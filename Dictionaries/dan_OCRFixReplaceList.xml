@@ -1,0 +1,10 @@
+<OCRFixReplaceList>
+  <WholeWords>
+    <Word from="Haner" to="Han er" />
+  </WholeWords>
+  <PartialWords />
+  <PartialLines />
+  <BeginLines />
+  <EndLines />
+  <WholeLines />
+</OCRFixReplaceList>
