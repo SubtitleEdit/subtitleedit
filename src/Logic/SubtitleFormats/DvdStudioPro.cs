@@ -1,0 +1,122 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+using System.Text.RegularExpressions;
+
+namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
+{
+    public class DvdStudioPro : SubtitleFormat
+    {
+        readonly Regex _regexTimeCodes = new Regex(@"^\d+:\d+:\d+:\d+\t,\t\d+:\d+:\d+:\d+\t,\t.*$", RegexOptions.Compiled);
+
+        public override string Extension
+        {
+            get { return ".STL"; }
+        }
+
+        public override string Name
+        {
+            get { return "DVD Studio Pro"; }
+        }
+
+        public override bool HasLineNumber
+        {
+            get { return false; }
+        }
+
+        public override bool IsTimeBased
+        {
+            get { return true; }
+        }
+
+        public override bool IsMine(List<string> lines, string fileName)
+        {
+            Subtitle subtitle = new Subtitle();
+            LoadSubtitle(subtitle, lines, fileName);
+            return subtitle.Paragraphs.Count > _errorCount;
+        }
+
+        public override string ToText(Subtitle subtitle, string title)
+        {
+            const string paragraphWriteFormat = "{0}\t,\t{1}\t,\t{2}\r\n";
+            const string timeFormat = "{0:00}:{1:00}:{2:00}:{3:00}";
+            const string header = @"$VertAlign			=	Bottom
+$Bold				=	FALSE
+$Underlined			=	FALSE
+$Italic				=	0
+$XOffset				=	0
+$YOffset				=	-5
+$TextContrast			=	15
+$Outline1Contrast			=	15
+$Outline2Contrast			=	13
+$BackgroundContrast		=	0
+$ForceDisplay			=	FALSE
+$FadeIn				=	0
+$FadeOut				=	0
+$HorzAlign			=	Center
+";
+
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine(header);
+            foreach (Paragraph p in subtitle.Paragraphs)
+            {
+                string startTime = string.Format(timeFormat, p.StartTime.Hours, p.StartTime.Minutes, p.StartTime.Seconds, (int)Math.Round((p.StartTime.Milliseconds / 10.0) / 4.0));
+                string endTime = string.Format(timeFormat, p.EndTime.Hours, p.EndTime.Minutes, p.EndTime.Seconds, (int)Math.Round((p.EndTime.Milliseconds / 10.0) / 4.0));
+                sb.Append(string.Format(paragraphWriteFormat, startTime, endTime, p.Text.Replace(Environment.NewLine, " | ")));
+            }
+            return sb.ToString().Trim();
+        }
+
+        public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
+        {
+            _errorCount = 0;
+            int number = 0;
+            foreach (string line in lines)
+            {
+                if (line.Trim().Length > 0 && line[0] != '$')
+                {
+                    if (_regexTimeCodes.Match(line).Success)
+                    {
+                        string[] threePart = line.Split(new[] { "\t,\t"}, StringSplitOptions.None);
+                        Paragraph p = new Paragraph();
+                        if (threePart.Length == 3 &&
+                            GetTimeCode(p.StartTime, threePart[0]) &&
+                            GetTimeCode(p.EndTime, threePart[1]))
+                        {
+                            number++;
+                            p.Number = number;
+                            p.Text = threePart[2].TrimEnd().Replace(" | ", Environment.NewLine).Replace("|", Environment.NewLine);
+                            subtitle.Paragraphs.Add(p);
+                        }
+                    }
+                    else
+                    {
+                        _errorCount++;
+                    }
+                }
+                else
+                {
+                    _errorCount++;
+                }
+            }
+        }
+
+        private static bool GetTimeCode(TimeCode timeCode, string timeString)
+        {
+            try
+            {
+                string[] timeParts = timeString.Split(':');
+                timeCode.Hours = int.Parse(timeParts[0]);
+                timeCode.Minutes = int.Parse(timeParts[1]);
+                timeCode.Seconds = int.Parse(timeParts[2]);
+                int milliseconds = int.Parse(timeParts[3]);
+                timeCode.Milliseconds = (int)Math.Round(milliseconds * 4.0 * 10.0);                 
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+    }
+}
