@@ -1,0 +1,892 @@
+﻿<OCRFixReplaceList>
+  <WholeWords>
+    <Word from="/'ve" to="I've" />
+    <Word from="\/\/e're" to="We're" />
+    <Word from="\/\le're" to="We're" />
+    <Word from="|'mjust" to="I'm just" />
+    <Word from="¤ff" to="off" />
+    <Word from="¤Id" to="old" />
+    <Word from="¤Ids" to="olds" />
+    <Word from="¤n" to="on" />
+    <Word from="¤ne" to="one" />
+    <Word from="¤nly" to="only" />
+    <Word from="¤pen" to="open" />
+    <Word from="¤r" to="or" />
+    <Word from="¤rder" to="order" />
+    <Word from="¤ther" to="other" />
+    <Word from="¤ur" to="our" />
+    <Word from="¤ut" to="out" />
+    <Word from="¤ver" to="over" />
+    <Word from="¤wn" to="own" />
+    <Word from="€V€I'y" to="every" />
+    <Word from="0'clock" to="o'clock" />
+    <Word from="0f" to="of" />
+    <Word from="0fft0" to="off to" />
+    <Word from="0n" to="on" />
+    <Word from="0ne" to="one" />
+    <Word from="0ne's" to="one's" />
+    <Word from="0r" to="or" />
+    <Word from="0rders" to="orders" />
+    <Word from="0thers'" to="others'" />
+    <Word from="0ut" to="out" />
+    <Word from="0utlaws'" to="outlaws'" />
+    <Word from="0ver" to="over" />
+    <Word from="13oos" to="1300s" />
+    <Word from="18oos" to="1800s" />
+    <Word from="195os" to="1950s" />
+    <Word from="1o" to="10" />
+    <Word from="1oo" to="100" />
+    <Word from="1ooth" to="100th" />
+    <Word from="1oth" to="10th" />
+    <Word from="2o" to="20" />
+    <Word from="2oth" to="20th" />
+    <Word from="3o" to="30" />
+    <Word from="3oth" to="30th" />
+    <Word from="4o" to="40" />
+    <Word from="4os" to="40s" />
+    <Word from="4oth" to="40th" />
+    <Word from="5o" to="50" />
+    <Word from="5oth" to="50th" />
+    <Word from="6o" to="60" />
+    <Word from="6os" to="60s" />
+    <Word from="'6os" to="'60s" />
+    <Word from="6oth" to="60th" />
+    <Word from="7o" to="70" />
+    <Word from="'7os" to="'70s" />
+    <Word from="7oth" to="70th" />
+    <Word from="8o" to="80" />
+    <Word from="'8os" to="'80s" />
+    <Word from="8oth" to="80th" />
+    <Word from="9o" to="90" />
+    <Word from="9oth" to="90th" />
+    <Word from="A/ways" to="Always" />
+    <Word from="abcut" to="about" />
+    <Word from="aboutus" to="about us" />
+    <Word from="accldent" to="accident" />
+    <Word from="afterall" to="after all" />
+    <Word from="afulcrum" to="a fulcrum" />
+    <Word from="AII" to="All" />
+    <Word from="airstrike" to="air-strike" />
+    <Word from="ajob" to="a job" />
+    <Word from="ajoke" to="a joke" />
+    <Word from="Ajoke" to="A joke" />
+    <Word from="ajoking" to="a joking" />
+    <Word from="alittle" to="a little" />
+    <Word from="aln't" to="ain't" />
+    <Word from="alot" to="a lot" />
+    <Word from="Alot" to="A lot" />
+    <Word from="andthe" to="and the" />
+    <Word from="Arnsteln's" to="Arnstein's" />
+    <Word from="atleast" to="at least" />
+    <Word from="Atough" to="A tough" />
+    <Word from="bcat" to="boat" />
+    <Word from="Bcllvla" to="Bolivia" />
+    <Word from="bcmb" to="bomb" />
+    <Word from="bcmbs" to="bombs" />
+    <Word from="bejumpy" to="be jumpy" />
+    <Word from="besldes" to="besides" />
+    <Word from="bestfriend" to="best friend" />
+    <Word from="bestguy" to="best guy" />
+    <Word from="blonde" to="blonde" />
+    <Word from="blt" to="bit" />
+    <Word from="Bo99" to="Bogg" />
+    <Word from="bulldozlng" to="bulldozing" />
+    <Word from="butjust" to="but just" />
+    <Word from="butl" to="but I" />
+    <Word from="buythem" to="buy them" />
+    <Word from="bythe" to="by the" />
+    <Word from="can*t" to="can't" />
+    <Word from="can'i" to="can't" />
+    <Word from="can'I" to="can't" />
+    <Word from="cannut" to="cannot" />
+    <Word from="can'T" to="can't" />
+    <Word from="Car0l" to="Carol" />
+    <Word from="carrled" to="carried" />
+    <Word from="Ccug" to="Coug" />
+    <Word from="Ccugs" to="Cougs" />
+    <Word from="Ccver" to="Cover" />
+    <Word from="cff" to="off" />
+    <Word from="cfycu" to="of you" />
+    <Word from="cfycur" to="of your" />
+    <Word from="chlldrcn" to="children" />
+    <Word from="chlldren" to="children" />
+    <Word from="CIear" to="Clear" />
+    <Word from="ckay" to="okay" />
+    <Word from="cn" to="on" />
+    <Word from="cne" to="one" />
+    <Word from="cnes" to="ones" />
+    <Word from="Coincidenta//y" to="Coincidentally" />
+    <Word from="COm€" to="Come" />
+    <Word from="complainingabout" to="complaining about" />
+    <Word from="coms" to="come" />
+    <Word from="confdence" to="confidence" />
+    <Word from="conhrmed" to="confirmed" />
+    <Word from="couIdn't" to="couldn't" />
+    <Word from="couldn'T" to="couldn't" />
+    <Word from="cp" to="op" />
+    <Word from="crder" to="order" />
+    <Word from="cther" to="other" />
+    <Word from="cuuld" to="could" />
+    <Word from="cver" to="over" />
+    <Word from="D¤esn't" to="Doesn't" />
+    <Word from="d¤n'i" to="don't" />
+    <Word from="d¤n't" to="don't" />
+    <Word from="d0" to="do" />
+    <Word from="D0" to="Do" />
+    <Word from="D0asn't" to="Doesn't" />
+    <Word from="dc" to="do" />
+    <Word from="dccsn't" to="doesn't" />
+    <Word from="dcctcr" to="doctor" />
+    <Word from="Dces" to="Does" />
+    <Word from="dcgs" to="dogs" />
+    <Word from="dcing" to="doing" />
+    <Word from="dcn'I" to="don't" />
+    <Word from="dcn't" to="don't" />
+    <Word from="dcughnut" to="doughnut" />
+    <Word from="declslons" to="decisions" />
+    <Word from="desewes" to="deserves" />
+    <Word from="didn'!" to="didn't" />
+    <Word from="didnt" to="didn't" />
+    <Word from="didn'T" to="didn't" />
+    <Word from="dIdn't" to="didn't" />
+    <Word from="didrft" to="didn't" />
+    <Word from="dld" to="did" />
+    <Word from="dldn't" to="didn't" />
+    <Word from="dlfflcull" to="difficult" />
+    <Word from="dlsobeyed" to="disobeyed" />
+    <Word from="doasn't" to="doesn't" />
+    <Word from="Doasn't" to="Doesn't" />
+    <Word from="doctoh" to="doctor" />
+    <Word from="doesnt" to="doesn't" />
+    <Word from="doesn'T" to="doesn't" />
+    <Word from="doesri't" to="doesnt't" />
+    <Word from="doit" to="do it" />
+    <Word from="don*t" to="don't" />
+    <Word from="don'i" to="don't" />
+    <Word from="don'l" to="don't" />
+    <Word from="Don'l" to="Don't" />
+    <Word from="dont" to="don't" />
+    <Word from="don'T" to="don't" />
+    <Word from="don'tjust" to="don't just" />
+    <Word from="Don'tjust" to="Don't just" />
+    <Word from="don'tlhink" to="don't think" />
+    <Word from="Drinkthis" to="Drink this" />
+    <Word from="dumbto" to="dumb to" />
+    <Word from="dun't" to="don't" />
+    <Word from="etemity" to="eternity" />
+    <Word from="even/body's" to="everybody's" />
+    <Word from="everythings" to="everything's" />
+    <Word from="Everythlng's" to="Everything's" />
+    <Word from="Everytime" to="Every time" />
+    <Word from="Fathef" to="Father" />
+    <Word from="fcrebcdlng" to="foreboding" />
+    <Word from="fcreverjudges" to="forever judges" />
+    <Word from="fcund" to="found" />
+    <Word from="flll" to="fill" />
+    <Word from="fo/low" to="follow" />
+    <Word from="fonzvard" to="forward" />
+    <Word from="fora" to="for a" />
+    <Word from="Fora" to="For a" />
+    <Word from="forsunburns" to="for sunburns" />
+    <Word from="Foryears" to="For years" />
+    <Word from="foryou" to="for you" />
+    <Word from="G0" to="Go" />
+    <Word from="gc" to="go" />
+    <Word from="gcing" to="going" />
+    <Word from="gcnna" to="gonna" />
+    <Word from="gct" to="get" />
+    <Word from="Gct" to="Got" />
+    <Word from="genercsity" to="generosity" />
+    <Word from="generosityn" to="generosity&quot;" />
+    <Word from="gLlyS" to="guys" />
+    <Word from="gnyone" to="anyone" />
+    <Word from="golng" to="going" />
+    <Word from="gOt" to="got" />
+    <Word from="grandjury" to="grand jury" />
+    <Word from="Greatjobl" to="Great job!" />
+    <Word from="grinco" to="gringo" />
+    <Word from="gu" to="go" />
+    <Word from="gunna" to="gonna" />
+    <Word from="guyjust" to="guy just" />
+    <Word from="gUyS" to="guys" />
+    <Word from="H0we·ver" to="However" />
+    <Word from="halftheir" to="half their" />
+    <Word from="hcle" to="hole" />
+    <Word from="hcme" to="home" />
+    <Word from="hcmes" to="homes" />
+    <Word from="hcpe" to="hope" />
+    <Word from="hctel" to="hotel" />
+    <Word from="hcurs" to="hours" />
+    <Word from="Hcw" to="How" />
+    <Word from="Hefell" to="He fell" />
+    <Word from="he'II" to="he'll" />
+    <Word from="He'II" to="He'll" />
+    <Word from="HeII0" to="Hello" />
+    <Word from="He'Il" to="He'll" />
+    <Word from="Hejust" to="He just" />
+    <Word from="He'lI" to="He'll" />
+    <Word from="HelIo" to="Hello" />
+    <Word from="hellc" to="hello" />
+    <Word from="HellO" to="Hello" />
+    <Word from="herflesh" to="her flesh" />
+    <Word from="herwith" to="her with" />
+    <Word from="HeY·" to="Hey." />
+    <Word from="hiddsn" to="hidden" />
+    <Word from="hisjunk" to="his junk" />
+    <Word from="Hnally" to="finally" />
+    <Word from="HOId" to="Hold" />
+    <Word from="hOIes" to="holes" />
+    <Word from="honorthe" to="honor the" />
+    <Word from="howto" to="how to" />
+    <Word from="Hs's" to="He's" />
+    <Word from="hurtyou" to="hurt you" />
+    <Word from="I thought" to="I thought" />
+    <Word from="I\/Ian" to="Man" />
+    <Word from="I\/Iathies" to="Mathies" />
+    <Word from="I\/Ie" to="Me" />
+    <Word from="I\/Iommy" to="Mommy" />
+    <Word from="I\/Ir" to="Mr" />
+    <Word from="I\/Ir." to="Mr." />
+    <Word from="I\/ly" to="My" />
+    <Word from="Iaid" to="laid" />
+    <Word from="Iam" to="I am" />
+    <Word from="Iand" to="land" />
+    <Word from="Ianding" to="landing" />
+    <Word from="Iast" to="last" />
+    <Word from="Iate" to="late" />
+    <Word from="Icad" to="load" />
+    <Word from="Icading" to="loading" />
+    <Word from="Ican" to="I can" />
+    <Word from="Iccked" to="locked" />
+    <Word from="Icng" to="long" />
+    <Word from="Icsing" to="losing" />
+    <Word from="Icslng" to="losing" />
+    <Word from="Idid" to="I did" />
+    <Word from="Ididn't" to="I didn't" />
+    <Word from="Ido" to="I do" />
+    <Word from="Idon'i" to="I don't" />
+    <Word from="Idon't" to="I don't" />
+    <Word from="Idon'tthink" to="I don't think" />
+    <Word from="Ieamed" to="learned" />
+    <Word from="Iearned" to="learned" />
+    <Word from="Ieast" to="least" />
+    <Word from="Ieave" to="leave" />
+    <Word from="Ied" to="led" />
+    <Word from="Ieft" to="left" />
+    <Word from="Ieg's" to="leg's" />
+    <Word from="Iess" to="less" />
+    <Word from="Iet" to="let" />
+    <Word from="Iet's" to="let's" />
+    <Word from="Iet'sjust" to="let's just" />
+    <Word from="Ifear" to="I fear" />
+    <Word from="Ifeared" to="I feared" />
+    <Word from="ifl" to="if I" />
+    <Word from="Iforgot" to="I forgot" />
+    <Word from="ifthe" to="if the" />
+    <Word from="Ifthe" to="If the" />
+    <Word from="ifthere's" to="if there's" />
+    <Word from="Ifthey" to="If they" />
+    <Word from="Ifwe" to="If we" />
+    <Word from="Ifycu" to="If you" />
+    <Word from="ifyou" to="if you" />
+    <Word from="Iget" to="I get" />
+    <Word from="Igot" to="I got" />
+    <Word from="Igotta" to="I gotta" />
+    <Word from="Iguess" to="I guess" />
+    <Word from="Iguessljust" to="I guess I just" />
+    <Word from="Ihad" to="I had" />
+    <Word from="Ihat's" to="that's" />
+    <Word from="Ihave" to="I have" />
+    <Word from="Iheard" to="I heard" />
+    <Word from="ihere's" to="there's" />
+    <Word from="ihey've" to="they've" />
+    <Word from="ii/Iary" to="Mary" />
+    <Word from="ii/Ir" to="Mr" />
+    <Word from="ii/Ir." to="Mr." />
+    <Word from="ii/love" to="Move" />
+    <Word from="Iife" to="life" />
+    <Word from="I'II" to="I'll" />
+    <Word from="Iike" to="like" />
+    <Word from="I'Il" to="I'll" />
+    <Word from="Iine" to="line" />
+    <Word from="iirst" to="first" />
+    <Word from="ii's" to="it's" />
+    <Word from="Ii's" to="It's" />
+    <Word from="Iiterallyjumped" to="literally jumped" />
+    <Word from="Ijoined" to="I joined" />
+    <Word from="Ijust" to="I just" />
+    <Word from="Iknow" to="I know" />
+    <Word from="Ile" to="lie" />
+    <Word from="Ileft" to="I left" />
+    <Word from="Ilove" to="I love" />
+    <Word from="I'mjust" to="I'm just" />
+    <Word from="infact" to="in fact" />
+    <Word from="Infact" to="In fact" />
+    <Word from="infront" to="in front" />
+    <Word from="insolencel" to="insolence!" />
+    <Word from="intc" to="into" />
+    <Word from="inthe" to="in the" />
+    <Word from="Iong" to="long" />
+    <Word from="Iook" to="look" />
+    <Word from="Iookjust" to="look just" />
+    <Word from="Iooklng" to="looking" />
+    <Word from="Iooks" to="looks" />
+    <Word from="Ioose" to="loose" />
+    <Word from="Iord's" to="lord's" />
+    <Word from="Iose" to="lose" />
+    <Word from="Ioss" to="loss" />
+    <Word from="Iost" to="lost" />
+    <Word from="Iot" to="lot" />
+    <Word from="Iot's" to="lot's" />
+    <Word from="Iousyjob" to="lousy job" />
+    <Word from="Iove" to="love" />
+    <Word from="Ioves" to="loves" />
+    <Word from="Iowlife" to="lowlife" />
+    <Word from="Ipaid" to="I paid" />
+    <Word from="Iquit" to="I quit" />
+    <Word from="Ireallythinkthis" to="I really think this" />
+    <Word from="Isaw" to="I saw" />
+    <Word from="isn'i" to="isn't" />
+    <Word from="Isthis" to="Is this" />
+    <Word from="Istill" to="I still" />
+    <Word from="Istumblod" to="I stumbled" />
+    <Word from="Itake" to="I take" />
+    <Word from="Iteach" to="I teach" />
+    <Word from="Ithink" to="I think" />
+    <Word from="Ithinkthat" to="I think that" />
+    <Word from="Ithinkthis" to="I think this" />
+    <Word from="Ithinkyou're" to="I think you're" />
+    <Word from="Ithlnk" to="I think" />
+    <Word from="Ithought" to="I thought" />
+    <Word from="it'II" to="it'll" />
+    <Word from="It'II" to="It'll" />
+    <Word from="it'Il" to="it'll" />
+    <Word from="It'Il" to="It'll" />
+    <Word from="itjust" to="it just" />
+    <Word from="it'lI" to="it'll" />
+    <Word from="It'lI" to="It'll" />
+    <Word from="Itold" to="I told" />
+    <Word from="Itook" to="I took" />
+    <Word from="itout" to="it out" />
+    <Word from="it'sjust" to="it's just" />
+    <Word from="It'sjust" to="It's just" />
+    <Word from="Ittends" to="It tends" />
+    <Word from="Itwasn't" to="It wasn't" />
+    <Word from="Iuckier" to="luckier" />
+    <Word from="IV|oney" to="Money" />
+    <Word from="IV|oney's" to="Money's" />
+    <Word from="I'va" to="I've" />
+    <Word from="IVIan" to="Man" />
+    <Word from="IVIAN" to="MAN" />
+    <Word from="IVIarch" to="March" />
+    <Word from="IVIarci's" to="Marci's" />
+    <Word from="IVIarko" to="Marko" />
+    <Word from="IVIe" to="Me" />
+    <Word from="IVIine's" to="Mine's" />
+    <Word from="IVImm" to="Mmm" />
+    <Word from="IVIoney" to="Money" />
+    <Word from="IVIr." to="Mr." />
+    <Word from="IVIrs" to="Mrs" />
+    <Word from="IVIuch" to="Much" />
+    <Word from="IVIust" to="Must" />
+    <Word from="IVIy" to="My" />
+    <Word from="IVlacArthur" to="MacArthur" />
+    <Word from="IVlacArthur's" to="MacArthur's" />
+    <Word from="IVlcBride" to="McBride" />
+    <Word from="IVlore" to="More" />
+    <Word from="IVlr" to="Mr" />
+    <Word from="IVlr." to="Mr." />
+    <Word from="IVlust" to="Must" />
+    <Word from="IVly" to="My" />
+    <Word from="Iwake" to="I wake" />
+    <Word from="Iwant" to="I want" />
+    <Word from="Iwas" to="I was" />
+    <Word from="Iwasjust" to="I was just" />
+    <Word from="Iwasjustu" to="I was just..." />
+    <Word from="Iwill" to="I will" />
+    <Word from="Iwish" to="I wish" />
+    <Word from="Iwon't" to="I won't" />
+    <Word from="Iwould" to="I would" />
+    <Word from="Jaokson" to="Jackson" />
+    <Word from="Jascn" to="Jason" />
+    <Word from="jcke" to="joke" />
+    <Word from="Jumpthem" to="Jump them" />
+    <Word from="jusi" to="just" />
+    <Word from="jusl" to="just" />
+    <Word from="knowjust" to="know just" />
+    <Word from="knowthat" to="know that" />
+    <Word from="knowthis" to="know this" />
+    <Word from="l\/Iommy" to="Mommy" />
+    <Word from="l\/Ir." to="Mr." />
+    <Word from="l\/ly" to="My" />
+    <Word from="l‘m" to="I'm" />
+    <Word from="Laml6" to="I am l6" />
+    <Word from="Lcad" to="Load" />
+    <Word from="lcan" to="I can" />
+    <Word from="lcan't" to="I can't" />
+    <Word from="Lcve" to="Love" />
+    <Word from="l'd" to="I'd" />
+    <Word from="ldid" to="I did" />
+    <Word from="Ldid" to="I did" />
+    <Word from="L'djump" to="I'd jump" />
+    <Word from="ldon't" to="I don't" />
+    <Word from="Ldon't" to="I don't" />
+    <Word from="Lefs" to="Let's" />
+    <Word from="lf" to="if" />
+    <Word from="Lf" to="If" />
+    <Word from="lfthey" to="if they" />
+    <Word from="lget" to="I get" />
+    <Word from="li/lr." to="Mr." />
+    <Word from="licence" to="license" />
+    <Word from="l'II" to="I'll" />
+    <Word from="l'Il" to="I'll" />
+    <Word from="literally" to="literally" />
+    <Word from="ljust" to="I just" />
+    <Word from="ll/Iommy's" to="Mommy's" />
+    <Word from="ll/lajor" to="Major" />
+    <Word from="Ll/lajor" to="Major" />
+    <Word from="ll/layans" to="Mayans" />
+    <Word from="l'lI" to="I'll" />
+    <Word from="l'll" to="I'll" />
+    <Word from="L'll" to="I'll" />
+    <Word from="l'lljust" to="I'll just" />
+    <Word from="l'm" to="I'm" />
+    <Word from="L'm" to="I'm" />
+    <Word from="Lmean" to="I mean" />
+    <Word from="l'mjust" to="I'm just" />
+    <Word from="ln" to="In" />
+    <Word from="lRA's" to="IRA's" />
+    <Word from="Lrenka" to="Irenka" />
+    <Word from="Lrn" to="I'm" />
+    <Word from="lsn't" to="isn't" />
+    <Word from="Lsn't" to="Isn't" />
+    <Word from="Lst's" to="Let's" />
+    <Word from="lt" to="it" />
+    <Word from="ltake" to="I take" />
+    <Word from="ltell" to="I tell" />
+    <Word from="lthink" to="I think" />
+    <Word from="Lthink" to="I think" />
+    <Word from="lt'II" to="it'll" />
+    <Word from="lt'Il" to="it'll" />
+    <Word from="lt'll" to="it'll" />
+    <Word from="ltold" to="l told" />
+    <Word from="lt's" to="it's" />
+    <Word from="l've" to="I've" />
+    <Word from="L've" to="I've" />
+    <Word from="lVIan" to="Man" />
+    <Word from="lVIcHenry" to="McHenry" />
+    <Word from="lVIr." to="Mr." />
+    <Word from="lVlacArthur" to="MacArthur" />
+    <Word from="LVlore" to="More" />
+    <Word from="lVlr" to="Mr" />
+    <Word from="lVlr." to="Mr." />
+    <Word from="lVlust" to="Must" />
+    <Word from="lwant" to="I want" />
+    <Word from="lwanted" to="I wanted" />
+    <Word from="lwas" to="I was" />
+    <Word from="lwill" to="I will" />
+    <Word from="lwon't" to="I won't" />
+    <Word from="lwould" to="I would" />
+    <Word from="lwould've" to="I would've" />
+    <Word from="lx/Iorning" to="Morning" />
+    <Word from="majorjackpot" to="major jackpot" />
+    <Word from="mayjust" to="may just" />
+    <Word from="mbecause" to="&quot;because" />
+    <Word from="mcm's" to="mom's" />
+    <Word from="mcney" to="money" />
+    <Word from="mcral" to="moral" />
+    <Word from="mcre" to="more" />
+    <Word from="mcve" to="move" />
+    <Word from="Mlnd" to="Mind" />
+    <Word from="mOI'€" to="more" />
+    <Word from="myjob" to="my job" />
+    <Word from="Myjob" to="My job" />
+    <Word from="myselli" to="myself" />
+    <Word from="mythumb" to="my thumb" />
+    <Word from="N0" to="No" />
+    <Word from="narne" to="name" />
+    <Word from="Natians" to="Nations" />
+    <Word from="nc" to="no" />
+    <Word from="Nc" to="No" />
+    <Word from="ncne" to="none" />
+    <Word from="Ncrth" to="North" />
+    <Word from="ncw" to="new" />
+    <Word from="Ncw" to="Now" />
+    <Word from="neighboun" to="neighbour" />
+    <Word from="neverthere" to="never there" />
+    <Word from="newjobs" to="new jobs" />
+    <Word from="nextdoor" to="next door" />
+    <Word from="Nlagnificence" to="Magnificence" />
+    <Word from="Nlakes" to="Makes" />
+    <Word from="Nlan" to="Man" />
+    <Word from="Nlarch" to="March" />
+    <Word from="Nlarine" to="Marine" />
+    <Word from="Nlarion" to="Marion" />
+    <Word from="Nlarry" to="Marry" />
+    <Word from="Nlars" to="Mars" />
+    <Word from="Nlarty" to="Marty" />
+    <Word from="Nle" to="Me" />
+    <Word from="Nleet" to="Meet" />
+    <Word from="Nlen" to="Men" />
+    <Word from="Nlom" to="Mom" />
+    <Word from="Nlore" to="More" />
+    <Word from="Nlother" to="Mother" />
+    <Word from="Nlr." to="Mr." />
+    <Word from="Nlrs" to="Mrs" />
+    <Word from="Nluch" to="Much" />
+    <Word from="not judging" to="not judging" />
+    <Word from="notjunk" to="not junk" />
+    <Word from="notjust" to="not just" />
+    <Word from="Nowthat's" to="Now that's" />
+    <Word from="Numbertwo" to="Number two" />
+    <Word from="Ocps" to="Oops" />
+    <Word from="ofa" to="of a" />
+    <Word from="ofcourse" to="of course" />
+    <Word from="ofeither" to="of either" />
+    <Word from="offthe" to="off the" />
+    <Word from="offto" to="off to" />
+    <Word from="ofguy" to="of guy" />
+    <Word from="Ofhce" to="Office" />
+    <Word from="ofit" to="of it" />
+    <Word from="ofjam" to="of jam" />
+    <Word from="ofjoy" to="of joy" />
+    <Word from="ofjunior" to="of junior" />
+    <Word from="ofmy" to="of my" />
+    <Word from="ofopinions" to="of opinions" />
+    <Word from="ofpeopla" to="of people" />
+    <Word from="ofthat" to="of that" />
+    <Word from="ofthe" to="of the" />
+    <Word from="Ofthe" to="Of the" />
+    <Word from="oftheir" to="of their" />
+    <Word from="ofthem" to="of them" />
+    <Word from="ofthemselves" to="of themselves" />
+    <Word from="ofthere" to="of there" />
+    <Word from="ofthese" to="of these" />
+    <Word from="ofthings" to="of things" />
+    <Word from="ofthis" to="of this" />
+    <Word from="ofthlngs" to="of things" />
+    <Word from="ofthose" to="of those" />
+    <Word from="ofyou" to="of you" />
+    <Word from="ofyour" to="of your" />
+    <Word from="onboard" to="on board" />
+    <Word from="onIy" to="only" />
+    <Word from="onIything" to="only thing" />
+    <Word from="oomprise" to="comprise" />
+    <Word from="oonstitution" to="constitution" />
+    <Word from="opiimistically" to="optimistically" />
+    <Word from="ora" to="or a" />
+    <Word from="orjust" to="or just" />
+    <Word from="Orjust" to="Or just" />
+    <Word from="Orwould" to="Or would" />
+    <Word from="Othenzvise" to="Otherwise" />
+    <Word from="our joumey" to="our journey" />
+    <Word from="Ourguy" to="Our guy" />
+    <Word from="ourj0b's" to="our job's" />
+    <Word from="Ourj0b's" to="Our job's" />
+    <Word from="ourjobs" to="our jobs" />
+    <Word from="ourjob's" to="our job's" />
+    <Word from="Ourjob's" to="Our job's" />
+    <Word from="ourjoumey" to="our journey" />
+    <Word from="ourphotos" to="our photos" />
+    <Word from="overthe" to="over the" />
+    <Word from="pclnt" to="point" />
+    <Word from="pclnts" to="points" />
+    <Word from="pe0pIe" to="people" />
+    <Word from="Persona/y" to="Personally" />
+    <Word from="PIease" to="Please" />
+    <Word from="PIeasure" to="Pleasure" />
+    <Word from="pleasurlng" to="pleasuring" />
+    <Word from="POIe" to="Pole" />
+    <Word from="popsicle" to="Popsicle" />
+    <Word from="Presidenfs" to="President's" />
+    <Word from="probablyjust" to="probably just" />
+    <Word from="puIIing" to="pulling" />
+    <Word from="railyards" to="rail-yards" />
+    <Word from="ralnbow" to="rainbow" />
+    <Word from="ratherjump" to="rather jump" />
+    <Word from="ratherjust" to="rather just" />
+    <Word from="Rcque" to="Roque" />
+    <Word from="rcscucd" to="rescued" />
+    <Word from="reallyjust" to="really just" />
+    <Word from="reallythinkthis" to="really think this" />
+    <Word from="rememberthem" to="remember them" />
+    <Word from="retum" to="return" />
+    <Word from="rhfluence" to="influence" />
+    <Word from="ridonculous" to="ridiculous" />
+    <Word from="s/uggikh" to="sluggish" />
+    <Word from="S0" to="So" />
+    <Word from="sc" to="so" />
+    <Word from="scientihc" to="scientific" />
+    <Word from="scund" to="sound" />
+    <Word from="shcws" to="shows" />
+    <Word from="She`s" to="She's" />
+    <Word from="She‘II" to="She'll" />
+    <Word from="she'II" to="she'll" />
+    <Word from="She'II" to="She'll" />
+    <Word from="she'Il" to="she'll" />
+    <Word from="she'lI" to="she'll" />
+    <Word from="ShOp" to="shop" />
+    <Word from="shouldnt" to="shouldn't" />
+    <Word from="Shs's" to="She's" />
+    <Word from="signifcance" to="significance" />
+    <Word from="Sincc" to="Since" />
+    <Word from="Smiih" to="Smith" />
+    <Word from="Sojust" to="So just" />
+    <Word from="somethlng" to="somethlng" />
+    <Word from="somethlng's" to="something's" />
+    <Word from="speII" to="spell" />
+    <Word from="speII's" to="spell's" />
+    <Word from="StilI" to="Still" />
+    <Word from="stlll" to="still" />
+    <Word from="storyl" to="story!" />
+    <Word from="Stubbom" to="Stubborn" />
+    <Word from="suffocaiing" to="suffocating" />
+    <Word from="sun/ive" to="survive" />
+    <Word from="T0" to="To" />
+    <Word from="T00" to="Too" />
+    <Word from="talkto" to="talk to" />
+    <Word from="Talkto" to="Talk to" />
+    <Word from="tc" to="to" />
+    <Word from="tcday" to="today" />
+    <Word from="tcrturing" to="torturing" />
+    <Word from="tcuch" to="touch" />
+    <Word from="te//" to="tell" />
+    <Word from="th/nk" to="think" />
+    <Word from="thafs" to="that's" />
+    <Word from="Thafs" to="That's" />
+    <Word from="Thai's" to="That's" />
+    <Word from="Thal's" to="That's" />
+    <Word from="Thankyou" to="Thank you" />
+    <Word from="that'II" to="that'll" />
+    <Word from="that'Il" to="that'll" />
+    <Word from="thatjunk" to="that junk" />
+    <Word from="Thc" to="The" />
+    <Word from="theirfury" to="their fury" />
+    <Word from="Therds" to="There's" />
+    <Word from="There'II" to="There'll" />
+    <Word from="There'Il" to="There'll" />
+    <Word from="There'lI" to="There'll" />
+    <Word from="They/'re" to="They're" />
+    <Word from="they'II" to="they'll" />
+    <Word from="they'Il" to="they'll" />
+    <Word from="theyjust" to="they just" />
+    <Word from="Theyjust" to="They just" />
+    <Word from="they'lI" to="they'll" />
+    <Word from="They'lI" to="They'll" />
+    <Word from="theyre" to="they're" />
+    <Word from="thinkthat" to="think that" />
+    <Word from="this'II" to="this'll" />
+    <Word from="thlngs" to="things" />
+    <Word from="Thlnkthls" to="Think this" />
+    <Word from="thls" to="this" />
+    <Word from="thore's" to="there's" />
+    <Word from="Thore's" to="There's" />
+    <Word from="togelher" to="together" />
+    <Word from="togethen" to="together" />
+    <Word from="tomorrovv" to="tomorrow" />
+    <Word from="tothe" to="to the" />
+    <Word from="Towef" to="Tower" />
+    <Word from="Traitur" to="Traitor" />
+    <Word from="tvvelve" to="twelve" />
+    <Word from="Tvvelve" to="Twelve" />
+    <Word from="tvventy" to="tvventy" />
+    <Word from="Tvventy" to="Tvventy" />
+    <Word from="tvvo" to="two" />
+    <Word from="Tvvo" to="Two" />
+    <Word from="twc" to="two" />
+    <Word from="unconhrmed" to="unconfirmed" />
+    <Word from="underthe" to="under the" />
+    <Word from="underthese" to="under these" />
+    <Word from="upthinking" to="up thinking" />
+    <Word from="upto" to="up to" />
+    <Word from="vcice" to="voice" />
+    <Word from="veiy" to="very" />
+    <Word from="Voilá" to="Voilà" />
+    <Word from="Voilé" to="Voilá" />
+    <Word from="vvasjust" to="was just" />
+    <Word from="w¤n't" to="won't" />
+    <Word from="W9" to="We" />
+    <Word from="waierfall" to="waterfall" />
+    <Word from="wannajump" to="wanna jump" />
+    <Word from="wantyou" to="want you" />
+    <Word from="wayl" to="way I" />
+    <Word from="wclf" to="wolf" />
+    <Word from="wcman" to="woman" />
+    <Word from="wcmen" to="women" />
+    <Word from="wcrse" to="worse" />
+    <Word from="wculd" to="would" />
+    <Word from="we'II" to="we'll" />
+    <Word from="We'II" to="We'll" />
+    <Word from="we'Il" to="we'll" />
+    <Word from="We'Il" to="We'll" />
+    <Word from="wejust" to="we just" />
+    <Word from="we'lI" to="we'll" />
+    <Word from="We'ro" to="We're" />
+    <Word from="Whafs" to="What's" />
+    <Word from="Whateverwe" to="Whatever we" />
+    <Word from="whatwe" to="what we" />
+    <Word from="Whcse" to="Whose" />
+    <Word from="wilI" to="will" />
+    <Word from="wlfe" to="wife" />
+    <Word from="wlfe's" to="wife's" />
+    <Word from="wlth" to="with" />
+    <Word from="Wno" to="Who" />
+    <Word from="won'T" to="won't" />
+    <Word from="Wo're" to="We're" />
+    <Word from="wouIdn't" to="wouldn't" />
+    <Word from="wouldn'!" to="wouldn't" />
+    <Word from="wrcng" to="wrong" />
+    <Word from="wuuld" to="would" />
+    <Word from="Y¤u'II" to="You'll" />
+    <Word from="Y¤u'll" to="You'll" />
+    <Word from="y¤u're" to="you're" />
+    <Word from="Y¤u're" to="You're" />
+    <Word from="y¤u've" to="you've" />
+    <Word from="Y0" to="Yo" />
+    <Word from="y0LI" to="you" />
+    <Word from="y0u'II" to="you'll" />
+    <Word from="Y0u'rc" to="You're" />
+    <Word from="Y0u're" to="You're" />
+    <Word from="Y0u've" to="You've" />
+    <Word from="yaming" to="yarning" />
+    <Word from="ycu" to="you" />
+    <Word from="ycur" to="your" />
+    <Word from="Ycu're" to="You're" />
+    <Word from="Ycursins" to="Your sins" />
+    <Word from="yoLI" to="you" />
+    <Word from="yOU" to="you" />
+    <Word from="you`re" to="you're" />
+    <Word from="you'II" to="you'll" />
+    <Word from="You'II" to="You'll" />
+    <Word from="You'Il" to="You'll" />
+    <Word from="youjoin" to="you join" />
+    <Word from="youjust" to="you just" />
+    <Word from="You'lI" to="You'll" />
+    <Word from="you'ra" to="you're" />
+    <Word from="yourfather" to="your father" />
+    <Word from="yourhand" to="your hand" />
+    <Word from="yourjob" to="your job" />
+    <Word from="Yourjob" to="Your job" />
+    <Word from="yourname" to="your name" />
+    <Word from="you'ro" to="you're" />
+    <Word from="you'va" to="you've" />
+    <Word from="You'va" to="You've" />
+    <Word from="Yuu've" to="You've" />
+    <Word from="Yuu" to="You" />
+    <Word from="yuu" to="you" />
+    <Word from="naTve" to="naive" />
+    <Word from="Iacings" to="lacings" />
+    <Word from="Ilons" to="lions" />
+    <Word from="0utlaw's" to="outlaw's" />
+    <Word from="0fEngland" to="of England" />
+    <Word from="ofHis" to="of His" />
+    <Word from="Dcbby" to="Dobby" />
+    <Word from="Nlr" to="Mr" />
+  </WholeWords>
+  <PartialWords>
+    <!-- Will be used to check words not in dictionary -->
+    <!-- If new word(s) exists in spelling dictionary, it(they) is accepted -->
+    <WordPart from="¤" to="o" />
+    <WordPart from="/" to="l" />
+    <WordPart from="vv" to="w" />
+    <WordPart from="IVI" to="M" />
+    <WordPart from="lVI" to="M" />
+    <WordPart from="IVl" to="M" />
+    <WordPart from="lVl" to="M" />
+    <WordPart from="m" to="rn" />
+    <WordPart from="l" to="i" />
+    <WordPart from="€" to="e" />
+    <WordPart from="I" to="l" />
+    <WordPart from="c" to="o" />
+    <WordPart from="i" to="t" />
+    <WordPart from="cc" to="oo" />
+    <WordPart from="ii" to="tt" />
+    <WordPart from="ii" to="ll" />
+    <!-- "f " will be two words -->
+    <WordPart from="f" to="f " />
+    <WordPart from="c" to="e" />
+    <WordPart from="o" to="e" />
+    <WordPart from="o" to="e" />
+    <WordPart from="I" to="t" />
+    <WordPart from="n" to="o" />
+    <WordPart from="s" to="e" />
+  </PartialWords>
+  <PartialLines>
+    <LinePart from="at Hrst" to="at first" />
+    <LinePart from="can 't" to="can't" />
+    <LinePart from="come 0n" to="come on" />
+    <LinePart from="Come 0n" to="Come on" />
+    <LinePart from="couldn 't" to="couldn't" />
+    <LinePart from="Destin y's" to="Destiny's" />
+    <LinePart from="didn 't" to="didn't" />
+    <LinePart from="doesn 't" to="doesn't" />
+    <LinePart from="don 't" to="don't" />
+    <LinePart from="E very" to="Every" />
+    <LinePart from="get 0n" to="get on" />
+    <LinePart from="go 0n" to="go on" />
+    <LinePart from="Go 0n" to="Go on" />
+    <LinePart from="hadn 't" to="hadn't" />
+    <LinePart from="he 's" to="he's" />
+    <LinePart from="He 's" to="He's" />
+    <LinePart from="He y" to="Hey" />
+    <LinePart from="HEA VY" to="HEAVY" />
+    <LinePart from="Hold 0n" to="Hold on" />
+    <LinePart from="I d0" to="I do" />
+    <LinePart from="I 'm" to="I'm" />
+    <LinePart from="I 've" to="I've" />
+    <LinePart from="I'm sony" to="I'm sorry" />
+    <LinePart from="lova you" to="love you" />
+    <LinePart from="Lova you" to="love you" />
+    <LinePart from="lovo you" to="love you" />
+    <LinePart from="Lovo you" to="love you" />
+    <LinePart from="of 0ur" to="of our" />
+    <LinePart from="uf our" to="of our" />
+    <LinePart from="uf me" to="of me" />
+    <LinePart from="ot mine" to="of mine" />
+    <LinePart from="PLA YING" to="PLAYING" />
+    <LinePart from="she 's" to="she's" />
+    <LinePart from="She 's" to="She's" />
+    <LinePart from="shouldn 't" to="shouldn't" />
+    <LinePart from="sta y" to="stay" />
+    <LinePart from="Sta y" to="Stay" />
+    <LinePart from="taka care" to="take care" />
+    <LinePart from="Taka care" to="Take care" />
+    <LinePart from="the Hrst" to="the first" />
+    <LinePart from="toc late" to="too late" />
+    <LinePart from="wa y" to="way" />
+    <LinePart from="we 've" to="we've" />
+    <LinePart from="We 've" to="We've" />
+    <LinePart from="weren 't" to="weren't" />
+    <LinePart from="who 's" to="who's" />
+    <LinePart from="won 't" to="won't" />
+    <LinePart from="you 've" to="you've" />
+    <LinePart from="You 've" to="You've" />
+  </PartialLines>
+  <BeginLines>
+    <Beginning from="lrn gonna" to="I'm gonna" />
+    <Beginning from="L " to="I " />
+    <Beginning from="G0" to="Go" />
+    <Beginning from="GO get" to="Go get" />
+    <Beginning from="GO to" to="Go to" />
+    <Beginning from="GO for" to="Go for" />
+    <Beginning from="Ifl" to="If I" />
+    <Beginning from="lt'll" to="It'll" />
+    <Beginning from="Lt'll" to="It'll" />
+    <Beginning from="IVIa" to="Ma" />
+    <Beginning from="IVIu" to="Mu" />
+    <Beginning from="lt'll" to="It'll" />
+    <Beginning from="0ne" to="One" />
+    <Beginning from="0nly" to="Only" />
+    <Beginning from="0n " to="On " />
+  </BeginLines>
+  <EndLines>
+    <Ending from=", sin" to=", sir." />
+    <Ending from=" mothen" to="mother." />
+  </EndLines>
+  <WholeLines>
+    <!-- Whole lines - including -" etc -->
+    <Line from="N0." to="No." />
+    <Line from="N0." to="No." />
+    <Line from="-N0." to="-No." />
+  </WholeLines>
+</OCRFixReplaceList>
