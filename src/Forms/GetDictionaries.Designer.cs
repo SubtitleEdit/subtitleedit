@@ -1,0 +1,154 @@
+﻿namespace Nikse.SubtitleEdit.Forms
+{
+    sealed partial class GetDictionaries
+    {
+        /// <summary>
+        /// Required designer variable.
+        /// </summary>
+        private System.ComponentModel.IContainer components = null;
+
+        /// <summary>
+        /// Clean up any resources being used.
+        /// </summary>
+        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing && (components != null))
+            {
+                components.Dispose();
+            }
+            base.Dispose(disposing);
+        }
+
+        #region Windows Form Designer generated code
+
+        /// <summary>
+        /// Required method for Designer support - do not modify
+        /// the contents of this method with the code editor.
+        /// </summary>
+        private void InitializeComponent()
+        {
+            this.buttonOK = new System.Windows.Forms.Button();
+            this.labelDescription2 = new System.Windows.Forms.Label();
+            this.linkLabelOpenDictionaryFolder = new System.Windows.Forms.LinkLabel();
+            this.labelDescription1 = new System.Windows.Forms.Label();
+            this.comboBoxDictionaries = new System.Windows.Forms.ComboBox();
+            this.buttonDownload = new System.Windows.Forms.Button();
+            this.labelChooseLanguageAndClickDownload = new System.Windows.Forms.Label();
+            this.labelPleaseWait = new System.Windows.Forms.Label();
+            this.SuspendLayout();
+            // 
+            // buttonOK
+            // 
+            this.buttonOK.DialogResult = System.Windows.Forms.DialogResult.OK;
+            this.buttonOK.Location = new System.Drawing.Point(356, 159);
+            this.buttonOK.Name = "buttonOK";
+            this.buttonOK.Size = new System.Drawing.Size(75, 23);
+            this.buttonOK.TabIndex = 20;
+            this.buttonOK.Text = "&OK";
+            this.buttonOK.UseVisualStyleBackColor = true;
+            // 
+            // labelDescription2
+            // 
+            this.labelDescription2.AutoSize = true;
+            this.labelDescription2.Location = new System.Drawing.Point(30, 34);
+            this.labelDescription2.Name = "labelDescription2";
+            this.labelDescription2.Size = new System.Drawing.Size(260, 13);
+            this.labelDescription2.TabIndex = 1;
+            this.labelDescription2.Text = "uses the spell checking dictionaries from Open Office.";
+            // 
+            // linkLabelOpenDictionaryFolder
+            // 
+            this.linkLabelOpenDictionaryFolder.AutoSize = true;
+            this.linkLabelOpenDictionaryFolder.Location = new System.Drawing.Point(30, 164);
+            this.linkLabelOpenDictionaryFolder.Name = "linkLabelOpenDictionaryFolder";
+            this.linkLabelOpenDictionaryFolder.Size = new System.Drawing.Size(124, 13);
+            this.linkLabelOpenDictionaryFolder.TabIndex = 15;
+            this.linkLabelOpenDictionaryFolder.TabStop = true;
+            this.linkLabelOpenDictionaryFolder.Text = "Open \'Dictionaries\' folder";
+            this.linkLabelOpenDictionaryFolder.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.LinkLabel4LinkClicked);
+            // 
+            // labelDescription1
+            // 
+            this.labelDescription1.AutoSize = true;
+            this.labelDescription1.Location = new System.Drawing.Point(30, 16);
+            this.labelDescription1.Name = "labelDescription1";
+            this.labelDescription1.Size = new System.Drawing.Size(320, 13);
+            this.labelDescription1.TabIndex = 8;
+            this.labelDescription1.Text = "Subtitle Edit\'s spell check is based on the NHunspell engine which";
+            // 
+            // comboBoxDictionaries
+            // 
+            this.comboBoxDictionaries.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxDictionaries.FormattingEnabled = true;
+            this.comboBoxDictionaries.Location = new System.Drawing.Point(33, 98);
+            this.comboBoxDictionaries.Name = "comboBoxDictionaries";
+            this.comboBoxDictionaries.Size = new System.Drawing.Size(317, 21);
+            this.comboBoxDictionaries.TabIndex = 0;
+            this.comboBoxDictionaries.SelectedIndexChanged += new System.EventHandler(this.comboBoxDictionaries_SelectedIndexChanged);
+            // 
+            // buttonDownload
+            // 
+            this.buttonDownload.Location = new System.Drawing.Point(356, 96);
+            this.buttonDownload.Name = "buttonDownload";
+            this.buttonDownload.Size = new System.Drawing.Size(75, 23);
+            this.buttonDownload.TabIndex = 10;
+            this.buttonDownload.Text = "&Download";
+            this.buttonDownload.UseVisualStyleBackColor = true;
+            this.buttonDownload.Click += new System.EventHandler(this.buttonDownload_Click);
+            // 
+            // labelChooseLanguageAndClickDownload
+            // 
+            this.labelChooseLanguageAndClickDownload.AutoSize = true;
+            this.labelChooseLanguageAndClickDownload.Location = new System.Drawing.Point(30, 80);
+            this.labelChooseLanguageAndClickDownload.Name = "labelChooseLanguageAndClickDownload";
+            this.labelChooseLanguageAndClickDownload.Size = new System.Drawing.Size(202, 13);
+            this.labelChooseLanguageAndClickDownload.TabIndex = 11;
+            this.labelChooseLanguageAndClickDownload.Text = "Choose your languge and click download";
+            // 
+            // labelPleaseWait
+            // 
+            this.labelPleaseWait.AutoSize = true;
+            this.labelPleaseWait.Location = new System.Drawing.Point(30, 122);
+            this.labelPleaseWait.Name = "labelPleaseWait";
+            this.labelPleaseWait.Size = new System.Drawing.Size(70, 13);
+            this.labelPleaseWait.TabIndex = 12;
+            this.labelPleaseWait.Text = "Please wait...";
+            // 
+            // GetDictionaries
+            // 
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.ClientSize = new System.Drawing.Size(443, 195);
+            this.Controls.Add(this.labelPleaseWait);
+            this.Controls.Add(this.labelChooseLanguageAndClickDownload);
+            this.Controls.Add(this.buttonDownload);
+            this.Controls.Add(this.comboBoxDictionaries);
+            this.Controls.Add(this.labelDescription1);
+            this.Controls.Add(this.linkLabelOpenDictionaryFolder);
+            this.Controls.Add(this.labelDescription2);
+            this.Controls.Add(this.buttonOK);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            this.KeyPreview = true;
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
+            this.Name = "GetDictionaries";
+            this.Text = "Need dictionaries?";
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.FormGetDictionaries_KeyDown);
+            this.ResumeLayout(false);
+            this.PerformLayout();
+
+        }
+
+        #endregion
+
+        private System.Windows.Forms.Button buttonOK;
+        private System.Windows.Forms.Label labelDescription2;
+        private System.Windows.Forms.LinkLabel linkLabelOpenDictionaryFolder;
+        private System.Windows.Forms.Label labelDescription1;
+        private System.Windows.Forms.ComboBox comboBoxDictionaries;
+        private System.Windows.Forms.Button buttonDownload;
+        private System.Windows.Forms.Label labelChooseLanguageAndClickDownload;
+        private System.Windows.Forms.Label labelPleaseWait;
+    }
+}
