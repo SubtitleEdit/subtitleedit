@@ -13,7 +13,7 @@
     <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <IsWebBootstrapper>false</IsWebBootstrapper>
-    <ApplicationIcon>SE.ico</ApplicationIcon>
+    <ApplicationIcon>Icons\SE.ico</ApplicationIcon>
     <ManifestCertificateThumbprint>DCCE7922B5E425ADB221E06DC2FB405664CF8F63</ManifestCertificateThumbprint>
     <ManifestKeyFile>SubtitleEdit_TemporaryKey.pfx</ManifestKeyFile>
     <GenerateManifests>true</GenerateManifests>
@@ -794,7 +794,7 @@
     <Content Include="Resources\sv-SE.xml">
       <SubType>Designer</SubType>
     </Content>
-    <Content Include="SE.ico" />
+    <Content Include="Icons\SE.ico" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
