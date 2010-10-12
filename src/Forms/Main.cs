@@ -87,7 +87,7 @@ namespace Nikse.SubtitleEdit.Forms
                     if (versionInfo.Length >= 3 && versionInfo[2] != "0")
                         _title += "." + versionInfo[2];
 
-                    _title = "Subtitle Edit 3.0 RC1";
+                    _title = "Subtitle Edit 3.0 RC2";
 
                 }
                 return _title;
@@ -176,6 +176,7 @@ namespace Nikse.SubtitleEdit.Forms
             panelWaveFormControls.Visible = Configuration.Settings.General.ShowWaveForm;
             trackBarWaveFormPosition.Visible = Configuration.Settings.General.ShowWaveForm;
             toolStripButtonToogleWaveForm.Checked = Configuration.Settings.General.ShowWaveForm;
+            toolStripButtonToogleVideo.Checked = Configuration.Settings.General.ShowVideoPlayer;
 
             string fileName = string.Empty;
             string[] args = Environment.GetCommandLineArgs();
