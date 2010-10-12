@@ -22,33 +22,40 @@
 ; Requirements:
 ; *Inno Setup QuickStart Pack v5.3.11(+): http://www.jrsoftware.org/isdl.php#qsp
 
-#define installer_build_number "01"
+
+#define installer_build_number "02"
+
 #define VerMajor
 #define VerMinor
-#define VerRevision
 #define VerBuild
-#expr ParseVersion("D:\Dev\SubtitleEdit\bin\Release\SubtitleEdit.exe", VerMajor, VerMinor, VerRevision, VerBuild)
-#define app_version str(VerMajor) + "." + str(VerMinor) + "." + str(VerRevision) + "." + str(VerBuild)
-#define simple_app_version str(VerMajor) + "." + str(VerMinor) + "." + str(VerRevision)
+#define VerRevision
+
+#expr ParseVersion("..\src\bin\Release\SubtitleEdit.exe", VerMajor, VerMinor, VerBuild, VerRevision)
+#define app_version str(VerMajor) + "." + str(VerMinor) + "." + str(VerBuild) + "." + str(VerRevision)
+
+;the following simple_app_version is for 2 digit releases, one of the two must be uncommented at a time
+;#define simple_app_version str(VerMajor) + "." + str(VerMinor) + "." + str(VerBuild)
+#define simple_app_version str(VerMajor) + "." + str(VerMinor)
+
 #define installer_build_date GetDateTimeString('mmm, d yyyy', '', '')
+
 
 [Setup]
 AppID=SubtitleEdit
-;AppCopyright=Copyright © 2009-2010, Nikse
+AppCopyright=Copyright © 2009-2010, Nikse
 AppContact=http://www.nikse.dk/se/
 AppName=Subtitle Edit
-AppVerName=Subtitle Edit 3.0 Release Candidate 2  
-;AppVerName=Subtitle Edit {#= simple_app_version} 
+AppVerName=Subtitle Edit {#= simple_app_version}
 AppVersion={#= simple_app_version}
 AppPublisher=Nikse
-AppPublisherURL=http://www.nikse.dk/
+AppPublisherURL=http://www.nikse.dk/se/
 AppSupportURL=http://www.nikse.dk/se/
 AppUpdatesURL=http://www.nikse.dk/se/
 UninstallDisplayName=Subtitle Edit {#= simple_app_version}
 DefaultDirName={pf}\Subtitle Edit
 DefaultGroupName=Subtitle Edit
 VersionInfoCompany=Nikse
-;VersionInfoCopyright=Copyright © 2009-2010, Nikse
+VersionInfoCopyright=Copyright © 2009-2010, Nikse
 VersionInfoDescription=Subtitle Edit {#= simple_app_version} Setup
 VersionInfoTextVersion={#= simple_app_version}
 VersionInfoVersion={#= simple_app_version}
@@ -56,35 +63,30 @@ VersionInfoProductName=Subtitle Edit
 VersionInfoProductVersion={#= simple_app_version}
 VersionInfoProductTextVersion={#= simple_app_version}
 MinVersion=0,5.0.2195
-;AppReadmeFile={app}\README.txt
+;AppReadmeFile={app}\Readme.txt
 LicenseFile=..\src\gpl.txt
-InfoAfterFile=CHANGELOG.txt
-;InfoBeforeFile=..\README.txt
-SetupIconFile=..\src\SE.ico
+InfoAfterFile=Changelog.txt
+;InfoBeforeFile=..\Readme.txt
+SetupIconFile=..\src\Icons\SE.ico
+UninstallDisplayIcon={app}\SubtitleEdit.exe
 ;WizardImageFile=Icons\WizardImageFile.bmp
 WizardSmallImageFile=Icons\WizardSmallImageFile.bmp
 OutputDir=.
 OutputBaseFilename=SubtitleEdit-{#= simple_app_version}-setup
-AllowNoIcons=false
-Compression=lzma/Ultra64
-SolidCompression=false
-EnableDirDoesntExistWarning=false
+AllowNoIcons=yes
+Compression=lzma/ultra64
+SolidCompression=yes
+EnableDirDoesntExistWarning=no
 DirExistsWarning=no
-ShowTasksTreeLines=false
-AlwaysShowDirOnReadyPage=false
-AlwaysShowGroupOnReadyPage=false
+ShowTasksTreeLines=yes
+AlwaysShowDirOnReadyPage=yes
+AlwaysShowGroupOnReadyPage=yes
 PrivilegesRequired=admin
 ShowLanguageDialog=yes
 DisableDirPage=auto
 DisableProgramGroupPage=auto
-;AppMutex=Global\SubtitleEditMutex
-ShowComponentSizes=false
-AlwaysShowComponentsList=false
-FlatComponentsList=false
-UsePreviousSetupType=false
-UsePreviousTasks=false
-TerminalServicesAware=false
-DisableReadyPage=true
+AppMutex=Subtitle_Edit_Mutex
+
 
 [Languages]
 Name: en; MessagesFile: compiler:Default.isl
@@ -105,11 +107,12 @@ BeveledLabel=Subtitle Edit v{#= simple_app_version} by Nikse, Setup v{#= install
 
 
 [Files]
+Source: Changelog.txt; DestDir: {app}; Flags: ignoreversion
 Source: ..\src\Bin\Release\Hunspellx86.dll; DestDir: {app}; Flags: ignoreversion
 Source: ..\src\Bin\Release\Interop.QuartzTypeLib.dll; DestDir: {app}; Flags: ignoreversion
 Source: ..\src\Bin\Release\NHunspell.dll; DestDir: {app}; Flags: ignoreversion
-Source: ..\src\Bin\Release\tessnet2_32.dll; DestDir: {app}; Flags: ignoreversion
 Source: ..\src\Bin\Release\SubtitleEdit.exe; DestDir: {app}; Flags: ignoreversion
+Source: ..\src\Bin\Release\tessnet2_32.dll; DestDir: {app}; Flags: ignoreversion
 Source: ..\src\Bin\Release\Icons\Find.png; DestDir: {app}\Icons; Flags: ignoreversion
 Source: ..\src\Bin\Release\Icons\Help.png; DestDir: {app}\Icons; Flags: ignoreversion
 Source: ..\src\Bin\Release\Icons\New.png; DestDir: {app}\Icons; Flags: ignoreversion
@@ -144,16 +147,17 @@ Name: desktopicon; Description: {cm:CreateDesktopIcon}; GroupDescription: {cm:Ad
 Name: desktopicon\user; Description: {cm:tsk_CurrentUser}; GroupDescription: {cm:AdditionalIcons}; Flags: exclusive
 Name: desktopicon\common; Description: {cm:tsk_AllUsers}; GroupDescription: {cm:AdditionalIcons}; Flags: unchecked exclusive
 Name: quicklaunchicon; Description: {cm:CreateQuickLaunchIcon}; GroupDescription: {cm:AdditionalIcons}; OnlyBelowVersion: 0,6.01; Flags: unchecked
+
 Name: reset_settings; Description: {cm:tsk_ResetSettings}; GroupDescription: {cm:tsk_Other}; Check: SettingsExistCheck(); Flags: checkedonce unchecked
 
 
 [Icons]
 Name: {group}\Subtitle Edit; Filename: {app}\SubtitleEdit.exe; Comment: Subtitle Edit {#= simple_app_version}; WorkingDir: {app}; AppUserModelID: Nikse.SubtitleEdit; IconFilename: {app}\SubtitleEdit.exe; IconIndex: 0
-;Name: {group}\{cm:sm_Help}\{cm:sm_Changelog}; Filename: {app}\CHANGELOG.txt; Comment: {cm:sm_com_Changelog}; WorkingDir: {app}
-;Name: {group}\{cm:sm_Help}\{cm:sm_HelpFile}; Filename: {app}\Help.htm; Comment: {cm:sm_HelpFile}; WorkingDir: {app}
-;Name: {group}\{cm:sm_Help}\{cm:sm_ReadmeFile}; Filename: {app}\README.txt; Comment: {cm:sm_com_ReadmeFile}; WorkingDir: {app}
-Name: {group}\{cm:sm_Help}\{cm:ProgramOnTheWeb,Subtitle Edit}; Filename: http://www.nikse.dk/se/; Comment: {cm:ProgramOnTheWeb,Subtitle Edit}
+Name: {group}\Help and Support\Changelog; Filename: {app}\Changelog.txt; Comment: {cm:sm_com_Changelog}; WorkingDir: {app}
+;Name: {group}\Help and Support\Readme; Filename: {app}\Readme.txt; Comment: {cm:sm_com_ReadmeFile}; WorkingDir: {app}
+Name: {group}\Help and Support\{cm:ProgramOnTheWeb,Subtitle Edit}; Filename: http://www.nikse.dk/se/; Comment: {cm:ProgramOnTheWeb,Subtitle Edit}
 Name: {group}\{cm:UninstallProgram,Subtitle Edit}; Filename: {uninstallexe}; IconFilename: {app}\uninstall.ico; Comment: {cm:UninstallProgram,Subtitle Edit}; WorkingDir: {app}
+
 Name: {commondesktop}\Subtitle Edit; Filename: {app}\SubtitleEdit.exe; Tasks: desktopicon\common; Comment: Subtitle Edit {#= simple_app_version}; WorkingDir: {app}; AppUserModelID: Nikse.SubtitleEdit; IconFilename: {app}\SubtitleEdit.exe; IconIndex: 0
 Name: {userdesktop}\Subtitle Edit; Filename: {app}\SubtitleEdit.exe; Tasks: desktopicon\user; Comment: Subtitle Edit {#= simple_app_version}; WorkingDir: {app}; AppUserModelID: Nikse.SubtitleEdit; IconFilename: {app}\SubtitleEdit.exe; IconIndex: 0
 Name: {userappdata}\Microsoft\Internet Explorer\Quick Launch\Subtitle Edit; Filename: {app}\SubtitleEdit.exe; Tasks: quicklaunchicon; Comment: Subtitle Edit {#= simple_app_version}; WorkingDir: {app}; IconFilename: {app}\SubtitleEdit.exe; IconIndex: 0
@@ -162,12 +166,13 @@ Name: {userappdata}\Microsoft\Internet Explorer\Quick Launch\Subtitle Edit; File
 [InstallDelete]
 Type: files; Name: {userdesktop}\Subtitle Edit.lnk; Check: NOT IsTaskSelected('desktopicon\user') AND IsUpdate()
 Type: files; Name: {commondesktop}\Subtitle Edit.lnk; Check: NOT IsTaskSelected('desktopicon\common') AND IsUpdate()
+
 Type: files; Name: {userappdata}\Subtitle Edit\settings.xml; Tasks: reset_settings
 Type: dirifempty; Name: {userappdata}\Subtitle Edit; Tasks: reset_settings
 
 
 [Run]
-Filename: {app}\SubtitleEdit.exe; Description: {cm:LaunchProgram,Subtitle Edit}; Flags: nowait postinstall skipifsilent runascurrentuser
+Filename: {app}\SubtitleEdit.exe; Description: {cm:LaunchProgram,Subtitle Edit}; WorkingDir: {app}; Flags: nowait postinstall skipifsilent runascurrentuser
 Filename: http://www.nikse.dk/se/; Description: {cm:run_VisitWebsite}; Flags: nowait postinstall skipifsilent shellexec runascurrentuser unchecked
 
 
@@ -271,4 +276,3 @@ begin
    end;
    CreateMutex(installer_mutex_name);
 end;
-
