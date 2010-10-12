@@ -46,6 +46,7 @@ dk.tsk_CurrentUser=Kun for aktulle bruger
 dk.tsk_Other=Andre:
 dk.tsk_ResetSettings=Nulstil Subtitle Edit indstillinger
 
+
 es.msg_SetupIsRunningWarning=Subtitle Edit Setup is already running!
 es.msg_AskToDownNET=Subtitle Edit requires the .NET Framework 2.0. Please download and install the .NET Framework and run setup again. %n%nDo you want to download the .NET Framework 2.0 now?
 es.msg_DeleteSettings=Do you also want to delete Subtitle Edit's settings? %nIf you plan on reinstalling Subtitle Edit you do not have to delete them.
