@@ -57,10 +57,10 @@ VersionInfoProductVersion={#= simple_app_version}
 VersionInfoProductTextVersion={#= simple_app_version}
 MinVersion=0,5.0.2195
 ;AppReadmeFile={app}\README.txt
-LicenseFile=D:\dev\SubtitleEdit\Bin\Release\gpl.txt
-;InfoAfterFile=..\CHANGELOG.txt
+LicenseFile=..\src\gpl.txt
+InfoAfterFile=CHANGELOG.txt
 ;InfoBeforeFile=..\README.txt
-SetupIconFile=D:\Dev\SubtitleEdit\SE.ico
+SetupIconFile=..\src\SE.ico
 ;WizardImageFile=Icons\WizardImageFile.bmp
 WizardSmallImageFile=Icons\WizardSmallImageFile.bmp
 OutputDir=.
@@ -105,38 +105,37 @@ BeveledLabel=Subtitle Edit v{#= simple_app_version} by Nikse, Setup v{#= install
 
 
 [Files]
-Source: D:\dev\SubtitleEdit\Bin\Release\Hunspellx86.dll; DestDir: {app}; Flags: ignoreversion
-Source: D:\dev\SubtitleEdit\Bin\Release\Interop.QuartzTypeLib.dll; DestDir: {app}; Flags: ignoreversion
-Source: D:\dev\SubtitleEdit\Bin\Release\NHunspell.dll; DestDir: {app}; Flags: ignoreversion
-Source: D:\dev\SubtitleEdit\Bin\Release\tessnet2_32.dll; DestDir: {app}; Flags: ignoreversion
-Source: D:\dev\SubtitleEdit\Bin\Release\SubtitleEdit.exe; DestDir: {app}; Flags: ignoreversion
-Source: D:\dev\SubtitleEdit\Bin\Release\Icons\CreateAdjust.png; DestDir: {app}\Icons; Flags: ignoreversion
-Source: D:\dev\SubtitleEdit\Bin\Release\Icons\Find.png; DestDir: {app}\Icons; Flags: ignoreversion
-Source: D:\dev\SubtitleEdit\Bin\Release\Icons\Help.png; DestDir: {app}\Icons; Flags: ignoreversion
-Source: D:\dev\SubtitleEdit\Bin\Release\Icons\New.png; DestDir: {app}\Icons; Flags: ignoreversion
-Source: D:\dev\SubtitleEdit\Bin\Release\Icons\Open.png; DestDir: {app}\Icons; Flags: ignoreversion
-Source: D:\dev\SubtitleEdit\Bin\Release\Icons\Replace.png; DestDir: {app}\Icons; Flags: ignoreversion
-Source: D:\dev\SubtitleEdit\Bin\Release\Icons\Save.png; DestDir: {app}\Icons; Flags: ignoreversion
-Source: D:\dev\SubtitleEdit\Bin\Release\Icons\SaveAs.png; DestDir: {app}\Icons; Flags: ignoreversion
-Source: D:\dev\SubtitleEdit\Bin\Release\Icons\Settings.png; DestDir: {app}\Icons; Flags: ignoreversion
-Source: D:\dev\SubtitleEdit\Bin\Release\Icons\SpellCheck.png; DestDir: {app}\Icons; Flags: ignoreversion
-Source: D:\dev\SubtitleEdit\Bin\Release\Icons\VideoToogle.png; DestDir: {app}\Icons; Flags: ignoreversion
-Source: D:\dev\SubtitleEdit\Bin\Release\Icons\VisualSync.png; DestDir: {app}\Icons; Flags: ignoreversion
-Source: D:\dev\SubtitleEdit\Bin\Release\Icons\WaveFormToogle.png; DestDir: {app}\Icons; Flags: ignoreversion
-Source: D:\dev\SubtitleEdit\Bin\Release\Dictionaries\en_US_names_etc.xml; DestDir: {app}\Dictionaries; Flags: ignoreversion
-Source: D:\dev\SubtitleEdit\Bin\Release\Dictionaries\en_US_user.xml; DestDir: {app}\Dictionaries; Flags: ignoreversion
-Source: D:\dev\SubtitleEdit\Bin\Release\Dictionaries\eng_OCRFixReplaceList.xml; DestDir: {app}\Dictionaries; Flags: ignoreversion
-Source: D:\dev\SubtitleEdit\Bin\Release\Dictionaries\en_US.aff; DestDir: {app}\Dictionaries; Flags: ignoreversion
-Source: D:\dev\SubtitleEdit\Bin\Release\Dictionaries\en_US.dic; DestDir: {app}\Dictionaries; Flags: ignoreversion
-Source: D:\dev\SubtitleEdit\Bin\Release\Dictionaries\names_etc.xml; DestDir: {app}\Dictionaries; Flags: ignoreversion
-Source: D:\dev\SubtitleEdit\Bin\Release\TessData\eng.DangAmbigs; DestDir: {app}\TessData; Flags: ignoreversion
-Source: D:\dev\SubtitleEdit\Bin\Release\TessData\eng.freq-dawg; DestDir: {app}\TessData; Flags: ignoreversion
-Source: D:\dev\SubtitleEdit\Bin\Release\TessData\eng.inttemp; DestDir: {app}\TessData; Flags: ignoreversion
-Source: D:\dev\SubtitleEdit\Bin\Release\TessData\eng.normproto; DestDir: {app}\TessData; Flags: ignoreversion
-Source: D:\dev\SubtitleEdit\Bin\Release\TessData\eng.pffmtable; DestDir: {app}\TessData; Flags: ignoreversion
-Source: D:\dev\SubtitleEdit\Bin\Release\TessData\eng.unicharset; DestDir: {app}\TessData; Flags: ignoreversion
-Source: D:\dev\SubtitleEdit\Bin\Release\TessData\eng.user-words; DestDir: {app}\TessData; Flags: ignoreversion
-Source: D:\dev\SubtitleEdit\Bin\Release\TessData\eng.word-dawg; DestDir: {app}\TessData; Flags: ignoreversion
+Source: ..\src\Bin\Release\Hunspellx86.dll; DestDir: {app}; Flags: ignoreversion
+Source: ..\src\Bin\Release\Interop.QuartzTypeLib.dll; DestDir: {app}; Flags: ignoreversion
+Source: ..\src\Bin\Release\NHunspell.dll; DestDir: {app}; Flags: ignoreversion
+Source: ..\src\Bin\Release\tessnet2_32.dll; DestDir: {app}; Flags: ignoreversion
+Source: ..\src\Bin\Release\SubtitleEdit.exe; DestDir: {app}; Flags: ignoreversion
+Source: ..\src\Bin\Release\Icons\Find.png; DestDir: {app}\Icons; Flags: ignoreversion
+Source: ..\src\Bin\Release\Icons\Help.png; DestDir: {app}\Icons; Flags: ignoreversion
+Source: ..\src\Bin\Release\Icons\New.png; DestDir: {app}\Icons; Flags: ignoreversion
+Source: ..\src\Bin\Release\Icons\Open.png; DestDir: {app}\Icons; Flags: ignoreversion
+Source: ..\src\Bin\Release\Icons\Replace.png; DestDir: {app}\Icons; Flags: ignoreversion
+Source: ..\src\Bin\Release\Icons\Save.png; DestDir: {app}\Icons; Flags: ignoreversion
+Source: ..\src\Bin\Release\Icons\SaveAs.png; DestDir: {app}\Icons; Flags: ignoreversion
+Source: ..\src\Bin\Release\Icons\Settings.png; DestDir: {app}\Icons; Flags: ignoreversion
+Source: ..\src\Bin\Release\Icons\SpellCheck.png; DestDir: {app}\Icons; Flags: ignoreversion
+Source: ..\src\Bin\Release\Icons\VideoToogle.png; DestDir: {app}\Icons; Flags: ignoreversion
+Source: ..\src\Bin\Release\Icons\VisualSync.png; DestDir: {app}\Icons; Flags: ignoreversion
+Source: ..\src\Bin\Release\Icons\WaveFormToogle.png; DestDir: {app}\Icons; Flags: ignoreversion
+Source: ..\Dictionaries\en_US_names_etc.xml; DestDir: {app}\Dictionaries; Flags: ignoreversion
+Source: ..\Dictionaries\en_US_user.xml; DestDir: {app}\Dictionaries; Flags: ignoreversion
+Source: ..\Dictionaries\eng_OCRFixReplaceList.xml; DestDir: {app}\Dictionaries; Flags: ignoreversion
+Source: ..\Dictionaries\en_US.aff; DestDir: {app}\Dictionaries; Flags: ignoreversion
+Source: ..\Dictionaries\en_US.dic; DestDir: {app}\Dictionaries; Flags: ignoreversion
+Source: ..\Dictionaries\names_etc.xml; DestDir: {app}\Dictionaries; Flags: ignoreversion
+Source: ..\TessData\eng.DangAmbigs; DestDir: {app}\TessData; Flags: ignoreversion
+Source: ..\TessData\eng.freq-dawg; DestDir: {app}\TessData; Flags: ignoreversion
+Source: ..\TessData\eng.inttemp; DestDir: {app}\TessData; Flags: ignoreversion
+Source: ..\TessData\eng.normproto; DestDir: {app}\TessData; Flags: ignoreversion
+Source: ..\TessData\eng.pffmtable; DestDir: {app}\TessData; Flags: ignoreversion
+Source: ..\TessData\eng.unicharset; DestDir: {app}\TessData; Flags: ignoreversion
+Source: ..\TessData\eng.user-words; DestDir: {app}\TessData; Flags: ignoreversion
+Source: ..\TessData\eng.word-dawg; DestDir: {app}\TessData; Flags: ignoreversion
 Source: Icons\uninstall.ico; DestDir: {app}; Flags: ignoreversion
 
 
@@ -145,7 +144,6 @@ Name: desktopicon; Description: {cm:CreateDesktopIcon}; GroupDescription: {cm:Ad
 Name: desktopicon\user; Description: {cm:tsk_CurrentUser}; GroupDescription: {cm:AdditionalIcons}; Flags: exclusive
 Name: desktopicon\common; Description: {cm:tsk_AllUsers}; GroupDescription: {cm:AdditionalIcons}; Flags: unchecked exclusive
 Name: quicklaunchicon; Description: {cm:CreateQuickLaunchIcon}; GroupDescription: {cm:AdditionalIcons}; OnlyBelowVersion: 0,6.01; Flags: unchecked
-
 Name: reset_settings; Description: {cm:tsk_ResetSettings}; GroupDescription: {cm:tsk_Other}; Check: SettingsExistCheck(); Flags: checkedonce unchecked
 
 
