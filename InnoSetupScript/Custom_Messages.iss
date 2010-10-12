@@ -36,15 +36,15 @@ en.sm_ReadmeFile=ReadMe
 en.sm_com_ReadmeFile=Subtitle Edit's ReadMe
 
 
-dk.msg_SetupIsRunningWarning=Subtitle Edit Setup is already running!
-dk.msg_AskToDownNET=Subtitle Edit requires the .NET Framework 2.0. Please download and install the .NET Framework and run setup again. %n%nDo you want to download the .NET Framework 2.0 now?
-dk.msg_DeleteSettings=Do you also want to delete Subtitle Edit's settings? %nIf you plan on reinstalling Subtitle Edit you do not have to delete them.
-dk.tsk_AllUsers=For all users
-dk.tsk_CurrentUser=For the current user only
-dk.tsk_Other=Other:
-dk.tsk_ResetSettings=Reset Subtitle Edit's settings
-dk.run_VisitWebsite=Visit Subtitle Edit's Website
-dk.sm_com_Changelog=Subtitle Edit's Changelog
+dk.msg_SetupIsRunningWarning=Subtitle Edit Setup kører allerede!
+dk.msg_AskToDownNET=Subtitle Edit kræver .NET Framework 2.0. Download and installer .NET Framework og kør setup igen. %n%nVil du downloade .NET Framework 2.0 nu?
+dk.msg_DeleteSettings=Vil du også slette Subtitle Edit indstillinger? %nHvis de vil geninstallere Subtitle Edit senere kan du beholde disse indstillinger.
+dk.tsk_AllUsers=For alle brugere
+dk.tsk_CurrentUser=Kun for aktulle bruger
+dk.tsk_Other=Andre:
+dk.tsk_ResetSettings=Nulstil Subtitle Edit indstillinger
+dk.run_VisitWebsite=Besøg Subtitle Edits Website
+dk.sm_com_Changelog=Subtitle Edit ændringslog
 dk.sm_ReadmeFile=ReadMe
 dk.sm_com_ReadmeFile=Subtitle Edit's ReadMe
 
