@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:wsap="http://schemas.xmlsoap.org/ws/2004/08/addressing/policy" xmlns:wsa10="http://www.w3.org/2005/08/addressing" xmlns:tns="http://api.microsofttranslator.com/V2" xmlns:msc="http://schemas.microsoft.com/ws/2005/12/wsdl/contract" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:wsx="http://schemas.xmlsoap.org/ws/2004/09/mex" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:wsam="http://www.w3.org/2007/05/addressing/metadata" xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="http://api.microsofttranslator.com/V2" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <xsd:schema targetNamespace="http://api.microsofttranslator.com/V2/Imports">
+      <xsd:import schemaLocation="http://api.microsofttranslator.com/V2/soap.svc?xsd=xsd0" namespace="http://api.microsofttranslator.com/V2" />
+      <xsd:import schemaLocation="http://api.microsofttranslator.com/V2/soap.svc?xsd=xsd1" namespace="http://schemas.microsoft.com/2003/10/Serialization/" />
+      <xsd:import schemaLocation="http://api.microsofttranslator.com/V2/soap.svc?xsd=xsd2" namespace="http://schemas.microsoft.com/2003/10/Serialization/Arrays" />
+      <xsd:import schemaLocation="http://api.microsofttranslator.com/V2/soap.svc?xsd=xsd3" namespace="http://schemas.datacontract.org/2004/07/Microsoft.MT.Web.Service.V2" />
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="LanguageService_AddTranslation_InputMessage">
+    <wsdl:part name="parameters" element="tns:AddTranslation" />
+  </wsdl:message>
+  <wsdl:message name="LanguageService_AddTranslation_OutputMessage">
+    <wsdl:part name="parameters" element="tns:AddTranslationResponse" />
+  </wsdl:message>
+  <wsdl:message name="LanguageService_BreakSentences_InputMessage">
+    <wsdl:part name="parameters" element="tns:BreakSentences" />
+  </wsdl:message>
+  <wsdl:message name="LanguageService_BreakSentences_OutputMessage">
+    <wsdl:part name="parameters" element="tns:BreakSentencesResponse" />
+  </wsdl:message>
+  <wsdl:message name="LanguageService_Detect_InputMessage">
+    <wsdl:part name="parameters" element="tns:Detect" />
+  </wsdl:message>
+  <wsdl:message name="LanguageService_Detect_OutputMessage">
+    <wsdl:part name="parameters" element="tns:DetectResponse" />
+  </wsdl:message>
+  <wsdl:message name="LanguageService_DetectArray_InputMessage">
+    <wsdl:part name="parameters" element="tns:DetectArray" />
+  </wsdl:message>
+  <wsdl:message name="LanguageService_DetectArray_OutputMessage">
+    <wsdl:part name="parameters" element="tns:DetectArrayResponse" />
+  </wsdl:message>
+  <wsdl:message name="LanguageService_GetAppIdToken_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetAppIdToken" />
+  </wsdl:message>
+  <wsdl:message name="LanguageService_GetAppIdToken_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetAppIdTokenResponse" />
+  </wsdl:message>
+  <wsdl:message name="LanguageService_GetLanguageNames_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetLanguageNames" />
+  </wsdl:message>
+  <wsdl:message name="LanguageService_GetLanguageNames_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetLanguageNamesResponse" />
+  </wsdl:message>
+  <wsdl:message name="LanguageService_GetLanguagesForSpeak_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetLanguagesForSpeak" />
+  </wsdl:message>
+  <wsdl:message name="LanguageService_GetLanguagesForSpeak_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetLanguagesForSpeakResponse" />
+  </wsdl:message>
+  <wsdl:message name="LanguageService_GetLanguagesForTranslate_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetLanguagesForTranslate" />
+  </wsdl:message>
+  <wsdl:message name="LanguageService_GetLanguagesForTranslate_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetLanguagesForTranslateResponse" />
+  </wsdl:message>
+  <wsdl:message name="LanguageService_GetTranslations_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetTranslations" />
+  </wsdl:message>
+  <wsdl:message name="LanguageService_GetTranslations_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetTranslationsResponse" />
+  </wsdl:message>
+  <wsdl:message name="LanguageService_Translate_InputMessage">
+    <wsdl:part name="parameters" element="tns:Translate" />
+  </wsdl:message>
+  <wsdl:message name="LanguageService_Translate_OutputMessage">
+    <wsdl:part name="parameters" element="tns:TranslateResponse" />
+  </wsdl:message>
+  <wsdl:message name="LanguageService_AddTranslationArray_InputMessage">
+    <wsdl:part name="parameters" element="tns:AddTranslationArray" />
+  </wsdl:message>
+  <wsdl:message name="LanguageService_AddTranslationArray_OutputMessage">
+    <wsdl:part name="parameters" element="tns:AddTranslationArrayResponse" />
+  </wsdl:message>
+  <wsdl:message name="LanguageService_GetTranslationsArray_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetTranslationsArray" />
+  </wsdl:message>
+  <wsdl:message name="LanguageService_GetTranslationsArray_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetTranslationsArrayResponse" />
+  </wsdl:message>
+  <wsdl:message name="LanguageService_Speak_InputMessage">
+    <wsdl:part name="parameters" element="tns:Speak" />
+  </wsdl:message>
+  <wsdl:message name="LanguageService_Speak_OutputMessage">
+    <wsdl:part name="parameters" element="tns:SpeakResponse" />
+  </wsdl:message>
+  <wsdl:message name="LanguageService_TranslateArray_InputMessage">
+    <wsdl:part name="parameters" element="tns:TranslateArray" />
+  </wsdl:message>
+  <wsdl:message name="LanguageService_TranslateArray_OutputMessage">
+    <wsdl:part name="parameters" element="tns:TranslateArrayResponse" />
+  </wsdl:message>
+  <wsdl:portType name="LanguageService">
+    <wsdl:operation name="AddTranslation">
+      <wsdl:input wsaw:Action="http://api.microsofttranslator.com/V2/LanguageService/AddTranslation" message="tns:LanguageService_AddTranslation_InputMessage" />
+      <wsdl:output wsaw:Action="http://api.microsofttranslator.com/V2/LanguageService/AddTranslationResponse" message="tns:LanguageService_AddTranslation_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="BreakSentences">
+      <wsdl:input wsaw:Action="http://api.microsofttranslator.com/V2/LanguageService/BreakSentences" message="tns:LanguageService_BreakSentences_InputMessage" />
+      <wsdl:output wsaw:Action="http://api.microsofttranslator.com/V2/LanguageService/BreakSentencesResponse" message="tns:LanguageService_BreakSentences_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="Detect">
+      <wsdl:input wsaw:Action="http://api.microsofttranslator.com/V2/LanguageService/Detect" message="tns:LanguageService_Detect_InputMessage" />
+      <wsdl:output wsaw:Action="http://api.microsofttranslator.com/V2/LanguageService/DetectResponse" message="tns:LanguageService_Detect_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="DetectArray">
+      <wsdl:input wsaw:Action="http://api.microsofttranslator.com/V2/LanguageService/DetectArray" message="tns:LanguageService_DetectArray_InputMessage" />
+      <wsdl:output wsaw:Action="http://api.microsofttranslator.com/V2/LanguageService/DetectArrayResponse" message="tns:LanguageService_DetectArray_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetAppIdToken">
+      <wsdl:input wsaw:Action="http://api.microsofttranslator.com/V2/LanguageService/GetAppIdToken" message="tns:LanguageService_GetAppIdToken_InputMessage" />
+      <wsdl:output wsaw:Action="http://api.microsofttranslator.com/V2/LanguageService/GetAppIdTokenResponse" message="tns:LanguageService_GetAppIdToken_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetLanguageNames">
+      <wsdl:input wsaw:Action="http://api.microsofttranslator.com/V2/LanguageService/GetLanguageNames" message="tns:LanguageService_GetLanguageNames_InputMessage" />
+      <wsdl:output wsaw:Action="http://api.microsofttranslator.com/V2/LanguageService/GetLanguageNamesResponse" message="tns:LanguageService_GetLanguageNames_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetLanguagesForSpeak">
+      <wsdl:input wsaw:Action="http://api.microsofttranslator.com/V2/LanguageService/GetLanguagesForSpeak" message="tns:LanguageService_GetLanguagesForSpeak_InputMessage" />
+      <wsdl:output wsaw:Action="http://api.microsofttranslator.com/V2/LanguageService/GetLanguagesForSpeakResponse" message="tns:LanguageService_GetLanguagesForSpeak_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetLanguagesForTranslate">
+      <wsdl:input wsaw:Action="http://api.microsofttranslator.com/V2/LanguageService/GetLanguagesForTranslate" message="tns:LanguageService_GetLanguagesForTranslate_InputMessage" />
+      <wsdl:output wsaw:Action="http://api.microsofttranslator.com/V2/LanguageService/GetLanguagesForTranslateResponse" message="tns:LanguageService_GetLanguagesForTranslate_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetTranslations">
+      <wsdl:input wsaw:Action="http://api.microsofttranslator.com/V2/LanguageService/GetTranslations" message="tns:LanguageService_GetTranslations_InputMessage" />
+      <wsdl:output wsaw:Action="http://api.microsofttranslator.com/V2/LanguageService/GetTranslationsResponse" message="tns:LanguageService_GetTranslations_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="Translate">
+      <wsdl:input wsaw:Action="http://api.microsofttranslator.com/V2/LanguageService/Translate" message="tns:LanguageService_Translate_InputMessage" />
+      <wsdl:output wsaw:Action="http://api.microsofttranslator.com/V2/LanguageService/TranslateResponse" message="tns:LanguageService_Translate_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="AddTranslationArray">
+      <wsdl:input wsaw:Action="http://api.microsofttranslator.com/V2/LanguageService/AddTranslationArray" message="tns:LanguageService_AddTranslationArray_InputMessage" />
+      <wsdl:output wsaw:Action="http://api.microsofttranslator.com/V2/LanguageService/AddTranslationArrayResponse" message="tns:LanguageService_AddTranslationArray_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="GetTranslationsArray">
+      <wsdl:input wsaw:Action="http://api.microsofttranslator.com/V2/LanguageService/GetTranslationsArray" message="tns:LanguageService_GetTranslationsArray_InputMessage" />
+      <wsdl:output wsaw:Action="http://api.microsofttranslator.com/V2/LanguageService/GetTranslationsArrayResponse" message="tns:LanguageService_GetTranslationsArray_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="Speak">
+      <wsdl:input wsaw:Action="http://api.microsofttranslator.com/V2/LanguageService/Speak" message="tns:LanguageService_Speak_InputMessage" />
+      <wsdl:output wsaw:Action="http://api.microsofttranslator.com/V2/LanguageService/SpeakResponse" message="tns:LanguageService_Speak_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="TranslateArray">
+      <wsdl:input wsaw:Action="http://api.microsofttranslator.com/V2/LanguageService/TranslateArray" message="tns:LanguageService_TranslateArray_InputMessage" />
+      <wsdl:output wsaw:Action="http://api.microsofttranslator.com/V2/LanguageService/TranslateArrayResponse" message="tns:LanguageService_TranslateArray_OutputMessage" />
+    </wsdl:operation>
+  </wsdl:portType>
+</wsdl:definitions>
