@@ -16,14 +16,12 @@
 ;*
 ;* You should have received a copy of the GNU General Public License
 ;* along with Subtitle Edit.  If not, see <http://www.gnu.org/licenses/>.
-;
-;
-;
+
 ; Requirements:
-; *Inno Setup QuickStart Pack v5.3.11(+): http://www.jrsoftware.org/isdl.php#qsp
+; Inno Setup QuickStart Pack v5.3.11(+): http://www.jrsoftware.org/isdl.php#qsp
 
 
-#define installer_build_number "02"
+#define installer_build_number "03"
 
 #define VerMajor
 #define VerMinor
@@ -33,7 +31,7 @@
 #expr ParseVersion("..\src\bin\Release\SubtitleEdit.exe", VerMajor, VerMinor, VerBuild, VerRevision)
 #define app_version str(VerMajor) + "." + str(VerMinor) + "." + str(VerBuild) + "." + str(VerRevision)
 
-;the following simple_app_version is for 2 digit releases, one of the two must be uncommented at a time
+;the following simple_app_version is for 3 digit releases, one of the two must be uncommented at a time
 ;#define simple_app_version str(VerMajor) + "." + str(VerMinor) + "." + str(VerBuild)
 #define simple_app_version str(VerMajor) + "." + str(VerMinor)
 
@@ -65,29 +63,26 @@ VersionInfoProductTextVersion={#= simple_app_version}
 MinVersion=0,5.0.2195
 ;AppReadmeFile={app}\Readme.txt
 LicenseFile=..\src\gpl.txt
-InfoAfterFile=Changelog.txt
+InfoAfterFile=..\src\Changelog.txt
 ;InfoBeforeFile=..\Readme.txt
 SetupIconFile=..\src\Icons\SE.ico
 ;WizardImageFile=Icons\WizardImageFile.bmp
 WizardSmallImageFile=Icons\WizardSmallImageFile.bmp
 OutputDir=.
 OutputBaseFilename=SubtitleEdit-{#= simple_app_version}-setup
-AllowNoIcons=false
-Compression=lzma/Ultra64
-SolidCompression=false
-EnableDirDoesntExistWarning=false
-DirExistsWarning=no
-ShowTasksTreeLines=false
-AlwaysShowDirOnReadyPage=false
-AlwaysShowGroupOnReadyPage=false
+AllowNoIcons=yes
+Compression=lzma/ultra64
+SolidCompression=yes
+EnableDirDoesntExistWarning=no
+DirExistsWarning=auto
+ShowTasksTreeLines=yes
+DisableReadyPage=yes
 PrivilegesRequired=admin
 ShowLanguageDialog=yes
-DisableDirPage=false
+DisableDirPage=auto
 DisableProgramGroupPage=auto
 AppMutex=Subtitle_Edit_Mutex
-AlwaysShowComponentsList=true
-FlatComponentsList=true
-DisableReadyPage=true
+
 
 [Languages]
 Name: en; MessagesFile: compiler:Default.isl
@@ -107,13 +102,23 @@ Name: ro; MessagesFile: Languages\Romanian.isl
 BeveledLabel=Subtitle Edit v{#= simple_app_version} by Nikse, Setup v{#= installer_build_number} built on {#= installer_build_date}
 
 
+[Tasks]
+Name: desktopicon; Description: {cm:CreateDesktopIcon}; GroupDescription: {cm:AdditionalIcons}
+Name: desktopicon\user; Description: {cm:tsk_CurrentUser}; GroupDescription: {cm:AdditionalIcons}; Flags: exclusive
+Name: desktopicon\common; Description: {cm:tsk_AllUsers}; GroupDescription: {cm:AdditionalIcons}; Flags: unchecked exclusive
+Name: quicklaunchicon; Description: {cm:CreateQuickLaunchIcon}; GroupDescription: {cm:AdditionalIcons}; OnlyBelowVersion: 0,6.01; Flags: unchecked
+Name: reset_settings; Description: {cm:tsk_ResetSettings}; GroupDescription: {cm:tsk_Other}; Check: SettingsExistCheck(); Flags: checkedonce unchecked
+
+
 [Files]
-Source: Changelog.txt; DestDir: {app}; Flags: ignoreversion
+Source: ..\src\Changelog.txt; DestDir: {app}; Flags: ignoreversion
+Source: ..\src\gpl.txt; DestDir: {app}; Flags: ignoreversion
 Source: ..\src\Bin\Release\Hunspellx86.dll; DestDir: {app}; Flags: ignoreversion
 Source: ..\src\Bin\Release\Interop.QuartzTypeLib.dll; DestDir: {app}; Flags: ignoreversion
 Source: ..\src\Bin\Release\NHunspell.dll; DestDir: {app}; Flags: ignoreversion
 Source: ..\src\Bin\Release\SubtitleEdit.exe; DestDir: {app}; Flags: ignoreversion
 Source: ..\src\Bin\Release\tessnet2_32.dll; DestDir: {app}; Flags: ignoreversion
+Source: Icons\uninstall.ico; DestDir: {app}; Flags: ignoreversion
 Source: ..\src\Bin\Release\Icons\Find.png; DestDir: {app}\Icons; Flags: ignoreversion
 Source: ..\src\Bin\Release\Icons\Help.png; DestDir: {app}\Icons; Flags: ignoreversion
 Source: ..\src\Bin\Release\Icons\New.png; DestDir: {app}\Icons; Flags: ignoreversion
@@ -143,16 +148,6 @@ Source: ..\TessData\eng.pffmtable; DestDir: {app}\TessData; Flags: ignoreversion
 Source: ..\TessData\eng.unicharset; DestDir: {app}\TessData; Flags: ignoreversion
 Source: ..\TessData\eng.user-words; DestDir: {app}\TessData; Flags: ignoreversion
 Source: ..\TessData\eng.word-dawg; DestDir: {app}\TessData; Flags: ignoreversion
-Source: Icons\uninstall.ico; DestDir: {app}; Flags: ignoreversion
-
-
-[Tasks]
-Name: desktopicon; Description: {cm:CreateDesktopIcon}; GroupDescription: {cm:AdditionalIcons}
-Name: desktopicon\user; Description: {cm:tsk_CurrentUser}; GroupDescription: {cm:AdditionalIcons}; Flags: exclusive
-Name: desktopicon\common; Description: {cm:tsk_AllUsers}; GroupDescription: {cm:AdditionalIcons}; Flags: unchecked exclusive
-Name: quicklaunchicon; Description: {cm:CreateQuickLaunchIcon}; GroupDescription: {cm:AdditionalIcons}; OnlyBelowVersion: 0,6.01; Flags: unchecked
-
-Name: reset_settings; Description: {cm:tsk_ResetSettings}; GroupDescription: {cm:tsk_Other}; Check: SettingsExistCheck(); Flags: checkedonce unchecked
 
 
 [Icons]
@@ -170,8 +165,7 @@ Name: {userappdata}\Microsoft\Internet Explorer\Quick Launch\Subtitle Edit; File
 [InstallDelete]
 Type: files; Name: {userdesktop}\Subtitle Edit.lnk; Check: NOT IsTaskSelected('desktopicon\user') AND IsUpdate()
 Type: files; Name: {commondesktop}\Subtitle Edit.lnk; Check: NOT IsTaskSelected('desktopicon\common') AND IsUpdate()
-Type: files; Name: {userappdata}\Subtitle Edit\settings.xml; Tasks: reset_settings
-Type: dirifempty; Name: {userappdata}\Subtitle Edit; Tasks: reset_settings
+Type: files; Name: {userappdata}\Subtitle Edit\Settings.xml; Tasks: reset_settings
 
 
 [Run]
@@ -217,6 +211,15 @@ begin
       Result := False;
     end;
   end;
+end;
+
+
+procedure CurPageChanged(CurPageID: Integer);
+begin
+  if CurPageID = wpSelectTasks then
+    WizardForm.NextButton.Caption := SetupMessage(msgButtonInstall)
+  else
+    WizardForm.NextButton.Caption := SetupMessage(msgButtonNext);
 end;
 
 
