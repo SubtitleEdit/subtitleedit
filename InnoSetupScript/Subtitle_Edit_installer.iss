@@ -50,6 +50,7 @@ AppPublisherURL=http://www.nikse.dk/se/
 AppSupportURL=http://www.nikse.dk/se/
 AppUpdatesURL=http://www.nikse.dk/se/
 UninstallDisplayName=Subtitle Edit {#= simple_app_version}
+UninstallDisplayIcon={app}\SubtitleEdit.exe
 DefaultDirName={pf}\Subtitle Edit
 DefaultGroupName=Subtitle Edit
 VersionInfoCompany=Nikse
@@ -94,7 +95,7 @@ Name: nl; MessagesFile: compiler:Languages\Dutch.isl
 Name: pl; MessagesFile: compiler:Languages\Polish.isl
 Name: ro; MessagesFile: Languages\Romanian.isl
 
-; Include the installer's custom messages and services script
+; Include the installer's custom messages
 #include "Custom_Messages.iss"
 
 
