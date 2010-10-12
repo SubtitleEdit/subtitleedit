@@ -1,0 +1,157 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Windows.Forms;
+using Nikse.SubtitleEdit.Logic.VobSub;
+using Nikse.SubtitleEdit.Logic;
+
+namespace Nikse.SubtitleEdit.Forms
+{
+    public sealed partial class DvdSubRipChooseLanguage : Form
+    {
+        class SubListBoxItem
+        {
+            public string Name { get; set; }
+            public VobSubMergedPack SubPack { get; set; }
+            public override string ToString()
+            {
+                return Name;
+            }
+
+            public SubListBoxItem(string name, VobSubMergedPack subPack)
+            {
+                Name = name;
+                SubPack = subPack;
+            }
+        }
+
+        List<VobSubMergedPack> _mergedVobSubPacks;
+        List<Color> _palette;
+
+        public List<VobSubMergedPack> SelectedVobSubMergedPacks { get; private set; }
+        
+        public DvdSubRipChooseLanguage()
+        {
+            InitializeComponent();
+            Text = Configuration.Settings.Language.DvdSubRipChooseLanguage.Title;
+            labelChooseLanguage.Text = Configuration.Settings.Language.DvdSubRipChooseLanguage.ChooseLanguageStreamId;
+            buttonOK.Text = Configuration.Settings.Language.General.OK;
+            buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
+        }
+
+        internal void Initialize(List<VobSubMergedPack> mergedVobSubPacks, List<Color> palette, List<string> languages, string selectedLanguage)
+        {
+            _mergedVobSubPacks = mergedVobSubPacks;
+            _palette = palette;
+
+            List<int> uniqueLanguageStreamIds = new List<int>();
+            foreach (var pack in mergedVobSubPacks)
+            {
+                if (!uniqueLanguageStreamIds.Contains(pack.StreamId))
+                    uniqueLanguageStreamIds.Add(pack.StreamId);
+            }
+
+            comboBoxLanguages.Items.Clear();
+            foreach (string languageName in languages)
+            {
+                if (uniqueLanguageStreamIds.Contains(GetLanguageIdFromString(languageName))) // only list languages actually found in vob
+                {
+                    comboBoxLanguages.Items.Add(languageName);
+                    if (languageName == selectedLanguage)
+                        comboBoxLanguages.SelectedIndex = comboBoxLanguages.Items.Count - 1;
+                    uniqueLanguageStreamIds.Remove(GetLanguageIdFromString(languageName));
+                }
+            }
+
+            foreach (var existingLanguageId in uniqueLanguageStreamIds)
+                comboBoxLanguages.Items.Add(string.Format(Configuration.Settings.Language.DvdSubRipChooseLanguage.UnknownLanguage + " (0x{0:x})", existingLanguageId)); // subtitle track not supplied from IFO
+
+
+
+            if (comboBoxLanguages.Items.Count > 0 && comboBoxLanguages.SelectedIndex < 0)
+                comboBoxLanguages.SelectedIndex = 0;
+        }
+
+        private static string ShowInSrtFormat(TimeSpan ts)
+        {
+            return string.Format("{0:00}:{1:00}:{2:00},{3:000}", ts.Hours, ts.Minutes, ts.Seconds, ts.Milliseconds);
+        }
+
+        private void ListBox1SelectedIndexChanged(object sender, EventArgs e)
+        {
+            SubListBoxItem x = listBox1.Items[listBox1.SelectedIndex] as SubListBoxItem;
+
+            Bitmap bmp = x.SubPack.SubPicture.GetBitmap(_palette, Color.Transparent, Color.Wheat, Color.Black, Color.DarkGray);
+            if (bmp.Width > pictureBoxImage.Width || bmp.Height > pictureBoxImage.Height)
+            {
+                float width = bmp.Width;
+                float height = bmp.Height;
+                while (width > pictureBoxImage.Width || height > pictureBoxImage.Height)
+                {
+                    width = width * 95 / 100;
+                    height = height * 95 / 100;
+                }
+
+                Bitmap temp = new Bitmap((int)width, (int)height);
+                using (Graphics g = Graphics.FromImage((Image)temp))
+                    g.DrawImage(bmp, 0, 0, (int)width, (int)height);
+                bmp = temp;
+            }
+            pictureBoxImage.Image = bmp;
+            groupBoxImage.Text = string.Format(Configuration.Settings.Language.DvdSubRipChooseLanguage.SubtitleImageXofYAndWidthXHeight, listBox1.SelectedIndex + 1, listBox1.Items.Count, bmp.Width, bmp.Height);
+        }
+
+
+        private static int GetLanguageIdFromString(string currentLanguage)
+        {
+            currentLanguage = currentLanguage.Substring(currentLanguage.IndexOf("0x") + 2).TrimEnd(')');
+            return Convert.ToInt32(currentLanguage, 16);
+        }
+
+        private void ComboBoxLanguagesSelectedIndexChanged(object sender, EventArgs e)
+        {
+            int chosenStreamId = GetLanguageIdFromString(comboBoxLanguages.Items[comboBoxLanguages.SelectedIndex].ToString());
+
+            listBox1.Items.Clear();
+            for (int i = 0; i < _mergedVobSubPacks.Count; i++)
+            {
+                var x = _mergedVobSubPacks[i];
+                if (x.StreamId == chosenStreamId)
+                {
+                    string s = string.Format("#{0:000}: Stream-id=0X{1:X} - {2} --> {3}", i, x.StreamId, ShowInSrtFormat(x.StartTime), ShowInSrtFormat(x.EndTime));
+                    listBox1.Items.Add(new SubListBoxItem(s, x));
+                }
+            }
+            if (listBox1.Items.Count > 0)
+                listBox1.SelectedIndex = 0;
+        }
+
+        private void ButtonOkClick(object sender, EventArgs e)
+        {
+            if (listBox1.Items.Count > -1)
+            {
+                SelectedVobSubMergedPacks = new List<VobSubMergedPack>();
+                foreach (var x in listBox1.Items)
+                {
+                    SelectedVobSubMergedPacks.Add((x as SubListBoxItem).SubPack);
+                }
+                DialogResult = DialogResult.OK;
+            }
+        }
+
+        private void ButtonCancelClick(object sender, EventArgs e)
+        {
+            DialogResult = DialogResult.Cancel;
+        }
+
+        private void DvdSubRipShowSubtitles_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Escape)
+            {
+                e.SuppressKeyPress = true;
+                DialogResult = DialogResult.Cancel;
+            }
+        }
+
+    }
+}

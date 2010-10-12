@@ -1,0 +1,449 @@
+﻿using Nikse.SubtitleEdit.Logic;
+namespace Nikse.SubtitleEdit.Forms
+{
+    sealed partial class VisualSync
+    {
+        /// <summary>
+        /// Required designer variable.
+        /// </summary>
+        private System.ComponentModel.IContainer components = null;
+
+        /// <summary>
+        /// Clean up any resources being used.
+        /// </summary>
+        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing && (components != null))
+            {
+                components.Dispose();
+            }
+            base.Dispose(disposing);
+        }
+
+        #region Windows Form Designer generated code
+
+        /// <summary>
+        /// Required method for Designer support - do not modify
+        /// the contents of this method with the code editor.
+        /// </summary>
+        private void InitializeComponent()
+        {
+            this.components = new System.ComponentModel.Container();
+            this.buttonOpenMovie = new System.Windows.Forms.Button();
+            this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this.buttonOK = new System.Windows.Forms.Button();
+            this.groupBoxStartScene = new System.Windows.Forms.GroupBox();
+            this.labelStartSubtitle = new System.Windows.Forms.Label();
+            this.panelControlsStart = new System.Windows.Forms.Panel();
+            this.buttonStartVerify = new System.Windows.Forms.Button();
+            this.buttonGotoStartSubtitlePosition = new System.Windows.Forms.Button();
+            this.buttonFindTextStart = new System.Windows.Forms.Button();
+            this.buttonStartThreeSecondsBack = new System.Windows.Forms.Button();
+            this.buttonStartHalfASecondBack = new System.Windows.Forms.Button();
+            this.comboBoxStartTexts = new System.Windows.Forms.ComboBox();
+            this.groupBoxEndScene = new System.Windows.Forms.GroupBox();
+            this.labelEndSubtitle = new System.Windows.Forms.Label();
+            this.panelControlsEnd = new System.Windows.Forms.Panel();
+            this.buttonEndVerify = new System.Windows.Forms.Button();
+            this.buttonGotoEndSubtitlePosition = new System.Windows.Forms.Button();
+            this.buttonFindTextEnd = new System.Windows.Forms.Button();
+            this.buttonThreeSecondsBack = new System.Windows.Forms.Button();
+            this.buttonEndHalfASecondBack = new System.Windows.Forms.Button();
+            this.comboBoxEndTexts = new System.Windows.Forms.ComboBox();
+            this.buttonCancel = new System.Windows.Forms.Button();
+            this.labelVideoInfo = new System.Windows.Forms.Label();
+            this.groupBoxMovieInfo = new System.Windows.Forms.GroupBox();
+            this.buttonSync = new System.Windows.Forms.Button();
+            this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
+            this.timer2 = new System.Windows.Forms.Timer(this.components);
+            this.labelTip = new System.Windows.Forms.Label();
+            this.MediaPlayerEnd = new Nikse.SubtitleEdit.Controls.VideoPlayerContainer();
+            this.MediaPlayerStart = new Nikse.SubtitleEdit.Controls.VideoPlayerContainer();
+            this.groupBoxStartScene.SuspendLayout();
+            this.panelControlsStart.SuspendLayout();
+            this.groupBoxEndScene.SuspendLayout();
+            this.panelControlsEnd.SuspendLayout();
+            this.groupBoxMovieInfo.SuspendLayout();
+            this.SuspendLayout();
+            // 
+            // buttonOpenMovie
+            // 
+            this.buttonOpenMovie.Location = new System.Drawing.Point(12, 12);
+            this.buttonOpenMovie.Name = "buttonOpenMovie";
+            this.buttonOpenMovie.Size = new System.Drawing.Size(100, 21);
+            this.buttonOpenMovie.TabIndex = 5;
+            this.buttonOpenMovie.Text = "Open movie...";
+            this.buttonOpenMovie.UseVisualStyleBackColor = true;
+            this.buttonOpenMovie.Click += new System.EventHandler(this.ButtonOpenMovieClick);
+            // 
+            // timer1
+            // 
+            this.timer1.Tick += new System.EventHandler(this.Timer1Tick);
+            // 
+            // buttonOK
+            // 
+            this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonOK.DialogResult = System.Windows.Forms.DialogResult.OK;
+            this.buttonOK.Location = new System.Drawing.Point(749, 498);
+            this.buttonOK.Name = "buttonOK";
+            this.buttonOK.Size = new System.Drawing.Size(75, 21);
+            this.buttonOK.TabIndex = 3;
+            this.buttonOK.Text = "&OK";
+            this.buttonOK.UseVisualStyleBackColor = true;
+            this.buttonOK.Click += new System.EventHandler(this.buttonOK_Click);
+            // 
+            // groupBoxStartScene
+            // 
+            this.groupBoxStartScene.Controls.Add(this.MediaPlayerStart);
+            this.groupBoxStartScene.Controls.Add(this.labelStartSubtitle);
+            this.groupBoxStartScene.Controls.Add(this.panelControlsStart);
+            this.groupBoxStartScene.Location = new System.Drawing.Point(12, 65);
+            this.groupBoxStartScene.Name = "groupBoxStartScene";
+            this.groupBoxStartScene.Size = new System.Drawing.Size(450, 399);
+            this.groupBoxStartScene.TabIndex = 0;
+            this.groupBoxStartScene.TabStop = false;
+            this.groupBoxStartScene.Text = "Start scene";
+            this.groupBoxStartScene.Enter += new System.EventHandler(this.GroupBoxStartSceneEnter);
+            // 
+            // labelStartSubtitle
+            // 
+            this.labelStartSubtitle.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.labelStartSubtitle.BackColor = System.Drawing.Color.Black;
+            this.labelStartSubtitle.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelStartSubtitle.ForeColor = System.Drawing.Color.White;
+            this.labelStartSubtitle.Location = new System.Drawing.Point(6, 296);
+            this.labelStartSubtitle.Name = "labelStartSubtitle";
+            this.labelStartSubtitle.Size = new System.Drawing.Size(438, 28);
+            this.labelStartSubtitle.TabIndex = 12;
+            this.labelStartSubtitle.Text = "labelStartSubtitle";
+            this.labelStartSubtitle.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // panelControlsStart
+            // 
+            this.panelControlsStart.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.panelControlsStart.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panelControlsStart.Controls.Add(this.buttonStartVerify);
+            this.panelControlsStart.Controls.Add(this.buttonGotoStartSubtitlePosition);
+            this.panelControlsStart.Controls.Add(this.buttonFindTextStart);
+            this.panelControlsStart.Controls.Add(this.buttonStartThreeSecondsBack);
+            this.panelControlsStart.Controls.Add(this.buttonStartHalfASecondBack);
+            this.panelControlsStart.Controls.Add(this.comboBoxStartTexts);
+            this.panelControlsStart.Location = new System.Drawing.Point(6, 327);
+            this.panelControlsStart.Name = "panelControlsStart";
+            this.panelControlsStart.Size = new System.Drawing.Size(438, 68);
+            this.panelControlsStart.TabIndex = 1;
+            // 
+            // buttonStartVerify
+            // 
+            this.buttonStartVerify.Location = new System.Drawing.Point(138, 37);
+            this.buttonStartVerify.Name = "buttonStartVerify";
+            this.buttonStartVerify.Size = new System.Drawing.Size(119, 21);
+            this.buttonStartVerify.TabIndex = 3;
+            this.buttonStartVerify.Text = "Play 2 secs and back";
+            this.buttonStartVerify.UseVisualStyleBackColor = true;
+            this.buttonStartVerify.Click += new System.EventHandler(this.ButtonStartVerifyClick);
+            // 
+            // buttonGotoStartSubtitlePosition
+            // 
+            this.buttonGotoStartSubtitlePosition.Location = new System.Drawing.Point(263, 37);
+            this.buttonGotoStartSubtitlePosition.Name = "buttonGotoStartSubtitlePosition";
+            this.buttonGotoStartSubtitlePosition.Size = new System.Drawing.Size(90, 21);
+            this.buttonGotoStartSubtitlePosition.TabIndex = 4;
+            this.buttonGotoStartSubtitlePosition.Text = "Goto sub pos";
+            this.buttonGotoStartSubtitlePosition.UseVisualStyleBackColor = true;
+            this.buttonGotoStartSubtitlePosition.Click += new System.EventHandler(this.ButtonGotoStartSubtitlePositionClick);
+            // 
+            // buttonFindTextStart
+            // 
+            this.buttonFindTextStart.Location = new System.Drawing.Point(359, 37);
+            this.buttonFindTextStart.Name = "buttonFindTextStart";
+            this.buttonFindTextStart.Size = new System.Drawing.Size(70, 21);
+            this.buttonFindTextStart.TabIndex = 5;
+            this.buttonFindTextStart.Text = "Find text...";
+            this.buttonFindTextStart.UseVisualStyleBackColor = true;
+            this.buttonFindTextStart.Click += new System.EventHandler(this.ButtonFindTextStartClick);
+            // 
+            // buttonStartThreeSecondsBack
+            // 
+            this.buttonStartThreeSecondsBack.Location = new System.Drawing.Point(6, 37);
+            this.buttonStartThreeSecondsBack.Name = "buttonStartThreeSecondsBack";
+            this.buttonStartThreeSecondsBack.Size = new System.Drawing.Size(60, 21);
+            this.buttonStartThreeSecondsBack.TabIndex = 1;
+            this.buttonStartThreeSecondsBack.Text = "< 3 secs";
+            this.buttonStartThreeSecondsBack.UseVisualStyleBackColor = true;
+            this.buttonStartThreeSecondsBack.Click += new System.EventHandler(this.ButtonStartThreeSecondsBackClick);
+            // 
+            // buttonStartHalfASecondBack
+            // 
+            this.buttonStartHalfASecondBack.Location = new System.Drawing.Point(72, 37);
+            this.buttonStartHalfASecondBack.Name = "buttonStartHalfASecondBack";
+            this.buttonStartHalfASecondBack.Size = new System.Drawing.Size(60, 21);
+            this.buttonStartHalfASecondBack.TabIndex = 2;
+            this.buttonStartHalfASecondBack.Text = "< ½ sec";
+            this.buttonStartHalfASecondBack.UseVisualStyleBackColor = true;
+            this.buttonStartHalfASecondBack.Click += new System.EventHandler(this.ButtonStartHalfASecondBackClick);
+            // 
+            // comboBoxStartTexts
+            // 
+            this.comboBoxStartTexts.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxStartTexts.FormattingEnabled = true;
+            this.comboBoxStartTexts.Location = new System.Drawing.Point(7, 10);
+            this.comboBoxStartTexts.Name = "comboBoxStartTexts";
+            this.comboBoxStartTexts.Size = new System.Drawing.Size(422, 21);
+            this.comboBoxStartTexts.TabIndex = 0;
+            // 
+            // groupBoxEndScene
+            // 
+            this.groupBoxEndScene.Controls.Add(this.MediaPlayerEnd);
+            this.groupBoxEndScene.Controls.Add(this.labelEndSubtitle);
+            this.groupBoxEndScene.Controls.Add(this.panelControlsEnd);
+            this.groupBoxEndScene.Location = new System.Drawing.Point(468, 65);
+            this.groupBoxEndScene.Name = "groupBoxEndScene";
+            this.groupBoxEndScene.Size = new System.Drawing.Size(450, 399);
+            this.groupBoxEndScene.TabIndex = 1;
+            this.groupBoxEndScene.TabStop = false;
+            this.groupBoxEndScene.Text = "End scene";
+            this.groupBoxEndScene.Enter += new System.EventHandler(this.GroupBoxEndSceneEnter);
+            // 
+            // labelEndSubtitle
+            // 
+            this.labelEndSubtitle.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.labelEndSubtitle.BackColor = System.Drawing.Color.Black;
+            this.labelEndSubtitle.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelEndSubtitle.ForeColor = System.Drawing.Color.White;
+            this.labelEndSubtitle.Location = new System.Drawing.Point(6, 296);
+            this.labelEndSubtitle.Name = "labelEndSubtitle";
+            this.labelEndSubtitle.Size = new System.Drawing.Size(438, 28);
+            this.labelEndSubtitle.TabIndex = 13;
+            this.labelEndSubtitle.Text = "labelEndSubtitle";
+            this.labelEndSubtitle.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // panelControlsEnd
+            // 
+            this.panelControlsEnd.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.panelControlsEnd.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panelControlsEnd.Controls.Add(this.buttonEndVerify);
+            this.panelControlsEnd.Controls.Add(this.buttonGotoEndSubtitlePosition);
+            this.panelControlsEnd.Controls.Add(this.buttonFindTextEnd);
+            this.panelControlsEnd.Controls.Add(this.buttonThreeSecondsBack);
+            this.panelControlsEnd.Controls.Add(this.buttonEndHalfASecondBack);
+            this.panelControlsEnd.Controls.Add(this.comboBoxEndTexts);
+            this.panelControlsEnd.Location = new System.Drawing.Point(7, 327);
+            this.panelControlsEnd.Name = "panelControlsEnd";
+            this.panelControlsEnd.Size = new System.Drawing.Size(438, 68);
+            this.panelControlsEnd.TabIndex = 1;
+            // 
+            // buttonEndVerify
+            // 
+            this.buttonEndVerify.Location = new System.Drawing.Point(139, 37);
+            this.buttonEndVerify.Name = "buttonEndVerify";
+            this.buttonEndVerify.Size = new System.Drawing.Size(118, 21);
+            this.buttonEndVerify.TabIndex = 3;
+            this.buttonEndVerify.Text = "Play 2 secs and back";
+            this.buttonEndVerify.UseVisualStyleBackColor = true;
+            this.buttonEndVerify.Click += new System.EventHandler(this.ButtonEndVerifyClick);
+            // 
+            // buttonGotoEndSubtitlePosition
+            // 
+            this.buttonGotoEndSubtitlePosition.Location = new System.Drawing.Point(263, 37);
+            this.buttonGotoEndSubtitlePosition.Name = "buttonGotoEndSubtitlePosition";
+            this.buttonGotoEndSubtitlePosition.Size = new System.Drawing.Size(90, 21);
+            this.buttonGotoEndSubtitlePosition.TabIndex = 4;
+            this.buttonGotoEndSubtitlePosition.Text = "Goto sub pos";
+            this.buttonGotoEndSubtitlePosition.UseVisualStyleBackColor = true;
+            this.buttonGotoEndSubtitlePosition.Click += new System.EventHandler(this.ButtonGotoEndSubtitlePositionClick);
+            // 
+            // buttonFindTextEnd
+            // 
+            this.buttonFindTextEnd.Location = new System.Drawing.Point(359, 37);
+            this.buttonFindTextEnd.Name = "buttonFindTextEnd";
+            this.buttonFindTextEnd.Size = new System.Drawing.Size(70, 21);
+            this.buttonFindTextEnd.TabIndex = 5;
+            this.buttonFindTextEnd.Text = "Find text...";
+            this.buttonFindTextEnd.UseVisualStyleBackColor = true;
+            this.buttonFindTextEnd.Click += new System.EventHandler(this.ButtonFindTextEndClick);
+            // 
+            // buttonThreeSecondsBack
+            // 
+            this.buttonThreeSecondsBack.Location = new System.Drawing.Point(7, 37);
+            this.buttonThreeSecondsBack.Name = "buttonThreeSecondsBack";
+            this.buttonThreeSecondsBack.Size = new System.Drawing.Size(60, 21);
+            this.buttonThreeSecondsBack.TabIndex = 1;
+            this.buttonThreeSecondsBack.Text = "< 3 secs";
+            this.buttonThreeSecondsBack.UseVisualStyleBackColor = true;
+            this.buttonThreeSecondsBack.Click += new System.EventHandler(this.ButtonThreeSecondsBackClick);
+            // 
+            // buttonEndHalfASecondBack
+            // 
+            this.buttonEndHalfASecondBack.Location = new System.Drawing.Point(73, 37);
+            this.buttonEndHalfASecondBack.Name = "buttonEndHalfASecondBack";
+            this.buttonEndHalfASecondBack.Size = new System.Drawing.Size(60, 21);
+            this.buttonEndHalfASecondBack.TabIndex = 2;
+            this.buttonEndHalfASecondBack.Text = "< ½ sec";
+            this.buttonEndHalfASecondBack.UseVisualStyleBackColor = true;
+            this.buttonEndHalfASecondBack.Click += new System.EventHandler(this.ButtonEndHalfASecondBackClick);
+            // 
+            // comboBoxEndTexts
+            // 
+            this.comboBoxEndTexts.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxEndTexts.FormattingEnabled = true;
+            this.comboBoxEndTexts.Location = new System.Drawing.Point(7, 10);
+            this.comboBoxEndTexts.Name = "comboBoxEndTexts";
+            this.comboBoxEndTexts.Size = new System.Drawing.Size(422, 21);
+            this.comboBoxEndTexts.TabIndex = 0;
+            // 
+            // buttonCancel
+            // 
+            this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            this.buttonCancel.Location = new System.Drawing.Point(830, 498);
+            this.buttonCancel.Name = "buttonCancel";
+            this.buttonCancel.Size = new System.Drawing.Size(75, 21);
+            this.buttonCancel.TabIndex = 4;
+            this.buttonCancel.Text = "C&ancel";
+            this.buttonCancel.UseVisualStyleBackColor = true;
+            // 
+            // labelVideoInfo
+            // 
+            this.labelVideoInfo.AutoSize = true;
+            this.labelVideoInfo.Location = new System.Drawing.Point(6, 16);
+            this.labelVideoInfo.Name = "labelVideoInfo";
+            this.labelVideoInfo.Size = new System.Drawing.Size(85, 13);
+            this.labelVideoInfo.TabIndex = 13;
+            this.labelVideoInfo.Text = "No video loaded";
+            // 
+            // groupBoxMovieInfo
+            // 
+            this.groupBoxMovieInfo.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxMovieInfo.Controls.Add(this.labelVideoInfo);
+            this.groupBoxMovieInfo.Location = new System.Drawing.Point(132, 8);
+            this.groupBoxMovieInfo.Name = "groupBoxMovieInfo";
+            this.groupBoxMovieInfo.Size = new System.Drawing.Size(786, 53);
+            this.groupBoxMovieInfo.TabIndex = 14;
+            this.groupBoxMovieInfo.TabStop = false;
+            this.groupBoxMovieInfo.Text = "Movie info";
+            // 
+            // buttonSync
+            // 
+            this.buttonSync.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.buttonSync.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.buttonSync.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.buttonSync.Location = new System.Drawing.Point(395, 482);
+            this.buttonSync.Name = "buttonSync";
+            this.buttonSync.Size = new System.Drawing.Size(148, 37);
+            this.buttonSync.TabIndex = 2;
+            this.buttonSync.Text = "Sync!";
+            this.buttonSync.UseVisualStyleBackColor = true;
+            this.buttonSync.Click += new System.EventHandler(this.ButtonSyncClick);
+            // 
+            // openFileDialog1
+            // 
+            this.openFileDialog1.FileName = "openFileDialog1";
+            // 
+            // labelTip
+            // 
+            this.labelTip.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.labelTip.AutoSize = true;
+            this.labelTip.ForeColor = System.Drawing.Color.Silver;
+            this.labelTip.Location = new System.Drawing.Point(12, 474);
+            this.labelTip.Name = "labelTip";
+            this.labelTip.Size = new System.Drawing.Size(320, 13);
+            this.labelTip.TabIndex = 15;
+            this.labelTip.Text = "Tip: Use <ctrl+arrow left/right> keys to move 100 ms back/forward";
+            // 
+            // MediaPlayerEnd
+            // 
+            this.MediaPlayerEnd.BackColor = System.Drawing.Color.Black;
+            this.MediaPlayerEnd.CurrentPosition = 0D;
+            this.MediaPlayerEnd.Location = new System.Drawing.Point(6, 34);
+            this.MediaPlayerEnd.Name = "MediaPlayerEnd";
+            this.MediaPlayerEnd.ShowStopButton = true;
+            this.MediaPlayerEnd.Size = new System.Drawing.Size(438, 263);
+            this.MediaPlayerEnd.TabIndex = 14;
+            this.MediaPlayerEnd.VideoPlayer = null;
+            this.MediaPlayerEnd.Volume = 0D;
+            this.MediaPlayerEnd.OnButtonClicked += new System.EventHandler(this.MediaPlayerEnd_OnButtonClicked);
+            // 
+            // MediaPlayerStart
+            // 
+            this.MediaPlayerStart.BackColor = System.Drawing.Color.Black;
+            this.MediaPlayerStart.CurrentPosition = 0D;
+            this.MediaPlayerStart.Location = new System.Drawing.Point(6, 34);
+            this.MediaPlayerStart.Name = "MediaPlayerStart";
+            this.MediaPlayerStart.ShowStopButton = true;
+            this.MediaPlayerStart.Size = new System.Drawing.Size(438, 263);
+            this.MediaPlayerStart.TabIndex = 13;
+            this.MediaPlayerStart.VideoPlayer = null;
+            this.MediaPlayerStart.Volume = 0D;
+            this.MediaPlayerStart.OnButtonClicked += new System.EventHandler(this.MediaPlayerStart_OnButtonClicked);
+            // 
+            // VisualSync
+            // 
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.ClientSize = new System.Drawing.Size(927, 525);
+            this.Controls.Add(this.labelTip);
+            this.Controls.Add(this.buttonSync);
+            this.Controls.Add(this.groupBoxMovieInfo);
+            this.Controls.Add(this.buttonCancel);
+            this.Controls.Add(this.groupBoxEndScene);
+            this.Controls.Add(this.groupBoxStartScene);
+            this.Controls.Add(this.buttonOK);
+            this.Controls.Add(this.buttonOpenMovie);
+            this.KeyPreview = true;
+            this.MinimumSize = new System.Drawing.Size(935, 540);
+            this.Name = "VisualSync";
+            this.Text = "Visual Sync";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormVisualSync_FormClosing);
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.VisualSync_FormClosed);
+            this.Load += new System.EventHandler(this.VisualSync_Load);
+            this.Shown += new System.EventHandler(this.VisualSync_Shown);
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.VisualSync_KeyDown);
+            this.Resize += new System.EventHandler(this.FormVisualSync_Resize);
+            this.groupBoxStartScene.ResumeLayout(false);
+            this.panelControlsStart.ResumeLayout(false);
+            this.groupBoxEndScene.ResumeLayout(false);
+            this.panelControlsEnd.ResumeLayout(false);
+            this.groupBoxMovieInfo.ResumeLayout(false);
+            this.groupBoxMovieInfo.PerformLayout();
+            this.ResumeLayout(false);
+            this.PerformLayout();
+
+        }
+
+        #endregion
+
+        private System.Windows.Forms.Button buttonOpenMovie;
+        private System.Windows.Forms.Timer timer1;
+        private System.Windows.Forms.Button buttonOK;
+        private System.Windows.Forms.GroupBox groupBoxStartScene;
+        private System.Windows.Forms.GroupBox groupBoxEndScene;
+        private System.Windows.Forms.Button buttonCancel;
+        private System.Windows.Forms.Panel panelControlsStart;
+        private System.Windows.Forms.ComboBox comboBoxStartTexts;
+        private System.Windows.Forms.Button buttonGotoStartSubtitlePosition;
+        private System.Windows.Forms.Button buttonFindTextStart;
+        private System.Windows.Forms.Button buttonStartThreeSecondsBack;
+        private System.Windows.Forms.Button buttonStartHalfASecondBack;
+        private System.Windows.Forms.Label labelVideoInfo;
+        private System.Windows.Forms.GroupBox groupBoxMovieInfo;
+        private System.Windows.Forms.Panel panelControlsEnd;
+        private System.Windows.Forms.Button buttonGotoEndSubtitlePosition;
+        private System.Windows.Forms.Button buttonFindTextEnd;
+        private System.Windows.Forms.Button buttonThreeSecondsBack;
+        private System.Windows.Forms.Button buttonEndHalfASecondBack;
+        private System.Windows.Forms.ComboBox comboBoxEndTexts;
+        private System.Windows.Forms.Button buttonSync;
+        private System.Windows.Forms.OpenFileDialog openFileDialog1;
+        private System.Windows.Forms.Label labelStartSubtitle;
+        private System.Windows.Forms.Label labelEndSubtitle;
+        private System.Windows.Forms.Button buttonStartVerify;
+        private System.Windows.Forms.Button buttonEndVerify;
+        private Nikse.SubtitleEdit.Controls.VideoPlayerContainer MediaPlayerStart;
+        private Nikse.SubtitleEdit.Controls.VideoPlayerContainer MediaPlayerEnd;
+        private System.Windows.Forms.Timer timer2;
+        private System.Windows.Forms.Label labelTip;
+    }
+}

@@ -1,0 +1,229 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Text.RegularExpressions;
+using System.Windows.Forms;
+using Nikse.SubtitleEdit.Logic;
+
+namespace Nikse.SubtitleEdit.Forms
+{
+    public sealed partial class OcrSpellCheck : Form
+    {
+        public enum Action
+        {
+            Abort,
+            AddToUserDictionary,
+            AddToNames,
+            AllwaysUseSuggestion,
+            ChangeAndSave,
+            ChangeOnce,
+            ChangeWholeText,
+            SkipAll,
+            SkipWholeText,
+            SkipOnce,
+            UseSuggestion,
+        }
+
+        public Action ActionResult { get; private set; }
+        public string Word { get; private set; }
+        public string Paragraph { get; private set; }
+
+        private string _originalWord;
+
+        public OcrSpellCheck()
+        {
+            InitializeComponent();
+
+            Text = Configuration.Settings.Language.SpellCheck.Title;
+            buttonAddToDictionary.Text = Configuration.Settings.Language.SpellCheck.AddToUserDictionary;
+            buttonChange.Text = Configuration.Settings.Language.SpellCheck.Change;
+            buttonChangeAll.Text = Configuration.Settings.Language.SpellCheck.ChangeAll;
+            buttonSkipAll.Text = Configuration.Settings.Language.SpellCheck.SkipAll;
+            buttonSkipOnce.Text = Configuration.Settings.Language.SpellCheck.SkipOnce;
+            buttonUseSuggestion.Text = Configuration.Settings.Language.SpellCheck.Use;
+            buttonUseSuggestionAlways.Text = Configuration.Settings.Language.SpellCheck.UseAlways;
+            buttonAbort.Text = Configuration.Settings.Language.SpellCheck.Abort;
+            groupBoxEditWholeText.Text = Configuration.Settings.Language.SpellCheck.EditWholeText;
+            buttonChangeWholeText.Text = Configuration.Settings.Language.SpellCheck.Change;
+            buttonSkipText.Text = Configuration.Settings.Language.SpellCheck.SkipOnce;
+            buttonEditWholeText.Text =  Configuration.Settings.Language.SpellCheck.EditWholeText;
+            buttonEditWord.Text = Configuration.Settings.Language.SpellCheck.EditWordOnly;
+            groupBoxText.Text = Configuration.Settings.Language.General.Text;
+            GroupBoxEditWord.Text = Configuration.Settings.Language.SpellCheck.WordNotFound;
+            groupBoxSuggestions.Text = Configuration.Settings.Language.SpellCheck.Suggestions;
+            groupBoxTextAsImage.Text = Configuration.Settings.Language.SpellCheck.ImageText;
+            buttonAddToNames.Text = Configuration.Settings.Language.SpellCheck.AddToNamesAndIgnoreList;
+        }
+
+        private void ButtonAbortClick(object sender, EventArgs e)
+        {
+            ActionResult = Action.Abort;
+            DialogResult = DialogResult.Abort;
+        }
+
+        internal void Initialize(string word, List<string> suggestions, string line, string[] words, int i, Bitmap bitmap)
+        {
+            _originalWord = word;
+            pictureBoxText.Image = bitmap;
+            textBoxWord.Text = word;
+            richTextBoxParagraph.Text = line;
+            textBoxWholeText.Text = line;
+            listBoxSuggestions.Items.Clear();
+            foreach (string suggestion in suggestions)
+                listBoxSuggestions.Items.Add(suggestion);
+            if (listBoxSuggestions.Items.Count > 0)
+                listBoxSuggestions.SelectedIndex = 0;
+
+            HighLightWord(richTextBoxParagraph, word);
+            ButtonEditWordClick(null, null);
+        }
+
+        private static void HighLightWord(RichTextBox richTextBoxParagraph, string word)
+        {
+            Regex regex = Utilities.MakeWordSearchRegex(word);
+            Match match = regex.Match(richTextBoxParagraph.Text);
+            if (!match.Success)
+            {
+                regex = Utilities.MakeWordSearchRegexWithNumbers(word);
+                match = regex.Match(richTextBoxParagraph.Text);
+            }
+            while (match.Success)
+            {
+                richTextBoxParagraph.SelectionStart = match.Index+1;
+                richTextBoxParagraph.SelectionLength = match.Length;
+                while (richTextBoxParagraph.SelectedText != match.Value && richTextBoxParagraph.SelectionStart > 0)
+                {
+                    richTextBoxParagraph.SelectionStart = richTextBoxParagraph.SelectionStart - 1;
+                    richTextBoxParagraph.SelectionLength = match.Length;
+                }
+                richTextBoxParagraph.SelectionColor = Color.Red;
+                match = match.NextMatch();
+            }
+            richTextBoxParagraph.SelectionLength = 0;
+            richTextBoxParagraph.SelectionStart = 0;
+        }
+
+        private void ButtonEditWholeTextClick(object sender, EventArgs e)
+        {
+            groupBoxEditWholeText.BringToFront();
+            groupBoxEditWholeText.Enabled = true;
+            GroupBoxEditWord.SendToBack();
+            GroupBoxEditWord.Enabled = false;
+            buttonEditWord.Enabled = true;
+            buttonEditWholeText.Enabled = false;
+            textBoxWholeText.Focus();
+        }
+
+        private void ButtonEditWordClick(object sender, EventArgs e)
+        {
+            groupBoxEditWholeText.SendToBack();
+            groupBoxEditWholeText.Enabled = false;
+            GroupBoxEditWord.BringToFront();
+            GroupBoxEditWord.Enabled = true;
+            buttonEditWord.Enabled = false;
+            buttonEditWholeText.Enabled = true;
+            textBoxWord.Focus();
+        }
+
+        private void ButtonChangeAllClick(object sender, EventArgs e)
+        {
+            if (_originalWord == textBoxWord.Text.Trim())
+            {
+                MessageBox.Show("Word was not changed!");
+                return;
+            }
+
+            Word = textBoxWord.Text;
+            ActionResult = Action.ChangeAndSave;
+            DialogResult = DialogResult.OK;
+        }
+
+        private void ButtonChangeClick(object sender, EventArgs e)
+        {
+            Word = textBoxWord.Text;
+            ActionResult = Action.ChangeOnce;
+            DialogResult = DialogResult.OK;
+        }
+
+        private void ButtonSkipOnceClick(object sender, EventArgs e)
+        {
+            ActionResult = Action.SkipOnce;
+            DialogResult = DialogResult.OK;
+        }
+
+        private void ButtonSkipAllClick(object sender, EventArgs e)
+        {
+            Word = textBoxWord.Text;
+            ActionResult = Action.SkipAll;
+            DialogResult = DialogResult.OK;
+        }
+
+        private void ButtonUseSuggestionClick(object sender, EventArgs e)
+        {
+            if (listBoxSuggestions.SelectedIndex >= 0)
+            {
+                Word = listBoxSuggestions.SelectedItem.ToString();
+                ActionResult = Action.UseSuggestion;
+                DialogResult = DialogResult.OK;
+            }
+        }
+
+        private void ButtonUseSuggestionAlwaysClick(object sender, EventArgs e)
+        {
+            if (listBoxSuggestions.SelectedIndex >= 0)
+            {
+                Word = listBoxSuggestions.Items[listBoxSuggestions.SelectedIndex].ToString();
+                ActionResult = Action.AllwaysUseSuggestion;
+                DialogResult = DialogResult.OK;
+            }
+        }
+
+        private void ButtonChangeWholeTextClick(object sender, EventArgs e)
+        {
+            Paragraph = textBoxWholeText.Text.Trim();
+            ActionResult = Action.ChangeWholeText;
+            DialogResult = DialogResult.OK;
+        }
+
+        private void ButtonAddToNamesClick(object sender, EventArgs e)
+        {
+            Word = textBoxWord.Text.Trim();
+            ActionResult = Action.AddToNames;
+            DialogResult = DialogResult.OK;
+        }
+
+        private void ButtonAddToDictionaryClick(object sender, EventArgs e)
+        {
+            string s = textBoxWord.Text.Trim();
+            if (s.Length == 0 || s.Contains(" "))
+            {
+                MessageBox.Show("Word should be one single word");
+                return;
+            }
+
+            Word = s;
+            if (Word.Length == 0)
+                ActionResult = Action.SkipOnce;
+            else
+                ActionResult = Action.AddToUserDictionary;
+            DialogResult = DialogResult.OK;
+        }
+
+        private void ButtonSkipTextClick(object sender, EventArgs e)
+        {
+            Word = textBoxWord.Text;
+            ActionResult = Action.SkipWholeText;
+            DialogResult = DialogResult.OK;
+        }
+
+        private void TextBoxWordKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                ButtonChangeClick(null, null);
+                e.SuppressKeyPress = true;
+            }
+        }
+
+    }
+}
