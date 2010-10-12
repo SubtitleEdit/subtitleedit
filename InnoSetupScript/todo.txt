@@ -1,10 +1,3 @@
--fix the copyright year
 -add a readme file
--tell translators to finish the custom messages translations
- NOTE: Do NOT change the file encoding of custom_messages.iss, it has to be UTF-8 Signature
-
-on uninstall:
--remove {app}\WaveForms
--remove {app}\Dictionaries\*.aff
--remove {app}\Dictionaries\*.dic
--remove {app}\Dictionaries
+-add a WizardImageFile
+-translate custom message (READ THE NOTE IN "custom_messages.iss")

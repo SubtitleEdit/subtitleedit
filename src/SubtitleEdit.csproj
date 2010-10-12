@@ -696,6 +696,7 @@
     <None Include="DLLs\Interop.WMPLib.dll" />
     <None Include="DLLs\tessnet2_32.dll" />
     <None Include="DLLs\tessnet2_64.dll" />
+    <Content Include="ChangeLog.txt" />
     <Content Include="gpl.txt" />
     <Content Include="Hunspellx64.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
