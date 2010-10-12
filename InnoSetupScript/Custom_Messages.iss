@@ -20,6 +20,8 @@
 
 [CustomMessages]
 ;sm=Start Menu, tsk=Task, com=Comment, msg=Message
+;NOTE: Do NOT change the file encoding it must me UTF-8 Signature
+
 ;English
 en.msg_SetupIsRunningWarning=Subtitle Edit Setup is already running!
 en.msg_AskToDownNET=Subtitle Edit requires the .NET Framework 2.0. Please download and install the .NET Framework and run setup again. %n%nDo you want to download the .NET Framework 2.0 now?
@@ -29,10 +31,7 @@ en.tsk_CurrentUser=For the current user only
 en.tsk_Other=Other:
 en.tsk_ResetSettings=Reset Subtitle Edit's settings
 en.run_VisitWebsite=Visit Subtitle Edit's Website
-en.sm_Changelog=Changelog
 en.sm_com_Changelog=Subtitle Edit's Changelog
-en.sm_Help=Help and Support
-en.sm_HelpFile=Subtitle Edit's Help
 en.sm_ReadmeFile=ReadMe
 en.sm_com_ReadmeFile=Subtitle Edit's ReadMe
 
@@ -45,10 +44,7 @@ dk.tsk_CurrentUser=For the current user only
 dk.tsk_Other=Other:
 dk.tsk_ResetSettings=Reset Subtitle Edit's settings
 dk.run_VisitWebsite=Visit Subtitle Edit's Website
-dk.sm_Changelog=Changelog
 dk.sm_com_Changelog=Subtitle Edit's Changelog
-dk.sm_Help=Help and Support
-dk.sm_HelpFile=Subtitle Edit's Help
 dk.sm_ReadmeFile=ReadMe
 dk.sm_com_ReadmeFile=Subtitle Edit's ReadMe
 
@@ -60,10 +56,7 @@ es.tsk_CurrentUser=For the current user only
 es.tsk_Other=Other:
 es.tsk_ResetSettings=Reset Subtitle Edit's settings
 es.run_VisitWebsite=Visit Subtitle Edit's Website
-es.sm_Changelog=Changelog
 es.sm_com_Changelog=Subtitle Edit's Changelog
-es.sm_Help=Help and Support
-es.sm_HelpFile=Subtitle Edit's Help
 es.sm_ReadmeFile=ReadMe
 es.sm_com_ReadmeFile=Subtitle Edit's ReadMe
 
@@ -75,10 +68,7 @@ fr.tsk_CurrentUser=For the current user only
 fr.tsk_Other=Other:
 fr.tsk_ResetSettings=Reset Subtitle Edit's settings
 fr.run_VisitWebsite=Visit Subtitle Edit's Website
-fr.sm_Changelog=Changelog
 fr.sm_com_Changelog=Subtitle Edit's Changelog
-fr.sm_Help=Help and Support
-fr.sm_HelpFile=Subtitle Edit's Help
 fr.sm_ReadmeFile=ReadMe
 fr.sm_com_ReadmeFile=Subtitle Edit's ReadMe
 
@@ -90,10 +80,7 @@ it.tsk_CurrentUser=For the current user only
 it.tsk_Other=Other:
 it.tsk_ResetSettings=Reset Subtitle Edit's settings
 it.run_VisitWebsite=Visit Subtitle Edit's Website
-it.sm_Changelog=Changelog
 it.sm_com_Changelog=Subtitle Edit's Changelog
-it.sm_Help=Help and Support
-it.sm_HelpFile=Subtitle Edit's Help
 it.sm_ReadmeFile=ReadMe
 it.sm_com_ReadmeFile=Subtitle Edit's ReadMe
 
@@ -105,10 +92,7 @@ nl.tsk_CurrentUser=For the current user only
 nl.tsk_Other=Other:
 nl.tsk_ResetSettings=Reset Subtitle Edit's settings
 nl.run_VisitWebsite=Visit Subtitle Edit's Website
-nl.sm_Changelog=Changelog
 nl.sm_com_Changelog=Subtitle Edit's Changelog
-nl.sm_Help=Help and Support
-nl.sm_HelpFile=Subtitle Edit's Help
 nl.sm_ReadmeFile=ReadMe
 nl.sm_com_ReadmeFile=Subtitle Edit's ReadMe
 
@@ -120,10 +104,7 @@ pl.tsk_CurrentUser=For the current user only
 pl.tsk_Other=Other:
 pl.tsk_ResetSettings=Reset Subtitle Edit's settings
 pl.run_VisitWebsite=Visit Subtitle Edit's Website
-pl.sm_Changelog=Changelog
 pl.sm_com_Changelog=Subtitle Edit's Changelog
-pl.sm_Help=Help and Support
-pl.sm_HelpFile=Subtitle Edit's Help
 pl.sm_ReadmeFile=ReadMe
 pl.sm_com_ReadmeFile=Subtitle Edit's ReadMe
 
@@ -135,9 +116,6 @@ ro.tsk_CurrentUser=For the current user only
 ro.tsk_Other=Other:
 ro.tsk_ResetSettings=Reset Subtitle Edit's settings
 ro.run_VisitWebsite=Visit Subtitle Edit's Website
-ro.sm_Changelog=Changelog
 ro.sm_com_Changelog=Subtitle Edit's Changelog
-ro.sm_Help=Help and Support
-ro.sm_HelpFile=Subtitle Edit's Help
 ro.sm_ReadmeFile=ReadMe
 ro.sm_com_ReadmeFile=Subtitle Edit's ReadMe
