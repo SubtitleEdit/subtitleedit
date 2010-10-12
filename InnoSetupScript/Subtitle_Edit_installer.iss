@@ -42,7 +42,7 @@
 
 [Setup]
 AppID=SubtitleEdit
-AppCopyright=Copyright © 2009-2010, Nikse
+AppCopyright=Copyright © 2001-2010, Nikse
 AppContact=http://www.nikse.dk/se/
 AppName=Subtitle Edit
 AppVerName=Subtitle Edit {#= simple_app_version}
@@ -55,7 +55,7 @@ UninstallDisplayName=Subtitle Edit {#= simple_app_version}
 DefaultDirName={pf}\Subtitle Edit
 DefaultGroupName=Subtitle Edit
 VersionInfoCompany=Nikse
-VersionInfoCopyright=Copyright © 2009-2010, Nikse
+VersionInfoCopyright=Copyright © 2001-2010, Nikse
 VersionInfoDescription=Subtitle Edit {#= simple_app_version} Setup
 VersionInfoTextVersion={#= simple_app_version}
 VersionInfoVersion={#= simple_app_version}
@@ -68,25 +68,26 @@ LicenseFile=..\src\gpl.txt
 InfoAfterFile=Changelog.txt
 ;InfoBeforeFile=..\Readme.txt
 SetupIconFile=..\src\Icons\SE.ico
-UninstallDisplayIcon={app}\SubtitleEdit.exe
 ;WizardImageFile=Icons\WizardImageFile.bmp
 WizardSmallImageFile=Icons\WizardSmallImageFile.bmp
 OutputDir=.
 OutputBaseFilename=SubtitleEdit-{#= simple_app_version}-setup
-AllowNoIcons=yes
-Compression=lzma/ultra64
-SolidCompression=yes
-EnableDirDoesntExistWarning=no
+AllowNoIcons=false
+Compression=lzma/Ultra64
+SolidCompression=false
+EnableDirDoesntExistWarning=false
 DirExistsWarning=no
-ShowTasksTreeLines=yes
-AlwaysShowDirOnReadyPage=yes
-AlwaysShowGroupOnReadyPage=yes
+ShowTasksTreeLines=false
+AlwaysShowDirOnReadyPage=false
+AlwaysShowGroupOnReadyPage=false
 PrivilegesRequired=admin
 ShowLanguageDialog=yes
-DisableDirPage=auto
+DisableDirPage=false
 DisableProgramGroupPage=auto
 AppMutex=Subtitle_Edit_Mutex
-
+AlwaysShowComponentsList=true
+FlatComponentsList=true
+DisableReadyPage=true
 
 [Languages]
 Name: en; MessagesFile: compiler:Default.isl
@@ -125,11 +126,14 @@ Source: ..\src\Bin\Release\Icons\SpellCheck.png; DestDir: {app}\Icons; Flags: ig
 Source: ..\src\Bin\Release\Icons\VideoToogle.png; DestDir: {app}\Icons; Flags: ignoreversion
 Source: ..\src\Bin\Release\Icons\VisualSync.png; DestDir: {app}\Icons; Flags: ignoreversion
 Source: ..\src\Bin\Release\Icons\WaveFormToogle.png; DestDir: {app}\Icons; Flags: ignoreversion
+Source: ..\Dictionaries\da_DK_names_etc.xml; DestDir: {app}\Dictionaries; Flags: ignoreversion
+Source: ..\Dictionaries\da_DK_user.xml; DestDir: {app}\Dictionaries; Flags: ignoreversion
+Source: ..\Dictionaries\dan_OCRFixReplaceList.xml; DestDir: {app}\Dictionaries; Flags: ignoreversion
+Source: ..\Dictionaries\en_US.aff; DestDir: {app}\Dictionaries; Flags: ignoreversion
+Source: ..\Dictionaries\en_US.dic; DestDir: {app}\Dictionaries; Flags: ignoreversion
 Source: ..\Dictionaries\en_US_names_etc.xml; DestDir: {app}\Dictionaries; Flags: ignoreversion
 Source: ..\Dictionaries\en_US_user.xml; DestDir: {app}\Dictionaries; Flags: ignoreversion
 Source: ..\Dictionaries\eng_OCRFixReplaceList.xml; DestDir: {app}\Dictionaries; Flags: ignoreversion
-Source: ..\Dictionaries\en_US.aff; DestDir: {app}\Dictionaries; Flags: ignoreversion
-Source: ..\Dictionaries\en_US.dic; DestDir: {app}\Dictionaries; Flags: ignoreversion
 Source: ..\Dictionaries\names_etc.xml; DestDir: {app}\Dictionaries; Flags: ignoreversion
 Source: ..\TessData\eng.DangAmbigs; DestDir: {app}\TessData; Flags: ignoreversion
 Source: ..\TessData\eng.freq-dawg; DestDir: {app}\TessData; Flags: ignoreversion
@@ -166,7 +170,6 @@ Name: {userappdata}\Microsoft\Internet Explorer\Quick Launch\Subtitle Edit; File
 [InstallDelete]
 Type: files; Name: {userdesktop}\Subtitle Edit.lnk; Check: NOT IsTaskSelected('desktopicon\user') AND IsUpdate()
 Type: files; Name: {commondesktop}\Subtitle Edit.lnk; Check: NOT IsTaskSelected('desktopicon\common') AND IsUpdate()
-
 Type: files; Name: {userappdata}\Subtitle Edit\settings.xml; Tasks: reset_settings
 Type: dirifempty; Name: {userappdata}\Subtitle Edit; Tasks: reset_settings
 
