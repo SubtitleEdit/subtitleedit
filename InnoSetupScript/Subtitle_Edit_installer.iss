@@ -21,7 +21,7 @@
 ; Inno Setup QuickStart Pack v5.3.11(+): http://www.jrsoftware.org/isdl.php#qsp
 
 
-#define installer_build_number "03"
+#define installer_build_number "04"
 
 #define VerMajor
 #define VerMinor
@@ -131,15 +131,15 @@ Source: ..\src\Bin\Release\Icons\SpellCheck.png; DestDir: {app}\Icons; Flags: ig
 Source: ..\src\Bin\Release\Icons\VideoToogle.png; DestDir: {app}\Icons; Flags: ignoreversion
 Source: ..\src\Bin\Release\Icons\VisualSync.png; DestDir: {app}\Icons; Flags: ignoreversion
 Source: ..\src\Bin\Release\Icons\WaveFormToogle.png; DestDir: {app}\Icons; Flags: ignoreversion
-Source: ..\Dictionaries\da_DK_names_etc.xml; DestDir: {app}\Dictionaries; Flags: ignoreversion
-Source: ..\Dictionaries\da_DK_user.xml; DestDir: {app}\Dictionaries; Flags: ignoreversion
-Source: ..\Dictionaries\dan_OCRFixReplaceList.xml; DestDir: {app}\Dictionaries; Flags: ignoreversion
+Source: ..\Dictionaries\da_DK_names_etc.xml; DestDir: {app}\Dictionaries; Flags: ignoreversion onlyifdoesntexist uninsneveruninstall
+Source: ..\Dictionaries\da_DK_user.xml; DestDir: {app}\Dictionaries; Flags: ignoreversion onlyifdoesntexist uninsneveruninstall
+Source: ..\Dictionaries\dan_OCRFixReplaceList.xml; DestDir: {app}\Dictionaries; Flags: ignoreversion onlyifdoesntexist uninsneveruninstall
 Source: ..\Dictionaries\en_US.aff; DestDir: {app}\Dictionaries; Flags: ignoreversion
 Source: ..\Dictionaries\en_US.dic; DestDir: {app}\Dictionaries; Flags: ignoreversion
-Source: ..\Dictionaries\en_US_names_etc.xml; DestDir: {app}\Dictionaries; Flags: ignoreversion
-Source: ..\Dictionaries\en_US_user.xml; DestDir: {app}\Dictionaries; Flags: ignoreversion
-Source: ..\Dictionaries\eng_OCRFixReplaceList.xml; DestDir: {app}\Dictionaries; Flags: ignoreversion
-Source: ..\Dictionaries\names_etc.xml; DestDir: {app}\Dictionaries; Flags: ignoreversion
+Source: ..\Dictionaries\en_US_names_etc.xml; DestDir: {app}\Dictionaries; Flags: ignoreversion onlyifdoesntexist uninsneveruninstall
+Source: ..\Dictionaries\en_US_user.xml; DestDir: {app}\Dictionaries; Flags: ignoreversion onlyifdoesntexist uninsneveruninstall
+Source: ..\Dictionaries\eng_OCRFixReplaceList.xml; DestDir: {app}\Dictionaries; Flags: ignoreversion onlyifdoesntexist uninsneveruninstall
+Source: ..\Dictionaries\names_etc.xml; DestDir: {app}\Dictionaries; Flags: ignoreversion onlyifdoesntexist uninsneveruninstall
 Source: ..\TessData\eng.DangAmbigs; DestDir: {app}\TessData; Flags: ignoreversion
 Source: ..\TessData\eng.freq-dawg; DestDir: {app}\TessData; Flags: ignoreversion
 Source: ..\TessData\eng.inttemp; DestDir: {app}\TessData; Flags: ignoreversion
@@ -173,6 +173,11 @@ Filename: {app}\SubtitleEdit.exe; Description: {cm:LaunchProgram,Subtitle Edit};
 Filename: http://www.nikse.dk/se/; Description: {cm:run_VisitWebsite}; Flags: nowait postinstall skipifsilent shellexec runascurrentuser unchecked
 
 
+[UninstallDelete]
+Type: dirifempty; Name: {app}\WaveForms
+Type: dirifempty; Name: {app}
+
+
 [Code]
 // Global variables and constants
 const installer_mutex_name = 'subtitle_edit_setup_mutex';
@@ -192,6 +197,16 @@ end;
 Procedure CleanUpFiles();
 begin
   DeleteFile(ExpandConstant('{app}\Settings.xml'));
+  DeleteFile(ExpandConstant('{app}\Dictionaries\da_DK_names_etc.xml'));
+  DeleteFile(ExpandConstant('{app}\Dictionaries\da_DK_user.xml'));
+  DeleteFile(ExpandConstant('{app}\Dictionaries\dan_OCRFixReplaceList.xml'));
+  DeleteFile(ExpandConstant('{app}\Dictionaries\en_US_names_etc.xml'));
+  DeleteFile(ExpandConstant('{app}\Dictionaries\en_US_user.xml'));
+  DeleteFile(ExpandConstant('{app}\Dictionaries\eng_OCRFixReplaceList.xml'));
+  DeleteFile(ExpandConstant('{app}\Dictionaries\names_etc.xml'));
+  DelTree(ExpandConstant('{app}\Dictionaries\*.dic'), False, True, False);
+  DelTree(ExpandConstant('{app}\Dictionaries\*.aff'), False, True, False);
+  RemoveDir(ExpandConstant('{app}\Dictionaries'));
 end;
 
 
@@ -218,6 +233,8 @@ procedure CurPageChanged(CurPageID: Integer);
 begin
   if CurPageID = wpSelectTasks then
     WizardForm.NextButton.Caption := SetupMessage(msgButtonInstall)
+  else if CurPageID = wpFinished then
+    WizardForm.NextButton.Caption := SetupMessage(msgButtonFinish)
   else
     WizardForm.NextButton.Caption := SetupMessage(msgButtonNext);
 end;
