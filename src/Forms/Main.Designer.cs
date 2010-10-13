@@ -1178,7 +1178,6 @@
             this.addWordsFromWordlistTonamesetcToolStripMenuItem1.Name = "addWordsFromWordlistTonamesetcToolStripMenuItem1";
             this.addWordsFromWordlistTonamesetcToolStripMenuItem1.Size = new System.Drawing.Size(330, 22);
             this.addWordsFromWordlistTonamesetcToolStripMenuItem1.Text = "_Add words from wordlist to \"names_etc\"";
-            this.addWordsFromWordlistTonamesetcToolStripMenuItem1.Visible = false;
             this.addWordsFromWordlistTonamesetcToolStripMenuItem1.Click += new System.EventHandler(this.addWordsFromWordlistTonamesetcToolStripMenuItem1_Click);
             // 
             // exportNewWordsToolStripMenuItem
@@ -1186,6 +1185,7 @@
             this.exportNewWordsToolStripMenuItem.Name = "exportNewWordsToolStripMenuItem";
             this.exportNewWordsToolStripMenuItem.Size = new System.Drawing.Size(330, 22);
             this.exportNewWordsToolStripMenuItem.Text = "_Export new words";
+            this.exportNewWordsToolStripMenuItem.Visible = false;
             this.exportNewWordsToolStripMenuItem.Click += new System.EventHandler(this.exportNewWordsToolStripMenuItem_Click);
             // 
             // toolStripMenuItemSyncronization
