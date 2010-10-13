@@ -1,4 +1,4 @@
-;* Subtitle Edit - Installer script
+ï»¿;* Subtitle Edit - Installer script
 ;*
 ;* Copyright (C) 2010 XhmikosR
 ;*
@@ -35,11 +35,11 @@ en.tsk_Other=Other:
 en.tsk_ResetSettings=Reset Subtitle Edit's settings
 
 
-dk.msg_SetupIsRunningWarning=Subtitle Edit Setup kører allerede!
-dk.msg_AskToDownNET=Subtitle Edit kræver .NET Framework 2.0. Download and installer .NET Framework og kør setup igen. %n%nVil du downloade .NET Framework 2.0 nu?
-dk.msg_DeleteSettings=Vil du også slette Subtitle Edit indstillinger? %nHvis du vil geninstallere Subtitle Edit senere kan du beholde disse indstillinger.
-dk.run_VisitWebsite=Besøg Subtitle Edits Website
-dk.sm_com_Changelog=Subtitle Edit ændringslog
+dk.msg_SetupIsRunningWarning=Subtitle Edit Setup kÃ¸rer allerede!
+dk.msg_AskToDownNET=Subtitle Edit krÃ¦ver .NET Framework 2.0. Download and installer .NET Framework og kÃ¸r setup igen. %n%nVil du downloade .NET Framework 2.0 nu?
+dk.msg_DeleteSettings=Vil du ogsÃ¥ slette Subtitle Edit indstillinger? %nHvis du vil geninstallere Subtitle Edit senere kan du beholde disse indstillinger.
+dk.run_VisitWebsite=BesÃ¸g Subtitle Edits Website
+dk.sm_com_Changelog=Subtitle Edit Ã¦ndringslog
 dk.sm_com_ReadmeFile=Subtitle Edit's ReadMe
 dk.tsk_AllUsers=For alle brugere
 dk.tsk_CurrentUser=Kun for aktulle bruger
