@@ -5010,13 +5010,13 @@ namespace Nikse.SubtitleEdit.Forms
                     if (!localNamesEtc.Contains(word) && !namesEtc.Contains(word))
                     {
                         wordsAdded++;
-                        localNamesEtc.Add(word);
-                        localNamesEtc.Sort();
+                        namesEtc.Add(word);
                     }
                 }
 
                 if (MessageBox.Show("Add new words: " + wordsAdded.ToString(), "", MessageBoxButtons.OKCancel) == System.Windows.Forms.DialogResult.OK) 
                 {
+                    namesEtc.Sort();
                     var namesEtcDoc = new XmlDocument();
                     if (File.Exists(globalNamesEtcFileName))
                         namesEtcDoc.Load(globalNamesEtcFileName);
@@ -5027,13 +5027,13 @@ namespace Nikse.SubtitleEdit.Forms
                     if (de != null)
                     {
                         de.RemoveAll();
-                        foreach (var name in localNamesEtc)
+                        foreach (var name in namesEtc)
                         {
                             XmlNode node = namesEtcDoc.CreateElement("name");
                             node.InnerText = name;
                             de.AppendChild(node);
                         }
-                        namesEtcDoc.Save(userNamesEtcXmlFileName);
+                        namesEtcDoc.Save(globalNamesEtcFileName);
                     }
 
                 }
