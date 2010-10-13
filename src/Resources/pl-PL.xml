@@ -3,7 +3,7 @@
   <General>
     <Title>Subtitle Edit</Title>
     <Version>3.0</Version>
-    <TranslatedBy>Adam "admas" Malich</TranslatedBy>
+    <TranslatedBy>Translated by Adam "admas" Malich</TranslatedBy>
     <CultureName>pl-PL</CultureName>
     <OK>&amp;OK</OK>
     <Cancel>&amp;Anuluj</Cancel>
@@ -44,14 +44,10 @@
     <Negative>Negatywny</Negative>
     <RegularExpressionIsNotValid>Wyrażenie regularne nie jest poprawne!</RegularExpressionIsNotValid>
     <SubtitleSaved>Napisy zostały zapisane</SubtitleSaved>
-    <CurrentSubtitle>
-    </CurrentSubtitle>
-    <OriginalText>
-    </OriginalText>
-    <OpenOriginalSubtitleFile>
-    </OpenOriginalSubtitleFile>
-    <PleaseWait>
-    </PleaseWait>
+    <CurrentSubtitle>Aktualne napisy</CurrentSubtitle>
+    <OriginalText>Tekst oryginalny</OriginalText>
+    <OpenOriginalSubtitleFile>Otwórz plik oryginalnych napisów...</OpenOriginalSubtitleFile>
+    <PleaseWait>Proszę czekać...</PleaseWait>
   </General>
   <About>
     <Title>O Subtitle Edit</Title>
@@ -71,26 +67,16 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Description>Dodaj do nazw/listy ignor. (wyraż. niereg.)</Description>
   </AddToNames>
   <AddWaveForm>
-    <Title>
-    </Title>
-    <SourceVideoFile>
-    </SourceVideoFile>
-    <GenerateWaveFormData>
-    </GenerateWaveFormData>
-    <PleaseWait>
-    </PleaseWait>
-    <VlcMediaPlayerNotFoundTitle>
-    </VlcMediaPlayerNotFoundTitle>
-    <VlcMediaPlayerNotFound>
-    </VlcMediaPlayerNotFound>
-    <GoToVlcMediaPlayerHomePage>
-    </GoToVlcMediaPlayerHomePage>
-    <GeneratingPeakFile>
-    </GeneratingPeakFile>
-    <ExtractingSeconds>
-    </ExtractingSeconds>
-    <ExtractingMinutes>
-    </ExtractingMinutes>
+    <Title>Generowanie próbkowania dźwięku</Title>
+    <SourceVideoFile>Plik źródłowego wideo:</SourceVideoFile>
+    <GenerateWaveFormData>Generuj próbkowanie dźwięku</GenerateWaveFormData>
+    <PleaseWait>Może to potrwać kilka minut - proszę czekać</PleaseWait>
+    <VlcMediaPlayerNotFoundTitle>Nie znaleziono VLC Media Player</VlcMediaPlayerNotFoundTitle>
+    <VlcMediaPlayerNotFound>Subtitle Edit potrzebuje do wypakowania danych audio VLC Media Player 1.1.x lub nowszego.</VlcMediaPlayerNotFound>
+    <GoToVlcMediaPlayerHomePage>Chesz przejść na stronę domową VLC Media Player?</GoToVlcMediaPlayerHomePage>
+    <GeneratingPeakFile>Generowanie szczytów pliku</GeneratingPeakFile>
+    <ExtractingSeconds>Wypakowano audio: {0:0.0} sek.</ExtractingSeconds>
+    <ExtractingMinutes>Wypakowano audio: {0:0.0} min.</ExtractingMinutes>
   </AddWaveForm>
   <AdjustDisplayDuration>
     <Title>Dostosuj czas wyświetlania</Title>
@@ -100,7 +86,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <AddSeconds>Dodaj sekundy</AddSeconds>
     <SetAsPercent>Dostosuj w procentach</SetAsPercent>
     <Note>Uwaga: Czas wyświetlania nie nałoży się na czas początkowy
-             następnego tekstu.</Note>
+              następnego tekstu.</Note>
     <PleaseSelectAValueFromTheDropDownList>Proszę wybrać wartość z listy rozwijanej</PleaseSelectAValueFromTheDropDownList>
     <PleaseChoose> - Proszę wybrać - </PleaseChoose>
   </AdjustDisplayDuration>
@@ -111,10 +97,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Before>Przed</Before>
     <After>Po</After>
     <LinesFoundX>Znaleziono linii: {0}</LinesFoundX>
-    <OnlyBreakLinesLongerThan>
-    </OnlyBreakLinesLongerThan>
-    <OnlyUnbreakLinesShorterThan>
-    </OnlyUnbreakLinesShorterThan>
+    <OnlyBreakLinesLongerThan>Łam tylko linie dłuższe, niż</OnlyBreakLinesLongerThan>
+    <OnlyUnbreakLinesShorterThan>Cofaj łamanie dla linii krótszych, niż</OnlyUnbreakLinesShorterThan>
   </AutoBreakUnbreakLines>
   <ChangeCasing>
     <Title>Zmiana budowy zdań</Title>
@@ -222,7 +206,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Next>&amp;Dalej &gt;</Next>
     <Step2>Krok 2/2 - Weryfikacja problemów</Step2>
     <Fixes>Problemy</Fixes>
-    <Log>Log</Log>
+    <Log>Dziennik zdarzeń</Log>
     <LineNumber>Linia#</LineNumber>
     <Function>Funkcja</Function>
     <Before>Przed</Before>
@@ -329,8 +313,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FixEllipsesStartExample>'... i pójdziemy dalej' -&gt; 'i pójdziemy dalej'</FixEllipsesStartExample>
     <FixMissingOpenBracketExample>'brzęk] Uważaj!' --&gt; '[brzęk] Uważaj!'</FixMissingOpenBracketExample>
     <FixMusicNotationExample>'âTª słodkie są sny' --&gt; '♫ słodkie są sny'</FixMusicNotationExample>
-    <NumberOfImportantLogMessages>
-    </NumberOfImportantLogMessages>
+    <NumberOfImportantLogMessages>{0} ważnych wiadomości w dzienniku zdarzeń!</NumberOfImportantLogMessages>
   </FixCommonErrors>
   <GetDictionaries>
     <Title>Potrzebny słownik?</Title>
@@ -339,13 +322,10 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <GetDictionariesHere>Potrzebne słowniki znajdują się tutaj:</GetDictionariesHere>
     <OpenOpenOfficeWiki>Lista słowników na Wiki Open Office</OpenOpenOfficeWiki>
     <GetAllDictionaries>Tutaj pobierzesz wszystkie słowniki</GetAllDictionaries>
-    <ChooseLanguageAndClickDownload>
-    </ChooseLanguageAndClickDownload>
+    <ChooseLanguageAndClickDownload>Wybierz swój język i kliknij pobierz</ChooseLanguageAndClickDownload>
     <OpenDictionariesFolder>Otwórz folder 'Dictionaries'</OpenDictionariesFolder>
-    <Download>
-    </Download>
-    <XDownloaded>
-    </XDownloaded>
+    <Download>Pobierz</Download>
+    <XDownloaded>{0} został pobrany i zainstalowany</XDownloaded>
   </GetDictionaries>
   <GoogleTranslate>
     <Title>Tłumaczenie Google</Title>
@@ -353,9 +333,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <To>na:</To>
     <Translate>Tłumacz</Translate>
     <PleaseWait>Proszę czekać... to może chwilę potrwać</PleaseWait>
-    <PoweredByGoogleTranslate>Wsparcie Tłumacz Google</PoweredByGoogleTranslate>
-    <PoweredByMicrosoftTranslate>
-    </PoweredByMicrosoftTranslate>
+    <PoweredByGoogleTranslate>Wsparcie: tłumacz Google</PoweredByGoogleTranslate>
+    <PoweredByMicrosoftTranslate>Wsparcie: tłumacz Microsoft</PoweredByMicrosoftTranslate>
   </GoogleTranslate>
   <GoToLine>
     <Title>Idź do numeru linii</Title>
@@ -388,8 +367,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <Reopen>Otwórz &amp;ponownie</Reopen>
         <Save>&amp;Zapisz</Save>
         <SaveAs>Zapisz j&amp;ako...</SaveAs>
-        <OpenContainingFolder>
-        </OpenContainingFolder>
+        <OpenContainingFolder>Otwórz zawartość folderu</OpenContainingFolder>
         <Compare>Po&amp;równaj...</Compare>
         <ImportOcrFromDvd>Importuj/OCR napisy z VOB/IFO (DVD)...</ImportOcrFromDvd>
         <ImportOcrVobSubSubtitle>Importuj/OCR napisy z VobSub (sub/idx)...</ImportOcrVobSubSubtitle>
@@ -402,10 +380,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
       <Edit>
         <Title>Edytuj</Title>
         <ShowUndoHistory>Pokaż historię (do cofania zmian)</ShowUndoHistory>
-        <ShowOriginalText>
-        </ShowOriginalText>
-        <HideOriginalText>
-        </HideOriginalText>
+        <ShowOriginalText>Pokaż tekst oryginalny (tryb tłumacza)</ShowOriginalText>
+        <HideOriginalText>Ukryj tekst oryginalny</HideOriginalText>
         <InsertUnicodeSymbol>Wstaw symbol Unicode</InsertUnicodeSymbol>
         <Find>&amp;Znajdź</Find>
         <FindNext>Znajdź &amp;następny</FindNext>
@@ -422,8 +398,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <ChangeCasing>Zmień budowę zdań...</ChangeCasing>
         <ChangeFrameRate>Zmień szybkość odtwarzania klatek...</ChangeFrameRate>
         <MergeShortLines>Połącz krótkie linie...</MergeShortLines>
-        <MinimumDisplayTimeBetweenParagraphs>
-        </MinimumDisplayTimeBetweenParagraphs>
+        <MinimumDisplayTimeBetweenParagraphs>Minimalny odstęp czasowy między nowymi wierszami</MinimumDisplayTimeBetweenParagraphs>
         <SortBy>Sortuj wg</SortBy>
         <TextAlphabetically>Tekst - alfabetycznie</TextAlphabetically>
         <TextSingleLineMaximumLength>Tekst - maksymalna długość pojedynczej linii</TextSingleLineMaximumLength>
@@ -433,46 +408,29 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <AppendSubtitle>Połącz napisy...</AppendSubtitle>
       </Tools>
       <Video>
-        <Title>
-        </Title>
-        <OpenVideo>
-        </OpenVideo>
-        <ShowHideVideo>
-        </ShowHideVideo>
-        <ShowHideWaveForm>
-        </ShowHideWaveForm>
+        <Title>Wideo</Title>
+        <OpenVideo>Otwórz plik wideo...</OpenVideo>
+        <ShowHideVideo>Pokaż/ukryj wideo</ShowHideVideo>
+        <ShowHideWaveForm>Pokaż/ukryj próbkowanie dźwięku</ShowHideWaveForm>
       </Video>
       <SpellCheck>
-        <Title>
-        </Title>
-        <SpellCheck>
-        </SpellCheck>
-        <FindDoubleWords>
-        </FindDoubleWords>
-        <GetDictionaries>
-        </GetDictionaries>
-        <AddToNamesEtcList>
-        </AddToNamesEtcList>
+        <Title>Sprawdzenie pisowni</Title>
+        <SpellCheck>&amp;Sprawdź pisownię...</SpellCheck>
+        <FindDoubleWords>Znajdź podwójne wyrazy</FindDoubleWords>
+        <GetDictionaries>Pobierz słowniki...</GetDictionaries>
+        <AddToNamesEtcList>Dodaj do nazw własnych/listy etc</AddToNamesEtcList>
       </SpellCheck>
       <Synchronization>
-        <Title>
-        </Title>
-        <AdjustAllTimes>
-        </AdjustAllTimes>
-        <VisualSync>
-        </VisualSync>
-        <PointSync>
-        </PointSync>
+        <Title>Synchronizacja</Title>
+        <AdjustAllTimes>Dostosuj wczystkie czasy (ukazywanie się wcześniej/później)</AdjustAllTimes>
+        <VisualSync>Synchronizacja &amp;wizualna...</VisualSync>
+        <PointSync>Punkt synchronizacji...</PointSync>
       </Synchronization>
       <AutoTranslate>
-        <Title>
-        </Title>
-        <TranslatePoweredByGoogle>
-        </TranslatePoweredByGoogle>
-        <TranslatePoweredByMicrosoft>
-        </TranslatePoweredByMicrosoft>
-        <TranslateFromSwedishToDanish>
-        </TranslateFromSwedishToDanish>
+        <Title>Automatyczne tłumaczenie</Title>
+        <TranslatePoweredByGoogle>Przetłumacz (za pomocą Google)...</TranslatePoweredByGoogle>
+        <TranslatePoweredByMicrosoft>Przetłumacz (za pomocą Microsoft)...</TranslatePoweredByMicrosoft>
+        <TranslateFromSwedishToDanish>Przetłumacz ze szwedzkiego na duński (za pomocą nikse.dk)...</TranslateFromSwedishToDanish>
       </AutoTranslate>
       <Options>
         <Title>Opcje</Title>
@@ -491,14 +449,12 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <SaveAs>Zapisz jako</SaveAs>
         <Find>Znajdź</Find>
         <Replace>Zamień</Replace>
-        <VisualSync>Synchro wizualne</VisualSync>
+        <VisualSync>Synchronizacja wizualna</VisualSync>
         <SpellCheck>Sprawdź pisownię</SpellCheck>
         <Settings>Ustawienia</Settings>
         <Help>Pomoc</Help>
-        <ShowHideWaveForm>
-        </ShowHideWaveForm>
-        <ShowHideVideo>
-        </ShowHideVideo>
+        <ShowHideWaveForm>Pokaż/ukryj próbkowanie dźwięku</ShowHideWaveForm>
+        <ShowHideVideo>Pokaż/ukryj wideo</ShowHideVideo>
       </ToolBar>
       <ContextMenu>
         <Delete>Usuń</Delete>
@@ -511,14 +467,13 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <Normal>Normalna</Normal>
         <Underline>Podkreślnie</Underline>
         <Color>Kolor...</Color>
-        <FontName>
-        </FontName>
+        <FontName>Nazwa czcionki...</FontName>
         <AutoBalanceSelectedLines>Automatycznie zrównoważ wybrane linie...</AutoBalanceSelectedLines>
         <RemoveLineBreaksFromSelectedLines>Usuń linie łamania z wybranych linii...</RemoveLineBreaksFromSelectedLines>
         <TypewriterEffect>Efekt maszyny do pisania...</TypewriterEffect>
         <KaraokeEffect>Efekt karaoke...</KaraokeEffect>
         <ShowSelectedLinesEarlierLater>Pokaż wybrane linie wcześniej/później...</ShowSelectedLinesEarlierLater>
-        <VisualSyncSelectedLines>Synchro wizualne wybranych linii...</VisualSyncSelectedLines>
+        <VisualSyncSelectedLines>Synchronizacja wizualna wybranych linii...</VisualSyncSelectedLines>
         <GoogleTranslateSelectedLines>Tłumaczenie Google wybranych linii...</GoogleTranslateSelectedLines>
         <AdjustDisplayDurationForSelectedLines>Dostosuj czas wyświetlania dla wybranych linii...</AdjustDisplayDurationForSelectedLines>
         <FixCommonErrorsInSelectedLines>Popraw pospolite błędy w wybranych liniach...</FixCommonErrorsInSelectedLines>
@@ -530,105 +485,64 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
       <FileEncoding>Kodowanie pliku</FileEncoding>
       <ListView>Widok listy</ListView>
       <SourceView>Widok źródła</SourceView>
-      <UndoChangesInEditPanel>Cofnij zmiany w panelu edycji</UndoChangesInEditPanel>
+      <UndoChangesInEditPanel>Cofnij zmiany</UndoChangesInEditPanel>
       <Previous>&lt; Pop.</Previous>
       <Next>Nast. &gt;</Next>
       <AutoBreak>Złam</AutoBreak>
       <Unbreak>Cofnij</Unbreak>
     </Controls>
     <VideoControls>
-      <Translate>
-      </Translate>
-      <Create>
-      </Create>
-      <Adjust>
-      </Adjust>
-      <SelectCurrentElementWhilePlaying>
-      </SelectCurrentElementWhilePlaying>
-      <AutoRepeat>
-      </AutoRepeat>
-      <AutoRepeatOn>
-      </AutoRepeatOn>
-      <AutoRepeatCount>
-      </AutoRepeatCount>
-      <AutoContinue>
-      </AutoContinue>
-      <AutoContinueOn>
-      </AutoContinueOn>
-      <DelayInSeconds>
-      </DelayInSeconds>
-      <OriginalText>
-      </OriginalText>
-      <Previous>
-      </Previous>
-      <Stop>
-      </Stop>
-      <PlayCurrent>
-      </PlayCurrent>
-      <Next>
-      </Next>
-      <Playing>
-      </Playing>
-      <RepeatingLastTime>
-      </RepeatingLastTime>
-      <RepeatingXTimesLeft>
-      </RepeatingXTimesLeft>
-      <AutoContinueInOneSecond>
-      </AutoContinueInOneSecond>
-      <AutoContinueInXSeconds>
-      </AutoContinueInXSeconds>
-      <StillTypingAutoContinueStopped>
-      </StillTypingAutoContinueStopped>
-      <InsertNewSubtitleAtVideoPosition>
-      </InsertNewSubtitleAtVideoPosition>
-      <Auto>
-      </Auto>
-      <PlayFromJustBeforeText>
-      </PlayFromJustBeforeText>
-      <Pause>
-      </Pause>
-      <GoToSubtitlePositionAndPause>
-      </GoToSubtitlePositionAndPause>
-      <SetStartTime>
-      </SetStartTime>
-      <SetEndTimeAndGoToNext>
-      </SetEndTimeAndGoToNext>
-      <SetEndTime>
-      </SetEndTime>
-      <SetstartTimeAndOffsetOfRest>
-      </SetstartTimeAndOffsetOfRest>
-      <SearchTextOnline>
-      </SearchTextOnline>
-      <GoogleTranslate>
-      </GoogleTranslate>
-      <GoogleIt>
-      </GoogleIt>
-      <SecondsBackShort>
-      </SecondsBackShort>
-      <SecondsForwardShort>
-      </SecondsForwardShort>
-      <VideoPosition>
-      </VideoPosition>
-      <TranslateTip>
-      </TranslateTip>
-      <CreateTip>
-      </CreateTip>
-      <AdjustTip>
-      </AdjustTip>
-      <BeforeChangingTimeInWaveFormX>
-      </BeforeChangingTimeInWaveFormX>
-      <NewTextInsertAtX>
-      </NewTextInsertAtX>
+      <Translate>Tłumacz</Translate>
+      <Create>Utwórz</Create>
+      <Adjust>Dostosuj</Adjust>
+      <SelectCurrentElementWhilePlaying>Oznacz aktualnie odtwarzaną linię napisu</SelectCurrentElementWhilePlaying>
+      <AutoRepeat>Automatyczne powtarzanie</AutoRepeat>
+      <AutoRepeatOn>Wł. automat. powtarzanie</AutoRepeatOn>
+      <AutoRepeatCount>Liczba powtórzeń (razy)</AutoRepeatCount>
+      <AutoContinue>Automatyczna kontynuacja</AutoContinue>
+      <AutoContinueOn>Wł. automat. kontynuację</AutoContinueOn>
+      <DelayInSeconds>Opóźnienie (sekundy)</DelayInSeconds>
+      <OriginalText>Tekst oryginalny</OriginalText>
+      <Previous>&lt; W&amp;róć</Previous>
+      <Stop>&amp;Stop</Stop>
+      <PlayCurrent>&amp;Odtw, aktual.</PlayCurrent>
+      <Next>&amp;Dalej &gt;</Next>
+      <Playing>Odtwarzam...</Playing>
+      <RepeatingLastTime>Powtarzanie... ostatni czas</RepeatingLastTime>
+      <RepeatingXTimesLeft>Powtarzanie... wykonano {0} razy</RepeatingXTimesLeft>
+      <AutoContinueInOneSecond>Automat. kont. po jednej sek.</AutoContinueInOneSecond>
+      <AutoContinueInXSeconds>Auto kontynuacja po {0} sek.</AutoContinueInXSeconds>
+      <StillTypingAutoContinueStopped>Zatrz. pisanie na maszynie... automat. kont. zatrzymana</StillTypingAutoContinueStopped>
+      <InsertNewSubtitleAtVideoPosition>&amp;Wstaw nowy napis w poz. wideo</InsertNewSubtitleAtVideoPosition>
+      <Auto>Auto</Auto>
+      <PlayFromJustBeforeText>Zacznij odtw. przed &amp;tekstem</PlayFromJustBeforeText>
+      <Pause>Pauza</Pause>
+      <GoToSubtitlePositionAndPause>Idź do podpozycji i pauza</GoToSubtitlePositionAndPause>
+      <SetStartTime>Ustaw czas &amp;początku</SetStartTime>
+      <SetEndTimeAndGoToNext>Ustaw &amp;koniec &amp;&amp; idź dalej</SetEndTimeAndGoToNext>
+      <SetEndTime>Ustaw czas &amp;końca</SetEndTime>
+      <SetstartTimeAndOffsetOfRest>Ustaw sta&amp;rt i wyrównaj resztę</SetstartTimeAndOffsetOfRest>
+      <SearchTextOnline>Szukaj tekst online</SearchTextOnline>
+      <GoogleTranslate>Tłumacz Google</GoogleTranslate>
+      <GoogleIt>Na Google</GoogleIt>
+      <SecondsBackShort>&lt;&lt; sek.</SecondsBackShort>
+      <SecondsForwardShort>sek. &gt;&gt;</SecondsForwardShort>
+      <VideoPosition>Pozycja wideo:</VideoPosition>
+      <TranslateTip>Tip: Użyj &lt;alt+arrow up/down&gt;, aby przejść do poprzednich/następnych napisów</TranslateTip>
+      <CreateTip>Tip: Użyj klawiszy &lt;ctrl+arrow left/right&gt;</CreateTip>
+      <AdjustTip>Tip: Użyj &lt;alt+arrow up/down&gt;, aby przejść do poprzednich/następnych napisów</AdjustTip>
+      <BeforeChangingTimeInWaveFormX>Przed zmianami czasu w próbkowaniu dźwięku: {0}</BeforeChangingTimeInWaveFormX>
+      <NewTextInsertAtX>Wstawiono nowy tekst w {0}</NewTextInsertAtX>
     </VideoControls>
     <SaveChangesToUntitled>Zapisać zmiany w bez nazwy?</SaveChangesToUntitled>
     <SaveChangesToX>Zapisać zmiany w {0}?</SaveChangesToX>
     <SaveSubtitleAs>Zapisz napisy jako...</SaveSubtitleAs>
     <NoSubtitleLoaded>Nie wczytano napisów</NoSubtitleLoaded>
-    <VisualSyncSelectedLines>Synchro wizualne - wybrane linie</VisualSyncSelectedLines>
-    <VisualSyncTitle>Synchro wizualne</VisualSyncTitle>
+    <VisualSyncSelectedLines>Synchronizacja wizualna - wybrane linie</VisualSyncSelectedLines>
+    <VisualSyncTitle>Synchronizacja wizualna</VisualSyncTitle>
     <BeforeVisualSync>Przed synchronizacją wizualną</BeforeVisualSync>
-    <VisualSyncPerformedOnSelectedLines>Wykonano sychro wizualne wybranych linii</VisualSyncPerformedOnSelectedLines>
-    <VisualSyncPerformed>Wykonano sychro wizualne</VisualSyncPerformed>
+    <VisualSyncPerformedOnSelectedLines>Wykonano sychronizację wizualną wybranych linii</VisualSyncPerformedOnSelectedLines>
+    <VisualSyncPerformed>Wykonano sychronizację wizualną</VisualSyncPerformed>
     <ImportThisVobSubSubtitle>Importować te napisy VobSub?</ImportThisVobSubSubtitle>
     <FileXIsLargerThan10Mb>Plik jest większy, niż 10 mb: {0}</FileXIsLargerThan10Mb>
     <ContinueAnyway>Kontynuować pomimo to?</ContinueAnyway>
@@ -685,15 +599,13 @@ które powinnny już być zsynchronizowane z plikiem wideo.
 Kontynuować?</SubtitleAppendPrompt>
     <SubtitleAppendPromptTitle>Połącz napisy</SubtitleAppendPromptTitle>
     <OpenSubtitleToAppend>Otwórz napisy do połączenia...</OpenSubtitleToAppend>
-    <AppendViaVisualSyncTitle>Synchro wizualne - dodaj drugą część napisów</AppendViaVisualSyncTitle>
-    <AppendSynchronizedSubtitlePrompt>
-    </AppendSynchronizedSubtitlePrompt>
+    <AppendViaVisualSyncTitle>Synchronizacja wizualna - dodaj drugą część napisów</AppendViaVisualSyncTitle>
+    <AppendSynchronizedSubtitlePrompt>Dodać te zsynchronizowane napisy?</AppendSynchronizedSubtitlePrompt>
     <BeforeAppend>Przed połączeniem</BeforeAppend>
     <SubtitleAppendedX>Połączono napisy: {0}</SubtitleAppendedX>
     <SubtitleNotAppended>Napisy NIE zostały połączone!</SubtitleNotAppended>
     <GoogleTranslate>Tłumaczenie Google</GoogleTranslate>
-    <MicrosoftTranslate>
-    </MicrosoftTranslate>
+    <MicrosoftTranslate>Tłumaczenie Microsoft</MicrosoftTranslate>
     <BeforeGoogleTranslation>Przed tłumaczeniem Google</BeforeGoogleTranslation>
     <SelectedLinesTranslated>Przetłumacz wybrane linie</SelectedLinesTranslated>
     <SubtitleTranslated>Napisy przetłumaczone</SubtitleTranslated>
@@ -734,8 +646,7 @@ Kontynuować?</SubtitleAppendPrompt>
     <BeforeMergeLines>Przed łączeniem linii</BeforeMergeLines>
     <LinesMerged>Łączenie linii</LinesMerged>
     <BeforeSettingColor>Przed ustawieniem koloru</BeforeSettingColor>
-    <BeforeSettingFontName>
-    </BeforeSettingFontName>
+    <BeforeSettingFontName>Przed ustawieniem nazwy czcionki</BeforeSettingFontName>
     <BeforeTypeWriterEffect>Przed efektem maszyny do pisania</BeforeTypeWriterEffect>
     <BeforeKaraokeEffect>Przed efektem karaoke</BeforeKaraokeEffect>
     <BeforeImportingDvdSubtitle>Przed importem napisów z dvd</BeforeImportingDvdSubtitle>
@@ -749,7 +660,7 @@ Kontynuować?</SubtitleAppendPrompt>
     <DropFileXNotAccepted>Przeciągnięty plik '{0}' nie został zaakceptowany - plik jest zbyt duży</DropFileXNotAccepted>
     <DropOnlyOneFile>Możesz przeciągnąć tylko jeden plik</DropOnlyOneFile>
     <BeforeCreateAdjustLines>Przed utworzeniem/dostosowaniem linii</BeforeCreateAdjustLines>
-    <OpenAnsiSubtitle>Otwórz napisy ANSI...</OpenAnsiSubtitle>
+    <OpenAnsiSubtitle>Otwórz napisy...</OpenAnsiSubtitle>
     <BeforeChangeCasing>Przed zmianą budowy zdań</BeforeChangeCasing>
     <CasingCompleteMessageNoNames>Ilość linii ze zmianą budowy zdań: {0}/{1}</CasingCompleteMessageNoNames>
     <CasingCompleteMessageOnlyNames>Ilość linii ze zmianą pisowni nazw własnych: {0}/{1}</CasingCompleteMessageOnlyNames>
@@ -761,7 +672,7 @@ Kontynuować?</SubtitleAppendPrompt>
     <OpenVobSubFile>Otwórz napisy VobSub (sub/idx)...</OpenVobSubFile>
     <VobSubFiles>Pliki napisów VobSub</VobSubFiles>
     <BeforeImportingVobSubFile>Przed importowaniem napisów VobSub</BeforeImportingVobSubFile>
-    <BeforeShowSelectedLinesEarlierLater>Przed wyborem wcześniejszego/późniejszego ukazywania się linii</BeforeShowSelectedLinesEarlierLater>
+    <BeforeShowSelectedLinesEarlierLater>Przed wybraniem wcześniejszego/późniejszego ukazywania się linii</BeforeShowSelectedLinesEarlierLater>
     <ShowSelectedLinesEarlierLaterPerformed>Wykonanie na wybranych liniach wcześniejszego/późniejszego ukazywania się</ShowSelectedLinesEarlierLaterPerformed>
     <DoubleWordsViaRegEx>Podwójne wyrazy via regex {0}</DoubleWordsViaRegEx>
     <BeforeSortX>Przed sortowaniem: {0}</BeforeSortX>
@@ -779,24 +690,17 @@ Kontynuować?</SubtitleAppendPrompt>
     <NegativeTimeWarning>Napisy zawierają błędne kody czasowe. Chcesz zapisać?</NegativeTimeWarning>
     <BeforeMergeShortLines>Przed połączeniem krótkich linii</BeforeMergeShortLines>
     <MergedShortLinesX>Ilość połączonych linii: {0}</MergedShortLinesX>
-    <BeforeSetMinimumDisplayTimeBetweenParagraphs>
-    </BeforeSetMinimumDisplayTimeBetweenParagraphs>
-    <XMinimumDisplayTimeBetweenParagraphsChanged>
-    </XMinimumDisplayTimeBetweenParagraphsChanged>
+    <BeforeSetMinimumDisplayTimeBetweenParagraphs>Przed ustawieniem minimalnego odstępu czasowego między wierszami</BeforeSetMinimumDisplayTimeBetweenParagraphs>
+    <XMinimumDisplayTimeBetweenParagraphsChanged>Ilość zmian czasów minimalnego odstępu między wierszami: {0}</XMinimumDisplayTimeBetweenParagraphsChanged>
     <BeforeImportText>Przed importem tekstu</BeforeImportText>
     <TextImported>Tekst zaimportowany</TextImported>
-    <BeforePointSynchronization>
-    </BeforePointSynchronization>
-    <PointSynchronizationDone>
-    </PointSynchronizationDone>
+    <BeforePointSynchronization>Przed punktem synchronizacji</BeforePointSynchronization>
+    <PointSynchronizationDone>Wykonano punkt synchronizacji</PointSynchronizationDone>
     <BeforeTimeCodeImport>Przed importem kodów czasowych</BeforeTimeCodeImport>
     <TimeCodeImportedFromXY>Zaimportowanych kodów czasowych z {0}: {1}</TimeCodeImportedFromXY>
-    <BeforeInsertSubtitleAtVideoPosition>
-    </BeforeInsertSubtitleAtVideoPosition>
-    <BeforeSetStartTimeAndOffsetTheRest>
-    </BeforeSetStartTimeAndOffsetTheRest>
-    <ContinueWithCurrentSpellCheck>
-    </ContinueWithCurrentSpellCheck>
+    <BeforeInsertSubtitleAtVideoPosition>Przed wstawieniem napisów w pozycji wideo</BeforeInsertSubtitleAtVideoPosition>
+    <BeforeSetStartTimeAndOffsetTheRest>Przed ustawieniem czasu początku i przesunięcie pozostałych</BeforeSetStartTimeAndOffsetTheRest>
+    <ContinueWithCurrentSpellCheck>Kontynuować aktualne sprawdzanie pisowni?</ContinueWithCurrentSpellCheck>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Wybór napisów z pliku Matroska</Title>
@@ -808,10 +712,8 @@ Kontynuować?</SubtitleAppendPrompt>
     <MaximumCharacters>Maksymalna ilość znaków w wierszu</MaximumCharacters>
     <MaximumMillisecondsBetween>Górna granica milisekund między liniami</MaximumMillisecondsBetween>
     <NumberOfMergesX>Ilość połączonych: {0}</NumberOfMergesX>
-    <LineNumber>
-    </LineNumber>
-    <MergedText>
-    </MergedText>
+    <LineNumber>Linia#</LineNumber>
+    <MergedText>Połączony tekst</MergedText>
   </MergedShortLines>
   <MultipleReplace>
     <Title>Wielokrotna zamiana</Title>
@@ -832,8 +734,7 @@ Kontynuować?</SubtitleAppendPrompt>
   </MultipleReplace>
   <RemoveTextFromHearImpaired>
     <Title>Usuń tekst dla słabo słyszących</Title>
-    <RemoveTextConditions>
-    </RemoveTextConditions>
+    <RemoveTextConditions>Uwarunkowania dla usuwanego tekstu</RemoveTextConditions>
     <RemoveTextBetween>Opcja ta usunie tekst między:</RemoveTextBetween>
     <SquareBrackets>'[' i ']'</SquareBrackets>
     <Brackets>'{' i '}'</Brackets>
@@ -842,14 +743,12 @@ Kontynuować?</SubtitleAppendPrompt>
     <And>i</And>
     <RemoveTextBeforeColon>Usuń tekst przed dwukropkiem (':')</RemoveTextBeforeColon>
     <OnlyIfTextIsUppercase>Tylko, jeśli tekst jest Z DUŻYCH LITER</OnlyIfTextIsUppercase>
-    <OnlyIfInSeparateLine>
-    </OnlyIfInSeparateLine>
+    <OnlyIfInSeparateLine>Tylko, jeśli w oddzielnej linii</OnlyIfInSeparateLine>
     <LineNumber>Linia#</LineNumber>
     <Before>Przed</Before>
     <After>Po</After>
     <LinesFoundX>Znaleziono linii: {0}</LinesFoundX>
-    <RemoveTextIfContains>
-    </RemoveTextIfContains>
+    <RemoveTextIfContains>Usuń tekst, jeśli zawiera:</RemoveTextIfContains>
   </RemoveTextFromHearImpaired>
   <ReplaceDialog>
     <Title>Zamień</Title>
@@ -866,27 +765,21 @@ Kontynuować?</SubtitleAppendPrompt>
     <Title>Ustaw minimalny odstęp czasowy między wyświetlanymi wierszami</Title>
     <PreviewLinesModifiedX>Podgląd - zmodyfikowanych wierszy: {0}</PreviewLinesModifiedX>
     <ShowOnlyModifiedLines>Pokaż tylko zmodyfikowane linie</ShowOnlyModifiedLines>
-    <MinimumMillisecondsBetweenParagraphs>
-    </MinimumMillisecondsBetweenParagraphs>
+    <MinimumMillisecondsBetweenParagraphs>Minimalny odstęp między liniami w milisekundach</MinimumMillisecondsBetweenParagraphs>
   </SetMinimumDisplayTimeBetweenParagraphs>
   <SetSyncPoint>
     <Title>Ustaw punkt synchronizacji dla linii {0}</Title>
     <SyncPointTimeCode>Kod czasowy punktu synchronizacji</SyncPointTimeCode>
-    <ThreeSecondsBack>
-    </ThreeSecondsBack>
-    <HalfASecondBack>
-    </HalfASecondBack>
-    <HalfASecondForward>
-    </HalfASecondForward>
-    <ThreeSecondsForward>
-    </ThreeSecondsForward>
+    <ThreeSecondsBack>&lt;&lt; 3 sek</ThreeSecondsBack>
+    <HalfASecondBack>&lt;&lt; ½ sek</HalfASecondBack>
+    <HalfASecondForward>½ sek &gt;&gt;</HalfASecondForward>
+    <ThreeSecondsForward>3 sek &gt;&gt;</ThreeSecondsForward>
   </SetSyncPoint>
   <Settings>
     <Title>Ustawienia</Title>
     <General>Ogólne</General>
     <VideoPlayer>Odtwarzacz wideo</VideoPlayer>
-    <WaveForm>
-    </WaveForm>
+    <WaveForm>Próbkowanie dźwięku</WaveForm>
     <Tools>Narzędzia</Tools>
     <WordLists>Listy wyrazów</WordLists>
     <SsaStyle>Styl SSA</SsaStyle>
@@ -899,12 +792,11 @@ Kontynuować?</SubtitleAppendPrompt>
     <Find>Znajdź</Find>
     <Replace>Zamień</Replace>
     <VisualSync>Synch. wiz.</VisualSync>
-    <SpellCheck>Spr. pisow.</SpellCheck>
+    <SpellCheck>Spr. pisowni</SpellCheck>
     <SettingsName>Ustawienia</SettingsName>
     <Help>Pomoc</Help>
     <Miscellaneous>Różne</Miscellaneous>
-    <ShowFrameRate>
-    </ShowFrameRate>
+    <ShowFrameRate>Pokaż szybk. odtw. klatek na Pasku narzędzi</ShowFrameRate>
     <DefaultFrameRate>Domyślna szybk. odtw. klatek</DefaultFrameRate>
     <DefaultFileEncoding>Domyślne kodowanie</DefaultFileEncoding>
     <AutoDetectAnsiEncoding>Auto. detekcja kodowania ANSI</AutoDetectAnsiEncoding>
@@ -915,16 +807,13 @@ Kontynuować?</SubtitleAppendPrompt>
     <StartWithLastFileLoaded>Uruchom z ostatnio wczytanym plikiem</StartWithLastFileLoaded>
     <RememberPositionAndSize>Pamiętaj pozycję i rozmiar Głównego okna</RememberPositionAndSize>
     <StartInSourceView>Uruchom w Widoku źródła</StartInSourceView>
-    <RemoveBlankLinesWhenOpening>
-    </RemoveBlankLinesWhenOpening>
+    <RemoveBlankLinesWhenOpening>Podczas otwierania napisów usuwaj puste linie</RemoveBlankLinesWhenOpening>
     <ShowLineBreaksAs>Linia łamania w Widoku listy</ShowLineBreaksAs>
-    <MainListViewDoubleClickAction>Dwuklik na linii w Głównym oknie powoduje</MainListViewDoubleClickAction>
+    <MainListViewDoubleClickAction>Akcja po dwukliku na linii w Głównym oknie</MainListViewDoubleClickAction>
     <MainListViewNothing>Nic</MainListViewNothing>
-    <MainListViewVideoGoToPositionAndPause>
-    </MainListViewVideoGoToPositionAndPause>
-    <MainListViewVideoGoToPositionAndPlay>
-    </MainListViewVideoGoToPositionAndPlay>
-    <MainListViewEditText>Przechodzi do panelu edycji tekstu</MainListViewEditText>
+    <MainListViewVideoGoToPositionAndPause>Idź do pozycji wideo i pauza</MainListViewVideoGoToPositionAndPause>
+    <MainListViewVideoGoToPositionAndPlay>Idź do pozycji wideo i odtwarzaj</MainListViewVideoGoToPositionAndPlay>
+    <MainListViewEditText>Idź do panelu edycji tekstu</MainListViewEditText>
     <VideoEngine>Silnik wideo</VideoEngine>
     <DirectShow>DirectShow</DirectShow>
     <DirectShowDescription>quartz.dll z folderu system32</DirectShowDescription>
@@ -932,35 +821,22 @@ Kontynuować?</SubtitleAppendPrompt>
     <ManagedDirectXDescription>Microsoft.DirectX.AudioVideoPlayback -  .NET Zarządca kodu z DirectX</ManagedDirectXDescription>
     <WindowsMediaPlayer>Windows Media Player</WindowsMediaPlayer>
     <WindowsMediaPlayerDescription>Kontrolki ActiveX WMP</WindowsMediaPlayerDescription>
-    <VlcMediaPlayer>
-    </VlcMediaPlayer>
-    <VlcMediaPlayerDescription>
-    </VlcMediaPlayerDescription>
+    <VlcMediaPlayer>VLC Media Player</VlcMediaPlayer>
+    <VlcMediaPlayerDescription>libvlc.dll z VLC Media Player 1.1.0 lub nowszy</VlcMediaPlayerDescription>
     <ShowStopButton>Pokaż przycisk Stop</ShowStopButton>
     <DefaultVolume>Domyśl. głośność</DefaultVolume>
     <VolumeNotes>0 bez dźwięku, 100 najwyższa głośność</VolumeNotes>
-    <MainWindowVideoControls>
-    </MainWindowVideoControls>
-    <CustomSearchTextAndUrl>
-    </CustomSearchTextAndUrl>
-    <WaveFormAppearance>
-    </WaveFormAppearance>
-    <WaveFormGridColor>
-    </WaveFormGridColor>
-    <WaveFormShowGridLines>
-    </WaveFormShowGridLines>
-    <WaveFormColor>
-    </WaveFormColor>
-    <WaveFormSelectedColor>
-    </WaveFormSelectedColor>
-    <WaveFormBackgroundColor>
-    </WaveFormBackgroundColor>
-    <WaveFormTextColor>
-    </WaveFormTextColor>
-    <WaveFormsFolderEmpty>
-    </WaveFormsFolderEmpty>
-    <WaveFormsFolderInfo>
-    </WaveFormsFolderInfo>
+    <MainWindowVideoControls>Główne okno kontroli wideo</MainWindowVideoControls>
+    <CustomSearchTextAndUrl>Domyślny url dla wyszukiwania tekstu</CustomSearchTextAndUrl>
+    <WaveFormAppearance>Wygląd próbkowanego dźwięku</WaveFormAppearance>
+    <WaveFormGridColor>Kolor siatki</WaveFormGridColor>
+    <WaveFormShowGridLines>Pokaż linie siatki</WaveFormShowGridLines>
+    <WaveFormColor>Kolor wykresu</WaveFormColor>
+    <WaveFormSelectedColor>Kolor zaznaczenia</WaveFormSelectedColor>
+    <WaveFormBackgroundColor>Kolor tła</WaveFormBackgroundColor>
+    <WaveFormTextColor>Kolor tekstu</WaveFormTextColor>
+    <WaveFormsFolderEmpty>Opróżnij folder 'WaveForms'</WaveFormsFolderEmpty>
+    <WaveFormsFolderInfo>Folder 'WaveForms' zawiera {0} plik(i) ({1:0.00} MB)</WaveFormsFolderInfo>
     <SubStationAlphaStyle>Styl Sub Station Alpha</SubStationAlphaStyle>
     <ChooseFont>Wybierz czcionkę</ChooseFont>
     <ChooseColor>Wybierz kolor</ChooseColor>
@@ -978,8 +854,7 @@ Kontynuować?</SubtitleAppendPrompt>
     <UseOnlineNamesEtc>Użyj online pliku names etc xml</UseOnlineNamesEtc>
     <WordAddedX>Dodano wyrazów: {0}</WordAddedX>
     <WordAlreadyExists>Wyraz już istnieje!</WordAlreadyExists>
-    <WordNotFound>
-    </WordNotFound>
+    <WordNotFound>Wyraz nie istnieje</WordNotFound>
     <RemoveX>Usunąć {0}?</RemoveX>
     <CannotUpdateNamesEtcOnline>Nie można zaktualizować online NamesEtc.xml!</CannotUpdateNamesEtcOnline>
     <ProxyServerSettings>Ustawienia serwera Proxy</ProxyServerSettings>
@@ -999,14 +874,13 @@ Kontynuować?</SubtitleAppendPrompt>
     <MusicSymbolsToReplace>Symbole muzyczne do zamiany (oddzielone spacją)</MusicSymbolsToReplace>
   </Settings>
   <ShowEarlierLater>
-    <Title>Pokaż wybrane linie wcześniej/później</Title>
+    <Title>Ukazywanie się wybranych linii wcześniej/później</Title>
     <ShowEarlier>Pokaż wcześniej</ShowEarlier>
     <ShowLater>Pokaż później</ShowLater>
-    <TotalAdjustmentX>
-    </TotalAdjustmentX>
+    <TotalAdjustmentX>Suma dostosowań: {0}</TotalAdjustmentX>
   </ShowEarlierLater>
   <ShowHistory>
-    <Title>Historia (do cofnięcia zmian)</Title>
+    <Title>Historia (do cofania dokonanych zmian)</Title>
     <SelectRollbackPoint>Wybór czasu/opisu dla cofnięcia zmian</SelectRollbackPoint>
     <Time>Czas</Time>
     <Description>Opis</Description>
@@ -1015,8 +889,7 @@ Kontynuować?</SubtitleAppendPrompt>
     <Rollback>Cofnij</Rollback>
   </ShowHistory>
   <SpellCheck>
-    <Title>
-    </Title>
+    <Title>Sprawdź pisownię</Title>
     <FullText>Cały tekst</FullText>
     <WordNotFound>Nie znaleziono słowa</WordNotFound>
     <Language>Język</Language>
@@ -1070,7 +943,7 @@ Kontynuować?</SubtitleAppendPrompt>
     <Message>Jeżeli chcesz to naprawić, wyślij email na mailto:niksedk@gmail.com i dołącz kopię pliku napisu.</Message>
   </UnknownSubtitle>
   <VisualSync>
-    <Title>Synchro wizualne</Title>
+    <Title>Synchronizacja wizualna</Title>
     <StartScene>Scena początkowa</StartScene>
     <EndScene>Scena końcowa</EndScene>
     <Synchronize>Synchronizuj</Synchronize>
@@ -1080,11 +953,10 @@ Kontynuować?</SubtitleAppendPrompt>
     <FindText>Znajdź txt</FindText>
     <GoToSubPosition>Idź do pozycji</GoToSubPosition>
     <KeepChangesTitle>Utrzymać zmiany?</KeepChangesTitle>
-    <KeepChangesMessage>Wykonano zmiany w napisach w 'Synchro wizualnym'.</KeepChangesMessage>
+    <KeepChangesMessage>Wykonano zmiany napisów w 'Synchro wizualnym'.</KeepChangesMessage>
     <SynchronizationDone>Wykonano synchronizację!</SynchronizationDone>
     <StartSceneMustComeBeforeEndScene>Scena startowa musi być przed sceną końcową!</StartSceneMustComeBeforeEndScene>
-    <Tip>
-    </Tip>
+    <Tip>Tip: Klawisze &lt;ctrl+arrow left/right&gt; cofają lub przesuwają do przodu o 100 ms</Tip>
   </VisualSync>
   <VobSubEditCharacters>
     <Title>Edycja bazy danych porównywanych obrazów</Title>
@@ -1132,16 +1004,14 @@ Kontynuować?</SubtitleAppendPrompt>
     <SaveSubtitleImageAs>Zapisz obraz napisu jako...</SaveSubtitleImageAs>
     <TryModiForUnknownWords>Spróbuj MS MODI OCR dla nieznanych wyrazów</TryModiForUnknownWords>
     <DictionaryX>Słownik: {0}</DictionaryX>
-    <RightToLeft>Od prawej do lewej</RightToLeft>
-    <ShowOnlyForcedSubtitles>
-    </ShowOnlyForcedSubtitles>
-    <UseTimeCodesFromIdx>
-    </UseTimeCodesFromIdx>
+    <RightToLeft>Prawy do lewego</RightToLeft>
+    <ShowOnlyForcedSubtitles>Pokaż tylko wymuszone napisy</ShowOnlyForcedSubtitles>
+    <UseTimeCodesFromIdx>Użyj kodów czasowych z pliku .idx</UseTimeCodesFromIdx>
   </VobSubOcr>
   <VobSubOcrCharacter>
     <Title>VobSub - Ręcznie obrazy do tekstu</Title>
     <ShrinkSelection>Zawęż wybór</ShrinkSelection>
-    <ExpandSelection>Pozszerz wybór</ExpandSelection>
+    <ExpandSelection>Rozszerz wybór</ExpandSelection>
     <SubtitleImage>Obraz napisu</SubtitleImage>
     <Characters>Znak(i)</Characters>
     <CharactersAsText>Znak(i) jako tekst</CharactersAsText>
@@ -1153,27 +1023,16 @@ Kontynuować?</SubtitleAppendPrompt>
     <Message>Nazwa folderu bazy nowych znaków</Message>
   </VobSubOcrNewFolder>
   <WaveForm>
-    <ClickToAddWaveForm>
-    </ClickToAddWaveForm>
-    <Seconds>
-    </Seconds>
-    <ZoomIn>
-    </ZoomIn>
-    <ZoomOut>
-    </ZoomOut>
-    <AddParagraphHere>
-    </AddParagraphHere>
-    <DeleteParagraph>
-    </DeleteParagraph>
-    <Split>
-    </Split>
-    <SplitAtCursor>
-    </SplitAtCursor>
-    <MergeWithPrevious>
-    </MergeWithPrevious>
-    <MergeWithNext>
-    </MergeWithNext>
-    <PlaySelection>
-    </PlaySelection>
+    <ClickToAddWaveForm>Kliknij, aby dodać próbkowanie dźwięku</ClickToAddWaveForm>
+    <Seconds>sekund</Seconds>
+    <ZoomIn>Powiększ</ZoomIn>
+    <ZoomOut>Pomniejsz</ZoomOut>
+    <AddParagraphHere>Dodaj tekst tutaj</AddParagraphHere>
+    <DeleteParagraph>Usuń tekst</DeleteParagraph>
+    <Split>Podziel</Split>
+    <SplitAtCursor>Podziel przy kursorze</SplitAtCursor>
+    <MergeWithPrevious>Połącz z poprzednim</MergeWithPrevious>
+    <MergeWithNext>Połącz z następnym</MergeWithNext>
+    <PlaySelection>Odtwórz wybrane</PlaySelection>
   </WaveForm>
 </Language>
