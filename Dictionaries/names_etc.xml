@@ -1,4 +1,4 @@
-<!--
+﻿<!--
 Contains names that should not be translated.
 This file is case sensitive.
 This file is generated/updated by Multi Translator
@@ -660,7 +660,6 @@ This file is generated/updated by Multi Translator
   <name>Bryson</name>
   <name>Buchanan</name>
   <name>Buchanans</name>
-  <name>Buck</name>
   <name>Buckingham</name>
   <name>Buckley</name>
   <name>Buckner</name>
@@ -668,7 +667,6 @@ This file is generated/updated by Multi Translator
   <name>Buddha</name>
   <name>Buddhist</name>
   <name>Buddhists</name>
-  <name>Buddy</name>
   <name>Budwear</name>
   <name>Bueller</name>
   <name>Buenas</name>
@@ -698,7 +696,6 @@ This file is generated/updated by Multi Translator
   <name>Burundi</name>
   <name>Burundian</name>
   <name>Burundians</name>
-  <name>Bush</name>
   <name>Bushs</name>
   <name>Buster</name>
   <name>Butch</name>
@@ -948,14 +945,12 @@ This file is generated/updated by Multi Translator
   <name>Claudio</name>
   <name>Clay</name>
   <name>Clayton</name>
-  <name>CLAYTON</name>
   <name>Claytons</name>
   <name>Clementine</name>
   <name>Clémentine</name>
   <name>Cleo</name>
   <name>Cleopatra</name>
   <name>Cleveland</name>
-  <name>Cliff</name>
   <name>Clifford</name>
   <name>Cliffords</name>
   <name>Cliffside</name>
@@ -1260,7 +1255,6 @@ This file is generated/updated by Multi Translator
   <name>Dixie</name>
   <name>Dixon</name>
   <name>Dixons</name>
-  <name>Dizzy</name>
   <name>Djibouti</name>
   <name>Djiboutian</name>
   <name>Djiboutians</name>
@@ -1548,7 +1542,6 @@ This file is generated/updated by Multi Translator
   <name>Fiddler</name>
   <name>Fiedler</name>
   <name>Fieldings</name>
-  <name>Fields</name>
   <name>Figg</name>
   <name>Fiji</name>
   <name>Fijian</name>
@@ -1564,7 +1557,6 @@ This file is generated/updated by Multi Translator
   <name>Finlay</name>
   <name>Finlays</name>
   <name>Finley</name>
-  <name>finnas</name>
   <name>Finnish</name>
   <name>Finns</name>
   <name>Fiona</name>
@@ -1786,7 +1778,6 @@ This file is generated/updated by Multi Translator
   <name>Graham</name>
   <name>Grande</name>
   <name>Granger</name>
-  <name>Grants</name>
   <name>Graysmith</name>
   <name>Grayson</name>
   <name>Graystone</name>
@@ -2028,7 +2019,6 @@ This file is generated/updated by Multi Translator
   <name>Hongkong</name>
   <name>Honolulu</name>
   <name>Hooters</name>
-  <name>Hoover</name>
   <name>Hopkins</name>
   <name>Horace</name>
   <name>Horatio</name>
@@ -2068,7 +2058,6 @@ This file is generated/updated by Multi Translator
   <name>Icelander</name>
   <name>Icelanders</name>
   <name>Icelandic</name>
-  <name>I'd</name>
   <name>ID</name>
   <name>Ida</name>
   <name>Idaho</name>
@@ -2076,10 +2065,8 @@ This file is generated/updated by Multi Translator
   <name>III</name>
   <name>Ikea</name>
   <name>Ilana</name>
-  <name>I'll</name>
   <name>Illinois</name>
   <name>Ilsa</name>
-  <name>I'm</name>
   <name>Impreza</name>
   <name>Incubator</name>
   <name>India</name>
@@ -2142,7 +2129,6 @@ This file is generated/updated by Multi Translator
   <name>Itzhak</name>
   <name>Ivan</name>
   <name>Ivanov</name>
-  <name>I've</name>
   <name>Ivoirian</name>
   <name>Ivoirians</name>
   <name>Ivorian</name>
@@ -2473,7 +2459,6 @@ This file is generated/updated by Multi Translator
   <name>Kiribati</name>
   <name>Kirsten</name>
   <name>Kisha</name>
-  <name>Kit</name>
   <name>Kitsis</name>
   <name>Kitts</name>
   <name>Kitty</name>
@@ -3359,7 +3344,6 @@ This file is generated/updated by Multi Translator
   <name>Norma</name>
   <name>Norman</name>
   <name>Norris</name>
-  <name>North</name>
   <name>Northman</name>
   <name>Northman's</name>
   <name>Northwestern</name>
@@ -3392,7 +3376,6 @@ This file is generated/updated by Multi Translator
   <name>O'Connell</name>
   <name>O'Conner</name>
   <name>O'Conners</name>
-  <name>October</name>
   <name>Odessa</name>
   <name>O'Donnell</name>
   <name>O'Hara</name>
@@ -3541,7 +3524,6 @@ This file is generated/updated by Multi Translator
   <name>Pennsylvania</name>
   <name>Pentagon</name>
   <name>Pentagons</name>
-  <name>Penthouse</name>
   <name>Pepsi</name>
   <name>Perchov</name>
   <name>Percy</name>
@@ -3648,7 +3630,6 @@ This file is generated/updated by Multi Translator
   <name>PTSD</name>
   <name>Puckett</name>
   <name>Pullman</name>
-  <name>Pumpkin</name>
   <name>Putnam</name>
   <name>Pythagoras</name>
   <name>Qatar</name>
@@ -3768,7 +3749,6 @@ This file is generated/updated by Multi Translator
   <name>Ripley</name>
   <name>Risotto</name>
   <name>Rita</name>
-  <name>River</name>
   <name>Rivera</name>
   <name>Robbie</name>
   <name>Robbins</name>
@@ -3848,7 +3828,6 @@ This file is generated/updated by Multi Translator
   <name>Russian</name>
   <name>Russians</name>
   <name>Russo</name>
-  <name>Rusty</name>
   <name>Rustys</name>
   <name>Ruth</name>
   <name>Rutledge</name>
@@ -4387,7 +4366,6 @@ This file is generated/updated by Multi Translator
   <name>Tor</name>
   <name>Tori</name>
   <name>Torino</name>
-  <name>Tornado</name>
   <name>Toronto</name>
   <name>Torres</name>
   <name>Tory</name>
@@ -4680,7 +4658,6 @@ This file is generated/updated by Multi Translator
   <name>Xerox66</name>
   <name>XJoelX</name>
   <name>X-Men</name>
-  <name>X-MEN</name>
   <name>XY</name>
   <name>Yaeko</name>
   <name>Yaekos</name>
