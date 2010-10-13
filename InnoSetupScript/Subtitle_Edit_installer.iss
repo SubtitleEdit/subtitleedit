@@ -1,4 +1,4 @@
-ï»¿;* Subtitle Edit - Installer script
+;* Subtitle Edit - Installer script
 ;*
 ;* Copyright (C) 2010 XhmikosR
 ;*
@@ -40,22 +40,22 @@
 
 [Setup]
 AppID=SubtitleEdit
-AppCopyright=Copyright Â© 2001-2010, Nikse
+AppCopyright=Copyright © 2001-2010, Nikse
 AppContact=http://www.nikse.dk/se/
 AppName=Subtitle Edit
-AppVerName=Subtitle Edit {#= simple_app_version}
+AppVerName=Subtitle Edit v{#= simple_app_version}
 AppVersion={#= simple_app_version}
 AppPublisher=Nikse
 AppPublisherURL=http://www.nikse.dk/se/
 AppSupportURL=http://www.nikse.dk/se/
 AppUpdatesURL=http://www.nikse.dk/se/
-UninstallDisplayName=Subtitle Edit {#= simple_app_version}
+UninstallDisplayName=Subtitle Edit v{#= simple_app_version}
 UninstallDisplayIcon={app}\SubtitleEdit.exe
 DefaultDirName={pf}\Subtitle Edit
 DefaultGroupName=Subtitle Edit
 VersionInfoCompany=Nikse
-VersionInfoCopyright=Copyright Â© 2001-2010, Nikse
-VersionInfoDescription=Subtitle Edit {#= simple_app_version} Setup
+VersionInfoCopyright=Copyright © 2001-2010, Nikse
+VersionInfoDescription=Subtitle Edit v{#= simple_app_version} Setup
 VersionInfoTextVersion={#= simple_app_version}
 VersionInfoVersion={#= simple_app_version}
 VersionInfoProductName=Subtitle Edit
