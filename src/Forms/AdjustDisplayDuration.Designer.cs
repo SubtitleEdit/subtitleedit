@@ -59,7 +59,7 @@
             this.radioButtonSeconds.Checked = true;
             this.radioButtonSeconds.Location = new System.Drawing.Point(11, 22);
             this.radioButtonSeconds.Name = "radioButtonSeconds";
-            this.radioButtonSeconds.Size = new System.Drawing.Size(67, 17);
+            this.radioButtonSeconds.Size = new System.Drawing.Size(65, 17);
             this.radioButtonSeconds.TabIndex = 1;
             this.radioButtonSeconds.TabStop = true;
             this.radioButtonSeconds.Text = "Seconds";
@@ -155,7 +155,7 @@
             this.labelNote.AutoSize = true;
             this.labelNote.Location = new System.Drawing.Point(10, 135);
             this.labelNote.Name = "labelNote";
-            this.labelNote.Size = new System.Drawing.Size(265, 13);
+            this.labelNote.Size = new System.Drawing.Size(279, 13);
             this.labelNote.TabIndex = 5;
             this.labelNote.Text = "Note: Display time will not overlap start time of next text";
             // 
@@ -164,7 +164,7 @@
             this.labelAddInPercent.AutoSize = true;
             this.labelAddInPercent.Location = new System.Drawing.Point(179, 69);
             this.labelAddInPercent.Name = "labelAddInPercent";
-            this.labelAddInPercent.Size = new System.Drawing.Size(86, 13);
+            this.labelAddInPercent.Size = new System.Drawing.Size(89, 13);
             this.labelAddInPercent.TabIndex = 6;
             this.labelAddInPercent.Text = "Adjust in percent";
             // 
@@ -173,7 +173,7 @@
             this.labelAddSeconds.AutoSize = true;
             this.labelAddSeconds.Location = new System.Drawing.Point(10, 69);
             this.labelAddSeconds.Name = "labelAddSeconds";
-            this.labelAddSeconds.Size = new System.Drawing.Size(69, 13);
+            this.labelAddSeconds.Size = new System.Drawing.Size(68, 13);
             this.labelAddSeconds.TabIndex = 7;
             this.labelAddSeconds.Text = "Add seconds";
             // 
@@ -212,6 +212,7 @@
             this.Controls.Add(this.comboBoxSeconds);
             this.Controls.Add(this.comboBoxPercent);
             this.Controls.Add(this.groupBoxAdjustVia);
+            this.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.KeyPreview = true;
