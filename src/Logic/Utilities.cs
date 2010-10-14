@@ -375,7 +375,7 @@ namespace Nikse.SubtitleEdit.Logic
             var gs = Configuration.Settings.General;
 
             if (string.IsNullOrEmpty(gs.SubtitleFontName))
-                gs.SubtitleFontName = "Microsoft Sans Serif";
+                gs.SubtitleFontName = "Tahoma";
 
             if (gs.SubtitleFontBold)
                 control.Font = new System.Drawing.Font(gs.SubtitleFontName, gs.SubtitleFontSize, System.Drawing.FontStyle.Bold);
