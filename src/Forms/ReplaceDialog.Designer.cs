@@ -46,7 +46,7 @@
             this.radioButtonRegEx.AutoSize = true;
             this.radioButtonRegEx.Location = new System.Drawing.Point(182, 51);
             this.radioButtonRegEx.Name = "radioButtonRegEx";
-            this.radioButtonRegEx.Size = new System.Drawing.Size(57, 17);
+            this.radioButtonRegEx.Size = new System.Drawing.Size(56, 17);
             this.radioButtonRegEx.TabIndex = 3;
             this.radioButtonRegEx.Text = "RegEx";
             this.radioButtonRegEx.UseVisualStyleBackColor = true;
@@ -57,7 +57,7 @@
             this.radioButtonCaseSensitive.AutoSize = true;
             this.radioButtonCaseSensitive.Location = new System.Drawing.Point(81, 51);
             this.radioButtonCaseSensitive.Name = "radioButtonCaseSensitive";
-            this.radioButtonCaseSensitive.Size = new System.Drawing.Size(93, 17);
+            this.radioButtonCaseSensitive.Size = new System.Drawing.Size(94, 17);
             this.radioButtonCaseSensitive.TabIndex = 2;
             this.radioButtonCaseSensitive.Text = "Case sensitive";
             this.radioButtonCaseSensitive.UseVisualStyleBackColor = true;
@@ -90,7 +90,7 @@
             // 
             this.textBoxFind.Location = new System.Drawing.Point(15, 25);
             this.textBoxFind.Name = "textBoxFind";
-            this.textBoxFind.Size = new System.Drawing.Size(262, 20);
+            this.textBoxFind.Size = new System.Drawing.Size(262, 21);
             this.textBoxFind.TabIndex = 0;
             this.textBoxFind.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxFindKeyDown);
             // 
@@ -108,7 +108,7 @@
             // 
             this.textBoxReplace.Location = new System.Drawing.Point(15, 103);
             this.textBoxReplace.Name = "textBoxReplace";
-            this.textBoxReplace.Size = new System.Drawing.Size(265, 20);
+            this.textBoxReplace.Size = new System.Drawing.Size(265, 21);
             this.textBoxReplace.TabIndex = 4;
             this.textBoxReplace.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxFindKeyDown);
             // 
@@ -126,7 +126,7 @@
             this.labelFindWhat.AutoSize = true;
             this.labelFindWhat.Location = new System.Drawing.Point(12, 9);
             this.labelFindWhat.Name = "labelFindWhat";
-            this.labelFindWhat.Size = new System.Drawing.Size(56, 13);
+            this.labelFindWhat.Size = new System.Drawing.Size(58, 13);
             this.labelFindWhat.TabIndex = 15;
             this.labelFindWhat.Text = "Find what:";
             // 
@@ -155,6 +155,7 @@
             this.Controls.Add(this.radioButtonNormal);
             this.Controls.Add(this.buttonReplace);
             this.Controls.Add(this.textBoxFind);
+            this.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.KeyPreview = true;

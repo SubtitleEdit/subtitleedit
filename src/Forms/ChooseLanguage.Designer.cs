@@ -61,7 +61,7 @@
             this.labelLanguage.AutoSize = true;
             this.labelLanguage.Location = new System.Drawing.Point(12, 15);
             this.labelLanguage.Name = "labelLanguage";
-            this.labelLanguage.Size = new System.Drawing.Size(55, 13);
+            this.labelLanguage.Size = new System.Drawing.Size(54, 13);
             this.labelLanguage.TabIndex = 15;
             this.labelLanguage.Text = "Language";
             // 
@@ -84,6 +84,7 @@
             this.Controls.Add(this.comboBoxLanguages);
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.buttonOK);
+            this.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.KeyPreview = true;
             this.MaximizeBox = false;

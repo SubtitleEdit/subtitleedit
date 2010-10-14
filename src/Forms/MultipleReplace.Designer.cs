@@ -152,7 +152,7 @@
             this.labelFindWhat.AutoSize = true;
             this.labelFindWhat.Location = new System.Drawing.Point(17, 26);
             this.labelFindWhat.Name = "labelFindWhat";
-            this.labelFindWhat.Size = new System.Drawing.Size(56, 13);
+            this.labelFindWhat.Size = new System.Drawing.Size(58, 13);
             this.labelFindWhat.TabIndex = 22;
             this.labelFindWhat.Text = "Find what:";
             // 
@@ -169,7 +169,7 @@
             // 
             this.textBoxReplace.Location = new System.Drawing.Point(250, 42);
             this.textBoxReplace.Name = "textBoxReplace";
-            this.textBoxReplace.Size = new System.Drawing.Size(227, 20);
+            this.textBoxReplace.Size = new System.Drawing.Size(227, 21);
             this.textBoxReplace.TabIndex = 2;
             this.textBoxReplace.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxReplaceKeyDown);
             // 
@@ -178,7 +178,7 @@
             this.radioButtonRegEx.AutoSize = true;
             this.radioButtonRegEx.Location = new System.Drawing.Point(187, 68);
             this.radioButtonRegEx.Name = "radioButtonRegEx";
-            this.radioButtonRegEx.Size = new System.Drawing.Size(57, 17);
+            this.radioButtonRegEx.Size = new System.Drawing.Size(56, 17);
             this.radioButtonRegEx.TabIndex = 6;
             this.radioButtonRegEx.Text = "RegEx";
             this.radioButtonRegEx.UseVisualStyleBackColor = true;
@@ -189,7 +189,7 @@
             this.radioButtonCaseSensitive.AutoSize = true;
             this.radioButtonCaseSensitive.Location = new System.Drawing.Point(86, 68);
             this.radioButtonCaseSensitive.Name = "radioButtonCaseSensitive";
-            this.radioButtonCaseSensitive.Size = new System.Drawing.Size(93, 17);
+            this.radioButtonCaseSensitive.Size = new System.Drawing.Size(94, 17);
             this.radioButtonCaseSensitive.TabIndex = 5;
             this.radioButtonCaseSensitive.Text = "Case sensitive";
             this.radioButtonCaseSensitive.UseVisualStyleBackColor = true;
@@ -212,7 +212,7 @@
             // 
             this.textBoxFind.Location = new System.Drawing.Point(20, 42);
             this.textBoxFind.Name = "textBoxFind";
-            this.textBoxFind.Size = new System.Drawing.Size(224, 20);
+            this.textBoxFind.Size = new System.Drawing.Size(224, 21);
             this.textBoxFind.TabIndex = 1;
             // 
             // listViewReplaceList
@@ -302,6 +302,7 @@
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.groupBoxReplaces);
             this.Controls.Add(this.groupBoxLinesFound);
+            this.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.KeyPreview = true;
             this.MaximizeBox = false;

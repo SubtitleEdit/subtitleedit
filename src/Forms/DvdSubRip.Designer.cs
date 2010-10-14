@@ -69,7 +69,7 @@
             this.textBoxIfoFileName.Location = new System.Drawing.Point(6, 34);
             this.textBoxIfoFileName.Name = "textBoxIfoFileName";
             this.textBoxIfoFileName.ReadOnly = true;
-            this.textBoxIfoFileName.Size = new System.Drawing.Size(435, 20);
+            this.textBoxIfoFileName.Size = new System.Drawing.Size(435, 21);
             this.textBoxIfoFileName.TabIndex = 0;
             this.textBoxIfoFileName.DragDrop += new System.Windows.Forms.DragEventHandler(this.TextBoxIfoFileNameDragDrop);
             this.textBoxIfoFileName.DragEnter += new System.Windows.Forms.DragEventHandler(this.TextBoxIfoFileNameDragEnter);
@@ -79,7 +79,7 @@
             this.labelIfoFile.AutoSize = true;
             this.labelIfoFile.Location = new System.Drawing.Point(6, 18);
             this.labelIfoFile.Name = "labelIfoFile";
-            this.labelIfoFile.Size = new System.Drawing.Size(40, 13);
+            this.labelIfoFile.Size = new System.Drawing.Size(42, 13);
             this.labelIfoFile.TabIndex = 2;
             this.labelIfoFile.Text = "IFO file";
             // 
@@ -161,7 +161,7 @@
             this.radioButtonPal.Checked = true;
             this.radioButtonPal.Location = new System.Drawing.Point(6, 19);
             this.radioButtonPal.Name = "radioButtonPal";
-            this.radioButtonPal.Size = new System.Drawing.Size(80, 17);
+            this.radioButtonPal.Size = new System.Drawing.Size(81, 17);
             this.radioButtonPal.TabIndex = 0;
             this.radioButtonPal.TabStop = true;
             this.radioButtonPal.Text = "PAL (25fps)";
@@ -212,7 +212,7 @@
             this.labelVobFiles.AutoSize = true;
             this.labelVobFiles.Location = new System.Drawing.Point(6, 61);
             this.labelVobFiles.Name = "labelVobFiles";
-            this.labelVobFiles.Size = new System.Drawing.Size(50, 13);
+            this.labelVobFiles.Size = new System.Drawing.Size(49, 13);
             this.labelVobFiles.TabIndex = 4;
             this.labelVobFiles.Text = "VOB files";
             // 
@@ -244,13 +244,13 @@
             this.labelStatus.AutoSize = true;
             this.labelStatus.Location = new System.Drawing.Point(117, 276);
             this.labelStatus.Name = "labelStatus";
-            this.labelStatus.Size = new System.Drawing.Size(37, 13);
+            this.labelStatus.Size = new System.Drawing.Size(38, 13);
             this.labelStatus.TabIndex = 5;
             this.labelStatus.Text = "Status";
             // 
             // buttonStartRipping
             // 
-            this.buttonStartRipping.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.buttonStartRipping.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.buttonStartRipping.Location = new System.Drawing.Point(4, 273);
             this.buttonStartRipping.Name = "buttonStartRipping";
             this.buttonStartRipping.Size = new System.Drawing.Size(107, 31);
@@ -268,6 +268,7 @@
             this.Controls.Add(this.labelStatus);
             this.Controls.Add(this.progressBarRip);
             this.Controls.Add(this.groupBoxDvd);
+            this.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.KeyPreview = true;
             this.MaximizeBox = false;

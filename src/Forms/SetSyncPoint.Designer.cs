@@ -68,7 +68,7 @@
             this.timeUpDownLine.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.timeUpDownLine.Location = new System.Drawing.Point(18, 19);
             this.timeUpDownLine.Name = "timeUpDownLine";
-            this.timeUpDownLine.Size = new System.Drawing.Size(89, 24);
+            this.timeUpDownLine.Size = new System.Drawing.Size(89, 25);
             this.timeUpDownLine.TabIndex = 1;
             // 
             // groupBox2
@@ -149,7 +149,7 @@
             this.labelVideoFileName.AutoSize = true;
             this.labelVideoFileName.Location = new System.Drawing.Point(12, 211);
             this.labelVideoFileName.Name = "labelVideoFileName";
-            this.labelVideoFileName.Size = new System.Drawing.Size(100, 13);
+            this.labelVideoFileName.Size = new System.Drawing.Size(98, 13);
             this.labelVideoFileName.TabIndex = 21;
             this.labelVideoFileName.Text = "labelVideoFileName";
             // 
@@ -213,7 +213,7 @@
             this.labelSubtitle.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.labelSubtitle.BackColor = System.Drawing.Color.Black;
-            this.labelSubtitle.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelSubtitle.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelSubtitle.ForeColor = System.Drawing.Color.White;
             this.labelSubtitle.Location = new System.Drawing.Point(12, 492);
             this.labelSubtitle.Name = "labelSubtitle";
@@ -254,6 +254,7 @@
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBoxSyncPointTimeCode);
             this.Controls.Add(this.videoPlayerContainer1);
+            this.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.KeyPreview = true;
             this.MaximizeBox = false;
             this.MinimizeBox = false;

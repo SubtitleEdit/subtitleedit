@@ -75,7 +75,7 @@
             this.labelChooseLanguage.AutoSize = true;
             this.labelChooseLanguage.Location = new System.Drawing.Point(6, 11);
             this.labelChooseLanguage.Name = "labelChooseLanguage";
-            this.labelChooseLanguage.Size = new System.Drawing.Size(141, 13);
+            this.labelChooseLanguage.Size = new System.Drawing.Size(146, 13);
             this.labelChooseLanguage.TabIndex = 3;
             this.labelChooseLanguage.Text = "Choose language (stream-id)";
             // 
@@ -129,6 +129,7 @@
             this.Controls.Add(this.labelChooseLanguage);
             this.Controls.Add(this.comboBoxLanguages);
             this.Controls.Add(this.listBox1);
+            this.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.KeyPreview = true;
             this.MaximizeBox = false;
             this.MinimizeBox = false;

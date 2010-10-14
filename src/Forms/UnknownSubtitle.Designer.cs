@@ -38,7 +38,7 @@
             this.labelTitle.AutoSize = true;
             this.labelTitle.Location = new System.Drawing.Point(15, 25);
             this.labelTitle.Name = "labelTitle";
-            this.labelTitle.Size = new System.Drawing.Size(112, 13);
+            this.labelTitle.Size = new System.Drawing.Size(114, 13);
             this.labelTitle.TabIndex = 0;
             this.labelTitle.Text = "Unknown subtitle type";
             // 
@@ -76,6 +76,7 @@
             this.Controls.Add(this.richTextBoxMessage);
             this.Controls.Add(this.buttonOK);
             this.Controls.Add(this.labelTitle);
+            this.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.KeyPreview = true;
             this.MaximizeBox = false;

@@ -77,7 +77,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.textBoxFindText.Location = new System.Drawing.Point(12, 32);
             this.textBoxFindText.Name = "textBoxFindText";
-            this.textBoxFindText.Size = new System.Drawing.Size(178, 20);
+            this.textBoxFindText.Size = new System.Drawing.Size(178, 21);
             this.textBoxFindText.TabIndex = 0;
             this.textBoxFindText.TextChanged += new System.EventHandler(this.TextBoxFindTextTextChanged);
             this.textBoxFindText.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxFindTextKeyDown);
@@ -97,6 +97,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.subtitleListView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                         | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
+            this.subtitleListView1.FirstVisibleIndex = -1;
             this.subtitleListView1.FullRowSelect = true;
             this.subtitleListView1.GridLines = true;
             this.subtitleListView1.HideSelection = false;
@@ -120,6 +121,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.buttonOK);
             this.Controls.Add(this.subtitleListView1);
+            this.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.KeyPreview = true;
             this.MaximizeBox = false;

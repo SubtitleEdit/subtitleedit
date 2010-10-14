@@ -49,6 +49,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonFixesInverse = new System.Windows.Forms.Button();
             this.buttonFixesSelectAll = new System.Windows.Forms.Button();
             this.buttonFixesApply = new System.Windows.Forms.Button();
+            this.subtitleListView1 = new Nikse.SubtitleEdit.Controls.SubtitleListView();
             this.contextMenuStripListview = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.toolStripMenuItemDelete = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
@@ -59,6 +60,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonAutoBreak = new System.Windows.Forms.Button();
             this.labelStartTimeWarning = new System.Windows.Forms.Label();
             this.labelDurationWarning = new System.Windows.Forms.Label();
+            this.timeUpDownStartTime = new Nikse.SubtitleEdit.Controls.TimeUpDown();
             this.numericUpDownDuration = new System.Windows.Forms.NumericUpDown();
             this.labelDuration = new System.Windows.Forms.Label();
             this.labelStartTime = new System.Windows.Forms.Label();
@@ -74,8 +76,6 @@ namespace Nikse.SubtitleEdit.Forms
             this.tabPageLog = new System.Windows.Forms.TabPage();
             this.textBoxFixedIssues = new System.Windows.Forms.TextBox();
             this.labelNumberOfImportantLogMessages = new System.Windows.Forms.Label();
-            this.subtitleListView1 = new Nikse.SubtitleEdit.Controls.SubtitleListView();
-            this.timeUpDownStartTime = new Nikse.SubtitleEdit.Controls.TimeUpDown();
             this.groupBoxStep1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.tabControl1.SuspendLayout();
@@ -117,7 +117,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.labelStatus.AutoSize = true;
             this.labelStatus.Location = new System.Drawing.Point(12, 542);
             this.labelStatus.Name = "labelStatus";
-            this.labelStatus.Size = new System.Drawing.Size(59, 13);
+            this.labelStatus.Size = new System.Drawing.Size(60, 13);
             this.labelStatus.TabIndex = 5;
             this.labelStatus.Text = "labelStatus";
             // 
@@ -286,7 +286,7 @@ namespace Nikse.SubtitleEdit.Forms
             // buttonFixesApply
             // 
             this.buttonFixesApply.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonFixesApply.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.buttonFixesApply.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.buttonFixesApply.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonFixesApply.Location = new System.Drawing.Point(634, 232);
             this.buttonFixesApply.Name = "buttonFixesApply";
@@ -295,6 +295,24 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonFixesApply.Text = "Apply &selected fixes";
             this.buttonFixesApply.UseVisualStyleBackColor = true;
             this.buttonFixesApply.Click += new System.EventHandler(this.ButtonFixesApplyClick);
+            // 
+            // subtitleListView1
+            // 
+            this.subtitleListView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.subtitleListView1.ContextMenuStrip = this.contextMenuStripListview;
+            this.subtitleListView1.FirstVisibleIndex = -1;
+            this.subtitleListView1.FullRowSelect = true;
+            this.subtitleListView1.GridLines = true;
+            this.subtitleListView1.HideSelection = false;
+            this.subtitleListView1.Location = new System.Drawing.Point(2, 269);
+            this.subtitleListView1.Name = "subtitleListView1";
+            this.subtitleListView1.Size = new System.Drawing.Size(797, 109);
+            this.subtitleListView1.TabIndex = 110;
+            this.subtitleListView1.UseCompatibleStateImageBehavior = false;
+            this.subtitleListView1.View = System.Windows.Forms.View.Details;
+            this.subtitleListView1.SelectedIndexChanged += new System.EventHandler(this.SubtitleListView1SelectedIndexChanged);
             // 
             // contextMenuStripListview
             // 
@@ -383,7 +401,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.labelStartTimeWarning.ForeColor = System.Drawing.Color.Red;
             this.labelStartTimeWarning.Location = new System.Drawing.Point(6, 51);
             this.labelStartTimeWarning.Name = "labelStartTimeWarning";
-            this.labelStartTimeWarning.Size = new System.Drawing.Size(114, 13);
+            this.labelStartTimeWarning.Size = new System.Drawing.Size(115, 13);
             this.labelStartTimeWarning.TabIndex = 32;
             this.labelStartTimeWarning.Text = "labelStartTimeWarning";
             // 
@@ -393,9 +411,18 @@ namespace Nikse.SubtitleEdit.Forms
             this.labelDurationWarning.ForeColor = System.Drawing.Color.Red;
             this.labelDurationWarning.Location = new System.Drawing.Point(57, 64);
             this.labelDurationWarning.Name = "labelDurationWarning";
-            this.labelDurationWarning.Size = new System.Drawing.Size(109, 13);
+            this.labelDurationWarning.Size = new System.Drawing.Size(110, 13);
             this.labelDurationWarning.TabIndex = 31;
             this.labelDurationWarning.Text = "labelDurationWarning";
+            // 
+            // timeUpDownStartTime
+            // 
+            this.timeUpDownStartTime.AutoSize = true;
+            this.timeUpDownStartTime.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.timeUpDownStartTime.Location = new System.Drawing.Point(8, 27);
+            this.timeUpDownStartTime.Name = "timeUpDownStartTime";
+            this.timeUpDownStartTime.Size = new System.Drawing.Size(89, 25);
+            this.timeUpDownStartTime.TabIndex = 112;
             // 
             // numericUpDownDuration
             // 
@@ -417,7 +444,7 @@ namespace Nikse.SubtitleEdit.Forms
             0,
             -2147483648});
             this.numericUpDownDuration.Name = "numericUpDownDuration";
-            this.numericUpDownDuration.Size = new System.Drawing.Size(54, 20);
+            this.numericUpDownDuration.Size = new System.Drawing.Size(54, 21);
             this.numericUpDownDuration.TabIndex = 114;
             this.numericUpDownDuration.ValueChanged += new System.EventHandler(this.NumericUpDownDurationValueChanged);
             // 
@@ -426,7 +453,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.labelDuration.AutoSize = true;
             this.labelDuration.Location = new System.Drawing.Point(97, 12);
             this.labelDuration.Name = "labelDuration";
-            this.labelDuration.Size = new System.Drawing.Size(47, 13);
+            this.labelDuration.Size = new System.Drawing.Size(48, 13);
             this.labelDuration.TabIndex = 28;
             this.labelDuration.Text = "Duration";
             // 
@@ -435,7 +462,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.labelStartTime.AutoSize = true;
             this.labelStartTime.Location = new System.Drawing.Point(6, 12);
             this.labelStartTime.Name = "labelStartTime";
-            this.labelStartTime.Size = new System.Drawing.Size(51, 13);
+            this.labelStartTime.Size = new System.Drawing.Size(54, 13);
             this.labelStartTime.TabIndex = 27;
             this.labelStartTime.Text = "Start time";
             // 
@@ -522,7 +549,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.tabPageLog.Controls.Add(this.textBoxFixedIssues);
             this.tabPageLog.Location = new System.Drawing.Point(4, 22);
             this.tabPageLog.Name = "tabPageLog";
-            this.tabPageLog.Size = new System.Drawing.Size(802, 472);
+            this.tabPageLog.Size = new System.Drawing.Size(802, 471);
             this.tabPageLog.TabIndex = 2;
             this.tabPageLog.Text = "Log";
             this.tabPageLog.UseVisualStyleBackColor = true;
@@ -549,36 +576,9 @@ namespace Nikse.SubtitleEdit.Forms
             this.labelNumberOfImportantLogMessages.ForeColor = System.Drawing.Color.Red;
             this.labelNumberOfImportantLogMessages.Location = new System.Drawing.Point(12, 558);
             this.labelNumberOfImportantLogMessages.Name = "labelNumberOfImportantLogMessages";
-            this.labelNumberOfImportantLogMessages.Size = new System.Drawing.Size(187, 13);
+            this.labelNumberOfImportantLogMessages.Size = new System.Drawing.Size(190, 13);
             this.labelNumberOfImportantLogMessages.TabIndex = 11;
             this.labelNumberOfImportantLogMessages.Text = "labelNumberOfImportantLogMessages";
-            // 
-            // subtitleListView1
-            // 
-            this.subtitleListView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.subtitleListView1.ContextMenuStrip = this.contextMenuStripListview;
-            this.subtitleListView1.FirstVisibleIndex = -1;
-            this.subtitleListView1.FullRowSelect = true;
-            this.subtitleListView1.GridLines = true;
-            this.subtitleListView1.HideSelection = false;
-            this.subtitleListView1.Location = new System.Drawing.Point(2, 269);
-            this.subtitleListView1.Name = "subtitleListView1";
-            this.subtitleListView1.Size = new System.Drawing.Size(797, 109);
-            this.subtitleListView1.TabIndex = 110;
-            this.subtitleListView1.UseCompatibleStateImageBehavior = false;
-            this.subtitleListView1.View = System.Windows.Forms.View.Details;
-            this.subtitleListView1.SelectedIndexChanged += new System.EventHandler(this.SubtitleListView1SelectedIndexChanged);
-            // 
-            // timeUpDownStartTime
-            // 
-            this.timeUpDownStartTime.AutoSize = true;
-            this.timeUpDownStartTime.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.timeUpDownStartTime.Location = new System.Drawing.Point(8, 27);
-            this.timeUpDownStartTime.Name = "timeUpDownStartTime";
-            this.timeUpDownStartTime.Size = new System.Drawing.Size(89, 24);
-            this.timeUpDownStartTime.TabIndex = 112;
             // 
             // FixCommonErrors
             // 
@@ -593,6 +593,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.Controls.Add(this.buttonNextFinish);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBoxStep1);
+            this.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.KeyPreview = true;
             this.MaximizeBox = false;
             this.MinimizeBox = false;

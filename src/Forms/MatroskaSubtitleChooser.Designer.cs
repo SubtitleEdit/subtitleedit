@@ -68,7 +68,7 @@
             this.labelChoose.AutoSize = true;
             this.labelChoose.Location = new System.Drawing.Point(9, 20);
             this.labelChoose.Name = "labelChoose";
-            this.labelChoose.Size = new System.Drawing.Size(220, 13);
+            this.labelChoose.Size = new System.Drawing.Size(224, 13);
             this.labelChoose.TabIndex = 48;
             this.labelChoose.Text = "More than one subtitle found - please choose";
             // 
@@ -81,6 +81,7 @@
             this.Controls.Add(this.listBox1);
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.buttonOK);
+            this.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.KeyPreview = true;
             this.MaximizeBox = false;

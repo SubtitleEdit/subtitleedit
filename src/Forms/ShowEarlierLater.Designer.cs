@@ -49,7 +49,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.labelHoursMinSecsMilliSecs.AutoSize = true;
             this.labelHoursMinSecsMilliSecs.Location = new System.Drawing.Point(11, 383);
             this.labelHoursMinSecsMilliSecs.Name = "labelHoursMinSecsMilliSecs";
-            this.labelHoursMinSecsMilliSecs.Size = new System.Drawing.Size(107, 13);
+            this.labelHoursMinSecsMilliSecs.Size = new System.Drawing.Size(108, 13);
             this.labelHoursMinSecsMilliSecs.TabIndex = 18;
             this.labelHoursMinSecsMilliSecs.Text = "Hours:min:sec.msecs";
             // 
@@ -116,14 +116,14 @@ namespace Nikse.SubtitleEdit.Forms
             this.labelTotalAdjustment.AutoSize = true;
             this.labelTotalAdjustment.Location = new System.Drawing.Point(11, 348);
             this.labelTotalAdjustment.Name = "labelTotalAdjustment";
-            this.labelTotalAdjustment.Size = new System.Drawing.Size(105, 13);
+            this.labelTotalAdjustment.Size = new System.Drawing.Size(108, 13);
             this.labelTotalAdjustment.TabIndex = 38;
             this.labelTotalAdjustment.Text = "labelTotalAdjustment";
             // 
             // labelSubtitle
             // 
             this.labelSubtitle.BackColor = System.Drawing.Color.Black;
-            this.labelSubtitle.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelSubtitle.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelSubtitle.ForeColor = System.Drawing.Color.White;
             this.labelSubtitle.Location = new System.Drawing.Point(387, 582);
             this.labelSubtitle.Name = "labelSubtitle";
@@ -155,7 +155,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.timeUpDownAdjust.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.timeUpDownAdjust.Location = new System.Drawing.Point(12, 399);
             this.timeUpDownAdjust.Name = "timeUpDownAdjust";
-            this.timeUpDownAdjust.Size = new System.Drawing.Size(89, 24);
+            this.timeUpDownAdjust.Size = new System.Drawing.Size(89, 25);
             this.timeUpDownAdjust.TabIndex = 21;
             // 
             // ShowEarlierLater
@@ -173,6 +173,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.Controls.Add(this.labelHoursMinSecsMilliSecs);
             this.Controls.Add(this.buttonShowLater);
             this.Controls.Add(this.buttonShowEarlier);
+            this.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.KeyPreview = true;
             this.MaximizeBox = false;

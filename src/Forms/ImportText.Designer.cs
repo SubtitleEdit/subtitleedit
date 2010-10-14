@@ -46,10 +46,10 @@
             this.radioButtonLineMode = new System.Windows.Forms.RadioButton();
             this.checkBoxRemoveEmptyLines = new System.Windows.Forms.CheckBox();
             this.groupBoxImportResult = new System.Windows.Forms.GroupBox();
+            this.SubtitleListview1 = new Nikse.SubtitleEdit.Controls.SubtitleListView();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.buttonOK = new System.Windows.Forms.Button();
-            this.SubtitleListview1 = new Nikse.SubtitleEdit.Controls.SubtitleListView();
             this.groupBoxImportText.SuspendLayout();
             this.groupBoxImportOptions.SuspendLayout();
             this.groupBoxDuration.SuspendLayout();
@@ -123,7 +123,7 @@
             this.checkBoxMergeShortLines.CheckState = System.Windows.Forms.CheckState.Checked;
             this.checkBoxMergeShortLines.Location = new System.Drawing.Point(6, 98);
             this.checkBoxMergeShortLines.Name = "checkBoxMergeShortLines";
-            this.checkBoxMergeShortLines.Size = new System.Drawing.Size(189, 17);
+            this.checkBoxMergeShortLines.Size = new System.Drawing.Size(193, 17);
             this.checkBoxMergeShortLines.TabIndex = 40;
             this.checkBoxMergeShortLines.Text = "Merge short lines with continuation";
             this.checkBoxMergeShortLines.UseVisualStyleBackColor = true;
@@ -155,7 +155,7 @@
             0,
             0});
             this.numericUpDownDurationFixed.Name = "numericUpDownDurationFixed";
-            this.numericUpDownDurationFixed.Size = new System.Drawing.Size(64, 20);
+            this.numericUpDownDurationFixed.Size = new System.Drawing.Size(64, 21);
             this.numericUpDownDurationFixed.TabIndex = 37;
             this.numericUpDownDurationFixed.Value = new decimal(new int[] {
             1000,
@@ -168,7 +168,7 @@
             this.radioButtonDurationFixed.AutoSize = true;
             this.radioButtonDurationFixed.Location = new System.Drawing.Point(19, 42);
             this.radioButtonDurationFixed.Name = "radioButtonDurationFixed";
-            this.radioButtonDurationFixed.Size = new System.Drawing.Size(50, 17);
+            this.radioButtonDurationFixed.Size = new System.Drawing.Size(51, 17);
             this.radioButtonDurationFixed.TabIndex = 3;
             this.radioButtonDurationFixed.Text = "Fixed";
             this.radioButtonDurationFixed.UseVisualStyleBackColor = true;
@@ -180,7 +180,7 @@
             this.radioButtonDurationAuto.Checked = true;
             this.radioButtonDurationAuto.Location = new System.Drawing.Point(19, 19);
             this.radioButtonDurationAuto.Name = "radioButtonDurationAuto";
-            this.radioButtonDurationAuto.Size = new System.Drawing.Size(47, 17);
+            this.radioButtonDurationAuto.Size = new System.Drawing.Size(48, 17);
             this.radioButtonDurationAuto.TabIndex = 2;
             this.radioButtonDurationAuto.TabStop = true;
             this.radioButtonDurationAuto.Text = "Auto";
@@ -211,7 +211,7 @@
             0,
             0});
             this.numericUpDownGapBetweenLines.Name = "numericUpDownGapBetweenLines";
-            this.numericUpDownGapBetweenLines.Size = new System.Drawing.Size(64, 20);
+            this.numericUpDownGapBetweenLines.Size = new System.Drawing.Size(64, 21);
             this.numericUpDownGapBetweenLines.TabIndex = 36;
             this.numericUpDownGapBetweenLines.Value = new decimal(new int[] {
             1000,
@@ -224,7 +224,7 @@
             this.labelGapBetweenSubtitles.AutoSize = true;
             this.labelGapBetweenSubtitles.Location = new System.Drawing.Point(6, 175);
             this.labelGapBetweenSubtitles.Name = "labelGapBetweenSubtitles";
-            this.labelGapBetweenSubtitles.Size = new System.Drawing.Size(177, 13);
+            this.labelGapBetweenSubtitles.Size = new System.Drawing.Size(180, 13);
             this.labelGapBetweenSubtitles.TabIndex = 37;
             this.labelGapBetweenSubtitles.Text = "Gap between subtitles (milliseconds)";
             // 
@@ -235,7 +235,7 @@
             this.checkBoxRemoveLinesWithoutLetters.CheckState = System.Windows.Forms.CheckState.Checked;
             this.checkBoxRemoveLinesWithoutLetters.Location = new System.Drawing.Point(6, 144);
             this.checkBoxRemoveLinesWithoutLetters.Name = "checkBoxRemoveLinesWithoutLetters";
-            this.checkBoxRemoveLinesWithoutLetters.Size = new System.Drawing.Size(158, 17);
+            this.checkBoxRemoveLinesWithoutLetters.Size = new System.Drawing.Size(162, 17);
             this.checkBoxRemoveLinesWithoutLetters.TabIndex = 5;
             this.checkBoxRemoveLinesWithoutLetters.Text = "Remove lines without letters";
             this.checkBoxRemoveLinesWithoutLetters.UseVisualStyleBackColor = true;
@@ -258,7 +258,7 @@
             this.radioButtonAutoSplit.Checked = true;
             this.radioButtonAutoSplit.Location = new System.Drawing.Point(6, 19);
             this.radioButtonAutoSplit.Name = "radioButtonAutoSplit";
-            this.radioButtonAutoSplit.Size = new System.Drawing.Size(88, 17);
+            this.radioButtonAutoSplit.Size = new System.Drawing.Size(93, 17);
             this.radioButtonAutoSplit.TabIndex = 2;
             this.radioButtonAutoSplit.TabStop = true;
             this.radioButtonAutoSplit.Text = "Auto split text";
@@ -270,7 +270,7 @@
             this.radioButtonLineMode.AutoSize = true;
             this.radioButtonLineMode.Location = new System.Drawing.Point(6, 42);
             this.radioButtonLineMode.Name = "radioButtonLineMode";
-            this.radioButtonLineMode.Size = new System.Drawing.Size(131, 17);
+            this.radioButtonLineMode.Size = new System.Drawing.Size(133, 17);
             this.radioButtonLineMode.TabIndex = 0;
             this.radioButtonLineMode.Text = "One line is one subtitle";
             this.radioButtonLineMode.UseVisualStyleBackColor = true;
@@ -283,7 +283,7 @@
             this.checkBoxRemoveEmptyLines.CheckState = System.Windows.Forms.CheckState.Checked;
             this.checkBoxRemoveEmptyLines.Location = new System.Drawing.Point(6, 121);
             this.checkBoxRemoveEmptyLines.Name = "checkBoxRemoveEmptyLines";
-            this.checkBoxRemoveEmptyLines.Size = new System.Drawing.Size(121, 17);
+            this.checkBoxRemoveEmptyLines.Size = new System.Drawing.Size(122, 17);
             this.checkBoxRemoveEmptyLines.TabIndex = 3;
             this.checkBoxRemoveEmptyLines.Text = "Remove empty lines";
             this.checkBoxRemoveEmptyLines.UseVisualStyleBackColor = true;
@@ -301,6 +301,24 @@
             this.groupBoxImportResult.TabIndex = 15;
             this.groupBoxImportResult.TabStop = false;
             this.groupBoxImportResult.Text = "Preview";
+            // 
+            // SubtitleListview1
+            // 
+            this.SubtitleListview1.AllowDrop = true;
+            this.SubtitleListview1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.SubtitleListview1.FirstVisibleIndex = -1;
+            this.SubtitleListview1.FullRowSelect = true;
+            this.SubtitleListview1.GridLines = true;
+            this.SubtitleListview1.HideSelection = false;
+            this.SubtitleListview1.Location = new System.Drawing.Point(6, 19);
+            this.SubtitleListview1.MultiSelect = false;
+            this.SubtitleListview1.Name = "SubtitleListview1";
+            this.SubtitleListview1.Size = new System.Drawing.Size(811, 186);
+            this.SubtitleListview1.TabIndex = 12;
+            this.SubtitleListview1.UseCompatibleStateImageBehavior = false;
+            this.SubtitleListview1.View = System.Windows.Forms.View.Details;
             // 
             // openFileDialog1
             // 
@@ -330,24 +348,6 @@
             this.buttonOK.UseVisualStyleBackColor = true;
             this.buttonOK.Click += new System.EventHandler(this.buttonOK_Click);
             // 
-            // SubtitleListview1
-            // 
-            this.SubtitleListview1.AllowDrop = true;
-            this.SubtitleListview1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.SubtitleListview1.FirstVisibleIndex = -1;
-            this.SubtitleListview1.FullRowSelect = true;
-            this.SubtitleListview1.GridLines = true;
-            this.SubtitleListview1.HideSelection = false;
-            this.SubtitleListview1.Location = new System.Drawing.Point(6, 19);
-            this.SubtitleListview1.MultiSelect = false;
-            this.SubtitleListview1.Name = "SubtitleListview1";
-            this.SubtitleListview1.Size = new System.Drawing.Size(811, 186);
-            this.SubtitleListview1.TabIndex = 12;
-            this.SubtitleListview1.UseCompatibleStateImageBehavior = false;
-            this.SubtitleListview1.View = System.Windows.Forms.View.Details;
-            // 
             // ImportText
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -358,6 +358,7 @@
             this.Controls.Add(this.groupBoxImportResult);
             this.Controls.Add(this.groupBoxImportOptions);
             this.Controls.Add(this.groupBoxImportText);
+            this.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.KeyPreview = true;
             this.MinimumSize = new System.Drawing.Size(810, 648);
             this.Name = "ImportText";

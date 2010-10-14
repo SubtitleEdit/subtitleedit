@@ -34,6 +34,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.buttonOK = new System.Windows.Forms.Button();
             this.groupBoxStartScene = new System.Windows.Forms.GroupBox();
+            this.MediaPlayerStart = new Nikse.SubtitleEdit.Controls.VideoPlayerContainer();
             this.labelStartSubtitle = new System.Windows.Forms.Label();
             this.panelControlsStart = new System.Windows.Forms.Panel();
             this.buttonStartVerify = new System.Windows.Forms.Button();
@@ -43,6 +44,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonStartHalfASecondBack = new System.Windows.Forms.Button();
             this.comboBoxStartTexts = new System.Windows.Forms.ComboBox();
             this.groupBoxEndScene = new System.Windows.Forms.GroupBox();
+            this.MediaPlayerEnd = new Nikse.SubtitleEdit.Controls.VideoPlayerContainer();
             this.labelEndSubtitle = new System.Windows.Forms.Label();
             this.panelControlsEnd = new System.Windows.Forms.Panel();
             this.buttonEndVerify = new System.Windows.Forms.Button();
@@ -58,8 +60,6 @@ namespace Nikse.SubtitleEdit.Forms
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.timer2 = new System.Windows.Forms.Timer(this.components);
             this.labelTip = new System.Windows.Forms.Label();
-            this.MediaPlayerEnd = new Nikse.SubtitleEdit.Controls.VideoPlayerContainer();
-            this.MediaPlayerStart = new Nikse.SubtitleEdit.Controls.VideoPlayerContainer();
             this.groupBoxStartScene.SuspendLayout();
             this.panelControlsStart.SuspendLayout();
             this.groupBoxEndScene.SuspendLayout();
@@ -106,11 +106,24 @@ namespace Nikse.SubtitleEdit.Forms
             this.groupBoxStartScene.Text = "Start scene";
             this.groupBoxStartScene.Enter += new System.EventHandler(this.GroupBoxStartSceneEnter);
             // 
+            // MediaPlayerStart
+            // 
+            this.MediaPlayerStart.BackColor = System.Drawing.Color.Black;
+            this.MediaPlayerStart.CurrentPosition = 0D;
+            this.MediaPlayerStart.Location = new System.Drawing.Point(6, 34);
+            this.MediaPlayerStart.Name = "MediaPlayerStart";
+            this.MediaPlayerStart.ShowStopButton = true;
+            this.MediaPlayerStart.Size = new System.Drawing.Size(438, 263);
+            this.MediaPlayerStart.TabIndex = 13;
+            this.MediaPlayerStart.VideoPlayer = null;
+            this.MediaPlayerStart.Volume = 0D;
+            this.MediaPlayerStart.OnButtonClicked += new System.EventHandler(this.MediaPlayerStart_OnButtonClicked);
+            // 
             // labelStartSubtitle
             // 
             this.labelStartSubtitle.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.labelStartSubtitle.BackColor = System.Drawing.Color.Black;
-            this.labelStartSubtitle.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelStartSubtitle.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelStartSubtitle.ForeColor = System.Drawing.Color.White;
             this.labelStartSubtitle.Location = new System.Drawing.Point(6, 296);
             this.labelStartSubtitle.Name = "labelStartSubtitle";
@@ -206,11 +219,24 @@ namespace Nikse.SubtitleEdit.Forms
             this.groupBoxEndScene.Text = "End scene";
             this.groupBoxEndScene.Enter += new System.EventHandler(this.GroupBoxEndSceneEnter);
             // 
+            // MediaPlayerEnd
+            // 
+            this.MediaPlayerEnd.BackColor = System.Drawing.Color.Black;
+            this.MediaPlayerEnd.CurrentPosition = 0D;
+            this.MediaPlayerEnd.Location = new System.Drawing.Point(6, 34);
+            this.MediaPlayerEnd.Name = "MediaPlayerEnd";
+            this.MediaPlayerEnd.ShowStopButton = true;
+            this.MediaPlayerEnd.Size = new System.Drawing.Size(438, 263);
+            this.MediaPlayerEnd.TabIndex = 14;
+            this.MediaPlayerEnd.VideoPlayer = null;
+            this.MediaPlayerEnd.Volume = 0D;
+            this.MediaPlayerEnd.OnButtonClicked += new System.EventHandler(this.MediaPlayerEnd_OnButtonClicked);
+            // 
             // labelEndSubtitle
             // 
             this.labelEndSubtitle.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.labelEndSubtitle.BackColor = System.Drawing.Color.Black;
-            this.labelEndSubtitle.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelEndSubtitle.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelEndSubtitle.ForeColor = System.Drawing.Color.White;
             this.labelEndSubtitle.Location = new System.Drawing.Point(6, 296);
             this.labelEndSubtitle.Name = "labelEndSubtitle";
@@ -309,7 +335,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.labelVideoInfo.AutoSize = true;
             this.labelVideoInfo.Location = new System.Drawing.Point(6, 16);
             this.labelVideoInfo.Name = "labelVideoInfo";
-            this.labelVideoInfo.Size = new System.Drawing.Size(85, 13);
+            this.labelVideoInfo.Size = new System.Drawing.Size(84, 13);
             this.labelVideoInfo.TabIndex = 13;
             this.labelVideoInfo.Text = "No video loaded";
             // 
@@ -328,7 +354,7 @@ namespace Nikse.SubtitleEdit.Forms
             // buttonSync
             // 
             this.buttonSync.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-            this.buttonSync.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.buttonSync.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.buttonSync.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.buttonSync.Location = new System.Drawing.Point(395, 482);
             this.buttonSync.Name = "buttonSync";
@@ -349,35 +375,9 @@ namespace Nikse.SubtitleEdit.Forms
             this.labelTip.ForeColor = System.Drawing.Color.Silver;
             this.labelTip.Location = new System.Drawing.Point(12, 474);
             this.labelTip.Name = "labelTip";
-            this.labelTip.Size = new System.Drawing.Size(320, 13);
+            this.labelTip.Size = new System.Drawing.Size(332, 13);
             this.labelTip.TabIndex = 15;
             this.labelTip.Text = "Tip: Use <ctrl+arrow left/right> keys to move 100 ms back/forward";
-            // 
-            // MediaPlayerEnd
-            // 
-            this.MediaPlayerEnd.BackColor = System.Drawing.Color.Black;
-            this.MediaPlayerEnd.CurrentPosition = 0D;
-            this.MediaPlayerEnd.Location = new System.Drawing.Point(6, 34);
-            this.MediaPlayerEnd.Name = "MediaPlayerEnd";
-            this.MediaPlayerEnd.ShowStopButton = true;
-            this.MediaPlayerEnd.Size = new System.Drawing.Size(438, 263);
-            this.MediaPlayerEnd.TabIndex = 14;
-            this.MediaPlayerEnd.VideoPlayer = null;
-            this.MediaPlayerEnd.Volume = 0D;
-            this.MediaPlayerEnd.OnButtonClicked += new System.EventHandler(this.MediaPlayerEnd_OnButtonClicked);
-            // 
-            // MediaPlayerStart
-            // 
-            this.MediaPlayerStart.BackColor = System.Drawing.Color.Black;
-            this.MediaPlayerStart.CurrentPosition = 0D;
-            this.MediaPlayerStart.Location = new System.Drawing.Point(6, 34);
-            this.MediaPlayerStart.Name = "MediaPlayerStart";
-            this.MediaPlayerStart.ShowStopButton = true;
-            this.MediaPlayerStart.Size = new System.Drawing.Size(438, 263);
-            this.MediaPlayerStart.TabIndex = 13;
-            this.MediaPlayerStart.VideoPlayer = null;
-            this.MediaPlayerStart.Volume = 0D;
-            this.MediaPlayerStart.OnButtonClicked += new System.EventHandler(this.MediaPlayerStart_OnButtonClicked);
             // 
             // VisualSync
             // 
@@ -392,6 +392,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.Controls.Add(this.groupBoxStartScene);
             this.Controls.Add(this.buttonOK);
             this.Controls.Add(this.buttonOpenMovie);
+            this.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.KeyPreview = true;
             this.MinimumSize = new System.Drawing.Size(935, 540);
             this.Name = "VisualSync";

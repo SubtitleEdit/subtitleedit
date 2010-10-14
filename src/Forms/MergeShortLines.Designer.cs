@@ -86,7 +86,7 @@ namespace Nikse.SubtitleEdit.Forms
             0,
             0});
             this.numericUpDownMaxCharacters.Name = "numericUpDownMaxCharacters";
-            this.numericUpDownMaxCharacters.Size = new System.Drawing.Size(64, 20);
+            this.numericUpDownMaxCharacters.Size = new System.Drawing.Size(64, 21);
             this.numericUpDownMaxCharacters.TabIndex = 0;
             this.numericUpDownMaxCharacters.Value = new decimal(new int[] {
             65,
@@ -100,7 +100,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.labelMaxCharacters.AutoSize = true;
             this.labelMaxCharacters.Location = new System.Drawing.Point(267, 9);
             this.labelMaxCharacters.Name = "labelMaxCharacters";
-            this.labelMaxCharacters.Size = new System.Drawing.Size(187, 13);
+            this.labelMaxCharacters.Size = new System.Drawing.Size(190, 13);
             this.labelMaxCharacters.TabIndex = 32;
             this.labelMaxCharacters.Text = "Maximum characters in one paragraph";
             // 
@@ -127,7 +127,7 @@ namespace Nikse.SubtitleEdit.Forms
             0,
             0});
             this.numericUpDownMaxMillisecondsBetweenLines.Name = "numericUpDownMaxMillisecondsBetweenLines";
-            this.numericUpDownMaxMillisecondsBetweenLines.Size = new System.Drawing.Size(64, 20);
+            this.numericUpDownMaxMillisecondsBetweenLines.Size = new System.Drawing.Size(64, 21);
             this.numericUpDownMaxMillisecondsBetweenLines.TabIndex = 2;
             this.numericUpDownMaxMillisecondsBetweenLines.Value = new decimal(new int[] {
             250,
@@ -211,6 +211,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.Controls.Add(this.SubtitleListview1);
             this.Controls.Add(this.buttonOK);
             this.Controls.Add(this.buttonCancel);
+            this.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.KeyPreview = true;
             this.MinimumSize = new System.Drawing.Size(750, 400);
             this.Name = "MergeShortLines";

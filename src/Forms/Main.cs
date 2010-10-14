@@ -1333,7 +1333,7 @@ namespace Nikse.SubtitleEdit.Forms
             var gs = Configuration.Settings.General;
 
             if (string.IsNullOrEmpty(gs.SubtitleFontName))
-                gs.SubtitleFontName = "Microsoft Sans Serif";
+                gs.SubtitleFontName = "Tahoma";
 
             if (gs.SubtitleFontBold)
             {
