@@ -68,7 +68,7 @@
             this.labelInfo.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.labelInfo.Location = new System.Drawing.Point(37, 9);
             this.labelInfo.Name = "labelInfo";
-            this.labelInfo.Size = new System.Drawing.Size(142, 13);
+            this.labelInfo.Size = new System.Drawing.Size(151, 13);
             this.labelInfo.TabIndex = 3;
             this.labelInfo.Text = "Convert frame rate of subtitle";
             // 
@@ -144,6 +144,7 @@
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.buttonOK);
             this.Controls.Add(this.labelInfo);
+            this.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.KeyPreview = true;
             this.MaximizeBox = false;

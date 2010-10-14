@@ -130,7 +130,7 @@
             this.labelCondition.AutoSize = true;
             this.labelCondition.Location = new System.Drawing.Point(13, 13);
             this.labelCondition.Name = "labelCondition";
-            this.labelCondition.Size = new System.Drawing.Size(138, 13);
+            this.labelCondition.Size = new System.Drawing.Size(141, 13);
             this.labelCondition.TabIndex = 9;
             this.labelCondition.Text = "Only break lines longer than";
             // 
@@ -144,6 +144,7 @@
             this.Controls.Add(this.groupBoxLinesFound);
             this.Controls.Add(this.buttonOK);
             this.Controls.Add(this.buttonCancel);
+            this.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.KeyPreview = true;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
