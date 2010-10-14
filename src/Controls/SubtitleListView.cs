@@ -17,7 +17,7 @@ namespace Nikse.SubtitleEdit.Controls
 
         private int _firstVisibleIndex = -1;
         private string _lineSeparatorString = " || ";
-        public string SubtitleFontName = "Microsoft Sans Serif";
+        public string SubtitleFontName = "Tahoma";
         public bool SubtitleFontBold = false;
         public int SubtitleFontSize = 8;
 
