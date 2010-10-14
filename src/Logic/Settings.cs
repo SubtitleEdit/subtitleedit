@@ -80,7 +80,7 @@ namespace Nikse.SubtitleEdit.Logic
 
         public SsaStyleSettings()
         {
-            FontName = "Microsoft Sans Serif";
+            FontName = "Tahoma";
             FontSize = 18;
             FontColorArgb = System.Drawing.Color.FromArgb(255, 255, 255).ToArgb();
         }
@@ -217,7 +217,7 @@ namespace Nikse.SubtitleEdit.Logic
             ShowWaveForm = false;
             ShowFrameRate = false;
             DefaultFrameRate = 23.976;
-            SubtitleFontName = "Microsoft Sans Serif";
+            SubtitleFontName = "Tahoma";
             if (Environment.OSVersion.Version.Major < 6) // 6 == Vista/Win2008Server/Win7
                 SubtitleFontName = "Lucida Sans Unicode";
 
