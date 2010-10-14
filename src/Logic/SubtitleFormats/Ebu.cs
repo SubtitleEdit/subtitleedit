@@ -180,6 +180,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             const int TTISize = 128;
             const byte TextFieldCRLF = 0x8A;
             const byte TextFieldTerminator = 0x8F;
+            const byte ItalicsOn = 0x80;
+            const byte ItalicsOff = 0x80;
+            const byte UnderlineOn = 0x82;
+            const byte UnderlineOff = 0x83;
 
             Encoding encoding = Encoding.Default; 
             //try
@@ -216,9 +220,17 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 {
                     if (buffer[index + 16 + i] == TextFieldCRLF)
                         sb.AppendLine();
+                    else if (buffer[index + 16 + i] == ItalicsOn)
+                        sb.Append("<i>");
+                    else if (buffer[index + 16 + i] == ItalicsOff)
+                        sb.Append("</i>");
+                    else if (buffer[index + 16 + i] == UnderlineOn)
+                        sb.Append("<u>");
+                    else if (buffer[index + 16 + i] == UnderlineOff)
+                        sb.Append("</u>");
                     else if (buffer[index + 16 + i] == TextFieldTerminator)
                         break;
-                    else
+                    else if (buffer[index + 16 + i] >= 0xA1)
                         sb.Append(encoding.GetString(buffer, index+16+i, 1));
                 }
                 tti.TextField = sb.ToString();
