@@ -95,7 +95,7 @@
             this.labelChooseCharacters.AutoSize = true;
             this.labelChooseCharacters.Location = new System.Drawing.Point(12, 19);
             this.labelChooseCharacters.Name = "labelChooseCharacters";
-            this.labelChooseCharacters.Size = new System.Drawing.Size(102, 13);
+            this.labelChooseCharacters.Size = new System.Drawing.Size(105, 13);
             this.labelChooseCharacters.TabIndex = 18;
             this.labelChooseCharacters.Text = "Choose character(s)";
             // 
@@ -104,7 +104,7 @@
             this.labelImageCompareFiles.AutoSize = true;
             this.labelImageCompareFiles.Location = new System.Drawing.Point(12, 67);
             this.labelImageCompareFiles.Name = "labelImageCompareFiles";
-            this.labelImageCompareFiles.Size = new System.Drawing.Size(101, 13);
+            this.labelImageCompareFiles.Size = new System.Drawing.Size(103, 13);
             this.labelImageCompareFiles.TabIndex = 19;
             this.labelImageCompareFiles.Text = "Image compare files";
             // 
@@ -131,7 +131,7 @@
             this.checkBoxItalic.AutoSize = true;
             this.checkBoxItalic.Location = new System.Drawing.Point(15, 61);
             this.checkBoxItalic.Name = "checkBoxItalic";
-            this.checkBoxItalic.Size = new System.Drawing.Size(58, 17);
+            this.checkBoxItalic.Size = new System.Drawing.Size(59, 17);
             this.checkBoxItalic.TabIndex = 29;
             this.checkBoxItalic.Text = "Is &italic";
             this.checkBoxItalic.UseVisualStyleBackColor = true;
@@ -141,7 +141,7 @@
             this.labelDoubleSize.AutoSize = true;
             this.labelDoubleSize.Location = new System.Drawing.Point(14, 172);
             this.labelDoubleSize.Name = "labelDoubleSize";
-            this.labelDoubleSize.Size = new System.Drawing.Size(92, 13);
+            this.labelDoubleSize.Size = new System.Drawing.Size(93, 13);
             this.labelDoubleSize.TabIndex = 28;
             this.labelDoubleSize.Text = "Image double size";
             // 
@@ -160,7 +160,7 @@
             this.labelTextAssociatedWithImage.AutoSize = true;
             this.labelTextAssociatedWithImage.Location = new System.Drawing.Point(14, 19);
             this.labelTextAssociatedWithImage.Name = "labelTextAssociatedWithImage";
-            this.labelTextAssociatedWithImage.Size = new System.Drawing.Size(135, 13);
+            this.labelTextAssociatedWithImage.Size = new System.Drawing.Size(137, 13);
             this.labelTextAssociatedWithImage.TabIndex = 26;
             this.labelTextAssociatedWithImage.Text = "Text associated with image";
             // 
@@ -188,7 +188,7 @@
             // 
             this.textBoxText.Location = new System.Drawing.Point(14, 35);
             this.textBoxText.Name = "textBoxText";
-            this.textBoxText.Size = new System.Drawing.Size(100, 20);
+            this.textBoxText.Size = new System.Drawing.Size(100, 21);
             this.textBoxText.TabIndex = 23;
             // 
             // pictureBox1
@@ -223,6 +223,7 @@
             this.Controls.Add(this.buttonOK);
             this.Controls.Add(this.listBoxFileNames);
             this.Controls.Add(this.comboBoxTexts);
+            this.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.KeyPreview = true;
             this.MaximizeBox = false;

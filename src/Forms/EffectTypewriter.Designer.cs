@@ -46,7 +46,7 @@
             this.labelPreview.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.labelPreview.BackColor = System.Drawing.Color.Black;
-            this.labelPreview.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelPreview.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelPreview.ForeColor = System.Drawing.Color.White;
             this.labelPreview.Location = new System.Drawing.Point(12, 72);
             this.labelPreview.Name = "labelPreview";
@@ -94,7 +94,7 @@
             this.labelEndDelay.AutoSize = true;
             this.labelEndDelay.Location = new System.Drawing.Point(17, 44);
             this.labelEndDelay.Name = "labelEndDelay";
-            this.labelEndDelay.Size = new System.Drawing.Size(112, 13);
+            this.labelEndDelay.Size = new System.Drawing.Size(113, 13);
             this.labelEndDelay.TabIndex = 32;
             this.labelEndDelay.Text = "End delay in millisecs.:";
             // 
@@ -118,7 +118,7 @@
             0,
             -2147483648});
             this.numericUpDownDelay.Name = "numericUpDownDelay";
-            this.numericUpDownDelay.Size = new System.Drawing.Size(54, 20);
+            this.numericUpDownDelay.Size = new System.Drawing.Size(54, 21);
             this.numericUpDownDelay.TabIndex = 35;
             // 
             // labelTM
@@ -126,7 +126,7 @@
             this.labelTM.AutoSize = true;
             this.labelTM.Location = new System.Drawing.Point(51, 22);
             this.labelTM.Name = "labelTM";
-            this.labelTM.Size = new System.Drawing.Size(78, 13);
+            this.labelTM.Size = new System.Drawing.Size(79, 13);
             this.labelTM.TabIndex = 36;
             this.labelTM.Text = "Total millisecs.:";
             // 
@@ -135,7 +135,7 @@
             this.labelTotalMillisecs.AutoSize = true;
             this.labelTotalMillisecs.Location = new System.Drawing.Point(127, 23);
             this.labelTotalMillisecs.Name = "labelTotalMillisecs";
-            this.labelTotalMillisecs.Size = new System.Drawing.Size(92, 13);
+            this.labelTotalMillisecs.Size = new System.Drawing.Size(90, 13);
             this.labelTotalMillisecs.TabIndex = 37;
             this.labelTotalMillisecs.Text = "labelTotalMillisecs";
             // 
@@ -152,6 +152,7 @@
             this.Controls.Add(this.buttonOK);
             this.Controls.Add(this.buttonPreview);
             this.Controls.Add(this.labelPreview);
+            this.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.KeyPreview = true;
             this.MaximizeBox = false;

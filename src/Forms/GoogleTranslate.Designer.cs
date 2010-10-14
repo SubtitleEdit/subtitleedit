@@ -58,7 +58,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.labelFrom.AutoSize = true;
             this.labelFrom.Location = new System.Drawing.Point(288, 41);
             this.labelFrom.Name = "labelFrom";
-            this.labelFrom.Size = new System.Drawing.Size(33, 13);
+            this.labelFrom.Size = new System.Drawing.Size(35, 13);
             this.labelFrom.TabIndex = 1;
             this.labelFrom.Text = "From:";
             // 
@@ -118,7 +118,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.linkLabelPoweredByGoogleTranslate.AutoSize = true;
             this.linkLabelPoweredByGoogleTranslate.Location = new System.Drawing.Point(15, 529);
             this.linkLabelPoweredByGoogleTranslate.Name = "linkLabelPoweredByGoogleTranslate";
-            this.linkLabelPoweredByGoogleTranslate.Size = new System.Drawing.Size(143, 13);
+            this.linkLabelPoweredByGoogleTranslate.Size = new System.Drawing.Size(146, 13);
             this.linkLabelPoweredByGoogleTranslate.TabIndex = 8;
             this.linkLabelPoweredByGoogleTranslate.TabStop = true;
             this.linkLabelPoweredByGoogleTranslate.Text = "Powered by Google translate";
@@ -129,7 +129,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.labelPleaseWait.AutoSize = true;
             this.labelPleaseWait.Location = new System.Drawing.Point(703, 23);
             this.labelPleaseWait.Name = "labelPleaseWait";
-            this.labelPleaseWait.Size = new System.Drawing.Size(171, 13);
+            this.labelPleaseWait.Size = new System.Drawing.Size(176, 13);
             this.labelPleaseWait.TabIndex = 10;
             this.labelPleaseWait.Text = "Please wait... this may take a while";
             // 
@@ -181,6 +181,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.Controls.Add(this.subtitleListViewFrom);
             this.Controls.Add(this.labelFrom);
             this.Controls.Add(this.comboBoxFrom);
+            this.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.KeyPreview = true;
             this.MaximizeBox = false;
             this.MinimizeBox = false;

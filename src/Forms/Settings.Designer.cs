@@ -107,6 +107,9 @@
             this.radioButtonVideoPlayerDirectShow = new System.Windows.Forms.RadioButton();
             this.radioButtonVideoPlayerManagedDirectX = new System.Windows.Forms.RadioButton();
             this.tabPageWaveForm = new System.Windows.Forms.TabPage();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.buttonWaveFormsFolderEmpty = new System.Windows.Forms.Button();
+            this.labelWaveFormsFolderInfo = new System.Windows.Forms.Label();
             this.groupBoxWaveFormAppearence = new System.Windows.Forms.GroupBox();
             this.panelWaveFormTextColor = new System.Windows.Forms.Panel();
             this.buttonWaveFormTextColor = new System.Windows.Forms.Button();
@@ -180,9 +183,6 @@
             this.colorDialogSSAStyle = new System.Windows.Forms.ColorDialog();
             this.fontDialogSSAStyle = new System.Windows.Forms.FontDialog();
             this.labelStatus = new System.Windows.Forms.Label();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.labelWaveFormsFolderInfo = new System.Windows.Forms.Label();
-            this.buttonWaveFormsFolderEmpty = new System.Windows.Forms.Button();
             this.tabControlSettings.SuspendLayout();
             this.tabPageGenerel.SuspendLayout();
             this.groupBoxMiscellaneous.SuspendLayout();
@@ -202,6 +202,7 @@
             this.groupBoxVideoPlayerDefault.SuspendLayout();
             this.groupBoxVideoEngine.SuspendLayout();
             this.tabPageWaveForm.SuspendLayout();
+            this.groupBox1.SuspendLayout();
             this.groupBoxWaveFormAppearence.SuspendLayout();
             this.tabPageTools.SuspendLayout();
             this.groupBoxSpellCheck.SuspendLayout();
@@ -218,7 +219,6 @@
             this.tabPageProxy.SuspendLayout();
             this.groupBoxProxySettings.SuspendLayout();
             this.groupBoxProxyAuthentication.SuspendLayout();
-            this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
             // buttonOK
@@ -317,7 +317,7 @@
             this.checkBoxShowFrameRate.AutoSize = true;
             this.checkBoxShowFrameRate.Location = new System.Drawing.Point(180, 19);
             this.checkBoxShowFrameRate.Name = "checkBoxShowFrameRate";
-            this.checkBoxShowFrameRate.Size = new System.Drawing.Size(149, 17);
+            this.checkBoxShowFrameRate.Size = new System.Drawing.Size(154, 17);
             this.checkBoxShowFrameRate.TabIndex = 29;
             this.checkBoxShowFrameRate.Text = "Show frame rate in toolbar";
             this.checkBoxShowFrameRate.UseVisualStyleBackColor = true;
@@ -359,7 +359,7 @@
             this.labelListViewDoubleClickEvent.AutoSize = true;
             this.labelListViewDoubleClickEvent.Location = new System.Drawing.Point(432, 183);
             this.labelListViewDoubleClickEvent.Name = "labelListViewDoubleClickEvent";
-            this.labelListViewDoubleClickEvent.Size = new System.Drawing.Size(229, 13);
+            this.labelListViewDoubleClickEvent.Size = new System.Drawing.Size(227, 13);
             this.labelListViewDoubleClickEvent.TabIndex = 14;
             this.labelListViewDoubleClickEvent.Text = "Double-click on line in main window listview will";
             // 
@@ -368,7 +368,7 @@
             this.textBoxShowLineBreaksAs.Location = new System.Drawing.Point(588, 151);
             this.textBoxShowLineBreaksAs.MaxLength = 10;
             this.textBoxShowLineBreaksAs.Name = "textBoxShowLineBreaksAs";
-            this.textBoxShowLineBreaksAs.Size = new System.Drawing.Size(69, 20);
+            this.textBoxShowLineBreaksAs.Size = new System.Drawing.Size(69, 21);
             this.textBoxShowLineBreaksAs.TabIndex = 24;
             // 
             // labelShowLineBreaksAs
@@ -385,7 +385,7 @@
             this.checkBoxRememberWindowPosition.AutoSize = true;
             this.checkBoxRememberWindowPosition.Location = new System.Drawing.Point(435, 71);
             this.checkBoxRememberWindowPosition.Name = "checkBoxRememberWindowPosition";
-            this.checkBoxRememberWindowPosition.Size = new System.Drawing.Size(222, 17);
+            this.checkBoxRememberWindowPosition.Size = new System.Drawing.Size(223, 17);
             this.checkBoxRememberWindowPosition.TabIndex = 18;
             this.checkBoxRememberWindowPosition.Text = "Remember main window position and size";
             this.checkBoxRememberWindowPosition.UseVisualStyleBackColor = true;
@@ -395,7 +395,7 @@
             this.textBoxSubtitleLineMaximumLength.Location = new System.Drawing.Point(180, 133);
             this.textBoxSubtitleLineMaximumLength.MaxLength = 3;
             this.textBoxSubtitleLineMaximumLength.Name = "textBoxSubtitleLineMaximumLength";
-            this.textBoxSubtitleLineMaximumLength.Size = new System.Drawing.Size(121, 20);
+            this.textBoxSubtitleLineMaximumLength.Size = new System.Drawing.Size(121, 21);
             this.textBoxSubtitleLineMaximumLength.TabIndex = 6;
             this.textBoxSubtitleLineMaximumLength.Text = "68";
             this.textBoxSubtitleLineMaximumLength.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxAjustSecondsKeyDown);
@@ -405,7 +405,7 @@
             this.labelSubMaxLen.AutoSize = true;
             this.labelSubMaxLen.Location = new System.Drawing.Point(14, 136);
             this.labelSubMaxLen.Name = "labelSubMaxLen";
-            this.labelSubMaxLen.Size = new System.Drawing.Size(99, 13);
+            this.labelSubMaxLen.Size = new System.Drawing.Size(103, 13);
             this.labelSubMaxLen.TabIndex = 11;
             this.labelSubMaxLen.Text = "Subtitle max. length";
             // 
@@ -414,7 +414,7 @@
             this.labelSubtitleFontSize.AutoSize = true;
             this.labelSubtitleFontSize.Location = new System.Drawing.Point(14, 197);
             this.labelSubtitleFontSize.Name = "labelSubtitleFontSize";
-            this.labelSubtitleFontSize.Size = new System.Drawing.Size(84, 13);
+            this.labelSubtitleFontSize.Size = new System.Drawing.Size(87, 13);
             this.labelSubtitleFontSize.TabIndex = 10;
             this.labelSubtitleFontSize.Text = "Subtitle font size";
             // 
@@ -432,7 +432,7 @@
             this.checkBoxStartInSourceView.AutoSize = true;
             this.checkBoxStartInSourceView.Location = new System.Drawing.Point(435, 94);
             this.checkBoxStartInSourceView.Name = "checkBoxStartInSourceView";
-            this.checkBoxStartInSourceView.Size = new System.Drawing.Size(119, 17);
+            this.checkBoxStartInSourceView.Size = new System.Drawing.Size(121, 17);
             this.checkBoxStartInSourceView.TabIndex = 20;
             this.checkBoxStartInSourceView.Text = "Start in source view";
             this.checkBoxStartInSourceView.UseVisualStyleBackColor = true;
@@ -442,7 +442,7 @@
             this.checkBoxReopenLastOpened.AutoSize = true;
             this.checkBoxReopenLastOpened.Location = new System.Drawing.Point(435, 48);
             this.checkBoxReopenLastOpened.Name = "checkBoxReopenLastOpened";
-            this.checkBoxReopenLastOpened.Size = new System.Drawing.Size(140, 17);
+            this.checkBoxReopenLastOpened.Size = new System.Drawing.Size(145, 17);
             this.checkBoxReopenLastOpened.TabIndex = 16;
             this.checkBoxReopenLastOpened.Text = "Start with last file loaded";
             this.checkBoxReopenLastOpened.UseVisualStyleBackColor = true;
@@ -452,7 +452,7 @@
             this.checkBoxRememberRecentFiles.AutoSize = true;
             this.checkBoxRememberRecentFiles.Location = new System.Drawing.Point(435, 25);
             this.checkBoxRememberRecentFiles.Name = "checkBoxRememberRecentFiles";
-            this.checkBoxRememberRecentFiles.Size = new System.Drawing.Size(188, 17);
+            this.checkBoxRememberRecentFiles.Size = new System.Drawing.Size(195, 17);
             this.checkBoxRememberRecentFiles.TabIndex = 14;
             this.checkBoxRememberRecentFiles.Text = "Remember recent files (for reopen)";
             this.checkBoxRememberRecentFiles.UseVisualStyleBackColor = true;
@@ -462,7 +462,7 @@
             this.checkBoxSubtitleFontBold.AutoSize = true;
             this.checkBoxSubtitleFontBold.Location = new System.Drawing.Point(180, 222);
             this.checkBoxSubtitleFontBold.Name = "checkBoxSubtitleFontBold";
-            this.checkBoxSubtitleFontBold.Size = new System.Drawing.Size(47, 17);
+            this.checkBoxSubtitleFontBold.Size = new System.Drawing.Size(46, 17);
             this.checkBoxSubtitleFontBold.TabIndex = 12;
             this.checkBoxSubtitleFontBold.Text = "Bold";
             this.checkBoxSubtitleFontBold.UseVisualStyleBackColor = true;
@@ -496,7 +496,7 @@
             this.labelSubtitleFont.AutoSize = true;
             this.labelSubtitleFont.Location = new System.Drawing.Point(14, 172);
             this.labelSubtitleFont.Name = "labelSubtitleFont";
-            this.labelSubtitleFont.Size = new System.Drawing.Size(63, 13);
+            this.labelSubtitleFont.Size = new System.Drawing.Size(66, 13);
             this.labelSubtitleFont.TabIndex = 8;
             this.labelSubtitleFont.Text = "Subtitle font";
             // 
@@ -519,7 +519,7 @@
             this.labelDefaultFileEncoding.AutoSize = true;
             this.labelDefaultFileEncoding.Location = new System.Drawing.Point(14, 79);
             this.labelDefaultFileEncoding.Name = "labelDefaultFileEncoding";
-            this.labelDefaultFileEncoding.Size = new System.Drawing.Size(104, 13);
+            this.labelDefaultFileEncoding.Size = new System.Drawing.Size(105, 13);
             this.labelDefaultFileEncoding.TabIndex = 2;
             this.labelDefaultFileEncoding.Text = "Default file encoding";
             // 
@@ -536,7 +536,7 @@
             this.labelDefaultFrameRate.AutoSize = true;
             this.labelDefaultFrameRate.Location = new System.Drawing.Point(14, 44);
             this.labelDefaultFrameRate.Name = "labelDefaultFrameRate";
-            this.labelDefaultFrameRate.Size = new System.Drawing.Size(88, 13);
+            this.labelDefaultFrameRate.Size = new System.Drawing.Size(93, 13);
             this.labelDefaultFrameRate.TabIndex = 0;
             this.labelDefaultFrameRate.Text = "Default framerate";
             // 
@@ -584,7 +584,7 @@
             this.labelTBHelp.AutoSize = true;
             this.labelTBHelp.Location = new System.Drawing.Point(594, 21);
             this.labelTBHelp.Name = "labelTBHelp";
-            this.labelTBHelp.Size = new System.Drawing.Size(29, 13);
+            this.labelTBHelp.Size = new System.Drawing.Size(28, 13);
             this.labelTBHelp.TabIndex = 33;
             this.labelTBHelp.Text = "Help";
             // 
@@ -601,7 +601,7 @@
             this.checkBoxHelp.AutoSize = true;
             this.checkBoxHelp.Location = new System.Drawing.Point(596, 80);
             this.checkBoxHelp.Name = "checkBoxHelp";
-            this.checkBoxHelp.Size = new System.Drawing.Size(56, 17);
+            this.checkBoxHelp.Size = new System.Drawing.Size(55, 17);
             this.checkBoxHelp.TabIndex = 31;
             this.checkBoxHelp.Text = "Visible";
             this.checkBoxHelp.UseVisualStyleBackColor = true;
@@ -611,7 +611,7 @@
             this.labelTBSettings.AutoSize = true;
             this.labelTBSettings.Location = new System.Drawing.Point(526, 21);
             this.labelTBSettings.Name = "labelTBSettings";
-            this.labelTBSettings.Size = new System.Drawing.Size(45, 13);
+            this.labelTBSettings.Size = new System.Drawing.Size(46, 13);
             this.labelTBSettings.TabIndex = 30;
             this.labelTBSettings.Text = "Settings";
             // 
@@ -628,7 +628,7 @@
             this.checkBoxSettings.AutoSize = true;
             this.checkBoxSettings.Location = new System.Drawing.Point(532, 80);
             this.checkBoxSettings.Name = "checkBoxSettings";
-            this.checkBoxSettings.Size = new System.Drawing.Size(56, 17);
+            this.checkBoxSettings.Size = new System.Drawing.Size(55, 17);
             this.checkBoxSettings.TabIndex = 28;
             this.checkBoxSettings.Text = "Visible";
             this.checkBoxSettings.UseVisualStyleBackColor = true;
@@ -638,7 +638,7 @@
             this.labelTBSpellCheck.AutoSize = true;
             this.labelTBSpellCheck.Location = new System.Drawing.Point(459, 21);
             this.labelTBSpellCheck.Name = "labelTBSpellCheck";
-            this.labelTBSpellCheck.Size = new System.Drawing.Size(63, 13);
+            this.labelTBSpellCheck.Size = new System.Drawing.Size(59, 13);
             this.labelTBSpellCheck.TabIndex = 27;
             this.labelTBSpellCheck.Text = "Spell check";
             // 
@@ -655,7 +655,7 @@
             this.checkBoxSpellCheck.AutoSize = true;
             this.checkBoxSpellCheck.Location = new System.Drawing.Point(464, 80);
             this.checkBoxSpellCheck.Name = "checkBoxSpellCheck";
-            this.checkBoxSpellCheck.Size = new System.Drawing.Size(56, 17);
+            this.checkBoxSpellCheck.Size = new System.Drawing.Size(55, 17);
             this.checkBoxSpellCheck.TabIndex = 26;
             this.checkBoxSpellCheck.Text = "Visible";
             this.checkBoxSpellCheck.UseVisualStyleBackColor = true;
@@ -665,7 +665,7 @@
             this.labelTBVisualSync.AutoSize = true;
             this.labelTBVisualSync.Location = new System.Drawing.Point(382, 21);
             this.labelTBVisualSync.Name = "labelTBVisualSync";
-            this.labelTBVisualSync.Size = new System.Drawing.Size(60, 13);
+            this.labelTBVisualSync.Size = new System.Drawing.Size(59, 13);
             this.labelTBVisualSync.TabIndex = 21;
             this.labelTBVisualSync.Text = "Visual sync";
             // 
@@ -682,7 +682,7 @@
             this.checkBoxVisualSync.AutoSize = true;
             this.checkBoxVisualSync.Location = new System.Drawing.Point(398, 80);
             this.checkBoxVisualSync.Name = "checkBoxVisualSync";
-            this.checkBoxVisualSync.Size = new System.Drawing.Size(56, 17);
+            this.checkBoxVisualSync.Size = new System.Drawing.Size(55, 17);
             this.checkBoxVisualSync.TabIndex = 19;
             this.checkBoxVisualSync.Text = "Visible";
             this.checkBoxVisualSync.UseVisualStyleBackColor = true;
@@ -692,7 +692,7 @@
             this.labelTBReplace.AutoSize = true;
             this.labelTBReplace.Location = new System.Drawing.Point(327, 21);
             this.labelTBReplace.Name = "labelTBReplace";
-            this.labelTBReplace.Size = new System.Drawing.Size(47, 13);
+            this.labelTBReplace.Size = new System.Drawing.Size(45, 13);
             this.labelTBReplace.TabIndex = 18;
             this.labelTBReplace.Text = "Replace";
             // 
@@ -709,7 +709,7 @@
             this.checkBoxReplace.AutoSize = true;
             this.checkBoxReplace.Location = new System.Drawing.Point(335, 80);
             this.checkBoxReplace.Name = "checkBoxReplace";
-            this.checkBoxReplace.Size = new System.Drawing.Size(56, 17);
+            this.checkBoxReplace.Size = new System.Drawing.Size(55, 17);
             this.checkBoxReplace.TabIndex = 16;
             this.checkBoxReplace.Text = "Visible";
             this.checkBoxReplace.UseVisualStyleBackColor = true;
@@ -736,7 +736,7 @@
             this.checkBoxToolbarFind.AutoSize = true;
             this.checkBoxToolbarFind.Location = new System.Drawing.Point(272, 80);
             this.checkBoxToolbarFind.Name = "checkBoxToolbarFind";
-            this.checkBoxToolbarFind.Size = new System.Drawing.Size(56, 17);
+            this.checkBoxToolbarFind.Size = new System.Drawing.Size(55, 17);
             this.checkBoxToolbarFind.TabIndex = 13;
             this.checkBoxToolbarFind.Text = "Visible";
             this.checkBoxToolbarFind.UseVisualStyleBackColor = true;
@@ -746,7 +746,7 @@
             this.labelTBSaveAs.AutoSize = true;
             this.labelTBSaveAs.Location = new System.Drawing.Point(200, 21);
             this.labelTBSaveAs.Name = "labelTBSaveAs";
-            this.labelTBSaveAs.Size = new System.Drawing.Size(46, 13);
+            this.labelTBSaveAs.Size = new System.Drawing.Size(45, 13);
             this.labelTBSaveAs.TabIndex = 12;
             this.labelTBSaveAs.Text = "Save as";
             // 
@@ -763,7 +763,7 @@
             this.checkBoxToolbarSaveAs.AutoSize = true;
             this.checkBoxToolbarSaveAs.Location = new System.Drawing.Point(209, 80);
             this.checkBoxToolbarSaveAs.Name = "checkBoxToolbarSaveAs";
-            this.checkBoxToolbarSaveAs.Size = new System.Drawing.Size(56, 17);
+            this.checkBoxToolbarSaveAs.Size = new System.Drawing.Size(55, 17);
             this.checkBoxToolbarSaveAs.TabIndex = 10;
             this.checkBoxToolbarSaveAs.Text = "Visible";
             this.checkBoxToolbarSaveAs.UseVisualStyleBackColor = true;
@@ -773,7 +773,7 @@
             this.labelTBSave.AutoSize = true;
             this.labelTBSave.Location = new System.Drawing.Point(144, 21);
             this.labelTBSave.Name = "labelTBSave";
-            this.labelTBSave.Size = new System.Drawing.Size(32, 13);
+            this.labelTBSave.Size = new System.Drawing.Size(31, 13);
             this.labelTBSave.TabIndex = 9;
             this.labelTBSave.Text = "Save";
             // 
@@ -790,7 +790,7 @@
             this.checkBoxToolbarSave.AutoSize = true;
             this.checkBoxToolbarSave.Location = new System.Drawing.Point(146, 80);
             this.checkBoxToolbarSave.Name = "checkBoxToolbarSave";
-            this.checkBoxToolbarSave.Size = new System.Drawing.Size(56, 17);
+            this.checkBoxToolbarSave.Size = new System.Drawing.Size(55, 17);
             this.checkBoxToolbarSave.TabIndex = 7;
             this.checkBoxToolbarSave.Text = "Visible";
             this.checkBoxToolbarSave.UseVisualStyleBackColor = true;
@@ -817,7 +817,7 @@
             this.checkBoxToolbarOpen.AutoSize = true;
             this.checkBoxToolbarOpen.Location = new System.Drawing.Point(83, 80);
             this.checkBoxToolbarOpen.Name = "checkBoxToolbarOpen";
-            this.checkBoxToolbarOpen.Size = new System.Drawing.Size(56, 17);
+            this.checkBoxToolbarOpen.Size = new System.Drawing.Size(55, 17);
             this.checkBoxToolbarOpen.TabIndex = 4;
             this.checkBoxToolbarOpen.Text = "Visible";
             this.checkBoxToolbarOpen.UseVisualStyleBackColor = true;
@@ -827,7 +827,7 @@
             this.labelTBNew.AutoSize = true;
             this.labelTBNew.Location = new System.Drawing.Point(19, 21);
             this.labelTBNew.Name = "labelTBNew";
-            this.labelTBNew.Size = new System.Drawing.Size(29, 13);
+            this.labelTBNew.Size = new System.Drawing.Size(28, 13);
             this.labelTBNew.TabIndex = 3;
             this.labelTBNew.Text = "New";
             // 
@@ -844,7 +844,7 @@
             this.checkBoxToolbarNew.AutoSize = true;
             this.checkBoxToolbarNew.Location = new System.Drawing.Point(20, 80);
             this.checkBoxToolbarNew.Name = "checkBoxToolbarNew";
-            this.checkBoxToolbarNew.Size = new System.Drawing.Size(56, 17);
+            this.checkBoxToolbarNew.Size = new System.Drawing.Size(55, 17);
             this.checkBoxToolbarNew.TabIndex = 1;
             this.checkBoxToolbarNew.Text = "Visible";
             this.checkBoxToolbarNew.UseVisualStyleBackColor = true;
@@ -878,7 +878,7 @@
             // 
             this.textBoxCustomSearchUrl.Location = new System.Drawing.Point(166, 38);
             this.textBoxCustomSearchUrl.Name = "textBoxCustomSearchUrl";
-            this.textBoxCustomSearchUrl.Size = new System.Drawing.Size(601, 20);
+            this.textBoxCustomSearchUrl.Size = new System.Drawing.Size(601, 21);
             this.textBoxCustomSearchUrl.TabIndex = 2;
             // 
             // labelCustomSearch
@@ -886,7 +886,7 @@
             this.labelCustomSearch.AutoSize = true;
             this.labelCustomSearch.Location = new System.Drawing.Point(12, 20);
             this.labelCustomSearch.Name = "labelCustomSearch";
-            this.labelCustomSearch.Size = new System.Drawing.Size(132, 13);
+            this.labelCustomSearch.Size = new System.Drawing.Size(137, 13);
             this.labelCustomSearch.TabIndex = 1;
             this.labelCustomSearch.Text = "Custom search text and url";
             // 
@@ -921,7 +921,7 @@
             this.checkBoxVideoPlayerShowStopButton.AutoSize = true;
             this.checkBoxVideoPlayerShowStopButton.Location = new System.Drawing.Point(9, 19);
             this.checkBoxVideoPlayerShowStopButton.Name = "checkBoxVideoPlayerShowStopButton";
-            this.checkBoxVideoPlayerShowStopButton.Size = new System.Drawing.Size(109, 17);
+            this.checkBoxVideoPlayerShowStopButton.Size = new System.Drawing.Size(111, 17);
             this.checkBoxVideoPlayerShowStopButton.TabIndex = 10;
             this.checkBoxVideoPlayerShowStopButton.Text = "Show stop button";
             this.checkBoxVideoPlayerShowStopButton.UseVisualStyleBackColor = true;
@@ -940,18 +940,18 @@
             this.labelDefaultVol.AutoSize = true;
             this.labelDefaultVol.Location = new System.Drawing.Point(9, 56);
             this.labelDefaultVol.Name = "labelDefaultVol";
-            this.labelDefaultVol.Size = new System.Drawing.Size(78, 13);
+            this.labelDefaultVol.Size = new System.Drawing.Size(79, 13);
             this.labelDefaultVol.TabIndex = 6;
             this.labelDefaultVol.Text = "Default volume";
             // 
             // labelVolDescr
             // 
             this.labelVolDescr.AutoSize = true;
-            this.labelVolDescr.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelVolDescr.Font = new System.Drawing.Font("Tahoma", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelVolDescr.ForeColor = System.Drawing.Color.Gray;
             this.labelVolDescr.Location = new System.Drawing.Point(232, 57);
             this.labelVolDescr.Name = "labelVolDescr";
-            this.labelVolDescr.Size = new System.Drawing.Size(147, 12);
+            this.labelVolDescr.Size = new System.Drawing.Size(150, 11);
             this.labelVolDescr.TabIndex = 9;
             this.labelVolDescr.Text = "0 is no sound, 100 is higest volume";
             // 
@@ -975,11 +975,11 @@
             // labelVideoPlayerVLC
             // 
             this.labelVideoPlayerVLC.AutoSize = true;
-            this.labelVideoPlayerVLC.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelVideoPlayerVLC.Font = new System.Drawing.Font("Tahoma", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelVideoPlayerVLC.ForeColor = System.Drawing.Color.Gray;
             this.labelVideoPlayerVLC.Location = new System.Drawing.Point(150, 49);
             this.labelVideoPlayerVLC.Name = "labelVideoPlayerVLC";
-            this.labelVideoPlayerVLC.Size = new System.Drawing.Size(204, 12);
+            this.labelVideoPlayerVLC.Size = new System.Drawing.Size(209, 11);
             this.labelVideoPlayerVLC.TabIndex = 13;
             this.labelVideoPlayerVLC.Text = "libvlc.dll from VLC Media Player (1.1.0 or newer)";
             // 
@@ -988,7 +988,7 @@
             this.radioButtonVideoPlayerVLC.AutoSize = true;
             this.radioButtonVideoPlayerVLC.Location = new System.Drawing.Point(10, 46);
             this.radioButtonVideoPlayerVLC.Name = "radioButtonVideoPlayerVLC";
-            this.radioButtonVideoPlayerVLC.Size = new System.Drawing.Size(45, 17);
+            this.radioButtonVideoPlayerVLC.Size = new System.Drawing.Size(43, 17);
             this.radioButtonVideoPlayerVLC.TabIndex = 4;
             this.radioButtonVideoPlayerVLC.TabStop = true;
             this.radioButtonVideoPlayerVLC.Text = "VLC";
@@ -997,33 +997,33 @@
             // labelVideoPlayerWmp
             // 
             this.labelVideoPlayerWmp.AutoSize = true;
-            this.labelVideoPlayerWmp.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelVideoPlayerWmp.Font = new System.Drawing.Font("Tahoma", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelVideoPlayerWmp.ForeColor = System.Drawing.Color.Gray;
             this.labelVideoPlayerWmp.Location = new System.Drawing.Point(150, 70);
             this.labelVideoPlayerWmp.Name = "labelVideoPlayerWmp";
-            this.labelVideoPlayerWmp.Size = new System.Drawing.Size(97, 12);
+            this.labelVideoPlayerWmp.Size = new System.Drawing.Size(95, 11);
             this.labelVideoPlayerWmp.TabIndex = 11;
             this.labelVideoPlayerWmp.Text = "WMP ActiveX Control";
             // 
             // labelDirectShowDescription
             // 
             this.labelDirectShowDescription.AutoSize = true;
-            this.labelDirectShowDescription.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelDirectShowDescription.Font = new System.Drawing.Font("Tahoma", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelDirectShowDescription.ForeColor = System.Drawing.Color.Gray;
             this.labelDirectShowDescription.Location = new System.Drawing.Point(150, 26);
             this.labelDirectShowDescription.Name = "labelDirectShowDescription";
-            this.labelDirectShowDescription.Size = new System.Drawing.Size(97, 12);
+            this.labelDirectShowDescription.Size = new System.Drawing.Size(98, 11);
             this.labelDirectShowDescription.TabIndex = 10;
             this.labelDirectShowDescription.Text = "Quartz.dll in system32";
             // 
             // labelManagedDirectXDescription
             // 
             this.labelManagedDirectXDescription.AutoSize = true;
-            this.labelManagedDirectXDescription.Font = new System.Drawing.Font("Microsoft Sans Serif", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelManagedDirectXDescription.Font = new System.Drawing.Font("Tahoma", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelManagedDirectXDescription.ForeColor = System.Drawing.Color.Gray;
             this.labelManagedDirectXDescription.Location = new System.Drawing.Point(150, 93);
             this.labelManagedDirectXDescription.Name = "labelManagedDirectXDescription";
-            this.labelManagedDirectXDescription.Size = new System.Drawing.Size(315, 12);
+            this.labelManagedDirectXDescription.Size = new System.Drawing.Size(314, 11);
             this.labelManagedDirectXDescription.TabIndex = 9;
             this.labelManagedDirectXDescription.Text = "Microsoft.DirectX.AudioVideoPlayback -  .NET Managed code from DirectX";
             this.labelManagedDirectXDescription.Visible = false;
@@ -1033,7 +1033,7 @@
             this.radioButtonVideoPlayerWmp.AutoSize = true;
             this.radioButtonVideoPlayerWmp.Location = new System.Drawing.Point(10, 67);
             this.radioButtonVideoPlayerWmp.Name = "radioButtonVideoPlayerWmp";
-            this.radioButtonVideoPlayerWmp.Size = new System.Drawing.Size(133, 17);
+            this.radioButtonVideoPlayerWmp.Size = new System.Drawing.Size(132, 17);
             this.radioButtonVideoPlayerWmp.TabIndex = 8;
             this.radioButtonVideoPlayerWmp.TabStop = true;
             this.radioButtonVideoPlayerWmp.Text = "Windows Media Player";
@@ -1044,7 +1044,7 @@
             this.radioButtonVideoPlayerDirectShow.AutoSize = true;
             this.radioButtonVideoPlayerDirectShow.Location = new System.Drawing.Point(10, 23);
             this.radioButtonVideoPlayerDirectShow.Name = "radioButtonVideoPlayerDirectShow";
-            this.radioButtonVideoPlayerDirectShow.Size = new System.Drawing.Size(83, 17);
+            this.radioButtonVideoPlayerDirectShow.Size = new System.Drawing.Size(82, 17);
             this.radioButtonVideoPlayerDirectShow.TabIndex = 1;
             this.radioButtonVideoPlayerDirectShow.TabStop = true;
             this.radioButtonVideoPlayerDirectShow.Text = "DirectShow ";
@@ -1055,7 +1055,7 @@
             this.radioButtonVideoPlayerManagedDirectX.AutoSize = true;
             this.radioButtonVideoPlayerManagedDirectX.Location = new System.Drawing.Point(10, 90);
             this.radioButtonVideoPlayerManagedDirectX.Name = "radioButtonVideoPlayerManagedDirectX";
-            this.radioButtonVideoPlayerManagedDirectX.Size = new System.Drawing.Size(108, 17);
+            this.radioButtonVideoPlayerManagedDirectX.Size = new System.Drawing.Size(106, 17);
             this.radioButtonVideoPlayerManagedDirectX.TabIndex = 6;
             this.radioButtonVideoPlayerManagedDirectX.TabStop = true;
             this.radioButtonVideoPlayerManagedDirectX.Text = "Managed DirectX";
@@ -1072,6 +1072,35 @@
             this.tabPageWaveForm.TabIndex = 6;
             this.tabPageWaveForm.Text = "Wave form";
             this.tabPageWaveForm.UseVisualStyleBackColor = true;
+            // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.buttonWaveFormsFolderEmpty);
+            this.groupBox1.Controls.Add(this.labelWaveFormsFolderInfo);
+            this.groupBox1.Location = new System.Drawing.Point(6, 216);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(786, 157);
+            this.groupBox1.TabIndex = 3;
+            this.groupBox1.TabStop = false;
+            // 
+            // buttonWaveFormsFolderEmpty
+            // 
+            this.buttonWaveFormsFolderEmpty.Location = new System.Drawing.Point(10, 37);
+            this.buttonWaveFormsFolderEmpty.Name = "buttonWaveFormsFolderEmpty";
+            this.buttonWaveFormsFolderEmpty.Size = new System.Drawing.Size(188, 23);
+            this.buttonWaveFormsFolderEmpty.TabIndex = 1;
+            this.buttonWaveFormsFolderEmpty.Text = "Empty \'WaveForms\' folder";
+            this.buttonWaveFormsFolderEmpty.UseVisualStyleBackColor = true;
+            this.buttonWaveFormsFolderEmpty.Click += new System.EventHandler(this.buttonWaveFormsFolderEmpty_Click);
+            // 
+            // labelWaveFormsFolderInfo
+            // 
+            this.labelWaveFormsFolderInfo.AutoSize = true;
+            this.labelWaveFormsFolderInfo.Location = new System.Drawing.Point(7, 20);
+            this.labelWaveFormsFolderInfo.Name = "labelWaveFormsFolderInfo";
+            this.labelWaveFormsFolderInfo.Size = new System.Drawing.Size(207, 13);
+            this.labelWaveFormsFolderInfo.TabIndex = 0;
+            this.labelWaveFormsFolderInfo.Text = "\'WaveForms\' folder contains x files (x mb)";
             // 
             // groupBoxWaveFormAppearence
             // 
@@ -1221,7 +1250,7 @@
             this.checkBoxSpellCheckAutoChangeNames.AutoSize = true;
             this.checkBoxSpellCheckAutoChangeNames.Location = new System.Drawing.Point(15, 20);
             this.checkBoxSpellCheckAutoChangeNames.Name = "checkBoxSpellCheckAutoChangeNames";
-            this.checkBoxSpellCheckAutoChangeNames.Size = new System.Drawing.Size(209, 17);
+            this.checkBoxSpellCheckAutoChangeNames.Size = new System.Drawing.Size(216, 17);
             this.checkBoxSpellCheckAutoChangeNames.TabIndex = 0;
             this.checkBoxSpellCheckAutoChangeNames.Text = "Auto fix names where only casing differ";
             this.checkBoxSpellCheckAutoChangeNames.UseVisualStyleBackColor = true;
@@ -1260,7 +1289,7 @@
             this.textBoxMusicSymbolsToReplace.Location = new System.Drawing.Point(483, 46);
             this.textBoxMusicSymbolsToReplace.MaxLength = 100;
             this.textBoxMusicSymbolsToReplace.Name = "textBoxMusicSymbolsToReplace";
-            this.textBoxMusicSymbolsToReplace.Size = new System.Drawing.Size(274, 20);
+            this.textBoxMusicSymbolsToReplace.Size = new System.Drawing.Size(274, 21);
             this.textBoxMusicSymbolsToReplace.TabIndex = 35;
             // 
             // labelToolsMusicSymbolsToReplace
@@ -1268,7 +1297,7 @@
             this.labelToolsMusicSymbolsToReplace.AutoSize = true;
             this.labelToolsMusicSymbolsToReplace.Location = new System.Drawing.Point(480, 30);
             this.labelToolsMusicSymbolsToReplace.Name = "labelToolsMusicSymbolsToReplace";
-            this.labelToolsMusicSymbolsToReplace.Size = new System.Drawing.Size(221, 13);
+            this.labelToolsMusicSymbolsToReplace.Size = new System.Drawing.Size(225, 13);
             this.labelToolsMusicSymbolsToReplace.TabIndex = 34;
             this.labelToolsMusicSymbolsToReplace.Text = "Music symbols to replace (separate by space)";
             // 
@@ -1277,7 +1306,7 @@
             this.labelToolsMusicSymbol.AutoSize = true;
             this.labelToolsMusicSymbol.Location = new System.Drawing.Point(480, 79);
             this.labelToolsMusicSymbol.Name = "labelToolsMusicSymbol";
-            this.labelToolsMusicSymbol.Size = new System.Drawing.Size(70, 13);
+            this.labelToolsMusicSymbol.Size = new System.Drawing.Size(69, 13);
             this.labelToolsMusicSymbol.TabIndex = 32;
             this.labelToolsMusicSymbol.Text = "Music symbol";
             // 
@@ -1286,7 +1315,7 @@
             this.labelMergeShortLines.AutoSize = true;
             this.labelMergeShortLines.Location = new System.Drawing.Point(12, 30);
             this.labelMergeShortLines.Name = "labelMergeShortLines";
-            this.labelMergeShortLines.Size = new System.Drawing.Size(120, 13);
+            this.labelMergeShortLines.Size = new System.Drawing.Size(124, 13);
             this.labelMergeShortLines.TabIndex = 31;
             this.labelMergeShortLines.Text = "Merge lines shorter than";
             // 
@@ -1384,7 +1413,7 @@
             this.labelToolsStartScene.AutoSize = true;
             this.labelToolsStartScene.Location = new System.Drawing.Point(13, 52);
             this.labelToolsStartScene.Name = "labelToolsStartScene";
-            this.labelToolsStartScene.Size = new System.Drawing.Size(122, 13);
+            this.labelToolsStartScene.Size = new System.Drawing.Size(125, 13);
             this.labelToolsStartScene.TabIndex = 27;
             this.labelToolsStartScene.Text = "Start scene paragraph is";
             // 
@@ -1421,7 +1450,7 @@
             this.labelVerifyButton.AutoSize = true;
             this.labelVerifyButton.Location = new System.Drawing.Point(13, 25);
             this.labelVerifyButton.Name = "labelVerifyButton";
-            this.labelVerifyButton.Size = new System.Drawing.Size(151, 13);
+            this.labelVerifyButton.Size = new System.Drawing.Size(147, 13);
             this.labelVerifyButton.TabIndex = 3;
             this.labelVerifyButton.Text = "Play X seconds and back, X is";
             // 
@@ -1469,7 +1498,7 @@
             // 
             this.textBoxOcrFixValue.Location = new System.Drawing.Point(82, 208);
             this.textBoxOcrFixValue.Name = "textBoxOcrFixValue";
-            this.textBoxOcrFixValue.Size = new System.Drawing.Size(74, 20);
+            this.textBoxOcrFixValue.Size = new System.Drawing.Size(74, 21);
             this.textBoxOcrFixValue.TabIndex = 45;
             this.textBoxOcrFixValue.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxOcrFixValueKeyDown);
             // 
@@ -1498,7 +1527,7 @@
             // 
             this.textBoxOcrFixKey.Location = new System.Drawing.Point(6, 208);
             this.textBoxOcrFixKey.Name = "textBoxOcrFixKey";
-            this.textBoxOcrFixKey.Size = new System.Drawing.Size(74, 20);
+            this.textBoxOcrFixKey.Size = new System.Drawing.Size(74, 21);
             this.textBoxOcrFixKey.TabIndex = 44;
             // 
             // buttonAddOcrFix
@@ -1549,7 +1578,7 @@
             // 
             this.textBoxUserWord.Location = new System.Drawing.Point(3, 209);
             this.textBoxUserWord.Name = "textBoxUserWord";
-            this.textBoxUserWord.Size = new System.Drawing.Size(147, 20);
+            this.textBoxUserWord.Size = new System.Drawing.Size(147, 21);
             this.textBoxUserWord.TabIndex = 34;
             this.textBoxUserWord.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxUserWordKeyDown);
             // 
@@ -1579,7 +1608,7 @@
             this.checkBoxNamesEtcOnline.AutoSize = true;
             this.checkBoxNamesEtcOnline.Location = new System.Drawing.Point(7, 22);
             this.checkBoxNamesEtcOnline.Name = "checkBoxNamesEtcOnline";
-            this.checkBoxNamesEtcOnline.Size = new System.Drawing.Size(162, 17);
+            this.checkBoxNamesEtcOnline.Size = new System.Drawing.Size(163, 17);
             this.checkBoxNamesEtcOnline.TabIndex = 26;
             this.checkBoxNamesEtcOnline.Text = "Use online names etc xml file";
             this.checkBoxNamesEtcOnline.UseVisualStyleBackColor = true;
@@ -1588,7 +1617,7 @@
             // 
             this.textBoxNamesEtcOnline.Location = new System.Drawing.Point(6, 45);
             this.textBoxNamesEtcOnline.Name = "textBoxNamesEtcOnline";
-            this.textBoxNamesEtcOnline.Size = new System.Drawing.Size(235, 20);
+            this.textBoxNamesEtcOnline.Size = new System.Drawing.Size(235, 21);
             this.textBoxNamesEtcOnline.TabIndex = 28;
             this.textBoxNamesEtcOnline.Text = "http://www.nikse.dk/se/Names_Etc.xml";
             // 
@@ -1630,7 +1659,7 @@
             // 
             this.textBoxNameEtc.Location = new System.Drawing.Point(3, 212);
             this.textBoxNameEtc.Name = "textBoxNameEtc";
-            this.textBoxNameEtc.Size = new System.Drawing.Size(151, 20);
+            this.textBoxNameEtc.Size = new System.Drawing.Size(151, 21);
             this.textBoxNameEtc.TabIndex = 24;
             this.textBoxNameEtc.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxNameEtcKeyDown);
             // 
@@ -1649,7 +1678,7 @@
             this.labelWordListLanguage.AutoSize = true;
             this.labelWordListLanguage.Location = new System.Drawing.Point(6, 19);
             this.labelWordListLanguage.Name = "labelWordListLanguage";
-            this.labelWordListLanguage.Size = new System.Drawing.Size(55, 13);
+            this.labelWordListLanguage.Size = new System.Drawing.Size(54, 13);
             this.labelWordListLanguage.TabIndex = 1;
             this.labelWordListLanguage.Text = "Language";
             // 
@@ -1690,7 +1719,7 @@
             // labelSSAExample
             // 
             this.labelSSAExample.BackColor = System.Drawing.Color.Black;
-            this.labelSSAExample.Font = new System.Drawing.Font("Microsoft Sans Serif", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelSSAExample.Font = new System.Drawing.Font("Tahoma", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelSSAExample.ForeColor = System.Drawing.Color.White;
             this.labelSSAExample.Location = new System.Drawing.Point(23, 152);
             this.labelSSAExample.Name = "labelSSAExample";
@@ -1713,7 +1742,7 @@
             this.labelExampleColon.AutoSize = true;
             this.labelExampleColon.Location = new System.Drawing.Point(25, 137);
             this.labelExampleColon.Name = "labelExampleColon";
-            this.labelExampleColon.Size = new System.Drawing.Size(50, 13);
+            this.labelExampleColon.Size = new System.Drawing.Size(51, 13);
             this.labelExampleColon.TabIndex = 2;
             this.labelExampleColon.Text = "Example:";
             // 
@@ -1779,7 +1808,7 @@
             // 
             this.textBoxProxyDomain.Location = new System.Drawing.Point(106, 71);
             this.textBoxProxyDomain.Name = "textBoxProxyDomain";
-            this.textBoxProxyDomain.Size = new System.Drawing.Size(192, 20);
+            this.textBoxProxyDomain.Size = new System.Drawing.Size(192, 21);
             this.textBoxProxyDomain.TabIndex = 30;
             // 
             // labelProxyDomain
@@ -1787,7 +1816,7 @@
             this.labelProxyDomain.AutoSize = true;
             this.labelProxyDomain.Location = new System.Drawing.Point(12, 74);
             this.labelProxyDomain.Name = "labelProxyDomain";
-            this.labelProxyDomain.Size = new System.Drawing.Size(43, 13);
+            this.labelProxyDomain.Size = new System.Drawing.Size(42, 13);
             this.labelProxyDomain.TabIndex = 29;
             this.labelProxyDomain.Text = "Domain";
             // 
@@ -1795,7 +1824,7 @@
             // 
             this.textBoxProxyUserName.Location = new System.Drawing.Point(106, 19);
             this.textBoxProxyUserName.Name = "textBoxProxyUserName";
-            this.textBoxProxyUserName.Size = new System.Drawing.Size(192, 20);
+            this.textBoxProxyUserName.Size = new System.Drawing.Size(192, 21);
             this.textBoxProxyUserName.TabIndex = 22;
             // 
             // labelProxyPassword
@@ -1820,7 +1849,7 @@
             // 
             this.textBoxProxyPassword.Location = new System.Drawing.Point(106, 45);
             this.textBoxProxyPassword.Name = "textBoxProxyPassword";
-            this.textBoxProxyPassword.Size = new System.Drawing.Size(192, 20);
+            this.textBoxProxyPassword.Size = new System.Drawing.Size(192, 21);
             this.textBoxProxyPassword.TabIndex = 24;
             this.textBoxProxyPassword.UseSystemPasswordChar = true;
             // 
@@ -1828,7 +1857,7 @@
             // 
             this.textBoxProxyAddress.Location = new System.Drawing.Point(134, 34);
             this.textBoxProxyAddress.Name = "textBoxProxyAddress";
-            this.textBoxProxyAddress.Size = new System.Drawing.Size(192, 20);
+            this.textBoxProxyAddress.Size = new System.Drawing.Size(192, 21);
             this.textBoxProxyAddress.TabIndex = 20;
             // 
             // labelProxyAddress
@@ -1836,7 +1865,7 @@
             this.labelProxyAddress.AutoSize = true;
             this.labelProxyAddress.Location = new System.Drawing.Point(25, 34);
             this.labelProxyAddress.Name = "labelProxyAddress";
-            this.labelProxyAddress.Size = new System.Drawing.Size(73, 13);
+            this.labelProxyAddress.Size = new System.Drawing.Size(76, 13);
             this.labelProxyAddress.TabIndex = 3;
             this.labelProxyAddress.Text = "Proxy address";
             // 
@@ -1845,38 +1874,9 @@
             this.labelStatus.AutoSize = true;
             this.labelStatus.Location = new System.Drawing.Point(12, 432);
             this.labelStatus.Name = "labelStatus";
-            this.labelStatus.Size = new System.Drawing.Size(59, 13);
+            this.labelStatus.Size = new System.Drawing.Size(60, 13);
             this.labelStatus.TabIndex = 3;
             this.labelStatus.Text = "labelStatus";
-            // 
-            // groupBox1
-            // 
-            this.groupBox1.Controls.Add(this.buttonWaveFormsFolderEmpty);
-            this.groupBox1.Controls.Add(this.labelWaveFormsFolderInfo);
-            this.groupBox1.Location = new System.Drawing.Point(6, 216);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(786, 157);
-            this.groupBox1.TabIndex = 3;
-            this.groupBox1.TabStop = false;
-            // 
-            // labelWaveFormsFolderInfo
-            // 
-            this.labelWaveFormsFolderInfo.AutoSize = true;
-            this.labelWaveFormsFolderInfo.Location = new System.Drawing.Point(7, 20);
-            this.labelWaveFormsFolderInfo.Name = "labelWaveFormsFolderInfo";
-            this.labelWaveFormsFolderInfo.Size = new System.Drawing.Size(200, 13);
-            this.labelWaveFormsFolderInfo.TabIndex = 0;
-            this.labelWaveFormsFolderInfo.Text = "\'WaveForms\' folder contains x files (x mb)";
-            // 
-            // buttonWaveFormsFolderEmpty
-            // 
-            this.buttonWaveFormsFolderEmpty.Location = new System.Drawing.Point(10, 37);
-            this.buttonWaveFormsFolderEmpty.Name = "buttonWaveFormsFolderEmpty";
-            this.buttonWaveFormsFolderEmpty.Size = new System.Drawing.Size(188, 23);
-            this.buttonWaveFormsFolderEmpty.TabIndex = 1;
-            this.buttonWaveFormsFolderEmpty.Text = "Empty \'WaveForms\' folder";
-            this.buttonWaveFormsFolderEmpty.UseVisualStyleBackColor = true;
-            this.buttonWaveFormsFolderEmpty.Click += new System.EventHandler(this.buttonWaveFormsFolderEmpty_Click);
             // 
             // Settings
             // 
@@ -1887,6 +1887,7 @@
             this.Controls.Add(this.tabControlSettings);
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.buttonOK);
+            this.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.KeyPreview = true;
             this.MaximizeBox = false;
@@ -1918,6 +1919,8 @@
             this.groupBoxVideoEngine.ResumeLayout(false);
             this.groupBoxVideoEngine.PerformLayout();
             this.tabPageWaveForm.ResumeLayout(false);
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
             this.groupBoxWaveFormAppearence.ResumeLayout(false);
             this.groupBoxWaveFormAppearence.PerformLayout();
             this.tabPageTools.ResumeLayout(false);
@@ -1946,8 +1949,6 @@
             this.groupBoxProxySettings.PerformLayout();
             this.groupBoxProxyAuthentication.ResumeLayout(false);
             this.groupBoxProxyAuthentication.PerformLayout();
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 

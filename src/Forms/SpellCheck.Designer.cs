@@ -95,7 +95,7 @@
             this.labelLanguage.AutoSize = true;
             this.labelLanguage.Location = new System.Drawing.Point(314, 14);
             this.labelLanguage.Name = "labelLanguage";
-            this.labelLanguage.Size = new System.Drawing.Size(55, 13);
+            this.labelLanguage.Size = new System.Drawing.Size(54, 13);
             this.labelLanguage.TabIndex = 3;
             this.labelLanguage.Text = "Language";
             // 
@@ -139,7 +139,7 @@
             this.labelFullText.AutoSize = true;
             this.labelFullText.Location = new System.Drawing.Point(8, 17);
             this.labelFullText.Name = "labelFullText";
-            this.labelFullText.Size = new System.Drawing.Size(43, 13);
+            this.labelFullText.Size = new System.Drawing.Size(46, 13);
             this.labelFullText.TabIndex = 7;
             this.labelFullText.Text = "Full text";
             // 
@@ -147,7 +147,7 @@
             // 
             this.textBoxWord.Location = new System.Drawing.Point(23, 19);
             this.textBoxWord.Name = "textBoxWord";
-            this.textBoxWord.Size = new System.Drawing.Size(237, 20);
+            this.textBoxWord.Size = new System.Drawing.Size(237, 21);
             this.textBoxWord.TabIndex = 1;
             // 
             // buttonAbort
@@ -254,7 +254,7 @@
             this.checkBoxAutoChangeNames.AutoSize = true;
             this.checkBoxAutoChangeNames.Location = new System.Drawing.Point(8, 157);
             this.checkBoxAutoChangeNames.Name = "checkBoxAutoChangeNames";
-            this.checkBoxAutoChangeNames.Size = new System.Drawing.Size(209, 17);
+            this.checkBoxAutoChangeNames.Size = new System.Drawing.Size(216, 17);
             this.checkBoxAutoChangeNames.TabIndex = 12;
             this.checkBoxAutoChangeNames.Text = "Auto fix names where only casing differ";
             this.checkBoxAutoChangeNames.UseVisualStyleBackColor = true;
@@ -304,7 +304,7 @@
             // 
             // textBoxWholeText
             // 
-            this.textBoxWholeText.Font = new System.Drawing.Font("Times New Roman", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.textBoxWholeText.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.textBoxWholeText.Location = new System.Drawing.Point(6, 19);
             this.textBoxWholeText.Multiline = true;
             this.textBoxWholeText.Name = "textBoxWholeText";
@@ -325,6 +325,7 @@
             this.Controls.Add(this.comboBoxDictionaries);
             this.Controls.Add(this.groupBoxWordNotFound);
             this.Controls.Add(this.groupBoxEditWholeText);
+            this.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.KeyPreview = true;
             this.MaximizeBox = false;

@@ -39,7 +39,7 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(12, 17);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(194, 13);
+            this.label1.Size = new System.Drawing.Size(198, 13);
             this.label1.TabIndex = 0;
             this.label1.Text = "Name of new character database folder";
             // 
@@ -47,7 +47,7 @@
             // 
             this.textBoxFolder.Location = new System.Drawing.Point(15, 33);
             this.textBoxFolder.Name = "textBoxFolder";
-            this.textBoxFolder.Size = new System.Drawing.Size(184, 20);
+            this.textBoxFolder.Size = new System.Drawing.Size(184, 21);
             this.textBoxFolder.TabIndex = 1;
             this.textBoxFolder.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxFolderKeyDown);
             // 
@@ -82,6 +82,7 @@
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.textBoxFolder);
             this.Controls.Add(this.label1);
+            this.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.KeyPreview = true;
             this.MaximizeBox = false;

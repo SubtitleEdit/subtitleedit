@@ -792,6 +792,16 @@ namespace Nikse.SubtitleEdit.Forms
                     p.Text = p.Text.Substring(0, p.Text.Length - " .".Length) + ".";
                 }
 
+                if (p.Text.EndsWith(" \""))
+                {
+                    p.Text = p.Text.Remove(p.Text.Length - 2, 1);
+                }
+
+                if (p.Text.Contains(" \"" + Environment.NewLine))
+                {
+                    p.Text = p.Text.Replace(" \"" + Environment.NewLine, "\"" + Environment.NewLine);
+                }
+
                 if (p.Text.Contains(" ." + Environment.NewLine))
                 {
                     p.Text = p.Text.Replace(" ." + Environment.NewLine, "." + Environment.NewLine);

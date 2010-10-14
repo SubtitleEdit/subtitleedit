@@ -53,7 +53,7 @@
             this.labelDescription2.AutoSize = true;
             this.labelDescription2.Location = new System.Drawing.Point(30, 34);
             this.labelDescription2.Name = "labelDescription2";
-            this.labelDescription2.Size = new System.Drawing.Size(260, 13);
+            this.labelDescription2.Size = new System.Drawing.Size(263, 13);
             this.labelDescription2.TabIndex = 1;
             this.labelDescription2.Text = "uses the spell checking dictionaries from Open Office.";
             // 
@@ -62,7 +62,7 @@
             this.linkLabelOpenDictionaryFolder.AutoSize = true;
             this.linkLabelOpenDictionaryFolder.Location = new System.Drawing.Point(30, 164);
             this.linkLabelOpenDictionaryFolder.Name = "linkLabelOpenDictionaryFolder";
-            this.linkLabelOpenDictionaryFolder.Size = new System.Drawing.Size(124, 13);
+            this.linkLabelOpenDictionaryFolder.Size = new System.Drawing.Size(126, 13);
             this.linkLabelOpenDictionaryFolder.TabIndex = 15;
             this.linkLabelOpenDictionaryFolder.TabStop = true;
             this.linkLabelOpenDictionaryFolder.Text = "Open \'Dictionaries\' folder";
@@ -73,7 +73,7 @@
             this.labelDescription1.AutoSize = true;
             this.labelDescription1.Location = new System.Drawing.Point(30, 16);
             this.labelDescription1.Name = "labelDescription1";
-            this.labelDescription1.Size = new System.Drawing.Size(320, 13);
+            this.labelDescription1.Size = new System.Drawing.Size(316, 13);
             this.labelDescription1.TabIndex = 8;
             this.labelDescription1.Text = "Subtitle Edit\'s spell check is based on the NHunspell engine which";
             // 
@@ -102,7 +102,7 @@
             this.labelChooseLanguageAndClickDownload.AutoSize = true;
             this.labelChooseLanguageAndClickDownload.Location = new System.Drawing.Point(30, 80);
             this.labelChooseLanguageAndClickDownload.Name = "labelChooseLanguageAndClickDownload";
-            this.labelChooseLanguageAndClickDownload.Size = new System.Drawing.Size(202, 13);
+            this.labelChooseLanguageAndClickDownload.Size = new System.Drawing.Size(201, 13);
             this.labelChooseLanguageAndClickDownload.TabIndex = 11;
             this.labelChooseLanguageAndClickDownload.Text = "Choose your languge and click download";
             // 
@@ -111,7 +111,7 @@
             this.labelPleaseWait.AutoSize = true;
             this.labelPleaseWait.Location = new System.Drawing.Point(30, 122);
             this.labelPleaseWait.Name = "labelPleaseWait";
-            this.labelPleaseWait.Size = new System.Drawing.Size(70, 13);
+            this.labelPleaseWait.Size = new System.Drawing.Size(73, 13);
             this.labelPleaseWait.TabIndex = 12;
             this.labelPleaseWait.Text = "Please wait...";
             // 
@@ -128,6 +128,7 @@
             this.Controls.Add(this.linkLabelOpenDictionaryFolder);
             this.Controls.Add(this.labelDescription2);
             this.Controls.Add(this.buttonOK);
+            this.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.KeyPreview = true;
             this.MaximizeBox = false;

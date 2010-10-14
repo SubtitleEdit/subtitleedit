@@ -132,7 +132,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.labelStatus.AutoSize = true;
             this.labelStatus.Location = new System.Drawing.Point(4, 560);
             this.labelStatus.Name = "labelStatus";
-            this.labelStatus.Size = new System.Drawing.Size(35, 13);
+            this.labelStatus.Size = new System.Drawing.Size(37, 13);
             this.labelStatus.TabIndex = 17;
             this.labelStatus.Text = "status";
             // 
@@ -168,7 +168,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.checkBoxShowOnlyDifferences.AutoSize = true;
             this.checkBoxShowOnlyDifferences.Location = new System.Drawing.Point(330, 542);
             this.checkBoxShowOnlyDifferences.Name = "checkBoxShowOnlyDifferences";
-            this.checkBoxShowOnlyDifferences.Size = new System.Drawing.Size(130, 17);
+            this.checkBoxShowOnlyDifferences.Size = new System.Drawing.Size(132, 17);
             this.checkBoxShowOnlyDifferences.TabIndex = 20;
             this.checkBoxShowOnlyDifferences.Text = "Show only differences";
             this.checkBoxShowOnlyDifferences.UseVisualStyleBackColor = true;
@@ -180,7 +180,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.checkBoxOnlyListDifferencesInText.AutoSize = true;
             this.checkBoxOnlyListDifferencesInText.Location = new System.Drawing.Point(330, 560);
             this.checkBoxOnlyListDifferencesInText.Name = "checkBoxOnlyListDifferencesInText";
-            this.checkBoxOnlyListDifferencesInText.Size = new System.Drawing.Size(189, 17);
+            this.checkBoxOnlyListDifferencesInText.Size = new System.Drawing.Size(197, 17);
             this.checkBoxOnlyListDifferencesInText.TabIndex = 21;
             this.checkBoxOnlyListDifferencesInText.Text = "Only look for differences in the text";
             this.checkBoxOnlyListDifferencesInText.UseVisualStyleBackColor = true;
@@ -235,6 +235,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.Controls.Add(this.subtitleListView2);
             this.Controls.Add(this.subtitleListView1);
             this.Controls.Add(this.labelSubtitle1);
+            this.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.KeyPreview = true;
             this.MinimumSize = new System.Drawing.Size(800, 400);
             this.Name = "Compare";

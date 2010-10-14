@@ -126,7 +126,7 @@
     <value>12, 9</value>
   </data>
   <data name="labelGoToLine.Size" type="System.Drawing.Size, System.Drawing">
-    <value>76, 13</value>
+    <value>73, 13</value>
   </data>
   <data name="labelGoToLine.TabIndex" type="System.Int32, mscorlib">
     <value>0</value>
@@ -174,7 +174,7 @@
     <value>15, 25</value>
   </data>
   <data name="textBox1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>100, 20</value>
+    <value>100, 21</value>
   </data>
   <data name="textBox1.TabIndex" type="System.Int32, mscorlib">
     <value>0</value>
@@ -227,6 +227,9 @@
   </data>
   <data name="$this.ClientSize" type="System.Drawing.Size, System.Drawing">
     <value>235, 84</value>
+  </data>
+  <data name="$this.Font" type="System.Drawing.Font, System.Drawing">
+    <value>Tahoma, 8.25pt</value>
   </data>
   <data name="$this.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>

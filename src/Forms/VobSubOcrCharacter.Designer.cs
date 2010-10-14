@@ -71,7 +71,7 @@
             this.labelSubtitleImage.AutoSize = true;
             this.labelSubtitleImage.Location = new System.Drawing.Point(9, 13);
             this.labelSubtitleImage.Name = "labelSubtitleImage";
-            this.labelSubtitleImage.Size = new System.Drawing.Size(73, 13);
+            this.labelSubtitleImage.Size = new System.Drawing.Size(74, 13);
             this.labelSubtitleImage.TabIndex = 13;
             this.labelSubtitleImage.Text = "Subtitle image";
             // 
@@ -89,7 +89,7 @@
             this.labelCharactersAsText.AutoSize = true;
             this.labelCharactersAsText.Location = new System.Drawing.Point(9, 243);
             this.labelCharactersAsText.Name = "labelCharactersAsText";
-            this.labelCharactersAsText.Size = new System.Drawing.Size(98, 13);
+            this.labelCharactersAsText.Size = new System.Drawing.Size(105, 13);
             this.labelCharactersAsText.TabIndex = 17;
             this.labelCharactersAsText.Text = "Character(s) as text";
             // 
@@ -97,7 +97,7 @@
             // 
             this.textBoxCharacters.Location = new System.Drawing.Point(12, 259);
             this.textBoxCharacters.Name = "textBoxCharacters";
-            this.textBoxCharacters.Size = new System.Drawing.Size(225, 20);
+            this.textBoxCharacters.Size = new System.Drawing.Size(225, 21);
             this.textBoxCharacters.TabIndex = 0;
             this.textBoxCharacters.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxCharactersKeyDown);
             // 
@@ -115,7 +115,7 @@
             this.labelCharacters.AutoSize = true;
             this.labelCharacters.Location = new System.Drawing.Point(14, 168);
             this.labelCharacters.Name = "labelCharacters";
-            this.labelCharacters.Size = new System.Drawing.Size(64, 13);
+            this.labelCharacters.Size = new System.Drawing.Size(68, 13);
             this.labelCharacters.TabIndex = 19;
             this.labelCharacters.Text = "Character(s)";
             // 
@@ -135,7 +135,7 @@
             this.checkBoxItalic.AutoSize = true;
             this.checkBoxItalic.Location = new System.Drawing.Point(243, 262);
             this.checkBoxItalic.Name = "checkBoxItalic";
-            this.checkBoxItalic.Size = new System.Drawing.Size(48, 17);
+            this.checkBoxItalic.Size = new System.Drawing.Size(49, 17);
             this.checkBoxItalic.TabIndex = 1;
             this.checkBoxItalic.Text = "&Italic";
             this.checkBoxItalic.UseVisualStyleBackColor = true;
@@ -182,6 +182,7 @@
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.labelSubtitleImage);
             this.Controls.Add(this.pictureBoxSubtitleImage);
+            this.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.KeyPreview = true;
             this.MaximizeBox = false;
