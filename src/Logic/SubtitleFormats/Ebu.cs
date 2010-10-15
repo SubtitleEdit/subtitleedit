@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Text.RegularExpressions;
+﻿using System.Collections.Generic;
 using System.IO;
+using System.Text;
 
 namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
@@ -174,6 +172,126 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             return header;
         }
 
+        /// <summary>
+        /// Get text with regard code page from header
+        /// </summary>
+        /// <param name="skipNext">Skip next character</param>
+        /// <param name="header">EBU header</param>
+        /// <param name="buffer">data buffer</param>
+        /// <param name="index">index to current byte in buffer</param>
+        /// <returns>Character at index</returns>
+        private string GetCharacter(out bool skipNext, EbuGeneralSubtitleInformation header, byte[] buffer, int index)
+        {
+            skipNext = false;
+            if (header.CharacterCodeTableNumber == "00")
+            {
+                //note that 0xC1—0xCF combines characters - http://en.wikipedia.org/wiki/ISO/IEC_6937
+                Encoding encoding = Encoding.GetEncoding(20269);
+                string next = encoding.GetString(buffer, index + 1, 1);
+                switch (buffer[index])
+                {
+                    case 0xc1:
+                        skipNext = "aeiou".Contains(next.ToLower());
+                        switch (next)
+                        {
+                            case "a": return "à";
+                            case "e": return "è";
+                            case "i": return "ì";
+                            case "o": return "ò";
+                            case "u": return "ù";
+                            case "A": return "À";
+                            case "E": return "È";
+                            case "I": return "Ì";
+                            case "O": return "Ò";
+                            case "U": return "Ù";
+                        }
+                        return string.Empty;
+                    case 0xc2:
+                        skipNext = "aeiou".Contains(next.ToLower());
+                        switch (next)
+                        {
+                            case "a": return "á";
+                            case "e": return "é";
+                            case "i": return "í";
+                            case "o": return "ó";
+                            case "u": return "ú";
+                            case "A": return "Á";
+                            case "E": return "É";
+                            case "I": return "Í";
+                            case "O": return "Ó";
+                            case "U": return "Ú";
+                        }
+                        return string.Empty;
+                    case 0xc3:
+                        skipNext = "aeiou".Contains(next.ToLower());
+                        switch (next)
+                        {
+                            case "a": return "â";
+                            case "e": return "ê";
+                            case "i": return "î";
+                            case "o": return "ô";
+                            case "u": return "û";
+                            case "A": return "Â";
+                            case "E": return "Ê";
+                            case "I": return "Î";
+                            case "O": return "Ô";
+                            case "U": return "Û";
+                        }
+                        return string.Empty;
+                    case 0xc4:
+                        skipNext = "ao".Contains(next.ToLower());
+                        switch (next)
+                        {
+                            case "a": return "ã";
+                            case "o": return "õ";
+                            case "A": return "Ã";
+                            case "E": return "Õ";
+                        }
+                        return string.Empty;
+                    case 0xc8:
+                        skipNext = "aeiou".Contains(next.ToLower());
+                        switch (next)
+                        {
+                            case "a": return "ä";
+                            case "e": return "ë";
+                            case "i": return "ï";
+                            case "o": return "ö";
+                            case "u": return "ü";
+                            case "A": return "Ä";
+                            case "E": return "Ë";
+                            case "I": return "Ï";
+                            case "O": return "Ö";
+                            case "U": return "Ü";
+                        }
+                        return string.Empty;
+                    default:
+                        return encoding.GetString(buffer, index, 1);
+                }
+            }
+            else if (header.CharacterCodeTableNumber == "01") // Latin/Cyrillic alphabet - from ISO 8859/5-1988
+            {
+                Encoding encoding = Encoding.GetEncoding("ISO-8859-5");
+                return encoding.GetString(buffer, index, 1);
+            }
+            else if (header.CharacterCodeTableNumber == "02") // Latin/Arabic alphabet - from ISO 8859/6-1987
+            {
+                Encoding encoding = Encoding.GetEncoding("ISO-8859-6");
+                return encoding.GetString(buffer, index, 1);
+            }
+            else if (header.CharacterCodeTableNumber == "03") // Latin/Greek alphabet - from ISO 8859/7-1987
+            {
+                Encoding encoding = Encoding.GetEncoding("ISO-8859-7"); // or ISO-8859-1 ?
+                return encoding.GetString(buffer, index, 1);
+            }
+            else if (header.CharacterCodeTableNumber == "04") // Latin/Hebrew alphabet - from ISO 8859/8-1988
+            {
+                Encoding encoding = Encoding.GetEncoding("ISO-8859-8");
+                return encoding.GetString(buffer, index, 1);
+            }
+
+            return string.Empty;
+        }
+
         private IEnumerable<EbuTextTimingInformation> ReadTTI(byte[] buffer, EbuGeneralSubtitleInformation header)
         {
             const int StartOfTTI = 1024;
@@ -185,18 +303,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             const byte UnderlineOn = 0x82;
             const byte UnderlineOff = 0x83;
 
-            Encoding encoding = Encoding.Default; 
-            //try
-            //{
-            //    if (header.CharacterCodeTableNumber == "00")
-            //        encoding = Encoding.GetEncoding("ISO-8859-1");
-            //    else
-            //        encoding = Encoding.GetEncoding(int.Parse(header.CodePageNumber));
-            //}
-            //catch
-            //{ 
-            //    // will fall-back to default encoding
-            //}
             List<EbuTextTimingInformation> list = new List<EbuTextTimingInformation>();
             int index = StartOfTTI;
             while (index + TTISize < buffer.Length)
@@ -214,26 +320,32 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 tti.TimeCodeOutMilliseconds = (int)(1000 / (header.FrameRate / buffer[index + 9 + 3]));
                 tti.CommentFlag = buffer[index + 15];
 
-                // text
+                // build text
+                bool skipNext = false;
                 StringBuilder sb = new StringBuilder();
                 for (int i = 0; i < 112; i++)
                 {
-                    if (buffer[index + 16 + i] == TextFieldCRLF)
-                        sb.AppendLine();
-                    else if (buffer[index + 16 + i] == ItalicsOn)
-                        sb.Append("<i>");
-                    else if (buffer[index + 16 + i] == ItalicsOff)
-                        sb.Append("</i>");
-                    else if (buffer[index + 16 + i] == UnderlineOn)
-                        sb.Append("<u>");
-                    else if (buffer[index + 16 + i] == UnderlineOff)
-                        sb.Append("</u>");
-                    else if (buffer[index + 16 + i] == TextFieldTerminator)
-                        break;
-                    else if (buffer[index + 16 + i] >= 0x20 && buffer[index + 16 + i] <= 0x7F)
-                        sb.Append(encoding.GetString(buffer, index+16+i, 1));
-                    else if (buffer[index + 16 + i] >= 0xA1)
-                        sb.Append(encoding.GetString(buffer, index+16+i, 1));
+                    if (skipNext)
+                    {
+                        skipNext = false;
+                    }
+                    else
+                    {
+                        if (buffer[index + 16 + i] == TextFieldCRLF)
+                            sb.AppendLine();
+                        else if (buffer[index + 16 + i] == ItalicsOn)
+                            sb.Append("<i>");
+                        else if (buffer[index + 16 + i] == ItalicsOff)
+                            sb.Append("</i>");
+                        else if (buffer[index + 16 + i] == UnderlineOn)
+                            sb.Append("<u>");
+                        else if (buffer[index + 16 + i] == UnderlineOff)
+                            sb.Append("</u>");
+                        else if (buffer[index + 16 + i] == TextFieldTerminator)
+                            break;
+                        else if ((buffer[index + 16 + i] >= 0x20 && buffer[index + 16 + i] <= 0x7F) || buffer[index + 16 + i] >= 0xA1)
+                            sb.Append(GetCharacter(out skipNext, header, buffer, index + 16 + i));
+                    }
                 }
                 tti.TextField = sb.ToString();
 
