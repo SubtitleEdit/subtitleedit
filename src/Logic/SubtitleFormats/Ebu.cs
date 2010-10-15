@@ -230,6 +230,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         sb.Append("</u>");
                     else if (buffer[index + 16 + i] == TextFieldTerminator)
                         break;
+                    else if (buffer[index + 16 + i] >= 0x20 && buffer[index + 16 + i] <= 0x7F)
+                        sb.Append(encoding.GetString(buffer, index+16+i, 1));
                     else if (buffer[index + 16 + i] >= 0xA1)
                         sb.Append(encoding.GetString(buffer, index+16+i, 1));
                 }
