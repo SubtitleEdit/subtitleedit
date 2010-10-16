@@ -105,5 +105,14 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
+        internal void SetIcon(System.Drawing.Bitmap bitmap)
+        {
+            if (bitmap != null)
+            {
+                IntPtr Hicon = bitmap.GetHicon();
+                this.Icon = System.Drawing.Icon.FromHandle(Hicon);
+            }
+        }
+
     }
 }
