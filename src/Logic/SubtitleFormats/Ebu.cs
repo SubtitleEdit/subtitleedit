@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System;
 
 namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
@@ -190,78 +191,238 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 string next = encoding.GetString(buffer, index + 1, 1);
                 switch (buffer[index])
                 {
-                    case 0xc1:
-                        skipNext = "aeiou".Contains(next.ToLower());
+                    case 0xc1: // Grave
+                        skipNext = "AEIOUaeiou".Contains(next);
                         switch (next)
                         {
-                            case "a": return "à";
-                            case "e": return "è";
-                            case "i": return "ì";
-                            case "o": return "ò";
-                            case "u": return "ù";
                             case "A": return "À";
                             case "E": return "È";
                             case "I": return "Ì";
                             case "O": return "Ò";
                             case "U": return "Ù";
+                            case "a": return "à";
+                            case "e": return "è";
+                            case "i": return "ì";
+                            case "o": return "ò";
+                            case "u": return "ù";
                         }
                         return string.Empty;
-                    case 0xc2:
-                        skipNext = "aeiou".Contains(next.ToLower());
+                    case 0xc2: // Acute
+                        skipNext = "ACEILNORSUYZacegilnorsuyz".Contains(next);
                         switch (next)
                         {
-                            case "a": return "á";
-                            case "e": return "é";
-                            case "i": return "í";
-                            case "o": return "ó";
-                            case "u": return "ú";
                             case "A": return "Á";
+                            case "C": return "Ć";
                             case "E": return "É";
                             case "I": return "Í";
+                            case "L": return "Ĺ";
+                            case "N": return "Ń";
                             case "O": return "Ó";
+                            case "R": return "Ŕ";
+                            case "S": return "Ś";
                             case "U": return "Ú";
+                            case "Y": return "Ý";
+                            case "Z": return "Ź";
+                            case "a": return "á";
+                            case "c": return "ć";
+                            case "e": return "é";
+                            case "g": return "ģ";
+                            case "i": return "í";
+                            case "l": return "ĺ"; 
+                            case "n": return "ń";
+                            case "o": return "ó";
+                            case "r": return "ŕ";
+                            case "s": return "ś";
+                            case "u": return "ú";
+                            case "y": return "ý";
+                            case "z": return "ź";
                         }
                         return string.Empty;
-                    case 0xc3:
-                        skipNext = "aeiou".Contains(next.ToLower());
+                    case 0xc3: // Circumflex
+                        skipNext = "ACEGHIJOSUWYaceghijosuwy".Contains(next); 
                         switch (next)
                         {
-                            case "a": return "â";
-                            case "e": return "ê";
-                            case "i": return "î";
-                            case "o": return "ô";
-                            case "u": return "û";
                             case "A": return "Â";
+                            case "C": return "Ĉ";
                             case "E": return "Ê";
+                            case "G": return "Ĝ";
+                            case "H": return "Ĥ";
                             case "I": return "Î";
+                            case "J": return "Ĵ";
                             case "O": return "Ô";
+                            case "S": return "Ŝ";
                             case "U": return "Û";
+                            case "W": return "Ŵ";
+                            case "Y": return "Ŷ";
+                            case "a": return "â";
+                            case "c": return "ĉ";
+                            case "e": return "ê";
+                            case "g": return "ĝ";
+                            case "h": return "ĥ";
+                            case "i": return "î";
+                            case "j": return "ĵ";
+                            case "o": return "ô";
+                            case "s": return "ŝ";
+                            case "u": return "û";
+                            case "w": return "ŵ";
+                            case "y": return "ŷ";
                         }
                         return string.Empty;
-                    case 0xc4:
-                        skipNext = "ao".Contains(next.ToLower());
+                    case 0xc4: // Tilde
+                        skipNext = "AINOUainou".Contains(next);
                         switch (next)
                         {
-                            case "a": return "ã";
-                            case "o": return "õ";
                             case "A": return "Ã";
-                            case "E": return "Õ";
+                            case "I": return "Ĩ";
+                            case "N": return "Ñ";
+                            case "O": return "Õ";
+                            case "U": return "Ũ";
+                            case "a": return "ã";
+                            case "i": return "ĩ";
+                            case "n": return "ñ";
+                            case "o": return "õ";
+                            case "u": return "ũ";
                         }
                         return string.Empty;
-                    case 0xc8:
-                        skipNext = "aeiou".Contains(next.ToLower());
+                    case 0xc5: // Macron
+                        skipNext = "AEIOUaeiou".Contains(next);
+                        switch (next) 
+                        {
+                            case "A": return "Ā";
+                            case "E": return "Ē";
+                            case "I": return "Ī";
+                            case "O": return "Ō";
+                            case "U": return "Ū";
+                            case "a": return "ā";
+                            case "e": return "ē";
+                            case "i": return "ī";
+                            case "o": return "ō";
+                            case "u": return "ū";
+                        }
+                        return string.Empty;
+                    case 0xc6: // Breve
+                        skipNext = "AGUagu".Contains(next);
                         switch (next)
                         {
-                            case "a": return "ä";
-                            case "e": return "ë";
-                            case "i": return "ï";
-                            case "o": return "ö";
-                            case "u": return "ü";
+                            case "A": return "Ă";
+                            case "G": return "Ğ";
+                            case "U": return "Ŭ";
+                            case "a": return "ă";
+                            case "g": return "ğ";
+                            case "u": return "ŭ";
+                        }
+                        return string.Empty;
+                    case 0xc7: // Dot
+                        skipNext = "CEGIZcegiz".Contains(next);
+                        switch (next)
+                        {
+                            case "C": return "Ċ";
+                            case "E": return "Ė";
+                            case "G": return "Ġ";
+                            case "I": return "İ";
+                            case "Z": return "Ż";
+                            case "c": return "ċ";
+                            case "e": return "ė";
+                            case "g": return "ġ";
+                            case "i": return "ı";
+                            case "z": return "ż";
+                        }
+                        return string.Empty;
+                    case 0xc8: // Umlaut or diæresis
+                        skipNext = "AEIOUYaeiouy".Contains(next);
+                        switch (next)
+                        {
                             case "A": return "Ä";
                             case "E": return "Ë";
                             case "I": return "Ï";
                             case "O": return "Ö";
                             case "U": return "Ü";
+                            case "Y": return "Ÿ";
+                            case "a": return "ä";
+                            case "e": return "ë";
+                            case "i": return "ï";
+                            case "o": return "ö";
+                            case "u": return "ü";
+                            case "y": return "ÿ";
+                        }
+                        return string.Empty;
+                    case 0xca: // Ring
+                        skipNext = "AUau".Contains(next);
+                        switch (next)
+                        {
+                            case "A": return "Å";
+                            case "U": return "Ů";
+                            case "a": return "å";
+                            case "u": return "ů";
+                        }
+                        return string.Empty;
+                    case 0xcb: // Cedilla
+                        skipNext = "CGKLNRSTcklnrst".Contains(next);
+                        switch (next)
+                        {
+                            case "C": return "Ç";
+                            case "G": return "Ģ";
+                            case "K": return "Ķ";
+                            case "L": return "Ļ";
+                            case "N": return "Ņ";
+                            case "R": return "Ŗ";
+                            case "S": return "Ş";
+                            case "T": return "Ţ";
+                            case "c": return "ç";
+                            case "k": return "ķ";
+                            case "l": return "ļ";
+                            case "n": return "ņ";
+                            case "r": return "ŗ";
+                            case "s": return "ş";
+                            case "t": return "ţ";
+                        }
+                        return string.Empty;
+                    case 0xcd: // DoubleAcute
+                        skipNext = "OUou".Contains(next);
+                        switch (next)
+                        {
+                            case "O": return "Ő";
+                            case "U": return "Ű";
+                            case "o": return "ő";
+                            case "u": return "ű";
+                        }
+                        return string.Empty;
+                    case 0xce: // Ogonek
+                        skipNext = "AEIUaeiu".Contains(next);
+                        switch (next)
+                        {
+                            case "A": return "Ą";
+                            case "E": return "Ę";
+                            case "I": return "Į";
+                            case "U": return "Ų";
+                            case "a": return "ą";
+                            case "e": return "ę";
+                            case "i": return "į";
+                            case "u": return "ų";
+                        }
+                        return string.Empty;
+                    case 0xcf: // Caron
+                        skipNext = "CDELNRSTZcdelnrstz".Contains(next);
+                        switch (next)
+                        {
+                            case "C": return "Č";
+                            case "D": return "Ď";
+                            case "E": return "Ě";
+                            case "L": return "Ľ";
+                            case "N": return "Ň";
+                            case "R": return "Ř";
+                            case "S": return "Š";
+                            case "T": return "Ť";
+                            case "Z": return "Ž";
+                            case "c": return "č";
+                            case "d": return "ď";
+                            case "e": return "ě";
+                            case "l": return "ľ";
+                            case "n": return "ň";
+                            case "r": return "ř";
+                            case "s": return "š";
+                            case "t": return "ť";
+                            case "z": return "ž";
                         }
                         return string.Empty;
                     default:
@@ -323,6 +484,9 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 // build text
                 bool skipNext = false;
                 StringBuilder sb = new StringBuilder();
+                string endTags = string.Empty;                
+                string color = string.Empty;
+                string lastColor = string.Empty;
                 for (int i = 0; i < 112; i++)
                 {
                     if (skipNext)
@@ -331,6 +495,36 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     }
                     else
                     {
+                        if (buffer[index + 16 + i] >= 0 && buffer[index + 16 + i] <= 0x17)
+                        {                           
+                            //switch (buffer[index + 16 + i])
+                            //{
+                            //    case 00:
+                            //    case 10: color = "Black";
+                            //        break;
+                            //    case 01:
+                            //    case 11: color = "Red";
+                            //        break;
+                            //    case 02:
+                            //    case 12: color = "Red";
+                            //        break;
+                            //    case 03:
+                            //    case 13: color = "Yellow";
+                            //        break;
+                            //    case 04:
+                            //    case 14: color = "Blue";
+                            //        break;
+                            //    case 05:
+                            //    case 15: color = "Magenta";
+                            //        break;
+                            //    case 06:
+                            //    case 16: color = "Cyan";
+                            //        break;
+                            //    case 07:
+                            //    case 17: color = "White";
+                            //        break;
+                            //}
+                        }
                         if (buffer[index + 16 + i] == TextFieldCRLF)
                             sb.AppendLine();
                         else if (buffer[index + 16 + i] == ItalicsOn)
@@ -344,11 +538,25 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         else if (buffer[index + 16 + i] == TextFieldTerminator)
                             break;
                         else if ((buffer[index + 16 + i] >= 0x20 && buffer[index + 16 + i] <= 0x7F) || buffer[index + 16 + i] >= 0xA1)
-                            sb.Append(GetCharacter(out skipNext, header, buffer, index + 16 + i));
+                        {
+                            string ch = GetCharacter(out skipNext, header, buffer, index + 16 + i);
+                            if (ch != " ")
+                            {
+                                if (color != lastColor && color.Length > 0)
+                                {
+                                    endTags = "</font>";
+                                    if (lastColor.Length > 0)
+                                        sb.Append("</font>");
+                                    sb.Append("<font color=\"" + color + "\">");
+                                }
+                                lastColor = color;
+                            }
+                            sb.Append(ch);
+                        }
                     }
                 }
-                tti.TextField = sb.ToString();
-
+                tti.TextField = sb.ToString().Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine) + endTags;
+                tti.TextField = tti.TextField.TrimEnd();
 
                 index += TTISize;
                 list.Add(tti);
