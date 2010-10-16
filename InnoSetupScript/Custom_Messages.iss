@@ -25,7 +25,7 @@
 ;English
 en.msg_SetupIsRunningWarning=Subtitle Edit Setup is already running!
 en.msg_AskToDownNET=Subtitle Edit requires the .NET Framework 2.0. Please download and install the .NET Framework and run setup again. %n%nDo you want to download the .NET Framework 2.0 now?
-en.msg_DeleteSettings=Do you also want to delete Subtitle Edit's settings? %nIf you plan on reinstalling Subtitle Edit you do not have to delete them.
+en.msg_DeleteSettings=Do you also want to delete Subtitle Edit's settings and any custom changes you made in the dictionaries? %n%nIf you plan on reinstalling Subtitle Edit you do not have to delete them.
 en.run_VisitWebsite=Visit Subtitle Edit's Website
 en.sm_com_Changelog=Subtitle Edit's Changelog
 en.sm_com_ReadmeFile=Subtitle Edit's ReadMe
@@ -37,7 +37,7 @@ en.tsk_ResetSettings=Reset Subtitle Edit's settings
 
 dk.msg_SetupIsRunningWarning=Subtitle Edit Setup kører allerede!
 dk.msg_AskToDownNET=Subtitle Edit kræver .NET Framework 2.0. Download and installer .NET Framework og kør setup igen. %n%nVil du downloade .NET Framework 2.0 nu?
-dk.msg_DeleteSettings=Vil du også slette Subtitle Edit indstillinger? %nHvis du vil geninstallere Subtitle Edit senere kan du beholde disse indstillinger.
+dk.msg_DeleteSettings=Do you also want to delete Subtitle Edit's settings and any custom changes you made in the dictionaries? %n%nHvis du vil geninstallere Subtitle Edit senere kan du beholde disse indstillinger.
 dk.run_VisitWebsite=Besøg Subtitle Edits Website
 dk.sm_com_Changelog=Subtitle Edit ændringslog
 dk.sm_com_ReadmeFile=Subtitle Edit's ReadMe
@@ -49,7 +49,7 @@ dk.tsk_ResetSettings=Nulstil Subtitle Edit indstillinger
 
 es.msg_SetupIsRunningWarning=Subtitle Edit Setup is already running!
 es.msg_AskToDownNET=Subtitle Edit requires the .NET Framework 2.0. Please download and install the .NET Framework and run setup again. %n%nDo you want to download the .NET Framework 2.0 now?
-es.msg_DeleteSettings=Do you also want to delete Subtitle Edit's settings? %nIf you plan on reinstalling Subtitle Edit you do not have to delete them.
+es.msg_DeleteSettings=Do you also want to delete Subtitle Edit's settings and any custom changes you made in the dictionaries? %n%nIf you plan on reinstalling Subtitle Edit you do not have to delete them.
 es.run_VisitWebsite=Visit Subtitle Edit's Website
 es.sm_com_Changelog=Subtitle Edit's Changelog
 es.sm_com_ReadmeFile=Subtitle Edit's ReadMe
@@ -61,7 +61,7 @@ es.tsk_ResetSettings=Reset Subtitle Edit's settings
 
 fr.msg_SetupIsRunningWarning=Subtitle Edit Setup is already running!
 fr.msg_AskToDownNET=Subtitle Edit requires the .NET Framework 2.0. Please download and install the .NET Framework and run setup again. %n%nDo you want to download the .NET Framework 2.0 now?
-fr.msg_DeleteSettings=Do you also want to delete Subtitle Edit's settings? %nIf you plan on reinstalling Subtitle Edit you do not have to delete them.
+fr.msg_DeleteSettings=Do you also want to delete Subtitle Edit's settings and any custom changes you made in the dictionaries? %n%nIf you plan on reinstalling Subtitle Edit you do not have to delete them.
 fr.run_VisitWebsite=Visit Subtitle Edit's Website
 fr.sm_com_Changelog=Subtitle Edit's Changelog
 fr.sm_com_ReadmeFile=Subtitle Edit's ReadMe
@@ -73,7 +73,7 @@ fr.tsk_ResetSettings=Reset Subtitle Edit's settings
 
 it.msg_SetupIsRunningWarning=Subtitle Edit Setup is already running!
 it.msg_AskToDownNET=Subtitle Edit requires the .NET Framework 2.0. Please download and install the .NET Framework and run setup again. %n%nDo you want to download the .NET Framework 2.0 now?
-it.msg_DeleteSettings=Do you also want to delete Subtitle Edit's settings? %nIf you plan on reinstalling Subtitle Edit you do not have to delete them.
+it.msg_DeleteSettings=Do you also want to delete Subtitle Edit's settings and any custom changes you made in the dictionaries? %n%nIf you plan on reinstalling Subtitle Edit you do not have to delete them.
 it.run_VisitWebsite=Visit Subtitle Edit's Website
 it.sm_com_Changelog=Subtitle Edit's Changelog
 it.sm_com_ReadmeFile=Subtitle Edit's ReadMe
@@ -85,7 +85,7 @@ it.tsk_ResetSettings=Reset Subtitle Edit's settings
 
 nl.msg_SetupIsRunningWarning=Subtitle Edit Setup is already running!
 nl.msg_AskToDownNET=Subtitle Edit requires the .NET Framework 2.0. Please download and install the .NET Framework and run setup again. %n%nDo you want to download the .NET Framework 2.0 now?
-nl.msg_DeleteSettings=Do you also want to delete Subtitle Edit's settings? %nIf you plan on reinstalling Subtitle Edit you do not have to delete them.
+nl.msg_DeleteSettings=Do you also want to delete Subtitle Edit's settings and any custom changes you made in the dictionaries? %n%nIf you plan on reinstalling Subtitle Edit you do not have to delete them.
 nl.run_VisitWebsite=Visit Subtitle Edit's Website
 nl.sm_com_Changelog=Subtitle Edit's Changelog
 nl.sm_com_ReadmeFile=Subtitle Edit's ReadMe
@@ -97,7 +97,7 @@ nl.tsk_ResetSettings=Reset Subtitle Edit's settings
 
 pl.msg_SetupIsRunningWarning=Subtitle Edit Setup is already running!
 pl.msg_AskToDownNET=Subtitle Edit requires the .NET Framework 2.0. Please download and install the .NET Framework and run setup again. %n%nDo you want to download the .NET Framework 2.0 now?
-pl.msg_DeleteSettings=Do you also want to delete Subtitle Edit's settings? %nIf you plan on reinstalling Subtitle Edit you do not have to delete them.
+pl.msg_DeleteSettings=Do you also want to delete Subtitle Edit's settings and any custom changes you made in the dictionaries? %n%nIf you plan on reinstalling Subtitle Edit you do not have to delete them.
 pl.run_VisitWebsite=Visit Subtitle Edit's Website
 pl.sm_com_Changelog=Subtitle Edit's Changelog
 pl.sm_com_ReadmeFile=Subtitle Edit's ReadMe
@@ -109,7 +109,7 @@ pl.tsk_ResetSettings=Reset Subtitle Edit's settings
 
 ro.msg_SetupIsRunningWarning=Subtitle Edit Setup is already running!
 ro.msg_AskToDownNET=Subtitle Edit requires the .NET Framework 2.0. Please download and install the .NET Framework and run setup again. %n%nDo you want to download the .NET Framework 2.0 now?
-ro.msg_DeleteSettings=Do you also want to delete Subtitle Edit's settings? %nIf you plan on reinstalling Subtitle Edit you do not have to delete them.
+ro.msg_DeleteSettings=Do you also want to delete Subtitle Edit's settings and any custom changes you made in the dictionaries? %n%nIf you plan on reinstalling Subtitle Edit you do not have to delete them.
 ro.run_VisitWebsite=Visit Subtitle Edit's Website
 ro.sm_com_Changelog=Subtitle Edit's Changelog
 ro.sm_com_ReadmeFile=Subtitle Edit's ReadMe
