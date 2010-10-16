@@ -18,7 +18,7 @@
 ;* along with Subtitle Edit.  If not, see <http://www.gnu.org/licenses/>.
 
 ; Requirements:
-; Inno Setup QuickStart Pack v5.3.11(+): http://www.jrsoftware.org/isdl.php#qsp
+; Inno Setup QuickStart Pack Unicode v5.3.11(+): http://www.jrsoftware.org/isdl.php#qsp
 
 
 #define installer_build_number "04"
@@ -35,20 +35,21 @@
 ;#define simple_app_version str(VerMajor) + "." + str(VerMinor) + "." + str(VerBuild)
 #define simple_app_version str(VerMajor) + "." + str(VerMinor)
 
+#define app_web_site "http://www.nikse.dk/se/"
 #define installer_build_date GetDateTimeString('mmm, d yyyy', '', '')
 
 
 [Setup]
 AppID=SubtitleEdit
 AppCopyright=Copyright © 2001-2010, Nikse
-AppContact=http://www.nikse.dk/se/
+AppContact={#= app_web_site}
 AppName=Subtitle Edit
 AppVerName=Subtitle Edit v{#= simple_app_version}
 AppVersion={#= simple_app_version}
 AppPublisher=Nikse
-AppPublisherURL=http://www.nikse.dk/se/
-AppSupportURL=http://www.nikse.dk/se/
-AppUpdatesURL=http://www.nikse.dk/se/
+AppPublisherURL={#= app_web_site}
+AppSupportURL={#= app_web_site}
+AppUpdatesURL={#= app_web_site}
 UninstallDisplayName=Subtitle Edit v{#= simple_app_version}
 UninstallDisplayIcon={app}\SubtitleEdit.exe
 DefaultDirName={pf}\Subtitle Edit
@@ -155,7 +156,7 @@ Source: ..\TessData\eng.word-dawg; DestDir: {app}\TessData; Flags: ignoreversion
 Name: {group}\Subtitle Edit; Filename: {app}\SubtitleEdit.exe; Comment: Subtitle Edit {#= simple_app_version}; WorkingDir: {app}; AppUserModelID: Nikse.SubtitleEdit; IconFilename: {app}\SubtitleEdit.exe; IconIndex: 0
 Name: {group}\Help and Support\Changelog; Filename: {app}\Changelog.txt; Comment: {cm:sm_com_Changelog}; WorkingDir: {app}
 ;Name: {group}\Help and Support\Readme; Filename: {app}\Readme.txt; Comment: {cm:sm_com_ReadmeFile}; WorkingDir: {app}
-Name: {group}\Help and Support\{cm:ProgramOnTheWeb,Subtitle Edit}; Filename: http://www.nikse.dk/se/; Comment: {cm:ProgramOnTheWeb,Subtitle Edit}
+Name: {group}\Help and Support\{cm:ProgramOnTheWeb,Subtitle Edit}; Filename: {#= app_web_site}; Comment: {cm:ProgramOnTheWeb,Subtitle Edit}
 Name: {group}\{cm:UninstallProgram,Subtitle Edit}; Filename: {uninstallexe}; IconFilename: {app}\uninstall.ico; Comment: {cm:UninstallProgram,Subtitle Edit}; WorkingDir: {app}
 
 Name: {commondesktop}\Subtitle Edit; Filename: {app}\SubtitleEdit.exe; Tasks: desktopicon\common; Comment: Subtitle Edit {#= simple_app_version}; WorkingDir: {app}; AppUserModelID: Nikse.SubtitleEdit; IconFilename: {app}\SubtitleEdit.exe; IconIndex: 0
@@ -171,7 +172,7 @@ Type: files; Name: {userappdata}\Subtitle Edit\Settings.xml; Tasks: reset_settin
 
 [Run]
 Filename: {app}\SubtitleEdit.exe; Description: {cm:LaunchProgram,Subtitle Edit}; WorkingDir: {app}; Flags: nowait postinstall skipifsilent runascurrentuser
-Filename: http://www.nikse.dk/se/; Description: {cm:run_VisitWebsite}; Flags: nowait postinstall skipifsilent shellexec runascurrentuser unchecked
+Filename: {#= app_web_site}; Description: {cm:run_VisitWebsite}; Flags: nowait postinstall skipifsilent shellexec runascurrentuser unchecked
 
 
 [UninstallDelete]
