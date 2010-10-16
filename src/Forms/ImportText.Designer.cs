@@ -95,6 +95,7 @@
             this.textBoxText.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.textBoxText.Size = new System.Drawing.Size(495, 272);
             this.textBoxText.TabIndex = 2;
+            this.textBoxText.TextChanged += new System.EventHandler(this.textBoxText_TextChanged);
             this.textBoxText.DragDrop += new System.Windows.Forms.DragEventHandler(this.textBoxText_DragDrop);
             this.textBoxText.DragEnter += new System.Windows.Forms.DragEventHandler(this.textBoxText_DragEnter);
             // 
@@ -123,7 +124,7 @@
             this.checkBoxMergeShortLines.CheckState = System.Windows.Forms.CheckState.Checked;
             this.checkBoxMergeShortLines.Location = new System.Drawing.Point(6, 98);
             this.checkBoxMergeShortLines.Name = "checkBoxMergeShortLines";
-            this.checkBoxMergeShortLines.Size = new System.Drawing.Size(193, 17);
+            this.checkBoxMergeShortLines.Size = new System.Drawing.Size(189, 17);
             this.checkBoxMergeShortLines.TabIndex = 40;
             this.checkBoxMergeShortLines.Text = "Merge short lines with continuation";
             this.checkBoxMergeShortLines.UseVisualStyleBackColor = true;
@@ -168,7 +169,7 @@
             this.radioButtonDurationFixed.AutoSize = true;
             this.radioButtonDurationFixed.Location = new System.Drawing.Point(19, 42);
             this.radioButtonDurationFixed.Name = "radioButtonDurationFixed";
-            this.radioButtonDurationFixed.Size = new System.Drawing.Size(51, 17);
+            this.radioButtonDurationFixed.Size = new System.Drawing.Size(50, 17);
             this.radioButtonDurationFixed.TabIndex = 3;
             this.radioButtonDurationFixed.Text = "Fixed";
             this.radioButtonDurationFixed.UseVisualStyleBackColor = true;
@@ -180,7 +181,7 @@
             this.radioButtonDurationAuto.Checked = true;
             this.radioButtonDurationAuto.Location = new System.Drawing.Point(19, 19);
             this.radioButtonDurationAuto.Name = "radioButtonDurationAuto";
-            this.radioButtonDurationAuto.Size = new System.Drawing.Size(48, 17);
+            this.radioButtonDurationAuto.Size = new System.Drawing.Size(47, 17);
             this.radioButtonDurationAuto.TabIndex = 2;
             this.radioButtonDurationAuto.TabStop = true;
             this.radioButtonDurationAuto.Text = "Auto";
@@ -235,7 +236,7 @@
             this.checkBoxRemoveLinesWithoutLetters.CheckState = System.Windows.Forms.CheckState.Checked;
             this.checkBoxRemoveLinesWithoutLetters.Location = new System.Drawing.Point(6, 144);
             this.checkBoxRemoveLinesWithoutLetters.Name = "checkBoxRemoveLinesWithoutLetters";
-            this.checkBoxRemoveLinesWithoutLetters.Size = new System.Drawing.Size(162, 17);
+            this.checkBoxRemoveLinesWithoutLetters.Size = new System.Drawing.Size(158, 17);
             this.checkBoxRemoveLinesWithoutLetters.TabIndex = 5;
             this.checkBoxRemoveLinesWithoutLetters.Text = "Remove lines without letters";
             this.checkBoxRemoveLinesWithoutLetters.UseVisualStyleBackColor = true;
@@ -258,7 +259,7 @@
             this.radioButtonAutoSplit.Checked = true;
             this.radioButtonAutoSplit.Location = new System.Drawing.Point(6, 19);
             this.radioButtonAutoSplit.Name = "radioButtonAutoSplit";
-            this.radioButtonAutoSplit.Size = new System.Drawing.Size(93, 17);
+            this.radioButtonAutoSplit.Size = new System.Drawing.Size(88, 17);
             this.radioButtonAutoSplit.TabIndex = 2;
             this.radioButtonAutoSplit.TabStop = true;
             this.radioButtonAutoSplit.Text = "Auto split text";
@@ -270,7 +271,7 @@
             this.radioButtonLineMode.AutoSize = true;
             this.radioButtonLineMode.Location = new System.Drawing.Point(6, 42);
             this.radioButtonLineMode.Name = "radioButtonLineMode";
-            this.radioButtonLineMode.Size = new System.Drawing.Size(133, 17);
+            this.radioButtonLineMode.Size = new System.Drawing.Size(131, 17);
             this.radioButtonLineMode.TabIndex = 0;
             this.radioButtonLineMode.Text = "One line is one subtitle";
             this.radioButtonLineMode.UseVisualStyleBackColor = true;
@@ -283,7 +284,7 @@
             this.checkBoxRemoveEmptyLines.CheckState = System.Windows.Forms.CheckState.Checked;
             this.checkBoxRemoveEmptyLines.Location = new System.Drawing.Point(6, 121);
             this.checkBoxRemoveEmptyLines.Name = "checkBoxRemoveEmptyLines";
-            this.checkBoxRemoveEmptyLines.Size = new System.Drawing.Size(122, 17);
+            this.checkBoxRemoveEmptyLines.Size = new System.Drawing.Size(121, 17);
             this.checkBoxRemoveEmptyLines.TabIndex = 3;
             this.checkBoxRemoveEmptyLines.Text = "Remove empty lines";
             this.checkBoxRemoveEmptyLines.UseVisualStyleBackColor = true;
@@ -309,6 +310,7 @@
                         | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.SubtitleListview1.FirstVisibleIndex = -1;
+            this.SubtitleListview1.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.SubtitleListview1.FullRowSelect = true;
             this.SubtitleListview1.GridLines = true;
             this.SubtitleListview1.HideSelection = false;
