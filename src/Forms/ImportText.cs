@@ -242,7 +242,10 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonOK_Click(object sender, EventArgs e)
         {
-            DialogResult = DialogResult.OK;
+            if (SubtitleListview1.Items.Count > 0)
+                DialogResult = DialogResult.OK;
+            else
+                DialogResult = DialogResult.Cancel;
         }
 
         private void buttonCancel_Click(object sender, EventArgs e)
@@ -294,7 +297,8 @@ namespace Nikse.SubtitleEdit.Forms
         {
             try
             {
-                textBoxText.Text = File.ReadAllText(fileName);
+                Encoding encoding = Utilities.GetEncodingFromFile(fileName);
+                textBoxText.Text = File.ReadAllText(fileName, encoding);
                 _videoFileName = fileName.Substring(0, fileName.Length - Path.GetExtension(fileName).Length);
                 if (_videoFileName.EndsWith(".en"))
                     _videoFileName = _videoFileName.Remove(_videoFileName.Length - 3);
@@ -345,6 +349,11 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (e.KeyCode == Keys.Escape)
                 DialogResult = DialogResult.Cancel;
+        }
+
+        private void textBoxText_TextChanged(object sender, EventArgs e)
+        {
+            buttonRefresh_Click(null, null);
         }
 
     }
