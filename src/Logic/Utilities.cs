@@ -143,7 +143,7 @@ namespace Nikse.SubtitleEdit.Logic
 
         public static IEnumerable<string> GetMovieFileExtensions()
         {
-            return new List<string> { ".avi", ".mkv", ".wmv", ".mpg", ".mpeg", ".divx", ".mp4", ".asf", ".flv" };
+            return new List<string> { ".avi", ".mkv", ".wmv", ".mpg", ".mpeg", ".divx", ".mp4", ".asf", ".flv", ".mov" };
         }
 
         public static string GetVideoFileFilter()
@@ -475,7 +475,6 @@ namespace Nikse.SubtitleEdit.Logic
                         }
                         else if (GetCount(hewbrewEncoding.GetString(buffer), "אתה", "אולי", "הוא", "בסדר", "יודע", "טוב") > 5)
                             return hewbrewEncoding;
-
                     }
                 }
                 file.Close();
