@@ -1206,17 +1206,32 @@ namespace Nikse.SubtitleEdit.Forms
                 LogStatus(fixAction, string.Format(_language.XMissingQuotesAdded, noOfFixes));
         }
 
+        private static string GetWholeWord(string text, int index)
+        {
+            int start = index;
+            while (start > 0 && (Environment.NewLine + " ,.!?\"'=()/-").Contains(text[start - 1].ToString()) == false)
+                start--;
+
+            int end = index;
+            while (end+1 < text.Length && (Environment.NewLine + " ,.!?\"'=()/-").Contains(text[end+1].ToString()) == false)
+                end++;
+
+            return text.Substring(start, end - start +1);
+        }
+
         public void FixUppercaseIInsideWords()
         {
             string fixAction = _language.FixUppercaseIInsideLowercaseWord;
             int uppercaseIsInsideLowercaseWords = 0;
-            Regex re = new Regex(@"[a-zæøåäöé]I", RegexOptions.Compiled);
+            Regex reAfterLowercaseLetter = new Regex(@"[a-zæøåäöé]I", RegexOptions.Compiled);
+            Regex reBeforeLowercaseLetter = new Regex(@"I[a-zæøåäöé]", RegexOptions.Compiled);
+            bool isLineContinuation = false;
             for (int i = 0; i < _subtitle.Paragraphs.Count; i++)
             {
                 Paragraph p = _subtitle.Paragraphs[i];
+                string oldText = p.Text;
 
-                // reg-ex
-                Match match = re.Match(p.Text);
+                Match match = reAfterLowercaseLetter.Match(p.Text);
                 if (match.Success)
                 {
                     while (match.Success)
@@ -1227,7 +1242,6 @@ namespace Nikse.SubtitleEdit.Forms
                             {
                                 if (AllowFix(i + 1, fixAction))
                                 {
-                                    string oldText = p.Text;
                                     p.Text = p.Text.Substring(0, match.Index + 1) + "l";
                                     if (match.Index + 2 < oldText.Length)
                                         p.Text += oldText.Substring(match.Index + 2);
@@ -1241,6 +1255,80 @@ namespace Nikse.SubtitleEdit.Forms
                         match = match.NextMatch();
                     }
                 }
+
+                StripableText st = new StripableText(p.Text);
+                match = reBeforeLowercaseLetter.Match(st.StrippedText);
+                if (match.Success)
+                {
+                    while (match.Success)
+                    {
+                        string word = GetWholeWord(st.StrippedText, match.Index);
+                        if (!IsName(word))
+                        {
+                            if (AllowFix(i + 1, fixAction))
+                            {
+                                if (word.ToLower() == "internal" ||
+                                    word.ToLower() == "island" ||
+                                    word.ToLower() == "islands")
+                                {
+                                }
+                                else if (match.Index == 0)
+                                {  // first letter in paragraph
+
+                                    //too risky! - perhaps if periods is fixed at the same time... or too complicated!?
+                                    //if (isLineContinuation)
+                                    //{
+                                    //    st.StrippedText = st.StrippedText.Remove(match.Index, 1).Insert(match.Index, "l");
+                                    //    p.Text = st.MergedString;
+                                    //    uppercaseIsInsideLowercaseWords++;
+                                    //    _totalFixes++;
+                                    //    AddFixToListView(p, i + 1, fixAction, oldText, p.Text);
+                                    //}
+                                }
+                                else
+                                {
+                                    if (match.Index > 2 && st.StrippedText[match.Index - 1] == ' ')
+                                    {
+                                        if ((Utilities.GetLetters(true, true, true) + ",").Contains(st.StrippedText[match.Index - 2].ToString()))
+                                        {
+                                            st.StrippedText = st.StrippedText.Remove(match.Index, 1).Insert(match.Index, "l");
+                                            p.Text = st.MergedString;
+                                            uppercaseIsInsideLowercaseWords++;
+                                            _totalFixes++;
+                                            AddFixToListView(p, i + 1, fixAction, oldText, p.Text);
+                                        }
+                                    }
+                                    else if (match.Index > Environment.NewLine.Length + 1 && Environment.NewLine.Contains(st.StrippedText[match.Index - 1].ToString()))
+                                    {
+                                        if ((Utilities.GetLetters(true, true, true) + ",").Contains(st.StrippedText[match.Index - (Environment.NewLine.Length + 1)].ToString()))
+                                        {
+                                            st.StrippedText = st.StrippedText.Remove(match.Index, 1).Insert(match.Index, "l");
+                                            p.Text = st.MergedString;
+                                            uppercaseIsInsideLowercaseWords++;
+                                            _totalFixes++;
+                                            AddFixToListView(p, i + 1, fixAction, oldText, p.Text);
+                                        }
+                                    }
+                                    else if (match.Index > 1 && ((st.StrippedText[match.Index - 1] == '\"') || (st.StrippedText[match.Index - 1] == '>')))
+                                    {
+                                    }
+                                    else 
+                                    {
+                                        st.StrippedText = st.StrippedText.Remove(match.Index, 1).Insert(match.Index, "l");
+                                        p.Text = st.MergedString;
+                                        uppercaseIsInsideLowercaseWords++;
+                                        _totalFixes++;
+                                        AddFixToListView(p, i + 1, fixAction, oldText, p.Text);
+                                    }
+                                }
+
+                            }
+                        }
+                        match = match.NextMatch();
+                    }
+                }
+
+                isLineContinuation = p.Text.Length > 0 && Utilities.GetLetters(true, true, false).Contains(p.Text[p.Text.Length - 1].ToString());
             }
             if (uppercaseIsInsideLowercaseWords > 0)
                 LogStatus(_language.FixUppercaseIInsindeLowercaseWords, string.Format(_language.XUppercaseIsFoundInsideLowercaseWords, uppercaseIsInsideLowercaseWords));
