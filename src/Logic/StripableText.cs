@@ -216,8 +216,15 @@ namespace Nikse.SubtitleEdit.Logic
                         }
                         else
                         {
-                            lastWasBreak = false;
-                            sb.Append(s.ToUpper());
+                            if (".!?:;)]}([{".Contains(s))
+                            {
+                                sb.Append(s);
+                            }
+                            else
+                            {
+                                lastWasBreak = false;
+                                sb.Append(s.ToUpper());
+                            }
                         }
                     }
                     else
