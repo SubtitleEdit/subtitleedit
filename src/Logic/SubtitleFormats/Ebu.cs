@@ -58,6 +58,49 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         return 30.0; // should be DiskFormatcode STL30.01
                 }
             }
+
+            public EbuGeneralSubtitleInformation()
+            {
+                CodePageNumber = "437";
+                DiskFormatCode = "STL25.01";
+            }
+
+            public override string  ToString()
+            {
+                string result = 
+                          CodePageNumber + 
+                          DiskFormatCode + 
+                          DisplayStandardCode  + 
+                          CharacterCodeTableNumber +
+                          LanguageCode +
+                          OriginalProgrammeTitle +
+                          OriginalEpisodeTitle +
+                          TranslatedProgrammeTitle +
+                          TranslatedEpisodeTitle + 
+                          TranslatorsName +
+                          TranslatorsContactDetails +
+                          SubtitleListReferenceCode +
+                          CreationDate +
+                          RevisionDate +
+                          RevisionNumber +
+                          TotalNumberOfTextAndTimingInformationBlocks  +
+                          TotalNumberOfSubtitles  +
+                          TotalNumberOfSubtitleGroups +
+                          MaximumNumberOfDisplayableCharactersInAnyTextRow +
+                          MaximumNumberOfDisplayableRows +
+                          TimeCodeStatus +
+                          TimeCodeStartOfProgramme +
+                          TimeCodeFirstInCue +
+                          TotalNumberOfDisks +
+                          DiskSequenceNumber +
+                          CountryOfOrigin +
+                          Publisher +
+                          EditorsName +
+                          EditorsContactDetails  +
+                          SpareBytes +
+                          UserDefinedArea;
+                return result;
+            }
         }
 
         /// <summary>
@@ -65,10 +108,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         /// </summary>
         private class EbuTextTimingInformation
         {
-            public string SubtitleGroupNumber { get; set; }
-            public string SubtitleNumber { get; set; }
-            public string ExtensionBlockNumber { get; set; }
-            public string CumulativeStatus { get; set; }
+            public byte SubtitleGroupNumber { get; set; }
+            public UInt16 SubtitleNumber { get; set; }
+            public byte ExtensionBlockNumber { get; set; }
+            public byte CumulativeStatus { get; set; }
             public int TimeCodeInHours { get; set; }
             public int TimeCodeInMinutes { get; set; }
             public int TimeCodeInSeconds { get; set; }
@@ -77,10 +120,32 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             public int TimeCodeOutMinutes { get; set; }
             public int TimeCodeOutSeconds { get; set; }
             public int TimeCodeOutMilliseconds { get; set; }
-            public string VerticalPosition { get; set; }
-            public string JustificationCode { get; set; }
+            public byte VerticalPosition { get; set; }
+            public byte JustificationCode { get; set; }
             public byte CommentFlag { get; set; }
             public string TextField { get; set; }
+
+            internal byte[] GetBytes()
+            {
+                byte[] buffer = new byte[128]; // Text and Timing Information (TTI) block consists of 128 bytes
+
+                buffer[0] = SubtitleGroupNumber;
+                byte[] temp = BitConverter.GetBytes(SubtitleNumber);
+                buffer[1] = temp[0];
+                buffer[2] = temp[1];
+                buffer[3] = ExtensionBlockNumber;
+                buffer[4] = CumulativeStatus;
+
+                //TODO: time codes
+
+                buffer[13] = VerticalPosition;
+                buffer[14] = JustificationCode;
+                buffer[15] = CommentFlag;
+
+                //TODO: text field... 
+
+                return buffer;
+            }
         }
 
         public override string Extension
@@ -101,6 +166,22 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         public override bool IsTimeBased
         {
             get { return true; }
+        }
+
+        public void Save(string fileName, Subtitle subtitle)
+        {
+            FileStream fs = new FileStream(fileName, FileMode.Create, FileAccess.Write);
+
+            EbuGeneralSubtitleInformation header = new EbuGeneralSubtitleInformation();
+            byte[] buffer = ASCIIEncoding.ASCII.GetBytes(header.ToString());
+            fs.Write(buffer, 0, buffer.Length);
+
+            foreach (Paragraph p in subtitle.Paragraphs)
+            {
+                EbuTextTimingInformation tti = new EbuTextTimingInformation();
+                buffer = tti.GetBytes();
+                fs.Write(buffer, 0, buffer.Length);
+            }
         }
 
         public override bool IsMine(List<string> lines, string fileName)
@@ -469,6 +550,11 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             while (index + TTISize < buffer.Length)
             {
                 var tti = new EbuTextTimingInformation();
+                
+                tti.SubtitleGroupNumber = buffer[index];
+                tti.SubtitleNumber = (ushort)(buffer[index + 2] * 256+ buffer[index + 1]);
+                tti.ExtensionBlockNumber = buffer[index + 3];
+                tti.CumulativeStatus = buffer[index + 4];
 
                 tti.TimeCodeInHours = buffer[index + 5 + 0];
                 tti.TimeCodeInMinutes = buffer[index + 5 + 1];
@@ -479,6 +565,9 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 tti.TimeCodeOutMinutes = buffer[index + 9 + 1];
                 tti.TimeCodeOutSeconds = buffer[index + 9 + 2];
                 tti.TimeCodeOutMilliseconds = (int)(1000 / (header.FrameRate / buffer[index + 9 + 3]));
+
+                tti.VerticalPosition = buffer[index + 13];
+                tti.JustificationCode = buffer[index + 14];
                 tti.CommentFlag = buffer[index + 15];
 
                 // build text
@@ -496,34 +585,34 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     else
                     {
                         if (buffer[index + 16 + i] >= 0 && buffer[index + 16 + i] <= 0x17)
-                        {                           
-                            //switch (buffer[index + 16 + i])
-                            //{
-                            //    case 00:
-                            //    case 10: color = "Black";
-                            //        break;
-                            //    case 01:
-                            //    case 11: color = "Red";
-                            //        break;
-                            //    case 02:
-                            //    case 12: color = "Red";
-                            //        break;
-                            //    case 03:
-                            //    case 13: color = "Yellow";
-                            //        break;
-                            //    case 04:
-                            //    case 14: color = "Blue";
-                            //        break;
-                            //    case 05:
-                            //    case 15: color = "Magenta";
-                            //        break;
-                            //    case 06:
-                            //    case 16: color = "Cyan";
-                            //        break;
-                            //    case 07:
-                            //    case 17: color = "White";
-                            //        break;
-                            //}
+                        {
+                            switch (buffer[index + 16 + i])
+                            {
+                                case 0x00:
+                                case 0x10: color = "Black";
+                                    break;
+                                case 0x01:
+                                case 0x11: color = "Red";
+                                    break;
+                                case 0x02:
+                                case 0x12: color = "Green";
+                                    break;
+                                case 0x03:
+                                case 0x13: color = "Yellow";
+                                    break;
+                                case 0x04:
+                                case 0x14: color = "Blue";
+                                    break;
+                                case 0x05:
+                                case 0x15: color = "Magenta";
+                                    break;
+                                case 0x06:
+                                case 0x16: color = "Cyan";
+                                    break;
+                                case 0x07:
+                                case 0x17: color = "White";
+                                    break;
+                            }
                         }
                         if (buffer[index + 16 + i] == TextFieldCRLF)
                             sb.AppendLine();
