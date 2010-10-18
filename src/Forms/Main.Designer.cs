@@ -1406,7 +1406,7 @@
             this.timeUpDownStartTime.Location = new System.Drawing.Point(9, 27);
             this.timeUpDownStartTime.Margin = new System.Windows.Forms.Padding(4);
             this.timeUpDownStartTime.Name = "timeUpDownStartTime";
-            this.timeUpDownStartTime.Size = new System.Drawing.Size(89, 25);
+            this.timeUpDownStartTime.Size = new System.Drawing.Size(92, 25);
             this.timeUpDownStartTime.TabIndex = 0;
             // 
             // buttonUndoListViewChanges
@@ -1555,6 +1555,7 @@
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.SubtitleListview1.ContextMenuStrip = this.contextMenuStripListview;
             this.SubtitleListview1.FirstVisibleIndex = -1;
+            this.SubtitleListview1.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.SubtitleListview1.FullRowSelect = true;
             this.SubtitleListview1.GridLines = true;
             this.SubtitleListview1.HideSelection = false;
@@ -1806,7 +1807,7 @@
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(1103, 267);
+            this.tabPage2.Size = new System.Drawing.Size(1482, 267);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Source view";
             this.tabPage2.UseVisualStyleBackColor = true;
@@ -1823,7 +1824,7 @@
             this.textBoxSource.Multiline = true;
             this.textBoxSource.Name = "textBoxSource";
             this.textBoxSource.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.textBoxSource.Size = new System.Drawing.Size(1096, 253);
+            this.textBoxSource.Size = new System.Drawing.Size(1475, 253);
             this.textBoxSource.TabIndex = 12;
             this.textBoxSource.WordWrap = false;
             this.textBoxSource.Click += new System.EventHandler(this.TextBoxSourceClick);
@@ -2509,7 +2510,7 @@
             this.timeUpDownVideoPosition.Location = new System.Drawing.Point(86, 192);
             this.timeUpDownVideoPosition.Margin = new System.Windows.Forms.Padding(4);
             this.timeUpDownVideoPosition.Name = "timeUpDownVideoPosition";
-            this.timeUpDownVideoPosition.Size = new System.Drawing.Size(89, 25);
+            this.timeUpDownVideoPosition.Size = new System.Drawing.Size(92, 25);
             this.timeUpDownVideoPosition.TabIndex = 12;
             // 
             // tabPageAdjust
@@ -2752,7 +2753,7 @@
             this.timeUpDownVideoPositionAdjust.Location = new System.Drawing.Point(87, 214);
             this.timeUpDownVideoPositionAdjust.Margin = new System.Windows.Forms.Padding(4);
             this.timeUpDownVideoPositionAdjust.Name = "timeUpDownVideoPositionAdjust";
-            this.timeUpDownVideoPositionAdjust.Size = new System.Drawing.Size(89, 25);
+            this.timeUpDownVideoPositionAdjust.Size = new System.Drawing.Size(92, 25);
             this.timeUpDownVideoPositionAdjust.TabIndex = 13;
             // 
             // videoTimer
