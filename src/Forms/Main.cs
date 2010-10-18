@@ -143,6 +143,7 @@ namespace Nikse.SubtitleEdit.Forms
             labelDurationWarning.Text = string.Empty;
             labelVideoInfo.Text = string.Empty;
             Text = Title;
+            timeUpDownStartTime.TimeCode = new TimeCode(0, 0, 0, 0);
 
             SetFormatToSubRip();
 
@@ -1041,16 +1042,6 @@ namespace Nikse.SubtitleEdit.Forms
                 _converted = false;
                 _fileName = saveFileDialog1.FileName;
 
-                // only allow current extension or ".txt"
-                string ext = Path.GetExtension(_fileName).ToLower();
-                bool extOk = ext == currentFormat.Extension.ToLower() || currentFormat.AlternateExtensions.Contains(ext) || ext == ".txt";
-                if (!extOk)
-                {
-                    if (_fileName.EndsWith("."))
-                        _fileName = _fileName.Substring(0, _fileName.Length - 1);
-                    _fileName += currentFormat.Extension;
-                }
-
                 _fileDateTime = File.GetLastWriteTime(_fileName);
                 Text = Title + " - " + _fileName;
                 Configuration.Settings.RecentFiles.Add(_fileName);
@@ -1059,8 +1050,20 @@ namespace Nikse.SubtitleEdit.Forms
                 int index = 0;
                 foreach (SubtitleFormat format in SubtitleFormat.AllSubtitleFormats)
                 {
-                    if (saveFileDialog1.FilterIndex == index +1)
+                    if (saveFileDialog1.FilterIndex == index + 1)
+                    {
+                        // only allow current extension or ".txt"
+                        string ext = Path.GetExtension(_fileName).ToLower();
+                        bool extOk = ext == format.Extension.ToLower() || format.AlternateExtensions.Contains(ext) || ext == ".txt";
+                        if (!extOk)
+                        {
+                            if (_fileName.EndsWith("."))
+                                _fileName = _fileName.Substring(0, _fileName.Length - 1);
+                            _fileName += format.Extension;
+                        }
+
                         SaveSubtitle(format);
+                    }
                     index++;
                 }
             }
@@ -1530,6 +1533,7 @@ namespace Nikse.SubtitleEdit.Forms
                 selectedText = _findHelper.FindText;
 
             var findDialog = new FindDialog();
+            findDialog.SetIcon(toolStripButtonFind.Image as Bitmap);
             findDialog.Initialize(selectedText, _findHelper);
             if (findDialog.ShowDialog(this) == DialogResult.OK)
             {
@@ -1675,6 +1679,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (replaceDialog == null)
             {
                 replaceDialog = new ReplaceDialog();
+                replaceDialog.SetIcon(toolStripButtonReplace.Image as Bitmap);
                 if (_findHelper == null)
                 {
                     _findHelper = replaceDialog.GetFindDialogHelper(_subtitleListViewIndex);
@@ -1747,6 +1752,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (replaceDialog == null)
             {
                 replaceDialog = new ReplaceDialog();
+                replaceDialog.SetIcon(toolStripButtonReplace.Image as Bitmap);
                 if (_findHelper == null)
                 {
                     _findHelper = replaceDialog.GetFindDialogHelper(_subtitleListViewIndex);
@@ -4249,7 +4255,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (e.Modifiers == Keys.None && e.KeyCode == Keys.Space)
             {
-                if (!textBoxListViewText.Focused && mediaPlayer.VideoPlayer != null)
+                if (!textBoxListViewText.Focused && !textBoxSource.Focused && mediaPlayer.VideoPlayer != null)
                 {
                     mediaPlayer.TooglePlayPause();
                     e.SuppressKeyPress = true;
