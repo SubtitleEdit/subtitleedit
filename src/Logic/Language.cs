@@ -954,7 +954,7 @@ namespace Nikse.SubtitleEdit.Logic
                 DefaultFrameRate = "Default frame rate",
                 DefaultFileEncoding = "Default file encoding",
                 AutoDetectAnsiEncoding = "Auto detect ANSI encoding",
-                SubtitleLineMaximumLength = "Subtitle max. length",
+                SubtitleLineMaximumLength = "Single line max. length",
                 SubtitleFont = "Subtitle font",
                 SubtitleFontSize = "Subtitle font size",
                 RememberRecentFiles = "Remember recent files (for reopen)",
