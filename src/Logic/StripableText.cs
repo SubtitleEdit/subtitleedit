@@ -229,7 +229,6 @@ namespace Nikse.SubtitleEdit.Logic
                     }
                     else
                     {
-
                         sb.Append(s);
                         if (".!?:;)]}([{".Contains(s))
                             lastWasBreak = true;
