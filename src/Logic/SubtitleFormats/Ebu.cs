@@ -2,6 +2,7 @@
 using System.IO;
 using System.Text;
 using System;
+using System.Text.RegularExpressions;
 
 namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
@@ -63,28 +64,57 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             {
                 CodePageNumber = "437";
                 DiskFormatCode = "STL25.01";
+                DisplayStandardCode = "0";
+                CharacterCodeTableNumber = "00";
+                LanguageCode = "0A";
+                OriginalProgrammeTitle = "No Title                        ";
+                OriginalEpisodeTitle = "                                ";
+                TranslatedProgrammeTitle = string.Empty.PadLeft(32, ' ');
+                TranslatedEpisodeTitle = string.Empty.PadLeft(32, ' ');
+                TranslatorsName = string.Empty.PadLeft(32, ' ');
+                TranslatorsContactDetails = string.Empty.PadLeft(32, ' ');
+                SubtitleListReferenceCode = "0               ";
+                CreationDate = "101021";
+                RevisionDate = "101021";
+                RevisionNumber = "01";
+                TotalNumberOfTextAndTimingInformationBlocks = "00725";
+                TotalNumberOfSubtitles = "00725";
+                TotalNumberOfSubtitleGroups = "001";
+                MaximumNumberOfDisplayableCharactersInAnyTextRow = "40";
+                MaximumNumberOfDisplayableRows = "23";
+                TimeCodeStatus = "1";
+                TimeCodeStartOfProgramme = "00000000";
+                TimeCodeFirstInCue = "00000001"; 
+                TotalNumberOfDisks = "1";
+                DiskSequenceNumber = "1";
+                CountryOfOrigin = "USA";
+                Publisher = string.Empty.PadLeft(32, ' ');
+                EditorsName = string.Empty.PadLeft(32, ' ');
+                EditorsContactDetails = string.Empty.PadLeft(32, ' ');
+                SpareBytes = string.Empty.PadLeft(75, ' ');
+                UserDefinedArea = string.Empty.PadLeft(576, ' ');
             }
 
-            public override string  ToString()
+            public override string ToString()
             {
-                string result = 
-                          CodePageNumber + 
-                          DiskFormatCode + 
-                          DisplayStandardCode  + 
+                string result =
+                          CodePageNumber +
+                          DiskFormatCode +
+                          DisplayStandardCode +
                           CharacterCodeTableNumber +
                           LanguageCode +
                           OriginalProgrammeTitle +
                           OriginalEpisodeTitle +
                           TranslatedProgrammeTitle +
-                          TranslatedEpisodeTitle + 
+                          TranslatedEpisodeTitle +
                           TranslatorsName +
                           TranslatorsContactDetails +
                           SubtitleListReferenceCode +
                           CreationDate +
                           RevisionDate +
                           RevisionNumber +
-                          TotalNumberOfTextAndTimingInformationBlocks  +
-                          TotalNumberOfSubtitles  +
+                          TotalNumberOfTextAndTimingInformationBlocks +
+                          TotalNumberOfSubtitles +
                           TotalNumberOfSubtitleGroups +
                           MaximumNumberOfDisplayableCharactersInAnyTextRow +
                           MaximumNumberOfDisplayableRows +
@@ -96,11 +126,14 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                           CountryOfOrigin +
                           Publisher +
                           EditorsName +
-                          EditorsContactDetails  +
+                          EditorsContactDetails +
                           SpareBytes +
-                          UserDefinedArea;
-                return result;
+                          UserDefinedArea;                                    
+                if (result.Length == 1024)
+                    return result;
+                throw new Exception("Length must be 1024");
             }
+
         }
 
         /// <summary>
@@ -125,7 +158,17 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             public byte CommentFlag { get; set; }
             public string TextField { get; set; }
 
-            internal byte[] GetBytes()
+            public EbuTextTimingInformation()
+            {
+                SubtitleGroupNumber = 1;
+                ExtensionBlockNumber = 255;
+                CumulativeStatus = 0;
+                VerticalPosition = 0;
+                JustificationCode = 20;
+                CommentFlag = 0;
+            }
+
+            internal byte[] GetBytes(EbuGeneralSubtitleInformation header)
             {
                 byte[] buffer = new byte[128]; // Text and Timing Information (TTI) block consists of 128 bytes
 
@@ -136,15 +179,183 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 buffer[3] = ExtensionBlockNumber;
                 buffer[4] = CumulativeStatus;
 
-                //TODO: time codes
+                buffer[5] = (byte)TimeCodeInHours;
+                buffer[6] = (byte)TimeCodeInMinutes;
+                buffer[7] = (byte)TimeCodeInSeconds;
+                buffer[8] = GetFrameFromMilliseconds(TimeCodeInMilliseconds);
+
+                buffer[9] = (byte)TimeCodeOutHours;
+                buffer[10] = (byte)TimeCodeOutMinutes;
+                buffer[11] = (byte)TimeCodeOutSeconds;
+                buffer[12] = GetFrameFromMilliseconds(TimeCodeOutMilliseconds);
 
                 buffer[13] = VerticalPosition;
                 buffer[14] = JustificationCode;
                 buffer[15] = CommentFlag;
 
-                //TODO: text field... 
+                Encoding encoding = Encoding.Default;
+                if (header.CharacterCodeTableNumber == "00")
+                {
+                    encoding = Encoding.GetEncoding(20269);
+                    // 0xC1—0xCF combines characters - http://en.wikipedia.org/wiki/ISO/IEC_6937
+                    TextField = ReplaceSpecialCharactersWithTwoByteEncoding(TextField, encoding.GetString(new byte[] { 0xc1 }), "ÀÈÌÒÙàèìòù", "AEIOUaeiou");
+                    TextField = ReplaceSpecialCharactersWithTwoByteEncoding(TextField, encoding.GetString(new byte[] { 0xc2 }), "ÁĆÉÍĹŃÓŔŚÚÝŹáćéģíĺńóŕśúýź", "ACEILNORSUYZacegilnorsuyz");
+                    TextField = ReplaceSpecialCharactersWithTwoByteEncoding(TextField, encoding.GetString(new byte[] { 0xc3 }), "ÂĈÊĜĤÎĴÔŜÛŴŶâĉêĝĥîĵôŝûŵŷ", "ACEGHIJOSUWYaceghijosuwy");
+                    TextField = ReplaceSpecialCharactersWithTwoByteEncoding(TextField, encoding.GetString(new byte[] { 0xc4 }), "ÃĨÑÕŨãĩñõũ", "AINOUainou");
+                    TextField = ReplaceSpecialCharactersWithTwoByteEncoding(TextField, encoding.GetString(new byte[] { 0xc5 }), "ĀĒĪŌŪāēīōū", "AEIOUaeiou");
+                    TextField = ReplaceSpecialCharactersWithTwoByteEncoding(TextField, encoding.GetString(new byte[] { 0xc6 }), "ĂĞŬăğŭ", "AGUagu");
+                    TextField = ReplaceSpecialCharactersWithTwoByteEncoding(TextField, encoding.GetString(new byte[] { 0xc7 }), "ĊĖĠİŻċėġıż", "CEGIZcegiz");
+                    TextField = ReplaceSpecialCharactersWithTwoByteEncoding(TextField, encoding.GetString(new byte[] { 0xc8 }), "ÄËÏÖÜŸäëïöüÿ", "AEIOUYaeiouy");
+                    TextField = ReplaceSpecialCharactersWithTwoByteEncoding(TextField, encoding.GetString(new byte[] { 0xca }), "ÅŮåů", "AUau");
+                    TextField = ReplaceSpecialCharactersWithTwoByteEncoding(TextField, encoding.GetString(new byte[] { 0xcb }), "ÇĢĶĻŅŖŞŢçķļņŗşţ", "CGKLNRSTcklnrst");
+                    TextField = ReplaceSpecialCharactersWithTwoByteEncoding(TextField, encoding.GetString(new byte[] { 0xcd }), "ŐŰőű", "OUou");
+                    TextField = ReplaceSpecialCharactersWithTwoByteEncoding(TextField, encoding.GetString(new byte[] { 0xce }), "ĄĘĮŲąęįų", "AEIUaeiu");
+                    TextField = ReplaceSpecialCharactersWithTwoByteEncoding(TextField, encoding.GetString(new byte[] { 0xcf }), "ČĎĚĽŇŘŠŤŽčďěľňřšťž", "CDELNRSTZcdelnrstz");
+                }
+                else if (header.CharacterCodeTableNumber == "01") // Latin/Cyrillic alphabet - from ISO 8859/5-1988
+                {
+                    encoding = Encoding.GetEncoding("ISO-8859-5");
+                }
+                else if (header.CharacterCodeTableNumber == "02") // Latin/Arabic alphabet - from ISO 8859/6-1987
+                {
+                    encoding = Encoding.GetEncoding("ISO-8859-6");
+                }
+                else if (header.CharacterCodeTableNumber == "03") // Latin/Greek alphabet - from ISO 8859/7-1987
+                {
+                    encoding = Encoding.GetEncoding("ISO-8859-7"); // or ISO-8859-1 ?
+                }
+                else if (header.CharacterCodeTableNumber == "04") // Latin/Hebrew alphabet - from ISO 8859/8-1988
+                {
+                    encoding = Encoding.GetEncoding("ISO-8859-8");
+                }
 
+                // italic/underline
+                string italicsOn = encoding.GetString(new byte[] { 0x80 });
+                string italicsOff = encoding.GetString(new byte[] { 0x81 });
+                string underlineOn = encoding.GetString(new byte[] { 0x82 });
+                string underlineOff = encoding.GetString(new byte[] { 0x83 });
+                TextField = TextField.Replace("<i>", italicsOn);
+                TextField = TextField.Replace("<I>", italicsOn);
+                TextField = TextField.Replace("</i>", italicsOff);
+                TextField = TextField.Replace("</I>", italicsOff);
+                TextField = TextField.Replace("<u>", underlineOn);
+                TextField = TextField.Replace("<U>", underlineOn);
+                TextField = TextField.Replace("</u>", underlineOff);
+                TextField = TextField.Replace("</U>", underlineOff);
+
+                //font tags
+                string s = TextField;
+                int start = s.IndexOf("<font ");
+                if (start >= 0)
+                {
+                    int end = s.IndexOf(">", start);
+                    if (end > 0)
+                    {
+                        string f = s.Substring(start, end - start);
+                        if (f.Contains(" color="))
+                        {
+                            int colorStart = f.IndexOf(" color=");
+                            if (s.IndexOf("\"", colorStart + " color=".Length + 1) > 0)
+                            {
+                                int colorEnd = f.IndexOf("\"", colorStart + " color=".Length + 1);
+                                if (colorStart > 1)
+                                {
+                                    string color = f.Substring(colorStart + 7, colorEnd - (colorStart + 7));
+                                    color = color.Trim('\'');
+                                    color = color.Trim('\"');
+                                    color = color.Trim('#');
+                                    
+                                    s = s.Remove(start, end - start + 1);
+                                    s = s.Insert(start, GetNearestEbuColorCode(color, encoding));
+                                }
+                            }
+                        }
+                    }
+                    TextField = s;
+                }
+                TextField = Utilities.RemoveHtmlTags(TextField);
+
+                // newline
+                string newline = encoding.GetString(new byte[] { 0x8A, 0x8A });
+                TextField = TextField.Replace(Environment.NewLine, newline);
+
+                // convert text to bytes
+                byte[] bytes = encoding.GetBytes(TextField);
+                for (int i = 0; i < 112; i++)
+                {
+                    if (i < bytes.Length)
+                        buffer[16 + i] = bytes[i];
+                    else if (i == bytes.Length)
+                        buffer[16 + i] = 0x8f;
+                    else
+                        buffer[16 + i] = 0x8a;
+                }
                 return buffer;
+            }
+
+            private string GetNearestEbuColorCode(string color, Encoding encoding)
+            {
+                color = color.ToLower();
+                if (color == "black" || color == "000000")
+                    return encoding.GetString(new byte[] { 0x00 }); // black
+                else if (color == "red" || color == "ff0000")
+                    return encoding.GetString(new byte[] { 0x01 }); // red
+                else if (color == "green" || color == "00ff00")
+                    return encoding.GetString(new byte[] { 0x02 }); // green
+                else if (color == "yellow" || color == "ffff00")
+                    return encoding.GetString(new byte[] { 0x03 }); // yellow
+                else if (color == "blue" || color == "0000ff")
+                    return encoding.GetString(new byte[] { 0x04 }); // blue
+                else if (color == "magenta" || color == "ff00ff")
+                    return encoding.GetString(new byte[] { 0x05 }); // magenta
+                else if (color == "cyan" || color == "00ffff")
+                    return encoding.GetString(new byte[] { 0x06 }); // cyan
+                else if (color == "white" || color == "ffffff")
+                    return encoding.GetString(new byte[] { 0x07 }); // white
+                else if (color.Length == 6)
+                {
+                    Regex regExpr = new Regex(@"^[a-f0-9]{6}$", RegexOptions.Compiled);
+                    if (regExpr.IsMatch(color))
+                    {
+                        const int MaxDiff = 130;
+                        int r = int.Parse(color.Substring(0, 2), System.Globalization.NumberStyles.HexNumber);
+                        int g = int.Parse(color.Substring(2, 2), System.Globalization.NumberStyles.HexNumber);
+                        int b = int.Parse(color.Substring(4, 2), System.Globalization.NumberStyles.HexNumber);
+                        if (r < MaxDiff && g < MaxDiff && b < MaxDiff)
+                            return encoding.GetString(new byte[] { 0x00 }); // black
+                        if (r > 255 - MaxDiff && g < MaxDiff && b < MaxDiff)
+                            return encoding.GetString(new byte[] { 0x01 }); // red
+                        if (r < MaxDiff && g > 255 - MaxDiff && b < MaxDiff)
+                            return encoding.GetString(new byte[] { 0x02 }); // green
+                        if (r > 255 - MaxDiff && g > 255 - MaxDiff && b < MaxDiff)
+                            return encoding.GetString(new byte[] { 0x03 }); // yellow
+                        if (r < MaxDiff && g < MaxDiff && b > 255 - MaxDiff)
+                            return encoding.GetString(new byte[] { 0x04 }); // blue
+                        if (r > 255 - MaxDiff && g < MaxDiff && b > 255 - MaxDiff)
+                            return encoding.GetString(new byte[] { 0x05 }); // magenta
+                        if (r < MaxDiff && g > 255 - MaxDiff && b > 255 - MaxDiff)
+                            return encoding.GetString(new byte[] { 0x06 }); // cyan
+                        if (r > 255-MaxDiff && g > 255-MaxDiff && b > 255-MaxDiff)
+                            return encoding.GetString(new byte[] { 0x07 }); // white
+                    }
+                }
+                return string.Empty;
+            }
+
+            private string ReplaceSpecialCharactersWithTwoByteEncoding(string text, string specialCharacter, string originalCharacters, string newCharacters)
+            {
+                if (originalCharacters.Length != newCharacters.Length)
+                    throw new ArgumentException("originalCharacters and newCharacters must have equal length");
+
+                for (int i = 0; i < newCharacters.Length; i++)
+                    text = text.Replace(originalCharacters[i].ToString(), specialCharacter + newCharacters[i]);
+                return text;
+            }
+
+            public static byte GetFrameFromMilliseconds(int milliseconds)
+            {
+                int frame = milliseconds / 41;
+                return (byte)frame;
             }
         }
 
@@ -173,15 +384,46 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             FileStream fs = new FileStream(fileName, FileMode.Create, FileAccess.Write);
 
             EbuGeneralSubtitleInformation header = new EbuGeneralSubtitleInformation();
+            header.TotalNumberOfSubtitles = ((subtitle.Paragraphs.Count+1).ToString()).PadLeft(5, '0'); // seems to be 1 higher than actual number of subtitles
+            header.TotalNumberOfTextAndTimingInformationBlocks = header.TotalNumberOfSubtitles;
+
+            string today = string.Format("{0:00}{1:00}{2:00}", DateTime.Now.Year.ToString().Remove(0, 2), DateTime.Now.Month, DateTime.Now.Day);
+            if (today.Length == 6)
+            {
+                header.CreationDate = today;
+                header.RevisionDate = today;
+            }
+
+            Paragraph firstParagraph = subtitle.GetParagraphOrDefault(0);
+            if (firstParagraph != null)
+            {
+                TimeCode tc = firstParagraph.StartTime;
+                string firstTimeCode = string.Format("{0:00}{1:00}{2:00}{3:00}", tc.Hours, tc.Minutes, tc.Seconds, EbuTextTimingInformation.GetFrameFromMilliseconds(tc.Milliseconds));
+                if (firstTimeCode.Length == 8)
+                    header.TimeCodeFirstInCue = firstTimeCode;
+            }
+
             byte[] buffer = ASCIIEncoding.ASCII.GetBytes(header.ToString());
             fs.Write(buffer, 0, buffer.Length);
+
 
             foreach (Paragraph p in subtitle.Paragraphs)
             {
                 EbuTextTimingInformation tti = new EbuTextTimingInformation();
-                buffer = tti.GetBytes();
+                tti.SubtitleNumber = (ushort)p.Number;
+                tti.TextField = p.Text;
+                tti.TimeCodeInHours = p.StartTime.Hours;
+                tti.TimeCodeInMinutes = p.StartTime.Minutes;
+                tti.TimeCodeInSeconds = p.StartTime.Seconds;
+                tti.TimeCodeInMilliseconds = p.StartTime.Milliseconds;
+                tti.TimeCodeOutHours = p.EndTime.Hours;
+                tti.TimeCodeOutMinutes = p.EndTime.Minutes;
+                tti.TimeCodeOutSeconds = p.EndTime.Seconds;
+                tti.TimeCodeOutMilliseconds = p.EndTime.Milliseconds;
+                buffer = tti.GetBytes(header);
                 fs.Write(buffer, 0, buffer.Length);
             }
+            fs.Close();
         }
 
         public override bool IsMine(List<string> lines, string fileName)
@@ -541,7 +783,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             const byte TextFieldCRLF = 0x8A;
             const byte TextFieldTerminator = 0x8F;
             const byte ItalicsOn = 0x80;
-            const byte ItalicsOff = 0x80;
+            const byte ItalicsOff = 0x81;
             const byte UnderlineOn = 0x82;
             const byte UnderlineOff = 0x83;
 
