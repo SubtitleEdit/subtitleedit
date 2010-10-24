@@ -163,8 +163,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 SubtitleGroupNumber = 1;
                 ExtensionBlockNumber = 255;
                 CumulativeStatus = 0;
-                VerticalPosition = 0;
-                JustificationCode = 20;
+                VerticalPosition = 0x16;
+                JustificationCode = 02;
                 CommentFlag = 0;
             }
 
