@@ -121,7 +121,21 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                             int startFrame = int.Parse(frames[0]);
                             int endFrame = int.Parse(frames[1]);
 
-                            subtitle.Paragraphs.Add(new Paragraph(startFrame, endFrame, text.Replace("|", Environment.NewLine)));
+                            text = text.Replace("|", Environment.NewLine);
+                            if (text.Contains("{Y:b}"))
+                                text = text.Replace("{Y:b}", "<b>") + "</b>";
+                            if (text.Contains("{y:b}"))
+                                text = text.Replace("{y:b}", "<b>") + "</b>";
+                            if (text.Contains("{Y:i}"))
+                                text = text.Replace("{Y:i}", "<i>") + "</i>";
+                            if (text.Contains("{y:i}"))
+                                text = text.Replace("{y:i}", "<i>") + "</i>";
+                            if (text.Contains("{Y:u}"))
+                                text = text.Replace("{Y:u}", "<u>") + "</u>";
+                            if (text.Contains("{y:u}"))
+                                text = text.Replace("{y:u}", "<u>") + "</u>";
+
+                            subtitle.Paragraphs.Add(new Paragraph(startFrame, endFrame, text));
                             
                         }
                     }
