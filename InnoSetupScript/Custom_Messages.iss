@@ -37,7 +37,7 @@ en.tsk_ResetSettings=Reset Subtitle Edit's settings
 
 dk.msg_SetupIsRunningWarning=Subtitle Edit Setup kører allerede!
 dk.msg_AskToDownNET=Subtitle Edit kræver .NET Framework 2.0. Download and installer .NET Framework og kør setup igen. %n%nVil du downloade .NET Framework 2.0 nu?
-dk.msg_DeleteSettings=Do you also want to delete Subtitle Edit's settings and any custom changes you made in the dictionaries? %n%nHvis du vil geninstallere Subtitle Edit senere kan du beholde disse indstillinger.
+dk.msg_DeleteSettings=Vil du også slette Subtitle Edit's indstillinger og evt. ændringer i ordlister? %n%nHvis du vil geninstallere Subtitle Edit senere kan du beholde disse indstillinger.
 dk.run_VisitWebsite=Besøg Subtitle Edits Website
 dk.sm_com_Changelog=Subtitle Edit ændringslog
 dk.sm_com_ReadmeFile=Subtitle Edit's ReadMe
@@ -106,14 +106,13 @@ pl.tsk_CurrentUser=For the current user only
 pl.tsk_Other=Other:
 pl.tsk_ResetSettings=Reset Subtitle Edit's settings
 
-
-ro.msg_SetupIsRunningWarning=Subtitle Edit Setup is already running!
-ro.msg_AskToDownNET=Subtitle Edit requires the .NET Framework 2.0. Please download and install the .NET Framework and run setup again. %n%nDo you want to download the .NET Framework 2.0 now?
-ro.msg_DeleteSettings=Do you also want to delete Subtitle Edit's settings and any custom changes you made in the dictionaries? %n%nIf you plan on reinstalling Subtitle Edit you do not have to delete them.
-ro.run_VisitWebsite=Visit Subtitle Edit's Website
-ro.sm_com_Changelog=Subtitle Edit's Changelog
-ro.sm_com_ReadmeFile=Subtitle Edit's ReadMe
-ro.tsk_AllUsers=For all users
-ro.tsk_CurrentUser=For the current user only
-ro.tsk_Other=Other:
-ro.tsk_ResetSettings=Reset Subtitle Edit's settings
+ro.msg_SetupIsRunningWarning=Instalarea programului Subtitle Edit se efectuează deja!
+ro.msg_AskToDownNET=Subtitle Edit necesită .NET Framework 2.0. Vă rog să descărcaţi şi să instalaţi .NET Framework şi apoi reinstalaţi. %n%nVreţi să descărcaţi acum .NET Framework 2.0?
+ro.msg_DeleteSettings=Vreţi de asemenea să ştergeţi setările şi personalizările făcute în dicţionare? %n%nDacă aveţi de gând să reinstalaţi Subtitle Edit, nu este nevoie să le ştergeţi.
+ro.run_VisitWebsite=Vizitaţi pagina Web a programului Subtitle Edit
+ro.sm_com_Changelog=Jurnalul modificărilor în programul Subtitle Edit
+ro.sm_com_ReadmeFile=Citeşte-mă
+ro.tsk_AllUsers=Pentru toţi utilizatorii
+ro.tsk_CurrentUser=Pentru utilizatorul curent
+ro.tsk_Other=Altele:
+ro.tsk_ResetSettings=Resetaţi setările programului Subtitle Edit
