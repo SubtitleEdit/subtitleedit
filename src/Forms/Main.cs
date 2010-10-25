@@ -66,8 +66,6 @@ namespace Nikse.SubtitleEdit.Forms
         System.Windows.Forms.Timer _timerAddHistoryWhenDone = new Timer();
         string _timerAddHistoryWhenDoneText;
 
-        private System.Threading.Mutex _mutex;
-
         private bool AutoRepeatContinueOn
         {
             get
@@ -86,10 +84,8 @@ namespace Nikse.SubtitleEdit.Forms
                     _title = String.Format("{0} {1}.{2}", _languageGeneral.Title, versionInfo[0], versionInfo[1]);
                     if (versionInfo.Length >= 3 && versionInfo[2] != "0")
                         _title += "." + versionInfo[2];
-
-                    _title = "Subtitle Edit 3.0 RC2";
-
                 }
+                _title = "Subtitle Edit 3.0 RC3";
                 return _title;
             }
         }
@@ -228,14 +224,15 @@ namespace Nikse.SubtitleEdit.Forms
             buttonCustomUrl.Enabled = Configuration.Settings.VideoControls.CustomSearchUrl.Length > 1;
             
             // Initialize events etc. for audio wave form
+            AudioWaveForm.OnDoubleClickNonParagraph += AudioWaveForm_OnDoubleClickNonParagraph;
             AudioWaveForm.OnPositionSelected += AudioWaveForm_OnPositionSelected;
             AudioWaveForm.OnTimeChanged += AudioWaveForm_OnTimeChanged;
             AudioWaveForm.OnNewSelectionRightClicked += AudioWaveForm_OnNewSelectionRightClicked;
             AudioWaveForm.OnParagraphRightClicked += AudioWaveForm_OnParagraphRightClicked;
-            AudioWaveForm.OnTooglePlay += AudioWaveForm_OnTooglePlay;
+            AudioWaveForm.OnSingleClick += AudioWaveForm_OnSingleClick;
             AudioWaveForm.OnPause += AudioWaveForm_OnPause;
             AudioWaveForm.OnTimeChangedAndOffsetRest += AudioWaveForm_OnTimeChangedAndOffsetRest;
-            AudioWaveForm.OnZoomedChanged += AudioWaveForm_OnZoomedChanged;
+            AudioWaveForm.OnZoomedChanged += AudioWaveForm_OnZoomedChanged;            
             AudioWaveForm.DrawGridLines = Configuration.Settings.VideoControls.WaveFormDrawGrid;
             AudioWaveForm.GridColor = Configuration.Settings.VideoControls.WaveFormGridColor;
             AudioWaveForm.SelectedColor = Configuration.Settings.VideoControls.WaveFormSelectedColor;
@@ -255,14 +252,20 @@ namespace Nikse.SubtitleEdit.Forms
 
             _timerAddHistoryWhenDone.Interval = 500;
             _timerAddHistoryWhenDone.Tick += new EventHandler(timerAddHistoryWhenDone_Tick);
+        }
 
-            try
+        void AudioWaveForm_OnDoubleClickNonParagraph(double seconds, Paragraph paragraph)
+        {
+            if (mediaPlayer.VideoPlayer != null)
             {
-                _mutex = System.Threading.Mutex.OpenExisting("Subtitle_Edit_Mutex");
-            }
-            catch 
-            {
-                _mutex = new System.Threading.Mutex(true, "Subtitle_Edit_Mutex");
+                if (paragraph == null)
+                {
+                    mediaPlayer.TooglePlayPause();
+                }
+                else
+                {
+                    SubtitleListview1.SelectIndexAndEnsureVisible(_subtitle.GetIndex(paragraph));
+                }
             }
         }
 
@@ -290,15 +293,16 @@ namespace Nikse.SubtitleEdit.Forms
         }
 
         void AudioWaveForm_OnPause(object sender, EventArgs e)
-        {
+        {            
             if (mediaPlayer.VideoPlayer != null)
                 mediaPlayer.Pause();
         }
 
-        void AudioWaveForm_OnTooglePlay(object sender, EventArgs e)
+        void AudioWaveForm_OnSingleClick(double seconds, Paragraph paragraph)
         {
             if (mediaPlayer.VideoPlayer != null)
-                mediaPlayer.TooglePlayPause();
+                mediaPlayer.Pause();
+            mediaPlayer.CurrentPosition = seconds;
         }
 
         void AudioWaveForm_OnParagraphRightClicked(double seconds, Paragraph paragraph)
@@ -737,11 +741,11 @@ namespace Nikse.SubtitleEdit.Forms
                     var selectedLines = new Subtitle { WasLoadedWithFrameNumbers = _subtitle.WasLoadedWithFrameNumbers };
                     foreach (int index in SubtitleListview1.SelectedIndices)
                         selectedLines.Paragraphs.Add(_subtitle.Paragraphs[index]);
-                    visualSync.Initialize(this.Icon, selectedLines, _fileName, _language.VisualSyncSelectedLines, CurrentFrameRate);
+                    visualSync.Initialize(toolStripButtonVisualSync.Image as Bitmap, selectedLines, _fileName, _language.VisualSyncSelectedLines, CurrentFrameRate);
                 }
                 else
                 {
-                    visualSync.Initialize(this.Icon, _subtitle, _fileName, _language.VisualSyncTitle, CurrentFrameRate);
+                    visualSync.Initialize(toolStripButtonVisualSync.Image as Bitmap, _subtitle, _fileName, _language.VisualSyncTitle, CurrentFrameRate);
                 }
 
                 if (visualSync.ShowDialog(this) == DialogResult.OK)
@@ -1027,6 +1031,10 @@ namespace Nikse.SubtitleEdit.Forms
         {
             SubtitleFormat currentFormat = GetCurrentSubtitleFormat();
             Utilities.SetSaveDialogFilter(saveFileDialog1, currentFormat);
+
+            Ebu ebu = new Ebu();
+            saveFileDialog1.Filter += "| " + ebu.FriendlyName + "|*" + ebu.Extension;
+
             saveFileDialog1.Title = _language.SaveSubtitleAs;
             saveFileDialog1.DefaultExt = "*" + currentFormat.Extension;
             saveFileDialog1.AddExtension = true;               
@@ -1039,6 +1047,21 @@ namespace Nikse.SubtitleEdit.Forms
             DialogResult result = saveFileDialog1.ShowDialog(this);
             if (result == DialogResult.OK)
             {
+                if (saveFileDialog1.FilterIndex == SubtitleFormat.AllSubtitleFormats.Count + 1)
+                { 
+                    string fileName = saveFileDialog1.FileName;
+                    string ext = Path.GetExtension(fileName).ToLower();
+                    bool extOk = ext == ebu.Extension.ToLower();
+                    if (!extOk)
+                    {
+                        if (fileName.EndsWith("."))
+                            fileName = fileName.Substring(0, fileName.Length - 1);
+                        fileName += ebu.Extension;
+                    }
+                    ebu.Save(fileName, _subtitle);
+                    return DialogResult.OK;
+                }
+
                 _converted = false;
                 _fileName = saveFileDialog1.FileName;
 
@@ -1061,8 +1084,9 @@ namespace Nikse.SubtitleEdit.Forms
                                 _fileName = _fileName.Substring(0, _fileName.Length - 1);
                             _fileName += format.Extension;
                         }
-
-                        SaveSubtitle(format);
+                        
+                        if (SaveSubtitle(format) == DialogResult.OK)
+                            SetCurrentFormat(format);
                     }
                     index++;
                 }
@@ -2323,7 +2347,7 @@ namespace Nikse.SubtitleEdit.Forms
                                 {
                                     VisualSync visualSync = new VisualSync();
 
-                                    visualSync.Initialize(this.Icon, subtitleToAppend, _fileName, _language.AppendViaVisualSyncTitle, CurrentFrameRate);
+                                    visualSync.Initialize(toolStripButtonVisualSync.Image as Bitmap, subtitleToAppend, _fileName, _language.AppendViaVisualSyncTitle, CurrentFrameRate);
 
                                     visualSync.ShowDialog(this);
                                     if (visualSync.OKPressed)
@@ -3244,7 +3268,10 @@ namespace Nikse.SubtitleEdit.Forms
                     prevParagraph.Text = prevParagraph.Text.Replace(Environment.NewLine, " ");
                     prevParagraph.Text += Environment.NewLine + currentParagraph.Text.Replace(Environment.NewLine, " ");
                     prevParagraph.Text = Utilities.AutoBreakLine(prevParagraph.Text);
-                    prevParagraph.EndTime.TotalMilliseconds = prevParagraph.EndTime.TotalMilliseconds + currentParagraph.Duration.TotalMilliseconds; // currentParagraph.EndTime;
+
+
+//                    prevParagraph.EndTime.TotalMilliseconds = prevParagraph.EndTime.TotalMilliseconds + currentParagraph.Duration.TotalMilliseconds; 
+                    prevParagraph.EndTime.TotalMilliseconds = currentParagraph.EndTime.TotalMilliseconds;
 
                     _subtitle.Paragraphs.Remove(currentParagraph);
 
@@ -3279,7 +3306,9 @@ namespace Nikse.SubtitleEdit.Forms
                     currentParagraph.Text = currentParagraph.Text.Replace(Environment.NewLine, " ");
                     currentParagraph.Text += Environment.NewLine + nextParagraph.Text.Replace(Environment.NewLine, " ");
                     currentParagraph.Text = Utilities.AutoBreakLine(currentParagraph.Text);
-                    currentParagraph.EndTime.TotalMilliseconds = currentParagraph.EndTime.TotalMilliseconds + nextParagraph.Duration.TotalMilliseconds; //nextParagraph.EndTime;
+                    
+                    //currentParagraph.EndTime.TotalMilliseconds = currentParagraph.EndTime.TotalMilliseconds + nextParagraph.Duration.TotalMilliseconds; //nextParagraph.EndTime;
+                    currentParagraph.EndTime.TotalMilliseconds = nextParagraph.EndTime.TotalMilliseconds;
 
                     _subtitle.Paragraphs.Remove(nextParagraph);
 
@@ -3429,12 +3458,6 @@ namespace Nikse.SubtitleEdit.Forms
 
                     Configuration.Settings.Save();
                 }
-            }
-
-            if (_mutex != null)
-            {
-                _mutex.WaitOne();
-                _mutex.ReleaseMutex();
             }
         }
 
@@ -4329,7 +4352,6 @@ namespace Nikse.SubtitleEdit.Forms
                     buttonSetEnd_Click(null, null);
                     e.SuppressKeyPress = true;
                 }
-
             }
         }
 
@@ -4929,123 +4951,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
         }
-
-        private void addWordsFromWordlistToNamesetcToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            openFileDialog1.Title = "Open names_etc.xml file to import into en_US_names_etc.xml";
-            openFileDialog1.FileName = string.Empty;
-            openFileDialog1.Filter = "Xml files|*.xml";
-            if (openFileDialog1.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-            {
-                int wordsAdded = 0;
-                XmlDocument doc = new XmlDocument();
-                doc.Load(openFileDialog1.FileName);
-
-                string language = "en_US";
-
-                var namesEtc = new List<string>();
-                Utilities.LoadGlobalNamesEtc(namesEtc, namesEtc);
-
-                var localNamesEtc = new List<string>();
-                string userNamesEtcXmlFileName = Utilities.LoadLocalNamesEtc(localNamesEtc, localNamesEtc, language);
-                localNamesEtc.Sort();
-
-                foreach (XmlNode node in doc.DocumentElement.SelectNodes("name"))
-                {
-
-                    string word = node.InnerText.Trim();
-                    if (!localNamesEtc.Contains(word) && !namesEtc.Contains(word))
-                    {
-                        wordsAdded++;
-                        localNamesEtc.Add(word);
-                        localNamesEtc.Sort();
-                    }
-                }
-
-                if (MessageBox.Show("Add new words: " + wordsAdded.ToString(), "", MessageBoxButtons.OKCancel) == System.Windows.Forms.DialogResult.OK) 
-                {
-                    var namesEtcDoc = new XmlDocument();
-                    if (File.Exists(userNamesEtcXmlFileName))
-                        namesEtcDoc.Load(userNamesEtcXmlFileName);
-                    else
-                        namesEtcDoc.LoadXml("<ignore_words />");
-
-                    XmlNode de = namesEtcDoc.DocumentElement;
-                    if (de != null)
-                    {
-                        de.RemoveAll();
-                        foreach (var name in localNamesEtc)
-                        {
-                            XmlNode node = namesEtcDoc.CreateElement("name");
-                            node.InnerText = name;
-                            de.AppendChild(node);
-                        }
-                        namesEtcDoc.Save(userNamesEtcXmlFileName);
-                    }
-
-                }
-            }
-        }
-
-        private void addWordsFromWordlistTonamesetcToolStripMenuItem1_Click(object sender, EventArgs e)
-        {
-            openFileDialog1.Title = "Open names_etc.xml file to import into names_etc.xml";
-            openFileDialog1.FileName = string.Empty;
-            openFileDialog1.Filter = "Xml files|*.xml";
-            if (openFileDialog1.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-            {
-                int wordsAdded = 0;
-                XmlDocument doc = new XmlDocument();
-                doc.Load(openFileDialog1.FileName);
-
-                string language = "en_US";
-
-                string globalNamesEtcFileName = Utilities.DictionaryFolder + "names_etc.xml";
-
-                var namesEtc = new List<string>();
-                Utilities.LoadGlobalNamesEtc(namesEtc, namesEtc);
-                namesEtc.Sort();
-
-                var localNamesEtc = new List<string>();
-                string userNamesEtcXmlFileName = Utilities.LoadLocalNamesEtc(localNamesEtc, localNamesEtc, language);
-
-                foreach (XmlNode node in doc.DocumentElement.SelectNodes("name"))
-                {
-
-                    string word = node.InnerText.Trim();
-                    if (!localNamesEtc.Contains(word) && !namesEtc.Contains(word))
-                    {
-                        wordsAdded++;
-                        namesEtc.Add(word);
-                    }
-                }
-
-                if (MessageBox.Show("Add new words: " + wordsAdded.ToString(), "", MessageBoxButtons.OKCancel) == System.Windows.Forms.DialogResult.OK) 
-                {
-                    namesEtc.Sort();
-                    var namesEtcDoc = new XmlDocument();
-                    if (File.Exists(globalNamesEtcFileName))
-                        namesEtcDoc.Load(globalNamesEtcFileName);
-                    else
-                        namesEtcDoc.LoadXml("<ignore_words />");
-
-                    XmlNode de = namesEtcDoc.DocumentElement;
-                    if (de != null)
-                    {
-                        de.RemoveAll();
-                        foreach (var name in namesEtc)
-                        {
-                            XmlNode node = namesEtcDoc.CreateElement("name");
-                            node.InnerText = name;
-                            de.AppendChild(node);
-                        }
-                        namesEtcDoc.Save(globalNamesEtcFileName);
-                    }
-
-                }
-            }
-        }
-
+       
         private void toolStripMenuItemTranslationMode_Click(object sender, EventArgs e)
         {
             if (SubtitleListview1.IsColumTextAlternateActive)
@@ -6342,64 +6248,48 @@ namespace Nikse.SubtitleEdit.Forms
             toolStripButtonToogleWaveForm_Click(null, null);
         }
 
-        private void exportNewWordsToolStripMenuItem_Click(object sender, EventArgs e)
+        private void AudioWaveForm_DragEnter(object sender, DragEventArgs e)
         {
-            openFileDialog1.Title = "Open names_etc.xml file to import into names_etc.xml";
-            openFileDialog1.FileName = string.Empty;
-            openFileDialog1.Filter = "Xml files|*.xml";
-            if (openFileDialog1.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            // make sure they're actually dropping files (not text or anything else)
+            if (e.Data.GetDataPresent(DataFormats.FileDrop, false))
+                e.Effect = DragDropEffects.All;
+        }
+
+        private void AudioWaveForm_DragDrop(object sender, DragEventArgs e)
+        {
+            if (string.IsNullOrEmpty(_videoFileName))
+                buttonOpenVideo_Click(null, null);
+            if (_videoFileName == null)
+                return;
+
+            string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
+            if (files.Length == 1)
             {
-                int wordsAdded = 0;
-                XmlDocument doc = new XmlDocument();
-                doc.Load(openFileDialog1.FileName);
+                string fileName = files[0];
 
-                string language = "en_US";
-
-                string globalNamesEtcFileName = Utilities.DictionaryFolder + "names_etc.xml";
-
-                var namesEtc = new List<string>();
-                Utilities.LoadGlobalNamesEtc(namesEtc, namesEtc);
-                namesEtc.Sort();
-
-                var localNamesEtc = new List<string>();
-                var newNames = new List<string>();
-                string userNamesEtcXmlFileName = Utilities.LoadLocalNamesEtc(localNamesEtc, localNamesEtc, language);
-
-                foreach (XmlNode node in doc.DocumentElement.SelectNodes("name"))
+                var fi = new FileInfo(fileName);
+                string ext = Path.GetExtension(fileName).ToLower();
+                if (ext != ".wav")
                 {
-
-                    string word = node.InnerText.Trim();
-                    if (!localNamesEtc.Contains(word) && !namesEtc.Contains(word))
-                    {
-                        wordsAdded++;
-                        newNames.Add(word);
-                        newNames.Sort();
-                    }
+                    MessageBox.Show(string.Format(".Wav only!", fileName));
+                    return;
                 }
 
-                saveFileDialog1.Filter = "Xml files|*.xml";
-                saveFileDialog1.FileName = "NewNames.xml";
-
-                if (saveFileDialog1.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                AddWareForm addWaveForm = new AddWareForm();
+                addWaveForm.InitializeViaWaveFile(fileName);
+                if (addWaveForm.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                 {
-                    if (MessageBox.Show("Save new words: " + newNames.Count.ToString(), "", MessageBoxButtons.OKCancel) == System.Windows.Forms.DialogResult.OK)
-                    {
-                        var namesEtcDoc = new XmlDocument();
-                        namesEtcDoc.LoadXml("<ignore_words />");
-
-                        XmlNode de = namesEtcDoc.DocumentElement;
-                        if (de != null)
-                        {
-                            foreach (var name in newNames)
-                            {
-                                XmlNode node = namesEtcDoc.CreateElement("name");
-                                node.InnerText = name;
-                                de.AppendChild(node);
-                            }
-                            namesEtcDoc.Save(saveFileDialog1.FileName);
-                        }
-                    }
-                }
+                    string peakWaveFileName = GetPeakWaveFileName(_videoFileName);
+                    addWaveForm.WavePeak.WritePeakSamples(peakWaveFileName);
+                    var audioPeakWave = new WavePeakGenerator(peakWaveFileName);
+                    audioPeakWave.GenerateAllSamples();
+                    AudioWaveForm.WavePeaks = audioPeakWave;
+                    timerWaveForm.Start();
+                }               
+            }
+            else
+            {
+                MessageBox.Show(_language.DropOnlyOneFile);
             }
         }
 

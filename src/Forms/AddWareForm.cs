@@ -15,6 +15,7 @@ namespace Nikse.SubtitleEdit.Forms
     {
         public string SourceVideoFileName { get; private set; }
         private bool _cancel = false;
+        private string _wavFileName = null;
 
         public AddWareForm()
         {
@@ -126,6 +127,8 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (labelVideoFileName.Text.Length > 1 && File.Exists(labelVideoFileName.Text))
                 buttonRipWave_Click(null, null);
+            else if (_wavFileName != null)
+                FixWaveOnly();
         }
 
         private void AddWareForm_KeyDown(object sender, KeyEventArgs e)
@@ -137,6 +140,40 @@ namespace Nikse.SubtitleEdit.Forms
         private void buttonCancel_Click(object sender, EventArgs e)
         {
             _cancel = true;
+        }
+
+        internal void InitializeViaWaveFile(string fileName)
+        {
+            _wavFileName = fileName;            
+        }
+
+        private void FixWaveOnly()
+        {
+            Text = Configuration.Settings.Language.AddWaveForm.Title;
+            buttonRipWave.Text = Configuration.Settings.Language.AddWaveForm.GenerateWaveFormData;
+            labelPleaseWait.Text = Configuration.Settings.Language.AddWaveForm.PleaseWait;
+            labelVideoFileName.Text = string.Empty;
+            buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
+            buttonRipWave.Enabled = false;
+            _cancel = false;
+            buttonCancel.Visible = false;
+            progressBar1.Visible = false;
+            progressBar1.Style = ProgressBarStyle.Blocks;
+
+            labelProgress.Text = Configuration.Settings.Language.AddWaveForm.GeneratingPeakFile;
+            this.Refresh();
+            labelPleaseWait.Visible = false;
+            try
+            {
+                ReadWaveFile(_wavFileName);
+                labelProgress.Text = string.Empty;
+                this.DialogResult = DialogResult.OK;
+            }
+            catch (Exception exception)
+            {
+                MessageBox.Show(exception.Message + Environment.NewLine + exception.StackTrace);
+                this.DialogResult = DialogResult.Cancel;
+            }
         }
     }
 }
