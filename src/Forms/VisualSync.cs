@@ -271,9 +271,14 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        internal void Initialize(Icon icon, Subtitle subtitle, string fileName, string title, double framerate)
+        internal void Initialize(Bitmap bitmap, Subtitle subtitle, string fileName, string title, double framerate)
         {
-            this.Icon = (Icon)icon.Clone();
+            if (bitmap != null)
+            {
+                IntPtr Hicon = bitmap.GetHicon();
+                this.Icon = System.Drawing.Icon.FromHandle(Hicon);
+            }
+
             _originalSubtitle = subtitle;
             _oldFramerate = framerate;
             _subtitleFileName = fileName;
