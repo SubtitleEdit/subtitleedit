@@ -21,7 +21,7 @@
 ; Inno Setup QuickStart Pack Unicode v5.3.11(+): http://www.jrsoftware.org/isdl.php#qsp
 
 
-#define installer_build_number "04"
+#define installer_build_number "05"
 
 #define VerMajor
 #define VerMinor
@@ -113,6 +113,7 @@ Name: reset_settings; Description: {cm:tsk_ResetSettings}; GroupDescription: {cm
 
 
 [Files]
+Source: psvince.dll; DestDir: {app}; Flags: ignoreversion
 Source: ..\src\Changelog.txt; DestDir: {app}; Flags: ignoreversion
 Source: ..\src\gpl.txt; DestDir: {app}; Flags: ignoreversion
 Source: ..\src\Bin\Release\Hunspellx86.dll; DestDir: {app}; Flags: ignoreversion
@@ -185,6 +186,15 @@ Type: dirifempty; Name: {app}
 const installer_mutex_name = 'subtitle_edit_setup_mutex';
 var
   is_update: Boolean;
+
+
+// General functions
+function IsModuleLoaded(modulename: AnsiString ):  Boolean;
+external 'IsModuleLoaded@files:psvince.dll stdcall setuponly';
+
+
+function IsModuleLoadedU(modulename: AnsiString ):  Boolean;
+external 'IsModuleLoaded@{app}\psvince.dll stdcall uninstallonly';
 
 
 // Check if Subtitle Edit's settings exist
@@ -264,10 +274,17 @@ begin
   // Create a mutex for the installer and if it's already running then expose a message and stop installation
   if CheckForMutexes(installer_mutex_name) then begin
     if not WizardSilent() then
-      MsgBox(ExpandConstant('{cm:msg_SetupIsRunningWarning}'), mbCriticalError, MB_OK);
+      MsgBox(ExpandConstant('{cm:msg_SetupIsRunningWarning}'), mbError, MB_OK);
     exit;
   end;
   CreateMutex(installer_mutex_name);
+
+  if IsModuleLoaded( 'SubtitleEdit.exe' ) then begin
+    MsgBox(ExpandConstant('{cm:msg_AppIsRunning}'), mbError, MB_OK );
+    Result := False;
+    Abort;
+  end else
+    Result := True;
 
   // Check if .NET Framework 2.0 is installed and if not offer to download it
   try
@@ -293,11 +310,25 @@ end;
 
 function InitializeUninstall(): Boolean;
 begin
-  Result := True;
-  if CheckForMutexes(installer_mutex_name) then begin
-    if not WizardSilent() then
-      MsgBox(ExpandConstant('{cm:msg_SetupIsRunningWarning}'), mbCriticalError, MB_OK);
-      exit;
-   end;
-   CreateMutex(installer_mutex_name);
+  // Check if app is running during uninstallation
+  if IsModuleLoadedU( 'SubtitleEdit.exe' ) then begin
+      MsgBox(ExpandConstant('{cm:msg_AppIsRunning}'), mbError, MB_OK );
+      Result := False;
+  end
+  else Result := True;
+
+  if NOT IsModuleLoadedU( 'SubtitleEdit.exe' ) then begin
+      Result := True;
+      if CheckForMutexes(installer_mutex_name) then begin
+        if not WizardSilent() then
+        MsgBox(ExpandConstant('{cm:msg_SetupIsRunningWarning}'), mbError, MB_OK);
+        Result := False;
+      end
+      else begin
+        CreateMutex(installer_mutex_name);
+      end;
+  end;
+
+  // Unload the psvince.dll in order to be uninstalled
+  UnloadDLL(ExpandConstant('{app}\psvince.dll'));
 end;

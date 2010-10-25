@@ -24,6 +24,7 @@
 
 ;English
 en.msg_SetupIsRunningWarning=Subtitle Edit Setup is already running!
+en.msg_AppIsRunning=Subtitle Edit is running! Please close it before proceeding.
 en.msg_AskToDownNET=Subtitle Edit requires the .NET Framework 2.0. Please download and install the .NET Framework and run setup again. %n%nDo you want to download the .NET Framework 2.0 now?
 en.msg_DeleteSettings=Do you also want to delete Subtitle Edit's settings and any custom changes you made in the dictionaries? %n%nIf you plan on reinstalling Subtitle Edit you do not have to delete them.
 en.run_VisitWebsite=Visit Subtitle Edit's Website
@@ -36,6 +37,7 @@ en.tsk_ResetSettings=Reset Subtitle Edit's settings
 
 
 dk.msg_SetupIsRunningWarning=Subtitle Edit Setup kører allerede!
+dk.msg_AppIsRunning=Subtitle Edit is running! Please close it before proceeding.
 dk.msg_AskToDownNET=Subtitle Edit kræver .NET Framework 2.0. Download and installer .NET Framework og kør setup igen. %n%nVil du downloade .NET Framework 2.0 nu?
 dk.msg_DeleteSettings=Vil du også slette Subtitle Edit's indstillinger og evt. ændringer i ordlister? %n%nHvis du vil geninstallere Subtitle Edit senere kan du beholde disse indstillinger.
 dk.run_VisitWebsite=Besøg Subtitle Edits Website
@@ -48,6 +50,7 @@ dk.tsk_ResetSettings=Nulstil Subtitle Edit indstillinger
 
 
 es.msg_SetupIsRunningWarning=Subtitle Edit Setup is already running!
+es.msg_AppIsRunning=Subtitle Edit is running! Please close it before proceeding.
 es.msg_AskToDownNET=Subtitle Edit requires the .NET Framework 2.0. Please download and install the .NET Framework and run setup again. %n%nDo you want to download the .NET Framework 2.0 now?
 es.msg_DeleteSettings=Do you also want to delete Subtitle Edit's settings and any custom changes you made in the dictionaries? %n%nIf you plan on reinstalling Subtitle Edit you do not have to delete them.
 es.run_VisitWebsite=Visit Subtitle Edit's Website
@@ -60,6 +63,7 @@ es.tsk_ResetSettings=Reset Subtitle Edit's settings
 
 
 fr.msg_SetupIsRunningWarning=Subtitle Edit Setup is already running!
+fr.msg_AppIsRunning=Subtitle Edit is running! Please close it before proceeding.
 fr.msg_AskToDownNET=Subtitle Edit requires the .NET Framework 2.0. Please download and install the .NET Framework and run setup again. %n%nDo you want to download the .NET Framework 2.0 now?
 fr.msg_DeleteSettings=Do you also want to delete Subtitle Edit's settings and any custom changes you made in the dictionaries? %n%nIf you plan on reinstalling Subtitle Edit you do not have to delete them.
 fr.run_VisitWebsite=Visit Subtitle Edit's Website
@@ -72,6 +76,7 @@ fr.tsk_ResetSettings=Reset Subtitle Edit's settings
 
 
 it.msg_SetupIsRunningWarning=Subtitle Edit Setup is already running!
+it.msg_AppIsRunning=Subtitle Edit is running! Please close it before proceeding.
 it.msg_AskToDownNET=Subtitle Edit requires the .NET Framework 2.0. Please download and install the .NET Framework and run setup again. %n%nDo you want to download the .NET Framework 2.0 now?
 it.msg_DeleteSettings=Do you also want to delete Subtitle Edit's settings and any custom changes you made in the dictionaries? %n%nIf you plan on reinstalling Subtitle Edit you do not have to delete them.
 it.run_VisitWebsite=Visit Subtitle Edit's Website
@@ -84,6 +89,7 @@ it.tsk_ResetSettings=Reset Subtitle Edit's settings
 
 
 nl.msg_SetupIsRunningWarning=Subtitle Edit Setup is already running!
+nl.msg_AppIsRunning=Subtitle Edit is running! Please close it before proceeding.
 nl.msg_AskToDownNET=Subtitle Edit requires the .NET Framework 2.0. Please download and install the .NET Framework and run setup again. %n%nDo you want to download the .NET Framework 2.0 now?
 nl.msg_DeleteSettings=Do you also want to delete Subtitle Edit's settings and any custom changes you made in the dictionaries? %n%nIf you plan on reinstalling Subtitle Edit you do not have to delete them.
 nl.run_VisitWebsite=Visit Subtitle Edit's Website
@@ -96,6 +102,7 @@ nl.tsk_ResetSettings=Reset Subtitle Edit's settings
 
 
 pl.msg_SetupIsRunningWarning=Subtitle Edit Setup is already running!
+pl.msg_AppIsRunning=Subtitle Edit is running! Please close it before proceeding.
 pl.msg_AskToDownNET=Subtitle Edit requires the .NET Framework 2.0. Please download and install the .NET Framework and run setup again. %n%nDo you want to download the .NET Framework 2.0 now?
 pl.msg_DeleteSettings=Do you also want to delete Subtitle Edit's settings and any custom changes you made in the dictionaries? %n%nIf you plan on reinstalling Subtitle Edit you do not have to delete them.
 pl.run_VisitWebsite=Visit Subtitle Edit's Website
@@ -107,6 +114,7 @@ pl.tsk_Other=Other:
 pl.tsk_ResetSettings=Reset Subtitle Edit's settings
 
 ro.msg_SetupIsRunningWarning=Instalarea programului Subtitle Edit se efectuează deja!
+ro.msg_AppIsRunning=Subtitle Edit is running! Please close it before proceeding.
 ro.msg_AskToDownNET=Subtitle Edit necesită .NET Framework 2.0. Vă rog să descărcaţi şi să instalaţi .NET Framework şi apoi reinstalaţi. %n%nVreţi să descărcaţi acum .NET Framework 2.0?
 ro.msg_DeleteSettings=Vreţi de asemenea să ştergeţi setările şi personalizările făcute în dicţionare? %n%nDacă aveţi de gând să reinstalaţi Subtitle Edit, nu este nevoie să le ştergeţi.
 ro.run_VisitWebsite=Vizitaţi pagina Web a programului Subtitle Edit
