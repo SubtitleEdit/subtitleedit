@@ -83,7 +83,7 @@ PrivilegesRequired=admin
 ShowLanguageDialog=yes
 DisableDirPage=auto
 DisableProgramGroupPage=auto
-AppMutex=Subtitle_Edit_Mutex
+;AppMutex=Subtitle_Edit_Mutex
 
 
 [Languages]
