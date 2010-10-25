@@ -46,7 +46,8 @@ namespace Nikse.SubtitleEdit.Controls
         public event TimeChangedEventHandler OnTimeChanged;
         public event TimeChangedEventHandler OnTimeChangedAndOffsetRest;
 
-        public event EventHandler OnTooglePlay;
+        public event TimeChangedEventHandler OnSingleClick;
+        public event TimeChangedEventHandler OnDoubleClickNonParagraph;
         public event EventHandler OnPause;
         public event EventHandler OnZoomedChanged;
 
@@ -797,7 +798,7 @@ namespace Nikse.SubtitleEdit.Controls
 
         private void WaveForm_MouseDoubleClick(object sender, MouseEventArgs e)
         {
-            if (_wavePeaks == null || OnPositionSelected == null)
+            if (_wavePeaks == null)
                 return;
 
             _mouseDown = false;
@@ -846,7 +847,8 @@ namespace Nikse.SubtitleEdit.Controls
                     }
                 }
 
-                OnPositionSelected.Invoke(seconds, p);
+                if (OnDoubleClickNonParagraph != null)
+                    OnDoubleClickNonParagraph.Invoke(seconds, p);                
             }
         }
 
@@ -860,7 +862,7 @@ namespace Nikse.SubtitleEdit.Controls
 
         private void WaveForm_MouseClick(object sender, MouseEventArgs e)
         {
-            if (e.Button == MouseButtons.Left && OnTooglePlay != null)
+            if (e.Button == MouseButtons.Left && OnSingleClick != null)
             {
                 int diff = Math.Abs(_mouseMoveStartX - e.X);
                 if (_mouseMoveStartX == -1 || _mouseMoveEndX == -1 || diff < 10 && TimeSpan.FromTicks(DateTime.Now.Ticks - _buttonDownTimeTicks).TotalSeconds < 0.25)
@@ -927,7 +929,7 @@ namespace Nikse.SubtitleEdit.Controls
                     }
 
                     if (_mouseDownParagraphType == MouseDownParagraphType.None || _mouseDownParagraphType == MouseDownParagraphType.Whole)
-                        OnTooglePlay.Invoke(sender, null);
+                        OnSingleClick.Invoke(XPositionToSeconds(e.X), null);
                 }
             }
         }
