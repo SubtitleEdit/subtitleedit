@@ -755,12 +755,12 @@ namespace Nikse.SubtitleEdit.Logic.OCR
                         }
                         catch
                         {
-                            doc.LoadXml("<ReplaceList><WholeWords/><PartialLines/><BeginLines/><EndLines/><WholeLines/><Letters/></ReplaceList>");
+                            doc.LoadXml("<ReplaceList><WholeWords/><PartialLines/><BeginLines/><EndLines/><WholeLines/></ReplaceList>");
                         }
                     }
                     else
                     {
-                        doc.LoadXml("<ReplaceList><WholeWords/><PartialLines/><BeginLines/><EndLines/><WholeLines/><Letters/></ReplaceList>");                    
+                        doc.LoadXml("<ReplaceList><WholeWords/><PartialLines/><BeginLines/><EndLines/><WholeLines/></ReplaceList>");                    
                     }
                     if (!_wordReplaceList.ContainsKey(word))
                         _wordReplaceList.Add(word, _spellCheck.Word);
