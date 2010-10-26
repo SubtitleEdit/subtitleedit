@@ -52,11 +52,7 @@ namespace Nikse.SubtitleEdit.Logic
                     {
                         try
                         {
-                            string path = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + Path.DirectorySeparatorChar + "Nikse";
-                            if (!Directory.Exists(path))
-                                Directory.CreateDirectory(path);
-
-                            path += Path.DirectorySeparatorChar + "SubtitleEdit";
+                            string path = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + Path.DirectorySeparatorChar + "Subtitle Edit";
                             if (!Directory.Exists(path))
                                 Directory.CreateDirectory(path);
 
