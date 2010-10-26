@@ -21,7 +21,7 @@
 ; Inno Setup QuickStart Pack Unicode v5.3.11(+): http://www.jrsoftware.org/isdl.php#qsp
 
 
-#define installer_build_number "05"
+#define installer_build_number "06"
 
 #define VerMajor
 #define VerMinor
@@ -44,19 +44,19 @@ AppID=SubtitleEdit
 AppCopyright=Copyright © 2001-2010, Nikse
 AppContact={#= app_web_site}
 AppName=Subtitle Edit
-AppVerName=Subtitle Edit {#= simple_app_version}
+AppVerName=Subtitle Edit v{#= simple_app_version}
 AppVersion={#= simple_app_version}
 AppPublisher=Nikse
 AppPublisherURL={#= app_web_site}
 AppSupportURL={#= app_web_site}
 AppUpdatesURL={#= app_web_site}
-UninstallDisplayName=Subtitle Edit {#= simple_app_version}
+UninstallDisplayName=Subtitle Edit v{#= simple_app_version}
 UninstallDisplayIcon={app}\SubtitleEdit.exe
 DefaultDirName={pf}\Subtitle Edit
 DefaultGroupName=Subtitle Edit
 VersionInfoCompany=Nikse
 VersionInfoCopyright=Copyright © 2001-2010, Nikse
-VersionInfoDescription=Subtitle Edit {#= simple_app_version} Setup
+VersionInfoDescription=Subtitle Edit v{#= simple_app_version} Setup
 VersionInfoTextVersion={#= simple_app_version}
 VersionInfoVersion={#= simple_app_version}
 VersionInfoProductName=Subtitle Edit
@@ -101,7 +101,7 @@ Name: ro; MessagesFile: Languages\Romanian.isl
 
 
 [Messages]
-BeveledLabel=Subtitle Edit {#= simple_app_version} by Nikse, Setup v{#= installer_build_number} built on {#= installer_build_date}
+BeveledLabel=Subtitle Edit v{#= simple_app_version} by Nikse, Setup v{#= installer_build_number} built on {#= installer_build_date}
 
 
 [Tasks]
@@ -148,21 +148,34 @@ Source: ..\Tesseract\tesseract.exe; DestDir: {app}\Tesseract; Flags: ignoreversi
 
 
 [Icons]
-Name: {group}\Subtitle Edit; Filename: {app}\SubtitleEdit.exe; Comment: Subtitle Edit {#= simple_app_version}; WorkingDir: {app}; AppUserModelID: Nikse.SubtitleEdit; IconFilename: {app}\SubtitleEdit.exe; IconIndex: 0
+Name: {group}\Subtitle Edit; Filename: {app}\SubtitleEdit.exe; Comment: Subtitle Edit v{#= simple_app_version}; WorkingDir: {app}; AppUserModelID: Nikse.SubtitleEdit; IconFilename: {app}\SubtitleEdit.exe; IconIndex: 0
 Name: {group}\Help and Support\Changelog; Filename: {app}\Changelog.txt; Comment: {cm:sm_com_Changelog}; WorkingDir: {app}
 ;Name: {group}\Help and Support\Readme; Filename: {app}\Readme.txt; Comment: {cm:sm_com_ReadmeFile}; WorkingDir: {app}
 Name: {group}\Help and Support\{cm:ProgramOnTheWeb,Subtitle Edit}; Filename: {#= app_web_site}; Comment: {cm:ProgramOnTheWeb,Subtitle Edit}
 Name: {group}\{cm:UninstallProgram,Subtitle Edit}; Filename: {uninstallexe}; IconFilename: {app}\uninstall.ico; Comment: {cm:UninstallProgram,Subtitle Edit}; WorkingDir: {app}
 
-Name: {commondesktop}\Subtitle Edit; Filename: {app}\SubtitleEdit.exe; Tasks: desktopicon\common; Comment: Subtitle Edit {#= simple_app_version}; WorkingDir: {app}; AppUserModelID: Nikse.SubtitleEdit; IconFilename: {app}\SubtitleEdit.exe; IconIndex: 0
-Name: {userdesktop}\Subtitle Edit; Filename: {app}\SubtitleEdit.exe; Tasks: desktopicon\user; Comment: Subtitle Edit {#= simple_app_version}; WorkingDir: {app}; AppUserModelID: Nikse.SubtitleEdit; IconFilename: {app}\SubtitleEdit.exe; IconIndex: 0
-Name: {userappdata}\Microsoft\Internet Explorer\Quick Launch\Subtitle Edit; Filename: {app}\SubtitleEdit.exe; Tasks: quicklaunchicon; Comment: Subtitle Edit {#= simple_app_version}; WorkingDir: {app}; IconFilename: {app}\SubtitleEdit.exe; IconIndex: 0
+Name: {commondesktop}\Subtitle Edit; Filename: {app}\SubtitleEdit.exe; Tasks: desktopicon\common; Comment: Subtitle Edit v{#= simple_app_version}; WorkingDir: {app}; AppUserModelID: Nikse.SubtitleEdit; IconFilename: {app}\SubtitleEdit.exe; IconIndex: 0
+Name: {userdesktop}\Subtitle Edit; Filename: {app}\SubtitleEdit.exe; Tasks: desktopicon\user; Comment: Subtitle Edit v{#= simple_app_version}; WorkingDir: {app}; AppUserModelID: Nikse.SubtitleEdit; IconFilename: {app}\SubtitleEdit.exe; IconIndex: 0
+Name: {userappdata}\Microsoft\Internet Explorer\Quick Launch\Subtitle Edit; Filename: {app}\SubtitleEdit.exe; Tasks: quicklaunchicon; Comment: Subtitle Edit v{#= simple_app_version}; WorkingDir: {app}; IconFilename: {app}\SubtitleEdit.exe; IconIndex: 0
 
 
 [InstallDelete]
 Type: files; Name: {userdesktop}\Subtitle Edit.lnk; Check: NOT IsTaskSelected('desktopicon\user') AND IsUpdate()
 Type: files; Name: {commondesktop}\Subtitle Edit.lnk; Check: NOT IsTaskSelected('desktopicon\common') AND IsUpdate()
 Type: files; Name: {userappdata}\Subtitle Edit\Settings.xml; Tasks: reset_settings
+Type: dirifempty; Name: {userappdata}\Subtitle Edit; Tasks: reset_settings
+
+;remove old Tesseract files
+Type: files; Name: {app}\tessnet2_32.dll
+Type: files; Name: {app}\TessData\eng.DangAmbigs
+Type: files; Name: {app}\TessData\eng.freq-dawg
+Type: files; Name: {app}\TessData\eng.inttemp
+Type: files; Name: {app}\TessData\eng.normproto
+Type: files; Name: {app}\TessData\eng.pffmtable
+Type: files; Name: {app}\TessData\eng.unicharset
+Type: files; Name: {app}\TessData\eng.user-words
+Type: files; Name: {app}\TessData\eng.word-dawg
+Type: dirifempty; Name: {app}\TessData
 
 
 [Run]
@@ -195,14 +208,15 @@ external 'IsModuleLoaded@{app}\psvince.dll stdcall uninstallonly';
 function SettingsExistCheck(): Boolean;
 begin
   Result := False;
-  if FileExists(ExpandConstant('{app}\Settings.xml')) then
+  if FileExists(ExpandConstant('{userappdata}\Subtitle Edit\Settings.xml')) then
   Result := True;
 end;
 
 
 Procedure CleanUpFiles();
 begin
-  DeleteFile(ExpandConstant('{app}\Settings.xml'));
+  DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Settings.xml'));
+  RemoveDir(ExpandConstant('{userappdata}\Subtitle Edit'));
   DeleteFile(ExpandConstant('{app}\Dictionaries\da_DK_names_etc.xml'));
   DeleteFile(ExpandConstant('{app}\Dictionaries\da_DK_user.xml'));
   DeleteFile(ExpandConstant('{app}\Dictionaries\dan_OCRFixReplaceList.xml'));
@@ -254,6 +268,7 @@ begin
   if SettingsExistCheck then begin
     if MsgBox(ExpandConstant('{cm:msg_DeleteSettings}'), mbConfirmation, MB_YESNO or MB_DEFBUTTON2) = IDYES then begin
        CleanUpFiles;
+       DeleteFile(ExpandConstant('{app}\Settings.xml'));
      end;
       RemoveDir(ExpandConstant('{app}'));
     end;
