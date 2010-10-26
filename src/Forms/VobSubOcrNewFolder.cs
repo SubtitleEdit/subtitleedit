@@ -33,7 +33,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 try
                 {
-                    string fullName = Path.GetDirectoryName(Application.ExecutablePath).TrimEnd(Path.DirectorySeparatorChar) + Path.DirectorySeparatorChar + @"VobSub" + Path.DirectorySeparatorChar + folderName;
+                    string fullName = Configuration.VobSubCompareFolder + folderName;
                     Directory.CreateDirectory(fullName);
                     FolderName = folderName;
                     DialogResult = DialogResult.OK;

@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System;
 
 namespace Nikse.SubtitleEdit.Logic
 {
@@ -6,7 +7,74 @@ namespace Nikse.SubtitleEdit.Logic
     {
         static readonly Configuration Instance = new Configuration();
         string _baseDir;
+        string _dataDir;
         Settings _settings;
+
+        public static string SettingsFileName
+        {
+            get
+            {
+                return DataDirectory + "Settings.xml";
+            }
+        }
+
+        public static string DictionariesFolder
+        {
+            get
+            {
+                return DataDirectory + "Dictionaries" + Path.DirectorySeparatorChar;
+            }
+        }
+
+        public static string VobSubCompareFolder
+        {
+            get
+            {
+                return DataDirectory + "VobSub" + Path.DirectorySeparatorChar;
+            }
+        }
+
+        public static string WaveFormsFolder
+        {
+            get
+            {
+                return DataDirectory + "WaveForms" + Path.DirectorySeparatorChar;
+            }
+        }
+
+        public static string DataDirectory
+        {
+            get
+            {
+                if (Instance._dataDir == null)
+                {
+                    if (BaseDirectory.StartsWith(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), StringComparison.OrdinalIgnoreCase))
+                    {
+                        try
+                        {
+                            string path = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + Path.DirectorySeparatorChar + "Nikse";
+                            if (!Directory.Exists(path))
+                                Directory.CreateDirectory(path);
+
+                            path += Path.DirectorySeparatorChar + "SubtitleEdit";
+                            if (!Directory.Exists(path))
+                                Directory.CreateDirectory(path);
+
+                            Instance._dataDir = path + Path.DirectorySeparatorChar;
+                        }
+                        catch
+                        {
+                            Instance._dataDir = BaseDirectory;
+                        }
+                    }
+                    else
+                    {
+                        Instance._dataDir = BaseDirectory;
+                    }
+                }
+                return Instance._dataDir;
+            }
+        }
 
         public static string BaseDirectory
         {

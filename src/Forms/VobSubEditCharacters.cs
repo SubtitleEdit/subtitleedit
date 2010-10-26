@@ -27,7 +27,7 @@ namespace Nikse.SubtitleEdit.Forms
             InitializeComponent();
             pictureBox1.SizeMode = PictureBoxSizeMode.AutoSize;
 
-            _directoryPath = Path.GetDirectoryName(Application.ExecutablePath).TrimEnd(Path.DirectorySeparatorChar) + Path.DirectorySeparatorChar + @"VobSub" + Path.DirectorySeparatorChar + databaseFolderName + Path.DirectorySeparatorChar;
+            _directoryPath = Configuration.VobSubCompareFolder + databaseFolderName + Path.DirectorySeparatorChar;
             if (!File.Exists(_directoryPath + "CompareDescription.xml"))
                 _compareDoc.LoadXml("<OcrBitmaps></OcrBitmaps>");
             else

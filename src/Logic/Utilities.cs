@@ -575,7 +575,7 @@ namespace Nikse.SubtitleEdit.Logic
         {
             get
             {
-                return Path.GetDirectoryName(Application.ExecutablePath).TrimEnd(Path.DirectorySeparatorChar) + Path.DirectorySeparatorChar + "Dictionaries" + Path.DirectorySeparatorChar;
+                return Configuration.DictionariesFolder;
             }
         }
 

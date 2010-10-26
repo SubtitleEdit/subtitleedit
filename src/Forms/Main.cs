@@ -85,7 +85,7 @@ namespace Nikse.SubtitleEdit.Forms
                     if (versionInfo.Length >= 3 && versionInfo[2] != "0")
                         _title += "." + versionInfo[2];
                 }
-                _title = "Subtitle Edit 3.0 RC3";
+                _title = "Subtitle Edit 3.0 RC4";
                 return _title;
             }
         }
@@ -5988,7 +5988,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private string GetPeakWaveFileName(string videoFileName)
         {
-            string dir = Configuration.BaseDirectory + "WaveForms";
+            string dir = Configuration.WaveFormsFolder.TrimEnd(Path.DirectorySeparatorChar);
             if (!Directory.Exists(dir))
                 Directory.CreateDirectory(dir);
 
