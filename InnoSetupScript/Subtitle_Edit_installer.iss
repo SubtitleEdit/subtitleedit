@@ -165,7 +165,7 @@ Type: files; Name: {commondesktop}\Subtitle Edit.lnk; Check: NOT IsTaskSelected(
 Type: files; Name: {userappdata}\Subtitle Edit\Settings.xml; Tasks: reset_settings
 Type: dirifempty; Name: {userappdata}\Subtitle Edit; Tasks: reset_settings
 
-;remove old Tesseract files
+;remove old Tesseract files and settings file
 Type: files; Name: {app}\tessnet2_32.dll
 Type: files; Name: {app}\TessData\eng.DangAmbigs
 Type: files; Name: {app}\TessData\eng.freq-dawg
@@ -176,6 +176,7 @@ Type: files; Name: {app}\TessData\eng.unicharset
 Type: files; Name: {app}\TessData\eng.user-words
 Type: files; Name: {app}\TessData\eng.word-dawg
 Type: dirifempty; Name: {app}\TessData
+Type: files; Name: {app}\Settings.xml
 
 
 [Run]
@@ -268,7 +269,6 @@ begin
   if SettingsExistCheck then begin
     if MsgBox(ExpandConstant('{cm:msg_DeleteSettings}'), mbConfirmation, MB_YESNO or MB_DEFBUTTON2) = IDYES then begin
        CleanUpFiles;
-       DeleteFile(ExpandConstant('{app}\Settings.xml'));
      end;
       RemoveDir(ExpandConstant('{app}'));
     end;
