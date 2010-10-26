@@ -44,19 +44,19 @@ AppID=SubtitleEdit
 AppCopyright=Copyright © 2001-2010, Nikse
 AppContact={#= app_web_site}
 AppName=Subtitle Edit
-AppVerName=Subtitle Edit v{#= simple_app_version}
+AppVerName=Subtitle Edit {#= simple_app_version}
 AppVersion={#= simple_app_version}
 AppPublisher=Nikse
 AppPublisherURL={#= app_web_site}
 AppSupportURL={#= app_web_site}
 AppUpdatesURL={#= app_web_site}
-UninstallDisplayName=Subtitle Edit v{#= simple_app_version}
+UninstallDisplayName=Subtitle Edit {#= simple_app_version}
 UninstallDisplayIcon={app}\SubtitleEdit.exe
 DefaultDirName={pf}\Subtitle Edit
 DefaultGroupName=Subtitle Edit
 VersionInfoCompany=Nikse
 VersionInfoCopyright=Copyright © 2001-2010, Nikse
-VersionInfoDescription=Subtitle Edit v{#= simple_app_version} Setup
+VersionInfoDescription=Subtitle Edit {#= simple_app_version} Setup
 VersionInfoTextVersion={#= simple_app_version}
 VersionInfoVersion={#= simple_app_version}
 VersionInfoProductName=Subtitle Edit
@@ -101,7 +101,7 @@ Name: ro; MessagesFile: Languages\Romanian.isl
 
 
 [Messages]
-BeveledLabel=Subtitle Edit v{#= simple_app_version} by Nikse, Setup v{#= installer_build_number} built on {#= installer_build_date}
+BeveledLabel=Subtitle Edit {#= simple_app_version} by Nikse, Setup v{#= installer_build_number} built on {#= installer_build_date}
 
 
 [Tasks]
@@ -120,7 +120,6 @@ Source: ..\src\Bin\Release\Hunspellx86.dll; DestDir: {app}; Flags: ignoreversion
 Source: ..\src\Bin\Release\Interop.QuartzTypeLib.dll; DestDir: {app}; Flags: ignoreversion
 Source: ..\src\Bin\Release\NHunspell.dll; DestDir: {app}; Flags: ignoreversion
 Source: ..\src\Bin\Release\SubtitleEdit.exe; DestDir: {app}; Flags: ignoreversion
-Source: ..\src\Bin\Release\tessnet2_32.dll; DestDir: {app}; Flags: ignoreversion
 Source: Icons\uninstall.ico; DestDir: {app}; Flags: ignoreversion
 Source: ..\src\Bin\Release\Icons\Find.png; DestDir: {app}\Icons; Flags: ignoreversion
 Source: ..\src\Bin\Release\Icons\Help.png; DestDir: {app}\Icons; Flags: ignoreversion
@@ -143,26 +142,21 @@ Source: ..\Dictionaries\en_US_names_etc.xml; DestDir: {app}\Dictionaries; Flags:
 Source: ..\Dictionaries\en_US_user.xml; DestDir: {app}\Dictionaries; Flags: ignoreversion onlyifdoesntexist uninsneveruninstall
 Source: ..\Dictionaries\eng_OCRFixReplaceList.xml; DestDir: {app}\Dictionaries; Flags: ignoreversion onlyifdoesntexist uninsneveruninstall
 Source: ..\Dictionaries\names_etc.xml; DestDir: {app}\Dictionaries; Flags: ignoreversion onlyifdoesntexist uninsneveruninstall
-Source: ..\TessData\eng.DangAmbigs; DestDir: {app}\TessData; Flags: ignoreversion
-Source: ..\TessData\eng.freq-dawg; DestDir: {app}\TessData; Flags: ignoreversion
-Source: ..\TessData\eng.inttemp; DestDir: {app}\TessData; Flags: ignoreversion
-Source: ..\TessData\eng.normproto; DestDir: {app}\TessData; Flags: ignoreversion
-Source: ..\TessData\eng.pffmtable; DestDir: {app}\TessData; Flags: ignoreversion
-Source: ..\TessData\eng.unicharset; DestDir: {app}\TessData; Flags: ignoreversion
-Source: ..\TessData\eng.user-words; DestDir: {app}\TessData; Flags: ignoreversion
-Source: ..\TessData\eng.word-dawg; DestDir: {app}\TessData; Flags: ignoreversion
+Source: ..\Tesseract\tessdata\eng.traineddata; DestDir: {app}\Tesseract\tessdata; Flags: ignoreversion
+Source: ..\Tesseract\leptonlib.dll; DestDir: {app}\Tesseract; Flags: ignoreversion
+Source: ..\Tesseract\tesseract.exe; DestDir: {app}\Tesseract; Flags: ignoreversion
 
 
 [Icons]
-Name: {group}\Subtitle Edit; Filename: {app}\SubtitleEdit.exe; Comment: Subtitle Edit v{#= simple_app_version}; WorkingDir: {app}; AppUserModelID: Nikse.SubtitleEdit; IconFilename: {app}\SubtitleEdit.exe; IconIndex: 0
+Name: {group}\Subtitle Edit; Filename: {app}\SubtitleEdit.exe; Comment: Subtitle Edit {#= simple_app_version}; WorkingDir: {app}; AppUserModelID: Nikse.SubtitleEdit; IconFilename: {app}\SubtitleEdit.exe; IconIndex: 0
 Name: {group}\Help and Support\Changelog; Filename: {app}\Changelog.txt; Comment: {cm:sm_com_Changelog}; WorkingDir: {app}
 ;Name: {group}\Help and Support\Readme; Filename: {app}\Readme.txt; Comment: {cm:sm_com_ReadmeFile}; WorkingDir: {app}
 Name: {group}\Help and Support\{cm:ProgramOnTheWeb,Subtitle Edit}; Filename: {#= app_web_site}; Comment: {cm:ProgramOnTheWeb,Subtitle Edit}
 Name: {group}\{cm:UninstallProgram,Subtitle Edit}; Filename: {uninstallexe}; IconFilename: {app}\uninstall.ico; Comment: {cm:UninstallProgram,Subtitle Edit}; WorkingDir: {app}
 
-Name: {commondesktop}\Subtitle Edit; Filename: {app}\SubtitleEdit.exe; Tasks: desktopicon\common; Comment: Subtitle Edit v{#= simple_app_version}; WorkingDir: {app}; AppUserModelID: Nikse.SubtitleEdit; IconFilename: {app}\SubtitleEdit.exe; IconIndex: 0
-Name: {userdesktop}\Subtitle Edit; Filename: {app}\SubtitleEdit.exe; Tasks: desktopicon\user; Comment: Subtitle Edit v{#= simple_app_version}; WorkingDir: {app}; AppUserModelID: Nikse.SubtitleEdit; IconFilename: {app}\SubtitleEdit.exe; IconIndex: 0
-Name: {userappdata}\Microsoft\Internet Explorer\Quick Launch\Subtitle Edit; Filename: {app}\SubtitleEdit.exe; Tasks: quicklaunchicon; Comment: Subtitle Edit v{#= simple_app_version}; WorkingDir: {app}; IconFilename: {app}\SubtitleEdit.exe; IconIndex: 0
+Name: {commondesktop}\Subtitle Edit; Filename: {app}\SubtitleEdit.exe; Tasks: desktopicon\common; Comment: Subtitle Edit {#= simple_app_version}; WorkingDir: {app}; AppUserModelID: Nikse.SubtitleEdit; IconFilename: {app}\SubtitleEdit.exe; IconIndex: 0
+Name: {userdesktop}\Subtitle Edit; Filename: {app}\SubtitleEdit.exe; Tasks: desktopicon\user; Comment: Subtitle Edit {#= simple_app_version}; WorkingDir: {app}; AppUserModelID: Nikse.SubtitleEdit; IconFilename: {app}\SubtitleEdit.exe; IconIndex: 0
+Name: {userappdata}\Microsoft\Internet Explorer\Quick Launch\Subtitle Edit; Filename: {app}\SubtitleEdit.exe; Tasks: quicklaunchicon; Comment: Subtitle Edit {#= simple_app_version}; WorkingDir: {app}; IconFilename: {app}\SubtitleEdit.exe; IconIndex: 0
 
 
 [InstallDelete]
