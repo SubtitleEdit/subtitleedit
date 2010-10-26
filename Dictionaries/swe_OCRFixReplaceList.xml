@@ -1,0 +1,17 @@
+﻿<ReplaceList>
+  <WholeWords>
+    <Word from="lârt" to="lärt" />
+    <Word from="hedervårda" to="hedervärda" />
+    <Word from="stormâstare" to="stormästare" />
+    <Word from="Avfârd" to="Avfärd" />
+    <Word from="tâlten" to="tälten" />
+    <Word from="ârjag" to="är jag" />
+    <Word from="ärjag" to="är jag" />
+    <Word from="jâmlikar" to="jämlikar" />
+  </WholeWords>
+  <PartialLines />
+  <BeginLines />
+  <EndLines />
+  <WholeLines />
+  <Letters />
+</ReplaceList>
