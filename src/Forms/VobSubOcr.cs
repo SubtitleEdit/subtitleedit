@@ -956,9 +956,9 @@ namespace Nikse.SubtitleEdit.Forms
             string tempTextFileName = Path.GetTempPath() + Guid.NewGuid().ToString();
 
             Process process = new Process();
-            process.StartInfo = new ProcessStartInfo(Configuration.BaseDirectory + "Tesseract" + Path.DirectorySeparatorChar + "tesseract.exe");
+            process.StartInfo = new ProcessStartInfo(Configuration.DataDirectory + "Tesseract" + Path.DirectorySeparatorChar + "tesseract.exe");
             process.StartInfo.Arguments = "\"" + tempTiffFileName + "\" \"" + tempTextFileName + "\" -l " + language;
-            process.StartInfo.WorkingDirectory = (Configuration.BaseDirectory + "Tesseract");
+            process.StartInfo.WorkingDirectory = (Configuration.DataDirectory + "Tesseract");
             process.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
             process.Start();
             process.WaitForExit(2000);
@@ -1221,7 +1221,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void InitializeTesseract()
         {
-            string dir = Configuration.BaseDirectory + "Tesseract\\tessdata";
+            string dir = Configuration.DataDirectory + "Tesseract" + Path.DirectorySeparatorChar + "tessdata";
             if (Directory.Exists(dir))
             {
                 var list = new List<string>();
