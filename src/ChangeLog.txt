@@ -12,6 +12,7 @@ Improved: Layout changed - Translation helper + Create/adjust lines moved to mai
 Improved: Ripping subtitles from DVD should now have correct time codes (thx JeanlDvd/DvdSubEdit +  gioni666)
 Improved: Ripping subtitles from DVD/Vobsub files now has a an option to only ocr "forced subtitles" (thx Rolf)
 Improved: Ripping subtitles from Vobsub files now has an option to use time codes from idx file (now default)
+Imrpoved: Upgraded Tesseract 2.x to 3.0.
 Improved: Can now retrieve and install spell check dictionaries from the internet (thx dr.jackson for idea + Jaime Olivares for zip unpack code + thx Pierre for testing)
 Improved: "Compare subtitle" color high-lighting is now more like other compare programs
 Improved: Fix common erors - Fix alone lowercase 'i' to 'I' now works better close to html tags (thx Chamallow)
