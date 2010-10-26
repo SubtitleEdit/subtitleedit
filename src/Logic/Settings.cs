@@ -333,7 +333,7 @@ namespace Nikse.SubtitleEdit.Logic
             //Serialize(Configuration.BaseDirectory + "Settings.xml", this);
 
             //Fast - TODO: Fix in release
-            CustomSerialize(Configuration.BaseDirectory + "Settings.xml", this);
+            CustomSerialize(Configuration.SettingsFileName, this);
         }
 
         private static void Serialize(string fileName, Settings settings)
@@ -346,17 +346,17 @@ namespace Nikse.SubtitleEdit.Logic
 
         public static Settings GetSettings()
         {
-            Settings settings = new Settings();            
-            if (File.Exists(Configuration.BaseDirectory + "Settings.xml"))
+            Settings settings = new Settings();
+            string settingsFileName = Configuration.SettingsFileName;
+            if (File.Exists(settingsFileName))
             {
                 try
                 {
                     //TODO: Fix in release
-                    settings = CustomDeserialize(Configuration.BaseDirectory + "Settings.xml"); //  15 msecs
+                    settings = CustomDeserialize(settingsFileName); //  15 msecs
 
                     //too slow... :(
                     //settings = Deserialize(Configuration.BaseDirectory + "Settings.xml"); // 688 msecs
-
                 }
                 catch
                 {

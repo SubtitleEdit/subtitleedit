@@ -360,7 +360,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void InitializeWaveFormsFolderEmpty(LanguageStructure.Settings language)
         {
-            string waveFormsFolder = Path.Combine(Configuration.BaseDirectory, "WaveForms");
+            string waveFormsFolder = Configuration.WaveFormsFolder.TrimEnd(Path.DirectorySeparatorChar);
             if (Directory.Exists(waveFormsFolder))
             {
                 long bytes = 0;
@@ -1244,7 +1244,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonWaveFormsFolderEmpty_Click(object sender, EventArgs e)
         {
-            string waveFormsFolder = Path.Combine(Configuration.BaseDirectory, "WaveForms");
+            string waveFormsFolder = Configuration.WaveFormsFolder.TrimEnd(Path.DirectorySeparatorChar);
             if (Directory.Exists(waveFormsFolder))
             {
                 DirectoryInfo di = new DirectoryInfo(waveFormsFolder);

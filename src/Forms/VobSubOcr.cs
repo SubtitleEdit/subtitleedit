@@ -10,6 +10,7 @@ using System.Xml;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.OCR;
 using Nikse.SubtitleEdit.Logic.VobSub;
+using System.Diagnostics;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -83,8 +84,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         // Tesseract OCR
         //tessnet2.Tesseract _tesseractOcrEngine;
-        object _tesseractOcrEngine;
+//        object _tesseractOcrEngine;
         string _lastLine;
+        string _languageId;
 
         // Dictionaries/spellchecking/fixing
         OcrFixEngine _ocrFixEngine;
@@ -111,6 +113,11 @@ namespace Nikse.SubtitleEdit.Forms
             buttonOK.Text = Configuration.Settings.Language.General.OK;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
             subtitleListView1.InitializeLanguage(Configuration.Settings.Language.General, Configuration.Settings);
+            subtitleListView1.Columns[0].Width = 45;
+            subtitleListView1.Columns[1].Width = 90;
+            subtitleListView1.Columns[2].Width = 90;
+            subtitleListView1.Columns[3].Width = 70;
+            subtitleListView1.Columns[4].Width = 150;
 
             groupBoxImagePalette.Text = language.ImagePalette;
             checkBoxCustomFourColors.Text = language.UseCustomColors;
@@ -218,7 +225,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             try
             {
-                string characterDatabasePath = Path.GetDirectoryName(Application.ExecutablePath).TrimEnd(Path.DirectorySeparatorChar) + Path.DirectorySeparatorChar + @"VobSub";
+                string characterDatabasePath = Configuration.VobSubCompareFolder.TrimEnd(Path.DirectorySeparatorChar);
                 if (!Directory.Exists(characterDatabasePath))
                     Directory.CreateDirectory(characterDatabasePath);
 
@@ -251,7 +258,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void LoadImageCompareBitmaps()
         {
             _compareBitmaps = new List<CompareItem>();
-            string path = Path.GetDirectoryName(Application.ExecutablePath).TrimEnd(Path.DirectorySeparatorChar) + Path.DirectorySeparatorChar + @"VobSub" + Path.DirectorySeparatorChar + comboBoxCharacterDatabase.SelectedItem + Path.DirectorySeparatorChar;
+            string path = Configuration.VobSubCompareFolder + comboBoxCharacterDatabase.SelectedItem + Path.DirectorySeparatorChar;
             if (!File.Exists(path + "CompareDescription.xml"))
                 _compareDoc.LoadXml("<OcrBitmaps></OcrBitmaps>");
             else
@@ -491,7 +498,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void SaveCompareItem(Bitmap newTarget, string text, bool isItalic, int expandCount)
         {
-            string path = Path.GetDirectoryName(Application.ExecutablePath).TrimEnd(Path.DirectorySeparatorChar) + Path.DirectorySeparatorChar + @"VobSub" + Path.DirectorySeparatorChar + comboBoxCharacterDatabase.SelectedItem + Path.DirectorySeparatorChar;
+            string path = Configuration.VobSubCompareFolder + comboBoxCharacterDatabase.SelectedItem + Path.DirectorySeparatorChar;
             string name = Guid.NewGuid().ToString();
             string fileName = path + name + ".bmp";
             newTarget.Save(fileName);
@@ -941,17 +948,38 @@ namespace Nikse.SubtitleEdit.Forms
         //    }
         //}
 
+        private string Tesseract3DoOcrViaExe(Bitmap bmp, string language)
+        {
+            string tempTiffFileName = Path.GetTempPath() + Guid.NewGuid().ToString() + ".tiff";
+            bmp.Save(tempTiffFileName, System.Drawing.Imaging.ImageFormat.Tiff);
+
+            string tempTextFileName = Path.GetTempPath() + Guid.NewGuid().ToString();
+
+            Process process = new Process();
+            process.StartInfo = new ProcessStartInfo(Configuration.BaseDirectory + "Tesseract" + Path.DirectorySeparatorChar + "tesseract.exe");
+            process.StartInfo.Arguments = "\"" + tempTiffFileName + "\" \"" + tempTextFileName + "\" -l " + language;
+            process.StartInfo.WorkingDirectory = (Configuration.BaseDirectory + "Tesseract");
+            process.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
+            process.Start();
+            process.WaitForExit(2000);
+            string s = File.ReadAllText(tempTextFileName + ".txt");
+            try
+            {
+                File.Delete(tempTiffFileName);
+                File.Delete(tempTextFileName + ".txt");
+            }
+            catch
+            {
+            }
+            return s;
+        }
 
         private string OcrViaTessnet(Bitmap bitmap, int index)
         {
-            if (_tesseractOcrEngine == null || _ocrFixEngine == null)
+            if (_ocrFixEngine == null)
             {
-                Cursor = Cursors.WaitCursor;
-                _tesseractOcrEngine = new tessnet2.Tesseract();
-                string languageId = (comboBoxTesseractLanguages.SelectedItem as TesseractLanguage).Id;
-                (_tesseractOcrEngine as tessnet2.Tesseract).Init(Configuration.BaseDirectory + "tessdata", languageId, false); // _tesseractOcrEngine.Init("tessdata", "eng", false);
-
-                _ocrFixEngine = new OcrFixEngine(languageId, this);
+                _languageId = (comboBoxTesseractLanguages.SelectedItem as TesseractLanguage).Id;
+                _ocrFixEngine = new OcrFixEngine(_languageId, this);
                 if (_ocrFixEngine.IsDictionaryLoaded)
                     labelDictionaryLoaded.Text = string.Format(Configuration.Settings.Language.VobSubOcr.DictionaryX, _ocrFixEngine.DictionaryCulture.NativeName);
                 else
@@ -964,45 +992,27 @@ namespace Nikse.SubtitleEdit.Forms
                     foreach (var modiLanguage in comboBoxModiLanguage.Items)
                     {
                         if ((modiLanguage as ModiLanguage).Text == tesseractLanguageText)
-                        {
                             comboBoxModiLanguage.SelectedIndex = i;
-                        }
                         i++;
                     }
                 }
-                Cursor = Cursors.Default;
             }
 
-            // OCR bitmaps (splitted into lines)
             var sb = new StringBuilder();
-            var result = new List<tessnet2.Word>();
             int badWords = 0;
             var textWithOutFixes = new StringBuilder();
+            textWithOutFixes.Append(Tesseract3DoOcrViaExe(bitmap, _languageId));
+            sb.Append(textWithOutFixes.ToString());
+            int numberOfWords = sb.ToString().Split((" " + Environment.NewLine).ToCharArray(), StringSplitOptions.RemoveEmptyEntries).Length;
 
-            foreach (ImageSplitterItem splitImage in ImageSplitter.SplitVertical(bitmap))
-            {
-                result = (_tesseractOcrEngine as tessnet2.Tesseract).DoOCR(splitImage.Bitmap, Rectangle.Empty);
-                foreach (var s in result)
-                {
-                    sb.Append(s.Text + " ");
-                    textWithOutFixes.Append(s.Text + " ");
-                    if (s.Confidence > 160)
-                        badWords++;
-                    if (s.Confidence > 200)
-                        badWords++;
-                }
-                sb.AppendLine();
-                textWithOutFixes.AppendLine();
-                splitImage.Bitmap.Dispose();
-            }
             string line = sb.ToString().Trim();
             if (_ocrFixEngine.IsDictionaryLoaded)
             {
                 if (checkBoxAutoFixCommonErrors.Checked)
                     line = _ocrFixEngine.FixOcrErrors(line, index, _lastLine, true, checkBoxGuessUnknownWords.Checked);
-                int wordsNotFound = _ocrFixEngine.CountUnknownWordsViaDictionary(line);               
+                int wordsNotFound = _ocrFixEngine.CountUnknownWordsViaDictionary(line);
 
-                if (wordsNotFound > 0)
+                if (wordsNotFound > 0 || sb.ToString().Replace("~", string.Empty).Trim().Length == 0)
                 {                   
                     _ocrFixEngine.AutoGuessesUsed.Clear();
                     _ocrFixEngine.UnknownWordsFound.Clear();
@@ -1073,9 +1083,9 @@ namespace Nikse.SubtitleEdit.Forms
                 if (checkBoxAutoFixCommonErrors.Checked)
                     line = _ocrFixEngine.FixOcrErrors(line, index, _lastLine, true, checkBoxGuessUnknownWords.Checked);
 
-                if (badWords >= result.Count)
+                if (badWords >= numberOfWords) //result.Count)
                     subtitleListView1.SetBackgroundColor(index, Color.Red);
-                else if (badWords >= result.Count / 2)
+                else if (badWords >= numberOfWords / 2) // result.Count / 2)
                     subtitleListView1.SetBackgroundColor(index, Color.Orange);
                 else if (badWords > 0)
                     subtitleListView1.SetBackgroundColor(index, Color.Yellow);
@@ -1211,15 +1221,15 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void InitializeTesseract()
         {
-            string dir = Configuration.BaseDirectory + "tessdata";
+            string dir = Configuration.BaseDirectory + "Tesseract\\tessdata";
             if (Directory.Exists(dir))
             {
                 var list = new List<string>();
                 comboBoxTesseractLanguages.Items.Clear();
                 foreach (var culture in System.Globalization.CultureInfo.GetCultures(System.Globalization.CultureTypes.NeutralCultures))
                 {
-                    if (!list.Contains(culture.ThreeLetterISOLanguageName) &&
-                        Directory.GetFiles(dir, culture.ThreeLetterISOLanguageName + ".inttemp").Length > 0)
+                    string trainDataFileName = dir + "\\" + culture.ThreeLetterISOLanguageName + ".traineddata";
+                    if (!list.Contains(culture.ThreeLetterISOLanguageName) && File.Exists(trainDataFileName))
                     {
                         list.Add(culture.ThreeLetterISOLanguageName);
                         comboBoxTesseractLanguages.Items.Add(new TesseractLanguage { Id = culture.ThreeLetterISOLanguageName, Text = culture.EnglishName });
@@ -1228,7 +1238,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             if (comboBoxTesseractLanguages.Items.Count > 0)
             {
-                for (int i=0; i<comboBoxTesseractLanguages.Items.Count; i++)
+                for (int i = 0; i < comboBoxTesseractLanguages.Items.Count; i++)
                 {
                     if ((comboBoxTesseractLanguages.Items[i] as TesseractLanguage).Id == Configuration.Settings.VobSubOcr.TesseractLastLanguage)
                         comboBoxTesseractLanguages.SelectedIndex = i;
@@ -1238,6 +1248,36 @@ namespace Nikse.SubtitleEdit.Forms
                     comboBoxTesseractLanguages.SelectedIndex = 0;
             }
         }
+
+        //private void InitializeTesseract()
+        //{
+        //    string dir = Configuration.BaseDirectory + "tessdata";
+        //    if (Directory.Exists(dir))
+        //    {
+        //        var list = new List<string>();
+        //        comboBoxTesseractLanguages.Items.Clear();
+        //        foreach (var culture in System.Globalization.CultureInfo.GetCultures(System.Globalization.CultureTypes.NeutralCultures))
+        //        {
+        //            if (!list.Contains(culture.ThreeLetterISOLanguageName) &&
+        //                Directory.GetFiles(dir, culture.ThreeLetterISOLanguageName + ".inttemp").Length > 0)
+        //            {
+        //                list.Add(culture.ThreeLetterISOLanguageName);
+        //                comboBoxTesseractLanguages.Items.Add(new TesseractLanguage { Id = culture.ThreeLetterISOLanguageName, Text = culture.EnglishName });
+        //            }
+        //        }
+        //    }
+        //    if (comboBoxTesseractLanguages.Items.Count > 0)
+        //    {
+        //        for (int i = 0; i < comboBoxTesseractLanguages.Items.Count; i++)
+        //        {
+        //            if ((comboBoxTesseractLanguages.Items[i] as TesseractLanguage).Id == Configuration.Settings.VobSubOcr.TesseractLastLanguage)
+        //                comboBoxTesseractLanguages.SelectedIndex = i;
+        //        }
+
+        //        if (comboBoxTesseractLanguages.SelectedIndex == -1)
+        //            comboBoxTesseractLanguages.SelectedIndex = 0;
+        //    }
+        //}
 
         private void InitializeModiLanguages()
         {
@@ -1319,7 +1359,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (formVobSubEditCharacters.ShowDialog() == DialogResult.OK)
             {
                 _compareDoc = formVobSubEditCharacters.ImageCompareDocument;
-                string path = Path.GetDirectoryName(Application.ExecutablePath).TrimEnd(Path.DirectorySeparatorChar) + Path.DirectorySeparatorChar + @"VobSub" + Path.DirectorySeparatorChar + comboBoxCharacterDatabase.SelectedItem + Path.DirectorySeparatorChar;
+                string path = Configuration.VobSubCompareFolder + comboBoxCharacterDatabase.SelectedItem + Path.DirectorySeparatorChar;
                 _compareDoc.Save(path + "CompareDescription.xml");
             }
             LoadImageCompareBitmaps();
