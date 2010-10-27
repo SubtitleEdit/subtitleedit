@@ -20,7 +20,7 @@ namespace Nikse.SubtitleEdit.Logic
         }
 
         public StripableText(string text)
-            : this(text, " >-\"['‘`´¶(♪¿¡.", " -\"]'`´¶)♪.!?:")
+            : this(text, " >-\"”“['‘`´¶(♪¿¡.", " -\"”“]'`´¶)♪.!?:")
         {
         }
 
@@ -170,6 +170,13 @@ namespace Nikse.SubtitleEdit.Logic
                                           s.EndsWith("]") ||
                                           s.EndsWith(")") ||
                                           s.EndsWith(":");
+
+                // start with uppercase after music symbol - but only if next line not starts with music symbol
+                if (!startWithUppercase && (s.EndsWith("♪") || s.EndsWith("♫")))
+                {
+                    if (!Pre.Contains("♪") && !Pre.Contains("♫"))
+                        startWithUppercase = true;
+                }
 
                 if (startWithUppercase && StrippedText.Length > 0)
                 {
