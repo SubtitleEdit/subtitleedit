@@ -33,6 +33,7 @@ en.sm_com_ReadmeFile=Subtitle Edit's ReadMe
 en.tsk_AllUsers=For all users
 en.tsk_CurrentUser=For the current user only
 en.tsk_Other=Other:
+en.tsk_ResetDictionaries=Reset Dictionaries and delete any custom names
 en.tsk_ResetSettings=Reset Subtitle Edit's settings
 
 
@@ -46,6 +47,7 @@ dk.sm_com_ReadmeFile=Subtitle Edit's ReadMe
 dk.tsk_AllUsers=For alle brugere
 dk.tsk_CurrentUser=Kun for aktulle bruger
 dk.tsk_Other=Andre:
+dk.tsk_ResetDictionaries=Reset Dictionaries and delete any custom names
 dk.tsk_ResetSettings=Nulstil Subtitle Edit indstillinger
 
 
@@ -59,6 +61,7 @@ dk.tsk_ResetSettings=Nulstil Subtitle Edit indstillinger
 ;es.tsk_AllUsers=For all users
 ;es.tsk_CurrentUser=For the current user only
 ;es.tsk_Other=Other:
+;es.tsk_ResetDictionaries=Reset Dictionaries and delete any custom names
 ;es.tsk_ResetSettings=Reset Subtitle Edit's settings
 
 
@@ -72,6 +75,7 @@ fr.sm_com_ReadmeFile=Subtitle Edit's ReadMe
 fr.tsk_AllUsers=For all users
 fr.tsk_CurrentUser=For the current user only
 fr.tsk_Other=Other:
+fr.tsk_ResetDictionaries=Reset Dictionaries and delete any custom names
 fr.tsk_ResetSettings=Reset Subtitle Edit's settings
 
 
@@ -85,6 +89,7 @@ fr.tsk_ResetSettings=Reset Subtitle Edit's settings
 ;it.tsk_AllUsers=For all users
 ;it.tsk_CurrentUser=For the current user only
 ;it.tsk_Other=Other:
+;it.tsk_ResetDictionaries=Reset Dictionaries and delete any custom names
 ;it.tsk_ResetSettings=Reset Subtitle Edit's settings
 
 
@@ -98,6 +103,7 @@ nl.sm_com_ReadmeFile=Subtitle Edit's ReadMe
 nl.tsk_AllUsers=For all users
 nl.tsk_CurrentUser=For the current user only
 nl.tsk_Other=Other:
+nl.tsk_ResetDictionaries=Reset Dictionaries and delete any custom names
 nl.tsk_ResetSettings=Reset Subtitle Edit's settings
 
 
@@ -111,6 +117,7 @@ pl.sm_com_ReadmeFile=Subtitle Edit's ReadMe
 pl.tsk_AllUsers=For all users
 pl.tsk_CurrentUser=For the current user only
 pl.tsk_Other=Other:
+pl.tsk_ResetDictionaries=Reset Dictionaries and delete any custom names
 pl.tsk_ResetSettings=Reset Subtitle Edit's settings
 
 ro.msg_SetupIsRunningWarning=Instalarea programului Subtitle Edit se efectuează deja!
@@ -123,4 +130,5 @@ ro.sm_com_ReadmeFile=Citeşte-mă
 ro.tsk_AllUsers=Pentru toţi utilizatorii
 ro.tsk_CurrentUser=Pentru utilizatorul curent
 ro.tsk_Other=Altele:
+ro.tsk_ResetDictionaries=Reset Dictionaries and delete any custom names
 ro.tsk_ResetSettings=Resetaţi setările programului Subtitle Edit

@@ -21,7 +21,7 @@
 ; Inno Setup QuickStart Pack Unicode v5.3.11(+): http://www.jrsoftware.org/isdl.php#qsp
 
 
-#define installer_build_number "07"
+#define installer_build_number "08"
 
 #define VerMajor
 #define VerMinor
@@ -109,6 +109,7 @@ Name: desktopicon; Description: {cm:CreateDesktopIcon}; GroupDescription: {cm:Ad
 Name: desktopicon\user; Description: {cm:tsk_CurrentUser}; GroupDescription: {cm:AdditionalIcons}; Flags: exclusive
 Name: desktopicon\common; Description: {cm:tsk_AllUsers}; GroupDescription: {cm:AdditionalIcons}; Flags: unchecked exclusive
 Name: quicklaunchicon; Description: {cm:CreateQuickLaunchIcon}; GroupDescription: {cm:AdditionalIcons}; OnlyBelowVersion: 0,6.01; Flags: unchecked
+Name: reset_dictionaries; Description: {cm:tsk_ResetDictionaries}; GroupDescription: {cm:tsk_Other}; Check: DictionariesExistCheck(); Flags: checkedonce unchecked
 Name: reset_settings; Description: {cm:tsk_ResetSettings}; GroupDescription: {cm:tsk_Other}; Check: SettingsExistCheck(); Flags: checkedonce unchecked
 
 
@@ -165,17 +166,7 @@ Type: files; Name: {commondesktop}\Subtitle Edit.lnk; Check: NOT IsTaskSelected(
 Type: files; Name: {userappdata}\Subtitle Edit\Settings.xml; Tasks: reset_settings
 Type: dirifempty; Name: {userappdata}\Subtitle Edit; Tasks: reset_settings
 
-;remove old Tesseract files, Dictionaries and settings file
-Type: files; Name: {app}\tessnet2_32.dll
-Type: files; Name: {app}\TessData\eng.DangAmbigs
-Type: files; Name: {app}\TessData\eng.freq-dawg
-Type: files; Name: {app}\TessData\eng.inttemp
-Type: files; Name: {app}\TessData\eng.normproto
-Type: files; Name: {app}\TessData\eng.pffmtable
-Type: files; Name: {app}\TessData\eng.unicharset
-Type: files; Name: {app}\TessData\eng.user-words
-Type: files; Name: {app}\TessData\eng.word-dawg
-Type: dirifempty; Name: {app}\TessData
+;remove old files from the {app} dir
 Type: files; Name: {app}\Dictionaries\da_DK_names_etc.xml
 Type: files; Name: {app}\Dictionaries\da_DK_user.xml
 Type: files; Name: {app}\Dictionaries\dan_OCRFixReplaceList.xml
@@ -186,6 +177,17 @@ Type: files; Name: {app}\Dictionaries\en_US_user.xml
 Type: files; Name: {app}\Dictionaries\eng_OCRFixReplaceList.xml
 Type: files; Name: {app}\Dictionaries\names_etc.xml
 Type: dirifempty; Name: {app}\Dictionaries
+Type: files; Name: {app}\tessnet2_32.dll
+Type: files; Name: {app}\TessData\eng.DangAmbigs
+Type: files; Name: {app}\TessData\eng.freq-dawg
+Type: files; Name: {app}\TessData\eng.inttemp
+Type: files; Name: {app}\TessData\eng.normproto
+Type: files; Name: {app}\TessData\eng.pffmtable
+Type: files; Name: {app}\TessData\eng.unicharset
+Type: files; Name: {app}\TessData\eng.user-words
+Type: files; Name: {app}\TessData\eng.word-dawg
+Type: dirifempty; Name: {app}\TessData
+
 Type: files; Name: {app}\Settings.xml
 
 
@@ -196,6 +198,7 @@ Filename: {#= app_web_site}; Description: {cm:run_VisitWebsite}; Flags: nowait p
 
 [UninstallDelete]
 Type: dirifempty; Name: {app}\WaveForms
+Type: dirifempty; Name: {userappdata}\Subtitle Edit\WaveForms
 Type: dirifempty; Name: {app}
 
 
@@ -224,9 +227,17 @@ begin
 end;
 
 
-Procedure CleanUpFiles();
+// Check if Dictionaries exist
+function DictionariesExistCheck(): Boolean;
 begin
-  DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Settings.xml'));
+  Result := False;
+  if DirExists(ExpandConstant('{userappdata}\Subtitle Edit\Dictionaries')) then
+  Result := True;
+end;
+
+
+procedure CleanUpDictionaries();
+begin
   DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Dictionaries\da_DK_names_etc.xml'));
   DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Dictionaries\da_DK_user.xml'));
   DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Dictionaries\dan_OCRFixReplaceList.xml'));
@@ -237,7 +248,6 @@ begin
   DelTree(ExpandConstant('{userappdata}\Subtitle Edit\Dictionaries\*.dic'), False, True, False);
   DelTree(ExpandConstant('{userappdata}\Subtitle Edit\Dictionaries\*.aff'), False, True, False);
   RemoveDir(ExpandConstant('{userappdata}\Subtitle Edit\Dictionaries'));
-  RemoveDir(ExpandConstant('{userappdata}\Subtitle Edit'));
 end;
 
 
@@ -271,16 +281,32 @@ begin
 end;
 
 
-Procedure CurUninstallStepChanged(CurUninstallStep: TUninstallStep);
+procedure CurStepChanged(CurStep: TSetupStep);
 begin
-  // When uninstalling ask user to delete Subtitle Edit's logs and settings
+  if CurStep = ssInstall then begin
+    if IsTaskSelected('reset_settings') then begin
+       DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Settings.xml'));
+    end;
+    if IsTaskSelected('reset_dictionaries') then begin
+      CleanUpDictionaries;
+    end;
+    RemoveDir(ExpandConstant('{userappdata}\Subtitle Edit'));
+  end;
+end;
+
+
+procedure CurUninstallStepChanged(CurUninstallStep: TUninstallStep);
+begin
+  // When uninstalling ask user to delete Subtitle Edit's dictionaries and settings
   // based on whether these files exist only
   if CurUninstallStep = usUninstall then begin
-  if SettingsExistCheck then begin
+  if SettingsExistCheck or DictionariesExistCheck then begin
     if MsgBox(ExpandConstant('{cm:msg_DeleteSettings}'), mbConfirmation, MB_YESNO or MB_DEFBUTTON2) = IDYES then begin
-       CleanUpFiles;
+       CleanUpDictionaries;
+       DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Settings.xml'));
      end;
       RemoveDir(ExpandConstant('{app}'));
+      RemoveDir(ExpandConstant('{userappdata}\Subtitle Edit'));
     end;
   end;
 end;
