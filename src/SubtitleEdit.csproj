@@ -668,7 +668,7 @@
       <SubType>Designer</SubType>
     </None>
     <EmbeddedResource Include="Resources\da-DK.xml.zip" />
-    <EmbeddedResource Include="Resources\es-ES.xml.zip" />
+    <None Include="Resources\es-ES.xml.zip" />
     <EmbeddedResource Include="Resources\pl-PL.xml.zip" />
     <EmbeddedResource Include="Resources\ro-RO.xml.zip" />
     <EmbeddedResource Include="Resources\sr-Cyrl-CS.xml.zip" />
@@ -756,7 +756,7 @@
     </EmbeddedResource>
     <None Include="Resources\it-IT.xml" />
     <None Include="Resources\es-ES.xml" />
-    <EmbeddedResource Include="Resources\it-IT.xml.zip" />
+    <None Include="Resources\it-IT.xml.zip" />
     <None Include="Resources\nl-NL.xml" />
     <None Include="Icons\Donate.gif" />
     <Content Include="Icons\Find.png">
