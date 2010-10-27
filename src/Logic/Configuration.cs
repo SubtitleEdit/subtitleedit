@@ -26,6 +26,14 @@ namespace Nikse.SubtitleEdit.Logic
             }
         }
 
+        public static string IconsFolder
+        {
+            get
+            {
+                return DataDirectory + "Icons" + Path.DirectorySeparatorChar;
+            }
+        }
+
         public static string VobSubCompareFolder
         {
             get

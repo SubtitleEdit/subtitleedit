@@ -1376,7 +1376,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void TryLoadIcon(ToolStripButton button, string iconName)
         { 
-            string fullPath = Configuration.BaseDirectory + @"Icons\" + iconName + ".png";
+            string fullPath = Configuration.IconsFolder + iconName + ".png";
             if (File.Exists(fullPath))
                 button.Image = new Bitmap(fullPath);
         }
@@ -1417,7 +1417,6 @@ namespace Nikse.SubtitleEdit.Forms
 
             toolStripSeparatorFindReplace.Visible = gs.ShowToolbarFind || gs.ShowToolbarReplace;
             toolStripSeparatorHelp.Visible = gs.ShowToolbarHelp;
-
         }
 
         private void ToolStripButtonFileNewClick(object sender, EventArgs e)
