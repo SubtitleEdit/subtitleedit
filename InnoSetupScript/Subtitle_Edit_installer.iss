@@ -21,7 +21,7 @@
 ; Inno Setup QuickStart Pack Unicode v5.3.11(+): http://www.jrsoftware.org/isdl.php#qsp
 
 
-#define installer_build_number "06"
+#define installer_build_number "07"
 
 #define VerMajor
 #define VerMinor
@@ -89,9 +89,9 @@ DisableProgramGroupPage=auto
 [Languages]
 Name: en; MessagesFile: compiler:Default.isl
 Name: dk; MessagesFile: compiler:Languages\Danish.isl
-Name: es; MessagesFile: compiler:Languages\Spanish.isl
+;Name: es; MessagesFile: compiler:Languages\Spanish.isl
 Name: fr; MessagesFile: compiler:Languages\French.isl
-Name: it; MessagesFile: compiler:Languages\Italian.isl
+;Name: it; MessagesFile: compiler:Languages\Italian.isl
 Name: nl; MessagesFile: compiler:Languages\Dutch.isl
 Name: pl; MessagesFile: compiler:Languages\Polish.isl
 Name: ro; MessagesFile: Languages\Romanian.isl
@@ -133,15 +133,15 @@ Source: ..\src\Bin\Release\Icons\SpellCheck.png; DestDir: {app}\Icons; Flags: ig
 Source: ..\src\Bin\Release\Icons\VideoToogle.png; DestDir: {app}\Icons; Flags: ignoreversion
 Source: ..\src\Bin\Release\Icons\VisualSync.png; DestDir: {app}\Icons; Flags: ignoreversion
 Source: ..\src\Bin\Release\Icons\WaveFormToogle.png; DestDir: {app}\Icons; Flags: ignoreversion
-Source: ..\Dictionaries\da_DK_names_etc.xml; DestDir: {app}\Dictionaries; Flags: ignoreversion onlyifdoesntexist uninsneveruninstall
-Source: ..\Dictionaries\da_DK_user.xml; DestDir: {app}\Dictionaries; Flags: ignoreversion onlyifdoesntexist uninsneveruninstall
-Source: ..\Dictionaries\dan_OCRFixReplaceList.xml; DestDir: {app}\Dictionaries; Flags: ignoreversion onlyifdoesntexist uninsneveruninstall
-Source: ..\Dictionaries\en_US.aff; DestDir: {app}\Dictionaries; Flags: ignoreversion
-Source: ..\Dictionaries\en_US.dic; DestDir: {app}\Dictionaries; Flags: ignoreversion
-Source: ..\Dictionaries\en_US_names_etc.xml; DestDir: {app}\Dictionaries; Flags: ignoreversion onlyifdoesntexist uninsneveruninstall
-Source: ..\Dictionaries\en_US_user.xml; DestDir: {app}\Dictionaries; Flags: ignoreversion onlyifdoesntexist uninsneveruninstall
-Source: ..\Dictionaries\eng_OCRFixReplaceList.xml; DestDir: {app}\Dictionaries; Flags: ignoreversion onlyifdoesntexist uninsneveruninstall
-Source: ..\Dictionaries\names_etc.xml; DestDir: {app}\Dictionaries; Flags: ignoreversion onlyifdoesntexist uninsneveruninstall
+Source: ..\Dictionaries\da_DK_names_etc.xml; DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion onlyifdoesntexist uninsneveruninstall
+Source: ..\Dictionaries\da_DK_user.xml; DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion onlyifdoesntexist uninsneveruninstall
+Source: ..\Dictionaries\dan_OCRFixReplaceList.xml; DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion onlyifdoesntexist uninsneveruninstall
+Source: ..\Dictionaries\en_US.aff; DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion
+Source: ..\Dictionaries\en_US.dic; DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion
+Source: ..\Dictionaries\en_US_names_etc.xml; DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion onlyifdoesntexist uninsneveruninstall
+Source: ..\Dictionaries\en_US_user.xml; DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion onlyifdoesntexist uninsneveruninstall
+Source: ..\Dictionaries\eng_OCRFixReplaceList.xml; DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion onlyifdoesntexist uninsneveruninstall
+Source: ..\Dictionaries\names_etc.xml; DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion onlyifdoesntexist uninsneveruninstall
 Source: ..\Tesseract\tessdata\eng.traineddata; DestDir: {app}\Tesseract\tessdata; Flags: ignoreversion
 Source: ..\Tesseract\leptonlib.dll; DestDir: {app}\Tesseract; Flags: ignoreversion
 Source: ..\Tesseract\tesseract.exe; DestDir: {app}\Tesseract; Flags: ignoreversion
@@ -165,7 +165,7 @@ Type: files; Name: {commondesktop}\Subtitle Edit.lnk; Check: NOT IsTaskSelected(
 Type: files; Name: {userappdata}\Subtitle Edit\Settings.xml; Tasks: reset_settings
 Type: dirifempty; Name: {userappdata}\Subtitle Edit; Tasks: reset_settings
 
-;remove old Tesseract files and settings file
+;remove old Tesseract files, Dictionaries and settings file
 Type: files; Name: {app}\tessnet2_32.dll
 Type: files; Name: {app}\TessData\eng.DangAmbigs
 Type: files; Name: {app}\TessData\eng.freq-dawg
@@ -176,6 +176,16 @@ Type: files; Name: {app}\TessData\eng.unicharset
 Type: files; Name: {app}\TessData\eng.user-words
 Type: files; Name: {app}\TessData\eng.word-dawg
 Type: dirifempty; Name: {app}\TessData
+Type: files; Name: {app}\Dictionaries\da_DK_names_etc.xml
+Type: files; Name: {app}\Dictionaries\da_DK_user.xml
+Type: files; Name: {app}\Dictionaries\dan_OCRFixReplaceList.xml
+Type: files; Name: {app}\Dictionaries\en_US.aff
+Type: files; Name: {app}\Dictionaries\en_US.dic
+Type: files; Name: {app}\Dictionaries\en_US_names_etc.xml
+Type: files; Name: {app}\Dictionaries\en_US_user.xml
+Type: files; Name: {app}\Dictionaries\eng_OCRFixReplaceList.xml
+Type: files; Name: {app}\Dictionaries\names_etc.xml
+Type: dirifempty; Name: {app}\Dictionaries
 Type: files; Name: {app}\Settings.xml
 
 
@@ -217,17 +227,17 @@ end;
 Procedure CleanUpFiles();
 begin
   DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Settings.xml'));
+  DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Dictionaries\da_DK_names_etc.xml'));
+  DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Dictionaries\da_DK_user.xml'));
+  DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Dictionaries\dan_OCRFixReplaceList.xml'));
+  DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Dictionaries\en_US_names_etc.xml'));
+  DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Dictionaries\en_US_user.xml'));
+  DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Dictionaries\eng_OCRFixReplaceList.xml'));
+  DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Dictionaries\names_etc.xml'));
+  DelTree(ExpandConstant('{userappdata}\Subtitle Edit\Dictionaries\*.dic'), False, True, False);
+  DelTree(ExpandConstant('{userappdata}\Subtitle Edit\Dictionaries\*.aff'), False, True, False);
+  RemoveDir(ExpandConstant('{userappdata}\Subtitle Edit\Dictionaries'));
   RemoveDir(ExpandConstant('{userappdata}\Subtitle Edit'));
-  DeleteFile(ExpandConstant('{app}\Dictionaries\da_DK_names_etc.xml'));
-  DeleteFile(ExpandConstant('{app}\Dictionaries\da_DK_user.xml'));
-  DeleteFile(ExpandConstant('{app}\Dictionaries\dan_OCRFixReplaceList.xml'));
-  DeleteFile(ExpandConstant('{app}\Dictionaries\en_US_names_etc.xml'));
-  DeleteFile(ExpandConstant('{app}\Dictionaries\en_US_user.xml'));
-  DeleteFile(ExpandConstant('{app}\Dictionaries\eng_OCRFixReplaceList.xml'));
-  DeleteFile(ExpandConstant('{app}\Dictionaries\names_etc.xml'));
-  DelTree(ExpandConstant('{app}\Dictionaries\*.dic'), False, True, False);
-  DelTree(ExpandConstant('{app}\Dictionaries\*.aff'), False, True, False);
-  RemoveDir(ExpandConstant('{app}\Dictionaries'));
 end;
 
 

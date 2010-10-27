@@ -49,17 +49,17 @@ dk.tsk_Other=Andre:
 dk.tsk_ResetSettings=Nulstil Subtitle Edit indstillinger
 
 
-es.msg_SetupIsRunningWarning=Subtitle Edit Setup is already running!
-es.msg_AppIsRunning=Subtitle Edit is running! Please close it before proceeding.
-es.msg_AskToDownNET=Subtitle Edit requires the .NET Framework 2.0. Please download and install the .NET Framework and run setup again. %n%nDo you want to download the .NET Framework 2.0 now?
-es.msg_DeleteSettings=Do you also want to delete Subtitle Edit's settings and any custom changes you made in the dictionaries? %n%nIf you plan on reinstalling Subtitle Edit you do not have to delete them.
-es.run_VisitWebsite=Visit Subtitle Edit's Website
-es.sm_com_Changelog=Subtitle Edit's Changelog
-es.sm_com_ReadmeFile=Subtitle Edit's ReadMe
-es.tsk_AllUsers=For all users
-es.tsk_CurrentUser=For the current user only
-es.tsk_Other=Other:
-es.tsk_ResetSettings=Reset Subtitle Edit's settings
+;es.msg_SetupIsRunningWarning=Subtitle Edit Setup is already running!
+;es.msg_AppIsRunning=Subtitle Edit is running! Please close it before proceeding.
+;es.msg_AskToDownNET=Subtitle Edit requires the .NET Framework 2.0. Please download and install the .NET Framework and run setup again. %n%nDo you want to download the .NET Framework 2.0 now?
+;es.msg_DeleteSettings=Do you also want to delete Subtitle Edit's settings and any custom changes you made in the dictionaries? %n%nIf you plan on reinstalling Subtitle Edit you do not have to delete them.
+;es.run_VisitWebsite=Visit Subtitle Edit's Website
+;es.sm_com_Changelog=Subtitle Edit's Changelog
+;es.sm_com_ReadmeFile=Subtitle Edit's ReadMe
+;es.tsk_AllUsers=For all users
+;es.tsk_CurrentUser=For the current user only
+;es.tsk_Other=Other:
+;es.tsk_ResetSettings=Reset Subtitle Edit's settings
 
 
 fr.msg_SetupIsRunningWarning=Subtitle Edit Setup is already running!
@@ -75,17 +75,17 @@ fr.tsk_Other=Other:
 fr.tsk_ResetSettings=Reset Subtitle Edit's settings
 
 
-it.msg_SetupIsRunningWarning=Subtitle Edit Setup is already running!
-it.msg_AppIsRunning=Subtitle Edit is running! Please close it before proceeding.
-it.msg_AskToDownNET=Subtitle Edit requires the .NET Framework 2.0. Please download and install the .NET Framework and run setup again. %n%nDo you want to download the .NET Framework 2.0 now?
-it.msg_DeleteSettings=Do you also want to delete Subtitle Edit's settings and any custom changes you made in the dictionaries? %n%nIf you plan on reinstalling Subtitle Edit you do not have to delete them.
-it.run_VisitWebsite=Visit Subtitle Edit's Website
-it.sm_com_Changelog=Subtitle Edit's Changelog
-it.sm_com_ReadmeFile=Subtitle Edit's ReadMe
-it.tsk_AllUsers=For all users
-it.tsk_CurrentUser=For the current user only
-it.tsk_Other=Other:
-it.tsk_ResetSettings=Reset Subtitle Edit's settings
+;it.msg_SetupIsRunningWarning=Subtitle Edit Setup is already running!
+;it.msg_AppIsRunning=Subtitle Edit is running! Please close it before proceeding.
+;it.msg_AskToDownNET=Subtitle Edit requires the .NET Framework 2.0. Please download and install the .NET Framework and run setup again. %n%nDo you want to download the .NET Framework 2.0 now?
+;it.msg_DeleteSettings=Do you also want to delete Subtitle Edit's settings and any custom changes you made in the dictionaries? %n%nIf you plan on reinstalling Subtitle Edit you do not have to delete them.
+;it.run_VisitWebsite=Visit Subtitle Edit's Website
+;it.sm_com_Changelog=Subtitle Edit's Changelog
+;it.sm_com_ReadmeFile=Subtitle Edit's ReadMe
+;it.tsk_AllUsers=For all users
+;it.tsk_CurrentUser=For the current user only
+;it.tsk_Other=Other:
+;it.tsk_ResetSettings=Reset Subtitle Edit's settings
 
 
 nl.msg_SetupIsRunningWarning=Subtitle Edit Setup is already running!
