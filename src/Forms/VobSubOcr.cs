@@ -956,9 +956,9 @@ namespace Nikse.SubtitleEdit.Forms
             string tempTextFileName = Path.GetTempPath() + Guid.NewGuid().ToString();
 
             Process process = new Process();
-            process.StartInfo = new ProcessStartInfo(Configuration.DataDirectory + "Tesseract" + Path.DirectorySeparatorChar + "tesseract.exe");
+            process.StartInfo = new ProcessStartInfo(Configuration.TesseractFolder + "tesseract.exe");
             process.StartInfo.Arguments = "\"" + tempTiffFileName + "\" \"" + tempTextFileName + "\" -l " + language;
-            process.StartInfo.WorkingDirectory = (Configuration.DataDirectory + "Tesseract");
+            process.StartInfo.WorkingDirectory = (Configuration.TesseractFolder);
             process.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
             process.Start();
             process.WaitForExit(2000);
