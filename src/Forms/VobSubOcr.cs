@@ -1221,7 +1221,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void InitializeTesseract()
         {
-            string dir = Configuration.DataDirectory + "Tesseract" + Path.DirectorySeparatorChar + "tessdata";
+            string dir = Configuration.TesseractFolder + "tessdata";
             if (Directory.Exists(dir))
             {
                 var list = new List<string>();
@@ -1248,36 +1248,6 @@ namespace Nikse.SubtitleEdit.Forms
                     comboBoxTesseractLanguages.SelectedIndex = 0;
             }
         }
-
-        //private void InitializeTesseract()
-        //{
-        //    string dir = Configuration.BaseDirectory + "tessdata";
-        //    if (Directory.Exists(dir))
-        //    {
-        //        var list = new List<string>();
-        //        comboBoxTesseractLanguages.Items.Clear();
-        //        foreach (var culture in System.Globalization.CultureInfo.GetCultures(System.Globalization.CultureTypes.NeutralCultures))
-        //        {
-        //            if (!list.Contains(culture.ThreeLetterISOLanguageName) &&
-        //                Directory.GetFiles(dir, culture.ThreeLetterISOLanguageName + ".inttemp").Length > 0)
-        //            {
-        //                list.Add(culture.ThreeLetterISOLanguageName);
-        //                comboBoxTesseractLanguages.Items.Add(new TesseractLanguage { Id = culture.ThreeLetterISOLanguageName, Text = culture.EnglishName });
-        //            }
-        //        }
-        //    }
-        //    if (comboBoxTesseractLanguages.Items.Count > 0)
-        //    {
-        //        for (int i = 0; i < comboBoxTesseractLanguages.Items.Count; i++)
-        //        {
-        //            if ((comboBoxTesseractLanguages.Items[i] as TesseractLanguage).Id == Configuration.Settings.VobSubOcr.TesseractLastLanguage)
-        //                comboBoxTesseractLanguages.SelectedIndex = i;
-        //        }
-
-        //        if (comboBoxTesseractLanguages.SelectedIndex == -1)
-        //            comboBoxTesseractLanguages.SelectedIndex = 0;
-        //    }
-        //}
 
         private void InitializeModiLanguages()
         {
