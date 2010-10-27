@@ -30,7 +30,15 @@ namespace Nikse.SubtitleEdit.Logic
         {
             get
             {
-                return DataDirectory + "Icons" + Path.DirectorySeparatorChar;
+                return BaseDirectory + "Icons" + Path.DirectorySeparatorChar;
+            }
+        }
+
+        public static string TesseractFolder
+        {
+            get
+            {
+                return BaseDirectory + "Tesseract" + Path.DirectorySeparatorChar;
             }
         }
 
