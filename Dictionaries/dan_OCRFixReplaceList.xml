@@ -1,6 +1,8 @@
 <OCRFixReplaceList>
   <WholeWords>
     <Word from="Haner" to="Han er" />
+    <Word from="JaveL" to="Javel" />
+    <Word from="Diakonalstrædel" to="Diakonalstræde!" />
   </WholeWords>
   <PartialWords />
   <PartialLines />
