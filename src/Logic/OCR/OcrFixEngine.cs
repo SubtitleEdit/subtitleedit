@@ -23,7 +23,7 @@ namespace Nikse.SubtitleEdit.Logic.OCR
         Dictionary<string, string> _partialWordReplaceList;
         string _replaceListXmlFileName;
         string _userWordListXmlFileName;
-        string _languageName;
+        string _fiveLetterWordListLanguageName;
         List<string> _namesEtcList = new List<string>();
         List<string> _namesEtcListUppercase = new List<string>();
         List<string> _namesEtcMultiWordList = new List<string>(); // case sensitive phrases
@@ -90,7 +90,6 @@ namespace Nikse.SubtitleEdit.Logic.OCR
             {
                 if (culture.ThreeLetterISOLanguageName == threeLetterIsoLanguageName)
                 {
-                    _languageName = culture.TwoLetterISOLanguageName;
                     string dictionaryFolder = Utilities.DictionaryFolder;
                     if (!Directory.Exists(dictionaryFolder))
                         return;
@@ -99,8 +98,8 @@ namespace Nikse.SubtitleEdit.Logic.OCR
                     if (files.Length == 0)
                         return;
 
-                    string languageName = Path.GetFileName(files[0]).Substring(0, 5);
-                    string dictionary = Utilities.DictionaryFolder + languageName;
+                    _fiveLetterWordListLanguageName = Path.GetFileName(files[0]).Substring(0, 5);
+                    string dictionary = Utilities.DictionaryFolder + _fiveLetterWordListLanguageName;
                     _wordSkipList = new List<string>();
                     _wordSkipList.Add(Configuration.Settings.Tools.MusicSymbol);
                     _wordSkipList.Add("*");
@@ -111,7 +110,7 @@ namespace Nikse.SubtitleEdit.Logic.OCR
                     // Load names etc list (names/noise words)
                     _namesEtcList = new List<string>();
                     _namesEtcMultiWordList = new List<string>();
-                    Utilities.LoadNamesEtcWordLists(_namesEtcList, _namesEtcMultiWordList, languageName);
+                    Utilities.LoadNamesEtcWordLists(_namesEtcList, _namesEtcMultiWordList, _fiveLetterWordListLanguageName);
 
                     _namesEtcListUppercase = new List<string>();
                     foreach (string name in _namesEtcList)
@@ -119,7 +118,7 @@ namespace Nikse.SubtitleEdit.Logic.OCR
 
                     // Load user words
                     _userWordList = new List<string>();
-                    _userWordListXmlFileName = Utilities.LoadUserWordList(_userWordList, languageName);
+                    _userWordListXmlFileName = Utilities.LoadUserWordList(_userWordList, _fiveLetterWordListLanguageName);
 
                     // Load NHunspell spellchecker
                     _hunspell = new Hunspell(dictionary + ".aff", dictionary + ".dic");
@@ -558,7 +557,7 @@ namespace Nikse.SubtitleEdit.Logic.OCR
             if (_hunspell == null)
                 return line;
 
-            string[] words = line.Split((Environment.NewLine + " ,.!?:;()[]{}+-$£\"“#&%").ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+            string[] words = line.Split((Environment.NewLine + " ,.!?:;()[]{}+-$£\"”“#&%").ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
             for (int i = 0; i < words.Length; i++)
             {
                 string word = words[i];
@@ -638,7 +637,7 @@ namespace Nikse.SubtitleEdit.Logic.OCR
                     if (_userWordListXmlFileName != null)
                     {
                         _userWordList.Add(_spellCheck.Word);
-                        Utilities.AddToUserDictionary(_spellCheck.Word, _languageName);
+                        Utilities.AddToUserDictionary(_spellCheck.Word, _fiveLetterWordListLanguageName);
                     }
                     result.Word = _spellCheck.Word;
                     result.Fixed = true;
@@ -656,7 +655,7 @@ namespace Nikse.SubtitleEdit.Logic.OCR
                             _namesEtcMultiWordList.Add(s);
                         else
                             _namesEtcList.Add(s);
-                        Utilities.AddWordToLocalNamesEtcList(s, _languageName);
+                        Utilities.AddWordToLocalNamesEtcList(s, _fiveLetterWordListLanguageName);
                     }
                     catch
                     {
