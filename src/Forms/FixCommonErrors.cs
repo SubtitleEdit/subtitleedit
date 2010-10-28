@@ -1309,7 +1309,7 @@ namespace Nikse.SubtitleEdit.Forms
                                             AddFixToListView(p, i + 1, fixAction, oldText, p.Text);
                                         }
                                     }
-                                    else if (match.Index > 1 && ((st.StrippedText[match.Index - 1] == '\"') || (st.StrippedText[match.Index - 1] == '>')))
+                                    else if (match.Index > 1 && ((st.StrippedText[match.Index - 1] == '\"') || (st.StrippedText[match.Index - 1] == '>') || (st.StrippedText[match.Index - 1] == '-')))
                                     {
                                     }
                                     else 
