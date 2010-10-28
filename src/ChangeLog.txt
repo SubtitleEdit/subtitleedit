@@ -4,7 +4,7 @@ New: Wave form control with many sync/replay/creation commands (thx for feedback
 New: Translator mode  (Edit -> Show original subtitle, thx dr.jackson)
 New: Added Microsoft translate
 New: Option to remove blank lines when opening a subtitle (thx honeybunny)
-New: Can now read subtitles in the binary EBU format (thx corbin dallas)
+New: Can now read subtitles in the binary EBU format (thx corbin dallas/Iban)
 New: Can now read/write subtitle Sony DVD Architecht format (thx Mark/Zedopipo)
 New: Setting "Font name" is possible via right-click menu in list view
 New: New cool installer (thx xhmikosr)
