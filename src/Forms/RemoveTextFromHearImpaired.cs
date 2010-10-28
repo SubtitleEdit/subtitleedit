@@ -185,8 +185,6 @@ namespace Nikse.SubtitleEdit.Forms
             if (text.IndexOf(':') > 0 && text.IndexOf(':') == text.Length - 1 && text != text.ToUpper())
                 return text;
 
-
-
             List<int> removedAtLine = new List<int>();
             var sb = new StringBuilder();
             string[] parts = text.Trim().Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
@@ -212,7 +210,15 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     else if (s2.Contains(": "))
                     {
-                        s2 = s2.Remove(0, s2.IndexOf(": ") + 2);
+                        string textToRemove = s2.Substring(0, s2.IndexOf(": ") + 2);
+                        if (textToRemove.Contains("<i>"))
+                        {
+                            s2 = "<i>" + s2.Remove(0, s2.IndexOf(": ") + 2);
+                        }
+                        else
+                        {
+                            s2 = s2.Remove(0, s2.IndexOf(": ") + 2);
+                        }
                         removedAtLine.Add(lineNo);
 
                         if (!s2.Trim().StartsWith("-") &&
@@ -272,15 +278,21 @@ namespace Nikse.SubtitleEdit.Forms
                 parts = newText.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
                 if (parts.Length == 2)
                 {
-                    if (parts[0].Contains("-") && parts[1].IndexOf("-") > 6)
-                        parts[1] = "- " + parts[1];
-                    else if (removedAtLine.Count == 1 && removedAtLine[0] > 1)
+                    if (removedAtLine.Count > 0)
                     {
-                        if (parts[0].IndexOf("-") < 0 || parts[0].IndexOf("-") > 6)
-                            parts[0] = "- " + parts[0];
-                        if (parts[1].IndexOf("-") < 0 || parts[1].IndexOf("-") > 6)
-                            parts[1] = "- " + parts[1];
+                        StripableText p0 = new StripableText(parts[0]);
+
+                        if (p0.Post.Contains(".") || p0.Post.Contains("!") || p0.Post.Contains("?"))
+                        {
+                            StripableText p1 = new StripableText(parts[1]);
+                            if (!p0.Pre.Contains("-"))
+                                parts[0] = "- " + parts[0];
+
+                            if (!p1.Pre.Contains("-"))
+                                parts[1] = "- " + parts[1];
+                        }
                     }
+
                     newText = parts[0] + Environment.NewLine +  parts[1];
                 }
             }
