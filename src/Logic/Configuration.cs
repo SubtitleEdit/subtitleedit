@@ -64,11 +64,16 @@ namespace Nikse.SubtitleEdit.Logic
             {
                 if (Instance._dataDir == null)
                 {
-                    if (BaseDirectory.StartsWith(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), StringComparison.OrdinalIgnoreCase))
+                    string path = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + Path.DirectorySeparatorChar + "Subtitle Edit";
+                    bool useApplicationData = BaseDirectory.StartsWith(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), StringComparison.OrdinalIgnoreCase);
+
+                    if (!useApplicationData)
+                        useApplicationData = !Directory.Exists(BaseDirectory + "Dictionaries") && Directory.Exists(Path.Combine(path, "Directonries"));
+
+                    if (useApplicationData)
                     {
                         try
                         {
-                            string path = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + Path.DirectorySeparatorChar + "Subtitle Edit";
                             if (!Directory.Exists(path))
                                 Directory.CreateDirectory(path);
 
