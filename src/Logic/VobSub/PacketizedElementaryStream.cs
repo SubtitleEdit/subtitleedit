@@ -67,7 +67,7 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
             {
                 string bString = Helper.GetBinaryString(buffer, tempIndex, 5);
                 bString = bString.Substring(4, 3) + bString.Substring(8, 15) + bString.Substring(24, 15);
-                PresentationTimeStamp = Convert.ToUInt32(bString, 2);
+                PresentationTimeStamp = Convert.ToUInt64(bString, 2);
                 tempIndex += 5;
             }
             if (PresentationTimeStampDecodeTimeStampFlags == Helper.B00000011)
