@@ -24,14 +24,12 @@
     <Word from="sägerjag" to="säger jag" />
     <Word from="behållerjag" to="behåller jag" />
     <Word from="prøblem" to="problem" />
-    <Word from="5f°r&gt;p" to="Stopp" />
     <Word from="räddadeju" to="räddade ju" />
     <Word from="honøm" to="honom" />
     <Word from="Ln" to="In" />
     <Word from="svårﬂörtad" to="svårflörtad" />
     <Word from="øch" to="och" />
     <Word from="ﬂörtar" to="flörtar" />
-    <Word from="eJ" to="Hej" />
     <Word from="kännerjag" to="känner jag" />
     <Word from="ﬂickan" to="flickan" />
     <Word from="snø" to="snö" />
@@ -252,9 +250,7 @@
     <Word from="Hßppa" to="Hoppa" />
     <Word from="förstörds" to="förstördes" />
     <Word from="varjättegoda" to="var jättegoda" />
-    <Word from="GJ" to="Nej" />
     <Word from="Kor\/" to="Korv" />
-    <Word from="Su" to="Suh" />
     <Word from="brüléel" to="brülée!" />
     <Word from="Hei" to="Hej" />
     <Word from="älskarjordgubbsglass" to="älskar jordgubbsglass" />
@@ -278,9 +274,54 @@
     <Word from="Spﬂng" to="Spring" />
     <Word from="trecﬁe" to="tredje" />
     <Word from="ryckerjag" to="rycker jag" />
-    <Word from="Him" to="Flint" />
+    <Word from="skullejag" to="skulle jag" />
+    <Word from="vetju" to="vet ju" />
+    <Word from="aﬂjag" to="att jag" />
+    <Word from="ﬂnns" to="finns" />
+    <Word from="ärlång" to="är lång" />
+    <Word from="kåra" to="kära" />
+    <Word from="ärﬁna" to="är ﬁna" />
+    <Word from="äri" to="är i" />
+    <Word from="hörden" to="hör den" />
+    <Word from="ättjäg" to="att jäg" />
+    <Word from="gär" to="går" />
+    <Word from="föri" to="för i" />
+    <Word from="Hurvisste" to="Hur visste" />
   </WholeWords>
-  <PartialLines />
+  <PartialWords>
+    <!-- Will be used to check words not in dictionary -->
+    <!-- If new word(s) exists in spelling dictionary, it(they) is accepted -->
+    <WordPart from="¤" to="o" />
+    <WordPart from="ﬁ" to="fi" />
+    <WordPart from="â" to="ä" />
+    <WordPart from="/" to="l" />
+    <WordPart from="vv" to="w" />
+    <WordPart from="IVI" to="M" />
+    <WordPart from="lVI" to="M" />
+    <WordPart from="IVl" to="M" />
+    <WordPart from="lVl" to="M" />
+    <WordPart from="m" to="rn" />
+    <WordPart from="l" to="i" />
+    <WordPart from="€" to="e" />
+    <WordPart from="I" to="l" />
+    <WordPart from="c" to="o" />
+    <WordPart from="i" to="t" />
+    <WordPart from="cc" to="oo" />
+    <WordPart from="ii" to="tt" />
+    <WordPart from="n/" to="ry" />
+    <WordPart from="ae" to="æ" />
+    <!-- "f " will be two words -->
+    <WordPart from="f" to="f " />
+    <WordPart from="c" to="e" />
+    <WordPart from="o" to="e" />
+    <WordPart from="o" to="e" />
+    <WordPart from="I" to="t" />
+    <WordPart from="n" to="o" />
+    <WordPart from="s" to="e" />
+    <WordPart from="å" to="ä" />
+    <WordPart from="à" to="å" />
+    <WordPart from="n/" to="rv" />
+  </PartialWords>
   <BeginLines>
     <Beginning from="Ln " to="In " />
   </BeginLines>
