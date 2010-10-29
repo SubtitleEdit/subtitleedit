@@ -996,12 +996,20 @@ namespace Nikse.SubtitleEdit.Forms
                         i++;
                     }
                 }
+                comboBoxModiLanguage.SelectedIndex = -1;
             }
 
             var sb = new StringBuilder();
             int badWords = 0;
             var textWithOutFixes = new StringBuilder();
             textWithOutFixes.Append(Tesseract3DoOcrViaExe(bitmap, _languageId));
+
+            if (textWithOutFixes.ToString().Trim().Length == 0)
+            {
+                textWithOutFixes = new StringBuilder();
+                textWithOutFixes.Append(TesseractResizeAndRetry(bitmap));     
+            }
+
             sb.Append(textWithOutFixes.ToString());
             int numberOfWords = sb.ToString().Split((" " + Environment.NewLine).ToCharArray(), StringSplitOptions.RemoveEmptyEntries).Length;
 
@@ -1011,6 +1019,22 @@ namespace Nikse.SubtitleEdit.Forms
                 if (checkBoxAutoFixCommonErrors.Checked)
                     line = _ocrFixEngine.FixOcrErrors(line, index, _lastLine, true, checkBoxGuessUnknownWords.Checked);
                 int wordsNotFound = _ocrFixEngine.CountUnknownWordsViaDictionary(line);
+
+                if (wordsNotFound > 0)
+                { 
+                    string newText = TesseractResizeAndRetry(bitmap);
+                    newText = _ocrFixEngine.FixOcrErrors(newText, index, _lastLine, true, checkBoxGuessUnknownWords.Checked);
+                    int newWordsNotFound = _ocrFixEngine.CountUnknownWordsViaDictionary(newText);
+                    if (newWordsNotFound < wordsNotFound)
+                    {
+                        wordsNotFound = newWordsNotFound;
+                        textWithOutFixes = new StringBuilder();
+                        textWithOutFixes.Append(newText);
+                        sb = new StringBuilder();
+                        sb.Append(newText);
+                    }
+                }
+
 
                 if (wordsNotFound > 0 || sb.ToString().Replace("~", string.Empty).Trim().Length == 0)
                 {                   
@@ -1024,7 +1048,7 @@ namespace Nikse.SubtitleEdit.Forms
                         if (modiText.Length == 0)
                             modiText = CallModi(index); // retry... strange MODI
                         if (modiText.Length == 0)
-                            modiText = CallModi(index); // retry... strange MODI
+                            modiText = CallModi(index); // retry... strange MODI                        
 
                         if (modiText.Length > 1)
                         {
@@ -1104,6 +1128,18 @@ namespace Nikse.SubtitleEdit.Forms
                 bitmap.Dispose();
 
             return line;
+        }
+
+        private string TesseractResizeAndRetry(Bitmap bitmap)
+        {
+            string result = Tesseract3DoOcrViaExe(ResizeBitmap(bitmap, bitmap.Width * 2, bitmap.Height * 2), _languageId);
+            if (result.Trim().Length == 0)
+            {
+                result = Tesseract3DoOcrViaExe(ResizeBitmap(bitmap, bitmap.Width * 3, bitmap.Height * 2), _languageId);
+                if (result.ToString().Trim().Length == 0)
+                    result = Tesseract3DoOcrViaExe(ResizeBitmap(bitmap, bitmap.Width * 4, bitmap.Height * 2), _languageId);
+            }
+            return result.TrimEnd();
         }
 
         private void LogOcrFix(int index, string oldLine, string newLine)
@@ -1452,7 +1488,7 @@ namespace Nikse.SubtitleEdit.Forms
             saveFileDialog1.Title = Configuration.Settings.Language.VobSubOcr.SaveSubtitleImageAs;
             saveFileDialog1.AddExtension = true;                
             saveFileDialog1.FileName = "Image" + _selectedIndex;
-            saveFileDialog1.Filter = "PNG image|*.png|BMP image|*.bmp|GIF image|*.gif";
+            saveFileDialog1.Filter = "PNG image|*.png|BMP image|*.bmp|GIF image|*.gif|TIFF image|*.tiff";
             saveFileDialog1.FilterIndex = 0;
 
             DialogResult result = saveFileDialog1.ShowDialog(this);
@@ -1471,8 +1507,10 @@ namespace Nikse.SubtitleEdit.Forms
                     bmp.Save(saveFileDialog1.FileName, System.Drawing.Imaging.ImageFormat.Png);
                 else if (saveFileDialog1.FilterIndex == 1)
                     bmp.Save(saveFileDialog1.FileName);
-                else
+                else if (saveFileDialog1.FilterIndex == 2)
                     bmp.Save(saveFileDialog1.FileName, System.Drawing.Imaging.ImageFormat.Gif);
+                else
+                    bmp.Save(saveFileDialog1.FileName, System.Drawing.Imaging.ImageFormat.Tiff);
                 }
                 catch (Exception exception)
                 {

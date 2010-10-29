@@ -575,24 +575,36 @@ namespace Nikse.SubtitleEdit.Logic.OCR
 
                         if (autoFix && useAutoGuess)
                         {
+                            List<string> guesses = new List<string>();
+
                             if (word.Length > 5)
                             {
-                                foreach (string guess in CreateGuessesFromLetters(word))
+                                guesses = (List<string>)CreateGuessesFromLetters(word);
+                            }
+                            else
+                            {
+                                guesses.Add(word.Replace("ﬁ", "fi"));
+                                guesses.Add(word.Replace("ﬁ", "fj"));
+                                guesses.Add(word.Replace("ﬂ", "fl"));
+                                if (!word.EndsWith("€") && !word.StartsWith("€"))
+                                    guesses.Add(word.Replace("€", "e"));
+                                guesses.Add(word.Replace("ﬁ", "fj"));
+                            }
+                            foreach (string guess in guesses)
+                            {
+                                if (IsWordOrWordsCorrect(_hunspell, guess))
                                 {
-                                    if (IsWordOrWordsCorrect(_hunspell, guess))
+                                    var regex = new Regex(@"\b" + word + @"\b");
+                                    Match match = regex.Match(line);
+                                    if (match.Success)
                                     {
-                                        var regex = new Regex(@"\b" + word + @"\b");
-                                        Match match = regex.Match(line);
-                                        if (match.Success)
-                                        {
-                                            if (log)
-                                                AutoGuessesUsed.Add(string.Format("#{0}: {1} -> {2} in line via '{3}': {4}", index + 1, word, guess, "OCRFixReplaceList.xml", line.Replace(Environment.NewLine, " ")));
+                                        if (log)
+                                            AutoGuessesUsed.Add(string.Format("#{0}: {1} -> {2} in line via '{3}': {4}", index + 1, word, guess, "OCRFixReplaceList.xml", line.Replace(Environment.NewLine, " ")));
 
-                                            line = line.Remove(match.Index, match.Value.Length).Insert(match.Index, guess);
-                                            wordsNotFound--;
-                                            correct = true;
-                                            break;
-                                        }
+                                        line = line.Remove(match.Index, match.Value.Length).Insert(match.Index, guess);
+                                        wordsNotFound--;
+                                        correct = true;
+                                        break;
                                     }
                                 }
                             }
@@ -636,8 +648,8 @@ namespace Nikse.SubtitleEdit.Logic.OCR
                 case OcrSpellCheck.Action.AddToUserDictionary:
                     if (_userWordListXmlFileName != null)
                     {
-                        _userWordList.Add(_spellCheck.Word);
-                        Utilities.AddToUserDictionary(_spellCheck.Word, _fiveLetterWordListLanguageName);
+                        _userWordList.Add(_spellCheck.Word.Trim().ToLower());
+                        Utilities.AddToUserDictionary(_spellCheck.Word.Trim().ToLower(), _fiveLetterWordListLanguageName);
                     }
                     result.Word = _spellCheck.Word;
                     result.Fixed = true;
@@ -800,7 +812,7 @@ namespace Nikse.SubtitleEdit.Logic.OCR
 
         private static string AddToGuessList(List<string> list, string word, int index, string letter, string replaceLetters)
         {
-            if (string.IsNullOrEmpty(word) || index < 0 || index >= word.Length)
+            if (string.IsNullOrEmpty(word) || index < 0 || index + letter.Length - 1 >= word.Length)
                 return word;
 
             string s = word.Remove(index, letter.Length);
