@@ -255,8 +255,6 @@ namespace Nikse.SubtitleEdit.Forms
             // checkBoxUseModiInTesseractForUnknownWords
             // 
             this.checkBoxUseModiInTesseractForUnknownWords.AutoSize = true;
-            this.checkBoxUseModiInTesseractForUnknownWords.Checked = true;
-            this.checkBoxUseModiInTesseractForUnknownWords.CheckState = System.Windows.Forms.CheckState.Checked;
             this.checkBoxUseModiInTesseractForUnknownWords.Location = new System.Drawing.Point(22, 74);
             this.checkBoxUseModiInTesseractForUnknownWords.Name = "checkBoxUseModiInTesseractForUnknownWords";
             this.checkBoxUseModiInTesseractForUnknownWords.Size = new System.Drawing.Size(165, 17);
