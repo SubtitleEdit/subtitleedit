@@ -51,16 +51,17 @@
   </General>
   <About>
     <Title>Om Undertext Edit</Title>
-    <AboutText1>Subtitle Edit är fri programvara under GNU Public License.
- Du kan distribuera, modifiera och använda den fritt.
+    <AboutText1>
+      Subtitle Edit är fri programvara under GNU Public License.
+      Du kan distribuera, modifiera och använda den fritt.
 
- C # källkod är tillgänglig på webbplatsen eller kan mailas på begäran.
+      C # källkod är tillgänglig på http://code.google.com/p/subtitleedit/
 
- Besök www.nikse.dk för den senaste versionen.
+      Besök http://www.nikse.dk för den senaste versionen.
 
- Förslag är mycket välkomna.
+      Förslag är mycket välkomna.
 
- E-post: mailto: nikse.dk@gmail.com</AboutText1>
+      E-post: mailto:nikse.dk@gmail.com</AboutText1>
   </About>
   <AddToNames>
     <Title>Lägg till namn/etc</Title>
