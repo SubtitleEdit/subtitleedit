@@ -1035,7 +1035,6 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
 
-
                 if (wordsNotFound > 0 || sb.ToString().Replace("~", string.Empty).Trim().Length == 0)
                 {                   
                     _ocrFixEngine.AutoGuessesUsed.Clear();
@@ -1132,13 +1131,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         private string TesseractResizeAndRetry(Bitmap bitmap)
         {
-            string result = Tesseract3DoOcrViaExe(ResizeBitmap(bitmap, bitmap.Width * 2, bitmap.Height * 2), _languageId);
-            if (result.Trim().Length == 0)
-            {
-                result = Tesseract3DoOcrViaExe(ResizeBitmap(bitmap, bitmap.Width * 3, bitmap.Height * 2), _languageId);
-                if (result.ToString().Trim().Length == 0)
-                    result = Tesseract3DoOcrViaExe(ResizeBitmap(bitmap, bitmap.Width * 4, bitmap.Height * 2), _languageId);
-            }
+            string result = Tesseract3DoOcrViaExe(ResizeBitmap(bitmap, bitmap.Width * 3, bitmap.Height * 2), _languageId);
+            if (result.ToString().Trim().Length == 0)
+                result = Tesseract3DoOcrViaExe(ResizeBitmap(bitmap, bitmap.Width * 4, bitmap.Height * 2), _languageId);
             return result.TrimEnd();
         }
 
