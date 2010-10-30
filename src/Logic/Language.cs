@@ -118,7 +118,7 @@ namespace Nikse.SubtitleEdit.Logic
                 AboutText1 = "Subtitle Edit is Free Software under the GNU Public License." + Environment.NewLine +
                              "You may distribute, modify and use it freely." + Environment.NewLine +
                              Environment.NewLine +
-                             "C# source code is either available on web site or can be emailed on request." + Environment.NewLine +
+                             "C# source code is either available on http://code.google.com/p/subtitleedit" + Environment.NewLine +
                              Environment.NewLine +
                              "Visit www.nikse.dk for the latest version." + Environment.NewLine +
                              Environment.NewLine +
