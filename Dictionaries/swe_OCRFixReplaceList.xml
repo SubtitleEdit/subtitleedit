@@ -287,6 +287,29 @@
     <Word from="gär" to="går" />
     <Word from="föri" to="för i" />
     <Word from="Hurvisste" to="Hur visste" />
+    <Word from="ﬁck" to="fick" />
+    <Word from="ﬁnns" to="finns" />
+    <Word from="ﬁn" to="fin" />
+    <Word from="Fa" to="Bra." />
+    <Word from="bori" to="bor i" />
+    <Word from="fiendeplanl" to="fiendeplan!" />
+    <Word from="iförnamn" to="i förnamn" />
+    <Word from="detju" to="det ju" />
+    <Word from="Nüd" to="Niki" />
+    <Word from="hatarjag" to="hatar jag" />
+    <Word from="Klararjag" to="Klarar jag" />
+    <Word from="detaﬁer" to="detaljer" />
+    <Word from="vä/" to="väl" />
+    <Word from="smakarju" to="smakar ju" />
+    <Word from="Teacheﬂ" to="Teacher!" />
+    <Word from="imorse" to="i morse" />
+    <Word from="drickerjag" to="dricker jag" />
+    <Word from="ståri" to="står i" />
+    <Word from="Harjag" to="Har jag" />
+    <Word from="Talarjag" to="Talar jag" />
+    <Word from="undrarjag" to="undrar jag" />
+    <Word from="ålderjag" to="ålder jag" />
+    <Word from="vaﬁe" to="varje" />
   </WholeWords>
   <PartialWords>
     <!-- Will be used to check words not in dictionary -->
@@ -321,6 +344,10 @@
     <WordPart from="å" to="ä" />
     <WordPart from="à" to="å" />
     <WordPart from="n/" to="rv" />
+    <WordPart from="À" to="Å" />
+    <WordPart from="Ã" to="Å" />
+    <WordPart from="í" to="i" />
+    <WordPart from="\/" to="v" />
   </PartialWords>
   <BeginLines>
     <Beginning from="Ln " to="In " />
