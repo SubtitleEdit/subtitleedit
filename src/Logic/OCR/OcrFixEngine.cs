@@ -583,12 +583,15 @@ namespace Nikse.SubtitleEdit.Logic.OCR
                             }
                             else
                             {
+                                if (i==0)
+                                    guesses.Add(word.Replace(@"\/", "V"));
+                                else
+                                    guesses.Add(word.Replace(@"\/", "v"));
                                 guesses.Add(word.Replace("ﬁ", "fi"));
                                 guesses.Add(word.Replace("ﬁ", "fj"));
                                 guesses.Add(word.Replace("ﬂ", "fl"));
                                 if (!word.EndsWith("€") && !word.StartsWith("€"))
                                     guesses.Add(word.Replace("€", "e"));
-                                guesses.Add(word.Replace("ﬁ", "fj"));
                             }
                             foreach (string guess in guesses)
                             {
@@ -884,8 +887,9 @@ namespace Nikse.SubtitleEdit.Logic.OCR
             return false;
         }
 
-        public int CountUnknownWordsViaDictionary(string line)
+        public int CountUnknownWordsViaDictionary(string line, out int numberOfCorrectWords)
         {
+            numberOfCorrectWords = 0;
             if (_hunspell == null)
                 return 0;
 
@@ -900,8 +904,11 @@ namespace Nikse.SubtitleEdit.Logic.OCR
                     if (!correct)
                         correct = _hunspell.Spell(word.Trim('\''));
 
-                    if (!correct)
+                    if (correct)
+                        numberOfCorrectWords++;
+                    else
                         wordsNotFound++;
+
                 }
             }
             return wordsNotFound;
