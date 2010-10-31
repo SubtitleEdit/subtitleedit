@@ -999,43 +999,38 @@ namespace Nikse.SubtitleEdit.Forms
                 comboBoxModiLanguage.SelectedIndex = -1;
             }
 
-            var sb = new StringBuilder();
             int badWords = 0;
-            var textWithOutFixes = new StringBuilder();
-            textWithOutFixes.Append(Tesseract3DoOcrViaExe(bitmap, _languageId));
+            string textWithOutFixes = Tesseract3DoOcrViaExe(bitmap, _languageId);
 
             if (textWithOutFixes.ToString().Trim().Length == 0)
             {
-                textWithOutFixes = new StringBuilder();
-                textWithOutFixes.Append(TesseractResizeAndRetry(bitmap));     
+                textWithOutFixes = TesseractResizeAndRetry(bitmap);     
             }
 
-            sb.Append(textWithOutFixes.ToString());
-            int numberOfWords = sb.ToString().Split((" " + Environment.NewLine).ToCharArray(), StringSplitOptions.RemoveEmptyEntries).Length;
+            int numberOfWords = textWithOutFixes.ToString().Split((" " + Environment.NewLine).ToCharArray(), StringSplitOptions.RemoveEmptyEntries).Length;
 
-            string line = sb.ToString().Trim();
+            string line = textWithOutFixes.ToString().Trim();
             if (_ocrFixEngine.IsDictionaryLoaded)
             {
                 if (checkBoxAutoFixCommonErrors.Checked)
                     line = _ocrFixEngine.FixOcrErrors(line, index, _lastLine, true, checkBoxGuessUnknownWords.Checked);
-                int wordsNotFound = _ocrFixEngine.CountUnknownWordsViaDictionary(line);
+                int correctWords;
+                int wordsNotFound = _ocrFixEngine.CountUnknownWordsViaDictionary(line, out correctWords);
 
-                if (wordsNotFound > 0)
+                if (wordsNotFound > 0 || correctWords == 0)
                 { 
-                    string newText = TesseractResizeAndRetry(bitmap);
-                    newText = _ocrFixEngine.FixOcrErrors(newText, index, _lastLine, true, checkBoxGuessUnknownWords.Checked);
-                    int newWordsNotFound = _ocrFixEngine.CountUnknownWordsViaDictionary(newText);
+                    string newUnfixedText = TesseractResizeAndRetry(bitmap);
+                    string newText = _ocrFixEngine.FixOcrErrors(newUnfixedText, index, _lastLine, true, checkBoxGuessUnknownWords.Checked);
+                    int newWordsNotFound = _ocrFixEngine.CountUnknownWordsViaDictionary(newText, out correctWords);
                     if (newWordsNotFound < wordsNotFound)
                     {
                         wordsNotFound = newWordsNotFound;
-                        textWithOutFixes = new StringBuilder();
-                        textWithOutFixes.Append(newText);
-                        sb = new StringBuilder();
-                        sb.Append(newText);
+                        textWithOutFixes = newUnfixedText;
+                        line = newText;
                     }
                 }
 
-                if (wordsNotFound > 0 || sb.ToString().Replace("~", string.Empty).Trim().Length == 0)
+                if (wordsNotFound > 0 || correctWords == 0 || textWithOutFixes.ToString().Replace("~", string.Empty).Trim().Length == 0)
                 {                   
                     _ocrFixEngine.AutoGuessesUsed.Clear();
                     _ocrFixEngine.UnknownWordsFound.Clear();
@@ -1051,13 +1046,13 @@ namespace Nikse.SubtitleEdit.Forms
 
                         if (modiText.Length > 1)
                         {
-                            int modiWordsNotFound = _ocrFixEngine.CountUnknownWordsViaDictionary(modiText);
+                            int modiWordsNotFound = _ocrFixEngine.CountUnknownWordsViaDictionary(modiText, out correctWords);
                             if (modiWordsNotFound > 0)
                             {
                                 string modiTextOcrFixed = modiText;
                                 if (checkBoxAutoFixCommonErrors.Checked)
                                     modiTextOcrFixed = _ocrFixEngine.FixOcrErrors(modiText, index, _lastLine, false, checkBoxGuessUnknownWords.Checked);
-                                int modiOcrCorrectedWordsNotFound = _ocrFixEngine.CountUnknownWordsViaDictionary(modiTextOcrFixed);
+                                int modiOcrCorrectedWordsNotFound = _ocrFixEngine.CountUnknownWordsViaDictionary(modiTextOcrFixed, out correctWords);
                                 if (modiOcrCorrectedWordsNotFound < modiWordsNotFound)
                                     modiText = modiTextOcrFixed;
                             }
