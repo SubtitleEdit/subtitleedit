@@ -135,6 +135,52 @@
     <Word from="harløjet" to="har løjet" />
     <Word from="eri" to="er i" />
     <Word from="ﬁende" to="fjende" />
+    <Word from="derjo" to="der jo" />
+    <Word from="sigerjo" to="siger jo" />
+    <Word from="menerjeg" to="mener jeg" />
+    <Word from="Harjeg" to="Har jeg" />
+    <Word from="sigerjeg" to="siger jeg" />
+    <Word from="splitterjeg" to="splitter jeg" />
+    <Word from="erjournalist" to="er journalist" />
+    <Word from="erjoumalist" to="er journalist" />
+    <Word from="Forjeg" to="For jeg" />
+    <Word from="gârjeg" to="går jeg" />
+    <Word from="Nârjeg" to="Når jeg" />
+    <Word from="aﬂlom" to="afkom" />
+    <Word from="farerjo" to="farer jo" />
+    <Word from="tagerjeg" to="tager jeg" />
+    <Word from="Virkerjeg" to="Virker jeg" />
+    <Word from="morerjer" to="morer jer" />
+    <Word from="kommerjo" to="kommer jo" />
+    <Word from="istand" to="i stand" />
+    <Word from="bøm" to="børn" />
+    <Word from="frygterjeg" to="frygter jeg" />
+    <Word from="kommerjeg" to="kommer jeg" />
+    <Word from="eriournalistelev" to="er journalistelev" />
+    <Word from="harfat" to="har fat" />
+    <Word from="fårﬁngre" to="får ﬁngre" />
+    <Word from="slârjeg" to="slår jeg" />
+    <Word from="bam" to="barn" />
+    <Word from="erjournalistelev" to="er journalistelev" />
+    <Word from="politietjo" to="politiet jo" />
+    <Word from="elskerjo" to="elsker jo" />
+    <Word from="vari" to="var i" />
+    <Word from="fornemmerjeres" to="fornemmer jeres" />
+    <Word from="udklækketl" to="udklækket!" />
+    <Word from="í" to="i" />
+    <Word from="nyi" to="ny i" />
+    <Word from="Iumijelse" to="fornøjelse" />
+    <Word from="vures" to="vores" />
+    <Word from="I/Vashíngtan" to="Washington" />
+    <Word from="opleverjeg" to="oplever jeg" />
+    <Word from="PANTELÃNER" to="PANTELÅNER" />
+    <Word from="Gudmurgen" to="Godmorgen" />
+    <Word from="SKYDEVÃBEN" to="SKYDEVÅBEN" />
+    <Word from="PÃLIDELIG" to="PÅLIDELIG" />
+    <Word from="avertalte" to="overtalte" />
+    <Word from="Omsíder" to="Omsider" />
+    <Word from="lurtebåd" to="lortebåd" />
+    <Word from="Telrslning" to="Tekstning" />
   </WholeWords>
   <PartialWords>
     <!-- Will be used to check words not in dictionary -->
@@ -167,7 +213,8 @@
     <WordPart from="n" to="o" />
     <WordPart from="s" to="e" />
     <WordPart from="\A" to="Vi" />
-    <WordPart from="n/" to="rv" />
+    <WordPart from="Ã" to="Å" />
+    <WordPart from="í" to="i" />
   </PartialWords>
   <PartialLines />
   <BeginLines>
