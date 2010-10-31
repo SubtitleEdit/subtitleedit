@@ -213,6 +213,7 @@
     <WordPart from="n" to="o" />
     <WordPart from="s" to="e" />
     <WordPart from="\A" to="Vi" />
+    <WordPart from="n/" to="rv" />
     <WordPart from="Ã" to="Å" />
     <WordPart from="í" to="i" />
   </PartialWords>
