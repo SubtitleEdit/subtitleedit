@@ -633,7 +633,7 @@
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
+      <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </EmbeddedResource>
@@ -664,6 +664,7 @@
     </None>
     <EmbeddedResource Include="Resources\fr-FR.xml.zip" />
     <EmbeddedResource Include="Resources\OpenOfficeDictionaries.xml.zip" />
+    <EmbeddedResource Include="Resources\hu-HU.xml.zip" />
     <None Include="Resources\pl-PL.xml">
       <SubType>Designer</SubType>
     </None>
@@ -794,6 +795,9 @@
     </Content>
     <Content Include="Icons\WaveFormToogle.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\hu-HU.xml">
+      <SubType>Designer</SubType>
     </Content>
     <Content Include="Resources\OpenOfficeDictionaries.xml">
       <SubType>Designer</SubType>
