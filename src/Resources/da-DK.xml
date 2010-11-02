@@ -526,8 +526,8 @@
       <SearchTextOnline>Søg tekst online</SearchTextOnline>
       <GoogleTranslate>Google oversæt</GoogleTranslate>
       <GoogleIt>Google</GoogleIt>
-      <SecondsBackShort>&lt;&lt;sek</SecondsBackShort>
-      <SecondsForwardShort>sek&gt;&gt;</SecondsForwardShort>
+      <SecondsBackShort>&lt;&lt;</SecondsBackShort>
+      <SecondsForwardShort>&gt;&gt;</SecondsForwardShort>
       <VideoPosition>Video position:</VideoPosition>
       <TranslateTip>Tip: Brug &lt;alt+pil op/ned&gt; for at gå til forrige/næste tekst</TranslateTip>
       <CreateTip>Tip: Brug &lt;ctrl+pil venstre/højre&gt; genveje</CreateTip>
