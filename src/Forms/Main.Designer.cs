@@ -2377,7 +2377,7 @@
             this.buttonForward2.Name = "buttonForward2";
             this.buttonForward2.Size = new System.Drawing.Size(54, 21);
             this.buttonForward2.TabIndex = 10;
-            this.buttonForward2.Text = "Secs >>";
+            this.buttonForward2.Text = " >>";
             this.buttonForward2.UseVisualStyleBackColor = true;
             this.buttonForward2.Click += new System.EventHandler(this.buttonForward2_Click);
             // 
@@ -2410,7 +2410,7 @@
             this.buttonSecBack2.Name = "buttonSecBack2";
             this.buttonSecBack2.Size = new System.Drawing.Size(54, 21);
             this.buttonSecBack2.TabIndex = 8;
-            this.buttonSecBack2.Text = "<< Secs";
+            this.buttonSecBack2.Text = "<<";
             this.buttonSecBack2.UseVisualStyleBackColor = true;
             this.buttonSecBack2.Click += new System.EventHandler(this.buttonSecBack2_Click);
             // 
@@ -2430,7 +2430,7 @@
             this.buttonForward1.Name = "buttonForward1";
             this.buttonForward1.Size = new System.Drawing.Size(54, 21);
             this.buttonForward1.TabIndex = 7;
-            this.buttonForward1.Text = "Secs >>";
+            this.buttonForward1.Text = ">>";
             this.buttonForward1.UseVisualStyleBackColor = true;
             this.buttonForward1.Click += new System.EventHandler(this.buttonForward1_Click);
             // 
@@ -2472,7 +2472,7 @@
             this.buttonSecBack1.Name = "buttonSecBack1";
             this.buttonSecBack1.Size = new System.Drawing.Size(54, 21);
             this.buttonSecBack1.TabIndex = 5;
-            this.buttonSecBack1.Text = "<< Secs";
+            this.buttonSecBack1.Text = "<<";
             this.buttonSecBack1.UseVisualStyleBackColor = true;
             this.buttonSecBack1.Click += new System.EventHandler(this.buttonSecBack1_Click);
             // 
@@ -2610,7 +2610,7 @@
             this.buttonAdjustSecForward2.Name = "buttonAdjustSecForward2";
             this.buttonAdjustSecForward2.Size = new System.Drawing.Size(54, 21);
             this.buttonAdjustSecForward2.TabIndex = 11;
-            this.buttonAdjustSecForward2.Text = "Secs >>";
+            this.buttonAdjustSecForward2.Text = ">>";
             this.buttonAdjustSecForward2.UseVisualStyleBackColor = true;
             this.buttonAdjustSecForward2.Click += new System.EventHandler(this.buttonAdjustSecForward2_Click);
             // 
@@ -2643,7 +2643,7 @@
             this.buttonAdjustSecBack2.Name = "buttonAdjustSecBack2";
             this.buttonAdjustSecBack2.Size = new System.Drawing.Size(54, 21);
             this.buttonAdjustSecBack2.TabIndex = 9;
-            this.buttonAdjustSecBack2.Text = "<< Secs";
+            this.buttonAdjustSecBack2.Text = "<<";
             this.buttonAdjustSecBack2.UseVisualStyleBackColor = true;
             this.buttonAdjustSecBack2.Click += new System.EventHandler(this.buttonAdjustSecBack2_Click);
             // 
@@ -2653,7 +2653,7 @@
             this.buttonAdjustSecForward1.Name = "buttonAdjustSecForward1";
             this.buttonAdjustSecForward1.Size = new System.Drawing.Size(54, 21);
             this.buttonAdjustSecForward1.TabIndex = 8;
-            this.buttonAdjustSecForward1.Text = "Secs >>";
+            this.buttonAdjustSecForward1.Text = ">>";
             this.buttonAdjustSecForward1.UseVisualStyleBackColor = true;
             this.buttonAdjustSecForward1.Click += new System.EventHandler(this.buttonAdjustSecForward_Click);
             // 
@@ -2686,7 +2686,7 @@
             this.buttonAdjustSecBack1.Name = "buttonAdjustSecBack1";
             this.buttonAdjustSecBack1.Size = new System.Drawing.Size(54, 21);
             this.buttonAdjustSecBack1.TabIndex = 6;
-            this.buttonAdjustSecBack1.Text = "<< Secs";
+            this.buttonAdjustSecBack1.Text = "<<";
             this.buttonAdjustSecBack1.UseVisualStyleBackColor = true;
             this.buttonAdjustSecBack1.Click += new System.EventHandler(this.buttonAdjustSecBack_Click);
             // 
