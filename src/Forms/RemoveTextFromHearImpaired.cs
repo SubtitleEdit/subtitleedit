@@ -167,6 +167,20 @@ namespace Nikse.SubtitleEdit.Forms
                     hit = true;
                 }
 
+                if (!hit)
+                { 
+                    string[] parts = p.Text.Trim().Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                    foreach (string s in parts)
+                    {
+                        StripableText stSub = new StripableText(s, " >-\"'‘`´♪¿¡.", " -\"'`´♪.!?:");
+                        string newText = stSub.StrippedText;
+                        if (HasHearImpariedTagsAtStart(newText))
+                            hit = true;
+                        else if (HasHearImpariedTagsAtEnd(newText))
+                            hit = true;
+                    }
+                }
+
                 if (hit)
                 {
                     count++;
@@ -281,15 +295,20 @@ namespace Nikse.SubtitleEdit.Forms
                     if (removedAtLine.Count > 0)
                     {
                         StripableText p0 = new StripableText(parts[0]);
+                        StripableText p1 = new StripableText(parts[1]);
 
-                        if (p0.Post.Contains(".") || p0.Post.Contains("!") || p0.Post.Contains("?"))
+                        bool onlySecondSpeaker = removedAtLine.Count == 1 && removedAtLine[0] == 1 && !p1.Pre.Contains("-");
+
+                        if (!onlySecondSpeaker)
                         {
-                            StripableText p1 = new StripableText(parts[1]);
-                            if (!p0.Pre.Contains("-"))
-                                parts[0] = "- " + parts[0];
+                            if (p0.Post.Contains(".") || p0.Post.Contains("!") || p0.Post.Contains("?"))
+                            {
+                                if (!p0.Pre.Contains("-"))
+                                    parts[0] = "- " + parts[0];
 
-                            if (!p1.Pre.Contains("-"))
-                                parts[1] = "- " + parts[1];
+                                if (!p1.Pre.Contains("-"))
+                                    parts[1] = "- " + parts[1];
+                            }
                         }
                     }
 
