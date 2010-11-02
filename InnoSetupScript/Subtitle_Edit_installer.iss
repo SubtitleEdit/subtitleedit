@@ -91,6 +91,7 @@ Name: en; MessagesFile: compiler:Default.isl
 Name: dk; MessagesFile: compiler:Languages\Danish.isl
 ;Name: es; MessagesFile: compiler:Languages\Spanish.isl
 Name: fr; MessagesFile: compiler:Languages\French.isl
+Name: hu; MessagesFile: compiler:Languages\Hungarian.isl
 ;Name: it; MessagesFile: compiler:Languages\Italian.isl
 Name: nl; MessagesFile: compiler:Languages\Dutch.isl
 Name: pl; MessagesFile: compiler:Languages\Polish.isl
