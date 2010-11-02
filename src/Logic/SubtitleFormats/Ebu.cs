@@ -164,7 +164,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 ExtensionBlockNumber = 255;
                 CumulativeStatus = 0;
                 VerticalPosition = 0x16;
-                JustificationCode = 02;
+                JustificationCode = 0;
                 CommentFlag = 0;
             }
 
@@ -244,6 +244,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 TextField = TextField.Replace("</U>", underlineOff);
 
                 //font tags
+                string firstColor = null;
                 string s = TextField;
                 int start = s.IndexOf("<font ");
                 if (start >= 0)
@@ -266,7 +267,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                                     color = color.Trim('#');
                                     
                                     s = s.Remove(start, end - start + 1);
-                                    s = s.Insert(start, GetNearestEbuColorCode(color, encoding));
+                                    if (firstColor == null)
+                                        firstColor = GetNearestEbuColorCode(color, encoding);
+                                    else
+                                        s = s.Insert(start, GetNearestEbuColorCode(color, encoding));
                                 }
                             }
                         }
@@ -278,9 +282,21 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 // newline
                 string newline = encoding.GetString(new byte[] { 0x8A, 0x8A });
                 TextField = TextField.Replace(Environment.NewLine, newline);
+                if (TextField.Length < 4)
+                    TextField = string.Empty.PadLeft(4, ' ');
 
                 // convert text to bytes
                 byte[] bytes = encoding.GetBytes(TextField);
+                
+                bytes[0] = 0x20; // space or 0xd
+
+                bytes[1] = 0x07; // white
+                if (!string.IsNullOrEmpty(firstColor))
+                    bytes[1] = encoding.GetBytes(firstColor)[0];
+
+                bytes[2] = 0x20; // space or 0xd
+                bytes[3] = 0x20; // space or 0xd
+
                 for (int i = 0; i < 112; i++)
                 {
                     if (i < bytes.Length)
@@ -288,7 +304,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     else if (i == bytes.Length)
                         buffer[16 + i] = 0x8f;
                     else
-                        buffer[16 + i] = 0x8a;
+                        buffer[16 + i] = 0x8f;
                 }
                 return buffer;
             }
@@ -410,6 +426,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             foreach (Paragraph p in subtitle.Paragraphs)
             {
                 EbuTextTimingInformation tti = new EbuTextTimingInformation();
+                if (p.Text.Contains(Environment.NewLine))
+                    tti.VerticalPosition = 0x14;
+                else
+                    tti.VerticalPosition = 0x16;
                 tti.SubtitleNumber = (ushort)p.Number;
                 tti.TextField = p.Text;
                 tti.TimeCodeInHours = p.StartTime.Hours;
@@ -818,17 +838,22 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 string endTags = string.Empty;                
                 string color = string.Empty;
                 string lastColor = string.Empty;
-                for (int i = 0; i < 112; i++)
+                for (int i = 0; i < 112; i++) // skip fist byte (seems to be always 0xd/32/space - thx Iban)
                 {
-                    if (skipNext)
+                    byte b = buffer[index + 16 + i];
+                    if (i == 0 || i == 2 | i == 3)
+                    {
+                        // not used, 0=0xd, 2=0xb, 3=0xb 
+                    }
+                    else if (skipNext)
                     {
                         skipNext = false;
                     }
                     else
                     {
-                        if (buffer[index + 16 + i] >= 0 && buffer[index + 16 + i] <= 0x17)
+                        if (b >= 0 && b <= 0x17)
                         {
-                            switch (buffer[index + 16 + i])
+                            switch (b)
                             {
                                 case 0x00:
                                 case 0x10: color = "Black";
@@ -856,19 +881,19 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                                     break;
                             }
                         }
-                        if (buffer[index + 16 + i] == TextFieldCRLF)
+                        if (b == TextFieldCRLF)
                             sb.AppendLine();
-                        else if (buffer[index + 16 + i] == ItalicsOn)
+                        else if (b == ItalicsOn)
                             sb.Append("<i>");
-                        else if (buffer[index + 16 + i] == ItalicsOff)
+                        else if (b == ItalicsOff)
                             sb.Append("</i>");
-                        else if (buffer[index + 16 + i] == UnderlineOn)
+                        else if (b == UnderlineOn)
                             sb.Append("<u>");
-                        else if (buffer[index + 16 + i] == UnderlineOff)
+                        else if (b == UnderlineOff)
                             sb.Append("</u>");
-                        else if (buffer[index + 16 + i] == TextFieldTerminator)
+                        else if (b == TextFieldTerminator)
                             break;
-                        else if ((buffer[index + 16 + i] >= 0x20 && buffer[index + 16 + i] <= 0x7F) || buffer[index + 16 + i] >= 0xA1)
+                        else if ((b >= 0x20 && b <= 0x7F) || b >= 0xA1)
                         {
                             string ch = GetCharacter(out skipNext, header, buffer, index + 16 + i);
                             if (ch != " ")
@@ -888,7 +913,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 }
                 tti.TextField = sb.ToString().Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine) + endTags;
                 tti.TextField = tti.TextField.TrimEnd();
-
                 index += TTISize;
                 list.Add(tti);
             }
