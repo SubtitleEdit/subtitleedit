@@ -92,6 +92,7 @@ hu.tsk_Other=Egyéb:
 hu.tsk_ResetDictionaries=A szótárak visszaállítása és az egyéni nevek törlése
 hu.tsk_ResetSettings=A Subtitle Edit beállításainak visszaállítása
 
+
 ;it.msg_SetupIsRunningWarning=Subtitle Edit Setup is already running!
 ;it.msg_AppIsRunning=Subtitle Edit is running! Please close it before proceeding.
 ;it.msg_AskToDownNET=Subtitle Edit requires the .NET Framework 2.0. Please download and install the .NET Framework and run setup again. %n%nDo you want to download the .NET Framework 2.0 now?
@@ -133,6 +134,7 @@ pl.tsk_Other=Other:
 pl.tsk_ResetDictionaries=Reset Dictionaries and delete any custom names
 pl.tsk_ResetSettings=Reset Subtitle Edit's settings
 
+
 ro.msg_SetupIsRunningWarning=Instalarea programului Subtitle Edit se efectuează deja!
 ro.msg_AppIsRunning=Subtitle Edit is running! Please close it before proceeding.
 ro.msg_AskToDownNET=Subtitle Edit necesită .NET Framework 2.0. Vă rog să descărcaţi şi să instalaţi .NET Framework şi apoi reinstalaţi. %n%nVreţi să descărcaţi acum .NET Framework 2.0?
@@ -145,3 +147,17 @@ ro.tsk_CurrentUser=Pentru utilizatorul curent
 ro.tsk_Other=Altele:
 ro.tsk_ResetDictionaries=Reset Dictionaries and delete any custom names
 ro.tsk_ResetSettings=Resetaţi setările programului Subtitle Edit
+
+
+sv.msg_SetupIsRunningWarning=Instalarea programului Subtitle Edit se efectuează deja!
+sv.msg_AppIsRunning=Subtitle Edit is running! Please close it before proceeding.
+sv.msg_AskToDownNET=Subtitle Edit necesită .NET Framework 2.0. Vă rog să descărcaţi şi să instalaţi .NET Framework şi apoi reinstalaţi. %n%nVreţi să descărcaţi acum .NET Framework 2.0?
+sv.msg_DeleteSettings=Vreţi de asemenea să ştergeţi setările şi personalizările făcute în dicţionare? %n%nDacă aveţi de gând să reinstalaţi Subtitle Edit, nu este nevoie să le ştergeţi.
+sv.run_VisitWebsite=Vizitaţi pagina Web a programului Subtitle Edit
+sv.sm_com_Changelog=Jurnalul modificărilor în programul Subtitle Edit
+sv.sm_com_ReadmeFile=Citeşte-mă
+sv.tsk_AllUsers=Pentru toţi utilizatorii
+sv.tsk_CurrentUser=Pentru utilizatorul curent
+sv.tsk_Other=Altele:
+sv.tsk_ResetDictionaries=Reset Dictionaries and delete any custom names
+sv.tsk_ResetSettings=Resetaţi setările programului Subtitle Edit
