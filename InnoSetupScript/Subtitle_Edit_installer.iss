@@ -18,10 +18,10 @@
 ;* along with Subtitle Edit.  If not, see <http://www.gnu.org/licenses/>.
 
 ; Requirements:
-; Inno Setup QuickStart Pack Unicode v5.3.11(+): http://www.jrsoftware.org/isdl.php#qsp
+; Inno Setup QuickStart Pack Unicode v5.4.0(+): http://www.jrsoftware.org/isdl.php#qsp
 
 
-#define installer_build_number "08"
+#define installer_build_number "09"
 
 #define VerMajor
 #define VerMinor
@@ -96,6 +96,7 @@ Name: hu; MessagesFile: compiler:Languages\Hungarian.isl
 Name: nl; MessagesFile: compiler:Languages\Dutch.isl
 Name: pl; MessagesFile: compiler:Languages\Polish.isl
 Name: ro; MessagesFile: Languages\Romanian.isl
+Name: sv; MessagesFile: Languages\Swedish.isl
 
 ; Include the installer's custom messages
 #include "Custom_Messages.iss"
