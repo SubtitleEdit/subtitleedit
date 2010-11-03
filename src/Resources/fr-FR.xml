@@ -200,7 +200,7 @@ Email : mailto:nikse.dk@gmail.com</AboutText1>
     <WhatToFix>Quoi faire</WhatToFix>
     <Example>Exemple</Example>
     <SelectAll>Tout sélect.</SelectAll>
-    <InverseSelection>Inverser sélection</InverseSelection>
+    <InverseSelection>Inverser sélect.</InverseSelection>
     <Back>&lt; &amp;Retour</Back>
     <Next>&amp;Suivant &gt;</Next>
     <Step2>Etape 2/2 - Vérification des corrections</Step2>
@@ -290,8 +290,8 @@ Email : mailto:nikse.dk@gmail.com</AboutText1>
     <XUppercaseIsFoundInsideLowercaseWords>{0} 'i' majuscule(s) trouvé(s) dans un mot en minuscules</XUppercaseIsFoundInsideLowercaseWords>
     <RefreshFixes>Rafraîchir corrections disponibles</RefreshFixes>
     <ApplyFixes>Effectuer les corrections sélectionnées</ApplyFixes>
-    <AutoBreak>&amp;Coupé</AutoBreak>
-    <Unbreak>&amp;Linéaire</Unbreak>
+    <AutoBreak>&amp;Couper</AutoBreak>
+    <Unbreak>&amp;Joindre</Unbreak>
     <FixDoubleDash>Correction '--' -&gt; '...' </FixDoubleDash>
     <FixDoubleGreaterThan>Effacer les &gt;&gt; </FixDoubleGreaterThan>
     <FixEllipsesStart>Effacer les '...' en début de ligne</FixEllipsesStart>
@@ -329,11 +329,11 @@ Email : mailto:nikse.dk@gmail.com</AboutText1>
   <GoogleTranslate>
     <Title>Google translate</Title>
     <From>De:</From>
-    <To>Pour:</To>
+    <To>A:</To>
     <Translate>Traduire</Translate>
     <PleaseWait>S'il vous plaît patienter... Cela peut prendre un certain temps</PleaseWait>
-    <PoweredByGoogleTranslate>Réalisé à l'aide de Google traduction</PoweredByGoogleTranslate>
-    <PoweredByMicrosoftTranslate>Réalisé à l'aide de Microsoft traduction</PoweredByMicrosoftTranslate>
+    <PoweredByGoogleTranslate>Réalisé avec Google traduction</PoweredByGoogleTranslate>
+    <PoweredByMicrosoftTranslate>Réalisé avec Microsoft traduction</PoweredByMicrosoftTranslate>
   </GoogleTranslate>
   <GoToLine>
     <Title>Aller au sous-titre numéro</Title>
@@ -393,7 +393,7 @@ Email : mailto:nikse.dk@gmail.com</AboutText1>
         <AdjustDisplayDuration>Ajuster &amp;durées...</AdjustDisplayDuration>
         <FixCommonErrors>Correction des &amp;erreurs fréquentes...</FixCommonErrors>
         <StartNumberingFrom>Nouvelle &amp;numérotation...</StartNumberingFrom>
-        <RemoveTextForHearingImpaired>Enlever le texte pour &amp;malentendants...</RemoveTextForHearingImpaired>
+        <RemoveTextForHearingImpaired>Supprimer le texte pour &amp;malentendants...</RemoveTextForHearingImpaired>
         <ChangeCasing>Changer la &amp;casse...</ChangeCasing>
         <ChangeFrameRate>Changer la vites&amp;se de trame...</ChangeFrameRate>
         <MergeShortLines>&amp;Fusionner les lignes courtes...</MergeShortLines>
@@ -413,7 +413,7 @@ Email : mailto:nikse.dk@gmail.com</AboutText1>
         <ShowHideWaveForm>Montrer/cacher forme sonore</ShowHideWaveForm>
       </Video>
       <SpellCheck>
-        <Title>Vérifier orthographe</Title>
+        <Title>Orthographe</Title>
         <SpellCheck>&amp;Vérifier orthographe</SpellCheck>
         <FindDoubleWords>Trouver doublons</FindDoubleWords>
         <GetDictionaries>Télécharger dictionnaires...</GetDictionaries>
@@ -426,7 +426,7 @@ Email : mailto:nikse.dk@gmail.com</AboutText1>
         <PointSync>Synchronisation par points...</PointSync>
       </Synchronization>
       <AutoTranslate>
-        <Title>Auto-traduction</Title>
+        <Title>Traduction</Title>
         <TranslatePoweredByGoogle>Traduire (avec Google)...</TranslatePoweredByGoogle>
         <TranslatePoweredByMicrosoft>Traduire (avec Microsoft)</TranslatePoweredByMicrosoft>
         <TranslateFromSwedishToDanish>Traduire du Suèdois au Danois (avec nikse.dk)</TranslateFromSwedishToDanish>
@@ -476,7 +476,7 @@ Email : mailto:nikse.dk@gmail.com</AboutText1>
         <GoogleTranslateSelectedLines>Traduction Google des lignes sélectionnées...</GoogleTranslateSelectedLines>
         <AdjustDisplayDurationForSelectedLines>Régler la durée des lignes sélectionnées...</AdjustDisplayDurationForSelectedLines>
         <FixCommonErrorsInSelectedLines>Correction des erreurs communes dans les lignes sélectionnées...</FixCommonErrorsInSelectedLines>
-        <ChangeCasingForSelectedLines>Changer de boîtier pour les lignes sélectionnées...</ChangeCasingForSelectedLines>
+        <ChangeCasingForSelectedLines>Changer la casse pour les lignes sélectionnées...</ChangeCasingForSelectedLines>
       </ContextMenu>
     </Menu>
     <Controls>
@@ -484,11 +484,11 @@ Email : mailto:nikse.dk@gmail.com</AboutText1>
       <FileEncoding>Encodage de fichier</FileEncoding>
       <ListView>Vue liste</ListView>
       <SourceView>Vue source</SourceView>
-      <UndoChangesInEditPanel>Revenir au texte d'origine</UndoChangesInEditPanel>
+      <UndoChangesInEditPanel>Annuler changement</UndoChangesInEditPanel>
       <Previous>&lt; Préc.</Previous>
       <Next>Suiv. &gt;</Next>
-      <AutoBreak>Coupé</AutoBreak>
-      <Unbreak>Linéaire</Unbreak>
+      <AutoBreak>Couper</AutoBreak>
+      <Unbreak>Joindre</Unbreak>
     </Controls>
     <VideoControls>
       <Translate>Traduire</Translate>
@@ -497,12 +497,12 @@ Email : mailto:nikse.dk@gmail.com</AboutText1>
       <SelectCurrentElementWhilePlaying>Sélectionner sous-titre courant pendant la lecture</SelectCurrentElementWhilePlaying>
       <AutoRepeat>Répétition automatique</AutoRepeat>
       <AutoRepeatOn>Répétition automatique activée</AutoRepeatOn>
-      <AutoRepeatCount>Répéter le comptage (temps)</AutoRepeatCount>
+      <AutoRepeatCount>Nombre de répétitions</AutoRepeatCount>
       <AutoContinue>Continuation automatique</AutoContinue>
-      <AutoContinueOn>Activé</AutoContinueOn>
-      <DelayInSeconds>Décalage (secondes)</DelayInSeconds>
+      <AutoContinueOn>Cont. automatique activée</AutoContinueOn>
+      <DelayInSeconds>Durée de la pause (secondes)</DelayInSeconds>
       <OriginalText>Texte original</OriginalText>
-      <Previous>&lt;Pré&amp;cédent</Previous>
+      <Previous>&lt; Pré&amp;cédent</Previous>
       <Stop>&amp;Stop</Stop>
       <PlayCurrent>&amp;Lire</PlayCurrent>
       <Next>&amp;Suivant &gt;</Next>
@@ -566,7 +566,7 @@ Email : mailto:nikse.dk@gmail.com</AboutText1>
     <NewFrameRateUsedToCalculateFrameNumbers>Nouvelle cadence de frame ({0}) a été utilisé pour le calcul des numéros de frame de début/fin</NewFrameRateUsedToCalculateFrameNumbers>
     <FindContinue>L'élément de recherche n'a pas été trouvé. Souhaitez-vous recommencer à partir du haut du document et faire une nouvelle recherche?</FindContinue>
     <FindContinueTitle>Continuer trouver?</FindContinueTitle>
-    <XFoundAtLineNumberY>"{0} 'trouvé au numéro de ligne {1}</XFoundAtLineNumberY>
+    <XFoundAtLineNumberY>"{0} 'trouvé à la ligne {1}</XFoundAtLineNumberY>
     <XNotFound>'{0}' introuvable</XNotFound>
     <BeforeReplace>Avant de remplacer: {0}</BeforeReplace>
     <MatchFoundX>Correspondance trouve: {0}</MatchFoundX>
@@ -731,7 +731,7 @@ Poursuivre?</SubtitleAppendPrompt>
   </MultipleReplace>
   <RemoveTextFromHearImpaired>
     <Title>Supprimer le texte pour les malentendants</Title>
-    <RemoveTextConditions>Supprimer les conditions du texte</RemoveTextConditions>
+    <RemoveTextConditions>Règles de supprssion du texte</RemoveTextConditions>
     <RemoveTextBetween>Supprimer le texte entre:</RemoveTextBetween>
     <SquareBrackets>'[' Et ']'</SquareBrackets>
     <Brackets>'(' Et ')'</Brackets>
@@ -759,7 +759,7 @@ Poursuivre?</SubtitleAppendPrompt>
     <ReplaceAll>Remplacer &amp;tous</ReplaceAll>
   </ReplaceDialog>
   <SetMinimumDisplayTimeBetweenParagraphs>
-    <Title>Régler l'heure d'affichage minimal entre les paragraphes</Title>
+    <Title>Régler le temps d'affichage minimum entre les paragraphes</Title>
     <PreviewLinesModifiedX>Aperçu - paragraphes modifiés: {0}</PreviewLinesModifiedX>
     <ShowOnlyModifiedLines>Afficher uniquement les lignes modifiées</ShowOnlyModifiedLines>
     <MinimumMillisecondsBetweenParagraphs>Minimum de millisecondes entre les lignes</MinimumMillisecondsBetweenParagraphs>
@@ -788,7 +788,7 @@ Poursuivre?</SubtitleAppendPrompt>
     <SaveAs>Sauver sous</SaveAs>
     <Find>Chercher</Find>
     <Replace>Remplacer</Replace>
-    <VisualSync>Sync. visuel</VisualSync>
+    <VisualSync>Synchronisation visuelle</VisualSync>
     <SpellCheck>Orthographe</SpellCheck>
     <SettingsName>Config.</SettingsName>
     <Help>Aide</Help>
@@ -832,8 +832,8 @@ Poursuivre?</SubtitleAppendPrompt>
     <WaveFormSelectedColor>Couleur sélectionnée</WaveFormSelectedColor>
     <WaveFormBackgroundColor>Couleur de fond</WaveFormBackgroundColor>
     <WaveFormTextColor>Couleur du texte</WaveFormTextColor>
-    <WaveFormsFolderEmpty>Répertoire 'WaveForms' vide</WaveFormsFolderEmpty>
-    <WaveFormsFolderInfo>Répertoire 'WaveForms' contient {0} fichiers ({1:0.00} MB)</WaveFormsFolderInfo>
+    <WaveFormsFolderEmpty>Vider le répertoire 'WaveForms'</WaveFormsFolderEmpty>
+    <WaveFormsFolderInfo>Le répertoire 'WaveForms' contient {0} fichiers ({1:0.00} MB)</WaveFormsFolderInfo>
     <SubStationAlphaStyle>Style du SSA (Sub Station Alpha)</SubStationAlphaStyle>
     <ChooseFont>Choisir fonte</ChooseFont>
     <ChooseColor>Choisir couleur</ChooseColor>
@@ -878,7 +878,7 @@ Poursuivre?</SubtitleAppendPrompt>
   </ShowEarlierLater>
   <ShowHistory>
     <Title>Historique (pour annuler</Title>
-    <SelectRollbackPoint>Choisissez l'heure/description pour retour en arrière</SelectRollbackPoint>
+    <SelectRollbackPoint>Choisissez le point de retour en arrière</SelectRollbackPoint>
     <Time>Temps</Time>
     <Description>Description</Description>
     <CompareHistoryItems>Comparer les éléments de l'historique</CompareHistoryItems>
@@ -895,7 +895,7 @@ Poursuivre?</SubtitleAppendPrompt>
     <SkipOnce>&amp;Passer</SkipOnce>
     <SkipAll>Passer &amp;tous</SkipAll>
     <AddToUserDictionary>Ajouter au dictionnaire utilisateur</AddToUserDictionary>
-    <AddToNamesAndIgnoreList>Ajouter à la liste des noms/bruit (sensible à la casse)</AddToNamesAndIgnoreList>
+    <AddToNamesAndIgnoreList>Ajouter à la liste des noms (sensible à la casse)</AddToNamesAndIgnoreList>
     <Abort>Interrompre</Abort>
     <Use>Utiliser</Use>
     <UseAlways>Toujours &amp;utiliser</UseAlways>
