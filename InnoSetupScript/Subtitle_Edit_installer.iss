@@ -93,7 +93,7 @@ Name: dk; MessagesFile: compiler:Languages\Danish.isl
 Name: fr; MessagesFile: compiler:Languages\French.isl
 Name: hu; MessagesFile: compiler:Languages\Hungarian.isl
 ;Name: it; MessagesFile: compiler:Languages\Italian.isl
-Name: nl; MessagesFile: compiler:Languages\Dutch.isl
+;Name: nl; MessagesFile: compiler:Languages\Dutch.isl
 Name: pl; MessagesFile: compiler:Languages\Polish.isl
 Name: ro; MessagesFile: Languages\Romanian.isl
 Name: sv; MessagesFile: Languages\Swedish.isl

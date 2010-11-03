@@ -107,18 +107,18 @@ hu.tsk_ResetSettings=A Subtitle Edit beállításainak visszaállítása
 ;it.tsk_ResetSettings=Reset Subtitle Edit's settings
 
 
-nl.msg_SetupIsRunningWarning=Subtitle Edit Setup is already running!
-nl.msg_AppIsRunning=Subtitle Edit is running! Please close it before proceeding.
-nl.msg_AskToDownNET=Subtitle Edit requires the .NET Framework 2.0. Please download and install the .NET Framework and run setup again. %n%nDo you want to download the .NET Framework 2.0 now?
-nl.msg_DeleteSettings=Do you also want to delete Subtitle Edit's settings and any custom changes you made in the dictionaries? %n%nIf you plan on reinstalling Subtitle Edit you do not have to delete them.
-nl.run_VisitWebsite=Visit Subtitle Edit's Website
-nl.sm_com_Changelog=Subtitle Edit's Changelog
-nl.sm_com_ReadmeFile=Subtitle Edit's ReadMe
-nl.tsk_AllUsers=For all users
-nl.tsk_CurrentUser=For the current user only
-nl.tsk_Other=Other:
-nl.tsk_ResetDictionaries=Reset Dictionaries and delete any custom names
-nl.tsk_ResetSettings=Reset Subtitle Edit's settings
+;nl.msg_SetupIsRunningWarning=Subtitle Edit Setup is already running!
+;nl.msg_AppIsRunning=Subtitle Edit is running! Please close it before proceeding.
+;nl.msg_AskToDownNET=Subtitle Edit requires the .NET Framework 2.0. Please download and install the .NET Framework and run setup again. %n%nDo you want to download the .NET Framework 2.0 now?
+;nl.msg_DeleteSettings=Do you also want to delete Subtitle Edit's settings and any custom changes you made in the dictionaries? %n%nIf you plan on reinstalling Subtitle Edit you do not have to delete them.
+;nl.run_VisitWebsite=Visit Subtitle Edit's Website
+;nl.sm_com_Changelog=Subtitle Edit's Changelog
+;nl.sm_com_ReadmeFile=Subtitle Edit's ReadMe
+;nl.tsk_AllUsers=For all users
+;nl.tsk_CurrentUser=For the current user only
+;nl.tsk_Other=Other:
+;nl.tsk_ResetDictionaries=Reset Dictionaries and delete any custom names
+;nl.tsk_ResetSettings=Reset Subtitle Edit's settings
 
 
 pl.msg_SetupIsRunningWarning=Subtitle Edit Setup is already running!
