@@ -289,6 +289,11 @@ namespace Nikse.SubtitleEdit.Forms
                 comboBoxToolsEndSceneIndex.SelectedIndex = toolsSettings.EndSceneIndex;
             else
                 comboBoxToolsEndSceneIndex.SelectedIndex = 0;
+
+            comboBoxMergeShortLineLength.Items.Clear();
+            for (int i = 10; i < 100; i++)
+                comboBoxMergeShortLineLength.Items.Add(i.ToString());
+                
             if (toolsSettings.MergeLinesShorterThan >= 10 && toolsSettings.MergeLinesShorterThan - 10 < comboBoxMergeShortLineLength.Items.Count)
                 comboBoxMergeShortLineLength.SelectedIndex = toolsSettings.MergeLinesShorterThan - 10;
             else
