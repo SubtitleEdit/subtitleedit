@@ -27,6 +27,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     new SubViewer10(),
                     new SubViewer20(),
                     new Sami(),
+                    new Spruce(),
                     new TimedText(),
                     new TMPlayer(),
                     new YouTubeSbv(),
