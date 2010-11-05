@@ -435,6 +435,7 @@
     <Compile Include="Logic\SubtitleFormats\SonyDVDArchitectWithLineNumbers.cs" />
     <Compile Include="Logic\SubtitleFormats\Ebu.cs" />
     <Compile Include="Logic\SubtitleFormats\SonyDVDArchitect.cs" />
+    <Compile Include="Logic\SubtitleFormats\Spruce.cs" />
     <Compile Include="Logic\SubtitleFormats\UnknownSubtitle5.cs" />
     <Compile Include="Logic\SubtitleFormats\OpenDvt.cs" />
     <Compile Include="Logic\SubtitleFormats\YouTubeSbv.cs" />
