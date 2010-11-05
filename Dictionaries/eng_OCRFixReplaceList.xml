@@ -334,6 +334,7 @@
     <Word from="Ioose" to="loose" />
     <Word from="Iord's" to="lord's" />
     <Word from="Iose" to="lose" />
+    <Word from="Ioser" to="loser" />
     <Word from="Ioss" to="loss" />
     <Word from="Iost" to="lost" />
     <Word from="Iot" to="lot" />
@@ -782,6 +783,7 @@
     <Word from="ofHis" to="of His" />
     <Word from="Dcbby" to="Dobby" />
     <Word from="Nlr" to="Mr" />
+    <Word from="Inconceivablel" to="Inconceivable!" />
   </WholeWords>
   <PartialWords>
     <!-- Will be used to check words not in dictionary -->
@@ -878,6 +880,31 @@
     <Beginning from="0ne" to="One" />
     <Beginning from="0nly" to="Only" />
     <Beginning from="0n " to="On " />
+    <Beginning from="lt " to="It " />
+    <Beginning from="Lt " to="It " />
+    <Beginning from="lt's " to="It's " />
+    <Beginning from="Lt's " to="It's " />
+    <Beginning from="lt " to="It " />
+    <Beginning from="lt " to="It " />
+    <Beginning from="lt's " to="It's " />
+    <Beginning from="ln " to="In " />
+    <Beginning from="Ln " to="In " />
+    <Beginning from="l-in " to="I-in " />
+    <Beginning from="l-impossible" to="I-impossible" />
+    <Beginning from="l- impossible" to="I-impossible" />
+    <Beginning from="L- impossible" to="I-impossible" />
+    <Beginning from="l-isn't " to="I-isn't " />
+    <Beginning from="L-isn't " to="I-isn't " />
+    <Beginning from="l- isn't " to="I-isn't " />
+    <Beginning from="L- isn't " to="I-isn't " />
+    <Beginning from="l- l " to="I-I " />
+    <Beginning from="L- l " to="I-I " />
+    <Beginning from="l- it " to="I-it " />
+    <Beginning from="L- it " to="I-it " />
+    <Beginning from="Ls it " to="Is it " />
+    <Beginning from="Ls there " to="Is there " />
+    <Beginning from="Ls he " to="Is he " />
+    <Beginning from="Ls she " to="Is she " />
   </BeginLines>
   <EndLines>
     <Ending from=", sin" to=", sir." />
