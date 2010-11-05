@@ -1,4 +1,4 @@
-﻿<OCRFixReplaceList>
+<OCRFixReplaceList>
   <WholeWords>
     <Word from="Haner" to="Han er" />
     <Word from="JaveL" to="Javel" />
@@ -181,6 +181,29 @@
     <Word from="Omsíder" to="Omsider" />
     <Word from="lurtebåd" to="lortebåd" />
     <Word from="Telrslning" to="Tekstning" />
+    <Word from="miUø" to="miljø" />
+    <Word from="gåri" to="går i" />
+    <Word from="Fan/el" to="Farvel" />
+    <Word from="abeﬁæs" to="abefjæs" />
+    <Word from="hartalt" to="har talt" />
+    <Word from="\Årkelig" to="Virkelig" />
+    <Word from="beklagerjeg" to="beklager jeg" />
+    <Word from="Nårjeg" to="Når jeg" />
+    <Word from="rnaend" to="mænd" />
+    <Word from="vaskebjorn" to="vaskebjørn" />
+    <Word from="Ivil" to="I vil" />
+    <Word from="besog" to="besøg" />
+    <Word from="Vaer" to="Vær" />
+    <Word from="Undersogte" to="Undersøgte" />
+    <Word from="modte" to="mødte" />
+    <Word from="toj" to="tøj" />
+    <Word from="fodt" to="født" />
+    <Word from="gore" to="gøre" />
+    <Word from="provede" to="prøvede" />
+    <Word from="forste" to="første" />
+    <Word from="igang" to="i gang" />
+    <Word from="ligenu" to="lige nu" />
+    <Word from="clet" to="det" />
   </WholeWords>
   <PartialWords>
     <!-- Will be used to check words not in dictionary -->
