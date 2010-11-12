@@ -21,12 +21,20 @@
 ; Inno Setup QuickStart Pack Unicode v5.4.0(+): http://www.jrsoftware.org/isdl.php#qsp
 
 
-#define installer_build_number "09"
+#define installer_build_number "10"
 
 #define VerMajor
 #define VerMinor
 #define VerBuild
 #define VerRevision
+
+#if VER < 0x05040000
+  #error Update your Inno Setup version
+#endif
+
+#ifnexist "..\src\bin\Release\SubtitleEdit.exe"
+  #error Compile Subtitle Edit first
+#endif
 
 #expr ParseVersion("..\src\bin\Release\SubtitleEdit.exe", VerMajor, VerMinor, VerBuild, VerRevision)
 #define app_version str(VerMajor) + "." + str(VerMinor) + "." + str(VerBuild) + "." + str(VerRevision)
@@ -88,6 +96,7 @@ DisableProgramGroupPage=auto
 
 [Languages]
 Name: en; MessagesFile: compiler:Default.isl
+Name: de; MessagesFile: compiler:Languages\German.isl
 Name: dk; MessagesFile: compiler:Languages\Danish.isl
 ;Name: es; MessagesFile: compiler:Languages\Spanish.isl
 Name: fr; MessagesFile: compiler:Languages\French.isl
