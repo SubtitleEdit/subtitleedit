@@ -603,7 +603,10 @@ namespace Nikse.SubtitleEdit.Logic
                 InvalidVobSubHeader = "Header not valid VobSub file: {0}",
                 OpenVobSubFile = "Open VobSub (sub/idx) subtitle...",
                 VobSubFiles = "VobSub subtitle files",
+                OpenBluRaySupFile = "Open BluRay .sup file...",
+                BluRaySupFiles = "BluRay .sup files",
                 BeforeImportingVobSubFile = "Before importing VobSub subtitle",
+                BeforeImportingBluRaySupFile = "Before importing BluRay sup file",
                 BeforeShowSelectedLinesEarlierLater = "Before show selected lines earlier/later",
                 ShowSelectedLinesEarlierLaterPerformed = "Show earlier/later performed on selected lines",
                 DoubleWordsViaRegEx = "Double words via regex {0}",
@@ -648,6 +651,7 @@ namespace Nikse.SubtitleEdit.Logic
                         Compare = "&Compare...",
                         ImportOcrFromDvd = "Import/OCR subtitle from vob/ifo (dvd) ...",
                         ImportOcrVobSubSubtitle = "Import/OCR VobSub (sub/idx) subtitle...",
+                        ImportBluRaySupFile = "Import/OCR BluRay sup file...",
                         ImportSubtitleFromMatroskaFile = "Import subtitle from Matroska file...",
                         ImportSubtitleWithManualChosenEncoding = "Import subtitle with manual chosen encoding...",
                         ImportText = "Import plain text...",
@@ -1147,6 +1151,7 @@ namespace Nikse.SubtitleEdit.Logic
             VobSubOcr = new LanguageStructure.VobSubOcr
             {
                 Title = "Import/OCR VobSub (sub/idx) subtitle",
+                TitleBluRay = "Import/OCR BluRay (.sup) subtitle",
                 OcrMethod = "OCR method",
                 OcrViaModi = "OCR via Microsoft Office Document Imaging (MODI). Requires MS Office",
                 Language = "Language",
