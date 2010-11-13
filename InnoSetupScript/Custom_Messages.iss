@@ -38,7 +38,6 @@ en.tsk_ResetSettings=Reset Subtitle Edit's settings
 
 
 ; Deutsch
-;Deutsch
 de.msg_SetupIsRunningWarning=Subtitle Edit Setup läuft bereits!
 de.msg_AppIsRunning=Subtitle Edit läuft! Bitte schließen das Programm, bevor Sie fortfahren.
 de.msg_AskToDownNET=Subtitle Edit benötigt .NET Framework 2.0 oder höher. Bitte laden und installieren Sie .NET Framework und starten Sie die Installation erneut. %n%nMöchten Sie .NET Framework jetzt herunterladen?
