@@ -1,4 +1,4 @@
-﻿<ReplaceList>
+<ReplaceList>
   <WholeWords>
     <Word from="lârt" to="lärt" />
     <Word from="hedervårda" to="hedervärda" />
@@ -310,6 +310,21 @@
     <Word from="undrarjag" to="undrar jag" />
     <Word from="ålderjag" to="ålder jag" />
     <Word from="vaﬁe" to="varje" />
+    <Word from="Lngen" to="Ingen" />
+    <Word from="Därjag" to="Där jag" />
+    <Word from="s/yna" to="slyna" />
+    <Word from="snutkàrer" to="snutkårer" />
+    <Word from="klà" to="klå" />
+    <Word from="tvä" to="två" />
+    <Word from="mä/et" to="målet" />
+    <Word from="Blàskrika" to="Blåskrika" />
+    <Word from="omrâdet" to="området" />
+    <Word from="Förlå" to="Förlåt" />
+    <Word from="Iåter" to="låter" />
+    <Word from="KOITI" to="Kom" />
+    <Word from="MGI1" to="Men" />
+    <Word from="Ramstein" to="Rammstein" />
+    <Word from="PepsL" to="Pepsi." />
   </WholeWords>
   <PartialWords>
     <!-- Will be used to check words not in dictionary -->
@@ -344,13 +359,10 @@
     <WordPart from="å" to="ä" />
     <WordPart from="à" to="å" />
     <WordPart from="n/" to="rv" />
-    <WordPart from="À" to="Å" />
-    <WordPart from="Ã" to="Å" />
-    <WordPart from="í" to="i" />
-    <WordPart from="\/" to="v" />
   </PartialWords>
   <BeginLines>
     <Beginning from="Ln " to="In " />
+    <Beginning from="U ppfattat" to="Uppfattat" />
   </BeginLines>
   <EndLines />
   <WholeLines />
