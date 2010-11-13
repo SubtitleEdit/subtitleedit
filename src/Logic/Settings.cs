@@ -199,6 +199,8 @@ namespace Nikse.SubtitleEdit.Logic
         public int ListViewDoubleClickAction { get; set; }
         public string UppercaseLetters { get; set; }
         public int DefaultAdjustMilliseconds { get; set; }
+        public bool AutoRepeatOn { get; set; }
+        public bool AutoContinueOn { get; set; }
 
         public GeneralSettings()
         {
@@ -237,6 +239,8 @@ namespace Nikse.SubtitleEdit.Logic
             ListViewDoubleClickAction = 1;
             UppercaseLetters = "ABCDEFGHIJKLMNOPQRSTUVWZYXÆØÃÅÄÖÉÈÁÂÀÇÉÊÍÓÔÕÚŁ";
             DefaultAdjustMilliseconds = 1000;
+            AutoRepeatOn = true;
+            AutoContinueOn = false;
         }
     }
 
@@ -523,6 +527,12 @@ namespace Nikse.SubtitleEdit.Logic
             subNode = node.SelectSingleNode("DefaultAdjustMilliseconds");
             if (subNode != null)
                 settings.General.DefaultAdjustMilliseconds = Convert.ToInt32(subNode.InnerText);
+            subNode = node.SelectSingleNode("AutoRepeatOn");
+            if (subNode != null)
+                settings.General.AutoRepeatOn = Convert.ToBoolean(subNode.InnerText);
+            subNode = node.SelectSingleNode("AutoContinueOn");
+            if (subNode != null)
+                settings.General.AutoContinueOn = Convert.ToBoolean(subNode.InnerText);
             
             settings.Tools = new Nikse.SubtitleEdit.Logic.ToolsSettings();
             node = doc.DocumentElement.SelectSingleNode("Tools");
@@ -796,7 +806,9 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("ListViewLineSeparatorString", settings.General.ListViewLineSeparatorString);
             textWriter.WriteElementString("ListViewDoubleClickAction", settings.General.ListViewDoubleClickAction.ToString());
             textWriter.WriteElementString("UppercaseLetters", settings.General.UppercaseLetters);
-            textWriter.WriteElementString("DefaultAdjustMilliseconds", settings.General.DefaultAdjustMilliseconds.ToString());            
+            textWriter.WriteElementString("DefaultAdjustMilliseconds", settings.General.DefaultAdjustMilliseconds.ToString());
+            textWriter.WriteElementString("AutoRepeatOn", settings.General.AutoRepeatOn.ToString());
+            textWriter.WriteElementString("AutoContinueOn", settings.General.AutoContinueOn.ToString());
             textWriter.WriteEndElement();
 
             textWriter.WriteStartElement("Tools", "");

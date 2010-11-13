@@ -536,7 +536,10 @@
             public string InvalidVobSubHeader { get; set; }
             public string OpenVobSubFile { get; set; }
             public string VobSubFiles { get; set; }
+            public string OpenBluRaySupFile { get; set; }
+            public string BluRaySupFiles { get; set; }
             public string BeforeImportingVobSubFile { get; set; }
+            public string BeforeImportingBluRaySupFile { get; set; }
             public string BeforeShowSelectedLinesEarlierLater { get; set; }
             public string ShowSelectedLinesEarlierLaterPerformed { get; set; }
             public string DoubleWordsViaRegEx { get; set; }
@@ -581,6 +584,7 @@
                     public string Compare { get; set; }
                     public string ImportOcrFromDvd { get; set; }
                     public string ImportOcrVobSubSubtitle { get; set; }
+                    public string ImportBluRaySupFile { get; set; }
                     public string ImportSubtitleFromMatroskaFile { get; set; }
                     public string ImportSubtitleWithManualChosenEncoding { get; set; }
                     public string ImportText { get; set; }
@@ -1087,6 +1091,7 @@
         public class VobSubOcr
         {
             public string Title { get; set; }
+            public string TitleBluRay { get; set; }
             public string OcrMethod { get; set; }
             public string OcrViaModi { get; set; }
             public string OcrViaTesseract { get; set; }
