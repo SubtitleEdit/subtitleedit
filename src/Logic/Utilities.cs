@@ -1251,7 +1251,7 @@ namespace Nikse.SubtitleEdit.Logic
         internal static string LoadLocalNamesEtc(List<string> namesEtcList, List<string> namesEtcMultiWordList, string languageName)
         {
             string userNamesEtcXmlFileName = DictionaryFolder + languageName + "_names_etc.xml";
-            if (!File.Exists(userNamesEtcXmlFileName) && languageName.Length == 2)
+            if (languageName.Length == 2)
             {
                 string[] files = Directory.GetFiles(DictionaryFolder, languageName + "_??_names_etc.xml");
                 if (files.Length > 0)
