@@ -71,7 +71,8 @@ $ColorIndex1    = 0
 $ColorIndex2    = 1
 $ColorIndex3    = 2
 $ColorIndex4    = 3
-";
+
+//Subtitles";
             StringBuilder sb = new StringBuilder();
             sb.AppendLine(Header);
             foreach (Paragraph p in subtitle.Paragraphs)
