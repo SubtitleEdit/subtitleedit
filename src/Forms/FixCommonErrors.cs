@@ -767,91 +767,75 @@ namespace Nikse.SubtitleEdit.Forms
                 Paragraph p = _subtitle.Paragraphs[i];
                 string oldText = p.Text;
 
+                p.Text = p.Text.Trim();
                 while (p.Text.Contains("  "))
                 {
                     p.Text = p.Text.Replace("  ", " ");
                 }
-
                 if (p.Text.Contains(" " + Environment.NewLine))
                 {
                     p.Text = p.Text.Replace(" " + Environment.NewLine, Environment.NewLine);
                 }
-
                 if (p.Text.EndsWith(" "))
                 {
                     p.Text = p.Text.TrimEnd(' ');
                 }
-
                 while (p.Text.Contains(" ,"))
                 {
                     p.Text = p.Text.Replace(" ,", ",");
                 }
-
                 if (p.Text.EndsWith(" ."))
                 {
                     p.Text = p.Text.Substring(0, p.Text.Length - " .".Length) + ".";
                 }
-
                 if (p.Text.EndsWith(" \""))
                 {
                     p.Text = p.Text.Remove(p.Text.Length - 2, 1);
                 }
-
                 if (p.Text.Contains(" \"" + Environment.NewLine))
                 {
                     p.Text = p.Text.Replace(" \"" + Environment.NewLine, "\"" + Environment.NewLine);
                 }
-
                 if (p.Text.Contains(" ." + Environment.NewLine))
                 {
                     p.Text = p.Text.Replace(" ." + Environment.NewLine, "." + Environment.NewLine);
                 }
-
                 if (p.Text.EndsWith(" !"))
                 {
                     p.Text = p.Text.Substring(0, p.Text.Length - " !".Length) + "!";
                 }
-
                 if (p.Text.Contains(" !" + Environment.NewLine))
                 {
                     p.Text = p.Text.Replace(" !" + Environment.NewLine, "!" + Environment.NewLine);
                 }
-
                 if (p.Text.Contains("! </i>" + Environment.NewLine))
                 {
                     p.Text = p.Text.Replace("! </i>" + Environment.NewLine, "!</i>" + Environment.NewLine);
                 }
-
                 if (p.Text.Contains(" !</i>" + Environment.NewLine))
                 {
                     p.Text = p.Text.Replace(" !</i>" + Environment.NewLine, "!</i>" + Environment.NewLine);
                 }
-
                 if (p.Text.EndsWith(" ?</i>"))
                 {
                     p.Text = p.Text.Replace(" ?</i>", "?</i>");
-                }
-                
+                }                
                 if (p.Text.EndsWith(" ?"))
                 {
                     p.Text = p.Text.Substring(0, p.Text.Length - " ?".Length) + "?";
                 }
-
                 if (p.Text.Contains(" ?" + Environment.NewLine))
                 {
                     p.Text = p.Text.Replace(" ?" + Environment.NewLine, "?" + Environment.NewLine);
                 }
-
                 if (p.Text.Contains(" ?</i>" + Environment.NewLine))
                 {
                     p.Text = p.Text.Replace(" ?</i>" + Environment.NewLine, "?</i>" + Environment.NewLine);
                 }
-
                 if (p.Text.Contains("? </i>" + Environment.NewLine))
                 {
                     p.Text = p.Text.Replace("? </i>" + Environment.NewLine, "?</i>" + Environment.NewLine);
                 }
-
                 if (p.Text.EndsWith(" </i>"))
                 {
                     p.Text = p.Text.Substring(0, p.Text.Length - " </i>".Length) + "</i>";
@@ -868,7 +852,6 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     p.Text = p.Text.Replace(" </I>" + Environment.NewLine, "</I>" + Environment.NewLine);
                 }
-
                 if (p.Text.StartsWith("<i> "))
                 {
                     p.Text = "<i>" + p.Text.Substring("<i> ".Length);
@@ -877,6 +860,8 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     p.Text = p.Text.Replace(Environment.NewLine + "<i> ", Environment.NewLine + "<i>");
                 }
+                p.Text = p.Text.Trim();
+                p.Text = p.Text.Replace(Environment.NewLine + " ", Environment.NewLine);
                 if (p.Text.StartsWith("<I> "))
                 {
                     p.Text = "<I>" + p.Text.Substring("<I> ".Length);
@@ -885,6 +870,8 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     p.Text = p.Text.Replace(Environment.NewLine + "<I> ", Environment.NewLine + "<I>");
                 }
+                p.Text = p.Text.Trim();
+                p.Text = p.Text.Replace(Environment.NewLine + " ", Environment.NewLine);
 
                 if (p.Text != oldText)
                 {
