@@ -1,6 +1,7 @@
 v3.0
  * NEW:
-   * Wave form control with many sync/replay/creation commands (thx for feedback Kerensky)
+   * Wave form control with many sync/replay/creation commands
+     (thx Kerensky for the feedback)
    * Translator mode  (Edit -> Show original subtitle, thx dr.jackson)
    * Added Microsoft translate
    * Option to remove blank lines when opening a subtitle (thx honeybunny)
@@ -10,25 +11,33 @@ v3.0
    * New cool installer (thx XhmikosR)
  * IMPROVED:
    * Layout changed - Translation helper + Create/adjust lines moved to main window
-   * Ripping subtitles from DVD should now have correct time codes (thx JeanlDvd/DvdSubEdit +  gioni666)
-   * Ripping subtitles from DVD/Vobsub files now has a an option to only OCR  "forced subtitles" (thx Rolf)
-   * Ripping subtitles from Vobsub files now has an option to use time codes from idx file (now default)
-   * Updated Tesseract 2.x to 3.0.
-   * Can now retrieve and install spell check dictionaries from the internet (thx dr.jackson for idea + Jaime Olivares for zip unpack code + thx Pierre for testing)
+   * Ripping subtitles from DVD should now have correct time codes
+     (thx JeanlDvd/DvdSubEdit +  gioni666)
+   * Ripping subtitles from DVD/Vobsub files now has a an option to only OCR
+     "forced subtitles" (thx Rolf)
+   * Ripping subtitles from Vobsub files now has an option to use time codes
+     from idx file (now default)
+   * Updated Tesseract 2.x to 3.0
+   * Can now retrieve and install spell check dictionaries from the internet
+     (thx dr.jackson for the idea, Jaime Olivares for zip unpack code & Pierre for testing)
    * "Compare subtitle" color high-lighting is now more like other compare programs
-   * Fix common errors - Fix alone lowercase 'i' to 'I' now works better close to html tags (thx Chamallow)
+   * Fix common errors - Fix alone lowercase 'i' to 'I' now works better close to
+     html tags (thx Chamallow)
    * Updated names list (thx Chamallow)
    * "Google translate" window is now resizable (thx Kerensky)
    * Bold/italic/font tags now work better in ssa/ass subtitles
-   * Icons are now external in the "Icons" folder - you can change them easily yourself without re-compiling (thx 6205)
+   * Icons are now external in the "Icons" folder - you can change them easily yourself
+     without re-compiling (thx 6205)
    * New toolbar icons from gnome-look.org with some customization (thx 6205)
  * FIXED:
    * Merge short lines now works with italic tags (thx honeybunny)
-   * Importing subtitles from Matroska files will now correctly change current encoding to UTF-8 (thx Jonathan)
-   * Numerous fixes in "Remove text for hearing impaired" (thx sialivi, eMWu, honeybunny, aMvEL)
+   * Importing subtitles from Matroska files will now correctly change the current
+     encoding to UTF-8 (thx Jonathan)
+   * Numerous fixes in "Remove text for hearing impaired"
+     (thx sialivi, eMWu, honeybunny, aMvEL)
    * Tools -> Append subtitle without synchronizing (thx Les)
-   * Fixed bug in "Spell check -> Add to names/etc list" (thx dny238)</li>
-   * Fixed crash in ""Auto balance selected lines" (thx Jonathan)
-   * Fixed crash in "Replace all".
-   * Fixed bug in "time control" (thx eMWu)
+   * Bug in "Spell check -> Add to names/etc list" (thx dny238)
+   * Crash in ""Auto balance selected lines" (thx Jonathan)
+   * Crash in "Replace all"
+   * Bug in "time control" (thx eMWu)
    * Resume spell check now works better (thx Kerensky)
