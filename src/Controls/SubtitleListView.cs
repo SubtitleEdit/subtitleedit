@@ -67,8 +67,11 @@ namespace Nikse.SubtitleEdit.Controls
             if (!IsColumTextAlternateActive)
             {
                 Columns.Add(new ColumnHeader { Text = text, Width = -2 });
-                Columns[ColumnIndexText].Width = 250;
-                SubtitleListView_Resize(null, null);
+
+                int length = Columns[ColumnIndexNumber].Width + Columns[ColumnIndexStart].Width + Columns[ColumnIndexEnd].Width + Columns[ColumnIndexDuration].Width;
+                int lengthAvailable = this.Width - length;
+                Columns[ColumnIndexText].Width = (lengthAvailable / 2) - 15;
+                Columns[ColumnIndexTextAlternate].Width = -2;
             }
         }
 
