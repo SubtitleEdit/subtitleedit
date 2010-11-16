@@ -371,6 +371,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <Compare>Po&amp;równaj...</Compare>
         <ImportOcrFromDvd>Importuj/OCR napisy z VOB/IFO (DVD)...</ImportOcrFromDvd>
         <ImportOcrVobSubSubtitle>Importuj/OCR napisy z VobSub (sub/idx)...</ImportOcrVobSubSubtitle>
+        <ImportBluRaySupFile>Importuj/OCR napisy z BluRay (.sup)...</ImportBluRaySupFile>
         <ImportSubtitleFromMatroskaFile>Importuj napisy z pliku Matroska...</ImportSubtitleFromMatroskaFile>
         <ImportSubtitleWithManualChosenEncoding>Importuj napisy z ręcznym wyborem kodowania...</ImportSubtitleWithManualChosenEncoding>
         <ImportText>Importuj tekst...</ImportText>
@@ -671,7 +672,10 @@ Kontynuować?</SubtitleAppendPrompt>
     <InvalidVobSubHeader>Błędny nagłówek pliku VobSub: {0}</InvalidVobSubHeader>
     <OpenVobSubFile>Otwórz napisy VobSub (sub/idx)...</OpenVobSubFile>
     <VobSubFiles>Pliki napisów VobSub</VobSubFiles>
+    <OpenBluRaySupFile>Otwórz napisy BluRay (.sup)...</OpenBluRaySupFile>
+    <BluRaySupFiles>Pliki napisów BluRay (.sup)</BluRaySupFiles>
     <BeforeImportingVobSubFile>Przed importowaniem napisów VobSub</BeforeImportingVobSubFile>
+    <BeforeImportingBluRaySupFile>Przed importowaniem napisów BluRay (.sup)</BeforeImportingBluRaySupFile>
     <BeforeShowSelectedLinesEarlierLater>Przed wybraniem wcześniejszego/późniejszego ukazywania się linii</BeforeShowSelectedLinesEarlierLater>
     <ShowSelectedLinesEarlierLaterPerformed>Wykonanie na wybranych liniach wcześniejszego/późniejszego ukazywania się</ShowSelectedLinesEarlierLaterPerformed>
     <DoubleWordsViaRegEx>Podwójne wyrazy via regex {0}</DoubleWordsViaRegEx>
@@ -973,6 +977,7 @@ Kontynuować?</SubtitleAppendPrompt>
   </VobSubEditCharacters>
   <VobSubOcr>
     <Title>Import/OCR napisów VobSub (sub/idx)</Title>
+    <TitleBluRay>Import/OCR napisów BluRay (.sup)</TitleBluRay>
     <OcrMethod>Metody OCR</OcrMethod>
     <OcrViaModi>OCR za pomocą MS MODI. Wymagany MS Office</OcrViaModi>
     <OcrViaTesseract>OCR przy użyciu Tesseract</OcrViaTesseract>

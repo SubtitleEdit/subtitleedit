@@ -368,6 +368,7 @@ E-mail: nikse.dk @gmail.com</AboutText1>
         <Compare>&amp;Compara...</Compare>
         <ImportOcrFromDvd>Import/subtitrarea OCR din vob/IFO (DVD) ...</ImportOcrFromDvd>
         <ImportOcrVobSubSubtitle>Import/OCR VobSub (sub/idx) subtitrarea...</ImportOcrVobSubSubtitle>
+        <ImportBluRaySupFile>Import/OCR BluRay (,sup) subtitrarea...</ImportBluRaySupFile>
         <ImportSubtitleFromMatroskaFile>Import subtitrare din fisier Matroska...</ImportSubtitleFromMatroskaFile>
         <ImportSubtitleWithManualChosenEncoding>Import subtitrare cu alegerea manuala a codarii...</ImportSubtitleWithManualChosenEncoding>
         <ImportText>Import text simplu...</ImportText>
@@ -668,7 +669,10 @@ E-mail: nikse.dk @gmail.com</AboutText1>
     <InvalidVobSubHeader>Antetul nu este valabil pentru fisier VobSubr: {0}</InvalidVobSubHeader>
     <OpenVobSubFile>Deschide subtitrare VobSub (sub/idx)...</OpenVobSubFile>
     <VobSubFiles>Fisier subtitrare VobSub</VobSubFiles>
+    <OpenBluRaySupFile>Deschide subtitrare BluRay (.sup)...</OpenBluRaySupFile>
+    <BluRaySupFiles>Fisier subtitrare BluRay</BluRaySupFiles>
     <BeforeImportingVobSubFile>Inainte de a importa subtitrare VobSub</BeforeImportingVobSubFile>
+    <BeforeImportingBluRaySupFile>Inainte de a importa subtitrare BluRay (.sup)</BeforeImportingBluRaySupFile>
     <BeforeShowSelectedLinesEarlierLater>Inainte de a arata liniile selectate mai devreme/tarziu</BeforeShowSelectedLinesEarlierLater>
     <ShowSelectedLinesEarlierLaterPerformed>Arata mai devreme/tarziu efectuate pe liniile selectate</ShowSelectedLinesEarlierLaterPerformed>
     <DoubleWordsViaRegEx>Cuvinte dublate via regex {0}</DoubleWordsViaRegEx>
@@ -970,6 +974,7 @@ E-mail: nikse.dk @gmail.com</AboutText1>
   </VobSubEditCharacters>
   <VobSubOcr>
     <Title>Import subtitrare /OCR VobSub (sub/idx)</Title>
+    <TitleBluRay>Import subtitrare /OCR BluRay (.sup)</TitleBluRay>
     <OcrMethod>OCR metoda</OcrMethod>
     <OcrViaModi>OCR, prin intermediul Microsoft Office Document Imaging (MODI). Necesita MS Office</OcrViaModi>
     <OcrViaTesseract>OCR prin Tesseract</OcrViaTesseract>

@@ -371,6 +371,7 @@
         <Compare>&amp;Jämför...</Compare>
         <ImportOcrFromDvd>Importera/OCR textning från VOB/IFO (DVD) ...</ImportOcrFromDvd>
         <ImportOcrVobSubSubtitle>Importera/OCR VobSub (sub/idx) undertext...</ImportOcrVobSubSubtitle>
+        <ImportBluRaySupFile>Importera/OCR BluRay (.sup) undertext...</ImportBluRaySupFile>
         <ImportSubtitleFromMatroskaFile>Importera undertext från Matroska fil...</ImportSubtitleFromMatroskaFile>
         <ImportSubtitleWithManualChosenEncoding>Importera undertext med manuell valda kodningen...</ImportSubtitleWithManualChosenEncoding>
         <ImportText>Importera enbart text...</ImportText>
@@ -671,7 +672,10 @@
     <InvalidVobSubHeader>Rubrik inte giltigt VobSub fil: {0}</InvalidVobSubHeader>
     <OpenVobSubFile>Öppna VobSub (sub/idx) undertext...</OpenVobSubFile>
     <VobSubFiles>VobSub undertext filer</VobSubFiles>
+    <OpenBluRaySupFile>Öppna BluRay (.sup) undertext...</OpenBluRaySupFile>
+    <BluRaySupFiles>BluRay undertext filer</BluRaySupFiles>
     <BeforeImportingVobSubFile>Innan du importerar VobSub undertext</BeforeImportingVobSubFile>
+    <BeforeImportingBluRaySupFile>Innan du importerar BluRay undertext</BeforeImportingBluRaySupFile>
     <BeforeShowSelectedLinesEarlierLater>Före visa valda rader tidigare/senare</BeforeShowSelectedLinesEarlierLater>
     <ShowSelectedLinesEarlierLaterPerformed>Visa tidigare/senare utförs på utvalda rader</ShowSelectedLinesEarlierLaterPerformed>
     <DoubleWordsViaRegEx>Dubbel ord via regex {0}</DoubleWordsViaRegEx>
@@ -973,6 +977,7 @@
   </VobSubEditCharacters>
   <VobSubOcr>
     <Title>Import/OCR VobSub (sub/idx) undertext</Title>
+    <TitleBluRay>Import/OCR BluRay (.sup) undertext</TitleBluRay>
     <OcrMethod>OCR-metod</OcrMethod>
     <OcrViaModi>OCR via Microsoft Office Document Imaging (MODI). Kräver MS Office</OcrViaModi>
     <OcrViaTesseract>OCR via Tesseract</OcrViaTesseract>

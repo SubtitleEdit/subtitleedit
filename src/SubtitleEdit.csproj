@@ -369,6 +369,11 @@
     <Compile Include="Forms\VobSubOcrNewFolder.Designer.cs">
       <DependentUpon>VobSubOcrNewFolder.cs</DependentUpon>
     </Compile>
+    <Compile Include="Logic\BluRaySup\BluRaySupPalette.cs" />
+    <Compile Include="Logic\BluRaySup\BluRaySupParser.cs" />
+    <Compile Include="Logic\BluRaySup\BluRaySupPicture.cs" />
+    <Compile Include="Logic\BluRaySup\Core.cs" />
+    <Compile Include="Logic\BluRaySup\ToolBox.cs" />
     <Compile Include="Logic\DetectEncoding\EncodingTools.cs" />
     <Compile Include="Logic\DetectEncoding\Multilang\CMLangConvertCharset.cs" />
     <Compile Include="Logic\DetectEncoding\Multilang\CMLangConvertCharsetClass.cs" />
@@ -436,6 +441,8 @@
     <Compile Include="Logic\SubtitleFormats\Ebu.cs" />
     <Compile Include="Logic\SubtitleFormats\SonyDVDArchitect.cs" />
     <Compile Include="Logic\SubtitleFormats\Spruce.cs" />
+    <Compile Include="Logic\SubtitleFormats\SubtitleEditorProject.cs" />
+    <Compile Include="Logic\SubtitleFormats\UleadSubtitleFormat.cs" />
     <Compile Include="Logic\SubtitleFormats\UnknownSubtitle5.cs" />
     <Compile Include="Logic\SubtitleFormats\OpenDvt.cs" />
     <Compile Include="Logic\SubtitleFormats\YouTubeSbv.cs" />
@@ -670,7 +677,7 @@
       <SubType>Designer</SubType>
     </None>
     <EmbeddedResource Include="Resources\da-DK.xml.zip" />
-    <None Include="Resources\es-ES.xml.zip" />
+    <EmbeddedResource Include="Resources\es-ES.xml.zip" />
     <EmbeddedResource Include="Resources\pl-PL.xml.zip" />
     <EmbeddedResource Include="Resources\ro-RO.xml.zip" />
     <EmbeddedResource Include="Resources\sr-Cyrl-CS.xml.zip" />

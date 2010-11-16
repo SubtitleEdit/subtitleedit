@@ -45,11 +45,9 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 #Subtitle text begin";
 
             const string Footer = @"#Subtitle text end
-
 #Subtitle text attribute begin
-#/R:1,856 /FP:8  /FS:24
+#/R:1,{0} /FP:8  /FS:24
 #Subtitle text attribute end";
-
 
             StringBuilder sb = new StringBuilder();
             sb.AppendLine(Header);
@@ -63,7 +61,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 sb.AppendLine(Utilities.RemoveHtmlTags(p.Text));
                 index++;
             }
-            sb.AppendLine(Footer);
+            sb.AppendLine(string.Format(Footer, subtitle.Paragraphs.Count));
             return sb.ToString();
         }
 

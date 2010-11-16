@@ -8,6 +8,13 @@ namespace Nikse.SubtitleEdit.Logic
     {
         public static bool IsColorClose(Color a, Color b, int tolerance)
         {
+            if (a.A < 120 && b.A < 120)
+                return true; // transparent
+
+            if (a.A > 250 && a.R > 90 && a.G > 90 && a.B > 90 && 
+                b.A > 250 && b.R > 90 && b.G > 90 && b.B > 90)
+                return true; // dark, non transparent
+
             int diff = (a.R + a.G + a.B) - (b.R + b.G + b.B);
             return diff < tolerance && diff > -tolerance;
         }
@@ -131,7 +138,9 @@ namespace Nikse.SubtitleEdit.Logic
                 for (int y = 1; y < bmp1.Height; y++)
                 {
                     if (!IsColorClose(bmp1.GetPixel(x, y), bmp2.GetPixel(x, y), 20))
+                    {
                         different++;
+                    }
                 }
             }
             return different;

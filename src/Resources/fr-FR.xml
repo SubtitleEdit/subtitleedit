@@ -370,6 +370,7 @@ Email : mailto:nikse.dk@gmail.com</AboutText1>
         <Compare>&amp;Comparer...</Compare>
         <ImportOcrFromDvd>Import/sous-titres OCR de VOB/IFO (DVD) ...</ImportOcrFromDvd>
         <ImportOcrVobSubSubtitle>Import/OCR VobSub (sub/idx) sous-titres...</ImportOcrVobSubSubtitle>
+        <ImportBluRaySupFile>Import/OCR BluRay (.sup) sous-titres...</ImportBluRaySupFile>
         <ImportSubtitleFromMatroskaFile>Sous-titres d'importation de fichier Matroska...</ImportSubtitleFromMatroskaFile>
         <ImportSubtitleWithManualChosenEncoding>Sous-titres d'importation avec le codage choisi manuel...</ImportSubtitleWithManualChosenEncoding>
         <ImportText>Importer texte...</ImportText>
@@ -667,7 +668,10 @@ Poursuivre?</SubtitleAppendPrompt>
     <InvalidVobSubHeader>En-tête non valide fichier VobSub : {0}</InvalidVobSubHeader>
     <OpenVobSubFile>Ouvrir sous-titres VobSub (sub/idx)...</OpenVobSubFile>
     <VobSubFiles>Fichiers sous-titres VobSub</VobSubFiles>
+    <OpenBluRaySupFile>Ouvrir sous-titres BluRay (.sup)...</OpenBluRaySupFile>
+    <BluRaySupFiles>Fichiers sous-titres BluRay</BluRaySupFiles>
     <BeforeImportingVobSubFile>Avant d'importer des sous-titres VobSub</BeforeImportingVobSubFile>
+    <BeforeImportingBluRaySupFile>Avant d'importer des sous-titres BluRay</BeforeImportingBluRaySupFile>
     <BeforeShowSelectedLinesEarlierLater>Avant de montrer les lignes précédentes/suivantes sélectionnées</BeforeShowSelectedLinesEarlierLater>
     <ShowSelectedLinesEarlierLaterPerformed>Montrer précédent/suivant effectué sur les lignes sélectionnées </ShowSelectedLinesEarlierLaterPerformed>
     <DoubleWordsViaRegEx>Double mots via regex {0}</DoubleWordsViaRegEx>
@@ -970,6 +974,7 @@ Poursuivre?</SubtitleAppendPrompt>
   </VobSubEditCharacters>
   <VobSubOcr>
     <Title>Import/OCR VobSub (sub/idx) sous-titres</Title>
+    <TitleBluRay>Import/OCR BluRay (.sup) sous-titres</TitleBluRay>
     <OcrMethod>Méthode OCR</OcrMethod>
     <OcrViaModi>OCR par Microsoft Office Document Imaging (MODI). Nécessite MS Office</OcrViaModi>
     <OcrViaTesseract>OCR par Tesseract</OcrViaTesseract>
