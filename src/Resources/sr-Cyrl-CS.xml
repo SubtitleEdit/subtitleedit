@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Language Name="Српски">
   <General>
     <Title>Subtitle Edit</Title>
@@ -370,6 +370,7 @@ C# изворни кôд се налази на интернет страниц�
         <Compare>&amp;Упореди...</Compare>
         <ImportOcrFromDvd>Увези/препознај знакове титла  из VOB/IFO датотеке (ДВД)...</ImportOcrFromDvd>
         <ImportOcrVobSubSubtitle>Увези/препознај знакове VobSub титла...</ImportOcrVobSubSubtitle>
+        <ImportBluRaySupFile>Увези/препознај знакове BluRay титла...</ImportBluRaySupFile>
         <ImportSubtitleFromMatroskaFile>Увези титл из матрошка датотеке...</ImportSubtitleFromMatroskaFile>
         <ImportSubtitleWithManualChosenEncoding>Увези титл с ручно изабраним кодним распоредом...</ImportSubtitleWithManualChosenEncoding>
         <ImportText>Увези чист текст...</ImportText>
@@ -599,8 +600,7 @@ C# изворни кôд се налази на интернет страниц�
     <SubtitleAppendPromptTitle>Качење титла</SubtitleAppendPromptTitle>
     <OpenSubtitleToAppend>Отвори титл за качење...</OpenSubtitleToAppend>
     <AppendViaVisualSyncTitle>Визуелна синхронизација — качење другог дела титла</AppendViaVisualSyncTitle>
-    <AppendSynchronizedSubtitlePrompt>
-    </AppendSynchronizedSubtitlePrompt>
+    <AppendSynchronizedSubtitlePrompt>Додај овај синхронизовани титлове?</AppendSynchronizedSubtitlePrompt>
     <BeforeAppend>Пре качења</BeforeAppend>
     <SubtitleAppendedX>Прикачено титлова: {0}</SubtitleAppendedX>
     <SubtitleNotAppended>Титл није прикачен!</SubtitleNotAppended>
@@ -671,7 +671,10 @@ C# изворни кôд се налази на интернет страниц�
     <InvalidVobSubHeader>Заглавље није исправна VobSub датотека: {0}</InvalidVobSubHeader>
     <OpenVobSubFile>Отварање VobSub титла...</OpenVobSubFile>
     <VobSubFiles>VobSub титлови</VobSubFiles>
+    <OpenBluRaySupFile>Отварање BluRay (.sup) титла...</OpenBluRaySupFile>
+    <BluRaySupFiles>BluRay титлови</BluRaySupFiles>
     <BeforeImportingVobSubFile>Пре увоза VobSub титла</BeforeImportingVobSubFile>
+    <BeforeImportingBluRaySupFile>Пре увоза BluRay титла</BeforeImportingBluRaySupFile>
     <BeforeShowSelectedLinesEarlierLater>Пре приказивања изабране линије раније/касније</BeforeShowSelectedLinesEarlierLater>
     <ShowSelectedLinesEarlierLaterPerformed>Прикажи изабране линије раније или касније</ShowSelectedLinesEarlierLaterPerformed>
     <DoubleWordsViaRegEx>Дупле речи путем регекса {0}</DoubleWordsViaRegEx>
@@ -694,10 +697,8 @@ C# изворни кôд се налази на интернет страниц�
     <XMinimumDisplayTimeBetweenParagraphsChanged>Измењено броја линија с минималним временом приказа између пасуса: {0}</XMinimumDisplayTimeBetweenParagraphsChanged>
     <BeforeImportText>Пре увоза чистог текста</BeforeImportText>
     <TextImported>Текст је увезен</TextImported>
-    <BeforePointSynchronization>
-    </BeforePointSynchronization>
-    <PointSynchronizationDone>
-    </PointSynchronizationDone>
+    <BeforePointSynchronization>Пре тачка синхронизације</BeforePointSynchronization>
+    <PointSynchronizationDone>Тачка синхронизације урадити</PointSynchronizationDone>
     <BeforeTimeCodeImport>Пре увоза временских одредница</BeforeTimeCodeImport>
     <TimeCodeImportedFromXY>Временске одреднице су увезене из {0}: {1}</TimeCodeImportedFromXY>
     <BeforeInsertSubtitleAtVideoPosition>Пре постављања титла у положај видео записа</BeforeInsertSubtitleAtVideoPosition>
@@ -975,6 +976,7 @@ C# изворни кôд се налази на интернет страниц�
   </VobSubEditCharacters>
   <VobSubOcr>
     <Title>Увожење/препознавање знакова VobSub титла</Title>
+    <TitleBluRay>Увожење/препознавање знакова BluRay титла</TitleBluRay>
     <OcrMethod>Метода препознавања знакова</OcrMethod>
     <OcrViaModi>Препознавање знакова путем Microsoft Office Document Imaging (MODI). Захтева MS Office</OcrViaModi>
     <OcrViaTesseract>Препознавање знакова путем хиперкоцке</OcrViaTesseract>

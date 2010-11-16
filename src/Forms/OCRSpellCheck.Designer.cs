@@ -63,7 +63,7 @@
             // buttonAbort
             // 
             this.buttonAbort.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonAbort.Location = new System.Drawing.Point(512, 404);
+            this.buttonAbort.Location = new System.Drawing.Point(623, 442);
             this.buttonAbort.Name = "buttonAbort";
             this.buttonAbort.Size = new System.Drawing.Size(85, 21);
             this.buttonAbort.TabIndex = 24;
@@ -86,9 +86,9 @@
             this.groupBoxSuggestions.Controls.Add(this.buttonUseSuggestionAlways);
             this.groupBoxSuggestions.Controls.Add(this.buttonUseSuggestion);
             this.groupBoxSuggestions.Controls.Add(this.listBoxSuggestions);
-            this.groupBoxSuggestions.Location = new System.Drawing.Point(320, 211);
+            this.groupBoxSuggestions.Location = new System.Drawing.Point(320, 249);
             this.groupBoxSuggestions.Name = "groupBoxSuggestions";
-            this.groupBoxSuggestions.Size = new System.Drawing.Size(277, 187);
+            this.groupBoxSuggestions.Size = new System.Drawing.Size(388, 187);
             this.groupBoxSuggestions.TabIndex = 32;
             this.groupBoxSuggestions.TabStop = false;
             this.groupBoxSuggestions.Text = "Suggestions";
@@ -96,7 +96,7 @@
             // buttonUseSuggestionAlways
             // 
             this.buttonUseSuggestionAlways.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonUseSuggestionAlways.Location = new System.Drawing.Point(180, 16);
+            this.buttonUseSuggestionAlways.Location = new System.Drawing.Point(291, 16);
             this.buttonUseSuggestionAlways.Name = "buttonUseSuggestionAlways";
             this.buttonUseSuggestionAlways.Size = new System.Drawing.Size(87, 21);
             this.buttonUseSuggestionAlways.TabIndex = 33;
@@ -107,7 +107,7 @@
             // buttonUseSuggestion
             // 
             this.buttonUseSuggestion.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonUseSuggestion.Location = new System.Drawing.Point(95, 16);
+            this.buttonUseSuggestion.Location = new System.Drawing.Point(206, 16);
             this.buttonUseSuggestion.Name = "buttonUseSuggestion";
             this.buttonUseSuggestion.Size = new System.Drawing.Size(79, 21);
             this.buttonUseSuggestion.TabIndex = 32;
@@ -122,7 +122,7 @@
             this.listBoxSuggestions.FormattingEnabled = true;
             this.listBoxSuggestions.Location = new System.Drawing.Point(6, 39);
             this.listBoxSuggestions.Name = "listBoxSuggestions";
-            this.listBoxSuggestions.Size = new System.Drawing.Size(261, 134);
+            this.listBoxSuggestions.Size = new System.Drawing.Size(372, 134);
             this.listBoxSuggestions.TabIndex = 30;
             // 
             // GroupBoxEditWord
@@ -135,7 +135,7 @@
             this.GroupBoxEditWord.Controls.Add(this.textBoxWord);
             this.GroupBoxEditWord.Controls.Add(this.buttonSkipOnce);
             this.GroupBoxEditWord.Controls.Add(this.buttonAddToNames);
-            this.GroupBoxEditWord.Location = new System.Drawing.Point(12, 211);
+            this.GroupBoxEditWord.Location = new System.Drawing.Point(12, 249);
             this.GroupBoxEditWord.Name = "GroupBoxEditWord";
             this.GroupBoxEditWord.Size = new System.Drawing.Size(302, 187);
             this.GroupBoxEditWord.TabIndex = 33;
@@ -217,7 +217,7 @@
             this.groupBoxEditWholeText.Controls.Add(this.buttonSkipText);
             this.groupBoxEditWholeText.Controls.Add(this.buttonChangeWholeText);
             this.groupBoxEditWholeText.Controls.Add(this.textBoxWholeText);
-            this.groupBoxEditWholeText.Location = new System.Drawing.Point(12, 210);
+            this.groupBoxEditWholeText.Location = new System.Drawing.Point(12, 248);
             this.groupBoxEditWholeText.Name = "groupBoxEditWholeText";
             this.groupBoxEditWholeText.Size = new System.Drawing.Size(302, 188);
             this.groupBoxEditWholeText.TabIndex = 37;
@@ -261,7 +261,7 @@
             this.groupBoxTextAsImage.Controls.Add(this.pictureBoxText);
             this.groupBoxTextAsImage.Location = new System.Drawing.Point(12, 12);
             this.groupBoxTextAsImage.Name = "groupBoxTextAsImage";
-            this.groupBoxTextAsImage.Size = new System.Drawing.Size(585, 114);
+            this.groupBoxTextAsImage.Size = new System.Drawing.Size(696, 152);
             this.groupBoxTextAsImage.TabIndex = 34;
             this.groupBoxTextAsImage.TabStop = false;
             this.groupBoxTextAsImage.Text = "Image text";
@@ -273,7 +273,7 @@
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.pictureBoxText.Location = new System.Drawing.Point(6, 18);
             this.pictureBoxText.Name = "pictureBoxText";
-            this.pictureBoxText.Size = new System.Drawing.Size(573, 89);
+            this.pictureBoxText.Size = new System.Drawing.Size(684, 127);
             this.pictureBoxText.TabIndex = 32;
             this.pictureBoxText.TabStop = false;
             // 
@@ -284,9 +284,9 @@
             this.groupBoxText.Controls.Add(this.richTextBoxParagraph);
             this.groupBoxText.Controls.Add(this.buttonEditWholeText);
             this.groupBoxText.Controls.Add(this.buttonEditWord);
-            this.groupBoxText.Location = new System.Drawing.Point(12, 132);
+            this.groupBoxText.Location = new System.Drawing.Point(12, 170);
             this.groupBoxText.Name = "groupBoxText";
-            this.groupBoxText.Size = new System.Drawing.Size(585, 72);
+            this.groupBoxText.Size = new System.Drawing.Size(696, 72);
             this.groupBoxText.TabIndex = 38;
             this.groupBoxText.TabStop = false;
             this.groupBoxText.Text = "Text";
@@ -326,7 +326,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(609, 435);
+            this.ClientSize = new System.Drawing.Size(720, 473);
             this.Controls.Add(this.groupBoxText);
             this.Controls.Add(this.groupBoxTextAsImage);
             this.Controls.Add(this.buttonAbort);

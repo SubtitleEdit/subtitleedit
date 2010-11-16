@@ -73,6 +73,7 @@
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripMenuItemImportDvdSubtitles = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemSubIdx = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemImportBluRaySup = new System.Windows.Forms.ToolStripMenuItem();
             this.matroskaImportStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemManualAnsi = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemImportText = new System.Windows.Forms.ToolStripMenuItem();
@@ -656,6 +657,7 @@
             this.toolStripSeparator1,
             this.toolStripMenuItemImportDvdSubtitles,
             this.toolStripMenuItemSubIdx,
+            this.toolStripMenuItemImportBluRaySup,
             this.matroskaImportStripMenuItem,
             this.toolStripMenuItemManualAnsi,
             this.toolStripMenuItemImportText,
@@ -741,6 +743,13 @@
             this.toolStripMenuItemSubIdx.Size = new System.Drawing.Size(334, 22);
             this.toolStripMenuItemSubIdx.Text = "Import/OCR VobSub (sub/idx) subtitle...";
             this.toolStripMenuItemSubIdx.Click += new System.EventHandler(this.ToolStripMenuItemSubIdxClick1);
+            // 
+            // toolStripMenuItemImportBluRaySup
+            // 
+            this.toolStripMenuItemImportBluRaySup.Name = "toolStripMenuItemImportBluRaySup";
+            this.toolStripMenuItemImportBluRaySup.Size = new System.Drawing.Size(334, 22);
+            this.toolStripMenuItemImportBluRaySup.Text = "Import/OCR BluRay sup file...";
+            this.toolStripMenuItemImportBluRaySup.Click += new System.EventHandler(this.toolStripMenuItemImportBluRaySup_Click);
             // 
             // matroskaImportStripMenuItem
             // 
@@ -3137,6 +3146,7 @@
         private System.Windows.Forms.TrackBar trackBarWaveFormPosition;
         private System.Windows.Forms.Label labelVideoInfo;
         private System.Windows.Forms.ToolStripMenuItem showhideWaveFormToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemImportBluRaySup;
     }
 }
 

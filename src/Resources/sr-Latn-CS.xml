@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Language Name="Srpski">
   <General>
     <Title>Subtitle Edit</Title>
@@ -370,6 +370,7 @@ E-pošta: mailto:nikse.dk@gmail.com</AboutText1>
         <Compare>&amp;Uporedi...</Compare>
         <ImportOcrFromDvd>Uvezi/prepoznaj znakove titla  iz VOB/IFO datoteke (DVD)...</ImportOcrFromDvd>
         <ImportOcrVobSubSubtitle>Uvezi/prepoznaj znakove VobSub titla...</ImportOcrVobSubSubtitle>
+        <ImportBluRaySupFile>Uvezi/prepoznaj znakove BluRay (.sup) titla...</ImportBluRaySupFile>
         <ImportSubtitleFromMatroskaFile>Uvezi titl iz matroška datoteke...</ImportSubtitleFromMatroskaFile>
         <ImportSubtitleWithManualChosenEncoding>Uvezi titl s ručno izabranim kodnim rasporedom...</ImportSubtitleWithManualChosenEncoding>
         <ImportText>Uvezi čist tekst...</ImportText>
@@ -599,8 +600,7 @@ koji bi trebalo da je već sinhronizovan s video zapisom.
     <SubtitleAppendPromptTitle>Kačenje titla</SubtitleAppendPromptTitle>
     <OpenSubtitleToAppend>Otvori titl za kačenje...</OpenSubtitleToAppend>
     <AppendViaVisualSyncTitle>Vizuelna sinhronizacija — kačenje drugog dela titla</AppendViaVisualSyncTitle>
-    <AppendSynchronizedSubtitlePrompt>
-    </AppendSynchronizedSubtitlePrompt>
+    <AppendSynchronizedSubtitlePrompt>Додај овај синхронизовани титлове?</AppendSynchronizedSubtitlePrompt>
     <BeforeAppend>Pre kačenja</BeforeAppend>
     <SubtitleAppendedX>Prikačeno titlova: {0}</SubtitleAppendedX>
     <SubtitleNotAppended>Titl nije prikačen!</SubtitleNotAppended>
@@ -671,7 +671,10 @@ koji bi trebalo da je već sinhronizovan s video zapisom.
     <InvalidVobSubHeader>Zaglavlje nije ispravna VobSub datoteka: {0}</InvalidVobSubHeader>
     <OpenVobSubFile>Otvaranje VobSub titla...</OpenVobSubFile>
     <VobSubFiles>VobSub titlovi</VobSubFiles>
+    <OpenBluRaySupFile>Otvaranje BluRay titla...</OpenBluRaySupFile>
+    <BluRaySupFiles>BluRay (.sup)  titlovi</BluRaySupFiles>
     <BeforeImportingVobSubFile>Pre uvoza VobSub titla</BeforeImportingVobSubFile>
+    <BeforeImportingBluRaySupFile>Pre uvoza BluRay titla</BeforeImportingBluRaySupFile>
     <BeforeShowSelectedLinesEarlierLater>Pre prikazivanja izabrane linije ranije/kasnije</BeforeShowSelectedLinesEarlierLater>
     <ShowSelectedLinesEarlierLaterPerformed>Prikaži izabrane linije ranije ili kasnije</ShowSelectedLinesEarlierLaterPerformed>
     <DoubleWordsViaRegEx>Duple reči putem regeksa {0}</DoubleWordsViaRegEx>
@@ -694,10 +697,8 @@ koji bi trebalo da je već sinhronizovan s video zapisom.
     <XMinimumDisplayTimeBetweenParagraphsChanged>Izmenjeno broja linija s minimalnim vremenom prikaza između pasusa: {0}</XMinimumDisplayTimeBetweenParagraphsChanged>
     <BeforeImportText>Pre uvoza čistog teksta</BeforeImportText>
     <TextImported>Tekst je uvezen</TextImported>
-    <BeforePointSynchronization>
-    </BeforePointSynchronization>
-    <PointSynchronizationDone>
-    </PointSynchronizationDone>
+    <BeforePointSynchronization>Пре тачка синхронизације</BeforePointSynchronization>
+    <PointSynchronizationDone>Тачка синхронизације урадити</PointSynchronizationDone>
     <BeforeTimeCodeImport>Pre uvoza vremenskih odrednica</BeforeTimeCodeImport>
     <TimeCodeImportedFromXY>Vremenske odrednice su uvezene iz {0}: {1}</TimeCodeImportedFromXY>
     <BeforeInsertSubtitleAtVideoPosition>Pre postavljanja titla u položaj video zapisa</BeforeInsertSubtitleAtVideoPosition>
@@ -975,6 +976,7 @@ koji bi trebalo da je već sinhronizovan s video zapisom.
   </VobSubEditCharacters>
   <VobSubOcr>
     <Title>Uvoženje/prepoznavanje znakova VobSub titla</Title>
+    <TitleBluRay>Uvoženje/prepoznavanje znakova BluRay titla</TitleBluRay>
     <OcrMethod>Metoda prepoznavanja znakova</OcrMethod>
     <OcrViaModi>Prepoznavanje znakova putem Microsoft Office Document Imaging (MODI). Zahteva MS Office</OcrViaModi>
     <OcrViaTesseract>Prepoznavanje znakova putem hiperkocke</OcrViaTesseract>

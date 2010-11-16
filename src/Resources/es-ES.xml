@@ -371,6 +371,7 @@ de inicio del próximo texto</Note>
         <Compare>&amp;Comparar...</Compare>
         <ImportOcrFromDvd>Importar/OCR subtítulo desde vob/ifo (dvd) ...</ImportOcrFromDvd>
         <ImportOcrVobSubSubtitle>Importar/subtítuloOCR VobSub (sub/idx)...</ImportOcrVobSubSubtitle>
+        <ImportBluRaySupFile>Importar/subtítuloOCR BluRay (.sup)...</ImportBluRaySupFile>
         <ImportSubtitleFromMatroskaFile>Importar subtítulo desde archivo Matroska...</ImportSubtitleFromMatroskaFile>
         <ImportSubtitleWithManualChosenEncoding>Importar subtítulo de modo manual eligiendo codificador...</ImportSubtitleWithManualChosenEncoding>
         <ImportText>Importar texto...</ImportText>
@@ -671,7 +672,10 @@ Continuar?</SubtitleAppendPrompt>
     <InvalidVobSubHeader>Encabezado de archivoVobSub inválido: {0}</InvalidVobSubHeader>
     <OpenVobSubFile>Abrir subtítulo VobSub (sub/idx)...</OpenVobSubFile>
     <VobSubFiles>Subtítulos de archivos VobSub</VobSubFiles>
+    <OpenBluRaySupFile>Abrir subtítulo BluRay (.sup)...</OpenBluRaySupFile>
+    <BluRaySupFiles>Subtítulos de archivos BluRay</BluRaySupFiles>
     <BeforeImportingVobSubFile>Antes de importar subtítulos VobSub</BeforeImportingVobSubFile>
+    <BeforeImportingBluRaySupFile>Antes de importar subtítulos BluRay</BeforeImportingBluRaySupFile>
     <BeforeShowSelectedLinesEarlierLater>Antes de mostrar las líneas seleccionadas antes/después
 </BeforeShowSelectedLinesEarlierLater>
     <ShowSelectedLinesEarlierLaterPerformed>Mostrar el antes/después realizado sobre las líneas seleccionadas</ShowSelectedLinesEarlierLaterPerformed>
@@ -975,6 +979,7 @@ Continuar?</SubtitleAppendPrompt>
   </VobSubEditCharacters>
   <VobSubOcr>
     <Title>Importar/subtítuloOCR VobSub (sub/idx)</Title>
+    <TitleBluRay>Importar/subtítuloOCR BluRay (.sup)</TitleBluRay>
     <OcrMethod>método OCR</OcrMethod>
     <OcrViaModi>OCR vía Microsoft Office Document Imaging (MODI). MS Office requerido</OcrViaModi>
     <OcrViaTesseract>OCR a traves de Tesseract</OcrViaTesseract>

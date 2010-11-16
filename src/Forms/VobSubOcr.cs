@@ -82,6 +82,11 @@ namespace Nikse.SubtitleEdit.Forms
         List<VobSubMergedPack> _vobSubMergedPackist;
         List<Color> _palette;
 
+        // BluRay sup
+        List<Logic.BluRaySup.BluRaySupPicture> _bluRaySubtitlesOriginal;
+        List<Logic.BluRaySup.BluRaySupPicture> _bluRaySubtitles;
+        Nikse.SubtitleEdit.Logic.BluRaySup.BluRaySupPalette _defaultPaletteInfo;
+
         // Tesseract OCR
         //tessnet2.Tesseract _tesseractOcrEngine;
 //        object _tesseractOcrEngine;
@@ -220,6 +225,40 @@ namespace Nikse.SubtitleEdit.Forms
                 checkBoxCustomFourColors.Checked = true;
         }
 
+        internal void Initialize(List<Logic.BluRaySup.BluRaySupPicture> subtitles, VobSubOcrSettings vobSubOcrSettings)
+        {
+            buttonOK.Enabled = false;
+            buttonCancel.Enabled = false;
+            buttonStartOcr.Enabled = false;
+            buttonStop.Enabled = false;
+            buttonNewCharacterDatabase.Enabled = false;
+            buttonEditCharacterDatabase.Enabled = false;
+            labelStatus.Text = string.Empty;
+            progressBar1.Visible = false;
+            progressBar1.Maximum = 100;
+            progressBar1.Value = 0;
+            numericUpDownPixelsIsSpace.Value = 11; // vobSubOcrSettings.XOrMorePixelsMakesSpace;
+            _vobSubOcrSettings = vobSubOcrSettings;
+
+            InitializeModi();
+            InitializeTesseract();
+            LoadImageCompareCharacterDatabaseList();
+
+            if (Configuration.Settings.VobSubOcr.LastOcrMethod == "BitmapCompare" && comboBoxOcrMethod.Items.Count > 1)
+                comboBoxOcrMethod.SelectedIndex = 1;
+            else if (Configuration.Settings.VobSubOcr.LastOcrMethod == "MODI" && comboBoxOcrMethod.Items.Count > 2)
+                comboBoxOcrMethod.SelectedIndex = 2;
+            else
+                comboBoxOcrMethod.SelectedIndex = 0;
+
+            _bluRaySubtitlesOriginal = subtitles;
+
+            groupBoxImagePalette.Visible = false;
+
+            Text = Configuration.Settings.Language.VobSubOcr.TitleBluRay;
+        }
+
+
 
         private void LoadImageCompareCharacterDatabaseList()
         {
@@ -324,6 +363,45 @@ namespace Nikse.SubtitleEdit.Forms
             return true;
         }
 
+        private void LoadBluRaySup()
+        {
+            _subtitle = new Subtitle();
+
+            _bluRaySubtitles = new List<Logic.BluRaySup.BluRaySupPicture>();
+            int max = _bluRaySubtitlesOriginal.Count;
+            for (int i = 0; i < max; i++)
+            {
+                var x = _bluRaySubtitlesOriginal[i];
+                if ((checkBoxShowOnlyForced.Checked && x.IsForced) ||
+                    checkBoxShowOnlyForced.Checked == false)
+                {
+                    _bluRaySubtitles.Add(x);
+                    Paragraph p = new Paragraph();
+                    p.StartTime = new TimeCode(TimeSpan.FromMilliseconds((x.StartTime + 45) / 90.0));
+                    p.EndTime = new TimeCode(TimeSpan.FromMilliseconds((x.EndTime + 45) / 90.0));
+                    _subtitle.Paragraphs.Add(p);
+                }
+            }
+            _subtitle.Renumber(1);
+
+            FixShortDisplayTimes(_subtitle);
+
+            subtitleListView1.Fill(_subtitle);
+            subtitleListView1.SelectIndexAndEnsureVisible(0);
+
+            numericUpDownStartNumber.Maximum = max;
+            if (numericUpDownStartNumber.Maximum > 0 && numericUpDownStartNumber.Minimum <= 1)
+                numericUpDownStartNumber.Value = 1;
+
+            buttonOK.Enabled = true;
+            buttonCancel.Enabled = true;
+            buttonStartOcr.Enabled = true;
+            buttonStop.Enabled = false;
+            buttonNewCharacterDatabase.Enabled = true;
+            buttonEditCharacterDatabase.Enabled = true;
+            buttonStartOcr.Focus();
+        }
+
         private void LoadVobRip()
         {
             _subtitle = new Subtitle();
@@ -385,7 +463,21 @@ namespace Nikse.SubtitleEdit.Forms
 
         private Bitmap GetSubtitleBitmap(int index)
         {
-            if (checkBoxCustomFourColors.Checked)
+            if (_bluRaySubtitlesOriginal != null)
+            {
+                if (_bluRaySubtitles[index].Palettes.Count == 0 && _defaultPaletteInfo == null)
+                {
+                    for (int i = 0; i < _bluRaySubtitlesOriginal.Count; i++)
+                    {
+                        if (_bluRaySubtitlesOriginal[i].Palettes.Count > 0)
+                        {
+                            _defaultPaletteInfo = _bluRaySubtitlesOriginal[i].DecodePalette(null);
+                        }
+                    }
+                }
+                return _bluRaySubtitles[index].DecodeImage(_defaultPaletteInfo);
+            }
+            else if (checkBoxCustomFourColors.Checked)
             {
                 Color pattern = pictureBoxPattern.BackColor;
                 Color emphasis1 = pictureBoxEmphasis1.BackColor;
@@ -405,22 +497,36 @@ namespace Nikse.SubtitleEdit.Forms
 
         private long GetSubtitleStartTimeMilliseconds(int index)
         {
-            return (long)_vobSubMergedPackist[index].StartTime.TotalMilliseconds;
+            if (_bluRaySubtitlesOriginal != null)
+                return (_bluRaySubtitles[index].StartTime + 45) / 90;
+            else 
+                return (long)_vobSubMergedPackist[index].StartTime.TotalMilliseconds;
         }      
       
         private long GetSubtitleEndTimeMilliseconds(int index)
         {
-            return (long)_vobSubMergedPackist[index].EndTime.TotalMilliseconds;
-        }            
+            if (_bluRaySubtitlesOriginal != null)
+                return (_bluRaySubtitles[index].EndTime + 45) / 90;
+            else
+                return (long)_vobSubMergedPackist[index].EndTime.TotalMilliseconds;
+        }
+
+        private int GetSubtitleCount()
+        {
+            if (_bluRaySubtitlesOriginal != null)
+                return _bluRaySubtitles.Count;
+            else
+                return _vobSubMergedPackist.Count;
+        }
 
         private void ShowSubtitleImage(int index)
         {
-            int numberOfImages = _vobSubMergedPackist.Count;
+            int numberOfImages = GetSubtitleCount();
 
             if (index < numberOfImages)
             {
                 groupBoxSubtitleImage.Text = string.Format(Configuration.Settings.Language.VobSubOcr.SubtitleImageXofY, index + 1, numberOfImages);
-                pictureBoxSubtitleImage.Image = GetSubtitleBitmap(index); // SubtitleCreator.SUP.GetBitmap(index);
+                pictureBoxSubtitleImage.Image = GetSubtitleBitmap(index); 
                 pictureBoxSubtitleImage.Refresh();
             }
             else
@@ -476,7 +582,10 @@ namespace Nikse.SubtitleEdit.Forms
             if (smallestIndex >= 0)
             {
                 double differencePercentage = smallestDifference * 100.0 / (target.Width * target.Height);
-                if (differencePercentage < _vobSubOcrSettings.AllowDifferenceInPercent) // should be around 1.0...
+                double maxDiff= _vobSubOcrSettings.AllowDifferenceInPercent; // should be around 1.0 for vob/sub...
+                if (_bluRaySubtitlesOriginal != null)
+                    maxDiff = 14; // let bluray sup have a 14% diff
+                if (differencePercentage < maxDiff) //_vobSubOcrSettings.AllowDifferenceInPercent) // should be around 1.0...
                 {
                     XmlNode node = _compareDoc.DocumentElement.SelectSingleNode("FileName[.='" + _compareBitmaps[smallestIndex].Name + "']");
                     if (node != null)
@@ -789,28 +898,46 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void FormVobSubOcr_Shown(object sender, EventArgs e)
         {
-            _vobSubMergedPackistOriginal = new List<VobSubMergedPack>();
-            bool hasIdxTimeCodes = false;
-            bool hasForcedSubtitles = false;
-            foreach (var x in _vobSubMergedPackist)
+            if (_bluRaySubtitlesOriginal != null)
             {
-                _vobSubMergedPackistOriginal.Add(x);
-                if (x.IdxLine != null)
-                    hasIdxTimeCodes = true;
-                if (x.SubPicture.Forced)
-                    hasForcedSubtitles = true;
+                LoadBluRaySup();
+                bool hasForcedSubtitles = false;
+                foreach (var x in _bluRaySubtitlesOriginal)
+                {
+                    if (x.IsForced)
+                    {
+                        hasForcedSubtitles = true;
+                        break;
+                    }
+                }
+                checkBoxShowOnlyForced.Enabled = hasForcedSubtitles;
+                checkBoxUseTimeCodesFromIdx.Visible = false;
             }
-            checkBoxUseTimeCodesFromIdx.CheckedChanged -= checkBoxUseTimeCodesFromIdx_CheckedChanged;
-            checkBoxUseTimeCodesFromIdx.Visible = hasIdxTimeCodes;
-            checkBoxUseTimeCodesFromIdx.Checked = hasIdxTimeCodes;
-            checkBoxUseTimeCodesFromIdx.CheckedChanged += checkBoxUseTimeCodesFromIdx_CheckedChanged;
-            checkBoxShowOnlyForced.Enabled = hasForcedSubtitles;
-            LoadVobRip();
+            else
+            {
+                _vobSubMergedPackistOriginal = new List<VobSubMergedPack>();
+                bool hasIdxTimeCodes = false;
+                bool hasForcedSubtitles = false;
+                foreach (var x in _vobSubMergedPackist)
+                {
+                    _vobSubMergedPackistOriginal.Add(x);
+                    if (x.IdxLine != null)
+                        hasIdxTimeCodes = true;
+                    if (x.SubPicture.Forced)
+                        hasForcedSubtitles = true;
+                }
+                checkBoxUseTimeCodesFromIdx.CheckedChanged -= checkBoxUseTimeCodesFromIdx_CheckedChanged;
+                checkBoxUseTimeCodesFromIdx.Visible = hasIdxTimeCodes;
+                checkBoxUseTimeCodesFromIdx.Checked = hasIdxTimeCodes;
+                checkBoxUseTimeCodesFromIdx.CheckedChanged += checkBoxUseTimeCodesFromIdx_CheckedChanged;
+                checkBoxShowOnlyForced.Enabled = hasForcedSubtitles;
+                LoadVobRip();
+            }
         }
 
         private void ButtonOkClick(object sender, EventArgs e)
         {
-            if (Configuration.Settings.VobSubOcr.XOrMorePixelsMakesSpace != (int)numericUpDownPixelsIsSpace.Value)
+            if (Configuration.Settings.VobSubOcr.XOrMorePixelsMakesSpace != (int)numericUpDownPixelsIsSpace.Value && _bluRaySubtitlesOriginal == null)
             {
                 Configuration.Settings.VobSubOcr.XOrMorePixelsMakesSpace = (int)numericUpDownPixelsIsSpace.Value;    
                 Configuration.Settings.Save();
@@ -843,7 +970,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             _abort = false;
 
-            int max = _vobSubMergedPackist.Count;
+            int max = GetSubtitleCount();
 
             progressBar1.Maximum = max;
             progressBar1.Value = 0;
@@ -1093,6 +1220,8 @@ namespace Nikse.SubtitleEdit.Forms
                     subtitleListView1.SetBackgroundColor(index, Color.Orange);
                 else if (wordsNotFound == 1)
                     subtitleListView1.SetBackgroundColor(index, Color.Yellow);
+                else if (line.Trim().Length == 0)
+                    subtitleListView1.SetBackgroundColor(index, Color.Orange);
                 else
                     subtitleListView1.SetBackgroundColor(index, Color.Green);
             }
@@ -1107,6 +1236,8 @@ namespace Nikse.SubtitleEdit.Forms
                     subtitleListView1.SetBackgroundColor(index, Color.Orange);
                 else if (badWords > 0)
                     subtitleListView1.SetBackgroundColor(index, Color.Yellow);
+                else if (line.Trim().Length == 0)
+                    subtitleListView1.SetBackgroundColor(index, Color.Orange);
                 else
                     subtitleListView1.SetBackgroundColor(index, Color.Green);
             }
@@ -1598,7 +1729,10 @@ namespace Nikse.SubtitleEdit.Forms
         {
             Subtitle oldSubtitle = new Subtitle(_subtitle);
             subtitleListView1.BeginUpdate();
-            LoadVobRip();
+            if (_bluRaySubtitlesOriginal != null)
+                LoadBluRaySup();
+            else
+                LoadVobRip();
             for (int i = 0; i < _subtitle.Paragraphs.Count; i++)
             {
                 Paragraph current = _subtitle.Paragraphs[i];
@@ -1633,6 +1767,7 @@ namespace Nikse.SubtitleEdit.Forms
             subtitleListView1.Fill(_subtitle);
             subtitleListView1.EndUpdate();
         }
+
 
     }
 }

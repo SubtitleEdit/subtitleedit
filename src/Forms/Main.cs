@@ -14,6 +14,7 @@ using Nikse.SubtitleEdit.Logic.Enums;
 using Nikse.SubtitleEdit.Logic.SubtitleFormats;
 using Nikse.SubtitleEdit.Logic.VideoPlayers;
 using Nikse.SubtitleEdit.Logic.VobSub;
+using Nikse.SubtitleEdit.Logic.BluRaySup;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -139,6 +140,8 @@ namespace Nikse.SubtitleEdit.Forms
             labelVideoInfo.Text = string.Empty;
             Text = Title;
             timeUpDownStartTime.TimeCode = new TimeCode(0, 0, 0, 0);
+            checkBoxAutoRepeatOn.Checked = Configuration.Settings.General.AutoRepeatOn;
+            checkBoxAutoContinue.Checked = Configuration.Settings.General.AutoContinueOn;
 
             SetFormatToSubRip();
 
@@ -450,6 +453,10 @@ namespace Nikse.SubtitleEdit.Forms
             toolStripMenuItemCompare.Text = _language.Menu.File.Compare;
             toolStripMenuItemImportDvdSubtitles.Text = _language.Menu.File.ImportOcrFromDvd;
             toolStripMenuItemSubIdx.Text = _language.Menu.File.ImportOcrVobSubSubtitle;
+
+            //toolStripMenuItemImportBluRaySup.Visible = false; //TODO: add blu ray sup import/ocr
+            toolStripMenuItemImportBluRaySup.Text = _language.Menu.File.ImportBluRaySupFile;
+
             matroskaImportStripMenuItem.Text = _language.Menu.File.ImportSubtitleFromMatroskaFile;
             toolStripMenuItemManualAnsi.Text = _language.Menu.File.ImportSubtitleWithManualChosenEncoding;
             toolStripMenuItemImportText.Text = _language.Menu.File.ImportText;
@@ -843,8 +850,9 @@ namespace Nikse.SubtitleEdit.Forms
                                                       fileName), Title, MessageBoxButtons.YesNoCancel) != DialogResult.Yes)
                         return;
                 }
-
-                MakeHistoryForUndo(string.Format(_language.BeforeLoadOf, Path.GetFileName(fileName)));
+                 
+                if (_subtitle.HistoryItems.Count > 0 || _subtitle.Paragraphs.Count > 0)
+                    MakeHistoryForUndo(string.Format(_language.BeforeLoadOf, Path.GetFileName(fileName)));
 
                 SubtitleFormat format = _subtitle.LoadSubtitle(fileName, out encoding, encoding);
 
@@ -3454,6 +3462,9 @@ namespace Nikse.SubtitleEdit.Forms
 
                     //TODO: save in adjust all lines ...Configuration.Settings.General.DefaultAdjustMilliseconds = (int)timeUpDownAdjust.TimeCode.TotalMilliseconds;
 
+                    Configuration.Settings.General.AutoRepeatOn = checkBoxAutoRepeatOn.Checked;
+                    Configuration.Settings.General.AutoContinueOn = checkBoxAutoContinue.Checked;
+
                     Configuration.Settings.Save();
                 }
             }
@@ -4078,6 +4089,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                         _fileName = Path.ChangeExtension(vobSubOcr.FileName, ".srt");
                         Text = Title + " - " + _fileName;
+                        _converted = true;
 
                         Configuration.Settings.Save();
                     }
@@ -4169,7 +4181,12 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void Main_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.KeyCode == Keys.Right && e.Modifiers == Keys.Control)
+            if (e.Modifiers == Keys.Control && e.KeyCode == Keys.Z)
+            {
+                ShowHistoryforUndoToolStripMenuItemClick(null, null);
+                e.SuppressKeyPress = true;
+            }
+            else if (e.KeyCode == Keys.Right && e.Modifiers == Keys.Control)
             {
                 if (!textBoxListViewText.Focused)
                 {
@@ -4282,6 +4299,13 @@ namespace Nikse.SubtitleEdit.Forms
                     e.SuppressKeyPress = true;
                 }
             }
+            else if (e.Modifiers == Keys.None && e.KeyCode == Keys.F6)
+            {
+                if (mediaPlayer.VideoPlayer != null)
+                {
+                    GotoSubPositionAndPause();
+                }
+            }
             else if (e.Modifiers == Keys.None && e.KeyCode == Keys.F7)
             {
                 if (mediaPlayer.VideoPlayer != null)
@@ -4324,6 +4348,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 else if (e.Modifiers == Keys.None && e.KeyCode == Keys.F12)
                 {
+                    StopAutoDuration();
                     buttonSetEnd_Click(null, null);
                     e.SuppressKeyPress = true;
                 }
@@ -4347,6 +4372,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 else if (e.Modifiers == Keys.None && e.KeyCode == Keys.F12)
                 {
+                    StopAutoDuration();
                     buttonSetEnd_Click(null, null);
                     e.SuppressKeyPress = true;
                 }
@@ -6290,6 +6316,59 @@ namespace Nikse.SubtitleEdit.Forms
                 MessageBox.Show(_language.DropOnlyOneFile);
             }
         }
+
+        private void toolStripMenuItemImportBluRaySup_Click(object sender, EventArgs e)
+        {
+            if (ContinueNewOrExit())
+            {
+                openFileDialog1.Title = _language.OpenBluRaySupFile;
+                openFileDialog1.FileName = string.Empty;
+                openFileDialog1.Filter = _language.BluRaySupFiles + "|*.sup";
+                if (openFileDialog1.ShowDialog(this) == DialogResult.OK)
+                {
+                    ImportAndOcrBluRaySup(openFileDialog1.FileName);
+                }
+            }
+        }
+
+        private void ImportAndOcrBluRaySup(string fileName)
+        {
+            StringBuilder log = new StringBuilder();
+            var subtitles = BluRaySupParser.ParseBluRaySup(fileName, log);
+            if (subtitles.Count > 0)
+            {
+                var vobSubOcr = new VobSubOcr();
+                vobSubOcr.Initialize(subtitles, Configuration.Settings.VobSubOcr);
+                vobSubOcr.FileName = Path.GetFileName(fileName);
+                if (vobSubOcr.ShowDialog(this) == DialogResult.OK)
+                {
+                    MakeHistoryForUndo(_language.BeforeImportingBluRaySupFile);
+
+                    _subtitle.Paragraphs.Clear();
+                    SetCurrentFormat(new SubRip().FriendlyName);
+                    _subtitle.WasLoadedWithFrameNumbers = false;
+                    _subtitle.CalculateFrameNumbersFromTimeCodes(CurrentFrameRate);
+                    foreach (Paragraph p in vobSubOcr.SubtitleFromOcr.Paragraphs)
+                    {
+                        _subtitle.Paragraphs.Add(p);
+                    }
+
+                    ShowSource();
+                    SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
+                    _change = true;
+                    _subtitleListViewIndex = -1;
+                    SubtitleListview1.FirstVisibleIndex = -1;
+                    SubtitleListview1.SelectIndexAndEnsureVisible(0);
+
+                    _fileName = Path.ChangeExtension(vobSubOcr.FileName, ".srt");
+                    Text = Title + " - " + _fileName;
+                    _converted = true;
+
+                    Configuration.Settings.Save();
+                }
+            }
+        }
+
 
     }
 }
