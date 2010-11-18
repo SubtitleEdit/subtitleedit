@@ -372,7 +372,7 @@
         <Compare>Sammenlign...</Compare>
         <ImportOcrFromDvd>Import/OCR undertekster fra VOB/IFO (dvd) ...</ImportOcrFromDvd>
         <ImportOcrVobSubSubtitle>Importer/OCR VobSub (sub/idx) undertekst...</ImportOcrVobSubSubtitle>
-        <ImportBluRaySupFile>Importer/OCR BluRay sup fil...</ImportBluRaySupFile>
+        <ImportBluRaySupFile>Importer/OCR Blu-ray sup fil...</ImportBluRaySupFile>
         <ImportSubtitleFromMatroskaFile>Importer undertekster fra Matroska fil...</ImportSubtitleFromMatroskaFile>
         <ImportSubtitleWithManualChosenEncoding>Importer undertekst med manuel valgt tegnsæt...</ImportSubtitleWithManualChosenEncoding>
         <ImportText>Importer tekst...</ImportText>
@@ -673,10 +673,10 @@ Fortsæt?</SubtitleAppendPrompt>
     <InvalidVobSubHeader>Header ikke gyldig VobSub fil: {0}</InvalidVobSubHeader>
     <OpenVobSubFile>Åbn VobSub (sub/idx) undertekst...</OpenVobSubFile>
     <VobSubFiles>VobSub undertekst filer</VobSubFiles>
-    <OpenBluRaySupFile>Åbn BluRay sup fil...</OpenBluRaySupFile>
-    <BluRaySupFiles>BluRay sup filer</BluRaySupFiles>
+    <OpenBluRaySupFile>Åbn Blu-ray sup fil...</OpenBluRaySupFile>
+    <BluRaySupFiles>Blu-ray sup filer</BluRaySupFiles>
     <BeforeImportingVobSubFile>Før import af VobSub undertekst</BeforeImportingVobSubFile>
-    <BeforeImportingBluRaySupFile>Før import af BluRay sup undertekst</BeforeImportingBluRaySupFile>
+    <BeforeImportingBluRaySupFile>Før import af Blu-ray sup undertekst</BeforeImportingBluRaySupFile>
     <BeforeShowSelectedLinesEarlierLater>Før vis udvalgte linjer tidligere/senere</BeforeShowSelectedLinesEarlierLater>
     <ShowSelectedLinesEarlierLaterPerformed>Vis tidligere/senere udført på udvalgte linjer</ShowSelectedLinesEarlierLaterPerformed>
     <DoubleWordsViaRegEx>Dobbelt ord via regex {0}</DoubleWordsViaRegEx>
@@ -978,7 +978,7 @@ Fortsæt?</SubtitleAppendPrompt>
   </VobSubEditCharacters>
   <VobSubOcr>
     <Title>Importer/OCR VobSub (sub/idx) undertekst</Title>
-    <TitleBluRay>Importer/OCR BluRay (.sup) undertekst</TitleBluRay>
+    <TitleBluRay>Importer/OCR Blu-ray (.sup) undertekst</TitleBluRay>
     <OcrMethod>OCR-metoden</OcrMethod>
     <OcrViaModi>OCR via Microsoft Office Document Imaging (MODI). Kræver MS Office</OcrViaModi>
     <OcrViaTesseract>OCR via Tesseract</OcrViaTesseract>

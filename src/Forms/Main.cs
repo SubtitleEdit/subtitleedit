@@ -62,10 +62,12 @@ namespace Nikse.SubtitleEdit.Forms
         VideoInfo _videoInfo;
         int _repeatCount = -1;
         double _endSeconds = -1;
+        const double EndDelay = 0.05;
         int _autoContinueDelayCount = -1;
         long _lastTextKeyDownTicks = 0;
         System.Windows.Forms.Timer _timerAddHistoryWhenDone = new Timer();
         string _timerAddHistoryWhenDoneText;
+        double? _audioWaveFormRightClickSeconds = null;
 
         private bool AutoRepeatContinueOn
         {
@@ -316,6 +318,8 @@ namespace Nikse.SubtitleEdit.Forms
             splitToolStripMenuItem1.Visible = true;
             mergeWithPreviousToolStripMenuItem.Visible = true;
             mergeWithNextToolStripMenuItem.Visible = true;
+
+            _audioWaveFormRightClickSeconds = seconds;
             contextMenuStripWaveForm.Show(MousePosition.X, MousePosition.Y);
         }
 
@@ -3210,6 +3214,11 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void SplitLineToolStripMenuItemClick(object sender, EventArgs e)
         {
+            SplitSelectedParagraph(null);
+        }
+
+        private void SplitSelectedParagraph(double? splitSeconds)
+        {
             if (_subtitle.Paragraphs.Count > 0 && SubtitleListview1.SelectedItems.Count > 0)
             {
                 SubtitleListview1.SelectedIndexChanged -= SubtitleListview1_SelectedIndexChanged;
@@ -3222,11 +3231,13 @@ namespace Nikse.SubtitleEdit.Forms
                 var newParagraph = new Paragraph();
 
                 double middle = currentParagraph.StartTime.TotalMilliseconds + (currentParagraph.Duration.TotalMilliseconds / 2.0);
+                if (splitSeconds.HasValue && splitSeconds.Value > (currentParagraph.StartTime.TotalSeconds + 0.2) && splitSeconds.Value < (currentParagraph.EndTime.TotalSeconds - 0.2))
+                    middle = splitSeconds.Value * 1000.0;
                 newParagraph.EndTime.TotalMilliseconds = currentParagraph.EndTime.TotalMilliseconds;
                 currentParagraph.EndTime.TotalMilliseconds = middle;
                 newParagraph.StartTime.TotalMilliseconds = currentParagraph.EndTime.TotalMilliseconds + 1;
 
-                _subtitle.Paragraphs.Insert(firstSelectedIndex+1, newParagraph);
+                _subtitle.Paragraphs.Insert(firstSelectedIndex + 1, newParagraph);
 
 
                 string[] lines = currentParagraph.Text.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
@@ -3253,6 +3264,7 @@ namespace Nikse.SubtitleEdit.Forms
                 ShowStatus(_language.LineSplitted);
                 SubtitleListview1.SelectedIndexChanged += SubtitleListview1_SelectedIndexChanged;
                 RefreshSelectedParagraph();
+                _change = true;
             }
         }
 
@@ -4297,6 +4309,90 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     mediaPlayer.TooglePlayPause();
                     e.SuppressKeyPress = true;
+                }
+            }
+            else if (e.Modifiers == Keys.Alt && e.KeyCode == Keys.D1)
+            {
+                if (SubtitleListview1.SelectedItems.Count > 0 && _subtitle != null && mediaPlayer.VideoPlayer != null)
+                {
+                    Paragraph p = _subtitle.GetParagraphOrDefault(SubtitleListview1.SelectedItems[0].Index);
+                    if (p != null)
+                    {
+                        mediaPlayer.CurrentPosition = p.StartTime.TotalSeconds;
+                        e.SuppressKeyPress = true;
+                    }
+                }
+            }
+            else if (e.Modifiers == Keys.Alt && e.KeyCode == Keys.D2)
+            {
+                if (SubtitleListview1.SelectedItems.Count > 0 && _subtitle != null && mediaPlayer.VideoPlayer != null)
+                {
+                    Paragraph p = _subtitle.GetParagraphOrDefault(SubtitleListview1.SelectedItems[0].Index);
+                    if (p != null)
+                    {
+                        mediaPlayer.CurrentPosition = p.EndTime.TotalSeconds;
+                        e.SuppressKeyPress = true;
+                    }
+                }
+            }
+            else if (e.Modifiers == Keys.Alt && e.KeyCode == Keys.D3)
+            {
+                if (SubtitleListview1.SelectedItems.Count > 0 && _subtitle != null && mediaPlayer.VideoPlayer != null)
+                {
+                    int index = SubtitleListview1.SelectedItems[0].Index -1;
+                    Paragraph p = _subtitle.GetParagraphOrDefault(index);
+                    if (p != null)
+                    {
+                        SubtitleListview1.SelectIndexAndEnsureVisible(index);
+                        mediaPlayer.CurrentPosition = p.StartTime.TotalSeconds;
+                        e.SuppressKeyPress = true;
+                    }
+                }
+            }
+            else if (e.Modifiers == Keys.Alt && e.KeyCode == Keys.D4)
+            {
+                if (SubtitleListview1.SelectedItems.Count > 0 && _subtitle != null && mediaPlayer.VideoPlayer != null)
+                {
+                    int index = SubtitleListview1.SelectedItems[0].Index + 1;
+                    Paragraph p = _subtitle.GetParagraphOrDefault(index);
+                    if (p != null)
+                    {
+                        SubtitleListview1.SelectIndexAndEnsureVisible(index);
+                        mediaPlayer.CurrentPosition = p.StartTime.TotalSeconds;
+                        e.SuppressKeyPress = true;
+                    }
+                }
+            }
+            else if (e.Modifiers == Keys.None && e.KeyCode == Keys.F4)
+            {
+                if (SubtitleListview1.SelectedItems.Count > 0 && _subtitle != null && mediaPlayer.VideoPlayer != null)
+                {
+                    mediaPlayer.Pause();
+                    Paragraph p = _subtitle.GetParagraphOrDefault(SubtitleListview1.SelectedItems[0].Index);
+                    if (p != null)
+                    {
+                        if (Math.Abs(mediaPlayer.CurrentPosition - p.StartTime.TotalSeconds) < 0.1)
+                            mediaPlayer.CurrentPosition = p.EndTime.TotalSeconds;
+                        else
+                            mediaPlayer.CurrentPosition = p.StartTime.TotalSeconds;
+                        e.SuppressKeyPress = true;
+                    }
+                    
+                }
+            }
+            else if (e.Modifiers == Keys.None && e.KeyCode == Keys.F5)
+            {
+                if (SubtitleListview1.SelectedItems.Count > 0 && _subtitle != null && mediaPlayer.VideoPlayer != null)
+                {
+                    Paragraph p = _subtitle.GetParagraphOrDefault(SubtitleListview1.SelectedItems[0].Index);
+                    if (p != null)
+                    {
+                        mediaPlayer.CurrentPosition = p.StartTime.TotalSeconds;
+                        Utilities.ShowSubtitle(_subtitle.Paragraphs, labelSubtitle, mediaPlayer.VideoPlayer);
+                        mediaPlayer.Play();
+                        _endSeconds = p.EndTime.TotalSeconds;
+                        e.SuppressKeyPress = true;
+                    }
                 }
             }
             else if (e.Modifiers == Keys.None && e.KeyCode == Keys.F6)
@@ -5643,6 +5739,7 @@ namespace Nikse.SubtitleEdit.Forms
                     if (_endSeconds >= 0 && mediaPlayer.CurrentPosition > _endSeconds && !AutoRepeatContinueOn)
                     {
                         mediaPlayer.Pause();
+                        mediaPlayer.CurrentPosition = _endSeconds + EndDelay;
                         _endSeconds = -1;
                     }
 
@@ -6136,12 +6233,12 @@ namespace Nikse.SubtitleEdit.Forms
         }
 
         private void splitToolStripMenuItem1_Click(object sender, EventArgs e)
-        {
+        {            
             int index = _subtitle.GetIndex(AudioWaveForm.RightClickedParagraph);
             if (index >= 0)
             {
                 SubtitleListview1.SelectIndexAndEnsureVisible(index);
-                SplitLineToolStripMenuItemClick(null, null);
+                SplitSelectedParagraph(_audioWaveFormRightClickSeconds);
             }
         }
 

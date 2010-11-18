@@ -38,6 +38,8 @@ namespace Nikse.SubtitleEdit.Forms
                 AddHistoryItemToListView(item);
             }
             ListViewHistorySelectedIndexChanged(null, null);
+            if (listViewHistory.Items.Count > 0)
+                listViewHistory.Items[listViewHistory.Items.Count - 1].Selected = true;
         }
 
         private void AddHistoryItemToListView(HistoryItem hi)
