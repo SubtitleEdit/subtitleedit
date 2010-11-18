@@ -308,7 +308,11 @@ namespace Nikse.SubtitleEdit.Logic
                         (c2.A == 0 || IsColorClose(c2, Color.Black, 280)))
                     {
                         cursivePoints.Add(new Point(newX, newY));
-                        newX--;
+                        if (newX > 1)
+                            newX--;
+                        else
+                            cursiveOk = false;
+
                         newY++;
                     }
                     else
