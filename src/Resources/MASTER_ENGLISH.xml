@@ -54,7 +54,7 @@
     <AboutText1>Subtitle Edit is Free Software under the GNU Public License.
 You may distribute, modify and use it freely.
 
-C# source code is either available on web site or can be emailed on request.
+C# source code is available on http://code.google.com/p/subtitleedit
 
 Visit www.nikse.dk for the latest version.
 
@@ -370,6 +370,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <Compare>&amp;Compare...</Compare>
         <ImportOcrFromDvd>Import/OCR subtitle from vob/ifo (dvd) ...</ImportOcrFromDvd>
         <ImportOcrVobSubSubtitle>Import/OCR VobSub (sub/idx) subtitle...</ImportOcrVobSubSubtitle>
+        <ImportBluRaySupFile>Import/OCR Blu-ray sup file...</ImportBluRaySupFile>
         <ImportSubtitleFromMatroskaFile>Import subtitle from Matroska file...</ImportSubtitleFromMatroskaFile>
         <ImportSubtitleWithManualChosenEncoding>Import subtitle with manual chosen encoding...</ImportSubtitleWithManualChosenEncoding>
         <ImportText>Import plain text...</ImportText>
@@ -524,8 +525,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
       <SearchTextOnline>Search text online</SearchTextOnline>
       <GoogleTranslate>Google translate</GoogleTranslate>
       <GoogleIt>Google it</GoogleIt>
-      <SecondsBackShort>&lt;&lt; secs</SecondsBackShort>
-      <SecondsForwardShort>secs &gt;&gt;</SecondsForwardShort>
+      <SecondsBackShort>&lt;&lt;</SecondsBackShort>
+      <SecondsForwardShort>&gt;&gt;</SecondsForwardShort>
       <VideoPosition>Video position:</VideoPosition>
       <TranslateTip>Tip: Use &lt;alt+arrow up/down&gt; to go to previous/next subtitle</TranslateTip>
       <CreateTip>Tip: Use &lt;ctrl+arrow left/right&gt; keys</CreateTip>
@@ -670,7 +671,10 @@ Continue?</SubtitleAppendPrompt>
     <InvalidVobSubHeader>Header not valid VobSub file: {0}</InvalidVobSubHeader>
     <OpenVobSubFile>Open VobSub (sub/idx) subtitle...</OpenVobSubFile>
     <VobSubFiles>VobSub subtitle files</VobSubFiles>
+    <OpenBluRaySupFile>Open Blu-ray .sup file...</OpenBluRaySupFile>
+    <BluRaySupFiles>Blu-ray .sup files</BluRaySupFiles>
     <BeforeImportingVobSubFile>Before importing VobSub subtitle</BeforeImportingVobSubFile>
+    <BeforeImportingBluRaySupFile>Before importing Blu-ray sup file</BeforeImportingBluRaySupFile>
     <BeforeShowSelectedLinesEarlierLater>Before show selected lines earlier/later</BeforeShowSelectedLinesEarlierLater>
     <ShowSelectedLinesEarlierLaterPerformed>Show earlier/later performed on selected lines</ShowSelectedLinesEarlierLaterPerformed>
     <DoubleWordsViaRegEx>Double words via regex {0}</DoubleWordsViaRegEx>
@@ -799,7 +803,7 @@ Continue?</SubtitleAppendPrompt>
     <DefaultFrameRate>Default frame rate</DefaultFrameRate>
     <DefaultFileEncoding>Default file encoding</DefaultFileEncoding>
     <AutoDetectAnsiEncoding>Auto detect ANSI encoding</AutoDetectAnsiEncoding>
-    <SubtitleLineMaximumLength>Subtitle max. length</SubtitleLineMaximumLength>
+    <SubtitleLineMaximumLength>Single line max. length</SubtitleLineMaximumLength>
     <SubtitleFont>Subtitle font</SubtitleFont>
     <SubtitleFontSize>Subtitle font size</SubtitleFontSize>
     <RememberRecentFiles>Remember recent files (for reopen)</RememberRecentFiles>
@@ -972,6 +976,7 @@ Continue?</SubtitleAppendPrompt>
   </VobSubEditCharacters>
   <VobSubOcr>
     <Title>Import/OCR VobSub (sub/idx) subtitle</Title>
+    <TitleBluRay>Import/OCR Blu-ray (.sup) subtitle</TitleBluRay>
     <OcrMethod>OCR method</OcrMethod>
     <OcrViaModi>OCR via Microsoft Office Document Imaging (MODI). Requires MS Office</OcrViaModi>
     <OcrViaTesseract>OCR via Tesseract</OcrViaTesseract>
