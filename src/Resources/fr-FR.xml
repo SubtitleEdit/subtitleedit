@@ -63,8 +63,8 @@ Les suggestions sont plus que bienvenues.
 Email : mailto:nikse.dk@gmail.com</AboutText1>
   </About>
   <AddToNames>
-    <Title>Ajouter à la liste noms/etc</Title>
-    <Description>Ajouter à la liste noms/bruit (sensible à la casse)</Description>
+    <Title>Ajouter à la liste de noms/etc</Title>
+    <Description>Ajouter à la liste de noms/bruit (sensible à la casse)</Description>
   </AddToNames>
   <AddWaveForm>
     <Title>Générer forme à partir des données</Title>
@@ -83,9 +83,9 @@ Email : mailto:nikse.dk@gmail.com</AboutText1>
     <AdjustVia>Ajuster selon</AdjustVia>
     <Seconds>Secondes</Seconds>
     <Percent>Pourcentage</Percent>
-    <AddSeconds>Ajouter des secondes</AddSeconds>
+    <AddSeconds>Ajuster en secondes</AddSeconds>
     <SetAsPercent>Déterminer en % de la durée</SetAsPercent>
-    <Note>Note : L'instant d'affichage ne recouvre pas le temps initial du texte suivant</Note>
+    <Note>Note : Les ajustements n'altéreront pas les points de départ</Note>
     <PleaseSelectAValueFromTheDropDownList>Veuillez sélectionner une valeur dans la liste déroulante</PleaseSelectAValueFromTheDropDownList>
     <PleaseChoose> - Veuillez choisir - </PleaseChoose>
   </AdjustDisplayDuration>
@@ -120,7 +120,7 @@ Email : mailto:nikse.dk@gmail.com</AboutText1>
     <LinesFoundX>Lignes trouvées : {0}</LinesFoundX>
   </ChangeCasingNames>
   <ChangeFrameRate>
-    <Title>Changer la cadence de trame</Title>
+    <Title>Changer la cadence de trame (fps)</Title>
     <ConvertFrameRateOfSubtitle>Convertir la cadence de trame du sous-titre</ConvertFrameRateOfSubtitle>
     <FromFrameRate>Vitesse de départ</FromFrameRate>
     <ToFrameRate>Vitesse désirée</ToFrameRate>
@@ -368,11 +368,11 @@ Email : mailto:nikse.dk@gmail.com</AboutText1>
         <SaveAs>Sauver so&amp;us...</SaveAs>
         <OpenContainingFolder>Ouvrir répertoire contenant les sous-titres</OpenContainingFolder>
         <Compare>&amp;Comparer...</Compare>
-        <ImportOcrFromDvd>Import/sous-titres OCR de VOB/IFO (DVD) ...</ImportOcrFromDvd>
-        <ImportOcrVobSubSubtitle>Import/OCR VobSub (sub/idx) sous-titres...</ImportOcrVobSubSubtitle>
-        <ImportBluRaySupFile>Import/OCR BluRay (.sup) sous-titres...</ImportBluRaySupFile>
-        <ImportSubtitleFromMatroskaFile>Sous-titres d'importation de fichier Matroska...</ImportSubtitleFromMatroskaFile>
-        <ImportSubtitleWithManualChosenEncoding>Sous-titres d'importation avec le codage choisi manuel...</ImportSubtitleWithManualChosenEncoding>
+        <ImportOcrFromDvd>Importer sous-titres OCR de VOB/IFO (DVD) ...</ImportOcrFromDvd>
+        <ImportOcrVobSubSubtitle>Importer OCR VobSub (sub/idx) sous-titres...</ImportOcrVobSubSubtitle>
+        <ImportBluRaySupFile>Importer OCR Blu-ray (.sup) sous-titres...</ImportBluRaySupFile>
+        <ImportSubtitleFromMatroskaFile>Importer Sous-titres d'un fichier Matroska...</ImportSubtitleFromMatroskaFile>
+        <ImportSubtitleWithManualChosenEncoding>Importer Sous-titres en choisissant l'encodage...</ImportSubtitleWithManualChosenEncoding>
         <ImportText>Importer texte...</ImportText>
         <ImportTimecodes>Importer temporisation...</ImportTimecodes>
         <Exit>&amp;Quitter</Exit>
@@ -386,7 +386,7 @@ Email : mailto:nikse.dk@gmail.com</AboutText1>
         <Find>Re&amp;chercher</Find>
         <FindNext>Chercher &amp;suivant</FindNext>
         <Replace>&amp;Remplacer</Replace>
-        <MultipleReplace>Remplacement &amp;multiple...</MultipleReplace>
+        <MultipleReplace>Remplacements &amp;multiples...</MultipleReplace>
         <GoToSubtitleNumber>&amp;Aller au sous-titre n°...</GoToSubtitleNumber>
       </Edit>
       <Tools>
@@ -396,7 +396,7 @@ Email : mailto:nikse.dk@gmail.com</AboutText1>
         <StartNumberingFrom>Nouvelle &amp;numérotation...</StartNumberingFrom>
         <RemoveTextForHearingImpaired>Supprimer le texte pour &amp;malentendants...</RemoveTextForHearingImpaired>
         <ChangeCasing>Changer la &amp;casse...</ChangeCasing>
-        <ChangeFrameRate>Changer la vites&amp;se de trame...</ChangeFrameRate>
+        <ChangeFrameRate>Changer la vites&amp;se de trame (fps)...</ChangeFrameRate>
         <MergeShortLines>&amp;Fusionner les lignes courtes...</MergeShortLines>
         <MinimumDisplayTimeBetweenParagraphs>Temps d'affichage minimum entre paragraphes...</MinimumDisplayTimeBetweenParagraphs>
         <SortBy>T&amp;rier par</SortBy>
@@ -405,24 +405,24 @@ Email : mailto:nikse.dk@gmail.com</AboutText1>
         <TextTotalLength>Texte - longueur totale</TextTotalLength>
         <TextNumberOfLines>Texte - nombre de lignes</TextNumberOfLines>
         <SplitSubtitle>Part&amp;itionner les sous-titres...</SplitSubtitle>
-        <AppendSubtitle>Compléter les so&amp;us-titres...</AppendSubtitle>
+        <AppendSubtitle>Ajouter des so&amp;us-titres depuis fichier...</AppendSubtitle>
       </Tools>
       <Video>
         <Title>Vidéo</Title>
         <OpenVideo>Ouvrir fichier vidéo...</OpenVideo>
         <ShowHideVideo>Montrer/cacher vidéo</ShowHideVideo>
-        <ShowHideWaveForm>Montrer/cacher forme sonore</ShowHideWaveForm>
+        <ShowHideWaveForm>Montrer/cacher diagramme sonore</ShowHideWaveForm>
       </Video>
       <SpellCheck>
         <Title>Orthographe</Title>
         <SpellCheck>&amp;Vérifier orthographe</SpellCheck>
         <FindDoubleWords>Trouver doublons</FindDoubleWords>
         <GetDictionaries>Télécharger dictionnaires...</GetDictionaries>
-        <AddToNamesEtcList>Ajouter des mots à la liste noms/etc</AddToNamesEtcList>
+        <AddToNamesEtcList>Ajouter des mots à la liste de noms/etc</AddToNamesEtcList>
       </SpellCheck>
       <Synchronization>
         <Title>Synchronisation</Title>
-        <AdjustAllTimes>Ajuster tous les temps (montrer précédent/Suivant)</AdjustAllTimes>
+        <AdjustAllTimes>Ajuster tous les temps (montrer plus tôt/tard)</AdjustAllTimes>
         <VisualSync>&amp;Synchronisation visuelle...</VisualSync>
         <PointSync>Synchronisation par points...</PointSync>
       </Synchronization>
@@ -472,7 +472,7 @@ Email : mailto:nikse.dk@gmail.com</AboutText1>
         <RemoveLineBreaksFromSelectedLines>Retirez les retours à la ligne des lignes sélectionnées...</RemoveLineBreaksFromSelectedLines>
         <TypewriterEffect>Effet machine à écrire...</TypewriterEffect>
         <KaraokeEffect>Effet karaoké...</KaraokeEffect>
-        <ShowSelectedLinesEarlierLater>Afficher les options sélectionnées lignes plus tôt/tard...</ShowSelectedLinesEarlierLater>
+        <ShowSelectedLinesEarlierLater>Afficher les lignes plus tôt/tard...</ShowSelectedLinesEarlierLater>
         <VisualSyncSelectedLines>Lignes choisies en synchronisation visuelle...</VisualSyncSelectedLines>
         <GoogleTranslateSelectedLines>Traduction Google des lignes sélectionnées...</GoogleTranslateSelectedLines>
         <AdjustDisplayDurationForSelectedLines>Régler la durée des lignes sélectionnées...</AdjustDisplayDurationForSelectedLines>
@@ -668,10 +668,10 @@ Poursuivre?</SubtitleAppendPrompt>
     <InvalidVobSubHeader>En-tête non valide fichier VobSub : {0}</InvalidVobSubHeader>
     <OpenVobSubFile>Ouvrir sous-titres VobSub (sub/idx)...</OpenVobSubFile>
     <VobSubFiles>Fichiers sous-titres VobSub</VobSubFiles>
-    <OpenBluRaySupFile>Ouvrir sous-titres BluRay (.sup)...</OpenBluRaySupFile>
-    <BluRaySupFiles>Fichiers sous-titres BluRay</BluRaySupFiles>
+    <OpenBluRaySupFile>Ouvrir sous-titres Blu-ray (.sup)...</OpenBluRaySupFile>
+    <BluRaySupFiles>Fichiers sous-titres Blu-ray</BluRaySupFiles>
     <BeforeImportingVobSubFile>Avant d'importer des sous-titres VobSub</BeforeImportingVobSubFile>
-    <BeforeImportingBluRaySupFile>Avant d'importer des sous-titres BluRay</BeforeImportingBluRaySupFile>
+    <BeforeImportingBluRaySupFile>Avant d'importer des sous-titres Blu-ray</BeforeImportingBluRaySupFile>
     <BeforeShowSelectedLinesEarlierLater>Avant de montrer les lignes précédentes/suivantes sélectionnées</BeforeShowSelectedLinesEarlierLater>
     <ShowSelectedLinesEarlierLaterPerformed>Montrer précédent/suivant effectué sur les lignes sélectionnées </ShowSelectedLinesEarlierLaterPerformed>
     <DoubleWordsViaRegEx>Double mots via regex {0}</DoubleWordsViaRegEx>
@@ -683,8 +683,8 @@ Poursuivre?</SubtitleAppendPrompt>
     <NumberOfWithRemovedLineBreakX>Nombre de lignes avec des coupures de lignes enlevés: {0}</NumberOfWithRemovedLineBreakX>
     <BeforeMultipleReplace>Avant le remplacement multiple</BeforeMultipleReplace>
     <NumberOfLinesReplacedX>Nombre de lignes avec du texte remplacé: {0}</NumberOfLinesReplacedX>
-    <NameXAddedToNamesEtcList>Le nom "{0} 'a été ajouté à la liste noms/etc. </NameXAddedToNamesEtcList>
-    <NameXNotAddedToNamesEtcList>Le nom '{0} n'a pas été ajouté à la liste noms/etc</NameXNotAddedToNamesEtcList>
+    <NameXAddedToNamesEtcList>Le nom "{0} 'a été ajouté à la liste  noms/etc. </NameXAddedToNamesEtcList>
+    <NameXNotAddedToNamesEtcList>Le nom '{0} n'a pas été ajouté à la liste de noms/etc</NameXNotAddedToNamesEtcList>
     <XLinesSelected>{0} lignes sélectionnées</XLinesSelected>
     <UnicodeMusicSymbolsAnsiWarning>Sous-titre contenant des notes de musique unicode. Ils seront perdus en sauvegardant avec encodage ANSI.Poursuivre la sauvegarde?</UnicodeMusicSymbolsAnsiWarning>
     <NegativeTimeWarning>Sous-titre contenantt des codes de temps négatifs. Continuer la sauvegarde?</NegativeTimeWarning>
@@ -718,15 +718,15 @@ Poursuivre?</SubtitleAppendPrompt>
   </MergedShortLines>
   <MultipleReplace>
     <Title>Remplacement multiple</Title>
-    <FindWhat>Trouvez quoi</FindWhat>
-    <ReplaceWith>Remplacer par</ReplaceWith>
+    <FindWhat>Chercher :</FindWhat>
+    <ReplaceWith>Remplacer par :</ReplaceWith>
     <Normal>Normal</Normal>
     <CaseSensitive>Sensible à la casse</CaseSensitive>
     <RegularExpression>Expression régulière</RegularExpression>
     <LineNumber>Ligne #</LineNumber>
     <Before>Avant</Before>
     <After>Après</After>
-    <LinesFoundX>Lignes trouvés: {0}</LinesFoundX>
+    <LinesFoundX>Lignes trouvées: {0}</LinesFoundX>
     <Delete>Effacer</Delete>
     <Add>Ajouter</Add>
     <Update>&amp;Mise à jour</Update>
@@ -753,14 +753,14 @@ Poursuivre?</SubtitleAppendPrompt>
   </RemoveTextFromHearImpaired>
   <ReplaceDialog>
     <Title>Remplacer</Title>
-    <FindWhat>Trouvez quoi:</FindWhat>
+    <FindWhat>Chercher :</FindWhat>
     <Normal>Normal</Normal>
     <CaseSensitive>Sensible à la casse</CaseSensitive>
     <RegularExpression>Expression régulière</RegularExpression>
     <ReplaceWith>Remplacer par</ReplaceWith>
     <Find>&amp;Trouver</Find>
     <Replace>&amp;Remplacer</Replace>
-    <ReplaceAll>Remplacer &amp;tous</ReplaceAll>
+    <ReplaceAll>&amp;Tous</ReplaceAll>
   </ReplaceDialog>
   <SetMinimumDisplayTimeBetweenParagraphs>
     <Title>Régler le temps d'affichage minimum entre les paragraphes</Title>
@@ -770,7 +770,7 @@ Poursuivre?</SubtitleAppendPrompt>
   </SetMinimumDisplayTimeBetweenParagraphs>
   <SetSyncPoint>
     <Title>Définir point de synchronisation à la ligne {0}</Title>
-    <SyncPointTimeCode>Synchroniser le code de point de temps</SyncPointTimeCode>
+    <SyncPointTimeCode>Sync. le code de temps</SyncPointTimeCode>
     <ThreeSecondsBack>&lt;&lt; 3 secs</ThreeSecondsBack>
     <HalfASecondBack>&lt;&lt; ½ sec</HalfASecondBack>
     <HalfASecondForward>½  sec &gt;&gt;</HalfASecondForward>
@@ -827,7 +827,7 @@ Poursuivre?</SubtitleAppendPrompt>
     <ShowStopButton>Montrer bouton stop</ShowStopButton>
     <DefaultVolume>Volume par défaut</DefaultVolume>
     <VolumeNotes>0 pour muet, 100 pour le volume le plus fort</VolumeNotes>
-    <MainWindowVideoControls>Controles principaux de la fenêtre vidéo</MainWindowVideoControls>
+    <MainWindowVideoControls>Contrôles principaux de la fenêtre vidéo</MainWindowVideoControls>
     <CustomSearchTextAndUrl>Recherche texte et url personnalisée </CustomSearchTextAndUrl>
     <WaveFormAppearance>Apparence de la forme de l'onde</WaveFormAppearance>
     <WaveFormGridColor>Couleur de la grille</WaveFormGridColor>
@@ -844,7 +844,7 @@ Poursuivre?</SubtitleAppendPrompt>
     <Example>Exemple</Example>
     <Testing123>Un petit texte 123...</Testing123>
     <Language>Langue</Language>
-    <NamesIgnoreLists>Liste Nom/ignore (sensible à la casse)</NamesIgnoreLists>
+    <NamesIgnoreLists>Liste Nom/bruits (sensible à la casse)</NamesIgnoreLists>
     <AddNameEtc>Ajouter nom</AddNameEtc>
     <AddWord>Ajouter mot</AddWord>
     <Remove>Enlever</Remove>
@@ -875,9 +875,9 @@ Poursuivre?</SubtitleAppendPrompt>
     <MusicSymbolsToReplace>Symboles musicaux à remplacer (séparer par des espaces)</MusicSymbolsToReplace>
   </Settings>
   <ShowEarlierLater>
-    <Title>Afficher les options sélectionnées lignes plus tôt/tard</Title>
-    <ShowEarlier>Voir précédent</ShowEarlier>
-    <ShowLater>Voir suivant</ShowLater>
+    <Title>Afficher les sous-titres plus tôt ou plus tard</Title>
+    <ShowEarlier>Voir plus tôt</ShowEarlier>
+    <ShowLater>Voir plus tard</ShowLater>
     <TotalAdjustmentX>Ajustement total: {0}</TotalAdjustmentX>
   </ShowEarlierLater>
   <ShowHistory>
@@ -934,7 +934,7 @@ Poursuivre?</SubtitleAppendPrompt>
   <PointSync>
     <Title>Synchronisation par points</Title>
     <SyncHelp>Poser au moins deux points de synchro pour esquisser la synchro</SyncHelp>
-    <SetSyncPoint>Poser point de synchro</SetSyncPoint>
+    <SetSyncPoint>Déf. pt de sync.</SetSyncPoint>
     <RemoveSyncPoint>Enlever point de synchro</RemoveSyncPoint>
     <SyncPointsX>Points de synchro : {0}</SyncPointsX>
     <Description>La synchronization par points nécessite au moins 2 points de synchro</Description>
@@ -973,8 +973,8 @@ Poursuivre?</SubtitleAppendPrompt>
     <Image>Image</Image>
   </VobSubEditCharacters>
   <VobSubOcr>
-    <Title>Import/OCR VobSub (sub/idx) sous-titres</Title>
-    <TitleBluRay>Import/OCR BluRay (.sup) sous-titres</TitleBluRay>
+    <Title>Importer OCR VobSub (sub/idx) sous-titres</Title>
+    <TitleBluRay>Importer OCR Blu-ray (.sup) sous-titres</TitleBluRay>
     <OcrMethod>Méthode OCR</OcrMethod>
     <OcrViaModi>OCR par Microsoft Office Document Imaging (MODI). Nécessite MS Office</OcrViaModi>
     <OcrViaTesseract>OCR par Tesseract</OcrViaTesseract>
