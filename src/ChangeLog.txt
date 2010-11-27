@@ -1,43 +1,8 @@
-v3.0
+v3.1
  * NEW:
-   * Wave form control with many sync/replay/creation commands
-     (thx Kerensky for the feedback)
-   * Translator mode  (Edit -> Show original subtitle, thx dr.jackson)
-   * Added Microsoft translate
-   * Option to remove blank lines when opening a subtitle (thx honeybunny)
-   * Can now read subtitles in the binary EBU format (thx corbin dallas/Iban)
-   * Can now read/write subtitle Sony DVD Architect format (thx Mark/Zedopipo)
-   * Setting "Font name" is possible via right-click menu in list view
-   * New cool installer (thx XhmikosR)
+   * Auto-backup (never, every minute, every 5th minuter, or every 15th minute)
+   * Can remember last selected line (when re-opening subtitles)
  * IMPROVED:
-   * Layout changed - Translation helper + Create/adjust lines moved to main window
-   * Ripping subtitles from DVD should now have correct time codes
-     (thx JeanlDvd/DvdSubEdit +  gioni666)
-   * Ripping subtitles from DVD/Vobsub files now has a an option to only OCR
-     "forced subtitles" (thx Rolf)
-   * Ripping subtitles from Vobsub files now has an option to use time codes
-     from idx file (now default)
-   * Updated Tesseract 2.x to 3.0
-   * Can now retrieve and install spell check dictionaries from the internet
-     (thx dr.jackson for the idea, Jaime Olivares for zip unpack code & Pierre for testing)
-   * "Compare subtitle" color high-lighting is now more like other compare programs
-   * Fix common errors - Fix alone lowercase 'i' to 'I' now works better close to
-     html tags (thx Chamallow)
-   * Updated names list (thx Chamallow)
-   * "Google translate" window is now resizable (thx Kerensky)
-   * Bold/italic/font tags now work better in ssa/ass subtitles
-   * Icons are now external in the "Icons" folder - you can change them easily yourself
-     without re-compiling (thx 6205)
-   * New toolbar icons from gnome-look.org with some customization (thx 6205)
+   * ...
  * FIXED:
-   * Merge short lines now works with italic tags (thx honeybunny)
-   * Importing subtitles from Matroska files will now correctly change the current
-     encoding to UTF-8 (thx Jonathan)
-   * Numerous fixes in "Remove text for hearing impaired"
-     (thx sialivi, eMWu, honeybunny, aMvEL)
-   * Tools -> Append subtitle without synchronizing (thx Les)
-   * Bug in "Spell check -> Add to names/etc list" (thx dny238)
-   * Crash in ""Auto balance selected lines" (thx Jonathan)
-   * Crash in "Replace all"
-   * Bug in "time control" (thx eMWu)
-   * Resume spell check now works better (thx Kerensky)
+   * OCR Fix Engine - Lines after "..." will no longer be changed to start with upper-case letter.
