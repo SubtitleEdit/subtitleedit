@@ -4,6 +4,8 @@ Subtitle Edit Changelog
  * NEW:
    * Auto-backup (never, every minute, every 5th minute, or every 15th minute)
    * Ability to remember the last selected line when re-opening subtitles
+ * IMPROVED:
+   * Context menu for subtitle textbox now has italic, bold, underline, font name, and color
  * FIXED:
    * OCR Fix Engine - Lines after "..." will no longer be changed to start with uppercase letter
 
