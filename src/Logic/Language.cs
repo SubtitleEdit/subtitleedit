@@ -758,7 +758,11 @@ namespace Nikse.SubtitleEdit.Logic
 
                     ContextMenu = new LanguageStructure.Main.MainMenu.ListViewContextMenu
                     {
+                        Cut = "Cut",
+                        Copy = "Copy",
+                        Paste = "Paste",
                         Delete = "Delete",
+                        SelectAll = "Select all",
                         InsertBefore = "Insert before",
                         InsertAfter = "Insert after",
                         Split = "Split",

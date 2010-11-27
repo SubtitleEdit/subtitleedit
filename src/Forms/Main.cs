@@ -582,6 +582,19 @@ namespace Nikse.SubtitleEdit.Forms
             fixCommonErrorsInSelectedLinesToolStripMenuItem.Text = _language.Menu.ContextMenu.FixCommonErrorsInSelectedLines;
             changeCasingForSelectedLinesToolStripMenuItem.Text = _language.Menu.ContextMenu.ChangeCasingForSelectedLines;
 
+            // textbox context menu
+            cutToolStripMenuItem.Text = _language.Menu.ContextMenu.Cut;
+            copyToolStripMenuItem.Text = _language.Menu.ContextMenu.Copy;
+            pasteToolStripMenuItem.Text = _language.Menu.ContextMenu.Paste;
+            deleteToolStripMenuItem.Text = _language.Menu.ContextMenu.Delete;
+            selectAllToolStripMenuItem.Text = _language.Menu.ContextMenu.SelectAll;
+            normalToolStripMenuItem1.Text = _language.Menu.ContextMenu.Normal;
+            boldToolStripMenuItem1.Text = _languageGeneral.Bold;
+            italicToolStripMenuItem1.Text = _languageGeneral.Italic;
+            underlineToolStripMenuItem1.Text = _language.Menu.ContextMenu.Underline;
+            colorToolStripMenuItem1.Text = _language.Menu.ContextMenu.Color;
+            fontNameToolStripMenuItem.Text = _language.Menu.ContextMenu.FontName;
+
             // main controls
             SubtitleListview1.InitializeLanguage(_languageGeneral, Configuration.Settings);
             toolStripLabelSubtitleFormat.Text = _language.Controls.SubtitleFormat;
@@ -6580,6 +6593,172 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
+        private void selectAllToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            textBoxListViewText.SelectAll();
+        }
+
+        private void cutToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            textBoxListViewText.Cut();
+        }
+
+        private void copyToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            textBoxListViewText.Copy();
+        }
+
+        private void pasteToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            textBoxListViewText.Paste();
+        }
+
+        private void deleteToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            textBoxListViewText.DeselectAll();
+        }
+
+        private void normalToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            string text = textBoxListViewText.SelectedText;
+            int selectionStart = textBoxListViewText.SelectionStart;
+            text = Utilities.RemoveHtmlTags(text);
+            textBoxListViewText.SelectedText = text;
+            textBoxListViewText.SelectionStart = selectionStart;
+            textBoxListViewText.SelectionLength = text.Length;
+        }
+
+        private void TextBoxListViewToogleTag(string tag)
+        {
+            string text = textBoxListViewText.SelectedText;
+            int selectionStart = textBoxListViewText.SelectionStart;
+
+            if (text.Contains("<" + tag + ">"))
+            {
+                text = text.Replace("<" + tag + ">", string.Empty);
+                text = text.Replace("</" + tag + ">", string.Empty);
+            }
+            else
+            {
+                text = string.Format("<{0}>{1}</{0}>", tag, text);
+            }
+
+            textBoxListViewText.SelectedText = text;
+            textBoxListViewText.SelectionStart = selectionStart;
+            textBoxListViewText.SelectionLength = text.Length;
+        }
+
+        private void boldToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            TextBoxListViewToogleTag("b");
+        }
+
+        private void italicToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            TextBoxListViewToogleTag("i");
+        }
+
+        private void underlineToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            TextBoxListViewToogleTag("u");
+        }
+
+        private void colorToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            //color
+            string text = textBoxListViewText.SelectedText;
+            int selectionStart = textBoxListViewText.SelectionStart;
+
+            if (colorDialog1.ShowDialog(this) == DialogResult.OK)
+            { 
+                string color = Utilities.ColorToHex(colorDialog1.Color);
+                bool done = false;
+                string s = text;
+                if (s.StartsWith("<font "))
+                {
+                    int start = s.IndexOf("<font ");
+                    if (start >= 0)
+                    {
+                        int end = s.IndexOf(">", start);
+                        if (end > 0)
+                        {
+                            string f = s.Substring(start, end - start);
+                            if (f.Contains(" face=") && !f.Contains(" color="))
+                            {
+                                start = s.IndexOf(" face=", start);
+                                s = s.Insert(start, string.Format(" color=\"{0}\"", color));
+                                text = s;
+                                done = true;
+                            }
+                            else if (f.Contains(" color="))
+                            {
+                                int colorStart = f.IndexOf(" color=");
+                                if (s.IndexOf("\"", colorStart + " color=".Length + 1) > 0)
+                                    end = s.IndexOf("\"", colorStart + " color=".Length + 1);
+                                s = s.Substring(0, colorStart) + string.Format(" color=\"{0}", color) + s.Substring(end);
+                                text = s;
+                                done = true;
+                            }
+                        }
+                    }
+                }
+
+                if (!done)
+                    text = string.Format("<font color=\"{0}\">{1}</font>", color, text);
+
+                textBoxListViewText.SelectedText = text;
+                textBoxListViewText.SelectionStart = selectionStart;
+                textBoxListViewText.SelectionLength = text.Length;
+            }
+        }
+
+        private void fontNameToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            // font name
+            string text = textBoxListViewText.SelectedText;
+            int selectionStart = textBoxListViewText.SelectionStart;
+
+            if (fontDialog1.ShowDialog(this) == DialogResult.OK)
+            {
+                bool done = false;
+
+                string s = text;
+                if (s.StartsWith("<font "))
+                {
+                    int start = s.IndexOf("<font ");
+                    if (start >= 0)
+                    {
+                        int end = s.IndexOf(">", start);
+                        if (end > 0)
+                        {
+                            string f = s.Substring(start, end - start);
+                            if (f.Contains(" color=") && !f.Contains(" face="))
+                            {
+                                start = s.IndexOf(" color=", start);
+                                s = s.Insert(start, string.Format(" face=\"{0}\"", fontDialog1.Font.Name));
+                                text = s;
+                                done = true;
+                            }
+                            else if (f.Contains(" face="))
+                            {
+                                int faceStart = f.IndexOf(" face=");
+                                if (s.IndexOf("\"", faceStart + " face=".Length + 1) > 0)
+                                    end = s.IndexOf("\"", faceStart + " face=".Length + 1);
+                                s = s.Substring(0, faceStart) + string.Format(" face=\"{0}", fontDialog1.Font.Name) + s.Substring(end);
+                                text = s;
+                                done = true;
+                            }
+                        }
+                    }
+                }
+                if (!done)
+                    text = string.Format("<font face=\"{0}\">{1}</font>", fontDialog1.Font.Name, s);
+
+                textBoxListViewText.SelectedText = text;
+                textBoxListViewText.SelectionStart = selectionStart;
+                textBoxListViewText.SelectionLength = text.Length;
+            }
+        }
 
     }
 }
