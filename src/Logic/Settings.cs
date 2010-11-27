@@ -11,30 +11,59 @@ namespace Nikse.SubtitleEdit.Logic
     // The settings classes are build for easy xml-serilization (makes save/load code simple)
     // ...but the built-in serialization is too slow - so a custom (de-)serialization has been used!
 
+    public class RecentFileEntry
+    {
+        public string FileName { get; set; }
+        public int FirstVisibleIndex { get; set; }
+        public int FirstSelectedIndex { get; set; }
+    }
+
     public class RecentFilesSettings
     {
         private const int MaxRecentFiles = 25;
 
         [XmlArrayItem("FileName")]
-        public List<string> FileNames { get; set; }
+        public List<RecentFileEntry> Files { get; set; }
 
         public RecentFilesSettings()
         {
-            FileNames = new List<string>();
+            Files = new List<RecentFileEntry>();
+        }
+
+        public void Add(string fileName, int firstVisibleIndex, int firstSelectedIndex)
+        {
+            var newList = new List<RecentFileEntry> { new RecentFileEntry() { FileName = fileName, FirstVisibleIndex = firstVisibleIndex, FirstSelectedIndex = firstSelectedIndex } };
+            int index = 0;
+            foreach (var oldRecentFile in Files)
+            {
+                if (string.Compare(fileName, oldRecentFile.FileName, true) != 0 && index < MaxRecentFiles)
+                    newList.Add(new RecentFileEntry() { FileName = oldRecentFile.FileName, FirstVisibleIndex = oldRecentFile.FirstVisibleIndex, FirstSelectedIndex = oldRecentFile.FirstSelectedIndex });
+                index++;
+            }
+            Files = newList;
         }
 
         public void Add(string fileName)
         {
-            var newList = new List<string> {fileName};
-            int index = 0;
-            foreach (string oldFileName in FileNames)
+            var newList = new List<RecentFileEntry>();
+            foreach (var oldRecentFile in Files)
             {
-                if (string.Compare(fileName, oldFileName, true) != 0 && index < MaxRecentFiles)
-                    newList.Add(oldFileName);
+                if (string.Compare(fileName, oldRecentFile.FileName, true) == 0)
+                    newList.Add(new RecentFileEntry() { FileName = oldRecentFile.FileName, FirstVisibleIndex = oldRecentFile.FirstVisibleIndex, FirstSelectedIndex = oldRecentFile.FirstSelectedIndex });
+            }
+            if (newList.Count == 0)
+                newList.Add(new RecentFileEntry() { FileName = fileName, FirstVisibleIndex = -1, FirstSelectedIndex = -1 });
+
+            int index = 0;
+            foreach (var oldRecentFile in Files)
+            {
+                if (string.Compare(fileName, oldRecentFile.FileName, true) != 0 && index < MaxRecentFiles)
+                    newList.Add(new RecentFileEntry() { FileName = oldRecentFile.FileName, FirstVisibleIndex = oldRecentFile.FirstVisibleIndex, FirstSelectedIndex = oldRecentFile.FirstSelectedIndex });
                 index++;
             }
-            FileNames = newList;
+            Files = newList;
         }
+
     }
 
     public class ToolsSettings
@@ -183,6 +212,7 @@ namespace Nikse.SubtitleEdit.Logic
         public int SubtitleFontSize { get; set; }
         public bool SubtitleFontBold { get; set; }
         public bool ShowRecentFiles { get; set; }
+        public bool RememberSelectedLine { get; set; }
         public bool StartLoadLastFile { get; set; }
         public bool StartRememberPositionAndSize { get; set; }
         public string StartPosition { get; set; }
@@ -201,6 +231,7 @@ namespace Nikse.SubtitleEdit.Logic
         public int DefaultAdjustMilliseconds { get; set; }
         public bool AutoRepeatOn { get; set; }
         public bool AutoContinueOn { get; set; }
+        public int AutoBackupSeconds { get; set; }
 
         public GeneralSettings()
         {
@@ -228,6 +259,7 @@ namespace Nikse.SubtitleEdit.Logic
             DefaultEncoding = "UTF-8";
             AutoGuessAnsiEncoding = false;
             ShowRecentFiles = true;
+            RememberSelectedLine = false;
             StartLoadLastFile = true;
             StartRememberPositionAndSize = true;
             SubtitleLineMaximumLength = 65;
@@ -241,6 +273,7 @@ namespace Nikse.SubtitleEdit.Logic
             DefaultAdjustMilliseconds = 1000;
             AutoRepeatOn = true;
             AutoContinueOn = false;
+            AutoBackupSeconds = 0;
         }
     }
 
@@ -415,7 +448,18 @@ namespace Nikse.SubtitleEdit.Logic
             settings.RecentFiles = new Nikse.SubtitleEdit.Logic.RecentFilesSettings();
             XmlNode node = doc.DocumentElement.SelectSingleNode("RecentFiles");
             foreach (XmlNode listNode in node.SelectNodes("FileNames/FileName"))
-                settings.RecentFiles.FileNames.Add(listNode.InnerText);
+            {
+                string firstVisibleIndex = "-1";
+                if (listNode.Attributes["FirstVisibleIndex"] != null)
+                    firstVisibleIndex = listNode.Attributes["FirstVisibleIndex"].Value;
+
+                string firstSelectedIndex = "-1";
+                if (listNode.Attributes["FirstSelectedIndex"] != null)
+                    firstSelectedIndex = listNode.Attributes["FirstSelectedIndex"].Value;
+
+                settings.RecentFiles.Files.Add(new RecentFileEntry() { FileName = listNode.InnerText, FirstVisibleIndex = int.Parse(firstVisibleIndex), FirstSelectedIndex = int.Parse(firstSelectedIndex) });
+            }
+
 
             settings.General = new Nikse.SubtitleEdit.Logic.GeneralSettings();
             node = doc.DocumentElement.SelectSingleNode("General");
@@ -479,6 +523,9 @@ namespace Nikse.SubtitleEdit.Logic
             subNode = node.SelectSingleNode("ShowRecentFiles");
             if (subNode != null)
                 settings.General.ShowRecentFiles = Convert.ToBoolean(subNode.InnerText);
+            subNode = node.SelectSingleNode("RememberSelectedLine");
+            if (subNode != null)
+                settings.General.RememberSelectedLine = Convert.ToBoolean(subNode.InnerText);
             subNode = node.SelectSingleNode("StartLoadLastFile");
             if (subNode != null)
                 settings.General.StartLoadLastFile = Convert.ToBoolean(subNode.InnerText);
@@ -533,6 +580,9 @@ namespace Nikse.SubtitleEdit.Logic
             subNode = node.SelectSingleNode("AutoContinueOn");
             if (subNode != null)
                 settings.General.AutoContinueOn = Convert.ToBoolean(subNode.InnerText);
+            subNode = node.SelectSingleNode("AutoBackupSeconds");
+            if (subNode != null)
+                settings.General.AutoBackupSeconds = Convert.ToInt32(subNode.InnerText);            
             
             settings.Tools = new Nikse.SubtitleEdit.Logic.ToolsSettings();
             node = doc.DocumentElement.SelectSingleNode("Tools");
@@ -763,9 +813,13 @@ namespace Nikse.SubtitleEdit.Logic
 
             textWriter.WriteStartElement("RecentFiles", "");
             textWriter.WriteStartElement("FileNames", "");
-            foreach (var item in settings.RecentFiles.FileNames)
+            foreach (var item in settings.RecentFiles.Files)
             {
-                textWriter.WriteElementString("FileName", item);
+                textWriter.WriteStartElement("FileName");
+                textWriter.WriteAttributeString("FirstVisibleIndex", item.FirstVisibleIndex.ToString());
+                textWriter.WriteAttributeString("FirstSelectedIndex", item.FirstSelectedIndex.ToString());
+                textWriter.WriteString(item.FileName);
+                textWriter.WriteEndElement();
             }
             textWriter.WriteEndElement();
             textWriter.WriteEndElement();
@@ -791,6 +845,7 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("SubtitleFontSize", settings.General.SubtitleFontSize.ToString());
             textWriter.WriteElementString("SubtitleFontBold", settings.General.SubtitleFontBold.ToString());
             textWriter.WriteElementString("ShowRecentFiles", settings.General.ShowRecentFiles.ToString());
+            textWriter.WriteElementString("RememberSelectedLine", settings.General.RememberSelectedLine.ToString());            
             textWriter.WriteElementString("StartLoadLastFile", settings.General.StartLoadLastFile.ToString());
             textWriter.WriteElementString("StartRememberPositionAndSize", settings.General.StartRememberPositionAndSize.ToString());
             textWriter.WriteElementString("StartPosition", settings.General.StartPosition);
@@ -809,6 +864,7 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("DefaultAdjustMilliseconds", settings.General.DefaultAdjustMilliseconds.ToString());
             textWriter.WriteElementString("AutoRepeatOn", settings.General.AutoRepeatOn.ToString());
             textWriter.WriteElementString("AutoContinueOn", settings.General.AutoContinueOn.ToString());
+            textWriter.WriteElementString("AutoBackupSeconds", settings.General.AutoBackupSeconds.ToString());            
             textWriter.WriteEndElement();
 
             textWriter.WriteStartElement("Tools", "");

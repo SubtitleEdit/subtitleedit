@@ -58,6 +58,14 @@ namespace Nikse.SubtitleEdit.Logic
             }
         }
 
+        public static string AutoBackupFolder
+        {
+            get
+            {
+                return DataDirectory + "AutoBackup" + Path.DirectorySeparatorChar;
+            }
+        }
+
         public static string DataDirectory
         {
             get

@@ -69,6 +69,10 @@ namespace Nikse.SubtitleEdit.Forms
         string _timerAddHistoryWhenDoneText;
         double? _audioWaveFormRightClickSeconds = null;
 
+        System.Windows.Forms.Timer _timerAutoSave = new Timer();
+        string _textAutoSave;
+
+
         private bool AutoRepeatContinueOn
         {
             get
@@ -190,15 +194,18 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (Configuration.Settings.General.StartLoadLastFile)
             {
-                if (Configuration.Settings.RecentFiles.FileNames.Count > 0)
+                if (Configuration.Settings.RecentFiles.Files.Count > 0)
                 {
-                    fileName = Configuration.Settings.RecentFiles.FileNames[0];
+                    fileName = Configuration.Settings.RecentFiles.Files[0].FileName;
                     if (File.Exists(fileName))
+                    {
                         OpenSubtitle(fileName, null);
+                        SetRecentIndecies(fileName);
+                    }
                 }
             }
 
-            timeUpDownStartTime.MaskedTextBox.TextChanged += MaskedTextBox_TextChanged;
+            //timeUpDownStartTime.MaskedTextBox.TextChanged += MaskedTextBox_TextChanged;
             labelAutoDuration.Visible = false;
             labelSubtitle.Text = string.Empty;
             comboBoxAutoRepeat.SelectedIndex = 2;
@@ -665,6 +672,26 @@ namespace Nikse.SubtitleEdit.Forms
             comboBoxSubtitleFormats.SelectedIndexChanged += ComboBoxSubtitleFormatsSelectedIndexChanged;
         }
 
+        private int FirstSelectedIndex
+        {
+            get
+            {
+                if (SubtitleListview1.SelectedItems.Count == 0)
+                    return -1;
+                return SubtitleListview1.SelectedItems[0].Index;
+            }
+        }
+
+        private int FirstVisibleIndex
+        {
+            get
+            {
+                if (SubtitleListview1.Items.Count == 0)
+                    return -1;
+                return SubtitleListview1.TopItem.Index;
+            }
+        }
+
         private bool ContinueNewOrExit()
         {
             if (_change)
@@ -688,7 +715,7 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         _fileName = saveFileDialog1.FileName;
                         Text = Title + " - " + _fileName;
-                        Configuration.Settings.RecentFiles.Add(_fileName);
+                        Configuration.Settings.RecentFiles.Add(_fileName, FirstVisibleIndex, FirstSelectedIndex);
                         Configuration.Settings.Save();
 
                         if (SaveSubtitle(GetCurrentSubtitleFormat()) == DialogResult.OK)
@@ -834,6 +861,10 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (File.Exists(fileName))
             {
+                // save last first visible index + first selected index from listview
+                if (!string.IsNullOrEmpty(_fileName))
+                    Configuration.Settings.RecentFiles.Add(_fileName, FirstVisibleIndex, FirstSelectedIndex);
+
                 openFileDialog1.InitialDirectory = Path.GetDirectoryName(fileName);
 
                 if (Path.GetExtension(fileName).ToLower() == ".sub" && IsVobSubFile(fileName, false))
@@ -906,8 +937,8 @@ namespace Nikse.SubtitleEdit.Forms
                     AudioWaveForm.WavePeaks = null;
                     AudioWaveForm.Invalidate();
 
-                    if (Configuration.Settings.RecentFiles.FileNames.Count > 0 &&
-                        Configuration.Settings.RecentFiles.FileNames[0] == fileName)
+                    if (Configuration.Settings.RecentFiles.Files.Count > 0 &&
+                        Configuration.Settings.RecentFiles.Files[0].FileName == fileName)
                     {
                     }
                     else
@@ -955,7 +986,7 @@ namespace Nikse.SubtitleEdit.Forms
                         AudioWaveForm.WavePeaks = null;
                         AudioWaveForm.Invalidate();
 
-                        Configuration.Settings.RecentFiles.Add(fileName);
+                        Configuration.Settings.RecentFiles.Add(fileName, FirstVisibleIndex, FirstSelectedIndex);
                         Configuration.Settings.Save();
                         UpdateRecentFilesUI();
                         _fileName = fileName;
@@ -1001,18 +1032,18 @@ namespace Nikse.SubtitleEdit.Forms
         {
             reopenToolStripMenuItem.DropDownItems.Clear();
             if (Configuration.Settings.General.ShowRecentFiles &&
-                Configuration.Settings.RecentFiles.FileNames.Count > 0)
+                Configuration.Settings.RecentFiles.Files.Count > 0)
             {
                 reopenToolStripMenuItem.Visible = true;
-                foreach (string fileName in Configuration.Settings.RecentFiles.FileNames)
+                foreach (var file in Configuration.Settings.RecentFiles.Files)
                 {
-                    if (File.Exists(fileName))
-                        reopenToolStripMenuItem.DropDownItems.Add(fileName, null, ReopenSubtitleToolStripMenuItemClick);
+                    if (File.Exists(file.FileName))
+                        reopenToolStripMenuItem.DropDownItems.Add(file.FileName, null, ReopenSubtitleToolStripMenuItemClick);
                 }
             }
             else
             {
-                Configuration.Settings.RecentFiles.FileNames.Clear();
+                Configuration.Settings.RecentFiles.Files.Clear();
                 reopenToolStripMenuItem.Visible = false;
             }
         }
@@ -1023,7 +1054,44 @@ namespace Nikse.SubtitleEdit.Forms
             var item = sender as ToolStripItem;
 
             if (ContinueNewOrExit())
+            {
                 OpenSubtitle(item.Text, null);
+                SetRecentIndecies(item.Text);
+            }
+        }
+
+        private void SetRecentIndecies(string fileName)
+        {
+            if (!Configuration.Settings.General.RememberSelectedLine)
+                return;
+
+            foreach (var x in Configuration.Settings.RecentFiles.Files)
+            {
+                if (string.Compare(fileName, x.FileName, true) == 0)
+                {
+                    int sIndex = x.FirstSelectedIndex;
+                    if (sIndex >= 0 && sIndex < SubtitleListview1.Items.Count)
+                    {
+                        SubtitleListview1.SelectedIndexChanged -= SubtitleListview1_SelectedIndexChanged;
+                        for (int i = 0; i < SubtitleListview1.Items.Count; i++)
+                            SubtitleListview1.Items[i].Selected = i == sIndex;
+                        _subtitleListViewIndex = -1;
+                        SubtitleListview1.EnsureVisible(sIndex);
+                        SubtitleListview1.SelectedIndexChanged += SubtitleListview1_SelectedIndexChanged;
+                    }
+
+                    int topIndex = x.FirstVisibleIndex;
+                    if (topIndex >= 0 && topIndex < SubtitleListview1.Items.Count)
+                    {
+                        // to fix bug in .net framework we have to set topitem 3 times... wtf!?
+                        SubtitleListview1.TopItem = SubtitleListview1.Items[topIndex];
+                        SubtitleListview1.TopItem = SubtitleListview1.Items[topIndex];
+                        SubtitleListview1.TopItem = SubtitleListview1.Items[topIndex];
+                    }                    
+
+                    break;
+                }
+            }
         }
 
         private void SaveToolStripMenuItemClick(object sender, EventArgs e)
@@ -1078,7 +1146,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 _fileDateTime = File.GetLastWriteTime(_fileName);
                 Text = Title + " - " + _fileName;
-                Configuration.Settings.RecentFiles.Add(_fileName);
+                Configuration.Settings.RecentFiles.Add(_fileName, FirstVisibleIndex, FirstSelectedIndex);
                 Configuration.Settings.Save();
 
                 int index = 0;
@@ -1364,6 +1432,14 @@ namespace Nikse.SubtitleEdit.Forms
                 SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
                 RestoreSubtitleListviewIndexes();
             }
+
+            _timerAutoSave.Stop();
+            if (Configuration.Settings.General.AutoBackupSeconds > 0)
+            {
+                _timerAutoSave.Interval = 1000 * Configuration.Settings.General.AutoBackupSeconds; // take backup every x second if changes were made
+                _timerAutoSave.Start();
+            }
+
         }
 
         private void InitializeSubtitleFont()
@@ -3476,6 +3552,9 @@ namespace Nikse.SubtitleEdit.Forms
 
                     Configuration.Settings.General.AutoRepeatOn = checkBoxAutoRepeatOn.Checked;
                     Configuration.Settings.General.AutoContinueOn = checkBoxAutoContinue.Checked;
+
+                    if (!string.IsNullOrEmpty(_fileName))
+                        Configuration.Settings.RecentFiles.Add(_fileName, FirstVisibleIndex, FirstSelectedIndex);
 
                     Configuration.Settings.Save();
                 }
@@ -6040,6 +6119,41 @@ namespace Nikse.SubtitleEdit.Forms
         {
             toolStripButtonToogleVideo.Checked = !Configuration.Settings.General.ShowVideoPlayer;
             toolStripButtonToogleVideo_Click(null, null);
+
+            _timerAutoSave.Tick += TimerAutoSaveTick;
+            if (Configuration.Settings.General.AutoBackupSeconds > 0)
+            {
+                _timerAutoSave.Interval = 1000 * Configuration.Settings.General.AutoBackupSeconds; // take backup every x second if changes were made
+                _timerAutoSave.Start();
+            }
+        }
+
+        void TimerAutoSaveTick(object sender, EventArgs e)
+        {
+            string currentText = _subtitle.ToText(GetCurrentSubtitleFormat());
+            if (_textAutoSave != null && _subtitle.Paragraphs.Count > 0)
+            { 
+                if (currentText != _textAutoSave && currentText.Trim().Length > 0)
+                {
+                    if (!Directory.Exists(Configuration.AutoBackupFolder))
+                    {
+                        try
+                        {
+                            Directory.CreateDirectory(Configuration.AutoBackupFolder);
+                        }
+                        catch (Exception exception)
+                        {
+                            MessageBox.Show("Unable to create backup directory " + Configuration.AutoBackupFolder + ": " + exception.Message);
+                        }
+                    }
+                    string title = string.Empty;
+                    if (!string.IsNullOrEmpty(_fileName))
+                        title = "_" + Path.GetFileNameWithoutExtension(_fileName);
+                    string fileName = string.Format("{0}{1:0000}-{2:00}-{3:00}_{4:00}-{5:00}-{6:00}{7}{8}", Configuration.AutoBackupFolder, DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second, title, GetCurrentSubtitleFormat().Extension);
+                    File.WriteAllText(fileName, currentText);
+                }
+            }
+            _textAutoSave = currentText;                
         }
 
         private void mediaPlayer_DragDrop(object sender, DragEventArgs e)
