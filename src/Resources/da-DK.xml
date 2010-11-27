@@ -810,8 +810,9 @@ Fortsæt?</SubtitleAppendPrompt>
     <SubtitleFontSize>undertekst skriftstørrelse</SubtitleFontSize>
     <RememberRecentFiles>Husk seneste filer (for genåbn)</RememberRecentFiles>
     <StartWithLastFileLoaded>Start med sidste fil indlæst</StartWithLastFileLoaded>
+    <RememberSelectedLine>Husk aktive linje</RememberSelectedLine>
     <RememberPositionAndSize>Husk hovedvinduet position og størrelse</RememberPositionAndSize>
-    <StartInSourceView>Start i kilde henblik</StartInSourceView>
+    <StartInSourceView>Start i kilde visning</StartInSourceView>
     <RemoveBlankLinesWhenOpening>Fjern tomme linjer, når undertekst åbnes</RemoveBlankLinesWhenOpening>
     <ShowLineBreaksAs>Vis linjeskift i listevisning som</ShowLineBreaksAs>
     <MainListViewDoubleClickAction>Dobbeltklik på linje i hovedvinduet listevisning starter</MainListViewDoubleClickAction>
@@ -819,7 +820,11 @@ Fortsæt?</SubtitleAppendPrompt>
     <MainListViewVideoGoToPositionAndPause>Gå til video pos og pause</MainListViewVideoGoToPositionAndPause>
     <MainListViewVideoGoToPositionAndPlay>Gå til video pos og afspi</MainListViewVideoGoToPositionAndPlay>
     <MainListViewEditText>Gå til at rediger tekst</MainListViewEditText>
-    <VideoEngine>Video motor</VideoEngine>
+    <AutoBackup>Auto-backup</AutoBackup>
+    <AutoBackupEveryMinute>Hvert minut</AutoBackupEveryMinute>
+    <AutoBackupEveryFiveMinutes>Hver 5. minut</AutoBackupEveryFiveMinutes>
+    <AutoBackupEveryFifteenMinutes>Hver 15. minut</AutoBackupEveryFifteenMinutes>
+    <VideoEngine>Video afspiller</VideoEngine>
     <DirectShow>DirectShow</DirectShow>
     <DirectShowDescription>Quartz.dll i system32 mappen</DirectShowDescription>
     <ManagedDirectX>Managed DirectX</ManagedDirectX>
@@ -1029,7 +1034,7 @@ Fortsæt?</SubtitleAppendPrompt>
     <Message>Navn på ny tegn database mappe</Message>
   </VobSubOcrNewFolder>
   <WaveForm>
-    <ClickToAddWaveForm>Klik for at tilføj audio kurve</ClickToAddWaveForm>
+    <ClickToAddWaveForm>Klik for at tilføje audio kurve</ClickToAddWaveForm>
     <Seconds>sekunder</Seconds>
     <ZoomIn>Zoom ind</ZoomIn>
     <ZoomOut>Zoom ud</ZoomOut>
