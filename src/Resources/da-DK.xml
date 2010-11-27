@@ -459,7 +459,11 @@
         <ShowHideVideo>Vis/skjul video</ShowHideVideo>
       </ToolBar>
       <ContextMenu>
+        <Cut>Klip</Cut>
+        <Copy>Kopier</Copy>
+        <Paste>Indsæt</Paste>
         <Delete>Slet</Delete>
+        <SelectAll>Vælg alle</SelectAll>
         <InsertBefore>Indsæt før</InsertBefore>
         <InsertAfter>Indsæt efter</InsertAfter>
         <Split>Split</Split>
