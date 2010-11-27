@@ -445,8 +445,12 @@ namespace Nikse.SubtitleEdit.Logic.OCR
                 lastLine.EndsWith("!") ||
                 lastLine.EndsWith("?"))
             {
-                if (input.Length > 0 && input[0].ToString() != input[0].ToString().ToUpper())
-                    input = input.Remove(0, 1).Insert(0, input[0].ToString().ToUpper());
+                if (lastLine == null || !lastLine.EndsWith("..."))
+                {
+
+                    if (input.Length > 0 && input[0].ToString() != input[0].ToString().ToUpper())
+                        input = input.Remove(0, 1).Insert(0, input[0].ToString().ToUpper());
+                }
             }
 
             // lines ending with ". should often end at ... (of no other quotes exists near by)
