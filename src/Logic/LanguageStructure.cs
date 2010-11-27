@@ -903,6 +903,7 @@
             public string SubtitleFontSize { get; set; }
             public string RememberRecentFiles { get; set; }
             public string StartWithLastFileLoaded { get; set; }
+            public string RememberSelectedLine { get; set; }
             public string RememberPositionAndSize { get; set; }
             public string StartInSourceView { get; set; }
             public string RemoveBlankLinesWhenOpening { get; set; }
@@ -912,6 +913,10 @@
             public string MainListViewVideoGoToPositionAndPause { get; set; }
             public string MainListViewVideoGoToPositionAndPlay { get; set; }
             public string MainListViewEditText { get; set; }
+            public string AutoBackup { get; set; }
+            public string AutoBackupEveryMinute { get; set; }
+            public string AutoBackupEveryFiveMinutes { get; set; }
+            public string AutoBackupEveryFifteenMinutes { get; set; }
             public string VideoEngine { get; set; }
             public string DirectShow { get; set; }
             public string DirectShowDescription { get; set; }

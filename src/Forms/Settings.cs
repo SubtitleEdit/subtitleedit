@@ -64,6 +64,8 @@ namespace Nikse.SubtitleEdit.Forms
             comboBoxSubtitleFontSize.Text = gs.SubtitleFontSize.ToString();
             checkBoxSubtitleFontBold.Checked = gs.SubtitleFontBold;
             checkBoxRememberRecentFiles.Checked = gs.ShowRecentFiles;
+            checkBoxRememberRecentFiles_CheckedChanged(null, null);
+            checkBoxRememberSelectedLine.Checked = gs.RememberSelectedLine;
             checkBoxReopenLastOpened.Checked = gs.StartLoadLastFile;
             checkBoxStartInSourceView.Checked = gs.StartInSourceView;
             checkBoxRemoveBlankLinesWhenOpening.Checked = gs.RemoveBlankLinesWhenOpening;
@@ -179,6 +181,7 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxSubtitleFontBold.Text = Configuration.Settings.Language.General.Bold;
             checkBoxRememberRecentFiles.Text = language.RememberRecentFiles;
             checkBoxReopenLastOpened.Text = language.StartWithLastFileLoaded;
+            checkBoxRememberSelectedLine.Text = language.RememberSelectedLine;
             checkBoxStartInSourceView.Text = language.StartInSourceView;
             checkBoxRemoveBlankLinesWhenOpening.Text = language.RemoveBlankLinesWhenOpening;
             checkBoxRememberWindowPosition.Text = language.RememberPositionAndSize;
@@ -186,6 +189,12 @@ namespace Nikse.SubtitleEdit.Forms
             labelShowLineBreaksAs.Text = language.ShowLineBreaksAs;
             textBoxShowLineBreaksAs.Left = labelShowLineBreaksAs.Left + labelShowLineBreaksAs.Width;
             labelListViewDoubleClickEvent.Text = language.MainListViewDoubleClickAction;
+            labelAutoBackup.Text = language.AutoBackup;
+            comboBoxAutoBackup.Items[0] = Configuration.Settings.Language.General.None;
+            comboBoxAutoBackup.Items[1] = language.AutoBackupEveryMinute;
+            comboBoxAutoBackup.Items[2] = language.AutoBackupEveryFiveMinutes;
+            comboBoxAutoBackup.Items[3] = language.AutoBackupEveryFifteenMinutes;
+
             
             groupBoxVideoEngine.Text = language.VideoEngine;
             radioButtonVideoPlayerDirectShow.Text = language.DirectShow;
@@ -275,6 +284,15 @@ namespace Nikse.SubtitleEdit.Forms
             if (Configuration.Settings.General.ListViewDoubleClickAction >= 0 && Configuration.Settings.General.ListViewDoubleClickAction < comboBoxListViewDoubleClickEvent.Items.Count)
                 comboBoxListViewDoubleClickEvent.SelectedIndex =
                     Configuration.Settings.General.ListViewDoubleClickAction;
+
+            if (gs.AutoBackupSeconds == 60)
+                comboBoxAutoBackup.SelectedIndex = 1;
+            else if (gs.AutoBackupSeconds == 60 * 5)
+                comboBoxAutoBackup.SelectedIndex = 2;
+            else if (gs.AutoBackupSeconds == 60 * 15)
+                comboBoxAutoBackup.SelectedIndex = 3;
+            else
+                comboBoxAutoBackup.SelectedIndex = 0;
 
             ToolsSettings toolsSettings = Configuration.Settings.Tools;
             if (toolsSettings.VerifyPlaySeconds - 2 >= 0 && toolsSettings.VerifyPlaySeconds - 2 < comboBoxToolsVerifySeconds.Items.Count)
@@ -502,6 +520,7 @@ namespace Nikse.SubtitleEdit.Forms
             gs.SubtitleFontSize = int.Parse(comboBoxSubtitleFontSize.Text);
             gs.SubtitleFontBold = checkBoxSubtitleFontBold.Checked;
             gs.ShowRecentFiles = checkBoxRememberRecentFiles.Checked;
+            gs.RememberSelectedLine = checkBoxRememberSelectedLine.Checked;
             gs.StartLoadLastFile = checkBoxReopenLastOpened.Checked;
             gs.StartRememberPositionAndSize = checkBoxRememberWindowPosition.Checked;
             gs.StartInSourceView = checkBoxStartInSourceView.Checked;
@@ -510,6 +529,15 @@ namespace Nikse.SubtitleEdit.Forms
             if (gs.ListViewLineSeparatorString.Trim().Length == 0)
                 gs.ListViewLineSeparatorString = Environment.NewLine;
             gs.ListViewDoubleClickAction = comboBoxListViewDoubleClickEvent.SelectedIndex;
+
+            if (comboBoxAutoBackup.SelectedIndex == 1)
+                gs.AutoBackupSeconds = 60;
+            else if (comboBoxAutoBackup.SelectedIndex == 2)
+                gs.AutoBackupSeconds = 60 * 5;
+            else if (comboBoxAutoBackup.SelectedIndex == 3)
+                gs.AutoBackupSeconds = 60 * 15;
+            else
+                gs.AutoBackupSeconds = 0;
 
             if (radioButtonVideoPlayerWmp.Checked)
                 gs.VideoPlayer = "WindowsMediaPlayer";
@@ -1266,6 +1294,12 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
             InitializeWaveFormsFolderEmpty(Configuration.Settings.Language.Settings);
+        }
+
+        private void checkBoxRememberRecentFiles_CheckedChanged(object sender, EventArgs e)
+        {
+            checkBoxReopenLastOpened.Enabled = checkBoxRememberRecentFiles.Checked;
+            checkBoxRememberSelectedLine.Enabled = checkBoxRememberRecentFiles.Checked;
         }
 
     }
