@@ -710,6 +710,7 @@ Fortsæt?</SubtitleAppendPrompt>
     <BeforeInsertSubtitleAtVideoPosition>Før ny tekst ved aktuel video position</BeforeInsertSubtitleAtVideoPosition>
     <BeforeSetStartTimeAndOffsetTheRest>Før sæt start tid og juster resten</BeforeSetStartTimeAndOffsetTheRest>
     <ContinueWithCurrentSpellCheck>Fortsæt med aktuelle stavekontrol?</ContinueWithCurrentSpellCheck>
+    <CharactersPerSecond>Bogstav/sek: {0:0.00}</CharactersPerSecond>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Vælg undertekst fra Matroska fil</Title>

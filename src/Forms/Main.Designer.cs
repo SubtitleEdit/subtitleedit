@@ -301,6 +301,7 @@
             this.mergeWithNextToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator11 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripMenuItemWaveFormPlaySelection = new System.Windows.Forms.ToolStripMenuItem();
+            this.labelCharactersPerSecond = new System.Windows.Forms.Label();
             this.statusStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
@@ -1331,6 +1332,7 @@
             // 
             this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox1.Controls.Add(this.labelCharactersPerSecond);
             this.groupBox1.Controls.Add(this.labelAutoDuration);
             this.groupBox1.Controls.Add(this.panelSingleLine);
             this.groupBox1.Controls.Add(this.labelTextLineTotal);
@@ -2948,6 +2950,16 @@
             this.toolStripMenuItemWaveFormPlaySelection.Text = "Play selection";
             this.toolStripMenuItemWaveFormPlaySelection.Click += new System.EventHandler(this.toolStripMenuItemWaveFormPlaySelection_Click);
             // 
+            // labelCharactersPerSecond
+            // 
+            this.labelCharactersPerSecond.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.labelCharactersPerSecond.Location = new System.Drawing.Point(1170, 12);
+            this.labelCharactersPerSecond.Name = "labelCharactersPerSecond";
+            this.labelCharactersPerSecond.Size = new System.Drawing.Size(177, 13);
+            this.labelCharactersPerSecond.TabIndex = 31;
+            this.labelCharactersPerSecond.Text = "labelCharactersPerSecond";
+            this.labelCharactersPerSecond.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -3288,6 +3300,7 @@
         private System.Windows.Forms.ToolStripMenuItem underlineToolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem colorToolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem fontNameToolStripMenuItem;
+        private System.Windows.Forms.Label labelCharactersPerSecond;
     }
 }
 

@@ -636,6 +636,7 @@ namespace Nikse.SubtitleEdit.Logic
                 BeforeInsertSubtitleAtVideoPosition = "Before insert subtitle at video position",
                 BeforeSetStartTimeAndOffsetTheRest = "Before set start time and offset the rest",
                 ContinueWithCurrentSpellCheck = "Continue with current spell check?",
+                CharactersPerSecond = "Chars/sec: {0:0.00}",
 
                 Menu = new LanguageStructure.Main.MainMenu
                 {
