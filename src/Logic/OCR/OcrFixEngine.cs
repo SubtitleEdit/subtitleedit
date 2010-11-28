@@ -167,7 +167,15 @@ namespace Nikse.SubtitleEdit.Logic.OCR
                 {
                     if (word.Length > 0)
                     {
-                        string fixedWord = FixCommonWordErrors(word.ToString(), lastWord);
+                        string fixedWord;
+                        if (lastWord != null && lastWord.ToUpper().Contains("COLOR="))
+                        {
+                            fixedWord = word.ToString();
+                        }
+                        else
+                        {
+                            fixedWord = FixCommonWordErrors(word.ToString(), lastWord);
+                        }
                         sb.Append(fixedWord);
                         lastWord = fixedWord;
                         word = new StringBuilder();
