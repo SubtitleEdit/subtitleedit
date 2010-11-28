@@ -140,6 +140,7 @@ namespace Nikse.SubtitleEdit.Forms
             SetLanguage(Configuration.Settings.General.Language);
 
             labelTextLineLengths.Text = string.Empty;
+            labelCharactersPerSecond.Text = string.Empty;
             labelTextLineTotal.Text = string.Empty;
             labelStartTimeWarning.Text = string.Empty;
             labelDurationWarning.Text = string.Empty;
@@ -1309,8 +1310,9 @@ namespace Nikse.SubtitleEdit.Forms
             textBoxListViewText.Text = string.Empty;
             textBoxListViewText.Enabled = false;
             labelTextLineLengths.Text = string.Empty;
+            labelCharactersPerSecond.Text = string.Empty;
             labelTextLineTotal.Text = string.Empty;
-
+            
             if (mediaPlayer.VideoPlayer != null)
             {
                 mediaPlayer.VideoPlayer.DisposeVideoPlayer();
@@ -3168,11 +3170,10 @@ namespace Nikse.SubtitleEdit.Forms
                     _subtitleListViewIndex = firstSelectedIndex;
                     _oldSelectedParagraph = new Paragraph(p);
 
-                    UpdateListViewTextInfo(p.Text);
+                    UpdateListViewTextInfo(p);
                 }
             }
         }
-
 
         private void SubtitleListview1_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -3187,8 +3188,33 @@ namespace Nikse.SubtitleEdit.Forms
                 toolStripSelected.Text = string.Format(_language.XLinesSelected, SubtitleListview1.SelectedItems.Count);
         }
 
-        private void UpdateListViewTextInfo(string text)
+        private void UpdateListViewTextCharactersPerSeconds(Paragraph paragraph)
         {
+            string s = Utilities.RemoveHtmlTags(paragraph.Text).Replace(" ", string.Empty).Replace(Environment.NewLine, string.Empty);
+            if (paragraph.Duration.TotalSeconds > 0)
+            {
+                double charactersPerSecond = s.Length / paragraph.Duration.TotalSeconds;                
+                if (charactersPerSecond > Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds + 7)
+                    labelCharactersPerSecond.ForeColor = System.Drawing.Color.Red;
+                else if (charactersPerSecond > Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds)
+                    labelCharactersPerSecond.ForeColor = System.Drawing.Color.Orange;
+                else
+                    labelCharactersPerSecond.ForeColor = System.Drawing.Color.Black;
+                labelCharactersPerSecond.Text = string.Format(_language.CharactersPerSecond, charactersPerSecond);
+            }
+            else
+            {
+                labelCharactersPerSecond.ForeColor = System.Drawing.Color.Red;
+                labelCharactersPerSecond.Text = string.Format(_language.CharactersPerSecond, _languageGeneral.NotAvailable);
+            }
+        }
+
+        private void UpdateListViewTextInfo(Paragraph paragraph)
+        {
+            if (paragraph == null)
+                return;
+
+            string text = paragraph.Text;
             labelTextLineLengths.Text = _languageGeneral.SingleLineLengths;
             panelSingleLine.Left = labelTextLineLengths.Left + labelTextLineLengths.Width - 6;
             Utilities.DisplayLineLengths(panelSingleLine, text);
@@ -3209,6 +3235,7 @@ namespace Nikse.SubtitleEdit.Forms
                 labelTextLineTotal.ForeColor = System.Drawing.Color.Red;
                 labelTextLineTotal.Text = string.Format(_languageGeneral.TotalLengthXSplitLine, s.Length);
             }
+            UpdateListViewTextCharactersPerSeconds(paragraph);
         }
 
         private void ButtonNextClick(object sender, EventArgs e)
@@ -3280,10 +3307,10 @@ namespace Nikse.SubtitleEdit.Forms
             if (_subtitleListViewIndex >= 0)
             {
                 string text = textBoxListViewText.Text.TrimEnd();
-                UpdateListViewTextInfo(text);
-
+                
                 // update _subtitle + listview
                 _subtitle.Paragraphs[_subtitleListViewIndex].Text = text;
+                UpdateListViewTextInfo(_subtitle.Paragraphs[_subtitleListViewIndex]);
                 SubtitleListview1.SetText(_subtitleListViewIndex, text);
                 _change = true;
             }
@@ -3478,7 +3505,7 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         labelDurationWarning.Text = _languageGeneral.Negative;
                     }
-                }
+                }                
             }
         }
        
@@ -3492,6 +3519,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (currentParagraph != null)
                 {
                     UpdateOverlapErrors(timeUpDownStartTime.TimeCode);
+                    UpdateListViewTextCharactersPerSeconds(currentParagraph);
 
                     // update _subtitle + listview
                     currentParagraph.EndTime.TotalMilliseconds = currentParagraph.StartTime.TotalMilliseconds + ((double)numericUpDownDuration.Value * 1000.0);
@@ -3531,6 +3559,7 @@ namespace Nikse.SubtitleEdit.Forms
             numericUpDownDuration.ValueChanged += NumericUpDownDurationValueChanged;
 
             UpdateOverlapErrors(timeUpDownStartTime.TimeCode);
+            UpdateListViewTextCharactersPerSeconds(p);
             if (_subtitle != null && _subtitle.Paragraphs.Count > 0)
                 textBoxListViewText.Enabled = true;
         }

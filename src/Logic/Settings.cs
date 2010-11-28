@@ -220,6 +220,7 @@ namespace Nikse.SubtitleEdit.Logic
         public bool StartInSourceView { get; set; }
         public bool RemoveBlankLinesWhenOpening { get; set; }
         public int SubtitleLineMaximumLength { get; set; }
+        public int SubtitleMaximumCharactersPerSeconds { get; set; }
         public string SpellCheckLanguage { get; set; }
         public string VideoPlayer { get; set; }
         public int VideoPlayerDefaultVolume { get; set; }
@@ -263,6 +264,7 @@ namespace Nikse.SubtitleEdit.Logic
             StartLoadLastFile = true;
             StartRememberPositionAndSize = true;
             SubtitleLineMaximumLength = 65;
+            SubtitleMaximumCharactersPerSeconds = 25;
             SpellCheckLanguage = null;
             VideoPlayer = string.Empty;
             VideoPlayerDefaultVolume = 50;
@@ -547,6 +549,9 @@ namespace Nikse.SubtitleEdit.Logic
             subNode = node.SelectSingleNode("SubtitleLineMaximumLength");
             if (subNode != null)
                 settings.General.SubtitleLineMaximumLength = Convert.ToInt32(subNode.InnerText);
+            subNode = node.SelectSingleNode("SubtitleMaximumCharactersPerSeconds");
+            if (subNode != null)
+                settings.General.SubtitleMaximumCharactersPerSeconds = Convert.ToInt32(subNode.InnerText);
             subNode = node.SelectSingleNode("SpellCheckLanguage");
             if (subNode != null)
                 settings.General.SpellCheckLanguage = subNode.InnerText;
@@ -853,6 +858,7 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("StartInSourceView", settings.General.StartInSourceView.ToString());
             textWriter.WriteElementString("RemoveBlankLinesWhenOpening", settings.General.RemoveBlankLinesWhenOpening.ToString());            
             textWriter.WriteElementString("SubtitleLineMaximumLength", settings.General.SubtitleLineMaximumLength.ToString());
+            textWriter.WriteElementString("SubtitleMaximumCharactersPerSeconds", settings.General.SubtitleMaximumCharactersPerSeconds.ToString());            
             textWriter.WriteElementString("SpellCheckLanguage", settings.General.SpellCheckLanguage);
             textWriter.WriteElementString("VideoPlayer", settings.General.VideoPlayer);
             textWriter.WriteElementString("VideoPlayerDefaultVolume", settings.General.VideoPlayerDefaultVolume.ToString());

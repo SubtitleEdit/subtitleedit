@@ -569,6 +569,7 @@
             public string BeforeInsertSubtitleAtVideoPosition { get; set; }
             public string BeforeSetStartTimeAndOffsetTheRest { get; set; }
             public string ContinueWithCurrentSpellCheck { get; set; }
+            public string CharactersPerSecond { get; set; }
             
             public class MainMenu
             {
