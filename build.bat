@@ -2,6 +2,8 @@
 SETLOCAL
 TITLE Compiling Subtitle Edit...
 
+IF NOT DEFINED VS100COMNTOOLS ECHO:Visual Studio 2010 wasn't found&&GOTO :EndWithError
+
 REM Detect if we are running on 64bit WIN and use Wow6432Node, and set the path
 REM of Inno Setup accordingly
 IF "%PROGRAMFILES(x86)%zzz"=="zzz" (SET "U_=HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall"
@@ -25,12 +27,16 @@ IF %ERRORLEVEL% NEQ 0 GOTO :EndWithError
 ECHO.
 POPD
 
+IF DEFINED InnoSetupPath (
 PUSHD "InnoSetupScript"
 "%InnoSetupPath%\iscc.exe" /Q "Subtitle_Edit_installer.iss"
 IF %ERRORLEVEL% NEQ 0 GOTO :EndWithError
 ECHO.&&ECHO:Installer compiled successfully!
 MOVE /Y "SubtitleEdit-*-setup.exe" ".." >NUL 2>&1
 POPD
+) ELSE (
+ECHO:Inno Setup wasn't found; the installer wasn't built
+)
 
 
 :END
