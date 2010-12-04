@@ -595,6 +595,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 int italicBeginTagCount = CountTagInText(text, beginTag);
                 int italicEndTagCount = CountTagInText(text, endTag);
+                int noOfLines = CountTagInText(text, Environment.NewLine) + 1;
                 if (italicBeginTagCount + italicEndTagCount > 0)
                 {
                     if (italicBeginTagCount == 1 && italicEndTagCount == 1)
@@ -609,8 +610,12 @@ namespace Nikse.SubtitleEdit.Forms
 
                     if (italicBeginTagCount == 2 && italicEndTagCount == 0)
                     {
+                        int firstIndex = text.IndexOf(beginTag);
                         int lastIndex = text.LastIndexOf(beginTag);
-                        if (text.Length > lastIndex + endTag.Length)
+                        int lastIndexWithNewLine = text.LastIndexOf(Environment.NewLine+ beginTag) + Environment.NewLine.Length;
+                        if (noOfLines == 2 && lastIndex == lastIndexWithNewLine && firstIndex < 2)
+                            text = text.Replace(Environment.NewLine, "</i>" + Environment.NewLine) + "</i>";
+                        else if (text.Length > lastIndex + endTag.Length)
                             text = text.Substring(0, lastIndex) + endTag + text.Substring(lastIndex -1 + endTag.Length);
                         else
                             text = text.Substring(0, lastIndex) + endTag;
@@ -633,7 +638,12 @@ namespace Nikse.SubtitleEdit.Forms
 
                     if (italicBeginTagCount == 1 && italicEndTagCount == 0)
                     {
+                        int lastIndexWithNewLine = text.LastIndexOf(Environment.NewLine + beginTag) + Environment.NewLine.Length;
+                        int lastIndex = text.LastIndexOf(beginTag);
+
                         if (text.StartsWith(beginTag))
+                            text += endTag;
+                        else if (noOfLines == 2 && lastIndex == lastIndexWithNewLine)
                             text += endTag;
                         else
                             text = text.Replace(beginTag, string.Empty);
