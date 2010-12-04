@@ -64,11 +64,15 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     string name = item.SubItems[1].Text;
 
-                    if (item.Checked && text != null && text.ToLower().Contains(name.ToLower()) && name.Length > 2 && name != name.ToLower())
+                    string textNoTags = Utilities.RemoveHtmlTags(text);
+                    if (textNoTags != textNoTags.ToUpper())
                     {
-                        var st = new StripableText(text);
-                        st.FixCasing(new List<string> {name}, true, false, false, string.Empty);
-                        text = st.MergedString;
+                        if (item.Checked && text != null && text.ToLower().Contains(name.ToLower()) && name.Length > 2 && name != name.ToLower())
+                        {
+                            var st = new StripableText(text);
+                            st.FixCasing(new List<string> { name }, true, false, false, string.Empty);
+                            text = st.MergedString;
+                        }
                     }
                 }
                 if (text != p.Text)
