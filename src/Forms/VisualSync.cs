@@ -95,7 +95,15 @@ namespace Nikse.SubtitleEdit.Forms
             mediaPlayer.Pause();
             if (index != -1)
             {
-                mediaPlayer.CurrentPosition = _paragraphs[index].StartTime.TotalMilliseconds/1000.0;
+                double indexPositionInSeconds = _paragraphs[index].StartTime.TotalMilliseconds / 1000.0;
+
+                if (indexPositionInSeconds > mediaPlayer.Duration)
+                    indexPositionInSeconds = mediaPlayer.Duration - (2 * 60);
+
+                if (indexPositionInSeconds < 0)
+                    indexPositionInSeconds = 0;
+                
+                mediaPlayer.CurrentPosition = indexPositionInSeconds;
                 mediaPlayer.RefreshProgressBar();
             }
         }
