@@ -330,22 +330,36 @@ namespace Nikse.SubtitleEdit.Forms
             StripableText st = new StripableText(text, " >-\"'‘`´♪¿¡.", " -\"'`´♪.!?:");
             var sb = new StringBuilder();
             string[] parts = st.StrippedText.Trim().Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+            int lineNumber = 0;
+            bool removedDialogInFirstLine = false;
             foreach (string s in parts)
-            {
+            {                
                 StripableText stSub = new StripableText(s, " >-\"'‘`´♪¿¡.", " -\"'`´♪.!?:");
                 if (!StartAndEndsWithHearImpariedTags(stSub.StrippedText))
                 {
+                    if (removedDialogInFirstLine && stSub.Pre.Contains("- "))
+                        stSub.Pre = stSub.Pre.Replace("- ", string.Empty);
+
                     string newText = stSub.StrippedText;
                     if (HasHearImpariedTagsAtStart(newText))
                         newText = RemoveStartEndTags(newText);
                     if (HasHearImpariedTagsAtEnd(newText))
                         newText = RemoveEndTags(newText);
                     sb.AppendLine(stSub.Pre + newText + stSub.Post);
+
                 }
-                else if (st.Pre.Contains("<i>") && stSub.Post.Contains("</i>"))
+                else
                 {
-                    st.Pre = st.Pre.Replace("<i>", string.Empty);
+                    if (st.Pre.Contains("- ") && lineNumber == 0)
+                    {
+                        st.Pre = st.Pre.Replace("- ", string.Empty);
+                        removedDialogInFirstLine = true;
+                    }
+
+                    if (st.Pre.Contains("<i>") && stSub.Post.Contains("</i>"))
+                        st.Pre = st.Pre.Replace("<i>", string.Empty);
                 }
+                lineNumber++;
             }
 
             text = st.Pre + sb.ToString().Trim() + st.Post;
