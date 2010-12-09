@@ -21,6 +21,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     new MicroDvd(),
                     new MPlayer2(),
                     new OpenDvt(),
+                    new QuickTimeText(),
                     new SonyDVDArchitect(),
                     new SonyDVDArchitectWithLineNumbers(),
                     new SubStationAlpha(),
