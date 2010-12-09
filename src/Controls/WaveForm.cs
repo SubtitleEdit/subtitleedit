@@ -118,6 +118,22 @@ namespace Nikse.SubtitleEdit.Controls
             set
             {
                 _zoomFactor = 1.0;
+                _currentParagraph = null;
+                _selectedParagraph = null;
+                _buttonDownTimeTicks = 0;
+                _mouseMoveLastX = -1;
+                _mouseMoveStartX = -1;
+                _moveWholeStartDifferenceMilliseconds = -1;
+                _mouseMoveEndX = -1;
+                _mouseDown = false;
+                _mouseDownParagraph = null;
+                _mouseDownParagraphType = MouseDownParagraphType.Start;
+                _selectedParagraph = null;
+                _currentParagraph = null;
+                _previousAndNextParagraphs = new List<Paragraph>();
+                _currentVideoPositionSeconds = -1;
+                _subtitle = null;
+                _noClear = false;
                 _wavePeaks = value;
             }
         }
