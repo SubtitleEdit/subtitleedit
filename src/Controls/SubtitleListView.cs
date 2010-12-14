@@ -14,12 +14,15 @@ namespace Nikse.SubtitleEdit.Controls
         public const int ColumnIndexDuration = 3;
         public const int ColumnIndexText = 4;
         public const int ColumnIndexTextAlternate = 5;
+        public int ColumnIndexExtra = 5;
 
         private int _firstVisibleIndex = -1;
         private string _lineSeparatorString = " || ";
         public string SubtitleFontName = "Tahoma";
         public bool SubtitleFontBold = false;
         public int SubtitleFontSize = 8;
+        public bool IsAlternateTextColumnVisible { get; private set; }
+        public bool IsExtraColumnVisible { get; private set; }
 
         public int FirstVisibleIndex
         {
@@ -62,33 +65,37 @@ namespace Nikse.SubtitleEdit.Controls
             GridLines = true;
         }
 
-        public void AddAlternateTextColumn(string text)
+        public void ShowAlternateTextColumn(string text)
         {
-            if (!IsColumTextAlternateActive)
+            if (!IsAlternateTextColumnVisible)
             {
-                Columns.Add(new ColumnHeader { Text = text, Width = -2 });
+                ColumnIndexExtra = ColumnIndexTextAlternate + 1;                    
+                if (IsExtraColumnVisible)
+                {
+                    Columns.Insert(ColumnIndexTextAlternate, new ColumnHeader { Text = text, Width = -2 });
+                }
+                else
+                {
+                    Columns.Add(new ColumnHeader { Text = text, Width = -2 });
+                }
 
                 int length = Columns[ColumnIndexNumber].Width + Columns[ColumnIndexStart].Width + Columns[ColumnIndexEnd].Width + Columns[ColumnIndexDuration].Width;
                 int lengthAvailable = this.Width - length;
                 Columns[ColumnIndexText].Width = (lengthAvailable / 2) - 15;
                 Columns[ColumnIndexTextAlternate].Width = -2;
+
+                IsAlternateTextColumnVisible = true;
             }
         }
 
-        public void RemoveAlternateTextColumn()
+        public void HideAlternateTextColumn()
         {
-            if (IsColumTextAlternateActive)
+            if (IsAlternateTextColumnVisible)
             {
+                IsAlternateTextColumnVisible = false;
                 Columns.RemoveAt(ColumnIndexTextAlternate);
+                ColumnIndexExtra = ColumnIndexTextAlternate;
                 SubtitleListView_Resize(null, null);
-            }
-        }
-
-        public bool IsColumTextAlternateActive
-        {
-            get
-            {
-                return Columns.Count - 1 >= ColumnIndexTextAlternate;
             }
         }
 
@@ -303,6 +310,85 @@ namespace Nikse.SubtitleEdit.Controls
                 Items[index].SubItems[ColumnIndexText].Text = text.Replace(Environment.NewLine, _lineSeparatorString);
         }
 
+        public void SetTimeAndText(int index, Paragraph paragraph)
+        {
+            if (index >= 0 && index < Items.Count)
+            {
+                ListViewItem item = Items[index];
+                item.SubItems[ColumnIndexStart].Text = paragraph.StartTime.ToString();
+                item.SubItems[ColumnIndexEnd].Text = paragraph.EndTime.ToString();
+                item.SubItems[ColumnIndexDuration].Text = string.Format("{0},{1:000}", paragraph.Duration.Seconds, paragraph.Duration.Milliseconds);
+                Items[index].SubItems[ColumnIndexText].Text = paragraph.Text.Replace(Environment.NewLine, _lineSeparatorString);
+            }
+        }
+
+        public void ShowExtraColumn(string title)
+        {
+            if (!IsExtraColumnVisible)
+            {
+                if (IsAlternateTextColumnVisible)
+                    ColumnIndexExtra = ColumnIndexTextAlternate + 1;
+                else
+                    ColumnIndexExtra = ColumnIndexTextAlternate;
+
+                Columns.Add(new ColumnHeader { Text = title, Width = 80 });
+
+                int length = Columns[ColumnIndexNumber].Width + Columns[ColumnIndexStart].Width + Columns[ColumnIndexEnd].Width + Columns[ColumnIndexDuration].Width;
+                int lengthAvailable = this.Width - length;
+
+                if (IsAlternateTextColumnVisible)
+                {
+                    int part = lengthAvailable / 5;
+                    Columns[ColumnIndexText].Width = part * 2;
+                    Columns[ColumnIndexTextAlternate].Width = part * 2;
+                    Columns[ColumnIndexTextAlternate].Width = part;
+                }
+                else
+                {
+                    int part = lengthAvailable / 6;
+                    Columns[ColumnIndexText].Width = part * 4;
+                    Columns[ColumnIndexTextAlternate].Width = part * 2;
+                }
+                IsExtraColumnVisible = true;
+            }
+        }
+
+        public void HideExtraColumn()
+        {
+            if (IsExtraColumnVisible)
+            {
+                IsExtraColumnVisible = false;
+                Columns.RemoveAt(ColumnIndexExtra);
+                SubtitleListView_Resize(null, null);
+            }
+        }
+
+        public void SetExtraText(int index, string text, Color color)
+        {
+            if (index >= 0 && index < Items.Count)
+            {
+                if (IsAlternateTextColumnVisible)
+                    ColumnIndexExtra = ColumnIndexTextAlternate + 1;
+                else
+                    ColumnIndexExtra = ColumnIndexTextAlternate;
+                if (!IsExtraColumnVisible)
+                {
+                    ShowExtraColumn(string.Empty);
+                }
+                if (Items[index].SubItems.Count <= ColumnIndexExtra)
+                    Items[index].SubItems.Add(new ListViewItem.ListViewSubItem());
+                if (Items[index].SubItems.Count <= ColumnIndexExtra)
+                    Items[index].SubItems.Add(new ListViewItem.ListViewSubItem());
+                Items[index].SubItems[ColumnIndexExtra].Text = text;
+
+                
+                Items[index].UseItemStyleForSubItems = false;
+                Items[index].SubItems[ColumnIndexExtra].BackColor = Color.AntiqueWhite;
+                Items[index].SubItems[ColumnIndexExtra].ForeColor = color;
+
+            }
+        }
+
         public void SetAlternateText(int index, string text)
         {
             if (index >= 0 && index < Items.Count && Columns.Count >= ColumnIndexTextAlternate + 1)
@@ -406,7 +492,7 @@ namespace Nikse.SubtitleEdit.Controls
             Columns[ColumnIndexNumber].Width = 45;
             Columns[ColumnIndexEnd].Width = 80;
             Columns[ColumnIndexDuration].Width = 55;
-            if (IsColumTextAlternateActive)
+            if (IsAlternateTextColumnVisible)
             {
                 Columns[ColumnIndexText].Width = 250;
                 Columns[ColumnIndexTextAlternate].Width = -2;

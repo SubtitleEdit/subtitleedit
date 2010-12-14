@@ -301,6 +301,18 @@ namespace Nikse.SubtitleEdit.Logic
             return _paragraphs.IndexOf(p);
         }
 
+        internal Paragraph GetFirstAlike(Paragraph p)
+        {
+            foreach (Paragraph item in _paragraphs)
+            {
+                if (p.StartTime.TotalMilliseconds == item.StartTime.TotalMilliseconds &&
+                    p.EndTime.TotalMilliseconds == item.EndTime.TotalMilliseconds &&
+                    p.Text == item.Text)
+                    return item;
+            }
+            return null;
+        }
+
         internal Paragraph GetFirstParagraphByLineNumber(int number)
         {
             foreach (Paragraph p in _paragraphs)

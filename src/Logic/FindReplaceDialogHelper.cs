@@ -11,6 +11,7 @@ namespace Nikse.SubtitleEdit.Logic
         readonly Regex _regEx;
         int _findTextLenght;
 
+        public bool Success { get; set; }
         public FindType FindType { get; set; }
         public int SelectedIndex { get; set; }
         public int SelectedPosition { get; set; }
@@ -80,6 +81,12 @@ namespace Nikse.SubtitleEdit.Logic
                         Match match = _regEx.Match(text, startIndex);
                         if (match.Success)
                         {
+                            string groupName = Utilities.GetRegExGroup(_findText);
+                            if (groupName != null && match.Groups[groupName] != null && match.Groups[groupName].Success)
+                            {
+                                _findTextLenght = match.Groups[groupName].Length;
+                                return match.Groups[groupName].Index;
+                            }
                             _findTextLenght = match.Length;
                             return match.Index;
                         }
@@ -91,6 +98,7 @@ namespace Nikse.SubtitleEdit.Logic
 
         public bool FindNext(Subtitle subtitle, int startIndex, int position)
         {
+            Success = false;
             int index = 0;
             if (position < 0)
                 position = 0;
@@ -103,6 +111,7 @@ namespace Nikse.SubtitleEdit.Logic
                     {
                         SelectedIndex = index;
                         SelectedPosition = pos;
+                        Success = true;
                         return true;
                     }
                     position = 0;
@@ -137,6 +146,7 @@ namespace Nikse.SubtitleEdit.Logic
 
         public bool FindNext(TextBox textBox, int startIndex)
         {
+            Success = false;
             startIndex++;
             if (startIndex < textBox.Text.Length)
             {
@@ -145,8 +155,18 @@ namespace Nikse.SubtitleEdit.Logic
                     Match match = _regEx.Match(textBox.Text, startIndex);
                     if (match.Success)
                     {
-                        _findTextLenght = match.Length;
-                        SelectedIndex = match.Index;
+                        string groupName = Utilities.GetRegExGroup(_findText);
+                        if (groupName != null && match.Groups[groupName] != null && match.Groups[groupName].Success)
+                        {
+                            _findTextLenght = match.Groups[groupName].Length;
+                            SelectedIndex = match.Groups[groupName].Index;
+                        }
+                        else
+                        {
+                            _findTextLenght = match.Length;
+                            SelectedIndex = match.Index;
+                        }
+                        Success = true;
                     }
                     return match.Success;
                 }

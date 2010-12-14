@@ -128,10 +128,21 @@ namespace Nikse.SubtitleEdit.Forms
                         else if (searchType == Configuration.Settings.Language.MultipleReplace.RegularExpression)
                         {
                             Regex regex = new Regex(findWhat);
-                            if (regex.IsMatch(newText))
+                            var match = regex.Match(newText);
+                            if (match.Success)
                             {
                                 hit = true;
-                                newText = regex.Replace(newText, replaceWith);
+
+                                string groupName = Utilities.GetRegExGroup(findWhat);
+                                if (groupName != null && match.Groups[groupName] != null && match.Groups[groupName].Success)
+                                {
+                                    newText = newText.Remove(match.Groups[groupName].Index, match.Groups[groupName].Length);
+                                    newText = newText.Insert(match.Groups[groupName].Index, replaceWith);
+                                }
+                                else
+                                {
+                                    newText = regex.Replace(newText, replaceWith);
+                                }
                             }
                         }
                         else

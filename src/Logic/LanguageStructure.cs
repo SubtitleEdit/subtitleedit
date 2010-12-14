@@ -826,6 +826,27 @@
             public string Enabled { get; set; }
             public string SearchType { get; set; }
         }
+
+        public class NetworkChat
+        {
+            public string Title { get; set; }
+        }
+
+        public class NetworkJoin
+        {
+            public string Title { get; set; }
+        }
+
+        public class NetworkLogAndInfo
+        {
+            public string Title { get; set; }
+        }
+
+        public class NetworkStart
+        {
+            public string Title { get; set; }
+        }
+
         public class RemoveTextFromHearImpaired
         {
             public string Title { get; set; }
