@@ -38,6 +38,10 @@ namespace Nikse.SubtitleEdit.Logic
         public LanguageStructure.MatroskaSubtitleChooser MatroskaSubtitleChooser;
         public LanguageStructure.MergeShortLines MergedShortLines;
         public LanguageStructure.MultipleReplace MultipleReplace;
+        public LanguageStructure.NetworkChat NetworkChat;
+        public LanguageStructure.NetworkJoin NetworkJoin;
+        public LanguageStructure.NetworkLogAndInfo NetworkLogAndInfo;
+        public LanguageStructure.NetworkStart NetworkStart;
         public LanguageStructure.RemoveTextFromHearImpaired RemoveTextFromHearImpaired;
         public LanguageStructure.ReplaceDialog ReplaceDialog;
         public LanguageStructure.SetMinimumDisplayTimeBetweenParagraphs SetMinimumDisplayTimeBetweenParagraphs;
@@ -884,6 +888,26 @@ namespace Nikse.SubtitleEdit.Logic
                 Update = "&Update",
                 Enabled = "Enabled",
                 SearchType = "Search type",
+            };
+
+            NetworkChat = new LanguageStructure.NetworkChat
+            {
+                Title = "",
+            };
+
+            NetworkJoin = new LanguageStructure.NetworkJoin
+            {
+                Title = "",
+            };
+
+            NetworkLogAndInfo = new LanguageStructure.NetworkLogAndInfo
+            {
+                Title = "",
+            };
+
+            NetworkStart = new LanguageStructure.NetworkStart
+            {
+                Title = "",
             };
 
             RemoveTextFromHearImpaired = new LanguageStructure.RemoveTextFromHearImpaired

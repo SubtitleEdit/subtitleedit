@@ -232,6 +232,7 @@ namespace Nikse.SubtitleEdit.Logic
         public int DefaultAdjustMilliseconds { get; set; }
         public bool AutoRepeatOn { get; set; }
         public bool AutoContinueOn { get; set; }
+        public bool SyncListViewWithVideoWhilePlaying { get; set; }
         public int AutoBackupSeconds { get; set; }
 
         public GeneralSettings()
@@ -275,6 +276,7 @@ namespace Nikse.SubtitleEdit.Logic
             DefaultAdjustMilliseconds = 1000;
             AutoRepeatOn = true;
             AutoContinueOn = false;
+            SyncListViewWithVideoWhilePlaying = false;
             AutoBackupSeconds = 0;
         }
     }
@@ -333,6 +335,20 @@ namespace Nikse.SubtitleEdit.Logic
         public string SearchType { get; set; }
     }
 
+    public class NetworkSettings
+    {
+        public string UserName { get; set; }
+        public string WebServiceUrl { get; set; }
+        public string SessionKey { get; set; }
+
+        public NetworkSettings()
+        {
+            UserName = string.Empty;
+            SessionKey = "DemoSession"; // TODO - leave blank or use guid
+            WebServiceUrl = "http://www.nikse.dk/se/SeService.asmx";
+        }
+    }
+
     public class Settings
     {
         public RecentFilesSettings RecentFiles { get; set; }
@@ -344,6 +360,7 @@ namespace Nikse.SubtitleEdit.Logic
         public FixCommonErrorsSettings CommonErrors { get; set; }
         public VobSubOcrSettings VobSubOcr { get; set; }
         public VideoControlsSettings VideoControls { get; set; }
+        public NetworkSettings NetworkSettings { get; set; }
 
         [XmlArrayItem("MultipleSearchAndReplaceItem")]
         public List<MultipleSearchAndReplaceSetting> MultipleSearchAndReplaceList { get; set; }
@@ -362,6 +379,7 @@ namespace Nikse.SubtitleEdit.Logic
             CommonErrors = new FixCommonErrorsSettings();
             VobSubOcr = new VobSubOcrSettings();
             VideoControls = new VideoControlsSettings();
+            NetworkSettings = new Logic.NetworkSettings();
             MultipleSearchAndReplaceList = new List<MultipleSearchAndReplaceSetting>();
             Language = new Language();
         }
@@ -430,6 +448,8 @@ namespace Nikse.SubtitleEdit.Logic
                 settings.VobSubOcr = new VobSubOcrSettings();
             if (settings.MultipleSearchAndReplaceList == null)
                 settings.MultipleSearchAndReplaceList = new List<MultipleSearchAndReplaceSetting>();
+            if (settings.NetworkSettings == null)
+                settings.NetworkSettings = new NetworkSettings();
 
             return settings;
         }
@@ -582,6 +602,9 @@ namespace Nikse.SubtitleEdit.Logic
             subNode = node.SelectSingleNode("AutoRepeatOn");
             if (subNode != null)
                 settings.General.AutoRepeatOn = Convert.ToBoolean(subNode.InnerText);
+            subNode = node.SelectSingleNode("SyncListViewWithVideoWhilePlaying");
+            if (subNode != null)
+                settings.General.SyncListViewWithVideoWhilePlaying = Convert.ToBoolean(subNode.InnerText);
             subNode = node.SelectSingleNode("AutoContinueOn");
             if (subNode != null)
                 settings.General.AutoContinueOn = Convert.ToBoolean(subNode.InnerText);
@@ -766,6 +789,20 @@ namespace Nikse.SubtitleEdit.Logic
             if (subNode != null)
                 settings.VideoControls.WaveFormTextColor = Color.FromArgb(int.Parse(subNode.InnerText));
 
+            settings.NetworkSettings = new NetworkSettings();
+            node = doc.DocumentElement.SelectSingleNode("NetworkSettings");
+            if (node != null)
+            {
+                subNode = node.SelectSingleNode("SessionKey");
+                if (subNode != null)
+                    settings.NetworkSettings.SessionKey = subNode.InnerText;
+                subNode = node.SelectSingleNode("UserName");
+                if (subNode != null)
+                    settings.NetworkSettings.UserName = subNode.InnerText;
+                subNode = node.SelectSingleNode("WebServiceUrl");
+                if (subNode != null)
+                    settings.NetworkSettings.WebServiceUrl = subNode.InnerText;
+            }
 
             settings.VobSubOcr = new Nikse.SubtitleEdit.Logic.VobSubOcrSettings();
             node = doc.DocumentElement.SelectSingleNode("VobSubOcr");
@@ -870,6 +907,7 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("DefaultAdjustMilliseconds", settings.General.DefaultAdjustMilliseconds.ToString());
             textWriter.WriteElementString("AutoRepeatOn", settings.General.AutoRepeatOn.ToString());
             textWriter.WriteElementString("AutoContinueOn", settings.General.AutoContinueOn.ToString());
+            textWriter.WriteElementString("SyncListViewWithVideoWhilePlaying", settings.General.SyncListViewWithVideoWhilePlaying.ToString());           
             textWriter.WriteElementString("AutoBackupSeconds", settings.General.AutoBackupSeconds.ToString());            
             textWriter.WriteEndElement();
 
@@ -936,13 +974,18 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("CustomSearchText", settings.VideoControls.CustomSearchText);
             textWriter.WriteElementString("CustomSearchUrl", settings.VideoControls.CustomSearchUrl);
             textWriter.WriteElementString("LastActiveTab", settings.VideoControls.LastActiveTab);
-
             textWriter.WriteElementString("WaveFormDrawGrid", settings.VideoControls.WaveFormDrawGrid.ToString());
             textWriter.WriteElementString("WaveFormGridColor", settings.VideoControls.WaveFormGridColor.ToArgb().ToString());
             textWriter.WriteElementString("WaveFormColor", settings.VideoControls.WaveFormColor.ToArgb().ToString());
             textWriter.WriteElementString("WaveFormSelectedColor", settings.VideoControls.WaveFormSelectedColor.ToArgb().ToString());
             textWriter.WriteElementString("WaveFormBackgroundColor", settings.VideoControls.WaveFormBackgroundColor.ToArgb().ToString());
             textWriter.WriteElementString("WaveFormTextColor", settings.VideoControls.WaveFormTextColor.ToArgb().ToString());
+            textWriter.WriteEndElement();
+
+            textWriter.WriteStartElement("NetworkSettings", "");
+            textWriter.WriteElementString("SessionKey", settings.NetworkSettings.SessionKey);
+            textWriter.WriteElementString("UserName", settings.NetworkSettings.UserName);
+            textWriter.WriteElementString("WebServiceUrl", settings.NetworkSettings.WebServiceUrl);
             textWriter.WriteEndElement();
 
             textWriter.WriteStartElement("VobSubOcr", "");

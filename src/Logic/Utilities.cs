@@ -12,6 +12,7 @@ using Nikse.SubtitleEdit.Controls;
 using Nikse.SubtitleEdit.Forms;
 using Nikse.SubtitleEdit.Logic.SubtitleFormats;
 using Nikse.SubtitleEdit.Logic.VideoPlayers;
+using System.Drawing;
 
 namespace Nikse.SubtitleEdit.Logic
 {
@@ -288,6 +289,38 @@ namespace Nikse.SubtitleEdit.Logic
             s = s.Replace("  ", " ");
             int splitPos = -1;
             int mid = s.Length / 2;
+
+            // try to find " - " with uppercase letter after (dialogue)
+            if (splitPos == -1 && s.Contains(" - "))
+            {
+                for (int j = 0; j < 40; j++)
+                {
+                    if (mid + j + 4 < s.Length)
+                    {
+                        if (s[mid + j] == '-' && s[mid + j + 1] == ' ' && s[mid + j- 1] == ' ')
+                        {
+                            string rest = s.Substring(mid + j + 1).TrimStart();
+                            if (rest.Length > 0 && (rest.Substring(0, 1) == rest.Substring(0, 1).ToUpper()))
+                            {  
+                              splitPos = mid + j;
+                              break;
+                            }
+                        }
+                    }
+                    if (mid - (j + 1) > 4)
+                    {
+                        if (s[mid - j] == '-' && s[mid - j + 1] == ' ' && s[mid - j - 1] == ' ')
+                        {
+                            string rest = s.Substring(mid - j + 1).TrimStart();
+                            if (rest.Length > 0 && (rest.Substring(0, 1) == rest.Substring(0, 1).ToUpper()))
+                            {
+                                splitPos = mid - j;
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
 
             if (splitPos == -1)
             {
@@ -756,6 +789,10 @@ namespace Nikse.SubtitleEdit.Logic
             count = GetCount(text, "không", "tôi", "anh", "đó", "Tôi", "ông");
             if (count > bestCount)
                 return "vi"; // Vietnamese
+
+            count = GetCount(text, "是的", "是啊", "好吧", "好的", "亲爱的", "早上好");
+            if (count > bestCount)
+                return "zh"; // Chinese (simplified) - not tested...
 
             return string.Empty;
         }
@@ -1328,6 +1365,73 @@ namespace Nikse.SubtitleEdit.Logic
                 s += "0123456789";
 
             return s;
+        }
+
+        internal static Color GetColorFromUserName(string userName)
+        {
+            if (string.IsNullOrEmpty(userName))
+                return System.Drawing.Color.Pink;
+
+            byte[] buffer = System.Text.Encoding.UTF8.GetBytes(userName);
+            long number = 0;
+            foreach (byte b in buffer)
+                number += b;
+
+            switch (number % 20)
+            {
+                case 0: return Color.Red;
+                case 1: return Color.Blue;
+                case 2: return Color.Green;
+                case 3: return Color.DarkCyan;
+                case 4: return Color.DarkGreen;
+                case 5: return Color.DarkBlue;
+                case 6: return Color.DarkTurquoise;
+                case 7: return Color.DarkViolet;
+                case 8: return Color.DeepPink;
+                case 9: return Color.DodgerBlue;
+                case 10: return Color.ForestGreen;
+                case 11: return Color.Fuchsia;
+                case 12: return Color.DarkOrange;
+                case 13: return Color.GreenYellow;
+                case 14: return Color.IndianRed;
+                case 15: return Color.Indigo;
+                case 16: return Color.LawnGreen;
+                case 17: return Color.LightBlue;
+                case 18: return Color.DarkGoldenrod;
+                case 19: return Color.Magenta;
+                case 20: return Color.Maroon;
+                default:
+                    return Color.Black;
+            }            
+        }
+
+        internal static int GetNumber0To7FromUserName(string userName)
+        {
+            if (string.IsNullOrEmpty(userName))
+                return 0;
+
+            byte[] buffer = System.Text.Encoding.UTF8.GetBytes(userName);
+            long number = 0;
+            foreach (byte b in buffer)
+                number += b;
+
+            return (int)(number % 8);
+        }
+
+        internal static string GetRegExGroup( string regEx)
+        {
+            int start = regEx.IndexOf("(?<");
+            if (start >= 0 && regEx.IndexOf(")", start) > start)
+            {
+                int end = regEx.IndexOf(">", start);
+                if (end > start)
+                {
+                    start += 3;
+                    string group = regEx.Substring(start, end - start);
+                    return group;
+                }
+            }
+            return null;
         }
 
     }

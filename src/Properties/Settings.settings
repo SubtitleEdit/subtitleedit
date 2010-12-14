@@ -5,5 +5,8 @@
     <Setting Name="SubtitleEdit_MicrosoftTranslationService_SoapService" Type="(Web Service URL)" Scope="Application">
       <Value Profile="(Default)">http://api.microsofttranslator.com/V2/soap.svc</Value>
     </Setting>
+    <Setting Name="SubtitleEdit_SeNetworkService_SeService" Type="(Web Service URL)" Scope="Application">
+      <Value Profile="(Default)">http://localhost:2782/se/SeService.asmx</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

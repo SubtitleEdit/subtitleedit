@@ -320,6 +320,8 @@ namespace Nikse.SubtitleEdit.Logic.OCR
             // uppercase I or 1 inside lowercase word (will be replaced by lowercase L)
             word = FixIor1InsideLowerCaseWord(word);
 
+            word = FixLowerCaseLInsideUpperCaseWord(word); // eg. SCARLETTl => SCARLETTI
+
             // Retry word replace list
             foreach (string from in _wordReplaceList.Keys)
             {
@@ -338,6 +340,17 @@ namespace Nikse.SubtitleEdit.Logic.OCR
         {
             var startEndEndsWithNumber = new Regex(@"^\d+.+\d$");
             if (startEndEndsWithNumber.IsMatch(word))
+                return word;
+
+            if (word.Contains("1") ||
+                word.Contains("2") ||
+                word.Contains("3") ||
+                word.Contains("4") ||
+                word.Contains("5") ||
+                word.Contains("6") ||
+                word.Contains("7") ||
+                word.Contains("8") ||
+                word.Contains("9"))
                 return word;
 
             var hexNumber = new Regex(@"^#?[\dABDEFabcdef]+$");
@@ -392,6 +405,16 @@ namespace Nikse.SubtitleEdit.Logic.OCR
             if (startEndEndsWithNumber.IsMatch(word))
                 return word;
 
+            if (word.Contains("2") ||
+                word.Contains("3") ||
+                word.Contains("4") ||
+                word.Contains("5") ||
+                word.Contains("6") ||
+                word.Contains("7") ||
+                word.Contains("8") ||
+                word.Contains("9"))
+                return word;
+
             var hexNumber = new Regex(@"^#?[\dABDEFabcdef]+$");
             if (hexNumber.IsMatch(word))
                 return word;
@@ -413,6 +436,18 @@ namespace Nikse.SubtitleEdit.Logic.OCR
                         }
                         match = re.Match(word, match.Index + 1);
                     }
+                }
+            }
+            return word;
+        }
+
+        public static string FixLowerCaseLInsideUpperCaseWord(string word)
+        {
+            if (word.Length > 3 && word.Replace("l", string.Empty).ToUpper() == word.Replace("l", string.Empty))
+            {
+                if (!word.Contains("<") && !word.Contains(">") && !word.Contains("'"))
+                {
+                    word = word.Replace("l", "I");
                 }
             }
             return word;

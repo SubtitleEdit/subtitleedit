@@ -32,5 +32,15 @@ namespace Nikse.SubtitleEdit.Properties {
                 return ((string)(this["SubtitleEdit_MicrosoftTranslationService_SoapService"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.WebServiceUrl)]
+        [global::System.Configuration.DefaultSettingValueAttribute("http://localhost:2782/se/SeService.asmx")]
+        public string SubtitleEdit_SeNetworkService_SeService {
+            get {
+                return ((string)(this["SubtitleEdit_SeNetworkService_SeService"]));
+            }
+        }
     }
 }

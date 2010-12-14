@@ -219,6 +219,30 @@
     <Compile Include="Forms\GetDictionaries.Designer.cs">
       <DependentUpon>GetDictionaries.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\NetworkChat.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\NetworkChat.Designer.cs">
+      <DependentUpon>NetworkChat.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\NetworkJoin.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\NetworkJoin.Designer.cs">
+      <DependentUpon>NetworkJoin.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\NetworkLogAndInfo.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\NetworkLogAndInfo.Designer.cs">
+      <DependentUpon>NetworkLogAndInfo.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\NetworkStart.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\NetworkStart.Designer.cs">
+      <DependentUpon>NetworkStart.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\SetSyncPoint.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -419,6 +443,12 @@
     <Compile Include="Logic\FastBitmap.cs" />
     <Compile Include="Logic\IfoParser.cs" />
     <Compile Include="Logic\Language.cs" />
+    <Compile Include="Logic\Networking\NikseWebServiceSession.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Logic\Networking\UpdateLogEntry.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Logic\OCR\ModiLanguage.cs" />
     <Compile Include="Logic\OCR\OcrAlphabet.cs" />
     <Compile Include="Logic\OCR\OcrCharacter.cs" />
@@ -437,6 +467,7 @@
     <Compile Include="Logic\FindReplaceDialogHelper.cs" />
     <Compile Include="Logic\HistoryItem.cs" />
     <Compile Include="Logic\StripableText.cs" />
+    <Compile Include="Logic\SubtitleFormats\QuickTimeText.cs" />
     <Compile Include="Logic\SubtitleFormats\SonyDVDArchitectWithLineNumbers.cs" />
     <Compile Include="Logic\SubtitleFormats\Ebu.cs" />
     <Compile Include="Logic\SubtitleFormats\SonyDVDArchitect.cs" />
@@ -505,6 +536,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.map</DependentUpon>
     </Compile>
+    <Compile Include="Web References\SeNetworkService\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.map</DependentUpon>
+    </Compile>
     <EmbeddedResource Include="Controls\TimeUpDown.resx">
       <DependentUpon>TimeUpDown.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -567,6 +603,18 @@
     <EmbeddedResource Include="Forms\GetDictionaries.resx">
       <DependentUpon>GetDictionaries.cs</DependentUpon>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\NetworkChat.resx">
+      <DependentUpon>NetworkChat.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\NetworkJoin.resx">
+      <DependentUpon>NetworkJoin.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\NetworkLogAndInfo.resx">
+      <DependentUpon>NetworkLogAndInfo.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\NetworkStart.resx">
+      <DependentUpon>NetworkStart.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\SetSyncPoint.resx">
       <DependentUpon>SetSyncPoint.cs</DependentUpon>
@@ -683,6 +731,7 @@
     <EmbeddedResource Include="Resources\sr-Cyrl-CS.xml.zip" />
     <EmbeddedResource Include="Resources\sr-Latn-CS.xml.zip" />
     <EmbeddedResource Include="Resources\sv-SE.xml.zip" />
+    <EmbeddedResource Include="Resources\zh-CHS.xml.zip" />
     <None Include="Web References\MicrosoftTranslationService\GetTranslationsResponse.datasource">
       <DependentUpon>Reference.map</DependentUpon>
     </None>
@@ -707,8 +756,24 @@
     <None Include="Web References\MicrosoftTranslationService\TranslateArrayResponse.datasource">
       <DependentUpon>Reference.map</DependentUpon>
     </None>
+    <None Include="Web References\SeNetworkService\Reference.map">
+      <Generator>MSDiscoCodeGenerator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+    <None Include="Web References\SeNetworkService\SeSequence.datasource">
+      <DependentUpon>Reference.map</DependentUpon>
+    </None>
+    <None Include="Web References\SeNetworkService\SeService.wsdl" />
+    <None Include="Web References\SeNetworkService\SeUpdate.datasource">
+      <DependentUpon>Reference.map</DependentUpon>
+    </None>
+    <None Include="Web References\SeNetworkService\SeUser.datasource">
+      <DependentUpon>Reference.map</DependentUpon>
+    </None>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Resources\zh-CHS.xml" />
+    <None Include="Web References\SeNetworkService\SeService.disco" />
     <None Include="DLLs\Interop.QuartzTypeLib.dll" />
     <None Include="DLLs\NHunspell.dll" />
     <None Include="DLLs\AxInterop.WMPLib.dll" />
@@ -766,6 +831,7 @@
     <None Include="Resources\it-IT.xml.zip" />
     <None Include="Resources\nl-NL.xml" />
     <None Include="Icons\Donate.gif" />
+    <None Include="Icons\connect.png" />
     <Content Include="Icons\Find.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -886,6 +952,17 @@
       </CachedDynamicPropName>
       <CachedAppSettingsObjectName>Settings</CachedAppSettingsObjectName>
       <CachedSettingsPropName>SubtitleEdit_MicrosoftTranslationService_SoapService</CachedSettingsPropName>
+    </WebReferenceUrl>
+    <WebReferenceUrl Include="http://localhost:2782/se/SeService.asmx">
+      <UrlBehavior>Dynamic</UrlBehavior>
+      <RelPath>Web References\SeNetworkService\</RelPath>
+      <UpdateFromURL>http://localhost:2782/se/SeService.asmx</UpdateFromURL>
+      <ServiceLocationURL>
+      </ServiceLocationURL>
+      <CachedDynamicPropName>
+      </CachedDynamicPropName>
+      <CachedAppSettingsObjectName>Settings</CachedAppSettingsObjectName>
+      <CachedSettingsPropName>SubtitleEdit_SeNetworkService_SeService</CachedSettingsPropName>
     </WebReferenceUrl>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
