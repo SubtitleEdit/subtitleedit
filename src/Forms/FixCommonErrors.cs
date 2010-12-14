@@ -110,6 +110,7 @@ namespace Nikse.SubtitleEdit.Forms
         StringBuilder _newLog = new StringBuilder();
         StringBuilder _appliedLog = new StringBuilder();
         private int _numberOfImportantLogMessages = 0;
+        List<int> _deleteIndices = new List<int>();
 
         public Subtitle FixedSubtitle
         {
@@ -344,6 +345,8 @@ namespace Nikse.SubtitleEdit.Forms
                             p.Text = text.TrimEnd(Environment.NewLine.ToCharArray());
                             emptyLinesRemoved++;
                             AddFixToListView(p, i + 1, fixAction2, p.Text, text);
+
+
                         }
                     }
                 }
@@ -360,6 +363,7 @@ namespace Nikse.SubtitleEdit.Forms
                         _subtitle.Paragraphs.RemoveAt(i);
                         emptyLinesRemoved++;
                         AddFixToListView(p, i + 1, fixAction0, p.Text, string.Format("[{0}]", _language.RemovedEmptyLine));
+                        _deleteIndices.Add(i);
                     }
                 }
             }
@@ -1364,7 +1368,11 @@ namespace Nikse.SubtitleEdit.Forms
                 Paragraph p = _subtitle.Paragraphs[i];
                 Paragraph next = _subtitle.GetParagraphOrDefault(i + 1);
 
-                if (next != null &&
+                if (IsOneLineUrl(p.Text))
+                {
+                    ; // ignore urls
+                }
+                else if (next != null &&
                     next.Text.Length > 0 &&
                     Utilities.GetLetters(true, false, false).Contains(next.Text[0].ToString()) &&
                     p.Text.Length > 0 &&
@@ -1459,6 +1467,27 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (missigPeriodsAtEndOfLine > 0)
                 LogStatus(_language.AddPeriods, string.Format(_language.XPeriodsAdded, missigPeriodsAtEndOfLine));
+        }
+
+        private bool IsOneLineUrl(string s)
+        {
+            if (s.Contains(" ") || s.Contains(Environment.NewLine))
+                return false;
+
+            if (s.ToLower().StartsWith("http://"))
+                return true;
+
+            if (s.ToLower().StartsWith("https://"))
+                return true;
+
+            if (s.ToLower().StartsWith("www."))
+                return true;
+
+            string[] parts = s.Split(".".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+            if (parts.Length == 3 && parts[2].Length > 1 && parts[2].Length < 7)
+                return true;
+
+            return false;
         }
 
         private bool IsName(string candidate)
@@ -1655,7 +1684,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
             if (fixedStartWithUppercaseLetterAfterParagraphTicked > 0)
-                LogStatus(_language.StartWithUppercaseLetterAfterParagraph, fixedStartWithUppercaseLetterAfterParagraphTicked + " periods added.");
+                LogStatus(_language.StartWithUppercaseLetterAfterParagraph, fixedStartWithUppercaseLetterAfterParagraphTicked.ToString());
         }
 
         private void FixStartWithUppercaseLetterAfterPeriodInsideParagraph()
@@ -3152,6 +3181,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             subtitleListView1.BeginUpdate();
             _newLog = new StringBuilder();
+            _deleteIndices = new List<int>();
 
             _subtitle = new Subtitle(_originalSubtitle);
             foreach (ListViewItem item in listView1.Items)
@@ -3275,10 +3305,18 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ListViewFixesSelectedIndexChanged(object sender, EventArgs e)
         {
+            int addNumber = 0;
             if (listViewFixes.SelectedItems.Count > 0)
             {
                 Paragraph p = (Paragraph) listViewFixes.SelectedItems[0].Tag;
-                p = _originalSubtitle.GetFirstParagraphByLineNumber(p.Number);
+
+                for (int i = 0; i < p.Number; i++)
+                { 
+                    if (_deleteIndices.Contains(i))    
+                        addNumber++;
+                }
+                
+                p = _originalSubtitle.GetFirstParagraphByLineNumber(p.Number+addNumber);
                 if (p != null)
                 {
                     int index = _originalSubtitle.GetIndex(p);
