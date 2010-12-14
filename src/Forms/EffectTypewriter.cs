@@ -15,7 +15,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             InitializeComponent();
 
-            Text = Configuration.Settings.Language.EffectKaraoke.Title;
+            Text = Configuration.Settings.Language.EffectTypewriter.Title;
             labelTM.Text = Configuration.Settings.Language.EffectKaraoke.TotalMilliseconds;
             labelEndDelay.Text = Configuration.Settings.Language.EffectKaraoke.EndDelayInMilliseconds;
             buttonPreview.Text = Configuration.Settings.Language.General.Preview;
