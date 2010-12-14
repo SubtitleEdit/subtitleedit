@@ -18,7 +18,7 @@
     <NoVideoLoaded>未加载视频</NoVideoLoaded>
     <VideoInformation>视频信息</VideoInformation>
     <PositionX>位置/时长: {0}</PositionX>
-    <StartTime>开始时间</StartTime>
+    <StartTime>起始时间</StartTime>
     <EndTime>结束时间</EndTime>
     <Duration>时长</Duration>
     <Number>编号</Number>
@@ -27,11 +27,11 @@
     <Bold>粗体</Bold>
     <Italic>斜体</Italic>
     <Visible>可见</Visible>
-    <FrameRate>帧速</FrameRate>
+    <FrameRate>帧率</FrameRate>
     <Name>名称</Name>
     <FileNameXAndSize>文件名称: {0}（{1}）</FileNameXAndSize>
     <ResolutionX>分辨率: {0}</ResolutionX>
-    <FrameRateX>帧速: {0:0.0###}</FrameRateX>
+    <FrameRateX>帧率: {0:0.0###}</FrameRateX>
     <TotalFramesX>总帧数: {0:#,##0.##}</TotalFramesX>
     <VideoEncodingX>视频编码: {0}</VideoEncodingX>
     <SingleLineLengths>单行长度: </SingleLineLengths>
@@ -82,7 +82,7 @@ C# 源代码可从网站获得。
     <Percent>百分比</Percent>
     <AddSeconds>添加秒数</AddSeconds>
     <SetAsPercent>设置为时长百分比</SetAsPercent>
-    <Note>说明: 显示时间不会重叠下一个文本的开始时间</Note>
+    <Note>说明: 显示时间不会重叠下一个文本的起始时间</Note>
     <PleaseSelectAValueFromTheDropDownList>请从下拉列表中选择一个数值</PleaseSelectAValueFromTheDropDownList>
     <PleaseChoose>- 请选择 -</PleaseChoose>
   </AdjustDisplayDuration>
@@ -117,10 +117,10 @@ C# 源代码可从网站获得。
     <LinesFoundX>找到行: {0}</LinesFoundX>
   </ChangeCasingNames>
   <ChangeFrameRate>
-    <Title>更改帧速</Title>
-    <ConvertFrameRateOfSubtitle>转换字幕帧速</ConvertFrameRateOfSubtitle>
-    <FromFrameRate>从帧速</FromFrameRate>
-    <ToFrameRate>到帧速</ToFrameRate>
+    <Title>更改帧率</Title>
+    <ConvertFrameRateOfSubtitle>转换字幕帧率</ConvertFrameRateOfSubtitle>
+    <FromFrameRate>从帧率</FromFrameRate>
+    <ToFrameRate>到帧率</ToFrameRate>
   </ChangeFrameRate>
   <ChooseEncoding>
     <Title>选择编码方式</Title>
@@ -223,7 +223,7 @@ C# 源代码可从网站获得。
     <RemoveLineBreaks>删除只有一个句子的短文本的换行符</RemoveLineBreaks>
     <FixUppercaseIInsindeLowercaseWords>修复小写单词中的 'i' 为大写（OCR 错误）</FixUppercaseIInsindeLowercaseWords>
     <FixDoubleApostrophes>修复两个单引号字符 ('') 为一个双引号 (")</FixDoubleApostrophes>
-    <AddPeriods>在下一行以大写字母开头的行的后面添加句号</AddPeriods>
+    <AddPeriods>在下一行以大写字母开头的行后面添加句号</AddPeriods>
     <StartWithUppercaseLetterAfterParagraph>段落后以大写字母开头</StartWithUppercaseLetterAfterParagraph>
     <StartWithUppercaseLetterAfterPeriodInsideParagraph>段落中的句号后以大写字母开头</StartWithUppercaseLetterAfterPeriodInsideParagraph>
     <FixLowercaseIToUppercaseI>单独的小写 'i' 修复为 'I' (英语)</FixLowercaseIToUppercaseI>
@@ -265,8 +265,8 @@ C# 源代码可从网站获得。
     <FixMissingSpacesExample>Hey.You. -&gt; Hey. You.</FixMissingSpacesExample>
     <FixUppercaseIInsindeLowercaseWordsExample>The earth is fIat. -&gt; The earth is flat.</FixUppercaseIInsindeLowercaseWordsExample>
     <FixLowercaseIToUppercaseIExample>What do i care. -&gt; What do I care.</FixLowercaseIToUppercaseIExample>
-    <StartTimeLaterThanEndTime>文本编号 {0}: 开始时间晚于结束时间: {4}{1} --&gt; {2} {3}</StartTimeLaterThanEndTime>
-    <UnableToFixStartTimeLaterThanEndTime>无法修复文本编号 {0}: 开始时间晚于结束时间: {1}</UnableToFixStartTimeLaterThanEndTime>
+    <StartTimeLaterThanEndTime>文本编号 {0}: 起始时间晚于结束时间: {4}{1} --&gt; {2} {3}</StartTimeLaterThanEndTime>
+    <UnableToFixStartTimeLaterThanEndTime>无法修复文本编号 {0}: 起始时间晚于结束时间: {1}</UnableToFixStartTimeLaterThanEndTime>
     <XFixedToYZ>{0} 个被修复为: {1}{2}</XFixedToYZ>
     <UnableToFixTextXY>无法修复文本编号 {0}: {1}</UnableToFixTextXY>
     <XOverlappingTimestampsFixed>{0} 个重叠时间已修复</XOverlappingTimestampsFixed>
@@ -390,10 +390,10 @@ C# 源代码可从网站获得。
         <Title>工具(&amp;T)</Title>
         <AdjustDisplayDuration>调整时长(&amp;A)...</AdjustDisplayDuration>
         <FixCommonErrors>修复常规错误(&amp;F)...</FixCommonErrors>
-        <StartNumberingFrom>编号开始位置...</StartNumberingFrom>
+        <StartNumberingFrom>编号起始位置...</StartNumberingFrom>
         <RemoveTextForHearingImpaired>删除妨碍听觉的文本...</RemoveTextForHearingImpaired>
         <ChangeCasing>更改大小写...</ChangeCasing>
-        <ChangeFrameRate>更改帧速...</ChangeFrameRate>
+        <ChangeFrameRate>更改帧率...</ChangeFrameRate>
         <MergeShortLines>合并短行...</MergeShortLines>
         <MinimumDisplayTimeBetweenParagraphs>段落间最小显示时间...</MinimumDisplayTimeBetweenParagraphs>
         <SortBy>排序方式</SortBy>
@@ -487,9 +487,9 @@ C# 源代码可从网站获得。
       <ListView>列表视图</ListView>
       <SourceView>来源视图</SourceView>
       <UndoChangesInEditPanel>撤消编辑框内更改</UndoChangesInEditPanel>
-      <Previous>&lt; 上行</Previous>
-      <Next>下行 &gt;</Next>
-      <AutoBreak>自换行</AutoBreak>
+      <Previous>&lt; 上一行</Previous>
+      <Next>下一行 &gt;</Next>
+      <AutoBreak>自动换行</AutoBreak>
       <Unbreak>取消换行</Unbreak>
     </Controls>
     <VideoControls>
@@ -564,8 +564,8 @@ C# 源代码可从网站获得。
     <BeforeShowLater>推后显示之前</BeforeShowLater>
     <LineNumberX>行号: {0:#,##0.##}</LineNumberX>
     <OpenVideoFile>打开视频文件...</OpenVideoFile>
-    <NewFrameRateUsedToCalculateTimeCodes>新帧速 ({0}) 用于计算 起始/结束 时间码</NewFrameRateUsedToCalculateTimeCodes>
-    <NewFrameRateUsedToCalculateFrameNumbers>新帧速 ({0}) 用于计算 起始/结束 帧号</NewFrameRateUsedToCalculateFrameNumbers>
+    <NewFrameRateUsedToCalculateTimeCodes>新帧率 ({0}) 用于计算 起始/结束 时间码</NewFrameRateUsedToCalculateTimeCodes>
+    <NewFrameRateUsedToCalculateFrameNumbers>新帧率 ({0}) 用于计算 起始/结束 帧号</NewFrameRateUsedToCalculateFrameNumbers>
     <FindContinue>搜索的项目未找到。您要从文档开头开始再搜索一次吗？</FindContinue>
     <FindContinueTitle>继续查找？</FindContinueTitle>
     <XFoundAtLineNumberY>'{0}' 已找到在行号 {1}</XFoundAtLineNumberY>
@@ -665,8 +665,8 @@ C# 源代码可从网站获得。
     <CasingCompleteMessageNoNames>已更改大小写的行数: {0}/{1}</CasingCompleteMessageNoNames>
     <CasingCompleteMessageOnlyNames>已更改名称大小写的行数: {0}/{1}</CasingCompleteMessageOnlyNames>
     <CasingCompleteMessage>已更改大小写的行数: {0}/{1}，已更改大小写的名称: {2}</CasingCompleteMessage>
-    <BeforeChangeFrameRate>更改帧速之前</BeforeChangeFrameRate>
-    <FrameRateChangedFromXToY>帧速已从 {0} 更改为 {1}</FrameRateChangedFromXToY>
+    <BeforeChangeFrameRate>更改帧率之前</BeforeChangeFrameRate>
+    <FrameRateChangedFromXToY>帧率已从 {0} 更改为 {1}</FrameRateChangedFromXToY>
     <IdxFileNotFoundWarning>{0} 未找到！仍要导入 VobSub 文件吗？</IdxFileNotFoundWarning>
     <InvalidVobSubHeader>头部不是有效的 VobSub 文件: {0}</InvalidVobSubHeader>
     <OpenVobSubFile>打开 VobSub (sub/idx) 字幕...</OpenVobSubFile>
@@ -800,15 +800,15 @@ C# 源代码可从网站获得。
     <SettingsName>设置</SettingsName>
     <Help>帮助</Help>
     <Miscellaneous>其它</Miscellaneous>
-    <ShowFrameRate>在工具栏显示帧速</ShowFrameRate>
-    <DefaultFrameRate>默认帧速</DefaultFrameRate>
+    <ShowFrameRate>在工具栏显示帧率</ShowFrameRate>
+    <DefaultFrameRate>默认帧率</DefaultFrameRate>
     <DefaultFileEncoding>默认文件编码</DefaultFileEncoding>
     <AutoDetectAnsiEncoding>自动检测 ANSI 编码</AutoDetectAnsiEncoding>
     <SubtitleLineMaximumLength>单行最大长度</SubtitleLineMaximumLength>
     <SubtitleFont>字幕字体</SubtitleFont>
     <SubtitleFontSize>字幕字体大小</SubtitleFontSize>
     <RememberRecentFiles>记住最近的文件 (用于重新打开)</RememberRecentFiles>
-    <StartWithLastFileLoaded>用上次加载的文件开始</StartWithLastFileLoaded>
+    <StartWithLastFileLoaded>以上次加载的文件开始</StartWithLastFileLoaded>
     <RememberSelectedLine>记住所选行</RememberSelectedLine>
     <RememberPositionAndSize>记住主窗口的位置和大小</RememberPositionAndSize>
     <StartInSourceView>在来源视图中开始</StartInSourceView>
@@ -820,9 +820,9 @@ C# 源代码可从网站获得。
     <MainListViewVideoGoToPositionAndPlay>转到视频位置并播放</MainListViewVideoGoToPositionAndPlay>
     <MainListViewEditText>转到编辑文本框</MainListViewEditText>
     <AutoBackup>自动备份</AutoBackup>
-    <AutoBackupEveryMinute>1 分钟</AutoBackupEveryMinute>
-    <AutoBackupEveryFiveMinutes>5 分钟</AutoBackupEveryFiveMinutes>
-    <AutoBackupEveryFifteenMinutes>15 分钟</AutoBackupEveryFifteenMinutes>
+    <AutoBackupEveryMinute>每隔 1 分钟</AutoBackupEveryMinute>
+    <AutoBackupEveryFiveMinutes>每隔 5 分钟</AutoBackupEveryFiveMinutes>
+    <AutoBackupEveryFifteenMinutes>每隔 15 分钟</AutoBackupEveryFifteenMinutes>
     <VideoEngine>视频引擎</VideoEngine>
     <DirectShow>DirectShow</DirectShow>
     <DirectShowDescription>quartz.dll 在 System32 文件夹中</DirectShowDescription>
@@ -874,11 +874,11 @@ C# 源代码可从网站获得。
     <ProxyDomain>域</ProxyDomain>
     <PlayXSecondsAndBack>播放 X 秒后返回，X 为</PlayXSecondsAndBack>
     <StartSceneIndex>起始场景段落为</StartSceneIndex>
-    <EndSceneIndex>结束场景段落为</EndSceneIndex>
+    <EndSceneIndex>末尾场景段落为</EndSceneIndex>
     <FirstPlusX>开头 + {0}</FirstPlusX>
     <LastMinusX>最后 - {0}</LastMinusX>
     <FixCommonerrors>修复常规错误</FixCommonerrors>
-    <MergeLinesShorterThan>合并长度小于该值的行</MergeLinesShorterThan>
+    <MergeLinesShorterThan>合并小于该长度的行</MergeLinesShorterThan>
     <MusicSymbol>音符</MusicSymbol>
     <MusicSymbolsToReplace>替换音符 (用空格分隔)</MusicSymbolsToReplace>
   </Settings>
@@ -935,8 +935,8 @@ C# 源代码可从网站获得。
     <UnableToSaveFileX>无法保存 {0}</UnableToSaveFileX>
   </SplitSubtitle>
   <StartNumberingFrom>
-    <Title>编号开始位置...</Title>
-    <StartFromNumber>编号开始位置:</StartFromNumber>
+    <Title>编号起始位置...</Title>
+    <StartFromNumber>编号起始位置:</StartFromNumber>
     <PleaseEnterAValidNumber>请输入一个数字</PleaseEnterAValidNumber>
   </StartNumberingFrom>
   <PointSync>
@@ -953,7 +953,7 @@ C# 源代码可从网站获得。
   </UnknownSubtitle>
   <VisualSync>
     <Title>视觉同步</Title>
-    <StartScene>开始场景</StartScene>
+    <StartScene>起始场景</StartScene>
     <EndScene>末尾场景</EndScene>
     <Synchronize>同步</Synchronize>
     <HalfASecondBack>&lt; ½ 秒</HalfASecondBack>
@@ -964,7 +964,7 @@ C# 源代码可从网站获得。
     <KeepChangesTitle>保持你的更改？</KeepChangesTitle>
     <KeepChangesMessage>“视觉同步”中的字幕已被更改。</KeepChangesMessage>
     <SynchronizationDone>同步完成！</SynchronizationDone>
-    <StartSceneMustComeBeforeEndScene>开始场景必须在结束场景之前！</StartSceneMustComeBeforeEndScene>
+    <StartSceneMustComeBeforeEndScene>起始场景必须在末尾场景之前！</StartSceneMustComeBeforeEndScene>
     <Tip>提示: 使用 &lt;Ctrl + ←/→&gt; 键来 向前/向后 删除 100 毫秒</Tip>
   </VisualSync>
   <VobSubEditCharacters>
