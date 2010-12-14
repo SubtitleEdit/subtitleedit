@@ -1385,11 +1385,14 @@ namespace Nikse.SubtitleEdit.Forms
                 comboBoxTesseractLanguages.Items.Clear();
                 foreach (var culture in System.Globalization.CultureInfo.GetCultures(System.Globalization.CultureTypes.NeutralCultures))
                 {
-                    string trainDataFileName = dir + "\\" + culture.ThreeLetterISOLanguageName + ".traineddata";
+                    string tesseractName = culture.ThreeLetterISOLanguageName;
+                    if (culture.LCID == 0x4 && !File.Exists(dir + "\\" + tesseractName + ".traineddata"))
+                        tesseractName = "chi_sim";
+                    string trainDataFileName = dir + "\\" + tesseractName + ".traineddata";
                     if (!list.Contains(culture.ThreeLetterISOLanguageName) && File.Exists(trainDataFileName))
                     {
                         list.Add(culture.ThreeLetterISOLanguageName);
-                        comboBoxTesseractLanguages.Items.Add(new TesseractLanguage { Id = culture.ThreeLetterISOLanguageName, Text = culture.EnglishName });
+                        comboBoxTesseractLanguages.Items.Add(new TesseractLanguage { Id = tesseractName, Text = culture.EnglishName });
                     }
                 }
             }
