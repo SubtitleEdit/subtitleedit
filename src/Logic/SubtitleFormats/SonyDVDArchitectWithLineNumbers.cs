@@ -41,7 +41,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             { 
                 string text = Utilities.RemoveHtmlTags(p.Text);
                 text = text.Replace(Environment.NewLine, string.Empty);
-                sb.AppendLine(string.Format("{9:0000}  {0:00}:{1:00}:{2:00}:{3:00}  {4:00}:{5:00}:{6:00}:{7:00}    \t{8:00}",
+                sb.AppendLine(string.Format("{9:0000}  {0:00}:{1:00}:{2:00}:{3:00}  {4:00}:{5:00}:{6:00}:{7:00}    \t{8:00}" + Environment.NewLine,
                                             p.StartTime.Hours, p.StartTime.Minutes, p.StartTime.Seconds, p.StartTime.Milliseconds / 10,
                                             p.EndTime.Hours, p.EndTime.Minutes, p.EndTime.Seconds, p.EndTime.Milliseconds / 10,
                                             text, p.Number));
