@@ -101,6 +101,8 @@ namespace Nikse.SubtitleEdit.Controls
         public bool DrawGridLines { get; set; }
         public bool AllowNewSelection { get; set; }
 
+        public bool Locked { get; set; }
+
         public double EndPositionSeconds 
         {
             get
@@ -952,19 +954,19 @@ namespace Nikse.SubtitleEdit.Controls
 
         private void WaveForm_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.KeyCode == Keys.Add)
+            if (e.Modifiers == Keys.None && e.KeyCode == Keys.Add)
             {
                 ZoomFactor = ZoomFactor + 0.1;
                 if (OnZoomedChanged != null)
                     OnZoomedChanged.Invoke(null, null);
             }
-            else if (e.KeyCode == Keys.Subtract)
+            else if (e.Modifiers == Keys.None && e.KeyCode == Keys.Subtract)
             {
                 ZoomFactor = ZoomFactor - 0.1;
                 if (OnZoomedChanged != null)
                     OnZoomedChanged.Invoke(null, null);
             }
-            else if (e.Control == false && e.KeyCode == Keys.Z)
+            else if (e.Modifiers == Keys.None && e.KeyCode == Keys.Z)
             {
                 if (StartPositionSeconds > 0.1)
                 {
@@ -974,7 +976,7 @@ namespace Nikse.SubtitleEdit.Controls
                     e.SuppressKeyPress = true;
                 }
             }
-            else if (e.Control == false &&  e.KeyCode == Keys.X)
+            else if (e.Modifiers == Keys.None && e.KeyCode == Keys.X)
             {
                 if (StartPositionSeconds + 0.1 < _wavePeaks.Header.LengthInSeconds)
                 {
@@ -983,16 +985,29 @@ namespace Nikse.SubtitleEdit.Controls
                     Invalidate();
                     e.SuppressKeyPress = true;
                 }
-            }  
+            }
+            else if (e.Modifiers == Keys.Alt && e.KeyCode == Keys.C)
+            {
+                Locked = !Locked;
+                Invalidate();
+                e.SuppressKeyPress = true;
+            }
         }
 
         void WaveForm_MouseWheel(object sender, MouseEventArgs e)
         {
             int delta = e.Delta;
             {
-                StartPositionSeconds -= delta / 256.0;
-                if (_currentVideoPositionSeconds < StartPositionSeconds || _currentVideoPositionSeconds >= EndPositionSeconds)
-                    OnPositionSelected.Invoke(StartPositionSeconds, null);
+                if (Locked)
+                {
+                    OnPositionSelected.Invoke(_currentVideoPositionSeconds + (-delta / 256.0), null);
+                }
+                else
+                {
+                    StartPositionSeconds -= delta / 256.0;
+                    if (_currentVideoPositionSeconds < StartPositionSeconds || _currentVideoPositionSeconds >= EndPositionSeconds)
+                        OnPositionSelected.Invoke(StartPositionSeconds, null);
+                }
                 Invalidate();
             }
         }

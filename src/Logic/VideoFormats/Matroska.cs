@@ -4,6 +4,30 @@ using System.IO;
 
 namespace Nikse.SubtitleEdit.Logic
 {
+    public class SubtitleSequence
+    {
+        public long StartMilliseconds { get; set; }
+        public long EndMilliseconds { get; set; }
+        public byte[] BinaryData { get; set; }
+
+        public SubtitleSequence(byte[] data, long startMilliseconds, long endMilliseconds)
+        {
+            BinaryData = data;
+            StartMilliseconds = startMilliseconds;
+            EndMilliseconds = endMilliseconds;
+        }
+
+        public string Text
+        {
+            get
+            { 
+                if (BinaryData != null)
+                    return System.Text.Encoding.UTF8.GetString(BinaryData).Replace("\\N", Environment.NewLine);
+                return string.Empty;
+            }
+        }
+    }
+
     public class MatroskaSubtitleInfo
     {
         public long TrackNumber { get; set; }
@@ -92,7 +116,8 @@ namespace Nikse.SubtitleEdit.Logic
 
         List<MatroskaSubtitleInfo> _subtitleList;
         int _subtitleRipTrackNumber = 0;
-        Subtitle _subtitleRip = new Subtitle();
+        List<SubtitleSequence> _subtitleRip = new List<SubtitleSequence>();
+        //Subtitle _subtitleRip = new Subtitle();
 
 
         private static int GetMatroskaVariableIntLength(byte b)
@@ -953,16 +978,17 @@ namespace Nikse.SubtitleEdit.Logic
                      break;
                 }
 
-
-
                 // save subtitle data
                 if (trackNo == _subtitleRipTrackNumber)
                 {
                     long sublength = afterPosition - f.Position;
                     if (sublength > 0)
                     {
-                        string s = GetMatroskaString(sublength);
-                        s = s.Replace("\\N", Environment.NewLine);
+                        byte[] buffer = new byte[sublength];
+                        f.Read(buffer, 0, (int)sublength);
+
+                        //string s = GetMatroskaString(sublength);
+                        //s = s.Replace("\\N", Environment.NewLine);
 
                         f.Seek(afterPosition, SeekOrigin.Begin);
                         b = (byte)f.ReadByte();
@@ -974,7 +1000,7 @@ namespace Nikse.SubtitleEdit.Logic
                             duration = GetMatroskaVariableSizeUnsignedInt(dataSize);
                         }
 
-                        _subtitleRip.Paragraphs.Add(new Paragraph(s, timeCode + clusterTimeCode, timeCode + clusterTimeCode + duration));
+                        _subtitleRip.Add(new SubtitleSequence(buffer, timeCode + clusterTimeCode, timeCode + clusterTimeCode + duration));
                     }
                 }
 
@@ -1061,7 +1087,7 @@ namespace Nikse.SubtitleEdit.Logic
             return _subtitleList;
         }
 
-        public Subtitle GetMatroskaSubtitle(string fileName, int trackNumber, out bool isValid)
+        public List<SubtitleSequence> GetMatroskaSubtitle(string fileName, int trackNumber, out bool isValid)
         {
             byte b;
             bool done;

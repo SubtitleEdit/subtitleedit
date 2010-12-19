@@ -114,6 +114,10 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 VideoFileName = fileName;
 
+                FileInfo fi = new FileInfo(fileName);
+                if (fi.Length < 1000)
+                    return;
+
                 if (MediaPlayerStart.VideoPlayer != null)
                 {
                     MediaPlayerStart.Pause();

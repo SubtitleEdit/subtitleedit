@@ -95,6 +95,10 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (File.Exists(fileName))
             {
+                FileInfo fi = new FileInfo(fileName);
+                if (fi.Length < 1000)
+                    return;
+
                 labelVideoFileName.Text = fileName;
                 VideoFileName = fileName;
                 if (videoPlayerContainer1.VideoPlayer != null)

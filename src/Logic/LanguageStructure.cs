@@ -1006,6 +1006,7 @@
         public class ShowEarlierLater
         {
             public string Title { get; set; }
+            public string TitleAll { get; set; }
             public string ShowEarlier { get; set; }
             public string ShowLater { get; set; }
             public string TotalAdjustmentX { get; set; }
