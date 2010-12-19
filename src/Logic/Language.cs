@@ -1069,6 +1069,7 @@ namespace Nikse.SubtitleEdit.Logic
             ShowEarlierLater = new LanguageStructure.ShowEarlierLater
             {
                 Title = "Show selected lines earlier/later",
+                TitleAll = "Show all lines earlier/later",
                 ShowEarlier = "Show earlier",
                 ShowLater = "Show later",
                 TotalAdjustmentX = "Total adjustment: {0}",

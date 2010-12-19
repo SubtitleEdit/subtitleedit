@@ -35,6 +35,7 @@
     <ApplicationRevision>3</ApplicationRevision>
     <ApplicationVersion>2.0.1.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
+    <PublishWizardCompleted>true</PublishWizardCompleted>
     <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -76,7 +77,10 @@
       <EmbedInteropTypes>True</EmbedInteropTypes>
       <HintPath>DLLs\Interop.QuartzTypeLib.dll</HintPath>
     </Reference>
-    <Reference Include="NHunspell, Version=0.6.3.0, Culture=neutral, processorArchitecture=MSIL" />
+    <Reference Include="NHunspell, Version=0.9.6.0, Culture=neutral, PublicKeyToken=1ac793ea843b4366, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>DLLs\NHunspell.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
@@ -393,6 +397,12 @@
     <Compile Include="Forms\VobSubOcrNewFolder.Designer.cs">
       <DependentUpon>VobSubOcrNewFolder.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\Watermark.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Watermark.Designer.cs">
+      <DependentUpon>Watermark.cs</DependentUpon>
+    </Compile>
     <Compile Include="Logic\BluRaySup\BluRaySupPalette.cs" />
     <Compile Include="Logic\BluRaySup\BluRaySupParser.cs" />
     <Compile Include="Logic\BluRaySup\BluRaySupPicture.cs" />
@@ -687,6 +697,9 @@
     <EmbeddedResource Include="Forms\VobSubOcrNewFolder.resx">
       <DependentUpon>VobSubOcrNewFolder.cs</DependentUpon>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Watermark.resx">
+      <DependentUpon>Watermark.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>

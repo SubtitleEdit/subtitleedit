@@ -1219,7 +1219,8 @@
             // toolStripMenuItemAdjustAllTimes
             // 
             this.toolStripMenuItemAdjustAllTimes.Name = "toolStripMenuItemAdjustAllTimes";
-            this.toolStripMenuItemAdjustAllTimes.Size = new System.Drawing.Size(276, 22);
+            this.toolStripMenuItemAdjustAllTimes.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.D)));
+            this.toolStripMenuItemAdjustAllTimes.Size = new System.Drawing.Size(317, 22);
             this.toolStripMenuItemAdjustAllTimes.Text = "Adjust all times (show earlier/later)...";
             this.toolStripMenuItemAdjustAllTimes.Click += new System.EventHandler(this.toolStripMenuItemAdjustAllTimes_Click);
             // 
@@ -1228,7 +1229,7 @@
             this.visualSyncToolStripMenuItem.Name = "visualSyncToolStripMenuItem";
             this.visualSyncToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift)
                         | System.Windows.Forms.Keys.V)));
-            this.visualSyncToolStripMenuItem.Size = new System.Drawing.Size(276, 22);
+            this.visualSyncToolStripMenuItem.Size = new System.Drawing.Size(317, 22);
             this.visualSyncToolStripMenuItem.Text = "Visual sync...";
             this.visualSyncToolStripMenuItem.Click += new System.EventHandler(this.VisualSyncToolStripMenuItemClick);
             // 
@@ -1237,7 +1238,7 @@
             this.toolStripMenuItemPointSync.Name = "toolStripMenuItemPointSync";
             this.toolStripMenuItemPointSync.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift)
                         | System.Windows.Forms.Keys.P)));
-            this.toolStripMenuItemPointSync.Size = new System.Drawing.Size(276, 22);
+            this.toolStripMenuItemPointSync.Size = new System.Drawing.Size(317, 22);
             this.toolStripMenuItemPointSync.Text = "Point sync...";
             this.toolStripMenuItemPointSync.Click += new System.EventHandler(this.toolStripMenuItemPointSync_Click);
             // 
@@ -1358,14 +1359,14 @@
             // 
             this.helpToolStripMenuItem1.Name = "helpToolStripMenuItem1";
             this.helpToolStripMenuItem1.ShortcutKeys = System.Windows.Forms.Keys.F1;
-            this.helpToolStripMenuItem1.Size = new System.Drawing.Size(152, 22);
+            this.helpToolStripMenuItem1.Size = new System.Drawing.Size(118, 22);
             this.helpToolStripMenuItem1.Text = "Help";
             this.helpToolStripMenuItem1.Click += new System.EventHandler(this.HelpToolStripMenuItem1Click);
             // 
             // aboutToolStripMenuItem
             // 
             this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(118, 22);
             this.aboutToolStripMenuItem.Text = "About";
             this.aboutToolStripMenuItem.Click += new System.EventHandler(this.AboutToolStripMenuItemClick);
             // 
