@@ -33,6 +33,10 @@
             this.tabControlSettings = new System.Windows.Forms.TabControl();
             this.tabPageGenerel = new System.Windows.Forms.TabPage();
             this.groupBoxMiscellaneous = new System.Windows.Forms.GroupBox();
+            this.panelSubtitleBackgroundColor = new System.Windows.Forms.Panel();
+            this.panelSubtitleFontColor = new System.Windows.Forms.Panel();
+            this.labelSubtitleFontBackgroundColor = new System.Windows.Forms.Label();
+            this.labelSubtitleFontColor = new System.Windows.Forms.Label();
             this.comboBoxAutoBackup = new System.Windows.Forms.ComboBox();
             this.labelAutoBackup = new System.Windows.Forms.Label();
             this.checkBoxRememberSelectedLine = new System.Windows.Forms.CheckBox();
@@ -227,7 +231,7 @@
             // buttonOK
             // 
             this.buttonOK.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.buttonOK.Location = new System.Drawing.Point(661, 434);
+            this.buttonOK.Location = new System.Drawing.Point(661, 456);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 21);
             this.buttonOK.TabIndex = 0;
@@ -238,7 +242,7 @@
             // buttonCancel
             // 
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.buttonCancel.Location = new System.Drawing.Point(740, 434);
+            this.buttonCancel.Location = new System.Drawing.Point(740, 456);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 21);
             this.buttonCancel.TabIndex = 1;
@@ -257,7 +261,7 @@
             this.tabControlSettings.Location = new System.Drawing.Point(13, 13);
             this.tabControlSettings.Name = "tabControlSettings";
             this.tabControlSettings.SelectedIndex = 0;
-            this.tabControlSettings.Size = new System.Drawing.Size(806, 415);
+            this.tabControlSettings.Size = new System.Drawing.Size(806, 437);
             this.tabControlSettings.TabIndex = 2;
             this.tabControlSettings.SelectedIndexChanged += new System.EventHandler(this.TabControlSettingsSelectedIndexChanged);
             // 
@@ -268,13 +272,17 @@
             this.tabPageGenerel.Location = new System.Drawing.Point(4, 22);
             this.tabPageGenerel.Name = "tabPageGenerel";
             this.tabPageGenerel.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageGenerel.Size = new System.Drawing.Size(798, 389);
+            this.tabPageGenerel.Size = new System.Drawing.Size(798, 411);
             this.tabPageGenerel.TabIndex = 0;
             this.tabPageGenerel.Text = "Generel";
             this.tabPageGenerel.UseVisualStyleBackColor = true;
             // 
             // groupBoxMiscellaneous
             // 
+            this.groupBoxMiscellaneous.Controls.Add(this.panelSubtitleBackgroundColor);
+            this.groupBoxMiscellaneous.Controls.Add(this.panelSubtitleFontColor);
+            this.groupBoxMiscellaneous.Controls.Add(this.labelSubtitleFontBackgroundColor);
+            this.groupBoxMiscellaneous.Controls.Add(this.labelSubtitleFontColor);
             this.groupBoxMiscellaneous.Controls.Add(this.comboBoxAutoBackup);
             this.groupBoxMiscellaneous.Controls.Add(this.labelAutoBackup);
             this.groupBoxMiscellaneous.Controls.Add(this.checkBoxRememberSelectedLine);
@@ -303,10 +311,46 @@
             this.groupBoxMiscellaneous.Controls.Add(this.labelDefaultFrameRate);
             this.groupBoxMiscellaneous.Location = new System.Drawing.Point(6, 121);
             this.groupBoxMiscellaneous.Name = "groupBoxMiscellaneous";
-            this.groupBoxMiscellaneous.Size = new System.Drawing.Size(786, 262);
+            this.groupBoxMiscellaneous.Size = new System.Drawing.Size(786, 284);
             this.groupBoxMiscellaneous.TabIndex = 0;
             this.groupBoxMiscellaneous.TabStop = false;
             this.groupBoxMiscellaneous.Text = "Miscellaneous";
+            // 
+            // panelSubtitleBackgroundColor
+            // 
+            this.panelSubtitleBackgroundColor.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panelSubtitleBackgroundColor.Location = new System.Drawing.Point(180, 261);
+            this.panelSubtitleBackgroundColor.Name = "panelSubtitleBackgroundColor";
+            this.panelSubtitleBackgroundColor.Size = new System.Drawing.Size(46, 15);
+            this.panelSubtitleBackgroundColor.TabIndex = 35;
+            this.panelSubtitleBackgroundColor.Click += new System.EventHandler(this.panelSubtitleBackgroundColor_Click);
+            // 
+            // panelSubtitleFontColor
+            // 
+            this.panelSubtitleFontColor.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panelSubtitleFontColor.Location = new System.Drawing.Point(180, 241);
+            this.panelSubtitleFontColor.Name = "panelSubtitleFontColor";
+            this.panelSubtitleFontColor.Size = new System.Drawing.Size(46, 15);
+            this.panelSubtitleFontColor.TabIndex = 34;
+            this.panelSubtitleFontColor.Click += new System.EventHandler(this.panelSubtitleFontColor_Click);
+            // 
+            // labelSubtitleFontBackgroundColor
+            // 
+            this.labelSubtitleFontBackgroundColor.AutoSize = true;
+            this.labelSubtitleFontBackgroundColor.Location = new System.Drawing.Point(15, 262);
+            this.labelSubtitleFontBackgroundColor.Name = "labelSubtitleFontBackgroundColor";
+            this.labelSubtitleFontBackgroundColor.Size = new System.Drawing.Size(151, 13);
+            this.labelSubtitleFontBackgroundColor.TabIndex = 33;
+            this.labelSubtitleFontBackgroundColor.Text = "Subtitle font background color";
+            // 
+            // labelSubtitleFontColor
+            // 
+            this.labelSubtitleFontColor.AutoSize = true;
+            this.labelSubtitleFontColor.Location = new System.Drawing.Point(15, 242);
+            this.labelSubtitleFontColor.Name = "labelSubtitleFontColor";
+            this.labelSubtitleFontColor.Size = new System.Drawing.Size(92, 13);
+            this.labelSubtitleFontColor.TabIndex = 32;
+            this.labelSubtitleFontColor.Text = "Subtitle font color";
             // 
             // comboBoxAutoBackup
             // 
@@ -500,7 +544,7 @@
             // checkBoxSubtitleFontBold
             // 
             this.checkBoxSubtitleFontBold.AutoSize = true;
-            this.checkBoxSubtitleFontBold.Location = new System.Drawing.Point(180, 222);
+            this.checkBoxSubtitleFontBold.Location = new System.Drawing.Point(180, 221);
             this.checkBoxSubtitleFontBold.Name = "checkBoxSubtitleFontBold";
             this.checkBoxSubtitleFontBold.Size = new System.Drawing.Size(47, 17);
             this.checkBoxSubtitleFontBold.TabIndex = 10;
@@ -897,7 +941,7 @@
             this.tabPageVideoPlayer.Location = new System.Drawing.Point(4, 22);
             this.tabPageVideoPlayer.Name = "tabPageVideoPlayer";
             this.tabPageVideoPlayer.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageVideoPlayer.Size = new System.Drawing.Size(798, 389);
+            this.tabPageVideoPlayer.Size = new System.Drawing.Size(798, 411);
             this.tabPageVideoPlayer.TabIndex = 2;
             this.tabPageVideoPlayer.Text = "Video player";
             this.tabPageVideoPlayer.UseVisualStyleBackColor = true;
@@ -909,7 +953,7 @@
             this.groupBoxMainWindowVideoControls.Controls.Add(this.comboBoxCustomSearch);
             this.groupBoxMainWindowVideoControls.Location = new System.Drawing.Point(7, 241);
             this.groupBoxMainWindowVideoControls.Name = "groupBoxMainWindowVideoControls";
-            this.groupBoxMainWindowVideoControls.Size = new System.Drawing.Size(785, 142);
+            this.groupBoxMainWindowVideoControls.Size = new System.Drawing.Size(785, 164);
             this.groupBoxMainWindowVideoControls.TabIndex = 15;
             this.groupBoxMainWindowVideoControls.TabStop = false;
             this.groupBoxMainWindowVideoControls.Text = "Main window video controls";
@@ -1108,7 +1152,7 @@
             this.tabPageWaveForm.Controls.Add(this.groupBoxWaveFormAppearence);
             this.tabPageWaveForm.Location = new System.Drawing.Point(4, 22);
             this.tabPageWaveForm.Name = "tabPageWaveForm";
-            this.tabPageWaveForm.Size = new System.Drawing.Size(798, 389);
+            this.tabPageWaveForm.Size = new System.Drawing.Size(798, 411);
             this.tabPageWaveForm.TabIndex = 6;
             this.tabPageWaveForm.Text = "Wave form";
             this.tabPageWaveForm.UseVisualStyleBackColor = true;
@@ -1119,7 +1163,7 @@
             this.groupBox1.Controls.Add(this.labelWaveFormsFolderInfo);
             this.groupBox1.Location = new System.Drawing.Point(6, 216);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(786, 170);
+            this.groupBox1.Size = new System.Drawing.Size(786, 192);
             this.groupBox1.TabIndex = 3;
             this.groupBox1.TabStop = false;
             // 
@@ -1164,6 +1208,7 @@
             // 
             // panelWaveFormTextColor
             // 
+            this.panelWaveFormTextColor.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panelWaveFormTextColor.Location = new System.Drawing.Point(138, 109);
             this.panelWaveFormTextColor.Name = "panelWaveFormTextColor";
             this.panelWaveFormTextColor.Size = new System.Drawing.Size(21, 20);
@@ -1182,6 +1227,7 @@
             // 
             // panelWaveFormGridColor
             // 
+            this.panelWaveFormGridColor.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panelWaveFormGridColor.Location = new System.Drawing.Point(138, 135);
             this.panelWaveFormGridColor.Name = "panelWaveFormGridColor";
             this.panelWaveFormGridColor.Size = new System.Drawing.Size(21, 20);
@@ -1200,6 +1246,7 @@
             // 
             // panelWaveFormBackgroundColor
             // 
+            this.panelWaveFormBackgroundColor.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panelWaveFormBackgroundColor.Location = new System.Drawing.Point(138, 82);
             this.panelWaveFormBackgroundColor.Name = "panelWaveFormBackgroundColor";
             this.panelWaveFormBackgroundColor.Size = new System.Drawing.Size(21, 20);
@@ -1218,6 +1265,7 @@
             // 
             // panelWaveFormColor
             // 
+            this.panelWaveFormColor.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panelWaveFormColor.Location = new System.Drawing.Point(138, 55);
             this.panelWaveFormColor.Name = "panelWaveFormColor";
             this.panelWaveFormColor.Size = new System.Drawing.Size(21, 20);
@@ -1236,6 +1284,7 @@
             // 
             // panelWaveFormSelectedColor
             // 
+            this.panelWaveFormSelectedColor.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panelWaveFormSelectedColor.Location = new System.Drawing.Point(138, 27);
             this.panelWaveFormSelectedColor.Name = "panelWaveFormSelectedColor";
             this.panelWaveFormSelectedColor.Size = new System.Drawing.Size(21, 20);
@@ -1270,7 +1319,7 @@
             this.tabPageTools.Location = new System.Drawing.Point(4, 22);
             this.tabPageTools.Name = "tabPageTools";
             this.tabPageTools.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageTools.Size = new System.Drawing.Size(798, 389);
+            this.tabPageTools.Size = new System.Drawing.Size(798, 411);
             this.tabPageTools.TabIndex = 5;
             this.tabPageTools.Text = "Tools";
             this.tabPageTools.UseVisualStyleBackColor = true;
@@ -1280,7 +1329,7 @@
             this.groupBoxSpellCheck.Controls.Add(this.checkBoxSpellCheckAutoChangeNames);
             this.groupBoxSpellCheck.Location = new System.Drawing.Point(7, 257);
             this.groupBoxSpellCheck.Name = "groupBoxSpellCheck";
-            this.groupBoxSpellCheck.Size = new System.Drawing.Size(785, 126);
+            this.groupBoxSpellCheck.Size = new System.Drawing.Size(785, 148);
             this.groupBoxSpellCheck.TabIndex = 4;
             this.groupBoxSpellCheck.TabStop = false;
             this.groupBoxSpellCheck.Text = "Spell check";
@@ -1458,7 +1507,7 @@
             this.tabPageWordLists.Location = new System.Drawing.Point(4, 22);
             this.tabPageWordLists.Name = "tabPageWordLists";
             this.tabPageWordLists.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageWordLists.Size = new System.Drawing.Size(798, 389);
+            this.tabPageWordLists.Size = new System.Drawing.Size(798, 411);
             this.tabPageWordLists.TabIndex = 3;
             this.tabPageWordLists.Text = "Word lists";
             this.tabPageWordLists.UseVisualStyleBackColor = true;
@@ -1473,7 +1522,7 @@
             this.groupBoxWordLists.Controls.Add(this.comboBoxWordListLanguage);
             this.groupBoxWordLists.Location = new System.Drawing.Point(6, 6);
             this.groupBoxWordLists.Name = "groupBoxWordLists";
-            this.groupBoxWordLists.Size = new System.Drawing.Size(786, 377);
+            this.groupBoxWordLists.Size = new System.Drawing.Size(786, 399);
             this.groupBoxWordLists.TabIndex = 2;
             this.groupBoxWordLists.TabStop = false;
             this.groupBoxWordLists.Text = "Word lists";
@@ -1487,14 +1536,14 @@
             this.groupBoxOcrFixList.Controls.Add(this.buttonAddOcrFix);
             this.groupBoxOcrFixList.Location = new System.Drawing.Point(510, 43);
             this.groupBoxOcrFixList.Name = "groupBoxOcrFixList";
-            this.groupBoxOcrFixList.Size = new System.Drawing.Size(264, 238);
+            this.groupBoxOcrFixList.Size = new System.Drawing.Size(264, 267);
             this.groupBoxOcrFixList.TabIndex = 6;
             this.groupBoxOcrFixList.TabStop = false;
             this.groupBoxOcrFixList.Text = "OCR fix list";
             // 
             // textBoxOcrFixValue
             // 
-            this.textBoxOcrFixValue.Location = new System.Drawing.Point(82, 208);
+            this.textBoxOcrFixValue.Location = new System.Drawing.Point(82, 238);
             this.textBoxOcrFixValue.Name = "textBoxOcrFixValue";
             this.textBoxOcrFixValue.Size = new System.Drawing.Size(74, 21);
             this.textBoxOcrFixValue.TabIndex = 45;
@@ -1515,7 +1564,7 @@
             this.listBoxOcrFixList.FormattingEnabled = true;
             this.listBoxOcrFixList.Location = new System.Drawing.Point(6, 16);
             this.listBoxOcrFixList.Name = "listBoxOcrFixList";
-            this.listBoxOcrFixList.Size = new System.Drawing.Size(150, 186);
+            this.listBoxOcrFixList.Size = new System.Drawing.Size(150, 212);
             this.listBoxOcrFixList.TabIndex = 40;
             this.listBoxOcrFixList.SelectedIndexChanged += new System.EventHandler(this.ListBoxOcrFixListSelectedIndexChanged);
             this.listBoxOcrFixList.Enter += new System.EventHandler(this.ListBoxSearchReset);
@@ -1523,14 +1572,14 @@
             // 
             // textBoxOcrFixKey
             // 
-            this.textBoxOcrFixKey.Location = new System.Drawing.Point(6, 208);
+            this.textBoxOcrFixKey.Location = new System.Drawing.Point(6, 238);
             this.textBoxOcrFixKey.Name = "textBoxOcrFixKey";
             this.textBoxOcrFixKey.Size = new System.Drawing.Size(74, 21);
             this.textBoxOcrFixKey.TabIndex = 44;
             // 
             // buttonAddOcrFix
             // 
-            this.buttonAddOcrFix.Location = new System.Drawing.Point(162, 206);
+            this.buttonAddOcrFix.Location = new System.Drawing.Point(162, 236);
             this.buttonAddOcrFix.Name = "buttonAddOcrFix";
             this.buttonAddOcrFix.Size = new System.Drawing.Size(75, 23);
             this.buttonAddOcrFix.TabIndex = 46;
@@ -1546,7 +1595,7 @@
             this.groupBoxUserWordList.Controls.Add(this.buttonAddUserWord);
             this.groupBoxUserWordList.Location = new System.Drawing.Point(259, 43);
             this.groupBoxUserWordList.Name = "groupBoxUserWordList";
-            this.groupBoxUserWordList.Size = new System.Drawing.Size(241, 238);
+            this.groupBoxUserWordList.Size = new System.Drawing.Size(241, 267);
             this.groupBoxUserWordList.TabIndex = 4;
             this.groupBoxUserWordList.TabStop = false;
             this.groupBoxUserWordList.Text = "User word list";
@@ -1566,7 +1615,7 @@
             this.listBoxUserWordLists.FormattingEnabled = true;
             this.listBoxUserWordLists.Location = new System.Drawing.Point(3, 16);
             this.listBoxUserWordLists.Name = "listBoxUserWordLists";
-            this.listBoxUserWordLists.Size = new System.Drawing.Size(150, 186);
+            this.listBoxUserWordLists.Size = new System.Drawing.Size(150, 212);
             this.listBoxUserWordLists.TabIndex = 30;
             this.listBoxUserWordLists.SelectedIndexChanged += new System.EventHandler(this.ListBoxUserWordListsSelectedIndexChanged);
             this.listBoxUserWordLists.Enter += new System.EventHandler(this.ListBoxSearchReset);
@@ -1574,7 +1623,7 @@
             // 
             // textBoxUserWord
             // 
-            this.textBoxUserWord.Location = new System.Drawing.Point(3, 209);
+            this.textBoxUserWord.Location = new System.Drawing.Point(3, 238);
             this.textBoxUserWord.Name = "textBoxUserWord";
             this.textBoxUserWord.Size = new System.Drawing.Size(147, 21);
             this.textBoxUserWord.TabIndex = 34;
@@ -1582,7 +1631,7 @@
             // 
             // buttonAddUserWord
             // 
-            this.buttonAddUserWord.Location = new System.Drawing.Point(156, 207);
+            this.buttonAddUserWord.Location = new System.Drawing.Point(156, 236);
             this.buttonAddUserWord.Name = "buttonAddUserWord";
             this.buttonAddUserWord.Size = new System.Drawing.Size(75, 23);
             this.buttonAddUserWord.TabIndex = 36;
@@ -1594,7 +1643,7 @@
             // 
             this.groupBoxWordListLocation.Controls.Add(this.checkBoxNamesEtcOnline);
             this.groupBoxWordListLocation.Controls.Add(this.textBoxNamesEtcOnline);
-            this.groupBoxWordListLocation.Location = new System.Drawing.Point(6, 287);
+            this.groupBoxWordListLocation.Location = new System.Drawing.Point(6, 316);
             this.groupBoxWordListLocation.Name = "groupBoxWordListLocation";
             this.groupBoxWordListLocation.Size = new System.Drawing.Size(774, 77);
             this.groupBoxWordListLocation.TabIndex = 8;
@@ -1627,7 +1676,7 @@
             this.groupBoxNamesIgonoreLists.Controls.Add(this.buttonAddNamesEtc);
             this.groupBoxNamesIgonoreLists.Location = new System.Drawing.Point(6, 43);
             this.groupBoxNamesIgonoreLists.Name = "groupBoxNamesIgonoreLists";
-            this.groupBoxNamesIgonoreLists.Size = new System.Drawing.Size(241, 238);
+            this.groupBoxNamesIgonoreLists.Size = new System.Drawing.Size(241, 267);
             this.groupBoxNamesIgonoreLists.TabIndex = 2;
             this.groupBoxNamesIgonoreLists.TabStop = false;
             this.groupBoxNamesIgonoreLists.Text = "Names/ignore lists";
@@ -1647,7 +1696,7 @@
             this.listBoxNamesEtc.FormattingEnabled = true;
             this.listBoxNamesEtc.Location = new System.Drawing.Point(3, 16);
             this.listBoxNamesEtc.Name = "listBoxNamesEtc";
-            this.listBoxNamesEtc.Size = new System.Drawing.Size(150, 186);
+            this.listBoxNamesEtc.Size = new System.Drawing.Size(150, 212);
             this.listBoxNamesEtc.TabIndex = 20;
             this.listBoxNamesEtc.SelectedIndexChanged += new System.EventHandler(this.ListBoxNamesEtcSelectedIndexChanged);
             this.listBoxNamesEtc.Enter += new System.EventHandler(this.ListBoxSearchReset);
@@ -1655,7 +1704,7 @@
             // 
             // textBoxNameEtc
             // 
-            this.textBoxNameEtc.Location = new System.Drawing.Point(3, 212);
+            this.textBoxNameEtc.Location = new System.Drawing.Point(3, 241);
             this.textBoxNameEtc.Name = "textBoxNameEtc";
             this.textBoxNameEtc.Size = new System.Drawing.Size(151, 21);
             this.textBoxNameEtc.TabIndex = 24;
@@ -1663,7 +1712,7 @@
             // 
             // buttonAddNamesEtc
             // 
-            this.buttonAddNamesEtc.Location = new System.Drawing.Point(160, 209);
+            this.buttonAddNamesEtc.Location = new System.Drawing.Point(160, 238);
             this.buttonAddNamesEtc.Name = "buttonAddNamesEtc";
             this.buttonAddNamesEtc.Size = new System.Drawing.Size(75, 23);
             this.buttonAddNamesEtc.TabIndex = 26;
@@ -1695,7 +1744,7 @@
             this.tabPageSsaStyle.Location = new System.Drawing.Point(4, 22);
             this.tabPageSsaStyle.Name = "tabPageSsaStyle";
             this.tabPageSsaStyle.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageSsaStyle.Size = new System.Drawing.Size(798, 389);
+            this.tabPageSsaStyle.Size = new System.Drawing.Size(798, 411);
             this.tabPageSsaStyle.TabIndex = 1;
             this.tabPageSsaStyle.Text = "SSA style";
             this.tabPageSsaStyle.UseVisualStyleBackColor = true;
@@ -1709,7 +1758,7 @@
             this.groupBoxSsaStyle.Controls.Add(this.buttonSSAChooseFont);
             this.groupBoxSsaStyle.Location = new System.Drawing.Point(6, 6);
             this.groupBoxSsaStyle.Name = "groupBoxSsaStyle";
-            this.groupBoxSsaStyle.Size = new System.Drawing.Size(786, 377);
+            this.groupBoxSsaStyle.Size = new System.Drawing.Size(786, 399);
             this.groupBoxSsaStyle.TabIndex = 0;
             this.groupBoxSsaStyle.TabStop = false;
             this.groupBoxSsaStyle.Text = "Sub Station Alpha style";
@@ -1770,7 +1819,7 @@
             this.tabPageProxy.Location = new System.Drawing.Point(4, 22);
             this.tabPageProxy.Name = "tabPageProxy";
             this.tabPageProxy.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageProxy.Size = new System.Drawing.Size(798, 389);
+            this.tabPageProxy.Size = new System.Drawing.Size(798, 411);
             this.tabPageProxy.TabIndex = 4;
             this.tabPageProxy.Text = "Proxy";
             this.tabPageProxy.UseVisualStyleBackColor = true;
@@ -1782,7 +1831,7 @@
             this.groupBoxProxySettings.Controls.Add(this.labelProxyAddress);
             this.groupBoxProxySettings.Location = new System.Drawing.Point(6, 6);
             this.groupBoxProxySettings.Name = "groupBoxProxySettings";
-            this.groupBoxProxySettings.Size = new System.Drawing.Size(786, 377);
+            this.groupBoxProxySettings.Size = new System.Drawing.Size(786, 399);
             this.groupBoxProxySettings.TabIndex = 1;
             this.groupBoxProxySettings.TabStop = false;
             this.groupBoxProxySettings.Text = "Proxy server settings";
@@ -1870,7 +1919,7 @@
             // labelStatus
             // 
             this.labelStatus.AutoSize = true;
-            this.labelStatus.Location = new System.Drawing.Point(12, 432);
+            this.labelStatus.Location = new System.Drawing.Point(10, 456);
             this.labelStatus.Name = "labelStatus";
             this.labelStatus.Size = new System.Drawing.Size(60, 13);
             this.labelStatus.TabIndex = 3;
@@ -1880,7 +1929,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(831, 464);
+            this.ClientSize = new System.Drawing.Size(831, 484);
             this.Controls.Add(this.labelStatus);
             this.Controls.Add(this.tabControlSettings);
             this.Controls.Add(this.buttonCancel);
@@ -2112,5 +2161,9 @@
         private System.Windows.Forms.CheckBox checkBoxRememberSelectedLine;
         private System.Windows.Forms.ComboBox comboBoxAutoBackup;
         private System.Windows.Forms.Label labelAutoBackup;
+        private System.Windows.Forms.Panel panelSubtitleBackgroundColor;
+        private System.Windows.Forms.Panel panelSubtitleFontColor;
+        private System.Windows.Forms.Label labelSubtitleFontBackgroundColor;
+        private System.Windows.Forms.Label labelSubtitleFontColor;
     }
 }

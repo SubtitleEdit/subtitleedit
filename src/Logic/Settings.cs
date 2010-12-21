@@ -211,12 +211,15 @@ namespace Nikse.SubtitleEdit.Logic
         public string SubtitleFontName { get; set; }
         public int SubtitleFontSize { get; set; }
         public bool SubtitleFontBold { get; set; }
+        public Color SubtitleFontColor { get; set; }
+        public Color SubtitleBackgroundColor { get; set; }
         public bool ShowRecentFiles { get; set; }
         public bool RememberSelectedLine { get; set; }
         public bool StartLoadLastFile { get; set; }
         public bool StartRememberPositionAndSize { get; set; }
         public string StartPosition { get; set; }
         public string StartSize { get; set; }
+        public int StartListViewWidth { get; set; }
         public bool StartInSourceView { get; set; }
         public bool RemoveBlankLinesWhenOpening { get; set; }
         public int SubtitleLineMaximumLength { get; set; }
@@ -258,6 +261,8 @@ namespace Nikse.SubtitleEdit.Logic
 
             SubtitleFontSize = 8;
             SubtitleFontBold = false;
+            SubtitleFontColor = System.Drawing.Color.Black;
+            SubtitleBackgroundColor = System.Drawing.Color.White;
             DefaultEncoding = "UTF-8";
             AutoGuessAnsiEncoding = false;
             ShowRecentFiles = true;
@@ -542,6 +547,12 @@ namespace Nikse.SubtitleEdit.Logic
             subNode = node.SelectSingleNode("SubtitleFontBold");
             if (subNode != null)
                 settings.General.SubtitleFontBold = Convert.ToBoolean(subNode.InnerText);
+            subNode = node.SelectSingleNode("SubtitleFontColor");
+            if (subNode != null)
+                settings.General.SubtitleFontColor = Color.FromArgb(Convert.ToInt32(subNode.InnerText));
+            subNode = node.SelectSingleNode("SubtitleBackgroundColor");
+            if (subNode != null)
+                settings.General.SubtitleBackgroundColor = Color.FromArgb(Convert.ToInt32(subNode.InnerText));
             subNode = node.SelectSingleNode("ShowRecentFiles");
             if (subNode != null)
                 settings.General.ShowRecentFiles = Convert.ToBoolean(subNode.InnerText);
@@ -560,6 +571,9 @@ namespace Nikse.SubtitleEdit.Logic
             subNode = node.SelectSingleNode("StartSize");
             if (subNode != null)
                 settings.General.StartSize = subNode.InnerText;
+            subNode = node.SelectSingleNode("StartListViewWidth");
+            if (subNode != null)
+                settings.General.StartListViewWidth = Convert.ToInt32(subNode.InnerText);            
             subNode = node.SelectSingleNode("StartInSourceView");
             if (subNode != null)
                 settings.General.StartInSourceView = Convert.ToBoolean(subNode.InnerText);
@@ -886,12 +900,15 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("SubtitleFontName", settings.General.SubtitleFontName);
             textWriter.WriteElementString("SubtitleFontSize", settings.General.SubtitleFontSize.ToString());
             textWriter.WriteElementString("SubtitleFontBold", settings.General.SubtitleFontBold.ToString());
+            textWriter.WriteElementString("SubtitleFontColor", settings.General.SubtitleFontColor.ToArgb().ToString());
+            textWriter.WriteElementString("SubtitleBackgroundColor", settings.General.SubtitleBackgroundColor.ToArgb().ToString());
             textWriter.WriteElementString("ShowRecentFiles", settings.General.ShowRecentFiles.ToString());
             textWriter.WriteElementString("RememberSelectedLine", settings.General.RememberSelectedLine.ToString());            
             textWriter.WriteElementString("StartLoadLastFile", settings.General.StartLoadLastFile.ToString());
             textWriter.WriteElementString("StartRememberPositionAndSize", settings.General.StartRememberPositionAndSize.ToString());
             textWriter.WriteElementString("StartPosition", settings.General.StartPosition);
             textWriter.WriteElementString("StartSize", settings.General.StartSize);
+            textWriter.WriteElementString("StartListViewWidth", settings.General.StartListViewWidth.ToString());
             textWriter.WriteElementString("StartInSourceView", settings.General.StartInSourceView.ToString());
             textWriter.WriteElementString("RemoveBlankLinesWhenOpening", settings.General.RemoveBlankLinesWhenOpening.ToString());            
             textWriter.WriteElementString("SubtitleLineMaximumLength", settings.General.SubtitleLineMaximumLength.ToString());

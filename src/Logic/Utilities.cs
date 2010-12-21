@@ -414,6 +414,9 @@ namespace Nikse.SubtitleEdit.Logic
                 control.Font = new System.Drawing.Font(gs.SubtitleFontName, gs.SubtitleFontSize, System.Drawing.FontStyle.Bold);
             else
                 control.Font = new System.Drawing.Font(gs.SubtitleFontName, gs.SubtitleFontSize);
+
+            control.BackColor = gs.SubtitleBackgroundColor;
+            control.ForeColor = gs.SubtitleFontColor;
         }
 
         public static string RemoveHtmlTags(string s)

@@ -44,6 +44,8 @@ namespace Nikse.SubtitleEdit.Controls
             SubtitleFontBold = settings.General.SubtitleFontBold;
             if (settings.General.SubtitleFontSize > 6 && settings.General.SubtitleFontSize < 72)
                 SubtitleFontSize = settings.General.SubtitleFontSize;
+            ForeColor = settings.General.SubtitleFontColor;
+            BackColor = settings.General.SubtitleBackgroundColor;
         }
 
         public SubtitleListView()

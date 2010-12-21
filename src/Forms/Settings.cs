@@ -63,6 +63,8 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxAutoDetectAnsiEncoding.Checked = gs.AutoGuessAnsiEncoding;
             comboBoxSubtitleFontSize.Text = gs.SubtitleFontSize.ToString();
             checkBoxSubtitleFontBold.Checked = gs.SubtitleFontBold;
+            panelSubtitleFontColor.BackColor = gs.SubtitleFontColor;
+            panelSubtitleBackgroundColor.BackColor = gs.SubtitleBackgroundColor;
             checkBoxRememberRecentFiles.Checked = gs.ShowRecentFiles;
             checkBoxRememberRecentFiles_CheckedChanged(null, null);
             checkBoxRememberSelectedLine.Checked = gs.RememberSelectedLine;
@@ -178,6 +180,8 @@ namespace Nikse.SubtitleEdit.Forms
             labelSubMaxLen.Text = language.SubtitleLineMaximumLength;
             labelSubtitleFont.Text = language.SubtitleFont;
             labelSubtitleFontSize.Text = language.SubtitleFontSize;
+            labelSubtitleFontColor.Text = language.SubtitleFontColor;
+            labelSubtitleFontBackgroundColor.Text = language.SubtitleBackgroundColor;
             checkBoxSubtitleFontBold.Text = Configuration.Settings.Language.General.Bold;
             checkBoxRememberRecentFiles.Text = language.RememberRecentFiles;
             checkBoxReopenLastOpened.Text = language.StartWithLastFileLoaded;
@@ -519,6 +523,8 @@ namespace Nikse.SubtitleEdit.Forms
             gs.AutoGuessAnsiEncoding = checkBoxAutoDetectAnsiEncoding.Checked;
             gs.SubtitleFontSize = int.Parse(comboBoxSubtitleFontSize.Text);
             gs.SubtitleFontBold = checkBoxSubtitleFontBold.Checked;
+            gs.SubtitleFontColor = panelSubtitleFontColor.BackColor;
+            gs.SubtitleBackgroundColor = panelSubtitleBackgroundColor.BackColor;
             gs.ShowRecentFiles = checkBoxRememberRecentFiles.Checked;
             gs.RememberSelectedLine = checkBoxRememberSelectedLine.Checked;
             gs.StartLoadLastFile = checkBoxReopenLastOpened.Checked;
@@ -1300,6 +1306,33 @@ namespace Nikse.SubtitleEdit.Forms
         {
             checkBoxReopenLastOpened.Enabled = checkBoxRememberRecentFiles.Checked;
             checkBoxRememberSelectedLine.Enabled = checkBoxRememberRecentFiles.Checked;
+        }
+
+        private void buttonWaveFormSelectedColor_Click(object sender, MouseEventArgs e)
+        {
+            colorDialogSSAStyle.Color = panelWaveFormSelectedColor.BackColor;
+            if (colorDialogSSAStyle.ShowDialog() == DialogResult.OK)
+            {
+                panelWaveFormSelectedColor.BackColor = colorDialogSSAStyle.Color;
+            }
+        }
+
+        private void panelSubtitleFontColor_Click(object sender, EventArgs e)
+        {
+            colorDialogSSAStyle.Color = panelSubtitleFontColor.BackColor;
+            if (colorDialogSSAStyle.ShowDialog() == DialogResult.OK)
+            {
+                panelSubtitleFontColor.BackColor = colorDialogSSAStyle.Color;
+            }
+        }
+
+        private void panelSubtitleBackgroundColor_Click(object sender, EventArgs e)
+        {
+            colorDialogSSAStyle.Color = panelSubtitleBackgroundColor.BackColor;
+            if (colorDialogSSAStyle.ShowDialog() == DialogResult.OK)
+            {
+                panelSubtitleBackgroundColor.BackColor = colorDialogSSAStyle.Color;
+            }
         }
 
     }
