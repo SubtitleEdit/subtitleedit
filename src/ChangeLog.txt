@@ -2,12 +2,22 @@ Subtitle Edit Changelog
 
 3.1 (Not released yet)
  * NEW:
+   * Collaboration via the internet (Networking, also has chat)
    * Auto-backup (never, every minute, every 5th minute, or every 15th minute)
    * Ability to remember the last selected line when re-opening subtitles
+   * Support for the subtitle format "Quicktime text" (two variations) 
+   * Added "Chars/sec" info to textbox in main window 
+   * Options to choose font color and background color (for list view/text-boxes)
  * IMPROVED:
    * Context menu for subtitle textbox now has italic, bold, underline, font name, and color
+   * Updated NHunspell (spell check component) to latest version (0.9.6)
+   * Synchronization Show earlier/later changed a bit, also now has short cut (Ctrl+Shift+D)
+   * Main window: Video will no automatically move up beside subtitle if wave form is displayed + some re-sizing of controls allowed.
  * FIXED:
    * OCR Fix Engine - Lines after "..." will no longer be changed to start with uppercase letter
+   * Fixed missing line break in Sony Dvd Architecht (w line numbers) - thx Rosa 
+   * Fixed a minor bug in initialization of waveform - thx Frederic! 
+   * Fixed a minor bug in Visual Sync, if end scene was after vidoe length
 
 
 3.0 (18th November 2010)
