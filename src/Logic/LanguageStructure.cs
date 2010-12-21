@@ -927,6 +927,8 @@
             public string SubtitleLineMaximumLength { get; set; }
             public string SubtitleFont { get; set; }
             public string SubtitleFontSize { get; set; }
+            public string SubtitleFontColor { get; set; }
+            public string SubtitleBackgroundColor { get; set; }
             public string RememberRecentFiles { get; set; }
             public string StartWithLastFileLoaded { get; set; }
             public string RememberSelectedLine { get; set; }

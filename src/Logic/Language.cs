@@ -990,6 +990,8 @@ namespace Nikse.SubtitleEdit.Logic
                 SubtitleLineMaximumLength = "Single line max. length",
                 SubtitleFont = "Subtitle font",
                 SubtitleFontSize = "Subtitle font size",
+                SubtitleFontColor = "Subtitle font color",
+                SubtitleBackgroundColor = "Subtitle background color",
                 RememberRecentFiles = "Remember recent files (for reopen)",
                 StartWithLastFileLoaded = "Start with last file loaded",
                 RememberSelectedLine = "Remember selected line",

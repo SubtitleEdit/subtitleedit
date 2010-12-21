@@ -176,7 +176,9 @@ namespace Nikse.SubtitleEdit.Forms
 
             UpdateRecentFilesUI();
             InitializeToolbar();
-            InitializeSubtitleFont();
+            Utilities.InitializeSubtitleFont(textBoxSource);
+            Utilities.InitializeSubtitleFont(textBoxListViewText);
+
 
             tabControlSubtitle.SelectTab(TabControlSourceView); // AC
             ShowSourceLineNumber();                             // AC
@@ -389,6 +391,12 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void Main_Load(object sender, EventArgs e)
         {
+            splitContainer1.Panel2MinSize = 250;
+            splitContainer1.Panel1MinSize = 250;
+
+            if (Configuration.Settings.General.StartListViewWidth < 250)
+                Configuration.Settings.General.StartListViewWidth = (Width / 3) * 2;
+
             if (Configuration.Settings.General.StartRememberPositionAndSize &&
                 !string.IsNullOrEmpty(Configuration.Settings.General.StartPosition))
             {
@@ -410,8 +418,9 @@ namespace Nikse.SubtitleEdit.Forms
                 if (Configuration.Settings.General.StartSize == "Maximized")
                 {
                     CenterFormOnCurrentScreen();
-
                     WindowState = FormWindowState.Maximized;
+                    if (!splitContainer1.Panel2Collapsed && Configuration.Settings.General.StartRememberPositionAndSize)
+                        splitContainer1.SplitterDistance = Configuration.Settings.General.StartListViewWidth;
                     return;
                 }
 
@@ -442,6 +451,10 @@ namespace Nikse.SubtitleEdit.Forms
             else
             {
                 CenterFormOnCurrentScreen();
+            }
+            if (!splitContainer1.Panel2Collapsed && Configuration.Settings.General.StartRememberPositionAndSize)
+            {
+                splitContainer1.SplitterDistance = Configuration.Settings.General.StartListViewWidth;
             }
 
             if (Environment.OSVersion.Version.Major < 6) // 6 == Vista/Win2008Server/Win7
@@ -1408,9 +1421,11 @@ namespace Nikse.SubtitleEdit.Forms
         private void ShowSettings()
         {
             string oldListViewLineSeparatorString = Configuration.Settings.General.ListViewLineSeparatorString;
-            string oldSubtitleFontSettings = Configuration.Settings.General.SubtitleFontName + 
+            string oldSubtitleFontSettings = Configuration.Settings.General.SubtitleFontName +
                                           Configuration.Settings.General.SubtitleFontBold +
-                                          Configuration.Settings.General.SubtitleFontSize;
+                                          Configuration.Settings.General.SubtitleFontSize +
+                                          Configuration.Settings.General.SubtitleFontColor.ToArgb().ToString() +
+                                          Configuration.Settings.General.SubtitleBackgroundColor.ToArgb().ToString();
 
 
             var settings = new Settings();
@@ -1423,7 +1438,8 @@ namespace Nikse.SubtitleEdit.Forms
 
             InitializeToolbar();
             UpdateRecentFilesUI();
-            InitializeSubtitleFont();
+            Utilities.InitializeSubtitleFont(textBoxSource);
+            Utilities.InitializeSubtitleFont(textBoxListViewText);
             buttonCustomUrl.Text = Configuration.Settings.VideoControls.CustomSearchText;
             buttonCustomUrl.Enabled = Configuration.Settings.VideoControls.CustomSearchUrl.Length > 1;
 
@@ -1436,12 +1452,17 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (oldSubtitleFontSettings != Configuration.Settings.General.SubtitleFontName + 
                                           Configuration.Settings.General.SubtitleFontBold +
-                                          Configuration.Settings.General.SubtitleFontSize)
+                                          Configuration.Settings.General.SubtitleFontSize +
+                                          Configuration.Settings.General.SubtitleFontColor.ToArgb().ToString() +
+                                          Configuration.Settings.General.SubtitleBackgroundColor.ToArgb().ToString())
             {
                 Utilities.InitializeSubtitleFont(textBoxListViewText);
+                Utilities.InitializeSubtitleFont(textBoxSource);
                 SubtitleListview1.SubtitleFontName = Configuration.Settings.General.SubtitleFontName;
                 SubtitleListview1.SubtitleFontBold = Configuration.Settings.General.SubtitleFontBold;
                 SubtitleListview1.SubtitleFontSize = Configuration.Settings.General.SubtitleFontSize;
+                SubtitleListview1.ForeColor = Configuration.Settings.General.SubtitleFontColor;
+                SubtitleListview1.BackColor = Configuration.Settings.General.SubtitleBackgroundColor;
                 SaveSubtitleListviewIndexes();
                 SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
                 RestoreSubtitleListviewIndexes();
@@ -1462,25 +1483,6 @@ namespace Nikse.SubtitleEdit.Forms
                 _timerAutoSave.Start();
             }
 
-        }
-
-        private void InitializeSubtitleFont()
-        {
-            var gs = Configuration.Settings.General;
-
-            if (string.IsNullOrEmpty(gs.SubtitleFontName))
-                gs.SubtitleFontName = "Tahoma";
-
-            if (gs.SubtitleFontBold)
-            {
-                textBoxSource.Font = new System.Drawing.Font(gs.SubtitleFontName, gs.SubtitleFontSize, System.Drawing.FontStyle.Bold);
-                textBoxListViewText.Font = new System.Drawing.Font(gs.SubtitleFontName, gs.SubtitleFontSize, System.Drawing.FontStyle.Bold);
-            }
-            else
-            {
-                textBoxSource.Font = new System.Drawing.Font(gs.SubtitleFontName, gs.SubtitleFontSize);
-                textBoxListViewText.Font = new System.Drawing.Font(gs.SubtitleFontName, gs.SubtitleFontSize);
-            }
         }
 
         private void TryLoadIcon(ToolStripButton button, string iconName)
@@ -3708,18 +3710,19 @@ namespace Nikse.SubtitleEdit.Forms
                         Configuration.Settings.General.StartSize = "Maximized";
                     else
                         Configuration.Settings.General.StartSize = Width + ";" + Height;
-
-                    //TODO: save in adjust all lines ...Configuration.Settings.General.DefaultAdjustMilliseconds = (int)timeUpDownAdjust.TimeCode.TotalMilliseconds;
-
-                    Configuration.Settings.General.AutoRepeatOn = checkBoxAutoRepeatOn.Checked;
-                    Configuration.Settings.General.AutoContinueOn = checkBoxAutoContinue.Checked;
-                    Configuration.Settings.General.SyncListViewWithVideoWhilePlaying = checkBoxSyncListViewWithVideoWhilePlaying.Checked;
-
-                    if (!string.IsNullOrEmpty(_fileName))
-                        Configuration.Settings.RecentFiles.Add(_fileName, FirstVisibleIndex, FirstSelectedIndex);
-
-                    Configuration.Settings.Save();
+                    Configuration.Settings.General.StartListViewWidth = splitContainer1.SplitterDistance;
                 }
+                else if (Configuration.Settings.General.StartRememberPositionAndSize)
+                {
+                    Configuration.Settings.General.StartListViewWidth = splitContainer1.SplitterDistance;
+                }
+                Configuration.Settings.General.AutoRepeatOn = checkBoxAutoRepeatOn.Checked;
+                Configuration.Settings.General.AutoContinueOn = checkBoxAutoContinue.Checked;
+                Configuration.Settings.General.SyncListViewWithVideoWhilePlaying = checkBoxSyncListViewWithVideoWhilePlaying.Checked;
+                if (!string.IsNullOrEmpty(_fileName))
+                    Configuration.Settings.RecentFiles.Add(_fileName, FirstVisibleIndex, FirstSelectedIndex);
+                Configuration.Settings.Save();
+
             }
         }
 
@@ -5705,43 +5708,41 @@ namespace Nikse.SubtitleEdit.Forms
             if (mediaPlayer != null)
                 mediaPlayer.Pause();
 
-            groupBoxVideo.Visible = false;
-            tabControlSubtitle.Height = this.Height - (tabControlSubtitle.Top + statusStrip1.Height + 38);
+            splitContainer1.Panel2Collapsed = true;
+            splitContainerMain.Panel2Collapsed = true;
         }
 
         private void ShowVideoPlayer()
-        {            
-            groupBoxVideo.Visible = true;
-            groupBoxVideo.Top = statusStrip1.Top - (groupBoxVideo.Height + 5);
-            tabControlSubtitle.Height = groupBoxVideo.Top - (tabControlSubtitle.Top);
-            labelVideoInfo.TextAlign = ContentAlignment.TopRight;
-            labelVideoInfo.Left = groupBoxVideo.Width - (labelVideoInfo.Width + 10);
+        {
+            if (toolStripButtonToogleVideo.Checked && toolStripButtonToogleWaveForm.Checked)
+            {
+                splitContainer1.Panel2Collapsed = false;
+                MoveVideoUp();
+            }
+            else
+            {
+                splitContainer1.Panel2Collapsed = true;
+                MoveVideoDown();
+            }
+
+            splitContainerMain.Panel2Collapsed = false;
             if (toolStripButtonToogleVideo.Checked)
             {
                 if (AudioWaveForm.Visible)
                 {
                     AudioWaveForm.Left = tabControlButtons.Left + tabControlButtons.Width + 5;
-                    panelVideoPlayer.Width = 360;
-                    panelVideoPlayer.Left = this.Width - (360 + 34);
-                    AudioWaveForm.Width = panelVideoPlayer.Left - (AudioWaveForm.Left + 5);
                 }
                 else
                 {
                     panelVideoPlayer.Left = tabControlButtons.Left + tabControlButtons.Width + 5;
-                    int w = this.Width - (panelVideoPlayer.Left + 34);
-                    if (w > 500)
-                        w = 500;
-                    panelVideoPlayer.Width = w; // this.Width - (panelVideoPlayer.Left + 34);
-
-                    labelVideoInfo.TextAlign = ContentAlignment.TopLeft;
-                    labelVideoInfo.Left = checkBoxSyncListViewWithVideoWhilePlaying.Left + checkBoxSyncListViewWithVideoWhilePlaying.Width + 10;
                 }
             }
             else if (AudioWaveForm.Visible)
             {
                 AudioWaveForm.Left = tabControlButtons.Left + tabControlButtons.Width + 5;
-                AudioWaveForm.Width = this.Width - (AudioWaveForm.Left + 34);
             }
+            AudioWaveForm.Width = groupBoxVideo.Width - (AudioWaveForm.Left + 10);
+
             checkBoxSyncListViewWithVideoWhilePlaying.Left = tabControlButtons.Left + tabControlButtons.Width + 5;
             panelWaveFormControls.Left = AudioWaveForm.Left;
             trackBarWaveFormPosition.Left = panelWaveFormControls.Left + panelWaveFormControls.Width + 5;
@@ -5751,14 +5752,37 @@ namespace Nikse.SubtitleEdit.Forms
                 TryToFindAndOpenVideoFile(Path.Combine(Path.GetDirectoryName(_fileName), Path.GetFileNameWithoutExtension(_fileName)));
         }
 
+        private void MoveVideoUp()
+        {
+            if (splitContainer1.Panel2.Controls.Count == 0)
+            {
+                var control = panelVideoPlayer;
+                groupBoxVideo.Controls.Remove(control);
+                splitContainer1.Panel2.Controls.Add(control);
+            }
+            panelVideoPlayer.Top = 0;
+            panelVideoPlayer.Left = 0;
+            panelVideoPlayer.Height = splitContainer1.Panel2.Height - 2;
+            panelVideoPlayer.Width = splitContainer1.Panel2.Width - 2;
+        }
+
+        private void MoveVideoDown()
+        {
+            if (splitContainer1.Panel2.Controls.Count > 0)
+            {
+                var control = panelVideoPlayer;
+                splitContainer1.Panel2.Controls.Clear();
+                groupBoxVideo.Controls.Add(control);
+            }
+            panelVideoPlayer.Top = 26;
+            panelVideoPlayer.Left = tabControlButtons.Left + tabControlButtons.Width + 5;
+            panelVideoPlayer.Height = groupBoxVideo.Height - (panelVideoPlayer.Top + 5);
+            panelVideoPlayer.Width = groupBoxVideo.Width - (panelVideoPlayer.Left + 5);
+        }
+
         private void Main_Resize(object sender, EventArgs e)
         {
-            tabControlSubtitle.Width = this.Width - tabControlSubtitle.Left - 22;
-            if (groupBoxVideo.Visible)
-                ShowVideoPlayer();
-            else
-                HideVideoPlayer();
-            AudioWaveForm.Invalidate();
+            panelVideoPlayer.Invalidate();
         }
 
         private void PlayCurrent()
@@ -6138,17 +6162,24 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void toolStripMenuItemAdjustAllTimes_Click(object sender, EventArgs e)
         {
-            if (_subtitle != null && _subtitle.Paragraphs.Count > 1)
+            if (SubtitleListview1.SelectedItems.Count > 1)
             {
-                mediaPlayer.Pause();
-                _showEarlierOrLater = new ShowEarlierLater();
-                SaveSubtitleListviewIndexes();
-                _showEarlierOrLater.Initialize(ShowEarlierOrLater, false);
-                _showEarlierOrLater.Show(this);
+                ShowSelectedLinesEarlierlaterToolStripMenuItemClick(null, null);
             }
             else
             {
-                MessageBox.Show(_language.NoSubtitleLoaded, Title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                if (_subtitle != null && _subtitle.Paragraphs.Count > 1)
+                {
+                    mediaPlayer.Pause();
+                    _showEarlierOrLater = new ShowEarlierLater();
+                    SaveSubtitleListviewIndexes();
+                    _showEarlierOrLater.Initialize(ShowEarlierOrLater, false);
+                    _showEarlierOrLater.ShowDialog(this);
+                }
+                else
+                {
+                    MessageBox.Show(_language.NoSubtitleLoaded, Title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
             }
         }
 
@@ -6369,27 +6400,28 @@ namespace Nikse.SubtitleEdit.Forms
             if (toolStripButtonToogleVideo.Checked && toolStripButtonToogleWaveForm.Checked )
             {
                 AudioWaveForm.Left = tabControlButtons.Left + tabControlButtons.Width + 5;
-                panelVideoPlayer.Left = AudioWaveForm.Left + AudioWaveForm.Width + 5;
+                //panelVideoPlayer.Left = AudioWaveForm.Left + AudioWaveForm.Width + 5;
             }
             else if (toolStripButtonToogleVideo.Checked)
             {
-                panelVideoPlayer.Left = tabControlButtons.Left + tabControlButtons.Width + 5;
+                //panelVideoPlayer.Left = tabControlButtons.Left + tabControlButtons.Width + 5;
             }
             else
             {
                 AudioWaveForm.Left = tabControlButtons.Left + tabControlButtons.Width + 5;                
             }
+            AudioWaveForm.Width = groupBoxVideo.Width - (AudioWaveForm.Left + 10);
             panelWaveFormControls.Left = AudioWaveForm.Left;
             this.Main_Resize(null, null);
 
 
-            labelVideoInfo.TextAlign = ContentAlignment.TopRight;
-            labelVideoInfo.Left = groupBoxVideo.Width - (labelVideoInfo.Width + 10);
-            if (toolStripButtonToogleVideo.Checked && !AudioWaveForm.Visible)
-            {
-                labelVideoInfo.TextAlign = ContentAlignment.TopLeft;
-                labelVideoInfo.Left = checkBoxSyncListViewWithVideoWhilePlaying.Left + checkBoxSyncListViewWithVideoWhilePlaying.Width + 10;
-            }            
+            //labelVideoInfo.TextAlign = ContentAlignment.TopRight;
+            //labelVideoInfo.Left = groupBoxVideo.Width - (labelVideoInfo.Width + 10);
+            //if (toolStripButtonToogleVideo.Checked && !AudioWaveForm.Visible)
+            //{
+                //labelVideoInfo.TextAlign = ContentAlignment.TopLeft;
+                //labelVideoInfo.Left = checkBoxSyncListViewWithVideoWhilePlaying.Left + checkBoxSyncListViewWithVideoWhilePlaying.Width + 10;
+            //}            
 
             Refresh();
         }
@@ -7220,6 +7252,12 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 foreach (var update in updates)
                 {
+                    if (!string.IsNullOrEmpty(update.Text))
+                    {
+                        if (!update.Text.Contains(Environment.NewLine))
+                            update.Text = update.Text.Replace("\n", Environment.NewLine);
+                        update.Text = update.Text.Replace("<br />", Environment.NewLine);
+                    }
                     if (update.User.Ip != _networkSession.CurrentUser.Ip || update.User.UserName != _networkSession.CurrentUser.UserName)
                     {
                         if (update.Action == "USR")
