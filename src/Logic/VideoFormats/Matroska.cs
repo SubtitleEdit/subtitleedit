@@ -34,7 +34,9 @@ namespace Nikse.SubtitleEdit.Logic
         public string Name { get; set; }
         public string Language { get; set; }
         public string CodecId { get; set; }
-        public string CodecPrivate { get; set; }        
+        public string CodecPrivate { get; set; }
+        public int ContentCompressionAlgorithm { get; set; }
+        public int ContentEncodingType { get; set; } 
     }
         
     public class Matroska
@@ -550,6 +552,9 @@ namespace Nikse.SubtitleEdit.Logic
             string codecId = string.Empty;
             string codecPrivate = string.Empty;
             string biCompression = string.Empty;
+            int contentCompressionAlgorithm = -1;
+            int contentEncodingType = -1;
+
 
             while (f.Position < f.Length && done == false)
             {
@@ -624,6 +629,23 @@ namespace Nikse.SubtitleEdit.Logic
                             biCompression = codecPrivate.Substring(16, 4);
                         f.Seek(afterPosition, SeekOrigin.Begin);
                     }
+                    else if (matroskaId == 0x6D80) // ContentEncodings
+                    {
+                        afterPosition = f.Position + dataSize;
+
+                        contentCompressionAlgorithm = 0; // default value
+                        contentEncodingType = 0; // default value
+
+                        int contentEncoding1  = f.ReadByte();
+                        int contentEncoding2  = f.ReadByte();
+
+                        if (contentEncoding1 == 0x62 && contentEncoding2 == 0x40)
+                        {
+                            AnalyzeMatroskaContentEncoding(afterPosition, ref contentCompressionAlgorithm, ref contentEncodingType);
+                        }
+                        f.Seek(afterPosition, SeekOrigin.Begin);
+                    }
+                        
                     else
                         f.Seek(dataSize, SeekOrigin.Current);
                 }
@@ -642,10 +664,70 @@ namespace Nikse.SubtitleEdit.Logic
                     TrackNumber = trackNumber, 
                     CodecId = codecId, 
                     Language = language,
-                    CodecPrivate = codecPrivate
+                    CodecPrivate = codecPrivate,
+                    ContentEncodingType = contentEncodingType,
+                    ContentCompressionAlgorithm = contentCompressionAlgorithm
                 } );
             }
         }
+
+        private void AnalyzeMatroskaContentEncoding(long endPosition, ref int contentCompressionAlgorithm, ref int contentEncodingType)
+        {
+            bool done = false;
+
+            byte b2 = (byte)f.ReadByte();
+            long sizeOfSize2 = GetMatroskaVariableIntLength(b2);
+            long dataSize2 = GetMatroskaDataSize(sizeOfSize2, b2);
+            long afterposition2 = f.Position + dataSize2;
+
+            while (f.Position < endPosition && done == false)
+            {
+                int ebmlId = f.ReadByte() * 256 + f.ReadByte();
+
+                if (ebmlId == 0)
+                    done = true;
+                else
+                {
+                    if (ebmlId == 0x5031)// ContentEncodingOrder
+                    {
+                        int contentEncodingOrder = f.ReadByte() * 256 + f.ReadByte();
+                        //System.Windows.Forms.MessageBox.Show("ContentEncodingOrder: " + contentEncodingOrder.ToString());
+                    }
+                    else if (ebmlId == 0x5032)// ContentEncodingScope
+                    {
+                        int contentEncodingScope = f.ReadByte() * 256 + f.ReadByte();
+                        //System.Windows.Forms.MessageBox.Show("ContentEncodingScope: " + contentEncodingScope.ToString());
+                    }
+                    else if (ebmlId == 0x5033)// ContentEncodingType
+                    {
+                        contentEncodingType = f.ReadByte() * 256 + f.ReadByte();
+                    }
+                    else if (ebmlId == 0x5034)// ContentCompression
+                    {
+                        byte b = (byte)f.ReadByte();
+                        long sizeOfSize = GetMatroskaVariableIntLength(b);
+                        long dataSize = GetMatroskaDataSize(sizeOfSize, b);
+                        long afterPosition = f.Position + dataSize;
+                        while (f.Position < afterPosition)
+                        {
+                            int contentCompressionId = f.ReadByte() * 256 + f.ReadByte();
+                            if (contentCompressionId == 0x4254)
+                            {
+                                contentCompressionAlgorithm = f.ReadByte() * 256 + f.ReadByte();
+                            }
+                            else if (contentCompressionId == 0x4255)
+                            {
+                                int contentCompSettings = f.ReadByte() * 256 + f.ReadByte();
+                                //System.Windows.Forms.MessageBox.Show("contentCompSettings: " + contentCompSettings.ToString());
+                            }
+                            
+                        }
+                        f.Seek(afterPosition, SeekOrigin.Begin);
+                    }
+                }
+            }
+        }
+
 
         private void AnalyzeMatroskaSegmentInformation(long endPosition)
         {
@@ -830,6 +912,8 @@ namespace Nikse.SubtitleEdit.Logic
                         else if (matroskaId == 0x1F43B675) // cluster
                         {
                             afterPosition = f.Position + dataSize;
+                            if (f.Position > 8000000)
+                                System.Windows.Forms.MessageBox.Show("8mb");
                             AnalyzeMatroskaCluster();
                             f.Seek(afterPosition, SeekOrigin.Begin);
                         }
@@ -904,6 +988,7 @@ namespace Nikse.SubtitleEdit.Logic
             long dataSize;
             long afterPosition;
             long clusterTimeCode = 0;
+            long duration = 0;
 
             while (f.Position < f.Length && done == false)
             {
@@ -927,6 +1012,48 @@ namespace Nikse.SubtitleEdit.Logic
                     {
                         afterPosition = f.Position + dataSize;
                         AnalyzeMatroskaBlock(clusterTimeCode);
+                        f.Seek(afterPosition, SeekOrigin.Begin);
+                    }
+                    else if (matroskaId == 0xA3) // SimpleBlock
+                    {
+                        afterPosition = f.Position + dataSize;
+                        long before = f.Position;
+                        b = (byte)f.ReadByte();
+                        int sizeOftrackNumber = GetMatroskaVariableIntLength(b);
+                        long trackNumber = GetMatroskaDataSize(sizeOftrackNumber, b);
+
+                        if (trackNumber == _subtitleRipTrackNumber)
+                        {
+                            int timeCode = GetInt16();
+
+                            // lacing
+                            byte flags = (byte)f.ReadByte();
+                            byte numberOfFrames = 0;
+                            switch ((flags & 6))  // 6 = 00000110 
+                            {
+                                case 0: System.Diagnostics.Debug.Print("No lacing");   // No lacing
+                                    break;
+                                case 2: System.Diagnostics.Debug.Print("Xiph lacing"); // 2 = 00000010 = Xiph lacing
+                                    numberOfFrames = (byte)f.ReadByte();
+                                    numberOfFrames++;
+                                    break;
+                                case 4: System.Diagnostics.Debug.Print("fixed-size");  // 4 = 00000100 = Fixed-size lacing
+                                    numberOfFrames = (byte)f.ReadByte();
+                                    numberOfFrames++;
+                                    for (int i = 1; i <= numberOfFrames; i++)
+                                        b = (byte)f.ReadByte(); // frames
+                                    break;
+                                case 6: System.Diagnostics.Debug.Print("EBML");        // 6 = 00000110 = EMBL
+                                    numberOfFrames = (byte)f.ReadByte();
+                                    numberOfFrames++;
+                                    break;
+                            }
+
+                            byte[] buffer = new byte[dataSize - (f.Position - before)];
+                            f.Read(buffer, 0, buffer.Length);
+                            _subtitleRip.Add(new SubtitleSequence(buffer, timeCode + clusterTimeCode, timeCode + clusterTimeCode + duration));
+
+                        }
                         f.Seek(afterPosition, SeekOrigin.Begin);
                     }
                     else
@@ -1003,7 +1130,6 @@ namespace Nikse.SubtitleEdit.Logic
                         _subtitleRip.Add(new SubtitleSequence(buffer, timeCode + clusterTimeCode, timeCode + clusterTimeCode + duration));
                     }
                 }
-
 
             }
         }
