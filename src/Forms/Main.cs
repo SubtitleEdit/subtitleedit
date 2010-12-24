@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using System.IO.Compression;
 using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -20,6 +21,7 @@ namespace Nikse.SubtitleEdit.Forms
 {
     public sealed partial class Main : Form
     {
+
         private class ComboBoxZoomItem
         {
             public string Text { get; set; }
@@ -394,7 +396,7 @@ namespace Nikse.SubtitleEdit.Forms
             splitContainer1.Panel1MinSize = 525;
             splitContainer1.Panel2MinSize = 250;
             splitContainerMain.Panel1MinSize = 250;
-            splitContainerMain.Panel2MinSize = 250;
+            splitContainerMain.Panel2MinSize = 200;
 
             if (Configuration.Settings.General.StartListViewWidth < 250)
                 Configuration.Settings.General.StartListViewWidth = (Width / 3) * 2;
@@ -3401,13 +3403,18 @@ namespace Nikse.SubtitleEdit.Forms
                         textBoxListViewText.Text = string.Format("<{0}>{1}</{0}>", tag, textBoxListViewText.Text);
                     }
                     //SubtitleListview1.SetText(i, textBoxListViewText.Text);
-
                 }
                 else
                 {
                     TextBoxListViewToogleTag("i");
                 }
             }
+            if (e.Modifiers == Keys.Control && e.KeyCode == Keys.D)
+            {
+                textBoxListViewText.SelectionLength = 0;
+                e.SuppressKeyPress = true;
+            }
+
 
             // last key down in text
             _lastTextKeyDownTicks = DateTime.Now.Ticks;
@@ -3996,7 +4003,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             if (matroskaSubtitleInfo.CodecId.ToUpper() == "S_HDMV/PGS")
             {
-//                MessageBox.Show("Blu-ray subtitles inside Matroska not supported - sorry!");
+                MessageBox.Show("Blu-ray subtitles inside Matroska not supported - sorry!");
                 LoadBluRaySubFromMatroska(matroskaSubtitleInfo, fileName);
                 return;
             }
@@ -4144,8 +4151,7 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         mergedVobSubPacks.Add(new VobSubMergedPack(p.BinaryData, TimeSpan.FromMilliseconds(p.StartMilliseconds), 32, null));
                     }
-                }
-                
+                }                
 
                 var formSubOcr = new VobSubOcr();
                 formSubOcr.Initialize(mergedVobSubPacks, idx.Palette, Configuration.Settings.VobSubOcr);
@@ -7293,7 +7299,7 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         if (!update.Text.Contains(Environment.NewLine))
                             update.Text = update.Text.Replace("\n", Environment.NewLine);
-                        update.Text = update.Text.Replace("<br />", Environment.NewLine);
+                        update.Text = HttpUtility.HtmlDecode(update.Text).Replace("<br />", Environment.NewLine);
                     }
                     if (update.User.Ip != _networkSession.CurrentUser.Ip || update.User.UserName != _networkSession.CurrentUser.UserName)
                     {
@@ -7545,6 +7551,11 @@ namespace Nikse.SubtitleEdit.Forms
                     _networkChat.WindowState = FormWindowState.Normal;
                 }
             }
+        }
+
+        private void AudioWaveForm_KeyDown(object sender, KeyEventArgs e)
+        {
+
         }
 
      }

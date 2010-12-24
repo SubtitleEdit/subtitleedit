@@ -154,6 +154,11 @@ namespace Nikse.SubtitleEdit.Forms
                 _action = SpellCheckAction.Abort;
                 DialogResult = DialogResult.Cancel;
             }
+            else if (e.KeyCode == Keys.F1)
+            {
+                Utilities.ShowHelp("#spellcheck");
+                e.SuppressKeyPress = true;
+            }
         }
 
         private void ButtonAbortClick(object sender, EventArgs e)
