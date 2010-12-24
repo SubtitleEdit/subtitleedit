@@ -208,6 +208,11 @@ namespace Nikse.SubtitleEdit.Forms
                 GoBackSeconds(-0.1, videoPlayerContainer1.VideoPlayer);
                 e.SuppressKeyPress = true;
             }
+            else if (e.KeyCode == Keys.F1)
+            {
+                Utilities.ShowHelp("#sync");
+                e.SuppressKeyPress = true;
+            }
         }
 
         private void GetTime_FormClosing(object sender, FormClosingEventArgs e)

@@ -135,6 +135,11 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (e.KeyCode == Keys.Escape)
                 DialogResult = DialogResult.Cancel;
+            else if (e.KeyCode == Keys.F1)
+            {
+                Utilities.ShowHelp("#waveform");
+                e.SuppressKeyPress = true;
+            }
         }
 
         private void buttonCancel_Click(object sender, EventArgs e)

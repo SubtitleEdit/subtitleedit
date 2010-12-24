@@ -1498,7 +1498,10 @@ namespace Nikse.SubtitleEdit.Forms
         private void VobSubOcr_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.F1)
+            {
                 Utilities.ShowHelp("#importvobsub");
+                e.SuppressKeyPress = true;
+            }
             else if (e.KeyCode == Keys.Down && e.Modifiers == Keys.Alt)
             {
                 int selectedIndex = 0;

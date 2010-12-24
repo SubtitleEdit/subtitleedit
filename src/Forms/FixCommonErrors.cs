@@ -1073,7 +1073,17 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     while (match.Success)
                     {
-                        if ("\"<".Contains(p.Text[match.Index + 2].ToString()) == false)
+                        int start = match.Index;
+                        start -= 4;
+                        if (start < 0)
+                            start = 0;
+                        int indexOfStartCodeTag = p.Text.IndexOf('{', start);
+                        int indexOfEndCodeTag = p.Text.IndexOf('}', start);
+                        if (indexOfStartCodeTag >= 0 && indexOfEndCodeTag >= 0 && indexOfStartCodeTag < match.Index)
+                        {
+                            // we are inside a tag: like indexOfEndCodeTag "{y:i}Is this italic?"
+                        }
+                        else if ("\"<".Contains(p.Text[match.Index + 2].ToString()) == false)
                         {
                             if (AllowFix(i + 1, fixAction))
                             {
@@ -1292,11 +1302,17 @@ namespace Nikse.SubtitleEdit.Forms
                                     {
                                         if ((Utilities.GetLetters(true, true, true) + ",").Contains(st.StrippedText[match.Index - 2].ToString()))
                                         {
-                                            st.StrippedText = st.StrippedText.Remove(match.Index, 1).Insert(match.Index, "l");
-                                            p.Text = st.MergedString;
-                                            uppercaseIsInsideLowercaseWords++;
-                                            _totalFixes++;
-                                            AddFixToListView(p, i + 1, fixAction, oldText, p.Text);
+                                            string secondLetter = string.Empty;
+                                            if (match.Length >= 2)
+                                                secondLetter = match.Value.Substring(1,1);
+                                            if (Utilities.LowerCaseVowels.Contains(secondLetter.ToLower()))
+                                            {
+                                                st.StrippedText = st.StrippedText.Remove(match.Index, 1).Insert(match.Index, "l");
+                                                p.Text = st.MergedString;
+                                                uppercaseIsInsideLowercaseWords++;
+                                                _totalFixes++;
+                                                AddFixToListView(p, i + 1, fixAction, oldText, p.Text);
+                                            }
                                         }
                                     }
                                     else if (match.Index > Environment.NewLine.Length + 1 && Environment.NewLine.Contains(st.StrippedText[match.Index - 1].ToString()))
@@ -1315,11 +1331,29 @@ namespace Nikse.SubtitleEdit.Forms
                                     }
                                     else 
                                     {
-                                        st.StrippedText = st.StrippedText.Remove(match.Index, 1).Insert(match.Index, "l");
-                                        p.Text = st.MergedString;
-                                        uppercaseIsInsideLowercaseWords++;
-                                        _totalFixes++;
-                                        AddFixToListView(p, i + 1, fixAction, oldText, p.Text);
+                                        string before = string.Empty;
+                                        string after = string.Empty;
+                                        if (match.Index > 0)
+                                            before = st.StrippedText.Substring(match.Index -1, 1);
+                                        if (match.Index < st.StrippedText.Length - 2)
+                                            after = st.StrippedText.Substring(match.Index + 1, 1);
+                                        if (before.Length == 1 && before != before.ToLower() && after.Length == 1 && after != after.ToUpper() &&
+                                            !Utilities.LowerCaseVowels.Contains(before.ToLower()) && !Utilities.LowerCaseVowels.Contains(after.ToLower()))
+                                        {
+                                            st.StrippedText = st.StrippedText.Remove(match.Index, 1).Insert(match.Index, "i");
+                                            p.Text = st.MergedString;
+                                            uppercaseIsInsideLowercaseWords++;
+                                            _totalFixes++;
+                                            AddFixToListView(p, i + 1, fixAction, oldText, p.Text);
+                                        }
+                                        else
+                                        {
+                                            st.StrippedText = st.StrippedText.Remove(match.Index, 1).Insert(match.Index, "l");
+                                            p.Text = st.MergedString;
+                                            uppercaseIsInsideLowercaseWords++;
+                                            _totalFixes++;
+                                            AddFixToListView(p, i + 1, fixAction, oldText, p.Text);
+                                        }
                                     }
                                 }
 
@@ -1378,7 +1412,7 @@ namespace Nikse.SubtitleEdit.Forms
                     p.Text.Length > 0 &&
                     (!"\",.!?:;>-])♪♫".Contains(p.Text[p.Text.Length - 1].ToString())))
                 {
-                    if (!p.Text.EndsWith(")") && !p.Text.EndsWith("]")) // hear impaired
+                    if (!p.Text.EndsWith(")") && !p.Text.EndsWith("]") && !p.Text.EndsWith("*") && !p.Text.EndsWith("¶")) // hear impaired
                     {
                         if (p.Text != p.Text.ToUpper())
                         {
@@ -1677,7 +1711,6 @@ namespace Nikse.SubtitleEdit.Forms
                                 fixedStartWithUppercaseLetterAfterParagraphTicked++;
                                 AddFixToListView(p, i + 1, fixAction2, oldText, p.Text);
                             }
-
                         }
                     }
 
@@ -1825,7 +1858,7 @@ namespace Nikse.SubtitleEdit.Forms
                                     prev = s[match.Index - 1].ToString();
                                 if (match.Index + 1 < s.Length)
                                     next = s[match.Index + 1].ToString();
-                                if (prev != ">" && next != ">")
+                                if (prev != ">" && next != ">" && next != "}")
                                 {
                                     string temp = s.Substring(0, match.Index) + "I";
                                     if (match.Index + 1 < oldText.Length)
@@ -2211,10 +2244,12 @@ namespace Nikse.SubtitleEdit.Forms
                                  MyRegEx(@"\bdet har i\b"), 
                                  MyRegEx(@"\bDet må i "), 
                                  MyRegEx(@"\bdet må i "), 
+                                 MyRegEx(@"\b[Dd]et Det kan i sgu"),                                  
                                  MyRegEx(@"\bend i aner\b"), 
                                  MyRegEx(@"\bend i tror\b"), 
                                  MyRegEx(@"\bend i ved\b"), 
-                                 MyRegEx(@"\ber i alle\b"), 
+                                 MyRegEx(@"\b, er i alle\b"), 
+                                 MyRegEx(@"\bellers får i "),                                  
                                  MyRegEx(@"\bEr i alle\b"), 
                                  MyRegEx(@"\ber i allerede\b"), 
                                  MyRegEx(@"\bEr i allerede\b"), 
@@ -2309,6 +2344,8 @@ namespace Nikse.SubtitleEdit.Forms
                                  MyRegEx(@"\b[Gg]iver i mig\b"),
                                  MyRegEx(@"\bglor i på\b"),
                                  MyRegEx(@"\bGlor i på\b"),
+                                 MyRegEx(@"\b[Gg]lor i allesammen på\b"),
+                                 MyRegEx(@"\b[Gg]lor i alle på\b"),
                                  MyRegEx(@"\bGår i ind\b"),
                                  MyRegEx(@"\bgår i ind\b"),
                                  MyRegEx(@"\b[Gg]å i bare\b"),
@@ -2335,6 +2372,8 @@ namespace Nikse.SubtitleEdit.Forms
                                  MyRegEx(@"\bhelvede vil i?"),
                                  MyRegEx(@"\bHer har i\b"),
                                  MyRegEx(@"\bher har i\b"),
+                                 MyRegEx(@"\b[Hh]older i fast\b"),
+                                 MyRegEx(@"\b[Hh]older i godt fast\b"),
                                  MyRegEx(@"\bHvad fanden har i\b"), 
                                  MyRegEx(@"\bhvad fanden har i\b"), 
                                  MyRegEx(@"\bHvad fanden tror i\b"), 
@@ -2411,7 +2450,9 @@ namespace Nikse.SubtitleEdit.Forms
                                  MyRegEx(@"\b[Hh]vornår skal i "), 
                                  MyRegEx(@"\b[Hh]vornår skulle i "), 
                                  MyRegEx(@"\b[Hh]ører i på\b"),                                 
-                                 MyRegEx(@"\b[Hh]ørte i på\b"),                                 
+                                 MyRegEx(@"\b[Hh]ørte i på\b"),  
+                                 MyRegEx(@"\b[Hh]ører i,\b"),  
+                                 MyRegEx(@"\b[Hh]ører i ikke\b"),  
                                  MyRegEx(@"\bi altid\b"),
                                  MyRegEx(@"\bi ankomme\b"),
                                  MyRegEx(@"\bi ankommer\b"),
@@ -2536,13 +2577,19 @@ namespace Nikse.SubtitleEdit.Forms
                                  MyRegEx(@"\b[Ll]eder i efter\b"), 
                                  MyRegEx(@"\b[Ll]aver i ikke\b"), 
                                  MyRegEx(@"\blaver i her\b"), 
+                                 MyRegEx(@"\b[Ll]igner i far\b"), 
+                                 MyRegEx(@"\b[Ll]igner i hinanden\b"), 
+                                 MyRegEx(@"\b[Ll]igner i mor\b"), 
                                  MyRegEx(@"\bLover i\b"), 
+                                 MyRegEx(@"\b[Ll]ykkes i med\b"),                                  
+                                 MyRegEx(@"\b[Ll]ykkedes i med\b"),                                  
                                  MyRegEx(@"\b[Ll]øb i hellere\b"),                                  
                                  MyRegEx(@"\b[Mm]ødte i "),
                                  MyRegEx(@"\b[Mm]angler i en\b"), 
                                  MyRegEx(@"\b[Mm]en i gutter\b"),
                                  MyRegEx(@"\b[Mm]en i drenge\b"),
                                  MyRegEx(@"\b[Mm]en i fyre\b"),
+                                 MyRegEx(@"\b[Mm]en i står\b"),                                 
                                  MyRegEx(@"\b[Mm]ener i at\b"),
                                  MyRegEx(@"\b[Mm]ener i det\b"),
                                  MyRegEx(@"\b[Mm]ener i virkelig\b"),
@@ -2576,10 +2623,13 @@ namespace Nikse.SubtitleEdit.Forms
                                  MyRegEx(@"\b[Ss]ikre på i ikke\b"),
                                  MyRegEx(@"\b[Ss]kal i alle\b"), 
                                  MyRegEx(@"\b[Ss]kal i allesammen\b"), 
+                                 MyRegEx(@"\b[Ss]kal i begge dø\b"), 
                                  MyRegEx(@"\b[Ss]kal i bare\b"), 
                                  MyRegEx(@"\b[Ss]kal i dele\b"), 
+                                 MyRegEx(@"\b[Ss]kal i dø\b"), 
                                  MyRegEx(@"\b[Ss]kal i fordele\b"), 
                                  MyRegEx(@"\b[Ss]kal i fordeles\b"), 
+                                 MyRegEx(@"\b[Ss]kal i fortælle\b"),                                  
                                  MyRegEx(@"\b[Ss]kal i gøre\b"), 
                                  MyRegEx(@"\b[Ss]kal i have\b"), 
                                  MyRegEx(@"\b[Ss]kal i ikke\b"), 
@@ -2648,7 +2698,8 @@ namespace Nikse.SubtitleEdit.Forms
                                  MyRegEx(@"\b[Vv]ed i tror\b"),
                                  MyRegEx(@"\b[Vv]enter i på\b"),
                                  MyRegEx(@"\b[Vv]il i besegle\b"),
-                                 MyRegEx(@"\b[Vv]il i dræbe\b"),
+                                 MyRegEx(@"\b[Vv]il i dræbe\b"),                                 
+                                 MyRegEx(@"\b[Vv]il i fjerne\b"),
                                  MyRegEx(@"\b[Vv]il i fortryde\b"),
                                  MyRegEx(@"\b[Vv]il i gerne\b"),
                                  MyRegEx(@"\b[Vv]il i godt\b"),
@@ -2690,7 +2741,9 @@ namespace Nikse.SubtitleEdit.Forms
                                  MyRegEx(@"\bville i tage\b"),
                                  MyRegEx(@"\bville i tro\b"),
                                  MyRegEx(@"\bville i være\b"),
-                                 MyRegEx(@"\bville i være\b"),                            
+                                 MyRegEx(@"\bville i være\b"),
+                                 MyRegEx(@"\b[Vv]iste i, at\b"),
+                                 MyRegEx(@"\b[Vv]iste i at\b"),                            
                                  MyRegEx(@"\bvover i\b"),                            
                           
                              };
@@ -2790,198 +2843,6 @@ namespace Nikse.SubtitleEdit.Forms
 
                 FixSpanishInvertedLetter("?", "¿", p, last, ref wasLastLineClosed, i, fixAction, ref fixCount);
                 FixSpanishInvertedLetter("!", "¡", p, last, ref wasLastLineClosed, i, fixAction, ref fixCount);
-                //if (p.Text.Contains("?"))
-                //{
-                //    bool skip = false;
-                //    if (last != null && p.Text.Contains("?") && !p.Text.Contains("¿") && last.Text.Contains("¿") && !last.Text.Contains("?"))
-                //        skip = true;
-
-                //    if (!skip)
-                //    {
-                //        int startIndex = 0;
-                //        int questionMarkIndex = p.Text.IndexOf("?");
-                //        if (!wasLastLineClosed && ((p.Text.IndexOf("!") > 0 && p.Text.IndexOf("!") < questionMarkIndex) ||
-                //                                   (p.Text.IndexOf("?") > 0 && p.Text.IndexOf("?") < questionMarkIndex) ||
-                //                                   (p.Text.IndexOf(".") > 0 && p.Text.IndexOf(".") < questionMarkIndex)))
-                //            wasLastLineClosed = true;
-                //        while (questionMarkIndex > 0 && startIndex < p.Text.Length)
-                //        {
-                //            int inverseQuestionMarkIndex = p.Text.IndexOf("¿", startIndex);
-                //            if (wasLastLineClosed && (inverseQuestionMarkIndex == -1 || inverseQuestionMarkIndex > questionMarkIndex))
-                //            {
-                //                if (AllowFix(i + 1, fixAction))
-                //                {
-                //                    int j = questionMarkIndex - 1;
-
-                //                    while (j > startIndex && (p.Text[j] == '.' || p.Text[j] == '!' || p.Text[j] == '?'))
-                //                        j--;
-
-                //                    while (j > startIndex && p.Text[j] != '.' && p.Text[j] != '!' && p.Text[j] != '?' &&
-                //                           !(j > 3 && p.Text.Substring(j - 3, 3) == Environment.NewLine + "-") &&
-                //                           !(j > 4 && p.Text.Substring(j - 4, 4) == Environment.NewLine + " -") &&
-                //                           !(j > 6 && p.Text.Substring(j - 6, 6) == Environment.NewLine + "<i>-"))
-                //                        j--;
-
-                //                    if (".!?".Contains(p.Text[j].ToString()))
-                //                    {
-                //                        j++;
-                //                    }
-                //                    if (j + 3 < p.Text.Length && p.Text.Substring(j + 1, 2) == Environment.NewLine)
-                //                    {
-                //                        j += 3;
-                //                    }
-                //                    else if (j + 2 < p.Text.Length && p.Text.Substring(j, 2) == Environment.NewLine)
-                //                    {
-                //                        j += 2;
-                //                    }
-                //                    if (j >= startIndex)
-                //                    {
-                //                        string part = p.Text.Substring(j, questionMarkIndex - j + 1);
-
-                //                        string speaker = string.Empty;
-                //                        int speakerEnd = part.IndexOf(")");
-                //                        if (part.StartsWith("(") && speakerEnd > 0 && speakerEnd < part.IndexOf("?"))
-                //                        {
-                //                            while (Environment.NewLine.Contains(part[speakerEnd + 1].ToString()))
-                //                                speakerEnd++;
-                //                            speaker = part.Substring(0, speakerEnd + 1);
-                //                            part = part.Substring(speakerEnd + 1);
-                //                        }
-                //                        speakerEnd = part.IndexOf("]");
-                //                        if (part.StartsWith("[") && speakerEnd > 0 && speakerEnd < part.IndexOf("?"))
-                //                        {
-                //                            while (Environment.NewLine.Contains(part[speakerEnd + 1].ToString()))
-                //                                speakerEnd++;
-                //                            speaker = part.Substring(0, speakerEnd + 1);
-                //                            part = part.Substring(speakerEnd + 1);
-                //                        }
-
-                //                        StripableText st = new StripableText(part);
-                //                        p.Text = p.Text.Remove(j, questionMarkIndex - j + 1).Insert(j, speaker + st.Pre + "¿" + st.StrippedText + st.Post);
-                //                    }
-                //                }
-                //            }
-                //            else if (last != null && !wasLastLineClosed && inverseQuestionMarkIndex == p.Text.IndexOf("?") && !last.Text.Contains("¿"))
-                //            {
-                //                string lastOldtext = last.Text;
-                //                int idx = last.Text.Length - 2;
-                //                while (idx > 0 && (last.Text.Substring(idx, 2) != ". ") && (last.Text.Substring(idx, 2) != "! ") && (last.Text.Substring(idx, 2) != "? "))
-                //                    idx--;
-
-                //                last.Text = last.Text.Insert(idx, "¿");
-                //                fixCount++;
-                //                _totalFixes++;
-                //                AddFixToListView(p, i, fixAction, lastOldtext, last.Text);
-                //            }
-
-                //            startIndex = questionMarkIndex + 2;
-                //            if (startIndex < p.Text.Length)
-                //                questionMarkIndex = p.Text.IndexOf("?", startIndex);
-                //            else
-                //                questionMarkIndex = -1;
-                //            wasLastLineClosed = true;
-                //        }
-                //    }
-                //    if (p.Text.EndsWith("?...") && p.Text.Length > 4)
-                //    {
-                //        p.Text = p.Text.Remove(p.Text.Length - 4, 4) + "...?";
-                //    }
-                //}
-                //if (p.Text.Contains("!"))
-                //{
-                //    bool skip = false;
-                //    if (last != null && p.Text.Contains("!") && !p.Text.Contains("¡") && last.Text.Contains("¡") && !last.Text.Contains("!"))
-                //        skip = true;
-
-                //    if (!skip)
-                //    {
-                //        int startIndex = 0;
-                //        int exclamationMarkIndex = p.Text.IndexOf("!");
-                //        while (exclamationMarkIndex > 0 && startIndex < p.Text.Length)
-                //        {
-                //            int inversExclamationMarkIndex = p.Text.IndexOf("¡", startIndex);
-                //            if (wasLastLineClosed && (inversExclamationMarkIndex == -1 || inversExclamationMarkIndex > exclamationMarkIndex))
-                //            {
-                //                if (AllowFix(i + 1, fixAction))
-                //                {
-
-                //                    int j = exclamationMarkIndex - 1;
-
-                //                    while (j > startIndex && (p.Text[j] == '.' || p.Text[j] == '!' || p.Text[j] == '?'))
-                //                        j--;
-
-                //                    while (j > startIndex && p.Text[j] != '.' && p.Text[j] != '!' && p.Text[j] != '?' &&
-                //                           !(j > 3 && p.Text.Substring(j - 3, 3) == Environment.NewLine + "-") &&
-                //                           !(j > 4 && p.Text.Substring(j - 4, 4) == Environment.NewLine + " -") &&
-                //                           !(j > 6 && p.Text.Substring(j - 6, 6) == Environment.NewLine + "<i>-"))
-                //                    {
-                //                        j--;
-                //                    }
-                //                    if (".!?".Contains(p.Text[j].ToString()))
-                //                    {
-                //                        j++;
-                //                    }
-                //                    if (j + 3 < p.Text.Length && p.Text.Substring(j + 1, 2) == Environment.NewLine)
-                //                    {
-                //                        j += 3;
-                //                    }
-                //                    else if (j + 2 < p.Text.Length && p.Text.Substring(j, 2) == Environment.NewLine)
-                //                    {
-                //                        j += 2;
-                //                    }
-                //                    if (j >= startIndex)
-                //                    {
-                //                        string part = p.Text.Substring(j, exclamationMarkIndex - j + 1);
-
-                //                        string speaker = string.Empty;
-                //                        int speakerEnd = part.IndexOf(")");
-                //                        if (part.StartsWith("(") && speakerEnd > 0 && speakerEnd < part.IndexOf("!"))
-                //                        {
-                //                            while (Environment.NewLine.Contains(part[speakerEnd + 1].ToString()))
-                //                                speakerEnd++;
-                //                            speaker = part.Substring(0, speakerEnd + 1);
-                //                            part = part.Substring(speakerEnd + 1);
-                //                        }
-                //                        speakerEnd = part.IndexOf("]");
-                //                        if (part.StartsWith("[") && speakerEnd > 0 && speakerEnd < part.IndexOf("!"))
-                //                        {
-                //                            while (Environment.NewLine.Contains(part[speakerEnd + 1].ToString()))
-                //                                speakerEnd++;
-                //                            speaker = part.Substring(0, speakerEnd + 1);
-                //                            part = part.Substring(speakerEnd + 1);
-                //                        }
-
-                //                        StripableText st = new StripableText(part);
-                //                        p.Text = p.Text.Remove(j, exclamationMarkIndex - j + 1).Insert(j, speaker + st.Pre + "¡" + st.StrippedText + st.Post);
-                //                    }
-                //                }
-                //            }
-                //            else if (last != null && !wasLastLineClosed && exclamationMarkIndex == p.Text.IndexOf("!") && !last.Text.Contains("¡"))
-                //            {
-                //                string lastOldtext = last.Text;
-                //                int idx = last.Text.Length - 2;
-                //                while (idx > 0 && (last.Text.Substring(idx, 2) != ". ") && (last.Text.Substring(idx, 2) != "! ") && (last.Text.Substring(idx, 2) != "? "))
-                //                    idx--;
-
-                //                last.Text = last.Text.Insert(idx, "¡");
-                //                fixCount++;
-                //                _totalFixes++;
-                //                AddFixToListView(p, i, fixAction, lastOldtext, last.Text);
-
-                //            }
-                //            startIndex = exclamationMarkIndex + 2;
-                //            if (startIndex < p.Text.Length)
-                //                exclamationMarkIndex = p.Text.IndexOf("!", startIndex);
-                //            else
-                //                exclamationMarkIndex = -1;
-                //            wasLastLineClosed = true;
-                //        } 
-                //    }
-                //    if (p.Text.EndsWith("!...") && p.Text.Length > 4)
-                //    {
-                //        p.Text = p.Text.Remove(p.Text.Length - 4, 4) + "...!";
-                //    }
-                //}
 
                 if (p.Text != oldText)
                 {

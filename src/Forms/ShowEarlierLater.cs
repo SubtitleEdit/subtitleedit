@@ -31,6 +31,11 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 DialogResult = DialogResult.Cancel;
             }
+            else if (e.KeyCode == Keys.F1)
+            {
+                Utilities.ShowHelp("#sync");
+                e.SuppressKeyPress = true;
+            }
         }
 
         internal void Initialize(AdjustEventHandler adjustCallback, bool onlySelected)

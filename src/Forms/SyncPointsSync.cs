@@ -139,6 +139,11 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (e.KeyCode == Keys.Escape)
                 DialogResult = DialogResult.Cancel;
+            else if (e.KeyCode == Keys.F1)
+            {
+                Utilities.ShowHelp("#sync");
+                e.SuppressKeyPress = true;
+            }
         }
 
         private void Sync(int startIndex, int endIndex, int minIndex, int maxIndex, double startPos, double endPos)
