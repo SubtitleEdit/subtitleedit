@@ -752,7 +752,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             string line = GetStringWithItalicTags(matches);
             if (checkBoxAutoFixCommonErrors.Checked)
-                line = OcrFixEngine.FixOcrErrorsViaHardcodedRules(line, _lastLine);
+                line = OcrFixEngine.FixOcrErrorsViaHardcodedRules(line, _lastLine, null); // TODO: add abbreviations list
             return line;
         }
 
