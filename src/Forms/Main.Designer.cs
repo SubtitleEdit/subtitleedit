@@ -1353,7 +1353,7 @@
             this.leaveSessionToolStripMenuItem.Name = "leaveSessionToolStripMenuItem";
             this.leaveSessionToolStripMenuItem.Size = new System.Drawing.Size(215, 22);
             this.leaveSessionToolStripMenuItem.Text = "Leave session";
-            this.leaveSessionToolStripMenuItem.Click += new System.EventHandler(this.leaveSessionToolStripMenuItem_Click);
+            this.leaveSessionToolStripMenuItem.Click += new System.EventHandler(this.LeaveSessionToolStripMenuItemClick);
             // 
             // helpToolStripMenuItem
             // 

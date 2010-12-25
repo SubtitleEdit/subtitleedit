@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
-using System.IO.Compression;
 using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -6313,7 +6312,12 @@ namespace Nikse.SubtitleEdit.Forms
                 }
 
                 trackBarWaveFormPosition.ValueChanged -= trackBarWaveFormPosition_ValueChanged;
-                trackBarWaveFormPosition.Value = (int)mediaPlayer.CurrentPosition;
+                int value = (int)mediaPlayer.CurrentPosition;
+                if (value > trackBarWaveFormPosition.Maximum)
+                    value = trackBarWaveFormPosition.Maximum;
+                if (value < trackBarWaveFormPosition.Minimum)
+                    value = trackBarWaveFormPosition.Minimum;
+                trackBarWaveFormPosition.Value = value;
                 trackBarWaveFormPosition.ValueChanged += trackBarWaveFormPosition_ValueChanged;
             }
         }
@@ -7185,7 +7189,7 @@ namespace Nikse.SubtitleEdit.Forms
             ShowStatus(message);
         }
 
-
+        #region Networking
         private void startServerToolStripMenuItem_Click(object sender, EventArgs e)
         {
             _networkSession = new NikseWebServiceSession(_subtitle, _subtitleAlternate, TimerWebServiceTick, OnUpdateUserLogEntries);
@@ -7291,6 +7295,10 @@ namespace Nikse.SubtitleEdit.Forms
             SubtitleListview1.SelectedIndexChanged -= SubtitleListview1_SelectedIndexChanged;
             string message;
             var updates = _networkSession.GetUpdates(out message);
+            int currentSelectedIndex = -1;
+            if (SubtitleListview1.SelectedItems.Count > 0)
+                currentSelectedIndex = SubtitleListview1.SelectedItems[0].Index;
+            int oldCurrentSelectedIndex = currentSelectedIndex; 
             if (message == "OK")
             {
                 foreach (var update in updates)
@@ -7351,6 +7359,8 @@ namespace Nikse.SubtitleEdit.Forms
 
                             if (insertIndex > update.Index)
                                 insertIndex--;
+                            if (currentSelectedIndex >= 0 && currentSelectedIndex > update.Index)
+                                currentSelectedIndex--;
                         }
                         else if (update.Action == "INS")
                         {
@@ -7376,6 +7386,8 @@ namespace Nikse.SubtitleEdit.Forms
                             }
                             if (insertIndex > update.Index)
                                 insertIndex++;
+                            if (currentSelectedIndex >= 0 && currentSelectedIndex > update.Index)
+                                currentSelectedIndex++;
                         }
                         else if (update.Action == "UPD")
                         {
@@ -7455,7 +7467,7 @@ namespace Nikse.SubtitleEdit.Forms
             else
             {
                 MessageBox.Show(message);
-                leaveSessionToolStripMenuItem_Click(null, null);
+                LeaveSessionToolStripMenuItemClick(null, null);
                 SubtitleListview1.SelectedIndexChanged += SubtitleListview1_SelectedIndexChanged;
                 return;
             }
@@ -7463,8 +7475,15 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 _subtitle.Renumber(1);
                 SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
-                UpdateListviewwithUserLogEntries();
-                if (_oldSelectedParagraph != null)
+                UpdateListviewWithUserLogEntries();
+
+                if (oldCurrentSelectedIndex != currentSelectedIndex)
+                {
+                    _oldSelectedParagraph = null;
+                    _subtitleListViewIndex = currentSelectedIndex;
+                    SubtitleListview1.SelectIndexAndEnsureVisible(_subtitleListViewIndex);
+                }
+                else if (_oldSelectedParagraph != null)
                 {
                     Paragraph p = _subtitle.GetFirstAlike(_oldSelectedParagraph);
                     if (p != null)
@@ -7476,14 +7495,14 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (updateListViewStatus)
             {
-                UpdateListviewwithUserLogEntries();
+                UpdateListviewWithUserLogEntries();
             }
             _networkSession.LastSubtitle = new Subtitle(_subtitle);
             SubtitleListview1.SelectedIndexChanged += SubtitleListview1_SelectedIndexChanged;
             _networkSession.TimerStart();
         }
 
-        private void UpdateListviewwithUserLogEntries()
+        private void UpdateListviewWithUserLogEntries()
         {
             SubtitleListview1.BeginUpdate();
             foreach (UpdateLogEntry entry in _networkSession.UpdateLog)
@@ -7491,7 +7510,7 @@ namespace Nikse.SubtitleEdit.Forms
             SubtitleListview1.EndUpdate();
         }
 
-        private void leaveSessionToolStripMenuItem_Click(object sender, EventArgs e)
+        private void LeaveSessionToolStripMenuItemClick(object sender, EventArgs e)
         {
             if (_networkSession != null)
             {
@@ -7521,7 +7540,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         internal void OnUpdateUserLogEntries(object sender, EventArgs e)
         {
-            UpdateListviewwithUserLogEntries();
+            UpdateListviewWithUserLogEntries();
         }
 
         private void toolStripStatusNetworking_Click(object sender, EventArgs e)
@@ -7552,11 +7571,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
         }
-
-        private void AudioWaveForm_KeyDown(object sender, KeyEventArgs e)
-        {
-
-        }
+        #endregion
 
      }
 }
