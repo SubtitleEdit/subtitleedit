@@ -12,13 +12,14 @@ Subtitle Edit Changelog
  * IMPROVED:
    * Context menu for subtitle textbox now has italic, bold, underline, font name, and color
    * Updated NHunspell (spell check component) to latest version (0.9.6)
-   * Synchronization Show earlier/later changed a bit, also added short cut (Ctrl+Shift+D)
-   * Main window: Video player will now automatically move up beside subtitle if waveform is displayed + some re-sizing of controls allowed
+   * Synchronization Show earlier/later changed a bit, also added a shortcut (Ctrl+Shift+D)
+   * Main window: Video player will now automatically move up beside subtitle if waveform is
+     displayed + some resizing of controls allowed
  * FIXED:
    * OCR Fix Engine: Lines after "..." will no longer be changed to start with uppercase letter
-   * Fixed missing line break in Sony Dvd Architecht (w line numbers) - thx Rosa 
-   * Fixed a minor bug in initialization of waveform - thx Frederic! 
-   * Fixed a minor bug in Visual Sync, if end scene was after video length
+   * Missing line break in Sony Dvd Architecht (w line numbers) - thx Rosa 
+   * A minor bug in initialization of waveform - thx Frederic! 
+   * A minor bug in Visual Sync, if end scene was after video length
 
 
 3.0 (18th November 2010)
