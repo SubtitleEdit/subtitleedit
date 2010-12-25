@@ -207,12 +207,6 @@ Filename: {app}\SubtitleEdit.exe; Description: {cm:LaunchProgram,Subtitle Edit};
 Filename: {#= app_web_site}; Description: {cm:run_VisitWebsite}; Flags: nowait postinstall skipifsilent shellexec runascurrentuser unchecked
 
 
-[UninstallDelete]
-Type: dirifempty; Name: {app}\WaveForms
-Type: dirifempty; Name: {userappdata}\Subtitle Edit\WaveForms
-Type: dirifempty; Name: {app}
-
-
 [Code]
 // Global variables and constants
 const installer_mutex_name = 'subtitle_edit_setup_mutex';
@@ -240,10 +234,16 @@ end;
 
 // Check if Dictionaries exist
 function DictionariesExistCheck(): Boolean;
+var
+  FindRec: TFindRec;
 begin
-  Result := False;
-  if DirExists(ExpandConstant('{userappdata}\Subtitle Edit\Dictionaries')) then
-  Result := True;
+  if FindFirst(ExpandConstant('{userappdata}\Subtitle Edit\Dictionaries\*.aff'), FindRec) OR
+  FindFirst(ExpandConstant('{userappdata}\Subtitle Edit\Dictionaries\*.dic'), FindRec) OR
+  FindFirst(ExpandConstant('{userappdata}\Subtitle Edit\Dictionaries\*.xml'), FindRec) then begin
+    Result := True;
+    FindClose(FindRec);
+  end else
+    Result := False;
 end;
 
 
@@ -311,12 +311,14 @@ begin
   // When uninstalling ask user to delete Subtitle Edit's dictionaries and settings
   // based on whether these files exist only
   if CurUninstallStep = usUninstall then begin
-  if SettingsExistCheck or DictionariesExistCheck then begin
+  if SettingsExistCheck OR DictionariesExistCheck then begin
     if MsgBox(ExpandConstant('{cm:msg_DeleteSettings}'), mbConfirmation, MB_YESNO or MB_DEFBUTTON2) = IDYES then begin
        CleanUpDictionaries;
        DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Settings.xml'));
      end;
+      RemoveDir(ExpandConstant('{app}\WaveForms'));
       RemoveDir(ExpandConstant('{app}'));
+      RemoveDir(ExpandConstant('{userappdata}\Subtitle Edit\WaveForms'));
       RemoveDir(ExpandConstant('{userappdata}\Subtitle Edit'));
     end;
   end;
