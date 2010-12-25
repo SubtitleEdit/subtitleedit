@@ -27,6 +27,7 @@ namespace Nikse.SubtitleEdit.Logic.OCR
         List<string> _namesEtcList = new List<string>();
         List<string> _namesEtcListUppercase = new List<string>();
         List<string> _namesEtcMultiWordList = new List<string>(); // case sensitive phrases
+        List<string> _abbreviationList;
         List<string> _userWordList = new List<string>();
         List<string> _wordSkipList = new List<string>();
         Hunspell _hunspell;
@@ -119,6 +120,19 @@ namespace Nikse.SubtitleEdit.Logic.OCR
                     // Load user words
                     _userWordList = new List<string>();
                     _userWordListXmlFileName = Utilities.LoadUserWordList(_userWordList, _fiveLetterWordListLanguageName);
+
+                    // Find abbreviations
+                    _abbreviationList = new List<string>();
+                    foreach (string name in _namesEtcList)
+                    {
+                        if (name.EndsWith("."))
+                            _abbreviationList.Add(name);
+                    }
+                    foreach (string name in _userWordList)
+                    {
+                        if (name.EndsWith("."))
+                            _abbreviationList.Add(name);
+                    }
 
                     // Load NHunspell spellchecker
                     _hunspell = new Hunspell(dictionary + ".aff", dictionary + ".dic");
@@ -455,7 +469,7 @@ namespace Nikse.SubtitleEdit.Logic.OCR
 
         private string FixCommenOcrLineErrors(string input, string lastLine)
         {
-            input = FixOcrErrorsViaHardcodedRules(input, lastLine);
+            input = FixOcrErrorsViaHardcodedRules(input, lastLine, _abbreviationList);
             input = FixOcrErrorViaLineReplaceList(input);
 
             // e.g. "selectionsu." -> "selections..."
@@ -481,16 +495,31 @@ namespace Nikse.SubtitleEdit.Logic.OCR
             return input;
         }
 
-        public static string FixOcrErrorsViaHardcodedRules(string input, string lastLine)
+        private static bool EndsWithAbbreviation(string line, List<string> abbreviationList)
+        {
+            if (string.IsNullOrEmpty(line) || abbreviationList == null)
+                return false;
+
+            abbreviationList.Add("a.m.");
+            abbreviationList.Add("p.m.");
+            abbreviationList.Add("o.r.");
+            foreach (string abbreviation in abbreviationList)
+            {
+                if (line.ToLower().EndsWith(" " + abbreviation.ToLower()))
+                    return true;
+            }
+            return false;
+        }
+
+        public static string FixOcrErrorsViaHardcodedRules(string input, string lastLine, List<string> abbreviationList)
         {
             if (lastLine == null ||
                 lastLine.EndsWith(".") ||
                 lastLine.EndsWith("!") ||
                 lastLine.EndsWith("?"))
             {
-                if (lastLine == null || !lastLine.EndsWith("..."))
+                if (lastLine == null || (!lastLine.EndsWith("...") && !EndsWithAbbreviation(lastLine, abbreviationList)))
                 {
-
                     if (input.Length > 0 && input[0].ToString() != input[0].ToString().ToUpper())
                         input = input.Remove(0, 1).Insert(0, input[0].ToString().ToUpper());
                 }

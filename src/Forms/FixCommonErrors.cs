@@ -774,6 +774,10 @@ namespace Nikse.SubtitleEdit.Forms
 
         public void FixUnneededSpaces()
         {
+            const string zeroWhiteSpace = "\u200B";
+            const string zeroWidthNoBreakSpace = "\uFEFF";
+
+
             string fixAction = _language.UnneededSpace;
             int doubleSpaces = 0;
             for (int i = 0; i < _subtitle.Paragraphs.Count; i++)
@@ -782,6 +786,10 @@ namespace Nikse.SubtitleEdit.Forms
                 string oldText = p.Text;
 
                 p.Text = p.Text.Trim();
+
+                p.Text = p.Text.Replace(zeroWhiteSpace, string.Empty);
+                p.Text = p.Text.Replace(zeroWidthNoBreakSpace, string.Empty);
+                p.Text = p.Text.Replace("", string.Empty); // some kind of hidden space!!!
                 while (p.Text.Contains("  "))
                 {
                     p.Text = p.Text.Replace("  ", " ");
@@ -1319,11 +1327,18 @@ namespace Nikse.SubtitleEdit.Forms
                                     {
                                         if ((Utilities.GetLetters(true, true, true) + ",").Contains(st.StrippedText[match.Index - (Environment.NewLine.Length + 1)].ToString()))
                                         {
-                                            st.StrippedText = st.StrippedText.Remove(match.Index, 1).Insert(match.Index, "l");
-                                            p.Text = st.MergedString;
-                                            uppercaseIsInsideLowercaseWords++;
-                                            _totalFixes++;
-                                            AddFixToListView(p, i + 1, fixAction, oldText, p.Text);
+                                            string next = string.Empty;
+                                            if (match.Length >= 2)
+                                                next = match.Value.Substring(1, 1);
+
+                                            if (Utilities.LowerCaseVowels.Contains(next))
+                                            {
+                                                st.StrippedText = st.StrippedText.Remove(match.Index, 1).Insert(match.Index, "l");
+                                                p.Text = st.MergedString;
+                                                uppercaseIsInsideLowercaseWords++;
+                                                _totalFixes++;
+                                                AddFixToListView(p, i + 1, fixAction, oldText, p.Text);
+                                            }
                                         }
                                     }
                                     else if (match.Index > 1 && ((st.StrippedText[match.Index - 1] == '\"') || (st.StrippedText[match.Index - 1] == '>') || (st.StrippedText[match.Index - 1] == '-')))
@@ -1348,11 +1363,17 @@ namespace Nikse.SubtitleEdit.Forms
                                         }
                                         else
                                         {
-                                            st.StrippedText = st.StrippedText.Remove(match.Index, 1).Insert(match.Index, "l");
-                                            p.Text = st.MergedString;
-                                            uppercaseIsInsideLowercaseWords++;
-                                            _totalFixes++;
-                                            AddFixToListView(p, i + 1, fixAction, oldText, p.Text);
+                                            if (before == " " && !Utilities.LowerCaseVowels.Contains(after.ToLower()))
+                                            {
+                                            }
+                                            else
+                                            {
+                                                st.StrippedText = st.StrippedText.Remove(match.Index, 1).Insert(match.Index, "l");
+                                                p.Text = st.MergedString;
+                                                uppercaseIsInsideLowercaseWords++;
+                                                _totalFixes++;
+                                                AddFixToListView(p, i + 1, fixAction, oldText, p.Text);
+                                            }
                                         }
                                     }
                                 }
@@ -1699,7 +1720,7 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         string text = p.Text.Substring(indexOfNewLine + 2);
                         StripableText st = new StripableText(text);
-                        if (st.StrippedText.Length > 0 && st.StrippedText[0].ToString() != st.StrippedText[0].ToString().ToUpper())
+                        if (st.StrippedText.Length > 0 && st.StrippedText[0].ToString() != st.StrippedText[0].ToString().ToUpper() && !st.Pre.EndsWith("[") && !st.Pre.Contains("..."))
                         {
                             text = st.Pre + st.StrippedText.Remove(0, 1).Insert(0, st.StrippedText[0].ToString().ToUpper()) + st.Post;
 
@@ -1858,7 +1879,12 @@ namespace Nikse.SubtitleEdit.Forms
                                     prev = s[match.Index - 1].ToString();
                                 if (match.Index + 1 < s.Length)
                                     next = s[match.Index + 1].ToString();
-                                if (prev != ">" && next != ">" && next != "}")
+
+                                string wholePrev = string.Empty;
+                                if (match.Index > 1)
+                                    wholePrev = s.Substring(0, match.Index - 1);
+
+                                if (prev != ">" && next != ">" && next != "}" && !wholePrev.Trim().EndsWith("..."))
                                 {
                                     string temp = s.Substring(0, match.Index) + "I";
                                     if (match.Index + 1 < oldText.Length)
