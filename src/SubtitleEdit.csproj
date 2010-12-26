@@ -807,12 +807,8 @@
     <None Include="DLLs\Interop.WMPLib.dll" />
     <Content Include="ChangeLog.txt" />
     <Content Include="gpl.txt" />
-    <Content Include="Hunspellx64.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Hunspellx86.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+    <None Include="Dlls\Hunspellx64.dll" />
+    <None Include="Dlls\Hunspellx86.dll" />
     <EmbeddedResource Include="Controls\VideoPlayerContainer.resx">
       <DependentUpon>VideoPlayerContainer.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -996,6 +992,11 @@
   <PropertyGroup>
     <PreBuildEvent>
     </PreBuildEvent>
+  </PropertyGroup>
+  <PropertyGroup>
+    <PostBuildEvent>COPY /Y /V "$(ProjectDir)Dlls\Hunspellx86.dll" "$(TargetDir)"
+COPY /Y /V "$(ProjectDir)Dlls\Hunspellx64.dll" "$(TargetDir)"
+</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
