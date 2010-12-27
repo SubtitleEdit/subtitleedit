@@ -3,7 +3,7 @@ using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Logic
 {
-    class PositionsAndSizes
+    public class PositionsAndSizes
     {
         List<PositionAndSize> _positionsAndSizes = new List<PositionAndSize>();
 

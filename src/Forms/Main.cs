@@ -78,6 +78,11 @@ namespace Nikse.SubtitleEdit.Forms
 
         ShowEarlierLater _showEarlierOrLater = null;
 
+        bool _isVideoControlsUnDocked = false;
+        VideoPlayerUnDocked _videoPlayerUnDocked = null;
+        WaveFormUnDocked _waveFormUnDocked = null;
+        VideoControlsUndocked _videoControlsUnDocked = null;
+
         private bool AutoRepeatContinueOn
         {
             get
@@ -4029,7 +4034,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 MakeHistoryForUndo(_language.BeforeImportFromMatroskaFile);
                 _subtitleListViewIndex = -1;
-
+                FileNew();
                 _subtitle.Paragraphs.Clear();
 
                 if (isSsa)
@@ -4074,10 +4079,18 @@ namespace Nikse.SubtitleEdit.Forms
                 ShowStatus(_language.SubtitleImportedFromMatroskaFile);
                 _subtitle.Renumber(1);
                 _subtitle.WasLoadedWithFrameNumbers = false;
-                _fileName = string.Empty;
+                if (fileName.ToLower().EndsWith(".mkv"))
+                {
+                    _fileName = fileName.Substring(0, fileName.Length - 4);
+                    Text = Title + " - " + _fileName;
+                }
+                else
+                {
+                    Text = Title;
+                }
                 _fileDateTime = new DateTime();
-                Text = Title;
-                _converted = false;
+                
+                _converted = true;
 
                 SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
                 if (_subtitle.Paragraphs.Count > 0)
@@ -4521,7 +4534,7 @@ namespace Nikse.SubtitleEdit.Forms
                     if (vobSubOcr.ShowDialog(this) == DialogResult.OK)
                     {
                         MakeHistoryForUndo(_language.BeforeImportingVobSubFile);
-
+                        FileNew();
                         _subtitle.Paragraphs.Clear();
                         SetCurrentFormat(new SubRip().FriendlyName);
                         _subtitle.WasLoadedWithFrameNumbers = false;
@@ -5284,7 +5297,7 @@ namespace Nikse.SubtitleEdit.Forms
                         if (formSubOcr.ShowDialog(this) == DialogResult.OK)
                         {
                             MakeHistoryForUndo(_language.BeforeImportingDvdSubtitle);
-
+                            FileNew();
                             _subtitle.Paragraphs.Clear();
                             SetCurrentFormat(new SubRip().FriendlyName);
                             _subtitle.WasLoadedWithFrameNumbers = false;
@@ -5774,42 +5787,86 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ShowVideoPlayer()
         {
-            if (toolStripButtonToogleVideo.Checked && toolStripButtonToogleWaveForm.Checked)
+            if (_isVideoControlsUnDocked)
             {
-                splitContainer1.Panel2Collapsed = false;
-                MoveVideoUp();
+                ShowHideUnDockedVideoControls();
             }
             else
             {
-                splitContainer1.Panel2Collapsed = true;
-                MoveVideoDown();
-            }
-
-            splitContainerMain.Panel2Collapsed = false;
-            if (toolStripButtonToogleVideo.Checked)
-            {
-                if (AudioWaveForm.Visible)
+                if (toolStripButtonToogleVideo.Checked && toolStripButtonToogleWaveForm.Checked)
                 {
-                    AudioWaveForm.Left = tabControlButtons.Left + tabControlButtons.Width + 5;
+                    splitContainer1.Panel2Collapsed = false;
+                    MoveVideoUp();
                 }
                 else
                 {
-                    panelVideoPlayer.Left = tabControlButtons.Left + tabControlButtons.Width + 5;
+                    splitContainer1.Panel2Collapsed = true;
+                    MoveVideoDown();
                 }
-            }
-            else if (AudioWaveForm.Visible)
-            {
-                AudioWaveForm.Left = tabControlButtons.Left + tabControlButtons.Width + 5;
-            }
-            AudioWaveForm.Width = groupBoxVideo.Width - (AudioWaveForm.Left + 10);
 
-            checkBoxSyncListViewWithVideoWhilePlaying.Left = tabControlButtons.Left + tabControlButtons.Width + 5;
-            panelWaveFormControls.Left = AudioWaveForm.Left;
-            trackBarWaveFormPosition.Left = panelWaveFormControls.Left + panelWaveFormControls.Width + 5;
-            trackBarWaveFormPosition.Width = AudioWaveForm.Left + AudioWaveForm.Width - trackBarWaveFormPosition.Left + 5;
+                splitContainerMain.Panel2Collapsed = false;
+                if (toolStripButtonToogleVideo.Checked)
+                {
+                    if (AudioWaveForm.Visible)
+                    {
+                        AudioWaveForm.Left = tabControlButtons.Left + tabControlButtons.Width + 5;
+                    }
+                    else
+                    {
+                        panelVideoPlayer.Left = tabControlButtons.Left + tabControlButtons.Width + 5;
+                    }
+                }
+                else if (AudioWaveForm.Visible)
+                {
+                    AudioWaveForm.Left = tabControlButtons.Left + tabControlButtons.Width + 5;
+                }
+                AudioWaveForm.Width = groupBoxVideo.Width - (AudioWaveForm.Left + 10);
+
+                checkBoxSyncListViewWithVideoWhilePlaying.Left = tabControlButtons.Left + tabControlButtons.Width + 5;
+                panelWaveFormControls.Left = AudioWaveForm.Left;
+                trackBarWaveFormPosition.Left = panelWaveFormControls.Left + panelWaveFormControls.Width + 5;
+                trackBarWaveFormPosition.Width = AudioWaveForm.Left + AudioWaveForm.Width - trackBarWaveFormPosition.Left + 5;
+            }
 
             if (mediaPlayer.VideoPlayer == null && !string.IsNullOrEmpty(_fileName))
                 TryToFindAndOpenVideoFile(Path.Combine(Path.GetDirectoryName(_fileName), Path.GetFileNameWithoutExtension(_fileName)));
+
+        }
+
+        private void ShowHideUnDockedVideoControls()
+        {
+            if (_videoPlayerUnDocked == null || _videoPlayerUnDocked.IsDisposed)
+                UnDockVideoPlayer();
+            _videoPlayerUnDocked.Visible = false;
+            if (toolStripButtonToogleVideo.Checked)
+            {
+                _videoPlayerUnDocked.Show(this);
+                if (_videoPlayerUnDocked.WindowState == FormWindowState.Minimized)
+                    _videoPlayerUnDocked.WindowState = FormWindowState.Normal;
+            }
+
+            if (_waveFormUnDocked == null || _waveFormUnDocked.IsDisposed)
+                UnDockWaveForm();
+            _waveFormUnDocked.Visible = false;
+            if (toolStripButtonToogleWaveForm.Checked)
+            {
+                _waveFormUnDocked.Show(this);
+                if (_waveFormUnDocked.WindowState == FormWindowState.Minimized)
+                    _waveFormUnDocked.WindowState = FormWindowState.Normal;
+            }
+
+            if (toolStripButtonToogleVideo.Checked || toolStripButtonToogleWaveForm.Checked)
+            {                
+                if (_videoControlsUnDocked == null || _videoControlsUnDocked.IsDisposed)
+                    UnDockVideoButtons();
+                _videoControlsUnDocked.Visible = false;
+                _videoControlsUnDocked.Show(this);
+            }
+            else
+            {
+                if (_videoControlsUnDocked != null && !_videoControlsUnDocked.IsDisposed)
+                    _videoControlsUnDocked.Visible = false;
+            }
         }
 
         private void MoveVideoUp()
@@ -5834,7 +5891,7 @@ namespace Nikse.SubtitleEdit.Forms
                 splitContainer1.Panel2.Controls.Clear();
                 groupBoxVideo.Controls.Add(control);
             }
-            panelVideoPlayer.Top = 26;
+            panelVideoPlayer.Top = 27;
             panelVideoPlayer.Left = tabControlButtons.Left + tabControlButtons.Width + 5;
             panelVideoPlayer.Height = groupBoxVideo.Height - (panelVideoPlayer.Top + 5);
             panelVideoPlayer.Width = groupBoxVideo.Width - (panelVideoPlayer.Left + 5);
@@ -6156,7 +6213,10 @@ namespace Nikse.SubtitleEdit.Forms
             labelSubtitle.BringToFront();
             if (!toolStripButtonToogleVideo.Checked && !toolStripButtonToogleWaveForm.Checked)
             {
-                HideVideoPlayer();
+                if (_isVideoControlsUnDocked)
+                    ShowHideUnDockedVideoControls();
+                else
+                    HideVideoPlayer();
             }
             else
             {
@@ -6174,7 +6234,10 @@ namespace Nikse.SubtitleEdit.Forms
             panelWaveFormControls.Visible = toolStripButtonToogleWaveForm.Checked;
             if (!toolStripButtonToogleWaveForm.Checked && !toolStripButtonToogleVideo.Checked)
             {
-                HideVideoPlayer();
+                if (_isVideoControlsUnDocked)
+                    ShowHideUnDockedVideoControls();
+                else
+                    HideVideoPlayer();
             }
             else
             {
@@ -6462,15 +6525,23 @@ namespace Nikse.SubtitleEdit.Forms
                 Configuration.Settings.VideoControls.LastActiveTab = "Adjust";
             }
 
-            if (toolStripButtonToogleWaveForm.Checked )
-                AudioWaveForm.Left = tabControlButtons.Left + tabControlButtons.Width + 5;
-            AudioWaveForm.Width = groupBoxVideo.Width - (AudioWaveForm.Left + 10);
-            panelWaveFormControls.Left = AudioWaveForm.Left;
-            trackBarWaveFormPosition.Left = panelWaveFormControls.Left + panelWaveFormControls.Width + 5;
-            trackBarWaveFormPosition.Width = groupBoxVideo.Width - (trackBarWaveFormPosition.Left + 10);
-            this.Main_Resize(null, null);
-            checkBoxSyncListViewWithVideoWhilePlaying.Left = tabControlButtons.Left + tabControlButtons.Width + 5;
-            Refresh();
+            if (!_isVideoControlsUnDocked)
+            {
+                if (toolStripButtonToogleWaveForm.Checked)
+                    AudioWaveForm.Left = tabControlButtons.Left + tabControlButtons.Width + 5;
+                AudioWaveForm.Width = groupBoxVideo.Width - (AudioWaveForm.Left + 10);
+                panelWaveFormControls.Left = AudioWaveForm.Left;
+                trackBarWaveFormPosition.Left = panelWaveFormControls.Left + panelWaveFormControls.Width + 5;
+                trackBarWaveFormPosition.Width = groupBoxVideo.Width - (trackBarWaveFormPosition.Left + 10);
+                this.Main_Resize(null, null);
+                checkBoxSyncListViewWithVideoWhilePlaying.Left = tabControlButtons.Left + tabControlButtons.Width + 5;
+                Refresh();
+            }
+            else if (_videoControlsUnDocked != null && !_videoControlsUnDocked.IsDisposed)
+            {
+                _videoControlsUnDocked.Width = tabControlButtons.Width + 20;
+                _videoControlsUnDocked.Height = tabControlButtons.Height + 40;
+            }
         }
 
         private void buttonSecBack1_Click(object sender, EventArgs e)
@@ -6988,7 +7059,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (vobSubOcr.ShowDialog(this) == DialogResult.OK)
                 {
                     MakeHistoryForUndo(_language.BeforeImportingBluRaySupFile);
-
+                    FileNew();
                     _subtitle.Paragraphs.Clear();
                     SetCurrentFormat(new SubRip().FriendlyName);
                     _subtitle.WasLoadedWithFrameNumbers = false;
@@ -7293,8 +7364,29 @@ namespace Nikse.SubtitleEdit.Forms
             bool doReFill = false;
             bool updateListViewStatus = false;
             SubtitleListview1.SelectedIndexChanged -= SubtitleListview1_SelectedIndexChanged;
-            string message;
-            var updates = _networkSession.GetUpdates(out message);
+            string message = string.Empty;
+
+            List<SeNetworkService.SeUpdate> updates = null;
+            try
+            {
+                updates = (List<SeNetworkService.SeUpdate>)_networkSession.GetUpdates(out message);
+            }
+            catch (Exception exception)
+            {
+                MessageBox.Show("Unable to connect to server: " + exception.Message);
+                _networkSession.TimerStop();
+                if (_networkChat != null && !_networkChat.IsDisposed)
+                {
+                    _networkChat.Close();
+                    _networkChat = null;
+                }
+                _networkSession = null;
+                EnableDisableControlsNotWorkingInNetworkMode(true);
+                toolStripStatusNetworking.Visible = false;
+                SubtitleListview1.HideExtraColumn();
+                _networkChat = null;
+                return;
+            }
             int currentSelectedIndex = -1;
             if (SubtitleListview1.SelectedItems.Count > 0)
                 currentSelectedIndex = SubtitleListview1.SelectedItems[0].Index;
@@ -7461,8 +7553,9 @@ namespace Nikse.SubtitleEdit.Forms
                     _networkSession.InsertLine(insertIndex, insertParagraph);
                     doReFill = true;
                 }
-
                 _networkSession.CheckForAndSubmitUpdates(updates); // updates only (no inserts/deletes)
+
+                //TODO: do some compare lines count... and reload if no match!
             }
             else
             {
@@ -7573,5 +7666,177 @@ namespace Nikse.SubtitleEdit.Forms
         }
         #endregion
 
-     }
+        private void UnDockVideoPlayer()
+        {
+            _videoPlayerUnDocked = new VideoPlayerUnDocked(this, labelVideoInfo.Text, _formPositionsAndSizes, mediaPlayer);
+            _formPositionsAndSizes.SetPositionAndSize(_videoPlayerUnDocked);
+
+            Control control = null;
+            if (splitContainer1.Panel2.Controls.Count == 0)
+            {
+                control = panelVideoPlayer;
+                groupBoxVideo.Controls.Remove(control);
+            }
+            else if (splitContainer1.Panel2.Controls.Count > 0)
+            {
+                control = panelVideoPlayer;
+                splitContainer1.Panel2.Controls.Clear();
+            }
+            if (control != null)
+            {
+                control.Top = 0;
+                control.Left = 0;
+                control.Width = _videoPlayerUnDocked.PanelContainer.Width;
+                control.Height = _videoPlayerUnDocked.PanelContainer.Height;
+                _videoPlayerUnDocked.PanelContainer.Controls.Add(control);
+            }
+        }
+
+        public void ReDockVideoPlayer(Control control)
+        {
+            groupBoxVideo.Controls.Add(control);
+        }
+
+        private void UnDockWaveForm()
+        {
+            _waveFormUnDocked = new WaveFormUnDocked(this, labelVideoInfo.Text, _formPositionsAndSizes);
+            _formPositionsAndSizes.SetPositionAndSize(_waveFormUnDocked);
+            
+            var control = AudioWaveForm;
+            groupBoxVideo.Controls.Remove(control);
+            control.Top = 0;
+            control.Left = 0;
+            control.Width = _waveFormUnDocked.PanelContainer.Width;
+            control.Height = _waveFormUnDocked.PanelContainer.Height - panelWaveFormControls.Height;
+            _waveFormUnDocked.PanelContainer.Controls.Add(control);
+
+            var control2 = (Control)panelWaveFormControls;
+            groupBoxVideo.Controls.Remove(control2);
+            control2.Top = control.Height;
+            control2.Left = 0;
+            _waveFormUnDocked.PanelContainer.Controls.Add(control2);
+
+            var control3 = (Control)trackBarWaveFormPosition;
+            groupBoxVideo.Controls.Remove(control3);
+            control3.Top = control.Height;
+            control3.Left = control2.Width +2;
+            control3.Width = _waveFormUnDocked.PanelContainer.Width - control3.Left;
+            _waveFormUnDocked.PanelContainer.Controls.Add(control3);
+        }
+
+        public void ReDockWaveForm(Control waveForm, Control buttons, Control trackBar)
+        {
+            groupBoxVideo.Controls.Add(waveForm);
+            waveForm.Top = 30;
+            waveForm.Height = groupBoxVideo.Height - (waveForm.Top + buttons.Height + 10);
+
+            groupBoxVideo.Controls.Add(buttons);
+            buttons.Top = waveForm.Top + waveForm.Height + 5;
+
+            groupBoxVideo.Controls.Add(trackBar);
+            trackBar.Top = buttons.Top;
+        }
+
+        private void UnDockVideoButtons()
+        {
+            _videoControlsUnDocked = new VideoControlsUndocked(this, labelVideoInfo.Text, _formPositionsAndSizes);
+            _formPositionsAndSizes.SetPositionAndSize(_videoControlsUnDocked);
+            var control = tabControlButtons;
+            groupBoxVideo.Controls.Remove(control);
+            control.Top = 0;
+            control.Left = 0;
+            _videoControlsUnDocked.PanelContainer.Controls.Add(control);
+            splitContainerMain.Panel2Collapsed = true;
+            splitContainer1.Panel2Collapsed = true;
+        }
+
+        public void ReDockVideoButtons(Control videoButtons)
+        {
+            groupBoxVideo.Controls.Add(videoButtons);
+            videoButtons.Top = 12;
+            videoButtons.Left = 5;
+        }
+
+        private void undockVideoControlsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            UnDockVideoPlayer();
+            if (toolStripButtonToogleVideo.Checked)
+                _videoPlayerUnDocked.Show(this);
+
+            UnDockWaveForm();
+            if (toolStripButtonToogleWaveForm.Checked)
+                _waveFormUnDocked.Show(this);
+
+            UnDockVideoButtons();
+            _videoControlsUnDocked.Show(this);
+
+            _isVideoControlsUnDocked = true;
+
+            undockVideoControlsToolStripMenuItem.Visible = false;
+            redockVideoControlsToolStripMenuItem.Visible = true;
+
+            tabControl1_SelectedIndexChanged(null, null);
+        }
+
+        private void redockVideoControlsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+            if (_videoControlsUnDocked != null && !_videoControlsUnDocked.IsDisposed)
+            {
+                var control = _videoControlsUnDocked.PanelContainer.Controls[0];
+                _videoControlsUnDocked.PanelContainer.Controls.Clear();
+                ReDockVideoButtons(control);
+                _videoControlsUnDocked.Close();
+                _videoControlsUnDocked = null;
+            }
+
+            if (_waveFormUnDocked != null && !_waveFormUnDocked.IsDisposed)
+            {
+                var controlWaveForm = _waveFormUnDocked.PanelContainer.Controls[0];
+                var controlButtons = _waveFormUnDocked.PanelContainer.Controls[1];
+                var controlTrackBar = _waveFormUnDocked.PanelContainer.Controls[2];
+                _waveFormUnDocked.PanelContainer.Controls.Clear();
+                ReDockWaveForm(controlWaveForm, controlButtons, controlTrackBar);
+                _waveFormUnDocked.Close();
+                _waveFormUnDocked = null;
+            }
+
+            if (_videoPlayerUnDocked != null && !_videoPlayerUnDocked.IsDisposed)
+            {
+                var control = _videoPlayerUnDocked.PanelContainer.Controls[0];
+                _videoPlayerUnDocked.PanelContainer.Controls.Remove(control);
+                ReDockVideoPlayer(control);
+                _videoPlayerUnDocked.Close();
+                _videoPlayerUnDocked = null;
+            }
+
+            _isVideoControlsUnDocked = false;
+            _videoPlayerUnDocked = null;
+            _waveFormUnDocked = null;
+            _videoControlsUnDocked = null;
+            ShowVideoPlayer();
+
+            AudioWaveForm.Visible = toolStripButtonToogleWaveForm.Checked;
+            trackBarWaveFormPosition.Visible = toolStripButtonToogleWaveForm.Checked;
+            panelWaveFormControls.Visible = toolStripButtonToogleWaveForm.Checked;
+            if (!toolStripButtonToogleVideo.Checked)
+                HideVideoPlayer();
+            
+            mediaPlayer.Invalidate();
+            this.Refresh();
+
+            undockVideoControlsToolStripMenuItem.Visible = true;
+            redockVideoControlsToolStripMenuItem.Visible = false;
+        }
+
+        internal void SetWaveFormToogleOff()
+        {
+            toolStripButtonToogleWaveForm.Checked = false;
+        }
+
+        internal void SetVideoPlayerToogleOff()
+        {
+            toolStripButtonToogleVideo.Checked = false;
+        }
+    }
 }
