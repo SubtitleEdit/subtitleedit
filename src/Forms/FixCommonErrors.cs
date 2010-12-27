@@ -226,6 +226,9 @@ namespace Nikse.SubtitleEdit.Forms
             buttonAutoBreak.Text = _language.AutoBreak;
             buttonUnBreak.Text = _language.Unbreak;
             subtitleListView1.InitializeLanguage(_languageGeneral, Configuration.Settings);
+
+            splitContainerStep2.Panel1MinSize = 110;
+            splitContainerStep2.Panel2MinSize = 160;
         }
 
         private void AddFixActionItemToListView(FixItem fi)
