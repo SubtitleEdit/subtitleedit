@@ -122,6 +122,9 @@
             this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
             this.showhideWaveFormToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showhideVideoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator19 = new System.Windows.Forms.ToolStripSeparator();
+            this.undockVideoControlsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.redockVideoControlsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemSpellCheckMain = new System.Windows.Forms.ToolStripMenuItem();
             this.spellCheckToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.findDoubleWordsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -1132,7 +1135,10 @@
             this.openVideoToolStripMenuItem,
             this.toolStripSeparator5,
             this.showhideWaveFormToolStripMenuItem,
-            this.showhideVideoToolStripMenuItem});
+            this.showhideVideoToolStripMenuItem,
+            this.toolStripSeparator19,
+            this.undockVideoControlsToolStripMenuItem,
+            this.redockVideoControlsToolStripMenuItem});
             this.toolStripMenuItemVideo.Name = "toolStripMenuItemVideo";
             this.toolStripMenuItemVideo.Size = new System.Drawing.Size(50, 20);
             this.toolStripMenuItemVideo.Text = "Video";
@@ -1140,28 +1146,48 @@
             // openVideoToolStripMenuItem
             // 
             this.openVideoToolStripMenuItem.Name = "openVideoToolStripMenuItem";
-            this.openVideoToolStripMenuItem.Size = new System.Drawing.Size(195, 22);
+            this.openVideoToolStripMenuItem.Size = new System.Drawing.Size(199, 22);
             this.openVideoToolStripMenuItem.Text = "Open video...";
             this.openVideoToolStripMenuItem.Click += new System.EventHandler(this.buttonOpenVideo_Click);
             // 
             // toolStripSeparator5
             // 
             this.toolStripSeparator5.Name = "toolStripSeparator5";
-            this.toolStripSeparator5.Size = new System.Drawing.Size(192, 6);
+            this.toolStripSeparator5.Size = new System.Drawing.Size(196, 6);
             // 
             // showhideWaveFormToolStripMenuItem
             // 
             this.showhideWaveFormToolStripMenuItem.Name = "showhideWaveFormToolStripMenuItem";
-            this.showhideWaveFormToolStripMenuItem.Size = new System.Drawing.Size(195, 22);
+            this.showhideWaveFormToolStripMenuItem.Size = new System.Drawing.Size(199, 22);
             this.showhideWaveFormToolStripMenuItem.Text = "Show/hide wave form";
             this.showhideWaveFormToolStripMenuItem.Click += new System.EventHandler(this.showhideWaveFormToolStripMenuItem_Click);
             // 
             // showhideVideoToolStripMenuItem
             // 
             this.showhideVideoToolStripMenuItem.Name = "showhideVideoToolStripMenuItem";
-            this.showhideVideoToolStripMenuItem.Size = new System.Drawing.Size(195, 22);
+            this.showhideVideoToolStripMenuItem.Size = new System.Drawing.Size(199, 22);
             this.showhideVideoToolStripMenuItem.Text = "Show/hide video";
             this.showhideVideoToolStripMenuItem.Click += new System.EventHandler(this.toolStripButtonToogleVideo_Click);
+            // 
+            // toolStripSeparator19
+            // 
+            this.toolStripSeparator19.Name = "toolStripSeparator19";
+            this.toolStripSeparator19.Size = new System.Drawing.Size(196, 6);
+            // 
+            // undockVideoControlsToolStripMenuItem
+            // 
+            this.undockVideoControlsToolStripMenuItem.Name = "undockVideoControlsToolStripMenuItem";
+            this.undockVideoControlsToolStripMenuItem.Size = new System.Drawing.Size(199, 22);
+            this.undockVideoControlsToolStripMenuItem.Text = "Un-dock video controls";
+            this.undockVideoControlsToolStripMenuItem.Click += new System.EventHandler(this.undockVideoControlsToolStripMenuItem_Click);
+            // 
+            // redockVideoControlsToolStripMenuItem
+            // 
+            this.redockVideoControlsToolStripMenuItem.Name = "redockVideoControlsToolStripMenuItem";
+            this.redockVideoControlsToolStripMenuItem.Size = new System.Drawing.Size(199, 22);
+            this.redockVideoControlsToolStripMenuItem.Text = "Re-dock video controls";
+            this.redockVideoControlsToolStripMenuItem.Visible = false;
+            this.redockVideoControlsToolStripMenuItem.Click += new System.EventHandler(this.redockVideoControlsToolStripMenuItem_Click);
             // 
             // toolStripMenuItemSpellCheckMain
             // 
@@ -2040,19 +2066,17 @@
             // 
             // groupBoxVideo
             // 
-            this.groupBoxVideo.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBoxVideo.Controls.Add(this.checkBoxSyncListViewWithVideoWhilePlaying);
             this.groupBoxVideo.Controls.Add(this.labelVideoInfo);
             this.groupBoxVideo.Controls.Add(this.trackBarWaveFormPosition);
             this.groupBoxVideo.Controls.Add(this.panelWaveFormControls);
             this.groupBoxVideo.Controls.Add(this.AudioWaveForm);
             this.groupBoxVideo.Controls.Add(this.tabControlButtons);
+            this.groupBoxVideo.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBoxVideo.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.groupBoxVideo.Location = new System.Drawing.Point(3, 3);
+            this.groupBoxVideo.Location = new System.Drawing.Point(0, 0);
             this.groupBoxVideo.Name = "groupBoxVideo";
-            this.groupBoxVideo.Size = new System.Drawing.Size(1238, 299);
+            this.groupBoxVideo.Size = new System.Drawing.Size(1244, 305);
             this.groupBoxVideo.TabIndex = 1;
             this.groupBoxVideo.TabStop = false;
             // 
@@ -2069,7 +2093,7 @@
             // labelVideoInfo
             // 
             this.labelVideoInfo.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.labelVideoInfo.Location = new System.Drawing.Point(863, 12);
+            this.labelVideoInfo.Location = new System.Drawing.Point(869, 12);
             this.labelVideoInfo.Name = "labelVideoInfo";
             this.labelVideoInfo.Size = new System.Drawing.Size(369, 13);
             this.labelVideoInfo.TabIndex = 12;
@@ -2081,10 +2105,10 @@
             this.trackBarWaveFormPosition.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.trackBarWaveFormPosition.AutoSize = false;
-            this.trackBarWaveFormPosition.Location = new System.Drawing.Point(645, 258);
+            this.trackBarWaveFormPosition.Location = new System.Drawing.Point(645, 264);
             this.trackBarWaveFormPosition.Maximum = 1000;
             this.trackBarWaveFormPosition.Name = "trackBarWaveFormPosition";
-            this.trackBarWaveFormPosition.Size = new System.Drawing.Size(586, 20);
+            this.trackBarWaveFormPosition.Size = new System.Drawing.Size(592, 20);
             this.trackBarWaveFormPosition.TabIndex = 11;
             this.trackBarWaveFormPosition.TickStyle = System.Windows.Forms.TickStyle.None;
             this.trackBarWaveFormPosition.ValueChanged += new System.EventHandler(this.trackBarWaveFormPosition_ValueChanged);
@@ -2093,7 +2117,7 @@
             // 
             this.panelWaveFormControls.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.panelWaveFormControls.Controls.Add(this.toolStrip2);
-            this.panelWaveFormControls.Location = new System.Drawing.Point(478, 263);
+            this.panelWaveFormControls.Location = new System.Drawing.Point(478, 269);
             this.panelWaveFormControls.Name = "panelWaveFormControls";
             this.panelWaveFormControls.Size = new System.Drawing.Size(161, 29);
             this.panelWaveFormControls.TabIndex = 10;
@@ -2184,11 +2208,11 @@
             this.AudioWaveForm.DrawGridLines = true;
             this.AudioWaveForm.GridColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(20)))), ((int)(((byte)(18)))));
             this.AudioWaveForm.Location = new System.Drawing.Point(475, 30);
-            this.AudioWaveForm.Margin = new System.Windows.Forms.Padding(4);
+            this.AudioWaveForm.Margin = new System.Windows.Forms.Padding(0);
             this.AudioWaveForm.Name = "AudioWaveForm";
             this.AudioWaveForm.NewSelectionParagraph = null;
             this.AudioWaveForm.SelectedColor = System.Drawing.Color.Red;
-            this.AudioWaveForm.Size = new System.Drawing.Size(756, 222);
+            this.AudioWaveForm.Size = new System.Drawing.Size(762, 228);
             this.AudioWaveForm.StartPositionSeconds = 0D;
             this.AudioWaveForm.TabIndex = 6;
             this.AudioWaveForm.TextColor = System.Drawing.Color.Gray;
@@ -2941,9 +2965,9 @@
             this.labelSubtitle.BackColor = System.Drawing.Color.Black;
             this.labelSubtitle.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelSubtitle.ForeColor = System.Drawing.Color.White;
-            this.labelSubtitle.Location = new System.Drawing.Point(0, 248);
+            this.labelSubtitle.Location = new System.Drawing.Point(0, 246);
             this.labelSubtitle.Name = "labelSubtitle";
-            this.labelSubtitle.Size = new System.Drawing.Size(280, 32);
+            this.labelSubtitle.Size = new System.Drawing.Size(281, 33);
             this.labelSubtitle.TabIndex = 3;
             this.labelSubtitle.Text = "labelSubtitle";
             this.labelSubtitle.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -2955,10 +2979,11 @@
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.mediaPlayer.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(18)))), ((int)(((byte)(18)))), ((int)(((byte)(18)))));
             this.mediaPlayer.CurrentPosition = 0D;
-            this.mediaPlayer.Location = new System.Drawing.Point(0, 2);
+            this.mediaPlayer.Location = new System.Drawing.Point(0, 0);
+            this.mediaPlayer.Margin = new System.Windows.Forms.Padding(0);
             this.mediaPlayer.Name = "mediaPlayer";
             this.mediaPlayer.ShowStopButton = true;
-            this.mediaPlayer.Size = new System.Drawing.Size(280, 246);
+            this.mediaPlayer.Size = new System.Drawing.Size(281, 246);
             this.mediaPlayer.TabIndex = 5;
             this.mediaPlayer.VideoPlayer = null;
             this.mediaPlayer.Volume = 0D;
@@ -3440,6 +3465,9 @@
         private System.Windows.Forms.ToolStripMenuItem chatToolStripMenuItem;
         private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.SplitContainer splitContainerMain;
+        private System.Windows.Forms.ToolStripMenuItem undockVideoControlsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem redockVideoControlsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator19;
     }
 }
 
