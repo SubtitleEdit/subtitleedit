@@ -346,7 +346,7 @@ namespace Nikse.SubtitleEdit.Forms
                         if (_userWordList.IndexOf(ChangeWord) < 0)
                         {
                             _noOfAddedWords++;
-                            _userWordList.Add(ChangeWord);
+                            _userWordList.Add(ChangeWord.ToLower());
                             XmlNode node = _userWordDictionary.CreateElement("word");
                             node.InnerText = ChangeWord.Trim().ToLower();
                             _userWordDictionary.DocumentElement.AppendChild(node);
