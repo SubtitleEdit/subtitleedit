@@ -574,6 +574,13 @@
             public string BeforeSetStartTimeAndOffsetTheRest { get; set; }
             public string ContinueWithCurrentSpellCheck { get; set; }
             public string CharactersPerSecond { get; set; }
+            public string NetworkMessage { get; set; }
+            public string NetworkUpdate { get; set; }
+            public string NetworkInsert { get; set; }
+            public string NetworkDelete { get; set; }
+            public string NetworkNewUser { get; set; }
+            public string NetworkByeUser { get; set; }
+            public string NetworkUnableToConnectToServer { get; set; }
             
             public class MainMenu
             {

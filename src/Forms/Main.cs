@@ -7382,7 +7382,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             catch (Exception exception)
             {
-                MessageBox.Show("Unable to connect to server: " + exception.Message);
+                MessageBox.Show(string.Format(_language.NetworkUnableToConnectToServer, exception.Message));
                 _networkSession.TimerStop();
                 if (_networkChat != null && !_networkChat.IsDisposed)
                 {
@@ -7419,7 +7419,7 @@ namespace Nikse.SubtitleEdit.Forms
                             {
                                 _networkChat.AddUser(update.User);
                             }
-                            _networkSession.AppendToLog("New user: " + update.User.UserName + " (" + update.User.Ip + ")");
+                            _networkSession.AppendToLog(string.Format(_language.NetworkNewUser, update.User.UserName, update.User.Ip ));
                         }
                         else if (update.Action == "MSG")
                         {
@@ -7434,7 +7434,7 @@ namespace Nikse.SubtitleEdit.Forms
                             {
                                 _networkChat.AddChatMessage(update.User, update.Text);
                             }
-                            _networkSession.AppendToLog("Message: " + update.User.UserName + " (" + update.User.Ip + "): " + update.Text);
+                            _networkSession.AppendToLog(string.Format(_language.NetworkMessage, update.User.UserName, update.User.Ip, update.Text));
                         }
                         else if (update.Action == "DEL")
                         {
@@ -7442,7 +7442,7 @@ namespace Nikse.SubtitleEdit.Forms
                             _subtitle.Paragraphs.RemoveAt(update.Index);
                             if (_networkSession.LastSubtitle != null)
                                 _networkSession.LastSubtitle.Paragraphs.RemoveAt(update.Index);
-                            _networkSession.AppendToLog("Delete: " + update.User.UserName + " (" + update.User.Ip + "): Index=" + update.Index.ToString());
+                            _networkSession.AppendToLog(string.Format(_language.NetworkDelete, update.User.UserName , update.User.Ip, update.Index.ToString()));
                             _networkSession.AdjustUpdateLogToDelete(update.Index);
                             _change = true;
 
@@ -7470,7 +7470,7 @@ namespace Nikse.SubtitleEdit.Forms
                             _subtitle.Paragraphs.Insert(update.Index, p);
                             if (_networkSession.LastSubtitle != null)
                                 _networkSession.LastSubtitle.Paragraphs.Insert(update.Index, new Paragraph(p));
-                            _networkSession.AppendToLog("Insert: " + update.User.UserName + " (" + update.User.Ip + "): Index=" + update.Index.ToString() + ", Text=" + update.Text.Replace(Environment.NewLine, Configuration.Settings.General.ListViewLineSeparatorString));
+                            _networkSession.AppendToLog(string.Format(_language.NetworkInsert, update.User.UserName, update.User.Ip, update.Index.ToString(), update.Text.Replace(Environment.NewLine, Configuration.Settings.General.ListViewLineSeparatorString)));
                             _networkSession.AddToWsUserLog(update.User, update.Index, update.Action, false);
                             updateListViewStatus = true;
                             _networkSession.AdjustUpdateLogToInsert(update.Index);
@@ -7500,6 +7500,7 @@ namespace Nikse.SubtitleEdit.Forms
                                 p.EndTime.TotalMilliseconds = update.EndMilliseconds;
                                 p.Text = update.Text;
                                 SubtitleListview1.SetTimeAndText(update.Index, p);
+                                _networkSession.AppendToLog(string.Format(_language.NetworkUpdate, update.User.UserName, update.User.Ip, update.Index.ToString(), update.Text.Replace(Environment.NewLine, Configuration.Settings.General.ListViewLineSeparatorString)));
                                 _networkSession.AddToWsUserLog(update.User, update.Index, update.Action, true);
                                 updateListViewStatus = true;
                             }
@@ -7532,7 +7533,7 @@ namespace Nikse.SubtitleEdit.Forms
                             if (removeUser != null)
                                 _networkSession.Users.Remove(removeUser);
 
-                            _networkSession.AppendToLog("Bye: " + update.User.UserName + " (" + update.User.Ip + ")");
+                            _networkSession.AppendToLog(string.Format(_language.NetworkByeUser, update.User.UserName, update.User.Ip));
                         }
                         else
                         {
