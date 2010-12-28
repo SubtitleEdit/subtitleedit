@@ -69,16 +69,10 @@ namespace System.IO.Compression
         #endregion
 
         #region Private fields
-        // List of files to store
-        private List<ZipFileEntry> Files = new List<ZipFileEntry>();
-        // Filename of storage file
-        private string FileName;
         // Stream object of storage file
         private Stream ZipFileStream;
         // Central dir image
         private byte[] CentralDirImage = null;
-        // Existing files in zip
-        private ushort ExistingFiles = 0;
         // Static CRC32 Table
         private static UInt32[] CrcTable = null;
         // Default filename encoder
@@ -113,10 +107,7 @@ namespace System.IO.Compression
         public static ZipExtractor Open(string _filename)
         {
             Stream stream = (Stream)new FileStream(_filename, FileMode.Open, FileAccess.Read);
-
             ZipExtractor zip = Open(stream);
-            zip.FileName = _filename;
-
             return zip;
         }
 
@@ -364,7 +355,7 @@ namespace System.IO.Compression
                 11-15 Hour (0–23 on a 24-hour clock) 
         */
 
-        private DateTime DosTimeToDateTime(uint _dt)
+        private static DateTime DosTimeToDateTime(uint _dt)
         {
             return new DateTime(
                 (int)(_dt >> 25) + 1980,
@@ -403,7 +394,6 @@ namespace System.IO.Compression
                             return false;
 
                         // Copy entire central directory to a memory buffer
-                        this.ExistingFiles = entries;
                         this.CentralDirImage = new byte[centralSize];
                         this.ZipFileStream.Seek(centralDirOffset, SeekOrigin.Begin);
                         this.ZipFileStream.Read(this.CentralDirImage, 0, centralSize);

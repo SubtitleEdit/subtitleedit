@@ -53,6 +53,10 @@
             public string OriginalText { get; set; }
             public string OpenOriginalSubtitleFile { get; set; }
             public string PleaseWait { get; set; }
+            public string SessionKey { get; set; }
+            public string UserName { get; set; }
+            public string WebServiceUrl { get; set; }
+            public string IP { get; set; }
         }
 
         public class About
@@ -630,6 +634,8 @@
                     public string OpenVideo { get; set; }
                     public string ShowHideVideo { get; set; }
                     public string ShowHideWaveForm { get; set; }
+                    public string UnDockVideoControls { get; set; }
+                    public string ReDockVideoControls { get; set; }
                 }
                 public class SpellCheckMenu
                 {
@@ -658,6 +664,16 @@
                     public string Title { get; set; }
                     public string Settings { get; set; }
                     public string ChooseLanguage { get; set; }
+                }
+
+                public class NetworkingMenu
+                {
+                    public string Title { get; set; }
+                    public string StartNewSession { get; set; }
+                    public string JoinSession { get; set; }
+                    public string ShowSessionInfoAndLog { get; set; }
+                    public string Chat { get; set; }
+                    public string LeaveSession { get; set; }
                 }
 
                 public class HelpMenu
@@ -720,6 +736,7 @@
                 public SynchronizationkMenu Synchronization { get; set; }
                 public AutoTranslateMenu AutoTranslate { get; set; }
                 public OptionsMenu Options { get; set; }
+                public NetworkingMenu Networking { get; set; }
                 public HelpMenu Help { get; set; }
                 public ToolBarMenu ToolBar { get; set; }
                 public ListViewContextMenu ContextMenu { get; set; }              
@@ -830,21 +847,28 @@
         public class NetworkChat
         {
             public string Title { get; set; }
+            public string Send { get; set; }
         }
 
         public class NetworkJoin
         {
             public string Title { get; set; }
+            public string Information { get; set; }
+            public string Join { get; set; }
         }
 
         public class NetworkLogAndInfo
         {
             public string Title { get; set; }
+            public string Log { get; set; }
         }
 
         public class NetworkStart
         {
             public string Title { get; set; }
+            public string ConnectionTo { get; set; }
+            public string Information { get; set; }
+            public string Start { get; set; }
         }
 
         public class RemoveTextFromHearImpaired

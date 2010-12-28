@@ -538,6 +538,8 @@ namespace Nikse.SubtitleEdit.Forms
             openVideoToolStripMenuItem.Text = _language.Menu.Video.OpenVideo;
             showhideWaveFormToolStripMenuItem.Text = _language.Menu.Video.ShowHideWaveForm;
             showhideVideoToolStripMenuItem.Text = _language.Menu.Video.ShowHideVideo;
+            undockVideoControlsToolStripMenuItem.Text = _language.Menu.Video.UnDockVideoControls;
+            redockVideoControlsToolStripMenuItem.Text = _language.Menu.Video.ReDockVideoControls;
 
             toolStripMenuItemSpellCheckMain.Text = _language.Menu.SpellCheck.Title;
             spellCheckToolStripMenuItem.Text = _language.Menu.SpellCheck.SpellCheck;
@@ -566,6 +568,13 @@ namespace Nikse.SubtitleEdit.Forms
             catch
             { 
             }
+
+            toolStripMenuItemNetworking.Text = _language.Menu.Networking.Title;
+            startServerToolStripMenuItem.Text = _language.Menu.Networking.StartNewSession;
+            joinSessionToolStripMenuItem.Text = _language.Menu.Networking.JoinSession;
+            showSessionKeyLogToolStripMenuItem.Text = _language.Menu.Networking.ShowSessionInfoAndLog;
+            chatToolStripMenuItem.Text = _language.Menu.Networking.Chat;
+            leaveSessionToolStripMenuItem.Text = _language.Menu.Networking.LeaveSession;
 
             helpToolStripMenuItem.Text = _language.Menu.Help.Title;
             helpToolStripMenuItem1.Text = _language.Menu.Help.Help;
