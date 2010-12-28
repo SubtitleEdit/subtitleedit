@@ -49,13 +49,13 @@
             // 
             // labelSessionKey
             // 
-            this.labelSessionKey.AutoSize = true;
             this.labelSessionKey.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.labelSessionKey.Location = new System.Drawing.Point(87, 19);
+            this.labelSessionKey.Location = new System.Drawing.Point(12, 19);
             this.labelSessionKey.Name = "labelSessionKey";
-            this.labelSessionKey.Size = new System.Drawing.Size(64, 13);
+            this.labelSessionKey.Size = new System.Drawing.Size(139, 17);
             this.labelSessionKey.TabIndex = 21;
             this.labelSessionKey.Text = "Session key";
+            this.labelSessionKey.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // labelLog
             // 
@@ -75,6 +75,7 @@
             this.textBoxLog.Multiline = true;
             this.textBoxLog.Name = "textBoxLog";
             this.textBoxLog.ReadOnly = true;
+            this.textBoxLog.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.textBoxLog.Size = new System.Drawing.Size(543, 179);
             this.textBoxLog.TabIndex = 4;
             // 
@@ -92,13 +93,13 @@
             // 
             // labelWebServiceUrl
             // 
-            this.labelWebServiceUrl.AutoSize = true;
             this.labelWebServiceUrl.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.labelWebServiceUrl.Location = new System.Drawing.Point(70, 71);
+            this.labelWebServiceUrl.Location = new System.Drawing.Point(12, 71);
             this.labelWebServiceUrl.Name = "labelWebServiceUrl";
-            this.labelWebServiceUrl.Size = new System.Drawing.Size(81, 13);
+            this.labelWebServiceUrl.Size = new System.Drawing.Size(139, 17);
             this.labelWebServiceUrl.TabIndex = 29;
             this.labelWebServiceUrl.Text = "Web service url";
+            this.labelWebServiceUrl.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // textBoxUserName
             // 
@@ -110,13 +111,13 @@
             // 
             // labelUserName
             // 
-            this.labelUserName.AutoSize = true;
             this.labelUserName.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.labelUserName.Location = new System.Drawing.Point(96, 45);
+            this.labelUserName.Location = new System.Drawing.Point(12, 45);
             this.labelUserName.Name = "labelUserName";
-            this.labelUserName.Size = new System.Drawing.Size(55, 13);
+            this.labelUserName.Size = new System.Drawing.Size(139, 17);
             this.labelUserName.TabIndex = 28;
             this.labelUserName.Text = "Username";
+            this.labelUserName.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // textBoxWebServiceUrl
             // 

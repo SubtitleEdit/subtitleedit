@@ -71,13 +71,13 @@
             // 
             // labelUserName
             // 
-            this.labelUserName.AutoSize = true;
             this.labelUserName.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.labelUserName.Location = new System.Drawing.Point(36, 86);
+            this.labelUserName.Location = new System.Drawing.Point(2, 86);
             this.labelUserName.Name = "labelUserName";
-            this.labelUserName.Size = new System.Drawing.Size(55, 13);
+            this.labelUserName.Size = new System.Drawing.Size(89, 13);
             this.labelUserName.TabIndex = 3;
             this.labelUserName.Text = "Username";
+            this.labelUserName.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // comboBoxWebServiceUrl
             // 
@@ -92,13 +92,13 @@
             // 
             // labelWebServiceUrl
             // 
-            this.labelWebServiceUrl.AutoSize = true;
             this.labelWebServiceUrl.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.labelWebServiceUrl.Location = new System.Drawing.Point(10, 112);
+            this.labelWebServiceUrl.Location = new System.Drawing.Point(2, 109);
             this.labelWebServiceUrl.Name = "labelWebServiceUrl";
-            this.labelWebServiceUrl.Size = new System.Drawing.Size(81, 13);
+            this.labelWebServiceUrl.Size = new System.Drawing.Size(89, 16);
             this.labelWebServiceUrl.TabIndex = 8;
             this.labelWebServiceUrl.Text = "Web service url";
+            this.labelWebServiceUrl.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // labelInfo
             // 
@@ -120,13 +120,13 @@
             // 
             // labelSessionKey
             // 
-            this.labelSessionKey.AutoSize = true;
             this.labelSessionKey.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.labelSessionKey.Location = new System.Drawing.Point(26, 60);
+            this.labelSessionKey.Location = new System.Drawing.Point(-1, 60);
             this.labelSessionKey.Name = "labelSessionKey";
-            this.labelSessionKey.Size = new System.Drawing.Size(65, 13);
+            this.labelSessionKey.Size = new System.Drawing.Size(92, 17);
             this.labelSessionKey.TabIndex = 11;
             this.labelSessionKey.Text = "Session Key";
+            this.labelSessionKey.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // textBoxSessionKey
             // 

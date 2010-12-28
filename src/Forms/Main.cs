@@ -3015,12 +3015,12 @@ namespace Nikse.SubtitleEdit.Forms
                 var indexes = new List<int>();
                 foreach (ListViewItem item in SubtitleListview1.SelectedItems)
                     indexes.Add(item.Index);
-                int firstIndex = SubtitleListview1.SelectedItems[0].Index;
+                int firstIndex = SubtitleListview1.SelectedItems[0].Index;              
 
                 if (_networkSession != null)
                 {
                     _networkSession.TimerStop();
-                    NetworkGetSendUpdates(indexes, 0, null);
+                    NetworkGetSendUpdates(indexes, 0, null);                    
                 }
                 else
                 {
@@ -7375,10 +7375,11 @@ namespace Nikse.SubtitleEdit.Forms
             SubtitleListview1.SelectedIndexChanged -= SubtitleListview1_SelectedIndexChanged;
             string message = string.Empty;
 
+            int numberOfLines = 0;
             List<SeNetworkService.SeUpdate> updates = null;
             try
             {
-                updates = _networkSession.GetUpdates(out message);
+                updates = _networkSession.GetUpdates(out message, out numberOfLines);
             }
             catch (Exception exception)
             {
@@ -7541,6 +7542,18 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                     }
                 }
+                if (numberOfLines != _subtitle.Paragraphs.Count)
+                {
+                    _subtitle = _networkSession.ReloadSubtitle();
+                    SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
+                    UpdateListviewWithUserLogEntries();
+                    _networkSession.LastSubtitle = new Subtitle(_subtitle);
+                    _oldSelectedParagraph = null;
+                    SubtitleListview1.SelectedIndexChanged += SubtitleListview1_SelectedIndexChanged;
+                    _networkSession.TimerStart();
+                    RefreshSelectedParagraph();
+                    return;
+                }
                 if (deleteIndices.Count > 0)
                 {
                     deleteIndices.Sort();
@@ -7564,8 +7577,6 @@ namespace Nikse.SubtitleEdit.Forms
                     doReFill = true;
                 }
                 _networkSession.CheckForAndSubmitUpdates(updates); // updates only (no inserts/deletes)
-
-                //TODO: do some compare lines count... and reload if no match!
             }
             else
             {

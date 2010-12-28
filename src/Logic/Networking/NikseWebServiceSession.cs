@@ -140,15 +140,31 @@ namespace Nikse.SubtitleEdit.Logic.Networking
             _timerWebService.Start();
         }
 
-        public List<SeNetworkService.SeUpdate> GetUpdates(out string message)
+        public List<SeNetworkService.SeUpdate> GetUpdates(out string message, out int numberOfLines)
         {
             List<SeNetworkService.SeUpdate> list = new List<SeNetworkService.SeUpdate>();
             DateTime newUpdateTime;
-            var updates = _seWs.GetUpdates(SessionId, CurrentUser.UserName, _seWsLastUpdate, out message, out newUpdateTime);
+            var updates = _seWs.GetUpdates(SessionId, CurrentUser.UserName, _seWsLastUpdate, out message, out newUpdateTime, out numberOfLines);
             foreach (var update in updates)
                 list.Add(update);
             _seWsLastUpdate = newUpdateTime;
             return list;
+        }
+
+        public Subtitle ReloadSubtitle()
+        {
+            Subtitle.Paragraphs.Clear();
+            string tempFileName;
+            DateTime updateTime;
+            var sequences = _seWs.GetSubtitle(SessionId, out tempFileName, out updateTime);
+            FileName = tempFileName;
+            _seWsLastUpdate = updateTime;
+            if (sequences != null)
+            {
+                foreach (var sequence in sequences)
+                    Subtitle.Paragraphs.Add(new Paragraph(HttpUtility.HtmlDecode(sequence.Text).Replace("<br />", Environment.NewLine), sequence.StartMilliseconds, sequence.EndMilliseconds));
+            }
+            return Subtitle;
         }
 
         private void ReloadFromWs()
