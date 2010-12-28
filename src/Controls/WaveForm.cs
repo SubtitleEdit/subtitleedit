@@ -219,7 +219,7 @@ namespace Nikse.SubtitleEdit.Controls
             Invalidate();
         }
 
-        private int CalculateHeight(double value, int imageHeight, int maxHeight)
+        private static int CalculateHeight(double value, int imageHeight, int maxHeight)
         {
             double percentage = value / maxHeight;
             int result = (int)Math.Round((percentage * imageHeight) + (imageHeight / 2));
@@ -371,9 +371,9 @@ namespace Nikse.SubtitleEdit.Controls
             }
         }
 
-        private void DrawTimeLine(double StartPositionSeconds, PaintEventArgs e)
+        private void DrawTimeLine(double startPositionSeconds, PaintEventArgs e)
         {
-            int start = (int)Math.Round(StartPositionSeconds + 0.5);
+            int start = (int)Math.Round(startPositionSeconds + 0.5);
             double seconds = start - StartPositionSeconds;
             float position = SecondsToXPosition(seconds);
             Pen pen = new Pen(TextColor);
@@ -398,7 +398,7 @@ namespace Nikse.SubtitleEdit.Controls
             }
         }
 
-        private string GetDisplayTime(double seconds)
+        private static string GetDisplayTime(double seconds)
         {
             TimeSpan ts = TimeSpan.FromSeconds(seconds);
             if (ts.Minutes == 0 && ts.Hours == 0)
@@ -743,7 +743,7 @@ namespace Nikse.SubtitleEdit.Controls
             }
         }
 
-        private bool IsParagrapBorderHit(int milliseconds, List<Paragraph> paragraphs)
+        private static bool IsParagrapBorderHit(int milliseconds, List<Paragraph> paragraphs)
         {
             foreach (Paragraph p in paragraphs)
             {
@@ -754,7 +754,7 @@ namespace Nikse.SubtitleEdit.Controls
             return false;
         }
 
-        private bool IsParagrapBorderHit(int milliseconds, Paragraph paragraph)
+        private static bool IsParagrapBorderHit(int milliseconds, Paragraph paragraph)
         {
             if (paragraph == null)
                 return false;
@@ -921,7 +921,6 @@ namespace Nikse.SubtitleEdit.Controls
                     else if (ModifierKeys == (Keys.Control | Keys.Shift) && _selectedParagraph != null)
                     {
                         double seconds = XPositionToSeconds(e.X);
-                        int milliseconds = (int)(seconds * 1000.0);
                         if (_mouseDownParagraphType == MouseDownParagraphType.None || _mouseDownParagraphType == MouseDownParagraphType.Whole)
                         {
                             _mouseDownParagraph = _selectedParagraph;
