@@ -411,9 +411,9 @@ namespace Nikse.SubtitleEdit.Logic
                 gs.SubtitleFontName = "Tahoma";
 
             if (gs.SubtitleFontBold)
-                control.Font = new System.Drawing.Font(gs.SubtitleFontName, gs.SubtitleFontSize, System.Drawing.FontStyle.Bold);
+                control.Font = new Font(gs.SubtitleFontName, gs.SubtitleFontSize, FontStyle.Bold);
             else
-                control.Font = new System.Drawing.Font(gs.SubtitleFontName, gs.SubtitleFontSize);
+                control.Font = new Font(gs.SubtitleFontName, gs.SubtitleFontSize);
 
             control.BackColor = gs.SubtitleBackgroundColor;
             control.ForeColor = gs.SubtitleFontColor;
@@ -506,8 +506,7 @@ namespace Nikse.SubtitleEdit.Logic
                         {
                             if (GetCount(hewbrewEncoding.GetString(buffer), "אולי", "אולי", "אולי", "אולי", "טוב", "טוב") > 10)
                                 return hewbrewEncoding;
-                            else
-                                return arabicEncoding;
+                            return arabicEncoding;
                         }
                         else if (GetCount(hewbrewEncoding.GetString(buffer), "אתה", "אולי", "הוא", "בסדר", "יודע", "טוב") > 5)
                             return hewbrewEncoding;
@@ -593,8 +592,7 @@ namespace Nikse.SubtitleEdit.Logic
                 {
                     if (GetCount(hewbrewEncoding.GetString(buffer), "אולי", "אולי", "אולי", "אולי", "טוב", "טוב") > 10)
                         return hewbrewEncoding;
-                    else
-                        return arabicEncoding;
+                    return arabicEncoding;
                 }
                 else if (GetCount(hewbrewEncoding.GetString(buffer), "אתה", "אולי", "הוא", "בסדר", "יודע", "טוב") > 5)
                     return hewbrewEncoding;
@@ -826,7 +824,19 @@ namespace Nikse.SubtitleEdit.Logic
                 sb.AppendLine(p.Text);
             string text = sb.ToString();
 
-            foreach (string name in GetDictionaryLanguages())
+            List<string> dictionaryNames = GetDictionaryLanguages();
+
+            bool containsEnGB = false;
+            bool containsEnUS = false;
+            foreach (string name in dictionaryNames)
+            {
+                if (name.Contains("[en_GB]"))
+                    containsEnGB = true;
+                if (name.Contains("[en_US]"))
+                    containsEnUS = true;
+            }
+
+            foreach (string name in dictionaryNames)
             {
                 string shortName = string.Empty;
                 int start = name.IndexOf("[");
@@ -861,7 +871,54 @@ namespace Nikse.SubtitleEdit.Logic
                     case "en_US":
                         count = GetCount(text, "we", "are", "and", "you", "your", "what");
                         if (count > bestCount)
-                            languageName = shortName;
+                        {
+                            if (!string.IsNullOrEmpty(languageName) && languageName.StartsWith("en_"))
+                            {
+                                //keep existing english language
+                            }
+                            else
+                            {
+                                if (containsEnGB)
+                                {
+                                    int usCount = GetCount("color", "flavor", "ass", "humor", "neighbor", "honor", "airplane");
+                                    int gbCount = GetCount("colour", "flavour", "arse", "humour", "neighbour", "honour", "aeroplane");
+                                    if (usCount >= gbCount)
+                                        languageName = shortName;
+                                    else
+                                        languageName = "en_GB";
+                                }
+                                else
+                                {
+                                    languageName = shortName;
+                                }
+                            }
+                        }
+                        break;
+                    case "en_GB":
+                        count = GetCount(text, "we", "are", "and", "you", "your", "what");
+                        if (count > bestCount)
+                        {
+                            if (!string.IsNullOrEmpty(languageName) && languageName.StartsWith("en_"))
+                            {
+                                //keep existing english language
+                            }
+                            else
+                            {
+                                if (containsEnUS)
+                                {
+                                    int usCount = GetCount("color", "flavor", "ass", "humor", "neighbor", "honor", "airplane");
+                                    int gbCount = GetCount("colour", "flavour", "arse", "humour", "neighbour", "honour", "aeroplane");
+                                    if (usCount >= gbCount)
+                                        languageName = "en_US";
+                                    else
+                                        languageName = "en_GB";
+                                }
+                                else
+                                {
+                                    languageName = shortName;
+                                }
+                            }
+                        }
                         break;
                     case "sv_SE":
                         count = GetCount(text, "vi", "är", "och", "Jag", "inte", "för");
@@ -949,7 +1006,7 @@ namespace Nikse.SubtitleEdit.Logic
             return languageName;
         }
 
-        public static string ColorToHex(System.Drawing.Color c)
+        public static string ColorToHex(Color c)
         {
             string result = string.Format("#{0:x2}{1:x2}{2:x2}", c.R, c.G, c.B);
             return result;
@@ -1143,9 +1200,9 @@ namespace Nikse.SubtitleEdit.Logic
                 labelLength.Left = position;
                 position += labelLength.Width - 4;
                 if (line.Length > Configuration.Settings.General.SubtitleLineMaximumLength)
-                    labelLength.ForeColor = System.Drawing.Color.Red;
+                    labelLength.ForeColor = Color.Red;
                 else if (line.Length > Configuration.Settings.General.SubtitleLineMaximumLength - 5)
-                    labelLength.ForeColor = System.Drawing.Color.Orange;
+                    labelLength.ForeColor = Color.Orange;
             }
         }
 
@@ -1373,9 +1430,9 @@ namespace Nikse.SubtitleEdit.Logic
         internal static Color GetColorFromUserName(string userName)
         {
             if (string.IsNullOrEmpty(userName))
-                return System.Drawing.Color.Pink;
+                return Color.Pink;
 
-            byte[] buffer = System.Text.Encoding.UTF8.GetBytes(userName);
+            byte[] buffer = Encoding.UTF8.GetBytes(userName);
             long number = 0;
             foreach (byte b in buffer)
                 number += b;
@@ -1413,7 +1470,7 @@ namespace Nikse.SubtitleEdit.Logic
             if (string.IsNullOrEmpty(userName))
                 return 0;
 
-            byte[] buffer = System.Text.Encoding.UTF8.GetBytes(userName);
+            byte[] buffer = Encoding.UTF8.GetBytes(userName);
             long number = 0;
             foreach (byte b in buffer)
                 number += b;
@@ -1444,7 +1501,7 @@ namespace Nikse.SubtitleEdit.Logic
             StringBuilder encodedValue = new StringBuilder();
             foreach (char c in chars)
             {
-                if ((int)c > 127) // above normal ASCII
+                if (c > 127) // above normal ASCII
                     encodedValue.Append("&#" + (int)c + ";");
                 else
                     encodedValue.Append(c);

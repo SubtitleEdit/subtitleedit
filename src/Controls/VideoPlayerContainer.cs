@@ -305,7 +305,7 @@ namespace Nikse.SubtitleEdit.Controls
 
             _labelTimeCode.Location = new Point(280, 29);
             _labelTimeCode.ForeColor = Color.FromArgb(100, 200, 200);
-            _labelTimeCode.Font = new System.Drawing.Font(_labelTimeCode.Font.FontFamily, 7);
+            _labelTimeCode.Font = new Font(_labelTimeCode.Font.FontFamily, 7);
             _labelTimeCode.AutoSize = true;
             _panelcontrols.Controls.Add(_labelTimeCode);
 
@@ -321,29 +321,6 @@ namespace Nikse.SubtitleEdit.Controls
 
         public void VideoPlayerContainerResize(object sender, EventArgs e)
         {
-            //_pictureBoxPlay.Left = 22;
-            //_pictureBoxPlay.Top = 126 - 113;
-            //_pictureBoxPlayDown.Location = new Point(22, 127 - 113);
-            //_pictureBoxPlayOver.Location = new Point(23, 126 - 113);
-
-            //_pictureBoxPause.Location = new Point(23, 126 - 113);
-            //_pictureBoxPauseDown.Location = new Point(22, 127 - 113);
-            //_pictureBoxPauseOver.Location = new Point(22, 127 - 113);
-
-            //_pictureBoxStop.Location = new Point(60, 130 - 113);
-            //_pictureBoxStopDown.Location = new Point(60, 130 - 113);
-            //_pictureBoxStopOver.Location = new Point(60, 130 - 113);
-
-            //_pictureBoxMute.Location = new Point(91, 131 - 113);
-            //_pictureBoxMuteDown.Location = new Point(91, 131 - 113);
-            //_pictureBoxMuteOver.Location = new Point(91, 131 - 113);
-
-            //_pictureBoxProgressBar.Location = new Point(47, 118 - 113);
-            //_pictureBoxVolumeBarBackground.Location = new Point(111, 135 - 113);
-            //_pictureBoxVolumeBar.Location = new Point(120, 139 - 113);
-            //_pictureBoxProgressbarBackground.Location = new Point(43, 114 - 113);
-
-
             PanelPlayer.Height = Height - ControlsHeight;
             PanelPlayer.Width = Width;
 
@@ -354,7 +331,6 @@ namespace Nikse.SubtitleEdit.Controls
             _pictureBoxFastForward.Left = Width - 49;
 
             _labelTimeCode.Left = Width - 170;
-
         }
 
         #region PlayPauseButtons

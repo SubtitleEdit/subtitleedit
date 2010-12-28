@@ -6,7 +6,7 @@ using Nikse.SubtitleEdit.Logic;
 
 namespace Nikse.SubtitleEdit.Controls
 {
-    public class SubtitleListView : ListView
+    public sealed class SubtitleListView : ListView
     {
         public const int ColumnIndexNumber = 0;
         public const int ColumnIndexStart = 1;
@@ -19,7 +19,7 @@ namespace Nikse.SubtitleEdit.Controls
         private int _firstVisibleIndex = -1;
         private string _lineSeparatorString = " || ";
         public string SubtitleFontName = "Tahoma";
-        public bool SubtitleFontBold = false;
+        public bool SubtitleFontBold;
         public int SubtitleFontSize = 8;
         public bool IsAlternateTextColumnVisible { get; private set; }
         public bool IsExtraColumnVisible { get; private set; }
@@ -50,7 +50,7 @@ namespace Nikse.SubtitleEdit.Controls
 
         public SubtitleListView()
         {
-            this.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            Font = new Font("Tahoma", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
             Columns.AddRange(new[] 
             {
 			    new ColumnHeader { Text="#", Width=55 },
@@ -82,7 +82,7 @@ namespace Nikse.SubtitleEdit.Controls
                 }
 
                 int length = Columns[ColumnIndexNumber].Width + Columns[ColumnIndexStart].Width + Columns[ColumnIndexEnd].Width + Columns[ColumnIndexDuration].Width;
-                int lengthAvailable = this.Width - length;
+                int lengthAvailable = Width - length;
                 Columns[ColumnIndexText].Width = (lengthAvailable / 2) - 15;
                 Columns[ColumnIndexTextAlternate].Width = -2;
 
@@ -198,7 +198,7 @@ namespace Nikse.SubtitleEdit.Controls
                 FirstVisibleIndex = -1;
         }
 
-        private string GetOriginalSubtitle(int index, Paragraph paragraph, List<Paragraph> originalParagraphs)
+        private static string GetOriginalSubtitle(int index, Paragraph paragraph, List<Paragraph> originalParagraphs)
         {
             if (index < originalParagraphs.Count && Math.Abs(originalParagraphs[index].StartTime.TotalMilliseconds - paragraph.StartTime.TotalMilliseconds) < 50)
                 return originalParagraphs[index].Text;
@@ -336,7 +336,7 @@ namespace Nikse.SubtitleEdit.Controls
                 Columns.Add(new ColumnHeader { Text = title, Width = 80 });
 
                 int length = Columns[ColumnIndexNumber].Width + Columns[ColumnIndexStart].Width + Columns[ColumnIndexEnd].Width + Columns[ColumnIndexDuration].Width;
-                int lengthAvailable = this.Width - length;
+                int lengthAvailable = Width - length;
 
                 if (IsAlternateTextColumnVisible)
                 {
@@ -470,12 +470,12 @@ namespace Nikse.SubtitleEdit.Controls
         {
             if (index >= 0 && index < Items.Count)
             {
-                ListViewItem item = Items[index];                
-                Items[index].Text = string.Empty;
-                Items[index].SubItems[ColumnIndexStart].Text = string.Empty;
-                Items[index].SubItems[ColumnIndexEnd].Text = string.Empty;
-                Items[index].SubItems[ColumnIndexDuration].Text = string.Empty;
-                Items[index].SubItems[ColumnIndexText].Text = string.Empty;
+                ListViewItem item = Items[index];
+                item.Text = string.Empty;
+                item.SubItems[ColumnIndexStart].Text = string.Empty;
+                item.SubItems[ColumnIndexEnd].Text = string.Empty;
+                item.SubItems[ColumnIndexDuration].Text = string.Empty;
+                item.SubItems[ColumnIndexText].Text = string.Empty;
 
                 SetBackgroundColor(index, color);
             }

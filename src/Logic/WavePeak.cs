@@ -79,7 +79,7 @@ namespace Nikse.SubtitleEdit.Logic
             stream.Read(buffer, 0, buffer.Length);
             DataId = Encoding.UTF8.GetString(buffer, 0, 4);
             DataChunkSize = BitConverter.ToInt32(buffer, 4);
-            DataStartPosition = (int)(ConstantHeaderSize + FmtChunkSize + 8);
+            DataStartPosition = ConstantHeaderSize + FmtChunkSize + 8;
 
             _headerData = new byte[DataStartPosition];
             stream.Position = 0;
@@ -98,7 +98,7 @@ namespace Nikse.SubtitleEdit.Logic
         {
             get
             {
-                return DataChunkSize / BytesPerSecond;
+                return (double)DataChunkSize / BytesPerSecond;
             }
         }
 
@@ -115,24 +115,25 @@ namespace Nikse.SubtitleEdit.Logic
             toStream.Write(_headerData, 0, _headerData.Length);
         }
 
-        private void WriteInt16ToByteArray(byte[] _headerData, int index, int value)
+        private static void WriteInt16ToByteArray(byte[] headerData, int index, int value)
         {
             byte[] buffer = BitConverter.GetBytes((short)value);
             for (int i = 0; i < buffer.Length; i++)
-                _headerData[index + i] = buffer[i];
+                headerData[index + i] = buffer[i];
         }
-        private void WriteInt32ToByteArray(byte[] _headerData, int index, int value)
+
+        private static void WriteInt32ToByteArray(byte[] headerData, int index, int value)
         {
             byte[] buffer = BitConverter.GetBytes(value);
             for (int i = 0; i < buffer.Length; i++)
-                _headerData[index + i] = buffer[i];
+                headerData[index + i] = buffer[i];
         }
     }
 
     public class WavePeakGenerator
     {
-        private Stream _stream = null;
-        private byte[] _data = null;
+        private Stream _stream;
+        private byte[] _data;
 
         private delegate int ReadSampleDataValueDelegate(ref int index);
 
@@ -317,7 +318,7 @@ namespace Nikse.SubtitleEdit.Logic
         /// <returns>Sample data reader that matches bits per sample</returns>
         private ReadSampleDataValueDelegate GetSampleDataRerader()
         {
-            ReadSampleDataValueDelegate readSampleDataValue = null;
+            ReadSampleDataValueDelegate readSampleDataValue;
             switch (Header.BitsPerSample)
             {
                 case 8:

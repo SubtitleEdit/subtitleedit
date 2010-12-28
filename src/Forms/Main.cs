@@ -7268,7 +7268,7 @@ namespace Nikse.SubtitleEdit.Forms
             networkNew.Initialize(_networkSession, _fileName);
             if (networkNew.ShowDialog(this) == DialogResult.OK)
             { 
-                _networkSession.Log(_networkSession.CurrentUser.UserName + ": Started session " + _networkSession.SessionId + " at " + DateTime.Now.ToLongTimeString());
+                _networkSession.AppendToLog(_networkSession.CurrentUser.UserName + ": Started session " + _networkSession.SessionId + " at " + DateTime.Now.ToLongTimeString());
                 toolStripStatusNetworking.Visible = true;
                 toolStripStatusNetworking.Text = "Network mode";
                 EnableDisableControlsNotWorkingInNetworkMode(false);
@@ -7298,7 +7298,7 @@ namespace Nikse.SubtitleEdit.Forms
                 toolStripStatusNetworking.Visible = true;
                 toolStripStatusNetworking.Text = "Network mode";
                 EnableDisableControlsNotWorkingInNetworkMode(false);
-                _networkSession.Log(_networkSession.CurrentUser.UserName + ": Joined session " + _networkSession.SessionId + " at " + DateTime.Now.ToLongTimeString());
+                _networkSession.AppendToLog(_networkSession.CurrentUser.UserName + ": Joined session " + _networkSession.SessionId + " at " + DateTime.Now.ToLongTimeString());
                 SubtitleListview1.ShowExtraColumn("User/action");
                 _subtitleListViewIndex = -1;
                 _oldSelectedParagraph = null;
@@ -7410,7 +7410,7 @@ namespace Nikse.SubtitleEdit.Forms
                             {
                                 _networkChat.AddUser(update.User);
                             }
-                            _networkSession.Log("New user: " + update.User.UserName + " (" + update.User.Ip + ")");
+                            _networkSession.AppendToLog("New user: " + update.User.UserName + " (" + update.User.Ip + ")");
                         }
                         else if (update.Action == "MSG")
                         {
@@ -7425,7 +7425,7 @@ namespace Nikse.SubtitleEdit.Forms
                             {
                                 _networkChat.AddChatMessage(update.User, update.Text);
                             }
-                            _networkSession.Log("Message: " + update.User.UserName + " (" + update.User.Ip + "): " + update.Text);
+                            _networkSession.AppendToLog("Message: " + update.User.UserName + " (" + update.User.Ip + "): " + update.Text);
                         }
                         else if (update.Action == "DEL")
                         {
@@ -7433,7 +7433,7 @@ namespace Nikse.SubtitleEdit.Forms
                             _subtitle.Paragraphs.RemoveAt(update.Index);
                             if (_networkSession.LastSubtitle != null)
                                 _networkSession.LastSubtitle.Paragraphs.RemoveAt(update.Index);
-                            _networkSession.Log("Delete: " + update.User.UserName + " (" + update.User.Ip + "): Index=" + update.Index.ToString());
+                            _networkSession.AppendToLog("Delete: " + update.User.UserName + " (" + update.User.Ip + "): Index=" + update.Index.ToString());
                             _networkSession.AdjustUpdateLogToDelete(update.Index);
                             _change = true;
 
@@ -7461,7 +7461,7 @@ namespace Nikse.SubtitleEdit.Forms
                             _subtitle.Paragraphs.Insert(update.Index, p);
                             if (_networkSession.LastSubtitle != null)
                                 _networkSession.LastSubtitle.Paragraphs.Insert(update.Index, new Paragraph(p));
-                            _networkSession.Log("Insert: " + update.User.UserName + " (" + update.User.Ip + "): Index=" + update.Index.ToString() + ", Text=" + update.Text.Replace(Environment.NewLine, Configuration.Settings.General.ListViewLineSeparatorString));
+                            _networkSession.AppendToLog("Insert: " + update.User.UserName + " (" + update.User.Ip + "): Index=" + update.Index.ToString() + ", Text=" + update.Text.Replace(Environment.NewLine, Configuration.Settings.General.ListViewLineSeparatorString));
                             _networkSession.AddToWsUserLog(update.User, update.Index, update.Action, false);
                             updateListViewStatus = true;
                             _networkSession.AdjustUpdateLogToInsert(update.Index);
@@ -7523,11 +7523,11 @@ namespace Nikse.SubtitleEdit.Forms
                             if (removeUser != null)
                                 _networkSession.Users.Remove(removeUser);
 
-                            _networkSession.Log("Bye: " + update.User.UserName + " (" + update.User.Ip + ")");
+                            _networkSession.AppendToLog("Bye: " + update.User.UserName + " (" + update.User.Ip + ")");
                         }
                         else
                         {
-                            _networkSession.Log("UNKNOWN ACTION: " + update.Action + " by " + update.User.UserName + " (" + update.User.Ip + ")");
+                            _networkSession.AppendToLog("UNKNOWN ACTION: " + update.Action + " by " + update.User.UserName + " (" + update.User.Ip + ")");
                         }
                     }
                 }
