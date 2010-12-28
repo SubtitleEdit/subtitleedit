@@ -5,7 +5,7 @@ using Nikse.SubtitleEdit.Logic.Networking;
 
 namespace Nikse.SubtitleEdit.Forms
 {
-    public partial class NetworkChat : Form
+    public sealed partial class NetworkChat : Form
     {
         Logic.Networking.NikseWebServiceSession _networkSession;
 
@@ -13,7 +13,10 @@ namespace Nikse.SubtitleEdit.Forms
         {
             InitializeComponent();
             buttonSendChat.Text = Configuration.Settings.Language.NetworkChat.Send;
-
+            listViewUsers.Columns[0].Text = Configuration.Settings.Language.General.UserName;
+            listViewUsers.Columns[1].Text = Configuration.Settings.Language.General.IP;
+            listViewChat.Columns[0].Text = Configuration.Settings.Language.General.UserName;
+            listViewChat.Columns[1].Text = Configuration.Settings.Language.General.Text;
         }
 
         internal void Initialize(Nikse.SubtitleEdit.Logic.Networking.NikseWebServiceSession networkSession)
