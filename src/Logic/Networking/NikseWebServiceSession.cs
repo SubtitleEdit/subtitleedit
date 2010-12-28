@@ -22,13 +22,13 @@ namespace Nikse.SubtitleEdit.Logic.Networking
         SeNetworkService.SeService _seWs;
         DateTime _seWsLastUpdate = DateTime.Now.AddYears(-1);
         public SeNetworkService.SeUser CurrentUser { get; set; }
-        public Subtitle LastSubtitle = null;
+        public Subtitle LastSubtitle;
         public Subtitle Subtitle;
         public Subtitle OriginalSubtitle;
         public string SessionId;
         public string FileName;
         public List<SeNetworkService.SeUser> Users;
-        public StringBuilder _log;
+        public StringBuilder Log;
 
         public string WebServiceUrl
         {
@@ -44,8 +44,8 @@ namespace Nikse.SubtitleEdit.Logic.Networking
             OriginalSubtitle = originalSubtitle;
             _timerWebService = new System.Windows.Forms.Timer();
             _timerWebService.Interval = 5000;
-            _timerWebService.Tick += new EventHandler(TimerWebServiceTick);
-            _log = new StringBuilder();
+            _timerWebService.Tick += TimerWebServiceTick;
+            Log = new StringBuilder();
             OnUpdateTimerTick = onUpdateTimerTick;
             OnUpdateUserLogEntries = onUpdateUserLogEntries;
         }
@@ -56,7 +56,7 @@ namespace Nikse.SubtitleEdit.Logic.Networking
             var list = new List<SeNetworkService.SeSequence>();
             foreach (Paragraph p in Subtitle.Paragraphs)
             {
-                list.Add(new SeNetworkService.SeSequence()
+                list.Add(new SeNetworkService.SeSequence
                 {
                     StartMilliseconds = (int)p.StartTime.TotalMilliseconds,
                     EndMilliseconds = (int)p.EndTime.TotalMilliseconds,
@@ -69,7 +69,7 @@ namespace Nikse.SubtitleEdit.Logic.Networking
             {
                 foreach (Paragraph p in OriginalSubtitle.Paragraphs)
                 {
-                    originalSubtitle.Add(new SeNetworkService.SeSequence()
+                    originalSubtitle.Add(new SeNetworkService.SeSequence
                     {
                         StartMilliseconds = (int)p.StartTime.TotalMilliseconds,
                         EndMilliseconds = (int)p.EndTime.TotalMilliseconds,
@@ -152,7 +152,7 @@ namespace Nikse.SubtitleEdit.Logic.Networking
         {
             if (_seWs != null)
             {
-                Subtitle = new Logic.Subtitle();
+                Subtitle = new Subtitle();
                 var sequences = _seWs.GetSubtitle(SessionId, out FileName, out _seWsLastUpdate);
                 foreach (var sequence in sequences)
                 {
@@ -164,15 +164,15 @@ namespace Nikse.SubtitleEdit.Logic.Networking
             }
         }
 
-        public void Log(string text)
+        public void AppendToLog(string text)
         {            
             string timestamp = DateTime.Now.ToLongTimeString();
-            _log.AppendLine(timestamp + ": " + text.TrimEnd().Replace(Environment.NewLine, Configuration.Settings.General.ListViewLineSeparatorString));
+            Log.AppendLine(timestamp + ": " + text.TrimEnd().Replace(Environment.NewLine, Configuration.Settings.General.ListViewLineSeparatorString));
         }
 
         public string GetLog()
         {
-            return _log.ToString();
+            return Log.ToString();
         }
 
         public void SendChatMessage(string message)
@@ -182,7 +182,7 @@ namespace Nikse.SubtitleEdit.Logic.Networking
 
         internal void UpdateLine(int index, Paragraph paragraph)
         {
-            _seWs.UpdateLine(SessionId, index, new SeNetworkService.SeSequence()
+            _seWs.UpdateLine(SessionId, index, new SeNetworkService.SeSequence
             {
                 StartMilliseconds = (int)paragraph.StartTime.TotalMilliseconds,
                 EndMilliseconds = (int)paragraph.EndTime.TotalMilliseconds,
@@ -250,13 +250,13 @@ namespace Nikse.SubtitleEdit.Logic.Networking
                 sb.Append(index + ", ");
                 AdjustUpdateLogToDelete(index);
             }
-            Log("Delete line: " + sb.ToString().Trim().TrimEnd(','));
+            AppendToLog("Delete line: " + sb.ToString().Trim().TrimEnd(','));
         }
 
         internal void InsertLine(int index, Paragraph newParagraph)
         {
             _seWs.InsertLine(SessionId, index, (int)newParagraph.StartTime.TotalMilliseconds, (int)newParagraph.EndTime.TotalMilliseconds, newParagraph.Text, CurrentUser);
-            Log("Insert line at " + index.ToString() + ": " + newParagraph.ToString());
+            AppendToLog("Insert line at " + index + ": " + newParagraph);
         }
 
         internal void AdjustUpdateLogToInsert(int index)
