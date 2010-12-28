@@ -1,13 +1,20 @@
 ﻿using System;
 using System.Windows.Forms;
+using Nikse.SubtitleEdit.Logic;
 
 namespace Nikse.SubtitleEdit.Forms
 {
-    public partial class NetworkLogAndInfo : Form
+    public sealed partial class NetworkLogAndInfo : Form
     {
         public NetworkLogAndInfo()
         {
             InitializeComponent();
+            Text = Configuration.Settings.Language.NetworkLogAndInfo.Title;
+            labelSessionKey.Text = Configuration.Settings.Language.General.SessionKey;
+            labelUserName.Text = Configuration.Settings.Language.General.UserName;
+            labelWebServiceUrl.Text = Configuration.Settings.Language.General.WebServiceUrl;
+            labelLog.Text = Configuration.Settings.Language.NetworkLogAndInfo.Log;
+            buttonOK.Text = Configuration.Settings.Language.General.OK;
         }
 
         internal void Initialize(Logic.Networking.NikseWebServiceSession _networkSession)
@@ -18,7 +25,7 @@ namespace Nikse.SubtitleEdit.Forms
             textBoxLog.Text = _networkSession.GetLog();
         }
 
-        private void buttonConnect_Click(object sender, EventArgs e)
+        private void buttonOK_Click(object sender, EventArgs e)
         {
             DialogResult = DialogResult.OK;
         }

@@ -2,7 +2,7 @@
 <Language Name="Dansk">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.0</Version>
+    <Version>3.1</Version>
     <TranslatedBy>Oversat til dansk af Nikse (mailto:nikse.dk@gmail.com)</TranslatedBy>
     <CultureName>da-DK</CultureName>
     <OK>&amp;OK</OK>
@@ -48,6 +48,10 @@
     <OriginalText>Oprindelig tekst</OriginalText>
     <OpenOriginalSubtitleFile>Åbn oprindelige undertekst fil...</OpenOriginalSubtitleFile>
     <PleaseWait>Vent venligst...</PleaseWait>
+    <SessionKey>Sessionsnøgle</SessionKey>
+    <UserName>Brugernavn</UserName>
+    <WebServiceUrl>Webservice url</WebServiceUrl>
+    <IP>IP</IP>
   </General>
   <About>
     <Title>Om Subtitle Edit</Title>
@@ -414,6 +418,8 @@
         <OpenVideo>Åbn video fil...</OpenVideo>
         <ShowHideVideo>Vis/skjul video</ShowHideVideo>
         <ShowHideWaveForm>Vis/skjul lyd kurve</ShowHideWaveForm>
+        <UnDockVideoControls>Pop video vinduer ud</UnDockVideoControls>
+        <ReDockVideoControls>Saml video vindue</ReDockVideoControls>
       </Video>
       <SpellCheck>
         <Title>Stavekontrol</Title>
@@ -439,6 +445,14 @@
         <Settings>&amp;Indstillinger...</Settings>
         <ChooseLanguage>&amp;Vælg sprog...</ChooseLanguage>
       </Options>
+      <Networking>
+        <Title>Fælles projekt online</Title>
+        <StartNewSession>Start ny session</StartNewSession>
+        <JoinSession>Deltag i session</JoinSession>
+        <ShowSessionInfoAndLog>Vis sessions-info og log</ShowSessionInfoAndLog>
+        <Chat>Chat</Chat>
+        <LeaveSession>Forlad session</LeaveSession>
+      </Networking>
       <Help>
         <Title>Hjælp</Title>
         <Help>&amp;Hjælp</Help>
@@ -742,6 +756,27 @@ Fortsæt?</SubtitleAppendPrompt>
     <Enabled>Aktiv</Enabled>
     <SearchType>Søge type</SearchType>
   </MultipleReplace>
+  <NetworkChat>
+    <Title>Chat</Title>
+    <Send>Send</Send>
+  </NetworkChat>
+  <NetworkJoin>
+    <Title>Deltag i netværks-session</Title>
+    <Information>Hop med i en eksisterende session, hvor flere personer
+ kan redigere i samme undertekst fil (fælles projekt online)</Information>
+    <Join>Deltag</Join>
+  </NetworkJoin>
+  <NetworkLogAndInfo>
+    <Title>Netværk sessions-info og log</Title>
+    <Log>Log:</Log>
+  </NetworkLogAndInfo>
+  <NetworkStart>
+    <Title>Start netværks-session</Title>
+    <ConnectionTo>Forbinder til {0}...</ConnectionTo>
+    <Information>Start ny session, hvor flere personer
+ kan redigere i samme undertekst fil (fælles online projekt)</Information>
+    <Start>Start</Start>
+  </NetworkStart>
   <RemoveTextFromHearImpaired>
     <Title>Fjern tekst for hørehæmmede</Title>
     <RemoveTextConditions>Betingelser</RemoveTextConditions>
@@ -813,6 +848,8 @@ Fortsæt?</SubtitleAppendPrompt>
     <SubtitleLineMaximumLength>undertekst max. længde</SubtitleLineMaximumLength>
     <SubtitleFont>undertekst skrifttype</SubtitleFont>
     <SubtitleFontSize>undertekst skriftstørrelse</SubtitleFontSize>
+    <SubtitleFontColor>Undertekst skriftfarve</SubtitleFontColor>
+    <SubtitleBackgroundColor>Undertekst baggrundsfarve</SubtitleBackgroundColor>
     <RememberRecentFiles>Husk seneste filer (for genåbn)</RememberRecentFiles>
     <StartWithLastFileLoaded>Start med sidste fil indlæst</StartWithLastFileLoaded>
     <RememberSelectedLine>Husk aktive linje</RememberSelectedLine>
@@ -890,6 +927,7 @@ Fortsæt?</SubtitleAppendPrompt>
   </Settings>
   <ShowEarlierLater>
     <Title>Vis valgte linjer tidligere/senere</Title>
+    <TitleAll>Vis alle linjer tidligere/senere</TitleAll>
     <ShowEarlier>Vis tidligere</ShowEarlier>
     <ShowLater>Vis senere</ShowLater>
     <TotalAdjustmentX>Samlede justering: {0}</TotalAdjustmentX>

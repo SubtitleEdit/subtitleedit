@@ -29,13 +29,13 @@
         private void InitializeComponent()
         {
             this.textBoxSessionKey = new System.Windows.Forms.TextBox();
-            this.label2 = new System.Windows.Forms.Label();
+            this.labelSessionKey = new System.Windows.Forms.Label();
             this.labelLog = new System.Windows.Forms.Label();
             this.textBoxLog = new System.Windows.Forms.TextBox();
-            this.buttonConnect = new System.Windows.Forms.Button();
-            this.label1 = new System.Windows.Forms.Label();
+            this.buttonOK = new System.Windows.Forms.Button();
+            this.labelWebServiceUrl = new System.Windows.Forms.Label();
             this.textBoxUserName = new System.Windows.Forms.TextBox();
-            this.labelGoToLine = new System.Windows.Forms.Label();
+            this.labelUserName = new System.Windows.Forms.Label();
             this.textBoxWebServiceUrl = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
@@ -47,15 +47,15 @@
             this.textBoxSessionKey.Size = new System.Drawing.Size(290, 20);
             this.textBoxSessionKey.TabIndex = 1;
             // 
-            // label2
+            // labelSessionKey
             // 
-            this.label2.AutoSize = true;
-            this.label2.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.label2.Location = new System.Drawing.Point(87, 19);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(64, 13);
-            this.label2.TabIndex = 21;
-            this.label2.Text = "Session key";
+            this.labelSessionKey.AutoSize = true;
+            this.labelSessionKey.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.labelSessionKey.Location = new System.Drawing.Point(87, 19);
+            this.labelSessionKey.Name = "labelSessionKey";
+            this.labelSessionKey.Size = new System.Drawing.Size(64, 13);
+            this.labelSessionKey.TabIndex = 21;
+            this.labelSessionKey.Text = "Session key";
             // 
             // labelLog
             // 
@@ -78,27 +78,27 @@
             this.textBoxLog.Size = new System.Drawing.Size(543, 179);
             this.textBoxLog.TabIndex = 4;
             // 
-            // buttonConnect
+            // buttonOK
             // 
-            this.buttonConnect.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonConnect.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonConnect.Location = new System.Drawing.Point(480, 310);
-            this.buttonConnect.Name = "buttonConnect";
-            this.buttonConnect.Size = new System.Drawing.Size(75, 21);
-            this.buttonConnect.TabIndex = 0;
-            this.buttonConnect.Text = "&OK";
-            this.buttonConnect.UseVisualStyleBackColor = true;
-            this.buttonConnect.Click += new System.EventHandler(this.buttonConnect_Click);
+            this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.buttonOK.Location = new System.Drawing.Point(480, 310);
+            this.buttonOK.Name = "buttonOK";
+            this.buttonOK.Size = new System.Drawing.Size(75, 21);
+            this.buttonOK.TabIndex = 0;
+            this.buttonOK.Text = "&OK";
+            this.buttonOK.UseVisualStyleBackColor = true;
+            this.buttonOK.Click += new System.EventHandler(this.buttonOK_Click);
             // 
-            // label1
+            // labelWebServiceUrl
             // 
-            this.label1.AutoSize = true;
-            this.label1.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.label1.Location = new System.Drawing.Point(70, 71);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(81, 13);
-            this.label1.TabIndex = 29;
-            this.label1.Text = "Web service url";
+            this.labelWebServiceUrl.AutoSize = true;
+            this.labelWebServiceUrl.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.labelWebServiceUrl.Location = new System.Drawing.Point(70, 71);
+            this.labelWebServiceUrl.Name = "labelWebServiceUrl";
+            this.labelWebServiceUrl.Size = new System.Drawing.Size(81, 13);
+            this.labelWebServiceUrl.TabIndex = 29;
+            this.labelWebServiceUrl.Text = "Web service url";
             // 
             // textBoxUserName
             // 
@@ -108,15 +108,15 @@
             this.textBoxUserName.Size = new System.Drawing.Size(290, 20);
             this.textBoxUserName.TabIndex = 2;
             // 
-            // labelGoToLine
+            // labelUserName
             // 
-            this.labelGoToLine.AutoSize = true;
-            this.labelGoToLine.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.labelGoToLine.Location = new System.Drawing.Point(96, 45);
-            this.labelGoToLine.Name = "labelGoToLine";
-            this.labelGoToLine.Size = new System.Drawing.Size(55, 13);
-            this.labelGoToLine.TabIndex = 28;
-            this.labelGoToLine.Text = "Username";
+            this.labelUserName.AutoSize = true;
+            this.labelUserName.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.labelUserName.Location = new System.Drawing.Point(96, 45);
+            this.labelUserName.Name = "labelUserName";
+            this.labelUserName.Size = new System.Drawing.Size(55, 13);
+            this.labelUserName.TabIndex = 28;
+            this.labelUserName.Text = "Username";
             // 
             // textBoxWebServiceUrl
             // 
@@ -132,14 +132,14 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(565, 337);
             this.Controls.Add(this.textBoxWebServiceUrl);
-            this.Controls.Add(this.label1);
+            this.Controls.Add(this.labelWebServiceUrl);
             this.Controls.Add(this.textBoxUserName);
-            this.Controls.Add(this.labelGoToLine);
-            this.Controls.Add(this.buttonConnect);
+            this.Controls.Add(this.labelUserName);
+            this.Controls.Add(this.buttonOK);
             this.Controls.Add(this.labelLog);
             this.Controls.Add(this.textBoxLog);
             this.Controls.Add(this.textBoxSessionKey);
-            this.Controls.Add(this.label2);
+            this.Controls.Add(this.labelSessionKey);
             this.KeyPreview = true;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
@@ -156,13 +156,13 @@
         #endregion
 
         private System.Windows.Forms.TextBox textBoxSessionKey;
-        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label labelSessionKey;
         private System.Windows.Forms.Label labelLog;
         private System.Windows.Forms.TextBox textBoxLog;
-        private System.Windows.Forms.Button buttonConnect;
-        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Button buttonOK;
+        private System.Windows.Forms.Label labelWebServiceUrl;
         private System.Windows.Forms.TextBox textBoxUserName;
-        private System.Windows.Forms.Label labelGoToLine;
+        private System.Windows.Forms.Label labelUserName;
         private System.Windows.Forms.TextBox textBoxWebServiceUrl;
     }
 }

@@ -15,6 +15,14 @@ namespace Nikse.SubtitleEdit.Forms
         {
             InitializeComponent();
             labelStatus.Text = string.Empty;
+            Text = Configuration.Settings.Language.NetworkJoin.Title;
+            labelInfo.Text = Configuration.Settings.Language.NetworkJoin.Information;
+            labelSessionKey.Text = Configuration.Settings.Language.General.SessionKey;
+            labelUserName.Text = Configuration.Settings.Language.General.UserName;
+            labelWebServiceUrl.Text = Configuration.Settings.Language.General.WebServiceUrl;
+            buttonJoin.Text = Configuration.Settings.Language.NetworkJoin.Join;
+            buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
+
         }
 
         internal void Initialize(Logic.Networking.NikseWebServiceSession networkSession)
@@ -31,17 +39,17 @@ namespace Nikse.SubtitleEdit.Forms
                 textBoxUserName.Text = Dns.GetHostName();
         }
 
-        private void buttonConnect_Click(object sender, EventArgs e)
+        private void buttonJoin_Click(object sender, EventArgs e)
         {
             Configuration.Settings.NetworkSettings.SessionKey = textBoxSessionKey.Text;
             Configuration.Settings.NetworkSettings.WebServiceUrl = comboBoxWebServiceUrl.Text;
             Configuration.Settings.NetworkSettings.UserName = textBoxUserName.Text;
 
-            buttonConnect.Enabled = false;
+            buttonJoin.Enabled = false;
             buttonCancel.Enabled = false;
             textBoxUserName.Enabled = false;
             comboBoxWebServiceUrl.Enabled = false;
-            labelStatus.Text = string.Format("Connecting to {0}...", comboBoxWebServiceUrl.Text);
+            labelStatus.Text = string.Format(Configuration.Settings.Language.NetworkStart.ConnectionTo, comboBoxWebServiceUrl.Text);
             Refresh();
 
             try
@@ -62,7 +70,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 MessageBox.Show(exception.Message);
             }
-            buttonConnect.Enabled = true;
+            buttonJoin.Enabled = true;
             buttonCancel.Enabled = true;
             textBoxUserName.Enabled = true;
             comboBoxWebServiceUrl.Enabled = true;

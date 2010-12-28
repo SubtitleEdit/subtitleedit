@@ -114,6 +114,10 @@ namespace Nikse.SubtitleEdit.Logic
                 OriginalText = "Original text",
                 OpenOriginalSubtitleFile = "Open original subtitle file...",
                 PleaseWait = "Please wait...",
+                SessionKey = "Session key",
+                UserName = "Username",
+                WebServiceUrl = "Webservice url",
+                IP = "IP",
             };
 
             About = new LanguageStructure.About
@@ -704,6 +708,8 @@ namespace Nikse.SubtitleEdit.Logic
                         OpenVideo = "Open video file...",
                         ShowHideVideo = "Show/hide video",
                         ShowHideWaveForm = "Show/hide wave form",
+                        UnDockVideoControls = "Un-dock video controls",
+                        ReDockVideoControls = "Re-dock video controls",
                     },
 
                     SpellCheck = new LanguageStructure.Main.MainMenu.SpellCheckMenu
@@ -743,6 +749,16 @@ namespace Nikse.SubtitleEdit.Logic
                         Title = "Help",
                         Help = "&Help",
                         About = "&About"
+                    },
+
+                    Networking = new LanguageStructure.Main.MainMenu.NetworkingMenu
+                    {
+                        Title = "Networking",
+                        StartNewSession = "Start new session",
+                        JoinSession = "Join session",
+                        ShowSessionInfoAndLog = "Show session info and log",
+                        Chat = "Chat",
+                        LeaveSession = "Leave session",
                     },
 
                     ToolBar = new LanguageStructure.Main.MainMenu.ToolBarMenu
@@ -892,22 +908,31 @@ namespace Nikse.SubtitleEdit.Logic
 
             NetworkChat = new LanguageStructure.NetworkChat
             {
-                Title = "",
+                Title = "Chat",
+                Send = "Send",
             };
 
             NetworkJoin = new LanguageStructure.NetworkJoin
             {
-                Title = "",
+                Title = "Join network session",
+                Information = @"Join existing session where multiple persons
+can edit in same subtitle file (collaboration)",
+                Join = "Join",                 
             };
 
             NetworkLogAndInfo = new LanguageStructure.NetworkLogAndInfo
             {
-                Title = "",
+                Title = "Network session info and log",
+                Log = "Log:"
             };
 
             NetworkStart = new LanguageStructure.NetworkStart
             {
-                Title = "",
+                Title = "Start network session",
+                ConnectionTo = "Connecting to {0}...",
+                Information = @"Start new session where multiple persons
+can edit in same subtitle file (collaboration)",
+                Start = "Start",
             };
 
             RemoveTextFromHearImpaired = new LanguageStructure.RemoveTextFromHearImpaired

@@ -5,7 +5,7 @@ using Nikse.SubtitleEdit.Logic;
 
 namespace Nikse.SubtitleEdit.Forms
 {
-    public partial class NetworkStart : Form
+    public sealed partial class NetworkStart : Form
     {
 
         Logic.Networking.NikseWebServiceSession _networkSession;
@@ -14,7 +14,14 @@ namespace Nikse.SubtitleEdit.Forms
         public NetworkStart()
         {
             InitializeComponent();
-            labelStatus.Text = string.Empty;            
+            labelStatus.Text = string.Empty;
+            Text = Configuration.Settings.Language.NetworkStart.Title;
+            labelInfo.Text = Configuration.Settings.Language.NetworkStart.Information;
+            labelSessionKey.Text = Configuration.Settings.Language.General.SessionKey;
+            labelUserName.Text = Configuration.Settings.Language.General.UserName;
+            labelWebServiceUrl.Text = Configuration.Settings.Language.General.WebServiceUrl;
+            buttonStart.Text = Configuration.Settings.Language.NetworkStart.Start;
+            buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
         }
 
         internal void Initialize(Logic.Networking.NikseWebServiceSession networkSession, string fileName)
@@ -32,18 +39,18 @@ namespace Nikse.SubtitleEdit.Forms
                 textBoxUserName.Text = Dns.GetHostName();
         }
 
-        private void buttonOK_Click(object sender, EventArgs e)
+        private void buttonStart_Click(object sender, EventArgs e)
         {
             Configuration.Settings.NetworkSettings.SessionKey = textBoxSessionKey.Text;
             Configuration.Settings.NetworkSettings.WebServiceUrl = comboBoxWebServiceUrl.Text;
             Configuration.Settings.NetworkSettings.UserName = textBoxUserName.Text;
 
-            buttonConnect.Enabled = false;
+            buttonStart.Enabled = false;
             buttonCancel.Enabled = false;
             textBoxSessionKey.Enabled = false;
             textBoxUserName.Enabled = false;
             comboBoxWebServiceUrl.Enabled = false;
-            labelStatus.Text = string.Format("Connecting to {0}...", comboBoxWebServiceUrl.Text);
+            labelStatus.Text = string.Format(Configuration.Settings.Language.NetworkStart.ConnectionTo, comboBoxWebServiceUrl.Text);
             Refresh();
 
             try
@@ -64,7 +71,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 MessageBox.Show(exception.Message);
             }
-            buttonConnect.Enabled = true;
+            buttonStart.Enabled = true;
             buttonCancel.Enabled = true;
             textBoxSessionKey.Enabled = false;
             textBoxUserName.Enabled = true;

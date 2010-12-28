@@ -12,12 +12,14 @@ namespace Nikse.SubtitleEdit.Forms
         public NetworkChat()
         {
             InitializeComponent();
+            buttonSendChat.Text = Configuration.Settings.Language.NetworkChat.Send;
+
         }
 
         internal void Initialize(Nikse.SubtitleEdit.Logic.Networking.NikseWebServiceSession networkSession)
         {
             _networkSession = networkSession;
-            Text = "Chat - " + _networkSession.CurrentUser.UserName;
+            Text = Configuration.Settings.Language.NetworkChat.Title + " - " + _networkSession.CurrentUser.UserName;
 
             listViewUsers.Items.Clear();
             foreach (var user in _networkSession.Users)
