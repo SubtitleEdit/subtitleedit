@@ -68,7 +68,7 @@ namespace Nikse.SubtitleEdit.Logic
             General = new LanguageStructure.General
             {
                 Title = "Subtitle Edit",
-                Version = "3.0",
+                Version = "3.1",
                 TranslatedBy = "",
                 CultureName = "en-US",
                 OK = "&OK",
@@ -645,6 +645,13 @@ namespace Nikse.SubtitleEdit.Logic
                 BeforeSetStartTimeAndOffsetTheRest = "Before set start time and offset the rest",
                 ContinueWithCurrentSpellCheck = "Continue with current spell check?",
                 CharactersPerSecond = "Chars/sec: {0:0.00}",
+                NetworkMessage = "New message: {0} ({1}): {2}",
+                NetworkUpdate = "Line updated: {0} ({1}): Index={2}, Text={3}",                
+                NetworkInsert = "Line inserted: {0} ({1}): Index={2}, Text={3}",                
+                NetworkDelete = "Line deleted: {0} ({1}): Index={2}",                
+                NetworkNewUser = "New user: {0} ({1})",
+                NetworkByeUser = "Bye {0} ({1})",
+                NetworkUnableToConnectToServer = "Unable to connect to server: {0}",
 
                 Menu = new LanguageStructure.Main.MainMenu
                 {
