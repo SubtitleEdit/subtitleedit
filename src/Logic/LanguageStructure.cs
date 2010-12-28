@@ -811,6 +811,8 @@
 
                 public string BeforeChangingTimeInWaveFormX { get; set; }
                 public string NewTextInsertAtX { get; set; }
+
+                public string Center { get; set; }
             }
         }
 

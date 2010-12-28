@@ -553,6 +553,7 @@
       <AdjustTip>Tip: Brug &lt;alt+pil op/ned&gt; for at gå til forrige/næste tekst</AdjustTip>
       <BeforeChangingTimeInWaveFormX>Før ændring af tid i lyd kurve: {0}</BeforeChangingTimeInWaveFormX>
       <NewTextInsertAtX>Ny tekst indsat ved {0}</NewTextInsertAtX>
+      <Center>Center</Center>
     </VideoControls>
     <SaveChangesToUntitled>Gem ændringer til unavngivet?</SaveChangesToUntitled>
     <SaveChangesToX>Gem ændringer til {0}?</SaveChangesToX>

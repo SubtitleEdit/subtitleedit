@@ -655,6 +655,7 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxSyncListViewWithVideoWhilePlaying.Text = _language.VideoControls.SelectCurrentElementWhilePlaying;
             if (_videoFileName == null)
                 labelVideoInfo.Text = Configuration.Settings.Language.General.NoVideoLoaded;
+            toolStripButtonLockCenter.Text = _language.VideoControls.Center;
 
             groupBoxAutoRepeat.Text = _language.VideoControls.AutoRepeat;
             checkBoxAutoRepeatOn.Text = _language.VideoControls.AutoRepeatOn;
@@ -6974,6 +6975,12 @@ namespace Nikse.SubtitleEdit.Forms
             mediaPlayer.Play();
         }
 
+        private void toolStripButtonLockCenter_Click_1(object sender, EventArgs e)
+        {
+            toolStripButtonLockCenter.Checked = !toolStripButtonLockCenter.Checked;
+            AudioWaveForm.Locked = toolStripButtonLockCenter.Checked;
+        }
+
         private void trackBarWaveFormPosition_ValueChanged(object sender, EventArgs e)
         {
             mediaPlayer.CurrentPosition = trackBarWaveFormPosition.Value;
@@ -7859,5 +7866,6 @@ namespace Nikse.SubtitleEdit.Forms
         {
             toolStripButtonToogleVideo.Checked = false;
         }
+
     }
 }

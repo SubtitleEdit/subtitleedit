@@ -628,6 +628,22 @@
         gg==
 </value>
   </data>
+  <data name="toolStripButtonLockCenter.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
+        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAJeSURBVDhPnZJbT1NBFIX5Rz75H7wkxsQYE2OMgonGYDQG
+        44XUVDQEJRWjhra0PfYCtLQUaPGWUrCgbXngxRgffIDaUEpAbKG3c3raM8s9c2o59dFJVuZhz3yz15rd
+        5YuuwhdJwxsl0e6JpHDlRV6oZ0RX9/MtUh7S9ApcQstwhhJwBj+hyxtZxb+LX4p/0xBdY7DFNZiDCo50
+        r4Ix1qGjx3t0gLFQqzNcphfn1zQEkgwv3zdg8ncC6g2GL1/zaAHSHYCywnDJksNUSoO0xGB528CDcVl0
+        oKgMKl3mjxwC5lICwIsVulyoMFwczsGd0GBb0PAsouKutyYAJVk/V6a9DZDCn+EhiBRegYNCsfnjuPA0
+        BztdHo01MThTR59bB0xGUxgLLJEWYfcv6hY4gC+ZyJzOXzk/tAlrTMOrD00MhBTcknRAU2NoNBkOaoYO
+        3C2ARkWVikWycG5QB4yQf1NAxg1nRQA0ssr95/eNgJmk6IDTZSrulhjOPsni9ccmhiMU4ISMXocO4B3u
+        lRmyvw0Az5wOqCoaClTM7wNnBrL0feQ/rOKOp4br9rIA8PB+lYD1XRh+YTYpJswZTIhwrBMxnDb/hGW+
+        gUc0QLffVHHNpgOC79JUXxBnRsdjhyHyb+R0/oXbReDUwwyGZlX0T8q46SKAVQdUFFAHdMaYgURzzQHF
+        KvcPZPeAk6YMHk/Xcc9XowCruNoC5IsMm+Q/Y7TgCi2LdHcOGHIF3d+J/g2YpxThv3es0gas7zD82Aa+
+        bxky4N55+nyy/urY/Q0x/33uagfAeKY9iQ4C8In6X/0Bb/or6jCtPhIAAAAASUVORK5CYII=
+</value>
+  </data>
   <metadata name="videoTimer.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>728, 56</value>
   </metadata>
