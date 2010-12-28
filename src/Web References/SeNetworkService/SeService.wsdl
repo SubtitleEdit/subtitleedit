@@ -161,6 +161,7 @@
             <s:element minOccurs="0" maxOccurs="1" name="GetUpdatesResult" type="tns:ArrayOfSeUpdate" />
             <s:element minOccurs="0" maxOccurs="1" name="message" type="s:string" />
             <s:element minOccurs="1" maxOccurs="1" name="newUpdateTime" type="s:dateTime" />
+            <s:element minOccurs="1" maxOccurs="1" name="numberOfLines" type="s:int" />
           </s:sequence>
         </s:complexType>
       </s:element>
