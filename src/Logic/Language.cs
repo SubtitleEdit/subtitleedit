@@ -874,6 +874,8 @@ namespace Nikse.SubtitleEdit.Logic
 
                     BeforeChangingTimeInWaveFormX = "Before changing time in wave form: {0}",
                     NewTextInsertAtX = "New text inserted at {0}",
+
+                    Center = "Center",
                 },
             };
 
