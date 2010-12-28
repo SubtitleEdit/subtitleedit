@@ -7378,7 +7378,7 @@ namespace Nikse.SubtitleEdit.Forms
             List<SeNetworkService.SeUpdate> updates = null;
             try
             {
-                updates = (List<SeNetworkService.SeUpdate>)_networkSession.GetUpdates(out message);
+                updates = _networkSession.GetUpdates(out message);
             }
             catch (Exception exception)
             {

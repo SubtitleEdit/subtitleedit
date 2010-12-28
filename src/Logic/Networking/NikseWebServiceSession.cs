@@ -140,12 +140,15 @@ namespace Nikse.SubtitleEdit.Logic.Networking
             _timerWebService.Start();
         }
 
-        public IEnumerable<SeNetworkService.SeUpdate> GetUpdates(out string message)
-        { 
+        public List<SeNetworkService.SeUpdate> GetUpdates(out string message)
+        {
+            List<SeNetworkService.SeUpdate> list = new List<SeNetworkService.SeUpdate>();
             DateTime newUpdateTime;
             var updates = _seWs.GetUpdates(SessionId, CurrentUser.UserName, _seWsLastUpdate, out message, out newUpdateTime);
+            foreach (var update in updates)
+                list.Add(update);
             _seWsLastUpdate = newUpdateTime;
-            return updates;
+            return list;
         }
 
         private void ReloadFromWs()
