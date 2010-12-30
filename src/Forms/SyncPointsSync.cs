@@ -48,6 +48,19 @@ namespace Nikse.SubtitleEdit.Forms
             labelNoOfSyncPoints.Text = string.Format(Configuration.Settings.Language.PointSync.SyncPointsX, 0);
             labelSyncHelp.Text = Configuration.Settings.Language.PointSync.Description;
             SubtitleListview1.InitializeLanguage(Configuration.Settings.Language.General, Configuration.Settings);
+            SubtitleListview1.InitializeTimeStampColumWidths(this);
+            FixLargeFonts();
+        }
+
+        private void FixLargeFonts()
+        {
+            Graphics graphics = this.CreateGraphics();
+            SizeF textSize = graphics.MeasureString(buttonOK.Text, this.Font);
+            if (textSize.Height > buttonOK.Height - 4)
+            {
+                int newButtonHeight = (int)(textSize.Height + 7 + 0.5);
+                Utilities.SetButtonHeight(this, newButtonHeight, 1);
+            }
         }
 
         public void Initialize(Subtitle subtitle, string subtitleFileName, string videoFileName)

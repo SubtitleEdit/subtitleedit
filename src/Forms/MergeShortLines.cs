@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Text;
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Logic;
-using System.Text;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -17,6 +17,18 @@ namespace Nikse.SubtitleEdit.Forms
         public MergeShortLines()
         {
             InitializeComponent();
+            FixLargeFonts();
+        }
+
+        private void FixLargeFonts()
+        {
+            Graphics graphics = this.CreateGraphics();
+            SizeF textSize = graphics.MeasureString(buttonOK.Text, this.Font);
+            if (textSize.Height > buttonOK.Height - 4)
+            {
+                int newButtonHeight = (int)(textSize.Height + 7 + 0.5);
+                Utilities.SetButtonHeight(this, newButtonHeight, 1);
+            }
         }
 
         public Subtitle MergedSubtitle
@@ -45,7 +57,8 @@ namespace Nikse.SubtitleEdit.Forms
 
             buttonOK.Text = Configuration.Settings.Language.General.OK;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
-            SubtitleListview1.InitializeLanguage(Configuration.Settings.Language.General, Configuration.Settings);            
+            SubtitleListview1.InitializeLanguage(Configuration.Settings.Language.General, Configuration.Settings);
+            SubtitleListview1.InitializeTimeStampColumWidths(this);
             NumberOfMerges = 0;
             numericUpDownMaxCharacters.Value = Configuration.Settings.General.SubtitleLineMaximumLength;
             _subtitle = subtitle;

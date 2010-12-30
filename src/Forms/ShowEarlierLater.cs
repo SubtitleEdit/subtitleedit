@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Logic;
 using System.IO;
+using System.Drawing;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -23,6 +24,18 @@ namespace Nikse.SubtitleEdit.Forms
             labelHoursMinSecsMilliSecs.Text = Configuration.Settings.Language.General.HourMinutesSecondsMilliseconds;
             buttonShowEarlier.Text = Configuration.Settings.Language.ShowEarlierLater.ShowEarlier;
             buttonShowLater.Text = Configuration.Settings.Language.ShowEarlierLater.ShowLater;
+            FixLargeFonts();
+        }
+
+        private void FixLargeFonts()
+        {
+            Graphics graphics = this.CreateGraphics();
+            SizeF textSize = graphics.MeasureString(buttonShowEarlier.Text, this.Font);
+            if (textSize.Height > buttonShowEarlier.Height - 4)
+            {
+                int newButtonHeight = (int)(textSize.Height + 7 + 0.5);
+                Utilities.SetButtonHeight(this, newButtonHeight, 1);
+            }
         }
 
         private void ShowEarlierLater_KeyDown(object sender, KeyEventArgs e)

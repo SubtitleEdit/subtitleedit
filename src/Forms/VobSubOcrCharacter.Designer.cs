@@ -71,7 +71,7 @@
             this.labelSubtitleImage.AutoSize = true;
             this.labelSubtitleImage.Location = new System.Drawing.Point(9, 13);
             this.labelSubtitleImage.Name = "labelSubtitleImage";
-            this.labelSubtitleImage.Size = new System.Drawing.Size(74, 13);
+            this.labelSubtitleImage.Size = new System.Drawing.Size(93, 17);
             this.labelSubtitleImage.TabIndex = 13;
             this.labelSubtitleImage.Text = "Subtitle image";
             // 
@@ -87,9 +87,9 @@
             // labelCharactersAsText
             // 
             this.labelCharactersAsText.AutoSize = true;
-            this.labelCharactersAsText.Location = new System.Drawing.Point(9, 243);
+            this.labelCharactersAsText.Location = new System.Drawing.Point(9, 242);
             this.labelCharactersAsText.Name = "labelCharactersAsText";
-            this.labelCharactersAsText.Size = new System.Drawing.Size(105, 13);
+            this.labelCharactersAsText.Size = new System.Drawing.Size(130, 17);
             this.labelCharactersAsText.TabIndex = 17;
             this.labelCharactersAsText.Text = "Character(s) as text";
             // 
@@ -97,7 +97,7 @@
             // 
             this.textBoxCharacters.Location = new System.Drawing.Point(12, 259);
             this.textBoxCharacters.Name = "textBoxCharacters";
-            this.textBoxCharacters.Size = new System.Drawing.Size(225, 21);
+            this.textBoxCharacters.Size = new System.Drawing.Size(225, 24);
             this.textBoxCharacters.TabIndex = 0;
             this.textBoxCharacters.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxCharactersKeyDown);
             // 
@@ -115,7 +115,7 @@
             this.labelCharacters.AutoSize = true;
             this.labelCharacters.Location = new System.Drawing.Point(14, 168);
             this.labelCharacters.Name = "labelCharacters";
-            this.labelCharacters.Size = new System.Drawing.Size(68, 13);
+            this.labelCharacters.Size = new System.Drawing.Size(84, 17);
             this.labelCharacters.TabIndex = 19;
             this.labelCharacters.Text = "Character(s)";
             // 
@@ -135,7 +135,7 @@
             this.checkBoxItalic.AutoSize = true;
             this.checkBoxItalic.Location = new System.Drawing.Point(243, 262);
             this.checkBoxItalic.Name = "checkBoxItalic";
-            this.checkBoxItalic.Size = new System.Drawing.Size(49, 17);
+            this.checkBoxItalic.Size = new System.Drawing.Size(57, 21);
             this.checkBoxItalic.TabIndex = 1;
             this.checkBoxItalic.Text = "&Italic";
             this.checkBoxItalic.UseVisualStyleBackColor = true;
@@ -167,7 +167,7 @@
             // 
             // VobSubOcrCharacter
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(573, 317);
             this.Controls.Add(this.buttonShrinkSelection);

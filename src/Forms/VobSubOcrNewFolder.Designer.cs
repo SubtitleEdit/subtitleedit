@@ -39,7 +39,7 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(12, 17);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(198, 13);
+            this.label1.Size = new System.Drawing.Size(247, 17);
             this.label1.TabIndex = 0;
             this.label1.Text = "Name of new character database folder";
             // 
@@ -47,14 +47,14 @@
             // 
             this.textBoxFolder.Location = new System.Drawing.Point(15, 33);
             this.textBoxFolder.Name = "textBoxFolder";
-            this.textBoxFolder.Size = new System.Drawing.Size(184, 21);
+            this.textBoxFolder.Size = new System.Drawing.Size(236, 24);
             this.textBoxFolder.TabIndex = 1;
             this.textBoxFolder.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxFolderKeyDown);
             // 
             // buttonOK
             // 
             this.buttonOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonOK.Location = new System.Drawing.Point(43, 69);
+            this.buttonOK.Location = new System.Drawing.Point(95, 66);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 21);
             this.buttonOK.TabIndex = 13;
@@ -66,7 +66,7 @@
             // 
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonCancel.Location = new System.Drawing.Point(124, 69);
+            this.buttonCancel.Location = new System.Drawing.Point(176, 66);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 21);
             this.buttonCancel.TabIndex = 12;
@@ -75,9 +75,9 @@
             // 
             // VobSubOcrNewFolder
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(215, 99);
+            this.ClientSize = new System.Drawing.Size(263, 99);
             this.Controls.Add(this.buttonOK);
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.textBoxFolder);

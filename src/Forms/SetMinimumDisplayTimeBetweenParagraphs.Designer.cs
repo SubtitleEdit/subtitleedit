@@ -59,6 +59,7 @@
                         | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.SubtitleListview1.FirstVisibleIndex = -1;
+            this.SubtitleListview1.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.SubtitleListview1.FullRowSelect = true;
             this.SubtitleListview1.GridLines = true;
             this.SubtitleListview1.HideSelection = false;
@@ -83,7 +84,7 @@
             0,
             0});
             this.numericUpDownMinMillisecondsBetweenLines.Name = "numericUpDownMinMillisecondsBetweenLines";
-            this.numericUpDownMinMillisecondsBetweenLines.Size = new System.Drawing.Size(64, 21);
+            this.numericUpDownMinMillisecondsBetweenLines.Size = new System.Drawing.Size(64, 24);
             this.numericUpDownMinMillisecondsBetweenLines.TabIndex = 34;
             this.numericUpDownMinMillisecondsBetweenLines.Value = new decimal(new int[] {
             50,
@@ -97,7 +98,7 @@
             this.labelMaxMillisecondsBetweenLines.AutoSize = true;
             this.labelMaxMillisecondsBetweenLines.Location = new System.Drawing.Point(15, 18);
             this.labelMaxMillisecondsBetweenLines.Name = "labelMaxMillisecondsBetweenLines";
-            this.labelMaxMillisecondsBetweenLines.Size = new System.Drawing.Size(172, 13);
+            this.labelMaxMillisecondsBetweenLines.Size = new System.Drawing.Size(217, 17);
             this.labelMaxMillisecondsBetweenLines.TabIndex = 35;
             this.labelMaxMillisecondsBetweenLines.Text = "Mininum milliseconds between lines";
             // 
@@ -128,9 +129,9 @@
             // 
             this.checkBoxShowOnlyChangedLines.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.checkBoxShowOnlyChangedLines.AutoSize = true;
-            this.checkBoxShowOnlyChangedLines.Location = new System.Drawing.Point(18, 448);
+            this.checkBoxShowOnlyChangedLines.Location = new System.Drawing.Point(18, 444);
             this.checkBoxShowOnlyChangedLines.Name = "checkBoxShowOnlyChangedLines";
-            this.checkBoxShowOnlyChangedLines.Size = new System.Drawing.Size(142, 17);
+            this.checkBoxShowOnlyChangedLines.Size = new System.Drawing.Size(178, 21);
             this.checkBoxShowOnlyChangedLines.TabIndex = 38;
             this.checkBoxShowOnlyChangedLines.Text = "Show only modified lines";
             this.checkBoxShowOnlyChangedLines.UseVisualStyleBackColor = true;
@@ -138,7 +139,7 @@
             // 
             // SetMinimumDisplayTimeBetweenParagraphs
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(754, 480);
             this.Controls.Add(this.checkBoxShowOnlyChangedLines);

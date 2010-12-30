@@ -75,8 +75,6 @@ namespace Nikse.SubtitleEdit.Forms
             textBoxSubtitleLineMaximumLength.Text = gs.SubtitleLineMaximumLength.ToString();
             textBoxShowLineBreaksAs.Text = gs.ListViewLineSeparatorString;
 
-
-
             if (string.Compare(gs.VideoPlayer.Trim(), "VLC", true) == 0)
                 radioButtonVideoPlayerVLC.Checked = true;
             else if (string.Compare(gs.VideoPlayer.Trim(), "WindowsMediaPlayer", true) == 0)
@@ -322,7 +320,6 @@ namespace Nikse.SubtitleEdit.Forms
                 comboBoxMergeShortLineLength.SelectedIndex = 0;
 
 
-
             // Music notes / music symbols
             if (!Utilities.IsRunningOnMono() && Environment.OSVersion.Version.Major < 6) // 6 == Vista/Win2008Server/Win7
             {
@@ -383,6 +380,19 @@ namespace Nikse.SubtitleEdit.Forms
             panelWaveFormColor.BackColor = Configuration.Settings.VideoControls.WaveFormColor;
             panelWaveFormBackgroundColor.BackColor = Configuration.Settings.VideoControls.WaveFormBackgroundColor;
             panelWaveFormTextColor.BackColor = Configuration.Settings.VideoControls.WaveFormTextColor;
+
+            FixLargeFonts();
+        }
+
+        private void FixLargeFonts()
+        {
+            Graphics graphics = this.CreateGraphics();
+            SizeF textSize = graphics.MeasureString(buttonOK.Text, this.Font);
+            if (textSize.Height > buttonOK.Height - 4)
+            {
+                int newButtonHeight = (int)(textSize.Height + 7 + 0.5);
+                Utilities.SetButtonHeight(this, newButtonHeight, 1);
+            }
         }
 
         private void InitializeWaveFormsFolderEmpty(LanguageStructure.Settings language)

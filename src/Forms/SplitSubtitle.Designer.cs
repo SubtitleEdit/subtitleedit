@@ -41,7 +41,7 @@
             // 
             // buttonGetFrameRate
             // 
-            this.buttonGetFrameRate.Location = new System.Drawing.Point(178, 102);
+            this.buttonGetFrameRate.Location = new System.Drawing.Point(137, 97);
             this.buttonGetFrameRate.Name = "buttonGetFrameRate";
             this.buttonGetFrameRate.Size = new System.Drawing.Size(24, 22);
             this.buttonGetFrameRate.TabIndex = 8;
@@ -53,7 +53,7 @@
             // 
             this.buttonDone.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.buttonDone.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonDone.Location = new System.Drawing.Point(198, 156);
+            this.buttonDone.Location = new System.Drawing.Point(238, 149);
             this.buttonDone.Name = "buttonDone";
             this.buttonDone.Size = new System.Drawing.Size(75, 21);
             this.buttonDone.TabIndex = 18;
@@ -63,7 +63,7 @@
             // buttonSplit
             // 
             this.buttonSplit.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonSplit.Location = new System.Drawing.Point(117, 156);
+            this.buttonSplit.Location = new System.Drawing.Point(157, 149);
             this.buttonSplit.Name = "buttonSplit";
             this.buttonSplit.Size = new System.Drawing.Size(75, 21);
             this.buttonSplit.TabIndex = 17;
@@ -76,7 +76,7 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(39, 30);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(217, 13);
+            this.label1.Size = new System.Drawing.Size(272, 17);
             this.label1.TabIndex = 19;
             this.label1.Text = "Enter length of first part of video or browse";
             // 
@@ -85,7 +85,7 @@
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(39, 45);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(152, 13);
+            this.label2.Size = new System.Drawing.Size(191, 17);
             this.label2.TabIndex = 20;
             this.label2.Text = "and get length from video file:";
             // 
@@ -96,9 +96,9 @@
             // labelHoursMinSecsMilliSecs
             // 
             this.labelHoursMinSecsMilliSecs.AutoSize = true;
-            this.labelHoursMinSecsMilliSecs.Location = new System.Drawing.Point(82, 88);
+            this.labelHoursMinSecsMilliSecs.Location = new System.Drawing.Point(41, 81);
             this.labelHoursMinSecsMilliSecs.Name = "labelHoursMinSecsMilliSecs";
-            this.labelHoursMinSecsMilliSecs.Size = new System.Drawing.Size(108, 13);
+            this.labelHoursMinSecsMilliSecs.Size = new System.Drawing.Size(138, 17);
             this.labelHoursMinSecsMilliSecs.TabIndex = 22;
             this.labelHoursMinSecsMilliSecs.Text = "Hours:min:sec.msecs";
             // 
@@ -106,16 +106,17 @@
             // 
             this.splitTimeUpDownAdjust.AutoSize = true;
             this.splitTimeUpDownAdjust.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.splitTimeUpDownAdjust.Location = new System.Drawing.Point(83, 102);
+            this.splitTimeUpDownAdjust.Location = new System.Drawing.Point(42, 97);
+            this.splitTimeUpDownAdjust.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.splitTimeUpDownAdjust.Name = "splitTimeUpDownAdjust";
-            this.splitTimeUpDownAdjust.Size = new System.Drawing.Size(89, 25);
+            this.splitTimeUpDownAdjust.Size = new System.Drawing.Size(123, 29);
             this.splitTimeUpDownAdjust.TabIndex = 21;
             // 
             // SplitSubtitle
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(285, 182);
+            this.ClientSize = new System.Drawing.Size(325, 182);
             this.Controls.Add(this.labelHoursMinSecsMilliSecs);
             this.Controls.Add(this.splitTimeUpDownAdjust);
             this.Controls.Add(this.label2);

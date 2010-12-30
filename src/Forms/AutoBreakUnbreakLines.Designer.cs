@@ -119,9 +119,9 @@
             // 
             this.comboBoxConditions.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxConditions.FormattingEnabled = true;
-            this.comboBoxConditions.Location = new System.Drawing.Point(12, 29);
+            this.comboBoxConditions.Location = new System.Drawing.Point(12, 30);
             this.comboBoxConditions.Name = "comboBoxConditions";
-            this.comboBoxConditions.Size = new System.Drawing.Size(150, 21);
+            this.comboBoxConditions.Size = new System.Drawing.Size(150, 25);
             this.comboBoxConditions.TabIndex = 8;
             this.comboBoxConditions.SelectedIndexChanged += new System.EventHandler(this.comboBoxConditions_SelectedIndexChanged);
             // 
@@ -130,13 +130,13 @@
             this.labelCondition.AutoSize = true;
             this.labelCondition.Location = new System.Drawing.Point(13, 13);
             this.labelCondition.Name = "labelCondition";
-            this.labelCondition.Size = new System.Drawing.Size(141, 13);
+            this.labelCondition.Size = new System.Drawing.Size(177, 17);
             this.labelCondition.TabIndex = 9;
             this.labelCondition.Text = "Only break lines longer than";
             // 
             // AutoBreakUnbreakLines
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(774, 454);
             this.Controls.Add(this.labelCondition);

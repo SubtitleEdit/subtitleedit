@@ -3,6 +3,7 @@ using System.Text;
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Logic;
 using System.Collections.Generic;
+using System.Drawing;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -16,6 +17,18 @@ namespace Nikse.SubtitleEdit.Forms
         public Watermark()
         {
             InitializeComponent();
+            FixLargeFonts();
+        }
+
+        private void FixLargeFonts()
+        {
+            Graphics graphics = this.CreateGraphics();
+            SizeF textSize = graphics.MeasureString(buttonOK.Text, this.Font);
+            if (textSize.Height > buttonOK.Height - 4)
+            {
+                int newButtonHeight = (int)(textSize.Height + 7 + 0.5);
+                Utilities.SetButtonHeight(this, newButtonHeight, 1);
+            }
         }
 
         internal void Initialize(Logic.Subtitle subtitle, int firstSelectedIndex)

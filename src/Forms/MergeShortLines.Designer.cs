@@ -74,7 +74,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             // numericUpDownMaxCharacters
             // 
-            this.numericUpDownMaxCharacters.Location = new System.Drawing.Point(270, 25);
+            this.numericUpDownMaxCharacters.Location = new System.Drawing.Point(236, 26);
             this.numericUpDownMaxCharacters.Maximum = new decimal(new int[] {
             200,
             0,
@@ -86,7 +86,7 @@ namespace Nikse.SubtitleEdit.Forms
             0,
             0});
             this.numericUpDownMaxCharacters.Name = "numericUpDownMaxCharacters";
-            this.numericUpDownMaxCharacters.Size = new System.Drawing.Size(64, 21);
+            this.numericUpDownMaxCharacters.Size = new System.Drawing.Size(64, 24);
             this.numericUpDownMaxCharacters.TabIndex = 0;
             this.numericUpDownMaxCharacters.Value = new decimal(new int[] {
             65,
@@ -98,9 +98,9 @@ namespace Nikse.SubtitleEdit.Forms
             // labelMaxCharacters
             // 
             this.labelMaxCharacters.AutoSize = true;
-            this.labelMaxCharacters.Location = new System.Drawing.Point(267, 9);
+            this.labelMaxCharacters.Location = new System.Drawing.Point(233, 9);
             this.labelMaxCharacters.Name = "labelMaxCharacters";
-            this.labelMaxCharacters.Size = new System.Drawing.Size(190, 13);
+            this.labelMaxCharacters.Size = new System.Drawing.Size(243, 17);
             this.labelMaxCharacters.TabIndex = 32;
             this.labelMaxCharacters.Text = "Maximum characters in one paragraph";
             // 
@@ -109,7 +109,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.labelMaxMillisecondsBetweenLines.AutoSize = true;
             this.labelMaxMillisecondsBetweenLines.Location = new System.Drawing.Point(483, 9);
             this.labelMaxMillisecondsBetweenLines.Name = "labelMaxMillisecondsBetweenLines";
-            this.labelMaxMillisecondsBetweenLines.Size = new System.Drawing.Size(178, 13);
+            this.labelMaxMillisecondsBetweenLines.Size = new System.Drawing.Size(226, 17);
             this.labelMaxMillisecondsBetweenLines.TabIndex = 33;
             this.labelMaxMillisecondsBetweenLines.Text = "Maximum milliseconds between lines";
             // 
@@ -127,7 +127,7 @@ namespace Nikse.SubtitleEdit.Forms
             0,
             0});
             this.numericUpDownMaxMillisecondsBetweenLines.Name = "numericUpDownMaxMillisecondsBetweenLines";
-            this.numericUpDownMaxMillisecondsBetweenLines.Size = new System.Drawing.Size(64, 21);
+            this.numericUpDownMaxMillisecondsBetweenLines.Size = new System.Drawing.Size(64, 24);
             this.numericUpDownMaxMillisecondsBetweenLines.TabIndex = 2;
             this.numericUpDownMaxMillisecondsBetweenLines.Value = new decimal(new int[] {
             250,
@@ -158,9 +158,9 @@ namespace Nikse.SubtitleEdit.Forms
             this.columnHeader5,
             this.columnHeader7});
             this.listViewFixes.FullRowSelect = true;
-            this.listViewFixes.Location = new System.Drawing.Point(6, 13);
+            this.listViewFixes.Location = new System.Drawing.Point(6, 23);
             this.listViewFixes.Name = "listViewFixes";
-            this.listViewFixes.Size = new System.Drawing.Size(740, 181);
+            this.listViewFixes.Size = new System.Drawing.Size(740, 171);
             this.listViewFixes.TabIndex = 0;
             this.listViewFixes.UseCompatibleStateImageBehavior = false;
             this.listViewFixes.View = System.Windows.Forms.View.Details;
@@ -188,6 +188,7 @@ namespace Nikse.SubtitleEdit.Forms
                         | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.SubtitleListview1.FirstVisibleIndex = -1;
+            this.SubtitleListview1.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.SubtitleListview1.FullRowSelect = true;
             this.SubtitleListview1.GridLines = true;
             this.SubtitleListview1.HideSelection = false;
@@ -200,7 +201,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             // MergeShortLines
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(776, 585);
             this.Controls.Add(this.groupBoxLinesFound);

@@ -793,6 +793,7 @@ namespace Nikse.SubtitleEdit.Logic
                         SelectAll = "Select all",
                         InsertBefore = "Insert before",
                         InsertAfter = "Insert after",
+                        InsertSubtitleAfter = "Insert subtitle after this line...",
                         Split = "Split",
                         MergeSelectedLines = "Merge selected lines",
                         MergeWithLineBefore = "Merge with line before",

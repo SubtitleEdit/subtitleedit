@@ -47,7 +47,7 @@
             this.radioButtonPercent.AutoSize = true;
             this.radioButtonPercent.Location = new System.Drawing.Point(171, 22);
             this.radioButtonPercent.Name = "radioButtonPercent";
-            this.radioButtonPercent.Size = new System.Drawing.Size(62, 17);
+            this.radioButtonPercent.Size = new System.Drawing.Size(78, 21);
             this.radioButtonPercent.TabIndex = 0;
             this.radioButtonPercent.Text = "Percent";
             this.radioButtonPercent.UseVisualStyleBackColor = true;
@@ -59,7 +59,7 @@
             this.radioButtonSeconds.Checked = true;
             this.radioButtonSeconds.Location = new System.Drawing.Point(11, 22);
             this.radioButtonSeconds.Name = "radioButtonSeconds";
-            this.radioButtonSeconds.Size = new System.Drawing.Size(65, 17);
+            this.radioButtonSeconds.Size = new System.Drawing.Size(84, 21);
             this.radioButtonSeconds.TabIndex = 1;
             this.radioButtonSeconds.TabStop = true;
             this.radioButtonSeconds.Text = "Seconds";
@@ -119,9 +119,9 @@
             "123",
             "124",
             "125"});
-            this.comboBoxPercent.Location = new System.Drawing.Point(182, 85);
+            this.comboBoxPercent.Location = new System.Drawing.Point(182, 86);
             this.comboBoxPercent.Name = "comboBoxPercent";
-            this.comboBoxPercent.Size = new System.Drawing.Size(141, 21);
+            this.comboBoxPercent.Size = new System.Drawing.Size(141, 25);
             this.comboBoxPercent.TabIndex = 3;
             // 
             // comboBoxSeconds
@@ -145,9 +145,9 @@
             "+0.8",
             "+0.9",
             "+1.0"});
-            this.comboBoxSeconds.Location = new System.Drawing.Point(13, 85);
+            this.comboBoxSeconds.Location = new System.Drawing.Point(13, 86);
             this.comboBoxSeconds.Name = "comboBoxSeconds";
-            this.comboBoxSeconds.Size = new System.Drawing.Size(141, 21);
+            this.comboBoxSeconds.Size = new System.Drawing.Size(141, 25);
             this.comboBoxSeconds.TabIndex = 4;
             // 
             // labelNote
@@ -155,7 +155,7 @@
             this.labelNote.AutoSize = true;
             this.labelNote.Location = new System.Drawing.Point(10, 135);
             this.labelNote.Name = "labelNote";
-            this.labelNote.Size = new System.Drawing.Size(279, 13);
+            this.labelNote.Size = new System.Drawing.Size(352, 17);
             this.labelNote.TabIndex = 5;
             this.labelNote.Text = "Note: Display time will not overlap start time of next text";
             // 
@@ -164,7 +164,7 @@
             this.labelAddInPercent.AutoSize = true;
             this.labelAddInPercent.Location = new System.Drawing.Point(179, 69);
             this.labelAddInPercent.Name = "labelAddInPercent";
-            this.labelAddInPercent.Size = new System.Drawing.Size(89, 13);
+            this.labelAddInPercent.Size = new System.Drawing.Size(112, 17);
             this.labelAddInPercent.TabIndex = 6;
             this.labelAddInPercent.Text = "Adjust in percent";
             // 
@@ -173,7 +173,7 @@
             this.labelAddSeconds.AutoSize = true;
             this.labelAddSeconds.Location = new System.Drawing.Point(10, 69);
             this.labelAddSeconds.Name = "labelAddSeconds";
-            this.labelAddSeconds.Size = new System.Drawing.Size(68, 13);
+            this.labelAddSeconds.Size = new System.Drawing.Size(86, 17);
             this.labelAddSeconds.TabIndex = 7;
             this.labelAddSeconds.Text = "Add seconds";
             // 
@@ -201,9 +201,9 @@
             // 
             // AdjustDisplayDuration
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(381, 199);
+            this.ClientSize = new System.Drawing.Size(385, 206);
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.buttonOK);
             this.Controls.Add(this.labelAddSeconds);

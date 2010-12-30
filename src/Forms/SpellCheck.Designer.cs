@@ -86,16 +86,16 @@
             this.comboBoxDictionaries.FormattingEnabled = true;
             this.comboBoxDictionaries.Location = new System.Drawing.Point(317, 30);
             this.comboBoxDictionaries.Name = "comboBoxDictionaries";
-            this.comboBoxDictionaries.Size = new System.Drawing.Size(257, 21);
+            this.comboBoxDictionaries.Size = new System.Drawing.Size(257, 25);
             this.comboBoxDictionaries.TabIndex = 8;
             this.comboBoxDictionaries.SelectedIndexChanged += new System.EventHandler(this.ComboBoxDictionariesSelectedIndexChanged);
             // 
             // labelLanguage
             // 
             this.labelLanguage.AutoSize = true;
-            this.labelLanguage.Location = new System.Drawing.Point(314, 14);
+            this.labelLanguage.Location = new System.Drawing.Point(314, 13);
             this.labelLanguage.Name = "labelLanguage";
-            this.labelLanguage.Size = new System.Drawing.Size(54, 13);
+            this.labelLanguage.Size = new System.Drawing.Size(68, 17);
             this.labelLanguage.TabIndex = 3;
             this.labelLanguage.Text = "Language";
             // 
@@ -128,18 +128,19 @@
             // listBoxSuggestions
             // 
             this.listBoxSuggestions.FormattingEnabled = true;
+            this.listBoxSuggestions.ItemHeight = 17;
             this.listBoxSuggestions.Location = new System.Drawing.Point(8, 42);
             this.listBoxSuggestions.Name = "listBoxSuggestions";
-            this.listBoxSuggestions.Size = new System.Drawing.Size(272, 108);
+            this.listBoxSuggestions.Size = new System.Drawing.Size(272, 106);
             this.listBoxSuggestions.TabIndex = 11;
             this.listBoxSuggestions.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.ListBoxSuggestionsMouseDoubleClick);
             // 
             // labelFullText
             // 
             this.labelFullText.AutoSize = true;
-            this.labelFullText.Location = new System.Drawing.Point(8, 17);
+            this.labelFullText.Location = new System.Drawing.Point(8, 16);
             this.labelFullText.Name = "labelFullText";
-            this.labelFullText.Size = new System.Drawing.Size(46, 13);
+            this.labelFullText.Size = new System.Drawing.Size(56, 17);
             this.labelFullText.TabIndex = 7;
             this.labelFullText.Text = "Full text";
             // 
@@ -147,7 +148,7 @@
             // 
             this.textBoxWord.Location = new System.Drawing.Point(23, 19);
             this.textBoxWord.Name = "textBoxWord";
-            this.textBoxWord.Size = new System.Drawing.Size(237, 21);
+            this.textBoxWord.Size = new System.Drawing.Size(237, 24);
             this.textBoxWord.TabIndex = 1;
             // 
             // buttonAbort
@@ -254,7 +255,7 @@
             this.checkBoxAutoChangeNames.AutoSize = true;
             this.checkBoxAutoChangeNames.Location = new System.Drawing.Point(8, 157);
             this.checkBoxAutoChangeNames.Name = "checkBoxAutoChangeNames";
-            this.checkBoxAutoChangeNames.Size = new System.Drawing.Size(216, 17);
+            this.checkBoxAutoChangeNames.Size = new System.Drawing.Size(275, 21);
             this.checkBoxAutoChangeNames.TabIndex = 12;
             this.checkBoxAutoChangeNames.Text = "Auto fix names where only casing differ";
             this.checkBoxAutoChangeNames.UseVisualStyleBackColor = true;
@@ -313,7 +314,7 @@
             // 
             // SpellCheck
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(605, 341);
             this.Controls.Add(this.buttonEditWholeText);
