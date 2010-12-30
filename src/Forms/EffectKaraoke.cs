@@ -24,6 +24,18 @@ namespace Nikse.SubtitleEdit.Forms
             buttonPreview.Text = Configuration.Settings.Language.General.Preview;
             buttonOK.Text = Configuration.Settings.Language.General.OK;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
+            FixLargeFonts();
+        }
+
+        private void FixLargeFonts()
+        {
+            Graphics graphics = this.CreateGraphics();
+            SizeF textSize = graphics.MeasureString(buttonOK.Text, this.Font);
+            if (textSize.Height > buttonOK.Height - 4)
+            {
+                int newButtonHeight = (int)(textSize.Height + 7 + 0.5);
+                Utilities.SetButtonHeight(this, newButtonHeight, 1);
+            }
         }
 
         private void FormEffectkaraoke_KeyDown(object sender, KeyEventArgs e)
@@ -46,6 +58,8 @@ namespace Nikse.SubtitleEdit.Forms
             labelTotalMillisecs.Text = string.Format("{0:#,##0.000}", paragraph.Duration.TotalMilliseconds / 1000);
             numericUpDownDelay.Maximum = (int)((paragraph.Duration.TotalMilliseconds - 500) / 1000);
             numericUpDownDelay.Minimum = 0;
+
+            numericUpDownDelay.Left = labelEndDelay.Left + labelEndDelay.Width + 5;
         }
 
         private void AddToPreview(RichTextBox rtb, string text)

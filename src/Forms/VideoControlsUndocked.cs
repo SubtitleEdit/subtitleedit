@@ -35,8 +35,9 @@ namespace Nikse.SubtitleEdit.Forms
             if (e.CloseReason == CloseReason.UserClosing && panelContainer.Controls.Count > 0)
             {
                 var control = panelContainer.Controls[0];
+                var controlCheckBox = panelContainer.Controls[1];
                 panelContainer.Controls.Clear();
-                _mainForm.ReDockVideoButtons(control);
+                _mainForm.ReDockVideoButtons(control, controlCheckBox);
             }
             _positionsAndSizes.SavePositionAndSize(this);
         }

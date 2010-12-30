@@ -145,139 +145,158 @@ namespace Nikse.SubtitleEdit.Forms
 
         public Main()
         {
-            InitializeComponent();
-
-            SetLanguage(Configuration.Settings.General.Language);
-
-            toolStripStatusNetworking.Visible = false;
-            labelTextLineLengths.Text = string.Empty;
-            labelCharactersPerSecond.Text = string.Empty;
-            labelTextLineTotal.Text = string.Empty;
-            labelStartTimeWarning.Text = string.Empty;
-            labelDurationWarning.Text = string.Empty;
-            labelVideoInfo.Text = string.Empty;
-            Text = Title;
-            timeUpDownStartTime.TimeCode = new TimeCode(0, 0, 0, 0);
-            checkBoxAutoRepeatOn.Checked = Configuration.Settings.General.AutoRepeatOn;
-            checkBoxAutoContinue.Checked = Configuration.Settings.General.AutoContinueOn;
-            checkBoxSyncListViewWithVideoWhilePlaying.Checked = Configuration.Settings.General.SyncListViewWithVideoWhilePlaying;
-
-            SetFormatToSubRip();
-
-            if (Configuration.Settings.General.DefaultEncoding == "ANSI")
+            try
             {
-                comboBoxEncoding.SelectedIndex = 0;
-                comboBoxEncoding.Items[0] = "ANSI - " + Encoding.Default.CodePage.ToString();
-            }
-            else
-            {
-                comboBoxEncoding.Text = Configuration.Settings.General.DefaultEncoding;
-            }
+                //                MessageBox.Show("Test1");
+                InitializeComponent();
 
-            toolStripComboBoxFrameRate.Items.Add((23.976).ToString());
-            toolStripComboBoxFrameRate.Items.Add((24.0).ToString());
-            toolStripComboBoxFrameRate.Items.Add((25.0).ToString());
-            toolStripComboBoxFrameRate.Items.Add((29.97).ToString());
-            toolStripComboBoxFrameRate.Text = Configuration.Settings.General.DefaultFrameRate.ToString();
+                //                MessageBox.Show("Test2");
+                SetLanguage(Configuration.Settings.General.Language);
+                //                MessageBox.Show("Test3");
 
-            UpdateRecentFilesUI();
-            InitializeToolbar();
-            Utilities.InitializeSubtitleFont(textBoxSource);
-            Utilities.InitializeSubtitleFont(textBoxListViewText);
+                toolStripStatusNetworking.Visible = false;
+                labelTextLineLengths.Text = string.Empty;
+                labelCharactersPerSecond.Text = string.Empty;
+                labelTextLineTotal.Text = string.Empty;
+                labelStartTimeWarning.Text = string.Empty;
+                labelDurationWarning.Text = string.Empty;
+                labelVideoInfo.Text = string.Empty;
+                Text = Title;
+                timeUpDownStartTime.TimeCode = new TimeCode(0, 0, 0, 0);
+                checkBoxAutoRepeatOn.Checked = Configuration.Settings.General.AutoRepeatOn;
+                checkBoxAutoContinue.Checked = Configuration.Settings.General.AutoContinueOn;
+                checkBoxSyncListViewWithVideoWhilePlaying.Checked = Configuration.Settings.General.SyncListViewWithVideoWhilePlaying;
 
+                SetFormatToSubRip();
+                //                MessageBox.Show("Test4");
 
-            tabControlSubtitle.SelectTab(TabControlSourceView); // AC
-            ShowSourceLineNumber();                             // AC
-            tabControlSubtitle.SelectTab(TabControlListView);   // AC
-            if (Configuration.Settings.General.StartInSourceView)
-                tabControlSubtitle.SelectTab(TabControlSourceView);
-
-            AudioWaveForm.Visible = Configuration.Settings.General.ShowWaveForm;
-            panelWaveFormControls.Visible = Configuration.Settings.General.ShowWaveForm;
-            trackBarWaveFormPosition.Visible = Configuration.Settings.General.ShowWaveForm;
-            toolStripButtonToogleWaveForm.Checked = Configuration.Settings.General.ShowWaveForm;
-            toolStripButtonToogleVideo.Checked = Configuration.Settings.General.ShowVideoPlayer;
-
-            string fileName = string.Empty;
-            string[] args = Environment.GetCommandLineArgs();
-            if (args.Length >= 2)
-                fileName = args[1];
-
-            if (fileName.Length > 0 && File.Exists(fileName))
-            {
-                OpenSubtitle(fileName, null);
-            }
-            else if (Configuration.Settings.General.StartLoadLastFile)
-            {
-                if (Configuration.Settings.RecentFiles.Files.Count > 0)
+                if (Configuration.Settings.General.DefaultEncoding == "ANSI")
                 {
-                    fileName = Configuration.Settings.RecentFiles.Files[0].FileName;
-                    if (File.Exists(fileName))
+                    comboBoxEncoding.SelectedIndex = 0;
+                    comboBoxEncoding.Items[0] = "ANSI - " + Encoding.Default.CodePage.ToString();
+                }
+                else
+                {
+                    comboBoxEncoding.Text = Configuration.Settings.General.DefaultEncoding;
+                }
+
+                toolStripComboBoxFrameRate.Items.Add((23.976).ToString());
+                toolStripComboBoxFrameRate.Items.Add((24.0).ToString());
+                toolStripComboBoxFrameRate.Items.Add((25.0).ToString());
+                toolStripComboBoxFrameRate.Items.Add((29.97).ToString());
+                toolStripComboBoxFrameRate.Text = Configuration.Settings.General.DefaultFrameRate.ToString();
+
+                //MessageBox.Show("Test5");
+                UpdateRecentFilesUI();
+                InitializeToolbar();
+                Utilities.InitializeSubtitleFont(textBoxSource);
+                Utilities.InitializeSubtitleFont(textBoxListViewText);
+//                MessageBox.Show("Test6");
+
+
+                tabControlSubtitle.SelectTab(TabControlSourceView); // AC
+                ShowSourceLineNumber();                             // AC
+                tabControlSubtitle.SelectTab(TabControlListView);   // AC
+                if (Configuration.Settings.General.StartInSourceView)
+                    tabControlSubtitle.SelectTab(TabControlSourceView);
+//                MessageBox.Show("Test7");
+
+
+                AudioWaveForm.Visible = Configuration.Settings.General.ShowWaveForm;
+                panelWaveFormControls.Visible = Configuration.Settings.General.ShowWaveForm;
+                trackBarWaveFormPosition.Visible = Configuration.Settings.General.ShowWaveForm;
+                toolStripButtonToogleWaveForm.Checked = Configuration.Settings.General.ShowWaveForm;
+                toolStripButtonToogleVideo.Checked = Configuration.Settings.General.ShowVideoPlayer;
+
+//                MessageBox.Show("Test8");
+                string fileName = string.Empty;
+                string[] args = Environment.GetCommandLineArgs();
+                if (args.Length >= 2)
+                    fileName = args[1];
+
+                if (fileName.Length > 0 && File.Exists(fileName))
+                {
+                    OpenSubtitle(fileName, null);
+                }
+                else if (Configuration.Settings.General.StartLoadLastFile)
+                {
+                    if (Configuration.Settings.RecentFiles.Files.Count > 0)
                     {
-                        OpenSubtitle(fileName, null);
-                        SetRecentIndecies(fileName);
+                        fileName = Configuration.Settings.RecentFiles.Files[0].FileName;
+                        if (File.Exists(fileName))
+                        {
+                            OpenSubtitle(fileName, null);
+                            SetRecentIndecies(fileName);
+                        }
                     }
                 }
+
+//                MessageBox.Show("Test9");
+                //timeUpDownStartTime.MaskedTextBox.TextChanged += MaskedTextBox_TextChanged;
+                labelAutoDuration.Visible = false;
+                labelSubtitle.Text = string.Empty;
+                comboBoxAutoRepeat.SelectedIndex = 2;
+                comboBoxAutoContinue.SelectedIndex = 2;
+                timeUpDownVideoPosition.TimeCode = new TimeCode(0, 0, 0, 0);
+                timeUpDownVideoPositionAdjust.TimeCode = new TimeCode(0, 0, 0, 0);
+                timeUpDownVideoPosition.TimeCodeChanged += VideoPositionChanged;
+                timeUpDownVideoPositionAdjust.TimeCodeChanged += VideoPositionChanged;
+                timeUpDownVideoPosition.Enabled = false;
+                timeUpDownVideoPositionAdjust.Enabled = false;
+
+                switch (Configuration.Settings.VideoControls.LastActiveTab)
+                {
+                    case "Translate":
+                        tabControlButtons.SelectedIndex = 0;
+                        break;
+                    case "Create":
+                        tabControlButtons.SelectedIndex = 1;
+                        break;
+                    case "Adjust":
+                        tabControlButtons.SelectedIndex = 2;
+                        break;
+                }
+                tabControl1_SelectedIndexChanged(null, null);
+
+                buttonCustomUrl.Text = Configuration.Settings.VideoControls.CustomSearchText;
+                buttonCustomUrl.Enabled = Configuration.Settings.VideoControls.CustomSearchUrl.Length > 1;
+
+                // Initialize events etc. for audio wave form
+                AudioWaveForm.OnDoubleClickNonParagraph += AudioWaveForm_OnDoubleClickNonParagraph;
+                AudioWaveForm.OnPositionSelected += AudioWaveForm_OnPositionSelected;
+                AudioWaveForm.OnTimeChanged += AudioWaveForm_OnTimeChanged;
+                AudioWaveForm.OnNewSelectionRightClicked += AudioWaveForm_OnNewSelectionRightClicked;
+                AudioWaveForm.OnParagraphRightClicked += AudioWaveForm_OnParagraphRightClicked;
+                AudioWaveForm.OnSingleClick += AudioWaveForm_OnSingleClick;
+                AudioWaveForm.OnPause += AudioWaveForm_OnPause;
+                AudioWaveForm.OnTimeChangedAndOffsetRest += AudioWaveForm_OnTimeChangedAndOffsetRest;
+                AudioWaveForm.OnZoomedChanged += AudioWaveForm_OnZoomedChanged;
+                AudioWaveForm.DrawGridLines = Configuration.Settings.VideoControls.WaveFormDrawGrid;
+                AudioWaveForm.GridColor = Configuration.Settings.VideoControls.WaveFormGridColor;
+                AudioWaveForm.SelectedColor = Configuration.Settings.VideoControls.WaveFormSelectedColor;
+                AudioWaveForm.Color = Configuration.Settings.VideoControls.WaveFormColor;
+                AudioWaveForm.BackgroundColor = Configuration.Settings.VideoControls.WaveFormBackgroundColor;
+                AudioWaveForm.TextColor = Configuration.Settings.VideoControls.WaveFormTextColor;
+
+                for (double zoomCounter = WaveForm.ZoomMininum; zoomCounter <= WaveForm.ZoomMaxinum + (0.001); zoomCounter += 0.1)
+                {
+                    int percent = (int)Math.Round((zoomCounter * 100));
+                    ComboBoxZoomItem item = new ComboBoxZoomItem() { Text = percent.ToString() + "%", ZoomFactor = zoomCounter };
+                    toolStripComboBoxWaveForm.Items.Add(item);
+                    if (percent == 100)
+                        toolStripComboBoxWaveForm.SelectedIndex = toolStripComboBoxWaveForm.Items.Count - 1;
+                }
+                toolStripComboBoxWaveForm.SelectedIndexChanged += toolStripComboBoxWaveForm_SelectedIndexChanged;
+
+                FixLargeFonts();
+                //this.Width = (int)(5304958 / (8 - 8 + (this.Width) - this.Width));
+                _timerAddHistoryWhenDone.Interval = 500;
+                _timerAddHistoryWhenDone.Tick += new EventHandler(timerAddHistoryWhenDone_Tick);
             }
-
-            //timeUpDownStartTime.MaskedTextBox.TextChanged += MaskedTextBox_TextChanged;
-            labelAutoDuration.Visible = false;
-            labelSubtitle.Text = string.Empty;
-            comboBoxAutoRepeat.SelectedIndex = 2;
-            comboBoxAutoContinue.SelectedIndex = 2;
-            timeUpDownVideoPosition.TimeCode = new TimeCode(0, 0, 0, 0);
-            timeUpDownVideoPositionAdjust.TimeCode = new TimeCode(0, 0, 0, 0);
-            timeUpDownVideoPosition.TimeCodeChanged += VideoPositionChanged;
-            timeUpDownVideoPositionAdjust.TimeCodeChanged += VideoPositionChanged;
-            timeUpDownVideoPosition.Enabled = false;
-            timeUpDownVideoPositionAdjust.Enabled = false;
-
-            switch (Configuration.Settings.VideoControls.LastActiveTab)
+            catch (Exception exception)
             {
-                case "Translate":
-                    tabControlButtons.SelectedIndex = 0;
-                    break;
-                case "Create":
-                    tabControlButtons.SelectedIndex = 1;
-                    break;
-                case "Adjust":
-                    tabControlButtons.SelectedIndex = 2;
-                    break;
+                MessageBox.Show(exception.Message + Environment.NewLine + exception.StackTrace);
             }
-            tabControl1_SelectedIndexChanged(null, null);
-
-            buttonCustomUrl.Text = Configuration.Settings.VideoControls.CustomSearchText;
-            buttonCustomUrl.Enabled = Configuration.Settings.VideoControls.CustomSearchUrl.Length > 1;
-            
-            // Initialize events etc. for audio wave form
-            AudioWaveForm.OnDoubleClickNonParagraph += AudioWaveForm_OnDoubleClickNonParagraph;
-            AudioWaveForm.OnPositionSelected += AudioWaveForm_OnPositionSelected;
-            AudioWaveForm.OnTimeChanged += AudioWaveForm_OnTimeChanged;
-            AudioWaveForm.OnNewSelectionRightClicked += AudioWaveForm_OnNewSelectionRightClicked;
-            AudioWaveForm.OnParagraphRightClicked += AudioWaveForm_OnParagraphRightClicked;
-            AudioWaveForm.OnSingleClick += AudioWaveForm_OnSingleClick;
-            AudioWaveForm.OnPause += AudioWaveForm_OnPause;
-            AudioWaveForm.OnTimeChangedAndOffsetRest += AudioWaveForm_OnTimeChangedAndOffsetRest;
-            AudioWaveForm.OnZoomedChanged += AudioWaveForm_OnZoomedChanged;            
-            AudioWaveForm.DrawGridLines = Configuration.Settings.VideoControls.WaveFormDrawGrid;
-            AudioWaveForm.GridColor = Configuration.Settings.VideoControls.WaveFormGridColor;
-            AudioWaveForm.SelectedColor = Configuration.Settings.VideoControls.WaveFormSelectedColor;
-            AudioWaveForm.Color = Configuration.Settings.VideoControls.WaveFormColor;
-            AudioWaveForm.BackgroundColor = Configuration.Settings.VideoControls.WaveFormBackgroundColor;
-            AudioWaveForm.TextColor = Configuration.Settings.VideoControls.WaveFormTextColor;
-            
-            for (double zoomCounter = WaveForm.ZoomMininum; zoomCounter <= WaveForm.ZoomMaxinum + (0.001); zoomCounter += 0.1)
-            {
-                int percent = (int)Math.Round((zoomCounter * 100));
-                ComboBoxZoomItem item = new ComboBoxZoomItem() { Text = percent.ToString() + "%", ZoomFactor = zoomCounter };
-                toolStripComboBoxWaveForm.Items.Add(item);
-                if (percent == 100)
-                    toolStripComboBoxWaveForm.SelectedIndex = toolStripComboBoxWaveForm.Items.Count - 1;
-            }
-            toolStripComboBoxWaveForm.SelectedIndexChanged += toolStripComboBoxWaveForm_SelectedIndexChanged;
-
-            _timerAddHistoryWhenDone.Interval = 500;
-            _timerAddHistoryWhenDone.Tick += new EventHandler(timerAddHistoryWhenDone_Tick);
         }
 
         void AudioWaveForm_OnDoubleClickNonParagraph(double seconds, Paragraph paragraph)
@@ -477,6 +496,8 @@ namespace Nikse.SubtitleEdit.Forms
                 textBoxSource.Font = new System.Drawing.Font(unicodeFontName, fontSize);
                 textBoxListViewText.Font = new System.Drawing.Font(unicodeFontName, fontSize);
                 SubtitleListview1.Font = new System.Drawing.Font(unicodeFontName, fontSize);
+
+                toolStripWaveControls.RenderMode = ToolStripRenderMode.System;
             }
         }
 
@@ -597,6 +618,7 @@ namespace Nikse.SubtitleEdit.Forms
             toolStripMenuItemDelete.Text = _language.Menu.ContextMenu.Delete;
             toolStripMenuItemInsertBefore.Text = _language.Menu.ContextMenu.InsertBefore;
             toolStripMenuItemInsertAfter.Text = _language.Menu.ContextMenu.InsertAfter;
+            toolStripMenuItemInsertSubtitle.Text = _language.Menu.ContextMenu.InsertSubtitleAfter;
             splitLineToolStripMenuItem.Text = _language.Menu.ContextMenu.Split;
             toolStripMenuItemMergeLines.Text = _language.Menu.ContextMenu.MergeSelectedLines;
             mergeBeforeToolStripMenuItem.Text = _language.Menu.ContextMenu.MergeWithLineBefore;
@@ -1005,6 +1027,15 @@ namespace Nikse.SubtitleEdit.Forms
                     _change = false;
                     _converted = false;
 
+                    if (_videoControlsUnDocked != null && !_videoControlsUnDocked.IsDisposed)
+                        _videoControlsUnDocked.Text = fileName;
+
+                    if (_videoPlayerUnDocked != null && !_videoPlayerUnDocked.IsDisposed)
+                        _videoPlayerUnDocked.Text = fileName;
+
+                    if (_waveFormUnDocked != null && !_waveFormUnDocked.IsDisposed)
+                        _waveFormUnDocked.Text = fileName;
+
                     if (justConverted)
                     {
                         _converted = true;
@@ -1359,6 +1390,15 @@ namespace Nikse.SubtitleEdit.Forms
             _change = false;
             _converted = false;
 
+
+            if (_videoControlsUnDocked != null && !_videoControlsUnDocked.IsDisposed)
+                _videoControlsUnDocked.Text = string.Empty;
+
+            if (_videoPlayerUnDocked != null && !_videoPlayerUnDocked.IsDisposed)
+                _videoPlayerUnDocked.Text = string.Empty;
+
+            if (_waveFormUnDocked != null && !_waveFormUnDocked.IsDisposed)
+                _waveFormUnDocked.Text = string.Empty;
         }
 
         private void FileNew()
@@ -2882,6 +2922,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 toolStripMenuItemInsertBefore.Visible = true;
                 toolStripMenuItemInsertAfter.Visible = true;
+                toolStripMenuItemInsertSubtitle.Visible = _networkSession == null;
                 toolStripMenuItemMergeLines.Visible = true;
                 mergeAfterToolStripMenuItem.Visible = true;
                 mergeBeforeToolStripMenuItem.Visible = true;
@@ -2910,6 +2951,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     toolStripMenuItemInsertBefore.Visible = false;
                     toolStripMenuItemInsertAfter.Visible = false;
+                    toolStripMenuItemInsertSubtitle.Visible = false;
                     mergeAfterToolStripMenuItem.Visible = false;
                     mergeBeforeToolStripMenuItem.Visible = false;
                     splitLineToolStripMenuItem.Visible = false;
@@ -2919,6 +2961,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     toolStripMenuItemInsertBefore.Visible = false;
                     toolStripMenuItemInsertAfter.Visible = false;
+                    toolStripMenuItemInsertSubtitle.Visible = false;
                     splitLineToolStripMenuItem.Visible = false;
                     toolStripMenuItemMergeLines.Visible = false;
                     mergeAfterToolStripMenuItem.Visible = false;
@@ -5901,14 +5944,73 @@ namespace Nikse.SubtitleEdit.Forms
                 splitContainer1.Panel2.Controls.Clear();
                 groupBoxVideo.Controls.Add(control);
             }
-            panelVideoPlayer.Top = 27;
+            panelVideoPlayer.Top = 32;
             panelVideoPlayer.Left = tabControlButtons.Left + tabControlButtons.Width + 5;
             panelVideoPlayer.Height = groupBoxVideo.Height - (panelVideoPlayer.Top + 5);
             panelVideoPlayer.Width = groupBoxVideo.Width - (panelVideoPlayer.Left + 5);
         }
 
-        private void Main_Resize(object sender, EventArgs e)
+        private void FixLargeFonts()
         {
+            Graphics graphics = this.CreateGraphics();
+            SizeF textSize = graphics.MeasureString(buttonPlayPrevious.Text, this.Font);
+            if (textSize.Height > buttonPlayPrevious.Height - 4)
+            {
+                int newButtonHeight = (int)(textSize.Height + 7 + 0.5);
+                Utilities.SetButtonHeight(this, newButtonHeight, 1);
+
+                // List view
+                SubtitleListview1.InitializeTimeStampColumWidths(this);
+                int adjustUp = 8;
+                SubtitleListview1.Height = SubtitleListview1.Height - adjustUp;
+                groupBoxEdit.Top = groupBoxEdit.Top - adjustUp;
+                groupBoxEdit.Height = groupBoxEdit.Height + adjustUp;
+                numericUpDownDuration.Left = timeUpDownStartTime.Left + timeUpDownStartTime.Width;
+                numericUpDownDuration.Width = numericUpDownDuration.Width + 5;
+                labelDuration.Left = numericUpDownDuration.Left - 3;
+                labelAutoDuration.Left = labelDuration.Left - (labelAutoDuration.Width - 5);
+
+                // Video controls - Create
+                timeUpDownVideoPosition.Left = labelVideoPosition.Left + labelVideoPosition.Width;
+                int buttonWidth = labelVideoPosition.Width + timeUpDownVideoPosition.Width;
+                buttonInsertNewText.Width = buttonWidth;
+                buttonBeforeText.Width = buttonWidth;
+                buttonGotoSub.Width = buttonWidth;
+                buttonSetStartTime.Width = buttonWidth;
+                buttonSetEnd.Width = buttonWidth;
+                int FKeyLeft = buttonInsertNewText.Left + buttonInsertNewText.Width;
+                labelCreateF9.Left = FKeyLeft;
+                labelCreateF10.Left = FKeyLeft;
+                labelCreateF11.Left = FKeyLeft;
+                labelCreateF12.Left = FKeyLeft;
+                buttonForward1.Left = buttonInsertNewText.Left + buttonInsertNewText.Width - buttonForward1.Width;
+                numericUpDownSec1.Width = buttonInsertNewText.Width - (numericUpDownSec1.Left + buttonForward1.Width);
+                buttonForward2.Left = buttonInsertNewText.Left + buttonInsertNewText.Width - buttonForward2.Width;
+                numericUpDownSec2.Width = buttonInsertNewText.Width - (numericUpDownSec2.Left + buttonForward2.Width);
+
+                // Video controls - Adjust
+                timeUpDownVideoPositionAdjust.Left = labelVideoPosition2.Left + labelVideoPosition2.Width;
+                buttonSetStartAndOffsetRest.Width = buttonWidth;
+                buttonSetEndAndGoToNext.Width = buttonWidth;
+                buttonAdjustSetStartTime.Width = buttonWidth;
+                buttonAdjustSetEndTime.Width = buttonWidth;
+                buttonAdjustPlayBefore.Width = buttonWidth;
+                buttonAdjustGoToPosAndPause.Width = buttonWidth;
+                labelAdjustF9.Left = FKeyLeft;
+                labelAdjustF10.Left = FKeyLeft;
+                labelAdjustF11.Left = FKeyLeft;
+                labelAdjustF12.Left = FKeyLeft;
+                buttonAdjustSecForward1.Left = buttonInsertNewText.Left + buttonInsertNewText.Width - buttonAdjustSecForward1.Width;
+                numericUpDownSecAdjust1.Width = buttonInsertNewText.Width - (numericUpDownSecAdjust2.Left + buttonAdjustSecForward1.Width);
+                buttonAdjustSecForward2.Left = buttonInsertNewText.Left + buttonInsertNewText.Width - buttonAdjustSecForward2.Width;
+                numericUpDownSecAdjust2.Width = buttonInsertNewText.Width - (numericUpDownSecAdjust2.Left + buttonAdjustSecForward2.Width);
+
+                tabControl1_SelectedIndexChanged(null, null);
+            }            
+        }
+
+        private void Main_Resize(object sender, EventArgs e)
+        {            
             panelVideoPlayer.Invalidate();
         }
 
@@ -6539,6 +6641,12 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 if (toolStripButtonToogleWaveForm.Checked)
                     AudioWaveForm.Left = tabControlButtons.Left + tabControlButtons.Width + 5;
+                if (!toolStripButtonToogleWaveForm.Checked && toolStripButtonToogleVideo.Checked)
+                {
+                    panelVideoPlayer.Left = tabControlButtons.Left + tabControlButtons.Width + 5;
+                    panelVideoPlayer.Width = groupBoxVideo.Width - (panelVideoPlayer.Left + 10);
+                }
+
                 AudioWaveForm.Width = groupBoxVideo.Width - (AudioWaveForm.Left + 10);
                 panelWaveFormControls.Left = AudioWaveForm.Left;
                 trackBarWaveFormPosition.Left = panelWaveFormControls.Left + panelWaveFormControls.Width + 5;
@@ -6550,7 +6658,7 @@ namespace Nikse.SubtitleEdit.Forms
             else if (_videoControlsUnDocked != null && !_videoControlsUnDocked.IsDisposed)
             {
                 _videoControlsUnDocked.Width = tabControlButtons.Width + 20;
-                _videoControlsUnDocked.Height = tabControlButtons.Height + 40;
+                _videoControlsUnDocked.Height = tabControlButtons.Height + 65;
             }
         }
 
@@ -7359,7 +7467,7 @@ namespace Nikse.SubtitleEdit.Forms
             toolStripButtonVisualSync.Enabled = enabled;       
      
             // textbox source
-            textBoxSource.ReadOnly = !enabled;
+            textBoxSource.ReadOnly = !enabled;            
         }
 
         internal void TimerWebServiceTick(object sender, EventArgs e)
@@ -7771,18 +7879,28 @@ namespace Nikse.SubtitleEdit.Forms
             _formPositionsAndSizes.SetPositionAndSize(_videoControlsUnDocked);
             var control = tabControlButtons;
             groupBoxVideo.Controls.Remove(control);
-            control.Top = 0;
+            control.Top = 25;
             control.Left = 0;
             _videoControlsUnDocked.PanelContainer.Controls.Add(control);
+
+            groupBoxVideo.Controls.Remove(checkBoxSyncListViewWithVideoWhilePlaying);
+            _videoControlsUnDocked.PanelContainer.Controls.Add(checkBoxSyncListViewWithVideoWhilePlaying);
+            checkBoxSyncListViewWithVideoWhilePlaying.Top = 5;
+            checkBoxSyncListViewWithVideoWhilePlaying.Left = 5;
+
             splitContainerMain.Panel2Collapsed = true;
             splitContainer1.Panel2Collapsed = true;
         }
 
-        public void ReDockVideoButtons(Control videoButtons)
+        public void ReDockVideoButtons(Control videoButtons, Control checkBoxSyncSubWithVideo)
         {
             groupBoxVideo.Controls.Add(videoButtons);
             videoButtons.Top = 12;
             videoButtons.Left = 5;
+
+            groupBoxVideo.Controls.Add(checkBoxSyncSubWithVideo);
+            checkBoxSyncSubWithVideo.Top = 11;
+            checkBoxSyncSubWithVideo.Left = videoButtons.Left + videoButtons.Width + 5;
         }
 
         private void undockVideoControlsToolStripMenuItem_Click(object sender, EventArgs e)
@@ -7812,8 +7930,9 @@ namespace Nikse.SubtitleEdit.Forms
             if (_videoControlsUnDocked != null && !_videoControlsUnDocked.IsDisposed)
             {
                 var control = _videoControlsUnDocked.PanelContainer.Controls[0];
+                var controlCheckBox = _videoControlsUnDocked.PanelContainer.Controls[1];
                 _videoControlsUnDocked.PanelContainer.Controls.Clear();
-                ReDockVideoButtons(control);
+                ReDockVideoButtons(control, controlCheckBox);
                 _videoControlsUnDocked.Close();
                 _videoControlsUnDocked = null;
             }
@@ -7865,6 +7984,58 @@ namespace Nikse.SubtitleEdit.Forms
         internal void SetVideoPlayerToogleOff()
         {
             toolStripButtonToogleVideo.Checked = false;
+        }
+
+        private void toolStripMenuItemInsertSubtitle_Click(object sender, EventArgs e)
+        {
+            openFileDialog1.Title = _languageGeneral.OpenSubtitle;
+            openFileDialog1.FileName = string.Empty;
+            openFileDialog1.Filter = Utilities.GetOpenDialogFiler();
+            if (openFileDialog1.ShowDialog(this) == DialogResult.OK)
+            {
+                if (!File.Exists(openFileDialog1.FileName))
+                    return;
+
+                var fi = new FileInfo(openFileDialog1.FileName);
+                if (fi.Length > 1024 * 1024 * 10) // max 10 mb
+                {
+                    if (MessageBox.Show(string.Format(_language.FileXIsLargerThan10Mb + Environment.NewLine +
+                                                      Environment.NewLine +
+                                                      _language.ContinueAnyway,
+                                                      openFileDialog1.FileName), Title, MessageBoxButtons.YesNoCancel) != DialogResult.Yes)
+                        return;
+                }
+
+                MakeHistoryForUndo(string.Format(_language.BeforeInsertLine, openFileDialog1.FileName));
+
+                Encoding encoding = null;
+                Subtitle subtitle = new Subtitle();
+                SubtitleFormat format = subtitle.LoadSubtitle(openFileDialog1.FileName, out encoding, encoding);
+
+
+                if (format != null)
+                {
+                    SaveSubtitleListviewIndexes();
+                    if (format.IsFrameBased)
+                        subtitle.CalculateTimeCodesFromFrameNumbers(CurrentFrameRate);
+                    else
+                        subtitle.CalculateFrameNumbersFromTimeCodes(CurrentFrameRate);
+
+                    if (Configuration.Settings.General.RemoveBlankLinesWhenOpening)
+                        subtitle.RemoveEmptyLines();
+
+                    int index = FirstSelectedIndex + 0;
+                    foreach (Paragraph p in subtitle.Paragraphs)
+                    {
+                        _subtitle.Paragraphs.Insert(index, new Paragraph(p));
+                        index++;
+                    }
+                    _subtitle.Renumber(1);
+                    ShowSource();
+                    SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
+                    RestoreSubtitleListviewIndexes();
+                }
+            }
         }
 
     }

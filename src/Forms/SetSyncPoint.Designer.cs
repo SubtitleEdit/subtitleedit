@@ -67,8 +67,9 @@
             this.timeUpDownLine.AutoSize = true;
             this.timeUpDownLine.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.timeUpDownLine.Location = new System.Drawing.Point(18, 19);
+            this.timeUpDownLine.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.timeUpDownLine.Name = "timeUpDownLine";
-            this.timeUpDownLine.Size = new System.Drawing.Size(92, 25);
+            this.timeUpDownLine.Size = new System.Drawing.Size(123, 29);
             this.timeUpDownLine.TabIndex = 1;
             // 
             // groupBox2
@@ -148,9 +149,9 @@
             // 
             this.labelVideoFileName.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.labelVideoFileName.AutoSize = true;
-            this.labelVideoFileName.Location = new System.Drawing.Point(12, 211);
+            this.labelVideoFileName.Location = new System.Drawing.Point(12, 209);
             this.labelVideoFileName.Name = "labelVideoFileName";
-            this.labelVideoFileName.Size = new System.Drawing.Size(98, 13);
+            this.labelVideoFileName.Size = new System.Drawing.Size(120, 17);
             this.labelVideoFileName.TabIndex = 21;
             this.labelVideoFileName.Text = "labelVideoFileName";
             // 
@@ -239,7 +240,7 @@
             // 
             // SetSyncPoint
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(749, 568);
             this.Controls.Add(this.labelSubtitle);

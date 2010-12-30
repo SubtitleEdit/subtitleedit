@@ -3,6 +3,7 @@ using System.IO;
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.VideoPlayers;
+using System.Drawing;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -30,6 +31,19 @@ namespace Nikse.SubtitleEdit.Forms
             buttonSetSyncPoint.Text = Configuration.Settings.Language.PointSync.SetSyncPoint;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
             subtitleListView1.InitializeLanguage(Configuration.Settings.Language.General, Configuration.Settings);
+            subtitleListView1.InitializeTimeStampColumWidths(this);
+            FixLargeFonts();
+        }
+
+        private void FixLargeFonts()
+        {
+            Graphics graphics = this.CreateGraphics();
+            SizeF textSize = graphics.MeasureString(buttonSetSyncPoint.Text, this.Font);
+            if (textSize.Height > buttonSetSyncPoint.Height - 4)
+            {
+                int newButtonHeight = (int)(textSize.Height + 7 + 0.5);
+                Utilities.SetButtonHeight(this, newButtonHeight, 1);
+            }
         }
 
         public TimeSpan SyncronizationPoint

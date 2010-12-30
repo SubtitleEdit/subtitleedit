@@ -93,6 +93,18 @@ namespace Nikse.SubtitleEdit.Forms
             buttonSkipText.Text = Configuration.Settings.Language.SpellCheck.SkipOnce;
             groupBoxSuggestions.Text = Configuration.Settings.Language.SpellCheck.Suggestions;
             buttonAddToNames.Text = Configuration.Settings.Language.SpellCheck.AddToNamesAndIgnoreList;
+            FixLargeFonts();
+        }
+
+        private void FixLargeFonts()
+        {
+            Graphics graphics = this.CreateGraphics();
+            SizeF textSize = graphics.MeasureString(buttonAbort.Text, this.Font);
+            if (textSize.Height > buttonAbort.Height - 4)
+            {
+                int newButtonHeight = (int)(textSize.Height + 7 + 0.5);
+                Utilities.SetButtonHeight(this, newButtonHeight, 1);
+            }
         }
 
         public void Initialize(string languageName, string word, List<string> suggestions, string paragraph, string progress)

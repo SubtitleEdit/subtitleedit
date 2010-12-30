@@ -133,9 +133,9 @@
             this.columnHeader8});
             this.listViewFixes.FullRowSelect = true;
             this.listViewFixes.HideSelection = false;
-            this.listViewFixes.Location = new System.Drawing.Point(6, 13);
+            this.listViewFixes.Location = new System.Drawing.Point(6, 23);
             this.listViewFixes.Name = "listViewFixes";
-            this.listViewFixes.Size = new System.Drawing.Size(714, 249);
+            this.listViewFixes.Size = new System.Drawing.Size(714, 239);
             this.listViewFixes.TabIndex = 9;
             this.listViewFixes.UseCompatibleStateImageBehavior = false;
             this.listViewFixes.View = System.Windows.Forms.View.Details;
@@ -162,7 +162,7 @@
             // 
             // ChangeCasingNames
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(736, 589);
             this.Controls.Add(this.buttonOK);

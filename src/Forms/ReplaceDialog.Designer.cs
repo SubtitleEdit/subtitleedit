@@ -43,9 +43,9 @@
             // radioButtonRegEx
             // 
             this.radioButtonRegEx.AutoSize = true;
-            this.radioButtonRegEx.Location = new System.Drawing.Point(182, 51);
+            this.radioButtonRegEx.Location = new System.Drawing.Point(201, 51);
             this.radioButtonRegEx.Name = "radioButtonRegEx";
-            this.radioButtonRegEx.Size = new System.Drawing.Size(56, 17);
+            this.radioButtonRegEx.Size = new System.Drawing.Size(69, 21);
             this.radioButtonRegEx.TabIndex = 3;
             this.radioButtonRegEx.Text = "RegEx";
             this.radioButtonRegEx.UseVisualStyleBackColor = true;
@@ -54,9 +54,9 @@
             // radioButtonCaseSensitive
             // 
             this.radioButtonCaseSensitive.AutoSize = true;
-            this.radioButtonCaseSensitive.Location = new System.Drawing.Point(81, 51);
+            this.radioButtonCaseSensitive.Location = new System.Drawing.Point(88, 51);
             this.radioButtonCaseSensitive.Name = "radioButtonCaseSensitive";
-            this.radioButtonCaseSensitive.Size = new System.Drawing.Size(94, 17);
+            this.radioButtonCaseSensitive.Size = new System.Drawing.Size(113, 21);
             this.radioButtonCaseSensitive.TabIndex = 2;
             this.radioButtonCaseSensitive.Text = "Case sensitive";
             this.radioButtonCaseSensitive.UseVisualStyleBackColor = true;
@@ -68,7 +68,7 @@
             this.radioButtonNormal.Checked = true;
             this.radioButtonNormal.Location = new System.Drawing.Point(17, 51);
             this.radioButtonNormal.Name = "radioButtonNormal";
-            this.radioButtonNormal.Size = new System.Drawing.Size(58, 17);
+            this.radioButtonNormal.Size = new System.Drawing.Size(72, 21);
             this.radioButtonNormal.TabIndex = 1;
             this.radioButtonNormal.TabStop = true;
             this.radioButtonNormal.Text = "Normal";
@@ -89,7 +89,7 @@
             // 
             this.textBoxFind.Location = new System.Drawing.Point(15, 25);
             this.textBoxFind.Name = "textBoxFind";
-            this.textBoxFind.Size = new System.Drawing.Size(262, 21);
+            this.textBoxFind.Size = new System.Drawing.Size(262, 24);
             this.textBoxFind.TabIndex = 0;
             this.textBoxFind.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxFindKeyDown);
             // 
@@ -105,9 +105,9 @@
             // 
             // textBoxReplace
             // 
-            this.textBoxReplace.Location = new System.Drawing.Point(15, 103);
+            this.textBoxReplace.Location = new System.Drawing.Point(15, 104);
             this.textBoxReplace.Name = "textBoxReplace";
-            this.textBoxReplace.Size = new System.Drawing.Size(265, 21);
+            this.textBoxReplace.Size = new System.Drawing.Size(265, 24);
             this.textBoxReplace.TabIndex = 4;
             this.textBoxReplace.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxFindKeyDown);
             // 
@@ -116,16 +116,16 @@
             this.labelReplaceWith.AutoSize = true;
             this.labelReplaceWith.Location = new System.Drawing.Point(12, 87);
             this.labelReplaceWith.Name = "labelReplaceWith";
-            this.labelReplaceWith.Size = new System.Drawing.Size(72, 13);
+            this.labelReplaceWith.Size = new System.Drawing.Size(89, 17);
             this.labelReplaceWith.TabIndex = 14;
             this.labelReplaceWith.Text = "Replace with:";
             // 
             // labelFindWhat
             // 
             this.labelFindWhat.AutoSize = true;
-            this.labelFindWhat.Location = new System.Drawing.Point(12, 9);
+            this.labelFindWhat.Location = new System.Drawing.Point(12, 8);
             this.labelFindWhat.Name = "labelFindWhat";
-            this.labelFindWhat.Size = new System.Drawing.Size(58, 13);
+            this.labelFindWhat.Size = new System.Drawing.Size(72, 17);
             this.labelFindWhat.TabIndex = 15;
             this.labelFindWhat.Text = "Find what:";
             // 
@@ -141,7 +141,7 @@
             // 
             // ReplaceDialog
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(301, 170);
             this.Controls.Add(this.buttonFind);

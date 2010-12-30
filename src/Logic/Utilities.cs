@@ -1517,6 +1517,24 @@ namespace Nikse.SubtitleEdit.Logic
             }   
         }
 
+        internal static void SetButtonHeight(Control control, int newHeight, int level)
+        {
+            if (level > 6)
+                return;
+
+            if (control.HasChildren)
+            {
+                foreach (Control subControl in control.Controls)
+                {
+                    if (subControl.HasChildren)
+                        SetButtonHeight(subControl, newHeight, level++);
+                    else if (subControl is Button)
+                        subControl.Height = newHeight;
+                }
+            }
+            else if (control is Button)
+                control.Height = newHeight;
+        }
             
     }
 }

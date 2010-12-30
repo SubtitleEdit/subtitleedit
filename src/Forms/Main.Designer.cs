@@ -151,26 +151,6 @@
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.tabControlSubtitle = new System.Windows.Forms.TabControl();
-            this.tabPage1 = new System.Windows.Forms.TabPage();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.labelCharactersPerSecond = new System.Windows.Forms.Label();
-            this.labelAutoDuration = new System.Windows.Forms.Label();
-            this.panelSingleLine = new System.Windows.Forms.Panel();
-            this.labelTextLineTotal = new System.Windows.Forms.Label();
-            this.buttonUnBreak = new System.Windows.Forms.Button();
-            this.buttonUndoListViewChanges = new System.Windows.Forms.Button();
-            this.labelStartTimeWarning = new System.Windows.Forms.Label();
-            this.labelDurationWarning = new System.Windows.Forms.Label();
-            this.numericUpDownDuration = new System.Windows.Forms.NumericUpDown();
-            this.labelTextLineLengths = new System.Windows.Forms.Label();
-            this.buttonAutoBreak = new System.Windows.Forms.Button();
-            this.buttonPrevious = new System.Windows.Forms.Button();
-            this.buttonNext = new System.Windows.Forms.Button();
-            this.labelText = new System.Windows.Forms.Label();
-            this.labelDuration = new System.Windows.Forms.Label();
-            this.labelStartTime = new System.Windows.Forms.Label();
-            this.textBoxListViewText = new System.Windows.Forms.TextBox();
             this.contextMenuStripTextBoxListView = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.cutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.copyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -189,6 +169,7 @@
             this.toolStripMenuItemDelete = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemInsertBefore = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemInsertAfter = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemInsertSubtitle = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator7 = new System.Windows.Forms.ToolStripSeparator();
             this.splitLineToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemMergeLines = new System.Windows.Forms.ToolStripMenuItem();
@@ -215,8 +196,6 @@
             this.fixCommonErrorsInSelectedLinesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.changeCasingForSelectedLinesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
-            this.tabPage2 = new System.Windows.Forms.TabPage();
-            this.textBoxSource = new System.Windows.Forms.TextBox();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
@@ -227,7 +206,7 @@
             this.labelVideoInfo = new System.Windows.Forms.Label();
             this.trackBarWaveFormPosition = new System.Windows.Forms.TrackBar();
             this.panelWaveFormControls = new System.Windows.Forms.Panel();
-            this.toolStrip2 = new System.Windows.Forms.ToolStrip();
+            this.toolStripWaveControls = new System.Windows.Forms.ToolStrip();
             this.toolStripButtonWaveFormZoomOut = new System.Windows.Forms.ToolStripButton();
             this.toolStripComboBoxWaveForm = new System.Windows.Forms.ToolStripComboBox();
             this.toolStripButtonWaveFormZoomIn = new System.Windows.Forms.ToolStripButton();
@@ -235,6 +214,7 @@
             this.toolStripButtonWaveFormPause = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonWaveFormPlay = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonLockCenter = new System.Windows.Forms.ToolStripButton();
+            this.AudioWaveForm = new Nikse.SubtitleEdit.Controls.WaveForm();
             this.tabControlButtons = new System.Windows.Forms.TabControl();
             this.tabPageTranslate = new System.Windows.Forms.TabPage();
             this.labelTranslateTip = new System.Windows.Forms.Label();
@@ -256,15 +236,16 @@
             this.buttonPlayCurrent = new System.Windows.Forms.Button();
             this.buttonPlayNext = new System.Windows.Forms.Button();
             this.tabPageCreate = new System.Windows.Forms.TabPage();
+            this.timeUpDownVideoPosition = new Nikse.SubtitleEdit.Controls.TimeUpDown();
             this.buttonGotoSub = new System.Windows.Forms.Button();
             this.buttonBeforeText = new System.Windows.Forms.Button();
             this.buttonSetEnd = new System.Windows.Forms.Button();
             this.buttonInsertNewText = new System.Windows.Forms.Button();
             this.buttonSetStartTime = new System.Windows.Forms.Button();
-            this.label12 = new System.Windows.Forms.Label();
-            this.label11 = new System.Windows.Forms.Label();
-            this.label10 = new System.Windows.Forms.Label();
-            this.label9 = new System.Windows.Forms.Label();
+            this.labelCreateF12 = new System.Windows.Forms.Label();
+            this.labelCreateF11 = new System.Windows.Forms.Label();
+            this.labelCreateF10 = new System.Windows.Forms.Label();
+            this.labelCreateF9 = new System.Windows.Forms.Label();
             this.buttonForward2 = new System.Windows.Forms.Button();
             this.numericUpDownSec2 = new System.Windows.Forms.NumericUpDown();
             this.buttonSecBack2 = new System.Windows.Forms.Button();
@@ -274,15 +255,16 @@
             this.labelVideoPosition = new System.Windows.Forms.Label();
             this.buttonSecBack1 = new System.Windows.Forms.Button();
             this.tabPageAdjust = new System.Windows.Forms.TabPage();
+            this.timeUpDownVideoPositionAdjust = new Nikse.SubtitleEdit.Controls.TimeUpDown();
             this.buttonAdjustSetEndTime = new System.Windows.Forms.Button();
             this.buttonSetEndAndGoToNext = new System.Windows.Forms.Button();
             this.buttonSetStartAndOffsetRest = new System.Windows.Forms.Button();
             this.buttonAdjustSetStartTime = new System.Windows.Forms.Button();
             this.labelAdjustTip = new System.Windows.Forms.Label();
-            this.label7 = new System.Windows.Forms.Label();
-            this.label6 = new System.Windows.Forms.Label();
-            this.label5 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
+            this.labelAdjustF12 = new System.Windows.Forms.Label();
+            this.labelAdjustF11 = new System.Windows.Forms.Label();
+            this.labelAdjustF10 = new System.Windows.Forms.Label();
+            this.labelAdjustF9 = new System.Windows.Forms.Label();
             this.buttonAdjustSecForward2 = new System.Windows.Forms.Button();
             this.numericUpDownSecAdjust2 = new System.Windows.Forms.NumericUpDown();
             this.buttonAdjustSecBack2 = new System.Windows.Forms.Button();
@@ -292,8 +274,6 @@
             this.labelVideoPosition2 = new System.Windows.Forms.Label();
             this.buttonAdjustGoToPosAndPause = new System.Windows.Forms.Button();
             this.buttonAdjustPlayBefore = new System.Windows.Forms.Button();
-            this.panelVideoPlayer = new System.Windows.Forms.Panel();
-            this.labelSubtitle = new System.Windows.Forms.Label();
             this.videoTimer = new System.Windows.Forms.Timer(this.components);
             this.timerAutoDuration = new System.Windows.Forms.Timer(this.components);
             this.timerAutoContinue = new System.Windows.Forms.Timer(this.components);
@@ -307,28 +287,44 @@
             this.mergeWithNextToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator11 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripMenuItemWaveFormPlaySelection = new System.Windows.Forms.ToolStripMenuItem();
-            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.splitContainerMain = new System.Windows.Forms.SplitContainer();
+            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.tabControlSubtitle = new System.Windows.Forms.TabControl();
+            this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.groupBoxEdit = new System.Windows.Forms.GroupBox();
+            this.labelCharactersPerSecond = new System.Windows.Forms.Label();
+            this.panelSingleLine = new System.Windows.Forms.Panel();
+            this.labelTextLineTotal = new System.Windows.Forms.Label();
+            this.buttonUnBreak = new System.Windows.Forms.Button();
             this.timeUpDownStartTime = new Nikse.SubtitleEdit.Controls.TimeUpDown();
+            this.buttonUndoListViewChanges = new System.Windows.Forms.Button();
+            this.labelStartTimeWarning = new System.Windows.Forms.Label();
+            this.labelDurationWarning = new System.Windows.Forms.Label();
+            this.numericUpDownDuration = new System.Windows.Forms.NumericUpDown();
+            this.labelTextLineLengths = new System.Windows.Forms.Label();
+            this.buttonAutoBreak = new System.Windows.Forms.Button();
+            this.buttonPrevious = new System.Windows.Forms.Button();
+            this.buttonNext = new System.Windows.Forms.Button();
+            this.labelText = new System.Windows.Forms.Label();
+            this.labelStartTime = new System.Windows.Forms.Label();
+            this.textBoxListViewText = new System.Windows.Forms.TextBox();
+            this.labelDuration = new System.Windows.Forms.Label();
+            this.labelAutoDuration = new System.Windows.Forms.Label();
             this.SubtitleListview1 = new Nikse.SubtitleEdit.Controls.SubtitleListView();
+            this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.textBoxSource = new System.Windows.Forms.TextBox();
+            this.panelVideoPlayer = new System.Windows.Forms.Panel();
+            this.labelSubtitle = new System.Windows.Forms.Label();
             this.mediaPlayer = new Nikse.SubtitleEdit.Controls.VideoPlayerContainer();
-            this.AudioWaveForm = new Nikse.SubtitleEdit.Controls.WaveForm();
-            this.timeUpDownVideoPosition = new Nikse.SubtitleEdit.Controls.TimeUpDown();
-            this.timeUpDownVideoPositionAdjust = new Nikse.SubtitleEdit.Controls.TimeUpDown();
             this.statusStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
-            this.tabControlSubtitle.SuspendLayout();
-            this.tabPage1.SuspendLayout();
-            this.groupBox1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDuration)).BeginInit();
             this.contextMenuStripTextBoxListView.SuspendLayout();
             this.contextMenuStripListview.SuspendLayout();
-            this.tabPage2.SuspendLayout();
             this.groupBoxVideo.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarWaveFormPosition)).BeginInit();
             this.panelWaveFormControls.SuspendLayout();
-            this.toolStrip2.SuspendLayout();
+            this.toolStripWaveControls.SuspendLayout();
             this.tabControlButtons.SuspendLayout();
             this.tabPageTranslate.SuspendLayout();
             this.groupBoxTranslateSearch.SuspendLayout();
@@ -340,14 +336,19 @@
             this.tabPageAdjust.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSecAdjust2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSecAdjust1)).BeginInit();
-            this.panelVideoPlayer.SuspendLayout();
             this.contextMenuStripWaveForm.SuspendLayout();
-            this.splitContainer1.Panel1.SuspendLayout();
-            this.splitContainer1.Panel2.SuspendLayout();
-            this.splitContainer1.SuspendLayout();
             this.splitContainerMain.Panel1.SuspendLayout();
             this.splitContainerMain.Panel2.SuspendLayout();
             this.splitContainerMain.SuspendLayout();
+            this.splitContainer1.Panel1.SuspendLayout();
+            this.splitContainer1.Panel2.SuspendLayout();
+            this.splitContainer1.SuspendLayout();
+            this.tabControlSubtitle.SuspendLayout();
+            this.tabPage1.SuspendLayout();
+            this.groupBoxEdit.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDuration)).BeginInit();
+            this.tabPage2.SuspendLayout();
+            this.panelVideoPlayer.SuspendLayout();
             this.SuspendLayout();
             // 
             // statusStrip1
@@ -1406,249 +1407,6 @@
             this.aboutToolStripMenuItem.Text = "About";
             this.aboutToolStripMenuItem.Click += new System.EventHandler(this.AboutToolStripMenuItemClick);
             // 
-            // tabControlSubtitle
-            // 
-            this.tabControlSubtitle.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.tabControlSubtitle.Controls.Add(this.tabPage1);
-            this.tabControlSubtitle.Controls.Add(this.tabPage2);
-            this.tabControlSubtitle.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tabControlSubtitle.Location = new System.Drawing.Point(3, 3);
-            this.tabControlSubtitle.Name = "tabControlSubtitle";
-            this.tabControlSubtitle.SelectedIndex = 0;
-            this.tabControlSubtitle.Size = new System.Drawing.Size(945, 282);
-            this.tabControlSubtitle.TabIndex = 0;
-            this.tabControlSubtitle.SelectedIndexChanged += new System.EventHandler(this.TabControlSubtitleSelectedIndexChanged);
-            // 
-            // tabPage1
-            // 
-            this.tabPage1.Controls.Add(this.groupBox1);
-            this.tabPage1.Controls.Add(this.SubtitleListview1);
-            this.tabPage1.Location = new System.Drawing.Point(4, 22);
-            this.tabPage1.Name = "tabPage1";
-            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(937, 256);
-            this.tabPage1.TabIndex = 0;
-            this.tabPage1.Text = "List view";
-            this.tabPage1.UseVisualStyleBackColor = true;
-            // 
-            // groupBox1
-            // 
-            this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBox1.Controls.Add(this.labelCharactersPerSecond);
-            this.groupBox1.Controls.Add(this.labelAutoDuration);
-            this.groupBox1.Controls.Add(this.panelSingleLine);
-            this.groupBox1.Controls.Add(this.labelTextLineTotal);
-            this.groupBox1.Controls.Add(this.buttonUnBreak);
-            this.groupBox1.Controls.Add(this.timeUpDownStartTime);
-            this.groupBox1.Controls.Add(this.buttonUndoListViewChanges);
-            this.groupBox1.Controls.Add(this.labelStartTimeWarning);
-            this.groupBox1.Controls.Add(this.labelDurationWarning);
-            this.groupBox1.Controls.Add(this.numericUpDownDuration);
-            this.groupBox1.Controls.Add(this.labelTextLineLengths);
-            this.groupBox1.Controls.Add(this.buttonAutoBreak);
-            this.groupBox1.Controls.Add(this.buttonPrevious);
-            this.groupBox1.Controls.Add(this.buttonNext);
-            this.groupBox1.Controls.Add(this.labelText);
-            this.groupBox1.Controls.Add(this.labelDuration);
-            this.groupBox1.Controls.Add(this.labelStartTime);
-            this.groupBox1.Controls.Add(this.textBoxListViewText);
-            this.groupBox1.Location = new System.Drawing.Point(3, 150);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(926, 102);
-            this.groupBox1.TabIndex = 1;
-            this.groupBox1.TabStop = false;
-            // 
-            // labelCharactersPerSecond
-            // 
-            this.labelCharactersPerSecond.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.labelCharactersPerSecond.Location = new System.Drawing.Point(625, 12);
-            this.labelCharactersPerSecond.Name = "labelCharactersPerSecond";
-            this.labelCharactersPerSecond.Size = new System.Drawing.Size(177, 13);
-            this.labelCharactersPerSecond.TabIndex = 31;
-            this.labelCharactersPerSecond.Text = "labelCharactersPerSecond";
-            this.labelCharactersPerSecond.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // labelAutoDuration
-            // 
-            this.labelAutoDuration.AutoSize = true;
-            this.labelAutoDuration.Location = new System.Drawing.Point(93, 12);
-            this.labelAutoDuration.Name = "labelAutoDuration";
-            this.labelAutoDuration.Size = new System.Drawing.Size(30, 13);
-            this.labelAutoDuration.TabIndex = 30;
-            this.labelAutoDuration.Text = "Auto";
-            // 
-            // panelSingleLine
-            // 
-            this.panelSingleLine.AutoSize = true;
-            this.panelSingleLine.Location = new System.Drawing.Point(314, 86);
-            this.panelSingleLine.Margin = new System.Windows.Forms.Padding(0);
-            this.panelSingleLine.Name = "panelSingleLine";
-            this.panelSingleLine.Size = new System.Drawing.Size(52, 16);
-            this.panelSingleLine.TabIndex = 7;
-            // 
-            // labelTextLineTotal
-            // 
-            this.labelTextLineTotal.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.labelTextLineTotal.Location = new System.Drawing.Point(625, 86);
-            this.labelTextLineTotal.Name = "labelTextLineTotal";
-            this.labelTextLineTotal.Size = new System.Drawing.Size(177, 13);
-            this.labelTextLineTotal.TabIndex = 21;
-            this.labelTextLineTotal.Text = "labelTextLineTotal";
-            this.labelTextLineTotal.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // buttonUnBreak
-            // 
-            this.buttonUnBreak.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonUnBreak.Location = new System.Drawing.Point(806, 31);
-            this.buttonUnBreak.Name = "buttonUnBreak";
-            this.buttonUnBreak.Size = new System.Drawing.Size(117, 21);
-            this.buttonUnBreak.TabIndex = 6;
-            this.buttonUnBreak.Text = "Unbreak";
-            this.buttonUnBreak.UseVisualStyleBackColor = true;
-            this.buttonUnBreak.Click += new System.EventHandler(this.ButtonUnBreakClick);
-            // 
-            // buttonUndoListViewChanges
-            // 
-            this.buttonUndoListViewChanges.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonUndoListViewChanges.Location = new System.Drawing.Point(806, 59);
-            this.buttonUndoListViewChanges.Name = "buttonUndoListViewChanges";
-            this.buttonUndoListViewChanges.Size = new System.Drawing.Size(117, 21);
-            this.buttonUndoListViewChanges.TabIndex = 7;
-            this.buttonUndoListViewChanges.Text = "Undo changes ";
-            this.buttonUndoListViewChanges.UseVisualStyleBackColor = true;
-            this.buttonUndoListViewChanges.Click += new System.EventHandler(this.ButtonUndoListViewChangesClick);
-            // 
-            // labelStartTimeWarning
-            // 
-            this.labelStartTimeWarning.AutoSize = true;
-            this.labelStartTimeWarning.ForeColor = System.Drawing.Color.Red;
-            this.labelStartTimeWarning.Location = new System.Drawing.Point(6, 53);
-            this.labelStartTimeWarning.Name = "labelStartTimeWarning";
-            this.labelStartTimeWarning.Size = new System.Drawing.Size(115, 13);
-            this.labelStartTimeWarning.TabIndex = 18;
-            this.labelStartTimeWarning.Text = "labelStartTimeWarning";
-            // 
-            // labelDurationWarning
-            // 
-            this.labelDurationWarning.AutoSize = true;
-            this.labelDurationWarning.ForeColor = System.Drawing.Color.Red;
-            this.labelDurationWarning.Location = new System.Drawing.Point(120, 53);
-            this.labelDurationWarning.Name = "labelDurationWarning";
-            this.labelDurationWarning.Size = new System.Drawing.Size(110, 13);
-            this.labelDurationWarning.TabIndex = 17;
-            this.labelDurationWarning.Text = "labelDurationWarning";
-            // 
-            // numericUpDownDuration
-            // 
-            this.numericUpDownDuration.DecimalPlaces = 3;
-            this.numericUpDownDuration.Increment = new decimal(new int[] {
-            1,
-            0,
-            0,
-            65536});
-            this.numericUpDownDuration.Location = new System.Drawing.Point(122, 28);
-            this.numericUpDownDuration.Maximum = new decimal(new int[] {
-            99999,
-            0,
-            0,
-            0});
-            this.numericUpDownDuration.Minimum = new decimal(new int[] {
-            99999,
-            0,
-            0,
-            -2147483648});
-            this.numericUpDownDuration.Name = "numericUpDownDuration";
-            this.numericUpDownDuration.Size = new System.Drawing.Size(54, 21);
-            this.numericUpDownDuration.TabIndex = 1;
-            this.numericUpDownDuration.ValueChanged += new System.EventHandler(this.NumericUpDownDurationValueChanged);
-            // 
-            // labelTextLineLengths
-            // 
-            this.labelTextLineLengths.AutoSize = true;
-            this.labelTextLineLengths.Location = new System.Drawing.Point(203, 86);
-            this.labelTextLineLengths.Name = "labelTextLineLengths";
-            this.labelTextLineLengths.Size = new System.Drawing.Size(108, 13);
-            this.labelTextLineLengths.TabIndex = 12;
-            this.labelTextLineLengths.Text = "labelTextLineLengths";
-            // 
-            // buttonAutoBreak
-            // 
-            this.buttonAutoBreak.Location = new System.Drawing.Point(139, 75);
-            this.buttonAutoBreak.Name = "buttonAutoBreak";
-            this.buttonAutoBreak.Size = new System.Drawing.Size(64, 21);
-            this.buttonAutoBreak.TabIndex = 4;
-            this.buttonAutoBreak.Text = "Auto br";
-            this.buttonAutoBreak.UseVisualStyleBackColor = true;
-            this.buttonAutoBreak.Click += new System.EventHandler(this.ButtonAutoBreakClick);
-            // 
-            // buttonPrevious
-            // 
-            this.buttonPrevious.Location = new System.Drawing.Point(7, 75);
-            this.buttonPrevious.Name = "buttonPrevious";
-            this.buttonPrevious.Size = new System.Drawing.Size(64, 21);
-            this.buttonPrevious.TabIndex = 2;
-            this.buttonPrevious.Text = "< Prev ";
-            this.buttonPrevious.UseVisualStyleBackColor = true;
-            this.buttonPrevious.Click += new System.EventHandler(this.ButtonPreviousClick);
-            // 
-            // buttonNext
-            // 
-            this.buttonNext.Location = new System.Drawing.Point(73, 75);
-            this.buttonNext.Name = "buttonNext";
-            this.buttonNext.Size = new System.Drawing.Size(64, 21);
-            this.buttonNext.TabIndex = 3;
-            this.buttonNext.Text = "Next >";
-            this.buttonNext.UseVisualStyleBackColor = true;
-            this.buttonNext.Click += new System.EventHandler(this.ButtonNextClick);
-            // 
-            // labelText
-            // 
-            this.labelText.AutoSize = true;
-            this.labelText.Location = new System.Drawing.Point(203, 12);
-            this.labelText.Name = "labelText";
-            this.labelText.Size = new System.Drawing.Size(29, 13);
-            this.labelText.TabIndex = 5;
-            this.labelText.Text = "Text";
-            // 
-            // labelDuration
-            // 
-            this.labelDuration.AutoSize = true;
-            this.labelDuration.Location = new System.Drawing.Point(120, 12);
-            this.labelDuration.Name = "labelDuration";
-            this.labelDuration.Size = new System.Drawing.Size(48, 13);
-            this.labelDuration.TabIndex = 4;
-            this.labelDuration.Text = "Duration";
-            // 
-            // labelStartTime
-            // 
-            this.labelStartTime.AutoSize = true;
-            this.labelStartTime.Location = new System.Drawing.Point(6, 12);
-            this.labelStartTime.Name = "labelStartTime";
-            this.labelStartTime.Size = new System.Drawing.Size(54, 13);
-            this.labelStartTime.TabIndex = 3;
-            this.labelStartTime.Text = "Start time";
-            // 
-            // textBoxListViewText
-            // 
-            this.textBoxListViewText.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxListViewText.ContextMenuStrip = this.contextMenuStripTextBoxListView;
-            this.textBoxListViewText.Enabled = false;
-            this.textBoxListViewText.HideSelection = false;
-            this.textBoxListViewText.Location = new System.Drawing.Point(206, 28);
-            this.textBoxListViewText.Multiline = true;
-            this.textBoxListViewText.Name = "textBoxListViewText";
-            this.textBoxListViewText.Size = new System.Drawing.Size(596, 56);
-            this.textBoxListViewText.TabIndex = 5;
-            this.textBoxListViewText.TextChanged += new System.EventHandler(this.TextBoxListViewTextTextChanged);
-            this.textBoxListViewText.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxListViewTextKeyDown);
-            this.textBoxListViewText.KeyUp += new System.Windows.Forms.KeyEventHandler(this.textBoxListViewText_KeyUp);
-            this.textBoxListViewText.Leave += new System.EventHandler(this.textBoxListViewText_Leave);
-            this.textBoxListViewText.MouseMove += new System.Windows.Forms.MouseEventHandler(this.textBoxListViewText_MouseMove);
-            // 
             // contextMenuStripTextBoxListView
             // 
             this.contextMenuStripTextBoxListView.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -1666,13 +1424,13 @@
             this.colorToolStripMenuItem1,
             this.fontNameToolStripMenuItem});
             this.contextMenuStripTextBoxListView.Name = "contextMenuStripTextBoxListView";
-            this.contextMenuStripTextBoxListView.Size = new System.Drawing.Size(163, 258);
+            this.contextMenuStripTextBoxListView.Size = new System.Drawing.Size(191, 280);
             // 
             // cutToolStripMenuItem
             // 
             this.cutToolStripMenuItem.Name = "cutToolStripMenuItem";
             this.cutToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.X)));
-            this.cutToolStripMenuItem.Size = new System.Drawing.Size(162, 22);
+            this.cutToolStripMenuItem.Size = new System.Drawing.Size(190, 24);
             this.cutToolStripMenuItem.Text = "Cut";
             this.cutToolStripMenuItem.Click += new System.EventHandler(this.cutToolStripMenuItem_Click);
             // 
@@ -1680,7 +1438,7 @@
             // 
             this.copyToolStripMenuItem.Name = "copyToolStripMenuItem";
             this.copyToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.C)));
-            this.copyToolStripMenuItem.Size = new System.Drawing.Size(162, 22);
+            this.copyToolStripMenuItem.Size = new System.Drawing.Size(190, 24);
             this.copyToolStripMenuItem.Text = "Copy";
             this.copyToolStripMenuItem.Click += new System.EventHandler(this.copyToolStripMenuItem_Click);
             // 
@@ -1688,74 +1446,74 @@
             // 
             this.pasteToolStripMenuItem.Name = "pasteToolStripMenuItem";
             this.pasteToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.V)));
-            this.pasteToolStripMenuItem.Size = new System.Drawing.Size(162, 22);
+            this.pasteToolStripMenuItem.Size = new System.Drawing.Size(190, 24);
             this.pasteToolStripMenuItem.Text = "Paste";
             this.pasteToolStripMenuItem.Click += new System.EventHandler(this.pasteToolStripMenuItem_Click);
             // 
             // deleteToolStripMenuItem
             // 
             this.deleteToolStripMenuItem.Name = "deleteToolStripMenuItem";
-            this.deleteToolStripMenuItem.Size = new System.Drawing.Size(162, 22);
+            this.deleteToolStripMenuItem.Size = new System.Drawing.Size(190, 24);
             this.deleteToolStripMenuItem.Text = "Delete";
             this.deleteToolStripMenuItem.Click += new System.EventHandler(this.deleteToolStripMenuItem_Click);
             // 
             // toolStripSeparator18
             // 
             this.toolStripSeparator18.Name = "toolStripSeparator18";
-            this.toolStripSeparator18.Size = new System.Drawing.Size(159, 6);
+            this.toolStripSeparator18.Size = new System.Drawing.Size(187, 6);
             // 
             // selectAllToolStripMenuItem
             // 
             this.selectAllToolStripMenuItem.Name = "selectAllToolStripMenuItem";
             this.selectAllToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.A)));
-            this.selectAllToolStripMenuItem.Size = new System.Drawing.Size(162, 22);
+            this.selectAllToolStripMenuItem.Size = new System.Drawing.Size(190, 24);
             this.selectAllToolStripMenuItem.Text = "Select all";
             this.selectAllToolStripMenuItem.Click += new System.EventHandler(this.selectAllToolStripMenuItem_Click);
             // 
             // toolStripSeparator17
             // 
             this.toolStripSeparator17.Name = "toolStripSeparator17";
-            this.toolStripSeparator17.Size = new System.Drawing.Size(159, 6);
+            this.toolStripSeparator17.Size = new System.Drawing.Size(187, 6);
             // 
             // normalToolStripMenuItem1
             // 
             this.normalToolStripMenuItem1.Name = "normalToolStripMenuItem1";
-            this.normalToolStripMenuItem1.Size = new System.Drawing.Size(162, 22);
+            this.normalToolStripMenuItem1.Size = new System.Drawing.Size(190, 24);
             this.normalToolStripMenuItem1.Text = "Normal";
             this.normalToolStripMenuItem1.Click += new System.EventHandler(this.normalToolStripMenuItem1_Click);
             // 
             // boldToolStripMenuItem1
             // 
             this.boldToolStripMenuItem1.Name = "boldToolStripMenuItem1";
-            this.boldToolStripMenuItem1.Size = new System.Drawing.Size(162, 22);
+            this.boldToolStripMenuItem1.Size = new System.Drawing.Size(190, 24);
             this.boldToolStripMenuItem1.Text = "Bold";
             this.boldToolStripMenuItem1.Click += new System.EventHandler(this.boldToolStripMenuItem1_Click);
             // 
             // italicToolStripMenuItem1
             // 
             this.italicToolStripMenuItem1.Name = "italicToolStripMenuItem1";
-            this.italicToolStripMenuItem1.Size = new System.Drawing.Size(162, 22);
+            this.italicToolStripMenuItem1.Size = new System.Drawing.Size(190, 24);
             this.italicToolStripMenuItem1.Text = "Italic";
             this.italicToolStripMenuItem1.Click += new System.EventHandler(this.italicToolStripMenuItem1_Click);
             // 
             // underlineToolStripMenuItem1
             // 
             this.underlineToolStripMenuItem1.Name = "underlineToolStripMenuItem1";
-            this.underlineToolStripMenuItem1.Size = new System.Drawing.Size(162, 22);
+            this.underlineToolStripMenuItem1.Size = new System.Drawing.Size(190, 24);
             this.underlineToolStripMenuItem1.Text = "Underline";
             this.underlineToolStripMenuItem1.Click += new System.EventHandler(this.underlineToolStripMenuItem1_Click);
             // 
             // colorToolStripMenuItem1
             // 
             this.colorToolStripMenuItem1.Name = "colorToolStripMenuItem1";
-            this.colorToolStripMenuItem1.Size = new System.Drawing.Size(162, 22);
+            this.colorToolStripMenuItem1.Size = new System.Drawing.Size(190, 24);
             this.colorToolStripMenuItem1.Text = "Color...";
             this.colorToolStripMenuItem1.Click += new System.EventHandler(this.colorToolStripMenuItem1_Click);
             // 
             // fontNameToolStripMenuItem
             // 
             this.fontNameToolStripMenuItem.Name = "fontNameToolStripMenuItem";
-            this.fontNameToolStripMenuItem.Size = new System.Drawing.Size(162, 22);
+            this.fontNameToolStripMenuItem.Size = new System.Drawing.Size(190, 24);
             this.fontNameToolStripMenuItem.Text = "Font name...";
             this.fontNameToolStripMenuItem.Click += new System.EventHandler(this.fontNameToolStripMenuItem_Click);
             // 
@@ -1765,6 +1523,7 @@
             this.toolStripMenuItemDelete,
             this.toolStripMenuItemInsertBefore,
             this.toolStripMenuItemInsertAfter,
+            this.toolStripMenuItemInsertSubtitle,
             this.toolStripSeparator7,
             this.splitLineToolStripMenuItem,
             this.toolStripMenuItemMergeLines,
@@ -1791,39 +1550,46 @@
             this.fixCommonErrorsInSelectedLinesToolStripMenuItem,
             this.changeCasingForSelectedLinesToolStripMenuItem});
             this.contextMenuStripListview.Name = "contextMenuStripListview";
-            this.contextMenuStripListview.Size = new System.Drawing.Size(276, 540);
+            this.contextMenuStripListview.Size = new System.Drawing.Size(331, 610);
             this.contextMenuStripListview.Opening += new System.ComponentModel.CancelEventHandler(this.ContextMenuStripListviewOpening);
             // 
             // toolStripMenuItemDelete
             // 
             this.toolStripMenuItemDelete.Name = "toolStripMenuItemDelete";
-            this.toolStripMenuItemDelete.Size = new System.Drawing.Size(275, 22);
+            this.toolStripMenuItemDelete.Size = new System.Drawing.Size(330, 24);
             this.toolStripMenuItemDelete.Text = "Delete";
             this.toolStripMenuItemDelete.Click += new System.EventHandler(this.ToolStripMenuItemDeleteClick);
             // 
             // toolStripMenuItemInsertBefore
             // 
             this.toolStripMenuItemInsertBefore.Name = "toolStripMenuItemInsertBefore";
-            this.toolStripMenuItemInsertBefore.Size = new System.Drawing.Size(275, 22);
+            this.toolStripMenuItemInsertBefore.Size = new System.Drawing.Size(330, 24);
             this.toolStripMenuItemInsertBefore.Text = "Insert before";
             this.toolStripMenuItemInsertBefore.Click += new System.EventHandler(this.ToolStripMenuItemInsertBeforeClick);
             // 
             // toolStripMenuItemInsertAfter
             // 
             this.toolStripMenuItemInsertAfter.Name = "toolStripMenuItemInsertAfter";
-            this.toolStripMenuItemInsertAfter.Size = new System.Drawing.Size(275, 22);
+            this.toolStripMenuItemInsertAfter.Size = new System.Drawing.Size(330, 24);
             this.toolStripMenuItemInsertAfter.Text = "Insert after";
             this.toolStripMenuItemInsertAfter.Click += new System.EventHandler(this.ToolStripMenuItemInsertAfterClick);
+            // 
+            // toolStripMenuItemInsertSubtitle
+            // 
+            this.toolStripMenuItemInsertSubtitle.Name = "toolStripMenuItemInsertSubtitle";
+            this.toolStripMenuItemInsertSubtitle.Size = new System.Drawing.Size(330, 24);
+            this.toolStripMenuItemInsertSubtitle.Text = "Insert subtitle file after this line...";
+            this.toolStripMenuItemInsertSubtitle.Click += new System.EventHandler(this.toolStripMenuItemInsertSubtitle_Click);
             // 
             // toolStripSeparator7
             // 
             this.toolStripSeparator7.Name = "toolStripSeparator7";
-            this.toolStripSeparator7.Size = new System.Drawing.Size(272, 6);
+            this.toolStripSeparator7.Size = new System.Drawing.Size(327, 6);
             // 
             // splitLineToolStripMenuItem
             // 
             this.splitLineToolStripMenuItem.Name = "splitLineToolStripMenuItem";
-            this.splitLineToolStripMenuItem.Size = new System.Drawing.Size(275, 22);
+            this.splitLineToolStripMenuItem.Size = new System.Drawing.Size(330, 24);
             this.splitLineToolStripMenuItem.Text = "Split";
             this.splitLineToolStripMenuItem.Click += new System.EventHandler(this.SplitLineToolStripMenuItemClick);
             // 
@@ -1832,153 +1598,153 @@
             this.toolStripMenuItemMergeLines.Name = "toolStripMenuItemMergeLines";
             this.toolStripMenuItemMergeLines.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift)
                         | System.Windows.Forms.Keys.M)));
-            this.toolStripMenuItemMergeLines.Size = new System.Drawing.Size(275, 22);
+            this.toolStripMenuItemMergeLines.Size = new System.Drawing.Size(330, 24);
             this.toolStripMenuItemMergeLines.Text = "Merge selected lines";
             this.toolStripMenuItemMergeLines.Click += new System.EventHandler(this.ToolStripMenuItemMergeLinesClick);
             // 
             // mergeBeforeToolStripMenuItem
             // 
             this.mergeBeforeToolStripMenuItem.Name = "mergeBeforeToolStripMenuItem";
-            this.mergeBeforeToolStripMenuItem.Size = new System.Drawing.Size(275, 22);
+            this.mergeBeforeToolStripMenuItem.Size = new System.Drawing.Size(330, 24);
             this.mergeBeforeToolStripMenuItem.Text = "Merge with line before";
             this.mergeBeforeToolStripMenuItem.Click += new System.EventHandler(this.MergeBeforeToolStripMenuItemClick);
             // 
             // mergeAfterToolStripMenuItem
             // 
             this.mergeAfterToolStripMenuItem.Name = "mergeAfterToolStripMenuItem";
-            this.mergeAfterToolStripMenuItem.Size = new System.Drawing.Size(275, 22);
+            this.mergeAfterToolStripMenuItem.Size = new System.Drawing.Size(330, 24);
             this.mergeAfterToolStripMenuItem.Text = "Merge with line after";
             this.mergeAfterToolStripMenuItem.Click += new System.EventHandler(this.MergeAfterToolStripMenuItemClick);
             // 
             // toolStripSeparator8
             // 
             this.toolStripSeparator8.Name = "toolStripSeparator8";
-            this.toolStripSeparator8.Size = new System.Drawing.Size(272, 6);
+            this.toolStripSeparator8.Size = new System.Drawing.Size(327, 6);
             // 
             // normalToolStripMenuItem
             // 
             this.normalToolStripMenuItem.Name = "normalToolStripMenuItem";
-            this.normalToolStripMenuItem.Size = new System.Drawing.Size(275, 22);
+            this.normalToolStripMenuItem.Size = new System.Drawing.Size(330, 24);
             this.normalToolStripMenuItem.Text = "Normal";
             this.normalToolStripMenuItem.Click += new System.EventHandler(this.NormalToolStripMenuItemClick);
             // 
             // boldToolStripMenuItem
             // 
             this.boldToolStripMenuItem.Name = "boldToolStripMenuItem";
-            this.boldToolStripMenuItem.Size = new System.Drawing.Size(275, 22);
+            this.boldToolStripMenuItem.Size = new System.Drawing.Size(330, 24);
             this.boldToolStripMenuItem.Text = "Bold";
             this.boldToolStripMenuItem.Click += new System.EventHandler(this.BoldToolStripMenuItemClick);
             // 
             // italicToolStripMenuItem
             // 
             this.italicToolStripMenuItem.Name = "italicToolStripMenuItem";
-            this.italicToolStripMenuItem.Size = new System.Drawing.Size(275, 22);
+            this.italicToolStripMenuItem.Size = new System.Drawing.Size(330, 24);
             this.italicToolStripMenuItem.Text = "Italic";
             this.italicToolStripMenuItem.Click += new System.EventHandler(this.ItalicToolStripMenuItemClick);
             // 
             // underlineToolStripMenuItem
             // 
             this.underlineToolStripMenuItem.Name = "underlineToolStripMenuItem";
-            this.underlineToolStripMenuItem.Size = new System.Drawing.Size(275, 22);
+            this.underlineToolStripMenuItem.Size = new System.Drawing.Size(330, 24);
             this.underlineToolStripMenuItem.Text = "Underline";
             this.underlineToolStripMenuItem.Click += new System.EventHandler(this.UnderlineToolStripMenuItemClick);
             // 
             // colorToolStripMenuItem
             // 
             this.colorToolStripMenuItem.Name = "colorToolStripMenuItem";
-            this.colorToolStripMenuItem.Size = new System.Drawing.Size(275, 22);
+            this.colorToolStripMenuItem.Size = new System.Drawing.Size(330, 24);
             this.colorToolStripMenuItem.Text = "Color...";
             this.colorToolStripMenuItem.Click += new System.EventHandler(this.ColorToolStripMenuItemClick);
             // 
             // toolStripMenuItemFont
             // 
             this.toolStripMenuItemFont.Name = "toolStripMenuItemFont";
-            this.toolStripMenuItemFont.Size = new System.Drawing.Size(275, 22);
+            this.toolStripMenuItemFont.Size = new System.Drawing.Size(330, 24);
             this.toolStripMenuItemFont.Text = "Font name...";
             this.toolStripMenuItemFont.Click += new System.EventHandler(this.toolStripMenuItemFont_Click);
             // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(272, 6);
+            this.toolStripSeparator2.Size = new System.Drawing.Size(327, 6);
             // 
             // toolStripMenuItemAutoBreakLines
             // 
             this.toolStripMenuItemAutoBreakLines.Name = "toolStripMenuItemAutoBreakLines";
-            this.toolStripMenuItemAutoBreakLines.Size = new System.Drawing.Size(275, 22);
+            this.toolStripMenuItemAutoBreakLines.Size = new System.Drawing.Size(330, 24);
             this.toolStripMenuItemAutoBreakLines.Text = "Auto balance selected lines...";
             this.toolStripMenuItemAutoBreakLines.Click += new System.EventHandler(this.ToolStripMenuItemAutoBreakLinesClick);
             // 
             // toolStripMenuItemUnbreakLines
             // 
             this.toolStripMenuItemUnbreakLines.Name = "toolStripMenuItemUnbreakLines";
-            this.toolStripMenuItemUnbreakLines.Size = new System.Drawing.Size(275, 22);
+            this.toolStripMenuItemUnbreakLines.Size = new System.Drawing.Size(330, 24);
             this.toolStripMenuItemUnbreakLines.Text = "Remove line-breaks in selected lines...";
             this.toolStripMenuItemUnbreakLines.Click += new System.EventHandler(this.ToolStripMenuItemUnbreakLinesClick);
             // 
             // toolStripSeparatorBreakLines
             // 
             this.toolStripSeparatorBreakLines.Name = "toolStripSeparatorBreakLines";
-            this.toolStripSeparatorBreakLines.Size = new System.Drawing.Size(272, 6);
+            this.toolStripSeparatorBreakLines.Size = new System.Drawing.Size(327, 6);
             // 
             // typeEffectToolStripMenuItem
             // 
             this.typeEffectToolStripMenuItem.Name = "typeEffectToolStripMenuItem";
-            this.typeEffectToolStripMenuItem.Size = new System.Drawing.Size(275, 22);
+            this.typeEffectToolStripMenuItem.Size = new System.Drawing.Size(330, 24);
             this.typeEffectToolStripMenuItem.Text = "Typewriter effect...";
             this.typeEffectToolStripMenuItem.Click += new System.EventHandler(this.TypeEffectToolStripMenuItemClick);
             // 
             // karokeeEffectToolStripMenuItem
             // 
             this.karokeeEffectToolStripMenuItem.Name = "karokeeEffectToolStripMenuItem";
-            this.karokeeEffectToolStripMenuItem.Size = new System.Drawing.Size(275, 22);
+            this.karokeeEffectToolStripMenuItem.Size = new System.Drawing.Size(330, 24);
             this.karokeeEffectToolStripMenuItem.Text = "Karaoke effect...";
             this.karokeeEffectToolStripMenuItem.Click += new System.EventHandler(this.KarokeeEffectToolStripMenuItemClick);
             // 
             // toolStripSeparatorAdvancedFunctions
             // 
             this.toolStripSeparatorAdvancedFunctions.Name = "toolStripSeparatorAdvancedFunctions";
-            this.toolStripSeparatorAdvancedFunctions.Size = new System.Drawing.Size(272, 6);
+            this.toolStripSeparatorAdvancedFunctions.Size = new System.Drawing.Size(327, 6);
             // 
             // showSelectedLinesEarlierlaterToolStripMenuItem
             // 
             this.showSelectedLinesEarlierlaterToolStripMenuItem.Name = "showSelectedLinesEarlierlaterToolStripMenuItem";
-            this.showSelectedLinesEarlierlaterToolStripMenuItem.Size = new System.Drawing.Size(275, 22);
+            this.showSelectedLinesEarlierlaterToolStripMenuItem.Size = new System.Drawing.Size(330, 24);
             this.showSelectedLinesEarlierlaterToolStripMenuItem.Text = "Show selected lines earlier/later...";
             this.showSelectedLinesEarlierlaterToolStripMenuItem.Click += new System.EventHandler(this.ShowSelectedLinesEarlierlaterToolStripMenuItemClick);
             // 
             // visualSyncSelectedLinesToolStripMenuItem
             // 
             this.visualSyncSelectedLinesToolStripMenuItem.Name = "visualSyncSelectedLinesToolStripMenuItem";
-            this.visualSyncSelectedLinesToolStripMenuItem.Size = new System.Drawing.Size(275, 22);
+            this.visualSyncSelectedLinesToolStripMenuItem.Size = new System.Drawing.Size(330, 24);
             this.visualSyncSelectedLinesToolStripMenuItem.Text = "Visual sync selected lines...";
             this.visualSyncSelectedLinesToolStripMenuItem.Click += new System.EventHandler(this.VisualSyncSelectedLinesToolStripMenuItemClick);
             // 
             // googleTranslateSelectedLinesToolStripMenuItem
             // 
             this.googleTranslateSelectedLinesToolStripMenuItem.Name = "googleTranslateSelectedLinesToolStripMenuItem";
-            this.googleTranslateSelectedLinesToolStripMenuItem.Size = new System.Drawing.Size(275, 22);
+            this.googleTranslateSelectedLinesToolStripMenuItem.Size = new System.Drawing.Size(330, 24);
             this.googleTranslateSelectedLinesToolStripMenuItem.Text = "Google translate selected lines...";
             this.googleTranslateSelectedLinesToolStripMenuItem.Click += new System.EventHandler(this.GoogleTranslateSelectedLinesToolStripMenuItemClick);
             // 
             // adjustDisplayTimeForSelectedLinesToolStripMenuItem
             // 
             this.adjustDisplayTimeForSelectedLinesToolStripMenuItem.Name = "adjustDisplayTimeForSelectedLinesToolStripMenuItem";
-            this.adjustDisplayTimeForSelectedLinesToolStripMenuItem.Size = new System.Drawing.Size(275, 22);
+            this.adjustDisplayTimeForSelectedLinesToolStripMenuItem.Size = new System.Drawing.Size(330, 24);
             this.adjustDisplayTimeForSelectedLinesToolStripMenuItem.Text = "Adjust display time for selected lines...";
             this.adjustDisplayTimeForSelectedLinesToolStripMenuItem.Click += new System.EventHandler(this.AdjustDisplayTimeForSelectedLinesToolStripMenuItemClick);
             // 
             // fixCommonErrorsInSelectedLinesToolStripMenuItem
             // 
             this.fixCommonErrorsInSelectedLinesToolStripMenuItem.Name = "fixCommonErrorsInSelectedLinesToolStripMenuItem";
-            this.fixCommonErrorsInSelectedLinesToolStripMenuItem.Size = new System.Drawing.Size(275, 22);
+            this.fixCommonErrorsInSelectedLinesToolStripMenuItem.Size = new System.Drawing.Size(330, 24);
             this.fixCommonErrorsInSelectedLinesToolStripMenuItem.Text = "Fix common errors in selected lines...";
             this.fixCommonErrorsInSelectedLinesToolStripMenuItem.Click += new System.EventHandler(this.FixCommonErrorsInSelectedLinesToolStripMenuItemClick);
             // 
             // changeCasingForSelectedLinesToolStripMenuItem
             // 
             this.changeCasingForSelectedLinesToolStripMenuItem.Name = "changeCasingForSelectedLinesToolStripMenuItem";
-            this.changeCasingForSelectedLinesToolStripMenuItem.Size = new System.Drawing.Size(275, 22);
+            this.changeCasingForSelectedLinesToolStripMenuItem.Size = new System.Drawing.Size(330, 24);
             this.changeCasingForSelectedLinesToolStripMenuItem.Text = "Change casing for selected lines...";
             this.changeCasingForSelectedLinesToolStripMenuItem.Click += new System.EventHandler(this.ChangeCasingForSelectedLinesToolStripMenuItemClick);
             // 
@@ -1987,39 +1753,6 @@
             this.imageList1.ColorDepth = System.Windows.Forms.ColorDepth.Depth8Bit;
             this.imageList1.ImageSize = new System.Drawing.Size(16, 16);
             this.imageList1.TransparentColor = System.Drawing.Color.Transparent;
-            // 
-            // tabPage2
-            // 
-            this.tabPage2.Controls.Add(this.textBoxSource);
-            this.tabPage2.Location = new System.Drawing.Point(4, 22);
-            this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(937, 256);
-            this.tabPage2.TabIndex = 1;
-            this.tabPage2.Text = "Source view";
-            this.tabPage2.UseVisualStyleBackColor = true;
-            // 
-            // textBoxSource
-            // 
-            this.textBoxSource.AllowDrop = true;
-            this.textBoxSource.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxSource.HideSelection = false;
-            this.textBoxSource.Location = new System.Drawing.Point(1, 3);
-            this.textBoxSource.MaxLength = 327670;
-            this.textBoxSource.Multiline = true;
-            this.textBoxSource.Name = "textBoxSource";
-            this.textBoxSource.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.textBoxSource.Size = new System.Drawing.Size(932, 253);
-            this.textBoxSource.TabIndex = 12;
-            this.textBoxSource.WordWrap = false;
-            this.textBoxSource.Click += new System.EventHandler(this.TextBoxSourceClick);
-            this.textBoxSource.TextChanged += new System.EventHandler(this.TextBoxSourceTextChanged);
-            this.textBoxSource.DragDrop += new System.Windows.Forms.DragEventHandler(this.TextBoxSourceDragDrop);
-            this.textBoxSource.DragEnter += new System.Windows.Forms.DragEventHandler(this.TextBoxSourceDragEnter);
-            this.textBoxSource.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxSourceKeyDown);
-            this.textBoxSource.Leave += new System.EventHandler(this.TextBoxSourceLeave);
             // 
             // openFileDialog1
             // 
@@ -2061,7 +1794,7 @@
             this.labelVideoInfo.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.labelVideoInfo.Location = new System.Drawing.Point(869, 12);
             this.labelVideoInfo.Name = "labelVideoInfo";
-            this.labelVideoInfo.Size = new System.Drawing.Size(369, 13);
+            this.labelVideoInfo.Size = new System.Drawing.Size(369, 19);
             this.labelVideoInfo.TabIndex = 12;
             this.labelVideoInfo.Text = "No video file loaded";
             this.labelVideoInfo.TextAlign = System.Drawing.ContentAlignment.TopRight;
@@ -2082,18 +1815,18 @@
             // panelWaveFormControls
             // 
             this.panelWaveFormControls.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.panelWaveFormControls.Controls.Add(this.toolStrip2);
-            this.panelWaveFormControls.Location = new System.Drawing.Point(478, 269);
+            this.panelWaveFormControls.Controls.Add(this.toolStripWaveControls);
+            this.panelWaveFormControls.Location = new System.Drawing.Point(477, 262);
             this.panelWaveFormControls.Name = "panelWaveFormControls";
-            this.panelWaveFormControls.Size = new System.Drawing.Size(174, 29);
+            this.panelWaveFormControls.Size = new System.Drawing.Size(167, 30);
             this.panelWaveFormControls.TabIndex = 10;
             // 
-            // toolStrip2
+            // toolStripWaveControls
             // 
-            this.toolStrip2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.toolStrip2.Dock = System.Windows.Forms.DockStyle.None;
-            this.toolStrip2.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
-            this.toolStrip2.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripWaveControls.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.toolStripWaveControls.Dock = System.Windows.Forms.DockStyle.None;
+            this.toolStripWaveControls.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
+            this.toolStripWaveControls.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripButtonWaveFormZoomOut,
             this.toolStripComboBoxWaveForm,
             this.toolStripButtonWaveFormZoomIn,
@@ -2101,11 +1834,11 @@
             this.toolStripButtonWaveFormPause,
             this.toolStripButtonWaveFormPlay,
             this.toolStripButtonLockCenter});
-            this.toolStrip2.Location = new System.Drawing.Point(0, 0);
-            this.toolStrip2.Name = "toolStrip2";
-            this.toolStrip2.Size = new System.Drawing.Size(158, 25);
-            this.toolStrip2.TabIndex = 0;
-            this.toolStrip2.Text = "toolStrip2";
+            this.toolStripWaveControls.Location = new System.Drawing.Point(0, 3);
+            this.toolStripWaveControls.Name = "toolStripWaveControls";
+            this.toolStripWaveControls.Size = new System.Drawing.Size(165, 25);
+            this.toolStripWaveControls.TabIndex = 0;
+            this.toolStripWaveControls.Text = "toolStrip2";
             // 
             // toolStripButtonWaveFormZoomOut
             // 
@@ -2122,7 +1855,7 @@
             this.toolStripComboBoxWaveForm.AutoSize = false;
             this.toolStripComboBoxWaveForm.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.toolStripComboBoxWaveForm.Name = "toolStripComboBoxWaveForm";
-            this.toolStripComboBoxWaveForm.Size = new System.Drawing.Size(55, 23);
+            this.toolStripComboBoxWaveForm.Size = new System.Drawing.Size(62, 23);
             // 
             // toolStripButtonWaveFormZoomIn
             // 
@@ -2171,6 +1904,34 @@
             this.toolStripButtonLockCenter.Size = new System.Drawing.Size(23, 22);
             this.toolStripButtonLockCenter.Text = "Center";
             this.toolStripButtonLockCenter.Click += new System.EventHandler(this.toolStripButtonLockCenter_Click_1);
+            // 
+            // AudioWaveForm
+            // 
+            this.AudioWaveForm.AllowDrop = true;
+            this.AudioWaveForm.AllowNewSelection = true;
+            this.AudioWaveForm.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.AudioWaveForm.BackColor = System.Drawing.Color.Black;
+            this.AudioWaveForm.BackgroundColor = System.Drawing.Color.Black;
+            this.AudioWaveForm.Color = System.Drawing.Color.GreenYellow;
+            this.AudioWaveForm.DrawGridLines = true;
+            this.AudioWaveForm.GridColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(20)))), ((int)(((byte)(18)))));
+            this.AudioWaveForm.Location = new System.Drawing.Point(475, 35);
+            this.AudioWaveForm.Margin = new System.Windows.Forms.Padding(0);
+            this.AudioWaveForm.Name = "AudioWaveForm";
+            this.AudioWaveForm.NewSelectionParagraph = null;
+            this.AudioWaveForm.SelectedColor = System.Drawing.Color.Red;
+            this.AudioWaveForm.Size = new System.Drawing.Size(762, 223);
+            this.AudioWaveForm.StartPositionSeconds = 0D;
+            this.AudioWaveForm.TabIndex = 6;
+            this.AudioWaveForm.TextColor = System.Drawing.Color.Gray;
+            this.AudioWaveForm.WaveFormNotLoadedText = "Click to add wave form";
+            this.AudioWaveForm.WavePeaks = null;
+            this.AudioWaveForm.ZoomFactor = 1D;
+            this.AudioWaveForm.Click += new System.EventHandler(this.AudioWaveForm_Click);
+            this.AudioWaveForm.DragDrop += new System.Windows.Forms.DragEventHandler(this.AudioWaveForm_DragDrop);
+            this.AudioWaveForm.DragEnter += new System.Windows.Forms.DragEventHandler(this.AudioWaveForm_DragEnter);
             // 
             // tabControlButtons
             // 
@@ -2421,15 +2182,16 @@
             // 
             // tabPageCreate
             // 
+            this.tabPageCreate.Controls.Add(this.timeUpDownVideoPosition);
             this.tabPageCreate.Controls.Add(this.buttonGotoSub);
             this.tabPageCreate.Controls.Add(this.buttonBeforeText);
             this.tabPageCreate.Controls.Add(this.buttonSetEnd);
             this.tabPageCreate.Controls.Add(this.buttonInsertNewText);
             this.tabPageCreate.Controls.Add(this.buttonSetStartTime);
-            this.tabPageCreate.Controls.Add(this.label12);
-            this.tabPageCreate.Controls.Add(this.label11);
-            this.tabPageCreate.Controls.Add(this.label10);
-            this.tabPageCreate.Controls.Add(this.label9);
+            this.tabPageCreate.Controls.Add(this.labelCreateF12);
+            this.tabPageCreate.Controls.Add(this.labelCreateF11);
+            this.tabPageCreate.Controls.Add(this.labelCreateF10);
+            this.tabPageCreate.Controls.Add(this.labelCreateF9);
             this.tabPageCreate.Controls.Add(this.buttonForward2);
             this.tabPageCreate.Controls.Add(this.numericUpDownSec2);
             this.tabPageCreate.Controls.Add(this.buttonSecBack2);
@@ -2438,7 +2200,6 @@
             this.tabPageCreate.Controls.Add(this.numericUpDownSec1);
             this.tabPageCreate.Controls.Add(this.labelVideoPosition);
             this.tabPageCreate.Controls.Add(this.buttonSecBack1);
-            this.tabPageCreate.Controls.Add(this.timeUpDownVideoPosition);
             this.tabPageCreate.Location = new System.Drawing.Point(4, 22);
             this.tabPageCreate.Name = "tabPageCreate";
             this.tabPageCreate.Padding = new System.Windows.Forms.Padding(3);
@@ -2446,6 +2207,16 @@
             this.tabPageCreate.TabIndex = 1;
             this.tabPageCreate.Text = "Create";
             this.tabPageCreate.UseVisualStyleBackColor = true;
+            // 
+            // timeUpDownVideoPosition
+            // 
+            this.timeUpDownVideoPosition.AutoSize = true;
+            this.timeUpDownVideoPosition.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.timeUpDownVideoPosition.Location = new System.Drawing.Point(86, 192);
+            this.timeUpDownVideoPosition.Margin = new System.Windows.Forms.Padding(4);
+            this.timeUpDownVideoPosition.Name = "timeUpDownVideoPosition";
+            this.timeUpDownVideoPosition.Size = new System.Drawing.Size(92, 25);
+            this.timeUpDownVideoPosition.TabIndex = 12;
             // 
             // buttonGotoSub
             // 
@@ -2497,45 +2268,45 @@
             this.buttonSetStartTime.UseVisualStyleBackColor = true;
             this.buttonSetStartTime.Click += new System.EventHandler(this.buttonSetStartTime_Click);
             // 
-            // label12
+            // labelCreateF12
             // 
-            this.label12.AutoSize = true;
-            this.label12.ForeColor = System.Drawing.Color.Silver;
-            this.label12.Location = new System.Drawing.Point(178, 114);
-            this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(25, 13);
-            this.label12.TabIndex = 65;
-            this.label12.Text = "F12";
+            this.labelCreateF12.AutoSize = true;
+            this.labelCreateF12.ForeColor = System.Drawing.Color.Silver;
+            this.labelCreateF12.Location = new System.Drawing.Point(178, 114);
+            this.labelCreateF12.Name = "labelCreateF12";
+            this.labelCreateF12.Size = new System.Drawing.Size(25, 13);
+            this.labelCreateF12.TabIndex = 65;
+            this.labelCreateF12.Text = "F12";
             // 
-            // label11
+            // labelCreateF11
             // 
-            this.label11.AutoSize = true;
-            this.label11.ForeColor = System.Drawing.Color.Silver;
-            this.label11.Location = new System.Drawing.Point(178, 88);
-            this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(25, 13);
-            this.label11.TabIndex = 64;
-            this.label11.Text = "F11";
+            this.labelCreateF11.AutoSize = true;
+            this.labelCreateF11.ForeColor = System.Drawing.Color.Silver;
+            this.labelCreateF11.Location = new System.Drawing.Point(178, 88);
+            this.labelCreateF11.Name = "labelCreateF11";
+            this.labelCreateF11.Size = new System.Drawing.Size(25, 13);
+            this.labelCreateF11.TabIndex = 64;
+            this.labelCreateF11.Text = "F11";
             // 
-            // label10
+            // labelCreateF10
             // 
-            this.label10.AutoSize = true;
-            this.label10.ForeColor = System.Drawing.Color.Silver;
-            this.label10.Location = new System.Drawing.Point(178, 36);
-            this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(25, 13);
-            this.label10.TabIndex = 63;
-            this.label10.Text = "F10";
+            this.labelCreateF10.AutoSize = true;
+            this.labelCreateF10.ForeColor = System.Drawing.Color.Silver;
+            this.labelCreateF10.Location = new System.Drawing.Point(178, 36);
+            this.labelCreateF10.Name = "labelCreateF10";
+            this.labelCreateF10.Size = new System.Drawing.Size(25, 13);
+            this.labelCreateF10.TabIndex = 63;
+            this.labelCreateF10.Text = "F10";
             // 
-            // label9
+            // labelCreateF9
             // 
-            this.label9.AutoSize = true;
-            this.label9.ForeColor = System.Drawing.Color.Silver;
-            this.label9.Location = new System.Drawing.Point(178, 10);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(19, 13);
-            this.label9.TabIndex = 62;
-            this.label9.Text = "F9";
+            this.labelCreateF9.AutoSize = true;
+            this.labelCreateF9.ForeColor = System.Drawing.Color.Silver;
+            this.labelCreateF9.Location = new System.Drawing.Point(178, 10);
+            this.labelCreateF9.Name = "labelCreateF9";
+            this.labelCreateF9.Size = new System.Drawing.Size(19, 13);
+            this.labelCreateF9.TabIndex = 62;
+            this.labelCreateF9.Text = "F9";
             // 
             // buttonForward2
             // 
@@ -2644,15 +2415,16 @@
             // 
             // tabPageAdjust
             // 
+            this.tabPageAdjust.Controls.Add(this.timeUpDownVideoPositionAdjust);
             this.tabPageAdjust.Controls.Add(this.buttonAdjustSetEndTime);
             this.tabPageAdjust.Controls.Add(this.buttonSetEndAndGoToNext);
             this.tabPageAdjust.Controls.Add(this.buttonSetStartAndOffsetRest);
             this.tabPageAdjust.Controls.Add(this.buttonAdjustSetStartTime);
             this.tabPageAdjust.Controls.Add(this.labelAdjustTip);
-            this.tabPageAdjust.Controls.Add(this.label7);
-            this.tabPageAdjust.Controls.Add(this.label6);
-            this.tabPageAdjust.Controls.Add(this.label5);
-            this.tabPageAdjust.Controls.Add(this.label2);
+            this.tabPageAdjust.Controls.Add(this.labelAdjustF12);
+            this.tabPageAdjust.Controls.Add(this.labelAdjustF11);
+            this.tabPageAdjust.Controls.Add(this.labelAdjustF10);
+            this.tabPageAdjust.Controls.Add(this.labelAdjustF9);
             this.tabPageAdjust.Controls.Add(this.buttonAdjustSecForward2);
             this.tabPageAdjust.Controls.Add(this.numericUpDownSecAdjust2);
             this.tabPageAdjust.Controls.Add(this.buttonAdjustSecBack2);
@@ -2662,13 +2434,22 @@
             this.tabPageAdjust.Controls.Add(this.labelVideoPosition2);
             this.tabPageAdjust.Controls.Add(this.buttonAdjustGoToPosAndPause);
             this.tabPageAdjust.Controls.Add(this.buttonAdjustPlayBefore);
-            this.tabPageAdjust.Controls.Add(this.timeUpDownVideoPositionAdjust);
             this.tabPageAdjust.Location = new System.Drawing.Point(4, 22);
             this.tabPageAdjust.Name = "tabPageAdjust";
             this.tabPageAdjust.Size = new System.Drawing.Size(459, 257);
             this.tabPageAdjust.TabIndex = 2;
             this.tabPageAdjust.Text = "Adjust";
             this.tabPageAdjust.UseVisualStyleBackColor = true;
+            // 
+            // timeUpDownVideoPositionAdjust
+            // 
+            this.timeUpDownVideoPositionAdjust.AutoSize = true;
+            this.timeUpDownVideoPositionAdjust.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.timeUpDownVideoPositionAdjust.Location = new System.Drawing.Point(87, 214);
+            this.timeUpDownVideoPositionAdjust.Margin = new System.Windows.Forms.Padding(4);
+            this.timeUpDownVideoPositionAdjust.Name = "timeUpDownVideoPositionAdjust";
+            this.timeUpDownVideoPositionAdjust.Size = new System.Drawing.Size(92, 25);
+            this.timeUpDownVideoPositionAdjust.TabIndex = 13;
             // 
             // buttonAdjustSetEndTime
             // 
@@ -2720,45 +2501,45 @@
             this.labelAdjustTip.TabIndex = 14;
             this.labelAdjustTip.Text = "Tip: Use <ctrl+arrow left/right> keys";
             // 
-            // label7
+            // labelAdjustF12
             // 
-            this.label7.AutoSize = true;
-            this.label7.ForeColor = System.Drawing.Color.Silver;
-            this.label7.Location = new System.Drawing.Point(178, 88);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(25, 13);
-            this.label7.TabIndex = 64;
-            this.label7.Text = "F12";
+            this.labelAdjustF12.AutoSize = true;
+            this.labelAdjustF12.ForeColor = System.Drawing.Color.Silver;
+            this.labelAdjustF12.Location = new System.Drawing.Point(178, 88);
+            this.labelAdjustF12.Name = "labelAdjustF12";
+            this.labelAdjustF12.Size = new System.Drawing.Size(25, 13);
+            this.labelAdjustF12.TabIndex = 64;
+            this.labelAdjustF12.Text = "F12";
             // 
-            // label6
+            // labelAdjustF11
             // 
-            this.label6.AutoSize = true;
-            this.label6.ForeColor = System.Drawing.Color.Silver;
-            this.label6.Location = new System.Drawing.Point(178, 62);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(25, 13);
-            this.label6.TabIndex = 63;
-            this.label6.Text = "F11";
+            this.labelAdjustF11.AutoSize = true;
+            this.labelAdjustF11.ForeColor = System.Drawing.Color.Silver;
+            this.labelAdjustF11.Location = new System.Drawing.Point(178, 62);
+            this.labelAdjustF11.Name = "labelAdjustF11";
+            this.labelAdjustF11.Size = new System.Drawing.Size(25, 13);
+            this.labelAdjustF11.TabIndex = 63;
+            this.labelAdjustF11.Text = "F11";
             // 
-            // label5
+            // labelAdjustF10
             // 
-            this.label5.AutoSize = true;
-            this.label5.ForeColor = System.Drawing.Color.Silver;
-            this.label5.Location = new System.Drawing.Point(178, 36);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(25, 13);
-            this.label5.TabIndex = 62;
-            this.label5.Text = "F10";
+            this.labelAdjustF10.AutoSize = true;
+            this.labelAdjustF10.ForeColor = System.Drawing.Color.Silver;
+            this.labelAdjustF10.Location = new System.Drawing.Point(178, 36);
+            this.labelAdjustF10.Name = "labelAdjustF10";
+            this.labelAdjustF10.Size = new System.Drawing.Size(25, 13);
+            this.labelAdjustF10.TabIndex = 62;
+            this.labelAdjustF10.Text = "F10";
             // 
-            // label2
+            // labelAdjustF9
             // 
-            this.label2.AutoSize = true;
-            this.label2.ForeColor = System.Drawing.Color.Silver;
-            this.label2.Location = new System.Drawing.Point(178, 10);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(19, 13);
-            this.label2.TabIndex = 61;
-            this.label2.Text = "F9";
+            this.labelAdjustF9.AutoSize = true;
+            this.labelAdjustF9.ForeColor = System.Drawing.Color.Silver;
+            this.labelAdjustF9.Location = new System.Drawing.Point(178, 10);
+            this.labelAdjustF9.Name = "labelAdjustF9";
+            this.labelAdjustF9.Size = new System.Drawing.Size(19, 13);
+            this.labelAdjustF9.TabIndex = 61;
+            this.labelAdjustF9.Text = "F9";
             // 
             // buttonAdjustSecForward2
             // 
@@ -2875,32 +2656,6 @@
             this.buttonAdjustPlayBefore.UseVisualStyleBackColor = true;
             this.buttonAdjustPlayBefore.Click += new System.EventHandler(this.buttonBeforeText_Click);
             // 
-            // panelVideoPlayer
-            // 
-            this.panelVideoPlayer.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.panelVideoPlayer.Controls.Add(this.labelSubtitle);
-            this.panelVideoPlayer.Controls.Add(this.mediaPlayer);
-            this.panelVideoPlayer.Location = new System.Drawing.Point(1, 1);
-            this.panelVideoPlayer.Name = "panelVideoPlayer";
-            this.panelVideoPlayer.Size = new System.Drawing.Size(282, 280);
-            this.panelVideoPlayer.TabIndex = 5;
-            // 
-            // labelSubtitle
-            // 
-            this.labelSubtitle.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.labelSubtitle.BackColor = System.Drawing.Color.Black;
-            this.labelSubtitle.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelSubtitle.ForeColor = System.Drawing.Color.White;
-            this.labelSubtitle.Location = new System.Drawing.Point(0, 246);
-            this.labelSubtitle.Name = "labelSubtitle";
-            this.labelSubtitle.Size = new System.Drawing.Size(281, 33);
-            this.labelSubtitle.TabIndex = 3;
-            this.labelSubtitle.Text = "labelSubtitle";
-            this.labelSubtitle.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
             // videoTimer
             // 
             this.videoTimer.Interval = 500;
@@ -2936,71 +2691,54 @@
             this.toolStripSeparator11,
             this.toolStripMenuItemWaveFormPlaySelection});
             this.contextMenuStripWaveForm.Name = "contextMenuStripWaveForm";
-            this.contextMenuStripWaveForm.Size = new System.Drawing.Size(183, 142);
+            this.contextMenuStripWaveForm.Size = new System.Drawing.Size(214, 154);
             // 
             // addParagraphHereToolStripMenuItem
             // 
             this.addParagraphHereToolStripMenuItem.Name = "addParagraphHereToolStripMenuItem";
-            this.addParagraphHereToolStripMenuItem.Size = new System.Drawing.Size(182, 22);
+            this.addParagraphHereToolStripMenuItem.Size = new System.Drawing.Size(213, 24);
             this.addParagraphHereToolStripMenuItem.Text = "Add paragraph here";
             this.addParagraphHereToolStripMenuItem.Click += new System.EventHandler(this.addParagraphHereToolStripMenuItem_Click);
             // 
             // deleteParagraphToolStripMenuItem
             // 
             this.deleteParagraphToolStripMenuItem.Name = "deleteParagraphToolStripMenuItem";
-            this.deleteParagraphToolStripMenuItem.Size = new System.Drawing.Size(182, 22);
+            this.deleteParagraphToolStripMenuItem.Size = new System.Drawing.Size(213, 24);
             this.deleteParagraphToolStripMenuItem.Text = "Delete paragraph";
             this.deleteParagraphToolStripMenuItem.Click += new System.EventHandler(this.deleteParagraphToolStripMenuItem_Click);
             // 
             // splitToolStripMenuItem1
             // 
             this.splitToolStripMenuItem1.Name = "splitToolStripMenuItem1";
-            this.splitToolStripMenuItem1.Size = new System.Drawing.Size(182, 22);
+            this.splitToolStripMenuItem1.Size = new System.Drawing.Size(213, 24);
             this.splitToolStripMenuItem1.Text = "Split";
             this.splitToolStripMenuItem1.Click += new System.EventHandler(this.splitToolStripMenuItem1_Click);
             // 
             // mergeWithPreviousToolStripMenuItem
             // 
             this.mergeWithPreviousToolStripMenuItem.Name = "mergeWithPreviousToolStripMenuItem";
-            this.mergeWithPreviousToolStripMenuItem.Size = new System.Drawing.Size(182, 22);
+            this.mergeWithPreviousToolStripMenuItem.Size = new System.Drawing.Size(213, 24);
             this.mergeWithPreviousToolStripMenuItem.Text = "Merge with previous";
             this.mergeWithPreviousToolStripMenuItem.Click += new System.EventHandler(this.mergeWithPreviousToolStripMenuItem_Click);
             // 
             // mergeWithNextToolStripMenuItem
             // 
             this.mergeWithNextToolStripMenuItem.Name = "mergeWithNextToolStripMenuItem";
-            this.mergeWithNextToolStripMenuItem.Size = new System.Drawing.Size(182, 22);
+            this.mergeWithNextToolStripMenuItem.Size = new System.Drawing.Size(213, 24);
             this.mergeWithNextToolStripMenuItem.Text = "Merge with next";
             this.mergeWithNextToolStripMenuItem.Click += new System.EventHandler(this.mergeWithNextToolStripMenuItem_Click);
             // 
             // toolStripSeparator11
             // 
             this.toolStripSeparator11.Name = "toolStripSeparator11";
-            this.toolStripSeparator11.Size = new System.Drawing.Size(179, 6);
+            this.toolStripSeparator11.Size = new System.Drawing.Size(210, 6);
             // 
             // toolStripMenuItemWaveFormPlaySelection
             // 
             this.toolStripMenuItemWaveFormPlaySelection.Name = "toolStripMenuItemWaveFormPlaySelection";
-            this.toolStripMenuItemWaveFormPlaySelection.Size = new System.Drawing.Size(182, 22);
+            this.toolStripMenuItemWaveFormPlaySelection.Size = new System.Drawing.Size(213, 24);
             this.toolStripMenuItemWaveFormPlaySelection.Text = "Play selection";
             this.toolStripMenuItemWaveFormPlaySelection.Click += new System.EventHandler(this.toolStripMenuItemWaveFormPlaySelection_Click);
-            // 
-            // splitContainer1
-            // 
-            this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer1.Location = new System.Drawing.Point(0, 0);
-            this.splitContainer1.Name = "splitContainer1";
-            // 
-            // splitContainer1.Panel1
-            // 
-            this.splitContainer1.Panel1.Controls.Add(this.tabControlSubtitle);
-            // 
-            // splitContainer1.Panel2
-            // 
-            this.splitContainer1.Panel2.Controls.Add(this.panelVideoPlayer);
-            this.splitContainer1.Size = new System.Drawing.Size(1244, 285);
-            this.splitContainer1.SplitterDistance = 950;
-            this.splitContainer1.TabIndex = 7;
             // 
             // splitContainerMain
             // 
@@ -3021,6 +2759,118 @@
             this.splitContainerMain.SplitterDistance = 285;
             this.splitContainerMain.TabIndex = 8;
             // 
+            // splitContainer1
+            // 
+            this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer1.Location = new System.Drawing.Point(0, 0);
+            this.splitContainer1.Name = "splitContainer1";
+            // 
+            // splitContainer1.Panel1
+            // 
+            this.splitContainer1.Panel1.Controls.Add(this.tabControlSubtitle);
+            // 
+            // splitContainer1.Panel2
+            // 
+            this.splitContainer1.Panel2.Controls.Add(this.panelVideoPlayer);
+            this.splitContainer1.Size = new System.Drawing.Size(1244, 285);
+            this.splitContainer1.SplitterDistance = 950;
+            this.splitContainer1.TabIndex = 7;
+            // 
+            // tabControlSubtitle
+            // 
+            this.tabControlSubtitle.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.tabControlSubtitle.Controls.Add(this.tabPage1);
+            this.tabControlSubtitle.Controls.Add(this.tabPage2);
+            this.tabControlSubtitle.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tabControlSubtitle.Location = new System.Drawing.Point(3, 3);
+            this.tabControlSubtitle.Name = "tabControlSubtitle";
+            this.tabControlSubtitle.SelectedIndex = 0;
+            this.tabControlSubtitle.Size = new System.Drawing.Size(945, 282);
+            this.tabControlSubtitle.TabIndex = 0;
+            this.tabControlSubtitle.SelectedIndexChanged += new System.EventHandler(this.TabControlSubtitleSelectedIndexChanged);
+            // 
+            // tabPage1
+            // 
+            this.tabPage1.Controls.Add(this.groupBoxEdit);
+            this.tabPage1.Controls.Add(this.SubtitleListview1);
+            this.tabPage1.Location = new System.Drawing.Point(4, 22);
+            this.tabPage1.Name = "tabPage1";
+            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage1.Size = new System.Drawing.Size(937, 256);
+            this.tabPage1.TabIndex = 0;
+            this.tabPage1.Text = "List view";
+            this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // groupBoxEdit
+            // 
+            this.groupBoxEdit.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxEdit.Controls.Add(this.labelCharactersPerSecond);
+            this.groupBoxEdit.Controls.Add(this.panelSingleLine);
+            this.groupBoxEdit.Controls.Add(this.labelTextLineTotal);
+            this.groupBoxEdit.Controls.Add(this.buttonUnBreak);
+            this.groupBoxEdit.Controls.Add(this.timeUpDownStartTime);
+            this.groupBoxEdit.Controls.Add(this.buttonUndoListViewChanges);
+            this.groupBoxEdit.Controls.Add(this.labelStartTimeWarning);
+            this.groupBoxEdit.Controls.Add(this.labelDurationWarning);
+            this.groupBoxEdit.Controls.Add(this.numericUpDownDuration);
+            this.groupBoxEdit.Controls.Add(this.labelTextLineLengths);
+            this.groupBoxEdit.Controls.Add(this.buttonAutoBreak);
+            this.groupBoxEdit.Controls.Add(this.buttonPrevious);
+            this.groupBoxEdit.Controls.Add(this.buttonNext);
+            this.groupBoxEdit.Controls.Add(this.labelText);
+            this.groupBoxEdit.Controls.Add(this.labelStartTime);
+            this.groupBoxEdit.Controls.Add(this.textBoxListViewText);
+            this.groupBoxEdit.Controls.Add(this.labelDuration);
+            this.groupBoxEdit.Controls.Add(this.labelAutoDuration);
+            this.groupBoxEdit.Location = new System.Drawing.Point(3, 154);
+            this.groupBoxEdit.Name = "groupBoxEdit";
+            this.groupBoxEdit.Size = new System.Drawing.Size(926, 102);
+            this.groupBoxEdit.TabIndex = 1;
+            this.groupBoxEdit.TabStop = false;
+            // 
+            // labelCharactersPerSecond
+            // 
+            this.labelCharactersPerSecond.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.labelCharactersPerSecond.Location = new System.Drawing.Point(625, 10);
+            this.labelCharactersPerSecond.Name = "labelCharactersPerSecond";
+            this.labelCharactersPerSecond.Size = new System.Drawing.Size(177, 17);
+            this.labelCharactersPerSecond.TabIndex = 31;
+            this.labelCharactersPerSecond.Text = "labelCharactersPerSecond";
+            this.labelCharactersPerSecond.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // panelSingleLine
+            // 
+            this.panelSingleLine.AutoSize = true;
+            this.panelSingleLine.Location = new System.Drawing.Point(314, 86);
+            this.panelSingleLine.Margin = new System.Windows.Forms.Padding(0);
+            this.panelSingleLine.Name = "panelSingleLine";
+            this.panelSingleLine.Size = new System.Drawing.Size(52, 16);
+            this.panelSingleLine.TabIndex = 7;
+            // 
+            // labelTextLineTotal
+            // 
+            this.labelTextLineTotal.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.labelTextLineTotal.Location = new System.Drawing.Point(625, 86);
+            this.labelTextLineTotal.Name = "labelTextLineTotal";
+            this.labelTextLineTotal.Size = new System.Drawing.Size(177, 17);
+            this.labelTextLineTotal.TabIndex = 21;
+            this.labelTextLineTotal.Text = "labelTextLineTotal";
+            this.labelTextLineTotal.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // buttonUnBreak
+            // 
+            this.buttonUnBreak.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonUnBreak.Location = new System.Drawing.Point(806, 31);
+            this.buttonUnBreak.Name = "buttonUnBreak";
+            this.buttonUnBreak.Size = new System.Drawing.Size(117, 21);
+            this.buttonUnBreak.TabIndex = 6;
+            this.buttonUnBreak.Text = "Unbreak";
+            this.buttonUnBreak.UseVisualStyleBackColor = true;
+            this.buttonUnBreak.Click += new System.EventHandler(this.ButtonUnBreakClick);
+            // 
             // timeUpDownStartTime
             // 
             this.timeUpDownStartTime.AutoSize = true;
@@ -3030,6 +2880,154 @@
             this.timeUpDownStartTime.Name = "timeUpDownStartTime";
             this.timeUpDownStartTime.Size = new System.Drawing.Size(92, 25);
             this.timeUpDownStartTime.TabIndex = 0;
+            // 
+            // buttonUndoListViewChanges
+            // 
+            this.buttonUndoListViewChanges.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonUndoListViewChanges.Location = new System.Drawing.Point(806, 59);
+            this.buttonUndoListViewChanges.Name = "buttonUndoListViewChanges";
+            this.buttonUndoListViewChanges.Size = new System.Drawing.Size(117, 21);
+            this.buttonUndoListViewChanges.TabIndex = 7;
+            this.buttonUndoListViewChanges.Text = "Undo changes ";
+            this.buttonUndoListViewChanges.UseVisualStyleBackColor = true;
+            this.buttonUndoListViewChanges.Click += new System.EventHandler(this.ButtonUndoListViewChangesClick);
+            // 
+            // labelStartTimeWarning
+            // 
+            this.labelStartTimeWarning.AutoSize = true;
+            this.labelStartTimeWarning.ForeColor = System.Drawing.Color.Red;
+            this.labelStartTimeWarning.Location = new System.Drawing.Point(6, 53);
+            this.labelStartTimeWarning.Name = "labelStartTimeWarning";
+            this.labelStartTimeWarning.Size = new System.Drawing.Size(115, 13);
+            this.labelStartTimeWarning.TabIndex = 18;
+            this.labelStartTimeWarning.Text = "labelStartTimeWarning";
+            // 
+            // labelDurationWarning
+            // 
+            this.labelDurationWarning.AutoSize = true;
+            this.labelDurationWarning.ForeColor = System.Drawing.Color.Red;
+            this.labelDurationWarning.Location = new System.Drawing.Point(120, 53);
+            this.labelDurationWarning.Name = "labelDurationWarning";
+            this.labelDurationWarning.Size = new System.Drawing.Size(110, 13);
+            this.labelDurationWarning.TabIndex = 17;
+            this.labelDurationWarning.Text = "labelDurationWarning";
+            // 
+            // numericUpDownDuration
+            // 
+            this.numericUpDownDuration.DecimalPlaces = 3;
+            this.numericUpDownDuration.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            65536});
+            this.numericUpDownDuration.Location = new System.Drawing.Point(122, 28);
+            this.numericUpDownDuration.Maximum = new decimal(new int[] {
+            99999,
+            0,
+            0,
+            0});
+            this.numericUpDownDuration.Minimum = new decimal(new int[] {
+            99999,
+            0,
+            0,
+            -2147483648});
+            this.numericUpDownDuration.Name = "numericUpDownDuration";
+            this.numericUpDownDuration.Size = new System.Drawing.Size(54, 21);
+            this.numericUpDownDuration.TabIndex = 1;
+            this.numericUpDownDuration.ValueChanged += new System.EventHandler(this.NumericUpDownDurationValueChanged);
+            // 
+            // labelTextLineLengths
+            // 
+            this.labelTextLineLengths.AutoSize = true;
+            this.labelTextLineLengths.Location = new System.Drawing.Point(203, 86);
+            this.labelTextLineLengths.Name = "labelTextLineLengths";
+            this.labelTextLineLengths.Size = new System.Drawing.Size(108, 13);
+            this.labelTextLineLengths.TabIndex = 12;
+            this.labelTextLineLengths.Text = "labelTextLineLengths";
+            // 
+            // buttonAutoBreak
+            // 
+            this.buttonAutoBreak.Location = new System.Drawing.Point(139, 75);
+            this.buttonAutoBreak.Name = "buttonAutoBreak";
+            this.buttonAutoBreak.Size = new System.Drawing.Size(64, 21);
+            this.buttonAutoBreak.TabIndex = 4;
+            this.buttonAutoBreak.Text = "Auto br";
+            this.buttonAutoBreak.UseVisualStyleBackColor = true;
+            this.buttonAutoBreak.Click += new System.EventHandler(this.ButtonAutoBreakClick);
+            // 
+            // buttonPrevious
+            // 
+            this.buttonPrevious.Location = new System.Drawing.Point(7, 75);
+            this.buttonPrevious.Name = "buttonPrevious";
+            this.buttonPrevious.Size = new System.Drawing.Size(64, 21);
+            this.buttonPrevious.TabIndex = 2;
+            this.buttonPrevious.Text = "< Prev ";
+            this.buttonPrevious.UseVisualStyleBackColor = true;
+            this.buttonPrevious.Click += new System.EventHandler(this.ButtonPreviousClick);
+            // 
+            // buttonNext
+            // 
+            this.buttonNext.Location = new System.Drawing.Point(73, 75);
+            this.buttonNext.Name = "buttonNext";
+            this.buttonNext.Size = new System.Drawing.Size(64, 21);
+            this.buttonNext.TabIndex = 3;
+            this.buttonNext.Text = "Next >";
+            this.buttonNext.UseVisualStyleBackColor = true;
+            this.buttonNext.Click += new System.EventHandler(this.ButtonNextClick);
+            // 
+            // labelText
+            // 
+            this.labelText.AutoSize = true;
+            this.labelText.Location = new System.Drawing.Point(203, 11);
+            this.labelText.Name = "labelText";
+            this.labelText.Size = new System.Drawing.Size(29, 13);
+            this.labelText.TabIndex = 5;
+            this.labelText.Text = "Text";
+            // 
+            // labelStartTime
+            // 
+            this.labelStartTime.AutoSize = true;
+            this.labelStartTime.Location = new System.Drawing.Point(6, 12);
+            this.labelStartTime.Name = "labelStartTime";
+            this.labelStartTime.Size = new System.Drawing.Size(54, 13);
+            this.labelStartTime.TabIndex = 3;
+            this.labelStartTime.Text = "Start time";
+            // 
+            // textBoxListViewText
+            // 
+            this.textBoxListViewText.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxListViewText.ContextMenuStrip = this.contextMenuStripTextBoxListView;
+            this.textBoxListViewText.Enabled = false;
+            this.textBoxListViewText.HideSelection = false;
+            this.textBoxListViewText.Location = new System.Drawing.Point(206, 28);
+            this.textBoxListViewText.Multiline = true;
+            this.textBoxListViewText.Name = "textBoxListViewText";
+            this.textBoxListViewText.Size = new System.Drawing.Size(596, 56);
+            this.textBoxListViewText.TabIndex = 5;
+            this.textBoxListViewText.TextChanged += new System.EventHandler(this.TextBoxListViewTextTextChanged);
+            this.textBoxListViewText.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxListViewTextKeyDown);
+            this.textBoxListViewText.KeyUp += new System.Windows.Forms.KeyEventHandler(this.textBoxListViewText_KeyUp);
+            this.textBoxListViewText.Leave += new System.EventHandler(this.textBoxListViewText_Leave);
+            this.textBoxListViewText.MouseMove += new System.Windows.Forms.MouseEventHandler(this.textBoxListViewText_MouseMove);
+            // 
+            // labelDuration
+            // 
+            this.labelDuration.AutoSize = true;
+            this.labelDuration.Location = new System.Drawing.Point(120, 12);
+            this.labelDuration.Name = "labelDuration";
+            this.labelDuration.Size = new System.Drawing.Size(48, 13);
+            this.labelDuration.TabIndex = 4;
+            this.labelDuration.Text = "Duration";
+            // 
+            // labelAutoDuration
+            // 
+            this.labelAutoDuration.AutoSize = true;
+            this.labelAutoDuration.Location = new System.Drawing.Point(93, 12);
+            this.labelAutoDuration.Name = "labelAutoDuration";
+            this.labelAutoDuration.Size = new System.Drawing.Size(30, 13);
+            this.labelAutoDuration.TabIndex = 30;
+            this.labelAutoDuration.Text = "Auto";
             // 
             // SubtitleListview1
             // 
@@ -3045,7 +3043,7 @@
             this.SubtitleListview1.HideSelection = false;
             this.SubtitleListview1.Location = new System.Drawing.Point(1, 3);
             this.SubtitleListview1.Name = "SubtitleListview1";
-            this.SubtitleListview1.Size = new System.Drawing.Size(932, 146);
+            this.SubtitleListview1.Size = new System.Drawing.Size(932, 150);
             this.SubtitleListview1.SmallImageList = this.imageList1;
             this.SubtitleListview1.TabIndex = 0;
             this.SubtitleListview1.UseCompatibleStateImageBehavior = false;
@@ -3055,6 +3053,65 @@
             this.SubtitleListview1.DragEnter += new System.Windows.Forms.DragEventHandler(this.SubtitleListview1_DragEnter);
             this.SubtitleListview1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.SubtitleListview1_KeyDown);
             this.SubtitleListview1.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.SubtitleListview1_MouseDoubleClick);
+            // 
+            // tabPage2
+            // 
+            this.tabPage2.Controls.Add(this.textBoxSource);
+            this.tabPage2.Location = new System.Drawing.Point(4, 22);
+            this.tabPage2.Name = "tabPage2";
+            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage2.Size = new System.Drawing.Size(937, 256);
+            this.tabPage2.TabIndex = 1;
+            this.tabPage2.Text = "Source view";
+            this.tabPage2.UseVisualStyleBackColor = true;
+            // 
+            // textBoxSource
+            // 
+            this.textBoxSource.AllowDrop = true;
+            this.textBoxSource.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxSource.HideSelection = false;
+            this.textBoxSource.Location = new System.Drawing.Point(1, 3);
+            this.textBoxSource.MaxLength = 327670;
+            this.textBoxSource.Multiline = true;
+            this.textBoxSource.Name = "textBoxSource";
+            this.textBoxSource.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.textBoxSource.Size = new System.Drawing.Size(932, 259);
+            this.textBoxSource.TabIndex = 12;
+            this.textBoxSource.WordWrap = false;
+            this.textBoxSource.Click += new System.EventHandler(this.TextBoxSourceClick);
+            this.textBoxSource.TextChanged += new System.EventHandler(this.TextBoxSourceTextChanged);
+            this.textBoxSource.DragDrop += new System.Windows.Forms.DragEventHandler(this.TextBoxSourceDragDrop);
+            this.textBoxSource.DragEnter += new System.Windows.Forms.DragEventHandler(this.TextBoxSourceDragEnter);
+            this.textBoxSource.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxSourceKeyDown);
+            this.textBoxSource.Leave += new System.EventHandler(this.TextBoxSourceLeave);
+            // 
+            // panelVideoPlayer
+            // 
+            this.panelVideoPlayer.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.panelVideoPlayer.Controls.Add(this.labelSubtitle);
+            this.panelVideoPlayer.Controls.Add(this.mediaPlayer);
+            this.panelVideoPlayer.Location = new System.Drawing.Point(1, 1);
+            this.panelVideoPlayer.Name = "panelVideoPlayer";
+            this.panelVideoPlayer.Size = new System.Drawing.Size(282, 280);
+            this.panelVideoPlayer.TabIndex = 5;
+            // 
+            // labelSubtitle
+            // 
+            this.labelSubtitle.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.labelSubtitle.BackColor = System.Drawing.Color.Black;
+            this.labelSubtitle.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelSubtitle.ForeColor = System.Drawing.Color.White;
+            this.labelSubtitle.Location = new System.Drawing.Point(0, 246);
+            this.labelSubtitle.Name = "labelSubtitle";
+            this.labelSubtitle.Size = new System.Drawing.Size(281, 33);
+            this.labelSubtitle.TabIndex = 3;
+            this.labelSubtitle.Text = "labelSubtitle";
+            this.labelSubtitle.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // mediaPlayer
             // 
@@ -3073,54 +3130,6 @@
             this.mediaPlayer.Volume = 0D;
             this.mediaPlayer.DragDrop += new System.Windows.Forms.DragEventHandler(this.mediaPlayer_DragDrop);
             this.mediaPlayer.DragEnter += new System.Windows.Forms.DragEventHandler(this.mediaPlayer_DragEnter);
-            // 
-            // AudioWaveForm
-            // 
-            this.AudioWaveForm.AllowDrop = true;
-            this.AudioWaveForm.AllowNewSelection = true;
-            this.AudioWaveForm.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.AudioWaveForm.BackColor = System.Drawing.Color.Black;
-            this.AudioWaveForm.BackgroundColor = System.Drawing.Color.Black;
-            this.AudioWaveForm.Color = System.Drawing.Color.GreenYellow;
-            this.AudioWaveForm.DrawGridLines = true;
-            this.AudioWaveForm.GridColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(20)))), ((int)(((byte)(18)))));
-            this.AudioWaveForm.Location = new System.Drawing.Point(475, 30);
-            this.AudioWaveForm.Margin = new System.Windows.Forms.Padding(0);
-            this.AudioWaveForm.Name = "AudioWaveForm";
-            this.AudioWaveForm.NewSelectionParagraph = null;
-            this.AudioWaveForm.SelectedColor = System.Drawing.Color.Red;
-            this.AudioWaveForm.Size = new System.Drawing.Size(762, 228);
-            this.AudioWaveForm.StartPositionSeconds = 0D;
-            this.AudioWaveForm.TabIndex = 6;
-            this.AudioWaveForm.TextColor = System.Drawing.Color.Gray;
-            this.AudioWaveForm.WaveFormNotLoadedText = "Click to add wave form";
-            this.AudioWaveForm.WavePeaks = null;
-            this.AudioWaveForm.ZoomFactor = 1D;
-            this.AudioWaveForm.Click += new System.EventHandler(this.AudioWaveForm_Click);
-            this.AudioWaveForm.DragDrop += new System.Windows.Forms.DragEventHandler(this.AudioWaveForm_DragDrop);
-            this.AudioWaveForm.DragEnter += new System.Windows.Forms.DragEventHandler(this.AudioWaveForm_DragEnter);
-            // 
-            // timeUpDownVideoPosition
-            // 
-            this.timeUpDownVideoPosition.AutoSize = true;
-            this.timeUpDownVideoPosition.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.timeUpDownVideoPosition.Location = new System.Drawing.Point(86, 192);
-            this.timeUpDownVideoPosition.Margin = new System.Windows.Forms.Padding(4);
-            this.timeUpDownVideoPosition.Name = "timeUpDownVideoPosition";
-            this.timeUpDownVideoPosition.Size = new System.Drawing.Size(92, 25);
-            this.timeUpDownVideoPosition.TabIndex = 12;
-            // 
-            // timeUpDownVideoPositionAdjust
-            // 
-            this.timeUpDownVideoPositionAdjust.AutoSize = true;
-            this.timeUpDownVideoPositionAdjust.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.timeUpDownVideoPositionAdjust.Location = new System.Drawing.Point(87, 214);
-            this.timeUpDownVideoPositionAdjust.Margin = new System.Windows.Forms.Padding(4);
-            this.timeUpDownVideoPositionAdjust.Name = "timeUpDownVideoPositionAdjust";
-            this.timeUpDownVideoPositionAdjust.Size = new System.Drawing.Size(92, 25);
-            this.timeUpDownVideoPositionAdjust.TabIndex = 13;
             // 
             // Main
             // 
@@ -3148,22 +3157,15 @@
             this.toolStrip1.PerformLayout();
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
-            this.tabControlSubtitle.ResumeLayout(false);
-            this.tabPage1.ResumeLayout(false);
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDuration)).EndInit();
             this.contextMenuStripTextBoxListView.ResumeLayout(false);
             this.contextMenuStripListview.ResumeLayout(false);
-            this.tabPage2.ResumeLayout(false);
-            this.tabPage2.PerformLayout();
             this.groupBoxVideo.ResumeLayout(false);
             this.groupBoxVideo.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBarWaveFormPosition)).EndInit();
             this.panelWaveFormControls.ResumeLayout(false);
             this.panelWaveFormControls.PerformLayout();
-            this.toolStrip2.ResumeLayout(false);
-            this.toolStrip2.PerformLayout();
+            this.toolStripWaveControls.ResumeLayout(false);
+            this.toolStripWaveControls.PerformLayout();
             this.tabControlButtons.ResumeLayout(false);
             this.tabPageTranslate.ResumeLayout(false);
             this.tabPageTranslate.PerformLayout();
@@ -3181,14 +3183,21 @@
             this.tabPageAdjust.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSecAdjust2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSecAdjust1)).EndInit();
-            this.panelVideoPlayer.ResumeLayout(false);
             this.contextMenuStripWaveForm.ResumeLayout(false);
-            this.splitContainer1.Panel1.ResumeLayout(false);
-            this.splitContainer1.Panel2.ResumeLayout(false);
-            this.splitContainer1.ResumeLayout(false);
             this.splitContainerMain.Panel1.ResumeLayout(false);
             this.splitContainerMain.Panel2.ResumeLayout(false);
             this.splitContainerMain.ResumeLayout(false);
+            this.splitContainer1.Panel1.ResumeLayout(false);
+            this.splitContainer1.Panel2.ResumeLayout(false);
+            this.splitContainer1.ResumeLayout(false);
+            this.tabControlSubtitle.ResumeLayout(false);
+            this.tabPage1.ResumeLayout(false);
+            this.groupBoxEdit.ResumeLayout(false);
+            this.groupBoxEdit.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDuration)).EndInit();
+            this.tabPage2.ResumeLayout(false);
+            this.tabPage2.PerformLayout();
+            this.panelVideoPlayer.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -3256,7 +3265,7 @@
         private System.Windows.Forms.ToolStripMenuItem boldToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem italicToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem underlineToolStripMenuItem;
-        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.GroupBox groupBoxEdit;
         private System.Windows.Forms.Label labelText;
         private System.Windows.Forms.Label labelDuration;
         private System.Windows.Forms.Label labelStartTime;
@@ -3418,14 +3427,14 @@
         private System.Windows.Forms.NumericUpDown numericUpDownSecAdjust2;
         private System.Windows.Forms.Button buttonAdjustSecBack2;
         private System.Windows.Forms.CheckBox checkBoxSyncListViewWithVideoWhilePlaying;
-        private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.Label label7;
-        private System.Windows.Forms.Label label12;
-        private System.Windows.Forms.Label label11;
-        private System.Windows.Forms.Label label10;
-        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.Label labelAdjustF10;
+        private System.Windows.Forms.Label labelAdjustF9;
+        private System.Windows.Forms.Label labelAdjustF11;
+        private System.Windows.Forms.Label labelAdjustF12;
+        private System.Windows.Forms.Label labelCreateF12;
+        private System.Windows.Forms.Label labelCreateF11;
+        private System.Windows.Forms.Label labelCreateF10;
+        private System.Windows.Forms.Label labelCreateF9;
         private System.Windows.Forms.Label labelAdjustTip;
         private System.Windows.Forms.ToolStripMenuItem translatepoweredByMicrosoftToolStripMenuItem;
         private System.Windows.Forms.ToolStripButton toolStripButtonToogleWaveForm;
@@ -3442,7 +3451,7 @@
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemWaveFormPlaySelection;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator11;
         private System.Windows.Forms.Panel panelWaveFormControls;
-        private System.Windows.Forms.ToolStrip toolStrip2;
+        private System.Windows.Forms.ToolStrip toolStripWaveControls;
         private System.Windows.Forms.ToolStripButton toolStripButtonWaveFormZoomIn;
         private System.Windows.Forms.ToolStripComboBox toolStripComboBoxWaveForm;
         private System.Windows.Forms.ToolStripButton toolStripButtonWaveFormZoomOut;
@@ -3481,6 +3490,7 @@
         private System.Windows.Forms.ToolStripMenuItem redockVideoControlsToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator19;
         private System.Windows.Forms.ToolStripButton toolStripButtonLockCenter;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemInsertSubtitle;
     }
 }
 

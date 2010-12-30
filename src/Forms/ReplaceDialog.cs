@@ -3,6 +3,7 @@ using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Enums;
+using System.Drawing;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -25,6 +26,18 @@ namespace Nikse.SubtitleEdit.Forms
             buttonFind.Text = Configuration.Settings.Language.ReplaceDialog.Find;
             buttonReplace.Text = Configuration.Settings.Language.ReplaceDialog.Replace;
             buttonReplaceAll.Text = Configuration.Settings.Language.ReplaceDialog.ReplaceAll;
+            FixLargeFonts();
+        }
+
+        private void FixLargeFonts()
+        {
+            Graphics graphics = this.CreateGraphics();
+            SizeF textSize = graphics.MeasureString(buttonReplace.Text, this.Font);
+            if (textSize.Height > buttonReplace.Height - 4)
+            {
+                int newButtonHeight = (int)(textSize.Height + 7 + 0.5);
+                Utilities.SetButtonHeight(this, newButtonHeight, 1);
+            }
         }
 
         public bool ReplaceAll { get; set; }

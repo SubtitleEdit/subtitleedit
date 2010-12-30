@@ -51,7 +51,7 @@
             this.labelTotalMillisecs.AutoSize = true;
             this.labelTotalMillisecs.Location = new System.Drawing.Point(120, 57);
             this.labelTotalMillisecs.Name = "labelTotalMillisecs";
-            this.labelTotalMillisecs.Size = new System.Drawing.Size(90, 13);
+            this.labelTotalMillisecs.Size = new System.Drawing.Size(108, 17);
             this.labelTotalMillisecs.TabIndex = 49;
             this.labelTotalMillisecs.Text = "labelTotalMillisecs";
             // 
@@ -60,7 +60,7 @@
             this.labelTM.AutoSize = true;
             this.labelTM.Location = new System.Drawing.Point(44, 56);
             this.labelTM.Name = "labelTM";
-            this.labelTM.Size = new System.Drawing.Size(79, 13);
+            this.labelTM.Size = new System.Drawing.Size(97, 17);
             this.labelTM.TabIndex = 48;
             this.labelTM.Text = "Total millisecs.:";
             // 
@@ -72,7 +72,7 @@
             0,
             0,
             65536});
-            this.numericUpDownDelay.Location = new System.Drawing.Point(123, 77);
+            this.numericUpDownDelay.Location = new System.Drawing.Point(156, 77);
             this.numericUpDownDelay.Maximum = new decimal(new int[] {
             99999,
             0,
@@ -84,7 +84,7 @@
             0,
             -2147483648});
             this.numericUpDownDelay.Name = "numericUpDownDelay";
-            this.numericUpDownDelay.Size = new System.Drawing.Size(54, 21);
+            this.numericUpDownDelay.Size = new System.Drawing.Size(54, 24);
             this.numericUpDownDelay.TabIndex = 47;
             // 
             // labelColor
@@ -92,7 +92,7 @@
             this.labelColor.AutoSize = true;
             this.labelColor.Location = new System.Drawing.Point(180, 22);
             this.labelColor.Name = "labelColor";
-            this.labelColor.Size = new System.Drawing.Size(32, 13);
+            this.labelColor.Size = new System.Drawing.Size(40, 17);
             this.labelColor.TabIndex = 46;
             this.labelColor.Text = "Color";
             // 
@@ -101,7 +101,7 @@
             this.labelEndDelay.AutoSize = true;
             this.labelEndDelay.Location = new System.Drawing.Point(10, 78);
             this.labelEndDelay.Name = "labelEndDelay";
-            this.labelEndDelay.Size = new System.Drawing.Size(113, 13);
+            this.labelEndDelay.Size = new System.Drawing.Size(141, 17);
             this.labelEndDelay.TabIndex = 45;
             this.labelEndDelay.Text = "End delay in millisecs.:";
             // 
@@ -146,9 +146,9 @@
             // labelChooseColor
             // 
             this.labelChooseColor.AutoSize = true;
-            this.labelChooseColor.Location = new System.Drawing.Point(50, 22);
+            this.labelChooseColor.Location = new System.Drawing.Point(29, 20);
             this.labelChooseColor.Name = "labelChooseColor";
-            this.labelChooseColor.Size = new System.Drawing.Size(73, 13);
+            this.labelChooseColor.Size = new System.Drawing.Size(93, 17);
             this.labelChooseColor.TabIndex = 40;
             this.labelChooseColor.Text = "Choose color:";
             // 
@@ -181,7 +181,7 @@
             // 
             // EffectKaraoke
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(440, 208);
             this.Controls.Add(this.richTextBoxPreview);

@@ -69,7 +69,7 @@
             this.textBoxIfoFileName.Location = new System.Drawing.Point(6, 34);
             this.textBoxIfoFileName.Name = "textBoxIfoFileName";
             this.textBoxIfoFileName.ReadOnly = true;
-            this.textBoxIfoFileName.Size = new System.Drawing.Size(435, 21);
+            this.textBoxIfoFileName.Size = new System.Drawing.Size(435, 24);
             this.textBoxIfoFileName.TabIndex = 0;
             this.textBoxIfoFileName.DragDrop += new System.Windows.Forms.DragEventHandler(this.TextBoxIfoFileNameDragDrop);
             this.textBoxIfoFileName.DragEnter += new System.Windows.Forms.DragEventHandler(this.TextBoxIfoFileNameDragEnter);
@@ -77,9 +77,9 @@
             // labelIfoFile
             // 
             this.labelIfoFile.AutoSize = true;
-            this.labelIfoFile.Location = new System.Drawing.Point(6, 18);
+            this.labelIfoFile.Location = new System.Drawing.Point(6, 17);
             this.labelIfoFile.Name = "labelIfoFile";
-            this.labelIfoFile.Size = new System.Drawing.Size(42, 13);
+            this.labelIfoFile.Size = new System.Drawing.Size(48, 17);
             this.labelIfoFile.TabIndex = 2;
             this.labelIfoFile.Text = "IFO file";
             // 
@@ -117,9 +117,9 @@
             // groupBoxLanguages
             // 
             this.groupBoxLanguages.Controls.Add(this.comboBoxLanguages);
-            this.groupBoxLanguages.Location = new System.Drawing.Point(6, 217);
+            this.groupBoxLanguages.Location = new System.Drawing.Point(6, 206);
             this.groupBoxLanguages.Name = "groupBoxLanguages";
-            this.groupBoxLanguages.Size = new System.Drawing.Size(242, 41);
+            this.groupBoxLanguages.Size = new System.Drawing.Size(242, 52);
             this.groupBoxLanguages.TabIndex = 14;
             this.groupBoxLanguages.TabStop = false;
             this.groupBoxLanguages.Text = "Languages";
@@ -128,18 +128,18 @@
             // 
             this.comboBoxLanguages.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxLanguages.FormattingEnabled = true;
-            this.comboBoxLanguages.Location = new System.Drawing.Point(6, 14);
+            this.comboBoxLanguages.Location = new System.Drawing.Point(6, 18);
             this.comboBoxLanguages.Name = "comboBoxLanguages";
-            this.comboBoxLanguages.Size = new System.Drawing.Size(230, 21);
+            this.comboBoxLanguages.Size = new System.Drawing.Size(230, 25);
             this.comboBoxLanguages.TabIndex = 14;
             // 
             // groupBoxPalNtsc
             // 
             this.groupBoxPalNtsc.Controls.Add(this.radioButtonNtsc);
             this.groupBoxPalNtsc.Controls.Add(this.radioButtonPal);
-            this.groupBoxPalNtsc.Location = new System.Drawing.Point(254, 217);
+            this.groupBoxPalNtsc.Location = new System.Drawing.Point(254, 212);
             this.groupBoxPalNtsc.Name = "groupBoxPalNtsc";
-            this.groupBoxPalNtsc.Size = new System.Drawing.Size(266, 41);
+            this.groupBoxPalNtsc.Size = new System.Drawing.Size(266, 46);
             this.groupBoxPalNtsc.TabIndex = 20;
             this.groupBoxPalNtsc.TabStop = false;
             this.groupBoxPalNtsc.Text = "PAL/NTSC";
@@ -149,7 +149,7 @@
             this.radioButtonNtsc.AutoSize = true;
             this.radioButtonNtsc.Location = new System.Drawing.Point(104, 18);
             this.radioButtonNtsc.Name = "radioButtonNtsc";
-            this.radioButtonNtsc.Size = new System.Drawing.Size(89, 17);
+            this.radioButtonNtsc.Size = new System.Drawing.Size(111, 21);
             this.radioButtonNtsc.TabIndex = 1;
             this.radioButtonNtsc.TabStop = true;
             this.radioButtonNtsc.Text = "NTSC (30fps)";
@@ -161,7 +161,7 @@
             this.radioButtonPal.Checked = true;
             this.radioButtonPal.Location = new System.Drawing.Point(6, 19);
             this.radioButtonPal.Name = "radioButtonPal";
-            this.radioButtonPal.Size = new System.Drawing.Size(81, 17);
+            this.radioButtonPal.Size = new System.Drawing.Size(100, 21);
             this.radioButtonPal.TabIndex = 0;
             this.radioButtonPal.TabStop = true;
             this.radioButtonPal.Text = "PAL (25fps)";
@@ -210,9 +210,9 @@
             // labelVobFiles
             // 
             this.labelVobFiles.AutoSize = true;
-            this.labelVobFiles.Location = new System.Drawing.Point(6, 61);
+            this.labelVobFiles.Location = new System.Drawing.Point(6, 60);
             this.labelVobFiles.Name = "labelVobFiles";
-            this.labelVobFiles.Size = new System.Drawing.Size(49, 13);
+            this.labelVobFiles.Size = new System.Drawing.Size(59, 17);
             this.labelVobFiles.TabIndex = 4;
             this.labelVobFiles.Text = "VOB files";
             // 
@@ -220,9 +220,10 @@
             // 
             this.listBoxVobFiles.AllowDrop = true;
             this.listBoxVobFiles.FormattingEnabled = true;
+            this.listBoxVobFiles.ItemHeight = 17;
             this.listBoxVobFiles.Location = new System.Drawing.Point(6, 77);
             this.listBoxVobFiles.Name = "listBoxVobFiles";
-            this.listBoxVobFiles.Size = new System.Drawing.Size(435, 134);
+            this.listBoxVobFiles.Size = new System.Drawing.Size(435, 123);
             this.listBoxVobFiles.TabIndex = 3;
             this.listBoxVobFiles.DragDrop += new System.Windows.Forms.DragEventHandler(this.ListBoxVobFilesDragDrop);
             this.listBoxVobFiles.DragEnter += new System.Windows.Forms.DragEventHandler(this.ListBoxVobFilesDragEnter);
@@ -242,9 +243,9 @@
             // labelStatus
             // 
             this.labelStatus.AutoSize = true;
-            this.labelStatus.Location = new System.Drawing.Point(117, 276);
+            this.labelStatus.Location = new System.Drawing.Point(117, 273);
             this.labelStatus.Name = "labelStatus";
-            this.labelStatus.Size = new System.Drawing.Size(38, 13);
+            this.labelStatus.Size = new System.Drawing.Size(47, 17);
             this.labelStatus.TabIndex = 5;
             this.labelStatus.Text = "Status";
             // 
@@ -261,7 +262,7 @@
             // 
             // DvdSubRip
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(536, 310);
             this.Controls.Add(this.buttonStartRipping);

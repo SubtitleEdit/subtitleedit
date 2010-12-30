@@ -7,6 +7,7 @@ using System.Text.RegularExpressions;
 using System.Web;
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Logic;
+using System.Drawing;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -63,6 +64,20 @@ namespace Nikse.SubtitleEdit.Forms
 
             subtitleListViewFrom.InitializeLanguage(Configuration.Settings.Language.General, Configuration.Settings);
             subtitleListViewTo.InitializeLanguage(Configuration.Settings.Language.General, Configuration.Settings);
+            FixLargeFonts();
+        }
+
+        private void FixLargeFonts()
+        {
+            Graphics graphics = this.CreateGraphics();
+            SizeF textSize = graphics.MeasureString(buttonOK.Text, this.Font);
+            if (textSize.Height > buttonOK.Height - 4)
+            {
+                subtitleListViewFrom.InitializeTimeStampColumWidths(this);
+                subtitleListViewTo.InitializeTimeStampColumWidths(this);
+                int newButtonHeight = (int)(textSize.Height + 7 + 0.5);
+                Utilities.SetButtonHeight(this, newButtonHeight, 1);
+            }
         }
 
         internal void Initialize(Subtitle subtitle, string title, bool googleTranslate)

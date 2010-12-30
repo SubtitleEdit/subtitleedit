@@ -715,6 +715,7 @@
                     public string SelectAll { get; set; }
                     public string InsertBefore { get; set; }
                     public string InsertAfter { get; set; }
+                    public string InsertSubtitleAfter { get; set; }
                     public string Split { get; set; }
                     public string MergeSelectedLines { get; set; }
                     public string MergeWithLineBefore { get; set; }

@@ -48,6 +48,18 @@ namespace Nikse.SubtitleEdit.Controls
             BackColor = settings.General.SubtitleBackgroundColor;
         }
 
+        public void InitializeTimeStampColumWidths(Form parentForm)
+        {
+            Graphics graphics = parentForm.CreateGraphics();
+            SizeF timestampSizeF = graphics.MeasureString("00:00:33,527", Font);
+            int timeStampWidth = (int)(timestampSizeF.Width + 0.5) + 10;
+
+            Columns[ColumnIndexStart].Width = timeStampWidth;
+            Columns[ColumnIndexEnd].Width = timeStampWidth;
+            Columns[ColumnIndexDuration].Width = Columns[ColumnIndexDuration].Width+12;
+            SubtitleListView_Resize(this, null);
+        }
+
         public SubtitleListView()
         {
             Font = new Font("Tahoma", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 0);

@@ -37,6 +37,18 @@ namespace Nikse.SubtitleEdit.Forms
             labelChooseLanguage.Text = Configuration.Settings.Language.DvdSubRipChooseLanguage.ChooseLanguageStreamId;
             buttonOK.Text = Configuration.Settings.Language.General.OK;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
+            FixLargeFonts();
+        }
+
+        private void FixLargeFonts()
+        {
+            Graphics graphics = this.CreateGraphics();
+            SizeF textSize = graphics.MeasureString(buttonOK.Text, this.Font);
+            if (textSize.Height > buttonOK.Height - 4)
+            {
+                int newButtonHeight = (int)(textSize.Height + 7 + 0.5);
+                Utilities.SetButtonHeight(this, newButtonHeight, 1);
+            }
         }
 
         internal void Initialize(List<VobSubMergedPack> mergedVobSubPacks, List<Color> palette, List<string> languages, string selectedLanguage)

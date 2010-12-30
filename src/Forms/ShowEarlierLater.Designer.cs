@@ -44,13 +44,13 @@ namespace Nikse.SubtitleEdit.Forms
             this.labelHoursMinSecsMilliSecs.AutoSize = true;
             this.labelHoursMinSecsMilliSecs.Location = new System.Drawing.Point(11, 7);
             this.labelHoursMinSecsMilliSecs.Name = "labelHoursMinSecsMilliSecs";
-            this.labelHoursMinSecsMilliSecs.Size = new System.Drawing.Size(108, 13);
+            this.labelHoursMinSecsMilliSecs.Size = new System.Drawing.Size(138, 17);
             this.labelHoursMinSecsMilliSecs.TabIndex = 18;
             this.labelHoursMinSecsMilliSecs.Text = "Hours:min:sec.msecs";
             // 
             // buttonShowLater
             // 
-            this.buttonShowLater.Location = new System.Drawing.Point(110, 54);
+            this.buttonShowLater.Location = new System.Drawing.Point(136, 54);
             this.buttonShowLater.Name = "buttonShowLater";
             this.buttonShowLater.Size = new System.Drawing.Size(119, 21);
             this.buttonShowLater.TabIndex = 20;
@@ -60,7 +60,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             // buttonShowEarlier
             // 
-            this.buttonShowEarlier.Location = new System.Drawing.Point(110, 27);
+            this.buttonShowEarlier.Location = new System.Drawing.Point(136, 27);
             this.buttonShowEarlier.Name = "buttonShowEarlier";
             this.buttonShowEarlier.Size = new System.Drawing.Size(120, 21);
             this.buttonShowEarlier.TabIndex = 19;
@@ -73,7 +73,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.labelTotalAdjustment.AutoSize = true;
             this.labelTotalAdjustment.Location = new System.Drawing.Point(12, 90);
             this.labelTotalAdjustment.Name = "labelTotalAdjustment";
-            this.labelTotalAdjustment.Size = new System.Drawing.Size(108, 13);
+            this.labelTotalAdjustment.Size = new System.Drawing.Size(135, 17);
             this.labelTotalAdjustment.TabIndex = 38;
             this.labelTotalAdjustment.Text = "labelTotalAdjustment";
             // 
@@ -86,15 +86,16 @@ namespace Nikse.SubtitleEdit.Forms
             this.timeUpDownAdjust.AutoSize = true;
             this.timeUpDownAdjust.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.timeUpDownAdjust.Location = new System.Drawing.Point(12, 23);
+            this.timeUpDownAdjust.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.timeUpDownAdjust.Name = "timeUpDownAdjust";
-            this.timeUpDownAdjust.Size = new System.Drawing.Size(92, 25);
+            this.timeUpDownAdjust.Size = new System.Drawing.Size(123, 29);
             this.timeUpDownAdjust.TabIndex = 21;
             // 
             // ShowEarlierLater
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(243, 113);
+            this.ClientSize = new System.Drawing.Size(272, 113);
             this.Controls.Add(this.labelTotalAdjustment);
             this.Controls.Add(this.timeUpDownAdjust);
             this.Controls.Add(this.labelHoursMinSecsMilliSecs);

@@ -84,6 +84,19 @@ namespace Nikse.SubtitleEdit.Forms
                 radioButtonNtsc.Checked = true;
             else
                 radioButtonPal.Checked = true;
+
+            FixLargeFonts();
+        }
+
+        private void FixLargeFonts()
+        {
+            Graphics graphics = this.CreateGraphics();
+            SizeF textSize = graphics.MeasureString(buttonAddVobFile.Text, this.Font);
+            if (textSize.Height > buttonAddVobFile.Height - 4)
+            {
+                int newButtonHeight = (int)(textSize.Height + 7 + 0.5);
+                Utilities.SetButtonHeight(this, newButtonHeight, 1);
+            }
         }
 
         private void ButtonOpenIfoClick(object sender, EventArgs e)

@@ -51,7 +51,7 @@
             // 
             this.textBoxAddName.Location = new System.Drawing.Point(15, 26);
             this.textBoxAddName.Name = "textBoxAddName";
-            this.textBoxAddName.Size = new System.Drawing.Size(221, 21);
+            this.textBoxAddName.Size = new System.Drawing.Size(221, 24);
             this.textBoxAddName.TabIndex = 15;
             // 
             // labelDescription
@@ -59,17 +59,17 @@
             this.labelDescription.AutoSize = true;
             this.labelDescription.Location = new System.Drawing.Point(12, 9);
             this.labelDescription.Name = "labelDescription";
-            this.labelDescription.Size = new System.Drawing.Size(196, 13);
+            this.labelDescription.Size = new System.Drawing.Size(244, 17);
             this.labelDescription.TabIndex = 14;
             this.labelDescription.Text = "Add to names/noise list (case sensitive)";
             // 
             // AddToNamesList
             // 
             this.AcceptButton = this.buttonOK;
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.buttonCancel;
-            this.ClientSize = new System.Drawing.Size(248, 84);
+            this.ClientSize = new System.Drawing.Size(268, 88);
             this.Controls.Add(this.buttonOK);
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.textBoxAddName);

@@ -123,6 +123,7 @@ namespace Nikse.SubtitleEdit.Forms
             subtitleListView1.Columns[2].Width = 90;
             subtitleListView1.Columns[3].Width = 70;
             subtitleListView1.Columns[4].Width = 150;
+            subtitleListView1.InitializeTimeStampColumWidths(this);
 
             groupBoxImagePalette.Text = language.ImagePalette;
             checkBoxCustomFourColors.Text = language.UseCustomColors;
@@ -157,6 +158,21 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxUseModiInTesseractForUnknownWords.Text = language.TryModiForUnknownWords;
             checkBoxShowOnlyForced.Text = language.ShowOnlyForcedSubtitles;
             checkBoxUseTimeCodesFromIdx.Text = language.UseTimeCodesFromIdx;
+
+            comboBoxTesseractLanguages.Left = labelTesseractLanguage.Left + labelTesseractLanguage.Width;
+
+            FixLargeFonts();
+        }
+
+        private void FixLargeFonts()
+        {
+            Graphics graphics = this.CreateGraphics();
+            SizeF textSize = graphics.MeasureString(buttonCancel.Text, this.Font);
+            if (textSize.Height > buttonCancel.Height - 4)
+            {
+                int newButtonHeight = (int)(textSize.Height + 7 + 0.5);
+                Utilities.SetButtonHeight(this, newButtonHeight, 1);
+            }
         }
 
         internal bool Initialize(string vobSubFileName, VobSubOcrSettings vobSubOcrSettings, bool useNewSubIdxCode)
@@ -1079,7 +1095,6 @@ namespace Nikse.SubtitleEdit.Forms
         {
             string tempTiffFileName = Path.GetTempPath() + Guid.NewGuid().ToString() + ".tiff";
             bmp.Save(tempTiffFileName, System.Drawing.Imaging.ImageFormat.Tiff);
-
             string tempTextFileName = Path.GetTempPath() + Guid.NewGuid().ToString();
 
             Process process = new Process();
@@ -1088,17 +1103,23 @@ namespace Nikse.SubtitleEdit.Forms
             process.StartInfo.WorkingDirectory = (Configuration.TesseractFolder);
             process.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
             process.Start();
-            process.WaitForExit(2000);
-            string s = File.ReadAllText(tempTextFileName + ".txt");
+            process.WaitForExit(5000);
+
+            string outputFileName = tempTextFileName + ".txt";
+            string result = string.Empty;
             try
             {
+                if (File.Exists(outputFileName))
+                {
+                    result = File.ReadAllText(outputFileName);
+                    File.Delete(tempTextFileName + ".txt");
+                }
                 File.Delete(tempTiffFileName);
-                File.Delete(tempTextFileName + ".txt");
             }
             catch
             {
             }
-            return s;
+            return result;
         }
 
         private string OcrViaTessnet(Bitmap bitmap, int index)

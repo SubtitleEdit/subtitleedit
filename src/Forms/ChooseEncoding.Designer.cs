@@ -111,15 +111,15 @@
             // LabelPreview
             // 
             this.LabelPreview.AutoSize = true;
-            this.LabelPreview.Location = new System.Drawing.Point(12, 285);
+            this.LabelPreview.Location = new System.Drawing.Point(12, 284);
             this.LabelPreview.Name = "LabelPreview";
-            this.LabelPreview.Size = new System.Drawing.Size(45, 13);
+            this.LabelPreview.Size = new System.Drawing.Size(55, 17);
             this.LabelPreview.TabIndex = 10;
             this.LabelPreview.Text = "Preview";
             // 
             // ChooseEncoding
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(629, 503);
             this.Controls.Add(this.LabelPreview);

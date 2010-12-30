@@ -203,7 +203,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.comboBoxStartTexts.FormattingEnabled = true;
             this.comboBoxStartTexts.Location = new System.Drawing.Point(7, 10);
             this.comboBoxStartTexts.Name = "comboBoxStartTexts";
-            this.comboBoxStartTexts.Size = new System.Drawing.Size(422, 21);
+            this.comboBoxStartTexts.Size = new System.Drawing.Size(422, 25);
             this.comboBoxStartTexts.TabIndex = 0;
             // 
             // groupBoxEndScene
@@ -316,7 +316,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.comboBoxEndTexts.FormattingEnabled = true;
             this.comboBoxEndTexts.Location = new System.Drawing.Point(7, 10);
             this.comboBoxEndTexts.Name = "comboBoxEndTexts";
-            this.comboBoxEndTexts.Size = new System.Drawing.Size(422, 21);
+            this.comboBoxEndTexts.Size = new System.Drawing.Size(422, 25);
             this.comboBoxEndTexts.TabIndex = 0;
             // 
             // buttonCancel
@@ -335,7 +335,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.labelVideoInfo.AutoSize = true;
             this.labelVideoInfo.Location = new System.Drawing.Point(6, 16);
             this.labelVideoInfo.Name = "labelVideoInfo";
-            this.labelVideoInfo.Size = new System.Drawing.Size(84, 13);
+            this.labelVideoInfo.Size = new System.Drawing.Size(106, 17);
             this.labelVideoInfo.TabIndex = 13;
             this.labelVideoInfo.Text = "No video loaded";
             // 
@@ -356,9 +356,9 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonSync.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.buttonSync.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.buttonSync.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.buttonSync.Location = new System.Drawing.Point(395, 482);
+            this.buttonSync.Location = new System.Drawing.Point(395, 488);
             this.buttonSync.Name = "buttonSync";
-            this.buttonSync.Size = new System.Drawing.Size(148, 37);
+            this.buttonSync.Size = new System.Drawing.Size(148, 31);
             this.buttonSync.TabIndex = 2;
             this.buttonSync.Text = "Sync!";
             this.buttonSync.UseVisualStyleBackColor = true;
@@ -373,15 +373,15 @@ namespace Nikse.SubtitleEdit.Forms
             this.labelTip.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.labelTip.AutoSize = true;
             this.labelTip.ForeColor = System.Drawing.Color.Silver;
-            this.labelTip.Location = new System.Drawing.Point(12, 474);
+            this.labelTip.Location = new System.Drawing.Point(12, 472);
             this.labelTip.Name = "labelTip";
-            this.labelTip.Size = new System.Drawing.Size(332, 13);
+            this.labelTip.Size = new System.Drawing.Size(423, 17);
             this.labelTip.TabIndex = 15;
             this.labelTip.Text = "Tip: Use <ctrl+arrow left/right> keys to move 100 ms back/forward";
             // 
             // VisualSync
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(927, 525);
             this.Controls.Add(this.labelTip);

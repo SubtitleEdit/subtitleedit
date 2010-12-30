@@ -6,6 +6,7 @@ using System.Net;
 using System.Windows.Forms;
 using System.Xml;
 using Nikse.SubtitleEdit.Logic;
+using System.Drawing;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -64,7 +65,18 @@ namespace Nikse.SubtitleEdit.Forms
                     comboBoxDictionaries.SelectedIndex = 0;
                 }
             }
+            FixLargeFonts();
+        }
 
+        private void FixLargeFonts()
+        {
+            Graphics graphics = this.CreateGraphics();
+            SizeF textSize = graphics.MeasureString(buttonOK.Text, this.Font);
+            if (textSize.Height > buttonOK.Height - 4)
+            {
+                int newButtonHeight = (int)(textSize.Height + 7 + 0.5);
+                Utilities.SetButtonHeight(this, newButtonHeight, 1);
+            }
         }
 
         private void FormGetDictionaries_KeyDown(object sender, KeyEventArgs e)

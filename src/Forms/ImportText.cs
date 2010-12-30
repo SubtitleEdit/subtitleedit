@@ -43,6 +43,19 @@ namespace Nikse.SubtitleEdit.Forms
             SubtitleListview1.InitializeLanguage(Configuration.Settings.Language.General, Configuration.Settings);
 
             numericUpDownDurationFixed.Enabled = radioButtonDurationFixed.Checked;
+            FixLargeFonts();
+        }
+
+        private void FixLargeFonts()
+        {
+            Graphics graphics = this.CreateGraphics();
+            SizeF textSize = graphics.MeasureString(buttonOK.Text, this.Font);
+            if (textSize.Height > buttonOK.Height - 4)
+            {
+                SubtitleListview1.InitializeTimeStampColumWidths(this);
+                int newButtonHeight = (int)(textSize.Height + 7 + 0.5);
+                Utilities.SetButtonHeight(this, newButtonHeight, 1);
+            }
         }
 
         private void buttonOpenText_Click(object sender, EventArgs e)

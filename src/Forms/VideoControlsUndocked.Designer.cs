@@ -36,16 +36,16 @@
             this.panelContainer.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panelContainer.Location = new System.Drawing.Point(0, 0);
             this.panelContainer.Name = "panelContainer";
-            this.panelContainer.Size = new System.Drawing.Size(458, 307);
+            this.panelContainer.Size = new System.Drawing.Size(458, 311);
             this.panelContainer.TabIndex = 2;
             // 
             // VideoControlsUndocked
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(458, 307);
+            this.ClientSize = new System.Drawing.Size(458, 311);
             this.Controls.Add(this.panelContainer);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
             this.MaximizeBox = false;
             this.Name = "VideoControlsUndocked";
             this.Text = "VideoControlsUndocked";

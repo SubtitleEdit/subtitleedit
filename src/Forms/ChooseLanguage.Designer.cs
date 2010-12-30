@@ -59,9 +59,9 @@
             // labelLanguage
             // 
             this.labelLanguage.AutoSize = true;
-            this.labelLanguage.Location = new System.Drawing.Point(12, 15);
+            this.labelLanguage.Location = new System.Drawing.Point(12, 14);
             this.labelLanguage.Name = "labelLanguage";
-            this.labelLanguage.Size = new System.Drawing.Size(54, 13);
+            this.labelLanguage.Size = new System.Drawing.Size(68, 17);
             this.labelLanguage.TabIndex = 15;
             this.labelLanguage.Text = "Language";
             // 
@@ -71,13 +71,13 @@
             this.comboBoxLanguages.FormattingEnabled = true;
             this.comboBoxLanguages.Location = new System.Drawing.Point(12, 31);
             this.comboBoxLanguages.Name = "comboBoxLanguages";
-            this.comboBoxLanguages.Size = new System.Drawing.Size(266, 21);
+            this.comboBoxLanguages.Size = new System.Drawing.Size(266, 25);
             this.comboBoxLanguages.TabIndex = 0;
             // 
             // ChooseLanguage
             // 
             this.AcceptButton = this.buttonOK;
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(290, 105);
             this.Controls.Add(this.labelLanguage);

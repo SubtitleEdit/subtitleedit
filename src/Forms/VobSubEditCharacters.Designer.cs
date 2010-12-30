@@ -55,16 +55,17 @@
             this.comboBoxTexts.FormattingEnabled = true;
             this.comboBoxTexts.Location = new System.Drawing.Point(12, 35);
             this.comboBoxTexts.Name = "comboBoxTexts";
-            this.comboBoxTexts.Size = new System.Drawing.Size(240, 21);
+            this.comboBoxTexts.Size = new System.Drawing.Size(240, 25);
             this.comboBoxTexts.TabIndex = 0;
             this.comboBoxTexts.SelectedIndexChanged += new System.EventHandler(this.ComboBoxTextsSelectedIndexChanged);
             // 
             // listBoxFileNames
             // 
             this.listBoxFileNames.FormattingEnabled = true;
+            this.listBoxFileNames.ItemHeight = 17;
             this.listBoxFileNames.Location = new System.Drawing.Point(12, 83);
             this.listBoxFileNames.Name = "listBoxFileNames";
-            this.listBoxFileNames.Size = new System.Drawing.Size(240, 264);
+            this.listBoxFileNames.Size = new System.Drawing.Size(240, 259);
             this.listBoxFileNames.TabIndex = 1;
             this.listBoxFileNames.SelectedIndexChanged += new System.EventHandler(this.ListBoxFileNamesSelectedIndexChanged);
             // 
@@ -93,18 +94,18 @@
             // labelChooseCharacters
             // 
             this.labelChooseCharacters.AutoSize = true;
-            this.labelChooseCharacters.Location = new System.Drawing.Point(12, 19);
+            this.labelChooseCharacters.Location = new System.Drawing.Point(12, 18);
             this.labelChooseCharacters.Name = "labelChooseCharacters";
-            this.labelChooseCharacters.Size = new System.Drawing.Size(105, 13);
+            this.labelChooseCharacters.Size = new System.Drawing.Size(132, 17);
             this.labelChooseCharacters.TabIndex = 18;
             this.labelChooseCharacters.Text = "Choose character(s)";
             // 
             // labelImageCompareFiles
             // 
             this.labelImageCompareFiles.AutoSize = true;
-            this.labelImageCompareFiles.Location = new System.Drawing.Point(12, 67);
+            this.labelImageCompareFiles.Location = new System.Drawing.Point(12, 66);
             this.labelImageCompareFiles.Name = "labelImageCompareFiles";
-            this.labelImageCompareFiles.Size = new System.Drawing.Size(103, 13);
+            this.labelImageCompareFiles.Size = new System.Drawing.Size(129, 17);
             this.labelImageCompareFiles.TabIndex = 19;
             this.labelImageCompareFiles.Text = "Image compare files";
             // 
@@ -131,7 +132,7 @@
             this.checkBoxItalic.AutoSize = true;
             this.checkBoxItalic.Location = new System.Drawing.Point(15, 61);
             this.checkBoxItalic.Name = "checkBoxItalic";
-            this.checkBoxItalic.Size = new System.Drawing.Size(59, 17);
+            this.checkBoxItalic.Size = new System.Drawing.Size(69, 21);
             this.checkBoxItalic.TabIndex = 29;
             this.checkBoxItalic.Text = "Is &italic";
             this.checkBoxItalic.UseVisualStyleBackColor = true;
@@ -141,7 +142,7 @@
             this.labelDoubleSize.AutoSize = true;
             this.labelDoubleSize.Location = new System.Drawing.Point(14, 172);
             this.labelDoubleSize.Name = "labelDoubleSize";
-            this.labelDoubleSize.Size = new System.Drawing.Size(93, 13);
+            this.labelDoubleSize.Size = new System.Drawing.Size(116, 17);
             this.labelDoubleSize.TabIndex = 28;
             this.labelDoubleSize.Text = "Image double size";
             // 
@@ -160,7 +161,7 @@
             this.labelTextAssociatedWithImage.AutoSize = true;
             this.labelTextAssociatedWithImage.Location = new System.Drawing.Point(14, 19);
             this.labelTextAssociatedWithImage.Name = "labelTextAssociatedWithImage";
-            this.labelTextAssociatedWithImage.Size = new System.Drawing.Size(137, 13);
+            this.labelTextAssociatedWithImage.Size = new System.Drawing.Size(172, 17);
             this.labelTextAssociatedWithImage.TabIndex = 26;
             this.labelTextAssociatedWithImage.Text = "Text associated with image";
             // 
@@ -180,7 +181,7 @@
             this.labelImageInfo.AutoSize = true;
             this.labelImageInfo.Location = new System.Drawing.Point(12, 87);
             this.labelImageInfo.Name = "labelImageInfo";
-            this.labelImageInfo.Size = new System.Drawing.Size(35, 13);
+            this.labelImageInfo.Size = new System.Drawing.Size(42, 17);
             this.labelImageInfo.TabIndex = 24;
             this.labelImageInfo.Text = "label1";
             // 
@@ -188,13 +189,13 @@
             // 
             this.textBoxText.Location = new System.Drawing.Point(14, 35);
             this.textBoxText.Name = "textBoxText";
-            this.textBoxText.Size = new System.Drawing.Size(100, 21);
+            this.textBoxText.Size = new System.Drawing.Size(100, 24);
             this.textBoxText.TabIndex = 23;
             // 
             // pictureBox1
             // 
             this.pictureBox1.BackColor = System.Drawing.Color.Red;
-            this.pictureBox1.Location = new System.Drawing.Point(17, 103);
+            this.pictureBox1.Location = new System.Drawing.Point(17, 104);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(52, 52);
             this.pictureBox1.TabIndex = 22;
@@ -213,7 +214,7 @@
             // 
             // VobSubEditCharacters
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(536, 380);
             this.Controls.Add(this.buttonCancel);

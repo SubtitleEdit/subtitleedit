@@ -35,7 +35,6 @@ namespace Nikse.SubtitleEdit.Forms
 
             FillComboWithUniqueAndSortedTexts();
 
-
             Text = Configuration.Settings.Language.VobSubEditCharacters.Title;
             labelChooseCharacters.Text = Configuration.Settings.Language.VobSubEditCharacters.ChooseCharacter;
             labelImageCompareFiles.Text = Configuration.Settings.Language.VobSubEditCharacters.ImageCompareFiles;
@@ -47,6 +46,18 @@ namespace Nikse.SubtitleEdit.Forms
             labelDoubleSize.Text = Configuration.Settings.Language.VobSubEditCharacters.ImageDoubleSize;
             buttonOK.Text = Configuration.Settings.Language.General.OK;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
+            FixLargeFonts();
+        }
+
+        private void FixLargeFonts()
+        {
+            Graphics graphics = this.CreateGraphics();
+            SizeF textSize = graphics.MeasureString(buttonCancel.Text, this.Font);
+            if (textSize.Height > buttonCancel.Height - 4)
+            {
+                int newButtonHeight = (int)(textSize.Height + 7 + 0.5);
+                Utilities.SetButtonHeight(this, newButtonHeight, 1);
+            }
         }
 
         private void FillComboWithUniqueAndSortedTexts()

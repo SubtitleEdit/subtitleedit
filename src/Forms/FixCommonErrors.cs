@@ -7,6 +7,7 @@ using System.Windows.Forms;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.OCR;
 using System.Text;
+using System.Drawing;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -229,6 +230,23 @@ namespace Nikse.SubtitleEdit.Forms
 
             splitContainerStep2.Panel1MinSize = 110;
             splitContainerStep2.Panel2MinSize = 160;
+
+            numericUpDownDuration.Left = timeUpDownStartTime.Left + timeUpDownStartTime.Width;
+            labelDuration.Left = timeUpDownStartTime.Left + timeUpDownStartTime.Width - 3;
+
+            FixLargeFonts();
+        }
+
+        private void FixLargeFonts()
+        {
+            Graphics graphics = this.CreateGraphics();
+            SizeF textSize = graphics.MeasureString(buttonCancel.Text, this.Font);
+            if (textSize.Height > buttonCancel.Height - 4)
+            {
+                subtitleListView1.InitializeTimeStampColumWidths(this);
+                int newButtonHeight = (int)(textSize.Height + 7 + 0.5);
+                Utilities.SetButtonHeight(this, newButtonHeight, 1);
+            }
         }
 
         private void AddFixActionItemToListView(FixItem fi)

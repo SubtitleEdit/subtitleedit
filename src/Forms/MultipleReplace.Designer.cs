@@ -82,9 +82,9 @@
             this.columnHeader8});
             this.listViewFixes.FullRowSelect = true;
             this.listViewFixes.HideSelection = false;
-            this.listViewFixes.Location = new System.Drawing.Point(6, 13);
+            this.listViewFixes.Location = new System.Drawing.Point(6, 21);
             this.listViewFixes.Name = "listViewFixes";
-            this.listViewFixes.Size = new System.Drawing.Size(714, 249);
+            this.listViewFixes.Size = new System.Drawing.Size(714, 239);
             this.listViewFixes.TabIndex = 9;
             this.listViewFixes.UseCompatibleStateImageBehavior = false;
             this.listViewFixes.View = System.Windows.Forms.View.Details;
@@ -150,18 +150,18 @@
             // labelFindWhat
             // 
             this.labelFindWhat.AutoSize = true;
-            this.labelFindWhat.Location = new System.Drawing.Point(17, 26);
+            this.labelFindWhat.Location = new System.Drawing.Point(17, 25);
             this.labelFindWhat.Name = "labelFindWhat";
-            this.labelFindWhat.Size = new System.Drawing.Size(58, 13);
+            this.labelFindWhat.Size = new System.Drawing.Size(72, 17);
             this.labelFindWhat.TabIndex = 22;
             this.labelFindWhat.Text = "Find what:";
             // 
             // labelReplaceWith
             // 
             this.labelReplaceWith.AutoSize = true;
-            this.labelReplaceWith.Location = new System.Drawing.Point(247, 26);
+            this.labelReplaceWith.Location = new System.Drawing.Point(247, 25);
             this.labelReplaceWith.Name = "labelReplaceWith";
-            this.labelReplaceWith.Size = new System.Drawing.Size(72, 13);
+            this.labelReplaceWith.Size = new System.Drawing.Size(89, 17);
             this.labelReplaceWith.TabIndex = 21;
             this.labelReplaceWith.Text = "Replace with:";
             // 
@@ -169,16 +169,16 @@
             // 
             this.textBoxReplace.Location = new System.Drawing.Point(250, 42);
             this.textBoxReplace.Name = "textBoxReplace";
-            this.textBoxReplace.Size = new System.Drawing.Size(227, 21);
+            this.textBoxReplace.Size = new System.Drawing.Size(227, 24);
             this.textBoxReplace.TabIndex = 2;
             this.textBoxReplace.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxReplaceKeyDown);
             // 
             // radioButtonRegEx
             // 
             this.radioButtonRegEx.AutoSize = true;
-            this.radioButtonRegEx.Location = new System.Drawing.Point(187, 68);
+            this.radioButtonRegEx.Location = new System.Drawing.Point(205, 68);
             this.radioButtonRegEx.Name = "radioButtonRegEx";
-            this.radioButtonRegEx.Size = new System.Drawing.Size(56, 17);
+            this.radioButtonRegEx.Size = new System.Drawing.Size(69, 21);
             this.radioButtonRegEx.TabIndex = 6;
             this.radioButtonRegEx.Text = "RegEx";
             this.radioButtonRegEx.UseVisualStyleBackColor = true;
@@ -187,9 +187,9 @@
             // radioButtonCaseSensitive
             // 
             this.radioButtonCaseSensitive.AutoSize = true;
-            this.radioButtonCaseSensitive.Location = new System.Drawing.Point(86, 68);
+            this.radioButtonCaseSensitive.Location = new System.Drawing.Point(94, 68);
             this.radioButtonCaseSensitive.Name = "radioButtonCaseSensitive";
-            this.radioButtonCaseSensitive.Size = new System.Drawing.Size(94, 17);
+            this.radioButtonCaseSensitive.Size = new System.Drawing.Size(113, 21);
             this.radioButtonCaseSensitive.TabIndex = 5;
             this.radioButtonCaseSensitive.Text = "Case sensitive";
             this.radioButtonCaseSensitive.UseVisualStyleBackColor = true;
@@ -201,7 +201,7 @@
             this.radioButtonNormal.Checked = true;
             this.radioButtonNormal.Location = new System.Drawing.Point(22, 68);
             this.radioButtonNormal.Name = "radioButtonNormal";
-            this.radioButtonNormal.Size = new System.Drawing.Size(58, 17);
+            this.radioButtonNormal.Size = new System.Drawing.Size(72, 21);
             this.radioButtonNormal.TabIndex = 4;
             this.radioButtonNormal.TabStop = true;
             this.radioButtonNormal.Text = "Normal";
@@ -212,7 +212,7 @@
             // 
             this.textBoxFind.Location = new System.Drawing.Point(20, 42);
             this.textBoxFind.Name = "textBoxFind";
-            this.textBoxFind.Size = new System.Drawing.Size(224, 21);
+            this.textBoxFind.Size = new System.Drawing.Size(224, 24);
             this.textBoxFind.TabIndex = 1;
             // 
             // listViewReplaceList
@@ -295,7 +295,7 @@
             // 
             // MultipleReplace
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(743, 597);
             this.Controls.Add(this.buttonOK);
