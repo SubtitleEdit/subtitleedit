@@ -41,7 +41,7 @@
             // 
             // buttonGetFrameRate
             // 
-            this.buttonGetFrameRate.Location = new System.Drawing.Point(137, 97);
+            this.buttonGetFrameRate.Location = new System.Drawing.Point(167, 99);
             this.buttonGetFrameRate.Name = "buttonGetFrameRate";
             this.buttonGetFrameRate.Size = new System.Drawing.Size(24, 22);
             this.buttonGetFrameRate.TabIndex = 8;
@@ -96,7 +96,7 @@
             // labelHoursMinSecsMilliSecs
             // 
             this.labelHoursMinSecsMilliSecs.AutoSize = true;
-            this.labelHoursMinSecsMilliSecs.Location = new System.Drawing.Point(41, 81);
+            this.labelHoursMinSecsMilliSecs.Location = new System.Drawing.Point(41, 79);
             this.labelHoursMinSecsMilliSecs.Name = "labelHoursMinSecsMilliSecs";
             this.labelHoursMinSecsMilliSecs.Size = new System.Drawing.Size(138, 17);
             this.labelHoursMinSecsMilliSecs.TabIndex = 22;
