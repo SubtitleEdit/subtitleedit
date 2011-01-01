@@ -4,22 +4,29 @@ Subtitle Edit Changelog
  * NEW:
    * Collaboration via the internet ("Networking", also has chat)
    * Auto-backup (never, every minute, every 5th minute, or every 15th minute)
-   * Ability to remember the last selected line when re-opening subtitles
+   * Video player/controls/wave form can now be un-docked (e.g. for ppl for multiple monitors)
+   * Ability to remember the last selected line when re-opening subtitles (thx Frederic)
    * Support for the subtitle format "Quicktime text" (two variations) 
-   * Added "Chars/sec" info to textbox in main window 
+   * Added "Chars/sec" info to textbox in main window (thx Kerensky)
    * Options to choose font color and background color (for list view/text-boxes)
-   * Can now import VobSub subtitles embedded in Matroska (.mkv) files.
+   * Can now import VobSub subtitles embedded in Matroska (.mkv) files (thx mosu for mkv info)
+   * Wave form position can be locked at center via new 'Center' button (thx Krystian)
  * IMPROVED:
+   * Main window: Video player will now automatically move up beside subtitle if waveform is
+     displayed + some resizing of controls allowed via splitters
    * Context menu for subtitle textbox now has italic, bold, underline, font name, and color
    * Updated NHunspell (spell check component) to latest version (0.9.6)
-   * Synchronization Show earlier/later changed a bit, also added a shortcut (Ctrl+Shift+D)
-   * Main window: Video player will now automatically move up beside subtitle if waveform is
-     displayed + some resizing of controls allowed
+   * Synchronization Show earlier/later changed a bit, also added a shortcut (Ctrl+Shift+A)
+   * Added a few buttons to 'Multiple replace' which is now re-sizable (thx sialivi)
+   * Moved video controls below subtitle preview (which now displays italic)
+   * Fix common ocr errors improed (thx aMvEL, sialivi, Alberto)
  * FIXED:
    * OCR Fix Engine: Lines after "..." will no longer be changed to start with uppercase letter
-   * Missing line break in Sony Dvd Architecht (w line numbers) - thx Rosa 
-   * A minor bug in initialization of waveform - thx Frederic! 
+   * Missing line break in Sony Dvd Architecht w line numbers (thx Rosa)
+   * A minor bug in initialization of waveform (thx Frederic)
    * A minor bug in Visual Sync, if end scene was after video length
+   * Fixed crash with wave form track bar (thx Christian)
+   * Fixed several bugs regarding 'large fonts' / higher dpi (thx Radbert)
 
 
 3.0 (18th November 2010)
