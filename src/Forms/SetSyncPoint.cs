@@ -169,7 +169,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 if (pos != _lastPosition)
                 {
-                    Utilities.ShowSubtitle(_subtitle.Paragraphs, labelSubtitle, videoPlayerContainer1.VideoPlayer);
+                    Utilities.ShowSubtitle(_subtitle.Paragraphs, videoPlayerContainer1);
                     timeUpDownLine.TimeCode = new TimeCode(TimeSpan.FromSeconds(pos));
                     _lastPosition = pos;
                 }

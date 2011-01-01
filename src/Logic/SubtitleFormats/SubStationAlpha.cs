@@ -290,7 +290,6 @@ Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
 
                     indexOfBegin = p.Text.IndexOf("{");
                 }
-
             }
         }
 
