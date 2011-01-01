@@ -44,7 +44,11 @@ namespace Nikse.SubtitleEdit.Forms
             deleteToolStripMenuItem.Text = Configuration.Settings.Language.MultipleReplace.Delete;
             buttonOK.Text = Configuration.Settings.Language.General.OK;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
+            buttonReplacesSelectAll.Text = Configuration.Settings.Language.FixCommonErrors.SelectAll;
+            buttonReplacesInverseSelection.Text = Configuration.Settings.Language.FixCommonErrors.InverseSelection;
             FixLargeFonts();
+            splitContainer1.Panel1MinSize = 200;
+            splitContainer1.Panel2MinSize = 200;
         }
 
         private void FixLargeFonts()
@@ -211,9 +215,9 @@ namespace Nikse.SubtitleEdit.Forms
 
             var subItem = new ListViewItem.ListViewSubItem(item, p.Number.ToString());
             item.SubItems.Add(subItem);
-            subItem = new ListViewItem.ListViewSubItem(item, p.Text);
+            subItem = new ListViewItem.ListViewSubItem(item, p.Text.Replace(Environment.NewLine, Configuration.Settings.General.ListViewLineSeparatorString));
             item.SubItems.Add(subItem);
-            subItem = new ListViewItem.ListViewSubItem(item, newText);
+            subItem = new ListViewItem.ListViewSubItem(item, newText.Replace(Environment.NewLine, Configuration.Settings.General.ListViewLineSeparatorString));
             item.SubItems.Add(subItem);
 
             listViewFixes.Items.Add(item);
@@ -337,5 +341,18 @@ namespace Nikse.SubtitleEdit.Forms
             if (e.KeyCode == Keys.Enter && textBoxFind.Text.Length > 0 && textBoxReplace.Text.Length > 0)
                 ButtonAddClick(null, null);
         }
+
+        private void buttonReplacesSelectAll_Click(object sender, EventArgs e)
+        {
+            foreach (ListViewItem item in listViewFixes.Items)
+                item.Checked = true;
+        }
+
+        private void buttonReplacesInverseSelection_Click(object sender, EventArgs e)
+        {
+            foreach (ListViewItem item in listViewFixes.Items)
+                item.Checked = !item.Checked;
+        }
+
     }
 }
