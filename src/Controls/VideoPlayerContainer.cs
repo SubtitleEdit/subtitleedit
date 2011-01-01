@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Logic.VideoPlayers;
+using System.Text;
 
 namespace Nikse.SubtitleEdit.Controls
 {
@@ -9,6 +10,9 @@ namespace Nikse.SubtitleEdit.Controls
     {
         public event EventHandler OnButtonClicked;
         public Panel PanelPlayer { get; private set; }
+        private Panel _panelSubtitle;
+        private RichTextBox _subtitleTextBox;
+        private string _subtitleText = string.Empty;
         private VideoPlayer _videoPlayer;
         public VideoPlayer VideoPlayer
         {
@@ -20,6 +24,7 @@ namespace Nikse.SubtitleEdit.Controls
         private double? _muteOldVolume;
         private readonly System.ComponentModel.ComponentResourceManager _resources;
         private const int ControlsHeight = 47;
+        private const int SubtitlesHeight = 47;
         private readonly Color _backgroundColor = Color.FromArgb(18, 18, 18); 
         private Panel _panelcontrols;
         private string _totalPositionString;
@@ -66,10 +71,13 @@ namespace Nikse.SubtitleEdit.Controls
         
         public VideoPlayerContainer()
         {
+            BorderStyle = System.Windows.Forms.BorderStyle.None;
             _resources = new System.ComponentModel.ComponentResourceManager(typeof(VideoPlayerContainer));
             BackColor = _backgroundColor;
             Controls.Add(MakePlayerPanel());
+            Controls.Add(MakeSubtitlesPanel());
             Controls.Add(MakeControlsPanel());
+            _panelcontrols.BringToFront();
 
             HideAllPlayImages();
             HideAllPauseImages();
@@ -89,6 +97,109 @@ namespace Nikse.SubtitleEdit.Controls
             PanelPlayer.MouseDown += PanelPlayer_MouseDown; 
         }
 
+        private Control MakeSubtitlesPanel()
+        {
+            _panelSubtitle = new Panel { BackColor = _backgroundColor, Left = 0, Top = 0 };
+            _panelSubtitle.Height = SubtitlesHeight + 1;
+            _subtitleTextBox = new RichTextBox();
+            _panelSubtitle.Controls.Add(_subtitleTextBox);
+            _subtitleTextBox.ReadOnly = true;
+            _subtitleTextBox.ScrollBars = RichTextBoxScrollBars.None;
+            _subtitleTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            _subtitleTextBox.Margin = new System.Windows.Forms.Padding(0);
+            _subtitleTextBox.BackColor = _backgroundColor;
+            _subtitleTextBox.ForeColor = Color.White;
+            _subtitleTextBox.Dock = DockStyle.Fill;
+            _subtitleTextBox.Font = new Font("Tahoma", 8, FontStyle.Bold);
+            return _panelSubtitle;
+        }
+
+        private static string RemoveSubStationAlphaFormatting(string s)
+        {
+            int indexOfBegin = s.IndexOf("{");
+            while (indexOfBegin >= 0 && s.IndexOf("}") > indexOfBegin)
+            {
+                int indexOfEnd = s.IndexOf("}");
+                s = s.Remove(indexOfBegin, (indexOfEnd - indexOfBegin) + 1);
+                indexOfBegin = s.IndexOf("{");
+            }
+            return s;
+        }
+
+        public string SubtitleText
+        {
+            get
+            {
+                return _subtitleText;
+            }
+            set
+            {
+                _subtitleText = value;
+
+                // remove styles for display text (except italic)
+                string text = RemoveSubStationAlphaFormatting(_subtitleText);
+                text = text.Replace("<b>", string.Empty);
+                text = text.Replace("</b>", string.Empty);
+                text = text.Replace("<B>", string.Empty);
+                text = text.Replace("</B>", string.Empty);
+                text = text.Replace("<u>", string.Empty);
+                text = text.Replace("</u>", string.Empty);
+                text = text.Replace("<U>", string.Empty);
+                text = text.Replace("</U>", string.Empty);
+                text = Logic.Utilities.RemoveHtmlFontTag(text);
+
+                // display italic
+                StringBuilder sb = new StringBuilder();
+                int i = 0;
+                bool isItalic = false;
+                int italicBegin = 0;
+                _subtitleTextBox.Text = string.Empty;
+                int letterCount = 0;
+                System.Collections.Generic.Dictionary<int, int> italicLookups = new System.Collections.Generic.Dictionary<int, int>();
+                while  (i < text.Length)
+                {
+                    if (text.Substring(i).ToLower().StartsWith("<i>"))
+                    {
+                        _subtitleTextBox.AppendText(sb.ToString());
+                        sb = new StringBuilder();
+                        isItalic = true;
+                        italicBegin = letterCount;
+                        i+=2;
+                    }
+                    else if (text.Substring(i).ToLower().StartsWith("</i>") && isItalic)
+                    {
+                        italicLookups.Add(italicBegin, sb.Length);
+                        _subtitleTextBox.AppendText(sb.ToString());
+                        sb = new StringBuilder();
+                        isItalic = false;
+                        i += 3;
+                    }
+                    else if (text.Substring(i, 1) == "\n") // RichTextBox only count NewLine as one character!
+                    {
+                        sb.Append(text.Substring(i, 1));
+                    }
+                    else 
+                    {
+                        sb.Append(text.Substring(i, 1));
+                        letterCount++;
+                    }
+                    i++;
+                }
+                _subtitleTextBox.Text += sb.ToString();
+                _subtitleTextBox.SelectAll();
+                _subtitleTextBox.SelectionAlignment = HorizontalAlignment.Center;
+                _subtitleTextBox.DeselectAll();
+                foreach (var entry in italicLookups)
+                {
+                    System.Drawing.Font currentFont = _subtitleTextBox.SelectionFont;
+                    System.Drawing.FontStyle newFontStyle = FontStyle.Italic | FontStyle.Bold;
+                    _subtitleTextBox.SelectionStart = entry.Key;
+                    _subtitleTextBox.SelectionLength = entry.Value;
+                    _subtitleTextBox.SelectionFont = new Font(currentFont.FontFamily, currentFont.Size, newFontStyle);
+                    _subtitleTextBox.DeselectAll();
+                }
+            }
+        }
 
         void PanelPlayer_MouseDown(object sender, MouseEventArgs e)
         {
@@ -321,10 +432,13 @@ namespace Nikse.SubtitleEdit.Controls
 
         public void VideoPlayerContainerResize(object sender, EventArgs e)
         {
-            PanelPlayer.Height = Height - ControlsHeight;
+            PanelPlayer.Height = Height - (ControlsHeight + SubtitlesHeight);
             PanelPlayer.Width = Width;
 
-            _panelcontrols.Top = Height - ControlsHeight;
+            _panelSubtitle.Top = Height - (ControlsHeight + SubtitlesHeight);
+            _panelSubtitle.Width = Width;
+
+            _panelcontrols.Top = Height - ControlsHeight + 2;
             _panelcontrols.Width = Width;
             _pictureBoxBackground.Width = Width;
             _pictureBoxProgressbarBackground.Width = Width - (_pictureBoxProgressbarBackground.Left * 2);

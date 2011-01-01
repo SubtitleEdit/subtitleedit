@@ -35,20 +35,24 @@
             // 
             this.panelContainer.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panelContainer.Location = new System.Drawing.Point(0, 0);
+            this.panelContainer.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.panelContainer.Name = "panelContainer";
-            this.panelContainer.Size = new System.Drawing.Size(632, 203);
+            this.panelContainer.Size = new System.Drawing.Size(843, 250);
             this.panelContainer.TabIndex = 1;
             // 
             // WaveFormUnDocked
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(632, 203);
+            this.ClientSize = new System.Drawing.Size(843, 250);
             this.Controls.Add(this.panelContainer);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
+            this.KeyPreview = true;
+            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.Name = "WaveFormUnDocked";
             this.Text = "WaveFormUnDocked";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.WaveFormUnDocked_FormClosing);
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.WaveFormUnDocked_KeyDown);
             this.ResumeLayout(false);
 
         }

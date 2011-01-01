@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Controls;
 using Nikse.SubtitleEdit.Logic;
-using System.Drawing;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -53,8 +53,6 @@ namespace Nikse.SubtitleEdit.Forms
         {
             InitializeComponent();
 
-            labelStartSubtitle.Text = string.Empty;
-            labelEndSubtitle.Text = string.Empty;
             openFileDialog1.InitialDirectory = string.Empty;
 
             MediaPlayerStart.InitializeVolume(Configuration.Settings.General.VideoPlayerDefaultVolume);
@@ -232,7 +230,7 @@ namespace Nikse.SubtitleEdit.Forms
                         MediaPlayerStart.CurrentPosition = _startGoBackPosition;
                         _startStopPosition = -1;
                     }
-                    Utilities.ShowSubtitle(_paragraphs, labelStartSubtitle, MediaPlayerStart.VideoPlayer);
+                    Utilities.ShowSubtitle(_paragraphs, MediaPlayerStart);
                 }
                 if (!MediaPlayerEnd.IsPaused)
                 {
@@ -243,7 +241,7 @@ namespace Nikse.SubtitleEdit.Forms
                         MediaPlayerEnd.CurrentPosition = _endGoBackPosition;
                         _endStopPosition = -1;
                     }
-                    Utilities.ShowSubtitle(_paragraphs, labelEndSubtitle, MediaPlayerEnd.VideoPlayer);
+                    Utilities.ShowSubtitle(_paragraphs, MediaPlayerEnd);
                 }                
             }
         }
@@ -421,33 +419,33 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void GoBackSeconds(double seconds, Label labelSubtitle, VideoPlayerContainer mediaPlayer)
+        private void GoBackSeconds(double seconds, VideoPlayerContainer mediaPlayer)
         {
             if (mediaPlayer.CurrentPosition > seconds)
                 mediaPlayer.CurrentPosition -= seconds;
             else
                 mediaPlayer.CurrentPosition = 0;
-            Utilities.ShowSubtitle(_paragraphs, labelSubtitle, mediaPlayer.VideoPlayer);
+            Utilities.ShowSubtitle(_paragraphs, mediaPlayer);
         }
 
         private void ButtonStartHalfASecondBackClick(object sender, EventArgs e)
         {
-            GoBackSeconds(0.5, labelStartSubtitle, MediaPlayerStart);
+            GoBackSeconds(0.5, MediaPlayerStart);
         }
 
         private void ButtonStartThreeSecondsBackClick(object sender, EventArgs e)
         {
-            GoBackSeconds(3.0, labelStartSubtitle, MediaPlayerStart);
+            GoBackSeconds(3.0, MediaPlayerStart);
         }
 
         private void ButtonEndHalfASecondBackClick(object sender, EventArgs e)
         {
-            GoBackSeconds(0.5, labelEndSubtitle, MediaPlayerEnd);
+            GoBackSeconds(0.5, MediaPlayerEnd);
         }
 
         private void ButtonThreeSecondsBackClick(object sender, EventArgs e)
         {
-            GoBackSeconds(3.0, labelEndSubtitle, MediaPlayerEnd);
+            GoBackSeconds(3.0, MediaPlayerEnd);
         }
 
         private void ButtonOpenMovieClick(object sender, EventArgs e)
@@ -467,14 +465,8 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void SizeWmp()
         {
-            MediaPlayerStart.Left = labelStartSubtitle.Left;
-            MediaPlayerStart.Width = labelStartSubtitle.Width;
-            MediaPlayerStart.Height = labelStartSubtitle.Top - MediaPlayerStart.Top;
-            MediaPlayerStart.RefreshProgressBar();
-
-            MediaPlayerEnd.Left = labelEndSubtitle.Left;
-            MediaPlayerEnd.Width = labelEndSubtitle.Width;
-            MediaPlayerEnd.Height = labelEndSubtitle.Top - MediaPlayerEnd.Top;
+            MediaPlayerStart.Height = panelControlsStart.Top - (MediaPlayerStart.Top + 2);
+            MediaPlayerEnd.Height = MediaPlayerStart.Height;
             MediaPlayerEnd.RefreshProgressBar();
         }
 
@@ -482,12 +474,11 @@ namespace Nikse.SubtitleEdit.Forms
         {
             int halfWidth = Width / 2;
             groupBoxStartScene.Width = halfWidth - 18;
-            labelStartSubtitle.Width = groupBoxStartScene.Width - 12;
-            panelControlsStart.Width = labelStartSubtitle.Width;
-
+            MediaPlayerStart.Width = groupBoxStartScene.Width - 12;
+            panelControlsStart.Width = MediaPlayerStart.Width;
             groupBoxEndScene.Left = halfWidth + 3;
             groupBoxEndScene.Width = halfWidth - 18;
-            labelEndSubtitle.Width = groupBoxEndScene.Width - 12;
+            MediaPlayerEnd.Width = groupBoxEndScene.Width - 12;
             SizeWmp();
             panelControlsEnd.Width = MediaPlayerEnd.Width;
             groupBoxStartScene.Height = Height - groupBoxEndScene.Top - 90;
@@ -597,49 +588,49 @@ namespace Nikse.SubtitleEdit.Forms
                 else if (e.Modifiers == Keys.Alt && e.KeyCode == Keys.Left)
                 {
                     if (_isStartSceneActive)
-                        GoBackSeconds(0.5, labelStartSubtitle, MediaPlayerStart);
+                        GoBackSeconds(0.5, MediaPlayerStart);
                     else
-                        GoBackSeconds(0.5, labelEndSubtitle, MediaPlayerEnd);
+                        GoBackSeconds(0.5, MediaPlayerEnd);
                     e.SuppressKeyPress = true;
                 }
                 else if (e.Modifiers == Keys.Alt && e.KeyCode == Keys.Right)
                 {
                     if (_isStartSceneActive)
-                        GoBackSeconds(-0.5, labelStartSubtitle, MediaPlayerStart);
+                        GoBackSeconds(-0.5, MediaPlayerStart);
                     else
-                        GoBackSeconds(-0.5, labelEndSubtitle, MediaPlayerEnd);
+                        GoBackSeconds(-0.5, MediaPlayerEnd);
                     e.SuppressKeyPress = true;
                 }
                 else if (e.Modifiers == Keys.Control && e.KeyCode == Keys.Left)
                 {
                     if (_isStartSceneActive)
-                        GoBackSeconds(0.1, labelStartSubtitle, MediaPlayerStart);
+                        GoBackSeconds(0.1, MediaPlayerStart);
                     else
-                        GoBackSeconds(0.1, labelEndSubtitle, MediaPlayerEnd);
+                        GoBackSeconds(0.1, MediaPlayerEnd);
                     e.SuppressKeyPress = true;
                 }
                 else if (e.Modifiers == Keys.Control && e.KeyCode == Keys.Right)
                 {
                     if (_isStartSceneActive)
-                        GoBackSeconds(-0.1, labelStartSubtitle, MediaPlayerStart);
+                        GoBackSeconds(-0.1, MediaPlayerStart);
                     else
-                        GoBackSeconds(-0.1, labelEndSubtitle, MediaPlayerEnd);
+                        GoBackSeconds(-0.1, MediaPlayerEnd);
                     e.SuppressKeyPress = true;
                 }
                 else if (e.Modifiers == (Keys.Control | Keys.Shift) && e.KeyCode == Keys.Right)
                 {
                     if (_isStartSceneActive)
-                        GoBackSeconds(1.0, labelStartSubtitle, MediaPlayerStart);
+                        GoBackSeconds(1.0, MediaPlayerStart);
                     else
-                        GoBackSeconds(1.0, labelEndSubtitle, MediaPlayerEnd);
+                        GoBackSeconds(1.0, MediaPlayerEnd);
                     e.SuppressKeyPress = true;
                 }
                 else if (e.Modifiers == (Keys.Control | Keys.Shift) && e.KeyCode == Keys.Left)
                 {
                     if (_isStartSceneActive)
-                        GoBackSeconds(-1.0, labelStartSubtitle, MediaPlayerStart);
+                        GoBackSeconds(-1.0, MediaPlayerStart);
                     else
-                        GoBackSeconds(-1.0, labelEndSubtitle, MediaPlayerEnd);
+                        GoBackSeconds(-1.0, MediaPlayerEnd);
                     e.SuppressKeyPress = true;
                 }
 

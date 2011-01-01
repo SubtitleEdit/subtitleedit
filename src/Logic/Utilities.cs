@@ -194,12 +194,12 @@ namespace Nikse.SubtitleEdit.Logic
             }
         }
 
-        public static int ShowSubtitle(List<Paragraph> paragraphs, Label labelSubtitle, VideoPlayer mediaPlayer)
+        public static int ShowSubtitle(List<Paragraph> paragraphs, VideoPlayerContainer videoPlayerContainer)
         {
             int index = 0;
-            if (mediaPlayer != null)
+            if (videoPlayerContainer.VideoPlayer != null)
             {
-                double positionInMilliseconds = mediaPlayer.CurrentPosition * 1000.0;
+                double positionInMilliseconds = videoPlayerContainer.VideoPlayer.CurrentPosition * 1000.0;
                 string text = string.Empty;
                 foreach (Paragraph p in paragraphs)
                 {
@@ -214,9 +214,9 @@ namespace Nikse.SubtitleEdit.Logic
                 if (index == paragraphs.Count)
                     index = -1;
 
-                if (labelSubtitle.Text != text)
+                if (videoPlayerContainer.SubtitleText != text)
                 {
-                    labelSubtitle.Text = text;
+                    videoPlayerContainer.SubtitleText = text;
                     return index;
                 }
             }

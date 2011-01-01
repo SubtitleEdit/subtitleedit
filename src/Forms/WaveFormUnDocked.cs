@@ -43,5 +43,10 @@ namespace Nikse.SubtitleEdit.Forms
             }
             _positionsAndSizes.SavePositionAndSize(this);
         }
+
+        private void WaveFormUnDocked_KeyDown(object sender, KeyEventArgs e)
+        {
+            _mainForm.Main_KeyDown(sender, e);
+        }
     }
 }

@@ -13,7 +13,6 @@ using Nikse.SubtitleEdit.Logic.BluRaySup;
 using Nikse.SubtitleEdit.Logic.Enums;
 using Nikse.SubtitleEdit.Logic.Networking;
 using Nikse.SubtitleEdit.Logic.SubtitleFormats;
-using Nikse.SubtitleEdit.Logic.VideoPlayers;
 using Nikse.SubtitleEdit.Logic.VobSub;
 
 namespace Nikse.SubtitleEdit.Forms
@@ -234,7 +233,7 @@ namespace Nikse.SubtitleEdit.Forms
 //                MessageBox.Show("Test9");
                 //timeUpDownStartTime.MaskedTextBox.TextChanged += MaskedTextBox_TextChanged;
                 labelAutoDuration.Visible = false;
-                labelSubtitle.Text = string.Empty;
+                mediaPlayer.SubtitleText = string.Empty;                
                 comboBoxAutoRepeat.SelectedIndex = 2;
                 comboBoxAutoContinue.SelectedIndex = 2;
                 timeUpDownVideoPosition.TimeCode = new TimeCode(0, 0, 0, 0);
@@ -4684,7 +4683,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void Main_KeyDown(object sender, KeyEventArgs e)
+        internal void Main_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.Modifiers == Keys.Control && e.KeyCode == Keys.Z)
             {
@@ -4882,7 +4881,7 @@ namespace Nikse.SubtitleEdit.Forms
                     if (p != null)
                     {
                         mediaPlayer.CurrentPosition = p.StartTime.TotalSeconds;
-                        Utilities.ShowSubtitle(_subtitle.Paragraphs, labelSubtitle, mediaPlayer.VideoPlayer);
+                        Utilities.ShowSubtitle(_subtitle.Paragraphs, mediaPlayer);
                         mediaPlayer.Play();
                         _endSeconds = p.EndTime.TotalSeconds;
                         e.SuppressKeyPress = true;
@@ -4900,7 +4899,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 if (mediaPlayer.VideoPlayer != null)
                 {
-                    GoBackSeconds(3, labelSubtitle, mediaPlayer.VideoPlayer);
+                    GoBackSeconds(3, mediaPlayer);
                 }
             }
             else if (e.Modifiers == Keys.None && e.KeyCode == Keys.F8)
@@ -5762,9 +5761,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void GoBackSeconds(double seconds,
-                                   Label labelGoBackSubtitleStatus,
-                                   VideoPlayer mediaPlayer)
+        private void GoBackSeconds(double seconds, VideoPlayerContainer videoPlayerContainer)
         {
             if (mediaPlayer != null)
             {
@@ -5772,39 +5769,39 @@ namespace Nikse.SubtitleEdit.Forms
                     mediaPlayer.CurrentPosition -= seconds;
                 else
                     mediaPlayer.CurrentPosition = 0;
-                Utilities.ShowSubtitle(_subtitle.Paragraphs, labelGoBackSubtitleStatus, mediaPlayer);
+                Utilities.ShowSubtitle(_subtitle.Paragraphs, videoPlayerContainer);
                 //                ShowPosition(labelPosition, mediaPlayer);
             }
         }
 
         private void ButtonStartHalfASecondBackClick(object sender, EventArgs e)
         {
-            GoBackSeconds(0.5, labelSubtitle, mediaPlayer.VideoPlayer);
+            GoBackSeconds(0.5, mediaPlayer);
         }
 
         private void ButtonStartThreeSecondsBackClick(object sender, EventArgs e)
         {
-            GoBackSeconds(3.0, labelSubtitle, mediaPlayer.VideoPlayer);
+            GoBackSeconds(3.0, mediaPlayer);
         }
 
         private void ButtonStartOneMinuteBackClick(object sender, EventArgs e)
         {
-            GoBackSeconds(60, labelSubtitle, mediaPlayer.VideoPlayer);
+            GoBackSeconds(60, mediaPlayer);
         }
 
         private void ButtonStartHalfASecondAheadClick(object sender, EventArgs e)
         {
-            GoBackSeconds(-0.5, labelSubtitle, mediaPlayer.VideoPlayer);
+            GoBackSeconds(-0.5, mediaPlayer);
         }
 
         private void ButtonStartThreeSecondsAheadClick(object sender, EventArgs e)
         {
-            GoBackSeconds(-3, labelSubtitle, mediaPlayer.VideoPlayer);
+            GoBackSeconds(-3, mediaPlayer);
         }
 
         private void ButtonStartOneMinuteAheadClick(object sender, EventArgs e)
         {
-            GoBackSeconds(-60, labelSubtitle, mediaPlayer.VideoPlayer);
+            GoBackSeconds(-60, mediaPlayer);
         }
 
         private void videoTimer_Tick(object sender, EventArgs e)
@@ -5814,7 +5811,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (!mediaPlayer.IsPaused)
                 {
                     mediaPlayer.RefreshProgressBar();
-                    Utilities.ShowSubtitle(_subtitle.Paragraphs, labelSubtitle, mediaPlayer.VideoPlayer);
+                    Utilities.ShowSubtitle(_subtitle.Paragraphs, mediaPlayer);
                 }
             }
         }
@@ -6051,7 +6048,7 @@ namespace Nikse.SubtitleEdit.Forms
                 textBoxListViewText.SelectAll();
                 _subtitleListViewIndex = newIndex;
                 GotoSubtitleIndex(newIndex);
-                Utilities.ShowSubtitle(_subtitle.Paragraphs, labelSubtitle, mediaPlayer.VideoPlayer);
+                Utilities.ShowSubtitle(_subtitle.Paragraphs, mediaPlayer);
                 PlayCurrent();
             }
         }
@@ -6068,7 +6065,7 @@ namespace Nikse.SubtitleEdit.Forms
                 textBoxListViewText.Focus();
                 textBoxListViewText.SelectAll();
                 GotoSubtitleIndex(newIndex);
-                Utilities.ShowSubtitle(_subtitle.Paragraphs, labelSubtitle, mediaPlayer.VideoPlayer);
+                Utilities.ShowSubtitle(_subtitle.Paragraphs, mediaPlayer);
                 _subtitleListViewIndex = newIndex;
                 PlayCurrent();
             }
@@ -6105,7 +6102,7 @@ namespace Nikse.SubtitleEdit.Forms
                     _endSeconds += 0.2; // go a little forward
 
                 mediaPlayer.CurrentPosition = startSeconds;
-                Utilities.ShowSubtitle(_subtitle.Paragraphs, labelSubtitle, mediaPlayer.VideoPlayer);
+                Utilities.ShowSubtitle(_subtitle.Paragraphs, mediaPlayer);
                 mediaPlayer.Play();
             }
         }
@@ -6272,7 +6269,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 mediaPlayer.Pause();
                 mediaPlayer.CurrentPosition = _subtitle.Paragraphs[index].StartTime.TotalSeconds;
-                Utilities.ShowSubtitle(_subtitle.Paragraphs, labelSubtitle, mediaPlayer.VideoPlayer);
+                Utilities.ShowSubtitle(_subtitle.Paragraphs, mediaPlayer);
 
                 double startPos = mediaPlayer.CurrentPosition - 1;
                 if (startPos < 0)
@@ -6322,7 +6319,7 @@ namespace Nikse.SubtitleEdit.Forms
             toolStripButtonToogleVideo.Checked = !toolStripButtonToogleVideo.Checked;
             panelVideoPlayer.Visible = toolStripButtonToogleVideo.Checked;
             mediaPlayer.BringToFront();
-            labelSubtitle.BringToFront();
+//            labelSubtitle.BringToFront();
             if (!toolStripButtonToogleVideo.Checked && !toolStripButtonToogleWaveForm.Checked)
             {
                 if (_isVideoControlsUnDocked)
@@ -6473,7 +6470,7 @@ namespace Nikse.SubtitleEdit.Forms
                 timeUpDownVideoPosition.TimeCode = new TimeCode(TimeSpan.FromMilliseconds(mediaPlayer.CurrentPosition * 1000.0));
                 timeUpDownVideoPositionAdjust.TimeCode = new TimeCode(TimeSpan.FromMilliseconds(mediaPlayer.CurrentPosition * 1000.0));
                 mediaPlayer.RefreshProgressBar();
-                int index = Utilities.ShowSubtitle(_subtitle.Paragraphs, labelSubtitle, mediaPlayer.VideoPlayer);
+                int index = Utilities.ShowSubtitle(_subtitle.Paragraphs, mediaPlayer);
                 if (index != -1 && checkBoxSyncListViewWithVideoWhilePlaying.Checked)
                 {
                     if ((DateTime.Now.Ticks - _lastTextKeyDownTicks) > 10000 * 700) // only if last typed char was entered > 700 milliseconds 
@@ -6664,12 +6661,12 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonSecBack1_Click(object sender, EventArgs e)
         {
-            GoBackSeconds((double)numericUpDownSec1.Value , labelSubtitle, mediaPlayer.VideoPlayer);
+            GoBackSeconds((double)numericUpDownSec1.Value , mediaPlayer);
         }
 
         private void buttonForward1_Click(object sender, EventArgs e)
         {
-            GoBackSeconds(-(double)numericUpDownSec1.Value, labelSubtitle, mediaPlayer.VideoPlayer);
+            GoBackSeconds(-(double)numericUpDownSec1.Value, mediaPlayer);
         }
 
         private void ButtonSetStartAndOffsetRestClick(object sender, EventArgs e)
@@ -6722,12 +6719,12 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonAdjustSecBack_Click(object sender, EventArgs e)
         {
-            GoBackSeconds((double)numericUpDownSecAdjust1.Value, labelSubtitle, mediaPlayer.VideoPlayer);
+            GoBackSeconds((double)numericUpDownSecAdjust1.Value, mediaPlayer);
         }
 
         private void buttonAdjustSecForward_Click(object sender, EventArgs e)
         {
-            GoBackSeconds(-(double)numericUpDownSecAdjust1.Value, labelSubtitle, mediaPlayer.VideoPlayer);
+            GoBackSeconds(-(double)numericUpDownSecAdjust1.Value, mediaPlayer);
         }
 
         private void Main_Shown(object sender, EventArgs e)
@@ -6805,22 +6802,22 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonSecBack2_Click(object sender, EventArgs e)
         {
-            GoBackSeconds((double)numericUpDownSec2.Value , labelSubtitle, mediaPlayer.VideoPlayer);
+            GoBackSeconds((double)numericUpDownSec2.Value , mediaPlayer);
         }
 
         private void buttonForward2_Click(object sender, EventArgs e)
         {
-            GoBackSeconds(-(double)numericUpDownSec2.Value, labelSubtitle, mediaPlayer.VideoPlayer);
+            GoBackSeconds(-(double)numericUpDownSec2.Value, mediaPlayer);
         }
 
         private void buttonAdjustSecBack2_Click(object sender, EventArgs e)
         {
-            GoBackSeconds((double)numericUpDownSecAdjust2.Value, labelSubtitle, mediaPlayer.VideoPlayer);
+            GoBackSeconds((double)numericUpDownSecAdjust2.Value, mediaPlayer);
         }
 
         private void buttonAdjustSecForward2_Click(object sender, EventArgs e)
         {
-            GoBackSeconds(-(double)numericUpDownSecAdjust2.Value, labelSubtitle, mediaPlayer.VideoPlayer);
+            GoBackSeconds(-(double)numericUpDownSecAdjust2.Value, mediaPlayer);
         }
 
         private void translatepoweredByMicrosoftToolStripMenuItem_Click(object sender, EventArgs e)
@@ -7024,7 +7021,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (p != null)
                 {
                     mediaPlayer.CurrentPosition = p.StartTime.TotalSeconds;
-                    Utilities.ShowSubtitle(_subtitle.Paragraphs, labelSubtitle, mediaPlayer.VideoPlayer);
+                    Utilities.ShowSubtitle(_subtitle.Paragraphs, mediaPlayer);
                     mediaPlayer.Play();
                     _endSeconds = p.EndTime.TotalSeconds;
                 }
