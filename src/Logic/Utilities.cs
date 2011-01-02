@@ -817,6 +817,8 @@ namespace Nikse.SubtitleEdit.Logic
 
         public static string AutoDetectLanguageName(string languageName, Subtitle subtitle)
         {
+            if (string.IsNullOrEmpty(languageName))
+                languageName = "en_US";
             int bestCount = subtitle.Paragraphs.Count / 14;
 
             StringBuilder sb = new StringBuilder();

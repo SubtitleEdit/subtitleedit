@@ -597,9 +597,6 @@ namespace Nikse.SubtitleEdit.Forms
             _namesEtcList = new List<string>();
             _namesEtcMultiWordList = new List<string>();
             _namesEtcListUppercase = new List<string>();
-            Utilities.LoadNamesEtcWordLists(_namesEtcList, _namesEtcMultiWordList, Utilities.AutoDetectGoogleLanguage(subtitle));
-            foreach (string namesItem in _namesEtcList)
-                _namesEtcListUppercase.Add(namesItem.ToUpper());
 
             _skipAllList = new List<string>();
 
@@ -634,6 +631,10 @@ namespace Nikse.SubtitleEdit.Forms
             if (autoDetect || string.IsNullOrEmpty(_languageName))
                 _languageName = Utilities.AutoDetectLanguageName(_languageName, subtitle);
             string dictionary = Utilities.DictionaryFolder + _languageName;
+
+            Utilities.LoadNamesEtcWordLists(_namesEtcList, _namesEtcMultiWordList, _languageName);
+            foreach (string namesItem in _namesEtcList)
+                _namesEtcListUppercase.Add(namesItem.ToUpper());
 
             _userWordList = new List<string>();
             _userWordDictionary = new XmlDocument();
