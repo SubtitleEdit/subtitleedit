@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Windows.Forms;
 using System.Xml;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.VideoPlayers;
-using System.Drawing;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -22,7 +22,7 @@ namespace Nikse.SubtitleEdit.Forms
         List<string> _wordListNamesEtc = new List<string>();
         List<string> _userWordList = new List<string>();
         Dictionary<string, string> _ocrFixWords = new Dictionary<string, string>();
-        Dictionary<string, string> _ocrFixPartialLines = new Dictionary<string, string>();
+        Dictionary<string, string> _ocrFixPartialLines = new Dictionary<string, string>();       
 
         class ComboBoxLanguage
         {
@@ -495,11 +495,11 @@ namespace Nikse.SubtitleEdit.Forms
 
                 comboBoxWordListLanguage.Items.Clear();
                 if (Configuration.Settings.WordLists.LastLanguage == null)
-                    Configuration.Settings.WordLists.LastLanguage = "en";
+                    Configuration.Settings.WordLists.LastLanguage = "en-US";
                 foreach (CultureInfo ci in cultures)
                 {
                     comboBoxWordListLanguage.Items.Add(new ComboBoxLanguage { CultureInfo = ci });
-                    if (ci.TwoLetterISOLanguageName == Configuration.Settings.WordLists.LastLanguage)
+                    if (ci.Name == Configuration.Settings.WordLists.LastLanguage)
                         comboBoxWordListLanguage.SelectedIndex = comboBoxWordListLanguage.Items.Count - 1;
                 }
                 if (comboBoxWordListLanguage.Items.Count > 0 && comboBoxWordListLanguage.SelectedIndex == -1)
@@ -603,7 +603,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 var ci = comboBoxWordListLanguage.Items[comboBoxWordListLanguage.SelectedIndex] as ComboBoxLanguage;
                 if (ci != null)
-                    Configuration.Settings.WordLists.LastLanguage = ci.CultureInfo.TwoLetterISOLanguageName;
+                    Configuration.Settings.WordLists.LastLanguage = ci.CultureInfo.Name;
             }
 
             SsaStyleSettings ssa = Configuration.Settings.SsaStyle;
@@ -812,10 +812,18 @@ namespace Nikse.SubtitleEdit.Forms
 
         void BwRunWorkerCompleted(object sender, System.ComponentModel.RunWorkerCompletedEventArgs e)
         {
-            listBoxNamesEtc.BeginUpdate();
-            foreach (string name in _wordListNamesEtc)
-                listBoxNamesEtc.Items.Add(name);
-            listBoxNamesEtc.EndUpdate();
+            try
+            {
+                listBoxNamesEtc.BeginUpdate();
+                foreach (string name in _wordListNamesEtc)
+                {
+                    listBoxNamesEtc.Items.Add(name);
+                }
+                listBoxNamesEtc.EndUpdate();
+            }
+            catch
+            { 
+            }
         }
 
         private string GetCurrentWordListLanguage()
