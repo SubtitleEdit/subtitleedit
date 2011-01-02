@@ -4448,7 +4448,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
 
                     bool saveChangeCaseChanges = true;
-                    changeCasing.FixCasing(selectedLines, Utilities.AutoDetectGoogleLanguage(_subtitle));
+                    changeCasing.FixCasing(selectedLines, Utilities.AutoDetectLanguageName(Configuration.Settings.General.SpellCheckLanguage, _subtitle));
                     var changeCasingNames = new ChangeCasingNames();
                     if (changeCasing.ChangeNamesToo)
                     {
