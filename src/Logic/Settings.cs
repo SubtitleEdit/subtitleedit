@@ -96,7 +96,7 @@ namespace Nikse.SubtitleEdit.Logic
 
         public WordListSettings()
         {
-            LastLanguage = "en";
+            LastLanguage = "en-US";
             NamesEtcUrl = "http://www.nikse.dk/se/Names_Etc.xml";
         }
     }

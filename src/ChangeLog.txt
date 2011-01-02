@@ -11,6 +11,7 @@ Subtitle Edit Changelog
    * Options to choose font color and background color (for list view/text-boxes)
    * Can now import VobSub subtitles embedded in Matroska (.mkv) files (thx mosu for mkv info)
    * Wave form position can be locked at center via new 'Center' button (thx Krystian)
+   * Can insert subtitle after a line in the list view via context menu
  * IMPROVED:
    * Main window: Video player will now automatically move up beside subtitle if waveform is
      displayed + some resizing of controls allowed via splitters
@@ -72,4 +73,5 @@ Subtitle Edit Changelog
    * Crash in "Replace all"
    * Bug in "time control" (thx eMWu)
    * Resume spell check now works better (thx Kerensky)
+   * Fixed occasional crash in Options (thx sialivi)
    
