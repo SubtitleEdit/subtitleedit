@@ -31,7 +31,11 @@ namespace Nikse.SubtitleEdit.Controls
 
         private PictureBox _pictureBoxBackground;
         private PictureBox _pictureBoxReverse;
+        private PictureBox _pictureBoxReverseOver;
+        private PictureBox _pictureBoxReverseDown;
         private PictureBox _pictureBoxFastForward;
+        private PictureBox _pictureBoxFastForwardOver;
+        private PictureBox _pictureBoxFastForwardDown;
         private PictureBox _pictureBoxPlay;
         private PictureBox _pictureBoxPlayOver;
         private PictureBox _pictureBoxPlayDown;
@@ -88,6 +92,12 @@ namespace Nikse.SubtitleEdit.Controls
 
             HideAllMuteImages();
             _pictureBoxMute.Visible = true;
+
+            HideAllReverseImages();
+            _pictureBoxReverse.Visible = true;
+
+            HideAllFastForwardImages();
+            _pictureBoxFastForward.Visible = true;
 
             VideoPlayerContainerResize(this, null);
             Resize += VideoPlayerContainerResize;
@@ -404,15 +414,59 @@ namespace Nikse.SubtitleEdit.Controls
             _pictureBoxReverse.SizeMode = PictureBoxSizeMode.AutoSize;
             _pictureBoxReverse.TabStop = false;
             _panelcontrols.Controls.Add(_pictureBoxReverse);
+            _pictureBoxReverse.MouseEnter += PictureBoxReverseMouseEnter;
+
+            _pictureBoxReverseOver = new PictureBox();
+            _pictureBoxReverseOver.Image = ((Image)(_resources.GetObject("pictureBoxReverseMouseOver.Image")));
+            _pictureBoxReverseOver.Location = _pictureBoxReverse.Location;
+            _pictureBoxReverseOver.Name = "_pictureBoxReverseOver";
+            _pictureBoxReverseOver.Size = _pictureBoxReverse.Size;
+            _pictureBoxReverseOver.SizeMode = PictureBoxSizeMode.AutoSize;
+            _pictureBoxReverseOver.TabStop = false;
+            _panelcontrols.Controls.Add(_pictureBoxReverseOver);
+            _pictureBoxReverseOver.MouseLeave += PictureBoxReverseOverMouseLeave;
+            _pictureBoxReverseOver.MouseDown += PictureBoxReverseOverMouseDown;
+            _pictureBoxReverseOver.MouseUp += PictureBoxReverseOverMouseUp;
+
+            _pictureBoxReverseDown = new PictureBox();
+            _pictureBoxReverseDown.Image = ((Image)(_resources.GetObject("pictureBoxReverseMouseDown.Image")));
+            _pictureBoxReverseDown.Location = _pictureBoxReverse.Location;
+            _pictureBoxReverseDown.Name = "_pictureBoxReverseOver";
+            _pictureBoxReverseDown.Size = _pictureBoxReverse.Size;
+            _pictureBoxReverseDown.SizeMode = PictureBoxSizeMode.AutoSize;
+            _pictureBoxReverseDown.TabStop = false;
+            _panelcontrols.Controls.Add(_pictureBoxReverseDown);
 
             _pictureBoxFastForward = new PictureBox();
             _pictureBoxFastForward.Image = ((Image)(_resources.GetObject("pictureBoxFastForward.Image")));
-            _pictureBoxFastForward.Location = new Point(570, 1);
+            _pictureBoxFastForward.Location = new Point(571, 1);
             _pictureBoxFastForward.Name = "_pictureBoxFastForward";
-            _pictureBoxFastForward.Size = new Size(18, 13);
+            _pictureBoxFastForward.Size = new Size(17, 13);
             _pictureBoxFastForward.SizeMode = PictureBoxSizeMode.AutoSize;
             _pictureBoxFastForward.TabStop = false;
             _panelcontrols.Controls.Add(_pictureBoxFastForward);
+            _pictureBoxFastForward.MouseEnter += PictureBoxFastForwardMouseEnter;
+
+            _pictureBoxFastForwardOver = new PictureBox();
+            _pictureBoxFastForwardOver.Image = ((Image)(_resources.GetObject("pictureBoxFastForwardMouseOver.Image")));
+            _pictureBoxFastForwardOver.Location = _pictureBoxFastForward.Location;
+            _pictureBoxFastForwardOver.Name = "_pictureBoxFastForwardOver";
+            _pictureBoxFastForwardOver.Size = _pictureBoxFastForward.Size;
+            _pictureBoxFastForwardOver.SizeMode = PictureBoxSizeMode.AutoSize;
+            _pictureBoxFastForwardOver.TabStop = false;
+            _panelcontrols.Controls.Add(_pictureBoxFastForwardOver);
+            _pictureBoxFastForwardOver.MouseLeave += PictureBoxFastForwardOverMouseLeave;
+            _pictureBoxFastForwardOver.MouseDown += PictureBoxFastForwardOverMouseDown;
+            _pictureBoxFastForwardOver.MouseUp += PictureBoxFastForwardOverMouseUp;
+
+            _pictureBoxFastForwardDown = new PictureBox();
+            _pictureBoxFastForwardDown.Image = ((Image)(_resources.GetObject("pictureBoxFastForwardMouseDown.Image")));
+            _pictureBoxFastForwardDown.Location = _pictureBoxFastForward.Location;
+            _pictureBoxFastForwardDown.Name = "_pictureBoxFastForwardDown";
+            _pictureBoxFastForwardDown.Size = _pictureBoxFastForward.Size;
+            _pictureBoxFastForwardDown.SizeMode = PictureBoxSizeMode.AutoSize;
+            _pictureBoxFastForwardDown.TabStop = false;
+            _panelcontrols.Controls.Add(_pictureBoxFastForwardDown);
 
             _labelTimeCode.Location = new Point(280, 29);
             _labelTimeCode.ForeColor = Color.FromArgb(100, 200, 200);
@@ -422,6 +476,8 @@ namespace Nikse.SubtitleEdit.Controls
 
             _pictureBoxBackground.SendToBack();
             _pictureBoxFastForward.BringToFront();
+            _pictureBoxFastForwardDown.BringToFront();
+            _pictureBoxFastForwardOver.BringToFront();
             _pictureBoxPlay.BringToFront();
 
             _panelcontrols.BackColor = _backgroundColor;
@@ -442,7 +498,9 @@ namespace Nikse.SubtitleEdit.Controls
             _panelcontrols.Width = Width;
             _pictureBoxBackground.Width = Width;
             _pictureBoxProgressbarBackground.Width = Width - (_pictureBoxProgressbarBackground.Left * 2);
-            _pictureBoxFastForward.Left = Width - 49;
+            _pictureBoxFastForward.Left = Width - 48;
+            _pictureBoxFastForwardDown.Left = _pictureBoxFastForward.Left;
+            _pictureBoxFastForwardOver.Left = _pictureBoxFastForward.Left;
 
             _labelTimeCode.Left = Width - 170;
         }
@@ -627,6 +685,89 @@ namespace Nikse.SubtitleEdit.Controls
             _pictureBoxMute.Visible = true;
             if (OnButtonClicked != null)
                 OnButtonClicked.Invoke(sender, e);
+        }
+
+        #endregion
+
+        #region Reverse buttons
+        private void HideAllReverseImages()
+        {
+            _pictureBoxReverseOver.Visible = false;
+            _pictureBoxReverseDown.Visible = false;
+            _pictureBoxReverse.Visible = false;
+        }
+
+        private void PictureBoxReverseMouseEnter(object sender, EventArgs e)
+        {
+            HideAllReverseImages();
+            _pictureBoxReverseOver.Visible = true;
+        }
+
+        private void PictureBoxReverseOverMouseLeave(object sender, EventArgs e)
+        {
+            HideAllReverseImages();
+            _pictureBoxReverse.Visible = true;
+        }
+
+        private void PictureBoxReverseOverMouseDown(object sender, MouseEventArgs e)
+        {
+            HideAllReverseImages();
+            _pictureBoxReverseDown.Visible = true;
+            if (VideoPlayer != null)
+            {
+                var newPosition = CurrentPosition - 3.0;
+                if (newPosition < 0)
+                    newPosition = 0;
+                CurrentPosition = newPosition;
+            }
+        }
+
+        private void PictureBoxReverseOverMouseUp(object sender, MouseEventArgs e)
+        {
+            HideAllReverseImages();           
+            _pictureBoxReverse.Visible = true;
+        }
+
+        #endregion
+
+        #region Fast forward buttons
+        private void HideAllFastForwardImages()
+        {
+            _pictureBoxFastForwardOver.Visible = false;
+            _pictureBoxFastForwardDown.Visible = false;
+            _pictureBoxFastForward.Visible = false;
+        }
+
+        private void PictureBoxFastForwardMouseEnter(object sender, EventArgs e)
+        {
+            HideAllFastForwardImages();
+            _pictureBoxFastForwardOver.Visible = true;
+        }
+
+        private void PictureBoxFastForwardOverMouseLeave(object sender, EventArgs e)
+        {
+            HideAllFastForwardImages();
+            _pictureBoxFastForward.Visible = true;
+        }
+
+        private void PictureBoxFastForwardOverMouseDown(object sender, MouseEventArgs e)
+        {
+            HideAllFastForwardImages();
+            _pictureBoxFastForwardDown.Visible = true;
+
+            if (VideoPlayer != null)
+            {
+                var newPosition = CurrentPosition + 3.0;
+                if (newPosition < 0)
+                    newPosition = 0;
+                CurrentPosition = newPosition;
+            }
+        }
+
+        private void PictureBoxFastForwardOverMouseUp(object sender, MouseEventArgs e)
+        {
+            HideAllFastForwardImages();
+            _pictureBoxFastForward.Visible = true;
         }
 
         #endregion
