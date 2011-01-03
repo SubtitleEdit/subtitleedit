@@ -878,7 +878,7 @@
     </EmbeddedResource>
     <None Include="Resources\it-IT.xml" />
     <None Include="Resources\es-ES.xml" />
-    <None Include="Resources\it-IT.xml.zip" />
+    <EmbeddedResource Include="Resources\it-IT.xml.zip" />
     <None Include="Resources\nl-NL.xml" />
     <None Include="Icons\Donate.gif" />
     <None Include="Icons\connect.png" />
