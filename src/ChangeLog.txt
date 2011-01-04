@@ -22,7 +22,7 @@ Subtitle Edit Changelog
    * Moved video controls below subtitle preview (which now displays italic)
    * Fix common ocr errors improed (thx aMvEL, sialivi, Alberto)
  * FIXED:
-   * Wave form: Fix bug with unprecise data (only for some sample rates)
+   * Wave form: Fixed unprecise (out of sync) wave form data (only happened for some sample rates)
    * OCR Fix Engine: Lines after "..." will no longer be changed to start with uppercase letter
    * Missing line break in Sony Dvd Architecht w line numbers (thx Rosa)
    * A minor bug in initialization of waveform (thx Frederic)
