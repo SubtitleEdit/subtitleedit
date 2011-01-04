@@ -11,7 +11,7 @@ Subtitle Edit Changelog
    * Options to choose font color and background color (for list view/text-boxes)
    * Can now import VobSub subtitles embedded in Matroska (.mkv) files (thx mosu for mkv info)
    * Wave form position can be locked at center via new 'Center' button (thx Krystian)
-   * Can insert subtitle after a line in the list view via context menu
+   * Can insert (a whole) subtitle after a line in the list view via context menu
  * IMPROVED:
    * Main window: Video player will now automatically move up beside subtitle if waveform is
      displayed + some resizing of controls allowed via splitters
@@ -22,10 +22,11 @@ Subtitle Edit Changelog
    * Moved video controls below subtitle preview (which now displays italic)
    * Fix common ocr errors improed (thx aMvEL, sialivi, Alberto)
  * FIXED:
+   * Wave form: Fix bug with unprecise data (only for some sample rates)
    * OCR Fix Engine: Lines after "..." will no longer be changed to start with uppercase letter
    * Missing line break in Sony Dvd Architecht w line numbers (thx Rosa)
    * A minor bug in initialization of waveform (thx Frederic)
-   * A minor bug in Visual Sync, if end scene was after video length
+   * A minor bug in Visual Sync, if end scene was after video length (thx tsieberg)
    * Fixed crash with wave form track bar (thx Christian)
    * Fixed several bugs regarding 'large fonts' / higher dpi (thx Radbert)
 
