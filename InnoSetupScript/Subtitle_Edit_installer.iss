@@ -1,6 +1,6 @@
 ;* Subtitle Edit - Installer script
 ;*
-;* Copyright (C) 2010 XhmikosR
+;* Copyright (C) 2010-2011 XhmikosR
 ;*
 ;* This file is part of Subtitle Edit.
 ;*
@@ -49,7 +49,7 @@
 
 [Setup]
 AppID=SubtitleEdit
-AppCopyright=Copyright © 2001-2010, Nikse
+AppCopyright=Copyright © 2001-2011, Nikse
 AppContact={#= app_web_site}
 AppName=Subtitle Edit
 AppVerName=Subtitle Edit v{#= simple_app_version}
@@ -63,7 +63,7 @@ UninstallDisplayIcon={app}\SubtitleEdit.exe
 DefaultDirName={pf}\Subtitle Edit
 DefaultGroupName=Subtitle Edit
 VersionInfoCompany=Nikse
-VersionInfoCopyright=Copyright © 2001-2010, Nikse
+VersionInfoCopyright=Copyright © 2001-2011, Nikse
 VersionInfoDescription=Subtitle Edit v{#= simple_app_version} Setup
 VersionInfoTextVersion={#= simple_app_version}
 VersionInfoVersion={#= simple_app_version}
@@ -101,7 +101,7 @@ Name: dk; MessagesFile: compiler:Languages\Danish.isl
 Name: es; MessagesFile: compiler:Languages\Spanish.isl
 Name: fr; MessagesFile: compiler:Languages\French.isl
 Name: hu; MessagesFile: compiler:Languages\Hungarian.isl
-;Name: it; MessagesFile: compiler:Languages\Italian.isl
+Name: it; MessagesFile: compiler:Languages\Italian.isl
 ;Name: nl; MessagesFile: compiler:Languages\Dutch.isl
 Name: pl; MessagesFile: compiler:Languages\Polish.isl
 Name: ro; MessagesFile: Languages\Romanian.isl
@@ -163,6 +163,7 @@ Source: ..\Tesseract\tesseract.exe; DestDir: {app}\Tesseract; Flags: ignoreversi
 Name: {group}\Subtitle Edit; Filename: {app}\SubtitleEdit.exe; Comment: Subtitle Edit v{#= simple_app_version}; WorkingDir: {app}; AppUserModelID: Nikse.SubtitleEdit; IconFilename: {app}\SubtitleEdit.exe; IconIndex: 0
 Name: {group}\Help and Support\Changelog; Filename: {app}\Changelog.txt; Comment: {cm:sm_com_Changelog}; WorkingDir: {app}
 ;Name: {group}\Help and Support\Readme; Filename: {app}\Readme.txt; Comment: {cm:sm_com_ReadmeFile}; WorkingDir: {app}
+Name: {group}\Help and Support\Online Help; Filename: http://www.nikse.dk/se/Help.aspx; Comment: {cm:sm_com_OnlineHelp}
 Name: {group}\Help and Support\{cm:ProgramOnTheWeb,Subtitle Edit}; Filename: {#= app_web_site}; Comment: {cm:ProgramOnTheWeb,Subtitle Edit}
 Name: {group}\{cm:UninstallProgram,Subtitle Edit}; Filename: {uninstallexe}; IconFilename: {app}\uninstall.ico; Comment: {cm:UninstallProgram,Subtitle Edit}; WorkingDir: {app}
 
@@ -203,7 +204,7 @@ Type: files; Name: {app}\Settings.xml
 
 
 [Run]
-Filename: {app}\SubtitleEdit.exe; Description: {cm:LaunchProgram,Subtitle Edit}; WorkingDir: {app}; Flags: nowait postinstall skipifsilent runascurrentuser
+Filename: {app}\SubtitleEdit.exe; Description: {cm:LaunchProgram,Subtitle Edit}; WorkingDir: {app}; Flags: nowait postinstall skipifsilent runascurrentuser unchecked
 Filename: {#= app_web_site}; Description: {cm:run_VisitWebsite}; Flags: nowait postinstall skipifsilent shellexec runascurrentuser unchecked
 
 
