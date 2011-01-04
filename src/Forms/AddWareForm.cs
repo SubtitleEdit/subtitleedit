@@ -1,17 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Text;
-using System.Windows.Forms;
 using System.Diagnostics;
 using System.IO;
+using System.Windows.Forms;
 using Nikse.SubtitleEdit.Logic;
 
 namespace Nikse.SubtitleEdit.Forms
 {
-    public partial class AddWareForm : Form
+    public sealed partial class AddWareForm : Form
     {
         public string SourceVideoFileName { get; private set; }
         private bool _cancel = false;
@@ -118,7 +113,12 @@ namespace Nikse.SubtitleEdit.Forms
         private void ReadWaveFile(string targetFile)
         {
             WavePeakGenerator waveFile = new WavePeakGenerator(targetFile);
-            waveFile.GeneratePeakSamples(128); // samples per second - SampleRate
+
+            int sampleRate = 126;
+            while (!(waveFile.Header.SampleRate % sampleRate == 0) && sampleRate < 1000)
+                sampleRate++; // old sample-rate / new sample-rate must have rest = 0
+            waveFile.GeneratePeakSamples(sampleRate); // samples per second - SampleRate 
+                                               
             WavePeak = waveFile;
             waveFile.Close();
         }

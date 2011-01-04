@@ -3,15 +3,39 @@ using System.Drawing;
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Logic.VideoPlayers;
 using System.Text;
+using System.Runtime.InteropServices;
 
 namespace Nikse.SubtitleEdit.Controls
 {
     public sealed class VideoPlayerContainer : Panel
     {
+        class RichTextBoxViewOnly : System.Windows.Forms.RichTextBox
+        {
+            public RichTextBoxViewOnly()
+            {
+                base.ReadOnly = true;
+                base.BorderStyle = BorderStyle.None;
+                base.TabStop = false;
+                base.SetStyle(ControlStyles.Selectable, false);
+                base.SetStyle(ControlStyles.UserMouse, true);
+                base.MouseEnter += delegate(object sender, EventArgs e) { this.Cursor = Cursors.Default;  };
+                base.ScrollBars = RichTextBoxScrollBars.None;
+                base.Margin = new System.Windows.Forms.Padding(0);
+                base.TabStop = false;
+            }
+
+            protected override void WndProc(ref Message m)
+            {
+                if (m.Msg == 0x204) return; // WM_RBUTTONDOWN
+                if (m.Msg == 0x205) return; // WM_RBUTTONUP
+                base.WndProc(ref m);
+            }           
+        }
+
         public event EventHandler OnButtonClicked;
         public Panel PanelPlayer { get; private set; }
         private Panel _panelSubtitle;
-        private RichTextBox _subtitleTextBox;
+        private RichTextBoxViewOnly _subtitleTextBox;
         private string _subtitleText = string.Empty;
         private VideoPlayer _videoPlayer;
         public VideoPlayer VideoPlayer
@@ -104,24 +128,49 @@ namespace Nikse.SubtitleEdit.Controls
 
             _pictureBoxProgressBar.Width = 0;
 
-            PanelPlayer.MouseDown += PanelPlayer_MouseDown; 
+            PanelPlayer.MouseDown += PanelPlayer_MouseDown;
+        }
+
+        public void EnableMouseWheelStep()
+        {
+            AddMouseWheelEvent(this);
+        }
+
+        private void AddMouseWheelEvent(Control control)
+        {
+            control.MouseWheel += Control_MouseWheel;
+            foreach (Control ctrl in control.Controls)
+                AddMouseWheelEvent(ctrl);
+        }
+
+        void Control_MouseWheel(object sender, MouseEventArgs e)
+        {
+            int delta = e.Delta;
+            double newPosition = CurrentPosition - (delta / 256.0);
+            if (newPosition < 0)
+                newPosition = 0;
+            else if (newPosition > Duration)
+                newPosition = Duration;
+            CurrentPosition = newPosition;
         }
 
         private Control MakeSubtitlesPanel()
         {
             _panelSubtitle = new Panel { BackColor = _backgroundColor, Left = 0, Top = 0 };
             _panelSubtitle.Height = SubtitlesHeight + 1;
-            _subtitleTextBox = new RichTextBox();
+            _subtitleTextBox = new RichTextBoxViewOnly();
             _panelSubtitle.Controls.Add(_subtitleTextBox);
-            _subtitleTextBox.ReadOnly = true;
-            _subtitleTextBox.ScrollBars = RichTextBoxScrollBars.None;
-            _subtitleTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            _subtitleTextBox.Margin = new System.Windows.Forms.Padding(0);
             _subtitleTextBox.BackColor = _backgroundColor;
             _subtitleTextBox.ForeColor = Color.White;
             _subtitleTextBox.Dock = DockStyle.Fill;
             _subtitleTextBox.Font = new Font("Tahoma", 8, FontStyle.Bold);
+            _subtitleTextBox.MouseClick += SubtitleTextBox_MouseClick;
             return _panelSubtitle;
+        }    
+
+        void SubtitleTextBox_MouseClick(object sender, MouseEventArgs e)
+        {
+            TooglePlayPause();
         }
 
         private static string RemoveSubStationAlphaFormatting(string s)

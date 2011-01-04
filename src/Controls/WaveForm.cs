@@ -996,19 +996,17 @@ namespace Nikse.SubtitleEdit.Controls
         void WaveForm_MouseWheel(object sender, MouseEventArgs e)
         {
             int delta = e.Delta;
+            if (Locked)
             {
-                if (Locked)
-                {
-                    OnPositionSelected.Invoke(_currentVideoPositionSeconds + (-delta / 256.0), null);
-                }
-                else
-                {
-                    StartPositionSeconds -= delta / 256.0;
-                    if (_currentVideoPositionSeconds < StartPositionSeconds || _currentVideoPositionSeconds >= EndPositionSeconds)
-                        OnPositionSelected.Invoke(StartPositionSeconds, null);
-                }
-                Invalidate();
+                OnPositionSelected.Invoke(_currentVideoPositionSeconds + (-delta / 256.0), null);
             }
+            else
+            {
+                StartPositionSeconds -= delta / 256.0;
+                if (_currentVideoPositionSeconds < StartPositionSeconds || _currentVideoPositionSeconds >= EndPositionSeconds)
+                    OnPositionSelected.Invoke(StartPositionSeconds, null);
+            }
+            Invalidate();
         }
 
     }

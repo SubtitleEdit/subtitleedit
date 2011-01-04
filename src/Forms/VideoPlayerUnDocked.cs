@@ -29,7 +29,12 @@ namespace Nikse.SubtitleEdit.Forms
             _mainForm = main;
             _positionsAndSizes = positionsAndSizes;
             _videoPlayerContainer = videoPlayerContainer;
-            Text = title;
+            Text = title;            
+        }
+
+        void VideoPlayerContainer_MouseWheel(object sender, MouseEventArgs e)
+        {
+            MessageBox.Show("Test");
         }
 
         private void VideoPlayerUnDocked_FormClosing(object sender, FormClosingEventArgs e)
@@ -54,36 +59,9 @@ namespace Nikse.SubtitleEdit.Forms
                     WindowState = FormWindowState.Maximized;
                 e.SuppressKeyPress = true;
             }
-            else if (_videoPlayerContainer.VideoPlayer != null)
+            else 
             {
-                if (e.Modifiers == Keys.None && e.KeyCode == Keys.Space)
-                {
-                    if (_videoPlayerContainer.VideoPlayer.IsPlaying)
-                        _videoPlayerContainer.VideoPlayer.Pause();
-                    else
-                        _videoPlayerContainer.VideoPlayer.Play();
-                    e.SuppressKeyPress = true;
-                }
-                else if (e.KeyCode == Keys.Right && e.Modifiers == Keys.Control)
-                {
-                    _videoPlayerContainer.CurrentPosition += 0.10;
-                    e.SuppressKeyPress = true;
-                }
-                else if (e.KeyCode == Keys.Left && e.Modifiers == Keys.Control)
-                {
-                    _videoPlayerContainer.CurrentPosition -= 0.10;
-                    e.SuppressKeyPress = true;
-                }
-                else if (e.KeyCode == Keys.Right && e.Modifiers == Keys.Alt)
-                {
-                    _videoPlayerContainer.CurrentPosition += 0.5;
-                    e.SuppressKeyPress = true;
-                }
-                else if (e.KeyCode == Keys.Left && e.Modifiers == Keys.Alt)
-                {
-                    _videoPlayerContainer.CurrentPosition -= 0.5;
-                    e.SuppressKeyPress = true;
-                }
+            _mainForm.Main_KeyDown(sender, e);
             }
         }
     }
