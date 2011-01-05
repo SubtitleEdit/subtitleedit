@@ -130,6 +130,8 @@
     <ConvertFrameRateOfSubtitle>Konverter antal billeder pr. sekund for undertekst</ConvertFrameRateOfSubtitle>
     <FromFrameRate>Fra antal billeder pr. sekund</FromFrameRate>
     <ToFrameRate>Til antal billeder pr. sekund</ToFrameRate>
+    <FrameRateNotCorrect>Billeder per sekund er ikke korrekt</FrameRateNotCorrect>
+    <FrameRateNotChanged>Antal billeder per sekund er den samme - ikke noget at konvertere</FrameRateNotChanged>
   </ChangeFrameRate>
   <ChooseEncoding>
     <Title>Vælg tegntabel</Title>
@@ -170,12 +172,14 @@
     <AbortedByUser>Afbrudt af bruger</AbortedByUser>
     <ReadingSubtitleData>Læser undertekst data...</ReadingSubtitleData>
     <RippingVobFileXofYZ>Ripper vob fil {1} af {2}: {0}</RippingVobFileXofYZ>
+    <WrongIfoType>IFO type er '{0}' og ikke 'DVD video-VTS «. {1} Prøv en anden fil end {2}</WrongIfoType>
   </DvdSubrip>
   <DvdSubRipChooseLanguage>
     <Title>Vælg sprog</Title>
     <ChooseLanguageStreamId>Vælg sprog (stream-id)</ChooseLanguageStreamId>
     <UnknownLanguage>Ukendt sprog</UnknownLanguage>
     <SubtitleImageXofYAndWidthXHeight>Undertekst billede {0}/{1} - {2} x {3}</SubtitleImageXofYAndWidthXHeight>
+    <SubtitleImage>Undertekst billede</SubtitleImage>
   </DvdSubRipChooseLanguage>
   <EffectKaraoke>
     <Title>Karaoke effekt</Title>
@@ -480,6 +484,7 @@
         <SelectAll>Vælg alle</SelectAll>
         <InsertBefore>Indsæt før</InsertBefore>
         <InsertAfter>Indsæt efter</InsertAfter>
+        <InsertSubtitleAfter>Indsæt undertekst efter denne linje...</InsertSubtitleAfter>
         <Split>Split</Split>
         <MergeSelectedLines>Flet markerede linjer</MergeSelectedLines>
         <MergeWithLineBefore>Flet med linjen før</MergeWithLineBefore>
@@ -726,13 +731,17 @@ Fortsæt?</SubtitleAppendPrompt>
     <BeforeSetStartTimeAndOffsetTheRest>Før sæt start tid og juster resten</BeforeSetStartTimeAndOffsetTheRest>
     <ContinueWithCurrentSpellCheck>Fortsæt med aktuelle stavekontrol?</ContinueWithCurrentSpellCheck>
     <CharactersPerSecond>Bogstav/sek: {0:0.00}</CharactersPerSecond>
+    <GetFrameRateFromVideoFile>Hent frame rate fra video fil</GetFrameRateFromVideoFile>
     <NetworkMessage>Ny meddelelse: {0} ({1}): {2}</NetworkMessage>
     <NetworkUpdate>Linje opdateret: {0} ({1}): Indeks = {2}, Tekst = {3}</NetworkUpdate>
     <NetworkInsert>Linje indsat: {0} ({1}): Indeks = {2}, Tekst = {3}</NetworkInsert>
     <NetworkDelete>Linje slettet: {0} ({1}): Indeks = {2}</NetworkDelete>
     <NetworkNewUser>Ny bruger: {0} ({1})</NetworkNewUser>
     <NetworkByeUser>Bye {0} ({1})</NetworkByeUser>
-    <NetworkUnableToConnectToServer>Stand til at forbinde til serveren: {0}</NetworkUnableToConnectToServer>
+    <NetworkUnableToConnectToServer>Kunne ikke forbinde til serveren: {0}</NetworkUnableToConnectToServer>
+    <UserAndAction>Bruger/handling</UserAndAction>
+    <NetworkMode>Netværk mode on</NetworkMode>
+    <XStartedSessionYAtZ>{0}: Startede session {1} kl. {2}</XStartedSessionYAtZ>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Vælg undertekst fra Matroska fil</Title>
