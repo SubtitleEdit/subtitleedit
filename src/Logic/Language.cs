@@ -210,6 +210,8 @@ namespace Nikse.SubtitleEdit.Logic
                 ConvertFrameRateOfSubtitle = "Convert frame rate of subtitle",
                 FromFrameRate = "From frame rate",
                 ToFrameRate = "To frame rate",
+                FrameRateNotCorrect = "Frame rate is not correct",
+                FrameRateNotChanged = "Frame rate is the same - nothing to convert",
             };
 
             ChooseEncoding = new LanguageStructure.ChooseEncoding
@@ -258,6 +260,7 @@ namespace Nikse.SubtitleEdit.Logic
                 AbortedByUser = "Aborted by user",
                 ReadingSubtitleData = "Reading subtitle data...",
                 RippingVobFileXofYZ = "Ripping vob file {1} of {2}: {0}",
+                WrongIfoType = "IFO type is '{0}' and not 'DVDVIDEO-VTS'.{1}Try another file than {2}",
             };
 
             DvdSubRipChooseLanguage = new LanguageStructure.DvdSubRipChooseLanguage
@@ -266,6 +269,7 @@ namespace Nikse.SubtitleEdit.Logic
                 ChooseLanguageStreamId = "Choose language (stream-id)",
                 UnknownLanguage = "Unknown language",
                 SubtitleImageXofYAndWidthXHeight = "Subtitle image {0}/{1}  -  {2}x{3} ",
+                SubtitleImage = "Subtitle image",
             };
 
             EffectKaraoke = new LanguageStructure.EffectKaraoke
@@ -645,6 +649,7 @@ namespace Nikse.SubtitleEdit.Logic
                 BeforeSetStartTimeAndOffsetTheRest = "Before set start time and offset the rest",
                 ContinueWithCurrentSpellCheck = "Continue with current spell check?",
                 CharactersPerSecond = "Chars/sec: {0:0.00}",
+                GetFrameRateFromVideoFile =  "Get frame rate from video file",
                 NetworkMessage = "New message: {0} ({1}): {2}",
                 NetworkUpdate = "Line updated: {0} ({1}): Index={2}, Text={3}",                
                 NetworkInsert = "Line inserted: {0} ({1}): Index={2}, Text={3}",                
@@ -652,6 +657,9 @@ namespace Nikse.SubtitleEdit.Logic
                 NetworkNewUser = "New user: {0} ({1})",
                 NetworkByeUser = "Bye {0} ({1})",
                 NetworkUnableToConnectToServer = "Unable to connect to server: {0}",
+                NetworkMode = "Networking mode",
+                UserAndAction = "User/action",
+                XStartedSessionYAtZ = "{0}: Started session {1} at {2}",
 
                 Menu = new LanguageStructure.Main.MainMenu
                 {

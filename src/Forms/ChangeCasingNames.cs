@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Logic;
-using System.Drawing;
 
 namespace Nikse.SubtitleEdit.Forms
 {
-    public partial class ChangeCasingNames : Form
+    public sealed partial class ChangeCasingNames : Form
     {
         readonly List<string> _usedNames = new List<string>();
         Subtitle _subtitle;
@@ -16,7 +16,7 @@ namespace Nikse.SubtitleEdit.Forms
         public ChangeCasingNames()
         {
             InitializeComponent();
-
+            Text = Configuration.Settings.Language.ChangeCasingNames.Title;
             groupBoxNames.Text = string.Empty;
             listViewNames.Columns[0].Text = Configuration.Settings.Language.ChangeCasingNames.Enabled;
             listViewNames.Columns[1].Text = Configuration.Settings.Language.ChangeCasingNames.Name;
