@@ -208,7 +208,7 @@ namespace Nikse.SubtitleEdit.Forms
             return InitializeSubIdx(vobSubFileName);
         }
 
-        internal void Initialize(List<VobSubMergedPack> vobSubMergedPackist, List<Color> palette, VobSubOcrSettings vobSubOcrSettings)
+        internal void Initialize(List<VobSubMergedPack> vobSubMergedPackist, List<Color> palette, VobSubOcrSettings vobSubOcrSettings, string languageString)
         {
             buttonOK.Enabled = false;
             buttonCancel.Enabled = false;
@@ -239,6 +239,8 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (_palette == null)
                 checkBoxCustomFourColors.Checked = true;
+
+            SetTesseractLanguageFromLanguageString(languageString);
         }
 
         internal void Initialize(List<Logic.BluRaySup.BluRaySupPicture> subtitles, VobSubOcrSettings vobSubOcrSettings)
@@ -370,6 +372,9 @@ namespace Nikse.SubtitleEdit.Forms
                 if (ChooseLanguage.ShowDialog(this) == System.Windows.Forms.DialogResult.OK)
                 {
                     _vobSubMergedPackist = ChooseLanguage.SelectedVobSubMergedPacks;
+
+                    SetTesseractLanguageFromLanguageString(ChooseLanguage.SelectedLanguageString);
+
                 }
                 else
                 {
@@ -377,6 +382,84 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
             return true;
+        }
+
+        private void SetTesseractLanguageFromLanguageString(string languageString)
+        {
+            // try to match language from vob to tesseract language
+            if (comboBoxTesseractLanguages.SelectedIndex >= 0 && comboBoxTesseractLanguages.Items.Count > 1 && languageString != null)
+            {
+                languageString = languageString.ToLower();
+                for (int i = 0; i < comboBoxTesseractLanguages.Items.Count; i++)
+                {
+                    TesseractLanguage tl = (comboBoxTesseractLanguages.Items[i] as TesseractLanguage);
+                    if (tl.Text.StartsWith("Chinese") && (languageString.StartsWith("chinese") || languageString.StartsWith("中文")))
+                    {
+                        comboBoxTesseractLanguages.SelectedIndex = i;
+                        break;
+                    }
+                    if (tl.Text.StartsWith("Korean") && (languageString.StartsWith("korean") || languageString.StartsWith("한국어")))
+                    {
+                        comboBoxTesseractLanguages.SelectedIndex = i;
+                        break;
+                    }
+                    else if (tl.Text.StartsWith("Swedish") && languageString.StartsWith("svenska"))
+                    {
+                        comboBoxTesseractLanguages.SelectedIndex = i;
+                        break;
+                    }
+                    else if (tl.Text.StartsWith("Norwegian") && languageString.StartsWith("norsk"))
+                    {
+                        comboBoxTesseractLanguages.SelectedIndex = i;
+                        break;
+                    }
+                    else if (tl.Text.StartsWith("Dutch") && languageString.StartsWith("Nederlands"))
+                    {
+                        comboBoxTesseractLanguages.SelectedIndex = i;
+                        break;
+                    }
+                    else if (tl.Text.StartsWith("Danish") && languageString.StartsWith("dansk"))
+                    {
+                        comboBoxTesseractLanguages.SelectedIndex = i;
+                        break;
+                    }
+                    else if (tl.Text.StartsWith("English") && languageString.StartsWith("english"))
+                    {
+                        comboBoxTesseractLanguages.SelectedIndex = i;
+                        break;
+                    }
+                    else if (tl.Text.StartsWith("French") && (languageString.StartsWith("french") || languageString.StartsWith("français")))
+                    {
+                        comboBoxTesseractLanguages.SelectedIndex = i;
+                        break;
+                    }
+                    else if (tl.Text.StartsWith("Spannish") && (languageString.StartsWith("spannish") || languageString.StartsWith("españo")))
+                    {
+                        comboBoxTesseractLanguages.SelectedIndex = i;
+                        break;
+                    }
+                    else if (tl.Text.StartsWith("Finnish") && languageString.StartsWith("suomi"))
+                    {
+                        comboBoxTesseractLanguages.SelectedIndex = i;
+                        break;
+                    }
+                    else if (tl.Text.StartsWith("Italian") && languageString.StartsWith("itali"))
+                    {
+                        comboBoxTesseractLanguages.SelectedIndex = i;
+                        break;
+                    }
+                    else if (tl.Text.StartsWith("German") && languageString.StartsWith("deutsch"))
+                    {
+                        comboBoxTesseractLanguages.SelectedIndex = i;
+                        break;
+                    }
+                    else if (tl.Text.StartsWith("Portuguese") && languageString.StartsWith("português"))
+                    {
+                        comboBoxTesseractLanguages.SelectedIndex = i;
+                        break;
+                    }
+                }
+            }
         }
 
         private void LoadBluRaySup()

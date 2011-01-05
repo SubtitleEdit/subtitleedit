@@ -27,8 +27,10 @@ namespace Nikse.SubtitleEdit.Forms
 
         List<VobSubMergedPack> _mergedVobSubPacks;
         List<Color> _palette;
+        List<string> _languages;
 
         public List<VobSubMergedPack> SelectedVobSubMergedPacks { get; private set; }
+        public string SelectedLanguageString { get; private set; }
         
         public DvdSubRipChooseLanguage()
         {
@@ -38,6 +40,7 @@ namespace Nikse.SubtitleEdit.Forms
             buttonOK.Text = Configuration.Settings.Language.General.OK;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
             FixLargeFonts();
+            groupBoxImage.Text = Configuration.Settings.Language.DvdSubRipChooseLanguage.SubtitleImage;
         }
 
         private void FixLargeFonts()
@@ -82,6 +85,8 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (comboBoxLanguages.Items.Count > 0 && comboBoxLanguages.SelectedIndex < 0)
                 comboBoxLanguages.SelectedIndex = 0;
+
+            _languages = languages;
         }
 
         private static string ShowInSrtFormat(TimeSpan ts)
@@ -142,6 +147,11 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (listBox1.Items.Count > -1)
             {
+                if (_languages != null && comboBoxLanguages.SelectedIndex >= 0 && comboBoxLanguages.SelectedIndex < _languages.Count)
+                    SelectedLanguageString = _languages[comboBoxLanguages.SelectedIndex];
+                else
+                    SelectedLanguageString = null;
+
                 SelectedVobSubMergedPacks = new List<VobSubMergedPack>();
                 foreach (var x in listBox1.Items)
                 {

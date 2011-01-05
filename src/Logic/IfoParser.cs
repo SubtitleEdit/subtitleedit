@@ -117,7 +117,7 @@ namespace Nikse.SubtitleEdit.Logic
                 string id = Encoding.UTF8.GetString(buffer);
                 if (id != "DVDVIDEO-VTS")
                 {
-                    ErrorMessage = string.Format("IFO type is '{0}' and not 'DVDVIDEO-VTS'.{1}Try another file than {2}",  id, Environment.NewLine, fileName);
+                    ErrorMessage = string.Format(Configuration.Settings.Language.DvdSubrip.WrongIfoType,  id, Environment.NewLine, fileName);
                     return;
                 }                
                 ParseVtsVobs();

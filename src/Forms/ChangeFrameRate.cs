@@ -90,11 +90,11 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (comboBoxFrameRateFrom.Text.Trim() == comboBoxFrameRateTo.Text.Trim())
             {
-                MessageBox.Show("Frame rate is the same - nothing to convert");
+                MessageBox.Show(Configuration.Settings.Language.ChangeFrameRate.FrameRateNotChanged);
             }
             else
             {
-                MessageBox.Show("Frame rate not entered correctly");
+                MessageBox.Show(Configuration.Settings.Language.ChangeFrameRate.FrameRateNotCorrect);
             }
         }
 

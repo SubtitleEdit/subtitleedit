@@ -146,13 +146,8 @@ namespace Nikse.SubtitleEdit.Forms
         {
             try
             {
-                //                MessageBox.Show("Test1");
                 InitializeComponent();
-
-                //                MessageBox.Show("Test2");
                 SetLanguage(Configuration.Settings.General.Language);
-                //                MessageBox.Show("Test3");
-
                 toolStripStatusNetworking.Visible = false;
                 labelTextLineLengths.Text = string.Empty;
                 labelCharactersPerSecond.Text = string.Empty;
@@ -167,7 +162,6 @@ namespace Nikse.SubtitleEdit.Forms
                 checkBoxSyncListViewWithVideoWhilePlaying.Checked = Configuration.Settings.General.SyncListViewWithVideoWhilePlaying;
 
                 SetFormatToSubRip();
-                //                MessageBox.Show("Test4");
 
                 if (Configuration.Settings.General.DefaultEncoding == "ANSI")
                 {
@@ -185,12 +179,10 @@ namespace Nikse.SubtitleEdit.Forms
                 toolStripComboBoxFrameRate.Items.Add((29.97).ToString());
                 toolStripComboBoxFrameRate.Text = Configuration.Settings.General.DefaultFrameRate.ToString();
 
-                //MessageBox.Show("Test5");
                 UpdateRecentFilesUI();
                 InitializeToolbar();
                 Utilities.InitializeSubtitleFont(textBoxSource);
                 Utilities.InitializeSubtitleFont(textBoxListViewText);
-//                MessageBox.Show("Test6");
 
 
                 tabControlSubtitle.SelectTab(TabControlSourceView); // AC
@@ -198,7 +190,6 @@ namespace Nikse.SubtitleEdit.Forms
                 tabControlSubtitle.SelectTab(TabControlListView);   // AC
                 if (Configuration.Settings.General.StartInSourceView)
                     tabControlSubtitle.SelectTab(TabControlSourceView);
-//                MessageBox.Show("Test7");
 
 
                 AudioWaveForm.Visible = Configuration.Settings.General.ShowWaveForm;
@@ -207,7 +198,6 @@ namespace Nikse.SubtitleEdit.Forms
                 toolStripButtonToogleWaveForm.Checked = Configuration.Settings.General.ShowWaveForm;
                 toolStripButtonToogleVideo.Checked = Configuration.Settings.General.ShowVideoPlayer;
 
-//                MessageBox.Show("Test8");
                 string fileName = string.Empty;
                 string[] args = Environment.GetCommandLineArgs();
                 if (args.Length >= 2)
@@ -230,8 +220,6 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
 
-//                MessageBox.Show("Test9");
-                //timeUpDownStartTime.MaskedTextBox.TextChanged += MaskedTextBox_TextChanged;
                 labelAutoDuration.Visible = false;
                 mediaPlayer.SubtitleText = string.Empty;                
                 comboBoxAutoRepeat.SelectedIndex = 2;
@@ -4218,7 +4206,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }                
 
                 var formSubOcr = new VobSubOcr();
-                formSubOcr.Initialize(mergedVobSubPacks, idx.Palette, Configuration.Settings.VobSubOcr);
+                formSubOcr.Initialize(mergedVobSubPacks, idx.Palette, Configuration.Settings.VobSubOcr, null); //TODO - language???
                 if (formSubOcr.ShowDialog(this) == DialogResult.OK)
                 {
                     ResetSubtitle();
@@ -5342,10 +5330,13 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     var showSubtitles = new DvdSubRipChooseLanguage();
                     showSubtitles.Initialize(formSubRip.MergedVobSubPacks, formSubRip.Palette, formSubRip.Languages, formSubRip.SelectedLanguage);
-                    if (showSubtitles.ShowDialog(this) == DialogResult.OK)
+                    if (formSubRip.Languages.Count == 1 || showSubtitles.ShowDialog(this) == DialogResult.OK)
                     {
                         var formSubOcr = new VobSubOcr();
-                        formSubOcr.Initialize(showSubtitles.SelectedVobSubMergedPacks, formSubRip.Palette, Configuration.Settings.VobSubOcr);
+                        var subs = formSubRip.MergedVobSubPacks;
+                        if (showSubtitles.SelectedVobSubMergedPacks != null)
+                            subs = showSubtitles.SelectedVobSubMergedPacks;
+                        formSubOcr.Initialize(subs, formSubRip.Palette, Configuration.Settings.VobSubOcr, formSubRip.SelectedLanguage);
                         if (formSubOcr.ShowDialog(this) == DialogResult.OK)
                         {
                             MakeHistoryForUndo(_language.BeforeImportingDvdSubtitle);
@@ -7389,11 +7380,11 @@ namespace Nikse.SubtitleEdit.Forms
             networkNew.Initialize(_networkSession, _fileName);
             if (networkNew.ShowDialog(this) == DialogResult.OK)
             { 
-                _networkSession.AppendToLog(_networkSession.CurrentUser.UserName + ": Started session " + _networkSession.SessionId + " at " + DateTime.Now.ToLongTimeString());
+                _networkSession.AppendToLog(string.Format(_language.XStartedSessionYAtZ, _networkSession.CurrentUser.UserName, _networkSession.SessionId, DateTime.Now.ToLongTimeString()));
                 toolStripStatusNetworking.Visible = true;
-                toolStripStatusNetworking.Text = "Network mode";
+                toolStripStatusNetworking.Text = _language.NetworkMode;
                 EnableDisableControlsNotWorkingInNetworkMode(false);
-                SubtitleListview1.ShowExtraColumn("User/action");
+                SubtitleListview1.ShowExtraColumn(_language.UserAndAction);
             }
             else
             {

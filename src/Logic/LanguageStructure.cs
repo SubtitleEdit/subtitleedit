@@ -140,6 +140,8 @@
             public string ConvertFrameRateOfSubtitle { get; set; }
             public string FromFrameRate { get; set; }
             public string ToFrameRate { get; set; }
+            public string FrameRateNotCorrect { get; set; }
+            public string FrameRateNotChanged { get; set; }
         }
 
         public class ChooseEncoding
@@ -188,6 +190,7 @@
             public string AbortedByUser { get; set; }
             public string ReadingSubtitleData { get; set; }
             public string RippingVobFileXofYZ { get; set; }
+            public string WrongIfoType { get; set; }
         }
 
         public class DvdSubRipChooseLanguage
@@ -196,6 +199,7 @@
             public string ChooseLanguageStreamId { get; set; }
             public string UnknownLanguage { get; set; }
             public string SubtitleImageXofYAndWidthXHeight { get; set; }
+            public string SubtitleImage { get; set; }
         }
 
         public class EffectKaraoke
@@ -574,6 +578,7 @@
             public string BeforeSetStartTimeAndOffsetTheRest { get; set; }
             public string ContinueWithCurrentSpellCheck { get; set; }
             public string CharactersPerSecond { get; set; }
+            public string GetFrameRateFromVideoFile { get; set; }
             public string NetworkMessage { get; set; }
             public string NetworkUpdate { get; set; }
             public string NetworkInsert { get; set; }
@@ -581,6 +586,9 @@
             public string NetworkNewUser { get; set; }
             public string NetworkByeUser { get; set; }
             public string NetworkUnableToConnectToServer { get; set; }
+            public string UserAndAction { get; set; }
+            public string NetworkMode { get; set; }
+            public string XStartedSessionYAtZ { get; set; }
             
             public class MainMenu
             {
@@ -815,6 +823,7 @@
 
                 public string Center { get; set; }
             }
+
         }
 
         public class MatroskaSubtitleChooser
