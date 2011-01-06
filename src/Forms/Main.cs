@@ -7414,6 +7414,7 @@ namespace Nikse.SubtitleEdit.Forms
                 toolStripStatusNetworking.Text = _language.NetworkMode;
                 EnableDisableControlsNotWorkingInNetworkMode(false);
                 SubtitleListview1.ShowExtraColumn(_language.UserAndAction);
+                TimerWebServiceTick(null, null);
             }
             else
             {
@@ -7446,6 +7447,7 @@ namespace Nikse.SubtitleEdit.Forms
                 SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
                 SubtitleListview1.SelectIndexAndEnsureVisible(0);
                 _change = true;
+                TimerWebServiceTick(null, null);
             }
             else
             {

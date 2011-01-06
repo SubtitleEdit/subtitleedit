@@ -372,6 +372,21 @@ namespace Nikse.SubtitleEdit.Controls
             if (IsExtraColumnVisible)
             {
                 IsExtraColumnVisible = false;
+
+                if (IsAlternateTextColumnVisible)
+                    ColumnIndexExtra = ColumnIndexTextAlternate + 1;
+                else
+                    ColumnIndexExtra = ColumnIndexTextAlternate;
+
+                for (int i = 0; i < Items.Count; i++)
+                {
+                    if (Items[i].SubItems.Count == ColumnIndexExtra + 1)
+                    {
+                        Items[i].SubItems[ColumnIndexExtra].Text = string.Empty;
+                        Items[i].SubItems[ColumnIndexExtra].BackColor = this.BackColor;
+                        Items[i].SubItems[ColumnIndexExtra].ForeColor = this.ForeColor;
+                    }
+                }
                 Columns.RemoveAt(ColumnIndexExtra);
                 SubtitleListView_Resize(null, null);
             }
