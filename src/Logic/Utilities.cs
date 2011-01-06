@@ -271,7 +271,7 @@ namespace Nikse.SubtitleEdit.Logic
 
         public static string AutoBreakLine(string text, int mininumLength)
         {
-            if (text.Length < 5)
+            if (text.Length < mininumLength)
                 return text;
 
             string temp = RemoveHtmlTags(text);

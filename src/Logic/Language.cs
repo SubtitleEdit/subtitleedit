@@ -50,6 +50,7 @@ namespace Nikse.SubtitleEdit.Logic
         public LanguageStructure.ShowEarlierLater ShowEarlierLater;
         public LanguageStructure.ShowHistory ShowHistory;
         public LanguageStructure.SpellCheck SpellCheck;
+        public LanguageStructure.SplitLongLines SplitLongLines;
         public LanguageStructure.SplitSubtitle SplitSubtitle;
         public LanguageStructure.StartNumberingFrom StartNumberingFrom;
         public LanguageStructure.PointSync PointSync;
@@ -636,6 +637,7 @@ namespace Nikse.SubtitleEdit.Logic
                 UnicodeMusicSymbolsAnsiWarning = "Subtitle contains unicode music notes. Saving using ANSI file encoding will lose these. Continue with saving?",
                 NegativeTimeWarning = "Subtitle contains negative time codes. Continue with saving?",
                 BeforeMergeShortLines = "Before merge short lines",
+                BeforeSplitLongLines = "Before split long lines",
                 MergedShortLinesX = "Number of lines merged: {0}",
                 BeforeSetMinimumDisplayTimeBetweenParagraphs = "Before set minimum display time between paragraphs",
                 XMinimumDisplayTimeBetweenParagraphsChanged = "Number of lines with minimum display time between paragraphs changed: {0}",
@@ -707,6 +709,7 @@ namespace Nikse.SubtitleEdit.Logic
                         ChangeCasing = "Change casing...",
                         ChangeFrameRate = "Change frame rate...",
                         MergeShortLines = "Merge short lines...",
+                        SplitLongLines = "Split long lines...",
                         MinimumDisplayTimeBetweenParagraphs = "Minimum display time between paragraphs...",
                         SortBy = "Sort by",
                         TextAlphabetically = "Text - alphabetically",
@@ -1155,6 +1158,17 @@ can edit in same subtitle file (collaboration)",
                 ImageText = "Image text",
                 SpellCheckCompleted ="Spell check completed.",
                 SpellCheckAborted = "Spell check aborted",
+            };
+
+            SplitLongLines = new LanguageStructure.SplitLongLines
+            {
+                Title = "Split long lines",
+                SingleLineMaximumLength = "Single line maximum length",
+                LineMaximumLength = "Line maximum length",
+                LineContinuationBeginEndStrings = "Line continuation begin/end strings",
+                NumberOfSplits = "Number of splits: {0}",
+                LongestSingleLineIsXAtY = "Longest single line length is {0} at line {1}",
+                LongestLineIsXAtY = "Longest total line length is {0} at line {1}",                                                
             };
 
             SplitSubtitle = new LanguageStructure.SplitSubtitle

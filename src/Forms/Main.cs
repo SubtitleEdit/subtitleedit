@@ -500,6 +500,7 @@ namespace Nikse.SubtitleEdit.Forms
             toolStripMenuItemCompare.Text = _language.Menu.File.Compare;
             toolStripMenuItemImportDvdSubtitles.Text = _language.Menu.File.ImportOcrFromDvd;
             toolStripMenuItemSubIdx.Text = _language.Menu.File.ImportOcrVobSubSubtitle;
+            toolStripButtonGetFrameRate.ToolTipText = _language.GetFrameRateFromVideoFile;
 
             toolStripMenuItemImportBluRaySup.Text = _language.Menu.File.ImportBluRaySupFile;
 
@@ -529,6 +530,7 @@ namespace Nikse.SubtitleEdit.Forms
             ChangeCasingToolStripMenuItem.Text = _language.Menu.Tools.ChangeCasing;
             toolStripMenuItemChangeFramerate.Text = _language.Menu.Tools.ChangeFrameRate;
             toolStripMenuItemAutoMergeShortLines.Text = _language.Menu.Tools.MergeShortLines;
+            toolStripMenuItemAutoSplitLongLines.Text = _language.Menu.Tools.SplitLongLines;
             setMinimumDisplayTimeBetweenParagraphsToolStripMenuItem.Text = _language.Menu.Tools.MinimumDisplayTimeBetweenParagraphs;
             toolStripMenuItem1.Text = _language.Menu.Tools.SortBy;
             sortNumberToolStripMenuItem.Text = _languageGeneral.Number;
@@ -5479,6 +5481,33 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
+        private void toolStripMenuItemAutoSplitLongLines_Click(object sender, EventArgs e)
+        {
+            if (_subtitle != null && _subtitle.Paragraphs.Count > 1)
+            {
+                ReloadFromSourceView();
+                var splitLongLines = new SplitLongLines();
+                _formPositionsAndSizes.SetPositionAndSize(splitLongLines);
+                splitLongLines.Initialize(_subtitle);
+                if (splitLongLines.ShowDialog(this) == DialogResult.OK)
+                {
+                    MakeHistoryForUndo(_language.BeforeMergeShortLines);
+                    _subtitle = splitLongLines.SplittedSubtitle;
+                    ShowStatus(string.Format(_language.MergedShortLinesX, splitLongLines.NumberOfSplits));
+                    SaveSubtitleListviewIndexes();
+                    ShowSource();
+                    SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
+                    RestoreSubtitleListviewIndexes();
+                    _change = true;
+                }
+                _formPositionsAndSizes.SavePositionAndSize(splitLongLines);
+            }
+            else
+            {
+                MessageBox.Show(_language.NoSubtitleLoaded, Title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+        }
+
         private void setMinimalDisplayTimeDifferenceToolStripMenuItem_Click(object sender, EventArgs e)
         {
             SetMinimumDisplayTimeBetweenParagraphs setMinDisplayDiff = new SetMinimumDisplayTimeBetweenParagraphs();
@@ -8024,7 +8053,7 @@ namespace Nikse.SubtitleEdit.Forms
                     RestoreSubtitleListviewIndexes();
                 }
             }
-        }
+        }        
 
     }
 }
