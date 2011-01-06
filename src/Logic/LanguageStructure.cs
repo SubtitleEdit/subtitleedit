@@ -565,6 +565,7 @@
             public string UnicodeMusicSymbolsAnsiWarning { get; set; }
             public string NegativeTimeWarning { get; set; }
             public string BeforeMergeShortLines { get; set; }
+            public string BeforeSplitLongLines { get; set; }
             public string MergedShortLinesX { get; set; }
             public string BeforeSetMinimumDisplayTimeBetweenParagraphs { get; set; }
             public string XMinimumDisplayTimeBetweenParagraphsChanged { get; set; }
@@ -634,6 +635,7 @@
                     public string ChangeCasing { get; set; }
                     public string ChangeFrameRate { get; set; }
                     public string MergeShortLines { get; set; }
+                    public string SplitLongLines { get; set; }
                     public string MinimumDisplayTimeBetweenParagraphs { get; set; }
                     public string SortBy { get; set; }
                     public string TextAlphabetically { get; set; }
@@ -840,7 +842,6 @@
             public string MaximumMillisecondsBetween { get; set; }
             public string NumberOfMergesX { get; set; }
             public string LineNumber { get; set; }
-
             public string MergedText { get; set; }
         }
 
@@ -1092,6 +1093,17 @@
             public string ImageText { get; set; }
             public string SpellCheckCompleted { get; set; }
             public string SpellCheckAborted { get; set; }
+        }
+
+        public class SplitLongLines
+        {
+            public string Title { get; set; }
+            public string SingleLineMaximumLength { get; set; }
+            public string LineMaximumLength { get; set; }
+            public string LineContinuationBeginEndStrings { get; set; }
+            public string NumberOfSplits { get; set; }
+            public string LongestSingleLineIsXAtY { get; set; }
+            public string LongestLineIsXAtY { get; set; }
         }
 
         public class SplitSubtitle

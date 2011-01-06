@@ -408,6 +408,7 @@
         <ChangeCasing>Skift store/små bogstaver...</ChangeCasing>
         <ChangeFrameRate>Skift frame rate...</ChangeFrameRate>
         <MergeShortLines>Flet korte linjer...</MergeShortLines>
+        <SplitLongLines>Split lange linjer...</SplitLongLines>
         <MinimumDisplayTimeBetweenParagraphs>Minimum visningstid mellem tekster...</MinimumDisplayTimeBetweenParagraphs>
         <SortBy>Sorter efter</SortBy>
         <TextAlphabetically>Tekst - alfabetisk</TextAlphabetically>
@@ -718,6 +719,7 @@ Fortsæt?</SubtitleAppendPrompt>
     <UnicodeMusicSymbolsAnsiWarning>Undertekst indeholder unicode tegn. Gemmes i ANSI filformat vil disse gå tabt. Fortsæt?</UnicodeMusicSymbolsAnsiWarning>
     <NegativeTimeWarning>Undertekst indeholder negative tidskoder. Gem?</NegativeTimeWarning>
     <BeforeMergeShortLines>Før fusionere korte linjer</BeforeMergeShortLines>
+    <BeforeSplitLongLines>Før split lange linjer</BeforeSplitLongLines>
     <MergedShortLinesX>Antal linjer fusionerede: {0}</MergedShortLinesX>
     <BeforeSetMinimumDisplayTimeBetweenParagraphs>Før ret minimum visningstid mellem tekster</BeforeSetMinimumDisplayTimeBetweenParagraphs>
     <XMinimumDisplayTimeBetweenParagraphsChanged>Antallet af linjer med minimum visningstid mellem tekster ændret: {0}</XMinimumDisplayTimeBetweenParagraphsChanged>
@@ -982,6 +984,15 @@ Fortsæt?</SubtitleAppendPrompt>
     <SpellCheckCompleted>Stavekontrol færdig</SpellCheckCompleted>
     <SpellCheckAborted>Stavekontrol afbrudt</SpellCheckAborted>
   </SpellCheck>
+  <SplitLongLines>
+    <Title>Split lange linjer</Title>
+    <SingleLineMaximumLength>Enkelt linje maksimale længde</SingleLineMaximumLength>
+    <LineMaximumLength>Line maksimale længde</LineMaximumLength>
+    <LineContinuationBeginEndStrings>Line fortsæt begynd/slut tekst</LineContinuationBeginEndStrings>
+    <NumberOfSplits>Antal splits: {0}</NumberOfSplits>
+    <LongestSingleLineIsXAtY>Længste enkelt linje længde er {0} på linie {1}</LongestSingleLineIsXAtY>
+    <LongestLineIsXAtY>Længste samlet linjelængde er {0} på linie {1}</LongestLineIsXAtY>
+  </SplitLongLines>
   <SplitSubtitle>
     <Title>Split undertekst</Title>
     <Description1>Indtast længden af første del af video-eller browse</Description1>
