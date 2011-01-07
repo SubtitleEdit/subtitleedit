@@ -32,6 +32,21 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         {
             var subtitle = new Subtitle();
             LoadSubtitle(subtitle, lines, fileName);
+
+            if (subtitle.Paragraphs.Count > 4)
+            {
+                bool allStartWithNumber = true;
+                foreach (Paragraph p in subtitle.Paragraphs)
+                {
+                    if (p.Text.Length > 1  && !Utilities.IsInteger(p.Text.Substring(0, 2)))
+                    {
+                        allStartWithNumber = false;
+                        break;
+                    }
+                }
+                if (allStartWithNumber)
+                    return false;
+            }
             return subtitle.Paragraphs.Count > _errorCount;
         }
 

@@ -963,8 +963,8 @@ namespace Nikse.SubtitleEdit.Forms
                         _oldSubtitleFormat = ebu;
                         SetFormatToSubRip();
                         justConverted = true;
+                        format = GetCurrentSubtitleFormat();
                     }
-                    format = GetCurrentSubtitleFormat();
                 }
 
                 _fileDateTime = File.GetLastWriteTime(fileName);

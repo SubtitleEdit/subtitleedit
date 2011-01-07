@@ -15,13 +15,16 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 return new List<SubtitleFormat>
                 {
                     new SubRip(),
+                    new AdobeEncore(),
                     new DvdStudioPro(),
                     new DvdSubtitle(),
 //                    new Ebu(),
                     new MicroDvd(),
                     new MPlayer2(),
                     new OpenDvt(),
+                    new PinnacleImpression(),
                     new QuickTimeText(),
+                    new RealTime(),
                     new SonyDVDArchitect(),
                     new SonyDVDArchitectWithLineNumbers(),
                     new SubStationAlpha(),
