@@ -574,19 +574,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (noOfShortDisplayTimes > 0)
                 LogStatus(fixAction, string.Format(_language.XDisplayTimesProlonged, noOfShortDisplayTimes));
         }
-
-        public static int CountTagInText(string text, string tag)
-        {
-            int count = 0;
-            int index = text.IndexOf(tag);
-            while (index >= 0)
-            {
-                count++;
-                index = text.IndexOf(tag, index + 1);
-            }
-            return count;
-        }
-    
+   
         public void FixInvalidItalicTags()
         {
             const string beginTag = "<i>";
@@ -598,100 +586,18 @@ namespace Nikse.SubtitleEdit.Forms
                 string text = _subtitle.Paragraphs[i].Text.Replace(beginTag.ToUpper(), beginTag).Replace(endTag.ToUpper(), endTag);
                 string oldText = text;
 
-                text = text.Replace("< i>", beginTag);
-                text = text.Replace("<i >", beginTag);
-                text = text.Replace("< I>", beginTag);
-                text = text.Replace("<I >", beginTag);
-
-                text = text.Replace("< /i>", endTag);
-                text = text.Replace("</ i>", endTag);
-                text = text.Replace("< /i>", endTag);
-                text = text.Replace("< /I>", endTag);
-                text = text.Replace("</ I>", endTag);
-                text = text.Replace("< /I>", endTag);
-
-                if (text.Contains(beginTag))
-                    text = text.Replace("<i/>", endTag);
-                else
-                    text = text.Replace("<i/>", string.Empty);
-
-                text = text.Replace(beginTag + beginTag, beginTag);
-                text = text.Replace(endTag + endTag, endTag);
-
-                int italicBeginTagCount = CountTagInText(text, beginTag);
-                int italicEndTagCount = CountTagInText(text, endTag);
-                int noOfLines = CountTagInText(text, Environment.NewLine) + 1;
-                if (italicBeginTagCount + italicEndTagCount > 0)
+                text = Utilities.FixInvalidItalicTags(text);
+                if (text != oldText)
                 {
-                    if (italicBeginTagCount == 1 && italicEndTagCount == 1)
+                    if (AllowFix(i + 1, fixAction))
                     {
-                        if (text.IndexOf(beginTag) > text.IndexOf(endTag))
-                        {
-                            text = text.Replace(beginTag, "___________@");
-                            text = text.Replace(endTag, beginTag);
-                            text = text.Replace("___________@", endTag);
-                        }
-                    }
-
-                    if (italicBeginTagCount == 2 && italicEndTagCount == 0)
-                    {
-                        int firstIndex = text.IndexOf(beginTag);
-                        int lastIndex = text.LastIndexOf(beginTag);
-                        int lastIndexWithNewLine = text.LastIndexOf(Environment.NewLine+ beginTag) + Environment.NewLine.Length;
-                        if (noOfLines == 2 && lastIndex == lastIndexWithNewLine && firstIndex < 2)
-                            text = text.Replace(Environment.NewLine, "</i>" + Environment.NewLine) + "</i>";
-                        else if (text.Length > lastIndex + endTag.Length)
-                            text = text.Substring(0, lastIndex) + endTag + text.Substring(lastIndex -1 + endTag.Length);
-                        else
-                            text = text.Substring(0, lastIndex) + endTag;
-                    }
-
-                    if (italicBeginTagCount == 1 && italicEndTagCount == 2)
-                    {
-                        int firstIndex = text.IndexOf(endTag);
-                        text = text.Substring(0, firstIndex - 1) + text.Substring(firstIndex + endTag.Length);
-                    }
-
-                    if (italicBeginTagCount == 2 && italicEndTagCount == 1)
-                    {
-                        int lastIndex = text.LastIndexOf(beginTag);
-                        if (text.Length > lastIndex + endTag.Length)
-                            text = text.Substring(0, lastIndex) + text.Substring(lastIndex - 1 + endTag.Length);
-                        else
-                            text = text.Substring(0, lastIndex - 1) + endTag;
-                    }
-
-                    if (italicBeginTagCount == 1 && italicEndTagCount == 0)
-                    {
-                        int lastIndexWithNewLine = text.LastIndexOf(Environment.NewLine + beginTag) + Environment.NewLine.Length;
-                        int lastIndex = text.LastIndexOf(beginTag);
-
-                        if (text.StartsWith(beginTag))
-                            text += endTag;
-                        else if (noOfLines == 2 && lastIndex == lastIndexWithNewLine)
-                            text += endTag;
-                        else
-                            text = text.Replace(beginTag, string.Empty);
-                    }
-
-                    if (italicBeginTagCount == 0 && italicEndTagCount == 1)
-                    {
-                        text = text.Replace(endTag, string.Empty);
-                    }
-
-                    text = text.Replace("<i></i>", string.Empty);
-
-                    if (text != oldText)
-                    {
-                        if (AllowFix(i + 1, fixAction))
-                        {
-                            _subtitle.Paragraphs[i].Text = text;
-                            _totalFixes++;
-                            noOfInvalidHtmlTags++;
-                            AddFixToListView(_subtitle.Paragraphs[i], i + 1, fixAction, oldText, text);
-                        }
+                        _subtitle.Paragraphs[i].Text = text;
+                        _totalFixes++;
+                        noOfInvalidHtmlTags++;
+                        AddFixToListView(_subtitle.Paragraphs[i], i + 1, fixAction, oldText, text);
                     }
                 }
+
             }
             if (noOfInvalidHtmlTags > 0)
                 LogStatus(_language.FixInvalidItalicTags, string.Format(_language.XInvalidHtmlTagsFixed, noOfInvalidHtmlTags));
@@ -1210,8 +1116,8 @@ namespace Nikse.SubtitleEdit.Forms
             int noOfFixes = 0;
             for (int i = 0; i < _subtitle.Paragraphs.Count; i++)
             {
-                Paragraph p = _subtitle.Paragraphs[i];                
-                if (CountTagInText(p.Text, "\"") == 1)
+                Paragraph p = _subtitle.Paragraphs[i];
+                if (Utilities.CountTagInText(p.Text, "\"") == 1)
                 {
                     string oldText = p.Text;
                     if (p.Text.StartsWith("\""))
@@ -1956,7 +1862,7 @@ namespace Nikse.SubtitleEdit.Forms
                     
                     if (prev == null || !Utilities.RemoveHtmlTags(prev.Text).Trim().EndsWith("-"))
                     {
-                        if (CountTagInText(text, "-") == 1)
+                        if (Utilities.CountTagInText(text, "-") == 1)
                         {
                             string oldText = p.Text;
 
@@ -1992,7 +1898,7 @@ namespace Nikse.SubtitleEdit.Forms
                 Paragraph p = _subtitle.Paragraphs[i];
                 string text = p.Text;
 
-                if (CountTagInText(text, Environment.NewLine) > 1)
+                if (Utilities.CountTagInText(text, Environment.NewLine) > 1)
                 {
                     string oldText = p.Text;
                     text = Utilities.AutoBreakLine(text);
