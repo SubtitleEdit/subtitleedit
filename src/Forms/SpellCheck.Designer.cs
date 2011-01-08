@@ -62,7 +62,7 @@
             // 
             // buttonAddToDictionary
             // 
-            this.buttonAddToDictionary.Location = new System.Drawing.Point(25, 126);
+            this.buttonAddToDictionary.Location = new System.Drawing.Point(25, 130);
             this.buttonAddToDictionary.Name = "buttonAddToDictionary";
             this.buttonAddToDictionary.Size = new System.Drawing.Size(235, 21);
             this.buttonAddToDictionary.TabIndex = 7;
@@ -72,7 +72,7 @@
             // 
             // buttonSkipOnce
             // 
-            this.buttonSkipOnce.Location = new System.Drawing.Point(23, 72);
+            this.buttonSkipOnce.Location = new System.Drawing.Point(23, 73);
             this.buttonSkipOnce.Name = "buttonSkipOnce";
             this.buttonSkipOnce.Size = new System.Drawing.Size(117, 21);
             this.buttonSkipOnce.TabIndex = 4;
@@ -86,16 +86,16 @@
             this.comboBoxDictionaries.FormattingEnabled = true;
             this.comboBoxDictionaries.Location = new System.Drawing.Point(317, 30);
             this.comboBoxDictionaries.Name = "comboBoxDictionaries";
-            this.comboBoxDictionaries.Size = new System.Drawing.Size(257, 25);
+            this.comboBoxDictionaries.Size = new System.Drawing.Size(257, 29);
             this.comboBoxDictionaries.TabIndex = 8;
             this.comboBoxDictionaries.SelectedIndexChanged += new System.EventHandler(this.ComboBoxDictionariesSelectedIndexChanged);
             // 
             // labelLanguage
             // 
             this.labelLanguage.AutoSize = true;
-            this.labelLanguage.Location = new System.Drawing.Point(314, 13);
+            this.labelLanguage.Location = new System.Drawing.Point(314, 12);
             this.labelLanguage.Name = "labelLanguage";
-            this.labelLanguage.Size = new System.Drawing.Size(68, 17);
+            this.labelLanguage.Size = new System.Drawing.Size(81, 21);
             this.labelLanguage.TabIndex = 3;
             this.labelLanguage.Text = "Language";
             // 
@@ -128,19 +128,19 @@
             // listBoxSuggestions
             // 
             this.listBoxSuggestions.FormattingEnabled = true;
-            this.listBoxSuggestions.ItemHeight = 17;
-            this.listBoxSuggestions.Location = new System.Drawing.Point(8, 42);
+            this.listBoxSuggestions.ItemHeight = 21;
+            this.listBoxSuggestions.Location = new System.Drawing.Point(8, 44);
             this.listBoxSuggestions.Name = "listBoxSuggestions";
-            this.listBoxSuggestions.Size = new System.Drawing.Size(272, 106);
+            this.listBoxSuggestions.Size = new System.Drawing.Size(272, 88);
             this.listBoxSuggestions.TabIndex = 11;
             this.listBoxSuggestions.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.ListBoxSuggestionsMouseDoubleClick);
             // 
             // labelFullText
             // 
             this.labelFullText.AutoSize = true;
-            this.labelFullText.Location = new System.Drawing.Point(8, 16);
+            this.labelFullText.Location = new System.Drawing.Point(8, 14);
             this.labelFullText.Name = "labelFullText";
-            this.labelFullText.Size = new System.Drawing.Size(56, 17);
+            this.labelFullText.Size = new System.Drawing.Size(70, 21);
             this.labelFullText.TabIndex = 7;
             this.labelFullText.Text = "Full text";
             // 
@@ -148,7 +148,7 @@
             // 
             this.textBoxWord.Location = new System.Drawing.Point(23, 19);
             this.textBoxWord.Name = "textBoxWord";
-            this.textBoxWord.Size = new System.Drawing.Size(237, 24);
+            this.textBoxWord.Size = new System.Drawing.Size(237, 27);
             this.textBoxWord.TabIndex = 1;
             // 
             // buttonAbort
@@ -163,7 +163,7 @@
             // 
             // buttonSkipAll
             // 
-            this.buttonSkipAll.Location = new System.Drawing.Point(146, 72);
+            this.buttonSkipAll.Location = new System.Drawing.Point(146, 74);
             this.buttonSkipAll.Name = "buttonSkipAll";
             this.buttonSkipAll.Size = new System.Drawing.Size(114, 21);
             this.buttonSkipAll.TabIndex = 5;
@@ -173,7 +173,7 @@
             // 
             // buttonChange
             // 
-            this.buttonChange.Location = new System.Drawing.Point(23, 45);
+            this.buttonChange.Location = new System.Drawing.Point(23, 46);
             this.buttonChange.Name = "buttonChange";
             this.buttonChange.Size = new System.Drawing.Size(117, 21);
             this.buttonChange.TabIndex = 2;
@@ -193,7 +193,7 @@
             // 
             // buttonChangeAll
             // 
-            this.buttonChangeAll.Location = new System.Drawing.Point(146, 45);
+            this.buttonChangeAll.Location = new System.Drawing.Point(146, 46);
             this.buttonChangeAll.Name = "buttonChangeAll";
             this.buttonChangeAll.Size = new System.Drawing.Size(114, 21);
             this.buttonChangeAll.TabIndex = 3;
@@ -213,7 +213,7 @@
             // 
             // buttonAddToNames
             // 
-            this.buttonAddToNames.Location = new System.Drawing.Point(25, 99);
+            this.buttonAddToNames.Location = new System.Drawing.Point(25, 102);
             this.buttonAddToNames.Name = "buttonAddToNames";
             this.buttonAddToNames.Size = new System.Drawing.Size(235, 21);
             this.buttonAddToNames.TabIndex = 6;
@@ -239,10 +239,10 @@
             // 
             // groupBoxSuggestions
             // 
-            this.groupBoxSuggestions.Controls.Add(this.checkBoxAutoChangeNames);
             this.groupBoxSuggestions.Controls.Add(this.buttonUseSuggestion);
-            this.groupBoxSuggestions.Controls.Add(this.listBoxSuggestions);
             this.groupBoxSuggestions.Controls.Add(this.buttonUseSuggestionAlways);
+            this.groupBoxSuggestions.Controls.Add(this.checkBoxAutoChangeNames);
+            this.groupBoxSuggestions.Controls.Add(this.listBoxSuggestions);
             this.groupBoxSuggestions.Location = new System.Drawing.Point(309, 120);
             this.groupBoxSuggestions.Name = "groupBoxSuggestions";
             this.groupBoxSuggestions.Size = new System.Drawing.Size(286, 182);
@@ -255,7 +255,7 @@
             this.checkBoxAutoChangeNames.AutoSize = true;
             this.checkBoxAutoChangeNames.Location = new System.Drawing.Point(8, 157);
             this.checkBoxAutoChangeNames.Name = "checkBoxAutoChangeNames";
-            this.checkBoxAutoChangeNames.Size = new System.Drawing.Size(275, 21);
+            this.checkBoxAutoChangeNames.Size = new System.Drawing.Size(328, 25);
             this.checkBoxAutoChangeNames.TabIndex = 12;
             this.checkBoxAutoChangeNames.Text = "Auto fix names where only casing differ";
             this.checkBoxAutoChangeNames.UseVisualStyleBackColor = true;
@@ -314,16 +314,16 @@
             // 
             // SpellCheck
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 17F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 21F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(605, 341);
+            this.Controls.Add(this.richTextBoxParagraph);
+            this.Controls.Add(this.comboBoxDictionaries);
             this.Controls.Add(this.buttonEditWholeText);
             this.Controls.Add(this.groupBoxSuggestions);
             this.Controls.Add(this.buttonAbort);
             this.Controls.Add(this.labelFullText);
-            this.Controls.Add(this.richTextBoxParagraph);
             this.Controls.Add(this.labelLanguage);
-            this.Controls.Add(this.comboBoxDictionaries);
             this.Controls.Add(this.groupBoxWordNotFound);
             this.Controls.Add(this.groupBoxEditWholeText);
             this.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));

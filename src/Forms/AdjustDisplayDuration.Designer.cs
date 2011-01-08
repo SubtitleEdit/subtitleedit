@@ -45,9 +45,9 @@
             // radioButtonPercent
             // 
             this.radioButtonPercent.AutoSize = true;
-            this.radioButtonPercent.Location = new System.Drawing.Point(171, 22);
+            this.radioButtonPercent.Location = new System.Drawing.Point(171, 21);
             this.radioButtonPercent.Name = "radioButtonPercent";
-            this.radioButtonPercent.Size = new System.Drawing.Size(78, 21);
+            this.radioButtonPercent.Size = new System.Drawing.Size(89, 24);
             this.radioButtonPercent.TabIndex = 0;
             this.radioButtonPercent.Text = "Percent";
             this.radioButtonPercent.UseVisualStyleBackColor = true;
@@ -57,9 +57,9 @@
             // 
             this.radioButtonSeconds.AutoSize = true;
             this.radioButtonSeconds.Checked = true;
-            this.radioButtonSeconds.Location = new System.Drawing.Point(11, 22);
+            this.radioButtonSeconds.Location = new System.Drawing.Point(11, 21);
             this.radioButtonSeconds.Name = "radioButtonSeconds";
-            this.radioButtonSeconds.Size = new System.Drawing.Size(84, 21);
+            this.radioButtonSeconds.Size = new System.Drawing.Size(97, 24);
             this.radioButtonSeconds.TabIndex = 1;
             this.radioButtonSeconds.TabStop = true;
             this.radioButtonSeconds.Text = "Seconds";
@@ -72,7 +72,7 @@
             this.groupBoxAdjustVia.Controls.Add(this.radioButtonSeconds);
             this.groupBoxAdjustVia.Location = new System.Drawing.Point(13, 13);
             this.groupBoxAdjustVia.Name = "groupBoxAdjustVia";
-            this.groupBoxAdjustVia.Size = new System.Drawing.Size(351, 45);
+            this.groupBoxAdjustVia.Size = new System.Drawing.Size(365, 47);
             this.groupBoxAdjustVia.TabIndex = 2;
             this.groupBoxAdjustVia.TabStop = false;
             this.groupBoxAdjustVia.Text = "Adjust via";
@@ -119,9 +119,9 @@
             "123",
             "124",
             "125"});
-            this.comboBoxPercent.Location = new System.Drawing.Point(182, 86);
+            this.comboBoxPercent.Location = new System.Drawing.Point(182, 89);
             this.comboBoxPercent.Name = "comboBoxPercent";
-            this.comboBoxPercent.Size = new System.Drawing.Size(141, 25);
+            this.comboBoxPercent.Size = new System.Drawing.Size(141, 29);
             this.comboBoxPercent.TabIndex = 3;
             // 
             // comboBoxSeconds
@@ -145,9 +145,9 @@
             "+0.8",
             "+0.9",
             "+1.0"});
-            this.comboBoxSeconds.Location = new System.Drawing.Point(13, 86);
+            this.comboBoxSeconds.Location = new System.Drawing.Point(13, 89);
             this.comboBoxSeconds.Name = "comboBoxSeconds";
-            this.comboBoxSeconds.Size = new System.Drawing.Size(141, 25);
+            this.comboBoxSeconds.Size = new System.Drawing.Size(141, 29);
             this.comboBoxSeconds.TabIndex = 4;
             // 
             // labelNote
@@ -155,33 +155,34 @@
             this.labelNote.AutoSize = true;
             this.labelNote.Location = new System.Drawing.Point(10, 135);
             this.labelNote.Name = "labelNote";
-            this.labelNote.Size = new System.Drawing.Size(352, 17);
+            this.labelNote.Size = new System.Drawing.Size(434, 21);
             this.labelNote.TabIndex = 5;
             this.labelNote.Text = "Note: Display time will not overlap start time of next text";
             // 
             // labelAddInPercent
             // 
             this.labelAddInPercent.AutoSize = true;
-            this.labelAddInPercent.Location = new System.Drawing.Point(179, 69);
+            this.labelAddInPercent.Location = new System.Drawing.Point(179, 70);
             this.labelAddInPercent.Name = "labelAddInPercent";
-            this.labelAddInPercent.Size = new System.Drawing.Size(112, 17);
+            this.labelAddInPercent.Size = new System.Drawing.Size(137, 21);
             this.labelAddInPercent.TabIndex = 6;
             this.labelAddInPercent.Text = "Adjust in percent";
             // 
             // labelAddSeconds
             // 
             this.labelAddSeconds.AutoSize = true;
-            this.labelAddSeconds.Location = new System.Drawing.Point(10, 69);
+            this.labelAddSeconds.Location = new System.Drawing.Point(10, 70);
             this.labelAddSeconds.Name = "labelAddSeconds";
-            this.labelAddSeconds.Size = new System.Drawing.Size(86, 17);
+            this.labelAddSeconds.Size = new System.Drawing.Size(104, 21);
             this.labelAddSeconds.TabIndex = 7;
             this.labelAddSeconds.Text = "Add seconds";
             // 
             // buttonCancel
             // 
+            this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonCancel.Location = new System.Drawing.Point(294, 169);
+            this.buttonCancel.Location = new System.Drawing.Point(303, 169);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 21);
             this.buttonCancel.TabIndex = 9;
@@ -190,8 +191,9 @@
             // 
             // buttonOK
             // 
+            this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonOK.Location = new System.Drawing.Point(213, 169);
+            this.buttonOK.Location = new System.Drawing.Point(222, 169);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 21);
             this.buttonOK.TabIndex = 8;
@@ -201,16 +203,16 @@
             // 
             // AdjustDisplayDuration
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 17F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 21F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(385, 206);
+            this.ClientSize = new System.Drawing.Size(390, 206);
+            this.Controls.Add(this.comboBoxSeconds);
+            this.Controls.Add(this.comboBoxPercent);
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.buttonOK);
             this.Controls.Add(this.labelAddSeconds);
             this.Controls.Add(this.labelAddInPercent);
             this.Controls.Add(this.labelNote);
-            this.Controls.Add(this.comboBoxSeconds);
-            this.Controls.Add(this.comboBoxPercent);
             this.Controls.Add(this.groupBoxAdjustVia);
             this.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;

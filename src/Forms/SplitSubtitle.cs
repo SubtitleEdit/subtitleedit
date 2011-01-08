@@ -31,6 +31,11 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void FixLargeFonts()
         {
+            label2.Top = label1.Top + label1.Height;
+
+            if (label1.Left + label1.Width + 5 > Width)
+                Width = label1.Left + label1.Width + 5;
+
             Graphics graphics = this.CreateGraphics();
             SizeF textSize = graphics.MeasureString(buttonSplit.Text, this.Font);
             if (textSize.Height > buttonSplit.Height - 4)

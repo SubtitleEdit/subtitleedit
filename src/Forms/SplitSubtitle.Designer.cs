@@ -41,7 +41,7 @@
             // 
             // buttonGetFrameRate
             // 
-            this.buttonGetFrameRate.Location = new System.Drawing.Point(167, 99);
+            this.buttonGetFrameRate.Location = new System.Drawing.Point(176, 99);
             this.buttonGetFrameRate.Name = "buttonGetFrameRate";
             this.buttonGetFrameRate.Size = new System.Drawing.Size(24, 22);
             this.buttonGetFrameRate.TabIndex = 8;
@@ -76,7 +76,7 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(39, 30);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(272, 17);
+            this.label1.Size = new System.Drawing.Size(331, 21);
             this.label1.TabIndex = 19;
             this.label1.Text = "Enter length of first part of video or browse";
             // 
@@ -85,7 +85,7 @@
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(39, 45);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(191, 17);
+            this.label2.Size = new System.Drawing.Size(233, 21);
             this.label2.TabIndex = 20;
             this.label2.Text = "and get length from video file:";
             // 
@@ -98,7 +98,7 @@
             this.labelHoursMinSecsMilliSecs.AutoSize = true;
             this.labelHoursMinSecsMilliSecs.Location = new System.Drawing.Point(41, 79);
             this.labelHoursMinSecsMilliSecs.Name = "labelHoursMinSecsMilliSecs";
-            this.labelHoursMinSecsMilliSecs.Size = new System.Drawing.Size(138, 17);
+            this.labelHoursMinSecsMilliSecs.Size = new System.Drawing.Size(169, 21);
             this.labelHoursMinSecsMilliSecs.TabIndex = 22;
             this.labelHoursMinSecsMilliSecs.Text = "Hours:min:sec.msecs";
             // 
@@ -107,23 +107,23 @@
             this.splitTimeUpDownAdjust.AutoSize = true;
             this.splitTimeUpDownAdjust.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.splitTimeUpDownAdjust.Location = new System.Drawing.Point(42, 97);
-            this.splitTimeUpDownAdjust.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.splitTimeUpDownAdjust.Margin = new System.Windows.Forms.Padding(4);
             this.splitTimeUpDownAdjust.Name = "splitTimeUpDownAdjust";
-            this.splitTimeUpDownAdjust.Size = new System.Drawing.Size(123, 29);
+            this.splitTimeUpDownAdjust.Size = new System.Drawing.Size(137, 34);
             this.splitTimeUpDownAdjust.TabIndex = 21;
             // 
             // SplitSubtitle
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 17F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 21F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(325, 182);
-            this.Controls.Add(this.labelHoursMinSecsMilliSecs);
+            this.Controls.Add(this.buttonGetFrameRate);
             this.Controls.Add(this.splitTimeUpDownAdjust);
+            this.Controls.Add(this.labelHoursMinSecsMilliSecs);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.buttonDone);
             this.Controls.Add(this.buttonSplit);
-            this.Controls.Add(this.buttonGetFrameRate);
             this.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.KeyPreview = true;

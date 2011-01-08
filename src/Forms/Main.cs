@@ -2956,6 +2956,9 @@ namespace Nikse.SubtitleEdit.Forms
                     mergeBeforeToolStripMenuItem.Visible = false;
                     typeEffectToolStripMenuItem.Visible = false;
                     toolStripSeparator7.Visible = false;
+
+                    if (SubtitleListview1.SelectedItems.Count > 5)
+                        toolStripMenuItemMergeLines.Visible = false;
                 }
 
                 if (GetCurrentSubtitleFormat().GetType() != typeof(SubRip))

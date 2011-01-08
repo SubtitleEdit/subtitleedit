@@ -26,11 +26,15 @@ namespace Nikse.SubtitleEdit.Forms
             buttonFind.Text = Configuration.Settings.Language.ReplaceDialog.Find;
             buttonReplace.Text = Configuration.Settings.Language.ReplaceDialog.Replace;
             buttonReplaceAll.Text = Configuration.Settings.Language.ReplaceDialog.ReplaceAll;
+
             FixLargeFonts();
         }
 
         private void FixLargeFonts()
         {
+            if (radioButtonRegEx.Left + radioButtonRegEx.Width + 5 > Width)
+                Width = radioButtonRegEx.Left + radioButtonRegEx.Width + 5;
+
             Graphics graphics = this.CreateGraphics();
             SizeF textSize = graphics.MeasureString(buttonReplace.Text, this.Font);
             if (textSize.Height > buttonReplace.Height - 4)

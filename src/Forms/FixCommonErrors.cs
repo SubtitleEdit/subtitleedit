@@ -1069,6 +1069,29 @@ namespace Nikse.SubtitleEdit.Forms
                         match = match.NextMatch();
                     }
                 }
+
+                string[] arr = p.Text.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                if (arr.Length == 2 && arr[0].Length > 1 && arr[1].Length > 1)
+                {
+                    if (arr[0].StartsWith("-") && arr[1].StartsWith("-"))
+                    {
+                        if (arr[0][1] != ' ')
+                            arr[0] = arr[0].Insert(1, " ");
+                        if (arr[1][1] != ' ')
+                            arr[1] = arr[1].Insert(1, " ");
+                        string newText = arr[0] + Environment.NewLine + arr[1];
+                        if (newText != p.Text && AllowFix(i + 1, fixAction))
+                        {
+                            _totalFixes++;
+                            missingSpaces++;
+
+                            string oldText = p.Text;
+                            p.Text = newText;
+                            AddFixToListView(p, i + 1, fixAction, oldText, p.Text);
+                        }
+                    }
+                }
+
             }
             if (missingSpaces > 0)
                 LogStatus(_language.FixMissingSpaces, string.Format(_language.XMissingSpacesAdded, missingSpaces));

@@ -68,21 +68,21 @@
             this.labelInfo.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.labelInfo.Location = new System.Drawing.Point(37, 9);
             this.labelInfo.Name = "labelInfo";
-            this.labelInfo.Size = new System.Drawing.Size(188, 17);
+            this.labelInfo.Size = new System.Drawing.Size(229, 21);
             this.labelInfo.TabIndex = 3;
             this.labelInfo.Text = "Convert frame rate of subtitle";
             // 
             // comboBoxFrameRateFrom
             // 
             this.comboBoxFrameRateFrom.FormattingEnabled = true;
-            this.comboBoxFrameRateFrom.Location = new System.Drawing.Point(119, 46);
+            this.comboBoxFrameRateFrom.Location = new System.Drawing.Point(119, 45);
             this.comboBoxFrameRateFrom.Name = "comboBoxFrameRateFrom";
-            this.comboBoxFrameRateFrom.Size = new System.Drawing.Size(121, 25);
+            this.comboBoxFrameRateFrom.Size = new System.Drawing.Size(121, 29);
             this.comboBoxFrameRateFrom.TabIndex = 7;
             // 
             // labelFromFrameRate
             // 
-            this.labelFromFrameRate.Location = new System.Drawing.Point(4, 49);
+            this.labelFromFrameRate.Location = new System.Drawing.Point(4, 48);
             this.labelFromFrameRate.Name = "labelFromFrameRate";
             this.labelFromFrameRate.Size = new System.Drawing.Size(112, 19);
             this.labelFromFrameRate.TabIndex = 6;
@@ -94,7 +94,7 @@
             this.comboBoxFrameRateTo.FormattingEnabled = true;
             this.comboBoxFrameRateTo.Location = new System.Drawing.Point(119, 74);
             this.comboBoxFrameRateTo.Name = "comboBoxFrameRateTo";
-            this.comboBoxFrameRateTo.Size = new System.Drawing.Size(121, 25);
+            this.comboBoxFrameRateTo.Size = new System.Drawing.Size(121, 29);
             this.comboBoxFrameRateTo.TabIndex = 9;
             // 
             // labelToFrameRate
@@ -108,7 +108,7 @@
             // 
             // buttonGetFrameRateFrom
             // 
-            this.buttonGetFrameRateFrom.Location = new System.Drawing.Point(246, 46);
+            this.buttonGetFrameRateFrom.Location = new System.Drawing.Point(246, 45);
             this.buttonGetFrameRateFrom.Name = "buttonGetFrameRateFrom";
             this.buttonGetFrameRateFrom.Size = new System.Drawing.Size(24, 22);
             this.buttonGetFrameRateFrom.TabIndex = 10;
@@ -132,7 +132,7 @@
             // 
             // ChangeFrameRate
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 17F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 21F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(295, 148);
             this.Controls.Add(this.buttonGetFrameRateTo);

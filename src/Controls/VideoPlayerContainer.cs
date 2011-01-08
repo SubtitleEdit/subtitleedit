@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Drawing;
+using System.Text;
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Logic.VideoPlayers;
-using System.Text;
-using System.Runtime.InteropServices;
 
 namespace Nikse.SubtitleEdit.Controls
 {
@@ -22,7 +21,6 @@ namespace Nikse.SubtitleEdit.Controls
                 base.MouseEnter += delegate(object sender, EventArgs e) { this.Cursor = Cursors.Default;  };
                 base.ScrollBars = RichTextBoxScrollBars.None;
                 base.Margin = new System.Windows.Forms.Padding(0);
-                base.TabStop = false;
             }
 
             protected override void WndProc(ref Message m)
@@ -519,9 +517,8 @@ namespace Nikse.SubtitleEdit.Controls
             _panelcontrols.Controls.Add(_pictureBoxFastForwardDown);
 
             _labelTimeCode.Location = new Point(280, 28);
-            _labelTimeCode.ForeColor = Color.Gray; // Color.FromArgb(100, 200, 200);
+            _labelTimeCode.ForeColor = Color.Gray;
             _labelTimeCode.Font = new Font(_labelTimeCode.Font.FontFamily, 7);
-//            _labelTimeCode.BackColor = Color.Transparent;
             _labelTimeCode.AutoSize = true;
             _panelcontrols.Controls.Add(_labelTimeCode);
 
