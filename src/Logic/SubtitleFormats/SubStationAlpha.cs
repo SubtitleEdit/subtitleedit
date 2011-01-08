@@ -127,17 +127,17 @@ Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
 
             text = text.Replace(@"{\i1}", "<i>");
             text = text.Replace(@"{\i0}", "</i>");
-            if (FixCommonErrors.CountTagInText(text, "<i>") > FixCommonErrors.CountTagInText(text, "</i>"))
+            if (Utilities.CountTagInText(text, "<i>") > Utilities.CountTagInText(text, "</i>"))
                 text += "</i>";
 
             text = text.Replace(@"{\u1}", "<u>");
             text = text.Replace(@"{\u0}", "</u>");
-            if (FixCommonErrors.CountTagInText(text, "<u>") > FixCommonErrors.CountTagInText(text, "</u>"))
+            if (Utilities.CountTagInText(text, "<u>") > Utilities.CountTagInText(text, "</u>"))
                 text += "</u>";
 
             text = text.Replace(@"{\b1}", "<b>");
             text = text.Replace(@"{\b0}", "</b>");
-            if (FixCommonErrors.CountTagInText(text, "<b>") > FixCommonErrors.CountTagInText(text, "</b>"))
+            if (Utilities.CountTagInText(text, "<b>") > Utilities.CountTagInText(text, "</b>"))
                 text += "</b>";
 
             for (int i = 0; i < 5; i++) // just look five times... 

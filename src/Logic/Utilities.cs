@@ -1538,6 +1538,111 @@ namespace Nikse.SubtitleEdit.Logic
             else if (control is Button)
                 control.Height = newHeight;
         }
+
+        internal static int CountTagInText(string text, string tag)
+        {
+            int count = 0;
+            int index = text.IndexOf(tag);
+            while (index >= 0)
+            {
+                count++;
+                index = text.IndexOf(tag, index + 1);
+            }
+            return count;
+        }
+
+        internal static string FixInvalidItalicTags(string text)
+        {
+            const string beginTag = "<i>";
+            const string endTag = "</i>";
+
+            text = text.Replace("< i>", beginTag);
+            text = text.Replace("<i >", beginTag);
+            text = text.Replace("< I>", beginTag);
+            text = text.Replace("<I >", beginTag);
+
+            text = text.Replace("< /i>", endTag);
+            text = text.Replace("</ i>", endTag);
+            text = text.Replace("< /i>", endTag);
+            text = text.Replace("< /I>", endTag);
+            text = text.Replace("</ I>", endTag);
+            text = text.Replace("< /I>", endTag);
+
+            if (text.Contains(beginTag))
+                text = text.Replace("<i/>", endTag);
+            else
+                text = text.Replace("<i/>", string.Empty);
+
+            text = text.Replace(beginTag + beginTag, beginTag);
+            text = text.Replace(endTag + endTag, endTag);
+
+            int italicBeginTagCount = CountTagInText(text, beginTag);
+            int italicEndTagCount = CountTagInText(text, endTag);
+            int noOfLines = CountTagInText(text, Environment.NewLine) + 1;
+            if (italicBeginTagCount + italicEndTagCount > 0)
+            {
+                if (italicBeginTagCount == 1 && italicEndTagCount == 1)
+                {
+                    if (text.IndexOf(beginTag) > text.IndexOf(endTag))
+                    {
+                        text = text.Replace(beginTag, "___________@");
+                        text = text.Replace(endTag, beginTag);
+                        text = text.Replace("___________@", endTag);
+                    }
+                }
+
+                if (italicBeginTagCount == 2 && italicEndTagCount == 0)
+                {
+                    int firstIndex = text.IndexOf(beginTag);
+                    int lastIndex = text.LastIndexOf(beginTag);
+                    int lastIndexWithNewLine = text.LastIndexOf(Environment.NewLine + beginTag) + Environment.NewLine.Length;
+                    if (noOfLines == 2 && lastIndex == lastIndexWithNewLine && firstIndex < 2)
+                        text = text.Replace(Environment.NewLine, "</i>" + Environment.NewLine) + "</i>";
+                    else if (text.Length > lastIndex + endTag.Length)
+                        text = text.Substring(0, lastIndex) + endTag + text.Substring(lastIndex - 1 + endTag.Length);
+                    else
+                        text = text.Substring(0, lastIndex) + endTag;
+                }
+
+                if (italicBeginTagCount == 1 && italicEndTagCount == 2)
+                {
+                    int firstIndex = text.IndexOf(endTag);
+                    text = text.Substring(0, firstIndex - 1) + text.Substring(firstIndex + endTag.Length);
+                }
+
+                if (italicBeginTagCount == 2 && italicEndTagCount == 1)
+                {
+                    int lastIndex = text.LastIndexOf(beginTag);
+                    if (text.Length > lastIndex + endTag.Length)
+                        text = text.Substring(0, lastIndex) + text.Substring(lastIndex - 1 + endTag.Length);
+                    else
+                        text = text.Substring(0, lastIndex - 1) + endTag;
+                }
+
+                if (italicBeginTagCount == 1 && italicEndTagCount == 0)
+                {
+                    int lastIndexWithNewLine = text.LastIndexOf(Environment.NewLine + beginTag) + Environment.NewLine.Length;
+                    int lastIndex = text.LastIndexOf(beginTag);
+
+                    if (text.StartsWith(beginTag))
+                        text += endTag;
+                    else if (noOfLines == 2 && lastIndex == lastIndexWithNewLine)
+                        text += endTag;
+                    else
+                        text = text.Replace(beginTag, string.Empty);
+                }
+
+                if (italicBeginTagCount == 0 && italicEndTagCount == 1)
+                {
+                    text = text.Replace(endTag, string.Empty);
+                }
+
+                text = text.Replace("<i></i>", string.Empty);
+                text = text.Replace("<i> </i>", string.Empty);
+                text = text.Replace("<i>  </i>", string.Empty);
+            }
+            return text;
+        }
             
     }
 }
