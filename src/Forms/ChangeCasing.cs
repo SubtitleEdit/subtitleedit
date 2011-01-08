@@ -31,6 +31,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void FixLargeFonts()
         {
+            if (radioButtonNormal.Left + radioButtonNormal.Width + 40 > Width)
+                Width = radioButtonNormal.Left + radioButtonNormal.Width + 40;
+
             Graphics graphics = this.CreateGraphics();
             SizeF textSize = graphics.MeasureString(buttonOK.Text, this.Font);
             if (textSize.Height > buttonOK.Height - 4)

@@ -30,14 +30,14 @@
         {
             this.components = new System.ComponentModel.Container();
             this.groupBoxLinesFound = new System.Windows.Forms.GroupBox();
+            this.buttonReplacesInverseSelection = new System.Windows.Forms.Button();
+            this.buttonReplacesSelectAll = new System.Windows.Forms.Button();
             this.listViewFixes = new System.Windows.Forms.ListView();
             this.columnHeader4 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader5 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader7 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader8 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.groupBoxReplaces = new System.Windows.Forms.GroupBox();
-            this.buttonReplacesSelectAll = new System.Windows.Forms.Button();
-            this.buttonReplacesInverseSelection = new System.Windows.Forms.Button();
             this.buttonUpdate = new System.Windows.Forms.Button();
             this.buttonAdd = new System.Windows.Forms.Button();
             this.labelFindWhat = new System.Windows.Forms.Label();
@@ -75,10 +75,34 @@
             this.groupBoxLinesFound.Controls.Add(this.listViewFixes);
             this.groupBoxLinesFound.Location = new System.Drawing.Point(4, 3);
             this.groupBoxLinesFound.Name = "groupBoxLinesFound";
-            this.groupBoxLinesFound.Size = new System.Drawing.Size(926, 314);
+            this.groupBoxLinesFound.Size = new System.Drawing.Size(926, 315);
             this.groupBoxLinesFound.TabIndex = 8;
             this.groupBoxLinesFound.TabStop = false;
             this.groupBoxLinesFound.Text = "Lines found: {0}";
+            // 
+            // buttonReplacesInverseSelection
+            // 
+            this.buttonReplacesInverseSelection.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.buttonReplacesInverseSelection.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.buttonReplacesInverseSelection.Location = new System.Drawing.Point(91, 287);
+            this.buttonReplacesInverseSelection.Name = "buttonReplacesInverseSelection";
+            this.buttonReplacesInverseSelection.Size = new System.Drawing.Size(100, 21);
+            this.buttonReplacesInverseSelection.TabIndex = 106;
+            this.buttonReplacesInverseSelection.Text = "&Inverse selection";
+            this.buttonReplacesInverseSelection.UseVisualStyleBackColor = true;
+            this.buttonReplacesInverseSelection.Click += new System.EventHandler(this.buttonReplacesInverseSelection_Click);
+            // 
+            // buttonReplacesSelectAll
+            // 
+            this.buttonReplacesSelectAll.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.buttonReplacesSelectAll.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.buttonReplacesSelectAll.Location = new System.Drawing.Point(10, 287);
+            this.buttonReplacesSelectAll.Name = "buttonReplacesSelectAll";
+            this.buttonReplacesSelectAll.Size = new System.Drawing.Size(75, 21);
+            this.buttonReplacesSelectAll.TabIndex = 105;
+            this.buttonReplacesSelectAll.Text = "Select &all";
+            this.buttonReplacesSelectAll.UseVisualStyleBackColor = true;
+            this.buttonReplacesSelectAll.Click += new System.EventHandler(this.buttonReplacesSelectAll_Click);
             // 
             // listViewFixes
             // 
@@ -125,45 +149,21 @@
             this.groupBoxReplaces.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                         | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxReplaces.Controls.Add(this.textBoxFind);
+            this.groupBoxReplaces.Controls.Add(this.textBoxReplace);
             this.groupBoxReplaces.Controls.Add(this.buttonUpdate);
             this.groupBoxReplaces.Controls.Add(this.buttonAdd);
             this.groupBoxReplaces.Controls.Add(this.labelFindWhat);
             this.groupBoxReplaces.Controls.Add(this.labelReplaceWith);
-            this.groupBoxReplaces.Controls.Add(this.textBoxReplace);
             this.groupBoxReplaces.Controls.Add(this.radioButtonRegEx);
             this.groupBoxReplaces.Controls.Add(this.radioButtonCaseSensitive);
             this.groupBoxReplaces.Controls.Add(this.radioButtonNormal);
-            this.groupBoxReplaces.Controls.Add(this.textBoxFind);
             this.groupBoxReplaces.Controls.Add(this.listViewReplaceList);
             this.groupBoxReplaces.Location = new System.Drawing.Point(8, 3);
             this.groupBoxReplaces.Name = "groupBoxReplaces";
             this.groupBoxReplaces.Size = new System.Drawing.Size(922, 297);
             this.groupBoxReplaces.TabIndex = 0;
             this.groupBoxReplaces.TabStop = false;
-            // 
-            // buttonReplacesSelectAll
-            // 
-            this.buttonReplacesSelectAll.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.buttonReplacesSelectAll.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonReplacesSelectAll.Location = new System.Drawing.Point(10, 287);
-            this.buttonReplacesSelectAll.Name = "buttonReplacesSelectAll";
-            this.buttonReplacesSelectAll.Size = new System.Drawing.Size(75, 21);
-            this.buttonReplacesSelectAll.TabIndex = 105;
-            this.buttonReplacesSelectAll.Text = "Select &all";
-            this.buttonReplacesSelectAll.UseVisualStyleBackColor = true;
-            this.buttonReplacesSelectAll.Click += new System.EventHandler(this.buttonReplacesSelectAll_Click);
-            // 
-            // buttonReplacesInverseSelection
-            // 
-            this.buttonReplacesInverseSelection.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.buttonReplacesInverseSelection.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonReplacesInverseSelection.Location = new System.Drawing.Point(91, 287);
-            this.buttonReplacesInverseSelection.Name = "buttonReplacesInverseSelection";
-            this.buttonReplacesInverseSelection.Size = new System.Drawing.Size(100, 21);
-            this.buttonReplacesInverseSelection.TabIndex = 106;
-            this.buttonReplacesInverseSelection.Text = "&Inverse selection";
-            this.buttonReplacesInverseSelection.UseVisualStyleBackColor = true;
-            this.buttonReplacesInverseSelection.Click += new System.EventHandler(this.buttonReplacesInverseSelection_Click);
             // 
             // buttonUpdate
             // 
@@ -188,18 +188,18 @@
             // labelFindWhat
             // 
             this.labelFindWhat.AutoSize = true;
-            this.labelFindWhat.Location = new System.Drawing.Point(17, 18);
+            this.labelFindWhat.Location = new System.Drawing.Point(17, 16);
             this.labelFindWhat.Name = "labelFindWhat";
-            this.labelFindWhat.Size = new System.Drawing.Size(72, 17);
+            this.labelFindWhat.Size = new System.Drawing.Size(89, 21);
             this.labelFindWhat.TabIndex = 22;
             this.labelFindWhat.Text = "Find what:";
             // 
             // labelReplaceWith
             // 
             this.labelReplaceWith.AutoSize = true;
-            this.labelReplaceWith.Location = new System.Drawing.Point(247, 18);
+            this.labelReplaceWith.Location = new System.Drawing.Point(247, 16);
             this.labelReplaceWith.Name = "labelReplaceWith";
-            this.labelReplaceWith.Size = new System.Drawing.Size(89, 17);
+            this.labelReplaceWith.Size = new System.Drawing.Size(112, 21);
             this.labelReplaceWith.TabIndex = 21;
             this.labelReplaceWith.Text = "Replace with:";
             // 
@@ -207,16 +207,16 @@
             // 
             this.textBoxReplace.Location = new System.Drawing.Point(250, 35);
             this.textBoxReplace.Name = "textBoxReplace";
-            this.textBoxReplace.Size = new System.Drawing.Size(227, 24);
+            this.textBoxReplace.Size = new System.Drawing.Size(227, 27);
             this.textBoxReplace.TabIndex = 2;
             this.textBoxReplace.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxReplaceKeyDown);
             // 
             // radioButtonRegEx
             // 
             this.radioButtonRegEx.AutoSize = true;
-            this.radioButtonRegEx.Location = new System.Drawing.Point(205, 61);
+            this.radioButtonRegEx.Location = new System.Drawing.Point(251, 62);
             this.radioButtonRegEx.Name = "radioButtonRegEx";
-            this.radioButtonRegEx.Size = new System.Drawing.Size(69, 21);
+            this.radioButtonRegEx.Size = new System.Drawing.Size(82, 25);
             this.radioButtonRegEx.TabIndex = 6;
             this.radioButtonRegEx.Text = "RegEx";
             this.radioButtonRegEx.UseVisualStyleBackColor = true;
@@ -225,9 +225,9 @@
             // radioButtonCaseSensitive
             // 
             this.radioButtonCaseSensitive.AutoSize = true;
-            this.radioButtonCaseSensitive.Location = new System.Drawing.Point(94, 61);
+            this.radioButtonCaseSensitive.Location = new System.Drawing.Point(111, 62);
             this.radioButtonCaseSensitive.Name = "radioButtonCaseSensitive";
-            this.radioButtonCaseSensitive.Size = new System.Drawing.Size(113, 21);
+            this.radioButtonCaseSensitive.Size = new System.Drawing.Size(141, 25);
             this.radioButtonCaseSensitive.TabIndex = 5;
             this.radioButtonCaseSensitive.Text = "Case sensitive";
             this.radioButtonCaseSensitive.UseVisualStyleBackColor = true;
@@ -237,9 +237,9 @@
             // 
             this.radioButtonNormal.AutoSize = true;
             this.radioButtonNormal.Checked = true;
-            this.radioButtonNormal.Location = new System.Drawing.Point(22, 61);
+            this.radioButtonNormal.Location = new System.Drawing.Point(22, 62);
             this.radioButtonNormal.Name = "radioButtonNormal";
-            this.radioButtonNormal.Size = new System.Drawing.Size(72, 21);
+            this.radioButtonNormal.Size = new System.Drawing.Size(88, 25);
             this.radioButtonNormal.TabIndex = 4;
             this.radioButtonNormal.TabStop = true;
             this.radioButtonNormal.Text = "Normal";
@@ -250,7 +250,7 @@
             // 
             this.textBoxFind.Location = new System.Drawing.Point(20, 35);
             this.textBoxFind.Name = "textBoxFind";
-            this.textBoxFind.Size = new System.Drawing.Size(224, 24);
+            this.textBoxFind.Size = new System.Drawing.Size(224, 27);
             this.textBoxFind.TabIndex = 1;
             // 
             // listViewReplaceList
@@ -355,7 +355,7 @@
             // 
             // MultipleReplace
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 17F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 21F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(933, 667);
             this.Controls.Add(this.splitContainer1);

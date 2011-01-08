@@ -37,9 +37,9 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(24, 25);
+            this.label1.Location = new System.Drawing.Point(24, 23);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(99, 13);
+            this.label1.Size = new System.Drawing.Size(152, 21);
             this.label1.TabIndex = 1;
             this.label1.Text = "Start from number:";
             // 
@@ -47,7 +47,7 @@
             // 
             this.textBox1.Location = new System.Drawing.Point(27, 41);
             this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(104, 21);
+            this.textBox1.Size = new System.Drawing.Size(104, 27);
             this.textBox1.TabIndex = 0;
             this.textBox1.Text = "1";
             this.textBox1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBox1KeyDown);
@@ -74,9 +74,9 @@
             // 
             // StartNumberingFrom
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 21F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(218, 105);
+            this.ClientSize = new System.Drawing.Size(261, 113);
             this.Controls.Add(this.buttonOK);
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.textBox1);

@@ -74,7 +74,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             // numericUpDownMaxCharacters
             // 
-            this.numericUpDownMaxCharacters.Location = new System.Drawing.Point(236, 26);
+            this.numericUpDownMaxCharacters.Location = new System.Drawing.Point(190, 27);
             this.numericUpDownMaxCharacters.Maximum = new decimal(new int[] {
             200,
             0,
@@ -86,7 +86,7 @@ namespace Nikse.SubtitleEdit.Forms
             0,
             0});
             this.numericUpDownMaxCharacters.Name = "numericUpDownMaxCharacters";
-            this.numericUpDownMaxCharacters.Size = new System.Drawing.Size(64, 24);
+            this.numericUpDownMaxCharacters.Size = new System.Drawing.Size(64, 27);
             this.numericUpDownMaxCharacters.TabIndex = 0;
             this.numericUpDownMaxCharacters.Value = new decimal(new int[] {
             65,
@@ -98,9 +98,9 @@ namespace Nikse.SubtitleEdit.Forms
             // labelMaxCharacters
             // 
             this.labelMaxCharacters.AutoSize = true;
-            this.labelMaxCharacters.Location = new System.Drawing.Point(233, 9);
+            this.labelMaxCharacters.Location = new System.Drawing.Point(187, 9);
             this.labelMaxCharacters.Name = "labelMaxCharacters";
-            this.labelMaxCharacters.Size = new System.Drawing.Size(243, 17);
+            this.labelMaxCharacters.Size = new System.Drawing.Size(294, 21);
             this.labelMaxCharacters.TabIndex = 32;
             this.labelMaxCharacters.Text = "Maximum characters in one paragraph";
             // 
@@ -109,13 +109,13 @@ namespace Nikse.SubtitleEdit.Forms
             this.labelMaxMillisecondsBetweenLines.AutoSize = true;
             this.labelMaxMillisecondsBetweenLines.Location = new System.Drawing.Point(483, 9);
             this.labelMaxMillisecondsBetweenLines.Name = "labelMaxMillisecondsBetweenLines";
-            this.labelMaxMillisecondsBetweenLines.Size = new System.Drawing.Size(226, 17);
+            this.labelMaxMillisecondsBetweenLines.Size = new System.Drawing.Size(284, 21);
             this.labelMaxMillisecondsBetweenLines.TabIndex = 33;
             this.labelMaxMillisecondsBetweenLines.Text = "Maximum milliseconds between lines";
             // 
             // numericUpDownMaxMillisecondsBetweenLines
             // 
-            this.numericUpDownMaxMillisecondsBetweenLines.Location = new System.Drawing.Point(486, 25);
+            this.numericUpDownMaxMillisecondsBetweenLines.Location = new System.Drawing.Point(486, 26);
             this.numericUpDownMaxMillisecondsBetweenLines.Maximum = new decimal(new int[] {
             2000,
             0,
@@ -127,7 +127,7 @@ namespace Nikse.SubtitleEdit.Forms
             0,
             0});
             this.numericUpDownMaxMillisecondsBetweenLines.Name = "numericUpDownMaxMillisecondsBetweenLines";
-            this.numericUpDownMaxMillisecondsBetweenLines.Size = new System.Drawing.Size(64, 24);
+            this.numericUpDownMaxMillisecondsBetweenLines.Size = new System.Drawing.Size(64, 27);
             this.numericUpDownMaxMillisecondsBetweenLines.TabIndex = 2;
             this.numericUpDownMaxMillisecondsBetweenLines.Value = new decimal(new int[] {
             250,
@@ -201,14 +201,14 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             // MergeShortLines
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 17F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 21F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(776, 585);
+            this.Controls.Add(this.numericUpDownMaxCharacters);
             this.Controls.Add(this.groupBoxLinesFound);
             this.Controls.Add(this.numericUpDownMaxMillisecondsBetweenLines);
             this.Controls.Add(this.labelMaxMillisecondsBetweenLines);
             this.Controls.Add(this.labelMaxCharacters);
-            this.Controls.Add(this.numericUpDownMaxCharacters);
             this.Controls.Add(this.SubtitleListview1);
             this.Controls.Add(this.buttonOK);
             this.Controls.Add(this.buttonCancel);

@@ -71,6 +71,9 @@
     <TargetZone>LocalIntranet</TargetZone>
   </PropertyGroup>
   <PropertyGroup />
+  <PropertyGroup>
+    <ApplicationManifest>Properties\Manifest.manifest</ApplicationManifest>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Interop.QuartzTypeLib, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -772,6 +775,7 @@
       <DependentUpon>SyncPointsSync.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="app.config" />
+    <None Include="Properties\Manifest.manifest" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -896,6 +900,7 @@
     </EmbeddedResource>
     <None Include="Resources\it-IT.xml" />
     <None Include="Resources\es-ES.xml" />
+    <None Include="Resources\it-IT.xml.zip" />
     <EmbeddedResource Include="Resources\it-IT.xml.zip" />
     <None Include="Resources\nl-NL.xml" />
     <None Include="Icons\Donate.gif" />

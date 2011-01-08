@@ -358,9 +358,9 @@
             this.labelStatus,
             this.toolStripSelected,
             this.toolStripStatusNetworking});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 658);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 656);
             this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(1244, 25);
+            this.statusStrip1.Size = new System.Drawing.Size(1244, 27);
             this.statusStrip1.TabIndex = 4;
             this.statusStrip1.Text = "statusStrip1";
             // 
@@ -368,14 +368,14 @@
             // 
             this.labelStatus.AutoSize = false;
             this.labelStatus.Name = "labelStatus";
-            this.labelStatus.Size = new System.Drawing.Size(700, 20);
+            this.labelStatus.Size = new System.Drawing.Size(700, 22);
             this.labelStatus.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // toolStripSelected
             // 
             this.toolStripSelected.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
             this.toolStripSelected.Name = "toolStripSelected";
-            this.toolStripSelected.Size = new System.Drawing.Size(312, 20);
+            this.toolStripSelected.Size = new System.Drawing.Size(312, 22);
             this.toolStripSelected.Spring = true;
             this.toolStripSelected.Text = "toolStripSelected";
             this.toolStripSelected.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -385,7 +385,7 @@
             this.toolStripStatusNetworking.Image = global::Nikse.SubtitleEdit.Properties.Resources.connect;
             this.toolStripStatusNetworking.Name = "toolStripStatusNetworking";
             this.toolStripStatusNetworking.Padding = new System.Windows.Forms.Padding(50, 0, 0, 0);
-            this.toolStripStatusNetworking.Size = new System.Drawing.Size(217, 20);
+            this.toolStripStatusNetworking.Size = new System.Drawing.Size(217, 22);
             this.toolStripStatusNetworking.Text = "toolStripStatusNetworking";
             this.toolStripStatusNetworking.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.toolStripStatusNetworking.TextImageRelation = System.Windows.Forms.TextImageRelation.TextBeforeImage;
@@ -1898,7 +1898,7 @@
             this.toolStripButtonWaveFormPlay.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonWaveFormPlay.Image")));
             this.toolStripButtonWaveFormPlay.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButtonWaveFormPlay.Name = "toolStripButtonWaveFormPlay";
-            this.toolStripButtonWaveFormPlay.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonWaveFormPlay.Size = new System.Drawing.Size(23, 30);
             this.toolStripButtonWaveFormPlay.Text = "toolStripButton1";
             this.toolStripButtonWaveFormPlay.Visible = false;
             this.toolStripButtonWaveFormPlay.Click += new System.EventHandler(this.toolStripButtonWaveFormPlay_Click);
@@ -2763,8 +2763,8 @@
             // splitContainerMain.Panel2
             // 
             this.splitContainerMain.Panel2.Controls.Add(this.groupBoxVideo);
-            this.splitContainerMain.Size = new System.Drawing.Size(1244, 594);
-            this.splitContainerMain.SplitterDistance = 285;
+            this.splitContainerMain.Size = new System.Drawing.Size(1244, 592);
+            this.splitContainerMain.SplitterDistance = 283;
             this.splitContainerMain.TabIndex = 8;
             // 
             // splitContainer1
@@ -2780,7 +2780,7 @@
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.panelVideoPlayer);
-            this.splitContainer1.Size = new System.Drawing.Size(1244, 285);
+            this.splitContainer1.Size = new System.Drawing.Size(1244, 283);
             this.splitContainer1.SplitterDistance = 950;
             this.splitContainer1.TabIndex = 7;
             // 
@@ -2795,7 +2795,7 @@
             this.tabControlSubtitle.Location = new System.Drawing.Point(3, 3);
             this.tabControlSubtitle.Name = "tabControlSubtitle";
             this.tabControlSubtitle.SelectedIndex = 0;
-            this.tabControlSubtitle.Size = new System.Drawing.Size(945, 282);
+            this.tabControlSubtitle.Size = new System.Drawing.Size(945, 280);
             this.tabControlSubtitle.TabIndex = 0;
             this.tabControlSubtitle.SelectedIndexChanged += new System.EventHandler(this.TabControlSubtitleSelectedIndexChanged);
             // 
@@ -2806,7 +2806,7 @@
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(937, 256);
+            this.tabPage1.Size = new System.Drawing.Size(937, 254);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "List view";
             this.tabPage1.UseVisualStyleBackColor = true;
@@ -2833,7 +2833,7 @@
             this.groupBoxEdit.Controls.Add(this.textBoxListViewText);
             this.groupBoxEdit.Controls.Add(this.labelDuration);
             this.groupBoxEdit.Controls.Add(this.labelAutoDuration);
-            this.groupBoxEdit.Location = new System.Drawing.Point(3, 154);
+            this.groupBoxEdit.Location = new System.Drawing.Point(3, 152);
             this.groupBoxEdit.Name = "groupBoxEdit";
             this.groupBoxEdit.Size = new System.Drawing.Size(926, 102);
             this.groupBoxEdit.TabIndex = 1;
@@ -2863,7 +2863,7 @@
             this.labelTextLineTotal.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.labelTextLineTotal.Location = new System.Drawing.Point(625, 86);
             this.labelTextLineTotal.Name = "labelTextLineTotal";
-            this.labelTextLineTotal.Size = new System.Drawing.Size(177, 17);
+            this.labelTextLineTotal.Size = new System.Drawing.Size(177, 18);
             this.labelTextLineTotal.TabIndex = 21;
             this.labelTextLineTotal.Text = "labelTextLineTotal";
             this.labelTextLineTotal.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -3051,7 +3051,7 @@
             this.SubtitleListview1.HideSelection = false;
             this.SubtitleListview1.Location = new System.Drawing.Point(1, 3);
             this.SubtitleListview1.Name = "SubtitleListview1";
-            this.SubtitleListview1.Size = new System.Drawing.Size(932, 150);
+            this.SubtitleListview1.Size = new System.Drawing.Size(932, 148);
             this.SubtitleListview1.SmallImageList = this.imageList1;
             this.SubtitleListview1.TabIndex = 0;
             this.SubtitleListview1.UseCompatibleStateImageBehavior = false;
@@ -3068,7 +3068,7 @@
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(937, 256);
+            this.tabPage2.Size = new System.Drawing.Size(937, 248);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Source view";
             this.tabPage2.UseVisualStyleBackColor = true;
@@ -3085,7 +3085,7 @@
             this.textBoxSource.Multiline = true;
             this.textBoxSource.Name = "textBoxSource";
             this.textBoxSource.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.textBoxSource.Size = new System.Drawing.Size(932, 259);
+            this.textBoxSource.Size = new System.Drawing.Size(932, 251);
             this.textBoxSource.TabIndex = 12;
             this.textBoxSource.WordWrap = false;
             this.textBoxSource.Click += new System.EventHandler(this.TextBoxSourceClick);
@@ -3103,7 +3103,7 @@
             this.panelVideoPlayer.Controls.Add(this.mediaPlayer);
             this.panelVideoPlayer.Location = new System.Drawing.Point(1, 1);
             this.panelVideoPlayer.Name = "panelVideoPlayer";
-            this.panelVideoPlayer.Size = new System.Drawing.Size(282, 280);
+            this.panelVideoPlayer.Size = new System.Drawing.Size(282, 278);
             this.panelVideoPlayer.TabIndex = 5;
             // 
             // mediaPlayer
@@ -3117,7 +3117,7 @@
             this.mediaPlayer.Margin = new System.Windows.Forms.Padding(0);
             this.mediaPlayer.Name = "mediaPlayer";
             this.mediaPlayer.ShowStopButton = true;
-            this.mediaPlayer.Size = new System.Drawing.Size(281, 280);
+            this.mediaPlayer.Size = new System.Drawing.Size(281, 278);
             this.mediaPlayer.SubtitleText = "";
             this.mediaPlayer.TabIndex = 5;
             this.mediaPlayer.VideoPlayer = null;
