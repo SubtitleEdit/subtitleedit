@@ -9,6 +9,7 @@ namespace Nikse.SubtitleEdit.Controls
 {
     public sealed class VideoPlayerContainer : Panel
     {
+
         class RichTextBoxViewOnly : System.Windows.Forms.RichTextBox
         {
             public RichTextBoxViewOnly()
@@ -517,9 +518,10 @@ namespace Nikse.SubtitleEdit.Controls
             _pictureBoxFastForwardDown.TabStop = false;
             _panelcontrols.Controls.Add(_pictureBoxFastForwardDown);
 
-            _labelTimeCode.Location = new Point(280, 29);
-            _labelTimeCode.ForeColor = Color.FromArgb(100, 200, 200);
+            _labelTimeCode.Location = new Point(280, 28);
+            _labelTimeCode.ForeColor = Color.Gray; // Color.FromArgb(100, 200, 200);
             _labelTimeCode.Font = new Font(_labelTimeCode.Font.FontFamily, 7);
+//            _labelTimeCode.BackColor = Color.Transparent;
             _labelTimeCode.AutoSize = true;
             _panelcontrols.Controls.Add(_labelTimeCode);
 
@@ -878,7 +880,6 @@ namespace Nikse.SubtitleEdit.Controls
                 TimeSpan span = TimeSpan.FromSeconds(pos);
                 string displayTime = string.Format("{0:00}:{1:00}:{2:00},{3:000}", span.Hours, span.Minutes, span.Seconds, span.Milliseconds);
                 _labelTimeCode.Text = displayTime + _totalPositionString;
-
             }
         }
 
