@@ -1084,6 +1084,8 @@ Fortsæt?</SubtitleAppendPrompt>
     <OcrAutoCorrectionSpellchecking>OCR automatisk korrektion / stavekontrol</OcrAutoCorrectionSpellchecking>
     <FixOcrErrors>Ret OCR-fejl</FixOcrErrors>
     <SaveSubtitleImageAs>Gem undertekst billede som...</SaveSubtitleImageAs>
+    <SaveAllSubtitleImagesAs>Gem alle undertekstl billeder som...</SaveAllSubtitleImagesAs>
+    <XImagesSavedInY>{0} billeder gemt i {1}</XImagesSavedInY>
     <TryModiForUnknownWords>Prøv MS MODI OCR for ukendte ord</TryModiForUnknownWords>
     <DictionaryX>Ordbog: {0}</DictionaryX>
     <RightToLeft>Højre til venstre</RightToLeft>
