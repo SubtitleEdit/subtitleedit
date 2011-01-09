@@ -172,6 +172,7 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
             GenerateBitmap(_data, fastBmp, 1, imageBottomFieldDataAddress, fourColors);
             Bitmap cropped = CropBitmapAndUnlok(fastBmp, fourColors[0]);
             bmp.Dispose();
+            gr.Dispose();
             return cropped;
         }
 
