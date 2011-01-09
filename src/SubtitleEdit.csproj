@@ -15,7 +15,6 @@
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <ApplicationIcon>Icons\SE.ico</ApplicationIcon>
     <ManifestCertificateThumbprint>DCCE7922B5E425ADB221E06DC2FB405664CF8F63</ManifestCertificateThumbprint>
-    <ManifestKeyFile>SubtitleEdit_TemporaryKey.pfx</ManifestKeyFile>
     <GenerateManifests>false</GenerateManifests>
     <SignManifests>false</SignManifests>
     <SccProjectName>Svn</SccProjectName>
@@ -772,7 +771,6 @@
       <DependentUpon>SyncPointsSync.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="app.config" />
-    <None Include="Properties\Manifest.manifest" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
