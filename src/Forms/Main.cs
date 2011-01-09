@@ -6189,16 +6189,6 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void buttonPlayCurrent_Click(object sender, EventArgs e)
-        {
-            PlayCurrent();
-        }
-
-        private void buttonPlayPrevious_Click(object sender, EventArgs e)
-        {
-            PlayPrevious();
-        }
-
         private void PlayPart(Paragraph paragraph)
         {
             if (mediaPlayer != null && mediaPlayer.VideoPlayer != null)
@@ -6392,21 +6382,6 @@ namespace Nikse.SubtitleEdit.Forms
         private void buttonGotoSub_Click(object sender, EventArgs e)
         {
             GotoSubPositionAndPause();
-        }
-
-        private void buttonStop_Click(object sender, EventArgs e)
-        {
-            timerAutoContinue.Stop();
-
-            if (mediaPlayer != null)
-                mediaPlayer.Pause();
-
-            labelStatus.Text = string.Empty;
-        }
-
-        private void buttonPlayNext_Click(object sender, EventArgs e)
-        {
-            Next();
         }
 
         private void buttonOpenVideo_Click(object sender, EventArgs e)
@@ -6675,7 +6650,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonGoogleIt_Click(object sender, EventArgs e)
         {
-            System.Diagnostics.Process.Start("http://www.google.dk/#q=" + HttpUtility.UrlEncode(textBoxSearchWord.Text));
+            System.Diagnostics.Process.Start("http://www.google.com/#q=" + HttpUtility.UrlEncode(textBoxSearchWord.Text));
         }
 
         private void buttonGoogleTranslateIt_Click(object sender, EventArgs e)
@@ -6689,17 +6664,17 @@ namespace Nikse.SubtitleEdit.Forms
             PlayCurrent();
         }
 
-        private void buttonPlayNext_Click_1(object sender, EventArgs e)
+        private void buttonPlayNext_Click(object sender, EventArgs e)
         {
             Next();
         }
 
-        private void buttonPlayPrevious_Click_1(object sender, EventArgs e)
+        private void buttonPlayPrevious_Click(object sender, EventArgs e)
         {
             PlayPrevious();
         }
 
-        private void buttonStop_Click_1(object sender, EventArgs e)
+        private void buttonStop_Click(object sender, EventArgs e)
         {
             _endSeconds = -1;
             timerAutoContinue.Stop();
@@ -7190,7 +7165,7 @@ namespace Nikse.SubtitleEdit.Forms
             mediaPlayer.Play();
         }
 
-        private void toolStripButtonLockCenter_Click_1(object sender, EventArgs e)
+        private void toolStripButtonLockCenter_Click(object sender, EventArgs e)
         {
             toolStripButtonLockCenter.Checked = !toolStripButtonLockCenter.Checked;
             AudioWaveForm.Locked = toolStripButtonLockCenter.Checked;
@@ -8120,7 +8095,6 @@ namespace Nikse.SubtitleEdit.Forms
                 Encoding encoding = null;
                 Subtitle subtitle = new Subtitle();
                 SubtitleFormat format = subtitle.LoadSubtitle(openFileDialog1.FileName, out encoding, encoding);
-
 
                 if (format != null)
                 {

@@ -1898,7 +1898,7 @@
             this.toolStripButtonWaveFormPlay.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonWaveFormPlay.Image")));
             this.toolStripButtonWaveFormPlay.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButtonWaveFormPlay.Name = "toolStripButtonWaveFormPlay";
-            this.toolStripButtonWaveFormPlay.Size = new System.Drawing.Size(23, 30);
+            this.toolStripButtonWaveFormPlay.Size = new System.Drawing.Size(23, 22);
             this.toolStripButtonWaveFormPlay.Text = "toolStripButton1";
             this.toolStripButtonWaveFormPlay.Visible = false;
             this.toolStripButtonWaveFormPlay.Click += new System.EventHandler(this.toolStripButtonWaveFormPlay_Click);
@@ -1911,7 +1911,7 @@
             this.toolStripButtonLockCenter.Name = "toolStripButtonLockCenter";
             this.toolStripButtonLockCenter.Size = new System.Drawing.Size(23, 22);
             this.toolStripButtonLockCenter.Text = "Center";
-            this.toolStripButtonLockCenter.Click += new System.EventHandler(this.toolStripButtonLockCenter_Click_1);
+            this.toolStripButtonLockCenter.Click += new System.EventHandler(this.toolStripButtonLockCenter_Click);
             // 
             // AudioWaveForm
             // 
@@ -2101,7 +2101,7 @@
             this.buttonStop.TabIndex = 5;
             this.buttonStop.Text = "Pa&use";
             this.buttonStop.UseVisualStyleBackColor = true;
-            this.buttonStop.Click += new System.EventHandler(this.buttonStop_Click_1);
+            this.buttonStop.Click += new System.EventHandler(this.buttonStop_Click);
             // 
             // groupBoxAutoRepeat
             // 
@@ -2164,7 +2164,7 @@
             this.buttonPlayPrevious.TabIndex = 2;
             this.buttonPlayPrevious.Text = "<< Prevoius";
             this.buttonPlayPrevious.UseVisualStyleBackColor = true;
-            this.buttonPlayPrevious.Click += new System.EventHandler(this.buttonPlayPrevious_Click_1);
+            this.buttonPlayPrevious.Click += new System.EventHandler(this.buttonPlayPrevious_Click);
             // 
             // buttonPlayCurrent
             // 
@@ -2186,7 +2186,7 @@
             this.buttonPlayNext.TabIndex = 4;
             this.buttonPlayNext.Text = "Next >>";
             this.buttonPlayNext.UseVisualStyleBackColor = true;
-            this.buttonPlayNext.Click += new System.EventHandler(this.buttonPlayNext_Click_1);
+            this.buttonPlayNext.Click += new System.EventHandler(this.buttonPlayNext_Click);
             // 
             // tabPageCreate
             // 
@@ -2861,7 +2861,7 @@
             // labelTextLineTotal
             // 
             this.labelTextLineTotal.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.labelTextLineTotal.Location = new System.Drawing.Point(625, 86);
+            this.labelTextLineTotal.Location = new System.Drawing.Point(625, 84);
             this.labelTextLineTotal.Name = "labelTextLineTotal";
             this.labelTextLineTotal.Size = new System.Drawing.Size(177, 18);
             this.labelTextLineTotal.TabIndex = 21;
@@ -3068,7 +3068,7 @@
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(937, 248);
+            this.tabPage2.Size = new System.Drawing.Size(937, 254);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Source view";
             this.tabPage2.UseVisualStyleBackColor = true;
@@ -3085,7 +3085,7 @@
             this.textBoxSource.Multiline = true;
             this.textBoxSource.Name = "textBoxSource";
             this.textBoxSource.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.textBoxSource.Size = new System.Drawing.Size(932, 251);
+            this.textBoxSource.Size = new System.Drawing.Size(932, 257);
             this.textBoxSource.TabIndex = 12;
             this.textBoxSource.WordWrap = false;
             this.textBoxSource.Click += new System.EventHandler(this.TextBoxSourceClick);
