@@ -51,7 +51,7 @@
             this.Name = "VideoPlayerUnDocked";
             this.Text = "VideoPlayerUnDocked";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.VideoPlayerUnDocked_FormClosing);
-            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.VideoPlayerUnDocked_KeyDown_1);
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.VideoPlayerUnDocked_KeyDown);
             this.ResumeLayout(false);
 
         }
