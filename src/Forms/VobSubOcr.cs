@@ -1768,7 +1768,9 @@ namespace Nikse.SubtitleEdit.Forms
                         string fileName = Path.Combine(folderBrowserDialog1.SelectedPath, i.ToString() + ".png");
                         bmp.Save(fileName, System.Drawing.Imaging.ImageFormat.Png);
                         imagesSavedCount++;
+                        bmp.Dispose();
                     }
+
                 }
                 MessageBox.Show(string.Format("{0} images saved in {1}", imagesSavedCount, folderBrowserDialog1.SelectedPath));
             }
