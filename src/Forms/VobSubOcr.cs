@@ -159,6 +159,11 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxShowOnlyForced.Text = language.ShowOnlyForcedSubtitles;
             checkBoxUseTimeCodesFromIdx.Text = language.UseTimeCodesFromIdx;
 
+            normalToolStripMenuItem.Text = Configuration.Settings.Language.Main.Menu.ContextMenu.Normal;
+            italicToolStripMenuItem.Text = Configuration.Settings.Language.General.Italic;
+            saveImageAsToolStripMenuItem.Text = language.SaveSubtitleImageAs;
+            saveAllImagesToolStripMenuItem.Text = language.SaveAllSubtitleImagesAs;
+
             comboBoxTesseractLanguages.Left = labelTesseractLanguage.Left + labelTesseractLanguage.Width;
 
             FixLargeFonts();
@@ -1734,19 +1739,38 @@ namespace Nikse.SubtitleEdit.Forms
 
                 try
                 {
-                if (saveFileDialog1.FilterIndex == 0)
-                    bmp.Save(saveFileDialog1.FileName, System.Drawing.Imaging.ImageFormat.Png);
-                else if (saveFileDialog1.FilterIndex == 1)
-                    bmp.Save(saveFileDialog1.FileName);
-                else if (saveFileDialog1.FilterIndex == 2)
-                    bmp.Save(saveFileDialog1.FileName, System.Drawing.Imaging.ImageFormat.Gif);
-                else
-                    bmp.Save(saveFileDialog1.FileName, System.Drawing.Imaging.ImageFormat.Tiff);
+                    if (saveFileDialog1.FilterIndex == 0)
+                        bmp.Save(saveFileDialog1.FileName, System.Drawing.Imaging.ImageFormat.Png);
+                    else if (saveFileDialog1.FilterIndex == 1)
+                        bmp.Save(saveFileDialog1.FileName);
+                    else if (saveFileDialog1.FilterIndex == 2)
+                        bmp.Save(saveFileDialog1.FileName, System.Drawing.Imaging.ImageFormat.Gif);
+                    else
+                        bmp.Save(saveFileDialog1.FileName, System.Drawing.Imaging.ImageFormat.Tiff);
                 }
                 catch (Exception exception)
                 {
                     MessageBox.Show(exception.Message);
                 }
+            }
+        }
+
+        private void saveAllImagesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            int imagesSavedCount = 0;
+            if (folderBrowserDialog1.ShowDialog(this) == DialogResult.OK)
+            {
+                for (int i = 0; i < _subtitle.Paragraphs.Count; i++)
+                {
+                    Bitmap bmp = GetSubtitleBitmap(i);
+                    if (bmp != null)
+                    {
+                        string fileName = Path.Combine(folderBrowserDialog1.SelectedPath, i.ToString() + ".png");
+                        bmp.Save(fileName, System.Drawing.Imaging.ImageFormat.Png);
+                        imagesSavedCount++;
+                    }
+                }
+                MessageBox.Show(string.Format("{0} images saved in {1}", imagesSavedCount, folderBrowserDialog1.SelectedPath));
             }
         }
 
@@ -1877,7 +1901,6 @@ namespace Nikse.SubtitleEdit.Forms
             subtitleListView1.Fill(_subtitle);
             subtitleListView1.EndUpdate();
         }
-
 
     }
 }
