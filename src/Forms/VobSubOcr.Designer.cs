@@ -37,6 +37,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.italicToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.saveImageAsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.saveAllImagesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.labelSubtitleText = new System.Windows.Forms.Label();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.labelStatus = new System.Windows.Forms.Label();
@@ -93,7 +94,6 @@ namespace Nikse.SubtitleEdit.Forms
             this.checkBoxShowOnlyForced = new System.Windows.Forms.CheckBox();
             this.checkBoxUseTimeCodesFromIdx = new System.Windows.Forms.CheckBox();
             this.subtitleListView1 = new Nikse.SubtitleEdit.Controls.SubtitleListView();
-            this.saveAllImagesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxSubtitleImage)).BeginInit();
             this.contextMenuStripListview.SuspendLayout();
@@ -163,6 +163,13 @@ namespace Nikse.SubtitleEdit.Forms
             this.saveImageAsToolStripMenuItem.Size = new System.Drawing.Size(157, 22);
             this.saveImageAsToolStripMenuItem.Text = "Save image as...";
             this.saveImageAsToolStripMenuItem.Click += new System.EventHandler(this.SaveImageAsToolStripMenuItemClick);
+            // 
+            // saveAllImagesToolStripMenuItem
+            // 
+            this.saveAllImagesToolStripMenuItem.Name = "saveAllImagesToolStripMenuItem";
+            this.saveAllImagesToolStripMenuItem.Size = new System.Drawing.Size(163, 22);
+            this.saveAllImagesToolStripMenuItem.Text = "Save all images...";
+            this.saveAllImagesToolStripMenuItem.Click += new System.EventHandler(this.saveAllImagesToolStripMenuItem_Click);
             // 
             // labelSubtitleText
             // 
@@ -557,7 +564,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.listBoxLog.FormattingEnabled = true;
             this.listBoxLog.Location = new System.Drawing.Point(5, 6);
             this.listBoxLog.Name = "listBoxLog";
-            this.listBoxLog.Size = new System.Drawing.Size(270, 95);
+            this.listBoxLog.Size = new System.Drawing.Size(270, 147);
             this.listBoxLog.TabIndex = 39;
             this.listBoxLog.SelectedIndexChanged += new System.EventHandler(this.ListBoxLogSelectedIndexChanged);
             // 
@@ -581,7 +588,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.listBoxLogSuggestions.FormattingEnabled = true;
             this.listBoxLogSuggestions.Location = new System.Drawing.Point(5, 6);
             this.listBoxLogSuggestions.Name = "listBoxLogSuggestions";
-            this.listBoxLogSuggestions.Size = new System.Drawing.Size(244, 82);
+            this.listBoxLogSuggestions.Size = new System.Drawing.Size(270, 147);
             this.listBoxLogSuggestions.TabIndex = 40;
             this.listBoxLogSuggestions.SelectedIndexChanged += new System.EventHandler(this.ListBoxLogSelectedIndexChanged);
             // 
@@ -604,7 +611,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.listBoxUnknownWords.FormattingEnabled = true;
             this.listBoxUnknownWords.Location = new System.Drawing.Point(5, 6);
             this.listBoxUnknownWords.Name = "listBoxUnknownWords";
-            this.listBoxUnknownWords.Size = new System.Drawing.Size(244, 82);
+            this.listBoxUnknownWords.Size = new System.Drawing.Size(273, 147);
             this.listBoxUnknownWords.TabIndex = 40;
             this.listBoxUnknownWords.SelectedIndexChanged += new System.EventHandler(this.ListBoxLogSelectedIndexChanged);
             // 
@@ -807,13 +814,6 @@ namespace Nikse.SubtitleEdit.Forms
             this.subtitleListView1.UseCompatibleStateImageBehavior = false;
             this.subtitleListView1.View = System.Windows.Forms.View.Details;
             this.subtitleListView1.SelectedIndexChanged += new System.EventHandler(this.SubtitleListView1SelectedIndexChanged);
-            // 
-            // saveAllImagesToolStripMenuItem
-            // 
-            this.saveAllImagesToolStripMenuItem.Name = "saveAllImagesToolStripMenuItem";
-            this.saveAllImagesToolStripMenuItem.Size = new System.Drawing.Size(163, 22);
-            this.saveAllImagesToolStripMenuItem.Text = "Save all images...";
-            this.saveAllImagesToolStripMenuItem.Click += new System.EventHandler(this.saveAllImagesToolStripMenuItem_Click);
             // 
             // VobSubOcr
             // 
