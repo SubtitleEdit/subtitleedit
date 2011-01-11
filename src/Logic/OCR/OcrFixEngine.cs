@@ -95,11 +95,32 @@ namespace Nikse.SubtitleEdit.Logic.OCR
                     if (!Directory.Exists(dictionaryFolder))
                         return;
 
-                    string[] files = Directory.GetFiles(Utilities.DictionaryFolder, culture.TwoLetterISOLanguageName + "_??.dic");
-                    if (files.Length == 0)
+                    string dictionaryFileName = null;
+                    foreach (string dic in Directory.GetFiles(dictionaryFolder, "*.dic"))
+                    {
+                        string name = Path.GetFileNameWithoutExtension(dic);
+                        if (!name.StartsWith("hyph"))
+                        {
+                            try
+                            {
+                                var ci = new CultureInfo(name.Replace("_", "-"));
+                                if (ci.ThreeLetterISOLanguageName == threeLetterIsoLanguageName || string.Compare(ci.ThreeLetterWindowsLanguageName, threeLetterIsoLanguageName, true) == 0)
+                                {
+                                    dictionaryFileName = dic;
+                                    break;
+                                }
+                            }
+                            catch (Exception exception)
+                            {
+                                System.Diagnostics.Debug.WriteLine(exception.Message);
+                            }
+                        }
+                    }
+
+                    if (dictionaryFileName == null)
                         return;
 
-                    _fiveLetterWordListLanguageName = Path.GetFileName(files[0]).Substring(0, 5);
+                    _fiveLetterWordListLanguageName = Path.GetFileName(dictionaryFileName).Substring(0, 5);
                     string dictionary = Utilities.DictionaryFolder + _fiveLetterWordListLanguageName;
                     _wordSkipList = new List<string>();
                     _wordSkipList.Add(Configuration.Settings.Tools.MusicSymbol);
