@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Reflection;
@@ -10,7 +11,6 @@ using System.Xml;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.OCR;
 using Nikse.SubtitleEdit.Logic.VobSub;
-using System.Diagnostics;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -163,6 +163,7 @@ namespace Nikse.SubtitleEdit.Forms
             italicToolStripMenuItem.Text = Configuration.Settings.Language.General.Italic;
             saveImageAsToolStripMenuItem.Text = language.SaveSubtitleImageAs;
             saveAllImagesToolStripMenuItem.Text = language.SaveAllSubtitleImagesAs;
+            checkBoxRightToLeft.Checked = Configuration.Settings.VobSubOcr.RightToLeft;
 
             comboBoxTesseractLanguages.Left = labelTesseractLanguage.Left + labelTesseractLanguage.Width;
 
@@ -764,6 +765,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     else if (index+1 < list.Count && list[index+1].Bitmap != null) // only allow expand to EndOfLine or space
                     {
+                        
                         index++; 
                         expandSelectionList.Add(list[index]);
                     }
@@ -860,21 +862,40 @@ namespace Nikse.SubtitleEdit.Forms
             return line;
         }
 
-        private static ImageSplitterItem GetExpandedSelection(Bitmap bitmap, List<ImageSplitterItem> expandSelectionList)
+        private ImageSplitterItem GetExpandedSelection(Bitmap bitmap, List<ImageSplitterItem> expandSelectionList)
         {
-            int minimumX = expandSelectionList[0].X;
-            int maximumX = expandSelectionList[expandSelectionList.Count - 1].X + expandSelectionList[expandSelectionList.Count - 1].Bitmap.Width;
-            int minimumY = expandSelectionList[0].Y;
-            int maximumY = expandSelectionList[0].Y + expandSelectionList[0].Bitmap.Height;
-            foreach (ImageSplitterItem item in expandSelectionList)
+            if (checkBoxRightToLeft.Checked)
             {
-                if (item.Y < minimumY)
-                    minimumY = item.Y;
-                if (item.Y + item.Bitmap.Height > maximumY)
-                    maximumY = item.Y + item.Bitmap.Height;
+                int minimumX = expandSelectionList[expandSelectionList.Count - 1].X - expandSelectionList[expandSelectionList.Count - 1].Bitmap.Width;
+                int maximumX = expandSelectionList[0].X;
+                int minimumY = expandSelectionList[0].Y;
+                int maximumY = expandSelectionList[0].Y + expandSelectionList[0].Bitmap.Height;
+                foreach (ImageSplitterItem item in expandSelectionList)
+                {
+                    if (item.Y < minimumY)
+                        minimumY = item.Y;
+                    if (item.Y + item.Bitmap.Height > maximumY)
+                        maximumY = item.Y + item.Bitmap.Height;
+                }
+                Bitmap part = ImageSplitter.Copy(bitmap, new Rectangle(minimumX, minimumY, maximumX - minimumX, maximumY - minimumY));
+                return new ImageSplitterItem(minimumX, minimumY, part);
             }
-            Bitmap part = ImageSplitter.Copy(bitmap, new Rectangle(minimumX, minimumY, maximumX - minimumX, maximumY - minimumY));
-            return new ImageSplitterItem(minimumX, minimumY, part);
+            else
+            {
+                int minimumX = expandSelectionList[0].X;
+                int maximumX = expandSelectionList[expandSelectionList.Count - 1].X + expandSelectionList[expandSelectionList.Count - 1].Bitmap.Width;
+                int minimumY = expandSelectionList[0].Y;
+                int maximumY = expandSelectionList[0].Y + expandSelectionList[0].Bitmap.Height;
+                foreach (ImageSplitterItem item in expandSelectionList)
+                {
+                    if (item.Y < minimumY)
+                        minimumY = item.Y;
+                    if (item.Y + item.Bitmap.Height > maximumY)
+                        maximumY = item.Y + item.Bitmap.Height;
+                }
+                Bitmap part = ImageSplitter.Copy(bitmap, new Rectangle(minimumX, minimumY, maximumX - minimumX, maximumY - minimumY));
+                return new ImageSplitterItem(minimumX, minimumY, part);
+            }
         }
 
         private static string GetStringWithItalicTags(List<CompareMatch> matches)
@@ -1064,6 +1085,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ButtonStartOcrClick(object sender, EventArgs e)
         {
+            Configuration.Settings.VobSubOcr.RightToLeft = checkBoxRightToLeft.Checked;
             _lastLine = null;
             buttonOK.Enabled = false;
             buttonCancel.Enabled = false;
@@ -1130,7 +1152,7 @@ namespace Nikse.SubtitleEdit.Forms
                     p.Text = text;
                 textBoxCurrentText.Text = text;
             }            
-            SetButtonsEnabledAfterOcrDone();
+            SetButtonsEnabledAfterOcrDone();            
         }
 
         private Bitmap ResizeBitmap(Bitmap b, int width, int height)

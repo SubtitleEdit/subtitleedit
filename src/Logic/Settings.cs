@@ -321,6 +321,7 @@ namespace Nikse.SubtitleEdit.Logic
         public int LastModiLanguageId { get; set; }
         public string LastOcrMethod { get; set; }
         public string TesseractLastLanguage { get; set; }
+        public bool RightToLeft { get; set; }
 
         public VobSubOcrSettings()
         {
@@ -329,6 +330,7 @@ namespace Nikse.SubtitleEdit.Logic
             LastImageCompareFolder = "English";
             LastModiLanguageId = 9;
             LastOcrMethod = "Tesseract";
+            RightToLeft = false;
         }
     }
 
@@ -838,6 +840,9 @@ namespace Nikse.SubtitleEdit.Logic
             subNode = node.SelectSingleNode("TesseractLastLanguage");
             if (subNode != null)
                 settings.VobSubOcr.TesseractLastLanguage = subNode.InnerText;
+            subNode = node.SelectSingleNode("RightToLeft");
+            if (subNode != null)
+                settings.VobSubOcr.RightToLeft = Convert.ToBoolean(subNode.InnerText);
 
             foreach (XmlNode listNode in doc.DocumentElement.SelectNodes("MultipleSearchAndReplaceList/MultipleSearchAndReplaceItem"))
             {
@@ -1012,6 +1017,7 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("LastModiLanguageId", settings.VobSubOcr.LastModiLanguageId.ToString());
             textWriter.WriteElementString("LastOcrMethod", settings.VobSubOcr.LastOcrMethod);
             textWriter.WriteElementString("TesseractLastLanguage", settings.VobSubOcr.TesseractLastLanguage);
+            textWriter.WriteElementString("RightToLeft", settings.VobSubOcr.RightToLeft.ToString());
             textWriter.WriteEndElement();
 
             textWriter.WriteStartElement("MultipleSearchAndReplaceList", "");
