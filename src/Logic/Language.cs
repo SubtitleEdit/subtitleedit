@@ -802,6 +802,7 @@ namespace Nikse.SubtitleEdit.Logic
                         Paste = "Paste",
                         Delete = "Delete",
                         SelectAll = "Select all",
+                        InsertFirstLine = "Insert line",
                         InsertBefore = "Insert before",
                         InsertAfter = "Insert after",
                         InsertSubtitleAfter = "Insert subtitle after this line...",
@@ -835,7 +836,7 @@ namespace Nikse.SubtitleEdit.Logic
                     UndoChangesInEditPanel = "Undo changes in edit panel",
                     Previous = "< Prev",
                     Next = "Next >",
-                    AutoBreak = "Auto br",
+                    AutoBreak = "Auto &br",
                     Unbreak = "Unbreak"
                 },
 

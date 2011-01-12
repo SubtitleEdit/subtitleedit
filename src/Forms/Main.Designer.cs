@@ -316,6 +316,8 @@
             this.textBoxSource = new System.Windows.Forms.TextBox();
             this.panelVideoPlayer = new System.Windows.Forms.Panel();
             this.mediaPlayer = new Nikse.SubtitleEdit.Controls.VideoPlayerContainer();
+            this.contextMenuStripEmpty = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.insertLineToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
@@ -349,6 +351,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDuration)).BeginInit();
             this.tabPage2.SuspendLayout();
             this.panelVideoPlayer.SuspendLayout();
+            this.contextMenuStripEmpty.SuspendLayout();
             this.SuspendLayout();
             // 
             // statusStrip1
@@ -3125,6 +3128,20 @@
             this.mediaPlayer.DragDrop += new System.Windows.Forms.DragEventHandler(this.mediaPlayer_DragDrop);
             this.mediaPlayer.DragEnter += new System.Windows.Forms.DragEventHandler(this.mediaPlayer_DragEnter);
             // 
+            // contextMenuStripEmpty
+            // 
+            this.contextMenuStripEmpty.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.insertLineToolStripMenuItem});
+            this.contextMenuStripEmpty.Name = "contextMenuStripEmpty";
+            this.contextMenuStripEmpty.Size = new System.Drawing.Size(126, 26);
+            // 
+            // insertLineToolStripMenuItem
+            // 
+            this.insertLineToolStripMenuItem.Name = "insertLineToolStripMenuItem";
+            this.insertLineToolStripMenuItem.Size = new System.Drawing.Size(125, 22);
+            this.insertLineToolStripMenuItem.Text = "Insert line";
+            this.insertLineToolStripMenuItem.Click += new System.EventHandler(this.insertLineToolStripMenuItem_Click);
+            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -3192,6 +3209,7 @@
             this.tabPage2.ResumeLayout(false);
             this.tabPage2.PerformLayout();
             this.panelVideoPlayer.ResumeLayout(false);
+            this.contextMenuStripEmpty.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -3485,6 +3503,8 @@
         private System.Windows.Forms.ToolStripButton toolStripButtonLockCenter;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemInsertSubtitle;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemAutoSplitLongLines;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStripEmpty;
+        private System.Windows.Forms.ToolStripMenuItem insertLineToolStripMenuItem;
     }
 }
 

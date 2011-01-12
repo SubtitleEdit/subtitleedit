@@ -602,9 +602,10 @@ namespace Nikse.SubtitleEdit.Forms
             toolStripButtonHelp.ToolTipText = _language.Menu.ToolBar.Help;
             toolStripButtonToogleWaveForm.ToolTipText = _language.Menu.ToolBar.ShowHideWaveForm;
             toolStripButtonToogleVideo.ToolTipText = _language.Menu.ToolBar.ShowHideVideo;
-            
+
 
             toolStripMenuItemDelete.Text = _language.Menu.ContextMenu.Delete;
+            insertLineToolStripMenuItem.Text = _language.Menu.ContextMenu.InsertFirstLine;
             toolStripMenuItemInsertBefore.Text = _language.Menu.ContextMenu.InsertBefore;
             toolStripMenuItemInsertAfter.Text = _language.Menu.ContextMenu.InsertAfter;
             toolStripMenuItemInsertSubtitle.Text = _language.Menu.ContextMenu.InsertSubtitleAfter;
@@ -2905,6 +2906,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (SubtitleListview1.SelectedItems.Count == 0)
             {
+                contextMenuStripEmpty.Show(MousePosition.X, MousePosition.Y);               
                 e.Cancel = true;
             }
             else
@@ -8119,6 +8121,11 @@ namespace Nikse.SubtitleEdit.Forms
                     RestoreSubtitleListviewIndexes();
                 }
             }
+        }
+
+        private void insertLineToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            InsertBefore();
         }        
 
     }
