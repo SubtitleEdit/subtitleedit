@@ -723,6 +723,7 @@
                     public string Paste { get; set; }
                     public string Delete { get; set; }
                     public string SelectAll { get; set; }
+                    public string InsertFirstLine { get; set; }
                     public string InsertBefore { get; set; }
                     public string InsertAfter { get; set; }
                     public string InsertSubtitleAfter { get; set; }
