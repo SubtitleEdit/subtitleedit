@@ -543,12 +543,14 @@ namespace Nikse.SubtitleEdit.Controls
                     }
                     else if (OnParagraphRightClicked != null)
                     {
-                        NewSelectionParagraph = null;
                         Paragraph p = GetParagraphAtMilliseconds(milliseconds);
                         RightClickedParagraph = p;
                         RightClickedSeconds = seconds;
                         if (p != null)
+                        {
+                            NewSelectionParagraph = null;
                             OnParagraphRightClicked.Invoke(seconds, p);
+                        }
                     }
                 }
                 Cursor = Cursors.Default;
