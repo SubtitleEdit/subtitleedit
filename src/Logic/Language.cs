@@ -662,6 +662,10 @@ namespace Nikse.SubtitleEdit.Logic
                 NetworkMode = "Networking mode",
                 UserAndAction = "User/action",
                 XStartedSessionYAtZ = "{0}: Started session {1} at {2}",
+                SpellChekingViaWordXLineYOfX = "Spell checking using Word {0} - line {1} / {2}",
+                UnableToStartWord = "Unable to start Microsoft Word",
+                SpellCheckAbortedXCorrections = "Spell check aborted. {0} corrections was made.",
+                SpellCheckCompletedXCorrections = "Spell check completed. {0} corrections was made.",
 
                 Menu = new LanguageStructure.Main.MainMenu
                 {
