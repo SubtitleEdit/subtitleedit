@@ -94,10 +94,6 @@ $HorzAlign			=	Center
                         _errorCount++;
                     }
                 }
-                else
-                {
-                    _errorCount++;
-                }
             }
         }
 
