@@ -101,7 +101,7 @@ namespace Nikse.SubtitleEdit.Forms
                     if (versionInfo.Length >= 3 && versionInfo[2] != "0")
                         _title += "." + versionInfo[2];
                 }
-                return _title + " Beta 2";
+                return _title + " Beta 3";
             }
         }
 
@@ -2768,6 +2768,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void SpellCheckViaWord()
         {
+            if (_subtitle == null | _subtitle.Paragraphs.Count == 0)
+                return;
+
             WordSpellChecker wordSpellChecker = null;
             int totalCorrections = 0;
             try

@@ -483,6 +483,7 @@
         <Paste>Indsæt</Paste>
         <Delete>Slet</Delete>
         <SelectAll>Vælg alle</SelectAll>
+        <InsertFirstLine>Indsæt linje</InsertFirstLine>
         <InsertBefore>Indsæt før</InsertBefore>
         <InsertAfter>Indsæt efter</InsertAfter>
         <InsertSubtitleAfter>Indsæt undertekst efter denne linje...</InsertSubtitleAfter>
@@ -744,6 +745,10 @@ Fortsæt?</SubtitleAppendPrompt>
     <UserAndAction>Bruger/handling</UserAndAction>
     <NetworkMode>Netværk mode on</NetworkMode>
     <XStartedSessionYAtZ>{0}: Startede session {1} kl. {2}</XStartedSessionYAtZ>
+    <SpellChekingViaWordXLineYOfX>Stavekontrol hjælp af Word {0} - linje {1} / {2}</SpellChekingViaWordXLineYOfX>
+    <UnableToStartWord>Kan ikke starte Microsoft Word</UnableToStartWord>
+    <SpellCheckAbortedXCorrections>Stavekontrol afbrudt. {0} korrektioner blev foretaget.</SpellCheckAbortedXCorrections>
+    <SpellCheckCompletedXCorrections>Stavekontrol færdig. {0} korrektioner blev foretaget.</SpellCheckCompletedXCorrections>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Vælg undertekst fra Matroska fil</Title>
@@ -842,6 +847,7 @@ Fortsæt?</SubtitleAppendPrompt>
   <Settings>
     <Title>Indstillinger</Title>
     <General>General</General>
+    <Toolbar>Toolbar</Toolbar>
     <VideoPlayer>Videoafspiller</VideoPlayer>
     <WaveForm>Lyd kurve</WaveForm>
     <Tools>Værktøj</Tools>
@@ -859,7 +865,6 @@ Fortsæt?</SubtitleAppendPrompt>
     <SpellCheck>Stavekontrol</SpellCheck>
     <SettingsName>Indstillinger</SettingsName>
     <Help>Hjælp</Help>
-    <Miscellaneous>Diverse</Miscellaneous>
     <ShowFrameRate>Vis frame rate i værktøjslinjen</ShowFrameRate>
     <DefaultFrameRate>Standard frame rate</DefaultFrameRate>
     <DefaultFileEncoding>Standard filkodningen</DefaultFileEncoding>
@@ -869,6 +874,7 @@ Fortsæt?</SubtitleAppendPrompt>
     <SubtitleFontSize>undertekst skriftstørrelse</SubtitleFontSize>
     <SubtitleFontColor>Undertekst skriftfarve</SubtitleFontColor>
     <SubtitleBackgroundColor>Undertekst baggrundsfarve</SubtitleBackgroundColor>
+    <SpellChecker>Stavekontrol</SpellChecker>
     <RememberRecentFiles>Husk seneste filer (for genåbn)</RememberRecentFiles>
     <StartWithLastFileLoaded>Start med sidste fil indlæst</StartWithLastFileLoaded>
     <RememberSelectedLine>Husk aktive linje</RememberSelectedLine>

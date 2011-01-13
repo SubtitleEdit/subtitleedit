@@ -951,6 +951,7 @@
         {
             public string Title { get; set; }
             public string General { get; set; }
+            public string Toolbar { get; set; }
             public string VideoPlayer { get; set; }
             public string WaveForm { get; set; }
             public string Tools { get; set; }
@@ -968,7 +969,6 @@
             public string SpellCheck { get; set; }
             public string SettingsName { get; set; }
             public string Help { get; set; }
-            public string Miscellaneous { get; set; }
             public string ShowFrameRate { get; set; }
             public string DefaultFrameRate { get; set; }
             public string DefaultFileEncoding { get; set; }
@@ -978,6 +978,7 @@
             public string SubtitleFontSize { get; set; }
             public string SubtitleFontColor { get; set; }
             public string SubtitleBackgroundColor { get; set; }
+            public string SpellChecker { get; set; }
             public string RememberRecentFiles { get; set; }
             public string StartWithLastFileLoaded { get; set; }
             public string RememberSelectedLine { get; set; }
