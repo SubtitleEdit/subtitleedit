@@ -16,6 +16,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 {
                     new SubRip(),
                     new AdobeEncore(),
+                    new AdobeEncoreTab(),
                     new DvdStudioPro(),
                     new DvdSubtitle(),
 //                    new Ebu(),
@@ -25,6 +26,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     new PinnacleImpression(),
                     new QuickTimeText(),
                     new RealTime(),
+                    new Scenarist(),
                     new SonyDVDArchitect(),
                     new SonyDVDArchitectWithLineNumbers(),
                     new SubStationAlpha(),
