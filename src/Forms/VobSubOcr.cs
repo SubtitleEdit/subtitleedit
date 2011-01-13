@@ -1779,23 +1779,63 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void saveAllImagesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            int imagesSavedCount = 0;
             if (folderBrowserDialog1.ShowDialog(this) == DialogResult.OK)
             {
+                const int height = 1080;
+                const int width = 1920;
+                const int border = 25;
+                int imagesSavedCount = 0;
+                StringBuilder sb = new StringBuilder();
                 for (int i = 0; i < _subtitle.Paragraphs.Count; i++)
                 {
                     Bitmap bmp = GetSubtitleBitmap(i);
+                    string numberString = string.Format("{0:0000}", i + 1);
                     if (bmp != null)
                     {
-                        string fileName = Path.Combine(folderBrowserDialog1.SelectedPath, i.ToString() + ".png");
+
+                        string fileName = Path.Combine(folderBrowserDialog1.SelectedPath, numberString + ".png");
                         bmp.Save(fileName, System.Drawing.Imaging.ImageFormat.Png);
                         imagesSavedCount++;
+
+                        Paragraph p = _subtitle.Paragraphs[i];
+                        //<Event InTC="00:00:24:07" OutTC="00:00:31:13" Forced="False">
+                        //  <Graphic Width="696" Height="111" X="612" Y="930">subtitle_exp_0001.png</Graphic>
+                        //</Event>
+                        sb.AppendLine("<Event InTC=\"" + BdnXmlTimeCode(p.StartTime) + "\" OutTC=\"" + BdnXmlTimeCode(p.EndTime) + "\" Forced=\"False\">");
+                        int x = (width - bmp.Width) / 2;
+                        int y = height - (bmp.Height + border);
+                        sb.AppendLine("  <Graphic Width=\"" + bmp.Width.ToString() + "\" Height=\"" + bmp.Height.ToString() + "\" X=\"" + x.ToString() + "\" Y=\"" + y.ToString() + "\">" + numberString + ".png</Graphic>");
+                        sb.AppendLine("</Event>");
+
                         bmp.Dispose();
                     }
-
                 }
+                XmlDocument doc = new XmlDocument();
+                Paragraph first = _subtitle.Paragraphs[0];
+                Paragraph last = _subtitle.Paragraphs[_subtitle.Paragraphs.Count - 1];
+                doc.LoadXml("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + Environment.NewLine +
+                            "<BDN Version=\"0.93\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:noNamespaceSchemaLocation=\"BD-03-006-0093b BDN File Format.xsd\">" + Environment.NewLine +
+                            "<Description>" + Environment.NewLine +
+                            "<Name Title=\"subtitle_exp\" Content=\"\"/>" + Environment.NewLine +
+                            "<Language Code=\"eng\"/>" + Environment.NewLine +
+                            "<Format VideoFormat=\"1080p\" FrameRate=\"25\" DropFrame=\"False\"/>" + Environment.NewLine +
+                            "<Events Type=\"Graphic\" FirstEventInTC=\"" + BdnXmlTimeCode(first.StartTime) + "\" LastEventOutTC=\"" + BdnXmlTimeCode(last.EndTime) + "\" NumberofEvents=\"" + imagesSavedCount.ToString() + "\"/>" + Environment.NewLine +
+                            "</Description>" + Environment.NewLine +
+                            "<Events>" + Environment.NewLine +
+                            "</Events>" + Environment.NewLine +
+                            "</BDN>");
+                XmlNode events = doc.DocumentElement.SelectSingleNode("Events");
+                events.InnerXml = sb.ToString();
+
+                File.WriteAllText(Path.Combine(folderBrowserDialog1.SelectedPath, "BDN_Index.xml"), doc.OuterXml);
                 MessageBox.Show(string.Format("{0} images saved in {1}", imagesSavedCount, folderBrowserDialog1.SelectedPath));
             }
+        }
+
+        private static string BdnXmlTimeCode(TimeCode timecode)
+        {
+            int frames = timecode.Milliseconds / 40; // 40==25fps (1000/25)
+            return string.Format("{0:00}:{1:00}:{2:00}:{3:00}", timecode.Hours, timecode.Minutes, timecode.Seconds, frames);
         }
 
         private void NormalToolStripMenuItemClick(object sender, EventArgs e)
