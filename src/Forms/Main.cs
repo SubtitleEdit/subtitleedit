@@ -2766,8 +2766,56 @@ namespace Nikse.SubtitleEdit.Forms
             SpellCheck(true);
         }
 
+        private void SpellCheckViaWord()
+        {
+            WordSpellChecker wordSpellChecker = null;
+            int totalCorrections = 0;
+            try
+            {
+                wordSpellChecker = new WordSpellChecker();
+            }
+            catch
+            {
+                MessageBox.Show(_language.UnableToStartWord);
+                //Configuration.Settings.General.SpellChecker = "hunspell"; ???
+                return;
+            }
+            string version = wordSpellChecker.Version;            
+            int index = 1;
+            foreach (Paragraph p in _subtitle.Paragraphs)
+            {
+                int errorsBefore;
+                int errorsAfter;
+                wordSpellChecker.NewDocument();
+                ShowStatus(string.Format(_language.SpellChekingViaWordXLineYOfX, version, index, _subtitle.Paragraphs.Count.ToString()));
+                SubtitleListview1.SelectIndexAndEnsureVisible(index - 1);
+                string newText = wordSpellChecker.CheckSpelling(p.Text, out errorsBefore, out errorsAfter);
+                wordSpellChecker.CloseDocument();
+                if (errorsAfter > 0)
+                {
+                    wordSpellChecker.Quit();
+                    ShowStatus(string.Format(_language.SpellCheckAbortedXCorrections, totalCorrections));
+                    return;
+                }
+                else if (errorsBefore != errorsAfter)
+                {
+                    textBoxListViewText.Text = newText;
+                }
+                totalCorrections += (errorsBefore - errorsAfter);
+                index++;
+            }
+            wordSpellChecker.Quit();
+            ShowStatus(string.Format(_language.SpellCheckCompletedXCorrections, totalCorrections));
+        }
+
         private void SpellCheck(bool autoDetect)
         {
+            if (Configuration.Settings.General.SpellChecker.ToLower().Contains("word"))
+            {
+                SpellCheckViaWord();
+                return;
+            }
+
             try
             {
                 string dictionaryFolder = Utilities.DictionaryFolder;

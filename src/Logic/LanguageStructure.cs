@@ -590,7 +590,11 @@
             public string UserAndAction { get; set; }
             public string NetworkMode { get; set; }
             public string XStartedSessionYAtZ { get; set; }
-            
+            public string SpellChekingViaWordXLineYOfX { get; set; }
+            public string UnableToStartWord { get; set; }
+            public string SpellCheckAbortedXCorrections { get; set; }
+            public string SpellCheckCompletedXCorrections { get; set; }
+           
             public class MainMenu
             {
                 public class FileMenu

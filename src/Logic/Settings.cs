@@ -237,6 +237,7 @@ namespace Nikse.SubtitleEdit.Logic
         public bool AutoContinueOn { get; set; }
         public bool SyncListViewWithVideoWhilePlaying { get; set; }
         public int AutoBackupSeconds { get; set; }
+        public string SpellChecker { get; set; }
 
         public GeneralSettings()
         {
@@ -283,6 +284,7 @@ namespace Nikse.SubtitleEdit.Logic
             AutoContinueOn = false;
             SyncListViewWithVideoWhilePlaying = false;
             AutoBackupSeconds = 0;
+            SpellChecker = "hunspell";
         }
     }
 
@@ -626,7 +628,10 @@ namespace Nikse.SubtitleEdit.Logic
                 settings.General.AutoContinueOn = Convert.ToBoolean(subNode.InnerText);
             subNode = node.SelectSingleNode("AutoBackupSeconds");
             if (subNode != null)
-                settings.General.AutoBackupSeconds = Convert.ToInt32(subNode.InnerText);            
+                settings.General.AutoBackupSeconds = Convert.ToInt32(subNode.InnerText);
+            subNode = node.SelectSingleNode("SpellChecker");
+            if (subNode != null)
+                settings.General.SpellChecker = subNode.InnerText;            
             
             settings.Tools = new Nikse.SubtitleEdit.Logic.ToolsSettings();
             node = doc.DocumentElement.SelectSingleNode("Tools");
@@ -929,8 +934,9 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("DefaultAdjustMilliseconds", settings.General.DefaultAdjustMilliseconds.ToString());
             textWriter.WriteElementString("AutoRepeatOn", settings.General.AutoRepeatOn.ToString());
             textWriter.WriteElementString("AutoContinueOn", settings.General.AutoContinueOn.ToString());
-            textWriter.WriteElementString("SyncListViewWithVideoWhilePlaying", settings.General.SyncListViewWithVideoWhilePlaying.ToString());           
-            textWriter.WriteElementString("AutoBackupSeconds", settings.General.AutoBackupSeconds.ToString());            
+            textWriter.WriteElementString("SyncListViewWithVideoWhilePlaying", settings.General.SyncListViewWithVideoWhilePlaying.ToString());
+            textWriter.WriteElementString("AutoBackupSeconds", settings.General.AutoBackupSeconds.ToString());
+            textWriter.WriteElementString("SpellChecker", settings.General.SpellChecker);
             textWriter.WriteEndElement();
 
             textWriter.WriteStartElement("Tools", "");
