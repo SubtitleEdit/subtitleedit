@@ -135,40 +135,40 @@ namespace Nikse.SubtitleEdit.Forms
             this.saveImageAsToolStripMenuItem,
             this.saveAllImagesToolStripMenuItem});
             this.contextMenuStripListview.Name = "contextMenuStripListview";
-            this.contextMenuStripListview.Size = new System.Drawing.Size(164, 120);
+            this.contextMenuStripListview.Size = new System.Drawing.Size(244, 120);
             this.contextMenuStripListview.Opening += new System.ComponentModel.CancelEventHandler(this.ContextMenuStripListviewOpening);
             // 
             // normalToolStripMenuItem
             // 
             this.normalToolStripMenuItem.Name = "normalToolStripMenuItem";
-            this.normalToolStripMenuItem.Size = new System.Drawing.Size(157, 22);
+            this.normalToolStripMenuItem.Size = new System.Drawing.Size(243, 22);
             this.normalToolStripMenuItem.Text = "Normal";
             this.normalToolStripMenuItem.Click += new System.EventHandler(this.NormalToolStripMenuItemClick);
             // 
             // italicToolStripMenuItem
             // 
             this.italicToolStripMenuItem.Name = "italicToolStripMenuItem";
-            this.italicToolStripMenuItem.Size = new System.Drawing.Size(157, 22);
+            this.italicToolStripMenuItem.Size = new System.Drawing.Size(243, 22);
             this.italicToolStripMenuItem.Text = "Italic";
             this.italicToolStripMenuItem.Click += new System.EventHandler(this.ItalicToolStripMenuItemClick);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(154, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(240, 6);
             // 
             // saveImageAsToolStripMenuItem
             // 
             this.saveImageAsToolStripMenuItem.Name = "saveImageAsToolStripMenuItem";
-            this.saveImageAsToolStripMenuItem.Size = new System.Drawing.Size(157, 22);
+            this.saveImageAsToolStripMenuItem.Size = new System.Drawing.Size(243, 22);
             this.saveImageAsToolStripMenuItem.Text = "Save image as...";
             this.saveImageAsToolStripMenuItem.Click += new System.EventHandler(this.SaveImageAsToolStripMenuItemClick);
             // 
             // saveAllImagesToolStripMenuItem
             // 
             this.saveAllImagesToolStripMenuItem.Name = "saveAllImagesToolStripMenuItem";
-            this.saveAllImagesToolStripMenuItem.Size = new System.Drawing.Size(163, 22);
-            this.saveAllImagesToolStripMenuItem.Text = "Save all images...";
+            this.saveAllImagesToolStripMenuItem.Size = new System.Drawing.Size(243, 22);
+            this.saveAllImagesToolStripMenuItem.Text = "Save all images (png/bdn xml)...";
             this.saveAllImagesToolStripMenuItem.Click += new System.EventHandler(this.saveAllImagesToolStripMenuItem_Click);
             // 
             // labelSubtitleText
