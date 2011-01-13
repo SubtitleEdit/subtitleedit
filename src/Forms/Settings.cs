@@ -148,6 +148,7 @@ namespace Nikse.SubtitleEdit.Forms
             tabPageTools.Text = language.Tools;
             tabPageSsaStyle.Text = language.SsaStyle;
             tabPageProxy.Text = language.Proxy;
+            tabPageToolBar.Text = language.Toolbar;
             groupBoxShowToolBarButtons.Text = language.ShowToolBarButtons;
             labelTBNew.Text = language.New;
             labelTBOpen.Text = language.Open;
@@ -170,7 +171,7 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxSettings.Text = Configuration.Settings.Language.General.Visible;
             checkBoxHelp.Text = Configuration.Settings.Language.General.Visible;
 
-            groupBoxMiscellaneous.Text = language.Miscellaneous;
+            groupBoxMiscellaneous.Text = language.General;
             checkBoxShowFrameRate.Text = language.ShowFrameRate;
             labelDefaultFrameRate.Text = language.DefaultFrameRate;
             labelDefaultFileEncoding.Text = language.DefaultFileEncoding;
@@ -180,6 +181,7 @@ namespace Nikse.SubtitleEdit.Forms
             labelSubtitleFontSize.Text = language.SubtitleFontSize;
             labelSubtitleFontColor.Text = language.SubtitleFontColor;
             labelSubtitleFontBackgroundColor.Text = language.SubtitleBackgroundColor;
+            labelSpellChecker.Text = language.SubtitleBackgroundColor;
             checkBoxSubtitleFontBold.Text = Configuration.Settings.Language.General.Bold;
             checkBoxRememberRecentFiles.Text = language.RememberRecentFiles;
             checkBoxReopenLastOpened.Text = language.StartWithLastFileLoaded;
@@ -197,7 +199,6 @@ namespace Nikse.SubtitleEdit.Forms
             comboBoxAutoBackup.Items[2] = language.AutoBackupEveryFiveMinutes;
             comboBoxAutoBackup.Items[3] = language.AutoBackupEveryFifteenMinutes;
 
-            
             groupBoxVideoEngine.Text = language.VideoEngine;
             radioButtonVideoPlayerDirectShow.Text = language.DirectShow;
             labelDirectShowDescription.Text = language.DirectShowDescription;
@@ -295,6 +296,11 @@ namespace Nikse.SubtitleEdit.Forms
                 comboBoxAutoBackup.SelectedIndex = 3;
             else
                 comboBoxAutoBackup.SelectedIndex = 0;
+
+            if (gs.SpellChecker.ToLower().Contains("word"))
+                comboBoxSpellChecker.SelectedIndex = 1;
+            else
+                comboBoxSpellChecker.SelectedIndex = 0;
 
             ToolsSettings toolsSettings = Configuration.Settings.Tools;
             if (toolsSettings.VerifyPlaySeconds - 2 >= 0 && toolsSettings.VerifyPlaySeconds - 2 < comboBoxToolsVerifySeconds.Items.Count)
@@ -554,6 +560,11 @@ namespace Nikse.SubtitleEdit.Forms
                 gs.AutoBackupSeconds = 60 * 15;
             else
                 gs.AutoBackupSeconds = 0;
+
+            if (comboBoxSpellChecker.SelectedIndex == 1)
+                gs.SpellChecker = "word";
+            else
+                gs.SpellChecker = "hunspell";
 
             if (radioButtonVideoPlayerWmp.Checked)
                 gs.VideoPlayer = "WindowsMediaPlayer";
