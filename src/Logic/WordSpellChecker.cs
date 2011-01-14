@@ -18,8 +18,8 @@ namespace Nikse.SubtitleEdit.Logic
         {
             _wordApplicationType = System.Type.GetTypeFromProgID("Word.Application");
             _wordApplication = Activator.CreateInstance(_wordApplicationType);
-            _wordApplicationType.InvokeMember("Top", BindingFlags.SetProperty, null, _wordApplication, new object[] { -1000 }); // hide window - it's a hack
-            _wordApplicationType.InvokeMember("Visible", BindingFlags.SetProperty, null, _wordApplication, new object[] { true }); // set visible to true - otherwise it will appear in the background
+            _wordApplicationType.InvokeMember("WindowState", BindingFlags.SetProperty, null, _wordApplication, new object[] { 0 }); // 0 == ?
+            _wordApplicationType.InvokeMember("Top", BindingFlags.SetProperty, null, _wordApplication, new object[] { -10000 }); // hide window - it's a hack
         }
 
         public void NewDocument()
@@ -32,7 +32,7 @@ namespace Nikse.SubtitleEdit.Logic
         {
             object saveChanges = false;
             object p = Missing.Value;
-            _wordDocumentType.InvokeMember("Close", System.Reflection.BindingFlags.InvokeMethod, null, _wordDocument, new object[] { saveChanges, p, p });
+            _wordDocumentType.InvokeMember("Close", BindingFlags.InvokeMethod, null, _wordDocument, new object[] { saveChanges, p, p });
         }
 
         public string Version
@@ -49,7 +49,7 @@ namespace Nikse.SubtitleEdit.Logic
             object saveChanges = false;
             object originalFormat = Missing.Value;
             object routeDocument = Missing.Value;
-            _wordApplicationType.InvokeMember("Quit", System.Reflection.BindingFlags.InvokeMethod, null, _wordApplication, new object[] { saveChanges, originalFormat, routeDocument });
+            _wordApplicationType.InvokeMember("Quit", BindingFlags.InvokeMethod, null, _wordApplication, new object[] { saveChanges, originalFormat, routeDocument });
             try
             {
                 System.Runtime.InteropServices.Marshal.ReleaseComObject(_wordDocument);
@@ -74,12 +74,13 @@ namespace Nikse.SubtitleEdit.Logic
             object spellingErrorsCount = spellingErrors.GetType().InvokeMember("Count", BindingFlags.GetProperty, null, spellingErrors, null);
             errorsBefore = int.Parse(spellingErrorsCount.ToString());
             System.Runtime.InteropServices.Marshal.ReleaseComObject(spellingErrors);
-           
+
             // perform spell check
             object p = Missing.Value;
+            _wordApplicationType.InvokeMember("Top", BindingFlags.SetProperty, null, _wordApplication, new object[] { -10000 }); // hide window - it's a hack
             _wordApplicationType.InvokeMember("Visible", BindingFlags.SetProperty, null, _wordApplication, new object[] { true }); // set visible to true - otherwise it will appear in the background
             _wordDocumentType.InvokeMember("CheckSpelling", BindingFlags.InvokeMethod, null, _wordDocument, new Object[] { p, p, p, p, p, p, p, p, p, p, p, p }); // 12 parameters
-//            _wordApplicationType.InvokeMember("Top", BindingFlags.SetProperty, null, _wordApplication, new object[] { -1000 }); // hide window - it's a hack
+
 
             // spell check error count
             spellingErrors = _wordDocumentType.InvokeMember("SpellingErrors", BindingFlags.GetProperty, null, _wordDocument, null);
@@ -88,13 +89,12 @@ namespace Nikse.SubtitleEdit.Logic
             System.Runtime.InteropServices.Marshal.ReleaseComObject(spellingErrors);
 
             // Get spellcheck text
-            object first = 0;
-            object characters = _wordDocumentType.InvokeMember("Characters", BindingFlags.GetProperty, null, _wordDocument, null);
-            object charactersCount = characters.GetType().InvokeMember("Count", BindingFlags.GetProperty, null, characters, null);
-            object last = int.Parse(charactersCount.ToString()) - 1;
-            System.Runtime.InteropServices.Marshal.ReleaseComObject(characters);
-
             object resultText = range.GetType().InvokeMember("Text", BindingFlags.GetProperty, null, range, null);
+            range.GetType().InvokeMember("Delete", BindingFlags.InvokeMethod, null, range, null);
+
+            System.Runtime.InteropServices.Marshal.ReleaseComObject(words);
+            System.Runtime.InteropServices.Marshal.ReleaseComObject(range);
+
             return resultText.ToString().TrimEnd(); // result needs a trimming at the end
         }
 

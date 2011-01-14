@@ -82,6 +82,8 @@ namespace Nikse.SubtitleEdit.Forms
         WaveFormUnDocked _waveFormUnDocked = null;
         VideoControlsUndocked _videoControlsUnDocked = null;
 
+        bool _cancelWordSpellCheck = false;
+
         private bool AutoRepeatContinueOn
         {
             get
@@ -2767,7 +2769,7 @@ namespace Nikse.SubtitleEdit.Forms
         }
 
         private void SpellCheckViaWord()
-        {
+        {            
             if (_subtitle == null | _subtitle.Paragraphs.Count == 0)
                 return;
 
@@ -2776,24 +2778,27 @@ namespace Nikse.SubtitleEdit.Forms
             try
             {
                 wordSpellChecker = new WordSpellChecker();
+                wordSpellChecker.NewDocument();
             }
             catch
             {
                 MessageBox.Show(_language.UnableToStartWord);
-                //Configuration.Settings.General.SpellChecker = "hunspell"; ???
                 return;
             }
-            string version = wordSpellChecker.Version;            
-            int index = 1;
+            string version = wordSpellChecker.Version;  
+          
+            int index = FirstSelectedIndex;
+            if (index < 0)
+                index = 0;
+
+            _cancelWordSpellCheck = false;
             foreach (Paragraph p in _subtitle.Paragraphs)
             {
                 int errorsBefore;
                 int errorsAfter;
-                wordSpellChecker.NewDocument();
                 ShowStatus(string.Format(_language.SpellChekingViaWordXLineYOfX, version, index, _subtitle.Paragraphs.Count.ToString()));
                 SubtitleListview1.SelectIndexAndEnsureVisible(index - 1);
                 string newText = wordSpellChecker.CheckSpelling(p.Text, out errorsBefore, out errorsAfter);
-                wordSpellChecker.CloseDocument();
                 if (errorsAfter > 0)
                 {
                     wordSpellChecker.Quit();
@@ -2806,9 +2811,14 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 totalCorrections += (errorsBefore - errorsAfter);
                 index++;
+
+                if (_cancelWordSpellCheck)
+                    break;
             }
+            wordSpellChecker.CloseDocument();
             wordSpellChecker.Quit();
             ShowStatus(string.Format(_language.SpellCheckCompletedXCorrections, totalCorrections));
+            Cursor = Cursors.Default;
         }
 
         private void SpellCheck(bool autoDetect)
@@ -5126,6 +5136,11 @@ namespace Nikse.SubtitleEdit.Forms
                 InsertAfter();
                 e.SuppressKeyPress = true;
             }
+            else if (e.KeyCode == Keys.Escape)
+            {
+                _cancelWordSpellCheck = true;
+            }
+
             //else if (e.Modifiers == Keys.Control && e.KeyCode == Keys.D)
             //{
             //    InsertAfter();
