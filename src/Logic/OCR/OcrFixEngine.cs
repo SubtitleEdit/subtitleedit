@@ -26,6 +26,7 @@ namespace Nikse.SubtitleEdit.Logic.OCR
         string _fiveLetterWordListLanguageName;
         List<string> _namesEtcList = new List<string>();
         List<string> _namesEtcListUppercase = new List<string>();
+        List<string> _namesEtcListWithApostrophe = new List<string>();
         List<string> _namesEtcMultiWordList = new List<string>(); // case sensitive phrases
         List<string> _abbreviationList;
         List<string> _userWordList = new List<string>();
@@ -137,6 +138,18 @@ namespace Nikse.SubtitleEdit.Logic.OCR
                     _namesEtcListUppercase = new List<string>();
                     foreach (string name in _namesEtcList)
                         _namesEtcListUppercase.Add(name.ToUpper());
+
+                    _namesEtcListWithApostrophe = new List<string>();
+                    if (threeLetterIsoLanguageName.ToLower() == "eng")
+                    {
+                        foreach (string namesItem in _namesEtcList)
+                        {
+                            if (!namesItem.EndsWith("s"))
+                                _namesEtcListWithApostrophe.Add(namesItem + "'s");
+                            else
+                                _namesEtcListWithApostrophe.Add(namesItem + "'");
+                        }
+                    }
 
                     // Load user words
                     _userWordList = new List<string>();
@@ -976,7 +989,10 @@ namespace Nikse.SubtitleEdit.Logic.OCR
                 return true;
 
             if (word.Length > 2 && _namesEtcListUppercase.IndexOf(word) >= 0)
-                return true;            
+                return true;
+
+            if (word.Length > 2 && _namesEtcListWithApostrophe.IndexOf(word) >= 0)
+                return true;
 
             if (Utilities.IsInNamesEtcMultiWordList(_namesEtcMultiWordList, line, word))
                 return true;
