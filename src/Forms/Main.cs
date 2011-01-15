@@ -2771,7 +2771,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void SpellCheckViaWord()
         {            
             if (_subtitle == null | _subtitle.Paragraphs.Count == 0)
-                return;
+                return;            
 
             WordSpellChecker wordSpellChecker = null;
             int totalCorrections = 0;
@@ -2779,6 +2779,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 wordSpellChecker = new WordSpellChecker();
                 wordSpellChecker.NewDocument();
+                Application.DoEvents();
             }
             catch
             {
@@ -2792,17 +2793,20 @@ namespace Nikse.SubtitleEdit.Forms
                 index = 0;
 
             _cancelWordSpellCheck = false;
-            foreach (Paragraph p in _subtitle.Paragraphs)
+            for (;index < _subtitle.Paragraphs.Count; index++)
             {
+                Paragraph p = _subtitle.Paragraphs[index];
                 int errorsBefore;
                 int errorsAfter;
-                ShowStatus(string.Format(_language.SpellChekingViaWordXLineYOfX, version, index, _subtitle.Paragraphs.Count.ToString()));
-                SubtitleListview1.SelectIndexAndEnsureVisible(index - 1);
+                ShowStatus(string.Format(_language.SpellChekingViaWordXLineYOfX, version, index+1, _subtitle.Paragraphs.Count.ToString()));
+                SubtitleListview1.SelectIndexAndEnsureVisible(index);
                 string newText = wordSpellChecker.CheckSpelling(p.Text, out errorsBefore, out errorsAfter);
                 if (errorsAfter > 0)
                 {
+                    wordSpellChecker.CloseDocument();
                     wordSpellChecker.Quit();
                     ShowStatus(string.Format(_language.SpellCheckAbortedXCorrections, totalCorrections));
+                    Cursor = Cursors.Default;
                     return;
                 }
                 else if (errorsBefore != errorsAfter)
@@ -2810,8 +2814,8 @@ namespace Nikse.SubtitleEdit.Forms
                     textBoxListViewText.Text = newText;
                 }
                 totalCorrections += (errorsBefore - errorsAfter);
-                index++;
 
+                Application.DoEvents();
                 if (_cancelWordSpellCheck)
                     break;
             }
