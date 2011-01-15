@@ -104,7 +104,7 @@ namespace Nikse.SubtitleEdit.Forms
                     if (versionInfo.Length >= 3 && versionInfo[2] != "0")
                         _title += "." + versionInfo[2];
                 }
-                return _title + " Beta 6";
+                return _title + " Beta 7";
             }
         }
 
@@ -150,6 +150,8 @@ namespace Nikse.SubtitleEdit.Forms
             try
             {
                 InitializeComponent();
+                toolStripMenuItemTranslationMode.ShortcutKeys = Keys.Control | Keys.Alt | Keys.O;
+                toolStripMenuItemTranslationMode.ShortcutKeyDisplayString = "Ctrl+Alt+O";
                 SetLanguage(Configuration.Settings.General.Language);
                 toolStripStatusNetworking.Visible = false;
                 labelTextLineLengths.Text = string.Empty;
@@ -549,6 +551,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             toolStripMenuItemVideo.Text = _language.Menu.Video.Title;
             openVideoToolStripMenuItem.Text = _language.Menu.Video.OpenVideo;
+            closeVideoToolStripMenuItem.Text = _language.Menu.Video.CloseVideo;
             showhideWaveFormToolStripMenuItem.Text = _language.Menu.Video.ShowHideWaveForm;
             showhideVideoToolStripMenuItem.Text = _language.Menu.Video.ShowHideVideo;
             undockVideoControlsToolStripMenuItem.Text = _language.Menu.Video.UnDockVideoControls;
@@ -3880,9 +3883,12 @@ namespace Nikse.SubtitleEdit.Forms
                     UpdateListViewTextCharactersPerSeconds(currentParagraph);
 
                     // update _subtitle + listview
+                    string oldDuration = currentParagraph.Duration.ToString();
                     currentParagraph.EndTime.TotalMilliseconds = currentParagraph.StartTime.TotalMilliseconds + ((double)numericUpDownDuration.Value * 1000.0);
                     SubtitleListview1.SetDuration(firstSelectedIndex, currentParagraph);
                     _change = true;
+
+                    MakeHistoryForUndoWhenNoMoreChanges(string.Format(_language.DisplayTimeAdjustedX, "#" + currentParagraph.Number + ": " +  oldDuration + " -> " + currentParagraph.Duration.ToString()));
                 }
             }
         }
@@ -3928,6 +3934,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 UpdateStartTimeInfo(timeUpDownStartTime.TimeCode);
                 _change = true;
+                MakeHistoryForUndoWhenNoMoreChanges(string.Format(_language.StartimeAdjustedX, "#" + (_subtitleListViewIndex+1).ToString() + ": " + timeUpDownStartTime.TimeCode.ToString()));
             }
         }
 
@@ -5204,6 +5211,22 @@ namespace Nikse.SubtitleEdit.Forms
             //    buttonSetEnd_Click(null, null);
             //    e.SuppressKeyPress = true;
             //}
+            else if (e.Modifiers == (Keys.Control | Keys.Shift) && e.KeyCode == Keys.U) // Ctrl+Shift+U = switch original/current
+            {
+                if (_subtitleAlternate != null && _subtitleAlternate.Paragraphs.Count > 0)
+                {
+                    Subtitle temp = _subtitle;
+                    _subtitle = _subtitleAlternate;
+                    _subtitleAlternate = temp;
+
+                    string tempName = _fileName;
+                    _fileName = _subtitleAlternateFileName;
+                    _subtitleAlternateFileName = tempName;
+
+                    SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
+                    RefreshSelectedParagraph();
+                }
+            }
         }
 
         private void SubtitleListview1_KeyDown(object sender, KeyEventArgs e)
@@ -5634,14 +5657,10 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (SubtitleListview1.IsAlternateTextColumnVisible)
             {
-                toolStripMenuItemTranslationMode.ShortcutKeys = Keys.None;
-                toolStripMenuItemTranslationMode.ShortcutKeyDisplayString = string.Empty;
                 toolStripMenuItemTranslationMode.Text = _language.Menu.Edit.HideOriginalText;
             }
             else
             {
-                toolStripMenuItemTranslationMode.ShortcutKeys = Keys.Control & Keys.Alt & Keys.O;
-                toolStripMenuItemTranslationMode.ShortcutKeyDisplayString = "Ctrl+Alt+O";
                 toolStripMenuItemTranslationMode.Text = _language.Menu.Edit.ShowOriginalText;
             }
         }
@@ -8249,6 +8268,22 @@ namespace Nikse.SubtitleEdit.Forms
         private void insertLineToolStripMenuItem_Click(object sender, EventArgs e)
         {
             InsertBefore();
+        }
+
+        private void closeVideoToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            mediaPlayer.VideoPlayer.DisposeVideoPlayer();
+            mediaPlayer.VideoPlayer = null;
+            timer1.Stop();
+            _videoFileName = null;
+            labelVideoInfo.Text = Configuration.Settings.Language.General.NoVideoLoaded;
+            AudioWaveForm.WavePeaks = null;
+            AudioWaveForm.Invalidate();            
+        }
+
+        private void toolStripMenuItemVideo_DropDownOpening(object sender, EventArgs e)
+        {
+            closeVideoToolStripMenuItem.Visible = !string.IsNullOrEmpty(_videoFileName);
         }        
 
     }
