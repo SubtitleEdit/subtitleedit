@@ -28,6 +28,7 @@ namespace Nikse.SubtitleEdit.Forms
         List<string> _namesEtcList = new List<string>();
         List<string> _namesEtcMultiWordList = new List<string>();
         List<string> _namesEtcListUppercase = new List<string>();
+        List<string> _namesEtcListWithApostrophe = new List<string>();
         List<string> _skipAllList = new List<string>();
         Dictionary<string, string> _changeAllDictionary = new Dictionary<string, string>();
         List<string> _userWordList = new List<string>();
@@ -371,6 +372,10 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         _namesEtcList.Add(_currentWord);
                         _namesEtcListUppercase.Add(_currentWord.ToUpper());
+                        if (!_currentWord.EndsWith("s"))
+                            _namesEtcListWithApostrophe.Add(_currentWord + "'s");
+                        else
+                            _namesEtcListWithApostrophe.Add(_currentWord + "'");
                         Utilities.AddWordToLocalNamesEtcList(_currentWord, _languageName);
                     }
                     else
@@ -378,6 +383,8 @@ namespace Nikse.SubtitleEdit.Forms
                         if (!_namesEtcList.Contains(ChangeWord))
                             Utilities.AddWordToLocalNamesEtcList(ChangeWord, _languageName);
                         _namesEtcListUppercase.Add(ChangeWord.ToUpper());
+                        _namesEtcListUppercase.Add(_currentWord.ToUpper());
+                        if (!_currentWord.EndsWith("s"))
                         _noOfChangedWords++;
                         if (!_changeAllDictionary.ContainsKey(_currentWord))
                             _changeAllDictionary.Add(_currentWord, ChangeWord);
@@ -508,6 +515,10 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         _noOfNamesEtc++;
                     }
+                    else if (_namesEtcListWithApostrophe.IndexOf(_currentWord) >= 0)
+                    {
+                        _noOfNamesEtc++;
+                    }
                     else if (Utilities.IsInNamesEtcMultiWordList(_namesEtcMultiWordList, _currentParagraph.Text, _currentWord)) //TODO: verify this!
                     {
                         _noOfNamesEtc++;
@@ -597,6 +608,7 @@ namespace Nikse.SubtitleEdit.Forms
             _namesEtcList = new List<string>();
             _namesEtcMultiWordList = new List<string>();
             _namesEtcListUppercase = new List<string>();
+            _namesEtcListWithApostrophe = new List<string>();
 
             _skipAllList = new List<string>();
 
@@ -635,6 +647,17 @@ namespace Nikse.SubtitleEdit.Forms
             Utilities.LoadNamesEtcWordLists(_namesEtcList, _namesEtcMultiWordList, _languageName);
             foreach (string namesItem in _namesEtcList)
                 _namesEtcListUppercase.Add(namesItem.ToUpper());
+
+            if (_languageName.ToLower().StartsWith("en_"))
+            {
+                foreach (string namesItem in _namesEtcList)
+                {
+                    if (!namesItem.EndsWith("s"))
+                        _namesEtcListWithApostrophe.Add(namesItem + "'s");
+                    else
+                        _namesEtcListWithApostrophe.Add(namesItem + "'");
+                }
+            }
 
             _userWordList = new List<string>();
             _userWordDictionary = new XmlDocument();
