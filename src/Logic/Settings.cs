@@ -14,6 +14,7 @@ namespace Nikse.SubtitleEdit.Logic
     public class RecentFileEntry
     {
         public string FileName { get; set; }
+        public string OriginalFileName { get; set; }
         public string VideoFileName { get; set; }
         public int FirstVisibleIndex { get; set; }
         public int FirstSelectedIndex { get; set; }
@@ -31,35 +32,35 @@ namespace Nikse.SubtitleEdit.Logic
             Files = new List<RecentFileEntry>();
         }
 
-        public void Add(string fileName, int firstVisibleIndex, int firstSelectedIndex, string videoFileName)
+        public void Add(string fileName, int firstVisibleIndex, int firstSelectedIndex, string videoFileName, string originalFileName)
         {
-            var newList = new List<RecentFileEntry> { new RecentFileEntry() { FileName = fileName, FirstVisibleIndex = firstVisibleIndex, FirstSelectedIndex = firstSelectedIndex, VideoFileName = videoFileName } };
+            var newList = new List<RecentFileEntry> { new RecentFileEntry() { FileName = fileName, FirstVisibleIndex = firstVisibleIndex, FirstSelectedIndex = firstSelectedIndex, VideoFileName = videoFileName, OriginalFileName = originalFileName } };
             int index = 0;
             foreach (var oldRecentFile in Files)
             {
                 if (string.Compare(fileName, oldRecentFile.FileName, true) != 0 && index < MaxRecentFiles)
-                    newList.Add(new RecentFileEntry() { FileName = oldRecentFile.FileName, FirstVisibleIndex = oldRecentFile.FirstVisibleIndex, FirstSelectedIndex = oldRecentFile.FirstSelectedIndex, VideoFileName = oldRecentFile.VideoFileName });
+                    newList.Add(new RecentFileEntry() { FileName = oldRecentFile.FileName, FirstVisibleIndex = oldRecentFile.FirstVisibleIndex, FirstSelectedIndex = oldRecentFile.FirstSelectedIndex, VideoFileName = oldRecentFile.VideoFileName, OriginalFileName = oldRecentFile.OriginalFileName });
                 index++;
             }
             Files = newList;
         }
 
-        public void Add(string fileName, string videoFileName)
+        public void Add(string fileName, string videoFileName, string originalFileName)
         {
             var newList = new List<RecentFileEntry>();
             foreach (var oldRecentFile in Files)
             {
                 if (string.Compare(fileName, oldRecentFile.FileName, true) == 0)
-                    newList.Add(new RecentFileEntry() { FileName = oldRecentFile.FileName, FirstVisibleIndex = oldRecentFile.FirstVisibleIndex, FirstSelectedIndex = oldRecentFile.FirstSelectedIndex, VideoFileName = oldRecentFile.VideoFileName });
+                    newList.Add(new RecentFileEntry() { FileName = oldRecentFile.FileName, FirstVisibleIndex = oldRecentFile.FirstVisibleIndex, FirstSelectedIndex = oldRecentFile.FirstSelectedIndex, VideoFileName = oldRecentFile.VideoFileName, OriginalFileName = oldRecentFile.OriginalFileName });
             }
             if (newList.Count == 0)
-                newList.Add(new RecentFileEntry() { FileName = fileName, FirstVisibleIndex = -1, FirstSelectedIndex = -1, VideoFileName = videoFileName });
+                newList.Add(new RecentFileEntry() { FileName = fileName, FirstVisibleIndex = -1, FirstSelectedIndex = -1, VideoFileName = videoFileName, OriginalFileName = originalFileName });
 
             int index = 0;
             foreach (var oldRecentFile in Files)
             {
                 if (string.Compare(fileName, oldRecentFile.FileName, true) != 0 && index < MaxRecentFiles)
-                    newList.Add(new RecentFileEntry() { FileName = oldRecentFile.FileName, FirstVisibleIndex = oldRecentFile.FirstVisibleIndex, FirstSelectedIndex = oldRecentFile.FirstSelectedIndex, VideoFileName = oldRecentFile.VideoFileName });
+                    newList.Add(new RecentFileEntry() { FileName = oldRecentFile.FileName, FirstVisibleIndex = oldRecentFile.FirstVisibleIndex, FirstSelectedIndex = oldRecentFile.FirstSelectedIndex, VideoFileName = oldRecentFile.VideoFileName, OriginalFileName = oldRecentFile.OriginalFileName });
                 index++;
             }
             Files = newList;
@@ -493,7 +494,11 @@ namespace Nikse.SubtitleEdit.Logic
                 if (listNode.Attributes["VideoFileName"] != null)
                     videoFileName = listNode.Attributes["VideoFileName"].Value;
 
-                settings.RecentFiles.Files.Add(new RecentFileEntry() { FileName = listNode.InnerText, FirstVisibleIndex = int.Parse(firstVisibleIndex), FirstSelectedIndex = int.Parse(firstSelectedIndex), VideoFileName = videoFileName });
+                string originalFileName = null;
+                if (listNode.Attributes["OriginalFileName"] != null)
+                    originalFileName = listNode.Attributes["OriginalFileName"].Value;
+
+                settings.RecentFiles.Files.Add(new RecentFileEntry() { FileName = listNode.InnerText, FirstVisibleIndex = int.Parse(firstVisibleIndex), FirstSelectedIndex = int.Parse(firstSelectedIndex), VideoFileName = videoFileName, OriginalFileName = originalFileName });
             }
 
 
@@ -887,6 +892,8 @@ namespace Nikse.SubtitleEdit.Logic
             foreach (var item in settings.RecentFiles.Files)
             {
                 textWriter.WriteStartElement("FileName");
+                if (item.OriginalFileName != null)
+                    textWriter.WriteAttributeString("OriginalFileName", item.OriginalFileName);
                 if (item.VideoFileName != null)
                     textWriter.WriteAttributeString("VideoFileName", item.VideoFileName);
                 textWriter.WriteAttributeString("FirstVisibleIndex", item.FirstVisibleIndex.ToString());

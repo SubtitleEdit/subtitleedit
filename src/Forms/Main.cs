@@ -35,6 +35,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         Subtitle _subtitle = new Subtitle();
         Subtitle _subtitleAlternate = new Subtitle();
+        string _subtitleAlternateFileName;
         string _fileName;
         string _videoFileName;
 
@@ -216,7 +217,7 @@ namespace Nikse.SubtitleEdit.Forms
                         fileName = Configuration.Settings.RecentFiles.Files[0].FileName;
                         if (File.Exists(fileName))
                         {
-                            OpenSubtitle(fileName, null, Configuration.Settings.RecentFiles.Files[0].VideoFileName);
+                            OpenSubtitle(fileName, null, Configuration.Settings.RecentFiles.Files[0].VideoFileName, Configuration.Settings.RecentFiles.Files[0].OriginalFileName);
                             SetRecentIndecies(fileName);
                         }
                     }
@@ -784,7 +785,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                         _fileName = saveFileDialog1.FileName;
                         Text = Title + " - " + _fileName;
-                        Configuration.Settings.RecentFiles.Add(_fileName, FirstVisibleIndex, FirstSelectedIndex, _videoFileName);
+                        Configuration.Settings.RecentFiles.Add(_fileName, FirstVisibleIndex, FirstSelectedIndex, _videoFileName, _subtitleAlternateFileName);
                         Configuration.Settings.Save();
 
                         if (SaveSubtitle(GetCurrentSubtitleFormat()) == DialogResult.OK)
@@ -928,10 +929,10 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void OpenSubtitle(string fileName, Encoding encoding)
         {
-            OpenSubtitle(fileName, encoding, null);
+            OpenSubtitle(fileName, encoding, null, null);
         }
 
-        private void OpenSubtitle(string fileName, Encoding encoding, string videoFileName)
+        private void OpenSubtitle(string fileName, Encoding encoding, string videoFileName, string orginalFileName)
         {
             if (File.Exists(fileName))
             {
@@ -939,7 +940,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 // save last first visible index + first selected index from listview
                 if (!string.IsNullOrEmpty(_fileName))
-                    Configuration.Settings.RecentFiles.Add(_fileName, FirstVisibleIndex, FirstSelectedIndex, _videoFileName);
+                    Configuration.Settings.RecentFiles.Add(_fileName, FirstVisibleIndex, FirstSelectedIndex, _videoFileName, orginalFileName);
 
                 openFileDialog1.InitialDirectory = Path.GetDirectoryName(fileName);
 
@@ -1002,6 +1003,10 @@ namespace Nikse.SubtitleEdit.Forms
 
                     SetCurrentFormat(format);
 
+                    _subtitleAlternateFileName = null;
+                    if (LoadAlternateSubtitleFile(orginalFileName))
+                        _subtitleAlternateFileName = orginalFileName;
+
                     textBoxSource.Text = _subtitle.ToText(format);
                     SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
                     if (SubtitleListview1.Items.Count > 0)
@@ -1018,9 +1023,9 @@ namespace Nikse.SubtitleEdit.Forms
                         OpenVideo(videoFileName);
                         
                     }
-                    else if (!string.IsNullOrEmpty(_fileName) && (toolStripButtonToogleVideo.Checked || toolStripButtonToogleWaveForm.Checked))
+                    else if (!string.IsNullOrEmpty(fileName) && (toolStripButtonToogleVideo.Checked || toolStripButtonToogleWaveForm.Checked))
                     {
-                        TryToFindAndOpenVideoFile(Path.Combine(Path.GetDirectoryName(_fileName), Path.GetFileNameWithoutExtension(_fileName)));
+                        TryToFindAndOpenVideoFile(Path.Combine(Path.GetDirectoryName(fileName), Path.GetFileNameWithoutExtension(fileName)));
                     }
                     videoFileLoaded = _videoFileName != null;
 
@@ -1031,7 +1036,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     else
                     {
-                        Configuration.Settings.RecentFiles.Add(fileName, _videoFileName);
+                        Configuration.Settings.RecentFiles.Add(fileName, _videoFileName, _subtitleAlternateFileName);
                         Configuration.Settings.Save();
                         UpdateRecentFilesUI();
                     }
@@ -1083,7 +1088,7 @@ namespace Nikse.SubtitleEdit.Forms
                         AudioWaveForm.WavePeaks = null;
                         AudioWaveForm.Invalidate();
 
-                        Configuration.Settings.RecentFiles.Add(fileName, FirstVisibleIndex, FirstSelectedIndex, _videoFileName);
+                        Configuration.Settings.RecentFiles.Add(fileName, FirstVisibleIndex, FirstSelectedIndex, _videoFileName, _subtitleAlternateFileName);
                         Configuration.Settings.Save();
                         UpdateRecentFilesUI();
                         _fileName = fileName;
@@ -1146,7 +1151,17 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (ContinueNewOrExit())
             {
-                OpenSubtitle(item.Text, null);
+                RecentFileEntry rfe = null;
+                foreach (var file in Configuration.Settings.RecentFiles.Files)
+                {
+                    if (file.FileName == item.Text)
+                        rfe = file;
+                }
+
+                if (rfe == null)
+                    OpenSubtitle(item.Text, null);
+                else
+                    OpenSubtitle(rfe.FileName, null, rfe.VideoFileName, rfe.OriginalFileName);
                 SetRecentIndecies(item.Text);
             }
         }
@@ -1241,7 +1256,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 _fileDateTime = File.GetLastWriteTime(_fileName);
                 Text = Title + " - " + _fileName;
-                Configuration.Settings.RecentFiles.Add(_fileName, FirstVisibleIndex, FirstSelectedIndex, _videoFileName);
+                Configuration.Settings.RecentFiles.Add(_fileName, FirstVisibleIndex, FirstSelectedIndex, _videoFileName, _subtitleAlternateFileName);
                 Configuration.Settings.Save();
 
                 int index = 0;
@@ -1362,6 +1377,7 @@ namespace Nikse.SubtitleEdit.Forms
             SetCurrentFormat(new SubRip());
             _subtitle = new Subtitle(_subtitle.HistoryItems);
             _subtitleAlternate = new Subtitle();
+            _subtitleAlternateFileName = null;
             textBoxSource.Text = string.Empty;
             SubtitleListview1.Items.Clear();
             _fileName = string.Empty;
@@ -2607,6 +2623,7 @@ namespace Nikse.SubtitleEdit.Forms
                     _subtitleListViewIndex = -1;
 
                     _subtitleAlternate = new Subtitle(_subtitle);
+                    _subtitleAlternateFileName = null;
                     MakeHistoryForUndo(_language.BeforeGoogleTranslation);
 
                     if (onlySelectedLines)
@@ -2667,7 +2684,7 @@ namespace Nikse.SubtitleEdit.Forms
                     try
                     {
                         _subtitleAlternate = new Subtitle(_subtitle);
-
+                        _subtitleAlternateFileName = null;
                         int firstSelectedIndex = 0;
                         if (SubtitleListview1.SelectedItems.Count > 0)
                             firstSelectedIndex = SubtitleListview1.SelectedItems[0].Index;
@@ -2798,7 +2815,7 @@ namespace Nikse.SubtitleEdit.Forms
             int totalLinesChanged = 0;
             try
             {
-                wordSpellChecker = new WordSpellChecker();
+                wordSpellChecker = new WordSpellChecker(this);
                 wordSpellChecker.NewDocument();
                 Application.DoEvents();
             }
@@ -3952,7 +3969,7 @@ namespace Nikse.SubtitleEdit.Forms
                 Configuration.Settings.General.AutoContinueOn = checkBoxAutoContinue.Checked;
                 Configuration.Settings.General.SyncListViewWithVideoWhilePlaying = checkBoxSyncListViewWithVideoWhilePlaying.Checked;
                 if (!string.IsNullOrEmpty(_fileName))
-                    Configuration.Settings.RecentFiles.Add(_fileName, FirstVisibleIndex, FirstSelectedIndex, _videoFileName);
+                    Configuration.Settings.RecentFiles.Add(_fileName, FirstVisibleIndex, FirstSelectedIndex, _videoFileName, _subtitleAlternateFileName);
                 Configuration.Settings.Save();
 
             }
@@ -5823,6 +5840,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 SubtitleListview1.HideAlternateTextColumn();
                 _subtitleAlternate = new Subtitle();
+                _subtitleAlternateFileName = null;
             }
             else
             {
@@ -5838,12 +5856,19 @@ namespace Nikse.SubtitleEdit.Forms
             if (!(openFileDialog1.ShowDialog(this) == DialogResult.OK))
                 return;
 
-            string fileName = openFileDialog1.FileName;
-            if (!File.Exists(fileName))
+            if (!LoadAlternateSubtitleFile(openFileDialog1.FileName))
                 return;
 
+            SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
+        }
+
+        private bool LoadAlternateSubtitleFile(string fileName)
+        {
+            if (!File.Exists(fileName))
+                return false;
+
             if (Path.GetExtension(fileName).ToLower() == ".sub" && IsVobSubFile(fileName, false))
-                return;
+                return false;
 
             var fi = new FileInfo(fileName);
             if (fi.Length > 1024 * 1024 * 10) // max 10 mb
@@ -5852,25 +5877,27 @@ namespace Nikse.SubtitleEdit.Forms
                                                     Environment.NewLine +
                                                     _language.ContinueAnyway,
                                                     fileName), Title, MessageBoxButtons.YesNoCancel) != DialogResult.Yes)
-                    return;
+                    return false;
             }
 
 
             Encoding encoding;
             _subtitleAlternate = new Subtitle();
+            _subtitleAlternateFileName = fileName;
             SubtitleFormat format = _subtitleAlternate.LoadSubtitle(fileName, out encoding, null);
             if (format == null)
-                return;
+                return false;
 
             if (format.IsFrameBased)
                 _subtitleAlternate.CalculateTimeCodesFromFrameNumbers(CurrentFrameRate);
             else
                 _subtitleAlternate.CalculateFrameNumbersFromTimeCodes(CurrentFrameRate);
 
-
             SubtitleListview1.ShowAlternateTextColumn(Configuration.Settings.Language.General.OriginalText);
-            SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
+            return true;
         }
+
+
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
