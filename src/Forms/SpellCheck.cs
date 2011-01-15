@@ -374,7 +374,7 @@ namespace Nikse.SubtitleEdit.Forms
                         _namesEtcListUppercase.Add(_currentWord.ToUpper());
                         if (!_currentWord.EndsWith("s"))
                             _namesEtcListWithApostrophe.Add(_currentWord + "'s");
-                        else
+                        else if (!_currentWord.EndsWith("'"))
                             _namesEtcListWithApostrophe.Add(_currentWord + "'");
                         Utilities.AddWordToLocalNamesEtcList(_currentWord, _languageName);
                     }
@@ -654,7 +654,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     if (!namesItem.EndsWith("s"))
                         _namesEtcListWithApostrophe.Add(namesItem + "'s");
-                    else
+                    else if (!namesItem.EndsWith("'"))
                         _namesEtcListWithApostrophe.Add(namesItem + "'");
                 }
             }
