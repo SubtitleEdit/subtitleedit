@@ -775,9 +775,13 @@ namespace Nikse.SubtitleEdit.Forms
 
                 if (string.IsNullOrEmpty(_fileName))
                 {
+                    if (!string.IsNullOrEmpty(openFileDialog1.InitialDirectory))
+                        saveFileDialog1.InitialDirectory = openFileDialog1.InitialDirectory;
                     saveFileDialog1.Title = _language.SaveSubtitleAs;
                     if (saveFileDialog1.ShowDialog(this) == DialogResult.OK)
                     {
+                        openFileDialog1.InitialDirectory = saveFileDialog1.InitialDirectory;
+
                         _fileName = saveFileDialog1.FileName;
                         Text = Title + " - " + _fileName;
                         Configuration.Settings.RecentFiles.Add(_fileName, FirstVisibleIndex, FirstSelectedIndex, _videoFileName);
@@ -1210,9 +1214,13 @@ namespace Nikse.SubtitleEdit.Forms
             else
                 saveFileDialog1.FileName = Path.GetFileNameWithoutExtension(_fileName);
 
+            if (!string.IsNullOrEmpty(openFileDialog1.InitialDirectory))
+                saveFileDialog1.InitialDirectory = openFileDialog1.InitialDirectory;
+
             DialogResult result = saveFileDialog1.ShowDialog(this);
             if (result == DialogResult.OK)
             {
+                openFileDialog1.InitialDirectory = saveFileDialog1.InitialDirectory;
                 if (saveFileDialog1.FilterIndex == SubtitleFormat.AllSubtitleFormats.Count + 1)
                 { 
                     string fileName = saveFileDialog1.FileName;
@@ -4168,6 +4176,7 @@ namespace Nikse.SubtitleEdit.Forms
             openFileDialog1.Filter = _language.MatroskaFiles + "|*.mkv;*.mks|" + _languageGeneral.AllFiles + "|*.*";
             if (openFileDialog1.ShowDialog(this) == DialogResult.OK)
             {
+                openFileDialog1.InitialDirectory = Path.GetDirectoryName(openFileDialog1.FileName);
                 bool isValid;
                 var matroska = new Matroska();
                 var subtitleList = matroska.GetMatroskaSubtitleTracks(openFileDialog1.FileName, out isValid);
@@ -5557,6 +5566,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (openFileDialog1.ShowDialog(this) == DialogResult.OK)
                 {
                     ImportAndOcrVobSubSubtitleNew(openFileDialog1.FileName);
+                    openFileDialog1.InitialDirectory = Path.GetDirectoryName(openFileDialog1.FileName);
                 }
             }
         }
