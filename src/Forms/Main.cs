@@ -103,7 +103,7 @@ namespace Nikse.SubtitleEdit.Forms
                     if (versionInfo.Length >= 3 && versionInfo[2] != "0")
                         _title += "." + versionInfo[2];
                 }
-                return _title + " Beta 3";
+                return _title + " Beta 6";
             }
         }
 
@@ -216,7 +216,7 @@ namespace Nikse.SubtitleEdit.Forms
                         fileName = Configuration.Settings.RecentFiles.Files[0].FileName;
                         if (File.Exists(fileName))
                         {
-                            OpenSubtitle(fileName, null);
+                            OpenSubtitle(fileName, null, Configuration.Settings.RecentFiles.Files[0].VideoFileName);
                             SetRecentIndecies(fileName);
                         }
                     }
@@ -780,7 +780,7 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         _fileName = saveFileDialog1.FileName;
                         Text = Title + " - " + _fileName;
-                        Configuration.Settings.RecentFiles.Add(_fileName, FirstVisibleIndex, FirstSelectedIndex);
+                        Configuration.Settings.RecentFiles.Add(_fileName, FirstVisibleIndex, FirstSelectedIndex, _videoFileName);
                         Configuration.Settings.Save();
 
                         if (SaveSubtitle(GetCurrentSubtitleFormat()) == DialogResult.OK)
@@ -924,11 +924,18 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void OpenSubtitle(string fileName, Encoding encoding)
         {
+            OpenSubtitle(fileName, encoding, null);
+        }
+
+        private void OpenSubtitle(string fileName, Encoding encoding, string videoFileName)
+        {
             if (File.Exists(fileName))
             {
+                bool videoFileLoaded = false;
+
                 // save last first visible index + first selected index from listview
                 if (!string.IsNullOrEmpty(_fileName))
-                    Configuration.Settings.RecentFiles.Add(_fileName, FirstVisibleIndex, FirstSelectedIndex);
+                    Configuration.Settings.RecentFiles.Add(_fileName, FirstVisibleIndex, FirstSelectedIndex, _videoFileName);
 
                 openFileDialog1.InitialDirectory = Path.GetDirectoryName(fileName);
 
@@ -1002,13 +1009,25 @@ namespace Nikse.SubtitleEdit.Forms
                     AudioWaveForm.WavePeaks = null;
                     AudioWaveForm.Invalidate();
 
+                    if (!string.IsNullOrEmpty(videoFileName) && File.Exists(videoFileName))
+                    {
+                        OpenVideo(videoFileName);
+                        
+                    }
+                    else if (!string.IsNullOrEmpty(_fileName) && (toolStripButtonToogleVideo.Checked || toolStripButtonToogleWaveForm.Checked))
+                    {
+                        TryToFindAndOpenVideoFile(Path.Combine(Path.GetDirectoryName(_fileName), Path.GetFileNameWithoutExtension(_fileName)));
+                    }
+                    videoFileLoaded = _videoFileName != null;
+
+
                     if (Configuration.Settings.RecentFiles.Files.Count > 0 &&
                         Configuration.Settings.RecentFiles.Files[0].FileName == fileName)
                     {
                     }
                     else
                     {
-                        Configuration.Settings.RecentFiles.Add(fileName);
+                        Configuration.Settings.RecentFiles.Add(fileName, _videoFileName);
                         Configuration.Settings.Save();
                         UpdateRecentFilesUI();
                     }
@@ -1060,7 +1079,7 @@ namespace Nikse.SubtitleEdit.Forms
                         AudioWaveForm.WavePeaks = null;
                         AudioWaveForm.Invalidate();
 
-                        Configuration.Settings.RecentFiles.Add(fileName, FirstVisibleIndex, FirstSelectedIndex);
+                        Configuration.Settings.RecentFiles.Add(fileName, FirstVisibleIndex, FirstSelectedIndex, _videoFileName);
                         Configuration.Settings.Save();
                         UpdateRecentFilesUI();
                         _fileName = fileName;
@@ -1075,18 +1094,12 @@ namespace Nikse.SubtitleEdit.Forms
                     else
                         ShowUnknownSubtitle();
                 }
-                if (!string.IsNullOrEmpty(_fileName) && (toolStripButtonToogleVideo.Checked || toolStripButtonToogleWaveForm.Checked))
+
+                if (!videoFileLoaded && mediaPlayer.VideoPlayer != null)
                 {
-                    TryToFindAndOpenVideoFile(Path.Combine(Path.GetDirectoryName(_fileName), Path.GetFileNameWithoutExtension(_fileName)));
-                }
-                else
-                {
-                    if (mediaPlayer.VideoPlayer != null)
-                    {
                         mediaPlayer.VideoPlayer.DisposeVideoPlayer();
                         mediaPlayer.VideoPlayer = null;
                         timer1.Stop();
-                    }
                 }
             }
             else
@@ -1220,7 +1233,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 _fileDateTime = File.GetLastWriteTime(_fileName);
                 Text = Title + " - " + _fileName;
-                Configuration.Settings.RecentFiles.Add(_fileName, FirstVisibleIndex, FirstSelectedIndex);
+                Configuration.Settings.RecentFiles.Add(_fileName, FirstVisibleIndex, FirstSelectedIndex, _videoFileName);
                 Configuration.Settings.Save();
 
                 int index = 0;
@@ -2774,7 +2787,7 @@ namespace Nikse.SubtitleEdit.Forms
                 return;            
 
             WordSpellChecker wordSpellChecker = null;
-            int totalCorrections = 0;
+            int totalLinesChanged = 0;
             try
             {
                 wordSpellChecker = new WordSpellChecker();
@@ -2805,15 +2818,18 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     wordSpellChecker.CloseDocument();
                     wordSpellChecker.Quit();
-                    ShowStatus(string.Format(_language.SpellCheckAbortedXCorrections, totalCorrections));
+                    ShowStatus(string.Format(_language.SpellCheckAbortedXCorrections, totalLinesChanged));
                     Cursor = Cursors.Default;
                     return;
                 }
                 else if (errorsBefore != errorsAfter)
                 {
-                    textBoxListViewText.Text = newText;
+                    if (textBoxListViewText.Text != newText)
+                    {
+                        textBoxListViewText.Text = newText;
+                        totalLinesChanged++;
+                    }
                 }
-                totalCorrections += (errorsBefore - errorsAfter);
 
                 Application.DoEvents();
                 if (_cancelWordSpellCheck)
@@ -2821,7 +2837,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             wordSpellChecker.CloseDocument();
             wordSpellChecker.Quit();
-            ShowStatus(string.Format(_language.SpellCheckCompletedXCorrections, totalCorrections));
+            ShowStatus(string.Format(_language.SpellCheckCompletedXCorrections, totalLinesChanged));
             Cursor = Cursors.Default;
         }
 
@@ -3928,7 +3944,7 @@ namespace Nikse.SubtitleEdit.Forms
                 Configuration.Settings.General.AutoContinueOn = checkBoxAutoContinue.Checked;
                 Configuration.Settings.General.SyncListViewWithVideoWhilePlaying = checkBoxSyncListViewWithVideoWhilePlaying.Checked;
                 if (!string.IsNullOrEmpty(_fileName))
-                    Configuration.Settings.RecentFiles.Add(_fileName, FirstVisibleIndex, FirstSelectedIndex);
+                    Configuration.Settings.RecentFiles.Add(_fileName, FirstVisibleIndex, FirstSelectedIndex, _videoFileName);
                 Configuration.Settings.Save();
 
             }
