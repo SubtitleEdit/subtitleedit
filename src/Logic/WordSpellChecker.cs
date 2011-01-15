@@ -21,11 +21,19 @@ namespace Nikse.SubtitleEdit.Logic
         private Type _wordDocumentType;
         bool _firstShow = true;
 
+        const int wdWindowStateNormal = 0;
+        const int wdWindowStateMaximize = 1;
+        const int wdWindowStateMinimize = 2;
+
+
         public WordSpellChecker()
         {
             _wordApplicationType = System.Type.GetTypeFromProgID("Word.Application");
             _wordApplication = Activator.CreateInstance(_wordApplicationType);
-            _wordApplicationType.InvokeMember("WindowState", BindingFlags.SetProperty, null, _wordApplication, new object[] { 0 }); // 0 == ?
+            _wordApplicationType.InvokeMember("WindowState", BindingFlags.SetProperty, null, _wordApplication, new object[] { wdWindowStateMinimize }); 
+            _wordApplicationType.InvokeMember("WindowState", BindingFlags.SetProperty, null, _wordApplication, new object[] { wdWindowStateMinimize }); 
+            _wordApplicationType.InvokeMember("WindowState", BindingFlags.SetProperty, null, _wordApplication, new object[] { wdWindowStateMinimize }); 
+            _wordApplicationType.InvokeMember("Top", BindingFlags.SetProperty, null, _wordApplication, new object[] { -10000 }); // hide window - it's a hack
             _wordApplicationType.InvokeMember("Top", BindingFlags.SetProperty, null, _wordApplication, new object[] { -10000 }); // hide window - it's a hack
         }
 
@@ -96,9 +104,11 @@ namespace Nikse.SubtitleEdit.Logic
                     _firstShow = false;
                 }
 
+                _wordApplicationType.InvokeMember("WindowState", BindingFlags.SetProperty, null, _wordApplication, new object[] { wdWindowStateMinimize }); 
                 _wordApplicationType.InvokeMember("Top", BindingFlags.SetProperty, null, _wordApplication, new object[] { -10000 }); // hide window - it's a hack
                 _wordApplicationType.InvokeMember("Visible", BindingFlags.SetProperty, null, _wordApplication, new object[] { true }); // set visible to true - otherwise it will appear in the background
                 _wordDocumentType.InvokeMember("CheckSpelling", BindingFlags.InvokeMethod, null, _wordDocument, new Object[] { p, p, p, p, p, p, p, p, p, p, p, p }); // 12 parameters               
+                _wordApplicationType.InvokeMember("Top", BindingFlags.SetProperty, null, _wordApplication, new object[] { -10000 }); // hide window - it's a hack
             }
 
             // spell check error count

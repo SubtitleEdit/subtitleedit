@@ -664,8 +664,8 @@ namespace Nikse.SubtitleEdit.Logic
                 XStartedSessionYAtZ = "{0}: Started session {1} at {2}",
                 SpellChekingViaWordXLineYOfX = "Spell checking using Word {0} - line {1} / {2}",
                 UnableToStartWord = "Unable to start Microsoft Word",
-                SpellCheckAbortedXCorrections = "Spell check aborted. {0} corrections was made.",
-                SpellCheckCompletedXCorrections = "Spell check completed. {0} corrections was made.",
+                SpellCheckAbortedXCorrections = "Spell check aborted. {0} lines was modified.",
+                SpellCheckCompletedXCorrections = "Spell check completed. {0} lines was modified.",
 
                 Menu = new LanguageStructure.Main.MainMenu
                 {
