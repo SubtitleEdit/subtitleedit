@@ -1,5 +1,8 @@
 ﻿using System;
+using System.ComponentModel;
+using System.Diagnostics;
 using System.Reflection;
+using System.Runtime.InteropServices;
 
 namespace Nikse.SubtitleEdit.Logic
 {
@@ -9,10 +12,14 @@ namespace Nikse.SubtitleEdit.Logic
     /// </summary>
     internal class WordSpellChecker
     {
+        [DllImport("user32.dll")]
+        public static extern bool SetForegroundWindow(IntPtr hWnd); 
+
         private object _wordApplication;
         private object _wordDocument;
         private Type _wordApplicationType;
         private Type _wordDocumentType;
+        bool _firstShow = true;
 
         public WordSpellChecker()
         {
@@ -75,12 +82,24 @@ namespace Nikse.SubtitleEdit.Logic
             errorsBefore = int.Parse(spellingErrorsCount.ToString());
             System.Runtime.InteropServices.Marshal.ReleaseComObject(spellingErrors);
 
+
             // perform spell check
             object p = Missing.Value;
-            _wordApplicationType.InvokeMember("Top", BindingFlags.SetProperty, null, _wordApplication, new object[] { -10000 }); // hide window - it's a hack
-            _wordApplicationType.InvokeMember("Visible", BindingFlags.SetProperty, null, _wordApplication, new object[] { true }); // set visible to true - otherwise it will appear in the background
-            _wordDocumentType.InvokeMember("CheckSpelling", BindingFlags.InvokeMethod, null, _wordDocument, new Object[] { p, p, p, p, p, p, p, p, p, p, p, p }); // 12 parameters
+            if (errorsBefore > 0)
+            {
+                if (_firstShow)
+                {
+                    BackgroundWorker bw = new BackgroundWorker();
+                    bw.WorkerSupportsCancellation = true;
+                    bw.DoWork += new DoWorkEventHandler(EnsureWordIsVisible);
+                    bw.RunWorkerAsync();
+                    _firstShow = false;
+                }
 
+                _wordApplicationType.InvokeMember("Top", BindingFlags.SetProperty, null, _wordApplication, new object[] { -10000 }); // hide window - it's a hack
+                _wordApplicationType.InvokeMember("Visible", BindingFlags.SetProperty, null, _wordApplication, new object[] { true }); // set visible to true - otherwise it will appear in the background
+                _wordDocumentType.InvokeMember("CheckSpelling", BindingFlags.InvokeMethod, null, _wordDocument, new Object[] { p, p, p, p, p, p, p, p, p, p, p, p }); // 12 parameters               
+            }
 
             // spell check error count
             spellingErrors = _wordDocumentType.InvokeMember("SpellingErrors", BindingFlags.GetProperty, null, _wordDocument, null);
@@ -96,6 +115,19 @@ namespace Nikse.SubtitleEdit.Logic
             System.Runtime.InteropServices.Marshal.ReleaseComObject(range);
 
             return resultText.ToString().TrimEnd(); // result needs a trimming at the end
+        }
+
+        void EnsureWordIsVisible(object sender, DoWorkEventArgs e)
+        {
+            int i = 0;
+            while (!e.Cancel && i <10)
+            {
+                Process[] processes = Process.GetProcessesByName("WINWORD");
+                if (processes.Length > 0)
+                    SetForegroundWindow(processes[0].MainWindowHandle);
+                System.Threading.Thread.Sleep(100);
+                i++;
+            }
         }
 
     }
