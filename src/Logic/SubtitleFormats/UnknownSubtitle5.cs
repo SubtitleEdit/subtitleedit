@@ -74,10 +74,15 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
             StringBuilder sb = new StringBuilder();
             lines.ForEach(line => sb.AppendLine(line));
+
+            string allText = sb.ToString();
+            if (!allText.Contains("<text") || !allText.Contains("start="))
+                return;
+
             XmlDocument xml = new XmlDocument();
             try
             {
-                xml.LoadXml(sb.ToString());
+                xml.LoadXml(allText);
             }
             catch
             {
