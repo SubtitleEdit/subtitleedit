@@ -80,10 +80,15 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
             StringBuilder sb = new StringBuilder();
             lines.ForEach(line => sb.AppendLine(line));
+
+            string xmlString = sb.ToString();
+            if (!xmlString.Contains("<Paragraph>") || !xmlString.Contains("<Text>"))
+                return;
+
             XmlDocument xml = new XmlDocument();
             try
             {
-                xml.LoadXml(sb.ToString());
+                xml.LoadXml(xmlString);
             }
             catch
             {
