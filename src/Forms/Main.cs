@@ -2349,7 +2349,7 @@ namespace Nikse.SubtitleEdit.Forms
                         double seconds = double.Parse(adjustDisplayTime.AdjustValue);
                         _subtitle.AdjustDisplayTimeUsingSeconds(seconds, selectedIndexes);
                     }
-                    ShowStatus(string.Format(_language.DisplayTimeAdjustedX, adjustDisplayTime.AdjustValue));
+                    ShowStatus(string.Format(_language.DisplayTimesAdjustedX, adjustDisplayTime.AdjustValue));
                     SaveSubtitleListviewIndexes();
                     if (IsFramesRelevant)
                         _subtitle.CalculateFrameNumbersFromTimeCodesNoCheck(CurrentFrameRate);
@@ -3934,7 +3934,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 UpdateStartTimeInfo(timeUpDownStartTime.TimeCode);
                 _change = true;
-                MakeHistoryForUndoWhenNoMoreChanges(string.Format(_language.StartimeAdjustedX, "#" + (_subtitleListViewIndex+1).ToString() + ": " + timeUpDownStartTime.TimeCode.ToString()));
+                MakeHistoryForUndoWhenNoMoreChanges(string.Format(_language.StarTimeAdjustedX, "#" + (_subtitleListViewIndex+1).ToString() + ": " + timeUpDownStartTime.TimeCode.ToString()));
             }
         }
 
@@ -5193,27 +5193,9 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 _cancelWordSpellCheck = true;
             }
-
-            //else if (e.Modifiers == Keys.Control && e.KeyCode == Keys.D)
-            //{
-            //    InsertAfter();
-            //    e.SuppressKeyPress = true;
-            //}
-
-            //else if (e.Modifiers == Keys.Alt && e.KeyCode == Keys.C)
-            //{
-            //    buttonSetStartTime_Click(null, null);
-            //    e.SuppressKeyPress = true;
-            //}
-            //else if (e.Modifiers == Keys.None && e.KeyCode == Keys.B)
-            //{
-            //    StopAutoDuration();
-            //    buttonSetEnd_Click(null, null);
-            //    e.SuppressKeyPress = true;
-            //}
             else if (e.Modifiers == (Keys.Control | Keys.Shift) && e.KeyCode == Keys.U) // Ctrl+Shift+U = switch original/current
             {
-                if (_subtitleAlternate != null && _subtitleAlternate.Paragraphs.Count > 0)
+                if (_subtitleAlternate != null && _subtitleAlternate.Paragraphs.Count > 0 && _networkSession == null)
                 {
                     Subtitle temp = _subtitle;
                     _subtitle = _subtitleAlternate;
