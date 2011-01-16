@@ -1,8 +1,8 @@
 ﻿using System;
-using System.ComponentModel;
-using System.Diagnostics;
 using System.Reflection;
 using System.Runtime.InteropServices;
+using System.Windows.Forms;
+using Nikse.SubtitleEdit.Forms;
 
 namespace Nikse.SubtitleEdit.Logic
 {
@@ -12,29 +12,38 @@ namespace Nikse.SubtitleEdit.Logic
     /// </summary>
     internal class WordSpellChecker
     {
-        [DllImport("user32.dll")]
-        public static extern bool SetForegroundWindow(IntPtr hWnd); 
+        [DllImport("user32.dll", EntryPoint = "SetWindowPos")]
+        public static extern IntPtr SetWindowPos(IntPtr hWnd, int hWndInsertAfter, int x, int y, int width, int height, int wFlags);
 
-        private object _wordApplication;
-        private object _wordDocument;
-        private Type _wordApplicationType;
-        private Type _wordDocumentType;
-        bool _firstShow = true;
+        const int HWND_BOTTOM = 1;
+
+        const int SWP_NOACTIVATE = 0x0010;
+        const short SWP_NOMOVE = 0X2;
+        const short SWP_NOSIZE = 1;
+        const short SWP_NOZORDER = 0X4;
+        const int SWP_SHOWWINDOW = 0x0040;
 
         const int wdWindowStateNormal = 0;
         const int wdWindowStateMaximize = 1;
         const int wdWindowStateMinimize = 2;
 
+        private object _wordApplication;
+        private object _wordDocument;
+        private Type _wordApplicationType;
+        private Type _wordDocumentType;
+        IntPtr _mainHandle;
 
-        public WordSpellChecker()
+        public WordSpellChecker(Main main)
         {
+            _mainHandle = main.Handle;
+
             _wordApplicationType = System.Type.GetTypeFromProgID("Word.Application");
             _wordApplication = Activator.CreateInstance(_wordApplicationType);
-            _wordApplicationType.InvokeMember("WindowState", BindingFlags.SetProperty, null, _wordApplication, new object[] { wdWindowStateMinimize }); 
-            _wordApplicationType.InvokeMember("WindowState", BindingFlags.SetProperty, null, _wordApplication, new object[] { wdWindowStateMinimize }); 
-            _wordApplicationType.InvokeMember("WindowState", BindingFlags.SetProperty, null, _wordApplication, new object[] { wdWindowStateMinimize }); 
-            _wordApplicationType.InvokeMember("Top", BindingFlags.SetProperty, null, _wordApplication, new object[] { -10000 }); // hide window - it's a hack
-            _wordApplicationType.InvokeMember("Top", BindingFlags.SetProperty, null, _wordApplication, new object[] { -10000 }); // hide window - it's a hack
+            
+            Application.DoEvents();
+            _wordApplicationType.InvokeMember("WindowState", BindingFlags.SetProperty, null, _wordApplication, new object[] { wdWindowStateNormal }); 
+            _wordApplicationType.InvokeMember("Top", BindingFlags.SetProperty, null, _wordApplication, new object[] { -5000 }); // hide window - it's a hack
+            Application.DoEvents();
         }
 
         public void NewDocument()
@@ -90,24 +99,15 @@ namespace Nikse.SubtitleEdit.Logic
             errorsBefore = int.Parse(spellingErrorsCount.ToString());
             System.Runtime.InteropServices.Marshal.ReleaseComObject(spellingErrors);
 
-
             // perform spell check
             object p = Missing.Value;
             if (errorsBefore > 0)
             {
-                if (_firstShow)
-                {
-                    BackgroundWorker bw = new BackgroundWorker();
-                    bw.WorkerSupportsCancellation = true;
-                    bw.DoWork += new DoWorkEventHandler(EnsureWordIsVisible);
-                    bw.RunWorkerAsync();
-                    _firstShow = false;
-                }
-
-                _wordApplicationType.InvokeMember("WindowState", BindingFlags.SetProperty, null, _wordApplication, new object[] { wdWindowStateMinimize }); 
+                _wordApplicationType.InvokeMember("WindowState", BindingFlags.SetProperty, null, _wordApplication, new object[] { wdWindowStateNormal }); 
                 _wordApplicationType.InvokeMember("Top", BindingFlags.SetProperty, null, _wordApplication, new object[] { -10000 }); // hide window - it's a hack
-                _wordApplicationType.InvokeMember("Visible", BindingFlags.SetProperty, null, _wordApplication, new object[] { true }); // set visible to true - otherwise it will appear in the background
+                SetWindowPos(_mainHandle, HWND_BOTTOM, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE); // make sure c# form is behind spell check dialog
                 _wordDocumentType.InvokeMember("CheckSpelling", BindingFlags.InvokeMethod, null, _wordDocument, new Object[] { p, p, p, p, p, p, p, p, p, p, p, p }); // 12 parameters               
+                SetWindowPos(_mainHandle, 0 , 0, 0, 0, 0, SWP_SHOWWINDOW | SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE); // bring c# form to front again
                 _wordApplicationType.InvokeMember("Top", BindingFlags.SetProperty, null, _wordApplication, new object[] { -10000 }); // hide window - it's a hack
             }
 
@@ -125,19 +125,6 @@ namespace Nikse.SubtitleEdit.Logic
             System.Runtime.InteropServices.Marshal.ReleaseComObject(range);
 
             return resultText.ToString().TrimEnd(); // result needs a trimming at the end
-        }
-
-        void EnsureWordIsVisible(object sender, DoWorkEventArgs e)
-        {
-            int i = 0;
-            while (!e.Cancel && i <10)
-            {
-                Process[] processes = Process.GetProcessesByName("WINWORD");
-                if (processes.Length > 0)
-                    SetForegroundWindow(processes[0].MainWindowHandle);
-                System.Threading.Thread.Sleep(100);
-                i++;
-            }
         }
 
     }

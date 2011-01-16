@@ -460,6 +460,8 @@
             public string SelectedLines { get; set; }
             public string BeforeDisplayTimeAdjustment { get; set; }
             public string DisplayTimeAdjustedX { get; set; }
+            public string DisplayTimesAdjustedX { get; set; }
+            public string StarTimeAdjustedX { get; set; }
             public string BeforeCommonErrorFixes { get; set; }
             public string CommonErrorsFixedInSelectedLines { get; set; }
             public string CommonErrorsFixed { get; set; }
@@ -653,6 +655,7 @@
                 {
                     public string Title { get; set; }
                     public string OpenVideo { get; set; }
+                    public string CloseVideo { get; set; }
                     public string ShowHideVideo { get; set; }
                     public string ShowHideWaveForm { get; set; }
                     public string UnDockVideoControls { get; set; }

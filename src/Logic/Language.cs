@@ -528,7 +528,9 @@ namespace Nikse.SubtitleEdit.Logic
                 CreateAdjustChangesApplied = "Create/adjust lines changes applied",
                 SelectedLines = "selected lines",
                 BeforeDisplayTimeAdjustment = "Before display time adjustment",
-                DisplayTimeAdjustedX = "Display times adjusted: {0}",
+                DisplayTimesAdjustedX = "Display times adjusted: {0}",
+                DisplayTimeAdjustedX = "Display time adjusted: {0}",
+                StarTimeAdjustedX = "Start time adjusted: {0}",
                 BeforeCommonErrorFixes = "Before common error fixes",
                 CommonErrorsFixedInSelectedLines = "Common errors fixed in selected lines",
                 CommonErrorsFixed = "Common errors fixed",
@@ -728,6 +730,7 @@ namespace Nikse.SubtitleEdit.Logic
                     {
                         Title = "Video",
                         OpenVideo = "Open video file...",
+                        CloseVideo = "Close video file",
                         ShowHideVideo = "Show/hide video",
                         ShowHideWaveForm = "Show/hide wave form",
                         UnDockVideoControls = "Un-dock video controls",
