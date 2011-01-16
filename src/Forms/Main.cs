@@ -396,7 +396,6 @@ namespace Nikse.SubtitleEdit.Forms
                 SubtitleListview1.SelectIndexAndEnsureVisible(_subtitle.GetIndex(paragraph));
         }
 
-
         private void VideoPositionChanged(object sender, EventArgs e)
         {
             TimeUpDown tud = (TimeUpDown)sender;
@@ -608,7 +607,6 @@ namespace Nikse.SubtitleEdit.Forms
             toolStripButtonHelp.ToolTipText = _language.Menu.ToolBar.Help;
             toolStripButtonToogleWaveForm.ToolTipText = _language.Menu.ToolBar.ShowHideWaveForm;
             toolStripButtonToogleVideo.ToolTipText = _language.Menu.ToolBar.ShowHideVideo;
-
 
             toolStripMenuItemDelete.Text = _language.Menu.ContextMenu.Delete;
             insertLineToolStripMenuItem.Text = _language.Menu.ContextMenu.InsertFirstLine;
@@ -4543,6 +4541,35 @@ namespace Nikse.SubtitleEdit.Forms
 
                     var fi = new FileInfo(fileName);
                     string ext = Path.GetExtension(fileName).ToLower();
+
+                    if (ext == ".mkv")
+                    { 
+                        bool isValid;
+                        var matroska = new Matroska();
+                        var subtitleList = matroska.GetMatroskaSubtitleTracks(fileName, out isValid);
+                        if (isValid)
+                        {
+                            if (subtitleList.Count == 0)
+                            {
+                                MessageBox.Show(_language.NoSubtitlesFound);
+                            }
+                            else if (subtitleList.Count > 1)
+                            {
+                                MatroskaSubtitleChooser subtitleChooser = new MatroskaSubtitleChooser();
+                                subtitleChooser.Initialize(subtitleList);
+                                if (subtitleChooser.ShowDialog(this) == DialogResult.OK)
+                                {
+                                    LoadMatroskaSubtitle(subtitleList[subtitleChooser.SelectedIndex], fileName);
+                                }
+                            }
+                            else
+                            {
+                                LoadMatroskaSubtitle(subtitleList[0], fileName);
+                            }
+                        }
+                        return;
+                    }
+
                     if (fi.Length < 1024 * 1024 * 2) // max 2 mb
                     {
                         OpenSubtitle(fileName, null);
