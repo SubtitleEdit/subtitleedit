@@ -413,7 +413,10 @@
             public MainVideoControls VideoControls { get; set; }
             public string SaveChangesToUntitled { get; set; }
             public string SaveChangesToX { get; set; }
+            public string SaveChangesToUntitledOriginal { get; set; }
+            public string SaveChangesToOriginalX { get; set; }
             public string SaveSubtitleAs { get; set; }
+            public string SaveOriginalSubtitleAs { get; set; }
             public string NoSubtitleLoaded { get; set; }
             public string VisualSyncSelectedLines { get; set; }
             public string VisualSyncTitle { get; set; }
@@ -429,6 +432,7 @@
             public string FileIsEmptyOrShort { get; set; }
             public string FileNotFound { get; set; }
             public string SavedSubtitleX { get; set; }
+            public string SavedOriginalSubtitleX { get; set; }
             public string FileOnDiskModified { get; set; }
             public string OverwriteModifiedFile { get; set; }
             public string UnableToSaveSubtitleX { get; set; }

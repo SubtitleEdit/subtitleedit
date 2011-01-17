@@ -481,7 +481,10 @@ namespace Nikse.SubtitleEdit.Logic
             {
                 SaveChangesToUntitled = "Save changes to untitled?",
                 SaveChangesToX = "Save changes to {0}?",
+                SaveChangesToUntitledOriginal = "Save changes to untitled original?",
+                SaveChangesToOriginalX = "Save changes to original {0}?",
                 SaveSubtitleAs = "Save subtitle as...",
+                SaveOriginalSubtitleAs = "Save original subtitle as...",
                 NoSubtitleLoaded = "No subtitle loaded",
                 VisualSyncSelectedLines = "Visual sync - selected lines",
                 VisualSyncTitle = "Visual sync",
@@ -497,6 +500,7 @@ namespace Nikse.SubtitleEdit.Logic
                 FileIsEmptyOrShort = "File is empty or very short!",
                 FileNotFound = "File not found: {0}",
                 SavedSubtitleX = "Saved subtitle {0}",
+                SavedOriginalSubtitleX = "Saved original subtitle {0}",
                 FileOnDiskModified = "file on disk modified",
                 OverwriteModifiedFile = "Overwrite the file {0} modified at {1} {2}{3} with current file loaded from disk at {4} {5}?",
                 UnableToSaveSubtitleX = "Unable to save subtitle file {0}",

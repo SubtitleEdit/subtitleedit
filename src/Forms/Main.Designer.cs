@@ -68,6 +68,11 @@
             this.reopenToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveAsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator20 = new System.Windows.Forms.ToolStripSeparator();
+            this.saveOriginalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.saveOriginalAstoolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.openOriginalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.removeOriginalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator12 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripMenuItemOpenContainingFolder = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemCompare = new System.Windows.Forms.ToolStripMenuItem();
@@ -294,8 +299,15 @@
             this.tabControlSubtitle = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.groupBoxEdit = new System.Windows.Forms.GroupBox();
+            this.labelAlternateCharactersPerSecond = new System.Windows.Forms.Label();
+            this.labelTextAlternateLineTotal = new System.Windows.Forms.Label();
+            this.labelAlternateSingleLine = new System.Windows.Forms.Label();
+            this.labelTextAlternateLineLengths = new System.Windows.Forms.Label();
+            this.labelAlternateText = new System.Windows.Forms.Label();
+            this.labelText = new System.Windows.Forms.Label();
+            this.textBoxListViewTextAlternate = new System.Windows.Forms.TextBox();
+            this.labelSingleLine = new System.Windows.Forms.Label();
             this.buttonAutoBreak = new System.Windows.Forms.Button();
-            this.panelSingleLine = new System.Windows.Forms.Panel();
             this.labelTextLineLengths = new System.Windows.Forms.Label();
             this.labelTextLineTotal = new System.Windows.Forms.Label();
             this.labelCharactersPerSecond = new System.Windows.Forms.Label();
@@ -307,7 +319,6 @@
             this.numericUpDownDuration = new System.Windows.Forms.NumericUpDown();
             this.buttonPrevious = new System.Windows.Forms.Button();
             this.buttonNext = new System.Windows.Forms.Button();
-            this.labelText = new System.Windows.Forms.Label();
             this.labelStartTime = new System.Windows.Forms.Label();
             this.textBoxListViewText = new System.Windows.Forms.TextBox();
             this.labelDuration = new System.Windows.Forms.Label();
@@ -704,6 +715,11 @@
             this.reopenToolStripMenuItem,
             this.saveToolStripMenuItem,
             this.saveAsToolStripMenuItem,
+            this.toolStripSeparator20,
+            this.saveOriginalToolStripMenuItem,
+            this.saveOriginalAstoolStripMenuItem,
+            this.openOriginalToolStripMenuItem,
+            this.removeOriginalToolStripMenuItem,
             this.toolStripSeparator12,
             this.toolStripMenuItemOpenContainingFolder,
             this.toolStripMenuItemCompare,
@@ -758,6 +774,39 @@
             this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(334, 22);
             this.saveAsToolStripMenuItem.Text = "Save as...";
             this.saveAsToolStripMenuItem.Click += new System.EventHandler(this.SaveAsToolStripMenuItemClick);
+            // 
+            // toolStripSeparator20
+            // 
+            this.toolStripSeparator20.Name = "toolStripSeparator20";
+            this.toolStripSeparator20.Size = new System.Drawing.Size(331, 6);
+            // 
+            // saveOriginalToolStripMenuItem
+            // 
+            this.saveOriginalToolStripMenuItem.Name = "saveOriginalToolStripMenuItem";
+            this.saveOriginalToolStripMenuItem.Size = new System.Drawing.Size(334, 22);
+            this.saveOriginalToolStripMenuItem.Text = "Save original";
+            this.saveOriginalToolStripMenuItem.Click += new System.EventHandler(this.saveOriginalToolStripMenuItem_Click);
+            // 
+            // saveOriginalAstoolStripMenuItem
+            // 
+            this.saveOriginalAstoolStripMenuItem.Name = "saveOriginalAstoolStripMenuItem";
+            this.saveOriginalAstoolStripMenuItem.Size = new System.Drawing.Size(334, 22);
+            this.saveOriginalAstoolStripMenuItem.Text = "Save original as...";
+            this.saveOriginalAstoolStripMenuItem.Click += new System.EventHandler(this.saveOriginalAstoolStripMenuItem_Click);
+            // 
+            // openOriginalToolStripMenuItem
+            // 
+            this.openOriginalToolStripMenuItem.Name = "openOriginalToolStripMenuItem";
+            this.openOriginalToolStripMenuItem.Size = new System.Drawing.Size(334, 22);
+            this.openOriginalToolStripMenuItem.Text = "Open original (translator mode)...";
+            this.openOriginalToolStripMenuItem.Click += new System.EventHandler(this.openOriginalToolStripMenuItem_Click);
+            // 
+            // removeOriginalToolStripMenuItem
+            // 
+            this.removeOriginalToolStripMenuItem.Name = "removeOriginalToolStripMenuItem";
+            this.removeOriginalToolStripMenuItem.Size = new System.Drawing.Size(334, 22);
+            this.removeOriginalToolStripMenuItem.Text = "Remove original";
+            this.removeOriginalToolStripMenuItem.Click += new System.EventHandler(this.removeOriginalToolStripMenuItem_Click);
             // 
             // toolStripSeparator12
             // 
@@ -1571,7 +1620,7 @@
             this.fixCommonErrorsInSelectedLinesToolStripMenuItem,
             this.changeCasingForSelectedLinesToolStripMenuItem});
             this.contextMenuStripListview.Name = "contextMenuStripListview";
-            this.contextMenuStripListview.Size = new System.Drawing.Size(276, 562);
+            this.contextMenuStripListview.Size = new System.Drawing.Size(276, 584);
             this.contextMenuStripListview.Opening += new System.ComponentModel.CancelEventHandler(this.ContextMenuStripListviewOpening);
             // 
             // toolStripMenuItemDelete
@@ -2828,8 +2877,15 @@
             // 
             this.groupBoxEdit.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxEdit.Controls.Add(this.labelAlternateCharactersPerSecond);
+            this.groupBoxEdit.Controls.Add(this.labelTextAlternateLineTotal);
+            this.groupBoxEdit.Controls.Add(this.labelAlternateSingleLine);
+            this.groupBoxEdit.Controls.Add(this.labelTextAlternateLineLengths);
+            this.groupBoxEdit.Controls.Add(this.labelAlternateText);
+            this.groupBoxEdit.Controls.Add(this.labelText);
+            this.groupBoxEdit.Controls.Add(this.textBoxListViewTextAlternate);
+            this.groupBoxEdit.Controls.Add(this.labelSingleLine);
             this.groupBoxEdit.Controls.Add(this.buttonAutoBreak);
-            this.groupBoxEdit.Controls.Add(this.panelSingleLine);
             this.groupBoxEdit.Controls.Add(this.labelTextLineLengths);
             this.groupBoxEdit.Controls.Add(this.labelTextLineTotal);
             this.groupBoxEdit.Controls.Add(this.labelCharactersPerSecond);
@@ -2841,7 +2897,6 @@
             this.groupBoxEdit.Controls.Add(this.numericUpDownDuration);
             this.groupBoxEdit.Controls.Add(this.buttonPrevious);
             this.groupBoxEdit.Controls.Add(this.buttonNext);
-            this.groupBoxEdit.Controls.Add(this.labelText);
             this.groupBoxEdit.Controls.Add(this.labelStartTime);
             this.groupBoxEdit.Controls.Add(this.textBoxListViewText);
             this.groupBoxEdit.Controls.Add(this.labelDuration);
@@ -2852,6 +2907,88 @@
             this.groupBoxEdit.TabIndex = 1;
             this.groupBoxEdit.TabStop = false;
             // 
+            // labelAlternateCharactersPerSecond
+            // 
+            this.labelAlternateCharactersPerSecond.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.labelAlternateCharactersPerSecond.AutoSize = true;
+            this.labelAlternateCharactersPerSecond.Location = new System.Drawing.Point(838, 12);
+            this.labelAlternateCharactersPerSecond.Name = "labelAlternateCharactersPerSecond";
+            this.labelAlternateCharactersPerSecond.Size = new System.Drawing.Size(64, 13);
+            this.labelAlternateCharactersPerSecond.TabIndex = 38;
+            this.labelAlternateCharactersPerSecond.Text = "altCharsSec";
+            // 
+            // labelTextAlternateLineTotal
+            // 
+            this.labelTextAlternateLineTotal.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.labelTextAlternateLineTotal.AutoSize = true;
+            this.labelTextAlternateLineTotal.Location = new System.Drawing.Point(884, 86);
+            this.labelTextAlternateLineTotal.Name = "labelTextAlternateLineTotal";
+            this.labelTextAlternateLineTotal.Size = new System.Drawing.Size(36, 13);
+            this.labelTextAlternateLineTotal.TabIndex = 37;
+            this.labelTextAlternateLineTotal.Text = "AltTot";
+            // 
+            // labelAlternateSingleLine
+            // 
+            this.labelAlternateSingleLine.AutoSize = true;
+            this.labelAlternateSingleLine.Location = new System.Drawing.Point(839, 86);
+            this.labelAlternateSingleLine.Name = "labelAlternateSingleLine";
+            this.labelAlternateSingleLine.Size = new System.Drawing.Size(47, 13);
+            this.labelAlternateSingleLine.TabIndex = 36;
+            this.labelAlternateSingleLine.Text = "AltSinLin";
+            // 
+            // labelTextAlternateLineLengths
+            // 
+            this.labelTextAlternateLineLengths.AutoSize = true;
+            this.labelTextAlternateLineLengths.Location = new System.Drawing.Point(786, 86);
+            this.labelTextAlternateLineLengths.Name = "labelTextAlternateLineLengths";
+            this.labelTextAlternateLineLengths.Size = new System.Drawing.Size(56, 13);
+            this.labelTextAlternateLineLengths.TabIndex = 35;
+            this.labelTextAlternateLineLengths.Text = "AltLineLen";
+            // 
+            // labelAlternateText
+            // 
+            this.labelAlternateText.AutoSize = true;
+            this.labelAlternateText.Location = new System.Drawing.Point(803, 12);
+            this.labelAlternateText.Name = "labelAlternateText";
+            this.labelAlternateText.Size = new System.Drawing.Size(29, 13);
+            this.labelAlternateText.TabIndex = 34;
+            this.labelAlternateText.Text = "Text";
+            this.labelAlternateText.Visible = false;
+            // 
+            // labelText
+            // 
+            this.labelText.AutoSize = true;
+            this.labelText.Location = new System.Drawing.Point(203, 11);
+            this.labelText.Name = "labelText";
+            this.labelText.Size = new System.Drawing.Size(29, 13);
+            this.labelText.TabIndex = 5;
+            this.labelText.Text = "Text";
+            // 
+            // textBoxListViewTextAlternate
+            // 
+            this.textBoxListViewTextAlternate.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxListViewTextAlternate.ContextMenuStrip = this.contextMenuStripTextBoxListView;
+            this.textBoxListViewTextAlternate.Enabled = false;
+            this.textBoxListViewTextAlternate.HideSelection = false;
+            this.textBoxListViewTextAlternate.Location = new System.Drawing.Point(806, 28);
+            this.textBoxListViewTextAlternate.Multiline = true;
+            this.textBoxListViewTextAlternate.Name = "textBoxListViewTextAlternate";
+            this.textBoxListViewTextAlternate.Size = new System.Drawing.Size(13, 56);
+            this.textBoxListViewTextAlternate.TabIndex = 33;
+            this.textBoxListViewTextAlternate.Visible = false;
+            this.textBoxListViewTextAlternate.TextChanged += new System.EventHandler(this.textBoxListViewTextAlternate_TextChanged);
+            this.textBoxListViewTextAlternate.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textBoxListViewTextAlternate_KeyDown);
+            // 
+            // labelSingleLine
+            // 
+            this.labelSingleLine.AutoSize = true;
+            this.labelSingleLine.Location = new System.Drawing.Point(310, 86);
+            this.labelSingleLine.Name = "labelSingleLine";
+            this.labelSingleLine.Size = new System.Drawing.Size(76, 13);
+            this.labelSingleLine.TabIndex = 32;
+            this.labelSingleLine.Text = "labelSingleLine";
+            // 
             // buttonAutoBreak
             // 
             this.buttonAutoBreak.Location = new System.Drawing.Point(139, 75);
@@ -2861,15 +2998,6 @@
             this.buttonAutoBreak.Text = "Auto br";
             this.buttonAutoBreak.UseVisualStyleBackColor = true;
             this.buttonAutoBreak.Click += new System.EventHandler(this.ButtonAutoBreakClick);
-            // 
-            // panelSingleLine
-            // 
-            this.panelSingleLine.AutoSize = true;
-            this.panelSingleLine.Location = new System.Drawing.Point(314, 86);
-            this.panelSingleLine.Margin = new System.Windows.Forms.Padding(0);
-            this.panelSingleLine.Name = "panelSingleLine";
-            this.panelSingleLine.Size = new System.Drawing.Size(52, 16);
-            this.panelSingleLine.TabIndex = 7;
             // 
             // labelTextLineLengths
             // 
@@ -2883,22 +3011,22 @@
             // labelTextLineTotal
             // 
             this.labelTextLineTotal.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.labelTextLineTotal.Location = new System.Drawing.Point(625, 84);
+            this.labelTextLineTotal.AutoSize = true;
+            this.labelTextLineTotal.Location = new System.Drawing.Point(625, 86);
             this.labelTextLineTotal.Name = "labelTextLineTotal";
-            this.labelTextLineTotal.Size = new System.Drawing.Size(177, 18);
+            this.labelTextLineTotal.Size = new System.Drawing.Size(94, 13);
             this.labelTextLineTotal.TabIndex = 21;
             this.labelTextLineTotal.Text = "labelTextLineTotal";
-            this.labelTextLineTotal.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // labelCharactersPerSecond
             // 
             this.labelCharactersPerSecond.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.labelCharactersPerSecond.Location = new System.Drawing.Point(625, 10);
+            this.labelCharactersPerSecond.AutoSize = true;
+            this.labelCharactersPerSecond.Location = new System.Drawing.Point(634, 11);
             this.labelCharactersPerSecond.Name = "labelCharactersPerSecond";
-            this.labelCharactersPerSecond.Size = new System.Drawing.Size(177, 17);
+            this.labelCharactersPerSecond.Size = new System.Drawing.Size(133, 13);
             this.labelCharactersPerSecond.TabIndex = 31;
             this.labelCharactersPerSecond.Text = "labelCharactersPerSecond";
-            this.labelCharactersPerSecond.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // buttonUnBreak
             // 
@@ -2995,15 +3123,6 @@
             this.buttonNext.Text = "Next >";
             this.buttonNext.UseVisualStyleBackColor = true;
             this.buttonNext.Click += new System.EventHandler(this.ButtonNextClick);
-            // 
-            // labelText
-            // 
-            this.labelText.AutoSize = true;
-            this.labelText.Location = new System.Drawing.Point(203, 11);
-            this.labelText.Name = "labelText";
-            this.labelText.Size = new System.Drawing.Size(29, 13);
-            this.labelText.TabIndex = 5;
-            this.labelText.Text = "Text";
             // 
             // labelStartTime
             // 
@@ -3339,7 +3458,6 @@
         private System.Windows.Forms.ToolStripMenuItem changeLanguageToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator12;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemCompare;
-        private System.Windows.Forms.Panel panelSingleLine;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemUnbreakLines;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemAutoBreakLines;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparatorBreakLines;
@@ -3516,6 +3634,18 @@
         private System.Windows.Forms.ContextMenuStrip contextMenuStripEmpty;
         private System.Windows.Forms.ToolStripMenuItem insertLineToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem closeVideoToolStripMenuItem;
+        private System.Windows.Forms.Label labelSingleLine;
+        private System.Windows.Forms.TextBox textBoxListViewTextAlternate;
+        private System.Windows.Forms.Label labelAlternateText;
+        private System.Windows.Forms.Label labelAlternateCharactersPerSecond;
+        private System.Windows.Forms.Label labelTextAlternateLineTotal;
+        private System.Windows.Forms.Label labelAlternateSingleLine;
+        private System.Windows.Forms.Label labelTextAlternateLineLengths;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator20;
+        private System.Windows.Forms.ToolStripMenuItem saveOriginalToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem saveOriginalAstoolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem openOriginalToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem removeOriginalToolStripMenuItem;
     }
 }
 

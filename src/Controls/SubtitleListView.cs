@@ -198,8 +198,9 @@ namespace Nikse.SubtitleEdit.Controls
             foreach (Paragraph paragraph in paragraphs)
             {
                 Add(paragraph, i.ToString());
-                string alternateText = GetOriginalSubtitle(i, paragraph, paragraphsAlternate);
-                SetAlternateText(i, alternateText);
+                Paragraph alternate = Utilities.GetOriginalParagraph(i, paragraph, paragraphsAlternate);
+                if (alternate != null)
+                    SetAlternateText(i, alternate.Text);
                 i++;
             }
 
@@ -208,27 +209,7 @@ namespace Nikse.SubtitleEdit.Controls
 
             if (FirstVisibleIndex == 0)
                 FirstVisibleIndex = -1;
-        }
-
-        private static string GetOriginalSubtitle(int index, Paragraph paragraph, List<Paragraph> originalParagraphs)
-        {
-            if (index < originalParagraphs.Count && Math.Abs(originalParagraphs[index].StartTime.TotalMilliseconds - paragraph.StartTime.TotalMilliseconds) < 50)
-                return originalParagraphs[index].Text;
-
-            foreach (Paragraph p in originalParagraphs)
-            {
-                if (p.StartTime.TotalMilliseconds == paragraph.StartTime.TotalMilliseconds)
-                    return p.Text;
-            }
-
-            foreach (Paragraph p in originalParagraphs)
-            {
-                if (p.StartTime.TotalMilliseconds > paragraph.StartTime.TotalMilliseconds - 200 &&
-                    p.StartTime.TotalMilliseconds < paragraph.StartTime.TotalMilliseconds + 1000)
-                    return p.Text;
-            }
-            return string.Empty;
-        }
+        }        
 
         private void Add(Paragraph paragraph, string tag)
         {
@@ -308,6 +289,13 @@ namespace Nikse.SubtitleEdit.Controls
         {
             if (index >= 0 && index < Items.Count)
                 return Items[index].SubItems[ColumnIndexText].Text.Replace(_lineSeparatorString, Environment.NewLine);
+            return null;
+        }
+
+        public string GetTextAlternate(int index)
+        {
+            if (index >= 0 && index < Items.Count && IsAlternateTextColumnVisible)
+                return Items[index].SubItems[ColumnIndexTextAlternate].Text.Replace(_lineSeparatorString, Environment.NewLine);
             return null;
         }
 

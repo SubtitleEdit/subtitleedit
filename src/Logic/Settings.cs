@@ -240,6 +240,7 @@ namespace Nikse.SubtitleEdit.Logic
         public bool SyncListViewWithVideoWhilePlaying { get; set; }
         public int AutoBackupSeconds { get; set; }
         public string SpellChecker { get; set; }
+        public bool AllowEditOfOriginalSubtitle { get; set; }
 
         public GeneralSettings()
         {
@@ -287,6 +288,7 @@ namespace Nikse.SubtitleEdit.Logic
             SyncListViewWithVideoWhilePlaying = false;
             AutoBackupSeconds = 0;
             SpellChecker = "hunspell";
+            AllowEditOfOriginalSubtitle = false;
         }
     }
 
@@ -641,7 +643,10 @@ namespace Nikse.SubtitleEdit.Logic
                 settings.General.AutoBackupSeconds = Convert.ToInt32(subNode.InnerText);
             subNode = node.SelectSingleNode("SpellChecker");
             if (subNode != null)
-                settings.General.SpellChecker = subNode.InnerText;            
+                settings.General.SpellChecker = subNode.InnerText;
+            subNode = node.SelectSingleNode("AllowEditOfOriginalSubtitle");
+            if (subNode != null)
+                settings.General.AllowEditOfOriginalSubtitle = Convert.ToBoolean(subNode.InnerText);
             
             settings.Tools = new Nikse.SubtitleEdit.Logic.ToolsSettings();
             node = doc.DocumentElement.SelectSingleNode("Tools");
@@ -951,6 +956,7 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("SyncListViewWithVideoWhilePlaying", settings.General.SyncListViewWithVideoWhilePlaying.ToString());
             textWriter.WriteElementString("AutoBackupSeconds", settings.General.AutoBackupSeconds.ToString());
             textWriter.WriteElementString("SpellChecker", settings.General.SpellChecker);
+            textWriter.WriteElementString("AllowEditOfOriginalSubtitle", settings.General.AllowEditOfOriginalSubtitle.ToString());
             textWriter.WriteEndElement();
 
             textWriter.WriteStartElement("Tools", "");
