@@ -194,6 +194,7 @@
             this.colorDialogSSAStyle = new System.Windows.Forms.ColorDialog();
             this.fontDialogSSAStyle = new System.Windows.Forms.FontDialog();
             this.labelStatus = new System.Windows.Forms.Label();
+            this.checkBoxAllowEditOfOriginalSubtitle = new System.Windows.Forms.CheckBox();
             this.tabControlSettings.SuspendLayout();
             this.tabPageGenerel.SuspendLayout();
             this.groupBoxMiscellaneous.SuspendLayout();
@@ -285,6 +286,7 @@
             // 
             // groupBoxMiscellaneous
             // 
+            this.groupBoxMiscellaneous.Controls.Add(this.checkBoxAllowEditOfOriginalSubtitle);
             this.groupBoxMiscellaneous.Controls.Add(this.comboBoxSpellChecker);
             this.groupBoxMiscellaneous.Controls.Add(this.labelSpellChecker);
             this.groupBoxMiscellaneous.Controls.Add(this.panelSubtitleBackgroundColor);
@@ -486,7 +488,7 @@
             this.checkBoxRememberWindowPosition.AutoSize = true;
             this.checkBoxRememberWindowPosition.Location = new System.Drawing.Point(436, 101);
             this.checkBoxRememberWindowPosition.Name = "checkBoxRememberWindowPosition";
-            this.checkBoxRememberWindowPosition.Size = new System.Drawing.Size(222, 17);
+            this.checkBoxRememberWindowPosition.Size = new System.Drawing.Size(223, 17);
             this.checkBoxRememberWindowPosition.TabIndex = 13;
             this.checkBoxRememberWindowPosition.Text = "Remember main window position and size";
             this.checkBoxRememberWindowPosition.UseVisualStyleBackColor = true;
@@ -533,7 +535,7 @@
             this.checkBoxStartInSourceView.AutoSize = true;
             this.checkBoxStartInSourceView.Location = new System.Drawing.Point(436, 124);
             this.checkBoxStartInSourceView.Name = "checkBoxStartInSourceView";
-            this.checkBoxStartInSourceView.Size = new System.Drawing.Size(119, 17);
+            this.checkBoxStartInSourceView.Size = new System.Drawing.Size(121, 17);
             this.checkBoxStartInSourceView.TabIndex = 14;
             this.checkBoxStartInSourceView.Text = "Start in source view";
             this.checkBoxStartInSourceView.UseVisualStyleBackColor = true;
@@ -543,7 +545,7 @@
             this.checkBoxReopenLastOpened.AutoSize = true;
             this.checkBoxReopenLastOpened.Location = new System.Drawing.Point(444, 52);
             this.checkBoxReopenLastOpened.Name = "checkBoxReopenLastOpened";
-            this.checkBoxReopenLastOpened.Size = new System.Drawing.Size(140, 17);
+            this.checkBoxReopenLastOpened.Size = new System.Drawing.Size(145, 17);
             this.checkBoxReopenLastOpened.TabIndex = 11;
             this.checkBoxReopenLastOpened.Text = "Start with last file loaded";
             this.checkBoxReopenLastOpened.UseVisualStyleBackColor = true;
@@ -553,7 +555,7 @@
             this.checkBoxRememberRecentFiles.AutoSize = true;
             this.checkBoxRememberRecentFiles.Location = new System.Drawing.Point(436, 28);
             this.checkBoxRememberRecentFiles.Name = "checkBoxRememberRecentFiles";
-            this.checkBoxRememberRecentFiles.Size = new System.Drawing.Size(188, 17);
+            this.checkBoxRememberRecentFiles.Size = new System.Drawing.Size(195, 17);
             this.checkBoxRememberRecentFiles.TabIndex = 10;
             this.checkBoxRememberRecentFiles.Text = "Remember recent files (for reopen)";
             this.checkBoxRememberRecentFiles.UseVisualStyleBackColor = true;
@@ -564,7 +566,7 @@
             this.checkBoxSubtitleFontBold.AutoSize = true;
             this.checkBoxSubtitleFontBold.Location = new System.Drawing.Point(193, 209);
             this.checkBoxSubtitleFontBold.Name = "checkBoxSubtitleFontBold";
-            this.checkBoxSubtitleFontBold.Size = new System.Drawing.Size(47, 17);
+            this.checkBoxSubtitleFontBold.Size = new System.Drawing.Size(46, 17);
             this.checkBoxSubtitleFontBold.TabIndex = 6;
             this.checkBoxSubtitleFontBold.Text = "Bold";
             this.checkBoxSubtitleFontBold.UseVisualStyleBackColor = true;
@@ -1974,6 +1976,16 @@
             this.labelStatus.TabIndex = 3;
             this.labelStatus.Text = "labelStatus";
             // 
+            // checkBoxAllowEditOfOriginalSubtitle
+            // 
+            this.checkBoxAllowEditOfOriginalSubtitle.AutoSize = true;
+            this.checkBoxAllowEditOfOriginalSubtitle.Location = new System.Drawing.Point(436, 296);
+            this.checkBoxAllowEditOfOriginalSubtitle.Name = "checkBoxAllowEditOfOriginalSubtitle";
+            this.checkBoxAllowEditOfOriginalSubtitle.Size = new System.Drawing.Size(160, 17);
+            this.checkBoxAllowEditOfOriginalSubtitle.TabIndex = 37;
+            this.checkBoxAllowEditOfOriginalSubtitle.Text = "Allow edit of original subtitle";
+            this.checkBoxAllowEditOfOriginalSubtitle.UseVisualStyleBackColor = true;
+            // 
             // Settings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -2221,5 +2233,6 @@
         private System.Windows.Forms.ComboBox comboBoxSpellChecker;
         private System.Windows.Forms.Label labelSpellChecker;
         private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.CheckBox checkBoxAllowEditOfOriginalSubtitle;
     }
 }
