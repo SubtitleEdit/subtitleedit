@@ -302,6 +302,8 @@ namespace Nikse.SubtitleEdit.Forms
             else
                 comboBoxSpellChecker.SelectedIndex = 0;
 
+            checkBoxAllowEditOfOriginalSubtitle.Checked = gs.AllowEditOfOriginalSubtitle;
+
             ToolsSettings toolsSettings = Configuration.Settings.Tools;
             if (toolsSettings.VerifyPlaySeconds - 2 >= 0 && toolsSettings.VerifyPlaySeconds - 2 < comboBoxToolsVerifySeconds.Items.Count)
                 comboBoxToolsVerifySeconds.SelectedIndex = toolsSettings.VerifyPlaySeconds - 2;
@@ -565,6 +567,8 @@ namespace Nikse.SubtitleEdit.Forms
                 gs.SpellChecker = "word";
             else
                 gs.SpellChecker = "hunspell";
+
+            gs.AllowEditOfOriginalSubtitle = checkBoxAllowEditOfOriginalSubtitle.Checked;
 
             if (radioButtonVideoPlayerWmp.Checked)
                 gs.VideoPlayer = "WindowsMediaPlayer";
