@@ -1472,7 +1472,7 @@ namespace Nikse.SubtitleEdit.Forms
             Text = Title;
             _oldSubtitleFormat = null;
             labelSingleLine.Text = string.Empty;
-            RemoveAlternate();
+            RemoveAlternate(true);
 
             comboBoxEncoding.Items[0] = "ANSI - " + Encoding.Default.CodePage.ToString();
             if (Configuration.Settings.General.DefaultEncoding == "ANSI")
@@ -1602,7 +1602,7 @@ namespace Nikse.SubtitleEdit.Forms
                                           Configuration.Settings.General.SubtitleFontColor.ToArgb().ToString() +
                                           Configuration.Settings.General.SubtitleBackgroundColor.ToArgb().ToString();
 
-
+            var oldAllowEditOfOriginalSubtitle = Configuration.Settings.General.AllowEditOfOriginalSubtitle;
             var settings = new Settings();
             settings.Initialize(this.Icon, toolStripButtonFileNew.Image, toolStripButtonFileOpen.Image, toolStripButtonSave.Image, toolStripButtonSaveAs.Image, 
                                 toolStripButtonFind.Image, toolStripButtonReplace.Image, toolStripButtonVisualSync.Image, toolStripButtonSpellCheck.Image, toolStripButtonSettings.Image, toolStripButtonHelp.Image);
@@ -1649,6 +1649,26 @@ namespace Nikse.SubtitleEdit.Forms
                 SaveSubtitleListviewIndexes();
                 SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
                 RestoreSubtitleListviewIndexes();
+            }
+
+            if (oldAllowEditOfOriginalSubtitle != Configuration.Settings.General.AllowEditOfOriginalSubtitle && _subtitleAlternate != null && _subtitleAlternate.Paragraphs.Count > 0)
+            {
+                if (Configuration.Settings.General.AllowEditOfOriginalSubtitle)
+                {
+                    buttonUnBreak.Visible = false;
+                    buttonUndoListViewChanges.Visible = false;
+                    textBoxListViewTextAlternate.Visible = true;
+                    labelAlternateText.Visible = true;
+                    labelAlternateCharactersPerSecond.Visible = true;
+                    labelTextAlternateLineLengths.Visible = true;
+                    labelAlternateSingleLine.Visible = true;
+                    labelTextAlternateLineTotal.Visible = true;
+                }
+                else
+                { 
+                    RemoveAlternate(false);
+                }
+                Main_Resize(null, null);
             }
 
             _timerAutoSave.Stop();
@@ -5110,7 +5130,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (e.KeyCode == Keys.Right && e.Modifiers == Keys.Control)
             {
-                if (!textBoxListViewText.Focused)
+                if (!textBoxListViewText.Focused && !textBoxListViewTextAlternate.Focused)
                 {
                     mediaPlayer.CurrentPosition += 0.10;
                     e.SuppressKeyPress = true;
@@ -5118,7 +5138,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (e.KeyCode == Keys.Left && e.Modifiers == Keys.Control)
             {
-                if (!textBoxListViewText.Focused)
+                if (!textBoxListViewText.Focused && !textBoxListViewTextAlternate.Focused)
                 {
                     mediaPlayer.CurrentPosition -= 0.10;
                     e.SuppressKeyPress = true;
@@ -5203,7 +5223,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (e.Modifiers == (Keys.Control | Keys.Shift) && e.KeyCode == Keys.Right)
             {
-                if (!textBoxListViewText.Focused)
+                if (!textBoxListViewText.Focused && !textBoxListViewTextAlternate.Focused)
                 {
                     mediaPlayer.CurrentPosition += 1.0;
                     e.SuppressKeyPress = true;
@@ -5211,7 +5231,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (e.Modifiers == (Keys.Control | Keys.Shift) && e.KeyCode == Keys.Left)
             {
-                if (!textBoxListViewText.Focused)
+                if (!textBoxListViewText.Focused && !textBoxListViewTextAlternate.Focused)
                 {
                     mediaPlayer.CurrentPosition -= 1.0;
                     e.SuppressKeyPress = true;
@@ -5219,7 +5239,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (e.Modifiers == Keys.None && e.KeyCode == Keys.Space)
             {
-                if (!textBoxListViewText.Focused && !textBoxSource.Focused && mediaPlayer.VideoPlayer != null)
+                if (!textBoxListViewText.Focused && !textBoxListViewTextAlternate.Focused && !textBoxSource.Focused && mediaPlayer.VideoPlayer != null)
                 {
                     mediaPlayer.TooglePlayPause();
                     e.SuppressKeyPress = true;
@@ -6341,6 +6361,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             splitContainer1.Panel2Collapsed = true;
             splitContainerMain.Panel2Collapsed = true;
+            Main_Resize(null, null);
         }
 
         private void ShowVideoPlayer()
@@ -6388,7 +6409,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (mediaPlayer.VideoPlayer == null && !string.IsNullOrEmpty(_fileName))
                 TryToFindAndOpenVideoFile(Path.Combine(Path.GetDirectoryName(_fileName), Path.GetFileNameWithoutExtension(_fileName)));
-
+            Main_Resize(null, null);
         }
 
         private void ShowHideUnDockedVideoControls()
@@ -8704,15 +8725,18 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (ContinueNewOrExitAlternate())
             {
-                RemoveAlternate();
+                RemoveAlternate(true);
             }
         }
 
-        private void RemoveAlternate()
+        private void RemoveAlternate(bool removeFromListView)
         {
-            SubtitleListview1.HideAlternateTextColumn();
-            _subtitleAlternate = new Subtitle();
-            _subtitleAlternateFileName = null;
+            if (removeFromListView)
+            {
+                SubtitleListview1.HideAlternateTextColumn();
+                _subtitleAlternate = new Subtitle();
+                _subtitleAlternateFileName = null;
+            }
 
             buttonUnBreak.Visible = true;
             buttonUndoListViewChanges.Visible = true;

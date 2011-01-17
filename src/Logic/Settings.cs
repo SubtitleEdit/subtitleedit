@@ -288,7 +288,7 @@ namespace Nikse.SubtitleEdit.Logic
             SyncListViewWithVideoWhilePlaying = false;
             AutoBackupSeconds = 0;
             SpellChecker = "hunspell";
-            AllowEditOfOriginalSubtitle = true;
+            AllowEditOfOriginalSubtitle = false;
         }
     }
 
