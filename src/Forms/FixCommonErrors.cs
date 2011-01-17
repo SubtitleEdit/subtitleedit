@@ -669,7 +669,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 Paragraph p = _subtitle.Paragraphs[i];
 
-                if (p.Text.Length < Configuration.Settings.Tools.MergeLinesShorterThan && p.Text.Contains(Environment.NewLine))
+                if (Utilities.RemoveHtmlTags(p.Text).Length < Configuration.Settings.Tools.MergeLinesShorterThan && p.Text.Contains(Environment.NewLine))
                 {
                     string s = p.Text.TrimEnd(".?!:;".ToCharArray());
                     s = s.TrimStart('-');
@@ -2064,6 +2064,18 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
 
+                if (p.Text.StartsWith("<i>..."))
+                {
+                    if (AllowFix(i + 1, fixAction))
+                    {
+                        string oldText = p.Text;
+                        p.Text = "<i>" + p.Text.Substring(6, p.Text.Length - 6);
+                        fixCount++;
+                        _totalFixes++;
+                        AddFixToListView(p, i + 1, fixAction, oldText, p.Text);
+                    }
+                }
+
                 if (p.Text.Contains(": ..."))
                 {
                     if (AllowFix(i + 1, fixAction))
@@ -3320,17 +3332,8 @@ namespace Nikse.SubtitleEdit.Forms
             labelTextLineTotal.Text = string.Empty;
 
             labelTextLineLengths.Text = _languageGeneral.SingleLineLengths;
-            panelSingleLine.Left = labelTextLineLengths.Left + labelTextLineLengths.Width - 6;
-            Utilities.DisplayLineLengths(panelSingleLine, text);
-            //labelTextLineMaxLength.Text = string.Empty;
-            //int maxLineLength = Utilities.GetMaxLineLength(text);
-            //labelTextLineMaxLength.Text = string.Format(_languageGeneral.SingleLineMaximumLengthX, maxLineLength);
-            //if (maxLineLength > Configuration.Settings.General.SubtitleLineMaximumLength)
-            //    labelTextLineMaxLength.ForeColor = System.Drawing.Color.Red;
-            //else if (maxLineLength > Configuration.Settings.General.SubtitleLineMaximumLength - 5)
-            //    labelTextLineMaxLength.ForeColor = System.Drawing.Color.Orange;
-            //else
-            //    labelTextLineMaxLength.ForeColor = System.Drawing.Color.Black;
+            labelSingleLine.Left = labelTextLineLengths.Left + labelTextLineLengths.Width - 6;
+            Utilities.GetLineLengths(labelSingleLine, text);
 
             string s = Utilities.RemoveHtmlTags(text).Replace(Environment.NewLine, " ");
             if (s.Length < Configuration.Settings.General.SubtitleLineMaximumLength * 1.9)

@@ -1168,46 +1168,79 @@ namespace Nikse.SubtitleEdit.Logic
             }
         }
 
-
-        internal static void DisplayLineLengths(Panel panelSingleLine, string text)
+        internal static void GetLineLengths(Label label, string text)
         {
-            string cleanText = RemoveHtmlTags(text).Replace(Environment.NewLine, "|");
+            label.ForeColor = Color.Black;
+            string cleanText = Utilities.RemoveHtmlTags(text).Replace(Environment.NewLine, "|");
             string[] lines = cleanText.Split('|');
 
-            int position = 0;
+            const int max = 3;
 
-            // we must dispose before clearing controls (or this will occur: "Error creating window handle")
-            foreach (Control ctrl in panelSingleLine.Controls)
-                ctrl.Dispose();
-            panelSingleLine.Controls.Clear();
-
+            StringBuilder sb = new StringBuilder();
             for (int i = 0; i < lines.Length; i++)
             {
                 string line = lines[i];
                 if (i > 0)
                 {
-                    var labelSlash = new Label {AutoSize = true, Margin = new Padding(0)};
-                    panelSingleLine.Controls.Add(labelSlash);
-                    labelSlash.Text = "/";
-                    labelSlash.Top = 0;
-                    labelSlash.Left = position;
-                    position += labelSlash.Width - 4;
-
+                    sb.Append("/");
                 }
-                var labelLength = new Label();
-                labelLength.AutoSize = true;
-                labelLength.Margin = new Padding(0);
-                panelSingleLine.Controls.Add(labelLength);
-                labelLength.Text = line.Length.ToString();
-                labelLength.Top = 0;
-                labelLength.Left = position;
-                position += labelLength.Width - 4;
+
+                if (i > max)
+                {
+                    label.ForeColor = Color.Red;
+                    sb.Append("...");
+                    label.Text = sb.ToString();
+                    return;
+                }
+
+                sb.Append(line.Length.ToString());
                 if (line.Length > Configuration.Settings.General.SubtitleLineMaximumLength)
-                    labelLength.ForeColor = Color.Red;
+                    label.ForeColor = Color.Red;
                 else if (line.Length > Configuration.Settings.General.SubtitleLineMaximumLength - 5)
-                    labelLength.ForeColor = Color.Orange;
+                    label.ForeColor = Color.Orange;
             }
+            label.Text = sb.ToString();
         }
+
+        //internal static void DisplayLineLengths(Panel panelSingleLine, string text)
+        //{
+        //    string cleanText = RemoveHtmlTags(text).Replace(Environment.NewLine, "|");
+        //    string[] lines = cleanText.Split('|');
+
+        //    int position = 0;
+
+        //    // we must dispose before clearing controls (or this will occur: "Error creating window handle")
+        //    foreach (Control ctrl in panelSingleLine.Controls)
+        //        ctrl.Dispose();
+        //    panelSingleLine.Controls.Clear();
+
+        //    for (int i = 0; i < lines.Length; i++)
+        //    {
+        //        string line = lines[i];
+        //        if (i > 0)
+        //        {
+        //            var labelSlash = new Label {AutoSize = true, Margin = new Padding(0)};
+        //            panelSingleLine.Controls.Add(labelSlash);
+        //            labelSlash.Text = "/";
+        //            labelSlash.Top = 0;
+        //            labelSlash.Left = position;
+        //            position += labelSlash.Width - 4;
+
+        //        }
+        //        var labelLength = new Label();
+        //        labelLength.AutoSize = true;
+        //        labelLength.Margin = new Padding(0);
+        //        panelSingleLine.Controls.Add(labelLength);
+        //        labelLength.Text = line.Length.ToString();
+        //        labelLength.Top = 0;
+        //        labelLength.Left = position;
+        //        position += labelLength.Width - 4;
+        //        if (line.Length > Configuration.Settings.General.SubtitleLineMaximumLength)
+        //            labelLength.ForeColor = Color.Red;
+        //        else if (line.Length > Configuration.Settings.General.SubtitleLineMaximumLength - 5)
+        //            labelLength.ForeColor = Color.Orange;
+        //    }
+        //}
 
         public static bool IsValidRegex(string testPattern)
         {
@@ -1642,6 +1675,26 @@ namespace Nikse.SubtitleEdit.Logic
                 text = text.Replace("<i>  </i>", string.Empty);
             }
             return text;
+        }
+
+        internal static Paragraph GetOriginalParagraph(int index, Paragraph paragraph, List<Paragraph> originalParagraphs)
+        {
+            if (index < originalParagraphs.Count && Math.Abs(originalParagraphs[index].StartTime.TotalMilliseconds - paragraph.StartTime.TotalMilliseconds) < 50)
+                return originalParagraphs[index];
+
+            foreach (Paragraph p in originalParagraphs)
+            {
+                if (p.StartTime.TotalMilliseconds == paragraph.StartTime.TotalMilliseconds)
+                    return p;
+            }
+
+            foreach (Paragraph p in originalParagraphs)
+            {
+                if (p.StartTime.TotalMilliseconds > paragraph.StartTime.TotalMilliseconds - 200 &&
+                    p.StartTime.TotalMilliseconds < paragraph.StartTime.TotalMilliseconds + 1000)
+                    return p;
+            }
+            return null;
         }
             
     }
