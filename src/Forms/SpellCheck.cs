@@ -32,6 +32,7 @@ namespace Nikse.SubtitleEdit.Forms
         List<string> _skipAllList = new List<string>();
         Dictionary<string, string> _changeAllDictionary = new Dictionary<string, string>();
         List<string> _userWordList = new List<string>();
+        List<string> _userPhraseList = new List<string>();
         XmlDocument _userWordDictionary = new XmlDocument();
         string _prefix = string.Empty;
         string _postfix = string.Empty;
@@ -216,12 +217,19 @@ namespace Nikse.SubtitleEdit.Forms
             _languageName = LanguageString;
             string dictionary = Utilities.DictionaryFolder + _languageName;
             _userWordList = new List<string>();
+            _userPhraseList = new List<string>();
             _userWordDictionary = new XmlDocument();
             if (File.Exists(Utilities.DictionaryFolder + _languageName + "_user.xml"))
             {
                 _userWordDictionary.Load(Utilities.DictionaryFolder + _languageName + "_user.xml");
                 foreach (XmlNode node in _userWordDictionary.DocumentElement.SelectNodes("word"))
-                    _userWordList.Add(node.InnerText.ToLower());
+                {
+                    string word = node.InnerText.Trim().ToLower();
+                    if (word.Contains(" "))
+                        _userPhraseList.Add(word);
+                    else
+                        _userWordList.Add(word);
+                }
             }
             else
             {
@@ -359,9 +367,13 @@ namespace Nikse.SubtitleEdit.Forms
                         if (_userWordList.IndexOf(ChangeWord) < 0)
                         {
                             _noOfAddedWords++;
-                            _userWordList.Add(ChangeWord.ToLower());
+                            string s = ChangeWord.Trim().ToLower();
+                            if (s.Contains(" "))
+                                _userPhraseList.Add(s);
+                            else 
+                                _userWordList.Add(s);
                             XmlNode node = _userWordDictionary.CreateElement("word");
-                            node.InnerText = ChangeWord.Trim().ToLower();
+                            node.InnerText = s;
                             _userWordDictionary.DocumentElement.AppendChild(node);
                             _userWordDictionary.Save(_dictionaryFolder + _languageName + "_user.xml");
                         }
@@ -523,6 +535,10 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         _noOfNamesEtc++;
                     }
+                    else if (Utilities.IsWordInUserPhrases(_userPhraseList, _wordsIndex, _words))
+                    {
+                        _noOfCorrectWords++;
+                    }
                     else
                     {
                         bool correct = _hunspell.Spell(_currentWord);
@@ -660,12 +676,19 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             _userWordList = new List<string>();
+            _userPhraseList = new List<string>();
             _userWordDictionary = new XmlDocument();
             if (File.Exists(dictionaryFolder + _languageName + "_user.xml"))
             {
                 _userWordDictionary.Load(dictionaryFolder + _languageName + "_user.xml");
                 foreach (XmlNode node in _userWordDictionary.DocumentElement.SelectNodes("word"))
-                    _userWordList.Add(node.InnerText.ToLower());
+                {
+                    string word = node.InnerText.Trim().ToLower();
+                    if (word.Contains(" "))
+                        _userPhraseList.Add(word);
+                    else
+                        _userWordList.Add(word);
+                }
             }
             else
             {

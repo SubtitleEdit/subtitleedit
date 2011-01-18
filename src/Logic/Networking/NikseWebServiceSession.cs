@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using System.Web;
 
 namespace Nikse.SubtitleEdit.Logic.Networking
 {
@@ -104,7 +103,7 @@ namespace Nikse.SubtitleEdit.Logic.Networking
             DateTime updateTime;
             Subtitle = new Subtitle();
             foreach (var sequence in _seWs.GetSubtitle(sessionKey, out tempFileName, out updateTime))
-                Subtitle.Paragraphs.Add(new Paragraph(HttpUtility.HtmlDecode(sequence.Text).Replace("<br />", Environment.NewLine), sequence.StartMilliseconds, sequence.EndMilliseconds));
+                Subtitle.Paragraphs.Add(new Paragraph(Utilities.HtmlDecode(sequence.Text).Replace("<br />", Environment.NewLine), sequence.StartMilliseconds, sequence.EndMilliseconds));
             FileName = tempFileName;
 
             OriginalSubtitle = new Subtitle();
@@ -112,7 +111,7 @@ namespace Nikse.SubtitleEdit.Logic.Networking
             if (sequences != null)
             {
                 foreach (var sequence in sequences)
-                    OriginalSubtitle.Paragraphs.Add(new Paragraph(HttpUtility.HtmlDecode(sequence.Text).Replace("<br />", Environment.NewLine), sequence.StartMilliseconds, sequence.EndMilliseconds));
+                    OriginalSubtitle.Paragraphs.Add(new Paragraph(Utilities.HtmlDecode(sequence.Text).Replace("<br />", Environment.NewLine), sequence.StartMilliseconds, sequence.EndMilliseconds));
             }
         
             SessionId = sessionKey;
@@ -162,7 +161,7 @@ namespace Nikse.SubtitleEdit.Logic.Networking
             if (sequences != null)
             {
                 foreach (var sequence in sequences)
-                    Subtitle.Paragraphs.Add(new Paragraph(HttpUtility.HtmlDecode(sequence.Text).Replace("<br />", Environment.NewLine), sequence.StartMilliseconds, sequence.EndMilliseconds));
+                    Subtitle.Paragraphs.Add(new Paragraph(Utilities.HtmlDecode(sequence.Text).Replace("<br />", Environment.NewLine), sequence.StartMilliseconds, sequence.EndMilliseconds));
             }
             return Subtitle;
         }
@@ -175,7 +174,7 @@ namespace Nikse.SubtitleEdit.Logic.Networking
                 var sequences = _seWs.GetSubtitle(SessionId, out FileName, out _seWsLastUpdate);
                 foreach (var sequence in sequences)
                 {
-                    Paragraph p = new Paragraph(HttpUtility.HtmlDecode(sequence.Text).Replace("<br />", Environment.NewLine), sequence.StartMilliseconds, sequence.EndMilliseconds);
+                    Paragraph p = new Paragraph(Utilities.HtmlDecode(sequence.Text).Replace("<br />", Environment.NewLine), sequence.StartMilliseconds, sequence.EndMilliseconds);
                     Subtitle.Paragraphs.Add(p);
                 }
                 Subtitle.Renumber(1);

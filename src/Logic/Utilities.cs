@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Net;
@@ -12,7 +13,6 @@ using Nikse.SubtitleEdit.Controls;
 using Nikse.SubtitleEdit.Forms;
 using Nikse.SubtitleEdit.Logic.SubtitleFormats;
 using Nikse.SubtitleEdit.Logic.VideoPlayers;
-using System.Drawing;
 
 namespace Nikse.SubtitleEdit.Logic
 {
@@ -225,7 +225,7 @@ namespace Nikse.SubtitleEdit.Logic
 
         public static string ReadTextFileViaUrlAndProxyIfAvailable(string url)
         {
-            var wc = new WebClient {Proxy = GetProxy()};
+            var wc = new WebClient { Proxy = GetProxy() };
             var ms = new MemoryStream(wc.DownloadData(url));
             var reader = new StreamReader(ms);
             return reader.ReadToEnd().Trim();
@@ -246,19 +246,19 @@ namespace Nikse.SubtitleEdit.Logic
                 }
                 else
                     proxy.UseDefaultCredentials = true;
-                
+
                 return proxy;
             }
             return null;
         }
 
         private static bool IsPartOfNumber(string s, int position)
-        { 
+        {
             if (",.".Contains(s[position].ToString()))
             {
-                if (position > 0 && position < s.Length-1)
+                if (position > 0 && position < s.Length - 1)
                 {
-                    return "1234567890".Contains(s[position-1].ToString()) && "1234567890".Contains(s[position+1].ToString());
+                    return "1234567890".Contains(s[position - 1].ToString()) && "1234567890".Contains(s[position + 1].ToString());
                 }
             }
             return false;
@@ -297,13 +297,13 @@ namespace Nikse.SubtitleEdit.Logic
                 {
                     if (mid + j + 4 < s.Length)
                     {
-                        if (s[mid + j] == '-' && s[mid + j + 1] == ' ' && s[mid + j- 1] == ' ')
+                        if (s[mid + j] == '-' && s[mid + j + 1] == ' ' && s[mid + j - 1] == ' ')
                         {
                             string rest = s.Substring(mid + j + 1).TrimStart();
                             if (rest.Length > 0 && (rest.Substring(0, 1) == rest.Substring(0, 1).ToUpper()))
-                            {  
-                              splitPos = mid + j;
-                              break;
+                            {
+                                splitPos = mid + j;
+                                break;
                             }
                         }
                     }
@@ -386,7 +386,7 @@ namespace Nikse.SubtitleEdit.Logic
                 splitPos = mid;
                 s = s.Insert(mid - 1, "-");
             }
-            if (splitPos < s.Length-2)
+            if (splitPos < s.Length - 2)
                 s = s.Substring(0, splitPos).TrimEnd() + Environment.NewLine + s.Substring(splitPos).Trim();
             return s.TrimEnd();
         }
@@ -447,7 +447,7 @@ namespace Nikse.SubtitleEdit.Logic
             while (s.ToLower().Contains("<font"))
             {
                 int startIndex = s.ToLower().IndexOf("<font");
-                int endIndex = Math.Max(s.IndexOf(">"), startIndex + 4); 
+                int endIndex = Math.Max(s.IndexOf(">"), startIndex + 4);
                 s = s.Remove(startIndex, (endIndex - startIndex) + 1);
             }
             return s;
@@ -455,7 +455,7 @@ namespace Nikse.SubtitleEdit.Logic
 
         public static Encoding GetEncodingFromFile(string fileName)
         {
-            Encoding encoding =  Encoding.Default;
+            Encoding encoding = Encoding.Default;
             try
             {
                 var file = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.Read);
@@ -464,13 +464,13 @@ namespace Nikse.SubtitleEdit.Logic
                 file.Position = 0;
                 file.Read(bom, 0, 12);
                 if (bom[0] == 0xef && bom[1] == 0xbb && bom[2] == 0xbf)
-                    encoding =  Encoding.UTF8;
+                    encoding = Encoding.UTF8;
                 else if (bom[0] == 0xff && bom[1] == 0xfe)
-                    encoding =  Encoding.Unicode;
+                    encoding = Encoding.Unicode;
                 else if (bom[0] == 0xfe && bom[1] == 0xff) // utf-16 and ucs-2
-                    encoding =  Encoding.BigEndianUnicode;
+                    encoding = Encoding.BigEndianUnicode;
                 else if (bom[0] == 0 && bom[1] == 0 && bom[2] == 0xfe && bom[3] == 0xff) // ucs-4
-                    encoding =  Encoding.UTF32;
+                    encoding = Encoding.UTF32;
                 else if (encoding == Encoding.Default && file.Length > 12)
                 {
                     int length = (int)file.Length;
@@ -535,7 +535,7 @@ namespace Nikse.SubtitleEdit.Logic
                 byte b = buffer[i];
                 if (b > 127)
                 {
-                    if (b >= 194 && b <=223 && buffer[i+1] >= 128 &&  buffer[i+1] <= 191)
+                    if (b >= 194 && b <= 223 && buffer[i + 1] >= 128 && buffer[i + 1] <= 191)
                     { // 2-byte sequence
                         utf8Count++;
                         i++;
@@ -1300,7 +1300,7 @@ namespace Nikse.SubtitleEdit.Logic
             word = word.Trim();
             if (word.Length > 1)
             {
-                var localNamesEtc = new List<string>();            
+                var localNamesEtc = new List<string>();
                 string userNamesEtcXmlFileName = LoadLocalNamesEtc(localNamesEtc, localNamesEtc, languageName);
 
                 if (localNamesEtc.Contains(word))
@@ -1322,14 +1322,14 @@ namespace Nikse.SubtitleEdit.Logic
                     {
                         XmlNode node = namesEtcDoc.CreateElement("name");
                         node.InnerText = name;
-                        de.AppendChild(node);                        
+                        de.AppendChild(node);
                     }
                     namesEtcDoc.Save(userNamesEtcXmlFileName);
                 }
                 return true;
             }
             return false;
-        }        
+        }
 
         public static string LoadNamesEtcWordLists(List<string> namesEtcList, List<string> namesEtcMultiWordList, string languageName)
         {
@@ -1452,7 +1452,7 @@ namespace Nikse.SubtitleEdit.Logic
             string s = string.Empty;
 
             if (uppercase)
-                s += Configuration.Settings.General.UppercaseLetters; 
+                s += Configuration.Settings.General.UppercaseLetters;
 
             if (lowercase)
                 s += Configuration.Settings.General.UppercaseLetters.ToLower();
@@ -1498,7 +1498,7 @@ namespace Nikse.SubtitleEdit.Logic
                 case 20: return Color.Maroon;
                 default:
                     return Color.Black;
-            }            
+            }
         }
 
         internal static int GetNumber0To7FromUserName(string userName)
@@ -1514,7 +1514,7 @@ namespace Nikse.SubtitleEdit.Logic
             return (int)(number % 8);
         }
 
-        internal static string GetRegExGroup( string regEx)
+        internal static string GetRegExGroup(string regEx)
         {
             int start = regEx.IndexOf("(?<");
             if (start >= 0 && regEx.IndexOf(")", start) > start)
@@ -1530,27 +1530,12 @@ namespace Nikse.SubtitleEdit.Logic
             return null;
         }
 
-        internal static string HtmlEncode(string value)
-        {
-            // call the normal HtmlEncode first
-            char[] chars = System.Web.HttpUtility.HtmlEncode(value).ToCharArray();
-            StringBuilder encodedValue = new StringBuilder();
-            foreach (char c in chars)
-            {
-                if (c > 127) // above normal ASCII
-                    encodedValue.Append("&#" + (int)c + ";");
-                else
-                    encodedValue.Append(c);
-            }
-            return encodedValue.ToString();
-        }
-
         internal static string LowerCaseVowels
-        { 
-            get 
+        {
+            get
             {
                 return "aeiouyæøåéóáôèòæøåäöïɤəɛʊʉɨ";
-            }   
+            }
         }
 
         internal static void SetButtonHeight(Control control, int newHeight, int level)
@@ -1696,6 +1681,394 @@ namespace Nikse.SubtitleEdit.Logic
             }
             return null;
         }
-            
+
+        /// <summary>
+        /// HTML-encodes a string
+        /// </summary>
+        /// <param name="text">Text string to encode</param>
+        /// <returns>HTML-encoded text</returns>
+        internal static string HtmlEncode(string text)
+        {
+            if (text == null)
+                return string.Empty;
+            StringBuilder sb = new StringBuilder(text.Length);
+            int len = text.Length;
+            for (int i = 0; i < len; i++)
+            {
+                switch (text[i])
+                {
+                    case '<':
+                        sb.Append("&lt;");
+                        break;
+                    case '>':
+                        sb.Append("&gt;");
+                        break;
+                    case '"':
+                        sb.Append("&quot;");
+                        break;
+                    case '&':
+                        sb.Append("&amp;");
+                        break;
+                    default:
+                        if (text[i] > 127)
+                          sb.Append("&#" + (int)text[i] + ";");
+                        else
+                            sb.Append(text[i]);
+                        break;
+                }
+            }
+            return sb.ToString();
+        }
+
+        /// <summary>
+        /// HTML-decodes a string
+        /// </summary>
+        /// <param name="text">Text string to encode</param>
+        /// <returns>HTML-decoded text</returns>
+        internal static string HtmlDecode(string text)
+        {
+            if (text == null)
+                return string.Empty;
+
+            StringBuilder sb = new StringBuilder(text.Length);
+
+            int len = text.Length;
+            int i = 0;
+            while (i < len)
+            {
+                char c = text[i];
+                int nextSemiColon = text.IndexOf(';', i+1);
+                if (c == '&' && nextSemiColon > 0 && nextSemiColon <= i + 8)
+                {
+                    string code = text.Substring(i + 1, nextSemiColon - (i+1));
+                    i += code.Length + 2;
+                    switch (code) // http://www.html-entities.com/   + http://en.wikipedia.org/wiki/List_of_XML_and_HTML_character_entity_references
+                    {
+                        case "lt":
+                            sb.Append('<');
+                            break;
+                        case "gt":
+                            sb.Append('>');
+                            break;
+                        case "quot":
+                            sb.Append('"');
+                            break;
+                        case "amp":
+                            sb.Append('&');
+                            break;
+                        case "apos":
+                            sb.Append("'");
+                            break;
+                        case "nbsp":
+                            sb.Append(" ");
+                            break;
+                        case "ndash":
+                            sb.Append("–");
+                            break;
+                        case "mdash":
+                            sb.Append("—");
+                            break;
+                        case "iexcl":
+                            sb.Append("¡");
+                            break;
+                        case "iquest":
+                            sb.Append("¿");
+                            break;
+                        case "ldquo":
+                            sb.Append("“");
+                            break;
+                        case "rdquo":
+                            sb.Append("”");
+                            break;
+                        case "&lsquo;":
+                            sb.Append("‘");
+                            break;
+                        case "rsquo":
+                            sb.Append("’");
+                            break;
+                        case "laquo":
+                            sb.Append("«");
+                            break;
+                        case "raquo":
+                            sb.Append("»");
+                            break;
+                        case "cent":
+                            sb.Append("¢");
+                            break;
+                        case "copy":
+                            sb.Append("©");
+                            break;
+                        case "divide":
+                            sb.Append("÷");
+                            break;
+                        case "micro":
+                            sb.Append("µ");
+                            break;
+                        case "middot":
+                            sb.Append("·");
+                            break;
+                        case "para":
+                            sb.Append("¶");
+                            break;
+                        case "plusmn":
+                            sb.Append("±");
+                            break;
+                        case "euro":
+                            sb.Append("€");
+                            break;
+                        case "pound":
+                            sb.Append("£");
+                            break;
+                        case "reg":
+                            sb.Append("®");
+                            break;
+                        case "sect":
+                            sb.Append("§");
+                            break;
+                        case "trade":
+                            sb.Append("™");
+                            break;
+                        case "yen":
+                            sb.Append("¥");
+                            break;
+                        case "aacute":
+                            sb.Append("á ");
+                            break;
+                        case "Aacute":
+                            sb.Append("Á");
+                            break;
+                        case "agrave":
+                            sb.Append("à");
+                            break;
+                        case "Agrave":
+                            sb.Append("À");
+                            break;
+                        case "acirc":
+                            sb.Append("â");
+                            break;
+                        case "Acirc":
+                            sb.Append("Â");
+                            break;
+                        case "aring":
+                            sb.Append("å ");
+                            break;
+                        case "Aring":
+                            sb.Append("Å");
+                            break;
+                        case "atilde":
+                            sb.Append("ã");
+                            break;
+                        case "Atilde":
+                            sb.Append("Ã");
+                            break;
+                        case "auml":
+                            sb.Append("ä");
+                            break;
+                        case "Auml":
+                            sb.Append("Ä");
+                            break;
+                        case "aelig":
+                            sb.Append("æ");
+                            break;
+                        case "AElig":
+                            sb.Append("Æ");
+                            break;
+                        case "ccedil":
+                            sb.Append("ç");
+                            break;
+                        case "Ccedil":
+                            sb.Append("Ç");
+                            break;
+                        case "eacute":
+                            sb.Append("é");
+                            break;
+                        case "Eacute":
+                            sb.Append("É");
+                            break;
+                        case "egrave":
+                            sb.Append("è");
+                            break;
+                        case "Egrave":
+                            sb.Append("È");
+                            break;
+                        case "ecirc":
+                            sb.Append("ê");
+                            break;
+                        case "Ecirc":
+                            sb.Append("Ê");
+                            break;
+                        case "euml":
+                            sb.Append("ë");
+                            break;
+                        case "Euml":
+                            sb.Append("Ë");
+                            break;
+                        case "iacute":
+                            sb.Append("í");
+                            break;
+                        case "Iacute":
+                            sb.Append("Í");
+                            break;
+                        case "igrave":
+                            sb.Append("ì");
+                            break;
+                        case "Igrave":
+                            sb.Append("Ì");
+                            break;
+                        case "icirc":
+                            sb.Append("î");
+                            break;
+                        case "Icirc":
+                            sb.Append("Î");
+                            break;
+                        case "iuml":
+                            sb.Append("iuml");
+                            break;
+                        case "Iuml":
+                            sb.Append("Ï");
+                            break;
+                        case "ntilde":
+                            sb.Append("ñ");
+                            break;
+                        case "Ntilde":
+                            sb.Append("Ñ");
+                            break;
+                        case "oacute":
+                            sb.Append("ó");
+                            break;
+                        case "Oacute":
+                            sb.Append("Ó");
+                            break;
+                        case "ograve":
+                            sb.Append("ò");
+                            break;
+                        case "Ograve":
+                            sb.Append("Ò");
+                            break;
+                        case "ocirc":
+                            sb.Append("ô");
+                            break;
+                        case "Ocirc":
+                            sb.Append("Ô");
+                            break;
+                        case "oslash":
+                            sb.Append("ø");
+                            break;
+                        case "Oslash":
+                            sb.Append("Ø");
+                            break;
+                        case "otilde":
+                            sb.Append("õ");
+                            break;
+                        case "Otilde":
+                            sb.Append("Õ");
+                            break;
+                        case "ouml":
+                            sb.Append("ö");
+                            break;
+                        case "Ouml":
+                            sb.Append("Ö");
+                            break;
+                        case "szlig":
+                            sb.Append("ß");
+                            break;
+                        case "uacute":
+                            sb.Append("ú");
+                            break;
+                        case "Uacute":
+                            sb.Append("Ú");
+                            break;
+                        case "ugrave":
+                            sb.Append("ù");
+                            break;
+                        case "Ugrave":
+                            sb.Append("Ù");
+                            break;
+                        case "ucirc":
+                            sb.Append("û");
+                            break;
+                        case "Ucirc":
+                            sb.Append("Û");
+                            break;
+                        case "uuml":
+                            sb.Append("ü");
+                            break;
+                        case "Uuml":
+                            sb.Append("Ü");
+                            break;
+                        case "yuml":
+                            sb.Append("ÿ");
+                            break;
+                        case "":
+                            sb.Append("");
+                            break;                           
+                        default:
+                            code = code.TrimStart('#');
+                            if (code.StartsWith("x") || code.StartsWith("X"))
+                            {
+                                code = code.TrimStart('x');
+                                code = code.TrimStart('X');
+                                try
+                                {
+                                    int value = Convert.ToInt32(code, 16);
+                                    sb.Append(Convert.ToChar(value));
+                                }
+                                catch
+                                { 
+                                }
+                            }
+                            else if (IsInteger(code))
+                            {
+                                sb.Append(Convert.ToChar(int.Parse(code)));
+                            }
+                            break;
+                    }
+                }
+                else
+                {
+                    sb.Append(c);
+                    i++;
+                }
+            }
+            return sb.ToString();
+        }
+
+        /// <summary>
+        /// UrlEncodes a string without the requirement for System.Web
+        /// </summary>
+        public static string UrlEncode(string text)
+        {
+            return System.Uri.EscapeDataString(text);
+        }
+
+        /// <summary>
+        /// UrlDecodes a string without requiring System.Web
+        /// </summary>
+        public static string UrlDecode(string text)
+        {
+            // pre-process for + sign space formatting since System.Uri doesn't handle it
+            // plus literals are encoded as %2b normally so this should be safe
+            text = text.Replace("+", " ");
+            return System.Uri.UnescapeDataString(text);
+        }
+
+        internal static bool IsWordInUserPhrases(List<string> userPhraseList, int index, string[] words)
+        {
+            string current = words[index];            
+            string prev = "-";
+            if (index > 0)
+                prev = words[index-1];
+            string next = "-";
+            if (index < words.Length-1)
+                next = words[index+1];
+            foreach (string userPhrase in userPhraseList)
+            {
+                if (userPhrase == current + " " + next)
+                    return true;
+                if (userPhrase == prev + " " + current)
+                    return true;
+            }
+            return false;
+        }
     }
 }
