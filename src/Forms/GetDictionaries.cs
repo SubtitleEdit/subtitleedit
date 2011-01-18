@@ -112,49 +112,14 @@ namespace Nikse.SubtitleEdit.Forms
                 comboBoxDictionaries.Enabled = false;
                 this.Refresh();
                 Cursor = Cursors.WaitCursor;
-                string dictionaryFolder = Utilities.DictionaryFolder;
-                if (!Directory.Exists(dictionaryFolder))
-                    Directory.CreateDirectory(dictionaryFolder);
 
                 int index = comboBoxDictionaries.SelectedIndex;
                 string url = _dictionaryDownloadLinks[index];
 
                 var wc = new WebClient { Proxy = Utilities.GetProxy() };
-                var ms = new MemoryStream(wc.DownloadData(url));
-                var reader = new StreamReader(ms);
-
-                ZipExtractor zip = ZipExtractor.Open(ms);
-                List<ZipExtractor.ZipFileEntry> dir = zip.ReadCentralDir();
-
-                // Extract dic/aff files in dictionary folder
-                string path;
-                bool result;
-                foreach (ZipExtractor.ZipFileEntry entry in dir)
-                {
-                    if (entry.FilenameInZip.ToLower().EndsWith(".dic") || entry.FilenameInZip.ToLower().EndsWith(".aff"))
-                    {
-                        string fileName = Path.GetFileName(entry.FilenameInZip);
-
-                        // French fix
-                        if (fileName.StartsWith("fr-moderne"))
-                            fileName = fileName.Replace("fr-moderne", "fr_FR");
-
-                        // German fix
-                        if (fileName.StartsWith("de_DE_frami"))
-                            fileName = fileName.Replace("de_DE_frami", "de_DE");                       
-
-                        path = Path.Combine(dictionaryFolder, fileName);
-                        result = zip.ExtractFile(entry, path);
-                    }
-                }
-                zip.Close();
-                ms.Close();
+                wc.DownloadDataCompleted += new DownloadDataCompletedEventHandler(wc_DownloadDataCompleted);
+                wc.DownloadDataAsync(new Uri(url));
                 Cursor = Cursors.Default;
-                labelPleaseWait.Text = string.Empty;
-                buttonOK.Enabled = true;
-                buttonDownload.Enabled = true;
-                comboBoxDictionaries.Enabled = true;
-                MessageBox.Show(string.Format(Configuration.Settings.Language.GetDictionaries.XDownloaded, comboBoxDictionaries.Items[index]));
             }
             catch (Exception exception)
             {
@@ -165,6 +130,51 @@ namespace Nikse.SubtitleEdit.Forms
                 Cursor = Cursors.Default;
                 MessageBox.Show(exception.Message + Environment.NewLine + Environment.NewLine + exception.StackTrace);
             }            
+        }
+
+        void wc_DownloadDataCompleted(object sender, DownloadDataCompletedEventArgs e)
+        {
+            string dictionaryFolder = Utilities.DictionaryFolder;
+            if (!Directory.Exists(dictionaryFolder))
+                Directory.CreateDirectory(dictionaryFolder);
+
+            int index = comboBoxDictionaries.SelectedIndex;
+            
+            var ms = new MemoryStream(e.Result);
+            var reader = new StreamReader(ms);
+
+            ZipExtractor zip = ZipExtractor.Open(ms);
+            List<ZipExtractor.ZipFileEntry> dir = zip.ReadCentralDir();
+
+            // Extract dic/aff files in dictionary folder
+            string path;
+            bool result;
+            foreach (ZipExtractor.ZipFileEntry entry in dir)
+            {
+                if (entry.FilenameInZip.ToLower().EndsWith(".dic") || entry.FilenameInZip.ToLower().EndsWith(".aff"))
+                {
+                    string fileName = Path.GetFileName(entry.FilenameInZip);
+
+                    // French fix
+                    if (fileName.StartsWith("fr-moderne"))
+                        fileName = fileName.Replace("fr-moderne", "fr_FR");
+
+                    // German fix
+                    if (fileName.StartsWith("de_DE_frami"))
+                        fileName = fileName.Replace("de_DE_frami", "de_DE");
+
+                    path = Path.Combine(dictionaryFolder, fileName);
+                    result = zip.ExtractFile(entry, path);
+                }
+            }
+            zip.Close();
+            ms.Close();
+            Cursor = Cursors.Default;
+            labelPleaseWait.Text = string.Empty;
+            buttonOK.Enabled = true;
+            buttonDownload.Enabled = true;
+            comboBoxDictionaries.Enabled = true;
+            MessageBox.Show(string.Format(Configuration.Settings.Language.GetDictionaries.XDownloaded, comboBoxDictionaries.Items[index]));            
         }
 
         private void comboBoxDictionaries_SelectedIndexChanged(object sender, EventArgs e)
