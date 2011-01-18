@@ -420,7 +420,7 @@ namespace Nikse.SubtitleEdit.Forms
                         _currentIndex++;
                         _currentParagraph = _subtitle.Paragraphs[_currentIndex];
                         string s = Utilities.RemoveHtmlTags(_currentParagraph.Text);
-                        _words = s.Split(" .,-?!:;\"“”()[]{}|<>/+\r\n¿¡".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                        _words = s.Split(" .,-?!:;\"“”()[]{}|<>/+\r\n¿¡…—".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
                         _wordsIndex = 0;
                         if (_words.Length == 0)
                         { 

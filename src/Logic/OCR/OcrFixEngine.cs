@@ -667,7 +667,7 @@ namespace Nikse.SubtitleEdit.Logic.OCR
             if (_hunspell == null)
                 return line;
 
-            string[] words = line.Split((Environment.NewLine + " ,.!?:;()[]{}+-$£\"”“#&%").ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+            string[] words = line.Split((Environment.NewLine + " ,.!?:;()[]{}+-$£\"”“#&%…—").ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
             for (int i = 0; i < words.Length; i++)
             {
                 string word = words[i];
@@ -1007,7 +1007,7 @@ namespace Nikse.SubtitleEdit.Logic.OCR
                 return 0;
 
             int wordsNotFound = 0;
-            string[] words = line.Split((Environment.NewLine + " ,.!?:;()[]{}+-$£\"#&%").ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+            string[] words = line.Split((Environment.NewLine + " ,.!?:;()[]{}+-$£\"#&%…“”").ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
             for (int i = 0; i < words.Length; i++)
             {
                 string word = words[i];

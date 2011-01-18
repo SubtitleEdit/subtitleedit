@@ -340,14 +340,14 @@ namespace Nikse.SubtitleEdit.Forms
 
             string oldText = text;
             text = RemoveColon(text);
-            StripableText st = new StripableText(text, " >-\"'‘`´♪¿¡.", " -\"'`´♪.!?:");
+            StripableText st = new StripableText(text, " >-\"'‘`´♪¿¡.…—", " -\"'`´♪.!?:…—");
             var sb = new StringBuilder();
             string[] parts = st.StrippedText.Trim().Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
             int lineNumber = 0;
             bool removedDialogInFirstLine = false;
             foreach (string s in parts)
-            {                
-                StripableText stSub = new StripableText(s, " >-\"'‘`´♪¿¡.", " -\"'`´♪.!?:");
+            {
+                StripableText stSub = new StripableText(s, " >-\"'‘`´♪¿¡.…—", " -\"'`´♪.!?:…—");
                 if (!StartAndEndsWithHearImpariedTags(stSub.StrippedText))
                 {
                     if (removedDialogInFirstLine && stSub.Pre.Contains("- "))
@@ -378,7 +378,7 @@ namespace Nikse.SubtitleEdit.Forms
             text = st.Pre + sb.ToString().Trim() + st.Post;
             text = RemoveColon(text);
 
-            st = new StripableText(text, " >-\"'‘`´♪¿¡.", " -\"'`´♪.!?:");
+            st = new StripableText(text, " >-\"'‘`´♪¿¡.…—", " -\"'`´♪.!?:…—");
             text = st.StrippedText;
             if (StartAndEndsWithHearImpariedTags(text))
             {
