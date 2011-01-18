@@ -1272,6 +1272,7 @@
             this.toolStripMenuItemSpellCheckMain.Name = "toolStripMenuItemSpellCheckMain";
             this.toolStripMenuItemSpellCheckMain.Size = new System.Drawing.Size(80, 20);
             this.toolStripMenuItemSpellCheckMain.Text = "Spell check";
+            this.toolStripMenuItemSpellCheckMain.DropDownOpening += new System.EventHandler(this.toolStripMenuItemSpellCheckMain_DropDownOpening);
             // 
             // spellCheckToolStripMenuItem
             // 

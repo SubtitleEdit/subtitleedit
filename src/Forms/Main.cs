@@ -1741,6 +1741,9 @@ namespace Nikse.SubtitleEdit.Forms
         {
             ReloadFromSourceView();
             SaveSubtitle(GetCurrentSubtitleFormat());
+
+            if (Configuration.Settings.General.AllowEditOfOriginalSubtitle && _subtitleAlternate != null && _subtitleAlternate.Paragraphs.Count > 0)
+                saveOriginalToolStripMenuItem_Click(null, null);
         }
 
         private void ToolStripButtonSaveAsClick(object sender, EventArgs e)
@@ -2774,8 +2777,9 @@ namespace Nikse.SubtitleEdit.Forms
         private static string GetTranslateStringFromNikseDk(string input)
         {
 //          string url = String.Format("http://localhost:2782/mt/Translate.aspx?text={0}&langpair={1}", HttpUtility.UrlEncode(input), "svda");
-            string url = String.Format("http://www.nikse.dk/mt/Translate.aspx?text={0}&langpair={1}", HttpUtility.UrlEncode(input), "svda");
-            var webClient = new WebClient {Proxy = Utilities.GetProxy(), Encoding = System.Text.Encoding.UTF8};
+//            string url = String.Format("http://www.nikse.dk/mt/Translate.aspx?text={0}&langpair={1}", HttpUtility.UrlEncode(input), "svda");
+            string url = String.Format("http://www.nikse.dk/mt/Translate.aspx?text={0}&langpair={1}", Utilities.UrlEncode(input), "svda");
+            var webClient = new WebClient { Proxy = Utilities.GetProxy(), Encoding = System.Text.Encoding.UTF8 };
             return webClient.DownloadString(url);
         }
 
@@ -7086,13 +7090,13 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonGoogleIt_Click(object sender, EventArgs e)
         {
-            System.Diagnostics.Process.Start("http://www.google.com/#q=" + HttpUtility.UrlEncode(textBoxSearchWord.Text));
+            System.Diagnostics.Process.Start("http://www.google.com/#q=" + Utilities.UrlEncode(textBoxSearchWord.Text));
         }
 
         private void buttonGoogleTranslateIt_Click(object sender, EventArgs e)
         {
             string languageId = Utilities.AutoDetectGoogleLanguage(_subtitle);
-            System.Diagnostics.Process.Start("http://translate.google.com/#auto|" + languageId + "|" + HttpUtility.UrlEncode(textBoxSearchWord.Text));
+            System.Diagnostics.Process.Start("http://translate.google.com/#auto|" + languageId + "|" + Utilities.UrlEncode(textBoxSearchWord.Text));
         }
 
         private void ButtonPlayCurrentClick(object sender, EventArgs e)
@@ -7640,7 +7644,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 if (url.Contains("{0}"))
                 {
-                    url = string.Format(url, HttpUtility.UrlEncode(textBoxSearchWord.Text));
+                    url = string.Format(url, Utilities.UrlEncode(textBoxSearchWord.Text));
                 }
                 System.Diagnostics.Process.Start(url);
             }
@@ -8065,7 +8069,8 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         if (!update.Text.Contains(Environment.NewLine))
                             update.Text = update.Text.Replace("\n", Environment.NewLine);
-                        update.Text = HttpUtility.HtmlDecode(update.Text).Replace("<br />", Environment.NewLine);
+//                        update.Text = HttpUtility.HtmlDecode(update.Text).Replace("<br />", Environment.NewLine);
+                        update.Text = Utilities.HtmlDecode(update.Text).Replace("<br />", Environment.NewLine);
                     }
                     if (update.User.Ip != _networkSession.CurrentUser.Ip || update.User.UserName != _networkSession.CurrentUser.UserName)
                     {
@@ -8751,6 +8756,22 @@ namespace Nikse.SubtitleEdit.Forms
 
             labelCharactersPerSecond.Left = textBoxListViewText.Left + (textBoxListViewText.Width - labelCharactersPerSecond.Width);
             labelTextLineTotal.Left = textBoxListViewText.Left + (textBoxListViewText.Width - labelTextLineTotal.Width);
+        }
+
+        private void toolStripMenuItemSpellCheckMain_DropDownOpening(object sender, EventArgs e)
+        {
+            if (Configuration.Settings.General.SpellChecker.ToLower().Contains("word"))
+            {
+                toolStripSeparator9.Visible = false;
+                GetDictionariesToolStripMenuItem.Visible = false;
+                addWordToNamesetcListToolStripMenuItem.Visible = false;
+            }
+            else
+            {
+                toolStripSeparator9.Visible = true;
+                GetDictionariesToolStripMenuItem.Visible = true;
+                addWordToNamesetcListToolStripMenuItem.Visible = true;
+            }
         }        
 
     }
