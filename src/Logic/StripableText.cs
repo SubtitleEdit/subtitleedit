@@ -20,7 +20,7 @@ namespace Nikse.SubtitleEdit.Logic
         }
 
         public StripableText(string text)
-            : this(text, " >-\"”“['‘`´¶(♪¿¡.", " -\"”“]'`´¶)♪.!?:")
+            : this(text, " >-\"”“['‘`´¶(♪¿¡.…—", " -\"”“]'`´¶)♪.!?:…—")
         {
         }
 
