@@ -70,11 +70,10 @@ VersionInfoVersion={#= simple_app_version}
 VersionInfoProductName=Subtitle Edit
 VersionInfoProductVersion={#= simple_app_version}
 VersionInfoProductTextVersion={#= simple_app_version}
-MinVersion=0,5.0.2195
+MinVersion=0,5.1
 LicenseFile=..\src\gpl.txt
 InfoAfterFile=..\src\Changelog.txt
 SetupIconFile=..\src\Icons\SE.ico
-;WizardImageFile=Icons\WizardImageFile.bmp
 WizardSmallImageFile=Icons\WizardSmallImageFile.bmp
 OutputDir=.
 OutputBaseFilename=SubtitleEdit-{#= simple_app_version}-setup
@@ -89,7 +88,6 @@ PrivilegesRequired=admin
 ShowLanguageDialog=yes
 DisableDirPage=auto
 DisableProgramGroupPage=auto
-;AppMutex=Subtitle_Edit_Mutex
 
 
 [Languages]
@@ -123,26 +121,26 @@ Name: reset_settings;     Description: {cm:tsk_ResetSettings};     GroupDescript
 
 
 [Files]
-Source: psvince.dll;                                  DestDir: {app};       Flags: ignoreversion
-Source: ..\src\Changelog.txt;                         DestDir: {app};       Flags: ignoreversion
-Source: ..\src\gpl.txt;                               DestDir: {app};       Flags: ignoreversion
-Source: ..\src\Bin\Release\Hunspellx86.dll;           DestDir: {app};       Flags: ignoreversion
-Source: ..\src\Bin\Release\Interop.QuartzTypeLib.dll; DestDir: {app};       Flags: ignoreversion
-Source: ..\src\Bin\Release\NHunspell.dll;             DestDir: {app};       Flags: ignoreversion
-Source: ..\src\Bin\Release\SubtitleEdit.exe;          DestDir: {app};       Flags: ignoreversion
-Source: Icons\uninstall.ico;                          DestDir: {app};       Flags: ignoreversion
-Source: ..\src\Bin\Release\Icons\Find.png;            DestDir: {app}\Icons; Flags: ignoreversion
-Source: ..\src\Bin\Release\Icons\Help.png;            DestDir: {app}\Icons; Flags: ignoreversion
-Source: ..\src\Bin\Release\Icons\New.png;             DestDir: {app}\Icons; Flags: ignoreversion
-Source: ..\src\Bin\Release\Icons\Open.png;            DestDir: {app}\Icons; Flags: ignoreversion
-Source: ..\src\Bin\Release\Icons\Replace.png;         DestDir: {app}\Icons; Flags: ignoreversion
-Source: ..\src\Bin\Release\Icons\Save.png;            DestDir: {app}\Icons; Flags: ignoreversion
-Source: ..\src\Bin\Release\Icons\SaveAs.png;          DestDir: {app}\Icons; Flags: ignoreversion
-Source: ..\src\Bin\Release\Icons\Settings.png;        DestDir: {app}\Icons; Flags: ignoreversion
-Source: ..\src\Bin\Release\Icons\SpellCheck.png;      DestDir: {app}\Icons; Flags: ignoreversion
-Source: ..\src\Bin\Release\Icons\VideoToogle.png;     DestDir: {app}\Icons; Flags: ignoreversion
-Source: ..\src\Bin\Release\Icons\VisualSync.png;      DestDir: {app}\Icons; Flags: ignoreversion
-Source: ..\src\Bin\Release\Icons\WaveFormToogle.png;  DestDir: {app}\Icons; Flags: ignoreversion
+Source: psvince.dll;                                  DestDir: {app};                                    Flags: ignoreversion
+Source: ..\src\Changelog.txt;                         DestDir: {app};                                    Flags: ignoreversion
+Source: ..\src\gpl.txt;                               DestDir: {app};                                    Flags: ignoreversion
+Source: ..\src\Bin\Release\Hunspellx86.dll;           DestDir: {app};                                    Flags: ignoreversion
+Source: ..\src\Bin\Release\Interop.QuartzTypeLib.dll; DestDir: {app};                                    Flags: ignoreversion
+Source: ..\src\Bin\Release\NHunspell.dll;             DestDir: {app};                                    Flags: ignoreversion
+Source: ..\src\Bin\Release\SubtitleEdit.exe;          DestDir: {app};                                    Flags: ignoreversion
+Source: Icons\uninstall.ico;                          DestDir: {app};                                    Flags: ignoreversion
+Source: ..\src\Bin\Release\Icons\Find.png;            DestDir: {app}\Icons;                              Flags: ignoreversion
+Source: ..\src\Bin\Release\Icons\Help.png;            DestDir: {app}\Icons;                              Flags: ignoreversion
+Source: ..\src\Bin\Release\Icons\New.png;             DestDir: {app}\Icons;                              Flags: ignoreversion
+Source: ..\src\Bin\Release\Icons\Open.png;            DestDir: {app}\Icons;                              Flags: ignoreversion
+Source: ..\src\Bin\Release\Icons\Replace.png;         DestDir: {app}\Icons;                              Flags: ignoreversion
+Source: ..\src\Bin\Release\Icons\Save.png;            DestDir: {app}\Icons;                              Flags: ignoreversion
+Source: ..\src\Bin\Release\Icons\SaveAs.png;          DestDir: {app}\Icons;                              Flags: ignoreversion
+Source: ..\src\Bin\Release\Icons\Settings.png;        DestDir: {app}\Icons;                              Flags: ignoreversion
+Source: ..\src\Bin\Release\Icons\SpellCheck.png;      DestDir: {app}\Icons;                              Flags: ignoreversion
+Source: ..\src\Bin\Release\Icons\VideoToogle.png;     DestDir: {app}\Icons;                              Flags: ignoreversion
+Source: ..\src\Bin\Release\Icons\VisualSync.png;      DestDir: {app}\Icons;                              Flags: ignoreversion
+Source: ..\src\Bin\Release\Icons\WaveFormToogle.png;  DestDir: {app}\Icons;                              Flags: ignoreversion
 Source: ..\Dictionaries\da_DK_names_etc.xml;          DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion onlyifdoesntexist uninsneveruninstall
 Source: ..\Dictionaries\da_DK_user.xml;               DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion onlyifdoesntexist uninsneveruninstall
 Source: ..\Dictionaries\dan_OCRFixReplaceList.xml;    DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion onlyifdoesntexist uninsneveruninstall
@@ -152,21 +150,21 @@ Source: ..\Dictionaries\en_US_names_etc.xml;          DestDir: {userappdata}\Sub
 Source: ..\Dictionaries\en_US_user.xml;               DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion onlyifdoesntexist uninsneveruninstall
 Source: ..\Dictionaries\eng_OCRFixReplaceList.xml;    DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion onlyifdoesntexist uninsneveruninstall
 Source: ..\Dictionaries\names_etc.xml;                DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion onlyifdoesntexist uninsneveruninstall
-Source: ..\Tesseract\tessdata\eng.traineddata;        DestDir: {app}\Tesseract\tessdata; Flags: ignoreversion
-Source: ..\Tesseract\leptonlib.dll;                   DestDir: {app}\Tesseract;          Flags: ignoreversion
-Source: ..\Tesseract\tesseract.exe;                   DestDir: {app}\Tesseract;          Flags: ignoreversion
+Source: ..\Tesseract\tessdata\eng.traineddata;        DestDir: {app}\Tesseract\tessdata;                 Flags: ignoreversion
+Source: ..\Tesseract\leptonlib.dll;                   DestDir: {app}\Tesseract;                          Flags: ignoreversion
+Source: ..\Tesseract\tesseract.exe;                   DestDir: {app}\Tesseract;                          Flags: ignoreversion
 
 
 [Icons]
-Name: {group}\Subtitle Edit;                Filename: {app}\SubtitleEdit.exe; Comment: Subtitle Edit v{#= simple_app_version}; WorkingDir: {app}; AppUserModelID: Nikse.SubtitleEdit; IconFilename: {app}\SubtitleEdit.exe; IconIndex: 0
-Name: {group}\Help and Support\Changelog;   Filename: {app}\Changelog.txt;    Comment: {cm:sm_com_Changelog};                  WorkingDir: {app}
+Name: {group}\Subtitle Edit;                Filename: {app}\SubtitleEdit.exe; WorkingDir: {app}; Comment: Subtitle Edit v{#= simple_app_version}; AppUserModelID: Nikse.SubtitleEdit; IconFilename: {app}\SubtitleEdit.exe; IconIndex: 0
+Name: {group}\Help and Support\Changelog;   Filename: {app}\Changelog.txt;    WorkingDir: {app}; Comment: {cm:sm_com_Changelog}
 Name: {group}\Help and Support\Online Help; Filename: http://www.nikse.dk/se/Help.aspx
-Name: {group}\Help and Support\{cm:ProgramOnTheWeb,Subtitle Edit}; Filename: {#= app_web_site}; Comment: {cm:ProgramOnTheWeb,Subtitle Edit}
-Name: {group}\{cm:UninstallProgram,Subtitle Edit};                 Filename: {uninstallexe}; IconFilename: {app}\uninstall.ico; Comment: {cm:UninstallProgram,Subtitle Edit}; WorkingDir: {app}
+Name: {group}\Help and Support\{cm:ProgramOnTheWeb,Subtitle Edit}; Filename: {#= app_web_site};  Comment: {cm:ProgramOnTheWeb,Subtitle Edit}
+Name: {group}\{cm:UninstallProgram,Subtitle Edit};                 Filename: {uninstallexe};     Comment: {cm:UninstallProgram,Subtitle Edit}; WorkingDir: {app}; IconFilename: {app}\uninstall.ico
 
-Name: {commondesktop}\Subtitle Edit; Filename: {app}\SubtitleEdit.exe; Tasks: desktopicon\common; Comment: Subtitle Edit v{#= simple_app_version}; WorkingDir: {app}; AppUserModelID: Nikse.SubtitleEdit; IconFilename: {app}\SubtitleEdit.exe; IconIndex: 0
-Name: {userdesktop}\Subtitle Edit;   Filename: {app}\SubtitleEdit.exe; Tasks: desktopicon\user;   Comment: Subtitle Edit v{#= simple_app_version}; WorkingDir: {app}; AppUserModelID: Nikse.SubtitleEdit; IconFilename: {app}\SubtitleEdit.exe; IconIndex: 0
-Name: {userappdata}\Microsoft\Internet Explorer\Quick Launch\Subtitle Edit; Filename: {app}\SubtitleEdit.exe; Tasks: quicklaunchicon; Comment: Subtitle Edit v{#= simple_app_version}; WorkingDir: {app}; IconFilename: {app}\SubtitleEdit.exe; IconIndex: 0
+Name: {commondesktop}\Subtitle Edit;        Filename: {app}\SubtitleEdit.exe; WorkingDir: {app}; Comment: Subtitle Edit v{#= simple_app_version}; AppUserModelID: Nikse.SubtitleEdit; IconFilename: {app}\SubtitleEdit.exe; IconIndex: 0; Tasks: desktopicon\common
+Name: {userdesktop}\Subtitle Edit;          Filename: {app}\SubtitleEdit.exe; WorkingDir: {app}; Comment: Subtitle Edit v{#= simple_app_version}; AppUserModelID: Nikse.SubtitleEdit; IconFilename: {app}\SubtitleEdit.exe; IconIndex: 0; Tasks: desktopicon\user
+Name: {userappdata}\Microsoft\Internet Explorer\Quick Launch\Subtitle Edit; Filename: {app}\SubtitleEdit.exe; Comment: Subtitle Edit v{#= simple_app_version}; WorkingDir: {app};     IconFilename: {app}\SubtitleEdit.exe; IconIndex: 0; Tasks: quicklaunchicon
 
 
 [InstallDelete]
@@ -187,6 +185,7 @@ Type: files;      Name: {app}\Dictionaries\en_US_user.xml
 Type: files;      Name: {app}\Dictionaries\eng_OCRFixReplaceList.xml
 Type: files;      Name: {app}\Dictionaries\names_etc.xml
 Type: dirifempty; Name: {app}\Dictionaries
+
 Type: files;      Name: {app}\tessnet2_32.dll
 Type: files;      Name: {app}\TessData\eng.DangAmbigs
 Type: files;      Name: {app}\TessData\eng.freq-dawg
@@ -296,7 +295,7 @@ procedure CurStepChanged(CurStep: TSetupStep);
 begin
   if CurStep = ssInstall then begin
     if IsTaskSelected('reset_settings') then begin
-       DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Settings.xml'));
+      DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Settings.xml'));
     end;
     if IsTaskSelected('reset_dictionaries') then begin
       CleanUpDictionaries;
@@ -337,6 +336,7 @@ begin
       MsgBox(ExpandConstant('{cm:msg_SetupIsRunningWarning}'), mbError, MB_OK);
     exit;
   end;
+
   CreateMutex(installer_mutex_name);
 
   if IsModuleLoaded( 'SubtitleEdit.exe' ) then begin
