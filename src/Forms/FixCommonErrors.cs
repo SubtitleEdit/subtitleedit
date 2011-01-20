@@ -671,15 +671,11 @@ namespace Nikse.SubtitleEdit.Forms
 
                 if (Utilities.RemoveHtmlTags(p.Text).Length < Configuration.Settings.Tools.MergeLinesShorterThan && p.Text.Contains(Environment.NewLine))
                 {
-                    string s = p.Text.TrimEnd(".?!:;".ToCharArray());
-                    s = s.TrimStart('-');
-                    if (!s.Contains(".") &&
-                        !s.Contains("?") &&
-                        !s.Contains("!") &&
-                        !s.Contains(":") &&
-                        !s.Contains(";") &&
-                        !s.Contains("-") &&
-                        p.Text != p.Text.ToUpper()) 
+                    string s = p.Text;
+                    if (!s.Contains(Environment.NewLine + "-") &&
+                        !s.Contains(Environment.NewLine + " -") &&
+                        !s.Contains(Environment.NewLine + "<i> -") &&
+                        !s.Contains(Environment.NewLine + "<i>-"))
                     {
                         if (AllowFix(i + 1, fixAction))
                         {

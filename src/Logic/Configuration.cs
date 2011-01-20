@@ -108,7 +108,10 @@ namespace Nikse.SubtitleEdit.Logic
                 if (Instance._baseDir == null)
                 {
                     System.Reflection.Assembly a = System.Reflection.Assembly.GetEntryAssembly();
-                    Instance._baseDir = Path.GetDirectoryName(a.Location);
+                    if (a != null)
+                        Instance._baseDir = Path.GetDirectoryName(a.Location);
+                    else
+                        Instance._baseDir = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
                     if (!Instance._baseDir.EndsWith(Path.DirectorySeparatorChar.ToString()))
                         Instance._baseDir += Path.DirectorySeparatorChar;
                 }
