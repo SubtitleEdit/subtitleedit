@@ -792,7 +792,7 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             openFileDialog1.InitialDirectory = saveFileDialog1.InitialDirectory;
                             _fileName = saveFileDialog1.FileName;
-                            Text = Title + " - " + _fileName;
+                            SetTitle();
                             Configuration.Settings.RecentFiles.Add(_fileName, FirstVisibleIndex, FirstSelectedIndex, _videoFileName, _subtitleAlternateFileName);
                             Configuration.Settings.Save();
 
@@ -1088,7 +1088,7 @@ namespace Nikse.SubtitleEdit.Forms
                         UpdateRecentFilesUI();
                     }
                     _fileName = fileName;
-                    Text = Title + " - " + _fileName;
+                    SetTitle();
                     ShowStatus(string.Format(_language.LoadedSubtitleX, _fileName));
                     _sourceViewChange = false;
                     _change = false;
@@ -1139,7 +1139,7 @@ namespace Nikse.SubtitleEdit.Forms
                         Configuration.Settings.Save();
                         UpdateRecentFilesUI();
                         _fileName = fileName;
-                        Text = Title + " - " + _fileName;
+                        SetTitle();
                         ShowStatus(string.Format(_language.LoadedEmptyOrShort, _fileName));
                         _sourceViewChange = false;
                         _change = false;
@@ -1302,7 +1302,7 @@ namespace Nikse.SubtitleEdit.Forms
                 _fileName = saveFileDialog1.FileName;
 
                 _fileDateTime = File.GetLastWriteTime(_fileName);
-                Text = Title + " - " + _fileName;
+                SetTitle();
                 Configuration.Settings.RecentFiles.Add(_fileName, FirstVisibleIndex, FirstSelectedIndex, _videoFileName, _subtitleAlternateFileName);
                 Configuration.Settings.Save();
 
@@ -2889,7 +2889,7 @@ namespace Nikse.SubtitleEdit.Forms
                     if (string.Compare(oldFileName, _fileName, true) == 0)
                         _fileDateTime = oldFileDateTime; // undo will not give overwrite-newer-file warning
 
-                    Text = Title + " - " + _fileName;
+                    SetTitle();
                     ShowStatus(_language.UndoPerformed);
 
                     comboBoxSubtitleFormats.SelectedIndexChanged -= ComboBoxSubtitleFormatsSelectedIndexChanged;
@@ -3268,6 +3268,26 @@ namespace Nikse.SubtitleEdit.Forms
                 MakeHistoryForUndo(historyText);
                 _subtitleListViewIndex = -1;
 
+                if (Configuration.Settings.General.AllowEditOfOriginalSubtitle && _subtitleAlternate != null && _subtitleAlternate.Paragraphs.Count > 0)
+                {
+                    var alternateIndexes = new List<int>();
+                    foreach (ListViewItem item in SubtitleListview1.SelectedItems)
+                    {
+                        Paragraph p = _subtitle.GetParagraphOrDefault(item.Index);
+                        if (p != null)
+                        {
+                            Paragraph original = Utilities.GetOriginalParagraph(item.Index, p, _subtitleAlternate.Paragraphs);
+                            if (original != null)
+                                alternateIndexes.Add(_subtitleAlternate.GetIndex(original));
+                        }
+                        alternateIndexes.Add(item.Index);
+                    }
+                    
+                    alternateIndexes.Reverse();
+                    foreach (int i in alternateIndexes)
+                        _subtitleAlternate.Paragraphs.RemoveAt(i);
+                }
+
                 var indexes = new List<int>();
                 foreach (ListViewItem item in SubtitleListview1.SelectedItems)
                     indexes.Add(item.Index);
@@ -3352,15 +3372,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (Configuration.Settings.General.AllowEditOfOriginalSubtitle && _subtitleAlternate != null && _subtitleAlternate.Paragraphs.Count > 0)
             {
-                if (next != null)
-                {
-                    Paragraph original = Utilities.GetOriginalParagraph(_subtitle.GetIndex(next), next, _subtitleAlternate.Paragraphs);
-                    if (original != null)
-                    {
-                        int originalInsertIndex = _subtitleAlternate.GetIndex(original);
-                        _subtitleAlternate.Paragraphs.Insert(originalInsertIndex, new Paragraph(newParagraph));
-                    }
-                }
+                _subtitleAlternate.InsertParagraphInCorrectTimeOrder(new Paragraph(newParagraph));
             }
 
             if (_networkSession != null)
@@ -3426,18 +3438,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (Configuration.Settings.General.AllowEditOfOriginalSubtitle && _subtitleAlternate != null && _subtitleAlternate.Paragraphs.Count > 0)
             {
-                if (prev != null)
-                {
-                    Paragraph original = Utilities.GetOriginalParagraph(_subtitle.GetIndex(prev), prev, _subtitleAlternate.Paragraphs);
-                    if (original != null)
-                    {
-                        int originalInsertIndex = _subtitleAlternate.GetIndex(original);
-                        if (originalInsertIndex >= 0)
-                        {
-                            _subtitleAlternate.Paragraphs.Insert(originalInsertIndex+1, new Paragraph(newParagraph));
-                        }
-                    }
-                }
+                _subtitleAlternate.InsertParagraphInCorrectTimeOrder(new Paragraph(newParagraph));
             }
 
             if (_networkSession != null)
@@ -5046,7 +5047,7 @@ namespace Nikse.SubtitleEdit.Forms
                         SubtitleListview1.SelectIndexAndEnsureVisible(0);
 
                         _fileName = Path.ChangeExtension(vobSubOcr.FileName, ".srt");
-                        Text = Title + " - " + _fileName;
+                        SetTitle();
                         _converted = true;
 
                         Configuration.Settings.Save();
@@ -5460,7 +5461,30 @@ namespace Nikse.SubtitleEdit.Forms
 
                     SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
                     RefreshSelectedParagraph();
+
+                    SetTitle();
+
+                    _fileDateTime = new DateTime();
                 }
+            }
+        }
+
+        private void SetTitle()
+        {
+            Text = Title;
+                        
+            if (!string.IsNullOrEmpty(_fileName))
+                Text = Text + " - " + _fileName;
+
+            if (Configuration.Settings.General.AllowEditOfOriginalSubtitle && _subtitleAlternate != null && _subtitleAlternate.Paragraphs.Count > 0)
+            {
+                Text = Text + " + ";
+                if (string.IsNullOrEmpty(_fileName))
+                    Text = Text + Configuration.Settings.Language.Main.New + " + ";
+                if (!string.IsNullOrEmpty(_subtitleAlternateFileName))
+                    Text = Text + _subtitleAlternateFileName;
+                else
+                    Text = Text + Configuration.Settings.Language.Main.New;
             }
         }
 
@@ -6189,6 +6213,8 @@ namespace Nikse.SubtitleEdit.Forms
                 labelTextLineTotal.Left = textBoxListViewText.Left + (textBoxListViewText.Width - labelTextLineTotal.Width);
                 Main_Resize(null, null);
                 _changeAlternate = false;
+
+                SetTitle();
             }
 
             SubtitleListview1.ShowAlternateTextColumn(Configuration.Settings.Language.General.OriginalText);
@@ -7744,7 +7770,7 @@ namespace Nikse.SubtitleEdit.Forms
                     SubtitleListview1.SelectIndexAndEnsureVisible(0);
 
                     _fileName = Path.ChangeExtension(vobSubOcr.FileName, ".srt");
-                    Text = Title + " - " + _fileName;
+                    SetTitle();
                     _converted = true;
 
                     Configuration.Settings.Save();
@@ -7753,44 +7779,71 @@ namespace Nikse.SubtitleEdit.Forms
         }
 
         private void selectAllToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            textBoxListViewText.SelectAll();
+        {            
+            if (textBoxListViewTextAlternate.Focused)
+                textBoxListViewTextAlternate.SelectAll();
+            else
+                textBoxListViewText.SelectAll();
         }
 
         private void cutToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            textBoxListViewText.Cut();
+            if (textBoxListViewTextAlternate.Focused)
+                textBoxListViewTextAlternate.Cut();
+            else
+                textBoxListViewText.Cut();
         }
 
         private void copyToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            textBoxListViewText.Copy();
+            if (textBoxListViewTextAlternate.Focused)
+                textBoxListViewTextAlternate.Copy();
+            else               
+                textBoxListViewText.Copy();
         }
 
         private void pasteToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            textBoxListViewText.Paste();
+            if (textBoxListViewTextAlternate.Focused)
+                textBoxListViewTextAlternate.Paste();
+            else
+                textBoxListViewText.Paste();
         }
 
         private void deleteToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            textBoxListViewText.DeselectAll();
+            if (textBoxListViewTextAlternate.Focused)
+                textBoxListViewTextAlternate.DeselectAll();
+            else
+                textBoxListViewText.DeselectAll();
         }
 
         private void normalToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            string text = textBoxListViewText.SelectedText;
-            int selectionStart = textBoxListViewText.SelectionStart;
+            TextBox tb;
+            if (textBoxListViewTextAlternate.Focused)
+                tb = textBoxListViewTextAlternate;
+            else
+                tb = textBoxListViewText;
+
+            string text = tb.SelectedText;
+            int selectionStart = tb.SelectionStart;
             text = Utilities.RemoveHtmlTags(text);
-            textBoxListViewText.SelectedText = text;
-            textBoxListViewText.SelectionStart = selectionStart;
-            textBoxListViewText.SelectionLength = text.Length;
+            tb.SelectedText = text;
+            tb.SelectionStart = selectionStart;
+            tb.SelectionLength = text.Length;
         }
 
         private void TextBoxListViewToogleTag(string tag)
         {
-            string text = textBoxListViewText.SelectedText;
-            int selectionStart = textBoxListViewText.SelectionStart;
+            TextBox tb;
+            if (textBoxListViewTextAlternate.Focused)
+                tb = textBoxListViewTextAlternate;
+            else
+                tb = textBoxListViewText;
+
+            string text = tb.SelectedText;
+            int selectionStart = tb.SelectionStart;
 
             if (text.Contains("<" + tag + ">"))
             {
@@ -7802,9 +7855,9 @@ namespace Nikse.SubtitleEdit.Forms
                 text = string.Format("<{0}>{1}</{0}>", tag, text);
             }
 
-            textBoxListViewText.SelectedText = text;
-            textBoxListViewText.SelectionStart = selectionStart;
-            textBoxListViewText.SelectionLength = text.Length;
+            tb.SelectedText = text;
+            tb.SelectionStart = selectionStart;
+            tb.SelectionLength = text.Length;
         }
 
         private void boldToolStripMenuItem1_Click(object sender, EventArgs e)
@@ -7824,9 +7877,15 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void colorToolStripMenuItem1_Click(object sender, EventArgs e)
         {
+            TextBox tb;
+            if (textBoxListViewTextAlternate.Focused)
+                tb = textBoxListViewTextAlternate;
+            else
+                tb = textBoxListViewText;
+
             //color
-            string text = textBoxListViewText.SelectedText;
-            int selectionStart = textBoxListViewText.SelectionStart;
+            string text = tb.SelectedText;
+            int selectionStart = tb.SelectionStart;
 
             if (colorDialog1.ShowDialog(this) == DialogResult.OK)
             { 
@@ -7865,17 +7924,23 @@ namespace Nikse.SubtitleEdit.Forms
                 if (!done)
                     text = string.Format("<font color=\"{0}\">{1}</font>", color, text);
 
-                textBoxListViewText.SelectedText = text;
-                textBoxListViewText.SelectionStart = selectionStart;
-                textBoxListViewText.SelectionLength = text.Length;
+                tb.SelectedText = text;
+                tb.SelectionStart = selectionStart;
+                tb.SelectionLength = text.Length;
             }
         }
 
         private void fontNameToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            TextBox tb;
+            if (textBoxListViewTextAlternate.Focused)
+                tb = textBoxListViewTextAlternate;
+            else
+                tb = textBoxListViewText;
+
             // font name
-            string text = textBoxListViewText.SelectedText;
-            int selectionStart = textBoxListViewText.SelectionStart;
+            string text = tb.SelectedText;
+            int selectionStart = tb.SelectionStart;
 
             if (fontDialog1.ShowDialog(this) == DialogResult.OK)
             {
@@ -7913,9 +7978,9 @@ namespace Nikse.SubtitleEdit.Forms
                 if (!done)
                     text = string.Format("<font face=\"{0}\">{1}</font>", fontDialog1.Font.Name, s);
 
-                textBoxListViewText.SelectedText = text;
-                textBoxListViewText.SelectionStart = selectionStart;
-                textBoxListViewText.SelectionLength = text.Length;
+                tb.SelectedText = text;
+                tb.SelectionStart = selectionStart;
+                tb.SelectionLength = text.Length;
             }
         }
 
@@ -7961,7 +8026,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (_subtitleAlternate != null && _subtitleAlternate.Paragraphs.Count > 0)
                     SubtitleListview1.ShowAlternateTextColumn(Configuration.Settings.Language.General.OriginalText);
                 _fileName = networkJoin.FileName;
-                Text = Title + " - " + _fileName;
+                SetTitle();
                 this.Text = Title;
                 toolStripStatusNetworking.Visible = true;
                 toolStripStatusNetworking.Text = "Network mode";
@@ -8569,12 +8634,38 @@ namespace Nikse.SubtitleEdit.Forms
                     if (Configuration.Settings.General.RemoveBlankLinesWhenOpening)
                         subtitle.RemoveEmptyLines();
 
-                    int index = FirstSelectedIndex + 0;
+                    int index = FirstSelectedIndex;
+                    if (index < 0)
+                        index = 0;
                     foreach (Paragraph p in subtitle.Paragraphs)
                     {
                         _subtitle.Paragraphs.Insert(index, new Paragraph(p));
-                        index++;
+                        index++;                        
                     }
+
+                    if (Configuration.Settings.General.AllowEditOfOriginalSubtitle && _subtitleAlternate != null && _subtitleAlternate.Paragraphs.Count > 0)
+                    {
+                        index = FirstSelectedIndex;
+                        if (index < 0)
+                            index = 0;
+                        Paragraph current = _subtitle.GetParagraphOrDefault(index);
+                        if (current != null)
+                        {
+                            Paragraph original = Utilities.GetOriginalParagraph(index, current, _subtitleAlternate.Paragraphs);
+                            if (original != null)
+                            {
+                                index = _subtitleAlternate.GetIndex(original);
+                                foreach (Paragraph p in subtitle.Paragraphs)
+                                {
+                                    _subtitleAlternate.Paragraphs.Insert(index, new Paragraph(p));
+                                    index++;
+                                }
+                                _changeAlternate = subtitle.Paragraphs.Count > 0;
+                            }
+                        }
+                    }
+
+                    _change = subtitle.Paragraphs.Count > 0;
                     _subtitle.Renumber(1);
                     ShowSource();
                     SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
@@ -8756,6 +8847,8 @@ namespace Nikse.SubtitleEdit.Forms
 
             labelCharactersPerSecond.Left = textBoxListViewText.Left + (textBoxListViewText.Width - labelCharactersPerSecond.Width);
             labelTextLineTotal.Left = textBoxListViewText.Left + (textBoxListViewText.Width - labelTextLineTotal.Width);
+
+            SetTitle();
         }
 
         private void toolStripMenuItemSpellCheckMain_DropDownOpening(object sender, EventArgs e)

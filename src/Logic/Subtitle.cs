@@ -405,5 +405,19 @@ namespace Nikse.SubtitleEdit.Logic
                     break;
             }
         }
+
+        internal void InsertParagraphInCorrectTimeOrder(Paragraph newParagraph)
+        {
+            for (int i=0; i<Paragraphs.Count; i++)
+            { 
+                Paragraph p = Paragraphs[i];
+                if (newParagraph.StartTime.TotalMilliseconds < p.StartTime.TotalMilliseconds)
+                {
+                    Paragraphs.Insert(i, newParagraph);
+                    return;
+                }
+            }
+            Paragraphs.Add(newParagraph);
+        }
     }
 }
