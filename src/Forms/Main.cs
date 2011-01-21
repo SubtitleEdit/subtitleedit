@@ -3764,23 +3764,16 @@ namespace Nikse.SubtitleEdit.Forms
                 Paragraph currentParagraph = _subtitle.GetParagraphOrDefault(firstSelectedIndex);
                 var newParagraph = new Paragraph();
 
-                double middle = currentParagraph.StartTime.TotalMilliseconds + (currentParagraph.Duration.TotalMilliseconds / 2.0);
-                if (splitSeconds.HasValue && splitSeconds.Value > (currentParagraph.StartTime.TotalSeconds + 0.2) && splitSeconds.Value < (currentParagraph.EndTime.TotalSeconds - 0.2))
-                    middle = splitSeconds.Value * 1000.0;
-                newParagraph.EndTime.TotalMilliseconds = currentParagraph.EndTime.TotalMilliseconds;
-                currentParagraph.EndTime.TotalMilliseconds = middle;
-                newParagraph.StartTime.TotalMilliseconds = currentParagraph.EndTime.TotalMilliseconds + 1;
-
-
+                string oldText = currentParagraph.Text;
                 string[] lines = currentParagraph.Text.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-                if (lines.Length == 2)
+                if (lines.Length == 2 && (lines[0].EndsWith(".") || lines[0].EndsWith("!") || lines[0].EndsWith("?")))
                 {
                     currentParagraph.Text = Utilities.AutoBreakLine(lines[0]);
                     newParagraph.Text = Utilities.AutoBreakLine(lines[1]);
                 }
                 else
                 {
-                    string s = Utilities.AutoBreakLine(currentParagraph.Text);
+                    string s = Utilities.AutoBreakLine(currentParagraph.Text, 5, Configuration.Settings.General.SubtitleLineMaximumLength * 2);
                     lines = s.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
                     if (lines.Length == 2)
                     {
@@ -3788,6 +3781,19 @@ namespace Nikse.SubtitleEdit.Forms
                         newParagraph.Text = Utilities.AutoBreakLine(lines[1]);
                     }
                 }
+
+                double startFactor = (double)Utilities.RemoveHtmlTags(currentParagraph.Text).Length / Utilities.RemoveHtmlTags(oldText).Length;
+                if (startFactor < 0.20)
+                    startFactor = 0.20;
+                if (startFactor > 0.80)
+                    startFactor = 0.80;
+
+                double middle = currentParagraph.StartTime.TotalMilliseconds + (currentParagraph.Duration.TotalMilliseconds * startFactor);
+                if (splitSeconds.HasValue && splitSeconds.Value > (currentParagraph.StartTime.TotalSeconds + 0.2) && splitSeconds.Value < (currentParagraph.EndTime.TotalSeconds - 0.2))
+                    middle = splitSeconds.Value * 1000.0;
+                newParagraph.EndTime.TotalMilliseconds = currentParagraph.EndTime.TotalMilliseconds;
+                currentParagraph.EndTime.TotalMilliseconds = middle;
+                newParagraph.StartTime.TotalMilliseconds = currentParagraph.EndTime.TotalMilliseconds + 1;
 
                 if (_networkSession != null)
                 {

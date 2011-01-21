@@ -266,10 +266,10 @@ namespace Nikse.SubtitleEdit.Logic
 
         public static string AutoBreakLine(string text)
         {
-            return AutoBreakLine(text, 5);
+            return AutoBreakLine(text, 5, Configuration.Settings.General.SubtitleLineMaximumLength);
         }
 
-        public static string AutoBreakLine(string text, int mininumLength)
+        public static string AutoBreakLine(string text, int mininumLength, int maximumLength)
         {
             if (text.Length < mininumLength)
                 return text;
@@ -293,7 +293,7 @@ namespace Nikse.SubtitleEdit.Logic
             // try to find " - " with uppercase letter after (dialogue)
             if (splitPos == -1 && s.Contains(" - "))
             {
-                for (int j = 0; j < 40; j++)
+                for (int j = 0; j < (maximumLength / 2)+5; j++)
                 {
                     if (mid + j + 4 < s.Length)
                     {
