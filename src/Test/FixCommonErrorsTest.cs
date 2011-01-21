@@ -1,6 +1,6 @@
-﻿using Nikse.SubtitleEdit.Forms;
+﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
+using Nikse.SubtitleEdit.Forms;
 using Nikse.SubtitleEdit.Logic;
 
 namespace Test
@@ -36,7 +36,14 @@ namespace Test
             Subtitle subtitle = new Subtitle();
             subtitle.Paragraphs.Add(new Paragraph(line, 100, 10000));
             target.Initialize(subtitle);
-            target.ButtonFixClick(null, null);
+        }
+
+        private static void InitializeFixCommonErrorsLine(FixCommonErrors_Accessor target, string line, string line2)
+        {
+            Subtitle subtitle = new Subtitle();
+            subtitle.Paragraphs.Add(new Paragraph(line, 100, 10000));
+            subtitle.Paragraphs.Add(new Paragraph(line2, 10001, 30000));
+            target.Initialize(subtitle);
         }
 
         #region Additional test attributes
@@ -70,9 +77,6 @@ namespace Test
         #endregion
 
         #region Merge short lines  
-        /// <summary>
-        ///A test for Merge short lines
-        ///</summary>
         [TestMethod()]
         [DeploymentItem("SubtitleEdit.exe")]
         public void FixShortLinesNormal()
@@ -83,9 +87,6 @@ namespace Test
             Assert.AreEqual(target._subtitle.Paragraphs[0].Text, "This is short!");
         }
 
-        /// <summary>
-        ///A test for Merge short lines
-        ///</summary>
         [TestMethod()]
         [DeploymentItem("SubtitleEdit.exe")]
         public void FixShortLinesLong()
@@ -96,9 +97,6 @@ namespace Test
             Assert.AreEqual(target._subtitle.Paragraphs[0].Text, "This I'm pretty sure is not a" + Environment.NewLine + "short line, that should be merged!!!");
         }
 
-        /// <summary>
-        ///A test for Merge short lines
-        ///</summary>
         [TestMethod()]
         [DeploymentItem("SubtitleEdit.exe")]
         public void FixShortLinesNormalItalic()
@@ -109,9 +107,6 @@ namespace Test
             Assert.AreEqual(target._subtitle.Paragraphs[0].Text, "<i>This is short!</i>");
         }
 
-        /// <summary>
-        ///A test for Merge short lines
-        ///</summary>
         [TestMethod()]
         [DeploymentItem("SubtitleEdit.exe")]
         public void FixShortLinesDialogue()
@@ -122,9 +117,6 @@ namespace Test
             Assert.AreEqual(target._subtitle.Paragraphs[0].Text, "- Hallo!" + Environment.NewLine + "- Hi");
         }
 
-        /// <summary>
-        ///A test for Merge short lines
-        ///</summary>
         [TestMethod()]
         [DeploymentItem("SubtitleEdit.exe")]
         public void FixShortLinesDialogueItalic()
@@ -149,5 +141,130 @@ namespace Test
             Assert.AreEqual(target._subtitle.Paragraphs[0].Text, "<i>- Hallo!</i>" + Environment.NewLine + "<i>- Hi<i>");
         }
         #endregion
+
+        #region Fix Italics
+        [TestMethod()]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void FixItalicsBeginOnly()
+        {
+            FixCommonErrors_Accessor target = new FixCommonErrors_Accessor();
+            InitializeFixCommonErrorsLine(target, "<i>Hey!" + Environment.NewLine + "<i>Boy!");
+            target.FixInvalidItalicTags();
+            Assert.AreEqual(target._subtitle.Paragraphs[0].Text, "<i>Hey!</i>" + Environment.NewLine + "<i>Boy!</i>");
+        }
+
+        [TestMethod()]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void FixItalicsFirstLineEndMissing()
+        {
+            FixCommonErrors_Accessor target = new FixCommonErrors_Accessor();
+            InitializeFixCommonErrorsLine(target, "<i>(jones) seems their attackers headed north." + Environment.NewLine + "<i>Hi!</i>");
+            target.FixInvalidItalicTags();
+            Assert.AreEqual(target._subtitle.Paragraphs[0].Text, "<i>(jones) seems their attackers headed north." + Environment.NewLine + "Hi!</i>");
+        }
+
+        [TestMethod()]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void FixItalicsStartInMiddle()
+        {
+            FixCommonErrors_Accessor target = new FixCommonErrors_Accessor();
+            InitializeFixCommonErrorsLine(target, "Seems their <i>attackers headed north.");
+            target.FixInvalidItalicTags();
+            Assert.AreEqual(target._subtitle.Paragraphs[0].Text, "Seems their attackers headed north.");
+        }        
+        
+        [TestMethod()]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void FixItalicsEmptyStart()
+        {
+            FixCommonErrors_Accessor target = new FixCommonErrors_Accessor();
+            InitializeFixCommonErrorsLine(target, "<i></i>test");
+            target.FixInvalidItalicTags();
+            Assert.AreEqual(target._subtitle.Paragraphs[0].Text, "test");
+        }
+
+        [TestMethod()]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void FixItalicsSecondLineMissingEnd()
+        {
+            FixCommonErrors_Accessor target = new FixCommonErrors_Accessor();
+            InitializeFixCommonErrorsLine(target, "- And..." + Environment.NewLine + "<i>Awesome it is!");
+            target.FixInvalidItalicTags();
+            Assert.AreEqual(target._subtitle.Paragraphs[0].Text, "- And..." + Environment.NewLine + "<i>Awesome it is!</i>");
+        }
+
+        [TestMethod()]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void FixItalicsBadEnding()
+        {
+            FixCommonErrors_Accessor target = new FixCommonErrors_Accessor();
+            InitializeFixCommonErrorsLine(target, "Awesome it is!</i>");
+            target.FixInvalidItalicTags();
+            Assert.AreEqual(target._subtitle.Paragraphs[0].Text, "Awesome it is!");
+        }
+
+        [TestMethod()]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void FixItalicsBadEnding2()
+        {
+            FixCommonErrors_Accessor target = new FixCommonErrors_Accessor();
+            InitializeFixCommonErrorsLine(target, "Awesome it is!<i></i>");
+            target.FixInvalidItalicTags();
+            Assert.AreEqual(target._subtitle.Paragraphs[0].Text, "Awesome it is!");
+        }
+
+        [TestMethod()]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void FixItalicsBadEnding3()
+        {
+            FixCommonErrors_Accessor target = new FixCommonErrors_Accessor();
+            InitializeFixCommonErrorsLine(target, "Awesome it is!<i>");
+            target.FixInvalidItalicTags();
+            Assert.AreEqual(target._subtitle.Paragraphs[0].Text, "Awesome it is!");
+        }
+
+        [TestMethod()]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void FixItalicsBadEnding4()
+        {
+            FixCommonErrors_Accessor target = new FixCommonErrors_Accessor();
+            InitializeFixCommonErrorsLine(target, "Awesome it is!</i><i>");
+            target.FixInvalidItalicTags();
+            Assert.AreEqual(target._subtitle.Paragraphs[0].Text, "Awesome it is!");
+        }
+        #endregion
+
+        #region Fix Missing Periods At End Of Line
+        [TestMethod()]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void FixMissingPeriodsAtEndOfLineNone()
+        {
+            FixCommonErrors_Accessor target = new FixCommonErrors_Accessor();
+            InitializeFixCommonErrorsLine(target, "This is line one!" + Environment.NewLine + "<i>Boy!</i>", "This is line one!" + Environment.NewLine + "<i>Boy!</i>");
+            target.FixMissingPeriodsAtEndOfLine();
+            Assert.AreEqual(target._subtitle.Paragraphs[0].Text, "This is line one!" + Environment.NewLine + "<i>Boy!</i>");
+        }
+
+        [TestMethod()]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void FixMissingPeriodsAtEndOfLineItalicAndMissing()
+        {
+            FixCommonErrors_Accessor target = new FixCommonErrors_Accessor();
+            InitializeFixCommonErrorsLine(target, "This is line one!" + Environment.NewLine + "<i>Boy</i>", "This is line one!" + Environment.NewLine + "<i>Boy!</i>");
+            target.FixMissingPeriodsAtEndOfLine();
+            Assert.AreEqual(target._subtitle.Paragraphs[0].Text, "This is line one!" + Environment.NewLine + "<i>Boy.</i>");
+        }
+
+        [TestMethod()]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void FixMissingPeriodsAtEndOfLineItalicAndMissing2()
+        {
+            FixCommonErrors_Accessor target = new FixCommonErrors_Accessor();
+            InitializeFixCommonErrorsLine(target, "<i>This is line one!" + Environment.NewLine + "Boy</i>", "This is line one!" + Environment.NewLine + "<i>Boy!</i>");
+            target.FixMissingPeriodsAtEndOfLine();
+            Assert.AreEqual(target._subtitle.Paragraphs[0].Text, "<i>This is line one!" + Environment.NewLine + "Boy.</i>");
+        }
+        #endregion
+
     }
 }
