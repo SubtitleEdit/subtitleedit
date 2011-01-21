@@ -119,8 +119,15 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
 
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         private delegate void libvlc_media_list_player_release(IntPtr mediaPlayer);
-        libvlc_media_list_player_release _libvlc_media_list_player_release;        
+        libvlc_media_list_player_release _libvlc_media_list_player_release;
 
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        private delegate float libvlc_media_player_get_rate(IntPtr mediaPlayer);
+        libvlc_media_player_get_rate _libvlc_media_player_get_rate;
+
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        private delegate int libvlc_media_player_set_rate(IntPtr mediaPlayer, float rate);
+        libvlc_media_player_set_rate _libvlc_media_player_set_rate;
 
         private object GetDllType(Type type, string name)
         {
@@ -159,6 +166,8 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             _libvlc_media_player_get_state = (libvlc_media_player_get_state)GetDllType(typeof(libvlc_media_player_get_state), "libvlc_media_player_get_state");
             _libvlc_media_player_get_length = (libvlc_media_player_get_length)GetDllType(typeof(libvlc_media_player_get_length), "libvlc_media_player_get_length");
             _libvlc_media_list_player_release = (libvlc_media_list_player_release)GetDllType(typeof(libvlc_media_list_player_release), "libvlc_media_list_player_release");
+            _libvlc_media_player_get_rate = (libvlc_media_player_get_rate)GetDllType(typeof(libvlc_media_player_get_rate), "libvlc_media_player_get_rate");
+            _libvlc_media_player_set_rate = (libvlc_media_player_set_rate)GetDllType(typeof(libvlc_media_player_set_rate), "libvlc_media_player_set_rate");
         }
 
         private bool IsAllMethodsLoaded()
@@ -182,7 +191,9 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                    _libvlc_media_player_get_fps != null &&
                    _libvlc_media_player_get_state != null &&
                    _libvlc_media_player_get_length != null &&
-                   _libvlc_media_list_player_release != null;
+                   _libvlc_media_list_player_release != null &&
+                   _libvlc_media_player_get_rate != null &&
+                   _libvlc_media_player_set_rate != null;
         }
 
         public static bool IsInstalled
@@ -242,6 +253,19 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             set
             {
                 _libvlc_media_player_set_time(_mediaPlayer, (long)(value * 1000.0));
+            }
+        }
+
+        public override double PlayRate
+        {
+            get
+            {
+                return _libvlc_media_player_get_rate(_mediaPlayer);
+            }
+            set
+            {
+                if (value >= 0 && value <= 2.0)
+                    _libvlc_media_player_set_rate(_mediaPlayer, (float)value);
             }
         }
 

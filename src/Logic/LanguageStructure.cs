@@ -836,6 +836,11 @@
                 public string NewTextInsertAtX { get; set; }
 
                 public string Center { get; set; }
+                public string PlayRate { get; set; }
+                public string Slow { get; set; }
+                public string Normal { get; set; }
+                public string Fast { get; set; }
+                public string VeryFast { get; set; }
             }
 
         }

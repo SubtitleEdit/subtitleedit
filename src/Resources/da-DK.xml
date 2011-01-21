@@ -562,10 +562,18 @@
       <BeforeChangingTimeInWaveFormX>Før ændring af tid i lyd kurve: {0}</BeforeChangingTimeInWaveFormX>
       <NewTextInsertAtX>Ny tekst indsat ved {0}</NewTextInsertAtX>
       <Center>Center</Center>
+      <PlayRate>Afspilnings hastighed</PlayRate>
+      <Slow>Langsom</Slow>
+      <Normal>Normal</Normal>
+      <Fast>Hurtig</Fast>
+      <VeryFast>Meget hurtig</VeryFast>
     </VideoControls>
     <SaveChangesToUntitled>Gem ændringer til unavngivet?</SaveChangesToUntitled>
     <SaveChangesToX>Gem ændringer til {0}?</SaveChangesToX>
+    <SaveChangesToUntitledOriginal>Gem ændringer til unavngivet original?</SaveChangesToUntitledOriginal>
+    <SaveChangesToOriginalX>Gem ændringer til den originale undertekst {0}?</SaveChangesToOriginalX>
     <SaveSubtitleAs>Gem undertekst som...</SaveSubtitleAs>
+    <SaveOriginalSubtitleAs>Gem original undertitel som...</SaveOriginalSubtitleAs>
     <NoSubtitleLoaded>Ingen undertekst indlæst</NoSubtitleLoaded>
     <VisualSyncSelectedLines>Visuel synkroniser - valgte linjer</VisualSyncSelectedLines>
     <VisualSyncTitle>Visual synkroniser</VisualSyncTitle>
@@ -581,6 +589,7 @@
     <FileIsEmptyOrShort>Filen er tom eller meget kort!</FileIsEmptyOrShort>
     <FileNotFound>Fil ikke findet: {0}</FileNotFound>
     <SavedSubtitleX>Gemte undertekst {0}</SavedSubtitleX>
+    <SavedOriginalSubtitleX>Gemte originale undertekst {0}</SavedOriginalSubtitleX>
     <FileOnDiskModified>Fil på disken ændret</FileOnDiskModified>
     <OverwriteModifiedFile>Overskriv filen {0} ændret {1} {2} {3} med aktuelle fil indlæst fra disken på {4} {5}?</OverwriteModifiedFile>
     <UnableToSaveSubtitleX>Kan ikke gemme undertekst fil {0}</UnableToSaveSubtitleX>

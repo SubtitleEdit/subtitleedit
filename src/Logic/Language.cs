@@ -900,6 +900,11 @@ namespace Nikse.SubtitleEdit.Logic
                     NewTextInsertAtX = "New text inserted at {0}",
 
                     Center = "Center",
+                    PlayRate = "Play rate (speed)",
+                    Slow = "Slow",
+                    Normal = "Normal",
+                    Fast = "Fast",
+                    VeryFast = "Very fast",
                 },
             };
 
