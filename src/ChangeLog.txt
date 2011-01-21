@@ -5,7 +5,9 @@ Subtitle Edit Changelog
    * Collaboration via the internet ("Networking", also has chat)
    * Auto-backup (never, every minute, every 5th minute, or every 15th minute)
    * Video player/controls/wave form can now be un-docked (e.g. for ppl for multiple monitors)
-   * Can now spell check via Word (Options -> Settings:General -> Spell checker)
+   * Spell check via Word (Options -> Settings:General -> Spell checker)
+   * Edit original subtitle (Options -> Settings:General:Allow edit of original subtitle)
+   * Wave form control can adjust play rate (slow, normal, fast, and very fast)
    * Ability to remember the last selected line when re-opening subtitles (thx Frederic)
    * Now remembers video file and original subtitle (thx Luis)
    * Support for the subtitle format "Quicktime text" (two variations) + Scenarist + Adobe Encore
