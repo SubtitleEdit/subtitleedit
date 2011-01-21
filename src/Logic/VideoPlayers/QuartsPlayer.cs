@@ -14,6 +14,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
 
         private QuartzTypeLib.IVideoWindow _quartzVideo;
         private FilgraphManagerClass _quartzFilgraphManager;
+        private IMediaPosition _mediaPosition;
         private bool _isPaused;
         private Control _owner;
         private System.Windows.Forms.Timer _videoEndTimer;
@@ -70,6 +71,16 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             }
         }
 
+        public override double PlayRate
+        {
+            get { return _mediaPosition.Rate; }
+            set
+            {
+                if (value >= 0 && value <= 2.0)
+                    _mediaPosition.Rate = value;
+            }
+        }
+
         public override void Play()
         {
             _quartzFilgraphManager.Run();
@@ -122,7 +133,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             _quartzFilgraphManager.Run();
             _quartzFilgraphManager.GetVideoSize(out _sourceWidth, out _sourceHeight);
             _owner.Resize += OwnerControlResize;
-
+            _mediaPosition = (IMediaPosition)_quartzFilgraphManager;
             if (OnVideoLoaded != null)
             {
                 _videoLoader = new BackgroundWorker();

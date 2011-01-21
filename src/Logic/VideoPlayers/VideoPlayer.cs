@@ -10,6 +10,12 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
         public abstract int Volume { get; set; }
         public abstract double Duration { get; }
         public abstract double CurrentPosition { get; set; }
+
+        /// <summary>
+        /// 1.0 is normal playback speed, 0.5 is half speed, and 2.0 is twice speed.
+        /// </summary>
+        public virtual double PlayRate { get; set; }
+
         public abstract void Play();
         public abstract void Pause();
         public abstract void Stop();

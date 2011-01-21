@@ -105,7 +105,7 @@ namespace Nikse.SubtitleEdit.Forms
                     if (versionInfo.Length >= 3 && versionInfo[2] != "0")
                         _title += "." + versionInfo[2];
                 }
-                return _title + " Beta 8";
+                return _title + " Beta 9";
             }
         }
 
@@ -681,6 +681,11 @@ namespace Nikse.SubtitleEdit.Forms
             if (_videoFileName == null)
                 labelVideoInfo.Text = Configuration.Settings.Language.General.NoVideoLoaded;
             toolStripButtonLockCenter.Text = _language.VideoControls.Center;
+            toolStripSplitButtonPlayRate.Text = _language.VideoControls.PlayRate;
+            toolStripMenuItemPlayRateSlow.Text = _language.VideoControls.Slow;
+            toolStripMenuItemPlayRateNormal.Text = _language.VideoControls.Normal;
+            toolStripMenuItemPlayRateFast.Text = _language.VideoControls.Fast;
+            toolStripMenuItemPlayRateVeryFast.Text = _language.VideoControls.VeryFast;
 
             groupBoxAutoRepeat.Text = _language.VideoControls.AutoRepeat;
             checkBoxAutoRepeatOn.Text = _language.VideoControls.AutoRepeatOn;
@@ -3793,6 +3798,34 @@ namespace Nikse.SubtitleEdit.Forms
                 newParagraph.EndTime.TotalMilliseconds = currentParagraph.EndTime.TotalMilliseconds;
                 currentParagraph.EndTime.TotalMilliseconds = middle;
                 newParagraph.StartTime.TotalMilliseconds = currentParagraph.EndTime.TotalMilliseconds + 1;
+
+                if (Configuration.Settings.General.AllowEditOfOriginalSubtitle && _subtitleAlternate != null && _subtitleAlternate.Paragraphs.Count > 0)
+                {
+                    Paragraph originalCurrent = Utilities.GetOriginalParagraph(firstSelectedIndex, currentParagraph, _subtitleAlternate.Paragraphs);
+                    if (originalCurrent != null)
+                    {
+                        originalCurrent.EndTime.TotalMilliseconds = currentParagraph.EndTime.TotalMilliseconds;
+                        Paragraph originalNew = new Paragraph(newParagraph);
+
+                        lines = originalCurrent.Text.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                        if (lines.Length == 2 && (lines[0].EndsWith(".") || lines[0].EndsWith("!") || lines[0].EndsWith("?")))
+                        {
+                            currentParagraph.Text = Utilities.AutoBreakLine(lines[0]);
+                            newParagraph.Text = Utilities.AutoBreakLine(lines[1]);
+                        }
+                        else
+                        {
+                            string s = Utilities.AutoBreakLine(originalCurrent.Text, 5, Configuration.Settings.General.SubtitleLineMaximumLength * 2);
+                            lines = s.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                        }
+                        if (lines.Length == 2)
+                        {
+                            originalCurrent.Text = Utilities.AutoBreakLine(lines[0]);
+                            originalNew.Text = Utilities.AutoBreakLine(lines[1]);
+                        }
+                        _subtitleAlternate.InsertParagraphInCorrectTimeOrder(originalNew);
+                    }
+                }
 
                 if (_networkSession != null)
                 {
@@ -7316,6 +7349,7 @@ namespace Nikse.SubtitleEdit.Forms
                 _timerAutoSave.Interval = 1000 * Configuration.Settings.General.AutoBackupSeconds; // take backup every x second if changes were made
                 _timerAutoSave.Start();
             }
+            toolStripMenuItemPlayRateNormal_Click(null, null);
             Main_Resize(null, null);            
         }
 
@@ -8872,7 +8906,59 @@ namespace Nikse.SubtitleEdit.Forms
                 GetDictionariesToolStripMenuItem.Visible = true;
                 addWordToNamesetcListToolStripMenuItem.Visible = true;
             }
-        }        
+        }
+
+        private void toolStripMenuItemPlayRateSlow_Click(object sender, EventArgs e)
+        {
+            if (mediaPlayer.VideoPlayer != null)
+            {
+                toolStripMenuItemPlayRateSlow.Checked = true;
+                toolStripMenuItemPlayRateNormal.Checked = false;
+                toolStripMenuItemPlayRateFast.Checked = false;
+                toolStripMenuItemPlayRateVeryFast.Checked = false;
+                mediaPlayer.VideoPlayer.PlayRate = 0.8;
+                toolStripSplitButtonPlayRate.Image = imageListPlayRate.Images[1];
+            }
+        }
+
+        private void toolStripMenuItemPlayRateNormal_Click(object sender, EventArgs e)
+        {
+            if (mediaPlayer.VideoPlayer != null)
+            {
+                toolStripMenuItemPlayRateSlow.Checked = false;
+                toolStripMenuItemPlayRateNormal.Checked = true;
+                toolStripMenuItemPlayRateFast.Checked = false;
+                toolStripMenuItemPlayRateVeryFast.Checked = false;
+                mediaPlayer.VideoPlayer.PlayRate = 1.0;
+                toolStripSplitButtonPlayRate.Image = imageListPlayRate.Images[0];
+            }
+        }
+
+        private void toolStripMenuItemPlayRateFast_Click(object sender, EventArgs e)
+        {
+            if (mediaPlayer.VideoPlayer != null)
+            {
+                toolStripMenuItemPlayRateSlow.Checked = false;
+                toolStripMenuItemPlayRateNormal.Checked = false;
+                toolStripMenuItemPlayRateFast.Checked = true;
+                toolStripMenuItemPlayRateVeryFast.Checked = false;
+                mediaPlayer.VideoPlayer.PlayRate = 1.2;
+                toolStripSplitButtonPlayRate.Image = imageListPlayRate.Images[1];
+            }
+        }
+
+        private void veryFastToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (mediaPlayer.VideoPlayer != null)
+            {
+                toolStripMenuItemPlayRateSlow.Checked = false;
+                toolStripMenuItemPlayRateNormal.Checked = false;
+                toolStripMenuItemPlayRateFast.Checked = false;
+                toolStripMenuItemPlayRateVeryFast.Checked = true;
+                mediaPlayer.VideoPlayer.PlayRate = 1.6;
+                toolStripSplitButtonPlayRate.Image = imageListPlayRate.Images[1];
+            }            
+        }
 
     }
 }
