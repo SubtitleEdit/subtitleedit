@@ -355,5 +355,17 @@ namespace Nikse.SubtitleEdit.Forms
             SubtitleListview1.SelectIndexAndEnsureVisible(index);
         }
 
+        private void ContinuationBeginEndChanged(object sender, EventArgs e)
+        {
+            Cursor = Cursors.WaitCursor;
+            int index = -1;
+            if (listViewFixes.SelectedItems.Count > 0)
+                index = listViewFixes.SelectedItems[0].Index;
+            GeneratePreview(true);
+            if (index >= 0)
+                listViewFixes.Items[index].Selected = true;
+            Cursor = Cursors.Default;
+        }
+
     }
 }
