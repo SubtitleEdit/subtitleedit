@@ -216,6 +216,7 @@
             this.comboBoxLineContinuationBegin.Name = "comboBoxLineContinuationBegin";
             this.comboBoxLineContinuationBegin.Size = new System.Drawing.Size(80, 21);
             this.comboBoxLineContinuationBegin.TabIndex = 2;
+            this.comboBoxLineContinuationBegin.SelectedIndexChanged += new System.EventHandler(this.ContinuationBeginEndChanged);
             // 
             // labelLineContinuationBeginEnd
             // 
@@ -236,6 +237,7 @@
             this.comboBoxLineContinuationEnd.Name = "comboBoxLineContinuationEnd";
             this.comboBoxLineContinuationEnd.Size = new System.Drawing.Size(80, 21);
             this.comboBoxLineContinuationEnd.TabIndex = 3;
+            this.comboBoxLineContinuationEnd.SelectedIndexChanged += new System.EventHandler(this.ContinuationBeginEndChanged);
             // 
             // SubtitleListview1
             // 
