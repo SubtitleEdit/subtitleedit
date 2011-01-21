@@ -1067,8 +1067,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                     if (!string.IsNullOrEmpty(videoFileName) && File.Exists(videoFileName))
                     {
-                        OpenVideo(videoFileName);
-                        
+                        OpenVideo(videoFileName);                        
                     }
                     else if (!string.IsNullOrEmpty(fileName) && (toolStripButtonToogleVideo.Checked || toolStripButtonToogleWaveForm.Checked))
                     {
@@ -6184,7 +6183,6 @@ namespace Nikse.SubtitleEdit.Forms
                     return false;
             }
 
-
             Encoding encoding;
             _subtitleAlternate = new Subtitle();
             _subtitleAlternateFileName = fileName;
@@ -6249,7 +6247,9 @@ namespace Nikse.SubtitleEdit.Forms
                 VideoInfo videoInfo = ShowVideoInfo(fileName);
                 toolStripComboBoxFrameRate.Text = videoInfo.FramesPerSecond.ToString();
 
+
                 Utilities.InitializeVideoPlayerAndContainer(fileName, videoInfo, mediaPlayer, VideoLoaded, VideoEnded);
+                mediaPlayer.Volume = 0;
                 labelVideoInfo.Text = Path.GetFileName(fileName) + " " + videoInfo.Width + "x" + videoInfo.Height + " " + videoInfo.VideoCodec;
                                 
                 string peakWaveFileName = GetPeakWaveFileName(fileName);
@@ -6272,6 +6272,7 @@ namespace Nikse.SubtitleEdit.Forms
         void VideoLoaded(object sender, EventArgs e)
         {
             mediaPlayer.Stop();
+            mediaPlayer.Volume = Configuration.Settings.General.VideoPlayerDefaultVolume;
             timer1.Start();
 
             trackBarWaveFormPosition.Maximum = (int)mediaPlayer.Duration;
