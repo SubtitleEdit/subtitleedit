@@ -1373,6 +1373,11 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 Paragraph p = _subtitle.Paragraphs[i];
                 Paragraph next = _subtitle.GetParagraphOrDefault(i + 1);
+                string nextText = string.Empty;
+                if (next != null)
+                    nextText = Utilities.RemoveHtmlTags(next.Text).TrimStart('-').TrimStart();
+                string tempNoHtml = Utilities.RemoveHtmlTags(p.Text).TrimEnd();
+
 
                 if (IsOneLineUrl(p.Text))
                 {
@@ -1380,11 +1385,11 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 else if (next != null &&
                     next.Text.Length > 0 &&
-                    Utilities.GetLetters(true, false, false).Contains(next.Text[0].ToString()) &&
-                    p.Text.Length > 0 &&
-                    (!"\",.!?:;>-])♪♫".Contains(p.Text[p.Text.Length - 1].ToString())))
+                    Utilities.GetLetters(true, false, false).Contains(nextText[0].ToString()) &&
+                    tempNoHtml.Length > 0 &&
+                    (!"\",.!?:;>-])♪♫".Contains(tempNoHtml[tempNoHtml.Length - 1].ToString())))
                 {
-                    if (!p.Text.EndsWith(")") && !p.Text.EndsWith("]") && !p.Text.EndsWith("*") && !p.Text.EndsWith("¶")) // hear impaired
+                    if (!tempNoHtml.EndsWith(")") && !tempNoHtml.EndsWith("]") && !tempNoHtml.EndsWith("*") && !tempNoHtml.EndsWith("¶")) // hear impaired
                     {
                         if (p.Text != p.Text.ToUpper())
                         {
@@ -1397,10 +1402,22 @@ namespace Nikse.SubtitleEdit.Forms
                                     if (AllowFix(i + 1, fixAction))
                                     {
                                         string oldText = p.Text;
-                                        _totalFixes++;
-                                        missigPeriodsAtEndOfLine++;
-                                        p.Text += ".";
-                                        AddFixToListView(p, i + 1, fixAction, oldText, p.Text);
+                                        if (p.Text.EndsWith(">"))
+                                        {
+                                            int lastLT = p.Text.LastIndexOf("<");
+                                            if (lastLT > 0)
+                                                p.Text = p.Text.Insert(lastLT, ".");
+                                        }
+                                        else
+                                        {
+                                            p.Text += ".";
+                                        }
+                                        if (p.Text != oldText)
+                                        {
+                                            _totalFixes++;
+                                            missigPeriodsAtEndOfLine++;
+                                            AddFixToListView(p, i + 1, fixAction, oldText, p.Text);
+                                        }
                                     }
                                 }
                             }
