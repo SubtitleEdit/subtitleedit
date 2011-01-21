@@ -669,13 +669,18 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 Paragraph p = _subtitle.Paragraphs[i];
 
-                if (Utilities.RemoveHtmlTags(p.Text).Length < Configuration.Settings.Tools.MergeLinesShorterThan && p.Text.Contains(Environment.NewLine))
+                string s = Utilities.RemoveHtmlTags(p.Text);
+                if (s.Length < Configuration.Settings.Tools.MergeLinesShorterThan && p.Text.Contains(Environment.NewLine))
                 {
-                    string s = p.Text;
-                    if (!s.Contains(Environment.NewLine + "-") &&
-                        !s.Contains(Environment.NewLine + " -") &&
-                        !s.Contains(Environment.NewLine + "<i> -") &&
-                        !s.Contains(Environment.NewLine + "<i>-"))
+                    s = s.TrimEnd().TrimEnd(".?!:;".ToCharArray());                    
+                    s = s.TrimStart('-');
+                    if (!s.Contains(".") &&
+                        !s.Contains("?") &&
+                        !s.Contains("!") &&
+                        !s.Contains(":") &&
+                        !s.Contains(";") &&
+                        !s.Contains("-") &&
+                        p.Text != p.Text.ToUpper()) 
                     {
                         if (AllowFix(i + 1, fixAction))
                         {
