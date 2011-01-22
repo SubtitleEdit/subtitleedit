@@ -36,6 +36,8 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonShowEarlier = new System.Windows.Forms.Button();
             this.labelTotalAdjustment = new System.Windows.Forms.Label();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this.radioButtonAllLines = new System.Windows.Forms.RadioButton();
+            this.radioButtonSelectedLinesOnly = new System.Windows.Forms.RadioButton();
             this.timeUpDownAdjust = new Nikse.SubtitleEdit.Controls.TimeUpDown();
             this.SuspendLayout();
             // 
@@ -44,7 +46,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.labelHoursMinSecsMilliSecs.AutoSize = true;
             this.labelHoursMinSecsMilliSecs.Location = new System.Drawing.Point(11, 6);
             this.labelHoursMinSecsMilliSecs.Name = "labelHoursMinSecsMilliSecs";
-            this.labelHoursMinSecsMilliSecs.Size = new System.Drawing.Size(169, 21);
+            this.labelHoursMinSecsMilliSecs.Size = new System.Drawing.Size(108, 13);
             this.labelHoursMinSecsMilliSecs.TabIndex = 18;
             this.labelHoursMinSecsMilliSecs.Text = "Hours:min:sec.msecs";
             // 
@@ -71,15 +73,39 @@ namespace Nikse.SubtitleEdit.Forms
             // labelTotalAdjustment
             // 
             this.labelTotalAdjustment.AutoSize = true;
-            this.labelTotalAdjustment.Location = new System.Drawing.Point(12, 90);
+            this.labelTotalAdjustment.Location = new System.Drawing.Point(12, 128);
             this.labelTotalAdjustment.Name = "labelTotalAdjustment";
-            this.labelTotalAdjustment.Size = new System.Drawing.Size(169, 21);
+            this.labelTotalAdjustment.Size = new System.Drawing.Size(108, 13);
             this.labelTotalAdjustment.TabIndex = 38;
             this.labelTotalAdjustment.Text = "labelTotalAdjustment";
             // 
             // timer1
             // 
             this.timer1.Interval = 250;
+            // 
+            // radioButtonAllLines
+            // 
+            this.radioButtonAllLines.AutoSize = true;
+            this.radioButtonAllLines.Location = new System.Drawing.Point(14, 70);
+            this.radioButtonAllLines.Name = "radioButtonAllLines";
+            this.radioButtonAllLines.Size = new System.Drawing.Size(60, 17);
+            this.radioButtonAllLines.TabIndex = 39;
+            this.radioButtonAllLines.TabStop = true;
+            this.radioButtonAllLines.Text = "All lines";
+            this.radioButtonAllLines.UseVisualStyleBackColor = true;
+            this.radioButtonAllLines.CheckedChanged += new System.EventHandler(this.radioButtonAllLines_CheckedChanged);
+            // 
+            // radioButtonSelectedLinesOnly
+            // 
+            this.radioButtonSelectedLinesOnly.AutoSize = true;
+            this.radioButtonSelectedLinesOnly.Location = new System.Drawing.Point(14, 93);
+            this.radioButtonSelectedLinesOnly.Name = "radioButtonSelectedLinesOnly";
+            this.radioButtonSelectedLinesOnly.Size = new System.Drawing.Size(113, 17);
+            this.radioButtonSelectedLinesOnly.TabIndex = 40;
+            this.radioButtonSelectedLinesOnly.TabStop = true;
+            this.radioButtonSelectedLinesOnly.Text = "Selected lines only";
+            this.radioButtonSelectedLinesOnly.UseVisualStyleBackColor = true;
+            this.radioButtonSelectedLinesOnly.CheckedChanged += new System.EventHandler(this.radioButtonAllLines_CheckedChanged);
             // 
             // timeUpDownAdjust
             // 
@@ -88,14 +114,16 @@ namespace Nikse.SubtitleEdit.Forms
             this.timeUpDownAdjust.Location = new System.Drawing.Point(12, 23);
             this.timeUpDownAdjust.Margin = new System.Windows.Forms.Padding(4);
             this.timeUpDownAdjust.Name = "timeUpDownAdjust";
-            this.timeUpDownAdjust.Size = new System.Drawing.Size(137, 34);
+            this.timeUpDownAdjust.Size = new System.Drawing.Size(92, 25);
             this.timeUpDownAdjust.TabIndex = 21;
             // 
             // ShowEarlierLater
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 21F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(278, 113);
+            this.ClientSize = new System.Drawing.Size(291, 150);
+            this.Controls.Add(this.radioButtonSelectedLinesOnly);
+            this.Controls.Add(this.radioButtonAllLines);
             this.Controls.Add(this.buttonShowLater);
             this.Controls.Add(this.buttonShowEarlier);
             this.Controls.Add(this.labelTotalAdjustment);
@@ -122,5 +150,7 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.Button buttonShowEarlier;
         private System.Windows.Forms.Label labelTotalAdjustment;
         private System.Windows.Forms.Timer timer1;
+        private System.Windows.Forms.RadioButton radioButtonAllLines;
+        private System.Windows.Forms.RadioButton radioButtonSelectedLinesOnly;
     }
 }

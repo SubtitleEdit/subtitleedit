@@ -105,7 +105,7 @@ namespace Nikse.SubtitleEdit.Forms
                     if (versionInfo.Length >= 3 && versionInfo[2] != "0")
                         _title += "." + versionInfo[2];
                 }
-                return _title + " Beta 9";
+                return _title + " Beta 10";
             }
         }
 
@@ -5157,9 +5157,9 @@ namespace Nikse.SubtitleEdit.Forms
                 timer1.Stop();
 
                 _showEarlierOrLater = new ShowEarlierLater();
-                _showEarlierOrLater.Initialize(ShowEarlierOrLaterSelectedLinesOnly, true);
+                _showEarlierOrLater.Initialize(ShowEarlierOrLater, true);
                 MakeHistoryForUndo(_language.BeforeShowSelectedLinesEarlierLater);
-                _showEarlierOrLater.ShowDialog(this);
+                _showEarlierOrLater.Show(this);
 
                 timerWaveForm.Enabled = waveFormEnabled;
                 videoTimer.Enabled = videoTimerEnabled;
@@ -6816,7 +6816,6 @@ namespace Nikse.SubtitleEdit.Forms
             TimeCode tc = new TimeCode(TimeSpan.FromMilliseconds(totalMilliseconds));
             MakeHistoryForUndo(_language.BeforeInsertSubtitleAtVideoPosition + "  " + tc.ToString());
 
-
             // find index where to insert
             int index = 0;
             foreach (Paragraph p in _subtitle.Paragraphs)
@@ -6872,9 +6871,7 @@ namespace Nikse.SubtitleEdit.Forms
                     mediaPlayer.CurrentPosition = _subtitle.Paragraphs[index].StartTime.TotalSeconds;
                 mediaPlayer.Play();
             }
-
         }
-
 
         private void GotoSubPositionAndPause()
         {
@@ -6956,40 +6953,37 @@ namespace Nikse.SubtitleEdit.Forms
             Refresh();
         }
 
-        public void ShowEarlierOrLater(double adjustMilliseconds)
+        public void ShowEarlierOrLater(double adjustMilliseconds, bool onlySelected)
         {
-            double frameRate = CurrentFrameRate;
-            _subtitle.AddTimeToAllParagraphs(TimeSpan.FromMilliseconds(adjustMilliseconds));
-            SubtitleListview1.BeginUpdate();
-            for (int i = 0; i < _subtitle.Paragraphs.Count; i++)
-            {
-                Paragraph p = _subtitle.GetParagraphOrDefault(i);
-                if (p != null)
-                    SubtitleListview1.SetStartTime(i, p);
-                if (_subtitle.WasLoadedWithFrameNumbers)
-                    p.CalculateFrameNumbersFromTimeCodes(frameRate);
-            }
-            SubtitleListview1.EndUpdate();
-            RefreshSelectedParagraph();
-        }
+            TimeCode tc = new TimeCode(TimeSpan.FromMilliseconds(adjustMilliseconds));
+            MakeHistoryForUndo(_language.BeforeShowSelectedLinesEarlierLater  + ": " + tc.ToString());
 
-        public void ShowEarlierOrLaterSelectedLinesOnly(double adjustMilliseconds)
-        {
-            double frameRate = CurrentFrameRate;
-            _subtitle.AddTimeToAllParagraphs(TimeSpan.FromMilliseconds(adjustMilliseconds));
+            double frameRate = CurrentFrameRate;            
             SubtitleListview1.BeginUpdate();
             for (int i = 0; i < _subtitle.Paragraphs.Count; i++)
             {
-                if (SubtitleListview1.Items[i].Selected)
+                if (SubtitleListview1.Items[i].Selected || !onlySelected)
                 {
                     Paragraph p = _subtitle.GetParagraphOrDefault(i);
                     if (p != null)
+                    {
+                        p.StartTime.TotalMilliseconds += adjustMilliseconds;
+                        p.EndTime.TotalMilliseconds += adjustMilliseconds;
                         SubtitleListview1.SetStartTime(i, p);
-                    if (_subtitle.WasLoadedWithFrameNumbers)
-                        p.CalculateFrameNumbersFromTimeCodes(frameRate);
+                    }
                 }
             }
             SubtitleListview1.EndUpdate();
+            if (_subtitle.WasLoadedWithFrameNumbers)
+                _subtitle.CalculateFrameNumbersFromTimeCodes(frameRate);
+            RefreshSelectedParagraph();
+            UpdateSourceView();
+        }
+
+        private void UpdateSourceView()
+        {
+            if (tabControlSubtitle.SelectedIndex == TabControlSourceView)
+                ShowSource();
         }
 
         private void toolStripMenuItemAdjustAllTimes_Click(object sender, EventArgs e)
@@ -7006,7 +7000,7 @@ namespace Nikse.SubtitleEdit.Forms
                     _showEarlierOrLater = new ShowEarlierLater();
                     SaveSubtitleListviewIndexes();
                     _showEarlierOrLater.Initialize(ShowEarlierOrLater, false);
-                    _showEarlierOrLater.ShowDialog(this);
+                    _showEarlierOrLater.Show(this);
                 }
                 else
                 {
