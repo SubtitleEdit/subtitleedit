@@ -221,6 +221,11 @@
             this.toolStripButtonWaveFormPause = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonWaveFormPlay = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonLockCenter = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSplitButtonPlayRate = new System.Windows.Forms.ToolStripSplitButton();
+            this.toolStripMenuItemPlayRateSlow = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemPlayRateNormal = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemPlayRateFast = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemPlayRateVeryFast = new System.Windows.Forms.ToolStripMenuItem();
             this.tabControlButtons = new System.Windows.Forms.TabControl();
             this.tabPageTranslate = new System.Windows.Forms.TabPage();
             this.labelTranslateTip = new System.Windows.Forms.Label();
@@ -324,10 +329,6 @@
             this.panelVideoPlayer = new System.Windows.Forms.Panel();
             this.contextMenuStripEmpty = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.insertLineToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSplitButtonPlayRate = new System.Windows.Forms.ToolStripSplitButton();
-            this.toolStripMenuItemPlayRateNormal = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItemPlayRateFast = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItemPlayRateSlow = new System.Windows.Forms.ToolStripMenuItem();
             this.imageListPlayRate = new System.Windows.Forms.ImageList(this.components);
             this.timeUpDownStartTime = new Nikse.SubtitleEdit.Controls.TimeUpDown();
             this.SubtitleListview1 = new Nikse.SubtitleEdit.Controls.SubtitleListView();
@@ -335,7 +336,6 @@
             this.AudioWaveForm = new Nikse.SubtitleEdit.Controls.WaveForm();
             this.timeUpDownVideoPosition = new Nikse.SubtitleEdit.Controls.TimeUpDown();
             this.timeUpDownVideoPositionAdjust = new Nikse.SubtitleEdit.Controls.TimeUpDown();
-            this.toolStripMenuItemPlayRateVeryFast = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
@@ -1851,7 +1851,9 @@
             this.groupBoxVideo.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBoxVideo.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.groupBoxVideo.Location = new System.Drawing.Point(0, 0);
+            this.groupBoxVideo.Margin = new System.Windows.Forms.Padding(0);
             this.groupBoxVideo.Name = "groupBoxVideo";
+            this.groupBoxVideo.Padding = new System.Windows.Forms.Padding(0);
             this.groupBoxVideo.Size = new System.Drawing.Size(1244, 305);
             this.groupBoxVideo.TabIndex = 1;
             this.groupBoxVideo.TabStop = false;
@@ -1859,7 +1861,7 @@
             // checkBoxSyncListViewWithVideoWhilePlaying
             // 
             this.checkBoxSyncListViewWithVideoWhilePlaying.AutoSize = true;
-            this.checkBoxSyncListViewWithVideoWhilePlaying.Location = new System.Drawing.Point(561, 11);
+            this.checkBoxSyncListViewWithVideoWhilePlaying.Location = new System.Drawing.Point(558, 11);
             this.checkBoxSyncListViewWithVideoWhilePlaying.Name = "checkBoxSyncListViewWithVideoWhilePlaying";
             this.checkBoxSyncListViewWithVideoWhilePlaying.Size = new System.Drawing.Size(207, 17);
             this.checkBoxSyncListViewWithVideoWhilePlaying.TabIndex = 1;
@@ -1869,7 +1871,7 @@
             // labelVideoInfo
             // 
             this.labelVideoInfo.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.labelVideoInfo.Location = new System.Drawing.Point(869, 12);
+            this.labelVideoInfo.Location = new System.Drawing.Point(872, 12);
             this.labelVideoInfo.Name = "labelVideoInfo";
             this.labelVideoInfo.Size = new System.Drawing.Size(369, 19);
             this.labelVideoInfo.TabIndex = 12;
@@ -1881,10 +1883,10 @@
             this.trackBarWaveFormPosition.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.trackBarWaveFormPosition.AutoSize = false;
-            this.trackBarWaveFormPosition.Location = new System.Drawing.Point(687, 264);
+            this.trackBarWaveFormPosition.Location = new System.Drawing.Point(674, 267);
             this.trackBarWaveFormPosition.Maximum = 1000;
             this.trackBarWaveFormPosition.Name = "trackBarWaveFormPosition";
-            this.trackBarWaveFormPosition.Size = new System.Drawing.Size(550, 20);
+            this.trackBarWaveFormPosition.Size = new System.Drawing.Size(566, 20);
             this.trackBarWaveFormPosition.TabIndex = 11;
             this.trackBarWaveFormPosition.TickStyle = System.Windows.Forms.TickStyle.None;
             this.trackBarWaveFormPosition.ValueChanged += new System.EventHandler(this.trackBarWaveFormPosition_ValueChanged);
@@ -1893,9 +1895,9 @@
             // 
             this.panelWaveFormControls.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.panelWaveFormControls.Controls.Add(this.toolStripWaveControls);
-            this.panelWaveFormControls.Location = new System.Drawing.Point(477, 262);
+            this.panelWaveFormControls.Location = new System.Drawing.Point(474, 265);
             this.panelWaveFormControls.Name = "panelWaveFormControls";
-            this.panelWaveFormControls.Size = new System.Drawing.Size(252, 30);
+            this.panelWaveFormControls.Size = new System.Drawing.Size(205, 30);
             this.panelWaveFormControls.TabIndex = 10;
             // 
             // toolStripWaveControls
@@ -1914,7 +1916,7 @@
             this.toolStripSplitButtonPlayRate});
             this.toolStripWaveControls.Location = new System.Drawing.Point(0, 3);
             this.toolStripWaveControls.Name = "toolStripWaveControls";
-            this.toolStripWaveControls.Size = new System.Drawing.Size(235, 25);
+            this.toolStripWaveControls.Size = new System.Drawing.Size(197, 25);
             this.toolStripWaveControls.TabIndex = 0;
             this.toolStripWaveControls.Text = "toolStrip2";
             // 
@@ -1982,6 +1984,50 @@
             this.toolStripButtonLockCenter.Size = new System.Drawing.Size(23, 22);
             this.toolStripButtonLockCenter.Text = "Center";
             this.toolStripButtonLockCenter.Click += new System.EventHandler(this.toolStripButtonLockCenter_Click);
+            // 
+            // toolStripSplitButtonPlayRate
+            // 
+            this.toolStripSplitButtonPlayRate.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripSplitButtonPlayRate.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripMenuItemPlayRateSlow,
+            this.toolStripMenuItemPlayRateNormal,
+            this.toolStripMenuItemPlayRateFast,
+            this.toolStripMenuItemPlayRateVeryFast});
+            this.toolStripSplitButtonPlayRate.Image = ((System.Drawing.Image)(resources.GetObject("toolStripSplitButtonPlayRate.Image")));
+            this.toolStripSplitButtonPlayRate.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripSplitButtonPlayRate.Name = "toolStripSplitButtonPlayRate";
+            this.toolStripSplitButtonPlayRate.Size = new System.Drawing.Size(32, 22);
+            this.toolStripSplitButtonPlayRate.Text = "Play rate (speed)";
+            // 
+            // toolStripMenuItemPlayRateSlow
+            // 
+            this.toolStripMenuItemPlayRateSlow.Name = "toolStripMenuItemPlayRateSlow";
+            this.toolStripMenuItemPlayRateSlow.Size = new System.Drawing.Size(148, 22);
+            this.toolStripMenuItemPlayRateSlow.Text = "Slow";
+            this.toolStripMenuItemPlayRateSlow.Click += new System.EventHandler(this.toolStripMenuItemPlayRateSlow_Click);
+            // 
+            // toolStripMenuItemPlayRateNormal
+            // 
+            this.toolStripMenuItemPlayRateNormal.Checked = true;
+            this.toolStripMenuItemPlayRateNormal.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.toolStripMenuItemPlayRateNormal.Name = "toolStripMenuItemPlayRateNormal";
+            this.toolStripMenuItemPlayRateNormal.Size = new System.Drawing.Size(148, 22);
+            this.toolStripMenuItemPlayRateNormal.Text = "Normal speed";
+            this.toolStripMenuItemPlayRateNormal.Click += new System.EventHandler(this.toolStripMenuItemPlayRateNormal_Click);
+            // 
+            // toolStripMenuItemPlayRateFast
+            // 
+            this.toolStripMenuItemPlayRateFast.Name = "toolStripMenuItemPlayRateFast";
+            this.toolStripMenuItemPlayRateFast.Size = new System.Drawing.Size(148, 22);
+            this.toolStripMenuItemPlayRateFast.Text = "Fast ";
+            this.toolStripMenuItemPlayRateFast.Click += new System.EventHandler(this.toolStripMenuItemPlayRateFast_Click);
+            // 
+            // toolStripMenuItemPlayRateVeryFast
+            // 
+            this.toolStripMenuItemPlayRateVeryFast.Name = "toolStripMenuItemPlayRateVeryFast";
+            this.toolStripMenuItemPlayRateVeryFast.Size = new System.Drawing.Size(148, 22);
+            this.toolStripMenuItemPlayRateVeryFast.Text = "Very fast";
+            this.toolStripMenuItemPlayRateVeryFast.Click += new System.EventHandler(this.veryFastToolStripMenuItem_Click);
             // 
             // tabControlButtons
             // 
@@ -3177,42 +3223,6 @@
             this.insertLineToolStripMenuItem.Text = "Insert line";
             this.insertLineToolStripMenuItem.Click += new System.EventHandler(this.insertLineToolStripMenuItem_Click);
             // 
-            // toolStripSplitButtonPlayRate
-            // 
-            this.toolStripSplitButtonPlayRate.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripSplitButtonPlayRate.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripMenuItemPlayRateSlow,
-            this.toolStripMenuItemPlayRateNormal,
-            this.toolStripMenuItemPlayRateFast,
-            this.toolStripMenuItemPlayRateVeryFast});
-            this.toolStripSplitButtonPlayRate.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripSplitButtonPlayRate.Name = "toolStripSplitButtonPlayRate";
-            this.toolStripSplitButtonPlayRate.Size = new System.Drawing.Size(16, 22);
-            this.toolStripSplitButtonPlayRate.Text = "Play rate (speed)";
-            // 
-            // toolStripMenuItemPlayRateNormal
-            // 
-            this.toolStripMenuItemPlayRateNormal.Checked = true;
-            this.toolStripMenuItemPlayRateNormal.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.toolStripMenuItemPlayRateNormal.Name = "toolStripMenuItemPlayRateNormal";
-            this.toolStripMenuItemPlayRateNormal.Size = new System.Drawing.Size(152, 22);
-            this.toolStripMenuItemPlayRateNormal.Text = "Normal speed";
-            this.toolStripMenuItemPlayRateNormal.Click += new System.EventHandler(this.toolStripMenuItemPlayRateNormal_Click);
-            // 
-            // toolStripMenuItemPlayRateFast
-            // 
-            this.toolStripMenuItemPlayRateFast.Name = "toolStripMenuItemPlayRateFast";
-            this.toolStripMenuItemPlayRateFast.Size = new System.Drawing.Size(152, 22);
-            this.toolStripMenuItemPlayRateFast.Text = "Fast ";
-            this.toolStripMenuItemPlayRateFast.Click += new System.EventHandler(this.toolStripMenuItemPlayRateFast_Click);
-            // 
-            // toolStripMenuItemPlayRateSlow
-            // 
-            this.toolStripMenuItemPlayRateSlow.Name = "toolStripMenuItemPlayRateSlow";
-            this.toolStripMenuItemPlayRateSlow.Size = new System.Drawing.Size(152, 22);
-            this.toolStripMenuItemPlayRateSlow.Text = "Slow";
-            this.toolStripMenuItemPlayRateSlow.Click += new System.EventHandler(this.toolStripMenuItemPlayRateSlow_Click);
-            // 
             // imageListPlayRate
             // 
             this.imageListPlayRate.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageListPlayRate.ImageStream")));
@@ -3286,12 +3296,12 @@
             this.AudioWaveForm.Color = System.Drawing.Color.GreenYellow;
             this.AudioWaveForm.DrawGridLines = true;
             this.AudioWaveForm.GridColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(20)))), ((int)(((byte)(18)))));
-            this.AudioWaveForm.Location = new System.Drawing.Point(475, 35);
+            this.AudioWaveForm.Location = new System.Drawing.Point(472, 32);
             this.AudioWaveForm.Margin = new System.Windows.Forms.Padding(0);
             this.AudioWaveForm.Name = "AudioWaveForm";
             this.AudioWaveForm.NewSelectionParagraph = null;
             this.AudioWaveForm.SelectedColor = System.Drawing.Color.Red;
-            this.AudioWaveForm.Size = new System.Drawing.Size(762, 223);
+            this.AudioWaveForm.Size = new System.Drawing.Size(768, 229);
             this.AudioWaveForm.StartPositionSeconds = 0D;
             this.AudioWaveForm.TabIndex = 6;
             this.AudioWaveForm.TextColor = System.Drawing.Color.Gray;
@@ -3321,13 +3331,6 @@
             this.timeUpDownVideoPositionAdjust.Name = "timeUpDownVideoPositionAdjust";
             this.timeUpDownVideoPositionAdjust.Size = new System.Drawing.Size(92, 25);
             this.timeUpDownVideoPositionAdjust.TabIndex = 13;
-            // 
-            // toolStripMenuItemPlayRateVeryFast
-            // 
-            this.toolStripMenuItemPlayRateVeryFast.Name = "toolStripMenuItemPlayRateVeryFast";
-            this.toolStripMenuItemPlayRateVeryFast.Size = new System.Drawing.Size(152, 22);
-            this.toolStripMenuItemPlayRateVeryFast.Text = "Very fast";
-            this.toolStripMenuItemPlayRateVeryFast.Click += new System.EventHandler(this.veryFastToolStripMenuItem_Click);
             // 
             // Main
             // 

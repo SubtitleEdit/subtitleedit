@@ -644,6 +644,17 @@
         bxky4N55+nyy/urY/Q0x/33uagfAeKY9iQ4C8In6X/0Bb/or6jCtPhIAAAAASUVORK5CYII=
 </value>
   </data>
+  <data name="toolStripSplitButtonPlayRate.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
+        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAExSURBVDhPY2AYdGDOlgn/l+2f4YHuMFziGB6YvKrzf8v0
+        6v8z1vekIEviEscwoGdh0/8dD5diGIJLnGHRnqn/Qc4D2QBS1DKj5v/upyv+TzveADZk6prOJqD4GXRx
+        uAtBmk9+3PL/yLt1//e/WvV/55Ml/7c9WPy/52DZ/4ZNuWBDNlyZj1V8+sbeZAaQzcfeb/y/9tHk/4tv
+        dP+fcbYRonlrzv+SVUn/UyaF/U8vS8ApzgBy9r6XK/+3bS7+X7sq63/JgqT/WdOjwJr9yp3/yyhJ/0/r
+        iMQqbuJoEsQA8puyttJ/HTPt/6YOxv9tPK3+J/QGwjXrW+k2mdgZn0EXN3Ey8cWaBusnVcA1IyvCJY5h
+        CEghyNkqeiooNuASx2qArrmuMboEyABs4oMuK5HuIAA9nQy9tlUooQAAAABJRU5ErkJggg==
+</value>
+  </data>
   <metadata name="videoTimer.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>609, 56</value>
   </metadata>
@@ -673,7 +684,7 @@
         AAEAAAD/////AQAAAAAAAAAMAgAAAFdTeXN0ZW0uV2luZG93cy5Gb3JtcywgVmVyc2lvbj00LjAuMC4w
         LCBDdWx0dXJlPW5ldXRyYWwsIFB1YmxpY0tleVRva2VuPWI3N2E1YzU2MTkzNGUwODkFAQAAACZTeXN0
         ZW0uV2luZG93cy5Gb3Jtcy5JbWFnZUxpc3RTdHJlYW1lcgEAAAAERGF0YQcCAgAAAAkDAAAADwMAAAD2
-        CAAAAk1TRnQBSQFMAgEBAgEAARABAAEQAQABEAEAARABAAT/AQkBAAj/AUIBTQE2AQQGAAE2AQQCAAEo
+        CAAAAk1TRnQBSQFMAgEBAgEAAWgBAAFoAQABEAEAARABAAT/AQkBAAj/AUIBTQE2AQQGAAE2AQQCAAEo
         AwABQAMAARADAAEBAQABCAYAAQQYAAGAAgABgAMAAoABAAGAAwABgAEAAYABAAKAAgADwAEAAcAB3AHA
         AQAB8AHKAaYBAAEzBQABMwEAATMBAAEzAQACMwIAAxYBAAMcAQADIgEAAykBAANVAQADTQEAA0IBAAM5
         AQABgAF8Af8BAAJQAf8BAAGTAQAB1gEAAf8B7AHMAQABxgHWAe8BAAHWAucBAAGQAakBrQIAAf8BMwMA
