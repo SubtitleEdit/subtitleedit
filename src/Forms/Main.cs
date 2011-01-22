@@ -1744,10 +1744,16 @@ namespace Nikse.SubtitleEdit.Forms
         private void ToolStripButtonSaveClick(object sender, EventArgs e)
         {
             ReloadFromSourceView();
+            bool oldChange = _change;
             SaveSubtitle(GetCurrentSubtitleFormat());
 
-            if (Configuration.Settings.General.AllowEditOfOriginalSubtitle && _subtitleAlternate != null && _subtitleAlternate.Paragraphs.Count > 0)
+            if (_changeAlternate && Configuration.Settings.General.AllowEditOfOriginalSubtitle && _subtitleAlternate != null && _subtitleAlternate.Paragraphs.Count > 0)
+            {
                 saveOriginalToolStripMenuItem_Click(null, null);
+                if (oldChange && !_change && !_changeAlternate)
+                    ShowStatus(string.Format(_language.SavedSubtitleX, Path.GetFileName(_fileName)) + " + " +
+                        string.Format(_language.SavedOriginalSubtitleX, Path.GetFileName(_subtitleAlternateFileName)));
+            }
         }
 
         private void ToolStripButtonSaveAsClick(object sender, EventArgs e)
@@ -3289,7 +3295,10 @@ namespace Nikse.SubtitleEdit.Forms
                     
                     alternateIndexes.Reverse();
                     foreach (int i in alternateIndexes)
-                        _subtitleAlternate.Paragraphs.RemoveAt(i);
+                    {
+                        if (i <_subtitleAlternate.Paragraphs.Count)
+                            _subtitleAlternate.Paragraphs.RemoveAt(i);
+                    }
                 }
 
                 var indexes = new List<int>();

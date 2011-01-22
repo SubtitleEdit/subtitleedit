@@ -355,7 +355,7 @@
     <ImportOptions>Import valgmuligheder</ImportOptions>
     <Splitting>Opdeling</Splitting>
     <AutoSplitText>Auto split tekst</AutoSplitText>
-    <OneLineIsOneSubtitle>En linje er en undertitel</OneLineIsOneSubtitle>
+    <OneLineIsOneSubtitle>En linje er en undertekst</OneLineIsOneSubtitle>
     <MergeShortLines>Flet kort linjer med fortsættelsen</MergeShortLines>
     <RemoveEmptyLines>Fjern tomme linjer</RemoveEmptyLines>
     <RemoveLinesWithoutLetters>Fjern linjer uden bogstaver</RemoveLinesWithoutLetters>
@@ -523,7 +523,7 @@
       <Translate>Oversæt</Translate>
       <Create>Opret</Create>
       <Adjust>Juster</Adjust>
-      <SelectCurrentElementWhilePlaying>Vælg aktuel undertekst, mens du spiller</SelectCurrentElementWhilePlaying>
+      <SelectCurrentElementWhilePlaying>Vælg aktuel undertekst, mens video spiller</SelectCurrentElementWhilePlaying>
       <AutoRepeat>Auto gentag</AutoRepeat>
       <AutoRepeatOn>Automatisk gentag aktiv</AutoRepeatOn>
       <AutoRepeatCount>Gentag antal gange</AutoRepeatCount>
@@ -573,7 +573,7 @@
     <SaveChangesToUntitledOriginal>Gem ændringer til unavngivet original?</SaveChangesToUntitledOriginal>
     <SaveChangesToOriginalX>Gem ændringer til den originale undertekst {0}?</SaveChangesToOriginalX>
     <SaveSubtitleAs>Gem undertekst som...</SaveSubtitleAs>
-    <SaveOriginalSubtitleAs>Gem original undertitel som...</SaveOriginalSubtitleAs>
+    <SaveOriginalSubtitleAs>Gem original undertekst som...</SaveOriginalSubtitleAs>
     <NoSubtitleLoaded>Ingen undertekst indlæst</NoSubtitleLoaded>
     <VisualSyncSelectedLines>Visuel synkroniser - valgte linjer</VisualSyncSelectedLines>
     <VisualSyncTitle>Visual synkroniser</VisualSyncTitle>
@@ -1125,7 +1125,7 @@ Fortsæt?</SubtitleAppendPrompt>
     <Message>Navn på ny tegn database mappe</Message>
   </VobSubOcrNewFolder>
   <WaveForm>
-    <ClickToAddWaveForm>Klik for at tilføje audio kurve</ClickToAddWaveForm>
+    <ClickToAddWaveForm>Klik  for  at  tilføje  audio  kurve</ClickToAddWaveForm>
     <Seconds>sekunder</Seconds>
     <ZoomIn>Zoom ind</ZoomIn>
     <ZoomOut>Zoom ud</ZoomOut>
