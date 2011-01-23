@@ -58,11 +58,18 @@ namespace Nikse.SubtitleEdit.Forms
             if (autoBalance)
             {
                 labelCondition.Text = Configuration.Settings.Language.AutoBreakUnbreakLines.OnlyBreakLinesLongerThan;            
-                for (int i = 10; i < 61; i++)
+                const int start = 10;
+                const int max = 60;
+                for (int i = start; i <= max; i++)
                     comboBoxConditions.Items.Add(i.ToString());
-                comboBoxConditions.SelectedIndex = 32;
+                
+                int index = Configuration.Settings.Tools.MergeLinesShorterThan - (start +1);
+                if (index > 0 && index < max)
+                    comboBoxConditions.SelectedIndex = index;
+                else
+                    comboBoxConditions.SelectedIndex = 30;
 
-                AutuBalance();
+                AutoBalance();
             }
             else
             {
@@ -75,7 +82,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void AutuBalance()
+        private void AutoBalance()
         {
             int minLength = int.Parse(comboBoxConditions.Items[comboBoxConditions.SelectedIndex].ToString());
             Text = Configuration.Settings.Language.AutoBreakUnbreakLines.TitleAutoBreak;
@@ -166,7 +173,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void comboBoxConditions_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (_modeAutoBalance)
-                AutuBalance();
+                AutoBalance();
             else
                 Unbreak();
         }

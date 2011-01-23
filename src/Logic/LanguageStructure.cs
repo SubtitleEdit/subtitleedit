@@ -264,6 +264,7 @@
             public string FixMissingSpaces { get; set; }
             public string BreakLongLines { get; set; }
             public string RemoveLineBreaks { get; set; }
+            public string RemoveLineBreaksAll { get; set; }
             public string FixUppercaseIInsindeLowercaseWords { get; set; }
             public string FixDoubleApostrophes { get; set; }
             public string AddPeriods { get; set; }
@@ -296,6 +297,7 @@
             public string XIsChangedToUppercase { get; set; }
             public string FixFirstLetterToUppercaseAfterParagraph { get; set; }
             public string MergeShortLine { get; set; }
+            public string MergeShortLineAll { get; set; }
             public string XLineBreaksAdded { get; set; }
             public string BreakLongLine { get; set; }
             public string FixLongDisplayTime { get; set; }
@@ -1074,6 +1076,8 @@
             public string ShowEarlier { get; set; }
             public string ShowLater { get; set; }
             public string TotalAdjustmentX { get; set; }
+            public string AllLines { get; set; }
+            public string SelectedLinesonly { get; set; }
         }
 
         public class ShowHistory

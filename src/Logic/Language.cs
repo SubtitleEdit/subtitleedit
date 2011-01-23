@@ -335,6 +335,7 @@ namespace Nikse.SubtitleEdit.Logic
                 FixMissingSpaces = "Fix missing spaces",
                 BreakLongLines = "Break long lines",
                 RemoveLineBreaks = "Remove line breaks in short texts with only one sentence",
+                RemoveLineBreaksAll = "Remove line breaks in short texts (all except dialogues)",
                 FixUppercaseIInsindeLowercaseWords = "Fix uppercase 'i' inside lowercase words (ocr error)",
                 FixDoubleApostrophes = "Fix double apostrophe characters ('') to a single quote (\")",
                 AddPeriods = "Add period after lines where next line start with uppercase letter",
@@ -365,7 +366,8 @@ namespace Nikse.SubtitleEdit.Logic
                 UncheckedFixLowercaseIToUppercaseI = "Unchecked \"Fix alone lowercase 'i' to 'I' (English)\"",
                 XIsChangedToUppercase = "{0} i's changed to uppercase",
                 FixFirstLetterToUppercaseAfterParagraph = "Fix first letter to uppercase after paragraph",
-                MergeShortLine = "Merge short line",
+                MergeShortLine = "Merge short line (single sentence)",
+                MergeShortLineAll = "Merge short line (all except dialoques)",
                 XLineBreaksAdded = "{0} line breaks added",
                 BreakLongLine = "Break long line",
                 FixLongDisplayTime = "Fix long display time",
@@ -1139,6 +1141,8 @@ can edit in same subtitle file (collaboration)",
                 ShowEarlier = "Show earlier",
                 ShowLater = "Show later",
                 TotalAdjustmentX = "Total adjustment: {0}",
+                AllLines = "All lines",
+                SelectedLinesonly = "Selected lines only",
             };
 
             ShowHistory = new LanguageStructure.ShowHistory

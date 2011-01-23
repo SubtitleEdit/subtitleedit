@@ -266,27 +266,25 @@ namespace Nikse.SubtitleEdit.Logic
 
         public static string AutoBreakLine(string text)
         {
-            return AutoBreakLine(text, 5, Configuration.Settings.General.SubtitleLineMaximumLength);
+            return AutoBreakLine(text, 5, Configuration.Settings.General.SubtitleLineMaximumLength, Configuration.Settings.Tools.MergeLinesShorterThan);
         }
 
-        public static string AutoBreakLine(string text, int mininumLength, int maximumLength)
+        public static string AutoBreakLine(string text, int mininumLength, int maximumLength, int mergeLinesShorterThan)
         {
-            if (text.Length < mininumLength)
-                return text;
-
-            string temp = RemoveHtmlTags(text);
-            temp = temp.TrimEnd("!?.:;".ToCharArray());
-            if (text.Length < 40 && !temp.Contains(".") && !temp.Contains("!") && !temp.Contains("?"))
-            {
-                text = text.Replace(Environment.NewLine, " ");
-                text = text.Replace("  ", " ");
-                text = text.Replace("  ", " ");
-                return text;
-            }
-
             string s = text.Replace(Environment.NewLine, " ");
             s = s.Replace("  ", " ");
             s = s.Replace("  ", " ");
+            string temp = RemoveHtmlTags(s);
+            if (temp.Length < mergeLinesShorterThan)
+            {
+                string[] lines = text.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                if (lines.Length == 2 && Utilities.RemoveHtmlTags(lines[1]).Trim().StartsWith("-"))
+                    return text;
+                if (lines.Length == 3 && Utilities.RemoveHtmlTags(lines[1]).Trim().StartsWith("-") && Utilities.RemoveHtmlTags(lines[2]).Trim().StartsWith("-"))
+                    return text;
+                return s;
+            }
+
             int splitPos = -1;
             int mid = s.Length / 2;
 
