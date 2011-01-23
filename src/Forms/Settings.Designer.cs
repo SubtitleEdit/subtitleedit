@@ -33,6 +33,9 @@
             this.tabControlSettings = new System.Windows.Forms.TabControl();
             this.tabPageGenerel = new System.Windows.Forms.TabPage();
             this.groupBoxMiscellaneous = new System.Windows.Forms.GroupBox();
+            this.labelMergeShortLines = new System.Windows.Forms.Label();
+            this.comboBoxMergeShortLineLength = new System.Windows.Forms.ComboBox();
+            this.checkBoxAllowEditOfOriginalSubtitle = new System.Windows.Forms.CheckBox();
             this.comboBoxSpellChecker = new System.Windows.Forms.ComboBox();
             this.labelSpellChecker = new System.Windows.Forms.Label();
             this.panelSubtitleBackgroundColor = new System.Windows.Forms.Panel();
@@ -141,8 +144,6 @@
             this.textBoxMusicSymbolsToReplace = new System.Windows.Forms.TextBox();
             this.labelToolsMusicSymbolsToReplace = new System.Windows.Forms.Label();
             this.labelToolsMusicSymbol = new System.Windows.Forms.Label();
-            this.labelMergeShortLines = new System.Windows.Forms.Label();
-            this.comboBoxMergeShortLineLength = new System.Windows.Forms.ComboBox();
             this.groupBoxToolsVisualSync = new System.Windows.Forms.GroupBox();
             this.labelToolsEndScene = new System.Windows.Forms.Label();
             this.comboBoxToolsEndSceneIndex = new System.Windows.Forms.ComboBox();
@@ -194,7 +195,6 @@
             this.colorDialogSSAStyle = new System.Windows.Forms.ColorDialog();
             this.fontDialogSSAStyle = new System.Windows.Forms.FontDialog();
             this.labelStatus = new System.Windows.Forms.Label();
-            this.checkBoxAllowEditOfOriginalSubtitle = new System.Windows.Forms.CheckBox();
             this.tabControlSettings.SuspendLayout();
             this.tabPageGenerel.SuspendLayout();
             this.groupBoxMiscellaneous.SuspendLayout();
@@ -286,6 +286,8 @@
             // 
             // groupBoxMiscellaneous
             // 
+            this.groupBoxMiscellaneous.Controls.Add(this.labelMergeShortLines);
+            this.groupBoxMiscellaneous.Controls.Add(this.comboBoxMergeShortLineLength);
             this.groupBoxMiscellaneous.Controls.Add(this.checkBoxAllowEditOfOriginalSubtitle);
             this.groupBoxMiscellaneous.Controls.Add(this.comboBoxSpellChecker);
             this.groupBoxMiscellaneous.Controls.Add(this.labelSpellChecker);
@@ -325,6 +327,34 @@
             this.groupBoxMiscellaneous.TabStop = false;
             this.groupBoxMiscellaneous.Text = "Miscellaneous";
             // 
+            // labelMergeShortLines
+            // 
+            this.labelMergeShortLines.AutoSize = true;
+            this.labelMergeShortLines.Location = new System.Drawing.Point(14, 153);
+            this.labelMergeShortLines.Name = "labelMergeShortLines";
+            this.labelMergeShortLines.Size = new System.Drawing.Size(124, 13);
+            this.labelMergeShortLines.TabIndex = 39;
+            this.labelMergeShortLines.Text = "Merge lines shorter than";
+            // 
+            // comboBoxMergeShortLineLength
+            // 
+            this.comboBoxMergeShortLineLength.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxMergeShortLineLength.FormattingEnabled = true;
+            this.comboBoxMergeShortLineLength.Location = new System.Drawing.Point(193, 150);
+            this.comboBoxMergeShortLineLength.Name = "comboBoxMergeShortLineLength";
+            this.comboBoxMergeShortLineLength.Size = new System.Drawing.Size(73, 21);
+            this.comboBoxMergeShortLineLength.TabIndex = 4;
+            // 
+            // checkBoxAllowEditOfOriginalSubtitle
+            // 
+            this.checkBoxAllowEditOfOriginalSubtitle.AutoSize = true;
+            this.checkBoxAllowEditOfOriginalSubtitle.Location = new System.Drawing.Point(436, 296);
+            this.checkBoxAllowEditOfOriginalSubtitle.Name = "checkBoxAllowEditOfOriginalSubtitle";
+            this.checkBoxAllowEditOfOriginalSubtitle.Size = new System.Drawing.Size(160, 17);
+            this.checkBoxAllowEditOfOriginalSubtitle.TabIndex = 23;
+            this.checkBoxAllowEditOfOriginalSubtitle.Text = "Allow edit of original subtitle";
+            this.checkBoxAllowEditOfOriginalSubtitle.UseVisualStyleBackColor = true;
+            // 
             // comboBoxSpellChecker
             // 
             this.comboBoxSpellChecker.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
@@ -332,15 +362,15 @@
             this.comboBoxSpellChecker.Items.AddRange(new object[] {
             "Hunspell",
             "Word"});
-            this.comboBoxSpellChecker.Location = new System.Drawing.Point(193, 294);
+            this.comboBoxSpellChecker.Location = new System.Drawing.Point(193, 332);
             this.comboBoxSpellChecker.Name = "comboBoxSpellChecker";
             this.comboBoxSpellChecker.Size = new System.Drawing.Size(121, 21);
-            this.comboBoxSpellChecker.TabIndex = 9;
+            this.comboBoxSpellChecker.TabIndex = 10;
             // 
             // labelSpellChecker
             // 
             this.labelSpellChecker.AutoSize = true;
-            this.labelSpellChecker.Location = new System.Drawing.Point(14, 297);
+            this.labelSpellChecker.Location = new System.Drawing.Point(14, 335);
             this.labelSpellChecker.Name = "labelSpellChecker";
             this.labelSpellChecker.Size = new System.Drawing.Size(69, 13);
             this.labelSpellChecker.TabIndex = 36;
@@ -349,25 +379,25 @@
             // panelSubtitleBackgroundColor
             // 
             this.panelSubtitleBackgroundColor.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panelSubtitleBackgroundColor.Location = new System.Drawing.Point(193, 249);
+            this.panelSubtitleBackgroundColor.Location = new System.Drawing.Point(193, 287);
             this.panelSubtitleBackgroundColor.Name = "panelSubtitleBackgroundColor";
             this.panelSubtitleBackgroundColor.Size = new System.Drawing.Size(46, 15);
-            this.panelSubtitleBackgroundColor.TabIndex = 8;
+            this.panelSubtitleBackgroundColor.TabIndex = 9;
             this.panelSubtitleBackgroundColor.Click += new System.EventHandler(this.panelSubtitleBackgroundColor_Click);
             // 
             // panelSubtitleFontColor
             // 
             this.panelSubtitleFontColor.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panelSubtitleFontColor.Location = new System.Drawing.Point(193, 229);
+            this.panelSubtitleFontColor.Location = new System.Drawing.Point(193, 267);
             this.panelSubtitleFontColor.Name = "panelSubtitleFontColor";
             this.panelSubtitleFontColor.Size = new System.Drawing.Size(46, 15);
-            this.panelSubtitleFontColor.TabIndex = 7;
+            this.panelSubtitleFontColor.TabIndex = 8;
             this.panelSubtitleFontColor.Click += new System.EventHandler(this.panelSubtitleFontColor_Click);
             // 
             // labelSubtitleFontBackgroundColor
             // 
             this.labelSubtitleFontBackgroundColor.AutoSize = true;
-            this.labelSubtitleFontBackgroundColor.Location = new System.Drawing.Point(14, 250);
+            this.labelSubtitleFontBackgroundColor.Location = new System.Drawing.Point(14, 288);
             this.labelSubtitleFontBackgroundColor.Name = "labelSubtitleFontBackgroundColor";
             this.labelSubtitleFontBackgroundColor.Size = new System.Drawing.Size(151, 13);
             this.labelSubtitleFontBackgroundColor.TabIndex = 33;
@@ -376,7 +406,7 @@
             // labelSubtitleFontColor
             // 
             this.labelSubtitleFontColor.AutoSize = true;
-            this.labelSubtitleFontColor.Location = new System.Drawing.Point(14, 230);
+            this.labelSubtitleFontColor.Location = new System.Drawing.Point(14, 268);
             this.labelSubtitleFontColor.Name = "labelSubtitleFontColor";
             this.labelSubtitleFontColor.Size = new System.Drawing.Size(92, 13);
             this.labelSubtitleFontColor.TabIndex = 32;
@@ -394,7 +424,7 @@
             this.comboBoxAutoBackup.Location = new System.Drawing.Point(539, 252);
             this.comboBoxAutoBackup.Name = "comboBoxAutoBackup";
             this.comboBoxAutoBackup.Size = new System.Drawing.Size(121, 21);
-            this.comboBoxAutoBackup.TabIndex = 21;
+            this.comboBoxAutoBackup.TabIndex = 22;
             // 
             // labelAutoBackup
             // 
@@ -402,7 +432,7 @@
             this.labelAutoBackup.Location = new System.Drawing.Point(433, 254);
             this.labelAutoBackup.Name = "labelAutoBackup";
             this.labelAutoBackup.Size = new System.Drawing.Size(68, 13);
-            this.labelAutoBackup.TabIndex = 20;
+            this.labelAutoBackup.TabIndex = 21;
             this.labelAutoBackup.Text = "Auto-backup";
             // 
             // checkBoxRememberSelectedLine
@@ -411,7 +441,7 @@
             this.checkBoxRememberSelectedLine.Location = new System.Drawing.Point(444, 75);
             this.checkBoxRememberSelectedLine.Name = "checkBoxRememberSelectedLine";
             this.checkBoxRememberSelectedLine.Size = new System.Drawing.Size(139, 17);
-            this.checkBoxRememberSelectedLine.TabIndex = 12;
+            this.checkBoxRememberSelectedLine.TabIndex = 13;
             this.checkBoxRememberSelectedLine.Text = "Remember selected line";
             this.checkBoxRememberSelectedLine.UseVisualStyleBackColor = true;
             // 
@@ -421,7 +451,7 @@
             this.checkBoxRemoveBlankLinesWhenOpening.Location = new System.Drawing.Point(436, 147);
             this.checkBoxRemoveBlankLinesWhenOpening.Name = "checkBoxRemoveBlankLinesWhenOpening";
             this.checkBoxRemoveBlankLinesWhenOpening.Size = new System.Drawing.Size(225, 17);
-            this.checkBoxRemoveBlankLinesWhenOpening.TabIndex = 15;
+            this.checkBoxRemoveBlankLinesWhenOpening.TabIndex = 16;
             this.checkBoxRemoveBlankLinesWhenOpening.Text = "Remove blank lines when opening subtitle";
             this.checkBoxRemoveBlankLinesWhenOpening.UseVisualStyleBackColor = true;
             // 
@@ -455,7 +485,7 @@
             this.comboBoxListViewDoubleClickEvent.Location = new System.Drawing.Point(436, 217);
             this.comboBoxListViewDoubleClickEvent.Name = "comboBoxListViewDoubleClickEvent";
             this.comboBoxListViewDoubleClickEvent.Size = new System.Drawing.Size(222, 21);
-            this.comboBoxListViewDoubleClickEvent.TabIndex = 19;
+            this.comboBoxListViewDoubleClickEvent.TabIndex = 20;
             // 
             // labelListViewDoubleClickEvent
             // 
@@ -463,7 +493,7 @@
             this.labelListViewDoubleClickEvent.Location = new System.Drawing.Point(433, 202);
             this.labelListViewDoubleClickEvent.Name = "labelListViewDoubleClickEvent";
             this.labelListViewDoubleClickEvent.Size = new System.Drawing.Size(227, 13);
-            this.labelListViewDoubleClickEvent.TabIndex = 18;
+            this.labelListViewDoubleClickEvent.TabIndex = 19;
             this.labelListViewDoubleClickEvent.Text = "Double-click on line in main window listview will";
             // 
             // textBoxShowLineBreaksAs
@@ -472,7 +502,7 @@
             this.textBoxShowLineBreaksAs.MaxLength = 10;
             this.textBoxShowLineBreaksAs.Name = "textBoxShowLineBreaksAs";
             this.textBoxShowLineBreaksAs.Size = new System.Drawing.Size(69, 21);
-            this.textBoxShowLineBreaksAs.TabIndex = 17;
+            this.textBoxShowLineBreaksAs.TabIndex = 18;
             // 
             // labelShowLineBreaksAs
             // 
@@ -480,7 +510,7 @@
             this.labelShowLineBreaksAs.Location = new System.Drawing.Point(433, 175);
             this.labelShowLineBreaksAs.Name = "labelShowLineBreaksAs";
             this.labelShowLineBreaksAs.Size = new System.Drawing.Size(150, 13);
-            this.labelShowLineBreaksAs.TabIndex = 16;
+            this.labelShowLineBreaksAs.TabIndex = 17;
             this.labelShowLineBreaksAs.Text = "Show line breaks in listview as";
             // 
             // checkBoxRememberWindowPosition
@@ -489,7 +519,7 @@
             this.checkBoxRememberWindowPosition.Location = new System.Drawing.Point(436, 101);
             this.checkBoxRememberWindowPosition.Name = "checkBoxRememberWindowPosition";
             this.checkBoxRememberWindowPosition.Size = new System.Drawing.Size(223, 17);
-            this.checkBoxRememberWindowPosition.TabIndex = 13;
+            this.checkBoxRememberWindowPosition.TabIndex = 14;
             this.checkBoxRememberWindowPosition.Text = "Remember main window position and size";
             this.checkBoxRememberWindowPosition.UseVisualStyleBackColor = true;
             // 
@@ -515,7 +545,7 @@
             // labelSubtitleFontSize
             // 
             this.labelSubtitleFontSize.AutoSize = true;
-            this.labelSubtitleFontSize.Location = new System.Drawing.Point(13, 185);
+            this.labelSubtitleFontSize.Location = new System.Drawing.Point(13, 223);
             this.labelSubtitleFontSize.Name = "labelSubtitleFontSize";
             this.labelSubtitleFontSize.Size = new System.Drawing.Size(87, 13);
             this.labelSubtitleFontSize.TabIndex = 10;
@@ -525,10 +555,10 @@
             // 
             this.comboBoxSubtitleFont.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxSubtitleFont.FormattingEnabled = true;
-            this.comboBoxSubtitleFont.Location = new System.Drawing.Point(193, 154);
+            this.comboBoxSubtitleFont.Location = new System.Drawing.Point(193, 192);
             this.comboBoxSubtitleFont.Name = "comboBoxSubtitleFont";
             this.comboBoxSubtitleFont.Size = new System.Drawing.Size(121, 21);
-            this.comboBoxSubtitleFont.TabIndex = 4;
+            this.comboBoxSubtitleFont.TabIndex = 5;
             // 
             // checkBoxStartInSourceView
             // 
@@ -536,7 +566,7 @@
             this.checkBoxStartInSourceView.Location = new System.Drawing.Point(436, 124);
             this.checkBoxStartInSourceView.Name = "checkBoxStartInSourceView";
             this.checkBoxStartInSourceView.Size = new System.Drawing.Size(121, 17);
-            this.checkBoxStartInSourceView.TabIndex = 14;
+            this.checkBoxStartInSourceView.TabIndex = 15;
             this.checkBoxStartInSourceView.Text = "Start in source view";
             this.checkBoxStartInSourceView.UseVisualStyleBackColor = true;
             // 
@@ -546,7 +576,7 @@
             this.checkBoxReopenLastOpened.Location = new System.Drawing.Point(444, 52);
             this.checkBoxReopenLastOpened.Name = "checkBoxReopenLastOpened";
             this.checkBoxReopenLastOpened.Size = new System.Drawing.Size(145, 17);
-            this.checkBoxReopenLastOpened.TabIndex = 11;
+            this.checkBoxReopenLastOpened.TabIndex = 12;
             this.checkBoxReopenLastOpened.Text = "Start with last file loaded";
             this.checkBoxReopenLastOpened.UseVisualStyleBackColor = true;
             // 
@@ -556,7 +586,7 @@
             this.checkBoxRememberRecentFiles.Location = new System.Drawing.Point(436, 28);
             this.checkBoxRememberRecentFiles.Name = "checkBoxRememberRecentFiles";
             this.checkBoxRememberRecentFiles.Size = new System.Drawing.Size(195, 17);
-            this.checkBoxRememberRecentFiles.TabIndex = 10;
+            this.checkBoxRememberRecentFiles.TabIndex = 11;
             this.checkBoxRememberRecentFiles.Text = "Remember recent files (for reopen)";
             this.checkBoxRememberRecentFiles.UseVisualStyleBackColor = true;
             this.checkBoxRememberRecentFiles.CheckedChanged += new System.EventHandler(this.checkBoxRememberRecentFiles_CheckedChanged);
@@ -564,10 +594,10 @@
             // checkBoxSubtitleFontBold
             // 
             this.checkBoxSubtitleFontBold.AutoSize = true;
-            this.checkBoxSubtitleFontBold.Location = new System.Drawing.Point(193, 209);
+            this.checkBoxSubtitleFontBold.Location = new System.Drawing.Point(193, 247);
             this.checkBoxSubtitleFontBold.Name = "checkBoxSubtitleFontBold";
             this.checkBoxSubtitleFontBold.Size = new System.Drawing.Size(46, 17);
-            this.checkBoxSubtitleFontBold.TabIndex = 6;
+            this.checkBoxSubtitleFontBold.TabIndex = 7;
             this.checkBoxSubtitleFontBold.Text = "Bold";
             this.checkBoxSubtitleFontBold.UseVisualStyleBackColor = true;
             // 
@@ -590,15 +620,15 @@
             "18",
             "19",
             "20"});
-            this.comboBoxSubtitleFontSize.Location = new System.Drawing.Point(193, 182);
+            this.comboBoxSubtitleFontSize.Location = new System.Drawing.Point(193, 220);
             this.comboBoxSubtitleFontSize.Name = "comboBoxSubtitleFontSize";
             this.comboBoxSubtitleFontSize.Size = new System.Drawing.Size(121, 21);
-            this.comboBoxSubtitleFontSize.TabIndex = 5;
+            this.comboBoxSubtitleFontSize.TabIndex = 6;
             // 
             // labelSubtitleFont
             // 
             this.labelSubtitleFont.AutoSize = true;
-            this.labelSubtitleFont.Location = new System.Drawing.Point(13, 160);
+            this.labelSubtitleFont.Location = new System.Drawing.Point(13, 198);
             this.labelSubtitleFont.Name = "labelSubtitleFont";
             this.labelSubtitleFont.Size = new System.Drawing.Size(66, 13);
             this.labelSubtitleFont.TabIndex = 8;
@@ -1401,8 +1431,6 @@
             this.groupBoxFixCommonErrors.Controls.Add(this.textBoxMusicSymbolsToReplace);
             this.groupBoxFixCommonErrors.Controls.Add(this.labelToolsMusicSymbolsToReplace);
             this.groupBoxFixCommonErrors.Controls.Add(this.labelToolsMusicSymbol);
-            this.groupBoxFixCommonErrors.Controls.Add(this.labelMergeShortLines);
-            this.groupBoxFixCommonErrors.Controls.Add(this.comboBoxMergeShortLineLength);
             this.groupBoxFixCommonErrors.Location = new System.Drawing.Point(7, 129);
             this.groupBoxFixCommonErrors.Name = "groupBoxFixCommonErrors";
             this.groupBoxFixCommonErrors.Size = new System.Drawing.Size(785, 121);
@@ -1419,14 +1447,14 @@
             "♪♪",
             "*",
             "#"});
-            this.comboBoxToolsMusicSymbol.Location = new System.Drawing.Point(671, 76);
+            this.comboBoxToolsMusicSymbol.Location = new System.Drawing.Point(199, 71);
             this.comboBoxToolsMusicSymbol.Name = "comboBoxToolsMusicSymbol";
             this.comboBoxToolsMusicSymbol.Size = new System.Drawing.Size(86, 21);
             this.comboBoxToolsMusicSymbol.TabIndex = 36;
             // 
             // textBoxMusicSymbolsToReplace
             // 
-            this.textBoxMusicSymbolsToReplace.Location = new System.Drawing.Point(483, 46);
+            this.textBoxMusicSymbolsToReplace.Location = new System.Drawing.Point(11, 41);
             this.textBoxMusicSymbolsToReplace.MaxLength = 100;
             this.textBoxMusicSymbolsToReplace.Name = "textBoxMusicSymbolsToReplace";
             this.textBoxMusicSymbolsToReplace.Size = new System.Drawing.Size(274, 21);
@@ -1435,7 +1463,7 @@
             // labelToolsMusicSymbolsToReplace
             // 
             this.labelToolsMusicSymbolsToReplace.AutoSize = true;
-            this.labelToolsMusicSymbolsToReplace.Location = new System.Drawing.Point(480, 30);
+            this.labelToolsMusicSymbolsToReplace.Location = new System.Drawing.Point(8, 25);
             this.labelToolsMusicSymbolsToReplace.Name = "labelToolsMusicSymbolsToReplace";
             this.labelToolsMusicSymbolsToReplace.Size = new System.Drawing.Size(225, 13);
             this.labelToolsMusicSymbolsToReplace.TabIndex = 34;
@@ -1444,29 +1472,11 @@
             // labelToolsMusicSymbol
             // 
             this.labelToolsMusicSymbol.AutoSize = true;
-            this.labelToolsMusicSymbol.Location = new System.Drawing.Point(480, 79);
+            this.labelToolsMusicSymbol.Location = new System.Drawing.Point(8, 74);
             this.labelToolsMusicSymbol.Name = "labelToolsMusicSymbol";
             this.labelToolsMusicSymbol.Size = new System.Drawing.Size(69, 13);
             this.labelToolsMusicSymbol.TabIndex = 32;
             this.labelToolsMusicSymbol.Text = "Music symbol";
-            // 
-            // labelMergeShortLines
-            // 
-            this.labelMergeShortLines.AutoSize = true;
-            this.labelMergeShortLines.Location = new System.Drawing.Point(12, 30);
-            this.labelMergeShortLines.Name = "labelMergeShortLines";
-            this.labelMergeShortLines.Size = new System.Drawing.Size(124, 13);
-            this.labelMergeShortLines.TabIndex = 31;
-            this.labelMergeShortLines.Text = "Merge lines shorter than";
-            // 
-            // comboBoxMergeShortLineLength
-            // 
-            this.comboBoxMergeShortLineLength.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBoxMergeShortLineLength.FormattingEnabled = true;
-            this.comboBoxMergeShortLineLength.Location = new System.Drawing.Point(196, 27);
-            this.comboBoxMergeShortLineLength.Name = "comboBoxMergeShortLineLength";
-            this.comboBoxMergeShortLineLength.Size = new System.Drawing.Size(73, 21);
-            this.comboBoxMergeShortLineLength.TabIndex = 30;
             // 
             // groupBoxToolsVisualSync
             // 
@@ -1976,16 +1986,6 @@
             this.labelStatus.TabIndex = 3;
             this.labelStatus.Text = "labelStatus";
             // 
-            // checkBoxAllowEditOfOriginalSubtitle
-            // 
-            this.checkBoxAllowEditOfOriginalSubtitle.AutoSize = true;
-            this.checkBoxAllowEditOfOriginalSubtitle.Location = new System.Drawing.Point(436, 296);
-            this.checkBoxAllowEditOfOriginalSubtitle.Name = "checkBoxAllowEditOfOriginalSubtitle";
-            this.checkBoxAllowEditOfOriginalSubtitle.Size = new System.Drawing.Size(160, 17);
-            this.checkBoxAllowEditOfOriginalSubtitle.TabIndex = 37;
-            this.checkBoxAllowEditOfOriginalSubtitle.Text = "Allow edit of original subtitle";
-            this.checkBoxAllowEditOfOriginalSubtitle.UseVisualStyleBackColor = true;
-            // 
             // Settings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -2181,8 +2181,6 @@
         private System.Windows.Forms.Label labelToolsStartScene;
         private System.Windows.Forms.ComboBox comboBoxToolsStartSceneIndex;
         private System.Windows.Forms.GroupBox groupBoxFixCommonErrors;
-        private System.Windows.Forms.Label labelMergeShortLines;
-        private System.Windows.Forms.ComboBox comboBoxMergeShortLineLength;
         private System.Windows.Forms.Label labelToolsMusicSymbol;
         private System.Windows.Forms.ComboBox comboBoxListViewDoubleClickEvent;
         private System.Windows.Forms.Label labelListViewDoubleClickEvent;
@@ -2234,5 +2232,7 @@
         private System.Windows.Forms.Label labelSpellChecker;
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.CheckBox checkBoxAllowEditOfOriginalSubtitle;
+        private System.Windows.Forms.Label labelMergeShortLines;
+        private System.Windows.Forms.ComboBox comboBoxMergeShortLineLength;
     }
 }

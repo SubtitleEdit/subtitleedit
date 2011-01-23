@@ -143,6 +143,7 @@ namespace Nikse.SubtitleEdit.Logic
         public bool InvalidItalicTagsTicked { get; set; }
         public bool BreakLongLinesTicked { get; set; }
         public bool MergeShortLinesTicked { get; set; }
+        public bool MergeShortLinesAllTicked { get; set; }
         public bool UnneededSpacesTicked { get; set; }
         public bool UnneededPeriodsTicked { get; set; }
         public bool MissingSpacesTicked { get; set; }

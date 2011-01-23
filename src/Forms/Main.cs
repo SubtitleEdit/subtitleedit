@@ -3786,7 +3786,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 else
                 {
-                    string s = Utilities.AutoBreakLine(currentParagraph.Text, 5, Configuration.Settings.General.SubtitleLineMaximumLength * 2);
+                    string s = Utilities.AutoBreakLine(currentParagraph.Text, 5, Configuration.Settings.General.SubtitleLineMaximumLength * 2, Configuration.Settings.Tools.MergeLinesShorterThan);
                     lines = s.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
                     if (lines.Length == 2)
                     {
@@ -3824,7 +3824,7 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                         else
                         {
-                            string s = Utilities.AutoBreakLine(originalCurrent.Text, 5, Configuration.Settings.General.SubtitleLineMaximumLength * 2);
+                            string s = Utilities.AutoBreakLine(originalCurrent.Text, 5, Configuration.Settings.General.SubtitleLineMaximumLength * 2, Configuration.Settings.Tools.MergeLinesShorterThan);
                             lines = s.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
                         }
                         if (lines.Length == 2)
@@ -4987,6 +4987,7 @@ namespace Nikse.SubtitleEdit.Forms
                             _change = true;
                             _subtitleListViewIndex = -1;
                             RestoreSubtitleListviewIndexes();
+                            UpdateSourceView();
                         }
                     }
                     Cursor.Current = Cursors.Default;
@@ -6973,6 +6974,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
             }
+            _change = true;
             SubtitleListview1.EndUpdate();
             if (_subtitle.WasLoadedWithFrameNumbers)
                 _subtitle.CalculateFrameNumbersFromTimeCodes(frameRate);
