@@ -1,8 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Logic;
-using System.Collections.Generic;
 
 namespace Nikse.SubtitleEdit.Controls
 {
@@ -239,7 +239,6 @@ namespace Nikse.SubtitleEdit.Controls
                 Graphics graphics = e.Graphics;
                 int begin = SecondsToXPosition(StartPositionSeconds);
                 int beginNoZoomFactor = (int)Math.Round(StartPositionSeconds * _wavePeaks.Header.SampleRate); // do not use zoom factor here!
-
                 
                 int start = -1;
                 int end = -1;
@@ -250,12 +249,11 @@ namespace Nikse.SubtitleEdit.Controls
                 }
                 int imageHeight = Height;
                 int maxHeight = (int)(Math.Max(Math.Abs(_wavePeaks.DataMinValue), Math.Abs(_wavePeaks.DataMaxValue)) + 0.5);
-                Pen pen = new System.Drawing.Pen(System.Drawing.Color.GreenYellow);
+                Pen pen = new System.Drawing.Pen(Color);
 
                 DrawBackground(graphics);
                 int x = 0;
                 int y = Height / 2;
-
                 if (_zoomFactor == 1.0)
                 {
                     for (int i = 0; i < _wavePeaks.AllSamples.Count && i < Width; i++)
@@ -264,6 +262,8 @@ namespace Nikse.SubtitleEdit.Controls
                         {
                             int newY = CalculateHeight(_wavePeaks.AllSamples[begin + i], imageHeight, maxHeight);
                             graphics.DrawLine(pen, x, y, i, newY);
+                            //graphics.FillRectangle(new SolidBrush(Color), x, y, 1, 1); - draw pixel instead of line
+
                             x = i;
                             y = newY;
                             if (begin + i > end || begin + i < start)

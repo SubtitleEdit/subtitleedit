@@ -69,9 +69,9 @@
             this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveAsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator20 = new System.Windows.Forms.ToolStripSeparator();
+            this.openOriginalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveOriginalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveOriginalAstoolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.openOriginalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.removeOriginalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator12 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripMenuItemOpenContainingFolder = new System.Windows.Forms.ToolStripMenuItem();
@@ -722,9 +722,9 @@
             this.saveToolStripMenuItem,
             this.saveAsToolStripMenuItem,
             this.toolStripSeparator20,
+            this.openOriginalToolStripMenuItem,
             this.saveOriginalToolStripMenuItem,
             this.saveOriginalAstoolStripMenuItem,
-            this.openOriginalToolStripMenuItem,
             this.removeOriginalToolStripMenuItem,
             this.toolStripSeparator12,
             this.toolStripMenuItemOpenContainingFolder,
@@ -786,6 +786,13 @@
             this.toolStripSeparator20.Name = "toolStripSeparator20";
             this.toolStripSeparator20.Size = new System.Drawing.Size(331, 6);
             // 
+            // openOriginalToolStripMenuItem
+            // 
+            this.openOriginalToolStripMenuItem.Name = "openOriginalToolStripMenuItem";
+            this.openOriginalToolStripMenuItem.Size = new System.Drawing.Size(334, 22);
+            this.openOriginalToolStripMenuItem.Text = "Open original (translator mode)...";
+            this.openOriginalToolStripMenuItem.Click += new System.EventHandler(this.openOriginalToolStripMenuItem_Click);
+            // 
             // saveOriginalToolStripMenuItem
             // 
             this.saveOriginalToolStripMenuItem.Name = "saveOriginalToolStripMenuItem";
@@ -799,13 +806,6 @@
             this.saveOriginalAstoolStripMenuItem.Size = new System.Drawing.Size(334, 22);
             this.saveOriginalAstoolStripMenuItem.Text = "Save original as...";
             this.saveOriginalAstoolStripMenuItem.Click += new System.EventHandler(this.saveOriginalAstoolStripMenuItem_Click);
-            // 
-            // openOriginalToolStripMenuItem
-            // 
-            this.openOriginalToolStripMenuItem.Name = "openOriginalToolStripMenuItem";
-            this.openOriginalToolStripMenuItem.Size = new System.Drawing.Size(334, 22);
-            this.openOriginalToolStripMenuItem.Text = "Open original (translator mode)...";
-            this.openOriginalToolStripMenuItem.Click += new System.EventHandler(this.openOriginalToolStripMenuItem_Click);
             // 
             // removeOriginalToolStripMenuItem
             // 

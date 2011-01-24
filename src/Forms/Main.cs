@@ -105,7 +105,7 @@ namespace Nikse.SubtitleEdit.Forms
                     if (versionInfo.Length >= 3 && versionInfo[2] != "0")
                         _title += "." + versionInfo[2];
                 }
-                return _title + " Beta 10";
+                return _title + " Beta 11";
             }
         }
 
@@ -2769,6 +2769,7 @@ namespace Nikse.SubtitleEdit.Forms
                     ShowSource();
 
                     SubtitleListview1.ShowAlternateTextColumn(Configuration.Settings.Language.General.OriginalText);
+                    SubtitleListview1.AutoSizeAllColumns(this);
                     SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
 
                     RestoreSubtitleListviewIndexes();
@@ -2856,6 +2857,7 @@ namespace Nikse.SubtitleEdit.Forms
                             }
                             ShowSource();
                             SubtitleListview1.ShowAlternateTextColumn(Configuration.Settings.Language.General.OriginalText);
+                            SubtitleListview1.AutoSizeAllColumns(this);
                             SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
                             ShowStatus(_language.TranslationFromSwedishToDanishComplete);
                             SubtitleListview1.SelectIndexAndEnsureVisible(firstSelectedIndex);
@@ -6166,6 +6168,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (SubtitleListview1.IsAlternateTextColumnVisible)
             {
                 SubtitleListview1.HideAlternateTextColumn();
+                SubtitleListview1.AutoSizeAllColumns(this);
                 _subtitleAlternate = new Subtitle();
                 _subtitleAlternateFileName = null;
 
@@ -6187,6 +6190,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 OpenAlternateSubtitle();
             }
+            SetTitle();
         }
 
         private void OpenAlternateSubtitle()
@@ -6265,6 +6269,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             SubtitleListview1.ShowAlternateTextColumn(Configuration.Settings.Language.General.OriginalText);
+            SubtitleListview1.AutoSizeAllColumns(this);
             return true;
         }
 
@@ -8051,6 +8056,7 @@ namespace Nikse.SubtitleEdit.Forms
                 toolStripStatusNetworking.Text = _language.NetworkMode;
                 EnableDisableControlsNotWorkingInNetworkMode(false);
                 SubtitleListview1.ShowExtraColumn(_language.UserAndAction);
+                SubtitleListview1.AutoSizeAllColumns(this);
                 TimerWebServiceTick(null, null);
             }
             else
@@ -8079,12 +8085,14 @@ namespace Nikse.SubtitleEdit.Forms
                 EnableDisableControlsNotWorkingInNetworkMode(false);
                 _networkSession.AppendToLog(_networkSession.CurrentUser.UserName + ": Joined session " + _networkSession.SessionId + " at " + DateTime.Now.ToLongTimeString());
                 SubtitleListview1.ShowExtraColumn("User/action");
+                SubtitleListview1.AutoSizeAllColumns(this);
                 _subtitleListViewIndex = -1;
                 _oldSelectedParagraph = null;
                 SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
                 SubtitleListview1.SelectIndexAndEnsureVisible(0);
                 _change = true;
                 TimerWebServiceTick(null, null);
+                
             }
             else
             {
@@ -8876,6 +8884,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (removeFromListView)
             {
                 SubtitleListview1.HideAlternateTextColumn();
+                SubtitleListview1.AutoSizeAllColumns(this);
                 _subtitleAlternate = new Subtitle();
                 _subtitleAlternateFileName = null;
             }
