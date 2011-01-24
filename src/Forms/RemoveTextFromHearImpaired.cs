@@ -136,7 +136,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (Environment.OSVersion.Version.Major < 6) // 6 == Vista/Win2008Server/Win7
             {
-                string unicodeFontName = "Lucida Sans Unicode";
+                string unicodeFontName = "Times New Roman";
                 float fontSize = comboBoxCustomStart.Font.Size;
                 comboBoxCustomStart.Font = new System.Drawing.Font(unicodeFontName, fontSize);
                 comboBoxCustomEnd.Font = new System.Drawing.Font(unicodeFontName, fontSize);

@@ -912,8 +912,8 @@ namespace Nikse.SubtitleEdit.Logic
                         else if (matroskaId == 0x1F43B675) // cluster
                         {
                             afterPosition = f.Position + dataSize;
-                            if (f.Position > 8000000)
-                                System.Windows.Forms.MessageBox.Show("8mb");
+                            //if (f.Position > 8000000)
+                            //    System.Windows.Forms.MessageBox.Show("8mb");
                             AnalyzeMatroskaCluster();
                             f.Seek(afterPosition, SeekOrigin.Begin);
                         }
