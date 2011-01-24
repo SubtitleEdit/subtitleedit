@@ -79,6 +79,46 @@ namespace Nikse.SubtitleEdit.Controls
             GridLines = true;
         }
 
+        public void AutoSizeAllColumns(Form parentForm)
+        {
+            Columns[ColumnIndexNumber].Width = 55;
+            InitializeTimeStampColumWidths(parentForm);
+
+            int length = Columns[ColumnIndexNumber].Width + Columns[ColumnIndexStart].Width + Columns[ColumnIndexEnd].Width + Columns[ColumnIndexDuration].Width;
+            int lengthAvailable = Width - length;
+
+            int numberOfRestColumns = 1;
+            if (IsAlternateTextColumnVisible)
+                numberOfRestColumns++;
+            if (IsExtraColumnVisible)
+                numberOfRestColumns++;
+
+            if (IsAlternateTextColumnVisible && !IsExtraColumnVisible)
+            {
+                int restWidth = (lengthAvailable / 2) - 15;
+                Columns[ColumnIndexText].Width = restWidth;
+                Columns[ColumnIndexTextAlternate].Width = restWidth;
+            }
+            else if (!IsAlternateTextColumnVisible && !IsExtraColumnVisible)
+            {
+                int restWidth = lengthAvailable - 15;
+                Columns[ColumnIndexText].Width = restWidth;
+            }
+            else if (!IsAlternateTextColumnVisible && IsExtraColumnVisible)
+            {
+                int restWidth = lengthAvailable - 15;
+                Columns[ColumnIndexText].Width = (int) (restWidth * 0.6);
+                Columns[ColumnIndexExtra].Width = (int)(restWidth * 0.4);
+            }
+            else
+            {
+                int restWidth = lengthAvailable - 15;
+                Columns[ColumnIndexText].Width = (int)(restWidth * 0.4);
+                Columns[ColumnIndexTextAlternate].Width = (int)(restWidth * 0.4);
+                Columns[ColumnIndexExtra].Width = (int)(restWidth * 0.2);
+            }
+        }
+
         public void ShowAlternateTextColumn(string text)
         {
             if (!IsAlternateTextColumnVisible)
