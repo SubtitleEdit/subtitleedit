@@ -486,7 +486,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (Environment.OSVersion.Version.Major < 6) // 6 == Vista/Win2008Server/Win7
             {
-                string unicodeFontName = "Lucida Sans Unicode";
+                string unicodeFontName = "Times New Roman";
                 Configuration.Settings.General.SubtitleFontName = unicodeFontName;
                 float fontSize = toolStripMenuItemSingleNote.Font.Size;
                 toolStripMenuItemSingleNote.Font = new System.Drawing.Font(unicodeFontName, fontSize);
@@ -4678,6 +4678,7 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         mergedVobSubPacks.Add(new VobSubMergedPack(p.BinaryData, TimeSpan.FromMilliseconds(p.StartMilliseconds), 32, null));
                     }
+                    mergedVobSubPacks[mergedVobSubPacks.Count - 1].EndTime = TimeSpan.FromMilliseconds(p.EndMilliseconds);
                 }                
 
                 var formSubOcr = new VobSubOcr();
