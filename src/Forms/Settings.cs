@@ -331,12 +331,16 @@ namespace Nikse.SubtitleEdit.Forms
             // Music notes / music symbols
             if (!Utilities.IsRunningOnMono() && Environment.OSVersion.Version.Major < 6) // 6 == Vista/Win2008Server/Win7
             {
-
                 float fontSize = comboBoxToolsMusicSymbol.Font.Size;
-                listBoxNamesEtc.Font = new System.Drawing.Font("Lucida Sans Unicode", fontSize);
-                listBoxUserWordLists.Font = new System.Drawing.Font("Lucida Sans Unicode", fontSize);
-                listBoxOcrFixList.Font = new System.Drawing.Font("Lucida Sans Unicode", fontSize);
-                comboBoxToolsMusicSymbol.Font = new System.Drawing.Font("Lucida Sans Unicode", fontSize);
+                string unicodeFontName = "Times New Roman";
+                listBoxNamesEtc.Font = new System.Drawing.Font(unicodeFontName, fontSize);
+                listBoxUserWordLists.Font = new System.Drawing.Font(unicodeFontName, fontSize);
+                listBoxOcrFixList.Font = new System.Drawing.Font(unicodeFontName, fontSize);
+                comboBoxToolsMusicSymbol.Font = new System.Drawing.Font(unicodeFontName, fontSize);
+                textBoxNameEtc.Font = new System.Drawing.Font(unicodeFontName, fontSize);
+                textBoxUserWord.Font = new System.Drawing.Font(unicodeFontName, fontSize);
+                textBoxOcrFixKey.Font = new System.Drawing.Font(unicodeFontName, fontSize);
+                textBoxOcrFixValue.Font = new System.Drawing.Font(unicodeFontName, fontSize);
             }
 
             comboBoxToolsMusicSymbol.Items.Clear();
