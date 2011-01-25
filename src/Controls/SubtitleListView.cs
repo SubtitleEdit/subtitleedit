@@ -265,9 +265,9 @@ namespace Nikse.SubtitleEdit.Controls
 
             subItem = new ListViewItem.ListViewSubItem(item, paragraph.Text.Replace(Environment.NewLine, _lineSeparatorString));
             if (SubtitleFontBold)
-                subItem.Font = new Font(SubtitleFontName, subItem.Font.Size, FontStyle.Bold);
+                subItem.Font = new Font(SubtitleFontName, SubtitleFontSize , FontStyle.Bold);
             else
-                subItem.Font = new Font(SubtitleFontName, subItem.Font.Size);
+                subItem.Font = new Font(SubtitleFontName, SubtitleFontSize);
 
             item.UseItemStyleForSubItems = false;
             item.SubItems.Add(subItem);

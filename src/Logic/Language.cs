@@ -993,6 +993,8 @@ can edit in same subtitle file (collaboration)",
                 After = "After",
                 LinesFoundX = "Lines found: {0}",
                 RemoveTextIfContains = "Remove text if it contains:",
+                RemoveInterjections = "Remove interjections (shh, hmm, etc.)",
+                EditInterjections = "Edit...",
             };
 
             ReplaceDialog = new LanguageStructure.ReplaceDialog
