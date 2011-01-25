@@ -332,7 +332,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (!Utilities.IsRunningOnMono() && Environment.OSVersion.Version.Major < 6) // 6 == Vista/Win2008Server/Win7
             {
                 float fontSize = comboBoxToolsMusicSymbol.Font.Size;
-                string unicodeFontName = "Times New Roman";
+                string unicodeFontName = Utilities.WinXp2kUnicodeFontName;
                 listBoxNamesEtc.Font = new System.Drawing.Font(unicodeFontName, fontSize);
                 listBoxUserWordLists.Font = new System.Drawing.Font(unicodeFontName, fontSize);
                 listBoxOcrFixList.Font = new System.Drawing.Font(unicodeFontName, fontSize);

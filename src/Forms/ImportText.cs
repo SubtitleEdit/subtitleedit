@@ -41,6 +41,8 @@ namespace Nikse.SubtitleEdit.Forms
             buttonOK.Text = Configuration.Settings.Language.ImportText.Next;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
             SubtitleListview1.InitializeLanguage(Configuration.Settings.Language.General, Configuration.Settings);
+            Utilities.InitializeSubtitleFont(SubtitleListview1);
+            SubtitleListview1.AutoSizeAllColumns(this);
 
             numericUpDownDurationFixed.Enabled = radioButtonDurationFixed.Checked;
             FixLargeFonts();
@@ -52,7 +54,6 @@ namespace Nikse.SubtitleEdit.Forms
             SizeF textSize = graphics.MeasureString(buttonOK.Text, this.Font);
             if (textSize.Height > buttonOK.Height - 4)
             {
-                SubtitleListview1.InitializeTimeStampColumWidths(this);
                 int newButtonHeight = (int)(textSize.Height + 7 + 0.5);
                 Utilities.SetButtonHeight(this, newButtonHeight, 1);
             }

@@ -264,7 +264,7 @@ namespace Nikse.SubtitleEdit.Logic
             DefaultFrameRate = 23.976;
             SubtitleFontName = "Tahoma";
             if (Environment.OSVersion.Version.Major < 6) // 6 == Vista/Win2008Server/Win7
-                SubtitleFontName = "Courier New";
+                SubtitleFontName = Utilities.WinXp2kUnicodeFontName;
 
             SubtitleFontSize = 8;
             SubtitleFontBold = false;

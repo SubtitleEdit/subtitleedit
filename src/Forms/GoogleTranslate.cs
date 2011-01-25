@@ -64,6 +64,10 @@ namespace Nikse.SubtitleEdit.Forms
 
             subtitleListViewFrom.InitializeLanguage(Configuration.Settings.Language.General, Configuration.Settings);
             subtitleListViewTo.InitializeLanguage(Configuration.Settings.Language.General, Configuration.Settings);
+            Utilities.InitializeSubtitleFont(subtitleListViewFrom);
+            Utilities.InitializeSubtitleFont(subtitleListViewTo);
+            subtitleListViewFrom.AutoSizeAllColumns(this);
+            subtitleListViewTo.AutoSizeAllColumns(this);
             FixLargeFonts();
         }
 

@@ -49,6 +49,8 @@ namespace Nikse.SubtitleEdit.Forms
             labelSyncHelp.Text = Configuration.Settings.Language.PointSync.Description;
             SubtitleListview1.InitializeLanguage(Configuration.Settings.Language.General, Configuration.Settings);
             SubtitleListview1.InitializeTimeStampColumWidths(this);
+            Utilities.InitializeSubtitleFont(SubtitleListview1);
+            SubtitleListview1.AutoSizeAllColumns(this);
             FixLargeFonts();
         }
 

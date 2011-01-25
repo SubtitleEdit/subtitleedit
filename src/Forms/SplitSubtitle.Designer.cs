@@ -76,7 +76,7 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(39, 30);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(331, 21);
+            this.label1.Size = new System.Drawing.Size(217, 13);
             this.label1.TabIndex = 19;
             this.label1.Text = "Enter length of first part of video or browse";
             // 
@@ -85,7 +85,7 @@
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(39, 45);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(233, 21);
+            this.label2.Size = new System.Drawing.Size(152, 13);
             this.label2.TabIndex = 20;
             this.label2.Text = "and get length from video file:";
             // 
@@ -98,7 +98,7 @@
             this.labelHoursMinSecsMilliSecs.AutoSize = true;
             this.labelHoursMinSecsMilliSecs.Location = new System.Drawing.Point(41, 79);
             this.labelHoursMinSecsMilliSecs.Name = "labelHoursMinSecsMilliSecs";
-            this.labelHoursMinSecsMilliSecs.Size = new System.Drawing.Size(169, 21);
+            this.labelHoursMinSecsMilliSecs.Size = new System.Drawing.Size(108, 13);
             this.labelHoursMinSecsMilliSecs.TabIndex = 22;
             this.labelHoursMinSecsMilliSecs.Text = "Hours:min:sec.msecs";
             // 
@@ -109,12 +109,12 @@
             this.splitTimeUpDownAdjust.Location = new System.Drawing.Point(42, 97);
             this.splitTimeUpDownAdjust.Margin = new System.Windows.Forms.Padding(4);
             this.splitTimeUpDownAdjust.Name = "splitTimeUpDownAdjust";
-            this.splitTimeUpDownAdjust.Size = new System.Drawing.Size(137, 34);
+            this.splitTimeUpDownAdjust.Size = new System.Drawing.Size(92, 25);
             this.splitTimeUpDownAdjust.TabIndex = 21;
             // 
             // SplitSubtitle
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 21F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(325, 182);
             this.Controls.Add(this.buttonGetFrameRate);

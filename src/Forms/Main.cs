@@ -197,6 +197,7 @@ namespace Nikse.SubtitleEdit.Forms
                 Utilities.InitializeSubtitleFont(textBoxSource);
                 Utilities.InitializeSubtitleFont(textBoxListViewText);
                 Utilities.InitializeSubtitleFont(SubtitleListview1);
+                SubtitleListview1.AutoSizeAllColumns(this);
 
                 tabControlSubtitle.SelectTab(TabControlSourceView); // AC
                 ShowSourceLineNumber();                             // AC
@@ -485,7 +486,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (Environment.OSVersion.Version.Major < 6) // 6 == Vista/Win2008Server/Win7
             {
-                string unicodeFontName = "Times New Roman";
+                string unicodeFontName = Utilities.WinXp2kUnicodeFontName;
                 Configuration.Settings.General.SubtitleFontName = unicodeFontName;
                 float fontSize = toolStripMenuItemSingleNote.Font.Size;
                 toolStripMenuItemSingleNote.Font = new System.Drawing.Font(unicodeFontName, fontSize);
@@ -1637,13 +1638,14 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 Utilities.InitializeSubtitleFont(textBoxListViewText);
                 Utilities.InitializeSubtitleFont(textBoxSource);
-                Utilities.InitializeSubtitleFont(SubtitleListview1);
                 SubtitleListview1.SubtitleFontName = Configuration.Settings.General.SubtitleFontName;
                 SubtitleListview1.SubtitleFontBold = Configuration.Settings.General.SubtitleFontBold;
                 SubtitleListview1.SubtitleFontSize = Configuration.Settings.General.SubtitleFontSize;
                 SubtitleListview1.ForeColor = Configuration.Settings.General.SubtitleFontColor;
                 SubtitleListview1.BackColor = Configuration.Settings.General.SubtitleBackgroundColor;
                 SaveSubtitleListviewIndexes();
+                Utilities.InitializeSubtitleFont(SubtitleListview1);
+                SubtitleListview1.AutoSizeAllColumns(this);
                 SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
                 RestoreSubtitleListviewIndexes();
             }
@@ -6663,6 +6665,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             labelCharactersPerSecond.Left = textBoxListViewText.Left + (textBoxListViewText.Width - labelCharactersPerSecond.Width);
             labelTextLineTotal.Left = textBoxListViewText.Left + (textBoxListViewText.Width - labelTextLineTotal.Width);
+            SubtitleListview1.AutoSizeAllColumns(this);
         }
 
         private void PlayCurrent()
