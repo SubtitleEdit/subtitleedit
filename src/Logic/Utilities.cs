@@ -18,6 +18,8 @@ namespace Nikse.SubtitleEdit.Logic
 {
     public static class Utilities
     {
+        internal const string WinXp2kUnicodeFontName = "Times New Roman";
+
         public static VideoInfo GetVideoInfo(string fileName, EventHandler event1)
         {
             VideoInfo info = TryReadVideoInfoViaAviHeader(fileName);
@@ -2068,5 +2070,7 @@ namespace Nikse.SubtitleEdit.Logic
             }
             return false;
         }
+
+        
     }
 }

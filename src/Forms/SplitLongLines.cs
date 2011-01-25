@@ -60,7 +60,8 @@ namespace Nikse.SubtitleEdit.Forms
             buttonOK.Text = Configuration.Settings.Language.General.OK;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
             SubtitleListview1.InitializeLanguage(Configuration.Settings.Language.General, Configuration.Settings);
-            SubtitleListview1.InitializeTimeStampColumWidths(this);
+            Utilities.InitializeSubtitleFont(SubtitleListview1);
+            SubtitleListview1.AutoSizeAllColumns(this);
             NumberOfSplits = 0;
             numericUpDownSingleLineMaxCharacters.Value = Configuration.Settings.General.SubtitleLineMaximumLength;
             _subtitle = subtitle;

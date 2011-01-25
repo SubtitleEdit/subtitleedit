@@ -183,6 +183,7 @@ namespace Nikse.SubtitleEdit.Forms
             listView1.Columns[2].Width = 400;
 
             Utilities.InitializeSubtitleFont(textBoxListViewText);
+            Utilities.InitializeSubtitleFont(subtitleListView1);
             listViewFixes.ListViewItemSorter = new ListViewSorter { ColumnNumber = 1, IsNumber = true };
 
             if (Screen.PrimaryScreen.WorkingArea.Width <= 124)

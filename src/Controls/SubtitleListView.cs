@@ -56,7 +56,7 @@ namespace Nikse.SubtitleEdit.Controls
 
             Columns[ColumnIndexStart].Width = timeStampWidth;
             Columns[ColumnIndexEnd].Width = timeStampWidth;
-            Columns[ColumnIndexDuration].Width = Columns[ColumnIndexDuration].Width+12;
+            Columns[ColumnIndexDuration].Width = (int) (timeStampWidth * 0.8);
             SubtitleListView_Resize(this, null);
         }
 

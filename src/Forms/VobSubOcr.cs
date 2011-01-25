@@ -167,6 +167,9 @@ namespace Nikse.SubtitleEdit.Forms
 
             comboBoxTesseractLanguages.Left = labelTesseractLanguage.Left + labelTesseractLanguage.Width;
 
+            Utilities.InitializeSubtitleFont(subtitleListView1);
+            subtitleListView1.AutoSizeAllColumns(this);
+
             FixLargeFonts();
         }
 
