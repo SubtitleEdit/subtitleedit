@@ -1,9 +1,10 @@
 ﻿using System;
-using System.Text;
-using System.Windows.Forms;
-using Nikse.SubtitleEdit.Logic;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Text;
+using System.Text.RegularExpressions;
+using System.Windows.Forms;
+using Nikse.SubtitleEdit.Logic;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -29,7 +30,10 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxRemoveTextBetweenParentheses.Text = _language.Parentheses;
             checkBoxRemoveTextBetweenQuestionMarks.Text = _language.QuestionMarks;
             checkBoxRemoveTextBetweenSquares.Text = _language.SquareBrackets;
-            checkBoxRemoveWhereContains.Text = _language.RemoveTextIfContains;            
+            checkBoxRemoveWhereContains.Text = _language.RemoveTextIfContains;
+            checkBoxRemoveInterjections.Text = _language.RemoveInterjections;
+            buttonEditInterjections.Text = _language.EditInterjections;
+            buttonEditInterjections.Left = checkBoxRemoveInterjections.Left + checkBoxRemoveInterjections.Width;
             listViewFixes.Columns[0].Text = Configuration.Settings.Language.General.Apply;
             listViewFixes.Columns[1].Text = _language.LineNumber;
             listViewFixes.Columns[2].Text = _language.Before;
@@ -180,6 +184,11 @@ namespace Nikse.SubtitleEdit.Forms
                     hit = true;
                 }
 
+                if (checkBoxRemoveInterjections.Checked && RemoveInterjections(p.Text) != p.Text.Trim())
+                {
+                    hit = true;
+                }
+
                 if (!hit)
                 { 
                     string[] parts = p.Text.Trim().Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
@@ -286,8 +295,8 @@ namespace Nikse.SubtitleEdit.Forms
                         int index = s2.LastIndexOf("!");
                         if (index == -1 || s2.LastIndexOf("?") > index)
                             index = s2.LastIndexOf("?");
-                        if (index == -1 || s2.LastIndexOf(".") > index)
-                            index = s2.LastIndexOf(".");
+                        if (index == -1 || s2.LastIndexOf(". ") > index)
+                            index = s2.LastIndexOf(". ");
                         if (index > 3)
                             sb.AppendLine(s2.Substring(0, index+1));
                     }
@@ -359,7 +368,6 @@ namespace Nikse.SubtitleEdit.Forms
                     if (HasHearImpariedTagsAtEnd(newText))
                         newText = RemoveEndTags(newText);
                     sb.AppendLine(stSub.Pre + newText + stSub.Post);
-
                 }
                 else
                 {
@@ -377,6 +385,8 @@ namespace Nikse.SubtitleEdit.Forms
 
             text = st.Pre + sb.ToString().Trim() + st.Post;
             text = RemoveColon(text);
+            if (checkBoxRemoveInterjections.Checked)
+                text = RemoveInterjections(text);
 
             st = new StripableText(text, " >-\"'‘`´♪¿¡.…—", " -\"'`´♪.!?:…—");
             text = st.StrippedText;
@@ -393,6 +403,38 @@ namespace Nikse.SubtitleEdit.Forms
                 text != null && !text.Contains(Environment.NewLine))
             {
                 text = text.TrimStart().TrimStart('-').TrimStart();
+            }
+            return text;
+        }
+
+        private string RemoveInterjections(string text)
+        {
+            string[] arr = Configuration.Settings.Tools.Interjections.Split(";".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+            foreach (string s in arr)
+            {
+                if (text.Contains(s))
+                { 
+                    Regex regex = new Regex(s);
+                    Match match = regex.Match(text);
+                    if (match.Success)
+                    {
+                        int index = match.Index;
+                        string temp = text.Remove(index, s.Length);
+                        while (temp.Length > 0 && (temp.StartsWith(" ") || temp.StartsWith(",")))
+                        {
+                            temp = temp.Remove(0, 1);
+                        }
+                        if (temp.Length > 0 &&  s[0].ToString() != s[0].ToString().ToLower())
+                        {
+                            temp = temp.Remove(0,1).Insert(0, temp[0].ToString().ToUpper());
+                        }
+
+                        StripableText st = new StripableText(temp);
+                        if (st.StrippedText.Length == 0)
+                            return string.Empty;
+                        return temp;
+                    }
+                }
             }
             return text;
         }
@@ -512,6 +554,29 @@ namespace Nikse.SubtitleEdit.Forms
             Cursor = Cursors.WaitCursor;
             GeneratePreview();
             Cursor = Cursors.Default;
+        }
+
+        private void checkBoxRemoveInterjections_CheckedChanged(object sender, EventArgs e)
+        {
+            Cursor = Cursors.WaitCursor;
+            GeneratePreview();
+            Cursor = Cursors.Default;
+        }
+
+        private void buttonEditInterjections_Click(object sender, EventArgs e)
+        {
+            Interjections editInterjections = new Interjections();
+            editInterjections.Initialize(Configuration.Settings.Tools.Interjections);
+            if (editInterjections.ShowDialog(this) == DialogResult.OK)
+            {
+                Configuration.Settings.Tools.Interjections = editInterjections.GetInterjectionsSemiColonSeperatedString();
+                if (checkBoxRemoveInterjections.Checked)
+                {
+                    Cursor = Cursors.WaitCursor;
+                    GeneratePreview();
+                    Cursor = Cursors.Default;
+                }
+            }
         }
 
     }

@@ -77,6 +77,7 @@ namespace Nikse.SubtitleEdit.Logic
         public string MusicSymbol { get; set; }
         public string MusicSymbolToReplace { get; set; }
         public bool SpellCheckAutoChangeNames { get; set; }
+        public string Interjections { get; set; }
 
         public ToolsSettings()
         {
@@ -87,6 +88,7 @@ namespace Nikse.SubtitleEdit.Logic
             MusicSymbol = "♪";
             MusicSymbolToReplace = "âª â¶ â™ª âTª ã¢â™âª ?t×3 ?t¤3";
             SpellCheckAutoChangeNames = true;
+            Interjections = "Ugh;Ughh;Hm;Hmm;Hmmm;Ahh;Whew;Phew;Gah;Oh;Ohh;Uh;Uhh;";
         }
     }
 
@@ -672,6 +674,9 @@ namespace Nikse.SubtitleEdit.Logic
             subNode = node.SelectSingleNode("SpellCheckAutoChangeNames");
             if (subNode != null)
                 settings.Tools.SpellCheckAutoChangeNames = Convert.ToBoolean(subNode.InnerText);
+            subNode = node.SelectSingleNode("Interjections");
+            if (subNode != null)
+                settings.Tools.Interjections = subNode.InnerText;           
 
             settings.SsaStyle = new Nikse.SubtitleEdit.Logic.SsaStyleSettings();
             node = doc.DocumentElement.SelectSingleNode("SsaStyle");
@@ -968,6 +973,7 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("MusicSymbol", settings.Tools.MusicSymbol);
             textWriter.WriteElementString("MusicSymbolToReplace", settings.Tools.MusicSymbolToReplace);
             textWriter.WriteElementString("SpellCheckAutoChangeNames", settings.Tools.SpellCheckAutoChangeNames.ToString());
+            textWriter.WriteElementString("Interjections", settings.Tools.Interjections);            
             textWriter.WriteEndElement();
 
             textWriter.WriteStartElement("SsaStyle", "");

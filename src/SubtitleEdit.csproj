@@ -225,6 +225,12 @@
     <Compile Include="Forms\GetDictionaries.Designer.cs">
       <DependentUpon>GetDictionaries.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\Interjections.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Interjections.Designer.cs">
+      <DependentUpon>Interjections.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\NetworkChat.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -659,6 +665,9 @@
     <EmbeddedResource Include="Forms\GetDictionaries.resx">
       <DependentUpon>GetDictionaries.cs</DependentUpon>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Interjections.resx">
+      <DependentUpon>Interjections.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\NetworkChat.resx">
       <DependentUpon>NetworkChat.cs</DependentUpon>

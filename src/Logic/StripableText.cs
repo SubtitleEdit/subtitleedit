@@ -35,7 +35,7 @@ namespace Nikse.SubtitleEdit.Logic
             {
                 for (int i = 0; i < 5; i++)
                 {
-                    while (text.Length > 1 && _stripStartCharacters.Contains(text.Substring(0, 1)))
+                    while (text.Length > 0 && _stripStartCharacters.Contains(text.Substring(0, 1)))
                     {
                         Pre += text.Substring(0, 1);
                         text = text.Substring(1);
@@ -56,7 +56,7 @@ namespace Nikse.SubtitleEdit.Logic
             {
                 for (int i = 0; i < 5; i++)
                 {
-                    while (text.Length > 1 && _stripEndCharacters.Contains(text.Substring(text.Length - 1, 1)))
+                    while (text.Length > 0 && _stripEndCharacters.Contains(text.Substring(text.Length - 1, 1)))
                     {
                         Post = text.Substring(text.Length - 1, 1) + Post;
                         text = text.Substring(0, text.Length - 1);

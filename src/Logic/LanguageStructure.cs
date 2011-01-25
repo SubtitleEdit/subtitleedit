@@ -928,6 +928,8 @@
             public string After { get; set; }
             public string LinesFoundX { get; set; }
             public string RemoveTextIfContains { get; set; }
+            public string RemoveInterjections { get; set; }
+            public string EditInterjections { get; set; }
         }
 
         public class ReplaceDialog

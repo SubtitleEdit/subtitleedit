@@ -5,7 +5,6 @@ using System.IO;
 using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Web;
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Controls;
 using Nikse.SubtitleEdit.Logic;
@@ -197,7 +196,7 @@ namespace Nikse.SubtitleEdit.Forms
                 InitializeToolbar();
                 Utilities.InitializeSubtitleFont(textBoxSource);
                 Utilities.InitializeSubtitleFont(textBoxListViewText);
-
+                Utilities.InitializeSubtitleFont(SubtitleListview1);
 
                 tabControlSubtitle.SelectTab(TabControlSourceView); // AC
                 ShowSourceLineNumber();                             // AC
@@ -1619,6 +1618,7 @@ namespace Nikse.SubtitleEdit.Forms
             UpdateRecentFilesUI();
             Utilities.InitializeSubtitleFont(textBoxSource);
             Utilities.InitializeSubtitleFont(textBoxListViewText);
+            Utilities.InitializeSubtitleFont(SubtitleListview1);
             buttonCustomUrl.Text = Configuration.Settings.VideoControls.CustomSearchText;
             buttonCustomUrl.Enabled = Configuration.Settings.VideoControls.CustomSearchUrl.Length > 1;
 
@@ -1637,6 +1637,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 Utilities.InitializeSubtitleFont(textBoxListViewText);
                 Utilities.InitializeSubtitleFont(textBoxSource);
+                Utilities.InitializeSubtitleFont(SubtitleListview1);
                 SubtitleListview1.SubtitleFontName = Configuration.Settings.General.SubtitleFontName;
                 SubtitleListview1.SubtitleFontBold = Configuration.Settings.General.SubtitleFontBold;
                 SubtitleListview1.SubtitleFontSize = Configuration.Settings.General.SubtitleFontSize;
@@ -6245,6 +6246,9 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (Configuration.Settings.General.AllowEditOfOriginalSubtitle && _subtitleAlternate.Paragraphs.Count > 1)
             {
+                InsertMissingParagraphs(_subtitle, _subtitleAlternate);
+                InsertMissingParagraphs(_subtitleAlternate, _subtitle);
+
                 buttonUnBreak.Visible = false;
                 buttonUndoListViewChanges.Visible = false;
                
@@ -6272,6 +6276,24 @@ namespace Nikse.SubtitleEdit.Forms
             SubtitleListview1.ShowAlternateTextColumn(Configuration.Settings.Language.General.OriginalText);
             SubtitleListview1.AutoSizeAllColumns(this);
             return true;
+        }
+
+        private void InsertMissingParagraphs(Subtitle masterSubtitle, Subtitle insertIntoSubtitle)
+        {
+            int index = 0;
+            foreach (Paragraph p in masterSubtitle.Paragraphs)
+            {
+
+                Paragraph insertParagraph = Utilities.GetOriginalParagraph(index, p, insertIntoSubtitle.Paragraphs);
+                if (insertParagraph == null)
+                {
+                    insertParagraph = new Paragraph(p);
+                    insertParagraph.Text = string.Empty;
+                    insertIntoSubtitle.InsertParagraphInCorrectTimeOrder(insertParagraph);
+                }
+                index++;
+            }
+            insertIntoSubtitle.Renumber(1);
         }
 
 
@@ -7203,7 +7225,9 @@ namespace Nikse.SubtitleEdit.Forms
         {
             toolStripMenuItemOpenContainingFolder.Visible = !string.IsNullOrEmpty(_fileName) && File.Exists(_fileName);
 
-            if (Configuration.Settings.General.AllowEditOfOriginalSubtitle && _subtitleAlternate != null && _subtitleAlternate.Paragraphs.Count > 0)
+            bool subtitleLoaded = _subtitle != null && _subtitle.Paragraphs.Count > 0;
+            openOriginalToolStripMenuItem.Visible = subtitleLoaded;
+            if (subtitleLoaded && Configuration.Settings.General.AllowEditOfOriginalSubtitle && _subtitleAlternate != null && _subtitleAlternate.Paragraphs.Count > 0)
             {
                 saveOriginalToolStripMenuItem.Visible = true;
                 saveOriginalAstoolStripMenuItem.Visible = true;
@@ -7214,14 +7238,8 @@ namespace Nikse.SubtitleEdit.Forms
                 saveOriginalToolStripMenuItem.Visible = false;
                 saveOriginalAstoolStripMenuItem.Visible = false;
                 removeOriginalToolStripMenuItem.Visible = false;
-
-                if (_subtitle == null || _subtitle.Paragraphs.Count < 1)
-                {
-                    openOriginalToolStripMenuItem.Visible = false;
-                    toolStripSeparator20.Visible = false;
-                }
-
             }
+            toolStripSeparator20.Visible = subtitleLoaded;
         }
 
         private void toolStripMenuItemOpenContainingFolder_Click(object sender, EventArgs e)
@@ -8809,7 +8827,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 else
                 {
-                    //NIO:TODO: TextBoxListViewToogleTag("i");
+                   TextBoxListViewToogleTag("i");
                 }
             }
             if (e.Modifiers == Keys.Control && e.KeyCode == Keys.D)
