@@ -61,10 +61,17 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
         private delegate void libvlc_video_get_size(IntPtr mediaPlayer, UInt32 number, out UInt32 x, out UInt32 y);
         libvlc_video_get_size _libvlc_video_get_size;
 
-        //[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        //private delegate int libvlc_video_set_spu(IntPtr mediaPlayer, UInt32 index);
-        //libvlc_video_set_spu _libvlc_video_set_spu;
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        private delegate int libvlc_audio_get_track_count(IntPtr mediaPlayer);
+        libvlc_audio_get_track_count _libvlc_audio_get_track_count;
 
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        private delegate int libvlc_audio_get_track(IntPtr mediaPlayer);
+        libvlc_audio_get_track _libvlc_audio_get_track;
+
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        private delegate int libvlc_audio_set_track(IntPtr mediaPlayer, int trackNumber);
+        libvlc_audio_set_track _libvlc_audio_set_track;
 
         // LibVLC Audio Controls - http://www.videolan.org/developers/vlc/doc/doxygen/html/group__libvlc__audio.html
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
@@ -150,7 +157,9 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             _libvlc_media_release = (libvlc_media_release)GetDllType(typeof(libvlc_media_release), "libvlc_media_release");
 
             _libvlc_video_get_size = (libvlc_video_get_size)GetDllType(typeof(libvlc_video_get_size), "libvlc_video_get_size");
-//            _libvlc_video_set_spu = (libvlc_video_set_spu)GetDllType(typeof(libvlc_video_set_spu), "libvlc_video_set_spu");
+            _libvlc_audio_get_track_count = (libvlc_audio_get_track_count)GetDllType(typeof(libvlc_audio_get_track_count), "libvlc_audio_get_track_count");
+            _libvlc_audio_get_track = (libvlc_audio_get_track)GetDllType(typeof(libvlc_audio_get_track), "libvlc_audio_get_track");
+            _libvlc_audio_set_track = (libvlc_audio_set_track)GetDllType(typeof(libvlc_audio_set_track), "libvlc_audio_set_track");
 
             _libvlc_audio_get_volume = (libvlc_audio_get_volume)GetDllType(typeof(libvlc_audio_get_volume), "libvlc_audio_get_volume");
             _libvlc_audio_set_volume = (libvlc_audio_set_volume)GetDllType(typeof(libvlc_audio_set_volume), "libvlc_audio_set_volume");
@@ -291,7 +300,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             {
                 const int Paused = 4;
                 int state = _libvlc_media_player_get_state(_mediaPlayer);
-                return state == Paused;
+                return state == Paused; 
             }
         }
 
@@ -302,6 +311,27 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                 const int Playing = 3;
                 int state = _libvlc_media_player_get_state(_mediaPlayer);
                 return state == Playing;
+            }
+        }
+
+        public int AudioTrackCount
+        {
+            get
+            {
+                return _libvlc_audio_get_track_count(_mediaPlayer);
+            }
+        }
+
+
+        public int AudioTrackNumber
+        {
+            get
+            {
+                return _libvlc_audio_get_track(_mediaPlayer);
+            }
+            set
+            {
+                _libvlc_audio_set_track(_mediaPlayer, value);
             }
         }
 
@@ -335,13 +365,13 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
 
                 _libvlc_media_player_play(newVlc._mediaPlayer);
                 newVlc._videoLoadedTimer = new System.Windows.Forms.Timer { Interval = 500 };
-                newVlc._videoLoadedTimer.Tick += new EventHandler(newVlc._videoLoadedTimer_Tick);
+                newVlc._videoLoadedTimer.Tick += new EventHandler(newVlc.VideoLoadedTimer_Tick);
                 newVlc._videoLoadedTimer.Start();
             }
             return newVlc;
         }
 
-        void _videoLoadedTimer_Tick(object sender, EventArgs e)
+        void VideoLoadedTimer_Tick(object sender, EventArgs e)
         {
             int i = 0;
             while (!IsPlaying && i < 50)
@@ -438,12 +468,11 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
 
                 _libvlc_media_player_play(_mediaPlayer);
                 _videoLoadedTimer = new System.Windows.Forms.Timer { Interval = 500 };
-                _videoLoadedTimer.Tick += new EventHandler(_videoLoadedTimer_Tick);
+                _videoLoadedTimer.Tick += new EventHandler(VideoLoadedTimer_Tick);
                 _videoLoadedTimer.Start();
 
             }
         }
-
 
         void VideoEndTimerTick(object sender, EventArgs e)
         {
@@ -451,7 +480,12 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             int state = _libvlc_media_player_get_state(_mediaPlayer);
 
             if (state == Ended)
-                OnVideoLoaded.Invoke(_mediaPlayer, new EventArgs());
+            {
+                Stop();
+                Play();
+                Pause();
+                OnVideoEnded.Invoke(_mediaPlayer, new EventArgs());
+            }
         }
 
         public override void DisposeVideoPlayer()
