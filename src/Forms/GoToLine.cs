@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Logic;
 
@@ -17,6 +18,18 @@ namespace Nikse.SubtitleEdit.Forms
             Text = Configuration.Settings.Language.GoToLine.Title;
             buttonOK.Text = Configuration.Settings.Language.General.OK;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
+            FixLargeFonts();
+        }
+
+        private void FixLargeFonts()
+        {
+            Graphics graphics = this.CreateGraphics();
+            SizeF textSize = graphics.MeasureString(buttonOK.Text, this.Font);
+            if (textSize.Height > buttonOK.Height - 4)
+            {
+                int newButtonHeight = (int)(textSize.Height + 7 + 0.5);
+                Utilities.SetButtonHeight(this, newButtonHeight, 1);
+            }
         }
 
         public int LineNumber

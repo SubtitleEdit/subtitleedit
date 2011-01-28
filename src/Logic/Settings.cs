@@ -88,7 +88,7 @@ namespace Nikse.SubtitleEdit.Logic
             MusicSymbol = "♪";
             MusicSymbolToReplace = "âª â¶ â™ª âTª ã¢â™âª ?t×3 ?t¤3";
             SpellCheckAutoChangeNames = true;
-            Interjections = "Ugh;Ughh;Hm;Hmm;Hmmm;Ahh;Whew;Phew;Gah;Oh;Ohh;Uh;Uhh;";
+            Interjections = "Ah;Ahh;Ahhh;Eh;Ehh;Ehhh;Hm;Hmm;Hmmm;Phew;Gah;Oh;Ohh;Ohhh;Ow;Oww;Owww;Ugh;Ughh;Uh;Uhh;Uhhh;Whew";
         }
     }
 
@@ -228,6 +228,7 @@ namespace Nikse.SubtitleEdit.Logic
         public bool StartInSourceView { get; set; }
         public bool RemoveBlankLinesWhenOpening { get; set; }
         public int SubtitleLineMaximumLength { get; set; }
+        public bool AutoWrapLineWhileTyping { get; set; }
         public int SubtitleMaximumCharactersPerSeconds { get; set; }
         public string SpellCheckLanguage { get; set; }
         public string VideoPlayer { get; set; }
@@ -277,6 +278,7 @@ namespace Nikse.SubtitleEdit.Logic
             StartLoadLastFile = true;
             StartRememberPositionAndSize = true;
             SubtitleLineMaximumLength = 65;
+            AutoWrapLineWhileTyping = true;
             SubtitleMaximumCharactersPerSeconds = 25;
             SpellCheckLanguage = null;
             VideoPlayer = string.Empty;
@@ -598,10 +600,13 @@ namespace Nikse.SubtitleEdit.Logic
                 settings.General.StartInSourceView = Convert.ToBoolean(subNode.InnerText);
             subNode = node.SelectSingleNode("RemoveBlankLinesWhenOpening");
             if (subNode != null)
-                settings.General.RemoveBlankLinesWhenOpening = Convert.ToBoolean(subNode.InnerText);            
+                settings.General.RemoveBlankLinesWhenOpening = Convert.ToBoolean(subNode.InnerText);
             subNode = node.SelectSingleNode("SubtitleLineMaximumLength");
             if (subNode != null)
                 settings.General.SubtitleLineMaximumLength = Convert.ToInt32(subNode.InnerText);
+            subNode = node.SelectSingleNode("AutoWrapLineWhileTyping");
+            if (subNode != null)
+                settings.General.AutoWrapLineWhileTyping = Convert.ToBoolean(subNode.InnerText);           
             subNode = node.SelectSingleNode("SubtitleMaximumCharactersPerSeconds");
             if (subNode != null)
                 settings.General.SubtitleMaximumCharactersPerSeconds = Convert.ToInt32(subNode.InnerText);
@@ -947,6 +952,7 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("StartInSourceView", settings.General.StartInSourceView.ToString());
             textWriter.WriteElementString("RemoveBlankLinesWhenOpening", settings.General.RemoveBlankLinesWhenOpening.ToString());            
             textWriter.WriteElementString("SubtitleLineMaximumLength", settings.General.SubtitleLineMaximumLength.ToString());
+            textWriter.WriteElementString("AutoWrapLineWhileTyping", settings.General.AutoWrapLineWhileTyping.ToString());            
             textWriter.WriteElementString("SubtitleMaximumCharactersPerSeconds", settings.General.SubtitleMaximumCharactersPerSeconds.ToString());            
             textWriter.WriteElementString("SpellCheckLanguage", settings.General.SpellCheckLanguage);
             textWriter.WriteElementString("VideoPlayer", settings.General.VideoPlayer);

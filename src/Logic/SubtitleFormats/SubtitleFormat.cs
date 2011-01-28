@@ -20,6 +20,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     new DvdStudioPro(),
                     new DvdSubtitle(),
 //                    new Ebu(),
+                    new FinalCutProXml(),
                     new MicroDvd(),
                     new MPlayer2(),
                     new OpenDvt(),
