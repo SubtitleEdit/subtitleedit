@@ -408,6 +408,11 @@
             public string PreviewLinesModifiedX { get; set; }
         }
 
+        public class Interjections
+        {
+            public string Title { get; set; }
+        }
+
         public class Main
         {
             public MainMenu Menu { get; set; }
@@ -661,6 +666,7 @@
                 {
                     public string Title { get; set; }
                     public string OpenVideo { get; set; }
+                    public string ChooseAudioTrack { get; set; }
                     public string CloseVideo { get; set; }
                     public string ShowHideVideo { get; set; }
                     public string ShowHideWaveForm { get; set; }
@@ -990,6 +996,7 @@
             public string DefaultFileEncoding { get; set; }
             public string AutoDetectAnsiEncoding { get; set; }
             public string SubtitleLineMaximumLength { get; set; }
+            public string AutoWrapWhileTyping { get; set; }
             public string SubtitleFont { get; set; }
             public string SubtitleFontSize { get; set; }
             public string SubtitleFontColor { get; set; }

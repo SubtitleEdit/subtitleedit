@@ -73,6 +73,7 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxRemoveBlankLinesWhenOpening.Checked = gs.RemoveBlankLinesWhenOpening;
             checkBoxRememberWindowPosition.Checked = gs.StartRememberPositionAndSize;
             textBoxSubtitleLineMaximumLength.Text = gs.SubtitleLineMaximumLength.ToString();
+            checkBoxAutoWrapWhileTyping.Checked = gs.AutoWrapLineWhileTyping;
             textBoxShowLineBreaksAs.Text = gs.ListViewLineSeparatorString;
 
             if (string.Compare(gs.VideoPlayer.Trim(), "VLC", true) == 0)
@@ -177,6 +178,7 @@ namespace Nikse.SubtitleEdit.Forms
             labelDefaultFileEncoding.Text = language.DefaultFileEncoding;
             labelAutoDetectAnsiEncoding.Text = language.AutoDetectAnsiEncoding;
             labelSubMaxLen.Text = language.SubtitleLineMaximumLength;
+            checkBoxAutoWrapWhileTyping.Text = language.AutoWrapWhileTyping;
             labelSubtitleFont.Text = language.SubtitleFont;
             labelSubtitleFontSize.Text = language.SubtitleFontSize;
             labelSubtitleFontColor.Text = language.SubtitleFontColor;
@@ -602,6 +604,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 gs.SubtitleLineMaximumLength = 68;
             }
+            gs.AutoWrapLineWhileTyping = checkBoxAutoWrapWhileTyping.Checked;
             
             if (comboBoxSubtitleFont.SelectedItem != null)
                 gs.SubtitleFontName = comboBoxSubtitleFont.SelectedItem.ToString();

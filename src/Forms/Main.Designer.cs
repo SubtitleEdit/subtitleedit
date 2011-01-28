@@ -125,6 +125,7 @@
             this.appendTextVisuallyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemVideo = new System.Windows.Forms.ToolStripMenuItem();
             this.openVideoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemSetAudioTrack = new System.Windows.Forms.ToolStripMenuItem();
             this.closeVideoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
             this.showhideWaveFormToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -1202,6 +1203,7 @@
             // 
             this.toolStripMenuItemVideo.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.openVideoToolStripMenuItem,
+            this.toolStripMenuItemSetAudioTrack,
             this.closeVideoToolStripMenuItem,
             this.toolStripSeparator5,
             this.showhideWaveFormToolStripMenuItem,
@@ -1213,6 +1215,7 @@
             this.toolStripMenuItemVideo.Size = new System.Drawing.Size(50, 20);
             this.toolStripMenuItemVideo.Text = "Video";
             this.toolStripMenuItemVideo.DropDownOpening += new System.EventHandler(this.toolStripMenuItemVideo_DropDownOpening);
+            this.toolStripMenuItemVideo.Click += new System.EventHandler(this.toolStripMenuItemVideo_Click);
             // 
             // openVideoToolStripMenuItem
             // 
@@ -1220,6 +1223,12 @@
             this.openVideoToolStripMenuItem.Size = new System.Drawing.Size(199, 22);
             this.openVideoToolStripMenuItem.Text = "Open video...";
             this.openVideoToolStripMenuItem.Click += new System.EventHandler(this.buttonOpenVideo_Click);
+            // 
+            // toolStripMenuItemSetAudioTrack
+            // 
+            this.toolStripMenuItemSetAudioTrack.Name = "toolStripMenuItemSetAudioTrack";
+            this.toolStripMenuItemSetAudioTrack.Size = new System.Drawing.Size(199, 22);
+            this.toolStripMenuItemSetAudioTrack.Text = "Choose audio track";
             // 
             // closeVideoToolStripMenuItem
             // 
@@ -3712,6 +3721,7 @@
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemPlayRateFast;
         private System.Windows.Forms.ImageList imageListPlayRate;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemPlayRateVeryFast;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemSetAudioTrack;
     }
 }
 

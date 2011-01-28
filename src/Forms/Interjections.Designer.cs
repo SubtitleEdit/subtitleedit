@@ -54,7 +54,7 @@
             // 
             this.buttonRemove.Location = new System.Drawing.Point(159, 16);
             this.buttonRemove.Name = "buttonRemove";
-            this.buttonRemove.Size = new System.Drawing.Size(75, 23);
+            this.buttonRemove.Size = new System.Drawing.Size(75, 21);
             this.buttonRemove.TabIndex = 22;
             this.buttonRemove.Text = "Remove";
             this.buttonRemove.UseVisualStyleBackColor = true;
@@ -79,9 +79,9 @@
             // 
             // buttonAdd
             // 
-            this.buttonAdd.Location = new System.Drawing.Point(159, 217);
+            this.buttonAdd.Location = new System.Drawing.Point(159, 219);
             this.buttonAdd.Name = "buttonAdd";
-            this.buttonAdd.Size = new System.Drawing.Size(75, 23);
+            this.buttonAdd.Size = new System.Drawing.Size(75, 21);
             this.buttonAdd.TabIndex = 26;
             this.buttonAdd.Text = "Add";
             this.buttonAdd.UseVisualStyleBackColor = true;

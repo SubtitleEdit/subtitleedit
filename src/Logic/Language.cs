@@ -34,6 +34,7 @@ namespace Nikse.SubtitleEdit.Logic
         public LanguageStructure.GoogleTranslate GoogleTranslate;
         public LanguageStructure.GoToLine GoToLine;
         public LanguageStructure.ImportText ImportText;
+        public LanguageStructure.Interjections Interjections;
         public LanguageStructure.Main Main;
         public LanguageStructure.MatroskaSubtitleChooser MatroskaSubtitleChooser;
         public LanguageStructure.MergeShortLines MergedShortLines;
@@ -479,6 +480,11 @@ namespace Nikse.SubtitleEdit.Logic
                 PreviewLinesModifiedX = "Preview - paragraphs modified: {0}",
             };
 
+            Interjections = new LanguageStructure.Interjections
+            {
+                Title = "Interjections",
+            };
+
             Main = new LanguageStructure.Main
             {
                 SaveChangesToUntitled = "Save changes to untitled?",
@@ -736,6 +742,7 @@ namespace Nikse.SubtitleEdit.Logic
                     {
                         Title = "Video",
                         OpenVideo = "Open video file...",
+                        ChooseAudioTrack = "Choose audio track",
                         CloseVideo = "Close video file",
                         ShowHideVideo = "Show/hide video",
                         ShowHideWaveForm = "Show/hide wave form",
@@ -1055,6 +1062,7 @@ can edit in same subtitle file (collaboration)",
                 DefaultFileEncoding = "Default file encoding",
                 AutoDetectAnsiEncoding = "Auto detect ANSI encoding",
                 SubtitleLineMaximumLength = "Single line max. length",
+                AutoWrapWhileTyping = "Auto-wrap while typing",
                 SubtitleFont = "Subtitle font",
                 SubtitleFontSize = "Subtitle font size",
                 SubtitleFontColor = "Subtitle font color",

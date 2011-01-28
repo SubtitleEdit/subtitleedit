@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Logic;
@@ -38,6 +39,19 @@ namespace Nikse.SubtitleEdit.Forms
                 _interjections.Add(s.Trim());
             }
             FillListBox();
+            Text = Configuration.Settings.Language.Interjections.Title;
+            FixLargeFonts();
+        }
+
+        private void FixLargeFonts()
+        {
+            Graphics graphics = this.CreateGraphics();
+            SizeF textSize = graphics.MeasureString(buttonOK.Text, this.Font);
+            if (textSize.Height > buttonOK.Height - 4)
+            {
+                int newButtonHeight = (int)(textSize.Height + 7 + 0.5);
+                Utilities.SetButtonHeight(this, newButtonHeight, 1);
+            }
         }
 
         private void buttonAdd_Click(object sender, EventArgs e)

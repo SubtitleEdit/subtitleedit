@@ -104,7 +104,7 @@ namespace Nikse.SubtitleEdit.Forms
                     if (versionInfo.Length >= 3 && versionInfo[2] != "0")
                         _title += "." + versionInfo[2];
                 }
-                return _title + " Beta 11";
+                return _title + " Beta 12";
             }
         }
 
@@ -559,6 +559,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             toolStripMenuItemVideo.Text = _language.Menu.Video.Title;
             openVideoToolStripMenuItem.Text = _language.Menu.Video.OpenVideo;
+            toolStripMenuItemSetAudioTrack.Text = _language.Menu.Video.ChooseAudioTrack;
             closeVideoToolStripMenuItem.Text = _language.Menu.Video.CloseVideo;
             showhideWaveFormToolStripMenuItem.Text = _language.Menu.Video.ShowHideWaveForm;
             showhideVideoToolStripMenuItem.Text = _language.Menu.Video.ShowHideVideo;
@@ -3719,7 +3720,42 @@ namespace Nikse.SubtitleEdit.Forms
         private void TextBoxListViewTextKeyDown(object sender, KeyEventArgs e)
         {
             int numberOfNewLines = textBoxListViewText.Text.Length - textBoxListViewText.Text.Replace(Environment.NewLine, " ").Length;
-            if (e.KeyCode == Keys.Enter && numberOfNewLines > 1)
+
+            if (e.Modifiers == Keys.None && numberOfNewLines < 1 && textBoxListViewText.Text.Length > Configuration.Settings.General.SubtitleLineMaximumLength-5)
+            {
+                if (1 == 1) // auto break setting!
+                {
+                    string newText;
+                    if (textBoxListViewText.Text.Length > Configuration.Settings.General.SubtitleLineMaximumLength + 30)
+                    {
+                        newText = Utilities.AutoBreakLine(textBoxListViewText.Text);
+                    }
+                    else
+                    {
+                        int lastSpace = textBoxListViewText.Text.LastIndexOf(' ');
+                        if (lastSpace > 0)
+                            newText = textBoxListViewText.Text.Remove(lastSpace, 1).Insert(lastSpace, Environment.NewLine);
+                        else
+                            newText = textBoxListViewText.Text;
+                    }
+
+                    int autobreakIndex = newText.IndexOf(Environment.NewLine);
+                    if (autobreakIndex > 0)
+                    {
+                        int selectionStart = textBoxListViewText.SelectionStart;
+                        int selectionLength = textBoxListViewText.SelectionLength;
+                        textBoxListViewText.Text = newText;
+                        if (selectionStart > autobreakIndex)
+                            selectionStart += Environment.NewLine.Length;
+                        if (selectionStart >= 0)
+                            textBoxListViewText.SelectionStart = selectionStart;
+                        if (selectionLength >= 0)
+                            textBoxListViewText.SelectionLength = selectionLength;
+                    }
+                }
+            }
+
+            if (e.KeyCode == Keys.Enter && e.Modifiers == Keys.None && numberOfNewLines > 1)
             {
                 e.SuppressKeyPress = true;
             }
@@ -8769,6 +8805,38 @@ namespace Nikse.SubtitleEdit.Forms
         private void toolStripMenuItemVideo_DropDownOpening(object sender, EventArgs e)
         {
             closeVideoToolStripMenuItem.Visible = !string.IsNullOrEmpty(_videoFileName);
+
+
+            toolStripMenuItemSetAudioTrack.Visible = false;
+            if (mediaPlayer.VideoPlayer != null && mediaPlayer.VideoPlayer is Nikse.SubtitleEdit.Logic.VideoPlayers.LibVlc11xDynamic)
+            {
+                var libVlc = (Nikse.SubtitleEdit.Logic.VideoPlayers.LibVlc11xDynamic)mediaPlayer.VideoPlayer;
+                int numberOfTracks = libVlc.AudioTrackCount;
+                int currentTrackNumber = libVlc.AudioTrackNumber;
+                if (numberOfTracks > 2)
+                {
+                    toolStripMenuItemSetAudioTrack.DropDownItems.Clear();
+                    for (int i = 0; i < numberOfTracks-1; i++)
+                    {
+                        toolStripMenuItemSetAudioTrack.DropDownItems.Add((i + 1).ToString(), null, ChooseAudioTrack);
+                        if (i+1 == currentTrackNumber)
+                            toolStripMenuItemSetAudioTrack.DropDownItems[toolStripMenuItemSetAudioTrack.DropDownItems.Count - 1].Select();
+                    }
+                    toolStripMenuItemSetAudioTrack.Visible = true;
+                }
+            }
+        }
+
+        private void ChooseAudioTrack(object sender, EventArgs e)
+        {
+            if (mediaPlayer.VideoPlayer != null && mediaPlayer.VideoPlayer is Nikse.SubtitleEdit.Logic.VideoPlayers.LibVlc11xDynamic)
+            {
+                var libVlc = (Nikse.SubtitleEdit.Logic.VideoPlayers.LibVlc11xDynamic)mediaPlayer.VideoPlayer;
+                var item = sender as ToolStripItem;
+
+                int number = int.Parse(item.Text);
+                libVlc.AudioTrackNumber = number;
+            }
         }
 
         private void textBoxListViewTextAlternate_TextChanged(object sender, EventArgs e)
@@ -8798,7 +8866,42 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
 
             int numberOfNewLines = textBoxListViewTextAlternate.Text.Length - textBoxListViewTextAlternate.Text.Replace(Environment.NewLine, " ").Length;
-            if (e.KeyCode == Keys.Enter && numberOfNewLines > 1)
+
+            if (e.Modifiers == Keys.None && numberOfNewLines < 1 && textBoxListViewTextAlternate.Text.Length >= Configuration.Settings.General.SubtitleLineMaximumLength)
+            {
+                if (1 == 1) // auto break setting!
+                {
+                    string newText;
+                    if (textBoxListViewTextAlternate.Text.Length > Configuration.Settings.General.SubtitleLineMaximumLength + 30)
+                    {
+                        newText = Utilities.AutoBreakLine(textBoxListViewTextAlternate.Text);
+                    }
+                    else
+                    {
+                        int lastSpace = textBoxListViewTextAlternate.Text.LastIndexOf(' ');
+                        if (lastSpace > 0)
+                            newText = textBoxListViewTextAlternate.Text.Remove(lastSpace, 1).Insert(lastSpace, Environment.NewLine);
+                        else
+                            newText = textBoxListViewTextAlternate.Text;
+                    }
+
+                    int autobreakIndex = newText.IndexOf(Environment.NewLine);
+                    if (autobreakIndex > 0)
+                    {
+                        int selectionStart = textBoxListViewTextAlternate.SelectionStart;
+                        int selectionLength = textBoxListViewTextAlternate.SelectionLength;
+                        textBoxListViewTextAlternate.Text = newText;
+                        if (selectionStart > autobreakIndex)
+                            selectionStart += Environment.NewLine.Length;
+                        if (selectionStart >= 0)
+                            textBoxListViewTextAlternate.SelectionStart = selectionStart;
+                        if (selectionLength >= 0)
+                            textBoxListViewTextAlternate.SelectionLength = selectionLength;
+                    }
+                }
+            }
+
+            if (e.KeyCode == Keys.Enter && e.Modifiers == Keys.None && numberOfNewLines > 1)
             {
                 e.SuppressKeyPress = true;
             }
@@ -8994,6 +9097,11 @@ namespace Nikse.SubtitleEdit.Forms
                 mediaPlayer.VideoPlayer.PlayRate = 1.6;
                 toolStripSplitButtonPlayRate.Image = imageListPlayRate.Images[1];
             }            
+        }
+
+        private void toolStripMenuItemVideo_Click(object sender, EventArgs e)
+        {
+
         }
 
     }

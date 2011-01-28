@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Net;
 using System.Text;
@@ -7,7 +8,6 @@ using System.Text.RegularExpressions;
 using System.Web;
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Logic;
-using System.Drawing;
 
 namespace Nikse.SubtitleEdit.Forms
 {
