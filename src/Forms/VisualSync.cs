@@ -26,6 +26,7 @@ namespace Nikse.SubtitleEdit.Forms
         readonly LanguageStructure.General _languageGeneral;
 
         public string VideoFileName { get; set; }
+        public int AudioTrackNumber { get; set; }
 
         public bool OKPressed { get; set; }
 
@@ -179,6 +180,12 @@ namespace Nikse.SubtitleEdit.Forms
                 Utilities.InitializeVideoPlayerAndContainer(MediaPlayerStart.VideoPlayer.VideoFileName, null, MediaPlayerEnd, VideoEndLoaded, VideoEndEnded);
             }
             timer1.Start();
+
+            if (AudioTrackNumber > -1 && MediaPlayerStart.VideoPlayer is Nikse.SubtitleEdit.Logic.VideoPlayers.LibVlc11xDynamic)
+            {
+                var libVlc = (Nikse.SubtitleEdit.Logic.VideoPlayers.LibVlc11xDynamic)MediaPlayerStart.VideoPlayer;
+                libVlc.AudioTrackNumber = AudioTrackNumber;
+            }
         }
 
         void VideoEndEnded(object sender, EventArgs e)
@@ -194,6 +201,12 @@ namespace Nikse.SubtitleEdit.Forms
             _endGoBackPosition = MediaPlayerEnd.CurrentPosition;
             _endStopPosition = _endGoBackPosition + 0.1;
             MediaPlayerEnd.Play();
+
+            if (AudioTrackNumber > -1 && MediaPlayerEnd.VideoPlayer is Nikse.SubtitleEdit.Logic.VideoPlayers.LibVlc11xDynamic)
+            {
+                var libVlc = (Nikse.SubtitleEdit.Logic.VideoPlayers.LibVlc11xDynamic)MediaPlayerEnd.VideoPlayer;
+                libVlc.AudioTrackNumber = AudioTrackNumber;
+            }
         }
 
         private VideoInfo ShowVideoInfo(string fileName)
@@ -458,6 +471,7 @@ namespace Nikse.SubtitleEdit.Forms
             openFileDialog1.FileName = string.Empty;
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
+                AudioTrackNumber = -1;
                 openFileDialog1.InitialDirectory = Path.GetDirectoryName(openFileDialog1.FileName);
                 OpenVideo(openFileDialog1.FileName);
             }

@@ -21,6 +21,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         string _subtitleFileName;
         string _videoFileName;
+        int _audioTrackNumber;
         Subtitle _subtitle;
         Subtitle _originalSubtitle;
         System.Collections.Generic.SortedDictionary<int, TimeSpan> _syncronizationPoints = new SortedDictionary<int, TimeSpan>();
@@ -65,12 +66,13 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        public void Initialize(Subtitle subtitle, string subtitleFileName, string videoFileName)
+        public void Initialize(Subtitle subtitle, string subtitleFileName, string videoFileName, int audioTrackNumber)
         {
             _subtitle = new Subtitle(subtitle);
             _originalSubtitle = subtitle;
             _subtitleFileName = subtitleFileName;
             _videoFileName = videoFileName;
+            _audioTrackNumber = audioTrackNumber;
             SubtitleListview1.Fill(subtitle);
             if (SubtitleListview1.Items.Count > 0)
                 SubtitleListview1.Items[0].Selected = true;
@@ -113,7 +115,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 SetSyncPoint getTime = new SetSyncPoint();
                 int index = SubtitleListview1.SelectedItems[0].Index;
-                getTime.Initialize(_subtitle, _subtitleFileName, index, _videoFileName);
+                getTime.Initialize(_subtitle, _subtitleFileName, index, _videoFileName, _audioTrackNumber);
                 if (getTime.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                 {
                     if (_syncronizationPoints.ContainsKey(index))

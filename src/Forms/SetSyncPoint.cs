@@ -14,6 +14,7 @@ namespace Nikse.SubtitleEdit.Forms
         double _goBackPosition;
         double _stopPosition = -1.0;
         Subtitle _subtitle;
+        int _audioTrackNumber = -1;
 
         public string VideoFileName { get; private set; }
 
@@ -51,9 +52,10 @@ namespace Nikse.SubtitleEdit.Forms
             get { return timeUpDownLine.TimeCode.TimeSpan; }
         }
 
-        public void Initialize(Subtitle subtitle, string subtitleFileName, int index, string videoFileName)
+        public void Initialize(Subtitle subtitle, string subtitleFileName, int index, string videoFileName, int audioTrackNumber)
         {
             _subtitle = subtitle;
+            _audioTrackNumber = audioTrackNumber;
             subtitleListView1.Fill(subtitle);
             _guess = subtitle.Paragraphs[index].StartTime.TimeSpan;
             subtitleListView1.Items[index].Selected = true;
@@ -100,6 +102,7 @@ namespace Nikse.SubtitleEdit.Forms
             openFileDialog1.FileName = string.Empty;
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
+                _audioTrackNumber = -1;
                 openFileDialog1.InitialDirectory = Path.GetDirectoryName(openFileDialog1.FileName);
                 OpenVideo(openFileDialog1.FileName);
             }
@@ -142,6 +145,12 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 videoPlayerContainer1.VideoPlayer.CurrentPosition = _guess.TotalMilliseconds / 1000.0;
                 videoPlayerContainer1.RefreshProgressBar();
+            }
+
+            if (_audioTrackNumber > -1 && videoPlayerContainer1.VideoPlayer is Nikse.SubtitleEdit.Logic.VideoPlayers.LibVlc11xDynamic)
+            {
+                var libVlc = (Nikse.SubtitleEdit.Logic.VideoPlayers.LibVlc11xDynamic)videoPlayerContainer1.VideoPlayer;
+                libVlc.AudioTrackNumber = _audioTrackNumber;
             }
         }
 

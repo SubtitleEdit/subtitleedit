@@ -37,6 +37,7 @@ namespace Nikse.SubtitleEdit.Forms
         string _subtitleAlternateFileName;
         string _fileName;
         string _videoFileName;
+        int _videoAudioTrackNumber = -1;
 
         public string VideoFileName
         {
@@ -894,6 +895,7 @@ namespace Nikse.SubtitleEdit.Forms
                 var visualSync = new VisualSync();
                 _formPositionsAndSizes.SetPositionAndSize(visualSync);
                 visualSync.VideoFileName = _videoFileName;
+                visualSync.AudioTrackNumber = _videoAudioTrackNumber;
 
                 SaveSubtitleListviewIndexes();
                 if (onlySelectedLines)
@@ -908,6 +910,7 @@ namespace Nikse.SubtitleEdit.Forms
                     visualSync.Initialize(toolStripButtonVisualSync.Image as Bitmap, _subtitle, _fileName, _language.VisualSyncTitle, CurrentFrameRate);
                 }
 
+                mediaPlayer.Pause();
                 if (visualSync.ShowDialog(this) == DialogResult.OK)
                 {
                     MakeHistoryForUndo(_language.BeforeVisualSync);
@@ -1067,6 +1070,7 @@ namespace Nikse.SubtitleEdit.Forms
                     _findHelper = null;
                     _spellCheckForm = null;
                     _videoFileName = null;
+                    _videoAudioTrackNumber = -1;
                     labelVideoInfo.Text = Configuration.Settings.Language.General.NoVideoLoaded;
                     AudioWaveForm.WavePeaks = null;
                     AudioWaveForm.Invalidate();
@@ -1136,6 +1140,7 @@ namespace Nikse.SubtitleEdit.Forms
                         _findHelper = null;
                         _spellCheckForm = null;
                         _videoFileName = null;
+                        _videoAudioTrackNumber = -1;
                         labelVideoInfo.Text = Configuration.Settings.Language.General.NoVideoLoaded;
                         AudioWaveForm.WavePeaks = null;
                         AudioWaveForm.Invalidate();
@@ -1489,6 +1494,7 @@ namespace Nikse.SubtitleEdit.Forms
             _findHelper = null;
             _spellCheckForm = null;
             _videoFileName = null;
+            _videoAudioTrackNumber = -1;
             labelVideoInfo.Text = Configuration.Settings.Language.General.NoVideoLoaded;
             AudioWaveForm.WavePeaks = null;
             AudioWaveForm.Invalidate();
@@ -3721,39 +3727,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             int numberOfNewLines = textBoxListViewText.Text.Length - textBoxListViewText.Text.Replace(Environment.NewLine, " ").Length;
 
-            if (e.Modifiers == Keys.None && numberOfNewLines < 1 && textBoxListViewText.Text.Length > Configuration.Settings.General.SubtitleLineMaximumLength-5)
-            {
-                if (1 == 1) // auto break setting!
-                {
-                    string newText;
-                    if (textBoxListViewText.Text.Length > Configuration.Settings.General.SubtitleLineMaximumLength + 30)
-                    {
-                        newText = Utilities.AutoBreakLine(textBoxListViewText.Text);
-                    }
-                    else
-                    {
-                        int lastSpace = textBoxListViewText.Text.LastIndexOf(' ');
-                        if (lastSpace > 0)
-                            newText = textBoxListViewText.Text.Remove(lastSpace, 1).Insert(lastSpace, Environment.NewLine);
-                        else
-                            newText = textBoxListViewText.Text;
-                    }
-
-                    int autobreakIndex = newText.IndexOf(Environment.NewLine);
-                    if (autobreakIndex > 0)
-                    {
-                        int selectionStart = textBoxListViewText.SelectionStart;
-                        int selectionLength = textBoxListViewText.SelectionLength;
-                        textBoxListViewText.Text = newText;
-                        if (selectionStart > autobreakIndex)
-                            selectionStart += Environment.NewLine.Length;
-                        if (selectionStart >= 0)
-                            textBoxListViewText.SelectionStart = selectionStart;
-                        if (selectionLength >= 0)
-                            textBoxListViewText.SelectionLength = selectionLength;
-                    }
-                }
-            }
+            CheckAutoWrap(textBoxListViewText, e, numberOfNewLines);
 
             if (e.KeyCode == Keys.Enter && e.Modifiers == Keys.None && numberOfNewLines > 1)
             {
@@ -3798,6 +3772,43 @@ namespace Nikse.SubtitleEdit.Forms
 
             // last key down in text
             _lastTextKeyDownTicks = DateTime.Now.Ticks;
+        }
+
+        private void CheckAutoWrap(TextBox textBox, KeyEventArgs e, int numberOfNewLines)
+        {
+            if (e.Modifiers == Keys.None && numberOfNewLines < 1 && textBox.Text.Length > Configuration.Settings.General.SubtitleLineMaximumLength - 3)
+            {
+                if (Configuration.Settings.General.AutoWrapLineWhileTyping) // only if auto-break-setting is true
+                {
+                    string newText;
+                    if (textBox.Text.Length > Configuration.Settings.General.SubtitleLineMaximumLength + 30)
+                    {
+                        newText = Utilities.AutoBreakLine(textBox.Text);
+                    }
+                    else
+                    {
+                        int lastSpace = textBox.Text.LastIndexOf(' ');
+                        if (lastSpace > 0)
+                            newText = textBox.Text.Remove(lastSpace, 1).Insert(lastSpace, Environment.NewLine);
+                        else
+                            newText = textBox.Text;
+                    }
+
+                    int autobreakIndex = newText.IndexOf(Environment.NewLine);
+                    if (autobreakIndex > 0)
+                    {
+                        int selectionStart = textBox.SelectionStart;
+                        int selectionLength = textBox.SelectionLength;
+                        textBox.Text = newText;
+                        if (selectionStart > autobreakIndex)
+                            selectionStart += Environment.NewLine.Length;
+                        if (selectionStart >= 0)
+                            textBox.SelectionStart = selectionStart;
+                        if (selectionLength >= 0)
+                            textBox.SelectionLength = selectionLength;
+                    }
+                }
+            }
         }
 
         private void SplitLineToolStripMenuItemClick(object sender, EventArgs e)
@@ -6110,7 +6121,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (importText.ShowDialog(this) == System.Windows.Forms.DialogResult.OK)
                 {
                     SyncPointsSync syncPointSync = new SyncPointsSync();
-                    syncPointSync.Initialize(importText.FixedSubtitle, _fileName, importText.VideoFileName);
+                    syncPointSync.Initialize(importText.FixedSubtitle, _fileName, importText.VideoFileName, _videoAudioTrackNumber);
                     if (syncPointSync.ShowDialog(this) == System.Windows.Forms.DialogResult.OK)
                     {
                         ResetSubtitle();
@@ -6134,7 +6145,8 @@ namespace Nikse.SubtitleEdit.Forms
             SyncPointsSync pointSync = new SyncPointsSync();
             _formPositionsAndSizes.SetPositionAndSize(pointSync);
 
-            pointSync.Initialize(_subtitle, _fileName,  _videoFileName);
+            pointSync.Initialize(_subtitle, _fileName,  _videoFileName, _videoAudioTrackNumber);
+            mediaPlayer.Pause();
             if (pointSync.ShowDialog(this) == DialogResult.OK)
             {
                 _subtitleListViewIndex = -1;
@@ -8797,6 +8809,7 @@ namespace Nikse.SubtitleEdit.Forms
             mediaPlayer.VideoPlayer = null;
             timer1.Stop();
             _videoFileName = null;
+            _videoAudioTrackNumber = -1;
             labelVideoInfo.Text = Configuration.Settings.Language.General.NoVideoLoaded;
             AudioWaveForm.WavePeaks = null;
             AudioWaveForm.Invalidate();            
@@ -8806,20 +8819,19 @@ namespace Nikse.SubtitleEdit.Forms
         {
             closeVideoToolStripMenuItem.Visible = !string.IsNullOrEmpty(_videoFileName);
 
-
             toolStripMenuItemSetAudioTrack.Visible = false;
             if (mediaPlayer.VideoPlayer != null && mediaPlayer.VideoPlayer is Nikse.SubtitleEdit.Logic.VideoPlayers.LibVlc11xDynamic)
             {
                 var libVlc = (Nikse.SubtitleEdit.Logic.VideoPlayers.LibVlc11xDynamic)mediaPlayer.VideoPlayer;
                 int numberOfTracks = libVlc.AudioTrackCount;
-                int currentTrackNumber = libVlc.AudioTrackNumber;
-                if (numberOfTracks > 2)
+                _videoAudioTrackNumber = libVlc.AudioTrackNumber;
+                if (numberOfTracks > 1)
                 {
                     toolStripMenuItemSetAudioTrack.DropDownItems.Clear();
-                    for (int i = 0; i < numberOfTracks-1; i++)
+                    for (int i = 0; i < numberOfTracks; i++)
                     {
                         toolStripMenuItemSetAudioTrack.DropDownItems.Add((i + 1).ToString(), null, ChooseAudioTrack);
-                        if (i+1 == currentTrackNumber)
+                        if (i == _videoAudioTrackNumber)
                             toolStripMenuItemSetAudioTrack.DropDownItems[toolStripMenuItemSetAudioTrack.DropDownItems.Count - 1].Select();
                     }
                     toolStripMenuItemSetAudioTrack.Visible = true;
@@ -8835,7 +8847,9 @@ namespace Nikse.SubtitleEdit.Forms
                 var item = sender as ToolStripItem;
 
                 int number = int.Parse(item.Text);
+                number--;
                 libVlc.AudioTrackNumber = number;
+                _videoAudioTrackNumber = number;
             }
         }
 
@@ -8867,39 +8881,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             int numberOfNewLines = textBoxListViewTextAlternate.Text.Length - textBoxListViewTextAlternate.Text.Replace(Environment.NewLine, " ").Length;
 
-            if (e.Modifiers == Keys.None && numberOfNewLines < 1 && textBoxListViewTextAlternate.Text.Length >= Configuration.Settings.General.SubtitleLineMaximumLength)
-            {
-                if (1 == 1) // auto break setting!
-                {
-                    string newText;
-                    if (textBoxListViewTextAlternate.Text.Length > Configuration.Settings.General.SubtitleLineMaximumLength + 30)
-                    {
-                        newText = Utilities.AutoBreakLine(textBoxListViewTextAlternate.Text);
-                    }
-                    else
-                    {
-                        int lastSpace = textBoxListViewTextAlternate.Text.LastIndexOf(' ');
-                        if (lastSpace > 0)
-                            newText = textBoxListViewTextAlternate.Text.Remove(lastSpace, 1).Insert(lastSpace, Environment.NewLine);
-                        else
-                            newText = textBoxListViewTextAlternate.Text;
-                    }
-
-                    int autobreakIndex = newText.IndexOf(Environment.NewLine);
-                    if (autobreakIndex > 0)
-                    {
-                        int selectionStart = textBoxListViewTextAlternate.SelectionStart;
-                        int selectionLength = textBoxListViewTextAlternate.SelectionLength;
-                        textBoxListViewTextAlternate.Text = newText;
-                        if (selectionStart > autobreakIndex)
-                            selectionStart += Environment.NewLine.Length;
-                        if (selectionStart >= 0)
-                            textBoxListViewTextAlternate.SelectionStart = selectionStart;
-                        if (selectionLength >= 0)
-                            textBoxListViewTextAlternate.SelectionLength = selectionLength;
-                    }
-                }
-            }
+            CheckAutoWrap(textBoxListViewTextAlternate, e, numberOfNewLines);
 
             if (e.KeyCode == Keys.Enter && e.Modifiers == Keys.None && numberOfNewLines > 1)
             {
