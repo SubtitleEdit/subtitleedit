@@ -318,7 +318,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
         {
             get
             {
-                return _libvlc_audio_get_track_count(_mediaPlayer);
+                return _libvlc_audio_get_track_count(_mediaPlayer)-1;
             }
         }
 
@@ -327,11 +327,11 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
         {
             get
             {
-                return _libvlc_audio_get_track(_mediaPlayer);
+                return _libvlc_audio_get_track(_mediaPlayer)-1;
             }
             set
             {
-                _libvlc_audio_set_track(_mediaPlayer, value);
+                _libvlc_audio_set_track(_mediaPlayer, value+1);
             }
         }
 
@@ -481,9 +481,11 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
 
             if (state == Ended)
             {
-                Stop();
+                // hack to make sure VLC is in ready state
+                Stop(); 
                 Play();
                 Pause();
+
                 OnVideoEnded.Invoke(_mediaPlayer, new EventArgs());
             }
         }
