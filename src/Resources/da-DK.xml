@@ -234,6 +234,7 @@
     <FixMissingSpaces>Ret manglende mellemrum</FixMissingSpaces>
     <BreakLongLines>Ombryd lange linjer</BreakLongLines>
     <RemoveLineBreaks>Fjern linjeskift i korte afsnit med kun én sætning</RemoveLineBreaks>
+    <RemoveLineBreaksAll>Fjern linjeskift i korte tekster (undtagen dialog)</RemoveLineBreaksAll>
     <FixUppercaseIInsindeLowercaseWords>Ret store bogstaver 'i' inde i små ord (OCR-fejl)</FixUppercaseIInsindeLowercaseWords>
     <FixDoubleApostrophes>Ret dobbelt apostrof tegn ('') til en enkelt qoute ( ")</FixDoubleApostrophes>
     <AddPeriods>Tilføj punktum efter de linjer, hvor næste linje starter med stort bogstav</AddPeriods>
@@ -266,6 +267,7 @@
     <XIsChangedToUppercase>{0} i'er skiftet til store bogstaver</XIsChangedToUppercase>
     <FixFirstLetterToUppercaseAfterParagraph>Ret første bogstav til stort bogstav efter afsnit</FixFirstLetterToUppercaseAfterParagraph>
     <MergeShortLine>Flet kort line</MergeShortLine>
+    <MergeShortLineAll>Flet kort linjer (undtagen dialog)</MergeShortLineAll>
     <XLineBreaksAdded>{0} linjeskift indsættes</XLineBreaksAdded>
     <BreakLongLine>Brryd lange linjer</BreakLongLine>
     <FixLongDisplayTime>Ret lang visningstid</FixLongDisplayTime>
@@ -367,6 +369,9 @@
     <TextFiles>Tekstfiler</TextFiles>
     <PreviewLinesModifiedX>Preview - ændrede linjer: {0}</PreviewLinesModifiedX>
   </ImportText>
+  <Interjections>
+    <Title>Følelsesudbrud</Title>
+  </Interjections>
   <Main>
     <Menu>
       <File>
@@ -421,6 +426,7 @@
       <Video>
         <Title>Video</Title>
         <OpenVideo>Åbn video fil...</OpenVideo>
+        <ChooseAudioTrack>Vælg lyd spor</ChooseAudioTrack>
         <CloseVideo>Luk videofil</CloseVideo>
         <ShowHideVideo>Vis/skjul video</ShowHideVideo>
         <ShowHideWaveForm>Vis/skjul lyd kurve</ShowHideWaveForm>
@@ -830,6 +836,8 @@ Fortsæt?</SubtitleAppendPrompt>
     <After>Efter</After>
     <LinesFoundX>Linjer fundet: {0}</LinesFoundX>
     <RemoveTextIfContains>Fjern tekst, hvis indeholder:</RemoveTextIfContains>
+    <RemoveInterjections>Fjern følelsesudbrud (Ahh, hmm, osv.)</RemoveInterjections>
+    <EditInterjections>Rediger...</EditInterjections>
   </RemoveTextFromHearImpaired>
   <ReplaceDialog>
     <Title>Erstat</Title>
@@ -882,6 +890,7 @@ Fortsæt?</SubtitleAppendPrompt>
     <DefaultFileEncoding>Standard filkodningen</DefaultFileEncoding>
     <AutoDetectAnsiEncoding>Auto opdag ANSI-kodning</AutoDetectAnsiEncoding>
     <SubtitleLineMaximumLength>undertekst max. længde</SubtitleLineMaximumLength>
+    <AutoWrapWhileTyping>Auto-ombryd tekst mens du skriver</AutoWrapWhileTyping>
     <SubtitleFont>undertekst skrifttype</SubtitleFont>
     <SubtitleFontSize>undertekst skriftstørrelse</SubtitleFontSize>
     <SubtitleFontColor>Undertekst skriftfarve</SubtitleFontColor>
@@ -968,6 +977,8 @@ Fortsæt?</SubtitleAppendPrompt>
     <ShowEarlier>Vis tidligere</ShowEarlier>
     <ShowLater>Vis senere</ShowLater>
     <TotalAdjustmentX>Samlede justering: {0}</TotalAdjustmentX>
+    <AllLines>Alle linjer</AllLines>
+    <SelectedLinesonly>Valgte linjer</SelectedLinesonly>
   </ShowEarlierLater>
   <ShowHistory>
     <Title>Historik (fortryd)</Title>
