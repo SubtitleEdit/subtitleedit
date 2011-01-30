@@ -378,7 +378,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             
             textBoxMusicSymbolsToReplace.Text = toolsSettings.MusicSymbolToReplace;
-
+            checkBoxFixCommonOcrErrorsUsingHardcodedRules.Checked = toolsSettings.OcrFixUseHardcodedRules;
             checkBoxSpellCheckAutoChangeNames.Checked = toolsSettings.SpellCheckAutoChangeNames;
             
             
@@ -617,6 +617,7 @@ namespace Nikse.SubtitleEdit.Forms
             toolsSettings.MusicSymbol = comboBoxToolsMusicSymbol.SelectedItem.ToString();
             toolsSettings.MusicSymbolToReplace = textBoxMusicSymbolsToReplace.Text;
             toolsSettings.SpellCheckAutoChangeNames = checkBoxSpellCheckAutoChangeNames.Checked;
+            toolsSettings.OcrFixUseHardcodedRules = checkBoxFixCommonOcrErrorsUsingHardcodedRules.Checked;
 
             WordListSettings wordListSettings = Configuration.Settings.WordLists;
             wordListSettings.UseOnlineNamesEtc = checkBoxNamesEtcOnline.Checked;

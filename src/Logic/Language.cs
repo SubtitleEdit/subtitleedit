@@ -1142,6 +1142,7 @@ can edit in same subtitle file (collaboration)",
                 MergeLinesShorterThan = "Merge lines shorter than",
                 MusicSymbol = "Music symbol",                
                 MusicSymbolsToReplace = "Music symbols to replace (separate by space)",
+                FixCommonOcrErrorsUseHardcodedRules = "Fix common OCR errors - also use hardcoded rules",
             };
 
             ShowEarlierLater = new LanguageStructure.ShowEarlierLater
