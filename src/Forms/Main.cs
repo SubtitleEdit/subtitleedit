@@ -7362,7 +7362,6 @@ namespace Nikse.SubtitleEdit.Forms
 
                 MakeHistoryForUndo(_language.BeforeSetStartTimeAndOffsetTheRest + "  " +_subtitle.Paragraphs[index].Number.ToString() + " - " + tc.ToString());
 
-
                 double offset = _subtitle.Paragraphs[index].StartTime.TotalMilliseconds - tc.TotalMilliseconds;
                 for (int i = index; i < SubtitleListview1.Items.Count; i++)
                 {
@@ -7370,6 +7369,24 @@ namespace Nikse.SubtitleEdit.Forms
                     _subtitle.Paragraphs[i].EndTime = new TimeCode(TimeSpan.FromMilliseconds(_subtitle.Paragraphs[i].EndTime.TotalMilliseconds - offset));
                     SubtitleListview1.SetStartTime(i, _subtitle.Paragraphs[i]);
                 }
+
+                if (Configuration.Settings.General.AllowEditOfOriginalSubtitle && _subtitleAlternate != null && _subtitleAlternate.Paragraphs.Count > 0)
+                {
+                    Paragraph original = Utilities.GetOriginalParagraph(index, _subtitle.Paragraphs[index], _subtitleAlternate.Paragraphs);
+                    if (original != null)
+                    {
+                        index = _subtitleAlternate.GetIndex(original);
+                        for (int i = index; i < _subtitleAlternate.Paragraphs.Count; i++)
+                        {
+                            _subtitleAlternate.Paragraphs[i].StartTime = new TimeCode(TimeSpan.FromMilliseconds(_subtitleAlternate.Paragraphs[i].StartTime.TotalMilliseconds - offset));
+                            _subtitleAlternate.Paragraphs[i].EndTime = new TimeCode(TimeSpan.FromMilliseconds(_subtitleAlternate.Paragraphs[i].EndTime.TotalMilliseconds - offset));
+                        }
+                        SaveSubtitleListviewIndexes();
+                        SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
+                        RestoreSubtitleListviewIndexes();
+                    }
+                }
+
                 timeUpDownStartTime.MaskedTextBox.TextChanged += MaskedTextBox_TextChanged;
             }
         }
