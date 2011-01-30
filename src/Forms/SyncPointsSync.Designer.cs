@@ -31,7 +31,7 @@
             this.groupBoxImportResult = new System.Windows.Forms.GroupBox();
             this.listBoxSyncPoints = new System.Windows.Forms.ListBox();
             this.labelNoOfSyncPoints = new System.Windows.Forms.Label();
-            this.labelSyncHelp = new System.Windows.Forms.Label();
+            this.labelSyncInfo = new System.Windows.Forms.Label();
             this.buttonRemoveSyncPoint = new System.Windows.Forms.Button();
             this.buttonSetSyncPoint = new System.Windows.Forms.Button();
             this.SubtitleListview1 = new Nikse.SubtitleEdit.Controls.SubtitleListView();
@@ -48,7 +48,7 @@
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBoxImportResult.Controls.Add(this.listBoxSyncPoints);
             this.groupBoxImportResult.Controls.Add(this.labelNoOfSyncPoints);
-            this.groupBoxImportResult.Controls.Add(this.labelSyncHelp);
+            this.groupBoxImportResult.Controls.Add(this.labelSyncInfo);
             this.groupBoxImportResult.Controls.Add(this.buttonRemoveSyncPoint);
             this.groupBoxImportResult.Controls.Add(this.buttonSetSyncPoint);
             this.groupBoxImportResult.Controls.Add(this.SubtitleListview1);
@@ -78,15 +78,15 @@
             this.labelNoOfSyncPoints.TabIndex = 16;
             this.labelNoOfSyncPoints.Text = "Sync points: 0";
             // 
-            // labelSyncHelp
+            // labelSyncInfo
             // 
-            this.labelSyncHelp.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.labelSyncHelp.AutoSize = true;
-            this.labelSyncHelp.Location = new System.Drawing.Point(6, 376);
-            this.labelSyncHelp.Name = "labelSyncHelp";
-            this.labelSyncHelp.Size = new System.Drawing.Size(284, 13);
-            this.labelSyncHelp.TabIndex = 17;
-            this.labelSyncHelp.Text = "Set at least two sync points to make rough syncronization";
+            this.labelSyncInfo.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.labelSyncInfo.AutoSize = true;
+            this.labelSyncInfo.Location = new System.Drawing.Point(6, 376);
+            this.labelSyncInfo.Name = "labelSyncInfo";
+            this.labelSyncInfo.Size = new System.Drawing.Size(284, 13);
+            this.labelSyncInfo.TabIndex = 17;
+            this.labelSyncInfo.Text = "Set at least two sync points to make rough syncronization";
             // 
             // buttonRemoveSyncPoint
             // 
@@ -117,6 +117,7 @@
                         | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.SubtitleListview1.FirstVisibleIndex = -1;
+            this.SubtitleListview1.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.SubtitleListview1.FullRowSelect = true;
             this.SubtitleListview1.GridLines = true;
             this.SubtitleListview1.HideSelection = false;
@@ -192,7 +193,7 @@
         #endregion
 
         private System.Windows.Forms.GroupBox groupBoxImportResult;
-        private System.Windows.Forms.Label labelSyncHelp;
+        private System.Windows.Forms.Label labelSyncInfo;
         private System.Windows.Forms.Label labelNoOfSyncPoints;
         private System.Windows.Forms.Button buttonSetSyncPoint;
         private System.Windows.Forms.Button buttonApplySync;

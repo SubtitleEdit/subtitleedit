@@ -1233,7 +1233,7 @@ can edit in same subtitle file (collaboration)",
                 SetSyncPoint = "Set sync point",
                 RemoveSyncPoint = "Remove sync point",
                 SyncPointsX = "Sync points: {0}",
-                Description = "Point synchronization requires at least 2 synchronization points",
+                Info = "One sync point will adjust position, two or more sync points will adjust position and speed",
             };
 
             UnknownSubtitle = new LanguageStructure.UnknownSubtitle
