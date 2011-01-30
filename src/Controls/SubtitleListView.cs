@@ -101,7 +101,7 @@ namespace Nikse.SubtitleEdit.Controls
             }
             else if (!IsAlternateTextColumnVisible && !IsExtraColumnVisible)
             {
-                int restWidth = lengthAvailable - 15;
+                int restWidth = lengthAvailable - 23;
                 Columns[ColumnIndexText].Width = restWidth;
             }
             else if (!IsAlternateTextColumnVisible && IsExtraColumnVisible)

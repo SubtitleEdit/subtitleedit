@@ -853,12 +853,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\pictureBoxReverse.Image.png" />
-    <None Include="Resources\pictureBoxReverseMouseDown.Image.png" />
-    <None Include="Resources\pictureBoxReverseMouseOver.Image.png" />
-    <None Include="Resources\pictureBoxFastForward.Image.png" />
-    <None Include="Resources\pictureBoxFastForwardMouseDown.Image.png" />
-    <None Include="Resources\pictureBoxFastForwardMouseOver.Image.png" />
     <Content Include="Resources\zh-CHS.xml" />
     <None Include="Web References\SeNetworkService\SeService.disco" />
     <None Include="DLLs\Interop.QuartzTypeLib.dll" />
