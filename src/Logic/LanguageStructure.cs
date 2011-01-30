@@ -1167,7 +1167,7 @@
             public string SetSyncPoint { get; set; }
             public string RemoveSyncPoint { get; set; }
             public string SyncPointsX { get; set; }
-            public string Description { get; set; }
+            public string Info { get; set; }
         }
 
         public class UnknownSubtitle
