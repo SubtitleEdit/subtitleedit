@@ -291,7 +291,6 @@ namespace Nikse.SubtitleEdit.Forms
                 toolStripComboBoxWaveForm.SelectedIndexChanged += toolStripComboBoxWaveForm_SelectedIndexChanged;
 
                 FixLargeFonts();
-                //this.Width = (int)(5304958 / (8 - 8 + (this.Width) - this.Width));
                 _timerAddHistoryWhenDone.Interval = 500;
                 _timerAddHistoryWhenDone.Tick += new EventHandler(timerAddHistoryWhenDone_Tick);
             }
@@ -1075,16 +1074,19 @@ namespace Nikse.SubtitleEdit.Forms
                     AudioWaveForm.WavePeaks = null;
                     AudioWaveForm.Invalidate();
 
-                    if (!string.IsNullOrEmpty(videoFileName) && File.Exists(videoFileName))
+                    if (Configuration.Settings.General.ShowVideoPlayer || Configuration.Settings.General.ShowWaveForm)
                     {
-                        OpenVideo(videoFileName);                        
-                    }
-                    else if (!string.IsNullOrEmpty(fileName) && (toolStripButtonToogleVideo.Checked || toolStripButtonToogleWaveForm.Checked))
-                    {
-                        TryToFindAndOpenVideoFile(Path.Combine(Path.GetDirectoryName(fileName), Path.GetFileNameWithoutExtension(fileName)));
+                        if (!string.IsNullOrEmpty(videoFileName) && File.Exists(videoFileName))
+                        {
+                            OpenVideo(videoFileName);
+                        }
+                        else if (!string.IsNullOrEmpty(fileName) && (toolStripButtonToogleVideo.Checked || toolStripButtonToogleWaveForm.Checked))
+                        {
+                            TryToFindAndOpenVideoFile(Path.Combine(Path.GetDirectoryName(fileName), Path.GetFileNameWithoutExtension(fileName)));
+                        }
                     }
                     videoFileLoaded = _videoFileName != null;
-
+                    
 
                     if (Configuration.Settings.RecentFiles.Files.Count > 0 &&
                         Configuration.Settings.RecentFiles.Files[0].FileName == fileName)
@@ -6353,11 +6355,12 @@ namespace Nikse.SubtitleEdit.Forms
         private void OpenVideo(string fileName)
         {            
             if (File.Exists(fileName))
-            {
+            {                
                 FileInfo fi = new FileInfo(fileName);
                 if (fi.Length < 1000)
                     return;
 
+                Cursor = Cursors.WaitCursor;
                 VideoFileName = fileName;
                 if (mediaPlayer.VideoPlayer != null)
                 {
@@ -6367,7 +6370,6 @@ namespace Nikse.SubtitleEdit.Forms
 
                 VideoInfo videoInfo = ShowVideoInfo(fileName);
                 toolStripComboBoxFrameRate.Text = videoInfo.FramesPerSecond.ToString();
-
 
                 Utilities.InitializeVideoPlayerAndContainer(fileName, videoInfo, mediaPlayer, VideoLoaded, VideoEnded);
                 mediaPlayer.Volume = 0;
@@ -6387,6 +6389,7 @@ namespace Nikse.SubtitleEdit.Forms
                     AudioWaveForm.SetPosition(0, _subtitle, 0, 0);
                     timerWaveForm.Start();
                 }
+                Cursor = Cursors.Default;
             }
         }
 
@@ -6409,19 +6412,6 @@ namespace Nikse.SubtitleEdit.Forms
             _videoInfo = Utilities.GetVideoInfo(fileName, delegate { Application.DoEvents(); });
             var info = new FileInfo(fileName);
             long fileSizeInBytes = info.Length;
-
-            //labelVideoInfo.Text = string.Format(_languageGeneral.FileNameXAndSize, fileName, Utilities.FormatBytesToDisplayFileSize(fileSizeInBytes)) + Environment.NewLine +
-            //                      string.Format(_languageGeneral.ResolutionX, +_videoInfo.Width + "x" + _videoInfo.Height) + "    ";
-            //if (_videoInfo.FramesPerSecond > 5 && _videoInfo.FramesPerSecond < 200)
-            //    labelVideoInfo.Text += string.Format(_languageGeneral.FrameRateX + "        ", _videoInfo.FramesPerSecond);
-            //if (_videoInfo.TotalFrames > 10)
-            //    labelVideoInfo.Text += string.Format(_languageGeneral.TotalFramesX + "         ", (int)_videoInfo.TotalFrames);
-            //if (!string.IsNullOrEmpty(_videoInfo.VideoCodec))
-            //    labelVideoInfo.Text += string.Format(_languageGeneral.VideoEncodingX, _videoInfo.VideoCodec) + "        ";
-
-            //TimeSpan span = TimeSpan.FromMilliseconds(_videoInfo.TotalMilliseconds);
-            //_totalPositionString = " / " + string.Format("{0:00}:{1:00}:{2:00},{3:000}", span.Hours, span.Minutes, span.Seconds, span.Milliseconds);
-
             return _videoInfo;
         }
 
@@ -6456,7 +6446,6 @@ namespace Nikse.SubtitleEdit.Forms
                 else
                     mediaPlayer.CurrentPosition = 0;
                 Utilities.ShowSubtitle(_subtitle.Paragraphs, videoPlayerContainer);
-                //                ShowPosition(labelPosition, mediaPlayer);
             }
         }
 

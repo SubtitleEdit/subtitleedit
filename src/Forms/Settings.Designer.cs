@@ -33,6 +33,7 @@
             this.tabControlSettings = new System.Windows.Forms.TabControl();
             this.tabPageGenerel = new System.Windows.Forms.TabPage();
             this.groupBoxMiscellaneous = new System.Windows.Forms.GroupBox();
+            this.checkBoxAutoWrapWhileTyping = new System.Windows.Forms.CheckBox();
             this.labelMergeShortLines = new System.Windows.Forms.Label();
             this.comboBoxMergeShortLineLength = new System.Windows.Forms.ComboBox();
             this.checkBoxAllowEditOfOriginalSubtitle = new System.Windows.Forms.CheckBox();
@@ -195,7 +196,7 @@
             this.colorDialogSSAStyle = new System.Windows.Forms.ColorDialog();
             this.fontDialogSSAStyle = new System.Windows.Forms.FontDialog();
             this.labelStatus = new System.Windows.Forms.Label();
-            this.checkBoxAutoWrapWhileTyping = new System.Windows.Forms.CheckBox();
+            this.checkBoxFixCommonOcrErrorsUsingHardcodedRules = new System.Windows.Forms.CheckBox();
             this.tabControlSettings.SuspendLayout();
             this.tabPageGenerel.SuspendLayout();
             this.groupBoxMiscellaneous.SuspendLayout();
@@ -329,6 +330,16 @@
             this.groupBoxMiscellaneous.TabStop = false;
             this.groupBoxMiscellaneous.Text = "Miscellaneous";
             // 
+            // checkBoxAutoWrapWhileTyping
+            // 
+            this.checkBoxAutoWrapWhileTyping.AutoSize = true;
+            this.checkBoxAutoWrapWhileTyping.Location = new System.Drawing.Point(193, 146);
+            this.checkBoxAutoWrapWhileTyping.Name = "checkBoxAutoWrapWhileTyping";
+            this.checkBoxAutoWrapWhileTyping.Size = new System.Drawing.Size(132, 17);
+            this.checkBoxAutoWrapWhileTyping.TabIndex = 4;
+            this.checkBoxAutoWrapWhileTyping.Text = "Auto-wrap while typing";
+            this.checkBoxAutoWrapWhileTyping.UseVisualStyleBackColor = true;
+            // 
             // labelMergeShortLines
             // 
             this.labelMergeShortLines.AutoSize = true;
@@ -352,7 +363,7 @@
             this.checkBoxAllowEditOfOriginalSubtitle.AutoSize = true;
             this.checkBoxAllowEditOfOriginalSubtitle.Location = new System.Drawing.Point(436, 296);
             this.checkBoxAllowEditOfOriginalSubtitle.Name = "checkBoxAllowEditOfOriginalSubtitle";
-            this.checkBoxAllowEditOfOriginalSubtitle.Size = new System.Drawing.Size(160, 17);
+            this.checkBoxAllowEditOfOriginalSubtitle.Size = new System.Drawing.Size(155, 17);
             this.checkBoxAllowEditOfOriginalSubtitle.TabIndex = 24;
             this.checkBoxAllowEditOfOriginalSubtitle.Text = "Allow edit of original subtitle";
             this.checkBoxAllowEditOfOriginalSubtitle.UseVisualStyleBackColor = true;
@@ -520,7 +531,7 @@
             this.checkBoxRememberWindowPosition.AutoSize = true;
             this.checkBoxRememberWindowPosition.Location = new System.Drawing.Point(436, 101);
             this.checkBoxRememberWindowPosition.Name = "checkBoxRememberWindowPosition";
-            this.checkBoxRememberWindowPosition.Size = new System.Drawing.Size(223, 17);
+            this.checkBoxRememberWindowPosition.Size = new System.Drawing.Size(222, 17);
             this.checkBoxRememberWindowPosition.TabIndex = 15;
             this.checkBoxRememberWindowPosition.Text = "Remember main window position and size";
             this.checkBoxRememberWindowPosition.UseVisualStyleBackColor = true;
@@ -567,7 +578,7 @@
             this.checkBoxStartInSourceView.AutoSize = true;
             this.checkBoxStartInSourceView.Location = new System.Drawing.Point(436, 124);
             this.checkBoxStartInSourceView.Name = "checkBoxStartInSourceView";
-            this.checkBoxStartInSourceView.Size = new System.Drawing.Size(121, 17);
+            this.checkBoxStartInSourceView.Size = new System.Drawing.Size(119, 17);
             this.checkBoxStartInSourceView.TabIndex = 16;
             this.checkBoxStartInSourceView.Text = "Start in source view";
             this.checkBoxStartInSourceView.UseVisualStyleBackColor = true;
@@ -577,7 +588,7 @@
             this.checkBoxReopenLastOpened.AutoSize = true;
             this.checkBoxReopenLastOpened.Location = new System.Drawing.Point(444, 52);
             this.checkBoxReopenLastOpened.Name = "checkBoxReopenLastOpened";
-            this.checkBoxReopenLastOpened.Size = new System.Drawing.Size(145, 17);
+            this.checkBoxReopenLastOpened.Size = new System.Drawing.Size(140, 17);
             this.checkBoxReopenLastOpened.TabIndex = 13;
             this.checkBoxReopenLastOpened.Text = "Start with last file loaded";
             this.checkBoxReopenLastOpened.UseVisualStyleBackColor = true;
@@ -587,7 +598,7 @@
             this.checkBoxRememberRecentFiles.AutoSize = true;
             this.checkBoxRememberRecentFiles.Location = new System.Drawing.Point(436, 28);
             this.checkBoxRememberRecentFiles.Name = "checkBoxRememberRecentFiles";
-            this.checkBoxRememberRecentFiles.Size = new System.Drawing.Size(195, 17);
+            this.checkBoxRememberRecentFiles.Size = new System.Drawing.Size(188, 17);
             this.checkBoxRememberRecentFiles.TabIndex = 12;
             this.checkBoxRememberRecentFiles.Text = "Remember recent files (for reopen)";
             this.checkBoxRememberRecentFiles.UseVisualStyleBackColor = true;
@@ -598,7 +609,7 @@
             this.checkBoxSubtitleFontBold.AutoSize = true;
             this.checkBoxSubtitleFontBold.Location = new System.Drawing.Point(193, 269);
             this.checkBoxSubtitleFontBold.Name = "checkBoxSubtitleFontBold";
-            this.checkBoxSubtitleFontBold.Size = new System.Drawing.Size(46, 17);
+            this.checkBoxSubtitleFontBold.Size = new System.Drawing.Size(47, 17);
             this.checkBoxSubtitleFontBold.TabIndex = 8;
             this.checkBoxSubtitleFontBold.Text = "Bold";
             this.checkBoxSubtitleFontBold.UseVisualStyleBackColor = true;
@@ -1410,9 +1421,9 @@
             // groupBoxSpellCheck
             // 
             this.groupBoxSpellCheck.Controls.Add(this.checkBoxSpellCheckAutoChangeNames);
-            this.groupBoxSpellCheck.Location = new System.Drawing.Point(7, 257);
+            this.groupBoxSpellCheck.Location = new System.Drawing.Point(6, 283);
             this.groupBoxSpellCheck.Name = "groupBoxSpellCheck";
-            this.groupBoxSpellCheck.Size = new System.Drawing.Size(785, 148);
+            this.groupBoxSpellCheck.Size = new System.Drawing.Size(785, 122);
             this.groupBoxSpellCheck.TabIndex = 4;
             this.groupBoxSpellCheck.TabStop = false;
             this.groupBoxSpellCheck.Text = "Spell check";
@@ -1422,20 +1433,21 @@
             this.checkBoxSpellCheckAutoChangeNames.AutoSize = true;
             this.checkBoxSpellCheckAutoChangeNames.Location = new System.Drawing.Point(15, 20);
             this.checkBoxSpellCheckAutoChangeNames.Name = "checkBoxSpellCheckAutoChangeNames";
-            this.checkBoxSpellCheckAutoChangeNames.Size = new System.Drawing.Size(209, 17);
+            this.checkBoxSpellCheckAutoChangeNames.Size = new System.Drawing.Size(216, 17);
             this.checkBoxSpellCheckAutoChangeNames.TabIndex = 0;
             this.checkBoxSpellCheckAutoChangeNames.Text = "Auto fix names where only casing differ";
             this.checkBoxSpellCheckAutoChangeNames.UseVisualStyleBackColor = true;
             // 
             // groupBoxFixCommonErrors
             // 
+            this.groupBoxFixCommonErrors.Controls.Add(this.checkBoxFixCommonOcrErrorsUsingHardcodedRules);
             this.groupBoxFixCommonErrors.Controls.Add(this.comboBoxToolsMusicSymbol);
             this.groupBoxFixCommonErrors.Controls.Add(this.textBoxMusicSymbolsToReplace);
             this.groupBoxFixCommonErrors.Controls.Add(this.labelToolsMusicSymbolsToReplace);
             this.groupBoxFixCommonErrors.Controls.Add(this.labelToolsMusicSymbol);
             this.groupBoxFixCommonErrors.Location = new System.Drawing.Point(7, 129);
             this.groupBoxFixCommonErrors.Name = "groupBoxFixCommonErrors";
-            this.groupBoxFixCommonErrors.Size = new System.Drawing.Size(785, 121);
+            this.groupBoxFixCommonErrors.Size = new System.Drawing.Size(785, 148);
             this.groupBoxFixCommonErrors.TabIndex = 3;
             this.groupBoxFixCommonErrors.TabStop = false;
             this.groupBoxFixCommonErrors.Text = "Fix common errors";
@@ -1452,7 +1464,7 @@
             this.comboBoxToolsMusicSymbol.Location = new System.Drawing.Point(199, 71);
             this.comboBoxToolsMusicSymbol.Name = "comboBoxToolsMusicSymbol";
             this.comboBoxToolsMusicSymbol.Size = new System.Drawing.Size(86, 21);
-            this.comboBoxToolsMusicSymbol.TabIndex = 36;
+            this.comboBoxToolsMusicSymbol.TabIndex = 1;
             // 
             // textBoxMusicSymbolsToReplace
             // 
@@ -1460,7 +1472,7 @@
             this.textBoxMusicSymbolsToReplace.MaxLength = 100;
             this.textBoxMusicSymbolsToReplace.Name = "textBoxMusicSymbolsToReplace";
             this.textBoxMusicSymbolsToReplace.Size = new System.Drawing.Size(274, 21);
-            this.textBoxMusicSymbolsToReplace.TabIndex = 35;
+            this.textBoxMusicSymbolsToReplace.TabIndex = 0;
             // 
             // labelToolsMusicSymbolsToReplace
             // 
@@ -1516,7 +1528,7 @@
             this.comboBoxToolsEndSceneIndex.Location = new System.Drawing.Point(200, 76);
             this.comboBoxToolsEndSceneIndex.Name = "comboBoxToolsEndSceneIndex";
             this.comboBoxToolsEndSceneIndex.Size = new System.Drawing.Size(73, 21);
-            this.comboBoxToolsEndSceneIndex.TabIndex = 28;
+            this.comboBoxToolsEndSceneIndex.TabIndex = 2;
             // 
             // labelToolsStartScene
             // 
@@ -1539,7 +1551,7 @@
             this.comboBoxToolsStartSceneIndex.Location = new System.Drawing.Point(200, 49);
             this.comboBoxToolsStartSceneIndex.Name = "comboBoxToolsStartSceneIndex";
             this.comboBoxToolsStartSceneIndex.Size = new System.Drawing.Size(73, 21);
-            this.comboBoxToolsStartSceneIndex.TabIndex = 26;
+            this.comboBoxToolsStartSceneIndex.TabIndex = 1;
             // 
             // comboBoxToolsVerifySeconds
             // 
@@ -1553,7 +1565,7 @@
             this.comboBoxToolsVerifySeconds.Location = new System.Drawing.Point(200, 22);
             this.comboBoxToolsVerifySeconds.Name = "comboBoxToolsVerifySeconds";
             this.comboBoxToolsVerifySeconds.Size = new System.Drawing.Size(73, 21);
-            this.comboBoxToolsVerifySeconds.TabIndex = 21;
+            this.comboBoxToolsVerifySeconds.TabIndex = 0;
             // 
             // labelVerifyButton
             // 
@@ -1988,15 +2000,15 @@
             this.labelStatus.TabIndex = 3;
             this.labelStatus.Text = "labelStatus";
             // 
-            // checkBoxAutoWrapWhileTyping
+            // checkBoxFixCommonOcrErrorsUsingHardcodedRules
             // 
-            this.checkBoxAutoWrapWhileTyping.AutoSize = true;
-            this.checkBoxAutoWrapWhileTyping.Location = new System.Drawing.Point(193, 146);
-            this.checkBoxAutoWrapWhileTyping.Name = "checkBoxAutoWrapWhileTyping";
-            this.checkBoxAutoWrapWhileTyping.Size = new System.Drawing.Size(137, 17);
-            this.checkBoxAutoWrapWhileTyping.TabIndex = 4;
-            this.checkBoxAutoWrapWhileTyping.Text = "Auto-wrap while typing";
-            this.checkBoxAutoWrapWhileTyping.UseVisualStyleBackColor = true;
+            this.checkBoxFixCommonOcrErrorsUsingHardcodedRules.AutoSize = true;
+            this.checkBoxFixCommonOcrErrorsUsingHardcodedRules.Location = new System.Drawing.Point(15, 115);
+            this.checkBoxFixCommonOcrErrorsUsingHardcodedRules.Name = "checkBoxFixCommonOcrErrorsUsingHardcodedRules";
+            this.checkBoxFixCommonOcrErrorsUsingHardcodedRules.Size = new System.Drawing.Size(268, 17);
+            this.checkBoxFixCommonOcrErrorsUsingHardcodedRules.TabIndex = 2;
+            this.checkBoxFixCommonOcrErrorsUsingHardcodedRules.Text = "Fix common OCR errors - also use hardcoded rules";
+            this.checkBoxFixCommonOcrErrorsUsingHardcodedRules.UseVisualStyleBackColor = true;
             // 
             // Settings
             // 
@@ -2247,5 +2259,6 @@
         private System.Windows.Forms.Label labelMergeShortLines;
         private System.Windows.Forms.ComboBox comboBoxMergeShortLineLength;
         private System.Windows.Forms.CheckBox checkBoxAutoWrapWhileTyping;
+        private System.Windows.Forms.CheckBox checkBoxFixCommonOcrErrorsUsingHardcodedRules;
     }
 }

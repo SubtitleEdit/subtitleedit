@@ -248,32 +248,35 @@ namespace Nikse.SubtitleEdit.Logic.OCR
 
         private string FixCommonWordErrors(string word, string lastWord)
         {
-            while (word.Contains("--"))
-                word = word.Replace("--", "-");
-
-            if (word.Contains("’"))
-                word = word.Replace('’', '\'');
-
-            if (word.Contains("`"))
-                word = word.Replace('`', '\'');
-
-            if (word.Contains("‘"))
-                word = word.Replace('‘', '\'');
-
-            if (word.Contains("—"))
-                word = word.Replace('—', '-');
-
-            if (word.Contains("|"))
-                word = word.Replace("|", "l");
-
-            if (word.Contains("vx/"))
-                word = word.Replace("vx/", "w");
-
-            if (word.Contains("¤"))
+            if (Configuration.Settings.Tools.OcrFixUseHardcodedRules)
             {
-                var regex = new Regex("[A-ZÆØÅÄÖÉÈÀÙÂÊÎÔÛËÏa-zæøåäöéèàùâêîôûëï]¤");
-                if (regex.IsMatch(word))
-                    word = word.Replace("¤", "o");
+                while (word.Contains("--"))
+                    word = word.Replace("--", "-");
+
+                if (word.Contains("’"))
+                    word = word.Replace('’', '\'');
+
+                if (word.Contains("`"))
+                    word = word.Replace('`', '\'');
+
+                if (word.Contains("‘"))
+                    word = word.Replace('‘', '\'');
+
+                if (word.Contains("—"))
+                    word = word.Replace('—', '-');
+
+                if (word.Contains("|"))
+                    word = word.Replace("|", "l");
+
+                if (word.Contains("vx/"))
+                    word = word.Replace("vx/", "w");
+
+                if (word.Contains("¤"))
+                {
+                    var regex = new Regex("[A-ZÆØÅÄÖÉÈÀÙÂÊÎÔÛËÏa-zæøåäöéèàùâêîôûëï]¤");
+                    if (regex.IsMatch(word))
+                        word = word.Replace("¤", "o");
+                }
             }
 
             string pre = string.Empty;
@@ -359,16 +362,19 @@ namespace Nikse.SubtitleEdit.Logic.OCR
                     return _wordReplaceList[from];
             }
 
-            // uppercase I or 1 inside lowercase word (will be replaced by lowercase L)
-            word = FixIor1InsideLowerCaseWord(word);
+            if (Configuration.Settings.Tools.OcrFixUseHardcodedRules)
+            {
+                // uppercase I or 1 inside lowercase word (will be replaced by lowercase L)
+                word = FixIor1InsideLowerCaseWord(word);
 
-            // uppercase 0 inside lowercase word (will be replaced by lowercase L)
-            word = Fix0InsideLowerCaseWord(word);
+                // uppercase 0 inside lowercase word (will be replaced by lowercase L)
+                word = Fix0InsideLowerCaseWord(word);
 
-            // uppercase I or 1 inside lowercase word (will be replaced by lowercase L)
-            word = FixIor1InsideLowerCaseWord(word);
+                // uppercase I or 1 inside lowercase word (will be replaced by lowercase L)
+                word = FixIor1InsideLowerCaseWord(word);
 
-            word = FixLowerCaseLInsideUpperCaseWord(word); // eg. SCARLETTl => SCARLETTI
+                word = FixLowerCaseLInsideUpperCaseWord(word); // eg. SCARLETTl => SCARLETTI
+            }
 
             // Retry word replace list
             foreach (string from in _wordReplaceList.Keys)
@@ -506,26 +512,29 @@ namespace Nikse.SubtitleEdit.Logic.OCR
             input = FixOcrErrorsViaHardcodedRules(input, lastLine, _abbreviationList);
             input = FixOcrErrorViaLineReplaceList(input);
 
-            // e.g. "selectionsu." -> "selections..."
-            if (input.EndsWith("u.") && _hunspell != null)
+            if (Configuration.Settings.Tools.OcrFixUseHardcodedRules)
             {
-                string[] words = input.Split(" .".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-                if (words.Length > 0)
+                // e.g. "selectionsu." -> "selections..."
+                if (input.EndsWith("u.") && _hunspell != null)
                 {
-                    string lastWord = words[words.Length -1].Trim();
-                    if (lastWord.Length > 2 && 
-                        !IsWordOrWordsCorrect(_hunspell, lastWord) && 
-                        IsWordOrWordsCorrect(_hunspell, lastWord.Substring(0, lastWord.Length-1)))
-                        input = input.Substring(0, input.Length-2) + "...";
+                    string[] words = input.Split(" .".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                    if (words.Length > 0)
+                    {
+                        string lastWord = words[words.Length - 1].Trim();
+                        if (lastWord.Length > 2 &&
+                            !IsWordOrWordsCorrect(_hunspell, lastWord) &&
+                            IsWordOrWordsCorrect(_hunspell, lastWord.Substring(0, lastWord.Length - 1)))
+                            input = input.Substring(0, input.Length - 2) + "...";
+                    }
+                }
+
+                // music notes
+                if (input.StartsWith(".'") && input.EndsWith(".'"))
+                {
+                    input = input.Replace(".'", Configuration.Settings.Tools.MusicSymbol);
                 }
             }
 
-            // music notes
-            if (input.StartsWith(".'") && input.EndsWith(".'"))
-            {
-                input = input.Replace(".'", Configuration.Settings.Tools.MusicSymbol);
-            }
-             
             return input;
         }
 
@@ -547,6 +556,9 @@ namespace Nikse.SubtitleEdit.Logic.OCR
 
         public static string FixOcrErrorsViaHardcodedRules(string input, string lastLine, List<string> abbreviationList)
         {
+            if (!Configuration.Settings.Tools.OcrFixUseHardcodedRules)
+                return input;
+
             if (lastLine == null ||
                 lastLine.EndsWith(".") ||
                 lastLine.EndsWith("!") ||

@@ -77,6 +77,7 @@ namespace Nikse.SubtitleEdit.Logic
         public string MusicSymbol { get; set; }
         public string MusicSymbolToReplace { get; set; }
         public bool SpellCheckAutoChangeNames { get; set; }
+        public bool OcrFixUseHardcodedRules { get; set; }
         public string Interjections { get; set; }
 
         public ToolsSettings()
@@ -88,6 +89,7 @@ namespace Nikse.SubtitleEdit.Logic
             MusicSymbol = "♪";
             MusicSymbolToReplace = "âª â¶ â™ª âTª ã¢â™âª ?t×3 ?t¤3";
             SpellCheckAutoChangeNames = true;
+            OcrFixUseHardcodedRules = true;
             Interjections = "Ah;Ahh;Ahhh;Eh;Ehh;Ehhh;Hm;Hmm;Hmmm;Phew;Gah;Oh;Ohh;Ohhh;Ow;Oww;Owww;Ugh;Ughh;Uh;Uhh;Uhhh;Whew";
         }
     }
@@ -679,6 +681,9 @@ namespace Nikse.SubtitleEdit.Logic
             subNode = node.SelectSingleNode("SpellCheckAutoChangeNames");
             if (subNode != null)
                 settings.Tools.SpellCheckAutoChangeNames = Convert.ToBoolean(subNode.InnerText);
+            subNode = node.SelectSingleNode("OcrFixUseHardcodedRules");
+            if (subNode != null)
+                settings.Tools.OcrFixUseHardcodedRules = Convert.ToBoolean(subNode.InnerText);
             subNode = node.SelectSingleNode("Interjections");
             if (subNode != null)
                 settings.Tools.Interjections = subNode.InnerText;           
@@ -979,6 +984,7 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("MusicSymbol", settings.Tools.MusicSymbol);
             textWriter.WriteElementString("MusicSymbolToReplace", settings.Tools.MusicSymbolToReplace);
             textWriter.WriteElementString("SpellCheckAutoChangeNames", settings.Tools.SpellCheckAutoChangeNames.ToString());
+            textWriter.WriteElementString("OcrFixUseHardcodedRules", settings.Tools.OcrFixUseHardcodedRules.ToString());            
             textWriter.WriteElementString("Interjections", settings.Tools.Interjections);            
             textWriter.WriteEndElement();
 

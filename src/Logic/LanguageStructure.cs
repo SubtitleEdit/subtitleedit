@@ -1076,6 +1076,7 @@
             public string MergeLinesShorterThan { get; set; }
             public string MusicSymbol { get; set; }
             public string MusicSymbolsToReplace { get; set; }
+            public string FixCommonOcrErrorsUseHardcodedRules { get; set; }
         }
 
         public class ShowEarlierLater
