@@ -3664,6 +3664,32 @@ namespace Nikse.SubtitleEdit.Forms
             buttonBack.Left = buttonNextFinish.Left - (buttonBack.Width + 6);
             tabControl1.Width = groupBox2.Width - (tabControl1.Left * 2);
             listView1.Width = groupBoxStep1.Width - (listView1.Left * 2);
+
+            ListViewFixesAutoSizeAllColumns();
+            subtitleListView1.AutoSizeAllColumns(this);
+        }
+
+        public void ListViewFixesAutoSizeAllColumns()
+        {
+            Graphics graphics = CreateGraphics();
+
+            SizeF timestampSizeF = graphics.MeasureString(listViewFixes.Columns[0].Text, Font); // Apply
+            int width = (int)(timestampSizeF.Width + 12);
+            listViewFixes.Columns[0].Width = width;
+
+            timestampSizeF = graphics.MeasureString(listViewFixes.Columns[1].Text, Font); // line#
+            width = (int)(timestampSizeF.Width + 12);
+            listViewFixes.Columns[1].Width = width;
+
+            timestampSizeF = graphics.MeasureString("Auto break all lines and even more stuff", Font); // Function
+            width = (int)(timestampSizeF.Width + 12);
+            listViewFixes.Columns[2].Width = width;
+
+            int length = listViewFixes.Columns[0].Width + listViewFixes.Columns[1].Width + listViewFixes.Columns[2].Width;
+            int lengthAvailable = Width - length;
+            width = (lengthAvailable - 10) / 2;
+            listViewFixes.Columns[3].Width = width; // before
+            listViewFixes.Columns[4].Width = width; // after
         }
 
         private void FixCommonErrors_Shown(object sender, EventArgs e)
