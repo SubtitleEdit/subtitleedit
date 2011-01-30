@@ -912,6 +912,7 @@ Fortsæt?</SubtitleAppendPrompt>
     <AutoBackupEveryMinute>Hvert minut</AutoBackupEveryMinute>
     <AutoBackupEveryFiveMinutes>Hver 5. minut</AutoBackupEveryFiveMinutes>
     <AutoBackupEveryFifteenMinutes>Hver 15. minut</AutoBackupEveryFifteenMinutes>
+    <AllowEditOfOriginalSubtitle>Tillad redigering af originale undertekst</AllowEditOfOriginalSubtitle>
     <VideoEngine>Video afspiller</VideoEngine>
     <DirectShow>DirectShow</DirectShow>
     <DirectShowDescription>Quartz.dll i system32 mappen</DirectShowDescription>
@@ -970,6 +971,7 @@ Fortsæt?</SubtitleAppendPrompt>
     <MergeLinesShorterThan>Flet linjer kortere end</MergeLinesShorterThan>
     <MusicSymbol>Musik symbol</MusicSymbol>
     <MusicSymbolsToReplace>Musik symboler der skal erstattes (adskilt af mellemrum)</MusicSymbolsToReplace>
+    <FixCommonOcrErrorsUseHardcodedRules>Fastsætte fælles OCR fejl - Inkluder hardcodede regler</FixCommonOcrErrorsUseHardcodedRules>
   </Settings>
   <ShowEarlierLater>
     <Title>Vis valgte linjer tidligere/senere</Title>
@@ -1046,7 +1048,7 @@ Fortsæt?</SubtitleAppendPrompt>
     <SetSyncPoint>Set synk punkt</SetSyncPoint>
     <RemoveSyncPoint>Fjern synk punkt</RemoveSyncPoint>
     <SyncPointsX>Sync punkter: {0}</SyncPointsX>
-    <Description>Punkt synkronisering kræver mindst 2 synkroniserings-punkter</Description>
+    <Info>Et synkronisering punkt vil justere positioner, to eller flere synkroniserings punkter vil justere position og hastighed</Info>
   </PointSync>
   <UnknownSubtitle>
     <Title>Ukendt undertekst type</Title>
