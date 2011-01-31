@@ -36,7 +36,7 @@
     <VideoEncodingX>Video encoding: {0}</VideoEncodingX>
     <SingleLineLengths>Enkelt linje længde: </SingleLineLengths>
     <TotalLengthX>Total længde: {0}</TotalLengthX>
-    <TotalLengthXSplitLine>Total længde: {0} (delt linje!)</TotalLengthXSplitLine>
+    <TotalLengthXSplitLine>Total længde: {0} (split linje!)</TotalLengthXSplitLine>
     <NotAvailable>Ikke tilgængelig</NotAvailable>
     <OverlapPreviousLineX>Overlap forrige ({0:#,##0.###})</OverlapPreviousLineX>
     <OverlapX>Overlap ({0:#,##0.###})</OverlapX>
