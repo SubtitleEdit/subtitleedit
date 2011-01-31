@@ -1215,7 +1215,6 @@
             this.toolStripMenuItemVideo.Size = new System.Drawing.Size(50, 20);
             this.toolStripMenuItemVideo.Text = "Video";
             this.toolStripMenuItemVideo.DropDownOpening += new System.EventHandler(this.toolStripMenuItemVideo_DropDownOpening);
-            this.toolStripMenuItemVideo.Click += new System.EventHandler(this.toolStripMenuItemVideo_Click);
             // 
             // openVideoToolStripMenuItem
             // 
@@ -2907,6 +2906,7 @@
             this.splitContainer1.Size = new System.Drawing.Size(1244, 283);
             this.splitContainer1.SplitterDistance = 950;
             this.splitContainer1.TabIndex = 7;
+            this.splitContainer1.SplitterMoved += new System.Windows.Forms.SplitterEventHandler(this.splitContainer1_SplitterMoved);
             // 
             // tabControlSubtitle
             // 
