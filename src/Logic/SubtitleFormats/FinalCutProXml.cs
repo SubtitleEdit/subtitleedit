@@ -146,7 +146,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                             }
                         }
                     }
-                    catch (Exception ex)
+                    catch 
                     {
                         _errorCount++;
                     }
