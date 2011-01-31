@@ -9087,10 +9087,10 @@ namespace Nikse.SubtitleEdit.Forms
             }            
         }
 
-        private void toolStripMenuItemVideo_Click(object sender, EventArgs e)
+        private void splitContainer1_SplitterMoved(object sender, SplitterEventArgs e)
         {
-
-        }
+            Main_Resize(null, null);
+        }       
 
     }
 }
