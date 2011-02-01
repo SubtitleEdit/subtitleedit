@@ -2,7 +2,7 @@
 <Language Name="Српски">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.0</Version>
+    <Version>3.1</Version>
     <TranslatedBy>Превод: Rancher</TranslatedBy>
     <CultureName>sr-Cyrl-cs</CultureName>
     <OK>&amp;У реду</OK>
@@ -37,6 +37,8 @@
     <SingleLineLengths>Дужина линије: </SingleLineLengths>
     <TotalLengthX>Укупна дужина: {0}</TotalLengthX>
     <TotalLengthXSplitLine>Укупна дужина: {0} (подељена линија!)</TotalLengthXSplitLine>
+    <SplitLine>
+    </SplitLine>
     <NotAvailable>недоступно</NotAvailable>
     <OverlapPreviousLineX>Преклапање претходне линије ({0:#,##0.###})</OverlapPreviousLineX>
     <OverlapX>Преклапање ({0:#,##0.###})</OverlapX>
@@ -48,6 +50,14 @@
     <OriginalText>Оригинални текст</OriginalText>
     <OpenOriginalSubtitleFile>Отварање оригиналног титла...</OpenOriginalSubtitleFile>
     <PleaseWait>Молимо, сачекајте...</PleaseWait>
+    <SessionKey>
+    </SessionKey>
+    <UserName>
+    </UserName>
+    <WebServiceUrl>
+    </WebServiceUrl>
+    <IP>
+    </IP>
   </General>
   <About>
     <Title>О програму</Title>
@@ -124,6 +134,10 @@ C# изворни кôд се налази на интернет страниц�
     <ConvertFrameRateOfSubtitle>Пребаци број кадрова титла:</ConvertFrameRateOfSubtitle>
     <FromFrameRate>Из:</FromFrameRate>
     <ToFrameRate>У:</ToFrameRate>
+    <FrameRateNotCorrect>
+    </FrameRateNotCorrect>
+    <FrameRateNotChanged>
+    </FrameRateNotChanged>
   </ChangeFrameRate>
   <ChooseEncoding>
     <Title>Одабир кодног распореда</Title>
@@ -164,12 +178,16 @@ C# изворни кôд се налази на интернет страниц�
     <AbortedByUser>Заустављено од стране корисника</AbortedByUser>
     <ReadingSubtitleData>Учитавање титла...</ReadingSubtitleData>
     <RippingVobFileXofYZ>Извршавање VOB датотеке {1} од {2}: {0}</RippingVobFileXofYZ>
+    <WrongIfoType>
+    </WrongIfoType>
   </DvdSubrip>
   <DvdSubRipChooseLanguage>
     <Title>Одабир језика</Title>
     <ChooseLanguageStreamId>Изаберите језик (stream-id)</ChooseLanguageStreamId>
     <UnknownLanguage>Непознат језик</UnknownLanguage>
     <SubtitleImageXofYAndWidthXHeight>Слика титла {0}/{1}  —  {2}x{3} </SubtitleImageXofYAndWidthXHeight>
+    <SubtitleImage>
+    </SubtitleImage>
   </DvdSubRipChooseLanguage>
   <EffectKaraoke>
     <Title>Караоке ефекат</Title>
@@ -224,6 +242,8 @@ C# изворни кôд се налази на интернет страниц�
     <FixMissingSpaces>Исправи недостајуће размаке</FixMissingSpaces>
     <BreakLongLines>Подели дуге линије</BreakLongLines>
     <RemoveLineBreaks>Уклони редове у кратким пасусима са само једном реченицом</RemoveLineBreaks>
+    <RemoveLineBreaksAll>
+    </RemoveLineBreaksAll>
     <FixUppercaseIInsindeLowercaseWords>Исправи велико латиничко слово И насред речи</FixUppercaseIInsindeLowercaseWords>
     <FixDoubleApostrophes>Исправи дупле апострофе у наводнике</FixDoubleApostrophes>
     <AddPeriods>Додај тачку после линија где следећа почиње с великим словом</AddPeriods>
@@ -256,6 +276,8 @@ C# изворни кôд се налази на интернет страниц�
     <XIsChangedToUppercase>{0} слова 'i' је измењено у велика</XIsChangedToUppercase>
     <FixFirstLetterToUppercaseAfterParagraph>Исправи прво слово након новог реда у велико</FixFirstLetterToUppercaseAfterParagraph>
     <MergeShortLine>Споји кратке линије</MergeShortLine>
+    <MergeShortLineAll>
+    </MergeShortLineAll>
     <XLineBreaksAdded>додато је {0} редова</XLineBreaksAdded>
     <BreakLongLine>Подели дугу линију</BreakLongLine>
     <FixLongDisplayTime>Исправи дуго време приказа</FixLongDisplayTime>
@@ -357,6 +379,10 @@ C# изворни кôд се налази на интернет страниц�
     <TextFiles>Текстуалне датотеке</TextFiles>
     <PreviewLinesModifiedX>Преглед — измењено пасуса: {0}</PreviewLinesModifiedX>
   </ImportText>
+  <Interjections>
+    <Title>
+    </Title>
+  </Interjections>
   <Main>
     <Menu>
       <File>
@@ -398,6 +424,8 @@ C# изворни кôд се налази на интернет страниц�
         <ChangeCasing>Промени мала и велика слова...</ChangeCasing>
         <ChangeFrameRate>Промени број кадрова...</ChangeFrameRate>
         <MergeShortLines>Споји кратке линије...</MergeShortLines>
+        <SplitLongLines>
+        </SplitLongLines>
         <MinimumDisplayTimeBetweenParagraphs>Најмање време приказа између пасуса...</MinimumDisplayTimeBetweenParagraphs>
         <SortBy>Сврставање</SortBy>
         <TextAlphabetically>Алфабетни ред</TextAlphabetically>
@@ -410,8 +438,16 @@ C# изворни кôд се налази на интернет страниц�
       <Video>
         <Title>Видео запис</Title>
         <OpenVideo>Отвори видео датотеку...</OpenVideo>
+        <ChooseAudioTrack>
+        </ChooseAudioTrack>
+        <CloseVideo>
+        </CloseVideo>
         <ShowHideVideo>Прикажи/сакриј видео запис</ShowHideVideo>
         <ShowHideWaveForm>Прикажи/сакриј таласни облик</ShowHideWaveForm>
+        <UnDockVideoControls>
+        </UnDockVideoControls>
+        <ReDockVideoControls>
+        </ReDockVideoControls>
       </Video>
       <SpellCheck>
         <Title>Провера правописа</Title>
@@ -437,6 +473,20 @@ C# изворни кôд се налази на интернет страниц�
         <Settings>&amp;Поставке...</Settings>
         <ChooseLanguage>&amp;Изабери језик...</ChooseLanguage>
       </Options>
+      <Networking>
+        <Title>
+        </Title>
+        <StartNewSession>
+        </StartNewSession>
+        <JoinSession>
+        </JoinSession>
+        <ShowSessionInfoAndLog>
+        </ShowSessionInfoAndLog>
+        <Chat>
+        </Chat>
+        <LeaveSession>
+        </LeaveSession>
+      </Networking>
       <Help>
         <Title>Помоћ</Title>
         <Help>&amp;Помоћ</Help>
@@ -457,9 +507,21 @@ C# изворни кôд се налази на интернет страниц�
         <ShowHideVideo>Прикажи/сакриј видео запис</ShowHideVideo>
       </ToolBar>
       <ContextMenu>
+        <Cut>
+        </Cut>
+        <Copy>
+        </Copy>
+        <Paste>
+        </Paste>
         <Delete>Избриши</Delete>
+        <SelectAll>
+        </SelectAll>
+        <InsertFirstLine>
+        </InsertFirstLine>
         <InsertBefore>Убаци иза</InsertBefore>
         <InsertAfter>Убаци испред</InsertAfter>
+        <InsertSubtitleAfter>
+        </InsertSubtitleAfter>
         <Split>Подели</Split>
         <MergeSelectedLines>Споји изабране линије</MergeSelectedLines>
         <MergeWithLineBefore>Споји с линијом иза</MergeWithLineBefore>
@@ -533,10 +595,28 @@ C# изворни кôд се налази на интернет страниц�
       <AdjustTip>Користите Alt + горња/доња стрелица да пређете на претходни/следећи титл.</AdjustTip>
       <BeforeChangingTimeInWaveFormX>Пре мењања времена у таласном облику: {0}</BeforeChangingTimeInWaveFormX>
       <NewTextInsertAtX>Нови текст је унесен у {0}</NewTextInsertAtX>
+      <Center>
+      </Center>
+      <PlayRate>
+      </PlayRate>
+      <Slow>
+      </Slow>
+      <Normal>
+      </Normal>
+      <Fast>
+      </Fast>
+      <VeryFast>
+      </VeryFast>
     </VideoControls>
     <SaveChangesToUntitled>Сачувати измене?</SaveChangesToUntitled>
     <SaveChangesToX>Сачувати измене за {0}?</SaveChangesToX>
+    <SaveChangesToUntitledOriginal>
+    </SaveChangesToUntitledOriginal>
+    <SaveChangesToOriginalX>
+    </SaveChangesToOriginalX>
     <SaveSubtitleAs>Сачувај титл као...</SaveSubtitleAs>
+    <SaveOriginalSubtitleAs>
+    </SaveOriginalSubtitleAs>
     <NoSubtitleLoaded>Нема учитаних титлова.</NoSubtitleLoaded>
     <VisualSyncSelectedLines>Визуелна синхронизација — изабране линије</VisualSyncSelectedLines>
     <VisualSyncTitle>Визуелна синхронизација</VisualSyncTitle>
@@ -552,6 +632,8 @@ C# изворни кôд се налази на интернет страниц�
     <FileIsEmptyOrShort>Датотека је празна или је веома кратка!</FileIsEmptyOrShort>
     <FileNotFound>Датотека није пронађена: {0}</FileNotFound>
     <SavedSubtitleX>{0} титл је сачуван</SavedSubtitleX>
+    <SavedOriginalSubtitleX>
+    </SavedOriginalSubtitleX>
     <FileOnDiskModified>Датотека на диску је измењена</FileOnDiskModified>
     <OverwriteModifiedFile>Замени {0} датотеку измењену у {1} {2}{3} с учитаном датотеком са диска у {4} {5}?</OverwriteModifiedFile>
     <UnableToSaveSubtitleX>{0} титл није сачуван</UnableToSaveSubtitleX>
@@ -584,6 +666,10 @@ C# изворни кôд се налази на интернет страниц�
     <SelectedLines>изабране линије</SelectedLines>
     <BeforeDisplayTimeAdjustment>Пре измена времена приказа</BeforeDisplayTimeAdjustment>
     <DisplayTimeAdjustedX>Прилагођено времена приказа: {0}</DisplayTimeAdjustedX>
+    <DisplayTimesAdjustedX>
+    </DisplayTimesAdjustedX>
+    <StarTimeAdjustedX>
+    </StarTimeAdjustedX>
     <BeforeCommonErrorFixes>Пре исправки честих грешака</BeforeCommonErrorFixes>
     <CommonErrorsFixedInSelectedLines>Исправљене су честе грешке у изабраним линијама</CommonErrorsFixedInSelectedLines>
     <CommonErrorsFixed>Честе грешке су исправљене</CommonErrorsFixed>
@@ -692,6 +778,8 @@ C# изворни кôд се налази на интернет страниц�
     <UnicodeMusicSymbolsAnsiWarning>Титл садржи уникод музичке ноте. Ако сачувате преко ASCII кодног распореда, изгубићете их. Желите ли да наставите?</UnicodeMusicSymbolsAnsiWarning>
     <NegativeTimeWarning>Титл садржи негативне временске одреднице. Желите ли да наставите?</NegativeTimeWarning>
     <BeforeMergeShortLines>Пре спајања кратких линија</BeforeMergeShortLines>
+    <BeforeSplitLongLines>
+    </BeforeSplitLongLines>
     <MergedShortLinesX>Спојено линија: {0}</MergedShortLinesX>
     <BeforeSetMinimumDisplayTimeBetweenParagraphs>Пре постављања најмањег времена приказа између пасуса</BeforeSetMinimumDisplayTimeBetweenParagraphs>
     <XMinimumDisplayTimeBetweenParagraphsChanged>Измењено броја линија с минималним временом приказа између пасуса: {0}</XMinimumDisplayTimeBetweenParagraphsChanged>
@@ -704,6 +792,38 @@ C# изворни кôд се налази на интернет страниц�
     <BeforeInsertSubtitleAtVideoPosition>Пре постављања титла у положај видео записа</BeforeInsertSubtitleAtVideoPosition>
     <BeforeSetStartTimeAndOffsetTheRest>Пре постављања почетног времена и помакивања остатка</BeforeSetStartTimeAndOffsetTheRest>
     <ContinueWithCurrentSpellCheck>Наставити с текућом провером правописа?</ContinueWithCurrentSpellCheck>
+    <CharactersPerSecond>
+    </CharactersPerSecond>
+    <GetFrameRateFromVideoFile>
+    </GetFrameRateFromVideoFile>
+    <NetworkMessage>
+    </NetworkMessage>
+    <NetworkUpdate>
+    </NetworkUpdate>
+    <NetworkInsert>
+    </NetworkInsert>
+    <NetworkDelete>
+    </NetworkDelete>
+    <NetworkNewUser>
+    </NetworkNewUser>
+    <NetworkByeUser>
+    </NetworkByeUser>
+    <NetworkUnableToConnectToServer>
+    </NetworkUnableToConnectToServer>
+    <UserAndAction>
+    </UserAndAction>
+    <NetworkMode>
+    </NetworkMode>
+    <XStartedSessionYAtZ>
+    </XStartedSessionYAtZ>
+    <SpellChekingViaWordXLineYOfX>
+    </SpellChekingViaWordXLineYOfX>
+    <UnableToStartWord>
+    </UnableToStartWord>
+    <SpellCheckAbortedXCorrections>
+    </SpellCheckAbortedXCorrections>
+    <SpellCheckCompletedXCorrections>
+    </SpellCheckCompletedXCorrections>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Одабир титла из матрошка датотеке</Title>
@@ -735,6 +855,36 @@ C# изворни кôд се налази на интернет страниц�
     <Enabled>Омогућено</Enabled>
     <SearchType>Врста претраге</SearchType>
   </MultipleReplace>
+  <NetworkChat>
+    <Title>
+    </Title>
+    <Send>
+    </Send>
+  </NetworkChat>
+  <NetworkJoin>
+    <Title>
+    </Title>
+    <Information>
+    </Information>
+    <Join>
+    </Join>
+  </NetworkJoin>
+  <NetworkLogAndInfo>
+    <Title>
+    </Title>
+    <Log>
+    </Log>
+  </NetworkLogAndInfo>
+  <NetworkStart>
+    <Title>
+    </Title>
+    <ConnectionTo>
+    </ConnectionTo>
+    <Information>
+    </Information>
+    <Start>
+    </Start>
+  </NetworkStart>
   <RemoveTextFromHearImpaired>
     <Title>Уклањање текста за глуве</Title>
     <RemoveTextConditions>Уклањање услова текста</RemoveTextConditions>
@@ -752,6 +902,10 @@ C# изворни кôд се налази на интернет страниц�
     <After>После</After>
     <LinesFoundX>Пронађено линија: {0}</LinesFoundX>
     <RemoveTextIfContains>Уклони текст ако садржи:</RemoveTextIfContains>
+    <RemoveInterjections>
+    </RemoveInterjections>
+    <EditInterjections>
+    </EditInterjections>
   </RemoveTextFromHearImpaired>
   <ReplaceDialog>
     <Title>Замена</Title>
@@ -781,6 +935,8 @@ C# изворни кôд се налази на интернет страниц�
   <Settings>
     <Title>Поставке</Title>
     <General>Опште</General>
+    <Toolbar>
+    </Toolbar>
     <VideoPlayer>Видео плејер</VideoPlayer>
     <WaveForm>Таласни облик</WaveForm>
     <Tools>Алатке</Tools>
@@ -798,16 +954,25 @@ C# изворни кôд се налази на интернет страниц�
     <SpellCheck>Правопис</SpellCheck>
     <SettingsName>Поставке</SettingsName>
     <Help>Помоћ</Help>
-    <Miscellaneous>Остало</Miscellaneous>
     <ShowFrameRate>Прикажи број кадрова у алатници</ShowFrameRate>
     <DefaultFrameRate>Подразумевани број кадрова</DefaultFrameRate>
     <DefaultFileEncoding>Подразумевано кодирање</DefaultFileEncoding>
     <AutoDetectAnsiEncoding>Аутоматски уочи кодирање</AutoDetectAnsiEncoding>
     <SubtitleLineMaximumLength>Највећа дужина титла</SubtitleLineMaximumLength>
+    <AutoWrapWhileTyping>
+    </AutoWrapWhileTyping>
     <SubtitleFont>Фонт</SubtitleFont>
     <SubtitleFontSize>Величина фонта</SubtitleFontSize>
+    <SubtitleFontColor>
+    </SubtitleFontColor>
+    <SubtitleBackgroundColor>
+    </SubtitleBackgroundColor>
+    <SpellChecker>
+    </SpellChecker>
     <RememberRecentFiles>Запамти скорашње датотеке</RememberRecentFiles>
     <StartWithLastFileLoaded>Покрени с последње учитаном датотеком</StartWithLastFileLoaded>
+    <RememberSelectedLine>
+    </RememberSelectedLine>
     <RememberPositionAndSize>Запамти положај и величину главног прозора</RememberPositionAndSize>
     <StartInSourceView>Покрени у изворном приказу</StartInSourceView>
     <RemoveBlankLinesWhenOpening>Уклони празне линије при отварању титла</RemoveBlankLinesWhenOpening>
@@ -817,6 +982,16 @@ C# изворни кôд се налази на интернет страниц�
     <MainListViewVideoGoToPositionAndPause>прећи на положај снимка и паузирати</MainListViewVideoGoToPositionAndPause>
     <MainListViewVideoGoToPositionAndPlay>прећи на положај снимка и репродуковати</MainListViewVideoGoToPositionAndPlay>
     <MainListViewEditText>прећи на поље за уређивање</MainListViewEditText>
+    <AutoBackup>
+    </AutoBackup>
+    <AutoBackupEveryMinute>
+    </AutoBackupEveryMinute>
+    <AutoBackupEveryFiveMinutes>
+    </AutoBackupEveryFiveMinutes>
+    <AutoBackupEveryFifteenMinutes>
+    </AutoBackupEveryFifteenMinutes>
+    <AllowEditOfOriginalSubtitle>
+    </AllowEditOfOriginalSubtitle>
     <VideoEngine>Видео механизам</VideoEngine>
     <DirectShow>DirectShow</DirectShow>
     <DirectShowDescription>quartz.dll у system32 фасцикли</DirectShowDescription>
@@ -875,12 +1050,20 @@ C# изворни кôд се налази на интернет страниц�
     <MergeLinesShorterThan>Споји линије краће од:</MergeLinesShorterThan>
     <MusicSymbol>Музички симболи</MusicSymbol>
     <MusicSymbolsToReplace>Музички симболи за замену (одмаћи размаком)</MusicSymbolsToReplace>
+    <FixCommonOcrErrorsUseHardcodedRules>
+    </FixCommonOcrErrorsUseHardcodedRules>
   </Settings>
   <ShowEarlierLater>
     <Title>Приказивање изабраних линија раније или касније</Title>
+    <TitleAll>
+    </TitleAll>
     <ShowEarlier>Постави раније</ShowEarlier>
     <ShowLater>Постави касније</ShowLater>
     <TotalAdjustmentX>Укупно прилагођења: {0}</TotalAdjustmentX>
+    <AllLines>
+    </AllLines>
+    <SelectedLinesonly>
+    </SelectedLinesonly>
   </ShowEarlierLater>
   <ShowHistory>
     <Title>Историјат</Title>
@@ -915,6 +1098,22 @@ C# изворни кôд се налази на интернет страниц�
     <SpellCheckCompleted>Провера правописа је завршена.</SpellCheckCompleted>
     <SpellCheckAborted>Провера правописа је прекинута.</SpellCheckAborted>
   </SpellCheck>
+  <SplitLongLines>
+    <Title>
+    </Title>
+    <SingleLineMaximumLength>
+    </SingleLineMaximumLength>
+    <LineMaximumLength>
+    </LineMaximumLength>
+    <LineContinuationBeginEndStrings>
+    </LineContinuationBeginEndStrings>
+    <NumberOfSplits>
+    </NumberOfSplits>
+    <LongestSingleLineIsXAtY>
+    </LongestSingleLineIsXAtY>
+    <LongestLineIsXAtY>
+    </LongestLineIsXAtY>
+  </SplitLongLines>
   <SplitSubtitle>
     <Title>Дељење титла</Title>
     <Description1>Унесите дужину првог дела видео записа</Description1>
@@ -939,7 +1138,8 @@ C# изворни кôд се налази на интернет страниц�
     <SetSyncPoint>Постави тачку</SetSyncPoint>
     <RemoveSyncPoint>Уклони тачку</RemoveSyncPoint>
     <SyncPointsX>Тачака синхронизације: {0}</SyncPointsX>
-    <Description>Тачка синхронизације захтева макар две тачке.</Description>
+    <Info>
+    </Info>
   </PointSync>
   <UnknownSubtitle>
     <Title>Непознат тип титла</Title>
@@ -1006,6 +1206,10 @@ C# изворни кôд се налази на интернет страниц�
     <OcrAutoCorrectionSpellchecking>OCR корекција / провера правописа</OcrAutoCorrectionSpellchecking>
     <FixOcrErrors>Исправи грешке у препознавању знакова</FixOcrErrors>
     <SaveSubtitleImageAs>Сачувај визуелни титл као...</SaveSubtitleImageAs>
+    <SaveAllSubtitleImagesAs>
+    </SaveAllSubtitleImagesAs>
+    <XImagesSavedInY>
+    </XImagesSavedInY>
     <TryModiForUnknownWords>Покушај MS MODI препознавање знакова за непознате речи</TryModiForUnknownWords>
     <DictionaryX>Речник: {0}</DictionaryX>
     <RightToLeft>С десна на лево</RightToLeft>
