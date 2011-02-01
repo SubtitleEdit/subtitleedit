@@ -120,7 +120,6 @@ namespace Nikse.SubtitleEdit.Forms
                     text.EndsWith(comboBoxCustomEnd.Text) && text.IndexOf(comboBoxCustomStart.Text) > 0);
         }
 
-
         private bool StartAndEndsWithHearImpariedTags(string text)
         {
             return (text.StartsWith("[") && text.EndsWith("]") && checkBoxRemoveTextBetweenSquares.Checked) ||
@@ -189,6 +188,11 @@ namespace Nikse.SubtitleEdit.Forms
                     hit = true;
                 }
 
+                if (RemoveHearImpairedtagsInsideLine(p.Text) != p.Text.Trim())
+                {
+                    hit = true;
+                }
+
                 if (!hit)
                 { 
                     string[] parts = p.Text.Trim().Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
@@ -212,6 +216,48 @@ namespace Nikse.SubtitleEdit.Forms
             }
             listViewFixes.EndUpdate();
             groupBoxLinesFound.Text = string.Format(_language.LinesFoundX, count);
+        }
+
+        private string RemoveHearImpairedtagsInsideLine(string newText)
+        {
+            int i = 5;
+            while (i < newText.Length)
+            {
+                string s = newText.Substring(i);
+                if (i > 5 && s.Length > 2 && (s.StartsWith(".") || s.StartsWith("!") || s.StartsWith("?")))
+                {
+                    if (s[1] == ' ' || s.Substring(1).StartsWith("<i>") || s.Substring(1).StartsWith("</i>"))
+                    {
+                        string pre = " ";
+                        if (s.Substring(1).StartsWith("<i>"))
+                            pre = "<i>";
+                        else if (s.Substring(1).StartsWith(" <i>"))
+                            pre = " <i>";
+                        else if (s.Substring(1).StartsWith("</i>"))
+                            pre = "</i>";
+
+                        s = s.Remove(0, 1 + pre.Length);
+                        if (s.StartsWith(" ") && s.Length > 1)
+                        {
+                            pre += " ";
+                            s = s.Remove(0, 1);
+                        }
+
+                        int oldLength = s.Length;
+                        if (HasHearImpariedTagsAtStart(s))
+                        {
+                            s = RemoveStartEndTags(s);
+                            newText = newText.Substring(0, i+1) + pre + " " + s;
+                            newText = newText.Replace("<i></i>", string.Empty);
+                            newText = newText.Replace("<i> </i>", " ");
+                            newText = newText.Replace("  ", " ");
+                            newText = newText.Replace("  ", " ");
+                        }
+                    }
+                }
+                i++;
+            }
+            return newText;
         }
 
         private string RemoveColon(string text)
@@ -385,6 +431,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             text = st.Pre + sb.ToString().Trim() + st.Post;
             text = RemoveColon(text);
+            text = RemoveHearImpairedtagsInsideLine(text);
             if (checkBoxRemoveInterjections.Checked)
                 text = RemoveInterjections(text);
 
@@ -405,7 +452,7 @@ namespace Nikse.SubtitleEdit.Forms
                 text = text.TrimStart().TrimStart('-').TrimStart();
             }
             return text;
-        }
+        }       
 
         private string RemoveInterjections(string text)
         {
@@ -420,6 +467,13 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         int index = match.Index;
                         string temp = text.Remove(index, s.Length);
+                        string pre = string.Empty;
+                        if (index > 0)
+                        {
+                            pre = text.Substring(0, index);
+                            temp = temp.Remove(0, index);
+                        }
+
                         while (temp.Length > 0 && (temp.StartsWith(" ") || temp.StartsWith(",")))
                         {
                             temp = temp.Remove(0, 1);
@@ -428,6 +482,7 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             temp = temp.Remove(0,1).Insert(0, temp[0].ToString().ToUpper());
                         }
+                        temp = pre + temp;
 
                         StripableText st = new StripableText(temp);
                         if (st.StrippedText.Length == 0)
