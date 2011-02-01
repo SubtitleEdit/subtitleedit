@@ -2071,6 +2071,42 @@ namespace Nikse.SubtitleEdit.Logic
             return false;
         }
 
+        internal static void CheckAutoWrap(TextBox textBox, KeyEventArgs e, int numberOfNewLines)
+        {
+            if (e.Modifiers == Keys.None && numberOfNewLines < 1 && textBox.Text.Length > Configuration.Settings.General.SubtitleLineMaximumLength - 3)
+            {
+                if (Configuration.Settings.General.AutoWrapLineWhileTyping) // only if auto-break-setting is true
+                {
+                    string newText;
+                    if (textBox.Text.Length > Configuration.Settings.General.SubtitleLineMaximumLength + 30)
+                    {
+                        newText = Utilities.AutoBreakLine(textBox.Text);
+                    }
+                    else
+                    {
+                        int lastSpace = textBox.Text.LastIndexOf(' ');
+                        if (lastSpace > 0)
+                            newText = textBox.Text.Remove(lastSpace, 1).Insert(lastSpace, Environment.NewLine);
+                        else
+                            newText = textBox.Text;
+                    }
+
+                    int autobreakIndex = newText.IndexOf(Environment.NewLine);
+                    if (autobreakIndex > 0)
+                    {
+                        int selectionStart = textBox.SelectionStart;
+                        int selectionLength = textBox.SelectionLength;
+                        textBox.Text = newText;
+                        if (selectionStart > autobreakIndex)
+                            selectionStart += Environment.NewLine.Length;
+                        if (selectionStart >= 0)
+                            textBox.SelectionStart = selectionStart;
+                        if (selectionLength >= 0)
+                            textBox.SelectionLength = selectionLength;
+                    }
+                }
+            }
+        }
         
     }
 }

@@ -37,6 +37,7 @@
     <SingleLineLengths>Enkelt linje længde: </SingleLineLengths>
     <TotalLengthX>Total længde: {0}</TotalLengthX>
     <TotalLengthXSplitLine>Total længde: {0} (split linje!)</TotalLengthXSplitLine>
+    <SplitLine>Split linje!</SplitLine>
     <NotAvailable>Ikke tilgængelig</NotAvailable>
     <OverlapPreviousLineX>Overlap forrige ({0:#,##0.###})</OverlapPreviousLineX>
     <OverlapX>Overlap ({0:#,##0.###})</OverlapX>
@@ -303,7 +304,7 @@
     <RefreshFixes>Opdater tilgængelige rettelser</RefreshFixes>
     <ApplyFixes>Udfør valgte rettelser</ApplyFixes>
     <AutoBreak>Auto &amp;ombr</AutoBreak>
-    <Unbreak>&amp;Ubryd</Unbreak>
+    <Unbreak>&amp;Ombryd</Unbreak>
     <FixDoubleDash>Fix '-' -&gt;'...'</FixDoubleDash>
     <FixDoubleGreaterThan>Fjern &gt;&gt;</FixDoubleGreaterThan>
     <FixEllipsesStart>Fjern startende '...'</FixEllipsesStart>
@@ -519,11 +520,11 @@
       <FileEncoding>Filkodning</FileEncoding>
       <ListView>Listevisning</ListView>
       <SourceView>Kilde visning</SourceView>
-      <UndoChangesInEditPanel>Fortryd ændringer i rette-panelet</UndoChangesInEditPanel>
+      <UndoChangesInEditPanel>Fortryd ændringer</UndoChangesInEditPanel>
       <Previous>&lt;Forrige</Previous>
       <Next>Næste&gt;</Next>
       <AutoBreak>Auto br</AutoBreak>
-      <Unbreak>&amp;Ubryd</Unbreak>
+      <Unbreak>&amp;Ombryd</Unbreak>
     </Controls>
     <VideoControls>
       <Translate>Oversæt</Translate>
