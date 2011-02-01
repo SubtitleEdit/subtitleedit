@@ -3,6 +3,7 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Logic.VideoPlayers;
+using Nikse.SubtitleEdit.Logic;
 
 namespace Nikse.SubtitleEdit.Controls
 {
@@ -18,7 +19,7 @@ namespace Nikse.SubtitleEdit.Controls
                 base.TabStop = false;
                 base.SetStyle(ControlStyles.Selectable, false);
                 base.SetStyle(ControlStyles.UserMouse, true);
-                base.MouseEnter += delegate(object sender, EventArgs e) { this.Cursor = Cursors.Default;  };
+                base.MouseEnter += delegate(object sender, EventArgs e) { this.Cursor = Cursors.Default; };
                 base.ScrollBars = RichTextBoxScrollBars.None;
                 base.Margin = new System.Windows.Forms.Padding(0);
             }
@@ -47,7 +48,7 @@ namespace Nikse.SubtitleEdit.Controls
         private double? _muteOldVolume;
         private readonly System.ComponentModel.ComponentResourceManager _resources;
         private const int ControlsHeight = 47;
-        private const int SubtitlesHeight = 47;
+        private const int SubtitlesHeight = 57;
         private readonly Color _backgroundColor = Color.FromArgb(18, 18, 18); 
         private Panel _panelcontrols;
         private string _totalPositionString;
@@ -162,9 +163,17 @@ namespace Nikse.SubtitleEdit.Controls
             _subtitleTextBox.BackColor = _backgroundColor;
             _subtitleTextBox.ForeColor = Color.White;
             _subtitleTextBox.Dock = DockStyle.Fill;
-            _subtitleTextBox.Font = new Font("Tahoma", 8, FontStyle.Bold);
+            SetSubtitleFont();          
             _subtitleTextBox.MouseClick += SubtitleTextBox_MouseClick;
             return _panelSubtitle;
+        }
+
+        public void SetSubtitleFont()
+        {
+            var gs = Nikse.SubtitleEdit.Logic.Configuration.Settings.General;
+            if (string.IsNullOrEmpty(gs.SubtitleFontName))
+                gs.SubtitleFontName = "Tahoma";
+             _subtitleTextBox.Font = new Font(gs.SubtitleFontName, gs.SubtitleFontSize+1.5F, FontStyle.Bold);
         }    
 
         void SubtitleTextBox_MouseClick(object sender, MouseEventArgs e)
@@ -250,7 +259,9 @@ namespace Nikse.SubtitleEdit.Controls
                 foreach (var entry in italicLookups)
                 {
                     System.Drawing.Font currentFont = _subtitleTextBox.SelectionFont;
-                    System.Drawing.FontStyle newFontStyle = FontStyle.Italic | FontStyle.Bold;
+                    System.Drawing.FontStyle newFontStyle = FontStyle.Italic;
+//                    if (Nikse.SubtitleEdit.Logic.Configuration.Settings.General.SubtitleFontBold)
+                        newFontStyle = FontStyle.Italic | FontStyle.Bold;
                     _subtitleTextBox.SelectionStart = entry.Key;
                     _subtitleTextBox.SelectionLength = entry.Value;
                     _subtitleTextBox.SelectionFont = new Font(currentFont.FontFamily, currentFont.Size, newFontStyle);
