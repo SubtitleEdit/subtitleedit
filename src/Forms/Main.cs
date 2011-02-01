@@ -105,7 +105,7 @@ namespace Nikse.SubtitleEdit.Forms
                     if (versionInfo.Length >= 3 && versionInfo[2] != "0")
                         _title += "." + versionInfo[2];
                 }
-                return _title + " Beta 12";
+                return _title + " RC1";
             }
         }
 
@@ -672,6 +672,7 @@ namespace Nikse.SubtitleEdit.Forms
             buttonNext.Text = _language.Controls.Next;
             buttonAutoBreak.Text = _language.Controls.AutoBreak;
             buttonUnBreak.Text = _language.Controls.Unbreak;
+            buttonSplitLine.Text = _languageGeneral.SplitLine;
             ShowSourceLineNumber();
 
             // Video controls
@@ -1656,7 +1657,9 @@ namespace Nikse.SubtitleEdit.Forms
                 Utilities.InitializeSubtitleFont(SubtitleListview1);
                 SubtitleListview1.AutoSizeAllColumns(this);
                 SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
-                RestoreSubtitleListviewIndexes();
+                RestoreSubtitleListviewIndexes();                
+                mediaPlayer.SetSubtitleFont();
+                Utilities.ShowSubtitle(_subtitle.Paragraphs, mediaPlayer);
             }
 
             if (oldListViewLineSeparatorString != Configuration.Settings.General.ListViewLineSeparatorString)
@@ -1673,6 +1676,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     buttonUnBreak.Visible = false;
                     buttonUndoListViewChanges.Visible = false;
+                    buttonSplitLine.Visible = false;
                     textBoxListViewTextAlternate.Visible = true;
                     labelAlternateText.Visible = true;
                     labelAlternateCharactersPerSecond.Visible = true;
@@ -3487,6 +3491,8 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void SubtitleListView1SelectedIndexChange()
         {
+            if (buttonUndoListViewChanges.Visible)
+                buttonUndoListViewChanges.Enabled = false;
             StopAutoDuration();
             ShowLineInformationListView();            
             if (_subtitle.Paragraphs.Count > 0)
@@ -3603,6 +3609,7 @@ namespace Nikse.SubtitleEdit.Forms
             singleLine.Left = lineLengths.Left + lineLengths.Width - 6;
             Utilities.GetLineLengths(singleLine, text);
 
+            buttonSplitLine.Visible = false;
             string s = Utilities.RemoveHtmlTags(text).Replace(Environment.NewLine, " ");
             if (s.Length < Configuration.Settings.General.SubtitleLineMaximumLength * 1.9)
             {
@@ -3618,8 +3625,15 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 lineTotal.ForeColor = System.Drawing.Color.Red;
                 lineTotal.Text = string.Format(_languageGeneral.TotalLengthXSplitLine, s.Length);
+                if (buttonUnBreak.Visible)
+                {
+                    lineTotal.Text = string.Format(_languageGeneral.TotalLengthX, s.Length);
+                    buttonSplitLine.Visible = true;
+                }
             }
             UpdateListViewTextCharactersPerSeconds(charactersPerSecond, paragraph);
+            labelCharactersPerSecond.Left = textBoxListViewText.Left + (textBoxListViewText.Width - labelCharactersPerSecond.Width);
+            labelTextLineTotal.Left = textBoxListViewText.Left + (textBoxListViewText.Width - labelTextLineTotal.Width);
         }        
 
         private void ButtonNextClick(object sender, EventArgs e)
@@ -3697,6 +3711,9 @@ namespace Nikse.SubtitleEdit.Forms
                 UpdateListViewTextInfo(labelTextLineLengths, labelSingleLine, labelTextLineTotal, labelCharactersPerSecond, _subtitle.Paragraphs[_subtitleListViewIndex]);
                 SubtitleListview1.SetText(_subtitleListViewIndex, text);
                 _change = true;
+
+                if (buttonUndoListViewChanges.Visible)
+                    buttonUndoListViewChanges.Enabled = _oldSelectedParagraph != null && text != _oldSelectedParagraph.Text;
             }
         }
 
@@ -3729,7 +3746,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             int numberOfNewLines = textBoxListViewText.Text.Length - textBoxListViewText.Text.Replace(Environment.NewLine, " ").Length;
 
-            CheckAutoWrap(textBoxListViewText, e, numberOfNewLines);
+            Utilities.CheckAutoWrap(textBoxListViewText, e, numberOfNewLines);
 
             if (e.KeyCode == Keys.Enter && e.Modifiers == Keys.None && numberOfNewLines > 1)
             {
@@ -3774,43 +3791,6 @@ namespace Nikse.SubtitleEdit.Forms
 
             // last key down in text
             _lastTextKeyDownTicks = DateTime.Now.Ticks;
-        }
-
-        private void CheckAutoWrap(TextBox textBox, KeyEventArgs e, int numberOfNewLines)
-        {
-            if (e.Modifiers == Keys.None && numberOfNewLines < 1 && textBox.Text.Length > Configuration.Settings.General.SubtitleLineMaximumLength - 3)
-            {
-                if (Configuration.Settings.General.AutoWrapLineWhileTyping) // only if auto-break-setting is true
-                {
-                    string newText;
-                    if (textBox.Text.Length > Configuration.Settings.General.SubtitleLineMaximumLength + 30)
-                    {
-                        newText = Utilities.AutoBreakLine(textBox.Text);
-                    }
-                    else
-                    {
-                        int lastSpace = textBox.Text.LastIndexOf(' ');
-                        if (lastSpace > 0)
-                            newText = textBox.Text.Remove(lastSpace, 1).Insert(lastSpace, Environment.NewLine);
-                        else
-                            newText = textBox.Text;
-                    }
-
-                    int autobreakIndex = newText.IndexOf(Environment.NewLine);
-                    if (autobreakIndex > 0)
-                    {
-                        int selectionStart = textBox.SelectionStart;
-                        int selectionLength = textBox.SelectionLength;
-                        textBox.Text = newText;
-                        if (selectionStart > autobreakIndex)
-                            selectionStart += Environment.NewLine.Length;
-                        if (selectionStart >= 0)
-                            textBox.SelectionStart = selectionStart;
-                        if (selectionLength >= 0)
-                            textBox.SelectionLength = selectionLength;
-                    }
-                }
-            }
         }
 
         private void SplitLineToolStripMenuItemClick(object sender, EventArgs e)
@@ -6303,7 +6283,8 @@ namespace Nikse.SubtitleEdit.Forms
 
                 buttonUnBreak.Visible = false;
                 buttonUndoListViewChanges.Visible = false;
-               
+                buttonSplitLine.Visible = false;
+
                 textBoxListViewText.Anchor = AnchorStyles.Left | AnchorStyles.Top;
                 textBoxListViewText.Width = (groupBoxEdit.Width - (textBoxListViewText.Left + 10)) / 2;
                 textBoxListViewTextAlternate.Anchor = AnchorStyles.Left | AnchorStyles.Top;
@@ -7436,7 +7417,12 @@ namespace Nikse.SubtitleEdit.Forms
                 _timerAutoSave.Start();
             }
             toolStripMenuItemPlayRateNormal_Click(null, null);
-            Main_Resize(null, null);            
+            Main_Resize(null, null);
+
+            if (Configuration.Settings.General.StartInSourceView)
+                textBoxSource.Focus();
+            else
+                SubtitleListview1.Focus();
         }
 
         void TimerAutoSaveTick(object sender, EventArgs e)
@@ -8887,7 +8873,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             int numberOfNewLines = textBoxListViewTextAlternate.Text.Length - textBoxListViewTextAlternate.Text.Replace(Environment.NewLine, " ").Length;
 
-            CheckAutoWrap(textBoxListViewTextAlternate, e, numberOfNewLines);
+            Utilities.CheckAutoWrap(textBoxListViewTextAlternate, e, numberOfNewLines);
 
             if (e.KeyCode == Keys.Enter && e.Modifiers == Keys.None && numberOfNewLines > 1)
             {
@@ -9090,6 +9076,11 @@ namespace Nikse.SubtitleEdit.Forms
         private void splitContainer1_SplitterMoved(object sender, SplitterEventArgs e)
         {
             Main_Resize(null, null);
+        }
+
+        private void buttonSplitLine_Click(object sender, EventArgs e)
+        {
+            SplitSelectedParagraph(null);
         }       
 
     }

@@ -2,7 +2,7 @@
 <Language Name="简体中文">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.0</Version>
+    <Version>3.1</Version>
     <TranslatedBy>翻译: FeiXJ</TranslatedBy>
     <CultureName>zh-CHS</CultureName>
     <OK>确定(&amp;O)</OK>
@@ -37,6 +37,8 @@
     <SingleLineLengths>单行长度: </SingleLineLengths>
     <TotalLengthX>总长度: {0}</TotalLengthX>
     <TotalLengthXSplitLine>总长度: {0}（分割行！）</TotalLengthXSplitLine>
+    <SplitLine>
+    </SplitLine>
     <NotAvailable>N/A</NotAvailable>
     <OverlapPreviousLineX>重叠上一行 ({0:#,##0.###})</OverlapPreviousLineX>
     <OverlapX>重叠 ({0:#,##0.###})</OverlapX>
@@ -48,6 +50,14 @@
     <OriginalText>原始文本</OriginalText>
     <OpenOriginalSubtitleFile>打开原始字幕文件...</OpenOriginalSubtitleFile>
     <PleaseWait>请稍候...</PleaseWait>
+    <SessionKey>
+    </SessionKey>
+    <UserName>
+    </UserName>
+    <WebServiceUrl>
+    </WebServiceUrl>
+    <IP>
+    </IP>
   </General>
   <About>
     <Title>关于 Subtitle Edit</Title>
@@ -121,6 +131,10 @@ C# 源代码可从网站获得。
     <ConvertFrameRateOfSubtitle>转换字幕帧率</ConvertFrameRateOfSubtitle>
     <FromFrameRate>从帧率</FromFrameRate>
     <ToFrameRate>到帧率</ToFrameRate>
+    <FrameRateNotCorrect>
+    </FrameRateNotCorrect>
+    <FrameRateNotChanged>
+    </FrameRateNotChanged>
   </ChangeFrameRate>
   <ChooseEncoding>
     <Title>选择编码方式</Title>
@@ -161,12 +175,16 @@ C# 源代码可从网站获得。
     <AbortedByUser>用户中止</AbortedByUser>
     <ReadingSubtitleData>正在读取字幕数据...</ReadingSubtitleData>
     <RippingVobFileXofYZ>正在提取 Vob 文件 {1}/{2}: {0}</RippingVobFileXofYZ>
+    <WrongIfoType>
+    </WrongIfoType>
   </DvdSubrip>
   <DvdSubRipChooseLanguage>
     <Title>选择语言</Title>
     <ChooseLanguageStreamId>选择语言（流 ID）</ChooseLanguageStreamId>
     <UnknownLanguage>未知语言</UnknownLanguage>
     <SubtitleImageXofYAndWidthXHeight>字幕图像 {0}/{1} - {2}x{3}</SubtitleImageXofYAndWidthXHeight>
+    <SubtitleImage>
+    </SubtitleImage>
   </DvdSubRipChooseLanguage>
   <EffectKaraoke>
     <Title>卡拉 OK 效果</Title>
@@ -221,6 +239,8 @@ C# 源代码可从网站获得。
     <FixMissingSpaces>修复丢失的空格</FixMissingSpaces>
     <BreakLongLines>断开长行</BreakLongLines>
     <RemoveLineBreaks>删除只有一个句子的短文本的换行符</RemoveLineBreaks>
+    <RemoveLineBreaksAll>
+    </RemoveLineBreaksAll>
     <FixUppercaseIInsindeLowercaseWords>修复小写单词中的 'i' 为大写（OCR 错误）</FixUppercaseIInsindeLowercaseWords>
     <FixDoubleApostrophes>修复两个单引号字符 ('') 为一个双引号 (")</FixDoubleApostrophes>
     <AddPeriods>在下一行以大写字母开头的行后面添加句号</AddPeriods>
@@ -253,6 +273,8 @@ C# 源代码可从网站获得。
     <XIsChangedToUppercase>{0} 个 'i' 已更改为大写</XIsChangedToUppercase>
     <FixFirstLetterToUppercaseAfterParagraph>修复段落后的首字母为大写</FixFirstLetterToUppercaseAfterParagraph>
     <MergeShortLine>合并短行</MergeShortLine>
+    <MergeShortLineAll>
+    </MergeShortLineAll>
     <XLineBreaksAdded>{0} 个换行符已添加</XLineBreaksAdded>
     <BreakLongLine>断开长行</BreakLongLine>
     <FixLongDisplayTime>修复过长的显示时间</FixLongDisplayTime>
@@ -354,6 +376,10 @@ C# 源代码可从网站获得。
     <TextFiles>文本文件</TextFiles>
     <PreviewLinesModifiedX>预览 - 已修改段落: {0}</PreviewLinesModifiedX>
   </ImportText>
+  <Interjections>
+    <Title>
+    </Title>
+  </Interjections>
   <Main>
     <Menu>
       <File>
@@ -395,6 +421,8 @@ C# 源代码可从网站获得。
         <ChangeCasing>更改大小写...</ChangeCasing>
         <ChangeFrameRate>更改帧率...</ChangeFrameRate>
         <MergeShortLines>合并短行...</MergeShortLines>
+        <SplitLongLines>
+        </SplitLongLines>
         <MinimumDisplayTimeBetweenParagraphs>段落间最小显示时间...</MinimumDisplayTimeBetweenParagraphs>
         <SortBy>排序方式</SortBy>
         <TextAlphabetically>文字 - 按字母顺序</TextAlphabetically>
@@ -407,8 +435,16 @@ C# 源代码可从网站获得。
       <Video>
         <Title>视频(&amp;V)</Title>
         <OpenVideo>打开视频文件...</OpenVideo>
+        <ChooseAudioTrack>
+        </ChooseAudioTrack>
+        <CloseVideo>
+        </CloseVideo>
         <ShowHideVideo>显示/隐藏 视频</ShowHideVideo>
         <ShowHideWaveForm>显示/隐藏 波形</ShowHideWaveForm>
+        <UnDockVideoControls>
+        </UnDockVideoControls>
+        <ReDockVideoControls>
+        </ReDockVideoControls>
       </Video>
       <SpellCheck>
         <Title>拼写检查(&amp;S)</Title>
@@ -434,6 +470,20 @@ C# 源代码可从网站获得。
         <Settings>设置(&amp;S)...</Settings>
         <ChooseLanguage>选择语言(&amp;C)...</ChooseLanguage>
       </Options>
+      <Networking>
+        <Title>
+        </Title>
+        <StartNewSession>
+        </StartNewSession>
+        <JoinSession>
+        </JoinSession>
+        <ShowSessionInfoAndLog>
+        </ShowSessionInfoAndLog>
+        <Chat>
+        </Chat>
+        <LeaveSession>
+        </LeaveSession>
+      </Networking>
       <Help>
         <Title>帮助(&amp;H)</Title>
         <Help>帮助(&amp;H)</Help>
@@ -459,8 +509,12 @@ C# 源代码可从网站获得。
         <Paste>粘贴</Paste>
         <Delete>删除</Delete>
         <SelectAll>全部选择</SelectAll>
+        <InsertFirstLine>
+        </InsertFirstLine>
         <InsertBefore>之前插入</InsertBefore>
         <InsertAfter>之后插入</InsertAfter>
+        <InsertSubtitleAfter>
+        </InsertSubtitleAfter>
         <Split>分割</Split>
         <MergeSelectedLines>合并所选行</MergeSelectedLines>
         <MergeWithLineBefore>合并之前行</MergeWithLineBefore>
@@ -534,10 +588,28 @@ C# 源代码可从网站获得。
       <AdjustTip>提示: 使用 &lt;Alt + up/down&gt; 以转到 上一行/下一行</AdjustTip>
       <BeforeChangingTimeInWaveFormX>更改波形内的时间之前: {0}</BeforeChangingTimeInWaveFormX>
       <NewTextInsertAtX>已在 {0} 处插入新文本</NewTextInsertAtX>
+      <Center>
+      </Center>
+      <PlayRate>
+      </PlayRate>
+      <Slow>
+      </Slow>
+      <Normal>
+      </Normal>
+      <Fast>
+      </Fast>
+      <VeryFast>
+      </VeryFast>
     </VideoControls>
     <SaveChangesToUntitled>保存更改到 Untitled 吗？</SaveChangesToUntitled>
     <SaveChangesToX>保存更改到 {0} 吗？</SaveChangesToX>
+    <SaveChangesToUntitledOriginal>
+    </SaveChangesToUntitledOriginal>
+    <SaveChangesToOriginalX>
+    </SaveChangesToOriginalX>
     <SaveSubtitleAs>字幕另存为...</SaveSubtitleAs>
+    <SaveOriginalSubtitleAs>
+    </SaveOriginalSubtitleAs>
     <NoSubtitleLoaded>尚未加载字幕</NoSubtitleLoaded>
     <VisualSyncSelectedLines>视觉同步 - 所选行</VisualSyncSelectedLines>
     <VisualSyncTitle>视觉同步</VisualSyncTitle>
@@ -553,6 +625,8 @@ C# 源代码可从网站获得。
     <FileIsEmptyOrShort>文件是空的或者太短！</FileIsEmptyOrShort>
     <FileNotFound>文件未找到: {0}</FileNotFound>
     <SavedSubtitleX>字幕 {0} 已保存</SavedSubtitleX>
+    <SavedOriginalSubtitleX>
+    </SavedOriginalSubtitleX>
     <FileOnDiskModified>磁盘上的文件已修改</FileOnDiskModified>
     <OverwriteModifiedFile>您要用当前文件覆盖文件 {0} (修改于 {1}{2}{3}) 吗？ (当前文件是从 {4} {5} 处的磁盘加载的)</OverwriteModifiedFile>
     <UnableToSaveSubtitleX>无法保存字幕文件 {0}</UnableToSaveSubtitleX>
@@ -584,6 +658,10 @@ C# 源代码可从网站获得。
     <SelectedLines>所选行</SelectedLines>
     <BeforeDisplayTimeAdjustment>显示时间调整之前</BeforeDisplayTimeAdjustment>
     <DisplayTimeAdjustedX>已调整显示时间: {0}</DisplayTimeAdjustedX>
+    <DisplayTimesAdjustedX>
+    </DisplayTimesAdjustedX>
+    <StarTimeAdjustedX>
+    </StarTimeAdjustedX>
     <BeforeCommonErrorFixes>修复常规错误之前</BeforeCommonErrorFixes>
     <CommonErrorsFixedInSelectedLines>已修复所选行内的常规错误</CommonErrorsFixedInSelectedLines>
     <CommonErrorsFixed>常规错误已修复</CommonErrorsFixed>
@@ -692,6 +770,8 @@ C# 源代码可从网站获得。
     <UnicodeMusicSymbolsAnsiWarning>字幕含有 Unicode 音符，使用 ANSI 文件编码保存会丢失这些音符。继续保存吗？</UnicodeMusicSymbolsAnsiWarning>
     <NegativeTimeWarning>字幕含有负值时间码。继续保存吗？</NegativeTimeWarning>
     <BeforeMergeShortLines>合并短行之前</BeforeMergeShortLines>
+    <BeforeSplitLongLines>
+    </BeforeSplitLongLines>
     <MergedShortLinesX>已合并行数: {0}</MergedShortLinesX>
     <BeforeSetMinimumDisplayTimeBetweenParagraphs>设置段间最小显示时间之前</BeforeSetMinimumDisplayTimeBetweenParagraphs>
     <XMinimumDisplayTimeBetweenParagraphsChanged>已更改段间最小显示时间的行数: {0}</XMinimumDisplayTimeBetweenParagraphsChanged>
@@ -705,6 +785,36 @@ C# 源代码可从网站获得。
     <BeforeSetStartTimeAndOffsetTheRest>设置起始时间并偏移其余之前</BeforeSetStartTimeAndOffsetTheRest>
     <ContinueWithCurrentSpellCheck>继续当前的拼写检查吗？</ContinueWithCurrentSpellCheck>
     <CharactersPerSecond>字符/秒: {0:0.00}</CharactersPerSecond>
+    <GetFrameRateFromVideoFile>
+    </GetFrameRateFromVideoFile>
+    <NetworkMessage>
+    </NetworkMessage>
+    <NetworkUpdate>
+    </NetworkUpdate>
+    <NetworkInsert>
+    </NetworkInsert>
+    <NetworkDelete>
+    </NetworkDelete>
+    <NetworkNewUser>
+    </NetworkNewUser>
+    <NetworkByeUser>
+    </NetworkByeUser>
+    <NetworkUnableToConnectToServer>
+    </NetworkUnableToConnectToServer>
+    <UserAndAction>
+    </UserAndAction>
+    <NetworkMode>
+    </NetworkMode>
+    <XStartedSessionYAtZ>
+    </XStartedSessionYAtZ>
+    <SpellChekingViaWordXLineYOfX>
+    </SpellChekingViaWordXLineYOfX>
+    <UnableToStartWord>
+    </UnableToStartWord>
+    <SpellCheckAbortedXCorrections>
+    </SpellCheckAbortedXCorrections>
+    <SpellCheckCompletedXCorrections>
+    </SpellCheckCompletedXCorrections>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>从 Matroska 文件选择字幕</Title>
@@ -736,6 +846,36 @@ C# 源代码可从网站获得。
     <Enabled>启用</Enabled>
     <SearchType>搜索类型</SearchType>
   </MultipleReplace>
+  <NetworkChat>
+    <Title>
+    </Title>
+    <Send>
+    </Send>
+  </NetworkChat>
+  <NetworkJoin>
+    <Title>
+    </Title>
+    <Information>
+    </Information>
+    <Join>
+    </Join>
+  </NetworkJoin>
+  <NetworkLogAndInfo>
+    <Title>
+    </Title>
+    <Log>
+    </Log>
+  </NetworkLogAndInfo>
+  <NetworkStart>
+    <Title>
+    </Title>
+    <ConnectionTo>
+    </ConnectionTo>
+    <Information>
+    </Information>
+    <Start>
+    </Start>
+  </NetworkStart>
   <RemoveTextFromHearImpaired>
     <Title>删除文本以免妨碍听觉</Title>
     <RemoveTextConditions>删除文本条件</RemoveTextConditions>
@@ -753,6 +893,10 @@ C# 源代码可从网站获得。
     <After>之后</After>
     <LinesFoundX>找到行数: {0}</LinesFoundX>
     <RemoveTextIfContains>删除文本，如果它包含:</RemoveTextIfContains>
+    <RemoveInterjections>
+    </RemoveInterjections>
+    <EditInterjections>
+    </EditInterjections>
   </RemoveTextFromHearImpaired>
   <ReplaceDialog>
     <Title>替换</Title>
@@ -782,6 +926,8 @@ C# 源代码可从网站获得。
   <Settings>
     <Title>设置</Title>
     <General>常规</General>
+    <Toolbar>
+    </Toolbar>
     <VideoPlayer>视频播放器</VideoPlayer>
     <WaveForm>波形格式</WaveForm>
     <Tools>工具</Tools>
@@ -799,14 +945,21 @@ C# 源代码可从网站获得。
     <SpellCheck>拼写检查</SpellCheck>
     <SettingsName>设置</SettingsName>
     <Help>帮助</Help>
-    <Miscellaneous>其它</Miscellaneous>
     <ShowFrameRate>在工具栏显示帧率</ShowFrameRate>
     <DefaultFrameRate>默认帧率</DefaultFrameRate>
     <DefaultFileEncoding>默认文件编码</DefaultFileEncoding>
     <AutoDetectAnsiEncoding>自动检测 ANSI 编码</AutoDetectAnsiEncoding>
     <SubtitleLineMaximumLength>单行最大长度</SubtitleLineMaximumLength>
+    <AutoWrapWhileTyping>
+    </AutoWrapWhileTyping>
     <SubtitleFont>字幕字体</SubtitleFont>
     <SubtitleFontSize>字幕字体大小</SubtitleFontSize>
+    <SubtitleFontColor>
+    </SubtitleFontColor>
+    <SubtitleBackgroundColor>
+    </SubtitleBackgroundColor>
+    <SpellChecker>
+    </SpellChecker>
     <RememberRecentFiles>记住最近的文件 (用于重新打开)</RememberRecentFiles>
     <StartWithLastFileLoaded>以上次加载的文件开始</StartWithLastFileLoaded>
     <RememberSelectedLine>记住所选行</RememberSelectedLine>
@@ -823,6 +976,8 @@ C# 源代码可从网站获得。
     <AutoBackupEveryMinute>每隔 1 分钟</AutoBackupEveryMinute>
     <AutoBackupEveryFiveMinutes>每隔 5 分钟</AutoBackupEveryFiveMinutes>
     <AutoBackupEveryFifteenMinutes>每隔 15 分钟</AutoBackupEveryFifteenMinutes>
+    <AllowEditOfOriginalSubtitle>
+    </AllowEditOfOriginalSubtitle>
     <VideoEngine>视频引擎</VideoEngine>
     <DirectShow>DirectShow</DirectShow>
     <DirectShowDescription>quartz.dll 在 System32 文件夹中</DirectShowDescription>
@@ -881,12 +1036,20 @@ C# 源代码可从网站获得。
     <MergeLinesShorterThan>合并小于该长度的行</MergeLinesShorterThan>
     <MusicSymbol>音符</MusicSymbol>
     <MusicSymbolsToReplace>替换音符 (用空格分隔)</MusicSymbolsToReplace>
+    <FixCommonOcrErrorsUseHardcodedRules>
+    </FixCommonOcrErrorsUseHardcodedRules>
   </Settings>
   <ShowEarlierLater>
     <Title>提前/推后 显示所选行时间</Title>
+    <TitleAll>
+    </TitleAll>
     <ShowEarlier>提前显示</ShowEarlier>
     <ShowLater>推后显示</ShowLater>
     <TotalAdjustmentX>调整总数: {0}</TotalAdjustmentX>
+    <AllLines>
+    </AllLines>
+    <SelectedLinesonly>
+    </SelectedLinesonly>
   </ShowEarlierLater>
   <ShowHistory>
     <Title>历史 (用于撤消)</Title>
@@ -921,6 +1084,22 @@ C# 源代码可从网站获得。
     <SpellCheckCompleted>拼写检查完成。</SpellCheckCompleted>
     <SpellCheckAborted>拼写检查中止</SpellCheckAborted>
   </SpellCheck>
+  <SplitLongLines>
+    <Title>
+    </Title>
+    <SingleLineMaximumLength>
+    </SingleLineMaximumLength>
+    <LineMaximumLength>
+    </LineMaximumLength>
+    <LineContinuationBeginEndStrings>
+    </LineContinuationBeginEndStrings>
+    <NumberOfSplits>
+    </NumberOfSplits>
+    <LongestSingleLineIsXAtY>
+    </LongestSingleLineIsXAtY>
+    <LongestLineIsXAtY>
+    </LongestLineIsXAtY>
+  </SplitLongLines>
   <SplitSubtitle>
     <Title>分割字幕</Title>
     <Description1>输入视频第一部分的长度，或浏览</Description1>
@@ -945,7 +1124,8 @@ C# 源代码可从网站获得。
     <SetSyncPoint>设置同步点</SetSyncPoint>
     <RemoveSyncPoint>删除同步点</RemoveSyncPoint>
     <SyncPointsX>同步点: {0}</SyncPointsX>
-    <Description>点同步需要至少 2 个同步点</Description>
+    <Info>
+    </Info>
   </PointSync>
   <UnknownSubtitle>
     <Title>未知的字幕类型</Title>
@@ -1012,6 +1192,10 @@ C# 源代码可从网站获得。
     <OcrAutoCorrectionSpellchecking>OCR 自动修正/拼写检查</OcrAutoCorrectionSpellchecking>
     <FixOcrErrors>修正 OCR 错误</FixOcrErrors>
     <SaveSubtitleImageAs>字幕图像另存为...</SaveSubtitleImageAs>
+    <SaveAllSubtitleImagesAs>
+    </SaveAllSubtitleImagesAs>
+    <XImagesSavedInY>
+    </XImagesSavedInY>
     <TryModiForUnknownWords>为未知词尝试 MS MODI OCR</TryModiForUnknownWords>
     <DictionaryX>字典: {0}</DictionaryX>
     <RightToLeft>从右到左</RightToLeft>

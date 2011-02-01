@@ -100,6 +100,7 @@ namespace Nikse.SubtitleEdit.Logic
                 SingleLineLengths = "Single line length: ",
                 TotalLengthX = "Total length: {0}",
                 TotalLengthXSplitLine = "Total length: {0} (split line!)",
+                SplitLine = "Split line!",
                 NotAvailable = "N/A",
                 FileNameXAndSize = "File name: {0} ({1})",
                 ResolutionX = "Resolution: {0}",

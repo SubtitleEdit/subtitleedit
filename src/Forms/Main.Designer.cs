@@ -305,6 +305,7 @@
             this.tabControlSubtitle = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.groupBoxEdit = new System.Windows.Forms.GroupBox();
+            this.buttonSplitLine = new System.Windows.Forms.Button();
             this.labelAlternateCharactersPerSecond = new System.Windows.Forms.Label();
             this.labelTextAlternateLineTotal = new System.Windows.Forms.Label();
             this.labelAlternateSingleLine = new System.Windows.Forms.Label();
@@ -2939,6 +2940,7 @@
             // 
             this.groupBoxEdit.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxEdit.Controls.Add(this.buttonSplitLine);
             this.groupBoxEdit.Controls.Add(this.labelAlternateCharactersPerSecond);
             this.groupBoxEdit.Controls.Add(this.labelTextAlternateLineTotal);
             this.groupBoxEdit.Controls.Add(this.labelAlternateSingleLine);
@@ -2968,6 +2970,19 @@
             this.groupBoxEdit.Size = new System.Drawing.Size(926, 102);
             this.groupBoxEdit.TabIndex = 1;
             this.groupBoxEdit.TabStop = false;
+            // 
+            // buttonSplitLine
+            // 
+            this.buttonSplitLine.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonSplitLine.ForeColor = System.Drawing.Color.Red;
+            this.buttonSplitLine.Location = new System.Drawing.Point(806, 78);
+            this.buttonSplitLine.Name = "buttonSplitLine";
+            this.buttonSplitLine.Size = new System.Drawing.Size(117, 21);
+            this.buttonSplitLine.TabIndex = 39;
+            this.buttonSplitLine.Text = "Split line";
+            this.buttonSplitLine.UseVisualStyleBackColor = true;
+            this.buttonSplitLine.Visible = false;
+            this.buttonSplitLine.Click += new System.EventHandler(this.buttonSplitLine_Click);
             // 
             // labelAlternateCharactersPerSecond
             // 
@@ -3093,7 +3108,7 @@
             // buttonUnBreak
             // 
             this.buttonUnBreak.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonUnBreak.Location = new System.Drawing.Point(806, 31);
+            this.buttonUnBreak.Location = new System.Drawing.Point(806, 30);
             this.buttonUnBreak.Name = "buttonUnBreak";
             this.buttonUnBreak.Size = new System.Drawing.Size(117, 21);
             this.buttonUnBreak.TabIndex = 6;
@@ -3114,7 +3129,8 @@
             // buttonUndoListViewChanges
             // 
             this.buttonUndoListViewChanges.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonUndoListViewChanges.Location = new System.Drawing.Point(806, 59);
+            this.buttonUndoListViewChanges.Enabled = false;
+            this.buttonUndoListViewChanges.Location = new System.Drawing.Point(806, 54);
             this.buttonUndoListViewChanges.Name = "buttonUndoListViewChanges";
             this.buttonUndoListViewChanges.Size = new System.Drawing.Size(117, 21);
             this.buttonUndoListViewChanges.TabIndex = 7;
@@ -3722,6 +3738,7 @@
         private System.Windows.Forms.ImageList imageListPlayRate;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemPlayRateVeryFast;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemSetAudioTrack;
+        private System.Windows.Forms.Button buttonSplitLine;
     }
 }
 
