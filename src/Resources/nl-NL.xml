@@ -2,7 +2,7 @@
 <Language Name="Nederlands">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.0</Version>
+    <Version>3.1</Version>
     <TranslatedBy>Albert B.</TranslatedBy>
     <CultureName>nl-NL</CultureName>
     <OK>&amp;Okee</OK>
@@ -39,6 +39,8 @@
     <SingleLineLengths>Enkele regellengte</SingleLineLengths>
     <TotalLengthX>Totale lengte: {0}</TotalLengthX>
     <TotalLengthXSplitLine>Totale lengte: {0} scheidingslijn!)</TotalLengthXSplitLine>
+    <SplitLine>
+    </SplitLine>
     <NotAvailable>N.v.t.</NotAvailable>
     <OverlapPreviousLineX>Overlap vorige lijn ({0:#,##0.###})</OverlapPreviousLineX>
     <OverlapX>Overlap ({0:#,##0.###})</OverlapX>
@@ -55,6 +57,14 @@
     </OpenOriginalSubtitleFile>
     <PleaseWait>
     </PleaseWait>
+    <SessionKey>
+    </SessionKey>
+    <UserName>
+    </UserName>
+    <WebServiceUrl>
+    </WebServiceUrl>
+    <IP>
+    </IP>
   </General>
   <About>
     <Title>Over Subtitle Edit</Title>
@@ -150,6 +160,10 @@ U mag deze verspreiden, wijzigen en vrij gebruiken.
     <ConvertFrameRateOfSubtitle>Verander beeldsnelheid van de ondertitels</ConvertFrameRateOfSubtitle>
     <FromFrameRate>Van beeldsnelheid</FromFrameRate>
     <ToFrameRate>Naar beeldsnelheid</ToFrameRate>
+    <FrameRateNotCorrect>
+    </FrameRateNotCorrect>
+    <FrameRateNotChanged>
+    </FrameRateNotChanged>
   </ChangeFrameRate>
   <ChooseEncoding>
     <Title>Kies codering</Title>
@@ -211,6 +225,8 @@ U mag deze verspreiden, wijzigen en vrij gebruiken.
     </ReadingSubtitleData>
     <RippingVobFileXofYZ>
     </RippingVobFileXofYZ>
+    <WrongIfoType>
+    </WrongIfoType>
   </DvdSubrip>
   <DvdSubRipChooseLanguage>
     <Title>
@@ -221,6 +237,8 @@ U mag deze verspreiden, wijzigen en vrij gebruiken.
     </UnknownLanguage>
     <SubtitleImageXofYAndWidthXHeight>
     </SubtitleImageXofYAndWidthXHeight>
+    <SubtitleImage>
+    </SubtitleImage>
   </DvdSubRipChooseLanguage>
   <EffectKaraoke>
     <Title>Karaoke effect</Title>
@@ -276,6 +294,8 @@ U mag deze verspreiden, wijzigen en vrij gebruiken.
     <BreakLongLines>Breek lange regels af</BreakLongLines>
     <RemoveLineBreaks>
     </RemoveLineBreaks>
+    <RemoveLineBreaksAll>
+    </RemoveLineBreaksAll>
     <FixUppercaseIInsindeLowercaseWords>Verbeter hoofdletters 'i' in kleine letter woorden (ocr fout)</FixUppercaseIInsindeLowercaseWords>
     <FixDoubleApostrophes>Verbeter dubbele apostrof tekens ('') naar enkele quotes (")</FixDoubleApostrophes>
     <AddPeriods>Plaats een komma na regels daar waar de volgende regel met een hoofdletter begint</AddPeriods>
@@ -312,6 +332,8 @@ U mag deze verspreiden, wijzigen en vrij gebruiken.
     <XIsChangedToUppercase>{0} i's vervangen door hoofdletter I</XIsChangedToUppercase>
     <FixFirstLetterToUppercaseAfterParagraph>Verander eerste letter in hoofdletters na een paragraaf</FixFirstLetterToUppercaseAfterParagraph>
     <MergeShortLine>Voeg korte regels samen</MergeShortLine>
+    <MergeShortLineAll>
+    </MergeShortLineAll>
     <XLineBreaksAdded>{0} regeleinden toegevoegd</XLineBreaksAdded>
     <BreakLongLine>Breek lange regel af</BreakLongLine>
     <FixLongDisplayTime>Herstel te lange weergavetijd</FixLongDisplayTime>
@@ -454,6 +476,10 @@ U mag deze verspreiden, wijzigen en vrij gebruiken.
     <PreviewLinesModifiedX>
     </PreviewLinesModifiedX>
   </ImportText>
+  <Interjections>
+    <Title>
+    </Title>
+  </Interjections>
   <Main>
     <Menu>
       <File>
@@ -469,6 +495,8 @@ U mag deze verspreiden, wijzigen en vrij gebruiken.
         <ImportOcrFromDvd>
         </ImportOcrFromDvd>
         <ImportOcrVobSubSubtitle>Importeer/OCR VobSub (sub/idx) ondertitel...</ImportOcrVobSubSubtitle>
+        <ImportBluRaySupFile>
+        </ImportBluRaySupFile>
         <ImportSubtitleFromMatroskaFile>Importeer ondertitels uit Matroska bestand...</ImportSubtitleFromMatroskaFile>
         <ImportSubtitleWithManualChosenEncoding>Importeer ondertitel met zelf gekozen codering...</ImportSubtitleWithManualChosenEncoding>
         <ImportText>
@@ -502,6 +530,8 @@ U mag deze verspreiden, wijzigen en vrij gebruiken.
         <ChangeFrameRate>Verander beeldsnelheid..</ChangeFrameRate>
         <MergeShortLines>
         </MergeShortLines>
+        <SplitLongLines>
+        </SplitLongLines>
         <MinimumDisplayTimeBetweenParagraphs>
         </MinimumDisplayTimeBetweenParagraphs>
         <SortBy>Sorteer op</SortBy>
@@ -517,10 +547,18 @@ U mag deze verspreiden, wijzigen en vrij gebruiken.
         </Title>
         <OpenVideo>
         </OpenVideo>
+        <ChooseAudioTrack>
+        </ChooseAudioTrack>
+        <CloseVideo>
+        </CloseVideo>
         <ShowHideVideo>
         </ShowHideVideo>
         <ShowHideWaveForm>
         </ShowHideWaveForm>
+        <UnDockVideoControls>
+        </UnDockVideoControls>
+        <ReDockVideoControls>
+        </ReDockVideoControls>
       </Video>
       <SpellCheck>
         <Title>
@@ -559,6 +597,20 @@ U mag deze verspreiden, wijzigen en vrij gebruiken.
         <Settings>&amp;Instellingen</Settings>
         <ChooseLanguage>&amp;Kies taal...</ChooseLanguage>
       </Options>
+      <Networking>
+        <Title>
+        </Title>
+        <StartNewSession>
+        </StartNewSession>
+        <JoinSession>
+        </JoinSession>
+        <ShowSessionInfoAndLog>
+        </ShowSessionInfoAndLog>
+        <Chat>
+        </Chat>
+        <LeaveSession>
+        </LeaveSession>
+      </Networking>
       <Help>
         <Title>Help</Title>
         <Help>&amp;Help</Help>
@@ -581,9 +633,21 @@ U mag deze verspreiden, wijzigen en vrij gebruiken.
         </ShowHideVideo>
       </ToolBar>
       <ContextMenu>
+        <Cut>
+        </Cut>
+        <Copy>
+        </Copy>
+        <Paste>
+        </Paste>
         <Delete>Verwijder</Delete>
+        <SelectAll>
+        </SelectAll>
+        <InsertFirstLine>
+        </InsertFirstLine>
         <InsertBefore>Voeg in voor</InsertBefore>
         <InsertAfter>Voeg in na</InsertAfter>
+        <InsertSubtitleAfter>
+        </InsertSubtitleAfter>
         <Split>Splitsen</Split>
         <MergeSelectedLines>Voeg geselecteerde regels samen</MergeSelectedLines>
         <MergeWithLineBefore>Samenvoegen met voorgaande regel</MergeWithLineBefore>
@@ -701,10 +765,28 @@ U mag deze verspreiden, wijzigen en vrij gebruiken.
       </BeforeChangingTimeInWaveFormX>
       <NewTextInsertAtX>
       </NewTextInsertAtX>
+      <Center>
+      </Center>
+      <PlayRate>
+      </PlayRate>
+      <Slow>
+      </Slow>
+      <Normal>
+      </Normal>
+      <Fast>
+      </Fast>
+      <VeryFast>
+      </VeryFast>
     </VideoControls>
     <SaveChangesToUntitled>Wijzigingen opslaan in zonder titel?</SaveChangesToUntitled>
     <SaveChangesToX>Veranderingen opslaan in {0}?</SaveChangesToX>
+    <SaveChangesToUntitledOriginal>
+    </SaveChangesToUntitledOriginal>
+    <SaveChangesToOriginalX>
+    </SaveChangesToOriginalX>
     <SaveSubtitleAs>Sla ondertitels op als...</SaveSubtitleAs>
+    <SaveOriginalSubtitleAs>
+    </SaveOriginalSubtitleAs>
     <NoSubtitleLoaded>Geen ondertitel geladen</NoSubtitleLoaded>
     <VisualSyncSelectedLines>Visuele sync geselecteerde regels</VisualSyncSelectedLines>
     <VisualSyncTitle>Visuele sync</VisualSyncTitle>
@@ -720,6 +802,8 @@ U mag deze verspreiden, wijzigen en vrij gebruiken.
     <FileIsEmptyOrShort>Bestand is leeg of erg klein</FileIsEmptyOrShort>
     <FileNotFound>Bestand niet gevonden: {0}</FileNotFound>
     <SavedSubtitleX>Opgeslagen ondertitels {0}</SavedSubtitleX>
+    <SavedOriginalSubtitleX>
+    </SavedOriginalSubtitleX>
     <FileOnDiskModified>Bestand op schijf is veranderd</FileOnDiskModified>
     <OverwriteModifiedFile>Overschrijf het bestand {0} veranderd op {1} {2}{3} met het huidige bestand geladen van schijf op {4} {5}?</OverwriteModifiedFile>
     <UnableToSaveSubtitleX>Kan ondertitel bestand {0} niet opslaan</UnableToSaveSubtitleX>
@@ -754,6 +838,10 @@ U mag deze verspreiden, wijzigen en vrij gebruiken.
     <SelectedLines>Geselecteerde regels</SelectedLines>
     <BeforeDisplayTimeAdjustment>Voor weergavetijd toegepast</BeforeDisplayTimeAdjustment>
     <DisplayTimeAdjustedX>Weergavetijd aangepast: {0}</DisplayTimeAdjustedX>
+    <DisplayTimesAdjustedX>
+    </DisplayTimesAdjustedX>
+    <StarTimeAdjustedX>
+    </StarTimeAdjustedX>
     <BeforeCommonErrorFixes>Voor herstel gebruikelijke fouten</BeforeCommonErrorFixes>
     <CommonErrorsFixedInSelectedLines>Gebruikelijke fouten in geselecteerde regels hersteld</CommonErrorsFixedInSelectedLines>
     <CommonErrorsFixed>Gebruikelijke fouten hersteld</CommonErrorsFixed>
@@ -846,7 +934,13 @@ Toch doorgaan?</SubtitleAppendPrompt>
     <InvalidVobSubHeader>Koptekst niet geldig VobSub-bestand: {0}</InvalidVobSubHeader>
     <OpenVobSubFile>Open VobSub (sub/idx) ondertitel...</OpenVobSubFile>
     <VobSubFiles>VobSub ondertitelbestanden</VobSubFiles>
+    <OpenBluRaySupFile>
+    </OpenBluRaySupFile>
+    <BluRaySupFiles>
+    </BluRaySupFiles>
     <BeforeImportingVobSubFile>Voor importeren VobSub ondertiteling</BeforeImportingVobSubFile>
+    <BeforeImportingBluRaySupFile>
+    </BeforeImportingBluRaySupFile>
     <BeforeShowSelectedLinesEarlierLater>Voor tonen geselecteerde regels eerder/later</BeforeShowSelectedLinesEarlierLater>
     <ShowSelectedLinesEarlierLaterPerformed>Toon eerder/later uitgevoerd op geselecteerde regels</ShowSelectedLinesEarlierLaterPerformed>
     <DoubleWordsViaRegEx>Dubbele woorden via regex {0}</DoubleWordsViaRegEx>
@@ -874,6 +968,8 @@ Toch doorgaan?</SubtitleAppendPrompt>
     </NegativeTimeWarning>
     <BeforeMergeShortLines>
     </BeforeMergeShortLines>
+    <BeforeSplitLongLines>
+    </BeforeSplitLongLines>
     <MergedShortLinesX>
     </MergedShortLinesX>
     <BeforeSetMinimumDisplayTimeBetweenParagraphs>
@@ -898,6 +994,38 @@ Toch doorgaan?</SubtitleAppendPrompt>
     </BeforeSetStartTimeAndOffsetTheRest>
     <ContinueWithCurrentSpellCheck>
     </ContinueWithCurrentSpellCheck>
+    <CharactersPerSecond>
+    </CharactersPerSecond>
+    <GetFrameRateFromVideoFile>
+    </GetFrameRateFromVideoFile>
+    <NetworkMessage>
+    </NetworkMessage>
+    <NetworkUpdate>
+    </NetworkUpdate>
+    <NetworkInsert>
+    </NetworkInsert>
+    <NetworkDelete>
+    </NetworkDelete>
+    <NetworkNewUser>
+    </NetworkNewUser>
+    <NetworkByeUser>
+    </NetworkByeUser>
+    <NetworkUnableToConnectToServer>
+    </NetworkUnableToConnectToServer>
+    <UserAndAction>
+    </UserAndAction>
+    <NetworkMode>
+    </NetworkMode>
+    <XStartedSessionYAtZ>
+    </XStartedSessionYAtZ>
+    <SpellChekingViaWordXLineYOfX>
+    </SpellChekingViaWordXLineYOfX>
+    <UnableToStartWord>
+    </UnableToStartWord>
+    <SpellCheckAbortedXCorrections>
+    </SpellCheckAbortedXCorrections>
+    <SpellCheckCompletedXCorrections>
+    </SpellCheckCompletedXCorrections>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Kies ondertitels uit Matroska bestand</Title>
@@ -935,6 +1063,36 @@ Toch doorgaan?</SubtitleAppendPrompt>
     <Enabled>Ingeschakeld</Enabled>
     <SearchType>Zoek type</SearchType>
   </MultipleReplace>
+  <NetworkChat>
+    <Title>
+    </Title>
+    <Send>
+    </Send>
+  </NetworkChat>
+  <NetworkJoin>
+    <Title>
+    </Title>
+    <Information>
+    </Information>
+    <Join>
+    </Join>
+  </NetworkJoin>
+  <NetworkLogAndInfo>
+    <Title>
+    </Title>
+    <Log>
+    </Log>
+  </NetworkLogAndInfo>
+  <NetworkStart>
+    <Title>
+    </Title>
+    <ConnectionTo>
+    </ConnectionTo>
+    <Information>
+    </Information>
+    <Start>
+    </Start>
+  </NetworkStart>
   <RemoveTextFromHearImpaired>
     <Title>Verwijder tekst voor doven en slechthorenden</Title>
     <RemoveTextConditions>
@@ -955,6 +1113,10 @@ Toch doorgaan?</SubtitleAppendPrompt>
     <LinesFoundX>Regels gevonden: {0}</LinesFoundX>
     <RemoveTextIfContains>
     </RemoveTextIfContains>
+    <RemoveInterjections>
+    </RemoveInterjections>
+    <EditInterjections>
+    </EditInterjections>
   </RemoveTextFromHearImpaired>
   <ReplaceDialog>
     <Title>Vervang</Title>
@@ -994,6 +1156,8 @@ Toch doorgaan?</SubtitleAppendPrompt>
   <Settings>
     <Title>Instellingen</Title>
     <General>Algemeen</General>
+    <Toolbar>
+    </Toolbar>
     <VideoPlayer>Video speler</VideoPlayer>
     <WaveForm>
     </WaveForm>
@@ -1015,7 +1179,6 @@ Toch doorgaan?</SubtitleAppendPrompt>
     <SpellCheck>Spelling</SpellCheck>
     <SettingsName>Instellingen</SettingsName>
     <Help>Help</Help>
-    <Miscellaneous>Diversen</Miscellaneous>
     <ShowFrameRate>
     </ShowFrameRate>
     <DefaultFrameRate>Standaard beeldsnelheid</DefaultFrameRate>
@@ -1023,10 +1186,20 @@ Toch doorgaan?</SubtitleAppendPrompt>
     <AutoDetectAnsiEncoding>
     </AutoDetectAnsiEncoding>
     <SubtitleLineMaximumLength>Maximale ondertitellengte</SubtitleLineMaximumLength>
+    <AutoWrapWhileTyping>
+    </AutoWrapWhileTyping>
     <SubtitleFont>Ondertitel lettertype</SubtitleFont>
     <SubtitleFontSize>Lettergrootte</SubtitleFontSize>
+    <SubtitleFontColor>
+    </SubtitleFontColor>
+    <SubtitleBackgroundColor>
+    </SubtitleBackgroundColor>
+    <SpellChecker>
+    </SpellChecker>
     <RememberRecentFiles>Onthoud recente bestanden (voor heropenen)</RememberRecentFiles>
     <StartWithLastFileLoaded>Begin met laatst opgeslagen bestand</StartWithLastFileLoaded>
+    <RememberSelectedLine>
+    </RememberSelectedLine>
     <RememberPositionAndSize>Onthoud hoofdvenster positie en grootte</RememberPositionAndSize>
     <StartInSourceView>Begin in bron weergave</StartInSourceView>
     <RemoveBlankLinesWhenOpening>
@@ -1042,6 +1215,16 @@ Toch doorgaan?</SubtitleAppendPrompt>
     </MainListViewVideoGoToPositionAndPlay>
     <MainListViewEditText>
     </MainListViewEditText>
+    <AutoBackup>
+    </AutoBackup>
+    <AutoBackupEveryMinute>
+    </AutoBackupEveryMinute>
+    <AutoBackupEveryFiveMinutes>
+    </AutoBackupEveryFiveMinutes>
+    <AutoBackupEveryFifteenMinutes>
+    </AutoBackupEveryFifteenMinutes>
+    <AllowEditOfOriginalSubtitle>
+    </AllowEditOfOriginalSubtitle>
     <VideoEngine>Video speler</VideoEngine>
     <DirectShow>DirectShow</DirectShow>
     <DirectShowDescription>Quartz.dll in system32 bestand</DirectShowDescription>
@@ -1143,13 +1326,21 @@ Toch doorgaan?</SubtitleAppendPrompt>
     </MusicSymbol>
     <MusicSymbolsToReplace>
     </MusicSymbolsToReplace>
+    <FixCommonOcrErrorsUseHardcodedRules>
+    </FixCommonOcrErrorsUseHardcodedRules>
   </Settings>
   <ShowEarlierLater>
     <Title>Toon geselecteerde regels eerder/later</Title>
+    <TitleAll>
+    </TitleAll>
     <ShowEarlier>Toon eerder</ShowEarlier>
     <ShowLater>Toon later</ShowLater>
     <TotalAdjustmentX>
     </TotalAdjustmentX>
+    <AllLines>
+    </AllLines>
+    <SelectedLinesonly>
+    </SelectedLinesonly>
   </ShowEarlierLater>
   <ShowHistory>
     <Title>Geschiedenis (voor ongedaan maken)</Title>
@@ -1194,6 +1385,22 @@ Toch doorgaan?</SubtitleAppendPrompt>
     <SpellCheckAborted>
     </SpellCheckAborted>
   </SpellCheck>
+  <SplitLongLines>
+    <Title>
+    </Title>
+    <SingleLineMaximumLength>
+    </SingleLineMaximumLength>
+    <LineMaximumLength>
+    </LineMaximumLength>
+    <LineContinuationBeginEndStrings>
+    </LineContinuationBeginEndStrings>
+    <NumberOfSplits>
+    </NumberOfSplits>
+    <LongestSingleLineIsXAtY>
+    </LongestSingleLineIsXAtY>
+    <LongestLineIsXAtY>
+    </LongestLineIsXAtY>
+  </SplitLongLines>
   <SplitSubtitle>
     <Title>Splits ondertitel</Title>
     <Description1>Voer de lengte van het eerste videodeel in of blader</Description1>
@@ -1223,8 +1430,8 @@ Toch doorgaan?</SubtitleAppendPrompt>
     </RemoveSyncPoint>
     <SyncPointsX>
     </SyncPointsX>
-    <Description>
-    </Description>
+    <Info>
+    </Info>
   </PointSync>
   <UnknownSubtitle>
     <Title>Onbekend ondertitel type</Title>
@@ -1263,6 +1470,8 @@ Toch doorgaan?</SubtitleAppendPrompt>
   </VobSubEditCharacters>
   <VobSubOcr>
     <Title>Importeer/OCR VobSub (sub/idx) ondertitel</Title>
+    <TitleBluRay>
+    </TitleBluRay>
     <OcrMethod>OCR methode</OcrMethod>
     <OcrViaModi>OCR via Microsoft Office Document Imaging (MODI). vereist MS Office</OcrViaModi>
     <OcrViaTesseract>
@@ -1305,6 +1514,10 @@ Toch doorgaan?</SubtitleAppendPrompt>
     </FixOcrErrors>
     <SaveSubtitleImageAs>
     </SaveSubtitleImageAs>
+    <SaveAllSubtitleImagesAs>
+    </SaveAllSubtitleImagesAs>
+    <XImagesSavedInY>
+    </XImagesSavedInY>
     <TryModiForUnknownWords>
     </TryModiForUnknownWords>
     <DictionaryX>
