@@ -77,5 +77,20 @@ namespace Test
             string actual = target.RemoveColon(text);
             Assert.AreEqual(expected, actual);
         }
+
+        /// <summary>
+        ///A test for RemoveHIInsideLine
+        ///</summary>
+        [TestMethod()]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void RemoveHIInsideLine()
+        {
+            FormRemoveTextForHearImpaired_Accessor target = new FormRemoveTextForHearImpaired_Accessor(); // TODO: Initialize to an appropriate value
+            string text = "Be quiet. (SHUSHING) It's okay.";
+            string expected = "Be quiet. It's okay.";
+            string actual = target.RemoveHearImpairedtagsInsideLine(text);
+            Assert.AreEqual(expected, actual);
+        }
+
     }
 }
