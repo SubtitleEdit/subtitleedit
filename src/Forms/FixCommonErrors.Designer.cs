@@ -56,18 +56,17 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonRefreshFixes = new System.Windows.Forms.Button();
             this.buttonFixesSelectAll = new System.Windows.Forms.Button();
             this.buttonFixesInverse = new System.Windows.Forms.Button();
-            this.subtitleListView1 = new Nikse.SubtitleEdit.Controls.SubtitleListView();
             this.contextMenuStripListview = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.toolStripMenuItemDelete = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.mergeSelectedLinesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBoxEditPanel = new System.Windows.Forms.GroupBox();
+            this.buttonSplitLine = new System.Windows.Forms.Button();
             this.labelSingleLine = new System.Windows.Forms.Label();
             this.buttonUnBreak = new System.Windows.Forms.Button();
             this.buttonAutoBreak = new System.Windows.Forms.Button();
             this.labelStartTimeWarning = new System.Windows.Forms.Label();
             this.labelDurationWarning = new System.Windows.Forms.Label();
-            this.timeUpDownStartTime = new Nikse.SubtitleEdit.Controls.TimeUpDown();
             this.numericUpDownDuration = new System.Windows.Forms.NumericUpDown();
             this.labelDuration = new System.Windows.Forms.Label();
             this.labelStartTime = new System.Windows.Forms.Label();
@@ -77,6 +76,8 @@ namespace Nikse.SubtitleEdit.Forms
             this.tabPageLog = new System.Windows.Forms.TabPage();
             this.textBoxFixedIssues = new System.Windows.Forms.TextBox();
             this.labelNumberOfImportantLogMessages = new System.Windows.Forms.Label();
+            this.subtitleListView1 = new Nikse.SubtitleEdit.Controls.SubtitleListView();
+            this.timeUpDownStartTime = new Nikse.SubtitleEdit.Controls.TimeUpDown();
             this.groupBoxStep1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.tabControl1.SuspendLayout();
@@ -367,25 +368,6 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonFixesInverse.UseVisualStyleBackColor = true;
             this.buttonFixesInverse.Click += new System.EventHandler(this.ButtonFixesInverseClick);
             // 
-            // subtitleListView1
-            // 
-            this.subtitleListView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.subtitleListView1.ContextMenuStrip = this.contextMenuStripListview;
-            this.subtitleListView1.FirstVisibleIndex = -1;
-            this.subtitleListView1.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.subtitleListView1.FullRowSelect = true;
-            this.subtitleListView1.GridLines = true;
-            this.subtitleListView1.HideSelection = false;
-            this.subtitleListView1.Location = new System.Drawing.Point(3, 5);
-            this.subtitleListView1.Name = "subtitleListView1";
-            this.subtitleListView1.Size = new System.Drawing.Size(785, 145);
-            this.subtitleListView1.TabIndex = 110;
-            this.subtitleListView1.UseCompatibleStateImageBehavior = false;
-            this.subtitleListView1.View = System.Windows.Forms.View.Details;
-            this.subtitleListView1.SelectedIndexChanged += new System.EventHandler(this.SubtitleListView1SelectedIndexChanged);
-            // 
             // contextMenuStripListview
             // 
             this.contextMenuStripListview.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -393,25 +375,25 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripSeparator1,
             this.mergeSelectedLinesToolStripMenuItem});
             this.contextMenuStripListview.Name = "contextMenuStripListview";
-            this.contextMenuStripListview.Size = new System.Drawing.Size(215, 58);
+            this.contextMenuStripListview.Size = new System.Drawing.Size(182, 54);
             this.contextMenuStripListview.Opening += new System.ComponentModel.CancelEventHandler(this.ContextMenuStripListviewOpening);
             // 
             // toolStripMenuItemDelete
             // 
             this.toolStripMenuItemDelete.Name = "toolStripMenuItemDelete";
-            this.toolStripMenuItemDelete.Size = new System.Drawing.Size(214, 24);
+            this.toolStripMenuItemDelete.Size = new System.Drawing.Size(181, 22);
             this.toolStripMenuItemDelete.Text = "Delete";
             this.toolStripMenuItemDelete.Click += new System.EventHandler(this.ToolStripMenuItemDeleteClick);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(211, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(178, 6);
             // 
             // mergeSelectedLinesToolStripMenuItem
             // 
             this.mergeSelectedLinesToolStripMenuItem.Name = "mergeSelectedLinesToolStripMenuItem";
-            this.mergeSelectedLinesToolStripMenuItem.Size = new System.Drawing.Size(214, 24);
+            this.mergeSelectedLinesToolStripMenuItem.Size = new System.Drawing.Size(181, 22);
             this.mergeSelectedLinesToolStripMenuItem.Text = "Merge selected lines";
             this.mergeSelectedLinesToolStripMenuItem.Click += new System.EventHandler(this.MergeSelectedLinesToolStripMenuItemClick);
             // 
@@ -419,6 +401,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.groupBoxEditPanel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxEditPanel.Controls.Add(this.buttonSplitLine);
             this.groupBoxEditPanel.Controls.Add(this.labelSingleLine);
             this.groupBoxEditPanel.Controls.Add(this.buttonUnBreak);
             this.groupBoxEditPanel.Controls.Add(this.buttonAutoBreak);
@@ -433,9 +416,21 @@ namespace Nikse.SubtitleEdit.Forms
             this.groupBoxEditPanel.Controls.Add(this.textBoxListViewText);
             this.groupBoxEditPanel.Location = new System.Drawing.Point(8, 149);
             this.groupBoxEditPanel.Name = "groupBoxEditPanel";
-            this.groupBoxEditPanel.Size = new System.Drawing.Size(732, 85);
+            this.groupBoxEditPanel.Size = new System.Drawing.Size(780, 85);
             this.groupBoxEditPanel.TabIndex = 111;
             this.groupBoxEditPanel.TabStop = false;
+            // 
+            // buttonSplitLine
+            // 
+            this.buttonSplitLine.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonSplitLine.ForeColor = System.Drawing.Color.Red;
+            this.buttonSplitLine.Location = new System.Drawing.Point(627, 60);
+            this.buttonSplitLine.Name = "buttonSplitLine";
+            this.buttonSplitLine.Size = new System.Drawing.Size(96, 21);
+            this.buttonSplitLine.TabIndex = 124;
+            this.buttonSplitLine.Text = "Split line";
+            this.buttonSplitLine.UseVisualStyleBackColor = true;
+            this.buttonSplitLine.Click += new System.EventHandler(this.buttonSplitLine_Click);
             // 
             // labelSingleLine
             // 
@@ -449,9 +444,9 @@ namespace Nikse.SubtitleEdit.Forms
             // buttonUnBreak
             // 
             this.buttonUnBreak.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonUnBreak.Location = new System.Drawing.Point(499, 39);
+            this.buttonUnBreak.Location = new System.Drawing.Point(627, 36);
             this.buttonUnBreak.Name = "buttonUnBreak";
-            this.buttonUnBreak.Size = new System.Drawing.Size(66, 21);
+            this.buttonUnBreak.Size = new System.Drawing.Size(96, 21);
             this.buttonUnBreak.TabIndex = 122;
             this.buttonUnBreak.Text = "&Unbreak";
             this.buttonUnBreak.UseVisualStyleBackColor = true;
@@ -460,9 +455,9 @@ namespace Nikse.SubtitleEdit.Forms
             // buttonAutoBreak
             // 
             this.buttonAutoBreak.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonAutoBreak.Location = new System.Drawing.Point(499, 12);
+            this.buttonAutoBreak.Location = new System.Drawing.Point(627, 12);
             this.buttonAutoBreak.Name = "buttonAutoBreak";
-            this.buttonAutoBreak.Size = new System.Drawing.Size(66, 21);
+            this.buttonAutoBreak.Size = new System.Drawing.Size(96, 21);
             this.buttonAutoBreak.TabIndex = 120;
             this.buttonAutoBreak.Text = "Auto &br";
             this.buttonAutoBreak.UseVisualStyleBackColor = true;
@@ -487,16 +482,6 @@ namespace Nikse.SubtitleEdit.Forms
             this.labelDurationWarning.Size = new System.Drawing.Size(110, 13);
             this.labelDurationWarning.TabIndex = 31;
             this.labelDurationWarning.Text = "labelDurationWarning";
-            // 
-            // timeUpDownStartTime
-            // 
-            this.timeUpDownStartTime.AutoSize = true;
-            this.timeUpDownStartTime.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.timeUpDownStartTime.Location = new System.Drawing.Point(8, 27);
-            this.timeUpDownStartTime.Margin = new System.Windows.Forms.Padding(4);
-            this.timeUpDownStartTime.Name = "timeUpDownStartTime";
-            this.timeUpDownStartTime.Size = new System.Drawing.Size(92, 25);
-            this.timeUpDownStartTime.TabIndex = 112;
             // 
             // numericUpDownDuration
             // 
@@ -543,7 +528,7 @@ namespace Nikse.SubtitleEdit.Forms
             // labelTextLineTotal
             // 
             this.labelTextLineTotal.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.labelTextLineTotal.Location = new System.Drawing.Point(316, 65);
+            this.labelTextLineTotal.Location = new System.Drawing.Point(444, 65);
             this.labelTextLineTotal.Name = "labelTextLineTotal";
             this.labelTextLineTotal.Size = new System.Drawing.Size(177, 16);
             this.labelTextLineTotal.TabIndex = 26;
@@ -567,9 +552,10 @@ namespace Nikse.SubtitleEdit.Forms
             this.textBoxListViewText.Location = new System.Drawing.Point(194, 9);
             this.textBoxListViewText.Multiline = true;
             this.textBoxListViewText.Name = "textBoxListViewText";
-            this.textBoxListViewText.Size = new System.Drawing.Size(299, 56);
+            this.textBoxListViewText.Size = new System.Drawing.Size(427, 56);
             this.textBoxListViewText.TabIndex = 118;
             this.textBoxListViewText.TextChanged += new System.EventHandler(this.TextBoxListViewTextTextChanged);
+            this.textBoxListViewText.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textBoxListViewText_KeyDown);
             // 
             // tabPageLog
             // 
@@ -606,6 +592,35 @@ namespace Nikse.SubtitleEdit.Forms
             this.labelNumberOfImportantLogMessages.Size = new System.Drawing.Size(190, 13);
             this.labelNumberOfImportantLogMessages.TabIndex = 11;
             this.labelNumberOfImportantLogMessages.Text = "labelNumberOfImportantLogMessages";
+            // 
+            // subtitleListView1
+            // 
+            this.subtitleListView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.subtitleListView1.ContextMenuStrip = this.contextMenuStripListview;
+            this.subtitleListView1.FirstVisibleIndex = -1;
+            this.subtitleListView1.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.subtitleListView1.FullRowSelect = true;
+            this.subtitleListView1.GridLines = true;
+            this.subtitleListView1.HideSelection = false;
+            this.subtitleListView1.Location = new System.Drawing.Point(3, 5);
+            this.subtitleListView1.Name = "subtitleListView1";
+            this.subtitleListView1.Size = new System.Drawing.Size(785, 145);
+            this.subtitleListView1.TabIndex = 110;
+            this.subtitleListView1.UseCompatibleStateImageBehavior = false;
+            this.subtitleListView1.View = System.Windows.Forms.View.Details;
+            this.subtitleListView1.SelectedIndexChanged += new System.EventHandler(this.SubtitleListView1SelectedIndexChanged);
+            // 
+            // timeUpDownStartTime
+            // 
+            this.timeUpDownStartTime.AutoSize = true;
+            this.timeUpDownStartTime.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.timeUpDownStartTime.Location = new System.Drawing.Point(8, 27);
+            this.timeUpDownStartTime.Margin = new System.Windows.Forms.Padding(4);
+            this.timeUpDownStartTime.Name = "timeUpDownStartTime";
+            this.timeUpDownStartTime.Size = new System.Drawing.Size(92, 25);
+            this.timeUpDownStartTime.TabIndex = 112;
             // 
             // FixCommonErrors
             // 
@@ -697,5 +712,6 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.Label labelNumberOfImportantLogMessages;
         private System.Windows.Forms.SplitContainer splitContainerStep2;
         private System.Windows.Forms.Label labelSingleLine;
+        private System.Windows.Forms.Button buttonSplitLine;
     }
 }

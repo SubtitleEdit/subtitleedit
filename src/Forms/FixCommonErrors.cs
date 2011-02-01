@@ -3387,6 +3387,7 @@ namespace Nikse.SubtitleEdit.Forms
             Utilities.GetLineLengths(labelSingleLine, text);
 
             string s = Utilities.RemoveHtmlTags(text).Replace(Environment.NewLine, " ");
+            buttonSplitLine.Visible = false;
             if (s.Length < Configuration.Settings.General.SubtitleLineMaximumLength * 1.9)
             {
                 labelTextLineTotal.ForeColor = System.Drawing.Color.Black;
@@ -3400,7 +3401,8 @@ namespace Nikse.SubtitleEdit.Forms
             else
             {
                 labelTextLineTotal.ForeColor = System.Drawing.Color.Red;
-                labelTextLineTotal.Text = string.Format(_languageGeneral.TotalLengthXSplitLine, s.Length);
+                labelTextLineTotal.Text = string.Format(_languageGeneral.TotalLengthX, s.Length);
+                buttonSplitLine.Visible = true;
             }
         }
 
@@ -3695,6 +3697,91 @@ namespace Nikse.SubtitleEdit.Forms
         private void FixCommonErrors_Shown(object sender, EventArgs e)
         {
             FixCommonErrors_Resize(null, null);
+        }
+
+        private void SplitSelectedParagraph(double? splitSeconds)
+        {
+            if (_originalSubtitle.Paragraphs.Count > 0 && subtitleListView1.SelectedItems.Count > 0)
+            {
+                subtitleListView1.SelectedIndexChanged -= SubtitleListView1SelectedIndexChanged;
+                int firstSelectedIndex = subtitleListView1.SelectedItems[0].Index;
+
+                // save de-seleced fixes
+                List<string> deSelectedFixes = new List<string>();
+                foreach (ListViewItem item in listViewFixes.Items)
+                {
+                    if (!item.Checked)
+                    {
+                        int number = Convert.ToInt32(item.SubItems[1].Text);
+                        if (number > firstSelectedIndex)
+                            number++;
+                        deSelectedFixes.Add(number + item.SubItems[2].Text + item.SubItems[3].Text);
+                    }
+                }
+
+                Paragraph currentParagraph = _originalSubtitle.GetParagraphOrDefault(firstSelectedIndex);
+                var newParagraph = new Paragraph();
+
+                string oldText = currentParagraph.Text;
+                string[] lines = currentParagraph.Text.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                if (lines.Length == 2 && (lines[0].EndsWith(".") || lines[0].EndsWith("!") || lines[0].EndsWith("?")))
+                {
+                    currentParagraph.Text = Utilities.AutoBreakLine(lines[0]);
+                    newParagraph.Text = Utilities.AutoBreakLine(lines[1]);
+                }
+                else
+                {
+                    string s = Utilities.AutoBreakLine(currentParagraph.Text, 5, Configuration.Settings.General.SubtitleLineMaximumLength * 2, Configuration.Settings.Tools.MergeLinesShorterThan);
+                    lines = s.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                    if (lines.Length == 2)
+                    {
+                        currentParagraph.Text = Utilities.AutoBreakLine(lines[0]);
+                        newParagraph.Text = Utilities.AutoBreakLine(lines[1]);
+                    }
+                }
+
+                double startFactor = (double)Utilities.RemoveHtmlTags(currentParagraph.Text).Length / Utilities.RemoveHtmlTags(oldText).Length;
+                if (startFactor < 0.20)
+                    startFactor = 0.20;
+                if (startFactor > 0.80)
+                    startFactor = 0.80;
+
+                double middle = currentParagraph.StartTime.TotalMilliseconds + (currentParagraph.Duration.TotalMilliseconds * startFactor);
+                if (splitSeconds.HasValue && splitSeconds.Value > (currentParagraph.StartTime.TotalSeconds + 0.2) && splitSeconds.Value < (currentParagraph.EndTime.TotalSeconds - 0.2))
+                    middle = splitSeconds.Value * 1000.0;
+                newParagraph.EndTime.TotalMilliseconds = currentParagraph.EndTime.TotalMilliseconds;
+                currentParagraph.EndTime.TotalMilliseconds = middle;
+                newParagraph.StartTime.TotalMilliseconds = currentParagraph.EndTime.TotalMilliseconds + 1;
+
+                _originalSubtitle.Paragraphs.Insert(firstSelectedIndex + 1, newParagraph);
+                _originalSubtitle.Renumber(1);
+                subtitleListView1.Fill(_originalSubtitle);
+                textBoxListViewText.Text = currentParagraph.Text;
+
+                subtitleListView1.SelectIndexAndEnsureVisible(firstSelectedIndex);
+                subtitleListView1.SelectedIndexChanged += SubtitleListView1SelectedIndexChanged;
+
+                // restore de-selected fixes
+                listViewFixes.Items.Clear();
+                _onlyListFixes = true;
+                Next();
+                foreach (ListViewItem item in listViewFixes.Items)
+                {
+                    if (deSelectedFixes.Contains(item.SubItems[1].Text + item.SubItems[2].Text + item.SubItems[3].Text))
+                        item.Checked = false;
+                }
+            }
+        }
+
+        private void buttonSplitLine_Click(object sender, EventArgs e)
+        {
+            SplitSelectedParagraph(null);
+        }
+
+        private void textBoxListViewText_KeyDown(object sender, KeyEventArgs e)
+        {
+            int numberOfNewLines = textBoxListViewText.Text.Length - textBoxListViewText.Text.Replace(Environment.NewLine, " ").Length;
+            Utilities.CheckAutoWrap(textBoxListViewText, e, numberOfNewLines);
         }
 
     }
