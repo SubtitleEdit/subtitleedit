@@ -107,7 +107,6 @@
             this.startNumberingFromToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.removeTextForHearImparedToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ChangeCasingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItemChangeFramerate = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemAutoMergeShortLines = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemAutoSplitLongLines = new System.Windows.Forms.ToolStripMenuItem();
             this.setMinimumDisplayTimeBetweenParagraphsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -143,6 +142,7 @@
             this.toolStripMenuItemAdjustAllTimes = new System.Windows.Forms.ToolStripMenuItem();
             this.visualSyncToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemPointSync = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemChangeFrameRate2 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemAutoTranslate = new System.Windows.Forms.ToolStripMenuItem();
             this.translateByGoogleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.translatepoweredByMicrosoftToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -1029,7 +1029,6 @@
             this.startNumberingFromToolStripMenuItem,
             this.removeTextForHearImparedToolStripMenuItem,
             this.ChangeCasingToolStripMenuItem,
-            this.toolStripMenuItemChangeFramerate,
             this.toolStripMenuItemAutoMergeShortLines,
             this.toolStripMenuItemAutoSplitLongLines,
             this.setMinimumDisplayTimeBetweenParagraphsToolStripMenuItem,
@@ -1081,13 +1080,6 @@
             this.ChangeCasingToolStripMenuItem.Size = new System.Drawing.Size(317, 22);
             this.ChangeCasingToolStripMenuItem.Text = "Change casing...";
             this.ChangeCasingToolStripMenuItem.Click += new System.EventHandler(this.ChangeCasingToolStripMenuItem_Click);
-            // 
-            // toolStripMenuItemChangeFramerate
-            // 
-            this.toolStripMenuItemChangeFramerate.Name = "toolStripMenuItemChangeFramerate";
-            this.toolStripMenuItemChangeFramerate.Size = new System.Drawing.Size(317, 22);
-            this.toolStripMenuItemChangeFramerate.Text = "Change framerate...";
-            this.toolStripMenuItemChangeFramerate.Click += new System.EventHandler(this.ToolStripMenuItemChangeFramerateClick);
             // 
             // toolStripMenuItemAutoMergeShortLines
             // 
@@ -1333,7 +1325,8 @@
             this.toolStripMenuItemSyncronization.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripMenuItemAdjustAllTimes,
             this.visualSyncToolStripMenuItem,
-            this.toolStripMenuItemPointSync});
+            this.toolStripMenuItemPointSync,
+            this.toolStripMenuItemChangeFrameRate2});
             this.toolStripMenuItemSyncronization.Name = "toolStripMenuItemSyncronization";
             this.toolStripMenuItemSyncronization.Size = new System.Drawing.Size(97, 20);
             this.toolStripMenuItemSyncronization.Text = "Syncronization";
@@ -1364,6 +1357,13 @@
             this.toolStripMenuItemPointSync.Size = new System.Drawing.Size(336, 22);
             this.toolStripMenuItemPointSync.Text = "Point sync...";
             this.toolStripMenuItemPointSync.Click += new System.EventHandler(this.toolStripMenuItemPointSync_Click);
+            // 
+            // toolStripMenuItemChangeFrameRate2
+            // 
+            this.toolStripMenuItemChangeFrameRate2.Name = "toolStripMenuItemChangeFrameRate2";
+            this.toolStripMenuItemChangeFrameRate2.Size = new System.Drawing.Size(336, 22);
+            this.toolStripMenuItemChangeFrameRate2.Text = "Change framerate...";
+            this.toolStripMenuItemChangeFrameRate2.Click += new System.EventHandler(this.ToolStripMenuItemChangeFramerateClick);
             // 
             // toolStripMenuItemAutoTranslate
             // 
@@ -3521,7 +3521,6 @@
         private Nikse.SubtitleEdit.Controls.TimeUpDown timeUpDownStartTime;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemManualAnsi;
         private System.Windows.Forms.ToolStripMenuItem ChangeCasingToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemChangeFramerate;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemMergeLines;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparatorAdvancedFunctions;
         private System.Windows.Forms.ToolStripMenuItem visualSyncSelectedLinesToolStripMenuItem;
@@ -3739,6 +3738,7 @@
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemPlayRateVeryFast;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemSetAudioTrack;
         private System.Windows.Forms.Button buttonSplitLine;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemChangeFrameRate2;
     }
 }
 
