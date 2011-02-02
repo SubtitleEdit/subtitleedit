@@ -55,7 +55,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             listViewFixes.Columns[0].Text = Configuration.Settings.Language.General.Apply;
             listViewFixes.Columns[1].Text = Configuration.Settings.Language.MergedShortLines.LineNumber;
-            listViewFixes.Columns[2].Text = Configuration.Settings.Language.MergedShortLines.MergedText;
+            listViewFixes.Columns[2].Text = Configuration.Settings.Language.General.Text;
 
             buttonOK.Text = Configuration.Settings.Language.General.OK;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
