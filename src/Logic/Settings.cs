@@ -279,7 +279,7 @@ namespace Nikse.SubtitleEdit.Logic
             RememberSelectedLine = false;
             StartLoadLastFile = true;
             StartRememberPositionAndSize = true;
-            SubtitleLineMaximumLength = 65;
+            SubtitleLineMaximumLength = 43;
             AutoWrapLineWhileTyping = true;
             SubtitleMaximumCharactersPerSeconds = 25;
             SpellCheckLanguage = null;
