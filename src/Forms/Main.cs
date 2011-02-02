@@ -541,7 +541,7 @@ namespace Nikse.SubtitleEdit.Forms
             startNumberingFromToolStripMenuItem.Text = _language.Menu.Tools.StartNumberingFrom;
             removeTextForHearImparedToolStripMenuItem.Text = _language.Menu.Tools.RemoveTextForHearingImpaired;
             ChangeCasingToolStripMenuItem.Text = _language.Menu.Tools.ChangeCasing;
-            toolStripMenuItemChangeFramerate.Text = _language.Menu.Tools.ChangeFrameRate;
+            toolStripMenuItemChangeFrameRate2.Text = _language.Menu.Tools.ChangeFrameRate;
             toolStripMenuItemAutoMergeShortLines.Text = _language.Menu.Tools.MergeShortLines;
             toolStripMenuItemAutoSplitLongLines.Text = _language.Menu.Tools.SplitLongLines;
             setMinimumDisplayTimeBetweenParagraphsToolStripMenuItem.Text = _language.Menu.Tools.MinimumDisplayTimeBetweenParagraphs;
