@@ -246,7 +246,7 @@ Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
                             else if (i == indexText)
                                 text = splittedLine[i];
                             else if (i > indexText)
-                                text += splittedLine[i];
+                                text += "," + splittedLine[i];
                         }
 
                         try
