@@ -117,6 +117,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         if (textIndex < s.Length)
                         {
                             string text = s.Substring(textIndex);
+                            text = text.Replace("|", Environment.NewLine);
                             string temp = s.Substring(0, textIndex - 1);
                             string[] frames = temp.Replace("][", ":").Replace("[", string.Empty).Replace("]", string.Empty).Split(':');
 
