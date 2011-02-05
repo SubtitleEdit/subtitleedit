@@ -647,7 +647,14 @@ namespace Nikse.SubtitleEdit.Forms
                         GoBackSeconds(-1.0, MediaPlayerEnd);
                     e.SuppressKeyPress = true;
                 }
-
+                else if (e.Modifiers == Keys.None && e.KeyCode == Keys.Space)
+                {
+                    if (_isStartSceneActive)
+                        MediaPlayerStart.TooglePlayPause();
+                    else
+                        MediaPlayerEnd.TooglePlayPause();
+                    e.SuppressKeyPress = true;
+                }
             }
         }
 
