@@ -28,7 +28,7 @@ Subtitle Edit Changelog
    * Added a few buttons to 'Multiple replace' which is now re-sizable (thx sialivi)
    * Moved video controls below subtitle preview (which now displays italic)
    * Fix common ocr errors improved (thx aMvEL, sialivi, Alberto)
-   * Remove text for HI can now alose remove interjections (thx Dr. Jackson)
+   * Remove text for HI can now also remove interjections (thx Dr. Jackson)
    * Start/display time changes are now undo-able (thx Luis)
    * Subtitle preview on video player now more precise (thx hawk) + uses font from Settings + bold (thx Leszek)
    * "Point sync" can now also sync using only one sync point (thx tttoan) 
@@ -39,9 +39,11 @@ Subtitle Edit Changelog
    * Fixed several bugs regarding 'large fonts' / higher dpi (thx Radbert)
    * Fixed memory leak in VobSub SubPicture class (thx Almogzt)
    * Fixed a bug that froze vlc after playing to end of video
-   * Missing line break in Sony Dvd Architecht w line numbers (thx Rosa)
+   * Missing line break in Sony Dvd Architect w line numbers (thx Rosa)
    * A minor bug in Visual Sync, if end scene was after video length (thx tsieberg)
-   * OCR Fix Engine: Lines after "..." will no longer be changed to start with uppercase letter
+   * OCR Fix Engine: Lines after "..." will no longer be changed to start with uppercase 
+   * Fixed bug in reading of SSA files (',' was removed) - thx Péter
+   * Fixed line breaking bug in mpl format - thx Przemek
 
 3.0 (18th November 2010)
  * NEW:
