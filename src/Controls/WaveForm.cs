@@ -254,6 +254,10 @@ namespace Nikse.SubtitleEdit.Controls
                 DrawBackground(graphics);
                 int x = 0;
                 int y = Height / 2;
+
+                var penNormal = new System.Drawing.Pen(Color);
+                var penSelected = new System.Drawing.Pen(SelectedColor); // selected paragraph
+
                 if (_zoomFactor == 1.0)
                 {
                     for (int i = 0; i < _wavePeaks.AllSamples.Count && i < Width; i++)
@@ -262,14 +266,14 @@ namespace Nikse.SubtitleEdit.Controls
                         {
                             int newY = CalculateHeight(_wavePeaks.AllSamples[begin + i], imageHeight, maxHeight);
                             graphics.DrawLine(pen, x, y, i, newY);
-                            //graphics.FillRectangle(new SolidBrush(Color), x, y, 1, 1); - draw pixel instead of line
+                            //graphics.FillRectangle(new SolidBrush(Color), x, y, 1, 1); // draw pixel instead of line
 
                             x = i;
                             y = newY;
                             if (begin + i > end || begin + i < start)
-                                pen = new System.Drawing.Pen(Color);
+                                pen = penNormal;
                             else
-                                pen = new System.Drawing.Pen(SelectedColor); // selected paragraph
+                                pen = penSelected; // selected paragraph
                         }
                     }
                 }
@@ -288,9 +292,9 @@ namespace Nikse.SubtitleEdit.Controls
                             x2 = x3;
                             y = newY;
                             if (begin + x2 > end || begin + x2 < start)
-                                pen = new System.Drawing.Pen(Color);
+                                pen = penNormal;
                             else
-                                pen = new System.Drawing.Pen(SelectedColor); // selected paragraph
+                                pen = penSelected; // selected paragraph
                         }
                     }
                 }
