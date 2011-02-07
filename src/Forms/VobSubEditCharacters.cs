@@ -25,6 +25,7 @@ namespace Nikse.SubtitleEdit.Forms
         public VobSubEditCharacters(string databaseFolderName)
         {
             InitializeComponent();
+            labelImageInfo.Text = string.Empty;
             pictureBox1.SizeMode = PictureBoxSizeMode.AutoSize;
 
             _directoryPath = Configuration.VobSubCompareFolder + databaseFolderName + Path.DirectorySeparatorChar;

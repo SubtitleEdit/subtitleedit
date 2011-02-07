@@ -136,7 +136,13 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
         {
             get
             {
-                return ImageObjects[ObjectId];
+                if (ObjectId < ImageObjects.Count)
+                    return ImageObjects[ObjectId];
+                else
+                {
+                    System.Diagnostics.Debug.WriteLine("Invalid Blu-ray SupPicture index - BluRaySupPictures.cs: internal ImageObject ObjectIdImage");
+                    return ImageObjects[ImageObjects.Count - 1];
+                }
             }
         }
 

@@ -75,7 +75,10 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 else
                 {
-                    MessageBox.Show(message);
+                    if (message == "Session not found!")
+                        MessageBox.Show(string.Format(Configuration.Settings.Language.Main.XNotFound, textBoxSessionKey.Text));
+                    else
+                        MessageBox.Show(message);
                 }
             }
             catch (Exception exception)

@@ -3178,7 +3178,7 @@
             0,
             -2147483648});
             this.numericUpDownDuration.Name = "numericUpDownDuration";
-            this.numericUpDownDuration.Size = new System.Drawing.Size(54, 21);
+            this.numericUpDownDuration.Size = new System.Drawing.Size(57, 21);
             this.numericUpDownDuration.TabIndex = 1;
             this.numericUpDownDuration.ValueChanged += new System.EventHandler(this.NumericUpDownDurationValueChanged);
             // 

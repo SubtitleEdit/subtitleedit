@@ -3452,7 +3452,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (_numberOfImportantLogMessages == 0)
                 labelNumberOfImportantLogMessages.Text = string.Empty;
             else
-                labelNumberOfImportantLogMessages.Text = string.Format("{0} important log messages!", _numberOfImportantLogMessages);
+                labelNumberOfImportantLogMessages.Text = string.Format(_language.NumberOfImportantLogMessages, _numberOfImportantLogMessages);
         }
 
         private void ButtonRefreshFixesClick(object sender, EventArgs e)

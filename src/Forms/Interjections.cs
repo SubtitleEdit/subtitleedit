@@ -40,6 +40,14 @@ namespace Nikse.SubtitleEdit.Forms
             }
             FillListBox();
             Text = Configuration.Settings.Language.Interjections.Title;
+
+            // Add to interjections (or general)
+            buttonRemove.Text = Configuration.Settings.Language.Settings.Remove;
+            buttonAdd.Text = Configuration.Settings.Language.MultipleReplace.Add;
+
+            buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
+            buttonOK.Text = Configuration.Settings.Language.General.OK;
+
             FixLargeFonts();
         }
 

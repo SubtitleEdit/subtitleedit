@@ -279,6 +279,7 @@ namespace Nikse.SubtitleEdit.Forms
             labelMergeShortLines.Text = language.MergeLinesShorterThan;
             labelToolsMusicSymbol.Text = language.MusicSymbol;
             labelToolsMusicSymbolsToReplace.Text = language.MusicSymbolsToReplace;
+            checkBoxFixCommonOcrErrorsUsingHardcodedRules.Text = language.FixCommonOcrErrorsUseHardcodedRules;
             groupBoxSpellCheck.Text = language.SpellCheck;
             checkBoxSpellCheckAutoChangeNames.Text = Configuration.Settings.Language.SpellCheck.AutoFixNames;
 
