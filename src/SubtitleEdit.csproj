@@ -954,7 +954,9 @@
     </Content>
     <Content Include="Resources\fr-FR.xml" />
     <Content Include="Resources\ro-RO.xml" />
-    <Content Include="Resources\sr-Cyrl-CS.xml" />
+    <Content Include="Resources\sr-Cyrl-CS.xml">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Resources\sr-Latn-CS.xml" />
     <Content Include="Resources\sv-SE.xml">
       <SubType>Designer</SubType>

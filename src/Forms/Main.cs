@@ -105,7 +105,7 @@ namespace Nikse.SubtitleEdit.Forms
                     if (versionInfo.Length >= 3 && versionInfo[2] != "0")
                         _title += "." + versionInfo[2];
                 }
-                return _title + " RC1";
+                return _title + " RC2";
             }
         }
 
@@ -8143,18 +8143,17 @@ namespace Nikse.SubtitleEdit.Forms
                 SetTitle();
                 this.Text = Title;
                 toolStripStatusNetworking.Visible = true;
-                toolStripStatusNetworking.Text = "Network mode";
+                toolStripStatusNetworking.Text = _language.NetworkMode;
                 EnableDisableControlsNotWorkingInNetworkMode(false);
-                _networkSession.AppendToLog(_networkSession.CurrentUser.UserName + ": Joined session " + _networkSession.SessionId + " at " + DateTime.Now.ToLongTimeString());
-                SubtitleListview1.ShowExtraColumn("User/action");
+                _networkSession.AppendToLog(string.Format(_language.XStartedSessionYAtZ, _networkSession.CurrentUser.UserName, _networkSession.SessionId, DateTime.Now.ToLongTimeString()));
+                SubtitleListview1.ShowExtraColumn(_language.UserAndAction);
                 SubtitleListview1.AutoSizeAllColumns(this);
                 _subtitleListViewIndex = -1;
                 _oldSelectedParagraph = null;
                 SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
                 SubtitleListview1.SelectIndexAndEnsureVisible(0);
                 _change = true;
-                TimerWebServiceTick(null, null);
-                
+                TimerWebServiceTick(null, null);                
             }
             else
             {

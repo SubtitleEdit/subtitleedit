@@ -28,6 +28,7 @@ namespace Nikse.SubtitleEdit.Forms
             labelPleaseWait.Text = Configuration.Settings.Language.AddWaveForm.PleaseWait;
             labelVideoFileName.Text = videoFile;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
+            labelSourcevideoFile.Text = Configuration.Settings.Language.AddWaveForm.SourceVideoFile;
         }
 
         private void buttonRipWave_Click(object sender, EventArgs e)
