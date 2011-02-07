@@ -88,6 +88,12 @@ namespace Nikse.SubtitleEdit.Forms
                 _fileBuffer = new byte[length];
                 file.Read(_fileBuffer, 0, length);
 
+                for (int i = 0; i < length; i++)
+                {
+                    if (_fileBuffer[i] == 0)
+                        _fileBuffer[i] = 32;
+                }
+
                 file.Close();
                 file.Dispose();
             }
