@@ -67,9 +67,9 @@
             this.timeUpDownLine.AutoSize = true;
             this.timeUpDownLine.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.timeUpDownLine.Location = new System.Drawing.Point(18, 19);
-            this.timeUpDownLine.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.timeUpDownLine.Margin = new System.Windows.Forms.Padding(4);
             this.timeUpDownLine.Name = "timeUpDownLine";
-            this.timeUpDownLine.Size = new System.Drawing.Size(123, 29);
+            this.timeUpDownLine.Size = new System.Drawing.Size(92, 25);
             this.timeUpDownLine.TabIndex = 1;
             // 
             // groupBox2
@@ -143,6 +143,7 @@
             // 
             // timer1
             // 
+            this.timer1.Interval = 50;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
             // labelVideoFileName
@@ -151,7 +152,7 @@
             this.labelVideoFileName.AutoSize = true;
             this.labelVideoFileName.Location = new System.Drawing.Point(12, 209);
             this.labelVideoFileName.Name = "labelVideoFileName";
-            this.labelVideoFileName.Size = new System.Drawing.Size(120, 17);
+            this.labelVideoFileName.Size = new System.Drawing.Size(98, 13);
             this.labelVideoFileName.TabIndex = 21;
             this.labelVideoFileName.Text = "labelVideoFileName";
             // 
@@ -234,13 +235,14 @@
             this.videoPlayerContainer1.Name = "videoPlayerContainer1";
             this.videoPlayerContainer1.ShowStopButton = true;
             this.videoPlayerContainer1.Size = new System.Drawing.Size(728, 265);
+            this.videoPlayerContainer1.SubtitleText = "";
             this.videoPlayerContainer1.TabIndex = 13;
             this.videoPlayerContainer1.VideoPlayer = null;
             this.videoPlayerContainer1.Volume = 0D;
             // 
             // SetSyncPoint
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 17F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(749, 568);
             this.Controls.Add(this.labelSubtitle);
