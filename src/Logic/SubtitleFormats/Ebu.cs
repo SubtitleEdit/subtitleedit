@@ -429,7 +429,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             byte[] buffer = ASCIIEncoding.ASCII.GetBytes(header.ToString());
             fs.Write(buffer, 0, buffer.Length);
 
-
             foreach (Paragraph p in subtitle.Paragraphs)
             {
                 EbuTextTimingInformation tti = new EbuTextTimingInformation();
@@ -848,7 +847,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 for (int i = 0; i < 112; i++) // skip fist byte (seems to be always 0xd/32/space - thx Iban)
                 {
                     byte b = buffer[index + 16 + i];
-                    if (i == 0 || i == 2 | i == 3)
+                    if (i == 0 || (i == 2 && b < 0xf) | (i == 3 && b <= 0xf))
                     {
                         // not used, 0=0xd, 2=0xb, 3=0xb 
                     }
