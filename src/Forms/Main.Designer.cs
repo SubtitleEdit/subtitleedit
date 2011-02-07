@@ -2791,6 +2791,7 @@
             // 
             // videoTimer
             // 
+            this.videoTimer.Interval = 50;
             this.videoTimer.Tick += new System.EventHandler(this.videoTimer_Tick);
             // 
             // timerAutoDuration
