@@ -12,10 +12,15 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
     {
         private System.Windows.Forms.Timer _videoLoadedTimer;
         private System.Windows.Forms.Timer _videoEndTimer;
+        private System.Windows.Forms.Timer _mouseTimer;
 
         private IntPtr _libVlcDLL;
         private IntPtr _libVlc;
         private IntPtr _mediaPlayer;
+        private System.Windows.Forms.Control _ownerControl;
+
+        [DllImport("user32")]
+        private static extern short GetKeyState(int vKey);
 
         // Win32 API functions for loading dlls dynamic
         [DllImport("kernel32.dll")]
@@ -340,6 +345,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             LibVlc11xDynamic newVlc = new LibVlc11xDynamic();
             newVlc._libVlc = this._libVlc;
             newVlc._libVlcDLL = this._libVlcDLL;
+            newVlc._ownerControl = ownerControl;
 
             newVlc.LoadLibVlcDynamic();
 
@@ -367,6 +373,10 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                 newVlc._videoLoadedTimer = new System.Windows.Forms.Timer { Interval = 500 };
                 newVlc._videoLoadedTimer.Tick += new EventHandler(newVlc.VideoLoadedTimer_Tick);
                 newVlc._videoLoadedTimer.Start();
+
+                newVlc._mouseTimer = new System.Windows.Forms.Timer { Interval = 25 };
+                newVlc._mouseTimer.Tick += newVlc.MouseTimerTick;
+                newVlc._mouseTimer.Start();
             }
             return newVlc;
         }
@@ -433,6 +443,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
 
         public override void Initialize(System.Windows.Forms.Control ownerControl, string videoFileName, EventHandler onVideoLoaded, EventHandler onVideoEnded)
         {
+            _ownerControl = ownerControl;
             string dllFile = GetVlcPath("libvlc.dll");
             if (File.Exists(dllFile))
             {
@@ -458,7 +469,6 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                 //  Mac: libvlc_media_player_set_nsobject (_mediaPlayer, view);
                 _libvlc_media_player_set_hwnd(_mediaPlayer, ownerControl.Handle); // windows                               
                 
-
                 if (onVideoEnded != null)
                 {
                     _videoEndTimer = new System.Windows.Forms.Timer { Interval = 500 };
@@ -471,21 +481,53 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                 _videoLoadedTimer.Tick += new EventHandler(VideoLoadedTimer_Tick);
                 _videoLoadedTimer.Start();
 
+                _mouseTimer = new System.Windows.Forms.Timer { Interval = 25 };
+                _mouseTimer.Tick += MouseTimerTick;
+                _mouseTimer.Start();
             }
         }
 
-        void VideoEndTimerTick(object sender, EventArgs e)
+        public static bool IsLeftMouseButtonDown() 
         {
+            const int KEY_PRESSED = 0x8000;
+            const int VK_LBUTTON = 0x1;
+            return Convert.ToBoolean(GetKeyState(VK_LBUTTON) & KEY_PRESSED);
+        }
+
+        void MouseTimerTick(object sender, EventArgs e)
+        {
+            _mouseTimer.Stop();
+            if (IsLeftMouseButtonDown())
+            {
+                var p = _ownerControl.PointToClient(System.Windows.Forms.Control.MousePosition);
+                if (p.X > 0 && p.X < _ownerControl.Width && p.Y > 0 && p.Y < _ownerControl.Height)
+                {
+                    if (IsPlaying)
+                        Pause();
+                    else
+                        Play();
+                    int i = 0;
+                    while (IsLeftMouseButtonDown() && i < 20)
+                    {
+                        System.Threading.Thread.Sleep(25);
+                        System.Windows.Forms.Application.DoEvents();
+                        i++;
+                    }
+                }
+            }
+            _mouseTimer.Start();
+        }
+
+        void VideoEndTimerTick(object sender, EventArgs e)
+        {            
             const int Ended = 6;
             int state = _libvlc_media_player_get_state(_mediaPlayer);
-
             if (state == Ended)
             {
                 // hack to make sure VLC is in ready state
                 Stop(); 
                 Play();
                 Pause();
-
                 OnVideoEnded.Invoke(_mediaPlayer, new EventArgs());
             }
         }
@@ -494,9 +536,12 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
         {
             if (_videoLoadedTimer != null)
                 _videoLoadedTimer.Stop();
-            
+
             if (_videoEndTimer != null)
                 _videoEndTimer.Stop();
+
+            if (_mouseTimer != null)
+                _mouseTimer.Stop();
 
             ThreadPool.QueueUserWorkItem(DisposeVLC, this);
         }
@@ -525,5 +570,6 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
         public override event EventHandler OnVideoLoaded;
 
         public override event EventHandler OnVideoEnded;
+
     }
 }
