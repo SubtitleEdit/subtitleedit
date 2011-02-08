@@ -18,6 +18,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
         private IntPtr _libVlc;
         private IntPtr _mediaPlayer;
         private System.Windows.Forms.Control _ownerControl;
+        private System.Windows.Forms.Form _parentForm;
 
         [DllImport("user32")]
         private static extern short GetKeyState(int vKey);
@@ -346,6 +347,8 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             newVlc._libVlc = this._libVlc;
             newVlc._libVlcDLL = this._libVlcDLL;
             newVlc._ownerControl = ownerControl;
+            if (ownerControl != null)
+                newVlc._parentForm = ownerControl.FindForm();
 
             newVlc.LoadLibVlcDynamic();
 
@@ -444,6 +447,8 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
         public override void Initialize(System.Windows.Forms.Control ownerControl, string videoFileName, EventHandler onVideoLoaded, EventHandler onVideoEnded)
         {
             _ownerControl = ownerControl;
+            if (ownerControl != null)
+                _parentForm = ownerControl.FindForm();
             string dllFile = GetVlcPath("libvlc.dll");
             if (File.Exists(dllFile))
             {
@@ -497,7 +502,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
         void MouseTimerTick(object sender, EventArgs e)
         {
             _mouseTimer.Stop();
-            if (IsLeftMouseButtonDown())
+            if (_parentForm != null && _parentForm.ContainsFocus && IsLeftMouseButtonDown())
             {
                 var p = _ownerControl.PointToClient(System.Windows.Forms.Control.MousePosition);
                 if (p.X > 0 && p.X < _ownerControl.Width && p.Y > 0 && p.Y < _ownerControl.Height)
@@ -507,9 +512,9 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                     else
                         Play();
                     int i = 0;
-                    while (IsLeftMouseButtonDown() && i < 20)
+                    while (IsLeftMouseButtonDown() && i < 200)
                     {
-                        System.Threading.Thread.Sleep(25);
+                        System.Threading.Thread.Sleep(2);
                         System.Windows.Forms.Application.DoEvents();
                         i++;
                     }
