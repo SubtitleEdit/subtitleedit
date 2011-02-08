@@ -58,6 +58,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.timer2 = new System.Windows.Forms.Timer(this.components);
             this.labelTip = new System.Windows.Forms.Label();
+            this.timerProgressBarRefresh = new System.Windows.Forms.Timer(this.components);
             this.groupBoxStartScene.SuspendLayout();
             this.panelControlsStart.SuspendLayout();
             this.groupBoxEndScene.SuspendLayout();
@@ -352,6 +353,10 @@ namespace Nikse.SubtitleEdit.Forms
             this.labelTip.TabIndex = 15;
             this.labelTip.Text = "Tip: Use <ctrl+arrow left/right> keys to move 100 ms back/forward";
             // 
+            // timerProgressBarRefresh
+            // 
+            this.timerProgressBarRefresh.Tick += new System.EventHandler(this.timerProgressBarRefresh_Tick);
+            // 
             // VisualSync
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -417,5 +422,6 @@ namespace Nikse.SubtitleEdit.Forms
         private Nikse.SubtitleEdit.Controls.VideoPlayerContainer MediaPlayerEnd;
         private System.Windows.Forms.Timer timer2;
         private System.Windows.Forms.Label labelTip;
+        private System.Windows.Forms.Timer timerProgressBarRefresh;
     }
 }

@@ -802,6 +802,7 @@
     <EmbeddedResource Include="Resources\fr-FR.xml.zip" />
     <EmbeddedResource Include="Resources\OpenOfficeDictionaries.xml.zip" />
     <EmbeddedResource Include="Resources\hu-HU.xml.zip" />
+    <EmbeddedResource Include="Resources\fa-IR.xml.zip" />
     <None Include="Resources\pl-PL.xml">
       <SubType>Designer</SubType>
     </None>
@@ -853,6 +854,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Resources\fa-IR.xml" />
     <Content Include="Resources\zh-CHS.xml" />
     <None Include="Web References\SeNetworkService\SeService.disco" />
     <None Include="DLLs\Interop.QuartzTypeLib.dll" />

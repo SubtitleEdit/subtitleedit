@@ -49,8 +49,8 @@
             this.toolStripSeparatorHelp = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripButtonHelp = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator13 = new System.Windows.Forms.ToolStripSeparator();
-            this.toolStripButtonToogleWaveForm = new System.Windows.Forms.ToolStripButton();
-            this.toolStripButtonToogleVideo = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButtonToggleWaveForm = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButtonToggleVideo = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripLabelSubtitleFormat = new System.Windows.Forms.ToolStripLabel();
             this.comboBoxSubtitleFormats = new System.Windows.Forms.ToolStripComboBox();
@@ -434,8 +434,8 @@
             this.toolStripSeparatorHelp,
             this.toolStripButtonHelp,
             this.toolStripSeparator13,
-            this.toolStripButtonToogleWaveForm,
-            this.toolStripButtonToogleVideo,
+            this.toolStripButtonToggleWaveForm,
+            this.toolStripButtonToggleVideo,
             this.toolStripSeparator6,
             this.toolStripLabelSubtitleFormat,
             this.comboBoxSubtitleFormats,
@@ -597,31 +597,31 @@
             this.toolStripSeparator13.Name = "toolStripSeparator13";
             this.toolStripSeparator13.Size = new System.Drawing.Size(6, 40);
             // 
-            // toolStripButtonToogleWaveForm
+            // toolStripButtonToggleWaveForm
             // 
-            this.toolStripButtonToogleWaveForm.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButtonToogleWaveForm.Font = new System.Drawing.Font("Tahoma", 8.25F);
-            this.toolStripButtonToogleWaveForm.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonToogleWaveForm.Image")));
-            this.toolStripButtonToogleWaveForm.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
-            this.toolStripButtonToogleWaveForm.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButtonToogleWaveForm.Name = "toolStripButtonToogleWaveForm";
-            this.toolStripButtonToogleWaveForm.Size = new System.Drawing.Size(36, 37);
-            this.toolStripButtonToogleWaveForm.Text = "Show/hide wave form";
-            this.toolStripButtonToogleWaveForm.Click += new System.EventHandler(this.toolStripButtonToogleWaveForm_Click);
+            this.toolStripButtonToggleWaveForm.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonToggleWaveForm.Font = new System.Drawing.Font("Tahoma", 8.25F);
+            this.toolStripButtonToggleWaveForm.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonToggleWaveForm.Image")));
+            this.toolStripButtonToggleWaveForm.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.toolStripButtonToggleWaveForm.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonToggleWaveForm.Name = "toolStripButtonToggleWaveForm";
+            this.toolStripButtonToggleWaveForm.Size = new System.Drawing.Size(36, 37);
+            this.toolStripButtonToggleWaveForm.Text = "Show/hide wave form";
+            this.toolStripButtonToggleWaveForm.Click += new System.EventHandler(this.toolStripButtonToggleWaveForm_Click);
             // 
-            // toolStripButtonToogleVideo
+            // toolStripButtonToggleVideo
             // 
-            this.toolStripButtonToogleVideo.Checked = true;
-            this.toolStripButtonToogleVideo.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.toolStripButtonToogleVideo.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButtonToogleVideo.Font = new System.Drawing.Font("Tahoma", 8.25F);
-            this.toolStripButtonToogleVideo.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonToogleVideo.Image")));
-            this.toolStripButtonToogleVideo.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
-            this.toolStripButtonToogleVideo.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButtonToogleVideo.Name = "toolStripButtonToogleVideo";
-            this.toolStripButtonToogleVideo.Size = new System.Drawing.Size(36, 37);
-            this.toolStripButtonToogleVideo.Text = "Show/hide video";
-            this.toolStripButtonToogleVideo.Click += new System.EventHandler(this.toolStripButtonToogleVideo_Click);
+            this.toolStripButtonToggleVideo.Checked = true;
+            this.toolStripButtonToggleVideo.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.toolStripButtonToggleVideo.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonToggleVideo.Font = new System.Drawing.Font("Tahoma", 8.25F);
+            this.toolStripButtonToggleVideo.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonToggleVideo.Image")));
+            this.toolStripButtonToggleVideo.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.toolStripButtonToggleVideo.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonToggleVideo.Name = "toolStripButtonToggleVideo";
+            this.toolStripButtonToggleVideo.Size = new System.Drawing.Size(36, 37);
+            this.toolStripButtonToggleVideo.Text = "Show/hide video";
+            this.toolStripButtonToggleVideo.Click += new System.EventHandler(this.toolStripButtonToggleVideo_Click);
             // 
             // toolStripSeparator6
             // 
@@ -1246,7 +1246,7 @@
             this.showhideVideoToolStripMenuItem.Name = "showhideVideoToolStripMenuItem";
             this.showhideVideoToolStripMenuItem.Size = new System.Drawing.Size(199, 22);
             this.showhideVideoToolStripMenuItem.Text = "Show/hide video";
-            this.showhideVideoToolStripMenuItem.Click += new System.EventHandler(this.toolStripButtonToogleVideo_Click);
+            this.showhideVideoToolStripMenuItem.Click += new System.EventHandler(this.toolStripButtonToggleVideo_Click);
             // 
             // toolStripSeparator19
             // 
@@ -3179,7 +3179,7 @@
             0,
             -2147483648});
             this.numericUpDownDuration.Name = "numericUpDownDuration";
-            this.numericUpDownDuration.Size = new System.Drawing.Size(57, 21);
+            this.numericUpDownDuration.Size = new System.Drawing.Size(56, 21);
             this.numericUpDownDuration.TabIndex = 1;
             this.numericUpDownDuration.ValueChanged += new System.EventHandler(this.NumericUpDownDurationValueChanged);
             // 
@@ -3581,7 +3581,7 @@
         private System.Windows.Forms.ToolStripLabel toolStripLabelSubtitleFormat;
         private System.Windows.Forms.ToolStripLabel toolStripLabelEncoding;
         private System.Windows.Forms.ToolStripComboBox comboBoxEncoding;
-        private System.Windows.Forms.ToolStripButton toolStripButtonToogleVideo;
+        private System.Windows.Forms.ToolStripButton toolStripButtonToggleVideo;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator15;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparatorFrameRate;
         private System.Windows.Forms.ToolStripLabel toolStripLabelFrameRate;
@@ -3661,7 +3661,7 @@
         private System.Windows.Forms.Label labelCreateF9;
         private System.Windows.Forms.Label labelAdjustTip;
         private System.Windows.Forms.ToolStripMenuItem translatepoweredByMicrosoftToolStripMenuItem;
-        private System.Windows.Forms.ToolStripButton toolStripButtonToogleWaveForm;
+        private System.Windows.Forms.ToolStripButton toolStripButtonToggleWaveForm;
         private Controls.VideoPlayerContainer mediaPlayer;
         private System.Windows.Forms.Panel panelVideoPlayer;
         private Controls.WaveForm AudioWaveForm;

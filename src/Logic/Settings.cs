@@ -230,6 +230,7 @@ namespace Nikse.SubtitleEdit.Logic
         public bool StartInSourceView { get; set; }
         public bool RemoveBlankLinesWhenOpening { get; set; }
         public int SubtitleLineMaximumLength { get; set; }
+        public int MininumMillisecondsBetweenLines { get; set; }
         public bool AutoWrapLineWhileTyping { get; set; }
         public int SubtitleMaximumCharactersPerSeconds { get; set; }
         public string SpellCheckLanguage { get; set; }
@@ -280,6 +281,7 @@ namespace Nikse.SubtitleEdit.Logic
             StartLoadLastFile = true;
             StartRememberPositionAndSize = true;
             SubtitleLineMaximumLength = 43;
+            MininumMillisecondsBetweenLines = 25;
             AutoWrapLineWhileTyping = true;
             SubtitleMaximumCharactersPerSeconds = 25;
             SpellCheckLanguage = null;
@@ -606,6 +608,9 @@ namespace Nikse.SubtitleEdit.Logic
             subNode = node.SelectSingleNode("SubtitleLineMaximumLength");
             if (subNode != null)
                 settings.General.SubtitleLineMaximumLength = Convert.ToInt32(subNode.InnerText);
+            subNode = node.SelectSingleNode("SubtitleLineMaximumLength");
+            if (subNode != null)
+                settings.General.SubtitleLineMaximumLength = Convert.ToInt32(subNode.InnerText);            
             subNode = node.SelectSingleNode("AutoWrapLineWhileTyping");
             if (subNode != null)
                 settings.General.AutoWrapLineWhileTyping = Convert.ToBoolean(subNode.InnerText);           
@@ -957,6 +962,7 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("StartInSourceView", settings.General.StartInSourceView.ToString());
             textWriter.WriteElementString("RemoveBlankLinesWhenOpening", settings.General.RemoveBlankLinesWhenOpening.ToString());            
             textWriter.WriteElementString("SubtitleLineMaximumLength", settings.General.SubtitleLineMaximumLength.ToString());
+            textWriter.WriteElementString("SubtitleLineMaximumLength", settings.General.MininumMillisecondsBetweenLines.ToString());
             textWriter.WriteElementString("AutoWrapLineWhileTyping", settings.General.AutoWrapLineWhileTyping.ToString());            
             textWriter.WriteElementString("SubtitleMaximumCharactersPerSeconds", settings.General.SubtitleMaximumCharactersPerSeconds.ToString());            
             textWriter.WriteElementString("SpellCheckLanguage", settings.General.SpellCheckLanguage);

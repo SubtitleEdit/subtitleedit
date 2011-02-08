@@ -178,7 +178,7 @@ namespace Nikse.SubtitleEdit.Controls
 
         void SubtitleTextBox_MouseClick(object sender, MouseEventArgs e)
         {
-            TooglePlayPause();
+            TogglePlayPause();
         }
 
         private static string RemoveSubStationAlphaFormatting(string s)
@@ -272,7 +272,7 @@ namespace Nikse.SubtitleEdit.Controls
 
         void PanelPlayer_MouseDown(object sender, MouseEventArgs e)
         {
-            TooglePlayPause();
+            TogglePlayPause();
         }
 
         public void InitializeVolume(double defaultVolume)
@@ -565,6 +565,32 @@ namespace Nikse.SubtitleEdit.Controls
         }
 
         #region PlayPauseButtons
+
+        public void RefreshPlayPauseButtons()
+        {
+            if (VideoPlayer != null)
+            {
+                if (VideoPlayer.IsPlaying)
+                {
+                    if (!_pictureBoxPause.Visible && !_pictureBoxPauseDown.Visible && !_pictureBoxPauseOver.Visible)
+                    {
+                        HideAllPauseImages();
+                        HideAllPlayImages();
+                        _pictureBoxPause.Visible = true;
+                    }
+                }
+                else
+                {
+                    if (!_pictureBoxPlay.Visible && !_pictureBoxPlayOver.Visible && !_pictureBoxPlayDown.Visible)
+                    {
+                        HideAllPauseImages();
+                        HideAllPlayImages();
+                        _pictureBoxPlay.Visible = true;
+                    }
+                }
+            }
+        }
+
         private void HideAllPlayImages()
         {
             _pictureBoxPlayOver.Visible = false;
@@ -888,6 +914,8 @@ namespace Nikse.SubtitleEdit.Controls
                 TimeSpan span = TimeSpan.FromSeconds(pos);
                 string displayTime = string.Format("{0:00}:{1:00}:{2:00},{3:000}", span.Hours, span.Minutes, span.Seconds, span.Milliseconds);
                 _labelTimeCode.Text = displayTime + _totalPositionString;
+
+                RefreshPlayPauseButtons();
             }
         }
 
@@ -972,7 +1000,7 @@ namespace Nikse.SubtitleEdit.Controls
             }
         }
 
-        public void TooglePlayPause()
+        public void TogglePlayPause()
         {
             if (VideoPlayer != null)
             {

@@ -33,7 +33,7 @@ namespace Nikse.SubtitleEdit.Forms
                 var control = panelContainer.Controls[0];
                 panelContainer.Controls.Clear();
                 _mainForm.ReDockVideoPlayer(control);
-                _mainForm.SetVideoPlayerToogleOff();
+                _mainForm.SetVideoPlayerToggleOff();
             }
             _positionsAndSizes.SavePositionAndSize(this);            
         }
