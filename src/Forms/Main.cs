@@ -5200,7 +5200,14 @@ namespace Nikse.SubtitleEdit.Forms
         private void ShowSelectedLinesEarlierlaterToolStripMenuItemClick(object sender, EventArgs e)
         {
             if (_subtitle != null && _subtitle.Paragraphs.Count > 1)
-            {                
+            {
+                if (_showEarlierOrLater != null && !_showEarlierOrLater.IsDisposed)
+                {
+                    _showEarlierOrLater.WindowState = FormWindowState.Normal;
+                    _showEarlierOrLater.Focus();
+                    return;
+                }             
+
                 bool waveFormEnabled = timerWaveForm.Enabled;
                 timerWaveForm.Stop();
                 bool videoTimerEnabled = videoTimer.Enabled;
@@ -7051,6 +7058,14 @@ namespace Nikse.SubtitleEdit.Forms
                 if (_subtitle != null && _subtitle.Paragraphs.Count > 1)
                 {
                     mediaPlayer.Pause();
+
+                    if (_showEarlierOrLater != null && !_showEarlierOrLater.IsDisposed)
+                    {
+                        _showEarlierOrLater.WindowState = FormWindowState.Normal;
+                        _showEarlierOrLater.Focus();
+                        return;
+                    }
+
                     _showEarlierOrLater = new ShowEarlierLater();
                     SaveSubtitleListviewIndexes();
                     _showEarlierOrLater.Initialize(ShowEarlierOrLater, false);
