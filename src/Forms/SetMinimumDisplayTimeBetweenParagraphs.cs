@@ -47,8 +47,8 @@ namespace Nikse.SubtitleEdit.Forms
         public void Initialize(Subtitle subtitle)
         {
             _subtitle = subtitle;
-
-            GeneratePreview();
+            numericUpDownMinMillisecondsBetweenLines.Value = Configuration.Settings.General.MininumMillisecondsBetweenLines;
+//            GeneratePreview();
         }
 
         private void GeneratePreview()
@@ -87,6 +87,8 @@ namespace Nikse.SubtitleEdit.Forms
             }
             SubtitleListview1.EndUpdate();
             FixCount = fixes.Count;
+
+            groupBoxLinesFound.Text = minumumMillisecondsBetweenLines.ToString();
         }
 
         private void buttonOK_Click(object sender, EventArgs e)
@@ -111,12 +113,22 @@ namespace Nikse.SubtitleEdit.Forms
         private void numericUpDownMinMillisecondsBetweenLines_ValueChanged(object sender, EventArgs e)
         {
             GeneratePreview();
+            Configuration.Settings.General.MininumMillisecondsBetweenLines = (int)numericUpDownMinMillisecondsBetweenLines.Value;
         }
 
         private void checkBoxShowOnlyChangedLines_CheckedChanged(object sender, EventArgs e)
         {
             GeneratePreview();
         }
+
+        private void numericUpDownMinMillisecondsBetweenLines_KeyUp(object sender, KeyEventArgs e)
+        {
+            numericUpDownMinMillisecondsBetweenLines.ValueChanged -= numericUpDownMinMillisecondsBetweenLines_ValueChanged;
+            GeneratePreview();
+            numericUpDownMinMillisecondsBetweenLines.ValueChanged += numericUpDownMinMillisecondsBetweenLines_ValueChanged;
+            Configuration.Settings.General.MininumMillisecondsBetweenLines = (int)numericUpDownMinMillisecondsBetweenLines.Value;
+        }
+
     }
 
 }

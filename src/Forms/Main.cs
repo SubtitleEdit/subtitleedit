@@ -210,8 +210,8 @@ namespace Nikse.SubtitleEdit.Forms
                 AudioWaveForm.Visible = Configuration.Settings.General.ShowWaveForm;
                 panelWaveFormControls.Visible = Configuration.Settings.General.ShowWaveForm;
                 trackBarWaveFormPosition.Visible = Configuration.Settings.General.ShowWaveForm;
-                toolStripButtonToogleWaveForm.Checked = Configuration.Settings.General.ShowWaveForm;
-                toolStripButtonToogleVideo.Checked = Configuration.Settings.General.ShowVideoPlayer;
+                toolStripButtonToggleWaveForm.Checked = Configuration.Settings.General.ShowWaveForm;
+                toolStripButtonToggleVideo.Checked = Configuration.Settings.General.ShowVideoPlayer;
 
                 string fileName = string.Empty;
                 string[] args = Environment.GetCommandLineArgs();
@@ -306,7 +306,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 if (paragraph == null)
                 {
-                    mediaPlayer.TooglePlayPause();
+                    mediaPlayer.TogglePlayPause();
                 }
                 else
                 {
@@ -615,8 +615,8 @@ namespace Nikse.SubtitleEdit.Forms
             toolStripButtonSpellCheck.ToolTipText = _language.Menu.ToolBar.SpellCheck;
             toolStripButtonSettings.ToolTipText = _language.Menu.ToolBar.Settings;
             toolStripButtonHelp.ToolTipText = _language.Menu.ToolBar.Help;
-            toolStripButtonToogleWaveForm.ToolTipText = _language.Menu.ToolBar.ShowHideWaveForm;
-            toolStripButtonToogleVideo.ToolTipText = _language.Menu.ToolBar.ShowHideVideo;
+            toolStripButtonToggleWaveForm.ToolTipText = _language.Menu.ToolBar.ShowHideWaveForm;
+            toolStripButtonToggleVideo.ToolTipText = _language.Menu.ToolBar.ShowHideVideo;
 
             toolStripMenuItemDelete.Text = _language.Menu.ContextMenu.Delete;
             insertLineToolStripMenuItem.Text = _language.Menu.ContextMenu.InsertFirstLine;
@@ -1081,7 +1081,7 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             OpenVideo(videoFileName);
                         }
-                        else if (!string.IsNullOrEmpty(fileName) && (toolStripButtonToogleVideo.Checked || toolStripButtonToogleWaveForm.Checked))
+                        else if (!string.IsNullOrEmpty(fileName) && (toolStripButtonToggleVideo.Checked || toolStripButtonToggleWaveForm.Checked))
                         {
                             TryToFindAndOpenVideoFile(Path.Combine(Path.GetDirectoryName(fileName), Path.GetFileNameWithoutExtension(fileName)));
                         }
@@ -1722,8 +1722,8 @@ namespace Nikse.SubtitleEdit.Forms
             TryLoadIcon(toolStripButtonSpellCheck, "SpellCheck");
             TryLoadIcon(toolStripButtonHelp, "Help");
 
-            TryLoadIcon(toolStripButtonToogleVideo, "VideoToogle");
-            TryLoadIcon(toolStripButtonToogleWaveForm, "WaveFormToogle");
+            TryLoadIcon(toolStripButtonToggleVideo, "VideoToggle");
+            TryLoadIcon(toolStripButtonToggleWaveForm, "WaveFormToggle");
 
             toolStripButtonFileNew.Visible = gs.ShowToolbarNew;
             toolStripButtonFileOpen.Visible = gs.ShowToolbarOpen;
@@ -3221,20 +3221,20 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void BoldToolStripMenuItemClick(object sender, EventArgs e)
         {
-            ListViewToogleTag("b");
+            ListViewToggleTag("b");
         }
 
         private void ItalicToolStripMenuItemClick(object sender, EventArgs e)
         {
-            ListViewToogleTag("i");
+            ListViewToggleTag("i");
         }
 
         private void UnderlineToolStripMenuItemClick(object sender, EventArgs e)
         {
-            ListViewToogleTag("u");
+            ListViewToggleTag("u");
         }
 
-        private void ListViewToogleTag(string tag)
+        private void ListViewToggleTag(string tag)
         {
             if (_subtitle.Paragraphs.Count > 0 && SubtitleListview1.SelectedItems.Count > 0)
             {
@@ -3362,9 +3362,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void ToolStripMenuItemInsertBeforeClick(object sender, EventArgs e)
         {
             if (_subtitle.Paragraphs.Count > 0)
-            {
                 InsertBefore();
-            }
         }
 
         private void InsertBefore()
@@ -3378,12 +3376,25 @@ namespace Nikse.SubtitleEdit.Forms
             if (SubtitleListview1.SelectedItems.Count > 0)
                 firstSelectedIndex = SubtitleListview1.SelectedItems[0].Index;
 
+            int addMilliseconds = Configuration.Settings.General.MininumMillisecondsBetweenLines +1;
+            if (addMilliseconds < 1)
+                addMilliseconds = 1;
+
             var newParagraph = new Paragraph();
             Paragraph prev = _subtitle.GetParagraphOrDefault(firstSelectedIndex - 1);
             Paragraph next = _subtitle.GetParagraphOrDefault(firstSelectedIndex);
-            if (prev != null)
+            if (prev != null && next != null)
             {
-                newParagraph.StartTime.TotalMilliseconds = prev.EndTime.TotalMilliseconds + 200;
+                newParagraph.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - addMilliseconds;
+                newParagraph.StartTime.TotalMilliseconds = newParagraph.EndTime.TotalMilliseconds - 2000;
+                if (newParagraph.StartTime.TotalMilliseconds <= prev.EndTime.TotalMilliseconds)
+                    newParagraph.StartTime.TotalMilliseconds = prev.EndTime.TotalMilliseconds + 1;
+                if (newParagraph.Duration.TotalMilliseconds < 100)
+                    newParagraph.EndTime.TotalMilliseconds += 100;
+            }
+            else if (prev != null)
+            {
+                newParagraph.StartTime.TotalMilliseconds = prev.EndTime.TotalMilliseconds + addMilliseconds;
                 newParagraph.EndTime.TotalMilliseconds = newParagraph.StartTime.TotalMilliseconds + 1200;
                 if (next != null && newParagraph.EndTime.TotalMilliseconds > next.StartTime.TotalMilliseconds)
                     newParagraph.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - 1;
@@ -3449,7 +3460,11 @@ namespace Nikse.SubtitleEdit.Forms
             Paragraph next = _subtitle.GetParagraphOrDefault(firstSelectedIndex);
             if (prev != null)
             {
-                newParagraph.StartTime.TotalMilliseconds = prev.EndTime.TotalMilliseconds + 200;
+                int addMilliseconds = Configuration.Settings.General.MininumMillisecondsBetweenLines;
+                if (addMilliseconds < 1)
+                    addMilliseconds = 1;
+
+                newParagraph.StartTime.TotalMilliseconds = prev.EndTime.TotalMilliseconds + addMilliseconds;
                 newParagraph.EndTime.TotalMilliseconds = newParagraph.StartTime.TotalMilliseconds + 1200;
                 if (next != null && newParagraph.EndTime.TotalMilliseconds > next.StartTime.TotalMilliseconds)
                     newParagraph.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - 1;
@@ -3780,7 +3795,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 else
                 {
-                    TextBoxListViewToogleTag("i");
+                    TextBoxListViewToggleTag("i");
                 }
             }
             if (e.Modifiers == Keys.Control && e.KeyCode == Keys.D)
@@ -5211,7 +5226,17 @@ namespace Nikse.SubtitleEdit.Forms
 
         internal void Main_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.Modifiers == Keys.Control && e.KeyCode == Keys.Z)
+            if (e.Modifiers == Keys.Alt && e.KeyCode == Keys.Insert)
+            {
+                InsertAfter();
+                e.SuppressKeyPress = true;
+            }
+            else if (e.Shift && e.KeyCode == Keys.Insert)
+            {
+                InsertBefore();
+                e.SuppressKeyPress = true;
+            }
+            else if (e.Modifiers == Keys.Control && e.KeyCode == Keys.Z)
             {
                 ShowHistoryforUndoToolStripMenuItemClick(null, null);
                 e.SuppressKeyPress = true;
@@ -5296,7 +5321,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
             else if (e.Modifiers == Keys.Control && e.KeyCode == Keys.U)
-            { // toogle translator mode
+            { // toggle translator mode
                 EditToolStripMenuItemDropDownOpening(null, null);
                 toolStripMenuItemTranslationMode_Click(null, null);
             }
@@ -5305,7 +5330,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (mediaPlayer.VideoPlayer != null)
                 {
                     _endSeconds = -1;
-                    mediaPlayer.TooglePlayPause();
+                    mediaPlayer.TogglePlayPause();
                     e.SuppressKeyPress = true;
                 }
             }
@@ -5329,7 +5354,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 if (!textBoxListViewText.Focused && !textBoxListViewTextAlternate.Focused && !textBoxSource.Focused && mediaPlayer.VideoPlayer != null)
                 {
-                    mediaPlayer.TooglePlayPause();
+                    mediaPlayer.TogglePlayPause();
                     e.SuppressKeyPress = true;
                 }
             }
@@ -5435,23 +5460,72 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 if (mediaPlayer.VideoPlayer != null)
                 {
-                    mediaPlayer.TooglePlayPause();
+                    mediaPlayer.TogglePlayPause();
                     e.SuppressKeyPress = true;
                 }
             }
+            else if (e.Modifiers == (Keys.Control | Keys.Alt | Keys.Shift) && e.KeyCode == Keys.W) // watermak
+            {
+                if (comboBoxEncoding.Text.StartsWith("ANSI - "))
+                {
+                    MessageBox.Show("Watermark only works with unicode file encoding");
+                }
+                else
+                {
+                    Watermark watermarkForm = new Watermark();
+                    watermarkForm.Initialize(_subtitle, FirstSelectedIndex);
+                    if (watermarkForm.ShowDialog(this) == DialogResult.OK)
+                    {
+                        watermarkForm.AddOrRemove(_subtitle);
+                        RefreshSelectedParagraph();
+                    }
+                }
+            }
+            else if (e.KeyCode == Keys.Escape)
+            {
+                _cancelWordSpellCheck = true;
+            }
+            else if (e.Modifiers == (Keys.Control | Keys.Shift) && e.KeyCode == Keys.U) // Ctrl+Shift+U = switch original/current
+            {
+                if (_subtitleAlternate != null && _subtitleAlternate.Paragraphs.Count > 0 && _networkSession == null)
+                {
+                    Subtitle temp = _subtitle;
+                    _subtitle = _subtitleAlternate;
+                    _subtitleAlternate = temp;
+
+                    string tempName = _fileName;
+                    _fileName = _subtitleAlternateFileName;
+                    _subtitleAlternateFileName = tempName;
+
+                    bool tempChange = _change;
+                    _change = _changeAlternate;
+                    _changeAlternate = tempChange;
+
+                    SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
+                    RefreshSelectedParagraph();
+
+                    SetTitle();
+
+                    _fileDateTime = new DateTime();
+                }
+            }
+
+            // TABS - MUST BE LAST
             else if (tabControlButtons.SelectedTab == tabPageAdjust && mediaPlayer.VideoPlayer != null)
             {
                 if ((e.Modifiers == Keys.Control && e.KeyCode == Keys.Space))
                 {
-                    buttonSetStartAndOffsetRest_Click(null, null);
+                    ButtonSetStartAndOffsetRestClick(null, null);
+                    e.SuppressKeyPress = true;
                 }
                 else if (e.Modifiers == Keys.Shift && e.KeyCode == Keys.Space)
                 {
                     buttonSetEndAndGoToNext_Click(null, null);
+                    e.SuppressKeyPress = true;
                 }
                 else if (e.Modifiers == Keys.None && e.KeyCode == Keys.F9)
                 {
-                    buttonSetStartAndOffsetRest_Click(null, null);
+                    ButtonSetStartAndOffsetRestClick(null, null);
                     e.SuppressKeyPress = true;
                 }
                 else if (e.Modifiers == Keys.None && e.KeyCode == Keys.F10)
@@ -5495,61 +5569,7 @@ namespace Nikse.SubtitleEdit.Forms
                     e.SuppressKeyPress = true;
                 }
             }
-            else if (e.Modifiers == (Keys.Control | Keys.Alt | Keys.Shift) && e.KeyCode == Keys.W) // watermak
-            {
-                if (comboBoxEncoding.Text.StartsWith("ANSI - "))
-                {
-                    MessageBox.Show("Watermark only works with unicode file encoding");
-                }
-                else
-                {
-                    Watermark watermarkForm = new Watermark();
-                    watermarkForm.Initialize(_subtitle, FirstSelectedIndex);
-                    if (watermarkForm.ShowDialog(this) == DialogResult.OK)
-                    {
-                        watermarkForm.AddOrRemove(_subtitle);
-                        RefreshSelectedParagraph();
-                    }
-                }
-            }
-            else if (e.Modifiers == Keys.Shift && e.KeyCode == Keys.Insert)
-            {
-                InsertBefore();
-                e.SuppressKeyPress = true;
-            }
-            else if (e.Modifiers == Keys.Alt && e.KeyCode == Keys.Insert)
-            {
-                InsertAfter();
-                e.SuppressKeyPress = true;
-            }
-            else if (e.KeyCode == Keys.Escape)
-            {
-                _cancelWordSpellCheck = true;
-            }
-            else if (e.Modifiers == (Keys.Control | Keys.Shift) && e.KeyCode == Keys.U) // Ctrl+Shift+U = switch original/current
-            {
-                if (_subtitleAlternate != null && _subtitleAlternate.Paragraphs.Count > 0 && _networkSession == null)
-                {
-                    Subtitle temp = _subtitle;
-                    _subtitle = _subtitleAlternate;
-                    _subtitleAlternate = temp;
-
-                    string tempName = _fileName;
-                    _fileName = _subtitleAlternateFileName;
-                    _subtitleAlternateFileName = tempName;
-
-                    bool tempChange = _change;
-                    _change = _changeAlternate;
-                    _changeAlternate = tempChange;
-
-                    SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
-                    RefreshSelectedParagraph();
-
-                    SetTitle();
-
-                    _fileDateTime = new DateTime();
-                }
-            }
+            // put new entries above tabs
         }
 
         private void SetTitle()
@@ -6500,7 +6520,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else
             {
-                if (toolStripButtonToogleVideo.Checked && toolStripButtonToogleWaveForm.Checked)
+                if (toolStripButtonToggleVideo.Checked && toolStripButtonToggleWaveForm.Checked)
                 {
                     splitContainer1.Panel2Collapsed = false;
                     MoveVideoUp();
@@ -6512,7 +6532,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
 
                 splitContainerMain.Panel2Collapsed = false;
-                if (toolStripButtonToogleVideo.Checked)
+                if (toolStripButtonToggleVideo.Checked)
                 {
                     if (AudioWaveForm.Visible)
                     {
@@ -6545,7 +6565,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (_videoPlayerUnDocked == null || _videoPlayerUnDocked.IsDisposed)
                 UnDockVideoPlayer();
             _videoPlayerUnDocked.Visible = false;
-            if (toolStripButtonToogleVideo.Checked)
+            if (toolStripButtonToggleVideo.Checked)
             {
                 _videoPlayerUnDocked.Show(this);
                 if (_videoPlayerUnDocked.WindowState == FormWindowState.Minimized)
@@ -6555,14 +6575,14 @@ namespace Nikse.SubtitleEdit.Forms
             if (_waveFormUnDocked == null || _waveFormUnDocked.IsDisposed)
                 UnDockWaveForm();
             _waveFormUnDocked.Visible = false;
-            if (toolStripButtonToogleWaveForm.Checked)
+            if (toolStripButtonToggleWaveForm.Checked)
             {
                 _waveFormUnDocked.Show(this);
                 if (_waveFormUnDocked.WindowState == FormWindowState.Minimized)
                     _waveFormUnDocked.WindowState = FormWindowState.Normal;
             }
 
-            if (toolStripButtonToogleVideo.Checked || toolStripButtonToogleWaveForm.Checked)
+            if (toolStripButtonToggleVideo.Checked || toolStripButtonToggleWaveForm.Checked)
             {                
                 if (_videoControlsUnDocked == null || _videoControlsUnDocked.IsDisposed)
                     UnDockVideoButtons();
@@ -6820,23 +6840,6 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void buttonSetStartAndOffsetRest_Click(object sender, EventArgs e)
-        {
-            if (SubtitleListview1.SelectedItems.Count == 1)
-            {
-                int index = SubtitleListview1.SelectedItems[0].Index;
-                double videoPosition = mediaPlayer.CurrentPosition;
-                var tc = new TimeCode(TimeSpan.FromSeconds(videoPosition));
-                double offset = _subtitle.Paragraphs[index].StartTime.TotalMilliseconds - tc.TotalMilliseconds;
-                for (int i = index; i < SubtitleListview1.Items.Count; i++)
-                {
-                    _subtitle.Paragraphs[i].StartTime = new TimeCode(TimeSpan.FromMilliseconds(_subtitle.Paragraphs[i].StartTime.TotalMilliseconds - offset));
-                    _subtitle.Paragraphs[i].EndTime = new TimeCode(TimeSpan.FromMilliseconds(_subtitle.Paragraphs[i].EndTime.TotalMilliseconds - offset));
-                    SubtitleListview1.SetStartTime(i, _subtitle.Paragraphs[i]);
-                }
-            }
-        }
-
         private void buttonSetEnd_Click(object sender, EventArgs e)
         {
             if (SubtitleListview1.SelectedItems.Count == 1)
@@ -6961,13 +6964,13 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void toolStripButtonToogleVideo_Click(object sender, EventArgs e)
+        private void toolStripButtonToggleVideo_Click(object sender, EventArgs e)
         {
-            toolStripButtonToogleVideo.Checked = !toolStripButtonToogleVideo.Checked;
-            panelVideoPlayer.Visible = toolStripButtonToogleVideo.Checked;
+            toolStripButtonToggleVideo.Checked = !toolStripButtonToggleVideo.Checked;
+            panelVideoPlayer.Visible = toolStripButtonToggleVideo.Checked;
             mediaPlayer.BringToFront();
 //            labelSubtitle.BringToFront();
-            if (!toolStripButtonToogleVideo.Checked && !toolStripButtonToogleWaveForm.Checked)
+            if (!toolStripButtonToggleVideo.Checked && !toolStripButtonToggleWaveForm.Checked)
             {
                 if (_isVideoControlsUnDocked)
                     ShowHideUnDockedVideoControls();
@@ -6978,17 +6981,17 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 ShowVideoPlayer();
             }
-            Configuration.Settings.General.ShowVideoPlayer = toolStripButtonToogleVideo.Checked;
+            Configuration.Settings.General.ShowVideoPlayer = toolStripButtonToggleVideo.Checked;
             Refresh();
         }
 
-        private void toolStripButtonToogleWaveForm_Click(object sender, EventArgs e)
+        private void toolStripButtonToggleWaveForm_Click(object sender, EventArgs e)
         {
-            toolStripButtonToogleWaveForm.Checked = !toolStripButtonToogleWaveForm.Checked;
-            AudioWaveForm.Visible = toolStripButtonToogleWaveForm.Checked;
-            trackBarWaveFormPosition.Visible = toolStripButtonToogleWaveForm.Checked;
-            panelWaveFormControls.Visible = toolStripButtonToogleWaveForm.Checked;
-            if (!toolStripButtonToogleWaveForm.Checked && !toolStripButtonToogleVideo.Checked)
+            toolStripButtonToggleWaveForm.Checked = !toolStripButtonToggleWaveForm.Checked;
+            AudioWaveForm.Visible = toolStripButtonToggleWaveForm.Checked;
+            trackBarWaveFormPosition.Visible = toolStripButtonToggleWaveForm.Checked;
+            panelWaveFormControls.Visible = toolStripButtonToggleWaveForm.Checked;
+            if (!toolStripButtonToggleWaveForm.Checked && !toolStripButtonToggleVideo.Checked)
             {
                 if (_isVideoControlsUnDocked)
                     ShowHideUnDockedVideoControls();
@@ -6999,7 +7002,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 ShowVideoPlayer();
             }
-            Configuration.Settings.General.ShowWaveForm = toolStripButtonToogleWaveForm.Checked;
+            Configuration.Settings.General.ShowWaveForm = toolStripButtonToggleWaveForm.Checked;
             Refresh();
         }
 
@@ -7297,9 +7300,9 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (!_isVideoControlsUnDocked)
             {
-                if (toolStripButtonToogleWaveForm.Checked)
+                if (toolStripButtonToggleWaveForm.Checked)
                     AudioWaveForm.Left = tabControlButtons.Left + tabControlButtons.Width + 5;
-                if (!toolStripButtonToogleWaveForm.Checked && toolStripButtonToogleVideo.Checked)
+                if (!toolStripButtonToggleWaveForm.Checked && toolStripButtonToggleVideo.Checked)
                 {
                     panelVideoPlayer.Left = tabControlButtons.Left + tabControlButtons.Width + 5;
                     panelVideoPlayer.Width = groupBoxVideo.Width - (panelVideoPlayer.Left + 10);
@@ -7407,8 +7410,8 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void Main_Shown(object sender, EventArgs e)
         {
-            toolStripButtonToogleVideo.Checked = !Configuration.Settings.General.ShowVideoPlayer;
-            toolStripButtonToogleVideo_Click(null, null);
+            toolStripButtonToggleVideo.Checked = !Configuration.Settings.General.ShowVideoPlayer;
+            toolStripButtonToggleVideo_Click(null, null);
 
             _timerAutoSave.Tick += TimerAutoSaveTick;
             if (Configuration.Settings.General.AutoBackupSeconds > 0)
@@ -7791,7 +7794,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void showhideWaveFormToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            toolStripButtonToogleWaveForm_Click(null, null);
+            toolStripButtonToggleWaveForm_Click(null, null);
         }
 
         private void AudioWaveForm_DragEnter(object sender, DragEventArgs e)
@@ -7947,7 +7950,7 @@ namespace Nikse.SubtitleEdit.Forms
             tb.SelectionLength = text.Length;
         }
 
-        private void TextBoxListViewToogleTag(string tag)
+        private void TextBoxListViewToggleTag(string tag)
         {
             TextBox tb;
             if (textBoxListViewTextAlternate.Focused)
@@ -7975,17 +7978,17 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void boldToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            TextBoxListViewToogleTag("b");
+            TextBoxListViewToggleTag("b");
         }
 
         private void italicToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            TextBoxListViewToogleTag("i");
+            TextBoxListViewToggleTag("i");
         }
 
         private void underlineToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            TextBoxListViewToogleTag("u");
+            TextBoxListViewToggleTag("u");
         }
 
         private void colorToolStripMenuItem1_Click(object sender, EventArgs e)
@@ -8632,11 +8635,11 @@ namespace Nikse.SubtitleEdit.Forms
         private void undockVideoControlsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             UnDockVideoPlayer();
-            if (toolStripButtonToogleVideo.Checked)
+            if (toolStripButtonToggleVideo.Checked)
                 _videoPlayerUnDocked.Show(this);
 
             UnDockWaveForm();
-            if (toolStripButtonToogleWaveForm.Checked)
+            if (toolStripButtonToggleWaveForm.Checked)
                 _waveFormUnDocked.Show(this);
 
             UnDockVideoButtons();
@@ -8689,10 +8692,10 @@ namespace Nikse.SubtitleEdit.Forms
             _videoControlsUnDocked = null;
             ShowVideoPlayer();
 
-            AudioWaveForm.Visible = toolStripButtonToogleWaveForm.Checked;
-            trackBarWaveFormPosition.Visible = toolStripButtonToogleWaveForm.Checked;
-            panelWaveFormControls.Visible = toolStripButtonToogleWaveForm.Checked;
-            if (!toolStripButtonToogleVideo.Checked)
+            AudioWaveForm.Visible = toolStripButtonToggleWaveForm.Checked;
+            trackBarWaveFormPosition.Visible = toolStripButtonToggleWaveForm.Checked;
+            panelWaveFormControls.Visible = toolStripButtonToggleWaveForm.Checked;
+            if (!toolStripButtonToggleVideo.Checked)
                 HideVideoPlayer();
             
             mediaPlayer.Invalidate();
@@ -8702,14 +8705,14 @@ namespace Nikse.SubtitleEdit.Forms
             redockVideoControlsToolStripMenuItem.Visible = false;
         }
 
-        internal void SetWaveFormToogleOff()
+        internal void SetWaveFormToggleOff()
         {
-            toolStripButtonToogleWaveForm.Checked = false;
+            toolStripButtonToggleWaveForm.Checked = false;
         }
 
-        internal void SetVideoPlayerToogleOff()
+        internal void SetVideoPlayerToggleOff()
         {
-            toolStripButtonToogleVideo.Checked = false;
+            toolStripButtonToggleVideo.Checked = false;
         }
 
         private void toolStripMenuItemInsertSubtitle_Click(object sender, EventArgs e)
@@ -8906,7 +8909,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 else
                 {
-                   TextBoxListViewToogleTag("i");
+                   TextBoxListViewToggleTag("i");
                 }
             }
             if (e.Modifiers == Keys.Control && e.KeyCode == Keys.D)

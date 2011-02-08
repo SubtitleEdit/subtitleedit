@@ -180,6 +180,7 @@ namespace Nikse.SubtitleEdit.Forms
                 Utilities.InitializeVideoPlayerAndContainer(MediaPlayerStart.VideoPlayer.VideoFileName, null, MediaPlayerEnd, VideoEndLoaded, VideoEndEnded);
             }
             timer1.Start();
+            timerProgressBarRefresh.Start();
 
             if (AudioTrackNumber > -1 && MediaPlayerStart.VideoPlayer is Nikse.SubtitleEdit.Logic.VideoPlayers.LibVlc11xDynamic)
             {
@@ -262,7 +263,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void FormVisualSync_FormClosing(object sender, FormClosingEventArgs e)
         {
             timer1.Stop();
-
+            timerProgressBarRefresh.Stop();
             if (MediaPlayerStart != null)
                 MediaPlayerStart.Pause();
             if (MediaPlayerEnd != null)
@@ -295,6 +296,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 e.Cancel = true;
                 timer1.Start();
+                timerProgressBarRefresh.Start();
             }
             else if (dr == DialogResult.Yes)
             {
@@ -591,12 +593,12 @@ namespace Nikse.SubtitleEdit.Forms
                     if (_isStartSceneActive)
                     {
                         _startStopPosition = -1;
-                        MediaPlayerStart.TooglePlayPause();
+                        MediaPlayerStart.TogglePlayPause();
                     }
                     else
                     {
                         _endStopPosition = -1;
-                        MediaPlayerStart.TooglePlayPause();
+                        MediaPlayerStart.TogglePlayPause();
                     }
                 }
                 else if (e.Modifiers == Keys.Alt && e.KeyCode == Keys.Left)
@@ -650,9 +652,9 @@ namespace Nikse.SubtitleEdit.Forms
                 else if (e.Modifiers == Keys.None && e.KeyCode == Keys.Space)
                 {
                     if (_isStartSceneActive)
-                        MediaPlayerStart.TooglePlayPause();
+                        MediaPlayerStart.TogglePlayPause();
                     else
-                        MediaPlayerEnd.TooglePlayPause();
+                        MediaPlayerEnd.TogglePlayPause();
                     e.SuppressKeyPress = true;
                 }
             }
@@ -722,6 +724,18 @@ namespace Nikse.SubtitleEdit.Forms
         private void buttonOK_Click(object sender, EventArgs e)
         {
             OKPressed = true;
+        }
+
+        private void timerProgressBarRefresh_Tick(object sender, EventArgs e)
+        {
+            if (MediaPlayerStart.VideoPlayer != null) // && MediaPlayerStart.VideoPlayer.GetType() == typeof(Nikse.SubtitleEdit.Logic.VideoPlayers.QuartsPlayer))
+            {
+                MediaPlayerStart.RefreshProgressBar();
+            }
+            if (MediaPlayerEnd.VideoPlayer != null) // && MediaPlayerEnd.VideoPlayer.GetType() == typeof(Nikse.SubtitleEdit.Logic.VideoPlayers.QuartsPlayer))
+            {
+                MediaPlayerEnd.RefreshProgressBar();
+            }
         }
 
     }
