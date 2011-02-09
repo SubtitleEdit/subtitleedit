@@ -13,12 +13,14 @@ Subtitle Edit Changelog
    * Support for the subtitle format "Quicktime text" (two variations) + Scenarist + Adobe Encore
    * Added "Chars/sec" info to textbox in main window (thx Kerensky)
    * Options to choose font color and background color (for list view/text-boxes)
-   * Can now import VobSub subtitles embedded in Matroska (.mkv) files (thx mosu for mkv info + thx hawk for testing)
+   * Can now import VobSub subtitles embedded in Matroska (.mkv) files
+     (thx mosu for mkv info + thx hawk for testing)
    * Wave form position can be locked at center via new 'Center' button (thx Krystian)
    * Can insert (a whole) subtitle after a line in the list view via context menu
    * Auto-suggest line splitting with button while typing (thx Dr. Jackson)
    * Auto-wrap text while typing (option, thx swedelandster)
-   * Video menu will now have a "Choose audio track" if more than one audio track exists (only using VLC as video player)
+   * Video menu will now have a "Choose audio track" if more than one audio track exists
+     (only when using VLC as video player)
  * IMPROVED:
    * Main window: Video player will now automatically move up beside subtitle if waveform is
      displayed + some resizing of controls allowed via splitters
