@@ -125,8 +125,8 @@ namespace Nikse.SubtitleEdit.Logic
 
                         if (endOk && StrippedText.Length >= start + name.Length)
                         {
-                            string orginalName = StrippedText.Substring(start, name.Length);
-                            originalNames.Add(orginalName);
+                            string originalName = StrippedText.Substring(start, name.Length);
+                            originalNames.Add(originalName);
                             StrippedText = StrippedText.Remove(start, name.Length);
                             StrippedText = StrippedText.Insert(start, GetAndInsertNextId(replaceIds, replaceNames, name));
                             lower = StrippedText.ToLower();

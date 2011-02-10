@@ -159,8 +159,6 @@ namespace Nikse.SubtitleEdit.Forms
                 labelAlternateSingleLine.Visible = false;
                 labelTextAlternateLineTotal.Visible = false;
 
-                toolStripMenuItemTranslationMode.ShortcutKeys = Keys.Control | Keys.Alt | Keys.O;
-                toolStripMenuItemTranslationMode.ShortcutKeyDisplayString = "Ctrl+Alt+O";
                 SetLanguage(Configuration.Settings.General.Language);
                 toolStripStatusNetworking.Visible = false;
                 labelTextLineLengths.Text = string.Empty;
@@ -169,6 +167,7 @@ namespace Nikse.SubtitleEdit.Forms
                 labelStartTimeWarning.Text = string.Empty;
                 labelDurationWarning.Text = string.Empty;
                 labelVideoInfo.Text = string.Empty;
+                labelSingleLine.Text = string.Empty;
                 Text = Title;
                 timeUpDownStartTime.TimeCode = new TimeCode(0, 0, 0, 0);
                 checkBoxAutoRepeatOn.Checked = Configuration.Settings.General.AutoRepeatOn;
@@ -509,6 +508,11 @@ namespace Nikse.SubtitleEdit.Forms
             reopenToolStripMenuItem.Text = _language.Menu.File.Reopen;
             saveToolStripMenuItem.Text = _language.Menu.File.Save;
             saveAsToolStripMenuItem.Text = _language.Menu.File.SaveAs;
+            openOriginalToolStripMenuItem.Text = _language.Menu.File.OpenOriginal;
+            saveOriginalToolStripMenuItem.Text = _language.Menu.File.SaveOriginal;
+            saveOriginalAstoolStripMenuItem.Text = _language.SaveOriginalSubtitleAs;
+            removeOriginalToolStripMenuItem.Text = _language.Menu.File.RemoveOriginal;
+
             toolStripMenuItemOpenContainingFolder.Text = _language.Menu.File.OpenContainingFolder;
             toolStripMenuItemCompare.Text = _language.Menu.File.Compare;
             toolStripMenuItemImportDvdSubtitles.Text = _language.Menu.File.ImportOcrFromDvd;
@@ -525,7 +529,6 @@ namespace Nikse.SubtitleEdit.Forms
 
             editToolStripMenuItem.Text = _language.Menu.Edit.Title;
             showHistoryforUndoToolStripMenuItem.Text = _language.Menu.Edit.ShowUndoHistory;
-            toolStripMenuItemTranslationMode.Text = _language.Menu.Edit.ShowOriginalText;
 
             toolStripMenuItemInsertUnicodeCharacter.Text = _language.Menu.Edit.InsertUnicodeSymbol;
 
@@ -4179,6 +4182,7 @@ namespace Nikse.SubtitleEdit.Forms
                 SubtitleListview1.SetDuration(_subtitleListViewIndex, p);
 
                 InitializeListViewEditBox(p);
+                buttonUndoListViewChanges.Enabled = false;
             }
         }
 
@@ -6023,16 +6027,6 @@ namespace Nikse.SubtitleEdit.Forms
                 toolStripMenuItemInsertUnicodeCharacter.Visible = true;
                 toolStripSeparatorInsertUnicodeCharacter.Visible = true;                
             }
-
-            if (SubtitleListview1.IsAlternateTextColumnVisible)
-            {
-                toolStripMenuItemTranslationMode.Text = _language.Menu.Edit.HideOriginalText;
-            }
-            else
-            {
-                toolStripMenuItemTranslationMode.Text = _language.Menu.Edit.ShowOriginalText;
-            }
-            toolStripMenuItemTranslationMode.Visible = false; //TODO: Remove this (now in file menu)
         }
 
         private void InsertUnicodeSymbol(object sender, EventArgs e)
@@ -7094,9 +7088,7 @@ namespace Nikse.SubtitleEdit.Forms
                         _endSeconds = -1;
                     }
 
-                    // mediaPlayer.RefreshProgressBar();
-                    // Utilities.ShowSubtitle(_subtitle.Paragraphs, labelSubtitle, mediaPlayer.VideoPlayer);
-                    if (AutoRepeatContinueOn) // && (_endSeconds == -1 && !checkBoxSyncListViewWithVideoWhilePlaying.Checked))
+                    if (AutoRepeatContinueOn) 
                     {
                         if (_endSeconds >= 0 && mediaPlayer.CurrentPosition > _endSeconds && checkBoxAutoRepeatOn.Checked)
                         {
@@ -7111,7 +7103,8 @@ namespace Nikse.SubtitleEdit.Forms
                                     labelStatus.Text = string.Format(Configuration.Settings.Language.Main.VideoControls.RepeatingXTimesLeft, _repeatCount);
 
                                 _repeatCount--;
-                                PlayPart(_subtitle.Paragraphs[_subtitleListViewIndex]);
+                                if (_subtitleListViewIndex >= 0 && _subtitleListViewIndex < _subtitle.Paragraphs.Count)
+                                    PlayPart(_subtitle.Paragraphs[_subtitleListViewIndex]);
                             }
                             else if (checkBoxAutoContinue.Checked)
                             {
@@ -7140,7 +7133,7 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         SubtitleListview1.BeginUpdate();
                         if (index + 2 < SubtitleListview1.Items.Count)
-                            SubtitleListview1.EnsureVisible(index + 2);
+                            SubtitleListview1.EnsureVisible(index + 2);                        
                         SubtitleListview1.SelectIndexAndEnsureVisible(index);
                         SubtitleListview1.EndUpdate();
                     }
