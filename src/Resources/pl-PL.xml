@@ -381,6 +381,9 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <Reopen>Otwórz &amp;ponownie</Reopen>
         <Save>&amp;Zapisz</Save>
         <SaveAs>Zapisz j&amp;ako...</SaveAs>
+        <OpenOriginal>Otwórz oryginalny tytuł (tryb tłumacz)...</OpenOriginal>
+        <SaveOriginal>Zapisz oryginalny</SaveOriginal>
+        <RemoveOriginal>Usuń oryginalny</RemoveOriginal>
         <OpenContainingFolder>Otwórz zawartość folderu</OpenContainingFolder>
         <Compare>Po&amp;równaj...</Compare>
         <ImportOcrFromDvd>Importuj/OCR napisy z VOB/IFO (DVD)...</ImportOcrFromDvd>
@@ -395,8 +398,6 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
       <Edit>
         <Title>Edytuj</Title>
         <ShowUndoHistory>Pokaż historię (do cofania zmian)</ShowUndoHistory>
-        <ShowOriginalText>Pokaż tekst oryginalny (tryb tłumacza)</ShowOriginalText>
-        <HideOriginalText>Ukryj tekst oryginalny</HideOriginalText>
         <InsertUnicodeSymbol>Wstaw symbol Unicode</InsertUnicodeSymbol>
         <Find>&amp;Znajdź</Find>
         <FindNext>Znajdź &amp;następny</FindNext>

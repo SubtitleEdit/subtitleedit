@@ -382,6 +382,9 @@
         <Reopen>&amp;Genåbn</Reopen>
         <Save>&amp;Gem</Save>
         <SaveAs>Gem &amp;som...</SaveAs>
+        <OpenOriginal>Åbn original undertekst (oversætter mode)...</OpenOriginal>
+        <SaveOriginal>Gem original</SaveOriginal>
+        <RemoveOriginal>Fjern original</RemoveOriginal>
         <OpenContainingFolder>Åbn indeholdende mappe</OpenContainingFolder>
         <Compare>Sammenlign...</Compare>
         <ImportOcrFromDvd>Import/OCR undertekster fra VOB/IFO (dvd) ...</ImportOcrFromDvd>
@@ -396,8 +399,6 @@
       <Edit>
         <Title>Rediger</Title>
         <ShowUndoHistory>Vis historik (fortryd)</ShowUndoHistory>
-        <ShowOriginalText>Vis oprindelig tekst (oversætter mode)</ShowOriginalText>
-        <HideOriginalText>Skjul oprindelig tekst</HideOriginalText>
         <InsertUnicodeSymbol>Indsæt unicode symbol</InsertUnicodeSymbol>
         <Find>&amp;Find</Find>
         <FindNext>Find &amp;næste</FindNext>

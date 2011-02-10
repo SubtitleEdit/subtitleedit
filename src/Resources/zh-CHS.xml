@@ -378,6 +378,9 @@ C# 源代码可从 http://code.google.com/p/subtitleedit 获得。
         <Reopen>重新打开(&amp;R)</Reopen>
         <Save>保存(&amp;S)</Save>
         <SaveAs>另存为(&amp;A)...</SaveAs>
+        <OpenOriginal>打开原始字幕（翻译模式）...</OpenOriginal>
+        <SaveOriginal>保存原始</SaveOriginal>
+        <RemoveOriginal>删除原</RemoveOriginal>
         <OpenContainingFolder>打开所在文件夹</OpenContainingFolder>
         <Compare>比较(&amp;C)...</Compare>
         <ImportOcrFromDvd>从 DVD 导入/OCR 字幕...</ImportOcrFromDvd>
@@ -392,8 +395,6 @@ C# 源代码可从 http://code.google.com/p/subtitleedit 获得。
       <Edit>
         <Title>编辑(&amp;E)</Title>
         <ShowUndoHistory>显示历史记录 (用于撤消)</ShowUndoHistory>
-        <ShowOriginalText>显示原始文本 (翻译模式)</ShowOriginalText>
-        <HideOriginalText>隐藏原始文本</HideOriginalText>
         <InsertUnicodeSymbol>插入 Unicode 符号</InsertUnicodeSymbol>
         <Find>查找(&amp;F)</Find>
         <FindNext>查找下一个(&amp;N)</FindNext>

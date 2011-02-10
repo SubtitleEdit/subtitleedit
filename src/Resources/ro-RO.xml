@@ -378,6 +378,9 @@ E-mail: nikse.dk @gmail.com</AboutText1>
         <Reopen>&amp;Redeschideti</Reopen>
         <Save>&amp;Salvati</Save>
         <SaveAs>Salvati &amp;ca...</SaveAs>
+        <OpenOriginal>Deschis subtitrare original (modul de traducator)...</OpenOriginal>
+        <SaveOriginal>Salvaţi original</SaveOriginal>
+        <RemoveOriginal>Eliminaţi original</RemoveOriginal>
         <OpenContainingFolder>Deschis dosar continand</OpenContainingFolder>
         <Compare>&amp;Compara...</Compare>
         <ImportOcrFromDvd>Import/subtitrarea OCR din vob/IFO (DVD) ...</ImportOcrFromDvd>
@@ -392,8 +395,6 @@ E-mail: nikse.dk @gmail.com</AboutText1>
       <Edit>
         <Title>Editare</Title>
         <ShowUndoHistory>Arata istorie (pentru anuleaza)</ShowUndoHistory>
-        <ShowOriginalText>Afisati textul original (modul traducator)</ShowOriginalText>
-        <HideOriginalText>Ascunde textul original</HideOriginalText>
         <InsertUnicodeSymbol>Inserarea simbol unicode</InsertUnicodeSymbol>
         <Find>&amp;Gasiti</Find>
         <FindNext>Gasiti &amp;urmatoarea</FindNext>

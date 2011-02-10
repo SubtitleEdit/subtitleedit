@@ -381,6 +381,9 @@
         <Reopen>&amp;ÅterÖppna</Reopen>
         <Save>&amp;Spara</Save>
         <SaveAs>Spara &amp;som...</SaveAs>
+        <OpenOriginal>Öppna original subtitle (översättare läge)...</OpenOriginal>
+        <SaveOriginal>Spara original</SaveOriginal>
+        <RemoveOriginal>Ta bort original</RemoveOriginal>
         <OpenContainingFolder>Öppna mappen</OpenContainingFolder>
         <Compare>&amp;Jämför...</Compare>
         <ImportOcrFromDvd>Importera/OCR textning från VOB/IFO (DVD) ...</ImportOcrFromDvd>
@@ -395,8 +398,6 @@
       <Edit>
         <Title>Redigera</Title>
         <ShowUndoHistory>Visa historik (för ångra)</ShowUndoHistory>
-        <ShowOriginalText>Visa original text (översättar läge)</ShowOriginalText>
-        <HideOriginalText>Dölj original text</HideOriginalText>
         <InsertUnicodeSymbol>Infoga unicode symbol</InsertUnicodeSymbol>
         <Find>&amp;Sök</Find>
         <FindNext>Sök &amp;nästa</FindNext>
