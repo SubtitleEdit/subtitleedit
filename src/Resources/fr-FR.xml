@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Language Name="Français">
   <General>
     <Title>Subtitle Edit</Title>
@@ -380,6 +380,9 @@ Email : mailto:nikse.dk@gmail.com</AboutText1>
         <Reopen>&amp;Réouvrir</Reopen>
         <Save>&amp;Sauver</Save>
         <SaveAs>Sauver so&amp;us...</SaveAs>
+        <OpenOriginal>Ouvrir sous-titre original (mode traduction)...</OpenOriginal>
+        <SaveOriginal>Sauver original</SaveOriginal>
+        <RemoveOriginal>Retirer original</RemoveOriginal>
         <OpenContainingFolder>Ouvrir répertoire contenant les sous-titres</OpenContainingFolder>
         <Compare>&amp;Comparer...</Compare>
         <ImportOcrFromDvd>Importer sous-titres OCR de VOB/IFO (DVD) ...</ImportOcrFromDvd>
@@ -394,8 +397,6 @@ Email : mailto:nikse.dk@gmail.com</AboutText1>
       <Edit>
         <Title>&amp;Edition</Title>
         <ShowUndoHistory>Montrer l'&amp;historique (pour annulation)</ShowUndoHistory>
-        <ShowOriginalText>Montrer texte original (mode traduction)</ShowOriginalText>
-        <HideOriginalText>Cacher texte original</HideOriginalText>
         <InsertUnicodeSymbol>&amp;Insérer un symbole unicode</InsertUnicodeSymbol>
         <Find>Re&amp;chercher</Find>
         <FindNext>Chercher &amp;suivant</FindNext>
