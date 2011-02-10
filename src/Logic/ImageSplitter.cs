@@ -109,7 +109,7 @@ namespace Nikse.SubtitleEdit.Logic
                             Bitmap part = Copy(bmp, new Rectangle(0, startY, bmp.Width, size+1));
 //                            part.Save("c:\\line_0_to_width.bmp");
                             parts.Add(new ImageSplitterItem(0, startY, part));
-//                            bmp.Save("c:\\orginal.bmp");
+//                            bmp.Save("c:\\original.bmp");
                         }
                         size = 0;
                         startY = y;

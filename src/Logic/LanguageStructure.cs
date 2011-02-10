@@ -26,6 +26,7 @@
             public string StartTime { get; set; }
             public string EndTime { get; set; }
             public string Duration { get; set; }
+            public string NumberSymbol { get; set; }
             public string Number { get; set; }
             public string Text { get; set; }
             public string HourMinutesSecondsMilliseconds { get; set; }
@@ -56,6 +57,7 @@
             public string PleaseWait { get; set; }
             public string SessionKey { get; set; }
             public string UserName { get; set; }
+            public string UserNameAlreadyInUse { get; set; }
             public string WebServiceUrl { get; set; }
             public string IP { get; set; }
         }
@@ -601,7 +603,7 @@
             public string NetworkNewUser { get; set; }
             public string NetworkByeUser { get; set; }
             public string NetworkUnableToConnectToServer { get; set; }
-            public string UserAndAction { get; set; }
+            public string UserAndAction { get; set; }            
             public string NetworkMode { get; set; }
             public string XStartedSessionYAtZ { get; set; }
             public string SpellChekingViaWordXLineYOfX { get; set; }
@@ -619,6 +621,9 @@
                     public string Reopen { get; set; }
                     public string Save { get; set; }
                     public string SaveAs { get; set; }
+                    public string OpenOriginal { get; set; }
+                    public string SaveOriginal { get; set; }
+                    public string RemoveOriginal { get; set; }
                     public string OpenContainingFolder { get; set; }
                     public string Compare { get; set; }
                     public string ImportOcrFromDvd { get; set; }
@@ -634,8 +639,6 @@
                 {
                     public string Title { get; set; }
                     public string ShowUndoHistory { get; set; }
-                    public string ShowOriginalText { get; set; }
-                    public string HideOriginalText { get; set; }
                     public string InsertUnicodeSymbol { get; set; }
                     public string Find { get; set; }
                     public string FindNext { get; set; }

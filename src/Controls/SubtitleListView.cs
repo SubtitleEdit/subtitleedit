@@ -32,6 +32,7 @@ namespace Nikse.SubtitleEdit.Controls
 
         public void InitializeLanguage(LanguageStructure.General general, Settings settings)
         {
+            Columns[ColumnIndexNumber].Text = general.NumberSymbol;
             Columns[ColumnIndexStart].Text = general.StartTime;
             Columns[ColumnIndexEnd].Text = general.EndTime;
             Columns[ColumnIndexDuration].Text = general.Duration;
