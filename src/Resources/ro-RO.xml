@@ -15,12 +15,14 @@
     <VideoFiles>Fisiere video</VideoFiles>
     <OpenSubtitle>Deschide subtitrare...</OpenSubtitle>
     <OpenVideoFile>Deschide fisier video...</OpenVideoFile>
+    <OpenVideoFileTitle>Deschide fisier video...</OpenVideoFileTitle>
     <NoVideoLoaded>Nici un fisier video incarcat</NoVideoLoaded>
     <VideoInformation>Informatii video</VideoInformation>
     <PositionX>Pozitie / Durata:{0}</PositionX>
     <StartTime>Inceput la...</StartTime>
     <EndTime>Sfarsit la...</EndTime>
     <Duration>Durata</Duration>
+    <NumberSymbol>#</NumberSymbol>
     <Number>Numar</Number>
     <Text>Text</Text>
     <HourMinutesSecondsMilliseconds>Ora: min: sec: msec</HourMinutesSecondsMilliseconds>
@@ -51,6 +53,7 @@
     <PleaseWait>Asteapta...</PleaseWait>
     <SessionKey>Sesiune</SessionKey>
     <UserName>Nume utilizator</UserName>
+    <UserNameAlreadyInUse>Nume de utilizator deja în uz</UserNameAlreadyInUse>
     <WebServiceUrl>Adresa</WebServiceUrl>
     <IP>IP</IP>
   </General>
@@ -380,7 +383,7 @@ E-mail: nikse.dk @gmail.com</AboutText1>
         <SaveAs>Salvati &amp;ca...</SaveAs>
         <OpenOriginal>Deschis subtitrare original (modul de traducator)...</OpenOriginal>
         <SaveOriginal>Salvaţi original</SaveOriginal>
-        <RemoveOriginal>Eliminaţi original</RemoveOriginal>
+        <CloseOriginal>Eliminaţi original</CloseOriginal>
         <OpenContainingFolder>Deschis dosar continand</OpenContainingFolder>
         <Compare>&amp;Compara...</Compare>
         <ImportOcrFromDvd>Import/subtitrarea OCR din vob/IFO (DVD) ...</ImportOcrFromDvd>
@@ -891,6 +894,7 @@ pot edita in acelasi fisier subtitrare (colaborare)</Information>
     <AutoWrapWhileTyping>Auto-desparte în timp ce tastaţi</AutoWrapWhileTyping>
     <SubtitleFont>Font subtitrare</SubtitleFont>
     <SubtitleFontSize>Marime font</SubtitleFontSize>
+    <SubtitleBold>Ingrosat</SubtitleBold>
     <SubtitleFontColor>Culoare literelor subtitrarii</SubtitleFontColor>
     <SubtitleBackgroundColor>Culoarea fundalului subtitrarii</SubtitleBackgroundColor>
     <SpellChecker>Verificator ortografic</SpellChecker>

@@ -15,12 +15,14 @@
     <VideoFiles>Videofiler</VideoFiles>
     <OpenSubtitle>Öppna undertext...</OpenSubtitle>
     <OpenVideoFile>Öppna videofil...</OpenVideoFile>
+    <OpenVideoFileTitle>Öppna videofil...</OpenVideoFileTitle>
     <NoVideoLoaded>Ingen video laddad</NoVideoLoaded>
     <VideoInformation>Video info</VideoInformation>
     <PositionX>Position / permanent: {0}</PositionX>
     <StartTime>Starttid</StartTime>
     <EndTime>Sluttid</EndTime>
     <Duration>Permanent</Duration>
+    <NumberSymbol>#</NumberSymbol>
     <Number>Antal</Number>
     <Text>Text</Text>
     <HourMinutesSecondsMilliseconds>Timme: min: sek: msek</HourMinutesSecondsMilliseconds>
@@ -51,6 +53,7 @@
     <PleaseWait>Vänligen vänta</PleaseWait>
     <SessionKey>Sessionsnyckel</SessionKey>
     <UserName>Användarnamn</UserName>
+    <UserNameAlreadyInUse>Användarnamnet finns redan</UserNameAlreadyInUse>
     <WebServiceUrl>Webbtjänst url</WebServiceUrl>
     <IP>IP</IP>
   </General>
@@ -383,7 +386,7 @@
         <SaveAs>Spara &amp;som...</SaveAs>
         <OpenOriginal>Öppna original subtitle (översättare läge)...</OpenOriginal>
         <SaveOriginal>Spara original</SaveOriginal>
-        <RemoveOriginal>Ta bort original</RemoveOriginal>
+        <CloseOriginal>Ta bort original</CloseOriginal>
         <OpenContainingFolder>Öppna mappen</OpenContainingFolder>
         <Compare>&amp;Jämför...</Compare>
         <ImportOcrFromDvd>Importera/OCR textning från VOB/IFO (DVD) ...</ImportOcrFromDvd>
@@ -894,6 +897,7 @@
     <AutoWrapWhileTyping>Auto-wrap när du skriver</AutoWrapWhileTyping>
     <SubtitleFont>Typsnitt för textning</SubtitleFont>
     <SubtitleFontSize>Undertext teckenstorlek</SubtitleFontSize>
+    <SubtitleBold>Fet</SubtitleBold>
     <SubtitleFontColor>Undertext teckenfärg</SubtitleFontColor>
     <SubtitleBackgroundColor>Undertext bakgrundsfärg</SubtitleBackgroundColor>
     <SpellChecker>Stavningskontroll</SpellChecker>

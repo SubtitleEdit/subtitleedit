@@ -21,6 +21,7 @@
     <StartTime>Indítási idő</StartTime>
     <EndTime>Befejezési idő</EndTime>
     <Duration>Időtartam</Duration>
+    <NumberSymbol>#</NumberSymbol>
     <Number>Számok</Number>
     <Text>Szöveg</Text>
     <HourMinutesSecondsMilliseconds>Óra:perc:mp:msec</HourMinutesSecondsMilliseconds>
@@ -54,6 +55,8 @@
     </SessionKey>
     <UserName>
     </UserName>
+    <UserNameAlreadyInUse>
+    </UserNameAlreadyInUse>
     <WebServiceUrl>
     </WebServiceUrl>
     <IP>
@@ -392,6 +395,12 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <Reopen>Újranyitás</Reopen>
         <Save>&amp;Mentés</Save>
         <SaveAs>Mentés másként...</SaveAs>
+        <OpenOriginal>
+        </OpenOriginal>
+        <SaveOriginal>
+        </SaveOriginal>
+        <CloseOriginal>
+        </CloseOriginal>
         <OpenContainingFolder>A fájlt tartalmazó mappa megnyitása</OpenContainingFolder>
         <Compare>Összehasonlítás...</Compare>
         <ImportOcrFromDvd>Felirat importálás/OCR vob/ifo fájlból (dvd) ...</ImportOcrFromDvd>
@@ -407,8 +416,6 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
       <Edit>
         <Title>Szerkesztés</Title>
         <ShowUndoHistory>Előzmények megjelenítése (visszavonási mód)</ShowUndoHistory>
-        <ShowOriginalText>Eredeti szöveg megjelenítése (fordító mód)</ShowOriginalText>
-        <HideOriginalText>Eredeti szöveg rejtése</HideOriginalText>
         <InsertUnicodeSymbol>Unicode szimbólum beszúrása</InsertUnicodeSymbol>
         <Find>&amp;Keresés</Find>
         <FindNext>Következő keresése</FindNext>

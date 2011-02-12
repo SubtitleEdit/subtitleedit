@@ -467,7 +467,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (string.IsNullOrEmpty(openFileDialog1.InitialDirectory) && !string.IsNullOrEmpty(_subtitleFileName))
                 openFileDialog1.InitialDirectory = Path.GetDirectoryName(_subtitleFileName);
-            openFileDialog1.Title = _languageGeneral.OpenVideoFile;
+            openFileDialog1.Title = _languageGeneral.OpenVideoFileTitle;
             openFileDialog1.FileName = string.Empty;
             openFileDialog1.Filter = Utilities.GetVideoFileFilter();
             openFileDialog1.FileName = string.Empty;

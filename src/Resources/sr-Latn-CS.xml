@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Language Name="Srpski">
   <General>
     <Title>Subtitle Edit</Title>
@@ -21,6 +21,7 @@
     <StartTime>Početak</StartTime>
     <EndTime>Kraj</EndTime>
     <Duration>Trajanje</Duration>
+    <NumberSymbol>#</NumberSymbol>
     <Number>Broj</Number>
     <Text>Tekst</Text>
     <HourMinutesSecondsMilliseconds>h:min:sec:ms</HourMinutesSecondsMilliseconds>
@@ -51,6 +52,8 @@
     <PleaseWait>Molimo, sačekajte...</PleaseWait>
     <SessionKey>Ključ:</SessionKey>
     <UserName>Korisnik:</UserName>
+    <UserNameAlreadyInUse>
+    </UserNameAlreadyInUse>
     <WebServiceUrl>Adresa:</WebServiceUrl>
     <IP>IP adresa</IP>
   </General>
@@ -380,6 +383,12 @@ E-pošta: mailto:nikse.dk@gmail.com</AboutText1>
         <Reopen>&amp;Ponovo otvori</Reopen>
         <Save>&amp;Sačuvaj</Save>
         <SaveAs>Sačuvaj &amp;kao...</SaveAs>
+        <OpenOriginal>
+        </OpenOriginal>
+        <SaveOriginal>
+        </SaveOriginal>
+        <CloseOriginal>
+        </CloseOriginal>
         <OpenContainingFolder>Otvori fasciklu</OpenContainingFolder>
         <Compare>&amp;Uporedi...</Compare>
         <ImportOcrFromDvd>Prepoznaj znakove DVD titla...</ImportOcrFromDvd>
@@ -394,8 +403,6 @@ E-pošta: mailto:nikse.dk@gmail.com</AboutText1>
       <Edit>
         <Title>Uređivanje</Title>
         <ShowUndoHistory>Prikaži istorijat</ShowUndoHistory>
-        <ShowOriginalText>Prikaži izvorni tekst</ShowOriginalText>
-        <HideOriginalText>Sakrij izvorni tekst</HideOriginalText>
         <InsertUnicodeSymbol>Ubaci unikod simbol</InsertUnicodeSymbol>
         <Find>&amp;Pronađi</Find>
         <FindNext>Pronađi &amp;sledeće</FindNext>

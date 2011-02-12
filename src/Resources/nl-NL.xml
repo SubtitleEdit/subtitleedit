@@ -23,6 +23,7 @@
     <StartTime>Starttijd</StartTime>
     <EndTime>Eindtijd</EndTime>
     <Duration>Tijd</Duration>
+    <NumberSymbol>#</NumberSymbol>
     <Number>Nummer</Number>
     <Text>Tekst</Text>
     <HourMinutesSecondsMilliseconds>Uur, min, sec, msec</HourMinutesSecondsMilliseconds>
@@ -61,6 +62,8 @@
     </SessionKey>
     <UserName>
     </UserName>
+    <UserNameAlreadyInUse>
+    </UserNameAlreadyInUse>
     <WebServiceUrl>
     </WebServiceUrl>
     <IP>
@@ -489,6 +492,12 @@ U mag deze verspreiden, wijzigen en vrij gebruiken.
         <Reopen>&amp;Heropen</Reopen>
         <Save>&amp;Opslaan</Save>
         <SaveAs>Opslaan &amp;als...</SaveAs>
+        <OpenOriginal>
+        </OpenOriginal>
+        <SaveOriginal>
+        </SaveOriginal>
+        <CloseOriginal>
+        </CloseOriginal>
         <OpenContainingFolder>
         </OpenContainingFolder>
         <Compare>&amp;Vergelijk...</Compare>
@@ -508,10 +517,6 @@ U mag deze verspreiden, wijzigen en vrij gebruiken.
       <Edit>
         <Title>Aanpassen</Title>
         <ShowUndoHistory>Toon geschiedenis (voor herstellen)</ShowUndoHistory>
-        <ShowOriginalText>
-        </ShowOriginalText>
-        <HideOriginalText>
-        </HideOriginalText>
         <InsertUnicodeSymbol>
         </InsertUnicodeSymbol>
         <Find>&amp;Zoek</Find>

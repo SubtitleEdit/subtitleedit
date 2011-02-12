@@ -181,10 +181,10 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxAutoWrapWhileTyping.Text = language.AutoWrapWhileTyping;
             labelSubtitleFont.Text = language.SubtitleFont;
             labelSubtitleFontSize.Text = language.SubtitleFontSize;
+            checkBoxSubtitleFontBold.Text = language.SubtitleBold; 
             labelSubtitleFontColor.Text = language.SubtitleFontColor;
             labelSubtitleFontBackgroundColor.Text = language.SubtitleBackgroundColor;
-            labelSpellChecker.Text = language.SpellChecker;
-            checkBoxSubtitleFontBold.Text = Configuration.Settings.Language.General.Bold;
+            labelSpellChecker.Text = language.SpellChecker;            
             checkBoxRememberRecentFiles.Text = language.RememberRecentFiles;
             checkBoxReopenLastOpened.Text = language.StartWithLastFileLoaded;
             checkBoxRememberSelectedLine.Text = language.RememberSelectedLine;
