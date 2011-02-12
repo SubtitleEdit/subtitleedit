@@ -15,12 +15,14 @@
     <VideoFiles>视频文件</VideoFiles>
     <OpenSubtitle>打开字幕...</OpenSubtitle>
     <OpenVideoFile>打开视频文件...</OpenVideoFile>
+    <OpenVideoFileTitle>打开视频文件...</OpenVideoFileTitle>
     <NoVideoLoaded>未加载视频</NoVideoLoaded>
     <VideoInformation>视频信息</VideoInformation>
     <PositionX>位置/时长: {0}</PositionX>
     <StartTime>起始时间</StartTime>
     <EndTime>结束时间</EndTime>
     <Duration>时长</Duration>
+    <NumberSymbol>#</NumberSymbol>
     <Number>编号</Number>
     <Text>文本</Text>
     <HourMinutesSecondsMilliseconds>时:分:秒:毫秒</HourMinutesSecondsMilliseconds>
@@ -51,6 +53,7 @@
     <PleaseWait>请稍候...</PleaseWait>
     <SessionKey>会话密钥</SessionKey>
     <UserName>用户名</UserName>
+    <UserNameAlreadyInUse>用户名已被使用</UserNameAlreadyInUse>
     <WebServiceUrl>Web 服务网址</WebServiceUrl>
     <IP>IP</IP>
   </General>
@@ -321,7 +324,7 @@ C# 源代码可从 http://code.google.com/p/subtitleedit 获得。
     <FixEllipsesStartExample>'... and then we' -&gt; 'and then we'</FixEllipsesStartExample>
     <FixMissingOpenBracketExample>'clanks] Look out!' --&gt; '[clanks] Look out!'</FixMissingOpenBracketExample>
     <FixMusicNotationExample>'âTª sweet dreams are' --&gt; '♫ sweet dreams are'</FixMusicNotationExample>
-    <NumberOfImportantLogMessages>{0} 重要的记录消息！</NumberOfImportantLogMessages>
+    <NumberOfImportantLogMessages>{0} 条重要的记录消息！</NumberOfImportantLogMessages>
   </FixCommonErrors>
   <GetDictionaries>
     <Title>需要词典？</Title>
@@ -378,9 +381,9 @@ C# 源代码可从 http://code.google.com/p/subtitleedit 获得。
         <Reopen>重新打开(&amp;R)</Reopen>
         <Save>保存(&amp;S)</Save>
         <SaveAs>另存为(&amp;A)...</SaveAs>
-        <OpenOriginal>打开原始字幕（翻译模式）...</OpenOriginal>
-        <SaveOriginal>保存原始</SaveOriginal>
-        <RemoveOriginal>删除原</RemoveOriginal>
+        <OpenOriginal>打开原始字幕 (翻译模式)...</OpenOriginal>
+        <SaveOriginal>保存原始字幕</SaveOriginal>
+        <CloseOriginal>关闭原始字幕</CloseOriginal>
         <OpenContainingFolder>打开所在文件夹</OpenContainingFolder>
         <Compare>比较(&amp;C)...</Compare>
         <ImportOcrFromDvd>从 DVD 导入/OCR 字幕...</ImportOcrFromDvd>
@@ -889,6 +892,7 @@ C# 源代码可从 http://code.google.com/p/subtitleedit 获得。
     <AutoWrapWhileTyping>打字时自动换行</AutoWrapWhileTyping>
     <SubtitleFont>字幕字体</SubtitleFont>
     <SubtitleFontSize>字幕字体大小</SubtitleFontSize>
+    <SubtitleBold>粗体</SubtitleBold>
     <SubtitleFontColor>字幕字体颜色</SubtitleFontColor>
     <SubtitleBackgroundColor>字幕背景颜色</SubtitleBackgroundColor>
     <SpellChecker>拼写检查</SpellChecker>

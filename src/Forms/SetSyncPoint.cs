@@ -96,7 +96,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonOpenMovie_Click(object sender, EventArgs e)
         {
-            openFileDialog1.Title = Configuration.Settings.Language.General.OpenVideoFile;
+            openFileDialog1.Title = Configuration.Settings.Language.General.OpenVideoFileTitle;
             openFileDialog1.FileName = string.Empty;
             openFileDialog1.Filter = Utilities.GetVideoFileFilter();
             openFileDialog1.FileName = string.Empty;

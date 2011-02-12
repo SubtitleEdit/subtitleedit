@@ -21,6 +21,7 @@
     <StartTime>Inizio</StartTime>
     <EndTime>Fine</EndTime>
     <Duration>Durata</Duration>
+    <NumberSymbol>#</NumberSymbol>
     <Number>Numero</Number>
     <Text>Testo</Text>
     <HourMinutesSecondsMilliseconds>ore:min:sec:msec</HourMinutesSecondsMilliseconds>
@@ -54,6 +55,8 @@
     </SessionKey>
     <UserName>
     </UserName>
+    <UserNameAlreadyInUse>
+    </UserNameAlreadyInUse>
     <WebServiceUrl>
     </WebServiceUrl>
     <IP>
@@ -392,6 +395,12 @@ E-mail: mailto: nikse.dk@gmail.com</AboutText1>
         <Reopen>&amp;Riapri</Reopen>
         <Save>&amp;Salva</Save>
         <SaveAs>Salva con nome...</SaveAs>
+        <OpenOriginal>
+        </OpenOriginal>
+        <SaveOriginal>
+        </SaveOriginal>
+        <CloseOriginal>
+        </CloseOriginal>
         <OpenContainingFolder>Apri cartella contenitore</OpenContainingFolder>
         <Compare>&amp;Confronta...</Compare>
         <ImportOcrFromDvd>Importa/OCR sottotitoli da VOB/IFO (DVD)...</ImportOcrFromDvd>
@@ -406,8 +415,6 @@ E-mail: mailto: nikse.dk@gmail.com</AboutText1>
       <Edit>
         <Title>Modifica</Title>
         <ShowUndoHistory>Cronologia (per annullamento modifiche)</ShowUndoHistory>
-        <ShowOriginalText>Mostra testo originale (modo traduzione)</ShowOriginalText>
-        <HideOriginalText>Nascondi il testo originale</HideOriginalText>
         <InsertUnicodeSymbol>Inserisci simbolo unicode</InsertUnicodeSymbol>
         <Find>&amp;Trova</Find>
         <FindNext>Trova &amp;Successivo</FindNext>

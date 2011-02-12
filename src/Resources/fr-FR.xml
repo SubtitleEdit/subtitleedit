@@ -15,12 +15,14 @@
     <VideoFiles>Fichiers vidéo</VideoFiles>
     <OpenSubtitle>Ouvrir sous-titre...</OpenSubtitle>
     <OpenVideoFile>Ouvrir fichier vidéo...</OpenVideoFile>
+    <OpenVideoFileTitle>Ouvrir fichier vidéo...</OpenVideoFileTitle>
     <NoVideoLoaded>Pas de vidéo chargée</NoVideoLoaded>
     <VideoInformation>Info vidéo</VideoInformation>
     <PositionX>Position / durée : {0}</PositionX>
     <StartTime>Temps initial</StartTime>
     <EndTime>Temps final</EndTime>
     <Duration>Durée</Duration>
+    <NumberSymbol>#</NumberSymbol>
     <Number>Numéro</Number>
     <Text>Texte</Text>
     <HourMinutesSecondsMilliseconds>heure:min:sec:msec</HourMinutesSecondsMilliseconds>
@@ -51,6 +53,7 @@
     <PleaseWait>Patientez...</PleaseWait>
     <SessionKey>Clé de session</SessionKey>
     <UserName>Nom d'utilisateur</UserName>
+    <UserNameAlreadyInUse>Nom d'utilisateur déjà utilisé</UserNameAlreadyInUse>
     <WebServiceUrl>url Webservice</WebServiceUrl>
     <IP>IP</IP>
   </General>
@@ -382,7 +385,7 @@ Email : mailto:nikse.dk@gmail.com</AboutText1>
         <SaveAs>Sauver so&amp;us...</SaveAs>
         <OpenOriginal>Ouvrir sous-titre original (mode traduction)...</OpenOriginal>
         <SaveOriginal>Sauver original</SaveOriginal>
-        <RemoveOriginal>Retirer original</RemoveOriginal>
+        <CloseOriginal>Retirer original</CloseOriginal>
         <OpenContainingFolder>Ouvrir répertoire contenant les sous-titres</OpenContainingFolder>
         <Compare>&amp;Comparer...</Compare>
         <ImportOcrFromDvd>Importer sous-titres OCR de VOB/IFO (DVD) ...</ImportOcrFromDvd>
@@ -893,6 +896,7 @@ Poursuivre?</SubtitleAppendPrompt>
     <AutoWrapWhileTyping>Défilement auto à la frappe</AutoWrapWhileTyping>
     <SubtitleFont>Police de sous-titre</SubtitleFont>
     <SubtitleFontSize>Taille de sous-titre</SubtitleFontSize>
+    <SubtitleBold>Gras</SubtitleBold>
     <SubtitleFontColor>Couleur de police sous-titres</SubtitleFontColor>
     <SubtitleBackgroundColor>Couleur de fond de sous-titres</SubtitleBackgroundColor>
     <SpellChecker>Correcteur orthographique</SpellChecker>

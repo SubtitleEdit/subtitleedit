@@ -511,7 +511,7 @@ namespace Nikse.SubtitleEdit.Forms
             openOriginalToolStripMenuItem.Text = _language.Menu.File.OpenOriginal;
             saveOriginalToolStripMenuItem.Text = _language.Menu.File.SaveOriginal;
             saveOriginalAstoolStripMenuItem.Text = _language.SaveOriginalSubtitleAs;
-            removeOriginalToolStripMenuItem.Text = _language.Menu.File.RemoveOriginal;
+            removeOriginalToolStripMenuItem.Text = _language.Menu.File.CloseOriginal;
 
             toolStripMenuItemOpenContainingFolder.Text = _language.Menu.File.OpenContainingFolder;
             toolStripMenuItemCompare.Text = _language.Menu.File.Compare;
@@ -6954,7 +6954,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (string.IsNullOrEmpty(openFileDialog1.InitialDirectory) && !string.IsNullOrEmpty(_fileName))
                 openFileDialog1.InitialDirectory = Path.GetDirectoryName(_fileName);
-            openFileDialog1.Title = Configuration.Settings.Language.General.OpenVideoFile;
+            openFileDialog1.Title = Configuration.Settings.Language.General.OpenVideoFileTitle;
             openFileDialog1.FileName = string.Empty;
             openFileDialog1.Filter = Utilities.GetVideoFileFilter();
             openFileDialog1.FileName = string.Empty;

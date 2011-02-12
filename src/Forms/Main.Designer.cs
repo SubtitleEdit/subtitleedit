@@ -2092,7 +2092,7 @@
             // labelTranslateTip
             // 
             this.labelTranslateTip.AutoSize = true;
-            this.labelTranslateTip.ForeColor = System.Drawing.Color.Silver;
+            this.labelTranslateTip.ForeColor = System.Drawing.Color.Gray;
             this.labelTranslateTip.Location = new System.Drawing.Point(9, 232);
             this.labelTranslateTip.Name = "labelTranslateTip";
             this.labelTranslateTip.Size = new System.Drawing.Size(307, 13);
@@ -2397,7 +2397,7 @@
             // labelCreateF12
             // 
             this.labelCreateF12.AutoSize = true;
-            this.labelCreateF12.ForeColor = System.Drawing.Color.Silver;
+            this.labelCreateF12.ForeColor = System.Drawing.Color.Gray;
             this.labelCreateF12.Location = new System.Drawing.Point(178, 114);
             this.labelCreateF12.Name = "labelCreateF12";
             this.labelCreateF12.Size = new System.Drawing.Size(25, 13);
@@ -2407,7 +2407,7 @@
             // labelCreateF11
             // 
             this.labelCreateF11.AutoSize = true;
-            this.labelCreateF11.ForeColor = System.Drawing.Color.Silver;
+            this.labelCreateF11.ForeColor = System.Drawing.Color.Gray;
             this.labelCreateF11.Location = new System.Drawing.Point(178, 88);
             this.labelCreateF11.Name = "labelCreateF11";
             this.labelCreateF11.Size = new System.Drawing.Size(25, 13);
@@ -2417,7 +2417,7 @@
             // labelCreateF10
             // 
             this.labelCreateF10.AutoSize = true;
-            this.labelCreateF10.ForeColor = System.Drawing.Color.Silver;
+            this.labelCreateF10.ForeColor = System.Drawing.Color.Gray;
             this.labelCreateF10.Location = new System.Drawing.Point(178, 36);
             this.labelCreateF10.Name = "labelCreateF10";
             this.labelCreateF10.Size = new System.Drawing.Size(25, 13);
@@ -2427,7 +2427,7 @@
             // labelCreateF9
             // 
             this.labelCreateF9.AutoSize = true;
-            this.labelCreateF9.ForeColor = System.Drawing.Color.Silver;
+            this.labelCreateF9.ForeColor = System.Drawing.Color.Gray;
             this.labelCreateF9.Location = new System.Drawing.Point(178, 10);
             this.labelCreateF9.Name = "labelCreateF9";
             this.labelCreateF9.Size = new System.Drawing.Size(19, 13);
@@ -2480,7 +2480,7 @@
             // labelCreateTip
             // 
             this.labelCreateTip.AutoSize = true;
-            this.labelCreateTip.ForeColor = System.Drawing.Color.Silver;
+            this.labelCreateTip.ForeColor = System.Drawing.Color.Gray;
             this.labelCreateTip.Location = new System.Drawing.Point(7, 230);
             this.labelCreateTip.Name = "labelCreateTip";
             this.labelCreateTip.Size = new System.Drawing.Size(186, 13);
@@ -2620,7 +2620,7 @@
             // labelAdjustTip
             // 
             this.labelAdjustTip.AutoSize = true;
-            this.labelAdjustTip.ForeColor = System.Drawing.Color.Silver;
+            this.labelAdjustTip.ForeColor = System.Drawing.Color.Gray;
             this.labelAdjustTip.Location = new System.Drawing.Point(6, 239);
             this.labelAdjustTip.Name = "labelAdjustTip";
             this.labelAdjustTip.Size = new System.Drawing.Size(186, 13);
@@ -2630,7 +2630,7 @@
             // labelAdjustF12
             // 
             this.labelAdjustF12.AutoSize = true;
-            this.labelAdjustF12.ForeColor = System.Drawing.Color.Silver;
+            this.labelAdjustF12.ForeColor = System.Drawing.Color.Gray;
             this.labelAdjustF12.Location = new System.Drawing.Point(178, 88);
             this.labelAdjustF12.Name = "labelAdjustF12";
             this.labelAdjustF12.Size = new System.Drawing.Size(25, 13);
@@ -2640,7 +2640,7 @@
             // labelAdjustF11
             // 
             this.labelAdjustF11.AutoSize = true;
-            this.labelAdjustF11.ForeColor = System.Drawing.Color.Silver;
+            this.labelAdjustF11.ForeColor = System.Drawing.Color.Gray;
             this.labelAdjustF11.Location = new System.Drawing.Point(178, 62);
             this.labelAdjustF11.Name = "labelAdjustF11";
             this.labelAdjustF11.Size = new System.Drawing.Size(25, 13);
@@ -2650,7 +2650,7 @@
             // labelAdjustF10
             // 
             this.labelAdjustF10.AutoSize = true;
-            this.labelAdjustF10.ForeColor = System.Drawing.Color.Silver;
+            this.labelAdjustF10.ForeColor = System.Drawing.Color.Gray;
             this.labelAdjustF10.Location = new System.Drawing.Point(178, 36);
             this.labelAdjustF10.Name = "labelAdjustF10";
             this.labelAdjustF10.Size = new System.Drawing.Size(25, 13);
@@ -2660,7 +2660,7 @@
             // labelAdjustF9
             // 
             this.labelAdjustF9.AutoSize = true;
-            this.labelAdjustF9.ForeColor = System.Drawing.Color.Silver;
+            this.labelAdjustF9.ForeColor = System.Drawing.Color.Gray;
             this.labelAdjustF9.Location = new System.Drawing.Point(178, 10);
             this.labelAdjustF9.Name = "labelAdjustF9";
             this.labelAdjustF9.Size = new System.Drawing.Size(19, 13);

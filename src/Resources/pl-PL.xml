@@ -15,12 +15,14 @@
     <VideoFiles>Pliki wideo</VideoFiles>
     <OpenSubtitle>Otwórz napisy...</OpenSubtitle>
     <OpenVideoFile>Otwórz plik wideo...</OpenVideoFile>
+    <OpenVideoFileTitle>Otwórz plik wideo...</OpenVideoFileTitle>
     <NoVideoLoaded>Nie wczytano wideo</NoVideoLoaded>
     <VideoInformation>Informacje o wideo</VideoInformation>
     <PositionX>Pozycja / czas trwania: {0}</PositionX>
     <StartTime>Początek</StartTime>
     <EndTime>Koniec</EndTime>
     <Duration>Trwanie</Duration>
+    <NumberSymbol>#</NumberSymbol>
     <Number>Numer</Number>
     <Text>Tekst</Text>
     <HourMinutesSecondsMilliseconds>Godz.:min:sek:msek</HourMinutesSecondsMilliseconds>
@@ -51,6 +53,7 @@
     <PleaseWait>Proszę czekać...</PleaseWait>
     <SessionKey>Klucz sesji</SessionKey>
     <UserName>Nazwa użytkownika</UserName>
+    <UserNameAlreadyInUse>Nazwa użytkownika już w użyciu</UserNameAlreadyInUse>
     <WebServiceUrl>URL serwisu WWW</WebServiceUrl>
     <IP>IP</IP>
   </General>
@@ -383,7 +386,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <SaveAs>Zapisz j&amp;ako...</SaveAs>
         <OpenOriginal>Otwórz oryginalny tytuł (tryb tłumacz)...</OpenOriginal>
         <SaveOriginal>Zapisz oryginalny</SaveOriginal>
-        <RemoveOriginal>Usuń oryginalny</RemoveOriginal>
+        <CloseOriginal>Usuń oryginalny</CloseOriginal>
         <OpenContainingFolder>Otwórz zawartość folderu</OpenContainingFolder>
         <Compare>Po&amp;równaj...</Compare>
         <ImportOcrFromDvd>Importuj/OCR napisy z VOB/IFO (DVD)...</ImportOcrFromDvd>
@@ -894,6 +897,7 @@ Kontynuować?</SubtitleAppendPrompt>
     <AutoWrapWhileTyping>Automatycznie zawijaj podczas pisania</AutoWrapWhileTyping>
     <SubtitleFont>Czcionka napisów</SubtitleFont>
     <SubtitleFontSize>Rozmiar czcionki</SubtitleFontSize>
+    <SubtitleBold>Pogrubienie</SubtitleBold>
     <SubtitleFontColor>Kolor czcionki napisów</SubtitleFontColor>
     <SubtitleBackgroundColor>Kolor tła napisów</SubtitleBackgroundColor>
     <SpellChecker>Sprawdzanie pisowni</SpellChecker>

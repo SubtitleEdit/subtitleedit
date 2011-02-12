@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Language Name="Српски">
   <General>
     <Title>Subtitle Edit</Title>
@@ -21,6 +21,7 @@
     <StartTime>Почетак</StartTime>
     <EndTime>Крај</EndTime>
     <Duration>Трајање</Duration>
+    <NumberSymbol>#</NumberSymbol>
     <Number>Број</Number>
     <Text>Текст</Text>
     <HourMinutesSecondsMilliseconds>h:min:sec:ms</HourMinutesSecondsMilliseconds>
@@ -51,6 +52,8 @@
     <PleaseWait>Молимо, сачекајте...</PleaseWait>
     <SessionKey>Кључ:</SessionKey>
     <UserName>Корисник:</UserName>
+    <UserNameAlreadyInUse>
+    </UserNameAlreadyInUse>
     <WebServiceUrl>Адреса:</WebServiceUrl>
     <IP>IP адреса</IP>
   </General>
@@ -380,6 +383,12 @@ C# изворни кôд се налази на интернет страниц�
         <Reopen>&amp;Поново отвори</Reopen>
         <Save>&amp;Сачувај</Save>
         <SaveAs>Сачувај &amp;као...</SaveAs>
+        <OpenOriginal>
+        </OpenOriginal>
+        <SaveOriginal>
+        </SaveOriginal>
+        <CloseOriginal>
+        </CloseOriginal>
         <OpenContainingFolder>Отвори фасциклу</OpenContainingFolder>
         <Compare>&amp;Упореди...</Compare>
         <ImportOcrFromDvd>Препознај знакове ДВД титла...</ImportOcrFromDvd>
@@ -394,8 +403,6 @@ C# изворни кôд се налази на интернет страниц�
       <Edit>
         <Title>Уређивање</Title>
         <ShowUndoHistory>Прикажи историјат</ShowUndoHistory>
-        <ShowOriginalText>Прикажи изворни текст</ShowOriginalText>
-        <HideOriginalText>Сакриј изворни текст</HideOriginalText>
         <InsertUnicodeSymbol>Убаци уникод симбол</InsertUnicodeSymbol>
         <Find>&amp;Пронађи</Find>
         <FindNext>Пронађи &amp;следеће</FindNext>

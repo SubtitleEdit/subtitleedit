@@ -15,12 +15,14 @@
     <VideoFiles>Video filer</VideoFiles>
     <OpenSubtitle>Åbn undertekst...</OpenSubtitle>
     <OpenVideoFile>Åbn video fil...</OpenVideoFile>
+    <OpenVideoFileTitle>Åbn video fil...</OpenVideoFileTitle>
     <NoVideoLoaded>Ingen video indlæst</NoVideoLoaded>
     <VideoInformation>Video info</VideoInformation>
     <PositionX>Position: {0}</PositionX>
     <StartTime>Starttid</StartTime>
     <EndTime>Sluttid</EndTime>
     <Duration>Varighed</Duration>
+    <NumberSymbol>#</NumberSymbol>
     <Number>Antal</Number>
     <Text>Tekst</Text>
     <HourMinutesSecondsMilliseconds>Timer:min:sek:msek</HourMinutesSecondsMilliseconds>
@@ -51,6 +53,7 @@
     <PleaseWait>Vent venligst...</PleaseWait>
     <SessionKey>Sessionsnøgle</SessionKey>
     <UserName>Brugernavn</UserName>
+    <UserNameAlreadyInUse>Brugernavn allerede i brug</UserNameAlreadyInUse>
     <WebServiceUrl>Webservice url</WebServiceUrl>
     <IP>IP</IP>
   </General>
@@ -384,7 +387,7 @@
         <SaveAs>Gem &amp;som...</SaveAs>
         <OpenOriginal>Åbn original undertekst (oversætter mode)...</OpenOriginal>
         <SaveOriginal>Gem original</SaveOriginal>
-        <RemoveOriginal>Fjern original</RemoveOriginal>
+        <CloseOriginal>Luk original</CloseOriginal>
         <OpenContainingFolder>Åbn indeholdende mappe</OpenContainingFolder>
         <Compare>Sammenlign...</Compare>
         <ImportOcrFromDvd>Import/OCR undertekster fra VOB/IFO (dvd) ...</ImportOcrFromDvd>
@@ -895,6 +898,7 @@ Fortsæt?</SubtitleAppendPrompt>
     <AutoWrapWhileTyping>Auto-ombryd tekst mens du skriver</AutoWrapWhileTyping>
     <SubtitleFont>undertekst skrifttype</SubtitleFont>
     <SubtitleFontSize>undertekst skriftstørrelse</SubtitleFontSize>
+    <SubtitleBold>Fed</SubtitleBold>
     <SubtitleFontColor>Undertekst skriftfarve</SubtitleFontColor>
     <SubtitleBackgroundColor>Undertekst baggrundsfarve</SubtitleBackgroundColor>
     <SpellChecker>Stavekontrol</SpellChecker>

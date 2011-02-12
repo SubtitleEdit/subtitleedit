@@ -20,6 +20,7 @@
             public string VideoFiles { get; set; }
             public string OpenSubtitle { get; set; }
             public string OpenVideoFile { get; set; }
+            public string OpenVideoFileTitle { get; set; }
             public string NoVideoLoaded { get; set; }
             public string VideoInformation { get; set; }
             public string PositionX { get; set; }
@@ -623,7 +624,7 @@
                     public string SaveAs { get; set; }
                     public string OpenOriginal { get; set; }
                     public string SaveOriginal { get; set; }
-                    public string RemoveOriginal { get; set; }
+                    public string CloseOriginal { get; set; }
                     public string OpenContainingFolder { get; set; }
                     public string Compare { get; set; }
                     public string ImportOcrFromDvd { get; set; }
@@ -1003,6 +1004,7 @@
             public string AutoWrapWhileTyping { get; set; }
             public string SubtitleFont { get; set; }
             public string SubtitleFontSize { get; set; }
+            public string SubtitleBold { get; set; }
             public string SubtitleFontColor { get; set; }
             public string SubtitleBackgroundColor { get; set; }
             public string SpellChecker { get; set; }

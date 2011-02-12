@@ -55,7 +55,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private string GetFrameRateFromVideoFile(string oldFrameRate)
         {
-            openFileDialog1.Title = Configuration.Settings.Language.General.OpenVideoFile;
+            openFileDialog1.Title = Configuration.Settings.Language.General.OpenVideoFileTitle;
             openFileDialog1.FileName = string.Empty;
             openFileDialog1.Filter = Utilities.GetVideoFileFilter();
             openFileDialog1.FileName = string.Empty;
