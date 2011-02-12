@@ -7131,11 +7131,14 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     if ((DateTime.Now.Ticks - _lastTextKeyDownTicks) > 10000 * 700) // only if last typed char was entered > 700 milliseconds 
                     {
-                        SubtitleListview1.BeginUpdate();
-                        if (index + 2 < SubtitleListview1.Items.Count)
-                            SubtitleListview1.EnsureVisible(index + 2);                        
-                        SubtitleListview1.SelectIndexAndEnsureVisible(index);
-                        SubtitleListview1.EndUpdate();
+                        if (_endSeconds <= 0 || !checkBoxAutoRepeatOn.Checked)
+                        {
+                            SubtitleListview1.BeginUpdate();
+                            if (index + 2 < SubtitleListview1.Items.Count)
+                                SubtitleListview1.EnsureVisible(index + 2);
+                            SubtitleListview1.SelectIndexAndEnsureVisible(index);
+                            SubtitleListview1.EndUpdate();
+                        }
                     }
                 }
 
