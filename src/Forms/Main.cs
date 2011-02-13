@@ -303,6 +303,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (mediaPlayer.VideoPlayer != null)
             {
+                _endSeconds = -1;
                 if (paragraph == null)
                 {
                     mediaPlayer.TogglePlayPause();
@@ -338,13 +339,15 @@ namespace Nikse.SubtitleEdit.Forms
         }
 
         void AudioWaveForm_OnPause(object sender, EventArgs e)
-        {            
+        {
+            _endSeconds = -1;
             if (mediaPlayer.VideoPlayer != null)
                 mediaPlayer.Pause();
         }
 
         void AudioWaveForm_OnSingleClick(double seconds, Paragraph paragraph)
         {
+            _endSeconds = -1;
             if (mediaPlayer.VideoPlayer != null)
                 mediaPlayer.Pause();
             mediaPlayer.CurrentPosition = seconds;
@@ -913,6 +916,7 @@ namespace Nikse.SubtitleEdit.Forms
                     visualSync.Initialize(toolStripButtonVisualSync.Image as Bitmap, _subtitle, _fileName, _language.VisualSyncTitle, CurrentFrameRate);
                 }
 
+                _endSeconds = -1;
                 mediaPlayer.Pause();
                 if (visualSync.ShowDialog(this) == DialogResult.OK)
                 {
@@ -5331,6 +5335,17 @@ namespace Nikse.SubtitleEdit.Forms
                         MergeSelectedLines();
                 }
             }
+            else if (e.Modifiers == Keys.Control && e.KeyCode == Keys.K)
+            {
+                if (_subtitle.Paragraphs.Count > 0 && SubtitleListview1.SelectedItems.Count >= 1)
+                {
+                    e.SuppressKeyPress = true;
+                    if (SubtitleListview1.SelectedItems.Count == 2)
+                        MergeAfterToolStripMenuItemClick(null, null);
+                    else
+                        MergeSelectedLines();
+                }
+            }
             else if (e.Modifiers == Keys.Control && e.KeyCode == Keys.U)
             { // toggle translator mode
                 EditToolStripMenuItemDropDownOpening(null, null);
@@ -5365,6 +5380,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 if (!textBoxListViewText.Focused && !textBoxListViewTextAlternate.Focused && !textBoxSource.Focused && mediaPlayer.VideoPlayer != null)
                 {
+                    _endSeconds = -1;
                     mediaPlayer.TogglePlayPause();
                     e.SuppressKeyPress = true;
                 }
@@ -5471,6 +5487,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 if (mediaPlayer.VideoPlayer != null)
                 {
+                    _endSeconds = -1;
                     mediaPlayer.TogglePlayPause();
                     e.SuppressKeyPress = true;
                 }
@@ -6357,7 +6374,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void OpenVideo(string fileName)
         {            
             if (File.Exists(fileName))
-            {                
+            {
                 FileInfo fi = new FileInfo(fileName);
                 if (fi.Length < 1000)
                     return;
@@ -6369,6 +6386,7 @@ namespace Nikse.SubtitleEdit.Forms
                     mediaPlayer.Pause();
                     mediaPlayer.VideoPlayer.DisposeVideoPlayer();
                 }
+                _endSeconds = -1;
 
                 VideoInfo videoInfo = ShowVideoInfo(fileName);
                 toolStripComboBoxFrameRate.Text = videoInfo.FramesPerSecond.ToString();

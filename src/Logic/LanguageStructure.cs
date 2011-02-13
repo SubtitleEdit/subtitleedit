@@ -358,7 +358,8 @@
             public string FixEllipsesStartExample { get; set; }
             public string FixMissingOpenBracketExample { get; set; }
             public string FixMusicNotationExample { get; set; }
-            public string NumberOfImportantLogMessages { get; set; }            
+            public string NumberOfImportantLogMessages { get; set; }
+            public string FixedOkXY { get; set; }      
         }
         
         public class GetDictionaries
@@ -1175,6 +1176,7 @@
             public string RemoveSyncPoint { get; set; }
             public string SyncPointsX { get; set; }
             public string Info { get; set; }
+            public string ApplySync { get; set; }
         }
 
         public class UnknownSubtitle

@@ -325,6 +325,7 @@ E-mail: nikse.dk @gmail.com</AboutText1>
     <FixMissingOpenBracketExample>'clanks] Look out!' --&gt; '[clanks] Look out!'</FixMissingOpenBracketExample>
     <FixMusicNotationExample>'aTª sweet dreams are' --&gt; '♫ sweet dreams are'</FixMusicNotationExample>
     <NumberOfImportantLogMessages>{0} mesaje importante in jurnal!</NumberOfImportantLogMessages>
+    <FixedOkXY>OK - "{0} ': {1}</FixedOkXY>
   </FixCommonErrors>
   <GetDictionaries>
     <Title>Aveti nevoie de dictionare?</Title>
@@ -1051,6 +1052,7 @@ pot edita in acelasi fisier subtitrare (colaborare)</Information>
     <RemoveSyncPoint>Eliminati punct de sincronizare</RemoveSyncPoint>
     <SyncPointsX>Puncte de sincronizare: {0}</SyncPointsX>
     <Info>Un punct de sincronizare va ajusta pozitia, doua sau mai multe puncte de sincronizare vor ajusta pozitia si viteza</Info>
+    <ApplySync>Aplica</ApplySync>
   </PointSync>
   <UnknownSubtitle>
     <Title>Tip necunoscut de subtitrare</Title>

@@ -15,6 +15,7 @@
     <VideoFiles>Videófájlok</VideoFiles>
     <OpenSubtitle>Felirat megnyitása...</OpenSubtitle>
     <OpenVideoFile>Videófájl megnyitása...</OpenVideoFile>
+    <OpenVideoFileTitle>Videófájl megnyitása...</OpenVideoFileTitle>
     <NoVideoLoaded>Nincs betöltött videó</NoVideoLoaded>
     <VideoInformation>Videó információk</VideoInformation>
     <PositionX>Pozíció / időtartam: {0}</PositionX>
@@ -974,6 +975,8 @@ Folytatja?</SubtitleAppendPrompt>
     </AutoWrapWhileTyping>
     <SubtitleFont>Felirat betűtípusa</SubtitleFont>
     <SubtitleFontSize>Felirat betűmérete</SubtitleFontSize>
+    <SubtitleBold>
+    </SubtitleBold>
     <SubtitleFontColor>
     </SubtitleFontColor>
     <SubtitleBackgroundColor>
@@ -1151,6 +1154,8 @@ Folytatja?</SubtitleAppendPrompt>
     <SyncPointsX>Szinkronizálási pontok: {0}</SyncPointsX>
     <Info>
     </Info>
+    <ApplySync>
+    </ApplySync>
   </PointSync>
   <UnknownSubtitle>
     <Title>Ismeretlen felirat típus</Title>

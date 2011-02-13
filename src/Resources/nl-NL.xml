@@ -17,6 +17,7 @@
     <VideoFiles>Videobestanden</VideoFiles>
     <OpenSubtitle>Open ondertitels</OpenSubtitle>
     <OpenVideoFile>Open videobestand</OpenVideoFile>
+    <OpenVideoFileTitle>Open videobestand</OpenVideoFileTitle>
     <NoVideoLoaded>Geen videobestand geopend</NoVideoLoaded>
     <VideoInformation>Video informatie</VideoInformation>
     <PositionX>Positie/Tijd: {0}</PositionX>
@@ -1195,6 +1196,8 @@ Toch doorgaan?</SubtitleAppendPrompt>
     </AutoWrapWhileTyping>
     <SubtitleFont>Ondertitel lettertype</SubtitleFont>
     <SubtitleFontSize>Lettergrootte</SubtitleFontSize>
+    <SubtitleBold>
+    </SubtitleBold>
     <SubtitleFontColor>
     </SubtitleFontColor>
     <SubtitleBackgroundColor>
@@ -1437,6 +1440,8 @@ Toch doorgaan?</SubtitleAppendPrompt>
     </SyncPointsX>
     <Info>
     </Info>
+    <ApplySync>
+    </ApplySync>
   </PointSync>
   <UnknownSubtitle>
     <Title>Onbekend ondertitel type</Title>

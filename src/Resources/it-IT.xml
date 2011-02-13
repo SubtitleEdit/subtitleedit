@@ -15,6 +15,7 @@
     <VideoFiles>File video</VideoFiles>
     <OpenSubtitle>Apri sottotitoli...</OpenSubtitle>
     <OpenVideoFile>Apri video...</OpenVideoFile>
+    <OpenVideoFileTitle>Apri video...</OpenVideoFileTitle>
     <NoVideoLoaded>Nessun video caricato</NoVideoLoaded>
     <VideoInformation>Proprietà del Video</VideoInformation>
     <PositionX>Posizione / Durata: {0}</PositionX>
@@ -965,6 +966,8 @@ Si desidera continuare?</SubtitleAppendPrompt>
     </AutoWrapWhileTyping>
     <SubtitleFont>Tipo carattere sottotitolo</SubtitleFont>
     <SubtitleFontSize>Dimensione</SubtitleFontSize>
+    <SubtitleBold>
+    </SubtitleBold>
     <SubtitleFontColor>Colore carattere sottotitolo</SubtitleFontColor>
     <SubtitleBackgroundColor>Colore sfondo sottotitolo</SubtitleBackgroundColor>
     <SpellChecker>
@@ -1134,6 +1137,8 @@ Si desidera continuare?</SubtitleAppendPrompt>
     <SyncPointsX>Punti di sincronizzazione: {0}</SyncPointsX>
     <Info>
     </Info>
+    <ApplySync>
+    </ApplySync>
   </PointSync>
   <UnknownSubtitle>
     <Title>Tipo di sottotitolo sconosciuto</Title>

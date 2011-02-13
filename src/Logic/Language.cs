@@ -431,6 +431,7 @@ namespace Nikse.SubtitleEdit.Logic
                 Unbreak = "&Unbreak",
                 FixCommonOcrErrors = "Fix common OCR errors (using OCR replace list)",                 
                 NumberOfImportantLogMessages = "{0} important log messages!",
+                FixedOkXY = "Fixed and OK - '{0}': {1}",
             };
 
             GetDictionaries = new LanguageStructure.GetDictionaries
@@ -1241,6 +1242,7 @@ can edit in same subtitle file (collaboration)",
                 RemoveSyncPoint = "Remove sync point",
                 SyncPointsX = "Sync points: {0}",
                 Info = "One sync point will adjust position, two or more sync points will adjust position and speed",
+                ApplySync = "Apply",
             };
 
             UnknownSubtitle = new LanguageStructure.UnknownSubtitle

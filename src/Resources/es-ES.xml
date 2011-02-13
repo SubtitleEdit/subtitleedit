@@ -15,12 +15,14 @@
     <VideoFiles>Archivos de video</VideoFiles>
     <OpenSubtitle>Abrir subtítutlos...</OpenSubtitle>
     <OpenVideoFile>Abrir archivo de video...</OpenVideoFile>
+    <OpenVideoFileTitle>Abrir archivo de video...</OpenVideoFileTitle>
     <NoVideoLoaded>Ningún video cargado</NoVideoLoaded>
     <VideoInformation>Información de video</VideoInformation>
     <PositionX>Posición / duración: {0}</PositionX>
     <StartTime>Tiempo inicial</StartTime>
     <EndTime>Tiempo final</EndTime>
     <Duration>Duración</Duration>
+    <NumberSymbol>#</NumberSymbol>
     <Number>Número</Number>
     <Text>Texto</Text>
     <HourMinutesSecondsMilliseconds>Hora:min:seg:mseg</HourMinutesSecondsMilliseconds>
@@ -54,6 +56,8 @@
     </SessionKey>
     <UserName>
     </UserName>
+    <UserNameAlreadyInUse>
+    </UserNameAlreadyInUse>
     <WebServiceUrl>
     </WebServiceUrl>
     <IP>
@@ -336,6 +340,8 @@ de inicio del próximo texto</Note>
     <FixMissingOpenBracketExample>'ruido] Cuidado!' --&gt; '[ruido] Cuidado!'</FixMissingOpenBracketExample>
     <FixMusicNotationExample>'âTª sweet dreams are' --&gt; '♫ sweet dreams are'</FixMusicNotationExample>
     <NumberOfImportantLogMessages>{0} mensajes de log importantes!</NumberOfImportantLogMessages>
+    <FixedOkXY>
+    </FixedOkXY>
   </FixCommonErrors>
   <GetDictionaries>
     <Title>necesita diccionarios?</Title>
@@ -393,6 +399,12 @@ de inicio del próximo texto</Note>
         <Reopen>&amp;Reabrir</Reopen>
         <Save>&amp;Guardar</Save>
         <SaveAs>Guardar &amp;como...</SaveAs>
+        <OpenOriginal>
+        </OpenOriginal>
+        <SaveOriginal>
+        </SaveOriginal>
+        <CloseOriginal>
+        </CloseOriginal>
         <OpenContainingFolder>Abrir la carpeta contenedora</OpenContainingFolder>
         <Compare>&amp;Comparar...</Compare>
         <ImportOcrFromDvd>Importar/OCR subtítulo desde vob/ifo (dvd) ...</ImportOcrFromDvd>
@@ -407,8 +419,6 @@ de inicio del próximo texto</Note>
       <Edit>
         <Title>Editar</Title>
         <ShowUndoHistory>Mostrar historia (para deshacer)</ShowUndoHistory>
-        <ShowOriginalText>Mostrar texto original (modo traductor)</ShowOriginalText>
-        <HideOriginalText>Ocultar texto original</HideOriginalText>
         <InsertUnicodeSymbol>Insertar símbolo Unicode</InsertUnicodeSymbol>
         <Find>&amp;Buscar</Find>
         <FindNext>Encontrar &amp;próximo</FindNext>
@@ -965,6 +975,8 @@ Continuar?</SubtitleAppendPrompt>
     </AutoWrapWhileTyping>
     <SubtitleFont>Tipo de fuente</SubtitleFont>
     <SubtitleFontSize>Tamaño de fuente</SubtitleFontSize>
+    <SubtitleBold>
+    </SubtitleBold>
     <SubtitleFontColor>
     </SubtitleFontColor>
     <SubtitleBackgroundColor>
@@ -1143,6 +1155,8 @@ Continuar?</SubtitleAppendPrompt>
     <SyncPointsX>Puntos de sincronización: {0}</SyncPointsX>
     <Info>
     </Info>
+    <ApplySync>
+    </ApplySync>
   </PointSync>
   <UnknownSubtitle>
     <Title>Tipo desconocido de subtítulo</Title>

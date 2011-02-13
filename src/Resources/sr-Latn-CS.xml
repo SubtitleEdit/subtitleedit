@@ -15,6 +15,8 @@
     <VideoFiles>Video datoteke</VideoFiles>
     <OpenSubtitle>Otvaranje titla...</OpenSubtitle>
     <OpenVideoFile>Otvori...</OpenVideoFile>
+    <OpenVideoFileTitle>
+    </OpenVideoFileTitle>
     <NoVideoLoaded>Video snimak nije učitan.</NoVideoLoaded>
     <VideoInformation>Podaci o video snimku</VideoInformation>
     <PositionX>Položaj/trajanje: {0}</PositionX>
@@ -327,6 +329,7 @@ E-pošta: mailto:nikse.dk@gmail.com</AboutText1>
     <FixMissingOpenBracketExample>zveket] Pazi! —&gt; [zveket] Pazi!</FixMissingOpenBracketExample>
     <FixMusicNotationExample>âTª slatki snovi —&gt; ♫ slatki snovi</FixMusicNotationExample>
     <NumberOfImportantLogMessages>Broj važnih izveštaja: {0}</NumberOfImportantLogMessages>
+    <FixedOkXY>U redu - '{0}': {1}</FixedOkXY>
   </FixCommonErrors>
   <GetDictionaries>
     <Title>Preuzimanje rečnika</Title>
@@ -899,6 +902,8 @@ osoba mogu da uređuju isti titl.</Information>
     <AutoWrapWhileTyping>prelomi pri kucanju</AutoWrapWhileTyping>
     <SubtitleFont>Font:</SubtitleFont>
     <SubtitleFontSize>Veličina fonta:</SubtitleFontSize>
+    <SubtitleBold>
+    </SubtitleBold>
     <SubtitleFontColor>Boja fonta:</SubtitleFontColor>
     <SubtitleBackgroundColor>Boja pozadine:</SubtitleBackgroundColor>
     <SpellChecker>Provera pravopisa:</SpellChecker>
@@ -1055,6 +1060,8 @@ osoba mogu da uređuju isti titl.</Information>
     <RemoveSyncPoint>Ukloni tačku</RemoveSyncPoint>
     <SyncPointsX>Tačaka usklađivanja: {0}</SyncPointsX>
     <Info>Jedna tačka usklađivanja prilagodiće položaj. Dve ili više tačaka uticaće na položaj i brzinu.</Info>
+    <ApplySync>
+    </ApplySync>
   </PointSync>
   <UnknownSubtitle>
     <Title>Nepoznata vrsta titla.</Title>
