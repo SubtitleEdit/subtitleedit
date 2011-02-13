@@ -134,9 +134,9 @@
             // 
             this.buttonApplySync.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonApplySync.Enabled = false;
-            this.buttonApplySync.Location = new System.Drawing.Point(749, 413);
+            this.buttonApplySync.Location = new System.Drawing.Point(745, 413);
             this.buttonApplySync.Name = "buttonApplySync";
-            this.buttonApplySync.Size = new System.Drawing.Size(75, 21);
+            this.buttonApplySync.Size = new System.Drawing.Size(80, 21);
             this.buttonApplySync.TabIndex = 15;
             this.buttonApplySync.Text = "Apply";
             this.buttonApplySync.UseVisualStyleBackColor = true;
@@ -146,7 +146,7 @@
             // 
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonCancel.Location = new System.Drawing.Point(668, 413);
+            this.buttonCancel.Location = new System.Drawing.Point(664, 413);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 21);
             this.buttonCancel.TabIndex = 19;
@@ -158,7 +158,7 @@
             // 
             this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonOK.Location = new System.Drawing.Point(587, 413);
+            this.buttonOK.Location = new System.Drawing.Point(583, 413);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 21);
             this.buttonOK.TabIndex = 18;

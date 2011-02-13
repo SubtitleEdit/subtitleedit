@@ -328,6 +328,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FixMissingOpenBracketExample>'brzęk] Uważaj!' --&gt; '[brzęk] Uważaj!'</FixMissingOpenBracketExample>
     <FixMusicNotationExample>'âTª słodkie są sny' --&gt; '♫ słodkie są sny'</FixMusicNotationExample>
     <NumberOfImportantLogMessages>{0} ważnych wiadomości w Dzienniku zdarzeń!</NumberOfImportantLogMessages>
+    <FixedOkXY>OK - "{0} ': {1}</FixedOkXY>
   </FixCommonErrors>
   <GetDictionaries>
     <Title>Potrzebny słownik?</Title>
@@ -1054,6 +1055,7 @@ Kontynuować?</SubtitleAppendPrompt>
     <RemoveSyncPoint>Usuń punkt</RemoveSyncPoint>
     <SyncPointsX>Punktów synchronizacji: {0}</SyncPointsX>
     <Info>Jeden punkt synchronizacji dostosuje pozycję, dwa lub więcej punktów synchronizacji dostosuje pozycję i prędkość</Info>
+    <ApplySync>Zastosuj</ApplySync>
   </PointSync>
   <UnknownSubtitle>
     <Title>Nieznany typ napisów</Title>

@@ -329,6 +329,7 @@
     <FixMissingOpenBracketExample>»clanks] Pas på!" -&gt; '[Clanks] Pas på! "</FixMissingOpenBracketExample>
     <FixMusicNotationExample>'âTª sweet dreams are' --&gt; '* sweet dreams are'</FixMusicNotationExample>
     <NumberOfImportantLogMessages>{0} vigtige log beskeder!</NumberOfImportantLogMessages>
+    <FixedOkXY>Rettet og OK - '{0}': {1}</FixedOkXY>
   </FixCommonErrors>
   <GetDictionaries>
     <Title>Mangler ordbøger?</Title>
@@ -1055,6 +1056,7 @@ Fortsæt?</SubtitleAppendPrompt>
     <RemoveSyncPoint>Fjern synk punkt</RemoveSyncPoint>
     <SyncPointsX>Sync punkter: {0}</SyncPointsX>
     <Info>Et synkronisering punkt vil justere positioner, to eller flere synkroniserings punkter vil justere position og hastighed</Info>
+    <ApplySync>Anvend</ApplySync>
   </PointSync>
   <UnknownSubtitle>
     <Title>Ukendt undertekst type</Title>

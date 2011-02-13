@@ -22,7 +22,7 @@
     <StartTime>起始时间</StartTime>
     <EndTime>结束时间</EndTime>
     <Duration>时长</Duration>
-    <NumberSymbol>#</NumberSymbol>
+    <NumberSymbol>编号</NumberSymbol>
     <Number>编号</Number>
     <Text>文本</Text>
     <HourMinutesSecondsMilliseconds>时:分:秒:毫秒</HourMinutesSecondsMilliseconds>
@@ -200,7 +200,7 @@ C# 源代码可从 http://code.google.com/p/subtitleedit 获得。
     <RegularExpression>正则表达式</RegularExpression>
   </FindDialog>
   <FindSubtitleLine>
-    <Title>查找字幕线</Title>
+    <Title>查找字幕行</Title>
     <Find>查找(&amp;F)</Find>
     <FindNext>查找下一个(&amp;N)</FindNext>
   </FindSubtitleLine>
@@ -282,7 +282,7 @@ C# 源代码可从 http://code.google.com/p/subtitleedit 获得。
     <FixLowercaseIToUppercaseIExample>What do i care. -&gt; What do I care.</FixLowercaseIToUppercaseIExample>
     <StartTimeLaterThanEndTime>文本编号 {0}: 起始时间晚于结束时间: {4}{1} --&gt; {2} {3}</StartTimeLaterThanEndTime>
     <UnableToFixStartTimeLaterThanEndTime>无法修复文本编号 {0}: 起始时间晚于结束时间: {1}</UnableToFixStartTimeLaterThanEndTime>
-    <XFixedToYZ>{0} 个被修复为: {1}{2}</XFixedToYZ>
+    <XFixedToYZ>{0} 被修复为: {1}{2}</XFixedToYZ>
     <UnableToFixTextXY>无法修复文本编号 {0}: {1}</UnableToFixTextXY>
     <XOverlappingTimestampsFixed>{0} 个重叠时间已修复</XOverlappingTimestampsFixed>
     <XDisplayTimesProlonged>{0} 个显示时间已延长</XDisplayTimesProlonged>
@@ -325,6 +325,7 @@ C# 源代码可从 http://code.google.com/p/subtitleedit 获得。
     <FixMissingOpenBracketExample>'clanks] Look out!' --&gt; '[clanks] Look out!'</FixMissingOpenBracketExample>
     <FixMusicNotationExample>'âTª sweet dreams are' --&gt; '♫ sweet dreams are'</FixMusicNotationExample>
     <NumberOfImportantLogMessages>{0} 条重要的记录消息！</NumberOfImportantLogMessages>
+    <FixedOkXY>完成 - '{0}': {1}</FixedOkXY>
   </FixCommonErrors>
   <GetDictionaries>
     <Title>需要词典？</Title>
@@ -819,7 +820,7 @@ C# 源代码可从 http://code.google.com/p/subtitleedit 获得。
     <Start>开始</Start>
   </NetworkStart>
   <RemoveTextFromHearImpaired>
-    <Title>删除文本以免妨碍听觉</Title>
+    <Title>删除妨碍听觉的文本</Title>
     <RemoveTextConditions>删除文本条件</RemoveTextConditions>
     <RemoveTextBetween>删除文本条件</RemoveTextBetween>
     <SquareBrackets>'[' 和 ']'</SquareBrackets>
@@ -829,7 +830,7 @@ C# 源代码可从 http://code.google.com/p/subtitleedit 获得。
     <And>和</And>
     <RemoveTextBeforeColon>删除冒号前的文本</RemoveTextBeforeColon>
     <OnlyIfTextIsUppercase>仅当文本是大写时</OnlyIfTextIsUppercase>
-    <OnlyIfInSeparateLine>仅当在分隔线内</OnlyIfInSeparateLine>
+    <OnlyIfInSeparateLine>仅当在单独行内</OnlyIfInSeparateLine>
     <LineNumber>行号</LineNumber>
     <Before>之前</Before>
     <After>之后</After>
@@ -1049,6 +1050,7 @@ C# 源代码可从 http://code.google.com/p/subtitleedit 获得。
     <RemoveSyncPoint>删除同步点</RemoveSyncPoint>
     <SyncPointsX>同步点: {0}</SyncPointsX>
     <Info>一个同步点可调整位置，两个以上同步点可调整位置和速度</Info>
+    <ApplySync>应用</ApplySync>
   </PointSync>
   <UnknownSubtitle>
     <Title>未知的字幕类型</Title>
@@ -1064,11 +1066,11 @@ C# 源代码可从 http://code.google.com/p/subtitleedit 获得。
     <PlayXSecondsAndBack>播放 {0} 秒后返回</PlayXSecondsAndBack>
     <FindText>查找文本</FindText>
     <GoToSubPosition>转到字幕位置</GoToSubPosition>
-    <KeepChangesTitle>保持您的更改？</KeepChangesTitle>
+    <KeepChangesTitle>保留更改吗？</KeepChangesTitle>
     <KeepChangesMessage>“视觉同步”中的字幕已被更改。</KeepChangesMessage>
     <SynchronizationDone>同步完成！</SynchronizationDone>
     <StartSceneMustComeBeforeEndScene>起始场景必须在末尾场景之前！</StartSceneMustComeBeforeEndScene>
-    <Tip>提示: 使用 &lt;Ctrl + ←/→&gt; 键来 向前/向后 删除 100 毫秒</Tip>
+    <Tip>提示: 使用 &lt;Ctrl + ←/→&gt; 键来 向前/向后 移动 100 毫秒</Tip>
   </VisualSync>
   <VobSubEditCharacters>
     <Title>编辑「图像比较数据库」</Title>

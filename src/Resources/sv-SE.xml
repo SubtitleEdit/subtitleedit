@@ -328,6 +328,7 @@
     <FixMissingOpenBracketExample>"Clanks] Titta ut!" -&gt; "[Clanks] Titta ut!"</FixMissingOpenBracketExample>
     <FixMusicNotationExample>"âTª' Sweet Dreams are" -&gt; "♫ Sweet Dreams are"</FixMusicNotationExample>
     <NumberOfImportantLogMessages>{0}Viktiga loggmeddelanden!</NumberOfImportantLogMessages>
+    <FixedOkXY>OK - '{0}': {1}</FixedOkXY>
   </FixCommonErrors>
   <GetDictionaries>
     <Title>Behövs ordböcker?</Title>
@@ -1054,6 +1055,7 @@
     <RemoveSyncPoint>Ta bort synk punkt</RemoveSyncPoint>
     <SyncPointsX>Synk punkter: {0}</SyncPointsX>
     <Info>En synk punkt kommer att justera position, två eller flera synk punkter justerar position och hastighet</Info>
+    <ApplySync>Verkställ</ApplySync>
   </PointSync>
   <UnknownSubtitle>
     <Title>Okänd undertext typ</Title>

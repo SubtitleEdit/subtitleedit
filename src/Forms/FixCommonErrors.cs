@@ -327,7 +327,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (_onlyListFixes)
                     _newLog.AppendLine(" +  " + sender + ": " +  message);
                 else
-                    _appliedLog.AppendLine(Configuration.Settings.Language.General.OK.Replace("&", string.Empty) + " -  " + sender + ": " + message);
+                    _appliedLog.AppendLine(string.Format(_language.FixedOkXY, sender, message));
             }
         }
 
