@@ -2073,7 +2073,7 @@ namespace Nikse.SubtitleEdit.Logic
 
         internal static void CheckAutoWrap(TextBox textBox, KeyEventArgs e, int numberOfNewLines)
         {
-            if (e.Modifiers == Keys.None && numberOfNewLines < 1 && textBox.Text.Length >= Configuration.Settings.General.SubtitleLineMaximumLength)
+            if (e.Modifiers == Keys.None && e.KeyCode != Keys.Enter && numberOfNewLines < 1 && textBox.Text.Length >= Configuration.Settings.General.SubtitleLineMaximumLength)
             {
                 if (Configuration.Settings.General.AutoWrapLineWhileTyping) // only if auto-break-setting is true
                 {
