@@ -306,7 +306,8 @@ namespace Nikse.SubtitleEdit.Forms
                 _endSeconds = -1;
                 if (paragraph == null)
                 {
-                    mediaPlayer.TogglePlayPause();
+                    if (Configuration.Settings.VideoControls.WaveFormDoubleClickOnNonParagraphAction == "PlayPause")
+                        mediaPlayer.TogglePlayPause();
                 }
                 else
                 {
@@ -1045,6 +1046,19 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
 
+                if (format == null)
+                {
+                    Pac pac = new Pac();
+                    if (pac.IsMine(null, fileName))
+                    {
+                        pac.LoadSubtitle(_subtitle, null, fileName);
+                        _oldSubtitleFormat = pac;
+                        SetFormatToSubRip();
+                        justConverted = true;
+                        format = GetCurrentSubtitleFormat();
+                    }
+                }
+
                 _fileDateTime = File.GetLastWriteTime(fileName);
 
                 if (GetCurrentSubtitleFormat().IsFrameBased)
@@ -1287,6 +1301,9 @@ namespace Nikse.SubtitleEdit.Forms
             Ebu ebu = new Ebu();
             saveFileDialog1.Filter += "| " + ebu.FriendlyName + "|*" + ebu.Extension;
 
+            Pac pac = new Pac();
+            saveFileDialog1.Filter += "| " + pac.FriendlyName + "|*" + pac.Extension;
+
             saveFileDialog1.Title = _language.SaveSubtitleAs;
             saveFileDialog1.DefaultExt = "*" + currentFormat.Extension;
             saveFileDialog1.AddExtension = true;               
@@ -1304,7 +1321,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 openFileDialog1.InitialDirectory = saveFileDialog1.InitialDirectory;
                 if (saveFileDialog1.FilterIndex == SubtitleFormat.AllSubtitleFormats.Count + 1)
-                { 
+                {
                     string fileName = saveFileDialog1.FileName;
                     string ext = Path.GetExtension(fileName).ToLower();
                     bool extOk = ext == ebu.Extension.ToLower();
@@ -1315,6 +1332,20 @@ namespace Nikse.SubtitleEdit.Forms
                         fileName += ebu.Extension;
                     }
                     ebu.Save(fileName, _subtitle);
+                    return DialogResult.OK;
+                }
+                else if (saveFileDialog1.FilterIndex == SubtitleFormat.AllSubtitleFormats.Count + 2)
+                {
+                    string fileName = saveFileDialog1.FileName;
+                    string ext = Path.GetExtension(fileName).ToLower();
+                    bool extOk = ext == pac.Extension.ToLower();
+                    if (!extOk)
+                    {
+                        if (fileName.EndsWith("."))
+                            fileName = fileName.Substring(0, fileName.Length - 1);
+                        fileName += pac.Extension;
+                    }
+                    pac.Save(fileName, _subtitle);
                     return DialogResult.OK;
                 }
 

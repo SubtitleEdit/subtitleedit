@@ -313,6 +313,7 @@ namespace Nikse.SubtitleEdit.Logic
         public Color WaveFormSelectedColor { get; set; }
         public Color WaveFormBackgroundColor { get; set; }
         public Color WaveFormTextColor { get; set; }
+        public string WaveFormDoubleClickOnNonParagraphAction { get; set; }
 
         public VideoControlsSettings()
         {
@@ -325,6 +326,7 @@ namespace Nikse.SubtitleEdit.Logic
             WaveFormSelectedColor = Color.Red;
             WaveFormBackgroundColor = Color.Black;
             WaveFormTextColor = Color.Gray;
+            WaveFormDoubleClickOnNonParagraphAction = "PlayPause";
         }
     }
 
@@ -845,6 +847,9 @@ namespace Nikse.SubtitleEdit.Logic
             subNode = node.SelectSingleNode("WaveFormTextColor");
             if (subNode != null)
                 settings.VideoControls.WaveFormTextColor = Color.FromArgb(int.Parse(subNode.InnerText));
+            subNode = node.SelectSingleNode("WaveFormDoubleClickOnNonParagraphAction");
+            if (subNode != null)
+                settings.VideoControls.WaveFormDoubleClickOnNonParagraphAction = subNode.InnerText;            
 
             settings.NetworkSettings = new NetworkSettings();
             node = doc.DocumentElement.SelectSingleNode("NetworkSettings");
@@ -1053,6 +1058,8 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("WaveFormSelectedColor", settings.VideoControls.WaveFormSelectedColor.ToArgb().ToString());
             textWriter.WriteElementString("WaveFormBackgroundColor", settings.VideoControls.WaveFormBackgroundColor.ToArgb().ToString());
             textWriter.WriteElementString("WaveFormTextColor", settings.VideoControls.WaveFormTextColor.ToArgb().ToString());
+            textWriter.WriteElementString("WaveFormDoubleClickOnNonParagraphAction", settings.VideoControls.WaveFormDoubleClickOnNonParagraphAction);
+            
             textWriter.WriteEndElement();
 
             textWriter.WriteStartElement("NetworkSettings", "");
