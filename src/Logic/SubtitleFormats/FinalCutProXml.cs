@@ -106,7 +106,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
-            const int frameRate = 30;
+            const double frameRate = 30.0d;
             _errorCount = 0;
 
             StringBuilder sb = new StringBuilder();
