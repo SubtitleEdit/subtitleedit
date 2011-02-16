@@ -8,6 +8,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
     class FinalCutProXml : SubtitleFormat
     {
+        public double FrameRate { get; set; }
+
         public override string Extension
         {
             get { return ".xml"; }
@@ -35,6 +37,15 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             return subtitle.Paragraphs.Count > 0;
         }
 
+        private string IsNtsc()
+        {
+            if (Configuration.Settings.General.DefaultFrameRate >= 29.976 &&
+                Configuration.Settings.General.DefaultFrameRate <= 30.0)
+                return "TRUE";
+            return "FALSE";
+            
+        }
+
         public override string ToText(Subtitle subtitle, string title)
         {
             string xmlStructure =
@@ -53,8 +64,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 "<generatoritem>" + Environment.NewLine +
                 "    <name>Text</name>" + Environment.NewLine +
                 "    <rate>" + Environment.NewLine +
-                "        <ntsc>TRUE</ntsc>" + Environment.NewLine +
-                "        <timebase>30</timebase>" + Environment.NewLine +
+                "        <ntsc>" + IsNtsc() + "</ntsc>" + Environment.NewLine +
+                "        <timebase>" + Configuration.Settings.General.DefaultFrameRate.ToString() + "</timebase>" + Environment.NewLine +
                 "    </rate>" + Environment.NewLine +
                 "    <start></start>" + Environment.NewLine + // start frame?
                 "    <end></end>" + Environment.NewLine + // end frame?
@@ -85,12 +96,12 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 XmlNode track = xml.CreateElement("track");
                 track.InnerXml = xmlTrackStructure;
 
-                const int frameRate = 30;
+                double frameRate = Configuration.Settings.General.DefaultFrameRate;
                 XmlNode start = track.SelectSingleNode("generatoritem/start");
-                start.InnerText = (p.StartTime.TotalSeconds*frameRate).ToString();
+                start.InnerText = (((int)Math.Round(p.StartTime.TotalSeconds*frameRate))).ToString();
 
                 XmlNode end = track.SelectSingleNode("generatoritem/end");
-                end.InnerText = (p.EndTime.TotalSeconds * frameRate).ToString();
+                end.InnerText = (((int)Math.Round(p.EndTime.TotalSeconds * frameRate))).ToString();
 
                 XmlNode text = track.SelectSingleNode("generatoritem/effect/parameter/value");
                 text.InnerText = Utilities.RemoveHtmlTags(p.Text);
@@ -101,13 +112,15 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             XmlTextWriter writer = new XmlTextWriter(ms, Encoding.UTF8);
             writer.Formatting = Formatting.Indented;
             xml.Save(writer);
-            return Encoding.UTF8.GetString(ms.ToArray()).Trim();
+            string xmlAsText = Encoding.UTF8.GetString(ms.ToArray()).Trim();
+            xmlAsText = xmlAsText.Replace("xmeml[]", "xmeml");
+            return xmlAsText;
         }
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
-            const double frameRate = 30.0d;
             _errorCount = 0;
+            FrameRate = Configuration.Settings.General.DefaultFrameRate;
 
             StringBuilder sb = new StringBuilder();
             lines.ForEach(line => sb.AppendLine(line));
@@ -116,22 +129,41 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             {
                 xml.LoadXml(sb.ToString());
 
+                if (xml.DocumentElement.SelectSingleNode("sequence/rate") != null && xml.DocumentElement.SelectSingleNode("sequence/rate/timebase") != null)
+                {
+                    try
+                    {
+                        FrameRate = double.Parse(xml.DocumentElement.SelectSingleNode("sequence/rate/timebase").InnerText);
+                    }
+                    catch
+                    {
+                        FrameRate = Configuration.Settings.General.DefaultFrameRate;
+                    }
+                }
+
                 foreach (XmlNode node in xml.SelectNodes("xmeml/sequence/media/video/track"))
                 {
                     try
                     {
                         foreach (XmlNode generatorItemNode in node.SelectNodes("generatoritem"))
                         {
+                            XmlNode rate = generatorItemNode.SelectSingleNode("rate");
+                            if (rate != null)
+                            {
+                                XmlNode timebase = rate.SelectSingleNode("timebase");
+                                if (timebase != null)
+                                    FrameRate = double.Parse(timebase.InnerText);
+                            }
 
-                            int startFrame = 0;
-                            int endFrame = 0;
+                            double startFrame = 0;
+                            double endFrame = 0;
                             XmlNode startNode = generatorItemNode.SelectSingleNode("start");
                             if (startNode != null)
-                                startFrame = int.Parse(startNode.InnerText);
+                                startFrame = double.Parse(startNode.InnerText);
 
                             XmlNode endNode = generatorItemNode.SelectSingleNode("end");
                             if (endNode != null)
-                                endFrame = int.Parse(endNode.InnerText);
+                                endFrame = double.Parse(endNode.InnerText);
 
                             string text = string.Empty;
                             foreach (XmlNode parameterNode in generatorItemNode.SelectNodes("effect/parameter[parameterid='str']"))
@@ -142,7 +174,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                             }
                             if (text.Length > 0)
                             {
-                                subtitle.Paragraphs.Add(new Paragraph(text, Convert.ToDouble((startFrame / frameRate) *1000), Convert.ToDouble((endFrame / frameRate) * 1000)));
+                                subtitle.Paragraphs.Add(new Paragraph(text, Convert.ToDouble((startFrame / FrameRate) *1000), Convert.ToDouble((endFrame / FrameRate) * 1000)));
                             }
                         }
                     }
