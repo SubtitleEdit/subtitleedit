@@ -34,11 +34,13 @@ namespace Nikse.SubtitleEdit.Logic.OCR
         Hunspell _hunspell;
         readonly OcrSpellCheck _spellCheck;
         readonly Form _parentForm;
+        private string _spellCheckDictionaryName;
 
         public bool Abort { get; set; }
         public List<string> AutoGuessesUsed { get; set; }
         public List<string> UnknownWordsFound { get; set; }
         public bool IsDictionaryLoaded { get; private set; }
+        
         public CultureInfo DictionaryCulture { get; private set; }
 
         /// <summary>
@@ -121,61 +123,95 @@ namespace Nikse.SubtitleEdit.Logic.OCR
                     if (dictionaryFileName == null)
                         return;
 
-                    _fiveLetterWordListLanguageName = Path.GetFileName(dictionaryFileName).Substring(0, 5);
-                    string dictionary = Utilities.DictionaryFolder + _fiveLetterWordListLanguageName;
-                    _wordSkipList = new List<string>();
-                    _wordSkipList.Add(Configuration.Settings.Tools.MusicSymbol);
-                    _wordSkipList.Add("*");
-                    _wordSkipList.Add("%");
-                    _wordSkipList.Add("#");
-                    _wordSkipList.Add("+");
-
-                    // Load names etc list (names/noise words)
-                    _namesEtcList = new List<string>();
-                    _namesEtcMultiWordList = new List<string>();
-                    Utilities.LoadNamesEtcWordLists(_namesEtcList, _namesEtcMultiWordList, _fiveLetterWordListLanguageName);
-
-                    _namesEtcListUppercase = new List<string>();
-                    foreach (string name in _namesEtcList)
-                        _namesEtcListUppercase.Add(name.ToUpper());
-
-                    _namesEtcListWithApostrophe = new List<string>();
-                    if (threeLetterIsoLanguageName.ToLower() == "eng")
-                    {
-                        foreach (string namesItem in _namesEtcList)
-                        {
-                            if (!namesItem.EndsWith("s"))
-                                _namesEtcListWithApostrophe.Add(namesItem + "'s");
-                            else
-                                _namesEtcListWithApostrophe.Add(namesItem + "'");
-                        }
-                    }
-
-                    // Load user words
-                    _userWordList = new List<string>();
-                    _userWordListXmlFileName = Utilities.LoadUserWordList(_userWordList, _fiveLetterWordListLanguageName);
-
-                    // Find abbreviations
-                    _abbreviationList = new List<string>();
-                    foreach (string name in _namesEtcList)
-                    {
-                        if (name.EndsWith("."))
-                            _abbreviationList.Add(name);
-                    }
-                    foreach (string name in _userWordList)
-                    {
-                        if (name.EndsWith("."))
-                            _abbreviationList.Add(name);
-                    }
-
-                    // Load NHunspell spellchecker
-                    _hunspell = new Hunspell(dictionary + ".aff", dictionary + ".dic");
-                    IsDictionaryLoaded = true;
-                    DictionaryCulture = culture;
+                    LoadSpellingDictionariesViaDictionaryFileName(threeLetterIsoLanguageName, culture, dictionaryFileName, true);
                     return;
                 }
             }
             return;
+        }
+
+        private void LoadSpellingDictionariesViaDictionaryFileName(string threeLetterIsoLanguageName, CultureInfo culture, string dictionaryFileName, bool resetSkipList)
+        {
+            _fiveLetterWordListLanguageName = Path.GetFileName(dictionaryFileName).Substring(0, 5);
+            string dictionary = Utilities.DictionaryFolder + _fiveLetterWordListLanguageName;
+            if (resetSkipList)
+            {
+                _wordSkipList = new List<string>();
+                _wordSkipList.Add(Configuration.Settings.Tools.MusicSymbol);
+                _wordSkipList.Add("*");
+                _wordSkipList.Add("%");
+                _wordSkipList.Add("#");
+                _wordSkipList.Add("+");
+            }
+
+            // Load names etc list (names/noise words)
+            _namesEtcList = new List<string>();
+            _namesEtcMultiWordList = new List<string>();
+            Utilities.LoadNamesEtcWordLists(_namesEtcList, _namesEtcMultiWordList, _fiveLetterWordListLanguageName);
+
+            _namesEtcListUppercase = new List<string>();
+            foreach (string name in _namesEtcList)
+                _namesEtcListUppercase.Add(name.ToUpper());
+
+            _namesEtcListWithApostrophe = new List<string>();
+            if (threeLetterIsoLanguageName.ToLower() == "eng")
+            {
+                foreach (string namesItem in _namesEtcList)
+                {
+                    if (!namesItem.EndsWith("s"))
+                        _namesEtcListWithApostrophe.Add(namesItem + "'s");
+                    else
+                        _namesEtcListWithApostrophe.Add(namesItem + "'");
+                }
+            }
+
+            // Load user words
+            _userWordList = new List<string>();
+            _userWordListXmlFileName = Utilities.LoadUserWordList(_userWordList, _fiveLetterWordListLanguageName);
+
+            // Find abbreviations
+            _abbreviationList = new List<string>();
+            foreach (string name in _namesEtcList)
+            {
+                if (name.EndsWith("."))
+                    _abbreviationList.Add(name);
+            }
+            foreach (string name in _userWordList)
+            {
+                if (name.EndsWith("."))
+                    _abbreviationList.Add(name);
+            }
+
+            // Load NHunspell spellchecker
+            _hunspell = new Hunspell(dictionary + ".aff", dictionary + ".dic");
+            IsDictionaryLoaded = true;
+            _spellCheckDictionaryName = dictionary;
+            DictionaryCulture = culture;
+        }
+
+        public string SpellCheckDictionaryName
+        {
+            get
+            {
+                string[] parts = _spellCheckDictionaryName.Split(Path.DirectorySeparatorChar.ToString().ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                if (parts.Length > 0)
+                    return parts[parts.Length - 1];
+                return string.Empty;
+            }
+            set
+            {
+                string _spellCheckDictionaryName = Path.Combine(Utilities.DictionaryFolder, value);
+                CultureInfo ci;
+                try
+                {
+                    ci = new CultureInfo(value);
+                }
+                catch
+                {
+                    ci = CultureInfo.CurrentCulture;
+                }
+                LoadSpellingDictionariesViaDictionaryFileName(ci.ThreeLetterISOLanguageName, ci, _spellCheckDictionaryName, false);
+            }
         }
 
         internal static Dictionary<string, string> LoadReplaceList(XmlDocument doc, string name)

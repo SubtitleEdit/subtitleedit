@@ -145,12 +145,25 @@ namespace Nikse.SubtitleEdit.Forms
             labelFixesMade.Text = string.Empty;
             labelFixesMade.Left = checkBoxAutoFixCommonErrors.Left + checkBoxAutoFixCommonErrors.Width;
             labelDictionaryLoaded.Text = string.Empty;
+            comboBoxDictionaries.Visible = false;
             groupBoxImageCompareMethod.Text = language.OcrViaImageCompare;
             groupBoxModiMethod.Text = language.OcrViaModi;
             checkBoxAutoFixCommonErrors.Text = language.FixOcrErrors;
             checkBoxRightToLeft.Text = language.RightToLeft;
             checkBoxRightToLeft.Left = numericUpDownPixelsIsSpace.Left;
             groupBoxOCRControls.Text = language.StartOcr + " / " + language.Stop;
+
+            comboBoxDictionaries.SelectedIndexChanged -= comboBoxDictionaries_SelectedIndexChanged;
+            comboBoxDictionaries.Items.Clear();
+            comboBoxDictionaries.Items.Add(Configuration.Settings.Language.General.None);
+            foreach (string name in Utilities.GetDictionaryLanguages())
+            {
+                comboBoxDictionaries.Items.Add(name);
+                //if (name.Contains("[" + languageName + "]"))
+                //    comboBoxDictionaries.SelectedIndex = comboBoxDictionaries.Items.Count - 1;
+            }
+            comboBoxDictionaries.SelectedIndexChanged += comboBoxDictionaries_SelectedIndexChanged;
+
 
             comboBoxOcrMethod.Items.Clear();
             comboBoxOcrMethod.Items.Add(language.OcrViaTesseract);
@@ -1244,9 +1257,28 @@ namespace Nikse.SubtitleEdit.Forms
                 _languageId = (comboBoxTesseractLanguages.SelectedItem as TesseractLanguage).Id;
                 _ocrFixEngine = new OcrFixEngine(_languageId, this);
                 if (_ocrFixEngine.IsDictionaryLoaded)
-                    labelDictionaryLoaded.Text = string.Format(Configuration.Settings.Language.VobSubOcr.DictionaryX, _ocrFixEngine.DictionaryCulture.NativeName);
+                {
+                    labelDictionaryLoaded.Text = string.Format(Configuration.Settings.Language.VobSubOcr.DictionaryX, string.Empty); // _ocrFixEngine.DictionaryCulture.NativeName);
+
+                    string loadedDictionaryName = _ocrFixEngine.SpellCheckDictionaryName;
+                    int i = 0;
+                    comboBoxDictionaries.SelectedIndexChanged -= comboBoxDictionaries_SelectedIndexChanged;
+                    foreach (string item in comboBoxDictionaries.Items)
+                    {
+                        if (item.Contains("[" + loadedDictionaryName + "]"))
+                            comboBoxDictionaries.SelectedIndex = i;
+                        i++;
+                    }
+                    comboBoxDictionaries.SelectedIndexChanged += comboBoxDictionaries_SelectedIndexChanged;
+                    comboBoxDictionaries.Left = labelDictionaryLoaded.Left + labelDictionaryLoaded.Width;
+                    comboBoxDictionaries.Width = groupBoxOcrAutoFix.Width - (comboBoxDictionaries.Left + 5);
+                    comboBoxDictionaries.Visible = true;
+                }
                 else
+                {
                     labelDictionaryLoaded.Text = string.Format(Configuration.Settings.Language.VobSubOcr.DictionaryX, Configuration.Settings.Language.General.None);
+                    comboBoxDictionaries.SelectedIndex = 0;
+                }
 
                 if (_modiEnabled && checkBoxUseModiInTesseractForUnknownWords.Checked)
                 {
@@ -1969,6 +2001,30 @@ namespace Nikse.SubtitleEdit.Forms
             }
             subtitleListView1.Fill(_subtitle);
             subtitleListView1.EndUpdate();
+        }
+
+        public string LanguageString
+        {
+            get
+            {
+                string name = comboBoxDictionaries.SelectedItem.ToString();
+                int start = name.LastIndexOf("[");
+                int end = name.LastIndexOf("]");
+                if (start > 0 && end > start)
+                {
+                    start++;
+                    name = name.Substring(start, end - start);
+                    return name;
+                }
+                return null;
+            }
+        }
+
+        private void comboBoxDictionaries_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            Configuration.Settings.General.SpellCheckLanguage = LanguageString;
+            if (_ocrFixEngine != null)
+                _ocrFixEngine.SpellCheckDictionaryName = LanguageString;
         }
 
     }
