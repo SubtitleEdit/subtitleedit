@@ -373,6 +373,33 @@ namespace Nikse.SubtitleEdit.Logic
         }
     }
 
+    public class Shortcuts
+    {
+        public string MainFileNew { get; set; }
+        public string MainFileOpen { get; set; }
+        public string MainFileSave { get; set; }
+        public string MainEditFind { get; set; }
+        public string MainEditFindNext { get; set; }
+        public string MainEditReplace { get; set; }
+        public string MainEditGoToLineNumber { get; set; }
+        public string MainListViewItalic { get; set; }
+        public string MainTextBoxItalic { get; set; }
+        
+        
+        public Shortcuts()
+        {
+            MainFileNew = "Control+N";
+            MainFileOpen = "Control+O";
+            MainFileSave = "Control+S";
+            MainEditFind = "Control+F";
+            MainEditFindNext = "F3";
+            MainEditReplace = "Control+H";
+            MainEditGoToLineNumber = "Control+G";
+            MainListViewItalic = "Control+I";
+            MainTextBoxItalic = "Control+I";
+        }
+    }
+
     public class Settings
     {
         public RecentFilesSettings RecentFiles { get; set; }
@@ -385,6 +412,7 @@ namespace Nikse.SubtitleEdit.Logic
         public VobSubOcrSettings VobSubOcr { get; set; }
         public VideoControlsSettings VideoControls { get; set; }
         public NetworkSettings NetworkSettings { get; set; }
+        public Shortcuts Shortcuts { get; set; }
 
         [XmlArrayItem("MultipleSearchAndReplaceItem")]
         public List<MultipleSearchAndReplaceSetting> MultipleSearchAndReplaceList { get; set; }
@@ -406,6 +434,7 @@ namespace Nikse.SubtitleEdit.Logic
             NetworkSettings = new Logic.NetworkSettings();
             MultipleSearchAndReplaceList = new List<MultipleSearchAndReplaceSetting>();
             Language = new Language();
+            Shortcuts = new Shortcuts();
         }
 
         public void Save()
@@ -474,6 +503,8 @@ namespace Nikse.SubtitleEdit.Logic
                 settings.MultipleSearchAndReplaceList = new List<MultipleSearchAndReplaceSetting>();
             if (settings.NetworkSettings == null)
                 settings.NetworkSettings = new NetworkSettings();
+            if (settings.Shortcuts == null)
+                settings.Shortcuts = new Shortcuts();
 
             return settings;
         }
@@ -907,7 +938,37 @@ namespace Nikse.SubtitleEdit.Logic
                     item.SearchType = subNode.InnerText;
                 settings.MultipleSearchAndReplaceList.Add(item);
             }
-
+            
+            settings.Shortcuts = new Shortcuts();
+            node = doc.DocumentElement.SelectSingleNode("Shortcuts");
+            subNode = node.SelectSingleNode("MainFileNew");
+            if (subNode != null)
+                settings.Shortcuts.MainFileNew = subNode.InnerText;
+            subNode = node.SelectSingleNode("MainFileOpen");
+            if (subNode != null)
+                settings.Shortcuts.MainFileOpen = subNode.InnerText;
+            subNode = node.SelectSingleNode("MainFileSave");
+            if (subNode != null)
+                settings.Shortcuts.MainFileSave = subNode.InnerText;
+            subNode = node.SelectSingleNode("MainEditFind");
+            if (subNode != null)
+                settings.Shortcuts.MainEditFind = subNode.InnerText;
+            subNode = node.SelectSingleNode("MainEditFindNext");
+            if (subNode != null)
+                settings.Shortcuts.MainEditFindNext = subNode.InnerText;
+            subNode = node.SelectSingleNode("MainEditReplace");
+            if (subNode != null)
+                settings.Shortcuts.MainEditReplace = subNode.InnerText;
+            subNode = node.SelectSingleNode("MainEditGoToLineNumber");
+            if (subNode != null)
+                settings.Shortcuts.MainEditGoToLineNumber = subNode.InnerText;
+            subNode = node.SelectSingleNode("MainListViewItalic");
+            if (subNode != null)
+                settings.Shortcuts.MainListViewItalic = subNode.InnerText;
+            subNode = node.SelectSingleNode("MainTextBoxItalic");
+            if (subNode != null)
+                settings.Shortcuts.MainTextBoxItalic = subNode.InnerText;
+            
             return settings;
         }
 
@@ -1088,6 +1149,18 @@ namespace Nikse.SubtitleEdit.Logic
                 textWriter.WriteElementString("SearchType", item.SearchType);
                 textWriter.WriteEndElement();
             }
+            textWriter.WriteEndElement();
+
+            textWriter.WriteStartElement("Shortcuts", "");
+            textWriter.WriteElementString("MainFileNew", settings.Shortcuts.MainFileNew);
+            textWriter.WriteElementString("MainFileOpen", settings.Shortcuts.MainFileOpen);
+            textWriter.WriteElementString("MainFileSave", settings.Shortcuts.MainFileSave);
+            textWriter.WriteElementString("MainEditFind", settings.Shortcuts.MainEditFind);
+            textWriter.WriteElementString("MainEditFindNext", settings.Shortcuts.MainEditFindNext);
+            textWriter.WriteElementString("MainEditReplace", settings.Shortcuts.MainEditReplace);
+            textWriter.WriteElementString("MainEditGoToLineNumber", settings.Shortcuts.MainEditGoToLineNumber);
+            textWriter.WriteElementString("MainListViewItalic", settings.Shortcuts.MainEditGoToLineNumber);
+            textWriter.WriteElementString("MainTextBoxItalic", settings.Shortcuts.MainTextBoxItalic);                        
             textWriter.WriteEndElement();
 
             textWriter.WriteEndElement();
