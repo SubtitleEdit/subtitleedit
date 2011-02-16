@@ -7486,6 +7486,35 @@ namespace Nikse.SubtitleEdit.Forms
                 textBoxSource.Focus();
             else
                 SubtitleListview1.Focus();
+
+            newToolStripMenuItem.ShortcutKeys = GetKeys(Configuration.Settings.Shortcuts.MainFileNew);
+            openToolStripMenuItem.ShortcutKeys = GetKeys(Configuration.Settings.Shortcuts.MainFileOpen);
+            saveToolStripMenuItem.ShortcutKeys = GetKeys(Configuration.Settings.Shortcuts.MainFileSave);
+            findToolStripMenuItem.ShortcutKeys = GetKeys(Configuration.Settings.Shortcuts.MainEditFind);
+            findNextToolStripMenuItem.ShortcutKeys = GetKeys(Configuration.Settings.Shortcuts.MainEditFindNext);
+            replaceToolStripMenuItem.ShortcutKeys = GetKeys(Configuration.Settings.Shortcuts.MainEditReplace);
+            gotoLineNumberToolStripMenuItem.ShortcutKeys = GetKeys(Configuration.Settings.Shortcuts.MainEditGoToLineNumber);
+            italicToolStripMenuItem.ShortcutKeys = GetKeys(Configuration.Settings.Shortcuts.MainListViewItalic);
+            italicToolStripMenuItem1.ShortcutKeys = GetKeys(Configuration.Settings.Shortcuts.MainTextBoxItalic);
+        }
+
+        private Keys GetKeys(string keysInString)
+        {
+            if (string.IsNullOrEmpty(keysInString))
+                return Keys.None;
+
+            string[] parts = keysInString.ToLower().Split("+".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+            Keys resultKeys = Keys.None;
+            foreach (string k in parts)
+            {
+                foreach (Keys val in Enum.GetValues(typeof(Keys)))
+                {
+                    if (k == val.ToString().ToLower())
+                        resultKeys = resultKeys | val;
+                }
+            }
+
+            return resultKeys;
         }
 
         void TimerAutoSaveTick(object sender, EventArgs e)
