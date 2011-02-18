@@ -28,13 +28,13 @@
 #define VerBuild
 #define VerRevision
 
-#if VER < 0x05040000
+#if VER < 0x05040100
   #error Update your Inno Setup version
 #endif
 
-#ifnexist "..\src\bin\Release\SubtitleEdit.exe"
-  #error Compile Subtitle Edit first
-#endif
+;#ifnexist "..\src\bin\Release\SubtitleEdit.exe"
+;  #error Compile Subtitle Edit first
+;#endif
 
 #expr ParseVersion("..\src\bin\Release\SubtitleEdit.exe", VerMajor, VerMinor, VerBuild, VerRevision)
 #define app_version str(VerMajor) + "." + str(VerMinor) + "." + str(VerBuild) + "." + str(VerRevision)
@@ -98,7 +98,7 @@ Name: es; MessagesFile: compiler:Languages\Spanish.isl
 Name: fr; MessagesFile: compiler:Languages\French.isl
 Name: hu; MessagesFile: compiler:Languages\Hungarian.isl
 Name: it; MessagesFile: compiler:Languages\Italian.isl
-;Name: nl; MessagesFile: compiler:Languages\Dutch.isl
+Name: nl; MessagesFile: compiler:Languages\Dutch.isl
 Name: pl; MessagesFile: compiler:Languages\Polish.isl
 Name: ro; MessagesFile: Languages\Romanian.isl
 Name: sv; MessagesFile: Languages\Swedish.isl
