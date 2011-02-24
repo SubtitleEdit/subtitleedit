@@ -654,9 +654,17 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         string oldText = p.Text;
                         p.Text = Utilities.AutoBreakLine(p.Text);
-                        _totalFixes++;
-                        noOfLongLines++;
-                        AddFixToListView(p, i + 1, fixAction, oldText, p.Text);
+                        if (oldText != p.Text)
+                        {
+                            _totalFixes++;
+                            noOfLongLines++;
+                            AddFixToListView(p, i + 1, fixAction, oldText, p.Text);
+                        }
+                        else
+                        {
+                            LogStatus(fixAction, string.Format(_language.UnableToFixTextXY, i + 1, p));
+                            _totalErrors++;
+                        }
                     }
                 }
             }
@@ -3073,6 +3081,8 @@ namespace Nikse.SubtitleEdit.Forms
             subtitleListView1.Fill(_originalSubtitle);
             if (listViewFixes.Items.Count > 0)
                 listViewFixes.Items[0].Selected = true;
+            else
+                subtitleListView1.SelectIndexAndEnsureVisible(0);
         }
 
         private void RunSelectedActions()
