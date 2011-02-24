@@ -525,6 +525,7 @@
     <Compile Include="Logic\SubtitleFormats\UleadSubtitleFormat.cs" />
     <Compile Include="Logic\SubtitleFormats\UnknownSubtitle5.cs" />
     <Compile Include="Logic\SubtitleFormats\OpenDvt.cs" />
+    <Compile Include="Logic\SubtitleFormats\AbcIViewer.cs" />
     <Compile Include="Logic\SubtitleFormats\YouTubeSbv.cs" />
     <Compile Include="Logic\SubtitleFormats\SubViewer10.cs" />
     <Compile Include="Logic\SubtitleFormats\TimedText.cs" />
