@@ -46,6 +46,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     new UnknownSubtitle3(),
                     new UnknownSubtitle4(),
                     new UnknownSubtitle5(),
+                    new AbcIViewer(),
                     new Csv(),
                     new TimeXml(),
                 };

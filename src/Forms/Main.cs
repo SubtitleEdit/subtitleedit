@@ -3449,6 +3449,8 @@ namespace Nikse.SubtitleEdit.Forms
                 newParagraph.StartTime.TotalMilliseconds = 1000;
                 newParagraph.EndTime.TotalMilliseconds = 3000;
             }
+            if (GetCurrentSubtitleFormat().IsFrameBased)
+                newParagraph.CalculateFrameNumbersFromTimeCodes(CurrentFrameRate);
 
             if (Configuration.Settings.General.AllowEditOfOriginalSubtitle && _subtitleAlternate != null && _subtitleAlternate.Paragraphs.Count > 0)
             {
@@ -3519,6 +3521,8 @@ namespace Nikse.SubtitleEdit.Forms
                 newParagraph.StartTime.TotalMilliseconds = 1000;
                 newParagraph.EndTime.TotalMilliseconds = 3000;
             }
+            if (GetCurrentSubtitleFormat().IsFrameBased)
+                newParagraph.CalculateFrameNumbersFromTimeCodes(CurrentFrameRate);
 
             if (Configuration.Settings.General.AllowEditOfOriginalSubtitle && _subtitleAlternate != null && _subtitleAlternate.Paragraphs.Count > 0)
             {
@@ -3930,6 +3934,8 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 else
                 {
+                    if (GetCurrentSubtitleFormat().IsFrameBased)
+                        newParagraph.CalculateFrameNumbersFromTimeCodes(CurrentFrameRate);
                     _subtitle.Paragraphs.Insert(firstSelectedIndex + 1, newParagraph);
                     _subtitle.Renumber(startNumber);
                     SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
@@ -4132,6 +4138,8 @@ namespace Nikse.SubtitleEdit.Forms
                 p.EndTime.TotalMilliseconds += (startTime.TotalMilliseconds - p.StartTime.TotalMilliseconds);
                 p.StartTime = startTime;
                 SubtitleListview1.SetStartTime(_subtitleListViewIndex, p);
+                if (GetCurrentSubtitleFormat().IsFrameBased)
+                    p.CalculateFrameNumbersFromTimeCodes(CurrentFrameRate);
             }
         }
 
@@ -4492,8 +4500,11 @@ namespace Nikse.SubtitleEdit.Forms
                     int lastSelectedIndex = SubtitleListview1.SelectedItems[0].Index;
                     int index = lastSelectedIndex;
                     _subtitle.Paragraphs.RemoveAt(index);
+                    bool isframeBased = GetCurrentSubtitleFormat().IsFrameBased;
                     foreach (Paragraph p in typewriter.TypewriterParagraphs)
                     {
+                        if (isframeBased)
+                            p.CalculateFrameNumbersFromTimeCodes(CurrentFrameRate);
                         _subtitle.Paragraphs.Insert(index, p);
                         index++;
                     }
@@ -4520,6 +4531,7 @@ namespace Nikse.SubtitleEdit.Forms
                     MakeHistoryForUndo(_language.BeforeKaraokeEffect);
                     int firstNumber = _subtitle.Paragraphs[0].Number;
                     int lastSelectedIndex = SubtitleListview1.SelectedItems[0].Index;
+                    bool isframeBased = GetCurrentSubtitleFormat().IsFrameBased;
 
                     int i = SubtitleListview1.SelectedItems.Count - 1;
                     while (i >= 0)
@@ -4532,6 +4544,8 @@ namespace Nikse.SubtitleEdit.Forms
                             _subtitle.Paragraphs.RemoveAt(index);
                             foreach (Paragraph kp in karaoke.MakeAnimation(p))
                             {
+                                if (isframeBased)
+                                    p.CalculateFrameNumbersFromTimeCodes(CurrentFrameRate);
                                 _subtitle.Paragraphs.Insert(index, kp);
                                 index++;
                             }
@@ -6930,6 +6944,8 @@ namespace Nikse.SubtitleEdit.Forms
 
             // create and insert
             var newPararaph = new Paragraph("", totalMilliseconds, totalMilliseconds + 2000);
+            if (GetCurrentSubtitleFormat().IsFrameBased)
+                newPararaph.CalculateFrameNumbersFromTimeCodes(CurrentFrameRate);
             _subtitle.Paragraphs.Insert(index, newPararaph);
 
             _subtitleListViewIndex = -1;
@@ -7710,6 +7726,8 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             // create and insert
+            if (GetCurrentSubtitleFormat().IsFrameBased)
+                newParagraph.CalculateFrameNumbersFromTimeCodes(CurrentFrameRate);
             _subtitle.Paragraphs.Insert(index, newParagraph);
 
             _subtitleListViewIndex = -1;
