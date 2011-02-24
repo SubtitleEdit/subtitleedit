@@ -325,7 +325,7 @@ C# 源代码可从 http://code.google.com/p/subtitleedit 获得。
     <FixMissingOpenBracketExample>'clanks] Look out!' --&gt; '[clanks] Look out!'</FixMissingOpenBracketExample>
     <FixMusicNotationExample>'âTª sweet dreams are' --&gt; '♫ sweet dreams are'</FixMusicNotationExample>
     <NumberOfImportantLogMessages>{0} 条重要的记录消息！</NumberOfImportantLogMessages>
-    <FixedOkXY>完成 - '{0}': {1}</FixedOkXY>
+    <FixedOkXY>完成 - {0}: {1}</FixedOkXY>
   </FixCommonErrors>
   <GetDictionaries>
     <Title>需要词典？</Title>
@@ -444,7 +444,7 @@ C# 源代码可从 http://code.google.com/p/subtitleedit 获得。
       </SpellCheck>
       <Synchronization>
         <Title>同步(&amp;Y)</Title>
-        <AdjustAllTimes>调整所有时间 (提前/推后 显示)...</AdjustAllTimes>
+        <AdjustAllTimes>提前/推后 显示...</AdjustAllTimes>
         <VisualSync>视觉同步(&amp;V)...</VisualSync>
         <PointSync>点同步(&amp;P)...</PointSync>
       </Synchronization>
@@ -452,7 +452,7 @@ C# 源代码可从 http://code.google.com/p/subtitleedit 获得。
         <Title>自动翻译(&amp;A)</Title>
         <TranslatePoweredByGoogle>翻译 (由谷歌提供)...</TranslatePoweredByGoogle>
         <TranslatePoweredByMicrosoft>翻译 (由微软提供)...</TranslatePoweredByMicrosoft>
-        <TranslateFromSwedishToDanish>瑞典语翻译为丹麦语 (由 nikse.dk 提供)...</TranslateFromSwedishToDanish>
+        <TranslateFromSwedishToDanish>瑞典语翻译为丹麦语...</TranslateFromSwedishToDanish>
       </AutoTranslate>
       <Options>
         <Title>选项(&amp;O)</Title>
