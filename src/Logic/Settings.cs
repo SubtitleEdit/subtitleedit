@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Text;
 using System.Xml;
 using System.Xml.Serialization;
-using System.Drawing;
 
 namespace Nikse.SubtitleEdit.Logic
 {
@@ -446,13 +446,13 @@ namespace Nikse.SubtitleEdit.Logic
             CustomSerialize(Configuration.SettingsFileName, this);
         }
 
-        private static void Serialize(string fileName, Settings settings)
-        {
-            var s = new XmlSerializer(typeof(Settings));
-            TextWriter w = new StreamWriter(fileName);
-            s.Serialize(w, settings);
-            w.Close();
-        }
+        //private static void Serialize(string fileName, Settings settings)
+        //{
+        //    var s = new XmlSerializer(typeof(Settings));
+        //    TextWriter w = new StreamWriter(fileName);
+        //    s.Serialize(w, settings);
+        //    w.Close();
+        //}
 
         public static Settings GetSettings()
         {
@@ -480,34 +480,34 @@ namespace Nikse.SubtitleEdit.Logic
             return settings;
         }
 
-        private static Settings Deserialize(string fileName)
-        {
-            var r = new StreamReader(fileName);
-            var s = new XmlSerializer(typeof(Settings));
-            var settings = (Settings)s.Deserialize(r);
-            r.Close();
+        //private static Settings Deserialize(string fileName)
+        //{
+        //    var r = new StreamReader(fileName);
+        //    var s = new XmlSerializer(typeof(Settings));
+        //    var settings = (Settings)s.Deserialize(r);
+        //    r.Close();
 
-            if (settings.RecentFiles == null)
-                settings.RecentFiles = new RecentFilesSettings();
-            if (settings.General == null)
-                settings.General = new GeneralSettings();
-            if (settings.SsaStyle == null)
-                settings.SsaStyle = new SsaStyleSettings();
-            if (settings.CommonErrors == null)
-                settings.CommonErrors = new FixCommonErrorsSettings();
-            if (settings.VideoControls == null)
-                settings.VideoControls = new VideoControlsSettings();
-            if (settings.VobSubOcr == null)
-                settings.VobSubOcr = new VobSubOcrSettings();
-            if (settings.MultipleSearchAndReplaceList == null)
-                settings.MultipleSearchAndReplaceList = new List<MultipleSearchAndReplaceSetting>();
-            if (settings.NetworkSettings == null)
-                settings.NetworkSettings = new NetworkSettings();
-            if (settings.Shortcuts == null)
-                settings.Shortcuts = new Shortcuts();
+        //    if (settings.RecentFiles == null)
+        //        settings.RecentFiles = new RecentFilesSettings();
+        //    if (settings.General == null)
+        //        settings.General = new GeneralSettings();
+        //    if (settings.SsaStyle == null)
+        //        settings.SsaStyle = new SsaStyleSettings();
+        //    if (settings.CommonErrors == null)
+        //        settings.CommonErrors = new FixCommonErrorsSettings();
+        //    if (settings.VideoControls == null)
+        //        settings.VideoControls = new VideoControlsSettings();
+        //    if (settings.VobSubOcr == null)
+        //        settings.VobSubOcr = new VobSubOcrSettings();
+        //    if (settings.MultipleSearchAndReplaceList == null)
+        //        settings.MultipleSearchAndReplaceList = new List<MultipleSearchAndReplaceSetting>();
+        //    if (settings.NetworkSettings == null)
+        //        settings.NetworkSettings = new NetworkSettings();
+        //    if (settings.Shortcuts == null)
+        //        settings.Shortcuts = new Shortcuts();
 
-            return settings;
-        }
+        //    return settings;
+        //}
 
         /// <summary>
         /// A faster serializer than xml serializer... which is insanely slow (first time)!!!!
@@ -941,34 +941,37 @@ namespace Nikse.SubtitleEdit.Logic
             
             settings.Shortcuts = new Shortcuts();
             node = doc.DocumentElement.SelectSingleNode("Shortcuts");
-            subNode = node.SelectSingleNode("MainFileNew");
-            if (subNode != null)
-                settings.Shortcuts.MainFileNew = subNode.InnerText;
-            subNode = node.SelectSingleNode("MainFileOpen");
-            if (subNode != null)
-                settings.Shortcuts.MainFileOpen = subNode.InnerText;
-            subNode = node.SelectSingleNode("MainFileSave");
-            if (subNode != null)
-                settings.Shortcuts.MainFileSave = subNode.InnerText;
-            subNode = node.SelectSingleNode("MainEditFind");
-            if (subNode != null)
-                settings.Shortcuts.MainEditFind = subNode.InnerText;
-            subNode = node.SelectSingleNode("MainEditFindNext");
-            if (subNode != null)
-                settings.Shortcuts.MainEditFindNext = subNode.InnerText;
-            subNode = node.SelectSingleNode("MainEditReplace");
-            if (subNode != null)
-                settings.Shortcuts.MainEditReplace = subNode.InnerText;
-            subNode = node.SelectSingleNode("MainEditGoToLineNumber");
-            if (subNode != null)
-                settings.Shortcuts.MainEditGoToLineNumber = subNode.InnerText;
-            subNode = node.SelectSingleNode("MainListViewItalic");
-            if (subNode != null)
-                settings.Shortcuts.MainListViewItalic = subNode.InnerText;
-            subNode = node.SelectSingleNode("MainTextBoxItalic");
-            if (subNode != null)
-                settings.Shortcuts.MainTextBoxItalic = subNode.InnerText;
-            
+            if (node != null)
+            {
+                subNode = node.SelectSingleNode("MainFileNew");
+                if (subNode != null)
+                    settings.Shortcuts.MainFileNew = subNode.InnerText;
+                subNode = node.SelectSingleNode("MainFileOpen");
+                if (subNode != null)
+                    settings.Shortcuts.MainFileOpen = subNode.InnerText;
+                subNode = node.SelectSingleNode("MainFileSave");
+                if (subNode != null)
+                    settings.Shortcuts.MainFileSave = subNode.InnerText;
+                subNode = node.SelectSingleNode("MainEditFind");
+                if (subNode != null)
+                    settings.Shortcuts.MainEditFind = subNode.InnerText;
+                subNode = node.SelectSingleNode("MainEditFindNext");
+                if (subNode != null)
+                    settings.Shortcuts.MainEditFindNext = subNode.InnerText;
+                subNode = node.SelectSingleNode("MainEditReplace");
+                if (subNode != null)
+                    settings.Shortcuts.MainEditReplace = subNode.InnerText;
+                subNode = node.SelectSingleNode("MainEditGoToLineNumber");
+                if (subNode != null)
+                    settings.Shortcuts.MainEditGoToLineNumber = subNode.InnerText;
+                subNode = node.SelectSingleNode("MainListViewItalic");
+                if (subNode != null)
+                    settings.Shortcuts.MainListViewItalic = subNode.InnerText;
+                subNode = node.SelectSingleNode("MainTextBoxItalic");
+                if (subNode != null)
+                    settings.Shortcuts.MainTextBoxItalic = subNode.InnerText;
+            }
+
             return settings;
         }
 
