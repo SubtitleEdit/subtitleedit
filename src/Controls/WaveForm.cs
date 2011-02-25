@@ -1004,11 +1004,11 @@ namespace Nikse.SubtitleEdit.Controls
             int delta = e.Delta;
             if (Locked)
             {
-                OnPositionSelected.Invoke(_currentVideoPositionSeconds + (-delta / 256.0), null);
+                OnPositionSelected.Invoke(_currentVideoPositionSeconds + (delta / 256.0), null);
             }
             else
             {
-                StartPositionSeconds -= delta / 256.0;
+                StartPositionSeconds += delta / 256.0;
                 if (_currentVideoPositionSeconds < StartPositionSeconds || _currentVideoPositionSeconds >= EndPositionSeconds)
                     OnPositionSelected.Invoke(StartPositionSeconds, null);
             }
