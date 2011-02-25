@@ -105,7 +105,7 @@ namespace Nikse.SubtitleEdit.Forms
                     if (versionInfo.Length >= 3 && versionInfo[2] != "0")
                         _title += "." + versionInfo[2];
                 }
-                return _title + " RC3";
+                return _title + " RC4";
             }
         }
 
@@ -974,7 +974,7 @@ namespace Nikse.SubtitleEdit.Forms
             openFileDialog1.Title = _languageGeneral.OpenSubtitle;
             openFileDialog1.FileName = string.Empty;
             openFileDialog1.Filter = Utilities.GetOpenDialogFiler();
-            if (openFileDialog1.ShowDialog(this) == DialogResult.OK)
+            if (openFileDialog1.ShowDialog(this) == DialogResult.OK) // sometimes crashes... why??
             {
                 OpenSubtitle(openFileDialog1.FileName, null);
             }
@@ -2377,6 +2377,8 @@ namespace Nikse.SubtitleEdit.Forms
                 if (textBoxSource.Text.Trim().Length > 0)
                 {
                     SubtitleFormat format = _subtitle.ReloadLoadSubtitle(new List<string>(textBoxSource.Lines), null);
+                    if (format.IsFrameBased)
+                        _subtitle.CalculateTimeCodesFromFrameNumbers(CurrentFrameRate);
                     _sourceViewChange = false;
                     if (format == null)
                     {
@@ -3450,7 +3452,10 @@ namespace Nikse.SubtitleEdit.Forms
                 newParagraph.EndTime.TotalMilliseconds = 3000;
             }
             if (GetCurrentSubtitleFormat().IsFrameBased)
+            {
                 newParagraph.CalculateFrameNumbersFromTimeCodes(CurrentFrameRate);
+                newParagraph.CalculateTimeCodesFromFrameNumbers(CurrentFrameRate);
+            }
 
             if (Configuration.Settings.General.AllowEditOfOriginalSubtitle && _subtitleAlternate != null && _subtitleAlternate.Paragraphs.Count > 0)
             {
@@ -3522,7 +3527,10 @@ namespace Nikse.SubtitleEdit.Forms
                 newParagraph.EndTime.TotalMilliseconds = 3000;
             }
             if (GetCurrentSubtitleFormat().IsFrameBased)
+            {
                 newParagraph.CalculateFrameNumbersFromTimeCodes(CurrentFrameRate);
+                newParagraph.CalculateTimeCodesFromFrameNumbers(CurrentFrameRate);
+            }
 
             if (Configuration.Settings.General.AllowEditOfOriginalSubtitle && _subtitleAlternate != null && _subtitleAlternate.Paragraphs.Count > 0)
             {
@@ -3935,7 +3943,15 @@ namespace Nikse.SubtitleEdit.Forms
                 else
                 {
                     if (GetCurrentSubtitleFormat().IsFrameBased)
+                    {
+                        if (currentParagraph != null)
+                        {
+                            currentParagraph.CalculateFrameNumbersFromTimeCodes(CurrentFrameRate);
+                            currentParagraph.CalculateTimeCodesFromFrameNumbers(CurrentFrameRate);
+                        }
                         newParagraph.CalculateFrameNumbersFromTimeCodes(CurrentFrameRate);
+                        newParagraph.CalculateTimeCodesFromFrameNumbers(CurrentFrameRate);
+                    }
                     _subtitle.Paragraphs.Insert(firstSelectedIndex + 1, newParagraph);
                     _subtitle.Renumber(startNumber);
                     SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
@@ -4139,7 +4155,10 @@ namespace Nikse.SubtitleEdit.Forms
                 p.StartTime = startTime;
                 SubtitleListview1.SetStartTime(_subtitleListViewIndex, p);
                 if (GetCurrentSubtitleFormat().IsFrameBased)
+                {
                     p.CalculateFrameNumbersFromTimeCodes(CurrentFrameRate);
+                    p.CalculateTimeCodesFromFrameNumbers(CurrentFrameRate);
+                }
             }
         }
 
@@ -4206,6 +4225,12 @@ namespace Nikse.SubtitleEdit.Forms
                             original.EndTime.TotalMilliseconds = currentParagraph.EndTime.TotalMilliseconds;
                             _changeAlternate = true;
                         }
+                    }
+
+                    if (GetCurrentSubtitleFormat().IsFrameBased)
+                    {
+                        currentParagraph.CalculateFrameNumbersFromTimeCodes(CurrentFrameRate);
+                        currentParagraph.CalculateTimeCodesFromFrameNumbers(CurrentFrameRate);
                     }
 
                     MakeHistoryForUndoWhenNoMoreChanges(string.Format(_language.DisplayTimeAdjustedX, "#" + currentParagraph.Number + ": " +  oldDuration + " -> " + currentParagraph.Duration.ToString()));
@@ -4504,7 +4529,10 @@ namespace Nikse.SubtitleEdit.Forms
                     foreach (Paragraph p in typewriter.TypewriterParagraphs)
                     {
                         if (isframeBased)
+                        {
                             p.CalculateFrameNumbersFromTimeCodes(CurrentFrameRate);
+                            p.CalculateTimeCodesFromFrameNumbers(CurrentFrameRate);
+                        }
                         _subtitle.Paragraphs.Insert(index, p);
                         index++;
                     }
@@ -4545,7 +4573,10 @@ namespace Nikse.SubtitleEdit.Forms
                             foreach (Paragraph kp in karaoke.MakeAnimation(p))
                             {
                                 if (isframeBased)
+                                {
                                     p.CalculateFrameNumbersFromTimeCodes(CurrentFrameRate);
+                                    p.CalculateTimeCodesFromFrameNumbers(CurrentFrameRate);
+                                }
                                 _subtitle.Paragraphs.Insert(index, kp);
                                 index++;
                             }
@@ -6943,10 +6974,13 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             // create and insert
-            var newPararaph = new Paragraph("", totalMilliseconds, totalMilliseconds + 2000);
+            var newParagraph = new Paragraph("", totalMilliseconds, totalMilliseconds + 2000);
             if (GetCurrentSubtitleFormat().IsFrameBased)
-                newPararaph.CalculateFrameNumbersFromTimeCodes(CurrentFrameRate);
-            _subtitle.Paragraphs.Insert(index, newPararaph);
+            {
+                newParagraph.CalculateFrameNumbersFromTimeCodes(CurrentFrameRate);
+                newParagraph.CalculateTimeCodesFromFrameNumbers(CurrentFrameRate);
+            }
+            _subtitle.Paragraphs.Insert(index, newParagraph);
 
             _subtitleListViewIndex = -1;
             _subtitle.Renumber(startNumber);
@@ -6955,8 +6989,8 @@ namespace Nikse.SubtitleEdit.Forms
 
             textBoxListViewText.Focus();
             timerAutoDuration.Start();
-            
-            ShowStatus(string.Format(_language.VideoControls.NewTextInsertAtX,  newPararaph.StartTime.ToShortString()));
+
+            ShowStatus(string.Format(_language.VideoControls.NewTextInsertAtX, newParagraph.StartTime.ToShortString()));
         }
 
         private void timerAutoDuration_Tick(object sender, EventArgs e)
@@ -7727,7 +7761,10 @@ namespace Nikse.SubtitleEdit.Forms
 
             // create and insert
             if (GetCurrentSubtitleFormat().IsFrameBased)
+            {
                 newParagraph.CalculateFrameNumbersFromTimeCodes(CurrentFrameRate);
+                newParagraph.CalculateTimeCodesFromFrameNumbers(CurrentFrameRate);
+            }
             _subtitle.Paragraphs.Insert(index, newParagraph);
 
             _subtitleListViewIndex = -1;
