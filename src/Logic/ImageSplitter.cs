@@ -346,13 +346,15 @@ namespace Nikse.SubtitleEdit.Logic
             return allTransparent;
         }
 
-        public static List<ImageSplitterItem> SplitBitmapToLetters(Bitmap bmp, int xOrMorePixelsMakesSpace)
+        public static List<ImageSplitterItem> SplitBitmapToLetters(Bitmap bmp, int xOrMorePixelsMakesSpace, bool rightToLeft, bool topToBottom)
         {
             var list = new List<ImageSplitterItem>();
 
             // split into seperate lines
             List<ImageSplitterItem> verticalBitmaps = SplitVertical(bmp);
 
+            if (!topToBottom)
+                verticalBitmaps.Reverse();
 
             // split into letters
             int lineCount = 0;
@@ -360,10 +362,15 @@ namespace Nikse.SubtitleEdit.Logic
             {
                 if (lineCount > 0)
                     list.Add(new ImageSplitterItem(Environment.NewLine));
+                var line = new List<ImageSplitterItem>();
                 foreach (ImageSplitterItem item in SplitHorizontal(b, xOrMorePixelsMakesSpace))
                 {
-                    list.Add(item);
+                    line.Add(item);
                 }
+                if (rightToLeft)
+                    line.Reverse();
+                foreach (ImageSplitterItem item in line)
+                    list.Add(item);
                 lineCount++;
             }
 

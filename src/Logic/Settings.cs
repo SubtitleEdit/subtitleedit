@@ -339,6 +339,8 @@ namespace Nikse.SubtitleEdit.Logic
         public string LastOcrMethod { get; set; }
         public string TesseractLastLanguage { get; set; }
         public bool RightToLeft { get; set; }
+        public bool TopToBottom { get; set; }
+        public int DefaultMillisecondsForUnknownDurations { get; set; }
 
         public VobSubOcrSettings()
         {
@@ -348,6 +350,8 @@ namespace Nikse.SubtitleEdit.Logic
             LastModiLanguageId = 9;
             LastOcrMethod = "Tesseract";
             RightToLeft = false;
+            TopToBottom = true;
+            DefaultMillisecondsForUnknownDurations = 5000;
         }
     }
 
@@ -920,6 +924,12 @@ namespace Nikse.SubtitleEdit.Logic
             subNode = node.SelectSingleNode("RightToLeft");
             if (subNode != null)
                 settings.VobSubOcr.RightToLeft = Convert.ToBoolean(subNode.InnerText);
+            subNode = node.SelectSingleNode("TopToBottom");
+            if (subNode != null)
+                settings.VobSubOcr.TopToBottom = Convert.ToBoolean(subNode.InnerText);
+            subNode = node.SelectSingleNode("DefaultMillisecondsForUnknownDurations");
+            if (subNode != null)
+                settings.VobSubOcr.DefaultMillisecondsForUnknownDurations = Convert.ToInt32(subNode.InnerText);
 
             foreach (XmlNode listNode in doc.DocumentElement.SelectNodes("MultipleSearchAndReplaceList/MultipleSearchAndReplaceItem"))
             {
@@ -1140,6 +1150,8 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("LastOcrMethod", settings.VobSubOcr.LastOcrMethod);
             textWriter.WriteElementString("TesseractLastLanguage", settings.VobSubOcr.TesseractLastLanguage);
             textWriter.WriteElementString("RightToLeft", settings.VobSubOcr.RightToLeft.ToString());
+            textWriter.WriteElementString("TopToBottom", settings.VobSubOcr.TopToBottom.ToString());
+            textWriter.WriteElementString("DefaultMillisecondsForUnknownDurations", settings.VobSubOcr.DefaultMillisecondsForUnknownDurations.ToString());            
             textWriter.WriteEndElement();
 
             textWriter.WriteStartElement("MultipleSearchAndReplaceList", "");
