@@ -1061,7 +1061,7 @@ namespace Nikse.SubtitleEdit.Logic
                         sb.Append("*" + ext + ";");
                 }
             }
-            sb.Append("*" + new Pac().Extension + ";");
+            sb.Append("*" + new Pac().Extension);
             sb.Append("|" + Configuration.Settings.Language.General.AllFiles + "|*.*");
             return sb.ToString();
         }
