@@ -73,6 +73,7 @@ namespace Nikse.SubtitleEdit.Logic
 
         public SubtitleFormat ReloadLoadSubtitle(List<string> lines, string fileName)
         {
+            Paragraphs.Clear();
             foreach (SubtitleFormat subtitleFormat in SubtitleFormat.AllSubtitleFormats)
             {
                 if (subtitleFormat.IsMine(lines, fileName))
