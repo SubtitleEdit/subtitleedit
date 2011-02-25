@@ -1054,12 +1054,11 @@ namespace Nikse.SubtitleEdit.Logic
             foreach (SubtitleFormat s in SubtitleFormat.AllSubtitleFormats)
             {
                 if (!sb.ToString().Contains("*" + s.Extension + ";"))
-                {
                     sb.Append("*" + s.Extension + ";");
-                    foreach (string ext in s.AlternateExtensions)
-                    {
+                foreach (string ext in s.AlternateExtensions)
+                {
+                    if (!sb.ToString().Contains("*" + ext + ";"))
                         sb.Append("*" + ext + ";");
-                    }
                 }
             }
             sb.Append("*" + new Pac().Extension + ";");
