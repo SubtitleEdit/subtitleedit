@@ -7323,7 +7323,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonGoogleIt_Click(object sender, EventArgs e)
         {
-            System.Diagnostics.Process.Start("http://www.google.com/#q=" + Utilities.UrlEncode(textBoxSearchWord.Text));
+            System.Diagnostics.Process.Start("http://www.google.com/search?q=" + Utilities.UrlEncode(textBoxSearchWord.Text));
         }
 
         private void buttonGoogleTranslateIt_Click(object sender, EventArgs e)
