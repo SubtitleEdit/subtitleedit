@@ -12,6 +12,7 @@ using System.Xml;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.OCR;
 using Nikse.SubtitleEdit.Logic.VobSub;
+using System.Text.RegularExpressions;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -159,8 +160,6 @@ namespace Nikse.SubtitleEdit.Forms
             foreach (string name in Utilities.GetDictionaryLanguages())
             {
                 comboBoxDictionaries.Items.Add(name);
-                //if (name.Contains("[" + languageName + "]"))
-                //    comboBoxDictionaries.SelectedIndex = comboBoxDictionaries.Items.Count - 1;
             }
             comboBoxDictionaries.SelectedIndexChanged += comboBoxDictionaries_SelectedIndexChanged;
 
@@ -575,7 +574,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (p.EndTime.TotalMilliseconds <= p.StartTime.TotalMilliseconds)
                 {
                     Paragraph next = _subtitle.GetParagraphOrDefault(i + 1);
-                    double newEndTime = p.StartTime.TotalMilliseconds + 2400;
+                    double newEndTime = p.StartTime.TotalMilliseconds + Configuration.Settings.VobSubOcr.DefaultMillisecondsForUnknownDurations;
                     if (next == null || (newEndTime < next.StartTime.TotalMilliseconds))
                         p.EndTime.TotalMilliseconds = newEndTime;
                     else if (next != null)
@@ -762,10 +761,7 @@ namespace Nikse.SubtitleEdit.Forms
         private string SplitAndOcrBitmapNormal(Bitmap bitmap)
         {
             var matches = new List<CompareMatch>();
-            List<ImageSplitterItem> list = ImageSplitter.SplitBitmapToLetters(bitmap, (int)numericUpDownPixelsIsSpace.Value);
-
-            if (checkBoxRightToLeft.Checked)
-                list.Reverse();
+            List<ImageSplitterItem> list = ImageSplitter.SplitBitmapToLetters(bitmap, (int)numericUpDownPixelsIsSpace.Value, checkBoxRightToLeft.Checked, Configuration.Settings.VobSubOcr.TopToBottom);
 
             int index = 0;
             bool expandSelection = false;
@@ -877,6 +873,29 @@ namespace Nikse.SubtitleEdit.Forms
             string line = GetStringWithItalicTags(matches);
             if (checkBoxAutoFixCommonErrors.Checked)
                 line = OcrFixEngine.FixOcrErrorsViaHardcodedRules(line, _lastLine, null); // TODO: add abbreviations list
+
+            if (checkBoxRightToLeft.Checked)
+                line = ReverseNumberStrings(line);
+
+            return line;
+        }
+
+        private string ReverseNumberStrings(string line)
+        {
+            Regex regex = new Regex(@"\b\d+\b");
+            var matches = regex.Matches(line);
+            foreach (Match match in matches)
+            {
+                if (match.Length > 1)
+                {
+                    string number = string.Empty;
+                    for (int i = match.Index; i < match.Index + match.Length; i++)
+                    {
+                        number = line[i] + number;
+                    }
+                    line = line.Remove(match.Index, match.Length).Insert(match.Index, number);
+                }
+            }
             return line;
         }
 
