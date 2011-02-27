@@ -277,12 +277,12 @@ namespace Nikse.SubtitleEdit.Logic
             DefaultEncoding = "UTF-8";
             AutoGuessAnsiEncoding = false;
             ShowRecentFiles = true;
-            RememberSelectedLine = false;
+            RememberSelectedLine = true;
             StartLoadLastFile = true;
             StartRememberPositionAndSize = true;
             SubtitleLineMaximumLength = 43;
             MininumMillisecondsBetweenLines = 25;
-            AutoWrapLineWhileTyping = true;
+            AutoWrapLineWhileTyping = false;
             SubtitleMaximumCharactersPerSeconds = 25;
             SpellCheckLanguage = null;
             VideoPlayer = string.Empty;
@@ -314,6 +314,8 @@ namespace Nikse.SubtitleEdit.Logic
         public Color WaveFormBackgroundColor { get; set; }
         public Color WaveFormTextColor { get; set; }
         public string WaveFormDoubleClickOnNonParagraphAction { get; set; }
+        public string WaveFormRightClickOnNonParagraphAction { get; set; }
+        public bool WaveFormMouseWheelScrollUpIsForward { get; set; }            
 
         public VideoControlsSettings()
         {
@@ -327,6 +329,8 @@ namespace Nikse.SubtitleEdit.Logic
             WaveFormBackgroundColor = Color.Black;
             WaveFormTextColor = Color.Gray;
             WaveFormDoubleClickOnNonParagraphAction = "PlayPause";
+            WaveFormDoubleClickOnNonParagraphAction = string.Empty;
+            WaveFormMouseWheelScrollUpIsForward = true;
         }
     }
 
@@ -884,7 +888,13 @@ namespace Nikse.SubtitleEdit.Logic
                 settings.VideoControls.WaveFormTextColor = Color.FromArgb(int.Parse(subNode.InnerText));
             subNode = node.SelectSingleNode("WaveFormDoubleClickOnNonParagraphAction");
             if (subNode != null)
-                settings.VideoControls.WaveFormDoubleClickOnNonParagraphAction = subNode.InnerText;            
+                settings.VideoControls.WaveFormDoubleClickOnNonParagraphAction = subNode.InnerText;
+            subNode = node.SelectSingleNode("WaveFormRightClickOnNonParagraphAction");
+            if (subNode != null)
+                settings.VideoControls.WaveFormRightClickOnNonParagraphAction = subNode.InnerText;
+            subNode = node.SelectSingleNode("WaveFormMouseWheelScrollUpIsForward");
+            if (subNode != null)
+                settings.VideoControls.WaveFormMouseWheelScrollUpIsForward = Convert.ToBoolean(subNode.InnerText);            
 
             settings.NetworkSettings = new NetworkSettings();
             node = doc.DocumentElement.SelectSingleNode("NetworkSettings");
@@ -1133,6 +1143,8 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("WaveFormBackgroundColor", settings.VideoControls.WaveFormBackgroundColor.ToArgb().ToString());
             textWriter.WriteElementString("WaveFormTextColor", settings.VideoControls.WaveFormTextColor.ToArgb().ToString());
             textWriter.WriteElementString("WaveFormDoubleClickOnNonParagraphAction", settings.VideoControls.WaveFormDoubleClickOnNonParagraphAction);
+            textWriter.WriteElementString("WaveFormRightClickOnNonParagraphAction", settings.VideoControls.WaveFormRightClickOnNonParagraphAction);
+            textWriter.WriteElementString("WaveFormMouseWheelScrollUpIsForward", settings.VideoControls.WaveFormMouseWheelScrollUpIsForward.ToString());            
             
             textWriter.WriteEndElement();
 
