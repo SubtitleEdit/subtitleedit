@@ -105,7 +105,7 @@ namespace Nikse.SubtitleEdit.Forms
                     if (versionInfo.Length >= 3 && versionInfo[2] != "0")
                         _title += "." + versionInfo[2];
                 }
-                return _title + " RC4";
+                return _title;
             }
         }
 
@@ -268,6 +268,7 @@ namespace Nikse.SubtitleEdit.Forms
                 AudioWaveForm.OnTimeChanged += AudioWaveForm_OnTimeChanged;
                 AudioWaveForm.OnNewSelectionRightClicked += AudioWaveForm_OnNewSelectionRightClicked;
                 AudioWaveForm.OnParagraphRightClicked += AudioWaveForm_OnParagraphRightClicked;
+                AudioWaveForm.OnNonParagraphRightClicked += new WaveForm.PositionChangedEventHandler(AudioWaveForm_OnNonParagraphRightClicked);
                 AudioWaveForm.OnSingleClick += AudioWaveForm_OnSingleClick;
                 AudioWaveForm.OnPause += AudioWaveForm_OnPause;
                 AudioWaveForm.OnTimeChangedAndOffsetRest += AudioWaveForm_OnTimeChangedAndOffsetRest;
@@ -278,6 +279,7 @@ namespace Nikse.SubtitleEdit.Forms
                 AudioWaveForm.Color = Configuration.Settings.VideoControls.WaveFormColor;
                 AudioWaveForm.BackgroundColor = Configuration.Settings.VideoControls.WaveFormBackgroundColor;
                 AudioWaveForm.TextColor = Configuration.Settings.VideoControls.WaveFormTextColor;
+                AudioWaveForm.MouseWheelScrollUpIsForward = Configuration.Settings.VideoControls.WaveFormMouseWheelScrollUpIsForward;
 
                 for (double zoomCounter = WaveForm.ZoomMininum; zoomCounter <= WaveForm.ZoomMaxinum + (0.001); zoomCounter += 0.1)
                 {
@@ -296,6 +298,15 @@ namespace Nikse.SubtitleEdit.Forms
             catch (Exception exception)
             {
                 MessageBox.Show(exception.Message + Environment.NewLine + exception.StackTrace);
+            }
+        }
+
+        void AudioWaveForm_OnNonParagraphRightClicked(double seconds, Paragraph paragraph)
+        {
+            if (Configuration.Settings.VideoControls.WaveFormDoubleClickOnNonParagraphAction == "ButtonSetStartAndOffsetRest")
+            {
+                mediaPlayer.CurrentPosition = seconds;
+                ButtonSetStartAndOffsetRestClick(null, null);
             }
         }
 
@@ -5317,6 +5328,12 @@ namespace Nikse.SubtitleEdit.Forms
 
         internal void Main_KeyDown(object sender, KeyEventArgs e)
         {
+            if (e.Modifiers == Keys.Alt && e.KeyCode == (Keys.RButton | Keys.ShiftKey) && textBoxListViewText.Focused)
+            { // annoying that focus leaves textbox while typing, when pressing Alt alone 
+                e.SuppressKeyPress = true;
+                return;
+            }
+
             if (e.Modifiers == Keys.Alt && e.KeyCode == Keys.Insert)
             {
                 InsertAfter();
@@ -5651,7 +5668,26 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (tabControlButtons.SelectedTab == tabPageCreate && mediaPlayer.VideoPlayer != null)
             {
-                if (e.Modifiers == Keys.None && e.KeyCode == Keys.F9)
+                if (e.Modifiers == Keys.Control && e.KeyCode == Keys.F9)
+                {
+                    InsertNewTextAtVideoPosition();
+                    e.SuppressKeyPress = true;
+                }
+                else if (e.Modifiers == Keys.Shift && e.KeyCode == Keys.F9)
+                {
+                    var p = InsertNewTextAtVideoPosition();
+                    p.Text = p.StartTime.ToShortString();
+                    SubtitleListview1.SetText(_subtitle.GetIndex(p), p.Text);
+                    textBoxListViewText.Text = p.Text;
+                    e.SuppressKeyPress = true;
+                }
+                else if (e.Modifiers == Keys.Alt && e.KeyCode == Keys.F9)
+                {
+                    StopAutoDuration();
+                    buttonSetEnd_Click(null, null);
+                    e.SuppressKeyPress = true;
+                }
+                else if (e.Modifiers == Keys.None && e.KeyCode == Keys.F9)
                 {
                     buttonInsertNewText_Click(null, null);
                     e.SuppressKeyPress = true;
@@ -6954,12 +6990,22 @@ namespace Nikse.SubtitleEdit.Forms
         {
             mediaPlayer.Pause();
 
+            var newParagraph = InsertNewTextAtVideoPosition();
+
+            textBoxListViewText.Focus();
+            timerAutoDuration.Start();
+
+            ShowStatus(string.Format(_language.VideoControls.NewTextInsertAtX, newParagraph.StartTime.ToShortString()));
+        }
+
+        private Paragraph InsertNewTextAtVideoPosition()
+        {
+            // current movie pos
+            double totalMilliseconds = mediaPlayer.CurrentPosition * 1000.0;
+
             int startNumber = 1;
             if (_subtitle.Paragraphs.Count > 0)
                 startNumber = _subtitle.Paragraphs[0].Number;
-
-            // current movie pos
-            double totalMilliseconds = mediaPlayer.CurrentPosition * 1000.0;
 
             TimeCode tc = new TimeCode(TimeSpan.FromMilliseconds(totalMilliseconds));
             MakeHistoryForUndo(_language.BeforeInsertSubtitleAtVideoPosition + "  " + tc.ToString());
@@ -6986,11 +7032,7 @@ namespace Nikse.SubtitleEdit.Forms
             _subtitle.Renumber(startNumber);
             SubtitleListview1.Fill(_subtitle.Paragraphs);
             SubtitleListview1.SelectIndexAndEnsureVisible(index);
-
-            textBoxListViewText.Focus();
-            timerAutoDuration.Start();
-
-            ShowStatus(string.Format(_language.VideoControls.NewTextInsertAtX, newParagraph.StartTime.ToShortString()));
+            return newParagraph;
         }
 
         private void timerAutoDuration_Tick(object sender, EventArgs e)

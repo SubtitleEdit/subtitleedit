@@ -38,6 +38,7 @@ namespace Nikse.SubtitleEdit.Controls
         public delegate void ParagraphChangedHandler(Paragraph paragraph);
         public event ParagraphChangedHandler OnNewSelectionRightClicked;
         public event PositionChangedEventHandler OnParagraphRightClicked;
+        public event PositionChangedEventHandler OnNonParagraphRightClicked;
 
         public delegate void PositionChangedEventHandler(double seconds, Paragraph paragraph);
         public event PositionChangedEventHandler OnPositionSelected;
@@ -51,6 +52,7 @@ namespace Nikse.SubtitleEdit.Controls
         public event EventHandler OnPause;
         public event EventHandler OnZoomedChanged;
 
+        public bool MouseWheelScrollUpIsForward = true;
         public const double ZoomMininum = 0.1;
         public const double ZoomMaxinum = 2.5;
         private double _zoomFactor = 1.0; // 1.0=no zoom
@@ -545,15 +547,25 @@ namespace Nikse.SubtitleEdit.Controls
                             }
                         }
                     }
-                    else if (OnParagraphRightClicked != null)
+                    else 
                     {
                         Paragraph p = GetParagraphAtMilliseconds(milliseconds);
                         RightClickedParagraph = p;
                         RightClickedSeconds = seconds;
                         if (p != null)
                         {
-                            NewSelectionParagraph = null;
-                            OnParagraphRightClicked.Invoke(seconds, p);
+                            if (OnParagraphRightClicked != null)
+                            {
+                                NewSelectionParagraph = null;
+                                OnParagraphRightClicked.Invoke(seconds, p);
+                            }
+                        }
+                        else
+                        {
+                            if (OnNonParagraphRightClicked != null)
+                            {
+                                OnNonParagraphRightClicked.Invoke(seconds, null);
+                            }
                         }
                     }
                 }
@@ -1002,6 +1014,8 @@ namespace Nikse.SubtitleEdit.Controls
         void WaveForm_MouseWheel(object sender, MouseEventArgs e)
         {
             int delta = e.Delta;
+            if (!MouseWheelScrollUpIsForward)
+                delta = delta * -1;
             if (Locked)
             {
                 OnPositionSelected.Invoke(_currentVideoPositionSeconds + (delta / 256.0), null);
