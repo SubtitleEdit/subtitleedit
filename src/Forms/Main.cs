@@ -7582,10 +7582,13 @@ namespace Nikse.SubtitleEdit.Forms
             newToolStripMenuItem.ShortcutKeys = GetKeys(Configuration.Settings.Shortcuts.MainFileNew);
             openToolStripMenuItem.ShortcutKeys = GetKeys(Configuration.Settings.Shortcuts.MainFileOpen);
             saveToolStripMenuItem.ShortcutKeys = GetKeys(Configuration.Settings.Shortcuts.MainFileSave);
+            saveAsToolStripMenuItem.ShortcutKeys = GetKeys(Configuration.Settings.Shortcuts.MainFileSaveAs);
             findToolStripMenuItem.ShortcutKeys = GetKeys(Configuration.Settings.Shortcuts.MainEditFind);
             findNextToolStripMenuItem.ShortcutKeys = GetKeys(Configuration.Settings.Shortcuts.MainEditFindNext);
             replaceToolStripMenuItem.ShortcutKeys = GetKeys(Configuration.Settings.Shortcuts.MainEditReplace);
             gotoLineNumberToolStripMenuItem.ShortcutKeys = GetKeys(Configuration.Settings.Shortcuts.MainEditGoToLineNumber);
+            showhideVideoToolStripMenuItem.ShortcutKeys = GetKeys(Configuration.Settings.Shortcuts.MainVideoShowHideVideo);
+            toolStripMenuItemAdjustAllTimes.ShortcutKeys = GetKeys(Configuration.Settings.Shortcuts.MainSynchronizationAdjustTimes);
             italicToolStripMenuItem.ShortcutKeys = GetKeys(Configuration.Settings.Shortcuts.MainListViewItalic);
             italicToolStripMenuItem1.ShortcutKeys = GetKeys(Configuration.Settings.Shortcuts.MainTextBoxItalic);
         }
@@ -9269,7 +9272,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void buttonSplitLine_Click(object sender, EventArgs e)
         {
             SplitSelectedParagraph(null);
-        }       
+        }
 
     }
 }

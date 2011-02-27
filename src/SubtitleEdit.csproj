@@ -798,6 +798,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <EmbeddedResource Include="Resources\bg-BG.xml.zip" />
     <None Include="Resources\da-DK.xml">
       <SubType>Designer</SubType>
     </None>
@@ -854,6 +855,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Resources\bg-BG.xml" />
     <Content Include="Resources\fa-IR.xml" />
     <Content Include="Resources\zh-CHS.xml" />
     <None Include="Web References\SeNetworkService\SeService.disco" />

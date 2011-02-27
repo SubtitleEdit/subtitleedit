@@ -386,25 +386,30 @@ namespace Nikse.SubtitleEdit.Logic
         public string MainFileNew { get; set; }
         public string MainFileOpen { get; set; }
         public string MainFileSave { get; set; }
+        public string MainFileSaveAs { get; set; }
         public string MainEditFind { get; set; }
         public string MainEditFindNext { get; set; }
         public string MainEditReplace { get; set; }
         public string MainEditGoToLineNumber { get; set; }
+        public string MainVideoShowHideVideo { get; set; }
+        public string MainSynchronizationAdjustTimes { get; set; }                
         public string MainListViewItalic { get; set; }
-        public string MainTextBoxItalic { get; set; }
-        
+        public string MainTextBoxItalic { get; set; }        
         
         public Shortcuts()
         {
             MainFileNew = "Control+N";
             MainFileOpen = "Control+O";
             MainFileSave = "Control+S";
+            MainFileSaveAs = "Control+Shift+S";
             MainEditFind = "Control+F";
             MainEditFindNext = "F3";
             MainEditReplace = "Control+H";
             MainEditGoToLineNumber = "Control+G";
+            MainVideoShowHideVideo = "Control+Q";
+            MainSynchronizationAdjustTimes = "Control+Shift+A";
             MainListViewItalic = "Control+I";
-            MainTextBoxItalic = "Control+I";
+            MainTextBoxItalic = "Control+I";            
         }
     }
 
@@ -972,6 +977,9 @@ namespace Nikse.SubtitleEdit.Logic
                 subNode = node.SelectSingleNode("MainFileSave");
                 if (subNode != null)
                     settings.Shortcuts.MainFileSave = subNode.InnerText;
+                subNode = node.SelectSingleNode("MainFileSaveAs");
+                if (subNode != null)
+                    settings.Shortcuts.MainFileSaveAs = subNode.InnerText;
                 subNode = node.SelectSingleNode("MainEditFind");
                 if (subNode != null)
                     settings.Shortcuts.MainEditFind = subNode.InnerText;
@@ -984,6 +992,12 @@ namespace Nikse.SubtitleEdit.Logic
                 subNode = node.SelectSingleNode("MainEditGoToLineNumber");
                 if (subNode != null)
                     settings.Shortcuts.MainEditGoToLineNumber = subNode.InnerText;
+                subNode = node.SelectSingleNode("MainVideoShowHideVideo");
+                if (subNode != null)
+                    settings.Shortcuts.MainVideoShowHideVideo = subNode.InnerText;
+                subNode = node.SelectSingleNode("MainSynchronizationAdjustTimes");
+                if (subNode != null)
+                    settings.Shortcuts.MainSynchronizationAdjustTimes = subNode.InnerText;               
                 subNode = node.SelectSingleNode("MainListViewItalic");
                 if (subNode != null)
                     settings.Shortcuts.MainListViewItalic = subNode.InnerText;
@@ -1182,10 +1196,13 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("MainFileNew", settings.Shortcuts.MainFileNew);
             textWriter.WriteElementString("MainFileOpen", settings.Shortcuts.MainFileOpen);
             textWriter.WriteElementString("MainFileSave", settings.Shortcuts.MainFileSave);
+            textWriter.WriteElementString("MainFileSaveAs", settings.Shortcuts.MainFileSaveAs);
             textWriter.WriteElementString("MainEditFind", settings.Shortcuts.MainEditFind);
             textWriter.WriteElementString("MainEditFindNext", settings.Shortcuts.MainEditFindNext);
             textWriter.WriteElementString("MainEditReplace", settings.Shortcuts.MainEditReplace);
             textWriter.WriteElementString("MainEditGoToLineNumber", settings.Shortcuts.MainEditGoToLineNumber);
+            textWriter.WriteElementString("MainVideoShowHideVideo", settings.Shortcuts.MainVideoShowHideVideo);
+            textWriter.WriteElementString("MainSynchronizationAdjustTimes", settings.Shortcuts.MainSynchronizationAdjustTimes);            
             textWriter.WriteElementString("MainListViewItalic", settings.Shortcuts.MainEditGoToLineNumber);
             textWriter.WriteElementString("MainTextBoxItalic", settings.Shortcuts.MainTextBoxItalic);                        
             textWriter.WriteEndElement();
