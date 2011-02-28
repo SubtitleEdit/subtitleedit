@@ -21,6 +21,7 @@ Subtitle Edit Changelog
    * Auto-wrap text while typing (option, thx swedelandster)
    * Video menu will now have a "Choose audio track" if more than one audio track exists
      (only when using VLC as video player)
+   * Bulgarian translation
  * IMPROVED:
    * Main window: Video player will now automatically move up beside subtitle if waveform is
      displayed + some resizing of controls allowed via splitters
@@ -48,6 +49,7 @@ Subtitle Edit Changelog
    * Fixed bug in reading of SSA files (',' was removed) - thx Péter
    * Fixed line breaking bug in mpl format - thx Przemek
    * Fixed shortcuts for adjust commands Ctrl+Space/Shift+Space/F9/F10
+
 
 3.0 (18th November 2010)
  * NEW:

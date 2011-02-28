@@ -18,10 +18,10 @@
 ;* along with Subtitle Edit.  If not, see <http://www.gnu.org/licenses/>.
 
 ; Requirements:
-; Inno Setup QuickStart Pack Unicode v5.4.0(+): http://www.jrsoftware.org/isdl.php#qsp
+; Inno Setup Unicode v5.4.1: http://www.jrsoftware.org/isdl.php
 
 
-#define installer_build_number "11"
+#define installer_build_number "12"
 
 #define VerMajor
 #define VerMinor
@@ -78,7 +78,7 @@ WizardSmallImageFile=Icons\WizardSmallImageFile.bmp
 OutputDir=.
 OutputBaseFilename=SubtitleEdit-{#= simple_app_version}-setup
 AllowNoIcons=yes
-Compression=lzma/ultra
+Compression=lzma2/ultra
 SolidCompression=yes
 EnableDirDoesntExistWarning=no
 DirExistsWarning=auto
@@ -92,6 +92,7 @@ DisableProgramGroupPage=auto
 
 [Languages]
 Name: en; MessagesFile: compiler:Default.isl
+Name: bg; MessagesFile: Languages\Bulgarian.isl
 Name: de; MessagesFile: compiler:Languages\German.isl
 Name: dk; MessagesFile: compiler:Languages\Danish.isl
 Name: es; MessagesFile: compiler:Languages\Spanish.isl

@@ -36,6 +36,20 @@ en.tsk_ResetDictionaries=Reset Dictionaries and delete any custom names
 en.tsk_ResetSettings=Reset Subtitle Edit's settings
 
 
+; Bulgarian
+bg.msg_SetupIsRunningWarning=Subtitle Edit Setup is already running!
+bg.msg_AppIsRunning=Subtitle Edit is running! Please close it before proceeding.
+bg.msg_AskToDownNET=Subtitle Edit requires the .NET Framework 2.0. Please download and install the .NET Framework and run setup again. %n%nDo you want to download the .NET Framework 2.0 now?
+bg.msg_DeleteSettings=Do you also want to delete Subtitle Edit's settings and any custom changes you made in the dictionaries? %n%nIf you plan on reinstalling Subtitle Edit you do not have to delete them.
+bg.run_VisitWebsite=Visit Subtitle Edit's Website
+bg.sm_com_Changelog=Subtitle Edit's Changelog
+bg.tsk_AllUsers=For all users
+bg.tsk_CurrentUser=For the current user only
+bg.tsk_Other=Other:
+bg.tsk_ResetDictionaries=Reset Dictionaries and delete any custom names
+bg.tsk_ResetSettings=Reset Subtitle Edit's settings
+
+
 ; Deutsch
 de.msg_SetupIsRunningWarning=Subtitle Edit Setup läuft bereits!
 de.msg_AppIsRunning=Subtitle Edit läuft! Bitte schließen das Programm, bevor Sie fortfahren.
