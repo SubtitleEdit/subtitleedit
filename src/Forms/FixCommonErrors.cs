@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Globalization;
+using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading;
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.OCR;
-using System.Text;
-using System.Drawing;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -466,6 +465,7 @@ namespace Nikse.SubtitleEdit.Forms
             // overlapping display time             
             for (int i = 1; i < _subtitle.Paragraphs.Count; i++ )
             {
+
                 Paragraph p = _subtitle.Paragraphs[i];
                 Paragraph prev = _subtitle.GetParagraphOrDefault(i - 1);
                 string oldCurrent = p.ToString();
@@ -498,7 +498,8 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         if (AllowFix(i + 1, fixAction))
                         {
-                            p.StartTime.TotalMilliseconds++;
+                            prev.EndTime.TotalMilliseconds-=2;
+                            p.StartTime.TotalMilliseconds = prev.EndTime.TotalMilliseconds+1;
                             _totalFixes++;
                             noOfOverlappingDisplayTimesFixed++;
                             AddFixToListView(p, i + 1, fixAction, oldCurrent, p.ToString());
