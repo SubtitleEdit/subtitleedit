@@ -1,4 +1,4 @@
-﻿<OCRFixReplaceList>
+<OCRFixReplaceList>
   <WholeWords>
     <Word from="/'ve" to="I've" />
     <Word from="\/\/e're" to="We're" />
@@ -784,6 +784,19 @@
     <Word from="Dcbby" to="Dobby" />
     <Word from="Nlr" to="Mr" />
     <Word from="Inconceivablel" to="Inconceivable!" />
+    <Word from="Dcn't" to="Don't" />
+    <Word from="Whc's" to="Who's" />
+    <Word from="myjch" to="my job" />
+    <Word from="ReaHy" to="Really" />
+    <Word from="anyhcdy's" to="anybody's" />
+    <Word from="ycu'd" to="you'd" />
+    <Word from="wcn't" to="won't" />
+    <Word from="slNGING" to="SINGING" />
+    <Word from="lN" to="IN" />
+    <Word from="nilios" to="niños" />
+    <Word from="Voilá" to="Voilà" />
+    <Word from="fulfilment" to="fulfillment" />
+    <Word from="soldierl" to="soldier!" />
   </WholeWords>
   <PartialWords>
     <!-- Will be used to check words not in dictionary -->
@@ -863,10 +876,32 @@
     <LinePart from="won 't" to="won't" />
     <LinePart from="you 've" to="you've" />
     <LinePart from="You 've" to="You've" />
+    <LinePart from="isn' t " to="isn't " />
+    <LinePart from="isn 't " to="isn't " />
+    <LinePart from="Don' t " to="Don't " />
+    <LinePart from="Don 't " to="Don't " />
+    <LinePart from="can' t " to="can't " />
+    <LinePart from="can 't " to="can't " />
+    <LinePart from="couldn 't " to="couldn't " />
+    <LinePart from="couldn' t " to="couldn't " />
+    <LinePart from="didn 't " to="didn't " />
+    <LinePart from="didn' t " to="didn't " />
+    <LinePart from="you 're " to="you're " />
+    <LinePart from="you' re " to="you're " />
+    <LinePart from="you 've " to="you've " />
+    <LinePart from="you' ve " to="you've " />
   </PartialLines>
   <BeginLines>
+    <Beginning from="l... I " to="I... I " />
+    <Beginning from="L... I " to="I... I " />
     <Beginning from="lrn gonna" to="I'm gonna" />
+    <Beginning from="-l don't" to="-I don't" />
+    <Beginning from="l don't" to="I don't" />
     <Beginning from="L " to="I " />
+    <Beginning from="-L " to="-I " />
+    <Beginning from="- L " to="- I " />
+    <Beginning from="-l " to="-I " />
+    <Beginning from="- l " to="- I " />
     <Beginning from="G0" to="Go" />
     <Beginning from="GO get" to="Go get" />
     <Beginning from="GO to" to="Go to" />
