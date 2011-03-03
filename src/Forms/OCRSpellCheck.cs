@@ -92,6 +92,13 @@ namespace Nikse.SubtitleEdit.Forms
 
         private static void HighLightWord(RichTextBox richTextBoxParagraph, string word)
         {
+            bool startApos = false;
+            if (word.StartsWith("'") && word.Length > 1)
+            {
+                startApos = true;
+                word = word.Substring(1);
+            }
+
             Regex regex = Utilities.MakeWordSearchRegex(word);
             Match match = regex.Match(richTextBoxParagraph.Text);
             if (!match.Success)
@@ -99,14 +106,28 @@ namespace Nikse.SubtitleEdit.Forms
                 regex = Utilities.MakeWordSearchRegexWithNumbers(word);
                 match = regex.Match(richTextBoxParagraph.Text);
             }
+
             while (match.Success)
             {
-                richTextBoxParagraph.SelectionStart = match.Index+1;
-                richTextBoxParagraph.SelectionLength = match.Length;
-                while (richTextBoxParagraph.SelectedText != match.Value && richTextBoxParagraph.SelectionStart > 0)
+                if (startApos)
                 {
-                    richTextBoxParagraph.SelectionStart = richTextBoxParagraph.SelectionStart - 1;
+                    richTextBoxParagraph.SelectionStart = match.Index-1;
+                    richTextBoxParagraph.SelectionLength = match.Length+1;
+                    while (richTextBoxParagraph.SelectedText != "'" + match.Value && richTextBoxParagraph.SelectionStart > 0)
+                    {
+                        richTextBoxParagraph.SelectionStart = richTextBoxParagraph.SelectionStart - 1;
+                        richTextBoxParagraph.SelectionLength = match.Length+1;
+                    }
+                }
+                else
+                {
+                    richTextBoxParagraph.SelectionStart = match.Index + 1;
                     richTextBoxParagraph.SelectionLength = match.Length;
+                    while (richTextBoxParagraph.SelectedText != match.Value && richTextBoxParagraph.SelectionStart > 0)
+                    {
+                        richTextBoxParagraph.SelectionStart = richTextBoxParagraph.SelectionStart - 1;
+                        richTextBoxParagraph.SelectionLength = match.Length;
+                    }
                 }
                 richTextBoxParagraph.SelectionColor = Color.Red;
                 match = match.NextMatch();
