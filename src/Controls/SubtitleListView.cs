@@ -53,7 +53,7 @@ namespace Nikse.SubtitleEdit.Controls
         {
             Graphics graphics = parentForm.CreateGraphics();
             SizeF timestampSizeF = graphics.MeasureString("00:00:33,527", Font);
-            int timeStampWidth = (int)(timestampSizeF.Width + 0.5) + 10;
+            int timeStampWidth = (int)(timestampSizeF.Width + 0.5) + 11;
 
             Columns[ColumnIndexStart].Width = timeStampWidth;
             Columns[ColumnIndexEnd].Width = timeStampWidth;

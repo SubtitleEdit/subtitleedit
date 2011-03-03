@@ -70,7 +70,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
 
-            openFileDialog1.Filter = Utilities.GetOpenDialogFiler();
+            openFileDialog1.Filter = Utilities.GetOpenDialogFilter();
         }
 
         public void Initialize(Subtitle subtitle1, string subtitleFileName1, Subtitle subtitle2, string subtitleFileName2)
@@ -87,7 +87,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (string.IsNullOrEmpty(subtitleFileName1))
                 openFileDialog1.InitialDirectory = Path.GetDirectoryName(subtitleFileName1);
-            openFileDialog1.Filter = Utilities.GetOpenDialogFiler();
+            openFileDialog1.Filter = Utilities.GetOpenDialogFilter();
         }
 
 

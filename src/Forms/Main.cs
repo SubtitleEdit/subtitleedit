@@ -984,7 +984,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             openFileDialog1.Title = _languageGeneral.OpenSubtitle;
             openFileDialog1.FileName = string.Empty;
-            openFileDialog1.Filter = Utilities.GetOpenDialogFiler();
+            openFileDialog1.Filter = Utilities.GetOpenDialogFilter();
             if (openFileDialog1.ShowDialog(this) == DialogResult.OK) // sometimes crashes... why??
             {
                 OpenSubtitle(openFileDialog1.FileName, null);
@@ -1025,6 +1025,12 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         ImportAndOcrVobSubSubtitleNew(fileName);
                     }
+                    return;
+                }
+
+                if (Path.GetExtension(fileName).ToLower() == ".sup" && IsBluRaySupFile(fileName))
+                {
+                    ImportAndOcrBluRaySup(fileName);
                     return;
                 }
 
@@ -1601,9 +1607,7 @@ namespace Nikse.SubtitleEdit.Forms
             else
             {
                 _subtitle.MakeHistoryForUndo(string.Format(_language.BeforeConvertingToX, GetCurrentSubtitleFormat().FriendlyName), _oldSubtitleFormat, _fileDateTime);
-
                 _oldSubtitleFormat.RemoveNativeFormatting(_subtitle);
-
                 SaveSubtitleListviewIndexes();
                 SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
                 RestoreSubtitleListviewIndexes();
@@ -2718,7 +2722,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     openFileDialog1.Title = _language.OpenSubtitleToAppend;
                     openFileDialog1.FileName = string.Empty;
-                    openFileDialog1.Filter = Utilities.GetOpenDialogFiler();
+                    openFileDialog1.Filter = Utilities.GetOpenDialogFilter();
                     if (openFileDialog1.ShowDialog(this) == DialogResult.OK)
                     {
                         bool success = false;
@@ -4382,6 +4386,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
+
         private void ButtonUnBreakClick(object sender, EventArgs e)
         {
             textBoxListViewText.Text = Utilities.UnbreakLine(textBoxListViewText.Text);
@@ -4665,7 +4670,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (matroskaSubtitleInfo.CodecId.ToUpper() == "S_HDMV/PGS")
             {
                 MessageBox.Show("Blu-ray subtitles inside Matroska not supported - sorry!");
-                LoadBluRaySubFromMatroska(matroskaSubtitleInfo, fileName);
+                //LoadBluRaySubFromMatroska(matroskaSubtitleInfo, fileName);
                 return;
             }
             else if (matroskaSubtitleInfo.CodecPrivate.ToLower().Contains("[script info]"))
@@ -5033,7 +5038,7 @@ namespace Nikse.SubtitleEdit.Forms
             ReloadFromSourceView();
             openFileDialog1.Title = _language.OpenAnsiSubtitle;
             openFileDialog1.FileName = string.Empty;
-            openFileDialog1.Filter = Utilities.GetOpenDialogFiler();
+            openFileDialog1.Filter = Utilities.GetOpenDialogFilter();
             if (openFileDialog1.ShowDialog(this) == DialogResult.OK)
             {
                 var chooseEncoding = new ChooseEncoding();
@@ -5210,6 +5215,15 @@ namespace Nikse.SubtitleEdit.Forms
                     MessageBox.Show(ex.Message);
             }
             return false;
+        }
+
+        private bool IsBluRaySupFile(string subFileName)
+        { 
+            var buffer = new byte[4];
+            var fs = new FileStream(subFileName, FileMode.Open, FileAccess.Read, FileShare.Read) {Position = 0};
+            fs.Read(buffer, 0, 4);
+            fs.Close();
+            return (buffer[0] == 0x50 && buffer[1] == 0x47); // 80 + 71 - P G                    
         }
 
         private void ImportAndOcrVobSubSubtitleNew(string fileName)
@@ -6304,7 +6318,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             openFileDialog1.Title = _languageGeneral.OpenSubtitle;
             openFileDialog1.FileName = string.Empty;
-            openFileDialog1.Filter = Utilities.GetOpenDialogFiler();
+            openFileDialog1.Filter = Utilities.GetOpenDialogFilter();
             if (openFileDialog1.ShowDialog(this) == DialogResult.OK)
             {
                 Encoding encoding = null;
@@ -6384,7 +6398,7 @@ namespace Nikse.SubtitleEdit.Forms
                 SaveSubtitleListviewIndexes();
                 openFileDialog1.Title = Configuration.Settings.Language.General.OpenOriginalSubtitleFile;
                 openFileDialog1.FileName = string.Empty;
-                openFileDialog1.Filter = Utilities.GetOpenDialogFiler();
+                openFileDialog1.Filter = Utilities.GetOpenDialogFilter();
                 if (!(openFileDialog1.ShowDialog(this) == DialogResult.OK))
                     return;
 
@@ -7591,6 +7605,134 @@ namespace Nikse.SubtitleEdit.Forms
             toolStripMenuItemAdjustAllTimes.ShortcutKeys = GetKeys(Configuration.Settings.Shortcuts.MainSynchronizationAdjustTimes);
             italicToolStripMenuItem.ShortcutKeys = GetKeys(Configuration.Settings.Shortcuts.MainListViewItalic);
             italicToolStripMenuItem1.ShortcutKeys = GetKeys(Configuration.Settings.Shortcuts.MainTextBoxItalic);
+
+            LoadPlugins();
+        }
+
+        //testing PLUGINS!
+        private void LoadPlugins()
+        {
+            string path = Path.Combine(Configuration.BaseDirectory, "Plugins");
+            if (!Directory.Exists(path))
+                return;
+            string[] pluginFiles = Directory.GetFiles(path, "*.DLL");
+
+            int filePluginCount = 0;
+            int toolsPluginCount = 0;
+            int syncPluginCount = 0;
+            foreach (string pluginFileName in pluginFiles)
+            {
+                Type pluginType = null;
+                System.Reflection.Assembly assembly = System.Reflection.Assembly.LoadFile(pluginFileName);
+                string objectName = Path.GetFileNameWithoutExtension(pluginFileName);
+                if (assembly != null)
+                {
+                    try
+                    {
+                        pluginType = assembly.GetType("SubtitleEdit." + objectName);
+                        object pluginObject = Activator.CreateInstance(pluginType);
+                        System.Reflection.PropertyInfo pi = pluginType.GetProperty("Name");
+                        string name = (string)pi.GetValue(pluginObject, null);
+                        pi = pluginType.GetProperty("Version");
+                        string version = (string)pi.GetValue(pluginObject, null);
+                        pi = pluginType.GetProperty("ActionType");
+                        string actionType = (string)pi.GetValue(pluginObject, null);
+                        System.Reflection.MethodInfo mi = pluginType.GetMethod("DoAction");
+
+                        if (!string.IsNullOrEmpty(name) && !string.IsNullOrEmpty(version) && !string.IsNullOrEmpty(actionType) && mi != null)
+                        {
+                            ToolStripMenuItem item = new ToolStripMenuItem();
+                            item.Name = "Plugin" + toolsPluginCount.ToString();
+                            item.Text = name;
+                            item.Tag = pluginFileName;
+
+                            pi = pluginType.GetProperty("ShortCut");
+                            if (pi != null)
+                                item.ShortcutKeys = GetKeys((string)pi.GetValue(pluginObject, null));
+
+                            if (string.Compare(actionType, "File", true) == 0)
+                            {
+                                if (filePluginCount == 0)
+                                    fileToolStripMenuItem.DropDownItems.Insert(fileToolStripMenuItem.DropDownItems.Count - 2, new ToolStripSeparator());
+                                item.Click += PluginToolClick;
+                                fileToolStripMenuItem.DropDownItems.Insert(fileToolStripMenuItem.DropDownItems.Count - 2, item);
+                                filePluginCount++;
+                            }
+                            else if (string.Compare(actionType, "Tool", true) == 0)
+                            {
+                                if (toolsPluginCount == 0)
+                                    toolsToolStripMenuItem.DropDownItems.Add(new ToolStripSeparator());
+                                item.Click += PluginToolClick;
+                                toolsToolStripMenuItem.DropDownItems.Add(item);
+                                toolsPluginCount++;
+                            }
+                            else if (string.Compare(actionType, "Sync", true) == 0)
+                            {
+                                if (syncPluginCount == 0)
+                                    toolStripMenuItemSyncronization.DropDownItems.Add(new ToolStripSeparator());
+                                item.Click += PluginToolClick;
+                                toolStripMenuItemSyncronization.DropDownItems.Add(item);
+                                syncPluginCount++;
+                            }
+                        }
+
+                    }
+                    catch (Exception exception)
+                    {
+                        MessageBox.Show("Error loading plugin:" + pluginFileName + ": " + exception.Message);
+                    }
+                    finally
+                    {
+                        assembly = null;
+                    }
+                }
+            }
+        }
+
+        void PluginToolClick(object sender, EventArgs e)
+        {
+            try
+            {
+                ToolStripItem item = (ToolStripItem) sender;
+                Type pluginType = null;
+                System.Reflection.Assembly assembly = System.Reflection.Assembly.LoadFile(item.Tag.ToString());
+                if (assembly != null)
+                {
+                    string objectName = Path.GetFileNameWithoutExtension(item.Tag.ToString());
+                    pluginType = assembly.GetType("SubtitleEdit." + objectName);
+                    object pluginObject = Activator.CreateInstance(pluginType);
+                    System.Reflection.MethodInfo mi = pluginType.GetMethod("DoAction");
+
+                    System.Reflection.PropertyInfo pi = pluginType.GetProperty("Name");
+                    string name = (string)pi.GetValue(pluginObject, null);
+                    pi = pluginType.GetProperty("Version");
+                    string version = (string)pi.GetValue(pluginObject, null);
+
+
+                    Subtitle temp = new Subtitle(_subtitle);
+                    string text = temp.ToText(new SubRip());
+                    string pluginResult = (string)mi.Invoke(pluginObject, new object[] { this, text, 25.0, _fileName, "", "" });
+
+                    if (!string.IsNullOrEmpty(pluginResult) && pluginResult.Length > 10 && text != pluginResult)
+                    {
+                        _subtitle.MakeHistoryForUndo(string.Format("Before running plugin: {0} {1}", name, version), GetCurrentSubtitleFormat(), _fileDateTime);
+                        string[] lineArray = pluginResult.Split(Environment.NewLine.ToCharArray());
+                        List<string> lines = new List<string>();
+                        foreach (string line in lineArray)
+                            lines.Add(line);
+                        new SubRip().LoadSubtitle(_subtitle, lines, _fileName);
+                        SaveSubtitleListviewIndexes();
+                        SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
+                        RestoreSubtitleListviewIndexes();
+                        ShowSource();
+                        _change = true;
+                    }
+                }
+            }
+            catch (Exception exception)
+            {
+                MessageBox.Show(exception.Message);
+            }
         }
 
         private Keys GetKeys(string keysInString)
@@ -7811,6 +7953,7 @@ namespace Nikse.SubtitleEdit.Forms
                 newParagraph.CalculateTimeCodesFromFrameNumbers(CurrentFrameRate);
             }
             _subtitle.Paragraphs.Insert(index, newParagraph);
+            _change = true;
 
             _subtitleListViewIndex = -1;
             _subtitle.Renumber(startNumber);
@@ -8908,7 +9051,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             openFileDialog1.Title = _languageGeneral.OpenSubtitle;
             openFileDialog1.FileName = string.Empty;
-            openFileDialog1.Filter = Utilities.GetOpenDialogFiler();
+            openFileDialog1.Filter = Utilities.GetOpenDialogFilter();
             if (openFileDialog1.ShowDialog(this) == DialogResult.OK)
             {
                 if (!File.Exists(openFileDialog1.FileName))

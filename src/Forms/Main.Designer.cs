@@ -2819,7 +2819,7 @@
             this.toolStripSeparator11,
             this.toolStripMenuItemWaveFormPlaySelection});
             this.contextMenuStripWaveForm.Name = "contextMenuStripWaveForm";
-            this.contextMenuStripWaveForm.Size = new System.Drawing.Size(183, 142);
+            this.contextMenuStripWaveForm.Size = new System.Drawing.Size(183, 164);
             // 
             // addParagraphHereToolStripMenuItem
             // 

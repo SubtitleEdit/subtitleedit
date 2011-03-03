@@ -1,6 +1,6 @@
 Subtitle Edit Changelog
 
-3.1 (Not released yet)
+3.1 (3rd March 2011)
  * NEW:
    * Collaboration via the internet ("Networking", also has chat)
    * Auto-backup (never, every minute, every 5th minute, or every 15th minute - thx swedelandster)
@@ -21,7 +21,7 @@ Subtitle Edit Changelog
    * Auto-wrap text while typing (option, thx swedelandster)
    * Video menu will now have a "Choose audio track" if more than one audio track exists
      (only when using VLC as video player)
-   * Bulgarian translation
+   * Bulgarian translation (thx Ivo Ivanov)
  * IMPROVED:
    * Main window: Video player will now automatically move up beside subtitle if waveform is
      displayed + some resizing of controls allowed via splitters

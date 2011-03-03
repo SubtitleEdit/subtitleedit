@@ -2042,7 +2042,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void comboBoxDictionaries_SelectedIndexChanged(object sender, EventArgs e)
         {
             Configuration.Settings.General.SpellCheckLanguage = LanguageString;
-            if (_ocrFixEngine != null)
+            if (_ocrFixEngine != null && LanguageString != null)
                 _ocrFixEngine.SpellCheckDictionaryName = LanguageString;
         }
 
