@@ -16,14 +16,14 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
         public override event EventHandler OnVideoEnded;
 
         private QuartzTypeLib.IVideoWindow _quartzVideo;
-        private FilgraphManagerClass _quartzFilgraphManager;
+        private QuartzTypeLib.FilgraphManager _quartzFilgraphManager;
         private IMediaPosition _mediaPosition;
         private bool _isPaused;
         private Control _owner;
         private System.Windows.Forms.Timer _videoEndTimer;
         private BackgroundWorker _videoLoader;
         int _sourceWidth;
-        int _sourceHeight;          
+        int _sourceHeight;
 
         public override string PlayerName { get { return "DirectShow"; } }
 
@@ -37,9 +37,9 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             {
                 try
                 {
-                    return (_quartzFilgraphManager.Volume / 35) + 100;
+                    return ((_quartzFilgraphManager as IBasicAudio).Volume / 35) + 100;
                 }
-                catch 
+                catch
                 {
                     return 0;
                 }
@@ -49,9 +49,9 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                 try
                 {
                     if (value == 0)
-                        _quartzFilgraphManager.Volume = -10000;
+                        (_quartzFilgraphManager as IBasicAudio).Volume = -10000;
                     else
-                        _quartzFilgraphManager.Volume = (value - 100) * 35;
+                        (_quartzFilgraphManager as IBasicAudio).Volume = (value - 100) * 35;
                 }
                 catch
                 {
@@ -61,16 +61,16 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
 
         public override double Duration
         {
-            get { return _quartzFilgraphManager.Duration; }
+            get { return _mediaPosition.Duration; }
         }
 
         public override double CurrentPosition
         {
-            get { return _quartzFilgraphManager.CurrentPosition; }
+            get { return _mediaPosition.CurrentPosition; }
             set
             {
                 if (value >= 0 && value <= Duration)
-                    _quartzFilgraphManager.CurrentPosition = value;
+                    _mediaPosition.CurrentPosition = value;
             }
         }
 
@@ -112,7 +112,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
 
         public override bool IsPlaying
         {
-            get 
+            get
             {
                 return !IsPaused;
             }
@@ -127,22 +127,22 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
 
             VideoFileName = videoFileName;
             _owner = ownerControl;
-            _quartzFilgraphManager = new FilgraphManagerClass();
+            _quartzFilgraphManager = new FilgraphManager();
             _quartzFilgraphManager.RenderFile(VideoFileName);
-            _quartzVideo = _quartzFilgraphManager;
+            _quartzVideo = _quartzFilgraphManager as IVideoWindow;
             _quartzVideo.Owner = (int)ownerControl.Handle;
             _quartzVideo.SetWindowPosition(0, 0, ownerControl.Width, ownerControl.Height);
             _quartzVideo.WindowStyle = wsChild;
             _quartzFilgraphManager.Run();
-            _quartzFilgraphManager.GetVideoSize(out _sourceWidth, out _sourceHeight);
+            (_quartzFilgraphManager as IBasicVideo).GetVideoSize(out _sourceWidth, out _sourceHeight);
             _owner.Resize += OwnerControlResize;
             _mediaPosition = (IMediaPosition)_quartzFilgraphManager;
             if (OnVideoLoaded != null)
             {
                 _videoLoader = new BackgroundWorker();
                 _videoLoader.RunWorkerCompleted += VideoLoaderRunWorkerCompleted;
-                _videoLoader.DoWork += VideoLoaderDoWork; 
-                _videoLoader.RunWorkerAsync();               
+                _videoLoader.DoWork += VideoLoaderDoWork;
+                _videoLoader.RunWorkerAsync();
             }
 
             OwnerControlResize(this, null);
@@ -150,7 +150,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             _videoEndTimer.Tick += VideoEndTimerTick;
             _videoEndTimer.Start();
 
-           _quartzVideo.MessageDrain =  (int)ownerControl.Handle;
+            _quartzVideo.MessageDrain = (int)ownerControl.Handle;
         }
 
         public static VideoInfo GetVideoInfo(string videoFileName)
@@ -159,19 +159,19 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
 
             try
             {
-                var quartzFilgraphManager = new FilgraphManagerClass();
+                var quartzFilgraphManager = new FilgraphManager();
                 quartzFilgraphManager.RenderFile(videoFileName);
                 int width;
                 int height;
-                quartzFilgraphManager.GetVideoSize(out width, out height);
+                (quartzFilgraphManager as IBasicVideo).GetVideoSize(out width, out height);
 
                 info.Width = width;
-                info.Height = height;      
-                if (quartzFilgraphManager.AvgTimePerFrame > 0)
-                    info.FramesPerSecond = 1 / quartzFilgraphManager.AvgTimePerFrame;
+                info.Height = height;
+                if ((quartzFilgraphManager as IBasicVideo2).AvgTimePerFrame > 0)
+                    info.FramesPerSecond = 1 / (quartzFilgraphManager as IBasicVideo2).AvgTimePerFrame;
                 info.Success = true;
-                info.TotalMilliseconds = quartzFilgraphManager.Duration * 1000;
-                info.TotalSeconds = quartzFilgraphManager.Duration;
+                info.TotalMilliseconds = (quartzFilgraphManager as IMediaPosition).Duration * 1000;
+                info.TotalSeconds = (quartzFilgraphManager as IMediaPosition).Duration;
                 info.TotalFrames = info.TotalSeconds * info.FramesPerSecond;
                 info.VideoCodec = string.Empty; // TODO... get real codec names from quartzFilgraphManager.FilterCollection;
 
@@ -204,7 +204,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                     OnVideoLoaded.Invoke(_quartzFilgraphManager, new EventArgs());
                 }
                 catch
-                { 
+                {
                 }
             }
             _videoEndTimer = null;
