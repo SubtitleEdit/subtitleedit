@@ -1055,6 +1055,7 @@
   <PropertyGroup>
     <PostBuildEvent>COPY /Y /V "$(ProjectDir)Dlls\Hunspellx86.dll" "$(TargetDir)"
 COPY /Y /V "$(ProjectDir)Dlls\Hunspellx64.dll" "$(TargetDir)"
+COPY /Y /V "$(ProjectDir)Dlls\Interop.QuartzTypeLib.dll" "$(TargetDir)"
 </PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
