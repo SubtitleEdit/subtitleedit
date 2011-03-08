@@ -804,6 +804,7 @@
     </None>
     <EmbeddedResource Include="Resources\fr-FR.xml.zip" />
     <EmbeddedResource Include="Resources\OpenOfficeDictionaries.xml.zip" />
+    <EmbeddedResource Include="Resources\it-IT.xml.zip" />
     <None Include="Resources\pl-PL.xml">
       <SubType>Designer</SubType>
     </None>
