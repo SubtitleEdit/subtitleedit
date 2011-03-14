@@ -12,17 +12,17 @@ IF NOT DEFINED VS100COMNTOOLS (
 IF "%~1" == "" (
   SET "BUILDTYPE=Build"
 ) ELSE (
-  IF /I "%~1" == "Build" SET "BUILDTYPE=Build" & GOTO START
-  IF /I "%~1" == "/Build" SET "BUILDTYPE=Build" & GOTO START
-  IF /I "%~1" == "-Build" SET "BUILDTYPE=Build" & GOTO START
-  IF /I "%~1" == "--Build" SET "BUILDTYPE=Build" & GOTO START
-  IF /I "%~1" == "Clean" SET "BUILDTYPE=Clean" & GOTO START
-  IF /I "%~1" == "/Clean" SET "BUILDTYPE=Clean" & GOTO START
-  IF /I "%~1" == "-Clean" SET "BUILDTYPE=Clean" & GOTO START
-  IF /I "%~1" == "--Clean" SET "BUILDTYPE=Clean" & GOTO START
-  IF /I "%~1" == "Rebuild" SET "BUILDTYPE=Rebuild" & GOTO START
-  IF /I "%~1" == "/Rebuild" SET "BUILDTYPE=Rebuild" & GOTO START
-  IF /I "%~1" == "-Rebuild" SET "BUILDTYPE=Rebuild" & GOTO START
+  IF /I "%~1" == "Build"     SET "BUILDTYPE=Build"   & GOTO START
+  IF /I "%~1" == "/Build"    SET "BUILDTYPE=Build"   & GOTO START
+  IF /I "%~1" == "-Build"    SET "BUILDTYPE=Build"   & GOTO START
+  IF /I "%~1" == "--Build"   SET "BUILDTYPE=Build"   & GOTO START
+  IF /I "%~1" == "Clean"     SET "BUILDTYPE=Clean"   & GOTO START
+  IF /I "%~1" == "/Clean"    SET "BUILDTYPE=Clean"   & GOTO START
+  IF /I "%~1" == "-Clean"    SET "BUILDTYPE=Clean"   & GOTO START
+  IF /I "%~1" == "--Clean"   SET "BUILDTYPE=Clean"   & GOTO START
+  IF /I "%~1" == "Rebuild"   SET "BUILDTYPE=Rebuild" & GOTO START
+  IF /I "%~1" == "/Rebuild"  SET "BUILDTYPE=Rebuild" & GOTO START
+  IF /I "%~1" == "-Rebuild"  SET "BUILDTYPE=Rebuild" & GOTO START
   IF /I "%~1" == "--Rebuild" SET "BUILDTYPE=Rebuild" & GOTO START
 
   ECHO. & ECHO Unsupported commandline switch!
