@@ -16,6 +16,7 @@ Aggiornamento alla v.3.1 di Marco A. (Pisa)</TranslatedBy>
     <VideoFiles>File video</VideoFiles>
     <OpenSubtitle>Apri sottotitoli...</OpenSubtitle>
     <OpenVideoFile>Apri file video...</OpenVideoFile>
+    <OpenVideoFileTitle>Apri file video...</OpenVideoFileTitle>
     <NoVideoLoaded>Video non caricato</NoVideoLoaded>
     <VideoInformation>Informazioni video</VideoInformation>
     <PositionX>Posizione / durata: {0}</PositionX>
@@ -39,6 +40,7 @@ Aggiornamento alla v.3.1 di Marco A. (Pisa)</TranslatedBy>
     <SingleLineLengths>Lunghezze delle singole linee:  </SingleLineLengths>
     <TotalLengthX>Lunghezza totale: {0}</TotalLengthX>
     <TotalLengthXSplitLine>Lunghezza totale: {0} (dividi linea!)</TotalLengthXSplitLine>
+    <SplitLine>Dividi linea!</SplitLine>
     <NotAvailable>N/D</NotAvailable>
     <OverlapPreviousLineX>Sovrapposizione linea prec. 
 ({0:#,##0.###})</OverlapPreviousLineX>
@@ -53,13 +55,14 @@ Aggiornamento alla v.3.1 di Marco A. (Pisa)</TranslatedBy>
     <PleaseWait>Attendere prego...</PleaseWait>
     <SessionKey>Chiave di sessione</SessionKey>
     <UserName>Nome utente</UserName>
+    <UserNameAlreadyInUse>Nome utente già in uso</UserNameAlreadyInUse>
     <WebServiceUrl>Url servizio web</WebServiceUrl>
     <IP>IP</IP>
   </General>
   <About>
     <Title>A proposito di Subtitle Edit</Title>
     <AboutText1>Subtitle Edit è un software free sotto la GNU Public License. 
-Può essere distribuirlo, modificato e utilizzato liberamente.
+Può essere distribuito, modificato e utilizzato liberamente.
 
 Il codice sorgente C# è disponibile su http://code.google.com/p/subtitleedit
 
@@ -74,9 +77,9 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Description>Aggiunge il nome all'elenco dei nomi/ecc (MAIUSCOLE/minuscole)</Description>
   </AddToNames>
   <AddWaveForm>
-    <Title>Genera modulo dati a forma di onda audio</Title>
+    <Title>Genera modulo dati audio</Title>
     <SourceVideoFile>File Sorgente Video:</SourceVideoFile>
-    <GenerateWaveFormData>Genera modulo dati a forma di onda audio</GenerateWaveFormData>
+    <GenerateWaveFormData>Genera modulo dati audio</GenerateWaveFormData>
     <PleaseWait>Questa operazione potrebbe richiedere alcuni minuti - si prega di attendere</PleaseWait>
     <VlcMediaPlayerNotFoundTitle>VLC Media Player non rilevato</VlcMediaPlayerNotFoundTitle>
     <VlcMediaPlayerNotFound>Per modificare il sottotitolo è necessario VLC media player 1.1.x o successiva per l'estrazione dei dati audio.</VlcMediaPlayerNotFound>
@@ -103,8 +106,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Before>Prima</Before>
     <After>Dopo</After>
     <LinesFoundX>Linee trovate: {0}</LinesFoundX>
-    <OnlyBreakLinesLongerThan>Interrompi solo le linee più lughe</OnlyBreakLinesLongerThan>
-    <OnlyUnbreakLinesShorterThan>Non interrompere le linee più corte</OnlyUnbreakLinesShorterThan>
+    <OnlyBreakLinesLongerThan>A capo solo le linee più lughe</OnlyBreakLinesLongerThan>
+    <OnlyUnbreakLinesShorterThan>Non a capo le linee più corte</OnlyUnbreakLinesShorterThan>
   </AutoBreakUnbreakLines>
   <ChangeCasing>
     <Title>Modifica MAIUSCOLE e minuscole</Title>
@@ -170,7 +173,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Ntsc>NTSC (30fps)</Ntsc>
     <StartRipping>Avvia ripping</StartRipping>
     <Abort>Annulla</Abort>
-    <AbortedByUser>Interrotto dall'utente</AbortedByUser>
+    <AbortedByUser>Annullato dall'utente</AbortedByUser>
     <ReadingSubtitleData>Lettura dati sottotitoli...</ReadingSubtitleData>
     <RippingVobFileXofYZ>Ripping file vob {1} di {2}: {0}</RippingVobFileXofYZ>
     <WrongIfoType>Il tipo di IFO è '{0}' e non 'DVDVIDEO-VTS'.{1}Prova con un altro file di {2}</WrongIfoType>
@@ -233,8 +236,9 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <RemoveUnneededSpaces>Rimuovi gli spazi non necessari</RemoveUnneededSpaces>
     <RemoveUnneededPeriods>Rimuovi i punti non necessari</RemoveUnneededPeriods>
     <FixMissingSpaces>Aggiungi gli spazi mancanti</FixMissingSpaces>
-    <BreakLongLines>Interrompi linee lunghe</BreakLongLines>
+    <BreakLongLines>A capo linee lunghe</BreakLongLines>
     <RemoveLineBreaks>Rimuovere A capo nei paragrafi brevi formati da una sola frase</RemoveLineBreaks>
+    <RemoveLineBreaksAll>Rimuovere A capo nei paragrafi brevi (tutti tranne i dialoghi)</RemoveLineBreaksAll>
     <FixUppercaseIInsindeLowercaseWords>Correggi le 'i' MAIUSCOLE all'interno di parole minuscole (errore OCR)</FixUppercaseIInsindeLowercaseWords>
     <FixDoubleApostrophes>Sostituisci i doppi apici (' ') con le virgolette (")</FixDoubleApostrophes>
     <AddPeriods>Aggiungi il punto se la linea successiva inizia in MAIUSCOLO</AddPeriods>
@@ -265,10 +269,11 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <ContinueAnyway>Continuare comunque?</ContinueAnyway>
     <UncheckedFixLowercaseIToUppercaseI>Deselezionata la voce "Sostituisci le 'i' minuscole singole con 'I' MAIUSCOLE (Inglese)"</UncheckedFixLowercaseIToUppercaseI>
     <XIsChangedToUppercase>{0} lettere cambiate in MAIUSCOLO</XIsChangedToUppercase>
-    <FixFirstLetterToUppercaseAfterParagraph>Correggi la prima lettera in maiuscolo dopo il punto</FixFirstLetterToUppercaseAfterParagraph>
-    <MergeShortLine>Unisci una linea corta</MergeShortLine>
+    <FixFirstLetterToUppercaseAfterParagraph>Correggi la prima lettera in Maiuscolo dopo il punto</FixFirstLetterToUppercaseAfterParagraph>
+    <MergeShortLine>Unisci una linea corta (singola frase)</MergeShortLine>
+    <MergeShortLineAll>Unisci una linea corta (tutto tranne i dialoghi)</MergeShortLineAll>
     <XLineBreaksAdded>{0} interruzioni di linea aggiunte</XLineBreaksAdded>
-    <BreakLongLine>Interrompi una linea lungha</BreakLongLine>
+    <BreakLongLine>A capo questa linea lunga</BreakLongLine>
     <FixLongDisplayTime>Correggi il tempo di visualizzazione lungo</FixLongDisplayTime>
     <FixInvalidItalicTag>Correggi il marcatore di corsivo non valido</FixInvalidItalicTag>
     <FixShortDisplayTime>Correggi il tempo di visualizzazione corto</FixShortDisplayTime>
@@ -279,8 +284,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FixMissingSpacesExample>Hey.Tu. -&gt; Hey. Tu.</FixMissingSpacesExample>
     <FixUppercaseIInsindeLowercaseWordsExample>Molto bene. -&gt; Molto bene.</FixUppercaseIInsindeLowercaseWordsExample>
     <FixLowercaseIToUppercaseIExample>Che vuoi che m'interessi. -&gt; Che vuoi che m'interessi.</FixLowercaseIToUppercaseIExample>
-    <StartTimeLaterThanEndTime>Sottotitolo Nº {0}: L'ora di inizio è oltre l'ora fine: {4}{1} --&gt; {2} {3}</StartTimeLaterThanEndTime>
-    <UnableToFixStartTimeLaterThanEndTime>Impossibile correggere il sottotitolo Nº {0}: L'ora di inizio è superiore all'ora fine: {1}</UnableToFixStartTimeLaterThanEndTime>
+    <StartTimeLaterThanEndTime>Sottotitolo Nº {0}: L'ora di inizio è successivo all'ora fine: {4}{1} --&gt; {2} {3}</StartTimeLaterThanEndTime>
+    <UnableToFixStartTimeLaterThanEndTime>Impossibile correggere il sottotitolo Nº {0}: L'ora di inizio è successivo all'ora fine: {1}</UnableToFixStartTimeLaterThanEndTime>
     <XFixedToYZ>{0} corretto in: {1}{2}</XFixedToYZ>
     <UnableToFixTextXY>Impossibile correggere il sottotitolo Nº {0}: {1}</UnableToFixTextXY>
     <XOverlappingTimestampsFixed>{0} Sovrapposizione di orari corrette</XOverlappingTimestampsFixed>
@@ -307,7 +312,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FixDoubleGreaterThan>Rimuovi &gt;&gt; </FixDoubleGreaterThan>
     <FixEllipsesStart>Rimuovi '...' iniziali</FixEllipsesStart>
     <FixMissingOpenBracket>Correggi [ perse </FixMissingOpenBracket>
-    <FixMusicNotation>Sostituisci i simboli musicali (e.g. âTª) con il simbolo preferito</FixMusicNotation>
+    <FixMusicNotation>Sostituisci i simboli musicali (es. âTª) con il simbolo preferito</FixMusicNotation>
     <FixDoubleDashs>Correggi '--'s -&gt; '...'s </FixDoubleDashs>
     <FixDoubleGreaterThans>Rimuovi &gt;&gt; iniziali</FixDoubleGreaterThans>
     <FixEllipsesStarts>Rimuovi ... iniziali</FixEllipsesStarts>
@@ -324,6 +329,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FixMissingOpenBracketExample>'clanks] Look out!' --&gt; '[clanks] Look out!'</FixMissingOpenBracketExample>
     <FixMusicNotationExample>'âTª sweet dreams are' --&gt; '♫ sweet dreams are'</FixMusicNotationExample>
     <NumberOfImportantLogMessages>{0} messaggio di log importante!</NumberOfImportantLogMessages>
+    <FixedOkXY>Correggi e OK - '{0}': {1}</FixedOkXY>
   </FixCommonErrors>
   <GetDictionaries>
     <Title>Hai bisogno di dizionari?</Title>
@@ -342,7 +348,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <From>Da:</From>
     <To>A:</To>
     <Translate>Traduci</Translate>
-    <PleaseWait>Si prega di attendere... potrebbe essere necessario un po di tempo</PleaseWait>
+    <PleaseWait>Si prega di attendere... potrebbe essere necessario qualche minuto</PleaseWait>
     <PoweredByGoogleTranslate>con Google translate</PoweredByGoogleTranslate>
     <PoweredByMicrosoftTranslate>con Microsoft translate</PoweredByMicrosoftTranslate>
   </GoogleTranslate>
@@ -357,9 +363,9 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Splitting>Divisione</Splitting>
     <AutoSplitText>Dividi automaticamente il testo</AutoSplitText>
     <OneLineIsOneSubtitle>Un sottotitolo ogni linea</OneLineIsOneSubtitle>
-    <MergeShortLines>Unisci linee corte di un paragrafo</MergeShortLines>
+    <MergeShortLines>Unisci le linee corte di un paragrafo</MergeShortLines>
     <RemoveEmptyLines>Rimuovi le linee vuote</RemoveEmptyLines>
-    <RemoveLinesWithoutLetters>Rimuovi linee senza lettere</RemoveLinesWithoutLetters>
+    <RemoveLinesWithoutLetters>Rimuovi le linee senza lettere</RemoveLinesWithoutLetters>
     <GapBetweenSubtitles>Intervallo tra sottotitoli (millesecondi)</GapBetweenSubtitles>
     <Auto>Auto</Auto>
     <Fixed>Correggi</Fixed>
@@ -368,6 +374,9 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <TextFiles>File di testo</TextFiles>
     <PreviewLinesModifiedX>Anteprima - paragrafi modificati: {0}</PreviewLinesModifiedX>
   </ImportText>
+  <Interjections>
+    <Title>Interiezioni</Title>
+  </Interjections>
   <Main>
     <Menu>
       <File>
@@ -394,8 +403,6 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
       <Edit>
         <Title>Modifica</Title>
         <ShowUndoHistory>Cronologia (per annullamento modifiche)</ShowUndoHistory>
-        <ShowOriginalText>Mostra il testo originale (modo traduttore)</ShowOriginalText>
-        <HideOriginalText>Nascondi il testo originale</HideOriginalText>
         <InsertUnicodeSymbol>Inserisci simbolo unicode</InsertUnicodeSymbol>
         <Find>&amp;Trova</Find>
         <FindNext>Trova &amp;successivo</FindNext>
@@ -429,8 +436,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <CloseVideo>Chiudi file video</CloseVideo>
         <ShowHideVideo>Mostra/nascondi finestra video</ShowHideVideo>
         <ShowHideWaveForm>Mostra/nascondi finestra forma audio</ShowHideWaveForm>
-        <UnDockVideoControls>Libera i controlli video</UnDockVideoControls>
-        <ReDockVideoControls>Riposiziona i controlli video</ReDockVideoControls>
+        <UnDockVideoControls>Libera i controlli audio/video</UnDockVideoControls>
+        <ReDockVideoControls>Riposiziona i controlli audio/video</ReDockVideoControls>
       </Video>
       <SpellCheck>
         <Title>Controllo ortografico</Title>
@@ -480,7 +487,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <SpellCheck>Controllo ortografico</SpellCheck>
         <Settings>Impostazioni</Settings>
         <Help>Aiuto</Help>
-        <ShowHideWaveForm>Mostra/nascondi finestra forma audio</ShowHideWaveForm>
+        <ShowHideWaveForm>Mostra/nascondi finestra dati audio</ShowHideWaveForm>
         <ShowHideVideo>Mostra/nascondi finestra video</ShowHideVideo>
       </ToolBar>
       <ContextMenu>
@@ -489,6 +496,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <Paste>Incolla</Paste>
         <Delete>Elimina</Delete>
         <SelectAll>Seleziona tutto</SelectAll>
+        <InsertFirstLine>Inserisci un sottotitolo</InsertFirstLine>
         <InsertBefore>Inserisci un nuovo sottotitolo prima</InsertBefore>
         <InsertAfter>Inserisci un nuovo sottotitolo dopo</InsertAfter>
         <InsertSubtitleAfter>Inserisci il sottotitolo dopo questa linea...</InsertSubtitleAfter>
@@ -499,9 +507,9 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <Normal>Normale</Normal>
         <Underline>Sottolineato</Underline>
         <Color>Colore...</Color>
-        <FontName>Carattere del Nome...</FontName>
+        <FontName>Carattere del nome...</FontName>
         <AutoBalanceSelectedLines>Auto bilancia le linee selezionate...</AutoBalanceSelectedLines>
-        <RemoveLineBreaksFromSelectedLines>Rimuovi interruzioni di linea dalle linee selezionate...</RemoveLineBreaksFromSelectedLines>
+        <RemoveLineBreaksFromSelectedLines>Rimuovi A capo dalle linee selezionate...</RemoveLineBreaksFromSelectedLines>
         <TypewriterEffect>Effetto macchina da scrivere...</TypewriterEffect>
         <KaraokeEffect>Effetto karaoke...</KaraokeEffect>
         <ShowSelectedLinesEarlierLater>Mostra linee selezionate prima/dopo...</ShowSelectedLinesEarlierLater>
@@ -521,7 +529,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
       <Previous>&lt; Prec</Previous>
       <Next>Succ &gt;</Next>
       <AutoBreak>A capo</AutoBreak>
-      <Unbreak>Indietro</Unbreak>
+      <Unbreak>Ri-unisci</Unbreak>
     </Controls>
     <VideoControls>
       <Translate>Traduci</Translate>
@@ -593,6 +601,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FileIsEmptyOrShort>Il file è vuoto o troppo breve!</FileIsEmptyOrShort>
     <FileNotFound>File non trovato: {0}</FileNotFound>
     <SavedSubtitleX>Sottotitolo salvato {0}</SavedSubtitleX>
+    <SavedOriginalSubtitleX>Sottotitolo originale salvato {0}</SavedOriginalSubtitleX>
     <FileOnDiskModified>Il file su disco è stato modificato</FileOnDiskModified>
     <OverwriteModifiedFile>Sovrascrivi il file {0} modificato in {1} {2}{3} con l'attuale file caricato da disco a {4} {5}?</OverwriteModifiedFile>
     <UnableToSaveSubtitleX>Impossibile salvare il file dei sottotitoli {0}</UnableToSaveSubtitleX>
@@ -610,7 +619,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FindContinueTitle>Continuo a cercare?</FindContinueTitle>
     <XFoundAtLineNumberY>'{0}' trovati alla linea numero {1}</XFoundAtLineNumberY>
     <XNotFound>'{0}' non trovato</XNotFound>
-    <BeforeReplace>Prima di sostituisci: {0}</BeforeReplace>
+    <BeforeReplace>Prima di sostituire: {0}</BeforeReplace>
     <MatchFoundX>Corrispondenze trovate: {0}</MatchFoundX>
     <NoMatchFoundX>Non corrispondenze trovate: {0}</NoMatchFoundX>
     <FoundNothingToReplace>Non è stato trovato nulla da sostituire</FoundNothingToReplace>
@@ -624,6 +633,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <SelectedLines>Sottotitoli selezionati</SelectedLines>
     <BeforeDisplayTimeAdjustment>Prima regola il tempo di visualizzazione</BeforeDisplayTimeAdjustment>
     <DisplayTimeAdjustedX>Tempo di visualizzazione corretto: {0}</DisplayTimeAdjustedX>
+    <DisplayTimesAdjustedX>Tempi di visualizzazione corretti: {0}</DisplayTimesAdjustedX>
+    <StarTimeAdjustedX>Tempo di inizio corretto: {0}</StarTimeAdjustedX>
     <BeforeCommonErrorFixes>Prima correggi gli errori comuni</BeforeCommonErrorFixes>
     <CommonErrorsFixedInSelectedLines>Corretto errori comuni nelle linee selezionate</CommonErrorsFixedInSelectedLines>
     <CommonErrorsFixed>Corretti errori comuni</CommonErrorsFixed>
@@ -644,7 +655,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <GoogleTranslate>Google translate</GoogleTranslate>
     <MicrosoftTranslate>Microsoft translate</MicrosoftTranslate>
     <BeforeGoogleTranslation>Prima di Google translation</BeforeGoogleTranslation>
-    <SelectedLinesTranslated>Seleziona il msottotitolo da tradurre</SelectedLinesTranslated>
+    <SelectedLinesTranslated>Seleziona il sottotitolo da tradurre</SelectedLinesTranslated>
     <SubtitleTranslated>Sottotitolo tradotto</SubtitleTranslated>
     <TranslateSwedishToDanish>Traduce i sottotitoli attuali dallo Svedese a Danese</TranslateSwedishToDanish>
     <TranslateSwedishToDanishWarning>Tradurre i sottotitoli SVEDESI attuali (si è sicuri che sia Svedese?) in Danese?</TranslateSwedishToDanishWarning>
@@ -653,8 +664,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <TranslationFromSwedishToDanishComplete>Traduzione da Svedese a Danese completata</TranslationFromSwedishToDanishComplete>
     <TranslationFromSwedishToDanishFailed>Traduzione da Svedese a Danese non riuscita</TranslationFromSwedishToDanishFailed>
     <BeforeUndo>Prima di Annulla Modifiche</BeforeUndo>
-    <BeforeUndo>Annullo eseguito</BeforeUndo>
-    <UndoPerformed>Annulla Modifiche completato</UndoPerformed>
+    <UndoPerformed>Annullo Modifiche completato</UndoPerformed>
     <NothingToUndo>Niente da annullare</NothingToUndo>
     <InvalidLanguageNameX>Nome della lingua non valido: {0}</InvalidLanguageNameX>
     <UnableToChangeLanguage>Impossibile cambiare la lingua!</UnableToChangeLanguage>
@@ -702,9 +712,9 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <BeforeChangeCasing>Prima di modificare MAIUSCOLE e minusole</BeforeChangeCasing>
     <CasingCompleteMessageNoNames>Numero di linee con Maiusc. e minusc. modificate: {0}/{1}</CasingCompleteMessageNoNames>
     <CasingCompleteMessageOnlyNames>Numero di linee con MAIUSCOLE e minuscole dei nomi modificati: {0}/{1}</CasingCompleteMessageOnlyNames>
-    <CasingCompleteMessage>Numero di linee con Maiusc. e minusc. modificate: {0}/{1}, changed casing for names: {2}</CasingCompleteMessage>
+    <CasingCompleteMessage>Numero di linee con Maiusc. e minusc. modificate: {0}/{1}, per i nomi Maiusc. e minusc. modificate: {2}</CasingCompleteMessage>
     <BeforeChangeFrameRate>Prima di modificare Vel. fotogramma</BeforeChangeFrameRate>
-    <FrameRateChangedFromXToY>Vel. fotogramma modificata da {0} a {1}</FrameRateChangedFromXToY>
+    <FrameRateChangedFromXToY>Vel. fotogramma modificato da {0} a {1}</FrameRateChangedFromXToY>
     <IdxFileNotFoundWarning>{0} non trovato! Importare comunque il file VobSub?</IdxFileNotFoundWarning>
     <InvalidVobSubHeader>Intestazione del file VobSub non valida: {0}</InvalidVobSubHeader>
     <OpenVobSubFile>Apri sottotitoli VobSub (sub/idx)...</OpenVobSubFile>
@@ -744,17 +754,21 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <BeforeSetStartTimeAndOffsetTheRest>Prima definisci l'ora di inizio e di compensare il resto</BeforeSetStartTimeAndOffsetTheRest>
     <ContinueWithCurrentSpellCheck>Continuare con il controllo ortografico corrente?</ContinueWithCurrentSpellCheck>
     <CharactersPerSecond>Caratteri/sec: {0:0.00}</CharactersPerSecond>
-    <GetFrameRateFromVideoFile>Ottieni vel. fotogramma da file video</GetFrameRateFromVideoFile>
+    <GetFrameRateFromVideoFile>Ottieni vel. fotogramma dal file video</GetFrameRateFromVideoFile>
     <NetworkMessage>Nuovo messaggio: {0} ({1}): {2}</NetworkMessage>
-    <NetworkUpdate>Linea aggiornata: {0} ({1}): Index={2}, Text={3}</NetworkUpdate>
-    <NetworkInsert>Linea inserita: {0} ({1}): Index={2}, Text={3}</NetworkInsert>
-    <NetworkDelete>Linea eliminata: {0} ({1}): Index={2}</NetworkDelete>
+    <NetworkUpdate>Linea aggiornata: {0} ({1}): Indice={2}, Testo={3}</NetworkUpdate>
+    <NetworkInsert>Linea inserita: {0} ({1}): Indice={2}, Testo={3}</NetworkInsert>
+    <NetworkDelete>Linea eliminata: {0} ({1}): Indice={2}</NetworkDelete>
     <NetworkNewUser>Nuovo utente: {0} ({1})</NetworkNewUser>
     <NetworkByeUser>Bye {0} ({1})</NetworkByeUser>
     <NetworkUnableToConnectToServer>Impossibile connettersi al server: {0}</NetworkUnableToConnectToServer>
     <UserAndAction>Utente/azione</UserAndAction>
-    <NetworkMode>Networking mode</NetworkMode>
+    <NetworkMode>Modalità di trasmissione</NetworkMode>
     <XStartedSessionYAtZ>{0}: Sessione iniziata {1} a {2}</XStartedSessionYAtZ>
+    <SpellChekingViaWordXLineYOfX>Il controllo ortografico utilizza Word {0} - linea {1} / {2}</SpellChekingViaWordXLineYOfX>
+    <UnableToStartWord>Impossibile avviare Microsoft Word</UnableToStartWord>
+    <SpellCheckAbortedXCorrections>Controllo ortografico annullato. {0} linee erano state modificate.</SpellCheckAbortedXCorrections>
+    <SpellCheckCompletedXCorrections>Controllo ortografico completato. {0} linee sono state modificate.</SpellCheckCompletedXCorrections>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Scegli sottotitoli da file Matroska</Title>
@@ -825,6 +839,8 @@ i file dei sottotitoli (collaborazione)
     <After>Dopo</After>
     <LinesFoundX>Linee trovate: {0}</LinesFoundX>
     <RemoveTextIfContains>Rimuovi il testo se contiene:</RemoveTextIfContains>
+    <RemoveInterjections>Rimuovi interiezioni (shh, hmm, ecc.)</RemoveInterjections>
+    <EditInterjections>Modifica...</EditInterjections>
   </RemoveTextFromHearImpaired>
   <ReplaceDialog>
     <Title>Sostituisci</Title>
@@ -872,14 +888,15 @@ i file dei sottotitoli (collaborazione)
     <SpellCheck>C. ortogr.</SpellCheck>
     <SettingsName>Impostazioni</SettingsName>
     <Help>Aiuto</Help>
-    <Miscellaneous>Varie</Miscellaneous>
     <ShowFrameRate>Mostra fotogramma nella barra degli strumenti</ShowFrameRate>
     <DefaultFrameRate>Vel. fotogramma predefinito</DefaultFrameRate>
     <DefaultFileEncoding>Codifica di pagina predefinita</DefaultFileEncoding>
     <AutoDetectAnsiEncoding>Identifica autom. la codifica ANSI</AutoDetectAnsiEncoding>
     <SubtitleLineMaximumLength>Massima lunghezza sottotitilo</SubtitleLineMaximumLength>
+    <AutoWrapWhileTyping>A capo automatico durante la digitazione</AutoWrapWhileTyping>
     <SubtitleFont>Carattere sottotitolo</SubtitleFont>
     <SubtitleFontSize>Dimensione carattere sottotitolo</SubtitleFontSize>
+    <SubtitleBold>Grassetto</SubtitleBold>
     <SubtitleFontColor>Colore carattere sottotitolo</SubtitleFontColor>
     <SubtitleBackgroundColor>Colore di sfondo sottotitolo</SubtitleBackgroundColor>
     <SpellChecker>Correttore ortografico</SpellChecker>
@@ -895,7 +912,7 @@ i file dei sottotitoli (collaborazione)
     <MainListViewVideoGoToPositionAndPause>Vai alla posizione video e metti in pausa</MainListViewVideoGoToPositionAndPause>
     <MainListViewVideoGoToPositionAndPlay>Vai alla posizione video e riproduci</MainListViewVideoGoToPositionAndPlay>
     <MainListViewEditText>Sposta il cursore sulla finestra di traduzione</MainListViewEditText>
-    <AutoBackup>Backup-Automatico</AutoBackup>
+    <AutoBackup>Backup-automatico</AutoBackup>
     <AutoBackupEveryMinute>Ogni minuto</AutoBackupEveryMinute>
     <AutoBackupEveryFiveMinutes>Ogni 5 minuti</AutoBackupEveryFiveMinutes>
     <AutoBackupEveryFifteenMinutes>Ogni 15 minuti</AutoBackupEveryFifteenMinutes>
@@ -914,7 +931,7 @@ i file dei sottotitoli (collaborazione)
     <VolumeNotes>0 volume al minimo (muto), 100 volume al massimo</VolumeNotes>
     <MainWindowVideoControls>Finestra principale controlli video</MainWindowVideoControls>
     <CustomSearchTextAndUrl>Ricerca testo e url personalizzati</CustomSearchTextAndUrl>
-    <WaveFormAppearance>Aspetto del formato onda audio</WaveFormAppearance>
+    <WaveFormAppearance>Aspetto del formato audio</WaveFormAppearance>
     <WaveFormGridColor>Colore griglia</WaveFormGridColor>
     <WaveFormShowGridLines>Mostra griglia</WaveFormShowGridLines>
     <WaveFormColor>Colore</WaveFormColor>
@@ -1035,7 +1052,8 @@ i file dei sottotitoli (collaborazione)
     <SetSyncPoint>Imposta punto sinc.</SetSyncPoint>
     <RemoveSyncPoint>Rimuovi punto di sinc.</RemoveSyncPoint>
     <SyncPointsX>Punti di sincronizzazione: {0}</SyncPointsX>
-    <Description>La sincronizzazione per punti richiede almeno 2 punti</Description>
+    <Info>Un punto di sincronizzazione regola la posizione, due o più punti di sincronizzazione regolano la posizione e la velocità</Info>
+    <ApplySync>Applica</ApplySync>
   </PointSync>
   <UnknownSubtitle>
     <Title>Tipo di Sottotitolo sconosciuto</Title>
@@ -1102,6 +1120,8 @@ i file dei sottotitoli (collaborazione)
     <OcrAutoCorrectionSpellchecking>Correzione automatica OCR / Controllo ortografico</OcrAutoCorrectionSpellchecking>
     <FixOcrErrors>Correggi gli errori OCR</FixOcrErrors>
     <SaveSubtitleImageAs>Salva l'immagine del sottotitolo come...</SaveSubtitleImageAs>
+    <SaveAllSubtitleImagesAs>Salva tutte le immagini (png/bdn xml)...</SaveAllSubtitleImagesAs>
+    <XImagesSavedInY>{0} immagini salvate in {1}</XImagesSavedInY>
     <TryModiForUnknownWords>Prova MS MODI OCR con le parole sconosciute</TryModiForUnknownWords>
     <DictionaryX>Dizionario: {0}</DictionaryX>
     <RightToLeft>Da destra a sinistra</RightToLeft>
@@ -1123,7 +1143,7 @@ i file dei sottotitoli (collaborazione)
     <Message>Nome della nuova cartella database caratteri</Message>
   </VobSubOcrNewFolder>
   <WaveForm>
-    <ClickToAddWaveForm>Fai clic qui per aggiungere la foma d'onda audio</ClickToAddWaveForm>
+    <ClickToAddWaveForm>Fai clic qui per aggiungere dati audio</ClickToAddWaveForm>
     <Seconds>secondi</Seconds>
     <ZoomIn>Zoom avanti</ZoomIn>
     <ZoomOut>Zoom indietro</ZoomOut>
