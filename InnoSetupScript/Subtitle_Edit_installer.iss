@@ -28,13 +28,13 @@
 #define VerBuild
 #define VerRevision
 
-#if VER < 0x05040100
+#if VER < 0x05040200
   #error Update your Inno Setup version
 #endif
 
-;#ifnexist "..\src\bin\Release\SubtitleEdit.exe"
-;  #error Compile Subtitle Edit first
-;#endif
+#ifnexist "..\src\bin\Release\SubtitleEdit.exe"
+  #error Compile Subtitle Edit first
+#endif
 
 #expr ParseVersion("..\src\bin\Release\SubtitleEdit.exe", VerMajor, VerMinor, VerBuild, VerRevision)
 #define app_version str(VerMajor) + "." + str(VerMinor) + "." + str(VerBuild) + "." + str(VerRevision)
