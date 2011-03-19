@@ -7185,7 +7185,7 @@ namespace Nikse.SubtitleEdit.Forms
             _change = true;
             SubtitleListview1.EndUpdate();
             if (_subtitle.WasLoadedWithFrameNumbers)
-                _subtitle.CalculateFrameNumbersFromTimeCodes(frameRate);
+                _subtitle.CalculateFrameNumbersFromTimeCodesNoCheck(frameRate);
             RefreshSelectedParagraph();
             UpdateSourceView();
         }
