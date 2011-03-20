@@ -54,7 +54,7 @@
             this.labelProduct.Font = new System.Drawing.Font("Tahoma", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelProduct.Location = new System.Drawing.Point(11, 16);
             this.labelProduct.Name = "labelProduct";
-            this.labelProduct.Size = new System.Drawing.Size(138, 20);
+            this.labelProduct.Size = new System.Drawing.Size(140, 19);
             this.labelProduct.TabIndex = 26;
             this.labelProduct.Text = "Subtitle Edit 3.0";
             // 
@@ -69,14 +69,14 @@
             // 
             // richTextBoxAbout1
             // 
-            this.richTextBoxAbout1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.richTextBoxAbout1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.richTextBoxAbout1.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.richTextBoxAbout1.Location = new System.Drawing.Point(16, 43);
             this.richTextBoxAbout1.Name = "richTextBoxAbout1";
             this.richTextBoxAbout1.ReadOnly = true;
             this.richTextBoxAbout1.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None;
-            this.richTextBoxAbout1.Size = new System.Drawing.Size(429, 243);
+            this.richTextBoxAbout1.Size = new System.Drawing.Size(429, 266);
             this.richTextBoxAbout1.TabIndex = 40;
             this.richTextBoxAbout1.TabStop = false;
             this.richTextBoxAbout1.Text = "About...";
@@ -114,11 +114,11 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(457, 372);
             this.Controls.Add(this.buttonDonate);
+            this.Controls.Add(this.okButton);
             this.Controls.Add(this.labelFindHeight);
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.richTextBoxAbout1);
             this.Controls.Add(this.labelProduct);
-            this.Controls.Add(this.okButton);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.KeyPreview = true;
             this.MaximizeBox = false;

@@ -526,6 +526,7 @@
     <Compile Include="Logic\SubtitleFormats\UnknownSubtitle5.cs" />
     <Compile Include="Logic\SubtitleFormats\OpenDvt.cs" />
     <Compile Include="Logic\SubtitleFormats\AbcIViewer.cs" />
+    <Compile Include="Logic\SubtitleFormats\UnknownSubtitle6.cs" />
     <Compile Include="Logic\SubtitleFormats\YouTubeSbv.cs" />
     <Compile Include="Logic\SubtitleFormats\SubViewer10.cs" />
     <Compile Include="Logic\SubtitleFormats\TimedText.cs" />
@@ -806,6 +807,7 @@
     <EmbeddedResource Include="Resources\OpenOfficeDictionaries.xml.zip" />
     <EmbeddedResource Include="Resources\it-IT.xml.zip" />
     <EmbeddedResource Include="Resources\hu-HU.xml.zip" />
+    <EmbeddedResource Include="Resources\ja-JP.xml.zip" />
     <None Include="Resources\pl-PL.xml">
       <SubType>Designer</SubType>
     </None>
@@ -859,6 +861,7 @@
   <ItemGroup>
     <Content Include="Resources\bg-BG.xml" />
     <Content Include="Resources\fa-IR.xml" />
+    <Content Include="Resources\ja-JP.xml" />
     <Content Include="Resources\zh-CHS.xml" />
     <None Include="Web References\SeNetworkService\SeService.disco" />
     <None Include="DLLs\Interop.QuartzTypeLib.dll" />

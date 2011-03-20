@@ -21,14 +21,14 @@ namespace Nikse.SubtitleEdit.Forms
             labelProduct.Text = String.Format("{0} {1}.{2}{3}, build {4}", _languageGeneral.Title, versionInfo[0], versionInfo[1], minorMinorVersion, versionInfo[3]);
             richTextBoxAbout1.Text = _language.AboutText1.TrimEnd() + Environment.NewLine +
                                      Environment.NewLine +
-                                     _languageGeneral.TranslatedBy;
+                                     _languageGeneral.TranslatedBy.Trim();
             okButton.Text = _languageGeneral.OK;
 
             // Autosize height
             labelFindHeight.AutoSize = true;
             labelFindHeight.Text = richTextBoxAbout1.Text;
-            richTextBoxAbout1.Height = labelFindHeight.Height + 15;
-            Height = richTextBoxAbout1.Top + richTextBoxAbout1.Height + 105;
+            richTextBoxAbout1.Height = labelFindHeight.Height + 25;
+            Height = richTextBoxAbout1.Top + richTextBoxAbout1.Height + 100;
         }
 
         private void OkButtonClick(object sender, EventArgs e)
