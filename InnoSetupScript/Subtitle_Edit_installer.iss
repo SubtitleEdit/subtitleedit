@@ -18,16 +18,10 @@
 ;* along with Subtitle Edit.  If not, see <http://www.gnu.org/licenses/>.
 
 ; Requirements:
-; Inno Setup Unicode v5.4.1: http://www.jrsoftware.org/isdl.php
+; Inno Setup Unicode: http://www.jrsoftware.org/isdl.php
 
 
-#define installer_build_number "12"
-
-#define VerMajor
-#define VerMinor
-#define VerBuild
-#define VerRevision
-
+; preprocessor checks
 #if VER < 0x05040200
   #error Update your Inno Setup version
 #endif
@@ -36,28 +30,35 @@
   #error Compile Subtitle Edit first
 #endif
 
+
+#define installer_build_number "13"
+
+#define VerMajor
+#define VerMinor
+#define VerBuild
+#define VerRevision
+
 #expr ParseVersion("..\src\bin\Release\SubtitleEdit.exe", VerMajor, VerMinor, VerBuild, VerRevision)
 #define app_version str(VerMajor) + "." + str(VerMinor) + "." + str(VerBuild) + "." + str(VerRevision)
 
-;the following simple_app_version is for 3 digit releases, one of the two must be uncommented at a time
+; the following simple_app_version is for 3 digit releases, one of the two must be uncommented at a time
 ;#define simple_app_version str(VerMajor) + "." + str(VerMinor) + "." + str(VerBuild)
 #define simple_app_version str(VerMajor) + "." + str(VerMinor)
 
-#define app_web_site "http://www.nikse.dk/se/"
 #define installer_build_date GetDateTimeString('mmm, d yyyy', '', '')
 
 
 [Setup]
 AppID=SubtitleEdit
 AppCopyright=Copyright © 2001-2011, Nikse
-AppContact={#= app_web_site}
+AppContact=http://www.nikse.dk/se/
 AppName=Subtitle Edit
 AppVerName=Subtitle Edit v{#= simple_app_version}
 AppVersion={#= simple_app_version}
 AppPublisher=Nikse
-AppPublisherURL={#= app_web_site}
-AppSupportURL={#= app_web_site}
-AppUpdatesURL={#= app_web_site}
+AppPublisherURL=http://www.nikse.dk/se/
+AppSupportURL=http://www.nikse.dk/se/
+AppUpdatesURL=http://www.nikse.dk/se/
 UninstallDisplayName=Subtitle Edit v{#= simple_app_version}
 UninstallDisplayIcon={app}\SubtitleEdit.exe
 DefaultDirName={pf}\Subtitle Edit
@@ -99,6 +100,7 @@ Name: es; MessagesFile: compiler:Languages\Spanish.isl
 Name: fr; MessagesFile: compiler:Languages\French.isl
 Name: hu; MessagesFile: compiler:Languages\Hungarian.isl
 Name: it; MessagesFile: compiler:Languages\Italian.isl
+Name: ja; MessagesFile: compiler:Languages\Japanese.isl
 Name: nl; MessagesFile: compiler:Languages\Dutch.isl
 Name: pl; MessagesFile: compiler:Languages\Polish.isl
 Name: ro; MessagesFile: Languages\Romanian.isl
@@ -160,7 +162,7 @@ Source: ..\Tesseract\tesseract.exe;                   DestDir: {app}\Tesseract; 
 Name: {group}\Subtitle Edit;                Filename: {app}\SubtitleEdit.exe; WorkingDir: {app}; Comment: Subtitle Edit v{#= simple_app_version}; AppUserModelID: Nikse.SubtitleEdit; IconFilename: {app}\SubtitleEdit.exe; IconIndex: 0
 Name: {group}\Help and Support\Changelog;   Filename: {app}\Changelog.txt;    WorkingDir: {app}; Comment: {cm:sm_com_Changelog}
 Name: {group}\Help and Support\Online Help; Filename: http://www.nikse.dk/se/Help.aspx
-Name: {group}\Help and Support\{cm:ProgramOnTheWeb,Subtitle Edit}; Filename: {#= app_web_site};  Comment: {cm:ProgramOnTheWeb,Subtitle Edit}
+Name: {group}\Help and Support\{cm:ProgramOnTheWeb,Subtitle Edit}; Filename: http://www.nikse.dk/se/;  Comment: {cm:ProgramOnTheWeb,Subtitle Edit}
 Name: {group}\{cm:UninstallProgram,Subtitle Edit};                 Filename: {uninstallexe};     Comment: {cm:UninstallProgram,Subtitle Edit}; WorkingDir: {app}; IconFilename: {app}\uninstall.ico
 
 Name: {commondesktop}\Subtitle Edit;        Filename: {app}\SubtitleEdit.exe; WorkingDir: {app}; Comment: Subtitle Edit v{#= simple_app_version}; AppUserModelID: Nikse.SubtitleEdit; IconFilename: {app}\SubtitleEdit.exe; IconIndex: 0; Tasks: desktopicon\common
@@ -175,7 +177,7 @@ Type: files;      Name: {commondesktop}\Subtitle Edit.lnk;        Check: NOT IsT
 Type: files;      Name: {userappdata}\Subtitle Edit\Settings.xml; Tasks: reset_settings
 Type: dirifempty; Name: {userappdata}\Subtitle Edit;              Tasks: reset_settings
 
-;remove old files from the {app} dir
+; remove old files from the {app} dir
 Type: files;      Name: {app}\Dictionaries\da_DK_names_etc.xml
 Type: files;      Name: {app}\Dictionaries\da_DK_user.xml
 Type: files;      Name: {app}\Dictionaries\dan_OCRFixReplaceList.xml
@@ -202,8 +204,8 @@ Type: files;      Name: {app}\Settings.xml
 
 
 [Run]
-Filename: {app}\SubtitleEdit.exe; Description: {cm:LaunchProgram,Subtitle Edit}; WorkingDir: {app}; Flags: nowait postinstall skipifsilent runascurrentuser unchecked
-Filename: {#= app_web_site};      Description: {cm:run_VisitWebsite};                               Flags: nowait postinstall skipifsilent shellexec runascurrentuser unchecked
+Filename: {app}\SubtitleEdit.exe;  Description: {cm:LaunchProgram,Subtitle Edit}; WorkingDir: {app}; Flags: nowait postinstall skipifsilent runascurrentuser unchecked
+Filename: http://www.nikse.dk/se/; Description: {cm:run_VisitWebsite};                               Flags: nowait postinstall skipifsilent shellexec runascurrentuser unchecked
 
 
 [Code]

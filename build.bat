@@ -84,10 +84,8 @@ IF "%PROGRAMFILES(x86)%zzz"=="zzz" (
   SET "U_=HKLM\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall"
 )
 
-SET "I_=Inno Setup"
-SET "A_=%I_% 5"
-FOR /f "delims=" %%a IN (
-  'REG QUERY "%U_%\%A_%_is1" /v "%I_%: App Path"2^>Nul^|FIND "REG_"') DO (
+FOR /F "delims=" %%a IN (
+  'REG QUERY "%U_%\Inno Setup 5_is1" /v "Inno Setup: App Path"2^>Nul^|FIND "REG_"') DO (
   SET "InnoSetupPath=%%a" & CALL :SubIS %%InnoSetupPath:*Z=%%)
 EXIT /B
 

@@ -133,6 +133,20 @@ it.tsk_ResetDictionaries=Reset Dictionaries and delete any custom names
 it.tsk_ResetSettings=Reset Subtitle Edit's settings
 
 
+; Japanese
+ja.msg_SetupIsRunningWarning=Subtitle Edit Setup is already running!
+ja.msg_AppIsRunning=Subtitle Edit is running! Please close it before proceeding.
+ja.msg_AskToDownNET=Subtitle Edit requires the .NET Framework 2.0. Please download and install the .NET Framework and run setup again. %n%nDo you want to download the .NET Framework 2.0 now?
+ja.msg_DeleteSettings=Do you also want to delete Subtitle Edit's settings and any custom changes you made in the dictionaries? %n%nIf you plan on reinstalling Subtitle Edit you do not have to delete them.
+ja.run_VisitWebsite=Visit Subtitle Edit's Website
+ja.sm_com_Changelog=Subtitle Edit's Changelog
+ja.tsk_AllUsers=For all users
+ja.tsk_CurrentUser=For the current user only
+ja.tsk_Other=Other:
+ja.tsk_ResetDictionaries=Reset Dictionaries and delete any custom names
+ja.tsk_ResetSettings=Reset Subtitle Edit's settings
+
+
 ; Dutch
 nl.msg_SetupIsRunningWarning=Subtitle Edit Setup is already running!
 nl.msg_AppIsRunning=Subtitle Edit is running! Please close it before proceeding.
