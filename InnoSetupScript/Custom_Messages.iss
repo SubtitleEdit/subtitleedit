@@ -18,10 +18,10 @@
 ;* along with Subtitle Edit.  If not, see <http://www.gnu.org/licenses/>.
 
 
-[CustomMessages]
 ;sm=Start Menu, tsk=Task, com=Comment, msg=Message
 ;NOTE: Do NOT change the file encoding, it must be UTF-8 Signature!
 
+[CustomMessages]
 ; English
 en.msg_SetupIsRunningWarning=Subtitle Edit Setup is already running!
 en.msg_AppIsRunning=Subtitle Edit is running! Please close it before proceeding.

@@ -26,9 +26,9 @@
   #error Update your Inno Setup version
 #endif
 
-#ifnexist "..\src\bin\Release\SubtitleEdit.exe"
-  #error Compile Subtitle Edit first
-#endif
+;#ifnexist "..\src\bin\Release\SubtitleEdit.exe"
+;  #error Compile Subtitle Edit first
+;#endif
 
 
 #define installer_build_number "13"
@@ -53,31 +53,31 @@ AppID=SubtitleEdit
 AppCopyright=Copyright © 2001-2011, Nikse
 AppContact=http://www.nikse.dk/se/
 AppName=Subtitle Edit
-AppVerName=Subtitle Edit v{#= simple_app_version}
-AppVersion={#= simple_app_version}
+AppVerName=Subtitle Edit v{#simple_app_version}
+AppVersion={#simple_app_version}
 AppPublisher=Nikse
 AppPublisherURL=http://www.nikse.dk/se/
 AppSupportURL=http://www.nikse.dk/se/
 AppUpdatesURL=http://www.nikse.dk/se/
-UninstallDisplayName=Subtitle Edit v{#= simple_app_version}
+UninstallDisplayName=Subtitle Edit v{#simple_app_version}
 UninstallDisplayIcon={app}\SubtitleEdit.exe
 DefaultDirName={pf}\Subtitle Edit
 DefaultGroupName=Subtitle Edit
 VersionInfoCompany=Nikse
 VersionInfoCopyright=Copyright © 2001-2011, Nikse
-VersionInfoDescription=Subtitle Edit v{#= simple_app_version} Setup
-VersionInfoTextVersion={#= simple_app_version}
-VersionInfoVersion={#= simple_app_version}
+VersionInfoDescription=Subtitle Edit v{#simple_app_version} Setup
+VersionInfoTextVersion={#simple_app_version}
+VersionInfoVersion={#simple_app_version}
 VersionInfoProductName=Subtitle Edit
-VersionInfoProductVersion={#= simple_app_version}
-VersionInfoProductTextVersion={#= simple_app_version}
+VersionInfoProductVersion={#simple_app_version}
+VersionInfoProductTextVersion={#simple_app_version}
 MinVersion=0,5.1
 LicenseFile=..\src\gpl.txt
 InfoAfterFile=..\src\Changelog.txt
 SetupIconFile=..\src\Icons\SE.ico
 WizardSmallImageFile=Icons\WizardSmallImageFile.bmp
 OutputDir=.
-OutputBaseFilename=SubtitleEdit-{#= simple_app_version}-setup
+OutputBaseFilename=SubtitleEdit-{#simple_app_version}-setup
 AllowNoIcons=yes
 Compression=lzma2/ultra
 SolidCompression=yes
@@ -111,7 +111,7 @@ Name: sv; MessagesFile: Languages\Swedish.isl
 
 
 [Messages]
-BeveledLabel=Subtitle Edit v{#= simple_app_version} by Nikse, Setup v{#= installer_build_number} built on {#= installer_build_date}
+BeveledLabel=Subtitle Edit v{#simple_app_version} by Nikse, Setup v{#installer_build_number} built on {#installer_build_date}
 
 
 [Tasks]
@@ -159,15 +159,15 @@ Source: ..\Tesseract\tesseract.exe;                   DestDir: {app}\Tesseract; 
 
 
 [Icons]
-Name: {group}\Subtitle Edit;                Filename: {app}\SubtitleEdit.exe; WorkingDir: {app}; Comment: Subtitle Edit v{#= simple_app_version}; AppUserModelID: Nikse.SubtitleEdit; IconFilename: {app}\SubtitleEdit.exe; IconIndex: 0
+Name: {group}\Subtitle Edit;                Filename: {app}\SubtitleEdit.exe; WorkingDir: {app}; Comment: Subtitle Edit v{#simple_app_version}; AppUserModelID: Nikse.SubtitleEdit; IconFilename: {app}\SubtitleEdit.exe; IconIndex: 0
 Name: {group}\Help and Support\Changelog;   Filename: {app}\Changelog.txt;    WorkingDir: {app}; Comment: {cm:sm_com_Changelog}
 Name: {group}\Help and Support\Online Help; Filename: http://www.nikse.dk/se/Help.aspx
 Name: {group}\Help and Support\{cm:ProgramOnTheWeb,Subtitle Edit}; Filename: http://www.nikse.dk/se/;  Comment: {cm:ProgramOnTheWeb,Subtitle Edit}
 Name: {group}\{cm:UninstallProgram,Subtitle Edit};                 Filename: {uninstallexe};     Comment: {cm:UninstallProgram,Subtitle Edit}; WorkingDir: {app}; IconFilename: {app}\uninstall.ico
 
-Name: {commondesktop}\Subtitle Edit;        Filename: {app}\SubtitleEdit.exe; WorkingDir: {app}; Comment: Subtitle Edit v{#= simple_app_version}; AppUserModelID: Nikse.SubtitleEdit; IconFilename: {app}\SubtitleEdit.exe; IconIndex: 0; Tasks: desktopicon\common
-Name: {userdesktop}\Subtitle Edit;          Filename: {app}\SubtitleEdit.exe; WorkingDir: {app}; Comment: Subtitle Edit v{#= simple_app_version}; AppUserModelID: Nikse.SubtitleEdit; IconFilename: {app}\SubtitleEdit.exe; IconIndex: 0; Tasks: desktopicon\user
-Name: {userappdata}\Microsoft\Internet Explorer\Quick Launch\Subtitle Edit; Filename: {app}\SubtitleEdit.exe; Comment: Subtitle Edit v{#= simple_app_version}; WorkingDir: {app};     IconFilename: {app}\SubtitleEdit.exe; IconIndex: 0; Tasks: quicklaunchicon
+Name: {commondesktop}\Subtitle Edit;        Filename: {app}\SubtitleEdit.exe; WorkingDir: {app}; Comment: Subtitle Edit v{#simple_app_version}; AppUserModelID: Nikse.SubtitleEdit; IconFilename: {app}\SubtitleEdit.exe; IconIndex: 0; Tasks: desktopicon\common
+Name: {userdesktop}\Subtitle Edit;          Filename: {app}\SubtitleEdit.exe; WorkingDir: {app}; Comment: Subtitle Edit v{#simple_app_version}; AppUserModelID: Nikse.SubtitleEdit; IconFilename: {app}\SubtitleEdit.exe; IconIndex: 0; Tasks: desktopicon\user
+Name: {userappdata}\Microsoft\Internet Explorer\Quick Launch\Subtitle Edit; Filename: {app}\SubtitleEdit.exe; Comment: Subtitle Edit v{#simple_app_version}; WorkingDir: {app};     IconFilename: {app}\SubtitleEdit.exe; IconIndex: 0; Tasks: quicklaunchicon
 
 
 [InstallDelete]
