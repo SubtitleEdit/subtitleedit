@@ -175,7 +175,6 @@ Type: files;      Name: {userdesktop}\Subtitle Edit.lnk;          Check: NOT IsT
 Type: files;      Name: {commondesktop}\Subtitle Edit.lnk;        Check: NOT IsTaskSelected('desktopicon\common') AND IsUpdate()
 
 Type: files;      Name: {userappdata}\Subtitle Edit\Settings.xml; Tasks: reset_settings
-Type: dirifempty; Name: {userappdata}\Subtitle Edit;              Tasks: reset_settings
 
 ; remove old files from the {app} dir
 Type: files;      Name: {app}\Dictionaries\da_DK_names_etc.xml
@@ -297,13 +296,9 @@ end;
 procedure CurStepChanged(CurStep: TSetupStep);
 begin
   if CurStep = ssInstall then begin
-    if IsTaskSelected('reset_settings') then begin
-      DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Settings.xml'));
-    end;
     if IsTaskSelected('reset_dictionaries') then begin
       CleanUpDictionaries;
     end;
-    RemoveDir(ExpandConstant('{userappdata}\Subtitle Edit'));
   end;
 end;
 
