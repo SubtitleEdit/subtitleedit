@@ -46,7 +46,7 @@ IF /I "%BUILDTYPE%" == "Clean" GOTO END
 CALL :SubDetectInno
 
 IF DEFINED InnoSetupPath (
-  PUSHD "InnoSetupScript"
+  PUSHD "installer"
 
   "%InnoSetupPath%\iscc.exe" /Q "Subtitle_Edit_installer.iss"
   IF %ERRORLEVEL% NEQ 0 GOTO EndWithError
