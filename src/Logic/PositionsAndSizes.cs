@@ -7,10 +7,10 @@ namespace Nikse.SubtitleEdit.Logic
     {
         List<PositionAndSize> _positionsAndSizes = new List<PositionAndSize>();
 
-        public void SetPositionAndSize(Form form)
+        public bool SetPositionAndSize(Form form)
         {
             if (form == null)
-                return;
+                return false;
 
             foreach (PositionAndSize ps in _positionsAndSizes)
             {
@@ -20,9 +20,10 @@ namespace Nikse.SubtitleEdit.Logic
                     form.Left = ps.Left;
                     form.Top = ps.Top;
                     form.Size = ps.Size;
-                    break;
+                    return true;
                 }
             }
+            return false;
         }
 
         public void SavePositionAndSize(Form form)

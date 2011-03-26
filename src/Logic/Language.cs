@@ -832,6 +832,7 @@ namespace Nikse.SubtitleEdit.Logic
                         InsertBefore = "Insert before",
                         InsertAfter = "Insert after",
                         InsertSubtitleAfter = "Insert subtitle after this line...",
+                        CopyToClipboard = "Copy as text to clipboard",
                         Split = "Split",
                         MergeSelectedLines = "Merge selected lines",
                         MergeWithLineBefore = "Merge with line before",
@@ -938,6 +939,7 @@ namespace Nikse.SubtitleEdit.Logic
                 NumberOfMergesX = "Number of merges: {0}",
                 LineNumber = "Line#",
                 MergedText = "Merged text",
+                OnlyMergeContinuationLines = "Only merge continuation lines",
             };
 
             MultipleReplace = new LanguageStructure.MultipleReplace

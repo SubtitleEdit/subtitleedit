@@ -752,6 +752,7 @@
                     public string InsertBefore { get; set; }
                     public string InsertAfter { get; set; }
                     public string InsertSubtitleAfter { get; set; }
+                    public string CopyToClipboard { get; set; }                    
                     public string Split { get; set; }
                     public string MergeSelectedLines { get; set; }
                     public string MergeWithLineBefore { get; set; }
@@ -874,6 +875,7 @@
             public string NumberOfMergesX { get; set; }
             public string LineNumber { get; set; }
             public string MergedText { get; set; }
+            public string OnlyMergeContinuationLines { get; set; }            
         }
 
         public class MultipleReplace

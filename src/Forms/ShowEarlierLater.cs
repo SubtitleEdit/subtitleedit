@@ -11,6 +11,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         TimeSpan _totalAdjustment = TimeSpan.FromMilliseconds(0);
         AdjustEventHandler _adjustCallback;
+        PositionsAndSizes _formPositionsAndSizes;
 
         public ShowEarlierLater()
         {
@@ -51,8 +52,9 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        internal void Initialize(AdjustEventHandler adjustCallback, bool onlySelected)
+        internal void Initialize(AdjustEventHandler adjustCallback, PositionsAndSizes formPositionsAndSizes, bool onlySelected)
         {
+            _formPositionsAndSizes = formPositionsAndSizes;
             if (onlySelected)
                 radioButtonSelectedLinesOnly.Checked = true;
             else
@@ -98,6 +100,11 @@ namespace Nikse.SubtitleEdit.Forms
                 Text = Configuration.Settings.Language.ShowEarlierLater.Title;
             else
                 Text = Configuration.Settings.Language.ShowEarlierLater.TitleAll;
+        }
+
+        private void ShowEarlierLater_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            _formPositionsAndSizes.SavePositionAndSize(this);
         }
 
     }

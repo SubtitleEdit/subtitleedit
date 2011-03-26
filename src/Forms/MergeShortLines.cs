@@ -51,6 +51,9 @@ namespace Nikse.SubtitleEdit.Forms
             labelMaxCharacters.Text = Configuration.Settings.Language.MergedShortLines.MaximumCharacters;
             labelMaxMillisecondsBetweenLines.Text = Configuration.Settings.Language.MergedShortLines.MaximumMillisecondsBetween;
 
+            checkBoxOnlyContinuationLines.Visible = !string.IsNullOrEmpty(Configuration.Settings.Language.MergedShortLines.OnlyMergeContinuationLines); //TODO: Remove in se 3.2
+            checkBoxOnlyContinuationLines.Text = Configuration.Settings.Language.MergedShortLines.OnlyMergeContinuationLines;
+
             listViewFixes.Columns[0].Text = Configuration.Settings.Language.General.Apply;
             listViewFixes.Columns[1].Text = Configuration.Settings.Language.MergedShortLines.LineNumber;
             listViewFixes.Columns[2].Text = Configuration.Settings.Language.MergedShortLines.MergedText;
@@ -224,7 +227,7 @@ namespace Nikse.SubtitleEdit.Forms
             return startTag;
         }
 
-        private static bool QualifiesForMerge(Paragraph p, Paragraph next, double maximumMillisecondsBetweenLines, int maximumTotalLength)
+        private bool QualifiesForMerge(Paragraph p, Paragraph next, double maximumMillisecondsBetweenLines, int maximumTotalLength)
         {
             if (p != null && p.Text != null && next != null && next.Text != null)
             {
@@ -236,6 +239,10 @@ namespace Nikse.SubtitleEdit.Forms
                     if (string.IsNullOrEmpty(s))
                         return true;
                     bool isLineContinuation = s.EndsWith(",") || s.EndsWith("-") || s.EndsWith("...") || Utilities.GetLetters(true, true, true).Contains(s.Substring(s.Length - 1));
+
+                    if (!checkBoxOnlyContinuationLines.Checked)
+                        return true;
+
                     if (isLineContinuation)                       
                         return true;
                 }
@@ -317,6 +324,13 @@ namespace Nikse.SubtitleEdit.Forms
             listViewFixes.Focus();
             if (listViewFixes.Items.Count > 0)
                 listViewFixes.Items[0].Selected = true;
+        }
+
+        private void checkBoxOnlyContinuationLines_CheckedChanged(object sender, EventArgs e)
+        {
+            Cursor = Cursors.WaitCursor;
+            GeneratePreview();
+            Cursor = Cursors.Default;
         }
     }
 
