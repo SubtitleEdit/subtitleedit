@@ -73,12 +73,8 @@ namespace Nikse.SubtitleEdit.Logic
                 if (Instance._dataDir == null)
                 {
                     string path = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + Path.DirectorySeparatorChar + "Subtitle Edit";
-                    bool useApplicationData = BaseDirectory.StartsWith(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), StringComparison.OrdinalIgnoreCase);
-
-                    if (!useApplicationData)
-                        useApplicationData = !Directory.Exists(BaseDirectory + "Dictionaries") && Directory.Exists(Path.Combine(path, "Directonries"));
-
-                    if (useApplicationData)
+                    if (BaseDirectory.StartsWith(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), StringComparison.OrdinalIgnoreCase) 
+                        && Directory.Exists(Path.Combine(path, "Dictionaries")))
                     {
                         try
                         {

@@ -369,6 +369,12 @@
     <Compile Include="Forms\StartNumberingFrom.Designer.cs">
       <DependentUpon>StartNumberingFrom.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\TranscriptImporter.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\TranscriptImporter.Designer.cs">
+      <DependentUpon>TranscriptImporter.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\UnknownSubtitle.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -511,6 +517,8 @@
     <Compile Include="Logic\StripableText.cs" />
     <Compile Include="Logic\SubtitleFormats\AdobeEncore.cs" />
     <Compile Include="Logic\SubtitleFormats\AdobeEncoreTabs.cs" />
+    <Compile Include="Logic\SubtitleFormats\DCSubtitle.cs" />
+    <Compile Include="Logic\SubtitleFormats\FinalCutProTextXml.cs" />
     <Compile Include="Logic\SubtitleFormats\FinalCutProXml.cs" />
     <Compile Include="Logic\SubtitleFormats\Pac.cs" />
     <Compile Include="Logic\SubtitleFormats\PinnacleImpression.cs" />
@@ -526,6 +534,7 @@
     <Compile Include="Logic\SubtitleFormats\UnknownSubtitle5.cs" />
     <Compile Include="Logic\SubtitleFormats\OpenDvt.cs" />
     <Compile Include="Logic\SubtitleFormats\AbcIViewer.cs" />
+    <Compile Include="Logic\SubtitleFormats\UnknownSubtitle6.cs" />
     <Compile Include="Logic\SubtitleFormats\YouTubeSbv.cs" />
     <Compile Include="Logic\SubtitleFormats\SubViewer10.cs" />
     <Compile Include="Logic\SubtitleFormats\TimedText.cs" />
@@ -738,6 +747,9 @@
     <EmbeddedResource Include="Forms\StartNumberingFrom.resx">
       <DependentUpon>StartNumberingFrom.cs</DependentUpon>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\TranscriptImporter.resx">
+      <DependentUpon>TranscriptImporter.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\UnknownSubtitle.resx">
       <DependentUpon>UnknownSubtitle.cs</DependentUpon>

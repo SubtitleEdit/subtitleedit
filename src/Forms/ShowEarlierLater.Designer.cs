@@ -135,7 +135,9 @@ namespace Nikse.SubtitleEdit.Forms
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "ShowEarlierLater";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Show selected lines earlier/later";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.ShowEarlierLater_FormClosing);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ShowEarlierLater_KeyDown);
             this.ResumeLayout(false);
             this.PerformLayout();

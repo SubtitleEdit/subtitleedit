@@ -7,6 +7,7 @@ using System.Text;
 using System.Windows.Forms;
 using System.IO;
 using Nikse.SubtitleEdit.Logic;
+using System.Xml;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -62,10 +63,16 @@ namespace Nikse.SubtitleEdit.Forms
         private void buttonOpenText_Click(object sender, EventArgs e)
         {
             openFileDialog1.Title = buttonOpenText.Text;
-            openFileDialog1.Filter = Configuration.Settings.Language.ImportText.TextFiles + "|*.txt|" + Configuration.Settings.Language.General.AllFiles  + "|*.*";
+            openFileDialog1.Filter = Configuration.Settings.Language.ImportText.TextFiles + "|*.txt|Adobe Story|*.astx|" + Configuration.Settings.Language.General.AllFiles + "|*.*";
             openFileDialog1.FileName = string.Empty;
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
-                LoadTextFile(openFileDialog1.FileName);
+            {
+                string ext = Path.GetExtension(openFileDialog1.FileName).ToLower();
+                if (ext == ".astx")
+                    LoadAdobeStory(openFileDialog1.FileName);
+                else
+                    LoadTextFile(openFileDialog1.FileName);
+            }
         }
 
         private void GeneratePreview()
@@ -313,34 +320,63 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 Encoding encoding = Utilities.GetEncodingFromFile(fileName);
                 textBoxText.Text = File.ReadAllText(fileName, encoding);
-                _videoFileName = fileName.Substring(0, fileName.Length - Path.GetExtension(fileName).Length);
-                if (_videoFileName.EndsWith(".en"))
-                    _videoFileName = _videoFileName.Remove(_videoFileName.Length - 3);
-                if (File.Exists(_videoFileName + ".avi"))
-                {
-                    _videoFileName += ".avi";
-                }
-                else if (File.Exists(_videoFileName + ".mkv"))
-                {
-                    _videoFileName += ".mkv";
-                }
-                else
-                {
-                    string[] files = Directory.GetFiles(Path.GetDirectoryName(fileName), Path.GetFileNameWithoutExtension(_videoFileName) + "*.avi");
-                    if (files.Length == 0)
-                        files = Directory.GetFiles(Path.GetDirectoryName(fileName), "*.avi");
-                    if (files.Length == 0)
-                        files = Directory.GetFiles(Path.GetDirectoryName(fileName), "*.mkv");
-                    if (files.Length > 0)
-                        _videoFileName = files[0];
-                }
-
+                SetVideoFileName(fileName);
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }
             GeneratePreview();
+        }
+
+        private void LoadAdobeStory(string fileName)
+        {
+            try
+            {
+                StringBuilder sb = new StringBuilder();
+                XmlDocument doc = new XmlDocument();
+                doc.Load(fileName);
+                foreach (XmlNode node in doc.DocumentElement.SelectNodes("//paragraph[@element='Dialog']")) // <paragraph objID="1:28" element="Dialog">
+                { 
+                    XmlNode textRun = node.SelectSingleNode("textRun"); // <textRun objID="1:259">Yeah...I suppose</textRun>
+                    if (textRun != null)
+                        sb.AppendLine(textRun.InnerText);                    
+                }
+                textBoxText.Text = sb.ToString();
+                SetVideoFileName(fileName);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+            radioButtonLineMode.Checked = true;
+            checkBoxMergeShortLines.Checked = false;
+            GeneratePreview();
+        }
+
+        private void SetVideoFileName(string fileName)
+        {
+            _videoFileName = fileName.Substring(0, fileName.Length - Path.GetExtension(fileName).Length);
+            if (_videoFileName.EndsWith(".en"))
+                _videoFileName = _videoFileName.Remove(_videoFileName.Length - 3);
+            if (File.Exists(_videoFileName + ".avi"))
+            {
+                _videoFileName += ".avi";
+            }
+            else if (File.Exists(_videoFileName + ".mkv"))
+            {
+                _videoFileName += ".mkv";
+            }
+            else
+            {
+                string[] files = Directory.GetFiles(Path.GetDirectoryName(fileName), Path.GetFileNameWithoutExtension(_videoFileName) + "*.avi");
+                if (files.Length == 0)
+                    files = Directory.GetFiles(Path.GetDirectoryName(fileName), "*.avi");
+                if (files.Length == 0)
+                    files = Directory.GetFiles(Path.GetDirectoryName(fileName), "*.mkv");
+                if (files.Length > 0)
+                    _videoFileName = files[0];
+            }
         }
 
         private void buttonRefresh_Click(object sender, EventArgs e)
