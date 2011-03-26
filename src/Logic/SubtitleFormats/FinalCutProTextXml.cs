@@ -6,7 +6,7 @@ using System.Xml;
 
 namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
-    class FinalCutProXml : SubtitleFormat
+    class FinalCutProTestXml : SubtitleFormat
     {
         public double FrameRate { get; set; }
 
@@ -17,7 +17,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public override string Name
         {
-            get { return "Final Cut Pro Xml"; }
+            get { return "Final Cut Pro Test Xml"; }
         }
 
         public override bool HasLineNumber
@@ -464,7 +464,10 @@ string xmlTrackStructure3b =
             foreach (Paragraph p in subtitle.Paragraphs)
             {
                 XmlNode track = xml.CreateElement("track");
-                track.InnerXml = xmlTrackStructure2;
+                if (number == 1)
+                    track.InnerXml = xmlTrackStructure3a;
+                else
+                    track.InnerXml = xmlTrackStructure3b;
 
                 double frameRate = Configuration.Settings.General.DefaultFrameRate;
                 XmlNode start = track.SelectSingleNode("generatoritem/start");
