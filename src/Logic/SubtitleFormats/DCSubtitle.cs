@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 using System.Xml;
-using System.IO;
 
 namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
 
+// http://code.google.com/p/subtitleedit/issues/detail?id=18
 //<DCSubtitle Version="1.0">
 //<!-- *** www.digital-cinema-services.de *** -->
 //<!-- *** ElMariKonverter *** -->
@@ -36,7 +37,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public override string Name
         {
-            get { return "DCSubtitle"; }
+            get { return "D-Cinema Subtitle"; }
         }
 
         public override bool HasLineNumber
@@ -123,29 +124,30 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 //</Subtitle>
                 XmlNode subNode = xml.CreateElement("Subtitle");
 
-                XmlAttribute end = xml.CreateAttribute("TimeOut");
-                end.InnerText = ConvertToTimeString(p.EndTime);
-                subNode.Attributes.Append(end);
-
-                XmlAttribute start = xml.CreateAttribute("TimeIn");
-                start.InnerText = ConvertToTimeString(p.StartTime);
-                subNode.Attributes.Append(start);
-
-                XmlAttribute fadeDownTime = xml.CreateAttribute("FadeDownTime");
-                fadeDownTime.InnerText = "20";
-                subNode.Attributes.Append(fadeDownTime);
+                XmlAttribute id = xml.CreateAttribute("SpotNumber");
+                id.InnerText = (no+1).ToString();
+                subNode.Attributes.Append(id);
 
                 XmlAttribute fadeUpTime = xml.CreateAttribute("FadeUpTime");
                 fadeUpTime.InnerText = "20";
                 subNode.Attributes.Append(fadeUpTime);
 
-                XmlAttribute id = xml.CreateAttribute("SpotNumber");
-                id.InnerText = no.ToString();
-                subNode.Attributes.Append(id);
+                XmlAttribute fadeDownTime = xml.CreateAttribute("FadeDownTime");
+                fadeDownTime.InnerText = "20";
+                subNode.Attributes.Append(fadeDownTime);
+
+                XmlAttribute start = xml.CreateAttribute("TimeIn");
+                start.InnerText = ConvertToTimeString(p.StartTime);
+                subNode.Attributes.Append(start);
+
+                XmlAttribute end = xml.CreateAttribute("TimeOut");
+                end.InnerText = ConvertToTimeString(p.EndTime);
+                subNode.Attributes.Append(end);
 
 //                <Text VPosition="8" VAlign="bottom" HPosition="0" HAlign="center" Direction="horizontal">Er hat uns allen geholfen:</Text>                
                 string[] lines = p.Text.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-                int vPos = 8;
+                int vPos = 1 + lines.Length * 7;
+                bool isItalic = false;
                 foreach (string line in lines)
                 { 
                     XmlNode textNode = xml.CreateElement("Text");
@@ -166,24 +168,72 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     direction.InnerText = "horizontal";
                     textNode.Attributes.Append(direction);
 
-                    if (line.StartsWith("<i>"))
+                    int i = 0;
+                    var txt = new StringBuilder();
+                    var html = new StringBuilder();
+                    XmlNode nodeTemp = xml.CreateElement("temp");
+                    while (i<line.Length)
                     {
-                        XmlNode fontNode = xml.CreateElement("Font");
+                        if (!isItalic && line.Substring(i).StartsWith("<i>"))
+                        {
+                            if (txt.Length > 0)
+                            {
+                                nodeTemp.InnerText = txt.ToString();
+                                html.Append(nodeTemp.InnerXml);
+                                txt = new StringBuilder();
+                            }
+                            isItalic = true;
+                            i+=2;
+                        }
+                        else if (isItalic && line.Substring(i).StartsWith("</i>"))
+                        {
+                            if (txt.Length > 0)
+                            {
+                                XmlNode fontNode = xml.CreateElement("Font");
 
-                        XmlAttribute italic = xml.CreateAttribute("Italic");
-                        italic.InnerText = "yes";
-                        fontNode.Attributes.Append(italic);
+                                XmlAttribute italic = xml.CreateAttribute("Italic");
+                                italic.InnerText = "yes";
+                                fontNode.Attributes.Append(italic);
 
-                        fontNode.InnerText = Utilities.RemoveHtmlTags(line);
-                        textNode.AppendChild(fontNode);
+                                fontNode.InnerText = Utilities.RemoveHtmlTags(txt.ToString());
+                                html.Append(fontNode.OuterXml);
+                                txt = new StringBuilder();
+                            }
+                            isItalic = false;
+                            i+=3;
+                        }
+                        else
+                        {
+                            txt.Append(line.Substring(i, 1));
+                        }
+                        i++;
+                    }
+                    if (isItalic)
+                    {
+                        if (txt.Length > 0)
+                        {
+                            XmlNode fontNode = xml.CreateElement("Font");
+
+                            XmlAttribute italic = xml.CreateAttribute("Italic");
+                            italic.InnerText = "yes";
+                            fontNode.Attributes.Append(italic);
+
+                            fontNode.InnerText = Utilities.RemoveHtmlTags(line);
+                            html.Append(fontNode.OuterXml);
+                        }
                     }
                     else
                     {
-                        textNode.InnerText = Utilities.RemoveHtmlTags(line);
-                    }                    
+                        if (txt.Length > 0)
+                        {
+                            nodeTemp.InnerText = txt.ToString();
+                            html.Append(nodeTemp.InnerXml);
+                        }
+                    }
+                    textNode.InnerXml = html.ToString();                  
                     
                     subNode.AppendChild(textNode);
-                    vPos += 7;
+                    vPos -= 7;
                 }
 
                 mainListFont.AppendChild(subNode);
@@ -217,9 +267,9 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     {
                         switch (innerNode.Name.ToString())
                         {
-                            case "br":
-                                pText.AppendLine();
-                                break;
+                            //case "br":
+                            //    pText.AppendLine();
+                            //    break;
                             case "Text":
                                 if (innerNode.Attributes["VPosition"] != null)
                                 {
@@ -242,11 +292,11 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                                         if (innerInnerNode.Name == "Font" && innerInnerNode.Attributes["Italic"] != null &&
                                             innerInnerNode.Attributes["Italic"].InnerText.ToLower() == "yes")
                                         {
-                                            pText.Append("<i>" + innerNode.InnerText + "</i>");
+                                            pText.Append("<i>" + innerInnerNode.InnerText + "</i>");
                                         }
                                         else
                                         {
-                                            pText.Append(innerNode.InnerText);
+                                            pText.Append(innerInnerNode.InnerText);
                                         }
                                     }                                    
                                 }
