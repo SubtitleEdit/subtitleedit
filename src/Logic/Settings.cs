@@ -236,6 +236,7 @@ namespace Nikse.SubtitleEdit.Logic
         public string SpellCheckLanguage { get; set; }
         public string VideoPlayer { get; set; }
         public int VideoPlayerDefaultVolume { get; set; }
+        public int VideoPlayerPreviewFontSize { get; set; }
         public bool VideoPlayerShowStopButton { get; set; }
         public string Language { get; set; }
         public string ListViewLineSeparatorString { get; set; }
@@ -287,6 +288,7 @@ namespace Nikse.SubtitleEdit.Logic
             SpellCheckLanguage = null;
             VideoPlayer = string.Empty;
             VideoPlayerDefaultVolume = 50;
+            VideoPlayerPreviewFontSize = 10;
             VideoPlayerShowStopButton = true;
             ListViewLineSeparatorString = "<br />";
             ListViewDoubleClickAction = 1;
@@ -672,6 +674,9 @@ namespace Nikse.SubtitleEdit.Logic
             subNode = node.SelectSingleNode("VideoPlayerDefaultVolume");
             if (subNode != null)
                 settings.General.VideoPlayerDefaultVolume = Convert.ToInt32(subNode.InnerText);
+            subNode = node.SelectSingleNode("VideoPlayerPreviewFontSize");
+            if (subNode != null)
+                settings.General.VideoPlayerPreviewFontSize = Convert.ToInt32(subNode.InnerText);            
             subNode = node.SelectSingleNode("VideoPlayerShowStopButton");
             if (subNode != null)
                 settings.General.VideoPlayerShowStopButton = Convert.ToBoolean(subNode.InnerText);
@@ -1071,6 +1076,7 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("SpellCheckLanguage", settings.General.SpellCheckLanguage);
             textWriter.WriteElementString("VideoPlayer", settings.General.VideoPlayer);
             textWriter.WriteElementString("VideoPlayerDefaultVolume", settings.General.VideoPlayerDefaultVolume.ToString());
+            textWriter.WriteElementString("VideoPlayerPreviewFontSize", settings.General.VideoPlayerPreviewFontSize.ToString());
             textWriter.WriteElementString("VideoPlayerShowStopButton", settings.General.VideoPlayerShowStopButton.ToString());
             textWriter.WriteElementString("Language", settings.General.Language);
             textWriter.WriteElementString("ListViewLineSeparatorString", settings.General.ListViewLineSeparatorString);

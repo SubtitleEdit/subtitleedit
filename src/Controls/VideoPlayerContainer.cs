@@ -3,7 +3,6 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Logic.VideoPlayers;
-using Nikse.SubtitleEdit.Logic;
 
 namespace Nikse.SubtitleEdit.Controls
 {
@@ -173,7 +172,7 @@ namespace Nikse.SubtitleEdit.Controls
             var gs = Nikse.SubtitleEdit.Logic.Configuration.Settings.General;
             if (string.IsNullOrEmpty(gs.SubtitleFontName))
                 gs.SubtitleFontName = "Tahoma";
-             _subtitleTextBox.Font = new Font(gs.SubtitleFontName, gs.SubtitleFontSize+1.5F, FontStyle.Bold);
+            _subtitleTextBox.Font = new Font(gs.SubtitleFontName, gs.VideoPlayerPreviewFontSize, FontStyle.Bold);
         }    
 
         void SubtitleTextBox_MouseClick(object sender, MouseEventArgs e)

@@ -106,6 +106,12 @@ namespace Nikse.SubtitleEdit.Forms
                 comboBoxVideoPlayerDefaultVolume.SelectedIndex = gs.VideoPlayerDefaultVolume;
             checkBoxVideoPlayerShowStopButton.Checked = gs.VideoPlayerShowStopButton;
 
+            int videoPlayerPreviewFontSizeIndex = gs.VideoPlayerPreviewFontSize - int.Parse(comboBoxlVideoPlayerPreviewFontSize.Items[0].ToString());
+            if (videoPlayerPreviewFontSizeIndex >= 0 && videoPlayerPreviewFontSizeIndex < comboBoxlVideoPlayerPreviewFontSize.Items.Count)
+                comboBoxlVideoPlayerPreviewFontSize.SelectedIndex = videoPlayerPreviewFontSizeIndex;
+            else
+                comboBoxlVideoPlayerPreviewFontSize.SelectedIndex = 3;
+
             comboBoxCustomSearch.Text = Configuration.Settings.VideoControls.CustomSearchText;
             textBoxCustomSearchUrl.Text = Configuration.Settings.VideoControls.CustomSearchUrl;
 
@@ -218,6 +224,9 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxVideoPlayerShowStopButton.Text = language.ShowStopButton;
             labelDefaultVol.Text = language.DefaultVolume;
             labelVolDescr.Text = language.VolumeNotes;
+
+            labelVideoPlayerPreviewFontSize.Text = language.PreviewFontSize;
+            comboBoxlVideoPlayerPreviewFontSize.Left = labelVideoPlayerPreviewFontSize.Left + labelVideoPlayerPreviewFontSize.Width;
 
             groupBoxMainWindowVideoControls.Text = language.MainWindowVideoControls;
             labelCustomSearch.Text = language.CustomSearchTextAndUrl;
@@ -590,6 +599,8 @@ namespace Nikse.SubtitleEdit.Forms
             if (gs.VideoPlayerDefaultVolume < 0 || gs.VideoPlayerDefaultVolume > 100)
                 comboBoxVideoPlayerDefaultVolume.SelectedIndex = 50;
             gs.VideoPlayerShowStopButton = checkBoxVideoPlayerShowStopButton.Checked;
+
+            gs.VideoPlayerPreviewFontSize = int.Parse(comboBoxlVideoPlayerPreviewFontSize.Items[0].ToString()) + comboBoxlVideoPlayerPreviewFontSize.SelectedIndex;
 
             Configuration.Settings.VideoControls.CustomSearchText = comboBoxCustomSearch.Text;
             Configuration.Settings.VideoControls.CustomSearchUrl = textBoxCustomSearchUrl.Text;
