@@ -1040,6 +1040,7 @@
             public string ShowStopButton { get; set; }
             public string DefaultVolume { get; set; }
             public string VolumeNotes { get; set; }
+            public string PreviewFontSize { get; set; }
             public string MainWindowVideoControls { get; set; }
             public string CustomSearchTextAndUrl { get; set; }
             public string WaveFormAppearance { get; set; }

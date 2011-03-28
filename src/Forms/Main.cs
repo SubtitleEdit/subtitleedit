@@ -1719,6 +1719,7 @@ namespace Nikse.SubtitleEdit.Forms
                 mediaPlayer.SetSubtitleFont();
                 Utilities.ShowSubtitle(_subtitle.Paragraphs, mediaPlayer);
             }
+            mediaPlayer.SetSubtitleFont();
 
             if (oldListViewLineSeparatorString != Configuration.Settings.General.ListViewLineSeparatorString)
             {

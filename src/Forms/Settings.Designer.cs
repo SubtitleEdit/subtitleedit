@@ -108,6 +108,8 @@
             this.labelCustomSearch = new System.Windows.Forms.Label();
             this.comboBoxCustomSearch = new System.Windows.Forms.ComboBox();
             this.groupBoxVideoPlayerDefault = new System.Windows.Forms.GroupBox();
+            this.labelVideoPlayerPreviewFontSize = new System.Windows.Forms.Label();
+            this.comboBoxlVideoPlayerPreviewFontSize = new System.Windows.Forms.ComboBox();
             this.checkBoxVideoPlayerShowStopButton = new System.Windows.Forms.CheckBox();
             this.comboBoxVideoPlayerDefaultVolume = new System.Windows.Forms.ComboBox();
             this.labelDefaultVol = new System.Windows.Forms.Label();
@@ -141,6 +143,7 @@
             this.groupBoxSpellCheck = new System.Windows.Forms.GroupBox();
             this.checkBoxSpellCheckAutoChangeNames = new System.Windows.Forms.CheckBox();
             this.groupBoxFixCommonErrors = new System.Windows.Forms.GroupBox();
+            this.checkBoxFixCommonOcrErrorsUsingHardcodedRules = new System.Windows.Forms.CheckBox();
             this.comboBoxToolsMusicSymbol = new System.Windows.Forms.ComboBox();
             this.textBoxMusicSymbolsToReplace = new System.Windows.Forms.TextBox();
             this.labelToolsMusicSymbolsToReplace = new System.Windows.Forms.Label();
@@ -196,7 +199,6 @@
             this.colorDialogSSAStyle = new System.Windows.Forms.ColorDialog();
             this.fontDialogSSAStyle = new System.Windows.Forms.FontDialog();
             this.labelStatus = new System.Windows.Forms.Label();
-            this.checkBoxFixCommonOcrErrorsUsingHardcodedRules = new System.Windows.Forms.CheckBox();
             this.tabControlSettings.SuspendLayout();
             this.tabPageGenerel.SuspendLayout();
             this.groupBoxMiscellaneous.SuspendLayout();
@@ -1045,9 +1047,9 @@
             this.groupBoxMainWindowVideoControls.Controls.Add(this.textBoxCustomSearchUrl);
             this.groupBoxMainWindowVideoControls.Controls.Add(this.labelCustomSearch);
             this.groupBoxMainWindowVideoControls.Controls.Add(this.comboBoxCustomSearch);
-            this.groupBoxMainWindowVideoControls.Location = new System.Drawing.Point(7, 241);
+            this.groupBoxMainWindowVideoControls.Location = new System.Drawing.Point(7, 296);
             this.groupBoxMainWindowVideoControls.Name = "groupBoxMainWindowVideoControls";
-            this.groupBoxMainWindowVideoControls.Size = new System.Drawing.Size(785, 164);
+            this.groupBoxMainWindowVideoControls.Size = new System.Drawing.Size(785, 109);
             this.groupBoxMainWindowVideoControls.TabIndex = 15;
             this.groupBoxMainWindowVideoControls.TabStop = false;
             this.groupBoxMainWindowVideoControls.Text = "Main window video controls";
@@ -1084,15 +1086,49 @@
             // 
             // groupBoxVideoPlayerDefault
             // 
+            this.groupBoxVideoPlayerDefault.Controls.Add(this.labelVideoPlayerPreviewFontSize);
+            this.groupBoxVideoPlayerDefault.Controls.Add(this.comboBoxlVideoPlayerPreviewFontSize);
             this.groupBoxVideoPlayerDefault.Controls.Add(this.checkBoxVideoPlayerShowStopButton);
             this.groupBoxVideoPlayerDefault.Controls.Add(this.comboBoxVideoPlayerDefaultVolume);
             this.groupBoxVideoPlayerDefault.Controls.Add(this.labelDefaultVol);
             this.groupBoxVideoPlayerDefault.Controls.Add(this.labelVolDescr);
             this.groupBoxVideoPlayerDefault.Location = new System.Drawing.Point(7, 135);
             this.groupBoxVideoPlayerDefault.Name = "groupBoxVideoPlayerDefault";
-            this.groupBoxVideoPlayerDefault.Size = new System.Drawing.Size(785, 99);
+            this.groupBoxVideoPlayerDefault.Size = new System.Drawing.Size(785, 155);
             this.groupBoxVideoPlayerDefault.TabIndex = 14;
             this.groupBoxVideoPlayerDefault.TabStop = false;
+            // 
+            // labelVideoPlayerPreviewFontSize
+            // 
+            this.labelVideoPlayerPreviewFontSize.AutoSize = true;
+            this.labelVideoPlayerPreviewFontSize.Location = new System.Drawing.Point(11, 103);
+            this.labelVideoPlayerPreviewFontSize.Name = "labelVideoPlayerPreviewFontSize";
+            this.labelVideoPlayerPreviewFontSize.Size = new System.Drawing.Size(128, 13);
+            this.labelVideoPlayerPreviewFontSize.TabIndex = 14;
+            this.labelVideoPlayerPreviewFontSize.Text = "Subtitle preview font size";
+            // 
+            // comboBoxlVideoPlayerPreviewFontSize
+            // 
+            this.comboBoxlVideoPlayerPreviewFontSize.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxlVideoPlayerPreviewFontSize.FormattingEnabled = true;
+            this.comboBoxlVideoPlayerPreviewFontSize.Items.AddRange(new object[] {
+            "8",
+            "9",
+            "10",
+            "11",
+            "12",
+            "13",
+            "14",
+            "15",
+            "16",
+            "17",
+            "18",
+            "19",
+            "20"});
+            this.comboBoxlVideoPlayerPreviewFontSize.Location = new System.Drawing.Point(145, 100);
+            this.comboBoxlVideoPlayerPreviewFontSize.Name = "comboBoxlVideoPlayerPreviewFontSize";
+            this.comboBoxlVideoPlayerPreviewFontSize.Size = new System.Drawing.Size(121, 21);
+            this.comboBoxlVideoPlayerPreviewFontSize.TabIndex = 13;
             // 
             // checkBoxVideoPlayerShowStopButton
             // 
@@ -1433,7 +1469,7 @@
             this.checkBoxSpellCheckAutoChangeNames.AutoSize = true;
             this.checkBoxSpellCheckAutoChangeNames.Location = new System.Drawing.Point(15, 20);
             this.checkBoxSpellCheckAutoChangeNames.Name = "checkBoxSpellCheckAutoChangeNames";
-            this.checkBoxSpellCheckAutoChangeNames.Size = new System.Drawing.Size(216, 17);
+            this.checkBoxSpellCheckAutoChangeNames.Size = new System.Drawing.Size(209, 17);
             this.checkBoxSpellCheckAutoChangeNames.TabIndex = 0;
             this.checkBoxSpellCheckAutoChangeNames.Text = "Auto fix names where only casing differ";
             this.checkBoxSpellCheckAutoChangeNames.UseVisualStyleBackColor = true;
@@ -1451,6 +1487,16 @@
             this.groupBoxFixCommonErrors.TabIndex = 3;
             this.groupBoxFixCommonErrors.TabStop = false;
             this.groupBoxFixCommonErrors.Text = "Fix common errors";
+            // 
+            // checkBoxFixCommonOcrErrorsUsingHardcodedRules
+            // 
+            this.checkBoxFixCommonOcrErrorsUsingHardcodedRules.AutoSize = true;
+            this.checkBoxFixCommonOcrErrorsUsingHardcodedRules.Location = new System.Drawing.Point(15, 115);
+            this.checkBoxFixCommonOcrErrorsUsingHardcodedRules.Name = "checkBoxFixCommonOcrErrorsUsingHardcodedRules";
+            this.checkBoxFixCommonOcrErrorsUsingHardcodedRules.Size = new System.Drawing.Size(264, 17);
+            this.checkBoxFixCommonOcrErrorsUsingHardcodedRules.TabIndex = 2;
+            this.checkBoxFixCommonOcrErrorsUsingHardcodedRules.Text = "Fix common OCR errors - also use hardcoded rules";
+            this.checkBoxFixCommonOcrErrorsUsingHardcodedRules.UseVisualStyleBackColor = true;
             // 
             // comboBoxToolsMusicSymbol
             // 
@@ -2000,16 +2046,6 @@
             this.labelStatus.TabIndex = 3;
             this.labelStatus.Text = "labelStatus";
             // 
-            // checkBoxFixCommonOcrErrorsUsingHardcodedRules
-            // 
-            this.checkBoxFixCommonOcrErrorsUsingHardcodedRules.AutoSize = true;
-            this.checkBoxFixCommonOcrErrorsUsingHardcodedRules.Location = new System.Drawing.Point(15, 115);
-            this.checkBoxFixCommonOcrErrorsUsingHardcodedRules.Name = "checkBoxFixCommonOcrErrorsUsingHardcodedRules";
-            this.checkBoxFixCommonOcrErrorsUsingHardcodedRules.Size = new System.Drawing.Size(268, 17);
-            this.checkBoxFixCommonOcrErrorsUsingHardcodedRules.TabIndex = 2;
-            this.checkBoxFixCommonOcrErrorsUsingHardcodedRules.Text = "Fix common OCR errors - also use hardcoded rules";
-            this.checkBoxFixCommonOcrErrorsUsingHardcodedRules.UseVisualStyleBackColor = true;
-            // 
             // Settings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -2260,5 +2296,7 @@
         private System.Windows.Forms.ComboBox comboBoxMergeShortLineLength;
         private System.Windows.Forms.CheckBox checkBoxAutoWrapWhileTyping;
         private System.Windows.Forms.CheckBox checkBoxFixCommonOcrErrorsUsingHardcodedRules;
+        private System.Windows.Forms.Label labelVideoPlayerPreviewFontSize;
+        private System.Windows.Forms.ComboBox comboBoxlVideoPlayerPreviewFontSize;
     }
 }
