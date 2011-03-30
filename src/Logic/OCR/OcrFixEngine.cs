@@ -698,12 +698,7 @@ namespace Nikse.SubtitleEdit.Logic.OCR
             {
                 if (newText.Contains(from))
                 {
-                    var regex = new Regex(@"\b" + from + @"\b");
-                    Match match = regex.Match(newText);
-                    if (match.Success)
-                    {
-                        newText = newText.Remove(match.Index, match.Value.Length).Insert(match.Index, _partialLineReplaceList[from]);
-                    }
+                    newText = ReplaceWord(newText, from, _partialLineReplaceList[from]);
                 }
             }
             return newText;
@@ -724,7 +719,6 @@ namespace Nikse.SubtitleEdit.Logic.OCR
                     bool correct = _hunspell.Spell(word);
                     if (!correct)
                         correct = _hunspell.Spell(word.Trim('\''));
-
                     if (!correct)
                     {
                         wordsNotFound++;
@@ -734,10 +728,13 @@ namespace Nikse.SubtitleEdit.Logic.OCR
                         if (autoFix && useAutoGuess)
                         {
                             List<string> guesses = new List<string>();
-
                             if (word.Length > 5)
                             {
                                 guesses = (List<string>)CreateGuessesFromLetters(word);
+
+                                string wordWithCasingChanged = GetWordWithDominatedCasing(word);
+                                if (_hunspell.Spell(word.ToLower()))
+                                    guesses.Insert(0, wordWithCasingChanged);
                             }
                             else
                             {
@@ -755,14 +752,14 @@ namespace Nikse.SubtitleEdit.Logic.OCR
                             {
                                 if (IsWordOrWordsCorrect(_hunspell, guess))
                                 {
-                                    var regex = new Regex(@"\b" + word + @"\b");
-                                    Match match = regex.Match(line);
-                                    if (match.Success)
+                                    string replacedLine = ReplaceWord(line, word, guess);
+                                    if (replacedLine != line)
                                     {
                                         if (log)
                                             AutoGuessesUsed.Add(string.Format("#{0}: {1} -> {2} in line via '{3}': {4}", index + 1, word, guess, "OCRFixReplaceList.xml", line.Replace(Environment.NewLine, " ")));
 
-                                        line = line.Remove(match.Index, match.Value.Length).Insert(match.Index, guess);
+                                        //line = line.Remove(match.Index, match.Value.Length).Insert(match.Index, guess);
+                                        line = replacedLine;
                                         wordsNotFound--;
                                         correct = true;
                                         break;
@@ -772,7 +769,11 @@ namespace Nikse.SubtitleEdit.Logic.OCR
                         }
                         if (!correct && promptForFixingErrors)
                         {
-                            List<string> suggestions = _hunspell.Suggest(word);
+                            List<string> suggestions = new List<string>();
+
+                            if (word.Length > 4 || !word.Contains("'")) //TODO: get fixed nhunspell
+                                suggestions = _hunspell.Suggest(word); // 0.9.6 fails on "Lt'S"
+
                             SpellcheckOcrTextResult res = SpellcheckOcrText(line, bitmap, words, i, word, suggestions);
                             if (res.FixedWholeLine)
                             {
@@ -788,6 +789,25 @@ namespace Nikse.SubtitleEdit.Logic.OCR
                 }
             }
             return line;
+        }
+
+        private string GetWordWithDominatedCasing(string word)
+        {
+            string uppercaseLetters = Utilities.GetLetters(true, false, false);
+            string lowercaseLetters = Utilities.GetLetters(false, true, false);
+            int lowercase = 0;
+            int uppercase = 0;
+            for (int i = 0; i < word.Length; i++)
+            {
+                if (lowercaseLetters.Contains(word.Substring(i, 1)))
+                    lowercase++;
+                else if (uppercaseLetters.Contains(word.Substring(i, 1)))
+                    uppercase++;
+            }
+            if (uppercase > lowercase)
+                return word.ToUpper();
+            else
+                return word.ToLower();
         }
 
         /// <summary>
@@ -874,42 +894,41 @@ namespace Nikse.SubtitleEdit.Logic.OCR
             }
             if (result.Fixed)
             {
-                var regEx = Utilities.MakeWordSearchRegex(word);
-                Match match = regEx.Match(line);
-                if (match.Success)
-                {
-                    result.Line = line.Remove(match.Index, word.Length).Insert(match.Index, result.Word);
-                }
-                else // some word containing a number or other strange character
-                {
-                    if (line.EndsWith(" " + word))
-                    {
-                        result.Line = line.Substring(0, line.Length - word.Length) + result.Word;
-                    }
-                    else if (line.StartsWith(word + " ") || line.StartsWith(word + ",") || line.StartsWith(word + "."))
-                    {
-                        result.Line = result.Word + line.Substring(word.Length);
-                    }
-                    else
-                    {
-                        regEx = Utilities.MakeWordSearchRegexWithNumbers(word);
-                        match = regEx.Match(line);
-                        if (match.Success)
-                        {
-                            int startIndex = match.Index;
-                            if (match.Value.StartsWith(" "))
-                                startIndex++;
-                            result.Line = line.Remove(startIndex, word.Length).Insert(startIndex, result.Word);
-                        }
-                        else
-                        {
-                            result.Fixed = false;
-                            MessageBox.Show("Unable to find word via regex: " + word);
-                        }
-                    }
-                }
+                result.Line = ReplaceWord(line, word, result.Word);
             }
             return result;
+        }
+
+        private string ReplaceWord(string text, string word, string newWord)
+        {
+            StringBuilder sb = new StringBuilder();
+            if (word != null && text != null && text.Contains(word))
+            {
+                int appendFrom = 0;
+                for (int i = 0; i < text.Length; i++)
+                {
+                    if (text.Substring(i).StartsWith(word) && i >= appendFrom)
+                    {
+                        bool startOk = i == 0;
+                        if (!startOk)
+                            startOk = (" <>-\"”“[]'‘`´¶()♪¿¡.…—!?,:;/" + Environment.NewLine).Contains(text.Substring(i - 1, 1));
+                        if (startOk)
+                        {
+                            bool endOK = (i + word.Length == text.Length);
+                            if (!endOK)
+                                endOK = (" <>-\"”“[]'‘`´¶()♪¿¡.…—!?,:;/" + Environment.NewLine).Contains(text.Substring(i + word.Length, 1));
+                            if (endOK)
+                            {
+                                sb.Append(newWord);
+                                appendFrom = i + word.Length;
+                            }
+                        }
+                    }
+                    if (i >= appendFrom)
+                        sb.Append(text.Substring(i, 1));
+                }
+            }
+            return sb.ToString();
         }
 
         private void SaveWordToWordList(string word)

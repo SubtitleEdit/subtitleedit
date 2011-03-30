@@ -92,48 +92,41 @@ namespace Nikse.SubtitleEdit.Forms
 
         private static void HighLightWord(RichTextBox richTextBoxParagraph, string word)
         {
-            bool startApos = false;
-            if (word.StartsWith("'") && word.Length > 1)
+            if (word != null && richTextBoxParagraph.Text.Contains(word))
             {
-                startApos = true;
-                word = word.Substring(1);
-            }
-
-            Regex regex = Utilities.MakeWordSearchRegex(word);
-            Match match = regex.Match(richTextBoxParagraph.Text);
-            if (!match.Success)
-            {
-                regex = Utilities.MakeWordSearchRegexWithNumbers(word);
-                match = regex.Match(richTextBoxParagraph.Text);
-            }
-
-            while (match.Success)
-            {
-                if (startApos)
+                for (int i = 0; i < richTextBoxParagraph.Text.Length; i++)
                 {
-                    richTextBoxParagraph.SelectionStart = match.Index-1;
-                    richTextBoxParagraph.SelectionLength = match.Length+1;
-                    while (richTextBoxParagraph.SelectedText != "'" + match.Value && richTextBoxParagraph.SelectionStart > 0)
-                    {
-                        richTextBoxParagraph.SelectionStart = richTextBoxParagraph.SelectionStart - 1;
-                        richTextBoxParagraph.SelectionLength = match.Length+1;
+                    if (richTextBoxParagraph.Text.Substring(i).StartsWith(word))
+                    { 
+                        bool startOk = i == 0;
+                        if (!startOk)
+                            startOk = (" <>-\"”“[]'‘`´¶()♪¿¡.…—!?,:;/" + Environment.NewLine).Contains(richTextBoxParagraph.Text.Substring(i - 1, 1));
+                        if (startOk)
+                        {
+                            bool endOK = (i + word.Length == richTextBoxParagraph.Text.Length);
+                            if (!endOK)
+                                endOK = (" <>-\"”“[]'‘`´¶()♪¿¡.…—!?,:;/" + Environment.NewLine).Contains(richTextBoxParagraph.Text.Substring(i + word.Length, 1));
+                            if (endOK)
+                            {
+                                richTextBoxParagraph.SelectionStart = i+ 1;
+                                richTextBoxParagraph.SelectionLength = word.Length;
+                                while (richTextBoxParagraph.SelectedText != word && richTextBoxParagraph.SelectionStart > 0)
+                                {
+                                    richTextBoxParagraph.SelectionStart = richTextBoxParagraph.SelectionStart - 1;
+                                    richTextBoxParagraph.SelectionLength = word.Length;
+                                }
+                                if (richTextBoxParagraph.SelectedText == word)
+                                {
+                                    richTextBoxParagraph.SelectionColor = Color.Red;
+                                }
+                            }
+                        }
                     }
                 }
-                else
-                {
-                    richTextBoxParagraph.SelectionStart = match.Index + 1;
-                    richTextBoxParagraph.SelectionLength = match.Length;
-                    while (richTextBoxParagraph.SelectedText != match.Value && richTextBoxParagraph.SelectionStart > 0)
-                    {
-                        richTextBoxParagraph.SelectionStart = richTextBoxParagraph.SelectionStart - 1;
-                        richTextBoxParagraph.SelectionLength = match.Length;
-                    }
-                }
-                richTextBoxParagraph.SelectionColor = Color.Red;
-                match = match.NextMatch();
-            }
-            richTextBoxParagraph.SelectionLength = 0;
-            richTextBoxParagraph.SelectionStart = 0;
+
+                richTextBoxParagraph.SelectionLength = 0;
+                richTextBoxParagraph.SelectionStart = 0;
+            }         
         }
 
         private void ButtonEditWholeTextClick(object sender, EventArgs e)

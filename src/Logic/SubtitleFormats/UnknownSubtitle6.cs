@@ -43,16 +43,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public override string ToText(Subtitle subtitle, string title)
         {
-            
-
-            const string paragraphWriteFormat = "{0:00}:{1:00}:{2:00}.{3:00}, {4:00}:{5:00}:{6:00}.{7:00}{8}{9}";
-
-//00:00:07.00, 00:00:12.00
-//Welche Auswirkung Mikroversicherungen auf unsere Klienten hat? Lassen wir sie für sich selber sprechen!
-//
-//00:00:22.00, 00:00:27.00
-//Arme Menschen in Uganda leben oft in schlechten Unterkünften.
-
             var sb = new StringBuilder();
 
             sb.AppendLine(" " + subtitle.Paragraphs.Count.ToString() + "           4             1234 ");
@@ -95,7 +85,7 @@ SRPSKI
                                             "{2}" + Environment.NewLine +
                                             "{3}", p.StartTime.TotalMilliseconds, p.EndTime.TotalMilliseconds, firstLine, secondLine));                
             }
-            return sb.ToString().Trim(); //.Replace(Environment.NewLine, "\n");
+            return sb.ToString().Trim();
         }
 
         private int RoundTo2Cifres(int milliseconds)

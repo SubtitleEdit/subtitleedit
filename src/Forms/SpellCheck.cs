@@ -550,7 +550,11 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             _mainWindow.FocusParagraph(_currentIndex);
 
-                            List<string> suggestions = _hunspell.Suggest(_currentWord);
+                            List<string> suggestions = new List<string>();
+
+                            if (_currentWord.Length > 4 || !_currentWord.Contains("'")) //TODO: get fixed nhunspell
+                                suggestions = _hunspell.Suggest(_currentWord); //TODO: 0.9.6 fails on "Lt'S"
+
                             if (AutoFixNames && _currentWord.Length > 1 && suggestions.Contains(_currentWord.Substring(0, 1).ToUpper() + _currentWord.Substring(1)))
                             {
                                 ChangeWord = _currentWord.Substring(0, 1).ToUpper() + _currentWord.Substring(1);
