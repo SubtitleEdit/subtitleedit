@@ -37,7 +37,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public override string Name
         {
-            get { return "D-Cinema Subtitle"; }
+            get { return "D-Cinema"; }
         }
 
         public override bool HasLineNumber

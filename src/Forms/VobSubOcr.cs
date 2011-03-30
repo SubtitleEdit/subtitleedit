@@ -145,8 +145,10 @@ namespace Nikse.SubtitleEdit.Forms
             groupBoxSubtitleImage.Text = string.Empty;
             labelFixesMade.Text = string.Empty;
             labelFixesMade.Left = checkBoxAutoFixCommonErrors.Left + checkBoxAutoFixCommonErrors.Width;
-            labelDictionaryLoaded.Text = string.Empty;
-            comboBoxDictionaries.Visible = false;
+            
+            labelDictionaryLoaded.Text = string.Format(Configuration.Settings.Language.VobSubOcr.DictionaryX, string.Empty);
+            comboBoxDictionaries.Left = labelDictionaryLoaded.Left + labelDictionaryLoaded.Width;
+
             groupBoxImageCompareMethod.Text = language.OcrViaImageCompare;
             groupBoxModiMethod.Text = language.OcrViaModi;
             checkBoxAutoFixCommonErrors.Text = language.FixOcrErrors;
@@ -1272,54 +1274,13 @@ namespace Nikse.SubtitleEdit.Forms
         private string OcrViaTessnet(Bitmap bitmap, int index)
         {
             if (_ocrFixEngine == null)
-            {
-                _languageId = (comboBoxTesseractLanguages.SelectedItem as TesseractLanguage).Id;
-                _ocrFixEngine = new OcrFixEngine(_languageId, this);
-                if (_ocrFixEngine.IsDictionaryLoaded)
-                {
-                    labelDictionaryLoaded.Text = string.Format(Configuration.Settings.Language.VobSubOcr.DictionaryX, string.Empty); // _ocrFixEngine.DictionaryCulture.NativeName);
-
-                    string loadedDictionaryName = _ocrFixEngine.SpellCheckDictionaryName;
-                    int i = 0;
-                    comboBoxDictionaries.SelectedIndexChanged -= comboBoxDictionaries_SelectedIndexChanged;
-                    foreach (string item in comboBoxDictionaries.Items)
-                    {
-                        if (item.Contains("[" + loadedDictionaryName + "]"))
-                            comboBoxDictionaries.SelectedIndex = i;
-                        i++;
-                    }
-                    comboBoxDictionaries.SelectedIndexChanged += comboBoxDictionaries_SelectedIndexChanged;
-                    comboBoxDictionaries.Left = labelDictionaryLoaded.Left + labelDictionaryLoaded.Width;
-                    comboBoxDictionaries.Width = groupBoxOcrAutoFix.Width - (comboBoxDictionaries.Left + 5);
-                    comboBoxDictionaries.Visible = true;
-                }
-                else
-                {
-                    labelDictionaryLoaded.Text = string.Format(Configuration.Settings.Language.VobSubOcr.DictionaryX, Configuration.Settings.Language.General.None);
-                    comboBoxDictionaries.SelectedIndex = 0;
-                }
-
-                if (_modiEnabled && checkBoxUseModiInTesseractForUnknownWords.Checked)
-                {
-                    string tesseractLanguageText = (comboBoxTesseractLanguages.SelectedItem as TesseractLanguage).Text;
-                    int i = 0;
-                    foreach (var modiLanguage in comboBoxModiLanguage.Items)
-                    {
-                        if ((modiLanguage as ModiLanguage).Text == tesseractLanguageText)
-                            comboBoxModiLanguage.SelectedIndex = i;
-                        i++;
-                    }
-                }
-                comboBoxModiLanguage.SelectedIndex = -1;
-            }
+                LoadOcrFixEngine();
 
             int badWords = 0;
             string textWithOutFixes = Tesseract3DoOcrViaExe(bitmap, _languageId);
 
             if (textWithOutFixes.ToString().Trim().Length == 0)
-            {
                 textWithOutFixes = TesseractResizeAndRetry(bitmap);     
-            }
 
             int numberOfWords = textWithOutFixes.ToString().Split((" " + Environment.NewLine).ToCharArray(), StringSplitOptions.RemoveEmptyEntries).Length;
 
@@ -1344,10 +1305,11 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
 
-                if (wordsNotFound > 0 || correctWords == 0 || textWithOutFixes.ToString().Replace("~", string.Empty).Trim().Length == 0)
-                {                   
+                if (wordsNotFound > 0 || correctWords == 0 || textWithOutFixes != null && textWithOutFixes.ToString().Replace("~", string.Empty).Trim().Length == 0)
+                {
                     _ocrFixEngine.AutoGuessesUsed.Clear();
                     _ocrFixEngine.UnknownWordsFound.Clear();
+
                     if (_modiEnabled && checkBoxUseModiInTesseractForUnknownWords.Checked)
                     {
                         // which is best - modi or tesseract - we find out here
@@ -1726,6 +1688,45 @@ namespace Nikse.SubtitleEdit.Forms
         {
             Configuration.Settings.VobSubOcr.TesseractLastLanguage = (comboBoxTesseractLanguages.SelectedItem as TesseractLanguage).Id;
             _ocrFixEngine = null;
+            LoadOcrFixEngine();
+        }
+
+        private void LoadOcrFixEngine()
+        {
+            _languageId = (comboBoxTesseractLanguages.SelectedItem as TesseractLanguage).Id;
+            _ocrFixEngine = new OcrFixEngine(_languageId, this);
+            if (_ocrFixEngine.IsDictionaryLoaded)
+            {
+                string loadedDictionaryName = _ocrFixEngine.SpellCheckDictionaryName;
+                int i = 0;
+                comboBoxDictionaries.SelectedIndexChanged -= comboBoxDictionaries_SelectedIndexChanged;
+                foreach (string item in comboBoxDictionaries.Items)
+                {
+                    if (item.Contains("[" + loadedDictionaryName + "]"))
+                        comboBoxDictionaries.SelectedIndex = i;
+                    i++;
+                }
+                comboBoxDictionaries.SelectedIndexChanged += comboBoxDictionaries_SelectedIndexChanged;
+                comboBoxDictionaries.Left = labelDictionaryLoaded.Left + labelDictionaryLoaded.Width;
+                comboBoxDictionaries.Width = groupBoxOcrAutoFix.Width - (comboBoxDictionaries.Left + 5);
+            }
+            else
+            {
+                comboBoxDictionaries.SelectedIndex = 0;
+            }
+
+            if (_modiEnabled && checkBoxUseModiInTesseractForUnknownWords.Checked)
+            {
+                string tesseractLanguageText = (comboBoxTesseractLanguages.SelectedItem as TesseractLanguage).Text;
+                int i = 0;
+                foreach (var modiLanguage in comboBoxModiLanguage.Items)
+                {
+                    if ((modiLanguage as ModiLanguage).Text == tesseractLanguageText)
+                        comboBoxModiLanguage.SelectedIndex = i;
+                    i++;
+                }
+            }
+            comboBoxModiLanguage.SelectedIndex = -1;
         }
 
         private void ComboBoxOcrMethodSelectedIndexChanged(object sender, EventArgs e)
