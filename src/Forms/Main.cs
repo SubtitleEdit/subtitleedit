@@ -146,6 +146,13 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
+        [System.Runtime.InteropServices.DllImport("kernel32.dll")]
+        static extern bool AttachConsole(int dwProcessId);
+
+        [System.Runtime.InteropServices.DllImport("kernel32.dll", SetLastError = true, ExactSpelling = true)]
+        static extern bool FreeConsole();
+
+
         public Main()
         {
             try
@@ -214,7 +221,12 @@ namespace Nikse.SubtitleEdit.Forms
 
                 string fileName = string.Empty;
                 string[] args = Environment.GetCommandLineArgs();
-                if (args.Length >= 2)
+                if (args.Length == 4 && args[1].ToLower() == "/convert")
+                {
+                    BatchConvert(args);
+                    return;
+                }
+                else if (args.Length >= 2)
                     fileName = args[1];
 
                 if (fileName.Length > 0 && File.Exists(fileName))
@@ -299,6 +311,155 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 MessageBox.Show(exception.Message + Environment.NewLine + exception.StackTrace);
             }
+        }
+
+        
+        private void BatchConvert(string[] args) // E.g.: /convert *.txt SubRip
+        {
+            const int ATTACH_PARENT_PROCESS = -1;
+            AttachConsole(ATTACH_PARENT_PROCESS);
+
+            Console.WriteLine();
+            Console.WriteLine();
+            Console.WriteLine();
+            Console.WriteLine();
+            Console.WriteLine(Title + " - Batch converter");
+            Console.WriteLine();
+            Console.WriteLine("- Syntax: SubtitleEdit /convert <pattern> <name-of-format-without-spaces>");
+            Console.WriteLine("    example: SubtitleEdit /convert *.srt sami");
+            Console.WriteLine();
+            Console.WriteLine();
+            
+            string pattern = args[2];
+            string toFormat = args[3];
+            string inputDirectory = Directory.GetCurrentDirectory();
+            string outputDirectory = Directory.GetCurrentDirectory();
+            int indexOfDirectorySeparatorChar = pattern.LastIndexOf(Path.DirectorySeparatorChar.ToString());
+            if (indexOfDirectorySeparatorChar > 0)
+            {
+                pattern = pattern.Substring(indexOfDirectorySeparatorChar);
+                inputDirectory = pattern.Substring(0, indexOfDirectorySeparatorChar -1);            
+            }
+
+            int count = 0;
+            int converted = 0;
+            var formats = SubtitleFormat.AllSubtitleFormats;
+            foreach (string fileName in Directory.GetFiles(inputDirectory, pattern))
+            {
+                count++;
+
+                Encoding encoding;
+                Subtitle sub = new Subtitle();
+                SubtitleFormat format = sub.LoadSubtitle(fileName, out encoding, null);
+                if (format == null)
+                {
+                    var ebu = new Ebu();
+                    if (ebu.IsMine(null, fileName))
+                    {
+                        ebu.LoadSubtitle(sub, null, fileName);
+                        format = ebu;
+                    }
+                }
+                if (format == null)
+                {
+                    var pac = new Pac();
+                    if (pac.IsMine(null, fileName))
+                    {
+                        pac.LoadSubtitle(sub, null, fileName);
+                        format = pac;
+                    }
+                }
+                if (format == null)
+                {
+                    var cavena890 = new Cavena890();
+                    if (cavena890.IsMine(null, fileName))
+                    {
+                        cavena890.LoadSubtitle(sub, null, fileName);
+                        format = cavena890;
+                    }
+                }
+
+                if (format == null)
+                {
+                    Console.WriteLine(string.Format("{0}: {1} - input file format unknown!", count, fileName, toFormat));
+                }
+                else
+                {                    
+                    bool targetFormatFound = false;
+                    foreach (SubtitleFormat sf in formats)
+                    {
+                        if (sf.Name.ToLower().Replace(" ", string.Empty) == toFormat.ToLower())
+                        {
+                            targetFormatFound = true;
+                            string outputFileName = Path.GetFileNameWithoutExtension(fileName) + sf.Extension;
+                            if (File.Exists(outputFileName))
+                                outputFileName = Path.GetFileNameWithoutExtension(fileName) + "_" + Guid.NewGuid().ToString() + sf.Extension;
+                            Console.Write(string.Format("{0}: {1} -> {2}...", count, Path.GetFileName(fileName), outputFileName));
+                            System.IO.File.WriteAllText(outputFileName, sub.ToText(sf));
+                            Console.WriteLine(" done.");
+                        }
+                    }
+                    if (!targetFormatFound)
+                    {
+                        var ebu = new Ebu();
+                        if (ebu.Name.ToLower().Replace(" ", string.Empty) == toFormat.ToLower())
+                        {
+                            targetFormatFound = true;
+                            string outputFileName = Path.GetFileNameWithoutExtension(fileName) + ebu.Extension;
+                            if (File.Exists(outputFileName))
+                                outputFileName = Path.GetFileNameWithoutExtension(fileName) + "_" + Guid.NewGuid().ToString() + ebu.Extension;
+                            Console.Write(string.Format("{0}: {1} -> {2}...", count, Path.GetFileName(fileName), outputFileName));
+                            ebu.Save(outputFileName, sub);
+                            Console.WriteLine(" done.");
+                        }
+                    }
+                    if (!targetFormatFound)
+                    {
+                        var pac = new Pac();
+                        if (pac.Name.ToLower().Replace(" ", string.Empty) == toFormat.ToLower())
+                        {
+                            targetFormatFound = true;
+                            string outputFileName = Path.GetFileNameWithoutExtension(fileName) + pac.Extension;
+                            if (File.Exists(outputFileName))
+                                outputFileName = Path.GetFileNameWithoutExtension(fileName) + "_" + Guid.NewGuid().ToString() + pac.Extension;
+                            Console.Write(string.Format("{0}: {1} -> {2}...", count, Path.GetFileName(fileName), outputFileName));
+                            pac.Save(outputFileName, sub);
+                            Console.WriteLine(" done.");
+                        }
+                    }
+                    if (!targetFormatFound)
+                    {
+                        var cavena890 = new Cavena890();
+                        if (cavena890.Name.ToLower().Replace(" ", string.Empty) == toFormat.ToLower())
+                        {
+                            targetFormatFound = true;
+                            string outputFileName = Path.GetFileNameWithoutExtension(fileName) + cavena890.Extension;
+                            if (File.Exists(outputFileName))
+                                outputFileName = Path.GetFileNameWithoutExtension(fileName) + "_" + Guid.NewGuid().ToString() + cavena890.Extension;
+                            Console.Write(string.Format("{0}: {1} -> {2}...", count, Path.GetFileName(fileName), outputFileName));
+                            cavena890.Save(outputFileName, sub);
+                            Console.WriteLine(" done.");
+                        }
+                    }
+                    if (!targetFormatFound)
+                    {
+                        Console.WriteLine(string.Format("{0}: {1} - target format '{2}' not found!", count, fileName, toFormat));
+                    }
+                    else
+                    {
+                        converted++;
+                    }
+                }                               
+            }
+            Console.WriteLine();
+            Console.WriteLine(string.Format("{0} file(s) converted", converted));
+            Console.WriteLine();
+            Console.Write(inputDirectory + ">");
+            if (count == converted)
+                Environment.Exit(0);
+            else
+                Environment.Exit(1);
+            FreeConsole();
         }
 
         void AudioWaveForm_OnNonParagraphRightClicked(double seconds, Paragraph paragraph)
@@ -1056,7 +1217,7 @@ namespace Nikse.SubtitleEdit.Forms
                 bool justConverted = false;
                 if (format == null)
                 {
-                    Ebu ebu = new Ebu();
+                    var ebu = new Ebu();
                     if (ebu.IsMine(null, fileName))
                     {
                         ebu.LoadSubtitle(_subtitle, null, fileName);
@@ -1069,11 +1230,24 @@ namespace Nikse.SubtitleEdit.Forms
 
                 if (format == null)
                 {
-                    Pac pac = new Pac();
+                    var pac = new Pac();
                     if (pac.IsMine(null, fileName))
                     {
                         pac.LoadSubtitle(_subtitle, null, fileName);
                         _oldSubtitleFormat = pac;
+                        SetFormatToSubRip();
+                        justConverted = true;
+                        format = GetCurrentSubtitleFormat();
+                    }
+                }
+
+                if (format == null)
+                {
+                    var cavena890 = new Cavena890();
+                    if (cavena890.IsMine(null, fileName))
+                    {
+                        cavena890.LoadSubtitle(_subtitle, null, fileName);
+                        _oldSubtitleFormat = cavena890;
                         SetFormatToSubRip();
                         justConverted = true;
                         format = GetCurrentSubtitleFormat();
@@ -1319,11 +1493,14 @@ namespace Nikse.SubtitleEdit.Forms
             SubtitleFormat currentFormat = GetCurrentSubtitleFormat();
             Utilities.SetSaveDialogFilter(saveFileDialog1, currentFormat);
 
-            Ebu ebu = new Ebu();
+            var ebu = new Ebu();
             saveFileDialog1.Filter += "| " + ebu.FriendlyName + "|*" + ebu.Extension;
 
-            Pac pac = new Pac();
+            var pac = new Pac();
             saveFileDialog1.Filter += "| " + pac.FriendlyName + "|*" + pac.Extension;
+
+            var cavena890 = new Cavena890();
+            saveFileDialog1.Filter += "| " + cavena890.FriendlyName + "|*" + cavena890.Extension;
 
             saveFileDialog1.Title = _language.SaveSubtitleAs;
             saveFileDialog1.DefaultExt = "*" + currentFormat.Extension;
@@ -1367,6 +1544,20 @@ namespace Nikse.SubtitleEdit.Forms
                         fileName += pac.Extension;
                     }
                     pac.Save(fileName, _subtitle);
+                    return DialogResult.OK;
+                }
+                else if (saveFileDialog1.FilterIndex == SubtitleFormat.AllSubtitleFormats.Count + 3)
+                {
+                    string fileName = saveFileDialog1.FileName;
+                    string ext = Path.GetExtension(fileName).ToLower();
+                    bool extOk = ext == cavena890.Extension.ToLower();
+                    if (!extOk)
+                    {
+                        if (fileName.EndsWith("."))
+                            fileName = fileName.Substring(0, fileName.Length - 1);
+                        fileName += cavena890.Extension;
+                    }
+                    cavena890.Save(fileName, _subtitle);
                     return DialogResult.OK;
                 }
 
