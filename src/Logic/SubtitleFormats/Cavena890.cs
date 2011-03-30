@@ -69,8 +69,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             foreach (Paragraph p in subtitle.Paragraphs)
             {
                 // number
-                fs.WriteByte((byte)(number / 255));
-                fs.WriteByte((byte)(number % 255));
+                fs.WriteByte((byte)(number / 256));
+                fs.WriteByte((byte)(number % 256));
 
                 WriteTime(fs, p.StartTime);
                 WriteTime(fs, p.EndTime);
@@ -78,14 +78,14 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 buffer = new byte[] { 0x14, 00, 00, 00, 00, 00, 00, 0x16 };
                 fs.Write(buffer, 0, buffer.Length);
 
-                WriteText(fs, p.Text);
+                WriteText(fs, p.Text, p == subtitle.Paragraphs[subtitle.Paragraphs.Count-1]);
 
                 number += 16;
             }
             fs.Close();
         }
 
-        private void WriteText(FileStream fs, string text)
+        private void WriteText(FileStream fs, string text, bool isLast)
         {
             string line1 = string.Empty;
             string line2 = string.Empty;
@@ -103,10 +103,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 line2 = line2.Substring(0, 50);
 
             line1 = line1.PadRight(51, Convert.ToChar(0x7F));
-            line1 = line2.PadRight(51, Convert.ToChar(0x7F));
-
+            line2 = line2.PadRight(51, Convert.ToChar(0x7F));
 
             var encoding = Encoding.Default;
+
             var buffer = encoding.GetBytes(line1);
             fs.Write(buffer, 0, buffer.Length);
 
@@ -115,18 +115,19 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
             buffer = encoding.GetBytes(line2);
             fs.Write(buffer, 0, buffer.Length);
-
+            
             buffer = new byte[] { 00, 00, 00, 00 };
-            fs.Write(buffer, 0, buffer.Length);
+            if (!isLast)
+                fs.Write(buffer, 0, buffer.Length);
         }
 
         private void WriteTime(FileStream fs, TimeCode timeCode)
         {
             double totalMilliseconds = timeCode.TotalMilliseconds + TimeSpan.FromHours(10).TotalMilliseconds; // +10 hours
-            int frames = (int)Math.Round(totalMilliseconds / Configuration.Settings.General.DefaultFrameRate);
-            fs.WriteByte((byte)(frames / 255 / 255));
-            fs.WriteByte((byte)(frames / 255 % 255));
-            fs.WriteByte((byte)(frames % 255));
+            int frames = (int)Math.Round(totalMilliseconds / (1000.0 /Configuration.Settings.General.DefaultFrameRate));
+            fs.WriteByte((byte)(frames / 256 / 256));
+            fs.WriteByte((byte)(frames / 256));
+            fs.WriteByte((byte)(frames % 256));
         }
 
         public override bool IsMine(List<string> lines, string fileName)
@@ -180,10 +181,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 {
                     int start = i - TextLength;
                     
-                    int number = buffer[start - 16] * 255 + buffer[start - 15];
+                    int number = buffer[start - 16] * 256 + buffer[start - 15];
 
-                    int startFrame = buffer[start - 14] * 255 * 255 + buffer[start - 13] * 255 + buffer[start - 12];
-                    int endFrame = buffer[start - 11] * 255 * 255 + buffer[start - 10] * 255 + buffer[start - 9];
+                    double startFrame = buffer[start - 14] * 256 * 256 + buffer[start - 13] * 256 + buffer[start - 12];
+                    double endFrame = buffer[start - 11] * 256 * 256 + buffer[start - 10] * 256 + buffer[start - 9];
 
 
                     string line1 = FixText(buffer, start, TextLength);
@@ -191,8 +192,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
                     Paragraph p = new Paragraph();
                     p.Text = (line1 + Environment.NewLine + line2).Trim();
-                    p.StartTime.TotalMilliseconds = (double)((1000 / Configuration.Settings.General.DefaultFrameRate) * startFrame);
-                    p.EndTime.TotalMilliseconds = (double)((1000 / Configuration.Settings.General.DefaultFrameRate) * endFrame);
+                    p.StartTime.TotalMilliseconds = (double)((1000.0 / Configuration.Settings.General.DefaultFrameRate) * startFrame);
+                    p.EndTime.TotalMilliseconds = (double)((1000.0 / Configuration.Settings.General.DefaultFrameRate) * endFrame);
 
                     subtitle.Paragraphs.Add(p);
                     i += TextLength * 2;
@@ -208,7 +209,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
             subtitle.Renumber(1);
         }
-
 
         private static string FixText(byte[] buffer, int start, int textLength)
         {
@@ -235,9 +235,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             text = text.Replace(encoding.GetString(new byte[] { 0x86, 0x6F }), "ö");
 
             text = text.Replace(encoding.GetString(new byte[] { 0x8C, 0x61 }), "å");
-            text = text.Replace(encoding.GetString(new byte[] { 0x8C, 0x41 }), "Å");
-
-            
+            text = text.Replace(encoding.GetString(new byte[] { 0x8C, 0x41 }), "Å");           
 
             text = text.Replace(encoding.GetString(new byte[] { 0x88 }), "<i>");
             text = text.Replace(encoding.GetString(new byte[] { 0x98 }), "</i>");
