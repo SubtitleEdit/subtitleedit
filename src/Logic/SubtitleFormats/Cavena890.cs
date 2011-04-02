@@ -97,28 +97,86 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             if (lines.Length > 1)
                 line2 = lines[1];
 
-            if (line1.Length > 50)
-                line1 = line1.Substring(0, 50);
-            if (line2.Length > 50)
-                line2 = line2.Substring(0, 50);
-
-            line1 = line1.PadRight(51, Convert.ToChar(0x7F));
-            line2 = line2.PadRight(51, Convert.ToChar(0x7F));
-
-            var encoding = Encoding.Default;
-
-            var buffer = encoding.GetBytes(line1);
+            var buffer = GetTextAsBytes(line1);
             fs.Write(buffer, 0, buffer.Length);
 
             buffer = new byte[] { 00, 00, 00, 00, 00, 00 };
             fs.Write(buffer, 0, buffer.Length);
 
-            buffer = encoding.GetBytes(line2);
+            buffer = GetTextAsBytes(line2);
             fs.Write(buffer, 0, buffer.Length);
             
             buffer = new byte[] { 00, 00, 00, 00 };
             if (!isLast)
                 fs.Write(buffer, 0, buffer.Length);
+        }
+
+        private byte[] GetTextAsBytes(string text)
+        {
+            byte[] buffer = new byte[51];
+
+            for (int i = 0; i < buffer.Length; i++)
+                buffer[i] = 0x7F;
+
+            var encoding = Encoding.Default;
+            int index = 0;
+            for (int i = 0; i < text.Length; i++)
+            {
+                string current = text.Substring(i, 1);
+                if (index < 50)
+                {
+                    if (current == "æ")
+                        buffer[index] = 0x1B;
+                    else if (current == "ø")
+                        buffer[index] = 0x1C;
+                    else if (current == "å")
+                        buffer[index] = 0x1D;
+                    else if (current == "Æ")
+                        buffer[index] = 0x5B;
+                    else if (current == "Ø")
+                        buffer[index] = 0x5C;
+                    else if (current == "Å")
+                        buffer[index] = 0x5D;
+                    else if (current == "Ä")
+                    {
+                        buffer[index] = 0x86;
+                        buffer[index + 1] = 0x41;
+                    }
+                    else if (current == "ä")
+                    {
+                        buffer[index] = 0x86;
+                        buffer[index + 1] = 0x61;
+                    }
+                    else if (current == "Ö")
+                    {
+                        buffer[index] = 0x86;
+                        buffer[index + 1] = 0x4F;
+                    }
+                    else if (current == "ö")
+                    {
+                        buffer[index] = 0x86;
+                        buffer[index + 1] = 0x6F;
+                    }
+                    else if (current == "å")
+                    {
+                        buffer[index] = 0x8C;
+                        buffer[index + 1] = 0x61;
+                    }
+                    else if (current == "Å")
+                    {
+                        buffer[index] = 0x8C;
+                        buffer[index + 1] = 0x41;
+                    }
+                    else if (text.Substring(i, 3) == "<i>")
+                        buffer[index] = 0x88;
+                    else if (text.Substring(i, 4) == "</i>")
+                        buffer[index] = 0x98;
+                    else
+                        buffer[index] = encoding.GetBytes(current)[0];
+                }    
+            }
+
+            return buffer;
         }
 
         private void WriteTime(FileStream fs, TimeCode timeCode)
