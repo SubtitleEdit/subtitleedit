@@ -289,6 +289,7 @@ namespace Nikse.SubtitleEdit.Forms
                 test = test.Replace("\\u0026lt;", "<");
                 test = test.Replace("\\u0026gt;", ">");
                 test = test.Replace("\\u003d", "=");
+                test = test.Replace("\\u200b", string.Empty);
                 test = test.Replace("\\\"", "\"");
                 test = test.Replace(" <br/>", Environment.NewLine);
                 test = test.Replace("<br/>", Environment.NewLine);
