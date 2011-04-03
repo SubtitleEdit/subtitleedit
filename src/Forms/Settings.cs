@@ -7,6 +7,7 @@ using System.Windows.Forms;
 using System.Xml;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.VideoPlayers;
+using System.Text;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -156,6 +157,7 @@ namespace Nikse.SubtitleEdit.Forms
             tabPageSsaStyle.Text = language.SsaStyle;
             tabPageProxy.Text = language.Proxy;
             tabPageToolBar.Text = language.Toolbar;
+            tabPageShortcuts.Text = language.Shortcuts;
             groupBoxShowToolBarButtons.Text = language.ShowToolBarButtons;
             labelTBNew.Text = language.New;
             labelTBOpen.Text = language.Open;
@@ -406,7 +408,80 @@ namespace Nikse.SubtitleEdit.Forms
             panelWaveFormBackgroundColor.BackColor = Configuration.Settings.VideoControls.WaveFormBackgroundColor;
             panelWaveFormTextColor.BackColor = Configuration.Settings.VideoControls.WaveFormTextColor;
 
+
+            //<MainFileNew>Control+N</MainFileNew>
+            //<MainFileOpen>Control+O</MainFileOpen>
+            //<MainFileSave>Control+S</MainFileSave>
+            //<MainFileSaveAs>Control+Shift+S</MainFileSaveAs>
+            TreeNode fileNode = new TreeNode(Configuration.Settings.Language.Main.Menu.File.Title);
+            fileNode.Nodes.Add(Configuration.Settings.Language.Main.Menu.File.New + GetShortcutText(Configuration.Settings.Shortcuts.MainFileNew));
+            fileNode.Nodes.Add(Configuration.Settings.Language.Main.Menu.File.Open + GetShortcutText(Configuration.Settings.Shortcuts.MainFileOpen));
+            fileNode.Nodes.Add(Configuration.Settings.Language.Main.Menu.File.Save + GetShortcutText(Configuration.Settings.Shortcuts.MainFileSave));
+            fileNode.Nodes.Add(Configuration.Settings.Language.Main.Menu.File.SaveAs + GetShortcutText(Configuration.Settings.Shortcuts.MainFileSaveAs));
+            treeViewShortcuts.Nodes.Add(fileNode);
+
+            //<MainEditFind>Control+F</MainEditFind>
+            //<MainEditFindNext>F3</MainEditFindNext>
+            //<MainEditReplace>Control+H</MainEditReplace>
+            //<MainEditGoToLineNumber>Control+G</MainEditGoToLineNumber>
+            TreeNode editNode = new TreeNode(Configuration.Settings.Language.Main.Menu.Edit.Title);
+            editNode.Nodes.Add(Configuration.Settings.Language.Main.Menu.Edit.Find + GetShortcutText(Configuration.Settings.Shortcuts.MainEditFind));
+            editNode.Nodes.Add(Configuration.Settings.Language.Main.Menu.Edit.FindNext + GetShortcutText(Configuration.Settings.Shortcuts.MainEditFindNext));
+            editNode.Nodes.Add(Configuration.Settings.Language.Main.Menu.Edit.Replace + GetShortcutText(Configuration.Settings.Shortcuts.MainEditReplace));
+            editNode.Nodes.Add(Configuration.Settings.Language.Main.Menu.Edit.GoToSubtitleNumber + GetShortcutText(Configuration.Settings.Shortcuts.MainEditGoToLineNumber));
+            treeViewShortcuts.Nodes.Add(editNode);
+
+            //<MainVideoShowHideVideo>Control+Q</MainVideoShowHideVideo>
+            TreeNode videoNode = new TreeNode(Configuration.Settings.Language.Main.Menu.Video.Title);
+            videoNode.Nodes.Add(Configuration.Settings.Language.Main.Menu.Video.ShowHideVideo + GetShortcutText(Configuration.Settings.Shortcuts.MainVideoShowHideVideo));
+            treeViewShortcuts.Nodes.Add(videoNode);
+
+            //<MainSynchronizationAdjustTimes>Control+Shift+A</MainSynchronizationAdjustTimes>
+            TreeNode SyncNode = new TreeNode(Configuration.Settings.Language.Main.Menu.Synchronization.Title);
+            SyncNode.Nodes.Add(Configuration.Settings.Language.Main.Menu.Synchronization.AdjustAllTimes + GetShortcutText(Configuration.Settings.Shortcuts.MainSynchronizationAdjustTimes));
+            treeViewShortcuts.Nodes.Add(SyncNode);
+            
+            //<MainListViewItalic>Control+G</MainListViewItalic>
+            TreeNode ListViewNode = new TreeNode(Configuration.Settings.Language.Main.Controls.ListView);
+            ListViewNode.Nodes.Add(Configuration.Settings.Language.General.Italic + GetShortcutText(Configuration.Settings.Shortcuts.MainListViewItalic));
+            treeViewShortcuts.Nodes.Add(ListViewNode);
+
+            //<MainTextBoxItalic>Control+I</MainTextBoxItalic>
+            TreeNode TextBoxNode = new TreeNode(Configuration.Settings.Language.Settings.TextBox);
+            TextBoxNode.Nodes.Add(Configuration.Settings.Language.General.Italic + GetShortcutText(Configuration.Settings.Shortcuts.MainTextBoxItalic));
+            treeViewShortcuts.Nodes.Add(TextBoxNode);
+
+            foreach (TreeNode node in treeViewShortcuts.Nodes)
+            {
+                node.Text = node.Text.Replace("&", string.Empty);
+                foreach (TreeNode subNode in node.Nodes)
+                {
+                    subNode.Text = subNode.Text.Replace("&", string.Empty);
+                    foreach (TreeNode subSubNode in subNode.Nodes)
+                    {
+                        subSubNode.Text = subSubNode.Text.Replace("&", string.Empty);
+                    }
+                }
+            }
+
+            treeViewShortcuts.ExpandAll();
+
+            groupBoxShortcuts.Text = language.Shortcuts;
+            labelShortcut.Text = language.Shortcut;
+            checkBoxShortcutsControl.Text = language.Control;
+            checkBoxShortcutsAlt.Text = language.Alt;
+            checkBoxShortcutsShift.Text = language.Shift;
+            buttonUpdateShortcut.Text = language.UpdateShortcut;
+            labelShortcutKey.Text = language.Key;
+            comboBoxShortcutKey.Left = labelShortcutKey.Left + labelShortcutKey.Width;
+            comboBoxShortcutKey.Items[0] = Configuration.Settings.Language.General.None;
+
             FixLargeFonts();
+        }
+
+        private string GetShortcutText(string shortcut)
+        {
+            return string.Format(" [{0}]", shortcut); 
         }
 
         private void FixLargeFonts()
@@ -662,6 +737,85 @@ namespace Nikse.SubtitleEdit.Forms
             Configuration.Settings.VideoControls.WaveFormColor = panelWaveFormColor.BackColor;
             Configuration.Settings.VideoControls.WaveFormBackgroundColor = panelWaveFormBackgroundColor.BackColor;
             Configuration.Settings.VideoControls.WaveFormTextColor = panelWaveFormTextColor.BackColor;
+
+
+            //Main File
+            foreach (TreeNode node in treeViewShortcuts.Nodes[0].Nodes)
+            {
+                if (node.Text.Contains("["))
+                {
+                    string text = node.Text.Substring(0, node.Text.IndexOf("[")).Trim();
+                    if (text == Configuration.Settings.Language.Main.Menu.File.New.Replace("&", string.Empty))
+                        Configuration.Settings.Shortcuts.MainFileNew = GetShortcut(node.Text);
+                    else if (text == Configuration.Settings.Language.Main.Menu.File.Save.Replace("&", string.Empty))
+                        Configuration.Settings.Shortcuts.MainFileSave = GetShortcut(node.Text);
+                    else if (text == Configuration.Settings.Language.Main.Menu.File.SaveAs.Replace("&", string.Empty))
+                        Configuration.Settings.Shortcuts.MainFileSaveAs = GetShortcut(node.Text);
+                }
+            }
+
+
+            //Main Edit
+            foreach (TreeNode node in treeViewShortcuts.Nodes[1].Nodes)
+            {
+                if (node.Text.Contains("["))
+                {
+                    string text = node.Text.Substring(0, node.Text.IndexOf("[")).Trim();
+                    if (text == Configuration.Settings.Language.Main.Menu.Edit.Find.Replace("&", string.Empty))
+                        Configuration.Settings.Shortcuts.MainEditFind = GetShortcut(node.Text);
+                    else if (text == Configuration.Settings.Language.Main.Menu.Edit.FindNext.Replace("&", string.Empty))
+                        Configuration.Settings.Shortcuts.MainEditFindNext = GetShortcut(node.Text);
+                    else if (text == Configuration.Settings.Language.Main.Menu.Edit.Replace.Replace("&", string.Empty))
+                        Configuration.Settings.Shortcuts.MainEditReplace = GetShortcut(node.Text);
+                    else if (text == Configuration.Settings.Language.Main.Menu.Edit.GoToSubtitleNumber.Replace("&", string.Empty))
+                        Configuration.Settings.Shortcuts.MainEditGoToLineNumber = GetShortcut(node.Text);
+                }
+            }
+
+
+            //Main Video
+            foreach (TreeNode node in treeViewShortcuts.Nodes[2].Nodes)
+            {
+                if (node.Text.Contains("["))
+                {
+                    string text = node.Text.Substring(0, node.Text.IndexOf("[")).Trim();
+                    if (text == Configuration.Settings.Language.Main.Menu.Video.ShowHideVideo.Replace("&", string.Empty))
+                        Configuration.Settings.Shortcuts.MainVideoShowHideVideo = GetShortcut(node.Text);
+                }
+            }
+
+            //Main Sync
+            foreach (TreeNode node in treeViewShortcuts.Nodes[3].Nodes)
+            {
+                if (node.Text.Contains("["))
+                {
+                    string text = node.Text.Substring(0, node.Text.IndexOf("[")).Trim();
+                    if (text == Configuration.Settings.Language.Main.Menu.Synchronization.AdjustAllTimes.Replace("&", string.Empty))
+                        Configuration.Settings.Shortcuts.MainSynchronizationAdjustTimes = GetShortcut(node.Text);
+                }
+            }
+
+            //Main List view
+            foreach (TreeNode node in treeViewShortcuts.Nodes[4].Nodes)
+            {
+                if (node.Text.Contains("["))
+                {
+                    string text = node.Text.Substring(0, node.Text.IndexOf("[")).Trim();
+                    if (text == Configuration.Settings.Language.General.Italic.Replace("&", string.Empty))
+                        Configuration.Settings.Shortcuts.MainListViewItalic = GetShortcut(node.Text);
+                }
+            }
+
+            //Main text box
+            foreach (TreeNode node in treeViewShortcuts.Nodes[5].Nodes)
+            {
+                if (node.Text.Contains("["))
+                {
+                    string text = node.Text.Substring(0, node.Text.IndexOf("[")).Trim();
+                    if (text == Configuration.Settings.Language.General.Italic.Replace("&", string.Empty))
+                        Configuration.Settings.Shortcuts.MainTextBoxItalic = GetShortcut(node.Text);
+                }
+            }
 
             Configuration.Settings.Save();
         }
@@ -1386,6 +1540,115 @@ namespace Nikse.SubtitleEdit.Forms
             if (colorDialogSSAStyle.ShowDialog() == DialogResult.OK)
             {
                 panelSubtitleBackgroundColor.BackColor = colorDialogSSAStyle.Color;
+            }
+        }
+
+        private void treeViewShortcuts_AfterSelect(object sender, TreeViewEventArgs e)
+        {
+            if (e.Node == null || e.Node.Nodes.Count > 0)
+            {
+                checkBoxShortcutsControl.Checked = false;
+                checkBoxShortcutsControl.Enabled = false;
+                checkBoxShortcutsAlt.Checked = false;
+                checkBoxShortcutsAlt.Enabled = false;
+                checkBoxShortcutsShift.Checked = false;
+                checkBoxShortcutsShift.Enabled = false;
+                comboBoxShortcutKey.SelectedIndex = 0;
+                comboBoxShortcutKey.Enabled = false;
+                buttonUpdateShortcut.Enabled = false;
+
+            }
+            else if (e.Node != null || e.Node.Nodes.Count == 0)
+            {
+                checkBoxShortcutsControl.Enabled = true;
+                checkBoxShortcutsAlt.Enabled = true;
+                checkBoxShortcutsShift.Enabled = true;
+
+                checkBoxShortcutsControl.Checked = false;
+                checkBoxShortcutsAlt.Checked = false;
+                checkBoxShortcutsShift.Checked = false;
+
+                comboBoxShortcutKey.SelectedIndex = 0;
+
+                comboBoxShortcutKey.Enabled = true;
+                buttonUpdateShortcut.Enabled = true;
+
+
+                string shortcut = GetShortcut(e.Node.Text);
+
+                string[] parts = shortcut.ToLower().Split("+".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                foreach (string k in parts)
+                {
+                    if (k.ToUpper() == "CONTROL")
+                    {
+                        checkBoxShortcutsControl.Checked = true;
+                    }
+                    else if (k.ToUpper() == "ALT")
+                    {
+                        checkBoxShortcutsAlt.Checked = true;
+                    }
+                    else if (k.ToUpper() == "SHIFT")
+                    {
+                        checkBoxShortcutsShift.Checked = true;
+                    }
+                    else
+                    {
+                        int i = 0;
+                        foreach (string value in comboBoxShortcutKey.Items)
+                        {
+                            if (value.ToUpper() == k.ToUpper())
+                            {
+                                comboBoxShortcutKey.SelectedIndex = i;
+                                break;
+                            }
+                            i++;
+                        }
+                    }
+                
+                }
+
+                
+            }
+        }
+
+        private string GetShortcut(string text)
+        {
+            string shortcut = text.Substring(text.IndexOf("["));
+            shortcut = shortcut.TrimEnd(']').TrimStart('[');
+            return shortcut;
+        }
+
+        private void buttonUpdateShortcut_Click(object sender, EventArgs e)
+        {
+            if (treeViewShortcuts.SelectedNode != null && treeViewShortcuts.SelectedNode.Text.Contains("["))
+            {
+                string text = treeViewShortcuts.SelectedNode.Text.Substring(0, treeViewShortcuts.SelectedNode.Text.IndexOf("[")).Trim();
+
+                if (comboBoxShortcutKey.SelectedIndex == 0)
+                {
+                    treeViewShortcuts.SelectedNode.Text = text + " [" + Configuration.Settings.Language.General.None + "]";
+                    return;
+                }
+
+                StringBuilder sb = new StringBuilder();
+                sb.Append("[");
+                if (checkBoxShortcutsControl.Checked)
+                    sb.Append("Control+");
+                if (checkBoxShortcutsAlt.Checked)
+                    sb.Append("Alt+");
+                if (checkBoxShortcutsShift.Checked)
+                    sb.Append("Shift+");
+                sb.Append(comboBoxShortcutKey.Items[comboBoxShortcutKey.SelectedIndex]);
+                sb.Append("]");
+
+                if (sb.Length < 4 || sb.ToString().EndsWith("+]"))
+                {
+                    MessageBox.Show(string.Format(Configuration.Settings.Language.Settings.ShortcutIsNotValid, sb.ToString()));
+                    return;
+                }
+
+                treeViewShortcuts.SelectedNode.Text = text + " " + sb.ToString();
+
             }
         }
 

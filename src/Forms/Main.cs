@@ -1941,6 +1941,8 @@ namespace Nikse.SubtitleEdit.Forms
                 Main_Resize(null, null);
             }
 
+            SetShortcuts();
+
             _timerAutoSave.Stop();
             if (Configuration.Settings.General.AutoBackupSeconds > 0)
             {
@@ -7819,6 +7821,13 @@ namespace Nikse.SubtitleEdit.Forms
             else
                 SubtitleListview1.Focus();
 
+            SetShortcuts();
+
+            LoadPlugins();
+        }
+
+        private void SetShortcuts()
+        {
             newToolStripMenuItem.ShortcutKeys = GetKeys(Configuration.Settings.Shortcuts.MainFileNew);
             openToolStripMenuItem.ShortcutKeys = GetKeys(Configuration.Settings.Shortcuts.MainFileOpen);
             saveToolStripMenuItem.ShortcutKeys = GetKeys(Configuration.Settings.Shortcuts.MainFileSave);
@@ -7831,8 +7840,6 @@ namespace Nikse.SubtitleEdit.Forms
             toolStripMenuItemAdjustAllTimes.ShortcutKeys = GetKeys(Configuration.Settings.Shortcuts.MainSynchronizationAdjustTimes);
             italicToolStripMenuItem.ShortcutKeys = GetKeys(Configuration.Settings.Shortcuts.MainListViewItalic);
             italicToolStripMenuItem1.ShortcutKeys = GetKeys(Configuration.Settings.Shortcuts.MainTextBoxItalic);
-
-            LoadPlugins();
         }
 
         //testing PLUGINS!
