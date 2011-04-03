@@ -196,6 +196,16 @@
             this.textBoxProxyPassword = new System.Windows.Forms.TextBox();
             this.textBoxProxyAddress = new System.Windows.Forms.TextBox();
             this.labelProxyAddress = new System.Windows.Forms.Label();
+            this.tabPageShortcuts = new System.Windows.Forms.TabPage();
+            this.groupBoxShortcuts = new System.Windows.Forms.GroupBox();
+            this.labelShortcutKey = new System.Windows.Forms.Label();
+            this.comboBoxShortcutKey = new System.Windows.Forms.ComboBox();
+            this.checkBoxShortcutsShift = new System.Windows.Forms.CheckBox();
+            this.checkBoxShortcutsAlt = new System.Windows.Forms.CheckBox();
+            this.checkBoxShortcutsControl = new System.Windows.Forms.CheckBox();
+            this.buttonUpdateShortcut = new System.Windows.Forms.Button();
+            this.treeViewShortcuts = new System.Windows.Forms.TreeView();
+            this.labelShortcut = new System.Windows.Forms.Label();
             this.colorDialogSSAStyle = new System.Windows.Forms.ColorDialog();
             this.fontDialogSSAStyle = new System.Windows.Forms.FontDialog();
             this.labelStatus = new System.Windows.Forms.Label();
@@ -237,6 +247,8 @@
             this.tabPageProxy.SuspendLayout();
             this.groupBoxProxySettings.SuspendLayout();
             this.groupBoxProxyAuthentication.SuspendLayout();
+            this.tabPageShortcuts.SuspendLayout();
+            this.groupBoxShortcuts.SuspendLayout();
             this.SuspendLayout();
             // 
             // buttonOK
@@ -270,6 +282,7 @@
             this.tabControlSettings.Controls.Add(this.tabPageWordLists);
             this.tabControlSettings.Controls.Add(this.tabPageSsaStyle);
             this.tabControlSettings.Controls.Add(this.tabPageProxy);
+            this.tabControlSettings.Controls.Add(this.tabPageShortcuts);
             this.tabControlSettings.Location = new System.Drawing.Point(13, 13);
             this.tabControlSettings.Name = "tabControlSettings";
             this.tabControlSettings.SelectedIndex = 0;
@@ -2037,6 +2050,185 @@
             this.labelProxyAddress.TabIndex = 3;
             this.labelProxyAddress.Text = "Proxy address";
             // 
+            // tabPageShortcuts
+            // 
+            this.tabPageShortcuts.Controls.Add(this.groupBoxShortcuts);
+            this.tabPageShortcuts.Location = new System.Drawing.Point(4, 22);
+            this.tabPageShortcuts.Name = "tabPageShortcuts";
+            this.tabPageShortcuts.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPageShortcuts.Size = new System.Drawing.Size(798, 411);
+            this.tabPageShortcuts.TabIndex = 8;
+            this.tabPageShortcuts.Text = "Shortcuts";
+            this.tabPageShortcuts.UseVisualStyleBackColor = true;
+            // 
+            // groupBoxShortcuts
+            // 
+            this.groupBoxShortcuts.Controls.Add(this.labelShortcutKey);
+            this.groupBoxShortcuts.Controls.Add(this.comboBoxShortcutKey);
+            this.groupBoxShortcuts.Controls.Add(this.checkBoxShortcutsShift);
+            this.groupBoxShortcuts.Controls.Add(this.checkBoxShortcutsAlt);
+            this.groupBoxShortcuts.Controls.Add(this.checkBoxShortcutsControl);
+            this.groupBoxShortcuts.Controls.Add(this.buttonUpdateShortcut);
+            this.groupBoxShortcuts.Controls.Add(this.treeViewShortcuts);
+            this.groupBoxShortcuts.Controls.Add(this.labelShortcut);
+            this.groupBoxShortcuts.Location = new System.Drawing.Point(6, 6);
+            this.groupBoxShortcuts.Name = "groupBoxShortcuts";
+            this.groupBoxShortcuts.Size = new System.Drawing.Size(786, 399);
+            this.groupBoxShortcuts.TabIndex = 2;
+            this.groupBoxShortcuts.TabStop = false;
+            this.groupBoxShortcuts.Text = "Shortcuts";
+            // 
+            // labelShortcutKey
+            // 
+            this.labelShortcutKey.AutoSize = true;
+            this.labelShortcutKey.Location = new System.Drawing.Point(320, 367);
+            this.labelShortcutKey.Name = "labelShortcutKey";
+            this.labelShortcutKey.Size = new System.Drawing.Size(25, 13);
+            this.labelShortcutKey.TabIndex = 35;
+            this.labelShortcutKey.Text = "Key";
+            // 
+            // comboBoxShortcutKey
+            // 
+            this.comboBoxShortcutKey.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxShortcutKey.Enabled = false;
+            this.comboBoxShortcutKey.FormattingEnabled = true;
+            this.comboBoxShortcutKey.Items.AddRange(new object[] {
+            "None",
+            "A",
+            "B",
+            "C",
+            "D",
+            "E",
+            "F",
+            "G",
+            "H",
+            "I",
+            "J",
+            "K",
+            "L",
+            "M",
+            "N",
+            "O",
+            "P",
+            "Q",
+            "R",
+            "S",
+            "T",
+            "U",
+            "V",
+            "W",
+            "X",
+            "Y",
+            "Z",
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6",
+            "7",
+            "8",
+            "9",
+            "0",
+            "F1",
+            "F2",
+            "F3",
+            "F4",
+            "F5",
+            "F6",
+            "F7",
+            "F8",
+            "F9",
+            "F10",
+            "F11",
+            "F12",
+            "Del",
+            "Down",
+            "End",
+            "Ins",
+            "Left",
+            "Pause",
+            "Right",
+            "Space",
+            "Tab",
+            "Up",
+            "NumPad0",
+            "NumPad1",
+            "NumPad2",
+            "NumPad3",
+            "NumPad4",
+            "NumPad5",
+            "NumPad6",
+            "NumPad7",
+            "NumPad8",
+            "NumPad9"});
+            this.comboBoxShortcutKey.Location = new System.Drawing.Point(351, 365);
+            this.comboBoxShortcutKey.Name = "comboBoxShortcutKey";
+            this.comboBoxShortcutKey.Size = new System.Drawing.Size(92, 21);
+            this.comboBoxShortcutKey.TabIndex = 4;
+            // 
+            // checkBoxShortcutsShift
+            // 
+            this.checkBoxShortcutsShift.AutoSize = true;
+            this.checkBoxShortcutsShift.Enabled = false;
+            this.checkBoxShortcutsShift.Location = new System.Drawing.Point(243, 366);
+            this.checkBoxShortcutsShift.Name = "checkBoxShortcutsShift";
+            this.checkBoxShortcutsShift.Size = new System.Drawing.Size(48, 17);
+            this.checkBoxShortcutsShift.TabIndex = 3;
+            this.checkBoxShortcutsShift.Text = "Shift";
+            this.checkBoxShortcutsShift.UseVisualStyleBackColor = true;
+            // 
+            // checkBoxShortcutsAlt
+            // 
+            this.checkBoxShortcutsAlt.AutoSize = true;
+            this.checkBoxShortcutsAlt.Enabled = false;
+            this.checkBoxShortcutsAlt.Location = new System.Drawing.Point(174, 366);
+            this.checkBoxShortcutsAlt.Name = "checkBoxShortcutsAlt";
+            this.checkBoxShortcutsAlt.Size = new System.Drawing.Size(39, 17);
+            this.checkBoxShortcutsAlt.TabIndex = 2;
+            this.checkBoxShortcutsAlt.Text = "Alt";
+            this.checkBoxShortcutsAlt.UseVisualStyleBackColor = true;
+            // 
+            // checkBoxShortcutsControl
+            // 
+            this.checkBoxShortcutsControl.AutoSize = true;
+            this.checkBoxShortcutsControl.Enabled = false;
+            this.checkBoxShortcutsControl.Location = new System.Drawing.Point(87, 367);
+            this.checkBoxShortcutsControl.Name = "checkBoxShortcutsControl";
+            this.checkBoxShortcutsControl.Size = new System.Drawing.Size(61, 17);
+            this.checkBoxShortcutsControl.TabIndex = 1;
+            this.checkBoxShortcutsControl.Text = "Control";
+            this.checkBoxShortcutsControl.UseVisualStyleBackColor = true;
+            // 
+            // buttonUpdateShortcut
+            // 
+            this.buttonUpdateShortcut.Enabled = false;
+            this.buttonUpdateShortcut.Location = new System.Drawing.Point(482, 363);
+            this.buttonUpdateShortcut.Name = "buttonUpdateShortcut";
+            this.buttonUpdateShortcut.Size = new System.Drawing.Size(111, 23);
+            this.buttonUpdateShortcut.TabIndex = 5;
+            this.buttonUpdateShortcut.Text = "&Update";
+            this.buttonUpdateShortcut.UseVisualStyleBackColor = true;
+            this.buttonUpdateShortcut.Click += new System.EventHandler(this.buttonUpdateShortcut_Click);
+            // 
+            // treeViewShortcuts
+            // 
+            this.treeViewShortcuts.HideSelection = false;
+            this.treeViewShortcuts.Location = new System.Drawing.Point(16, 21);
+            this.treeViewShortcuts.Name = "treeViewShortcuts";
+            this.treeViewShortcuts.Size = new System.Drawing.Size(751, 325);
+            this.treeViewShortcuts.TabIndex = 0;
+            this.treeViewShortcuts.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeViewShortcuts_AfterSelect);
+            // 
+            // labelShortcut
+            // 
+            this.labelShortcut.AutoSize = true;
+            this.labelShortcut.Location = new System.Drawing.Point(13, 368);
+            this.labelShortcut.Name = "labelShortcut";
+            this.labelShortcut.Size = new System.Drawing.Size(52, 13);
+            this.labelShortcut.TabIndex = 3;
+            this.labelShortcut.Text = "Shortcut:";
+            // 
             // labelStatus
             // 
             this.labelStatus.AutoSize = true;
@@ -2120,6 +2312,9 @@
             this.groupBoxProxySettings.PerformLayout();
             this.groupBoxProxyAuthentication.ResumeLayout(false);
             this.groupBoxProxyAuthentication.PerformLayout();
+            this.tabPageShortcuts.ResumeLayout(false);
+            this.groupBoxShortcuts.ResumeLayout(false);
+            this.groupBoxShortcuts.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -2298,5 +2493,15 @@
         private System.Windows.Forms.CheckBox checkBoxFixCommonOcrErrorsUsingHardcodedRules;
         private System.Windows.Forms.Label labelVideoPlayerPreviewFontSize;
         private System.Windows.Forms.ComboBox comboBoxlVideoPlayerPreviewFontSize;
+        private System.Windows.Forms.TabPage tabPageShortcuts;
+        private System.Windows.Forms.GroupBox groupBoxShortcuts;
+        private System.Windows.Forms.Button buttonUpdateShortcut;
+        private System.Windows.Forms.TreeView treeViewShortcuts;
+        private System.Windows.Forms.Label labelShortcut;
+        private System.Windows.Forms.Label labelShortcutKey;
+        private System.Windows.Forms.ComboBox comboBoxShortcutKey;
+        private System.Windows.Forms.CheckBox checkBoxShortcutsShift;
+        private System.Windows.Forms.CheckBox checkBoxShortcutsAlt;
+        private System.Windows.Forms.CheckBox checkBoxShortcutsControl;
     }
 }

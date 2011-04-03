@@ -1088,6 +1088,15 @@
             public string MusicSymbol { get; set; }
             public string MusicSymbolsToReplace { get; set; }
             public string FixCommonOcrErrorsUseHardcodedRules { get; set; }
+            public string Shortcuts { get; set; }
+            public string Shortcut { get; set; }
+            public string Control { get; set; }
+            public string Alt { get; set; }
+            public string Shift { get; set; }
+            public string Key { get; set; }
+            public string TextBox { get; set; }
+            public string UpdateShortcut { get; set; }
+            public string ShortcutIsNotValid { get; set; }
         }
 
         public class ShowEarlierLater

@@ -1154,6 +1154,15 @@ can edit in same subtitle file (collaboration)",
                 MusicSymbol = "Music symbol",                
                 MusicSymbolsToReplace = "Music symbols to replace (separate by space)",
                 FixCommonOcrErrorsUseHardcodedRules = "Fix common OCR errors - also use hardcoded rules",
+                Shortcuts = "Shortcuts",
+                Shortcut = "Shortcut",
+                Control = "Control",
+                Alt = "Alt",
+                Shift = "Shift",
+                Key = "Key",
+                TextBox = "Textbox",
+                UpdateShortcut = "Update",
+                ShortcutIsNotValid = "Shortcut is not valid: {0}",
             };
 
             ShowEarlierLater = new LanguageStructure.ShowEarlierLater
