@@ -393,6 +393,7 @@ namespace Nikse.SubtitleEdit.Logic
         public string MainEditFindNext { get; set; }
         public string MainEditReplace { get; set; }
         public string MainEditGoToLineNumber { get; set; }
+        public string MainToolsFixCommonErrors { get; set; }        
         public string MainVideoShowHideVideo { get; set; }
         public string MainSynchronizationAdjustTimes { get; set; }                
         public string MainListViewItalic { get; set; }
@@ -408,6 +409,7 @@ namespace Nikse.SubtitleEdit.Logic
             MainEditFindNext = "F3";
             MainEditReplace = "Control+H";
             MainEditGoToLineNumber = "Control+G";
+            MainToolsFixCommonErrors = "Control+Shift+F";
             MainVideoShowHideVideo = "Control+Q";
             MainSynchronizationAdjustTimes = "Control+Shift+A";
             MainListViewItalic = "Control+I";
@@ -997,6 +999,9 @@ namespace Nikse.SubtitleEdit.Logic
                 subNode = node.SelectSingleNode("MainEditGoToLineNumber");
                 if (subNode != null)
                     settings.Shortcuts.MainEditGoToLineNumber = subNode.InnerText;
+                subNode = node.SelectSingleNode("MainToolsFixCommonErrors");
+                if (subNode != null)
+                    settings.Shortcuts.MainToolsFixCommonErrors = subNode.InnerText;                
                 subNode = node.SelectSingleNode("MainVideoShowHideVideo");
                 if (subNode != null)
                     settings.Shortcuts.MainVideoShowHideVideo = subNode.InnerText;
@@ -1207,6 +1212,7 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("MainEditFindNext", settings.Shortcuts.MainEditFindNext);
             textWriter.WriteElementString("MainEditReplace", settings.Shortcuts.MainEditReplace);
             textWriter.WriteElementString("MainEditGoToLineNumber", settings.Shortcuts.MainEditGoToLineNumber);
+            textWriter.WriteElementString("MainToolsFixCommonErrors", settings.Shortcuts.MainToolsFixCommonErrors);            
             textWriter.WriteElementString("MainVideoShowHideVideo", settings.Shortcuts.MainVideoShowHideVideo);
             textWriter.WriteElementString("MainSynchronizationAdjustTimes", settings.Shortcuts.MainSynchronizationAdjustTimes);            
             textWriter.WriteElementString("MainListViewItalic", settings.Shortcuts.MainEditGoToLineNumber);

@@ -105,7 +105,7 @@ namespace Nikse.SubtitleEdit.Forms
                     if (versionInfo.Length >= 3 && versionInfo[2] != "0")
                         _title += "." + versionInfo[2];
                 }
-                return _title;
+                return _title + " Alpha";
             }
         }
 
@@ -713,6 +713,7 @@ namespace Nikse.SubtitleEdit.Forms
             replaceToolStripMenuItem.Text = _language.Menu.Edit.Replace;
             multipleReplaceToolStripMenuItem.Text = _language.Menu.Edit.MultipleReplace;
             gotoLineNumberToolStripMenuItem.Text = _language.Menu.Edit.GoToSubtitleNumber;
+            editSelectAllToolStripMenuItem.Text = _language.Menu.ContextMenu.SelectAll;
 
             toolsToolStripMenuItem.Text = _language.Menu.Tools.Title;
             adjustDisplayTimeToolStripMenuItem.Text = _language.Menu.Tools.AdjustDisplayDuration;
@@ -7836,13 +7837,15 @@ namespace Nikse.SubtitleEdit.Forms
             findNextToolStripMenuItem.ShortcutKeys = GetKeys(Configuration.Settings.Shortcuts.MainEditFindNext);
             replaceToolStripMenuItem.ShortcutKeys = GetKeys(Configuration.Settings.Shortcuts.MainEditReplace);
             gotoLineNumberToolStripMenuItem.ShortcutKeys = GetKeys(Configuration.Settings.Shortcuts.MainEditGoToLineNumber);
+
+            fixToolStripMenuItem.ShortcutKeys = GetKeys(Configuration.Settings.Shortcuts.MainToolsFixCommonErrors);
+
             showhideVideoToolStripMenuItem.ShortcutKeys = GetKeys(Configuration.Settings.Shortcuts.MainVideoShowHideVideo);
             toolStripMenuItemAdjustAllTimes.ShortcutKeys = GetKeys(Configuration.Settings.Shortcuts.MainSynchronizationAdjustTimes);
             italicToolStripMenuItem.ShortcutKeys = GetKeys(Configuration.Settings.Shortcuts.MainListViewItalic);
             italicToolStripMenuItem1.ShortcutKeys = GetKeys(Configuration.Settings.Shortcuts.MainTextBoxItalic);
         }
 
-        //testing PLUGINS!
         private void LoadPlugins()
         {
             string path = Path.Combine(Configuration.BaseDirectory, "Plugins");
@@ -9726,6 +9729,11 @@ namespace Nikse.SubtitleEdit.Forms
             ShowStatus(string.Format(_language.VideoControls.NewTextInsertAtX, newParagraph.StartTime.ToShortString()));
         }
 
+        private void editSelectAllToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            for (int i = 0; i < SubtitleListview1.Items.Count; i++)
+                SubtitleListview1.Items[i].Selected = true;
+        }
 
     }
 }
