@@ -431,6 +431,10 @@ namespace Nikse.SubtitleEdit.Forms
             editNode.Nodes.Add(Configuration.Settings.Language.Main.Menu.Edit.GoToSubtitleNumber + GetShortcutText(Configuration.Settings.Shortcuts.MainEditGoToLineNumber));
             treeViewShortcuts.Nodes.Add(editNode);
 
+            TreeNode toolsNode = new TreeNode(Configuration.Settings.Language.Main.Menu.Tools.Title);
+            toolsNode.Nodes.Add(Configuration.Settings.Language.Main.Menu.Tools.FixCommonErrors + GetShortcutText(Configuration.Settings.Shortcuts.MainToolsFixCommonErrors));
+            treeViewShortcuts.Nodes.Add(toolsNode);
+
             //<MainVideoShowHideVideo>Control+Q</MainVideoShowHideVideo>
             TreeNode videoNode = new TreeNode(Configuration.Settings.Language.Main.Menu.Video.Title);
             videoNode.Nodes.Add(Configuration.Settings.Language.Main.Menu.Video.ShowHideVideo + GetShortcutText(Configuration.Settings.Shortcuts.MainVideoShowHideVideo));
@@ -772,9 +776,19 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
 
+            //Main Tools
+            foreach (TreeNode node in treeViewShortcuts.Nodes[2].Nodes)
+            {
+                if (node.Text.Contains("["))
+                {
+                    string text = node.Text.Substring(0, node.Text.IndexOf("[")).Trim();
+                    if (text == Configuration.Settings.Language.Main.Menu.Tools.FixCommonErrors.Replace("&", string.Empty))
+                        Configuration.Settings.Shortcuts.MainToolsFixCommonErrors = GetShortcut(node.Text);
+                }
+            }
 
             //Main Video
-            foreach (TreeNode node in treeViewShortcuts.Nodes[2].Nodes)
+            foreach (TreeNode node in treeViewShortcuts.Nodes[3].Nodes)
             {
                 if (node.Text.Contains("["))
                 {
@@ -785,7 +799,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             //Main Sync
-            foreach (TreeNode node in treeViewShortcuts.Nodes[3].Nodes)
+            foreach (TreeNode node in treeViewShortcuts.Nodes[4].Nodes)
             {
                 if (node.Text.Contains("["))
                 {
@@ -796,7 +810,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             //Main List view
-            foreach (TreeNode node in treeViewShortcuts.Nodes[4].Nodes)
+            foreach (TreeNode node in treeViewShortcuts.Nodes[5].Nodes)
             {
                 if (node.Text.Contains("["))
                 {
@@ -807,7 +821,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             //Main text box
-            foreach (TreeNode node in treeViewShortcuts.Nodes[5].Nodes)
+            foreach (TreeNode node in treeViewShortcuts.Nodes[6].Nodes)
             {
                 if (node.Text.Contains("["))
                 {

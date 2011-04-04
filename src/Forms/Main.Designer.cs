@@ -100,6 +100,8 @@
             this.replaceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.multipleReplaceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.gotoLineNumberToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator21 = new System.Windows.Forms.ToolStripSeparator();
+            this.editSelectAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.adjustDisplayTimeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.fixToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -912,7 +914,9 @@
             this.findNextToolStripMenuItem,
             this.replaceToolStripMenuItem,
             this.multipleReplaceToolStripMenuItem,
-            this.gotoLineNumberToolStripMenuItem});
+            this.gotoLineNumberToolStripMenuItem,
+            this.toolStripSeparator21,
+            this.editSelectAllToolStripMenuItem});
             this.editToolStripMenuItem.Name = "editToolStripMenuItem";
             this.editToolStripMenuItem.Size = new System.Drawing.Size(40, 20);
             this.editToolStripMenuItem.Text = "Edit";
@@ -1012,6 +1016,18 @@
             this.gotoLineNumberToolStripMenuItem.Size = new System.Drawing.Size(222, 22);
             this.gotoLineNumberToolStripMenuItem.Text = "Goto line number...";
             this.gotoLineNumberToolStripMenuItem.Click += new System.EventHandler(this.GotoLineNumberToolStripMenuItemClick);
+            // 
+            // toolStripSeparator21
+            // 
+            this.toolStripSeparator21.Name = "toolStripSeparator21";
+            this.toolStripSeparator21.Size = new System.Drawing.Size(219, 6);
+            // 
+            // editSelectAllToolStripMenuItem
+            // 
+            this.editSelectAllToolStripMenuItem.Name = "editSelectAllToolStripMenuItem";
+            this.editSelectAllToolStripMenuItem.Size = new System.Drawing.Size(222, 22);
+            this.editSelectAllToolStripMenuItem.Text = "Select all";
+            this.editSelectAllToolStripMenuItem.Click += new System.EventHandler(this.editSelectAllToolStripMenuItem_Click);
             // 
             // toolsToolStripMenuItem
             // 
@@ -3745,6 +3761,8 @@
         private System.Windows.Forms.Button buttonSplitLine;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemChangeFrameRate2;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemCopySourceText;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator21;
+        private System.Windows.Forms.ToolStripMenuItem editSelectAllToolStripMenuItem;
     }
 }
 

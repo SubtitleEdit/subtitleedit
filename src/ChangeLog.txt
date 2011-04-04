@@ -1,5 +1,24 @@
 Subtitle Edit Changelog
 
+
+3.2 (net yet released)
+ * NEW:
+   * Subtitle formats: D-Cinema, Cavena890
+   * Most important shortcuts in Options -> Settings
+   * Command line conversion between subtitle formats (example: subtitleedit /convert *.srt microdvd)
+   * Subtitle preview font size (below video player) is now available in Options -> Settings
+   * Edit -> Select all 
+   * List view context menu: Copy as text to clipboard
+   * Transscript importer...???
+   * Plug-ins...???
+ * IMPROVED:
+   * Can now read Adobe Encore files starting with line numbers	
+   * Merge short lines can now also merge lines ending with ".", "?", or "!"
+ * FIXED:
+   * Adjust all times did not work for MicroDvd
+   * Remove empty white spaces from Google translate
+
+
 3.1 (3rd March 2011)
  * NEW:
    * Collaboration via the internet ("Networking", also has chat)
