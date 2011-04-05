@@ -43,7 +43,7 @@ POPD
 
 IF /I "%BUILDTYPE%" == "Clean" GOTO END
 
-CALL :SubDetectInno
+CALL :SubDetectInnoSetup
 
 IF DEFINED InnoSetupPath (
   PUSHD "installer"
@@ -75,7 +75,7 @@ ENDLOCAL
 EXIT
 
 
-:SubDetectInno
+:SubDetectInnoSetup
 REM Detect if we are running on 64bit WIN and use Wow6432Node, and set the path
 REM of Inno Setup accordingly
 IF "%PROGRAMFILES(x86)%zzz"=="zzz" (
@@ -86,10 +86,10 @@ IF "%PROGRAMFILES(x86)%zzz"=="zzz" (
 
 FOR /F "delims=" %%a IN (
   'REG QUERY "%U_%\Inno Setup 5_is1" /v "Inno Setup: App Path"2^>Nul^|FIND "REG_"') DO (
-  SET "InnoSetupPath=%%a" & CALL :SubIS %%InnoSetupPath:*Z=%%)
+  SET "InnoSetupPath=%%a" & CALL :SubInnoSetup %%InnoSetupPath:*Z=%%)
 EXIT /B
 
 
-:SubIS
+:SubInnoSetup
 SET InnoSetupPath=%*
 EXIT /B
