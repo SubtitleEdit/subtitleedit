@@ -36,6 +36,7 @@
             this.buttonStartHalfASecondBack = new System.Windows.Forms.Button();
             this.buttonPlayPause = new System.Windows.Forms.Button();
             this.SubtitleListview1 = new Nikse.SubtitleEdit.Controls.SubtitleListView();
+            this.buttonOpenText = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // textBoxListViewText
@@ -43,7 +44,7 @@
             this.textBoxListViewText.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.textBoxListViewText.Enabled = false;
             this.textBoxListViewText.HideSelection = false;
-            this.textBoxListViewText.Location = new System.Drawing.Point(12, 294);
+            this.textBoxListViewText.Location = new System.Drawing.Point(12, 296);
             this.textBoxListViewText.Multiline = true;
             this.textBoxListViewText.Name = "textBoxListViewText";
             this.textBoxListViewText.Size = new System.Drawing.Size(373, 56);
@@ -53,7 +54,7 @@
             // 
             this.labelText.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.labelText.AutoSize = true;
-            this.labelText.Location = new System.Drawing.Point(12, 278);
+            this.labelText.Location = new System.Drawing.Point(12, 280);
             this.labelText.Name = "labelText";
             this.labelText.Size = new System.Drawing.Size(28, 13);
             this.labelText.TabIndex = 8;
@@ -62,7 +63,7 @@
             // buttonInsert
             // 
             this.buttonInsert.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.buttonInsert.Location = new System.Drawing.Point(257, 362);
+            this.buttonInsert.Location = new System.Drawing.Point(257, 370);
             this.buttonInsert.Name = "buttonInsert";
             this.buttonInsert.Size = new System.Drawing.Size(189, 21);
             this.buttonInsert.TabIndex = 9;
@@ -75,7 +76,7 @@
             this.labelTranslateTip.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.labelTranslateTip.AutoSize = true;
             this.labelTranslateTip.ForeColor = System.Drawing.Color.Gray;
-            this.labelTranslateTip.Location = new System.Drawing.Point(452, 370);
+            this.labelTranslateTip.Location = new System.Drawing.Point(257, 355);
             this.labelTranslateTip.Name = "labelTranslateTip";
             this.labelTranslateTip.Size = new System.Drawing.Size(161, 13);
             this.labelTranslateTip.TabIndex = 10;
@@ -84,7 +85,7 @@
             // buttonStartThreeSecondsBack
             // 
             this.buttonStartThreeSecondsBack.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.buttonStartThreeSecondsBack.Location = new System.Drawing.Point(15, 362);
+            this.buttonStartThreeSecondsBack.Location = new System.Drawing.Point(15, 370);
             this.buttonStartThreeSecondsBack.Name = "buttonStartThreeSecondsBack";
             this.buttonStartThreeSecondsBack.Size = new System.Drawing.Size(60, 21);
             this.buttonStartThreeSecondsBack.TabIndex = 11;
@@ -95,7 +96,7 @@
             // buttonStartHalfASecondBack
             // 
             this.buttonStartHalfASecondBack.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.buttonStartHalfASecondBack.Location = new System.Drawing.Point(81, 362);
+            this.buttonStartHalfASecondBack.Location = new System.Drawing.Point(81, 370);
             this.buttonStartHalfASecondBack.Name = "buttonStartHalfASecondBack";
             this.buttonStartHalfASecondBack.Size = new System.Drawing.Size(60, 21);
             this.buttonStartHalfASecondBack.TabIndex = 12;
@@ -106,7 +107,7 @@
             // buttonPlayPause
             // 
             this.buttonPlayPause.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.buttonPlayPause.Location = new System.Drawing.Point(147, 362);
+            this.buttonPlayPause.Location = new System.Drawing.Point(147, 370);
             this.buttonPlayPause.Name = "buttonPlayPause";
             this.buttonPlayPause.Size = new System.Drawing.Size(104, 21);
             this.buttonPlayPause.TabIndex = 13;
@@ -125,18 +126,30 @@
             this.SubtitleListview1.FullRowSelect = true;
             this.SubtitleListview1.GridLines = true;
             this.SubtitleListview1.HideSelection = false;
-            this.SubtitleListview1.Location = new System.Drawing.Point(12, 12);
+            this.SubtitleListview1.Location = new System.Drawing.Point(12, 32);
             this.SubtitleListview1.Name = "SubtitleListview1";
-            this.SubtitleListview1.Size = new System.Drawing.Size(637, 258);
+            this.SubtitleListview1.Size = new System.Drawing.Size(637, 239);
             this.SubtitleListview1.TabIndex = 6;
             this.SubtitleListview1.UseCompatibleStateImageBehavior = false;
             this.SubtitleListview1.View = System.Windows.Forms.View.Details;
+            this.SubtitleListview1.SelectedIndexChanged += new System.EventHandler(this.SubtitleListview1_SelectedIndexChanged);
+            // 
+            // buttonOpenText
+            // 
+            this.buttonOpenText.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonOpenText.Location = new System.Drawing.Point(506, 5);
+            this.buttonOpenText.Name = "buttonOpenText";
+            this.buttonOpenText.Size = new System.Drawing.Size(143, 21);
+            this.buttonOpenText.TabIndex = 14;
+            this.buttonOpenText.Text = "Open transcript...";
+            this.buttonOpenText.UseVisualStyleBackColor = true;
             // 
             // TranscriptImporter
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(661, 392);
+            this.ClientSize = new System.Drawing.Size(661, 398);
+            this.Controls.Add(this.buttonOpenText);
             this.Controls.Add(this.buttonPlayPause);
             this.Controls.Add(this.buttonStartThreeSecondsBack);
             this.Controls.Add(this.buttonStartHalfASecondBack);
@@ -165,5 +178,6 @@
         private System.Windows.Forms.Button buttonStartThreeSecondsBack;
         private System.Windows.Forms.Button buttonStartHalfASecondBack;
         private System.Windows.Forms.Button buttonPlayPause;
+        private System.Windows.Forms.Button buttonOpenText;
     }
 }

@@ -40,6 +40,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     new Spruce(),
                     new SubtitleEditorProject(),
                     new TimedText(),
+                    new TimedText10(),
                     new TMPlayer(),
                     new YouTubeSbv(),
                 //    new Idx(),

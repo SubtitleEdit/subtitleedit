@@ -330,130 +330,130 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 					</sourcetrack>
 				</generatoritem>";
 
-            string xmlTrackStructure3a = 
-@"<generatoritem>
-    <name>Text</name>
-    <duration>3600</duration>
-    <rate>
-        <ntsc>TRUE</ntsc>
-        <timebase>30</timebase>
-    </rate>
-    <in>1650</in>
-    <out>1784</out>
-    <start>0</start>
-    <end>134</end>
-    <enabled>TRUE</enabled>
-    <anamorphic>FALSE</anamorphic>
-    <alphatype>black</alphatype>
-    <effect id = 'subtitle'> 
-        <name>Text</name>
-        <effectid>Text</effectid>
-        <effectcategory>Text</effectcategory>
-        <effecttype>generator</effecttype>
-        <mediatype>video</mediatype>
-        <parameter>
-            <parameterid>str</parameterid>
-            <name>Text</name>
-            <value>If you look at the Lindy Hop&#13;you'll see a couple just moving</value>
-        </parameter>
-        <parameter>
-            <parameterid>fontname</parameterid>
-            <name>Font</name>
-            <value>Futura</value>
-        </parameter>
-        <parameter>
-            <parameterid>fontsize</parameterid>
-            <name>Size</name>
-            <valuemin>0</valuemin>
-            <valuemax>1000</valuemax>
-            <value>36</value></parameter>
-        <parameter>
-            <parameterid>fontstyle</parameterid>
-            <name>Style</name>
-            <valuemin>1</valuemin>
-            <valuemax>4</valuemax>
-            <valuelist>
-                <valueentry>
-                    <name>Plain</name>
-                    <value>1</value>
-                </valueentry>
-                <valueentry>
-                    <name>Bold</name>
-                    <value>2</value>
-                </valueentry>
-                <valueentry>
-                    <name>Italic</name>
-                    <value>3</value>
-                </valueentry>
-                <valueentry>
-                    <name>Bold/Italic</name>
-                    <value>4</value>
-                </valueentry>
-            </valuelist>
-            <value>3</value>
-        </parameter>
-        <parameter>
-            <parameterid>fontalign</parameterid>
-            <name>Alignment</name>
-            <valuemin>1</valuemin>
-            <valuemax>3</valuemax>
-            <valuelist>
-                <valueentry>
-                    <name>Left</name>
-                    <value>1</value>
-                </valueentry>
-                <valueentry>
-                    <name>Center</name>
-                    <value>2</value>
-                </valueentry>
-                <valueentry>
-                    <name>Right</name>
-                    <value>3</value>
-                </valueentry>
-            </valuelist>
-            <value>2</value>
-        </parameter>
-        <parameter>
-            <parameterid>fontcolor</parameterid>
-            <name>Font Color</name>
-            <value>
-                <alpha>255</alpha>
-                <red>255</red>
-                <green>255</green>
-                <blue>255</blue>
-            </value>
-        </parameter>
-        <parameter>
-            <parameterid>origin</parameterid>
-            <name>Origin</name>
-            <value>
-                <horiz>0</horiz>
-                <vert>0.34375</vert>
-            </value>
-        </parameter>
-    </effect>
-    <sourcetrack>
-        <mediatype>video</mediatype>
-    </sourcetrack>
-</generatoritem>";
+//            string xmlTrackStructure3a = 
+//@"<generatoritem>
+//    <name>Text</name>
+//    <duration>3600</duration>
+//    <rate>
+//        <ntsc>TRUE</ntsc>
+//        <timebase>30</timebase>
+//    </rate>
+//    <in>1650</in>
+//    <out>1784</out>
+//    <start>0</start>
+//    <end>134</end>
+//    <enabled>TRUE</enabled>
+//    <anamorphic>FALSE</anamorphic>
+//    <alphatype>black</alphatype>
+//    <effect id = 'subtitle'> 
+//        <name>Text</name>
+//        <effectid>Text</effectid>
+//        <effectcategory>Text</effectcategory>
+//        <effecttype>generator</effecttype>
+//        <mediatype>video</mediatype>
+//        <parameter>
+//            <parameterid>str</parameterid>
+//            <name>Text</name>
+//            <value>If you look at the Lindy Hop&#13;you'll see a couple just moving</value>
+//        </parameter>
+//        <parameter>
+//            <parameterid>fontname</parameterid>
+//            <name>Font</name>
+//            <value>Futura</value>
+//        </parameter>
+//        <parameter>
+//            <parameterid>fontsize</parameterid>
+//            <name>Size</name>
+//            <valuemin>0</valuemin>
+//            <valuemax>1000</valuemax>
+//            <value>36</value></parameter>
+//        <parameter>
+//            <parameterid>fontstyle</parameterid>
+//            <name>Style</name>
+//            <valuemin>1</valuemin>
+//            <valuemax>4</valuemax>
+//            <valuelist>
+//                <valueentry>
+//                    <name>Plain</name>
+//                    <value>1</value>
+//                </valueentry>
+//                <valueentry>
+//                    <name>Bold</name>
+//                    <value>2</value>
+//                </valueentry>
+//                <valueentry>
+//                    <name>Italic</name>
+//                    <value>3</value>
+//                </valueentry>
+//                <valueentry>
+//                    <name>Bold/Italic</name>
+//                    <value>4</value>
+//                </valueentry>
+//            </valuelist>
+//            <value>3</value>
+//        </parameter>
+//        <parameter>
+//            <parameterid>fontalign</parameterid>
+//            <name>Alignment</name>
+//            <valuemin>1</valuemin>
+//            <valuemax>3</valuemax>
+//            <valuelist>
+//                <valueentry>
+//                    <name>Left</name>
+//                    <value>1</value>
+//                </valueentry>
+//                <valueentry>
+//                    <name>Center</name>
+//                    <value>2</value>
+//                </valueentry>
+//                <valueentry>
+//                    <name>Right</name>
+//                    <value>3</value>
+//                </valueentry>
+//            </valuelist>
+//            <value>2</value>
+//        </parameter>
+//        <parameter>
+//            <parameterid>fontcolor</parameterid>
+//            <name>Font Color</name>
+//            <value>
+//                <alpha>255</alpha>
+//                <red>255</red>
+//                <green>255</green>
+//                <blue>255</blue>
+//            </value>
+//        </parameter>
+//        <parameter>
+//            <parameterid>origin</parameterid>
+//            <name>Origin</name>
+//            <value>
+//                <horiz>0</horiz>
+//                <vert>0.34375</vert>
+//            </value>
+//        </parameter>
+//    </effect>
+//    <sourcetrack>
+//        <mediatype>video</mediatype>
+//    </sourcetrack>
+//</generatoritem>";
 
-string xmlTrackStructure3b =
-@"<generatoritem>
-    <start>135</start>
-    <end>219</end>
-    <effect id='subtitle'> 
-        <name>Text</name>
-        <effectid>Text</effectid>
-        <effectcategory>Text</effectcategory>
-        <effecttype>generator</effecttype>
-        <mediatype>video</mediatype>
-        <parameter>
-            <parameterid>str</parameterid>
-            <name>Text</name>
-            <value></value>
-        </parameter>
-    </effect>
-</generatoritem>";
+//string xmlTrackStructure3b =
+//@"<generatoritem>
+//    <start>135</start>
+//    <end>219</end>
+//    <effect id='subtitle'> 
+//        <name>Text</name>
+//        <effectid>Text</effectid>
+//        <effectcategory>Text</effectcategory>
+//        <effecttype>generator</effecttype>
+//        <mediatype>video</mediatype>
+//        <parameter>
+//            <parameterid>str</parameterid>
+//            <name>Text</name>
+//            <value></value>
+//        </parameter>
+//    </effect>
+//</generatoritem>";
 
             XmlDocument xml = new XmlDocument();
             xml.LoadXml(xmlStructure);

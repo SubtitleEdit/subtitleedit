@@ -76,5 +76,17 @@ namespace Nikse.SubtitleEdit.Forms
             _main.GoBackSeconds(3.0);
         }
 
+        private void SubtitleListview1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            Paragraph p = SubtitleListview1.GetSelectedParagraph(_subtitle);
+            if (p != null)
+            {
+
+            }
+            else
+            { 
+            }            
+        }
+
     }
 }

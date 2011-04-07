@@ -340,6 +340,7 @@
             this.contextMenuStripEmpty = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.insertLineToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.imageListPlayRate = new System.Windows.Forms.ImageList(this.components);
+            this.transcriptImporterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
@@ -1336,7 +1337,8 @@
             this.toolStripMenuItemAdjustAllTimes,
             this.visualSyncToolStripMenuItem,
             this.toolStripMenuItemPointSync,
-            this.toolStripMenuItemChangeFrameRate2});
+            this.toolStripMenuItemChangeFrameRate2,
+            this.transcriptImporterToolStripMenuItem});
             this.toolStripMenuItemSyncronization.Name = "toolStripMenuItemSyncronization";
             this.toolStripMenuItemSyncronization.Size = new System.Drawing.Size(97, 20);
             this.toolStripMenuItemSyncronization.Text = "Syncronization";
@@ -3378,6 +3380,13 @@
             this.imageListPlayRate.Images.SetKeyName(0, "FastForward.png");
             this.imageListPlayRate.Images.SetKeyName(1, "FastForwardHighLight.png");
             // 
+            // transcriptImporterToolStripMenuItem
+            // 
+            this.transcriptImporterToolStripMenuItem.Name = "transcriptImporterToolStripMenuItem";
+            this.transcriptImporterToolStripMenuItem.Size = new System.Drawing.Size(336, 22);
+            this.transcriptImporterToolStripMenuItem.Text = "Transcript importer...";
+            this.transcriptImporterToolStripMenuItem.Click += new System.EventHandler(this.transcriptImporterToolStripMenuItem_Click);
+            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -3763,6 +3772,7 @@
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemCopySourceText;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator21;
         private System.Windows.Forms.ToolStripMenuItem editSelectAllToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem transcriptImporterToolStripMenuItem;
     }
 }
 
