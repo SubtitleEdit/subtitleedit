@@ -78,6 +78,7 @@ namespace Nikse.SubtitleEdit.Forms
         NetworkChat _networkChat = null;
 
         ShowEarlierLater _showEarlierOrLater = null;
+        TranscriptImporter _transcriptImporter = null;
 
         bool _isVideoControlsUnDocked = false;
         VideoPlayerUnDocked _videoPlayerUnDocked = null;
@@ -6483,12 +6484,20 @@ namespace Nikse.SubtitleEdit.Forms
                     if (!string.IsNullOrEmpty(importText.VideoFileName))
                         OpenVideo(importText.VideoFileName);
 
-                    var ti = new TranscriptImporter();
-                    ti.Initialize(importText.FixedSubtitle, this);
-                    ti.Top = this.Top + 100;
-                    ti.Left = this.Left + (this.Width / 2) - (ti.Width / 3);
 
-                    ti.Show(this);
+                    if (_transcriptImporter != null && !_transcriptImporter.IsDisposed)
+                    {
+                        _transcriptImporter.WindowState = FormWindowState.Normal;
+                        _transcriptImporter.Focus();
+                        return;
+                    }             
+
+                    _transcriptImporter = new TranscriptImporter();
+                    _transcriptImporter.Initialize(importText.FixedSubtitle, this);
+                    _transcriptImporter.Top = this.Top + 100;
+                    _transcriptImporter.Left = this.Left + (this.Width / 2) - (_transcriptImporter.Width / 3);
+
+                    _transcriptImporter.Show(this);
 
                     //SyncPointsSync syncPointSync = new SyncPointsSync();
                     //syncPointSync.Initialize(importText.FixedSubtitle, _fileName, importText.VideoFileName, _videoAudioTrackNumber);
@@ -9733,6 +9742,23 @@ namespace Nikse.SubtitleEdit.Forms
         {
             for (int i = 0; i < SubtitleListview1.Items.Count; i++)
                 SubtitleListview1.Items[i].Selected = true;
+        }
+
+        private void transcriptImporterToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (_transcriptImporter != null && !_transcriptImporter.IsDisposed)
+            {
+                _transcriptImporter.WindowState = FormWindowState.Normal;
+                _transcriptImporter.Focus();
+                return;
+            }
+
+            _transcriptImporter = new TranscriptImporter();
+            _transcriptImporter.Initialize(new Subtitle(), this);
+            _transcriptImporter.Top = this.Top + 100;
+            _transcriptImporter.Left = this.Left + (this.Width / 2) - (_transcriptImporter.Width / 3);
+
+            _transcriptImporter.Show(this);
         }
 
     }

@@ -532,6 +532,7 @@
     <Compile Include="Logic\SubtitleFormats\SonyDVDArchitect.cs" />
     <Compile Include="Logic\SubtitleFormats\Spruce.cs" />
     <Compile Include="Logic\SubtitleFormats\SubtitleEditorProject.cs" />
+    <Compile Include="Logic\SubtitleFormats\TimedText10.cs" />
     <Compile Include="Logic\SubtitleFormats\UleadSubtitleFormat.cs" />
     <Compile Include="Logic\SubtitleFormats\UnknownSubtitle5.cs" />
     <Compile Include="Logic\SubtitleFormats\OpenDvt.cs" />
@@ -873,7 +874,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Resources\bg-BG.xml" />
-    <Content Include="Resources\fa-IR.xml" />
+    <Content Include="Resources\fa-IR.xml">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Resources\ja-JP.xml" />
     <Content Include="Resources\zh-CHS.xml" />
     <None Include="Web References\SeNetworkService\SeService.disco" />

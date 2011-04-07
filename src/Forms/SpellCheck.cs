@@ -552,7 +552,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                             List<string> suggestions = new List<string>();
 
-                            if (_currentWord.Length > 4 || !_currentWord.Contains("'")) //TODO: get fixed nhunspell
+                            if (_currentWord != "Lt'S" && _currentWord != "Sox's") //TODO: get fixed nhunspell
                                 suggestions = _hunspell.Suggest(_currentWord); //TODO: 0.9.6 fails on "Lt'S"
 
                             if (AutoFixNames && _currentWord.Length > 1 && suggestions.Contains(_currentWord.Substring(0, 1).ToUpper() + _currentWord.Substring(1)))

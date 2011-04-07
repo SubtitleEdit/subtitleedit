@@ -20,6 +20,7 @@ namespace Nikse.SubtitleEdit.Logic.OCR
         Dictionary<string, string> _beginLineReplaceList;
         Dictionary<string, string> _endLineReplaceList;
         Dictionary<string, string> _wholeLineReplaceList;
+        Dictionary<string, string> _partialWordReplaceListAlways;
         Dictionary<string, string> _partialWordReplaceList;
         string _replaceListXmlFileName;
         string _userWordListXmlFileName;
@@ -70,6 +71,7 @@ namespace Nikse.SubtitleEdit.Logic.OCR
             _beginLineReplaceList = new Dictionary<string, string>();
             _endLineReplaceList = new Dictionary<string, string>();
             _wholeLineReplaceList = new Dictionary<string, string>();
+            _partialWordReplaceListAlways = new Dictionary<string, string>();
             _partialWordReplaceList = new Dictionary<string, string>();
 
             _replaceListXmlFileName = Utilities.DictionaryFolder + languageId + "_OCRFixReplaceList.xml";
@@ -79,6 +81,7 @@ namespace Nikse.SubtitleEdit.Logic.OCR
                 doc.Load(_replaceListXmlFileName);
 
                 _wordReplaceList = LoadReplaceList(doc, "WholeWords");
+                _partialWordReplaceList = LoadReplaceList(doc, "PartialWordsAlways");
                 _partialWordReplaceList = LoadReplaceList(doc, "PartialWords");
                 _partialLineReplaceList = LoadReplaceList(doc, "PartialLines");
                 _beginLineReplaceList = LoadReplaceList(doc, "BeginLines");
@@ -314,6 +317,10 @@ namespace Nikse.SubtitleEdit.Logic.OCR
                         word = word.Replace("¤", "o");
                 }
             }
+
+            //always replace list
+            foreach (string letter in _partialWordReplaceListAlways.Keys)
+                word = word.Replace(letter,_partialWordReplaceListAlways[letter]);
 
             string pre = string.Empty;
             string post = string.Empty;
@@ -706,15 +713,45 @@ namespace Nikse.SubtitleEdit.Logic.OCR
 
         public string FixUnknownWordsViaGuessOrPrompt(out int wordsNotFound, string line, int index, Bitmap bitmap, bool autoFix, bool promptForFixingErrors, bool log, bool useAutoGuess)
         {
+            List<string> localIgnoreWords = new List<string>();
             wordsNotFound = 0;
             if (_hunspell == null)
                 return line;
 
-            string[] words = line.Split((Environment.NewLine + " ,.!?:;()[]{}+-$£\"”“#&%…—").ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+            string tempLine = line;
+            foreach (string name in _namesEtcList)
+            {
+                int start = tempLine.IndexOf(name);
+                if (start >= 0)
+                {
+                    if (start == 0 || (Environment.NewLine + " ,.!?:;()[]{}+-$£\"”“#&%…—").Contains(tempLine[start - 1].ToString()))
+                    {
+                        int end = start + name.Length;
+                        if (end >= tempLine.Length || (Environment.NewLine + " ,.!?:;()[]{}+-$£\"”“#&%…—").Contains(tempLine[end].ToString()))
+                            tempLine = tempLine.Remove(start, name.Length);
+                    }
+                }
+            }
+
+            foreach (string name in _namesEtcMultiWordList)
+            {
+                int start = tempLine.IndexOf(name);
+                if (start >= 0)
+                {
+                    if (start == 0 || (Environment.NewLine + " ,.!?:;()[]{}+-$£\"”“#&%…—").Contains(tempLine[start - 1].ToString()))
+                    {
+                        int end = start + name.Length;
+                        if (end >= tempLine.Length || (Environment.NewLine + " ,.!?:;()[]{}+-$£\"”“#&%…—").Contains(tempLine[end].ToString()))
+                            tempLine = tempLine.Remove(start, name.Length);
+                    }
+                }
+            }
+
+            string[] words = tempLine.Split((Environment.NewLine + " ,.!?:;()[]{}+-$£\"”“#&%…—").ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
             for (int i = 0; i < words.Length; i++)
             {
                 string word = words[i];
-                if (!IsWordKnownOrNumber(word, line))
+                if (!IsWordKnownOrNumber(word, line) && !localIgnoreWords.Contains(word))
                 {
                     bool correct = _hunspell.Spell(word);
                     if (!correct)
@@ -771,7 +808,7 @@ namespace Nikse.SubtitleEdit.Logic.OCR
                         {
                             List<string> suggestions = new List<string>();
 
-                            if (word.Length > 4 || !word.Contains("'")) //TODO: get fixed nhunspell
+                            if (word != "Lt'S" && word != "Sox's") //TODO: get fixed nhunspell
                                 suggestions = _hunspell.Suggest(word); // 0.9.6 fails on "Lt'S"
 
                             SpellcheckOcrTextResult res = SpellcheckOcrText(line, bitmap, words, i, word, suggestions);
@@ -781,6 +818,7 @@ namespace Nikse.SubtitleEdit.Logic.OCR
                             }
                             if (res.Fixed)
                             {
+                                localIgnoreWords.Add(word);
                                 line = res.Line;
                                 wordsNotFound--;
                             }
@@ -861,7 +899,7 @@ namespace Nikse.SubtitleEdit.Logic.OCR
                 case OcrSpellCheck.Action.AllwaysUseSuggestion:
                     SaveWordToWordList(word);
                     result.Fixed = true;
-                    result.Word = _spellCheck.Word;
+                    result.Word = _spellCheck.Word;                    
                     break;
                 case OcrSpellCheck.Action.ChangeAndSave:
                     SaveWordToWordList(word);
