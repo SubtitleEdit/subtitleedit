@@ -186,10 +186,17 @@ namespace Nikse.SubtitleEdit.Logic.OCR
             }
 
             // Load NHunspell spellchecker
-            _hunspell = new Hunspell(dictionary + ".aff", dictionary + ".dic");
-            IsDictionaryLoaded = true;
-            _spellCheckDictionaryName = dictionary;
-            DictionaryCulture = culture;
+			try 
+            {
+            	_hunspell = new Hunspell(dictionary + ".aff", dictionary + ".dic");
+                IsDictionaryLoaded = true;
+                _spellCheckDictionaryName = dictionary;
+                DictionaryCulture = culture;
+            }
+			catch 
+            {
+                IsDictionaryLoaded = false;
+			}
         }
 
         public string SpellCheckDictionaryName

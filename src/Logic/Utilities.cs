@@ -1031,6 +1031,12 @@ namespace Nikse.SubtitleEdit.Logic
             return Type.GetType("Mono.Runtime") != null;
         }
 
+        public static bool IsRunningOnLinux()
+        {
+            int p = (int)Environment.OSVersion.Platform;
+            return (p == 4 || p == 6 || p == 128);
+        }
+
         public static void ShowHelp(string parameter)
         {
             string helpFile = Configuration.Settings.Language.General.HelpFile;
