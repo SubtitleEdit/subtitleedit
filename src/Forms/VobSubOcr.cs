@@ -1542,9 +1542,9 @@ namespace Nikse.SubtitleEdit.Forms
                 foreach (var culture in System.Globalization.CultureInfo.GetCultures(System.Globalization.CultureTypes.NeutralCultures))
                 {
                     string tesseractName = culture.ThreeLetterISOLanguageName;
-                    if (culture.LCID == 0x4 && !File.Exists(dir + Path.PathSeparator + tesseractName + ".traineddata"))
+                    if (culture.LCID == 0x4 && !File.Exists(dir + Path.DirectorySeparatorChar + tesseractName + ".traineddata"))
                         tesseractName = "chi_sim";
-                    string trainDataFileName = dir + Path.PathSeparator + tesseractName + ".traineddata";
+                    string trainDataFileName = dir + Path.DirectorySeparatorChar + tesseractName + ".traineddata";
                     if (!list.Contains(culture.ThreeLetterISOLanguageName) && File.Exists(trainDataFileName))
                     {
                         list.Add(culture.ThreeLetterISOLanguageName);
