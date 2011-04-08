@@ -206,6 +206,14 @@
             public string SubtitleImage { get; set; }
         }
 
+        public class EbuSaveOtpions
+        {
+            public string Title { get; set; }
+            public string xxx { get; set; }
+            public string yyy { get; set; }
+            public string zzz { get; set; }
+        }
+
         public class EffectKaraoke
         {
             public string Title { get; set; }

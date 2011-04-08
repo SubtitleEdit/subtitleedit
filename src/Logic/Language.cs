@@ -25,6 +25,7 @@ namespace Nikse.SubtitleEdit.Logic
         public LanguageStructure.CompareSubtitles CompareSubtitles;
         public LanguageStructure.DvdSubRip DvdSubrip;
         public LanguageStructure.DvdSubRipChooseLanguage DvdSubRipChooseLanguage;
+        public LanguageStructure.EbuSaveOtpions EbuSaveOtpions;
         public LanguageStructure.EffectKaraoke EffectKaraoke;
         public LanguageStructure.EffectTypewriter EffectTypewriter;
         public LanguageStructure.FindDialog FindDialog;
@@ -276,6 +277,11 @@ namespace Nikse.SubtitleEdit.Logic
                 UnknownLanguage = "Unknown language",
                 SubtitleImageXofYAndWidthXHeight = "Subtitle image {0}/{1}  -  {2}x{3} ",
                 SubtitleImage = "Subtitle image",
+            };
+
+            EbuSaveOtpions = new LanguageStructure.EbuSaveOtpions
+            {
+                Title = "EBU save options",
             };
 
             EffectKaraoke = new LanguageStructure.EffectKaraoke

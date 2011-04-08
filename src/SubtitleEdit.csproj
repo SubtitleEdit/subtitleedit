@@ -177,6 +177,12 @@
     <Compile Include="Forms\AdjustDisplayDuration.Designer.cs">
       <DependentUpon>AdjustDisplayDuration.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\EbuSaveOptions.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\EbuSaveOptions.Designer.cs">
+      <DependentUpon>EbuSaveOptions.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\EffectKaraoke.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -650,6 +656,9 @@
     <EmbeddedResource Include="Forms\AdjustDisplayDuration.resx">
       <DependentUpon>AdjustDisplayDuration.cs</DependentUpon>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\EbuSaveOptions.resx">
+      <DependentUpon>EbuSaveOptions.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\EffectKaraoke.resx">
       <DependentUpon>EffectKaraoke.cs</DependentUpon>
