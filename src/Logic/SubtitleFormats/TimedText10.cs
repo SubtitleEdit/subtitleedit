@@ -201,7 +201,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     else
                     { 
                         endCode = new TimeCode(TimeSpan.FromMilliseconds(startCode.TotalMilliseconds + 3000));
-                    }                    
+                    }
+                    startSeconds = endCode.TotalSeconds;
 
                     subtitle.Paragraphs.Add(new Paragraph(startCode, endCode, pText.ToString()));
                 }
