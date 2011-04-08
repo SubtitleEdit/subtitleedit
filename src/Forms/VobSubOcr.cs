@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -1248,9 +1247,17 @@ namespace Nikse.SubtitleEdit.Forms
 
             Process process = new Process();
             process.StartInfo = new ProcessStartInfo(Configuration.TesseractFolder + "tesseract.exe");
+			process.StartInfo.UseShellExecute = true;
             process.StartInfo.Arguments = "\"" + tempTiffFileName + "\" \"" + tempTextFileName + "\" -l " + language;
             process.StartInfo.WorkingDirectory = (Configuration.TesseractFolder);
             process.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
+
+            if (Utilities.IsRunningOnLinux())
+            {
+                process.StartInfo.FileName = "tesseract";
+                process.StartInfo.UseShellExecute = false;
+            }
+
             process.Start();
             process.WaitForExit(5000);
 
@@ -1535,9 +1542,9 @@ namespace Nikse.SubtitleEdit.Forms
                 foreach (var culture in System.Globalization.CultureInfo.GetCultures(System.Globalization.CultureTypes.NeutralCultures))
                 {
                     string tesseractName = culture.ThreeLetterISOLanguageName;
-                    if (culture.LCID == 0x4 && !File.Exists(dir + "\\" + tesseractName + ".traineddata"))
+                    if (culture.LCID == 0x4 && !File.Exists(dir + Path.PathSeparator + tesseractName + ".traineddata"))
                         tesseractName = "chi_sim";
-                    string trainDataFileName = dir + "\\" + tesseractName + ".traineddata";
+                    string trainDataFileName = dir + Path.PathSeparator + tesseractName + ".traineddata";
                     if (!list.Contains(culture.ThreeLetterISOLanguageName) && File.Exists(trainDataFileName))
                     {
                         list.Add(culture.ThreeLetterISOLanguageName);
