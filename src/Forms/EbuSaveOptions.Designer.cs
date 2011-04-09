@@ -33,6 +33,8 @@
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPageHeader = new System.Windows.Forms.TabPage();
+            this.numericUpDownMaxCharacters = new System.Windows.Forms.NumericUpDown();
+            this.label12 = new System.Windows.Forms.Label();
             this.numericUpDownDiskSequenceNumber = new System.Windows.Forms.NumericUpDown();
             this.numericUpDownTotalNumberOfDiscs = new System.Windows.Forms.NumericUpDown();
             this.numericUpDownRevisionNumber = new System.Windows.Forms.NumericUpDown();
@@ -60,23 +62,21 @@
             this.tabPageErrors = new System.Windows.Forms.TabPage();
             this.textBoxErrors = new System.Windows.Forms.TextBox();
             this.label6 = new System.Windows.Forms.Label();
-            this.numericUpDownMaxCharacters = new System.Windows.Forms.NumericUpDown();
-            this.label12 = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.tabPageHeader.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMaxCharacters)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDiskSequenceNumber)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownTotalNumberOfDiscs)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownRevisionNumber)).BeginInit();
             this.tabPageTextAndTiming.SuspendLayout();
             this.tabPageErrors.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMaxCharacters)).BeginInit();
             this.SuspendLayout();
             // 
             // buttonOK
             // 
             this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonOK.Location = new System.Drawing.Point(684, 454);
+            this.buttonOK.Location = new System.Drawing.Point(513, 428);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 21);
             this.buttonOK.TabIndex = 19;
@@ -89,7 +89,7 @@
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonCancel.Location = new System.Drawing.Point(765, 454);
+            this.buttonCancel.Location = new System.Drawing.Point(594, 428);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 21);
             this.buttonCancel.TabIndex = 18;
@@ -103,13 +103,16 @@
             // 
             // tabControl1
             // 
+            this.tabControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.tabControl1.Controls.Add(this.tabPageHeader);
             this.tabControl1.Controls.Add(this.tabPageTextAndTiming);
             this.tabControl1.Controls.Add(this.tabPageErrors);
             this.tabControl1.Location = new System.Drawing.Point(12, 12);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(835, 431);
+            this.tabControl1.Size = new System.Drawing.Size(664, 405);
             this.tabControl1.TabIndex = 32;
             // 
             // tabPageHeader
@@ -140,10 +143,32 @@
             this.tabPageHeader.Location = new System.Drawing.Point(4, 22);
             this.tabPageHeader.Name = "tabPageHeader";
             this.tabPageHeader.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageHeader.Size = new System.Drawing.Size(827, 405);
+            this.tabPageHeader.Size = new System.Drawing.Size(656, 379);
             this.tabPageHeader.TabIndex = 0;
             this.tabPageHeader.Text = "General subtitle information";
             this.tabPageHeader.UseVisualStyleBackColor = true;
+            // 
+            // numericUpDownMaxCharacters
+            // 
+            this.numericUpDownMaxCharacters.Location = new System.Drawing.Point(147, 228);
+            this.numericUpDownMaxCharacters.Maximum = new decimal(new int[] {
+            99,
+            0,
+            0,
+            0});
+            this.numericUpDownMaxCharacters.Name = "numericUpDownMaxCharacters";
+            this.numericUpDownMaxCharacters.Size = new System.Drawing.Size(120, 20);
+            this.numericUpDownMaxCharacters.TabIndex = 52;
+            this.numericUpDownMaxCharacters.ValueChanged += new System.EventHandler(this.numericUpDownMaxCharacters_ValueChanged);
+            // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.Location = new System.Drawing.Point(7, 230);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(133, 13);
+            this.label12.TabIndex = 51;
+            this.label12.Text = "Max# of displayable chars ";
             // 
             // numericUpDownDiskSequenceNumber
             // 
@@ -262,7 +287,7 @@
             this.buttonImport.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonImport.Location = new System.Drawing.Point(411, 14);
             this.buttonImport.Name = "buttonImport";
-            this.buttonImport.Size = new System.Drawing.Size(92, 21);
+            this.buttonImport.Size = new System.Drawing.Size(134, 21);
             this.buttonImport.TabIndex = 1;
             this.buttonImport.Text = "Import...";
             this.buttonImport.UseVisualStyleBackColor = true;
@@ -399,7 +424,8 @@
             this.textBoxErrors.Location = new System.Drawing.Point(6, 26);
             this.textBoxErrors.Multiline = true;
             this.textBoxErrors.Name = "textBoxErrors";
-            this.textBoxErrors.Size = new System.Drawing.Size(804, 358);
+            this.textBoxErrors.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.textBoxErrors.Size = new System.Drawing.Size(815, 373);
             this.textBoxErrors.TabIndex = 13;
             // 
             // label6
@@ -411,41 +437,21 @@
             this.label6.TabIndex = 12;
             this.label6.Text = "Errors";
             // 
-            // numericUpDownMaxCharacters
-            // 
-            this.numericUpDownMaxCharacters.Location = new System.Drawing.Point(147, 228);
-            this.numericUpDownMaxCharacters.Maximum = new decimal(new int[] {
-            99,
-            0,
-            0,
-            0});
-            this.numericUpDownMaxCharacters.Name = "numericUpDownMaxCharacters";
-            this.numericUpDownMaxCharacters.Size = new System.Drawing.Size(120, 20);
-            this.numericUpDownMaxCharacters.TabIndex = 52;
-            this.numericUpDownMaxCharacters.ValueChanged += new System.EventHandler(this.numericUpDownMaxCharacters_ValueChanged);
-            // 
-            // label12
-            // 
-            this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(7, 230);
-            this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(133, 13);
-            this.label12.TabIndex = 51;
-            this.label12.Text = "Max# of displayable chars ";
-            // 
             // EbuSaveOptions
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(852, 486);
+            this.ClientSize = new System.Drawing.Size(681, 460);
             this.Controls.Add(this.tabControl1);
             this.Controls.Add(this.buttonOK);
             this.Controls.Add(this.buttonCancel);
+            this.MinimumSize = new System.Drawing.Size(648, 462);
             this.Name = "EbuSaveOptions";
             this.Text = "EbuSaveOptions";
             this.tabControl1.ResumeLayout(false);
             this.tabPageHeader.ResumeLayout(false);
             this.tabPageHeader.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMaxCharacters)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDiskSequenceNumber)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownTotalNumberOfDiscs)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownRevisionNumber)).EndInit();
@@ -453,7 +459,6 @@
             this.tabPageTextAndTiming.PerformLayout();
             this.tabPageErrors.ResumeLayout(false);
             this.tabPageErrors.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMaxCharacters)).EndInit();
             this.ResumeLayout(false);
 
         }
