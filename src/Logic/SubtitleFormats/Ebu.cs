@@ -1,8 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
-using System;
 using System.Text.RegularExpressions;
+using System.Windows.Forms;
+using Nikse.SubtitleEdit.Forms;
 
 namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
@@ -12,10 +14,12 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
     public class Ebu : SubtitleFormat
     {
 
+        internal EbuGeneralSubtitleInformation Header;
+
         /// <summary>
         /// GSI block (1024 bytes)
         /// </summary>
-        private class EbuGeneralSubtitleInformation
+        internal class EbuGeneralSubtitleInformation
         {
             public string CodePageNumber { get; set; } // 0..2
             public string DiskFormatCode { get; set; } // 3..10
@@ -404,9 +408,13 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public void Save(string fileName, Subtitle subtitle)
         {
-            FileStream fs = new FileStream(fileName, FileMode.Create, FileAccess.Write);
-
             EbuGeneralSubtitleInformation header = new EbuGeneralSubtitleInformation();
+            EbuSaveOptions saveOptions = new EbuSaveOptions();
+            saveOptions.Initialize(header, 0, fileName, subtitle);
+            if (saveOptions.ShowDialog() != DialogResult.OK)
+                return;
+
+            FileStream fs = new FileStream(fileName, FileMode.Create, FileAccess.Write);            
             header.TotalNumberOfSubtitles = ((subtitle.Paragraphs.Count+1).ToString()).PadLeft(5, '0'); // seems to be 1 higher than actual number of subtitles
             header.TotalNumberOfTextAndTimingInformationBlocks = header.TotalNumberOfSubtitles;
 
@@ -436,6 +444,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     tti.VerticalPosition = 0x14;
                 else
                     tti.VerticalPosition = 0x16;
+                tti.JustificationCode = saveOptions.JustificationCode;
                 tti.SubtitleNumber = (ushort)p.Number;
                 tti.TextField = p.Text;
                 tti.TimeCodeInHours = p.StartTime.Hours;
@@ -491,6 +500,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 subtitle.Paragraphs.Add(p);
             }
             subtitle.Renumber(1);
+            Header = header;
         }
 
         private EbuGeneralSubtitleInformation ReadHeader(byte[] buffer)
