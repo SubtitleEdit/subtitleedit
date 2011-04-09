@@ -287,16 +287,19 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                             }
                         }
                     }
-                    byte colorByte = 0x07; // white
+                    //byte colorByte = 0x07; // white
+                    byte colorByte = 255;
                     if (!string.IsNullOrEmpty(veryFirstColor))
                         colorByte = encoding.GetBytes(veryFirstColor)[0];
                     if (!string.IsNullOrEmpty(firstColor))
                         colorByte = encoding.GetBytes(firstColor)[0];
                     string prefix = encoding.GetString(new byte[] { 0xd, colorByte, 0xb, 0xb });
 
-                    sb.AppendLine(prefix + s);
+                    if (colorByte != 255)
+                        sb.Append(prefix);
+                    sb.AppendLine(s);
                 }
-                TextField = Utilities.RemoveHtmlTags(sb.ToString().TrimEnd());
+                TextField = Utilities.RemoveHtmlTags(sb.ToString()).TrimEnd();
 
                 // newline
                 string newline = encoding.GetString(new byte[] { 0x0a, 0x0a, 0x8a, 0x8a });
@@ -927,8 +930,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         }
                     }
                 }
-                tti.TextField = sb.ToString().Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine) + endTags;
-                tti.TextField = tti.TextField.TrimEnd();
+                tti.TextField = sb.ToString().Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine).TrimEnd() + endTags;
                 index += TTISize;
                 list.Add(tti);
             }

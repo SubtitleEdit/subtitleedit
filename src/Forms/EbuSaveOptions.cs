@@ -25,6 +25,14 @@ namespace Nikse.SubtitleEdit.Forms
             _subtitle = subtitle;
 
             FillFromHeader(header);
+            try
+            {
+                FillHeaderFromFile(fileName);
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine("EbuOptions unable to read existing file: " + fileName + "  - " + ex.Message);
+            }
 
             string title = Path.GetFileNameWithoutExtension(fileName);
             textBoxOriginalProgramTitle.Text = title;
@@ -110,9 +118,17 @@ namespace Nikse.SubtitleEdit.Forms
             openFileDialog1.Filter = "Ebu stl files (*.stl)|*.stl";
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
+                FillHeaderFromFile(openFileDialog1.FileName);
+            }
+        }
+
+        private void FillHeaderFromFile(string fileName)
+        {
+            if (System.IO.File.Exists(fileName))
+            {
                 Ebu ebu = new Ebu();
                 Subtitle temp = new Subtitle();
-                ebu.LoadSubtitle(temp, null, openFileDialog1.FileName);
+                ebu.LoadSubtitle(temp, null, fileName);
                 FillFromHeader(ebu.Header);
             }
         }
