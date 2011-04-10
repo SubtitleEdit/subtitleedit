@@ -474,7 +474,7 @@ namespace Nikse.SubtitleEdit.Forms
                             temp = temp.Remove(0, index);
                         }
 
-                        while (temp.Length > 0 && (temp.StartsWith(" ") || temp.StartsWith(",")))
+                        while (temp.Length > 0 && (temp.StartsWith(" ") || temp.StartsWith(",") || temp.StartsWith(".") || temp.StartsWith("!") || temp.StartsWith("?")))
                         {
                             temp = temp.Remove(0, 1);
                         }
