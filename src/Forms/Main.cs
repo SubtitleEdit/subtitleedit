@@ -4080,10 +4080,10 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void SplitLineToolStripMenuItemClick(object sender, EventArgs e)
         {
-            SplitSelectedParagraph(null);
+            SplitSelectedParagraph(null, null);
         }
 
-        private void SplitSelectedParagraph(double? splitSeconds)
+        private void SplitSelectedParagraph(double? splitSeconds, int? textIndex)
         {
             if (_subtitle.Paragraphs.Count > 0 && SubtitleListview1.SelectedItems.Count > 0)
             {
@@ -4098,19 +4098,27 @@ namespace Nikse.SubtitleEdit.Forms
 
                 string oldText = currentParagraph.Text;
                 string[] lines = currentParagraph.Text.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-                if (lines.Length == 2 && (lines[0].EndsWith(".") || lines[0].EndsWith("!") || lines[0].EndsWith("?")))
+                if (textIndex != null && textIndex.Value > 2 && textIndex.Value < oldText.Length -2)
                 {
-                    currentParagraph.Text = Utilities.AutoBreakLine(lines[0]);
-                    newParagraph.Text = Utilities.AutoBreakLine(lines[1]);
+                    currentParagraph.Text = Utilities.AutoBreakLine(oldText.Substring(0, textIndex.Value).Trim());
+                    newParagraph.Text = Utilities.AutoBreakLine(oldText.Substring(textIndex.Value).Trim());
                 }
                 else
                 {
-                    string s = Utilities.AutoBreakLine(currentParagraph.Text, 5, Configuration.Settings.General.SubtitleLineMaximumLength * 2, Configuration.Settings.Tools.MergeLinesShorterThan);
-                    lines = s.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-                    if (lines.Length == 2)
+                    if (lines.Length == 2 && (lines[0].EndsWith(".") || lines[0].EndsWith("!") || lines[0].EndsWith("?")))
                     {
                         currentParagraph.Text = Utilities.AutoBreakLine(lines[0]);
                         newParagraph.Text = Utilities.AutoBreakLine(lines[1]);
+                    }
+                    else
+                    {
+                        string s = Utilities.AutoBreakLine(currentParagraph.Text, 5, Configuration.Settings.General.SubtitleLineMaximumLength * 2, Configuration.Settings.Tools.MergeLinesShorterThan);
+                        lines = s.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                        if (lines.Length == 2)
+                        {
+                            currentParagraph.Text = Utilities.AutoBreakLine(lines[0]);
+                            newParagraph.Text = Utilities.AutoBreakLine(lines[1]);
+                        }
                     }
                 }
 
@@ -8237,7 +8245,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (index >= 0)
             {
                 SubtitleListview1.SelectIndexAndEnsureVisible(index);
-                SplitSelectedParagraph(_audioWaveFormRightClickSeconds);
+                SplitSelectedParagraph(_audioWaveFormRightClickSeconds, null);
             }
         }
 
@@ -9659,7 +9667,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonSplitLine_Click(object sender, EventArgs e)
         {
-            SplitSelectedParagraph(null);
+            SplitSelectedParagraph(null, null);
         }
 
         ///////////// 3.2 /////////////
@@ -9759,6 +9767,27 @@ namespace Nikse.SubtitleEdit.Forms
             _transcriptImporter.Left = this.Left + (this.Width / 2) - (_transcriptImporter.Width / 3);
 
             _transcriptImporter.Show(this);
+        }
+
+        private void toolStripMenuItemSplitTextAtCursor_Click(object sender, EventArgs e)
+        {
+            TextBox tb =textBoxListViewText;
+            if (textBoxListViewTextAlternate.Focused)
+                tb = textBoxListViewTextAlternate;
+
+            int? pos = null;
+            if (tb.SelectionStart > 2 && tb.SelectionStart < tb.Text.Length - 2)
+                pos = tb.SelectionStart;
+            SplitSelectedParagraph(null, pos);
+        }
+
+        private void contextMenuStripTextBoxListView_Opening(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            TextBox tb = textBoxListViewText;
+            if (textBoxListViewTextAlternate.Focused)
+                tb = textBoxListViewTextAlternate;
+            toolStripMenuItemSplitTextAtCursor.Visible = tb.Text.Length > 5 && tb.SelectionStart > 2 && tb.SelectionStart < tb.Text.Length - 2;
+
         }
 
     }
