@@ -1,7 +1,7 @@
 Subtitle Edit Changelog
 
 
-3.2 (net yet released)
+3.2 (not yet released)
  * NEW:
    * Subtitle formats: D-Cinema, Cavena890, Timed Text 1.0
    * Most important shortcuts in Options -> Settings
@@ -9,7 +9,8 @@ Subtitle Edit Changelog
    * Subtitle preview font size (below video player) is now available in Options -> Settings
    * Edit -> Select all 
    * List view context menu: Copy as text to clipboard
-   * Transscript importer...???
+   * Text box context menu -> Split line at cursor position
+   * Transcript importer...???
    * Plug-ins...???
  * IMPROVED:
    * OCR unknown words highlighting now works better
