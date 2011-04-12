@@ -28,6 +28,7 @@ namespace Nikse.SubtitleEdit.Logic
         public LanguageStructure.EbuSaveOtpions EbuSaveOtpions;
         public LanguageStructure.EffectKaraoke EffectKaraoke;
         public LanguageStructure.EffectTypewriter EffectTypewriter;
+        public LanguageStructure.ExportPngXml ExportPngXml;        
         public LanguageStructure.FindDialog FindDialog;
         public LanguageStructure.FindSubtitleLine FindSubtitleLine;
         public LanguageStructure.FixCommonErrors FixCommonErrors;
@@ -297,6 +298,20 @@ namespace Nikse.SubtitleEdit.Logic
                 Title = "Typewriter effect",
                 TotalMilliseconds = "Total millisecs.:",
                 EndDelayInMillisecs = "End delay in millisecs.:"
+            };
+
+            ExportPngXml = new LanguageStructure.ExportPngXml
+            {
+                Title = "Export BDN XML/PNG",
+                ImageSettings = "Image settings",
+                AntiAlias = "Anti alias",
+                BorderColor = "Border color",
+                BorderWidth = "Border width",
+                ExportAllLines = "Export all lines...",
+                FontColor = "Font color",
+                FontFamily = "Font family",
+                FontSize = "Font size",
+                XImagesSavedInY = "{0} images saved in {1}", 
             };
 
             FindDialog = new LanguageStructure.FindDialog

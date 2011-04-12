@@ -9790,5 +9790,12 @@ namespace Nikse.SubtitleEdit.Forms
 
         }
 
+        private void toolStripMenuItemExportPngXml_Click(object sender, EventArgs e)
+        {
+            ExportPngXml exportBdnXmlPng = new ExportPngXml();
+            exportBdnXmlPng.Initialize(_subtitle);
+            exportBdnXmlPng.ShowDialog(this);
+        }
+
     }
 }

@@ -37,6 +37,7 @@ namespace Nikse.SubtitleEdit.Forms
         string _prefix = string.Empty;
         string _postfix = string.Empty;
         Hunspell _hunspell;
+        LinuxHunspell _linuxHunspell;
         string _dictionaryFolder;
         Paragraph _currentParagraph;
         int _currentIndex;
@@ -237,11 +238,30 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             _changeAllDictionary = new Dictionary<string, string>();
-            _hunspell = new Hunspell(dictionary + ".aff", dictionary + ".dic");
+
+            if (Utilities.IsRunningOnLinux())
+                _linuxHunspell = new LinuxHunspell(dictionary + ".aff", dictionary + ".dic");
+            else
+                _hunspell = new Hunspell(dictionary + ".aff", dictionary + ".dic");
 
             _wordsIndex--;
             PrepareNextWord();
+        }
 
+        public bool DoSpell(string word)
+        {
+            if (_hunspell != null)
+                return _hunspell.Spell(word);
+            else
+                return _linuxHunspell.Spell(word);
+        }
+
+        public List<string> DoSuggest(string word)
+        {
+            if (_hunspell != null)
+                return _hunspell.Suggest(word);
+            else
+                return _linuxHunspell.Suggest(word);
         }
 
         private void ButtonChangeAllClick(object sender, EventArgs e)
@@ -361,7 +381,7 @@ namespace Nikse.SubtitleEdit.Forms
                     _skipAllList.Add(_currentWord.ToUpper());
                     break;
                 case SpellCheckAction.AddToDictionary:
-                    bool correct = _hunspell.Spell(ChangeWord);
+                    bool correct = DoSpell(ChangeWord);
                     if (!correct)
                     {
                         if (_userWordList.IndexOf(ChangeWord) < 0)
@@ -541,7 +561,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     else
                     {
-                        bool correct = _hunspell.Spell(_currentWord);
+                        bool correct = DoSpell(_currentWord);
                         if (correct)
                         {
                             _noOfCorrectWords++;
@@ -553,7 +573,7 @@ namespace Nikse.SubtitleEdit.Forms
                             List<string> suggestions = new List<string>();
 
                             if (_currentWord != "Lt'S" && _currentWord != "Sox's") //TODO: get fixed nhunspell
-                                suggestions = _hunspell.Suggest(_currentWord); //TODO: 0.9.6 fails on "Lt'S"
+                                suggestions = DoSuggest(_currentWord); //TODO: 0.9.6 fails on "Lt'S"
 
                             if (AutoFixNames && _currentWord.Length > 1 && suggestions.Contains(_currentWord.Substring(0, 1).ToUpper() + _currentWord.Substring(1)))
                             {
@@ -700,7 +720,11 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             _changeAllDictionary = new Dictionary<string, string>();
-            _hunspell = new Hunspell(dictionary + ".aff", dictionary + ".dic");
+
+            if (Utilities.IsRunningOnLinux())
+                _linuxHunspell = new LinuxHunspell(dictionary + ".aff", dictionary + ".dic");
+            else
+                _hunspell = new Hunspell(dictionary + ".aff", dictionary + ".dic");
 
             _currentIndex = 0;
             _currentParagraph = _subtitle.Paragraphs[_currentIndex];
