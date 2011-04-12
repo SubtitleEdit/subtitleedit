@@ -229,6 +229,20 @@
             public string EndDelayInMillisecs { get; set; }
         }
 
+        public class ExportPngXml
+        {
+            public string Title { get; set; }
+            public string ImageSettings { get; set; }
+            public string FontFamily { get; set; }
+            public string FontSize { get; set; }
+            public string FontColor { get; set; }
+            public string BorderColor { get; set; }
+            public string BorderWidth { get; set; }
+            public string AntiAlias { get; set; }
+            public string ExportAllLines { get; set; }
+            public string XImagesSavedInY { get; set; }
+        }
+
         public class FindDialog
         {
             public string Title { get; set; }

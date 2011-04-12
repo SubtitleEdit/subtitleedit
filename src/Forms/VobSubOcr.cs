@@ -1241,8 +1241,8 @@ namespace Nikse.SubtitleEdit.Forms
 
         private string Tesseract3DoOcrViaExe(Bitmap bmp, string language)
         {
-            string tempTiffFileName = Path.GetTempPath() + Guid.NewGuid().ToString() + ".tiff";
-            bmp.Save(tempTiffFileName, System.Drawing.Imaging.ImageFormat.Tiff);
+            string tempTiffFileName = Path.GetTempPath() + Guid.NewGuid().ToString() + ".png";
+            bmp.Save(tempTiffFileName, System.Drawing.Imaging.ImageFormat.Png);
             string tempTextFileName = Path.GetTempPath() + Guid.NewGuid().ToString();
 
             Process process = new Process();

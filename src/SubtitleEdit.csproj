@@ -195,6 +195,12 @@
     <Compile Include="Forms\EffectTypewriter.Designer.cs">
       <DependentUpon>EffectTypewriter.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\ExportPngXml.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ExportPngXml.Designer.cs">
+      <DependentUpon>ExportPngXml.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\FindDialog.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -497,6 +503,7 @@
     <Compile Include="Logic\FastBitmap.cs" />
     <Compile Include="Logic\IfoParser.cs" />
     <Compile Include="Logic\Language.cs" />
+    <Compile Include="Logic\LinuxHunspell.cs" />
     <Compile Include="Logic\Networking\NikseWebServiceSession.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -667,6 +674,9 @@
     <EmbeddedResource Include="Forms\EffectTypewriter.resx">
       <DependentUpon>EffectTypewriter.cs</DependentUpon>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ExportPngXml.resx">
+      <DependentUpon>ExportPngXml.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\FindDialog.resx">
       <DependentUpon>FindDialog.cs</DependentUpon>
