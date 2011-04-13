@@ -34,6 +34,17 @@ namespace Nikse.SubtitleEdit.Logic
             }
         }
 
+        public static string TesseractDataFolder
+        {
+            get
+            {
+                if (Utilities.IsRunningOnLinux())
+                    return "/usr/share/tesseract-ocr/tessdata";
+                else
+                    return TesseractFolder + "tessdata";
+            }
+        }
+
         public static string TesseractFolder
         {
             get
