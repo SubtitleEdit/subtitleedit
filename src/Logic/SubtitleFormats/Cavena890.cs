@@ -262,9 +262,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 }
             }
 
-            if (subtitle.Paragraphs.Count > 0 && subtitle.Paragraphs[0].StartTime.Hours > 9)
-                subtitle.AddTimeToAllParagraphs(TimeSpan.FromHours(-10));
-
             subtitle.Renumber(1);
         }
 
