@@ -1534,7 +1534,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void InitializeTesseract()
         {
-            string dir = Configuration.TesseractFolder + "tessdata";
+            string dir = Configuration.TesseractDataFolder;
             if (Directory.Exists(dir))
             {
                 var list = new List<string>();
