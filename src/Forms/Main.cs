@@ -222,7 +222,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 string fileName = string.Empty;
                 string[] args = Environment.GetCommandLineArgs();
-                if (args.Length == 4 && args[1].ToLower() == "/convert")
+                if (args.Length >= 4 && args[1].ToLower() == "/convert")
                 {
                     BatchConvert(args);
                     return;
@@ -326,13 +326,17 @@ namespace Nikse.SubtitleEdit.Forms
             Console.WriteLine();
             Console.WriteLine(Title + " - Batch converter");
             Console.WriteLine();
-            Console.WriteLine("- Syntax: SubtitleEdit /convert <pattern> <name-of-format-without-spaces>");
+            Console.WriteLine("- Syntax: SubtitleEdit /convert <pattern> <name-of-format-without-spaces> [/offset:hh:mm:ss:msec]");
             Console.WriteLine("    example: SubtitleEdit /convert *.srt sami");
             Console.WriteLine();
             Console.WriteLine();
             
             string pattern = args[2];
             string toFormat = args[3];
+            string offset = string.Empty;
+            if (args.Length > 4)
+                offset = args[4].ToLower();
+
             string inputDirectory = Directory.GetCurrentDirectory();
             string outputDirectory = Directory.GetCurrentDirectory();
             int indexOfDirectorySeparatorChar = pattern.LastIndexOf(Path.DirectorySeparatorChar.ToString());
@@ -385,7 +389,24 @@ namespace Nikse.SubtitleEdit.Forms
                     Console.WriteLine(string.Format("{0}: {1} - input file format unknown!", count, fileName, toFormat));
                 }
                 else
-                {                    
+                {
+                    // adjust offset
+                    if (!string.IsNullOrEmpty(offset) && (offset.StartsWith("/offset:") || offset.StartsWith("offset:")))
+                    {
+                        string[] parts = offset.Split(":".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                        if (parts.Length == 5)
+                        {
+                            try
+                            {
+                                sub.AddTimeToAllParagraphs(new TimeSpan(int.Parse(parts[1]), int.Parse(parts[2]), int.Parse(parts[3]), int.Parse(parts[4])));
+                            }
+                            catch 
+                            {
+                                Console.Write(" (unable to read offset " + offset + ")");
+                            }
+                        }
+                    }               
+
                     bool targetFormatFound = false;
                     foreach (SubtitleFormat sf in formats)
                     {
@@ -450,7 +471,7 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         converted++;
                     }
-                }                               
+                }
             }
             Console.WriteLine();
             Console.WriteLine(string.Format("{0} file(s) converted", converted));
