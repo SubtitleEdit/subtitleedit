@@ -292,7 +292,6 @@
             // 
             // buttonColor
             // 
-            this.buttonColor.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.buttonColor.Location = new System.Drawing.Point(276, 24);
             this.buttonColor.Name = "buttonColor";
             this.buttonColor.Size = new System.Drawing.Size(121, 21);

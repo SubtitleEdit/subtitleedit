@@ -50,11 +50,10 @@ namespace Nikse.SubtitleEdit.Forms
                 StringBuilder sb = new StringBuilder();
                 for (int i = 0; i < _subtitle.Paragraphs.Count; i++)
                 {                    
-                    Bitmap bmp = GenerateImageFromText(_subtitle.Paragraphs[i].Text);
+                    Bitmap bmp = GenerateImageFromTextWithStyle(_subtitle.Paragraphs[i].Text);
                     string numberString = string.Format("{0:0000}", i + 1);
                     if (bmp != null)
                     {
-
                         string fileName = Path.Combine(folderBrowserDialog1.SelectedPath, numberString + ".png");
                         bmp.Save(fileName, System.Drawing.Imaging.ImageFormat.Png);
                         imagesSavedCount++;
@@ -108,33 +107,148 @@ namespace Nikse.SubtitleEdit.Forms
             _borderWidth = float.Parse(comboBoxBorderWidth.SelectedItem.ToString());
         }
 
-        private Bitmap GenerateImageFromText(string text)
+        //private Bitmap GenerateImageFromText(string text)
+        //{
+        //    Font font = new System.Drawing.Font(_subtitleFontName, _subtitleFontSize);
+        //    Bitmap bmp = new Bitmap(400, 200);
+        //    Graphics g = Graphics.FromImage(bmp);
+        //    SizeF textSize = g.MeasureString(text, font);
+        //    g.Dispose();
+        //    bmp.Dispose();
+        //    bmp = new Bitmap((int)(textSize.Width * 0.8), (int)(textSize.Height * 0.7));
+        //    g = Graphics.FromImage(bmp);
+        //    if (checkBoxAntiAlias.Checked)
+        //    {
+        //        g.TextRenderingHint = TextRenderingHint.AntiAlias;
+        //        g.SmoothingMode = SmoothingMode.AntiAlias;
+        //    }
+        //    StringFormat sf = new StringFormat();
+        //    sf.Alignment = StringAlignment.Center;
+        //    sf.LineAlignment = StringAlignment.Center;// draw the text to a path            
+        //    System.Drawing.Drawing2D.GraphicsPath path = new System.Drawing.Drawing2D.GraphicsPath();
+        //    path.AddString(text, font.FontFamily, 0, font.Size, new Point(bmp.Width / 2, bmp.Height / 2), sf);
+        //    g.FillPath(new SolidBrush(_subtitleColor), path);
+        //    if (_borderWidth > 0)
+        //        g.DrawPath(new Pen(_borderColor, _borderWidth), path);
+        //    g.Dispose();
+        //    return bmp;
+        //}
+
+        private Bitmap GenerateImageFromTextWithStyle(string text)
         {
+            // remove styles for display text (except italic)
+            text = RemoveSubStationAlphaFormatting(text);
+            text = text.Replace("<b>", string.Empty);
+            text = text.Replace("</b>", string.Empty);
+            text = text.Replace("<B>", string.Empty);
+            text = text.Replace("</B>", string.Empty);
+            text = text.Replace("<u>", string.Empty);
+            text = text.Replace("</u>", string.Empty);
+            text = text.Replace("<U>", string.Empty);
+            text = text.Replace("</U>", string.Empty);
+            text = Logic.Utilities.RemoveHtmlFontTag(text);
+
             Font font = new System.Drawing.Font(_subtitleFontName, _subtitleFontSize);
             Bitmap bmp = new Bitmap(400, 200);
             Graphics g = Graphics.FromImage(bmp);
-            SizeF textSize = g.MeasureString(text, font);
+
+
+            SizeF textSize = g.MeasureString("Hj!", font);
+            var lineHeight = (textSize.Height * 0.64f);
+
+            textSize = g.MeasureString(text, font);
             g.Dispose();
             bmp.Dispose();
-            bmp = new Bitmap((int)(textSize.Width * 0.8), (int)(textSize.Height * 0.7));
+            bmp = new Bitmap((int)(textSize.Width * 0.8), (int)(textSize.Height * 0.7)+10);
             g = Graphics.FromImage(bmp);
+
             if (checkBoxAntiAlias.Checked)
             {
                 g.TextRenderingHint = TextRenderingHint.AntiAlias;
                 g.SmoothingMode = SmoothingMode.AntiAlias;
             }
             StringFormat sf = new StringFormat();
-            sf.Alignment = StringAlignment.Center;
-            sf.LineAlignment = StringAlignment.Center;// draw the text to a path            
+            sf.Alignment = StringAlignment.Near;
+            sf.LineAlignment = StringAlignment.Near;// draw the text to a path            
             System.Drawing.Drawing2D.GraphicsPath path = new System.Drawing.Drawing2D.GraphicsPath();
-            path.AddString(text, font.FontFamily, 0, font.Size, new Point(bmp.Width / 2, bmp.Height / 2), sf);
-            g.FillPath(new SolidBrush(_subtitleColor), path);
+
+            // display italic
+            StringBuilder sb = new StringBuilder();
+            int i = 0;
+            bool isItalic = false;
+            int left = 5;
+            float top = 5;
+            bool newLine = false;
+            while (i < text.Length)
+            {
+                if (text.Substring(i).ToLower().StartsWith("<i>"))
+                {
+                    if (sb.Length > 0)
+                        DrawText(font, sf, path, sb, isItalic, left, top, ref newLine);
+                    isItalic = true;
+                    i += 2;
+                }
+                else if (text.Substring(i).ToLower().StartsWith("</i>") && isItalic)
+                {
+                    DrawText(font, sf, path, sb, isItalic, left, top, ref newLine);
+                    isItalic = false;
+                    i += 3;
+                }
+                else if (text.Substring(i).StartsWith(Environment.NewLine))
+                {
+                    DrawText(font, sf, path, sb, isItalic, left, top, ref newLine);
+                    top += lineHeight;
+                    newLine = true;
+                    i += Environment.NewLine.Length - 1;
+                }
+                else
+                {
+                    sb.Append(text.Substring(i, 1));
+                }
+                i++;
+            }
+            if (sb.Length > 0)
+            {
+                DrawText(font, sf, path, sb, isItalic, left, top, ref newLine);
+            }
+
             if (_borderWidth > 0)
                 g.DrawPath(new Pen(_borderColor, _borderWidth), path);
+            g.FillPath(new SolidBrush(_subtitleColor), path);
             g.Dispose();
             return bmp;
         }
 
+        private static void DrawText(Font font, StringFormat sf, System.Drawing.Drawing2D.GraphicsPath path, StringBuilder sb, bool isItalic, int left, float top, ref bool newLine)
+        {
+            PointF next = new PointF(left, top);
+            if (path.PointCount > 0)
+                next.X = path.GetLastPoint().X;
+            if (newLine)
+            {
+                next.X = 5;
+                newLine = false;
+            }
+
+            if (isItalic)
+                path.AddString(sb.ToString(), font.FontFamily, (int)System.Drawing.FontStyle.Italic, font.Size, next, sf);
+            else
+                path.AddString(sb.ToString(), font.FontFamily, 0, font.Size, next, sf);
+
+            sb.Length = 0;
+        }
+
+        private static string RemoveSubStationAlphaFormatting(string s)
+        {
+            int indexOfBegin = s.IndexOf("{");
+            while (indexOfBegin >= 0 && s.IndexOf("}") > indexOfBegin)
+            {
+                int indexOfEnd = s.IndexOf("}");
+                s = s.Remove(indexOfBegin, (indexOfEnd - indexOfBegin) + 1);
+                indexOfBegin = s.IndexOf("{");
+            }
+            return s;
+        }
 
         internal void Initialize(Subtitle subtitle)
         {
@@ -156,7 +270,7 @@ namespace Nikse.SubtitleEdit.Forms
             _subtitle = subtitle;
             panelColor.BackColor = _subtitleColor;
             panelBorderColor.BackColor = _borderColor;
-            comboBoxBorderWidth.SelectedIndex = 1;
+            comboBoxBorderWidth.SelectedIndex = 2;
 
             foreach (var x in System.Drawing.FontFamily.Families)
             {
@@ -177,7 +291,7 @@ namespace Nikse.SubtitleEdit.Forms
             SetupImageParameters();
             if (subtitleListView1.SelectedItems.Count > 0)
             {
-                var bmp = GenerateImageFromText(_subtitle.Paragraphs[subtitleListView1.SelectedItems[0].Index].Text);
+                var bmp = GenerateImageFromTextWithStyle(_subtitle.Paragraphs[subtitleListView1.SelectedItems[0].Index].Text);
                 pictureBox1.Image = bmp;
                 labelImageResolution.Text = string.Format("{0}x{1}", bmp.Width, bmp.Height);
             }
