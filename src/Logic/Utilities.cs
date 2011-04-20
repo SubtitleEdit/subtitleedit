@@ -34,8 +34,8 @@ namespace Nikse.SubtitleEdit.Logic
             if (info.Success)
                 return info;
 
-            if (IsWmpAvailable)
-                return TryReadVideoInfoViaMediaPlayer(fileName, event1);
+            //if (IsWmpAvailable)
+            //    return TryReadVideoInfoViaMediaPlayer(fileName, event1);
 
             return new VideoInfo { VideoCodec = "Unknown" };
         }
@@ -80,41 +80,41 @@ namespace Nikse.SubtitleEdit.Logic
             return info;
         }
 
-        private static VideoInfo TryReadVideoInfoViaMediaPlayer(string fileName, EventHandler doEvents)
-        {
-            var info = new VideoInfo { Success = false };
+        //private static VideoInfo TryReadVideoInfoViaMediaPlayer(string fileName, EventHandler doEvents)
+        //{
+        //    var info = new VideoInfo { Success = false };
 
-            try
-            {
-                var player = new WMPLib.WindowsMediaPlayer { URL = fileName };
+        //    try
+        //    {
+        //        var player = new WMPLib.WindowsMediaPlayer { URL = fileName };
 
-                player.controls.play();
+        //        player.controls.play();
 
-                int i = 0;
-                while (i < 100 && player.openState != WMPLib.WMPOpenState.wmposMediaOpen)
-                {
-                    i++;
-                    System.Threading.Thread.Sleep(100);
-                    if (doEvents != null)
-                        doEvents.Invoke(null, null);
-                }
+        //        int i = 0;
+        //        while (i < 100 && player.openState != WMPLib.WMPOpenState.wmposMediaOpen)
+        //        {
+        //            i++;
+        //            System.Threading.Thread.Sleep(100);
+        //            if (doEvents != null)
+        //                doEvents.Invoke(null, null);
+        //        }
 
-                info.TotalSeconds = player.currentMedia.duration;
-                info.TotalMilliseconds = player.currentMedia.duration * 1000;
+        //        info.TotalSeconds = player.currentMedia.duration;
+        //        info.TotalMilliseconds = player.currentMedia.duration * 1000;
 
-                info.Width = player.currentMedia.imageSourceWidth;
-                info.Height = player.currentMedia.imageSourceHeight;
-                info.FramesPerSecond = player.network.encodedFrameRate;
+        //        info.Width = player.currentMedia.imageSourceWidth;
+        //        info.Height = player.currentMedia.imageSourceHeight;
+        //        info.FramesPerSecond = player.network.encodedFrameRate;
 
-                player.controls.stop();
-                player.close();
-                info.Success = true;
-            }
-            catch
-            {
-            }
-            return info;
-        }
+        //        player.controls.stop();
+        //        player.close();
+        //        info.Success = true;
+        //    }
+        //    catch
+        //    {
+        //    }
+        //    return info;
+        //}
 
         private static VideoInfo TryReadVideoInfoViaAviHeader(string fileName)
         {
@@ -1154,14 +1154,14 @@ namespace Nikse.SubtitleEdit.Logic
 
             if (gs.VideoPlayer == "VLC" && LibVlc11xDynamic.IsInstalled)
                 return new LibVlc11xDynamic();
-            if (gs.VideoPlayer == "WindowsMediaPlayer" && IsWmpAvailable)
-                return new WmpPlayer();
+            //if (gs.VideoPlayer == "WindowsMediaPlayer" && IsWmpAvailable)
+            //    return new WmpPlayer();
             //if (gs.VideoPlayer == "ManagedDirectX" && IsManagedDirectXInstalled)
             //    return new ManagedDirectXPlayer();
             if (IsQuartsDllInstalled)
                 return new QuartsPlayer();
-            if (IsWmpAvailable)
-                return new WmpPlayer();
+            //if (IsWmpAvailable)
+            //    return new WmpPlayer();
 
             throw new NotSupportedException("You need DirectX or VLC media player 1.1.x installed as well as Subtitle Edit dll files!");
         }
