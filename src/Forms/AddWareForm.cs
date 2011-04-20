@@ -36,18 +36,26 @@ namespace Nikse.SubtitleEdit.Forms
             buttonRipWave.Enabled = false;
             _cancel = false;
 
-            string vlcPath = Nikse.SubtitleEdit.Logic.VideoPlayers.LibVlc11xDynamic.GetVlcPath("vlc.exe");
-            if (!System.IO.File.Exists(vlcPath))
+            string vlcPath;
+            if (Utilities.IsRunningOnLinux() || Utilities.IsRunningOnMac())
             {
-                if (MessageBox.Show(Configuration.Settings.Language.AddWaveForm.VlcMediaPlayerNotFound + Environment.NewLine + 
-                                    Environment.NewLine +
-                                    Configuration.Settings.Language.AddWaveForm.GoToVlcMediaPlayerHomePage,
-                                   Configuration.Settings.Language.AddWaveForm.VlcMediaPlayerNotFoundTitle , MessageBoxButtons.YesNo) == System.Windows.Forms.DialogResult.Yes)
+                vlcPath = "vlc";
+            }
+            else // windows
+            {
+                vlcPath = Nikse.SubtitleEdit.Logic.VideoPlayers.LibVlc11xDynamic.GetVlcPath("vlc.exe");
+                if (!System.IO.File.Exists(vlcPath))
                 {
-                    System.Diagnostics.Process.Start("http://www.videolan.org/");
+                    if (MessageBox.Show(Configuration.Settings.Language.AddWaveForm.VlcMediaPlayerNotFound + Environment.NewLine +
+                                        Environment.NewLine +
+                                        Configuration.Settings.Language.AddWaveForm.GoToVlcMediaPlayerHomePage,
+                                       Configuration.Settings.Language.AddWaveForm.VlcMediaPlayerNotFoundTitle, MessageBoxButtons.YesNo) == System.Windows.Forms.DialogResult.Yes)
+                    {
+                        System.Diagnostics.Process.Start("http://www.videolan.org/");
+                    }
+                    buttonRipWave.Enabled = true;
+                    return;
                 }
-                buttonRipWave.Enabled = true;
-                return;
             }
 
             labelPleaseWait.Visible = true;
