@@ -1033,14 +1033,12 @@ namespace Nikse.SubtitleEdit.Logic
 
         public static bool IsRunningOnLinux()
         {
-            int p = (int)Environment.OSVersion.Platform;
-            return p == 4 || p == 128;
+            return Environment.OSVersion.Platform == PlatformID.Unix;
         }
 
         public static bool IsRunningOnMac()
         {
-            int p = (int)Environment.OSVersion.Platform;
-            return p == 6;
+            return Environment.OSVersion.Platform == PlatformID.MacOSX;
         }
 
         public static void ShowHelp(string parameter)
@@ -1151,6 +1149,8 @@ namespace Nikse.SubtitleEdit.Logic
         public static VideoPlayer GetVideoPlayer()
         {
             GeneralSettings gs = Configuration.Settings.General;
+
+            return new MPlayer();
 
             if (gs.VideoPlayer == "VLC" && LibVlc11xDynamic.IsInstalled)
                 return new LibVlc11xDynamic();
