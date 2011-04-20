@@ -55,50 +55,9 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             }
             set
             {
-                _mplayer.StandardInput.WriteLine("mute 1");
-                //            _mplayer.StandardInput.WriteLine("pausing_keep_force speed_set 100");
-                _mplayer.StandardInput.Flush();
-                _mplayer.StandardInput.WriteLine("osd_show_text Seeking 5");
-                _mplayer.StandardInput.Flush();
-
-                double before = value - 10.0;
-                if (before < 0)
-                    before = 0;
-                _mplayer.StandardInput.WriteLine(string.Format("pausing_keep seek {0:0.0} 2", before));
-                _mplayer.StandardInput.Flush();
-
-                GetProperty("tims_pos", true);
-                for (int i = 0; i < 100; i++)
-                {
-                    System.Threading.Thread.Sleep(10);
-                    System.Windows.Forms.Application.DoEvents();
-                }
-
-
-                double difference = value - _timePosition;
-                int addSteps = (int)(FramesPerSecond * difference);
-
-
-                if (addSteps > 0)
-                {
-                    for (int i = 0; i < addSteps; i++)
-                    {
-                        _mplayer.StandardInput.WriteLine("frame_step");
-                    }
-                    _mplayer.StandardInput.Flush();
-                }
-
-
-                for (int i = 0; i < 100; i++)
-                {
-                    System.Threading.Thread.Sleep(1);
-                    System.Windows.Forms.Application.DoEvents();
-                }
-                //_mplayer.StandardInput.WriteLine("pausing_keep speed_set 1.0");
-                //_mplayer.StandardInput.Flush();
-
-                _mplayer.StandardInput.WriteLine("pausing_keep_force mute 0");
-                _mplayer.StandardInput.WriteLine("pausing_keep_force get_property time_pos");
+                // NOTE: FOR ACCURATE SEARCH USE MPlayer2 - http://www.mplayer2.org/)
+                _timePosition = value;
+                _mplayer.StandardInput.WriteLine(string.Format("pausing_keep seek {0:0.0} 2", value));
                 _mplayer.StandardInput.Flush();
             }
         }
