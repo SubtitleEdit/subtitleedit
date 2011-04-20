@@ -1249,13 +1249,17 @@ namespace Nikse.SubtitleEdit.Forms
             process.StartInfo = new ProcessStartInfo(Configuration.TesseractFolder + "tesseract.exe");
 			process.StartInfo.UseShellExecute = true;
             process.StartInfo.Arguments = "\"" + tempTiffFileName + "\" \"" + tempTextFileName + "\" -l " + language;
-            process.StartInfo.WorkingDirectory = (Configuration.TesseractFolder);
             process.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
 
             if (Utilities.IsRunningOnLinux())
             {
-                process.StartInfo.FileName = "tesseract";
                 process.StartInfo.UseShellExecute = false;
+                process.StartInfo.RedirectStandardError = true;
+                process.StartInfo.FileName = "tesseract";
+            }
+            else
+            {
+                process.StartInfo.WorkingDirectory = (Configuration.TesseractFolder);
             }
 
             process.Start();

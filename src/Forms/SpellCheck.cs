@@ -5,9 +5,9 @@ using System.IO;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using System.Xml;
-using NHunspell;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Enums;
+using Nikse.SubtitleEdit.Logic.SpellCheck;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -37,7 +37,6 @@ namespace Nikse.SubtitleEdit.Forms
         string _prefix = string.Empty;
         string _postfix = string.Empty;
         Hunspell _hunspell;
-        LinuxHunspell _linuxHunspell;
         string _dictionaryFolder;
         Paragraph _currentParagraph;
         int _currentIndex;
@@ -238,30 +237,19 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             _changeAllDictionary = new Dictionary<string, string>();
-
-            if (Utilities.IsRunningOnLinux())
-                _linuxHunspell = new LinuxHunspell(dictionary + ".aff", dictionary + ".dic");
-            else
-                _hunspell = new Hunspell(dictionary + ".aff", dictionary + ".dic");
-
+            _hunspell = Hunspell.GetHunspell(dictionary);
             _wordsIndex--;
             PrepareNextWord();
         }
 
         public bool DoSpell(string word)
         {
-            if (_hunspell != null)
-                return _hunspell.Spell(word);
-            else
-                return _linuxHunspell.Spell(word);
+			return _hunspell.Spell(word);
         }
 
         public List<string> DoSuggest(string word)
         {
-            if (_hunspell != null)
-                return _hunspell.Suggest(word);
-            else
-                return _linuxHunspell.Suggest(word);
+			return _hunspell.Suggest(word);
         }
 
         private void ButtonChangeAllClick(object sender, EventArgs e)
@@ -720,12 +708,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             _changeAllDictionary = new Dictionary<string, string>();
-
-            if (Utilities.IsRunningOnLinux())
-                _linuxHunspell = new LinuxHunspell(dictionary + ".aff", dictionary + ".dic");
-            else
-                _hunspell = new Hunspell(dictionary + ".aff", dictionary + ".dic");
-
+            _hunspell = Hunspell.GetHunspell(dictionary);
             _currentIndex = 0;
             _currentParagraph = _subtitle.Paragraphs[_currentIndex];
             string s = Utilities.RemoveHtmlTags(_currentParagraph.Text);
