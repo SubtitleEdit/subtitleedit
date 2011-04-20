@@ -1034,7 +1034,13 @@ namespace Nikse.SubtitleEdit.Logic
         public static bool IsRunningOnLinux()
         {
             int p = (int)Environment.OSVersion.Platform;
-            return (p == 4 || p == 6 || p == 128);
+            return p == 4 || p == 128;
+        }
+
+        public static bool IsRunningOnMac()
+        {
+            int p = (int)Environment.OSVersion.Platform;
+            return p == 6;
         }
 
         public static void ShowHelp(string parameter)

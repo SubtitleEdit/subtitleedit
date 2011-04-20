@@ -503,7 +503,6 @@
     <Compile Include="Logic\FastBitmap.cs" />
     <Compile Include="Logic\IfoParser.cs" />
     <Compile Include="Logic\Language.cs" />
-    <Compile Include="Logic\LinuxHunspell.cs" />
     <Compile Include="Logic\Networking\NikseWebServiceSession.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -527,6 +526,10 @@
     <Compile Include="Logic\Enums\SpellCheckAction.cs" />
     <Compile Include="Logic\FindReplaceDialogHelper.cs" />
     <Compile Include="Logic\HistoryItem.cs" />
+    <Compile Include="Logic\Spellcheck\Hunspell.cs" />
+    <Compile Include="Logic\Spellcheck\LinuxHunspell.cs" />
+    <Compile Include="Logic\Spellcheck\MacHunspell.cs" />
+    <Compile Include="Logic\Spellcheck\WindowsHunspell.cs" />
     <Compile Include="Logic\StripableText.cs" />
     <Compile Include="Logic\SubtitleFormats\AdobeEncore.cs" />
     <Compile Include="Logic\SubtitleFormats\AdobeEncoreTabs.cs" />

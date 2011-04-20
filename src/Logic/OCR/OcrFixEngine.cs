@@ -7,8 +7,8 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using System.Xml;
-using NHunspell;
 using Nikse.SubtitleEdit.Forms;
+using Nikse.SubtitleEdit.Logic.SpellCheck;
 
 namespace Nikse.SubtitleEdit.Logic.OCR
 {
@@ -33,7 +33,6 @@ namespace Nikse.SubtitleEdit.Logic.OCR
         List<string> _userWordList = new List<string>();
         List<string> _wordSkipList = new List<string>();
         Hunspell _hunspell;
-        LinuxHunspell _linuxHunspell;
         readonly OcrSpellCheck _spellCheck;
         readonly Form _parentForm;
         private string _spellCheckDictionaryName;
@@ -186,21 +185,19 @@ namespace Nikse.SubtitleEdit.Logic.OCR
                     _abbreviationList.Add(name);
             }
 
-            // Load NHunspell spellchecker
-			try 
+            // Load Hunspell spellchecker
+            try 
             {
-                if (Utilities.IsRunningOnLinux())
-                    _linuxHunspell = new LinuxHunspell(dictionary + ".aff", dictionary + ".dic");
-                else
-            	    _hunspell = new Hunspell(dictionary + ".aff", dictionary + ".dic");
+                _hunspell = Hunspell.GetHunspell(dictionary);
                 IsDictionaryLoaded = true;
                 _spellCheckDictionaryName = dictionary;
                 DictionaryCulture = culture;
-            }
-			catch 
+            } 
+            catch 
             {
                 IsDictionaryLoaded = false;
-			}
+            }
+                    
         }
 
         public string SpellCheckDictionaryName
@@ -569,7 +566,7 @@ namespace Nikse.SubtitleEdit.Logic.OCR
             if (Configuration.Settings.Tools.OcrFixUseHardcodedRules)
             {
                 // e.g. "selectionsu." -> "selections..."
-                if (input.EndsWith("u.") && (_hunspell != null || _linuxHunspell != null))
+                if (input.EndsWith("u.") && _hunspell != null )
                 {
                     string[] words = input.Split(" .".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
                     if (words.Length > 0)
@@ -726,7 +723,7 @@ namespace Nikse.SubtitleEdit.Logic.OCR
         {
             List<string> localIgnoreWords = new List<string>();
             wordsNotFound = 0;
-            if (_hunspell == null && _linuxHunspell == null)
+            if (_hunspell == null)
                 return line;
 
             string tempLine = line;
@@ -1028,18 +1025,12 @@ namespace Nikse.SubtitleEdit.Logic.OCR
 
         public bool DoSpell(string word)
         {
-            if (_hunspell != null)
-                return _hunspell.Spell(word);
-            else
-                return _linuxHunspell.Spell(word);
+            return _hunspell.Spell(word);
         }
 
         public List<string> DoSuggest(string word)
         {
-            if (_hunspell != null)
-                return _hunspell.Suggest(word);
-            else
-                return _linuxHunspell.Suggest(word);
+            return _hunspell.Suggest(word);
         }
 
         public bool IsWordOrWordsCorrect(string word)
