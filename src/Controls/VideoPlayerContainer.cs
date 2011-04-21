@@ -539,7 +539,9 @@ namespace Nikse.SubtitleEdit.Controls
             _pictureBoxPlay.BringToFront();
 
             _panelcontrols.BackColor = _backgroundColor;
-
+            _pictureBoxPlay.BringToFront();
+            _pictureBoxPlayDown.BringToFront();
+            _pictureBoxPlayOver.BringToFront();
             _labelTimeCode.BringToFront();
             return _panelcontrols;
         }

@@ -9,6 +9,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
         private Process _mplayer;
         private System.Windows.Forms.Timer timer;
         private TimeSpan _lengthInSeconds;
+        private TimeSpan _lastLengthInSeconds = TimeSpan.FromDays(0);
         private bool _paused;
         private bool _loaded = false;
         private bool _ended = false;
@@ -64,22 +65,26 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
 
         public override void Play()
         {
-            SetProperty("pause", "1", false);
+//            SetProperty("pause", "1", false);
+            _mplayer.StandardInput.WriteLine("pause");
+            _mplayer.StandardInput.Flush();
             _paused = false;
         }
 
         public override void Pause()
         {
-            _mplayer.StandardInput.WriteLine("pausing set_property pause 1");
+            //_mplayer.StandardInput.WriteLine("pausing set_property pause 1");
+            _mplayer.StandardInput.WriteLine("pause");
             _mplayer.StandardInput.Flush();
             _paused = true;
         }
 
         public override void Stop()
         {
-            _mplayer.StandardInput.WriteLine("pausing set_property time_pos 0");
+            _mplayer.StandardInput.WriteLine("stop");
             _mplayer.StandardInput.Flush();
             _paused = true;
+            _lastLengthInSeconds = _lengthInSeconds;
         }
 
         public override bool IsPaused
@@ -127,7 +132,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
 
                 // start timer to collect variable properties
                 timer = new System.Windows.Forms.Timer();
-                timer.Interval = 500;
+                timer.Interval = 1000;
                 timer.Tick += new EventHandler(timer_Tick);
                 timer.Start();
 
@@ -155,9 +160,16 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
 
             if (OnVideoLoaded != null && _loaded == true)
             {
+                timer.Stop();
                 _loaded = false;
                 OnVideoLoaded.Invoke(this, null);
+                timer.Interval = 200;
+                timer.Start();
             }
+
+            if (_lengthInSeconds != _lastLengthInSeconds)
+                _paused = false;
+            _lastLengthInSeconds = _lengthInSeconds;
         }
 
         void MPlayerOutputDataReceived(object sender, DataReceivedEventArgs e)
@@ -282,6 +294,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
 
         public override void DisposeVideoPlayer()
         {
+            timer.Stop();
             if (_mplayer != null)
             {
                 _mplayer.OutputDataReceived -= MPlayerOutputDataReceived;

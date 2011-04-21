@@ -4617,6 +4617,11 @@ namespace Nikse.SubtitleEdit.Forms
                     Configuration.Settings.RecentFiles.Add(_fileName, FirstVisibleIndex, FirstSelectedIndex, _videoFileName, _subtitleAlternateFileName);
                 Configuration.Settings.Save();
 
+                if (mediaPlayer.VideoPlayer != null)
+                {
+                    mediaPlayer.VideoPlayer.DisposeVideoPlayer();
+                }
+
             }
         }
 
