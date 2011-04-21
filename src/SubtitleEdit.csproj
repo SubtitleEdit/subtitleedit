@@ -585,6 +585,7 @@
     <Compile Include="Logic\VideoFormats\RiffParser.cs" />
     <Compile Include="Logic\VideoFormats\VideoInfo.cs" />
     <Compile Include="Logic\VideoPlayers\LibVlcDynamic.cs" />
+    <Compile Include="Logic\VideoPlayers\LibVlcMono.cs" />
     <Compile Include="Logic\VideoPlayers\ManagedDirectXPlayer.cs" />
     <Compile Include="Logic\VideoPlayers\MPlayer.cs" />
     <Compile Include="Logic\VideoPlayers\QuartsPlayer.cs" />

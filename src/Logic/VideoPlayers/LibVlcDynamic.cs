@@ -401,7 +401,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
 
         public static string GetVlcPath(string fileName)
         {
-            if (Utilities.IsRunningOnLinux())
+            if (Utilities.IsRunningOnLinux() || Utilities.IsRunningOnMac())
                 return null;
 
             string path;

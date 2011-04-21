@@ -1251,7 +1251,7 @@ namespace Nikse.SubtitleEdit.Forms
             process.StartInfo.Arguments = "\"" + tempTiffFileName + "\" \"" + tempTextFileName + "\" -l " + language;
             process.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
 
-            if (Utilities.IsRunningOnLinux())
+            if (Utilities.IsRunningOnLinux() || Utilities.IsRunningOnMac())
             {
                 process.StartInfo.UseShellExecute = false;
                 process.StartInfo.RedirectStandardError = true;

@@ -36,10 +36,15 @@ namespace Nikse.SubtitleEdit.Forms
             buttonRipWave.Enabled = false;
             _cancel = false;
 
+            SourceVideoFileName = labelVideoFileName.Text;
+            string targetFile = Path.GetTempFileName() + ".wav";
+            string parameters = "-I dummy -vvv \"" + SourceVideoFileName + "\" --sout=#transcode{vcodec=none,acodec=s16l}:file{dst=\"" + targetFile + "\"}  vlc://quit";
+
             string vlcPath;
             if (Utilities.IsRunningOnLinux() || Utilities.IsRunningOnMac())
             {
-                vlcPath = "vlc";
+                vlcPath = "cvlc";
+                parameters = "-vvv --no-sout-video --sout '#transcode{acodec=s16l}:std{mux=wav,access=file,dst=" + targetFile +"}' \"" + SourceVideoFileName + "\" vlc://quit";
             }
             else // windows
             {
@@ -59,11 +64,6 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             labelPleaseWait.Visible = true;
-            SourceVideoFileName = labelVideoFileName.Text;
-            string targetFile = Path.GetTempFileName() + ".wav";
-            string parameters = "-I dummy -vvv \"" + SourceVideoFileName + "\" --sout=#transcode{vcodec=none,acodec=s16l}:file{dst=\"" + targetFile + "\"}  vlc://quit";
-            //string parameters = "-I dummy -vvv \"" + _wavFileName + "\" --sout=#transcode{vcodec=none,acodec=s24l}:file{dst=\"" + _targetFile + "\"}  vlc://quit";
-            //string parameters = "-I dummy -vvv \"" + _wavFileName + "\" --sout=#transcode{vcodec=none,acodec=s32l}:file{dst=\"" + _targetFile + "\"}  vlc://quit";
 
             Process process = new Process();
             process.StartInfo = new ProcessStartInfo(vlcPath, parameters);

@@ -1150,7 +1150,10 @@ namespace Nikse.SubtitleEdit.Logic
         {
             GeneralSettings gs = Configuration.Settings.General;
 
-            return new MPlayer();
+            if (Utilities.IsRunningOnLinux())
+                return new MPlayer();
+            if (Utilities.IsRunningOnMac())
+                return new LibVlcMono();
 
             if (gs.VideoPlayer == "VLC" && LibVlc11xDynamic.IsInstalled)
                 return new LibVlc11xDynamic();
