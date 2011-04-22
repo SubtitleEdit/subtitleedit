@@ -44,7 +44,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 }
                 catch (Exception ex)
                 {
-                    string s = ex.Message;
+                    System.Diagnostics.Debug.WriteLine(ex.Message);
                     return false;
                 }
             }
@@ -195,7 +195,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 }
                 catch (Exception ex)
                 {
-                    string s = ex.Message;
+                    System.Diagnostics.Debug.WriteLine(ex.Message);
                     _errorCount++;
                 }
             }

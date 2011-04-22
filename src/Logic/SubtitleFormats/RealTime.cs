@@ -75,7 +75,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             //<Time begin="0:03:24.8" end="0:03:29.4" /><clear/>Man stjæler ikke fra Chavo, nej.
             Paragraph p = null;
             subtitle.Paragraphs.Clear();
-            var regexTimeCodes = new Regex(@"^[\d\d:\d\d:\d\d\.\d\d]", RegexOptions.Compiled);
             foreach (string line in lines)
             {
                 try

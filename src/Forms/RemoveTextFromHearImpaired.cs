@@ -243,7 +243,6 @@ namespace Nikse.SubtitleEdit.Forms
                             s = s.Remove(0, 1);
                         }
 
-                        int oldLength = s.Length;
                         if (HasHearImpariedTagsAtStart(s))
                         {
                             s = RemoveStartEndTags(s);
@@ -439,7 +438,6 @@ namespace Nikse.SubtitleEdit.Forms
             text = st.StrippedText;
             if (StartAndEndsWithHearImpariedTags(text))
             {
-                string newText = text;
                 text = RemoveStartEndTags(text);
             }
             if (!string.IsNullOrEmpty(text))

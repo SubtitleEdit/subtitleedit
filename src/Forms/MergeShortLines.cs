@@ -231,7 +231,6 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (p != null && p.Text != null && next != null && next.Text != null)
             {
-                string sNext = Utilities.RemoveHtmlTags(next.Text.Trim());
                 string s = Utilities.RemoveHtmlTags(p.Text.Trim());
 
                 if (p.Text.Length + next.Text.Length < maximumTotalLength && next.StartTime.TotalMilliseconds - p.EndTime.TotalMilliseconds < maximumMillisecondsBetweenLines)
