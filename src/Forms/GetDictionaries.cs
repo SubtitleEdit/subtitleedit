@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.IO.Compression;
 using System.Net;
 using System.Windows.Forms;
 using System.Xml;
 using Nikse.SubtitleEdit.Logic;
-using System.Drawing;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -37,7 +37,7 @@ namespace Nikse.SubtitleEdit.Forms
                 using (var zip = new GZipStream(rdr.BaseStream, CompressionMode.Decompress))
                 {
                     byte[] data = new byte[175000];
-                    int count = zip.Read(data, 0, 175000);
+                    zip.Read(data, 0, 175000);
                     doc.LoadXml(System.Text.Encoding.UTF8.GetString(data));
                 }
                 rdr.Close();
@@ -141,14 +141,12 @@ namespace Nikse.SubtitleEdit.Forms
             int index = comboBoxDictionaries.SelectedIndex;
             
             var ms = new MemoryStream(e.Result);
-            var reader = new StreamReader(ms);
 
             ZipExtractor zip = ZipExtractor.Open(ms);
             List<ZipExtractor.ZipFileEntry> dir = zip.ReadCentralDir();
 
             // Extract dic/aff files in dictionary folder
             string path;
-            bool result;
             foreach (ZipExtractor.ZipFileEntry entry in dir)
             {
                 if (entry.FilenameInZip.ToLower().EndsWith(".dic") || entry.FilenameInZip.ToLower().EndsWith(".aff"))
@@ -164,7 +162,7 @@ namespace Nikse.SubtitleEdit.Forms
                         fileName = fileName.Replace("de_DE_frami", "de_DE");
 
                     path = Path.Combine(dictionaryFolder, fileName);
-                    result = zip.ExtractFile(entry, path);
+                    zip.ExtractFile(entry, path);
                 }
             }
             zip.Close();

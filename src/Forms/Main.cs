@@ -61,7 +61,6 @@ namespace Nikse.SubtitleEdit.Forms
         SpellCheck _spellCheckForm;
         PositionsAndSizes _formPositionsAndSizes = new PositionsAndSizes();
 
-        VideoInfo _videoInfo;
         int _repeatCount = -1;
         double _endSeconds = -1;
         const double EndDelay = 0.05;
@@ -338,7 +337,6 @@ namespace Nikse.SubtitleEdit.Forms
                 offset = args[4].ToLower();
 
             string inputDirectory = Directory.GetCurrentDirectory();
-            string outputDirectory = Directory.GetCurrentDirectory();
             int indexOfDirectorySeparatorChar = pattern.LastIndexOf(Path.DirectorySeparatorChar.ToString());
             if (indexOfDirectorySeparatorChar > 0)
             {
@@ -4265,7 +4263,6 @@ namespace Nikse.SubtitleEdit.Forms
             if (_subtitle.Paragraphs.Count > 0 && SubtitleListview1.SelectedItems.Count > 1)
             {
                 StringBuilder sb = new StringBuilder();
-                List<Paragraph> mergeParagraphs = new List<Paragraph>();
                 List<int> deleteIndices = new List<int>();
                 bool first = true;
                 int firstIndex = 0;
@@ -4278,7 +4275,6 @@ namespace Nikse.SubtitleEdit.Forms
                     sb.AppendLine(_subtitle.Paragraphs[index].Text);
                     first = false;
                 }
-
 
                 if (sb.Length > 200)
                     return;
@@ -6807,10 +6803,6 @@ namespace Nikse.SubtitleEdit.Forms
                     toolStripComboBoxWaveForm_SelectedIndexChanged(null, null);
                     AudioWaveForm.WavePeaks.GenerateAllSamples();
                     AudioWaveForm.WavePeaks.Close();
-
-                    Paragraph p = new Paragraph();
-                    if (_subtitle.Paragraphs.Count > 0)
-                        p = _subtitle.Paragraphs[0];
                     AudioWaveForm.SetPosition(0, _subtitle, 0, 0);
                     timerWaveForm.Start();
                 }
@@ -6834,10 +6826,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private VideoInfo ShowVideoInfo(string fileName)
         {
-            _videoInfo = Utilities.GetVideoInfo(fileName, delegate { Application.DoEvents(); });
-            var info = new FileInfo(fileName);
-            long fileSizeInBytes = info.Length;
-            return _videoInfo;
+            return Utilities.GetVideoInfo(fileName, delegate { Application.DoEvents(); });
         }
 
         private void TryToFindAndOpenVideoFile(string fileNameNoExtension)
@@ -8079,10 +8068,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (files.Length == 1)
             {
                 string fileName = files[0];
-
-                var fi = new FileInfo(fileName);
-                string ext = Path.GetExtension(fileName).ToLower();
-                
+                string ext = Path.GetExtension(fileName).ToLower();               
                 if (Utilities.GetVideoFileFilter().Contains(ext))
                 {
                     OpenVideo(fileName);
@@ -8438,8 +8424,6 @@ namespace Nikse.SubtitleEdit.Forms
             if (files.Length == 1)
             {
                 string fileName = files[0];
-
-                var fi = new FileInfo(fileName);
                 string ext = Path.GetExtension(fileName).ToLower();
                 if (ext != ".wav")
                 {
@@ -8826,9 +8810,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (_networkSession == null)
                 return;
 
-            List<int> insertIndices = new List<int>();
             List<int> deleteIndices = new List<int>();
-
             NetworkGetSendUpdates(deleteIndices, 0, null);
         }
 
@@ -9576,9 +9558,7 @@ namespace Nikse.SubtitleEdit.Forms
         }
 
         private void saveOriginalToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            SubtitleFormat format = GetCurrentSubtitleFormat();
-                   
+        {                  
             if (string.IsNullOrEmpty(_subtitleAlternateFileName))
             {
                 saveOriginalAstoolStripMenuItem_Click(null, null);

@@ -109,6 +109,7 @@ namespace Nikse.SubtitleEdit.Controls
             HideAllPlayImages();
             HideAllPauseImages();
             _pictureBoxPlay.Visible = true;
+            _pictureBoxPlay.BringToFront();
 
             HideAllStopImages();
             _pictureBoxStop.Visible = true;
@@ -578,6 +579,7 @@ namespace Nikse.SubtitleEdit.Controls
                         HideAllPauseImages();
                         HideAllPlayImages();
                         _pictureBoxPause.Visible = true;
+                        _pictureBoxPause.BringToFront();
                     }
                 }
                 else
@@ -587,6 +589,7 @@ namespace Nikse.SubtitleEdit.Controls
                         HideAllPauseImages();
                         HideAllPlayImages();
                         _pictureBoxPlay.Visible = true;
+                        _pictureBoxPlay.BringToFront();
                     }
                 }
             }
@@ -605,6 +608,7 @@ namespace Nikse.SubtitleEdit.Controls
             {
                 HideAllPlayImages();
                 _pictureBoxPlayOver.Visible = true;
+                _pictureBoxPlayOver.BringToFront();
             }
         }
 
@@ -614,6 +618,7 @@ namespace Nikse.SubtitleEdit.Controls
             {
                 HideAllPlayImages();
                 _pictureBoxPlay.Visible = true;
+                _pictureBoxPlay.BringToFront();
             }
         }
 
@@ -621,6 +626,7 @@ namespace Nikse.SubtitleEdit.Controls
         {
             HideAllPlayImages();
             _pictureBoxPlayDown.Visible = true;
+            _pictureBoxPlayDown.BringToFront();
             if (OnButtonClicked != null)
                 OnButtonClicked.Invoke(sender, e);
         }
@@ -629,6 +635,7 @@ namespace Nikse.SubtitleEdit.Controls
         {
             HideAllPlayImages();
             _pictureBoxPause.Visible = true;
+            _pictureBoxPause.BringToFront();
             Play();
         }
 
@@ -655,6 +662,7 @@ namespace Nikse.SubtitleEdit.Controls
             {
                 HideAllPauseImages();
                 _pictureBoxPause.Visible = true;
+                _pictureBoxPause.BringToFront();
             }
         }
 
@@ -970,6 +978,7 @@ namespace Nikse.SubtitleEdit.Controls
                 VideoPlayer.Play();
                 HideAllPlayImages();
                 _pictureBoxPause.Visible = true;
+                _pictureBoxPause.BringToFront();
                 RefreshProgressBar();
             }
             if (OnButtonClicked != null)

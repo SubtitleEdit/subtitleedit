@@ -107,33 +107,6 @@ namespace Nikse.SubtitleEdit.Forms
             _borderWidth = float.Parse(comboBoxBorderWidth.SelectedItem.ToString());
         }
 
-        //private Bitmap GenerateImageFromText(string text)
-        //{
-        //    Font font = new System.Drawing.Font(_subtitleFontName, _subtitleFontSize);
-        //    Bitmap bmp = new Bitmap(400, 200);
-        //    Graphics g = Graphics.FromImage(bmp);
-        //    SizeF textSize = g.MeasureString(text, font);
-        //    g.Dispose();
-        //    bmp.Dispose();
-        //    bmp = new Bitmap((int)(textSize.Width * 0.8), (int)(textSize.Height * 0.7));
-        //    g = Graphics.FromImage(bmp);
-        //    if (checkBoxAntiAlias.Checked)
-        //    {
-        //        g.TextRenderingHint = TextRenderingHint.AntiAlias;
-        //        g.SmoothingMode = SmoothingMode.AntiAlias;
-        //    }
-        //    StringFormat sf = new StringFormat();
-        //    sf.Alignment = StringAlignment.Center;
-        //    sf.LineAlignment = StringAlignment.Center;// draw the text to a path            
-        //    System.Drawing.Drawing2D.GraphicsPath path = new System.Drawing.Drawing2D.GraphicsPath();
-        //    path.AddString(text, font.FontFamily, 0, font.Size, new Point(bmp.Width / 2, bmp.Height / 2), sf);
-        //    g.FillPath(new SolidBrush(_subtitleColor), path);
-        //    if (_borderWidth > 0)
-        //        g.DrawPath(new Pen(_borderColor, _borderWidth), path);
-        //    g.Dispose();
-        //    return bmp;
-        //}
-
         private Bitmap GenerateImageFromTextWithStyle(string text)
         {
             // remove styles for display text (except italic)
@@ -281,9 +254,6 @@ namespace Nikse.SubtitleEdit.Forms
 
             subtitleListView1.Fill(_subtitle);
             subtitleListView1.SelectIndexAndEnsureVisible(0);
-
-            _isLoading = false;
-            comboBoxSubtitleFontSize.SelectedIndex = 15;
         }
 
         private void subtitleListView1_SelectedIndexChanged(object sender, EventArgs e)
@@ -359,6 +329,12 @@ namespace Nikse.SubtitleEdit.Forms
                 Utilities.ShowHelp(string.Empty);
                 e.SuppressKeyPress = true;
             }
+        }
+
+        private void ExportPngXml_Shown(object sender, EventArgs e)
+        {
+            _isLoading = false;
+            comboBoxSubtitleFontSize.SelectedIndex = 15;
         }
 
     }

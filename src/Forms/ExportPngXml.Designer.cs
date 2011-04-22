@@ -346,6 +346,7 @@
             this.Name = "ExportPngXml";
             this.ShowIcon = false;
             this.Text = "ExportPngXml";
+            this.Shown += new System.EventHandler(this.ExportPngXml_Shown);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ExportPngXml_KeyDown);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.groupBoxImageSettings.ResumeLayout(false);

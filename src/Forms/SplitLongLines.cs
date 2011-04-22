@@ -162,7 +162,6 @@ namespace Nikse.SubtitleEdit.Forms
             numberOfSplits = 0;
             Subtitle splittedSubtitle = new Subtitle();
             Paragraph p = null;
-            StringBuilder lineNumbers = new StringBuilder();
             for (int i = 0; i < subtitle.Paragraphs.Count; i++)
             {
                 bool added = false;

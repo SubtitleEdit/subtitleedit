@@ -1235,7 +1235,7 @@ namespace Nikse.SubtitleEdit.Forms
             int uppercaseIsInsideLowercaseWords = 0;
             Regex reAfterLowercaseLetter = new Regex(@"[a-zæøåäöé]I", RegexOptions.Compiled);
             Regex reBeforeLowercaseLetter = new Regex(@"I[a-zæøåäöé]", RegexOptions.Compiled);
-            bool isLineContinuation = false;
+//            bool isLineContinuation = false;
             for (int i = 0; i < _subtitle.Paragraphs.Count; i++)
             {
                 Paragraph p = _subtitle.Paragraphs[i];
@@ -1375,7 +1375,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
 
-                isLineContinuation = p.Text.Length > 0 && Utilities.GetLetters(true, true, false).Contains(p.Text[p.Text.Length - 1].ToString());
+                //isLineContinuation = p.Text.Length > 0 && Utilities.GetLetters(true, true, false).Contains(p.Text[p.Text.Length - 1].ToString());
             }
             if (uppercaseIsInsideLowercaseWords > 0)
                 LogStatus(_language.FixUppercaseIInsindeLowercaseWords, string.Format(_language.XUppercaseIsFoundInsideLowercaseWords, uppercaseIsInsideLowercaseWords));
@@ -1753,7 +1753,6 @@ namespace Nikse.SubtitleEdit.Forms
         {
             string fixAction = _language.StartWithUppercaseLetterAfterPeriodInsideParagraph;
             int noOfFixes = 0;
-            string lastLine = string.Empty;
             for (int i = 0; i < _subtitle.Paragraphs.Count; i++)
             {
                 Paragraph p = _subtitle.Paragraphs[i];
