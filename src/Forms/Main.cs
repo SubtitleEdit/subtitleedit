@@ -4908,8 +4908,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             if (matroskaSubtitleInfo.CodecId.ToUpper() == "S_HDMV/PGS")
             {
-                MessageBox.Show("Blu-ray subtitles inside Matroska not supported - sorry!");
-                //LoadBluRaySubFromMatroska(matroskaSubtitleInfo, fileName);
+                LoadBluRaySubFromMatroska(matroskaSubtitleInfo, fileName);
                 return;
             }
             else if (matroskaSubtitleInfo.CodecPrivate.ToLower().Contains("[script info]"))
@@ -5150,9 +5149,17 @@ namespace Nikse.SubtitleEdit.Forms
                     if (buffer.Length > 100)
                     {
                         MemoryStream ms = new MemoryStream(buffer);
-                        var list = BluRaySupParser.ParseBluRaySup(ms, log);
+                        var list = BluRaySupParser.ParseBluRaySup(ms, log, true); 
                         foreach (var sup in list)
+                        {
+                            sup.StartTime = p.StartMilliseconds;
+                            sup.EndTime = p.EndMilliseconds;
                             subtitles.Add(sup);
+
+                            // fix overlapping 
+                            if (subtitles.Count > 1 && sub[subtitles.Count - 2].EndMilliseconds > sub[subtitles.Count - 1].StartMilliseconds)
+                                subtitles[subtitles.Count - 2].EndTime = subtitles[subtitles.Count - 1].StartTime - 1;                             
+                        }
                         ms.Close();
                     }
                 }

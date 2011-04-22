@@ -135,7 +135,7 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
         {
             using (var fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.Read))
             {
-                return  ParseBluRaySup(fs, log);
+                return  ParseBluRaySup(fs, log, false);
             }
         }
 
@@ -144,7 +144,7 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
         /// </summary>
         /// <param name="ms">memory stream containing sup data</param>
         /// <param name="log">Text parser log</param>
-        public static List<BluRaySupPicture> ParseBluRaySup(Stream ms, StringBuilder log)
+        public static List<BluRaySupPicture> ParseBluRaySup(Stream ms, StringBuilder log, bool fromMatroskaFile)
         {
             SupSegment segment;
             BluRaySupPicture pic = null;
@@ -171,10 +171,22 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
                 string[] so = new string[1]; // hack to return string
 
                 ms.Seek(position, SeekOrigin.Begin);
-                buffer = new byte[headerSize];
-                ms.Read(buffer, 0, buffer.Length);
-                segment = ReadSegment(buffer, log);
-                position += headerSize;
+
+                if (fromMatroskaFile)
+                {
+                    buffer = new byte[3];
+                    ms.Read(buffer, 0, buffer.Length);
+                    segment = ReadSegmentFromMatroska(buffer, log);
+                    position += 3;
+                }
+                else
+                {
+                    buffer = new byte[headerSize];
+                    ms.Read(buffer, 0, buffer.Length);
+                    segment = ReadSegment(buffer, log);
+                    position += headerSize;
+                }
+
                 buffer = new byte[segment.Size];
                 ms.Read(buffer, 0, buffer.Length);
                 log.Append(i + ": ");
@@ -617,6 +629,22 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
             {
                 log.AppendLine("Unable to read segment - PG missing!");
             }
+            return segment;
+        }
+
+        /// <summary>
+        /// Matroska bd sup skips first 9 bytes as timecodes are in Matroska structure
+        /// </summary>
+        /// <param name="buffer"></param>
+        /// <param name="log"></param>
+        /// <returns></returns>
+        private static SupSegment ReadSegmentFromMatroska(byte[] buffer, StringBuilder log)
+        { 
+            SupSegment segment = new SupSegment();
+//            segment.PtsTimestamp = BigEndianInt32(buffer, 2); // read PTS
+//            segment.DtsTimestamp = BigEndianInt32(buffer, 6); // read PTS              
+            segment.Type = buffer[0];
+            segment.Size = BigEndianInt16(buffer, 1);
             return segment;
         }
 
