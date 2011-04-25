@@ -1220,6 +1220,12 @@ namespace Nikse.SubtitleEdit.Forms
                     return;
                 }
 
+                if (Path.GetExtension(fileName).ToLower() == ".mkv")
+                {
+                    ImportSubtitleFromMatroskaFile();                    
+                    return;
+                }
+
                 var fi = new FileInfo(fileName);
                 if (fi.Length > 1024 * 1024 * 10) // max 10 mb
                 {
@@ -1274,6 +1280,24 @@ namespace Nikse.SubtitleEdit.Forms
                         format = GetCurrentSubtitleFormat();
                     }
                 }
+
+                if (format == null)
+                {
+                    var bdnXml = new BdnXml();
+                    string[] arr = File.ReadAllLines(fileName);
+                    List<string> list = new List<string>();
+                    foreach (string l in arr)
+                        list.Add(l);
+                    if (bdnXml.IsMine(list, fileName))
+                    {
+                        if (ContinueNewOrExit())
+                        {
+                            ImportAndOcrBdnXml(fileName, bdnXml, list);
+                        }
+                        return;
+                    }
+                }
+
 
                 _fileDateTime = File.GetLastWriteTime(fileName);
 
@@ -1411,6 +1435,18 @@ namespace Nikse.SubtitleEdit.Forms
             else
             {
                 MessageBox.Show(string.Format(_language.FileNotFound, fileName));
+            }
+        }
+
+        private void ImportAndOcrBdnXml(string fileName, BdnXml bdnXml, List<string> list)
+        {
+            Subtitle bdnSubtitle = new Subtitle();
+            bdnXml.LoadSubtitle(bdnSubtitle, list, fileName);
+            bdnSubtitle.FileName = fileName;
+            var formSubOcr = new VobSubOcr();
+            formSubOcr.Initialize(bdnSubtitle, Configuration.Settings.VobSubOcr);
+            if (formSubOcr.ShowDialog(this) == DialogResult.OK)
+            {
             }
         }
 
@@ -4853,39 +4889,44 @@ namespace Nikse.SubtitleEdit.Forms
             if (openFileDialog1.ShowDialog(this) == DialogResult.OK)
             {
                 openFileDialog1.InitialDirectory = Path.GetDirectoryName(openFileDialog1.FileName);
-                bool isValid;
-                var matroska = new Matroska();
-                var subtitleList = matroska.GetMatroskaSubtitleTracks(openFileDialog1.FileName, out isValid);
-                if (isValid)
+                ImportSubtitleFromMatroskaFile();
+            }
+        }
+
+        private void ImportSubtitleFromMatroskaFile()
+        {
+            bool isValid;
+            var matroska = new Matroska();
+            var subtitleList = matroska.GetMatroskaSubtitleTracks(openFileDialog1.FileName, out isValid);
+            if (isValid)
+            {
+                if (subtitleList.Count == 0)
                 {
-                    if (subtitleList.Count == 0)
-                    {
-                        MessageBox.Show(_language.NoSubtitlesFound);
-                    }
-                    else
-                    {
-                        if (ContinueNewOrExit())
-                        {
-                            if (subtitleList.Count > 1)
-                            {
-                                MatroskaSubtitleChooser subtitleChooser = new MatroskaSubtitleChooser();
-                                subtitleChooser.Initialize(subtitleList);
-                                if (subtitleChooser.ShowDialog(this) == DialogResult.OK)
-                                {
-                                    LoadMatroskaSubtitle(subtitleList[subtitleChooser.SelectedIndex], openFileDialog1.FileName);
-                                }
-                            }
-                            else
-                            {
-                                LoadMatroskaSubtitle(subtitleList[0], openFileDialog1.FileName);
-                            }
-                        }
-                    }
+                    MessageBox.Show(_language.NoSubtitlesFound);
                 }
                 else
                 {
-                    MessageBox.Show(string.Format(_language.NotAValidMatroskaFileX, openFileDialog1.FileName));
+                    if (ContinueNewOrExit())
+                    {
+                        if (subtitleList.Count > 1)
+                        {
+                            MatroskaSubtitleChooser subtitleChooser = new MatroskaSubtitleChooser();
+                            subtitleChooser.Initialize(subtitleList);
+                            if (subtitleChooser.ShowDialog(this) == DialogResult.OK)
+                            {
+                                LoadMatroskaSubtitle(subtitleList[subtitleChooser.SelectedIndex], openFileDialog1.FileName);
+                            }
+                        }
+                        else
+                        {
+                            LoadMatroskaSubtitle(subtitleList[0], openFileDialog1.FileName);
+                        }
+                    }
                 }
+            }
+            else
+            {
+                MessageBox.Show(string.Format(_language.NotAValidMatroskaFileX, openFileDialog1.FileName));
             }
         }
 
