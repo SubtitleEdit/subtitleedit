@@ -33,16 +33,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="AxInterop.WMPLib">
-      <HintPath>..\obj\Release\AxInterop.WMPLib.dll</HintPath>
-    </Reference>
     <Reference Include="Interop.QuartzTypeLib">
       <HintPath>..\DLLs\Interop.QuartzTypeLib.dll</HintPath>
-      <EmbedInteropTypes>False</EmbedInteropTypes>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Interop.WMPLib">
-      <HintPath>..\obj\Release\Interop.WMPLib.dll</HintPath>
       <EmbedInteropTypes>False</EmbedInteropTypes>
       <Private>True</Private>
     </Reference>

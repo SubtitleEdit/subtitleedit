@@ -534,6 +534,7 @@
     <Compile Include="Logic\SubtitleFormats\AdobeEncore.cs" />
     <Compile Include="Logic\SubtitleFormats\AdobeEncoreTabs.cs" />
     <Compile Include="Logic\SubtitleFormats\AdobeEncoreWithLineNumbers.cs" />
+    <Compile Include="Logic\SubtitleFormats\BdnXml.cs" />
     <Compile Include="Logic\SubtitleFormats\Cavena890.cs" />
     <Compile Include="Logic\SubtitleFormats\DCSubtitle.cs" />
     <Compile Include="Logic\SubtitleFormats\FinalCutProTextXml.cs" />
