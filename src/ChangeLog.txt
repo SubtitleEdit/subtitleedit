@@ -5,11 +5,13 @@ Subtitle Edit Changelog
  * NEW:
    * Subtitle formats: D-Cinema, Cavena890, Timed Text 1.0
    * Most important shortcuts in Options -> Settings
+   * Export bdn-xml/images + import/ocr bdn-xml/images
    * Command line conversion between subtitle formats (example: subtitleedit /convert *.srt microdvd)
    * Subtitle preview font size (below video player) is now available in Options -> Settings
    * Edit -> Select all 
    * List view context menu: Copy as text to clipboard
    * Text box context menu -> Split line at cursor position
+   * Import+ocr of blu-ray sup files inside matroska files
    * Transcript importer...???
    * Plug-ins...???
  * IMPROVED:
@@ -18,7 +20,7 @@ Subtitle Edit Changelog
    * Can now read Adobe Encore files starting with line numbers	
  * FIXED:
    * Adjust all times did not work for MicroDvd
-   * Remove empty white spaces from Google translate
+   * Now removes empty white spaces from Google translate
 
 
 3.1 (3rd March 2011)
