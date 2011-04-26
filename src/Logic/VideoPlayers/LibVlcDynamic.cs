@@ -440,7 +440,19 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             if (File.Exists(path))
                 return path;
 
+            path = Path.Combine(@"C:\Program Files (x86)\VLC", fileName);
+            if (File.Exists(path))
+                return path;
+
+            path = Path.Combine(@"C:\Program Files\VLC", fileName);
+            if (File.Exists(path))
+                return path;
+
             path = Path.Combine(System.Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), @"VideoLAN\VLC\" + fileName);
+            if (File.Exists(path))
+                return path;
+
+            path = Path.Combine(System.Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), @"VLC\" + fileName);
             if (File.Exists(path))
                 return path;
 
