@@ -43,21 +43,12 @@ namespace Nikse.SubtitleEdit.Logic.SpellCheck
             for (int i = 0; i < resultCount; i++)
             {
                 IntPtr addressCharArray = Marshal.ReadIntPtr(addressStringArray, i * 4);
-                int offset = 0;
-                List<byte> bytesList = new List<byte>();
-                byte newByte = Marshal.ReadByte(addressCharArray, offset++);
-                while (newByte != 0)
-                {
-                    bytesList.Add(newByte);
-                    newByte = Marshal.ReadByte(addressCharArray, offset++);
-                }
-                byte[] bytesArray = new byte[offset];
-                bytesList.CopyTo(bytesArray);
-                string suggestion = System.Text.Encoding.UTF8.GetString(bytesArray);
+                string suggestion = Marshal.PtrToStringAuto(addressCharArray);
                 results.Add(suggestion);
             }
             Hunspell_free_list(_hunspellHandle, pointerToAddressStringArray, resultCount);
             Marshal.FreeHGlobal(pointerToAddressStringArray);
+
             return results;
         }
 
