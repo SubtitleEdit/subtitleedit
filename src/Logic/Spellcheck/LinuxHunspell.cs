@@ -36,29 +36,20 @@ namespace Nikse.SubtitleEdit.Logic.SpellCheck
 		
 		public override List<string> Suggest(string word)
 		{
-			IntPtr pointerToAddressStringArray = Marshal.AllocHGlobal(IntPtr.Size);
-			int resultCount = Hunspell_suggest(_hunspellHandle, pointerToAddressStringArray, word);
-			IntPtr addressStringArray = Marshal.ReadIntPtr(pointerToAddressStringArray);			
-			List<string> results = new List<string>();
-			for (int i = 0; i < resultCount; i++)
-			{
-				IntPtr addressCharArray = Marshal.ReadIntPtr(addressStringArray, i * 4);
-				int offset = 0;
-				List<byte> bytesList = new List<byte>();
-				byte newByte = Marshal.ReadByte(addressCharArray, offset++);
-				while (newByte != 0)
-				{
-					bytesList.Add(newByte);
-					newByte = Marshal.ReadByte(addressCharArray, offset++);
-				}
-				byte[] bytesArray = new byte[offset];
-				bytesList.CopyTo(bytesArray);
-				string suggestion = System.Text.Encoding.UTF8.GetString(bytesArray);
-				results.Add(suggestion);
-			}
-			Hunspell_free_list(_hunspellHandle, pointerToAddressStringArray, resultCount);
-			Marshal.FreeHGlobal(pointerToAddressStringArray);
-			return results;
+            IntPtr pointerToAddressStringArray = Marshal.AllocHGlobal(IntPtr.Size);
+            int resultCount = Hunspell_suggest(_hunspellHandle, pointerToAddressStringArray, word);
+            IntPtr addressStringArray = Marshal.ReadIntPtr(pointerToAddressStringArray);			
+            List<string> results = new List<string>();
+            for (int i = 0; i < resultCount; i++)
+            {
+                IntPtr addressCharArray = Marshal.ReadIntPtr(addressStringArray, i * 4);
+                string suggestion = Marshal.PtrToStringAuto(addressCharArray);
+                results.Add(suggestion);
+            }
+            Hunspell_free_list(_hunspellHandle, pointerToAddressStringArray, resultCount);
+            Marshal.FreeHGlobal(pointerToAddressStringArray);
+
+            return results;
 		}
 		
         ~ LinuxHunspell() 
