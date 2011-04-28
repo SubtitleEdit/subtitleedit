@@ -98,15 +98,14 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     string end = node.Attributes["dur"].InnerText;
                     string text = node.InnerText;
 
-
-                    subtitle.Paragraphs.Add(new Paragraph(text, Convert.ToDouble(start), Convert.ToDouble(start) + Convert.ToDouble(end)));
+                    subtitle.Paragraphs.Add(new Paragraph(text, Convert.ToDouble(start)*1000.0, 1000.0 * (Convert.ToDouble(start) + Convert.ToDouble(end))));
                 }
                 catch (Exception ex)
                 {
                     System.Diagnostics.Debug.WriteLine(ex.Message);
                     _errorCount++;
                 }
-            }            
+            }
             subtitle.Renumber(1);
         }
 
