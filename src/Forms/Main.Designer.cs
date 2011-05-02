@@ -2868,6 +2868,7 @@
             this.tabControlSubtitle.Size = new System.Drawing.Size(945, 280);
             this.tabControlSubtitle.TabIndex = 0;
             this.tabControlSubtitle.SelectedIndexChanged += new System.EventHandler(this.TabControlSubtitleSelectedIndexChanged);
+            this.tabControlSubtitle.Selecting += new System.Windows.Forms.TabControlCancelEventHandler(this.tabControlSubtitle_Selecting);
             // 
             // tabPage1
             // 

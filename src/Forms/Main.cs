@@ -2643,20 +2643,23 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (_sourceViewChange)
             {
-                MakeHistoryForUndo(_language.BeforeChangesMadeInSourceView);
                 SaveSubtitleListviewIndexes();
                 if (textBoxSource.Text.Trim().Length > 0)
                 {
-                    SubtitleFormat format = _subtitle.ReloadLoadSubtitle(new List<string>(textBoxSource.Lines), null);
-                    if (format.IsFrameBased)
-                        _subtitle.CalculateTimeCodesFromFrameNumbers(CurrentFrameRate);
-                    _sourceViewChange = false;
+                    Subtitle temp = new Subtitle(_subtitle);
+                    SubtitleFormat format = temp.ReloadLoadSubtitle(new List<string>(textBoxSource.Lines), null);
                     if (format == null)
                     {
                         MessageBox.Show(_language.UnableToParseSourceView);
+                        return;
                     }
                     else
                     {
+                        _sourceViewChange = false;
+                        MakeHistoryForUndo(_language.BeforeChangesMadeInSourceView);
+                        _subtitle.ReloadLoadSubtitle(new List<string>(textBoxSource.Lines), null);
+                        if (format.IsFrameBased)
+                            _subtitle.CalculateTimeCodesFromFrameNumbers(CurrentFrameRate);
                         int index = 0;
                         foreach (object obj in comboBoxSubtitleFormats.Items)
                         {
@@ -2668,6 +2671,8 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 else
                 {
+                    _sourceViewChange = false;
+                    MakeHistoryForUndo(_language.BeforeChangesMadeInSourceView);
                     _sourceViewChange = false;
                     _subtitle.Paragraphs.Clear();
                 }
@@ -9854,6 +9859,17 @@ namespace Nikse.SubtitleEdit.Forms
             ExportPngXml exportBdnXmlPng = new ExportPngXml();
             exportBdnXmlPng.Initialize(_subtitle);
             exportBdnXmlPng.ShowDialog(this);
+        }
+
+        private void tabControlSubtitle_Selecting(object sender, TabControlCancelEventArgs e)
+        {
+            if (tabControlSubtitle.SelectedIndex != TabControlSourceView && textBoxSource.Text.Trim().Length > 1)
+            {
+                Subtitle temp = new Subtitle(_subtitle);
+                SubtitleFormat format = temp.ReloadLoadSubtitle(new List<string>(textBoxSource.Lines), null);
+                if (format == null)
+                    e.Cancel = true;
+            }
         }
 
     }
