@@ -6,6 +6,7 @@ Subtitle Edit Changelog
    * Subtitle formats: D-Cinema, Cavena890, Timed Text 1.0
    * Most important shortcuts in Options -> Settings
    * Export bdn-xml/images + import/ocr bdn-xml/images
+   * Added "Point sync via other subtitle" - thx ioannis
    * Command line conversion between subtitle formats (example: subtitleedit /convert *.srt microdvd)
    * Subtitle preview font size (below video player) is now available in Options -> Settings
    * Edit -> Select all 
@@ -21,6 +22,7 @@ Subtitle Edit Changelog
  * FIXED:
    * Adjust all times did not work for MicroDvd
    * Now removes empty white spaces from Google translate
+   * Crash when entering invalid text in source view (thx Frédéric) 
 
 
 3.1 (3rd March 2011)
