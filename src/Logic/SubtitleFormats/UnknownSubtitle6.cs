@@ -83,7 +83,7 @@ SRPSKI
                 sb.AppendLine(string.Format(" {0}          {1} " + Environment.NewLine + 
                                             "1    0    0    0    0    0"+ Environment.NewLine + 
                                             "{2}" + Environment.NewLine +
-                                            "{3}", p.StartTime.TotalMilliseconds, p.EndTime.TotalMilliseconds, firstLine, secondLine));                
+                                            "{3}", p.StartTime.TotalMilliseconds /  10, p.EndTime.TotalMilliseconds / 10, firstLine, secondLine));                
             }
             return sb.ToString().Trim();
         }
@@ -119,8 +119,8 @@ SRPSKI
                     {
                         try
                         {
-                            paragraph.StartTime.TotalMilliseconds = long.Parse(parts[0]);
-                            paragraph.EndTime.TotalMilliseconds = long.Parse(parts[1]);
+                            paragraph.StartTime.TotalMilliseconds = long.Parse(parts[0]) * 10;
+                            paragraph.EndTime.TotalMilliseconds = long.Parse(parts[1]) * 10;
                             expecting = ExpectingLine.BeforeText;
                         }
                         catch
