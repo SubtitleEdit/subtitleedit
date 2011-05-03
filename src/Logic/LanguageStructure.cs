@@ -634,6 +634,7 @@
             public string UnableToStartWord { get; set; }
             public string SpellCheckAbortedXCorrections { get; set; }
             public string SpellCheckCompletedXCorrections { get; set; }
+            public string OpenOtherSubtitle { get; set; }
            
             public class MainMenu
             {
@@ -715,6 +716,7 @@
                     public string AdjustAllTimes { get; set; }
                     public string VisualSync { get; set; }
                     public string PointSync { get; set; }
+                    public string PointSyncViaOtherSubtitle { get; set; }
                 }
                 public class AutoTranslateMenu
                 {

@@ -24,6 +24,7 @@ namespace Nikse.SubtitleEdit.Forms
         int _audioTrackNumber;
         Subtitle _subtitle;
         Subtitle _originalSubtitle;
+        Subtitle _otherSubtitle;
         System.Collections.Generic.SortedDictionary<int, TimeSpan> _syncronizationPoints = new SortedDictionary<int, TimeSpan>();
 
         public string VideoFileName 
@@ -49,9 +50,13 @@ namespace Nikse.SubtitleEdit.Forms
             labelNoOfSyncPoints.Text = string.Format(Configuration.Settings.Language.PointSync.SyncPointsX, 0);
             labelSyncInfo.Text = Configuration.Settings.Language.PointSync.Info;
             SubtitleListview1.InitializeLanguage(Configuration.Settings.Language.General, Configuration.Settings);
+            subtitleListView2.InitializeLanguage(Configuration.Settings.Language.General, Configuration.Settings);
             SubtitleListview1.InitializeTimeStampColumWidths(this);
+            subtitleListView2.InitializeTimeStampColumWidths(this);
             Utilities.InitializeSubtitleFont(SubtitleListview1);
+            Utilities.InitializeSubtitleFont(subtitleListView2);
             SubtitleListview1.AutoSizeAllColumns(this);
+            subtitleListView2.AutoSizeAllColumns(this);
             FixLargeFonts();
         }
 
@@ -68,6 +73,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         public void Initialize(Subtitle subtitle, string subtitleFileName, string videoFileName, int audioTrackNumber)
         {
+            labelSubtitleFileName.Text = subtitleFileName;
             _subtitle = new Subtitle(subtitle);
             _originalSubtitle = subtitle;
             _subtitleFileName = subtitleFileName;
@@ -76,6 +82,51 @@ namespace Nikse.SubtitleEdit.Forms
             SubtitleListview1.Fill(subtitle);
             if (SubtitleListview1.Items.Count > 0)
                 SubtitleListview1.Items[0].Selected = true;
+
+            SubtitleListview1.Anchor = AnchorStyles.Left;
+            buttonSetSyncPoint.Anchor = AnchorStyles.Left;
+            buttonRemoveSyncPoint.Anchor = AnchorStyles.Left;
+            labelNoOfSyncPoints.Anchor = AnchorStyles.Left;
+            listBoxSyncPoints.Anchor = AnchorStyles.Left;
+            groupBoxImportResult.Anchor = AnchorStyles.Left;
+            labelOtherSubtitleFileName.Visible = false;
+            subtitleListView2.Visible = false;
+            groupBoxImportResult.Width = listBoxSyncPoints.Left + listBoxSyncPoints.Width + 20;
+            Width = groupBoxImportResult.Left + groupBoxImportResult.Width + 15;
+            SubtitleListview1.Anchor = AnchorStyles.Left | AnchorStyles.Bottom | AnchorStyles.Top | AnchorStyles.Right;
+            buttonSetSyncPoint.Anchor = AnchorStyles.Right;
+            buttonRemoveSyncPoint.Anchor = AnchorStyles.Right;
+            labelNoOfSyncPoints.Anchor =  AnchorStyles.Right;
+            listBoxSyncPoints.Anchor = AnchorStyles.Right;
+            groupBoxImportResult.Anchor = AnchorStyles.Left | AnchorStyles.Bottom | AnchorStyles.Top | AnchorStyles.Right;
+        }
+
+        public void Initialize(Subtitle subtitle, string subtitleFileName, string videoFileName, int audioTrackNumber, string OtherSubtitleFileName, Subtitle otherSubtitle)
+        {
+            labelSubtitleFileName.Text = subtitleFileName;
+            _subtitle = new Subtitle(subtitle);
+            _otherSubtitle = otherSubtitle;
+            _originalSubtitle = subtitle;
+            _subtitleFileName = subtitleFileName;
+            _videoFileName = videoFileName;
+            _audioTrackNumber = audioTrackNumber;
+            SubtitleListview1.Fill(subtitle);
+            if (SubtitleListview1.Items.Count > 0)
+                SubtitleListview1.Items[0].Selected = true;
+            labelOtherSubtitleFileName.Text = OtherSubtitleFileName;
+            subtitleListView2.Fill(otherSubtitle);
+
+            SubtitleListview1.Anchor = AnchorStyles.Left;
+            buttonSetSyncPoint.Anchor = AnchorStyles.Left;
+            buttonRemoveSyncPoint.Anchor = AnchorStyles.Left;
+            labelNoOfSyncPoints.Anchor = AnchorStyles.Left;
+            listBoxSyncPoints.Anchor = AnchorStyles.Left;
+            groupBoxImportResult.Anchor = AnchorStyles.Left;
+            labelOtherSubtitleFileName.Visible = true;
+            subtitleListView2.Visible = true;
+            groupBoxImportResult.Width = subtitleListView2.Left + subtitleListView2.Width + 20;
+            Width = groupBoxImportResult.Left + groupBoxImportResult.Width + 15;
+            FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
         }
 
         private void RefreshSyncronizationPointsUI()
@@ -110,21 +161,43 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonSetSyncPoint_Click(object sender, EventArgs e)
         {
-            if (SubtitleListview1.SelectedItems.Count == 1 && _subtitle != null)
+            if (subtitleListView2.Visible)
             {
-                SetSyncPoint getTime = new SetSyncPoint();
-                int index = SubtitleListview1.SelectedItems[0].Index;
-                getTime.Initialize(_subtitle, _subtitleFileName, index, _videoFileName, _audioTrackNumber);
-                if (getTime.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                SetSyncPointViaOthersubtitle();
+            }
+            else
+            {
+                if (SubtitleListview1.SelectedItems.Count == 1 && _subtitle != null)
                 {
-                    if (_syncronizationPoints.ContainsKey(index))
-                        _syncronizationPoints[index] = getTime.SyncronizationPoint;
-                    else
-                        _syncronizationPoints.Add(index, getTime.SyncronizationPoint);
-                    RefreshSyncronizationPointsUI();
+                    SetSyncPoint getTime = new SetSyncPoint();
+                    int index = SubtitleListview1.SelectedItems[0].Index;
+                    getTime.Initialize(_subtitle, _subtitleFileName, index, _videoFileName, _audioTrackNumber);
+                    if (getTime.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                    {
+                        if (_syncronizationPoints.ContainsKey(index))
+                            _syncronizationPoints[index] = getTime.SyncronizationPoint;
+                        else
+                            _syncronizationPoints.Add(index, getTime.SyncronizationPoint);
+                        RefreshSyncronizationPointsUI();
+                        _videoFileName = getTime.VideoFileName;
+                    }
                     _videoFileName = getTime.VideoFileName;
                 }
-                _videoFileName = getTime.VideoFileName;
+            }
+        }
+
+        private void SetSyncPointViaOthersubtitle()
+        {
+            if (_otherSubtitle != null && subtitleListView2.SelectedItems.Count == 1)
+            {
+                int index = SubtitleListview1.SelectedItems[0].Index;
+                int indexOther = subtitleListView2.SelectedItems[0].Index;
+                
+                if (_syncronizationPoints.ContainsKey(index))
+                    _syncronizationPoints[index] = TimeSpan.FromMilliseconds(_otherSubtitle.Paragraphs[indexOther].StartTime.TotalMilliseconds);
+                else
+                    _syncronizationPoints.Add(index, TimeSpan.FromMilliseconds(_otherSubtitle.Paragraphs[indexOther].StartTime.TotalMilliseconds));
+                RefreshSyncronizationPointsUI();
             }
         }
 
