@@ -706,6 +706,7 @@ namespace Nikse.SubtitleEdit.Logic
                 UnableToStartWord = "Unable to start Microsoft Word",
                 SpellCheckAbortedXCorrections = "Spell check aborted. {0} lines was modified.",
                 SpellCheckCompletedXCorrections = "Spell check completed. {0} lines was modified.",
+                OpenOtherSubtitle = "Open other subtitle",
 
                 Menu = new LanguageStructure.Main.MainMenu
                 {
@@ -792,6 +793,7 @@ namespace Nikse.SubtitleEdit.Logic
                         AdjustAllTimes = "Adjust all times (show earlier/later)...",
                         VisualSync = "&Visual sync...",
                         PointSync = "Point sync...",
+                        PointSyncViaOtherSubtitle = "Point sync via other subtitle...",
                     },
 
                     AutoTranslate = new LanguageStructure.Main.MainMenu.AutoTranslateMenu

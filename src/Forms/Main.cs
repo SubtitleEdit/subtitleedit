@@ -776,6 +776,7 @@ namespace Nikse.SubtitleEdit.Forms
             toolStripMenuItemAdjustAllTimes.Text = _language.Menu.Synchronization.AdjustAllTimes;
             visualSyncToolStripMenuItem.Text = _language.Menu.Synchronization.VisualSync;
             toolStripMenuItemPointSync.Text = _language.Menu.Synchronization.PointSync;
+            pointSyncViaOtherSubtitleToolStripMenuItem.Text = _language.Menu.Synchronization.PointSyncViaOtherSubtitle;
 
             toolStripMenuItemAutoTranslate.Text = _language.Menu.AutoTranslate.Title;
             translateByGoogleToolStripMenuItem.Text = _language.Menu.AutoTranslate.TranslatePoweredByGoogle;
@@ -1171,7 +1172,7 @@ namespace Nikse.SubtitleEdit.Forms
             openFileDialog1.Title = _languageGeneral.OpenSubtitle;
             openFileDialog1.FileName = string.Empty;
             openFileDialog1.Filter = Utilities.GetOpenDialogFilter();
-            if (openFileDialog1.ShowDialog(this) == DialogResult.OK) // sometimes crashes... why??
+            if (openFileDialog1.ShowDialog(this) == DialogResult.OK) 
             {
                 OpenSubtitle(openFileDialog1.FileName, null);
             }
@@ -6627,6 +6628,40 @@ namespace Nikse.SubtitleEdit.Forms
             }
             _videoFileName = pointSync.VideoFileName;
             _formPositionsAndSizes.SavePositionAndSize(pointSync);
+        }
+
+        private void pointSyncViaOtherSubtitleToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SyncPointsSync pointSync = new SyncPointsSync();
+            openFileDialog1.Title = _language.OpenOtherSubtitle;
+            openFileDialog1.FileName = string.Empty;
+            openFileDialog1.Filter = Utilities.GetOpenDialogFilter();
+            if (openFileDialog1.ShowDialog() == DialogResult.OK)
+            {
+                Subtitle sub = new Subtitle();
+                Encoding enc;
+                SubtitleFormat f = sub.LoadSubtitle(openFileDialog1.FileName, out enc, null);
+                if (f == null)
+                {
+                    ShowUnknownSubtitle();
+                    return;
+                }
+
+                pointSync.Initialize(_subtitle, _fileName, _videoFileName, _videoAudioTrackNumber, openFileDialog1.FileName, sub);
+                mediaPlayer.Pause();
+                if (pointSync.ShowDialog(this) == DialogResult.OK)
+                {
+                    _subtitleListViewIndex = -1;
+                    MakeHistoryForUndo(_language.BeforePointSynchronization);
+                    _subtitle = pointSync.FixedSubtitle;
+                    _subtitle.CalculateFrameNumbersFromTimeCodesNoCheck(CurrentFrameRate);
+                    ShowStatus(_language.PointSynchronizationDone);
+                    ShowSource();
+                    SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
+                    _change = true;
+                }
+                _videoFileName = pointSync.VideoFileName;
+            }
         }
 
         private void toolStripMenuItemImportTimeCodes_Click(object sender, EventArgs e)
