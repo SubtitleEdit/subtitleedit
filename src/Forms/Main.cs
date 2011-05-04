@@ -396,7 +396,11 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             try
                             {
-                                sub.AddTimeToAllParagraphs(new TimeSpan(int.Parse(parts[1]), int.Parse(parts[2]), int.Parse(parts[3]), int.Parse(parts[4])));
+                                TimeSpan ts = new TimeSpan(0, int.Parse(parts[1].TrimStart('-')), int.Parse(parts[2]), int.Parse(parts[3]), int.Parse(parts[4]));
+                                if (parts[1].StartsWith("-"))
+                                    sub.AddTimeToAllParagraphs(ts.Negate());
+                                else
+                                    sub.AddTimeToAllParagraphs(ts);
                             }
                             catch 
                             {
