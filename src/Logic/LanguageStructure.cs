@@ -1057,8 +1057,8 @@
             public string DirectShowDescription { get; set; }
             public string ManagedDirectX { get; set; }
             public string ManagedDirectXDescription { get; set; }
-            public string WindowsMediaPlayer { get; set; }
-            public string WindowsMediaPlayerDescription { get; set; }
+            public string MPlayer { get; set; }
+            public string MPlayerDescription { get; set; }
             public string VlcMediaPlayer { get; set; }
             public string VlcMediaPlayerDescription { get; set; }
             public string ShowStopButton { get; set; }

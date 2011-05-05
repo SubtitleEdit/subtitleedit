@@ -77,28 +77,23 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxAutoWrapWhileTyping.Checked = gs.AutoWrapLineWhileTyping;
             textBoxShowLineBreaksAs.Text = gs.ListViewLineSeparatorString;
 
-            if (string.Compare(gs.VideoPlayer.Trim(), "VLC", true) == 0)
+            if (string.Compare(gs.VideoPlayer.Trim(), "VLC", true) == 0 && LibVlc11xDynamic.IsInstalled)
                 radioButtonVideoPlayerVLC.Checked = true;
-            else if (string.Compare(gs.VideoPlayer.Trim(), "WindowsMediaPlayer", true) == 0)
-                radioButtonVideoPlayerWmp.Checked = true;
-            //else if (string.Compare(gs.VideoPlayer.Trim(), "ManagedDirectX", true) == 0)
-            //    radioButtonVideoPlayerManagedDirectX.Checked = true;
-            else
+            else if (string.Compare(gs.VideoPlayer.Trim(), "MPlayer", true) == 0 && Utilities.IsMPlayerAvailable)
+                radioButtonVideoPlayerMPlayer.Checked = true;
+            else if (Utilities.IsQuartsDllInstalled)
                 radioButtonVideoPlayerDirectShow.Checked = true;
-            if (!Utilities.IsWmpAvailable)
-            {
-                radioButtonVideoPlayerWmp.Visible = false;
-                labelVideoPlayerWmp.Visible = false;
-            }
-            //if (!Utilities.IsManagedDirectXInstalled)
-            //    radioButtonVideoPlayerManagedDirectX.Enabled = false;
+            else if (Utilities.IsMPlayerAvailable)
+                radioButtonVideoPlayerMPlayer.Checked = true;
+            else if (LibVlc11xDynamic.IsInstalled)
+                radioButtonVideoPlayerVLC.Checked = true;
+
+            if (!LibVlc11xDynamic.IsInstalled)
+                radioButtonVideoPlayerVLC.Enabled = false;
+            if (!Utilities.IsMPlayerAvailable)
+                radioButtonVideoPlayerMPlayer.Enabled = false;
             if (!Utilities.IsQuartsDllInstalled)
                 radioButtonVideoPlayerDirectShow.Enabled = false;
-            if (!LibVlc11xDynamic.IsInstalled)
-            {
-                radioButtonVideoPlayerVLC.Enabled = false;
-            }
-
 
             comboBoxVideoPlayerDefaultVolume.Items.Clear();
             for (int i=0; i<= 100; i++)
@@ -215,8 +210,8 @@ namespace Nikse.SubtitleEdit.Forms
             labelDirectShowDescription.Text = language.DirectShowDescription;
             radioButtonVideoPlayerManagedDirectX.Text = language.ManagedDirectX;
             labelManagedDirectXDescription.Text = language.ManagedDirectXDescription;
-            radioButtonVideoPlayerWmp.Text = language.WindowsMediaPlayer;
-            labelVideoPlayerWmp.Text = language.WindowsMediaPlayerDescription;
+            radioButtonVideoPlayerMPlayer.Text = language.MPlayer;
+            labelVideoPlayerMPlayer.Text = language.MPlayerDescription;
             if (!string.IsNullOrEmpty(language.VlcMediaPlayer))
             {
                 radioButtonVideoPlayerVLC.Text = language.VlcMediaPlayer;
@@ -666,8 +661,8 @@ namespace Nikse.SubtitleEdit.Forms
 
             gs.AllowEditOfOriginalSubtitle = checkBoxAllowEditOfOriginalSubtitle.Checked;
 
-            if (radioButtonVideoPlayerWmp.Checked)
-                gs.VideoPlayer = "WindowsMediaPlayer";
+            if (radioButtonVideoPlayerMPlayer.Checked)
+                gs.VideoPlayer = "MPlayer";
             //else if (radioButtonVideoPlayerManagedDirectX.Checked)
             //    gs.VideoPlayer = "ManagedDirectX";
             else if (radioButtonVideoPlayerVLC.Checked)
