@@ -117,10 +117,10 @@
             this.groupBoxVideoEngine = new System.Windows.Forms.GroupBox();
             this.labelVideoPlayerVLC = new System.Windows.Forms.Label();
             this.radioButtonVideoPlayerVLC = new System.Windows.Forms.RadioButton();
-            this.labelVideoPlayerWmp = new System.Windows.Forms.Label();
+            this.labelVideoPlayerMPlayer = new System.Windows.Forms.Label();
             this.labelDirectShowDescription = new System.Windows.Forms.Label();
             this.labelManagedDirectXDescription = new System.Windows.Forms.Label();
-            this.radioButtonVideoPlayerWmp = new System.Windows.Forms.RadioButton();
+            this.radioButtonVideoPlayerMPlayer = new System.Windows.Forms.RadioButton();
             this.radioButtonVideoPlayerDirectShow = new System.Windows.Forms.RadioButton();
             this.radioButtonVideoPlayerManagedDirectX = new System.Windows.Forms.RadioButton();
             this.tabPageWaveForm = new System.Windows.Forms.TabPage();
@@ -1186,10 +1186,10 @@
             // 
             this.groupBoxVideoEngine.Controls.Add(this.labelVideoPlayerVLC);
             this.groupBoxVideoEngine.Controls.Add(this.radioButtonVideoPlayerVLC);
-            this.groupBoxVideoEngine.Controls.Add(this.labelVideoPlayerWmp);
+            this.groupBoxVideoEngine.Controls.Add(this.labelVideoPlayerMPlayer);
             this.groupBoxVideoEngine.Controls.Add(this.labelDirectShowDescription);
             this.groupBoxVideoEngine.Controls.Add(this.labelManagedDirectXDescription);
-            this.groupBoxVideoEngine.Controls.Add(this.radioButtonVideoPlayerWmp);
+            this.groupBoxVideoEngine.Controls.Add(this.radioButtonVideoPlayerMPlayer);
             this.groupBoxVideoEngine.Controls.Add(this.radioButtonVideoPlayerDirectShow);
             this.groupBoxVideoEngine.Controls.Add(this.radioButtonVideoPlayerManagedDirectX);
             this.groupBoxVideoEngine.Location = new System.Drawing.Point(6, 6);
@@ -1215,22 +1215,22 @@
             this.radioButtonVideoPlayerVLC.AutoSize = true;
             this.radioButtonVideoPlayerVLC.Location = new System.Drawing.Point(10, 46);
             this.radioButtonVideoPlayerVLC.Name = "radioButtonVideoPlayerVLC";
-            this.radioButtonVideoPlayerVLC.Size = new System.Drawing.Size(45, 17);
+            this.radioButtonVideoPlayerVLC.Size = new System.Drawing.Size(43, 17);
             this.radioButtonVideoPlayerVLC.TabIndex = 4;
             this.radioButtonVideoPlayerVLC.TabStop = true;
             this.radioButtonVideoPlayerVLC.Text = "VLC";
             this.radioButtonVideoPlayerVLC.UseVisualStyleBackColor = true;
             // 
-            // labelVideoPlayerWmp
+            // labelVideoPlayerMPlayer
             // 
-            this.labelVideoPlayerWmp.AutoSize = true;
-            this.labelVideoPlayerWmp.Font = new System.Drawing.Font("Tahoma", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelVideoPlayerWmp.ForeColor = System.Drawing.Color.Gray;
-            this.labelVideoPlayerWmp.Location = new System.Drawing.Point(167, 70);
-            this.labelVideoPlayerWmp.Name = "labelVideoPlayerWmp";
-            this.labelVideoPlayerWmp.Size = new System.Drawing.Size(95, 11);
-            this.labelVideoPlayerWmp.TabIndex = 11;
-            this.labelVideoPlayerWmp.Text = "WMP ActiveX Control";
+            this.labelVideoPlayerMPlayer.AutoSize = true;
+            this.labelVideoPlayerMPlayer.Font = new System.Drawing.Font("Tahoma", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelVideoPlayerMPlayer.ForeColor = System.Drawing.Color.Gray;
+            this.labelVideoPlayerMPlayer.Location = new System.Drawing.Point(167, 70);
+            this.labelVideoPlayerMPlayer.Name = "labelVideoPlayerMPlayer";
+            this.labelVideoPlayerMPlayer.Size = new System.Drawing.Size(83, 11);
+            this.labelVideoPlayerMPlayer.TabIndex = 11;
+            this.labelVideoPlayerMPlayer.Text = "MPlayer2/MPlayer";
             // 
             // labelDirectShowDescription
             // 
@@ -1255,23 +1255,23 @@
             this.labelManagedDirectXDescription.Text = "Microsoft.DirectX.AudioVideoPlayback -  .NET Managed code from DirectX";
             this.labelManagedDirectXDescription.Visible = false;
             // 
-            // radioButtonVideoPlayerWmp
+            // radioButtonVideoPlayerMPlayer
             // 
-            this.radioButtonVideoPlayerWmp.AutoSize = true;
-            this.radioButtonVideoPlayerWmp.Location = new System.Drawing.Point(10, 67);
-            this.radioButtonVideoPlayerWmp.Name = "radioButtonVideoPlayerWmp";
-            this.radioButtonVideoPlayerWmp.Size = new System.Drawing.Size(133, 17);
-            this.radioButtonVideoPlayerWmp.TabIndex = 8;
-            this.radioButtonVideoPlayerWmp.TabStop = true;
-            this.radioButtonVideoPlayerWmp.Text = "Windows Media Player";
-            this.radioButtonVideoPlayerWmp.UseVisualStyleBackColor = true;
+            this.radioButtonVideoPlayerMPlayer.AutoSize = true;
+            this.radioButtonVideoPlayerMPlayer.Location = new System.Drawing.Point(10, 67);
+            this.radioButtonVideoPlayerMPlayer.Name = "radioButtonVideoPlayerMPlayer";
+            this.radioButtonVideoPlayerMPlayer.Size = new System.Drawing.Size(69, 17);
+            this.radioButtonVideoPlayerMPlayer.TabIndex = 8;
+            this.radioButtonVideoPlayerMPlayer.TabStop = true;
+            this.radioButtonVideoPlayerMPlayer.Text = "MPlayer2";
+            this.radioButtonVideoPlayerMPlayer.UseVisualStyleBackColor = true;
             // 
             // radioButtonVideoPlayerDirectShow
             // 
             this.radioButtonVideoPlayerDirectShow.AutoSize = true;
             this.radioButtonVideoPlayerDirectShow.Location = new System.Drawing.Point(10, 23);
             this.radioButtonVideoPlayerDirectShow.Name = "radioButtonVideoPlayerDirectShow";
-            this.radioButtonVideoPlayerDirectShow.Size = new System.Drawing.Size(83, 17);
+            this.radioButtonVideoPlayerDirectShow.Size = new System.Drawing.Size(82, 17);
             this.radioButtonVideoPlayerDirectShow.TabIndex = 1;
             this.radioButtonVideoPlayerDirectShow.TabStop = true;
             this.radioButtonVideoPlayerDirectShow.Text = "DirectShow ";
@@ -1282,7 +1282,7 @@
             this.radioButtonVideoPlayerManagedDirectX.AutoSize = true;
             this.radioButtonVideoPlayerManagedDirectX.Location = new System.Drawing.Point(10, 90);
             this.radioButtonVideoPlayerManagedDirectX.Name = "radioButtonVideoPlayerManagedDirectX";
-            this.radioButtonVideoPlayerManagedDirectX.Size = new System.Drawing.Size(108, 17);
+            this.radioButtonVideoPlayerManagedDirectX.Size = new System.Drawing.Size(106, 17);
             this.radioButtonVideoPlayerManagedDirectX.TabIndex = 6;
             this.radioButtonVideoPlayerManagedDirectX.TabStop = true;
             this.radioButtonVideoPlayerManagedDirectX.Text = "Managed DirectX";
@@ -2173,7 +2173,7 @@
             this.checkBoxShortcutsShift.Enabled = false;
             this.checkBoxShortcutsShift.Location = new System.Drawing.Point(243, 366);
             this.checkBoxShortcutsShift.Name = "checkBoxShortcutsShift";
-            this.checkBoxShortcutsShift.Size = new System.Drawing.Size(48, 17);
+            this.checkBoxShortcutsShift.Size = new System.Drawing.Size(47, 17);
             this.checkBoxShortcutsShift.TabIndex = 3;
             this.checkBoxShortcutsShift.Text = "Shift";
             this.checkBoxShortcutsShift.UseVisualStyleBackColor = true;
@@ -2184,7 +2184,7 @@
             this.checkBoxShortcutsAlt.Enabled = false;
             this.checkBoxShortcutsAlt.Location = new System.Drawing.Point(174, 366);
             this.checkBoxShortcutsAlt.Name = "checkBoxShortcutsAlt";
-            this.checkBoxShortcutsAlt.Size = new System.Drawing.Size(39, 17);
+            this.checkBoxShortcutsAlt.Size = new System.Drawing.Size(38, 17);
             this.checkBoxShortcutsAlt.TabIndex = 2;
             this.checkBoxShortcutsAlt.Text = "Alt";
             this.checkBoxShortcutsAlt.UseVisualStyleBackColor = true;
@@ -2195,7 +2195,7 @@
             this.checkBoxShortcutsControl.Enabled = false;
             this.checkBoxShortcutsControl.Location = new System.Drawing.Point(87, 367);
             this.checkBoxShortcutsControl.Name = "checkBoxShortcutsControl";
-            this.checkBoxShortcutsControl.Size = new System.Drawing.Size(61, 17);
+            this.checkBoxShortcutsControl.Size = new System.Drawing.Size(59, 17);
             this.checkBoxShortcutsControl.TabIndex = 1;
             this.checkBoxShortcutsControl.Text = "Control";
             this.checkBoxShortcutsControl.UseVisualStyleBackColor = true;
@@ -2387,10 +2387,10 @@
         private System.Windows.Forms.Label labelDefaultVol;
         private System.Windows.Forms.Label labelVolDescr;
         private System.Windows.Forms.GroupBox groupBoxVideoEngine;
-        private System.Windows.Forms.Label labelVideoPlayerWmp;
+        private System.Windows.Forms.Label labelVideoPlayerMPlayer;
         private System.Windows.Forms.Label labelDirectShowDescription;
         private System.Windows.Forms.Label labelManagedDirectXDescription;
-        private System.Windows.Forms.RadioButton radioButtonVideoPlayerWmp;
+        private System.Windows.Forms.RadioButton radioButtonVideoPlayerMPlayer;
         private System.Windows.Forms.RadioButton radioButtonVideoPlayerDirectShow;
         private System.Windows.Forms.RadioButton radioButtonVideoPlayerManagedDirectX;
         private System.Windows.Forms.CheckBox checkBoxRememberWindowPosition;

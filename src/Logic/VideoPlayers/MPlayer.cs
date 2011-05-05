@@ -223,14 +223,18 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             }
         }
 
-        private static string GetMPlayerFileName
+        public static string GetMPlayerFileName
         {
             get
             {
                 if (Utilities.IsRunningOnLinux() || Utilities.IsRunningOnMac())
                     return "mplayer";
 
-                string fileName = @"C:\Program Files (x86)\SMPlayer\mplayer\mplayer.exe";
+                string fileName = Path.Combine(Configuration.BaseDirectory, "mplayer.exe");
+                if (File.Exists(fileName))
+                    return fileName;
+
+                fileName = @"C:\Program Files (x86)\SMPlayer\mplayer\mplayer.exe";
                 if (File.Exists(fileName))
                     return fileName;
 

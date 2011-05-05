@@ -1130,19 +1130,14 @@ namespace Nikse.SubtitleEdit.Logic
             }
         }
 
-        public static bool IsWmpAvailable
+        public static bool IsMPlayerAvailable
         {
             get
             {
-                if (IsRunningOnMono())
-                    return false;
+                if (IsRunningOnMono() || IsRunningOnLinux())
+                    return File.Exists(Path.Combine(Configuration.BaseDirectory, "mplayer"));
 
-                string wmpInteropFileName = Path.GetDirectoryName(Application.ExecutablePath).TrimEnd('\\') + @"\AxInterop.WMPLib.dll";
-                if (!File.Exists(wmpInteropFileName))
-                    return false;
-
-                string wmpLibFileName = Path.GetDirectoryName(Application.ExecutablePath).TrimEnd('\\') + @"\Interop.WMPLib.dll";
-                return File.Exists(wmpLibFileName);
+                return MPlayer.GetMPlayerFileName != null;
             }
         }
 
