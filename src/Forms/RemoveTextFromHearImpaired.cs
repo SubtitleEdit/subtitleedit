@@ -89,22 +89,77 @@ namespace Nikse.SubtitleEdit.Forms
             return s.Trim();
         }
 
+        private string RemoveTextBetweenTags(string startTag, string endTag, string text)
+        {
+            if (startTag == "?" || endTag == "?")
+            {
+                if (text.StartsWith(startTag) && text.EndsWith(endTag))
+                    return string.Empty;
+                return text;
+            }
+
+            int start = text.IndexOf(startTag);
+            if (start == -1 || start == text.Length - 1)
+                return text;
+
+            int end = text.IndexOf(endTag, start + 1);
+            while (start >= 0 && end > start)
+            {
+                text = text.Remove(start, (end - start)+1);
+                start = text.IndexOf(startTag);
+                if (start >= 0 && start < text.Length - 1)
+                    end = text.IndexOf(endTag, start);
+                else
+                    end = -1;
+            }
+            return text.Replace(" " + Environment.NewLine, Environment.NewLine).TrimEnd();
+        }
+
+        private string RemoveHearImpairedTags(string text)
+        {
+            if (checkBoxRemoveTextBetweenSquares.Checked)
+            {
+                text = RemoveTextBetweenTags("[", "]:", text);
+                text = RemoveTextBetweenTags("[", "]", text);
+            }
+
+            if (checkBoxRemoveTextBetweenBrackets.Checked)
+            {
+                text = RemoveTextBetweenTags("{", "}:", text);
+                text = RemoveTextBetweenTags("{", "}", text);
+            }
+
+            if (checkBoxRemoveTextBetweenQuestionMarks.Checked)
+            {               
+                text = RemoveTextBetweenTags("?", "?:", text);
+                text = RemoveTextBetweenTags("?", "?", text);
+            }
+
+            if (checkBoxRemoveTextBetweenParentheses.Checked)
+            {
+                text = RemoveTextBetweenTags("(", "):", text);
+                text = RemoveTextBetweenTags("(", ")", text);
+            }
+
+            if (checkBoxRemoveTextBetweenCustomTags.Checked && comboBoxCustomStart.Text.Length > 0 && comboBoxCustomEnd.Text.Length > 0)
+            {
+                text = RemoveTextBetweenTags(comboBoxCustomStart.Text, comboBoxCustomEnd.Text, text);
+            }
+
+            return text;
+        }
+
+        private bool HasHearImpairedText(string text)
+        {
+            return RemoveHearImpairedTags(text) != text;
+        }
+
         public bool HasHearImpariedTagsAtStart(string text)
         {
             if (checkBoxOnlyIfInSeparateLine.Checked)
                 return StartAndEndsWithHearImpariedTags(text);
-            
-            return (text.StartsWith("[") && text.IndexOf("]") > 0 && checkBoxRemoveTextBetweenSquares.Checked) ||
-                   (text.StartsWith("{") && text.IndexOf("}") > 0 && checkBoxRemoveTextBetweenBrackets.Checked) ||
-                   (text.StartsWith("?") && text.IndexOf("?", 1) > 0 && checkBoxRemoveTextBetweenQuestionMarks.Checked) ||
-                   (text.StartsWith("(") && text.IndexOf(")") > 0 && checkBoxRemoveTextBetweenParentheses.Checked) ||
-                   (text.StartsWith("[") && text.IndexOf("]:") > 0 && checkBoxRemoveTextBetweenSquares.Checked) ||
-                   (text.StartsWith("{") && text.IndexOf("}:") > 0 && checkBoxRemoveTextBetweenBrackets.Checked) ||
-                   (text.StartsWith("?") && text.IndexOf("?:", 1) > 0 && checkBoxRemoveTextBetweenQuestionMarks.Checked) ||
-                   (text.StartsWith("(") && text.IndexOf("):") > 0 && checkBoxRemoveTextBetweenParentheses.Checked) ||
-                   (checkBoxRemoveTextBetweenCustomTags.Checked &&
-                    comboBoxCustomStart.Text.Length > 0 && comboBoxCustomEnd.Text.Length > 0 &&
-                    text.StartsWith(comboBoxCustomStart.Text) && text.IndexOf(comboBoxCustomEnd.Text, 1) > 0);
+
+            return HasHearImpairedText(text);
         }
 
         public bool HasHearImpariedTagsAtEnd(string text)
@@ -112,12 +167,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (checkBoxOnlyIfInSeparateLine.Checked)
                 return StartAndEndsWithHearImpariedTags(text);
 
-            return (text.EndsWith("]") && text.IndexOf("[") > 0 && checkBoxRemoveTextBetweenSquares.Checked) ||
-                   (text.EndsWith("}") && text.IndexOf("{") > 0 && checkBoxRemoveTextBetweenBrackets.Checked) ||
-                   (text.EndsWith(")") && text.IndexOf("(") > 0 && checkBoxRemoveTextBetweenParentheses.Checked) ||
-                   (checkBoxRemoveTextBetweenCustomTags.Checked &&
-                    comboBoxCustomStart.Text.Length > 0 && comboBoxCustomEnd.Text.Length > 0 &&
-                    text.EndsWith(comboBoxCustomEnd.Text) && text.IndexOf(comboBoxCustomStart.Text) > 0);
+            return HasHearImpairedText(text);
         }
 
         private bool StartAndEndsWithHearImpariedTags(string text)
@@ -408,10 +458,11 @@ namespace Nikse.SubtitleEdit.Forms
                         stSub.Pre = stSub.Pre.Replace("- ", string.Empty);
 
                     string newText = stSub.StrippedText;
-                    if (HasHearImpariedTagsAtStart(newText))
-                        newText = RemoveStartEndTags(newText);
-                    if (HasHearImpariedTagsAtEnd(newText))
-                        newText = RemoveEndTags(newText);
+                    newText = RemoveHearImpairedTags(newText);
+                    //if (HasHearImpariedTagsAtStart(newText))
+                    //    newText = RemoveStartEndTags(newText);
+                    //if (HasHearImpariedTagsAtEnd(newText))
+                    //    newText = RemoveEndTags(newText);
                     sb.AppendLine(stSub.Pre + newText + stSub.Post);
                 }
                 else
@@ -490,30 +541,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
             return text;
-        }
-
-        private string RemoveEndTags(string newText)
-        {
-            string s = newText;
-
-            if (s.EndsWith("]") && s.LastIndexOf("[") > 0 && checkBoxRemoveTextBetweenSquares.Checked)
-                newText = s.Remove(s.LastIndexOf("["));
-
-            else if (s.EndsWith("}") && s.LastIndexOf("{") > 0 && checkBoxRemoveTextBetweenBrackets.Checked)
-                newText = s.Remove(s.LastIndexOf("}"));
-
-            else if (s.EndsWith(")") && s.LastIndexOf("(") > 0 && checkBoxRemoveTextBetweenParentheses.Checked)
-                newText = s.Remove(s.LastIndexOf("("));
-
-            else if (checkBoxRemoveTextBetweenCustomTags.Checked &&
-                     s.Length > 0 && comboBoxCustomEnd.Text.Length > 0 && comboBoxCustomStart.Text.Length > 0 &&
-                     s.EndsWith(comboBoxCustomEnd.Text) && s.LastIndexOf(comboBoxCustomStart.Text) > 0)
-                newText = s.Remove(s.LastIndexOf(comboBoxCustomStart.Text));
-
-            if (newText != s)
-                newText = newText.TrimEnd(' ');
-            return newText;
-        }
+        }     
 
         private string RemoveStartEndTags(string text)
         {
