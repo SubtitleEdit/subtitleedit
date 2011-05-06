@@ -249,6 +249,10 @@ namespace Nikse.SubtitleEdit.Logic
         public int AutoBackupSeconds { get; set; }
         public string SpellChecker { get; set; }
         public bool AllowEditOfOriginalSubtitle { get; set; }
+        public bool Undocked { get; set; }
+        public string UndockedVideoPosition { get; set; }
+        public string UndockedWaveformPosition { get; set; }
+        public string UndockedVideoControlsPosition { get; set; }
 
         public GeneralSettings()
         {
@@ -300,6 +304,7 @@ namespace Nikse.SubtitleEdit.Logic
             AutoBackupSeconds = 0;
             SpellChecker = "hunspell";
             AllowEditOfOriginalSubtitle = false;
+            Undocked = false;
         }
     }
 
@@ -715,7 +720,19 @@ namespace Nikse.SubtitleEdit.Logic
             subNode = node.SelectSingleNode("AllowEditOfOriginalSubtitle");
             if (subNode != null)
                 settings.General.AllowEditOfOriginalSubtitle = Convert.ToBoolean(subNode.InnerText);
-            
+            subNode = node.SelectSingleNode("Undocked");
+            if (subNode != null)
+                settings.General.Undocked = Convert.ToBoolean(subNode.InnerText);
+            subNode = node.SelectSingleNode("UndockedVideoPosition");
+            if (subNode != null)
+                settings.General.UndockedVideoPosition = subNode.InnerText;
+            subNode = node.SelectSingleNode("UndockedWaveformPosition");
+            if (subNode != null)
+                settings.General.UndockedWaveformPosition = subNode.InnerText;
+            subNode = node.SelectSingleNode("UndockedVideoControlsPosition");
+            if (subNode != null)
+                settings.General.UndockedVideoControlsPosition = subNode.InnerText;
+           
             settings.Tools = new Nikse.SubtitleEdit.Logic.ToolsSettings();
             node = doc.DocumentElement.SelectSingleNode("Tools");
             subNode = node.SelectSingleNode("StartSceneIndex");
@@ -1094,6 +1111,10 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("AutoBackupSeconds", settings.General.AutoBackupSeconds.ToString());
             textWriter.WriteElementString("SpellChecker", settings.General.SpellChecker);
             textWriter.WriteElementString("AllowEditOfOriginalSubtitle", settings.General.AllowEditOfOriginalSubtitle.ToString());
+            textWriter.WriteElementString("Undocked", settings.General.Undocked.ToString());
+            textWriter.WriteElementString("UndockedVideoPosition", settings.General.UndockedVideoPosition);
+            textWriter.WriteElementString("UndockedWaveformPosition", settings.General.UndockedWaveformPosition);
+            textWriter.WriteElementString("UndockedVideoControlsPosition", settings.General.UndockedVideoControlsPosition);
             textWriter.WriteEndElement();
 
             textWriter.WriteStartElement("Tools", "");
