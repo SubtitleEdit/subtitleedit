@@ -5,7 +5,7 @@ using System.Drawing;
 
 namespace Nikse.SubtitleEdit.Logic
 {
-    class PositionAndSize
+    public class PositionAndSize
     {
         public string Name { get; set; }
         public int Left { get; set; }

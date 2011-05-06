@@ -419,6 +419,10 @@ namespace Nikse.SubtitleEdit.Forms
                             if (File.Exists(outputFileName))
                                 outputFileName = Path.GetFileNameWithoutExtension(fileName) + "_" + Guid.NewGuid().ToString() + sf.Extension;
                             Console.Write(string.Format("{0}: {1} -> {2}...", count, Path.GetFileName(fileName), outputFileName));
+                            if (sf.IsFrameBased && !sub.WasLoadedWithFrameNumbers)
+                                sub.CalculateFrameNumbersFromTimeCodesNoCheck(Configuration.Settings.General.DefaultFrameRate);
+                            else if (sf.IsTimeBased && sub.WasLoadedWithFrameNumbers)
+                                sub.CalculateTimeCodesFromFrameNumbers(Configuration.Settings.General.DefaultFrameRate);
                             System.IO.File.WriteAllText(outputFileName, sub.ToText(sf));
                             Console.WriteLine(" done.");
                         }
@@ -4657,6 +4661,14 @@ namespace Nikse.SubtitleEdit.Forms
                 Configuration.Settings.General.SyncListViewWithVideoWhilePlaying = checkBoxSyncListViewWithVideoWhilePlaying.Checked;
                 if (!string.IsNullOrEmpty(_fileName))
                     Configuration.Settings.RecentFiles.Add(_fileName, FirstVisibleIndex, FirstSelectedIndex, _videoFileName, _subtitleAlternateFileName);
+
+                if (_videoPlayerUnDocked != null && !_videoPlayerUnDocked.IsDisposed)
+                    Configuration.Settings.General.UndockedVideoPosition = _videoPlayerUnDocked.Left.ToString() + ";" + _videoPlayerUnDocked.Top.ToString() + ";" + _videoPlayerUnDocked.Width + ";" + _videoPlayerUnDocked.Height;
+                if (_waveFormUnDocked != null && !_waveFormUnDocked.IsDisposed)
+                    Configuration.Settings.General.UndockedWaveformPosition = _waveFormUnDocked.Left.ToString() + ";" + _waveFormUnDocked.Top.ToString() + ";" + _waveFormUnDocked.Width + ";" + _waveFormUnDocked.Height;
+                if (_videoControlsUnDocked != null && !_videoControlsUnDocked.IsDisposed)
+                    Configuration.Settings.General.UndockedVideoControlsPosition = _videoControlsUnDocked.Left.ToString() + ";" + _videoControlsUnDocked.Top.ToString() + ";" + _videoControlsUnDocked.Width + ";" + _videoControlsUnDocked.Height;
+
                 Configuration.Settings.Save();
 
                 if (mediaPlayer.VideoPlayer != null)
@@ -7951,9 +7963,36 @@ namespace Nikse.SubtitleEdit.Forms
             else
                 SubtitleListview1.Focus();
 
-            SetShortcuts();
+            if (Configuration.Settings.General.Undocked)
+            {
+                SetPositionFromXYString(Configuration.Settings.General.UndockedVideoPosition, "VideoPlayerUnDocked");
+                SetPositionFromXYString(Configuration.Settings.General.UndockedWaveformPosition, "WaveFormUnDocked");
+                SetPositionFromXYString(Configuration.Settings.General.UndockedVideoControlsPosition, "VideoControlsUndocked");
+                undockVideoControlsToolStripMenuItem_Click(null, null);
+            }
 
+            SetShortcuts();
             LoadPlugins();
+        }
+
+        private void SetPositionFromXYString(string positionAndSize, string name)
+        {
+            string[] parts = positionAndSize.Split(';');
+            if (parts.Length == 4)
+            {
+                try
+                {
+                    int x = int.Parse(parts[0]);
+                    int y = int.Parse(parts[1]);
+                    int w = int.Parse(parts[2]);
+                    int h = int.Parse(parts[3]);
+                    _formPositionsAndSizes.AddPositionAndSize(new PositionAndSize() { Left = x, Top = y, Size = new Size(w, h), Name = name });
+                }
+                catch (Exception exception)
+                {
+                    System.Diagnostics.Debug.WriteLine(exception.Message);
+                }
+            }
         }
 
         private void SetShortcuts()
@@ -9324,6 +9363,8 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void undockVideoControlsToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            Configuration.Settings.General.Undocked = true;
+
             UnDockVideoPlayer();
             if (toolStripButtonToggleVideo.Checked)
                 _videoPlayerUnDocked.Show(this);
@@ -9345,6 +9386,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void redockVideoControlsToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            Configuration.Settings.General.Undocked = false;
 
             if (_videoControlsUnDocked != null && !_videoControlsUnDocked.IsDisposed)
             {

@@ -26,6 +26,11 @@ namespace Nikse.SubtitleEdit.Forms
             Text = title;            
         }
 
+        public VideoPlayerUnDocked()
+        {
+            // TODO: Complete member initialization
+        }
+
         private void VideoPlayerUnDocked_FormClosing(object sender, FormClosingEventArgs e)
         {
             if (e.CloseReason == CloseReason.UserClosing && panelContainer.Controls.Count > 0)

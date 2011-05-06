@@ -30,6 +30,11 @@ namespace Nikse.SubtitleEdit.Forms
             Text = title;
         }
 
+        public WaveFormUnDocked()
+        {
+            // TODO: Complete member initialization
+        }
+
         private void WaveFormUnDocked_FormClosing(object sender, FormClosingEventArgs e)
         {
             if (e.CloseReason == CloseReason.UserClosing && panelContainer.Controls.Count > 0)

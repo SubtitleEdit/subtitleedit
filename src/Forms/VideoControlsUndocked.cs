@@ -30,6 +30,11 @@ namespace Nikse.SubtitleEdit.Forms
             Text = title;
         }
 
+        public VideoControlsUndocked()
+        {
+            // TODO: Complete member initialization
+        }
+
         private void VideoControlsUndocked_FormClosing(object sender, FormClosingEventArgs e)
         {
             if (e.CloseReason == CloseReason.UserClosing && panelContainer.Controls.Count > 0)

@@ -7,6 +7,11 @@ namespace Nikse.SubtitleEdit.Logic
     {
         List<PositionAndSize> _positionsAndSizes = new List<PositionAndSize>();
 
+        public void AddPositionAndSize(PositionAndSize pAndS)
+        {
+            _positionsAndSizes.Add(pAndS);
+        }
+
         public bool SetPositionAndSize(Form form)
         {
             if (form == null)
