@@ -44,7 +44,14 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void RichTextBoxAbout1LinkClicked(object sender, LinkClickedEventArgs e)
         {
-            Process.Start(e.LinkText);
+            try
+            {
+                Process.Start(e.LinkText);
+            }
+            catch
+            { 
+                MessageBox.Show("Unable to start link: " + e.LinkText, Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void buttonDonate_Click(object sender, EventArgs e)

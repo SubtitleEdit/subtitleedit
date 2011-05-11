@@ -1803,6 +1803,7 @@ namespace Nikse.SubtitleEdit.Forms
             _oldSubtitleFormat = null;
             labelSingleLine.Text = string.Empty;
             RemoveAlternate(true);
+            toolStripComboBoxFrameRate.Text = Configuration.Settings.General.DefaultFrameRate.ToString();
 
             comboBoxEncoding.Items[0] = "ANSI - " + Encoding.Default.CodePage.ToString();
             if (Configuration.Settings.General.DefaultEncoding == "ANSI")
@@ -7963,7 +7964,7 @@ namespace Nikse.SubtitleEdit.Forms
             else
                 SubtitleListview1.Focus();
 
-            if (Configuration.Settings.General.Undocked)
+            if (Configuration.Settings.General.Undocked && Configuration.Settings.General.StartRememberPositionAndSize)
             {
                 SetPositionFromXYString(Configuration.Settings.General.UndockedVideoPosition, "VideoPlayerUnDocked");
                 SetPositionFromXYString(Configuration.Settings.General.UndockedWaveformPosition, "WaveFormUnDocked");
@@ -9951,6 +9952,11 @@ namespace Nikse.SubtitleEdit.Forms
                 if (format == null)
                     e.Cancel = true;
             }
+        }
+
+        private void toolStripComboBoxFrameRate_TextChanged(object sender, EventArgs e)
+        {
+            Configuration.Settings.General.CurrentFrameRate = CurrentFrameRate;
         }
 
     }

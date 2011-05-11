@@ -433,6 +433,7 @@ namespace Nikse.SubtitleEdit.Logic
             s = s.Replace("</B>", string.Empty);
             s = s.Replace("<U>", string.Empty);
             s = s.Replace("</U>", string.Empty);
+            s = RemoveParagraphTag(s);
             return RemoveHtmlFontTag(s);
         }
 
@@ -447,6 +448,21 @@ namespace Nikse.SubtitleEdit.Logic
             while (s.ToLower().Contains("<font"))
             {
                 int startIndex = s.ToLower().IndexOf("<font");
+                int endIndex = Math.Max(s.IndexOf(">"), startIndex + 4);
+                s = s.Remove(startIndex, (endIndex - startIndex) + 1);
+            }
+            return s;
+        }
+
+        internal static string RemoveParagraphTag(string s)
+        {
+            s = s.Replace("</p>", string.Empty);
+            s = s.Replace("</P>", string.Empty);
+            s = s.Replace("<P>", string.Empty);
+            s = s.Replace("<P>", string.Empty);
+            while (s.ToLower().Contains("<p "))
+            {
+                int startIndex = s.ToLower().IndexOf("<p ");
                 int endIndex = Math.Max(s.IndexOf(">"), startIndex + 4);
                 s = s.Remove(startIndex, (endIndex - startIndex) + 1);
             }

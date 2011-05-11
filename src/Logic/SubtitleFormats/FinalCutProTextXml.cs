@@ -46,7 +46,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public override string ToText(Subtitle subtitle, string title)
         {
-            if (Configuration.Settings.General.DefaultFrameRate > 26)
+            if (Configuration.Settings.General.CurrentFrameRate > 26)
                 FrameRate = 30;
             else
                 FrameRate = 25;
@@ -469,7 +469,7 @@ string xmlTrackStructure3b =
                 else
                     track.InnerXml = xmlTrackStructure3b;
 
-                double frameRate = Configuration.Settings.General.DefaultFrameRate;
+                double frameRate = Configuration.Settings.General.CurrentFrameRate;
                 XmlNode start = track.SelectSingleNode("generatoritem/start");
                 start.InnerText = ((int)Math.Round(p.StartTime.TotalSeconds*frameRate)).ToString();
 
@@ -499,7 +499,7 @@ string xmlTrackStructure3b =
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
             _errorCount = 0;
-            FrameRate = Configuration.Settings.General.DefaultFrameRate;
+            FrameRate = Configuration.Settings.General.CurrentFrameRate;
 
             StringBuilder sb = new StringBuilder();
             lines.ForEach(line => sb.AppendLine(line));
@@ -516,7 +516,7 @@ string xmlTrackStructure3b =
                     }
                     catch
                     {
-                        FrameRate = Configuration.Settings.General.DefaultFrameRate;
+                        FrameRate = Configuration.Settings.General.CurrentFrameRate;
                     }
                 }
 

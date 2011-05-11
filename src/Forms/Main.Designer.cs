@@ -691,6 +691,7 @@
             this.toolStripComboBoxFrameRate.FlatStyle = System.Windows.Forms.FlatStyle.Standard;
             this.toolStripComboBoxFrameRate.Name = "toolStripComboBoxFrameRate";
             this.toolStripComboBoxFrameRate.Size = new System.Drawing.Size(100, 40);
+            this.toolStripComboBoxFrameRate.TextChanged += new System.EventHandler(this.toolStripComboBoxFrameRate_TextChanged);
             // 
             // toolStripButtonGetFrameRate
             // 

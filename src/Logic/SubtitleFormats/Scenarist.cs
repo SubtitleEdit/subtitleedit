@@ -55,7 +55,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         private string EncodeTimeCode(TimeCode time)
         {
             //00:03:15:22 (last is frame)
-            int frames = time.Milliseconds / (1000 / 30);
+            int frames = (int) (time.Milliseconds / (1000.0 / Configuration.Settings.General.CurrentFrameRate));
             return string.Format("{0:00}:{1:00}:{2:00}:{3:00}", time.Hours, time.Minutes, time.Seconds, frames);
         }
 
@@ -105,7 +105,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             string seconds = parts[2];
             string frames = parts[3];
 
-            int milliseconds = (int)((1000 / 30.0) * int.Parse(frames));
+            int milliseconds = (int)((1000.0 / Configuration.Settings.General.CurrentFrameRate) * int.Parse(frames));
             if (milliseconds > 999)
                 milliseconds = 999;
 
