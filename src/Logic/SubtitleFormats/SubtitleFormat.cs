@@ -18,6 +18,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     new AdobeEncore(),
                     new AdobeEncoreTab(),
                     new AdobeEncoreWithLineNumbers(),
+                    new Captionate(),
                     new DCSubtitle(),
                     new DvdStudioPro(),
                     new DvdSubtitle(),

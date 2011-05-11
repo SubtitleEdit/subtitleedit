@@ -213,6 +213,7 @@ namespace Nikse.SubtitleEdit.Logic
         public bool ShowWaveForm { get; set; }
         public bool ShowFrameRate { get; set; }
         public double DefaultFrameRate { get; set; }
+        public double CurrentFrameRate { get; set; }
         public string DefaultEncoding { get; set; }
         public bool AutoGuessAnsiEncoding { get; set; }
         public string SubtitleFontName { get; set; }
@@ -271,6 +272,7 @@ namespace Nikse.SubtitleEdit.Logic
             ShowWaveForm = false;
             ShowFrameRate = false;
             DefaultFrameRate = 23.976;
+            CurrentFrameRate = DefaultFrameRate;
             SubtitleFontName = "Tahoma";
             if (Environment.OSVersion.Version.Major < 6) // 6 == Vista/Win2008Server/Win7
                 SubtitleFontName = Utilities.WinXp2kUnicodeFontName;
@@ -611,7 +613,10 @@ namespace Nikse.SubtitleEdit.Logic
                 settings.General.ShowWaveForm = Convert.ToBoolean(subNode.InnerText);
             subNode = node.SelectSingleNode("DefaultFrameRate");
             if (subNode != null)
+            {
                 settings.General.DefaultFrameRate = Convert.ToDouble(subNode.InnerText);
+                settings.General.CurrentFrameRate = Convert.ToDouble(subNode.InnerText);
+            }
             subNode = node.SelectSingleNode("DefaultEncoding");
             if (subNode != null)
                 settings.General.DefaultEncoding = subNode.InnerText;

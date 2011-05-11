@@ -182,7 +182,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         private void WriteTime(FileStream fs, TimeCode timeCode)
         {
             double totalMilliseconds = timeCode.TotalMilliseconds + TimeSpan.FromHours(10).TotalMilliseconds; // +10 hours
-            int frames = (int)Math.Round(totalMilliseconds / (1000.0 /Configuration.Settings.General.DefaultFrameRate));
+            int frames = (int)Math.Round(totalMilliseconds / (1000.0 /Configuration.Settings.General.CurrentFrameRate));
             fs.WriteByte((byte)(frames / 256 / 256));
             fs.WriteByte((byte)(frames / 256));
             fs.WriteByte((byte)(frames % 256));
@@ -250,8 +250,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
                     Paragraph p = new Paragraph();
                     p.Text = (line1 + Environment.NewLine + line2).Trim();
-                    p.StartTime.TotalMilliseconds = (double)((1000.0 / Configuration.Settings.General.DefaultFrameRate) * startFrame);
-                    p.EndTime.TotalMilliseconds = (double)((1000.0 / Configuration.Settings.General.DefaultFrameRate) * endFrame);
+                    p.StartTime.TotalMilliseconds = (double)((1000.0 / Configuration.Settings.General.CurrentFrameRate) * startFrame);
+                    p.EndTime.TotalMilliseconds = (double)((1000.0 / Configuration.Settings.General.CurrentFrameRate) * endFrame);
 
                     subtitle.Paragraphs.Add(p);
                     i += TextLength * 2;

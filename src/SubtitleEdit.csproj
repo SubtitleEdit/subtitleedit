@@ -535,6 +535,7 @@
     <Compile Include="Logic\SubtitleFormats\AdobeEncoreTabs.cs" />
     <Compile Include="Logic\SubtitleFormats\AdobeEncoreWithLineNumbers.cs" />
     <Compile Include="Logic\SubtitleFormats\BdnXml.cs" />
+    <Compile Include="Logic\SubtitleFormats\Captionate.cs" />
     <Compile Include="Logic\SubtitleFormats\Cavena890.cs" />
     <Compile Include="Logic\SubtitleFormats\DCSubtitle.cs" />
     <Compile Include="Logic\SubtitleFormats\FinalCutProTextXml.cs" />
@@ -846,6 +847,7 @@
     <EmbeddedResource Include="Resources\it-IT.xml.zip" />
     <EmbeddedResource Include="Resources\hu-HU.xml.zip" />
     <EmbeddedResource Include="Resources\ja-JP.xml.zip" />
+    <EmbeddedResource Include="Resources\eu-ES.xml.zip" />
     <None Include="Resources\pl-PL.xml">
       <SubType>Designer</SubType>
     </None>
@@ -898,6 +900,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Resources\bg-BG.xml" />
+    <Content Include="Resources\eu-ES.xml" />
     <Content Include="Resources\fa-IR.xml">
       <SubType>Designer</SubType>
     </Content>
