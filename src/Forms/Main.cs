@@ -2007,6 +2007,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 Main_Resize(null, null);
             }
+            textBoxListViewTextAlternate.Enabled = Configuration.Settings.General.AllowEditOfOriginalSubtitle && _subtitleListViewIndex >= 0;
 
             SetShortcuts();
 
@@ -2016,7 +2017,7 @@ namespace Nikse.SubtitleEdit.Forms
                 _timerAutoSave.Interval = 1000 * Configuration.Settings.General.AutoBackupSeconds; // take backup every x second if changes were made
                 _timerAutoSave.Start();
             }
-
+            SetTitle();
         }
 
         private void TryLoadIcon(ToolStripButton button, string iconName)
@@ -8876,7 +8877,7 @@ namespace Nikse.SubtitleEdit.Forms
                     SubtitleListview1.ShowAlternateTextColumn(Configuration.Settings.Language.General.OriginalText);
                 _fileName = networkJoin.FileName;
                 SetTitle();
-                this.Text = Title;
+                Text = Title;
                 toolStripStatusNetworking.Visible = true;
                 toolStripStatusNetworking.Text = _language.NetworkMode;
                 EnableDisableControlsNotWorkingInNetworkMode(false);
