@@ -852,6 +852,7 @@ namespace Nikse.SubtitleEdit.Forms
             karokeeEffectToolStripMenuItem.Text = _language.Menu.ContextMenu.KaraokeEffect;
             showSelectedLinesEarlierlaterToolStripMenuItem.Text = _language.Menu.ContextMenu.ShowSelectedLinesEarlierLater;
             visualSyncSelectedLinesToolStripMenuItem.Text = _language.Menu.ContextMenu.VisualSyncSelectedLines;
+            toolStripMenuItemGoogleMicrosoftTranslateSelLine.Text = _language.Menu.ContextMenu.GoogleAndMicrosoftTranslateSelectedLine;
             googleTranslateSelectedLinesToolStripMenuItem.Text = _language.Menu.ContextMenu.GoogleTranslateSelectedLines;
             adjustDisplayTimeForSelectedLinesToolStripMenuItem.Text = _language.Menu.ContextMenu.AdjustDisplayDurationForSelectedLines;
             fixCommonErrorsInSelectedLinesToolStripMenuItem.Text = _language.Menu.ContextMenu.FixCommonErrorsInSelectedLines;
@@ -3483,6 +3484,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ContextMenuStripListviewOpening(object sender, System.ComponentModel.CancelEventArgs e)
         {
+            toolStripMenuItemGoogleMicrosoftTranslateSelLine.Visible = false;
             if (SubtitleListview1.SelectedItems.Count == 0)
             {
                 contextMenuStripEmpty.Show(MousePosition.X, MousePosition.Y);               
@@ -3516,6 +3518,8 @@ namespace Nikse.SubtitleEdit.Forms
                     toolStripMenuItemUnbreakLines.Visible = false;
                     toolStripMenuItemAutoBreakLines.Visible = false;
                     toolStripSeparatorBreakLines.Visible = false;
+
+                    toolStripMenuItemGoogleMicrosoftTranslateSelLine.Visible = _subtitleAlternate != null;
                 }
                 else if (SubtitleListview1.SelectedItems.Count == 2)
                 {
@@ -3621,7 +3625,7 @@ namespace Nikse.SubtitleEdit.Forms
                     askText = _language.DeleteOneLinePrompt;
                 }
 
-                if (MessageBox.Show(askText, Title, MessageBoxButtons.YesNo) == DialogResult.No)
+                if (Configuration.Settings.General.PromptDeleteLines && MessageBox.Show(askText, Title, MessageBoxButtons.YesNo) == DialogResult.No)
                     return;
 
                 MakeHistoryForUndo(historyText);
@@ -6067,8 +6071,55 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void SubtitleListview1_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.KeyCode == Keys.A && e.Control) //SelectAll
-            { 
+            if (e.KeyCode == Keys.C && e.Control) //Copy to clipboard
+            {
+                Subtitle tmp = new Subtitle();
+                foreach (int i in SubtitleListview1.SelectedIndices)
+                {
+                    Paragraph p = _subtitle.GetParagraphOrDefault(i);
+                    if (p != null)
+                        tmp.Paragraphs.Add(new Paragraph(p));
+                }
+                if (tmp.Paragraphs.Count > 0)
+                {
+                    Clipboard.SetText(tmp.ToText(new SubRip()));
+                }
+                e.SuppressKeyPress = true;
+            }
+            else if (e.KeyCode == Keys.V && e.Control) //Paste from clipboard
+            {
+                if (Clipboard.ContainsText())
+                {
+                    string text = Clipboard.GetText();
+                    Subtitle tmp = new Subtitle();
+                    SubRip format = new SubRip();
+                    List<string> list = new List<string>();
+                    foreach (string line in text.Replace(Environment.NewLine, "|").Split("|".ToCharArray(), StringSplitOptions.None))
+                        list.Add(line);
+                    format.LoadSubtitle(tmp, list, null);
+                    if (SubtitleListview1.SelectedItems.Count == 1 && tmp.Paragraphs.Count > 0)
+                    {
+                        Paragraph lastParagraph = null;
+                        Paragraph lastTempParagraph = null;
+                        foreach (Paragraph p in tmp.Paragraphs)
+                        {
+                            InsertAfter();
+                            textBoxListViewText.Text = p.Text;
+                            if (lastParagraph != null && lastTempParagraph != null)
+                            {
+                                double millisecondsBetween = p.StartTime.TotalMilliseconds - lastTempParagraph.EndTime.TotalMilliseconds;
+                                timeUpDownStartTime.TimeCode = new TimeCode(TimeSpan.FromMilliseconds(lastParagraph.EndTime.TotalMilliseconds + millisecondsBetween));
+                            }
+                            numericUpDownDuration.Value = (decimal)p.Duration.TotalSeconds;
+                            lastParagraph = _subtitle.GetParagraphOrDefault(_subtitleListViewIndex);
+                            lastTempParagraph = p;
+                        }
+                    }
+                }
+                e.SuppressKeyPress = true;
+            }
+            else if (e.KeyCode == Keys.A && e.Control) //SelectAll
+            {
                 foreach (ListViewItem item in SubtitleListview1.Items)
                     item.Selected = true;
                 e.SuppressKeyPress = true;

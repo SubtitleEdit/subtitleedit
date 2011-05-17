@@ -538,6 +538,7 @@
     <Compile Include="Logic\SubtitleFormats\Captionate.cs" />
     <Compile Include="Logic\SubtitleFormats\Cavena890.cs" />
     <Compile Include="Logic\SubtitleFormats\DCSubtitle.cs" />
+    <Compile Include="Logic\SubtitleFormats\Eeg708.cs" />
     <Compile Include="Logic\SubtitleFormats\FinalCutProTextXml.cs" />
     <Compile Include="Logic\SubtitleFormats\FinalCutProXml.cs" />
     <Compile Include="Logic\SubtitleFormats\Pac.cs" />
@@ -545,6 +546,8 @@
     <Compile Include="Logic\SubtitleFormats\QuickTimeText.cs" />
     <Compile Include="Logic\SubtitleFormats\RealTime.cs" />
     <Compile Include="Logic\SubtitleFormats\Scenarist.cs" />
+    <Compile Include="Logic\SubtitleFormats\SonyDVDArchitectExplicitDuration.cs" />
+    <Compile Include="Logic\SubtitleFormats\SonyDVDArchitectTabs.cs" />
     <Compile Include="Logic\SubtitleFormats\SonyDVDArchitectWithLineNumbers.cs" />
     <Compile Include="Logic\SubtitleFormats\Ebu.cs" />
     <Compile Include="Logic\SubtitleFormats\SonyDVDArchitect.cs" />
@@ -839,6 +842,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <EmbeddedResource Include="Resources\bg-BG.xml.zip" />
+    <EmbeddedResource Include="Resources\cs-CZ.xml.zip" />
     <None Include="Resources\da-DK.xml">
       <SubType>Designer</SubType>
     </None>
@@ -900,6 +904,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Resources\bg-BG.xml" />
+    <Content Include="Resources\cs-CZ.xml" />
     <Content Include="Resources\eu-ES.xml" />
     <Content Include="Resources\fa-IR.xml">
       <SubType>Designer</SubType>

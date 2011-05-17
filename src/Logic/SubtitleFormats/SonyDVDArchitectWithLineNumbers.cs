@@ -40,13 +40,13 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             foreach (Paragraph p in subtitle.Paragraphs)
             { 
                 string text = Utilities.RemoveHtmlTags(p.Text);
-                text = text.Replace(Environment.NewLine, string.Empty);
+                text = text.Replace(Environment.NewLine, "\r");
                 sb.AppendLine(string.Format("{9:0000}  {0:00}:{1:00}:{2:00}:{3:00}  {4:00}:{5:00}:{6:00}:{7:00}    \t{8:00}" + Environment.NewLine,
                                             p.StartTime.Hours, p.StartTime.Minutes, p.StartTime.Seconds, p.StartTime.Milliseconds / 10,
                                             p.EndTime.Hours, p.EndTime.Minutes, p.EndTime.Seconds, p.EndTime.Milliseconds / 10,
                                             text, p.Number));
             }
-            return sb.ToString().Trim();
+            return sb.ToString().Trim() + Environment.NewLine + Environment.NewLine + Environment.NewLine;
         }
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
@@ -56,9 +56,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             var regex = new Regex(@"^\d\d\d\d  \d\d:\d\d:\d\d:\d\d  \d\d:\d\d:\d\d:\d\d", RegexOptions.Compiled);
             var regex1DigitMillisecs = new Regex(@"^\d\d\d\d  \d\d\d:\d\d:\d\d:\d  \d\d\d:\d\d:\d\d:\d", RegexOptions.Compiled);
             _errorCount = 0;
+            Paragraph lastParagraph = null;
             foreach (string line in lines)
             {
-                string s = line.Replace("\0", string.Empty);
+                string s = line; 
                 if (s.Length > 0)
                 {
                     bool success = false;
@@ -87,8 +88,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                             string text = line.Replace("\0", string.Empty).Substring(match.Length).TrimStart();
                             text = text.Replace("|", Environment.NewLine);
 
-                            var p = new Paragraph(start, end, text);
-                            subtitle.Paragraphs.Add(p);
+                            lastParagraph = new Paragraph(start, end, text);
+                            subtitle.Paragraphs.Add(lastParagraph);
                             success = true;
                         }
                     }
@@ -115,10 +116,15 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                             string text = line.Replace("\0", string.Empty).Substring(match1DigitMillisecs.Length).TrimStart();
                             text = text.Replace("|", Environment.NewLine);
 
-                            var p = new Paragraph(start, end, text);
-                            subtitle.Paragraphs.Add(p);
+                            lastParagraph = new Paragraph(start, end, text);
+                            subtitle.Paragraphs.Add(lastParagraph);
                             success = true;
                         }
+                    }
+                    else if (line.Trim().Length > 0 && lastParagraph != null && Utilities.CountTagInText(lastParagraph.Text, Environment.NewLine) < 4)
+                    {
+                        lastParagraph.Text += Environment.NewLine + line.Trim();
+                        success = true;
                     }
                     if (!success)
                         _errorCount++;

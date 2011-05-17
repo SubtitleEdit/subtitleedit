@@ -226,11 +226,14 @@ namespace Nikse.SubtitleEdit.Forms
                 if (index < _translatedSubtitle.Paragraphs.Count)
                 {
                     string cleanText = s.Replace("</p>", string.Empty).Trim();
+                    if (cleanText.Contains("\n") && !cleanText.Contains("\r"))
+                        cleanText = cleanText.Replace("\n", Environment.NewLine);
                     cleanText = cleanText.Replace(" ...", "...");
                     cleanText = cleanText.Replace("<br>", Environment.NewLine);
                     cleanText = cleanText.Replace("<br/>", Environment.NewLine);
                     cleanText = cleanText.Replace("<br />", Environment.NewLine);
                     cleanText = cleanText.Replace(Environment.NewLine + " ", Environment.NewLine);
+                    cleanText = cleanText.Replace(" " + Environment.NewLine, Environment.NewLine);
                     _translatedSubtitle.Paragraphs[index].Text = cleanText;
                 }
                 index++;
@@ -746,7 +749,7 @@ namespace Nikse.SubtitleEdit.Forms
                         break;
                 }
                 if (sb.Length > 0)
-                    FillTranslatedText(client.Translate(BingApiId, sb.ToString(), from, to), start, index - 1);
+                    FillTranslatedText(client.Translate(BingApiId, sb.ToString().Replace(Environment.NewLine, "<br />"), from, to), start, index - 1);
             }
             finally
             {

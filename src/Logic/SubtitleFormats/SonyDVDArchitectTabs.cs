@@ -5,7 +5,7 @@ using System.Text.RegularExpressions;
 
 namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
-    public class SonyDVDArchitect : SubtitleFormat
+    class SonyDVDArchitectTabs : SubtitleFormat
     {
         public override string Extension
         {
@@ -14,7 +14,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public override string Name
         {
-            get { return "Sony DVDArchitect"; }
+            get { return "Sony DVDArchitect Tabs"; }
         }
 
         public override bool HasLineNumber
@@ -38,10 +38,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         {
             var sb = new StringBuilder();
             foreach (Paragraph p in subtitle.Paragraphs)
-            { 
+            {
                 string text = Utilities.RemoveHtmlTags(p.Text);
                 text = text.Replace(Environment.NewLine, "\r");
-                sb.AppendLine(string.Format("{0:00}:{1:00}:{2:00}:{3:00} - {4:00}:{5:00}:{6:00}:{7:00}  \t{8:00}",
+                sb.AppendLine(string.Format("{0:00}:{1:00}:{2:00}:{3:00}\t{4:00}:{5:00}:{6:00}:{7:00}\t{8:00}",
                                             p.StartTime.Hours, p.StartTime.Minutes, p.StartTime.Seconds, p.StartTime.Milliseconds / 10,
                                             p.EndTime.Hours, p.EndTime.Minutes, p.EndTime.Seconds, p.EndTime.Milliseconds / 10,
                                             text));
@@ -50,10 +50,11 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         }
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
-        {   // 00:04:10:92 - 00:04:13:32  	Raise Yourself To Help Mankind
-            // 00:04:27:92 - 00:04:30:92  	الجهة المتولية للمسئولية الاجتماعية لشركتنا.
+        {   //00:02:09:34	00:02:13:07	- Hvad mener du så om konkurrencen?- Jo, det er helt fint.
+            //00:02:14:02	00:02:16:41	- Var det den rigtige der vandt?- Ja, bestemt.
+            //newline = \r (0D)
 
-            var regex = new Regex(@"^\d\d:\d\d:\d\d:\d\d[ ]+-[ ]+\d\d:\d\d:\d\d:\d\d", RegexOptions.Compiled); 
+            var regex = new Regex(@"^\d\d:\d\d:\d\d:\d\d[ \t]+\d\d:\d\d:\d\d:\d\d[ \t]+", RegexOptions.Compiled);
             _errorCount = 0;
             Paragraph lastParagraph = null;
             foreach (string line in lines)
@@ -65,10 +66,11 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     if (line.Length > 26 && match.Success)
                     {
                         string s = line.Substring(0, match.Length);
-                        s = s.Replace(" - ", ":");
+                        s = s.Replace("\t", ":");
                         s = s.Replace(" ", string.Empty);
+                        s = s.Trim().TrimEnd(':').TrimEnd();
                         string[] parts = s.Split(':');
-                        if (parts.Length ==  8)
+                        if (parts.Length == 8)
                         {
                             int hours = int.Parse(parts[0]);
                             int minutes = int.Parse(parts[1]);

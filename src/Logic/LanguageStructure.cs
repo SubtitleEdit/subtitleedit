@@ -791,6 +791,7 @@
                     public string KaraokeEffect { get; set; }
                     public string ShowSelectedLinesEarlierLater { get; set; }
                     public string VisualSyncSelectedLines { get; set; }
+                    public string GoogleAndMicrosoftTranslateSelectedLine { get; set; }
                     public string GoogleTranslateSelectedLines { get; set; }
                     public string AdjustDisplayDurationForSelectedLines { get; set; }
                     public string FixCommonErrorsInSelectedLines { get; set; }
@@ -1052,6 +1053,7 @@
             public string AutoBackupEveryFiveMinutes { get; set; }
             public string AutoBackupEveryFifteenMinutes { get; set; }
             public string AllowEditOfOriginalSubtitle { get; set; }
+            public string PromptDeleteLines { get; set; }            
             public string VideoEngine { get; set; }
             public string DirectShow { get; set; }
             public string DirectShowDescription { get; set; }

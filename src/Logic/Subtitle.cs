@@ -114,6 +114,10 @@ namespace Nikse.SubtitleEdit.Logic
                     return subtitleFormat;
                 }
             }
+
+            if (useThisEncoding == null)
+                return LoadSubtitle(fileName, out encoding, Encoding.Unicode);
+
             return null;
         }
 
