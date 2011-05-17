@@ -83,26 +83,11 @@ namespace Nikse.SubtitleEdit.Logic
             {
                 if (Instance._dataDir == null)
                 {
-                    string path = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + Path.DirectorySeparatorChar + "Subtitle Edit";
-                    if (BaseDirectory.StartsWith(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), StringComparison.OrdinalIgnoreCase) 
-                        && Directory.Exists(Path.Combine(path, "Dictionaries")))
-                    {
-                        try
-                        {
-                            if (!Directory.Exists(path))
-                                Directory.CreateDirectory(path);
-
-                            Instance._dataDir = path + Path.DirectorySeparatorChar;
-                        }
-                        catch
-                        {
-                            Instance._dataDir = BaseDirectory;
-                        }
-                    }
+                    string appDataPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Subtitle Edit");
+                    if (File.Exists(Path.Combine(BaseDirectory, "uninstall.ico")) && Directory.Exists(appDataPath))
+                        Instance._dataDir = appDataPath + Path.DirectorySeparatorChar;
                     else
-                    {
                         Instance._dataDir = BaseDirectory;
-                    }
                 }
                 return Instance._dataDir;
             }

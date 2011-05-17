@@ -15,7 +15,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public override string Name
         {
-            get { return "Xml"; }
+            get { return "Captionate"; }
         }
 
         public override bool HasLineNumber

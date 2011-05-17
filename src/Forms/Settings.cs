@@ -200,6 +200,7 @@ namespace Nikse.SubtitleEdit.Forms
             labelListViewDoubleClickEvent.Text = language.MainListViewDoubleClickAction;
             labelAutoBackup.Text = language.AutoBackup;
             checkBoxAllowEditOfOriginalSubtitle.Text = language.AllowEditOfOriginalSubtitle;
+            checkBoxPromptDeleteLines.Text = language.PromptDeleteLines;
             comboBoxAutoBackup.Items[0] = Configuration.Settings.Language.General.None;
             comboBoxAutoBackup.Items[1] = language.AutoBackupEveryMinute;
             comboBoxAutoBackup.Items[2] = language.AutoBackupEveryFiveMinutes;
@@ -313,6 +314,7 @@ namespace Nikse.SubtitleEdit.Forms
                 comboBoxSpellChecker.SelectedIndex = 0;
 
             checkBoxAllowEditOfOriginalSubtitle.Checked = gs.AllowEditOfOriginalSubtitle;
+            checkBoxPromptDeleteLines.Checked = gs.PromptDeleteLines;
 
             ToolsSettings toolsSettings = Configuration.Settings.Tools;
             if (toolsSettings.VerifyPlaySeconds - 2 >= 0 && toolsSettings.VerifyPlaySeconds - 2 < comboBoxToolsVerifySeconds.Items.Count)
@@ -660,6 +662,7 @@ namespace Nikse.SubtitleEdit.Forms
                 gs.SpellChecker = "hunspell";
 
             gs.AllowEditOfOriginalSubtitle = checkBoxAllowEditOfOriginalSubtitle.Checked;
+            gs.PromptDeleteLines = checkBoxPromptDeleteLines.Checked;
 
             if (radioButtonVideoPlayerMPlayer.Checked)
                 gs.VideoPlayer = "MPlayer";
