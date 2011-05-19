@@ -61,7 +61,7 @@ IF DEFINED InnoSetupPath (
   IF %ERRORLEVEL% NEQ 0 GOTO EndWithError
 
   ECHO. & ECHO Installer compiled successfully!
-  MOVE /Y "SubtitleEdit-*-setup.exe" ".." >NUL 2>&1
+  MOVE /Y "SubtitleEdit-*-setup.exe" ".." >NUL
   POPD
 ) ELSE (
   ECHO Inno Setup wasn't found; the installer wasn't built
