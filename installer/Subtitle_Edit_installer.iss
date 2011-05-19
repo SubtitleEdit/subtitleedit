@@ -31,7 +31,7 @@
 ;#endif
 
 
-#define installer_build_number "13"
+#define installer_build_number "14"
 
 #define VerMajor
 #define VerMinor
@@ -94,6 +94,7 @@ DisableProgramGroupPage=auto
 [Languages]
 Name: en; MessagesFile: compiler:Default.isl
 Name: bg; MessagesFile: Languages\Bulgarian.isl
+Name: cs; MessagesFile: compiler:Languages\Czech.isl
 Name: de; MessagesFile: compiler:Languages\German.isl
 Name: dk; MessagesFile: compiler:Languages\Danish.isl
 Name: es; MessagesFile: compiler:Languages\Spanish.isl
