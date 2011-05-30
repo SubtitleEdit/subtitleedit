@@ -34,6 +34,7 @@ namespace Nikse.SubtitleEdit.Logic
         public LanguageStructure.FixCommonErrors FixCommonErrors;
         public LanguageStructure.GetDictionaries GetDictionaries;
         public LanguageStructure.GoogleTranslate GoogleTranslate;
+        public LanguageStructure.GoogleOrMicrosoftTranslate GoogleOrMicrosoftTranslate;
         public LanguageStructure.GoToLine GoToLine;
         public LanguageStructure.ImportText ImportText;
         public LanguageStructure.Interjections Interjections;
@@ -478,6 +479,17 @@ namespace Nikse.SubtitleEdit.Logic
                 PleaseWait = "Please wait... this may take a while",
                 PoweredByGoogleTranslate = "Powered by Google translate",
                 PoweredByMicrosoftTranslate = "Powered by Microsoft translate",
+            };
+
+            GoogleOrMicrosoftTranslate = new LanguageStructure.GoogleOrMicrosoftTranslate
+            {
+                Title = "Google vs Microsoft translate",
+                From = "From:",
+                To = "To:",
+                Translate = "Translate",
+                SourceText = "Source text",
+                GoogleTranslate = "Google translate",
+                MicrosoftTranslate = "Microsoft translate",
             };
 
             GoToLine = new LanguageStructure.GoToLine
