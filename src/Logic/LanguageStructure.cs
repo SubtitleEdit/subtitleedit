@@ -409,6 +409,17 @@
             public string PoweredByMicrosoftTranslate { get; set; }
         }
 
+        public class GoogleOrMicrosoftTranslate
+        {
+            public string Title { get; set; }
+            public string From { get; set; }
+            public string To { get; set; }
+            public string Translate { get; set; }
+            public string SourceText { get; set; }
+            public string GoogleTranslate { get; set; }
+            public string MicrosoftTranslate { get; set; }
+        }
+
         public class GoToLine
         {
             public string Title { get; set; }

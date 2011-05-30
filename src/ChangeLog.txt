@@ -3,29 +3,27 @@ Subtitle Edit Changelog
 
 3.2 (not yet released)
  * NEW:
-   * Subtitle formats: D-Cinema, Cavena890, Timed Text 1.0, Captionate
+   * Subtitle formats: D-Cinema, Cavena890, Timed Text 1.0, Captionate, Flash xml
    * Most important shortcuts in Options -> Settings
    * Export bdn-xml/images + import/ocr bdn-xml/images
-   * Added "Point sync via other subtitle" - thx ioannis
-   * Command line conversion between subtitle formats (example: subtitleedit /convert *.srt microdvd)
+   * Added "Point sync via other subtitle" (thx ioannis)
+   * Command line conversion between subtitle formats (example: subtitleedit /convert *.srt microdvd - thx Carl)
    * Subtitle preview font size (below video player) is now available in Options -> Settings
    * Edit -> Select all 
    * List view context menu: Copy as text to clipboard
-   * Text box context menu -> Split line at cursor position
+   * Text box context menu -> Split line at cursor position (thx dr. Jackson)
    * Import+ocr of blu-ray sup files inside matroska files
    * Now remembers undocked controls pos/size 	
-   * Transcript importer...???
-   * Plug-ins...???
  * IMPROVED:
-   * OCR unknown words highlighting now works better
+   * OCR unknown words highlighting now works better (thx sialivi)
    * Merge short lines can now also merge lines ending with ".", "?", or "!" (optional)
-   * Can now read Adobe Encore files starting with line numbers
+   * Can now read Adobe Encore files starting with line numbers (thx Pier)
  * FIXED:
    * Adjust all times did not work for MicroDvd
    * Now removes empty white spaces from Google translate
    * Crash when entering invalid text in source view (thx Frédéric) 
    * Fixed a few bugs in DVD Architect format + added another two new variants (thx Jacob)
-   * Fixed incorrect line-break in last part of sub (thx Jacob)
+   * Fixed incorrect line-break in Microsoft Translate in last part of sub (thx Jacob)
 
 
 3.1 (3rd March 2011)

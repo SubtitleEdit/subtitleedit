@@ -25,6 +25,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     new Eeg708(),
                     new FinalCutProXml(),
                     new FinalCutProTestXml(),
+                    new FlashXml(),
                     new MicroDvd(),
                     new MPlayer2(),
                     new OpenDvt(),

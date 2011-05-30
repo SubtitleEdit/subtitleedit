@@ -55,20 +55,16 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             StringBuilder sb = new StringBuilder();
             lines.ForEach(line => sb.AppendLine(line));
             string xmlAsString = sb.ToString().Trim();
-            if (xmlAsString.Contains("<DCSubtitle") &&
-                xmlAsString.Contains("<SubtitleList"))
+            if (xmlAsString.Contains("<DCSubtitle")) // &&                xmlAsString.Contains("<SubtitleList"))
             {
                 XmlDocument xml = new XmlDocument();
                 try
                 {
                     xml.LoadXml(xmlAsString);
 
-                    XmlNode subtitleList = xml.DocumentElement.SelectSingleNode("SubtitleList");
-                    if (subtitleList != null)
-                    {
-                        var subtitles = subtitleList.SelectNodes("//Subtitle");
+                    var subtitles = xml.DocumentElement.SelectNodes("//Subtitle");
+                    if (subtitles != null)
                         return subtitles != null && subtitles.Count > 0;
-                    }
                     return false;
                 }
                 catch (Exception ex)
@@ -256,8 +252,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             XmlDocument xml = new XmlDocument();
             xml.LoadXml(sb.ToString());
 
-            XmlNode subtitleList = xml.DocumentElement.SelectSingleNode("SubtitleList");
-            foreach (XmlNode node in subtitleList.SelectNodes("//Subtitle"))
+            foreach (XmlNode node in xml.DocumentElement.SelectNodes("//Subtitle"))
             {
                 try
                 {
