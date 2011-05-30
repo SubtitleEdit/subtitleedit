@@ -77,7 +77,6 @@ namespace Nikse.SubtitleEdit.Forms
         NetworkChat _networkChat = null;
 
         ShowEarlierLater _showEarlierOrLater = null;
-        TranscriptImporter _transcriptImporter = null;
 
         bool _isVideoControlsUnDocked = false;
         VideoPlayerUnDocked _videoPlayerUnDocked = null;
@@ -6656,37 +6655,22 @@ namespace Nikse.SubtitleEdit.Forms
                     if (!string.IsNullOrEmpty(importText.VideoFileName))
                         OpenVideo(importText.VideoFileName);
 
-
-                    if (_transcriptImporter != null && !_transcriptImporter.IsDisposed)
+                    SyncPointsSync syncPointSync = new SyncPointsSync();
+                    syncPointSync.Initialize(importText.FixedSubtitle, _fileName, importText.VideoFileName, _videoAudioTrackNumber);
+                    if (syncPointSync.ShowDialog(this) == System.Windows.Forms.DialogResult.OK)
                     {
-                        _transcriptImporter.WindowState = FormWindowState.Normal;
-                        _transcriptImporter.Focus();
-                        return;
-                    }             
+                        ResetSubtitle();
 
-                    _transcriptImporter = new TranscriptImporter();
-                    _transcriptImporter.Initialize(importText.FixedSubtitle, this);
-                    _transcriptImporter.Top = this.Top + 100;
-                    _transcriptImporter.Left = this.Left + (this.Width / 2) - (_transcriptImporter.Width / 3);
-
-                    _transcriptImporter.Show(this);
-
-                    //SyncPointsSync syncPointSync = new SyncPointsSync();
-                    //syncPointSync.Initialize(importText.FixedSubtitle, _fileName, importText.VideoFileName, _videoAudioTrackNumber);
-                    //if (syncPointSync.ShowDialog(this) == System.Windows.Forms.DialogResult.OK)
-                    //{
-                    //    ResetSubtitle();
-
-                    //    _subtitleListViewIndex = -1;
-                    //    MakeHistoryForUndo(_language.BeforeImportText); 
-                    //    _subtitle = importText.FixedSubtitle;
-                    //    _subtitle.CalculateFrameNumbersFromTimeCodesNoCheck(CurrentFrameRate);
-                    //    ShowStatus(_language.TextImported);
-                    //    ShowSource();
-                    //    SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
-                    //    _change = true;
-                    //}
-                    //_videoFileName = syncPointSync.VideoFileName;
+                        _subtitleListViewIndex = -1;
+                        MakeHistoryForUndo(_language.BeforeImportText);
+                        _subtitle = importText.FixedSubtitle;
+                        _subtitle.CalculateFrameNumbersFromTimeCodesNoCheck(CurrentFrameRate);
+                        ShowStatus(_language.TextImported);
+                        ShowSource();
+                        SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
+                        _change = true;
+                    }
+                    _videoFileName = syncPointSync.VideoFileName;
                 }
             }
         }
@@ -9963,23 +9947,6 @@ namespace Nikse.SubtitleEdit.Forms
         {
             for (int i = 0; i < SubtitleListview1.Items.Count; i++)
                 SubtitleListview1.Items[i].Selected = true;
-        }
-
-        private void transcriptImporterToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            if (_transcriptImporter != null && !_transcriptImporter.IsDisposed)
-            {
-                _transcriptImporter.WindowState = FormWindowState.Normal;
-                _transcriptImporter.Focus();
-                return;
-            }
-
-            _transcriptImporter = new TranscriptImporter();
-            _transcriptImporter.Initialize(new Subtitle(), this);
-            _transcriptImporter.Top = this.Top + 100;
-            _transcriptImporter.Left = this.Left + (this.Width / 2) - (_transcriptImporter.Width / 3);
-
-            _transcriptImporter.Show(this);
         }
 
         private void toolStripMenuItemSplitTextAtCursor_Click(object sender, EventArgs e)

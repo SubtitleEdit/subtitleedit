@@ -148,7 +148,6 @@
             this.toolStripMenuItemPointSync = new System.Windows.Forms.ToolStripMenuItem();
             this.pointSyncViaOtherSubtitleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemChangeFrameRate2 = new System.Windows.Forms.ToolStripMenuItem();
-            this.transcriptImporterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemAutoTranslate = new System.Windows.Forms.ToolStripMenuItem();
             this.translateByGoogleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.translatepoweredByMicrosoftToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -1367,8 +1366,7 @@
             this.visualSyncToolStripMenuItem,
             this.toolStripMenuItemPointSync,
             this.pointSyncViaOtherSubtitleToolStripMenuItem,
-            this.toolStripMenuItemChangeFrameRate2,
-            this.transcriptImporterToolStripMenuItem});
+            this.toolStripMenuItemChangeFrameRate2});
             this.toolStripMenuItemSyncronization.Name = "toolStripMenuItemSyncronization";
             this.toolStripMenuItemSyncronization.Size = new System.Drawing.Size(97, 20);
             this.toolStripMenuItemSyncronization.Text = "Syncronization";
@@ -1413,13 +1411,6 @@
             this.toolStripMenuItemChangeFrameRate2.Size = new System.Drawing.Size(336, 22);
             this.toolStripMenuItemChangeFrameRate2.Text = "Change framerate...";
             this.toolStripMenuItemChangeFrameRate2.Click += new System.EventHandler(this.ToolStripMenuItemChangeFramerateClick);
-            // 
-            // transcriptImporterToolStripMenuItem
-            // 
-            this.transcriptImporterToolStripMenuItem.Name = "transcriptImporterToolStripMenuItem";
-            this.transcriptImporterToolStripMenuItem.Size = new System.Drawing.Size(336, 22);
-            this.transcriptImporterToolStripMenuItem.Text = "Transcript importer...";
-            this.transcriptImporterToolStripMenuItem.Click += new System.EventHandler(this.transcriptImporterToolStripMenuItem_Click);
             // 
             // toolStripMenuItemAutoTranslate
             // 
@@ -3813,7 +3804,6 @@
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemCopySourceText;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator21;
         private System.Windows.Forms.ToolStripMenuItem editSelectAllToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem transcriptImporterToolStripMenuItem;
         private System.Windows.Forms.ContextMenuStrip contextMenuStripTextBoxListView;
         private System.Windows.Forms.ToolStripMenuItem cutToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem copyToolStripMenuItem;
