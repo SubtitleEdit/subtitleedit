@@ -21,7 +21,7 @@ namespace Nikse.SubtitleEdit.Forms
         MicrosoftTranslationService.SoapService _microsoftTranslationService = null;
         private const string BingApiId = "C2C2E9A508E6748F0494D68DFD92FAA1FF9B0BA4";
 
-        class ComboBoxItem
+        public class ComboBoxItem
         {
             public string Text { get; set; }
             public string Value { get; set; }
@@ -161,7 +161,9 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (!_googleTranslate)
             {
-                DoMicrosoftTranslate();
+                string from = (comboBoxFrom.SelectedItem as ComboBoxItem).Value;
+                string to = (comboBoxTo.SelectedItem as ComboBoxItem).Value;
+                DoMicrosoftTranslate(from, to);
                 return;
             }
 
@@ -397,104 +399,128 @@ namespace Nikse.SubtitleEdit.Forms
 
                 MicrosoftTranslationService.SoapService client = MsTranslationServiceClient;
 
-                string[] locales = client.GetLanguagesForTranslate(BingApiId);
-                string[] names = client.GetLanguageNames(BingApiId, "en", locales);
+                //string[] locales = client.GetLanguagesForTranslate(BingApiId);
+                string[] locales = GetMsLocales();
+
+//                string[] names = client.GetLanguageNames(BingApiId, "en", locales);
+                string[] names = GetMsNames();
+
                 for (int i = 0; i < locales.Length; i++)
                 {
                     if (names.Length > i && locales.Length > i)
                         comboBox.Items.Add(new ComboBoxItem(names[i], locales[i]));
                 }
+
                 return;
             }
 
+            FillComboWithGoogleLanguages(comboBox);
+        }
+
+        private string[] GetMsLocales()
+        {
+            string[] locales =  {"ar", "bg", "zh-CHS", "zh-CHT", "cs", "da", "nl", "en", "et", "fi", "fr", "de", "el", "ht", "he", "hu", "id", "it", "ja", "ko", "lv", "lt", "no", "pl", "pt", "ro", "ru", "sk", "sl", "es", "sv", "th", "tr", "uk", "vi" };
+            return locales;
+        }
+
+        private string[] GetMsNames()
+        {
+            string[] names = { "Arabic", "Bulgarian", "Chinese Simplified", "Chinese Traditional", "Czech", "Danish", "Dutch", "English", "Estonian", "Finnish", "French", "German", "Greek", "Haitian Creole", "Hebrew", "Hungarian", "Indonesian", "Italian", "Japanese", "Korean", "Latvian", "Lithuanian", "Norwegian", "Polish", "Portuguese", "Romanian", "Russian", "Slovak", "Slovenian", "Spanish", "Swedish", "Thai", "Turkish", "Ukrainian", "Vietnamese" };
+            return names;
+        }
+
+        public static void FillComboWithGoogleLanguages(ComboBox comboBox)
+        {
             comboBox.Items.Add(new ComboBoxItem("AFRIKAANS", "af"));
-            comboBox.Items.Add(new ComboBoxItem("ALBANIAN" , "sq"));
-            comboBox.Items.Add(new ComboBoxItem("AMHARIC" , "am"));
-            comboBox.Items.Add(new ComboBoxItem("ARABIC" , "ar"));
-//            comboBox.Items.Add(new ComboBoxItem("ARMENIAN" , "hy"));
-            comboBox.Items.Add(new ComboBoxItem("AZERBAIJANI" , "az"));
-            comboBox.Items.Add(new ComboBoxItem("BASQUE" , "eu"));
-            comboBox.Items.Add(new ComboBoxItem("BELARUSIAN" , "be"));
-//            comboBox.Items.Add(new ComboBoxItem("BENGALI" , "bn"));
-//            comboBox.Items.Add(new ComboBoxItem("BIHARI" , "bh"));
-            comboBox.Items.Add(new ComboBoxItem("BULGARIAN" , "bg"));
-//            comboBox.Items.Add(new ComboBoxItem("BURMESE" , "my"));
-            comboBox.Items.Add(new ComboBoxItem("CATALAN" , "ca"));
-//            comboBox.Items.Add(new ComboBoxItem("CHEROKEE" , "chr"));
-            comboBox.Items.Add(new ComboBoxItem("CHINESE" , "zh"));
-            comboBox.Items.Add(new ComboBoxItem("CHINESE_SIMPLIFIED" , "zh-CN"));
-            comboBox.Items.Add(new ComboBoxItem("CHINESE_TRADITIONAL" , "zh-TW"));
-            comboBox.Items.Add(new ComboBoxItem("CROATIAN" , "hr"));
-            comboBox.Items.Add(new ComboBoxItem("CZECH" , "cs"));
-            comboBox.Items.Add(new ComboBoxItem("DANISH" , "da"));
-//            comboBox.Items.Add(new ComboBoxItem("DHIVEHI" , "dv"));
+            comboBox.Items.Add(new ComboBoxItem("ALBANIAN", "sq"));
+            //            comboBox.Items.Add(new ComboBoxItem("AMHARIC" , "am"));
+            comboBox.Items.Add(new ComboBoxItem("ARABIC", "ar"));
+            comboBox.Items.Add(new ComboBoxItem("ARMENIAN", "hy"));
+            comboBox.Items.Add(new ComboBoxItem("AZERBAIJANI", "az"));
+            comboBox.Items.Add(new ComboBoxItem("BASQUE", "eu"));
+            comboBox.Items.Add(new ComboBoxItem("BELARUSIAN", "be"));
+            //            comboBox.Items.Add(new ComboBoxItem("BENGALI" , "bn"));
+            //            comboBox.Items.Add(new ComboBoxItem("BIHARI" , "bh"));
+            comboBox.Items.Add(new ComboBoxItem("BULGARIAN", "bg"));
+            //            comboBox.Items.Add(new ComboBoxItem("BURMESE" , "my"));
+            comboBox.Items.Add(new ComboBoxItem("CATALAN", "ca"));
+            //            comboBox.Items.Add(new ComboBoxItem("CHEROKEE" , "chr"));
+            comboBox.Items.Add(new ComboBoxItem("CHINESE", "zh"));
+            comboBox.Items.Add(new ComboBoxItem("CHINESE_SIMPLIFIED", "zh-CN"));
+            comboBox.Items.Add(new ComboBoxItem("CHINESE_TRADITIONAL", "zh-TW"));
+            comboBox.Items.Add(new ComboBoxItem("CROATIAN", "hr"));
+            comboBox.Items.Add(new ComboBoxItem("CZECH", "cs"));
+            comboBox.Items.Add(new ComboBoxItem("DANISH", "da"));
+            //            comboBox.Items.Add(new ComboBoxItem("DHIVEHI" , "dv"));
             comboBox.Items.Add(new ComboBoxItem("DUTCH", "nl"));
-            comboBox.Items.Add(new ComboBoxItem("ENGLISH" , "en"));
-//            comboBox.Items.Add(new ComboBoxItem("ESPERANTO" , "eo"));
-            comboBox.Items.Add(new ComboBoxItem("ESTONIAN" , "et"));
-            comboBox.Items.Add(new ComboBoxItem("FILIPINO" , "tl"));
-            comboBox.Items.Add(new ComboBoxItem("FINNISH" , "fi"));
-            comboBox.Items.Add(new ComboBoxItem("FRENCH" , "fr"));
-            comboBox.Items.Add(new ComboBoxItem("GALICIAN" , "gl"));
-            comboBox.Items.Add(new ComboBoxItem("GEORGIAN" , "ka"));
-            comboBox.Items.Add(new ComboBoxItem("GERMAN" , "de"));
-            comboBox.Items.Add(new ComboBoxItem("GREEK" , "el"));
-//            comboBox.Items.Add(new ComboBoxItem("GUARANI" , "gn"));
-//            comboBox.Items.Add(new ComboBoxItem("GUJARATI" , "gu"));
-            comboBox.Items.Add(new ComboBoxItem("HEBREW" , "iw"));
-            comboBox.Items.Add(new ComboBoxItem("HINDI" , "hi"));
-            comboBox.Items.Add(new ComboBoxItem("HUNGARIAN" , "hu"));
+            comboBox.Items.Add(new ComboBoxItem("ENGLISH", "en"));
+            //            comboBox.Items.Add(new ComboBoxItem("ESPERANTO" , "eo"));
+            comboBox.Items.Add(new ComboBoxItem("ESTONIAN", "et"));
+            comboBox.Items.Add(new ComboBoxItem("FILIPINO", "tl"));
+            comboBox.Items.Add(new ComboBoxItem("FINNISH", "fi"));
+            comboBox.Items.Add(new ComboBoxItem("FRENCH", "fr"));
+            comboBox.Items.Add(new ComboBoxItem("GALICIAN", "gl"));
+            comboBox.Items.Add(new ComboBoxItem("GEORGIAN", "ka"));
+            comboBox.Items.Add(new ComboBoxItem("GERMAN", "de"));
+            comboBox.Items.Add(new ComboBoxItem("GREEK", "el"));
+            comboBox.Items.Add(new ComboBoxItem("HAITIAN CREOLE", "ht"));
+            //            comboBox.Items.Add(new ComboBoxItem("GUARANI" , "gn"));
+            //            comboBox.Items.Add(new ComboBoxItem("GUJARATI" , "gu"));
+            comboBox.Items.Add(new ComboBoxItem("HEBREW", "iw"));
+            comboBox.Items.Add(new ComboBoxItem("HINDI", "hi"));
+            comboBox.Items.Add(new ComboBoxItem("HUNGARIAN", "hu"));
             comboBox.Items.Add(new ComboBoxItem("ICELANDIC", "is"));
-            comboBox.Items.Add(new ComboBoxItem("IRISH", "ga"));
             comboBox.Items.Add(new ComboBoxItem("INDONESIAN", "id"));
-//            comboBox.Items.Add(new ComboBoxItem("INUKTITUT" , "iu"));
-            comboBox.Items.Add(new ComboBoxItem("ITALIAN" , "it"));
-            comboBox.Items.Add(new ComboBoxItem("JAPANESE" , "ja"));
-//            comboBox.Items.Add(new ComboBoxItem("KANNADA" , "kn"));
-//            comboBox.Items.Add(new ComboBoxItem("KAZAKH" , "kk"));
-//            comboBox.Items.Add(new ComboBoxItem("KHMER" , "km"));
-            comboBox.Items.Add(new ComboBoxItem("KOREAN" , "ko"));
-//            comboBox.Items.Add(new ComboBoxItem("KURDISH", "ku"));
-//            comboBox.Items.Add(new ComboBoxItem("KYRGYZ", "ky"));
-//            comboBox.Items.Add(new ComboBoxItem("LAOTHIAN", "lo"));
-            comboBox.Items.Add(new ComboBoxItem("LATVIAN" , "lv"));
-            comboBox.Items.Add(new ComboBoxItem("LITHUANIAN" , "lt"));
-            comboBox.Items.Add(new ComboBoxItem("MACEDONIAN" , "mk"));
-            comboBox.Items.Add(new ComboBoxItem("MALAY" , "ms"));
-//            comboBox.Items.Add(new ComboBoxItem("MALAYALAM" , "ml"));
-            comboBox.Items.Add(new ComboBoxItem("MALTESE" , "mt"));
-//            comboBox.Items.Add(new ComboBoxItem("MARATHI" , "mr"));
-//            comboBox.Items.Add(new ComboBoxItem("MONGOLIAN" , "mn"));
-//            comboBox.Items.Add(new ComboBoxItem("NEPALI" , "ne"));
-            comboBox.Items.Add(new ComboBoxItem("NORWEGIAN" , "no"));
-//            comboBox.Items.Add(new ComboBoxItem("ORIYA" , "or"));
-//            comboBox.Items.Add(new ComboBoxItem("PASHTO" , "ps"));
-            comboBox.Items.Add(new ComboBoxItem("PERSIAN" , "fa"));
-            comboBox.Items.Add(new ComboBoxItem("POLISH" , "pl"));
-            comboBox.Items.Add(new ComboBoxItem("PORTUGUESE" , "pt-PT"));
-//            comboBox.Items.Add(new ComboBoxItem("PUNJABI" , "pa"));
-            comboBox.Items.Add(new ComboBoxItem("ROMANIAN" , "ro"));
-            comboBox.Items.Add(new ComboBoxItem("RUSSIAN" , "ru"));
-//            comboBox.Items.Add(new ComboBoxItem("SANSKRIT" , "sa"));
-            comboBox.Items.Add(new ComboBoxItem("SERBIAN" , "sr"));
-//            comboBox.Items.Add(new ComboBoxItem("SINDHI" , "sd"));
-//            comboBox.Items.Add(new ComboBoxItem("SINHALESE" , "si"));
-            comboBox.Items.Add(new ComboBoxItem("SLOVAK" , "sk"));
-            comboBox.Items.Add(new ComboBoxItem("SLOVENIAN" , "sl"));
-            comboBox.Items.Add(new ComboBoxItem("SPANISH" , "es"));
-            comboBox.Items.Add(new ComboBoxItem("SWAHILI" , "sw"));
-            comboBox.Items.Add(new ComboBoxItem("SWEDISH" , "sv"));
-//            comboBox.Items.Add(new ComboBoxItem("TAJIK" , "tg"));
-//            comboBox.Items.Add(new ComboBoxItem("TAMIL" , "ta"));
-            comboBox.Items.Add(new ComboBoxItem("TAGALOG" , "tl"));
-//            comboBox.Items.Add(new ComboBoxItem("TELUGU" , "te"));
-            comboBox.Items.Add(new ComboBoxItem("THAI" , "th"));
-//            comboBox.Items.Add(new ComboBoxItem("TIBETAN" , "bo"));
-            comboBox.Items.Add(new ComboBoxItem("TURKISH" , "tr"));
-            comboBox.Items.Add(new ComboBoxItem("UKRAINIAN" , "uk"));
-            comboBox.Items.Add(new ComboBoxItem("URDU" , "ur"));
-//            comboBox.Items.Add(new ComboBoxItem("UZBEK" , "uz"));
-//            comboBox.Items.Add(new ComboBoxItem("UIGHUR" , "ug"));
+            comboBox.Items.Add(new ComboBoxItem("IRISH", "ga"));
+            //            comboBox.Items.Add(new ComboBoxItem("INUKTITUT" , "iu"));
+            comboBox.Items.Add(new ComboBoxItem("ITALIAN", "it"));
+            comboBox.Items.Add(new ComboBoxItem("JAPANESE", "ja"));
+            //            comboBox.Items.Add(new ComboBoxItem("KANNADA" , "kn"));
+            //            comboBox.Items.Add(new ComboBoxItem("KAZAKH" , "kk"));
+            //            comboBox.Items.Add(new ComboBoxItem("KHMER" , "km"));
+            comboBox.Items.Add(new ComboBoxItem("KOREAN", "ko"));
+            //            comboBox.Items.Add(new ComboBoxItem("KURDISH", "ku"));
+            //            comboBox.Items.Add(new ComboBoxItem("KYRGYZ", "ky"));
+            //            comboBox.Items.Add(new ComboBoxItem("LAOTHIAN", "lo"));
+            comboBox.Items.Add(new ComboBoxItem("LATIN", "la"));
+            comboBox.Items.Add(new ComboBoxItem("LATVIAN", "lv"));
+            comboBox.Items.Add(new ComboBoxItem("LITHUANIAN", "lt"));
+            comboBox.Items.Add(new ComboBoxItem("MACEDONIAN", "mk"));
+            comboBox.Items.Add(new ComboBoxItem("MALAY", "ms"));
+            //            comboBox.Items.Add(new ComboBoxItem("MALAYALAM" , "ml"));
+            comboBox.Items.Add(new ComboBoxItem("MALTESE", "mt"));
+            //            comboBox.Items.Add(new ComboBoxItem("MARATHI" , "mr"));
+            //            comboBox.Items.Add(new ComboBoxItem("MONGOLIAN" , "mn"));
+            //            comboBox.Items.Add(new ComboBoxItem("NEPALI" , "ne"));
+            comboBox.Items.Add(new ComboBoxItem("NORWEGIAN", "no"));
+            //            comboBox.Items.Add(new ComboBoxItem("ORIYA" , "or"));
+            //            comboBox.Items.Add(new ComboBoxItem("PASHTO" , "ps"));
+            comboBox.Items.Add(new ComboBoxItem("PERSIAN", "fa"));
+            comboBox.Items.Add(new ComboBoxItem("POLISH", "pl"));
+            comboBox.Items.Add(new ComboBoxItem("PORTUGUESE", "pt-PT"));
+            //            comboBox.Items.Add(new ComboBoxItem("PUNJABI" , "pa"));
+            comboBox.Items.Add(new ComboBoxItem("ROMANIAN", "ro"));
+            comboBox.Items.Add(new ComboBoxItem("RUSSIAN", "ru"));
+            //            comboBox.Items.Add(new ComboBoxItem("SANSKRIT" , "sa"));
+            comboBox.Items.Add(new ComboBoxItem("SERBIAN", "sr"));
+            //            comboBox.Items.Add(new ComboBoxItem("SINDHI" , "sd"));
+            //            comboBox.Items.Add(new ComboBoxItem("SINHALESE" , "si"));
+            comboBox.Items.Add(new ComboBoxItem("SLOVAK", "sk"));
+            comboBox.Items.Add(new ComboBoxItem("SLOVENIAN", "sl"));
+            comboBox.Items.Add(new ComboBoxItem("SPANISH", "es"));
+            comboBox.Items.Add(new ComboBoxItem("SWAHILI", "sw"));
+            comboBox.Items.Add(new ComboBoxItem("SWEDISH", "sv"));
+            //            comboBox.Items.Add(new ComboBoxItem("TAJIK" , "tg"));
+            //            comboBox.Items.Add(new ComboBoxItem("TAMIL" , "ta"));
+            //            comboBox.Items.Add(new ComboBoxItem("TAGALOG" , "tl"));
+            //            comboBox.Items.Add(new ComboBoxItem("TELUGU" , "te"));
+            comboBox.Items.Add(new ComboBoxItem("THAI", "th"));
+            //            comboBox.Items.Add(new ComboBoxItem("TIBETAN" , "bo"));
+            comboBox.Items.Add(new ComboBoxItem("TURKISH", "tr"));
+            comboBox.Items.Add(new ComboBoxItem("UKRAINIAN", "uk"));
+            comboBox.Items.Add(new ComboBoxItem("URDU", "ur"));
+            //            comboBox.Items.Add(new ComboBoxItem("UZBEK" , "uz"));
+            //            comboBox.Items.Add(new ComboBoxItem("UIGHUR" , "ug"));
             comboBox.Items.Add(new ComboBoxItem("VIETNAMESE", "vi"));
             comboBox.Items.Add(new ComboBoxItem("WELSH", "cy"));
             comboBox.Items.Add(new ComboBoxItem("YIDDISH", "yi"));
@@ -709,12 +735,8 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-
-        private void DoMicrosoftTranslate()
+        public void DoMicrosoftTranslate(string from, string to)
         {
-            string from = (comboBoxFrom.SelectedItem as ComboBoxItem).Value;
-            string to = (comboBoxTo.SelectedItem as ComboBoxItem).Value;
-
             MicrosoftTranslationService.SoapService client = MsTranslationServiceClient;
 
             _breakTranslation = false;
