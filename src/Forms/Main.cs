@@ -6302,33 +6302,11 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     Configuration.Settings.Language = new Language(); // default is en-US
                 }
-                else if (cultureName == "Language.xml")
-                {
-                    var reader = new StreamReader(Configuration.BaseDirectory + cultureName);
-                    Configuration.Settings.Language = Language.Load(reader);
-                    reader.Close();
-                }
                 else
                 {
-                    System.Reflection.Assembly asm = System.Reflection.Assembly.GetExecutingAssembly();
-
-                    Stream strm = asm.GetManifestResourceStream("Nikse.SubtitleEdit.Resources." + cultureName + ".xml.zip");
-                    if (strm != null)
-                    {
-                        var rdr = new StreamReader(strm);
-                        Configuration.Settings.Language = Language.LoadAndDecompress(rdr);
-                        rdr.Close();
-                    }
-                    else
-                    {
-                        strm = asm.GetManifestResourceStream("Nikse.SubtitleEdit.Resources." + cultureName + ".xml");
-                        if (strm != null)
-                        {
-                            var reader = new StreamReader(strm);
-                            Configuration.Settings.Language = Language.Load(reader);
-                            reader.Close();
-                        }
-                    }
+                    var reader = new System.IO.StreamReader(Path.Combine(Configuration.DataDirectory, "Languages") + Path.DirectorySeparatorChar + cultureName + ".xml");
+                    Configuration.Settings.Language = Language.Load(reader);
+                    reader.Close();
                 }
                 Configuration.Settings.General.Language = cultureName;
                 _languageGeneral = Configuration.Settings.Language.General;

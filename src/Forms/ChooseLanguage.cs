@@ -1,17 +1,15 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Logic;
-using System.Collections.Generic;
-using System.Drawing;
 
 namespace Nikse.SubtitleEdit.Forms
 {
     public sealed partial class ChooseLanguage : Form
     {
-        private const string CustomLanguageFileName = "Language.xml";
-
         public class CultureListItem
         {
             CultureInfo _cultureInfo;
@@ -39,8 +37,6 @@ namespace Nikse.SubtitleEdit.Forms
                 int index = comboBoxLanguages.SelectedIndex;
                 if (index == -1)
                     return "en-US";
-                else if (comboBoxLanguages.Items[index].ToString() == CustomLanguageFileName)
-                    return CustomLanguageFileName;
                 else
                     return (comboBoxLanguages.Items[index] as CultureListItem).Name;
             }
@@ -51,13 +47,11 @@ namespace Nikse.SubtitleEdit.Forms
             InitializeComponent();
 
             List<string> list = new List<string>();
-            foreach (string name in System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceNames())
+            if (Directory.Exists(Path.Combine(Configuration.DataDirectory, "Languages")))
             {
-                string prefix = "Nikse.SubtitleEdit.Resources.";
-                string postfix = ".xml.zip";
-                if (name.StartsWith(prefix) && name.EndsWith(postfix))
+                foreach (string fileName in Directory.GetFiles(Path.Combine(Configuration.DataDirectory, "Languages"), "*.xml"))
                 {
-                    string cultureName = name.Substring(prefix.Length, name.Length - prefix.Length - postfix.Length);
+                    string cultureName = Path.GetFileNameWithoutExtension(fileName);
                     list.Add(cultureName);
                 }
             }
@@ -86,13 +80,6 @@ namespace Nikse.SubtitleEdit.Forms
                     index = i;
             }
             comboBoxLanguages.SelectedIndex = index;
-
-            string customLanguageFile = Path.Combine(Configuration.BaseDirectory, CustomLanguageFileName);
-            if (File.Exists(customLanguageFile))
-            {
-                comboBoxLanguages.Items.Add(CustomLanguageFileName);
-            }
-
 
             Text = Configuration.Settings.Language.ChooseLanguage.Title;
             labelLanguage.Text = Configuration.Settings.Language.ChooseLanguage.Language;
