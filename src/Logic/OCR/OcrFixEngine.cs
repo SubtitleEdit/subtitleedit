@@ -258,7 +258,7 @@ namespace Nikse.SubtitleEdit.Logic.OCR
             string lastWord = null;
             for (int i = 0; i < text.Length; i++)
             {
-                if (" ,.!?:;()[]{}+-$£\"#&%\r\n".Contains(text[i].ToString()))
+                if (" ¡¿,.!?:;()[]{}+-$£\"#&%\r\n".Contains(text[i].ToString()))
                 {
                     if (word.Length > 0)
                     {
@@ -732,10 +732,10 @@ namespace Nikse.SubtitleEdit.Logic.OCR
                 int start = tempLine.IndexOf(name);
                 if (start >= 0)
                 {
-                    if (start == 0 || (Environment.NewLine + " ,.!?:;()[]{}+-$£\"”“#&%…—").Contains(tempLine[start - 1].ToString()))
+                    if (start == 0 || (Environment.NewLine + " ¡¿,.!?:;()[]{}+-$£\"”“#&%…—").Contains(tempLine[start - 1].ToString()))
                     {
                         int end = start + name.Length;
-                        if (end >= tempLine.Length || (Environment.NewLine + " ,.!?:;()[]{}+-$£\"”“#&%…—").Contains(tempLine[end].ToString()))
+                        if (end >= tempLine.Length || (Environment.NewLine + " ¡¿,.!?:;()[]{}+-$£\"”“#&%…—").Contains(tempLine[end].ToString()))
                             tempLine = tempLine.Remove(start, name.Length);
                     }
                 }
@@ -746,16 +746,16 @@ namespace Nikse.SubtitleEdit.Logic.OCR
                 int start = tempLine.IndexOf(name);
                 if (start >= 0)
                 {
-                    if (start == 0 || (Environment.NewLine + " ,.!?:;()[]{}+-$£\"”“#&%…—").Contains(tempLine[start - 1].ToString()))
+                    if (start == 0 || (Environment.NewLine + " ¡¿,.!?:;()[]{}+-$£\"”“#&%…—").Contains(tempLine[start - 1].ToString()))
                     {
                         int end = start + name.Length;
-                        if (end >= tempLine.Length || (Environment.NewLine + " ,.!?:;()[]{}+-$£\"”“#&%…—").Contains(tempLine[end].ToString()))
+                        if (end >= tempLine.Length || (Environment.NewLine + " ¡¿,.!?:;()[]{}+-$£\"”“#&%…—").Contains(tempLine[end].ToString()))
                             tempLine = tempLine.Remove(start, name.Length);
                     }
                 }
             }
 
-            string[] words = tempLine.Split((Environment.NewLine + " ,.!?:;()[]{}+-$£\"”“#&%…—").ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+            string[] words = tempLine.Split((Environment.NewLine + " ¡¿,.!?:;()[]{}+-$£\"”“#&%…—").ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
             for (int i = 0; i < words.Length; i++)
             {
                 string word = words[i];
@@ -957,12 +957,12 @@ namespace Nikse.SubtitleEdit.Logic.OCR
                     {
                         bool startOk = i == 0;
                         if (!startOk)
-                            startOk = (" <>-\"”“[]'‘`´¶()♪¿¡.…—!?,:;/" + Environment.NewLine).Contains(text.Substring(i - 1, 1));
+                            startOk = (" ¡¿<>-\"”“[]'‘`´¶()♪¿¡.…—!?,:;/" + Environment.NewLine).Contains(text.Substring(i - 1, 1));
                         if (startOk)
                         {
                             bool endOK = (i + word.Length == text.Length);
                             if (!endOK)
-                                endOK = (" <>-\"”“[]'‘`´¶()♪¿¡.…—!?,:;/" + Environment.NewLine).Contains(text.Substring(i + word.Length, 1));
+                                endOK = (" ¡¿<>-\"”“[]'‘`´¶()♪¿¡.…—!?,:;/" + Environment.NewLine).Contains(text.Substring(i + word.Length, 1));
                             if (endOK)
                             {
                                 sb.Append(newWord);
@@ -1130,7 +1130,7 @@ namespace Nikse.SubtitleEdit.Logic.OCR
                 return 0;
 
             int wordsNotFound = 0;
-            string[] words = line.Split((Environment.NewLine + " ,.!?:;()[]{}+-$£\"#&%…“”").ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+            string[] words = line.Split((Environment.NewLine + " ¡¿,.!?:;()[]{}+-$£\"#&%…“”").ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
             for (int i = 0; i < words.Length; i++)
             {
                 string word = words[i];
