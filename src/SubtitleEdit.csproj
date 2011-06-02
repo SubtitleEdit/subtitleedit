@@ -501,6 +501,7 @@
     <Compile Include="Logic\DetectEncoding\Multilang\_ULARGE_INTEGER.cs" />
     <Compile Include="Logic\DetectEncoding\Multilang\__MIDL_IWinTypes_0009.cs" />
     <Compile Include="Logic\FastBitmap.cs" />
+    <Compile Include="Logic\Fourier.cs" />
     <Compile Include="Logic\IfoParser.cs" />
     <Compile Include="Logic\Language.cs" />
     <Compile Include="Logic\Networking\NikseWebServiceSession.cs">
@@ -555,6 +556,7 @@
     <Compile Include="Logic\SubtitleFormats\Spruce.cs" />
     <Compile Include="Logic\SubtitleFormats\SubtitleEditorProject.cs" />
     <Compile Include="Logic\SubtitleFormats\TimedText10.cs" />
+    <Compile Include="Logic\SubtitleFormats\TranscriberXml.cs" />
     <Compile Include="Logic\SubtitleFormats\UleadSubtitleFormat.cs" />
     <Compile Include="Logic\SubtitleFormats\UnknownSubtitle5.cs" />
     <Compile Include="Logic\SubtitleFormats\OpenDvt.cs" />
