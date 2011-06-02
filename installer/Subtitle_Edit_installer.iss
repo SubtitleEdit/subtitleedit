@@ -47,7 +47,7 @@
 
 #define installer_build_date GetDateTimeString('mmm, d yyyy', '', '')
 
-; If you don't define "localize", i.e. uncomment the following line then no translations 
+; If you don't define "localize", i.e. uncomment the following line then no translations
 ; for SubtitleEdit or the installer will be included
 #define localize
 
