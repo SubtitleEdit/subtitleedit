@@ -1,3 +1,2 @@
--add a readme file
 -add a WizardImageFile
 -translate the custom messages (READ THE NOTE IN "custom_messages.iss")

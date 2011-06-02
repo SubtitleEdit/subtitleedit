@@ -9,11 +9,11 @@ Subtitle Edit Changelog
    * Added "Point sync via other subtitle" (thx ioannis)
    * Command line conversion between subtitle formats (example: subtitleedit /convert *.srt microdvd - thx Carl)
    * Subtitle preview font size (below video player) is now available in Options -> Settings
-   * Edit -> Select all 
+   * Edit -> Select all
    * List view context menu: Copy as text to clipboard (you can also use ctrl+c/ctrl+v)
    * Text box context menu -> Split line at cursor position (thx dr. Jackson)
    * Import+ocr of blu-ray sup files inside matroska files
-   * Now remembers undocked controls pos/size 	
+   * Now remembers undocked controls pos/size
  * IMPROVED:
    * OCR unknown words highlighting now works better (thx sialivi)
    * Merge short lines can now also merge lines ending with ".", "?", or "!" (optional)
@@ -21,7 +21,7 @@ Subtitle Edit Changelog
  * FIXED:
    * Adjust all times did not work for MicroDvd
    * Now removes empty white spaces from Google translate
-   * Crash when entering invalid text in source view (thx Frédéric) 
+   * Crash when entering invalid text in source view (thx Frédéric)
    * Fixed a few bugs in DVD Architect format + added another two new variants (thx Jacob)
    * Fixed incorrect line-break in Microsoft Translate in last part of sub (thx Jacob)
 
@@ -60,7 +60,7 @@ Subtitle Edit Changelog
    * Remove text for HI can now also remove interjections (thx Dr. Jackson)
    * Start/display time changes are now undo-able (thx Luis)
    * Subtitle preview on video player now more precise (thx hawk) + uses font from Settings + bold (thx Leszek)
-   * "Point sync" can now also sync using only one sync point (thx tttoan) 
+   * "Point sync" can now also sync using only one sync point (thx tttoan)
    * VLC media player - mouse click now toggles play/pause
  * FIXED:
    * Wave form: Fixed unprecise (out of sync) wave form data for some sample rates
@@ -71,7 +71,7 @@ Subtitle Edit Changelog
    * Fixed a bug that froze vlc after playing to end of video
    * Missing line break in Sony Dvd Architect w line numbers (thx Rosa)
    * A minor bug in Visual Sync, if end scene was after video length (thx tsieberg)
-   * OCR Fix Engine: Lines after "..." will no longer be changed to start with uppercase 
+   * OCR Fix Engine: Lines after "..." will no longer be changed to start with uppercase
    * Fixed bug in reading of SSA files (',' was removed) - thx Péter
    * Fixed line breaking bug in mpl format - thx Przemek
    * Fixed shortcuts for adjust commands Ctrl+Space/Shift+Space/F9/F10
@@ -121,4 +121,3 @@ Subtitle Edit Changelog
    * Bug in "time control" (thx eMWu)
    * Resume spell check now works better (thx Kerensky)
    * Fixed occasional crash in Options (thx sialivi)
-   
