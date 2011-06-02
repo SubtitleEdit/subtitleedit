@@ -255,6 +255,9 @@ namespace Nikse.SubtitleEdit.Logic
         public string UndockedVideoPosition { get; set; }
         public string UndockedWaveformPosition { get; set; }
         public string UndockedVideoControlsPosition { get; set; }
+        public bool WaveFormCenter { get; set; }
+        public int SmallDelayMilliseconds { get; set; }
+        public int LargeDelayMilliseconds { get; set; }
 
         public GeneralSettings()
         {
@@ -309,6 +312,8 @@ namespace Nikse.SubtitleEdit.Logic
             AllowEditOfOriginalSubtitle = false;
             PromptDeleteLines = true;
             Undocked = false;
+            SmallDelayMilliseconds = 500;
+            LargeDelayMilliseconds = 5000;
         }
     }
 
@@ -759,6 +764,15 @@ namespace Nikse.SubtitleEdit.Logic
             subNode = node.SelectSingleNode("UndockedVideoControlsPosition");
             if (subNode != null)
                 settings.General.UndockedVideoControlsPosition = subNode.InnerText;
+            subNode = node.SelectSingleNode("WaveFormCenter");
+            if (subNode != null)
+                settings.General.WaveFormCenter = Convert.ToBoolean(subNode.InnerText);
+            subNode = node.SelectSingleNode("SmallDelayMilliseconds");
+            if (subNode != null)
+                settings.General.SmallDelayMilliseconds = Convert.ToInt32((subNode.InnerText));
+            subNode = node.SelectSingleNode("LargeDelayMilliseconds");
+            if (subNode != null)
+                settings.General.LargeDelayMilliseconds = Convert.ToInt32((subNode.InnerText));
            
             settings.Tools = new Nikse.SubtitleEdit.Logic.ToolsSettings();
             node = doc.DocumentElement.SelectSingleNode("Tools");
@@ -1164,6 +1178,9 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("UndockedVideoPosition", settings.General.UndockedVideoPosition);
             textWriter.WriteElementString("UndockedWaveformPosition", settings.General.UndockedWaveformPosition);
             textWriter.WriteElementString("UndockedVideoControlsPosition", settings.General.UndockedVideoControlsPosition);
+            textWriter.WriteElementString("WaveFormCenter", settings.General.WaveFormCenter.ToString());
+            textWriter.WriteElementString("SmallDelayMilliseconds", settings.General.SmallDelayMilliseconds.ToString());
+            textWriter.WriteElementString("LargeDelayMilliseconds", settings.General.LargeDelayMilliseconds.ToString());
             textWriter.WriteEndElement();
 
             textWriter.WriteStartElement("Tools", "");
