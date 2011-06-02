@@ -4705,7 +4705,6 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-
         private void ButtonUnBreakClick(object sender, EventArgs e)
         {
             textBoxListViewText.Text = Utilities.UnbreakLine(textBoxListViewText.Text);
@@ -8007,6 +8006,7 @@ namespace Nikse.SubtitleEdit.Forms
                 SetPositionFromXYString(Configuration.Settings.General.UndockedVideoPosition, "VideoPlayerUnDocked");
                 SetPositionFromXYString(Configuration.Settings.General.UndockedWaveformPosition, "WaveFormUnDocked");
                 SetPositionFromXYString(Configuration.Settings.General.UndockedVideoControlsPosition, "VideoControlsUndocked");
+                Configuration.Settings.General.Undocked = false;
                 undockVideoControlsToolStripMenuItem_Click(null, null);
             }
 
@@ -8057,6 +8057,8 @@ namespace Nikse.SubtitleEdit.Forms
             fixToolStripMenuItem.ShortcutKeys = GetKeys(Configuration.Settings.Shortcuts.MainToolsFixCommonErrors);
 
             showhideVideoToolStripMenuItem.ShortcutKeys = GetKeys(Configuration.Settings.Shortcuts.MainVideoShowHideVideo);
+            undockVideoControlsToolStripMenuItem.ShortcutKeys = GetKeys(Configuration.Settings.Shortcuts.MainVideoUndockVideoControls);
+            redockVideoControlsToolStripMenuItem.ShortcutKeys = GetKeys(Configuration.Settings.Shortcuts.MainVideoReDockVideoControls);
             toolStripMenuItemAdjustAllTimes.ShortcutKeys = GetKeys(Configuration.Settings.Shortcuts.MainSynchronizationAdjustTimes);
             italicToolStripMenuItem.ShortcutKeys = GetKeys(Configuration.Settings.Shortcuts.MainListViewItalic);
             italicToolStripMenuItem1.ShortcutKeys = GetKeys(Configuration.Settings.Shortcuts.MainTextBoxItalic);
@@ -8187,7 +8189,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private Keys GetKeys(string keysInString)
+        public Keys GetKeys(string keysInString)
         {
             if (string.IsNullOrEmpty(keysInString))
                 return Keys.None;
@@ -9412,6 +9414,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void undockVideoControlsToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            if (Configuration.Settings.General.Undocked)
+                return;
+
             Configuration.Settings.General.Undocked = true;
 
             UnDockVideoPlayer();
@@ -9431,12 +9436,14 @@ namespace Nikse.SubtitleEdit.Forms
             undockVideoControlsToolStripMenuItem.Visible = false;
             redockVideoControlsToolStripMenuItem.Visible = true;
 
-            tabControl1_SelectedIndexChanged(null, null);
-            
+            tabControl1_SelectedIndexChanged(null, null);            
         }
 
-        private void redockVideoControlsToolStripMenuItem_Click(object sender, EventArgs e)
+        public void redockVideoControlsToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            if (!Configuration.Settings.General.Undocked)
+                return;
+
             Configuration.Settings.General.Undocked = false;
 
             if (_videoControlsUnDocked != null && !_videoControlsUnDocked.IsDisposed)

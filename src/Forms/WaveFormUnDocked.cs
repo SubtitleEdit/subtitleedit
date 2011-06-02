@@ -13,6 +13,7 @@ namespace Nikse.SubtitleEdit.Forms
     {
         Main _mainForm = null;
         PositionsAndSizes _positionsAndSizes = null;
+        Keys _redockKeys;
 
         public Panel PanelContainer
         {
@@ -28,6 +29,7 @@ namespace Nikse.SubtitleEdit.Forms
             _mainForm = mainForm;
             this.Icon = (Icon)mainForm.Icon.Clone();
             _positionsAndSizes = positionsAndSizes;
+            _redockKeys = _mainForm.GetKeys(Configuration.Settings.Shortcuts.MainVideoReDockVideoControls);
         }
 
         public WaveFormUnDocked()
@@ -51,7 +53,10 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void WaveFormUnDocked_KeyDown(object sender, KeyEventArgs e)
         {
-            _mainForm.Main_KeyDown(sender, e);
+            if (_redockKeys == e.KeyData)
+                _mainForm.redockVideoControlsToolStripMenuItem_Click(null, null);
+            else
+                _mainForm.Main_KeyDown(sender, e);
         }
     }
 }

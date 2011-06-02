@@ -46,9 +46,11 @@
             this.ClientSize = new System.Drawing.Size(458, 311);
             this.Controls.Add(this.panelContainer);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
+            this.KeyPreview = true;
             this.Name = "VideoControlsUndocked";
             this.Text = "VideoControlsUndocked";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.VideoControlsUndocked_FormClosing);
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.VideoControlsUndocked_KeyDown);
             this.ResumeLayout(false);
 
         }
