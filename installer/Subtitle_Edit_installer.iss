@@ -149,7 +149,7 @@ Source: ..\src\Bin\Release\Hunspellx86.dll;           DestDir: {app};           
 Source: ..\src\Bin\Release\Interop.QuartzTypeLib.dll; DestDir: {app};                                    Flags: ignoreversion; Components: main
 Source: ..\src\Bin\Release\NHunspell.dll;             DestDir: {app};                                    Flags: ignoreversion; Components: main
 Source: ..\src\Bin\Release\SubtitleEdit.exe;          DestDir: {app};                                    Flags: ignoreversion; Components: main
-Source: Icons\uninstall.ico;                          DestDir: {app};                                    Flags: ignoreversion; Components: main
+Source: Icons\uninstall.ico;                          DestDir: {app}\Icons;                              Flags: ignoreversion; Components: main
 Source: ..\src\Bin\Release\Icons\Find.png;            DestDir: {app}\Icons;                              Flags: ignoreversion; Components: main
 Source: ..\src\Bin\Release\Icons\Help.png;            DestDir: {app}\Icons;                              Flags: ignoreversion; Components: main
 Source: ..\src\Bin\Release\Icons\New.png;             DestDir: {app}\Icons;                              Flags: ignoreversion; Components: main
@@ -198,7 +198,7 @@ Name: {group}\Subtitle Edit;                Filename: {app}\SubtitleEdit.exe; Wo
 Name: {group}\Help and Support\Changelog;   Filename: {app}\Changelog.txt;    WorkingDir: {app}; Comment: {cm:sm_com_Changelog}
 Name: {group}\Help and Support\Online Help; Filename: http://www.nikse.dk/se/Help.aspx
 Name: {group}\Help and Support\{cm:ProgramOnTheWeb,Subtitle Edit}; Filename: http://www.nikse.dk/se/;  Comment: {cm:ProgramOnTheWeb,Subtitle Edit}
-Name: {group}\{cm:UninstallProgram,Subtitle Edit};                 Filename: {uninstallexe};     Comment: {cm:UninstallProgram,Subtitle Edit}; WorkingDir: {app}; IconFilename: {app}\uninstall.ico
+Name: {group}\{cm:UninstallProgram,Subtitle Edit};                 Filename: {uninstallexe};           Comment: {cm:UninstallProgram,Subtitle Edit}; WorkingDir: {app}; IconFilename: {app}\Icons\uninstall.ico
 
 Name: {commondesktop}\Subtitle Edit;        Filename: {app}\SubtitleEdit.exe; WorkingDir: {app}; Comment: Subtitle Edit v{#simple_app_version}; AppUserModelID: Nikse.SubtitleEdit; IconFilename: {app}\SubtitleEdit.exe; IconIndex: 0; Tasks: desktopicon\common
 Name: {userdesktop}\Subtitle Edit;          Filename: {app}\SubtitleEdit.exe; WorkingDir: {app}; Comment: Subtitle Edit v{#simple_app_version}; AppUserModelID: Nikse.SubtitleEdit; IconFilename: {app}\SubtitleEdit.exe; IconIndex: 0; Tasks: desktopicon\user
@@ -222,6 +222,7 @@ Type: files;      Name: {app}\Dictionaries\en_US_user.xml
 Type: files;      Name: {app}\Dictionaries\eng_OCRFixReplaceList.xml
 Type: files;      Name: {app}\Dictionaries\names_etc.xml
 Type: dirifempty; Name: {app}\Dictionaries
+Type: files;      Name: {app}\uninstall.ico
 
 Type: files;      Name: {app}\Languages\bg-BG.xml;      Check: NOT IsComponentSelected('translations') AND IsUpdate()
 Type: files;      Name: {app}\Languages\cs-CZ.xml;      Check: NOT IsComponentSelected('translations') AND IsUpdate()
