@@ -23,6 +23,7 @@
 
 [CustomMessages]
 ; English
+en.comp_translations=Translations
 en.msg_SetupIsRunningWarning=Subtitle Edit Setup is already running!
 en.msg_AppIsRunning=Subtitle Edit is running! Please close it before proceeding.
 en.msg_AskToDownNET=Subtitle Edit requires the .NET Framework 2.0. Please download and install the .NET Framework and run setup again.%n%nDo you want to download the .NET Framework 2.0 now?
@@ -34,9 +35,13 @@ en.tsk_CurrentUser=For the current user only
 en.tsk_Other=Other:
 en.tsk_ResetDictionaries=Reset Dictionaries and delete any custom names
 en.tsk_ResetSettings=Reset Subtitle Edit's settings
+en.types_custom=Custom installation
+en.types_default=Default installation
 
 
+#ifdef localize
 ; Bulgarian
+bg.comp_translations=Translations
 bg.msg_SetupIsRunningWarning=Subtitle Edit Setup is already running!
 bg.msg_AppIsRunning=Subtitle Edit is running! Please close it before proceeding.
 bg.msg_AskToDownNET=Subtitle Edit requires the .NET Framework 2.0. Please download and install the .NET Framework and run setup again.%n%nDo you want to download the .NET Framework 2.0 now?
@@ -48,9 +53,12 @@ bg.tsk_CurrentUser=For the current user only
 bg.tsk_Other=Other:
 bg.tsk_ResetDictionaries=Reset Dictionaries and delete any custom names
 bg.tsk_ResetSettings=Reset Subtitle Edit's settings
+bg.types_custom=Custom installation
+bg.types_default=Default installation
 
 
 ; Czech
+cs.comp_translations=Translations
 cs.msg_SetupIsRunningWarning=Subtitle Edit Setup is already running!
 cs.msg_AppIsRunning=Subtitle Edit is running! Please close it before proceeding.
 cs.msg_AskToDownNET=Subtitle Edit requires the .NET Framework 2.0. Please download and install the .NET Framework and run setup again.%n%nDo you want to download the .NET Framework 2.0 now?
@@ -62,9 +70,12 @@ cs.tsk_CurrentUser=For the current user only
 cs.tsk_Other=Other:
 cs.tsk_ResetDictionaries=Reset Dictionaries and delete any custom names
 cs.tsk_ResetSettings=Reset Subtitle Edit's settings
+cs.types_custom=Custom installation
+cs.types_default=Default installation
 
 
 ; Deutsch
+de.comp_translations=Translations
 de.msg_SetupIsRunningWarning=Subtitle Edit Setup läuft bereits!
 de.msg_AppIsRunning=Subtitle Edit läuft! Bitte schließen das Programm, bevor Sie fortfahren.
 de.msg_AskToDownNET=Subtitle Edit benötigt .NET Framework 2.0 oder höher. Bitte laden und installieren Sie .NET Framework und starten Sie die Installation erneut.%n%nMöchten Sie .NET Framework jetzt herunterladen?
@@ -76,9 +87,12 @@ de.tsk_CurrentUser=Nur für mich
 de.tsk_Other=Andere:
 de.tsk_ResetDictionaries=Wörterbücher zurücksetzen und sonstige Namen löschen
 de.tsk_ResetSettings=Subtitle Edit Einstellungen zurücksetzen
+de.types_custom=Custom installation
+de.types_default=Default installation
 
 
 ; Danish
+dk.comp_translations=Translations
 dk.msg_SetupIsRunningWarning=Subtitle Edit Setup kører allerede!
 dk.msg_AppIsRunning=Subtitle Edit is running! Please close it before proceeding.
 dk.msg_AskToDownNET=Subtitle Edit kræver .NET Framework 2.0. Download and installer .NET Framework og kør setup igen.%n%nVil du downloade .NET Framework 2.0 nu?
@@ -90,9 +104,12 @@ dk.tsk_CurrentUser=Kun for aktulle bruger
 dk.tsk_Other=Andre:
 dk.tsk_ResetDictionaries=Reset Dictionaries and delete any custom names
 dk.tsk_ResetSettings=Nulstil Subtitle Edit indstillinger
+dk.types_custom=Custom installation
+dk.types_default=Default installation
 
 
 ; Spanish
+es.comp_translations=Translations
 es.msg_SetupIsRunningWarning=¡La instalación de Subtitle Edit está ya en marcha!
 es.msg_AppIsRunning=¡Subtitle Edit está en ejecución! Por favor, ciérrelo antes de proceder.
 es.msg_AskToDownNET=Subtitle Edit requiere .NET Framework 2.0. Por favor, descargue e instale .NET Framework y ejecute de nuevo la instalación.%n%n¿Desea descargar .NET Framework 2.0 ahora?
@@ -104,9 +121,12 @@ es.tsk_CurrentUser=Sólo para el usuario actual
 es.tsk_Other=Otro:
 es.tsk_ResetDictionaries=Restaura los Diccionarios y elimina cualquier nombre personalizado
 es.tsk_ResetSettings=Restaura la configuración de Subtitle Edit
+es.types_custom=Custom installation
+es.types_default=Default installation
 
 
 ; French
+fr.comp_translations=Translations
 fr.msg_SetupIsRunningWarning=Subtitle Edit Setup is already running!
 fr.msg_AppIsRunning=Subtitle Edit is running! Please close it before proceeding.
 fr.msg_AskToDownNET=Subtitle Edit requires the .NET Framework 2.0. Please download and install the .NET Framework and run setup again.%n%nDo you want to download the .NET Framework 2.0 now?
@@ -118,8 +138,11 @@ fr.tsk_CurrentUser=For the current user only
 fr.tsk_Other=Other:
 fr.tsk_ResetDictionaries=Reset Dictionaries and delete any custom names
 fr.tsk_ResetSettings=Reset Subtitle Edit's settings
+fr.types_custom=Custom installation
+fr.types_default=Default installation
 
 ; Hungarian
+hu.comp_translations=Translations
 hu.msg_SetupIsRunningWarning=A Subtitle Edit telepítő már fut!
 hu.msg_AppIsRunning=A Subtitle Edit fut! Kérjük, zárja be a folytatás elött.
 hu.msg_AskToDownNET=A Subtitle Edit futtatásához .NET Framework 2.0 szükséges. Kérjük, töltse le és telepítse a .NET Framework keretprogramot és futtassa újra a telepítőt.%n%nLetölti a .NET Framework 2.0 telepítőt most?
@@ -131,9 +154,12 @@ hu.tsk_CurrentUser=Csak a jelenlegi felhasználó számára
 hu.tsk_Other=Egyéb:
 hu.tsk_ResetDictionaries=A szótárak visszaállítása és az egyéni nevek törlése
 hu.tsk_ResetSettings=A Subtitle Edit beállításainak visszaállítása
+hu.types_custom=Custom installation
+hu.types_default=Default installation
 
 
 ; Italian
+it.comp_translations=Translations
 it.msg_SetupIsRunningWarning=Subtitle Edit Setup is already running!
 it.msg_AppIsRunning=Subtitle Edit is running! Please close it before proceeding.
 it.msg_AskToDownNET=Subtitle Edit requires the .NET Framework 2.0. Please download and install the .NET Framework and run setup again.%n%nDo you want to download the .NET Framework 2.0 now?
@@ -145,9 +171,12 @@ it.tsk_CurrentUser=For the current user only
 it.tsk_Other=Other:
 it.tsk_ResetDictionaries=Reset Dictionaries and delete any custom names
 it.tsk_ResetSettings=Reset Subtitle Edit's settings
+it.types_custom=Custom installation
+it.types_default=Default installation
 
 
 ; Japanese
+ja.comp_translations=Translations
 ja.msg_SetupIsRunningWarning=Subtitle Edit Setup is already running!
 ja.msg_AppIsRunning=Subtitle Edit is running! Please close it before proceeding.
 ja.msg_AskToDownNET=Subtitle Edit requires the .NET Framework 2.0. Please download and install the .NET Framework and run setup again.%n%nDo you want to download the .NET Framework 2.0 now?
@@ -159,9 +188,12 @@ ja.tsk_CurrentUser=For the current user only
 ja.tsk_Other=Other:
 ja.tsk_ResetDictionaries=Reset Dictionaries and delete any custom names
 ja.tsk_ResetSettings=Reset Subtitle Edit's settings
+ja.types_custom=Custom installation
+ja.types_default=Default installation
 
 
 ; Dutch
+nl.comp_translations=Translations
 nl.msg_SetupIsRunningWarning=Subtitle Edit Setup is already running!
 nl.msg_AppIsRunning=Subtitle Edit is running! Please close it before proceeding.
 nl.msg_AskToDownNET=Subtitle Edit requires the .NET Framework 2.0. Please download and install the .NET Framework and run setup again.%n%nDo you want to download the .NET Framework 2.0 now?
@@ -173,9 +205,12 @@ nl.tsk_CurrentUser=For the current user only
 nl.tsk_Other=Other:
 nl.tsk_ResetDictionaries=Reset Dictionaries and delete any custom names
 nl.tsk_ResetSettings=Reset Subtitle Edit's settings
+nl.types_custom=Custom installation
+nl.types_default=Default installation
 
 
 ; Polish
+pl.comp_translations=Translations
 pl.msg_SetupIsRunningWarning=Subtitle Edit Setup is already running!
 pl.msg_AppIsRunning=Subtitle Edit is running! Please close it before proceeding.
 pl.msg_AskToDownNET=Subtitle Edit requires the .NET Framework 2.0. Please download and install the .NET Framework and run setup again.%n%nDo you want to download the .NET Framework 2.0 now?
@@ -187,9 +222,12 @@ pl.tsk_CurrentUser=For the current user only
 pl.tsk_Other=Other:
 pl.tsk_ResetDictionaries=Reset Dictionaries and delete any custom names
 pl.tsk_ResetSettings=Reset Subtitle Edit's settings
+pl.types_custom=Custom installation
+pl.types_default=Default installation
 
 
 ; Romanian
+ro.comp_translations=Translations
 ro.msg_SetupIsRunningWarning=Instalarea programului Subtitle Edit se efectuează deja!
 ro.msg_AppIsRunning=Subtitle Edit is running! Please close it before proceeding.
 ro.msg_AskToDownNET=Subtitle Edit necesită .NET Framework 2.0. Vă rog să descărcaţi şi să instalaţi .NET Framework şi apoi reinstalaţi.%n%nVreţi să descărcaţi acum .NET Framework 2.0?
@@ -201,9 +239,12 @@ ro.tsk_CurrentUser=Pentru utilizatorul curent
 ro.tsk_Other=Altele:
 ro.tsk_ResetDictionaries=Reset Dictionaries and delete any custom names
 ro.tsk_ResetSettings=Resetaţi setările programului Subtitle Edit
+ro.types_custom=Custom installation
+ro.types_default=Default installation
 
 
 ; Swedish
+sv.comp_translations=Translations
 sv.msg_SetupIsRunningWarning=Instalarea programului Subtitle Edit se efectuează deja!
 sv.msg_AppIsRunning=Subtitle Edit is running! Please close it before proceeding.
 sv.msg_AskToDownNET=Subtitle Edit necesită .NET Framework 2.0. Vă rog să descărcaţi şi să instalaţi .NET Framework şi apoi reinstalaţi.%n%nVreţi să descărcaţi acum .NET Framework 2.0?
@@ -215,3 +256,6 @@ sv.tsk_CurrentUser=Pentru utilizatorul curent
 sv.tsk_Other=Altele:
 sv.tsk_ResetDictionaries=Reset Dictionaries and delete any custom names
 sv.tsk_ResetSettings=Resetaţi setările programului Subtitle Edit
+sv.types_custom=Custom installation
+sv.types_default=Default installation
+#endif
