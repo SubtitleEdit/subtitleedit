@@ -8032,6 +8032,15 @@ namespace Nikse.SubtitleEdit.Forms
                 undockVideoControlsToolStripMenuItem_Click(null, null);
             }
 
+            toolStripButtonLockCenter.Checked = Configuration.Settings.General.WaveFormCenter;
+            AudioWaveForm.Locked = toolStripButtonLockCenter.Checked;
+
+            numericUpDownSec1.Value = (decimal) (Configuration.Settings.General.SmallDelayMilliseconds / 1000.0);
+            numericUpDownSec2.Value = (decimal) (Configuration.Settings.General.LargeDelayMilliseconds / 1000.0);
+
+            numericUpDownSecAdjust1.Value = (decimal)(Configuration.Settings.General.SmallDelayMilliseconds / 1000.0);
+            numericUpDownSecAdjust2.Value = (decimal)(Configuration.Settings.General.LargeDelayMilliseconds / 1000.0);
+
             SetShortcuts();
             LoadPlugins();
         }
@@ -8566,6 +8575,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             toolStripButtonLockCenter.Checked = !toolStripButtonLockCenter.Checked;
             AudioWaveForm.Locked = toolStripButtonLockCenter.Checked;
+            Configuration.Settings.General.WaveFormCenter = AudioWaveForm.Locked;
         }
 
         private void trackBarWaveFormPosition_ValueChanged(object sender, EventArgs e)
@@ -10038,6 +10048,26 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
             }
+        }
+
+        private void numericUpDownSec1_ValueChanged(object sender, EventArgs e)
+        {
+            Configuration.Settings.General.SmallDelayMilliseconds = (int)(numericUpDownSec1.Value * 1000);
+        }
+
+        private void numericUpDownSec2_ValueChanged(object sender, EventArgs e)
+        {
+            Configuration.Settings.General.LargeDelayMilliseconds = (int)(numericUpDownSec2.Value * 1000);
+        }
+
+        private void numericUpDownSecAdjust1_ValueChanged(object sender, EventArgs e)
+        {
+            Configuration.Settings.General.SmallDelayMilliseconds = (int)(numericUpDownSecAdjust1.Value * 1000);
+        }
+
+        private void numericUpDownSecAdjust2_ValueChanged(object sender, EventArgs e)
+        {
+            Configuration.Settings.General.LargeDelayMilliseconds = (int)(numericUpDownSecAdjust2.Value * 1000);
         }
 
     }
