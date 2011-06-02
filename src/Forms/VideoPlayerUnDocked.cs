@@ -9,6 +9,7 @@ namespace Nikse.SubtitleEdit.Forms
         Main _mainForm = null;
         PositionsAndSizes _positionsAndSizes = null;
         Controls.VideoPlayerContainer _videoPlayerContainer;
+        Keys _redockKeys;
 
         public Panel PanelContainer
         {
@@ -25,6 +26,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.Icon = (Icon)_mainForm.Icon.Clone();
             _positionsAndSizes = positionsAndSizes;
             _videoPlayerContainer = videoPlayerContainer;
+            _redockKeys = _mainForm.GetKeys(Configuration.Settings.Shortcuts.MainVideoReDockVideoControls);
         }
 
         public VideoPlayerUnDocked()
@@ -53,6 +55,10 @@ namespace Nikse.SubtitleEdit.Forms
                 else if (WindowState == FormWindowState.Normal)
                     WindowState = FormWindowState.Maximized;
                 e.SuppressKeyPress = true;
+            }
+            else if (_redockKeys == e.KeyData)
+            {
+                _mainForm.redockVideoControlsToolStripMenuItem_Click(null, null);
             }
             else 
             {

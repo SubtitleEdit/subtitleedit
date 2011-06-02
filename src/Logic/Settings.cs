@@ -407,8 +407,10 @@ namespace Nikse.SubtitleEdit.Logic
         public string MainEditFindNext { get; set; }
         public string MainEditReplace { get; set; }
         public string MainEditGoToLineNumber { get; set; }
-        public string MainToolsFixCommonErrors { get; set; }        
+        public string MainToolsFixCommonErrors { get; set; }
         public string MainVideoShowHideVideo { get; set; }
+        public string MainVideoUndockVideoControls { get; set; }
+        public string MainVideoReDockVideoControls { get; set; }
         public string MainSynchronizationAdjustTimes { get; set; }                
         public string MainListViewItalic { get; set; }
         public string MainTextBoxItalic { get; set; }        
@@ -1059,10 +1061,17 @@ namespace Nikse.SubtitleEdit.Logic
                     settings.Shortcuts.MainEditGoToLineNumber = subNode.InnerText;
                 subNode = node.SelectSingleNode("MainToolsFixCommonErrors");
                 if (subNode != null)
-                    settings.Shortcuts.MainToolsFixCommonErrors = subNode.InnerText;                
+                    settings.Shortcuts.MainToolsFixCommonErrors = subNode.InnerText;
                 subNode = node.SelectSingleNode("MainVideoShowHideVideo");
                 if (subNode != null)
                     settings.Shortcuts.MainVideoShowHideVideo = subNode.InnerText;
+                subNode = node.SelectSingleNode("MainVideoUndockVideoControls");
+                if (subNode != null)
+                    settings.Shortcuts.MainVideoUndockVideoControls = subNode.InnerText;
+                subNode = node.SelectSingleNode("MainVideoReDockVideoControls");
+                if (subNode != null)
+                    settings.Shortcuts.MainVideoReDockVideoControls = subNode.InnerText;
+
                 subNode = node.SelectSingleNode("MainSynchronizationAdjustTimes");
                 if (subNode != null)
                     settings.Shortcuts.MainSynchronizationAdjustTimes = subNode.InnerText;               
@@ -1299,8 +1308,10 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("MainEditFindNext", settings.Shortcuts.MainEditFindNext);
             textWriter.WriteElementString("MainEditReplace", settings.Shortcuts.MainEditReplace);
             textWriter.WriteElementString("MainEditGoToLineNumber", settings.Shortcuts.MainEditGoToLineNumber);
-            textWriter.WriteElementString("MainToolsFixCommonErrors", settings.Shortcuts.MainToolsFixCommonErrors);            
+            textWriter.WriteElementString("MainToolsFixCommonErrors", settings.Shortcuts.MainToolsFixCommonErrors);
             textWriter.WriteElementString("MainVideoShowHideVideo", settings.Shortcuts.MainVideoShowHideVideo);
+            textWriter.WriteElementString("MainVideoUndockVideoControls", settings.Shortcuts.MainVideoUndockVideoControls);
+            textWriter.WriteElementString("MainVideoReDockVideoControls", settings.Shortcuts.MainVideoReDockVideoControls);
             textWriter.WriteElementString("MainSynchronizationAdjustTimes", settings.Shortcuts.MainSynchronizationAdjustTimes);            
             textWriter.WriteElementString("MainListViewItalic", settings.Shortcuts.MainEditGoToLineNumber);
             textWriter.WriteElementString("MainTextBoxItalic", settings.Shortcuts.MainTextBoxItalic);                        

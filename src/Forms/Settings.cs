@@ -435,6 +435,8 @@ namespace Nikse.SubtitleEdit.Forms
             //<MainVideoShowHideVideo>Control+Q</MainVideoShowHideVideo>
             TreeNode videoNode = new TreeNode(Configuration.Settings.Language.Main.Menu.Video.Title);
             videoNode.Nodes.Add(Configuration.Settings.Language.Main.Menu.Video.ShowHideVideo + GetShortcutText(Configuration.Settings.Shortcuts.MainVideoShowHideVideo));
+            videoNode.Nodes.Add(Configuration.Settings.Language.Main.Menu.Video.UnDockVideoControls + GetShortcutText(Configuration.Settings.Shortcuts.MainVideoUndockVideoControls));
+            videoNode.Nodes.Add(Configuration.Settings.Language.Main.Menu.Video.ReDockVideoControls + GetShortcutText(Configuration.Settings.Shortcuts.MainVideoReDockVideoControls));
             treeViewShortcuts.Nodes.Add(videoNode);
 
             //<MainSynchronizationAdjustTimes>Control+Shift+A</MainSynchronizationAdjustTimes>
@@ -482,6 +484,8 @@ namespace Nikse.SubtitleEdit.Forms
 
         private string GetShortcutText(string shortcut)
         {
+            if (string.IsNullOrEmpty(shortcut))
+                shortcut = Configuration.Settings.Language.General.None;
             return string.Format(" [{0}]", shortcut); 
         }
 
@@ -793,6 +797,10 @@ namespace Nikse.SubtitleEdit.Forms
                     string text = node.Text.Substring(0, node.Text.IndexOf("[")).Trim();
                     if (text == Configuration.Settings.Language.Main.Menu.Video.ShowHideVideo.Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.MainVideoShowHideVideo = GetShortcut(node.Text);
+                    else if (text == Configuration.Settings.Language.Main.Menu.Video.UnDockVideoControls.Replace("&", string.Empty))
+                        Configuration.Settings.Shortcuts.MainVideoUndockVideoControls = GetShortcut(node.Text);
+                    else if (text == Configuration.Settings.Language.Main.Menu.Video.ReDockVideoControls.Replace("&", string.Empty))
+                        Configuration.Settings.Shortcuts.MainVideoReDockVideoControls = GetShortcut(node.Text);
                 }
             }
 
