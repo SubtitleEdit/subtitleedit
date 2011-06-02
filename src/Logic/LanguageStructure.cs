@@ -61,6 +61,9 @@
             public string UserNameAlreadyInUse { get; set; }
             public string WebServiceUrl { get; set; }
             public string IP { get; set; }
+            public string VideoWindowTitle { get; set; }
+            public string AudioWindowTitle { get; set; }
+            public string ControlsWindowTitle { get; set; }
         }
 
         public class About

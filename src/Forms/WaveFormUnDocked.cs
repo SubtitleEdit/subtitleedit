@@ -22,12 +22,12 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        public WaveFormUnDocked(Main mainForm, string title, PositionsAndSizes positionsAndSizes)
+        public WaveFormUnDocked(Main mainForm, PositionsAndSizes positionsAndSizes)
         {
             InitializeComponent();
             _mainForm = mainForm;
+            this.Icon = (Icon)mainForm.Icon.Clone();
             _positionsAndSizes = positionsAndSizes;
-            Text = title;
         }
 
         public WaveFormUnDocked()
