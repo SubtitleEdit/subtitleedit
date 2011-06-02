@@ -17,8 +17,13 @@ namespace Nikse.SubtitleEdit.Forms
         {
             InitializeComponent();
 
-            _language = Configuration.Settings.Language.RemoveTextFromHearImpaired;
+            checkBoxRemoveTextBeforeColon.Checked = Configuration.Settings.RemoveTextForHearingImpaired.RemoveTextBeforeColor;
+            checkBoxRemoveTextBeforeColonOnlyUppercase.Checked = Configuration.Settings.RemoveTextForHearingImpaired.RemoveTextBeforeColorOnlyIfUppercase;
+            checkBoxRemoveInterjections.Checked = Configuration.Settings.RemoveTextForHearingImpaired.RemoveInterjections;
+            checkBoxRemoveWhereContains.Checked = Configuration.Settings.RemoveTextForHearingImpaired.RemoveIfContains;
+            comboBoxRemoveIfTextContains.Text = Configuration.Settings.RemoveTextForHearingImpaired.RemoveIfContainsText;
 
+            _language = Configuration.Settings.Language.RemoveTextFromHearImpaired;
             Text = _language.Title;
             groupBoxRemoveTextConditions.Text = _language.RemoveTextConditions;
             labelAnd.Text = _language.And;
@@ -203,6 +208,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void GeneratePreview()
         {
+            if (_subtitle == null)
+                return;
+
             listViewFixes.BeginUpdate();
             listViewFixes.Items.Clear();
             int count = 0;
@@ -658,6 +666,15 @@ namespace Nikse.SubtitleEdit.Forms
                     Cursor = Cursors.Default;
                 }
             }
+        }
+
+        private void FormRemoveTextForHearImpaired_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            Configuration.Settings.RemoveTextForHearingImpaired.RemoveTextBeforeColor = checkBoxRemoveTextBeforeColon.Checked;
+            Configuration.Settings.RemoveTextForHearingImpaired.RemoveTextBeforeColorOnlyIfUppercase = checkBoxRemoveTextBeforeColonOnlyUppercase.Checked;
+            Configuration.Settings.RemoveTextForHearingImpaired.RemoveInterjections = checkBoxRemoveInterjections.Checked;
+            Configuration.Settings.RemoveTextForHearingImpaired.RemoveIfContains = checkBoxRemoveWhereContains.Checked;
+            Configuration.Settings.RemoveTextForHearingImpaired.RemoveIfContainsText = comboBoxRemoveIfTextContains.Text;
         }
 
     }
