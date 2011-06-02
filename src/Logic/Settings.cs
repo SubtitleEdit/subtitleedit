@@ -426,6 +426,21 @@ namespace Nikse.SubtitleEdit.Logic
         }
     }
 
+    public class RemoveTextForHearingImpairedSettings
+    {
+        public bool RemoveTextBeforeColor { get; set; }
+        public bool RemoveTextBeforeColorOnlyIfUppercase { get; set; }
+        public bool RemoveInterjections { get; set; }
+        public bool RemoveIfContains { get; set; }
+        public string RemoveIfContainsText { get; set; }
+
+        public RemoveTextForHearingImpairedSettings()
+        {
+            RemoveTextBeforeColor = true;
+            RemoveIfContainsText = "¶";
+        }
+    }
+
     public class Settings
     {
         public RecentFilesSettings RecentFiles { get; set; }
@@ -439,6 +454,7 @@ namespace Nikse.SubtitleEdit.Logic
         public VideoControlsSettings VideoControls { get; set; }
         public NetworkSettings NetworkSettings { get; set; }
         public Shortcuts Shortcuts { get; set; }
+        public RemoveTextForHearingImpairedSettings RemoveTextForHearingImpaired { get; set; }
 
         [XmlArrayItem("MultipleSearchAndReplaceItem")]
         public List<MultipleSearchAndReplaceSetting> MultipleSearchAndReplaceList { get; set; }
@@ -461,6 +477,7 @@ namespace Nikse.SubtitleEdit.Logic
             MultipleSearchAndReplaceList = new List<MultipleSearchAndReplaceSetting>();
             Language = new Language();
             Shortcuts = new Shortcuts();
+            RemoveTextForHearingImpaired = new RemoveTextForHearingImpairedSettings();
         }
 
         public void Save()
@@ -1043,6 +1060,27 @@ namespace Nikse.SubtitleEdit.Logic
                     settings.Shortcuts.MainTextBoxItalic = subNode.InnerText;
             }
 
+            settings.RemoveTextForHearingImpaired = new RemoveTextForHearingImpairedSettings();
+            node = doc.DocumentElement.SelectSingleNode("RemoveTextForHearingImpaired");
+            if (node != null)
+            {
+                subNode = node.SelectSingleNode("RemoveTextBeforeColor");
+                if (subNode != null)
+                    settings.RemoveTextForHearingImpaired.RemoveTextBeforeColor = Convert.ToBoolean(subNode.InnerText);
+                subNode = node.SelectSingleNode("RemoveTextBeforeColorOnlyIfUppercase");
+                if (subNode != null)
+                    settings.RemoveTextForHearingImpaired.RemoveTextBeforeColorOnlyIfUppercase = Convert.ToBoolean(subNode.InnerText);
+                subNode = node.SelectSingleNode("RemoveInterjections");
+                if (subNode != null)
+                    settings.RemoveTextForHearingImpaired.RemoveInterjections = Convert.ToBoolean(subNode.InnerText);
+                subNode = node.SelectSingleNode("RemoveIfContains");
+                if (subNode != null)
+                    settings.RemoveTextForHearingImpaired.RemoveIfContains = Convert.ToBoolean(subNode.InnerText);
+                subNode = node.SelectSingleNode("RemoveIfContainsText");
+                if (subNode != null)
+                    settings.RemoveTextForHearingImpaired.RemoveIfContainsText = subNode.InnerText;
+            }
+            
             return settings;
         }
 
@@ -1249,6 +1287,14 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("MainSynchronizationAdjustTimes", settings.Shortcuts.MainSynchronizationAdjustTimes);            
             textWriter.WriteElementString("MainListViewItalic", settings.Shortcuts.MainEditGoToLineNumber);
             textWriter.WriteElementString("MainTextBoxItalic", settings.Shortcuts.MainTextBoxItalic);                        
+            textWriter.WriteEndElement();
+
+            textWriter.WriteStartElement("RemoveTextForHearingImpaired", "");
+            textWriter.WriteElementString("RemoveTextBeforeColor", settings.RemoveTextForHearingImpaired.RemoveTextBeforeColor.ToString());
+            textWriter.WriteElementString("RemoveTextBeforeColorOnlyIfUppercase", settings.RemoveTextForHearingImpaired.RemoveTextBeforeColorOnlyIfUppercase.ToString());
+            textWriter.WriteElementString("RemoveInterjections", settings.RemoveTextForHearingImpaired.RemoveInterjections.ToString());
+            textWriter.WriteElementString("RemoveIfContains", settings.RemoveTextForHearingImpaired.RemoveIfContains.ToString());
+            textWriter.WriteElementString("RemoveIfContainsText", settings.RemoveTextForHearingImpaired.RemoveIfContainsText);
             textWriter.WriteEndElement();
 
             textWriter.WriteEndElement();

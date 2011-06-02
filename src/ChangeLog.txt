@@ -10,7 +10,7 @@ Subtitle Edit Changelog
    * Command line conversion between subtitle formats (example: subtitleedit /convert *.srt microdvd - thx Carl)
    * Subtitle preview font size (below video player) is now available in Options -> Settings
    * Edit -> Select all 
-   * List view context menu: Copy as text to clipboard
+   * List view context menu: Copy as text to clipboard (you can also use ctrl+c/ctrl+v)
    * Text box context menu -> Split line at cursor position (thx dr. Jackson)
    * Import+ocr of blu-ray sup files inside matroska files
    * Now remembers undocked controls pos/size 	
