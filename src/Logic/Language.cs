@@ -127,6 +127,9 @@ namespace Nikse.SubtitleEdit.Logic
                 UserNameAlreadyInUse = "Username already in use",
                 WebServiceUrl = "Webservice url",
                 IP = "IP",
+                VideoWindowTitle = "Video - {0}",
+                AudioWindowTitle = "Audio - {0}",
+                ControlsWindowTitle = "Controls - {0}",
             };
 
             About = new LanguageStructure.About

@@ -485,9 +485,19 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                 _mediaPlayer = _libvlc_media_player_new_from_media(media);
                 _libvlc_media_release(media);
 
+
                 //  Linux: libvlc_media_player_set_xdrawable (_mediaPlayer, xdrawable);
                 //  Mac: libvlc_media_player_set_nsobject (_mediaPlayer, view);
+                
                 _libvlc_media_player_set_hwnd(_mediaPlayer, ownerControl.Handle); // windows                               
+
+                //hack: sometimes vlc opens in it's own windows - this code seems to prevent this
+                for (int j = 0; j < 50; j++)
+                {
+                    System.Threading.Thread.Sleep(10);
+                    System.Windows.Forms.Application.DoEvents();
+                }
+                _libvlc_media_player_set_hwnd(_mediaPlayer, ownerControl.Handle); // windows   
                 
                 if (onVideoEnded != null)
                 {

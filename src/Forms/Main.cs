@@ -1378,14 +1378,7 @@ namespace Nikse.SubtitleEdit.Forms
                     _change = false;
                     _converted = false;
 
-                    if (_videoControlsUnDocked != null && !_videoControlsUnDocked.IsDisposed)
-                        _videoControlsUnDocked.Text = fileName;
-
-                    if (_videoPlayerUnDocked != null && !_videoPlayerUnDocked.IsDisposed)
-                        _videoPlayerUnDocked.Text = fileName;
-
-                    if (_waveFormUnDocked != null && !_waveFormUnDocked.IsDisposed)
-                        _waveFormUnDocked.Text = fileName;
+                    SetUndockedWindowsTitle();
 
                     if (justConverted)
                     {
@@ -1446,6 +1439,28 @@ namespace Nikse.SubtitleEdit.Forms
             else
             {
                 MessageBox.Show(string.Format(_language.FileNotFound, fileName));
+            }
+        }
+
+        private void SetUndockedWindowsTitle()
+        {
+            string title = Configuration.Settings.Language.General.NoVideoLoaded;
+            if (!string.IsNullOrEmpty(_videoFileName))
+                title = Path.GetFileNameWithoutExtension(_videoFileName);
+
+            try //TODO: Remove in 3.2 final
+            {
+                if (_videoControlsUnDocked != null && !_videoControlsUnDocked.IsDisposed)
+                    _videoControlsUnDocked.Text = string.Format(Configuration.Settings.Language.General.ControlsWindowTitle, title);
+
+                if (_videoPlayerUnDocked != null && !_videoPlayerUnDocked.IsDisposed)
+                    _videoPlayerUnDocked.Text = string.Format(Configuration.Settings.Language.General.VideoWindowTitle, title);
+
+                if (_waveFormUnDocked != null && !_waveFormUnDocked.IsDisposed)
+                    _waveFormUnDocked.Text = string.Format(Configuration.Settings.Language.General.AudioWindowTitle, title);
+            }
+            catch
+            { 
             }
         }
 
@@ -1841,15 +1856,7 @@ namespace Nikse.SubtitleEdit.Forms
             _change = false;
             _converted = false;
 
-
-            if (_videoControlsUnDocked != null && !_videoControlsUnDocked.IsDisposed)
-                _videoControlsUnDocked.Text = string.Empty;
-
-            if (_videoPlayerUnDocked != null && !_videoPlayerUnDocked.IsDisposed)
-                _videoPlayerUnDocked.Text = string.Empty;
-
-            if (_waveFormUnDocked != null && !_waveFormUnDocked.IsDisposed)
-                _waveFormUnDocked.Text = string.Empty;
+            SetUndockedWindowsTitle();
         }
 
         private void FileNew()
@@ -6955,6 +6962,8 @@ namespace Nikse.SubtitleEdit.Forms
                     timerWaveForm.Start();
                 }
                 Cursor = Cursors.Default;
+
+                SetUndockedWindowsTitle();
             }
         }
 
@@ -9314,7 +9323,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void UnDockVideoPlayer()
         {
-            _videoPlayerUnDocked = new VideoPlayerUnDocked(this, labelVideoInfo.Text, _formPositionsAndSizes, mediaPlayer);
+            _videoPlayerUnDocked = new VideoPlayerUnDocked(this, _formPositionsAndSizes, mediaPlayer);
             _formPositionsAndSizes.SetPositionAndSize(_videoPlayerUnDocked);
 
             Control control = null;
@@ -9345,7 +9354,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void UnDockWaveForm()
         {
-            _waveFormUnDocked = new WaveFormUnDocked(this, labelVideoInfo.Text, _formPositionsAndSizes);
+            _waveFormUnDocked = new WaveFormUnDocked(this, _formPositionsAndSizes);
             _formPositionsAndSizes.SetPositionAndSize(_waveFormUnDocked);
             
             var control = AudioWaveForm;
@@ -9385,7 +9394,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void UnDockVideoButtons()
         {
-            _videoControlsUnDocked = new VideoControlsUndocked(this, labelVideoInfo.Text, _formPositionsAndSizes);
+            _videoControlsUnDocked = new VideoControlsUndocked(this, _formPositionsAndSizes);
             _formPositionsAndSizes.SetPositionAndSize(_videoControlsUnDocked);
             var control = tabControlButtons;
             groupBoxVideo.Controls.Remove(control);
@@ -9429,11 +9438,13 @@ namespace Nikse.SubtitleEdit.Forms
             _videoControlsUnDocked.Show(this);
 
             _isVideoControlsUnDocked = true;
+            SetUndockedWindowsTitle();
 
             undockVideoControlsToolStripMenuItem.Visible = false;
             redockVideoControlsToolStripMenuItem.Visible = true;
 
             tabControl1_SelectedIndexChanged(null, null);
+            
         }
 
         private void redockVideoControlsToolStripMenuItem_Click(object sender, EventArgs e)

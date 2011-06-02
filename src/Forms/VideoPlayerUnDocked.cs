@@ -1,5 +1,6 @@
 ﻿using System.Windows.Forms;
 using Nikse.SubtitleEdit.Logic;
+using System.Drawing;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -17,13 +18,13 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        public VideoPlayerUnDocked(Main main, string title, PositionsAndSizes positionsAndSizes, Controls.VideoPlayerContainer videoPlayerContainer)
+        public VideoPlayerUnDocked(Main main, PositionsAndSizes positionsAndSizes, Controls.VideoPlayerContainer videoPlayerContainer)
         {
             InitializeComponent();
             _mainForm = main;
+            this.Icon = (Icon)_mainForm.Icon.Clone();
             _positionsAndSizes = positionsAndSizes;
             _videoPlayerContainer = videoPlayerContainer;
-            Text = title;            
         }
 
         public VideoPlayerUnDocked()
