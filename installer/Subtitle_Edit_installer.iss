@@ -369,6 +369,8 @@ begin
       RemoveDir(ExpandConstant('{app}\Languages'));
       RemoveDir(ExpandConstant('{app}\WaveForms'));
       RemoveDir(ExpandConstant('{app}'));
+      RemoveDir(ExpandConstant('{userappdata}\Subtitle Edit\VobSub\English'));
+      RemoveDir(ExpandConstant('{userappdata}\Subtitle Edit\VobSub'));
       RemoveDir(ExpandConstant('{userappdata}\Subtitle Edit\WaveForms'));
       RemoveDir(ExpandConstant('{userappdata}\Subtitle Edit'));
 
