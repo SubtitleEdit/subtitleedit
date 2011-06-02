@@ -31,7 +31,7 @@
 ;#endif
 
 
-#define installer_build_number "14"
+#define installer_build_number "15"
 
 #define VerMajor
 #define VerMinor
@@ -46,6 +46,10 @@
 #define simple_app_version str(VerMajor) + "." + str(VerMinor)
 
 #define installer_build_date GetDateTimeString('mmm, d yyyy', '', '')
+
+; If you don't define "localize", i.e. uncomment the following line then no translations 
+; for SubtitleEdit or the installer will be included
+#define localize
 
 
 [Setup]
@@ -93,6 +97,7 @@ DisableProgramGroupPage=auto
 
 [Languages]
 Name: en; MessagesFile: compiler:Default.isl
+#ifdef localize
 Name: bg; MessagesFile: Languages\Bulgarian.isl
 Name: cs; MessagesFile: compiler:Languages\Czech.isl
 Name: de; MessagesFile: compiler:Languages\German.isl
@@ -106,6 +111,7 @@ Name: nl; MessagesFile: compiler:Languages\Dutch.isl
 Name: pl; MessagesFile: compiler:Languages\Polish.isl
 Name: ro; MessagesFile: Languages\Romanian.isl
 Name: sv; MessagesFile: Languages\Swedish.isl
+#endif
 
 ; Include the installer's custom messages
 #include "Custom_Messages.iss"
@@ -114,6 +120,17 @@ Name: sv; MessagesFile: Languages\Swedish.isl
 [Messages]
 BeveledLabel=Subtitle Edit v{#simple_app_version} by Nikse, Setup v{#installer_build_number} built on {#installer_build_date}
 
+
+[Types]
+Name: default;            Description: {cm:types_default}
+Name: custom;             Description: {cm:types_custom}; Flags: iscustom
+
+
+[Components]
+Name: main;               Description: Subtitle Edit v{#simple_app_version}; Types: default custom; Flags: fixed
+#ifdef localize
+Name: translations;       Description: {cm:comp_translations};               Types: default custom; Flags: disablenouninstallwarning
+#endif
 
 [Tasks]
 Name: desktopicon;        Description: {cm:CreateDesktopIcon};     GroupDescription: {cm:AdditionalIcons}
@@ -125,38 +142,55 @@ Name: reset_settings;     Description: {cm:tsk_ResetSettings};     GroupDescript
 
 
 [Files]
-Source: psvince.dll;                                  DestDir: {app};                                    Flags: ignoreversion
-Source: ..\src\Changelog.txt;                         DestDir: {app};                                    Flags: ignoreversion
-Source: ..\src\gpl.txt;                               DestDir: {app};                                    Flags: ignoreversion
-Source: ..\src\Bin\Release\Hunspellx86.dll;           DestDir: {app};                                    Flags: ignoreversion
-Source: ..\src\Bin\Release\Interop.QuartzTypeLib.dll; DestDir: {app};                                    Flags: ignoreversion
-Source: ..\src\Bin\Release\NHunspell.dll;             DestDir: {app};                                    Flags: ignoreversion
-Source: ..\src\Bin\Release\SubtitleEdit.exe;          DestDir: {app};                                    Flags: ignoreversion
-Source: Icons\uninstall.ico;                          DestDir: {app};                                    Flags: ignoreversion
-Source: ..\src\Bin\Release\Icons\Find.png;            DestDir: {app}\Icons;                              Flags: ignoreversion
-Source: ..\src\Bin\Release\Icons\Help.png;            DestDir: {app}\Icons;                              Flags: ignoreversion
-Source: ..\src\Bin\Release\Icons\New.png;             DestDir: {app}\Icons;                              Flags: ignoreversion
-Source: ..\src\Bin\Release\Icons\Open.png;            DestDir: {app}\Icons;                              Flags: ignoreversion
-Source: ..\src\Bin\Release\Icons\Replace.png;         DestDir: {app}\Icons;                              Flags: ignoreversion
-Source: ..\src\Bin\Release\Icons\Save.png;            DestDir: {app}\Icons;                              Flags: ignoreversion
-Source: ..\src\Bin\Release\Icons\SaveAs.png;          DestDir: {app}\Icons;                              Flags: ignoreversion
-Source: ..\src\Bin\Release\Icons\Settings.png;        DestDir: {app}\Icons;                              Flags: ignoreversion
-Source: ..\src\Bin\Release\Icons\SpellCheck.png;      DestDir: {app}\Icons;                              Flags: ignoreversion
-Source: ..\src\Bin\Release\Icons\VideoToogle.png;     DestDir: {app}\Icons;                              Flags: ignoreversion
-Source: ..\src\Bin\Release\Icons\VisualSync.png;      DestDir: {app}\Icons;                              Flags: ignoreversion
-Source: ..\src\Bin\Release\Icons\WaveFormToogle.png;  DestDir: {app}\Icons;                              Flags: ignoreversion
-Source: ..\Dictionaries\da_DK_names_etc.xml;          DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion onlyifdoesntexist uninsneveruninstall
-Source: ..\Dictionaries\da_DK_user.xml;               DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion onlyifdoesntexist uninsneveruninstall
-Source: ..\Dictionaries\dan_OCRFixReplaceList.xml;    DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion onlyifdoesntexist uninsneveruninstall
-Source: ..\Dictionaries\en_US.aff;                    DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion
-Source: ..\Dictionaries\en_US.dic;                    DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion
-Source: ..\Dictionaries\en_US_names_etc.xml;          DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion onlyifdoesntexist uninsneveruninstall
-Source: ..\Dictionaries\en_US_user.xml;               DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion onlyifdoesntexist uninsneveruninstall
-Source: ..\Dictionaries\eng_OCRFixReplaceList.xml;    DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion onlyifdoesntexist uninsneveruninstall
-Source: ..\Dictionaries\names_etc.xml;                DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion onlyifdoesntexist uninsneveruninstall
-Source: ..\Tesseract\tessdata\eng.traineddata;        DestDir: {app}\Tesseract\tessdata;                 Flags: ignoreversion
-Source: ..\Tesseract\leptonlib.dll;                   DestDir: {app}\Tesseract;                          Flags: ignoreversion
-Source: ..\Tesseract\tesseract.exe;                   DestDir: {app}\Tesseract;                          Flags: ignoreversion
+Source: psvince.dll;                                  DestDir: {app};                                    Flags: ignoreversion; Components: main
+Source: ..\src\Changelog.txt;                         DestDir: {app};                                    Flags: ignoreversion; Components: main
+Source: ..\src\gpl.txt;                               DestDir: {app};                                    Flags: ignoreversion; Components: main
+Source: ..\src\Bin\Release\Hunspellx86.dll;           DestDir: {app};                                    Flags: ignoreversion; Components: main
+Source: ..\src\Bin\Release\Interop.QuartzTypeLib.dll; DestDir: {app};                                    Flags: ignoreversion; Components: main
+Source: ..\src\Bin\Release\NHunspell.dll;             DestDir: {app};                                    Flags: ignoreversion; Components: main
+Source: ..\src\Bin\Release\SubtitleEdit.exe;          DestDir: {app};                                    Flags: ignoreversion; Components: main
+Source: Icons\uninstall.ico;                          DestDir: {app};                                    Flags: ignoreversion; Components: main
+Source: ..\src\Bin\Release\Icons\Find.png;            DestDir: {app}\Icons;                              Flags: ignoreversion; Components: main
+Source: ..\src\Bin\Release\Icons\Help.png;            DestDir: {app}\Icons;                              Flags: ignoreversion; Components: main
+Source: ..\src\Bin\Release\Icons\New.png;             DestDir: {app}\Icons;                              Flags: ignoreversion; Components: main
+Source: ..\src\Bin\Release\Icons\Open.png;            DestDir: {app}\Icons;                              Flags: ignoreversion; Components: main
+Source: ..\src\Bin\Release\Icons\Replace.png;         DestDir: {app}\Icons;                              Flags: ignoreversion; Components: main
+Source: ..\src\Bin\Release\Icons\Save.png;            DestDir: {app}\Icons;                              Flags: ignoreversion; Components: main
+Source: ..\src\Bin\Release\Icons\SaveAs.png;          DestDir: {app}\Icons;                              Flags: ignoreversion; Components: main
+Source: ..\src\Bin\Release\Icons\Settings.png;        DestDir: {app}\Icons;                              Flags: ignoreversion; Components: main
+Source: ..\src\Bin\Release\Icons\SpellCheck.png;      DestDir: {app}\Icons;                              Flags: ignoreversion; Components: main
+Source: ..\src\Bin\Release\Icons\VideoToogle.png;     DestDir: {app}\Icons;                              Flags: ignoreversion; Components: main
+Source: ..\src\Bin\Release\Icons\VisualSync.png;      DestDir: {app}\Icons;                              Flags: ignoreversion; Components: main
+Source: ..\src\Bin\Release\Icons\WaveFormToogle.png;  DestDir: {app}\Icons;                              Flags: ignoreversion; Components: main
+#ifdef localize
+Source: ..\src\Bin\Release\Languages\bg-BG.xml;       DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
+Source: ..\src\Bin\Release\Languages\cs-CZ.xml;       DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
+Source: ..\src\Bin\Release\Languages\da-DK.xml;       DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
+Source: ..\src\Bin\Release\Languages\es-ES.xml;       DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
+Source: ..\src\Bin\Release\Languages\eu-ES.xml;       DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
+Source: ..\src\Bin\Release\Languages\fr-FR.xml;       DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
+Source: ..\src\Bin\Release\Languages\hu-HU.xml;       DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
+Source: ..\src\Bin\Release\Languages\it-IT.xml;       DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
+Source: ..\src\Bin\Release\Languages\ja-JP.xml;       DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
+Source: ..\src\Bin\Release\Languages\pl-PL.xml;       DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
+Source: ..\src\Bin\Release\Languages\ro-RO.xml;       DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
+Source: ..\src\Bin\Release\Languages\sr-Cyrl-CS.xml;  DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
+Source: ..\src\Bin\Release\Languages\sr-Latn-CS.xml;  DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
+Source: ..\src\Bin\Release\Languages\sv-SE.xml;       DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
+Source: ..\src\Bin\Release\Languages\zh-CHS.xml;      DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
+#endif
+Source: ..\Dictionaries\da_DK_names_etc.xml;          DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion onlyifdoesntexist uninsneveruninstall; Components: main
+Source: ..\Dictionaries\da_DK_user.xml;               DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion onlyifdoesntexist uninsneveruninstall; Components: main
+Source: ..\Dictionaries\dan_OCRFixReplaceList.xml;    DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion onlyifdoesntexist uninsneveruninstall; Components: main
+Source: ..\Dictionaries\en_US.aff;                    DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion; Components: main
+Source: ..\Dictionaries\en_US.dic;                    DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion; Components: main
+Source: ..\Dictionaries\en_US_names_etc.xml;          DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion onlyifdoesntexist uninsneveruninstall; Components: main
+Source: ..\Dictionaries\en_US_user.xml;               DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion onlyifdoesntexist uninsneveruninstall; Components: main
+Source: ..\Dictionaries\eng_OCRFixReplaceList.xml;    DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion onlyifdoesntexist uninsneveruninstall; Components: main
+Source: ..\Dictionaries\names_etc.xml;                DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion onlyifdoesntexist uninsneveruninstall; Components: main
+Source: ..\Tesseract\tessdata\eng.traineddata;        DestDir: {app}\Tesseract\tessdata;                 Flags: ignoreversion; Components: main
+Source: ..\Tesseract\leptonlib.dll;                   DestDir: {app}\Tesseract;                          Flags: ignoreversion; Components: main
+Source: ..\Tesseract\tesseract.exe;                   DestDir: {app}\Tesseract;                          Flags: ignoreversion; Components: main
 
 
 [Icons]
@@ -172,8 +206,8 @@ Name: {userappdata}\Microsoft\Internet Explorer\Quick Launch\Subtitle Edit; File
 
 
 [InstallDelete]
-Type: files;      Name: {userdesktop}\Subtitle Edit.lnk;          Check: NOT IsTaskSelected('desktopicon\user')   AND IsUpdate()
-Type: files;      Name: {commondesktop}\Subtitle Edit.lnk;        Check: NOT IsTaskSelected('desktopicon\common') AND IsUpdate()
+Type: files;      Name: {userdesktop}\Subtitle Edit.lnk;   Check: NOT IsTaskSelected('desktopicon\user')   AND IsUpdate()
+Type: files;      Name: {commondesktop}\Subtitle Edit.lnk; Check: NOT IsTaskSelected('desktopicon\common') AND IsUpdate()
 
 Type: files;      Name: {userappdata}\Subtitle Edit\Settings.xml; Tasks: reset_settings
 
@@ -188,6 +222,23 @@ Type: files;      Name: {app}\Dictionaries\en_US_user.xml
 Type: files;      Name: {app}\Dictionaries\eng_OCRFixReplaceList.xml
 Type: files;      Name: {app}\Dictionaries\names_etc.xml
 Type: dirifempty; Name: {app}\Dictionaries
+
+Type: files;      Name: {app}\Languages\bg-BG.xml;      Check: NOT IsComponentSelected('translations') AND IsUpdate()
+Type: files;      Name: {app}\Languages\cs-CZ.xml;      Check: NOT IsComponentSelected('translations') AND IsUpdate()
+Type: files;      Name: {app}\Languages\da-DK.xml;      Check: NOT IsComponentSelected('translations') AND IsUpdate()
+Type: files;      Name: {app}\Languages\es-ES.xml;      Check: NOT IsComponentSelected('translations') AND IsUpdate()
+Type: files;      Name: {app}\Languages\eu-ES.xml;      Check: NOT IsComponentSelected('translations') AND IsUpdate()
+Type: files;      Name: {app}\Languages\fr-FR.xml;      Check: NOT IsComponentSelected('translations') AND IsUpdate()
+Type: files;      Name: {app}\Languages\hu-HU.xml;      Check: NOT IsComponentSelected('translations') AND IsUpdate()
+Type: files;      Name: {app}\Languages\it-IT.xml;      Check: NOT IsComponentSelected('translations') AND IsUpdate()
+Type: files;      Name: {app}\Languages\ja-JP.xml;      Check: NOT IsComponentSelected('translations') AND IsUpdate()
+Type: files;      Name: {app}\Languages\pl-PL.xml;      Check: NOT IsComponentSelected('translations') AND IsUpdate()
+Type: files;      Name: {app}\Languages\ro-RO.xml;      Check: NOT IsComponentSelected('translations') AND IsUpdate()
+Type: files;      Name: {app}\Languages\sr-Cyrl-CS.xml; Check: NOT IsComponentSelected('translations') AND IsUpdate()
+Type: files;      Name: {app}\Languages\sr-Latn-CS.xml; Check: NOT IsComponentSelected('translations') AND IsUpdate()
+Type: files;      Name: {app}\Languages\sv-SE.xml;      Check: NOT IsComponentSelected('translations') AND IsUpdate()
+Type: files;      Name: {app}\Languages\zh-CHS.xml;     Check: NOT IsComponentSelected('translations') AND IsUpdate()
+Type: dirifempty; Name: {app}\Languages;                Check: NOT IsComponentSelected('translations') AND IsUpdate()
 
 Type: files;      Name: {app}\tessnet2_32.dll
 Type: files;      Name: {app}\TessData\eng.DangAmbigs
@@ -315,6 +366,7 @@ begin
         DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Settings.xml'));
       end;
 
+      RemoveDir(ExpandConstant('{app}\Languages'));
       RemoveDir(ExpandConstant('{app}\WaveForms'));
       RemoveDir(ExpandConstant('{app}'));
       RemoveDir(ExpandConstant('{userappdata}\Subtitle Edit\WaveForms'));
