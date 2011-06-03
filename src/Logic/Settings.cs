@@ -259,7 +259,7 @@ namespace Nikse.SubtitleEdit.Logic
         public int SmallDelayMilliseconds { get; set; }
         public int LargeDelayMilliseconds { get; set; }
         public bool ShowOriginalAsPreviewIfAvailable { get; set; }
-        public bool GenerateSpectogram { get; set; }
+        public bool GenerateSpectrogram { get; set; }
 
         public GeneralSettings()
         {
@@ -783,9 +783,9 @@ namespace Nikse.SubtitleEdit.Logic
             subNode = node.SelectSingleNode("ShowOriginalAsPreviewIfAvailable");
             if (subNode != null)
                 settings.General.ShowOriginalAsPreviewIfAvailable = Convert.ToBoolean(subNode.InnerText);
-            subNode = node.SelectSingleNode("GenerateSpectogram");
+            subNode = node.SelectSingleNode("GenerateSpectrogram");
             if (subNode != null)
-                settings.General.GenerateSpectogram = Convert.ToBoolean(subNode.InnerText);
+                settings.General.GenerateSpectrogram = Convert.ToBoolean(subNode.InnerText);
            
             settings.Tools = new Nikse.SubtitleEdit.Logic.ToolsSettings();
             node = doc.DocumentElement.SelectSingleNode("Tools");
@@ -1198,7 +1198,7 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("SmallDelayMilliseconds", settings.General.SmallDelayMilliseconds.ToString());
             textWriter.WriteElementString("LargeDelayMilliseconds", settings.General.LargeDelayMilliseconds.ToString());
             textWriter.WriteElementString("ShowOriginalAsPreviewIfAvailable", settings.General.ShowOriginalAsPreviewIfAvailable.ToString());
-            textWriter.WriteElementString("GenerateSpectogram", settings.General.GenerateSpectogram.ToString());
+            textWriter.WriteElementString("GenerateSpectrogram", settings.General.GenerateSpectrogram.ToString());
             textWriter.WriteEndElement();
 
             textWriter.WriteStartElement("Tools", "");

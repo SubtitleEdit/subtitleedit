@@ -132,6 +132,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             groupBoxImagePalette.Text = language.ImagePalette;
             checkBoxCustomFourColors.Text = language.UseCustomColors;
+            checkBoxBackgroundTransparent.Text = language.Transparent;
             checkBoxPatternTransparent.Text = language.Transparent;
             checkBoxEmphasis1Transparent.Text = language.Transparent;
             checkBoxEmphasis2Transparent.Text = language.Transparent;
@@ -653,10 +654,13 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (checkBoxCustomFourColors.Checked)
             {
+                Color background = pictureBoxBackground.BackColor;
                 Color pattern = pictureBoxPattern.BackColor;
                 Color emphasis1 = pictureBoxEmphasis1.BackColor;
                 Color emphasis2 = pictureBoxEmphasis2.BackColor;
 
+                if (checkBoxBackgroundTransparent.Checked)
+                    background = Color.Transparent;
                 if (checkBoxPatternTransparent.Checked)
                     pattern = Color.Transparent;
                 if (checkBoxEmphasis1Transparent.Checked)
@@ -664,7 +668,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (checkBoxEmphasis2Transparent.Checked)
                     emphasis2 = Color.Transparent;
 
-                return _vobSubMergedPackist[index].SubPicture.GetBitmap(null, Color.Transparent, pattern, emphasis1, emphasis2);
+                return _vobSubMergedPackist[index].SubPicture.GetBitmap(null, background, pattern, emphasis1, emphasis2);
             }
             return _vobSubMergedPackist[index].SubPicture.GetBitmap(_palette, Color.Transparent, Color.Black, Color.White, Color.Black);
         }
@@ -2025,6 +2029,7 @@ namespace Nikse.SubtitleEdit.Forms
                 pictureBoxPattern.BackColor = Color.White;
                 pictureBoxEmphasis1.BackColor = Color.Black;
                 pictureBoxEmphasis2.BackColor = Color.Black;
+                checkBoxBackgroundTransparent.Enabled = true;
                 checkBoxPatternTransparent.Enabled = true;
                 checkBoxEmphasis1Transparent.Enabled = true;
                 checkBoxEmphasis2Transparent.Enabled = true;
@@ -2034,6 +2039,7 @@ namespace Nikse.SubtitleEdit.Forms
                 pictureBoxPattern.BackColor = Color.Gray;
                 pictureBoxEmphasis1.BackColor = Color.Gray;
                 pictureBoxEmphasis2.BackColor = Color.Gray;
+                checkBoxBackgroundTransparent.Enabled = false;
                 checkBoxPatternTransparent.Enabled = false;
                 checkBoxEmphasis1Transparent.Enabled = false;
                 checkBoxEmphasis2Transparent.Enabled = false;
@@ -2166,5 +2172,6 @@ namespace Nikse.SubtitleEdit.Forms
             Text = Configuration.Settings.Language.VobSubOcr.TitleBluRay;
             Text += " - " + Path.GetFileName(_bdnFileName);
         }
+
     }
 }

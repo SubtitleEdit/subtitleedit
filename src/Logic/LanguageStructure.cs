@@ -88,6 +88,7 @@
             public string VlcMediaPlayerNotFound { get; set; }
             public string GoToVlcMediaPlayerHomePage { get; set; }
             public string GeneratingPeakFile { get; set; }
+            public string GeneratingSpectrogram { get; set; }
             public string ExtractingSeconds { get; set; }
             public string ExtractingMinutes { get; set; }
         }

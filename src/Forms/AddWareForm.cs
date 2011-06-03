@@ -112,9 +112,6 @@ namespace Nikse.SubtitleEdit.Forms
                 buttonRipWave.Enabled = true;
                 return;
             }
-            labelProgress.Text = Configuration.Settings.Language.AddWaveForm.GeneratingPeakFile;
-            this.Refresh();
-            labelPleaseWait.Visible = false;
             ReadWaveFile(targetFile);
             labelProgress.Text = string.Empty;
             File.Delete(targetFile);
@@ -128,14 +125,20 @@ namespace Nikse.SubtitleEdit.Forms
             int sampleRate = 126;
             while (!(waveFile.Header.SampleRate % sampleRate == 0) && sampleRate < 1000)
                 sampleRate++; // old sample-rate / new sample-rate must have rest = 0
+
+            labelProgress.Text = Configuration.Settings.Language.AddWaveForm.GeneratingPeakFile;
+            this.Refresh();
             waveFile.GeneratePeakSamples(sampleRate); // samples per second - SampleRate 
 
-            if (Configuration.Settings.General.GenerateSpectogram)
+            if (Configuration.Settings.General.GenerateSpectrogram)
             {
+                labelProgress.Text = Configuration.Settings.Language.AddWaveForm.GeneratingSpectrogram;
+                this.Refresh();
                 System.IO.Directory.CreateDirectory(_spectrumDirectory);
                 waveFile.GenerateFourierData(256, _spectrumDirectory);
             }
-                                               
+            labelPleaseWait.Visible = false;
+
             WavePeak = waveFile;
             waveFile.Close();
         }
