@@ -313,6 +313,10 @@ namespace Nikse.SubtitleEdit.Logic
             AllowEditOfOriginalSubtitle = false;
             PromptDeleteLines = true;
             Undocked = false;
+            UndockedVideoPosition = "-32000;-32000";
+            UndockedWaveformPosition = "-32000;-32000";
+            UndockedVideoControlsPosition = "-32000;-32000";
+
             SmallDelayMilliseconds = 500;
             LargeDelayMilliseconds = 5000;
         }

@@ -88,6 +88,7 @@ namespace Nikse.SubtitleEdit.Forms
         bool _cancelWordSpellCheck = false;
 
         Keys _toggleVideoDockUndock = Keys.None;
+        bool _videoLoadedGoToSubPosAndPause = false;
 
         private bool AutoRepeatContinueOn
         {
@@ -245,6 +246,7 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             OpenSubtitle(fileName, null, Configuration.Settings.RecentFiles.Files[0].VideoFileName, Configuration.Settings.RecentFiles.Files[0].OriginalFileName);
                             SetRecentIndecies(fileName);
+                            DoEventsPlusGotoSubPosAndPause();
                         }
                     }
                 }
@@ -765,6 +767,8 @@ namespace Nikse.SubtitleEdit.Forms
             sortTextMaxLineLengthToolStripMenuItem.Text = _language.Menu.Tools.TextSingleLineMaximumLength;
             sortTextTotalLengthToolStripMenuItem.Text = _language.Menu.Tools.TextTotalLength;
             sortTextNumberOfLinesToolStripMenuItem.Text = _language.Menu.Tools.TextNumberOfLines;
+            toolStripMenuItemShowOriginalInPreview.Text = _language.Menu.Tools.ShowOriginalTextInAudioAndVideoPreview;
+            toolStripMenuItemMakeEmptyFromCurrent.Text = _language.Menu.Tools.MakeNewEmptyTranslationFromCurrentSubtitle;
             splitToolStripMenuItem.Text = _language.Menu.Tools.SplitSubtitle;
             appendTextVisuallyToolStripMenuItem.Text = _language.Menu.Tools.AppendSubtitle;
 
@@ -1545,8 +1549,28 @@ namespace Nikse.SubtitleEdit.Forms
                 else
                     OpenSubtitle(rfe.FileName, null, rfe.VideoFileName, rfe.OriginalFileName);
                 SetRecentIndecies(item.Text);
+                DoEventsPlusGotoSubPosAndPause();
             }
         }
+
+        private void DoEventsPlusGotoSubPosAndPause()
+        {
+            if (!string.IsNullOrEmpty(_videoFileName))
+            {
+                //for (int i = 0; i < 50; i++)
+                //{
+                //    Application.DoEvents();
+                //    System.Threading.Thread.Sleep(10);
+                //}
+                //GotoSubPositionAndPause();
+                _videoLoadedGoToSubPosAndPause = true;
+            }
+            else
+            {
+                mediaPlayer.SubtitleText = string.Empty;
+            }
+        }
+
 
         private void SetRecentIndecies(string fileName)
         {
@@ -4718,12 +4742,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (!string.IsNullOrEmpty(_fileName))
                     Configuration.Settings.RecentFiles.Add(_fileName, FirstVisibleIndex, FirstSelectedIndex, _videoFileName, _subtitleAlternateFileName);
 
-                if (_videoPlayerUnDocked != null && !_videoPlayerUnDocked.IsDisposed)
-                    Configuration.Settings.General.UndockedVideoPosition = _videoPlayerUnDocked.Left.ToString() + ";" + _videoPlayerUnDocked.Top.ToString() + ";" + _videoPlayerUnDocked.Width + ";" + _videoPlayerUnDocked.Height;
-                if (_waveFormUnDocked != null && !_waveFormUnDocked.IsDisposed)
-                    Configuration.Settings.General.UndockedWaveformPosition = _waveFormUnDocked.Left.ToString() + ";" + _waveFormUnDocked.Top.ToString() + ";" + _waveFormUnDocked.Width + ";" + _waveFormUnDocked.Height;
-                if (_videoControlsUnDocked != null && !_videoControlsUnDocked.IsDisposed)
-                    Configuration.Settings.General.UndockedVideoControlsPosition = _videoControlsUnDocked.Left.ToString() + ";" + _videoControlsUnDocked.Top.ToString() + ";" + _videoControlsUnDocked.Width + ";" + _videoControlsUnDocked.Height;
+                SaveUndockedPositions();
 
                 Configuration.Settings.Save();
 
@@ -4733,6 +4752,16 @@ namespace Nikse.SubtitleEdit.Forms
                 }
 
             }
+        }
+
+        private void SaveUndockedPositions()
+        {
+            if (_videoPlayerUnDocked != null && !_videoPlayerUnDocked.IsDisposed)
+                Configuration.Settings.General.UndockedVideoPosition = _videoPlayerUnDocked.Left.ToString() + ";" + _videoPlayerUnDocked.Top.ToString() + ";" + _videoPlayerUnDocked.Width + ";" + _videoPlayerUnDocked.Height;
+            if (_waveFormUnDocked != null && !_waveFormUnDocked.IsDisposed)
+                Configuration.Settings.General.UndockedWaveformPosition = _waveFormUnDocked.Left.ToString() + ";" + _waveFormUnDocked.Top.ToString() + ";" + _waveFormUnDocked.Width + ";" + _waveFormUnDocked.Height;
+            if (_videoControlsUnDocked != null && !_videoControlsUnDocked.IsDisposed)
+                Configuration.Settings.General.UndockedVideoControlsPosition = _videoControlsUnDocked.Left.ToString() + ";" + _videoControlsUnDocked.Top.ToString() + ";" + _videoControlsUnDocked.Width + ";" + _videoControlsUnDocked.Height;
         }
 
         private void ButtonUnBreakClick(object sender, EventArgs e)
@@ -7005,6 +7034,13 @@ namespace Nikse.SubtitleEdit.Forms
             timer1.Start();
 
             trackBarWaveFormPosition.Maximum = (int)mediaPlayer.Duration;
+
+            if (_videoLoadedGoToSubPosAndPause)
+            {
+                Application.DoEvents();
+                _videoLoadedGoToSubPosAndPause = false;
+                GotoSubPositionAndPause();
+            }
         }
 
         void VideoEnded(object sender, EventArgs e)
@@ -8055,11 +8091,11 @@ namespace Nikse.SubtitleEdit.Forms
             else
                 SubtitleListview1.Focus();
 
+            SetPositionFromXYString(Configuration.Settings.General.UndockedVideoPosition, "VideoPlayerUnDocked");
+            SetPositionFromXYString(Configuration.Settings.General.UndockedWaveformPosition, "WaveFormUnDocked");
+            SetPositionFromXYString(Configuration.Settings.General.UndockedVideoControlsPosition, "VideoControlsUndocked");
             if (Configuration.Settings.General.Undocked && Configuration.Settings.General.StartRememberPositionAndSize)
             {
-                SetPositionFromXYString(Configuration.Settings.General.UndockedVideoPosition, "VideoPlayerUnDocked");
-                SetPositionFromXYString(Configuration.Settings.General.UndockedWaveformPosition, "WaveFormUnDocked");
-                SetPositionFromXYString(Configuration.Settings.General.UndockedVideoControlsPosition, "VideoControlsUndocked");
                 Configuration.Settings.General.Undocked = false;
                 undockVideoControlsToolStripMenuItem_Click(null, null);
             }
@@ -9367,8 +9403,19 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void UnDockVideoPlayer()
         {
+            bool firstUndock = _videoPlayerUnDocked != null && !_videoPlayerUnDocked.IsDisposed;
+
             _videoPlayerUnDocked = new VideoPlayerUnDocked(this, _formPositionsAndSizes, mediaPlayer);
             _formPositionsAndSizes.SetPositionAndSize(_videoPlayerUnDocked);
+
+            if (firstUndock)
+            {
+                Configuration.Settings.General.UndockedVideoPosition = _videoPlayerUnDocked.Left.ToString() + ";" + _videoPlayerUnDocked.Top.ToString() + ";" + _videoPlayerUnDocked.Width + ";" + _videoPlayerUnDocked.Height;
+                //if (_waveFormUnDocked != null && !_waveFormUnDocked.IsDisposed)
+                //    Configuration.Settings.General.UndockedWaveformPosition = _waveFormUnDocked.Left.ToString() + ";" + _waveFormUnDocked.Top.ToString() + ";" + _waveFormUnDocked.Width + ";" + _waveFormUnDocked.Height;
+                //if (_videoControlsUnDocked != null && !_videoControlsUnDocked.IsDisposed)
+                //    Configuration.Settings.General.UndockedVideoControlsPosition = _videoControlsUnDocked.Left.ToString() + ";" + _videoControlsUnDocked.Top.ToString() + ";" + _videoControlsUnDocked.Width + ";" + _videoControlsUnDocked.Height;
+            }
 
             Control control = null;
             if (splitContainer1.Panel2.Controls.Count == 0)
@@ -9525,6 +9572,8 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (!Configuration.Settings.General.Undocked)
                 return;
+
+            SaveUndockedPositions();
 
             Configuration.Settings.General.Undocked = false;
 

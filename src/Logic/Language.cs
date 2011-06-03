@@ -778,6 +778,8 @@ namespace Nikse.SubtitleEdit.Logic
                         TextSingleLineMaximumLength = "Text - single line max. length",
                         TextTotalLength = "Text - total length",
                         TextNumberOfLines = "Text - number of lines",
+                        ShowOriginalTextInAudioAndVideoPreview = "Show original text in audio/video previews",
+                        MakeNewEmptyTranslationFromCurrentSubtitle = "Make new empty translation from current subtitle",
                         SplitSubtitle = "Split subtitle...",
                         AppendSubtitle = "Append subtitle...",
                     },
