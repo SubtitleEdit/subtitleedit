@@ -63,6 +63,8 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     if (string.Compare(cultureName, "zh-CHS", true) == 0)
                         comboBoxLanguages.Items.Add(new CultureListItem(new CultureInfo(0x4)));
+                    else if (string.Compare(cultureName, "zh-CHT", true) == 0)
+                        comboBoxLanguages.Items.Add(new CultureListItem(new CultureInfo(0x7C04)));
                     else
                         comboBoxLanguages.Items.Add(new CultureListItem(CultureInfo.CreateSpecificCulture(cultureName)));
                 }

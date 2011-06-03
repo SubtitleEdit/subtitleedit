@@ -258,6 +258,7 @@ namespace Nikse.SubtitleEdit.Logic
         public bool WaveFormCenter { get; set; }
         public int SmallDelayMilliseconds { get; set; }
         public int LargeDelayMilliseconds { get; set; }
+        public bool ShowOriginalAsPreviewIfAvailable { get; set; }
 
         public GeneralSettings()
         {
@@ -409,8 +410,7 @@ namespace Nikse.SubtitleEdit.Logic
         public string MainEditGoToLineNumber { get; set; }
         public string MainToolsFixCommonErrors { get; set; }
         public string MainVideoShowHideVideo { get; set; }
-        public string MainVideoUndockVideoControls { get; set; }
-        public string MainVideoReDockVideoControls { get; set; }
+        public string MainVideoToggleVideoControls { get; set; }
         public string MainSynchronizationAdjustTimes { get; set; }                
         public string MainListViewItalic { get; set; }
         public string MainTextBoxItalic { get; set; }        
@@ -775,6 +775,9 @@ namespace Nikse.SubtitleEdit.Logic
             subNode = node.SelectSingleNode("LargeDelayMilliseconds");
             if (subNode != null)
                 settings.General.LargeDelayMilliseconds = Convert.ToInt32((subNode.InnerText));
+            subNode = node.SelectSingleNode("ShowOriginalAsPreviewIfAvailable");
+            if (subNode != null)
+                settings.General.ShowOriginalAsPreviewIfAvailable = Convert.ToBoolean(subNode.InnerText);
            
             settings.Tools = new Nikse.SubtitleEdit.Logic.ToolsSettings();
             node = doc.DocumentElement.SelectSingleNode("Tools");
@@ -1065,13 +1068,9 @@ namespace Nikse.SubtitleEdit.Logic
                 subNode = node.SelectSingleNode("MainVideoShowHideVideo");
                 if (subNode != null)
                     settings.Shortcuts.MainVideoShowHideVideo = subNode.InnerText;
-                subNode = node.SelectSingleNode("MainVideoUndockVideoControls");
+                subNode = node.SelectSingleNode("MainVideoToggleVideoControls");
                 if (subNode != null)
-                    settings.Shortcuts.MainVideoUndockVideoControls = subNode.InnerText;
-                subNode = node.SelectSingleNode("MainVideoReDockVideoControls");
-                if (subNode != null)
-                    settings.Shortcuts.MainVideoReDockVideoControls = subNode.InnerText;
-
+                    settings.Shortcuts.MainVideoToggleVideoControls = subNode.InnerText;
                 subNode = node.SelectSingleNode("MainSynchronizationAdjustTimes");
                 if (subNode != null)
                     settings.Shortcuts.MainSynchronizationAdjustTimes = subNode.InnerText;               
@@ -1190,6 +1189,7 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("WaveFormCenter", settings.General.WaveFormCenter.ToString());
             textWriter.WriteElementString("SmallDelayMilliseconds", settings.General.SmallDelayMilliseconds.ToString());
             textWriter.WriteElementString("LargeDelayMilliseconds", settings.General.LargeDelayMilliseconds.ToString());
+            textWriter.WriteElementString("ShowOriginalAsPreviewIfAvailable", settings.General.ShowOriginalAsPreviewIfAvailable.ToString());            
             textWriter.WriteEndElement();
 
             textWriter.WriteStartElement("Tools", "");
@@ -1310,8 +1310,7 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("MainEditGoToLineNumber", settings.Shortcuts.MainEditGoToLineNumber);
             textWriter.WriteElementString("MainToolsFixCommonErrors", settings.Shortcuts.MainToolsFixCommonErrors);
             textWriter.WriteElementString("MainVideoShowHideVideo", settings.Shortcuts.MainVideoShowHideVideo);
-            textWriter.WriteElementString("MainVideoUndockVideoControls", settings.Shortcuts.MainVideoUndockVideoControls);
-            textWriter.WriteElementString("MainVideoReDockVideoControls", settings.Shortcuts.MainVideoReDockVideoControls);
+            textWriter.WriteElementString("MainVideoToggleVideoControls", settings.Shortcuts.MainVideoToggleVideoControls);
             textWriter.WriteElementString("MainSynchronizationAdjustTimes", settings.Shortcuts.MainSynchronizationAdjustTimes);            
             textWriter.WriteElementString("MainListViewItalic", settings.Shortcuts.MainEditGoToLineNumber);
             textWriter.WriteElementString("MainTextBoxItalic", settings.Shortcuts.MainTextBoxItalic);                        
