@@ -11,6 +11,7 @@ namespace Nikse.SubtitleEdit.Forms
         public string SourceVideoFileName { get; private set; }
         private bool _cancel = false;
         private string _wavFileName = null;
+        private string _spectrumDirectory;
 
         public AddWareForm()
         {
@@ -21,7 +22,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         public WavePeakGenerator WavePeak { get; private set; }
 
-        public void Initialize(string videoFile)
+        public void Initialize(string videoFile, string spectrumDirectory)
         {
             Text = Configuration.Settings.Language.AddWaveForm.Title;
             buttonRipWave.Text = Configuration.Settings.Language.AddWaveForm.GenerateWaveFormData;
@@ -29,6 +30,7 @@ namespace Nikse.SubtitleEdit.Forms
             labelVideoFileName.Text = videoFile;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
             labelSourcevideoFile.Text = Configuration.Settings.Language.AddWaveForm.SourceVideoFile;
+            _spectrumDirectory = spectrumDirectory;
         }
 
         private void buttonRipWave_Click(object sender, EventArgs e)
@@ -127,6 +129,12 @@ namespace Nikse.SubtitleEdit.Forms
             while (!(waveFile.Header.SampleRate % sampleRate == 0) && sampleRate < 1000)
                 sampleRate++; // old sample-rate / new sample-rate must have rest = 0
             waveFile.GeneratePeakSamples(sampleRate); // samples per second - SampleRate 
+
+            if (Configuration.Settings.General.GenerateSpectogram)
+            {
+                System.IO.Directory.CreateDirectory(_spectrumDirectory);
+                waveFile.GenerateFourierData(256, _spectrumDirectory);
+            }
                                                
             WavePeak = waveFile;
             waveFile.Close();

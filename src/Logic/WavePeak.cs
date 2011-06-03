@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Drawing;
 using System.IO;
+using System.Text;
 
 namespace Nikse.SubtitleEdit.Logic
 {
@@ -350,5 +351,181 @@ namespace Nikse.SubtitleEdit.Logic
             if (_stream != null)
                 _stream.Close();
         }
+
+        //////////////////////////////////////// SPECTRUM ///////////////////////////////////////////////////////////
+
+        public List<Bitmap> GenerateFourierData(int NFFT, string spectrumDirectory)
+        {
+            List<Bitmap> bitmaps = new List<Bitmap>();
+
+            // setup fourier transformation
+            Fourier f = new Fourier(NFFT, true);
+            double divider = 2.0;
+            for (int k = 0; k < Header.BitsPerSample - 2; k++)
+                divider *= 2;
+
+            // determine how to read sample values
+            ReadSampleDataValueDelegate readSampleDataValue = GetSampleDataRerader();
+
+            // load data
+            _data = new byte[Header.DataChunkSize];
+            _stream.Position = Header.DataStartPosition;
+            int bytesRead = _stream.Read(_data, 0, _data.Length);
+
+            // set up one column of the spectrogram
+            Color[] palette = new Color[NFFT];
+            for (int colorIndex = 0; colorIndex < NFFT; colorIndex++)
+                palette[colorIndex] = PaletteValue(colorIndex, NFFT);
+
+            // read sample values
+            DataMinValue = int.MaxValue;
+            DataMaxValue = int.MinValue;
+            var samples = new List<int>();
+            int index = 0;
+            int sampleSize = NFFT * 1024; // 1024 = bitmap width            
+            int count = 0;
+            while (index + Header.NumberOfChannels < Header.DataChunkSize)
+            {
+                int value = 0;
+                for (int channelNumber = 0; channelNumber < Header.NumberOfChannels; channelNumber++)
+                {
+                    value += readSampleDataValue.Invoke(ref index);
+                }
+                value = value / Header.NumberOfChannels;
+                if (value < DataMinValue)
+                    DataMinValue = value;
+                if (value > DataMaxValue)
+                    DataMaxValue = value;
+                samples.Add(value);
+
+                if (samples.Count == sampleSize)
+                {
+                    var samplesAsReal = new double[sampleSize];
+                    for (int k = 0; k < sampleSize; k++)
+                        samplesAsReal[k] = samples[k] / divider;
+                    Bitmap bmp = DrawSpectrogram(NFFT, samplesAsReal, f, palette);
+                    bmp.Save(Path.Combine(spectrumDirectory, count + ".gif"), System.Drawing.Imaging.ImageFormat.Gif);
+                    bitmaps.Add(bmp); // save serialized gif instead????
+                    samples = new List<int>();
+                    count++;
+                }
+            }
+
+            if (samples.Count > 0)
+            {
+                var samplesAsReal = new double[sampleSize];
+                for (int k = 0; k < sampleSize && k < samples.Count; k++)
+                    samplesAsReal[k] = samples[k] / divider;
+                Bitmap bmp = DrawSpectrogram(NFFT, samplesAsReal, f, palette);
+                bmp.Save(Path.Combine(spectrumDirectory, count + ".gif"), System.Drawing.Imaging.ImageFormat.Gif);
+                bitmaps.Add(bmp); // save serialized gif instead????
+            }
+
+            return bitmaps;
+        }
+
+        private Bitmap DrawSpectrogram(int NFFT, double[] samples, Fourier f, Color[] palette)
+        {
+            int NumSamples = samples.Length;
+
+            int Overlap = 0;
+            int ColIncrement = NFFT * (1 - Overlap);
+
+            int Numcols = NumSamples / ColIncrement;
+            // make sure we don't step beyond the end of the recording
+            while ((Numcols - 1) * ColIncrement + NFFT > NumSamples)
+                Numcols--;
+
+            double[] real = new double[NFFT];
+            double[] imag = new double[NFFT];
+            double[] magnitude = new double[NFFT / 2];
+            Bitmap bmp = new Bitmap(Numcols, NFFT / 2);
+            for (int col = 0; col <= Numcols - 1; col++)
+            {
+                // read a segment of the recorded signal
+                for (int c = 0; c <= NFFT - 1; c++)
+                {
+                    imag[c] = 0;
+                    real[c] = samples[col * ColIncrement + c] * Fourier.Hanning(NFFT, c);
+                }
+
+                // transform to the frequency domain
+                f.FourierTransform(real, imag);
+
+                // and compute the magnitude spectrum
+                f.MagnitudeSpectrum(real, imag, Fourier.W0Hanning, magnitude);
+
+                // Draw
+                for (int newY = 0; newY < NFFT / 2 - 1; newY++)
+                {
+                    int colorIndex = MapToPixelIndex(magnitude[newY], 100, 255);
+                    bmp.SetPixel(col, (NFFT / 2 - 1) - newY, palette[colorIndex]);
+                }
+            }
+            return bmp;
+        }     
+
+        public static Color PaletteValue(int x, int range)
+        {
+            double G = 0;
+            double R = 0;
+            double b = 0;
+            double r4 = 0;
+            double U = 0;
+
+            r4 = range / 4.0;
+            U = 255;
+
+            if (x < r4)
+            {
+                b = x / r4;
+                G = 0;
+                R = 0;
+            }
+            else if (x < 2 * r4)
+            {
+                b = (1 - (x - r4) / r4);
+                G = 1 - b;
+                R = 0;
+            }
+            else if (x < 3 * r4)
+            {
+                b = 0;
+                G = (2 - (x - r4) / r4);
+                R = 1 - G;
+            }
+            else
+            {
+                b = (x - 3 * r4) / r4;
+                G = 0;
+                R = 1 - b;
+            }
+
+            R = ((int)(System.Math.Sqrt(R) * U)) & 0xff;
+            G = ((int)(System.Math.Sqrt(G) * U)) & 0xff;
+            b = ((int)(System.Math.Sqrt(b) * U)) & 0xff;
+
+            return Color.FromArgb((int)R, (int)G, (int)b);
+        }
+
+        /// <summary>
+        /// Maps magnitudes in the range [-rangedB .. 0] dB to palette index values in the range [0 .. rangeIndex-1]
+        /// and computes and returns the index value which corresponds to passed-in magnitude 
+        /// </summary>
+        private int MapToPixelIndex(double magnitude, double rangedB, int rangeIndex)
+        {
+            const double Log10 = 2.30258509299405;
+
+            double levelIndB;
+            if (magnitude == 0)
+                return 0;
+
+            levelIndB = 20 * Math.Log(magnitude) / Log10;
+            if (levelIndB < -rangedB)
+                return 0;
+
+            return (int)(rangeIndex * (levelIndB + rangedB) / rangedB);
+        }
+
     }
 }
