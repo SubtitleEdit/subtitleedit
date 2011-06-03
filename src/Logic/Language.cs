@@ -163,6 +163,7 @@ namespace Nikse.SubtitleEdit.Logic
                 VlcMediaPlayerNotFound = "Subtitle Edit needs VLC media player 1.1.x or newer for extracting audio data.",
                 GoToVlcMediaPlayerHomePage = "Do you want to go to the VLC media player home page?",
                 GeneratingPeakFile = "Generating peak file...",
+                GeneratingSpectrogram = "Generating spectrogram...",
                 ExtractingSeconds = "Extracting audio: {0:0.0} seconds",
                 ExtractingMinutes = "Extracting audio: {0}.{1:00} minutes",
             };
