@@ -602,6 +602,7 @@
             public string BluRaySupFiles { get; set; }
             public string BeforeImportingVobSubFile { get; set; }
             public string BeforeImportingBluRaySupFile { get; set; }
+            public string BeforeImportingBdnXml { get; set; }
             public string BeforeShowSelectedLinesEarlierLater { get; set; }
             public string ShowSelectedLinesEarlierLaterPerformed { get; set; }
             public string DoubleWordsViaRegEx { get; set; }
@@ -1137,6 +1138,7 @@
             public string TextBox { get; set; }
             public string UpdateShortcut { get; set; }
             public string ShortcutIsNotValid { get; set; }
+            public string ToggleDockUndockOfVideoControls { get; set; }
         }
 
         public class ShowEarlierLater

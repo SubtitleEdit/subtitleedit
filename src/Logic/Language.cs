@@ -675,6 +675,7 @@ namespace Nikse.SubtitleEdit.Logic
                 BluRaySupFiles = "Blu-ray .sup files",
                 BeforeImportingVobSubFile = "Before importing VobSub subtitle",
                 BeforeImportingBluRaySupFile = "Before importing Blu-ray sup file",
+                BeforeImportingBdnXml = "Before importing BDN xml file",
                 BeforeShowSelectedLinesEarlierLater = "Before show selected lines earlier/later",
                 ShowSelectedLinesEarlierLaterPerformed = "Show earlier/later performed on selected lines",
                 DoubleWordsViaRegEx = "Double words via regex {0}",
@@ -1203,6 +1204,7 @@ can edit in same subtitle file (collaboration)",
                 TextBox = "Textbox",
                 UpdateShortcut = "Update",
                 ShortcutIsNotValid = "Shortcut is not valid: {0}",
+                ToggleDockUndockOfVideoControls = "Toggle dock/undock of video controls",
             };
 
             ShowEarlierLater = new LanguageStructure.ShowEarlierLater

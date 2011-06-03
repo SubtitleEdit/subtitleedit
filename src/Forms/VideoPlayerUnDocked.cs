@@ -1,6 +1,6 @@
-﻿using System.Windows.Forms;
+﻿using System.Drawing;
+using System.Windows.Forms;
 using Nikse.SubtitleEdit.Logic;
-using System.Drawing;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -26,12 +26,11 @@ namespace Nikse.SubtitleEdit.Forms
             this.Icon = (Icon)_mainForm.Icon.Clone();
             _positionsAndSizes = positionsAndSizes;
             _videoPlayerContainer = videoPlayerContainer;
-            _redockKeys = _mainForm.GetKeys(Configuration.Settings.Shortcuts.MainVideoReDockVideoControls);
+            _redockKeys = _mainForm.GetKeys(Configuration.Settings.Shortcuts.MainVideoToggleVideoControls);
         }
 
         public VideoPlayerUnDocked()
         {
-            // TODO: Complete member initialization
         }
 
         private void VideoPlayerUnDocked_FormClosing(object sender, FormClosingEventArgs e)
@@ -55,6 +54,10 @@ namespace Nikse.SubtitleEdit.Forms
                 else if (WindowState == FormWindowState.Normal)
                     WindowState = FormWindowState.Maximized;
                 e.SuppressKeyPress = true;
+            }
+            else if (e.Modifiers == Keys.Alt && e.KeyCode == Keys.A)
+            {
+                //TODO: Resize to video size...
             }
             else if (_redockKeys == e.KeyData)
             {
