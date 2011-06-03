@@ -703,6 +703,8 @@
                     public string TextSingleLineMaximumLength { get; set; }
                     public string TextTotalLength { get; set; }
                     public string TextNumberOfLines { get; set; }
+                    public string ShowOriginalTextInAudioAndVideoPreview { get; set; }
+                    public string MakeNewEmptyTranslationFromCurrentSubtitle { get; set; }
                     public string SplitSubtitle { get; set; }
                     public string AppendSubtitle { get; set; }
                 }

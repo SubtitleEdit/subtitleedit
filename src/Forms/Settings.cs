@@ -796,7 +796,7 @@ namespace Nikse.SubtitleEdit.Forms
                     string text = node.Text.Substring(0, node.Text.IndexOf("[")).Trim();
                     if (text == Configuration.Settings.Language.Main.Menu.Video.ShowHideVideo.Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.MainVideoShowHideVideo = GetShortcut(node.Text);
-                    else if (text == Configuration.Settings.Language.Main.Menu.Video.UnDockVideoControls.Replace("&", string.Empty))
+                    else if (text == Configuration.Settings.Language.Settings.ToggleDockUndockOfVideoControls.Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.MainVideoToggleVideoControls = GetShortcut(node.Text);
                 }
             }

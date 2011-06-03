@@ -7,6 +7,8 @@ Subtitle Edit Changelog
    * Most important shortcuts in Options -> Settings
    * Export bdn-xml/images + import/ocr bdn-xml/images
    * Added "Point sync via other subtitle" (thx ioannis)
+   * Tools -> Make empty translation from current subtitle (thx vmb)
+   * Tools -> Show original text in audio/video previews (thx vmb)
    * Command line conversion between subtitle formats (example: subtitleedit /convert *.srt microdvd - thx Carl)
    * Subtitle preview font size (below video player) is now available in Options -> Settings
    * Edit -> Select all
