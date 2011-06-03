@@ -8413,10 +8413,11 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 
                 AddWareForm addWaveForm = new AddWareForm();
-                addWaveForm.Initialize(_videoFileName);
+                string peakWaveFileName = GetPeakWaveFileName(_videoFileName);
+                string spectrumFileName = peakWaveFileName.Substring(0, peakWaveFileName.Length - 4);
+                addWaveForm.Initialize(_videoFileName, spectrumFileName);
                 if (addWaveForm.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                 {
-                    string peakWaveFileName = GetPeakWaveFileName(addWaveForm.SourceVideoFileName);
                     addWaveForm.WavePeak.WritePeakSamples(peakWaveFileName);
                     var audioPeakWave = new WavePeakGenerator(peakWaveFileName);
                     audioPeakWave.GenerateAllSamples();
