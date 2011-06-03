@@ -47,6 +47,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     new TimedText(),
                     new TimedText10(),
                     new TranscriberXml(),
+                    new TurboTitler(),
                     new TMPlayer(),
                     new YouTubeSbv(),
                 //    new Idx(),
