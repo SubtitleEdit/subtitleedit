@@ -1067,17 +1067,24 @@ namespace Nikse.SubtitleEdit.Controls
         {
             _spectrumBitmaps = new List<Bitmap>();
             int count = 0;
-            while (System.IO.File.Exists(System.IO.Path.Combine(spectrogramDirectory, count + ".gif")))
+            if (System.IO.Directory.Exists(spectrogramDirectory))
             {
-                Bitmap bmp = new Bitmap(System.IO.Path.Combine(spectrogramDirectory, count + ".gif"));
-                _spectrumBitmaps.Add(bmp);
-                count++;
+                while (System.IO.File.Exists(System.IO.Path.Combine(spectrogramDirectory, count + ".gif")))
+                {
+                    Bitmap bmp = new Bitmap(System.IO.Path.Combine(spectrogramDirectory, count + ".gif"));
+                    _spectrumBitmaps.Add(bmp);
+                    count++;
+                }
+                XmlDocument doc = new XmlDocument();
+                doc.Load(System.IO.Path.Combine(spectrogramDirectory, "Info.xml"));
+                _sampleDuration = Convert.ToDouble(doc.DocumentElement.SelectSingleNode("SampleDuration").InnerText);
+                _totalDuration = Convert.ToDouble(doc.DocumentElement.SelectSingleNode("TotalDuration").InnerText);
+                ShowSpectrogram = true;
             }
-            XmlDocument doc = new XmlDocument();
-            doc.Load(System.IO.Path.Combine(spectrogramDirectory, "Info.xml"));
-            _sampleDuration = Convert.ToDouble(doc.DocumentElement.SelectSingleNode("SampleDuration").InnerText);
-            _totalDuration = Convert.ToDouble(doc.DocumentElement.SelectSingleNode("TotalDuration").InnerText);
-            ShowSpectrogram = true;
+            else
+            {
+                ShowSpectrogram = false;
+            }
         }
 
         public void InitializeSpectrogram(List<Bitmap> spectrumBitmaps, double sampleDuration, double totalDuration)
