@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Text;
+using System.Xml;
 
 namespace Nikse.SubtitleEdit.Logic
 {
@@ -384,6 +385,7 @@ namespace Nikse.SubtitleEdit.Logic
             int index = 0;
             int sampleSize = NFFT * 1024; // 1024 = bitmap width            
             int count = 0;
+            long totalSamples = 0;
             while (index + Header.NumberOfChannels < Header.DataChunkSize)
             {
                 int value = 0;
@@ -397,6 +399,7 @@ namespace Nikse.SubtitleEdit.Logic
                 if (value > DataMaxValue)
                     DataMaxValue = value;
                 samples.Add(value);
+                totalSamples++;
 
                 if (samples.Count == sampleSize)
                 {
@@ -420,6 +423,14 @@ namespace Nikse.SubtitleEdit.Logic
                 bmp.Save(Path.Combine(spectrumDirectory, count + ".gif"), System.Drawing.Imaging.ImageFormat.Gif);
                 bitmaps.Add(bmp); // save serialized gif instead????
             }
+
+            XmlDocument doc = new XmlDocument();
+            doc.LoadXml("<SpectrogramInfo><SampleDuration/><TotalDuration/></SpectrogramInfo>");
+            double sampleDuration = Header.LengthInSeconds / (totalSamples / NFFT);
+            double totalDuration = Header.LengthInSeconds;
+            doc.DocumentElement.SelectSingleNode("SampleDuration").InnerText = sampleDuration.ToString();
+            doc.DocumentElement.SelectSingleNode("TotalDuration").InnerText = totalDuration.ToString();
+            doc.Save(System.IO.Path.Combine(spectrumDirectory, "Info.xml"));
 
             return bitmaps;
         }
