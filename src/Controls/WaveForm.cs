@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Logic;
+using System.Xml;
 
 namespace Nikse.SubtitleEdit.Controls
 {
@@ -34,6 +35,11 @@ namespace Nikse.SubtitleEdit.Controls
         private WavePeakGenerator _wavePeaks = null;
         private Subtitle _subtitle = null;
         private bool _noClear = false;
+
+        private List<Bitmap> _spectrumBitmaps = new List<Bitmap>();
+        private double _sampleDuration = 0;
+        private double _totalDuration = 0;
+        private const int SpectrumBitmapWidth = 1024;
 
         public delegate void ParagraphChangedHandler(Paragraph paragraph);
         public event ParagraphChangedHandler OnNewSelectionRightClicked;
@@ -256,6 +262,11 @@ namespace Nikse.SubtitleEdit.Controls
                 DrawBackground(graphics);
                 int x = 0;
                 int y = Height / 2;
+
+                if (_spectrumBitmaps != null && _spectrumBitmaps.Count > 0)
+                {
+                    DrawSpectrogramBitmap(StartPositionSeconds, graphics);                    
+                }
 
                 var penNormal = new System.Drawing.Pen(Color);
                 var penSelected = new System.Drawing.Pen(SelectedColor); // selected paragraph
@@ -1027,6 +1038,63 @@ namespace Nikse.SubtitleEdit.Controls
             }
             Invalidate();
         }
+
+        /////////////////////////////////////////////////
+
+        public void InitializeSpectrogram(string spectrogramDirectory)
+        {
+            _spectrumBitmaps = new List<Bitmap>();
+            int count = 0;
+            while (System.IO.File.Exists(System.IO.Path.Combine(spectrogramDirectory, count + ".gif")))
+            {
+                Bitmap bmp = new Bitmap(System.IO.Path.Combine(spectrogramDirectory, count + ".gif"));
+                _spectrumBitmaps.Add(bmp);
+                count++;
+            }
+            XmlDocument doc = new XmlDocument();
+            doc.Load(System.IO.Path.Combine(spectrogramDirectory, "Info.xml"));
+            _sampleDuration = Convert.ToDouble(doc.DocumentElement.SelectSingleNode("SampleDuration").InnerText);
+            _totalDuration = Convert.ToDouble(doc.DocumentElement.SelectSingleNode("TotalDuration").InnerText);
+        }
+
+        public void InitializeSpectrogram(List<Bitmap> spectrumBitmaps, double sampleDuration, double totalDuration)
+        {
+            _spectrumBitmaps = spectrumBitmaps;
+            _sampleDuration = sampleDuration;
+            _totalDuration = totalDuration;
+        }
+
+        private void DrawSpectrogramBitmap(double seconds, Graphics graphics)
+        {
+            double duration = EndPositionSeconds - StartPositionSeconds;
+            int width = (int) (duration / _sampleDuration);
+
+            Bitmap bmpDestination = new Bitmap(width, 128); //calculate width
+            Graphics gfx = Graphics.FromImage(bmpDestination);
+
+            double startRow = seconds / (_sampleDuration);
+            int bitmapIndex = (int)(startRow / SpectrumBitmapWidth);
+            int subtractValue = (int)startRow % SpectrumBitmapWidth;
+
+            int i = 0;
+            while (i * SpectrumBitmapWidth < width && i + bitmapIndex < _spectrumBitmaps.Count)
+            {
+                var bmp = _spectrumBitmaps[i + bitmapIndex];
+                gfx.DrawImage(bmp, new Point(bmp.Width * i - subtractValue, 0));
+                i++;
+            }
+            if (i + bitmapIndex < _spectrumBitmaps.Count && subtractValue > 0)
+            {
+                var bmp = _spectrumBitmaps[i + bitmapIndex];
+                gfx.DrawImage(bmp, new Point(bmp.Width * i - subtractValue, 0));
+                i++;
+            }
+            gfx.Dispose();
+
+            graphics.DrawImage(bmpDestination, new Rectangle(0, Height - bmpDestination.Height, Width, bmpDestination.Height));
+            bmpDestination.Dispose();
+        }
+
 
     }
 }

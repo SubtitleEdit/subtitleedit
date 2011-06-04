@@ -314,6 +314,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             catch (Exception exception)
             {
+                Cursor = Cursors.Default;
                 MessageBox.Show(exception.Message + Environment.NewLine + exception.StackTrace);
             }
         }
@@ -7007,6 +7008,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (File.Exists(peakWaveFileName))
                 {
                     AudioWaveForm.WavePeaks = new WavePeakGenerator(peakWaveFileName);
+                    AudioWaveForm.InitializeSpectrogram(peakWaveFileName.Substring(0, peakWaveFileName.Length-4));
                     toolStripComboBoxWaveForm_SelectedIndexChanged(null, null);
                     AudioWaveForm.WavePeaks.GenerateAllSamples();
                     AudioWaveForm.WavePeaks.Close();
