@@ -1352,6 +1352,7 @@ namespace Nikse.SubtitleEdit.Forms
                     _videoAudioTrackNumber = -1;
                     labelVideoInfo.Text = Configuration.Settings.Language.General.NoVideoLoaded;
                     AudioWaveForm.WavePeaks = null;
+                    AudioWaveForm.ResetSpectrogram();
                     AudioWaveForm.Invalidate();
 
                     if (Configuration.Settings.General.ShowVideoPlayer || Configuration.Settings.General.ShowWaveForm)
@@ -1418,6 +1419,7 @@ namespace Nikse.SubtitleEdit.Forms
                         _videoAudioTrackNumber = -1;
                         labelVideoInfo.Text = Configuration.Settings.Language.General.NoVideoLoaded;
                         AudioWaveForm.WavePeaks = null;
+                        AudioWaveForm.ResetSpectrogram();
                         AudioWaveForm.Invalidate();
 
                         Configuration.Settings.RecentFiles.Add(fileName, FirstVisibleIndex, FirstSelectedIndex, _videoFileName, _subtitleAlternateFileName);
@@ -1882,6 +1884,7 @@ namespace Nikse.SubtitleEdit.Forms
             _videoAudioTrackNumber = -1;
             labelVideoInfo.Text = Configuration.Settings.Language.General.NoVideoLoaded;
             AudioWaveForm.WavePeaks = null;
+            AudioWaveForm.ResetSpectrogram();
             AudioWaveForm.Invalidate();
 
             ShowStatus(_language.New);
@@ -7008,6 +7011,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (File.Exists(peakWaveFileName))
                 {
                     AudioWaveForm.WavePeaks = new WavePeakGenerator(peakWaveFileName);
+                    AudioWaveForm.ResetSpectrogram();
                     AudioWaveForm.InitializeSpectrogram(peakWaveFileName.Substring(0, peakWaveFileName.Length-4));
                     toolStripComboBoxWaveForm_SelectedIndexChanged(null, null);
                     AudioWaveForm.WavePeaks.GenerateAllSamples();
@@ -10249,6 +10253,56 @@ namespace Nikse.SubtitleEdit.Forms
                 toolStripMenuItemShowOriginalInPreview.Checked = Configuration.Settings.General.ShowOriginalAsPreviewIfAvailable;
             }
             toolStripMenuItemShowOriginalInPreview.Visible = SubtitleListview1.IsAlternateTextColumnVisible;
+        }
+
+        private void contextMenuStripWaveForm_Opening(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            if (AudioWaveForm.IsSpectrumAvailable)
+            {
+                if (AudioWaveForm.ShowSpectrogram && AudioWaveForm.ShowWaveform)
+                {
+                    showWaveformAndSpectrogramToolStripMenuItem.Visible = false;
+                    showOnlyWaveformToolStripMenuItem.Visible = true;
+                    showOnlySpectrogramToolStripMenuItem.Visible = true;
+                }
+                else if (AudioWaveForm.ShowSpectrogram)
+                {
+                    showWaveformAndSpectrogramToolStripMenuItem.Visible = true;
+                    showOnlyWaveformToolStripMenuItem.Visible = true;
+                    showOnlySpectrogramToolStripMenuItem.Visible = false;
+                }
+                else
+                {
+                    showWaveformAndSpectrogramToolStripMenuItem.Visible = true;
+                    showOnlyWaveformToolStripMenuItem.Visible = false;
+                    showOnlySpectrogramToolStripMenuItem.Visible = true;
+                }
+            }
+            else
+            {
+                toolStripSeparator24.Visible = false;
+                showWaveformAndSpectrogramToolStripMenuItem.Visible = false;
+                showOnlyWaveformToolStripMenuItem.Visible = false;
+                showOnlySpectrogramToolStripMenuItem.Visible = false;
+            }
+        }
+
+        private void showWaveformAndSpectrogramToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            AudioWaveForm.ShowSpectrogram = true;
+            AudioWaveForm.ShowWaveform = true;
+        }
+
+        private void showOnlyWaveformToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            AudioWaveForm.ShowSpectrogram = false;
+            AudioWaveForm.ShowWaveform = true;
+        }
+
+        private void showOnlySpectrogramToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            AudioWaveForm.ShowSpectrogram = true;
+            AudioWaveForm.ShowWaveform = false;
         }
 
     }
