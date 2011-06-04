@@ -80,6 +80,16 @@ namespace Nikse.SubtitleEdit.Controls
             }
         }
 
+        public bool IsSpectrumAvailable
+        {
+            get
+            {
+                return _spectrumBitmaps != null && _spectrumBitmaps.Count > 0;
+            }
+        }
+        public bool ShowSpectrogram { get; set; }
+        public bool ShowWaveform { get; set; }
+
         private double _startPositionSeconds = 0;
         public double StartPositionSeconds
         {
@@ -145,7 +155,13 @@ namespace Nikse.SubtitleEdit.Controls
                 _subtitle = null;
                 _noClear = false;
                 _wavePeaks = value;
+                ShowWaveform = true;
             }
+        }
+
+        public void ResetSpectrogram()
+        {
+            _spectrumBitmaps = new List<Bitmap>();
         }
 
         public void ClearSelection()
@@ -171,6 +187,8 @@ namespace Nikse.SubtitleEdit.Controls
             GridColor = Color.FromArgb(255, 20, 20, 18);
             DrawGridLines = true;
             AllowNewSelection = true;
+            ShowSpectrogram = true;
+            ShowWaveform = true;
         }
 
         private void NearestSubtitles(Subtitle subtitle, double currentVideoPositionSeconds, int subtitleIndex)
@@ -263,55 +281,59 @@ namespace Nikse.SubtitleEdit.Controls
                 int x = 0;
                 int y = Height / 2;
 
-                if (_spectrumBitmaps != null && _spectrumBitmaps.Count > 0)
+                if (IsSpectrumAvailable && ShowSpectrogram)
                 {
-                    DrawSpectrogramBitmap(StartPositionSeconds, graphics);                    
+                    DrawSpectrogramBitmap(StartPositionSeconds, graphics);
+                    imageHeight -= 128;
                 }
 
                 var penNormal = new System.Drawing.Pen(Color);
                 var penSelected = new System.Drawing.Pen(SelectedColor); // selected paragraph
 
-                if (_zoomFactor == 1.0)
+                if (ShowWaveform)
                 {
-                    for (int i = 0; i < _wavePeaks.AllSamples.Count && i < Width; i++)
+                    if (_zoomFactor == 1.0)
                     {
-                        if (begin + i < _wavePeaks.AllSamples.Count)
+                        for (int i = 0; i < _wavePeaks.AllSamples.Count && i < Width; i++)
                         {
-                            int newY = CalculateHeight(_wavePeaks.AllSamples[begin + i], imageHeight, maxHeight);
-                            graphics.DrawLine(pen, x, y, i, newY);
-                            //graphics.FillRectangle(new SolidBrush(Color), x, y, 1, 1); // draw pixel instead of line
+                            if (begin + i < _wavePeaks.AllSamples.Count)
+                            {
+                                int newY = CalculateHeight(_wavePeaks.AllSamples[begin + i], imageHeight, maxHeight);
+                                graphics.DrawLine(pen, x, y, i, newY);
+                                //graphics.FillRectangle(new SolidBrush(Color), x, y, 1, 1); // draw pixel instead of line
 
-                            x = i;
-                            y = newY;
-                            if (begin + i > end || begin + i < start)
-                                pen = penNormal;
-                            else
-                                pen = penSelected; // selected paragraph
+                                x = i;
+                                y = newY;
+                                if (begin + i > end || begin + i < start)
+                                    pen = penNormal;
+                                else
+                                    pen = penSelected; // selected paragraph
+                            }
                         }
                     }
-                }
-                else
-                {   
-                    // calculate lines with zoom factor
-                    float x2 = 0;
-                    float x3 = 0;
-                    for (int i = 0; i < _wavePeaks.AllSamples.Count && ((int)Math.Round(x3)) < Width; i++)
+                    else
                     {
-                        if (beginNoZoomFactor + i < _wavePeaks.AllSamples.Count)
+                        // calculate lines with zoom factor
+                        float x2 = 0;
+                        float x3 = 0;
+                        for (int i = 0; i < _wavePeaks.AllSamples.Count && ((int)Math.Round(x3)) < Width; i++)
                         {
-                            int newY = CalculateHeight(_wavePeaks.AllSamples[beginNoZoomFactor + i], imageHeight, maxHeight);
-                            x3 = (float)(_zoomFactor * i);
-                            graphics.DrawLine(pen, x2, y, x3, newY);
-                            x2 = x3;
-                            y = newY;
-                            if (begin + x2 > end || begin + x2 < start)
-                                pen = penNormal;
-                            else
-                                pen = penSelected; // selected paragraph
+                            if (beginNoZoomFactor + i < _wavePeaks.AllSamples.Count)
+                            {
+                                int newY = CalculateHeight(_wavePeaks.AllSamples[beginNoZoomFactor + i], imageHeight, maxHeight);
+                                x3 = (float)(_zoomFactor * i);
+                                graphics.DrawLine(pen, x2, y, x3, newY);
+                                x2 = x3;
+                                y = newY;
+                                if (begin + x2 > end || begin + x2 < start)
+                                    pen = penNormal;
+                                else
+                                    pen = penSelected; // selected paragraph
+                            }
                         }
                     }
                 }
-                DrawTimeLine(StartPositionSeconds, e);
+                DrawTimeLine(StartPositionSeconds, e, imageHeight);
 
                 // current video position
                 if (_currentVideoPositionSeconds > 0)
@@ -387,7 +409,7 @@ namespace Nikse.SubtitleEdit.Controls
             }
         }
 
-        private void DrawTimeLine(double startPositionSeconds, PaintEventArgs e)
+        private void DrawTimeLine(double startPositionSeconds, PaintEventArgs e, int imageHeight)
         {
             int start = (int)Math.Round(startPositionSeconds + 0.5);
             double seconds = start - StartPositionSeconds;
@@ -398,16 +420,16 @@ namespace Nikse.SubtitleEdit.Controls
             while (position < Width)            
             {
                 if (_zoomFactor > 0.3 || (int)Math.Round(StartPositionSeconds + seconds) % 5 == 0)
-                { 
-                    e.Graphics.DrawLine(pen, position, Height, position, Height-10);
-                    e.Graphics.DrawString(GetDisplayTime(StartPositionSeconds + seconds), textFont, textBrush, new PointF(position + 2, Height - 13));
+                {
+                    e.Graphics.DrawLine(pen, position, imageHeight, position, imageHeight - 10);
+                    e.Graphics.DrawString(GetDisplayTime(StartPositionSeconds + seconds), textFont, textBrush, new PointF(position + 2, imageHeight - 13));
                 }
 
                 seconds += 0.5;
                 position = SecondsToXPosition(seconds);
 
                 if (_zoomFactor > 0.5)
-                    e.Graphics.DrawLine(pen, position, Height, position, Height - 5);
+                    e.Graphics.DrawLine(pen, position, imageHeight, position, imageHeight - 5);
 
                 seconds += 0.5;
                 position = SecondsToXPosition(seconds);
@@ -1055,6 +1077,7 @@ namespace Nikse.SubtitleEdit.Controls
             doc.Load(System.IO.Path.Combine(spectrogramDirectory, "Info.xml"));
             _sampleDuration = Convert.ToDouble(doc.DocumentElement.SelectSingleNode("SampleDuration").InnerText);
             _totalDuration = Convert.ToDouble(doc.DocumentElement.SelectSingleNode("TotalDuration").InnerText);
+            ShowSpectrogram = true;
         }
 
         public void InitializeSpectrogram(List<Bitmap> spectrumBitmaps, double sampleDuration, double totalDuration)
@@ -1091,7 +1114,10 @@ namespace Nikse.SubtitleEdit.Controls
             }
             gfx.Dispose();
 
-            graphics.DrawImage(bmpDestination, new Rectangle(0, Height - bmpDestination.Height, Width, bmpDestination.Height));
+            if (ShowWaveform)
+                graphics.DrawImage(bmpDestination, new Rectangle(0, Height - bmpDestination.Height, Width, bmpDestination.Height));
+            else
+                graphics.DrawImage(bmpDestination, new Rectangle(0, 0, Width, Height));
             bmpDestination.Dispose();
         }
 
