@@ -1,6 +1,7 @@
 ﻿using System.Drawing;
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Logic;
+using Nikse.SubtitleEdit.Controls;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -57,11 +58,19 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (e.Modifiers == Keys.Alt && e.KeyCode == Keys.A)
             {
-                //TODO: Resize to video size...
+                if (_videoPlayerContainer.VideoWidth > 0 && _videoPlayerContainer.VideoHeight > 0)
+                {
+                    int wDiff = _videoPlayerContainer.VideoWidth - _videoPlayerContainer.PanelPlayer.Width;
+                    int hDiff = _videoPlayerContainer.VideoHeight - _videoPlayerContainer.PanelPlayer.Height;
+                    Width += wDiff;
+                    Height += hDiff;
+                    e.SuppressKeyPress = true;
+                }
             }
             else if (_redockKeys == e.KeyData)
             {
                 _mainForm.redockVideoControlsToolStripMenuItem_Click(null, null);
+                e.SuppressKeyPress = true;
             }
             else 
             {

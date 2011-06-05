@@ -1189,6 +1189,8 @@ namespace Nikse.SubtitleEdit.Logic
                 videoPlayerContainer.ShowStopButton = Configuration.Settings.General.VideoPlayerShowStopButton;
                 videoPlayerContainer.Volume = Configuration.Settings.General.VideoPlayerDefaultVolume;
                 videoPlayerContainer.EnableMouseWheelStep();
+                videoPlayerContainer.VideoWidth = videoInfo.Width;
+                videoPlayerContainer.VideoHeight = videoInfo.Height;
             }
             catch (Exception exception)
             {
