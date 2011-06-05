@@ -43,6 +43,9 @@ namespace Nikse.SubtitleEdit.Controls
             set { _videoPlayer = value; }
         }
 
+        public int VideoWidth { get; set; }
+        public int VideoHeight { get; set; }
+
         private bool _isMuted;
         private double? _muteOldVolume;
         private readonly System.ComponentModel.ComponentResourceManager _resources;
