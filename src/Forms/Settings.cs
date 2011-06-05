@@ -146,7 +146,7 @@ namespace Nikse.SubtitleEdit.Forms
             Text = language.Title;
             tabPageGenerel.Text = language.General;
             tabPageVideoPlayer.Text = language.VideoPlayer;
-            tabPageWaveForm.Text = language.WaveForm;
+            tabPageWaveForm.Text = language.WaveformAndSpectrogram;
             tabPageWordLists.Text = language.WordLists;
             tabPageTools.Text = language.Tools;
             tabPageSsaStyle.Text = language.SsaStyle;
@@ -236,6 +236,8 @@ namespace Nikse.SubtitleEdit.Forms
             buttonWaveFormSelectedColor.Text = language.WaveFormSelectedColor;
             buttonWaveFormTextColor.Text = language.WaveFormTextColor;
             buttonWaveFormBackgroundColor.Text = language.WaveFormBackgroundColor;
+            groupBoxSpectrogram.Text = language.Spectrogram;
+            checkBoxGenerateSpectrogram.Text = language.GenerateSpectrogram;
 
             buttonWaveFormsFolderEmpty.Text = language.WaveFormsFolderEmpty;
             InitializeWaveFormsFolderEmpty(language);
@@ -404,7 +406,7 @@ namespace Nikse.SubtitleEdit.Forms
             panelWaveFormColor.BackColor = Configuration.Settings.VideoControls.WaveFormColor;
             panelWaveFormBackgroundColor.BackColor = Configuration.Settings.VideoControls.WaveFormBackgroundColor;
             panelWaveFormTextColor.BackColor = Configuration.Settings.VideoControls.WaveFormTextColor;
-
+            checkBoxGenerateSpectrogram.Checked = Configuration.Settings.VideoControls.GenerateSpectrogram;           
 
             //<MainFileNew>Control+N</MainFileNew>
             //<MainFileOpen>Control+O</MainFileOpen>
@@ -507,6 +509,26 @@ namespace Nikse.SubtitleEdit.Forms
                 long bytes = 0;
                 int count = 0;
                 DirectoryInfo di = new DirectoryInfo(waveFormsFolder);
+
+                // spectrum data
+                foreach (DirectoryInfo dir in di.GetDirectories())
+                {
+                    DirectoryInfo spectrogramDir = new DirectoryInfo(dir.FullName);
+                    foreach (FileInfo fi in spectrogramDir.GetFiles("*.gif"))
+                    {
+                        bytes += fi.Length;
+                        count++;
+                    }
+                    string xmlFileName = Path.Combine(dir.FullName, "Info.xml");
+                    if (File.Exists(xmlFileName))
+                    {
+                        FileInfo fi = new FileInfo(xmlFileName);
+                        bytes += fi.Length;
+                        count++;
+                    }
+                }
+
+                // waveform data
                 foreach (FileInfo fi in di.GetFiles("*.wav"))
                 {
                     bytes += fi.Length;
@@ -742,7 +764,7 @@ namespace Nikse.SubtitleEdit.Forms
             Configuration.Settings.VideoControls.WaveFormColor = panelWaveFormColor.BackColor;
             Configuration.Settings.VideoControls.WaveFormBackgroundColor = panelWaveFormBackgroundColor.BackColor;
             Configuration.Settings.VideoControls.WaveFormTextColor = panelWaveFormTextColor.BackColor;
-
+            Configuration.Settings.VideoControls.GenerateSpectrogram = checkBoxGenerateSpectrogram.Checked;
 
             //Main File
             foreach (TreeNode node in treeViewShortcuts.Nodes[0].Nodes)
@@ -1512,6 +1534,20 @@ namespace Nikse.SubtitleEdit.Forms
             if (Directory.Exists(waveFormsFolder))
             {
                 DirectoryInfo di = new DirectoryInfo(waveFormsFolder);
+
+                foreach (DirectoryInfo dir in di.GetDirectories())
+                {
+                    DirectoryInfo spectrogramDir = new DirectoryInfo(dir.FullName);
+                    foreach (FileInfo fileName in spectrogramDir.GetFiles("*.gif"))
+                    {
+                        File.Delete(fileName.FullName);
+                    }
+                    string xmlFileName = Path.Combine(dir.FullName, "Info.xml");
+                    if (File.Exists(xmlFileName))
+                        File.Delete(xmlFileName);
+                    Directory.Delete(dir.FullName);
+                }
+
                 foreach (FileInfo fileName in di.GetFiles("*.wav"))
                 {
                     try 

@@ -958,6 +958,9 @@ namespace Nikse.SubtitleEdit.Forms
             mergeWithPreviousToolStripMenuItem.Text = Configuration.Settings.Language.WaveForm.MergeWithPrevious;
             mergeWithNextToolStripMenuItem.Text = Configuration.Settings.Language.WaveForm.MergeWithNext;
             toolStripMenuItemWaveFormPlaySelection.Text = Configuration.Settings.Language.WaveForm.PlaySelection;
+            showWaveformAndSpectrogramToolStripMenuItem.Text = Configuration.Settings.Language.WaveForm.ShowWaveformAndSpectrogram;
+            showOnlyWaveformToolStripMenuItem.Text = Configuration.Settings.Language.WaveForm.ShowWaveformOnly;
+            showOnlySpectrogramToolStripMenuItem.Text = Configuration.Settings.Language.WaveForm.ShowSpectrogramOnly;
 
             toolStripButtonWaveFormZoomOut.ToolTipText = Configuration.Settings.Language.WaveForm.ZoomOut;
             toolStripButtonWaveFormZoomIn.ToolTipText = Configuration.Settings.Language.WaveForm.ZoomIn;

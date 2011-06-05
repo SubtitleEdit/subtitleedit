@@ -259,7 +259,6 @@ namespace Nikse.SubtitleEdit.Logic
         public int SmallDelayMilliseconds { get; set; }
         public int LargeDelayMilliseconds { get; set; }
         public bool ShowOriginalAsPreviewIfAvailable { get; set; }
-        public bool GenerateSpectrogram { get; set; }
 
         public GeneralSettings()
         {
@@ -337,7 +336,8 @@ namespace Nikse.SubtitleEdit.Logic
         public Color WaveFormTextColor { get; set; }
         public string WaveFormDoubleClickOnNonParagraphAction { get; set; }
         public string WaveFormRightClickOnNonParagraphAction { get; set; }
-        public bool WaveFormMouseWheelScrollUpIsForward { get; set; }            
+        public bool WaveFormMouseWheelScrollUpIsForward { get; set; }
+        public bool GenerateSpectrogram { get; set; }     
 
         public VideoControlsSettings()
         {
@@ -783,9 +783,6 @@ namespace Nikse.SubtitleEdit.Logic
             subNode = node.SelectSingleNode("ShowOriginalAsPreviewIfAvailable");
             if (subNode != null)
                 settings.General.ShowOriginalAsPreviewIfAvailable = Convert.ToBoolean(subNode.InnerText);
-            subNode = node.SelectSingleNode("GenerateSpectrogram");
-            if (subNode != null)
-                settings.General.GenerateSpectrogram = Convert.ToBoolean(subNode.InnerText);
            
             settings.Tools = new Nikse.SubtitleEdit.Logic.ToolsSettings();
             node = doc.DocumentElement.SelectSingleNode("Tools");
@@ -977,7 +974,10 @@ namespace Nikse.SubtitleEdit.Logic
                 settings.VideoControls.WaveFormRightClickOnNonParagraphAction = subNode.InnerText;
             subNode = node.SelectSingleNode("WaveFormMouseWheelScrollUpIsForward");
             if (subNode != null)
-                settings.VideoControls.WaveFormMouseWheelScrollUpIsForward = Convert.ToBoolean(subNode.InnerText);            
+                settings.VideoControls.WaveFormMouseWheelScrollUpIsForward = Convert.ToBoolean(subNode.InnerText);
+            subNode = node.SelectSingleNode("GenerateSpectrogram");
+            if (subNode != null)
+                settings.VideoControls.GenerateSpectrogram = Convert.ToBoolean(subNode.InnerText);            
 
             settings.NetworkSettings = new NetworkSettings();
             node = doc.DocumentElement.SelectSingleNode("NetworkSettings");
@@ -1198,7 +1198,6 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("SmallDelayMilliseconds", settings.General.SmallDelayMilliseconds.ToString());
             textWriter.WriteElementString("LargeDelayMilliseconds", settings.General.LargeDelayMilliseconds.ToString());
             textWriter.WriteElementString("ShowOriginalAsPreviewIfAvailable", settings.General.ShowOriginalAsPreviewIfAvailable.ToString());
-            textWriter.WriteElementString("GenerateSpectrogram", settings.General.GenerateSpectrogram.ToString());
             textWriter.WriteEndElement();
 
             textWriter.WriteStartElement("Tools", "");
@@ -1274,8 +1273,8 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("WaveFormTextColor", settings.VideoControls.WaveFormTextColor.ToArgb().ToString());
             textWriter.WriteElementString("WaveFormDoubleClickOnNonParagraphAction", settings.VideoControls.WaveFormDoubleClickOnNonParagraphAction);
             textWriter.WriteElementString("WaveFormRightClickOnNonParagraphAction", settings.VideoControls.WaveFormRightClickOnNonParagraphAction);
-            textWriter.WriteElementString("WaveFormMouseWheelScrollUpIsForward", settings.VideoControls.WaveFormMouseWheelScrollUpIsForward.ToString());            
-            
+            textWriter.WriteElementString("WaveFormMouseWheelScrollUpIsForward", settings.VideoControls.WaveFormMouseWheelScrollUpIsForward.ToString());
+            textWriter.WriteElementString("GenerateSpectrogram", settings.VideoControls.GenerateSpectrogram.ToString());                                   
             textWriter.WriteEndElement();
 
             textWriter.WriteStartElement("NetworkSettings", "");

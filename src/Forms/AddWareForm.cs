@@ -130,7 +130,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.Refresh();
             waveFile.GeneratePeakSamples(sampleRate); // samples per second - SampleRate 
 
-            if (Configuration.Settings.General.GenerateSpectrogram)
+            if (Configuration.Settings.VideoControls.GenerateSpectrogram)
             {
                 labelProgress.Text = Configuration.Settings.Language.AddWaveForm.GeneratingSpectrogram;
                 this.Refresh();
