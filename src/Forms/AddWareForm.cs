@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Logic;
@@ -12,6 +14,7 @@ namespace Nikse.SubtitleEdit.Forms
         private bool _cancel = false;
         private string _wavFileName = null;
         private string _spectrumDirectory;
+        public List<Bitmap> SpectrumBitmaps { get; private set; }
 
         public AddWareForm()
         {
@@ -135,7 +138,7 @@ namespace Nikse.SubtitleEdit.Forms
                 labelProgress.Text = Configuration.Settings.Language.AddWaveForm.GeneratingSpectrogram;
                 this.Refresh();
                 System.IO.Directory.CreateDirectory(_spectrumDirectory);
-                waveFile.GenerateFourierData(256, _spectrumDirectory);
+                SpectrumBitmaps = waveFile.GenerateFourierData(256, _spectrumDirectory);
             }
             labelPleaseWait.Visible = false;
 

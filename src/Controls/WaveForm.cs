@@ -1088,11 +1088,23 @@ namespace Nikse.SubtitleEdit.Controls
             }
         }
 
-        public void InitializeSpectrogram(List<Bitmap> spectrumBitmaps, double sampleDuration, double totalDuration)
+        public void InitializeSpectrogram(List<Bitmap> spectrumBitmaps, string spectrogramDirectory)
         {
             _spectrumBitmaps = spectrumBitmaps;
-            _sampleDuration = sampleDuration;
-            _totalDuration = totalDuration;
+
+            XmlDocument doc = new XmlDocument();
+            string xmlInfoFileName = System.IO.Path.Combine(spectrogramDirectory, "Info.xml");
+            if (System.IO.File.Exists(xmlInfoFileName))
+            {
+                doc.Load(xmlInfoFileName);
+                _sampleDuration = Convert.ToDouble(doc.DocumentElement.SelectSingleNode("SampleDuration").InnerText);
+                _totalDuration = Convert.ToDouble(doc.DocumentElement.SelectSingleNode("TotalDuration").InnerText);
+                ShowSpectrogram = true;
+            }
+            else
+            {
+                ShowSpectrogram = false;
+            }
         }
 
         private void DrawSpectrogramBitmap(double seconds, Graphics graphics)

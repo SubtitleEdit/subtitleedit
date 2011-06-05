@@ -8430,6 +8430,8 @@ namespace Nikse.SubtitleEdit.Forms
                     var audioPeakWave = new WavePeakGenerator(peakWaveFileName);
                     audioPeakWave.GenerateAllSamples();
                     AudioWaveForm.WavePeaks = audioPeakWave;
+                    if (addWaveForm.SpectrumBitmaps != null)
+                        AudioWaveForm.InitializeSpectrogram(addWaveForm.SpectrumBitmaps, spectrumFileName);
                     timerWaveForm.Start();
                 }
             }
