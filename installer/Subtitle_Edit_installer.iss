@@ -31,7 +31,7 @@
 ;#endif
 
 
-#define installer_build_number "15"
+#define installer_build_number "16"
 
 #define VerMajor
 #define VerMinor
@@ -259,8 +259,13 @@ Type: files;      Name: {app}\Settings.xml
 
 
 [Run]
-Filename: {app}\SubtitleEdit.exe;  Description: {cm:LaunchProgram,Subtitle Edit}; WorkingDir: {app}; Flags: nowait postinstall skipifsilent runascurrentuser unchecked
-Filename: http://www.nikse.dk/se/; Description: {cm:run_VisitWebsite};                               Flags: nowait postinstall skipifsilent shellexec runascurrentuser unchecked
+Filename: {win}\Microsoft.NET\Framework\v2.0.50727\ngen.exe; Parameters: "install ""{app}\SubtitleEdit.exe"""; StatusMsg: {cm:msg_OptimizingPerformance}; Flags: runhidden runascurrentuser skipifdoesntexist
+Filename: {app}\SubtitleEdit.exe;  Description: {cm:LaunchProgram,Subtitle Edit}; WorkingDir: {app}; Flags: nowait postinstall skipifsilent unchecked
+Filename: http://www.nikse.dk/se/; Description: {cm:run_VisitWebsite};                               Flags: nowait postinstall skipifsilent shellexec unchecked
+
+
+[UninstallRun]
+Filename: {win}\Microsoft.NET\Framework\v2.0.50727\ngen.exe; Parameters: "uninstall ""{app}\SubtitleEdit.exe"""; Flags: runhidden runascurrentuser skipifdoesntexist
 
 
 [Code]
