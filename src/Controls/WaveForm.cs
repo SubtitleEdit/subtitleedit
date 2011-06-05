@@ -284,7 +284,8 @@ namespace Nikse.SubtitleEdit.Controls
                 if (IsSpectrumAvailable && ShowSpectrogram)
                 {
                     DrawSpectrogramBitmap(StartPositionSeconds, graphics);
-                    imageHeight -= 128;
+                    if (ShowWaveform)
+                        imageHeight -= 128;
                 }
 
                 var penNormal = new System.Drawing.Pen(Color);
