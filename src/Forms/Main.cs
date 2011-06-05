@@ -6738,10 +6738,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void toolStripMenuItemPointSync_Click(object sender, EventArgs e)
         {
-            SyncPointsSync pointSync = new SyncPointsSync();
-            _formPositionsAndSizes.SetPositionAndSize(pointSync);
-
+            SyncPointsSync pointSync = new SyncPointsSync();            
             pointSync.Initialize(_subtitle, _fileName,  _videoFileName, _videoAudioTrackNumber);
+            _formPositionsAndSizes.SetPositionAndSize(pointSync);
             mediaPlayer.Pause();
             if (pointSync.ShowDialog(this) == DialogResult.OK)
             {
