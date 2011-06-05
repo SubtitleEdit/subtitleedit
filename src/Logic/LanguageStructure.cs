@@ -1026,7 +1026,7 @@
             public string General { get; set; }
             public string Toolbar { get; set; }
             public string VideoPlayer { get; set; }
-            public string WaveForm { get; set; }
+            public string WaveformAndSpectrogram { get; set; }
             public string Tools { get; set; }
             public string WordLists { get; set; }
             public string SsaStyle { get; set; }
@@ -1096,6 +1096,8 @@
             public string WaveFormTextColor { get; set; }
             public string WaveFormsFolderEmpty { get; set; }
             public string WaveFormsFolderInfo { get; set; }
+            public string Spectrogram { get; set; }
+            public string GenerateSpectrogram { get; set; }
             public string SubStationAlphaStyle { get; set; }
             public string ChooseFont { get; set; }
             public string ChooseColor { get; set; }
@@ -1348,6 +1350,9 @@
             public string MergeWithPrevious { get; set; }
             public string MergeWithNext { get; set; }
             public string PlaySelection { get; set; }
+            public string ShowWaveformAndSpectrogram { get; set; }
+            public string ShowWaveformOnly { get; set; }
+            public string ShowSpectrogramOnly { get; set; }
         }
 
     }

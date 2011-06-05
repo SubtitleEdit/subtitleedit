@@ -3,6 +3,7 @@ Subtitle Edit Changelog
 
 3.2 (not yet released)
  * NEW:
+   * Can now display spectrogram (as well as waveform)
    * Subtitle formats: D-Cinema, Cavena890, Timed Text 1.0, Captionate, Flash xml
    * Most important shortcuts in Options -> Settings
    * Export bdn-xml/images + import/ocr bdn-xml/images
@@ -21,7 +22,7 @@ Subtitle Edit Changelog
    * Merge short lines can now also merge lines ending with ".", "?", or "!" (optional)
    * Can now read Adobe Encore files starting with line numbers (thx Pier)
  * FIXED:
-   * Adjust all times did not work for MicroDvd
+   * Adjust all times did not work for MicroDvd (thx Wolf)
    * Now removes empty white spaces from Google translate
    * Crash when entering invalid text in source view (thx Frédéric)
    * Fixed a few bugs in DVD Architect format + added another two new variants (thx Jacob)
