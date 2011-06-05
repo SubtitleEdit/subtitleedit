@@ -13,7 +13,7 @@ namespace Nikse.SubtitleEdit.Logic
         private byte[] _headerData;
 
         public string ChunkId { get; private set; }
-        public int ChunkSize { get; private set; }
+        public uint ChunkSize { get; private set; }
         public string Format { get; private set; }
         public string FmtId { get; private set; }
         public int FmtChunkSize { get; private set; }
@@ -47,7 +47,7 @@ namespace Nikse.SubtitleEdit.Logic
         /// <summary>
         /// Size of sound data
         /// </summary>
-        public int DataChunkSize { get; private set; }
+        public uint DataChunkSize { get; private set; }
         public int DataStartPosition { get; private set; }
 
         public WaveHeader(Stream stream)
@@ -60,7 +60,8 @@ namespace Nikse.SubtitleEdit.Logic
 
             // constant header
             ChunkId = Encoding.UTF8.GetString(buffer, 0, 4);
-            ChunkSize = BitConverter.ToInt32(buffer, 4);
+//            ChunkSize = BitConverter.ToInt32(buffer, 4);
+            ChunkSize = BitConverter.ToUInt32(buffer, 4);
             Format = Encoding.UTF8.GetString(buffer, 8, 4);
             FmtId = Encoding.UTF8.GetString(buffer, 12, 4);
             FmtChunkSize = BitConverter.ToInt32(buffer, 16);
@@ -80,7 +81,8 @@ namespace Nikse.SubtitleEdit.Logic
             stream.Position = ConstantHeaderSize + FmtChunkSize;
             stream.Read(buffer, 0, buffer.Length);
             DataId = Encoding.UTF8.GetString(buffer, 0, 4);
-            DataChunkSize = BitConverter.ToInt32(buffer, 4);
+            //DataChunkSize = (uint) BitConverter.ToInt32(buffer, 4);
+            DataChunkSize =  BitConverter.ToUInt32(buffer, 4);
             DataStartPosition = ConstantHeaderSize + FmtChunkSize + 8;
 
             _headerData = new byte[DataStartPosition];
@@ -295,6 +297,15 @@ namespace Nikse.SubtitleEdit.Logic
             return result;
         }
 
+        private int Read16BitValueFromStream(ref int index)
+        {
+            byte[] buffer = new byte[2];
+            _stream.Read(buffer, 0, 2);
+            int result = BitConverter.ToInt16(buffer, 0);
+            index += 2;
+            return result;
+        }
+
         private int ReadValue24Bit(ref int index)
         {
             byte[] buffer = new byte[4];
@@ -368,11 +379,6 @@ namespace Nikse.SubtitleEdit.Logic
             // determine how to read sample values
             ReadSampleDataValueDelegate readSampleDataValue = GetSampleDataRerader();
 
-            // load data
-            _data = new byte[Header.DataChunkSize];
-            _stream.Position = Header.DataStartPosition;
-            int bytesRead = _stream.Read(_data, 0, _data.Length);
-
             // set up one column of the spectrogram
             Color[] palette = new Color[NFFT];
             for (int colorIndex = 0; colorIndex < NFFT; colorIndex++)
@@ -386,32 +392,43 @@ namespace Nikse.SubtitleEdit.Logic
             int sampleSize = NFFT * 1024; // 1024 = bitmap width            
             int count = 0;
             long totalSamples = 0;
-            while (index + Header.NumberOfChannels < Header.DataChunkSize)
-            {
-                int value = 0;
-                for (int channelNumber = 0; channelNumber < Header.NumberOfChannels; channelNumber++)
-                {
-                    value += readSampleDataValue.Invoke(ref index);
-                }
-                value = value / Header.NumberOfChannels;
-                if (value < DataMinValue)
-                    DataMinValue = value;
-                if (value > DataMaxValue)
-                    DataMaxValue = value;
-                samples.Add(value);
-                totalSamples++;
 
-                if (samples.Count == sampleSize)
+            // load data in smaller parts
+            _data = new byte[Header.BytesPerSecond];
+            _stream.Position = Header.DataStartPosition;
+            int bytesRead = _stream.Read(_data, 0, _data.Length);
+
+            while (bytesRead == Header.BytesPerSecond)
+            {
+                while (index < Header.BytesPerSecond)
                 {
-                    var samplesAsReal = new double[sampleSize];
-                    for (int k = 0; k < sampleSize; k++)
-                        samplesAsReal[k] = samples[k] / divider;
-                    Bitmap bmp = DrawSpectrogram(NFFT, samplesAsReal, f, palette);
-                    bmp.Save(Path.Combine(spectrumDirectory, count + ".gif"), System.Drawing.Imaging.ImageFormat.Gif);
-                    bitmaps.Add(bmp); // save serialized gif instead????
-                    samples = new List<int>();
-                    count++;
+                    int value = 0;
+                    for (int channelNumber = 0; channelNumber < Header.NumberOfChannels; channelNumber++)
+                    {
+                        value += readSampleDataValue.Invoke(ref index);
+                    }
+                    value = value / Header.NumberOfChannels;
+                    if (value < DataMinValue)
+                        DataMinValue = value;
+                    if (value > DataMaxValue)
+                        DataMaxValue = value;
+                    samples.Add(value);
+                    totalSamples++;
+
+                    if (samples.Count == sampleSize)
+                    {
+                        var samplesAsReal = new double[sampleSize];
+                        for (int k = 0; k < sampleSize; k++)
+                            samplesAsReal[k] = samples[k] / divider;
+                        Bitmap bmp = DrawSpectrogram(NFFT, samplesAsReal, f, palette);
+                        bmp.Save(Path.Combine(spectrumDirectory, count + ".gif"), System.Drawing.Imaging.ImageFormat.Gif);
+                        bitmaps.Add(bmp); // save serialized gif instead????
+                        samples = new List<int>();
+                        count++;
+                    }
                 }
+                bytesRead = _stream.Read(_data, 0, _data.Length);
+                index = 0;
             }
 
             if (samples.Count > 0)
