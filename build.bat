@@ -90,7 +90,7 @@ ECHO. & ECHO.
 ECHO Usage:   %~nx0 [Clean^|Build^|Rebuild]
 ECHO.
 ECHO Notes:   You can also prefix the commands with "-", "--" or "/".
-ECHO          The arguments are case insesitive.
+ECHO          The arguments are not case sensitive.
 ECHO. & ECHO.
 ECHO Executing "%~nx0" will use the defaults: "%~nx0 build"
 ECHO.
