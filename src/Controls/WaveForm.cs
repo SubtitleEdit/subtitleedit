@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
-using Nikse.SubtitleEdit.Logic;
 using System.Xml;
+using Nikse.SubtitleEdit.Logic;
 
 namespace Nikse.SubtitleEdit.Controls
 {
@@ -37,6 +37,7 @@ namespace Nikse.SubtitleEdit.Controls
         private bool _noClear = false;
 
         private List<Bitmap> _spectrumBitmaps = new List<Bitmap>();
+        private string _spectrogramDirectory;
         private double _sampleDuration = 0;
         private double _totalDuration = 0;
         private const int SpectrumBitmapWidth = 1024;
@@ -1067,24 +1068,34 @@ namespace Nikse.SubtitleEdit.Controls
         public void InitializeSpectrogram(string spectrogramDirectory)
         {
             _spectrumBitmaps = new List<Bitmap>();
-            int count = 0;
+            ShowSpectrogram = false;
             if (System.IO.Directory.Exists(spectrogramDirectory))
             {
-                while (System.IO.File.Exists(System.IO.Path.Combine(spectrogramDirectory, count + ".gif")))
-                {
-                    Bitmap bmp = new Bitmap(System.IO.Path.Combine(spectrogramDirectory, count + ".gif"));
-                    _spectrumBitmaps.Add(bmp);
-                    count++;
-                }
-                XmlDocument doc = new XmlDocument();
-                doc.Load(System.IO.Path.Combine(spectrogramDirectory, "Info.xml"));
-                _sampleDuration = Convert.ToDouble(doc.DocumentElement.SelectSingleNode("SampleDuration").InnerText);
-                _totalDuration = Convert.ToDouble(doc.DocumentElement.SelectSingleNode("TotalDuration").InnerText);
-                ShowSpectrogram = true;
+                _spectrogramDirectory = spectrogramDirectory;
+                var bw = new System.ComponentModel.BackgroundWorker();
+                bw.DoWork += new System.ComponentModel.DoWorkEventHandler(LoadSpectrogramBitmapsAsync);
+                bw.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(LoadSpectrogramBitmapsCompleted);
+                bw.RunWorkerAsync();
             }
-            else
+        }
+
+        void LoadSpectrogramBitmapsCompleted(object sender, System.ComponentModel.RunWorkerCompletedEventArgs e)
+        {
+            XmlDocument doc = new XmlDocument();
+            doc.Load(System.IO.Path.Combine(_spectrogramDirectory, "Info.xml"));
+            _sampleDuration = Convert.ToDouble(doc.DocumentElement.SelectSingleNode("SampleDuration").InnerText);
+            _totalDuration = Convert.ToDouble(doc.DocumentElement.SelectSingleNode("TotalDuration").InnerText);
+            ShowSpectrogram = true;
+        }
+
+        void LoadSpectrogramBitmapsAsync(object sender, System.ComponentModel.DoWorkEventArgs e)
+        {
+            int count = 0;
+            while (System.IO.File.Exists(System.IO.Path.Combine(_spectrogramDirectory, count + ".gif")))
             {
-                ShowSpectrogram = false;
+                Bitmap bmp = new Bitmap(System.IO.Path.Combine(_spectrogramDirectory, count + ".gif"));
+                _spectrumBitmaps.Add(bmp);
+                count++;
             }
         }
 
