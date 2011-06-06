@@ -63,6 +63,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     new AbcIViewer(),
                     new Csv(),
                     new TimeXml(),
+                    new ZeroG(),
                 };
             }
         }
