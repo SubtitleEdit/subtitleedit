@@ -223,7 +223,7 @@
             this.toolStripMenuItemPlayRateNormal = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemPlayRateFast = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemPlayRateVeryFast = new System.Windows.Forms.ToolStripMenuItem();
-            this.AudioWaveForm = new Nikse.SubtitleEdit.Controls.AudioVisualizer();
+            this.audioVisualizer = new Nikse.SubtitleEdit.Controls.AudioVisualizer();
             this.tabControlButtons = new System.Windows.Forms.TabControl();
             this.tabPageTranslate = new System.Windows.Forms.TabPage();
             this.labelTranslateTip = new System.Windows.Forms.Label();
@@ -1840,7 +1840,7 @@
             this.groupBoxVideo.Controls.Add(this.labelVideoInfo);
             this.groupBoxVideo.Controls.Add(this.trackBarWaveFormPosition);
             this.groupBoxVideo.Controls.Add(this.panelWaveFormControls);
-            this.groupBoxVideo.Controls.Add(this.AudioWaveForm);
+            this.groupBoxVideo.Controls.Add(this.audioVisualizer);
             this.groupBoxVideo.Controls.Add(this.tabControlButtons);
             this.groupBoxVideo.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBoxVideo.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -2025,33 +2025,33 @@
             // 
             // AudioWaveForm
             // 
-            this.AudioWaveForm.AllowDrop = true;
-            this.AudioWaveForm.AllowNewSelection = true;
-            this.AudioWaveForm.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.audioVisualizer.AllowDrop = true;
+            this.audioVisualizer.AllowNewSelection = true;
+            this.audioVisualizer.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.AudioWaveForm.BackColor = System.Drawing.Color.Black;
-            this.AudioWaveForm.BackgroundColor = System.Drawing.Color.Black;
-            this.AudioWaveForm.Color = System.Drawing.Color.GreenYellow;
-            this.AudioWaveForm.DrawGridLines = true;
-            this.AudioWaveForm.GridColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(20)))), ((int)(((byte)(18)))));
-            this.AudioWaveForm.Location = new System.Drawing.Point(472, 32);
-            this.AudioWaveForm.Margin = new System.Windows.Forms.Padding(0);
-            this.AudioWaveForm.Name = "AudioWaveForm";
-            this.AudioWaveForm.NewSelectionParagraph = null;
-            this.AudioWaveForm.SelectedColor = System.Drawing.Color.Red;
-            this.AudioWaveForm.ShowSpectrogram = false;
-            this.AudioWaveForm.ShowWaveform = true;
-            this.AudioWaveForm.Size = new System.Drawing.Size(768, 229);
-            this.AudioWaveForm.StartPositionSeconds = 0D;
-            this.AudioWaveForm.TabIndex = 6;
-            this.AudioWaveForm.TextColor = System.Drawing.Color.Gray;
-            this.AudioWaveForm.WaveFormNotLoadedText = "Click to add wave form";
-            this.AudioWaveForm.WavePeaks = null;
-            this.AudioWaveForm.ZoomFactor = 1D;
-            this.AudioWaveForm.Click += new System.EventHandler(this.AudioWaveForm_Click);
-            this.AudioWaveForm.DragDrop += new System.Windows.Forms.DragEventHandler(this.AudioWaveForm_DragDrop);
-            this.AudioWaveForm.DragEnter += new System.Windows.Forms.DragEventHandler(this.AudioWaveForm_DragEnter);
+            this.audioVisualizer.BackColor = System.Drawing.Color.Black;
+            this.audioVisualizer.BackgroundColor = System.Drawing.Color.Black;
+            this.audioVisualizer.Color = System.Drawing.Color.GreenYellow;
+            this.audioVisualizer.DrawGridLines = true;
+            this.audioVisualizer.GridColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(20)))), ((int)(((byte)(18)))));
+            this.audioVisualizer.Location = new System.Drawing.Point(472, 32);
+            this.audioVisualizer.Margin = new System.Windows.Forms.Padding(0);
+            this.audioVisualizer.Name = "AudioWaveForm";
+            this.audioVisualizer.NewSelectionParagraph = null;
+            this.audioVisualizer.SelectedColor = System.Drawing.Color.Red;
+            this.audioVisualizer.ShowSpectrogram = false;
+            this.audioVisualizer.ShowWaveform = true;
+            this.audioVisualizer.Size = new System.Drawing.Size(768, 229);
+            this.audioVisualizer.StartPositionSeconds = 0D;
+            this.audioVisualizer.TabIndex = 6;
+            this.audioVisualizer.TextColor = System.Drawing.Color.Gray;
+            this.audioVisualizer.WaveFormNotLoadedText = "Click to add wave form";
+            this.audioVisualizer.WavePeaks = null;
+            this.audioVisualizer.ZoomFactor = 1D;
+            this.audioVisualizer.Click += new System.EventHandler(this.AudioWaveForm_Click);
+            this.audioVisualizer.DragDrop += new System.Windows.Forms.DragEventHandler(this.AudioWaveForm_DragDrop);
+            this.audioVisualizer.DragEnter += new System.Windows.Forms.DragEventHandler(this.AudioWaveForm_DragEnter);
             // 
             // tabControlButtons
             // 
@@ -3475,7 +3475,9 @@
             this.mediaPlayer.Size = new System.Drawing.Size(281, 278);
             this.mediaPlayer.SubtitleText = "";
             this.mediaPlayer.TabIndex = 5;
+            this.mediaPlayer.VideoHeight = 0;
             this.mediaPlayer.VideoPlayer = null;
+            this.mediaPlayer.VideoWidth = 0;
             this.mediaPlayer.Volume = 0D;
             this.mediaPlayer.DragDrop += new System.Windows.Forms.DragEventHandler(this.mediaPlayer_DragDrop);
             this.mediaPlayer.DragEnter += new System.Windows.Forms.DragEventHandler(this.mediaPlayer_DragEnter);
@@ -3807,7 +3809,7 @@
         private System.Windows.Forms.ToolStripButton toolStripButtonToggleWaveForm;
         private Controls.VideoPlayerContainer mediaPlayer;
         private System.Windows.Forms.Panel panelVideoPlayer;
-        private Controls.AudioVisualizer AudioWaveForm;
+        private Controls.AudioVisualizer audioVisualizer;
         private System.Windows.Forms.Timer timerWaveForm;
         private System.Windows.Forms.ContextMenuStrip contextMenuStripWaveForm;
         private System.Windows.Forms.ToolStripMenuItem addParagraphHereToolStripMenuItem;
