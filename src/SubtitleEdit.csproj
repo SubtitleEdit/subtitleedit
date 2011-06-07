@@ -940,8 +940,6 @@
     <None Include="Web References\SeNetworkService\SeService.disco" />
     <None Include="DLLs\Interop.QuartzTypeLib.dll" />
     <None Include="DLLs\NHunspell.dll" />
-    <None Include="DLLs\AxInterop.WMPLib.dll" />
-    <None Include="DLLs\Interop.WMPLib.dll" />
     <Content Include="ChangeLog.txt" />
     <Content Include="gpl.txt" />
     <None Include="Dlls\Hunspellx64.dll" />
