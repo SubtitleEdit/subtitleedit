@@ -212,8 +212,6 @@
             this.colorDialogSSAStyle = new System.Windows.Forms.ColorDialog();
             this.fontDialogSSAStyle = new System.Windows.Forms.FontDialog();
             this.labelStatus = new System.Windows.Forms.Label();
-            this.buttonSpectrogramsFolderEmpty = new System.Windows.Forms.Button();
-            this.labelSpectrogramsFolderInfo = new System.Windows.Forms.Label();
             this.tabControlSettings.SuspendLayout();
             this.tabPageGenerel.SuspendLayout();
             this.groupBoxMiscellaneous.SuspendLayout();
@@ -1340,8 +1338,6 @@
             // 
             // groupBox1
             // 
-            this.groupBox1.Controls.Add(this.buttonSpectrogramsFolderEmpty);
-            this.groupBox1.Controls.Add(this.labelSpectrogramsFolderInfo);
             this.groupBox1.Controls.Add(this.buttonWaveFormsFolderEmpty);
             this.groupBox1.Controls.Add(this.labelWaveFormsFolderInfo);
             this.groupBox1.Location = new System.Drawing.Point(6, 325);
@@ -1354,7 +1350,7 @@
             // 
             this.buttonWaveFormsFolderEmpty.Location = new System.Drawing.Point(10, 37);
             this.buttonWaveFormsFolderEmpty.Name = "buttonWaveFormsFolderEmpty";
-            this.buttonWaveFormsFolderEmpty.Size = new System.Drawing.Size(188, 23);
+            this.buttonWaveFormsFolderEmpty.Size = new System.Drawing.Size(325, 23);
             this.buttonWaveFormsFolderEmpty.TabIndex = 1;
             this.buttonWaveFormsFolderEmpty.Text = "Empty \'WaveForms\' folder";
             this.buttonWaveFormsFolderEmpty.UseVisualStyleBackColor = true;
@@ -2278,25 +2274,6 @@
             this.labelStatus.TabIndex = 3;
             this.labelStatus.Text = "labelStatus";
             // 
-            // buttonSpectrogramsFolderEmpty
-            // 
-            this.buttonSpectrogramsFolderEmpty.Location = new System.Drawing.Point(341, 35);
-            this.buttonSpectrogramsFolderEmpty.Name = "buttonSpectrogramsFolderEmpty";
-            this.buttonSpectrogramsFolderEmpty.Size = new System.Drawing.Size(188, 23);
-            this.buttonSpectrogramsFolderEmpty.TabIndex = 3;
-            this.buttonSpectrogramsFolderEmpty.Text = "Empty \'Spectrograms\' folder";
-            this.buttonSpectrogramsFolderEmpty.UseVisualStyleBackColor = true;
-            this.buttonSpectrogramsFolderEmpty.Click += new System.EventHandler(this.buttonSpectrogramsFolderEmpty_Click);
-            // 
-            // labelSpectrogramsFolderInfo
-            // 
-            this.labelSpectrogramsFolderInfo.AutoSize = true;
-            this.labelSpectrogramsFolderInfo.Location = new System.Drawing.Point(338, 18);
-            this.labelSpectrogramsFolderInfo.Name = "labelSpectrogramsFolderInfo";
-            this.labelSpectrogramsFolderInfo.Size = new System.Drawing.Size(216, 13);
-            this.labelSpectrogramsFolderInfo.TabIndex = 2;
-            this.labelSpectrogramsFolderInfo.Text = "\'Spectrograms\' folder contains x files (x mb)";
-            // 
             // Settings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -2567,7 +2544,5 @@
         private System.Windows.Forms.CheckBox checkBoxPromptDeleteLines;
         private System.Windows.Forms.GroupBox groupBoxSpectrogram;
         private System.Windows.Forms.CheckBox checkBoxGenerateSpectrogram;
-        private System.Windows.Forms.Button buttonSpectrogramsFolderEmpty;
-        private System.Windows.Forms.Label labelSpectrogramsFolderInfo;
     }
 }
