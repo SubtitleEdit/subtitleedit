@@ -2023,7 +2023,7 @@
             this.toolStripMenuItemPlayRateVeryFast.Text = "Very fast";
             this.toolStripMenuItemPlayRateVeryFast.Click += new System.EventHandler(this.veryFastToolStripMenuItem_Click);
             // 
-            // AudioWaveForm
+            // audioVisualizer
             // 
             this.audioVisualizer.AllowDrop = true;
             this.audioVisualizer.AllowNewSelection = true;
@@ -2037,7 +2037,7 @@
             this.audioVisualizer.GridColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(20)))), ((int)(((byte)(18)))));
             this.audioVisualizer.Location = new System.Drawing.Point(472, 32);
             this.audioVisualizer.Margin = new System.Windows.Forms.Padding(0);
-            this.audioVisualizer.Name = "AudioWaveForm";
+            this.audioVisualizer.Name = "audioVisualizer";
             this.audioVisualizer.NewSelectionParagraph = null;
             this.audioVisualizer.SelectedColor = System.Drawing.Color.Red;
             this.audioVisualizer.ShowSpectrogram = false;

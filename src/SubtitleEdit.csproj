@@ -851,7 +851,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <None Include="Resources\OpenOfficeDictionaries.xml.zip" />
+    <EmbeddedResource Include="Resources\OpenOfficeDictionaries.xml.zip" />
     <None Include="Web References\MicrosoftTranslationService\GetTranslationsResponse.datasource">
       <DependentUpon>Reference.map</DependentUpon>
     </None>
