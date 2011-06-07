@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using System.Xml;
 using Nikse.SubtitleEdit.Logic;
+using System.IO;
 
 namespace Nikse.SubtitleEdit.Controls
 {
@@ -1091,11 +1092,15 @@ namespace Nikse.SubtitleEdit.Controls
         void LoadSpectrogramBitmapsAsync(object sender, System.ComponentModel.DoWorkEventArgs e)
         {
             int count = 0;
+            string fileName = System.IO.Path.Combine(_spectrogramDirectory, count + ".gif");
             while (System.IO.File.Exists(System.IO.Path.Combine(_spectrogramDirectory, count + ".gif")))
             {
-                Bitmap bmp = new Bitmap(System.IO.Path.Combine(_spectrogramDirectory, count + ".gif"));
-                _spectrogramBitmaps.Add(bmp);
+                using (var ms = new MemoryStream(File.ReadAllBytes(fileName))) 
+                {
+                    _spectrogramBitmaps.Add((Bitmap)Bitmap.FromStream(ms));
+                }
                 count++;
+                fileName = System.IO.Path.Combine(_spectrogramDirectory, count + ".gif");
             }
         }
 
