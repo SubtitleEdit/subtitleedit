@@ -53,7 +53,6 @@ namespace Nikse.SubtitleEdit.Controls
         private const int SubtitlesHeight = 57;
         private readonly Color _backgroundColor = Color.FromArgb(18, 18, 18); 
         private Panel _panelcontrols;
-        private string _totalPositionString;
 
         private PictureBox _pictureBoxBackground;
         private PictureBox _pictureBoxReverse;
@@ -912,20 +911,13 @@ namespace Nikse.SubtitleEdit.Controls
                 if (VideoPlayer.Duration == 0)
                     return;
 
-                if (_totalPositionString == null)
-                {
-                    var sp = TimeSpan.FromSeconds(Duration);
-                    _totalPositionString = string.Format(" / {0:00}:{1:00}:{2:00},{3:000}", sp.Hours, sp.Minutes, sp.Seconds, sp.Milliseconds);
-                }
-
                 var pos = CurrentPosition;
                 if (pos > 1000000)
-                {
                     pos = 0;
-                }
-                TimeSpan span = TimeSpan.FromSeconds(pos);
-                string displayTime = string.Format("{0:00}:{1:00}:{2:00},{3:000}", span.Hours, span.Minutes, span.Seconds, span.Milliseconds);
-                _labelTimeCode.Text = displayTime + _totalPositionString;
+                var span = TimeSpan.FromSeconds(pos);
+                var dur = TimeSpan.FromSeconds(Duration);
+                _labelTimeCode.Text = string.Format("{0:00}:{1:00}:{2:00},{3:000} / {4:00}:{5:00}:{6:00},{7:000}", span.Hours, span.Minutes, span.Seconds, span.Milliseconds, 
+                                                     dur.Hours, dur.Minutes, dur.Seconds, dur.Milliseconds);
 
                 RefreshPlayPauseButtons();
             }
