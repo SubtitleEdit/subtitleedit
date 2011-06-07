@@ -291,6 +291,7 @@ namespace Nikse.SubtitleEdit.Forms
                 test = test.Replace("\\u0026#39;", "'");
                 test = test.Replace("\\u0026amp;", "&");
                 test = test.Replace("\\u0026quot;", "\"");
+                test = test.Replace("\\u0026apos;", "'");
                 test = test.Replace("\\u0026lt;", "<");
                 test = test.Replace("\\u0026gt;", ">");
                 test = test.Replace("\\u003d", "=");
