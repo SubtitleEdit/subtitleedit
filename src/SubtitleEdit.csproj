@@ -630,7 +630,7 @@
     <Compile Include="Logic\zlib\ZStream.cs" />
     <Compile Include="Logic\zlib\ZStreamException.cs" />
     <Compile Include="Logic\Wave.cs" />
-    <Compile Include="Logic\WavePeak.cs" />
+    <Compile Include="Logic\WaveToVisualizer.cs" />
     <Compile Include="Logic\ZipExtractor.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

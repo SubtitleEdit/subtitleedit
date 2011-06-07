@@ -60,7 +60,6 @@ namespace Nikse.SubtitleEdit.Logic
 
             // constant header
             ChunkId = Encoding.UTF8.GetString(buffer, 0, 4);
-//            ChunkSize = BitConverter.ToInt32(buffer, 4);
             ChunkSize = BitConverter.ToUInt32(buffer, 4);
             Format = Encoding.UTF8.GetString(buffer, 8, 4);
             FmtId = Encoding.UTF8.GetString(buffer, 12, 4);
@@ -81,7 +80,6 @@ namespace Nikse.SubtitleEdit.Logic
             stream.Position = ConstantHeaderSize + FmtChunkSize;
             stream.Read(buffer, 0, buffer.Length);
             DataId = Encoding.UTF8.GetString(buffer, 0, 4);
-            //DataChunkSize = (uint) BitConverter.ToInt32(buffer, 4);
             DataChunkSize =  BitConverter.ToUInt32(buffer, 4);
             DataStartPosition = ConstantHeaderSize + FmtChunkSize + 8;
 
