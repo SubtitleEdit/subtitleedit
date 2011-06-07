@@ -36,11 +36,11 @@ namespace Nikse.SubtitleEdit.Controls
         private Subtitle _subtitle = null;
         private bool _noClear = false;
 
-        private List<Bitmap> _spectrumBitmaps = new List<Bitmap>();
+        private List<Bitmap> _spectrogramBitmaps = new List<Bitmap>();
         private string _spectrogramDirectory;
         private double _sampleDuration = 0;
         private double _totalDuration = 0;
-        private const int SpectrumBitmapWidth = 1024;
+        private const int SpectrogramBitmapWidth = 1024;
 
         public delegate void ParagraphChangedHandler(Paragraph paragraph);
         public event ParagraphChangedHandler OnNewSelectionRightClicked;
@@ -81,11 +81,11 @@ namespace Nikse.SubtitleEdit.Controls
             }
         }
 
-        public bool IsSpectrumAvailable
+        public bool IsSpectrogramAvailable
         {
             get
             {
-                return _spectrumBitmaps != null && _spectrumBitmaps.Count > 0;
+                return _spectrogramBitmaps != null && _spectrogramBitmaps.Count > 0;
             }
         }
         public bool ShowSpectrogram { get; set; }
@@ -162,7 +162,7 @@ namespace Nikse.SubtitleEdit.Controls
 
         public void ResetSpectrogram()
         {
-            _spectrumBitmaps = new List<Bitmap>();
+            _spectrogramBitmaps = new List<Bitmap>();
         }
 
         public void ClearSelection()
@@ -282,7 +282,7 @@ namespace Nikse.SubtitleEdit.Controls
                 int x = 0;
                 int y = Height / 2;
 
-                if (IsSpectrumAvailable && ShowSpectrogram)
+                if (IsSpectrogramAvailable && ShowSpectrogram)
                 {
                     DrawSpectrogramBitmap(StartPositionSeconds, graphics);
                     if (ShowWaveform)
@@ -1067,7 +1067,7 @@ namespace Nikse.SubtitleEdit.Controls
 
         public void InitializeSpectrogram(string spectrogramDirectory)
         {
-            _spectrumBitmaps = new List<Bitmap>();
+            _spectrogramBitmaps = new List<Bitmap>();
             ShowSpectrogram = false;
             if (System.IO.Directory.Exists(spectrogramDirectory))
             {
@@ -1094,14 +1094,14 @@ namespace Nikse.SubtitleEdit.Controls
             while (System.IO.File.Exists(System.IO.Path.Combine(_spectrogramDirectory, count + ".gif")))
             {
                 Bitmap bmp = new Bitmap(System.IO.Path.Combine(_spectrogramDirectory, count + ".gif"));
-                _spectrumBitmaps.Add(bmp);
+                _spectrogramBitmaps.Add(bmp);
                 count++;
             }
         }
 
-        public void InitializeSpectrogram(List<Bitmap> spectrumBitmaps, string spectrogramDirectory)
+        public void InitializeSpectrogram(List<Bitmap> spectrogramBitmaps, string spectrogramDirectory)
         {
-            _spectrumBitmaps = spectrumBitmaps;
+            _spectrogramBitmaps = spectrogramBitmaps;
 
             XmlDocument doc = new XmlDocument();
             string xmlInfoFileName = System.IO.Path.Combine(spectrogramDirectory, "Info.xml");
@@ -1127,19 +1127,19 @@ namespace Nikse.SubtitleEdit.Controls
             Graphics gfx = Graphics.FromImage(bmpDestination);
 
             double startRow = seconds / (_sampleDuration);
-            int bitmapIndex = (int)(startRow / SpectrumBitmapWidth);
-            int subtractValue = (int)startRow % SpectrumBitmapWidth;
+            int bitmapIndex = (int)(startRow / SpectrogramBitmapWidth);
+            int subtractValue = (int)startRow % SpectrogramBitmapWidth;
 
             int i = 0;
-            while (i * SpectrumBitmapWidth < width && i + bitmapIndex < _spectrumBitmaps.Count)
+            while (i * SpectrogramBitmapWidth < width && i + bitmapIndex < _spectrogramBitmaps.Count)
             {
-                var bmp = _spectrumBitmaps[i + bitmapIndex];
+                var bmp = _spectrogramBitmaps[i + bitmapIndex];
                 gfx.DrawImage(bmp, new Point(bmp.Width * i - subtractValue, 0));
                 i++;
             }
-            if (i + bitmapIndex < _spectrumBitmaps.Count && subtractValue > 0)
+            if (i + bitmapIndex < _spectrogramBitmaps.Count && subtractValue > 0)
             {
-                var bmp = _spectrumBitmaps[i + bitmapIndex];
+                var bmp = _spectrogramBitmaps[i + bitmapIndex];
                 gfx.DrawImage(bmp, new Point(bmp.Width * i - subtractValue, 0));
                 i++;
             }

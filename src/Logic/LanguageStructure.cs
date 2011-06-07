@@ -1096,6 +1096,8 @@
             public string WaveFormTextColor { get; set; }
             public string WaveFormsFolderEmpty { get; set; }
             public string WaveFormsFolderInfo { get; set; }
+            public string SpectrogramsFolderEmpty { get; set; }
+            public string SpectrogramsFolderInfo { get; set; }
             public string Spectrogram { get; set; }
             public string GenerateSpectrogram { get; set; }
             public string SubStationAlphaStyle { get; set; }

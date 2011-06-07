@@ -69,6 +69,14 @@ namespace Nikse.SubtitleEdit.Logic
             }
         }
 
+        public static string SpectrogramsFolder
+        {
+            get
+            {
+                return DataDirectory + "Spectrograms" + Path.DirectorySeparatorChar;
+            }
+        }
+
         public static string AutoBackupFolder
         {
             get
