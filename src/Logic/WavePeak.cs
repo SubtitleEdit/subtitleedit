@@ -366,7 +366,7 @@ namespace Nikse.SubtitleEdit.Logic
 
         //////////////////////////////////////// SPECTRUM ///////////////////////////////////////////////////////////
 
-        public List<Bitmap> GenerateFourierData(int NFFT, string spectrumDirectory)
+        public List<Bitmap> GenerateFourierData(int NFFT, string spectrogramDirectory)
         {
             List<Bitmap> bitmaps = new List<Bitmap>();
 
@@ -421,7 +421,7 @@ namespace Nikse.SubtitleEdit.Logic
                         for (int k = 0; k < sampleSize; k++)
                             samplesAsReal[k] = samples[k] / divider;
                         Bitmap bmp = DrawSpectrogram(NFFT, samplesAsReal, f, palette);
-                        bmp.Save(Path.Combine(spectrumDirectory, count + ".gif"), System.Drawing.Imaging.ImageFormat.Gif);
+                        bmp.Save(Path.Combine(spectrogramDirectory, count + ".gif"), System.Drawing.Imaging.ImageFormat.Gif);
                         bitmaps.Add(bmp); // save serialized gif instead????
                         samples = new List<int>();
                         count++;
@@ -437,7 +437,7 @@ namespace Nikse.SubtitleEdit.Logic
                 for (int k = 0; k < sampleSize && k < samples.Count; k++)
                     samplesAsReal[k] = samples[k] / divider;
                 Bitmap bmp = DrawSpectrogram(NFFT, samplesAsReal, f, palette);
-                bmp.Save(Path.Combine(spectrumDirectory, count + ".gif"), System.Drawing.Imaging.ImageFormat.Gif);
+                bmp.Save(Path.Combine(spectrogramDirectory, count + ".gif"), System.Drawing.Imaging.ImageFormat.Gif);
                 bitmaps.Add(bmp); // save serialized gif instead????
             }
 
@@ -447,7 +447,7 @@ namespace Nikse.SubtitleEdit.Logic
             double totalDuration = Header.LengthInSeconds;
             doc.DocumentElement.SelectSingleNode("SampleDuration").InnerText = sampleDuration.ToString();
             doc.DocumentElement.SelectSingleNode("TotalDuration").InnerText = totalDuration.ToString();
-            doc.Save(System.IO.Path.Combine(spectrumDirectory, "Info.xml"));
+            doc.Save(System.IO.Path.Combine(spectrogramDirectory, "Info.xml"));
 
             return bitmaps;
         }

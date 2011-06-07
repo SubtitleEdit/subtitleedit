@@ -238,9 +238,10 @@ namespace Nikse.SubtitleEdit.Forms
             buttonWaveFormBackgroundColor.Text = language.WaveFormBackgroundColor;
             groupBoxSpectrogram.Text = language.Spectrogram;
             checkBoxGenerateSpectrogram.Text = language.GenerateSpectrogram;
+            buttonSpectrogramsFolderEmpty.Text = language.SpectrogramsFolderEmpty;
 
             buttonWaveFormsFolderEmpty.Text = language.WaveFormsFolderEmpty;
-            InitializeWaveFormsFolderEmpty(language);
+            InitializeWaveformsAndSpectrogramsFolderEmpty(language);
 
 
             groupBoxSsaStyle.Text = language.SubStationAlphaStyle;
@@ -501,16 +502,41 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void InitializeWaveFormsFolderEmpty(LanguageStructure.Settings language)
+        private void InitializeWaveformsAndSpectrogramsFolderEmpty(LanguageStructure.Settings language)
         {
             string waveFormsFolder = Configuration.WaveFormsFolder.TrimEnd(Path.DirectorySeparatorChar);
+            string spectrogramsFolder = Configuration.SpectrogramsFolder.TrimEnd(Path.DirectorySeparatorChar);
+            long bytes = 0;
+            int count = 0;
+
             if (Directory.Exists(waveFormsFolder))
             {
-                long bytes = 0;
-                int count = 0;
                 DirectoryInfo di = new DirectoryInfo(waveFormsFolder);
 
-                // spectrum data
+                // waveform data
+                bytes = 0;
+                count = 0;
+                foreach (FileInfo fi in di.GetFiles("*.wav"))
+                {
+                    bytes += fi.Length;
+                    count++;
+                }
+                labelWaveFormsFolderInfo.Text = string.Format(language.WaveFormsFolderInfo, count, bytes / 1024.0 / 1024.0);
+                buttonWaveFormsFolderEmpty.Enabled = count > 0;
+            }
+            else
+            {
+                buttonWaveFormsFolderEmpty.Enabled = false;
+                labelWaveFormsFolderInfo.Text = string.Format(language.WaveFormsFolderInfo, 0, 0);
+            }
+
+            if (Directory.Exists(spectrogramsFolder))
+            {
+                DirectoryInfo di = new DirectoryInfo(spectrogramsFolder);
+
+                // spectrogram data
+                bytes = 0;
+                count = 0;
                 foreach (DirectoryInfo dir in di.GetDirectories())
                 {
                     DirectoryInfo spectrogramDir = new DirectoryInfo(dir.FullName);
@@ -527,20 +553,13 @@ namespace Nikse.SubtitleEdit.Forms
                         count++;
                     }
                 }
-
-                // waveform data
-                foreach (FileInfo fi in di.GetFiles("*.wav"))
-                {
-                    bytes += fi.Length;
-                    count++;
-                }
-                labelWaveFormsFolderInfo.Text = string.Format(language.WaveFormsFolderInfo, count, bytes / 1024.0 / 1024.0);
-                buttonWaveFormsFolderEmpty.Enabled = count > 0;
+                labelSpectrogramsFolderInfo.Text = string.Format(language.SpectrogramsFolderInfo, count, bytes / 1024.0 / 1024.0);
+                buttonSpectrogramsFolderEmpty.Enabled = count > 0;
             }
             else
             {
-                buttonWaveFormsFolderEmpty.Enabled = false;
-                labelWaveFormsFolderInfo.Text = string.Format(language.WaveFormsFolderInfo, 0, 0);
+                buttonSpectrogramsFolderEmpty.Enabled = false;
+                labelSpectrogramsFolderInfo.Text = string.Format(language.SpectrogramsFolderInfo, 0, 0);
             }
         }
 
@@ -1535,19 +1554,6 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 DirectoryInfo di = new DirectoryInfo(waveFormsFolder);
 
-                foreach (DirectoryInfo dir in di.GetDirectories())
-                {
-                    DirectoryInfo spectrogramDir = new DirectoryInfo(dir.FullName);
-                    foreach (FileInfo fileName in spectrogramDir.GetFiles("*.gif"))
-                    {
-                        File.Delete(fileName.FullName);
-                    }
-                    string xmlFileName = Path.Combine(dir.FullName, "Info.xml");
-                    if (File.Exists(xmlFileName))
-                        File.Delete(xmlFileName);
-                    Directory.Delete(dir.FullName);
-                }
-
                 foreach (FileInfo fileName in di.GetFiles("*.wav"))
                 {
                     try 
@@ -1560,7 +1566,7 @@ namespace Nikse.SubtitleEdit.Forms
 	                }
                 }
             }
-            InitializeWaveFormsFolderEmpty(Configuration.Settings.Language.Settings);
+            InitializeWaveformsAndSpectrogramsFolderEmpty(Configuration.Settings.Language.Settings);
         }
 
         private void checkBoxRememberRecentFiles_CheckedChanged(object sender, EventArgs e)
@@ -1703,6 +1709,29 @@ namespace Nikse.SubtitleEdit.Forms
                 treeViewShortcuts.SelectedNode.Text = text + " " + sb.ToString();
 
             }
+        }
+
+        private void buttonSpectrogramsFolderEmpty_Click(object sender, EventArgs e)
+        {
+            string spectrogramsFolder = Configuration.SpectrogramsFolder.TrimEnd(Path.DirectorySeparatorChar);
+            if (Directory.Exists(spectrogramsFolder))
+            {
+                DirectoryInfo di = new DirectoryInfo(spectrogramsFolder);
+
+                foreach (DirectoryInfo dir in di.GetDirectories())
+                {
+                    DirectoryInfo spectrogramDir = new DirectoryInfo(dir.FullName);
+                    foreach (FileInfo fileName in spectrogramDir.GetFiles("*.gif"))
+                    {
+                        File.Delete(fileName.FullName);
+                    }
+                    string xmlFileName = Path.Combine(dir.FullName, "Info.xml");
+                    if (File.Exists(xmlFileName))
+                        File.Delete(xmlFileName);
+                    Directory.Delete(dir.FullName);
+                }
+            }
+            InitializeWaveformsAndSpectrogramsFolderEmpty(Configuration.Settings.Language.Settings);
         }
 
     }

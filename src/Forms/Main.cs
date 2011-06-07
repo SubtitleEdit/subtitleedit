@@ -7010,11 +7010,12 @@ namespace Nikse.SubtitleEdit.Forms
                 labelVideoInfo.Text = Path.GetFileName(fileName) + " " + videoInfo.Width + "x" + videoInfo.Height + " " + videoInfo.VideoCodec;
                                 
                 string peakWaveFileName = GetPeakWaveFileName(fileName);
+                string spectrogramFolder = GetSpectrogramFolder(fileName);
                 if (File.Exists(peakWaveFileName))
                 {
                     AudioWaveForm.WavePeaks = new WavePeakGenerator(peakWaveFileName);
                     AudioWaveForm.ResetSpectrogram();
-                    AudioWaveForm.InitializeSpectrogram(peakWaveFileName.Substring(0, peakWaveFileName.Length-4));
+                    AudioWaveForm.InitializeSpectrogram(spectrogramFolder);
                     toolStripComboBoxWaveForm_SelectedIndexChanged(null, null);
                     AudioWaveForm.WavePeaks.GenerateAllSamples();
                     AudioWaveForm.WavePeaks.Close();
@@ -8409,6 +8410,19 @@ namespace Nikse.SubtitleEdit.Forms
             return wavePeakName;            
         }
 
+        private string GetSpectrogramFolder(string videoFileName)
+        {
+            string dir = Configuration.SpectrogramsFolder.TrimEnd(Path.DirectorySeparatorChar);
+            if (!Directory.Exists(dir))
+                Directory.CreateDirectory(dir);
+
+            FileInfo fi = new FileInfo(videoFileName);
+            string name = Sha256Hash(Path.GetFileName(videoFileName) + fi.Length.ToString() + fi.CreationTimeUtc.ToShortDateString());
+            name = name.Replace("=", string.Empty).Replace("/", string.Empty).Replace(",", string.Empty).Replace("?", string.Empty).Replace("*", string.Empty).Replace("+", string.Empty).Replace("\\", string.Empty);
+            name = Path.Combine(dir, name);
+            return name;
+        }
+
         private void AudioWaveForm_Click(object sender, EventArgs e)
         {
             if (AudioWaveForm.WavePeaks == null)
@@ -8422,16 +8436,16 @@ namespace Nikse.SubtitleEdit.Forms
                 
                 AddWareForm addWaveForm = new AddWareForm();
                 string peakWaveFileName = GetPeakWaveFileName(_videoFileName);
-                string spectrumFileName = peakWaveFileName.Substring(0, peakWaveFileName.Length - 4);
-                addWaveForm.Initialize(_videoFileName, spectrumFileName);
+                string spectrogramFolder = GetSpectrogramFolder(_videoFileName);
+                addWaveForm.Initialize(_videoFileName, spectrogramFolder);
                 if (addWaveForm.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                 {
                     addWaveForm.WavePeak.WritePeakSamples(peakWaveFileName);
                     var audioPeakWave = new WavePeakGenerator(peakWaveFileName);
                     audioPeakWave.GenerateAllSamples();
                     AudioWaveForm.WavePeaks = audioPeakWave;
-                    if (addWaveForm.SpectrumBitmaps != null)
-                        AudioWaveForm.InitializeSpectrogram(addWaveForm.SpectrumBitmaps, spectrumFileName);
+                    if (addWaveForm.SpectrogramBitmaps != null)
+                        AudioWaveForm.InitializeSpectrogram(addWaveForm.SpectrogramBitmaps, spectrogramFolder);
                     timerWaveForm.Start();
                 }
             }
@@ -10261,7 +10275,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void contextMenuStripWaveForm_Opening(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            if (AudioWaveForm.IsSpectrumAvailable)
+            if (AudioWaveForm.IsSpectrogramAvailable)
             {
                 if (AudioWaveForm.ShowSpectrogram && AudioWaveForm.ShowWaveform)
                 {

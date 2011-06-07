@@ -13,8 +13,8 @@ namespace Nikse.SubtitleEdit.Forms
         public string SourceVideoFileName { get; private set; }
         private bool _cancel = false;
         private string _wavFileName = null;
-        private string _spectrumDirectory;
-        public List<Bitmap> SpectrumBitmaps { get; private set; }
+        private string _spectrogramDirectory;
+        public List<Bitmap> SpectrogramBitmaps { get; private set; }
 
         public AddWareForm()
         {
@@ -25,7 +25,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         public WavePeakGenerator WavePeak { get; private set; }
 
-        public void Initialize(string videoFile, string spectrumDirectory)
+        public void Initialize(string videoFile, string spectrogramDirectory)
         {
             Text = Configuration.Settings.Language.AddWaveForm.Title;
             buttonRipWave.Text = Configuration.Settings.Language.AddWaveForm.GenerateWaveFormData;
@@ -33,7 +33,7 @@ namespace Nikse.SubtitleEdit.Forms
             labelVideoFileName.Text = videoFile;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
             labelSourcevideoFile.Text = Configuration.Settings.Language.AddWaveForm.SourceVideoFile;
-            _spectrumDirectory = spectrumDirectory;
+            _spectrogramDirectory = spectrogramDirectory;
         }
 
         private void buttonRipWave_Click(object sender, EventArgs e)
@@ -137,8 +137,8 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 labelProgress.Text = Configuration.Settings.Language.AddWaveForm.GeneratingSpectrogram;
                 this.Refresh();
-                System.IO.Directory.CreateDirectory(_spectrumDirectory);
-                SpectrumBitmaps = waveFile.GenerateFourierData(256, _spectrumDirectory);
+                System.IO.Directory.CreateDirectory(_spectrogramDirectory);
+                SpectrogramBitmaps = waveFile.GenerateFourierData(256, _spectrogramDirectory);
             }
             labelPleaseWait.Visible = false;
 
