@@ -163,6 +163,11 @@ namespace Nikse.SubtitleEdit.Controls
 
         public void ResetSpectrogram()
         {
+            if (_spectrogramBitmaps != null)
+            {
+                foreach (Bitmap bmp in _spectrogramBitmaps)
+                    bmp.Dispose();
+            }
             _spectrogramBitmaps = new List<Bitmap>();
         }
 
