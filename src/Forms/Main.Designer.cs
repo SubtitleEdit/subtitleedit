@@ -223,7 +223,7 @@
             this.toolStripMenuItemPlayRateNormal = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemPlayRateFast = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemPlayRateVeryFast = new System.Windows.Forms.ToolStripMenuItem();
-            this.AudioWaveForm = new Nikse.SubtitleEdit.Controls.WaveForm();
+            this.AudioWaveForm = new Nikse.SubtitleEdit.Controls.AudioVisualizer();
             this.tabControlButtons = new System.Windows.Forms.TabControl();
             this.tabPageTranslate = new System.Windows.Forms.TabPage();
             this.labelTranslateTip = new System.Windows.Forms.Label();
@@ -3807,7 +3807,7 @@
         private System.Windows.Forms.ToolStripButton toolStripButtonToggleWaveForm;
         private Controls.VideoPlayerContainer mediaPlayer;
         private System.Windows.Forms.Panel panelVideoPlayer;
-        private Controls.WaveForm AudioWaveForm;
+        private Controls.AudioVisualizer AudioWaveForm;
         private System.Windows.Forms.Timer timerWaveForm;
         private System.Windows.Forms.ContextMenuStrip contextMenuStripWaveForm;
         private System.Windows.Forms.ToolStripMenuItem addParagraphHereToolStripMenuItem;

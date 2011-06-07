@@ -1,6 +1,6 @@
 ﻿namespace Nikse.SubtitleEdit.Controls
 {
-    partial class WaveForm
+    partial class AudioVisualizer
     {
         /// <summary> 
         /// Required designer variable.

@@ -285,7 +285,7 @@ namespace Nikse.SubtitleEdit.Forms
                 AudioWaveForm.OnTimeChanged += AudioWaveForm_OnTimeChanged;
                 AudioWaveForm.OnNewSelectionRightClicked += AudioWaveForm_OnNewSelectionRightClicked;
                 AudioWaveForm.OnParagraphRightClicked += AudioWaveForm_OnParagraphRightClicked;
-                AudioWaveForm.OnNonParagraphRightClicked += new WaveForm.PositionChangedEventHandler(AudioWaveForm_OnNonParagraphRightClicked);
+                AudioWaveForm.OnNonParagraphRightClicked += new AudioVisualizer.PositionChangedEventHandler(AudioWaveForm_OnNonParagraphRightClicked);
                 AudioWaveForm.OnSingleClick += AudioWaveForm_OnSingleClick;
                 AudioWaveForm.OnPause += AudioWaveForm_OnPause;
                 AudioWaveForm.OnTimeChangedAndOffsetRest += AudioWaveForm_OnTimeChangedAndOffsetRest;
@@ -298,7 +298,7 @@ namespace Nikse.SubtitleEdit.Forms
                 AudioWaveForm.TextColor = Configuration.Settings.VideoControls.WaveFormTextColor;
                 AudioWaveForm.MouseWheelScrollUpIsForward = Configuration.Settings.VideoControls.WaveFormMouseWheelScrollUpIsForward;
 
-                for (double zoomCounter = WaveForm.ZoomMininum; zoomCounter <= WaveForm.ZoomMaxinum + (0.001); zoomCounter += 0.1)
+                for (double zoomCounter = AudioVisualizer.ZoomMininum; zoomCounter <= AudioVisualizer.ZoomMaxinum + (0.001); zoomCounter += 0.1)
                 {
                     int percent = (int)Math.Round((zoomCounter * 100));
                     ComboBoxZoomItem item = new ComboBoxZoomItem() { Text = percent.ToString() + "%", ZoomFactor = zoomCounter };

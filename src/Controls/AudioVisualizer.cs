@@ -8,7 +8,7 @@ using System.IO;
 
 namespace Nikse.SubtitleEdit.Controls
 {
-    public partial class WaveForm : UserControl
+    public partial class AudioVisualizer : UserControl
     {
         private enum MouseDownParagraphType
         { 
@@ -175,7 +175,7 @@ namespace Nikse.SubtitleEdit.Controls
             Invalidate();
         }
 
-        public WaveForm()
+        public AudioVisualizer()
         {
             InitializeComponent();
             SetStyle(System.Windows.Forms.ControlStyles.UserPaint | System.Windows.Forms.ControlStyles.AllPaintingInWmPaint | System.Windows.Forms.ControlStyles.DoubleBuffer, true);
