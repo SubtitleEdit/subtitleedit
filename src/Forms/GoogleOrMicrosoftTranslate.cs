@@ -2,12 +2,14 @@
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Logic;
 using System.Drawing;
+using System.ComponentModel;
 
 namespace Nikse.SubtitleEdit.Forms
 {
     public sealed partial class GoogleOrMicrosoftTranslate : Form
     {
         public string TranslatedText { get; set; }
+        private string _googleText = null;
 
         public GoogleOrMicrosoftTranslate()
         {
@@ -18,7 +20,7 @@ namespace Nikse.SubtitleEdit.Forms
             RemovedLanguagesNotInMicrosoftTranslate(comboBoxTo);
 
             labelFrom.Text = Configuration.Settings.Language.GoogleOrMicrosoftTranslate.From;
-            labelTo.Text = Configuration.Settings.Language.GoogleOrMicrosoftTranslate.From;
+            labelTo.Text = Configuration.Settings.Language.GoogleOrMicrosoftTranslate.To;
             labelSourceText.Text = Configuration.Settings.Language.GoogleOrMicrosoftTranslate.SourceText;
             buttonGoogle.Text = Configuration.Settings.Language.GoogleOrMicrosoftTranslate.GoogleTranslate;
             buttonMicrosoft.Text = Configuration.Settings.Language.GoogleOrMicrosoftTranslate.MicrosoftTranslate;
@@ -96,6 +98,8 @@ namespace Nikse.SubtitleEdit.Forms
                 string from = (comboBoxFrom.SelectedItem as Nikse.SubtitleEdit.Forms.GoogleTranslate.ComboBoxItem).Value;
                 string to = (comboBoxTo.SelectedItem as Nikse.SubtitleEdit.Forms.GoogleTranslate.ComboBoxItem).Value;
                 string languagePair = from + "|" + to;
+
+                buttonGoogle.Text = string.Empty;
                 buttonGoogle.Text = Forms.GoogleTranslate.TranslateTextViaApi(textBoxSourceText.Text, languagePair);
 
                 GoogleTranslate gt = new GoogleTranslate();
@@ -135,6 +139,12 @@ namespace Nikse.SubtitleEdit.Forms
         {
             TranslatedText = buttonMicrosoft.Text;
             DialogResult = DialogResult.OK;
+        }
+
+        private void GoogleOrMicrosoftTranslate_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Escape)
+                DialogResult = DialogResult.Cancel;
         }
 
     }

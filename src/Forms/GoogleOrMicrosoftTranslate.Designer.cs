@@ -176,6 +176,7 @@
             this.Name = "GoogleOrMicrosoftTranslate";
             this.Text = "GoogleOrMicrosoftTranslate";
             this.Shown += new System.EventHandler(this.GoogleOrMicrosoftTranslate_Shown);
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.GoogleOrMicrosoftTranslate_KeyDown);
             this.ResumeLayout(false);
             this.PerformLayout();
 
