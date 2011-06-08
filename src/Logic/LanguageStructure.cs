@@ -717,6 +717,7 @@
                     public string CloseVideo { get; set; }
                     public string ShowHideVideo { get; set; }
                     public string ShowHideWaveForm { get; set; }
+                    public string ShowHideWaveformAndSpectrogram { get; set; }
                     public string UnDockVideoControls { get; set; }
                     public string ReDockVideoControls { get; set; }
                 }
@@ -1340,6 +1341,7 @@
         public class WaveForm
         {
             public string ClickToAddWaveForm { get; set; }
+            public string ClickToAddWaveformAndSpectrogram { get; set; }
             public string Seconds { get; set; }
             public string ZoomIn { get; set; }
             public string ZoomOut { get; set; }

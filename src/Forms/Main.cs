@@ -777,7 +777,12 @@ namespace Nikse.SubtitleEdit.Forms
             openVideoToolStripMenuItem.Text = _language.Menu.Video.OpenVideo;
             toolStripMenuItemSetAudioTrack.Text = _language.Menu.Video.ChooseAudioTrack;
             closeVideoToolStripMenuItem.Text = _language.Menu.Video.CloseVideo;
-            showhideWaveFormToolStripMenuItem.Text = _language.Menu.Video.ShowHideWaveForm;
+
+            if (Configuration.Settings.VideoControls.GenerateSpectrogram)
+                showhideWaveFormToolStripMenuItem.Text = _language.Menu.Video.ShowHideWaveformAndSpectrogram;
+            else
+                showhideWaveFormToolStripMenuItem.Text = _language.Menu.Video.ShowHideWaveForm;
+
             showhideVideoToolStripMenuItem.Text = _language.Menu.Video.ShowHideVideo;
             undockVideoControlsToolStripMenuItem.Text = _language.Menu.Video.UnDockVideoControls;
             redockVideoControlsToolStripMenuItem.Text = _language.Menu.Video.ReDockVideoControls;
@@ -965,7 +970,10 @@ namespace Nikse.SubtitleEdit.Forms
             toolStripButtonWaveFormZoomOut.ToolTipText = Configuration.Settings.Language.WaveForm.ZoomOut;
             toolStripButtonWaveFormZoomIn.ToolTipText = Configuration.Settings.Language.WaveForm.ZoomIn;
 
-            audioVisualizer.WaveFormNotLoadedText = Configuration.Settings.Language.WaveForm.ClickToAddWaveForm;
+            if (Configuration.Settings.VideoControls.GenerateSpectrogram)
+                audioVisualizer.WaveFormNotLoadedText = Configuration.Settings.Language.WaveForm.ClickToAddWaveformAndSpectrogram;
+            else 
+                audioVisualizer.WaveFormNotLoadedText = Configuration.Settings.Language.WaveForm.ClickToAddWaveForm;
         }
 
         private void SetFormatToSubRip()
@@ -2080,6 +2088,17 @@ namespace Nikse.SubtitleEdit.Forms
                 _timerAutoSave.Start();
             }
             SetTitle();
+            if (Configuration.Settings.VideoControls.GenerateSpectrogram)
+            {
+                audioVisualizer.WaveFormNotLoadedText = Configuration.Settings.Language.WaveForm.ClickToAddWaveformAndSpectrogram;
+                showhideWaveFormToolStripMenuItem.Text = _language.Menu.Video.ShowHideWaveformAndSpectrogram;
+            }
+            else
+            {
+                audioVisualizer.WaveFormNotLoadedText = Configuration.Settings.Language.WaveForm.ClickToAddWaveForm;
+                showhideWaveFormToolStripMenuItem.Text = _language.Menu.Video.ShowHideWaveForm;
+            }
+            audioVisualizer.Invalidate();
         }
 
         private int ShowSubtitle()
@@ -10266,10 +10285,17 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void toolsToolStripMenuItem_DropDownOpening(object sender, EventArgs e)
         {
-            if (_subtitle != null && _subtitle.Paragraphs.Count > 0)
+            if (_subtitle != null && _subtitle.Paragraphs.Count > 0 && _networkSession != null)
             {
+                toolStripSeparator23.Visible = true;
                 toolStripMenuItemMakeEmptyFromCurrent.Visible = _subtitle != null && _subtitle.Paragraphs.Count > 0 && !SubtitleListview1.IsAlternateTextColumnVisible;
                 toolStripMenuItemShowOriginalInPreview.Checked = Configuration.Settings.General.ShowOriginalAsPreviewIfAvailable;
+            }
+            else
+            {
+                toolStripSeparator23.Visible = false;
+                toolStripMenuItemMakeEmptyFromCurrent.Visible = false;
+                toolStripMenuItemShowOriginalInPreview.Checked = false;
             }
             toolStripMenuItemShowOriginalInPreview.Visible = SubtitleListview1.IsAlternateTextColumnVisible;
         }
@@ -10322,6 +10348,11 @@ namespace Nikse.SubtitleEdit.Forms
         {
             audioVisualizer.ShowSpectrogram = true;
             audioVisualizer.ShowWaveform = false;
+        }
+
+        private void splitContainerMain_SplitterMoved(object sender, SplitterEventArgs e)
+        {
+            mediaPlayer.Refresh();
         }
 
     }
