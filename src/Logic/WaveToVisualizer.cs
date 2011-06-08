@@ -80,7 +80,7 @@ namespace Nikse.SubtitleEdit.Logic
             stream.Position = ConstantHeaderSize + FmtChunkSize;
             stream.Read(buffer, 0, buffer.Length);
             DataId = Encoding.UTF8.GetString(buffer, 0, 4);
-            DataChunkSize =  BitConverter.ToUInt32(buffer, 4);
+            DataChunkSize = BitConverter.ToUInt32(buffer, 4);
             DataStartPosition = ConstantHeaderSize + FmtChunkSize + 8;
 
             _headerData = new byte[DataStartPosition];
@@ -379,8 +379,19 @@ namespace Nikse.SubtitleEdit.Logic
 
             // set up one column of the spectrogram
             Color[] palette = new Color[NFFT];
-            for (int colorIndex = 0; colorIndex < NFFT; colorIndex++)
-                palette[colorIndex] = PaletteValue(colorIndex, NFFT);
+            if (Configuration.Settings.VideoControls.SpectrogramAppearance == "Classic")
+            {
+                for (int colorIndex = 0; colorIndex < NFFT; colorIndex++)
+                    palette[colorIndex] = PaletteValue(colorIndex, NFFT);
+            }
+            else
+            {
+                var list = SmoothColors(0, 0, 0, Configuration.Settings.VideoControls.WaveFormColor.R,
+                                                 Configuration.Settings.VideoControls.WaveFormColor.G,
+                                                 Configuration.Settings.VideoControls.WaveFormColor.B, NFFT);
+                for (int i = 0; i < NFFT; i++)
+                    palette[i] = list[i];
+            }
 
             // read sample values
             DataMinValue = int.MaxValue;
@@ -489,7 +500,7 @@ namespace Nikse.SubtitleEdit.Logic
                 }
             }
             return bmp;
-        }     
+        }
 
         public static Color PaletteValue(int x, int range)
         {
@@ -553,5 +564,33 @@ namespace Nikse.SubtitleEdit.Logic
             return (int)(rangeIndex * (levelIndB + rangedB) / rangedB);
         }
 
+        private List<Color> SmoothColors(int fromR, int fromG, int fromB, int toR, int toG, int toB, int count)
+        {
+            while (toR < 255 && toG < 255 && toB < 255)
+            {
+                toR++;
+                toG++;
+                toB++;
+            }
+
+            var list = new List<Color>();
+            double r = fromR;
+            double g = fromG;
+            double b = fromB;
+            double diffR = (toR - fromR) / (double)count;
+            double diffG = (toG - fromG) / (double)count;
+            double diffB = (toB - fromB) / (double)count;
+
+            for (int i = 0; i < count; i++)
+            {
+                list.Add(Color.FromArgb((int)r, (int)g, (int)b));
+                r += diffR;
+                g += diffG;
+                b += diffB;
+            }
+            return list;
+        }
+
     }
 }
+ 

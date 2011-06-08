@@ -212,6 +212,8 @@
             this.colorDialogSSAStyle = new System.Windows.Forms.ColorDialog();
             this.fontDialogSSAStyle = new System.Windows.Forms.FontDialog();
             this.labelStatus = new System.Windows.Forms.Label();
+            this.comboBoxSpectrogramAppearance = new System.Windows.Forms.ComboBox();
+            this.labelSpectrogramAppearance = new System.Windows.Forms.Label();
             this.tabControlSettings.SuspendLayout();
             this.tabPageGenerel.SuspendLayout();
             this.groupBoxMiscellaneous.SuspendLayout();
@@ -1318,6 +1320,8 @@
             // 
             // groupBoxSpectrogram
             // 
+            this.groupBoxSpectrogram.Controls.Add(this.labelSpectrogramAppearance);
+            this.groupBoxSpectrogram.Controls.Add(this.comboBoxSpectrogramAppearance);
             this.groupBoxSpectrogram.Controls.Add(this.checkBoxGenerateSpectrogram);
             this.groupBoxSpectrogram.Location = new System.Drawing.Point(6, 216);
             this.groupBoxSpectrogram.Name = "groupBoxSpectrogram";
@@ -1331,7 +1335,7 @@
             this.checkBoxGenerateSpectrogram.AutoSize = true;
             this.checkBoxGenerateSpectrogram.Location = new System.Drawing.Point(10, 20);
             this.checkBoxGenerateSpectrogram.Name = "checkBoxGenerateSpectrogram";
-            this.checkBoxGenerateSpectrogram.Size = new System.Drawing.Size(131, 17);
+            this.checkBoxGenerateSpectrogram.Size = new System.Drawing.Size(134, 17);
             this.checkBoxGenerateSpectrogram.TabIndex = 11;
             this.checkBoxGenerateSpectrogram.Text = "Generate spectrogram";
             this.checkBoxGenerateSpectrogram.UseVisualStyleBackColor = true;
@@ -2274,6 +2278,27 @@
             this.labelStatus.TabIndex = 3;
             this.labelStatus.Text = "labelStatus";
             // 
+            // comboBoxSpectrogramAppearance
+            // 
+            this.comboBoxSpectrogramAppearance.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxSpectrogramAppearance.FormattingEnabled = true;
+            this.comboBoxSpectrogramAppearance.Items.AddRange(new object[] {
+            "Classic",
+            "Use waveform color (one color gradient)"});
+            this.comboBoxSpectrogramAppearance.Location = new System.Drawing.Point(7, 70);
+            this.comboBoxSpectrogramAppearance.Name = "comboBoxSpectrogramAppearance";
+            this.comboBoxSpectrogramAppearance.Size = new System.Drawing.Size(328, 21);
+            this.comboBoxSpectrogramAppearance.TabIndex = 14;
+            // 
+            // labelSpectrogramAppearance
+            // 
+            this.labelSpectrogramAppearance.AutoSize = true;
+            this.labelSpectrogramAppearance.Location = new System.Drawing.Point(7, 54);
+            this.labelSpectrogramAppearance.Name = "labelSpectrogramAppearance";
+            this.labelSpectrogramAppearance.Size = new System.Drawing.Size(164, 13);
+            this.labelSpectrogramAppearance.TabIndex = 15;
+            this.labelSpectrogramAppearance.Text = "Appearence (at generation time)";
+            // 
             // Settings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -2544,5 +2569,7 @@
         private System.Windows.Forms.CheckBox checkBoxPromptDeleteLines;
         private System.Windows.Forms.GroupBox groupBoxSpectrogram;
         private System.Windows.Forms.CheckBox checkBoxGenerateSpectrogram;
+        private System.Windows.Forms.Label labelSpectrogramAppearance;
+        private System.Windows.Forms.ComboBox comboBoxSpectrogramAppearance;
     }
 }
