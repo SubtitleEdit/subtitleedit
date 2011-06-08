@@ -792,7 +792,8 @@ namespace Nikse.SubtitleEdit.Logic
                         ChooseAudioTrack = "Choose audio track",
                         CloseVideo = "Close video file",
                         ShowHideVideo = "Show/hide video",
-                        ShowHideWaveForm = "Show/hide wave form",
+                        ShowHideWaveForm = "Show/hide waveform",
+                        ShowHideWaveformAndSpectrogram = "Show/hide waveform and spectrogram",
                         UnDockVideoControls = "Un-dock video controls",
                         ReDockVideoControls = "Re-dock video controls",
                     },
@@ -1406,6 +1407,7 @@ can edit in same subtitle file (collaboration)",
             WaveForm = new LanguageStructure.WaveForm
             {
                 ClickToAddWaveForm = "Click to add waveform",
+                ClickToAddWaveformAndSpectrogram = "Click to add waveform/spectrogram",
                 Seconds = "seconds",
                 ZoomIn = "Zoom in",
                 ZoomOut = "Zoom out",

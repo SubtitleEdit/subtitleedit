@@ -544,6 +544,7 @@
     <Compile Include="Logic\SubtitleFormats\Cavena890.cs" />
     <Compile Include="Logic\SubtitleFormats\DCSubtitle.cs" />
     <Compile Include="Logic\SubtitleFormats\Eeg708.cs" />
+    <Compile Include="Logic\SubtitleFormats\FabSubtitler.cs" />
     <Compile Include="Logic\SubtitleFormats\FinalCutProTextXml.cs" />
     <Compile Include="Logic\SubtitleFormats\FinalCutProXml.cs" />
     <Compile Include="Logic\SubtitleFormats\FlashXml.cs" />

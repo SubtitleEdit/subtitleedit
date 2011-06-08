@@ -184,7 +184,7 @@ namespace Nikse.SubtitleEdit.Controls
         {
             InitializeComponent();
             SetStyle(System.Windows.Forms.ControlStyles.UserPaint | System.Windows.Forms.ControlStyles.AllPaintingInWmPaint | System.Windows.Forms.ControlStyles.DoubleBuffer, true);
-            WaveFormNotLoadedText = "Click to add wave form";
+            WaveFormNotLoadedText = "Click to add waveform/spectrogram";
             this.MouseWheel += new MouseEventHandler(WaveForm_MouseWheel);
 
             BackgroundColor = Color.Black;
