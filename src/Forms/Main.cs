@@ -8549,6 +8549,7 @@ namespace Nikse.SubtitleEdit.Forms
             audioVisualizer.NewSelectionParagraph = null;
 
             ShowStatus(string.Format(_language.VideoControls.NewTextInsertAtX, newParagraph.StartTime.ToShortString()));
+            audioVisualizer.Invalidate();
         }
 
         private void mergeWithPreviousToolStripMenuItem_Click(object sender, EventArgs e)
@@ -8559,6 +8560,7 @@ namespace Nikse.SubtitleEdit.Forms
                 SubtitleListview1.SelectIndexAndEnsureVisible(index);
                 MergeBeforeToolStripMenuItemClick(null, null); 
             }
+            audioVisualizer.Invalidate();
         }
 
         private void deleteParagraphToolStripMenuItem_Click(object sender, EventArgs e)
@@ -8569,6 +8571,7 @@ namespace Nikse.SubtitleEdit.Forms
                 SubtitleListview1.SelectIndexAndEnsureVisible(index);
                 ToolStripMenuItemDeleteClick(null, null);
             }
+            audioVisualizer.Invalidate();
         }
 
         private void splitToolStripMenuItem1_Click(object sender, EventArgs e)
@@ -8579,6 +8582,7 @@ namespace Nikse.SubtitleEdit.Forms
                 SubtitleListview1.SelectIndexAndEnsureVisible(index);
                 SplitSelectedParagraph(_audioWaveFormRightClickSeconds, null);
             }
+            audioVisualizer.Invalidate();
         }
 
         private void mergeWithNextToolStripMenuItem_Click(object sender, EventArgs e)
@@ -8588,7 +8592,8 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 SubtitleListview1.SelectIndexAndEnsureVisible(index);
                 MergeAfterToolStripMenuItemClick(null, null);
-            }            
+            }
+            audioVisualizer.Invalidate();
         }
 
         private void buttonWaveFormZoomIn_Click(object sender, EventArgs e)

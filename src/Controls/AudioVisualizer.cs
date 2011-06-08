@@ -198,13 +198,14 @@ namespace Nikse.SubtitleEdit.Controls
             ShowWaveform = true;
         }
 
-        private void NearestSubtitles(Subtitle subtitle, double currentVideoPositionSeconds, int subtitleIndex)
-        { 
+        public void NearestSubtitles(Subtitle subtitle, double currentVideoPositionSeconds, int subtitleIndex)
+        {
+            _previousAndNextParagraphs.Clear();
+            _currentParagraph = null;
             int positionMilliseconds = (int)Math.Round(currentVideoPositionSeconds * 1000.0);
             if (_selectedParagraph != null && _selectedParagraph.StartTime.TotalMilliseconds < positionMilliseconds && _selectedParagraph.EndTime.TotalMilliseconds > positionMilliseconds)
             {
                 _currentParagraph = _selectedParagraph;
-                _previousAndNextParagraphs.Clear();
                 for (int j = 1; j < 12; j++)
                 {
                     Paragraph nextParagraph = subtitle.GetParagraphOrDefault(subtitleIndex - j);
@@ -224,7 +225,6 @@ namespace Nikse.SubtitleEdit.Controls
                     if (p.EndTime.TotalMilliseconds > positionMilliseconds)
                     {
                         _currentParagraph = p;
-                        _previousAndNextParagraphs.Clear();
                         for (int j = 1; j < 10; j++)
                         {
                             Paragraph nextParagraph = subtitle.GetParagraphOrDefault(i - j);
@@ -237,6 +237,29 @@ namespace Nikse.SubtitleEdit.Controls
                         }
 
                         break;
+                    }
+                }
+                if (_previousAndNextParagraphs.Count == 0)
+                {
+                    for (int i = 0; i < subtitle.Paragraphs.Count; i++)
+                    {
+                        Paragraph p = subtitle.Paragraphs[i];
+                        if (p.EndTime.TotalMilliseconds > StartPositionSeconds * 1000)
+                        {
+                            _currentParagraph = p;
+                            for (int j = 1; j < 10; j++)
+                            {
+                                Paragraph nextParagraph = subtitle.GetParagraphOrDefault(i - j);
+                                _previousAndNextParagraphs.Add(nextParagraph);
+                            }
+                            for (int j = 1; j < 10; j++)
+                            {
+                                Paragraph nextParagraph = subtitle.GetParagraphOrDefault(i + j);
+                                _previousAndNextParagraphs.Add(nextParagraph);
+                            }
+
+                            break;
+                        }
                     }
                 }
             }
