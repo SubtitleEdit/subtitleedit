@@ -337,7 +337,8 @@ namespace Nikse.SubtitleEdit.Logic
         public string WaveFormDoubleClickOnNonParagraphAction { get; set; }
         public string WaveFormRightClickOnNonParagraphAction { get; set; }
         public bool WaveFormMouseWheelScrollUpIsForward { get; set; }
-        public bool GenerateSpectrogram { get; set; }     
+        public bool GenerateSpectrogram { get; set; }
+        public string SpectrogramAppearance { get; set; }     
 
         public VideoControlsSettings()
         {
@@ -353,6 +354,7 @@ namespace Nikse.SubtitleEdit.Logic
             WaveFormDoubleClickOnNonParagraphAction = "PlayPause";
             WaveFormDoubleClickOnNonParagraphAction = string.Empty;
             WaveFormMouseWheelScrollUpIsForward = true;
+            SpectrogramAppearance = "OneColorGradient";
         }
     }
 
@@ -977,7 +979,10 @@ namespace Nikse.SubtitleEdit.Logic
                 settings.VideoControls.WaveFormMouseWheelScrollUpIsForward = Convert.ToBoolean(subNode.InnerText);
             subNode = node.SelectSingleNode("GenerateSpectrogram");
             if (subNode != null)
-                settings.VideoControls.GenerateSpectrogram = Convert.ToBoolean(subNode.InnerText);            
+                settings.VideoControls.GenerateSpectrogram = Convert.ToBoolean(subNode.InnerText);
+            subNode = node.SelectSingleNode("SpectrogramAppearance");
+            if (subNode != null)
+                settings.VideoControls.SpectrogramAppearance = subNode.InnerText;                        
 
             settings.NetworkSettings = new NetworkSettings();
             node = doc.DocumentElement.SelectSingleNode("NetworkSettings");
@@ -1274,7 +1279,8 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("WaveFormDoubleClickOnNonParagraphAction", settings.VideoControls.WaveFormDoubleClickOnNonParagraphAction);
             textWriter.WriteElementString("WaveFormRightClickOnNonParagraphAction", settings.VideoControls.WaveFormRightClickOnNonParagraphAction);
             textWriter.WriteElementString("WaveFormMouseWheelScrollUpIsForward", settings.VideoControls.WaveFormMouseWheelScrollUpIsForward.ToString());
-            textWriter.WriteElementString("GenerateSpectrogram", settings.VideoControls.GenerateSpectrogram.ToString());                                   
+            textWriter.WriteElementString("GenerateSpectrogram", settings.VideoControls.GenerateSpectrogram.ToString());
+            textWriter.WriteElementString("SpectrogramAppearance", settings.VideoControls.SpectrogramAppearance);
             textWriter.WriteEndElement();
 
             textWriter.WriteStartElement("NetworkSettings", "");

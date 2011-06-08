@@ -1099,6 +1099,9 @@
             public string WaveformAndSpectrogramsFolderInfo { get; set; }
             public string Spectrogram { get; set; }
             public string GenerateSpectrogram { get; set; }
+            public string SpectrogramAppearance { get; set; }
+            public string SpectrogramOneColorGradient { get; set; }
+            public string SpectrogramClassic { get; set; }
             public string SubStationAlphaStyle { get; set; }
             public string ChooseFont { get; set; }
             public string ChooseColor { get; set; }

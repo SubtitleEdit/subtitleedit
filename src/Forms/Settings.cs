@@ -238,6 +238,10 @@ namespace Nikse.SubtitleEdit.Forms
             buttonWaveFormBackgroundColor.Text = language.WaveFormBackgroundColor;
             groupBoxSpectrogram.Text = language.Spectrogram;
             checkBoxGenerateSpectrogram.Text = language.GenerateSpectrogram;
+            labelSpectrogramAppearance.Text = language.SpectrogramAppearance;
+            comboBoxSpectrogramAppearance.Items.Clear();
+            comboBoxSpectrogramAppearance.Items.Add(language.SpectrogramOneColorGradient);
+            comboBoxSpectrogramAppearance.Items.Add(language.SpectrogramClassic);
 
             buttonWaveFormsFolderEmpty.Text = language.WaveformAndSpectrogramsFolderEmpty;
             InitializeWaveformsAndSpectrogramsFolderEmpty(language);
@@ -406,7 +410,12 @@ namespace Nikse.SubtitleEdit.Forms
             panelWaveFormColor.BackColor = Configuration.Settings.VideoControls.WaveFormColor;
             panelWaveFormBackgroundColor.BackColor = Configuration.Settings.VideoControls.WaveFormBackgroundColor;
             panelWaveFormTextColor.BackColor = Configuration.Settings.VideoControls.WaveFormTextColor;
-            checkBoxGenerateSpectrogram.Checked = Configuration.Settings.VideoControls.GenerateSpectrogram;           
+            checkBoxGenerateSpectrogram.Checked = Configuration.Settings.VideoControls.GenerateSpectrogram;
+            if (Configuration.Settings.VideoControls.SpectrogramAppearance == "OneColorGradient")
+                comboBoxSpectrogramAppearance.SelectedIndex = 0;
+            else
+                comboBoxSpectrogramAppearance.SelectedIndex = 1;
+
 
             //<MainFileNew>Control+N</MainFileNew>
             //<MainFileOpen>Control+O</MainFileOpen>
@@ -547,7 +556,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (count > 0)
             {                
-                buttonWaveFormsFolderEmpty.Enabled = false;
+                buttonWaveFormsFolderEmpty.Enabled = true;
                 labelWaveFormsFolderInfo.Text = string.Format(language.WaveformAndSpectrogramsFolderInfo, count, bytes / 1024.0 / 1024.0);
 
             }
@@ -779,6 +788,11 @@ namespace Nikse.SubtitleEdit.Forms
             Configuration.Settings.VideoControls.WaveFormBackgroundColor = panelWaveFormBackgroundColor.BackColor;
             Configuration.Settings.VideoControls.WaveFormTextColor = panelWaveFormTextColor.BackColor;
             Configuration.Settings.VideoControls.GenerateSpectrogram = checkBoxGenerateSpectrogram.Checked;
+
+            if (comboBoxSpectrogramAppearance.SelectedIndex == 0)
+                Configuration.Settings.VideoControls.SpectrogramAppearance = "OneColorGradient";
+            else
+                Configuration.Settings.VideoControls.SpectrogramAppearance = "Classic";
 
             //Main File
             foreach (TreeNode node in treeViewShortcuts.Nodes[0].Nodes)
