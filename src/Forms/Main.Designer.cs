@@ -328,6 +328,12 @@
             this.underlineToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.colorToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.fontNameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator26 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripMenuItemInsertUnicodeSymbol = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem4 = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem5 = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem6 = new System.Windows.Forms.ToolStripMenuItem();
             this.labelSingleLine = new System.Windows.Forms.Label();
             this.buttonAutoBreak = new System.Windows.Forms.Button();
             this.labelTextLineLengths = new System.Windows.Forms.Label();
@@ -2819,7 +2825,7 @@
             this.showOnlyWaveformToolStripMenuItem,
             this.showOnlySpectrogramToolStripMenuItem});
             this.contextMenuStripWaveForm.Name = "contextMenuStripWaveForm";
-            this.contextMenuStripWaveForm.Size = new System.Drawing.Size(253, 236);
+            this.contextMenuStripWaveForm.Size = new System.Drawing.Size(253, 214);
             this.contextMenuStripWaveForm.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStripWaveForm_Opening);
             // 
             // addParagraphHereToolStripMenuItem
@@ -3098,9 +3104,11 @@
             this.italicToolStripMenuItem1,
             this.underlineToolStripMenuItem1,
             this.colorToolStripMenuItem1,
-            this.fontNameToolStripMenuItem});
+            this.fontNameToolStripMenuItem,
+            this.toolStripSeparator26,
+            this.toolStripMenuItemInsertUnicodeSymbol});
             this.contextMenuStripTextBoxListView.Name = "contextMenuStripTextBoxListView";
-            this.contextMenuStripTextBoxListView.Size = new System.Drawing.Size(215, 280);
+            this.contextMenuStripTextBoxListView.Size = new System.Drawing.Size(215, 330);
             this.contextMenuStripTextBoxListView.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStripTextBoxListView_Opening);
             // 
             // cutToolStripMenuItem
@@ -3201,6 +3209,50 @@
             this.fontNameToolStripMenuItem.Size = new System.Drawing.Size(214, 22);
             this.fontNameToolStripMenuItem.Text = "Font name...";
             this.fontNameToolStripMenuItem.Click += new System.EventHandler(this.fontNameToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator26
+            // 
+            this.toolStripSeparator26.Name = "toolStripSeparator26";
+            this.toolStripSeparator26.Size = new System.Drawing.Size(211, 6);
+            // 
+            // toolStripMenuItemInsertUnicodeSymbol
+            // 
+            this.toolStripMenuItemInsertUnicodeSymbol.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripMenuItem3,
+            this.toolStripMenuItem4,
+            this.toolStripMenuItem5,
+            this.toolStripMenuItem6});
+            this.toolStripMenuItemInsertUnicodeSymbol.Name = "toolStripMenuItemInsertUnicodeSymbol";
+            this.toolStripMenuItemInsertUnicodeSymbol.Size = new System.Drawing.Size(214, 22);
+            this.toolStripMenuItemInsertUnicodeSymbol.Text = "Insert unicode character";
+            // 
+            // toolStripMenuItem3
+            // 
+            this.toolStripMenuItem3.Name = "toolStripMenuItem3";
+            this.toolStripMenuItem3.Size = new System.Drawing.Size(86, 22);
+            this.toolStripMenuItem3.Text = "♪";
+            this.toolStripMenuItem3.Click += new System.EventHandler(this.InsertUnicodeSymbol);
+            // 
+            // toolStripMenuItem4
+            // 
+            this.toolStripMenuItem4.Name = "toolStripMenuItem4";
+            this.toolStripMenuItem4.Size = new System.Drawing.Size(86, 22);
+            this.toolStripMenuItem4.Text = "♫";
+            this.toolStripMenuItem4.Click += new System.EventHandler(this.InsertUnicodeSymbol);
+            // 
+            // toolStripMenuItem5
+            // 
+            this.toolStripMenuItem5.Name = "toolStripMenuItem5";
+            this.toolStripMenuItem5.Size = new System.Drawing.Size(86, 22);
+            this.toolStripMenuItem5.Text = "☺";
+            this.toolStripMenuItem5.Click += new System.EventHandler(this.InsertUnicodeSymbol);
+            // 
+            // toolStripMenuItem6
+            // 
+            this.toolStripMenuItem6.Name = "toolStripMenuItem6";
+            this.toolStripMenuItem6.Size = new System.Drawing.Size(86, 22);
+            this.toolStripMenuItem6.Text = "♥";
+            this.toolStripMenuItem6.Click += new System.EventHandler(this.InsertUnicodeSymbol);
             // 
             // labelSingleLine
             // 
@@ -3902,6 +3954,12 @@
         private System.Windows.Forms.ToolStripMenuItem showWaveformAndSpectrogramToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem showOnlyWaveformToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem showOnlySpectrogramToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator26;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemInsertUnicodeSymbol;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem3;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem4;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem5;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem6;
     }
 }
 
