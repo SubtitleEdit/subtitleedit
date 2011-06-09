@@ -387,6 +387,15 @@ namespace Nikse.SubtitleEdit.Forms
                         format = cavena890;
                     }
                 }
+                if (format == null)
+                {
+                    var spt = new Spt();
+                    if (spt.IsMine(null, fileName))
+                    {
+                        spt.LoadSubtitle(sub, null, fileName);
+                        format = spt;
+                    }
+                }
 
                 if (format == null)
                 {
@@ -1312,6 +1321,19 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         cavena890.LoadSubtitle(_subtitle, null, fileName);
                         _oldSubtitleFormat = cavena890;
+                        SetFormatToSubRip();
+                        justConverted = true;
+                        format = GetCurrentSubtitleFormat();
+                    }
+                }
+
+                if (format == null)
+                {
+                    var spt = new Spt();
+                    if (spt.IsMine(null, fileName))
+                    {
+                        spt.LoadSubtitle(_subtitle, null, fileName);
+                        _oldSubtitleFormat = spt;
                         SetFormatToSubRip();
                         justConverted = true;
                         format = GetCurrentSubtitleFormat();
