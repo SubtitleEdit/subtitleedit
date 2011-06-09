@@ -498,11 +498,15 @@ namespace Nikse.SubtitleEdit.Forms
 
         void AudioWaveForm_OnNonParagraphRightClicked(double seconds, Paragraph paragraph)
         {
-            if (Configuration.Settings.VideoControls.WaveFormDoubleClickOnNonParagraphAction == "ButtonSetStartAndOffsetRest")
-            {
-                mediaPlayer.CurrentPosition = seconds;
-                ButtonSetStartAndOffsetRestClick(null, null);
-            }
+            addParagraphHereToolStripMenuItem.Visible = false;
+            deleteParagraphToolStripMenuItem.Visible = false;
+            splitToolStripMenuItem1.Visible = false;
+            mergeWithPreviousToolStripMenuItem.Visible = false;
+            mergeWithNextToolStripMenuItem.Visible = false;
+            toolStripSeparator11.Visible = false;
+            toolStripMenuItemWaveFormPlaySelection.Visible = false;
+            toolStripSeparator24.Visible = false;
+            contextMenuStripWaveForm.Show(MousePosition.X, MousePosition.Y);
         }
 
         void AudioWaveForm_OnDoubleClickNonParagraph(double seconds, Paragraph paragraph)
@@ -569,6 +573,9 @@ namespace Nikse.SubtitleEdit.Forms
             splitToolStripMenuItem1.Visible = true;
             mergeWithPreviousToolStripMenuItem.Visible = true;
             mergeWithNextToolStripMenuItem.Visible = true;
+            toolStripSeparator11.Visible = true;
+            toolStripMenuItemWaveFormPlaySelection.Visible = true;
+            toolStripSeparator24.Visible = true;
 
             _audioWaveFormRightClickSeconds = seconds;
             contextMenuStripWaveForm.Show(MousePosition.X, MousePosition.Y);

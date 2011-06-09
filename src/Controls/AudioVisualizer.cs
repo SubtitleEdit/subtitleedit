@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Windows.Forms;
 using System.Xml;
 using Nikse.SubtitleEdit.Logic;
-using System.IO;
 
 namespace Nikse.SubtitleEdit.Controls
 {
@@ -259,6 +259,15 @@ namespace Nikse.SubtitleEdit.Controls
                             }
 
                             break;
+                        }
+                    }
+                    if (_previousAndNextParagraphs.Count == 0 && _subtitle.Paragraphs.Count > 0)
+                    {
+                        int i = _subtitle.Paragraphs.Count;
+                        for (int j = 1; j < 10; j++)
+                        {
+                            Paragraph nextParagraph = subtitle.GetParagraphOrDefault(i - j);
+                            _previousAndNextParagraphs.Add(nextParagraph);
                         }
                     }
                 }
