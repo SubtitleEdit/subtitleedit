@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
+using System.Text;
 using System.Windows.Forms;
 using System.Xml;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.VideoPlayers;
-using System.Text;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -245,7 +245,6 @@ namespace Nikse.SubtitleEdit.Forms
 
             buttonWaveFormsFolderEmpty.Text = language.WaveformAndSpectrogramsFolderEmpty;
             InitializeWaveformsAndSpectrogramsFolderEmpty(language);
-
 
             groupBoxSsaStyle.Text = language.SubStationAlphaStyle;
             buttonSSAChooseFont.Text = language.ChooseFont;
@@ -490,7 +489,7 @@ namespace Nikse.SubtitleEdit.Forms
             comboBoxShortcutKey.Items[0] = Configuration.Settings.Language.General.None;
 
             FixLargeFonts();
-        }
+        }       
 
         private string GetShortcutText(string shortcut)
         {
