@@ -890,6 +890,7 @@ namespace Nikse.SubtitleEdit.Forms
             underlineToolStripMenuItem1.Text = _language.Menu.ContextMenu.Underline;
             colorToolStripMenuItem1.Text = _language.Menu.ContextMenu.Color;
             fontNameToolStripMenuItem.Text = _language.Menu.ContextMenu.FontName;
+            toolStripMenuItemInsertUnicodeSymbol.Text = _language.Menu.Edit.InsertUnicodeSymbol;
 
             // main controls
             SubtitleListview1.InitializeLanguage(_languageGeneral, Configuration.Settings);
@@ -6652,7 +6653,10 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else
             {
-                textBoxListViewText.Text = textBoxListViewText.Text.Insert(textBoxListViewText.SelectionStart, (sender as ToolStripMenuItem).Text);
+                if (textBoxListViewTextAlternate.Visible && textBoxListViewTextAlternate.Enabled && textBoxListViewTextAlternate.Focused)
+                    textBoxListViewTextAlternate.Text = textBoxListViewTextAlternate.Text.Insert(textBoxListViewTextAlternate.SelectionStart, (sender as ToolStripMenuItem).Text);
+                else
+                    textBoxListViewText.Text = textBoxListViewText.Text.Insert(textBoxListViewText.SelectionStart, (sender as ToolStripMenuItem).Text);
             }
         }
 
@@ -10154,6 +10158,16 @@ namespace Nikse.SubtitleEdit.Forms
                 tb = textBoxListViewTextAlternate;
             toolStripMenuItemSplitTextAtCursor.Visible = tb.Text.Length > 5 && tb.SelectionStart > 2 && tb.SelectionStart < tb.Text.Length - 2;
 
+            if (GetCurrentEncoding() == Encoding.Default || _subtitleListViewIndex == -1)
+            {
+                toolStripMenuItemInsertUnicodeSymbol.Visible = false;
+                toolStripSeparator26.Visible = false;
+            }
+            else
+            {
+                toolStripMenuItemInsertUnicodeSymbol.Visible = true;
+                toolStripSeparator26.Visible = true;
+            }
         }
 
         private void toolStripMenuItemExportPngXml_Click(object sender, EventArgs e)
