@@ -155,7 +155,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         buffer[18] == 0 &&
                         buffer[19] == 0 &&
                         buffer[20] == 0 &&
-                        buffer[21] == 0 &&
+                        buffer[21] < 10 &&
                         buffer[22] == 0 &&
                         buffer[23] == 0x60 &&
                         fileName.ToLower().EndsWith(".pac"))
