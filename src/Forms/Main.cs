@@ -8163,23 +8163,23 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void SetShortcuts()
         {
-            newToolStripMenuItem.ShortcutKeys = GetKeys(Configuration.Settings.Shortcuts.MainFileNew);
-            openToolStripMenuItem.ShortcutKeys = GetKeys(Configuration.Settings.Shortcuts.MainFileOpen);
-            saveToolStripMenuItem.ShortcutKeys = GetKeys(Configuration.Settings.Shortcuts.MainFileSave);
-            saveAsToolStripMenuItem.ShortcutKeys = GetKeys(Configuration.Settings.Shortcuts.MainFileSaveAs);
-            findToolStripMenuItem.ShortcutKeys = GetKeys(Configuration.Settings.Shortcuts.MainEditFind);
-            findNextToolStripMenuItem.ShortcutKeys = GetKeys(Configuration.Settings.Shortcuts.MainEditFindNext);
-            replaceToolStripMenuItem.ShortcutKeys = GetKeys(Configuration.Settings.Shortcuts.MainEditReplace);
-            gotoLineNumberToolStripMenuItem.ShortcutKeys = GetKeys(Configuration.Settings.Shortcuts.MainEditGoToLineNumber);
+            newToolStripMenuItem.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainFileNew);
+            openToolStripMenuItem.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainFileOpen);
+            saveToolStripMenuItem.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainFileSave);
+            saveAsToolStripMenuItem.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainFileSaveAs);
+            findToolStripMenuItem.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainEditFind);
+            findNextToolStripMenuItem.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainEditFindNext);
+            replaceToolStripMenuItem.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainEditReplace);
+            gotoLineNumberToolStripMenuItem.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainEditGoToLineNumber);
 
-            fixToolStripMenuItem.ShortcutKeys = GetKeys(Configuration.Settings.Shortcuts.MainToolsFixCommonErrors);
+            fixToolStripMenuItem.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainToolsFixCommonErrors);
 
-            showhideVideoToolStripMenuItem.ShortcutKeys = GetKeys(Configuration.Settings.Shortcuts.MainVideoShowHideVideo);
-            _toggleVideoDockUndock = GetKeys(Configuration.Settings.Shortcuts.MainVideoToggleVideoControls);
+            showhideVideoToolStripMenuItem.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainVideoShowHideVideo);
+            _toggleVideoDockUndock = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainVideoToggleVideoControls);
 
-            toolStripMenuItemAdjustAllTimes.ShortcutKeys = GetKeys(Configuration.Settings.Shortcuts.MainSynchronizationAdjustTimes);
-            italicToolStripMenuItem.ShortcutKeys = GetKeys(Configuration.Settings.Shortcuts.MainListViewItalic);
-            italicToolStripMenuItem1.ShortcutKeys = GetKeys(Configuration.Settings.Shortcuts.MainTextBoxItalic);
+            toolStripMenuItemAdjustAllTimes.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainSynchronizationAdjustTimes);
+            italicToolStripMenuItem.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainListViewItalic);
+            italicToolStripMenuItem1.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxItalic);
         }
 
         private void LoadPlugins()
@@ -8220,7 +8220,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                             pi = pluginType.GetProperty("ShortCut");
                             if (pi != null)
-                                item.ShortcutKeys = GetKeys((string)pi.GetValue(pluginObject, null));
+                                item.ShortcutKeys = Utilities.GetKeys((string)pi.GetValue(pluginObject, null));
 
                             if (string.Compare(actionType, "File", true) == 0)
                             {
@@ -8305,26 +8305,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 MessageBox.Show(exception.Message);
             }
-        }
-
-        public Keys GetKeys(string keysInString)
-        {
-            if (string.IsNullOrEmpty(keysInString))
-                return Keys.None;
-
-            string[] parts = keysInString.ToLower().Split("+".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-            Keys resultKeys = Keys.None;
-            foreach (string k in parts)
-            {
-                foreach (Keys val in Enum.GetValues(typeof(Keys)))
-                {
-                    if (k == val.ToString().ToLower())
-                        resultKeys = resultKeys | val;
-                }
-            }
-
-            return resultKeys;
-        }
+        }      
 
         void TimerAutoSaveTick(object sender, EventArgs e)
         {
@@ -8462,6 +8443,7 @@ namespace Nikse.SubtitleEdit.Forms
                     addWaveForm.WavePeak.WritePeakSamples(peakWaveFileName);
                     var audioPeakWave = new WavePeakGenerator(peakWaveFileName);
                     audioPeakWave.GenerateAllSamples();
+                    audioPeakWave.Close();
                     audioVisualizer.WavePeaks = audioPeakWave;
                     if (addWaveForm.SpectrogramBitmaps != null)
                         audioVisualizer.InitializeSpectrogram(addWaveForm.SpectrogramBitmaps, spectrogramFolder);
@@ -9784,12 +9766,12 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (_isVideoControlsUnDocked)
             {
-                redockVideoControlsToolStripMenuItem.ShortcutKeys = GetKeys(Configuration.Settings.Shortcuts.MainVideoToggleVideoControls);
+                redockVideoControlsToolStripMenuItem.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainVideoToggleVideoControls);
                 undockVideoControlsToolStripMenuItem.ShortcutKeys = Keys.None;
             }
             else
             {
-                undockVideoControlsToolStripMenuItem.ShortcutKeys = GetKeys(Configuration.Settings.Shortcuts.MainVideoToggleVideoControls);
+                undockVideoControlsToolStripMenuItem.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainVideoToggleVideoControls);
                 redockVideoControlsToolStripMenuItem.ShortcutKeys = Keys.None;
             }
 

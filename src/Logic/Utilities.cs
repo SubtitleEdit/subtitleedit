@@ -2138,6 +2138,25 @@ namespace Nikse.SubtitleEdit.Logic
                 }
             }
         }
+
+        public static Keys GetKeys(string keysInString)
+        {
+            if (string.IsNullOrEmpty(keysInString))
+                return Keys.None;
+
+            string[] parts = keysInString.ToLower().Split("+".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+            Keys resultKeys = Keys.None;
+            foreach (string k in parts)
+            {
+                foreach (Keys val in Enum.GetValues(typeof(Keys)))
+                {
+                    if (k == val.ToString().ToLower())
+                        resultKeys = resultKeys | val;
+                }
+            }
+
+            return resultKeys;
+        }
         
     }
 }

@@ -27,7 +27,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.Icon = (Icon)_mainForm.Icon.Clone();
             _positionsAndSizes = positionsAndSizes;
             _videoPlayerContainer = videoPlayerContainer;
-            _redockKeys = _mainForm.GetKeys(Configuration.Settings.Shortcuts.MainVideoToggleVideoControls);
+            _redockKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainVideoToggleVideoControls);
         }
 
         public VideoPlayerUnDocked()

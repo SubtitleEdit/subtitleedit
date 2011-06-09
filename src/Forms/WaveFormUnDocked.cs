@@ -29,7 +29,7 @@ namespace Nikse.SubtitleEdit.Forms
             _mainForm = mainForm;
             this.Icon = (Icon)mainForm.Icon.Clone();
             _positionsAndSizes = positionsAndSizes;
-            _redockKeys = _mainForm.GetKeys(Configuration.Settings.Shortcuts.MainVideoToggleVideoControls);
+            _redockKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainVideoToggleVideoControls);
         }
 
         public WaveFormUnDocked()
