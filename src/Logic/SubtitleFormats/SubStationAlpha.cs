@@ -55,12 +55,12 @@ Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
 
             var sb = new StringBuilder();
             System.Drawing.Color fontColor = System.Drawing.Color.FromArgb(Configuration.Settings.SsaStyle.FontColorArgb);
-            bool isValidAssHeader =!string.IsNullOrEmpty(subtitle.Header) && subtitle.Header.Contains("[V4+ Styles]");
+            bool isValidAssHeader =!string.IsNullOrEmpty(subtitle.Header) && subtitle.Header.Contains("[V4 Styles]");
             List<string> styles = new List<string>();
             if (isValidAssHeader)
             {
                 sb.AppendLine(subtitle.Header.Trim());
-                sb.AppendLine("Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text");
+                sb.AppendLine("Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text");
                 styles = AdvancedSubStationAlpha.GetStylesFromHeader(subtitle.Header);
             }
             else
