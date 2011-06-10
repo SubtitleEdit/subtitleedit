@@ -19,6 +19,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     new AdobeEncore(),
                     new AdobeEncoreTab(),
                     new AdobeEncoreWithLineNumbers(),
+                    new AdvancedSubStationAlpha(),
                     new AQTitle(),
                     new Captionate(),
                     new CaraokeXml(),

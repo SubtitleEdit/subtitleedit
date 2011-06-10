@@ -28,6 +28,8 @@ namespace Nikse.SubtitleEdit.Logic
 
         public bool Forced { get; set; }
 
+        public string Extra { get; set; }
+
         public Paragraph()
         {
             StartTime = new TimeCode(TimeSpan.FromSeconds(0));

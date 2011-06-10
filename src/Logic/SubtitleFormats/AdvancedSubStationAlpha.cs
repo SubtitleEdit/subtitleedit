@@ -4,16 +4,16 @@ using System.Text;
 
 namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
-    public class SubStationAlpha : SubtitleFormat
+    class AdvancedSubStationAlpha : SubtitleFormat
     {
         public override string Extension
         {
-            get { return ".ssa"; }
+            get { return ".ass"; }
         }
 
         public override string Name
         {
-            get { return "Sub Station Alpha"; }
+            get { return "Advanced Sub Station Alpha"; }
         }
 
         public override bool HasLineNumber
@@ -29,6 +29,13 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         public override bool IsMine(List<string> lines, string fileName)
         {
             var subtitle = new Subtitle();
+
+            var sb = new StringBuilder();
+            lines.ForEach(line => sb.AppendLine(line));
+            string all = sb.ToString();
+            if (!all.Contains("[V4+ Styles]"))
+                return false;
+
             LoadSubtitle(subtitle, lines, fileName);
             return subtitle.Paragraphs.Count > _errorCount;
         }
@@ -37,21 +44,21 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         {
             const string header =
 @"[Script Info]
-; This is a Sub Station Alpha v4 script.
+; This is an Advanced Sub Station Alpha v4+ script.
 Title: {0}
 ScriptType: v4.00
 Collisions: Normal
 PlayDepth: 0
 
-[V4 Styles]
-Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, TertiaryColour, BackColour, Bold, Italic, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, AlphaLevel, Encoding
-Style: Default,{1},{2},{3},65535,65535,-2147483640,-1,0,1,3,0,2,30,30,30,0,0
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+Style: Default,Tahoma,25,&H00FFFFFF,&HF0000000,&H001509AE,&H32270EA8,-1,0,0,0,100,100,0,0.00,1,2,1,2,30,30,10,1
 
 [Events]
-Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text";
+Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text";
 
             const string timeCodeFormat = "{0}:{1:00}:{2:00}.{3:00}"; // h:mm:ss.cc 
-            const string paragraphWriteFormat = "Dialogue: Marked=0,{0},{1},{3},NTP,0000,0000,0000,!Effect,{2}";
+            const string paragraphWriteFormat = "Dialogue: Marked=0,{0},{1},{3},NTP,0000,0000,0000,,{2}";
 
             var sb = new StringBuilder();
             System.Drawing.Color fontColor = System.Drawing.Color.FromArgb(Configuration.Settings.SsaStyle.FontColorArgb);
@@ -61,7 +68,7 @@ Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
             {
                 sb.AppendLine(subtitle.Header.Trim());
                 sb.AppendLine("Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text");
-                styles = AdvancedSubStationAlpha.GetStylesFromHeader(subtitle.Header);
+                styles = GetStylesFromHeader(subtitle.Header);
             }
             else
             {
@@ -81,6 +88,21 @@ Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
                 sb.AppendLine(string.Format(paragraphWriteFormat, start, end, FormatText(p), style));
             }
             return sb.ToString().Trim();
+        }
+
+        public static List<string> GetStylesFromHeader(string headerLines)
+        {
+            List<string> list = new List<string>();
+            foreach (string line in headerLines.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries))
+            {
+                if (line.StartsWith("Style:"))
+                {
+                    int end = line.IndexOf(",");
+                    if (end > 0)
+                        list.Add(line.Substring(6, end - 6).Trim());
+                }
+            }
+            return list;
         }
 
         private static string FormatText(Paragraph p)
@@ -206,7 +228,7 @@ Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
             _errorCount = 0;
             bool eventsStarted = false;
             subtitle.Paragraphs.Clear();
-            string[] format = "Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text".Split(',');
+            string[] format = "Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text".Split(',');
             int indexStart = 1;
             int indexEnd = 2;
             int indexStyle = 3;
@@ -243,7 +265,7 @@ Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
                             }
                         }
                     }
-                    else 
+                    else
                     {
                         string text = string.Empty;
                         string start = string.Empty;
@@ -251,7 +273,7 @@ Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
                         string style = string.Empty;
 
                         string[] splittedLine;
-                        
+
                         if (s.StartsWith("dialogue:"))
                             splittedLine = line.Substring(10).Split(',');
                         else
@@ -263,6 +285,8 @@ Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
                                 start = splittedLine[i].Trim();
                             else if (i == indexEnd)
                                 end = splittedLine[i].Trim();
+                            else if (i == indexStyle)
+                                style = splittedLine[i].Trim();
                             else if (i == indexText)
                                 text = splittedLine[i];
                             else if (i > indexText)
@@ -282,9 +306,9 @@ Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
                         }
                         catch
                         {
-                            _errorCount++;    
+                            _errorCount++;
                         }
-                    }                        
+                    }
                 }
             }
             if (header.Length > 0)
@@ -310,21 +334,12 @@ Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
                 while (indexOfBegin >= 0 && p.Text.IndexOf("}") > indexOfBegin)
                 {
                     int indexOfEnd = p.Text.IndexOf("}");
-                    p.Text = p.Text.Remove(indexOfBegin, (indexOfEnd - indexOfBegin) +1);
+                    p.Text = p.Text.Remove(indexOfBegin, (indexOfEnd - indexOfBegin) + 1);
 
                     indexOfBegin = p.Text.IndexOf("{");
                 }
             }
         }
-
-        public override List<string> AlternateExtensions
-        {
-            get
-            {
-                return new List<string>() { ".ass" };
-            }
-        }
-
 
     }
 }
