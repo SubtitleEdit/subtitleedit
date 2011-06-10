@@ -1,5 +1,8 @@
 @ECHO OFF
 SETLOCAL
+SET "VERSION=3.2"
+SET "SEVENZIP_PATH=%PROGRAMFILES%\7-Zip\7z.exe"
+
 CD /D %~dp0
 
 rem Check for the help switches
@@ -51,17 +54,18 @@ POPD
 
 IF /I "%BUILDTYPE%" == "Clean" GOTO END
 
+IF DEFINED SEVENZIP_PATH IF EXIST "%SEVENZIP_PATH%" CALL :SubZipFile
+
 CALL :SubDetectInnoSetup
 
 IF DEFINED InnoSetupPath (
   PUSHD "installer"
 
   TITLE Compiling installer...
-  "%InnoSetupPath%\iscc.exe" /Q "Subtitle_Edit_installer.iss"
+  "%InnoSetupPath%\iscc.exe" /O.. /Q "Subtitle_Edit_installer.iss"
   IF %ERRORLEVEL% NEQ 0 GOTO EndWithError
 
   ECHO. & ECHO Installer compiled successfully!
-  MOVE /Y "SubtitleEdit-*-setup.exe" ".." >NUL
   POPD
 ) ELSE (
   ECHO Inno Setup wasn't found; the installer wasn't built
@@ -69,9 +73,42 @@ IF DEFINED InnoSetupPath (
 
 
 :END
+TITLE Compiling Subtitle Edit finished!
 ECHO.
 ENDLOCAL
 PAUSE
+EXIT /B
+
+
+:SubZipFile
+TITLE Creating the ZIP file...
+PUSHD "src\bin\Release"
+IF EXIST "temp_zip"                        RD /S /Q "temp_zip"
+IF NOT EXIST "temp_zip"                    MD "temp_zip"
+IF NOT EXIST "temp_zip\Languages"          MD "temp_zip\Languages"
+IF NOT EXIST "temp_zip\Tesseract"          MD "temp_zip\Tesseract"
+IF NOT EXIST "temp_zip\Tesseract\tessdata" MD "temp_zip\Tesseract\tessdata"
+
+COPY /Y /V "..\..\gpl.txt"                               "temp_zip\"
+COPY /Y /V "..\..\Changelog.txt"                         "temp_zip\"
+COPY /Y /V "Interop.QuartzTypeLib.dll"                   "temp_zip\"
+COPY /Y /V "Hunspellx86.dll"                             "temp_zip\"
+COPY /Y /V "NHunspell.dll"                               "temp_zip\"
+COPY /Y /V "SubtitleEdit.exe"                            "temp_zip\"
+COPY /Y /V "Languages\*.xml"                             "temp_zip\Languages\"
+COPY /Y /V "..\..\..\Tesseract\leptonlib.dll"            "temp_zip\Tesseract\"
+COPY /Y /V "..\..\..\Tesseract\tesseract.exe"            "temp_zip\Tesseract\"
+COPY /Y /V "..\..\..\Tesseract\tessdata\eng.traineddata" "temp_zip\Tesseract\tessdata\"
+
+PUSHD "temp_zip"
+START "" /B /WAIT "%SEVENZIP_PATH%" a -tzip -mx=9 "SE%VERSION%.zip" * >NUL
+IF %ERRORLEVEL% NEQ 0 GOTO EndWithError
+
+
+MOVE /Y "SE%VERSION%.zip" "..\..\..\.." >NUL
+POPD
+IF EXIST "temp_zip" RD /S /Q "temp_zip"
+POPD
 EXIT /B
 
 
