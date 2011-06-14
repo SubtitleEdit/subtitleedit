@@ -58,7 +58,7 @@ Style: Default,Tahoma,25,&H00FFFFFF,&HF0000000,&H001509AE,&H32270EA8,-1,0,0,0,10
 Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text";
 
             const string timeCodeFormat = "{0}:{1:00}:{2:00}.{3:00}"; // h:mm:ss.cc 
-            const string paragraphWriteFormat = "Dialogue: Marked=0,{0},{1},{3},NTP,0000,0000,0000,,{2}";
+            const string paragraphWriteFormat = "Dialogue: 0,{0},{1},{3},NTP,0000,0000,0000,,{2}";
 
             var sb = new StringBuilder();
             System.Drawing.Color fontColor = System.Drawing.Color.FromArgb(Configuration.Settings.SsaStyle.FontColorArgb);
