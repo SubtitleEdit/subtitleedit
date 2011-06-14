@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Runtime.InteropServices;
-using System.ComponentModel;
-using System.Threading;
 using System.IO;
+using System.Runtime.InteropServices;
+using System.Text;
+using System.Threading;
 
 namespace Nikse.SubtitleEdit.Logic.VideoPlayers
 {

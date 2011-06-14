@@ -295,15 +295,6 @@ namespace Nikse.SubtitleEdit.Logic
             return result;
         }
 
-        private int Read16BitValueFromStream(ref int index)
-        {
-            byte[] buffer = new byte[2];
-            _stream.Read(buffer, 0, 2);
-            int result = BitConverter.ToInt16(buffer, 0);
-            index += 2;
-            return result;
-        }
-
         private int ReadValue24Bit(ref int index)
         {
             byte[] buffer = new byte[4];

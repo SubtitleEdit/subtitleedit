@@ -343,11 +343,6 @@ namespace Nikse.SubtitleEdit.Logic
             }
         }
 
-        private int StrToInt(string s, int number)
-        {
-            return int.Parse(s);
-        }
-
         private int TimeToMs(int time)
         {
             int result;
@@ -362,7 +357,7 @@ namespace Nikse.SubtitleEdit.Logic
                 fps = 30;
             else 
                 fps = 25;
-            result += (int) Math.Round((double)(1000.0/fps)*StrToFloat(IntToHex(BinToInt(MidStr(temp,26,6)),3)));
+            result += (int) Math.Round((1000.0 / fps) * StrToFloat(IntToHex(BinToInt(MidStr(temp, 26, 6)), 3)));
             return result;
         }
 

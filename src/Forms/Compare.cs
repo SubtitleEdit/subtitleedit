@@ -6,7 +6,6 @@ using System.Text;
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Controls;
 using Nikse.SubtitleEdit.Logic;
-using Nikse.SubtitleEdit.Logic.SubtitleFormats;
 
 namespace Nikse.SubtitleEdit.Forms
 {

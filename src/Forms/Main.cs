@@ -111,7 +111,7 @@ namespace Nikse.SubtitleEdit.Forms
                     if (versionInfo.Length >= 3 && versionInfo[2] != "0")
                         _title += "." + versionInfo[2];
                 }
-                return _title + " Beta 1";
+                return _title + " Beta 2";
             }
         }
 
@@ -10267,7 +10267,6 @@ namespace Nikse.SubtitleEdit.Forms
             if (firstSelectedIndex >= 0)
             {
                 Paragraph p = _subtitle.GetParagraphOrDefault(firstSelectedIndex);
-                Paragraph normalParagraph = p;
                 if (p != null)
                 {
                     string defaultFromLanguage = Utilities.AutoDetectGoogleLanguage(_subtitle);
@@ -10462,7 +10461,8 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void textBoxListViewText_MouseDoubleClick(object sender, MouseEventArgs e)
         {
-            string selText = (sender as TextBox).SelectedText;
+            TextBox tb = (sender as TextBox);
+            string selText = tb.SelectedText;
             if (!string.IsNullOrEmpty(selText))
             {
                 for (int i = 0; i < 5; i++)
@@ -10476,27 +10476,19 @@ namespace Nikse.SubtitleEdit.Forms
                     selText = selText.TrimEnd(';');
                     selText = selText.TrimEnd(' ');
                 }
-                (sender as TextBox).SelectionLength = selText.Length;
+                tb.SelectionLength = selText.Length;
+                if ((selText.StartsWith("(") || selText.StartsWith("[")) && selText.Length > 1)
+                {
+                    int l = tb.SelectionLength -1;
+                    tb.SelectionStart++;
+                    tb.SelectionLength = l;
+                }
             }
         }
 
         private void textBoxListViewTextAlternate_MouseDoubleClick(object sender, MouseEventArgs e)
         {
-            string selText = (sender as TextBox).SelectedText;
-            if (!string.IsNullOrEmpty(selText))
-            {
-                for (int i = 0; i < 5; i++)
-                {
-                    selText = selText.TrimEnd('.');
-                    selText = selText.TrimEnd('!');
-                    selText = selText.TrimEnd('?');
-                    selText = selText.TrimEnd(',');
-                    selText = selText.TrimEnd(':');
-                    selText = selText.TrimEnd(';');
-                    selText = selText.TrimEnd(' ');
-                }
-                (sender as TextBox).SelectionLength = selText.Length;
-            }
+            textBoxListViewText_MouseDoubleClick(sender, e);
         }
 
     }

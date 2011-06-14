@@ -106,7 +106,7 @@ namespace System.IO.Compression
         /// <returns>A valid ZipStorer object</returns>
         public static ZipExtractor Open(string _filename)
         {
-            Stream stream = (Stream)new FileStream(_filename, FileMode.Open, FileAccess.Read);
+            Stream stream = new FileStream(_filename, FileMode.Open, FileAccess.Read);
             ZipExtractor zip = Open(stream);
             return zip;
         }

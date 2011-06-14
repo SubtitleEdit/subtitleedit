@@ -2129,7 +2129,6 @@ namespace Nikse.SubtitleEdit.Logic
                     if (autobreakIndex > 0)
                     {
                         int selectionStart = textBox.SelectionStart;
-                        int selectionLength = textBox.SelectionLength;
                         textBox.Text = newText;
                         if (selectionStart > autobreakIndex)
                             selectionStart += Environment.NewLine.Length-1;

@@ -398,7 +398,7 @@ namespace Nikse.SubtitleEdit.Forms
                     return;
                 }
 
-                MicrosoftTranslationService.SoapService client = MsTranslationServiceClient;
+               // MicrosoftTranslationService.SoapService client = MsTranslationServiceClient;
 
                 //string[] locales = client.GetLanguagesForTranslate(BingApiId);
                 string[] locales = GetMsLocales();

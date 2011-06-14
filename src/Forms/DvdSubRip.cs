@@ -344,7 +344,7 @@ namespace Nikse.SubtitleEdit.Forms
                 pre = "0010";
 
             long newPts = addPresentationTimeStamp + ((long)vsp.PacketizedElementaryStream.PresentationTimeStamp.Value);
-            string bString = Convert.ToString((long)newPts, 2).PadLeft(33, '0');
+            string bString = Convert.ToString(newPts, 2).PadLeft(33, '0');
 
             string fiveBytesString = pre + bString.Substring(0, 3) + "1" + bString.Substring(3, 15) + "1" + bString.Substring(18, 15) + "1";
 

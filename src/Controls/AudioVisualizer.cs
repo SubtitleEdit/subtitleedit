@@ -407,7 +407,7 @@ namespace Nikse.SubtitleEdit.Controls
                         if (currentRegionWidth > 40)
                         {
                             SolidBrush textBrush = new SolidBrush(Color.Turquoise);
-                            e.Graphics.DrawString(string.Format("{0:0.###} {1}", (double)((double)currentRegionWidth / _wavePeaks.Header.SampleRate / _zoomFactor),
+                            e.Graphics.DrawString(string.Format("{0:0.###} {1}",((double)currentRegionWidth / _wavePeaks.Header.SampleRate / _zoomFactor),
                                                                 Configuration.Settings.Language.WaveForm.Seconds),
                                                   Font, textBrush, new PointF(currentRegionLeft + 3, Height - 32));
                         }

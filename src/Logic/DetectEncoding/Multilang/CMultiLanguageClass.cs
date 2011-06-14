@@ -3,7 +3,6 @@ namespace MultiLanguage
     using System;
     using System.Runtime.CompilerServices;
     using System.Runtime.InteropServices;
-    using System.Security;
 
     [ComImport, TypeLibType((short) 2), ClassInterface((short) 0), Guid("275C23E2-3747-11D0-9FEA-00AA003F8646")]
     public class CMultiLanguageClass : IMultiLanguage, CMultiLanguage, IMLangCodePages, IMLangFontLink, IMLangLineBreakConsole, IMultiLanguage2, IMLangFontLink2, IMultiLanguage3

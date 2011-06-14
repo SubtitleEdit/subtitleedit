@@ -3,7 +3,6 @@ namespace MultiLanguage
     using System;
     using System.Runtime.CompilerServices;
     using System.Runtime.InteropServices;
-    using System.Security;
 
     [ComImport, InterfaceType((short) 1), Guid("F5BE2EE1-BFD7-11D0-B188-00AA0038C969")]
     public interface IMLangLineBreakConsole
