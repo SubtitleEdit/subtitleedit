@@ -17,11 +17,13 @@ Subtitle Edit Changelog
    * Text box context menu -> Split line at cursor position (thx dr. Jackson)
    * Import+ocr of blu-ray sup files inside matroska files
    * Now remembers undocked controls pos/size
+   * New customizable shortcut for Adjust mode: Set current subtitle end time at video pos, keep duration, and go to next sub (Shift+End, thx Bavo)
  * IMPROVED:
    * OCR unknown words highlighting now works better (thx sialivi)
    * Merge short lines can now also merge lines ending with ".", "?", or "!" (optional)
    * Can now read Adobe Encore files starting with line numbers (thx Pier)
    * Advanced Sub Station Alpha (and SSA) now keep original styles (thx Rebecca)
+   * Improved Remove text for HI (thx sialivi)
  * FIXED:
    * Adjust all times did not work for MicroDvd (thx Wolf)
    * Now removes empty unicode white spaces from Google translate

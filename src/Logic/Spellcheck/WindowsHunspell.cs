@@ -1,6 +1,4 @@
-using System;
 using System.Collections.Generic;
-using NHunspell;
 
 namespace Nikse.SubtitleEdit.Logic.SpellCheck
 {

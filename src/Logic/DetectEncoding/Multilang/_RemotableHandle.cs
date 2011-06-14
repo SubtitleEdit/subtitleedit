@@ -1,8 +1,6 @@
 namespace MultiLanguage
 {
-    using System;
     using System.Runtime.InteropServices;
-    using System.Security;
 
     [StructLayout(LayoutKind.Sequential, Pack=4)]
     public struct _RemotableHandle

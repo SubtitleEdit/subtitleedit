@@ -1,15 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
+using System.Drawing.Drawing2D;
+using System.Drawing.Text;
+using System.IO;
 using System.Text;
 using System.Windows.Forms;
-using System.Drawing.Text;
-using System.Drawing.Drawing2D;
-using Nikse.SubtitleEdit.Logic;
 using System.Xml;
-using System.IO;
+using Nikse.SubtitleEdit.Logic;
 
 namespace Nikse.SubtitleEdit.Forms
 {

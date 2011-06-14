@@ -17,7 +17,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     new SubRip(),
                     new AbcIViewer(),
                     new AdobeEncore(),
-                    new AdobeEncoreTab(),
+                    new AdobeEncoreTabs(),
                     new AdobeEncoreWithLineNumbers(),
                     new AdvancedSubStationAlpha(),
                     new AQTitle(),

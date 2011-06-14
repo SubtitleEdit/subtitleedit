@@ -3,7 +3,6 @@ namespace MultiLanguage
     using System;
     using System.Runtime.CompilerServices;
     using System.Runtime.InteropServices;
-    using System.Security;
 
     [ComImport, Guid("D66D6F98-CDAA-11D0-B822-00C04FC9B31F"), InterfaceType((short) 1)]
     public interface IMLangConvertCharset
