@@ -866,6 +866,7 @@ namespace Nikse.SubtitleEdit.Logic
 
                     ContextMenu = new LanguageStructure.Main.MainMenu.ListViewContextMenu
                     {
+                        SubStationAlphaSetStyle = "(Advanced) Sub Station Alpha - Set Style",
                         Cut = "Cut",
                         Copy = "Copy",
                         Paste = "Paste",

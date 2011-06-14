@@ -856,6 +856,7 @@ namespace Nikse.SubtitleEdit.Forms
             toolStripButtonToggleWaveForm.ToolTipText = _language.Menu.ToolBar.ShowHideWaveForm;
             toolStripButtonToggleVideo.ToolTipText = _language.Menu.ToolBar.ShowHideVideo;
 
+            setStylesForSelectedLinesToolStripMenuItem.Text = _language.Menu.ContextMenu.SubStationAlphaSetStyle;
             toolStripMenuItemDelete.Text = _language.Menu.ContextMenu.Delete;
             insertLineToolStripMenuItem.Text = _language.Menu.ContextMenu.InsertFirstLine;
             toolStripMenuItemInsertBefore.Text = _language.Menu.ContextMenu.InsertBefore;
@@ -1975,7 +1976,7 @@ namespace Nikse.SubtitleEdit.Forms
                 SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
                 RestoreSubtitleListviewIndexes();
 
-                if (_oldSubtitleFormat.GetType() == typeof(AdvancedSubStationAlpha) && _networkSession == null)
+                if ((_oldSubtitleFormat.GetType() == typeof(AdvancedSubStationAlpha) || _oldSubtitleFormat.GetType() == typeof(SubStationAlpha)) && _networkSession == null)
                 {
                     SubtitleListview1.HideExtraColumn();
                 }
@@ -1989,7 +1990,7 @@ namespace Nikse.SubtitleEdit.Forms
                 ShowStatus(string.Format(_language.ConvertedToX, format.FriendlyName));
                 _oldSubtitleFormat = format;
 
-                if (format.GetType() == typeof(AdvancedSubStationAlpha) && _networkSession == null)
+                if ((format.GetType() == typeof(AdvancedSubStationAlpha) || format.GetType() == typeof(SubStationAlpha)) && _networkSession == null)
                 {
                     SubtitleListview1.ShowExtraColumn("Style");
                     SubtitleListview1.DisplayExtraFromExtra = true;
@@ -3617,7 +3618,8 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ContextMenuStripListviewOpening(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            if (GetCurrentSubtitleFormat().GetType() == typeof(AdvancedSubStationAlpha) && SubtitleListview1.SelectedItems.Count > 0)
+            if ((GetCurrentSubtitleFormat().GetType() == typeof(AdvancedSubStationAlpha) || GetCurrentSubtitleFormat().GetType() == typeof(SubStationAlpha))
+                && SubtitleListview1.SelectedItems.Count > 0)
             {
                 var styles = AdvancedSubStationAlpha.GetStylesFromHeader(_subtitle.Header);
                 setStylesForSelectedLinesToolStripMenuItem.DropDownItems.Clear();
@@ -3625,6 +3627,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     setStylesForSelectedLinesToolStripMenuItem.DropDownItems.Add(style, null, tsi_Click);
                 }
+                setStylesForSelectedLinesToolStripMenuItem.Visible = styles.Count > 1;
             }
             else
             {
@@ -7951,7 +7954,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void textBoxListViewText_MouseMove(object sender, MouseEventArgs e)
         {
-            if (Control.ModifierKeys == Keys.Control)
+            if (Control.ModifierKeys == Keys.Control && MouseButtons == System.Windows.Forms.MouseButtons.Left)
             {
                 if (!string.IsNullOrEmpty(textBoxListViewText.SelectedText))
                     textBoxListViewText.DoDragDrop(textBoxListViewText.SelectedText, DragDropEffects.Copy);
@@ -9097,7 +9100,7 @@ namespace Nikse.SubtitleEdit.Forms
             networkNew.Initialize(_networkSession, _fileName);
             if (networkNew.ShowDialog(this) == DialogResult.OK)
             {
-                if (GetCurrentSubtitleFormat().GetType() == typeof(AdvancedSubStationAlpha))
+                if (GetCurrentSubtitleFormat().GetType() == typeof(AdvancedSubStationAlpha) || GetCurrentSubtitleFormat().GetType() == typeof(SubStationAlpha))
                 {
                     SubtitleListview1.HideExtraColumn();
                 }
@@ -9470,7 +9473,7 @@ namespace Nikse.SubtitleEdit.Forms
             SubtitleListview1.HideExtraColumn();
             _networkChat = null;
 
-            if (GetCurrentSubtitleFormat().GetType() == typeof(AdvancedSubStationAlpha) && _networkSession == null)
+            if ((GetCurrentSubtitleFormat().GetType() == typeof(AdvancedSubStationAlpha) || GetCurrentSubtitleFormat().GetType() == typeof(SubStationAlpha)) && _networkSession == null)
             {
                 SubtitleListview1.ShowExtraColumn("Style");
                 SubtitleListview1.DisplayExtraFromExtra = true;
@@ -10461,7 +10464,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void textBoxListViewTextAlternate_MouseMove(object sender, MouseEventArgs e)
         {
-            if (Control.ModifierKeys == Keys.Control)
+            if (Control.ModifierKeys == Keys.Control && MouseButtons == System.Windows.Forms.MouseButtons.Left)
             {
                 if (!string.IsNullOrEmpty(textBoxListViewTextAlternate.SelectedText))
                     textBoxListViewTextAlternate.DoDragDrop(textBoxListViewTextAlternate.SelectedText, DragDropEffects.Copy);
