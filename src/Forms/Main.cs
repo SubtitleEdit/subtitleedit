@@ -88,7 +88,9 @@ namespace Nikse.SubtitleEdit.Forms
         bool _cancelWordSpellCheck = false;
 
         Keys _toggleVideoDockUndock = Keys.None;
+        Keys _mainAdjustInsertViaEndAutoStartAndGoToNext = Keys.None;
         bool _videoLoadedGoToSubPosAndPause = false;
+        bool _makeHistory = true;
 
         private bool AutoRepeatContinueOn
         {
@@ -246,7 +248,7 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             OpenSubtitle(fileName, null, Configuration.Settings.RecentFiles.Files[0].VideoFileName, Configuration.Settings.RecentFiles.Files[0].OriginalFileName);
                             SetRecentIndecies(fileName);
-                            DoEventsPlusGotoSubPosAndPause();
+                            GotoSubPosAndPause();
                         }
                     }
                 }
@@ -607,7 +609,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             _change = true;
             MakeHistoryForUndoWhenNoMoreChanges(string.Format(_language.VideoControls.BeforeChangingTimeInWaveFormX, "#" + paragraph.Number + " " + paragraph.Text));
-
+            _makeHistory = false;
             int index = _subtitle.GetIndex(paragraph);
             if (index == _subtitleListViewIndex)
             {
@@ -621,6 +623,7 @@ namespace Nikse.SubtitleEdit.Forms
                 SubtitleListview1.SetStartTime(index, paragraph);
                 SubtitleListview1.SetDuration(index, paragraph);
             }
+            _makeHistory = true;
         }
 
         void AudioWaveForm_OnPositionSelected(double seconds, Paragraph paragraph)
@@ -1594,20 +1597,14 @@ namespace Nikse.SubtitleEdit.Forms
                 else
                     OpenSubtitle(rfe.FileName, null, rfe.VideoFileName, rfe.OriginalFileName);
                 SetRecentIndecies(item.Text);
-                DoEventsPlusGotoSubPosAndPause();
+                GotoSubPosAndPause();
             }
         }
 
-        private void DoEventsPlusGotoSubPosAndPause()
+        private void GotoSubPosAndPause()
         {
             if (!string.IsNullOrEmpty(_videoFileName))
             {
-                //for (int i = 0; i < 50; i++)
-                //{
-                //    Application.DoEvents();
-                //    System.Threading.Thread.Sleep(10);
-                //}
-                //GotoSubPositionAndPause();
                 _videoLoadedGoToSubPosAndPause = true;
             }
             else
@@ -1615,7 +1612,6 @@ namespace Nikse.SubtitleEdit.Forms
                 mediaPlayer.SubtitleText = string.Empty;
             }
         }
-
 
         private void SetRecentIndecies(string fileName)
         {
@@ -1644,8 +1640,9 @@ namespace Nikse.SubtitleEdit.Forms
                         SubtitleListview1.TopItem = SubtitleListview1.Items[topIndex];
                         SubtitleListview1.TopItem = SubtitleListview1.Items[topIndex];
                         SubtitleListview1.TopItem = SubtitleListview1.Items[topIndex];
-                    }                    
+                    }
 
+                    RefreshSelectedParagraph();
                     break;
                 }
             }
@@ -3396,7 +3393,9 @@ namespace Nikse.SubtitleEdit.Forms
                         SubtitleListview1.SelectIndexAndEnsureVisible(selectedIndex);
                     else
                         SubtitleListview1.SelectIndexAndEnsureVisible(0);
-                }
+
+                    audioVisualizer.Invalidate();
+                }                
             }
             else
             {
@@ -4695,7 +4694,8 @@ namespace Nikse.SubtitleEdit.Forms
                         currentParagraph.CalculateTimeCodesFromFrameNumbers(CurrentFrameRate);
                     }
 
-                    MakeHistoryForUndoWhenNoMoreChanges(string.Format(_language.DisplayTimeAdjustedX, "#" + currentParagraph.Number + ": " +  oldDuration + " -> " + currentParagraph.Duration.ToString()));
+                    if (_makeHistory)
+                        MakeHistoryForUndoWhenNoMoreChanges(string.Format(_language.DisplayTimeAdjustedX, "#" + currentParagraph.Number + ": " +  oldDuration + " -> " + currentParagraph.Duration.ToString()));
                 }
             }
         }
@@ -4776,7 +4776,8 @@ namespace Nikse.SubtitleEdit.Forms
 
                 UpdateOriginalTimeCodes(oldParagraph);
 
-                MakeHistoryForUndoWhenNoMoreChanges(string.Format(_language.StarTimeAdjustedX, "#" + (_subtitleListViewIndex+1).ToString() + ": " + timeUpDownStartTime.TimeCode.ToString()));
+                if (_makeHistory)
+                    MakeHistoryForUndoWhenNoMoreChanges(string.Format(_language.StarTimeAdjustedX, "#" + (_subtitleListViewIndex+1).ToString() + ": " + timeUpDownStartTime.TimeCode.ToString()));
             }
         }
 
@@ -6183,6 +6184,11 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     StopAutoDuration();
                     buttonSetEnd_Click(null, null);
+                    e.SuppressKeyPress = true;
+                }
+                else if (_mainAdjustInsertViaEndAutoStartAndGoToNext == e.KeyData)
+                {
+                    SetCurrentViaEndPositionAndGotoNext(FirstSelectedIndex);
                     e.SuppressKeyPress = true;
                 }
             }
@@ -8261,6 +8267,7 @@ namespace Nikse.SubtitleEdit.Forms
             toolStripMenuItemAdjustAllTimes.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainSynchronizationAdjustTimes);
             italicToolStripMenuItem.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainListViewItalic);
             italicToolStripMenuItem1.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxItalic);
+            _mainAdjustInsertViaEndAutoStartAndGoToNext = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainAdjustViaEndAutoStartAndGoToNext);
         }
 
         private void LoadPlugins()
@@ -10154,64 +10161,44 @@ namespace Nikse.SubtitleEdit.Forms
             mediaPlayer.TogglePlayPause();
         }
 
-        public void InsertViaEndPosition(string text, double durationMilliseconds, bool autoDuration)
+        public void SetCurrentViaEndPositionAndGotoNext(int index)
         {
+            Paragraph p = _subtitle.GetParagraphOrDefault(index);
+            if (p == null)
+                return;
+
             if (mediaPlayer.VideoPlayer == null || string.IsNullOrEmpty(_videoFileName))
             {
                 MessageBox.Show(Configuration.Settings.Language.General.NoVideoLoaded);
                 return;
             }
 
-            if (autoDuration)
-            { 
-                //TODO: auto duration
-            }
+            //if (autoDuration)
+            //{ 
+            //    //TODO: auto duration
+            //    //TODO: search for start via wave file (must only be minor adjustment)
+            //}
 
             // current movie pos
-            double totalMilliseconds = (mediaPlayer.CurrentPosition * 1000.0) - durationMilliseconds;
+            double durationTotalMilliseconds = p.Duration.TotalMilliseconds;
+            double totalMillisecondsEnd = mediaPlayer.CurrentPosition * 1000.0;
 
-            //TODO: search for start via wave file (must only be minor adjustment)
+            TimeCode tc = new TimeCode(TimeSpan.FromMilliseconds(totalMillisecondsEnd - durationTotalMilliseconds));
+            MakeHistoryForUndo(_language.BeforeSetEndAndVideoPosition + "  " + tc.ToString());
+            _makeHistory = false;
 
+            p.StartTime.TotalMilliseconds = totalMillisecondsEnd - durationTotalMilliseconds;
+            p.EndTime.TotalMilliseconds = totalMillisecondsEnd;
 
-            int startNumber = 1;
-            if (_subtitle.Paragraphs.Count > 0)
-                startNumber = _subtitle.Paragraphs[0].Number;
+            timeUpDownStartTime.TimeCode = p.StartTime;
+            decimal durationInSeconds = (decimal)(p.Duration.TotalSeconds);
+            if (durationInSeconds >= numericUpDownDuration.Minimum && durationInSeconds <= numericUpDownDuration.Maximum)
+                numericUpDownDuration.Value = durationInSeconds;
 
-            TimeCode tc = new TimeCode(TimeSpan.FromMilliseconds(totalMilliseconds));
-            MakeHistoryForUndo(_language.BeforeInsertSubtitleAtVideoPosition + "  " + tc.ToString());
-
-            // find index where to insert
-            int index = 0;
-            foreach (Paragraph p in _subtitle.Paragraphs)
-            {
-                if (p.StartTime.TotalMilliseconds > totalMilliseconds)
-                    break;
-                index++;
-            }
-
-            // create and insert
-            if (_subtitle.Paragraphs.Count > 0 && index > 0 && totalMilliseconds < _subtitle.Paragraphs[index - 1].EndTime.TotalMilliseconds)
-            {
-                double diff = _subtitle.Paragraphs[index - 1].EndTime.TotalMilliseconds - totalMilliseconds;
-                totalMilliseconds += diff + 250;
-                durationMilliseconds -= diff + 250;
-            }
-            var newParagraph = new Paragraph(text, totalMilliseconds, totalMilliseconds + durationMilliseconds);
-
-
-            if (GetCurrentSubtitleFormat().IsFrameBased)
-            {
-                newParagraph.CalculateFrameNumbersFromTimeCodes(CurrentFrameRate);
-                newParagraph.CalculateTimeCodesFromFrameNumbers(CurrentFrameRate);
-            }
-            _subtitle.Paragraphs.Insert(index, newParagraph);
-
-            _subtitleListViewIndex = -1;
-            _subtitle.Renumber(startNumber);
-            SubtitleListview1.Fill(_subtitle.Paragraphs);
-            SubtitleListview1.SelectIndexAndEnsureVisible(index);
-
-            ShowStatus(string.Format(_language.VideoControls.NewTextInsertAtX, newParagraph.StartTime.ToShortString()));
+            SubtitleListview1.SelectIndexAndEnsureVisible(index+1);
+            ShowStatus(string.Format(_language.VideoControls.AdjustedViaEndTime, p.StartTime.ToShortString()));
+            audioVisualizer.Invalidate();
+            _makeHistory = true;
         }
 
         private void editSelectAllToolStripMenuItem_Click(object sender, EventArgs e)

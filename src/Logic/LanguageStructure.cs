@@ -633,6 +633,7 @@
             public string TimeCodeImportedFromXY { get; set; }
             public string BeforeInsertSubtitleAtVideoPosition { get; set; }
             public string BeforeSetStartTimeAndOffsetTheRest { get; set; }
+            public string BeforeSetEndAndVideoPosition { get; set; }
             public string ContinueWithCurrentSpellCheck { get; set; }
             public string CharactersPerSecond { get; set; }
             public string GetFrameRateFromVideoFile { get; set; }
@@ -879,6 +880,7 @@
                 public string GoToSubtitlePositionAndPause { get; set; }
                 public string SetStartTime { get; set; }
                 public string SetEndTimeAndGoToNext { get; set; }
+                public string AdjustedViaEndTime { get; set; }
                 public string SetEndTime { get; set; }
                 public string SetstartTimeAndOffsetOfRest { get; set; }
 
@@ -1149,6 +1151,7 @@
             public string UpdateShortcut { get; set; }
             public string ShortcutIsNotValid { get; set; }
             public string ToggleDockUndockOfVideoControls { get; set; }
+            public string AdjustViaEndAutoStartAndGoToNext { get; set; }            
         }
 
         public class ShowEarlierLater
