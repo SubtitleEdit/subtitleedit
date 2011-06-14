@@ -706,6 +706,7 @@ namespace Nikse.SubtitleEdit.Logic
                 TimeCodeImportedFromXY = "Time codes imported from {0}: {1}",
                 BeforeInsertSubtitleAtVideoPosition = "Before insert subtitle at video position",
                 BeforeSetStartTimeAndOffsetTheRest = "Before set start time and offset the rest",
+                BeforeSetEndAndVideoPosition = "Before set end time at video position and auto calculate start",
                 ContinueWithCurrentSpellCheck = "Continue with current spell check?",
                 CharactersPerSecond = "Chars/sec: {0:0.00}",
                 GetFrameRateFromVideoFile =  "Get frame rate from video file",
@@ -943,6 +944,7 @@ namespace Nikse.SubtitleEdit.Logic
                     GoToSubtitlePositionAndPause = "Go to subposition and pause",
                     SetStartTime = "Set &start time",
                     SetEndTimeAndGoToNext = "Set &end && goto next",
+                    AdjustedViaEndTime = "Adjusted via end time {0}",
                     SetEndTime = "Set e&nd time",
                     SetstartTimeAndOffsetOfRest = "Set sta&rt and offset the rest",
 
@@ -1215,6 +1217,7 @@ can edit in same subtitle file (collaboration)",
                 UpdateShortcut = "Update",
                 ShortcutIsNotValid = "Shortcut is not valid: {0}",
                 ToggleDockUndockOfVideoControls = "Toggle dock/undock of video controls",
+                AdjustViaEndAutoStartAndGoToNext = "Adjust via end position and go to next",
             };
 
             ShowEarlierLater = new LanguageStructure.ShowEarlierLater

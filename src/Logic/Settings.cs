@@ -420,7 +420,8 @@ namespace Nikse.SubtitleEdit.Logic
         public string MainVideoToggleVideoControls { get; set; }
         public string MainSynchronizationAdjustTimes { get; set; }                
         public string MainListViewItalic { get; set; }
-        public string MainTextBoxItalic { get; set; }        
+        public string MainTextBoxItalic { get; set; }
+        public string MainAdjustViaEndAutoStartAndGoToNext { get; set; }        
         
         public Shortcuts()
         {
@@ -436,7 +437,8 @@ namespace Nikse.SubtitleEdit.Logic
             MainVideoShowHideVideo = "Control+Q";
             MainSynchronizationAdjustTimes = "Control+Shift+A";
             MainListViewItalic = "Control+I";
-            MainTextBoxItalic = "Control+I";            
+            MainTextBoxItalic = "Control+I";
+            MainAdjustViaEndAutoStartAndGoToNext = "Shift+End";
         }
     }
 
@@ -1093,6 +1095,9 @@ namespace Nikse.SubtitleEdit.Logic
                 subNode = node.SelectSingleNode("MainTextBoxItalic");
                 if (subNode != null)
                     settings.Shortcuts.MainTextBoxItalic = subNode.InnerText;
+                subNode = node.SelectSingleNode("MainAdjustViaEndAutoStartAndGoToNext");
+                if (subNode != null)
+                    settings.Shortcuts.MainAdjustViaEndAutoStartAndGoToNext = subNode.InnerText;                
             }
 
             settings.RemoveTextForHearingImpaired = new RemoveTextForHearingImpairedSettings();
@@ -1327,7 +1332,8 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("MainVideoToggleVideoControls", settings.Shortcuts.MainVideoToggleVideoControls);
             textWriter.WriteElementString("MainSynchronizationAdjustTimes", settings.Shortcuts.MainSynchronizationAdjustTimes);
             textWriter.WriteElementString("MainListViewItalic", settings.Shortcuts.MainListViewItalic);
-            textWriter.WriteElementString("MainTextBoxItalic", settings.Shortcuts.MainTextBoxItalic);                        
+            textWriter.WriteElementString("MainTextBoxItalic", settings.Shortcuts.MainTextBoxItalic);
+            textWriter.WriteElementString("MainAdjustViaEndAutoStartAndGoToNext", settings.Shortcuts.MainAdjustViaEndAutoStartAndGoToNext);                                    
             textWriter.WriteEndElement();
 
             textWriter.WriteStartElement("RemoveTextForHearingImpaired", "");
