@@ -1300,6 +1300,7 @@ can edit in same subtitle file (collaboration)",
             PointSync = new LanguageStructure.PointSync
             {
                 Title = "Point synchronization",
+                TitleViaOtherSubtitle = "Point sync via other subtitle",
                 SyncHelp = "Set at least two sync points to make rough synchronization",
                 SetSyncPoint = "Set sync point",
                 RemoveSyncPoint = "Remove sync point",
