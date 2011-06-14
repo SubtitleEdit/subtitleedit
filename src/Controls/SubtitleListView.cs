@@ -23,6 +23,7 @@ namespace Nikse.SubtitleEdit.Controls
         public int SubtitleFontSize = 8;
         public bool IsAlternateTextColumnVisible { get; private set; }
         public bool IsExtraColumnVisible { get; private set; }
+        public bool DisplayExtraFromExtra { get; set; }
 
         public int FirstVisibleIndex
         {
@@ -205,10 +206,10 @@ namespace Nikse.SubtitleEdit.Controls
         internal void Fill(Subtitle subtitle, Subtitle subtitleAlternate)
         {
             Fill(subtitle.Paragraphs, subtitleAlternate.Paragraphs);
-        }
+        }       
 
         internal void Fill(List<Paragraph> paragraphs)
-        {
+        {        
             SaveFirstVisibleIndex();
             BeginUpdate();
             Items.Clear();
@@ -218,6 +219,8 @@ namespace Nikse.SubtitleEdit.Controls
             foreach (Paragraph paragraph in paragraphs)
             {
                 Add(paragraph, i.ToString());
+                if (DisplayExtraFromExtra && IsExtraColumnVisible)
+                    Items[i].SubItems[ColumnIndexExtra].Text = paragraph.Extra;
                 i++;
             }
 
@@ -242,6 +245,8 @@ namespace Nikse.SubtitleEdit.Controls
                 Paragraph alternate = Utilities.GetOriginalParagraph(i, paragraph, paragraphsAlternate);
                 if (alternate != null)
                     SetAlternateText(i, alternate.Text);
+                if (DisplayExtraFromExtra && IsExtraColumnVisible)
+                    SetExtraText(i, paragraph.Extra, ForeColor);
                 i++;
             }
 
