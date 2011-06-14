@@ -786,6 +786,7 @@
 
                 public class ListViewContextMenu
                 {
+                    public string SubStationAlphaSetStyle { get; set; }
                     public string Cut { get; set; }
                     public string Copy { get; set; }
                     public string Paste { get; set; }

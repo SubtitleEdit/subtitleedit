@@ -265,6 +265,8 @@ Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
                                 end = splittedLine[i].Trim();
                             else if (i == indexText)
                                 text = splittedLine[i];
+                            else if (i == indexStyle)
+                                style = splittedLine[i];
                             else if (i > indexText)
                                 text += "," + splittedLine[i];
                         }
