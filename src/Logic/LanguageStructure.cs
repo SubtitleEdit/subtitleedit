@@ -1234,6 +1234,7 @@
         public class PointSync
         {
             public string Title { get; set; }
+            public string TitleViaOtherSubtitle { get; set; }
             public string SyncHelp { get; set; }
             public string SetSyncPoint { get; set; }
             public string RemoveSyncPoint { get; set; }

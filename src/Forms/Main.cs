@@ -1974,15 +1974,28 @@ namespace Nikse.SubtitleEdit.Forms
                 SaveSubtitleListviewIndexes();
                 SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
                 RestoreSubtitleListviewIndexes();
+
+                if (_oldSubtitleFormat.GetType() == typeof(AdvancedSubStationAlpha) && _networkSession == null)
+                {
+                    SubtitleListview1.HideExtraColumn();
+                }
             }
             ShowSource();
 
+            SubtitleListview1.DisplayExtraFromExtra = false;
             SubtitleFormat format = GetCurrentSubtitleFormat();
             if (format != null)
             {
                 ShowStatus(string.Format(_language.ConvertedToX, format.FriendlyName));
                 _oldSubtitleFormat = format;
+
+                if (format.GetType() == typeof(AdvancedSubStationAlpha) && _networkSession == null)
+                {
+                    SubtitleListview1.ShowExtraColumn("Style");
+                    SubtitleListview1.DisplayExtraFromExtra = true;
+                }
             }
+
         }
 
         private void ComboBoxSubtitleFormatsEnter(object sender, EventArgs e)
@@ -3604,6 +3617,21 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ContextMenuStripListviewOpening(object sender, System.ComponentModel.CancelEventArgs e)
         {
+            if (GetCurrentSubtitleFormat().GetType() == typeof(AdvancedSubStationAlpha) && SubtitleListview1.SelectedItems.Count > 0)
+            {
+                var styles = AdvancedSubStationAlpha.GetStylesFromHeader(_subtitle.Header);
+                setStylesForSelectedLinesToolStripMenuItem.DropDownItems.Clear();
+                foreach (string style in styles)
+                {
+                    setStylesForSelectedLinesToolStripMenuItem.DropDownItems.Add(style, null, tsi_Click);
+                }
+            }
+            else
+            {
+                setStylesForSelectedLinesToolStripMenuItem.Visible = false; 
+            }
+            
+
             toolStripMenuItemGoogleMicrosoftTranslateSelLine.Visible = false;
             if (SubtitleListview1.SelectedItems.Count == 0)
             {
@@ -3671,6 +3699,16 @@ namespace Nikse.SubtitleEdit.Forms
                     karokeeEffectToolStripMenuItem.Visible = false;
                     toolStripSeparatorAdvancedFunctions.Visible = SubtitleListview1.SelectedItems.Count == 1;
                 }
+            }
+        }
+
+        void tsi_Click(object sender, EventArgs e)
+        {
+            string style = (sender as ToolStripItem).Text;
+            foreach (int index in SubtitleListview1.SelectedIndices)
+            {
+                _subtitle.Paragraphs[index].Extra = style;
+                SubtitleListview1.SetExtraText(index, style, SubtitleListview1.ForeColor);
             }
         }
 
@@ -7913,8 +7951,15 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void textBoxListViewText_MouseMove(object sender, MouseEventArgs e)
         {
-            if (AutoRepeatContinueOn && !textBoxSearchWord.Focused)
-            { 
+            if (Control.ModifierKeys == Keys.Control)
+            {
+                if (!string.IsNullOrEmpty(textBoxListViewText.SelectedText))
+                    textBoxListViewText.DoDragDrop(textBoxListViewText.SelectedText, DragDropEffects.Copy);
+                else
+                    textBoxListViewText.DoDragDrop(textBoxListViewText.Text, DragDropEffects.Copy);
+            }
+            else if (AutoRepeatContinueOn && !textBoxSearchWord.Focused)
+            {
                 string selectedText = textBoxListViewText.SelectedText;
                 if (!string.IsNullOrEmpty(selectedText))
                 {
@@ -9051,7 +9096,12 @@ namespace Nikse.SubtitleEdit.Forms
             NetworkStart networkNew = new NetworkStart();
             networkNew.Initialize(_networkSession, _fileName);
             if (networkNew.ShowDialog(this) == DialogResult.OK)
-            { 
+            {
+                if (GetCurrentSubtitleFormat().GetType() == typeof(AdvancedSubStationAlpha))
+                {
+                    SubtitleListview1.HideExtraColumn();
+                }
+
                 _networkSession.AppendToLog(string.Format(_language.XStartedSessionYAtZ, _networkSession.CurrentUser.UserName, _networkSession.SessionId, DateTime.Now.ToLongTimeString()));
                 toolStripStatusNetworking.Visible = true;
                 toolStripStatusNetworking.Text = _language.NetworkMode;
@@ -9419,6 +9469,12 @@ namespace Nikse.SubtitleEdit.Forms
             toolStripStatusNetworking.Visible = false;
             SubtitleListview1.HideExtraColumn();
             _networkChat = null;
+
+            if (GetCurrentSubtitleFormat().GetType() == typeof(AdvancedSubStationAlpha) && _networkSession == null)
+            {
+                SubtitleListview1.ShowExtraColumn("Style");
+                SubtitleListview1.DisplayExtraFromExtra = true;
+            }
         }
 
         private void toolStripMenuItemNetworking_DropDownOpening(object sender, EventArgs e)
@@ -10383,6 +10439,74 @@ namespace Nikse.SubtitleEdit.Forms
         private void splitContainerMain_SplitterMoved(object sender, SplitterEventArgs e)
         {
             mediaPlayer.Refresh();
+        }
+
+        private void FindDoubleLinesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            for (int i = FirstSelectedIndex+1; i < _subtitle.Paragraphs.Count; i++)
+            {
+                var current = _subtitle.GetParagraphOrDefault(i);
+                var next = _subtitle.GetParagraphOrDefault(i+1);
+                if (current != null && next != null)
+                {
+                    if (current.Text.Trim().ToLower() == next.Text.Trim().ToLower())
+                    {
+                        SubtitleListview1.SelectIndexAndEnsureVisible(i);
+                        SubtitleListview1.Items[i + 1].Selected = true;
+                        break;
+                    }
+                }
+            }
+        }
+
+        private void textBoxListViewTextAlternate_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (Control.ModifierKeys == Keys.Control)
+            {
+                if (!string.IsNullOrEmpty(textBoxListViewTextAlternate.SelectedText))
+                    textBoxListViewTextAlternate.DoDragDrop(textBoxListViewTextAlternate.SelectedText, DragDropEffects.Copy);
+                else
+                    textBoxListViewTextAlternate.DoDragDrop(textBoxListViewTextAlternate.Text, DragDropEffects.Copy);
+            }
+        }
+
+        private void textBoxListViewText_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            string selText = (sender as TextBox).SelectedText;
+            if (!string.IsNullOrEmpty(selText))
+            {
+                for (int i = 0; i < 5; i++)
+                {
+                    selText = selText.TrimEnd('.');
+                    selText = selText.TrimEnd('!');
+                    selText = selText.TrimEnd('?');
+                    selText = selText.TrimEnd(',');
+                    selText = selText.TrimEnd(')');
+                    selText = selText.TrimEnd(':');
+                    selText = selText.TrimEnd(';');
+                    selText = selText.TrimEnd(' ');
+                }
+                (sender as TextBox).SelectionLength = selText.Length;
+            }
+        }
+
+        private void textBoxListViewTextAlternate_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            string selText = (sender as TextBox).SelectedText;
+            if (!string.IsNullOrEmpty(selText))
+            {
+                for (int i = 0; i < 5; i++)
+                {
+                    selText = selText.TrimEnd('.');
+                    selText = selText.TrimEnd('!');
+                    selText = selText.TrimEnd('?');
+                    selText = selText.TrimEnd(',');
+                    selText = selText.TrimEnd(':');
+                    selText = selText.TrimEnd(';');
+                    selText = selText.TrimEnd(' ');
+                }
+                (sender as TextBox).SelectionLength = selText.Length;
+            }
         }
 
     }
