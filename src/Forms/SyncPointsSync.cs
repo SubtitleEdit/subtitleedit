@@ -40,8 +40,7 @@ namespace Nikse.SubtitleEdit.Forms
         public SyncPointsSync()
         {
             InitializeComponent();
-
-            this.Text = Configuration.Settings.Language.PointSync.Title;
+                        
             buttonSetSyncPoint.Text = Configuration.Settings.Language.PointSync.SetSyncPoint;
             buttonRemoveSyncPoint.Text = Configuration.Settings.Language.PointSync.RemoveSyncPoint;
             buttonOK.Text = Configuration.Settings.Language.General.OK;
@@ -73,6 +72,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         public void Initialize(Subtitle subtitle, string subtitleFileName, string videoFileName, int audioTrackNumber)
         {
+            this.Text = Configuration.Settings.Language.PointSync.Title;
             labelSubtitleFileName.Text = subtitleFileName;
             _subtitle = new Subtitle(subtitle);
             _originalSubtitle = subtitle;
@@ -103,6 +103,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         public void Initialize(Subtitle subtitle, string subtitleFileName, string videoFileName, int audioTrackNumber, string OtherSubtitleFileName, Subtitle otherSubtitle)
         {
+            this.Text = Configuration.Settings.Language.PointSync.TitleViaOtherSubtitle;
             labelSubtitleFileName.Text = subtitleFileName;
             _subtitle = new Subtitle(subtitle);
             _otherSubtitle = otherSubtitle;
@@ -116,17 +117,15 @@ namespace Nikse.SubtitleEdit.Forms
             labelOtherSubtitleFileName.Text = OtherSubtitleFileName;
             subtitleListView2.Fill(otherSubtitle);
 
-            SubtitleListview1.Anchor = AnchorStyles.Left;
+            SubtitleListview1.Anchor = AnchorStyles.Left | AnchorStyles.Top | AnchorStyles.Bottom;
+            subtitleListView2.Anchor = AnchorStyles.Left | AnchorStyles.Top | AnchorStyles.Bottom;
             buttonSetSyncPoint.Anchor = AnchorStyles.Left;
             buttonRemoveSyncPoint.Anchor = AnchorStyles.Left;
             labelNoOfSyncPoints.Anchor = AnchorStyles.Left;
             listBoxSyncPoints.Anchor = AnchorStyles.Left;
-            groupBoxImportResult.Anchor = AnchorStyles.Left;
             labelOtherSubtitleFileName.Visible = true;
             subtitleListView2.Visible = true;
-            groupBoxImportResult.Width = subtitleListView2.Left + subtitleListView2.Width + 20;
-            Width = groupBoxImportResult.Left + groupBoxImportResult.Width + 15;
-            FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            Width = subtitleListView2.Width * 2 + 250;            
         }
 
         private void RefreshSyncronizationPointsUI()
@@ -335,6 +334,27 @@ namespace Nikse.SubtitleEdit.Forms
                 else
                     buttonSetSyncPoint_Click(null, null);
             }
+        }
+
+        private void SyncPointsSync_Resize(object sender, EventArgs e)
+        {
+            if (subtitleListView2.Visible)
+            {
+                int widthInMiddle = listBoxSyncPoints.Width;
+                SubtitleListview1.Width = (groupBoxImportResult.Width - widthInMiddle) / 2 - 12;
+                subtitleListView2.Width = SubtitleListview1.Width;
+                subtitleListView2.Left = SubtitleListview1.Left + SubtitleListview1.Width + widthInMiddle + 10;
+                listBoxSyncPoints.Left = SubtitleListview1.Left + SubtitleListview1.Width + 5;
+                buttonSetSyncPoint.Left = listBoxSyncPoints.Left;
+                buttonRemoveSyncPoint.Left = listBoxSyncPoints.Left;
+                labelNoOfSyncPoints.Left = listBoxSyncPoints.Left;
+                labelOtherSubtitleFileName.Left = subtitleListView2.Left;
+            }
+        }
+
+        private void SyncPointsSync_Shown(object sender, EventArgs e)
+        {
+            SyncPointsSync_Resize(null, null);
         }
 
     }
