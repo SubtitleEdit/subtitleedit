@@ -96,6 +96,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private string RemoveTextBetweenTags(string startTag, string endTag, string text)
         {
+            text = text.Trim();
             if (startTag == "?" || endTag == "?")
             {
                 if (text.StartsWith(startTag) && text.EndsWith(endTag))
@@ -258,6 +259,7 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         StripableText stSub = new StripableText(s, " >-\"'‘`´♪¿¡.", " -\"'`´♪.!?:");
                         string newText = stSub.StrippedText;
+
                         if (HasHearImpariedTagsAtStart(newText))
                             hit = true;
                         else if (HasHearImpariedTagsAtEnd(newText))
@@ -319,57 +321,40 @@ namespace Nikse.SubtitleEdit.Forms
 
         private string RemoveColon(string text)
         {
+            if (text.IndexOf(":") < 0)
+                return text;
+
             // House 7x01 line 52: and she would like you to do three things:
             // Okay or remove???
             if (text.IndexOf(':') > 0 && text.IndexOf(':') == text.Length - 1 && text != text.ToUpper())
                 return text;
 
-            List<int> removedAtLine = new List<int>();
-            var sb = new StringBuilder();
+            string newText = string.Empty;
             string[] parts = text.Trim().Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-
-            // two ppl talking - add a "- " before text
-            if (parts.Length == 2 && parts[0].Contains(": ") && parts[1].Contains(": ") && !text.Contains("-"))
-            {
-                parts[0] = parts[0].Replace(": ", ": - ");
-                parts[1] = parts[1].Replace(": ", ": - ");
-            }
-
-            int lineNo = 1;
+            int noOfNames = 0;
             foreach (string s in parts)
             {
-                string s2 = s;
-                if (checkBoxRemoveTextBeforeColon.Checked &&
-                    (s2.Contains(": ") || s2.EndsWith(":")))
+                int indexOfColon = s.IndexOf(":");
+                if (indexOfColon > 0)
                 {
-                    if (!s2.StartsWith(s2.Substring(0, s2.IndexOf(":")).ToUpper()) &&
-                        checkBoxRemoveTextBeforeColonOnlyUppercase.Checked)
+                    string pre = s.Substring(0, indexOfColon);
+                    if (checkBoxRemoveTextBeforeColonOnlyUppercase.Checked && pre.Replace("<i>", string.Empty) != pre.Replace("<i>", string.Empty).ToUpper())
                     {
-                        sb.AppendLine(s2);
+                        newText = newText + Environment.NewLine + s;
+                        newText = newText.Trim();
                     }
-                    else if (s2.Contains(": "))
+                    else
                     {
-                        string textToRemove = s2.Substring(0, s2.IndexOf(": ") + 2);
-                        if (textToRemove.Contains("<i>"))
+                        StripableText st = new StripableText(pre);
+                        if (Utilities.CountTagInText(st.StrippedText, " ") < 2)
                         {
-                            s2 = "<i>" + s2.Remove(0, s2.IndexOf(": ") + 2);
+                            newText = newText + Environment.NewLine + st.Pre + s.Substring(indexOfColon + 1).Trim() + st.Post;
+                            newText = newText.Trim();
+                            if (!IsHIDescription(st.StrippedText))
+                                noOfNames++;
                         }
-                        else
-                        {
-                            s2 = s2.Remove(0, s2.IndexOf(": ") + 2);
-                        }
-                        removedAtLine.Add(lineNo);
 
-                        if (!s2.Trim().StartsWith("-") &&
-                            sb.ToString().Length == 0 &&
-                            text.Contains(Environment.NewLine + "- "))
-                            s2 = "- " + s2;
-
-                        if (!s2.Trim().StartsWith("-") &&
-                            sb.ToString().Length > 0 &&
-                            sb.ToString().StartsWith("- "))
-                            s2 = "- " + s2;
-
+                        string s2 = newText;
                         for (int k = 0; k < 2; k++)
                         {
                             if (s2.Contains(":"))
@@ -390,59 +375,46 @@ namespace Nikse.SubtitleEdit.Forms
                                 }
                             }
                         }
-
-                        sb.AppendLine(s2);
-                    }
-                    else if (s2.Contains("!") || s2.Contains("?") || s2.Contains("."))
-                    {
-                        int index = s2.LastIndexOf("!");
-                        if (index == -1 || s2.LastIndexOf("?") > index)
-                            index = s2.LastIndexOf("?");
-                        if (index == -1 || s2.LastIndexOf(". ") > index)
-                            index = s2.LastIndexOf(". ");
-                        if (index > 3)
-                            sb.AppendLine(s2.Substring(0, index+1));
+                        newText = s2;
                     }
                 }
                 else
                 {
-                    sb.AppendLine(s2);
+                    newText = newText + Environment.NewLine + s;
+                    newText = newText.Trim();
                 }
-                lineNo++;
             }
-
-            string newText = sb.ToString().Trim();
-            if (text != newText)
-            {
-                parts = newText.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-                if (parts.Length == 2)
+            newText = newText.Trim();
+            if (noOfNames > 0 && Utilities.CountTagInText(newText, Environment.NewLine) == 1)
+            { 
+                int indexOfDialogChar = newText.IndexOf('-');
+                if (indexOfDialogChar < 0 || indexOfDialogChar > 6)
                 {
-                    if (removedAtLine.Count > 0)
-                    {
-                        StripableText p0 = new StripableText(parts[0]);
-                        StripableText p1 = new StripableText(parts[1]);
-
-                        bool onlySecondSpeaker = removedAtLine.Count == 1 && removedAtLine[0] == 1 && !p1.Pre.Contains("-");
-
-                        if (!onlySecondSpeaker)
-                        {
-                            if (p0.Post.Contains(".") || p0.Post.Contains("!") || p0.Post.Contains("?"))
-                            {
-                                if (!p0.Pre.Contains("-"))
-                                    parts[0] = "- " + parts[0];
-
-                                if (!p1.Pre.Contains("-"))
-                                    parts[1] = "- " + parts[1];
-                            }
-                        }
-                    }
-
-                    newText = parts[0] + Environment.NewLine +  parts[1];
+                    StripableText st = new StripableText( newText, "", "");
+                    newText = st.Pre + "- " + st.StrippedText + st.Post;
+                }
+                
+                int indexOfNewLine = newText.IndexOf(Environment.NewLine);
+                string second = newText.Substring(indexOfNewLine).Trim();
+                indexOfDialogChar = second.IndexOf('-');
+                if (indexOfDialogChar < 0 || indexOfDialogChar > 6)
+                {
+                    StripableText st = new StripableText(second, "", "");
+                    second = st.Pre + "- " + st.StrippedText + st.Post;
+                    newText = newText.Remove(indexOfNewLine) + Environment.NewLine + second;
+                }
+            }
+            else if (!newText.Contains(Environment.NewLine) && newText.Contains("-"))
+            {
+                StripableText st = new StripableText(newText);
+                if (st.Pre.Contains("-"))
+                { 
+                    newText = st.Pre.Replace("-", string.Empty) + st.StrippedText + st.Post;
                 }
             }
             return newText;
         }
-
+       
         private string RemoveTextFromHearImpaired(string text)
         {
             if (checkBoxRemoveWhereContains.Checked && comboBoxRemoveIfTextContains.Text.Length > 0 && text.Contains(comboBoxRemoveIfTextContains.Text))
@@ -452,29 +424,44 @@ namespace Nikse.SubtitleEdit.Forms
 
             string oldText = text;
             text = RemoveColon(text);
-            StripableText st = new StripableText(text, " >-\"'‘`´♪¿¡.…—", " -\"'`´♪.!?:…—");
+            string pre = " >-\"'‘`´♪¿¡.…—";
+            string post = " -\"'`´♪.!?:…—";
+            if (checkBoxRemoveTextBetweenCustomTags.Checked)
+            {
+                pre = pre.Replace(comboBoxCustomStart.Text, string.Empty);
+                post = post.Replace(comboBoxCustomEnd.Text, string.Empty);
+            }
+            StripableText st = new StripableText(text, pre, post);
             var sb = new StringBuilder();
             string[] parts = st.StrippedText.Trim().Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
             int lineNumber = 0;
-            bool removedDialogInFirstLine = false;
+            bool removedDialogInFirstLine = false;            
+            int noOfNamesRemoved = 0;
             foreach (string s in parts)
             {
-                StripableText stSub = new StripableText(s, " >-\"'‘`´♪¿¡.…—", " -\"'`´♪.!?:…—");
+                StripableText stSub = new StripableText(s, pre, post);
                 if (!StartAndEndsWithHearImpariedTags(stSub.StrippedText))
                 {
                     if (removedDialogInFirstLine && stSub.Pre.Contains("- "))
                         stSub.Pre = stSub.Pre.Replace("- ", string.Empty);
 
                     string newText = stSub.StrippedText;
+
                     newText = RemoveHearImpairedTags(newText);
-                    //if (HasHearImpariedTagsAtStart(newText))
-                    //    newText = RemoveStartEndTags(newText);
-                    //if (HasHearImpariedTagsAtEnd(newText))
-                    //    newText = RemoveEndTags(newText);
+
+                    if (stSub.StrippedText.Length - newText.Length > 2)
+                    {
+                        string removedText = GetRemovedString(stSub.StrippedText, newText);
+                        if (!IsHIDescription(removedText))
+                            noOfNamesRemoved++;
+                    }
                     sb.AppendLine(stSub.Pre + newText + stSub.Post);
                 }
                 else
                 {
+                    if (!IsHIDescription(stSub.StrippedText))
+                        noOfNamesRemoved++;
+
                     if (st.Pre.Contains("- ") && lineNumber == 0)
                     {
                         st.Pre = st.Pre.Replace("- ", string.Empty);
@@ -499,6 +486,15 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 text = RemoveStartEndTags(text);
             }
+
+            if (!text.StartsWith("-") && !text.Contains(Environment.NewLine + "-") && noOfNamesRemoved >= 1 && Utilities.CountTagInText(text, Environment.NewLine) == 1)
+            {
+                string[] arr = text.Split(Environment.NewLine.ToCharArray());
+                string part0 = arr[0].Trim().Replace("</i>", string.Empty).Trim();
+                if (!part0.EndsWith(",") && !part0.EndsWith("-"))
+                    text = "- " + text.Replace(Environment.NewLine, Environment.NewLine + "- ");
+            }
+
             if (!string.IsNullOrEmpty(text))
                 text = st.Pre + text + st.Post;
 
@@ -508,7 +504,48 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 text = text.TrimStart().TrimStart('-').TrimStart();
             }
+
+            text = text.Replace(Environment.NewLine + "- <i>", Environment.NewLine + "<i>- ");
             return text;
+        }
+
+        private bool IsHIDescription(string text)
+        {
+            text = text.ToLower();
+            text = text.TrimEnd(" ()[]?{}".ToCharArray());
+            text = text.TrimStart(" ()[]?{}".ToCharArray());
+            
+            if (text == "sighing" ||
+                text == "laughs" ||
+                text == "chuckles" ||
+                text == "scoff" ||                
+                text == "sighs" ||
+                text == "whispers" ||
+                text == "whisper" ||
+                text == "grunts" ||
+                text == "explosion" ||
+                text == "noise" ||
+                text == "exclaims" ||
+                text.StartsWith("engine ") ||
+                text == "singing" ||
+                text.EndsWith("ing"))
+                return true;
+            return false;
+        }
+
+        private string GetRemovedString(string oldText, string newText)
+        {
+            oldText = oldText.ToLower();
+            newText = newText.ToLower();
+            int start = oldText.IndexOf(newText);
+            string result;
+            if (start > 0)
+                result = oldText.Substring(0, newText.Length);
+            else
+                result = oldText.Substring(newText.Length);
+            result = result.TrimEnd(" ()[]?{}".ToCharArray());
+            result = result.TrimStart(" ()[]?{}".ToCharArray());
+            return result;
         }       
 
         private string RemoveInterjections(string text)
