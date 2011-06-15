@@ -373,6 +373,8 @@ namespace Nikse.SubtitleEdit.Logic
                 StartWithUppercaseLetterAfterParagraph = "Start with uppercase letter after paragraph",
                 StartWithUppercaseLetterAfterPeriodInsideParagraph = "Start with uppercase letter after period inside paragraph",
                 CommonOcrErrorsFixed = "Common OCR errors fixed (OcrReplaceList file used): {0}",                
+                RemoveSpaceBetweenNumber = "Remove space between numbers",
+                RemoveSpaceBetweenNumbersFixed = "Remove space between numbers fixed: {0}",                
                 FixLowercaseIToUppercaseI = "Fix alone lowercase 'i' to 'I' (English)",
                 FixDanishLetterI = "Fix Danish letter 'i'",
                 FixSpanishInvertedQuestionAndExclamationMarks = "Fix Spanish inverted question and exclamation marks",

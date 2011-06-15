@@ -404,6 +404,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ShowTextDifference()
         {
+            
 
             // from start
             int minLength = Math.Min(richTextBox1.Text.Length, richTextBox2.Text.Length);
@@ -427,10 +428,14 @@ namespace Nikse.SubtitleEdit.Forms
                         richTextBox1.SelectionStart = i;
                         richTextBox1.SelectionLength = 1;
                         richTextBox1.SelectionColor = Color.Red;
+                        if (richTextBox1.SelectedText.Trim() == string.Empty)
+                            richTextBox1.SelectionBackColor = Color.Red;
 
                         richTextBox2.SelectionStart = i;
                         richTextBox2.SelectionLength = 1;
                         richTextBox2.SelectionColor = Color.Red;
+                        if (richTextBox2.SelectedText.Trim() == string.Empty)
+                            richTextBox2.SelectionBackColor = Color.Red;
                     }
                     else
                     {
@@ -438,6 +443,8 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
             }
+
+            bool first = true;
             int maxLength = Math.Max(richTextBox1.Text.Length, richTextBox2.Text.Length);
             for (int i = startCharactersOk; i <= maxLength; i++)
             {
@@ -445,13 +452,17 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     richTextBox1.SelectionStart = i;
                     richTextBox1.SelectionLength = 1;
-                    richTextBox1.SelectionColor = Color.Red;
+                    richTextBox1.SelectionBackColor = Color.Red;
+                    if (richTextBox1.SelectedText.Trim() == string.Empty)
+                        richTextBox1.SelectionBackColor = Color.Red;
                 }
                 if (i < richTextBox2.Text.Length)
                 {
                     richTextBox2.SelectionStart = i;
                     richTextBox2.SelectionLength = 1;
                     richTextBox2.SelectionColor = Color.Red;
+                    if (richTextBox2.SelectedText.Trim() == string.Empty)
+                        richTextBox2.SelectionBackColor = Color.Red;
                 }
             }
 
@@ -463,10 +474,12 @@ namespace Nikse.SubtitleEdit.Forms
                     richTextBox1.SelectionStart = richTextBox1.Text.Length - i;
                     richTextBox1.SelectionLength = 1;
                     richTextBox1.SelectionColor = Color.Black;
+                    richTextBox1.SelectionBackColor = richTextBox1.BackColor;
 
                     richTextBox2.SelectionStart = richTextBox2.Text.Length - i;
                     richTextBox2.SelectionLength = 1;
                     richTextBox2.SelectionColor = Color.Black;
+                    richTextBox2.SelectionBackColor = richTextBox1.BackColor;
                 }
                 else
                 {

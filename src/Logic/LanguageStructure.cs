@@ -303,6 +303,8 @@
             public string FixLowercaseIToUppercaseI { get; set; }
             public string FixCommonOcrErrors { get; set; }
             public string CommonOcrErrorsFixed { get; set; }
+            public string RemoveSpaceBetweenNumber { get; set; }
+            public string RemoveSpaceBetweenNumbersFixed { get; set; }
             public string FixDanishLetterI { get; set; }
             public string FixSpanishInvertedQuestionAndExclamationMarks { get; set; }
             public string AddMissingQuote { get; set; }

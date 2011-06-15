@@ -38,8 +38,9 @@ namespace Nikse.SubtitleEdit.Forms
         const int IndexFixMissingOpenBracket = 23;
         const int IndexAloneLowercaseIToUppercaseIEnglish = 24;
         const int IndexFixOcrErrorsViaReplaceList = 25;
-        const int IndexDanishLetterI = 26;
-        const int IndexFixSpanishInvertedQuestionAndExclamationMarks = 27;
+        const int IndexRemoveSpaceBetweenNumbers = 26;
+        const int IndexDanishLetterI = 27;
+        const int IndexFixSpanishInvertedQuestionAndExclamationMarks = 28;
 
         int _danishLetterIIndex = -1;
         int _spanishInvertedQuestionAndExclamationMarksIndex = -1;
@@ -153,6 +154,7 @@ namespace Nikse.SubtitleEdit.Forms
             _fixActions.Add(new FixItem(_language.FixMissingOpenBracket, _language.FixMissingOpenBracketExample, delegate { FixMissingOpenBracket(); }, ce.FixMissingOpenBracketTicked));
             _fixActions.Add(new FixItem(_language.FixLowercaseIToUppercaseI, _language.FixLowercaseIToUppercaseIExample, delegate { FixAloneLowercaseIToUppercaseI(); }, ce.AloneLowercaseIToUppercaseIEnglishTicked));
             _fixActions.Add(new FixItem(_language.FixCommonOcrErrors, "D0n't -> Don't", delegate { FixOcrErrorsViaReplaceList(threeLetterISOLanguageName); }, ce.FixOcrErrorsViaReplaceListTicked));
+            _fixActions.Add(new FixItem(_language.RemoveSpaceBetweenNumber, "1 100 -> 1100", delegate { RemoveSpaceBetweenNumbers(); }, ce.RemoveSpaceBetweenNumberTicked));
 
             if (_autoDetectGoogleLanguage == "da" || subtitle.Paragraphs.Count < 25) // && Thread.CurrentThread.CurrentCulture.Name == "da-DK" && 
             {
@@ -770,6 +772,23 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     p.Text = p.Text.TrimEnd(' ');
                 }
+
+                p.Text = p.Text.Replace(". . ..", "...");
+                p.Text = p.Text.Replace(". ...", "...");
+                p.Text = p.Text.Replace(". .. .", "...");
+                p.Text = p.Text.Replace(". . .", "...");
+                p.Text = p.Text.Replace(". ..", "...");
+                p.Text = p.Text.Replace(".. .", "...");
+                p.Text = p.Text.Replace("....", "...");
+                p.Text = p.Text.Replace("....", "...");
+                p.Text = p.Text.Replace("....", "...");
+
+                p.Text = p.Text.Replace("... ?", "...?");
+                p.Text = p.Text.Replace("... !", "...!");
+
+                p.Text = p.Text.Replace(" :", ":");
+                p.Text = p.Text.Replace(" :", ":");
+
                 while (p.Text.Contains(" ,"))
                 {
                     p.Text = p.Text.Replace(" ,", ",");
@@ -872,7 +891,6 @@ namespace Nikse.SubtitleEdit.Forms
                         AddFixToListView(p, i + 1, fixAction, oldText, p.Text);
                     }
                 }
-
 
             }
             if (doubleSpaces > 0)
@@ -1114,22 +1132,23 @@ namespace Nikse.SubtitleEdit.Forms
                 string[] arr = p.Text.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
                 if (arr.Length == 2 && arr[0].Length > 1 && arr[1].Length > 1)
                 {
-                    if (arr[0].StartsWith("-") && arr[1].StartsWith("-"))
+                    if (arr[0][0] == '-' && arr[0][1] != ' ')
+                        arr[0] = arr[0].Insert(1, " ");
+                    if (arr[0].Length > 6 && arr[0].StartsWith("<i>-") &&  arr[0][4] != ' ')
+                        arr[0] = arr[0].Insert(4, " ");
+                    if (arr[1][0] == '-' && arr[1][1] != ' ')
+                        arr[1] = arr[1].Insert(1, " ");
+                    if (arr[1].Length > 6 && arr[1].StartsWith("<i>-") && arr[1][4] != ' ')
+                        arr[1] = arr[1].Insert(4, " ");
+                    string newText = arr[0] + Environment.NewLine + arr[1];
+                    if (newText != p.Text && AllowFix(i + 1, fixAction))
                     {
-                        if (arr[0][1] != ' ')
-                            arr[0] = arr[0].Insert(1, " ");
-                        if (arr[1][1] != ' ')
-                            arr[1] = arr[1].Insert(1, " ");
-                        string newText = arr[0] + Environment.NewLine + arr[1];
-                        if (newText != p.Text && AllowFix(i + 1, fixAction))
-                        {
-                            _totalFixes++;
-                            missingSpaces++;
+                        _totalFixes++;
+                        missingSpaces++;
 
-                            string oldText = p.Text;
-                            p.Text = newText;
-                            AddFixToListView(p, i + 1, fixAction, oldText, p.Text);
-                        }
+                        string oldText = p.Text;
+                        p.Text = newText;
+                        AddFixToListView(p, i + 1, fixAction, oldText, p.Text);
                     }
                 }
 
@@ -1850,6 +1869,39 @@ namespace Nikse.SubtitleEdit.Forms
             if (noOfFixes > 0)
                 LogStatus(_language.FixCommonOcrErrors, string.Format(_language.CommonOcrErrorsFixed, noOfFixes));
         }
+
+
+        private void RemoveSpaceBetweenNumbers()
+        {
+            string fixAction = _language.FixCommonOcrErrors;
+            int noOfFixes = 0;
+            Regex regex = new Regex(@"\d \d", RegexOptions.Compiled);
+            for (int i = 0; i < _subtitle.Paragraphs.Count; i++)
+            {
+                Paragraph p = _subtitle.Paragraphs[i];
+                string text = p.Text;
+                Match match = regex.Match(text);
+                while (match.Success)
+                {
+                    text = text.Remove(match.Index + 1, 1);
+                    match = regex.Match(text);
+                }
+                if (p.Text != text)
+                {
+                    if (AllowFix(i + 1, fixAction))
+                    {
+                        string oldText = p.Text;
+                        p.Text = text;
+                        noOfFixes++;
+                        _totalFixes++;
+                        AddFixToListView(p, i + 1, fixAction, oldText, p.Text);
+                    }
+                }
+            }
+            if (noOfFixes > 0)
+                LogStatus(_language.FixCommonOcrErrors, string.Format(_language.RemoveSpaceBetweenNumbersFixed, noOfFixes));
+        }
+
 
         private void FixAloneLowercaseIToUppercaseI()
         {
@@ -3155,6 +3207,7 @@ namespace Nikse.SubtitleEdit.Forms
             ce.FixMissingOpenBracketTicked = listView1.Items[IndexFixMissingOpenBracket].Checked;
             ce.AloneLowercaseIToUppercaseIEnglishTicked = listView1.Items[IndexAloneLowercaseIToUppercaseIEnglish].Checked;
             ce.FixOcrErrorsViaReplaceListTicked = listView1.Items[IndexFixOcrErrorsViaReplaceList].Checked;
+            ce.RemoveSpaceBetweenNumberTicked = listView1.Items[IndexRemoveSpaceBetweenNumbers].Checked;
             if (_danishLetterIIndex > -1)
                 ce.DanishLetterITicked = listView1.Items[_danishLetterIIndex].Checked;
 
