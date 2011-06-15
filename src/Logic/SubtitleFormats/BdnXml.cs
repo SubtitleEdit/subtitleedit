@@ -104,7 +104,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     string end = node.Attributes["OutTC"].InnerText;
                     string text = node.SelectSingleNode("Graphic").InnerText;
                     Paragraph p = new Paragraph(text, GetMillisecondsFromTimeCode(start), GetMillisecondsFromTimeCode(end));
-                    if (node.Attributes["Forced"] != null && node.Attributes["Forced"].InnerText.ToLower() == "true")
+                    if (node.Attributes["Forced"] != null && node.Attributes["Forced"].Value.ToLower() == "true")
                         p.Forced = true;
                     subtitle.Paragraphs.Add(p);                    
                 }
@@ -119,7 +119,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         private double GetMillisecondsFromTimeCode(string time)
         {
-            string[] arr = time.Split(":".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+            string[] arr = time.Split(":;".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
             return new TimeSpan(0, int.Parse(arr[0]), int.Parse(arr[1]), int.Parse(arr[2]), int.Parse(arr[3])).TotalMilliseconds;
         }
 
