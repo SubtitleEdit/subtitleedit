@@ -161,6 +161,7 @@ namespace Nikse.SubtitleEdit.Logic
         public bool StartWithUppercaseLetterAfterPeriodInsideParagraphTicked { get; set; }
         public bool AloneLowercaseIToUppercaseIEnglishTicked { get; set; }
         public bool FixOcrErrorsViaReplaceListTicked { get; set; }
+        public bool RemoveSpaceBetweenNumberTicked { get; set; }        
         public bool DanishLetterITicked { get; set; }
         public bool SpanishInvertedQuestionAndExclamationMarksTicked { get; set; }
         public bool FixDoubleDashTicked { get; set; }
@@ -919,6 +920,9 @@ namespace Nikse.SubtitleEdit.Logic
             subNode = node.SelectSingleNode("FixOcrErrorsViaReplaceListTicked");
             if (subNode != null)
                 settings.CommonErrors.FixOcrErrorsViaReplaceListTicked = Convert.ToBoolean(subNode.InnerText);
+            subNode = node.SelectSingleNode("RemoveSpaceBetweenNumberTicked");
+            if (subNode != null)
+                settings.CommonErrors.RemoveSpaceBetweenNumberTicked = Convert.ToBoolean(subNode.InnerText);
             subNode = node.SelectSingleNode("DanishLetterITicked");
             if (subNode != null)
                 settings.CommonErrors.DanishLetterITicked = Convert.ToBoolean(subNode.InnerText);
@@ -1262,6 +1266,7 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("StartWithUppercaseLetterAfterPeriodInsideParagraphTicked", settings.CommonErrors.StartWithUppercaseLetterAfterPeriodInsideParagraphTicked.ToString());
             textWriter.WriteElementString("AloneLowercaseIToUppercaseIEnglishTicked", settings.CommonErrors.AloneLowercaseIToUppercaseIEnglishTicked.ToString());
             textWriter.WriteElementString("FixOcrErrorsViaReplaceListTicked", settings.CommonErrors.FixOcrErrorsViaReplaceListTicked.ToString());
+            textWriter.WriteElementString("RemoveSpaceBetweenNumberTicked", settings.CommonErrors.RemoveSpaceBetweenNumberTicked.ToString());            
             textWriter.WriteElementString("DanishLetterITicked", settings.CommonErrors.DanishLetterITicked.ToString());
             textWriter.WriteElementString("SpanishInvertedQuestionAndExclamationMarksTicked", settings.CommonErrors.SpanishInvertedQuestionAndExclamationMarksTicked.ToString());            
             textWriter.WriteElementString("FixDoubleDashTicked", settings.CommonErrors.FixDoubleDashTicked.ToString());
