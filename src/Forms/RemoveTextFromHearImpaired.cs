@@ -320,6 +320,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         private string RemoveColon(string text)
         {
+            if (!checkBoxRemoveTextBeforeColon.Checked)
+                return text;
+
             if (text.IndexOf(":") < 0)
                 return text;
 
@@ -357,7 +360,13 @@ namespace Nikse.SubtitleEdit.Forms
                             {
                                 string content = s.Substring(indexOfColon + 1).Trim();
                                 if (content != string.Empty)
-                                    newText = newText + Environment.NewLine + st.Pre + content + st.Post;
+                                {
+                                    if (pre.Contains("<i>") && !content.Contains("</i>"))
+                                        newText = newText + Environment.NewLine + "<i>" + content;
+                                    else
+                                        newText = newText + Environment.NewLine + content;
+                                }
+//                                newText = newText + Environment.NewLine + st.Pre + content + st.Post;
                                 newText = newText.Trim();
                                 if (!IsHIDescription(st.StrippedText))
                                     noOfNames++;
@@ -420,8 +429,9 @@ namespace Nikse.SubtitleEdit.Forms
                 string[] arr = newText.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);                
                 if (arr.Length == 2 && arr[0].Length > 1 && arr[1].Length > 1)
                 {
-                    string arr1 = arr[1].Replace("<i>", string.Empty).Trim();
-                    if (arr1.Length > 1 && (Utilities.GetLetters(false, true, false) + ",").Contains(arr[0].Substring(arr[0].Length-1)) &&
+                    string arr0 = new StripableText(arr[0]).StrippedText;
+                    string arr1 = new StripableText(arr[1]).StrippedText;
+                    if (arr0.Length > 0 && arr1.Length > 1 && (Utilities.GetLetters(false, true, false) + ",").Contains(arr0.Substring(arr0.Length-1)) &&
                         Utilities.GetLetters(false, true, false).Contains(arr1.Substring(0, 1)))
                     {
                         insertDash = false;
@@ -538,6 +548,9 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 text = RemoveStartEndTags(text);
             }
+
+
+            text = RemoveHearImpairedTags(text);
 
             // fix 3 lines to two liners - if only two lines 
             if (noOfNamesRemoved >= 1 && Utilities.CountTagInText(text, Environment.NewLine) == 2)
@@ -807,6 +820,21 @@ namespace Nikse.SubtitleEdit.Forms
             Configuration.Settings.RemoveTextForHearingImpaired.RemoveInterjections = checkBoxRemoveInterjections.Checked;
             Configuration.Settings.RemoveTextForHearingImpaired.RemoveIfContains = checkBoxRemoveWhereContains.Checked;
             Configuration.Settings.RemoveTextForHearingImpaired.RemoveIfContainsText = comboBoxRemoveIfTextContains.Text;
+        }
+
+        private void FormRemoveTextForHearImpaired_Resize(object sender, EventArgs e)
+        {
+            int availableWidth = listViewFixes.Width - (listViewFixes.Columns[0].Width + listViewFixes.Columns[1].Width + 20);
+            listViewFixes.Columns[2].Width = availableWidth / 2;
+            listViewFixes.Columns[3].Width = availableWidth / 2;
+        }
+
+        private void checkBoxRemoveTextBeforeColon_CheckedChanged(object sender, EventArgs e)
+        {
+            checkBoxRemoveTextBeforeColonOnlyUppercase.Enabled = checkBoxRemoveTextBeforeColon.Checked;
+            Cursor = Cursors.WaitCursor;
+            GeneratePreview();
+            Cursor = Cursors.Default;
         }
 
     }
