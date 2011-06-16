@@ -59,7 +59,7 @@
             // 
             // buttonOK
             // 
-            this.buttonOK.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonOK.Location = new System.Drawing.Point(523, 480);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 21);
@@ -70,7 +70,7 @@
             // 
             // buttonCancel
             // 
-            this.buttonCancel.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.buttonCancel.Location = new System.Drawing.Point(604, 480);
             this.buttonCancel.Name = "buttonCancel";
@@ -142,7 +142,7 @@
             this.checkBoxRemoveTextBeforeColon.TabIndex = 10;
             this.checkBoxRemoveTextBeforeColon.Text = "Remove text before a colon (:)";
             this.checkBoxRemoveTextBeforeColon.UseVisualStyleBackColor = true;
-            this.checkBoxRemoveTextBeforeColon.CheckedChanged += new System.EventHandler(this.CheckBoxRemoveTextBetweenCheckedChanged);
+            this.checkBoxRemoveTextBeforeColon.CheckedChanged += new System.EventHandler(this.checkBoxRemoveTextBeforeColon_CheckedChanged);
             // 
             // groupBoxRemoveTextConditions
             // 
@@ -363,7 +363,6 @@
             this.Controls.Add(this.buttonCancel);
             this.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.KeyPreview = true;
-            this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.MinimumSize = new System.Drawing.Size(705, 514);
             this.Name = "FormRemoveTextForHearImpaired";
@@ -371,6 +370,7 @@
             this.Text = "Remove text for hearing impaired";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormRemoveTextForHearImpaired_FormClosing);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.FormRemoveTextForHearImpaired_KeyDown);
+            this.Resize += new System.EventHandler(this.FormRemoveTextForHearImpaired_Resize);
             this.groupBoxLinesFound.ResumeLayout(false);
             this.groupBoxRemoveTextConditions.ResumeLayout(false);
             this.groupBoxRemoveTextConditions.PerformLayout();
