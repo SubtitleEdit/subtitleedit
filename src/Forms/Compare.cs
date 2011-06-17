@@ -444,7 +444,6 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
 
-            bool first = true;
             int maxLength = Math.Max(richTextBox1.Text.Length, richTextBox2.Text.Length);
             for (int i = startCharactersOk; i <= maxLength; i++)
             {
