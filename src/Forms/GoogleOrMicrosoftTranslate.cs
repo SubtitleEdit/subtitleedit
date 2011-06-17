@@ -8,7 +8,6 @@ namespace Nikse.SubtitleEdit.Forms
     public sealed partial class GoogleOrMicrosoftTranslate : Form
     {
         public string TranslatedText { get; set; }
-        private string _googleText = null;
 
         public GoogleOrMicrosoftTranslate()
         {
