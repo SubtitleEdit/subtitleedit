@@ -28,20 +28,63 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.buttonOK = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.labelSubtitleImage = new System.Windows.Forms.Label();
             this.pictureBoxSubtitleImage = new System.Windows.Forms.PictureBox();
             this.labelCharactersAsText = new System.Windows.Forms.Label();
             this.textBoxCharacters = new System.Windows.Forms.TextBox();
+            this.contextMenuStripLetters = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.æToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.aeToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.AeToolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
+            this.øToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.øToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.åToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.åToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.äToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.äToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.öToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.öToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.germanToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.äToolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
+            this.äToolStripMenuItem3 = new System.Windows.Forms.ToolStripMenuItem();
+            this.öToolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
+            this.öToolStripMenuItem3 = new System.Windows.Forms.ToolStripMenuItem();
+            this.üToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.üToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.ßToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.spanishToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.áToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.áToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.éToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.éToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem6 = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem4 = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem7 = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem5 = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem8 = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem9 = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem10 = new System.Windows.Forms.ToolStripMenuItem();
+            this.ñToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.ñToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripMenuItem();
             this.pictureBoxCharacter = new System.Windows.Forms.PictureBox();
             this.labelCharacters = new System.Windows.Forms.Label();
             this.buttonAbort = new System.Windows.Forms.Button();
             this.checkBoxItalic = new System.Windows.Forms.CheckBox();
             this.buttonExpandSelection = new System.Windows.Forms.Button();
             this.buttonShrinkSelection = new System.Windows.Forms.Button();
+            this.buttonLastEdit = new System.Windows.Forms.Button();
+            this.pictureBoxLastEdit = new System.Windows.Forms.PictureBox();
+            this.buttonGuess = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxSubtitleImage)).BeginInit();
+            this.contextMenuStripLetters.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxCharacter)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxLastEdit)).BeginInit();
             this.SuspendLayout();
             // 
             // buttonOK
@@ -102,11 +145,306 @@
             // textBoxCharacters
             // 
             this.textBoxCharacters.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.textBoxCharacters.ContextMenuStrip = this.contextMenuStripLetters;
             this.textBoxCharacters.Location = new System.Drawing.Point(12, 259);
             this.textBoxCharacters.Name = "textBoxCharacters";
             this.textBoxCharacters.Size = new System.Drawing.Size(225, 21);
             this.textBoxCharacters.TabIndex = 0;
             this.textBoxCharacters.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxCharactersKeyDown);
+            // 
+            // contextMenuStripLetters
+            // 
+            this.contextMenuStripLetters.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.æToolStripMenuItem,
+            this.germanToolStripMenuItem,
+            this.spanishToolStripMenuItem});
+            this.contextMenuStripLetters.Name = "contextMenuStripLetters";
+            this.contextMenuStripLetters.Size = new System.Drawing.Size(117, 70);
+            // 
+            // æToolStripMenuItem
+            // 
+            this.æToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.aeToolStripMenuItem1,
+            this.AeToolStripMenuItem2,
+            this.øToolStripMenuItem,
+            this.øToolStripMenuItem1,
+            this.åToolStripMenuItem,
+            this.åToolStripMenuItem1,
+            this.äToolStripMenuItem,
+            this.äToolStripMenuItem1,
+            this.öToolStripMenuItem,
+            this.öToolStripMenuItem1});
+            this.æToolStripMenuItem.Name = "æToolStripMenuItem";
+            this.æToolStripMenuItem.Size = new System.Drawing.Size(116, 22);
+            this.æToolStripMenuItem.Text = "Nordic";
+            // 
+            // aeToolStripMenuItem1
+            // 
+            this.aeToolStripMenuItem1.Name = "aeToolStripMenuItem1";
+            this.aeToolStripMenuItem1.Size = new System.Drawing.Size(152, 22);
+            this.aeToolStripMenuItem1.Text = "æ";
+            this.aeToolStripMenuItem1.Click += new System.EventHandler(this.InsertLanguageCharacter);
+            // 
+            // AeToolStripMenuItem2
+            // 
+            this.AeToolStripMenuItem2.Name = "AeToolStripMenuItem2";
+            this.AeToolStripMenuItem2.Size = new System.Drawing.Size(152, 22);
+            this.AeToolStripMenuItem2.Text = "Æ";
+            this.AeToolStripMenuItem2.Click += new System.EventHandler(this.InsertLanguageCharacter);
+            // 
+            // øToolStripMenuItem
+            // 
+            this.øToolStripMenuItem.Name = "øToolStripMenuItem";
+            this.øToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.øToolStripMenuItem.Text = "ø";
+            this.øToolStripMenuItem.Click += new System.EventHandler(this.InsertLanguageCharacter);
+            // 
+            // øToolStripMenuItem1
+            // 
+            this.øToolStripMenuItem1.Name = "øToolStripMenuItem1";
+            this.øToolStripMenuItem1.Size = new System.Drawing.Size(152, 22);
+            this.øToolStripMenuItem1.Text = "Ø";
+            this.øToolStripMenuItem1.Click += new System.EventHandler(this.InsertLanguageCharacter);
+            // 
+            // åToolStripMenuItem
+            // 
+            this.åToolStripMenuItem.Name = "åToolStripMenuItem";
+            this.åToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.åToolStripMenuItem.Text = "å";
+            this.åToolStripMenuItem.Click += new System.EventHandler(this.InsertLanguageCharacter);
+            // 
+            // åToolStripMenuItem1
+            // 
+            this.åToolStripMenuItem1.Name = "åToolStripMenuItem1";
+            this.åToolStripMenuItem1.Size = new System.Drawing.Size(152, 22);
+            this.åToolStripMenuItem1.Text = "Å";
+            this.åToolStripMenuItem1.Click += new System.EventHandler(this.InsertLanguageCharacter);
+            // 
+            // äToolStripMenuItem
+            // 
+            this.äToolStripMenuItem.Name = "äToolStripMenuItem";
+            this.äToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.äToolStripMenuItem.Text = "ä";
+            this.äToolStripMenuItem.Click += new System.EventHandler(this.InsertLanguageCharacter);
+            // 
+            // äToolStripMenuItem1
+            // 
+            this.äToolStripMenuItem1.Name = "äToolStripMenuItem1";
+            this.äToolStripMenuItem1.Size = new System.Drawing.Size(152, 22);
+            this.äToolStripMenuItem1.Text = "Ä";
+            this.äToolStripMenuItem1.Click += new System.EventHandler(this.InsertLanguageCharacter);
+            // 
+            // öToolStripMenuItem
+            // 
+            this.öToolStripMenuItem.Name = "öToolStripMenuItem";
+            this.öToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.öToolStripMenuItem.Text = "ö";
+            this.öToolStripMenuItem.Click += new System.EventHandler(this.InsertLanguageCharacter);
+            // 
+            // öToolStripMenuItem1
+            // 
+            this.öToolStripMenuItem1.Name = "öToolStripMenuItem1";
+            this.öToolStripMenuItem1.Size = new System.Drawing.Size(152, 22);
+            this.öToolStripMenuItem1.Text = "Ö";
+            this.öToolStripMenuItem1.Click += new System.EventHandler(this.InsertLanguageCharacter);
+            // 
+            // germanToolStripMenuItem
+            // 
+            this.germanToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.äToolStripMenuItem2,
+            this.äToolStripMenuItem3,
+            this.öToolStripMenuItem2,
+            this.öToolStripMenuItem3,
+            this.üToolStripMenuItem,
+            this.üToolStripMenuItem1,
+            this.ßToolStripMenuItem});
+            this.germanToolStripMenuItem.Name = "germanToolStripMenuItem";
+            this.germanToolStripMenuItem.Size = new System.Drawing.Size(116, 22);
+            this.germanToolStripMenuItem.Text = "German";
+            // 
+            // äToolStripMenuItem2
+            // 
+            this.äToolStripMenuItem2.Name = "äToolStripMenuItem2";
+            this.äToolStripMenuItem2.Size = new System.Drawing.Size(152, 22);
+            this.äToolStripMenuItem2.Text = "ä";
+            this.äToolStripMenuItem2.Click += new System.EventHandler(this.InsertLanguageCharacter);
+            // 
+            // äToolStripMenuItem3
+            // 
+            this.äToolStripMenuItem3.Name = "äToolStripMenuItem3";
+            this.äToolStripMenuItem3.Size = new System.Drawing.Size(152, 22);
+            this.äToolStripMenuItem3.Text = "Ä";
+            this.äToolStripMenuItem3.Click += new System.EventHandler(this.InsertLanguageCharacter);
+            // 
+            // öToolStripMenuItem2
+            // 
+            this.öToolStripMenuItem2.Name = "öToolStripMenuItem2";
+            this.öToolStripMenuItem2.Size = new System.Drawing.Size(152, 22);
+            this.öToolStripMenuItem2.Text = "ö";
+            this.öToolStripMenuItem2.Click += new System.EventHandler(this.InsertLanguageCharacter);
+            // 
+            // öToolStripMenuItem3
+            // 
+            this.öToolStripMenuItem3.Name = "öToolStripMenuItem3";
+            this.öToolStripMenuItem3.Size = new System.Drawing.Size(152, 22);
+            this.öToolStripMenuItem3.Text = "Ö";
+            this.öToolStripMenuItem3.Click += new System.EventHandler(this.InsertLanguageCharacter);
+            // 
+            // üToolStripMenuItem
+            // 
+            this.üToolStripMenuItem.Name = "üToolStripMenuItem";
+            this.üToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.üToolStripMenuItem.Text = "ü";
+            this.üToolStripMenuItem.Click += new System.EventHandler(this.InsertLanguageCharacter);
+            // 
+            // üToolStripMenuItem1
+            // 
+            this.üToolStripMenuItem1.Name = "üToolStripMenuItem1";
+            this.üToolStripMenuItem1.Size = new System.Drawing.Size(152, 22);
+            this.üToolStripMenuItem1.Text = "Ü";
+            this.üToolStripMenuItem1.Click += new System.EventHandler(this.InsertLanguageCharacter);
+            // 
+            // ßToolStripMenuItem
+            // 
+            this.ßToolStripMenuItem.Name = "ßToolStripMenuItem";
+            this.ßToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.ßToolStripMenuItem.Text = "ß";
+            this.ßToolStripMenuItem.Click += new System.EventHandler(this.InsertLanguageCharacter);
+            // 
+            // spanishToolStripMenuItem
+            // 
+            this.spanishToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.áToolStripMenuItem,
+            this.áToolStripMenuItem1,
+            this.éToolStripMenuItem,
+            this.éToolStripMenuItem1,
+            this.toolStripMenuItem1,
+            this.toolStripMenuItem6,
+            this.toolStripMenuItem4,
+            this.toolStripMenuItem7,
+            this.toolStripMenuItem5,
+            this.toolStripMenuItem8,
+            this.toolStripMenuItem9,
+            this.toolStripMenuItem10,
+            this.ñToolStripMenuItem,
+            this.ñToolStripMenuItem1,
+            this.toolStripMenuItem2,
+            this.toolStripMenuItem3});
+            this.spanishToolStripMenuItem.Name = "spanishToolStripMenuItem";
+            this.spanishToolStripMenuItem.Size = new System.Drawing.Size(116, 22);
+            this.spanishToolStripMenuItem.Text = "Spanish";
+            // 
+            // áToolStripMenuItem
+            // 
+            this.áToolStripMenuItem.Name = "áToolStripMenuItem";
+            this.áToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.áToolStripMenuItem.Text = "á";
+            this.áToolStripMenuItem.Click += new System.EventHandler(this.InsertLanguageCharacter);
+            // 
+            // áToolStripMenuItem1
+            // 
+            this.áToolStripMenuItem1.Name = "áToolStripMenuItem1";
+            this.áToolStripMenuItem1.Size = new System.Drawing.Size(152, 22);
+            this.áToolStripMenuItem1.Text = "Á";
+            this.áToolStripMenuItem1.Click += new System.EventHandler(this.InsertLanguageCharacter);
+            // 
+            // éToolStripMenuItem
+            // 
+            this.éToolStripMenuItem.Name = "éToolStripMenuItem";
+            this.éToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.éToolStripMenuItem.Text = "é";
+            this.éToolStripMenuItem.Click += new System.EventHandler(this.InsertLanguageCharacter);
+            // 
+            // éToolStripMenuItem1
+            // 
+            this.éToolStripMenuItem1.Name = "éToolStripMenuItem1";
+            this.éToolStripMenuItem1.Size = new System.Drawing.Size(152, 22);
+            this.éToolStripMenuItem1.Text = "É";
+            this.éToolStripMenuItem1.Click += new System.EventHandler(this.InsertLanguageCharacter);
+            // 
+            // toolStripMenuItem1
+            // 
+            this.toolStripMenuItem1.Name = "toolStripMenuItem1";
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(152, 22);
+            this.toolStripMenuItem1.Text = "í";
+            this.toolStripMenuItem1.Click += new System.EventHandler(this.InsertLanguageCharacter);
+            // 
+            // toolStripMenuItem6
+            // 
+            this.toolStripMenuItem6.Name = "toolStripMenuItem6";
+            this.toolStripMenuItem6.Size = new System.Drawing.Size(152, 22);
+            this.toolStripMenuItem6.Text = "Í";
+            this.toolStripMenuItem6.Click += new System.EventHandler(this.InsertLanguageCharacter);
+            // 
+            // toolStripMenuItem4
+            // 
+            this.toolStripMenuItem4.Name = "toolStripMenuItem4";
+            this.toolStripMenuItem4.Size = new System.Drawing.Size(152, 22);
+            this.toolStripMenuItem4.Text = "ó";
+            this.toolStripMenuItem4.Click += new System.EventHandler(this.InsertLanguageCharacter);
+            // 
+            // toolStripMenuItem7
+            // 
+            this.toolStripMenuItem7.Name = "toolStripMenuItem7";
+            this.toolStripMenuItem7.Size = new System.Drawing.Size(152, 22);
+            this.toolStripMenuItem7.Text = "Ó";
+            this.toolStripMenuItem7.Click += new System.EventHandler(this.InsertLanguageCharacter);
+            // 
+            // toolStripMenuItem5
+            // 
+            this.toolStripMenuItem5.Name = "toolStripMenuItem5";
+            this.toolStripMenuItem5.Size = new System.Drawing.Size(152, 22);
+            this.toolStripMenuItem5.Text = "ú";
+            this.toolStripMenuItem5.Click += new System.EventHandler(this.InsertLanguageCharacter);
+            // 
+            // toolStripMenuItem8
+            // 
+            this.toolStripMenuItem8.Name = "toolStripMenuItem8";
+            this.toolStripMenuItem8.Size = new System.Drawing.Size(152, 22);
+            this.toolStripMenuItem8.Text = "Ú";
+            this.toolStripMenuItem8.Click += new System.EventHandler(this.InsertLanguageCharacter);
+            // 
+            // toolStripMenuItem9
+            // 
+            this.toolStripMenuItem9.Name = "toolStripMenuItem9";
+            this.toolStripMenuItem9.Size = new System.Drawing.Size(152, 22);
+            this.toolStripMenuItem9.Text = "ü";
+            this.toolStripMenuItem9.Click += new System.EventHandler(this.InsertLanguageCharacter);
+            // 
+            // toolStripMenuItem10
+            // 
+            this.toolStripMenuItem10.Name = "toolStripMenuItem10";
+            this.toolStripMenuItem10.Size = new System.Drawing.Size(152, 22);
+            this.toolStripMenuItem10.Text = "Ü";
+            this.toolStripMenuItem10.Click += new System.EventHandler(this.InsertLanguageCharacter);
+            // 
+            // ñToolStripMenuItem
+            // 
+            this.ñToolStripMenuItem.Name = "ñToolStripMenuItem";
+            this.ñToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.ñToolStripMenuItem.Text = "ñ";
+            this.ñToolStripMenuItem.Click += new System.EventHandler(this.InsertLanguageCharacter);
+            // 
+            // ñToolStripMenuItem1
+            // 
+            this.ñToolStripMenuItem1.Name = "ñToolStripMenuItem1";
+            this.ñToolStripMenuItem1.Size = new System.Drawing.Size(152, 22);
+            this.ñToolStripMenuItem1.Text = "Ñ";
+            this.ñToolStripMenuItem1.Click += new System.EventHandler(this.InsertLanguageCharacter);
+            // 
+            // toolStripMenuItem2
+            // 
+            this.toolStripMenuItem2.Name = "toolStripMenuItem2";
+            this.toolStripMenuItem2.Size = new System.Drawing.Size(152, 22);
+            this.toolStripMenuItem2.Text = "¿";
+            this.toolStripMenuItem2.Click += new System.EventHandler(this.InsertLanguageCharacter);
+            // 
+            // toolStripMenuItem3
+            // 
+            this.toolStripMenuItem3.Name = "toolStripMenuItem3";
+            this.toolStripMenuItem3.Size = new System.Drawing.Size(152, 22);
+            this.toolStripMenuItem3.Text = "¡";
+            this.toolStripMenuItem3.Click += new System.EventHandler(this.InsertLanguageCharacter);
             // 
             // pictureBoxCharacter
             // 
@@ -178,11 +516,47 @@
             this.buttonShrinkSelection.UseVisualStyleBackColor = true;
             this.buttonShrinkSelection.Click += new System.EventHandler(this.ButtonShrinkSelectionClick);
             // 
+            // buttonLastEdit
+            // 
+            this.buttonLastEdit.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonLastEdit.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.buttonLastEdit.Location = new System.Drawing.Point(325, 258);
+            this.buttonLastEdit.Name = "buttonLastEdit";
+            this.buttonLastEdit.Size = new System.Drawing.Size(156, 21);
+            this.buttonLastEdit.TabIndex = 22;
+            this.buttonLastEdit.Text = "Edit:";
+            this.buttonLastEdit.UseVisualStyleBackColor = true;
+            this.buttonLastEdit.Click += new System.EventHandler(this.buttonLastEdit_Click);
+            // 
+            // pictureBoxLastEdit
+            // 
+            this.pictureBoxLastEdit.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.pictureBoxLastEdit.Location = new System.Drawing.Point(487, 258);
+            this.pictureBoxLastEdit.Name = "pictureBoxLastEdit";
+            this.pictureBoxLastEdit.Size = new System.Drawing.Size(39, 21);
+            this.pictureBoxLastEdit.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
+            this.pictureBoxLastEdit.TabIndex = 23;
+            this.pictureBoxLastEdit.TabStop = false;
+            // 
+            // buttonGuess
+            // 
+            this.buttonGuess.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.buttonGuess.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.buttonGuess.Location = new System.Drawing.Point(12, 286);
+            this.buttonGuess.Name = "buttonGuess";
+            this.buttonGuess.Size = new System.Drawing.Size(112, 21);
+            this.buttonGuess.TabIndex = 24;
+            this.buttonGuess.Text = "Best guess";
+            this.buttonGuess.UseVisualStyleBackColor = true;
+            this.buttonGuess.Click += new System.EventHandler(this.buttonGuess_Click);
+            // 
             // VobSubOcrCharacter
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(573, 317);
+            this.Controls.Add(this.buttonGuess);
+            this.Controls.Add(this.buttonLastEdit);
             this.Controls.Add(this.buttonShrinkSelection);
             this.Controls.Add(this.buttonExpandSelection);
             this.Controls.Add(this.checkBoxItalic);
@@ -195,6 +569,7 @@
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.labelSubtitleImage);
             this.Controls.Add(this.pictureBoxSubtitleImage);
+            this.Controls.Add(this.pictureBoxLastEdit);
             this.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.KeyPreview = true;
             this.MaximizeBox = false;
@@ -202,7 +577,9 @@
             this.Name = "VobSubOcrCharacter";
             this.Text = "VobSub - Manual image to text";
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxSubtitleImage)).EndInit();
+            this.contextMenuStripLetters.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxCharacter)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxLastEdit)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -222,5 +599,45 @@
         private System.Windows.Forms.CheckBox checkBoxItalic;
         private System.Windows.Forms.Button buttonExpandSelection;
         private System.Windows.Forms.Button buttonShrinkSelection;
+        private System.Windows.Forms.Button buttonLastEdit;
+        private System.Windows.Forms.PictureBox pictureBoxLastEdit;
+        private System.Windows.Forms.Button buttonGuess;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStripLetters;
+        private System.Windows.Forms.ToolStripMenuItem æToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem aeToolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem AeToolStripMenuItem2;
+        private System.Windows.Forms.ToolStripMenuItem øToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem øToolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem åToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem åToolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem äToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem äToolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem öToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem öToolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem germanToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem äToolStripMenuItem2;
+        private System.Windows.Forms.ToolStripMenuItem äToolStripMenuItem3;
+        private System.Windows.Forms.ToolStripMenuItem öToolStripMenuItem2;
+        private System.Windows.Forms.ToolStripMenuItem öToolStripMenuItem3;
+        private System.Windows.Forms.ToolStripMenuItem üToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem üToolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem ßToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem spanishToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem áToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem áToolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem éToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem éToolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem ñToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem ñToolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem2;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem3;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem4;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem5;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem6;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem7;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem8;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem9;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem10;
     }
 }

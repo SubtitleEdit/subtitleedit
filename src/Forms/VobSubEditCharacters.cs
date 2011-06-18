@@ -201,5 +201,26 @@ namespace Nikse.SubtitleEdit.Forms
                     comboBoxTexts.SelectedIndex = oldComboBoxIndex;
             }
         }
+
+        internal void Initialize(string name, string text)
+        {
+            if (name != null && text != null)
+            {
+                for (int i = 0; i < comboBoxTexts.Items.Count; i++)
+                {
+                    if (comboBoxTexts.Items[i].ToString() == text)
+                    {
+                        comboBoxTexts.SelectedIndex = i;
+                        for (int j = 0; j < listBoxFileNames.Items.Count; j++)
+                        {
+                            if (listBoxFileNames.Items[j].ToString().StartsWith(name))
+                                listBoxFileNames.SelectedIndex = j;
+                        }
+                        return;
+                    }
+                }
+
+            }
+        }
     }
 }

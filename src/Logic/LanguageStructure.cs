@@ -304,6 +304,7 @@
             public string FixCommonOcrErrors { get; set; }
             public string CommonOcrErrorsFixed { get; set; }
             public string RemoveSpaceBetweenNumber { get; set; }
+            public string FixDialogsOnOneLine { get; set; }            
             public string RemoveSpaceBetweenNumbersFixed { get; set; }
             public string FixDanishLetterI { get; set; }
             public string FixSpanishInvertedQuestionAndExclamationMarks { get; set; }
@@ -1340,6 +1341,7 @@
             public string CharactersAsText { get; set; }
             public string Italic { get; set; }
             public string Abort { get; set; }
+            public string Skip { get; set; }
         }
 
         public class VobSubOcrNewFolder
