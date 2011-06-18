@@ -421,6 +421,9 @@ namespace Nikse.SubtitleEdit.Logic
 
         public static string RemoveHtmlTags(string s)
         {
+            if (s == null)
+                return null;
+
             s = s.Replace("<i>", string.Empty);
             s = s.Replace("</i>", string.Empty);
             s = s.Replace("<b>", string.Empty);

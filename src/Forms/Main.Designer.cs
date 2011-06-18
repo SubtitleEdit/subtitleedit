@@ -3127,7 +3127,7 @@
             this.toolStripSeparator26,
             this.toolStripMenuItemInsertUnicodeSymbol});
             this.contextMenuStripTextBoxListView.Name = "contextMenuStripTextBoxListView";
-            this.contextMenuStripTextBoxListView.Size = new System.Drawing.Size(215, 330);
+            this.contextMenuStripTextBoxListView.Size = new System.Drawing.Size(215, 308);
             this.contextMenuStripTextBoxListView.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStripTextBoxListView_Opening);
             // 
             // cutToolStripMenuItem

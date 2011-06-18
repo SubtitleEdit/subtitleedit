@@ -37,6 +37,10 @@ namespace Nikse.SubtitleEdit.Logic.OCR
         readonly Form _parentForm;
         private string _spellCheckDictionaryName;
 
+        Regex regexAloneI = new Regex(@"\bi\b", RegexOptions.Compiled);
+        Regex regexAloneIAsL = new Regex(@"\bl\b", RegexOptions.Compiled);
+        Regex regexSpaceBetweenNumbers = new Regex(@"\d \d", RegexOptions.Compiled);
+
         public bool Abort { get; set; }
         public List<string> AutoGuessesUsed { get; set; }
         public List<string> UnknownWordsFound { get; set; }
@@ -289,7 +293,30 @@ namespace Nikse.SubtitleEdit.Logic.OCR
             }
             text = FixCommenOcrLineErrors(sb.ToString(), lastLine);
             int wordsNotFound;
-            return FixUnknownWordsViaGuessOrPrompt(out wordsNotFound, text, index, null, true, false, logSuggestions, useAutoGuess);
+            text =  FixUnknownWordsViaGuessOrPrompt(out wordsNotFound, text, index, null, true, false, logSuggestions, useAutoGuess);
+            if (Configuration.Settings.Tools.OcrFixUseHardcodedRules)
+            {
+                text = FixLowercaseIToUppercaseI(text, lastLine);
+                if (SpellCheckDictionaryName.StartsWith("en_"))
+                {
+                    string oldText = text;
+                    text = FixCommonErrors.FixAloneLowercaseIToUppercaseLine(regexAloneI, oldText, text, 'i');
+                    text = FixCommonErrors.FixAloneLowercaseIToUppercaseLine(regexAloneIAsL, oldText, text, 'l');
+                    text = RemoveSpaceBetweenNumbers(text);
+                }
+            }
+            return text;
+        }
+
+        private string RemoveSpaceBetweenNumbers(string text)
+        {
+            Match match = regexSpaceBetweenNumbers.Match(text);
+            while (match.Success)
+            {
+                text = text.Remove(match.Index + 1, 1);
+                match = regexSpaceBetweenNumbers.Match(text);
+            }
+            return text;
         }
 
 
@@ -560,6 +587,7 @@ namespace Nikse.SubtitleEdit.Logic.OCR
 
         private string FixCommenOcrLineErrors(string input, string lastLine)
         {
+            input = FixOcrErrorViaLineReplaceList(input);
             input = FixOcrErrorsViaHardcodedRules(input, lastLine, _abbreviationList);
             input = FixOcrErrorViaLineReplaceList(input);
 
@@ -584,9 +612,41 @@ namespace Nikse.SubtitleEdit.Logic.OCR
                 {
                     input = input.Replace(".'", Configuration.Settings.Tools.MusicSymbol);
                 }
+                
             }
 
             return input;
+        }
+
+        private string FixLowercaseIToUppercaseI(string input, string lastLine)
+        {
+            StringBuilder sb = new StringBuilder();
+            string[] lines = input.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+            for (int i = 0; i < lines.Length; i++)
+            {
+                string l = lines[i];
+                
+                    if (i > 0)
+                        lastLine = lines[i - 1];
+                    lastLine = Utilities.RemoveHtmlTags(lastLine);
+
+                    if (string.IsNullOrEmpty(lastLine) ||
+                        lastLine.EndsWith(".") ||
+                        lastLine.EndsWith("!") ||
+                        lastLine.EndsWith("?"))
+                    {
+                        StripableText st = new StripableText(l);
+                        if (st.StrippedText.StartsWith("i"))
+                        {
+                            if (string.IsNullOrEmpty(lastLine) || (!lastLine.EndsWith("...") && !EndsWithAbbreviation(lastLine, _abbreviationList)))
+                            {
+                                l = st.Pre + "I" + st.StrippedText.Remove(0, 1) + st.Post;
+                            }
+                        }
+                    }
+                    sb.AppendLine(l);                
+            }
+            return sb.ToString().TrimEnd('\r').TrimEnd('\n').TrimEnd('\r').TrimEnd('\n');
         }
 
         private static bool EndsWithAbbreviation(string line, List<string> abbreviationList)
@@ -610,15 +670,23 @@ namespace Nikse.SubtitleEdit.Logic.OCR
             if (!Configuration.Settings.Tools.OcrFixUseHardcodedRules)
                 return input;
 
-            if (lastLine == null ||
+            if (string.IsNullOrEmpty(lastLine) ||
                 lastLine.EndsWith(".") ||
                 lastLine.EndsWith("!") ||
                 lastLine.EndsWith("?"))
             {
+                lastLine = Utilities.RemoveHtmlTags(lastLine);
+                StripableText st = new StripableText(input);
                 if (lastLine == null || (!lastLine.EndsWith("...") && !EndsWithAbbreviation(lastLine, abbreviationList)))
                 {
-                    if (input.Length > 0 && input[0].ToString() != input[0].ToString().ToUpper())
-                        input = input.Remove(0, 1).Insert(0, input[0].ToString().ToUpper());
+                    if (st.StrippedText.Length > 0 && st.StrippedText[0].ToString() != st.StrippedText[0].ToString().ToUpper())
+                    {
+                        string uppercaseLetter = st.StrippedText[0].ToString().ToUpper();
+                        if (st.StrippedText.Length > 1 && uppercaseLetter == "L" && "abcdfghjklmnpqrstvwxz".Contains(st.StrippedText[1].ToString()))
+                            uppercaseLetter = "I";
+                        st.StrippedText = st.StrippedText.Remove(0, 1).Insert(0, uppercaseLetter);
+                        input = st.Pre + st.StrippedText + st.Post;
+                    }
                 }
             }
 
@@ -674,30 +742,48 @@ namespace Nikse.SubtitleEdit.Logic.OCR
 
             string newText = input;
             string pre = string.Empty;
+            if (newText.StartsWith("<i>"))
+            {
+                pre += "<i>";
+                newText = newText.Remove(0, 3);
+            }
             while (newText.Length > 1 && " -\"['¶(".Contains(newText.Substring(0, 1)))
             {
                 pre += newText.Substring(0, 1);
                 newText = newText.Substring(1);
             }
+            if (newText.StartsWith("<i>"))
+            {
+                pre += "<i>";
+                newText = newText.Remove(0, 3);
+            }
 
             // begin line
-            foreach (string from in _beginLineReplaceList.Keys)
+            string[] lines = newText.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+            StringBuilder sb = new StringBuilder();
+            foreach (string l in lines)
             {
-                if (newText.StartsWith(from))
-                    newText = newText.Remove(0, from.Length).Insert(0, _beginLineReplaceList[from]);
-                if (newText.Contains(". " + from))
-                    newText = newText.Replace(". " + from, ". " + _beginLineReplaceList[from]);
-                if (newText.Contains("! " + from))
-                    newText = newText.Replace("! " + from, "! " + _beginLineReplaceList[from]);
-                if (newText.Contains("? " + from))
-                    newText = newText.Replace("? " + from, "? " + _beginLineReplaceList[from]);
-                if (newText.Contains("." + Environment.NewLine + from))
-                    newText = newText.Replace(". " + Environment.NewLine + from, ". " + Environment.NewLine + _beginLineReplaceList[from]);
-                if (newText.Contains("! " + Environment.NewLine + from))
-                    newText = newText.Replace("! " + Environment.NewLine + from, "! " + Environment.NewLine + _beginLineReplaceList[from]);
-                if (newText.Contains("? " + Environment.NewLine + from))
-                    newText = newText.Replace("? " + Environment.NewLine + from, "? " + Environment.NewLine + _beginLineReplaceList[from]);
+                string s = l;
+                foreach (string from in _beginLineReplaceList.Keys)
+                {
+                    if (s.StartsWith(from))
+                        s = s.Remove(0, from.Length).Insert(0, _beginLineReplaceList[from]);
+                    if (s.Contains(". " + from))
+                        s = s.Replace(". " + from, ". " + _beginLineReplaceList[from]);
+                    if (s.Contains("! " + from))
+                        s = s.Replace("! " + from, "! " + _beginLineReplaceList[from]);
+                    if (s.Contains("? " + from))
+                        s = s.Replace("? " + from, "? " + _beginLineReplaceList[from]);
+                    if (s.Contains("." + Environment.NewLine + from))
+                        s = s.Replace(". " + Environment.NewLine + from, ". " + Environment.NewLine + _beginLineReplaceList[from]);
+                    if (s.Contains("! " + Environment.NewLine + from))
+                        s = s.Replace("! " + Environment.NewLine + from, "! " + Environment.NewLine + _beginLineReplaceList[from]);
+                    if (s.Contains("? " + Environment.NewLine + from))
+                        s = s.Replace("? " + Environment.NewLine + from, "? " + Environment.NewLine + _beginLineReplaceList[from]);
+                }
+                sb.AppendLine(s);
             }
+            newText = sb.ToString().TrimEnd('\r').TrimEnd('\n').TrimEnd('\r').TrimEnd('\n');
             newText = pre + newText;
 
             foreach (string from in _endLineReplaceList.Keys)
@@ -765,6 +851,11 @@ namespace Nikse.SubtitleEdit.Logic.OCR
                     if (!correct)
                         correct = DoSpell(word.Trim('\''));
                     if (!correct)
+                        correct = DoSpell(word.Replace("<i>", string.Empty).Replace("</i>", string.Empty));
+                    if (!correct && _userWordList.Contains(word.ToLower().Replace("<i>", string.Empty).Replace("</i>", string.Empty)))
+                        correct = true;
+
+                    if (!correct)
                     {
                         wordsNotFound++;
                         if (log)
@@ -777,12 +868,21 @@ namespace Nikse.SubtitleEdit.Logic.OCR
                             {
                                 guesses = (List<string>)CreateGuessesFromLetters(word);
 
+                                if (word[0] == 'L')
+                                    guesses.Add("I" + word.Substring(1));
+
                                 string wordWithCasingChanged = GetWordWithDominatedCasing(word);
                                 if (DoSpell(word.ToLower()))
                                     guesses.Insert(0, wordWithCasingChanged);
                             }
                             else
                             {
+                                if (word[0] == 'L')
+                                    guesses.Add("I" + word.Substring(1));
+
+                                if (word.Length > 2  && word[0] == 'I' && word[1].ToString().ToUpper() != word[1].ToString())
+                                    guesses.Add("l" + word.Substring(1));
+
                                 if (i==0)
                                     guesses.Add(word.Replace(@"\/", "V"));
                                 else

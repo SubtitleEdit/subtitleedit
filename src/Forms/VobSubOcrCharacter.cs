@@ -7,6 +7,11 @@ namespace Nikse.SubtitleEdit.Forms
 {
     public sealed partial class VobSubOcrCharacter : Form
     {
+
+        VobSubOcr _vobSubForm;
+        string _lastAdditionName;
+        string _lastAdditionText;
+
         public VobSubOcrCharacter()
         {
             InitializeComponent();
@@ -21,7 +26,7 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxItalic.Text = language.Italic;
             buttonAbort.Text = language.Abort;
             buttonOK.Text = Configuration.Settings.Language.General.OK;
-            buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
+            buttonCancel.Text = language.Skip;
             FixLargeFonts();
         }
 
@@ -64,8 +69,22 @@ namespace Nikse.SubtitleEdit.Forms
 
         public bool ShrinkSelection { get; private set; }
 
-        public void Initialize(Bitmap vobSubImage, ImageSplitterItem character, Point position, bool italicChecked, bool showShrink)
+        public void Initialize(Bitmap vobSubImage, ImageSplitterItem character, Point position, bool italicChecked, bool showShrink, Nikse.SubtitleEdit.Forms.VobSubOcr.CompareMatch bestGuess, string lastAdditionName, string lastAdditionText, Bitmap lastAdditionImage, bool lastAdditionItalic, VobSubOcr vobSubForm)
         {
+            if (bestGuess != null)
+            {
+                buttonGuess.Visible = false; // hm... not too useful :(
+                buttonGuess.Text = bestGuess.Text;
+            }
+            else
+            {
+                buttonGuess.Visible = false;
+            }
+
+            _vobSubForm = vobSubForm;
+            _lastAdditionName = lastAdditionName;
+            _lastAdditionText = lastAdditionText;
+
             buttonShrinkSelection.Visible = showShrink;
 
             checkBoxItalic.Checked = italicChecked;
@@ -79,12 +98,29 @@ namespace Nikse.SubtitleEdit.Forms
             pictureBoxSubtitleImage.Image = vobSubImage;
             pictureBoxCharacter.Image = character.Bitmap;
 
+            if (lastAdditionImage != null && lastAdditionName != null && lastAdditionText != null)
+            {
+                buttonLastEdit.Visible = true;
+                if (lastAdditionItalic)
+                    buttonLastEdit.Font = new System.Drawing.Font(buttonLastEdit.Font.FontFamily, buttonLastEdit.Font.Size, FontStyle.Italic);
+                else
+                    buttonLastEdit.Font = new System.Drawing.Font(buttonLastEdit.Font.FontFamily, buttonLastEdit.Font.Size);                
+                pictureBoxLastEdit.Visible = true;
+                pictureBoxLastEdit.Image = lastAdditionImage;
+                buttonLastEdit.Text = "Edit last: " + lastAdditionText;
+            }
+            else
+            {
+                buttonLastEdit.Visible = false;
+                pictureBoxLastEdit.Visible = false;
+            }
+
+            
 
             Bitmap org = (Bitmap)vobSubImage.Clone();
             Bitmap bm = new Bitmap(org.Width, org.Height);
             Graphics g = Graphics.FromImage(bm);
             g.DrawImage(org, 0, 0, org.Width, org.Height);
-//            g.FillRectangle(Brushes.Black, 5, 5, 100, 30);
             g.DrawRectangle(Pens.Red, character.X, character.Y, character.Bitmap.Width, character.Bitmap.Height - 1);
             g.Dispose();
             pictureBoxSubtitleImage.Image = bm;
@@ -106,6 +142,17 @@ namespace Nikse.SubtitleEdit.Forms
         private void CheckBoxItalicCheckedChanged(object sender, EventArgs e)
         {
             textBoxCharacters.Focus();
+
+            if (checkBoxItalic.Checked)
+            {
+                labelCharactersAsText.Font = new System.Drawing.Font(labelCharactersAsText.Font.FontFamily, labelCharactersAsText.Font.Size, FontStyle.Italic);
+                textBoxCharacters.Font = new System.Drawing.Font(textBoxCharacters.Font.FontFamily, textBoxCharacters.Font.Size, FontStyle.Italic);
+            }
+            else
+            {
+                labelCharactersAsText.Font = new System.Drawing.Font(labelCharactersAsText.Font.FontFamily, labelCharactersAsText.Font.Size);
+                textBoxCharacters.Font = new System.Drawing.Font(textBoxCharacters.Font.FontFamily, textBoxCharacters.Font.Size);
+            }
         }
 
         private void ButtonExpandSelectionClick(object sender, EventArgs e)
@@ -118,6 +165,24 @@ namespace Nikse.SubtitleEdit.Forms
         {
             ShrinkSelection = true;
             DialogResult = DialogResult.OK;
+        }
+
+        private void buttonLastEdit_Click(object sender, EventArgs e)
+        {
+            _vobSubForm.EditImageCompareCharacters(_lastAdditionName, _lastAdditionText);
+            textBoxCharacters.Focus();
+        }
+
+        private void buttonGuess_Click(object sender, EventArgs e)
+        {
+            textBoxCharacters.Text = buttonGuess.Text;
+            DialogResult = DialogResult.OK;
+        }
+
+        private void InsertLanguageCharacter(object sender, EventArgs e)
+        {
+            textBoxCharacters.Text = textBoxCharacters.Text.Insert(textBoxCharacters.SelectionStart, (sender as ToolStripMenuItem).Text);
+
         }
     }
 }

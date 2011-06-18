@@ -39,8 +39,9 @@ namespace Nikse.SubtitleEdit.Forms
         const int IndexAloneLowercaseIToUppercaseIEnglish = 24;
         const int IndexFixOcrErrorsViaReplaceList = 25;
         const int IndexRemoveSpaceBetweenNumbers = 26;
-        const int IndexDanishLetterI = 27;
-        const int IndexFixSpanishInvertedQuestionAndExclamationMarks = 28;
+        const int IndexDialogsOnOneLine = 27;
+        const int IndexDanishLetterI = 28;
+        const int IndexFixSpanishInvertedQuestionAndExclamationMarks = 29;
 
         int _danishLetterIIndex = -1;
         int _spanishInvertedQuestionAndExclamationMarksIndex = -1;
@@ -155,6 +156,7 @@ namespace Nikse.SubtitleEdit.Forms
             _fixActions.Add(new FixItem(_language.FixLowercaseIToUppercaseI, _language.FixLowercaseIToUppercaseIExample, delegate { FixAloneLowercaseIToUppercaseI(); }, ce.AloneLowercaseIToUppercaseIEnglishTicked));
             _fixActions.Add(new FixItem(_language.FixCommonOcrErrors, "D0n't -> Don't", delegate { FixOcrErrorsViaReplaceList(threeLetterISOLanguageName); }, ce.FixOcrErrorsViaReplaceListTicked));
             _fixActions.Add(new FixItem(_language.RemoveSpaceBetweenNumber, "1 100 -> 1100", delegate { RemoveSpaceBetweenNumbers(); }, ce.RemoveSpaceBetweenNumberTicked));
+            _fixActions.Add(new FixItem(_language.FixDialogsOnOneLine, "Hi John! - Hi Ida! > Hi John!" + Configuration.Settings.General.ListViewLineSeparatorString + "- Hi Ida!", delegate { DialogsOnOneLine(); }, ce.FixDialogsOnOneLineTicked));           
 
             if (_autoDetectGoogleLanguage == "da" || subtitle.Paragraphs.Count < 25) // && Thread.CurrentThread.CurrentCulture.Name == "da-DK" && 
             {
@@ -1870,7 +1872,6 @@ namespace Nikse.SubtitleEdit.Forms
                 LogStatus(_language.FixCommonOcrErrors, string.Format(_language.CommonOcrErrorsFixed, noOfFixes));
         }
 
-
         private void RemoveSpaceBetweenNumbers()
         {
             string fixAction = _language.FixCommonOcrErrors;
@@ -1902,6 +1903,53 @@ namespace Nikse.SubtitleEdit.Forms
                 LogStatus(_language.FixCommonOcrErrors, string.Format(_language.RemoveSpaceBetweenNumbersFixed, noOfFixes));
         }
 
+        private void DialogsOnOneLine()
+        {
+            string fixAction = _language.FixDialogsOnOneLine;
+            int noOfFixes = 0;
+            for (int i = 0; i < _subtitle.Paragraphs.Count; i++)
+            {
+                Paragraph p = _subtitle.Paragraphs[i];
+                string text = p.Text;
+                string oldText = text;
+                if (text.Contains(" - ") && !text.Contains(Environment.NewLine))
+                {
+                    string[] parts = text.Replace(" - ", Environment.NewLine).Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                    if (parts.Length == 2)
+                    { 
+                        string part0 = Utilities.RemoveHtmlTags(parts[0]).Trim();
+                        string part1 = Utilities.RemoveHtmlTags(parts[1]).Trim();
+                        if (part0.Length > 1 && "!?.".Contains(part0.Substring(part0.Length - 1, 1)) &&
+                            part1.Length > 1 && ("'" + Utilities.GetLetters(true, false, false)).Contains(part1.Substring(0, 1)))
+                        {
+                            text = text.Replace(" - ", Environment.NewLine + "- ");
+                            if (Utilities.GetLetters(true, true, true).Contains(part0.Substring(0, 1)))
+                            {
+                                if (text.StartsWith("<i>"))
+                                    text = "<i>- " + text;
+                                else
+                                    text = "- " + text;
+                            }
+                        }                            
+                    }
+
+                    if (oldText != text)
+                    {
+                        if (AllowFix(i + 1, fixAction))
+                        {
+                            p.Text = text;
+                            noOfFixes++;
+                            _totalFixes++;
+                            AddFixToListView(p, i + 1, fixAction, oldText, p.Text);
+                        }
+                    }
+                }
+            }
+            if (noOfFixes > 0)
+                LogStatus(_language.FixCommonOcrErrors, string.Format(_language.RemoveSpaceBetweenNumbersFixed, noOfFixes));
+        }
+
+
 
         private void FixAloneLowercaseIToUppercaseI()
         {
@@ -1916,44 +1964,7 @@ namespace Nikse.SubtitleEdit.Forms
                 string s = p.Text;
                 if (s.Contains("i"))
                 {
-                    //html tags
-                    if (s.Contains(">i</"))
-                        s = s.Replace(">i</", ">I</");
-                    if (s.Contains(">i "))
-                        s = s.Replace(">i ", ">I ");
-                    if (s.Contains(">i" + Environment.NewLine))
-                        s = s.Replace(">i" + Environment.NewLine, ">I" + Environment.NewLine);
-
-                    // reg-ex
-                    Match match = re.Match(s);
-                    if (match.Success)
-                    {
-                        while (match.Success)
-                        {
-                            if (s[match.Index] == 'i')
-                            {
-                                string prev = string.Empty;
-                                string next = string.Empty;
-                                if (match.Index > 0)
-                                    prev = s[match.Index - 1].ToString();
-                                if (match.Index + 1 < s.Length)
-                                    next = s[match.Index + 1].ToString();
-
-                                string wholePrev = string.Empty;
-                                if (match.Index > 1)
-                                    wholePrev = s.Substring(0, match.Index - 1);
-
-                                if (prev != ">" && next != ">" && next != "}" && !wholePrev.Trim().EndsWith("..."))
-                                {
-                                    string temp = s.Substring(0, match.Index) + "I";
-                                    if (match.Index + 1 < oldText.Length)
-                                        temp += s.Substring(match.Index + 1);
-                                    s = temp;
-                                }
-                            }
-                            match = match.NextMatch();
-                        }
-                    }
+                    s = FixAloneLowercaseIToUppercaseLine(re, oldText, s, 'i');
 
                     if (s != oldText && AllowFix(i + 1, fixAction))
                     {
@@ -1967,6 +1978,49 @@ namespace Nikse.SubtitleEdit.Forms
             }
             if (iFixes > 0)
                 LogStatus(_language.FixLowercaseIToUppercaseI, string.Format(_language.XIsChangedToUppercase, iFixes));
+        }
+
+        public static string FixAloneLowercaseIToUppercaseLine(Regex re, string oldText, string s, char target)
+        {
+            //html tags
+            if (s.Contains(">" + target + "</"))
+                s = s.Replace(">" + target + "</", ">I</");
+            if (s.Contains(">" + target + " "))
+                s = s.Replace(">" + target + " ", ">I ");
+            if (s.Contains(">" + target + "" + Environment.NewLine))
+                s = s.Replace(">" + target + "" + Environment.NewLine, ">I" + Environment.NewLine);
+
+            // reg-ex
+            Match match = re.Match(s);
+            if (match.Success)
+            {
+                while (match.Success)
+                {
+                    if (s[match.Index] == target)
+                    {
+                        string prev = string.Empty;
+                        string next = string.Empty;
+                        if (match.Index > 0)
+                            prev = s[match.Index - 1].ToString();
+                        if (match.Index + 1 < s.Length)
+                            next = s[match.Index + 1].ToString();
+
+                        string wholePrev = string.Empty;
+                        if (match.Index > 1)
+                            wholePrev = s.Substring(0, match.Index - 1);
+
+                        if (prev != ">" && next != ">" && next != "}" && !wholePrev.Trim().EndsWith("..."))
+                        {
+                            string temp = s.Substring(0, match.Index) + "I";
+                            if (match.Index + 1 < oldText.Length)
+                                temp += s.Substring(match.Index + 1);
+                            s = temp;
+                        }
+                    }
+                    match = match.NextMatch();
+                }
+            }
+            return s;
         }
 
         private void FixHyphens()
@@ -3208,6 +3262,7 @@ namespace Nikse.SubtitleEdit.Forms
             ce.AloneLowercaseIToUppercaseIEnglishTicked = listView1.Items[IndexAloneLowercaseIToUppercaseIEnglish].Checked;
             ce.FixOcrErrorsViaReplaceListTicked = listView1.Items[IndexFixOcrErrorsViaReplaceList].Checked;
             ce.RemoveSpaceBetweenNumberTicked = listView1.Items[IndexRemoveSpaceBetweenNumbers].Checked;
+            ce.FixDialogsOnOneLineTicked = listView1.Items[IndexDialogsOnOneLine].Checked;
             if (_danishLetterIIndex > -1)
                 ce.DanishLetterITicked = listView1.Items[_danishLetterIIndex].Checked;
 
