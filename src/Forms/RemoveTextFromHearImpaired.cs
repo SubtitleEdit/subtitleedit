@@ -440,7 +440,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 if (insertDash)
                 {
-                    if (indexOfDialogChar < 0 || indexOfDialogChar > 6)
+                    if (indexOfDialogChar < 0 || indexOfDialogChar > 4)
                     {
                         StripableText st = new StripableText(newText, "", "");
                         newText = st.Pre + "- " + st.StrippedText + st.Post;
