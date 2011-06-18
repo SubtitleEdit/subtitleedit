@@ -670,6 +670,89 @@ namespace Nikse.SubtitleEdit.Logic.OCR
             if (!Configuration.Settings.Tools.OcrFixUseHardcodedRules)
                 return input;
 
+            string pre = string.Empty;
+            if (input.StartsWith("- "))
+            {
+                pre = "- ";
+                input = input.Remove(0, 2);
+            }
+            else if (input.StartsWith("-"))
+            {
+                pre = "-";
+                input = input.Remove(0, 1);
+            }
+
+            if (input.StartsWith(". .."))
+                input = "..." + input.Remove(0, 4);
+            if (input.StartsWith(".. ."))
+                input = "..." + input.Remove(0, 4);
+            if (input.StartsWith(". . ."))
+                input = "..." + input.Remove(0, 5);
+            if (input.StartsWith("... "))
+                input = input.Remove(3, 1);
+            input = pre + input;
+
+            if (input.StartsWith("<i>. .."))
+                input = "<i>..." + input.Remove(0, 7);
+            if (input.StartsWith("<i>.. ."))
+                input = "<i>..." + input.Remove(0, 7);
+            if (input.StartsWith("<i>. . ."))
+                input = "<i>..." + input.Remove(0, 8);
+            if (input.StartsWith("<i>... "))
+                input = input.Remove(6, 1);
+
+            if (input.EndsWith(". .."))
+                input = input.Remove(input.Length - 4, 4) + "...";
+            if (input.EndsWith(".. ."))
+                input = input.Remove(input.Length - 4, 4) + "...";
+            if (input.EndsWith(". . ."))
+                input = input.Remove(input.Length - 5, 5) + "...";
+            if (input.EndsWith(". ..."))
+                input = input.Remove(input.Length - 5, 5) + "...";
+
+            if (input.EndsWith(". ..</i>"))
+                input = input.Remove(input.Length - 8, 8) + "...</i>";
+            if (input.EndsWith(".. .</i>"))
+                input = input.Remove(input.Length - 8, 8) + "...</i>";
+            if (input.EndsWith(". . .</i>"))
+                input = input.Remove(input.Length - 9, 9) + "...</i>";
+            if (input.EndsWith(". ...</i>"))
+                input = input.Remove(input.Length - 9, 9) + "...</i>";
+
+            input = input.Replace("....", "...");
+            input = input.Replace("....", "...");
+
+            input = input.Replace("... ?", "...?");
+            input = input.Replace("... !", "...!");
+
+            if (input.StartsWith("- ...") && lastLine != null && lastLine.EndsWith("..."))
+                input = input.Remove(0, 2);
+            if (input.StartsWith("-...") && lastLine != null && lastLine.EndsWith("..."))
+                input = input.Remove(0, 1);
+
+            if (input.Length > 2 && input[0] == '-' && Utilities.GetLetters(true, false, false).Contains(input[1].ToString()))
+            {
+                input = input.Insert(1, " ");
+            }
+
+            if (input.Length > 5 && input.StartsWith("<i>-") && Utilities.GetLetters(true, false, false).Contains(input[4].ToString()))
+            {
+                input = input.Insert(4, " ");
+            }
+
+            int idx = input.IndexOf(Environment.NewLine + "-");
+            if (idx > 0 && Utilities.GetLetters(true, false, false).Contains(input[idx+Environment.NewLine.Length+1].ToString()))
+            {
+                input = input.Insert(idx + Environment.NewLine.Length + 1, " ");
+            }
+
+            idx = input.IndexOf(Environment.NewLine + "<i>-");
+            if (idx > 0 && Utilities.GetLetters(true, false, false).Contains(input[idx + Environment.NewLine.Length + 4].ToString()))
+            {
+                input = input.Insert(idx + Environment.NewLine.Length + 4, " ");
+            }
+
+
             if (string.IsNullOrEmpty(lastLine) ||
                 lastLine.EndsWith(".") ||
                 lastLine.EndsWith("!") ||

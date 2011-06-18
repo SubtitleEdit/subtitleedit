@@ -1342,6 +1342,10 @@
             public string Italic { get; set; }
             public string Abort { get; set; }
             public string Skip { get; set; }
+            public string Nordic { get; set; }
+            public string Spanish { get; set; }
+            public string German { get; set; }
+            public string AutoSubmitOnFirstChar { get; set; }
         }
 
         public class VobSubOcrNewFolder

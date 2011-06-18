@@ -107,6 +107,8 @@ namespace Nikse.SubtitleEdit.Forms
         Bitmap _lastAdditionImage = null;
         bool _lastAdditionItalic = false;
 
+        VobSubOcrCharacter vobSubOcrCharacter = new VobSubOcrCharacter();
+
 
         public VobSubOcr()
         {
@@ -1196,7 +1198,6 @@ namespace Nikse.SubtitleEdit.Forms
                     CompareMatch match = GetCompareMatch(item, bitmap, out bestGuess);
                     if (match == null)
                     {
-                        var vobSubOcrCharacter = new VobSubOcrCharacter();
                         vobSubOcrCharacter.Initialize(bitmap, item, _manualOcrDialogPosition, _italicCheckedLast, false, bestGuess, _lastAdditionName, _lastAdditionText, _lastAdditionImage, _lastAdditionItalic, this);
                         DialogResult result = vobSubOcrCharacter.ShowDialog(this);
                         if (result == DialogResult.OK && vobSubOcrCharacter.ExpandSelection)
