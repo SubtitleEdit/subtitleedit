@@ -27,6 +27,11 @@ namespace Nikse.SubtitleEdit.Forms
             buttonAbort.Text = language.Abort;
             buttonOK.Text = Configuration.Settings.Language.General.OK;
             buttonCancel.Text = language.Skip;
+            nordicToolStripMenuItem.Text = language.Nordic;
+            spanishToolStripMenuItem.Text = language.Spanish;
+            germanToolStripMenuItem.Text = language.German;
+            checkBoxAutoSubmitOfFirstChar.Text = language.AutoSubmitOnFirstChar;
+
             FixLargeFonts();
         }
 
@@ -71,6 +76,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         public void Initialize(Bitmap vobSubImage, ImageSplitterItem character, Point position, bool italicChecked, bool showShrink, Nikse.SubtitleEdit.Forms.VobSubOcr.CompareMatch bestGuess, string lastAdditionName, string lastAdditionText, Bitmap lastAdditionImage, bool lastAdditionItalic, VobSubOcr vobSubForm)
         {
+            textBoxCharacters.Text = string.Empty;
             if (bestGuess != null)
             {
                 buttonGuess.Visible = false; // hm... not too useful :(
@@ -113,9 +119,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 buttonLastEdit.Visible = false;
                 pictureBoxLastEdit.Visible = false;
-            }
-
-            
+            }            
 
             Bitmap org = (Bitmap)vobSubImage.Clone();
             Bitmap bm = new Bitmap(org.Width, org.Height);
@@ -124,6 +128,10 @@ namespace Nikse.SubtitleEdit.Forms
             g.DrawRectangle(Pens.Red, character.X, character.Y, character.Bitmap.Width, character.Bitmap.Height - 1);
             g.Dispose();
             pictureBoxSubtitleImage.Image = bm;
+
+            pictureBoxCharacter.Top = labelCharacters.Top + 16;
+            pictureBoxLastEdit.Top = buttonLastEdit.Top - 5;
+            pictureBoxLastEdit.Left = buttonLastEdit.Left + buttonLastEdit.Width + 5;
         }
 
         private void ButtonOkClick(object sender, EventArgs e)
@@ -183,6 +191,27 @@ namespace Nikse.SubtitleEdit.Forms
         {
             textBoxCharacters.Text = textBoxCharacters.Text.Insert(textBoxCharacters.SelectionStart, (sender as ToolStripMenuItem).Text);
 
+        }
+
+        private void textBoxCharacters_TextChanged(object sender, EventArgs e)
+        {
+            if (checkBoxAutoSubmitOfFirstChar.Checked && textBoxCharacters.Text.Length > 0)
+                DialogResult = DialogResult.OK;
+        }
+
+        private void VobSubOcrCharacter_Shown(object sender, EventArgs e)
+        {
+            textBoxCharacters.Focus();
+        }
+
+        private void checkBoxAutoSubmitOfFirstChar_CheckedChanged(object sender, EventArgs e)
+        {
+            Focus();
+            textBoxCharacters.Focus();
+            textBoxCharacters.Focus();
+            Application.DoEvents();
+            textBoxCharacters.Focus();
+            textBoxCharacters.Focus();
         }
     }
 }

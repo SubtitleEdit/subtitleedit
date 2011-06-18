@@ -1408,6 +1408,10 @@ can edit in same subtitle file (collaboration)",
                 Characters = "Character(s)",
                 CharactersAsText = "Character(s) as text",
                 Italic = "&Italic",
+                Nordic = "Nordic",
+                Spanish = "Spanish",
+                German = "German",
+                AutoSubmitOnFirstChar = "Auto submit on &first char",
             };
 
             VobSubOcrNewFolder = new LanguageStructure.VobSubOcrNewFolder

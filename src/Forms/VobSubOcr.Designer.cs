@@ -126,7 +126,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.pictureBoxSubtitleImage.Location = new System.Drawing.Point(13, 58);
             this.pictureBoxSubtitleImage.Name = "pictureBoxSubtitleImage";
             this.pictureBoxSubtitleImage.Size = new System.Drawing.Size(604, 127);
-            this.pictureBoxSubtitleImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pictureBoxSubtitleImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBoxSubtitleImage.TabIndex = 3;
             this.pictureBoxSubtitleImage.TabStop = false;
             // 
@@ -844,6 +844,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.subtitleListView1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
             this.subtitleListView1.ContextMenuStrip = this.contextMenuStripListview;
+            this.subtitleListView1.DisplayExtraFromExtra = false;
             this.subtitleListView1.FirstVisibleIndex = -1;
             this.subtitleListView1.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.subtitleListView1.FullRowSelect = true;
