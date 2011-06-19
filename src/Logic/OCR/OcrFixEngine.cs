@@ -48,6 +48,9 @@ namespace Nikse.SubtitleEdit.Logic.OCR
         
         public CultureInfo DictionaryCulture { get; private set; }
 
+        static Regex hexNumber = new Regex(@"^#?[\dABDEFabcdef]+$", RegexOptions.Compiled);
+        static Regex startEndEndsWithNumber = new Regex(@"^\d+.+\d$", RegexOptions.Compiled);
+
         /// <summary>
         /// Advanced ocr fixing via replace/spelling dictionaries + some hardcoded rules
         /// </summary>
@@ -96,14 +99,21 @@ namespace Nikse.SubtitleEdit.Logic.OCR
 
         private void LoadSpellingDictionaries(string threeLetterIsoLanguageName)
         {
-            IsDictionaryLoaded = false;
+            string dictionaryFolder = Utilities.DictionaryFolder;
+            if (!Directory.Exists(dictionaryFolder))
+                return;
+
+            // use US default
+            if (threeLetterIsoLanguageName == "eng" && File.Exists(Path.Combine(dictionaryFolder, "en_US.dic")))
+            {
+                LoadSpellingDictionariesViaDictionaryFileName("eng", new CultureInfo("en-US"), "en_US.dic", true);
+                return;
+            }
+
             foreach (var culture in CultureInfo.GetCultures(CultureTypes.NeutralCultures))
             {
                 if (culture.ThreeLetterISOLanguageName == threeLetterIsoLanguageName)
                 {
-                    string dictionaryFolder = Utilities.DictionaryFolder;
-                    if (!Directory.Exists(dictionaryFolder))
-                        return;
 
                     string dictionaryFileName = null;
                     foreach (string dic in Directory.GetFiles(dictionaryFolder, "*.dic"))
@@ -183,6 +193,16 @@ namespace Nikse.SubtitleEdit.Logic.OCR
                 if (name.EndsWith("."))
                     _abbreviationList.Add(name);
             }
+            if (threeLetterIsoLanguageName.ToLower() == "eng")
+            {
+                if (_abbreviationList.Contains("a.m."))
+                    _abbreviationList.Add("a.m.");
+                if (_abbreviationList.Contains("p.m."))
+                    _abbreviationList.Add("p.m.");
+                if (_abbreviationList.Contains("o.r."))
+                    _abbreviationList.Add("o.r.");
+            }
+
             foreach (string name in _userWordList)
             {
                 if (name.EndsWith("."))
@@ -291,6 +311,7 @@ namespace Nikse.SubtitleEdit.Logic.OCR
                 string fixedWord = FixCommonWordErrors(word.ToString(), lastWord);
                 sb.Append(fixedWord);
             }
+
             text = FixCommenOcrLineErrors(sb.ToString(), lastLine);
             int wordsNotFound;
             text =  FixUnknownWordsViaGuessOrPrompt(out wordsNotFound, text, index, null, true, false, logSuggestions, useAutoGuess);
@@ -432,12 +453,15 @@ namespace Nikse.SubtitleEdit.Logic.OCR
 
             foreach (string from in _wordReplaceList.Keys)
             {
-                if (word == from)
-                    return pre + _wordReplaceList[from] + post;
-                if (word + post == from)
-                    return pre + _wordReplaceList[from];
-                if (pre + word + post == from)
-                    return _wordReplaceList[from];
+                if (from.Contains(word))
+                {
+                    if (word == from)
+                        return pre + _wordReplaceList[from] + post;
+                    if (word + post == from)
+                        return pre + _wordReplaceList[from];
+                    if (pre + word + post == from)
+                        return _wordReplaceList[from];
+                }
             }
 
             if (Configuration.Settings.Tools.OcrFixUseHardcodedRules)
@@ -457,12 +481,15 @@ namespace Nikse.SubtitleEdit.Logic.OCR
             // Retry word replace list
             foreach (string from in _wordReplaceList.Keys)
             {
-                if (word == from)
-                    return pre + _wordReplaceList[from] + post;
-                if (word + post == from)
-                    return pre + _wordReplaceList[from];
-                if (pre + word + post == from)
-                    return _wordReplaceList[from];
+                if (from.Contains(word))
+                {
+                    if (word == from)
+                        return pre + _wordReplaceList[from] + post;
+                    if (word + post == from)
+                        return pre + _wordReplaceList[from];
+                    if (pre + word + post == from)
+                        return _wordReplaceList[from];
+                }
             }
 
             return pre + word + post;
@@ -470,7 +497,6 @@ namespace Nikse.SubtitleEdit.Logic.OCR
 
         public static string Fix0InsideLowerCaseWord(string word)
         {
-            var startEndEndsWithNumber = new Regex(@"^\d+.+\d$");
             if (startEndEndsWithNumber.IsMatch(word))
                 return word;
 
@@ -485,7 +511,6 @@ namespace Nikse.SubtitleEdit.Logic.OCR
                 word.Contains("9"))
                 return word;
 
-            var hexNumber = new Regex(@"^#?[\dABDEFabcdef]+$");
             if (hexNumber.IsMatch(word))
                 return word;
 
@@ -533,7 +558,6 @@ namespace Nikse.SubtitleEdit.Logic.OCR
 
         public static string FixIor1InsideLowerCaseWord(string word)
         {
-            var startEndEndsWithNumber = new Regex(@"^\d+.+\d$");
             if (startEndEndsWithNumber.IsMatch(word))
                 return word;
 
@@ -547,7 +571,6 @@ namespace Nikse.SubtitleEdit.Logic.OCR
                 word.Contains("9"))
                 return word;
 
-            var hexNumber = new Regex(@"^#?[\dABDEFabcdef]+$");
             if (hexNumber.IsMatch(word))
                 return word;
 
@@ -654,12 +677,10 @@ namespace Nikse.SubtitleEdit.Logic.OCR
             if (string.IsNullOrEmpty(line) || abbreviationList == null)
                 return false;
 
-            abbreviationList.Add("a.m.");
-            abbreviationList.Add("p.m.");
-            abbreviationList.Add("o.r.");
+            line = line.ToLower();
             foreach (string abbreviation in abbreviationList)
             {
-                if (line.ToLower().EndsWith(" " + abbreviation.ToLower()))
+                if (line.EndsWith(" " + abbreviation.ToLower()))
                     return true;
             }
             return false;
