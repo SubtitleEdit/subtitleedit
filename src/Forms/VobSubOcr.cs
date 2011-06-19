@@ -373,7 +373,13 @@ namespace Nikse.SubtitleEdit.Forms
                             expandCount = 0;
                     }
 
-                    _compareBitmaps.Add(new CompareItem(new Bitmap(bmpFileName), name, isItalic, expandCount));
+                    Bitmap bmp = null;
+                    using (var ms = new MemoryStream(File.ReadAllBytes(bmpFileName))) // load bmp without file lock
+                    {
+                        bmp = (Bitmap)Bitmap.FromStream(ms);
+                    }
+
+                    _compareBitmaps.Add(new CompareItem(bmp, name, isItalic, expandCount));
                 }
                 else
                 {
@@ -2137,6 +2143,7 @@ namespace Nikse.SubtitleEdit.Forms
                     subtitleListView1.SelectNone();
                     subtitleListView1.Items[goToLine.LineNumber - 1].Selected = true;
                     subtitleListView1.Items[goToLine.LineNumber - 1].EnsureVisible();
+                    subtitleListView1.Items[goToLine.LineNumber - 1].Focused = true;
                 }
             }
         }

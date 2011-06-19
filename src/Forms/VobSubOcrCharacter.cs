@@ -130,7 +130,8 @@ namespace Nikse.SubtitleEdit.Forms
             pictureBoxSubtitleImage.Image = bm;
 
             pictureBoxCharacter.Top = labelCharacters.Top + 16;
-            pictureBoxLastEdit.Top = buttonLastEdit.Top - 5;
+            if (lastAdditionImage != null)
+                pictureBoxLastEdit.Top = buttonLastEdit.Top - lastAdditionImage.Height + buttonLastEdit.Height;
             pictureBoxLastEdit.Left = buttonLastEdit.Left + buttonLastEdit.Width + 5;
         }
 

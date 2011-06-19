@@ -938,6 +938,9 @@ namespace Nikse.SubtitleEdit.Logic.OCR
                     if (!correct && _userWordList.Contains(word.ToLower().Replace("<i>", string.Empty).Replace("</i>", string.Empty)))
                         correct = true;
 
+                    if (!correct && !line.Contains(word))
+                        correct = true; // already fixed
+
                     if (!correct)
                     {
                         wordsNotFound++;
