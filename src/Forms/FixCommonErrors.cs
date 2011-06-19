@@ -2011,10 +2011,18 @@ namespace Nikse.SubtitleEdit.Forms
 
                         if (prev != ">" && next != ">" && next != "}" && !wholePrev.Trim().EndsWith("..."))
                         {
-                            string temp = s.Substring(0, match.Index) + "I";
-                            if (match.Index + 1 < oldText.Length)
-                                temp += s.Substring(match.Index + 1);
-                            s = temp;
+                            bool fix = true;
+
+                            if (prev == ".")
+                                fix = false;
+
+                            if (fix)
+                            {
+                                string temp = s.Substring(0, match.Index) + "I";
+                                if (match.Index + 1 < oldText.Length)
+                                    temp += s.Substring(match.Index + 1);
+                                s = temp;
+                            }
                         }
                     }
                     match = match.NextMatch();
@@ -2052,18 +2060,32 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             string oldText = p.Text;
 
-                            text = text.Replace(" - ", string.Empty);
-                            text = text.Replace(" -", string.Empty);
-                            text = text.Replace("- ", string.Empty);
-                            text = text.Replace("-", string.Empty);
-                            if (text != oldText)
+                            bool remove = true;
+
+                            string[] parts = Utilities.RemoveHtmlTags(text).Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                            if (parts.Length == 2)
                             {
-                                if (AllowFix(i + 1, fixAction))
+                                if (parts[0].Trim().StartsWith("-") && parts[1].Contains(":"))
+                                    remove = false;
+                                if (parts[1].Trim().StartsWith("-") && parts[0].Contains(":"))
+                                    remove = false;
+                            }
+
+                            if (remove)
+                            {
+                                text = text.Replace(" - ", string.Empty);
+                                text = text.Replace(" -", string.Empty);
+                                text = text.Replace("- ", string.Empty);
+                                text = text.Replace("-", string.Empty);
+                                if (text != oldText)
                                 {
-                                    p.Text = text;
-                                    iFixes++;
-                                    _totalFixes++;
-                                    AddFixToListView(p, i + 1, fixAction, oldText, p.Text);
+                                    if (AllowFix(i + 1, fixAction))
+                                    {
+                                        p.Text = text;
+                                        iFixes++;
+                                        _totalFixes++;
+                                        AddFixToListView(p, i + 1, fixAction, oldText, p.Text);
+                                    }
                                 }
                             }
                         }
