@@ -70,6 +70,7 @@ namespace Nikse.SubtitleEdit.Forms
                             subtitleListView1.Items[index].Selected = true;
                             subtitleListView1.HideSelection = false;
                             subtitleListView1.Items[index].EnsureVisible();
+                            subtitleListView1.Items[index].Focused = true;
                             _startFindIndex = index;
                             return;
                         }
@@ -159,6 +160,7 @@ namespace Nikse.SubtitleEdit.Forms
                     subtitleListView1.SelectNone();
                     subtitleListView1.Items[goToLine.LineNumber - 1].Selected = true;
                     subtitleListView1.Items[goToLine.LineNumber - 1].EnsureVisible();
+                    subtitleListView1.Items[goToLine.LineNumber - 1].Focused = true;
                 }
             }
         }

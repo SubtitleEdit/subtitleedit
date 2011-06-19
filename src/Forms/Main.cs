@@ -1631,6 +1631,7 @@ namespace Nikse.SubtitleEdit.Forms
                         _subtitleListViewIndex = -1;
                         SubtitleListview1.EnsureVisible(sIndex);
                         SubtitleListview1.SelectedIndexChanged += SubtitleListview1_SelectedIndexChanged;
+                        SubtitleListview1.Items[sIndex].Focused = true;
                     }
 
                     int topIndex = x.FirstVisibleIndex;
@@ -2860,6 +2861,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                     SubtitleListview1.Items[goToLine.LineNumber - 1].Selected = true;
                     SubtitleListview1.Items[goToLine.LineNumber - 1].EnsureVisible();
+                    SubtitleListview1.Items[goToLine.LineNumber - 1].Focused = true;
                     ShowStatus(string.Format(_language.GoToLineNumberX, goToLine.LineNumber));
                 }
                 else if (tabControlSubtitle.SelectedIndex == TabControlSourceView)
@@ -8201,11 +8203,6 @@ namespace Nikse.SubtitleEdit.Forms
             toolStripMenuItemPlayRateNormal_Click(null, null);
             Main_Resize(null, null);
 
-            if (Configuration.Settings.General.StartInSourceView)
-                textBoxSource.Focus();
-            else
-                SubtitleListview1.Focus();
-
             SetPositionFromXYString(Configuration.Settings.General.UndockedVideoPosition, "VideoPlayerUnDocked");
             SetPositionFromXYString(Configuration.Settings.General.UndockedWaveformPosition, "WaveFormUnDocked");
             SetPositionFromXYString(Configuration.Settings.General.UndockedVideoControlsPosition, "VideoControlsUndocked");
@@ -8226,6 +8223,21 @@ namespace Nikse.SubtitleEdit.Forms
 
             SetShortcuts();
             LoadPlugins();
+
+            if (Configuration.Settings.General.StartInSourceView)
+            {
+                textBoxSource.Focus();
+            }
+            else
+            {
+                SubtitleListview1.Focus();
+                int index = FirstSelectedIndex;
+                if (index > 0 && SubtitleListview1.Items.Count > index)
+                {
+                    SubtitleListview1.Focus();
+                    SubtitleListview1.Items[index].Focused = true;
+                }
+            }
         }
 
         private void SetPositionFromXYString(string positionAndSize, string name)
