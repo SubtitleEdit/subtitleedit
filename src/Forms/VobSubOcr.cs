@@ -106,8 +106,9 @@ namespace Nikse.SubtitleEdit.Forms
         string _lastAdditionText = null;
         Bitmap _lastAdditionImage = null;
         bool _lastAdditionItalic = false;
+        int _lastAdditionIndex = 0;
 
-        VobSubOcrCharacter vobSubOcrCharacter = new VobSubOcrCharacter();
+        VobSubOcrCharacter _vobSubOcrCharacter = new VobSubOcrCharacter();
 
 
         public VobSubOcr()
@@ -1158,28 +1159,30 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     item = GetExpandedSelection(bitmap, expandSelectionList);
 
-                    var vobSubOcrCharacter = new VobSubOcrCharacter();
-                    vobSubOcrCharacter.Initialize(bitmap, item, _manualOcrDialogPosition, _italicCheckedLast, expandSelectionList.Count > 1, null, _lastAdditionName, _lastAdditionText, _lastAdditionImage, _lastAdditionItalic, this);
-                    DialogResult result = vobSubOcrCharacter.ShowDialog(this);
-                    if (result == DialogResult.OK && vobSubOcrCharacter.ShrinkSelection)
+                    //var vobSubOcrCharacter = new VobSubOcrCharacter();
+                    _vobSubOcrCharacter.Initialize(bitmap, item, _manualOcrDialogPosition, _italicCheckedLast, expandSelectionList.Count > 1, null, _lastAdditionName, _lastAdditionText, _lastAdditionImage, _lastAdditionItalic, this);
+                    DialogResult result = _vobSubOcrCharacter.ShowDialog(this);
+                    _manualOcrDialogPosition = _vobSubOcrCharacter.FormPosition;
+                    if (result == DialogResult.OK && _vobSubOcrCharacter.ShrinkSelection)
                     {
                         shrinkSelection = true;
                         index--;
                         if (expandSelectionList.Count > 0)
                             expandSelectionList.RemoveAt(expandSelectionList.Count - 1);
                     }
-                    else if (result == DialogResult.OK && vobSubOcrCharacter.ExpandSelection)
+                    else if (result == DialogResult.OK && _vobSubOcrCharacter.ExpandSelection)
                     {
                         expandSelection = true;
                     }
                     else if (result == DialogResult.OK)
                     {
-                        string text = vobSubOcrCharacter.ManualRecognizedCharacters;
-                        _lastAdditionName = SaveCompareItem(item.Bitmap, text, vobSubOcrCharacter.IsItalic, expandSelectionList.Count);
+                        string text = _vobSubOcrCharacter.ManualRecognizedCharacters;
+                        _lastAdditionName = SaveCompareItem(item.Bitmap, text, _vobSubOcrCharacter.IsItalic, expandSelectionList.Count);
                         _lastAdditionText = text;
                         _lastAdditionImage = item.Bitmap;
-                        _lastAdditionItalic = vobSubOcrCharacter.IsItalic;
-                        matches.Add(new CompareMatch(text, vobSubOcrCharacter.IsItalic, expandSelectionList.Count));
+                        _lastAdditionItalic = _vobSubOcrCharacter.IsItalic;
+                        _lastAdditionIndex = listViewIndex;
+                        matches.Add(new CompareMatch(text, _vobSubOcrCharacter.IsItalic, expandSelectionList.Count));
                         expandSelectionList = new List<ImageSplitterItem>();
                     }
                     else if (result == DialogResult.Abort)
@@ -1190,8 +1193,7 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         matches.Add(new CompareMatch("*", false, 0));
                     }
-                    _manualOcrDialogPosition = vobSubOcrCharacter.FormPosition;
-                    _italicCheckedLast = vobSubOcrCharacter.IsItalic;
+                    _italicCheckedLast = _vobSubOcrCharacter.IsItalic;
 
                 }
                 else if (item.Bitmap == null)
@@ -1204,21 +1206,23 @@ namespace Nikse.SubtitleEdit.Forms
                     CompareMatch match = GetCompareMatch(item, bitmap, out bestGuess);
                     if (match == null)
                     {
-                        vobSubOcrCharacter.Initialize(bitmap, item, _manualOcrDialogPosition, _italicCheckedLast, false, bestGuess, _lastAdditionName, _lastAdditionText, _lastAdditionImage, _lastAdditionItalic, this);
-                        DialogResult result = vobSubOcrCharacter.ShowDialog(this);
-                        if (result == DialogResult.OK && vobSubOcrCharacter.ExpandSelection)
+                        _vobSubOcrCharacter.Initialize(bitmap, item, _manualOcrDialogPosition, _italicCheckedLast, false, bestGuess, _lastAdditionName, _lastAdditionText, _lastAdditionImage, _lastAdditionItalic, this);
+                        DialogResult result = _vobSubOcrCharacter.ShowDialog(this);
+                        _manualOcrDialogPosition = _vobSubOcrCharacter.FormPosition;
+                        if (result == DialogResult.OK && _vobSubOcrCharacter.ExpandSelection)
                         {
                             expandSelectionList.Add(item);
                             expandSelection = true;
                         }
                         else if (result == DialogResult.OK)
                         {
-                            string text = vobSubOcrCharacter.ManualRecognizedCharacters;
-                            _lastAdditionName = SaveCompareItem(item.Bitmap, text, vobSubOcrCharacter.IsItalic, 0);
+                            string text = _vobSubOcrCharacter.ManualRecognizedCharacters;
+                            _lastAdditionName = SaveCompareItem(item.Bitmap, text, _vobSubOcrCharacter.IsItalic, 0);
                             _lastAdditionText = text;
                             _lastAdditionImage = item.Bitmap;
-                            _lastAdditionItalic = vobSubOcrCharacter.IsItalic;
-                            matches.Add(new CompareMatch(text, vobSubOcrCharacter.IsItalic, 0));
+                            _lastAdditionItalic = _vobSubOcrCharacter.IsItalic;
+                            _lastAdditionIndex = listViewIndex;
+                            matches.Add(new CompareMatch(text, _vobSubOcrCharacter.IsItalic, 0));
                         }
                         else if (result == DialogResult.Abort)
                         {
@@ -1228,8 +1232,7 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             matches.Add(new CompareMatch("*", false, 0));
                         }
-                        _manualOcrDialogPosition = vobSubOcrCharacter.FormPosition;
-                        _italicCheckedLast = vobSubOcrCharacter.IsItalic;
+                        _italicCheckedLast = _vobSubOcrCharacter.IsItalic;
                     }
                     else // found image match
                     {
@@ -2094,17 +2097,20 @@ namespace Nikse.SubtitleEdit.Forms
             EditImageCompareCharacters(null, null);
         }
 
-        public void EditImageCompareCharacters(string name, string text)
+        public DialogResult EditImageCompareCharacters(string name, string text)
         {
             var formVobSubEditCharacters = new VobSubEditCharacters(comboBoxCharacterDatabase.SelectedItem.ToString());
             formVobSubEditCharacters.Initialize(name, text);
-            if (formVobSubEditCharacters.ShowDialog() == DialogResult.OK)
+
+            DialogResult result = formVobSubEditCharacters.ShowDialog();
+            if (result == DialogResult.OK)
             {
                 _compareDoc = formVobSubEditCharacters.ImageCompareDocument;
                 string path = Configuration.VobSubCompareFolder + comboBoxCharacterDatabase.SelectedItem + Path.DirectorySeparatorChar;
                 _compareDoc.Save(path + "CompareDescription.xml");
             }
             LoadImageCompareBitmaps();
+            return result;
         }
 
         private void VobSubOcr_KeyDown(object sender, KeyEventArgs e)
@@ -2551,5 +2557,20 @@ namespace Nikse.SubtitleEdit.Forms
             Text += " - " + Path.GetFileName(_bdnFileName);
         }
 
+
+        internal void StartOcrFromDelayed()
+        {
+            numericUpDownStartNumber.Value = _lastAdditionIndex+1;
+            Timer t = new Timer();
+            t.Interval = 200;
+            t.Tick += new EventHandler(t_Tick);
+            t.Start();
+        }
+
+        void t_Tick(object sender, EventArgs e)
+        {
+            (sender as Timer).Stop();
+            ButtonStartOcrClick(null, null);
+        }
     }
 }

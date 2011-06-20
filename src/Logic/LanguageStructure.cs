@@ -1346,6 +1346,7 @@
             public string Spanish { get; set; }
             public string German { get; set; }
             public string AutoSubmitOnFirstChar { get; set; }
+            public string EditLastX { get; set; }
         }
 
         public class VobSubOcrNewFolder

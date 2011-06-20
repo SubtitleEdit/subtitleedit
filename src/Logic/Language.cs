@@ -1412,6 +1412,7 @@ can edit in same subtitle file (collaboration)",
                 Spanish = "Spanish",
                 German = "German",
                 AutoSubmitOnFirstChar = "Auto submit on &first char",
+                EditLastX = "Edit last: {0}",
             };
 
             VobSubOcrNewFolder = new LanguageStructure.VobSubOcrNewFolder
