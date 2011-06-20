@@ -76,6 +76,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         public void Initialize(Bitmap vobSubImage, ImageSplitterItem character, Point position, bool italicChecked, bool showShrink, Nikse.SubtitleEdit.Forms.VobSubOcr.CompareMatch bestGuess, string lastAdditionName, string lastAdditionText, Bitmap lastAdditionImage, bool lastAdditionItalic, VobSubOcr vobSubForm)
         {
+            ShrinkSelection = false;
+            ExpandSelection = false;
+
             textBoxCharacters.Text = string.Empty;
             if (bestGuess != null)
             {
@@ -113,7 +116,7 @@ namespace Nikse.SubtitleEdit.Forms
                     buttonLastEdit.Font = new System.Drawing.Font(buttonLastEdit.Font.FontFamily, buttonLastEdit.Font.Size);                
                 pictureBoxLastEdit.Visible = true;
                 pictureBoxLastEdit.Image = lastAdditionImage;
-                buttonLastEdit.Text = "Edit last: " + lastAdditionText;
+                buttonLastEdit.Text = string.Format(Configuration.Settings.Language.VobSubOcrCharacter.EditLastX, lastAdditionText);
             }
             else
             {
@@ -178,8 +181,12 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonLastEdit_Click(object sender, EventArgs e)
         {
-            _vobSubForm.EditImageCompareCharacters(_lastAdditionName, _lastAdditionText);
-            textBoxCharacters.Focus();
+            var result = _vobSubForm.EditImageCompareCharacters(_lastAdditionName, _lastAdditionText);
+            if (result == DialogResult.OK)
+            {
+                _vobSubForm.StartOcrFromDelayed();
+                DialogResult = DialogResult.Abort;
+            }
         }
 
         private void buttonGuess_Click(object sender, EventArgs e)
