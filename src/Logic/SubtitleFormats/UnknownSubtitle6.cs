@@ -77,22 +77,14 @@ SRPSKI
                     firstLine = lines[0];
                 if (lines.Length > 1)
                     secondLine = lines[1];
-
-                string text = p.Text.Replace(Environment.NewLine, "|");
-                
+               
                 sb.AppendLine(string.Format(" {0}          {1} " + Environment.NewLine + 
                                             "1    0    0    0    0    0"+ Environment.NewLine + 
                                             "{2}" + Environment.NewLine +
                                             "{3}", p.StartTime.TotalMilliseconds /  10, p.EndTime.TotalMilliseconds / 10, firstLine, secondLine));                
             }
             return sb.ToString().Trim();
-        }
-
-        private int RoundTo2Cifres(int milliseconds)
-        {
-            int rounded = (int)Math.Round((double)milliseconds / 10);
-            return rounded;
-        }
+        }    
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {

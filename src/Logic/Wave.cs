@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Nikse.SubtitleEdit.Logic
+﻿namespace Nikse.SubtitleEdit.Logic
 {
     class Wave
     {

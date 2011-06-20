@@ -44,14 +44,6 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonOK = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.groupBoxOcrMethod = new System.Windows.Forms.GroupBox();
-            this.comboBoxOcrMethod = new System.Windows.Forms.ComboBox();
-            this.GroupBoxTesseractMethod = new System.Windows.Forms.GroupBox();
-            this.checkBoxUseModiInTesseractForUnknownWords = new System.Windows.Forms.CheckBox();
-            this.labelTesseractLanguage = new System.Windows.Forms.Label();
-            this.comboBoxTesseractLanguages = new System.Windows.Forms.ComboBox();
-            this.groupBoxModiMethod = new System.Windows.Forms.GroupBox();
-            this.label1 = new System.Windows.Forms.Label();
-            this.comboBoxModiLanguage = new System.Windows.Forms.ComboBox();
             this.groupBoxImageCompareMethod = new System.Windows.Forms.GroupBox();
             this.checkBoxRightToLeft = new System.Windows.Forms.CheckBox();
             this.numericUpDownPixelsIsSpace = new System.Windows.Forms.NumericUpDown();
@@ -60,6 +52,14 @@ namespace Nikse.SubtitleEdit.Forms
             this.comboBoxCharacterDatabase = new System.Windows.Forms.ComboBox();
             this.labelImageDatabase = new System.Windows.Forms.Label();
             this.buttonNewCharacterDatabase = new System.Windows.Forms.Button();
+            this.groupBoxModiMethod = new System.Windows.Forms.GroupBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.comboBoxModiLanguage = new System.Windows.Forms.ComboBox();
+            this.comboBoxOcrMethod = new System.Windows.Forms.ComboBox();
+            this.GroupBoxTesseractMethod = new System.Windows.Forms.GroupBox();
+            this.checkBoxUseModiInTesseractForUnknownWords = new System.Windows.Forms.CheckBox();
+            this.labelTesseractLanguage = new System.Windows.Forms.Label();
+            this.comboBoxTesseractLanguages = new System.Windows.Forms.ComboBox();
             this.textBoxCurrentText = new System.Windows.Forms.TextBox();
             this.groupBoxOCRControls = new System.Windows.Forms.GroupBox();
             this.labelStartFrom = new System.Windows.Forms.Label();
@@ -101,10 +101,10 @@ namespace Nikse.SubtitleEdit.Forms
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxSubtitleImage)).BeginInit();
             this.contextMenuStripListview.SuspendLayout();
             this.groupBoxOcrMethod.SuspendLayout();
-            this.GroupBoxTesseractMethod.SuspendLayout();
-            this.groupBoxModiMethod.SuspendLayout();
             this.groupBoxImageCompareMethod.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownPixelsIsSpace)).BeginInit();
+            this.groupBoxModiMethod.SuspendLayout();
+            this.GroupBoxTesseractMethod.SuspendLayout();
             this.groupBoxOCRControls.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownStartNumber)).BeginInit();
             this.groupBoxOcrAutoFix.SuspendLayout();
@@ -123,7 +123,7 @@ namespace Nikse.SubtitleEdit.Forms
             // pictureBoxSubtitleImage
             // 
             this.pictureBoxSubtitleImage.ContextMenuStrip = this.contextMenuStripListview;
-            this.pictureBoxSubtitleImage.Location = new System.Drawing.Point(13, 58);
+            this.pictureBoxSubtitleImage.Location = new System.Drawing.Point(13, 60);
             this.pictureBoxSubtitleImage.Name = "pictureBoxSubtitleImage";
             this.pictureBoxSubtitleImage.Size = new System.Drawing.Size(604, 127);
             this.pictureBoxSubtitleImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
@@ -139,46 +139,46 @@ namespace Nikse.SubtitleEdit.Forms
             this.saveImageAsToolStripMenuItem,
             this.saveAllImagesToolStripMenuItem});
             this.contextMenuStripListview.Name = "contextMenuStripListview";
-            this.contextMenuStripListview.Size = new System.Drawing.Size(244, 98);
+            this.contextMenuStripListview.Size = new System.Drawing.Size(337, 130);
             this.contextMenuStripListview.Opening += new System.ComponentModel.CancelEventHandler(this.ContextMenuStripListviewOpening);
             // 
             // normalToolStripMenuItem
             // 
             this.normalToolStripMenuItem.Name = "normalToolStripMenuItem";
-            this.normalToolStripMenuItem.Size = new System.Drawing.Size(243, 22);
+            this.normalToolStripMenuItem.Size = new System.Drawing.Size(336, 30);
             this.normalToolStripMenuItem.Text = "Normal";
             this.normalToolStripMenuItem.Click += new System.EventHandler(this.NormalToolStripMenuItemClick);
             // 
             // italicToolStripMenuItem
             // 
             this.italicToolStripMenuItem.Name = "italicToolStripMenuItem";
-            this.italicToolStripMenuItem.Size = new System.Drawing.Size(243, 22);
+            this.italicToolStripMenuItem.Size = new System.Drawing.Size(336, 30);
             this.italicToolStripMenuItem.Text = "Italic";
             this.italicToolStripMenuItem.Click += new System.EventHandler(this.ItalicToolStripMenuItemClick);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(240, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(333, 6);
             // 
             // saveImageAsToolStripMenuItem
             // 
             this.saveImageAsToolStripMenuItem.Name = "saveImageAsToolStripMenuItem";
-            this.saveImageAsToolStripMenuItem.Size = new System.Drawing.Size(243, 22);
+            this.saveImageAsToolStripMenuItem.Size = new System.Drawing.Size(336, 30);
             this.saveImageAsToolStripMenuItem.Text = "Save image as...";
             this.saveImageAsToolStripMenuItem.Click += new System.EventHandler(this.SaveImageAsToolStripMenuItemClick);
             // 
             // saveAllImagesToolStripMenuItem
             // 
             this.saveAllImagesToolStripMenuItem.Name = "saveAllImagesToolStripMenuItem";
-            this.saveAllImagesToolStripMenuItem.Size = new System.Drawing.Size(243, 22);
+            this.saveAllImagesToolStripMenuItem.Size = new System.Drawing.Size(336, 30);
             this.saveAllImagesToolStripMenuItem.Text = "Save all images (png/bdn xml)...";
             this.saveAllImagesToolStripMenuItem.Click += new System.EventHandler(this.saveAllImagesToolStripMenuItem_Click);
             // 
             // labelSubtitleText
             // 
             this.labelSubtitleText.AutoSize = true;
-            this.labelSubtitleText.Location = new System.Drawing.Point(12, 207);
+            this.labelSubtitleText.Location = new System.Drawing.Point(12, 200);
             this.labelSubtitleText.Name = "labelSubtitleText";
             this.labelSubtitleText.Size = new System.Drawing.Size(66, 13);
             this.labelSubtitleText.TabIndex = 6;
@@ -188,7 +188,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.progressBar1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.progressBar1.Location = new System.Drawing.Point(12, 552);
+            this.progressBar1.Location = new System.Drawing.Point(12, 564);
             this.progressBar1.Name = "progressBar1";
             this.progressBar1.Size = new System.Drawing.Size(861, 10);
             this.progressBar1.TabIndex = 7;
@@ -197,7 +197,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.labelStatus.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.labelStatus.AutoSize = true;
-            this.labelStatus.Location = new System.Drawing.Point(12, 535);
+            this.labelStatus.Location = new System.Drawing.Point(12, 543);
             this.labelStatus.Name = "labelStatus";
             this.labelStatus.Size = new System.Drawing.Size(131, 13);
             this.labelStatus.TabIndex = 8;
@@ -207,7 +207,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonOK.Location = new System.Drawing.Point(879, 541);
+            this.buttonOK.Location = new System.Drawing.Point(879, 548);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 21);
             this.buttonOK.TabIndex = 6;
@@ -220,7 +220,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonCancel.Location = new System.Drawing.Point(960, 541);
+            this.buttonCancel.Location = new System.Drawing.Point(960, 548);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 21);
             this.buttonCancel.TabIndex = 7;
@@ -229,16 +229,142 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             // groupBoxOcrMethod
             // 
+            this.groupBoxOcrMethod.Controls.Add(this.groupBoxImageCompareMethod);
+            this.groupBoxOcrMethod.Controls.Add(this.groupBoxModiMethod);
             this.groupBoxOcrMethod.Controls.Add(this.comboBoxOcrMethod);
             this.groupBoxOcrMethod.Controls.Add(this.GroupBoxTesseractMethod);
-            this.groupBoxOcrMethod.Controls.Add(this.groupBoxModiMethod);
-            this.groupBoxOcrMethod.Controls.Add(this.groupBoxImageCompareMethod);
-            this.groupBoxOcrMethod.Location = new System.Drawing.Point(13, 12);
+            this.groupBoxOcrMethod.Location = new System.Drawing.Point(13, 5);
             this.groupBoxOcrMethod.Name = "groupBoxOcrMethod";
             this.groupBoxOcrMethod.Size = new System.Drawing.Size(392, 192);
             this.groupBoxOcrMethod.TabIndex = 13;
             this.groupBoxOcrMethod.TabStop = false;
             this.groupBoxOcrMethod.Text = "OCR method";
+            // 
+            // groupBoxImageCompareMethod
+            // 
+            this.groupBoxImageCompareMethod.Controls.Add(this.checkBoxRightToLeft);
+            this.groupBoxImageCompareMethod.Controls.Add(this.numericUpDownPixelsIsSpace);
+            this.groupBoxImageCompareMethod.Controls.Add(this.buttonEditCharacterDatabase);
+            this.groupBoxImageCompareMethod.Controls.Add(this.labelNoOfPixelsIsSpace);
+            this.groupBoxImageCompareMethod.Controls.Add(this.comboBoxCharacterDatabase);
+            this.groupBoxImageCompareMethod.Controls.Add(this.labelImageDatabase);
+            this.groupBoxImageCompareMethod.Controls.Add(this.buttonNewCharacterDatabase);
+            this.groupBoxImageCompareMethod.Location = new System.Drawing.Point(13, 38);
+            this.groupBoxImageCompareMethod.Name = "groupBoxImageCompareMethod";
+            this.groupBoxImageCompareMethod.Size = new System.Drawing.Size(366, 131);
+            this.groupBoxImageCompareMethod.TabIndex = 35;
+            this.groupBoxImageCompareMethod.TabStop = false;
+            this.groupBoxImageCompareMethod.Text = "Image compare";
+            // 
+            // checkBoxRightToLeft
+            // 
+            this.checkBoxRightToLeft.AutoSize = true;
+            this.checkBoxRightToLeft.Location = new System.Drawing.Point(173, 100);
+            this.checkBoxRightToLeft.Name = "checkBoxRightToLeft";
+            this.checkBoxRightToLeft.Size = new System.Drawing.Size(80, 17);
+            this.checkBoxRightToLeft.TabIndex = 40;
+            this.checkBoxRightToLeft.Text = "Right to left";
+            this.checkBoxRightToLeft.UseVisualStyleBackColor = true;
+            // 
+            // numericUpDownPixelsIsSpace
+            // 
+            this.numericUpDownPixelsIsSpace.Location = new System.Drawing.Point(173, 67);
+            this.numericUpDownPixelsIsSpace.Maximum = new decimal(new int[] {
+            50,
+            0,
+            0,
+            0});
+            this.numericUpDownPixelsIsSpace.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.numericUpDownPixelsIsSpace.Name = "numericUpDownPixelsIsSpace";
+            this.numericUpDownPixelsIsSpace.Size = new System.Drawing.Size(50, 21);
+            this.numericUpDownPixelsIsSpace.TabIndex = 35;
+            this.numericUpDownPixelsIsSpace.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            // 
+            // buttonEditCharacterDatabase
+            // 
+            this.buttonEditCharacterDatabase.Location = new System.Drawing.Point(278, 46);
+            this.buttonEditCharacterDatabase.Name = "buttonEditCharacterDatabase";
+            this.buttonEditCharacterDatabase.Size = new System.Drawing.Size(68, 21);
+            this.buttonEditCharacterDatabase.TabIndex = 33;
+            this.buttonEditCharacterDatabase.Text = "Edit";
+            this.buttonEditCharacterDatabase.UseVisualStyleBackColor = true;
+            this.buttonEditCharacterDatabase.Click += new System.EventHandler(this.ButtonEditCharacterDatabaseClick);
+            // 
+            // labelNoOfPixelsIsSpace
+            // 
+            this.labelNoOfPixelsIsSpace.AutoSize = true;
+            this.labelNoOfPixelsIsSpace.Location = new System.Drawing.Point(6, 69);
+            this.labelNoOfPixelsIsSpace.Name = "labelNoOfPixelsIsSpace";
+            this.labelNoOfPixelsIsSpace.Size = new System.Drawing.Size(104, 13);
+            this.labelNoOfPixelsIsSpace.TabIndex = 34;
+            this.labelNoOfPixelsIsSpace.Text = "No of pixels is space";
+            // 
+            // comboBoxCharacterDatabase
+            // 
+            this.comboBoxCharacterDatabase.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxCharacterDatabase.FormattingEnabled = true;
+            this.comboBoxCharacterDatabase.Location = new System.Drawing.Point(130, 19);
+            this.comboBoxCharacterDatabase.Name = "comboBoxCharacterDatabase";
+            this.comboBoxCharacterDatabase.Size = new System.Drawing.Size(142, 21);
+            this.comboBoxCharacterDatabase.TabIndex = 31;
+            this.comboBoxCharacterDatabase.SelectedIndexChanged += new System.EventHandler(this.ComboBoxCharacterDatabaseSelectedIndexChanged);
+            // 
+            // labelImageDatabase
+            // 
+            this.labelImageDatabase.AutoSize = true;
+            this.labelImageDatabase.Location = new System.Drawing.Point(7, 22);
+            this.labelImageDatabase.Name = "labelImageDatabase";
+            this.labelImageDatabase.Size = new System.Drawing.Size(85, 13);
+            this.labelImageDatabase.TabIndex = 30;
+            this.labelImageDatabase.Text = "Image database";
+            // 
+            // buttonNewCharacterDatabase
+            // 
+            this.buttonNewCharacterDatabase.Location = new System.Drawing.Point(278, 19);
+            this.buttonNewCharacterDatabase.Name = "buttonNewCharacterDatabase";
+            this.buttonNewCharacterDatabase.Size = new System.Drawing.Size(68, 21);
+            this.buttonNewCharacterDatabase.TabIndex = 32;
+            this.buttonNewCharacterDatabase.Text = "New";
+            this.buttonNewCharacterDatabase.UseVisualStyleBackColor = true;
+            this.buttonNewCharacterDatabase.Click += new System.EventHandler(this.ButtonNewCharacterDatabaseClick);
+            // 
+            // groupBoxModiMethod
+            // 
+            this.groupBoxModiMethod.Controls.Add(this.label1);
+            this.groupBoxModiMethod.Controls.Add(this.comboBoxModiLanguage);
+            this.groupBoxModiMethod.Location = new System.Drawing.Point(7, 50);
+            this.groupBoxModiMethod.Name = "groupBoxModiMethod";
+            this.groupBoxModiMethod.Size = new System.Drawing.Size(366, 131);
+            this.groupBoxModiMethod.TabIndex = 35;
+            this.groupBoxModiMethod.TabStop = false;
+            this.groupBoxModiMethod.Text = "MODI";
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(11, 58);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(54, 13);
+            this.label1.TabIndex = 33;
+            this.label1.Text = "Language";
+            // 
+            // comboBoxModiLanguage
+            // 
+            this.comboBoxModiLanguage.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxModiLanguage.FormattingEnabled = true;
+            this.comboBoxModiLanguage.Location = new System.Drawing.Point(108, 55);
+            this.comboBoxModiLanguage.Name = "comboBoxModiLanguage";
+            this.comboBoxModiLanguage.Size = new System.Drawing.Size(195, 21);
+            this.comboBoxModiLanguage.TabIndex = 9;
+            this.comboBoxModiLanguage.SelectedIndexChanged += new System.EventHandler(this.ComboBoxModiLanguageSelectedIndexChanged);
             // 
             // comboBoxOcrMethod
             // 
@@ -248,7 +374,7 @@ namespace Nikse.SubtitleEdit.Forms
             "OCR via tesseract",
             "OCR via image compare",
             "OCR via Microsoftr MODI"});
-            this.comboBoxOcrMethod.Location = new System.Drawing.Point(13, 16);
+            this.comboBoxOcrMethod.Location = new System.Drawing.Point(13, 20);
             this.comboBoxOcrMethod.Name = "comboBoxOcrMethod";
             this.comboBoxOcrMethod.Size = new System.Drawing.Size(366, 21);
             this.comboBoxOcrMethod.TabIndex = 33;
@@ -274,7 +400,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.checkBoxUseModiInTesseractForUnknownWords.Enabled = false;
             this.checkBoxUseModiInTesseractForUnknownWords.Location = new System.Drawing.Point(22, 74);
             this.checkBoxUseModiInTesseractForUnknownWords.Name = "checkBoxUseModiInTesseractForUnknownWords";
-            this.checkBoxUseModiInTesseractForUnknownWords.Size = new System.Drawing.Size(167, 17);
+            this.checkBoxUseModiInTesseractForUnknownWords.Size = new System.Drawing.Size(165, 17);
             this.checkBoxUseModiInTesseractForUnknownWords.TabIndex = 39;
             this.checkBoxUseModiInTesseractForUnknownWords.Text = "Try MODI for unknown words";
             this.checkBoxUseModiInTesseractForUnknownWords.UseVisualStyleBackColor = true;
@@ -292,143 +418,17 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.comboBoxTesseractLanguages.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxTesseractLanguages.FormattingEnabled = true;
-            this.comboBoxTesseractLanguages.Location = new System.Drawing.Point(79, 31);
+            this.comboBoxTesseractLanguages.Location = new System.Drawing.Point(99, 31);
             this.comboBoxTesseractLanguages.Name = "comboBoxTesseractLanguages";
             this.comboBoxTesseractLanguages.Size = new System.Drawing.Size(195, 21);
             this.comboBoxTesseractLanguages.TabIndex = 34;
             this.comboBoxTesseractLanguages.SelectedIndexChanged += new System.EventHandler(this.ComboBoxTesseractLanguagesSelectedIndexChanged);
             // 
-            // groupBoxModiMethod
-            // 
-            this.groupBoxModiMethod.Controls.Add(this.label1);
-            this.groupBoxModiMethod.Controls.Add(this.comboBoxModiLanguage);
-            this.groupBoxModiMethod.Location = new System.Drawing.Point(7, 50);
-            this.groupBoxModiMethod.Name = "groupBoxModiMethod";
-            this.groupBoxModiMethod.Size = new System.Drawing.Size(366, 131);
-            this.groupBoxModiMethod.TabIndex = 35;
-            this.groupBoxModiMethod.TabStop = false;
-            this.groupBoxModiMethod.Text = "MODI";
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(18, 36);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(54, 13);
-            this.label1.TabIndex = 33;
-            this.label1.Text = "Language";
-            // 
-            // comboBoxModiLanguage
-            // 
-            this.comboBoxModiLanguage.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBoxModiLanguage.FormattingEnabled = true;
-            this.comboBoxModiLanguage.Location = new System.Drawing.Point(79, 33);
-            this.comboBoxModiLanguage.Name = "comboBoxModiLanguage";
-            this.comboBoxModiLanguage.Size = new System.Drawing.Size(195, 21);
-            this.comboBoxModiLanguage.TabIndex = 9;
-            this.comboBoxModiLanguage.SelectedIndexChanged += new System.EventHandler(this.ComboBoxModiLanguageSelectedIndexChanged);
-            // 
-            // groupBoxImageCompareMethod
-            // 
-            this.groupBoxImageCompareMethod.Controls.Add(this.checkBoxRightToLeft);
-            this.groupBoxImageCompareMethod.Controls.Add(this.numericUpDownPixelsIsSpace);
-            this.groupBoxImageCompareMethod.Controls.Add(this.buttonEditCharacterDatabase);
-            this.groupBoxImageCompareMethod.Controls.Add(this.labelNoOfPixelsIsSpace);
-            this.groupBoxImageCompareMethod.Controls.Add(this.comboBoxCharacterDatabase);
-            this.groupBoxImageCompareMethod.Controls.Add(this.labelImageDatabase);
-            this.groupBoxImageCompareMethod.Controls.Add(this.buttonNewCharacterDatabase);
-            this.groupBoxImageCompareMethod.Location = new System.Drawing.Point(13, 38);
-            this.groupBoxImageCompareMethod.Name = "groupBoxImageCompareMethod";
-            this.groupBoxImageCompareMethod.Size = new System.Drawing.Size(366, 131);
-            this.groupBoxImageCompareMethod.TabIndex = 35;
-            this.groupBoxImageCompareMethod.TabStop = false;
-            this.groupBoxImageCompareMethod.Text = "Image compare";
-            // 
-            // checkBoxRightToLeft
-            // 
-            this.checkBoxRightToLeft.AutoSize = true;
-            this.checkBoxRightToLeft.Location = new System.Drawing.Point(128, 112);
-            this.checkBoxRightToLeft.Name = "checkBoxRightToLeft";
-            this.checkBoxRightToLeft.Size = new System.Drawing.Size(83, 17);
-            this.checkBoxRightToLeft.TabIndex = 40;
-            this.checkBoxRightToLeft.Text = "Right to left";
-            this.checkBoxRightToLeft.UseVisualStyleBackColor = true;
-            // 
-            // numericUpDownPixelsIsSpace
-            // 
-            this.numericUpDownPixelsIsSpace.Location = new System.Drawing.Point(128, 86);
-            this.numericUpDownPixelsIsSpace.Maximum = new decimal(new int[] {
-            50,
-            0,
-            0,
-            0});
-            this.numericUpDownPixelsIsSpace.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.numericUpDownPixelsIsSpace.Name = "numericUpDownPixelsIsSpace";
-            this.numericUpDownPixelsIsSpace.Size = new System.Drawing.Size(50, 21);
-            this.numericUpDownPixelsIsSpace.TabIndex = 35;
-            this.numericUpDownPixelsIsSpace.Value = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            // 
-            // buttonEditCharacterDatabase
-            // 
-            this.buttonEditCharacterDatabase.Location = new System.Drawing.Point(204, 57);
-            this.buttonEditCharacterDatabase.Name = "buttonEditCharacterDatabase";
-            this.buttonEditCharacterDatabase.Size = new System.Drawing.Size(68, 21);
-            this.buttonEditCharacterDatabase.TabIndex = 33;
-            this.buttonEditCharacterDatabase.Text = "Edit";
-            this.buttonEditCharacterDatabase.UseVisualStyleBackColor = true;
-            this.buttonEditCharacterDatabase.Click += new System.EventHandler(this.ButtonEditCharacterDatabaseClick);
-            // 
-            // labelNoOfPixelsIsSpace
-            // 
-            this.labelNoOfPixelsIsSpace.AutoSize = true;
-            this.labelNoOfPixelsIsSpace.Location = new System.Drawing.Point(18, 90);
-            this.labelNoOfPixelsIsSpace.Name = "labelNoOfPixelsIsSpace";
-            this.labelNoOfPixelsIsSpace.Size = new System.Drawing.Size(104, 13);
-            this.labelNoOfPixelsIsSpace.TabIndex = 34;
-            this.labelNoOfPixelsIsSpace.Text = "No of pixels is space";
-            // 
-            // comboBoxCharacterDatabase
-            // 
-            this.comboBoxCharacterDatabase.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBoxCharacterDatabase.FormattingEnabled = true;
-            this.comboBoxCharacterDatabase.Location = new System.Drawing.Point(130, 30);
-            this.comboBoxCharacterDatabase.Name = "comboBoxCharacterDatabase";
-            this.comboBoxCharacterDatabase.Size = new System.Drawing.Size(167, 21);
-            this.comboBoxCharacterDatabase.TabIndex = 31;
-            this.comboBoxCharacterDatabase.SelectedIndexChanged += new System.EventHandler(this.ComboBoxCharacterDatabaseSelectedIndexChanged);
-            // 
-            // labelImageDatabase
-            // 
-            this.labelImageDatabase.AutoSize = true;
-            this.labelImageDatabase.Location = new System.Drawing.Point(41, 33);
-            this.labelImageDatabase.Name = "labelImageDatabase";
-            this.labelImageDatabase.Size = new System.Drawing.Size(85, 13);
-            this.labelImageDatabase.TabIndex = 30;
-            this.labelImageDatabase.Text = "Image database";
-            // 
-            // buttonNewCharacterDatabase
-            // 
-            this.buttonNewCharacterDatabase.Location = new System.Drawing.Point(130, 57);
-            this.buttonNewCharacterDatabase.Name = "buttonNewCharacterDatabase";
-            this.buttonNewCharacterDatabase.Size = new System.Drawing.Size(68, 21);
-            this.buttonNewCharacterDatabase.TabIndex = 32;
-            this.buttonNewCharacterDatabase.Text = "New";
-            this.buttonNewCharacterDatabase.UseVisualStyleBackColor = true;
-            this.buttonNewCharacterDatabase.Click += new System.EventHandler(this.ButtonNewCharacterDatabaseClick);
-            // 
             // textBoxCurrentText
             // 
             this.textBoxCurrentText.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.textBoxCurrentText.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBoxCurrentText.Location = new System.Drawing.Point(12, 419);
+            this.textBoxCurrentText.Location = new System.Drawing.Point(12, 423);
             this.textBoxCurrentText.Multiline = true;
             this.textBoxCurrentText.Name = "textBoxCurrentText";
             this.textBoxCurrentText.Size = new System.Drawing.Size(390, 77);
@@ -442,7 +442,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.groupBoxOCRControls.Controls.Add(this.numericUpDownStartNumber);
             this.groupBoxOCRControls.Controls.Add(this.buttonStop);
             this.groupBoxOCRControls.Controls.Add(this.buttonStartOcr);
-            this.groupBoxOCRControls.Location = new System.Drawing.Point(412, 416);
+            this.groupBoxOCRControls.Location = new System.Drawing.Point(412, 420);
             this.groupBoxOCRControls.Name = "groupBoxOCRControls";
             this.groupBoxOCRControls.Size = new System.Drawing.Size(287, 84);
             this.groupBoxOCRControls.TabIndex = 28;
@@ -452,7 +452,7 @@ namespace Nikse.SubtitleEdit.Forms
             // labelStartFrom
             // 
             this.labelStartFrom.AutoSize = true;
-            this.labelStartFrom.Location = new System.Drawing.Point(124, 14);
+            this.labelStartFrom.Location = new System.Drawing.Point(122, 28);
             this.labelStartFrom.Name = "labelStartFrom";
             this.labelStartFrom.Size = new System.Drawing.Size(127, 13);
             this.labelStartFrom.TabIndex = 31;
@@ -460,7 +460,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             // numericUpDownStartNumber
             // 
-            this.numericUpDownStartNumber.Location = new System.Drawing.Point(127, 31);
+            this.numericUpDownStartNumber.Location = new System.Drawing.Point(125, 49);
             this.numericUpDownStartNumber.Maximum = new decimal(new int[] {
             99999,
             0,
@@ -483,7 +483,7 @@ namespace Nikse.SubtitleEdit.Forms
             // buttonStop
             // 
             this.buttonStop.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonStop.Location = new System.Drawing.Point(13, 58);
+            this.buttonStop.Location = new System.Drawing.Point(13, 54);
             this.buttonStop.Name = "buttonStop";
             this.buttonStop.Size = new System.Drawing.Size(105, 22);
             this.buttonStop.TabIndex = 29;
@@ -495,7 +495,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.buttonStartOcr.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.buttonStartOcr.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonStartOcr.Location = new System.Drawing.Point(13, 30);
+            this.buttonStartOcr.Location = new System.Drawing.Point(13, 26);
             this.buttonStartOcr.Name = "buttonStartOcr";
             this.buttonStartOcr.Size = new System.Drawing.Size(105, 22);
             this.buttonStartOcr.TabIndex = 28;
@@ -516,9 +516,9 @@ namespace Nikse.SubtitleEdit.Forms
             this.groupBoxOcrAutoFix.Controls.Add(this.checkBoxAutoBreakLines);
             this.groupBoxOcrAutoFix.Controls.Add(this.labelDictionaryLoaded);
             this.groupBoxOcrAutoFix.Controls.Add(this.checkBoxAutoFixCommonErrors);
-            this.groupBoxOcrAutoFix.Location = new System.Drawing.Point(705, 221);
+            this.groupBoxOcrAutoFix.Location = new System.Drawing.Point(705, 203);
             this.groupBoxOcrAutoFix.Name = "groupBoxOcrAutoFix";
-            this.groupBoxOcrAutoFix.Size = new System.Drawing.Size(340, 318);
+            this.groupBoxOcrAutoFix.Size = new System.Drawing.Size(340, 340);
             this.groupBoxOcrAutoFix.TabIndex = 34;
             this.groupBoxOcrAutoFix.TabStop = false;
             this.groupBoxOcrAutoFix.Text = "OCR auto correction / spellchecking";
@@ -529,7 +529,7 @@ namespace Nikse.SubtitleEdit.Forms
             | System.Windows.Forms.AnchorStyles.Right)));
             this.comboBoxDictionaries.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxDictionaries.FormattingEnabled = true;
-            this.comboBoxDictionaries.Location = new System.Drawing.Point(127, 15);
+            this.comboBoxDictionaries.Location = new System.Drawing.Point(127, 20);
             this.comboBoxDictionaries.Name = "comboBoxDictionaries";
             this.comboBoxDictionaries.Size = new System.Drawing.Size(205, 21);
             this.comboBoxDictionaries.TabIndex = 41;
@@ -540,9 +540,9 @@ namespace Nikse.SubtitleEdit.Forms
             this.checkBoxGuessUnknownWords.AutoSize = true;
             this.checkBoxGuessUnknownWords.Checked = true;
             this.checkBoxGuessUnknownWords.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBoxGuessUnknownWords.Location = new System.Drawing.Point(11, 83);
+            this.checkBoxGuessUnknownWords.Location = new System.Drawing.Point(11, 91);
             this.checkBoxGuessUnknownWords.Name = "checkBoxGuessUnknownWords";
-            this.checkBoxGuessUnknownWords.Size = new System.Drawing.Size(164, 17);
+            this.checkBoxGuessUnknownWords.Size = new System.Drawing.Size(162, 17);
             this.checkBoxGuessUnknownWords.TabIndex = 39;
             this.checkBoxGuessUnknownWords.Text = "Try to guess unknown words";
             this.checkBoxGuessUnknownWords.UseVisualStyleBackColor = true;
@@ -555,10 +555,10 @@ namespace Nikse.SubtitleEdit.Forms
             this.tabControlLogs.Controls.Add(this.tabPageAllFixes);
             this.tabControlLogs.Controls.Add(this.tabPageSuggestions);
             this.tabControlLogs.Controls.Add(this.tabPageUnknownWords);
-            this.tabControlLogs.Location = new System.Drawing.Point(11, 128);
+            this.tabControlLogs.Location = new System.Drawing.Point(11, 146);
             this.tabControlLogs.Name = "tabControlLogs";
             this.tabControlLogs.SelectedIndex = 0;
-            this.tabControlLogs.Size = new System.Drawing.Size(323, 184);
+            this.tabControlLogs.Size = new System.Drawing.Size(323, 188);
             this.tabControlLogs.TabIndex = 35;
             // 
             // tabPageAllFixes
@@ -567,7 +567,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.tabPageAllFixes.Location = new System.Drawing.Point(4, 22);
             this.tabPageAllFixes.Name = "tabPageAllFixes";
             this.tabPageAllFixes.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageAllFixes.Size = new System.Drawing.Size(315, 158);
+            this.tabPageAllFixes.Size = new System.Drawing.Size(315, 162);
             this.tabPageAllFixes.TabIndex = 0;
             this.tabPageAllFixes.Text = "All fixes";
             this.tabPageAllFixes.UseVisualStyleBackColor = true;
@@ -579,9 +579,9 @@ namespace Nikse.SubtitleEdit.Forms
             | System.Windows.Forms.AnchorStyles.Right)));
             this.listBoxLog.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.listBoxLog.FormattingEnabled = true;
-            this.listBoxLog.Location = new System.Drawing.Point(5, 6);
+            this.listBoxLog.Location = new System.Drawing.Point(6, 3);
             this.listBoxLog.Name = "listBoxLog";
-            this.listBoxLog.Size = new System.Drawing.Size(304, 147);
+            this.listBoxLog.Size = new System.Drawing.Size(291, 121);
             this.listBoxLog.TabIndex = 39;
             this.listBoxLog.SelectedIndexChanged += new System.EventHandler(this.ListBoxLogSelectedIndexChanged);
             // 
@@ -591,7 +591,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.tabPageSuggestions.Location = new System.Drawing.Point(4, 22);
             this.tabPageSuggestions.Name = "tabPageSuggestions";
             this.tabPageSuggestions.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageSuggestions.Size = new System.Drawing.Size(315, 158);
+            this.tabPageSuggestions.Size = new System.Drawing.Size(315, 162);
             this.tabPageSuggestions.TabIndex = 1;
             this.tabPageSuggestions.Text = "Guesses used";
             this.tabPageSuggestions.UseVisualStyleBackColor = true;
@@ -605,7 +605,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.listBoxLogSuggestions.FormattingEnabled = true;
             this.listBoxLogSuggestions.Location = new System.Drawing.Point(5, 6);
             this.listBoxLogSuggestions.Name = "listBoxLogSuggestions";
-            this.listBoxLogSuggestions.Size = new System.Drawing.Size(270, 147);
+            this.listBoxLogSuggestions.Size = new System.Drawing.Size(292, 121);
             this.listBoxLogSuggestions.TabIndex = 40;
             this.listBoxLogSuggestions.SelectedIndexChanged += new System.EventHandler(this.ListBoxLogSelectedIndexChanged);
             // 
@@ -614,7 +614,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.tabPageUnknownWords.Controls.Add(this.listBoxUnknownWords);
             this.tabPageUnknownWords.Location = new System.Drawing.Point(4, 22);
             this.tabPageUnknownWords.Name = "tabPageUnknownWords";
-            this.tabPageUnknownWords.Size = new System.Drawing.Size(315, 158);
+            this.tabPageUnknownWords.Size = new System.Drawing.Size(315, 162);
             this.tabPageUnknownWords.TabIndex = 2;
             this.tabPageUnknownWords.Text = "Unknown words";
             this.tabPageUnknownWords.UseVisualStyleBackColor = true;
@@ -628,7 +628,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.listBoxUnknownWords.FormattingEnabled = true;
             this.listBoxUnknownWords.Location = new System.Drawing.Point(5, 6);
             this.listBoxUnknownWords.Name = "listBoxUnknownWords";
-            this.listBoxUnknownWords.Size = new System.Drawing.Size(273, 147);
+            this.listBoxUnknownWords.Size = new System.Drawing.Size(292, 121);
             this.listBoxUnknownWords.TabIndex = 40;
             this.listBoxUnknownWords.SelectedIndexChanged += new System.EventHandler(this.ListBoxLogSelectedIndexChanged);
             // 
@@ -646,9 +646,9 @@ namespace Nikse.SubtitleEdit.Forms
             this.checkBoxPromptForUnknownWords.AutoSize = true;
             this.checkBoxPromptForUnknownWords.Checked = true;
             this.checkBoxPromptForUnknownWords.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBoxPromptForUnknownWords.Location = new System.Drawing.Point(11, 61);
+            this.checkBoxPromptForUnknownWords.Location = new System.Drawing.Point(11, 69);
             this.checkBoxPromptForUnknownWords.Name = "checkBoxPromptForUnknownWords";
-            this.checkBoxPromptForUnknownWords.Size = new System.Drawing.Size(255, 17);
+            this.checkBoxPromptForUnknownWords.Size = new System.Drawing.Size(246, 17);
             this.checkBoxPromptForUnknownWords.TabIndex = 38;
             this.checkBoxPromptForUnknownWords.Text = "Prompt for unknown words (requires dictionary)";
             this.checkBoxPromptForUnknownWords.UseVisualStyleBackColor = true;
@@ -658,9 +658,9 @@ namespace Nikse.SubtitleEdit.Forms
             this.checkBoxAutoBreakLines.AutoSize = true;
             this.checkBoxAutoBreakLines.Checked = true;
             this.checkBoxAutoBreakLines.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBoxAutoBreakLines.Location = new System.Drawing.Point(11, 105);
+            this.checkBoxAutoBreakLines.Location = new System.Drawing.Point(11, 113);
             this.checkBoxAutoBreakLines.Name = "checkBoxAutoBreakLines";
-            this.checkBoxAutoBreakLines.Size = new System.Drawing.Size(208, 17);
+            this.checkBoxAutoBreakLines.Size = new System.Drawing.Size(200, 17);
             this.checkBoxAutoBreakLines.TabIndex = 37;
             this.checkBoxAutoBreakLines.Text = "Auto break subtitle, if line number > 2";
             this.checkBoxAutoBreakLines.UseVisualStyleBackColor = true;
@@ -668,7 +668,7 @@ namespace Nikse.SubtitleEdit.Forms
             // labelDictionaryLoaded
             // 
             this.labelDictionaryLoaded.AutoSize = true;
-            this.labelDictionaryLoaded.Location = new System.Drawing.Point(11, 19);
+            this.labelDictionaryLoaded.Location = new System.Drawing.Point(11, 24);
             this.labelDictionaryLoaded.Name = "labelDictionaryLoaded";
             this.labelDictionaryLoaded.Size = new System.Drawing.Size(112, 13);
             this.labelDictionaryLoaded.TabIndex = 36;
@@ -679,9 +679,9 @@ namespace Nikse.SubtitleEdit.Forms
             this.checkBoxAutoFixCommonErrors.AutoSize = true;
             this.checkBoxAutoFixCommonErrors.Checked = true;
             this.checkBoxAutoFixCommonErrors.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBoxAutoFixCommonErrors.Location = new System.Drawing.Point(11, 39);
+            this.checkBoxAutoFixCommonErrors.Location = new System.Drawing.Point(11, 47);
             this.checkBoxAutoFixCommonErrors.Name = "checkBoxAutoFixCommonErrors";
-            this.checkBoxAutoFixCommonErrors.Size = new System.Drawing.Size(139, 17);
+            this.checkBoxAutoFixCommonErrors.Size = new System.Drawing.Size(137, 17);
             this.checkBoxAutoFixCommonErrors.TabIndex = 34;
             this.checkBoxAutoFixCommonErrors.Text = "Fix common OCR errors";
             this.checkBoxAutoFixCommonErrors.UseVisualStyleBackColor = true;
@@ -699,7 +699,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.groupBoxImagePalette.Controls.Add(this.checkBoxCustomFourColors);
             this.groupBoxImagePalette.Location = new System.Drawing.Point(13, 16);
             this.groupBoxImagePalette.Name = "groupBoxImagePalette";
-            this.groupBoxImagePalette.Size = new System.Drawing.Size(604, 37);
+            this.groupBoxImagePalette.Size = new System.Drawing.Size(604, 38);
             this.groupBoxImagePalette.TabIndex = 35;
             this.groupBoxImagePalette.TabStop = false;
             this.groupBoxImagePalette.Text = "Image palette";
@@ -711,7 +711,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.checkBoxBackgroundTransparent.CheckState = System.Windows.Forms.CheckState.Checked;
             this.checkBoxBackgroundTransparent.Location = new System.Drawing.Point(144, 16);
             this.checkBoxBackgroundTransparent.Name = "checkBoxBackgroundTransparent";
-            this.checkBoxBackgroundTransparent.Size = new System.Drawing.Size(85, 17);
+            this.checkBoxBackgroundTransparent.Size = new System.Drawing.Size(83, 17);
             this.checkBoxBackgroundTransparent.TabIndex = 8;
             this.checkBoxBackgroundTransparent.Text = "Transparent";
             this.checkBoxBackgroundTransparent.UseVisualStyleBackColor = true;
@@ -732,7 +732,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.checkBoxEmphasis2Transparent.AutoSize = true;
             this.checkBoxEmphasis2Transparent.Location = new System.Drawing.Point(507, 19);
             this.checkBoxEmphasis2Transparent.Name = "checkBoxEmphasis2Transparent";
-            this.checkBoxEmphasis2Transparent.Size = new System.Drawing.Size(85, 17);
+            this.checkBoxEmphasis2Transparent.Size = new System.Drawing.Size(83, 17);
             this.checkBoxEmphasis2Transparent.TabIndex = 6;
             this.checkBoxEmphasis2Transparent.Text = "Transparent";
             this.checkBoxEmphasis2Transparent.UseVisualStyleBackColor = true;
@@ -743,7 +743,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.checkBoxEmphasis1Transparent.AutoSize = true;
             this.checkBoxEmphasis1Transparent.Location = new System.Drawing.Point(387, 19);
             this.checkBoxEmphasis1Transparent.Name = "checkBoxEmphasis1Transparent";
-            this.checkBoxEmphasis1Transparent.Size = new System.Drawing.Size(85, 17);
+            this.checkBoxEmphasis1Transparent.Size = new System.Drawing.Size(83, 17);
             this.checkBoxEmphasis1Transparent.TabIndex = 5;
             this.checkBoxEmphasis1Transparent.Text = "Transparent";
             this.checkBoxEmphasis1Transparent.UseVisualStyleBackColor = true;
@@ -754,7 +754,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.checkBoxPatternTransparent.AutoSize = true;
             this.checkBoxPatternTransparent.Location = new System.Drawing.Point(266, 19);
             this.checkBoxPatternTransparent.Name = "checkBoxPatternTransparent";
-            this.checkBoxPatternTransparent.Size = new System.Drawing.Size(85, 17);
+            this.checkBoxPatternTransparent.Size = new System.Drawing.Size(83, 17);
             this.checkBoxPatternTransparent.TabIndex = 4;
             this.checkBoxPatternTransparent.Text = "Transparent";
             this.checkBoxPatternTransparent.UseVisualStyleBackColor = true;
@@ -808,7 +808,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.groupBoxSubtitleImage.Controls.Add(this.groupBoxImagePalette);
             this.groupBoxSubtitleImage.Controls.Add(this.pictureBoxSubtitleImage);
-            this.groupBoxSubtitleImage.Location = new System.Drawing.Point(412, 13);
+            this.groupBoxSubtitleImage.Location = new System.Drawing.Point(412, 6);
             this.groupBoxSubtitleImage.Name = "groupBoxSubtitleImage";
             this.groupBoxSubtitleImage.Size = new System.Drawing.Size(625, 191);
             this.groupBoxSubtitleImage.TabIndex = 36;
@@ -819,7 +819,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.checkBoxShowOnlyForced.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.checkBoxShowOnlyForced.AutoSize = true;
-            this.checkBoxShowOnlyForced.Location = new System.Drawing.Point(414, 513);
+            this.checkBoxShowOnlyForced.Location = new System.Drawing.Point(414, 516);
             this.checkBoxShowOnlyForced.Name = "checkBoxShowOnlyForced";
             this.checkBoxShowOnlyForced.Size = new System.Drawing.Size(152, 17);
             this.checkBoxShowOnlyForced.TabIndex = 37;
@@ -831,7 +831,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.checkBoxUseTimeCodesFromIdx.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.checkBoxUseTimeCodesFromIdx.AutoSize = true;
-            this.checkBoxUseTimeCodesFromIdx.Location = new System.Drawing.Point(414, 530);
+            this.checkBoxUseTimeCodesFromIdx.Location = new System.Drawing.Point(414, 537);
             this.checkBoxUseTimeCodesFromIdx.Name = "checkBoxUseTimeCodesFromIdx";
             this.checkBoxUseTimeCodesFromIdx.Size = new System.Drawing.Size(186, 17);
             this.checkBoxUseTimeCodesFromIdx.TabIndex = 38;
@@ -850,9 +850,9 @@ namespace Nikse.SubtitleEdit.Forms
             this.subtitleListView1.FullRowSelect = true;
             this.subtitleListView1.GridLines = true;
             this.subtitleListView1.HideSelection = false;
-            this.subtitleListView1.Location = new System.Drawing.Point(13, 221);
+            this.subtitleListView1.Location = new System.Drawing.Point(13, 214);
             this.subtitleListView1.Name = "subtitleListView1";
-            this.subtitleListView1.Size = new System.Drawing.Size(686, 194);
+            this.subtitleListView1.Size = new System.Drawing.Size(686, 205);
             this.subtitleListView1.TabIndex = 4;
             this.subtitleListView1.UseCompatibleStateImageBehavior = false;
             this.subtitleListView1.View = System.Windows.Forms.View.Details;
@@ -862,7 +862,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1057, 568);
+            this.ClientSize = new System.Drawing.Size(1057, 579);
             this.Controls.Add(this.checkBoxShowOnlyForced);
             this.Controls.Add(this.checkBoxUseTimeCodesFromIdx);
             this.Controls.Add(this.groupBoxSubtitleImage);
@@ -889,13 +889,13 @@ namespace Nikse.SubtitleEdit.Forms
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxSubtitleImage)).EndInit();
             this.contextMenuStripListview.ResumeLayout(false);
             this.groupBoxOcrMethod.ResumeLayout(false);
-            this.GroupBoxTesseractMethod.ResumeLayout(false);
-            this.GroupBoxTesseractMethod.PerformLayout();
-            this.groupBoxModiMethod.ResumeLayout(false);
-            this.groupBoxModiMethod.PerformLayout();
             this.groupBoxImageCompareMethod.ResumeLayout(false);
             this.groupBoxImageCompareMethod.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownPixelsIsSpace)).EndInit();
+            this.groupBoxModiMethod.ResumeLayout(false);
+            this.groupBoxModiMethod.PerformLayout();
+            this.GroupBoxTesseractMethod.ResumeLayout(false);
+            this.GroupBoxTesseractMethod.PerformLayout();
             this.groupBoxOCRControls.ResumeLayout(false);
             this.groupBoxOCRControls.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownStartNumber)).EndInit();

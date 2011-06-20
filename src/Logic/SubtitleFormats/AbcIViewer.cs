@@ -46,7 +46,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
             XmlDocument xml = new XmlDocument();
             xml.LoadXml(xmlStructure);
-            XmlNode reel = xml.DocumentElement.SelectSingleNode("reel");
 
             foreach (Paragraph p in subtitle.Paragraphs)
             {

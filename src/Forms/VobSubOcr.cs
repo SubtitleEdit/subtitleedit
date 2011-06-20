@@ -201,7 +201,17 @@ namespace Nikse.SubtitleEdit.Forms
 
             italicToolStripMenuItem.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainListViewItalic);
 
+            comboBoxTesseractLanguages.Left = labelTesseractLanguage.Left + labelTesseractLanguage.Width + 3;
+            comboBoxModiLanguage.Left = label1.Left + label1.Width + 3;
+            
+            comboBoxCharacterDatabase.Left = labelImageDatabase.Left + labelImageDatabase.Width + 3;
+            buttonNewCharacterDatabase.Left = comboBoxCharacterDatabase.Left + comboBoxCharacterDatabase.Width + 3;
+            buttonEditCharacterDatabase.Left = buttonNewCharacterDatabase.Left;
+            numericUpDownPixelsIsSpace.Left = labelNoOfPixelsIsSpace.Left + labelNoOfPixelsIsSpace.Width + 3;
+            checkBoxRightToLeft.Left = numericUpDownPixelsIsSpace.Left;
+
             FixLargeFonts();
+            buttonEditCharacterDatabase.Top = buttonNewCharacterDatabase.Top + buttonNewCharacterDatabase.Height + 3;
         }
 
         private void FixLargeFonts()
@@ -2556,7 +2566,6 @@ namespace Nikse.SubtitleEdit.Forms
             Text = Configuration.Settings.Language.VobSubOcr.TitleBluRay;
             Text += " - " + Path.GetFileName(_bdnFileName);
         }
-
 
         internal void StartOcrFromDelayed()
         {

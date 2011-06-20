@@ -172,6 +172,7 @@ namespace Nikse.SubtitleEdit.Logic
             int startX = 0;
             int lastEndX = 0;
             int y = 0;
+            bool spaceJustAdded = false;
 
             for (int x = 0; x < bmp.Width - 1; x++)
             {
@@ -186,6 +187,24 @@ namespace Nikse.SubtitleEdit.Logic
                     x < bmp.Width-2 &&
                     !IsVerticalLineTransparent(bmp, ref tempY, x + 1))
                 {
+
+                    //Add space?
+                    if (lastEndX > 0 && lastEndX + xOrMorePixelsMakesSpace < startX)
+                    {
+                        int cleanCount = 0;
+                        for (int j = lastEndX; j < startX; j++)
+                        {
+                            int y1 = j;
+                            if (IsVerticalLineTransparent2(bmp, ref y1, j))
+                                cleanCount++;
+                        }
+                        if (cleanCount > 0 && !spaceJustAdded)
+                        {
+                            parts.Add(new ImageSplitterItem(" "));
+                            spaceJustAdded = true;
+                        }
+                    }
+
                     var cursivePoints = new List<Point>();                 
                     
                     cursiveOk = IsCursiveVerticalLineTransparent(bmp, size, y, x, cursivePoints);
@@ -200,7 +219,7 @@ namespace Nikse.SubtitleEdit.Logic
                             end++;
                         }
                         Bitmap b1 = Copy(bmp, new Rectangle(startX, 0, end, bmp.Height));
-//                         b1.Save("c:\\cursive.bmp");
+//                         b1.Save(@"d:\temp\cursive.bmp"); // just for debugging
 
                         // make non-black/transparent stuff from other letter transparent
                         foreach (Point p in cursivePoints)
@@ -210,12 +229,13 @@ namespace Nikse.SubtitleEdit.Logic
                         }
 
                         RemoveBlackBarRight(b1);
-//                        b1.Save("c:\\cursive-cleaned.bmp");
+//                                                b1.Save(@"d:\temp\cursive-cleaned.bmp"); // just for debugging
 
                         // crop and save image
                         int addY;
                         b1 = CropTopAndBottom(b1, out addY);
                         parts.Add(new ImageSplitterItem(startX, verticalItem.Y + addY, b1));
+                        spaceJustAdded = false;
                         size = 0;
                         startX = x + 1;
                         lastEndX = x;
@@ -232,7 +252,20 @@ namespace Nikse.SubtitleEdit.Logic
                             {
                                 //Add space?
                                 if (lastEndX > 0 && lastEndX + xOrMorePixelsMakesSpace < startX)
-                                    parts.Add(new ImageSplitterItem(" "));
+                                {
+                                    int cleanCount = 0;
+                                    for (int j = lastEndX; j < startX; j++)
+                                    {
+                                        int y1=j;
+                                        if (IsVerticalLineTransparent2(bmp, ref y1, j))
+                                            cleanCount++;
+                                    }
+                                    if (cleanCount > 2 && !spaceJustAdded)
+                                    {
+                                        parts.Add(new ImageSplitterItem(" "));
+                                        spaceJustAdded = true;
+                                    }
+                                }
 
                                 if (startX > 0)
                                     startX--;
@@ -241,10 +274,12 @@ namespace Nikse.SubtitleEdit.Logic
                                 Bitmap part = Copy(bmp, new Rectangle(startX, 0, end, bmp.Height));
                                 RemoveBlackBarRight(part);
                                 int addY;
-                                //                            part.Save("c:\\before" + startX.ToString() + ".bmp");
+                                //                            part.Save("c:\\before" + startX.ToString() + ".bmp"); // just for debugging
                                 part = CropTopAndBottom(part, out addY);
-                                //                            part.Save("c:\\after" + startX.ToString() + ".bmp");
+                                //                            part.Save("c:\\after" + startX.ToString() + ".bmp"); // just for debugging
                                 parts.Add(new ImageSplitterItem(startX, verticalItem.Y + addY, part));
+                                spaceJustAdded = false;
+//                                part.Save(@"d:\temp\cursive.bmp"); // just for debugging
                             }
                             size = 0;
                         }
@@ -259,7 +294,7 @@ namespace Nikse.SubtitleEdit.Logic
 
             if (size > 0)
             {
-                if (lastEndX > 0 && lastEndX + xOrMorePixelsMakesSpace < startX)
+                if (lastEndX > 0 && lastEndX + xOrMorePixelsMakesSpace < startX && !spaceJustAdded)
                     parts.Add(new ImageSplitterItem(" "));
 
                 if (startX > 0)
@@ -270,6 +305,7 @@ namespace Nikse.SubtitleEdit.Logic
                 int addY;
                 part = CropTopAndBottom(part, out addY);
                 parts.Add(new ImageSplitterItem(startX, verticalItem.Y + addY, part));
+                part.Save(@"d:\temp\cursive.bmp"); // just for debugging
             }
             return parts;
         }
@@ -335,6 +371,24 @@ namespace Nikse.SubtitleEdit.Logic
                 Color c = bmp.GetPixel(x, y);
                 if (c.A == 0 || //c.ToArgb() == transparentColor.ToArgb() ||
                     IsColorClose(c, Color.Black, 280)) // still dark color...
+                {
+                }
+                else
+                {
+                    allTransparent = false;
+                    break;
+                }
+            }
+            return allTransparent;
+        }
+
+        private static bool IsVerticalLineTransparent2(Bitmap bmp, ref int y, int x)
+        {
+            bool allTransparent = true;
+            for (y = 0; y < bmp.Height - 1; y++)
+            {
+                Color c = bmp.GetPixel(x, y);
+                if (c.A == 0) // still dark color...
                 {
                 }
                 else

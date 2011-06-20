@@ -134,7 +134,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 paragraph.Attributes.Append(textNode);
 
                 XmlAttribute translation = xml.CreateAttribute("translation");
-                translation.InnerText = string.Empty; ;
+                translation.InnerText = string.Empty;
                 paragraph.Attributes.Append(translation);
 
                 div.AppendChild(paragraph);
