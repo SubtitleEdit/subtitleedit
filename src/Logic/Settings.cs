@@ -374,7 +374,7 @@ namespace Nikse.SubtitleEdit.Logic
 
         public VobSubOcrSettings()
         {
-            XOrMorePixelsMakesSpace = 5;
+            XOrMorePixelsMakesSpace = 8;
             AllowDifferenceInPercent = 1.0;
             LastImageCompareFolder = "English";
             LastModiLanguageId = 9;
