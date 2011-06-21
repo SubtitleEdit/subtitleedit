@@ -180,7 +180,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             {
                 Paragraph p = GetPacParagraph(ref index, buffer);
                 if (p != null)
-                    subtitle.Paragraphs.Add(p);
+                    subtitle.Paragraphs.Add(p);                
             }
             subtitle.Renumber(1);
         }
@@ -193,7 +193,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             }
 
             if (index + 20 >= buffer.Length)
+            {
+                index += 20;
                 return null;
+            }
 
             int FEIndex = index;
             int endDelimiter1 = 0x00;
