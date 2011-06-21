@@ -560,6 +560,7 @@
     <Compile Include="Logic\SubtitleFormats\Ebu.cs" />
     <Compile Include="Logic\SubtitleFormats\SonyDVDArchitect.cs" />
     <Compile Include="Logic\SubtitleFormats\Spruce.cs" />
+    <Compile Include="Logic\SubtitleFormats\SpruceWithSpace.cs" />
     <Compile Include="Logic\SubtitleFormats\Spt.cs" />
     <Compile Include="Logic\SubtitleFormats\SubtitleEditorProject.cs" />
     <Compile Include="Logic\SubtitleFormats\TimedText10.cs" />

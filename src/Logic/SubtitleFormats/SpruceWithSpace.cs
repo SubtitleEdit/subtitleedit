@@ -5,7 +5,7 @@ using System.Text.RegularExpressions;
 
 namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
-    public class Spruce : SubtitleFormat
+    class SpruceWithSpace : SubtitleFormat
     {
         public override string Extension
         {
@@ -14,7 +14,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public override string Name
         {
-            get { return "Spruce Subtitle File"; }
+            get { return "Spruce Subtitle With Space"; }
         }
 
         public override bool HasLineNumber
@@ -36,48 +36,38 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public override string ToText(Subtitle subtitle, string title)
         {
-            const string Header = @"//Font select and font size
-$FontName       = Arial
-$FontSize       = 30
+            const string Header = @"$FontName			=	Arial
+$FontSize				=	34
+$HorzAlign			=	Left
+$VertAlign			=	Bottom
+$XOffset				=	0
+$YOffset				=	0
+$Bold					=	FALSE
+$UnderLined			=	FALSE
+$Italic				=	FALSE
+$TextContrast			=	15
+$Outline1Contrast		=	15
+$Outline2Contrast		=	15
+$BackgroundContrast	=	0
+$ForceDisplay			=	FALSE
+$FadeIn				=	0
+$FadeOut				=	0
+$TapeOffset			=	FALSE
 
-//Character attributes (global)
-$Bold           = FALSE
-$UnderLined     = FALSE
-$Italic         = FALSE
-
-//Position Control
-$HorzAlign      = Center
-$VertAlign      = Bottom
-$XOffset        = 0
-$YOffset        = 0
-
-//Contrast Control
-$TextContrast           = 15
-$Outline1Contrast       = 8
-$Outline2Contrast       = 15
-$BackgroundContrast     = 0
-
-//Effects Control
-$ForceDisplay   = FALSE
-$FadeIn         = 0
-$FadeOut        = 0
-
-//Other Controls
-$TapeOffset          = FALSE
-//$SetFilePathToken  = <<:>>
-
-//Colors
-$ColorIndex1    = 0
-$ColorIndex2    = 1
-$ColorIndex3    = 2
-$ColorIndex4    = 3
-
-//Subtitles";
+\\Colour 0 = Black
+\\Colour 1 = Red
+\\Colour 2 = Green
+\\Colour 3 = Yellow
+\\Colour 4 = Blue
+\\Colour 5 = Magenta
+\\Colour 6 = Cyan
+\\Colour 7 = White
+";
             StringBuilder sb = new StringBuilder();
             sb.AppendLine(Header);
             foreach (Paragraph p in subtitle.Paragraphs)
             {
-                sb.AppendLine(string.Format("{0},{1},{2}", EncodeTimeCode(p.StartTime), EncodeTimeCode(p.EndTime), EncodeText(p.Text)));
+                sb.AppendLine(string.Format("$HorzAlign		= Center\r\n{0}, {1}, {2}", EncodeTimeCode(p.StartTime), EncodeTimeCode(p.EndTime), EncodeText(p.Text)));
             }
             return sb.ToString();
         }
@@ -97,7 +87,7 @@ $ColorIndex4    = 3
         {
             //00:01:54:19
 
-            int frames = time.Milliseconds / (1000 / 25);
+            int frames = (int) (time.Milliseconds / (1000.0 / Configuration.Settings.General.CurrentFrameRate));
 
             return string.Format("{0:00}:{1:00}:{2:00}:{3:00}", time.Hours, time.Minutes, time.Seconds, frames);
         }
@@ -106,17 +96,17 @@ $ColorIndex4    = 3
         {
             //00:01:54:19,00:01:56:17,We should be thankful|they accepted our offer.
             subtitle.Paragraphs.Clear();
-            var regexTimeCodes = new Regex(@"^\d\d:\d\d:\d\d:\d\d,\d\d:\d\d:\d\d:\d\d,.+", RegexOptions.Compiled);
+            var regexTimeCodes = new Regex(@"^\d\d:\d\d:\d\d:\d\d, \d\d:\d\d:\d\d:\d\d,.+", RegexOptions.Compiled);
             foreach (string line in lines)
             {
                 if (regexTimeCodes.IsMatch(line))
                 {
                     string start = line.Substring(0, 11);
-                    string end = line.Substring(12, 11);
+                    string end = line.Substring(13, 11);
 
                     try
                     {
-                        Paragraph p = new Paragraph(DecodeTimeCode(start), DecodeTimeCode(end), DecodeText(line.Substring(24)));
+                        Paragraph p = new Paragraph(DecodeTimeCode(start), DecodeTimeCode(end), DecodeText(line.Substring(25).Trim()));
                         subtitle.Paragraphs.Add(p);
                     }
                     catch
@@ -141,7 +131,7 @@ $ColorIndex4    = 3
             string seconds = time.Substring(6, 2);
             string frames = time.Substring(9, 2);
 
-            int milliseconds = (int)((1000 / 25.0) * int.Parse(frames));
+            int milliseconds = (int)((1000.0 / Configuration.Settings.General.CurrentFrameRate) * int.Parse(frames));
             if (milliseconds > 999)
                 milliseconds = 999;
 
