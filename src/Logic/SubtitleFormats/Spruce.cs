@@ -107,6 +107,7 @@ $ColorIndex4    = 3
             //00:01:54:19,00:01:56:17,We should be thankful|they accepted our offer.
             subtitle.Paragraphs.Clear();
             var regexTimeCodes = new Regex(@"^\d\d:\d\d:\d\d:\d\d,\d\d:\d\d:\d\d:\d\d,.+", RegexOptions.Compiled);
+            var regexTimeCodes2 = new Regex(@"^\d\d:\d\d:\d\d:\d\d, \d\d:\d\d:\d\d:\d\d,.+", RegexOptions.Compiled);
             foreach (string line in lines)
             {
                 if (regexTimeCodes.IsMatch(line))
@@ -117,6 +118,21 @@ $ColorIndex4    = 3
                     try
                     {
                         Paragraph p = new Paragraph(DecodeTimeCode(start), DecodeTimeCode(end), DecodeText(line.Substring(24)));
+                        subtitle.Paragraphs.Add(p);
+                    }
+                    catch
+                    {
+                        _errorCount++;
+                    }
+                }
+                else if (regexTimeCodes2.IsMatch(line))
+                {
+                    string start = line.Substring(0, 11);
+                    string end = line.Substring(13, 11);
+
+                    try
+                    {
+                        Paragraph p = new Paragraph(DecodeTimeCode(start), DecodeTimeCode(end), DecodeText(line.Substring(25).Trim()));
                         subtitle.Paragraphs.Add(p);
                     }
                     catch
