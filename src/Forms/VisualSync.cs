@@ -177,7 +177,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else
             {
-                Utilities.InitializeVideoPlayerAndContainer(MediaPlayerStart.VideoPlayer.VideoFileName, null, MediaPlayerEnd, VideoEndLoaded, VideoEndEnded);
+                Utilities.InitializeVideoPlayerAndContainer(MediaPlayerStart.VideoPlayer.VideoFileName, _videoInfo , MediaPlayerEnd, VideoEndLoaded, VideoEndEnded);
             }
             timer1.Start();
             timerProgressBarRefresh.Start();
