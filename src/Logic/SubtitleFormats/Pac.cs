@@ -97,7 +97,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             // write four bytes time code
             fs.WriteByte((byte)timeCode.Hours);
 
-            byte frames = (byte)(timeCode.Milliseconds / 40);
+            byte frames = (byte)(timeCode.Milliseconds / (1000 / Configuration.Settings.General.CurrentFrameRate));
             string numberString = string.Format("{0:00}", (byte)timeCode.Minutes) +
                                   string.Format("{0:00}", (byte)timeCode.Seconds) +
                                   string.Format("{0:00}", frames);
@@ -234,10 +234,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         {
             if (timeCodeIndex > 0)
             {
-                int hour = buffer[timeCodeIndex];
-                if (hour > 5)
-                    hour = 0;
-
+                int min = buffer[timeCodeIndex];
                 int timecode1 = buffer[timeCodeIndex + 1];
                 int timecode2 = buffer[timeCodeIndex + 2];
                 int timecode3 = buffer[timeCodeIndex + 3];
@@ -251,15 +248,15 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     number = timecode3;
                 string numberString = string.Format("{0:00000000}", number);
 
-                int minute = int.Parse(numberString.Substring(2, 2));
+//                int minute = int.Parse(numberString.Substring(2, 2));
                 int second = int.Parse(numberString.Substring(4, 2));
                 int frames = int.Parse(numberString.Substring(6, 2));
 
-                int milliseconds = (int)((1000 / 24.0) * frames);
+                int milliseconds = (int)((1000 / Configuration.Settings.General.CurrentFrameRate) * frames);
                 if (milliseconds > 999)
                     milliseconds = 999;
 
-                return new TimeCode(hour, minute, second, milliseconds);
+                return new TimeCode(0, min, second, milliseconds);
             }
             return new TimeCode(0, 0, 0, 0);
         }
