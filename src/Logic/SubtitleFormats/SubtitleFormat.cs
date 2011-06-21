@@ -48,6 +48,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     new SubViewer20(),
                     new Sami(),
                     new Spruce(),
+                    new SpruceWithSpace(),
                     new SubtitleEditorProject(),
                     new TimedText(),
                     new TimedText10(),
