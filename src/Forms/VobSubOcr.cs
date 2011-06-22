@@ -2173,7 +2173,8 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void LoadOcrFixEngine()
         {
-            _languageId = (comboBoxTesseractLanguages.SelectedItem as TesseractLanguage).Id;
+            if (comboBoxTesseractLanguages.SelectedItem != null)
+                _languageId = (comboBoxTesseractLanguages.SelectedItem as TesseractLanguage).Id;
             _ocrFixEngine = new OcrFixEngine(_languageId, this);
             if (_ocrFixEngine.IsDictionaryLoaded)
             {

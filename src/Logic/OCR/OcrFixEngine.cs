@@ -323,8 +323,8 @@ namespace Nikse.SubtitleEdit.Logic.OCR
                     string oldText = text;
                     text = FixCommonErrors.FixAloneLowercaseIToUppercaseLine(regexAloneI, oldText, text, 'i');
                     text = FixCommonErrors.FixAloneLowercaseIToUppercaseLine(regexAloneIAsL, oldText, text, 'l');
-                    text = RemoveSpaceBetweenNumbers(text);
                 }
+                text = RemoveSpaceBetweenNumbers(text);
             }
             return text;
         }
@@ -339,7 +339,6 @@ namespace Nikse.SubtitleEdit.Logic.OCR
             }
             return text;
         }
-
 
         private string FixCommonWordErrors(string word, string lastWord)
         {
@@ -1026,7 +1025,14 @@ namespace Nikse.SubtitleEdit.Logic.OCR
                             if (word != "Lt'S" && word != "Sox's") //TODO: get fixed nhunspell
                                 suggestions = DoSuggest(word); // 0.9.6 fails on "Lt'S"
 
+                            if (word.StartsWith("<i>"))
+                                word = word.Remove(0, 3);
+
+                            if (word.EndsWith("</i>"))
+                                word = word.Remove(word.Length-4, 4);                           
+
                             SpellcheckOcrTextResult res = SpellcheckOcrText(line, bitmap, words, i, word, suggestions);
+
                             if (res.FixedWholeLine)
                             {
                                 return res.Line;
