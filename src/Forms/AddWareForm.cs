@@ -43,7 +43,8 @@ namespace Nikse.SubtitleEdit.Forms
 
             SourceVideoFileName = labelVideoFileName.Text;
             string targetFile = Path.GetTempFileName() + ".wav";
-            string parameters = "-I dummy -vvv \"" + SourceVideoFileName + "\" --sout=#transcode{vcodec=none,acodec=s16l}:file{dst=\"" + targetFile + "\"}  vlc://quit";
+//            string parameters = "-I dummy -vvv \"" + SourceVideoFileName + "\" --sout=#transcode{vcodec=none,acodec=s16l}:file{dst=\"" + targetFile + "\"}  vlc://quit";
+            string parameters = "-I dummy -vvv --no-sout-video --sout #transcode{acodec=s16l}:std{mux=wav,access=file,dst=\"" + targetFile + "\"} \"" + SourceVideoFileName + "\" vlc://quit";
 
             string vlcPath;
             if (Utilities.IsRunningOnLinux() || Utilities.IsRunningOnMac())
@@ -115,6 +116,21 @@ namespace Nikse.SubtitleEdit.Forms
                 buttonRipWave.Enabled = true;
                 return;
             }
+
+            FileInfo fi = new FileInfo(targetFile);
+            if (fi.Length <= 200)
+            {
+                MessageBox.Show("Sorry! VLC was unable to extract audio to wave file via this command line:" + Environment.NewLine
+                                + Environment.NewLine +
+                                "Command line: " + vlcPath + " " + parameters);
+
+                labelPleaseWait.Visible = false;
+                labelProgress.Text = string.Empty;
+                buttonRipWave.Enabled = true;
+                return;
+            }
+
+
             ReadWaveFile(targetFile);
             labelProgress.Text = string.Empty;
             File.Delete(targetFile);

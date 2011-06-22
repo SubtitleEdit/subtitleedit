@@ -20,6 +20,8 @@ Subtitle Edit Changelog
    * New customizable shortcut for Adjust mode: Set current subtitle end time at video pos, keep duration, and go to next sub (Shift+End, thx Bavo)
  * IMPROVED:
    * OCR unknown words highlighting now works better (thx sialivi)
+   * OCR image compare UI improved with "Edit last char" and more (thx Zoltán)
+   * OCR image compare: Compare more effective + word breaking improved
    * Merge short lines can now also merge lines ending with ".", "?", or "!" (optional)
    * Can now read Adobe Encore files starting with line numbers (thx Pier)
    * Advanced Sub Station Alpha (and SSA) now keep original styles (thx Rebecca)
