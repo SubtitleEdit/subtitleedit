@@ -95,10 +95,13 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         private void WriteTimeCode(FileStream fs, TimeCode timeCode)
         {
             // write four bytes time code
-            fs.WriteByte((byte)timeCode.Hours);
-
+            
             byte frames = (byte)(timeCode.Milliseconds / (1000 / Configuration.Settings.General.CurrentFrameRate));
-            string numberString = string.Format("{0:00}", (byte)timeCode.Minutes) +
+
+            byte minutes = (byte)(timeCode.Hours / 60 + timeCode.Minutes);
+            fs.WriteByte(minutes);
+
+            string numberString = string.Format("{0:00}", 0) +
                                   string.Format("{0:00}", (byte)timeCode.Seconds) +
                                   string.Format("{0:00}", frames);
 
@@ -248,7 +251,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     number = timecode3;
                 string numberString = string.Format("{0:00000000}", number);
 
-//                int minute = int.Parse(numberString.Substring(2, 2));
                 int second = int.Parse(numberString.Substring(4, 2));
                 int frames = int.Parse(numberString.Substring(6, 2));
 
