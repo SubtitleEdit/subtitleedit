@@ -47,11 +47,17 @@ namespace Nikse.SubtitleEdit.Forms
             string parameters = "-I dummy -vvv --no-sout-video --sout #transcode{acodec=s16l}:std{mux=wav,access=file,dst=\"" + targetFile + "\"} \"" + SourceVideoFileName + "\" vlc://quit";
 
             string vlcPath;
-            if (Utilities.IsRunningOnLinux() || Utilities.IsRunningOnMac())
+            //if (Logic.VideoPlayers.MPlayer.IsInstalled)
+            //{
+            //    vlcPath = Logic.VideoPlayers.MPlayer.GetMPlayerFileName;
+            //    parameters = "-ao pcm:fast:file=\"" + targetFile + "\" -vo null -vc null \"" + SourceVideoFileName + "\"";
+            //}
+            //else 
+                if (Utilities.IsRunningOnLinux() || Utilities.IsRunningOnMac())
             {
                 vlcPath = "cvlc";
                 parameters = "-vvv --no-sout-video --sout '#transcode{acodec=s16l}:std{mux=wav,access=file,dst=" + targetFile +"}' \"" + SourceVideoFileName + "\" vlc://quit";
-            }
+            }            
             else // windows
             {
                 vlcPath = Nikse.SubtitleEdit.Logic.VideoPlayers.LibVlc11xDynamic.GetVlcPath("vlc.exe");
@@ -129,6 +135,8 @@ namespace Nikse.SubtitleEdit.Forms
                 buttonRipWave.Enabled = true;
                 return;
             }
+
+            
 
 
             ReadWaveFile(targetFile);

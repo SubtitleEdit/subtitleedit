@@ -830,6 +830,19 @@ namespace Nikse.SubtitleEdit.Forms
                 cutBitmap.Dispose();
             }
 
+            if (smallestDifference > 0 && Width > 15)
+            {
+                int oldDifference = smallestDifference;
+                Bitmap cutBitmap = CopyBitmapSection(target, new Rectangle(1, 0, target.Width - 2, target.Height));
+                int topCrop = 0;
+                cutBitmap = ImageSplitter.CropTopAndBottom(cutBitmap, out topCrop);
+                FindBestMatch(ref index, ref smallestDifference, ref smallestIndex, cutBitmap);
+                cutBitmap.Dispose();
+                //if (oldDifference != smallestDifference)
+                //    MessageBox.Show("Test");
+            }                      
+
+
             //if (smallestDifference > 0)
             //{
             //    Bitmap resizedBitmap = ResizeBitmap(target, target.Width + 2, target.Height + 2);
@@ -842,7 +855,7 @@ namespace Nikse.SubtitleEdit.Forms
                 double differencePercentage = smallestDifference * 100.0 / (target.Width * target.Height);
                 double maxDiff= _vobSubOcrSettings.AllowDifferenceInPercent; // should be around 1.0 for vob/sub...
                 if (_bluRaySubtitlesOriginal != null)
-                    maxDiff = 14; // let bluray sup have a 14% diff
+                    maxDiff = 12; // let bluray sup have a 12% diff
                 if (differencePercentage < maxDiff) //_vobSubOcrSettings.AllowDifferenceInPercent) // should be around 1.0...
                 {
                     XmlNode node = _compareDoc.DocumentElement.SelectSingleNode("FileName[.='" + _compareBitmaps[smallestIndex].Name + "']");
@@ -1283,7 +1296,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     _ocrFixEngine.AutoGuessesUsed.Clear();
                     _ocrFixEngine.UnknownWordsFound.Clear();
-                    line = _ocrFixEngine.FixUnknownWordsViaGuessOrPrompt(out wordsNotFound, line, index, bitmap, checkBoxAutoFixCommonErrors.Checked, checkBoxPromptForUnknownWords.Checked, true, checkBoxGuessUnknownWords.Checked);
+                    line = _ocrFixEngine.FixUnknownWordsViaGuessOrPrompt(out wordsNotFound, line, listViewIndex, bitmap, checkBoxAutoFixCommonErrors.Checked, checkBoxPromptForUnknownWords.Checked, true, checkBoxGuessUnknownWords.Checked);
                 }
 
                 if (_ocrFixEngine.Abort)
@@ -1319,7 +1332,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 _tessnetOcrAutoFixes++;
                 labelFixesMade.Text = string.Format(" - {0}", _tessnetOcrAutoFixes);
-                LogOcrFix(index, textWithOutFixes.ToString(), line);
+                LogOcrFix(listViewIndex, textWithOutFixes.ToString(), line);
             }
 
             return line;
@@ -2582,5 +2595,6 @@ namespace Nikse.SubtitleEdit.Forms
             (sender as Timer).Stop();
             ButtonStartOcrClick(null, null);
         }
+
     }
 }
