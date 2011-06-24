@@ -78,18 +78,31 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
                                 else
                                     position += 0x800;
 
-                                while (vsp.PacketizedElementaryStream.Length == PacketizedElementaryStreamMaximumLength && position < fs.Length)
+                                int currentSubPictureStreamId = vsp.PacketizedElementaryStream.SubPictureStreamId.Value;
+                                while ((vsp.PacketizedElementaryStream.Length == PacketizedElementaryStreamMaximumLength || 
+                                        currentSubPictureStreamId != vsp.PacketizedElementaryStream.SubPictureStreamId.Value) && position < fs.Length)
                                 {
                                     fs.Seek(position, SeekOrigin.Begin);
                                     fs.Read(buffer, 0, 0x800);
                                     vsp = new VobSubPack(buffer, p); // idx position?
-                                    VobSubPacks.Add(vsp);
 
-                                    if (IsPrivateStream1(buffer, 0))
-                                        position += vsp.PacketizedElementaryStream.Length + 6;
+                                    if (currentSubPictureStreamId == vsp.PacketizedElementaryStream.SubPictureStreamId.Value)
+                                    {
+                                        VobSubPacks.Add(vsp);
+
+                                        if (IsPrivateStream1(buffer, 0))
+                                            position += vsp.PacketizedElementaryStream.Length + 6;
+                                        else
+                                            position += 0x800;
+                                    }
                                     else
+                                    {
+                                        //fs.Position = position; // +0x800;
                                         position += 0x800;
-                                }                                
+                                        fs.Seek(position, SeekOrigin.Begin);
+                                    }
+                                }      
+                                
                             }
                         }
                     }
