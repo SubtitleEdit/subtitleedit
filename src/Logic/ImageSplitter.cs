@@ -35,7 +35,7 @@ namespace Nikse.SubtitleEdit.Logic
             return bmp;
         }
 
-        private static Bitmap CropTopAndBottom(Bitmap bmp, out int topCropping)
+        public static Bitmap CropTopAndBottom(Bitmap bmp, out int topCropping)
         {
             int startTop = 0;
             int maxTop = bmp.Height-2;

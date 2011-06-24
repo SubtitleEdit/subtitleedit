@@ -574,14 +574,12 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             // listBoxLog
             // 
-            this.listBoxLog.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.listBoxLog.Dock = System.Windows.Forms.DockStyle.Fill;
             this.listBoxLog.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.listBoxLog.FormattingEnabled = true;
-            this.listBoxLog.Location = new System.Drawing.Point(6, 3);
+            this.listBoxLog.Location = new System.Drawing.Point(3, 3);
             this.listBoxLog.Name = "listBoxLog";
-            this.listBoxLog.Size = new System.Drawing.Size(291, 121);
+            this.listBoxLog.Size = new System.Drawing.Size(309, 156);
             this.listBoxLog.TabIndex = 39;
             this.listBoxLog.SelectedIndexChanged += new System.EventHandler(this.ListBoxLogSelectedIndexChanged);
             // 
@@ -598,14 +596,12 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             // listBoxLogSuggestions
             // 
-            this.listBoxLogSuggestions.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.listBoxLogSuggestions.Dock = System.Windows.Forms.DockStyle.Fill;
             this.listBoxLogSuggestions.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.listBoxLogSuggestions.FormattingEnabled = true;
-            this.listBoxLogSuggestions.Location = new System.Drawing.Point(5, 6);
+            this.listBoxLogSuggestions.Location = new System.Drawing.Point(3, 3);
             this.listBoxLogSuggestions.Name = "listBoxLogSuggestions";
-            this.listBoxLogSuggestions.Size = new System.Drawing.Size(292, 121);
+            this.listBoxLogSuggestions.Size = new System.Drawing.Size(309, 156);
             this.listBoxLogSuggestions.TabIndex = 40;
             this.listBoxLogSuggestions.SelectedIndexChanged += new System.EventHandler(this.ListBoxLogSelectedIndexChanged);
             // 
@@ -621,14 +617,12 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             // listBoxUnknownWords
             // 
-            this.listBoxUnknownWords.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.listBoxUnknownWords.Dock = System.Windows.Forms.DockStyle.Fill;
             this.listBoxUnknownWords.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.listBoxUnknownWords.FormattingEnabled = true;
-            this.listBoxUnknownWords.Location = new System.Drawing.Point(5, 6);
+            this.listBoxUnknownWords.Location = new System.Drawing.Point(0, 0);
             this.listBoxUnknownWords.Name = "listBoxUnknownWords";
-            this.listBoxUnknownWords.Size = new System.Drawing.Size(292, 121);
+            this.listBoxUnknownWords.Size = new System.Drawing.Size(315, 162);
             this.listBoxUnknownWords.TabIndex = 40;
             this.listBoxUnknownWords.SelectedIndexChanged += new System.EventHandler(this.ListBoxLogSelectedIndexChanged);
             // 
