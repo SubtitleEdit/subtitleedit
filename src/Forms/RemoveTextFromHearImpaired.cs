@@ -431,11 +431,18 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     string arr0 = new StripableText(arr[0]).StrippedText;
                     string arr1 = new StripableText(arr[1]).StrippedText;
-                    if (arr0.Length > 0 && arr1.Length > 1 && (Utilities.GetLetters(false, true, false) + ",").Contains(arr0.Substring(arr0.Length-1)) &&
+                    if (arr0.Length > 0 && arr1.Length > 1 && (Utilities.GetLetters(false, true, false) + ",").Contains(arr0.Substring(arr0.Length - 1)) &&
                         Utilities.GetLetters(false, true, false).Contains(arr1.Substring(0, 1)))
                     {
                         insertDash = false;
                     }
+
+                    if (arr0.Length > 0 && arr1.Length > 1 && !(arr[0].EndsWith(".") || arr[0].EndsWith("!") || arr[0].EndsWith("?") || arr[0].EndsWith("</i>")) &&
+                        !(new StripableText(arr[1]).Pre.Contains("-")))
+                    {
+                        insertDash = false;
+                    }
+                    
                 }
 
                 if (insertDash)
