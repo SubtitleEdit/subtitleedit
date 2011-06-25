@@ -830,9 +830,9 @@ namespace Nikse.SubtitleEdit.Forms
                 cutBitmap.Dispose();
             }
 
-            if (smallestDifference > 0 && Width > 15)
+            if (smallestDifference > 0 && target.Width > 15)
             {
-                int oldDifference = smallestDifference;
+               // int oldDifference = smallestDifference;
                 Bitmap cutBitmap = CopyBitmapSection(target, new Rectangle(1, 0, target.Width - 2, target.Height));
                 int topCrop = 0;
                 cutBitmap = ImageSplitter.CropTopAndBottom(cutBitmap, out topCrop);
