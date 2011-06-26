@@ -233,7 +233,10 @@ namespace Nikse.SubtitleEdit.Forms
         private void textBoxText_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter)
+            {
+                ButtonUpdateClick(null, null);
                 DialogResult = DialogResult.OK;
+            }
         }
     }
 }

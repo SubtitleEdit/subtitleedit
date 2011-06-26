@@ -79,6 +79,61 @@ namespace Nikse.SubtitleEdit.Logic
             return bmp;
         }
 
+        public static Bitmap CropTopAndBottom(Bitmap bmp, out int topCropping, int maxDifferentPixelsOnLine)
+        {
+            int startTop = 0;
+            int maxTop = bmp.Height - 2;
+            if (maxTop > bmp.Height)
+                maxTop = bmp.Height;
+            
+            for (int y = 0; y < maxTop; y++)
+            {
+                int difference = 0;
+                bool allTransparent = true;
+                for (int x = 1; x < bmp.Width - 1; x++)
+                {
+                    Color c = bmp.GetPixel(x, y);
+                    if (c.A != 0)
+                    {
+                        difference++;
+                        if (difference >= maxDifferentPixelsOnLine)
+                        {
+                            allTransparent = false;
+                            break;
+                        }
+                    }
+                }
+                if (!allTransparent)
+                    break;
+                startTop++;
+            }
+            if (startTop > 9)
+                startTop -= 5; // if top space > 9, then allways leave blank 5 pixels on top (so . is not confused with ').
+            topCropping = startTop;
+
+            for (int y = bmp.Height - 1; y > 3; y--)
+            {
+                int difference = 0;
+                bool allTransparent = true;
+                for (int x = 1; x < bmp.Width - 1; x++)
+                {
+                    Color c = bmp.GetPixel(x, y);
+                    if (c.A != 0)
+                    {
+                        difference++;
+                        if (difference >= maxDifferentPixelsOnLine)
+                        {
+                            allTransparent = false;
+                            break;
+                        }                        
+                    }
+                }
+                if (allTransparent == false)
+                    return Copy(bmp, new Rectangle(0, startTop, bmp.Width - 1, y - startTop + 1));
+            }
+            return bmp;
+        }
+
         public static List<ImageSplitterItem> SplitVertical(Bitmap bmp)
         { // split into lines
             int startY = 0;
