@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Logic;
+using System.Collections.Generic;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -9,8 +10,7 @@ namespace Nikse.SubtitleEdit.Forms
     {
 
         VobSubOcr _vobSubForm;
-        string _lastAdditionName;
-        string _lastAdditionText;
+        List<VobSubOcr.ImageCompareAddition> _additions;
 
         public VobSubOcrCharacter()
         {
@@ -74,7 +74,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         public bool ShrinkSelection { get; private set; }
 
-        public void Initialize(Bitmap vobSubImage, ImageSplitterItem character, Point position, bool italicChecked, bool showShrink, Nikse.SubtitleEdit.Forms.VobSubOcr.CompareMatch bestGuess, string lastAdditionName, string lastAdditionText, Bitmap lastAdditionImage, bool lastAdditionItalic, VobSubOcr vobSubForm)
+        public void Initialize(Bitmap vobSubImage, ImageSplitterItem character, Point position, bool italicChecked, bool showShrink, VobSubOcr.CompareMatch bestGuess, List<VobSubOcr.ImageCompareAddition> additions, VobSubOcr vobSubForm)
         {
             ShrinkSelection = false;
             ExpandSelection = false;
@@ -91,8 +91,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             _vobSubForm = vobSubForm;
-            _lastAdditionName = lastAdditionName;
-            _lastAdditionText = lastAdditionText;
+            _additions = additions;
 
             buttonShrinkSelection.Visible = showShrink;
 
@@ -107,16 +106,18 @@ namespace Nikse.SubtitleEdit.Forms
             pictureBoxSubtitleImage.Image = vobSubImage;
             pictureBoxCharacter.Image = character.Bitmap;
 
-            if (lastAdditionImage != null && lastAdditionName != null && lastAdditionText != null)
+            if (_additions.Count > 0)
             {
+                var last = _additions[_additions.Count - 1];
                 buttonLastEdit.Visible = true;
-                if (lastAdditionItalic)
+                if (last.Italic)
                     buttonLastEdit.Font = new System.Drawing.Font(buttonLastEdit.Font.FontFamily, buttonLastEdit.Font.Size, FontStyle.Italic);
                 else
                     buttonLastEdit.Font = new System.Drawing.Font(buttonLastEdit.Font.FontFamily, buttonLastEdit.Font.Size);                
                 pictureBoxLastEdit.Visible = true;
-                pictureBoxLastEdit.Image = lastAdditionImage;
-                buttonLastEdit.Text = string.Format(Configuration.Settings.Language.VobSubOcrCharacter.EditLastX, lastAdditionText);
+                pictureBoxLastEdit.Image = last.Image;
+                buttonLastEdit.Text = string.Format(Configuration.Settings.Language.VobSubOcrCharacter.EditLastX, last.Text);
+                pictureBoxLastEdit.Top = buttonLastEdit.Top - last.Image.Height + buttonLastEdit.Height;
             }
             else
             {
@@ -133,8 +134,6 @@ namespace Nikse.SubtitleEdit.Forms
             pictureBoxSubtitleImage.Image = bm;
 
             pictureBoxCharacter.Top = labelCharacters.Top + 16;
-            if (lastAdditionImage != null)
-                pictureBoxLastEdit.Top = buttonLastEdit.Top - lastAdditionImage.Height + buttonLastEdit.Height;
             pictureBoxLastEdit.Left = buttonLastEdit.Left + buttonLastEdit.Width + 5;
         }
 
@@ -181,11 +180,16 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonLastEdit_Click(object sender, EventArgs e)
         {
-            var result = _vobSubForm.EditImageCompareCharacters(_lastAdditionName, _lastAdditionText);
-            if (result == DialogResult.OK)
+            if (_additions.Count > 0)
             {
-                _vobSubForm.StartOcrFromDelayed();
-                DialogResult = DialogResult.Abort;
+                var last = _additions[_additions.Count - 1];
+                var result = _vobSubForm.EditImageCompareCharacters(last.Name, last.Text);
+                if (result == DialogResult.OK)
+                {
+                    _additions.RemoveAt(_additions.Count - 1);
+                    _vobSubForm.StartOcrFromDelayed();
+                    DialogResult = DialogResult.Abort;
+                }
             }
         }
 
