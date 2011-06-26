@@ -607,6 +607,7 @@
             this.MinimizeBox = false;
             this.MinimumSize = new System.Drawing.Size(588, 350);
             this.Name = "VobSubOcrCharacter";
+            this.ShowIcon = false;
             this.Text = "VobSub - Manual image to text";
             this.Shown += new System.EventHandler(this.VobSubOcrCharacter_Shown);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxSubtitleImage)).EndInit();

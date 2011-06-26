@@ -1542,6 +1542,7 @@ namespace Nikse.SubtitleEdit.Forms
                 checkBoxShowOnlyForced.Enabled = hasForcedSubtitles;
                 LoadVobRip();
             }
+            VobSubOcr_Resize(null, null);
         }
 
         private void ButtonOkClick(object sender, EventArgs e)
@@ -2572,6 +2573,21 @@ namespace Nikse.SubtitleEdit.Forms
         {
             (sender as Timer).Stop();
             ButtonStartOcrClick(null, null);
+        }
+
+        private void VobSubOcr_Resize(object sender, EventArgs e)
+        {
+            int originalTopHeight = 105;
+
+            int adjustPercent = (int)(Height * 0.15);
+            groupBoxSubtitleImage.Height = originalTopHeight + adjustPercent;
+            groupBoxOcrMethod.Height = groupBoxSubtitleImage.Height;
+
+            groupBoxOcrAutoFix.Top = groupBoxSubtitleImage.Top + groupBoxSubtitleImage.Height + 5;
+            labelSubtitleText.Top = groupBoxOcrAutoFix.Top;
+            subtitleListView1.Top = labelSubtitleText.Top + labelSubtitleText.Height + 3;
+            subtitleListView1.Height = textBoxCurrentText.Top - subtitleListView1.Top - 3;
+            groupBoxOcrAutoFix.Height = buttonOK.Top - groupBoxOcrAutoFix.Top - 3;
         }
 
     }
