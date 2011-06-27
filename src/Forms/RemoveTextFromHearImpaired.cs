@@ -585,10 +585,13 @@ namespace Nikse.SubtitleEdit.Forms
                 string part0 = arr[0].Trim().Replace("</i>", string.Empty).Trim();
                 if (!part0.EndsWith(",") && (!part0.EndsWith("-") || noOfNamesRemovedNotInLineOne > 0))
                 {
-                    if (!st.Pre.Contains("-"))
-                        text = "- " + text.Replace(Environment.NewLine, Environment.NewLine + "- ");
-                    if (!text.Contains(Environment.NewLine + "-") && !text.Contains(Environment.NewLine + "<i>-"))
-                        text = text.Replace(Environment.NewLine, Environment.NewLine + "- ");
+                    if (part0.Length > 0 && ".!?".Contains(part0.Substring(part0.Length - 1)))
+                    {
+                        if (!st.Pre.Contains("-"))
+                            text = "- " + text.Replace(Environment.NewLine, Environment.NewLine + "- ");
+                        if (!text.Contains(Environment.NewLine + "-") && !text.Contains(Environment.NewLine + "<i>-"))
+                            text = text.Replace(Environment.NewLine, Environment.NewLine + "- ");
+                    }
                 }
             }
 

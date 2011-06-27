@@ -476,8 +476,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     if (header.DiskFormatCode.StartsWith("STL25") ||
                         header.DiskFormatCode.StartsWith("STL30"))                    
                     {
-                        return Utilities.IsInteger(header.CodePageNumber) &&
-                               Utilities.IsInteger(header.TotalNumberOfSubtitles);
+                        return Utilities.IsInteger(header.CodePageNumber);
                     }
                 }
             }

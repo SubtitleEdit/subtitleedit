@@ -834,7 +834,7 @@ namespace Nikse.SubtitleEdit.Forms
                 double differencePercentage = smallestDifference * 100.0 / (target.Width * target.Height);
                 double maxDiff= _vobSubOcrSettings.AllowDifferenceInPercent; // should be around 1.0 for vob/sub...
                 if (_bluRaySubtitlesOriginal != null)
-                    maxDiff = 12; // let bluray sup have a 12% diff
+                    maxDiff = 12.9; // let bluray sup have a 12.9% diff
                 if (differencePercentage < maxDiff) //_vobSubOcrSettings.AllowDifferenceInPercent) // should be around 1.0...
                 {
                     XmlNode node = _compareDoc.DocumentElement.SelectSingleNode("FileName[.='" + _compareBitmaps[smallestIndex].Name + "']");
