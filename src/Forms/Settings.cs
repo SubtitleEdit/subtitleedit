@@ -354,6 +354,7 @@ namespace Nikse.SubtitleEdit.Forms
                 listBoxUserWordLists.Font = new System.Drawing.Font(unicodeFontName, fontSize);
                 listBoxOcrFixList.Font = new System.Drawing.Font(unicodeFontName, fontSize);
                 comboBoxToolsMusicSymbol.Font = new System.Drawing.Font(unicodeFontName, fontSize);
+                textBoxMusicSymbolsToReplace.Font = new System.Drawing.Font(unicodeFontName, fontSize);
                 textBoxNameEtc.Font = new System.Drawing.Font(unicodeFontName, fontSize);
                 textBoxUserWord.Font = new System.Drawing.Font(unicodeFontName, fontSize);
                 textBoxOcrFixKey.Font = new System.Drawing.Font(unicodeFontName, fontSize);
