@@ -375,9 +375,14 @@ begin
         DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Settings.xml'));
       end;
 
+      // Remove the dirs if they are empty
       RemoveDir(ExpandConstant('{app}\Languages'));
+      RemoveDir(ExpandConstant('{app}\Spectrograms'));
+      RemoveDir(ExpandConstant('{app}\VobSub\English'));
+      RemoveDir(ExpandConstant('{app}\VobSub'));
       RemoveDir(ExpandConstant('{app}\WaveForms'));
       RemoveDir(ExpandConstant('{app}'));
+      RemoveDir(ExpandConstant('{userappdata}\Subtitle Edit\Spectrograms'));
       RemoveDir(ExpandConstant('{userappdata}\Subtitle Edit\VobSub\English'));
       RemoveDir(ExpandConstant('{userappdata}\Subtitle Edit\VobSub'));
       RemoveDir(ExpandConstant('{userappdata}\Subtitle Edit\WaveForms'));
