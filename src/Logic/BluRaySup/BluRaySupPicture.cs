@@ -136,8 +136,15 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
         {
             get
             {
-                if (ObjectId < ImageObjects.Count)
+                if (ImageObjects == null)
+                {
+                    System.Diagnostics.Debug.WriteLine("Invalid Blu-ray SupPicture - ImageObjects is null - BluRaySupPictures.cs: internal ImageObject ObjectIdImage");
+                    return null;
+                }
+                else if (ObjectId < ImageObjects.Count)
+                {
                     return ImageObjects[ObjectId];
+                }
                 else
                 {
                     System.Diagnostics.Debug.WriteLine("Invalid Blu-ray SupPicture index - BluRaySupPictures.cs: internal ImageObject ObjectIdImage");
@@ -223,6 +230,9 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
         /// <returns>bitmap of the decoded caption</returns>
         public Bitmap DecodeImage(BluRaySupPalette defaultPalette)
         {
+            if (ObjectIdImage == null)
+                return new Bitmap(1,1);
+
             int w = ObjectIdImage.Width;
             int h = ObjectIdImage.Height;
 
