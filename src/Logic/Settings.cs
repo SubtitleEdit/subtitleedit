@@ -413,6 +413,7 @@ namespace Nikse.SubtitleEdit.Logic
         public string MainFileOpen { get; set; }
         public string MainFileSave { get; set; }
         public string MainFileSaveAs { get; set; }
+        public string MainFileExportEbu { get; set; }
         public string MainEditFind { get; set; }
         public string MainEditFindNext { get; set; }
         public string MainEditReplace { get; set; }
@@ -431,6 +432,7 @@ namespace Nikse.SubtitleEdit.Logic
             MainFileOpen = "Control+O";
             MainFileSave = "Control+S";
             MainFileSaveAs = "Control+Shift+S";
+            MainFileExportEbu = string.Empty;
             MainEditFind = "Control+F";
             MainEditFindNext = "F3";
             MainEditReplace = "Control+H";
@@ -1073,6 +1075,9 @@ namespace Nikse.SubtitleEdit.Logic
                 subNode = node.SelectSingleNode("MainFileSaveAs");
                 if (subNode != null)
                     settings.Shortcuts.MainFileSaveAs = subNode.InnerText;
+                subNode = node.SelectSingleNode("MainFileExportEbu");
+                if (subNode != null)
+                    settings.Shortcuts.MainFileExportEbu = subNode.InnerText;                
                 subNode = node.SelectSingleNode("MainEditFind");
                 if (subNode != null)
                     settings.Shortcuts.MainEditFind = subNode.InnerText;
@@ -1333,6 +1338,7 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("MainFileOpen", settings.Shortcuts.MainFileOpen);
             textWriter.WriteElementString("MainFileSave", settings.Shortcuts.MainFileSave);
             textWriter.WriteElementString("MainFileSaveAs", settings.Shortcuts.MainFileSaveAs);
+            textWriter.WriteElementString("MainFileExportEbu", settings.Shortcuts.MainFileSaveAs);            
             textWriter.WriteElementString("MainEditFind", settings.Shortcuts.MainEditFind);
             textWriter.WriteElementString("MainEditFindNext", settings.Shortcuts.MainEditFindNext);
             textWriter.WriteElementString("MainEditReplace", settings.Shortcuts.MainEditReplace);

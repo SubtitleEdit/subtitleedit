@@ -62,6 +62,8 @@
             this.tabPageErrors = new System.Windows.Forms.TabPage();
             this.textBoxErrors = new System.Windows.Forms.TextBox();
             this.label6 = new System.Windows.Forms.Label();
+            this.textBoxLanguageCode = new System.Windows.Forms.TextBox();
+            this.label14 = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.tabPageHeader.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMaxCharacters)).BeginInit();
@@ -79,7 +81,7 @@
             this.buttonOK.Location = new System.Drawing.Point(513, 428);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 21);
-            this.buttonOK.TabIndex = 19;
+            this.buttonOK.TabIndex = 0;
             this.buttonOK.Text = "Save";
             this.buttonOK.UseVisualStyleBackColor = true;
             this.buttonOK.Click += new System.EventHandler(this.buttonOK_Click);
@@ -92,7 +94,7 @@
             this.buttonCancel.Location = new System.Drawing.Point(594, 428);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 21);
-            this.buttonCancel.TabIndex = 18;
+            this.buttonCancel.TabIndex = 1;
             this.buttonCancel.Text = "C&ancel";
             this.buttonCancel.UseVisualStyleBackColor = true;
             this.buttonCancel.Click += new System.EventHandler(this.buttonCancel_Click);
@@ -117,6 +119,8 @@
             // 
             // tabPageHeader
             // 
+            this.tabPageHeader.Controls.Add(this.textBoxLanguageCode);
+            this.tabPageHeader.Controls.Add(this.label14);
             this.tabPageHeader.Controls.Add(this.numericUpDownMaxCharacters);
             this.tabPageHeader.Controls.Add(this.label12);
             this.tabPageHeader.Controls.Add(this.numericUpDownDiskSequenceNumber);
@@ -150,7 +154,7 @@
             // 
             // numericUpDownMaxCharacters
             // 
-            this.numericUpDownMaxCharacters.Location = new System.Drawing.Point(147, 228);
+            this.numericUpDownMaxCharacters.Location = new System.Drawing.Point(147, 252);
             this.numericUpDownMaxCharacters.Maximum = new decimal(new int[] {
             99,
             0,
@@ -158,13 +162,13 @@
             0});
             this.numericUpDownMaxCharacters.Name = "numericUpDownMaxCharacters";
             this.numericUpDownMaxCharacters.Size = new System.Drawing.Size(120, 20);
-            this.numericUpDownMaxCharacters.TabIndex = 52;
+            this.numericUpDownMaxCharacters.TabIndex = 9;
             this.numericUpDownMaxCharacters.ValueChanged += new System.EventHandler(this.numericUpDownMaxCharacters_ValueChanged);
             // 
             // label12
             // 
             this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(7, 230);
+            this.label12.Location = new System.Drawing.Point(7, 254);
             this.label12.Name = "label12";
             this.label12.Size = new System.Drawing.Size(133, 13);
             this.label12.TabIndex = 51;
@@ -172,7 +176,7 @@
             // 
             // numericUpDownDiskSequenceNumber
             // 
-            this.numericUpDownDiskSequenceNumber.Location = new System.Drawing.Point(147, 254);
+            this.numericUpDownDiskSequenceNumber.Location = new System.Drawing.Point(147, 278);
             this.numericUpDownDiskSequenceNumber.Maximum = new decimal(new int[] {
             9,
             0,
@@ -180,11 +184,11 @@
             0});
             this.numericUpDownDiskSequenceNumber.Name = "numericUpDownDiskSequenceNumber";
             this.numericUpDownDiskSequenceNumber.Size = new System.Drawing.Size(120, 20);
-            this.numericUpDownDiskSequenceNumber.TabIndex = 9;
+            this.numericUpDownDiskSequenceNumber.TabIndex = 10;
             // 
             // numericUpDownTotalNumberOfDiscs
             // 
-            this.numericUpDownTotalNumberOfDiscs.Location = new System.Drawing.Point(147, 280);
+            this.numericUpDownTotalNumberOfDiscs.Location = new System.Drawing.Point(147, 304);
             this.numericUpDownTotalNumberOfDiscs.Maximum = new decimal(new int[] {
             9,
             0,
@@ -192,11 +196,11 @@
             0});
             this.numericUpDownTotalNumberOfDiscs.Name = "numericUpDownTotalNumberOfDiscs";
             this.numericUpDownTotalNumberOfDiscs.Size = new System.Drawing.Size(120, 20);
-            this.numericUpDownTotalNumberOfDiscs.TabIndex = 8;
+            this.numericUpDownTotalNumberOfDiscs.TabIndex = 11;
             // 
             // numericUpDownRevisionNumber
             // 
-            this.numericUpDownRevisionNumber.Location = new System.Drawing.Point(147, 202);
+            this.numericUpDownRevisionNumber.Location = new System.Drawing.Point(147, 226);
             this.numericUpDownRevisionNumber.Maximum = new decimal(new int[] {
             99,
             0,
@@ -204,12 +208,12 @@
             0});
             this.numericUpDownRevisionNumber.Name = "numericUpDownRevisionNumber";
             this.numericUpDownRevisionNumber.Size = new System.Drawing.Size(120, 20);
-            this.numericUpDownRevisionNumber.TabIndex = 50;
+            this.numericUpDownRevisionNumber.TabIndex = 8;
             // 
             // label11
             // 
             this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(7, 256);
+            this.label11.Location = new System.Drawing.Point(7, 280);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(116, 13);
             this.label11.TabIndex = 49;
@@ -218,7 +222,7 @@
             // label10
             // 
             this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(7, 282);
+            this.label10.Location = new System.Drawing.Point(7, 306);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(108, 13);
             this.label10.TabIndex = 48;
@@ -227,7 +231,7 @@
             // label9
             // 
             this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(7, 204);
+            this.label9.Location = new System.Drawing.Point(7, 228);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(86, 13);
             this.label9.TabIndex = 47;
@@ -235,7 +239,7 @@
             // 
             // textBoxTranslatorsName
             // 
-            this.textBoxTranslatorsName.Location = new System.Drawing.Point(147, 146);
+            this.textBoxTranslatorsName.Location = new System.Drawing.Point(147, 170);
             this.textBoxTranslatorsName.MaxLength = 32;
             this.textBoxTranslatorsName.Name = "textBoxTranslatorsName";
             this.textBoxTranslatorsName.Size = new System.Drawing.Size(219, 20);
@@ -244,7 +248,7 @@
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(6, 149);
+            this.label8.Location = new System.Drawing.Point(6, 173);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(90, 13);
             this.label8.TabIndex = 45;
@@ -252,7 +256,7 @@
             // 
             // textBoxSubtitleListReferenceCode
             // 
-            this.textBoxSubtitleListReferenceCode.Location = new System.Drawing.Point(147, 176);
+            this.textBoxSubtitleListReferenceCode.Location = new System.Drawing.Point(147, 200);
             this.textBoxSubtitleListReferenceCode.MaxLength = 16;
             this.textBoxSubtitleListReferenceCode.Name = "textBoxSubtitleListReferenceCode";
             this.textBoxSubtitleListReferenceCode.Size = new System.Drawing.Size(219, 20);
@@ -261,7 +265,7 @@
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(6, 179);
+            this.label7.Location = new System.Drawing.Point(6, 203);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(132, 13);
             this.label7.TabIndex = 43;
@@ -288,7 +292,7 @@
             this.buttonImport.Location = new System.Drawing.Point(411, 14);
             this.buttonImport.Name = "buttonImport";
             this.buttonImport.Size = new System.Drawing.Size(134, 21);
-            this.buttonImport.TabIndex = 1;
+            this.buttonImport.TabIndex = 12;
             this.buttonImport.Text = "Import...";
             this.buttonImport.UseVisualStyleBackColor = true;
             this.buttonImport.Click += new System.EventHandler(this.buttonImport_Click);
@@ -304,7 +308,7 @@
             // 
             // textBoxTranslatedProgramTitle
             // 
-            this.textBoxTranslatedProgramTitle.Location = new System.Drawing.Point(147, 94);
+            this.textBoxTranslatedProgramTitle.Location = new System.Drawing.Point(147, 118);
             this.textBoxTranslatedProgramTitle.MaxLength = 32;
             this.textBoxTranslatedProgramTitle.Name = "textBoxTranslatedProgramTitle";
             this.textBoxTranslatedProgramTitle.Size = new System.Drawing.Size(219, 20);
@@ -312,7 +316,7 @@
             // 
             // textBoxTranslatedEpisodeTitle
             // 
-            this.textBoxTranslatedEpisodeTitle.Location = new System.Drawing.Point(147, 120);
+            this.textBoxTranslatedEpisodeTitle.Location = new System.Drawing.Point(147, 144);
             this.textBoxTranslatedEpisodeTitle.MaxLength = 32;
             this.textBoxTranslatedEpisodeTitle.Name = "textBoxTranslatedEpisodeTitle";
             this.textBoxTranslatedEpisodeTitle.Size = new System.Drawing.Size(219, 20);
@@ -320,7 +324,7 @@
             // 
             // textBoxOriginalEpisodeTitle
             // 
-            this.textBoxOriginalEpisodeTitle.Location = new System.Drawing.Point(147, 68);
+            this.textBoxOriginalEpisodeTitle.Location = new System.Drawing.Point(147, 92);
             this.textBoxOriginalEpisodeTitle.MaxLength = 32;
             this.textBoxOriginalEpisodeTitle.Name = "textBoxOriginalEpisodeTitle";
             this.textBoxOriginalEpisodeTitle.Size = new System.Drawing.Size(219, 20);
@@ -329,7 +333,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(6, 123);
+            this.label4.Location = new System.Drawing.Point(6, 147);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(116, 13);
             this.label4.TabIndex = 36;
@@ -338,7 +342,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(6, 97);
+            this.label3.Location = new System.Drawing.Point(6, 121);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(117, 13);
             this.label3.TabIndex = 35;
@@ -347,7 +351,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(6, 71);
+            this.label2.Location = new System.Drawing.Point(6, 95);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(101, 13);
             this.label2.TabIndex = 34;
@@ -355,7 +359,7 @@
             // 
             // textBoxOriginalProgramTitle
             // 
-            this.textBoxOriginalProgramTitle.Location = new System.Drawing.Point(147, 42);
+            this.textBoxOriginalProgramTitle.Location = new System.Drawing.Point(147, 66);
             this.textBoxOriginalProgramTitle.MaxLength = 32;
             this.textBoxOriginalProgramTitle.Name = "textBoxOriginalProgramTitle";
             this.textBoxOriginalProgramTitle.Size = new System.Drawing.Size(219, 20);
@@ -364,7 +368,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(6, 45);
+            this.label1.Location = new System.Drawing.Point(6, 69);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(102, 13);
             this.label1.TabIndex = 32;
@@ -376,7 +380,7 @@
             this.tabPageTextAndTiming.Controls.Add(this.label13);
             this.tabPageTextAndTiming.Location = new System.Drawing.Point(4, 22);
             this.tabPageTextAndTiming.Name = "tabPageTextAndTiming";
-            this.tabPageTextAndTiming.Size = new System.Drawing.Size(827, 405);
+            this.tabPageTextAndTiming.Size = new System.Drawing.Size(656, 379);
             this.tabPageTextAndTiming.TabIndex = 2;
             this.tabPageTextAndTiming.Text = "Text and timing information";
             this.tabPageTextAndTiming.UseVisualStyleBackColor = true;
@@ -411,7 +415,7 @@
             this.tabPageErrors.Location = new System.Drawing.Point(4, 22);
             this.tabPageErrors.Name = "tabPageErrors";
             this.tabPageErrors.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageErrors.Size = new System.Drawing.Size(827, 405);
+            this.tabPageErrors.Size = new System.Drawing.Size(656, 379);
             this.tabPageErrors.TabIndex = 1;
             this.tabPageErrors.Text = "Errors";
             this.tabPageErrors.UseVisualStyleBackColor = true;
@@ -436,6 +440,23 @@
             this.label6.Size = new System.Drawing.Size(34, 13);
             this.label6.TabIndex = 12;
             this.label6.Text = "Errors";
+            // 
+            // textBoxLanguageCode
+            // 
+            this.textBoxLanguageCode.Location = new System.Drawing.Point(147, 40);
+            this.textBoxLanguageCode.MaxLength = 32;
+            this.textBoxLanguageCode.Name = "textBoxLanguageCode";
+            this.textBoxLanguageCode.Size = new System.Drawing.Size(219, 20);
+            this.textBoxLanguageCode.TabIndex = 1;
+            // 
+            // label14
+            // 
+            this.label14.AutoSize = true;
+            this.label14.Location = new System.Drawing.Point(6, 43);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(82, 13);
+            this.label14.TabIndex = 54;
+            this.label14.Text = "Language code";
             // 
             // EbuSaveOptions
             // 
@@ -499,5 +520,7 @@
         private System.Windows.Forms.Label label13;
         private System.Windows.Forms.NumericUpDown numericUpDownMaxCharacters;
         private System.Windows.Forms.Label label12;
+        private System.Windows.Forms.TextBox textBoxLanguageCode;
+        private System.Windows.Forms.Label label14;
     }
 }

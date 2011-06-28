@@ -69,18 +69,23 @@ namespace Nikse.SubtitleEdit.Forms
         private void FillFromHeader(Ebu.EbuGeneralSubtitleInformation header)
         {
             comboBoxCharacterCodeTable.SelectedIndex = int.Parse(header.CharacterCodeTableNumber);
+            textBoxLanguageCode.Text = header.LanguageCode;
             textBoxOriginalProgramTitle.Text = header.OriginalProgrammeTitle.TrimEnd();
             textBoxOriginalEpisodeTitle.Text = header.OriginalEpisodeTitle.TrimEnd();
             textBoxTranslatedProgramTitle.Text = header.TranslatedProgrammeTitle.TrimEnd();
             textBoxTranslatedEpisodeTitle.Text = header.TranslatedEpisodeTitle.TrimEnd();
             textBoxTranslatorsName.Text = header.TranslatorsName.TrimEnd();
             textBoxSubtitleListReferenceCode.Text = header.SubtitleListReferenceCode.TrimEnd();
+            
             int number;
             if (int.TryParse(header.RevisionNumber, out number))
                 numericUpDownRevisionNumber.Value = number;
             else
                 numericUpDownRevisionNumber.Value = 1;
-            numericUpDownMaxCharacters.Value = int.Parse(header.MaximumNumberOfDisplayableCharactersInAnyTextRow);
+
+            if (int.TryParse(header.MaximumNumberOfDisplayableCharactersInAnyTextRow, out number))
+                numericUpDownMaxCharacters.Value = number;
+
             if (int.TryParse(header.DiskSequenceNumber, out number))
                 numericUpDownDiskSequenceNumber.Value = number;
             else

@@ -751,6 +751,11 @@ namespace Nikse.SubtitleEdit.Logic
                         ImportSubtitleWithManualChosenEncoding = "Import subtitle with manual chosen encoding...",
                         ImportText = "Import plain text...",
                         ImportTimecodes = "Import time codes...",
+                        Export = "Export",
+                        ExportBdnXml = "BDN xml/png...",
+                        ExportCavena890 = "Cavena 890...",
+                        ExportEbu = "EBU stl...",
+                        ExportPac = "PAC (Screen Electronics)...",
                         Exit = "E&xit"
                     },
 

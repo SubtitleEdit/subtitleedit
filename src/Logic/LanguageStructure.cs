@@ -678,6 +678,11 @@
                     public string ImportSubtitleWithManualChosenEncoding { get; set; }
                     public string ImportText { get; set; }
                     public string ImportTimecodes { get; set; }
+                    public string Export { get; set; }
+                    public string ExportBdnXml { get; set; }
+                    public string ExportCavena890 { get; set; }
+                    public string ExportEbu { get; set; }
+                    public string ExportPac { get; set; }
                     public string Exit { get; set; }
                 }
                 public class EditMenu

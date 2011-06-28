@@ -87,6 +87,9 @@
             this.toolStripSeparator22 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripMenuItemExport = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemExportPngXml = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemCavena890 = new System.Windows.Forms.ToolStripMenuItem();
+            this.eBUSTLToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.pACScreenElectronicsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator10 = new System.Windows.Forms.ToolStripSeparator();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -923,7 +926,10 @@
             // toolStripMenuItemExport
             // 
             this.toolStripMenuItemExport.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripMenuItemExportPngXml});
+            this.toolStripMenuItemExportPngXml,
+            this.toolStripMenuItemCavena890,
+            this.eBUSTLToolStripMenuItem,
+            this.pACScreenElectronicsToolStripMenuItem});
             this.toolStripMenuItemExport.Name = "toolStripMenuItemExport";
             this.toolStripMenuItemExport.Size = new System.Drawing.Size(334, 22);
             this.toolStripMenuItemExport.Text = "Export";
@@ -931,9 +937,30 @@
             // toolStripMenuItemExportPngXml
             // 
             this.toolStripMenuItemExportPngXml.Name = "toolStripMenuItemExportPngXml";
-            this.toolStripMenuItemExportPngXml.Size = new System.Drawing.Size(157, 22);
+            this.toolStripMenuItemExportPngXml.Size = new System.Drawing.Size(222, 22);
             this.toolStripMenuItemExportPngXml.Text = "BDN xml/png...";
             this.toolStripMenuItemExportPngXml.Click += new System.EventHandler(this.toolStripMenuItemExportPngXml_Click);
+            // 
+            // toolStripMenuItemCavena890
+            // 
+            this.toolStripMenuItemCavena890.Name = "toolStripMenuItemCavena890";
+            this.toolStripMenuItemCavena890.Size = new System.Drawing.Size(222, 22);
+            this.toolStripMenuItemCavena890.Text = "Cavena 890...";
+            this.toolStripMenuItemCavena890.Click += new System.EventHandler(this.toolStripMenuItemCavena890_Click);
+            // 
+            // eBUSTLToolStripMenuItem
+            // 
+            this.eBUSTLToolStripMenuItem.Name = "eBUSTLToolStripMenuItem";
+            this.eBUSTLToolStripMenuItem.Size = new System.Drawing.Size(222, 22);
+            this.eBUSTLToolStripMenuItem.Text = "EBU STL...";
+            this.eBUSTLToolStripMenuItem.Click += new System.EventHandler(this.eBUSTLToolStripMenuItem_Click);
+            // 
+            // pACScreenElectronicsToolStripMenuItem
+            // 
+            this.pACScreenElectronicsToolStripMenuItem.Name = "pACScreenElectronicsToolStripMenuItem";
+            this.pACScreenElectronicsToolStripMenuItem.Size = new System.Drawing.Size(222, 22);
+            this.pACScreenElectronicsToolStripMenuItem.Text = "PAC (Screen Electronics)...";
+            this.pACScreenElectronicsToolStripMenuItem.Click += new System.EventHandler(this.pACScreenElectronicsToolStripMenuItem_Click);
             // 
             // toolStripSeparator10
             // 
@@ -3983,6 +4010,9 @@
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem6;
         private System.Windows.Forms.ToolStripMenuItem setStylesForSelectedLinesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem FindDoubleLinesToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem eBUSTLToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem pACScreenElectronicsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemCavena890;
     }
 }
 
