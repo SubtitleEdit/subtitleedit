@@ -412,6 +412,9 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         public void Save(string fileName, Subtitle subtitle)
         {
             EbuGeneralSubtitleInformation header = new EbuGeneralSubtitleInformation();
+            if (subtitle.Header != null && subtitle.Header.Length > 1024 && (subtitle.Header.Contains("STL25") || subtitle.Header.Contains("STL30")))
+                header = ReadHeader(Encoding.UTF8.GetBytes(subtitle.Header));
+
             EbuSaveOptions saveOptions = new EbuSaveOptions();
             saveOptions.Initialize(header, 0, fileName, subtitle);
             if (saveOptions.ShowDialog() != DialogResult.OK)
@@ -493,6 +496,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             subtitle.Paragraphs.Clear();
             byte[] buffer = File.ReadAllBytes(fileName);
             EbuGeneralSubtitleInformation header = ReadHeader(buffer);
+            subtitle.Header = Encoding.UTF8.GetString(buffer);
             foreach (EbuTextTimingInformation tti in ReadTTI(buffer, header))
             {
                 Paragraph p = new Paragraph();

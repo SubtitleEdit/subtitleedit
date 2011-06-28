@@ -426,6 +426,7 @@ namespace Nikse.SubtitleEdit.Forms
             fileNode.Nodes.Add(Configuration.Settings.Language.Main.Menu.File.Open + GetShortcutText(Configuration.Settings.Shortcuts.MainFileOpen));
             fileNode.Nodes.Add(Configuration.Settings.Language.Main.Menu.File.Save + GetShortcutText(Configuration.Settings.Shortcuts.MainFileSave));
             fileNode.Nodes.Add(Configuration.Settings.Language.Main.Menu.File.SaveAs + GetShortcutText(Configuration.Settings.Shortcuts.MainFileSaveAs));
+            fileNode.Nodes.Add(Configuration.Settings.Language.Main.Menu.File.Export + " -> " + Configuration.Settings.Language.Main.Menu.File.ExportEbu + GetShortcutText(Configuration.Settings.Shortcuts.MainFileExportEbu));
             treeViewShortcuts.Nodes.Add(fileNode);
 
             //<MainEditFind>Control+F</MainEditFind>
@@ -810,6 +811,8 @@ namespace Nikse.SubtitleEdit.Forms
                         Configuration.Settings.Shortcuts.MainFileSave = GetShortcut(node.Text);
                     else if (text == Configuration.Settings.Language.Main.Menu.File.SaveAs.Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.MainFileSaveAs = GetShortcut(node.Text);
+                    else if (text == Configuration.Settings.Language.Main.Menu.File.ExportEbu.Replace("&", string.Empty))
+                        Configuration.Settings.Shortcuts.MainFileExportEbu = GetShortcut(node.Text);
                 }
             }
 

@@ -754,6 +754,11 @@ namespace Nikse.SubtitleEdit.Forms
             toolStripMenuItemManualAnsi.Text = _language.Menu.File.ImportSubtitleWithManualChosenEncoding;
             toolStripMenuItemImportText.Text = _language.Menu.File.ImportText;
             toolStripMenuItemImportTimeCodes.Text = _language.Menu.File.ImportTimecodes;
+            toolStripMenuItemExport.Text = _language.Menu.File.Export;
+            toolStripMenuItemExportPngXml.Text = _language.Menu.File.ExportBdnXml;
+            toolStripMenuItemCavena890.Text = _language.Menu.File.ExportCavena890;
+            eBUSTLToolStripMenuItem.Text = _language.Menu.File.ExportEbu;
+            pACScreenElectronicsToolStripMenuItem.Text = _language.Menu.File.ExportPac;
             exitToolStripMenuItem.Text = _language.Menu.File.Exit;
 
             editToolStripMenuItem.Text = _language.Menu.Edit.Title;
@@ -1666,15 +1671,6 @@ namespace Nikse.SubtitleEdit.Forms
             SubtitleFormat currentFormat = GetCurrentSubtitleFormat();
             Utilities.SetSaveDialogFilter(saveFileDialog1, currentFormat);
 
-            var ebu = new Ebu();
-            saveFileDialog1.Filter += "| " + ebu.FriendlyName + "|*" + ebu.Extension;
-
-            var pac = new Pac();
-            saveFileDialog1.Filter += "| " + pac.FriendlyName + "|*" + pac.Extension;
-
-            var cavena890 = new Cavena890();
-            saveFileDialog1.Filter += "| " + cavena890.FriendlyName + "|*" + cavena890.Extension;
-
             saveFileDialog1.Title = _language.SaveSubtitleAs;
             saveFileDialog1.DefaultExt = "*" + currentFormat.Extension;
             saveFileDialog1.AddExtension = true;               
@@ -1691,49 +1687,6 @@ namespace Nikse.SubtitleEdit.Forms
             if (result == DialogResult.OK)
             {
                 openFileDialog1.InitialDirectory = saveFileDialog1.InitialDirectory;
-                if (saveFileDialog1.FilterIndex == SubtitleFormat.AllSubtitleFormats.Count + 1)
-                {
-                    string fileName = saveFileDialog1.FileName;
-                    string ext = Path.GetExtension(fileName).ToLower();
-                    bool extOk = ext == ebu.Extension.ToLower();
-                    if (!extOk)
-                    {
-                        if (fileName.EndsWith("."))
-                            fileName = fileName.Substring(0, fileName.Length - 1);
-                        fileName += ebu.Extension;
-                    }
-                    ebu.Save(fileName, _subtitle);
-                    return DialogResult.OK;
-                }
-                else if (saveFileDialog1.FilterIndex == SubtitleFormat.AllSubtitleFormats.Count + 2)
-                {
-                    string fileName = saveFileDialog1.FileName;
-                    string ext = Path.GetExtension(fileName).ToLower();
-                    bool extOk = ext == pac.Extension.ToLower();
-                    if (!extOk)
-                    {
-                        if (fileName.EndsWith("."))
-                            fileName = fileName.Substring(0, fileName.Length - 1);
-                        fileName += pac.Extension;
-                    }
-                    pac.Save(fileName, _subtitle);
-                    return DialogResult.OK;
-                }
-                else if (saveFileDialog1.FilterIndex == SubtitleFormat.AllSubtitleFormats.Count + 3)
-                {
-                    string fileName = saveFileDialog1.FileName;
-                    string ext = Path.GetExtension(fileName).ToLower();
-                    bool extOk = ext == cavena890.Extension.ToLower();
-                    if (!extOk)
-                    {
-                        if (fileName.EndsWith("."))
-                            fileName = fileName.Substring(0, fileName.Length - 1);
-                        fileName += cavena890.Extension;
-                    }
-                    cavena890.Save(fileName, _subtitle);
-                    return DialogResult.OK;
-                }
-
                 _converted = false;
                 _fileName = saveFileDialog1.FileName;
 
@@ -8266,6 +8219,8 @@ namespace Nikse.SubtitleEdit.Forms
             openToolStripMenuItem.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainFileOpen);
             saveToolStripMenuItem.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainFileSave);
             saveAsToolStripMenuItem.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainFileSaveAs);
+            eBUSTLToolStripMenuItem.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainFileExportEbu);
+
             findToolStripMenuItem.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainEditFind);
             findNextToolStripMenuItem.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainEditFindNext);
             replaceToolStripMenuItem.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainEditReplace);
@@ -10501,6 +10456,105 @@ namespace Nikse.SubtitleEdit.Forms
         private void textBoxListViewTextAlternate_MouseDoubleClick(object sender, MouseEventArgs e)
         {
             textBoxListViewText_MouseDoubleClick(sender, e);
+        }
+
+        private void eBUSTLToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var ebu = new Ebu();
+            saveFileDialog1.Filter =  ebu.Name + "|*" + ebu.Extension;
+            saveFileDialog1.Title = _language.SaveSubtitleAs;
+            saveFileDialog1.DefaultExt = "*" + ebu.Extension;
+            saveFileDialog1.AddExtension = true;               
+ 
+            if (!string.IsNullOrEmpty(_videoFileName))
+                saveFileDialog1.FileName = Path.GetFileNameWithoutExtension(_videoFileName);
+            else
+                saveFileDialog1.FileName = Path.GetFileNameWithoutExtension(_fileName);
+
+            if (!string.IsNullOrEmpty(openFileDialog1.InitialDirectory))
+                saveFileDialog1.InitialDirectory = openFileDialog1.InitialDirectory;
+
+            DialogResult result = saveFileDialog1.ShowDialog(this);
+            if (result == DialogResult.OK)
+            {
+                openFileDialog1.InitialDirectory = saveFileDialog1.InitialDirectory;
+                string fileName = saveFileDialog1.FileName;
+                string ext = Path.GetExtension(fileName).ToLower();
+                bool extOk = ext == ebu.Extension.ToLower();
+                if (!extOk)
+                {
+                    if (fileName.EndsWith("."))
+                        fileName = fileName.Substring(0, fileName.Length - 1);
+                    fileName += ebu.Extension;
+                }
+                ebu.Save(fileName, _subtitle);
+            }
+        }
+
+        private void toolStripMenuItemCavena890_Click(object sender, EventArgs e)
+        {
+            var cavena890 = new Cavena890();
+            saveFileDialog1.Filter = cavena890.Name + "|*" + cavena890.Extension;
+            saveFileDialog1.Title = _language.SaveSubtitleAs;
+            saveFileDialog1.DefaultExt = "*" + cavena890.Extension;
+            saveFileDialog1.AddExtension = true;
+
+            if (!string.IsNullOrEmpty(_videoFileName))
+                saveFileDialog1.FileName = Path.GetFileNameWithoutExtension(_videoFileName);
+            else
+                saveFileDialog1.FileName = Path.GetFileNameWithoutExtension(_fileName);
+
+            if (!string.IsNullOrEmpty(openFileDialog1.InitialDirectory))
+                saveFileDialog1.InitialDirectory = openFileDialog1.InitialDirectory;
+
+            DialogResult result = saveFileDialog1.ShowDialog(this);
+            if (result == DialogResult.OK)
+            {
+                openFileDialog1.InitialDirectory = saveFileDialog1.InitialDirectory;
+                string fileName = saveFileDialog1.FileName;
+                string ext = Path.GetExtension(fileName).ToLower();
+                bool extOk = ext == cavena890.Extension.ToLower();
+                if (!extOk)
+                {
+                    if (fileName.EndsWith("."))
+                        fileName = fileName.Substring(0, fileName.Length - 1);
+                    fileName += cavena890.Extension;
+                }
+                cavena890.Save(fileName, _subtitle);
+            }
+        }
+
+        private void pACScreenElectronicsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var pac = new Pac();
+            saveFileDialog1.Filter = pac.Name + "|*" + pac.Extension;
+            saveFileDialog1.Title = _language.Menu.File.ExportEbu;
+            saveFileDialog1.DefaultExt = "*" + pac.Extension;
+            saveFileDialog1.AddExtension = true;
+
+            if (!string.IsNullOrEmpty(_videoFileName))
+                saveFileDialog1.FileName = Path.GetFileNameWithoutExtension(_videoFileName);
+            else
+                saveFileDialog1.FileName = Path.GetFileNameWithoutExtension(_fileName);
+
+            if (!string.IsNullOrEmpty(openFileDialog1.InitialDirectory))
+                saveFileDialog1.InitialDirectory = openFileDialog1.InitialDirectory;
+
+            DialogResult result = saveFileDialog1.ShowDialog(this);
+            if (result == DialogResult.OK)
+            {
+                openFileDialog1.InitialDirectory = saveFileDialog1.InitialDirectory;
+                string fileName = saveFileDialog1.FileName;
+                string ext = Path.GetExtension(fileName).ToLower();
+                bool extOk = ext == pac.Extension.ToLower();
+                if (!extOk)
+                {
+                    if (fileName.EndsWith("."))
+                        fileName = fileName.Substring(0, fileName.Length - 1);
+                    fileName += pac.Extension;
+                }
+                pac.Save(fileName, _subtitle);
+            }            
         }
 
     }

@@ -34,9 +34,6 @@ namespace Nikse.SubtitleEdit.Logic
             if (info.Success)
                 return info;
 
-            //if (IsWmpAvailable)
-            //    return TryReadVideoInfoViaMediaPlayer(fileName, event1);
-
             return new VideoInfo { VideoCodec = "Unknown" };
         }
 
@@ -79,42 +76,6 @@ namespace Nikse.SubtitleEdit.Logic
             }
             return info;
         }
-
-        //private static VideoInfo TryReadVideoInfoViaMediaPlayer(string fileName, EventHandler doEvents)
-        //{
-        //    var info = new VideoInfo { Success = false };
-
-        //    try
-        //    {
-        //        var player = new WMPLib.WindowsMediaPlayer { URL = fileName };
-
-        //        player.controls.play();
-
-        //        int i = 0;
-        //        while (i < 100 && player.openState != WMPLib.WMPOpenState.wmposMediaOpen)
-        //        {
-        //            i++;
-        //            System.Threading.Thread.Sleep(100);
-        //            if (doEvents != null)
-        //                doEvents.Invoke(null, null);
-        //        }
-
-        //        info.TotalSeconds = player.currentMedia.duration;
-        //        info.TotalMilliseconds = player.currentMedia.duration * 1000;
-
-        //        info.Width = player.currentMedia.imageSourceWidth;
-        //        info.Height = player.currentMedia.imageSourceHeight;
-        //        info.FramesPerSecond = player.network.encodedFrameRate;
-
-        //        player.controls.stop();
-        //        player.close();
-        //        info.Success = true;
-        //    }
-        //    catch
-        //    {
-        //    }
-        //    return info;
-        //}
 
         private static VideoInfo TryReadVideoInfoViaAviHeader(string fileName)
         {
@@ -1104,8 +1065,8 @@ namespace Nikse.SubtitleEdit.Logic
             int index = 0;
             foreach (SubtitleFormat format in SubtitleFormat.AllSubtitleFormats)
             {
-                sb.Append(format.FriendlyName + "|*" + format.Extension + "|");
-                if (currentFormat.FriendlyName == format.FriendlyName)
+                sb.Append(format.Name + "|*" + format.Extension + "|");
+                if (currentFormat.Name == format.Name)
                     saveFileDialog.FilterIndex = index + 1;
                 index++;
             }
