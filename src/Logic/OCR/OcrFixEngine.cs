@@ -935,16 +935,16 @@ namespace Nikse.SubtitleEdit.Logic.OCR
                 int start = tempLine.IndexOf(name);
                 if (start >= 0)
                 {
-                    if (start == 0 || (Environment.NewLine + " ¡¿,.!?:;()[]{}+-$£\"”“#&%…—").Contains(tempLine[start - 1].ToString()))
+                    if (start == 0 || (Environment.NewLine + " ¡¿,.!?:;()[]{}+-$£\"”“#&%…—♪").Contains(tempLine[start - 1].ToString()))
                     {
                         int end = start + name.Length;
-                        if (end >= tempLine.Length || (Environment.NewLine + " ¡¿,.!?:;()[]{}+-$£\"”“#&%…—").Contains(tempLine[end].ToString()))
+                        if (end >= tempLine.Length || (Environment.NewLine + " ¡¿,.!?:;()[]{}+-$£\"”“#&%…—♪").Contains(tempLine[end].ToString()))
                             tempLine = tempLine.Remove(start, name.Length);
                     }
                 }
             }
 
-            string[] words = tempLine.Split((Environment.NewLine + " ¡¿,.!?:;()[]{}+-$£\"”“#&%…—").ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+            string[] words = tempLine.Split((Environment.NewLine + " ¡¿,.!?:;()[]{}+-$£\"”“#&%…—♪").ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
             for (int i = 0; i < words.Length; i++)
             {
                 string word = words[i];

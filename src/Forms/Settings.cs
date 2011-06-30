@@ -807,15 +807,16 @@ namespace Nikse.SubtitleEdit.Forms
                     string text = node.Text.Substring(0, node.Text.IndexOf("[")).Trim();
                     if (text == Configuration.Settings.Language.Main.Menu.File.New.Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.MainFileNew = GetShortcut(node.Text);
+                    else if (text == Configuration.Settings.Language.Main.Menu.File.Open.Replace("&", string.Empty))
+                        Configuration.Settings.Shortcuts.MainFileOpen = GetShortcut(node.Text);
                     else if (text == Configuration.Settings.Language.Main.Menu.File.Save.Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.MainFileSave = GetShortcut(node.Text);
                     else if (text == Configuration.Settings.Language.Main.Menu.File.SaveAs.Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.MainFileSaveAs = GetShortcut(node.Text);
-                    else if (text == Configuration.Settings.Language.Main.Menu.File.ExportEbu.Replace("&", string.Empty))
+                    else if (text == (Configuration.Settings.Language.Main.Menu.File.Export + " -> " + Configuration.Settings.Language.Main.Menu.File.ExportEbu).Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.MainFileExportEbu = GetShortcut(node.Text);
                 }
             }
-
 
             //Main Edit
             foreach (TreeNode node in treeViewShortcuts.Nodes[1].Nodes)

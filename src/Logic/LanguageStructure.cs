@@ -1326,8 +1326,10 @@
             public string UnknownWords { get; set; }
             public string OcrAutoCorrectionSpellchecking { get; set; }
             public string FixOcrErrors { get; set; }
+            public string ImportTextWithMatchingTimeCodes { get; set; }
             public string SaveSubtitleImageAs { get; set; }
-            public string SaveAllSubtitleImagesAs { get; set; }
+            public string SaveAllSubtitleImagesAsBdnXml { get; set; }
+            public string SaveAllSubtitleImagesWithHtml { get; set; }
             public string XImagesSavedInY { get; set; }
             public string TryModiForUnknownWords { get; set; }
             public string DictionaryX  { get; set; }
