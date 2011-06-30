@@ -159,6 +159,7 @@ namespace Nikse.SubtitleEdit.Logic.OCR
                 _wordSkipList.Add("%");
                 _wordSkipList.Add("#");
                 _wordSkipList.Add("+");
+                _wordSkipList.Add("$");
             }
 
             // Load names etc list (names/noise words)
