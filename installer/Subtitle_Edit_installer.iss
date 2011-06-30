@@ -26,8 +26,9 @@
   #error Update your Inno Setup version
 #endif
 
-#define installer_build_number "16"
+#define installer_build_number "17"
 
+#define app_copyright "Copyright © 2001-2011, Nikse"
 #define VerMajor
 #define VerMinor
 #define VerBuild
@@ -48,14 +49,14 @@
 
 #define installer_build_date GetDateTimeString('mmm, d yyyy', '', '')
 
-; If you don't define "localize", i.e. uncomment the following line then no translations
-; for SubtitleEdit or the installer will be included
+; If you don't define "localize", i.e. comment out the following line then no translations
+; for SubtitleEdit or the installer itself will be included in the installer
 #define localize
 
 
 [Setup]
 AppID=SubtitleEdit
-AppCopyright=Copyright © 2001-2011, Nikse
+AppCopyright={#app_copyright}
 AppContact=http://www.nikse.dk/se/
 AppName=Subtitle Edit
 AppVerName=Subtitle Edit v{#simple_app_version}
@@ -69,7 +70,7 @@ UninstallDisplayIcon={app}\SubtitleEdit.exe
 DefaultDirName={pf}\Subtitle Edit
 DefaultGroupName=Subtitle Edit
 VersionInfoCompany=Nikse
-VersionInfoCopyright=Copyright © 2001-2011, Nikse
+VersionInfoCopyright={#app_copyright}
 VersionInfoDescription=Subtitle Edit v{#simple_app_version} Setup
 VersionInfoTextVersion={#simple_app_version}
 VersionInfoVersion={#simple_app_version}
