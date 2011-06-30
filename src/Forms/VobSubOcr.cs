@@ -12,6 +12,7 @@ using System.Xml;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.OCR;
 using Nikse.SubtitleEdit.Logic.VobSub;
+using Nikse.SubtitleEdit.Logic.SubtitleFormats;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -199,8 +200,9 @@ namespace Nikse.SubtitleEdit.Forms
 
             normalToolStripMenuItem.Text = Configuration.Settings.Language.Main.Menu.ContextMenu.Normal;
             italicToolStripMenuItem.Text = Configuration.Settings.Language.General.Italic;
+            importTextWithMatchingTimeCodesToolStripMenuItem.Text = language.ImportTextWithMatchingTimeCodes;
             saveImageAsToolStripMenuItem.Text = language.SaveSubtitleImageAs;
-            saveAllImagesToolStripMenuItem.Text = language.SaveAllSubtitleImagesAs;
+            saveAllImagesToolStripMenuItem.Text = language.SaveAllSubtitleImagesAsBdnXml;
             checkBoxRightToLeft.Checked = Configuration.Settings.VobSubOcr.RightToLeft;
 
             comboBoxTesseractLanguages.Left = labelTesseractLanguage.Left + labelTesseractLanguage.Width;
@@ -2313,8 +2315,12 @@ namespace Nikse.SubtitleEdit.Forms
                 const int border = 25;
                 int imagesSavedCount = 0;
                 StringBuilder sb = new StringBuilder();
+                progressBar1.Maximum = _subtitle.Paragraphs.Count - 1;
+                progressBar1.Value = 0;
+                progressBar1.Visible = true;
                 for (int i = 0; i < _subtitle.Paragraphs.Count; i++)
                 {
+                    progressBar1.Value = i;
                     Bitmap bmp = GetSubtitleBitmap(i);
                     string numberString = string.Format("{0:0000}", i + 1);
                     if (bmp != null)
@@ -2355,6 +2361,7 @@ namespace Nikse.SubtitleEdit.Forms
                 events.InnerXml = sb.ToString();
 
                 File.WriteAllText(Path.Combine(folderBrowserDialog1.SelectedPath, "BDN_Index.xml"), doc.OuterXml);
+                progressBar1.Visible = false;
                 MessageBox.Show(string.Format("{0} images saved in {1}", imagesSavedCount, folderBrowserDialog1.SelectedPath));
             }
         }
@@ -2588,6 +2595,89 @@ namespace Nikse.SubtitleEdit.Forms
             subtitleListView1.Top = labelSubtitleText.Top + labelSubtitleText.Height + 3;
             subtitleListView1.Height = textBoxCurrentText.Top - subtitleListView1.Top - 3;
             groupBoxOcrAutoFix.Height = buttonOK.Top - groupBoxOcrAutoFix.Top - 3;
+        }
+
+        private void importTextWithMatchingTimeCodesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            openFileDialog1.Title = Configuration.Settings.Language.General.OpenSubtitle;
+            openFileDialog1.FileName = string.Empty;
+            openFileDialog1.Filter = Utilities.GetOpenDialogFilter();
+            if (openFileDialog1.ShowDialog(this) == DialogResult.OK)
+            {
+                string fileName = openFileDialog1.FileName;
+                if (!File.Exists(fileName))
+                    return;
+
+                var fi = new FileInfo(fileName);
+                if (fi.Length > 1024 * 1024 * 10) // max 10 mb
+                {
+                    if (MessageBox.Show(string.Format(Configuration.Settings.Language.Main.FileXIsLargerThan10Mb + Environment.NewLine +
+                                                      Environment.NewLine +
+                                                      Configuration.Settings.Language.Main.ContinueAnyway,
+                                                      fileName), Text, MessageBoxButtons.YesNoCancel) != DialogResult.Yes)
+                        return;
+                }
+
+                Subtitle sub = new Subtitle();
+                Encoding encoding = null;
+                SubtitleFormat format = sub.LoadSubtitle(fileName, out encoding, encoding);
+                if (format == null || sub == null)
+                    return;
+
+                int index = 0;
+                foreach (Paragraph p in sub.Paragraphs)
+                {
+                    foreach (Paragraph currentP in _subtitle.Paragraphs)
+                    {
+                        if (string.IsNullOrEmpty(currentP.Text) && p.StartTime.TotalMilliseconds == currentP.StartTime.TotalMilliseconds)
+                        {
+                            currentP.Text = p.Text;
+                            subtitleListView1.SetText(index, p.Text);
+                            break;
+                        }
+                    }
+                    index++;
+                }
+
+                
+            }
+        }
+
+        private void saveAllImagesWithHtmlIndexViewToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (folderBrowserDialog1.ShowDialog(this) == DialogResult.OK)
+            {
+                progressBar1.Maximum = _subtitle.Paragraphs.Count-1;
+                progressBar1.Value = 0;
+                progressBar1.Visible = true;
+                int imagesSavedCount = 0;
+                StringBuilder sb = new StringBuilder();
+                sb.AppendLine("<html>");
+                sb.AppendLine("<head><title>Subtitle images</title></head>");
+                sb.AppendLine("<body>");
+                for (int i = 0; i < _subtitle.Paragraphs.Count; i++)
+                {
+                    progressBar1.Value = i;
+                    Bitmap bmp = GetSubtitleBitmap(i);
+                    string numberString = string.Format("{0:0000}", i + 1);
+                    if (bmp != null)
+                    {
+                        string fileName = Path.Combine(folderBrowserDialog1.SelectedPath, numberString + ".png");
+                        bmp.Save(fileName, System.Drawing.Imaging.ImageFormat.Png);
+                        imagesSavedCount++;
+                        Paragraph p = _subtitle.Paragraphs[i];
+                        sb.AppendLine(string.Format("#{3}: {0}->{1} <img src='{2}.png' /> <br /><hr />", p.StartTime.ToShortString(), p.EndTime.ToShortString(), numberString, i));
+                        bmp.Dispose();
+                    }
+                }
+                sb.AppendLine("</body>");
+                sb.AppendLine("</html>");
+                string htmlFileName = Path.Combine(folderBrowserDialog1.SelectedPath, "index.html");
+                File.WriteAllText(htmlFileName, sb.ToString());
+                progressBar1.Visible = false;
+                MessageBox.Show(string.Format("{0} images saved in {1}", imagesSavedCount, folderBrowserDialog1.SelectedPath));
+                Process.Start(htmlFileName);
+            }
         }
 
     }
