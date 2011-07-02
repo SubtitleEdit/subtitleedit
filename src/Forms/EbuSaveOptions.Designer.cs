@@ -34,6 +34,8 @@
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPageHeader = new System.Windows.Forms.TabPage();
+            this.textBoxCountryOfOrigin = new System.Windows.Forms.TextBox();
+            this.labelCountryOfOrigin = new System.Windows.Forms.Label();
             this.textBoxCodePageNumber = new System.Windows.Forms.TextBox();
             this.contextMenuStripCodeTable = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.unitedStatesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -42,43 +44,41 @@
             this.canadaFrenchToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.nordicToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.numericUpDownMaxRows = new System.Windows.Forms.NumericUpDown();
-            this.labelMaxRows = new System.Windows.Forms.Label();
+            this.labelMaxNumberOfDisplayableRows = new System.Windows.Forms.Label();
             this.comboBoxDiscFormatCode = new System.Windows.Forms.ComboBox();
             this.labelDiskFormatCode = new System.Windows.Forms.Label();
             this.labelCodePageNumber = new System.Windows.Forms.Label();
             this.textBoxLanguageCode = new System.Windows.Forms.TextBox();
-            this.label14 = new System.Windows.Forms.Label();
+            this.labelLanguageCode = new System.Windows.Forms.Label();
             this.numericUpDownMaxCharacters = new System.Windows.Forms.NumericUpDown();
-            this.label12 = new System.Windows.Forms.Label();
+            this.labelMaxNoOfDisplayableChars = new System.Windows.Forms.Label();
             this.numericUpDownDiskSequenceNumber = new System.Windows.Forms.NumericUpDown();
             this.numericUpDownTotalNumberOfDiscs = new System.Windows.Forms.NumericUpDown();
             this.numericUpDownRevisionNumber = new System.Windows.Forms.NumericUpDown();
-            this.label11 = new System.Windows.Forms.Label();
-            this.label10 = new System.Windows.Forms.Label();
-            this.label9 = new System.Windows.Forms.Label();
+            this.labelDiskSequenceNumber = new System.Windows.Forms.Label();
+            this.labelTotalNumberOfDisks = new System.Windows.Forms.Label();
+            this.labelRevisionNumber = new System.Windows.Forms.Label();
             this.textBoxTranslatorsName = new System.Windows.Forms.TextBox();
-            this.label8 = new System.Windows.Forms.Label();
+            this.labelTranslatorsName = new System.Windows.Forms.Label();
             this.textBoxSubtitleListReferenceCode = new System.Windows.Forms.TextBox();
-            this.label7 = new System.Windows.Forms.Label();
+            this.labelSubtitleListReferenceCode = new System.Windows.Forms.Label();
             this.comboBoxCharacterCodeTable = new System.Windows.Forms.ComboBox();
             this.buttonImport = new System.Windows.Forms.Button();
-            this.label5 = new System.Windows.Forms.Label();
+            this.labelCharacterCodeTable = new System.Windows.Forms.Label();
             this.textBoxTranslatedProgramTitle = new System.Windows.Forms.TextBox();
             this.textBoxTranslatedEpisodeTitle = new System.Windows.Forms.TextBox();
             this.textBoxOriginalEpisodeTitle = new System.Windows.Forms.TextBox();
-            this.label4 = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
+            this.labelTranslatedEpisodeTitle = new System.Windows.Forms.Label();
+            this.labelTranslatedProgramTitle = new System.Windows.Forms.Label();
+            this.labelOriginalEpisodeTitle = new System.Windows.Forms.Label();
             this.textBoxOriginalProgramTitle = new System.Windows.Forms.TextBox();
-            this.label1 = new System.Windows.Forms.Label();
+            this.labelOriginalProgramTitle = new System.Windows.Forms.Label();
             this.tabPageTextAndTiming = new System.Windows.Forms.TabPage();
             this.comboBoxJustificationCode = new System.Windows.Forms.ComboBox();
-            this.label13 = new System.Windows.Forms.Label();
+            this.labelJustificationCode = new System.Windows.Forms.Label();
             this.tabPageErrors = new System.Windows.Forms.TabPage();
             this.textBoxErrors = new System.Windows.Forms.TextBox();
             this.label6 = new System.Windows.Forms.Label();
-            this.textBoxCountryOfOrigin = new System.Windows.Forms.TextBox();
-            this.labelCountryOfOrigin = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.tabPageHeader.SuspendLayout();
             this.contextMenuStripCodeTable.SuspendLayout();
@@ -140,35 +140,35 @@
             this.tabPageHeader.Controls.Add(this.labelCountryOfOrigin);
             this.tabPageHeader.Controls.Add(this.textBoxCodePageNumber);
             this.tabPageHeader.Controls.Add(this.numericUpDownMaxRows);
-            this.tabPageHeader.Controls.Add(this.labelMaxRows);
+            this.tabPageHeader.Controls.Add(this.labelMaxNumberOfDisplayableRows);
             this.tabPageHeader.Controls.Add(this.comboBoxDiscFormatCode);
             this.tabPageHeader.Controls.Add(this.labelDiskFormatCode);
             this.tabPageHeader.Controls.Add(this.labelCodePageNumber);
             this.tabPageHeader.Controls.Add(this.textBoxLanguageCode);
-            this.tabPageHeader.Controls.Add(this.label14);
+            this.tabPageHeader.Controls.Add(this.labelLanguageCode);
             this.tabPageHeader.Controls.Add(this.numericUpDownMaxCharacters);
-            this.tabPageHeader.Controls.Add(this.label12);
+            this.tabPageHeader.Controls.Add(this.labelMaxNoOfDisplayableChars);
             this.tabPageHeader.Controls.Add(this.numericUpDownDiskSequenceNumber);
             this.tabPageHeader.Controls.Add(this.numericUpDownTotalNumberOfDiscs);
             this.tabPageHeader.Controls.Add(this.numericUpDownRevisionNumber);
-            this.tabPageHeader.Controls.Add(this.label11);
-            this.tabPageHeader.Controls.Add(this.label10);
-            this.tabPageHeader.Controls.Add(this.label9);
+            this.tabPageHeader.Controls.Add(this.labelDiskSequenceNumber);
+            this.tabPageHeader.Controls.Add(this.labelTotalNumberOfDisks);
+            this.tabPageHeader.Controls.Add(this.labelRevisionNumber);
             this.tabPageHeader.Controls.Add(this.textBoxTranslatorsName);
-            this.tabPageHeader.Controls.Add(this.label8);
+            this.tabPageHeader.Controls.Add(this.labelTranslatorsName);
             this.tabPageHeader.Controls.Add(this.textBoxSubtitleListReferenceCode);
-            this.tabPageHeader.Controls.Add(this.label7);
+            this.tabPageHeader.Controls.Add(this.labelSubtitleListReferenceCode);
             this.tabPageHeader.Controls.Add(this.comboBoxCharacterCodeTable);
             this.tabPageHeader.Controls.Add(this.buttonImport);
-            this.tabPageHeader.Controls.Add(this.label5);
+            this.tabPageHeader.Controls.Add(this.labelCharacterCodeTable);
             this.tabPageHeader.Controls.Add(this.textBoxTranslatedProgramTitle);
             this.tabPageHeader.Controls.Add(this.textBoxTranslatedEpisodeTitle);
             this.tabPageHeader.Controls.Add(this.textBoxOriginalEpisodeTitle);
-            this.tabPageHeader.Controls.Add(this.label4);
-            this.tabPageHeader.Controls.Add(this.label3);
-            this.tabPageHeader.Controls.Add(this.label2);
+            this.tabPageHeader.Controls.Add(this.labelTranslatedEpisodeTitle);
+            this.tabPageHeader.Controls.Add(this.labelTranslatedProgramTitle);
+            this.tabPageHeader.Controls.Add(this.labelOriginalEpisodeTitle);
             this.tabPageHeader.Controls.Add(this.textBoxOriginalProgramTitle);
-            this.tabPageHeader.Controls.Add(this.label1);
+            this.tabPageHeader.Controls.Add(this.labelOriginalProgramTitle);
             this.tabPageHeader.Location = new System.Drawing.Point(4, 22);
             this.tabPageHeader.Name = "tabPageHeader";
             this.tabPageHeader.Padding = new System.Windows.Forms.Padding(3);
@@ -176,6 +176,23 @@
             this.tabPageHeader.TabIndex = 0;
             this.tabPageHeader.Text = "General subtitle information";
             this.tabPageHeader.UseVisualStyleBackColor = true;
+            // 
+            // textBoxCountryOfOrigin
+            // 
+            this.textBoxCountryOfOrigin.Location = new System.Drawing.Point(147, 280);
+            this.textBoxCountryOfOrigin.MaxLength = 3;
+            this.textBoxCountryOfOrigin.Name = "textBoxCountryOfOrigin";
+            this.textBoxCountryOfOrigin.Size = new System.Drawing.Size(219, 20);
+            this.textBoxCountryOfOrigin.TabIndex = 62;
+            // 
+            // labelCountryOfOrigin
+            // 
+            this.labelCountryOfOrigin.AutoSize = true;
+            this.labelCountryOfOrigin.Location = new System.Drawing.Point(6, 283);
+            this.labelCountryOfOrigin.Name = "labelCountryOfOrigin";
+            this.labelCountryOfOrigin.Size = new System.Drawing.Size(83, 13);
+            this.labelCountryOfOrigin.TabIndex = 63;
+            this.labelCountryOfOrigin.Text = "Country of origin";
             // 
             // textBoxCodePageNumber
             // 
@@ -244,14 +261,14 @@
             this.numericUpDownMaxRows.Size = new System.Drawing.Size(120, 20);
             this.numericUpDownMaxRows.TabIndex = 12;
             // 
-            // labelMaxRows
+            // labelMaxNumberOfDisplayableRows
             // 
-            this.labelMaxRows.AutoSize = true;
-            this.labelMaxRows.Location = new System.Drawing.Point(473, 226);
-            this.labelMaxRows.Name = "labelMaxRows";
-            this.labelMaxRows.Size = new System.Drawing.Size(126, 13);
-            this.labelMaxRows.TabIndex = 60;
-            this.labelMaxRows.Text = "Max# of displayable rows";
+            this.labelMaxNumberOfDisplayableRows.AutoSize = true;
+            this.labelMaxNumberOfDisplayableRows.Location = new System.Drawing.Point(473, 226);
+            this.labelMaxNumberOfDisplayableRows.Name = "labelMaxNumberOfDisplayableRows";
+            this.labelMaxNumberOfDisplayableRows.Size = new System.Drawing.Size(126, 13);
+            this.labelMaxNumberOfDisplayableRows.TabIndex = 60;
+            this.labelMaxNumberOfDisplayableRows.Text = "Max# of displayable rows";
             // 
             // comboBoxDiscFormatCode
             // 
@@ -272,7 +289,7 @@
             this.labelDiskFormatCode.Name = "labelDiskFormatCode";
             this.labelDiskFormatCode.Size = new System.Drawing.Size(87, 13);
             this.labelDiskFormatCode.TabIndex = 58;
-            this.labelDiskFormatCode.Text = "Disc format code";
+            this.labelDiskFormatCode.Text = "Disk format code";
             // 
             // labelCodePageNumber
             // 
@@ -291,14 +308,14 @@
             this.textBoxLanguageCode.Size = new System.Drawing.Size(219, 20);
             this.textBoxLanguageCode.TabIndex = 3;
             // 
-            // label14
+            // labelLanguageCode
             // 
-            this.label14.AutoSize = true;
-            this.label14.Location = new System.Drawing.Point(6, 97);
-            this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(82, 13);
-            this.label14.TabIndex = 54;
-            this.label14.Text = "Language code";
+            this.labelLanguageCode.AutoSize = true;
+            this.labelLanguageCode.Location = new System.Drawing.Point(6, 97);
+            this.labelLanguageCode.Name = "labelLanguageCode";
+            this.labelLanguageCode.Size = new System.Drawing.Size(82, 13);
+            this.labelLanguageCode.TabIndex = 54;
+            this.labelLanguageCode.Text = "Language code";
             // 
             // numericUpDownMaxCharacters
             // 
@@ -313,14 +330,14 @@
             this.numericUpDownMaxCharacters.TabIndex = 11;
             this.numericUpDownMaxCharacters.ValueChanged += new System.EventHandler(this.numericUpDownMaxCharacters_ValueChanged);
             // 
-            // label12
+            // labelMaxNoOfDisplayableChars
             // 
-            this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(473, 200);
-            this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(133, 13);
-            this.label12.TabIndex = 51;
-            this.label12.Text = "Max# of displayable chars ";
+            this.labelMaxNoOfDisplayableChars.AutoSize = true;
+            this.labelMaxNoOfDisplayableChars.Location = new System.Drawing.Point(473, 200);
+            this.labelMaxNoOfDisplayableChars.Name = "labelMaxNoOfDisplayableChars";
+            this.labelMaxNoOfDisplayableChars.Size = new System.Drawing.Size(133, 13);
+            this.labelMaxNoOfDisplayableChars.TabIndex = 51;
+            this.labelMaxNoOfDisplayableChars.Text = "Max# of displayable chars ";
             // 
             // numericUpDownDiskSequenceNumber
             // 
@@ -358,32 +375,32 @@
             this.numericUpDownRevisionNumber.Size = new System.Drawing.Size(120, 20);
             this.numericUpDownRevisionNumber.TabIndex = 10;
             // 
-            // label11
+            // labelDiskSequenceNumber
             // 
-            this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(473, 252);
-            this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(116, 13);
-            this.label11.TabIndex = 49;
-            this.label11.Text = "Disk sequence number";
+            this.labelDiskSequenceNumber.AutoSize = true;
+            this.labelDiskSequenceNumber.Location = new System.Drawing.Point(473, 252);
+            this.labelDiskSequenceNumber.Name = "labelDiskSequenceNumber";
+            this.labelDiskSequenceNumber.Size = new System.Drawing.Size(116, 13);
+            this.labelDiskSequenceNumber.TabIndex = 49;
+            this.labelDiskSequenceNumber.Text = "Disk sequence number";
             // 
-            // label10
+            // labelTotalNumberOfDisks
             // 
-            this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(473, 278);
-            this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(108, 13);
-            this.label10.TabIndex = 48;
-            this.label10.Text = "Total number of disks";
+            this.labelTotalNumberOfDisks.AutoSize = true;
+            this.labelTotalNumberOfDisks.Location = new System.Drawing.Point(473, 278);
+            this.labelTotalNumberOfDisks.Name = "labelTotalNumberOfDisks";
+            this.labelTotalNumberOfDisks.Size = new System.Drawing.Size(108, 13);
+            this.labelTotalNumberOfDisks.TabIndex = 48;
+            this.labelTotalNumberOfDisks.Text = "Total number of disks";
             // 
-            // label9
+            // labelRevisionNumber
             // 
-            this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(473, 174);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(86, 13);
-            this.label9.TabIndex = 47;
-            this.label9.Text = "Revision number";
+            this.labelRevisionNumber.AutoSize = true;
+            this.labelRevisionNumber.Location = new System.Drawing.Point(473, 174);
+            this.labelRevisionNumber.Name = "labelRevisionNumber";
+            this.labelRevisionNumber.Size = new System.Drawing.Size(86, 13);
+            this.labelRevisionNumber.TabIndex = 47;
+            this.labelRevisionNumber.Text = "Revision number";
             // 
             // textBoxTranslatorsName
             // 
@@ -393,14 +410,14 @@
             this.textBoxTranslatorsName.Size = new System.Drawing.Size(219, 20);
             this.textBoxTranslatorsName.TabIndex = 8;
             // 
-            // label8
+            // labelTranslatorsName
             // 
-            this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(6, 227);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(90, 13);
-            this.label8.TabIndex = 45;
-            this.label8.Text = "Translator\'s name";
+            this.labelTranslatorsName.AutoSize = true;
+            this.labelTranslatorsName.Location = new System.Drawing.Point(6, 227);
+            this.labelTranslatorsName.Name = "labelTranslatorsName";
+            this.labelTranslatorsName.Size = new System.Drawing.Size(90, 13);
+            this.labelTranslatorsName.TabIndex = 45;
+            this.labelTranslatorsName.Text = "Translator\'s name";
             // 
             // textBoxSubtitleListReferenceCode
             // 
@@ -410,14 +427,14 @@
             this.textBoxSubtitleListReferenceCode.Size = new System.Drawing.Size(219, 20);
             this.textBoxSubtitleListReferenceCode.TabIndex = 9;
             // 
-            // label7
+            // labelSubtitleListReferenceCode
             // 
-            this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(6, 257);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(132, 13);
-            this.label7.TabIndex = 43;
-            this.label7.Text = "Subtitle list reference code";
+            this.labelSubtitleListReferenceCode.AutoSize = true;
+            this.labelSubtitleListReferenceCode.Location = new System.Drawing.Point(6, 257);
+            this.labelSubtitleListReferenceCode.Name = "labelSubtitleListReferenceCode";
+            this.labelSubtitleListReferenceCode.Size = new System.Drawing.Size(132, 13);
+            this.labelSubtitleListReferenceCode.TabIndex = 43;
+            this.labelSubtitleListReferenceCode.Text = "Subtitle list reference code";
             // 
             // comboBoxCharacterCodeTable
             // 
@@ -446,14 +463,14 @@
             this.buttonImport.UseVisualStyleBackColor = true;
             this.buttonImport.Click += new System.EventHandler(this.buttonImport_Click);
             // 
-            // label5
+            // labelCharacterCodeTable
             // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(6, 69);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(106, 13);
-            this.label5.TabIndex = 40;
-            this.label5.Text = "Character code table";
+            this.labelCharacterCodeTable.AutoSize = true;
+            this.labelCharacterCodeTable.Location = new System.Drawing.Point(6, 69);
+            this.labelCharacterCodeTable.Name = "labelCharacterCodeTable";
+            this.labelCharacterCodeTable.Size = new System.Drawing.Size(106, 13);
+            this.labelCharacterCodeTable.TabIndex = 40;
+            this.labelCharacterCodeTable.Text = "Character code table";
             // 
             // textBoxTranslatedProgramTitle
             // 
@@ -479,32 +496,32 @@
             this.textBoxOriginalEpisodeTitle.Size = new System.Drawing.Size(219, 20);
             this.textBoxOriginalEpisodeTitle.TabIndex = 5;
             // 
-            // label4
+            // labelTranslatedEpisodeTitle
             // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(6, 201);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(116, 13);
-            this.label4.TabIndex = 36;
-            this.label4.Text = "Translated episode title";
+            this.labelTranslatedEpisodeTitle.AutoSize = true;
+            this.labelTranslatedEpisodeTitle.Location = new System.Drawing.Point(6, 201);
+            this.labelTranslatedEpisodeTitle.Name = "labelTranslatedEpisodeTitle";
+            this.labelTranslatedEpisodeTitle.Size = new System.Drawing.Size(116, 13);
+            this.labelTranslatedEpisodeTitle.TabIndex = 36;
+            this.labelTranslatedEpisodeTitle.Text = "Translated episode title";
             // 
-            // label3
+            // labelTranslatedProgramTitle
             // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(6, 175);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(117, 13);
-            this.label3.TabIndex = 35;
-            this.label3.Text = "Translated program title";
+            this.labelTranslatedProgramTitle.AutoSize = true;
+            this.labelTranslatedProgramTitle.Location = new System.Drawing.Point(6, 175);
+            this.labelTranslatedProgramTitle.Name = "labelTranslatedProgramTitle";
+            this.labelTranslatedProgramTitle.Size = new System.Drawing.Size(117, 13);
+            this.labelTranslatedProgramTitle.TabIndex = 35;
+            this.labelTranslatedProgramTitle.Text = "Translated program title";
             // 
-            // label2
+            // labelOriginalEpisodeTitle
             // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(6, 149);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(101, 13);
-            this.label2.TabIndex = 34;
-            this.label2.Text = "Original episode title";
+            this.labelOriginalEpisodeTitle.AutoSize = true;
+            this.labelOriginalEpisodeTitle.Location = new System.Drawing.Point(6, 149);
+            this.labelOriginalEpisodeTitle.Name = "labelOriginalEpisodeTitle";
+            this.labelOriginalEpisodeTitle.Size = new System.Drawing.Size(101, 13);
+            this.labelOriginalEpisodeTitle.TabIndex = 34;
+            this.labelOriginalEpisodeTitle.Text = "Original episode title";
             // 
             // textBoxOriginalProgramTitle
             // 
@@ -514,19 +531,19 @@
             this.textBoxOriginalProgramTitle.Size = new System.Drawing.Size(219, 20);
             this.textBoxOriginalProgramTitle.TabIndex = 4;
             // 
-            // label1
+            // labelOriginalProgramTitle
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(6, 123);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(102, 13);
-            this.label1.TabIndex = 32;
-            this.label1.Text = "Original program title";
+            this.labelOriginalProgramTitle.AutoSize = true;
+            this.labelOriginalProgramTitle.Location = new System.Drawing.Point(6, 123);
+            this.labelOriginalProgramTitle.Name = "labelOriginalProgramTitle";
+            this.labelOriginalProgramTitle.Size = new System.Drawing.Size(102, 13);
+            this.labelOriginalProgramTitle.TabIndex = 32;
+            this.labelOriginalProgramTitle.Text = "Original program title";
             // 
             // tabPageTextAndTiming
             // 
             this.tabPageTextAndTiming.Controls.Add(this.comboBoxJustificationCode);
-            this.tabPageTextAndTiming.Controls.Add(this.label13);
+            this.tabPageTextAndTiming.Controls.Add(this.labelJustificationCode);
             this.tabPageTextAndTiming.Location = new System.Drawing.Point(4, 22);
             this.tabPageTextAndTiming.Name = "tabPageTextAndTiming";
             this.tabPageTextAndTiming.Size = new System.Drawing.Size(750, 396);
@@ -548,14 +565,14 @@
             this.comboBoxJustificationCode.Size = new System.Drawing.Size(219, 21);
             this.comboBoxJustificationCode.TabIndex = 43;
             // 
-            // label13
+            // labelJustificationCode
             // 
-            this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(6, 14);
-            this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(89, 13);
-            this.label13.TabIndex = 44;
-            this.label13.Text = "Justification code";
+            this.labelJustificationCode.AutoSize = true;
+            this.labelJustificationCode.Location = new System.Drawing.Point(6, 14);
+            this.labelJustificationCode.Name = "labelJustificationCode";
+            this.labelJustificationCode.Size = new System.Drawing.Size(89, 13);
+            this.labelJustificationCode.TabIndex = 44;
+            this.labelJustificationCode.Text = "Justification code";
             // 
             // tabPageErrors
             // 
@@ -589,23 +606,6 @@
             this.label6.Size = new System.Drawing.Size(34, 13);
             this.label6.TabIndex = 12;
             this.label6.Text = "Errors";
-            // 
-            // textBoxCountryOfOrigin
-            // 
-            this.textBoxCountryOfOrigin.Location = new System.Drawing.Point(147, 280);
-            this.textBoxCountryOfOrigin.MaxLength = 3;
-            this.textBoxCountryOfOrigin.Name = "textBoxCountryOfOrigin";
-            this.textBoxCountryOfOrigin.Size = new System.Drawing.Size(219, 20);
-            this.textBoxCountryOfOrigin.TabIndex = 62;
-            // 
-            // labelCountryOfOrigin
-            // 
-            this.labelCountryOfOrigin.AutoSize = true;
-            this.labelCountryOfOrigin.Location = new System.Drawing.Point(6, 283);
-            this.labelCountryOfOrigin.Name = "labelCountryOfOrigin";
-            this.labelCountryOfOrigin.Size = new System.Drawing.Size(83, 13);
-            this.labelCountryOfOrigin.TabIndex = 63;
-            this.labelCountryOfOrigin.Text = "Country of origin";
             // 
             // EbuSaveOptions
             // 
@@ -645,39 +645,39 @@
         private System.Windows.Forms.NumericUpDown numericUpDownDiskSequenceNumber;
         private System.Windows.Forms.NumericUpDown numericUpDownTotalNumberOfDiscs;
         private System.Windows.Forms.NumericUpDown numericUpDownRevisionNumber;
-        private System.Windows.Forms.Label label11;
-        private System.Windows.Forms.Label label10;
-        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.Label labelDiskSequenceNumber;
+        private System.Windows.Forms.Label labelTotalNumberOfDisks;
+        private System.Windows.Forms.Label labelRevisionNumber;
         private System.Windows.Forms.TextBox textBoxTranslatorsName;
-        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.Label labelTranslatorsName;
         private System.Windows.Forms.TextBox textBoxSubtitleListReferenceCode;
-        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.Label labelSubtitleListReferenceCode;
         private System.Windows.Forms.ComboBox comboBoxCharacterCodeTable;
         private System.Windows.Forms.Button buttonImport;
-        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Label labelCharacterCodeTable;
         private System.Windows.Forms.TextBox textBoxTranslatedProgramTitle;
         private System.Windows.Forms.TextBox textBoxTranslatedEpisodeTitle;
         private System.Windows.Forms.TextBox textBoxOriginalEpisodeTitle;
-        private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label labelTranslatedEpisodeTitle;
+        private System.Windows.Forms.Label labelTranslatedProgramTitle;
+        private System.Windows.Forms.Label labelOriginalEpisodeTitle;
         private System.Windows.Forms.TextBox textBoxOriginalProgramTitle;
-        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label labelOriginalProgramTitle;
         private System.Windows.Forms.TabPage tabPageTextAndTiming;
         private System.Windows.Forms.TabPage tabPageErrors;
         private System.Windows.Forms.TextBox textBoxErrors;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.ComboBox comboBoxJustificationCode;
-        private System.Windows.Forms.Label label13;
+        private System.Windows.Forms.Label labelJustificationCode;
         private System.Windows.Forms.NumericUpDown numericUpDownMaxCharacters;
-        private System.Windows.Forms.Label label12;
+        private System.Windows.Forms.Label labelMaxNoOfDisplayableChars;
         private System.Windows.Forms.TextBox textBoxLanguageCode;
-        private System.Windows.Forms.Label label14;
+        private System.Windows.Forms.Label labelLanguageCode;
         private System.Windows.Forms.Label labelCodePageNumber;
         private System.Windows.Forms.ComboBox comboBoxDiscFormatCode;
         private System.Windows.Forms.Label labelDiskFormatCode;
         private System.Windows.Forms.NumericUpDown numericUpDownMaxRows;
-        private System.Windows.Forms.Label labelMaxRows;
+        private System.Windows.Forms.Label labelMaxNumberOfDisplayableRows;
         private System.Windows.Forms.TextBox textBoxCodePageNumber;
         private System.Windows.Forms.ContextMenuStrip contextMenuStripCodeTable;
         private System.Windows.Forms.ToolStripMenuItem unitedStatesToolStripMenuItem;

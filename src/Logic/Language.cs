@@ -287,7 +287,28 @@ namespace Nikse.SubtitleEdit.Logic
 
             EbuSaveOtpions = new LanguageStructure.EbuSaveOtpions
             {
-                Title = "EBU save options",
+                Title = "EBU save options",                
+                GeneralSubtitleInformation = "General subtitle information",
+                CodePageNumber = "Code page number",
+                DiskFormatCode = "Disk format code",
+                CharacterCodeTable = "Character table",
+                LanguageCode = "Language code",
+                OriginalProgramTitle = "Original program title",
+                OriginalEpisodeTitle = "Original episode title",
+                TranslatedProgramTitle = "Translated program title",
+                TranslatedEpisodeTitle = "Translated episode title",
+                TranslatorsName = "Translators name",
+                SubtitleListReferenceCode = "Subtitle list reference code",
+                CountryOfOrigin = "Country of origin",
+                RevisionNumber = "Revision number",
+                MaxNoOfDisplayableChars = "Max# of chars per row",
+                MaxNumberOfDisplayableRows = "Max# of rows",
+                DiskSequenceNumber = "Disk sequence number",
+                TotalNumberOfDisks = "Total number of disks",
+                Import = "Import...",
+                TextAndTimingInformation = "Text and timing information",
+                JustificationCode = "Justification code",
+                Errors = "Errors",
             };
 
             EffectKaraoke = new LanguageStructure.EffectKaraoke
