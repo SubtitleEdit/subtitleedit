@@ -36,10 +36,11 @@ namespace Nikse.SubtitleEdit.Forms
             this.normalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.italicToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.importTextWithMatchingTimeCodesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.saveImageAsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveAllImagesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
-            this.importTextWithMatchingTimeCodesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.saveAllImagesWithHtmlIndexViewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.labelSubtitleText = new System.Windows.Forms.Label();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.labelStatus = new System.Windows.Forms.Label();
@@ -101,7 +102,6 @@ namespace Nikse.SubtitleEdit.Forms
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
             this.subtitleListView1 = new Nikse.SubtitleEdit.Controls.SubtitleListView();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
-            this.saveAllImagesWithHtmlIndexViewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxSubtitleImage)).BeginInit();
             this.contextMenuStripListview.SuspendLayout();
             this.groupBoxOcrMethod.SuspendLayout();
@@ -171,6 +171,18 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripSeparator1.Name = "toolStripSeparator1";
             this.toolStripSeparator1.Size = new System.Drawing.Size(279, 6);
             // 
+            // importTextWithMatchingTimeCodesToolStripMenuItem
+            // 
+            this.importTextWithMatchingTimeCodesToolStripMenuItem.Name = "importTextWithMatchingTimeCodesToolStripMenuItem";
+            this.importTextWithMatchingTimeCodesToolStripMenuItem.Size = new System.Drawing.Size(282, 22);
+            this.importTextWithMatchingTimeCodesToolStripMenuItem.Text = "Import text with matching time codes...";
+            this.importTextWithMatchingTimeCodesToolStripMenuItem.Click += new System.EventHandler(this.importTextWithMatchingTimeCodesToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator2
+            // 
+            this.toolStripSeparator2.Name = "toolStripSeparator2";
+            this.toolStripSeparator2.Size = new System.Drawing.Size(279, 6);
+            // 
             // saveImageAsToolStripMenuItem
             // 
             this.saveImageAsToolStripMenuItem.Name = "saveImageAsToolStripMenuItem";
@@ -185,17 +197,12 @@ namespace Nikse.SubtitleEdit.Forms
             this.saveAllImagesToolStripMenuItem.Text = "Save all images (png/bdn xml)...";
             this.saveAllImagesToolStripMenuItem.Click += new System.EventHandler(this.saveAllImagesToolStripMenuItem_Click);
             // 
-            // toolStripSeparator2
+            // saveAllImagesWithHtmlIndexViewToolStripMenuItem
             // 
-            this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(279, 6);
-            // 
-            // importTextWithMatchingTimeCodesToolStripMenuItem
-            // 
-            this.importTextWithMatchingTimeCodesToolStripMenuItem.Name = "importTextWithMatchingTimeCodesToolStripMenuItem";
-            this.importTextWithMatchingTimeCodesToolStripMenuItem.Size = new System.Drawing.Size(282, 22);
-            this.importTextWithMatchingTimeCodesToolStripMenuItem.Text = "Import text with matching time codes...";
-            this.importTextWithMatchingTimeCodesToolStripMenuItem.Click += new System.EventHandler(this.importTextWithMatchingTimeCodesToolStripMenuItem_Click);
+            this.saveAllImagesWithHtmlIndexViewToolStripMenuItem.Name = "saveAllImagesWithHtmlIndexViewToolStripMenuItem";
+            this.saveAllImagesWithHtmlIndexViewToolStripMenuItem.Size = new System.Drawing.Size(282, 22);
+            this.saveAllImagesWithHtmlIndexViewToolStripMenuItem.Text = "Save all images with html index view...";
+            this.saveAllImagesWithHtmlIndexViewToolStripMenuItem.Click += new System.EventHandler(this.saveAllImagesWithHtmlIndexViewToolStripMenuItem_Click);
             // 
             // labelSubtitleText
             // 
@@ -474,7 +481,7 @@ namespace Nikse.SubtitleEdit.Forms
             // labelStartFrom
             // 
             this.labelStartFrom.AutoSize = true;
-            this.labelStartFrom.Location = new System.Drawing.Point(122, 28);
+            this.labelStartFrom.Location = new System.Drawing.Point(120, 26);
             this.labelStartFrom.Name = "labelStartFrom";
             this.labelStartFrom.Size = new System.Drawing.Size(127, 13);
             this.labelStartFrom.TabIndex = 31;
@@ -482,7 +489,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             // numericUpDownStartNumber
             // 
-            this.numericUpDownStartNumber.Location = new System.Drawing.Point(125, 49);
+            this.numericUpDownStartNumber.Location = new System.Drawing.Point(123, 47);
             this.numericUpDownStartNumber.Maximum = new decimal(new int[] {
             99999,
             0,
@@ -505,7 +512,7 @@ namespace Nikse.SubtitleEdit.Forms
             // buttonStop
             // 
             this.buttonStop.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonStop.Location = new System.Drawing.Point(13, 54);
+            this.buttonStop.Location = new System.Drawing.Point(11, 52);
             this.buttonStop.Name = "buttonStop";
             this.buttonStop.Size = new System.Drawing.Size(105, 22);
             this.buttonStop.TabIndex = 29;
@@ -517,7 +524,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.buttonStartOcr.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.buttonStartOcr.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonStartOcr.Location = new System.Drawing.Point(13, 26);
+            this.buttonStartOcr.Location = new System.Drawing.Point(11, 24);
             this.buttonStartOcr.Name = "buttonStartOcr";
             this.buttonStartOcr.Size = new System.Drawing.Size(105, 22);
             this.buttonStartOcr.TabIndex = 28;
@@ -881,13 +888,6 @@ namespace Nikse.SubtitleEdit.Forms
             // openFileDialog1
             // 
             this.openFileDialog1.FileName = "openFileDialog1";
-            // 
-            // saveAllImagesWithHtmlIndexViewToolStripMenuItem
-            // 
-            this.saveAllImagesWithHtmlIndexViewToolStripMenuItem.Name = "saveAllImagesWithHtmlIndexViewToolStripMenuItem";
-            this.saveAllImagesWithHtmlIndexViewToolStripMenuItem.Size = new System.Drawing.Size(282, 22);
-            this.saveAllImagesWithHtmlIndexViewToolStripMenuItem.Text = "Save all images with html index view...";
-            this.saveAllImagesWithHtmlIndexViewToolStripMenuItem.Click += new System.EventHandler(this.saveAllImagesWithHtmlIndexViewToolStripMenuItem_Click);
             // 
             // VobSubOcr
             // 

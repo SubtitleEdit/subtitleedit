@@ -25,17 +25,20 @@ namespace Nikse.SubtitleEdit.Forms
             _subtitle = subtitle;
 
             FillFromHeader(header);
-            try
+            if (!string.IsNullOrEmpty(fileName))
             {
-                FillHeaderFromFile(fileName);
-            }
-            catch (Exception ex)
-            {
-                System.Diagnostics.Debug.WriteLine("EbuOptions unable to read existing file: " + fileName + "  - " + ex.Message);
+                try
+                {
+                    FillHeaderFromFile(fileName);
+                }
+                catch (Exception ex)
+                {
+                    System.Diagnostics.Debug.WriteLine("EbuOptions unable to read existing file: " + fileName + "  - " + ex.Message);
+                }
+                string title = Path.GetFileNameWithoutExtension(fileName);
+                textBoxOriginalProgramTitle.Text = title;
             }
 
-            string title = Path.GetFileNameWithoutExtension(fileName);
-            textBoxOriginalProgramTitle.Text = title;
             comboBoxJustificationCode.SelectedIndex = justificationCode;
 
             this.Text = Configuration.Settings.Language.EbuSaveOtpions.Title;
@@ -68,6 +71,13 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void FillFromHeader(Ebu.EbuGeneralSubtitleInformation header)
         {
+            textBoxCodePageNumber.Text = header.CodePageNumber;
+
+            if (header.DiskFormatCode == "STL30.01")
+                comboBoxDiscFormatCode.SelectedIndex = 1;
+            else
+                comboBoxDiscFormatCode.SelectedIndex = 0;
+
             comboBoxCharacterCodeTable.SelectedIndex = int.Parse(header.CharacterCodeTableNumber);
             textBoxLanguageCode.Text = header.LanguageCode;
             textBoxOriginalProgramTitle.Text = header.OriginalProgrammeTitle.TrimEnd();
@@ -76,6 +86,7 @@ namespace Nikse.SubtitleEdit.Forms
             textBoxTranslatedEpisodeTitle.Text = header.TranslatedEpisodeTitle.TrimEnd();
             textBoxTranslatorsName.Text = header.TranslatorsName.TrimEnd();
             textBoxSubtitleListReferenceCode.Text = header.SubtitleListReferenceCode.TrimEnd();
+            textBoxCountryOfOrigin.Text = header.CountryOfOrigin;
             
             int number;
             if (int.TryParse(header.RevisionNumber, out number))
@@ -85,6 +96,10 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (int.TryParse(header.MaximumNumberOfDisplayableCharactersInAnyTextRow, out number))
                 numericUpDownMaxCharacters.Value = number;
+
+            numericUpDownMaxRows.Value = 23;
+            if (int.TryParse(header.MaximumNumberOfDisplayableRows, out number))
+                numericUpDownMaxRows.Value = number;
 
             if (int.TryParse(header.DiskSequenceNumber, out number))
                 numericUpDownDiskSequenceNumber.Value = number;
@@ -98,6 +113,13 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonOK_Click(object sender, EventArgs e)
         {
+            _header.CodePageNumber = textBoxCodePageNumber.Text;
+
+            if (comboBoxDiscFormatCode.SelectedIndex == 1)
+                _header.DiskFormatCode = "STL30.01";
+            else
+                _header.DiskFormatCode = "STL25.01";
+            
             _header.CharacterCodeTableNumber = "0" + comboBoxCharacterCodeTable.SelectedIndex.ToString();
             _header.OriginalProgrammeTitle = textBoxOriginalProgramTitle.Text.PadRight(32, ' ');
             _header.OriginalEpisodeTitle = textBoxOriginalEpisodeTitle.Text.PadRight(32, ' '); 
@@ -105,8 +127,12 @@ namespace Nikse.SubtitleEdit.Forms
             _header.TranslatedEpisodeTitle = textBoxTranslatedEpisodeTitle.Text.PadRight(32, ' '); 
             _header.TranslatorsName = textBoxTranslatorsName.Text.PadRight(32, ' '); 
             _header.SubtitleListReferenceCode = textBoxSubtitleListReferenceCode.Text.PadRight(16, ' ');
+            _header.CountryOfOrigin = textBoxCountryOfOrigin.Text;
+            if (_header.CountryOfOrigin.Length != 3)
+                _header.CountryOfOrigin = "USA";
             _header.RevisionNumber = numericUpDownRevisionNumber.Value.ToString().PadLeft(2, '0');
             _header.MaximumNumberOfDisplayableCharactersInAnyTextRow = numericUpDownMaxCharacters.Value.ToString().PadLeft(2, '0');
+            _header.MaximumNumberOfDisplayableRows = numericUpDownMaxRows.Value.ToString().PadLeft(2, '0');
             _header.DiskSequenceNumber = numericUpDownDiskSequenceNumber.Value.ToString();
             _header.TotalNumberOfDisks = numericUpDownTotalNumberOfDiscs.Value.ToString();
             JustificationCode = (byte)comboBoxJustificationCode.SelectedIndex;
@@ -121,6 +147,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void buttonImport_Click(object sender, EventArgs e)
         {
             openFileDialog1.Filter = "Ebu stl files (*.stl)|*.stl";
+            openFileDialog1.FileName = string.Empty;
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
                 FillHeaderFromFile(openFileDialog1.FileName);
@@ -141,6 +168,31 @@ namespace Nikse.SubtitleEdit.Forms
         private void numericUpDownMaxCharacters_ValueChanged(object sender, EventArgs e)
         {
             CheckErrors(_subtitle);
+        }
+
+        private void unitedStatesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            textBoxCodePageNumber.Text = "437";
+        }
+
+        private void multilingualToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            textBoxCodePageNumber.Text = "850";
+        }
+
+        private void portugalToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            textBoxCodePageNumber.Text = "860";
+        }
+
+        private void canadaFrenchToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            textBoxCodePageNumber.Text = "863";
+        }
+
+        private void nordicToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            textBoxCodePageNumber.Text = "865";
         }
     }
 }

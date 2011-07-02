@@ -43,7 +43,7 @@
             // radioButtonRegEx
             // 
             this.radioButtonRegEx.AutoSize = true;
-            this.radioButtonRegEx.Location = new System.Drawing.Point(201, 51);
+            this.radioButtonRegEx.Location = new System.Drawing.Point(17, 97);
             this.radioButtonRegEx.Name = "radioButtonRegEx";
             this.radioButtonRegEx.Size = new System.Drawing.Size(56, 17);
             this.radioButtonRegEx.TabIndex = 3;
@@ -54,7 +54,7 @@
             // radioButtonCaseSensitive
             // 
             this.radioButtonCaseSensitive.AutoSize = true;
-            this.radioButtonCaseSensitive.Location = new System.Drawing.Point(88, 51);
+            this.radioButtonCaseSensitive.Location = new System.Drawing.Point(17, 74);
             this.radioButtonCaseSensitive.Name = "radioButtonCaseSensitive";
             this.radioButtonCaseSensitive.Size = new System.Drawing.Size(94, 17);
             this.radioButtonCaseSensitive.TabIndex = 2;
@@ -77,7 +77,7 @@
             // 
             // buttonReplace
             // 
-            this.buttonReplace.Location = new System.Drawing.Point(124, 140);
+            this.buttonReplace.Location = new System.Drawing.Point(124, 180);
             this.buttonReplace.Name = "buttonReplace";
             this.buttonReplace.Size = new System.Drawing.Size(75, 21);
             this.buttonReplace.TabIndex = 6;
@@ -95,7 +95,7 @@
             // 
             // buttonReplaceAll
             // 
-            this.buttonReplaceAll.Location = new System.Drawing.Point(205, 140);
+            this.buttonReplaceAll.Location = new System.Drawing.Point(205, 180);
             this.buttonReplaceAll.Name = "buttonReplaceAll";
             this.buttonReplaceAll.Size = new System.Drawing.Size(75, 21);
             this.buttonReplaceAll.TabIndex = 7;
@@ -105,7 +105,7 @@
             // 
             // textBoxReplace
             // 
-            this.textBoxReplace.Location = new System.Drawing.Point(15, 104);
+            this.textBoxReplace.Location = new System.Drawing.Point(15, 144);
             this.textBoxReplace.Name = "textBoxReplace";
             this.textBoxReplace.Size = new System.Drawing.Size(265, 21);
             this.textBoxReplace.TabIndex = 4;
@@ -114,7 +114,7 @@
             // labelReplaceWith
             // 
             this.labelReplaceWith.AutoSize = true;
-            this.labelReplaceWith.Location = new System.Drawing.Point(12, 87);
+            this.labelReplaceWith.Location = new System.Drawing.Point(12, 127);
             this.labelReplaceWith.Name = "labelReplaceWith";
             this.labelReplaceWith.Size = new System.Drawing.Size(72, 13);
             this.labelReplaceWith.TabIndex = 14;
@@ -131,7 +131,7 @@
             // 
             // buttonFind
             // 
-            this.buttonFind.Location = new System.Drawing.Point(43, 140);
+            this.buttonFind.Location = new System.Drawing.Point(43, 180);
             this.buttonFind.Name = "buttonFind";
             this.buttonFind.Size = new System.Drawing.Size(75, 21);
             this.buttonFind.TabIndex = 5;
@@ -143,7 +143,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(330, 170);
+            this.ClientSize = new System.Drawing.Size(330, 208);
             this.Controls.Add(this.buttonFind);
             this.Controls.Add(this.labelFindWhat);
             this.Controls.Add(this.labelReplaceWith);

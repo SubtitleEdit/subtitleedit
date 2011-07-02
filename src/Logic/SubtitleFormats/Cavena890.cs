@@ -250,8 +250,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
                     Paragraph p = new Paragraph();
                     p.Text = (line1 + Environment.NewLine + line2).Trim();
-                    p.StartTime.TotalMilliseconds = (double)((1000.0 / Configuration.Settings.General.CurrentFrameRate) * startFrame);
-                    p.EndTime.TotalMilliseconds = (double)((1000.0 / Configuration.Settings.General.CurrentFrameRate) * endFrame);
+                    p.StartTime.TotalMilliseconds = ((1000.0 / Configuration.Settings.General.CurrentFrameRate) * startFrame);
+                    p.EndTime.TotalMilliseconds = ((1000.0 / Configuration.Settings.General.CurrentFrameRate) * endFrame);
 
                     subtitle.Paragraphs.Add(p);
                     i += TextLength * 2;
