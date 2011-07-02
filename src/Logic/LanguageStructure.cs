@@ -213,9 +213,27 @@
         public class EbuSaveOtpions
         {
             public string Title { get; set; }
-            public string xxx { get; set; }
-            public string yyy { get; set; }
-            public string zzz { get; set; }
+            public string GeneralSubtitleInformation { get; set; }
+            public string CodePageNumber { get; set; }
+            public string DiskFormatCode { get; set; }
+            public string CharacterCodeTable { get; set; }
+            public string LanguageCode { get; set; }
+            public string OriginalProgramTitle { get; set; }
+            public string OriginalEpisodeTitle { get; set; }
+            public string TranslatedProgramTitle { get; set; }
+            public string TranslatedEpisodeTitle { get; set; }
+            public string TranslatorsName { get; set; }
+            public string SubtitleListReferenceCode { get; set; }
+            public string CountryOfOrigin { get; set; }
+            public string RevisionNumber { get; set; }
+            public string MaxNoOfDisplayableChars { get; set; }
+            public string MaxNumberOfDisplayableRows { get; set; }
+            public string DiskSequenceNumber { get; set; }
+            public string TotalNumberOfDisks { get; set; }
+            public string Import { get; set; }
+            public string TextAndTimingInformation { get; set; }
+            public string JustificationCode { get; set; }            
+            public string Errors { get; set; }
         }
 
         public class EffectKaraoke

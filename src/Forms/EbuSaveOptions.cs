@@ -17,6 +17,37 @@ namespace Nikse.SubtitleEdit.Forms
         public EbuSaveOptions()
         {
             InitializeComponent();
+
+            var language = Configuration.Settings.Language.EbuSaveOtpions;
+            Text = language.Title;
+            tabPageHeader.Text = language.GeneralSubtitleInformation;
+            tabPageTextAndTiming.Text = language.TextAndTimingInformation;
+            tabPageErrors.Text = language.Errors;
+
+            labelCodePageNumber.Text = language.CodePageNumber;
+            labelDiskFormatCode.Text = language.DiskFormatCode;
+            labelCharacterCodeTable.Text = language.CharacterCodeTable;
+            labelLanguageCode.Text = language.LanguageCode;
+            labelOriginalProgramTitle.Text = language.OriginalProgramTitle;
+            labelOriginalEpisodeTitle.Text = language.OriginalEpisodeTitle;
+            labelTranslatedProgramTitle.Text = language.TranslatedProgramTitle;
+            labelTranslatedEpisodeTitle.Text = language.TranslatedEpisodeTitle;
+            labelTranslatorsName.Text = language.TranslatorsName;
+            labelSubtitleListReferenceCode.Text = language.SubtitleListReferenceCode;
+            labelCountryOfOrigin.Text = language.CountryOfOrigin;
+
+            labelRevisionNumber.Text = language.RevisionNumber;
+            labelMaxNoOfDisplayableChars.Text = language.MaxNoOfDisplayableChars;
+            labelMaxNumberOfDisplayableRows.Text = language.MaxNumberOfDisplayableRows;
+            labelDiskSequenceNumber.Text = language.DiskSequenceNumber;
+            labelTotalNumberOfDisks.Text = language.TotalNumberOfDisks;
+
+            buttonImport.Text = language.Import;
+
+            labelJustificationCode.Text = language.JustificationCode;
+
+            buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
+            buttonOK.Text = Configuration.Settings.Language.General.OK;
         }
 
         internal void Initialize(Ebu.EbuGeneralSubtitleInformation header, byte justificationCode, string fileName, Subtitle subtitle)
