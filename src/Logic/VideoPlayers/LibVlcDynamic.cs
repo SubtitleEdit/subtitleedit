@@ -226,12 +226,6 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             }
         }
 
-        private static byte[] StringToCharPointer(string s)
-        {
-            return Encoding.UTF8.GetBytes(s + "\0");
-        }
-
-
         public override string PlayerName
         {
             get { return "VLC Lib Dynamic"; }

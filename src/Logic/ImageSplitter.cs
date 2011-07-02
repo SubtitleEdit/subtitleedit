@@ -360,7 +360,7 @@ namespace Nikse.SubtitleEdit.Logic
                 int addY;
                 part = CropTopAndBottom(part, out addY);
                 parts.Add(new ImageSplitterItem(startX, verticalItem.Y + addY, part));
-                part.Save(@"d:\temp\cursive.bmp"); // just for debugging
+                //part.Save(@"d:\temp\cursive.bmp"); // just for debugging
             }
             return parts;
         }

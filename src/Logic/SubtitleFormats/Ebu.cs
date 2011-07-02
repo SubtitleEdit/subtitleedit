@@ -164,7 +164,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
             public EbuTextTimingInformation()
             {
-                SubtitleGroupNumber = 1;
+                SubtitleGroupNumber = 0;
                 ExtensionBlockNumber = 255;
                 CumulativeStatus = 0;
                 VerticalPosition = 0x16;
@@ -186,12 +186,12 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 buffer[5] = (byte)TimeCodeInHours;
                 buffer[6] = (byte)TimeCodeInMinutes;
                 buffer[7] = (byte)TimeCodeInSeconds;
-                buffer[8] = GetFrameFromMilliseconds(TimeCodeInMilliseconds);
+                buffer[8] = GetFrameFromMilliseconds(TimeCodeInMilliseconds, header.FrameRate);
 
                 buffer[9] = (byte)TimeCodeOutHours;
                 buffer[10] = (byte)TimeCodeOutMinutes;
                 buffer[11] = (byte)TimeCodeOutSeconds;
-                buffer[12] = GetFrameFromMilliseconds(TimeCodeOutMilliseconds);
+                buffer[12] = GetFrameFromMilliseconds(TimeCodeOutMilliseconds, header.FrameRate);
 
                 buffer[13] = VerticalPosition;
                 buffer[14] = JustificationCode;
@@ -315,8 +315,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 {
                     if (i < bytes.Length)
                         buffer[16 + i] = bytes[i];
-                    else if (i == bytes.Length)
-                        buffer[16 + i] = 0x8f;
+                    //else if (i == bytes.Length)
+                    //    buffer[16 + i] = 0x8f;
                     else
                         buffer[16 + i] = 0x8f;
                 }
@@ -382,10 +382,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 return text;
             }
 
-            public static byte GetFrameFromMilliseconds(int milliseconds)
+            public static byte GetFrameFromMilliseconds(int milliseconds, double frameRate)
             {
-                int frame = milliseconds / 41;
-                return (byte)frame;
+                int frame = (int)(milliseconds / (1000.0 / frameRate));
+                return (byte)(frame);
             }
         }
 
@@ -412,11 +412,17 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         public void Save(string fileName, Subtitle subtitle)
         {
             EbuGeneralSubtitleInformation header = new EbuGeneralSubtitleInformation();
-            if (subtitle.Header != null && subtitle.Header.Length > 1024 && (subtitle.Header.Contains("STL25") || subtitle.Header.Contains("STL30")))
-                header = ReadHeader(Encoding.UTF8.GetBytes(subtitle.Header));
-
             EbuSaveOptions saveOptions = new EbuSaveOptions();
-            saveOptions.Initialize(header, 0, fileName, subtitle);
+            if (subtitle.Header != null && subtitle.Header.Length > 1024 && (subtitle.Header.Contains("STL25") || subtitle.Header.Contains("STL30")))
+            {
+                header = ReadHeader(Encoding.UTF8.GetBytes(subtitle.Header));
+                saveOptions.Initialize(header, 0, null, subtitle);
+            }
+            else
+            {
+                saveOptions.Initialize(header, 0, fileName, subtitle);
+            }
+
             if (saveOptions.ShowDialog() != DialogResult.OK)
                 return;
 
@@ -435,7 +441,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             if (firstParagraph != null)
             {
                 TimeCode tc = firstParagraph.StartTime;
-                string firstTimeCode = string.Format("{0:00}{1:00}{2:00}{3:00}", tc.Hours, tc.Minutes, tc.Seconds, EbuTextTimingInformation.GetFrameFromMilliseconds(tc.Milliseconds));
+                string firstTimeCode = string.Format("{0:00}{1:00}{2:00}{3:00}", tc.Hours, tc.Minutes, tc.Seconds, EbuTextTimingInformation.GetFrameFromMilliseconds(tc.Milliseconds, header.FrameRate));
                 if (firstTimeCode.Length == 8)
                     header.TimeCodeFirstInCue = firstTimeCode;
             }
@@ -443,6 +449,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             byte[] buffer = ASCIIEncoding.ASCII.GetBytes(header.ToString());
             fs.Write(buffer, 0, buffer.Length);
 
+            int subtitleNumber = 0;
             foreach (Paragraph p in subtitle.Paragraphs)
             {
                 EbuTextTimingInformation tti = new EbuTextTimingInformation();
@@ -451,7 +458,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 else
                     tti.VerticalPosition = 0x16;
                 tti.JustificationCode = saveOptions.JustificationCode;
-                tti.SubtitleNumber = (ushort)p.Number;
+                tti.SubtitleNumber = (ushort)subtitleNumber;
                 tti.TextField = p.Text;
                 tti.TimeCodeInHours = p.StartTime.Hours;
                 tti.TimeCodeInMinutes = p.StartTime.Minutes;
@@ -463,6 +470,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 tti.TimeCodeOutMilliseconds = p.EndTime.Milliseconds;
                 buffer = tti.GetBytes(header);
                 fs.Write(buffer, 0, buffer.Length);
+                subtitleNumber++;
             }
             fs.Close();
         }
@@ -534,6 +542,9 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             header.MaximumNumberOfDisplayableRows = Encoding.ASCII.GetString(buffer, 253, 2);
             header.TimeCodeStatus = Encoding.ASCII.GetString(buffer, 255, 1);
             header.TimeCodeStartOfProgramme = Encoding.ASCII.GetString(buffer, 256, 8);
+            header.CountryOfOrigin = Encoding.ASCII.GetString(buffer, 274, 3);
+            header.SpareBytes = Encoding.ASCII.GetString(buffer, 373, 75);
+            header.UserDefinedArea = Encoding.ASCII.GetString(buffer, 448, 576);
 
             return header;
         }
@@ -831,7 +842,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
             List<EbuTextTimingInformation> list = new List<EbuTextTimingInformation>();
             int index = StartOfTTI;
-            while (index + TTISize < buffer.Length)
+            while (index + TTISize <= buffer.Length)
             {
                 var tti = new EbuTextTimingInformation();
                 

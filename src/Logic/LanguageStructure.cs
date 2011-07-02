@@ -735,6 +735,7 @@
                     public string Title { get; set; }
                     public string SpellCheck { get; set; }
                     public string FindDoubleWords { get; set; }
+                    public string FindDoubleLines { get; set; }
                     public string GetDictionaries { get; set; }
                     public string AddToNamesEtcList { get; set; }
                 }

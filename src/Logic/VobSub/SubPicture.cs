@@ -161,18 +161,12 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
         private Bitmap GenerateBitmap(Rectangle imageDisplayArea, int imageTopFieldDataAddress, int imageBottomFieldDataAddress, List<Color> fourColors)
         {
             var bmp = new Bitmap(imageDisplayArea.Width + 1, imageDisplayArea.Height + 1);
-            
-            // Fill with background color
-            Graphics gr = Graphics.FromImage(bmp);
-            gr.FillRectangle(new SolidBrush(fourColors[0]), new Rectangle(0, 0, bmp.Width, bmp.Height));
-
             var fastBmp = new FastBitmap(bmp);
             fastBmp.LockImage();
             GenerateBitmap(_data, fastBmp, 0, imageTopFieldDataAddress, fourColors);
             GenerateBitmap(_data, fastBmp, 1, imageBottomFieldDataAddress, fourColors);
-            Bitmap cropped = CropBitmapAndUnlok(fastBmp, fourColors[0]);
+            Bitmap cropped = CropBitmapAndUnlok(fastBmp, Color.Transparent);
             bmp.Dispose();
-            gr.Dispose();
             return cropped;
         }
 
@@ -264,7 +258,7 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
 
         private static bool IsBackgroundColor(Color c, Color backgroundColor)
         {
-            return c.ToArgb() == backgroundColor.ToArgb() || c.ToArgb() == Color.FromArgb(0,0,0,0).ToArgb();
+            return c.ToArgb() == backgroundColor.ToArgb() || c.A == 0;
         }
 
         private static void GenerateBitmap(byte[] data, FastBitmap bmp, int startY, int dataAddress, List<Color> fourColors)

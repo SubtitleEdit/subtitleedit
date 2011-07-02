@@ -61,6 +61,7 @@ namespace Nikse.SubtitleEdit.Forms
                 Text = text;
                 Image = image;
                 Text = text;
+                Italic = italic;
                 Index = index;
             }
         }
@@ -1376,6 +1377,7 @@ namespace Nikse.SubtitleEdit.Forms
             StringBuilder word = new StringBuilder();
             int lettersItalics = 0;
             int lettersNonItalics = 0;
+            int lineLettersNonItalics = 0;
             int wordItalics = 0;
             int wordNonItalics = 0;
             bool isItalic = false;
@@ -1389,12 +1391,14 @@ namespace Nikse.SubtitleEdit.Forms
                 else if (matches[i].Text == Environment.NewLine)
                 {
                     ItalicsWord(line, ref word, ref lettersItalics, ref lettersNonItalics, ref wordItalics, ref wordNonItalics, ref isItalic, "");
-                    ItalianLine(paragraph, ref line, ref allItalic, ref wordItalics, ref wordNonItalics, ref isItalic, Environment.NewLine);
+                    ItalianLine(paragraph, ref line, ref allItalic, ref wordItalics, ref wordNonItalics, ref isItalic, Environment.NewLine, lineLettersNonItalics);
+                    lineLettersNonItalics = 0;
                 }
                 else if (matches[i].Italic)
                 {
                     word.Append(matches[i].Text);
                     lettersItalics += matches[i].Text.Length;
+                    lineLettersNonItalics += matches[i].Text.Length;
                 }
                 else
                 {
@@ -1406,7 +1410,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (word.Length > 0)
                 ItalicsWord(line, ref word, ref lettersItalics, ref lettersNonItalics, ref wordItalics, ref wordNonItalics, ref isItalic, "");
             if (line.Length > 0)
-                ItalianLine(paragraph, ref line, ref allItalic, ref wordItalics, ref wordNonItalics, ref isItalic, "");
+                ItalianLine(paragraph, ref line, ref allItalic, ref wordItalics, ref wordNonItalics, ref isItalic, "", lineLettersNonItalics);
 
             if (allItalic)
             {
@@ -1419,7 +1423,7 @@ namespace Nikse.SubtitleEdit.Forms
             return paragraph.ToString();
         }
 
-        private static void ItalianLine(StringBuilder paragraph, ref StringBuilder line, ref bool allItalic, ref int wordItalics, ref int wordNonItalics, ref bool isItalic, string appendString)
+        private static void ItalianLine(StringBuilder paragraph, ref StringBuilder line, ref bool allItalic, ref int wordItalics, ref int wordNonItalics, ref bool isItalic, string appendString, int lineLettersNonItalics)
         {
             if (isItalic)
             {
@@ -1433,7 +1437,7 @@ namespace Nikse.SubtitleEdit.Forms
                 paragraph.Append("<i>" + temp + "</i>");
                 paragraph.Append(appendString);
             }
-            else if (wordItalics > 0 && wordNonItalics == 1 && line.ToString().Trim().StartsWith("-"))
+            else if (wordItalics > 0 && wordNonItalics < 2 && lineLettersNonItalics < 3 && line.ToString().Trim().StartsWith("-"))
             {
                 string temp = line.ToString().Replace("<i>", "").Replace("</i>", "");
                 paragraph.Append("<i>" + temp + "</i>");
@@ -1470,12 +1474,12 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else
             {
-                line.Append(word.ToString());
                 if (isItalic)
                 {
                     line.Append("</i>");
                     isItalic = false;
                 }
+                line.Append(word.ToString());
                 line.Append(appendString);
                 wordNonItalics++;
             }

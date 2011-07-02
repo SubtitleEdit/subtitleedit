@@ -712,7 +712,7 @@ namespace Nikse.SubtitleEdit.Forms
                 splitContainer1.SplitterDistance = Configuration.Settings.General.StartListViewWidth;
             }
 
-            if (Environment.OSVersion.Version.Major < 6) // 6 == Vista/Win2008Server/Win7
+            if (Environment.OSVersion.Version.Major < 6 && Configuration.Settings.General.SubtitleFontName == Utilities.WinXp2kUnicodeFontName) // 6 == Vista/Win2008Server/Win7
             {
                 string unicodeFontName = Utilities.WinXp2kUnicodeFontName;
                 Configuration.Settings.General.SubtitleFontName = unicodeFontName;
@@ -814,6 +814,7 @@ namespace Nikse.SubtitleEdit.Forms
             toolStripMenuItemSpellCheckMain.Text = _language.Menu.SpellCheck.Title;
             spellCheckToolStripMenuItem.Text = _language.Menu.SpellCheck.SpellCheck;
             findDoubleWordsToolStripMenuItem.Text = _language.Menu.SpellCheck.FindDoubleWords;
+            FindDoubleLinesToolStripMenuItem.Text = _language.Menu.SpellCheck.FindDoubleLines;
             GetDictionariesToolStripMenuItem.Text = _language.Menu.SpellCheck.GetDictionaries;
             addWordToNamesetcListToolStripMenuItem.Text = _language.Menu.SpellCheck.AddToNamesEtcList;
 
@@ -5308,6 +5309,8 @@ namespace Nikse.SubtitleEdit.Forms
             Cursor.Current = Cursors.WaitCursor;
             List<SubtitleSequence> sub = matroska.GetMatroskaSubtitle(fileName, (int)matroskaSubtitleInfo.TrackNumber, out isValid);
             Cursor.Current = Cursors.Default;
+            int noOfErrors = 0;
+            string lastError = string.Empty;
 
             if (isValid)
             {
@@ -5318,7 +5321,7 @@ namespace Nikse.SubtitleEdit.Forms
                 StringBuilder log = new StringBuilder();
                 foreach (SubtitleSequence p in sub)
                 {
-                    byte[] buffer;
+                    byte[] buffer = null;
                     if (matroskaSubtitleInfo.ContentEncodingType == 0) // compressed with zlib
                     {
                         MemoryStream outStream = new MemoryStream();
@@ -5331,6 +5334,12 @@ namespace Nikse.SubtitleEdit.Forms
                             outStream.Position = 0;
                             outStream.Read(buffer, 0, buffer.Length);
                         }
+                        catch (Exception exception)
+                        {
+                            TimeCode tc = new TimeCode(TimeSpan.FromMilliseconds(p.StartMilliseconds));
+                            lastError = tc.ToString() + ": " + exception.Message + ": " + exception.StackTrace;
+                            noOfErrors++;
+                        }
                         finally
                         {
                             outStream.Close();
@@ -5342,10 +5351,10 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         buffer = p.BinaryData;
                     }
-                    if (buffer.Length > 100)
+                    if (buffer != null && buffer.Length > 100)
                     {
                         MemoryStream ms = new MemoryStream(buffer);
-                        var list = BluRaySupParser.ParseBluRaySup(ms, log, true); 
+                        var list = BluRaySupParser.ParseBluRaySup(ms, log, true);
                         foreach (var sup in list)
                         {
                             sup.StartTime = p.StartMilliseconds;
@@ -5354,10 +5363,15 @@ namespace Nikse.SubtitleEdit.Forms
 
                             // fix overlapping 
                             if (subtitles.Count > 1 && sub[subtitles.Count - 2].EndMilliseconds > sub[subtitles.Count - 1].StartMilliseconds)
-                                subtitles[subtitles.Count - 2].EndTime = subtitles[subtitles.Count - 1].StartTime - 1;                             
+                                subtitles[subtitles.Count - 2].EndTime = subtitles[subtitles.Count - 1].StartTime - 1;
                         }
                         ms.Close();
                     }
+                }
+
+                if (noOfErrors > 0)
+                {
+                    MessageBox.Show(string.Format("{0} errror(s) occured during extraction of bdsup\r\n\r\n{1}", noOfErrors, lastError));
                 }
 
                 var formSubOcr = new VobSubOcr();

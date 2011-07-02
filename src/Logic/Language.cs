@@ -811,6 +811,7 @@ namespace Nikse.SubtitleEdit.Logic
                     {
                         Title = "Spell check",
                         FindDoubleWords = "Find double words",
+                        FindDoubleLines = "Find double lines",
                         SpellCheck = "&Spell check...",
                         GetDictionaries = "Get dictionaries...",
                         AddToNamesEtcList = "Add word to names/ect list",
