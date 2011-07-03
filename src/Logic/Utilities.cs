@@ -1054,7 +1054,8 @@ namespace Nikse.SubtitleEdit.Logic
             sb.Append("*" + new Pac().Extension + ";");
             sb.Append("*" + new Cavena890().Extension + ";");
             sb.Append("*" + new Spt().Extension + ";");
-            sb.Append("*.sup");
+            sb.Append("*.sup;"); // blu-ray sup 
+            sb.Append("*.son"); // SON text/tif
             sb.Append("|" + Configuration.Settings.Language.General.AllFiles + "|*.*");
             return sb.ToString();
         }

@@ -674,7 +674,11 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     string fileName = Path.Combine(Path.GetDirectoryName(_bdnFileName), _bdnXmlSubtitle.Paragraphs[index].Text);
                     if (File.Exists(fileName))
-                        return new Bitmap(fileName);
+                    {
+                        Bitmap b = new Bitmap(fileName);
+                        b.MakeTransparent();
+                        return b;
+                    }
                 }
                 return null;
             }
@@ -711,7 +715,10 @@ namespace Nikse.SubtitleEdit.Forms
 
                 return _vobSubMergedPackist[index].SubPicture.GetBitmap(null, background, pattern, emphasis1, emphasis2);
             }
-            return _vobSubMergedPackist[index].SubPicture.GetBitmap(_palette, Color.Transparent, Color.Black, Color.White, Color.Black);
+
+            Bitmap bmp = _vobSubMergedPackist[index].SubPicture.GetBitmap(_palette, Color.Transparent, Color.Black, Color.White, Color.Black);
+            bmp.MakeTransparent();
+            return bmp;
         }
 
         private long GetSubtitleStartTimeMilliseconds(int index)
