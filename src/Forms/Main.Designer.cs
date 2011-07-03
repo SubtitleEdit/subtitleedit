@@ -2130,7 +2130,7 @@
             // 
             this.labelTranslateTip.AutoSize = true;
             this.labelTranslateTip.ForeColor = System.Drawing.Color.Gray;
-            this.labelTranslateTip.Location = new System.Drawing.Point(9, 232);
+            this.labelTranslateTip.Location = new System.Drawing.Point(16, 225);
             this.labelTranslateTip.Name = "labelTranslateTip";
             this.labelTranslateTip.Size = new System.Drawing.Size(307, 13);
             this.labelTranslateTip.TabIndex = 7;
@@ -2375,7 +2375,7 @@
             // 
             this.timeUpDownVideoPosition.AutoSize = true;
             this.timeUpDownVideoPosition.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.timeUpDownVideoPosition.Location = new System.Drawing.Point(86, 192);
+            this.timeUpDownVideoPosition.Location = new System.Drawing.Point(96, 191);
             this.timeUpDownVideoPosition.Margin = new System.Windows.Forms.Padding(4);
             this.timeUpDownVideoPosition.Name = "timeUpDownVideoPosition";
             this.timeUpDownVideoPosition.Size = new System.Drawing.Size(92, 25);
@@ -2385,7 +2385,7 @@
             // 
             this.buttonGotoSub.Location = new System.Drawing.Point(6, 58);
             this.buttonGotoSub.Name = "buttonGotoSub";
-            this.buttonGotoSub.Size = new System.Drawing.Size(173, 21);
+            this.buttonGotoSub.Size = new System.Drawing.Size(180, 21);
             this.buttonGotoSub.TabIndex = 2;
             this.buttonGotoSub.Text = "Goto subposition and pause";
             this.buttonGotoSub.UseVisualStyleBackColor = true;
@@ -2395,7 +2395,7 @@
             // 
             this.buttonBeforeText.Location = new System.Drawing.Point(6, 32);
             this.buttonBeforeText.Name = "buttonBeforeText";
-            this.buttonBeforeText.Size = new System.Drawing.Size(173, 21);
+            this.buttonBeforeText.Size = new System.Drawing.Size(180, 21);
             this.buttonBeforeText.TabIndex = 1;
             this.buttonBeforeText.Text = "Play from just before &text";
             this.buttonBeforeText.UseVisualStyleBackColor = true;
@@ -2405,7 +2405,7 @@
             // 
             this.buttonSetEnd.Location = new System.Drawing.Point(6, 110);
             this.buttonSetEnd.Name = "buttonSetEnd";
-            this.buttonSetEnd.Size = new System.Drawing.Size(173, 21);
+            this.buttonSetEnd.Size = new System.Drawing.Size(180, 21);
             this.buttonSetEnd.TabIndex = 4;
             this.buttonSetEnd.Text = "Set &end time";
             this.buttonSetEnd.UseVisualStyleBackColor = true;
@@ -2415,7 +2415,7 @@
             // 
             this.buttonInsertNewText.Location = new System.Drawing.Point(6, 6);
             this.buttonInsertNewText.Name = "buttonInsertNewText";
-            this.buttonInsertNewText.Size = new System.Drawing.Size(173, 21);
+            this.buttonInsertNewText.Size = new System.Drawing.Size(180, 21);
             this.buttonInsertNewText.TabIndex = 0;
             this.buttonInsertNewText.Text = "&Insert new subtitle at vpos";
             this.buttonInsertNewText.UseVisualStyleBackColor = true;
@@ -2425,7 +2425,7 @@
             // 
             this.buttonSetStartTime.Location = new System.Drawing.Point(6, 84);
             this.buttonSetStartTime.Name = "buttonSetStartTime";
-            this.buttonSetStartTime.Size = new System.Drawing.Size(173, 21);
+            this.buttonSetStartTime.Size = new System.Drawing.Size(180, 21);
             this.buttonSetStartTime.TabIndex = 3;
             this.buttonSetStartTime.Text = "Set &start time";
             this.buttonSetStartTime.UseVisualStyleBackColor = true;
@@ -2435,7 +2435,7 @@
             // 
             this.labelCreateF12.AutoSize = true;
             this.labelCreateF12.ForeColor = System.Drawing.Color.Gray;
-            this.labelCreateF12.Location = new System.Drawing.Point(178, 114);
+            this.labelCreateF12.Location = new System.Drawing.Point(188, 114);
             this.labelCreateF12.Name = "labelCreateF12";
             this.labelCreateF12.Size = new System.Drawing.Size(25, 13);
             this.labelCreateF12.TabIndex = 65;
@@ -2445,7 +2445,7 @@
             // 
             this.labelCreateF11.AutoSize = true;
             this.labelCreateF11.ForeColor = System.Drawing.Color.Gray;
-            this.labelCreateF11.Location = new System.Drawing.Point(178, 88);
+            this.labelCreateF11.Location = new System.Drawing.Point(188, 88);
             this.labelCreateF11.Name = "labelCreateF11";
             this.labelCreateF11.Size = new System.Drawing.Size(25, 13);
             this.labelCreateF11.TabIndex = 64;
@@ -2455,7 +2455,7 @@
             // 
             this.labelCreateF10.AutoSize = true;
             this.labelCreateF10.ForeColor = System.Drawing.Color.Gray;
-            this.labelCreateF10.Location = new System.Drawing.Point(178, 36);
+            this.labelCreateF10.Location = new System.Drawing.Point(188, 36);
             this.labelCreateF10.Name = "labelCreateF10";
             this.labelCreateF10.Size = new System.Drawing.Size(25, 13);
             this.labelCreateF10.TabIndex = 63;
@@ -2465,7 +2465,7 @@
             // 
             this.labelCreateF9.AutoSize = true;
             this.labelCreateF9.ForeColor = System.Drawing.Color.Gray;
-            this.labelCreateF9.Location = new System.Drawing.Point(178, 10);
+            this.labelCreateF9.Location = new System.Drawing.Point(188, 10);
             this.labelCreateF9.Name = "labelCreateF9";
             this.labelCreateF9.Size = new System.Drawing.Size(19, 13);
             this.labelCreateF9.TabIndex = 62;
@@ -2473,9 +2473,9 @@
             // 
             // buttonForward2
             // 
-            this.buttonForward2.Location = new System.Drawing.Point(125, 162);
+            this.buttonForward2.Location = new System.Drawing.Point(128, 163);
             this.buttonForward2.Name = "buttonForward2";
-            this.buttonForward2.Size = new System.Drawing.Size(54, 21);
+            this.buttonForward2.Size = new System.Drawing.Size(58, 21);
             this.buttonForward2.TabIndex = 10;
             this.buttonForward2.Text = " >>";
             this.buttonForward2.UseVisualStyleBackColor = true;
@@ -2489,14 +2489,14 @@
             0,
             0,
             65536});
-            this.numericUpDownSec2.Location = new System.Drawing.Point(65, 163);
+            this.numericUpDownSec2.Location = new System.Drawing.Point(70, 164);
             this.numericUpDownSec2.Maximum = new decimal(new int[] {
             60,
             0,
             0,
             0});
             this.numericUpDownSec2.Name = "numericUpDownSec2";
-            this.numericUpDownSec2.Size = new System.Drawing.Size(55, 21);
+            this.numericUpDownSec2.Size = new System.Drawing.Size(51, 21);
             this.numericUpDownSec2.TabIndex = 9;
             this.numericUpDownSec2.Value = new decimal(new int[] {
             5000,
@@ -2507,9 +2507,9 @@
             // 
             // buttonSecBack2
             // 
-            this.buttonSecBack2.Location = new System.Drawing.Point(6, 162);
+            this.buttonSecBack2.Location = new System.Drawing.Point(6, 163);
             this.buttonSecBack2.Name = "buttonSecBack2";
-            this.buttonSecBack2.Size = new System.Drawing.Size(54, 21);
+            this.buttonSecBack2.Size = new System.Drawing.Size(58, 21);
             this.buttonSecBack2.TabIndex = 8;
             this.buttonSecBack2.Text = "<<";
             this.buttonSecBack2.UseVisualStyleBackColor = true;
@@ -2519,7 +2519,7 @@
             // 
             this.labelCreateTip.AutoSize = true;
             this.labelCreateTip.ForeColor = System.Drawing.Color.Gray;
-            this.labelCreateTip.Location = new System.Drawing.Point(7, 230);
+            this.labelCreateTip.Location = new System.Drawing.Point(6, 222);
             this.labelCreateTip.Name = "labelCreateTip";
             this.labelCreateTip.Size = new System.Drawing.Size(186, 13);
             this.labelCreateTip.TabIndex = 13;
@@ -2527,9 +2527,9 @@
             // 
             // buttonForward1
             // 
-            this.buttonForward1.Location = new System.Drawing.Point(125, 136);
+            this.buttonForward1.Location = new System.Drawing.Point(128, 137);
             this.buttonForward1.Name = "buttonForward1";
-            this.buttonForward1.Size = new System.Drawing.Size(54, 21);
+            this.buttonForward1.Size = new System.Drawing.Size(58, 21);
             this.buttonForward1.TabIndex = 7;
             this.buttonForward1.Text = ">>";
             this.buttonForward1.UseVisualStyleBackColor = true;
@@ -2543,14 +2543,14 @@
             0,
             0,
             65536});
-            this.numericUpDownSec1.Location = new System.Drawing.Point(65, 137);
+            this.numericUpDownSec1.Location = new System.Drawing.Point(70, 138);
             this.numericUpDownSec1.Maximum = new decimal(new int[] {
             60,
             0,
             0,
             0});
             this.numericUpDownSec1.Name = "numericUpDownSec1";
-            this.numericUpDownSec1.Size = new System.Drawing.Size(55, 21);
+            this.numericUpDownSec1.Size = new System.Drawing.Size(51, 21);
             this.numericUpDownSec1.TabIndex = 6;
             this.numericUpDownSec1.Value = new decimal(new int[] {
             500,
@@ -2561,18 +2561,18 @@
             // 
             // labelVideoPosition
             // 
-            this.labelVideoPosition.AutoSize = true;
-            this.labelVideoPosition.Location = new System.Drawing.Point(9, 196);
+            this.labelVideoPosition.Location = new System.Drawing.Point(6, 196);
             this.labelVideoPosition.Name = "labelVideoPosition";
-            this.labelVideoPosition.Size = new System.Drawing.Size(77, 13);
+            this.labelVideoPosition.Size = new System.Drawing.Size(90, 13);
             this.labelVideoPosition.TabIndex = 11;
             this.labelVideoPosition.Text = "Video position:";
+            this.labelVideoPosition.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // buttonSecBack1
             // 
-            this.buttonSecBack1.Location = new System.Drawing.Point(6, 136);
+            this.buttonSecBack1.Location = new System.Drawing.Point(6, 137);
             this.buttonSecBack1.Name = "buttonSecBack1";
-            this.buttonSecBack1.Size = new System.Drawing.Size(54, 21);
+            this.buttonSecBack1.Size = new System.Drawing.Size(58, 21);
             this.buttonSecBack1.TabIndex = 5;
             this.buttonSecBack1.Text = "<<";
             this.buttonSecBack1.UseVisualStyleBackColor = true;
@@ -2610,7 +2610,7 @@
             // 
             this.timeUpDownVideoPositionAdjust.AutoSize = true;
             this.timeUpDownVideoPositionAdjust.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.timeUpDownVideoPositionAdjust.Location = new System.Drawing.Point(87, 214);
+            this.timeUpDownVideoPositionAdjust.Location = new System.Drawing.Point(96, 214);
             this.timeUpDownVideoPositionAdjust.Margin = new System.Windows.Forms.Padding(4);
             this.timeUpDownVideoPositionAdjust.Name = "timeUpDownVideoPositionAdjust";
             this.timeUpDownVideoPositionAdjust.Size = new System.Drawing.Size(92, 25);
@@ -2620,7 +2620,7 @@
             // 
             this.buttonAdjustSetEndTime.Location = new System.Drawing.Point(6, 84);
             this.buttonAdjustSetEndTime.Name = "buttonAdjustSetEndTime";
-            this.buttonAdjustSetEndTime.Size = new System.Drawing.Size(173, 21);
+            this.buttonAdjustSetEndTime.Size = new System.Drawing.Size(180, 21);
             this.buttonAdjustSetEndTime.TabIndex = 3;
             this.buttonAdjustSetEndTime.Text = "Set end time";
             this.buttonAdjustSetEndTime.UseVisualStyleBackColor = true;
@@ -2630,7 +2630,7 @@
             // 
             this.buttonSetEndAndGoToNext.Location = new System.Drawing.Point(6, 32);
             this.buttonSetEndAndGoToNext.Name = "buttonSetEndAndGoToNext";
-            this.buttonSetEndAndGoToNext.Size = new System.Drawing.Size(173, 21);
+            this.buttonSetEndAndGoToNext.Size = new System.Drawing.Size(180, 21);
             this.buttonSetEndAndGoToNext.TabIndex = 1;
             this.buttonSetEndAndGoToNext.Text = "Set e&nd && goto next";
             this.buttonSetEndAndGoToNext.UseVisualStyleBackColor = true;
@@ -2640,7 +2640,7 @@
             // 
             this.buttonSetStartAndOffsetRest.Location = new System.Drawing.Point(6, 6);
             this.buttonSetStartAndOffsetRest.Name = "buttonSetStartAndOffsetRest";
-            this.buttonSetStartAndOffsetRest.Size = new System.Drawing.Size(173, 21);
+            this.buttonSetStartAndOffsetRest.Size = new System.Drawing.Size(180, 21);
             this.buttonSetStartAndOffsetRest.TabIndex = 0;
             this.buttonSetStartAndOffsetRest.Text = "Set sta&rt and offset the rest";
             this.buttonSetStartAndOffsetRest.UseVisualStyleBackColor = true;
@@ -2650,7 +2650,7 @@
             // 
             this.buttonAdjustSetStartTime.Location = new System.Drawing.Point(6, 58);
             this.buttonAdjustSetStartTime.Name = "buttonAdjustSetStartTime";
-            this.buttonAdjustSetStartTime.Size = new System.Drawing.Size(173, 21);
+            this.buttonAdjustSetStartTime.Size = new System.Drawing.Size(180, 21);
             this.buttonAdjustSetStartTime.TabIndex = 2;
             this.buttonAdjustSetStartTime.Text = "Set start time";
             this.buttonAdjustSetStartTime.UseVisualStyleBackColor = true;
@@ -2670,7 +2670,7 @@
             // 
             this.labelAdjustF12.AutoSize = true;
             this.labelAdjustF12.ForeColor = System.Drawing.Color.Gray;
-            this.labelAdjustF12.Location = new System.Drawing.Point(178, 88);
+            this.labelAdjustF12.Location = new System.Drawing.Point(188, 88);
             this.labelAdjustF12.Name = "labelAdjustF12";
             this.labelAdjustF12.Size = new System.Drawing.Size(25, 13);
             this.labelAdjustF12.TabIndex = 64;
@@ -2680,7 +2680,7 @@
             // 
             this.labelAdjustF11.AutoSize = true;
             this.labelAdjustF11.ForeColor = System.Drawing.Color.Gray;
-            this.labelAdjustF11.Location = new System.Drawing.Point(178, 62);
+            this.labelAdjustF11.Location = new System.Drawing.Point(188, 62);
             this.labelAdjustF11.Name = "labelAdjustF11";
             this.labelAdjustF11.Size = new System.Drawing.Size(25, 13);
             this.labelAdjustF11.TabIndex = 63;
@@ -2690,7 +2690,7 @@
             // 
             this.labelAdjustF10.AutoSize = true;
             this.labelAdjustF10.ForeColor = System.Drawing.Color.Gray;
-            this.labelAdjustF10.Location = new System.Drawing.Point(178, 36);
+            this.labelAdjustF10.Location = new System.Drawing.Point(188, 36);
             this.labelAdjustF10.Name = "labelAdjustF10";
             this.labelAdjustF10.Size = new System.Drawing.Size(25, 13);
             this.labelAdjustF10.TabIndex = 62;
@@ -2700,7 +2700,7 @@
             // 
             this.labelAdjustF9.AutoSize = true;
             this.labelAdjustF9.ForeColor = System.Drawing.Color.Gray;
-            this.labelAdjustF9.Location = new System.Drawing.Point(178, 10);
+            this.labelAdjustF9.Location = new System.Drawing.Point(188, 10);
             this.labelAdjustF9.Name = "labelAdjustF9";
             this.labelAdjustF9.Size = new System.Drawing.Size(19, 13);
             this.labelAdjustF9.TabIndex = 61;
@@ -2708,9 +2708,9 @@
             // 
             // buttonAdjustSecForward2
             // 
-            this.buttonAdjustSecForward2.Location = new System.Drawing.Point(125, 190);
+            this.buttonAdjustSecForward2.Location = new System.Drawing.Point(128, 188);
             this.buttonAdjustSecForward2.Name = "buttonAdjustSecForward2";
-            this.buttonAdjustSecForward2.Size = new System.Drawing.Size(54, 21);
+            this.buttonAdjustSecForward2.Size = new System.Drawing.Size(58, 21);
             this.buttonAdjustSecForward2.TabIndex = 11;
             this.buttonAdjustSecForward2.Text = ">>";
             this.buttonAdjustSecForward2.UseVisualStyleBackColor = true;
@@ -2724,14 +2724,14 @@
             0,
             0,
             65536});
-            this.numericUpDownSecAdjust2.Location = new System.Drawing.Point(65, 190);
+            this.numericUpDownSecAdjust2.Location = new System.Drawing.Point(70, 189);
             this.numericUpDownSecAdjust2.Maximum = new decimal(new int[] {
             60,
             0,
             0,
             0});
             this.numericUpDownSecAdjust2.Name = "numericUpDownSecAdjust2";
-            this.numericUpDownSecAdjust2.Size = new System.Drawing.Size(56, 21);
+            this.numericUpDownSecAdjust2.Size = new System.Drawing.Size(51, 21);
             this.numericUpDownSecAdjust2.TabIndex = 10;
             this.numericUpDownSecAdjust2.Value = new decimal(new int[] {
             5000,
@@ -2744,7 +2744,7 @@
             // 
             this.buttonAdjustSecBack2.Location = new System.Drawing.Point(6, 188);
             this.buttonAdjustSecBack2.Name = "buttonAdjustSecBack2";
-            this.buttonAdjustSecBack2.Size = new System.Drawing.Size(54, 21);
+            this.buttonAdjustSecBack2.Size = new System.Drawing.Size(58, 21);
             this.buttonAdjustSecBack2.TabIndex = 9;
             this.buttonAdjustSecBack2.Text = "<<";
             this.buttonAdjustSecBack2.UseVisualStyleBackColor = true;
@@ -2752,9 +2752,9 @@
             // 
             // buttonAdjustSecForward1
             // 
-            this.buttonAdjustSecForward1.Location = new System.Drawing.Point(125, 164);
+            this.buttonAdjustSecForward1.Location = new System.Drawing.Point(128, 162);
             this.buttonAdjustSecForward1.Name = "buttonAdjustSecForward1";
-            this.buttonAdjustSecForward1.Size = new System.Drawing.Size(54, 21);
+            this.buttonAdjustSecForward1.Size = new System.Drawing.Size(58, 21);
             this.buttonAdjustSecForward1.TabIndex = 8;
             this.buttonAdjustSecForward1.Text = ">>";
             this.buttonAdjustSecForward1.UseVisualStyleBackColor = true;
@@ -2768,14 +2768,14 @@
             0,
             0,
             65536});
-            this.numericUpDownSecAdjust1.Location = new System.Drawing.Point(65, 164);
+            this.numericUpDownSecAdjust1.Location = new System.Drawing.Point(70, 163);
             this.numericUpDownSecAdjust1.Maximum = new decimal(new int[] {
             60,
             0,
             0,
             0});
             this.numericUpDownSecAdjust1.Name = "numericUpDownSecAdjust1";
-            this.numericUpDownSecAdjust1.Size = new System.Drawing.Size(56, 21);
+            this.numericUpDownSecAdjust1.Size = new System.Drawing.Size(51, 21);
             this.numericUpDownSecAdjust1.TabIndex = 7;
             this.numericUpDownSecAdjust1.Value = new decimal(new int[] {
             500,
@@ -2788,7 +2788,7 @@
             // 
             this.buttonAdjustSecBack1.Location = new System.Drawing.Point(6, 162);
             this.buttonAdjustSecBack1.Name = "buttonAdjustSecBack1";
-            this.buttonAdjustSecBack1.Size = new System.Drawing.Size(54, 21);
+            this.buttonAdjustSecBack1.Size = new System.Drawing.Size(58, 21);
             this.buttonAdjustSecBack1.TabIndex = 6;
             this.buttonAdjustSecBack1.Text = "<<";
             this.buttonAdjustSecBack1.UseVisualStyleBackColor = true;
@@ -2796,18 +2796,18 @@
             // 
             // labelVideoPosition2
             // 
-            this.labelVideoPosition2.AutoSize = true;
-            this.labelVideoPosition2.Location = new System.Drawing.Point(9, 219);
+            this.labelVideoPosition2.Location = new System.Drawing.Point(6, 219);
             this.labelVideoPosition2.Name = "labelVideoPosition2";
-            this.labelVideoPosition2.Size = new System.Drawing.Size(77, 13);
+            this.labelVideoPosition2.Size = new System.Drawing.Size(90, 13);
             this.labelVideoPosition2.TabIndex = 12;
             this.labelVideoPosition2.Text = "Video position:";
+            this.labelVideoPosition2.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // buttonAdjustGoToPosAndPause
             // 
             this.buttonAdjustGoToPosAndPause.Location = new System.Drawing.Point(6, 136);
             this.buttonAdjustGoToPosAndPause.Name = "buttonAdjustGoToPosAndPause";
-            this.buttonAdjustGoToPosAndPause.Size = new System.Drawing.Size(173, 21);
+            this.buttonAdjustGoToPosAndPause.Size = new System.Drawing.Size(180, 21);
             this.buttonAdjustGoToPosAndPause.TabIndex = 5;
             this.buttonAdjustGoToPosAndPause.Text = "&Goto subposition and pause";
             this.buttonAdjustGoToPosAndPause.UseVisualStyleBackColor = true;
@@ -2817,7 +2817,7 @@
             // 
             this.buttonAdjustPlayBefore.Location = new System.Drawing.Point(6, 110);
             this.buttonAdjustPlayBefore.Name = "buttonAdjustPlayBefore";
-            this.buttonAdjustPlayBefore.Size = new System.Drawing.Size(173, 21);
+            this.buttonAdjustPlayBefore.Size = new System.Drawing.Size(180, 21);
             this.buttonAdjustPlayBefore.TabIndex = 4;
             this.buttonAdjustPlayBefore.Text = "&Play from just before text";
             this.buttonAdjustPlayBefore.UseVisualStyleBackColor = true;
@@ -3035,7 +3035,7 @@
             this.groupBoxEdit.Controls.Add(this.labelAutoDuration);
             this.groupBoxEdit.Location = new System.Drawing.Point(3, 152);
             this.groupBoxEdit.Name = "groupBoxEdit";
-            this.groupBoxEdit.Size = new System.Drawing.Size(926, 102);
+            this.groupBoxEdit.Size = new System.Drawing.Size(930, 102);
             this.groupBoxEdit.TabIndex = 1;
             this.groupBoxEdit.TabStop = false;
             // 
@@ -3043,9 +3043,9 @@
             // 
             this.buttonSplitLine.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonSplitLine.ForeColor = System.Drawing.Color.Red;
-            this.buttonSplitLine.Location = new System.Drawing.Point(806, 78);
+            this.buttonSplitLine.Location = new System.Drawing.Point(810, 78);
             this.buttonSplitLine.Name = "buttonSplitLine";
-            this.buttonSplitLine.Size = new System.Drawing.Size(117, 21);
+            this.buttonSplitLine.Size = new System.Drawing.Size(115, 21);
             this.buttonSplitLine.TabIndex = 39;
             this.buttonSplitLine.Text = "Split line";
             this.buttonSplitLine.UseVisualStyleBackColor = true;
@@ -3056,7 +3056,7 @@
             // 
             this.labelAlternateCharactersPerSecond.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.labelAlternateCharactersPerSecond.AutoSize = true;
-            this.labelAlternateCharactersPerSecond.Location = new System.Drawing.Point(838, 12);
+            this.labelAlternateCharactersPerSecond.Location = new System.Drawing.Point(842, 11);
             this.labelAlternateCharactersPerSecond.Name = "labelAlternateCharactersPerSecond";
             this.labelAlternateCharactersPerSecond.Size = new System.Drawing.Size(64, 13);
             this.labelAlternateCharactersPerSecond.TabIndex = 38;
@@ -3066,7 +3066,7 @@
             // 
             this.labelTextAlternateLineTotal.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.labelTextAlternateLineTotal.AutoSize = true;
-            this.labelTextAlternateLineTotal.Location = new System.Drawing.Point(884, 86);
+            this.labelTextAlternateLineTotal.Location = new System.Drawing.Point(888, 86);
             this.labelTextAlternateLineTotal.Name = "labelTextAlternateLineTotal";
             this.labelTextAlternateLineTotal.Size = new System.Drawing.Size(36, 13);
             this.labelTextAlternateLineTotal.TabIndex = 37;
@@ -3093,7 +3093,7 @@
             // labelAlternateText
             // 
             this.labelAlternateText.AutoSize = true;
-            this.labelAlternateText.Location = new System.Drawing.Point(803, 12);
+            this.labelAlternateText.Location = new System.Drawing.Point(803, 11);
             this.labelAlternateText.Name = "labelAlternateText";
             this.labelAlternateText.Size = new System.Drawing.Size(29, 13);
             this.labelAlternateText.TabIndex = 34;
@@ -3103,7 +3103,7 @@
             // labelText
             // 
             this.labelText.AutoSize = true;
-            this.labelText.Location = new System.Drawing.Point(203, 11);
+            this.labelText.Location = new System.Drawing.Point(239, 11);
             this.labelText.Name = "labelText";
             this.labelText.Size = new System.Drawing.Size(29, 13);
             this.labelText.TabIndex = 5;
@@ -3119,7 +3119,7 @@
             this.textBoxListViewTextAlternate.Location = new System.Drawing.Point(806, 28);
             this.textBoxListViewTextAlternate.Multiline = true;
             this.textBoxListViewTextAlternate.Name = "textBoxListViewTextAlternate";
-            this.textBoxListViewTextAlternate.Size = new System.Drawing.Size(13, 56);
+            this.textBoxListViewTextAlternate.Size = new System.Drawing.Size(17, 56);
             this.textBoxListViewTextAlternate.TabIndex = 33;
             this.textBoxListViewTextAlternate.Visible = false;
             this.textBoxListViewTextAlternate.TextChanged += new System.EventHandler(this.textBoxListViewTextAlternate_TextChanged);
@@ -3296,7 +3296,7 @@
             // labelSingleLine
             // 
             this.labelSingleLine.AutoSize = true;
-            this.labelSingleLine.Location = new System.Drawing.Point(310, 86);
+            this.labelSingleLine.Location = new System.Drawing.Point(346, 86);
             this.labelSingleLine.Name = "labelSingleLine";
             this.labelSingleLine.Size = new System.Drawing.Size(76, 13);
             this.labelSingleLine.TabIndex = 32;
@@ -3304,9 +3304,9 @@
             // 
             // buttonAutoBreak
             // 
-            this.buttonAutoBreak.Location = new System.Drawing.Point(139, 75);
+            this.buttonAutoBreak.Location = new System.Drawing.Point(141, 78);
             this.buttonAutoBreak.Name = "buttonAutoBreak";
-            this.buttonAutoBreak.Size = new System.Drawing.Size(64, 21);
+            this.buttonAutoBreak.Size = new System.Drawing.Size(90, 21);
             this.buttonAutoBreak.TabIndex = 4;
             this.buttonAutoBreak.Text = "Auto br";
             this.buttonAutoBreak.UseVisualStyleBackColor = true;
@@ -3315,7 +3315,7 @@
             // labelTextLineLengths
             // 
             this.labelTextLineLengths.AutoSize = true;
-            this.labelTextLineLengths.Location = new System.Drawing.Point(203, 86);
+            this.labelTextLineLengths.Location = new System.Drawing.Point(239, 86);
             this.labelTextLineLengths.Name = "labelTextLineLengths";
             this.labelTextLineLengths.Size = new System.Drawing.Size(108, 13);
             this.labelTextLineLengths.TabIndex = 12;
@@ -3325,7 +3325,7 @@
             // 
             this.labelTextLineTotal.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.labelTextLineTotal.AutoSize = true;
-            this.labelTextLineTotal.Location = new System.Drawing.Point(625, 86);
+            this.labelTextLineTotal.Location = new System.Drawing.Point(638, 86);
             this.labelTextLineTotal.Name = "labelTextLineTotal";
             this.labelTextLineTotal.Size = new System.Drawing.Size(94, 13);
             this.labelTextLineTotal.TabIndex = 21;
@@ -3335,7 +3335,7 @@
             // 
             this.labelCharactersPerSecond.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.labelCharactersPerSecond.AutoSize = true;
-            this.labelCharactersPerSecond.Location = new System.Drawing.Point(634, 11);
+            this.labelCharactersPerSecond.Location = new System.Drawing.Point(638, 11);
             this.labelCharactersPerSecond.Name = "labelCharactersPerSecond";
             this.labelCharactersPerSecond.Size = new System.Drawing.Size(133, 13);
             this.labelCharactersPerSecond.TabIndex = 31;
@@ -3344,9 +3344,9 @@
             // buttonUnBreak
             // 
             this.buttonUnBreak.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonUnBreak.Location = new System.Drawing.Point(806, 30);
+            this.buttonUnBreak.Location = new System.Drawing.Point(810, 30);
             this.buttonUnBreak.Name = "buttonUnBreak";
-            this.buttonUnBreak.Size = new System.Drawing.Size(117, 21);
+            this.buttonUnBreak.Size = new System.Drawing.Size(115, 21);
             this.buttonUnBreak.TabIndex = 6;
             this.buttonUnBreak.Text = "Unbreak";
             this.buttonUnBreak.UseVisualStyleBackColor = true;
@@ -3356,7 +3356,7 @@
             // 
             this.timeUpDownStartTime.AutoSize = true;
             this.timeUpDownStartTime.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.timeUpDownStartTime.Location = new System.Drawing.Point(9, 27);
+            this.timeUpDownStartTime.Location = new System.Drawing.Point(9, 26);
             this.timeUpDownStartTime.Margin = new System.Windows.Forms.Padding(4);
             this.timeUpDownStartTime.Name = "timeUpDownStartTime";
             this.timeUpDownStartTime.Size = new System.Drawing.Size(92, 25);
@@ -3366,9 +3366,9 @@
             // 
             this.buttonUndoListViewChanges.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonUndoListViewChanges.Enabled = false;
-            this.buttonUndoListViewChanges.Location = new System.Drawing.Point(806, 54);
+            this.buttonUndoListViewChanges.Location = new System.Drawing.Point(810, 54);
             this.buttonUndoListViewChanges.Name = "buttonUndoListViewChanges";
-            this.buttonUndoListViewChanges.Size = new System.Drawing.Size(117, 21);
+            this.buttonUndoListViewChanges.Size = new System.Drawing.Size(115, 21);
             this.buttonUndoListViewChanges.TabIndex = 7;
             this.buttonUndoListViewChanges.Text = "Undo changes ";
             this.buttonUndoListViewChanges.UseVisualStyleBackColor = true;
@@ -3378,7 +3378,7 @@
             // 
             this.labelStartTimeWarning.AutoSize = true;
             this.labelStartTimeWarning.ForeColor = System.Drawing.Color.Red;
-            this.labelStartTimeWarning.Location = new System.Drawing.Point(6, 53);
+            this.labelStartTimeWarning.Location = new System.Drawing.Point(9, 50);
             this.labelStartTimeWarning.Name = "labelStartTimeWarning";
             this.labelStartTimeWarning.Size = new System.Drawing.Size(115, 13);
             this.labelStartTimeWarning.TabIndex = 18;
@@ -3388,7 +3388,7 @@
             // 
             this.labelDurationWarning.AutoSize = true;
             this.labelDurationWarning.ForeColor = System.Drawing.Color.Red;
-            this.labelDurationWarning.Location = new System.Drawing.Point(120, 53);
+            this.labelDurationWarning.Location = new System.Drawing.Point(123, 64);
             this.labelDurationWarning.Name = "labelDurationWarning";
             this.labelDurationWarning.Size = new System.Drawing.Size(110, 13);
             this.labelDurationWarning.TabIndex = 17;
@@ -3402,7 +3402,7 @@
             0,
             0,
             65536});
-            this.numericUpDownDuration.Location = new System.Drawing.Point(122, 28);
+            this.numericUpDownDuration.Location = new System.Drawing.Point(123, 27);
             this.numericUpDownDuration.Maximum = new decimal(new int[] {
             99999,
             0,
@@ -3420,7 +3420,7 @@
             // 
             // buttonPrevious
             // 
-            this.buttonPrevious.Location = new System.Drawing.Point(7, 75);
+            this.buttonPrevious.Location = new System.Drawing.Point(9, 78);
             this.buttonPrevious.Name = "buttonPrevious";
             this.buttonPrevious.Size = new System.Drawing.Size(64, 21);
             this.buttonPrevious.TabIndex = 2;
@@ -3430,7 +3430,7 @@
             // 
             // buttonNext
             // 
-            this.buttonNext.Location = new System.Drawing.Point(73, 75);
+            this.buttonNext.Location = new System.Drawing.Point(75, 78);
             this.buttonNext.Name = "buttonNext";
             this.buttonNext.Size = new System.Drawing.Size(64, 21);
             this.buttonNext.TabIndex = 3;
@@ -3441,7 +3441,7 @@
             // labelStartTime
             // 
             this.labelStartTime.AutoSize = true;
-            this.labelStartTime.Location = new System.Drawing.Point(6, 12);
+            this.labelStartTime.Location = new System.Drawing.Point(9, 11);
             this.labelStartTime.Name = "labelStartTime";
             this.labelStartTime.Size = new System.Drawing.Size(54, 13);
             this.labelStartTime.TabIndex = 3;
@@ -3454,10 +3454,10 @@
             this.textBoxListViewText.ContextMenuStrip = this.contextMenuStripTextBoxListView;
             this.textBoxListViewText.Enabled = false;
             this.textBoxListViewText.HideSelection = false;
-            this.textBoxListViewText.Location = new System.Drawing.Point(206, 28);
+            this.textBoxListViewText.Location = new System.Drawing.Point(236, 28);
             this.textBoxListViewText.Multiline = true;
             this.textBoxListViewText.Name = "textBoxListViewText";
-            this.textBoxListViewText.Size = new System.Drawing.Size(596, 56);
+            this.textBoxListViewText.Size = new System.Drawing.Size(570, 56);
             this.textBoxListViewText.TabIndex = 5;
             this.textBoxListViewText.TextChanged += new System.EventHandler(this.TextBoxListViewTextTextChanged);
             this.textBoxListViewText.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxListViewTextKeyDown);
@@ -3469,7 +3469,7 @@
             // labelDuration
             // 
             this.labelDuration.AutoSize = true;
-            this.labelDuration.Location = new System.Drawing.Point(120, 12);
+            this.labelDuration.Location = new System.Drawing.Point(123, 11);
             this.labelDuration.Name = "labelDuration";
             this.labelDuration.Size = new System.Drawing.Size(48, 13);
             this.labelDuration.TabIndex = 4;
@@ -3478,7 +3478,7 @@
             // labelAutoDuration
             // 
             this.labelAutoDuration.AutoSize = true;
-            this.labelAutoDuration.Location = new System.Drawing.Point(93, 12);
+            this.labelAutoDuration.Location = new System.Drawing.Point(94, 11);
             this.labelAutoDuration.Name = "labelAutoDuration";
             this.labelAutoDuration.Size = new System.Drawing.Size(30, 13);
             this.labelAutoDuration.TabIndex = 30;
