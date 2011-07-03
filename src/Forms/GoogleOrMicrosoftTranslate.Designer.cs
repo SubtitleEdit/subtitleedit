@@ -31,8 +31,8 @@
             this.buttonMicrosoft = new System.Windows.Forms.Button();
             this.buttonGoogle = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
-            this.label1 = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
+            this.labelGoogleTranslate = new System.Windows.Forms.Label();
+            this.labelMicrosoftTranslate = new System.Windows.Forms.Label();
             this.comboBoxFrom = new System.Windows.Forms.ComboBox();
             this.buttonTranslate = new System.Windows.Forms.Button();
             this.labelTo = new System.Windows.Forms.Label();
@@ -71,23 +71,23 @@
             this.buttonCancel.Text = "C&ancel";
             this.buttonCancel.UseVisualStyleBackColor = true;
             // 
-            // label1
+            // labelGoogleTranslate
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(14, 148);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(84, 13);
-            this.label1.TabIndex = 20;
-            this.label1.Text = "Google translate";
+            this.labelGoogleTranslate.AutoSize = true;
+            this.labelGoogleTranslate.Location = new System.Drawing.Point(14, 148);
+            this.labelGoogleTranslate.Name = "labelGoogleTranslate";
+            this.labelGoogleTranslate.Size = new System.Drawing.Size(84, 13);
+            this.labelGoogleTranslate.TabIndex = 20;
+            this.labelGoogleTranslate.Text = "Google translate";
             // 
-            // label4
+            // labelMicrosoftTranslate
             // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(319, 148);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(93, 13);
-            this.label4.TabIndex = 21;
-            this.label4.Text = "Microsoft translate";
+            this.labelMicrosoftTranslate.AutoSize = true;
+            this.labelMicrosoftTranslate.Location = new System.Drawing.Point(319, 148);
+            this.labelMicrosoftTranslate.Name = "labelMicrosoftTranslate";
+            this.labelMicrosoftTranslate.Size = new System.Drawing.Size(93, 13);
+            this.labelMicrosoftTranslate.TabIndex = 21;
+            this.labelMicrosoftTranslate.Text = "Microsoft translate";
             // 
             // comboBoxFrom
             // 
@@ -164,8 +164,8 @@
             this.Controls.Add(this.labelTo);
             this.Controls.Add(this.comboBoxTo);
             this.Controls.Add(this.labelFrom);
-            this.Controls.Add(this.label4);
-            this.Controls.Add(this.label1);
+            this.Controls.Add(this.labelMicrosoftTranslate);
+            this.Controls.Add(this.labelGoogleTranslate);
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.buttonGoogle);
             this.Controls.Add(this.buttonMicrosoft);
@@ -187,8 +187,8 @@
         private System.Windows.Forms.Button buttonMicrosoft;
         private System.Windows.Forms.Button buttonGoogle;
         private System.Windows.Forms.Button buttonCancel;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Label labelGoogleTranslate;
+        private System.Windows.Forms.Label labelMicrosoftTranslate;
         private System.Windows.Forms.ComboBox comboBoxFrom;
         private System.Windows.Forms.Button buttonTranslate;
         private System.Windows.Forms.Label labelTo;

@@ -41,6 +41,9 @@ namespace Nikse.SubtitleEdit.Forms
             this.saveImageAsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveAllImagesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveAllImagesWithHtmlIndexViewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparatorImageCompare = new System.Windows.Forms.ToolStripSeparator();
+            this.inspectImageCompareMatchesForCurrentImageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.EditLastAdditionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.labelSubtitleText = new System.Windows.Forms.Label();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.labelStatus = new System.Windows.Forms.Label();
@@ -100,8 +103,8 @@ namespace Nikse.SubtitleEdit.Forms
             this.checkBoxShowOnlyForced = new System.Windows.Forms.CheckBox();
             this.checkBoxUseTimeCodesFromIdx = new System.Windows.Forms.CheckBox();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
-            this.subtitleListView1 = new Nikse.SubtitleEdit.Controls.SubtitleListView();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
+            this.subtitleListView1 = new Nikse.SubtitleEdit.Controls.SubtitleListView();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxSubtitleImage)).BeginInit();
             this.contextMenuStripListview.SuspendLayout();
             this.groupBoxOcrMethod.SuspendLayout();
@@ -147,62 +150,84 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolStripSeparator2,
             this.saveImageAsToolStripMenuItem,
             this.saveAllImagesToolStripMenuItem,
-            this.saveAllImagesWithHtmlIndexViewToolStripMenuItem});
+            this.saveAllImagesWithHtmlIndexViewToolStripMenuItem,
+            this.toolStripSeparatorImageCompare,
+            this.inspectImageCompareMatchesForCurrentImageToolStripMenuItem,
+            this.EditLastAdditionsToolStripMenuItem});
             this.contextMenuStripListview.Name = "contextMenuStripListview";
-            this.contextMenuStripListview.Size = new System.Drawing.Size(283, 170);
+            this.contextMenuStripListview.Size = new System.Drawing.Size(306, 220);
             this.contextMenuStripListview.Opening += new System.ComponentModel.CancelEventHandler(this.ContextMenuStripListviewOpening);
             // 
             // normalToolStripMenuItem
             // 
             this.normalToolStripMenuItem.Name = "normalToolStripMenuItem";
-            this.normalToolStripMenuItem.Size = new System.Drawing.Size(282, 22);
+            this.normalToolStripMenuItem.Size = new System.Drawing.Size(305, 22);
             this.normalToolStripMenuItem.Text = "Normal";
             this.normalToolStripMenuItem.Click += new System.EventHandler(this.NormalToolStripMenuItemClick);
             // 
             // italicToolStripMenuItem
             // 
             this.italicToolStripMenuItem.Name = "italicToolStripMenuItem";
-            this.italicToolStripMenuItem.Size = new System.Drawing.Size(282, 22);
+            this.italicToolStripMenuItem.Size = new System.Drawing.Size(305, 22);
             this.italicToolStripMenuItem.Text = "Italic";
             this.italicToolStripMenuItem.Click += new System.EventHandler(this.ItalicToolStripMenuItemClick);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(279, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(302, 6);
             // 
             // importTextWithMatchingTimeCodesToolStripMenuItem
             // 
             this.importTextWithMatchingTimeCodesToolStripMenuItem.Name = "importTextWithMatchingTimeCodesToolStripMenuItem";
-            this.importTextWithMatchingTimeCodesToolStripMenuItem.Size = new System.Drawing.Size(282, 22);
+            this.importTextWithMatchingTimeCodesToolStripMenuItem.Size = new System.Drawing.Size(305, 22);
             this.importTextWithMatchingTimeCodesToolStripMenuItem.Text = "Import text with matching time codes...";
             this.importTextWithMatchingTimeCodesToolStripMenuItem.Click += new System.EventHandler(this.importTextWithMatchingTimeCodesToolStripMenuItem_Click);
             // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(279, 6);
+            this.toolStripSeparator2.Size = new System.Drawing.Size(302, 6);
             // 
             // saveImageAsToolStripMenuItem
             // 
             this.saveImageAsToolStripMenuItem.Name = "saveImageAsToolStripMenuItem";
-            this.saveImageAsToolStripMenuItem.Size = new System.Drawing.Size(282, 22);
+            this.saveImageAsToolStripMenuItem.Size = new System.Drawing.Size(305, 22);
             this.saveImageAsToolStripMenuItem.Text = "Save image as...";
             this.saveImageAsToolStripMenuItem.Click += new System.EventHandler(this.SaveImageAsToolStripMenuItemClick);
             // 
             // saveAllImagesToolStripMenuItem
             // 
             this.saveAllImagesToolStripMenuItem.Name = "saveAllImagesToolStripMenuItem";
-            this.saveAllImagesToolStripMenuItem.Size = new System.Drawing.Size(282, 22);
+            this.saveAllImagesToolStripMenuItem.Size = new System.Drawing.Size(305, 22);
             this.saveAllImagesToolStripMenuItem.Text = "Save all images (png/bdn xml)...";
             this.saveAllImagesToolStripMenuItem.Click += new System.EventHandler(this.saveAllImagesToolStripMenuItem_Click);
             // 
             // saveAllImagesWithHtmlIndexViewToolStripMenuItem
             // 
             this.saveAllImagesWithHtmlIndexViewToolStripMenuItem.Name = "saveAllImagesWithHtmlIndexViewToolStripMenuItem";
-            this.saveAllImagesWithHtmlIndexViewToolStripMenuItem.Size = new System.Drawing.Size(282, 22);
+            this.saveAllImagesWithHtmlIndexViewToolStripMenuItem.Size = new System.Drawing.Size(305, 22);
             this.saveAllImagesWithHtmlIndexViewToolStripMenuItem.Text = "Save all images with html index view...";
             this.saveAllImagesWithHtmlIndexViewToolStripMenuItem.Click += new System.EventHandler(this.saveAllImagesWithHtmlIndexViewToolStripMenuItem_Click);
+            // 
+            // toolStripSeparatorImageCompare
+            // 
+            this.toolStripSeparatorImageCompare.Name = "toolStripSeparatorImageCompare";
+            this.toolStripSeparatorImageCompare.Size = new System.Drawing.Size(302, 6);
+            // 
+            // inspectImageCompareMatchesForCurrentImageToolStripMenuItem
+            // 
+            this.inspectImageCompareMatchesForCurrentImageToolStripMenuItem.Name = "inspectImageCompareMatchesForCurrentImageToolStripMenuItem";
+            this.inspectImageCompareMatchesForCurrentImageToolStripMenuItem.Size = new System.Drawing.Size(305, 22);
+            this.inspectImageCompareMatchesForCurrentImageToolStripMenuItem.Text = "Inspect compare matches for current image";
+            this.inspectImageCompareMatchesForCurrentImageToolStripMenuItem.Click += new System.EventHandler(this.inspectImageCompareMatchesForCurrentImageToolStripMenuItem_Click);
+            // 
+            // EditLastAdditionsToolStripMenuItem
+            // 
+            this.EditLastAdditionsToolStripMenuItem.Name = "EditLastAdditionsToolStripMenuItem";
+            this.EditLastAdditionsToolStripMenuItem.Size = new System.Drawing.Size(305, 22);
+            this.EditLastAdditionsToolStripMenuItem.Text = "Edit last ocr image additions...";
+            this.EditLastAdditionsToolStripMenuItem.Click += new System.EventHandler(this.inspectLastAdditionsToolStripMenuItem_Click);
             // 
             // labelSubtitleText
             // 
@@ -866,6 +891,10 @@ namespace Nikse.SubtitleEdit.Forms
             this.checkBoxUseTimeCodesFromIdx.UseVisualStyleBackColor = true;
             this.checkBoxUseTimeCodesFromIdx.CheckedChanged += new System.EventHandler(this.checkBoxUseTimeCodesFromIdx_CheckedChanged);
             // 
+            // openFileDialog1
+            // 
+            this.openFileDialog1.FileName = "openFileDialog1";
+            // 
             // subtitleListView1
             // 
             this.subtitleListView1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -884,10 +913,6 @@ namespace Nikse.SubtitleEdit.Forms
             this.subtitleListView1.UseCompatibleStateImageBehavior = false;
             this.subtitleListView1.View = System.Windows.Forms.View.Details;
             this.subtitleListView1.SelectedIndexChanged += new System.EventHandler(this.SubtitleListView1SelectedIndexChanged);
-            // 
-            // openFileDialog1
-            // 
-            this.openFileDialog1.FileName = "openFileDialog1";
             // 
             // VobSubOcr
             // 
@@ -1021,5 +1046,8 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.ToolStripMenuItem importTextWithMatchingTimeCodesToolStripMenuItem;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
         private System.Windows.Forms.ToolStripMenuItem saveAllImagesWithHtmlIndexViewToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparatorImageCompare;
+        private System.Windows.Forms.ToolStripMenuItem inspectImageCompareMatchesForCurrentImageToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem EditLastAdditionsToolStripMenuItem;
     }
 }

@@ -1354,7 +1354,8 @@
             public string DictionaryX  { get; set; }
             public string RightToLeft { get; set; }
             public string ShowOnlyForcedSubtitles { get; set; }
-            public string UseTimeCodesFromIdx { get; set; }            
+            public string UseTimeCodesFromIdx { get; set; }
+            public string NoMatch { get; set; }
         }
 
         public class VobSubOcrCharacter
@@ -1373,6 +1374,12 @@
             public string German { get; set; }
             public string AutoSubmitOnFirstChar { get; set; }
             public string EditLastX { get; set; }
+        }
+
+        public class VobSubOcrCharacterInspect
+        {
+            public string Title { get; set; }
+            public string InspectItems { get; set; }
         }
 
         public class VobSubOcrNewFolder
