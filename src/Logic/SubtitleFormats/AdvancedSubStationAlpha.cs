@@ -227,6 +227,7 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
         {
             _errorCount = 0;
             bool eventsStarted = false;
+            bool fontsStarted = false;
             subtitle.Paragraphs.Clear();
             string[] format = "Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text".Split(',');
             int indexStart = 1;
@@ -235,14 +236,25 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
             int indexText = 9;
 
             var header = new StringBuilder();
+            var fonts = new StringBuilder();
             foreach (string line in lines)
             {
-                if (!eventsStarted)
-                    header.AppendLine(line);
+                if (!eventsStarted && !fontsStarted)
+                    header.AppendLine(line);                
 
                 if (line.Trim().ToLower() == "[events]")
                 {
                     eventsStarted = true;
+                    fontsStarted = false;
+                }
+                else if (line.Trim().ToLower() == "[fonts]")
+                {
+                    eventsStarted = false;
+                    fontsStarted = true;
+                }
+                else if (fontsStarted)
+                {
+                    fonts.AppendLine(line);
                 }
                 else if (eventsStarted)
                 {
