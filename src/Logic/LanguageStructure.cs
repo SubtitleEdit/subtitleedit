@@ -1356,6 +1356,7 @@
             public string ShowOnlyForcedSubtitles { get; set; }
             public string UseTimeCodesFromIdx { get; set; }
             public string NoMatch { get; set; }
+            public string AutoTransparentBackground { get; set; }
         }
 
         public class VobSubOcrCharacter

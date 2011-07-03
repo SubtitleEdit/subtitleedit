@@ -111,7 +111,7 @@ namespace Nikse.SubtitleEdit.Forms
                     if (versionInfo.Length >= 3 && versionInfo[2] != "0")
                         _title += "." + versionInfo[2];
                 }
-                return _title + " Beta 2";
+                return _title + " Beta 3";
             }
         }
 
@@ -3809,7 +3809,6 @@ namespace Nikse.SubtitleEdit.Forms
                             if (original != null)
                                 alternateIndexes.Add(_subtitleAlternate.GetIndex(original));
                         }
-                        alternateIndexes.Add(item.Index);
                     }
                     
                     alternateIndexes.Reverse();

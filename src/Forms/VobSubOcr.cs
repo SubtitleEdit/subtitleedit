@@ -158,6 +158,7 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxPatternTransparent.Text = language.Transparent;
             checkBoxEmphasis1Transparent.Text = language.Transparent;
             checkBoxEmphasis2Transparent.Text = language.Transparent;
+            checkBoxAutoTransparentBackground.Text = language.AutoTransparentBackground;
             checkBoxPromptForUnknownWords.Text = language.PromptForUnknownWords;
 
             groupBoxOcrAutoFix.Text = language.OcrAutoCorrectionSpellchecking;
@@ -338,6 +339,8 @@ namespace Nikse.SubtitleEdit.Forms
             groupBoxImagePalette.Visible = false;
 
             Text = Configuration.Settings.Language.VobSubOcr.TitleBluRay;
+            checkBoxAutoTransparentBackground.Checked = false;
+            checkBoxAutoTransparentBackground.Visible = false;
         }
 
         private void LoadImageCompareCharacterDatabaseList()
@@ -676,7 +679,8 @@ namespace Nikse.SubtitleEdit.Forms
                     if (File.Exists(fileName))
                     {
                         Bitmap b = new Bitmap(fileName);
-                        b.MakeTransparent();
+                        if (checkBoxAutoTransparentBackground.Checked)
+                            b.MakeTransparent();
                         return b;
                     }
                 }
@@ -717,7 +721,8 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             Bitmap bmp = _vobSubMergedPackist[index].SubPicture.GetBitmap(_palette, Color.Transparent, Color.Black, Color.White, Color.Black);
-            bmp.MakeTransparent();
+            if (checkBoxAutoTransparentBackground.Checked)
+                bmp.MakeTransparent();
             return bmp;
         }
 
@@ -2585,6 +2590,8 @@ namespace Nikse.SubtitleEdit.Forms
 
             Text = Configuration.Settings.Language.VobSubOcr.TitleBluRay;
             Text += " - " + Path.GetFileName(_bdnFileName);
+
+            checkBoxAutoTransparentBackground.Checked = true;
         }
 
         internal void StartOcrFromDelayed()
@@ -2678,7 +2685,7 @@ namespace Nikse.SubtitleEdit.Forms
                 StringBuilder sb = new StringBuilder();
                 sb.AppendLine("<html>");
                 sb.AppendLine("<head><title>Subtitle images</title></head>");
-                sb.AppendLine("<body>");
+                sb.AppendLine("<body style='text-align:center'>");
                 for (int i = 0; i < _subtitle.Paragraphs.Count; i++)
                 {
                     progressBar1.Value = i;
@@ -2764,6 +2771,11 @@ namespace Nikse.SubtitleEdit.Forms
                 _compareDoc.Save(path + "CompareDescription.xml");
             }
             LoadImageCompareBitmaps();
+        }
+
+        private void checkBoxAutoTransparentBackground_CheckedChanged(object sender, EventArgs e)
+        {
+            SubtitleListView1SelectedIndexChanged(null, null);
         }
 
     }
