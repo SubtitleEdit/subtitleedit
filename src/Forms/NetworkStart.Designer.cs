@@ -53,9 +53,9 @@
             // 
             // textBoxUserName
             // 
-            this.textBoxUserName.Location = new System.Drawing.Point(97, 83);
+            this.textBoxUserName.Location = new System.Drawing.Point(125, 83);
             this.textBoxUserName.Name = "textBoxUserName";
-            this.textBoxUserName.Size = new System.Drawing.Size(290, 20);
+            this.textBoxUserName.Size = new System.Drawing.Size(262, 20);
             this.textBoxUserName.TabIndex = 1;
             // 
             // buttonStart
@@ -72,9 +72,9 @@
             // labelUserName
             // 
             this.labelUserName.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.labelUserName.Location = new System.Drawing.Point(2, 86);
+            this.labelUserName.Location = new System.Drawing.Point(5, 86);
             this.labelUserName.Name = "labelUserName";
-            this.labelUserName.Size = new System.Drawing.Size(89, 13);
+            this.labelUserName.Size = new System.Drawing.Size(114, 16);
             this.labelUserName.TabIndex = 3;
             this.labelUserName.Text = "Username";
             this.labelUserName.TextAlign = System.Drawing.ContentAlignment.TopRight;
@@ -85,17 +85,17 @@
             this.comboBoxWebServiceUrl.Items.AddRange(new object[] {
             "http://www.nikse.dk/se/SeService.asmx",
             "http://nikse555.brinkster.net/SeService.asmx"});
-            this.comboBoxWebServiceUrl.Location = new System.Drawing.Point(97, 109);
+            this.comboBoxWebServiceUrl.Location = new System.Drawing.Point(125, 109);
             this.comboBoxWebServiceUrl.Name = "comboBoxWebServiceUrl";
-            this.comboBoxWebServiceUrl.Size = new System.Drawing.Size(290, 21);
+            this.comboBoxWebServiceUrl.Size = new System.Drawing.Size(262, 21);
             this.comboBoxWebServiceUrl.TabIndex = 2;
             // 
             // labelWebServiceUrl
             // 
             this.labelWebServiceUrl.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.labelWebServiceUrl.Location = new System.Drawing.Point(2, 109);
+            this.labelWebServiceUrl.Location = new System.Drawing.Point(5, 112);
             this.labelWebServiceUrl.Name = "labelWebServiceUrl";
-            this.labelWebServiceUrl.Size = new System.Drawing.Size(89, 16);
+            this.labelWebServiceUrl.Size = new System.Drawing.Size(114, 16);
             this.labelWebServiceUrl.TabIndex = 8;
             this.labelWebServiceUrl.Text = "Web service url";
             this.labelWebServiceUrl.TextAlign = System.Drawing.ContentAlignment.TopRight;
@@ -103,7 +103,7 @@
             // labelInfo
             // 
             this.labelInfo.AutoSize = true;
-            this.labelInfo.Location = new System.Drawing.Point(13, 13);
+            this.labelInfo.Location = new System.Drawing.Point(16, 13);
             this.labelInfo.Name = "labelInfo";
             this.labelInfo.Size = new System.Drawing.Size(200, 26);
             this.labelInfo.TabIndex = 9;
@@ -112,7 +112,7 @@
             // labelStatus
             // 
             this.labelStatus.AutoSize = true;
-            this.labelStatus.Location = new System.Drawing.Point(36, 170);
+            this.labelStatus.Location = new System.Drawing.Point(16, 167);
             this.labelStatus.Name = "labelStatus";
             this.labelStatus.Size = new System.Drawing.Size(59, 13);
             this.labelStatus.TabIndex = 10;
@@ -121,25 +121,25 @@
             // labelSessionKey
             // 
             this.labelSessionKey.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.labelSessionKey.Location = new System.Drawing.Point(-1, 60);
+            this.labelSessionKey.Location = new System.Drawing.Point(5, 60);
             this.labelSessionKey.Name = "labelSessionKey";
-            this.labelSessionKey.Size = new System.Drawing.Size(92, 17);
+            this.labelSessionKey.Size = new System.Drawing.Size(114, 16);
             this.labelSessionKey.TabIndex = 11;
             this.labelSessionKey.Text = "Session Key";
             this.labelSessionKey.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // textBoxSessionKey
             // 
-            this.textBoxSessionKey.Location = new System.Drawing.Point(97, 57);
+            this.textBoxSessionKey.Location = new System.Drawing.Point(125, 57);
             this.textBoxSessionKey.Name = "textBoxSessionKey";
-            this.textBoxSessionKey.Size = new System.Drawing.Size(290, 20);
+            this.textBoxSessionKey.Size = new System.Drawing.Size(262, 20);
             this.textBoxSessionKey.TabIndex = 0;
             // 
             // NetworkStart
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(414, 185);
+            this.ClientSize = new System.Drawing.Size(402, 185);
             this.Controls.Add(this.textBoxSessionKey);
             this.Controls.Add(this.labelSessionKey);
             this.Controls.Add(this.labelStatus);

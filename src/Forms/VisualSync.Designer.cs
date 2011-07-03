@@ -347,7 +347,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.labelTip.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.labelTip.AutoSize = true;
             this.labelTip.ForeColor = System.Drawing.Color.Gray;
-            this.labelTip.Location = new System.Drawing.Point(12, 468);
+            this.labelTip.Location = new System.Drawing.Point(12, 477);
             this.labelTip.Name = "labelTip";
             this.labelTip.Size = new System.Drawing.Size(332, 13);
             this.labelTip.TabIndex = 15;

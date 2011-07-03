@@ -214,7 +214,7 @@
             // radioButtonRegEx
             // 
             this.radioButtonRegEx.AutoSize = true;
-            this.radioButtonRegEx.Location = new System.Drawing.Point(251, 62);
+            this.radioButtonRegEx.Location = new System.Drawing.Point(286, 62);
             this.radioButtonRegEx.Name = "radioButtonRegEx";
             this.radioButtonRegEx.Size = new System.Drawing.Size(82, 25);
             this.radioButtonRegEx.TabIndex = 6;
@@ -225,7 +225,7 @@
             // radioButtonCaseSensitive
             // 
             this.radioButtonCaseSensitive.AutoSize = true;
-            this.radioButtonCaseSensitive.Location = new System.Drawing.Point(111, 62);
+            this.radioButtonCaseSensitive.Location = new System.Drawing.Point(146, 62);
             this.radioButtonCaseSensitive.Name = "radioButtonCaseSensitive";
             this.radioButtonCaseSensitive.Size = new System.Drawing.Size(141, 25);
             this.radioButtonCaseSensitive.TabIndex = 5;
