@@ -11,8 +11,8 @@ using System.Windows.Forms;
 using System.Xml;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.OCR;
-using Nikse.SubtitleEdit.Logic.VobSub;
 using Nikse.SubtitleEdit.Logic.SubtitleFormats;
+using Nikse.SubtitleEdit.Logic.VobSub;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -717,7 +717,10 @@ namespace Nikse.SubtitleEdit.Forms
                 if (checkBoxEmphasis2Transparent.Checked)
                     emphasis2 = Color.Transparent;
 
-                return _vobSubMergedPackist[index].SubPicture.GetBitmap(null, background, pattern, emphasis1, emphasis2);
+                Bitmap bm = _vobSubMergedPackist[index].SubPicture.GetBitmap(null, background, pattern, emphasis1, emphasis2);
+                if (checkBoxAutoTransparentBackground.Checked)
+                    bm.MakeTransparent();
+                return bm;
             }
 
             Bitmap bmp = _vobSubMergedPackist[index].SubPicture.GetBitmap(_palette, Color.Transparent, Color.Black, Color.White, Color.Black);
@@ -784,7 +787,7 @@ namespace Nikse.SubtitleEdit.Forms
             foreach (CompareItem compareItem in _compareBitmaps)
             {
                 // check for expand match!
-                if (compareItem.ExpandCount > 0)
+                if (compareItem.ExpandCount > 0 && compareItem.Bitmap.Width > targetItem.Bitmap.Width)
                 {
                     int dif = ImageSplitter.IsBitmapsAlike(compareItem.Bitmap, ImageSplitter.Copy(parentBitmap, new Rectangle(targetItem.X, targetItem.Y, compareItem.Bitmap.Width, compareItem.Bitmap.Height)));
                     if (dif < smallestDifference)

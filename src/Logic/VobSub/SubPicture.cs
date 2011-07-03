@@ -161,11 +161,16 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
         private Bitmap GenerateBitmap(Rectangle imageDisplayArea, int imageTopFieldDataAddress, int imageBottomFieldDataAddress, List<Color> fourColors)
         {
             var bmp = new Bitmap(imageDisplayArea.Width + 1, imageDisplayArea.Height + 1);
+            if (fourColors[0] != Color.Transparent)
+            {
+                Graphics gr = Graphics.FromImage(bmp);
+                gr.FillRectangle(new SolidBrush(fourColors[0]), new Rectangle(0, 0, bmp.Width, bmp.Height));
+            }
             var fastBmp = new FastBitmap(bmp);
             fastBmp.LockImage();
             GenerateBitmap(_data, fastBmp, 0, imageTopFieldDataAddress, fourColors);
             GenerateBitmap(_data, fastBmp, 1, imageBottomFieldDataAddress, fourColors);
-            Bitmap cropped = CropBitmapAndUnlok(fastBmp, Color.Transparent);
+            Bitmap cropped = CropBitmapAndUnlok(fastBmp, fourColors[0]);
             bmp.Dispose();
             return cropped;
         }
