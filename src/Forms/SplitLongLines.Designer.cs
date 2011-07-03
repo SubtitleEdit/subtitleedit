@@ -55,9 +55,9 @@
             this.groupBoxLinesFound.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBoxLinesFound.Controls.Add(this.listViewFixes);
-            this.groupBoxLinesFound.Location = new System.Drawing.Point(6, 64);
+            this.groupBoxLinesFound.Location = new System.Drawing.Point(12, 64);
             this.groupBoxLinesFound.Name = "groupBoxLinesFound";
-            this.groupBoxLinesFound.Size = new System.Drawing.Size(756, 200);
+            this.groupBoxLinesFound.Size = new System.Drawing.Size(750, 200);
             this.groupBoxLinesFound.TabIndex = 4;
             this.groupBoxLinesFound.TabStop = false;
             this.groupBoxLinesFound.Text = "Lines that will be splittet";
@@ -74,7 +74,7 @@
             this.listViewFixes.FullRowSelect = true;
             this.listViewFixes.Location = new System.Drawing.Point(6, 23);
             this.listViewFixes.Name = "listViewFixes";
-            this.listViewFixes.Size = new System.Drawing.Size(744, 171);
+            this.listViewFixes.Size = new System.Drawing.Size(738, 171);
             this.listViewFixes.TabIndex = 0;
             this.listViewFixes.UseCompatibleStateImageBehavior = false;
             this.listViewFixes.View = System.Windows.Forms.View.Details;
@@ -97,7 +97,7 @@
             // 
             // numericUpDownSingleLineMaxCharacters
             // 
-            this.numericUpDownSingleLineMaxCharacters.Location = new System.Drawing.Point(250, 35);
+            this.numericUpDownSingleLineMaxCharacters.Location = new System.Drawing.Point(28, 33);
             this.numericUpDownSingleLineMaxCharacters.Maximum = new decimal(new int[] {
             200,
             0,
@@ -121,7 +121,7 @@
             // labelLineMaxLength
             // 
             this.labelLineMaxLength.AutoSize = true;
-            this.labelLineMaxLength.Location = new System.Drawing.Point(428, 18);
+            this.labelLineMaxLength.Location = new System.Drawing.Point(240, 16);
             this.labelLineMaxLength.Name = "labelLineMaxLength";
             this.labelLineMaxLength.Size = new System.Drawing.Size(105, 13);
             this.labelLineMaxLength.TabIndex = 43;
@@ -130,7 +130,7 @@
             // labelSingleLineMaxLength
             // 
             this.labelSingleLineMaxLength.AutoSize = true;
-            this.labelSingleLineMaxLength.Location = new System.Drawing.Point(247, 18);
+            this.labelSingleLineMaxLength.Location = new System.Drawing.Point(25, 16);
             this.labelSingleLineMaxLength.Name = "labelSingleLineMaxLength";
             this.labelSingleLineMaxLength.Size = new System.Drawing.Size(133, 13);
             this.labelSingleLineMaxLength.TabIndex = 42;
@@ -140,7 +140,7 @@
             // 
             this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonOK.Location = new System.Drawing.Point(600, 577);
+            this.buttonOK.Location = new System.Drawing.Point(606, 581);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 21);
             this.buttonOK.TabIndex = 6;
@@ -153,7 +153,7 @@
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonCancel.Location = new System.Drawing.Point(681, 577);
+            this.buttonCancel.Location = new System.Drawing.Point(687, 581);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 21);
             this.buttonCancel.TabIndex = 7;
@@ -163,7 +163,7 @@
             // 
             // numericUpDownLineMaxCharacters
             // 
-            this.numericUpDownLineMaxCharacters.Location = new System.Drawing.Point(431, 35);
+            this.numericUpDownLineMaxCharacters.Location = new System.Drawing.Point(243, 33);
             this.numericUpDownLineMaxCharacters.Maximum = new decimal(new int[] {
             200,
             0,
@@ -188,7 +188,7 @@
             // 
             this.labelMaxSingleLineLengthIs.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.labelMaxSingleLineLengthIs.AutoSize = true;
-            this.labelMaxSingleLineLengthIs.Location = new System.Drawing.Point(3, 577);
+            this.labelMaxSingleLineLengthIs.Location = new System.Drawing.Point(9, 579);
             this.labelMaxSingleLineLengthIs.Name = "labelMaxSingleLineLengthIs";
             this.labelMaxSingleLineLengthIs.Size = new System.Drawing.Size(133, 13);
             this.labelMaxSingleLineLengthIs.TabIndex = 45;
@@ -199,7 +199,7 @@
             // 
             this.labelMaxLineLengthIs.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.labelMaxLineLengthIs.AutoSize = true;
-            this.labelMaxLineLengthIs.Location = new System.Drawing.Point(3, 592);
+            this.labelMaxLineLengthIs.Location = new System.Drawing.Point(9, 597);
             this.labelMaxLineLengthIs.Name = "labelMaxLineLengthIs";
             this.labelMaxLineLengthIs.Size = new System.Drawing.Size(83, 13);
             this.labelMaxLineLengthIs.TabIndex = 46;
@@ -212,7 +212,7 @@
             this.comboBoxLineContinuationBegin.Items.AddRange(new object[] {
             "- ",
             "..."});
-            this.comboBoxLineContinuationBegin.Location = new System.Drawing.Point(570, 33);
+            this.comboBoxLineContinuationBegin.Location = new System.Drawing.Point(478, 33);
             this.comboBoxLineContinuationBegin.Name = "comboBoxLineContinuationBegin";
             this.comboBoxLineContinuationBegin.Size = new System.Drawing.Size(80, 21);
             this.comboBoxLineContinuationBegin.TabIndex = 2;
@@ -221,7 +221,7 @@
             // labelLineContinuationBeginEnd
             // 
             this.labelLineContinuationBeginEnd.AutoSize = true;
-            this.labelLineContinuationBeginEnd.Location = new System.Drawing.Point(567, 17);
+            this.labelLineContinuationBeginEnd.Location = new System.Drawing.Point(475, 16);
             this.labelLineContinuationBeginEnd.Name = "labelLineContinuationBeginEnd";
             this.labelLineContinuationBeginEnd.Size = new System.Drawing.Size(173, 13);
             this.labelLineContinuationBeginEnd.TabIndex = 48;
@@ -233,7 +233,7 @@
             this.comboBoxLineContinuationEnd.Items.AddRange(new object[] {
             " -",
             "..."});
-            this.comboBoxLineContinuationEnd.Location = new System.Drawing.Point(656, 33);
+            this.comboBoxLineContinuationEnd.Location = new System.Drawing.Point(564, 33);
             this.comboBoxLineContinuationEnd.Name = "comboBoxLineContinuationEnd";
             this.comboBoxLineContinuationEnd.Size = new System.Drawing.Size(80, 21);
             this.comboBoxLineContinuationEnd.TabIndex = 3;
@@ -250,9 +250,9 @@
             this.SubtitleListview1.FullRowSelect = true;
             this.SubtitleListview1.GridLines = true;
             this.SubtitleListview1.HideSelection = false;
-            this.SubtitleListview1.Location = new System.Drawing.Point(4, 270);
+            this.SubtitleListview1.Location = new System.Drawing.Point(12, 270);
             this.SubtitleListview1.Name = "SubtitleListview1";
-            this.SubtitleListview1.Size = new System.Drawing.Size(758, 301);
+            this.SubtitleListview1.Size = new System.Drawing.Size(750, 301);
             this.SubtitleListview1.TabIndex = 5;
             this.SubtitleListview1.UseCompatibleStateImageBehavior = false;
             this.SubtitleListview1.View = System.Windows.Forms.View.Details;

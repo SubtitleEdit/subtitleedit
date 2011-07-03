@@ -77,7 +77,7 @@
             // 
             // buttonReplace
             // 
-            this.buttonReplace.Location = new System.Drawing.Point(124, 180);
+            this.buttonReplace.Location = new System.Drawing.Point(96, 180);
             this.buttonReplace.Name = "buttonReplace";
             this.buttonReplace.Size = new System.Drawing.Size(75, 21);
             this.buttonReplace.TabIndex = 6;
@@ -95,9 +95,9 @@
             // 
             // buttonReplaceAll
             // 
-            this.buttonReplaceAll.Location = new System.Drawing.Point(205, 180);
+            this.buttonReplaceAll.Location = new System.Drawing.Point(177, 180);
             this.buttonReplaceAll.Name = "buttonReplaceAll";
-            this.buttonReplaceAll.Size = new System.Drawing.Size(75, 21);
+            this.buttonReplaceAll.Size = new System.Drawing.Size(103, 21);
             this.buttonReplaceAll.TabIndex = 7;
             this.buttonReplaceAll.Text = "Replace all";
             this.buttonReplaceAll.UseVisualStyleBackColor = true;
@@ -131,7 +131,7 @@
             // 
             // buttonFind
             // 
-            this.buttonFind.Location = new System.Drawing.Point(43, 180);
+            this.buttonFind.Location = new System.Drawing.Point(15, 180);
             this.buttonFind.Name = "buttonFind";
             this.buttonFind.Size = new System.Drawing.Size(75, 21);
             this.buttonFind.TabIndex = 5;

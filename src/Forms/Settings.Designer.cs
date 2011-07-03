@@ -466,7 +466,7 @@
             "Every minute",
             "Every 5 minutes",
             "Evert 15 minutes"});
-            this.comboBoxAutoBackup.Location = new System.Drawing.Point(539, 252);
+            this.comboBoxAutoBackup.Location = new System.Drawing.Point(540, 252);
             this.comboBoxAutoBackup.Name = "comboBoxAutoBackup";
             this.comboBoxAutoBackup.Size = new System.Drawing.Size(121, 21);
             this.comboBoxAutoBackup.TabIndex = 23;
@@ -474,7 +474,7 @@
             // labelAutoBackup
             // 
             this.labelAutoBackup.AutoSize = true;
-            this.labelAutoBackup.Location = new System.Drawing.Point(433, 254);
+            this.labelAutoBackup.Location = new System.Drawing.Point(433, 255);
             this.labelAutoBackup.Name = "labelAutoBackup";
             this.labelAutoBackup.Size = new System.Drawing.Size(68, 13);
             this.labelAutoBackup.TabIndex = 22;
@@ -512,7 +512,7 @@
             // labelAutoDetectAnsiEncoding
             // 
             this.labelAutoDetectAnsiEncoding.AutoSize = true;
-            this.labelAutoDetectAnsiEncoding.Location = new System.Drawing.Point(13, 93);
+            this.labelAutoDetectAnsiEncoding.Location = new System.Drawing.Point(13, 91);
             this.labelAutoDetectAnsiEncoding.Name = "labelAutoDetectAnsiEncoding";
             this.labelAutoDetectAnsiEncoding.Size = new System.Drawing.Size(137, 13);
             this.labelAutoDetectAnsiEncoding.TabIndex = 16;
@@ -527,9 +527,9 @@
             "UTF-7",
             "UTF-8",
             "Unicode"});
-            this.comboBoxListViewDoubleClickEvent.Location = new System.Drawing.Point(436, 217);
+            this.comboBoxListViewDoubleClickEvent.Location = new System.Drawing.Point(436, 219);
             this.comboBoxListViewDoubleClickEvent.Name = "comboBoxListViewDoubleClickEvent";
-            this.comboBoxListViewDoubleClickEvent.Size = new System.Drawing.Size(222, 21);
+            this.comboBoxListViewDoubleClickEvent.Size = new System.Drawing.Size(332, 21);
             this.comboBoxListViewDoubleClickEvent.TabIndex = 21;
             // 
             // labelListViewDoubleClickEvent
@@ -581,7 +581,7 @@
             // labelSubMaxLen
             // 
             this.labelSubMaxLen.AutoSize = true;
-            this.labelSubMaxLen.Location = new System.Drawing.Point(13, 124);
+            this.labelSubMaxLen.Location = new System.Drawing.Point(13, 125);
             this.labelSubMaxLen.Name = "labelSubMaxLen";
             this.labelSubMaxLen.Size = new System.Drawing.Size(103, 13);
             this.labelSubMaxLen.TabIndex = 11;
@@ -792,7 +792,7 @@
             // labelTBHelp
             // 
             this.labelTBHelp.AutoSize = true;
-            this.labelTBHelp.Location = new System.Drawing.Point(594, 21);
+            this.labelTBHelp.Location = new System.Drawing.Point(702, 21);
             this.labelTBHelp.Name = "labelTBHelp";
             this.labelTBHelp.Size = new System.Drawing.Size(28, 13);
             this.labelTBHelp.TabIndex = 33;
@@ -800,7 +800,7 @@
             // 
             // pictureBoxHelp
             // 
-            this.pictureBoxHelp.Location = new System.Drawing.Point(593, 40);
+            this.pictureBoxHelp.Location = new System.Drawing.Point(701, 40);
             this.pictureBoxHelp.Name = "pictureBoxHelp";
             this.pictureBoxHelp.Size = new System.Drawing.Size(32, 32);
             this.pictureBoxHelp.TabIndex = 32;
@@ -809,7 +809,7 @@
             // checkBoxHelp
             // 
             this.checkBoxHelp.AutoSize = true;
-            this.checkBoxHelp.Location = new System.Drawing.Point(596, 80);
+            this.checkBoxHelp.Location = new System.Drawing.Point(704, 80);
             this.checkBoxHelp.Name = "checkBoxHelp";
             this.checkBoxHelp.Size = new System.Drawing.Size(55, 17);
             this.checkBoxHelp.TabIndex = 31;
@@ -819,7 +819,7 @@
             // labelTBSettings
             // 
             this.labelTBSettings.AutoSize = true;
-            this.labelTBSettings.Location = new System.Drawing.Point(526, 21);
+            this.labelTBSettings.Location = new System.Drawing.Point(622, 21);
             this.labelTBSettings.Name = "labelTBSettings";
             this.labelTBSettings.Size = new System.Drawing.Size(46, 13);
             this.labelTBSettings.TabIndex = 30;
@@ -827,7 +827,7 @@
             // 
             // pictureBoxSettings
             // 
-            this.pictureBoxSettings.Location = new System.Drawing.Point(529, 40);
+            this.pictureBoxSettings.Location = new System.Drawing.Point(625, 40);
             this.pictureBoxSettings.Name = "pictureBoxSettings";
             this.pictureBoxSettings.Size = new System.Drawing.Size(32, 32);
             this.pictureBoxSettings.TabIndex = 29;
@@ -836,7 +836,7 @@
             // checkBoxSettings
             // 
             this.checkBoxSettings.AutoSize = true;
-            this.checkBoxSettings.Location = new System.Drawing.Point(532, 80);
+            this.checkBoxSettings.Location = new System.Drawing.Point(628, 80);
             this.checkBoxSettings.Name = "checkBoxSettings";
             this.checkBoxSettings.Size = new System.Drawing.Size(55, 17);
             this.checkBoxSettings.TabIndex = 28;
@@ -846,7 +846,7 @@
             // labelTBSpellCheck
             // 
             this.labelTBSpellCheck.AutoSize = true;
-            this.labelTBSpellCheck.Location = new System.Drawing.Point(459, 21);
+            this.labelTBSpellCheck.Location = new System.Drawing.Point(545, 21);
             this.labelTBSpellCheck.Name = "labelTBSpellCheck";
             this.labelTBSpellCheck.Size = new System.Drawing.Size(59, 13);
             this.labelTBSpellCheck.TabIndex = 27;
@@ -854,7 +854,7 @@
             // 
             // pictureBoxSpellCheck
             // 
-            this.pictureBoxSpellCheck.Location = new System.Drawing.Point(463, 40);
+            this.pictureBoxSpellCheck.Location = new System.Drawing.Point(549, 40);
             this.pictureBoxSpellCheck.Name = "pictureBoxSpellCheck";
             this.pictureBoxSpellCheck.Size = new System.Drawing.Size(32, 32);
             this.pictureBoxSpellCheck.TabIndex = 26;
@@ -863,7 +863,7 @@
             // checkBoxSpellCheck
             // 
             this.checkBoxSpellCheck.AutoSize = true;
-            this.checkBoxSpellCheck.Location = new System.Drawing.Point(464, 80);
+            this.checkBoxSpellCheck.Location = new System.Drawing.Point(550, 80);
             this.checkBoxSpellCheck.Name = "checkBoxSpellCheck";
             this.checkBoxSpellCheck.Size = new System.Drawing.Size(55, 17);
             this.checkBoxSpellCheck.TabIndex = 26;
@@ -873,7 +873,7 @@
             // labelTBVisualSync
             // 
             this.labelTBVisualSync.AutoSize = true;
-            this.labelTBVisualSync.Location = new System.Drawing.Point(382, 21);
+            this.labelTBVisualSync.Location = new System.Drawing.Point(460, 21);
             this.labelTBVisualSync.Name = "labelTBVisualSync";
             this.labelTBVisualSync.Size = new System.Drawing.Size(59, 13);
             this.labelTBVisualSync.TabIndex = 21;
@@ -881,7 +881,7 @@
             // 
             // pictureBoxVisualSync
             // 
-            this.pictureBoxVisualSync.Location = new System.Drawing.Point(395, 40);
+            this.pictureBoxVisualSync.Location = new System.Drawing.Point(473, 40);
             this.pictureBoxVisualSync.Name = "pictureBoxVisualSync";
             this.pictureBoxVisualSync.Size = new System.Drawing.Size(32, 32);
             this.pictureBoxVisualSync.TabIndex = 20;
@@ -890,7 +890,7 @@
             // checkBoxVisualSync
             // 
             this.checkBoxVisualSync.AutoSize = true;
-            this.checkBoxVisualSync.Location = new System.Drawing.Point(398, 80);
+            this.checkBoxVisualSync.Location = new System.Drawing.Point(476, 80);
             this.checkBoxVisualSync.Name = "checkBoxVisualSync";
             this.checkBoxVisualSync.Size = new System.Drawing.Size(55, 17);
             this.checkBoxVisualSync.TabIndex = 19;
@@ -900,7 +900,7 @@
             // labelTBReplace
             // 
             this.labelTBReplace.AutoSize = true;
-            this.labelTBReplace.Location = new System.Drawing.Point(327, 21);
+            this.labelTBReplace.Location = new System.Drawing.Point(392, 21);
             this.labelTBReplace.Name = "labelTBReplace";
             this.labelTBReplace.Size = new System.Drawing.Size(45, 13);
             this.labelTBReplace.TabIndex = 18;
@@ -908,7 +908,7 @@
             // 
             // pictureBoxReplace
             // 
-            this.pictureBoxReplace.Location = new System.Drawing.Point(332, 40);
+            this.pictureBoxReplace.Location = new System.Drawing.Point(397, 40);
             this.pictureBoxReplace.Name = "pictureBoxReplace";
             this.pictureBoxReplace.Size = new System.Drawing.Size(32, 32);
             this.pictureBoxReplace.TabIndex = 17;
@@ -917,7 +917,7 @@
             // checkBoxReplace
             // 
             this.checkBoxReplace.AutoSize = true;
-            this.checkBoxReplace.Location = new System.Drawing.Point(335, 80);
+            this.checkBoxReplace.Location = new System.Drawing.Point(400, 80);
             this.checkBoxReplace.Name = "checkBoxReplace";
             this.checkBoxReplace.Size = new System.Drawing.Size(55, 17);
             this.checkBoxReplace.TabIndex = 16;
@@ -927,7 +927,7 @@
             // labelTBFind
             // 
             this.labelTBFind.AutoSize = true;
-            this.labelTBFind.Location = new System.Drawing.Point(271, 21);
+            this.labelTBFind.Location = new System.Drawing.Point(323, 21);
             this.labelTBFind.Name = "labelTBFind";
             this.labelTBFind.Size = new System.Drawing.Size(27, 13);
             this.labelTBFind.TabIndex = 15;
@@ -935,7 +935,7 @@
             // 
             // pictureBoxFind
             // 
-            this.pictureBoxFind.Location = new System.Drawing.Point(269, 40);
+            this.pictureBoxFind.Location = new System.Drawing.Point(321, 40);
             this.pictureBoxFind.Name = "pictureBoxFind";
             this.pictureBoxFind.Size = new System.Drawing.Size(32, 32);
             this.pictureBoxFind.TabIndex = 14;
@@ -944,7 +944,7 @@
             // checkBoxToolbarFind
             // 
             this.checkBoxToolbarFind.AutoSize = true;
-            this.checkBoxToolbarFind.Location = new System.Drawing.Point(272, 80);
+            this.checkBoxToolbarFind.Location = new System.Drawing.Point(324, 80);
             this.checkBoxToolbarFind.Name = "checkBoxToolbarFind";
             this.checkBoxToolbarFind.Size = new System.Drawing.Size(55, 17);
             this.checkBoxToolbarFind.TabIndex = 13;
@@ -954,7 +954,7 @@
             // labelTBSaveAs
             // 
             this.labelTBSaveAs.AutoSize = true;
-            this.labelTBSaveAs.Location = new System.Drawing.Point(200, 21);
+            this.labelTBSaveAs.Location = new System.Drawing.Point(239, 21);
             this.labelTBSaveAs.Name = "labelTBSaveAs";
             this.labelTBSaveAs.Size = new System.Drawing.Size(45, 13);
             this.labelTBSaveAs.TabIndex = 12;
@@ -962,7 +962,7 @@
             // 
             // pictureBoxSaveAs
             // 
-            this.pictureBoxSaveAs.Location = new System.Drawing.Point(206, 40);
+            this.pictureBoxSaveAs.Location = new System.Drawing.Point(245, 40);
             this.pictureBoxSaveAs.Name = "pictureBoxSaveAs";
             this.pictureBoxSaveAs.Size = new System.Drawing.Size(32, 32);
             this.pictureBoxSaveAs.TabIndex = 11;
@@ -971,7 +971,7 @@
             // checkBoxToolbarSaveAs
             // 
             this.checkBoxToolbarSaveAs.AutoSize = true;
-            this.checkBoxToolbarSaveAs.Location = new System.Drawing.Point(209, 80);
+            this.checkBoxToolbarSaveAs.Location = new System.Drawing.Point(248, 80);
             this.checkBoxToolbarSaveAs.Name = "checkBoxToolbarSaveAs";
             this.checkBoxToolbarSaveAs.Size = new System.Drawing.Size(55, 17);
             this.checkBoxToolbarSaveAs.TabIndex = 10;
@@ -981,7 +981,7 @@
             // labelTBSave
             // 
             this.labelTBSave.AutoSize = true;
-            this.labelTBSave.Location = new System.Drawing.Point(144, 21);
+            this.labelTBSave.Location = new System.Drawing.Point(170, 21);
             this.labelTBSave.Name = "labelTBSave";
             this.labelTBSave.Size = new System.Drawing.Size(31, 13);
             this.labelTBSave.TabIndex = 9;
@@ -989,7 +989,7 @@
             // 
             // pictureBoxSave
             // 
-            this.pictureBoxSave.Location = new System.Drawing.Point(143, 40);
+            this.pictureBoxSave.Location = new System.Drawing.Point(169, 40);
             this.pictureBoxSave.Name = "pictureBoxSave";
             this.pictureBoxSave.Size = new System.Drawing.Size(32, 32);
             this.pictureBoxSave.TabIndex = 8;
@@ -998,7 +998,7 @@
             // checkBoxToolbarSave
             // 
             this.checkBoxToolbarSave.AutoSize = true;
-            this.checkBoxToolbarSave.Location = new System.Drawing.Point(146, 80);
+            this.checkBoxToolbarSave.Location = new System.Drawing.Point(172, 80);
             this.checkBoxToolbarSave.Name = "checkBoxToolbarSave";
             this.checkBoxToolbarSave.Size = new System.Drawing.Size(55, 17);
             this.checkBoxToolbarSave.TabIndex = 7;
@@ -1008,7 +1008,7 @@
             // labelTBOpen
             // 
             this.labelTBOpen.AutoSize = true;
-            this.labelTBOpen.Location = new System.Drawing.Point(81, 21);
+            this.labelTBOpen.Location = new System.Drawing.Point(94, 21);
             this.labelTBOpen.Name = "labelTBOpen";
             this.labelTBOpen.Size = new System.Drawing.Size(33, 13);
             this.labelTBOpen.TabIndex = 6;
@@ -1016,7 +1016,7 @@
             // 
             // pictureBoxOpen
             // 
-            this.pictureBoxOpen.Location = new System.Drawing.Point(80, 40);
+            this.pictureBoxOpen.Location = new System.Drawing.Point(93, 40);
             this.pictureBoxOpen.Name = "pictureBoxOpen";
             this.pictureBoxOpen.Size = new System.Drawing.Size(32, 32);
             this.pictureBoxOpen.TabIndex = 5;
@@ -1025,7 +1025,7 @@
             // checkBoxToolbarOpen
             // 
             this.checkBoxToolbarOpen.AutoSize = true;
-            this.checkBoxToolbarOpen.Location = new System.Drawing.Point(83, 80);
+            this.checkBoxToolbarOpen.Location = new System.Drawing.Point(96, 80);
             this.checkBoxToolbarOpen.Name = "checkBoxToolbarOpen";
             this.checkBoxToolbarOpen.Size = new System.Drawing.Size(55, 17);
             this.checkBoxToolbarOpen.TabIndex = 4;
@@ -1174,7 +1174,7 @@
             // 
             this.comboBoxVideoPlayerDefaultVolume.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxVideoPlayerDefaultVolume.FormattingEnabled = true;
-            this.comboBoxVideoPlayerDefaultVolume.Location = new System.Drawing.Point(105, 53);
+            this.comboBoxVideoPlayerDefaultVolume.Location = new System.Drawing.Point(127, 53);
             this.comboBoxVideoPlayerDefaultVolume.Name = "comboBoxVideoPlayerDefaultVolume";
             this.comboBoxVideoPlayerDefaultVolume.Size = new System.Drawing.Size(121, 21);
             this.comboBoxVideoPlayerDefaultVolume.TabIndex = 12;
@@ -1193,7 +1193,7 @@
             this.labelVolDescr.AutoSize = true;
             this.labelVolDescr.Font = new System.Drawing.Font("Tahoma", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelVolDescr.ForeColor = System.Drawing.Color.Gray;
-            this.labelVolDescr.Location = new System.Drawing.Point(232, 57);
+            this.labelVolDescr.Location = new System.Drawing.Point(254, 57);
             this.labelVolDescr.Name = "labelVolDescr";
             this.labelVolDescr.Size = new System.Drawing.Size(150, 11);
             this.labelVolDescr.TabIndex = 9;
@@ -1333,7 +1333,7 @@
             // labelSpectrogramAppearance
             // 
             this.labelSpectrogramAppearance.AutoSize = true;
-            this.labelSpectrogramAppearance.Location = new System.Drawing.Point(7, 54);
+            this.labelSpectrogramAppearance.Location = new System.Drawing.Point(10, 54);
             this.labelSpectrogramAppearance.Name = "labelSpectrogramAppearance";
             this.labelSpectrogramAppearance.Size = new System.Drawing.Size(164, 13);
             this.labelSpectrogramAppearance.TabIndex = 15;
@@ -1346,9 +1346,9 @@
             this.comboBoxSpectrogramAppearance.Items.AddRange(new object[] {
             "Classic",
             "Use waveform color (one color gradient)"});
-            this.comboBoxSpectrogramAppearance.Location = new System.Drawing.Point(7, 70);
+            this.comboBoxSpectrogramAppearance.Location = new System.Drawing.Point(10, 70);
             this.comboBoxSpectrogramAppearance.Name = "comboBoxSpectrogramAppearance";
-            this.comboBoxSpectrogramAppearance.Size = new System.Drawing.Size(328, 21);
+            this.comboBoxSpectrogramAppearance.Size = new System.Drawing.Size(325, 21);
             this.comboBoxSpectrogramAppearance.TabIndex = 14;
             // 
             // checkBoxGenerateSpectrogram
@@ -1384,7 +1384,7 @@
             // labelWaveFormsFolderInfo
             // 
             this.labelWaveFormsFolderInfo.AutoSize = true;
-            this.labelWaveFormsFolderInfo.Location = new System.Drawing.Point(7, 20);
+            this.labelWaveFormsFolderInfo.Location = new System.Drawing.Point(10, 20);
             this.labelWaveFormsFolderInfo.Name = "labelWaveFormsFolderInfo";
             this.labelWaveFormsFolderInfo.Size = new System.Drawing.Size(207, 13);
             this.labelWaveFormsFolderInfo.TabIndex = 0;
@@ -1581,7 +1581,7 @@
             "♪♪",
             "*",
             "#"});
-            this.comboBoxToolsMusicSymbol.Location = new System.Drawing.Point(199, 71);
+            this.comboBoxToolsMusicSymbol.Location = new System.Drawing.Point(200, 71);
             this.comboBoxToolsMusicSymbol.Name = "comboBoxToolsMusicSymbol";
             this.comboBoxToolsMusicSymbol.Size = new System.Drawing.Size(86, 21);
             this.comboBoxToolsMusicSymbol.TabIndex = 1;
@@ -1647,7 +1647,7 @@
             "Last - 3"});
             this.comboBoxToolsEndSceneIndex.Location = new System.Drawing.Point(200, 76);
             this.comboBoxToolsEndSceneIndex.Name = "comboBoxToolsEndSceneIndex";
-            this.comboBoxToolsEndSceneIndex.Size = new System.Drawing.Size(73, 21);
+            this.comboBoxToolsEndSceneIndex.Size = new System.Drawing.Size(86, 21);
             this.comboBoxToolsEndSceneIndex.TabIndex = 2;
             // 
             // labelToolsStartScene
@@ -1670,7 +1670,7 @@
             "First +3"});
             this.comboBoxToolsStartSceneIndex.Location = new System.Drawing.Point(200, 49);
             this.comboBoxToolsStartSceneIndex.Name = "comboBoxToolsStartSceneIndex";
-            this.comboBoxToolsStartSceneIndex.Size = new System.Drawing.Size(73, 21);
+            this.comboBoxToolsStartSceneIndex.Size = new System.Drawing.Size(86, 21);
             this.comboBoxToolsStartSceneIndex.TabIndex = 1;
             // 
             // comboBoxToolsVerifySeconds
@@ -1684,7 +1684,7 @@
             "5"});
             this.comboBoxToolsVerifySeconds.Location = new System.Drawing.Point(200, 22);
             this.comboBoxToolsVerifySeconds.Name = "comboBoxToolsVerifySeconds";
-            this.comboBoxToolsVerifySeconds.Size = new System.Drawing.Size(73, 21);
+            this.comboBoxToolsVerifySeconds.Size = new System.Drawing.Size(86, 21);
             this.comboBoxToolsVerifySeconds.TabIndex = 0;
             // 
             // labelVerifyButton
@@ -1965,7 +1965,7 @@
             this.labelSSAExample.ForeColor = System.Drawing.Color.White;
             this.labelSSAExample.Location = new System.Drawing.Point(23, 152);
             this.labelSSAExample.Name = "labelSSAExample";
-            this.labelSSAExample.Size = new System.Drawing.Size(637, 101);
+            this.labelSSAExample.Size = new System.Drawing.Size(737, 101);
             this.labelSSAExample.TabIndex = 4;
             this.labelSSAExample.Text = "Testing 123...";
             this.labelSSAExample.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -1990,9 +1990,9 @@
             // 
             // buttonSSAChooseColor
             // 
-            this.buttonSSAChooseColor.Location = new System.Drawing.Point(28, 73);
+            this.buttonSSAChooseColor.Location = new System.Drawing.Point(26, 73);
             this.buttonSSAChooseColor.Name = "buttonSSAChooseColor";
-            this.buttonSSAChooseColor.Size = new System.Drawing.Size(112, 21);
+            this.buttonSSAChooseColor.Size = new System.Drawing.Size(114, 21);
             this.buttonSSAChooseColor.TabIndex = 1;
             this.buttonSSAChooseColor.Text = "Choose font color";
             this.buttonSSAChooseColor.UseVisualStyleBackColor = true;
@@ -2232,7 +2232,7 @@
             // 
             this.checkBoxShortcutsShift.AutoSize = true;
             this.checkBoxShortcutsShift.Enabled = false;
-            this.checkBoxShortcutsShift.Location = new System.Drawing.Point(243, 366);
+            this.checkBoxShortcutsShift.Location = new System.Drawing.Point(243, 367);
             this.checkBoxShortcutsShift.Name = "checkBoxShortcutsShift";
             this.checkBoxShortcutsShift.Size = new System.Drawing.Size(48, 17);
             this.checkBoxShortcutsShift.TabIndex = 3;
@@ -2243,7 +2243,7 @@
             // 
             this.checkBoxShortcutsAlt.AutoSize = true;
             this.checkBoxShortcutsAlt.Enabled = false;
-            this.checkBoxShortcutsAlt.Location = new System.Drawing.Point(174, 366);
+            this.checkBoxShortcutsAlt.Location = new System.Drawing.Point(174, 367);
             this.checkBoxShortcutsAlt.Name = "checkBoxShortcutsAlt";
             this.checkBoxShortcutsAlt.Size = new System.Drawing.Size(39, 17);
             this.checkBoxShortcutsAlt.TabIndex = 2;
@@ -2284,7 +2284,7 @@
             // labelShortcut
             // 
             this.labelShortcut.AutoSize = true;
-            this.labelShortcut.Location = new System.Drawing.Point(13, 368);
+            this.labelShortcut.Location = new System.Drawing.Point(13, 367);
             this.labelShortcut.Name = "labelShortcut";
             this.labelShortcut.Size = new System.Drawing.Size(52, 13);
             this.labelShortcut.TabIndex = 3;

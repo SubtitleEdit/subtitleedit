@@ -122,9 +122,9 @@
             this.checkBoxMergeShortLines.AutoSize = true;
             this.checkBoxMergeShortLines.Checked = true;
             this.checkBoxMergeShortLines.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBoxMergeShortLines.Location = new System.Drawing.Point(6, 98);
+            this.checkBoxMergeShortLines.Location = new System.Drawing.Point(19, 98);
             this.checkBoxMergeShortLines.Name = "checkBoxMergeShortLines";
-            this.checkBoxMergeShortLines.Size = new System.Drawing.Size(189, 17);
+            this.checkBoxMergeShortLines.Size = new System.Drawing.Size(193, 17);
             this.checkBoxMergeShortLines.TabIndex = 40;
             this.checkBoxMergeShortLines.Text = "Merge short lines with continuation";
             this.checkBoxMergeShortLines.UseVisualStyleBackColor = true;
@@ -137,14 +137,14 @@
             this.groupBoxDuration.Controls.Add(this.radioButtonDurationAuto);
             this.groupBoxDuration.Location = new System.Drawing.Point(6, 223);
             this.groupBoxDuration.Name = "groupBoxDuration";
-            this.groupBoxDuration.Size = new System.Drawing.Size(298, 63);
+            this.groupBoxDuration.Size = new System.Drawing.Size(298, 70);
             this.groupBoxDuration.TabIndex = 39;
             this.groupBoxDuration.TabStop = false;
             this.groupBoxDuration.Text = "Duration";
             // 
             // numericUpDownDurationFixed
             // 
-            this.numericUpDownDurationFixed.Location = new System.Drawing.Point(86, 39);
+            this.numericUpDownDurationFixed.Location = new System.Drawing.Point(111, 42);
             this.numericUpDownDurationFixed.Maximum = new decimal(new int[] {
             10000,
             0,
@@ -167,9 +167,9 @@
             // radioButtonDurationFixed
             // 
             this.radioButtonDurationFixed.AutoSize = true;
-            this.radioButtonDurationFixed.Location = new System.Drawing.Point(19, 42);
+            this.radioButtonDurationFixed.Location = new System.Drawing.Point(16, 42);
             this.radioButtonDurationFixed.Name = "radioButtonDurationFixed";
-            this.radioButtonDurationFixed.Size = new System.Drawing.Size(50, 17);
+            this.radioButtonDurationFixed.Size = new System.Drawing.Size(51, 17);
             this.radioButtonDurationFixed.TabIndex = 3;
             this.radioButtonDurationFixed.Text = "Fixed";
             this.radioButtonDurationFixed.UseVisualStyleBackColor = true;
@@ -179,9 +179,9 @@
             // 
             this.radioButtonDurationAuto.AutoSize = true;
             this.radioButtonDurationAuto.Checked = true;
-            this.radioButtonDurationAuto.Location = new System.Drawing.Point(19, 19);
+            this.radioButtonDurationAuto.Location = new System.Drawing.Point(16, 19);
             this.radioButtonDurationAuto.Name = "radioButtonDurationAuto";
-            this.radioButtonDurationAuto.Size = new System.Drawing.Size(47, 17);
+            this.radioButtonDurationAuto.Size = new System.Drawing.Size(48, 17);
             this.radioButtonDurationAuto.TabIndex = 2;
             this.radioButtonDurationAuto.TabStop = true;
             this.radioButtonDurationAuto.Text = "Auto";
@@ -200,7 +200,7 @@
             // 
             // numericUpDownGapBetweenLines
             // 
-            this.numericUpDownGapBetweenLines.Location = new System.Drawing.Point(9, 191);
+            this.numericUpDownGapBetweenLines.Location = new System.Drawing.Point(19, 192);
             this.numericUpDownGapBetweenLines.Maximum = new decimal(new int[] {
             10000,
             0,
@@ -223,7 +223,7 @@
             // labelGapBetweenSubtitles
             // 
             this.labelGapBetweenSubtitles.AutoSize = true;
-            this.labelGapBetweenSubtitles.Location = new System.Drawing.Point(6, 175);
+            this.labelGapBetweenSubtitles.Location = new System.Drawing.Point(19, 175);
             this.labelGapBetweenSubtitles.Name = "labelGapBetweenSubtitles";
             this.labelGapBetweenSubtitles.Size = new System.Drawing.Size(180, 13);
             this.labelGapBetweenSubtitles.TabIndex = 37;
@@ -234,9 +234,9 @@
             this.checkBoxRemoveLinesWithoutLetters.AutoSize = true;
             this.checkBoxRemoveLinesWithoutLetters.Checked = true;
             this.checkBoxRemoveLinesWithoutLetters.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBoxRemoveLinesWithoutLetters.Location = new System.Drawing.Point(6, 144);
+            this.checkBoxRemoveLinesWithoutLetters.Location = new System.Drawing.Point(19, 144);
             this.checkBoxRemoveLinesWithoutLetters.Name = "checkBoxRemoveLinesWithoutLetters";
-            this.checkBoxRemoveLinesWithoutLetters.Size = new System.Drawing.Size(158, 17);
+            this.checkBoxRemoveLinesWithoutLetters.Size = new System.Drawing.Size(162, 17);
             this.checkBoxRemoveLinesWithoutLetters.TabIndex = 5;
             this.checkBoxRemoveLinesWithoutLetters.Text = "Remove lines without letters";
             this.checkBoxRemoveLinesWithoutLetters.UseVisualStyleBackColor = true;
@@ -248,7 +248,7 @@
             this.groupBoxSplitting.Controls.Add(this.radioButtonLineMode);
             this.groupBoxSplitting.Location = new System.Drawing.Point(6, 19);
             this.groupBoxSplitting.Name = "groupBoxSplitting";
-            this.groupBoxSplitting.Size = new System.Drawing.Size(298, 65);
+            this.groupBoxSplitting.Size = new System.Drawing.Size(298, 68);
             this.groupBoxSplitting.TabIndex = 4;
             this.groupBoxSplitting.TabStop = false;
             this.groupBoxSplitting.Text = "Splitting";
@@ -257,9 +257,9 @@
             // 
             this.radioButtonAutoSplit.AutoSize = true;
             this.radioButtonAutoSplit.Checked = true;
-            this.radioButtonAutoSplit.Location = new System.Drawing.Point(6, 19);
+            this.radioButtonAutoSplit.Location = new System.Drawing.Point(14, 19);
             this.radioButtonAutoSplit.Name = "radioButtonAutoSplit";
-            this.radioButtonAutoSplit.Size = new System.Drawing.Size(88, 17);
+            this.radioButtonAutoSplit.Size = new System.Drawing.Size(93, 17);
             this.radioButtonAutoSplit.TabIndex = 2;
             this.radioButtonAutoSplit.TabStop = true;
             this.radioButtonAutoSplit.Text = "Auto split text";
@@ -269,9 +269,9 @@
             // radioButtonLineMode
             // 
             this.radioButtonLineMode.AutoSize = true;
-            this.radioButtonLineMode.Location = new System.Drawing.Point(6, 42);
+            this.radioButtonLineMode.Location = new System.Drawing.Point(14, 42);
             this.radioButtonLineMode.Name = "radioButtonLineMode";
-            this.radioButtonLineMode.Size = new System.Drawing.Size(131, 17);
+            this.radioButtonLineMode.Size = new System.Drawing.Size(133, 17);
             this.radioButtonLineMode.TabIndex = 0;
             this.radioButtonLineMode.Text = "One line is one subtitle";
             this.radioButtonLineMode.UseVisualStyleBackColor = true;
@@ -282,9 +282,9 @@
             this.checkBoxRemoveEmptyLines.AutoSize = true;
             this.checkBoxRemoveEmptyLines.Checked = true;
             this.checkBoxRemoveEmptyLines.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBoxRemoveEmptyLines.Location = new System.Drawing.Point(6, 121);
+            this.checkBoxRemoveEmptyLines.Location = new System.Drawing.Point(19, 121);
             this.checkBoxRemoveEmptyLines.Name = "checkBoxRemoveEmptyLines";
-            this.checkBoxRemoveEmptyLines.Size = new System.Drawing.Size(121, 17);
+            this.checkBoxRemoveEmptyLines.Size = new System.Drawing.Size(122, 17);
             this.checkBoxRemoveEmptyLines.TabIndex = 3;
             this.checkBoxRemoveEmptyLines.Text = "Remove empty lines";
             this.checkBoxRemoveEmptyLines.UseVisualStyleBackColor = true;
@@ -354,7 +354,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(847, 612);
+            this.ClientSize = new System.Drawing.Size(847, 616);
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.buttonOK);
             this.Controls.Add(this.groupBoxImportResult);

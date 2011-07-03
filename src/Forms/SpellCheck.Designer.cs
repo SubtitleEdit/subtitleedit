@@ -62,9 +62,9 @@
             // 
             // buttonAddToDictionary
             // 
-            this.buttonAddToDictionary.Location = new System.Drawing.Point(25, 133);
+            this.buttonAddToDictionary.Location = new System.Drawing.Point(20, 131);
             this.buttonAddToDictionary.Name = "buttonAddToDictionary";
-            this.buttonAddToDictionary.Size = new System.Drawing.Size(235, 21);
+            this.buttonAddToDictionary.Size = new System.Drawing.Size(250, 21);
             this.buttonAddToDictionary.TabIndex = 7;
             this.buttonAddToDictionary.Text = "Add to user dictionary (not case sensitive)";
             this.buttonAddToDictionary.UseVisualStyleBackColor = true;
@@ -72,9 +72,9 @@
             // 
             // buttonSkipOnce
             // 
-            this.buttonSkipOnce.Location = new System.Drawing.Point(23, 74);
+            this.buttonSkipOnce.Location = new System.Drawing.Point(20, 75);
             this.buttonSkipOnce.Name = "buttonSkipOnce";
-            this.buttonSkipOnce.Size = new System.Drawing.Size(117, 21);
+            this.buttonSkipOnce.Size = new System.Drawing.Size(122, 21);
             this.buttonSkipOnce.TabIndex = 4;
             this.buttonSkipOnce.Text = "Skip &once";
             this.buttonSkipOnce.UseVisualStyleBackColor = true;
@@ -84,16 +84,16 @@
             // 
             this.comboBoxDictionaries.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxDictionaries.FormattingEnabled = true;
-            this.comboBoxDictionaries.Location = new System.Drawing.Point(317, 30);
+            this.comboBoxDictionaries.Location = new System.Drawing.Point(317, 33);
             this.comboBoxDictionaries.Name = "comboBoxDictionaries";
-            this.comboBoxDictionaries.Size = new System.Drawing.Size(257, 21);
+            this.comboBoxDictionaries.Size = new System.Drawing.Size(271, 21);
             this.comboBoxDictionaries.TabIndex = 8;
             this.comboBoxDictionaries.SelectedIndexChanged += new System.EventHandler(this.ComboBoxDictionariesSelectedIndexChanged);
             // 
             // labelLanguage
             // 
             this.labelLanguage.AutoSize = true;
-            this.labelLanguage.Location = new System.Drawing.Point(314, 12);
+            this.labelLanguage.Location = new System.Drawing.Point(314, 14);
             this.labelLanguage.Name = "labelLanguage";
             this.labelLanguage.Size = new System.Drawing.Size(54, 13);
             this.labelLanguage.TabIndex = 3;
@@ -115,20 +115,20 @@
             this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.addXToNamesnoiseListToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(206, 48);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(211, 26);
             this.contextMenuStrip1.Opening += new System.ComponentModel.CancelEventHandler(this.ContextMenuStrip1Opening);
             // 
             // addXToNamesnoiseListToolStripMenuItem
             // 
             this.addXToNamesnoiseListToolStripMenuItem.Name = "addXToNamesnoiseListToolStripMenuItem";
-            this.addXToNamesnoiseListToolStripMenuItem.Size = new System.Drawing.Size(205, 22);
+            this.addXToNamesnoiseListToolStripMenuItem.Size = new System.Drawing.Size(210, 22);
             this.addXToNamesnoiseListToolStripMenuItem.Text = "Add x to names/noise list";
             this.addXToNamesnoiseListToolStripMenuItem.Click += new System.EventHandler(this.AddXToNamesnoiseListToolStripMenuItemClick);
             // 
             // listBoxSuggestions
             // 
             this.listBoxSuggestions.FormattingEnabled = true;
-            this.listBoxSuggestions.Location = new System.Drawing.Point(8, 46);
+            this.listBoxSuggestions.Location = new System.Drawing.Point(8, 44);
             this.listBoxSuggestions.Name = "listBoxSuggestions";
             this.listBoxSuggestions.Size = new System.Drawing.Size(272, 82);
             this.listBoxSuggestions.TabIndex = 11;
@@ -145,14 +145,14 @@
             // 
             // textBoxWord
             // 
-            this.textBoxWord.Location = new System.Drawing.Point(23, 19);
+            this.textBoxWord.Location = new System.Drawing.Point(20, 20);
             this.textBoxWord.Name = "textBoxWord";
-            this.textBoxWord.Size = new System.Drawing.Size(237, 21);
+            this.textBoxWord.Size = new System.Drawing.Size(250, 21);
             this.textBoxWord.TabIndex = 1;
             // 
             // buttonAbort
             // 
-            this.buttonAbort.Location = new System.Drawing.Point(510, 309);
+            this.buttonAbort.Location = new System.Drawing.Point(510, 308);
             this.buttonAbort.Name = "buttonAbort";
             this.buttonAbort.Size = new System.Drawing.Size(85, 21);
             this.buttonAbort.TabIndex = 12;
@@ -162,9 +162,9 @@
             // 
             // buttonSkipAll
             // 
-            this.buttonSkipAll.Location = new System.Drawing.Point(146, 75);
+            this.buttonSkipAll.Location = new System.Drawing.Point(148, 75);
             this.buttonSkipAll.Name = "buttonSkipAll";
-            this.buttonSkipAll.Size = new System.Drawing.Size(114, 21);
+            this.buttonSkipAll.Size = new System.Drawing.Size(122, 21);
             this.buttonSkipAll.TabIndex = 5;
             this.buttonSkipAll.Text = "&Skip all";
             this.buttonSkipAll.UseVisualStyleBackColor = true;
@@ -172,9 +172,9 @@
             // 
             // buttonChange
             // 
-            this.buttonChange.Location = new System.Drawing.Point(23, 46);
+            this.buttonChange.Location = new System.Drawing.Point(20, 47);
             this.buttonChange.Name = "buttonChange";
-            this.buttonChange.Size = new System.Drawing.Size(117, 21);
+            this.buttonChange.Size = new System.Drawing.Size(122, 21);
             this.buttonChange.TabIndex = 2;
             this.buttonChange.Text = "Change";
             this.buttonChange.UseVisualStyleBackColor = true;
@@ -192,9 +192,9 @@
             // 
             // buttonChangeAll
             // 
-            this.buttonChangeAll.Location = new System.Drawing.Point(146, 46);
+            this.buttonChangeAll.Location = new System.Drawing.Point(148, 47);
             this.buttonChangeAll.Name = "buttonChangeAll";
-            this.buttonChangeAll.Size = new System.Drawing.Size(114, 21);
+            this.buttonChangeAll.Size = new System.Drawing.Size(122, 21);
             this.buttonChangeAll.TabIndex = 3;
             this.buttonChangeAll.Text = "Change all";
             this.buttonChangeAll.UseVisualStyleBackColor = true;
@@ -212,9 +212,9 @@
             // 
             // buttonAddToNames
             // 
-            this.buttonAddToNames.Location = new System.Drawing.Point(25, 104);
+            this.buttonAddToNames.Location = new System.Drawing.Point(20, 103);
             this.buttonAddToNames.Name = "buttonAddToNames";
-            this.buttonAddToNames.Size = new System.Drawing.Size(235, 21);
+            this.buttonAddToNames.Size = new System.Drawing.Size(250, 21);
             this.buttonAddToNames.TabIndex = 6;
             this.buttonAddToNames.Text = "Add to names/noise list (case sensitive)";
             this.buttonAddToNames.UseVisualStyleBackColor = true;

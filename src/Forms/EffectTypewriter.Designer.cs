@@ -57,9 +57,9 @@
             // 
             // buttonPreview
             // 
-            this.buttonPreview.Location = new System.Drawing.Point(12, 115);
+            this.buttonPreview.Location = new System.Drawing.Point(12, 119);
             this.buttonPreview.Name = "buttonPreview";
-            this.buttonPreview.Size = new System.Drawing.Size(75, 21);
+            this.buttonPreview.Size = new System.Drawing.Size(100, 21);
             this.buttonPreview.TabIndex = 26;
             this.buttonPreview.Text = "Preview";
             this.buttonPreview.UseVisualStyleBackColor = true;
@@ -91,12 +91,12 @@
             // 
             // labelEndDelay
             // 
-            this.labelEndDelay.AutoSize = true;
-            this.labelEndDelay.Location = new System.Drawing.Point(17, 44);
+            this.labelEndDelay.Location = new System.Drawing.Point(16, 45);
             this.labelEndDelay.Name = "labelEndDelay";
-            this.labelEndDelay.Size = new System.Drawing.Size(113, 13);
+            this.labelEndDelay.Size = new System.Drawing.Size(140, 13);
             this.labelEndDelay.TabIndex = 32;
             this.labelEndDelay.Text = "End delay in millisecs.:";
+            this.labelEndDelay.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // numericUpDownDelay
             // 
@@ -106,7 +106,7 @@
             0,
             0,
             65536});
-            this.numericUpDownDelay.Location = new System.Drawing.Point(130, 43);
+            this.numericUpDownDelay.Location = new System.Drawing.Point(159, 43);
             this.numericUpDownDelay.Maximum = new decimal(new int[] {
             99999,
             0,
@@ -123,17 +123,17 @@
             // 
             // labelTM
             // 
-            this.labelTM.AutoSize = true;
-            this.labelTM.Location = new System.Drawing.Point(51, 22);
+            this.labelTM.Location = new System.Drawing.Point(16, 23);
             this.labelTM.Name = "labelTM";
-            this.labelTM.Size = new System.Drawing.Size(79, 13);
+            this.labelTM.Size = new System.Drawing.Size(140, 13);
             this.labelTM.TabIndex = 36;
             this.labelTM.Text = "Total millisecs.:";
+            this.labelTM.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // labelTotalMillisecs
             // 
             this.labelTotalMillisecs.AutoSize = true;
-            this.labelTotalMillisecs.Location = new System.Drawing.Point(127, 23);
+            this.labelTotalMillisecs.Location = new System.Drawing.Point(159, 23);
             this.labelTotalMillisecs.Name = "labelTotalMillisecs";
             this.labelTotalMillisecs.Size = new System.Drawing.Size(90, 13);
             this.labelTotalMillisecs.TabIndex = 37;

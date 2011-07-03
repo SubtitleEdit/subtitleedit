@@ -238,12 +238,13 @@
             // 
             // labelBorderWidth
             // 
-            this.labelBorderWidth.AutoSize = true;
-            this.labelBorderWidth.Location = new System.Drawing.Point(470, 56);
+            this.labelBorderWidth.Location = new System.Drawing.Point(426, 56);
             this.labelBorderWidth.Name = "labelBorderWidth";
-            this.labelBorderWidth.Size = new System.Drawing.Size(66, 13);
+            this.labelBorderWidth.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.labelBorderWidth.Size = new System.Drawing.Size(110, 13);
             this.labelBorderWidth.TabIndex = 16;
             this.labelBorderWidth.Text = "Border width";
+            this.labelBorderWidth.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // comboBoxBorderWidth
             // 

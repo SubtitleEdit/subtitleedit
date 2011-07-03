@@ -43,7 +43,7 @@
             // labelStatus
             // 
             this.labelStatus.AutoSize = true;
-            this.labelStatus.Location = new System.Drawing.Point(35, 173);
+            this.labelStatus.Location = new System.Drawing.Point(16, 167);
             this.labelStatus.Name = "labelStatus";
             this.labelStatus.Size = new System.Drawing.Size(59, 13);
             this.labelStatus.TabIndex = 18;
@@ -52,7 +52,7 @@
             // labelInfo
             // 
             this.labelInfo.AutoSize = true;
-            this.labelInfo.Location = new System.Drawing.Point(12, 9);
+            this.labelInfo.Location = new System.Drawing.Point(16, 13);
             this.labelInfo.Name = "labelInfo";
             this.labelInfo.Size = new System.Drawing.Size(212, 26);
             this.labelInfo.TabIndex = 17;
@@ -61,9 +61,9 @@
             // labelWebServiceUrl
             // 
             this.labelWebServiceUrl.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.labelWebServiceUrl.Location = new System.Drawing.Point(2, 112);
+            this.labelWebServiceUrl.Location = new System.Drawing.Point(5, 112);
             this.labelWebServiceUrl.Name = "labelWebServiceUrl";
-            this.labelWebServiceUrl.Size = new System.Drawing.Size(92, 21);
+            this.labelWebServiceUrl.Size = new System.Drawing.Size(114, 16);
             this.labelWebServiceUrl.TabIndex = 16;
             this.labelWebServiceUrl.Text = "Web service url";
             this.labelWebServiceUrl.TextAlign = System.Drawing.ContentAlignment.TopRight;
@@ -74,15 +74,15 @@
             this.comboBoxWebServiceUrl.Items.AddRange(new object[] {
             "http://www.nikse.dk/se/SeService.asmx",
             "http://nikse555.brinkster.net/SeService.asmx"});
-            this.comboBoxWebServiceUrl.Location = new System.Drawing.Point(96, 107);
+            this.comboBoxWebServiceUrl.Location = new System.Drawing.Point(125, 109);
             this.comboBoxWebServiceUrl.Name = "comboBoxWebServiceUrl";
-            this.comboBoxWebServiceUrl.Size = new System.Drawing.Size(290, 21);
+            this.comboBoxWebServiceUrl.Size = new System.Drawing.Size(261, 21);
             this.comboBoxWebServiceUrl.TabIndex = 2;
             // 
             // buttonCancel
             // 
             this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonCancel.Location = new System.Drawing.Point(311, 149);
+            this.buttonCancel.Location = new System.Drawing.Point(312, 147);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 21);
             this.buttonCancel.TabIndex = 4;
@@ -92,15 +92,15 @@
             // 
             // textBoxUserName
             // 
-            this.textBoxUserName.Location = new System.Drawing.Point(96, 55);
+            this.textBoxUserName.Location = new System.Drawing.Point(125, 57);
             this.textBoxUserName.Name = "textBoxUserName";
-            this.textBoxUserName.Size = new System.Drawing.Size(290, 20);
+            this.textBoxUserName.Size = new System.Drawing.Size(261, 20);
             this.textBoxUserName.TabIndex = 0;
             // 
             // buttonJoin
             // 
             this.buttonJoin.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonJoin.Location = new System.Drawing.Point(230, 149);
+            this.buttonJoin.Location = new System.Drawing.Point(231, 147);
             this.buttonJoin.Name = "buttonJoin";
             this.buttonJoin.Size = new System.Drawing.Size(75, 21);
             this.buttonJoin.TabIndex = 3;
@@ -111,26 +111,26 @@
             // labelUserName
             // 
             this.labelUserName.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.labelUserName.Location = new System.Drawing.Point(-1, 55);
+            this.labelUserName.Location = new System.Drawing.Point(5, 60);
             this.labelUserName.Name = "labelUserName";
-            this.labelUserName.Size = new System.Drawing.Size(91, 20);
+            this.labelUserName.Size = new System.Drawing.Size(114, 16);
             this.labelUserName.TabIndex = 11;
             this.labelUserName.Text = "Username";
             this.labelUserName.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // textBoxSessionKey
             // 
-            this.textBoxSessionKey.Location = new System.Drawing.Point(96, 81);
+            this.textBoxSessionKey.Location = new System.Drawing.Point(125, 83);
             this.textBoxSessionKey.Name = "textBoxSessionKey";
-            this.textBoxSessionKey.Size = new System.Drawing.Size(290, 20);
+            this.textBoxSessionKey.Size = new System.Drawing.Size(261, 20);
             this.textBoxSessionKey.TabIndex = 1;
             // 
             // labelSessionKey
             // 
             this.labelSessionKey.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.labelSessionKey.Location = new System.Drawing.Point(2, 81);
+            this.labelSessionKey.Location = new System.Drawing.Point(5, 86);
             this.labelSessionKey.Name = "labelSessionKey";
-            this.labelSessionKey.Size = new System.Drawing.Size(88, 20);
+            this.labelSessionKey.Size = new System.Drawing.Size(114, 16);
             this.labelSessionKey.TabIndex = 19;
             this.labelSessionKey.Text = "Key";
             this.labelSessionKey.TextAlign = System.Drawing.ContentAlignment.TopRight;
@@ -139,7 +139,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(408, 191);
+            this.ClientSize = new System.Drawing.Size(402, 185);
             this.Controls.Add(this.textBoxSessionKey);
             this.Controls.Add(this.labelSessionKey);
             this.Controls.Add(this.labelStatus);
