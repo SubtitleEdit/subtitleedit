@@ -53,7 +53,7 @@
             // 
             this.comboBoxTexts.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxTexts.FormattingEnabled = true;
-            this.comboBoxTexts.Location = new System.Drawing.Point(12, 35);
+            this.comboBoxTexts.Location = new System.Drawing.Point(12, 27);
             this.comboBoxTexts.Name = "comboBoxTexts";
             this.comboBoxTexts.Size = new System.Drawing.Size(240, 21);
             this.comboBoxTexts.TabIndex = 1;
@@ -62,7 +62,7 @@
             // listBoxFileNames
             // 
             this.listBoxFileNames.FormattingEnabled = true;
-            this.listBoxFileNames.Location = new System.Drawing.Point(12, 83);
+            this.listBoxFileNames.Location = new System.Drawing.Point(12, 73);
             this.listBoxFileNames.Name = "listBoxFileNames";
             this.listBoxFileNames.Size = new System.Drawing.Size(240, 251);
             this.listBoxFileNames.TabIndex = 3;
@@ -72,7 +72,7 @@
             // 
             this.buttonOK.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.buttonOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonOK.Location = new System.Drawing.Point(368, 351);
+            this.buttonOK.Location = new System.Drawing.Point(368, 341);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 21);
             this.buttonOK.TabIndex = 0;
@@ -93,7 +93,7 @@
             // labelChooseCharacters
             // 
             this.labelChooseCharacters.AutoSize = true;
-            this.labelChooseCharacters.Location = new System.Drawing.Point(12, 18);
+            this.labelChooseCharacters.Location = new System.Drawing.Point(12, 10);
             this.labelChooseCharacters.Name = "labelChooseCharacters";
             this.labelChooseCharacters.Size = new System.Drawing.Size(105, 13);
             this.labelChooseCharacters.TabIndex = 0;
@@ -102,7 +102,7 @@
             // labelImageCompareFiles
             // 
             this.labelImageCompareFiles.AutoSize = true;
-            this.labelImageCompareFiles.Location = new System.Drawing.Point(12, 66);
+            this.labelImageCompareFiles.Location = new System.Drawing.Point(12, 56);
             this.labelImageCompareFiles.Name = "labelImageCompareFiles";
             this.labelImageCompareFiles.Size = new System.Drawing.Size(103, 13);
             this.labelImageCompareFiles.TabIndex = 2;
@@ -119,7 +119,7 @@
             this.groupBoxCurrentCompareImage.Controls.Add(this.labelImageInfo);
             this.groupBoxCurrentCompareImage.Controls.Add(this.textBoxText);
             this.groupBoxCurrentCompareImage.Controls.Add(this.pictureBox1);
-            this.groupBoxCurrentCompareImage.Location = new System.Drawing.Point(258, 77);
+            this.groupBoxCurrentCompareImage.Location = new System.Drawing.Point(258, 67);
             this.groupBoxCurrentCompareImage.Name = "groupBoxCurrentCompareImage";
             this.groupBoxCurrentCompareImage.Size = new System.Drawing.Size(266, 268);
             this.groupBoxCurrentCompareImage.TabIndex = 6;
@@ -205,10 +205,10 @@
             // 
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonCancel.Location = new System.Drawing.Point(449, 351);
+            this.buttonCancel.Location = new System.Drawing.Point(449, 341);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 21);
-            this.buttonCancel.TabIndex = 1;
+            this.buttonCancel.TabIndex = 7;
             this.buttonCancel.Text = "C&ancel";
             this.buttonCancel.UseVisualStyleBackColor = true;
             // 
@@ -216,7 +216,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(536, 380);
+            this.ClientSize = new System.Drawing.Size(536, 370);
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.groupBoxCurrentCompareImage);
             this.Controls.Add(this.labelImageCompareFiles);
@@ -258,7 +258,7 @@
         private System.Windows.Forms.Label labelImageInfo;
         private System.Windows.Forms.TextBox textBoxText;
         private System.Windows.Forms.PictureBox pictureBox1;
-        private System.Windows.Forms.Button buttonCancel;
         private System.Windows.Forms.CheckBox checkBoxItalic;
+        private System.Windows.Forms.Button buttonCancel;
     }
 }

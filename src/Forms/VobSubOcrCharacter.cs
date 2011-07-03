@@ -74,7 +74,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         public bool ShrinkSelection { get; private set; }
 
-        public void Initialize(Bitmap vobSubImage, ImageSplitterItem character, Point position, bool italicChecked, bool showShrink, VobSubOcr.CompareMatch bestGuess, List<VobSubOcr.ImageCompareAddition> additions, VobSubOcr vobSubForm)
+        internal void Initialize(Bitmap vobSubImage, ImageSplitterItem character, Point position, bool italicChecked, bool showShrink, VobSubOcr.CompareMatch bestGuess, List<VobSubOcr.ImageCompareAddition> additions, VobSubOcr vobSubForm)
         {
             ShrinkSelection = false;
             ExpandSelection = false;
@@ -202,7 +202,6 @@ namespace Nikse.SubtitleEdit.Forms
         private void InsertLanguageCharacter(object sender, EventArgs e)
         {
             textBoxCharacters.Text = textBoxCharacters.Text.Insert(textBoxCharacters.SelectionStart, (sender as ToolStripMenuItem).Text);
-
         }
 
         private void textBoxCharacters_TextChanged(object sender, EventArgs e)

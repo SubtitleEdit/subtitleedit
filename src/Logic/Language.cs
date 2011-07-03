@@ -63,6 +63,7 @@ namespace Nikse.SubtitleEdit.Logic
         public LanguageStructure.VobSubEditCharacters VobSubEditCharacters;
         public LanguageStructure.VobSubOcr VobSubOcr;
         public LanguageStructure.VobSubOcrCharacter VobSubOcrCharacter;
+        public LanguageStructure.VobSubOcrCharacterInspect VobSubOcrCharacterInspect;
         public LanguageStructure.VobSubOcrNewFolder VobSubOcrNewFolder;
         public LanguageStructure.WaveForm WaveForm;
 
@@ -1424,6 +1425,7 @@ can edit in same subtitle file (collaboration)",
                 RightToLeft = "Right to left",
                 ShowOnlyForcedSubtitles = "Show only forced subtitles",
                 UseTimeCodesFromIdx = "Use time codes from .idx file",
+                NoMatch = "<No match>",
             };
 
             VobSubOcrCharacter = new LanguageStructure.VobSubOcrCharacter
@@ -1443,6 +1445,13 @@ can edit in same subtitle file (collaboration)",
                 AutoSubmitOnFirstChar = "Auto submit on &first char",
                 EditLastX = "Edit last: {0}",
             };
+
+            VobSubOcrCharacterInspect = new LanguageStructure.VobSubOcrCharacterInspect
+            {
+                Title = "Inspect compare matches for current image",
+                InspectItems = "Inspect items",
+            };
+
 
             VobSubOcrNewFolder = new LanguageStructure.VobSubOcrNewFolder
             {

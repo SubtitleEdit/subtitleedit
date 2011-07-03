@@ -14,6 +14,7 @@ namespace Nikse.SubtitleEdit.Forms
         string _directoryPath;
         List<bool> _italics = new List<bool>();
         bool _focusTextBox = false;
+        internal List<VobSubOcr.ImageCompareAddition> Additions { get; private set; }
 
         public XmlDocument ImageCompareDocument
         {
@@ -23,9 +24,12 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        public VobSubEditCharacters(string databaseFolderName)
+        internal VobSubEditCharacters(string databaseFolderName, List<VobSubOcr.ImageCompareAddition> additions)
         {
             InitializeComponent();
+            Additions = new List<VobSubOcr.ImageCompareAddition>();
+            foreach (var a in additions)
+                Additions.Add(a);
             labelImageInfo.Text = string.Empty;
             pictureBox1.SizeMode = PictureBoxSizeMode.AutoSize;
 
@@ -35,7 +39,7 @@ namespace Nikse.SubtitleEdit.Forms
             else
                 _compareDoc.Load(_directoryPath + "CompareDescription.xml");
 
-            FillComboWithUniqueAndSortedTexts();
+            Refill(Additions);
 
             Text = Configuration.Settings.Language.VobSubEditCharacters.Title;
             labelChooseCharacters.Text = Configuration.Settings.Language.VobSubEditCharacters.ChooseCharacter;
@@ -51,11 +55,51 @@ namespace Nikse.SubtitleEdit.Forms
             FixLargeFonts();
         }
 
+        private void Refill(List<VobSubOcr.ImageCompareAddition> additions)
+        {
+            if (additions != null)
+            {
+                labelChooseCharacters.Visible = false;
+                comboBoxTexts.Visible = false;
+                FillLastAdditions(additions);
+            }
+            else
+            {
+                FillComboWithUniqueAndSortedTexts();
+            }
+        }
+
+        private void FillLastAdditions(List<VobSubOcr.ImageCompareAddition> additions)
+        {
+            _italics = new List<bool>();
+            listBoxFileNames.Items.Clear();
+            foreach (XmlNode node in _compareDoc.DocumentElement.ChildNodes)
+            {
+                if (node.Attributes["Text"] != null)
+                {
+                    string text = node.Attributes["Text"].InnerText;
+                    string name = node.InnerText;
+                    foreach (VobSubOcr.ImageCompareAddition a in additions)
+                    {
+                        if (name == a.Name)
+                        {
+                            listBoxFileNames.Items.Add("[" + text +"] " + node.InnerText + ".bmp");
+                            _italics.Add(node.Attributes["Italic"] != null);
+                        }
+
+                    }
+                }
+            }
+
+            if (listBoxFileNames.Items.Count > 0)
+                listBoxFileNames.SelectedIndex = 0;
+        }
+
         private void FixLargeFonts()
         {
             Graphics graphics = this.CreateGraphics();
-            SizeF textSize = graphics.MeasureString(buttonCancel.Text, this.Font);
-            if (textSize.Height > buttonCancel.Height - 4)
+            SizeF textSize = graphics.MeasureString(buttonOK.Text, this.Font);
+            if (textSize.Height > buttonOK.Height - 4)
             {
                 int newButtonHeight = (int)(textSize.Height + 7 + 0.5);
                 Utilities.SetButtonHeight(this, newButtonHeight, 1);
@@ -109,10 +153,26 @@ namespace Nikse.SubtitleEdit.Forms
                 listBoxFileNames.SelectedIndex = 0;
         }
 
+        private string GetSelectedFileName()
+        {
+            string fileName = listBoxFileNames.SelectedItem.ToString();
+            if (fileName.StartsWith("["))
+                fileName = fileName.Substring(fileName.IndexOf("]") + 1);
+            return fileName.Trim();
+        }
+
+        private string GetFileName(int index)
+        {
+            string fileName = listBoxFileNames.Items[index].ToString();
+            if (fileName.StartsWith("["))
+                fileName = fileName.Substring(fileName.IndexOf("]") + 1);
+            return fileName.Trim();
+        }
+
         private void ListBoxFileNamesSelectedIndexChanged(object sender, EventArgs e)
         {
             checkBoxItalic.Checked = _italics[listBoxFileNames.SelectedIndex];
-            string fileName = _directoryPath + listBoxFileNames.SelectedItem;
+            string fileName = _directoryPath + GetSelectedFileName();
             Bitmap bmp;
             if (File.Exists(fileName))
             {
@@ -136,6 +196,19 @@ namespace Nikse.SubtitleEdit.Forms
             pictureBox2.Width = bmp.Width * 2;
             pictureBox2.Height = bmp.Height * 2;
             pictureBox2.Image = bmp;
+
+            if (Additions != null)
+            {
+                string target = GetSelectedFileName();
+                foreach (var a in Additions)
+                {
+                    if (target.StartsWith(a.Name))
+                    {
+                        textBoxText.Text = a.Text;
+                        break;
+                    }
+                }
+            }
         }
 
         private void VobSubEditCharacters_KeyDown(object sender, KeyEventArgs e)
@@ -146,13 +219,29 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ButtonUpdateClick(object sender, EventArgs e)
         {
-            string target = listBoxFileNames.SelectedItem.ToString();
+            if (listBoxFileNames.Items.Count == 0)
+                return;
+
+            string target = GetSelectedFileName();
             target = target.Substring(0, target.Length - 4);
             XmlNode node = _compareDoc.DocumentElement.SelectSingleNode("FileName[.='" + target + "']");
             if (node != null)
             {
                 string newText = textBoxText.Text;
                 node.Attributes["Text"].InnerText = newText;
+
+                if (Additions != null)
+                {
+                    foreach (var a in Additions)
+                    {
+                        if (target.StartsWith(a.Name))
+                        {
+                            a.Text = newText;
+                            a.Italic = checkBoxItalic.Checked;
+                            break;
+                        }
+                    }
+                }
 
                 if (checkBoxItalic.Checked)
                 {
@@ -171,18 +260,21 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
 
-                FillComboWithUniqueAndSortedTexts();
-                for (int i = 0; i < comboBoxTexts.Items.Count; i++)
+                Refill(Additions);
+                if (Additions == null)
                 {
-                    if (comboBoxTexts.Items[i].ToString() == newText)
+                    for (int i = 0; i < comboBoxTexts.Items.Count; i++)
                     {
-                        comboBoxTexts.SelectedIndex = i;
-                        for (int j = 0; j < listBoxFileNames.Items.Count; j++)
+                        if (comboBoxTexts.Items[i].ToString() == newText)
                         {
-                            if (listBoxFileNames.Items[j].ToString().StartsWith(target))
-                                listBoxFileNames.SelectedIndex = j;
+                            comboBoxTexts.SelectedIndex = i;
+                            for (int j = 0; j < listBoxFileNames.Items.Count; j++)
+                            {
+                                if (GetFileName(j).StartsWith(target))
+                                    listBoxFileNames.SelectedIndex = j;
+                            }
+                            return;
                         }
-                        return;
                     }
                 }
             }
@@ -190,16 +282,35 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ButtonDeleteClick(object sender, EventArgs e)
         {
+            if (listBoxFileNames.Items.Count == 0)
+                return;
+
             int oldComboBoxIndex = comboBoxTexts.SelectedIndex;
-            string target = listBoxFileNames.SelectedItem.ToString();
+            string target = GetSelectedFileName();
             target = target.Substring(0, target.Length - 4);
             XmlNode node = _compareDoc.DocumentElement.SelectSingleNode("FileName[.='" + target + "']");
             if (node != null)
             {
                 _compareDoc.DocumentElement.RemoveChild(node);
-                FillComboWithUniqueAndSortedTexts();
-                if (oldComboBoxIndex < comboBoxTexts.Items.Count)
-                    comboBoxTexts.SelectedIndex = oldComboBoxIndex;
+                if (Additions != null)
+                {
+                    for (int i = Additions.Count - 1; i >= 0; i--)
+                    {
+                        if (Additions[i].Name == target)
+                        {
+                            Additions.RemoveAt(i);
+                            Refill(Additions);
+                            break;
+                        }
+                    }
+                }
+
+                Refill(Additions);
+                if (Additions == null)
+                {
+                    if (oldComboBoxIndex < comboBoxTexts.Items.Count)
+                        comboBoxTexts.SelectedIndex = oldComboBoxIndex;
+                }
             }
         }
 
@@ -214,7 +325,7 @@ namespace Nikse.SubtitleEdit.Forms
                         comboBoxTexts.SelectedIndex = i;
                         for (int j = 0; j < listBoxFileNames.Items.Count; j++)
                         {
-                            if (listBoxFileNames.Items[j].ToString().StartsWith(name))
+                            if (GetFileName(j).StartsWith(name))
                                 listBoxFileNames.SelectedIndex = j;
                         }
                         _focusTextBox = true;
@@ -238,5 +349,6 @@ namespace Nikse.SubtitleEdit.Forms
                 DialogResult = DialogResult.OK;
             }
         }
+
     }
 }

@@ -17,6 +17,9 @@ namespace Nikse.SubtitleEdit.Forms
             RemovedLanguagesNotInMicrosoftTranslate(comboBoxFrom);
             RemovedLanguagesNotInMicrosoftTranslate(comboBoxTo);
 
+            Text = Configuration.Settings.Language.GoogleOrMicrosoftTranslate.Title;
+            labelGoogleTranslate.Text = Configuration.Settings.Language.GoogleOrMicrosoftTranslate.GoogleTranslate;
+            labelMicrosoftTranslate.Text = Configuration.Settings.Language.GoogleOrMicrosoftTranslate.MicrosoftTranslate;
             labelFrom.Text = Configuration.Settings.Language.GoogleOrMicrosoftTranslate.From;
             labelTo.Text = Configuration.Settings.Language.GoogleOrMicrosoftTranslate.To;
             labelSourceText.Text = Configuration.Settings.Language.GoogleOrMicrosoftTranslate.SourceText;
