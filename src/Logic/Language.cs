@@ -1426,6 +1426,7 @@ can edit in same subtitle file (collaboration)",
                 ShowOnlyForcedSubtitles = "Show only forced subtitles",
                 UseTimeCodesFromIdx = "Use time codes from .idx file",
                 NoMatch = "<No match>",
+                AutoTransparentBackground = "Auto transparent background"
             };
 
             VobSubOcrCharacter = new LanguageStructure.VobSubOcrCharacter
