@@ -1155,6 +1155,9 @@ namespace Nikse.SubtitleEdit.Forms
             return name;
         }
 
+        /// <summary>
+        /// Ocr via image compare
+        /// </summary>
         private string SplitAndOcrBitmapNormal(Bitmap bitmap, int listViewIndex)
         {
             if (_ocrFixEngine == null)
@@ -1432,7 +1435,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (line.Length > 0)
                 ItalianLine(paragraph, ref line, ref allItalic, ref wordItalics, ref wordNonItalics, ref isItalic, "", lineLettersNonItalics);
 
-            if (allItalic)
+            if (allItalic && matches.Count > 0)
             {
                 string temp = paragraph.ToString().Replace("<i>", "").Replace("</i>", "");
                 paragraph = new StringBuilder();
