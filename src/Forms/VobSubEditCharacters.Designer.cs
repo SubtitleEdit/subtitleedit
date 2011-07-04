@@ -64,7 +64,7 @@
             this.listBoxFileNames.FormattingEnabled = true;
             this.listBoxFileNames.Location = new System.Drawing.Point(12, 73);
             this.listBoxFileNames.Name = "listBoxFileNames";
-            this.listBoxFileNames.Size = new System.Drawing.Size(240, 251);
+            this.listBoxFileNames.Size = new System.Drawing.Size(240, 264);
             this.listBoxFileNames.TabIndex = 3;
             this.listBoxFileNames.SelectedIndexChanged += new System.EventHandler(this.ListBoxFileNamesSelectedIndexChanged);
             // 
@@ -131,7 +131,7 @@
             this.checkBoxItalic.AutoSize = true;
             this.checkBoxItalic.Location = new System.Drawing.Point(15, 61);
             this.checkBoxItalic.Name = "checkBoxItalic";
-            this.checkBoxItalic.Size = new System.Drawing.Size(58, 17);
+            this.checkBoxItalic.Size = new System.Drawing.Size(59, 17);
             this.checkBoxItalic.TabIndex = 2;
             this.checkBoxItalic.Text = "Is &italic";
             this.checkBoxItalic.UseVisualStyleBackColor = true;
@@ -180,9 +180,9 @@
             this.labelImageInfo.AutoSize = true;
             this.labelImageInfo.Location = new System.Drawing.Point(12, 87);
             this.labelImageInfo.Name = "labelImageInfo";
-            this.labelImageInfo.Size = new System.Drawing.Size(35, 13);
+            this.labelImageInfo.Size = new System.Drawing.Size(79, 13);
             this.labelImageInfo.TabIndex = 5;
-            this.labelImageInfo.Text = "label1";
+            this.labelImageInfo.Text = "labelImageInfo";
             // 
             // textBoxText
             // 

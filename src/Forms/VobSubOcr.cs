@@ -207,6 +207,9 @@ namespace Nikse.SubtitleEdit.Forms
             importTextWithMatchingTimeCodesToolStripMenuItem.Text = language.ImportTextWithMatchingTimeCodes;
             saveImageAsToolStripMenuItem.Text = language.SaveSubtitleImageAs;
             saveAllImagesToolStripMenuItem.Text = language.SaveAllSubtitleImagesAsBdnXml;
+            saveAllImagesWithHtmlIndexViewToolStripMenuItem.Text = language.SaveAllSubtitleImagesWithHtml;
+            inspectImageCompareMatchesForCurrentImageToolStripMenuItem.Text = language.InspectCompareMatchesForCurrentImage;
+            EditLastAdditionsToolStripMenuItem.Text = language.EditLastAdditions;
             checkBoxRightToLeft.Checked = Configuration.Settings.VobSubOcr.RightToLeft;
 
             comboBoxTesseractLanguages.Left = labelTesseractLanguage.Left + labelTesseractLanguage.Width;
@@ -2672,7 +2675,6 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     index++;
                 }
-
                 
             }
         }
@@ -2688,7 +2690,7 @@ namespace Nikse.SubtitleEdit.Forms
                 StringBuilder sb = new StringBuilder();
                 sb.AppendLine("<html>");
                 sb.AppendLine("<head><title>Subtitle images</title></head>");
-                sb.AppendLine("<body style='text-align:center'>");
+                sb.AppendLine("<body>");
                 for (int i = 0; i < _subtitle.Paragraphs.Count; i++)
                 {
                     progressBar1.Value = i;
@@ -2700,7 +2702,7 @@ namespace Nikse.SubtitleEdit.Forms
                         bmp.Save(fileName, System.Drawing.Imaging.ImageFormat.Png);
                         imagesSavedCount++;
                         Paragraph p = _subtitle.Paragraphs[i];
-                        sb.AppendLine(string.Format("#{3}: {0}->{1} <img src='{2}.png' /> <br /><hr />", p.StartTime.ToShortString(), p.EndTime.ToShortString(), numberString, i));
+                        sb.AppendLine(string.Format("#{3}: {0}->{1}<div style='text-align:center'><img src='{2}.png' /></div><br /><hr />", p.StartTime.ToShortString(), p.EndTime.ToShortString(), numberString, i));
                         bmp.Dispose();
                     }
                 }

@@ -27,9 +27,20 @@ namespace Nikse.SubtitleEdit.Forms
         internal VobSubEditCharacters(string databaseFolderName, List<VobSubOcr.ImageCompareAddition> additions)
         {
             InitializeComponent();
-            Additions = new List<VobSubOcr.ImageCompareAddition>();
-            foreach (var a in additions)
-                Additions.Add(a);
+            if (additions != null)
+            {
+                Additions = new List<VobSubOcr.ImageCompareAddition>();
+                foreach (var a in additions)
+                    Additions.Add(a);
+
+                int makeHigher = 40;
+                labelImageCompareFiles.Top = labelImageCompareFiles.Top - makeHigher;
+                listBoxFileNames.Top = listBoxFileNames.Top - makeHigher;
+                listBoxFileNames.Height = listBoxFileNames.Height + makeHigher;
+                groupBoxCurrentCompareImage.Top = groupBoxCurrentCompareImage.Top - makeHigher;
+                groupBoxCurrentCompareImage.Height = groupBoxCurrentCompareImage.Height + makeHigher;
+            }
+
             labelImageInfo.Text = string.Empty;
             pictureBox1.SizeMode = PictureBoxSizeMode.AutoSize;
 
@@ -57,7 +68,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void Refill(List<VobSubOcr.ImageCompareAddition> additions)
         {
-            if (additions != null)
+            if (additions != null && additions.Count > 0)
             {
                 labelChooseCharacters.Visible = false;
                 comboBoxTexts.Visible = false;
@@ -197,7 +208,7 @@ namespace Nikse.SubtitleEdit.Forms
             pictureBox2.Height = bmp.Height * 2;
             pictureBox2.Image = bmp;
 
-            if (Additions != null)
+            if (Additions != null && Additions.Count > 0)
             {
                 string target = GetSelectedFileName();
                 foreach (var a in Additions)
@@ -230,7 +241,7 @@ namespace Nikse.SubtitleEdit.Forms
                 string newText = textBoxText.Text;
                 node.Attributes["Text"].InnerText = newText;
 
-                if (Additions != null)
+                if (Additions != null && Additions.Count > 0)
                 {
                     foreach (var a in Additions)
                     {
@@ -261,7 +272,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
 
                 Refill(Additions);
-                if (Additions == null)
+                if (Additions == null || Additions.Count == 0)
                 {
                     for (int i = 0; i < comboBoxTexts.Items.Count; i++)
                     {
@@ -292,7 +303,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (node != null)
             {
                 _compareDoc.DocumentElement.RemoveChild(node);
-                if (Additions != null)
+                if (Additions != null && Additions.Count > 0)
                 {
                     for (int i = Additions.Count - 1; i >= 0; i--)
                     {
@@ -306,7 +317,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
 
                 Refill(Additions);
-                if (Additions == null)
+                if (Additions == null || Additions.Count == 0)
                 {
                     if (oldComboBoxIndex < comboBoxTexts.Items.Count)
                         comboBoxTexts.SelectedIndex = oldComboBoxIndex;

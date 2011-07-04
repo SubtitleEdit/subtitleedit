@@ -144,9 +144,9 @@
             this.labelImageInfo.AutoSize = true;
             this.labelImageInfo.Location = new System.Drawing.Point(12, 87);
             this.labelImageInfo.Name = "labelImageInfo";
-            this.labelImageInfo.Size = new System.Drawing.Size(35, 13);
+            this.labelImageInfo.Size = new System.Drawing.Size(76, 13);
             this.labelImageInfo.TabIndex = 5;
-            this.labelImageInfo.Text = "label1";
+            this.labelImageInfo.Text = "labelImageInfo";
             // 
             // textBoxText
             // 

@@ -25,6 +25,7 @@ namespace Nikse.SubtitleEdit.Forms
             labelSourceText.Text = Configuration.Settings.Language.GoogleOrMicrosoftTranslate.SourceText;
             buttonGoogle.Text = Configuration.Settings.Language.GoogleOrMicrosoftTranslate.GoogleTranslate;
             buttonMicrosoft.Text = Configuration.Settings.Language.GoogleOrMicrosoftTranslate.MicrosoftTranslate;
+            buttonTranslate.Text = Configuration.Settings.Language.GoogleOrMicrosoftTranslate.Translate;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
             FixLargeFonts();
         }

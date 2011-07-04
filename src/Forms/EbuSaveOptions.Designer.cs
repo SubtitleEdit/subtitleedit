@@ -78,7 +78,7 @@
             this.labelJustificationCode = new System.Windows.Forms.Label();
             this.tabPageErrors = new System.Windows.Forms.TabPage();
             this.textBoxErrors = new System.Windows.Forms.TextBox();
-            this.label6 = new System.Windows.Forms.Label();
+            this.labelErrors = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.tabPageHeader.SuspendLayout();
             this.contextMenuStripCodeTable.SuspendLayout();
@@ -577,7 +577,7 @@
             // tabPageErrors
             // 
             this.tabPageErrors.Controls.Add(this.textBoxErrors);
-            this.tabPageErrors.Controls.Add(this.label6);
+            this.tabPageErrors.Controls.Add(this.labelErrors);
             this.tabPageErrors.Location = new System.Drawing.Point(4, 22);
             this.tabPageErrors.Name = "tabPageErrors";
             this.tabPageErrors.Padding = new System.Windows.Forms.Padding(3);
@@ -598,14 +598,14 @@
             this.textBoxErrors.Size = new System.Drawing.Size(909, 344);
             this.textBoxErrors.TabIndex = 13;
             // 
-            // label6
+            // labelErrors
             // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(3, 10);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(34, 13);
-            this.label6.TabIndex = 12;
-            this.label6.Text = "Errors";
+            this.labelErrors.AutoSize = true;
+            this.labelErrors.Location = new System.Drawing.Point(3, 10);
+            this.labelErrors.Name = "labelErrors";
+            this.labelErrors.Size = new System.Drawing.Size(34, 13);
+            this.labelErrors.TabIndex = 12;
+            this.labelErrors.Text = "Errors";
             // 
             // EbuSaveOptions
             // 
@@ -666,7 +666,7 @@
         private System.Windows.Forms.TabPage tabPageTextAndTiming;
         private System.Windows.Forms.TabPage tabPageErrors;
         private System.Windows.Forms.TextBox textBoxErrors;
-        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.Label labelErrors;
         private System.Windows.Forms.ComboBox comboBoxJustificationCode;
         private System.Windows.Forms.Label labelJustificationCode;
         private System.Windows.Forms.NumericUpDown numericUpDownMaxCharacters;

@@ -45,6 +45,13 @@ namespace Nikse.SubtitleEdit.Forms
             buttonImport.Text = language.Import;
 
             labelJustificationCode.Text = language.JustificationCode;
+            comboBoxJustificationCode.Items.Clear();
+            comboBoxJustificationCode.Items.Add(language.TextUnchangedPresentation);
+            comboBoxJustificationCode.Items.Add(language.TextLeftJustifiedText);
+            comboBoxJustificationCode.Items.Add(language.TextCentredText);
+            comboBoxJustificationCode.Items.Add(language.TextRightJustifiedText);
+
+            labelErrors.Text = language.Errors;
 
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
             buttonOK.Text = Configuration.Settings.Language.General.OK;
@@ -90,14 +97,14 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     if (line.Length > numericUpDownMaxCharacters.Value)
                     {
-                        sb.AppendLine(string.Format("Line {0} exceeds max length ({1}) by {2}: {3}", i, numericUpDownMaxCharacters.Value, line.Length - numericUpDownMaxCharacters.Value, line));
+                        sb.AppendLine(string.Format(Configuration.Settings.Language.EbuSaveOtpions.MaxLengthError, i, numericUpDownMaxCharacters.Value, line.Length - numericUpDownMaxCharacters.Value, line));
                         errorCount++;
                     }
                 }
                 i++;
             }
             textBoxErrors.Text = sb.ToString();
-            tabPageErrors.Text = string.Format("Errors: {0}", errorCount);
+            tabPageErrors.Text = string.Format(Configuration.Settings.Language.EbuSaveOtpions.ErrorsX, errorCount);
         }
 
         private void FillFromHeader(Ebu.EbuGeneralSubtitleInformation header)
