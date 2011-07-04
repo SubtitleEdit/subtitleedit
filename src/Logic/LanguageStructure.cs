@@ -234,6 +234,12 @@
             public string TextAndTimingInformation { get; set; }
             public string JustificationCode { get; set; }            
             public string Errors { get; set; }
+            public string ErrorsX { get; set; }
+            public string MaxLengthError { get; set; }
+            public string TextUnchangedPresentation { get; set; }
+            public string TextLeftJustifiedText { get; set; }
+            public string TextCentredText { get; set; }
+            public string TextRightJustifiedText { get; set; }
         }
 
         public class EffectKaraoke
@@ -1357,6 +1363,9 @@
             public string UseTimeCodesFromIdx { get; set; }
             public string NoMatch { get; set; }
             public string AutoTransparentBackground { get; set; }
+            public string SaveAllImagesWithHtmlIndex { get; set; }
+            public string InspectCompareMatchesForCurrentImage { get; set; }
+            public string EditLastAdditions { get; set; }
         }
 
         public class VobSubOcrCharacter

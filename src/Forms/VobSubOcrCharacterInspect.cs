@@ -23,7 +23,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             Text = Configuration.Settings.Language.VobSubOcrCharacterInspect.Title;
             groupBoxInspectItems.Text = Configuration.Settings.Language.VobSubOcrCharacterInspect.InspectItems;
-
+            labelImageInfo.Text = string.Empty;
             groupBoxCurrentCompareImage.Text = Configuration.Settings.Language.VobSubEditCharacters.CurrentCompareImage;
             labelTextAssociatedWithImage.Text = Configuration.Settings.Language.VobSubEditCharacters.TextAssociatedWithImage;
             checkBoxItalic.Text = Configuration.Settings.Language.VobSubEditCharacters.IsItalic;
@@ -68,6 +68,8 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void listBoxInspectItems_SelectedIndexChanged(object sender, EventArgs e)
         {
+            labelImageInfo.Text = string.Empty;
+ 
             if (listBoxInspectItems.SelectedIndex < 0)
                 return;
 
@@ -94,6 +96,15 @@ namespace Nikse.SubtitleEdit.Forms
                         pictureBoxCompareBitmapDouble.Width = bitmap.Width * 2;
                         pictureBoxCompareBitmapDouble.Height = bitmap.Height * 2;
                         pictureBoxCompareBitmapDouble.Image = bitmap;
+
+                        try
+                        {
+                            labelImageInfo.Text = string.Format(Configuration.Settings.Language.VobSubEditCharacters.Image + " - {0}x{1}", bitmap.Width, bitmap.Height);
+                        }
+                        catch
+                        {
+                        }
+
                         _selectedCompareNode = node;
                     }
                 }

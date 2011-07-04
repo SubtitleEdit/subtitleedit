@@ -310,6 +310,12 @@ namespace Nikse.SubtitleEdit.Logic
                 TextAndTimingInformation = "Text and timing information",
                 JustificationCode = "Justification code",
                 Errors = "Errors",
+                ErrorsX = "Errors: {0}",
+                MaxLengthError = "Line {0} exceeds max length ({1}) by {2}: {3}",
+                TextUnchangedPresentation = "Unchanged pPresentation",
+                TextLeftJustifiedText = "Left justified text",
+                TextCentredText = "Centred text ",
+                TextRightJustifiedText = "Right justified text",
             };
 
             EffectKaraoke = new LanguageStructure.EffectKaraoke
@@ -1426,7 +1432,9 @@ can edit in same subtitle file (collaboration)",
                 ShowOnlyForcedSubtitles = "Show only forced subtitles",
                 UseTimeCodesFromIdx = "Use time codes from .idx file",
                 NoMatch = "<No match>",
-                AutoTransparentBackground = "Auto transparent background"
+                AutoTransparentBackground = "Auto transparent background",
+                InspectCompareMatchesForCurrentImage = "Inspect compare matches for current image...",
+                EditLastAdditions = "Edit last image compare additions..."
             };
 
             VobSubOcrCharacter = new LanguageStructure.VobSubOcrCharacter
