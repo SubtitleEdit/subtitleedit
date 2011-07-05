@@ -610,6 +610,7 @@
             this.ShowIcon = false;
             this.Text = "VobSub - Manual image to text";
             this.Shown += new System.EventHandler(this.VobSubOcrCharacter_Shown);
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.VobSubOcrCharacter_KeyDown);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxSubtitleImage)).EndInit();
             this.contextMenuStripLetters.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxCharacter)).EndInit();
