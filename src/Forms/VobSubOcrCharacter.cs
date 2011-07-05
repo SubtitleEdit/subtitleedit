@@ -224,5 +224,19 @@ namespace Nikse.SubtitleEdit.Forms
             textBoxCharacters.Focus();
             textBoxCharacters.Focus();
         }
+
+        private void VobSubOcrCharacter_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Modifiers == Keys.Alt && e.KeyCode == Keys.Left && buttonShrinkSelection.Visible)
+            {
+                ButtonShrinkSelectionClick(null, null);
+                e.SuppressKeyPress = true;
+            }
+            else if (e.Modifiers == Keys.Alt && e.KeyCode == Keys.Right && buttonExpandSelection.Visible)
+            {
+                ButtonExpandSelectionClick(null, null);
+                e.SuppressKeyPress = true;
+            }
+        }
     }
 }

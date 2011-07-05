@@ -1487,7 +1487,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private static void ItalicsWord(StringBuilder line, ref StringBuilder word, ref int lettersItalics, ref int lettersNonItalics, ref int wordItalics, ref int wordNonItalics, ref bool isItalic, string appendString)
         {
-            if (lettersItalics >= lettersNonItalics)
+            if (lettersItalics >= lettersNonItalics && lettersItalics > 0)
             {
                 if (!isItalic)
                     line.Append("<i>");
