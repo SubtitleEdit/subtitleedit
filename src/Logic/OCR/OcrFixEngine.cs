@@ -948,7 +948,8 @@ namespace Nikse.SubtitleEdit.Logic.OCR
             string[] words = tempLine.Split((Environment.NewLine + " ¡¿,.!?:;()[]{}+-$£\"”“#&%…—♪").ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
             for (int i = 0; i < words.Length; i++)
             {
-                string word = words[i];
+                string word = words[i].TrimStart('\'');
+                word = word.TrimEnd('\'');
                 if (!IsWordKnownOrNumber(word, line) && !localIgnoreWords.Contains(word))
                 {
                     bool correct = DoSpell(word);

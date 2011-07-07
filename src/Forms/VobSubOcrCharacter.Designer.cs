@@ -84,6 +84,7 @@
             this.pictureBoxLastEdit = new System.Windows.Forms.PictureBox();
             this.buttonGuess = new System.Windows.Forms.Button();
             this.checkBoxAutoSubmitOfFirstChar = new System.Windows.Forms.CheckBox();
+            this.labelItalicOn = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxSubtitleImage)).BeginInit();
             this.contextMenuStripLetters.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxCharacter)).BeginInit();
@@ -580,11 +581,24 @@
             this.checkBoxAutoSubmitOfFirstChar.UseVisualStyleBackColor = true;
             this.checkBoxAutoSubmitOfFirstChar.CheckedChanged += new System.EventHandler(this.checkBoxAutoSubmitOfFirstChar_CheckedChanged);
             // 
+            // labelItalicOn
+            // 
+            this.labelItalicOn.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.labelItalicOn.AutoSize = true;
+            this.labelItalicOn.Font = new System.Drawing.Font("Tahoma", 8.25F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelItalicOn.ForeColor = System.Drawing.Color.Red;
+            this.labelItalicOn.Location = new System.Drawing.Point(191, 10);
+            this.labelItalicOn.Name = "labelItalicOn";
+            this.labelItalicOn.Size = new System.Drawing.Size(36, 13);
+            this.labelItalicOn.TabIndex = 26;
+            this.labelItalicOn.Text = "Italic";
+            // 
             // VobSubOcrCharacter
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(573, 317);
+            this.Controls.Add(this.labelItalicOn);
             this.Controls.Add(this.checkBoxAutoSubmitOfFirstChar);
             this.Controls.Add(this.buttonLastEdit);
             this.Controls.Add(this.buttonGuess);
@@ -677,5 +691,6 @@
         private System.Windows.Forms.CheckBox checkBoxAutoSubmitOfFirstChar;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemMusicSymbol1;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemMusicSymbol2;
+        private System.Windows.Forms.Label labelItalicOn;
     }
 }
