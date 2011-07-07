@@ -288,6 +288,17 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                     }
                 }
+                else
+                {
+                    for (int i = 0; i < listBoxFileNames.Items.Count; i++)
+                    {
+                        if (listBoxFileNames.Items[i].ToString().Contains(target))
+                        {
+                            listBoxFileNames.SelectedIndex = i;
+                            return;
+                        }
+                    }
+                }
             }
         }
 

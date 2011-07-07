@@ -74,7 +74,7 @@ namespace Nikse.SubtitleEdit.Logic
             General = new LanguageStructure.General
             {
                 Title = "Subtitle Edit",
-                Version = "3.1",
+                Version = "3.2",
                 TranslatedBy = "",
                 CultureName = "en-US",
                 OK = "&OK",
@@ -312,7 +312,7 @@ namespace Nikse.SubtitleEdit.Logic
                 Errors = "Errors",
                 ErrorsX = "Errors: {0}",
                 MaxLengthError = "Line {0} exceeds max length ({1}) by {2}: {3}",
-                TextUnchangedPresentation = "Unchanged pPresentation",
+                TextUnchangedPresentation = "Unchanged presentation",
                 TextLeftJustifiedText = "Left justified text",
                 TextCentredText = "Centred text ",
                 TextRightJustifiedText = "Right justified text",
