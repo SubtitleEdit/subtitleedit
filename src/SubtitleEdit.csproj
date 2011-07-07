@@ -579,6 +579,7 @@
     <Compile Include="Logic\SubtitleFormats\AbcIViewer.cs" />
     <Compile Include="Logic\SubtitleFormats\UnknownSubtitle6.cs" />
     <Compile Include="Logic\SubtitleFormats\UnknownSubtitle7.cs" />
+    <Compile Include="Logic\SubtitleFormats\DigiBeta.cs" />
     <Compile Include="Logic\SubtitleFormats\YouTubeSbv.cs" />
     <Compile Include="Logic\SubtitleFormats\SubViewer10.cs" />
     <Compile Include="Logic\SubtitleFormats\TimedText.cs" />

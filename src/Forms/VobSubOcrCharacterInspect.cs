@@ -106,6 +106,7 @@ namespace Nikse.SubtitleEdit.Forms
                         }
 
                         _selectedCompareNode = node;
+                        break;
                     }
                 }
             }
@@ -134,7 +135,9 @@ namespace Nikse.SubtitleEdit.Forms
 
             XmlNode node = _selectedCompareNode;
             string newText = textBoxText.Text;
+            listBoxInspectItems.SelectedIndexChanged -= listBoxInspectItems_SelectedIndexChanged;
             listBoxInspectItems.Items[listBoxInspectItems.SelectedIndex] = newText;
+            listBoxInspectItems.SelectedIndexChanged += listBoxInspectItems_SelectedIndexChanged;
             node.Attributes["Text"].InnerText = newText;
 
             if (checkBoxItalic.Checked)

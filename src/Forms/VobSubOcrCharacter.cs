@@ -24,6 +24,8 @@ namespace Nikse.SubtitleEdit.Forms
             labelCharacters.Text = language.Characters;
             labelCharactersAsText.Text = language.CharactersAsText;
             checkBoxItalic.Text = language.Italic;
+            labelItalicOn.Text = language.Italic.Replace("&", string.Empty);
+            labelItalicOn.Visible = false;
             buttonAbort.Text = language.Abort;
             buttonOK.Text = Configuration.Settings.Language.General.OK;
             buttonCancel.Text = language.Skip;
@@ -31,7 +33,7 @@ namespace Nikse.SubtitleEdit.Forms
             spanishToolStripMenuItem.Text = language.Spanish;
             germanToolStripMenuItem.Text = language.German;
             checkBoxAutoSubmitOfFirstChar.Text = language.AutoSubmitOnFirstChar;
-
+            
             FixLargeFonts();
         }
 
@@ -158,11 +160,13 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 labelCharactersAsText.Font = new System.Drawing.Font(labelCharactersAsText.Font.FontFamily, labelCharactersAsText.Font.Size, FontStyle.Italic);
                 textBoxCharacters.Font = new System.Drawing.Font(textBoxCharacters.Font.FontFamily, textBoxCharacters.Font.Size, FontStyle.Italic);
+                labelItalicOn.Visible = true;
             }
             else
             {
                 labelCharactersAsText.Font = new System.Drawing.Font(labelCharactersAsText.Font.FontFamily, labelCharactersAsText.Font.Size);
                 textBoxCharacters.Font = new System.Drawing.Font(textBoxCharacters.Font.FontFamily, textBoxCharacters.Font.Size);
+                labelItalicOn.Visible = false;
             }
         }
 
