@@ -178,7 +178,7 @@ namespace Nikse.SubtitleEdit.Logic
                         startWithUppercase = true;
                 }
 
-                if (startWithUppercase && StrippedText.Length > 0)
+                if (startWithUppercase && StrippedText.Length > 0 && !Pre.Contains("..."))
                 {
                     StrippedText = StrippedText.Remove(0, 1).Insert(0, StrippedText[0].ToString().ToUpper());
                 }
@@ -238,7 +238,18 @@ namespace Nikse.SubtitleEdit.Logic
                     {
                         sb.Append(s);
                         if (".!?:;)]}([{".Contains(s))
-                            lastWasBreak = true;
+                        {
+                            if (s == "]" && sb.ToString().IndexOf("[") > 1)
+                            { // I [Motor roaring] love you!
+                                string temp = sb.ToString().Substring(0, sb.ToString().IndexOf("[") - 1).Trim();
+                                if (temp.Length > 0 && !Utilities.GetLetters(false, true, false).Contains(temp[temp.Length - 1].ToString()))
+                                    lastWasBreak = true;
+                            }
+                            else
+                            {
+                                lastWasBreak = true;
+                            }
+                        }
                     }
                 }
                 StrippedText = sb.ToString();
