@@ -33,7 +33,7 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
         {
             _data = data;
             SubPictureDateSize = Helper.GetEndianWord(_data, 0);
-            ParseDisplayControlCommands(false, null, null);
+            ParseDisplayControlCommands(false, null, null, false);
         }
 
         /// <summary>
@@ -45,13 +45,13 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
         /// <param name="emphasis1">Color</param>
         /// <param name="emphasis2">Color</param>
         /// <returns>Subtitle image</returns>
-        public Bitmap GetBitmap(List<Color> colorLookupTable, Color background, Color pattern, Color emphasis1, Color emphasis2)
+        public Bitmap GetBitmap(List<Color> colorLookupTable, Color background, Color pattern, Color emphasis1, Color emphasis2, bool useCustomColors)
         {
             var fourColors = new List<Color> { background, pattern, emphasis1, emphasis2 };
-            return ParseDisplayControlCommands(true, colorLookupTable, fourColors);
+            return ParseDisplayControlCommands(true, colorLookupTable, fourColors, useCustomColors);
         }
 
-        private Bitmap ParseDisplayControlCommands(bool createBitmap, List<Color> colorLookUpTable, List<Color> fourColors)
+        private Bitmap ParseDisplayControlCommands(bool createBitmap, List<Color> colorLookUpTable, List<Color> fourColors, bool useCustomColors)
         {
             ImageDisplayArea = new Rectangle();
             Bitmap bmp = null;
@@ -97,10 +97,13 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
                             if (colorLookUpTable != null && fourColors.Count == 4)
                             {
                                 byte[] imageColor = new[] { _data[commandIndex + 1], _data[commandIndex + 2] };
-                                SetColor(fourColors, 3, imageColor[0] >> 4, colorLookUpTable);
-                                SetColor(fourColors, 2, imageColor[0] & Helper.B00001111, colorLookUpTable);
-                                SetColor(fourColors, 1, imageColor[1] >> 4, colorLookUpTable);
-                                SetColor(fourColors, 0, imageColor[1] & Helper.B00001111, colorLookUpTable);
+                                if (!useCustomColors)
+                                {
+                                    SetColor(fourColors, 3, imageColor[0] >> 4, colorLookUpTable);
+                                    SetColor(fourColors, 2, imageColor[0] & Helper.B00001111, colorLookUpTable);
+                                    SetColor(fourColors, 1, imageColor[1] >> 4, colorLookUpTable);
+                                    SetColor(fourColors, 0, imageColor[1] & Helper.B00001111, colorLookUpTable);
+                                }
                             }
                             commandIndex += 3;
                             break;
