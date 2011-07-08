@@ -98,7 +98,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             SubListBoxItem x = listBox1.Items[listBox1.SelectedIndex] as SubListBoxItem;
 
-            Bitmap bmp = x.SubPack.SubPicture.GetBitmap(_palette, Color.Transparent, Color.Wheat, Color.Black, Color.DarkGray);
+            Bitmap bmp = x.SubPack.SubPicture.GetBitmap(_palette, Color.Transparent, Color.Wheat, Color.Black, Color.DarkGray, false);
             if (bmp.Width > pictureBoxImage.Width || bmp.Height > pictureBoxImage.Height)
             {
                 float width = bmp.Width;

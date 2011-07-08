@@ -720,13 +720,13 @@ namespace Nikse.SubtitleEdit.Forms
                 if (checkBoxEmphasis2Transparent.Checked)
                     emphasis2 = Color.Transparent;
 
-                Bitmap bm = _vobSubMergedPackist[index].SubPicture.GetBitmap(null, background, pattern, emphasis1, emphasis2);
+                Bitmap bm = _vobSubMergedPackist[index].SubPicture.GetBitmap(null, background, pattern, emphasis1, emphasis2, true);
                 if (checkBoxAutoTransparentBackground.Checked)
                     bm.MakeTransparent();
                 return bm;
             }
 
-            Bitmap bmp = _vobSubMergedPackist[index].SubPicture.GetBitmap(_palette, Color.Transparent, Color.Black, Color.White, Color.Black);
+            Bitmap bmp = _vobSubMergedPackist[index].SubPicture.GetBitmap(_palette, Color.Transparent, Color.Black, Color.White, Color.Black, false);
             if (checkBoxAutoTransparentBackground.Checked)
                 bmp.MakeTransparent();
             return bmp;
