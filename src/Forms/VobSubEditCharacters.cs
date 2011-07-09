@@ -13,7 +13,6 @@ namespace Nikse.SubtitleEdit.Forms
         XmlDocument _compareDoc = new XmlDocument();
         string _directoryPath;
         List<bool> _italics = new List<bool>();
-        bool _focusTextBox = false;
         internal List<VobSubOcr.ImageCompareAddition> Additions { get; private set; }
 
         public XmlDocument ImageCompareDocument
@@ -350,7 +349,6 @@ namespace Nikse.SubtitleEdit.Forms
                             if (GetFileName(j).StartsWith(name))
                                 listBoxFileNames.SelectedIndex = j;
                         }
-                        _focusTextBox = true;
                         return;
                     }
                 }
