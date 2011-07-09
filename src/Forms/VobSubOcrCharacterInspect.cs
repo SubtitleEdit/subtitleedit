@@ -8,7 +8,7 @@ using Nikse.SubtitleEdit.Logic;
 
 namespace Nikse.SubtitleEdit.Forms
 {
-    public partial class VobSubOcrCharacterInspect : Form
+    public sealed partial class VobSubOcrCharacterInspect : Form
     {
 
         public XmlDocument ImageCompareDocument { get; private set; }

@@ -2162,33 +2162,45 @@ namespace Nikse.SubtitleEdit.Forms
             for (int i = 0; i < _subtitle.Paragraphs.Count; i++)
             {
                 Paragraph p = _subtitle.Paragraphs[i];
+                string text = p.Text;
+                string oldText = p.Text;
 
                 if (p.Text.Contains("--"))
                 {
-                    if (AllowFix(i + 1, fixAction))
-                    {
-                        string oldText = p.Text;
-                        p.Text = p.Text.Replace("--", "... ");
-                        p.Text = p.Text.Replace("...  ", "... ");
-                        p.Text = p.Text.Replace(" ...", "...");
-                        
-                        fixCount++;
-                        _totalFixes++;
-                        AddFixToListView(p, i + 1, fixAction, oldText, p.Text);
-                    }
+                    text = text.Replace("--", "... ");
+                    text = text.Replace("...  ", "... ");
+                    text = text.Replace(" ...", "...");
                 }
-                if (p.Text.EndsWith("-"))
+                if (text.EndsWith("-"))
                 {
-                    if (AllowFix(i + 1, fixAction))
-                    {
-                        string oldText = p.Text;
-                        p.Text = p.Text.Substring(0, p.Text.Length - 1) + "...";
-                        p.Text = p.Text.Replace(" ...", "...");
-                        fixCount++;
-                        _totalFixes++;
-                        AddFixToListView(p, i + 1, fixAction, oldText, p.Text);
-                    }
+                    text = text.Substring(0, text.Length - 1) + "...";
+                    text = text.Replace(" ...", "...");
                 }
+                if (text.EndsWith("-</i>"))
+                {
+                    text = text.Replace("-</i>", "...");
+                    text = text.Replace(" ...", "...");
+                }
+
+                if (p.Text.StartsWith("—"))
+                {
+                    text = text.Remove(0, 1);
+                    text = text.Insert(0, "...");
+                }
+                if (p.Text.EndsWith("—"))
+                {
+                    text = text.Substring(0, text.Length - 1) + "...";
+                    text = text.Replace(" ...", "...");
+                } 
+                
+                if (text != oldText && AllowFix(i + 1, fixAction))
+                {
+                    p.Text = text;
+                    fixCount++;
+                    _totalFixes++;
+                    AddFixToListView(p, i + 1, fixAction, oldText, p.Text);
+                }
+
             }
             if (fixCount > 0)
                 LogStatus(_language.FixDoubleDash, string.Format(_language.XFixDoubleDash, fixCount));
