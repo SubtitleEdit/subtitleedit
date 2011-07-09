@@ -256,6 +256,24 @@ ro.types_custom=Custom installation
 ro.types_default=Default installation
 
 
+; Russian
+ru.comp_translations=Translations
+ru.msg_AppIsRunning=Subtitle Edit is running! Please close it before proceeding.
+ru.msg_AskToDownNET=Subtitle Edit requires the .NET Framework 2.0. Please download and install the .NET Framework and run setup again.%n%nDo you want to download the .NET Framework 2.0 now?
+ru.msg_DeleteSettings=Do you also want to delete Subtitle Edit's settings and any custom changes you made in the dictionaries?%n%nIf you plan on reinstalling Subtitle Edit you do not have to delete them.
+ru.msg_OptimizingPerformance=Optimizing performance...
+ru.msg_SetupIsRunningWarning=Subtitle Edit Setup is already running!
+ru.run_VisitWebsite=Visit Subtitle Edit's Website
+ru.sm_com_Changelog=Subtitle Edit's Changelog
+ru.tsk_AllUsers=For all users
+ru.tsk_CurrentUser=For the current user only
+ru.tsk_Other=Other:
+ru.tsk_ResetDictionaries=Reset Dictionaries and delete any custom names
+ru.tsk_ResetSettings=Reset Subtitle Edit's settings
+ru.types_custom=Custom installation
+ru.types_default=Default installation
+
+
 ; Swedish
 sv.comp_translations=Translations
 sv.msg_AppIsRunning=Subtitle Edit is running! Please close it before proceeding.
