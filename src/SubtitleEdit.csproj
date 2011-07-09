@@ -620,6 +620,7 @@
     <Compile Include="Logic\VideoPlayers\WmpPlayer.cs" />
     <Compile Include="Logic\VobSub\Helper.cs" />
     <Compile Include="Logic\VobSub\Idx.cs" />
+    <Compile Include="Logic\VobSub\IdxParagraph.cs" />
     <Compile Include="Logic\VobSub\Mpeg2Header.cs" />
     <Compile Include="Logic\VobSub\PacketizedElementaryStream.cs" />
     <Compile Include="Logic\VobSub\SubPicture.cs" />

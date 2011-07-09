@@ -7,17 +7,6 @@ using System.Text.RegularExpressions;
 
 namespace Nikse.SubtitleEdit.Logic.VobSub
 {
-    public class IdxParagraph
-    { 
-        public TimeSpan StartTime { get; private set; }
-        public long FilePosition { get; private set; }
-        public IdxParagraph(TimeSpan startTime, long filePosition)
-        {
-            StartTime = startTime;
-            FilePosition = filePosition;
-        }
-    }
-
     class Idx
     {      
         public readonly List<IdxParagraph> IdxParagraphs = new List<IdxParagraph>();
