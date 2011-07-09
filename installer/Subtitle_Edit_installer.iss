@@ -232,6 +232,7 @@ Type: files;      Name: {app}\Dictionaries\names_etc.xml
 Type: dirifempty; Name: {app}\Dictionaries
 Type: files;      Name: {app}\uninstall.ico
 
+#ifdef localize
 Type: files;      Name: {app}\Languages\bg-BG.xml;      Check: NOT IsComponentSelected('translations') AND IsUpdate()
 Type: files;      Name: {app}\Languages\cs-CZ.xml;      Check: NOT IsComponentSelected('translations') AND IsUpdate()
 Type: files;      Name: {app}\Languages\da-DK.xml;      Check: NOT IsComponentSelected('translations') AND IsUpdate()
@@ -249,6 +250,7 @@ Type: files;      Name: {app}\Languages\sr-Latn-CS.xml; Check: NOT IsComponentSe
 Type: files;      Name: {app}\Languages\sv-SE.xml;      Check: NOT IsComponentSelected('translations') AND IsUpdate()
 Type: files;      Name: {app}\Languages\zh-CHS.xml;     Check: NOT IsComponentSelected('translations') AND IsUpdate()
 Type: dirifempty; Name: {app}\Languages;                Check: NOT IsComponentSelected('translations') AND IsUpdate()
+#endif
 
 Type: files;      Name: {app}\tessnet2_32.dll
 Type: files;      Name: {app}\TessData\eng.DangAmbigs
