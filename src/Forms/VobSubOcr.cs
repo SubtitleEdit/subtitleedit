@@ -120,6 +120,7 @@ namespace Nikse.SubtitleEdit.Forms
         Subtitle _bdnXmlOriginal;
         Subtitle _bdnXmlSubtitle;
         string _bdnFileName;
+        bool _isSon = false;
 
         List<ImageCompareAddition> _lastAdditions = new List<ImageCompareAddition>();
         VobSubOcrCharacter _vobSubOcrCharacter = new VobSubOcrCharacter();
@@ -674,6 +675,11 @@ namespace Nikse.SubtitleEdit.Forms
 
         private Bitmap GetSubtitleBitmap(int index)
         {
+            Color background;
+            Color pattern;   
+            Color emphasis1;
+            Color emphasis2;
+            
             if (_bdnXmlSubtitle != null)
             {
                 if (index >= 0 && index < _bdnXmlSubtitle.Paragraphs.Count)
@@ -682,6 +688,31 @@ namespace Nikse.SubtitleEdit.Forms
                     if (File.Exists(fileName))
                     {
                         Bitmap b = new Bitmap(fileName);
+                        if (_isSon && checkBoxCustomFourColors.Checked)
+                        {
+                            GetCustomColors(out background, out pattern, out emphasis1, out emphasis2);
+
+                            FastBitmap fbmp = new FastBitmap(b);
+                            fbmp.LockImage();
+                            for (int x = 0; x < fbmp.Width; x++)
+                            {
+                                for (int y = 0; y < fbmp.Height; y++)
+                                {
+                                    Color c = fbmp.GetPixel(x, y);
+                                    if (c.R == Color.Red.R && c.G == Color.Red.G && c.B == Color.Red.B) // normally anti-alias
+                                        fbmp.SetPixel(x, y, emphasis2);
+                                    else if (c.R == Color.Blue.R && c.G == Color.Blue.G && c.B == Color.Blue.B) // normally text?
+                                        fbmp.SetPixel(x, y, pattern);
+                                    else if (c.R == Color.White.R && c.G == Color.White.G && c.B == Color.White.B) // normally background
+                                        fbmp.SetPixel(x, y, background);
+                                    else if (c.R == Color.Black.R && c.G == Color.Black.G && c.B == Color.Black.B) // outline/border
+                                        fbmp.SetPixel(x, y, emphasis1);
+                                    else
+                                        fbmp.SetPixel(x, y, c);
+                                }
+                            }
+                            fbmp.UnlockImage();
+                        }                        
                         if (checkBoxAutoTransparentBackground.Checked)
                             b.MakeTransparent();
                         return b;
@@ -706,19 +737,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (checkBoxCustomFourColors.Checked)
             {
-                Color background = pictureBoxBackground.BackColor;
-                Color pattern = pictureBoxPattern.BackColor;
-                Color emphasis1 = pictureBoxEmphasis1.BackColor;
-                Color emphasis2 = pictureBoxEmphasis2.BackColor;
-
-                if (checkBoxBackgroundTransparent.Checked)
-                    background = Color.Transparent;
-                if (checkBoxPatternTransparent.Checked)
-                    pattern = Color.Transparent;
-                if (checkBoxEmphasis1Transparent.Checked)
-                    emphasis1 = Color.Transparent;
-                if (checkBoxEmphasis2Transparent.Checked)
-                    emphasis2 = Color.Transparent;
+                GetCustomColors(out background, out pattern, out emphasis1, out emphasis2);
 
                 Bitmap bm = _vobSubMergedPackist[index].SubPicture.GetBitmap(null, background, pattern, emphasis1, emphasis2, true);
                 if (checkBoxAutoTransparentBackground.Checked)
@@ -730,6 +749,23 @@ namespace Nikse.SubtitleEdit.Forms
             if (checkBoxAutoTransparentBackground.Checked)
                 bmp.MakeTransparent();
             return bmp;
+        }
+
+        private void GetCustomColors(out Color background, out Color pattern, out Color emphasis1, out Color emphasis2)
+        {
+            background = pictureBoxBackground.BackColor;
+            pattern = pictureBoxPattern.BackColor;
+            emphasis1 = pictureBoxEmphasis1.BackColor;
+            emphasis2 = pictureBoxEmphasis2.BackColor;
+
+            if (checkBoxBackgroundTransparent.Checked)
+                background = Color.Transparent;
+            if (checkBoxPatternTransparent.Checked)
+                pattern = Color.Transparent;
+            if (checkBoxEmphasis1Transparent.Checked)
+                emphasis1 = Color.Transparent;
+            if (checkBoxEmphasis2Transparent.Checked)
+                emphasis2 = Color.Transparent;
         }
 
         private long GetSubtitleStartTimeMilliseconds(int index)
@@ -2566,10 +2602,19 @@ namespace Nikse.SubtitleEdit.Forms
                 _ocrFixEngine.SpellCheckDictionaryName = LanguageString;
         }
 
-        internal void Initialize(Subtitle bdnSubtitle, VobSubOcrSettings vobSubOcrSettings)
+        internal void Initialize(Subtitle bdnSubtitle, VobSubOcrSettings vobSubOcrSettings, bool isSon)
         {
             _bdnXmlOriginal = bdnSubtitle;
             _bdnFileName = bdnSubtitle.FileName;
+            _isSon = isSon;
+            if (_isSon)
+            {
+                checkBoxCustomFourColors.Checked = true;
+                pictureBoxBackground.BackColor = Color.Transparent;
+                pictureBoxPattern.BackColor = Color.DarkGray;
+                pictureBoxEmphasis1.BackColor = Color.Black;
+                pictureBoxEmphasis2.BackColor = Color.White;
+            }
 
             buttonOK.Enabled = false;
             buttonCancel.Enabled = false;
@@ -2595,7 +2640,7 @@ namespace Nikse.SubtitleEdit.Forms
             else
                 comboBoxOcrMethod.SelectedIndex = 0;
           
-            groupBoxImagePalette.Visible = false;
+            groupBoxImagePalette.Visible = isSon;
 
             Text = Configuration.Settings.Language.VobSubOcr.TitleBluRay;
             Text += " - " + Path.GetFileName(_bdnFileName);

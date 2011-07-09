@@ -1547,7 +1547,7 @@ namespace Nikse.SubtitleEdit.Forms
             bdnXml.LoadSubtitle(bdnSubtitle, list, fileName);
             bdnSubtitle.FileName = fileName;
             var formSubOcr = new VobSubOcr();
-            formSubOcr.Initialize(bdnSubtitle, Configuration.Settings.VobSubOcr);
+            formSubOcr.Initialize(bdnSubtitle, Configuration.Settings.VobSubOcr, false);
             if (formSubOcr.ShowDialog(this) == DialogResult.OK)
             {
                 MakeHistoryForUndo(_language.BeforeImportingBdnXml);
@@ -1580,7 +1580,7 @@ namespace Nikse.SubtitleEdit.Forms
             format.LoadSubtitle(sub, list, fileName);
             sub.FileName = fileName;
             var formSubOcr = new VobSubOcr();
-            formSubOcr.Initialize(sub, Configuration.Settings.VobSubOcr);
+            formSubOcr.Initialize(sub, Configuration.Settings.VobSubOcr, true);
             if (formSubOcr.ShowDialog(this) == DialogResult.OK)
             {
                 MakeHistoryForUndo(_language.BeforeImportingBdnXml);
