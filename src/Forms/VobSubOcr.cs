@@ -1361,7 +1361,7 @@ namespace Nikse.SubtitleEdit.Forms
                 else if (line.Trim().Length == 0)
                     subtitleListView1.SetBackgroundColor(listViewIndex, Color.Orange);
                 else
-                    subtitleListView1.SetBackgroundColor(listViewIndex, Color.Green);
+                    subtitleListView1.SetBackgroundColor(listViewIndex, Color.LightGreen);
             }
 
             if (textWithOutFixes.Trim() != line.Trim())
@@ -1895,7 +1895,7 @@ namespace Nikse.SubtitleEdit.Forms
                 else if (line.Trim().Length == 0)
                     subtitleListView1.SetBackgroundColor(index, Color.Orange);
                 else
-                    subtitleListView1.SetBackgroundColor(index, Color.Green);
+                    subtitleListView1.SetBackgroundColor(index, Color.LightGreen);
             }
             else
             { // no dictionary :(
@@ -1911,7 +1911,7 @@ namespace Nikse.SubtitleEdit.Forms
                 else if (line.Trim().Length == 0)
                     subtitleListView1.SetBackgroundColor(index, Color.Orange);
                 else
-                    subtitleListView1.SetBackgroundColor(index, Color.Green);
+                    subtitleListView1.SetBackgroundColor(index, Color.LightGreen);
             }
            
             if (textWithOutFixes.ToString().Trim() != line.Trim())
@@ -2172,7 +2172,9 @@ namespace Nikse.SubtitleEdit.Forms
                 string path = Configuration.VobSubCompareFolder + comboBoxCharacterDatabase.SelectedItem + Path.DirectorySeparatorChar;
                 _compareDoc.Save(path + "CompareDescription.xml");
             }
+            Cursor = Cursors.WaitCursor;
             LoadImageCompareBitmaps();
+            Cursor = Cursors.Default;
             return result;
         }
 
