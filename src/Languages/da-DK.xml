@@ -2,7 +2,7 @@
 <Language Name="Dansk">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.1</Version>
+    <Version>3.2</Version>
     <TranslatedBy>Oversat til dansk af Nikse (mailto:nikse.dk@gmail.com)</TranslatedBy>
     <CultureName>da-DK</CultureName>
     <OK>&amp;OK</OK>
@@ -56,6 +56,9 @@
     <UserNameAlreadyInUse>Brugernavn allerede i brug</UserNameAlreadyInUse>
     <WebServiceUrl>Webservice url</WebServiceUrl>
     <IP>IP</IP>
+    <VideoWindowTitle>Video - {0}</VideoWindowTitle>
+    <AudioWindowTitle>Lydspor - {0}</AudioWindowTitle>
+    <ControlsWindowTitle>Kommandoer - {0}</ControlsWindowTitle>
   </General>
   <About>
     <Title>Om Subtitle Edit</Title>
@@ -85,6 +88,7 @@
     <VlcMediaPlayerNotFound>Subtitle Edit behøver VLC media player 1.1.x eller nyere for kunne udpakke lyd data.</VlcMediaPlayerNotFound>
     <GoToVlcMediaPlayerHomePage>Ønsker du at gå til VLC media player hjemmeside?</GoToVlcMediaPlayerHomePage>
     <GeneratingPeakFile>Genererer peak-fil...</GeneratingPeakFile>
+    <GeneratingSpectrogram>Generer spectrogram...</GeneratingSpectrogram>
     <ExtractingSeconds>Udpakker lyd: {0:0.0} sekunder</ExtractingSeconds>
     <ExtractingMinutes>Udpakker  lyd:. {0} (1:00) minutter</ExtractingMinutes>
   </AddWaveForm>
@@ -185,6 +189,36 @@
     <SubtitleImageXofYAndWidthXHeight>Undertekst billede {0}/{1} - {2} x {3}</SubtitleImageXofYAndWidthXHeight>
     <SubtitleImage>Undertekst billede</SubtitleImage>
   </DvdSubRipChooseLanguage>
+  <EbuSaveOtpions>
+    <Title>EBU save options</Title>
+    <GeneralSubtitleInformation>General subtitle information</GeneralSubtitleInformation>
+    <CodePageNumber>Code page number</CodePageNumber>
+    <DiskFormatCode>Disk format code</DiskFormatCode>
+    <CharacterCodeTable>Character table</CharacterCodeTable>
+    <LanguageCode>Language code</LanguageCode>
+    <OriginalProgramTitle>Original program title</OriginalProgramTitle>
+    <OriginalEpisodeTitle>Original episode title</OriginalEpisodeTitle>
+    <TranslatedProgramTitle>Translated program title</TranslatedProgramTitle>
+    <TranslatedEpisodeTitle>Translated episode title</TranslatedEpisodeTitle>
+    <TranslatorsName>Translators name</TranslatorsName>
+    <SubtitleListReferenceCode>Subtitle list reference code</SubtitleListReferenceCode>
+    <CountryOfOrigin>Country of origin</CountryOfOrigin>
+    <RevisionNumber>Revision number</RevisionNumber>
+    <MaxNoOfDisplayableChars>Max# of chars per row</MaxNoOfDisplayableChars>
+    <MaxNumberOfDisplayableRows>Max# of rows</MaxNumberOfDisplayableRows>
+    <DiskSequenceNumber>Disk sequence number</DiskSequenceNumber>
+    <TotalNumberOfDisks>Total number of disks</TotalNumberOfDisks>
+    <Import>Import...</Import>
+    <TextAndTimingInformation>Text and timing information</TextAndTimingInformation>
+    <JustificationCode>Justification code</JustificationCode>
+    <Errors>Fejl</Errors>
+    <ErrorsX>Fejl: {0}</ErrorsX>
+    <MaxLengthError>Linie {0} overstiger max længde ({1}) af {2}: {3}</MaxLengthError>
+    <TextUnchangedPresentation>Uændret præsentation</TextUnchangedPresentation>
+    <TextLeftJustifiedText>Venstre justeret tekst</TextLeftJustifiedText>
+    <TextCentredText>Centreret tekst</TextCentredText>
+    <TextRightJustifiedText>Højre justeret tekst</TextRightJustifiedText>
+  </EbuSaveOtpions>
   <EffectKaraoke>
     <Title>Karaoke effekt</Title>
     <ChooseColor>Vælg farve:</ChooseColor>
@@ -196,6 +230,18 @@
     <TotalMilliseconds>Total millisecs.:</TotalMilliseconds>
     <EndDelayInMillisecs>Slut forsinkelse i millisek.:</EndDelayInMillisecs>
   </EffectTypewriter>
+  <ExportPngXml>
+    <Title>Eksporter BDN XML/PNG</Title>
+    <ImageSettings>Billedindstillinger</ImageSettings>
+    <FontFamily>Font navn</FontFamily>
+    <FontSize>Skriftstørrelse</FontSize>
+    <FontColor>Skriftfarve</FontColor>
+    <BorderColor>Kantfarve</BorderColor>
+    <BorderWidth>Kantbredde</BorderWidth>
+    <AntiAlias>Anti alias</AntiAlias>
+    <ExportAllLines>Eksporter alle linjer...</ExportAllLines>
+    <XImagesSavedInY>{0} billeder gemt i {1}</XImagesSavedInY>
+  </ExportPngXml>
   <FindDialog>
     <Title>Find</Title>
     <Find>Find</Find>
@@ -247,6 +293,9 @@
     <FixLowercaseIToUppercaseI>Ret alene lille 'i' til 'I' (engelsk)</FixLowercaseIToUppercaseI>
     <FixCommonOcrErrors>Ret OCR-fejl (ved hjælp af OCR erstat liste)</FixCommonOcrErrors>
     <CommonOcrErrorsFixed>Ret OCR fejl (via OcrReplaceList fil): {0}</CommonOcrErrorsFixed>
+    <RemoveSpaceBetweenNumber>Fjern mellemrum mellem tal</RemoveSpaceBetweenNumber>
+    <FixDialogsOnOneLine>Fix dialoger på én linje</FixDialogsOnOneLine>
+    <RemoveSpaceBetweenNumbersFixed>Fjern mellemrum mellem tallene rettet: {0}</RemoveSpaceBetweenNumbersFixed>
     <FixDanishLetterI>Ret fejl vedr. det dansk bogstav »i«</FixDanishLetterI>
     <FixSpanishInvertedQuestionAndExclamationMarks>Tilføj spanske omvendte spørgsmålstegn og udråbstegn</FixSpanishInvertedQuestionAndExclamationMarks>
     <AddMissingQuote>Tilføj manglende gåseøje</AddMissingQuote>
@@ -352,6 +401,15 @@
     <PoweredByGoogleTranslate>Powered by Google Translate</PoweredByGoogleTranslate>
     <PoweredByMicrosoftTranslate>Powered by Microsoft Bing Translate</PoweredByMicrosoftTranslate>
   </GoogleTranslate>
+  <GoogleOrMicrosoftTranslate>
+    <Title>Google vs Microsoft oversætter</Title>
+    <From>Fra:</From>
+    <To>Til:</To>
+    <Translate>Oversæt</Translate>
+    <SourceText>Kildetekst</SourceText>
+    <GoogleTranslate>Google oversætter</GoogleTranslate>
+    <MicrosoftTranslate>Microsoft oversætter</MicrosoftTranslate>
+  </GoogleOrMicrosoftTranslate>
   <GoToLine>
     <Title>Gå til linjenummer</Title>
     <XIsNotAValidNumber>{0} er ikke et gyldigt tal</XIsNotAValidNumber>
@@ -398,6 +456,11 @@
         <ImportSubtitleWithManualChosenEncoding>Importer undertekst med manuel valgt tegnsæt...</ImportSubtitleWithManualChosenEncoding>
         <ImportText>Importer tekst...</ImportText>
         <ImportTimecodes>Import tidskoder...</ImportTimecodes>
+        <Export>Eksporter</Export>
+        <ExportBdnXml>BDN xml/png...</ExportBdnXml>
+        <ExportCavena890>Cavena 890...</ExportCavena890>
+        <ExportEbu>EBU STL...</ExportEbu>
+        <ExportPac>PAC (Screen Electronics)...</ExportPac>
         <Exit>&amp;Afslut</Exit>
       </File>
       <Edit>
@@ -426,6 +489,8 @@
         <TextSingleLineMaximumLength>Tekst - enkelt linje max. længde</TextSingleLineMaximumLength>
         <TextTotalLength>Tekst - samlet længde</TextTotalLength>
         <TextNumberOfLines>Tekst - antal linjer</TextNumberOfLines>
+        <ShowOriginalTextInAudioAndVideoPreview>Vis oprindelig tekst i audio/video previews</ShowOriginalTextInAudioAndVideoPreview>
+        <MakeNewEmptyTranslationFromCurrentSubtitle>Dan ny tom oversættelse fra aktuelle undertekst</MakeNewEmptyTranslationFromCurrentSubtitle>
         <SplitSubtitle>Split undertekst...</SplitSubtitle>
         <AppendSubtitle>Append subtitle...</AppendSubtitle>
       </Tools>
@@ -436,6 +501,7 @@
         <CloseVideo>Luk videofil</CloseVideo>
         <ShowHideVideo>Vis/skjul video</ShowHideVideo>
         <ShowHideWaveForm>Vis/skjul lyd kurve</ShowHideWaveForm>
+        <ShowHideWaveformAndSpectrogram>Vis/skjul bølgeform og spektrogram</ShowHideWaveformAndSpectrogram>
         <UnDockVideoControls>Pop video vinduer ud</UnDockVideoControls>
         <ReDockVideoControls>Saml video vindue</ReDockVideoControls>
       </Video>
@@ -443,6 +509,7 @@
         <Title>Stavekontrol</Title>
         <SpellCheck>&amp;Stavekontrol...</SpellCheck>
         <FindDoubleWords>Find dobbelt ord</FindDoubleWords>
+        <FindDoubleLines>Find dobbelte linjer</FindDoubleLines>
         <GetDictionaries>Hent ordbøger...</GetDictionaries>
         <AddToNamesEtcList>Tilføj ord til navne mv. liste</AddToNamesEtcList>
       </SpellCheck>
@@ -451,6 +518,7 @@
         <AdjustAllTimes>Juster alle tider (vis tidligere/senere)...</AdjustAllTimes>
         <VisualSync>&amp;Visual synkroniser</VisualSync>
         <PointSync>Punkt synkroniser...</PointSync>
+        <PointSyncViaOtherSubtitle>Punkt synkroniser via anden undertekst...</PointSyncViaOtherSubtitle>
       </Synchronization>
       <AutoTranslate>
         <Title>Auto-oversæt</Title>
@@ -491,6 +559,7 @@
         <ShowHideVideo>Vis/skjul video</ShowHideVideo>
       </ToolBar>
       <ContextMenu>
+        <SubStationAlphaSetStyle>(Advanced) Sub Station Alpha - Sæt style</SubStationAlphaSetStyle>
         <Cut>Klip</Cut>
         <Copy>Kopier</Copy>
         <Paste>Indsæt</Paste>
@@ -500,6 +569,7 @@
         <InsertBefore>Indsæt før</InsertBefore>
         <InsertAfter>Indsæt efter</InsertAfter>
         <InsertSubtitleAfter>Indsæt undertekst efter denne linje...</InsertSubtitleAfter>
+        <CopyToClipboard>Kopier som tekst til udklipsholderen</CopyToClipboard>
         <Split>Split</Split>
         <MergeSelectedLines>Flet markerede linjer</MergeSelectedLines>
         <MergeWithLineBefore>Flet med linjen før</MergeWithLineBefore>
@@ -514,6 +584,7 @@
         <KaraokeEffect>Karaoke effekt...</KaraokeEffect>
         <ShowSelectedLinesEarlierLater>Vis valgte linjer tidligere/senere...</ShowSelectedLinesEarlierLater>
         <VisualSyncSelectedLines>Visual sync markerede linjer...</VisualSyncSelectedLines>
+        <GoogleAndMicrosoftTranslateSelectedLine>Google/Microsoft oversæt original linje</GoogleAndMicrosoftTranslateSelectedLine>
         <GoogleTranslateSelectedLines>Google oversæt markerede linjer...</GoogleTranslateSelectedLines>
         <AdjustDisplayDurationForSelectedLines>Juster visningstider for valgte linjer...</AdjustDisplayDurationForSelectedLines>
         <FixCommonErrorsInSelectedLines>Ret almindelige fejl i valgte linjer...</FixCommonErrorsInSelectedLines>
@@ -560,6 +631,7 @@
       <GoToSubtitlePositionAndPause>Gå til tekst position og pause</GoToSubtitlePositionAndPause>
       <SetStartTime>Set &amp;starttidspunkt</SetStartTime>
       <SetEndTimeAndGoToNext>Sæt slut &amp;&amp; gå til næste</SetEndTimeAndGoToNext>
+      <AdjustedViaEndTime>Justeret via sluttid {0}</AdjustedViaEndTime>
       <SetEndTime>Sæt slut tid</SetEndTime>
       <SetstartTimeAndOffsetOfRest>Set start og juster resten</SetstartTimeAndOffsetOfRest>
       <SearchTextOnline>Søg tekst online</SearchTextOnline>
@@ -727,6 +799,7 @@ Fortsæt?</SubtitleAppendPrompt>
     <BluRaySupFiles>Blu-ray sup filer</BluRaySupFiles>
     <BeforeImportingVobSubFile>Før import af VobSub undertekst</BeforeImportingVobSubFile>
     <BeforeImportingBluRaySupFile>Før import af Blu-ray sup undertekst</BeforeImportingBluRaySupFile>
+    <BeforeImportingBdnXml>Før importer af BDN xml</BeforeImportingBdnXml>
     <BeforeShowSelectedLinesEarlierLater>Før vis udvalgte linjer tidligere/senere</BeforeShowSelectedLinesEarlierLater>
     <ShowSelectedLinesEarlierLaterPerformed>Vis tidligere/senere udført på udvalgte linjer</ShowSelectedLinesEarlierLaterPerformed>
     <DoubleWordsViaRegEx>Dobbelt ord via regex {0}</DoubleWordsViaRegEx>
@@ -756,6 +829,7 @@ Fortsæt?</SubtitleAppendPrompt>
     <TimeCodeImportedFromXY>Tidskoder importeret fra {0}: {1}</TimeCodeImportedFromXY>
     <BeforeInsertSubtitleAtVideoPosition>Før ny tekst ved aktuel video position</BeforeInsertSubtitleAtVideoPosition>
     <BeforeSetStartTimeAndOffsetTheRest>Før sæt start tid og juster resten</BeforeSetStartTimeAndOffsetTheRest>
+    <BeforeSetEndAndVideoPosition>Før indsæt video via sluttid +  automatisk starttid</BeforeSetEndAndVideoPosition>
     <ContinueWithCurrentSpellCheck>Fortsæt med aktuelle stavekontrol?</ContinueWithCurrentSpellCheck>
     <CharactersPerSecond>Bogstav/sek: {0:0.00}</CharactersPerSecond>
     <GetFrameRateFromVideoFile>Hent frame rate fra video fil</GetFrameRateFromVideoFile>
@@ -773,6 +847,7 @@ Fortsæt?</SubtitleAppendPrompt>
     <UnableToStartWord>Kan ikke starte Microsoft Word</UnableToStartWord>
     <SpellCheckAbortedXCorrections>Stavekontrol afbrudt. {0} korrektioner blev foretaget.</SpellCheckAbortedXCorrections>
     <SpellCheckCompletedXCorrections>Stavekontrol færdig. {0} korrektioner blev foretaget.</SpellCheckCompletedXCorrections>
+    <OpenOtherSubtitle>Åbne anden undertekst</OpenOtherSubtitle>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Vælg undertekst fra Matroska fil</Title>
@@ -786,6 +861,7 @@ Fortsæt?</SubtitleAppendPrompt>
     <NumberOfMergesX>Antal fletninger: {0}</NumberOfMergesX>
     <LineNumber>Linje#</LineNumber>
     <MergedText>Sammenlagt tekst</MergedText>
+    <OnlyMergeContinuationLines>Flet kun fortsættelses-linjer</OnlyMergeContinuationLines>
   </MergedShortLines>
   <MultipleReplace>
     <Title>Multi søg og erstat</Title>
@@ -875,7 +951,7 @@ Fortsæt?</SubtitleAppendPrompt>
     <General>General</General>
     <Toolbar>Toolbar</Toolbar>
     <VideoPlayer>Videoafspiller</VideoPlayer>
-    <WaveForm>Lyd kurve</WaveForm>
+    <WaveformAndSpectrogram>Waveform/spektrogram</WaveformAndSpectrogram>
     <Tools>Værktøj</Tools>
     <WordLists>Ordlister</WordLists>
     <SsaStyle>SSA Style</SsaStyle>
@@ -920,18 +996,20 @@ Fortsæt?</SubtitleAppendPrompt>
     <AutoBackupEveryFiveMinutes>Hver 5. minut</AutoBackupEveryFiveMinutes>
     <AutoBackupEveryFifteenMinutes>Hver 15. minut</AutoBackupEveryFifteenMinutes>
     <AllowEditOfOriginalSubtitle>Tillad redigering af originale undertekst</AllowEditOfOriginalSubtitle>
+    <PromptDeleteLines>Spørg om slet af linjer</PromptDeleteLines>
     <VideoEngine>Video afspiller</VideoEngine>
     <DirectShow>DirectShow</DirectShow>
     <DirectShowDescription>Quartz.dll i system32 mappen</DirectShowDescription>
     <ManagedDirectX>Managed DirectX</ManagedDirectX>
     <ManagedDirectXDescription>Microsoft.DirectX.AudioVideoPlayback -. NET Managed kode fra DirectX</ManagedDirectXDescription>
-    <WindowsMediaPlayer>Windows Media Player</WindowsMediaPlayer>
-    <WindowsMediaPlayerDescription>WMP ActiveX-objekt</WindowsMediaPlayerDescription>
+    <MPlayer>MPlayer</MPlayer>
+    <MPlayerDescription>MPlayer2/Mplayer</MPlayerDescription>
     <VlcMediaPlayer>VLC Media Player</VlcMediaPlayer>
     <VlcMediaPlayerDescription>libvlc.dll fra VLC Media Player 1.1.0 eller nyere</VlcMediaPlayerDescription>
     <ShowStopButton>Vis stop-knap</ShowStopButton>
     <DefaultVolume>Standard volumen</DefaultVolume>
     <VolumeNotes>0 er ingen lyd, 100 er højeste lydstyrke</VolumeNotes>
+    <PreviewFontSize>Undertekst preview skriftstørrelse</PreviewFontSize>
     <MainWindowVideoControls>Hovedvinduet video-kontrol</MainWindowVideoControls>
     <CustomSearchTextAndUrl>Egen defineret søge titel og url</CustomSearchTextAndUrl>
     <WaveFormAppearance>Lyd kurve udseende</WaveFormAppearance>
@@ -941,8 +1019,13 @@ Fortsæt?</SubtitleAppendPrompt>
     <WaveFormSelectedColor>Valgte farve</WaveFormSelectedColor>
     <WaveFormBackgroundColor>Baggrundsfarve</WaveFormBackgroundColor>
     <WaveFormTextColor>Tekstfarve</WaveFormTextColor>
-    <WaveFormsFolderEmpty>Tøm 'kurveformer' folder</WaveFormsFolderEmpty>
-    <WaveFormsFolderInfo>"Kurveform" temp mappe indeholder {0} filer ((1:0.00) MB)</WaveFormsFolderInfo>
+    <WaveformAndSpectrogramsFolderEmpty>Tøm 'Spectrograms' og 'Waveforms' mapper</WaveformAndSpectrogramsFolderEmpty>
+    <WaveformAndSpectrogramsFolderInfo>'Waveform' og 'Spectrograms' mapper indeholder {0} filer ({1:0.00} MB)</WaveformAndSpectrogramsFolderInfo>
+    <Spectrogram>Spektrogram</Spectrogram>
+    <GenerateSpectrogram>Generer spektrogram</GenerateSpectrogram>
+    <SpectrogramAppearance>Spektrogram udseende</SpectrogramAppearance>
+    <SpectrogramOneColorGradient>Enkelt farve gradient</SpectrogramOneColorGradient>
+    <SpectrogramClassic>Klassisk</SpectrogramClassic>
     <SubStationAlphaStyle>Sub Station Alpha Style</SubStationAlphaStyle>
     <ChooseFont>Vælg skrifttype</ChooseFont>
     <ChooseColor>Vælg farve</ChooseColor>
@@ -979,6 +1062,17 @@ Fortsæt?</SubtitleAppendPrompt>
     <MusicSymbol>Musik symbol</MusicSymbol>
     <MusicSymbolsToReplace>Musik symboler der skal erstattes (adskilt af mellemrum)</MusicSymbolsToReplace>
     <FixCommonOcrErrorsUseHardcodedRules>Fastsætte fælles OCR fejl - Inkluder hardcodede regler</FixCommonOcrErrorsUseHardcodedRules>
+    <Shortcuts>Genveje</Shortcuts>
+    <Shortcut>Genvej</Shortcut>
+    <Control>Control</Control>
+    <Alt>Alt</Alt>
+    <Shift>Shift</Shift>
+    <Key>Key</Key>
+    <TextBox>Tekstboks</TextBox>
+    <UpdateShortcut>Opdater</UpdateShortcut>
+    <ShortcutIsNotValid>Genvej er ikke gyldig: {0}</ShortcutIsNotValid>
+    <ToggleDockUndockOfVideoControls>Skift dok/frigør af video kontrol</ToggleDockUndockOfVideoControls>
+    <AdjustViaEndAutoStartAndGoToNext>Juster via slutposition og gå til næste</AdjustViaEndAutoStartAndGoToNext>
   </Settings>
   <ShowEarlierLater>
     <Title>Vis valgte linjer tidligere/senere</Title>
@@ -1051,6 +1145,7 @@ Fortsæt?</SubtitleAppendPrompt>
   </StartNumberingFrom>
   <PointSync>
     <Title>Punkt synkronisering</Title>
+    <TitleViaOtherSubtitle>Punkt synkroniser via anden undertekst</TitleViaOtherSubtitle>
     <SyncHelp>Sæt mindst to synk punkter for at lave grov synkronisering</SyncHelp>
     <SetSyncPoint>Set synk punkt</SetSyncPoint>
     <RemoveSyncPoint>Fjern synk punkt</RemoveSyncPoint>
@@ -1122,14 +1217,20 @@ Fortsæt?</SubtitleAppendPrompt>
     <UnknownWords>Ukendte ord</UnknownWords>
     <OcrAutoCorrectionSpellchecking>OCR automatisk korrektion / stavekontrol</OcrAutoCorrectionSpellchecking>
     <FixOcrErrors>Ret OCR-fejl</FixOcrErrors>
+    <ImportTextWithMatchingTimeCodes>Importer tekst med matchende tidskoder...</ImportTextWithMatchingTimeCodes>
     <SaveSubtitleImageAs>Gem undertekst billede som...</SaveSubtitleImageAs>
-    <SaveAllSubtitleImagesAs>Gem alle undertekstl billeder som...</SaveAllSubtitleImagesAs>
+    <SaveAllSubtitleImagesAsBdnXml>Gem alle billeder (png/BDN xml)...</SaveAllSubtitleImagesAsBdnXml>
+    <SaveAllSubtitleImagesWithHtml>Gem alle billeder med html-indeks...</SaveAllSubtitleImagesWithHtml>
     <XImagesSavedInY>{0} billeder gemt i {1}</XImagesSavedInY>
     <TryModiForUnknownWords>Prøv MS MODI OCR for ukendte ord</TryModiForUnknownWords>
     <DictionaryX>Ordbog: {0}</DictionaryX>
     <RightToLeft>Højre til venstre</RightToLeft>
     <ShowOnlyForcedSubtitles>Vis kun tvungede (forced) undertekster</ShowOnlyForcedSubtitles>
     <UseTimeCodesFromIdx>Brug tidskoder fra .idx fil</UseTimeCodesFromIdx>
+    <NoMatch>&lt;No match&gt;</NoMatch>
+    <AutoTransparentBackground>Auto gennemsigtig baggrund</AutoTransparentBackground>
+    <InspectCompareMatchesForCurrentImage>Undersøg resultater for aktuelle billede...</InspectCompareMatchesForCurrentImage>
+    <EditLastAdditions>Rediger sidste tekst/billede...</EditLastAdditions>
   </VobSubOcr>
   <VobSubOcrCharacter>
     <Title>VobSub - Manual billede til tekst</Title>
@@ -1140,13 +1241,24 @@ Fortsæt?</SubtitleAppendPrompt>
     <CharactersAsText>Tegn som tekst</CharactersAsText>
     <Italic>&amp;Kursiv</Italic>
     <Abort>&amp;Afbryd</Abort>
+    <Skip>&amp;Skip</Skip>
+    <Nordic>Nordic</Nordic>
+    <Spanish>Spansk</Spanish>
+    <German>Tysk</German>
+    <AutoSubmitOnFirstChar>Auto tilføj ved &amp;første tegn</AutoSubmitOnFirstChar>
+    <EditLastX>Ret sidste: {0}</EditLastX>
   </VobSubOcrCharacter>
+  <VobSubOcrCharacterInspect>
+    <Title>Undersøg resultater for aktuelle billede</Title>
+    <InspectItems>Undersøg elementer</InspectItems>
+  </VobSubOcrCharacterInspect>
   <VobSubOcrNewFolder>
     <Title>Ny mappe</Title>
     <Message>Navn på ny tegn database mappe</Message>
   </VobSubOcrNewFolder>
   <WaveForm>
     <ClickToAddWaveForm>Klik  for  at  tilføje  audio  kurve</ClickToAddWaveForm>
+    <ClickToAddWaveformAndSpectrogram>Klik for at tilføje bølgeform/spektrogram</ClickToAddWaveformAndSpectrogram>
     <Seconds>sekunder</Seconds>
     <ZoomIn>Zoom ind</ZoomIn>
     <ZoomOut>Zoom ud</ZoomOut>
@@ -1157,5 +1269,8 @@ Fortsæt?</SubtitleAppendPrompt>
     <MergeWithPrevious>Flet med forrige</MergeWithPrevious>
     <MergeWithNext>Flet med næste</MergeWithNext>
     <PlaySelection>Afspil markering</PlaySelection>
+    <ShowWaveformAndSpectrogram>Vis bølgeform og spektrogram</ShowWaveformAndSpectrogram>
+    <ShowWaveformOnly>Vis kun bølgeform</ShowWaveformOnly>
+    <ShowSpectrogramOnly>Vis kun spektrogram</ShowSpectrogramOnly>
   </WaveForm>
 </Language>
