@@ -239,7 +239,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 {
                     int start = i - TextLength;
                     
-                    int number = buffer[start - 16] * 256 + buffer[start - 15];
+                    //int number = buffer[start - 16] * 256 + buffer[start - 15];
 
                     double startFrame = buffer[start - 14] * 256 * 256 + buffer[start - 13] * 256 + buffer[start - 12];
                     double endFrame = buffer[start - 11] * 256 * 256 + buffer[start - 10] * 256 + buffer[start - 9];

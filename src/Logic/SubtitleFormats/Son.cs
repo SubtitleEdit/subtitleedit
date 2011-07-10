@@ -45,7 +45,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             int index = 0;
             foreach (Paragraph p in subtitle.Paragraphs)
             {
-                //0003	00:00:28:16	00:00:31:04	Jeg vil lære jer	frygten for HERREN."  (newline is \t)
                 sb.AppendLine(string.Format("{0:0000}\t{1}\t{2}\t{3}", index + 1, EncodeTimeCode(p.StartTime), EncodeTimeCode(p.EndTime), Utilities.RemoveHtmlTags(p.Text).Replace(Environment.NewLine, "\t")));
                 index++;
             }
@@ -61,8 +60,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
-            //00:03:15:22 00:03:23:10 This is line one.
-            //This is line two.
+            //0001	00:00:19:13	00:00:22:10	a_0001.tif
             Paragraph p = null;
             subtitle.Paragraphs.Clear();
             var regexTimeCodes = new Regex(@"^\d\d\d\d\t\d\d:\d\d:\d\d:\d\d\t\d\d:\d\d:\d\d:\d\d\t[^\s]+\.(tif|tiff|png|bmp|TIF|TIFF|PNG|BMP)", RegexOptions.Compiled);

@@ -8,9 +8,7 @@ using System.Text;
 
 namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
-    /// <summary>
-    /// EBU Subtitling data exchange format
-    /// </summary>
+
     public class Pac : SubtitleFormat
     {
         public override string Extension
@@ -222,9 +220,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
             Paragraph p = new Paragraph();
             p.Text = sb.ToString();
-            int timeStartIndex = FEIndex - 8;
-            while (timeStartIndex > FEIndex - 20 && buffer[timeStartIndex] != 0x60)
-                timeStartIndex--;
+            int timeStartIndex = FEIndex - 15;
             if (buffer[timeStartIndex] == 0x60)
             {
                 p.StartTime = GetTimeCode(timeStartIndex+1, buffer);
