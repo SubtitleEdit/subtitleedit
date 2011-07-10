@@ -488,7 +488,7 @@ namespace Nikse.SubtitleEdit.Logic
             long dataSize;
             long afterPosition;
 
-            while (f.Position < f.Length && done == false)
+            while (f.Position < endPosition && done == false)
             {
                 matroskaId = GetMatroskaTrackVideoId();
                 if (matroskaId == 0)
@@ -675,11 +675,6 @@ namespace Nikse.SubtitleEdit.Logic
         {
             bool done = false;
 
-            byte b2 = (byte)f.ReadByte();
-            long sizeOfSize2 = GetMatroskaVariableIntLength(b2);
-            long dataSize2 = GetMatroskaDataSize(sizeOfSize2, b2);
-            long afterposition2 = f.Position + dataSize2;
-
             while (f.Position < endPosition && done == false)
             {
                 int ebmlId = f.ReadByte() * 256 + f.ReadByte();
@@ -691,12 +686,12 @@ namespace Nikse.SubtitleEdit.Logic
                     if (ebmlId == 0x5031)// ContentEncodingOrder
                     {
                         int contentEncodingOrder = f.ReadByte() * 256 + f.ReadByte();
-                        //System.Windows.Forms.MessageBox.Show("ContentEncodingOrder: " + contentEncodingOrder.ToString());
+                        System.Diagnostics.Debug.WriteLine("ContentEncodingOrder: " + contentEncodingOrder.ToString());
                     }
                     else if (ebmlId == 0x5032)// ContentEncodingScope
                     {
                         int contentEncodingScope = f.ReadByte() * 256 + f.ReadByte();
-                        //System.Windows.Forms.MessageBox.Show("ContentEncodingScope: " + contentEncodingScope.ToString());
+                        System.Diagnostics.Debug.WriteLine("ContentEncodingScope: " + contentEncodingScope.ToString());
                     }
                     else if (ebmlId == 0x5033)// ContentEncodingType
                     {
@@ -718,7 +713,7 @@ namespace Nikse.SubtitleEdit.Logic
                             else if (contentCompressionId == 0x4255)
                             {
                                 int contentCompSettings = f.ReadByte() * 256 + f.ReadByte();
-                                //System.Windows.Forms.MessageBox.Show("contentCompSettings: " + contentCompSettings.ToString());
+                                System.Diagnostics.Debug.WriteLine("contentCompSettings: " + contentCompSettings.ToString());
                             }
                             
                         }
@@ -740,7 +735,7 @@ namespace Nikse.SubtitleEdit.Logic
             long timeCodeScale = 0;
             double duration8b = 0;
 
-            while (f.Position < f.Length && done == false)
+            while (f.Position < endPosition && done == false)
             {
                 matroskaId = GetMatroskaSegmentId();
                 if (matroskaId == 0)
