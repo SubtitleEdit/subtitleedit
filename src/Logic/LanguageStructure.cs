@@ -825,6 +825,7 @@
                     public string Copy { get; set; }
                     public string Paste { get; set; }
                     public string Delete { get; set; }
+                    public string SplitLineAtCursorPosition { get; set; }
                     public string SelectAll { get; set; }
                     public string InsertFirstLine { get; set; }
                     public string InsertBefore { get; set; }
@@ -849,7 +850,7 @@
                     public string GoogleTranslateSelectedLines { get; set; }
                     public string AdjustDisplayDurationForSelectedLines { get; set; }
                     public string FixCommonErrorsInSelectedLines { get; set; }
-                    public string ChangeCasingForSelectedLines { get; set; }
+                    public string ChangeCasingForSelectedLines { get; set; }                    
                 }
 
                 public FileMenu File { get; set; }
