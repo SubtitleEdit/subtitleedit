@@ -560,8 +560,17 @@ namespace Nikse.SubtitleEdit.Forms
 
                             List<string> suggestions = new List<string>();
 
-                            if (_currentWord != "Lt'S" && _currentWord != "Sox's") //TODO: get fixed nhunspell
-                                suggestions = DoSuggest(_currentWord); //TODO: 0.9.6 fails on "Lt'S"
+                            if ((_currentWord == "Lt's" || _currentWord == "Lt'S") && _languageName.StartsWith("en_"))
+                            {
+                                suggestions.Add("It's");
+                            }
+                            else
+                            {
+                                if (_currentWord.ToUpper() != "LT'S" && _currentWord.ToUpper() != "SOX'S") //TODO: get fixed nhunspell
+                                    suggestions = DoSuggest(_currentWord); //TODO: 0.9.6 fails on "Lt'S"
+                            }
+
+
 
                             if (AutoFixNames && _currentWord.Length > 1 && suggestions.Contains(_currentWord.Substring(0, 1).ToUpper() + _currentWord.Substring(1)))
                             {

@@ -1024,8 +1024,15 @@ namespace Nikse.SubtitleEdit.Logic.OCR
                         {
                             List<string> suggestions = new List<string>();
 
-                            if (word != "Lt'S" && word != "Sox's") //TODO: get fixed nhunspell
-                                suggestions = DoSuggest(word); // 0.9.6 fails on "Lt'S"
+                            if ((word == "Lt's" || word == "Lt'S") && SpellCheckDictionaryName.StartsWith("en_"))
+                            {
+                                suggestions.Add("It's");
+                            }
+                            else
+                            {
+                                if (word.ToUpper() != "LT'S" && word.ToUpper() != "SOX'S") //TODO: get fixed nhunspell
+                                    suggestions = DoSuggest(word); // 0.9.6 fails on "Lt'S"
+                            }
 
                             if (word.StartsWith("<i>"))
                                 word = word.Remove(0, 3);
