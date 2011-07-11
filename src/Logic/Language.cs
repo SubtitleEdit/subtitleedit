@@ -909,6 +909,7 @@ namespace Nikse.SubtitleEdit.Logic
                         Copy = "Copy",
                         Paste = "Paste",
                         Delete = "Delete",
+                        SplitLineAtCursorPosition = "Split line at cursor position",
                         SelectAll = "Select all",
                         InsertFirstLine = "Insert line",
                         InsertBefore = "Insert before",

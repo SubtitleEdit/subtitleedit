@@ -903,6 +903,7 @@ namespace Nikse.SubtitleEdit.Forms
             copyToolStripMenuItem.Text = _language.Menu.ContextMenu.Copy;
             pasteToolStripMenuItem.Text = _language.Menu.ContextMenu.Paste;
             deleteToolStripMenuItem.Text = _language.Menu.ContextMenu.Delete;
+            splitLineToolStripMenuItem.Text = _language.Menu.ContextMenu.SplitLineAtCursorPosition;
             selectAllToolStripMenuItem.Text = _language.Menu.ContextMenu.SelectAll;
             normalToolStripMenuItem1.Text = _language.Menu.ContextMenu.Normal;
             boldToolStripMenuItem1.Text = _languageGeneral.Bold;
