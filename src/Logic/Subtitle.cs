@@ -286,7 +286,18 @@ namespace Nikse.SubtitleEdit.Logic
                     double newEndMilliseconds = _paragraphs[i].EndTime.TotalMilliseconds + (seconds * 1000.0);
                     if (newEndMilliseconds > nextStartMilliseconds)
                         newEndMilliseconds = nextStartMilliseconds - 1;
-                    _paragraphs[i].EndTime.TotalMilliseconds = newEndMilliseconds;
+
+                    if (seconds < 0)
+                    {
+                        if (_paragraphs[i].StartTime.TotalMilliseconds + 100 > newEndMilliseconds)
+                            _paragraphs[i].EndTime.TotalMilliseconds = _paragraphs[i].StartTime.TotalMilliseconds + 100;
+                        else
+                            _paragraphs[i].EndTime.TotalMilliseconds = newEndMilliseconds;
+                    }
+                    else
+                    {
+                        _paragraphs[i].EndTime.TotalMilliseconds = newEndMilliseconds;
+                    }
                 }
             }
         }
