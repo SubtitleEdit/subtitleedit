@@ -209,6 +209,7 @@ namespace Nikse.SubtitleEdit.Forms
                 InitializeToolbar();
                 Utilities.InitializeSubtitleFont(textBoxSource);
                 Utilities.InitializeSubtitleFont(textBoxListViewText);
+                Utilities.InitializeSubtitleFont(textBoxListViewTextAlternate);
                 Utilities.InitializeSubtitleFont(SubtitleListview1);
                 SubtitleListview1.AutoSizeAllColumns(this);
 
@@ -2061,6 +2062,7 @@ namespace Nikse.SubtitleEdit.Forms
             UpdateRecentFilesUI();
             Utilities.InitializeSubtitleFont(textBoxSource);
             Utilities.InitializeSubtitleFont(textBoxListViewText);
+            Utilities.InitializeSubtitleFont(textBoxListViewTextAlternate);
             Utilities.InitializeSubtitleFont(SubtitleListview1);
             buttonCustomUrl.Text = Configuration.Settings.VideoControls.CustomSearchText;
             buttonCustomUrl.Enabled = Configuration.Settings.VideoControls.CustomSearchUrl.Length > 1;
@@ -2079,6 +2081,7 @@ namespace Nikse.SubtitleEdit.Forms
                                           Configuration.Settings.General.SubtitleBackgroundColor.ToArgb().ToString())
             {
                 Utilities.InitializeSubtitleFont(textBoxListViewText);
+                Utilities.InitializeSubtitleFont(textBoxListViewTextAlternate);
                 Utilities.InitializeSubtitleFont(textBoxSource);
                 SubtitleListview1.SubtitleFontName = Configuration.Settings.General.SubtitleFontName;
                 SubtitleListview1.SubtitleFontBold = Configuration.Settings.General.SubtitleFontBold;
