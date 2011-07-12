@@ -229,6 +229,9 @@ namespace Nikse.SubtitleEdit.Logic.OCR
         {
             get
             {
+                if (_spellCheckDictionaryName == null)
+                    return string.Empty;
+
                 string[] parts = _spellCheckDictionaryName.Split(Path.DirectorySeparatorChar.ToString().ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
                 if (parts.Length > 0)
                     return parts[parts.Length - 1];
