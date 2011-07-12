@@ -569,6 +569,7 @@
     <Compile Include="Logic\SubtitleFormats\Spruce.cs" />
     <Compile Include="Logic\SubtitleFormats\SpruceWithSpace.cs" />
     <Compile Include="Logic\SubtitleFormats\Spt.cs" />
+    <Compile Include="Logic\SubtitleFormats\StructuredTitles.cs" />
     <Compile Include="Logic\SubtitleFormats\SubtitleEditorProject.cs" />
     <Compile Include="Logic\SubtitleFormats\TimedText10.cs" />
     <Compile Include="Logic\SubtitleFormats\TranscriberXml.cs" />
@@ -580,6 +581,7 @@
     <Compile Include="Logic\SubtitleFormats\UnknownSubtitle6.cs" />
     <Compile Include="Logic\SubtitleFormats\UnknownSubtitle7.cs" />
     <Compile Include="Logic\SubtitleFormats\DigiBeta.cs" />
+    <Compile Include="Logic\SubtitleFormats\Wsb.cs" />
     <Compile Include="Logic\SubtitleFormats\YouTubeSbv.cs" />
     <Compile Include="Logic\SubtitleFormats\SubViewer10.cs" />
     <Compile Include="Logic\SubtitleFormats\TimedText.cs" />
@@ -868,6 +870,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <EmbeddedResource Include="Resources\OpenOfficeDictionaries.xml.zip" />
+    <EmbeddedResource Include="Resources\HunspellDictionaries.xml.zip" />
     <None Include="Web References\MicrosoftTranslationService\GetTranslationsResponse.datasource">
       <DependentUpon>Reference.map</DependentUpon>
     </None>
@@ -1040,6 +1043,9 @@
     </Content>
     <Content Include="Icons\WaveFormToogle.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\HunspellDictionaries.xml">
+      <SubType>Designer</SubType>
     </Content>
     <Content Include="Resources\OpenOfficeDictionaries.xml">
       <SubType>Designer</SubType>

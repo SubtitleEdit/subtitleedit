@@ -29,7 +29,9 @@ namespace Nikse.SubtitleEdit.Forms
             labelPleaseWait.Text = Configuration.Settings.Language.General.PleaseWait;
 
             System.Reflection.Assembly asm = System.Reflection.Assembly.GetExecutingAssembly();
-            Stream strm = asm.GetManifestResourceStream("Nikse.SubtitleEdit.Resources.OpenOfficeDictionaries.xml.zip");
+            Stream strm = asm.GetManifestResourceStream("Nikse.SubtitleEdit.Resources.OpenOfficeDictionaries.xml.zip"); 
+//            Stream strm = asm.GetManifestResourceStream("Nikse.SubtitleEdit.Resources.HunspellDictionaries.xml.zip"); // backup plan...
+
             if (strm != null)
             {
                 XmlDocument doc = new XmlDocument();                    

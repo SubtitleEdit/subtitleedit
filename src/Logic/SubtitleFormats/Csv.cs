@@ -16,7 +16,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public override string Name
         {
-            get { return "csv"; }
+            get { return "Csv"; }
         }
 
         public override bool HasLineNumber
