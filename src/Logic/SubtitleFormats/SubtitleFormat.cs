@@ -50,6 +50,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     new Sami(),
                     new Spruce(),
                     new SpruceWithSpace(),
+                    new StructuredTitles(),
                     new SubtitleEditorProject(),
                     new TimedText(),
                     new TimedText10(),
@@ -66,6 +67,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     new UnknownSubtitle5(),
                     new UnknownSubtitle6(),
                     new UnknownSubtitle7(),
+//                    new Wsb(),
                     new YouTubeSbv(),
                     new ZeroG(),
                 };

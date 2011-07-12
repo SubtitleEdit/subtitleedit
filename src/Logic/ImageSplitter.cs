@@ -187,6 +187,7 @@ namespace Nikse.SubtitleEdit.Logic
         public static int IsBitmapsAlike(Bitmap bmp1, Bitmap bmp2)
         {
             int different = 0;
+            int maxDiff = (int)(bmp1.Width * bmp1.Height / 5.0);
 
             for (int x = 1; x < bmp1.Width; x++)
             {
@@ -197,6 +198,8 @@ namespace Nikse.SubtitleEdit.Logic
                         different++;
                     }
                 }
+                if (different > maxDiff)
+                    return different + 10;
             }
             return different;
         }
