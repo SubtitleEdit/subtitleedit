@@ -193,7 +193,6 @@ namespace Nikse.SubtitleEdit.Forms
             }
             comboBoxDictionaries.SelectedIndexChanged += comboBoxDictionaries_SelectedIndexChanged;
 
-
             comboBoxOcrMethod.Items.Clear();
             comboBoxOcrMethod.Items.Add(language.OcrViaTesseract);
             comboBoxOcrMethod.Items.Add(language.OcrViaImageCompare);
@@ -231,6 +230,9 @@ namespace Nikse.SubtitleEdit.Forms
 
             FixLargeFonts();
             buttonEditCharacterDatabase.Top = buttonNewCharacterDatabase.Top + buttonNewCharacterDatabase.Height + 3;
+
+            splitContainerBottom.Panel1MinSize = 400;
+            splitContainerBottom.Panel2MinSize = 250;
         }
 
         private void FixLargeFonts()
@@ -2677,11 +2679,13 @@ namespace Nikse.SubtitleEdit.Forms
             groupBoxSubtitleImage.Height = originalTopHeight + adjustPercent;
             groupBoxOcrMethod.Height = groupBoxSubtitleImage.Height;
 
-            groupBoxOcrAutoFix.Top = groupBoxSubtitleImage.Top + groupBoxSubtitleImage.Height + 5;
-            labelSubtitleText.Top = groupBoxOcrAutoFix.Top;
-            subtitleListView1.Top = labelSubtitleText.Top + labelSubtitleText.Height + 3;
-            subtitleListView1.Height = textBoxCurrentText.Top - subtitleListView1.Top - 3;
-            groupBoxOcrAutoFix.Height = buttonOK.Top - groupBoxOcrAutoFix.Top - 3;
+            splitContainerBottom.Top = groupBoxSubtitleImage.Top + groupBoxSubtitleImage.Height + 5;
+            splitContainerBottom.Height = progressBar1.Top - (splitContainerBottom.Top + 20);
+            checkBoxUseTimeCodesFromIdx.Left = groupBoxOCRControls.Left + 1;
+
+            listBoxUnknownWords.Top = listBoxLog.Top;
+            listBoxUnknownWords.Left = listBoxLog.Left;
+            listBoxUnknownWords.Size = listBoxLog.Size;            
         }
 
         private void importTextWithMatchingTimeCodesToolStripMenuItem_Click(object sender, EventArgs e)
