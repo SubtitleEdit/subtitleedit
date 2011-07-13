@@ -73,19 +73,19 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
             // TODO: What is this?
             fs.WriteByte(0);
-            fs.WriteByte(0x0a);
+            fs.WriteByte(0x0a); // sometimes 0x0b?
             fs.WriteByte(0x80);
             fs.WriteByte(0x80);
             fs.WriteByte(0x80);
             fs.WriteByte(0xfe);
-            fs.WriteByte(0x0a);
+            fs.WriteByte(0x0a); //09=header?
             fs.WriteByte(0x03);
 
             byte[] textBuffer = System.Text.Encoding.Default.GetBytes(text);
             fs.Write(textBuffer, 0, textBuffer.Length);
 
-            fs.WriteByte(0xff);
-            fs.WriteByte((byte)number);
+            fs.WriteByte(0);
+            fs.WriteByte((byte)(number+1));
             fs.WriteByte(0);
             fs.WriteByte(0x60);
         }
@@ -93,36 +93,35 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         private void WriteTimeCode(FileStream fs, TimeCode timeCode)
         {
             // write four bytes time code
-            
-            byte frames = (byte)(timeCode.Milliseconds / (1000 / Configuration.Settings.General.CurrentFrameRate));
+            string highPart = string.Format("{0:00}", timeCode.Hours) + string.Format("{0:00}", timeCode.Minutes);
+            if (timeCode.Hours == 7 && timeCode.Minutes == 35)
+                highPart = "065535";
 
-            byte minutes = (byte)(timeCode.Hours / 60 + timeCode.Minutes);
-            fs.WriteByte(minutes);
+            byte frames = (byte)(timeCode.Milliseconds / (1000.0 / Configuration.Settings.General.CurrentFrameRate));
+            string lowPart = string.Format("{0:00}", timeCode.Seconds) + string.Format("{0:00}", frames);
 
-            string numberString = string.Format("{0:00}", 0) +
-                                  string.Format("{0:00}", (byte)timeCode.Seconds) +
-                                  string.Format("{0:00}", frames);
-
-            UInt32 number = UInt32.Parse(numberString);
-            byte[] buffer = BitConverter.GetBytes(number);
-
-            if (buffer[2] == 0 && buffer[1] == 0)
+            int high = int.Parse(highPart);
+            if (high < 256)
             {
+                fs.WriteByte((byte)high);
                 fs.WriteByte(0);
-                fs.WriteByte(0);
-                fs.WriteByte(buffer[0]);
-            }
-            else if (buffer[2] == 0)
-            {
-                fs.WriteByte(0);
-                fs.WriteByte(buffer[0]);
-                fs.WriteByte(buffer[1]);
             }
             else
             {
-                fs.WriteByte(buffer[0]);
-                fs.WriteByte(buffer[1]);
-                fs.WriteByte(buffer[2]);
+                fs.WriteByte((byte)(high % 256));
+                fs.WriteByte((byte)(high / 256));
+            }
+
+            int low = int.Parse(lowPart);
+            if (low < 256)
+            {
+                fs.WriteByte((byte)low);
+                fs.WriteByte(0);
+            }
+            else
+            {
+                fs.WriteByte((byte)(low % 256));
+                fs.WriteByte((byte)(low / 256));
             }
         }
 
@@ -188,15 +187,19 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         private Paragraph GetPacParagraph(ref int index, byte[] buffer)
         {
-            while (index < buffer.Length && buffer[index] != 0xFE)
+            while (index < 15)
             {
                 index++;
             }
-
-            if (index + 20 >= buffer.Length)
+            bool con = true;
+            while (con)
             {
-                index += 20;
-                return null;
+                index++;
+                if (index +20 >= buffer.Length)
+                    return null;
+
+                if (buffer[index] == 0xFE && buffer[index - 15] == 0x60)
+                    con = false;
             }
 
             int FEIndex = index;
@@ -233,28 +236,19 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         {
             if (timeCodeIndex > 0)
             {
-                int min = buffer[timeCodeIndex];
-                int timecode1 = buffer[timeCodeIndex + 1];
-                int timecode2 = buffer[timeCodeIndex + 2];
-                int timecode3 = buffer[timeCodeIndex + 3];
+                string highPart = string.Format("{0:000000}", buffer[timeCodeIndex] + buffer[timeCodeIndex + 1] * 256);
+                string lowPart = string.Format("{0:000000}", buffer[timeCodeIndex+2] + buffer[timeCodeIndex + 3] * 256);
 
-                Int64 number = 0;
-                if (timecode1 > 0)
-                    number = timecode3 + (timecode2 * 256) + (timecode3 * 256 * 256);
-                else if (timecode2 > 0)
-                    number = timecode2 + (timecode3* 256);
-                else
-                    number = timecode3;
-                string numberString = string.Format("{0:00000000}", number);
+                int hours = int.Parse(highPart.Substring(0, 4));
+                int minutes = int.Parse(highPart.Substring(4, 2));
+                int second = int.Parse(lowPart.Substring(2, 2));
+                int frames = int.Parse(lowPart.Substring(4, 2));
 
-                int second = int.Parse(numberString.Substring(4, 2));
-                int frames = int.Parse(numberString.Substring(6, 2));
-
-                int milliseconds = (int)((1000 / Configuration.Settings.General.CurrentFrameRate) * frames);
+                int milliseconds = (int)((1000.0 / Configuration.Settings.General.CurrentFrameRate) * frames);
                 if (milliseconds > 999)
                     milliseconds = 999;
 
-                return new TimeCode(0, min, second, milliseconds);
+                return new TimeCode(hours, minutes, second, milliseconds);
             }
             return new TimeCode(0, 0, 0, 0);
         }
