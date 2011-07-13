@@ -87,15 +87,63 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 sb.Append(p.EndFrame.ToString());
                 sb.Append("}");
 
-                string text = p.Text.Replace(Environment.NewLine, "|");
-                text = text.Replace("<b>","{Y:b}");
-                text = text.Replace("</b>", string.Empty);
-                text = text.Replace("<i>","{Y:i}");
-                text = text.Replace("</i>", string.Empty);
-                text = text.Replace("<u>","{Y:u}");
-                text = text.Replace("</u>", string.Empty);
+                //{y:b} is italics for single line
+                //{Y:b} is italics for both lines
 
-                sb.AppendLine(text);
+                string[] parts = p.Text.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                int count = 0;
+                bool italicOn = false;
+                bool boldOn = false;
+                bool underlineOn = false;
+                StringBuilder lineSb = new StringBuilder();
+                foreach (string line in parts)
+                {
+                    if (count > 0)
+                        lineSb.Append("|");
+
+                    if (line.StartsWith("<i>") || italicOn)
+                    {
+                        italicOn = true;
+                        boldOn = false;
+                        underlineOn = false;
+                        lineSb.Append("{y:i}"); // italic single line
+                    }
+                    else if (line.StartsWith("<b>") || boldOn)
+                    {
+                        italicOn = false;
+                        boldOn = true;
+                        underlineOn = false;
+                        lineSb.Append("{y:b}"); // bold single line
+                    }
+                    else if (line.StartsWith("<u>") || underlineOn)
+                    {
+                        italicOn = false;
+                        boldOn = true;
+                        underlineOn = false;
+                        lineSb.Append("{y:u}"); // underline single line
+                    }
+
+                    if (line.Contains("</i>"))
+                        italicOn = false;
+
+                    if (line.Contains("</b>"))
+                        boldOn = false;
+
+                    if (line.Contains("</u>"))
+                        underlineOn = false;
+
+                    lineSb.Append(Utilities.RemoveHtmlTags(line));
+                    count++;
+                }
+                string text = lineSb.ToString();
+                int noOfLines = Utilities.CountTagInText(text,"|") +1;
+                if (noOfLines > 1 && Utilities.CountTagInText(text, "{y:i}") == noOfLines)
+                    text = "{Y:i}" + text.Replace("{y:i}", string.Empty);
+                else if (noOfLines > 1 && Utilities.CountTagInText(text, "{y:b}") == noOfLines)
+                    text = "{Y:b}" + text.Replace("{y:b}", string.Empty);
+                else if (noOfLines > 1 && Utilities.CountTagInText(text, "{y:u}") == noOfLines)
+                    text = "{Y:u}" + text.Replace("{y:u}", string.Empty);
+                sb.AppendLine(Utilities.RemoveHtmlTags(text));
             }
             return sb.ToString().Trim();
         }
@@ -121,20 +169,50 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                             int startFrame = int.Parse(frames[0]);
                             int endFrame = int.Parse(frames[1]);
 
-                            text = text.Replace("|", Environment.NewLine);
-                            if (text.Contains("{Y:b}"))
-                                text = text.Replace("{Y:b}", "<b>") + "</b>";
-                            if (text.Contains("{y:b}"))
-                                text = text.Replace("{y:b}", "<b>") + "</b>";
-                            if (text.Contains("{Y:i}"))
-                                text = text.Replace("{Y:i}", "<i>") + "</i>";
-                            if (text.Contains("{y:i}"))
-                                text = text.Replace("{y:i}", "<i>") + "</i>";
-                            if (text.Contains("{Y:u}"))
-                                text = text.Replace("{Y:u}", "<u>") + "</u>";
-                            if (text.Contains("{y:u}"))
-                                text = text.Replace("{y:u}", "<u>") + "</u>";
+                            string post = string.Empty;
+                            string[] parts = text.Split("|".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                            int count = 0;
+                            StringBuilder lineSb = new StringBuilder();
+                            foreach (string s2 in parts)
+                            {
+                                if (count > 0)
+                                    lineSb.AppendLine();
 
+                                s = s2.Trim();
+                                if (s.StartsWith("{Y:i}"))
+                                {
+                                    s = "<i>" + s.Replace("{Y:i}", string.Empty);
+                                    post += "</i>";
+                                }
+                                else if (s.StartsWith("{Y:b}"))
+                                {
+                                    s = "<b>" + s.Replace("{Y:b}", string.Empty);
+                                    post += "</b>";
+                                }
+                                else if (s.StartsWith("{Y:u}"))
+                                {
+                                    s = "<u>" + s.Replace("{Y:u}", string.Empty);
+                                    post += "</u>";
+                                }
+                                else if (s.StartsWith("{y:i}"))
+                                {
+                                    s = "<i>" + s.Replace("{y:i}", string.Empty) + "</i>";
+                                }
+                                else if (s.StartsWith("{y:b}"))
+                                {
+                                    s = "<b>" + s.Replace("{y:b}", string.Empty) + "</b>";
+                                }
+                                else if (s.StartsWith("{y:u}"))
+                                {
+                                    s = "<u>" + s.Replace("{y:u}", string.Empty) + "</u>";
+                                }
+                                s = s.Replace("{Y:i}", string.Empty).Replace("{y:i}", string.Empty);
+                                s = s.Replace("{Y:b}", string.Empty).Replace("{y:b}", string.Empty);
+                                s = s.Replace("{Y:u}", string.Empty).Replace("{y:u}", string.Empty);
+                                lineSb.Append(s);
+                                count++;
+                            }
+                            text = lineSb.ToString() + post;
                             subtitle.Paragraphs.Add(new Paragraph(startFrame, endFrame, text));
                             
                         }
