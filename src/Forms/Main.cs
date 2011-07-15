@@ -4974,48 +4974,59 @@ namespace Nikse.SubtitleEdit.Forms
                         Paragraph p = _subtitle.GetParagraphOrDefault(item.Index);
                         if (p != null)
                         {
-                            bool done = false;
-
-                            string s = p.Text;
-                            if (s.StartsWith("<font "))
-                            {
-                                int start = s.IndexOf("<font ");
-                                if (start >= 0)
-                                {
-                                    int end = s.IndexOf(">", start);
-                                    if (end > 0)
-                                    {
-                                        string f = s.Substring(start, end - start);
-                                        if (f.Contains(" face=") && !f.Contains(" color="))
-                                        {
-                                            start = s.IndexOf(" face=", start);
-                                            s = s.Insert(start, string.Format(" color=\"{0}\"", color));
-                                            p.Text = s;
-                                            done = true;
-                                        }
-                                        else if (f.Contains(" color="))
-                                        {
-                                            int colorStart = f.IndexOf(" color=");
-                                            if (s.IndexOf("\"", colorStart + " color=".Length + 1) > 0)
-                                                end = s.IndexOf("\"", colorStart + " color=".Length + 1);
-                                            s = s.Substring(0, colorStart) + string.Format(" color=\"{0}", color) + s.Substring(end);
-                                            p.Text = s;
-                                            done = true;
-                                        }
-                                    }
-                                }
-                            }
-
-
-                            if (!done)
-                                p.Text = string.Format("<font color=\"{0}\">{1}</font>", color, p.Text);
+                            SetFontColor(p, color);
                             SubtitleListview1.SetText(item.Index, p.Text);
+                            if (_subtitleAlternate != null)
+                            {
+                                Paragraph original = Utilities.GetOriginalParagraph(item.Index, p, _subtitleAlternate.Paragraphs);
+                                SetFontColor(original, color);
+                                SubtitleListview1.SetAlternateText(item.Index, p.Text);
+                                _changeAlternate = true;
+                            }
                         }
                     }
                     _change = true;
                     RefreshSelectedParagraph();
                 }
             }
+        }
+  
+        private void SetFontColor(Paragraph p, string color)
+        {
+            bool done = false;
+
+            string s = p.Text;
+            if (s.StartsWith("<font "))
+            {
+                int start = s.IndexOf("<font ");
+                if (start >= 0)
+                {
+                    int end = s.IndexOf(">", start);
+                    if (end > 0)
+                    {
+                        string f = s.Substring(start, end - start);
+                        if (f.Contains(" face=") && !f.Contains(" color="))
+                        {
+                            start = s.IndexOf(" face=", start);
+                            s = s.Insert(start, string.Format(" color=\"{0}\"", color));
+                            p.Text = s;
+                            done = true;
+                        }
+                        else if (f.Contains(" color="))
+                        {
+                            int colorStart = f.IndexOf(" color=");
+                            if (s.IndexOf("\"", colorStart + " color=".Length + 1) > 0)
+                                end = s.IndexOf("\"", colorStart + " color=".Length + 1);
+                            s = s.Substring(0, colorStart) + string.Format(" color=\"{0}", color) + s.Substring(end);
+                            p.Text = s;
+                            done = true;
+                        }
+                    }
+                }
+            }
+
+            if (!done)
+                p.Text = string.Format("<font color=\"{0}\">{1}</font>", color, p.Text);
         }
 
         private void toolStripMenuItemFont_Click(object sender, EventArgs e)
@@ -5031,48 +5042,59 @@ namespace Nikse.SubtitleEdit.Forms
                         Paragraph p = _subtitle.GetParagraphOrDefault(item.Index);
                         if (p != null)
                         {
-                            bool done = false;
-
-                            string s = p.Text;
-                            if (s.StartsWith("<font "))
-                            {
-                                int start = s.IndexOf("<font ");
-                                if (start >= 0)
-                                {
-                                    int end = s.IndexOf(">", start);
-                                    if (end > 0)
-                                    {
-                                        string f = s.Substring(start, end - start);
-                                        if (f.Contains(" color=") && !f.Contains(" face="))
-                                        {
-                                            start = s.IndexOf(" color=", start);
-                                            s = s.Insert(start, string.Format(" face=\"{0}\"", fontDialog1.Font.Name));
-                                            p.Text = s;
-                                            done = true;
-                                        }
-                                        else if (f.Contains(" face="))
-                                        { 
-                                            int faceStart = f.IndexOf(" face=");
-                                            if (s.IndexOf("\"", faceStart + " face=".Length + 1) > 0)
-                                                end = s.IndexOf("\"", faceStart + " face=".Length + 1);
-                                            s = s.Substring(0, faceStart) + string.Format(" face=\"{0}", fontDialog1.Font.Name) + s.Substring(end);
-                                            p.Text = s;
-                                            done = true;
-                                        }
-                                    }
-                                }
-                            }
-
-
-                            if (!done)
-                                p.Text = string.Format("<font face=\"{0}\">{1}</font>", fontDialog1.Font.Name, s);
+                            SetFontName(p);
                             SubtitleListview1.SetText(item.Index, p.Text);
+                            if (_subtitleAlternate != null)
+                            {
+                                Paragraph original = Utilities.GetOriginalParagraph(item.Index, p, _subtitleAlternate.Paragraphs);
+                                SetFontName(original);
+                                SubtitleListview1.SetAlternateText(item.Index, p.Text);
+                                _changeAlternate = true;
+                            }
                         }
                     }
                     _change = true;
                     RefreshSelectedParagraph();
                 }
             }
+        }
+
+        private void SetFontName(Paragraph p)
+        {
+            bool done = false;
+
+            string s = p.Text;
+            if (s.StartsWith("<font "))
+            {
+                int start = s.IndexOf("<font ");
+                if (start >= 0)
+                {
+                    int end = s.IndexOf(">", start);
+                    if (end > 0)
+                    {
+                        string f = s.Substring(start, end - start);
+                        if (f.Contains(" color=") && !f.Contains(" face="))
+                        {
+                            start = s.IndexOf(" color=", start);
+                            s = s.Insert(start, string.Format(" face=\"{0}\"", fontDialog1.Font.Name));
+                            p.Text = s;
+                            done = true;
+                        }
+                        else if (f.Contains(" face="))
+                        {
+                            int faceStart = f.IndexOf(" face=");
+                            if (s.IndexOf("\"", faceStart + " face=".Length + 1) > 0)
+                                end = s.IndexOf("\"", faceStart + " face=".Length + 1);
+                            s = s.Substring(0, faceStart) + string.Format(" face=\"{0}", fontDialog1.Font.Name) + s.Substring(end);
+                            p.Text = s;
+                            done = true;
+                        }
+                    }
+                }
+            }
+
+            if (!done)
+                p.Text = string.Format("<font face=\"{0}\">{1}</font>", fontDialog1.Font.Name, s);
         }
 
         private void TypeEffectToolStripMenuItemClick(object sender, EventArgs e)
