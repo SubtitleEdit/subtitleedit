@@ -89,7 +89,10 @@ namespace Nikse.SubtitleEdit.Controls
                 return _spectrogramBitmaps != null && _spectrogramBitmaps.Count > 0;
             }
         }
+
         public bool ShowSpectrogram { get; set; }
+        private bool _tempShowSpectrogram;
+
         public bool ShowWaveform { get; set; }
 
         private double _startPositionSeconds = 0;
@@ -157,7 +160,7 @@ namespace Nikse.SubtitleEdit.Controls
                 _subtitle = null;
                 _noClear = false;
                 _wavePeaks = value;
-                ShowWaveform = true;
+//                ShowWaveform = true;
             }
         }
 
@@ -1106,6 +1109,7 @@ namespace Nikse.SubtitleEdit.Controls
         public void InitializeSpectrogram(string spectrogramDirectory)
         {
             _spectrogramBitmaps = new List<Bitmap>();
+            _tempShowSpectrogram = ShowSpectrogram;
             ShowSpectrogram = false;
             if (System.IO.Directory.Exists(spectrogramDirectory))
             {
@@ -1123,7 +1127,7 @@ namespace Nikse.SubtitleEdit.Controls
             doc.Load(System.IO.Path.Combine(_spectrogramDirectory, "Info.xml"));
             _sampleDuration = Convert.ToDouble(doc.DocumentElement.SelectSingleNode("SampleDuration").InnerText);
             _totalDuration = Convert.ToDouble(doc.DocumentElement.SelectSingleNode("TotalDuration").InnerText);
-            ShowSpectrogram = true;
+            ShowSpectrogram = _tempShowSpectrogram;
         }
 
         void LoadSpectrogramBitmapsAsync(object sender, System.ComponentModel.DoWorkEventArgs e)

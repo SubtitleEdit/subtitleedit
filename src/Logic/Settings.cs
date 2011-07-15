@@ -212,7 +212,9 @@ namespace Nikse.SubtitleEdit.Logic
         public bool ShowToolbarHelp { get; set; }
 
         public bool ShowVideoPlayer { get; set; }
-        public bool ShowWaveForm { get; set; }
+        public bool ShowAudioVisualizer { get; set; }
+        public bool ShowWaveform { get; set; }
+        public bool ShowSpectrogram { get; set; }
         public bool ShowFrameRate { get; set; }
         public double DefaultFrameRate { get; set; }
         public double CurrentFrameRate { get; set; }
@@ -276,7 +278,9 @@ namespace Nikse.SubtitleEdit.Logic
             ShowToolbarHelp = true;
 
             ShowVideoPlayer = false;
-            ShowWaveForm = false;
+            ShowAudioVisualizer = false;
+            ShowWaveform = true;
+            ShowSpectrogram = true;
             ShowFrameRate = false;
             DefaultFrameRate = 23.976;
             CurrentFrameRate = DefaultFrameRate;
@@ -647,9 +651,15 @@ namespace Nikse.SubtitleEdit.Logic
             subNode = node.SelectSingleNode("ShowVideoPlayer");
             if (subNode != null)
                 settings.General.ShowVideoPlayer = Convert.ToBoolean(subNode.InnerText);
-            subNode = node.SelectSingleNode("ShowWaveForm");
+            subNode = node.SelectSingleNode("ShowAudioVisualizer");
             if (subNode != null)
-                settings.General.ShowWaveForm = Convert.ToBoolean(subNode.InnerText);
+                settings.General.ShowAudioVisualizer = Convert.ToBoolean(subNode.InnerText);
+            subNode = node.SelectSingleNode("ShowWaveform");
+            if (subNode != null)
+                settings.General.ShowWaveform = Convert.ToBoolean(subNode.InnerText);
+            subNode = node.SelectSingleNode("ShowSpectrogram");
+            if (subNode != null)
+                settings.General.ShowSpectrogram = Convert.ToBoolean(subNode.InnerText);
             subNode = node.SelectSingleNode("DefaultFrameRate");
             if (subNode != null)
             {
@@ -1174,7 +1184,9 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("ShowToolbarHelp", settings.General.ShowToolbarHelp.ToString());
             textWriter.WriteElementString("ShowFrameRate", settings.General.ShowFrameRate.ToString());
             textWriter.WriteElementString("ShowVideoPlayer", settings.General.ShowVideoPlayer.ToString());
-            textWriter.WriteElementString("ShowWaveForm", settings.General.ShowWaveForm.ToString());
+            textWriter.WriteElementString("ShowAudioVisualizer", settings.General.ShowAudioVisualizer.ToString());
+            textWriter.WriteElementString("ShowWaveform", settings.General.ShowWaveform.ToString());
+            textWriter.WriteElementString("ShowSpectrogram", settings.General.ShowSpectrogram.ToString());
             textWriter.WriteElementString("DefaultFrameRate", settings.General.DefaultFrameRate.ToString());
             textWriter.WriteElementString("DefaultEncoding", settings.General.DefaultEncoding);
             textWriter.WriteElementString("AutoGuessAnsiEncoding", settings.General.AutoGuessAnsiEncoding.ToString());

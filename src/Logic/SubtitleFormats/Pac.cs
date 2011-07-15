@@ -200,6 +200,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
                 if (buffer[index] == 0xFE && buffer[index - 15] == 0x60)
                     con = false;
+                if (buffer[index] == 0xFE && buffer[index - 12] == 0x60)
+                    con = false;
             }
 
             int FEIndex = index;
@@ -226,7 +228,13 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             int timeStartIndex = FEIndex - 15;
             if (buffer[timeStartIndex] == 0x60)
             {
-                p.StartTime = GetTimeCode(timeStartIndex+1, buffer);
+                p.StartTime = GetTimeCode(timeStartIndex + 1, buffer);
+                p.EndTime = GetTimeCode(timeStartIndex + 5, buffer);
+            }
+            else if (buffer[timeStartIndex+3] == 0x60)
+            {
+                timeStartIndex += 3;
+                p.StartTime = GetTimeCode(timeStartIndex + 1, buffer);
                 p.EndTime = GetTimeCode(timeStartIndex + 5, buffer);
             }
             return p;

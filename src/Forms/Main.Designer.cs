@@ -3123,6 +3123,7 @@
             this.textBoxListViewTextAlternate.TabIndex = 33;
             this.textBoxListViewTextAlternate.Visible = false;
             this.textBoxListViewTextAlternate.TextChanged += new System.EventHandler(this.textBoxListViewTextAlternate_TextChanged);
+            this.textBoxListViewTextAlternate.Enter += new System.EventHandler(this.textBoxListViewTextAlternate_Enter);
             this.textBoxListViewTextAlternate.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textBoxListViewTextAlternate_KeyDown);
             this.textBoxListViewTextAlternate.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.textBoxListViewTextAlternate_MouseDoubleClick);
             this.textBoxListViewTextAlternate.MouseMove += new System.Windows.Forms.MouseEventHandler(this.textBoxListViewTextAlternate_MouseMove);
@@ -3460,6 +3461,7 @@
             this.textBoxListViewText.Size = new System.Drawing.Size(570, 56);
             this.textBoxListViewText.TabIndex = 5;
             this.textBoxListViewText.TextChanged += new System.EventHandler(this.TextBoxListViewTextTextChanged);
+            this.textBoxListViewText.Enter += new System.EventHandler(this.textBoxListViewText_Enter);
             this.textBoxListViewText.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxListViewTextKeyDown);
             this.textBoxListViewText.KeyUp += new System.Windows.Forms.KeyEventHandler(this.textBoxListViewText_KeyUp);
             this.textBoxListViewText.Leave += new System.EventHandler(this.textBoxListViewText_Leave);
@@ -3499,7 +3501,7 @@
             this.SubtitleListview1.HideSelection = false;
             this.SubtitleListview1.Location = new System.Drawing.Point(1, 3);
             this.SubtitleListview1.Name = "SubtitleListview1";
-            this.SubtitleListview1.Size = new System.Drawing.Size(932, 148);
+            this.SubtitleListview1.Size = new System.Drawing.Size(933, 148);
             this.SubtitleListview1.TabIndex = 0;
             this.SubtitleListview1.UseCompatibleStateImageBehavior = false;
             this.SubtitleListview1.View = System.Windows.Forms.View.Details;

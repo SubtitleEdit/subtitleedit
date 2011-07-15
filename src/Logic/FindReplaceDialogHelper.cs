@@ -18,6 +18,7 @@ namespace Nikse.SubtitleEdit.Logic
         public int WindowPositionLeft { get; set; }
         public int WindowPositionTop { get; set; }
         public int StartLineIndex { get; set; }
+        public bool MatchInOriginal { get; set; }
 
         public int FindTextLength
         {
@@ -55,9 +56,9 @@ namespace Nikse.SubtitleEdit.Logic
             StartLineIndex = startLineIndex;
         }
 
-        public bool Find(Subtitle subtitle, int startIndex)
+        public bool Find(Subtitle subtitle, Subtitle originalSubtitle, int startIndex)
         {
-            return FindNext(subtitle, startIndex, 0);
+            return FindNext(subtitle, originalSubtitle, startIndex, 0);
         }
 
         public bool Find(TextBox textBox, int startIndex)
@@ -96,7 +97,7 @@ namespace Nikse.SubtitleEdit.Logic
             return -1;
         }
 
-        public bool FindNext(Subtitle subtitle, int startIndex, int position)
+        public bool FindNext(Subtitle subtitle, Subtitle originalSubtitle, int startIndex, int position)
         {
             Success = false;
             int index = 0;
@@ -106,15 +107,38 @@ namespace Nikse.SubtitleEdit.Logic
             {
                 if (index >= startIndex)
                 {
-                    int pos = FindPositionInText(p.Text, position);
-                    if (pos >= 0)
+                    int pos = 0;
+                    if (!MatchInOriginal)
                     {
-                        SelectedIndex = index;
-                        SelectedPosition = pos;
-                        Success = true;
-                        return true;
+                        pos = FindPositionInText(p.Text, position);
+                        if (pos >= 0)
+                        {
+                            MatchInOriginal = false;
+                            SelectedIndex = index;
+                            SelectedPosition = pos;
+                            Success = true;
+                            return true;
+                        }
+                        position = 0;
                     }
-                    position = 0;
+                    MatchInOriginal = false;
+
+                    if (originalSubtitle != null)
+                    {
+                        Paragraph o = Utilities.GetOriginalParagraph(index, p, originalSubtitle.Paragraphs);
+                        if (o != null)
+                        {
+                            pos = FindPositionInText(o.Text, position);
+                            if (pos >= 0)
+                            {
+                                MatchInOriginal = true;
+                                SelectedIndex = index;
+                                SelectedPosition = pos;
+                                Success = true;
+                                return true;
+                            }
+                        }
+                    }
                 }
                 index++;
             }
