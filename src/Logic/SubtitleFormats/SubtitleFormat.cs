@@ -27,6 +27,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     new DCSubtitle(),
                     new DigiBeta(),
                     new DvdStudioPro(),
+                    new DvdStudioProSpace(),
                     new DvdSubtitle(),
                     new Eeg708(),
                     new FabSubtitler(),
@@ -68,6 +69,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     new UnknownSubtitle6(),
                     new UnknownSubtitle7(),
 //                    new Wsb(),
+                    new YouTubeAnnotations(),
                     new YouTubeSbv(),
                     new ZeroG(),
                 };

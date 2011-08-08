@@ -5,9 +5,9 @@ using System.Text.RegularExpressions;
 
 namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
-    public class DvdStudioPro : SubtitleFormat
+    public class DvdStudioProSpace : SubtitleFormat
     {
-        readonly Regex _regexTimeCodes = new Regex(@"^\d+:\d+:\d+:\d+\t,\t\d+:\d+:\d+:\d+\t,\t.*$", RegexOptions.Compiled);
+        readonly Regex _regexTimeCodes = new Regex(@"^\d+:\d+:\d+:\d+ , \d+:\d+:\d+:\d+ , .*$", RegexOptions.Compiled);
 
         public override string Extension
         {
@@ -16,7 +16,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public override string Name
         {
-            get { return "DVD Studio Pro"; }
+            get { return "DVD Studio Pro with space"; }
         }
 
         public override bool HasLineNumber
@@ -38,7 +38,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public override string ToText(Subtitle subtitle, string title)
         {
-            const string paragraphWriteFormat = "{0}\t,\t{1}\t,\t{2}\r\n";
+            const string paragraphWriteFormat = "{0} , {1} , {2}\r\n";
             const string timeFormat = "{0:00}:{1:00}:{2:00}:{3:00}";
             const string header = @"$VertAlign			=	Bottom
 $Bold				=	FALSE
@@ -61,7 +61,7 @@ $HorzAlign			=	Center
             foreach (Paragraph p in subtitle.Paragraphs)
             {
                 double factor = (1000.0 / Configuration.Settings.General.CurrentFrameRate);
-                string startTime = string.Format(timeFormat, p.StartTime.Hours, p.StartTime.Minutes, p.StartTime.Seconds, (int)Math.Round(p.StartTime.Milliseconds  / factor));
+                string startTime = string.Format(timeFormat, p.StartTime.Hours, p.StartTime.Minutes, p.StartTime.Seconds, (int)Math.Round(p.StartTime.Milliseconds / factor));
                 string endTime = string.Format(timeFormat, p.EndTime.Hours, p.EndTime.Minutes, p.EndTime.Seconds, (int)Math.Round(p.EndTime.Milliseconds / factor));
                 sb.Append(string.Format(paragraphWriteFormat, startTime, endTime, p.Text.Replace(Environment.NewLine, " | ")));
             }
@@ -80,19 +80,20 @@ $HorzAlign			=	Center
             int number = 0;
             foreach (string line in lines)
             {
-                if (line.Trim().Length > 0 && line[0] != '$')
+                if (line.Trim().Length > 0 && line[0] != '$' && !line.StartsWith("//"))
                 {
                     if (_regexTimeCodes.Match(line).Success)
                     {
-                        string[] threePart = line.Split(new[] { "\t,\t"}, StringSplitOptions.None);
+                        string[] toPart = line.Substring(0, 25).Split(new[] { " ," }, StringSplitOptions.None);
                         Paragraph p = new Paragraph();
-                        if (threePart.Length == 3 &&
-                            GetTimeCode(p.StartTime, threePart[0]) &&
-                            GetTimeCode(p.EndTime, threePart[1]))
+                        if (toPart.Length == 2 &&
+                            GetTimeCode(p.StartTime, toPart[0]) &&
+                            GetTimeCode(p.EndTime, toPart[1]))
                         {
                             number++;
                             p.Number = number;
-                            p.Text = threePart[2].TrimEnd().Replace(" | ", Environment.NewLine).Replace("|", Environment.NewLine);
+                            string text = line.Substring(27).Trim();
+                            p.Text = text.Replace(" | ", Environment.NewLine).Replace("|", Environment.NewLine);
                             subtitle.Paragraphs.Add(p);
                         }
                     }
