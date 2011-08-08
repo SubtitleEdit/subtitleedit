@@ -81,7 +81,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Title>Vytvořit vlnovku z dat</Title>
     <SourceVideoFile>Zdrojový soubor videa:</SourceVideoFile>
     <GenerateWaveFormData>Vytvořit vlnovku z dat</GenerateWaveFormData>
-    <PleaseWait>Může to trvat několik minut, čekejte</PleaseWait>
+    <PleaseWait>Může to trvat několik minut, čekejte.</PleaseWait>
     <VlcMediaPlayerNotFoundTitle>VLC media player nebyl nalezen</VlcMediaPlayerNotFoundTitle>
     <VlcMediaPlayerNotFound>Subtitle Edit potřebuje VLC media player 1.1.x nebo novější pro extrahování zvukových dat.</VlcMediaPlayerNotFound>
     <GoToVlcMediaPlayerHomePage>Chcete přejít na domovskou stránku VLC media player?</GoToVlcMediaPlayerHomePage>
@@ -308,7 +308,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <X3PlusLinesFixed>Opraveno titulků s více než dvěma řádky: {0}</X3PlusLinesFixed>
     <Analysing>Analyzování...</Analysing>
     <NothingToFix>Není co opravovat :)</NothingToFix>
-    <FixesFoundX>Nelezen oprav: {0}</FixesFoundX>
+    <FixesFoundX>Nalezeno oprav: {0}</FixesFoundX>
     <XFixesApplied>Použito oprav: {0}</XFixesApplied>
     <NothingToFixBut>Není co opravovat, ale pár věcí lze vylepšit - viz zpráva pro podrobnosti</NothingToFixBut>
     <FixLowercaseIToUppercaseICheckedButCurrentLanguageIsNotEnglish>"Opravit samotná malá 'i' na 'I' (angličtina)" je zatrženo, ale aktuálně načtené titulky se nezdají být v angličtině.</FixLowercaseIToUppercaseICheckedButCurrentLanguageIsNotEnglish>
@@ -483,10 +483,10 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <SplitLongLines>Rozdělit dlouhé řádky...</SplitLongLines>
         <MinimumDisplayTimeBetweenParagraphs>Minimální čas zobrazení mezi odstavci...</MinimumDisplayTimeBetweenParagraphs>
         <SortBy>Seřadit podle</SortBy>
-        <TextAlphabetically>Textu - abecedně</TextAlphabetically>
-        <TextSingleLineMaximumLength>Textu - maximální délky jednoho řádku</TextSingleLineMaximumLength>
-        <TextTotalLength>Textu - celkové délky</TextTotalLength>
-        <TextNumberOfLines>Textu - počtu řádků</TextNumberOfLines>
+        <TextAlphabetically>Text - abecedně</TextAlphabetically>
+        <TextSingleLineMaximumLength>Text - maximální délka jednoho řádku</TextSingleLineMaximumLength>
+        <TextTotalLength>Text - celková délka</TextTotalLength>
+        <TextNumberOfLines>Text - počet řádků</TextNumberOfLines>
         <ShowOriginalTextInAudioAndVideoPreview>Zobrazit původní text v náhledech audia a videa</ShowOriginalTextInAudioAndVideoPreview>
         <MakeNewEmptyTranslationFromCurrentSubtitle>Vytvořit nový prázdný překlad z aktuálních titulků</MakeNewEmptyTranslationFromCurrentSubtitle>
         <SplitSubtitle>Rozdělit titulky...</SplitSubtitle>
@@ -562,6 +562,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <Copy>Kopírovat</Copy>
         <Paste>Vložit</Paste>
         <Delete>Odstranit</Delete>
+        <SplitLineAtCursorPosition>Rozdělit řádek na pozici kurzoru</SplitLineAtCursorPosition>
         <SelectAll>Vybrat vše</SelectAll>
         <InsertFirstLine>Vložit řádek</InsertFirstLine>
         <InsertBefore>Vložit před</InsertBefore>
@@ -638,9 +639,9 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
       <SecondsBackShort>&lt;&lt;</SecondsBackShort>
       <SecondsForwardShort>&gt;&gt;</SecondsForwardShort>
       <VideoPosition>Pozice videa:</VideoPosition>
-      <TranslateTip>Tip: Použít &lt;alt+šipka nahoru/dolů&gt; pro přechod na předchozí/další titulek</TranslateTip>
-      <CreateTip>Tip: Použít klávesy &lt;ctrl+šipka vlevo/vpravot&gt;</CreateTip>
-      <AdjustTip>Tip: Použít &lt;alt+šipka nahoru/dolů&gt; pro přechod na předchozí/další titulek</AdjustTip>
+      <TranslateTip>Tip: Použijte &lt;alt+šipka nahoru/dolů&gt; pro přechod na předchozí nebo další titulek</TranslateTip>
+      <CreateTip>Tip: Použijte &lt;ctrl+šipka vlevo/vpravot&gt;</CreateTip>
+      <AdjustTip>Tip: Použijte &lt;alt+šipka nahoru/dolů&gt; pro přechod na předchozí nebo další titulek</AdjustTip>
       <BeforeChangingTimeInWaveFormX>Před změnou času ve vlnovce: {0}</BeforeChangingTimeInWaveFormX>
       <NewTextInsertAtX>Nový text vložen v {0}</NewTextInsertAtX>
       <Center>Na střed</Center>
@@ -1256,7 +1257,7 @@ upravovat stejný soubor titulků (spolupráce)</Information>
   </VobSubOcrNewFolder>
   <WaveForm>
     <ClickToAddWaveForm>Klepněte pro přidání vlnovky</ClickToAddWaveForm>
-    <ClickToAddWaveformAndSpectrogram>Klepněte pro přidání vlnovky/spektrogramu</ClickToAddWaveformAndSpectrogram>
+    <ClickToAddWaveformAndSpectrogram>Klepněte pro přidání vlnovky a spektrogramu</ClickToAddWaveformAndSpectrogram>
     <Seconds>sekund</Seconds>
     <ZoomIn>Zvětšit</ZoomIn>
     <ZoomOut>Zmenšit</ZoomOut>
