@@ -914,14 +914,18 @@ namespace Nikse.SubtitleEdit.Forms
                 }
 
                 XmlNode nodeGuess = _compareDoc.DocumentElement.SelectSingleNode("FileName[.='" + _compareBitmaps[smallestIndex].Name + "']");
-                bool isItalicGuess = nodeGuess.Attributes["Italic"] != null;
-                int expandCountGuess = 0;
-                if (nodeGuess.Attributes["Expand"] != null)
+                if (nodeGuess != null)
                 {
-                    if (!int.TryParse(nodeGuess.Attributes["Expand"].InnerText, out expandCountGuess))
-                        expandCountGuess = 0;
+                    bool isItalicGuess = nodeGuess.Attributes["Italic"] != null;
+                    int expandCountGuess = 0;
+                    if (nodeGuess.Attributes["Expand"] != null)
+                    {
+                        if (!int.TryParse(nodeGuess.Attributes["Expand"].InnerText, out expandCountGuess))
+                            expandCountGuess = 0;
+                    }
+                    secondBestGuess = new CompareMatch(nodeGuess.Attributes["Text"].InnerText, isItalicGuess, expandCountGuess, _compareBitmaps[smallestIndex].Name);
                 }
-                secondBestGuess = new CompareMatch(nodeGuess.Attributes["Text"].InnerText, isItalicGuess, expandCountGuess, _compareBitmaps[smallestIndex].Name);
+
             }
 
             return null;
@@ -2813,9 +2817,12 @@ namespace Nikse.SubtitleEdit.Forms
             inspect.Initialize(comboBoxCharacterDatabase.SelectedItem.ToString(), matches, imageSources);
             if (inspect.ShowDialog(this) == DialogResult.OK)
             {
+                Cursor = Cursors.WaitCursor;
                 _compareDoc = inspect.ImageCompareDocument;
                 string path = Configuration.VobSubCompareFolder + comboBoxCharacterDatabase.SelectedItem + Path.DirectorySeparatorChar;
                 _compareDoc.Save(path + "CompareDescription.xml");
+                LoadImageCompareBitmaps();
+                Cursor = Cursors.Default;
             }
         }
 
@@ -2828,8 +2835,7 @@ namespace Nikse.SubtitleEdit.Forms
                 _compareDoc = formVobSubEditCharacters.ImageCompareDocument;
                 string path = Configuration.VobSubCompareFolder + comboBoxCharacterDatabase.SelectedItem + Path.DirectorySeparatorChar;
                 _compareDoc.Save(path + "CompareDescription.xml");
-            }
-            LoadImageCompareBitmaps();
+            }            
         }
 
         private void checkBoxAutoTransparentBackground_CheckedChanged(object sender, EventArgs e)

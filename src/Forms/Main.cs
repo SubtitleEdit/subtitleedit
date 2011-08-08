@@ -316,6 +316,7 @@ namespace Nikse.SubtitleEdit.Forms
                 FixLargeFonts();
                 _timerAddHistoryWhenDone.Interval = 500;
                 _timerAddHistoryWhenDone.Tick += new EventHandler(timerAddHistoryWhenDone_Tick);
+
             }
             catch (Exception exception)
             {
@@ -323,8 +324,7 @@ namespace Nikse.SubtitleEdit.Forms
                 MessageBox.Show(exception.Message + Environment.NewLine + exception.StackTrace);
             }
         }
-
-        
+       
         private void BatchConvert(string[] args) // E.g.: /convert *.txt SubRip
         {
             const int ATTACH_PARENT_PROCESS = -1;
@@ -572,10 +572,30 @@ namespace Nikse.SubtitleEdit.Forms
 
         void AudioWaveForm_OnSingleClick(double seconds, Paragraph paragraph)
         {
+            timerWaveForm.Stop();
             _endSeconds = -1;
             if (mediaPlayer.VideoPlayer != null)
                 mediaPlayer.Pause();
+
             mediaPlayer.CurrentPosition = seconds;
+
+            int index = -1;
+            if (SubtitleListview1.SelectedItems.Count > 0)
+                index = SubtitleListview1.SelectedItems[0].Index;
+            SetWaveFormPosition(audioVisualizer.StartPositionSeconds, seconds, index);
+
+            if (mediaPlayer.VideoPlayer != null && mediaPlayer.VideoPlayer is Nikse.SubtitleEdit.Logic.VideoPlayers.LibVlc11xDynamic) //TODO: Fix this hack!
+            {
+                double newPosition = seconds - 0.015;
+                for (int i = 0; i < 200; i++)
+                {
+                    if (mediaPlayer.CurrentPosition > seconds)
+                        mediaPlayer.CurrentPosition = newPosition;
+                    System.Threading.Thread.Sleep(1);
+                    Application.DoEvents();
+                }
+            }
+            timerWaveForm.Start();
         }
 
         void AudioWaveForm_OnParagraphRightClicked(double seconds, Paragraph paragraph)
@@ -4634,11 +4654,14 @@ namespace Nikse.SubtitleEdit.Forms
                         Paragraph original = Utilities.GetOriginalParagraph(firstSelectedIndex, currentParagraph, _subtitleAlternate.Paragraphs);
                         Paragraph originalNext = Utilities.GetOriginalParagraph(firstSelectedIndex+1,nextParagraph, _subtitleAlternate.Paragraphs);
 
-                        original.Text = original.Text.Replace(Environment.NewLine, " ");
-                        original.Text += Environment.NewLine + originalNext.Text.Replace(Environment.NewLine, " ");
-                        original.Text = ChangeAllLinesItalictoSingleItalic(original.Text);
-                        original.Text = Utilities.AutoBreakLine(original.Text);
-                        _subtitleAlternate.Paragraphs.Remove(originalNext);
+                        if (originalNext != null)
+                        {
+                            original.Text = original.Text.Replace(Environment.NewLine, " ");
+                            original.Text += Environment.NewLine + originalNext.Text.Replace(Environment.NewLine, " ");
+                            original.Text = ChangeAllLinesItalictoSingleItalic(original.Text);
+                            original.Text = Utilities.AutoBreakLine(original.Text);
+                            _subtitleAlternate.Paragraphs.Remove(originalNext);
+                        }
                     }
 
                     currentParagraph.Text = currentParagraph.Text.Replace(Environment.NewLine, " ");
@@ -10614,40 +10637,7 @@ namespace Nikse.SubtitleEdit.Forms
                 else
                     textBoxListViewTextAlternate.DoDragDrop(textBoxListViewTextAlternate.Text, DragDropEffects.Copy);
             }
-        }
-
-        private void textBoxListViewText_MouseDoubleClick(object sender, MouseEventArgs e)
-        {
-            TextBox tb = (sender as TextBox);
-            string selText = tb.SelectedText;
-            if (!string.IsNullOrEmpty(selText))
-            {
-                for (int i = 0; i < 5; i++)
-                {
-                    selText = selText.TrimEnd('.');
-                    selText = selText.TrimEnd('!');
-                    selText = selText.TrimEnd('?');
-                    selText = selText.TrimEnd(',');
-                    selText = selText.TrimEnd(')');
-                    selText = selText.TrimEnd(']');
-                    selText = selText.TrimEnd(':');
-                    selText = selText.TrimEnd(';');
-                    selText = selText.TrimEnd(' ');
-                }
-                tb.SelectionLength = selText.Length;
-                if ((selText.StartsWith("(") || selText.StartsWith("[")) && selText.Length > 1)
-                {
-                    int l = tb.SelectionLength -1;
-                    tb.SelectionStart++;
-                    tb.SelectionLength = l;
-                }
-            }
-        }
-
-        private void textBoxListViewTextAlternate_MouseDoubleClick(object sender, MouseEventArgs e)
-        {
-            textBoxListViewText_MouseDoubleClick(sender, e);
-        }
+        }       
 
         private void eBUSTLToolStripMenuItem_Click(object sender, EventArgs e)
         {

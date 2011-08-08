@@ -14,6 +14,7 @@ namespace Nikse.SubtitleEdit.Logic
         SubtitleFormat _format;
         bool _wasLoadedWithFrameNumbers;
         public string Header { get; set; }
+        public string Footer { get; set; }
 
         public string FileName { get; set; }
 

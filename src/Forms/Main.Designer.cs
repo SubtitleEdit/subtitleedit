@@ -316,7 +316,7 @@
             this.labelTextAlternateLineLengths = new System.Windows.Forms.Label();
             this.labelAlternateText = new System.Windows.Forms.Label();
             this.labelText = new System.Windows.Forms.Label();
-            this.textBoxListViewTextAlternate = new System.Windows.Forms.TextBox();
+            this.textBoxListViewTextAlternate = new Nikse.SubtitleEdit.Controls.SETextBox();
             this.contextMenuStripTextBoxListView = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.cutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.copyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -352,7 +352,7 @@
             this.buttonPrevious = new System.Windows.Forms.Button();
             this.buttonNext = new System.Windows.Forms.Button();
             this.labelStartTime = new System.Windows.Forms.Label();
-            this.textBoxListViewText = new System.Windows.Forms.TextBox();
+            this.textBoxListViewText = new Nikse.SubtitleEdit.Controls.SETextBox();
             this.labelDuration = new System.Windows.Forms.Label();
             this.labelAutoDuration = new System.Windows.Forms.Label();
             this.SubtitleListview1 = new Nikse.SubtitleEdit.Controls.SubtitleListView();
@@ -3125,7 +3125,6 @@
             this.textBoxListViewTextAlternate.TextChanged += new System.EventHandler(this.textBoxListViewTextAlternate_TextChanged);
             this.textBoxListViewTextAlternate.Enter += new System.EventHandler(this.textBoxListViewTextAlternate_Enter);
             this.textBoxListViewTextAlternate.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textBoxListViewTextAlternate_KeyDown);
-            this.textBoxListViewTextAlternate.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.textBoxListViewTextAlternate_MouseDoubleClick);
             this.textBoxListViewTextAlternate.MouseMove += new System.Windows.Forms.MouseEventHandler(this.textBoxListViewTextAlternate_MouseMove);
             // 
             // contextMenuStripTextBoxListView
@@ -3465,7 +3464,6 @@
             this.textBoxListViewText.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxListViewTextKeyDown);
             this.textBoxListViewText.KeyUp += new System.Windows.Forms.KeyEventHandler(this.textBoxListViewText_KeyUp);
             this.textBoxListViewText.Leave += new System.EventHandler(this.textBoxListViewText_Leave);
-            this.textBoxListViewText.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.textBoxListViewText_MouseDoubleClick);
             this.textBoxListViewText.MouseMove += new System.Windows.Forms.MouseEventHandler(this.textBoxListViewText_MouseMove);
             // 
             // labelDuration
@@ -3530,7 +3528,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxSource.HideSelection = false;
             this.textBoxSource.Location = new System.Drawing.Point(1, 3);
-            this.textBoxSource.MaxLength = 327670;
+            this.textBoxSource.MaxLength = 0;
             this.textBoxSource.Multiline = true;
             this.textBoxSource.Name = "textBoxSource";
             this.textBoxSource.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
@@ -3737,7 +3735,8 @@
         private System.Windows.Forms.Label labelText;
         private System.Windows.Forms.Label labelDuration;
         private System.Windows.Forms.Label labelStartTime;
-        private System.Windows.Forms.TextBox textBoxListViewText;
+        //private System.Windows.Forms.TextBox textBoxListViewText;
+        Nikse.SubtitleEdit.Controls.SETextBox textBoxListViewText;
         private System.Windows.Forms.Button buttonPrevious;
         private System.Windows.Forms.Button buttonNext;
         private System.Windows.Forms.ToolStripMenuItem splitLineToolStripMenuItem;
@@ -3945,7 +3944,6 @@
         private System.Windows.Forms.ToolStripMenuItem insertLineToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem closeVideoToolStripMenuItem;
         private System.Windows.Forms.Label labelSingleLine;
-        private System.Windows.Forms.TextBox textBoxListViewTextAlternate;
         private System.Windows.Forms.Label labelAlternateText;
         private System.Windows.Forms.Label labelAlternateCharactersPerSecond;
         private System.Windows.Forms.Label labelTextAlternateLineTotal;
@@ -4006,6 +4004,7 @@
         private System.Windows.Forms.ToolStripMenuItem eBUSTLToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem pACScreenElectronicsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemCavena890;
+        private Controls.SETextBox textBoxListViewTextAlternate;
     }
 }
 

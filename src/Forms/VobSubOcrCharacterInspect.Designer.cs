@@ -30,6 +30,7 @@
         {
             this.buttonCancel = new System.Windows.Forms.Button();
             this.groupBoxCurrentCompareImage = new System.Windows.Forms.GroupBox();
+            this.buttonAddBetterMatch = new System.Windows.Forms.Button();
             this.checkBoxItalic = new System.Windows.Forms.CheckBox();
             this.labelDoubleSize = new System.Windows.Forms.Label();
             this.pictureBoxCompareBitmapDouble = new System.Windows.Forms.PictureBox();
@@ -63,6 +64,7 @@
             // 
             // groupBoxCurrentCompareImage
             // 
+            this.groupBoxCurrentCompareImage.Controls.Add(this.buttonAddBetterMatch);
             this.groupBoxCurrentCompareImage.Controls.Add(this.checkBoxItalic);
             this.groupBoxCurrentCompareImage.Controls.Add(this.labelDoubleSize);
             this.groupBoxCurrentCompareImage.Controls.Add(this.pictureBoxCompareBitmapDouble);
@@ -78,6 +80,17 @@
             this.groupBoxCurrentCompareImage.TabIndex = 11;
             this.groupBoxCurrentCompareImage.TabStop = false;
             this.groupBoxCurrentCompareImage.Text = "Current compare image";
+            // 
+            // buttonAddBetterMatch
+            // 
+            this.buttonAddBetterMatch.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.buttonAddBetterMatch.Location = new System.Drawing.Point(120, 98);
+            this.buttonAddBetterMatch.Name = "buttonAddBetterMatch";
+            this.buttonAddBetterMatch.Size = new System.Drawing.Size(140, 21);
+            this.buttonAddBetterMatch.TabIndex = 28;
+            this.buttonAddBetterMatch.Text = "Add better match";
+            this.buttonAddBetterMatch.UseVisualStyleBackColor = true;
+            this.buttonAddBetterMatch.Click += new System.EventHandler(this.buttonAddBetterMatch_Click);
             // 
             // checkBoxItalic
             // 
@@ -122,7 +135,7 @@
             this.buttonDelete.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonDelete.Location = new System.Drawing.Point(120, 62);
             this.buttonDelete.Name = "buttonDelete";
-            this.buttonDelete.Size = new System.Drawing.Size(88, 21);
+            this.buttonDelete.Size = new System.Drawing.Size(140, 21);
             this.buttonDelete.TabIndex = 4;
             this.buttonDelete.Text = "Delete ";
             this.buttonDelete.UseVisualStyleBackColor = true;
@@ -133,7 +146,7 @@
             this.buttonUpdate.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonUpdate.Location = new System.Drawing.Point(120, 35);
             this.buttonUpdate.Name = "buttonUpdate";
-            this.buttonUpdate.Size = new System.Drawing.Size(88, 21);
+            this.buttonUpdate.Size = new System.Drawing.Size(140, 21);
             this.buttonUpdate.TabIndex = 3;
             this.buttonUpdate.Text = "Update";
             this.buttonUpdate.UseVisualStyleBackColor = true;
@@ -242,5 +255,6 @@
         private System.Windows.Forms.ListBox listBoxInspectItems;
         private System.Windows.Forms.GroupBox groupBoxInspectItems;
         private System.Windows.Forms.PictureBox pictureBoxInspectItem;
+        private System.Windows.Forms.Button buttonAddBetterMatch;
     }
 }
