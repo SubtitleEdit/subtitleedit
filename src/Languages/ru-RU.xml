@@ -570,6 +570,7 @@ http://code.google.com/p/subtitleedit.
         <Copy>Копировать</Copy>
         <Paste>Вставить</Paste>
         <Delete>Удалить</Delete>
+        <SplitLineAtCursorPosition>Разделить строку в позиции курсора</SplitLineAtCursorPosition>
         <SelectAll>Выделить все</SelectAll>
         <InsertFirstLine>Вставить строку</InsertFirstLine>
         <InsertBefore>Вставить строку перед</InsertBefore>
@@ -696,7 +697,7 @@ http://code.google.com/p/subtitleedit.
     <NewFrameRateUsedToCalculateTimeCodes>Новая частота кадров ({0}) была использована для расчета временного сдвига</NewFrameRateUsedToCalculateTimeCodes>
     <NewFrameRateUsedToCalculateFrameNumbers>Новая частота кадров ({0}) была использована для расчета сдвига нумерации кадров</NewFrameRateUsedToCalculateFrameNumbers>
     <FindContinue>Искомое слово не найдено. 
-Нужно ли выполнить поиск с самого начала документа?</FindContinue>
+Продолжить поиск с самого начала документа?</FindContinue>
     <FindContinueTitle>Продолжить поиск?</FindContinueTitle>
     <XFoundAtLineNumberY>"{0}" найдено в строке {1}</XFoundAtLineNumberY>
     <XNotFound>Не удалось найти "{0}"</XNotFound>
