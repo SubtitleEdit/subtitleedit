@@ -59,9 +59,7 @@ namespace Nikse.SubtitleEdit.Forms
                 ImageCompareDocument.Load(_directoryPath + "CompareDescription.xml");
 
             for (int i = 0; i < _matches.Count; i++)
-            {
                 listBoxInspectItems.Items.Add(_matches[i].Text);
-            }
             if (listBoxInspectItems.Items.Count > 0)
                 listBoxInspectItems.SelectedIndex = 0;
         }
@@ -115,6 +113,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 buttonUpdate.Enabled = false;
                 buttonDelete.Enabled = false;
+                buttonAddBetterMatch.Enabled = false;
                 textBoxText.Enabled = false;
                 textBoxText.Text = string.Empty;
                 checkBoxItalic.Enabled = false;
@@ -123,6 +122,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 buttonUpdate.Enabled = true;
                 buttonDelete.Enabled = true;
+                buttonAddBetterMatch.Enabled = true;
                 textBoxText.Enabled = true;
                 checkBoxItalic.Enabled = true;
             }
@@ -140,6 +140,12 @@ namespace Nikse.SubtitleEdit.Forms
             listBoxInspectItems.SelectedIndexChanged += listBoxInspectItems_SelectedIndexChanged;
             node.Attributes["Text"].InnerText = newText;
 
+            SetItalic(node);
+            listBoxInspectItems_SelectedIndexChanged(null, null);
+        }
+
+        private void SetItalic(XmlNode node)
+        {
             if (checkBoxItalic.Checked)
             {
                 if (node.Attributes["Italic"] == null)
@@ -156,7 +162,6 @@ namespace Nikse.SubtitleEdit.Forms
                     node.Attributes.RemoveNamedItem("Italic");
                 }
             }
-            listBoxInspectItems_SelectedIndexChanged(null, null);
         }
 
         private void buttonDelete_Click(object sender, EventArgs e)
@@ -167,6 +172,36 @@ namespace Nikse.SubtitleEdit.Forms
             ImageCompareDocument.DocumentElement.RemoveChild(_selectedCompareNode);
             _selectedCompareNode = null;
             listBoxInspectItems_SelectedIndexChanged(null, null);
+        }
+
+        private void buttonAddBetterMatch_Click(object sender, EventArgs e)
+        {
+            if (_selectedCompareNode != null)
+            {
+                XmlNode newNode = ImageCompareDocument.CreateElement("FileName");
+                XmlAttribute text = newNode.OwnerDocument.CreateAttribute("Text");
+                text.InnerText = textBoxText.Text;
+                newNode.Attributes.Append(text);
+                string name = Guid.NewGuid().ToString();
+                newNode.InnerText = name;
+                string imageFileName = Path.Combine(_directoryPath, name + ".bmp");
+                pictureBoxInspectItem.Image.Save(imageFileName, System.Drawing.Imaging.ImageFormat.Bmp);
+
+                SetItalic(newNode);
+                ImageCompareDocument.DocumentElement.AppendChild(newNode);
+
+                int index = listBoxInspectItems.SelectedIndex;
+                _matches[index].Name = name;
+                _matches[index].ExpandCount = 0;
+                _matches[index].Italic = checkBoxItalic.Checked;
+                _matches[index].Text = textBoxText.Text;
+                listBoxInspectItems.Items.Clear();
+                for (int i = 0; i < _matches.Count; i++)
+                    listBoxInspectItems.Items.Add(_matches[i].Text);
+                listBoxInspectItems.SelectedIndex = index;
+
+                listBoxInspectItems_SelectedIndexChanged(null, null);
+            }
         }
 
     }

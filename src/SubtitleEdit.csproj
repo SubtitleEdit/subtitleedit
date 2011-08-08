@@ -95,6 +95,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controls\SETextBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Controls\VideoPlayerContainer.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -550,6 +553,7 @@
     <Compile Include="Logic\SubtitleFormats\CaraokeXml.cs" />
     <Compile Include="Logic\SubtitleFormats\Cavena890.cs" />
     <Compile Include="Logic\SubtitleFormats\DCSubtitle.cs" />
+    <Compile Include="Logic\SubtitleFormats\DvdStudioProSpace.cs" />
     <Compile Include="Logic\SubtitleFormats\Eeg708.cs" />
     <Compile Include="Logic\SubtitleFormats\FabSubtitler.cs" />
     <Compile Include="Logic\SubtitleFormats\FinalCutProTextXml.cs" />
@@ -582,6 +586,7 @@
     <Compile Include="Logic\SubtitleFormats\UnknownSubtitle7.cs" />
     <Compile Include="Logic\SubtitleFormats\DigiBeta.cs" />
     <Compile Include="Logic\SubtitleFormats\Wsb.cs" />
+    <Compile Include="Logic\SubtitleFormats\YouTubeAnnotations.cs" />
     <Compile Include="Logic\SubtitleFormats\YouTubeSbv.cs" />
     <Compile Include="Logic\SubtitleFormats\SubViewer10.cs" />
     <Compile Include="Logic\SubtitleFormats\TimedText.cs" />
