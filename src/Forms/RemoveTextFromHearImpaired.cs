@@ -368,6 +368,10 @@ namespace Nikse.SubtitleEdit.Forms
                                 }
 //                                newText = newText + Environment.NewLine + st.Pre + content + st.Post;
                                 newText = newText.Trim();
+
+                                if (text.StartsWith("(") && newText.EndsWith(")") && !newText.Contains("("))
+                                    newText = newText.TrimEnd(')');
+
                                 if (!IsHIDescription(st.StrippedText))
                                     noOfNames++;
                             }
