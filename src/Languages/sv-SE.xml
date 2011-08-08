@@ -1,12 +1,12 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 <Language Name="Swedish">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.1</Version>
-    <TranslatedBy>Översatt av Ted</TranslatedBy>
+    <Version>3.2</Version>
+    <TranslatedBy>Översätt av Ted</TranslatedBy>
     <CultureName>sv-SE</CultureName>
-    <OK>&amp;OK</OK>
-    <Cancel>C &amp; Avbryt</Cancel>
+    <OK>OK</OK>
+    <Cancel>Avbryt</Cancel>
     <Apply>Verkställ</Apply>
     <None>Inga</None>
     <Preview>Förhandsgranska</Preview>
@@ -53,23 +53,25 @@
     <PleaseWait>Vänligen vänta</PleaseWait>
     <SessionKey>Sessionsnyckel</SessionKey>
     <UserName>Användarnamn</UserName>
-    <UserNameAlreadyInUse>Användarnamnet finns redan</UserNameAlreadyInUse>
-    <WebServiceUrl>Webbtjänst url</WebServiceUrl>
+    <UserNameAlreadyInUse>Användarnamn redan i bruk</UserNameAlreadyInUse>
+    <WebServiceUrl>Webbtjänsten url</WebServiceUrl>
     <IP>IP</IP>
+    <VideoWindowTitle>Video - {0}</VideoWindowTitle>
+    <AudioWindowTitle>Ljud - {0}</AudioWindowTitle>
+    <ControlsWindowTitle>Kontroller - {0}</ControlsWindowTitle>
   </General>
   <About>
     <Title>Om Undertext Edit</Title>
-    <AboutText1>
-      Subtitle Edit är fri programvara under GNU Public License.
-      Du kan distribuera, modifiera och använda den fritt.
+    <AboutText1>Subtitle Edit är fri programvara under GNU Public License.
+Du kan distribuera, modifiera och använda den fritt.
 
-      C # källkod är tillgänglig på http://code.google.com/p/subtitleedit/
+C # källkod är tillgänglig på http://code.google.com/p/subtitleedit/
 
-      Besök http://www.nikse.dk för den senaste versionen.
+Besök http://www.nikse.dk för den senaste versionen.
 
-      Förslag är mycket välkomna.
+Förslag är mycket välkomna.
 
-      E-post: mailto:nikse.dk@gmail.com</AboutText1>
+E-post: mailto:nikse.dk@gmail.com</AboutText1>
   </About>
   <AddToNames>
     <Title>Lägg till namn/etc</Title>
@@ -84,6 +86,7 @@
     <VlcMediaPlayerNotFound>Subtitle Edit behöver VLC media 1.1.x-spelare eller nyare för att extrahera ljuddata</VlcMediaPlayerNotFound>
     <GoToVlcMediaPlayerHomePage>Vill du gå till VLC media player hemsida?</GoToVlcMediaPlayerHomePage>
     <GeneratingPeakFile>Generera maximum</GeneratingPeakFile>
+    <GeneratingSpectrogram>Generera spektrogram...</GeneratingSpectrogram>
     <ExtractingSeconds>Extrahera ljud: {0:0.0} sekunder</ExtractingSeconds>
     <ExtractingMinutes>Extrahera ljud: {0} {1:00} minuter</ExtractingMinutes>
   </AddWaveForm>
@@ -109,11 +112,11 @@
     <OnlyUnbreakLinesShorterThan>Radbryt bara rader kortare än</OnlyUnbreakLinesShorterThan>
   </AutoBreakUnbreakLines>
   <ChangeCasing>
-    <Title>Ändra formsättning</Title>
+    <Title>Ändra  formsättning</Title>
     <ChangeCasingTo>Ändra formsättning till</ChangeCasingTo>
     <NormalCasing>Normal formsättning. Meningar börjar med stor bokstav.</NormalCasing>
-    <FixNamesCasing>Fixa namn formsättning (via Lexikon \ Names,etc.xml)</FixNamesCasing>
-    <FixOnlyNamesCasing>Fixa endast namn formsättning (via Lexikon \ Names,etc.xml)</FixOnlyNamesCasing>
+    <FixNamesCasing>Fixa namn formsättning (via Lexikon\Namn,etc.xml)</FixNamesCasing>
+    <FixOnlyNamesCasing>Fixa bara namn formsättning (via Lexikon\Namn,etc.xml)</FixOnlyNamesCasing>
     <OnlyChangeAllUppercaseLines>Ändra endast rader med versaler.</OnlyChangeAllUppercaseLines>
     <AllUppercase>Versaler</AllUppercase>
     <AllLowercase>Gemener</AllLowercase>
@@ -132,9 +135,9 @@
     <Title>Byt bildfrekvens</Title>
     <ConvertFrameRateOfSubtitle>Konvertera bildfrekvens</ConvertFrameRateOfSubtitle>
     <FromFrameRate>Från bildfrekvens</FromFrameRate>
-    <ToFrameRate>Till bildfrekvens</ToFrameRate>
-    <FrameRateNotCorrect>Bildfrekvensen är inte korrekt</FrameRateNotCorrect>
-    <FrameRateNotChanged>Bildfrekvensen är detsamma - inget att konvertera</FrameRateNotChanged>
+    <ToFrameRate>Till  bildfrekvens</ToFrameRate>
+    <FrameRateNotCorrect>Bildfrekvens är inte korrekt</FrameRateNotCorrect>
+    <FrameRateNotChanged>Bildfrekvens är detsamma - ingenting att konvertera</FrameRateNotChanged>
   </ChangeFrameRate>
   <ChooseEncoding>
     <Title>Välj kodning</Title>
@@ -175,26 +178,68 @@
     <AbortedByUser>Avbröts av användaren</AbortedByUser>
     <ReadingSubtitleData>Läs undertext data...</ReadingSubtitleData>
     <RippingVobFileXofYZ>Rippa VOB-fil {1} av {2}: {0}</RippingVobFileXofYZ>
-    <WrongIfoType>IFO typ '{0} "och inte" DVDVIDEO-VTS ". {1} Försök med en annan fil än {2}</WrongIfoType>
+    <WrongIfoType>IFO typ '{0} "och inte" DVDVIDEO-VTS ". {1} Försök med en annan fil {2}</WrongIfoType>
   </DvdSubrip>
   <DvdSubRipChooseLanguage>
     <Title>Välj språk</Title>
     <ChooseLanguageStreamId>Välj språk (stream-id)</ChooseLanguageStreamId>
     <UnknownLanguage>Okänt språk</UnknownLanguage>
     <SubtitleImageXofYAndWidthXHeight>Undertext bild {0}/{1} - {2} x {3}</SubtitleImageXofYAndWidthXHeight>
-    <SubtitleImage>Undertext bild</SubtitleImage>
+    <SubtitleImage>Undertex bild</SubtitleImage>
   </DvdSubRipChooseLanguage>
+  <EbuSaveOtpions>
+    <Title>EBU sparalternativ</Title>
+    <GeneralSubtitleInformation>Allmän textinformation</GeneralSubtitleInformation>
+    <CodePageNumber>Sidnummer</CodePageNumber>
+    <DiskFormatCode>Disk format</DiskFormatCode>
+    <CharacterCodeTable>Teckentabell</CharacterCodeTable>
+    <LanguageCode>Språk</LanguageCode>
+    <OriginalProgramTitle>Original program titel</OriginalProgramTitle>
+    <OriginalEpisodeTitle>Original episode titel</OriginalEpisodeTitle>
+    <TranslatedProgramTitle>Översatt program titel</TranslatedProgramTitle>
+    <TranslatedEpisodeTitle>Översatt episode titel</TranslatedEpisodeTitle>
+    <TranslatorsName>Översättare namn</TranslatorsName>
+    <SubtitleListReferenceCode>Undertext referenskod</SubtitleListReferenceCode>
+    <CountryOfOrigin>Ursprungsland</CountryOfOrigin>
+    <RevisionNumber>Revisionsnummer</RevisionNumber>
+    <MaxNoOfDisplayableChars>Max#antal tecken per rad</MaxNoOfDisplayableChars>
+    <MaxNumberOfDisplayableRows>Max#antal rader</MaxNumberOfDisplayableRows>
+    <DiskSequenceNumber>Disk sekvensnummer</DiskSequenceNumber>
+    <TotalNumberOfDisks>Totalt antal diskar</TotalNumberOfDisks>
+    <Import>Importera...</Import>
+    <TextAndTimingInformation>Text och tidsanpassad info</TextAndTimingInformation>
+    <JustificationCode>Motivering</JustificationCode>
+    <Errors>Fel</Errors>
+    <ErrorsX>Fel: {0}</ErrorsX>
+    <MaxLengthError>Linje {0} överskrider max längd ({1}) av {2}: {3}</MaxLengthError>
+    <TextUnchangedPresentation>Oförändrad presentation</TextUnchangedPresentation>
+    <TextLeftJustifiedText>Vänsterjusterade text</TextLeftJustifiedText>
+    <TextCentredText>Centrerad text</TextCentredText>
+    <TextRightJustifiedText>Höger justerad text</TextRightJustifiedText>
+  </EbuSaveOtpions>
   <EffectKaraoke>
     <Title>Karaoke effekt</Title>
     <ChooseColor>Välj färg:</ChooseColor>
     <TotalMilliseconds>Totalt milli sek.:</TotalMilliseconds>
-    <EndDelayInMilliseconds>Avsluta eftersläpning milli sek.:</EndDelayInMilliseconds>
+    <EndDelayInMilliseconds>End eftersläpning milli sek.:</EndDelayInMilliseconds>
   </EffectKaraoke>
   <EffectTypewriter>
     <Title>Skrivmaskins effekt</Title>
     <TotalMilliseconds>Totalt milli sek.:</TotalMilliseconds>
-    <EndDelayInMillisecs>Avsluta eftersläpning milli sek.:</EndDelayInMillisecs>
+    <EndDelayInMillisecs>End eftersläpning milli sek.:</EndDelayInMillisecs>
   </EffectTypewriter>
+  <ExportPngXml>
+    <Title>Exportera BDN XML/PNG</Title>
+    <ImageSettings>Bildinställningar</ImageSettings>
+    <FontFamily>Teckensnittsfamilj</FontFamily>
+    <FontSize>Teckenstorlek</FontSize>
+    <FontColor>Teckenfärg</FontColor>
+    <BorderColor>Kantfärg</BorderColor>
+    <BorderWidth>Kantbredd</BorderWidth>
+    <AntiAlias>Anti alias</AntiAlias>
+    <ExportAllLines>Exportera alla linjer...</ExportAllLines>
+    <XImagesSavedInY>{0} bilder som sparats {1}</XImagesSavedInY>
+  </ExportPngXml>
   <FindDialog>
     <Title>Hitta</Title>
     <Find>Hitta</Find>
@@ -216,7 +261,7 @@
     <InverseSelection>Avmarkera valda</InverseSelection>
     <Back>&lt;&amp;Bakåt</Back>
     <Next>&amp;Nästa&gt;</Next>
-    <Step2>Steg 2/2 - Kontrollera fixar</Step2>
+    <Step2>Steg 2/2 - Verifiera fix</Step2>
     <Fixes>Fixade</Fixes>
     <Log>Logg</Log>
     <LineNumber>Rad #</LineNumber>
@@ -228,7 +273,7 @@
     <RemovedEmptyLineAtBottom>Tog bort tom rad längst ner</RemovedEmptyLineAtBottom>
     <RemovedEmptyLinesUnsedLineBreaks>Ta bort tomma rader/oanvända radbrytningar</RemovedEmptyLinesUnsedLineBreaks>
     <EmptyLinesRemovedX>Radera tomma rader: {0}</EmptyLinesRemovedX>
-    <FixOverlappingDisplayTimes>Fixa överlappande visnings tid</FixOverlappingDisplayTimes>
+    <FixOverlappingDisplayTimes>Fixa överlappad visnings tid</FixOverlappingDisplayTimes>
     <FixShortDisplayTimes>Fixa kort visnings tid</FixShortDisplayTimes>
     <FixLongDisplayTimes>Fixa lång visnings tid</FixLongDisplayTimes>
     <FixInvalidItalicTags>Fixa inaktuella kursiva taggar</FixInvalidItalicTags>
@@ -238,14 +283,17 @@
     <BreakLongLines>Bryt långa rader</BreakLongLines>
     <RemoveLineBreaks>Ta bort radbrytningar i korta stycken med bara en mening</RemoveLineBreaks>
     <RemoveLineBreaksAll>Ta bort radbrytningar i korta texter (alla utom dialoger)</RemoveLineBreaksAll>
-    <FixUppercaseIInsindeLowercaseWords>Fixa versalt "i" inuti gemener ord (OCR fel)</FixUppercaseIInsindeLowercaseWords>
+    <FixUppercaseIInsindeLowercaseWords>Fixa versal "i" inuti gemener ord (OCR fel)</FixUppercaseIInsindeLowercaseWords>
     <FixDoubleApostrophes>Fixa dubbla apostrof tecken ('') till en enda apostrof (")</FixDoubleApostrophes>
-    <AddPeriods>Lägg till punkt efter rader där nästa rad börjar med stor bokstav</AddPeriods>
+    <AddPeriods>Lägg till punkt efter rad där nästa rad börjar med stor bokstav</AddPeriods>
     <StartWithUppercaseLetterAfterParagraph>Börja med stor bokstav efter punkt</StartWithUppercaseLetterAfterParagraph>
     <StartWithUppercaseLetterAfterPeriodInsideParagraph>Börja med stor bokstav efter punkt inne i paragraf</StartWithUppercaseLetterAfterPeriodInsideParagraph>
     <FixLowercaseIToUppercaseI>Fixa ensam små "i" till "I" (engelska)</FixLowercaseIToUppercaseI>
     <FixCommonOcrErrors>Åtgärda vanliga OCR fel(med OCR ersätta lista)</FixCommonOcrErrors>
     <CommonOcrErrorsFixed>Vanliga OCR  fel fix(OcrReplaceList fil som används): {0}</CommonOcrErrorsFixed>
+    <RemoveSpaceBetweenNumber>Ta bort mellanslag mellan siffror</RemoveSpaceBetweenNumber>
+    <FixDialogsOnOneLine>Fixa dialogrutor på en rad</FixDialogsOnOneLine>
+    <RemoveSpaceBetweenNumbersFixed>Ta bort mellanrum mellan siffrorna fix: {0}</RemoveSpaceBetweenNumbersFixed>
     <FixDanishLetterI>Fixa danska bokstaven "i"</FixDanishLetterI>
     <FixSpanishInvertedQuestionAndExclamationMarks>Fixa spanska inverterad fråga och utropstecken</FixSpanishInvertedQuestionAndExclamationMarks>
     <AddMissingQuote>Lägg till saknad citat (")</AddMissingQuote>
@@ -266,21 +314,21 @@
     <FixLowercaseIToUppercaseICheckedButCurrentLanguageIsNotEnglish>"Fixa ensam små"i" till"I"(engelska)" är markerad men laddad undertext verkar inte vara engelska.</FixLowercaseIToUppercaseICheckedButCurrentLanguageIsNotEnglish>
     <Continue>Fortsätt</Continue>
     <ContinueAnyway>Fortsätt ändå?</ContinueAnyway>
-    <UncheckedFixLowercaseIToUppercaseI>Okontrollerad "Fixa ensam små" i "till" I "(engelska)"</UncheckedFixLowercaseIToUppercaseI>
+    <UncheckedFixLowercaseIToUppercaseI>Avmarkera "Fixa ensam små" i "till" I "(engelska)"</UncheckedFixLowercaseIToUppercaseI>
     <XIsChangedToUppercase>{0} Har förändrats till versaler</XIsChangedToUppercase>
     <FixFirstLetterToUppercaseAfterParagraph>Fixa första bokstaven till versal efter punkt</FixFirstLetterToUppercaseAfterParagraph>
     <MergeShortLine>Slå ihop korta rader</MergeShortLine>
-    <MergeShortLineAll>Slå ihop kort linje (alla utom dialoger)</MergeShortLineAll>
+    <MergeShortLineAll>Sammanfoga kort linje (alla utom dialoger)</MergeShortLineAll>
     <XLineBreaksAdded>{0} Radbrytning tillagd</XLineBreaksAdded>
     <BreakLongLine>Bryt långa rader</BreakLongLine>
     <FixLongDisplayTime>Fixa lång visad tid</FixLongDisplayTime>
     <FixInvalidItalicTag>Fixa inaktuell kursiv tag</FixInvalidItalicTag>
-    <FixShortDisplayTime>Fixa kortare visad tid</FixShortDisplayTime>
-    <FixOverlappingDisplayTime>Fixa överlappande visad tid</FixOverlappingDisplayTime>
+    <FixShortDisplayTime>Fixa kort visad tid</FixShortDisplayTime>
+    <FixOverlappingDisplayTime>Fixa överlappad visad tid</FixOverlappingDisplayTime>
     <FixInvalidItalicTagsExample>&lt;i&gt;What do i care.&lt;i&gt; -&gt; &lt;i&gt;What do I care.&lt;/i&gt;</FixInvalidItalicTagsExample>
-    <RemoveUnneededSpacesExample>Hej  du ,  det. -&gt; Hej du, det.</RemoveUnneededSpacesExample>
+    <RemoveUnneededSpacesExample>Hey   you , there. -&gt; Hey you, there.</RemoveUnneededSpacesExample>
     <RemoveUnneededPeriodsExample>Hey you!.. -&gt; Hey you!</RemoveUnneededPeriodsExample>
-    <FixMissingSpacesExample>Hey.du. -&gt; Hej. du.</FixMissingSpacesExample>
+    <FixMissingSpacesExample>Hey.You. -&gt; Hey. You.</FixMissingSpacesExample>
     <FixUppercaseIInsindeLowercaseWordsExample>The earth is fLat. -&gt; The earth is flat</FixUppercaseIInsindeLowercaseWordsExample>
     <FixLowercaseIToUppercaseIExample>What do i care. -&gt; What do I care.</FixLowercaseIToUppercaseIExample>
     <StartTimeLaterThanEndTime>Text nummer {0}: Starttid är senare än sluttid: {4} {1} -&gt; {2} {3}</StartTimeLaterThanEndTime>
@@ -296,7 +344,7 @@
     <XUnneededSpacesRemoved>{0} Onödiga utrymmen borttaget</XUnneededSpacesRemoved>
     <UnneededPeriod>Onödiga punkter</UnneededPeriod>
     <XUnneededPeriodsRemoved>{0} Onödiga punkter borttagna</XUnneededPeriodsRemoved>
-    <FixMissingSpace>Fixat saknat utrymme</FixMissingSpace>
+    <FixMissingSpace>Fixa saknat utrymme</FixMissingSpace>
     <XMissingSpacesAdded>{0} Saknat avstånd tillagd</XMissingSpacesAdded>
     <FixUppercaseIInsideLowercaseWord>Fixa versal "i" inuti gemener ord</FixUppercaseIInsideLowercaseWord>
     <XPeriodsAdded>{0} Punkt tillagd.</XPeriodsAdded>
@@ -310,12 +358,12 @@
     <FixDoubleDash>Fixa '--' -&gt; '...'</FixDoubleDash>
     <FixDoubleGreaterThan>Ta bort&gt;&gt;</FixDoubleGreaterThan>
     <FixEllipsesStart>Ta bort inledande '...'</FixEllipsesStart>
-    <FixMissingOpenBracket>Fixa saknade [hakparenteser</FixMissingOpenBracket>
+    <FixMissingOpenBracket>Fixa saknade [ hakparenteser</FixMissingOpenBracket>
     <FixMusicNotation>Byt symboler (t.ex. âTª) med önskad musik symbol</FixMusicNotation>
     <FixDoubleDashs>Fixa '--' s -&gt;'...' s</FixDoubleDashs>
     <FixDoubleGreaterThans>Ta bort&gt;&gt; från start</FixDoubleGreaterThans>
     <FixEllipsesStarts>Ta bort ... från start</FixEllipsesStarts>
-    <FixMissingOpenBrackets>Fixa saknade [s</FixMissingOpenBrackets>
+    <FixMissingOpenBrackets>Fixa saknad ['s </FixMissingOpenBrackets>
     <FixMusicNotations>Ersätt âTª' med ♫</FixMusicNotations>
     <XFixDoubleDash>{0} Fixa '--'</XFixDoubleDash>
     <XFixDoubleGreaterThan>{0} Ta bort&gt;&gt;</XFixDoubleGreaterThan>
@@ -324,14 +372,14 @@
     <XFixMusicNotation>{0} Fixa noter i rad</XFixMusicNotation>
     <FixDoubleDashExample>"Whoa-- um yeah!" -&gt; "Whoa... um yeah!"</FixDoubleDashExample>
     <FixDoubleGreaterThanExample>"&gt;&gt; Robert: Sup dude!" --&gt; "Robert: Sup dude!"</FixDoubleGreaterThanExample>
-    <FixEllipsesStartExample>"... och då kommer vi "-&gt;" och då kommer vi "</FixEllipsesStartExample>
-    <FixMissingOpenBracketExample>"Clanks] Titta ut!" -&gt; "[Clanks] Titta ut!"</FixMissingOpenBracketExample>
-    <FixMusicNotationExample>"âTª' Sweet Dreams are" -&gt; "♫ Sweet Dreams are"</FixMusicNotationExample>
+    <FixEllipsesStartExample>'... and then we' -&gt; 'and then we'</FixEllipsesStartExample>
+    <FixMissingOpenBracketExample>'clanks] Look out!' --&gt; '[clanks] Look out!'</FixMissingOpenBracketExample>
+    <FixMusicNotationExample>'âTª sweet dreams are' --&gt; '♫ sweet dreams are'</FixMusicNotationExample>
     <NumberOfImportantLogMessages>{0}Viktiga loggmeddelanden!</NumberOfImportantLogMessages>
-    <FixedOkXY>OK - '{0}': {1}</FixedOkXY>
+    <FixedOkXY>Fixad och OK - '{0}': {1}</FixedOkXY>
   </FixCommonErrors>
   <GetDictionaries>
-    <Title>Behövs ordböcker?</Title>
+    <Title>Behöver ordböcker?</Title>
     <DescriptionLine1>Textredigerings stavningskontroll är baserad på NHunspell motorn som</DescriptionLine1>
     <DescriptionLine2>använder ordböcker från Open Office.</DescriptionLine2>
     <GetDictionariesHere>Hämta ordböcker här:</GetDictionariesHere>
@@ -347,13 +395,22 @@
     <From>Från:</From>
     <To>Till:</To>
     <Translate>Översätt</Translate>
-    <PleaseWait>Var god vänta... Detta kan ta en stund</PleaseWait>
+    <PleaseWait>Vänta... Kan ta en stund</PleaseWait>
     <PoweredByGoogleTranslate>Drivs av Google översätt</PoweredByGoogleTranslate>
     <PoweredByMicrosoftTranslate>Drivs med Microsoft översätt</PoweredByMicrosoftTranslate>
   </GoogleTranslate>
+  <GoogleOrMicrosoftTranslate>
+    <Title>Google vs Microsoft översätt</Title>
+    <From>Från:</From>
+    <To>Till:</To>
+    <Translate>Översätt</Translate>
+    <SourceText>Original text</SourceText>
+    <GoogleTranslate>Google översätt</GoogleTranslate>
+    <MicrosoftTranslate>Microsoft översätt</MicrosoftTranslate>
+  </GoogleOrMicrosoftTranslate>
   <GoToLine>
-    <Title>Gå till undertextnummer</Title>
-    <XIsNotAValidNumber>{0} är inte ett giltigt nummer</XIsNotAValidNumber>
+    <Title>Gå till undertextnr.</Title>
+    <XIsNotAValidNumber>{0} är inte ett giltigt nr.</XIsNotAValidNumber>
   </GoToLine>
   <ImportText>
     <Title>Importera enbart text</Title>
@@ -374,7 +431,7 @@
     <PreviewLinesModifiedX>Förhandsgranska - modifierad punkter: {0}</PreviewLinesModifiedX>
   </ImportText>
   <Interjections>
-    <Title>Inlägg</Title>
+    <Title>Interjektioner</Title>
   </Interjections>
   <Main>
     <Menu>
@@ -385,18 +442,23 @@
         <Reopen>&amp;ÅterÖppna</Reopen>
         <Save>&amp;Spara</Save>
         <SaveAs>Spara &amp;som...</SaveAs>
-        <OpenOriginal>Öppna original subtitle (översättare läge)...</OpenOriginal>
-        <SaveOriginal>Spara original</SaveOriginal>
-        <CloseOriginal>Ta bort original</CloseOriginal>
+        <OpenOriginal>Öppna original undertext (översatt läge)...</OpenOriginal>
+        <SaveOriginal>Spara original undertext</SaveOriginal>
+        <CloseOriginal>Stäng original undertext</CloseOriginal>
         <OpenContainingFolder>Öppna mappen</OpenContainingFolder>
         <Compare>&amp;Jämför...</Compare>
-        <ImportOcrFromDvd>Importera/OCR textning från VOB/IFO (DVD) ...</ImportOcrFromDvd>
+        <ImportOcrFromDvd>Importera/OCR textning från vob/ifo (dvd) ...</ImportOcrFromDvd>
         <ImportOcrVobSubSubtitle>Importera/OCR VobSub (sub/idx) undertext...</ImportOcrVobSubSubtitle>
-        <ImportBluRaySupFile>Importera/OCR BluRay (.sup) undertext...</ImportBluRaySupFile>
+        <ImportBluRaySupFile>Importera/OCR BluRay undertext...</ImportBluRaySupFile>
         <ImportSubtitleFromMatroskaFile>Importera undertext från Matroska fil...</ImportSubtitleFromMatroskaFile>
         <ImportSubtitleWithManualChosenEncoding>Importera undertext med manuell valda kodningen...</ImportSubtitleWithManualChosenEncoding>
         <ImportText>Importera enbart text...</ImportText>
         <ImportTimecodes>Importera tid koder...</ImportTimecodes>
+        <Export>Export</Export>
+        <ExportBdnXml>BDN xml/png...</ExportBdnXml>
+        <ExportCavena890>Cavena 890...</ExportCavena890>
+        <ExportEbu>EBU stl...</ExportEbu>
+        <ExportPac>PAC (Screen Electronics)...</ExportPac>
         <Exit>&amp;Avsluta</Exit>
       </File>
       <Edit>
@@ -418,13 +480,15 @@
         <ChangeCasing>Ändra formsättning...</ChangeCasing>
         <ChangeFrameRate>Byt bildfrekvens...</ChangeFrameRate>
         <MergeShortLines>Sammanfoga korta rader...</MergeShortLines>
-        <SplitLongLines>Dela långa rader...</SplitLongLines>
+        <SplitLongLines>Splitta långa rader...</SplitLongLines>
         <MinimumDisplayTimeBetweenParagraphs>Minsta tid mellan textrader</MinimumDisplayTimeBetweenParagraphs>
         <SortBy>Sortera efter</SortBy>
         <TextAlphabetically>Text - alfabetiskt</TextAlphabetically>
         <TextSingleLineMaximumLength>Text - enkel rad</TextSingleLineMaximumLength>
         <TextTotalLength>Text - total längd</TextTotalLength>
         <TextNumberOfLines>Text - antal rader</TextNumberOfLines>
+        <ShowOriginalTextInAudioAndVideoPreview>Visa original text i audio/video-förhandsvisningar</ShowOriginalTextInAudioAndVideoPreview>
+        <MakeNewEmptyTranslationFromCurrentSubtitle>Skapa ny tom översättning från nuvarande textning</MakeNewEmptyTranslationFromCurrentSubtitle>
         <SplitSubtitle>Splitta undertext...</SplitSubtitle>
         <AppendSubtitle>Lägg till undertext...</AppendSubtitle>
       </Tools>
@@ -435,13 +499,15 @@
         <CloseVideo>Stäng videofil</CloseVideo>
         <ShowHideVideo>Visa/dölj video</ShowHideVideo>
         <ShowHideWaveForm>Visa/dölj ljudformat</ShowHideWaveForm>
-        <UnDockVideoControls>Un-docka video kontroller</UnDockVideoControls>
-        <ReDockVideoControls>Re-docka video kontroller</ReDockVideoControls>
+        <ShowHideWaveformAndSpectrogram>Visa/dölj ljudformat och spektrogram</ShowHideWaveformAndSpectrogram>
+        <UnDockVideoControls>Un-docka videokontroller</UnDockVideoControls>
+        <ReDockVideoControls>Re-docka videokontroller</ReDockVideoControls>
       </Video>
       <SpellCheck>
         <Title>Stavningskontroll</Title>
         <SpellCheck>&amp;Stavningskontroll</SpellCheck>
         <FindDoubleWords>Hitta dubbel ord</FindDoubleWords>
+        <FindDoubleLines>Hitta dubbla linjer</FindDoubleLines>
         <GetDictionaries>Hämta lexikon</GetDictionaries>
         <AddToNamesEtcList>Lägg till ord till namn / ect</AddToNamesEtcList>
       </SpellCheck>
@@ -450,9 +516,10 @@
         <AdjustAllTimes>Justera alla tider (visa tidigare/senare )</AdjustAllTimes>
         <VisualSync>Visuell synk...</VisualSync>
         <PointSync>Punkt synk...</PointSync>
+        <PointSyncViaOtherSubtitle>Punkt synkronisera via andra undertitel...</PointSyncViaOtherSubtitle>
       </Synchronization>
       <AutoTranslate>
-        <Title>Översätta</Title>
+        <Title>Översätt</Title>
         <TranslatePoweredByGoogle>Översätt (som drivs av Google )</TranslatePoweredByGoogle>
         <TranslatePoweredByMicrosoft>Översätt (som drivs av Microsoft )</TranslatePoweredByMicrosoft>
         <TranslateFromSwedishToDanish>Översätter från svenska till danska (drivs av nikse.dk )</TranslateFromSwedishToDanish>
@@ -465,9 +532,9 @@
       <Networking>
         <Title>Nätverk</Title>
         <StartNewSession>Starta ny session</StartNewSession>
-        <JoinSession>Gå med i session</JoinSession>
-        <ShowSessionInfoAndLog>Visa session info och logg</ShowSessionInfoAndLog>
-        <Chat>Chat</Chat>
+        <JoinSession>Gå med session</JoinSession>
+        <ShowSessionInfoAndLog>Visa sessionen info och logga</ShowSessionInfoAndLog>
+        <Chat>Chatta</Chat>
         <LeaveSession>Lämna session</LeaveSession>
       </Networking>
       <Help>
@@ -490,15 +557,18 @@
         <ShowHideVideo>Visa/dölj video</ShowHideVideo>
       </ToolBar>
       <ContextMenu>
+        <SubStationAlphaSetStyle>(Advanced) Sub Station Alpha - Set Style</SubStationAlphaSetStyle>
         <Cut>Klipp</Cut>
         <Copy>Kopiera</Copy>
         <Paste>Klistra in</Paste>
         <Delete>Radera</Delete>
+        <SplitLineAtCursorPosition>Splitta rad vid markören</SplitLineAtCursorPosition>
         <SelectAll>Markera alla</SelectAll>
         <InsertFirstLine>Infoga rad</InsertFirstLine>
         <InsertBefore>Infoga före</InsertBefore>
         <InsertAfter>Infoga efter</InsertAfter>
-        <InsertSubtitleAfter>Infoga underrubrik efter denna linje...</InsertSubtitleAfter>
+        <InsertSubtitleAfter>Lägg till text efter denna linje...</InsertSubtitleAfter>
+        <CopyToClipboard>Kopiera som text till urklipp</CopyToClipboard>
         <Split>Splitta</Split>
         <MergeSelectedLines>Sammanfoga markerade rader</MergeSelectedLines>
         <MergeWithLineBefore>Slå ihop med raden före</MergeWithLineBefore>
@@ -513,6 +583,7 @@
         <KaraokeEffect>Karaoke effekt...</KaraokeEffect>
         <ShowSelectedLinesEarlierLater>Visa valda rader tidigare/senare...</ShowSelectedLinesEarlierLater>
         <VisualSyncSelectedLines>Visuellt synkroniserad valda rader...</VisualSyncSelectedLines>
+        <GoogleAndMicrosoftTranslateSelectedLine>Google/Microsoft översätt original rad</GoogleAndMicrosoftTranslateSelectedLine>
         <GoogleTranslateSelectedLines>Google översätt valda rader...</GoogleTranslateSelectedLines>
         <AdjustDisplayDurationForSelectedLines>Justera tidslängd för markerade rader...</AdjustDisplayDurationForSelectedLines>
         <FixCommonErrorsInSelectedLines>Åtgärda vanliga fel på utvalda rader...</FixCommonErrorsInSelectedLines>
@@ -559,13 +630,14 @@
       <GoToSubtitlePositionAndPause>Gå till textnummer och pausa</GoToSubtitlePositionAndPause>
       <SetStartTime>Sätt som &amp;start tid</SetStartTime>
       <SetEndTimeAndGoToNext>Sätt &amp;slut tid &amp;&amp; gå till nästa</SetEndTimeAndGoToNext>
+      <AdjustedViaEndTime>Justeras via sluttid {0}</AdjustedViaEndTime>
       <SetEndTime>Sätt s&amp;lut tid</SetEndTime>
       <SetstartTimeAndOffsetOfRest>Sätt sta&amp;rt tid och kompensera resten</SetstartTimeAndOffsetOfRest>
       <SearchTextOnline>Sök text online</SearchTextOnline>
       <GoogleTranslate>Google översätt</GoogleTranslate>
       <GoogleIt>Google det</GoogleIt>
-      <SecondsBackShort>&lt;&lt;Sök</SecondsBackShort>
-      <SecondsForwardShort>Sök&gt;&gt;</SecondsForwardShort>
+      <SecondsBackShort>&lt;&lt;</SecondsBackShort>
+      <SecondsForwardShort>&gt;&gt;</SecondsForwardShort>
       <VideoPosition>Video position</VideoPosition>
       <TranslateTip>Tips: Använd &lt;alt+pil up/ner&gt; för att gå till föregående/nästa undertext</TranslateTip>
       <CreateTip>Tips: Använd &lt;ctrl+piltangent vänster/höger&gt;</CreateTip>
@@ -573,8 +645,8 @@
       <BeforeChangingTimeInWaveFormX>Innan du ändrar tiden i ljudformat: {0}</BeforeChangingTimeInWaveFormX>
       <NewTextInsertAtX>Ny text infogas vid {0}</NewTextInsertAtX>
       <Center>Center</Center>
-      <PlayRate>Uppspelningshastighet</PlayRate>
-      <Slow>Långsam</Slow>
+      <PlayRate>Spel hastighet</PlayRate>
+      <Slow>Sakta</Slow>
       <Normal>Normal</Normal>
       <Fast>Snabb</Fast>
       <VeryFast>Mycket snabb</VeryFast>
@@ -582,9 +654,9 @@
     <SaveChangesToUntitled>Spara ändringar i odöpt?</SaveChangesToUntitled>
     <SaveChangesToX>Spara ändringar i {0}?</SaveChangesToX>
     <SaveChangesToUntitledOriginal>Spara ändringar till odöpt original?</SaveChangesToUntitledOriginal>
-    <SaveChangesToOriginalX>Spara ändringar i original {0}?</SaveChangesToOriginalX>
+    <SaveChangesToOriginalX>Spara ändringar i originalet {0}?</SaveChangesToOriginalX>
     <SaveSubtitleAs>Spara undertext som...</SaveSubtitleAs>
-    <SaveOriginalSubtitleAs>Spara original text som...</SaveOriginalSubtitleAs>
+    <SaveOriginalSubtitleAs>Spara original undertext som...</SaveOriginalSubtitleAs>
     <NoSubtitleLoaded>Ingen text laddad</NoSubtitleLoaded>
     <VisualSyncSelectedLines>Visuell synk - utvalda rader</VisualSyncSelectedLines>
     <VisualSyncTitle>Visuell synk</VisualSyncTitle>
@@ -600,7 +672,7 @@
     <FileIsEmptyOrShort>Filen är tom eller mycket kort!</FileIsEmptyOrShort>
     <FileNotFound>Filen hittades inte: {0}</FileNotFound>
     <SavedSubtitleX>Sparad undertext {0}</SavedSubtitleX>
-    <SavedOriginalSubtitleX>Sparad ursprunglig text {0}</SavedOriginalSubtitleX>
+    <SavedOriginalSubtitleX>Spara original textning {0}</SavedOriginalSubtitleX>
     <FileOnDiskModified>Fil på disk modifierad</FileOnDiskModified>
     <OverwriteModifiedFile>Skriv över filen {0} ändra {1} {2} {3} med aktuell fil laddad från disk vid {4} {5}?</OverwriteModifiedFile>
     <UnableToSaveSubtitleX>Det går inte att spara textfilen {0}</UnableToSaveSubtitleX>
@@ -614,8 +686,8 @@
     <OpenVideoFile>Öppna videofil...</OpenVideoFile>
     <NewFrameRateUsedToCalculateTimeCodes>Nya bildfrekvens ({0}) använts för att beräkna start/sluttid koder</NewFrameRateUsedToCalculateTimeCodes>
     <NewFrameRateUsedToCalculateFrameNumbers>Ny bildfrekvens ({0}) används för att beräkna start/slut nummer</NewFrameRateUsedToCalculateFrameNumbers>
-    <FindContinue>Sökandet post hittades inte.
- Vill du starta från början av dokumentet och söka en gång till?</FindContinue>
+    <FindContinue>Sökt post hittades inte.
+ Vill du starta från början av dokumentet och söka igen?</FindContinue>
     <FindContinueTitle>Fortsätt leta?</FindContinueTitle>
     <XFoundAtLineNumberY>'{0}' Finns på rad nummer {1}</XFoundAtLineNumberY>
     <XNotFound>'{0}' Hittades inte</XNotFound>
@@ -632,8 +704,8 @@
     <CreateAdjustChangesApplied>Skapa/anpassa rader tillämpa ändringarna</CreateAdjustChangesApplied>
     <SelectedLines>Markerade rader</SelectedLines>
     <BeforeDisplayTimeAdjustment>Före visad  tidjustering</BeforeDisplayTimeAdjustment>
-    <DisplayTimeAdjustedX>Visa tidjustering: {0}</DisplayTimeAdjustedX>
-    <DisplayTimesAdjustedX>Visad tidjustering: {0}</DisplayTimesAdjustedX>
+    <DisplayTimeAdjustedX>Visad tidjustering: {0}</DisplayTimeAdjustedX>
+    <DisplayTimesAdjustedX>Visa justerade tider: {0}</DisplayTimesAdjustedX>
     <StarTimeAdjustedX>Starttid justerad: {0}</StarTimeAdjustedX>
     <BeforeCommonErrorFixes>Innan vanligt fel åtgärdas</BeforeCommonErrorFixes>
     <CommonErrorsFixedInSelectedLines>Vanliga fel fixade på utvalda rader</CommonErrorsFixedInSelectedLines>
@@ -658,7 +730,7 @@
     <GoogleTranslate>Google översätt</GoogleTranslate>
     <MicrosoftTranslate>Microsoft översätt</MicrosoftTranslate>
     <BeforeGoogleTranslation>Före Google översättning</BeforeGoogleTranslation>
-    <SelectedLinesTranslated>Vald översatta rader</SelectedLinesTranslated>
+    <SelectedLinesTranslated>Valda rader översatt</SelectedLinesTranslated>
     <SubtitleTranslated>Undertext översatt</SubtitleTranslated>
     <TranslateSwedishToDanish>Översätt laddad svensk text till danska</TranslateSwedishToDanish>
     <TranslateSwedishToDanishWarning>Översätt laddad SVENSKA (är du säker att det är svenska?) undertext till danska?</TranslateSwedishToDanishWarning>
@@ -722,10 +794,11 @@
     <InvalidVobSubHeader>Rubrik inte giltigt VobSub fil: {0}</InvalidVobSubHeader>
     <OpenVobSubFile>Öppna VobSub (sub/idx) undertext...</OpenVobSubFile>
     <VobSubFiles>VobSub undertext filer</VobSubFiles>
-    <OpenBluRaySupFile>Öppna BluRay (.sup) undertext...</OpenBluRaySupFile>
+    <OpenBluRaySupFile>Öppna BluRay undertext...</OpenBluRaySupFile>
     <BluRaySupFiles>BluRay undertext filer</BluRaySupFiles>
     <BeforeImportingVobSubFile>Innan du importerar VobSub undertext</BeforeImportingVobSubFile>
     <BeforeImportingBluRaySupFile>Innan du importerar BluRay undertext</BeforeImportingBluRaySupFile>
+    <BeforeImportingBdnXml>Innan du importerar BDN xml-fil</BeforeImportingBdnXml>
     <BeforeShowSelectedLinesEarlierLater>Före visa valda rader tidigare/senare</BeforeShowSelectedLinesEarlierLater>
     <ShowSelectedLinesEarlierLaterPerformed>Visa tidigare/senare utförs på utvalda rader</ShowSelectedLinesEarlierLaterPerformed>
     <DoubleWordsViaRegEx>Dubbel ord via regex {0}</DoubleWordsViaRegEx>
@@ -741,9 +814,9 @@
     <NameXNotAddedToNamesEtcList>Namnet '{0}' har inte lagts till i namn/etc</NameXNotAddedToNamesEtcList>
     <XLinesSelected>{0} rader som valts</XLinesSelected>
     <UnicodeMusicSymbolsAnsiWarning>Undertext innehåller unicode noter. Spara använder ANSI filkodningen och kommer att förlora dessa. Fortsätt med att spara?</UnicodeMusicSymbolsAnsiWarning>
-    <NegativeTimeWarning>Undertext innehåller negativa tid koder. Fortsätt med att spara?</NegativeTimeWarning>
+    <NegativeTimeWarning>Undertext innehåller negativa tids kod. Fortsätt med att spara?</NegativeTimeWarning>
     <BeforeMergeShortLines>Före sammanfoga korta rader</BeforeMergeShortLines>
-    <BeforeSplitLongLines>Innan dela långa rader</BeforeSplitLongLines>
+    <BeforeSplitLongLines>Före splitta långa rader</BeforeSplitLongLines>
     <MergedShortLinesX>Antal rader sammanfogade: {0}</MergedShortLinesX>
     <BeforeSetMinimumDisplayTimeBetweenParagraphs>Innan fixa minsta visningstid mellan rader</BeforeSetMinimumDisplayTimeBetweenParagraphs>
     <XMinimumDisplayTimeBetweenParagraphsChanged>Antal rader med minsta visningstid  mellan rader: {0}</XMinimumDisplayTimeBetweenParagraphsChanged>
@@ -755,23 +828,25 @@
     <TimeCodeImportedFromXY>Tid koder importeras från {0}: {1}</TimeCodeImportedFromXY>
     <BeforeInsertSubtitleAtVideoPosition>Innan infoga undertext på video position</BeforeInsertSubtitleAtVideoPosition>
     <BeforeSetStartTimeAndOffsetTheRest>Innan sätt starttid och  kompensera resten</BeforeSetStartTimeAndOffsetTheRest>
+    <BeforeSetEndAndVideoPosition>Före ange sluttid på video position och automatiskt beräkna start</BeforeSetEndAndVideoPosition>
     <ContinueWithCurrentSpellCheck>Fortsätt med nuvarande stavningskontroll?</ContinueWithCurrentSpellCheck>
-    <CharactersPerSecond>Tecken/sec: {0:0.00}</CharactersPerSecond>
-    <GetFrameRateFromVideoFile>Få bildhastighet från videofil</GetFrameRateFromVideoFile>
+    <CharactersPerSecond>Tecken/sek: {0:0.00}</CharactersPerSecond>
+    <GetFrameRateFromVideoFile>Få bildfrekvens från videofil</GetFrameRateFromVideoFile>
     <NetworkMessage>Nytt meddelande: {0} ({1}): {2}</NetworkMessage>
-    <NetworkUpdate>Linje uppdaterad: {0} ({1}): Index = {2}, Text = {3}</NetworkUpdate>
-    <NetworkInsert>Rad inlagd: {0} ({1}): Index = {2}, Text = {3}</NetworkInsert>
+    <NetworkUpdate>Rad uppdaterad: {0} ({1}): Index = {2}, Text = {3}</NetworkUpdate>
+    <NetworkInsert>Rad införs: {0} ({1}): Index = {2}, Text = {3}</NetworkInsert>
     <NetworkDelete>Rad raderad: {0} ({1}): Index = {2}</NetworkDelete>
     <NetworkNewUser>Ny användare: {0} ({1})</NetworkNewUser>
-    <NetworkByeUser>Bye {0} ({1})</NetworkByeUser>
+    <NetworkByeUser>Hej {0} ({1})</NetworkByeUser>
     <NetworkUnableToConnectToServer>Kan inte ansluta till servern: {0}</NetworkUnableToConnectToServer>
     <UserAndAction>Användare/åtgärd</UserAndAction>
     <NetworkMode>Nätverk läge</NetworkMode>
-    <XStartedSessionYAtZ>{0}: Började session {1} på {2}</XStartedSessionYAtZ>
-    <SpellChekingViaWordXLineYOfX>Stavningskontroll använder Word {0} - line {1} / {2}</SpellChekingViaWordXLineYOfX>
+    <XStartedSessionYAtZ>{0}: Började sessionen {1} på {2}</XStartedSessionYAtZ>
+    <SpellChekingViaWordXLineYOfX>Stavningskontroll med Word {0} - line {1} / {2}</SpellChekingViaWordXLineYOfX>
     <UnableToStartWord>Det går inte att starta Microsoft Word</UnableToStartWord>
-    <SpellCheckAbortedXCorrections>Stavningskontroll avbröts. {0} rader ändrades.</SpellCheckAbortedXCorrections>
+    <SpellCheckAbortedXCorrections>Stavningskontroll avbruten. {0} rader ändrades.</SpellCheckAbortedXCorrections>
     <SpellCheckCompletedXCorrections>Stavningskontroll slutförd. {0} rader ändrades.</SpellCheckCompletedXCorrections>
+    <OpenOtherSubtitle>Öppna annan undertext</OpenOtherSubtitle>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Välj undertext från Matroska fil</Title>
@@ -785,6 +860,7 @@
     <NumberOfMergesX>Antal sammanslagning: {0}</NumberOfMergesX>
     <LineNumber>Rad#</LineNumber>
     <MergedText>Sammanslagen text</MergedText>
+    <OnlyMergeContinuationLines>Endast sammanslagen fortsättnings rad</OnlyMergeContinuationLines>
   </MergedShortLines>
   <MultipleReplace>
     <Title>Flera ersätta</Title>
@@ -804,30 +880,30 @@
     <SearchType>Typ av sökning</SearchType>
   </MultipleReplace>
   <NetworkChat>
-    <Title>Chat</Title>
+    <Title>Chatta</Title>
     <Send>Skicka</Send>
   </NetworkChat>
   <NetworkJoin>
     <Title>Gå med i nätverk session</Title>
-    <Information>Gå med i befintlig session där flera personer
- kan redigera i samma text fil (samarbete)</Information>
-    <Join>Gå med </Join>
+    <Information>Gå med befintlig session där flera personer
+kan redigera i samma textningsfil (samarbete)</Information>
+    <Join>Gå med</Join>
   </NetworkJoin>
   <NetworkLogAndInfo>
-    <Title>Nätverk session info och logg</Title>
-    <Log>Log:</Log>
+    <Title>Nätverk session info och logga</Title>
+    <Log>Logg:</Log>
   </NetworkLogAndInfo>
   <NetworkStart>
     <Title>Starta nätverk session</Title>
     <ConnectionTo>Ansluta till {0}...</ConnectionTo>
     <Information>Starta ny session där flera personer
- kan redigeras i samma text fil (samarbete)</Information>
+kan redigera i samma textningsfil (samarbete)</Information>
     <Start>Starta</Start>
   </NetworkStart>
   <RemoveTextFromHearImpaired>
     <Title>Ta bort text för hörselskadade</Title>
     <RemoveTextConditions>Ta bort text villkor</RemoveTextConditions>
-    <RemoveTextBetween>Detta tar bort text mellan:</RemoveTextBetween>
+    <RemoveTextBetween>Ta bort text mellan:</RemoveTextBetween>
     <SquareBrackets>'[' Och ']'</SquareBrackets>
     <Brackets>'{' Och '}'</Brackets>
     <Parentheses>'(' Och ')'</Parentheses>
@@ -841,7 +917,7 @@
     <After>Efter</After>
     <LinesFoundX>Rader hittades: {0}</LinesFoundX>
     <RemoveTextIfContains>Ta bort text om den innehåller:</RemoveTextIfContains>
-    <RemoveInterjections>Ta bort interjektioner (shh, hmm, etc.)</RemoveInterjections>
+    <RemoveInterjections>Ta bort interjektioner (Shh, hmm, etc.)</RemoveInterjections>
     <EditInterjections>Redigera...</EditInterjections>
   </RemoveTextFromHearImpaired>
   <ReplaceDialog>
@@ -874,7 +950,7 @@
     <General>Allmänt</General>
     <Toolbar>Verktygsfält</Toolbar>
     <VideoPlayer>Videospelare</VideoPlayer>
-    <WaveForm>Ljudformat</WaveForm>
+    <WaveformAndSpectrogram>Ljudformat/spektrogram</WaveformAndSpectrogram>
     <Tools>Verktyg</Tools>
     <WordLists>Ordlistor</WordLists>
     <SsaStyle>Font Stil</SsaStyle>
@@ -894,7 +970,7 @@
     <DefaultFrameRate>Standard bildfrekvens</DefaultFrameRate>
     <DefaultFileEncoding>Standard filkodningen</DefaultFileEncoding>
     <AutoDetectAnsiEncoding>Autoupptäck ANSI-kodning</AutoDetectAnsiEncoding>
-    <SubtitleLineMaximumLength>Textrad max. längd</SubtitleLineMaximumLength>
+    <SubtitleLineMaximumLength>Undertext max. längd</SubtitleLineMaximumLength>
     <AutoWrapWhileTyping>Auto-wrap när du skriver</AutoWrapWhileTyping>
     <SubtitleFont>Typsnitt för textning</SubtitleFont>
     <SubtitleFontSize>Undertext teckenstorlek</SubtitleFontSize>
@@ -904,7 +980,7 @@
     <SpellChecker>Stavningskontroll</SpellChecker>
     <RememberRecentFiles>Kom ihåg senast använda filer (för återuppta)</RememberRecentFiles>
     <StartWithLastFileLoaded>Börja med sist laddad fil</StartWithLastFileLoaded>
-    <RememberSelectedLine>Kom ihåg vald linje</RememberSelectedLine>
+    <RememberSelectedLine>Kom ihåg vald rad</RememberSelectedLine>
     <RememberPositionAndSize>Kom ihåg huvudfönstret position och storlek</RememberPositionAndSize>
     <StartInSourceView>Starta i ursprungskällan</StartInSourceView>
     <RemoveBlankLinesWhenOpening>Ta bort tomma rader när du öppnar en undertext</RemoveBlankLinesWhenOpening>
@@ -918,19 +994,21 @@
     <AutoBackupEveryMinute>Varje minut</AutoBackupEveryMinute>
     <AutoBackupEveryFiveMinutes>Var 5: e minut</AutoBackupEveryFiveMinutes>
     <AutoBackupEveryFifteenMinutes>Var 15: e minut</AutoBackupEveryFifteenMinutes>
-    <AllowEditOfOriginalSubtitle>Tillåt redigering av original text</AllowEditOfOriginalSubtitle>
+    <AllowEditOfOriginalSubtitle>Tillåt redigering av original undertext</AllowEditOfOriginalSubtitle>
+    <PromptDeleteLines>Fråga efter raderade rader</PromptDeleteLines>
     <VideoEngine>Video motor</VideoEngine>
     <DirectShow>DirectShow</DirectShow>
-    <DirectShowDescription>Quartz.dll i system32-mappen(directshow)</DirectShowDescription>
+    <DirectShowDescription>Quartz.dll i system32-mappen</DirectShowDescription>
     <ManagedDirectX>Managed DirectX</ManagedDirectX>
     <ManagedDirectXDescription>Microsoft.DirectX.AudioVideoPlayback -. NET hanterad kod från DirectX</ManagedDirectXDescription>
-    <WindowsMediaPlayer>Windows Media Player</WindowsMediaPlayer>
-    <WindowsMediaPlayerDescription>WMP ActiveX-kontroll</WindowsMediaPlayerDescription>
+    <MPlayer>MPlayer</MPlayer>
+    <MPlayerDescription>MPlayer2/Mplayer</MPlayerDescription>
     <VlcMediaPlayer>VLC Media Player</VlcMediaPlayer>
     <VlcMediaPlayerDescription>Libvlc.dll från VLC Media Player 1.1.0 eller senare</VlcMediaPlayerDescription>
     <ShowStopButton>Visa stoppknapp</ShowStopButton>
     <DefaultVolume>Standard volym</DefaultVolume>
     <VolumeNotes>0 är inget ljud, 100 är högsta volym</VolumeNotes>
+    <PreviewFontSize>Undertext förhandsgranskning textstorlek</PreviewFontSize>
     <MainWindowVideoControls>Huvudfönster video kontroller</MainWindowVideoControls>
     <CustomSearchTextAndUrl>Anpassad sökning text och url</CustomSearchTextAndUrl>
     <WaveFormAppearance>Ljudformat inställning</WaveFormAppearance>
@@ -940,8 +1018,13 @@
     <WaveFormSelectedColor>Välj färg</WaveFormSelectedColor>
     <WaveFormBackgroundColor>Bakgrundsfärg</WaveFormBackgroundColor>
     <WaveFormTextColor>Text färg</WaveFormTextColor>
-    <WaveFormsFolderEmpty>Tömm "Ljudformat" mapp</WaveFormsFolderEmpty>
-    <WaveFormsFolderInfo>"Ljudformat" mappen innehåller {0} filer ({1:0.00} MB)</WaveFormsFolderInfo>
+    <WaveformAndSpectrogramsFolderEmpty>Töm "spektrogram" och "ljudformat" mappar</WaveformAndSpectrogramsFolderEmpty>
+    <WaveformAndSpectrogramsFolderInfo>"Ljudformatr" och "spektrogram" mappar innehåller {0} filer ({1:0.00} MB)</WaveformAndSpectrogramsFolderInfo>
+    <Spectrogram>Spektrogram</Spectrogram>
+    <GenerateSpectrogram>Generera spektrogram</GenerateSpectrogram>
+    <SpectrogramAppearance>Spektrogram utseende</SpectrogramAppearance>
+    <SpectrogramOneColorGradient>Ett färggradient</SpectrogramOneColorGradient>
+    <SpectrogramClassic>Classic</SpectrogramClassic>
     <SubStationAlphaStyle>Sub Station Alpha style</SubStationAlphaStyle>
     <ChooseFont>Välj teckensnitt</ChooseFont>
     <ChooseColor>Välj färg</ChooseColor>
@@ -977,16 +1060,27 @@
     <MergeLinesShorterThan>Sammanfoga rader kortare än</MergeLinesShorterThan>
     <MusicSymbol>Musik symbol</MusicSymbol>
     <MusicSymbolsToReplace>Symbol som ska ersättas (separera med mellanslag)</MusicSymbolsToReplace>
-    <FixCommonOcrErrorsUseHardcodedRules>Åtgärda vanliga OCR fel - använder också hårdkodade regler</FixCommonOcrErrorsUseHardcodedRules>
+    <FixCommonOcrErrorsUseHardcodedRules>Fixa vanliga OCR fel - använda hårdkodade regler</FixCommonOcrErrorsUseHardcodedRules>
+    <Shortcuts>Genvägar</Shortcuts>
+    <Shortcut>Genväg</Shortcut>
+    <Control>Kontroll</Control>
+    <Alt>Alt</Alt>
+    <Shift>Shift</Shift>
+    <Key>Key</Key>
+    <TextBox>Textruta</TextBox>
+    <UpdateShortcut>Uppdatera</UpdateShortcut>
+    <ShortcutIsNotValid>Genväg är inte giltig: {0}</ShortcutIsNotValid>
+    <ToggleDockUndockOfVideoControls>Växla dock/undock video kontroll</ToggleDockUndockOfVideoControls>
+    <AdjustViaEndAutoStartAndGoToNext>Justera via ändläge och gå till nästa</AdjustViaEndAutoStartAndGoToNext>
   </Settings>
   <ShowEarlierLater>
     <Title>Visa valda rader tidigare/senare</Title>
-    <TitleAll>Visa alla linjer tidigare/senare</TitleAll>
+    <TitleAll>Visa alla rader tidigare/senare</TitleAll>
     <ShowEarlier>Visa tidigare</ShowEarlier>
     <ShowLater>Visa senare</ShowLater>
     <TotalAdjustmentX>Total justering: {0}</TotalAdjustmentX>
-    <AllLines>Alla linjer</AllLines>
-    <SelectedLinesonly>Endast valda linjer</SelectedLinesonly>
+    <AllLines>Alla rader</AllLines>
+    <SelectedLinesonly>Valda rader bara</SelectedLinesonly>
   </ShowEarlierLater>
   <ShowHistory>
     <Title>Historia (för ångra)</Title>
@@ -1022,13 +1116,13 @@
     <SpellCheckAborted>Stavningskontroll avbruten</SpellCheckAborted>
   </SpellCheck>
   <SplitLongLines>
-    <Title>Dela långa rader</Title>
-    <SingleLineMaximumLength>Enkelrad maximal längd</SingleLineMaximumLength>
-    <LineMaximumLength>Rad maximal längd</LineMaximumLength>
-    <LineContinuationBeginEndStrings>Radfortsättning börjar/slut strängar</LineContinuationBeginEndStrings>
-    <NumberOfSplits>Antal splittningar: {0}</NumberOfSplits>
-    <LongestSingleLineIsXAtY>Längsta enkel rad längd är {0} på rad {1}</LongestSingleLineIsXAtY>
-    <LongestLineIsXAtY>Längsta totala radlängden är {0} på rad {1}</LongestLineIsXAtY>
+    <Title>Splitta långa rader</Title>
+    <SingleLineMaximumLength>En rad maximala längd</SingleLineMaximumLength>
+    <LineMaximumLength>Raders maximala längd</LineMaximumLength>
+    <LineContinuationBeginEndStrings>Rad fortsättning inled/slut strängar</LineContinuationBeginEndStrings>
+    <NumberOfSplits>Antal delar: {0}</NumberOfSplits>
+    <LongestSingleLineIsXAtY>Längsta enda rad längd är {0} på rad {1}</LongestSingleLineIsXAtY>
+    <LongestLineIsXAtY>Längsta totala radlängd är {0} på rad {1}</LongestLineIsXAtY>
   </SplitLongLines>
   <SplitSubtitle>
     <Title>Dela undertext</Title>
@@ -1050,12 +1144,13 @@
   </StartNumberingFrom>
   <PointSync>
     <Title>Punkt synkronisera</Title>
+    <TitleViaOtherSubtitle>Punkt synkronisera via andra undertext</TitleViaOtherSubtitle>
     <SyncHelp>Sätt minst två synkpunkter till utkast synk</SyncHelp>
     <SetSyncPoint>Sätt synk punkt</SetSyncPoint>
     <RemoveSyncPoint>Ta bort synk punkt</RemoveSyncPoint>
     <SyncPointsX>Synk punkter: {0}</SyncPointsX>
-    <Info>En synk punkt kommer att justera position, två eller flera synk punkter justerar position och hastighet</Info>
-    <ApplySync>Verkställ</ApplySync>
+    <Info>En synk punkt kommer att justera positionen. två eller flera synkronisering punkter kommer att justera position och hastighet</Info>
+    <ApplySync>Applicera</ApplySync>
   </PointSync>
   <UnknownSubtitle>
     <Title>Okänd undertext typ</Title>
@@ -1092,7 +1187,7 @@
   </VobSubEditCharacters>
   <VobSubOcr>
     <Title>Import/OCR VobSub (sub/idx) undertext</Title>
-    <TitleBluRay>Import/OCR BluRay (.sup) undertext</TitleBluRay>
+    <TitleBluRay>Import/OCR BluRay undertext</TitleBluRay>
     <OcrMethod>OCR-metod</OcrMethod>
     <OcrViaModi>OCR via Microsoft Office Document Imaging (MODI). Kräver MS Office</OcrViaModi>
     <OcrViaTesseract>OCR via Tesseract</OcrViaTesseract>
@@ -1121,14 +1216,20 @@
     <UnknownWords>Okända ord</UnknownWords>
     <OcrAutoCorrectionSpellchecking>OCR automatisk korrigering / stavningskontroll</OcrAutoCorrectionSpellchecking>
     <FixOcrErrors>Fixa OCR fel</FixOcrErrors>
+    <ImportTextWithMatchingTimeCodes>Importera text med matchande tidkoder...</ImportTextWithMatchingTimeCodes>
     <SaveSubtitleImageAs>Spara undertext bild som...</SaveSubtitleImageAs>
-    <SaveAllSubtitleImagesAs>Spara alla bilder (png/bdn xml)...</SaveAllSubtitleImagesAs>
+    <SaveAllSubtitleImagesAsBdnXml>Spara alla bilder (PNG/bdn xml)...</SaveAllSubtitleImagesAsBdnXml>
+    <SaveAllSubtitleImagesWithHtml>Spara alla bilder med html-index...</SaveAllSubtitleImagesWithHtml>
     <XImagesSavedInY>{0} bilder som sparats i {1}</XImagesSavedInY>
     <TryModiForUnknownWords>Prova MS MODI OCR för okända ord</TryModiForUnknownWords>
     <DictionaryX>Ordbok: {0}</DictionaryX>
     <RightToLeft>Höger till vänster</RightToLeft>
     <ShowOnlyForcedSubtitles>Visa endast klämd text</ShowOnlyForcedSubtitles>
     <UseTimeCodesFromIdx>Använd tid koder från. Idx fil</UseTimeCodesFromIdx>
+    <NoMatch>&lt;No match&gt;</NoMatch>
+    <AutoTransparentBackground>Auto transparent bakgrund</AutoTransparentBackground>
+    <InspectCompareMatchesForCurrentImage>Inspektera jämföra matcher för aktuella bilden</InspectCompareMatchesForCurrentImage>
+    <EditLastAdditions>Redigera sista bilden jämför versioner ...</EditLastAdditions>
   </VobSubOcr>
   <VobSubOcrCharacter>
     <Title>VobSub - Manuell bild till text</Title>
@@ -1139,13 +1240,24 @@
     <CharactersAsText>Tecken som text</CharactersAsText>
     <Italic>&amp;Kursiv</Italic>
     <Abort>&amp;Avbryt</Abort>
+    <Skip>&amp;Hoppa</Skip>
+    <Nordic>Nordic</Nordic>
+    <Spanish>Spanska</Spanish>
+    <German>Tyska</German>
+    <AutoSubmitOnFirstChar>Auto lägg &amp;vid första tecken</AutoSubmitOnFirstChar>
+    <EditLastX>Redigera senaste: {0}</EditLastX>
   </VobSubOcrCharacter>
+  <VobSubOcrCharacterInspect>
+    <Title>Inspektera jämföra matcher för aktuella bilden</Title>
+    <InspectItems>Inspektera objekt</InspectItems>
+  </VobSubOcrCharacterInspect>
   <VobSubOcrNewFolder>
     <Title>Ny mapp</Title>
     <Message>Namn på nytt tecken databasmappen</Message>
   </VobSubOcrNewFolder>
   <WaveForm>
     <ClickToAddWaveForm>Klicka för att lägga till ljudformat</ClickToAddWaveForm>
+    <ClickToAddWaveformAndSpectrogram>Klicka för att lägga till ljudformat/spektrogram</ClickToAddWaveformAndSpectrogram>
     <Seconds>Sekunder</Seconds>
     <ZoomIn>Zooma in</ZoomIn>
     <ZoomOut>Zooma ut</ZoomOut>
@@ -1156,5 +1268,8 @@
     <MergeWithPrevious>Sammanfoa med tidigare</MergeWithPrevious>
     <MergeWithNext>Sammanfoga med nästa</MergeWithNext>
     <PlaySelection>Spela aktuell</PlaySelection>
+    <ShowWaveformAndSpectrogram>Visa ljudformat och spektrogram</ShowWaveformAndSpectrogram>
+    <ShowWaveformOnly>Visa bara ljudformat</ShowWaveformOnly>
+    <ShowSpectrogramOnly>Visa bara spektrogram</ShowSpectrogramOnly>
   </WaveForm>
 </Language>
