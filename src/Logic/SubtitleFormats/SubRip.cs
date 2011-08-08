@@ -139,6 +139,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                             _paragraph.Text += Environment.NewLine;
                         _paragraph.Text += RemoveBadChars(line).TrimEnd();
                     }
+                    else if (string.IsNullOrEmpty(line) && string.IsNullOrEmpty(_paragraph.Text))
+                    {
+                        _paragraph.Text = string.Empty;
+                    }
                     else
                     {
                         subtitle.Paragraphs.Add(_paragraph);
@@ -161,15 +165,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 return false;
 
             return true;
-
-            //string letters = Utilities.GetLetters(true, true, false);
-            //foreach (char ch in next)
-            //{
-            //    if (letters.Contains(ch.ToString()))
-            //        return true;
-            //}
-            //return false;
-
         }
 
         private string RemoveBadChars(string line)
