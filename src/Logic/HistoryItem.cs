@@ -11,8 +11,10 @@ namespace Nikse.SubtitleEdit.Logic
         public DateTime FileModified { get; set; }
         public Subtitle Subtitle { get; set; }
         public string SubtitleFormatFriendlyName { get; set; }
+        public Subtitle OriginalSubtitle { get; set; }
+        public string OriginalSubtitleFileName { get; set; }
 
-        public HistoryItem(int index, Subtitle subtitle, string description, string fileName, DateTime fileModified, string subtitleFormatFriendlyName)
+        public HistoryItem(int index, Subtitle subtitle, string description, string fileName, DateTime fileModified, string subtitleFormatFriendlyName, Subtitle originalSubtitle, string originalSubtitleFileName)
         {
             Index = index;
             Timestamp = DateTime.Now;
@@ -21,6 +23,8 @@ namespace Nikse.SubtitleEdit.Logic
             FileName = fileName;
             FileModified = fileModified;
             SubtitleFormatFriendlyName = subtitleFormatFriendlyName;
+            OriginalSubtitle = new Subtitle(originalSubtitle);
+            OriginalSubtitleFileName = originalSubtitleFileName;
         }
     }
 }

@@ -543,7 +543,7 @@ namespace Nikse.SubtitleEdit.Forms
         void timerAddHistoryWhenDone_Tick(object sender, EventArgs e)
         {
             _timerAddHistoryWhenDone.Stop();
-            _subtitle.MakeHistoryForUndo(_timerAddHistoryWhenDoneText, GetCurrentSubtitleFormat(), _fileDateTime);
+            _subtitle.MakeHistoryForUndo(_timerAddHistoryWhenDoneText, GetCurrentSubtitleFormat(), _fileDateTime, _subtitleAlternate, _subtitleAlternateFileName);
         }
 
         void AudioWaveForm_OnZoomedChanged(object sender, EventArgs e)
@@ -1158,7 +1158,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         public void MakeHistoryForUndo(string description)
         {
-            _subtitle.MakeHistoryForUndo(description, GetCurrentSubtitleFormat(), _fileDateTime);
+            _subtitle.MakeHistoryForUndo(description, GetCurrentSubtitleFormat(), _fileDateTime, _subtitleAlternate, _subtitleAlternateFileName);
         }
 
         /// <summary>
@@ -1996,7 +1996,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else
             {
-                _subtitle.MakeHistoryForUndo(string.Format(_language.BeforeConvertingToX, GetCurrentSubtitleFormat().FriendlyName), _oldSubtitleFormat, _fileDateTime);
+                _subtitle.MakeHistoryForUndo(string.Format(_language.BeforeConvertingToX, GetCurrentSubtitleFormat().FriendlyName), _oldSubtitleFormat, _fileDateTime, _subtitleAlternate, _subtitleAlternateFileName);
                 _oldSubtitleFormat.RemoveNativeFormatting(_subtitle);
                 SaveSubtitleListviewIndexes();
                 SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
@@ -3421,7 +3421,7 @@ namespace Nikse.SubtitleEdit.Forms
                     string oldFileName = _fileName;
                     DateTime oldFileDateTime = _fileDateTime;
 
-                    _fileName = _subtitle.UndoHistory(showHistory.SelectedIndex, out subtitleFormatFriendlyName, out _fileDateTime);
+                    _fileName = _subtitle.UndoHistory(showHistory.SelectedIndex, out subtitleFormatFriendlyName, out _fileDateTime, out _subtitleAlternate, out _subtitleAlternateFileName);
 
                     if (string.Compare(oldFileName, _fileName, true) == 0)
                         _fileDateTime = oldFileDateTime; // undo will not give overwrite-newer-file warning
@@ -3878,6 +3878,7 @@ namespace Nikse.SubtitleEdit.Forms
                         if (i <_subtitleAlternate.Paragraphs.Count)
                             _subtitleAlternate.Paragraphs.RemoveAt(i);
                     }
+                    _subtitleAlternate.Renumber(1);
                 }
 
                 var indexes = new List<int>();
@@ -3981,6 +3982,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (Configuration.Settings.General.AllowEditOfOriginalSubtitle && _subtitleAlternate != null && _subtitleAlternate.Paragraphs.Count > 0)
             {
                 _subtitleAlternate.InsertParagraphInCorrectTimeOrder(new Paragraph(newParagraph));
+                _subtitleAlternate.Renumber(1);
             }
 
             if (_networkSession != null)
@@ -4056,6 +4058,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (Configuration.Settings.General.AllowEditOfOriginalSubtitle && _subtitleAlternate != null && _subtitleAlternate.Paragraphs.Count > 0)
             {
                 _subtitleAlternate.InsertParagraphInCorrectTimeOrder(new Paragraph(newParagraph));
+                _subtitleAlternate.Renumber(1);
             }
 
             if (_networkSession != null)
@@ -4472,6 +4475,7 @@ namespace Nikse.SubtitleEdit.Forms
                             originalNew.Text = Utilities.AutoBreakLine(lines[1]);
                         }
                         _subtitleAlternate.InsertParagraphInCorrectTimeOrder(originalNew);
+                        _subtitleAlternate.Renumber(1);
                     }
                 }
 
@@ -4661,6 +4665,7 @@ namespace Nikse.SubtitleEdit.Forms
                             original.Text = ChangeAllLinesItalictoSingleItalic(original.Text);
                             original.Text = Utilities.AutoBreakLine(original.Text);
                             _subtitleAlternate.Paragraphs.Remove(originalNext);
+                            _subtitleAlternate.Renumber(1);
                         }
                     }
 
@@ -8555,7 +8560,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                     if (!string.IsNullOrEmpty(pluginResult) && pluginResult.Length > 10 && text != pluginResult)
                     {
-                        _subtitle.MakeHistoryForUndo(string.Format("Before running plugin: {0} {1}", name, version), GetCurrentSubtitleFormat(), _fileDateTime);
+                        _subtitle.MakeHistoryForUndo(string.Format("Before running plugin: {0} {1}", name, version), GetCurrentSubtitleFormat(), _fileDateTime, _subtitleAlternate, _subtitleAlternateFileName);
                         string[] lineArray = pluginResult.Split(Environment.NewLine.ToCharArray());
                         List<string> lines = new List<string>();
                         foreach (string line in lineArray)
@@ -10010,6 +10015,8 @@ namespace Nikse.SubtitleEdit.Forms
                                     index++;
                                 }
                                 _changeAlternate = subtitle.Paragraphs.Count > 0;
+                                if (_changeAlternate)
+                                    _subtitleAlternate.Renumber(1);
                             }
                         }
                     }
