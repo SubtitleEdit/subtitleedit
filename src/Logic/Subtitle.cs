@@ -122,13 +122,13 @@ namespace Nikse.SubtitleEdit.Logic
             return null;
         }
 
-        public void MakeHistoryForUndo(string description, SubtitleFormat subtitleFormat, DateTime fileModified)
+        public void MakeHistoryForUndo(string description, SubtitleFormat subtitleFormat, DateTime fileModified, Subtitle original, string originalSubtitleFileName)
         {
             // don't fill memory with history - use a max rollback points
             if (_history.Count > 50)
                 _history.RemoveAt(0);
 
-            _history.Add(new HistoryItem(_history.Count, this, description, FileName, fileModified, subtitleFormat.FriendlyName));            
+            _history.Add(new HistoryItem(_history.Count, this, description, FileName, fileModified, subtitleFormat.FriendlyName, original, originalSubtitleFileName));            
         }
 
         public bool CanUndo
@@ -139,14 +139,7 @@ namespace Nikse.SubtitleEdit.Logic
             }
         }
 
-        public void UndoLast()
-        {
-            string subtitleFormatFriendlyName;
-            DateTime fileModified;
-            UndoHistory(_history.Count - 1, out subtitleFormatFriendlyName, out fileModified);
-        }
-
-        public string UndoHistory(int index, out string subtitleFormatFriendlyName, out DateTime fileModified)
+        public string UndoHistory(int index, out string subtitleFormatFriendlyName, out DateTime fileModified, out Subtitle originalSubtitle, out string originalSubtitleFileName)
         {
             _paragraphs.Clear();
             foreach (Paragraph p in _history[index].Subtitle.Paragraphs)
@@ -155,6 +148,9 @@ namespace Nikse.SubtitleEdit.Logic
             subtitleFormatFriendlyName = _history[index].SubtitleFormatFriendlyName;
             FileName = _history[index].FileName;
             fileModified = _history[index].FileModified;
+            originalSubtitle = _history[index].OriginalSubtitle;
+            originalSubtitleFileName = _history[index].OriginalSubtitleFileName;
+
             return FileName;
         }
 
