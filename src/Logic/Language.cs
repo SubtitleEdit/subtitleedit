@@ -1460,6 +1460,7 @@ can edit in same subtitle file (collaboration)",
             {
                 Title = "Inspect compare matches for current image",
                 InspectItems = "Inspect items",
+                AddBetterMatch = "Add better match",
             };
 
 

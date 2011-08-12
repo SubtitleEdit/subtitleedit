@@ -1663,6 +1663,9 @@ namespace Nikse.SubtitleEdit.Logic
 
         internal static Paragraph GetOriginalParagraph(int index, Paragraph paragraph, List<Paragraph> originalParagraphs)
         {
+            if (index < 0)
+                return null;
+
             if (index < originalParagraphs.Count && Math.Abs(originalParagraphs[index].StartTime.TotalMilliseconds - paragraph.StartTime.TotalMilliseconds) < 50)
                 return originalParagraphs[index];
 

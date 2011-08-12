@@ -66,6 +66,7 @@ namespace Nikse.SubtitleEdit.Forms
         const double EndDelay = 0.05;
         int _autoContinueDelayCount = -1;
         long _lastTextKeyDownTicks = 0;
+        long _lastHistoryTicks = 0;
         System.Windows.Forms.Timer _timerAddHistoryWhenDone = new Timer();
         string _timerAddHistoryWhenDoneText;
         double? _audioWaveFormRightClickSeconds = null;
@@ -287,7 +288,7 @@ namespace Nikse.SubtitleEdit.Forms
                 // Initialize events etc. for audio wave form
                 audioVisualizer.OnDoubleClickNonParagraph += AudioWaveForm_OnDoubleClickNonParagraph;
                 audioVisualizer.OnPositionSelected += AudioWaveForm_OnPositionSelected;
-                audioVisualizer.OnTimeChanged += AudioWaveForm_OnTimeChanged;
+                audioVisualizer.OnTimeChanged += AudioWaveForm_OnTimeChanged; // start and/or end position of paragraph changed
                 audioVisualizer.OnNewSelectionRightClicked += AudioWaveForm_OnNewSelectionRightClicked;
                 audioVisualizer.OnParagraphRightClicked += AudioWaveForm_OnParagraphRightClicked;
                 audioVisualizer.OnNonParagraphRightClicked += new AudioVisualizer.PositionChangedEventHandler(AudioWaveForm_OnNonParagraphRightClicked);
@@ -553,14 +554,36 @@ namespace Nikse.SubtitleEdit.Forms
 
         void AudioWaveForm_OnTimeChangedAndOffsetRest(double seconds, Paragraph paragraph)
         {
-            int index = _subtitle.GetIndex(paragraph);
-            if (mediaPlayer.VideoPlayer != null && index >= 0)
+            if (mediaPlayer.VideoPlayer == null)
+                return;
+
+            int index = _subtitle.Paragraphs.IndexOf(paragraph);
+            if (index < 0)
+            {
+                if (_subtitleAlternate != null && SubtitleListview1.IsAlternateTextColumnVisible && Configuration.Settings.General.ShowOriginalAsPreviewIfAvailable)
+                {
+                    index = _subtitleAlternate.GetIndex(paragraph);
+                    if (index >= 0)
+                    {
+                        var current = Utilities.GetOriginalParagraph(index, paragraph, _subtitle.Paragraphs);
+                        if (current != null)
+                        {
+                            index = _subtitle.Paragraphs.IndexOf(current);
+                        }
+                    }
+                }
+                else if (_subtitleAlternate != null && SubtitleListview1.IsAlternateTextColumnVisible)
+                {
+                    index = _subtitle.GetIndex(paragraph);
+                }
+            }
+            if (index >= 0)
             {
                 SubtitleListview1.SelectIndexAndEnsureVisible(index);
                 mediaPlayer.CurrentPosition = seconds;
                 ButtonSetStartAndOffsetRestClick(null, null);
-                audioVisualizer.Invalidate();
-            }   
+            }
+            audioVisualizer.Invalidate();
         }
 
         void AudioWaveForm_OnPause(object sender, EventArgs e)
@@ -628,24 +651,97 @@ namespace Nikse.SubtitleEdit.Forms
             contextMenuStripWaveForm.Show(MousePosition.X, MousePosition.Y);
         }
 
-        void AudioWaveForm_OnTimeChanged(double seconds, Paragraph paragraph)
+        void AudioWaveForm_OnTimeChanged(double seconds, Paragraph paragraph, Paragraph beforeParagraph)
         {
+            if (beforeParagraph == null)
+                beforeParagraph = paragraph;
+
             _change = true;
-            MakeHistoryForUndoWhenNoMoreChanges(string.Format(_language.VideoControls.BeforeChangingTimeInWaveFormX, "#" + paragraph.Number + " " + paragraph.Text));
             _makeHistory = false;
-            int index = _subtitle.GetIndex(paragraph);
+            int index = _subtitle.Paragraphs.IndexOf(paragraph);
             if (index == _subtitleListViewIndex)
             {
+                // Make history item for rollback (change paragraph back for history + change again)
+                _subtitle.Paragraphs[index] = new Paragraph(beforeParagraph);
+                MakeHistoryForUndoOnlyIfNotResent(string.Format(_language.VideoControls.BeforeChangingTimeInWaveFormX, "#" + paragraph.Number + " " + paragraph.Text));
+                _subtitle.Paragraphs[index] = paragraph;
+
+                Paragraph original = null;
+                if (_subtitleAlternate != null && SubtitleListview1.IsAlternateTextColumnVisible)
+                    original = Utilities.GetOriginalParagraph(index, beforeParagraph, _subtitleAlternate.Paragraphs);
+
                 timeUpDownStartTime.TimeCode = paragraph.StartTime;
                 decimal durationInSeconds = (decimal) (paragraph.Duration.TotalSeconds);
                 if (durationInSeconds >= numericUpDownDuration.Minimum && durationInSeconds <= numericUpDownDuration.Maximum)
                     numericUpDownDuration.Value = durationInSeconds;
+
+                if (original != null)
+                {
+                    original.StartTime.TotalMilliseconds = paragraph.StartTime.TotalMilliseconds;
+                    original.EndTime.TotalMilliseconds = paragraph.EndTime.TotalMilliseconds;
+                }
             }
             else
             {
-                SubtitleListview1.SetStartTime(index, paragraph);
-                SubtitleListview1.SetDuration(index, paragraph);
+                if (_subtitleAlternate != null && SubtitleListview1.IsAlternateTextColumnVisible && Configuration.Settings.General.ShowOriginalAsPreviewIfAvailable)
+                {
+                    index = _subtitleAlternate.GetIndex(paragraph);
+                    if (index >= 0)
+                    {
+                        // Make history item for rollback (change paragraph back for history + change again)
+                        _subtitleAlternate.Paragraphs[index] = new Paragraph(beforeParagraph);
+                        MakeHistoryForUndoOnlyIfNotResent(string.Format(_language.VideoControls.BeforeChangingTimeInWaveFormX, "#" + paragraph.Number + " " + paragraph.Text));
+                        _subtitleAlternate.Paragraphs[index] = paragraph;
+
+                        var current = Utilities.GetOriginalParagraph(index, beforeParagraph, _subtitle.Paragraphs);
+                        if (current != null)
+                        {
+                            current.StartTime.TotalMilliseconds = paragraph.StartTime.TotalMilliseconds;
+                            current.EndTime.TotalMilliseconds = paragraph.EndTime.TotalMilliseconds;
+
+                            index = _subtitle.GetIndex(current);
+
+                            SubtitleListview1.SetStartTime(index, paragraph);
+                            SubtitleListview1.SetDuration(index, paragraph);
+                        }
+                    }
+                }
+                else if (_subtitleAlternate != null && SubtitleListview1.IsAlternateTextColumnVisible)
+                {
+                    index = _subtitle.GetIndex(paragraph);
+                    if (index >= 0)
+                    {
+                        // Make history item for rollback (change paragraph back for history + change again)
+                        _subtitle.Paragraphs[index] = new Paragraph(beforeParagraph);
+                        MakeHistoryForUndoOnlyIfNotResent(string.Format(_language.VideoControls.BeforeChangingTimeInWaveFormX, "#" + paragraph.Number + " " + paragraph.Text));
+                        _subtitle.Paragraphs[index] = paragraph;
+
+                        var original = Utilities.GetOriginalParagraph(index, beforeParagraph, _subtitleAlternate.Paragraphs);
+                        if (original != null)
+                        {
+                            original.StartTime.TotalMilliseconds = paragraph.StartTime.TotalMilliseconds;
+                            original.EndTime.TotalMilliseconds = paragraph.EndTime.TotalMilliseconds;
+                        }
+                        SubtitleListview1.SetStartTime(index, paragraph);
+                        SubtitleListview1.SetDuration(index, paragraph);
+                    } 
+                }
+                else
+                {
+                    if (index >= 0)
+                    {
+                        // Make history item for rollback (change paragraph back for history + change again)
+                        _subtitle.Paragraphs[index] = new Paragraph(beforeParagraph);
+                        MakeHistoryForUndoOnlyIfNotResent(string.Format(_language.VideoControls.BeforeChangingTimeInWaveFormX, "#" + paragraph.Number + " " + paragraph.Text));
+                        _subtitle.Paragraphs[index] = paragraph;
+                    }
+
+                    SubtitleListview1.SetStartTime(index, paragraph);
+                    SubtitleListview1.SetDuration(index, paragraph);
+                }
             }
+            beforeParagraph.StartTime.TotalMilliseconds = paragraph.StartTime.TotalMilliseconds;
+            beforeParagraph.EndTime.TotalMilliseconds = paragraph.EndTime.TotalMilliseconds;
             _makeHistory = true;
         }
 
@@ -895,7 +991,6 @@ namespace Nikse.SubtitleEdit.Forms
             toolStripMenuItemInsertAfter.Text = _language.Menu.ContextMenu.InsertAfter;
             toolStripMenuItemInsertSubtitle.Text = _language.Menu.ContextMenu.InsertSubtitleAfter;
 
-            toolStripMenuItemCopySourceText.Visible = !string.IsNullOrEmpty(_language.Menu.ContextMenu.CopyToClipboard); //TODO: remove in 3.2 final
             toolStripMenuItemCopySourceText.Text = _language.Menu.ContextMenu.CopyToClipboard;
 
             splitLineToolStripMenuItem.Text = _language.Menu.ContextMenu.Split;
@@ -1162,14 +1257,16 @@ namespace Nikse.SubtitleEdit.Forms
         }
 
         /// <summary>
-        /// Add undo history - but only if nothing happens for half a second
+        /// Add undo history - but only if last entry is older than 500 ms
         /// </summary>
         /// <param name="description">Undo description</param>
-        public void MakeHistoryForUndoWhenNoMoreChanges(string description)
+        public void MakeHistoryForUndoOnlyIfNotResent(string description)
         {
-            _timerAddHistoryWhenDone.Stop();
-            _timerAddHistoryWhenDoneText = description;
-            _timerAddHistoryWhenDone.Start();
+            if ((DateTime.Now.Ticks - _lastHistoryTicks) > 10000 * 500) // only if last typed char was entered > 700 milliseconds 
+            {
+                MakeHistoryForUndo(description);
+                _lastHistoryTicks = DateTime.Now.Ticks;
+            }
         }
 
         private void ShowVisualSync(bool onlySelectedLines)
@@ -4461,8 +4558,8 @@ namespace Nikse.SubtitleEdit.Forms
                         lines = originalCurrent.Text.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
                         if (lines.Length == 2 && (lines[0].EndsWith(".") || lines[0].EndsWith("!") || lines[0].EndsWith("?")))
                         {
-                            currentParagraph.Text = Utilities.AutoBreakLine(lines[0]);
-                            newParagraph.Text = Utilities.AutoBreakLine(lines[1]);
+                            originalCurrent.Text = Utilities.AutoBreakLine(lines[0]);
+                            originalNew.Text = Utilities.AutoBreakLine(lines[1]);
                         }
                         else
                         {
@@ -4523,6 +4620,23 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     SubtitleListview1.SelectedIndexChanged -= SubtitleListview1_SelectedIndexChanged;
                     MakeHistoryForUndo(_language.BeforeMergeLines);
+
+                    if (_subtitleAlternate != null)
+                    {
+                        Paragraph prevOriginal = Utilities.GetOriginalParagraph(firstSelectedIndex, prevParagraph, _subtitleAlternate.Paragraphs);
+                        Paragraph currentOriginal = Utilities.GetOriginalParagraph(firstSelectedIndex + 1, currentParagraph, _subtitleAlternate.Paragraphs);
+
+                        if (currentOriginal != null)
+                        {
+                            prevOriginal.Text = prevOriginal.Text.Replace(Environment.NewLine, " ");
+                            prevOriginal.Text += Environment.NewLine + currentOriginal.Text.Replace(Environment.NewLine, " ");
+                            prevOriginal.Text = ChangeAllLinesItalictoSingleItalic(prevOriginal.Text);
+                            prevOriginal.Text = Utilities.AutoBreakLine(prevOriginal.Text);
+                            prevOriginal.EndTime = currentOriginal.EndTime;
+                            _subtitleAlternate.Paragraphs.Remove(currentOriginal);
+                            _subtitleAlternate.Renumber(1);
+                        }
+                    }
 
                     prevParagraph.Text = prevParagraph.Text.Replace(Environment.NewLine, " ");
                     prevParagraph.Text += Environment.NewLine + currentParagraph.Text.Replace(Environment.NewLine, " ");
@@ -4664,6 +4778,7 @@ namespace Nikse.SubtitleEdit.Forms
                             original.Text += Environment.NewLine + originalNext.Text.Replace(Environment.NewLine, " ");
                             original.Text = ChangeAllLinesItalictoSingleItalic(original.Text);
                             original.Text = Utilities.AutoBreakLine(original.Text);
+                            original.EndTime = originalNext.EndTime;
                             _subtitleAlternate.Paragraphs.Remove(originalNext);
                             _subtitleAlternate.Renumber(1);
                         }
@@ -4771,7 +4886,14 @@ namespace Nikse.SubtitleEdit.Forms
 
                     // update _subtitle + listview
                     string oldDuration = currentParagraph.Duration.ToString();
-                    currentParagraph.EndTime.TotalMilliseconds = currentParagraph.StartTime.TotalMilliseconds + ((double)numericUpDownDuration.Value * 1000.0);
+
+                    Paragraph temp = new Paragraph(currentParagraph);
+                    temp.EndTime.TotalMilliseconds = currentParagraph.StartTime.TotalMilliseconds + ((double)numericUpDownDuration.Value * 1000.0);
+
+                    if (_makeHistory)
+                        MakeHistoryForUndoOnlyIfNotResent(string.Format(_language.DisplayTimeAdjustedX, "#" + currentParagraph.Number + ": " + oldDuration + " -> " + temp.Duration.ToString()));
+
+                    currentParagraph.EndTime.TotalMilliseconds = temp.EndTime.TotalMilliseconds;
                     SubtitleListview1.SetDuration(firstSelectedIndex, currentParagraph);
                     _change = true;
 
@@ -4790,9 +4912,6 @@ namespace Nikse.SubtitleEdit.Forms
                         currentParagraph.CalculateFrameNumbersFromTimeCodes(CurrentFrameRate);
                         currentParagraph.CalculateTimeCodesFromFrameNumbers(CurrentFrameRate);
                     }
-
-                    if (_makeHistory)
-                        MakeHistoryForUndoWhenNoMoreChanges(string.Format(_language.DisplayTimeAdjustedX, "#" + currentParagraph.Number + ": " +  oldDuration + " -> " + currentParagraph.Duration.ToString()));
                 }
             }
         }
@@ -4863,6 +4982,9 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (_subtitleListViewIndex >= 0)
             {
+                if (_makeHistory)
+                    MakeHistoryForUndoOnlyIfNotResent(string.Format(_language.StarTimeAdjustedX, "#" + (_subtitleListViewIndex + 1).ToString() + ": " + timeUpDownStartTime.TimeCode.ToString()));                
+
                 int firstSelectedIndex = FirstSelectedIndex;
                 Paragraph oldParagraph = _subtitle.GetParagraphOrDefault(firstSelectedIndex);
                 if (oldParagraph != null)
@@ -4872,9 +4994,6 @@ namespace Nikse.SubtitleEdit.Forms
                 _change = true;
 
                 UpdateOriginalTimeCodes(oldParagraph);
-
-                if (_makeHistory)
-                    MakeHistoryForUndoWhenNoMoreChanges(string.Format(_language.StarTimeAdjustedX, "#" + (_subtitleListViewIndex+1).ToString() + ": " + timeUpDownStartTime.TimeCode.ToString()));
             }
         }
 
@@ -6261,6 +6380,11 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 if (_subtitleAlternate != null && _subtitleAlternate.Paragraphs.Count > 0 && _networkSession == null)
                 {
+                    int firstIndex = FirstSelectedIndex;
+                    double firstMs = -1;
+                    if (firstIndex >= 0)
+                        firstMs = _subtitle.Paragraphs[firstIndex].StartTime.TotalMilliseconds;
+
                     Subtitle temp = _subtitle;
                     _subtitle = _subtitleAlternate;
                     _subtitleAlternate = temp;
@@ -6274,7 +6398,12 @@ namespace Nikse.SubtitleEdit.Forms
                     _changeAlternate = tempChange;
 
                     SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
-                    RefreshSelectedParagraph();
+
+                    _subtitleListViewIndex = -1;
+                    if (firstIndex >= 0 && _subtitle.Paragraphs.Count > firstIndex && _subtitle.Paragraphs[firstIndex].StartTime.TotalMilliseconds == firstMs)
+                        SubtitleListview1.SelectIndexAndEnsureVisible(firstIndex);
+                    else
+                        RefreshSelectedParagraph();
 
                     SetTitle();
 
@@ -6287,6 +6416,11 @@ namespace Nikse.SubtitleEdit.Forms
                     redockVideoControlsToolStripMenuItem_Click(null, null);
                 else
                     undockVideoControlsToolStripMenuItem_Click(null, null);
+            }
+            else if (e.Modifiers == (Keys.Control | Keys.Alt | Keys.Shift) && e.KeyCode == Keys.B) // Ctrl+Alt+Shift+B = Beam subtitles
+            {
+                Beamer beamer = new Beamer(_subtitle, _subtitleListViewIndex);
+                beamer.ShowDialog(this);
             }
 
             // TABS - MUST BE LAST
@@ -7270,9 +7404,20 @@ namespace Nikse.SubtitleEdit.Forms
         private void SetWaveFormPosition(double startPositionSeconds, double currentVideoPositionSeconds, int subtitleIndex)
         {
             if (SubtitleListview1.IsAlternateTextColumnVisible && Configuration.Settings.General.ShowOriginalAsPreviewIfAvailable)
-                audioVisualizer.SetPosition(startPositionSeconds, _subtitleAlternate, currentVideoPositionSeconds, -1);
+            {
+                int index = -1;
+                if (SubtitleListview1.SelectedItems.Count > 0)
+                {
+                    int i = SubtitleListview1.SelectedItems[0].Index;
+                    var p = Utilities.GetOriginalParagraph(i, _subtitle.Paragraphs[i], _subtitleAlternate.Paragraphs);
+                    index = _subtitleAlternate.GetIndex(p);
+                }
+                audioVisualizer.SetPosition(startPositionSeconds, _subtitleAlternate, currentVideoPositionSeconds, index);
+            }
             else
+            {
                 audioVisualizer.SetPosition(startPositionSeconds, _subtitle, currentVideoPositionSeconds, subtitleIndex);
+            }
         }
 
         void VideoLoaded(object sender, EventArgs e)
@@ -8830,12 +8975,16 @@ namespace Nikse.SubtitleEdit.Forms
         }
 
         private void splitToolStripMenuItem1_Click(object sender, EventArgs e)
-        {            
-            int index = _subtitle.GetIndex(audioVisualizer.RightClickedParagraph);
-            if (index >= 0)
+        {
+            for (int i = 0; i < _subtitle.Paragraphs.Count; i++)
             {
-                SubtitleListview1.SelectIndexAndEnsureVisible(index);
-                SplitSelectedParagraph(_audioWaveFormRightClickSeconds, null);
+                if (audioVisualizer.RightClickedParagraph.StartTime.TotalMilliseconds == _subtitle.Paragraphs[i].StartTime.TotalMilliseconds &&
+                    audioVisualizer.RightClickedParagraph.EndTime.TotalMilliseconds == _subtitle.Paragraphs[i].EndTime.TotalMilliseconds)
+                {
+                    SubtitleListview1.SelectIndexAndEnsureVisible(i);
+                    SplitSelectedParagraph(_audioWaveFormRightClickSeconds, null);
+                    break;
+                }
             }
             audioVisualizer.Invalidate();
         }
