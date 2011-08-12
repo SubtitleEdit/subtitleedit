@@ -1471,6 +1471,23 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
 
+                if (format == null && Path.GetExtension(fileName).ToLower() == ".wsb")
+                {
+                    string[] arr = File.ReadAllLines(fileName);
+                    List<string> list = new List<string>();
+                    foreach (string l in arr)
+                        list.Add(l);                    
+                    var wsb = new Wsb();
+                    if (wsb.IsMine(list, fileName))
+                    {
+                        wsb.LoadSubtitle(_subtitle, list, fileName);
+                        _oldSubtitleFormat = wsb;
+                        SetFormatToSubRip();
+                        justConverted = true;
+                        format = GetCurrentSubtitleFormat();
+                    }
+                }
+
                 if (format == null)
                 {
                     var bdnXml = new BdnXml();
