@@ -24,7 +24,7 @@ namespace Nikse.SubtitleEdit.Controls
 
         private void SelectCurrentWord(TextBox tb)
         {
-            string breakChars = ".!?,)([]<>:;♪{}-/#*| " + Environment.NewLine + "\t";
+            string breakChars = "\".!?,)([]<>:;♪{}-/#*| ¿¡" + Environment.NewLine + "\t";
             int selectionLength = 0;
             int i = tb.SelectionStart;
             while (i > 0 && breakChars.Contains(tb.Text.Substring(i - 1, 1)) == false)

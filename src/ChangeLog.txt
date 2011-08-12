@@ -4,7 +4,7 @@ Subtitle Edit Changelog
 3.2 (not yet released)
  * NEW:
    * Can now display spectrogram (as well as waveform)
-   * Subtitle formats: D-Cinema, Cavena890, Timed Text 1.0, Captionate, Flash xml, and more
+   * Subtitle formats: D-Cinema, Cavena890, Timed Text 1.0, Captionate, Flash xml, YouTube annotations and more
    * Most important shortcuts in Options -> Settings
    * Export bdn-xml/images + import/ocr bdn-xml/images
    * Added "Point sync via other subtitle" (thx ioannis)
@@ -25,7 +25,8 @@ Subtitle Edit Changelog
    * Merge short lines can now also merge lines ending with ".", "?", or "!" (optional)
    * Can now read Adobe Encore files starting with line numbers (thx Pier)
    * Advanced Sub Station Alpha (and SSA) now keep original styles (thx Rebecca)
-   * Improved Remove text for HI (thx sialivi)
+   * Improved Remove text for HI (thx sialivi/aMvEL)
+   * Undo now also works for original subtitle (thx Trottel)
  * FIXED:
    * Adjust all times did not work for MicroDvd (thx Wolf)
    * Fixed a bug in VobSub parser which could cause scrabled images

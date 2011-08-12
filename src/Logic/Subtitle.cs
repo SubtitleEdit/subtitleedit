@@ -311,7 +311,21 @@ namespace Nikse.SubtitleEdit.Logic
 
         internal int GetIndex(Paragraph p)
         {
-            return _paragraphs.IndexOf(p);
+            if (p == null)
+                return -1;
+
+            int index = _paragraphs.IndexOf(p);
+            if (index >= 0)
+                return index;
+
+            for (int i = 0; i < _paragraphs.Count; i++)
+            {
+                if (p.StartTime.TotalMilliseconds == _paragraphs[i].StartTime.TotalMilliseconds &&
+                    p.EndTime.TotalMilliseconds == _paragraphs[i].EndTime.TotalMilliseconds)
+                    return i;
+            }
+
+            return -1;
         }
 
         internal Paragraph GetFirstAlike(Paragraph p)
