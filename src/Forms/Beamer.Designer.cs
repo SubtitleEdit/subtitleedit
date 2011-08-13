@@ -291,6 +291,7 @@
             this.Name = "Beamer";
             this.ShowIcon = false;
             this.Text = "Beamer";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Beamer_FormClosing);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Beamer_KeyDown);
             this.groupBoxImageSettings.ResumeLayout(false);
             this.groupBoxImageSettings.PerformLayout();

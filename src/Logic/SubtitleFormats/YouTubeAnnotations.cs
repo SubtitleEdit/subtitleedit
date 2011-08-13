@@ -60,7 +60,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 //      <anchoredRegion x="6.005" y="9.231" w="26.328" h="18.154" sx="40.647" sy="14.462" t="0:01:13.0" d="0"/>
                 //    </movingRegion>
                 //  </segment>
-                //</annotation>
+                //</annotation>              
 
                 XmlNode annotation = xml.CreateElement("annotation");
 
@@ -142,18 +142,24 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 {
                     try
                     {
-                        XmlNode textNode = node.SelectSingleNode("TEXT");
-                        XmlNodeList anchoredRegions = node.SelectNodes("segment/movingRegion/anchoredRegion");
-
-                        if (textNode != null && anchoredRegions.Count == 2)
+                        if (node.Attributes["style"] != null && node.Attributes["style"].Value == "speech")
                         {
-                            string startTime = anchoredRegions[0].Attributes["t"].Value;
-                            string endTime = anchoredRegions[1].Attributes["t"].Value;
-                            var p = new Paragraph();
-                            p.StartTime = DecodeTimeCode(startTime);
-                            p.EndTime = DecodeTimeCode(endTime);
-                            p.Text = textNode.InnerText;
-                            subtitle.Paragraphs.Add(p);
+                            XmlNode textNode = node.SelectSingleNode("TEXT");
+                            XmlNodeList regions = node.SelectNodes("segment/movingRegion/anchoredRegion");
+
+                            if (regions.Count != 2)
+                                regions = node.SelectNodes("segment/movingRegion/rectRegion");
+
+                            if (textNode != null && regions.Count == 2)
+                            {
+                                string startTime = regions[0].Attributes["t"].Value;
+                                string endTime = regions[1].Attributes["t"].Value;
+                                var p = new Paragraph();
+                                p.StartTime = DecodeTimeCode(startTime);
+                                p.EndTime = DecodeTimeCode(endTime);
+                                p.Text = textNode.InnerText;
+                                subtitle.Paragraphs.Add(p);
+                            }
                         }
                     }
                     catch (Exception ex)
