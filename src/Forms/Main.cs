@@ -4412,6 +4412,8 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (textBoxListViewText.Text.Length > 0)
                 textBoxListViewText.Text = Utilities.AutoBreakLine(textBoxListViewText.Text);
+            if (_subtitleAlternate != null && Configuration.Settings.General.AllowEditOfOriginalSubtitle &&  textBoxListViewTextAlternate.Text.Length > 0)
+                textBoxListViewTextAlternate.Text = Utilities.AutoBreakLine(textBoxListViewTextAlternate.Text);
         }
 
         private void TextBoxListViewTextTextChanged(object sender, EventArgs e)
@@ -4514,6 +4516,13 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void SplitSelectedParagraph(double? splitSeconds, int? textIndex)
         {
+            int? alternateTextIndex = null;
+            if (textBoxListViewTextAlternate.Focused)
+            {
+                alternateTextIndex = textIndex;
+                textIndex = null;
+            }
+
             if (_subtitle.Paragraphs.Count > 0 && SubtitleListview1.SelectedItems.Count > 0)
             {
                 SubtitleListview1.SelectedIndexChanged -= SubtitleListview1_SelectedIndexChanged;
@@ -4573,7 +4582,15 @@ namespace Nikse.SubtitleEdit.Forms
                         Paragraph originalNew = new Paragraph(newParagraph);
 
                         lines = originalCurrent.Text.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-                        if (lines.Length == 2 && (lines[0].EndsWith(".") || lines[0].EndsWith("!") || lines[0].EndsWith("?")))
+
+                        oldText = originalCurrent.Text;
+                        if (alternateTextIndex != null && alternateTextIndex.Value > 2 && alternateTextIndex.Value < oldText.Length - 2)
+                        {
+                            originalCurrent.Text = Utilities.AutoBreakLine(oldText.Substring(0, alternateTextIndex.Value).Trim());
+                            originalNew.Text = Utilities.AutoBreakLine(oldText.Substring(alternateTextIndex.Value).Trim());
+                            lines = new string[0];
+                        }
+                        else if (lines.Length == 2 && (lines[0].EndsWith(".") || lines[0].EndsWith("!") || lines[0].EndsWith("?")))
                         {
                             originalCurrent.Text = Utilities.AutoBreakLine(lines[0]);
                             originalNew.Text = Utilities.AutoBreakLine(lines[1]);

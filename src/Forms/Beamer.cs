@@ -23,7 +23,7 @@ namespace Nikse.SubtitleEdit.Forms
         float _borderWidth = 2.0f;
         bool _isLoading = true;
         int _marginLeft = 0;
-        int _marginBottom = 10;
+        int _marginBottom = 25;
         int _showIndex = -2;
         double _seconds = 0.0;
 
@@ -118,7 +118,7 @@ namespace Nikse.SubtitleEdit.Forms
                     pictureBox1.Height = bmp.Height;
                     pictureBox1.Width = bmp.Width;
                     pictureBox1.Left = (Width - bmp.Width) / 2 + _marginLeft;
-                    pictureBox1.Top = Height - (pictureBox1.Height + 10 + _marginBottom);
+                    pictureBox1.Top = Height - (pictureBox1.Height + _marginBottom);
                     _showIndex = _index;
                 }
                 else
@@ -152,6 +152,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         private Bitmap GenerateImageFromTextWithStyle(string text)
         {
+            if (string.IsNullOrEmpty(text))
+                text = " ";
+
             // remove styles for display text (except italic)
             text = RemoveSubStationAlphaFormatting(text);
             text = text.Replace("<b>", string.Empty);
@@ -307,7 +310,7 @@ namespace Nikse.SubtitleEdit.Forms
             WindowState = FormWindowState.Maximized;
             _fullscreen = true;
             pictureBox1.Image = null;
-
+            Cursor.Hide();
             _marginBottom = Height - 200;
             timer1.Start();
         }
@@ -322,6 +325,7 @@ namespace Nikse.SubtitleEdit.Forms
                 groupBoxImageSettings.Show();
                 buttonStart.Show();
                 timer1.Stop();
+                Cursor.Show();
                 FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
                 BackColor = Control.DefaultBackColor;
                 WindowState = FormWindowState.Normal;
@@ -335,13 +339,12 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (e.KeyCode == Keys.Space || (e.KeyCode == Keys.Down && e.Modifiers == Keys.Alt))
             {
-                if (!timer1.Enabled)
-                    timer1.Start();
-
+                timer1.Stop();
                 if (_index < _subtitle.Paragraphs.Count - 1)
                     _index++;
                 _seconds = _subtitle.Paragraphs[_index].StartTime.TotalSeconds;
                 ShowCurrent();
+                timer1.Start();
                 e.Handled = true;
             }
             else if (e.KeyCode == Keys.Up && e.Modifiers == Keys.Alt)
@@ -395,6 +398,11 @@ namespace Nikse.SubtitleEdit.Forms
                 ShowCurrent();
                 _index = temp;
             }
+        }
+
+        private void Beamer_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            Cursor.Show();
         }
 
     }
