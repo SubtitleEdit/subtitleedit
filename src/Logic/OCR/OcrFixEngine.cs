@@ -887,6 +887,8 @@ namespace Nikse.SubtitleEdit.Logic.OCR
                         s = s.Replace("! " + Environment.NewLine + from, "! " + Environment.NewLine + _beginLineReplaceList[from]);
                     if (s.Contains("? " + Environment.NewLine + from))
                         s = s.Replace("? " + Environment.NewLine + from, "? " + Environment.NewLine + _beginLineReplaceList[from]);
+                    if (s.StartsWith("\"") && !from.StartsWith("\"") && s.StartsWith("\"" + from))
+                        s = s.Replace("\"" + from, "\"" + _beginLineReplaceList[from]);
                 }
                 sb.AppendLine(s);
             }

@@ -89,6 +89,8 @@ namespace Nikse.SubtitleEdit.Forms
         bool _cancelWordSpellCheck = false;
 
         Keys _toggleVideoDockUndock = Keys.None;
+        Keys _mainAdjustSetStartAndOffsetTheRest = Keys.None;
+        Keys _mainAdjustSetEndAndGotoNext = Keys.None;
         Keys _mainAdjustInsertViaEndAutoStartAndGoToNext = Keys.None;
         bool _videoLoadedGoToSubPosAndPause = false;
         bool _makeHistory = true;
@@ -112,7 +114,7 @@ namespace Nikse.SubtitleEdit.Forms
                     if (versionInfo.Length >= 3 && versionInfo[2] != "0")
                         _title += "." + versionInfo[2];
                 }
-                return _title + " Beta 3½";
+                return _title + " RC ½";
             }
         }
 
@@ -1020,7 +1022,7 @@ namespace Nikse.SubtitleEdit.Forms
             copyToolStripMenuItem.Text = _language.Menu.ContextMenu.Copy;
             pasteToolStripMenuItem.Text = _language.Menu.ContextMenu.Paste;
             deleteToolStripMenuItem.Text = _language.Menu.ContextMenu.Delete;
-            splitLineToolStripMenuItem.Text = _language.Menu.ContextMenu.SplitLineAtCursorPosition;
+            toolStripMenuItemSplitTextAtCursor.Text = _language.Menu.ContextMenu.SplitLineAtCursorPosition;
             selectAllToolStripMenuItem.Text = _language.Menu.ContextMenu.SelectAll;
             normalToolStripMenuItem1.Text = _language.Menu.ContextMenu.Normal;
             boldToolStripMenuItem1.Text = _languageGeneral.Bold;
@@ -4242,7 +4244,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                     if (showSource)
                     {
-                        MakeHistoryForUndo(_language.BeforeLineUpdatedInListView);
+                        MakeHistoryForUndoOnlyIfNotResent(_language.BeforeLineUpdatedInListView);
                         ShowSource();
                     }
                 }
@@ -6453,19 +6455,19 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (e.Modifiers == (Keys.Control | Keys.Alt | Keys.Shift) && e.KeyCode == Keys.B) // Ctrl+Alt+Shift+B = Beam subtitles
             {
-                Beamer beamer = new Beamer(_subtitle, _subtitleListViewIndex);
+                Beamer beamer = new Beamer(this, _subtitle, _subtitleListViewIndex);
                 beamer.ShowDialog(this);
             }
 
             // TABS - MUST BE LAST
             else if (tabControlButtons.SelectedTab == tabPageAdjust && mediaPlayer.VideoPlayer != null)
             {
-                if ((e.Modifiers == Keys.Control && e.KeyCode == Keys.Space))
+                if (_mainAdjustSetStartAndOffsetTheRest == e.KeyData) // ((e.Modifiers == Keys.Control && e.KeyCode == Keys.Space))
                 {
                     ButtonSetStartAndOffsetRestClick(null, null);
                     e.SuppressKeyPress = true;
                 }
-                else if (e.Modifiers == Keys.Shift && e.KeyCode == Keys.Space)
+                else if (_mainAdjustSetEndAndGotoNext == e.KeyData) // e.Modifiers == Keys.Shift && e.KeyCode == Keys.Space)
                 {
                     buttonSetEndAndGoToNext_Click(null, null);
                     e.SuppressKeyPress = true;
@@ -8513,6 +8515,13 @@ namespace Nikse.SubtitleEdit.Forms
                 int index = SubtitleListview1.SelectedItems[0].Index;
                 double videoPosition = mediaPlayer.CurrentPosition;
 
+                // save history
+                _makeHistory = false;
+                string oldDuration = _subtitle.Paragraphs[index].Duration.ToString();
+                Paragraph temp = new Paragraph(_subtitle.Paragraphs[index]);
+                temp.EndTime.TotalMilliseconds = new TimeCode(TimeSpan.FromSeconds(videoPosition)).TotalMilliseconds;
+                MakeHistoryForUndoOnlyIfNotResent(string.Format(_language.DisplayTimeAdjustedX, "#" + _subtitle.Paragraphs[index].Number + ": " + oldDuration + " -> " + temp.Duration.ToString()));
+
                 _subtitle.Paragraphs[index].EndTime = new TimeCode(TimeSpan.FromSeconds(videoPosition));
                 SubtitleListview1.SetDuration(index, _subtitle.Paragraphs[index]);
                 numericUpDownDuration.Value = (decimal)(_subtitle.Paragraphs[index].Duration.TotalSeconds);
@@ -8526,6 +8535,8 @@ namespace Nikse.SubtitleEdit.Forms
                     SubtitleListview1.AutoScrollOffset.Offset(0, index * 16);
                     SubtitleListview1.EnsureVisible(Math.Min(SubtitleListview1.Items.Count - 1, index + 5));
                 }
+
+                _makeHistory = true;
             }
         }
 
@@ -8631,6 +8642,8 @@ namespace Nikse.SubtitleEdit.Forms
             toolStripMenuItemAdjustAllTimes.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainSynchronizationAdjustTimes);
             italicToolStripMenuItem.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainListViewItalic);
             italicToolStripMenuItem1.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxItalic);
+            _mainAdjustSetStartAndOffsetTheRest = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainAdjustSetStartAndOffsetTheRest);
+            _mainAdjustSetEndAndGotoNext = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainAdjustSetEndAndGotoNext);
             _mainAdjustInsertViaEndAutoStartAndGoToNext = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainAdjustViaEndAutoStartAndGoToNext);
         }
 

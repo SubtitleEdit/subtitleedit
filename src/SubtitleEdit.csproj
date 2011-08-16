@@ -933,6 +933,7 @@
     </Content>
     <Content Include="Languages\da-DK.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </Content>
     <Content Include="Languages\es-ES.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
