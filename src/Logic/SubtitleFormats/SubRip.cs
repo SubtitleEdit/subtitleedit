@@ -142,6 +142,12 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     else if (string.IsNullOrEmpty(line) && string.IsNullOrEmpty(_paragraph.Text))
                     {
                         _paragraph.Text = string.Empty;
+                        if (!string.IsNullOrEmpty(next) && (Utilities.IsInteger(next) || _regexTimeCodes.IsMatch(next)))
+                        {
+                            subtitle.Paragraphs.Add(_paragraph);
+                            _paragraph = new Paragraph();
+                            _expecting = ExpectingLine.Number;
+                        }
                     }
                     else
                     {

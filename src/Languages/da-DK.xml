@@ -564,6 +564,7 @@
         <Copy>Kopier</Copy>
         <Paste>Indsæt</Paste>
         <Delete>Slet</Delete>
+        <SplitLineAtCursorPosition>Split ved markør</SplitLineAtCursorPosition>
         <SelectAll>Vælg alle</SelectAll>
         <InsertFirstLine>Indsæt linje</InsertFirstLine>
         <InsertBefore>Indsæt før</InsertBefore>

@@ -1,13 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
+using System.Drawing.Drawing2D;
+using System.Drawing.Text;
 using System.Text;
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Logic;
-using System.Drawing.Text;
-using System.Drawing.Drawing2D;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -15,21 +12,26 @@ namespace Nikse.SubtitleEdit.Forms
     {
         private Subtitle _subtitle;
         private int _index = 0;
-        bool _fullscreen = false;
-        Color _subtitleColor = Color.White;
-        string _subtitleFontName = "Verdana";
-        float _subtitleFontSize = 75.0f;
-        Color _borderColor = Color.Black;
-        float _borderWidth = 2.0f;
-        bool _isLoading = true;
-        int _marginLeft = 0;
-        int _marginBottom = 25;
-        int _showIndex = -2;
-        double _seconds = 0.0;
+        private bool _fullscreen = false;
+        private Color _subtitleColor = Color.White;
+        private string _subtitleFontName = "Verdana";
+        private float _subtitleFontSize = 75.0f;
+        private Color _borderColor = Color.Black;
+        private float _borderWidth = 2.0f;
+        private bool _isLoading = true;
+        private int _marginLeft = 0;
+        private int _marginBottom = 25;
+        private int _showIndex = -2;
+        private double _seconds = 0.0;
+        private double _millisecondsFactor = 1.0;
+        private Main _main;
+        private bool _noTimerAction = false;
+        private long _videoStartTick = 0;
 
-        public Beamer(Subtitle subtitle, int index)
+        public Beamer(Main main, Subtitle subtitle, int index)
         {
             InitializeComponent();
+            _main = main;
             _subtitle = subtitle;
             _index = index;
 
@@ -41,9 +43,21 @@ namespace Nikse.SubtitleEdit.Forms
             buttonBorderColor.Text = Configuration.Settings.Language.ExportPngXml.BorderColor;
             labelBorderWidth.Text = Configuration.Settings.Language.ExportPngXml.BorderWidth;
 
+            _subtitleFontName = Configuration.Settings.SubtitleBeaming.FontName;
+            _subtitleFontSize = Configuration.Settings.SubtitleBeaming.FontSize;
+            if (_subtitleFontSize > 100 || _subtitleFontSize < 10)
+                _subtitleFontSize = 60;
+            _subtitleColor = Configuration.Settings.SubtitleBeaming.FontColor;
+            _borderColor = Configuration.Settings.SubtitleBeaming.BorderColor;
+            _borderWidth = Configuration.Settings.SubtitleBeaming.BorderWidth;
+
             panelColor.BackColor = _subtitleColor;
             panelBorderColor.BackColor = _borderColor;
-            comboBoxBorderWidth.SelectedIndex = 2;
+
+            if (Configuration.Settings.SubtitleBeaming.BorderWidth > 0 && Configuration.Settings.SubtitleBeaming.BorderWidth < 5)
+                comboBoxBorderWidth.SelectedIndex = (int)_borderWidth;
+            else
+                comboBoxBorderWidth.SelectedIndex = 2;
 
             foreach (var x in System.Drawing.FontFamily.Families)
             {
@@ -51,7 +65,10 @@ namespace Nikse.SubtitleEdit.Forms
                 if (string.Compare(x.Name, _subtitleFontName, true) == 0)
                     comboBoxSubtitleFont.SelectedIndex = comboBoxSubtitleFont.Items.Count - 1;
             }
-            comboBoxSubtitleFontSize.SelectedIndex = 40;
+            if (_subtitleFontSize > 10 && _subtitleFontSize < 100)
+                comboBoxSubtitleFontSize.SelectedIndex = (int)(_subtitleFontSize -10);
+            else
+                comboBoxSubtitleFontSize.SelectedIndex = 40;
             _isLoading = false;
             ShowCurrent();
         }
@@ -120,6 +137,7 @@ namespace Nikse.SubtitleEdit.Forms
                     pictureBox1.Left = (Width - bmp.Width) / 2 + _marginLeft;
                     pictureBox1.Top = Height - (pictureBox1.Height + _marginBottom);
                     _showIndex = _index;
+                    _main.FocusParagraph(_index);
                 }
                 else
                 {
@@ -128,13 +146,19 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else
             {
-                var bmp = GenerateImageFromTextWithStyle("Testing 123" + Environment.NewLine + "Subtitle Edit");
+                string text = "Testing 123" + Environment.NewLine + "Subtitle Edit";
+                if (_index >= 0 && _index < _subtitle.Paragraphs.Count && _subtitle.Paragraphs[_index].Text.Length > 1)
+                {
+                    text = _subtitle.Paragraphs[_index].Text;
+                    _main.FocusParagraph(_index);
+                }
+                var bmp = GenerateImageFromTextWithStyle(text);
                 pictureBox1.Top = groupBoxImageSettings.Top + groupBoxImageSettings.Height + 5;
                 pictureBox1.Left = 5;
                 pictureBox1.Image = bmp;
                 pictureBox1.Height = bmp.Height;
                 pictureBox1.Width = bmp.Width;
-                _showIndex = -2;
+                _showIndex = -2;                
             }
         }
 
@@ -148,6 +172,12 @@ namespace Nikse.SubtitleEdit.Forms
             _subtitleFontName = comboBoxSubtitleFont.SelectedItem.ToString();
             _subtitleFontSize = float.Parse(comboBoxSubtitleFontSize.SelectedItem.ToString());
             _borderWidth = float.Parse(comboBoxBorderWidth.SelectedItem.ToString());
+
+            Configuration.Settings.SubtitleBeaming.FontName = _subtitleFontName;
+            Configuration.Settings.SubtitleBeaming.FontSize = (int)_subtitleFontSize;
+            Configuration.Settings.SubtitleBeaming.FontColor = _subtitleColor;
+            Configuration.Settings.SubtitleBeaming.BorderColor = _borderColor;
+            Configuration.Settings.SubtitleBeaming.BorderWidth = (int)_borderWidth;
         }
 
         private Bitmap GenerateImageFromTextWithStyle(string text)
@@ -178,9 +208,9 @@ namespace Nikse.SubtitleEdit.Forms
             textSize = g.MeasureString(text, font);
             g.Dispose();
             bmp.Dispose();
-            bmp = new Bitmap((int)(textSize.Width * 0.8), (int)(textSize.Height * 0.7) + 10);
+            bmp = new Bitmap((int)(textSize.Width * 0.8), (int)(textSize.Height * 0.7) + 10);            
             g = Graphics.FromImage(bmp);
-
+            g.FillRectangle(new SolidBrush(Color.Black), 0, 0, bmp.Width, bmp.Height); // background color
             if (checkBoxAntiAlias.Checked)
             {
                 g.TextRenderingHint = TextRenderingHint.AntiAlias;
@@ -271,8 +301,12 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void timer1_Tick(object sender, EventArgs e)
         {
+            if (_noTimerAction)
+                return;
+
             _seconds += 0.025;
-            double positionInMilliseconds = (_seconds * 1000.0) + 15.0;
+            double positionInMilliseconds = (DateTime.Now.Ticks - _videoStartTick) / 10000; // 10,000 ticks = 1 millisecond
+            positionInMilliseconds *= _millisecondsFactor;
             string text = string.Empty;
             int index = 0;
             foreach (Paragraph p in _subtitle.Paragraphs)
@@ -301,10 +335,20 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonStart_Click(object sender, EventArgs e)
         {
-            _index = -1;
+            if (_index >= _subtitle.Paragraphs.Count - 1)
+            {
+                _seconds = 0.0;
+                _index = -1;
+                _videoStartTick = DateTime.Now.Ticks;
+            }
+            else if (_index >= 0)
+            {
+                _seconds = _subtitle.Paragraphs[_index].StartTime.TotalSeconds;
+                _videoStartTick = DateTime.Now.Ticks- ((long) (_subtitle.Paragraphs[_index].StartTime.TotalMilliseconds) * 10000); //10,000 ticks = 1 millisecond
+            }           
+
             groupBoxImageSettings.Hide();
             buttonStart.Hide();
-            _seconds = 0.0;
             FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             BackColor = Color.Black;
             WindowState = FormWindowState.Maximized;
@@ -317,8 +361,68 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void Beamer_KeyDown(object sender, KeyEventArgs e)
         {
-            if (!_fullscreen)
+            if (e.Modifiers == Keys.Control && e.KeyCode == Keys.Home)
+            {
+                _index = 0;
+                _seconds = _subtitle.Paragraphs[_index].StartTime.TotalSeconds;
+                ShowCurrent();
+                e.Handled = true;
                 return;
+            }
+            else if (e.Modifiers == Keys.None && e.KeyCode == Keys.End)
+            {
+                _index = _subtitle.Paragraphs.Count-1;
+                _seconds = _subtitle.Paragraphs[_index].StartTime.TotalSeconds;
+                _seconds = _subtitle.Paragraphs[_index].StartTime.TotalSeconds;
+                ShowCurrent();
+                e.Handled = true;
+                return;
+            }
+
+            if (!_fullscreen)
+            {
+                if (e.KeyCode == Keys.Escape)
+                {
+                    DialogResult = DialogResult.Cancel;
+                }
+                else if (e.KeyCode == Keys.Space || (e.KeyCode == Keys.Down && e.Modifiers == Keys.Alt))
+                {
+                    if (_index < _subtitle.Paragraphs.Count - 1)
+                        _index++;
+                    _seconds = _subtitle.Paragraphs[_index].StartTime.TotalSeconds;
+                    ShowCurrent();
+                    e.Handled = true;
+                }
+                else if (e.KeyCode == Keys.Up && e.Modifiers == Keys.Alt)
+                {
+                    if (_index > 0)
+                        _index--;
+                    _seconds = _subtitle.Paragraphs[_index].StartTime.TotalSeconds;
+                    ShowCurrent();
+                    e.Handled = true;
+                }
+                else if (e.Modifiers == Keys.None && e.KeyCode == Keys.PageDown)
+                {
+                    if (_index < _subtitle.Paragraphs.Count - 21)
+                        _index += 20;
+                    else
+                        _index = _subtitle.Paragraphs.Count-1;
+                    _seconds = _subtitle.Paragraphs[_index].StartTime.TotalSeconds;
+                    ShowCurrent();
+                    e.Handled = true;
+                }
+                else if (e.Modifiers == Keys.None && e.KeyCode == Keys.PageUp)
+                {
+                    if (_index > 20)
+                        _index -= 20;
+                    else
+                        _index = 0;
+                    _seconds = _subtitle.Paragraphs[_index].StartTime.TotalSeconds;
+                    ShowCurrent();
+                    e.Handled = true;
+                }
+                return;
+            }
 
             if (e.KeyCode == Keys.Escape)
             {
@@ -332,6 +436,7 @@ namespace Nikse.SubtitleEdit.Forms
                 _showIndex = -2;
                 _fullscreen = false;
                 ShowCurrent();
+                e.Handled = true;
             }
             else if (e.KeyCode == Keys.Pause)
             {
@@ -339,12 +444,17 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (e.KeyCode == Keys.Space || (e.KeyCode == Keys.Down && e.Modifiers == Keys.Alt))
             {
-                timer1.Stop();
+                _noTimerAction = true;
                 if (_index < _subtitle.Paragraphs.Count - 1)
                     _index++;
                 _seconds = _subtitle.Paragraphs[_index].StartTime.TotalSeconds;
                 ShowCurrent();
-                timer1.Start();
+                if (!timer1.Enabled)
+                {
+                    _videoStartTick = (long)(_subtitle.Paragraphs[_index].StartTime.TotalMilliseconds) * 10000; //10,000 ticks = 1 millisecond
+                    timer1.Start();
+                }
+                _noTimerAction = false;
                 e.Handled = true;
             }
             else if (e.KeyCode == Keys.Up && e.Modifiers == Keys.Alt)
@@ -354,21 +464,49 @@ namespace Nikse.SubtitleEdit.Forms
                 _seconds = _subtitle.Paragraphs[_index].StartTime.TotalSeconds;
                 ShowCurrent();
             }
-            else if (e.KeyCode == Keys.Add)
+            else if (e.Modifiers == Keys.None && e.KeyCode == Keys.PageDown)
             {
-                if (comboBoxSubtitleFontSize.SelectedIndex < comboBoxSubtitleFontSize.Items.Count -1)
+                if (_index < _subtitle.Paragraphs.Count - 21)
+                    _index += 20;
+                else
+                    _index = _subtitle.Paragraphs.Count - 1;
+                _seconds = _subtitle.Paragraphs[_index].StartTime.TotalSeconds;
+                ShowCurrent();
+                e.Handled = true;
+            }
+            else if (e.Modifiers == Keys.None && e.KeyCode == Keys.PageUp)
+            {
+                if (_index > 20)
+                    _index -= 20;
+                else
+                    _index = 0;
+                _seconds = _subtitle.Paragraphs[_index].StartTime.TotalSeconds;
+                ShowCurrent();
+                e.Handled = true;
+            }
+            else if (e.Modifiers == Keys.None && e.KeyCode == Keys.Add)
+            {
+                if (comboBoxSubtitleFontSize.SelectedIndex < comboBoxSubtitleFontSize.Items.Count - 1)
                 {
                     comboBoxSubtitleFontSize.SelectedIndex = comboBoxSubtitleFontSize.SelectedIndex + 1;
                     ShowCurrent();
                 }
             }
-            else if (e.KeyCode == Keys.Subtract)
+            else if (e.Modifiers == Keys.None && e.KeyCode == Keys.Subtract)
             {
                 if (comboBoxSubtitleFontSize.SelectedIndex > 0)
                 {
-                    comboBoxSubtitleFontSize.SelectedIndex = comboBoxSubtitleFontSize.SelectedIndex - 1;                    
+                    comboBoxSubtitleFontSize.SelectedIndex = comboBoxSubtitleFontSize.SelectedIndex - 1;
                     ShowCurrent();
                 }
+            }
+            else if (e.Modifiers == Keys.Control && e.KeyCode == Keys.Add)
+            {
+                _millisecondsFactor += 0.001;
+            }
+            else if (e.Modifiers == Keys.Control && e.KeyCode == Keys.Subtract)
+            {
+                _millisecondsFactor -= 0.001;
             }
             else if (e.KeyCode == Keys.Up)
             {

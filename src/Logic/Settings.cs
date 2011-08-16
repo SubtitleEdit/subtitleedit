@@ -428,7 +428,9 @@ namespace Nikse.SubtitleEdit.Logic
         public string MainSynchronizationAdjustTimes { get; set; }                
         public string MainListViewItalic { get; set; }
         public string MainTextBoxItalic { get; set; }
-        public string MainAdjustViaEndAutoStartAndGoToNext { get; set; }        
+        public string MainAdjustSetStartAndOffsetTheRest { get; set; }
+        public string MainAdjustSetEndAndGotoNext { get; set; }
+        public string MainAdjustViaEndAutoStartAndGoToNext { get; set; }
         
         public Shortcuts()
         {
@@ -446,6 +448,8 @@ namespace Nikse.SubtitleEdit.Logic
             MainSynchronizationAdjustTimes = "Control+Shift+A";
             MainListViewItalic = "Control+I";
             MainTextBoxItalic = "Control+I";
+            MainAdjustSetStartAndOffsetTheRest = "Control+Space";
+            MainAdjustSetEndAndGotoNext = "Shift+Space";
             MainAdjustViaEndAutoStartAndGoToNext = "Shift+End";
         }
     }
@@ -465,6 +469,24 @@ namespace Nikse.SubtitleEdit.Logic
         }
     }
 
+    public class SubtitleBeaming
+    {
+        public string FontName { get; set; }
+        public int FontSize { get; set; }
+        public Color FontColor { get; set; }
+        public Color BorderColor { get; set; }
+        public int BorderWidth { get; set; }
+
+        public SubtitleBeaming()
+        {
+            FontName = "Verdana";
+            FontSize = 30;
+            FontColor = Color.White;
+            BorderColor = Color.DarkGray;
+            BorderWidth = 2;
+        }
+    }
+
     public class Settings
     {
         public RecentFilesSettings RecentFiles { get; set; }
@@ -479,6 +501,7 @@ namespace Nikse.SubtitleEdit.Logic
         public NetworkSettings NetworkSettings { get; set; }
         public Shortcuts Shortcuts { get; set; }
         public RemoveTextForHearingImpairedSettings RemoveTextForHearingImpaired { get; set; }
+        public SubtitleBeaming SubtitleBeaming { get; set; }
 
         [XmlArrayItem("MultipleSearchAndReplaceItem")]
         public List<MultipleSearchAndReplaceSetting> MultipleSearchAndReplaceList { get; set; }
@@ -502,6 +525,7 @@ namespace Nikse.SubtitleEdit.Logic
             Language = new Language();
             Shortcuts = new Shortcuts();
             RemoveTextForHearingImpaired = new RemoveTextForHearingImpairedSettings();
+            SubtitleBeaming = new SubtitleBeaming();
         }
 
         public void Save()
@@ -611,7 +635,6 @@ namespace Nikse.SubtitleEdit.Logic
 
                 settings.RecentFiles.Files.Add(new RecentFileEntry() { FileName = listNode.InnerText, FirstVisibleIndex = int.Parse(firstVisibleIndex), FirstSelectedIndex = int.Parse(firstSelectedIndex), VideoFileName = videoFileName, OriginalFileName = originalFileName });
             }
-
 
             settings.General = new Nikse.SubtitleEdit.Logic.GeneralSettings();
             node = doc.DocumentElement.SelectSingleNode("General");
@@ -1118,6 +1141,12 @@ namespace Nikse.SubtitleEdit.Logic
                 subNode = node.SelectSingleNode("MainTextBoxItalic");
                 if (subNode != null)
                     settings.Shortcuts.MainTextBoxItalic = subNode.InnerText;
+                subNode = node.SelectSingleNode("MainAdjustSetStartAndOffsetTheRest");
+                if (subNode != null)
+                    settings.Shortcuts.MainAdjustSetStartAndOffsetTheRest = subNode.InnerText;
+                subNode = node.SelectSingleNode("MainAdjustSetEndAndGotoNext");
+                if (subNode != null)
+                    settings.Shortcuts.MainAdjustSetEndAndGotoNext = subNode.InnerText;                
                 subNode = node.SelectSingleNode("MainAdjustViaEndAutoStartAndGoToNext");
                 if (subNode != null)
                     settings.Shortcuts.MainAdjustViaEndAutoStartAndGoToNext = subNode.InnerText;                
@@ -1143,7 +1172,28 @@ namespace Nikse.SubtitleEdit.Logic
                 if (subNode != null)
                     settings.RemoveTextForHearingImpaired.RemoveIfContainsText = subNode.InnerText;
             }
-            
+
+            settings.SubtitleBeaming = new SubtitleBeaming();
+            node = doc.DocumentElement.SelectSingleNode("SubtitleBeaming");
+            if (node != null)
+            {
+                subNode = node.SelectSingleNode("FontName");
+                if (subNode != null)
+                    settings.SubtitleBeaming.FontName = subNode.InnerText;
+                subNode = node.SelectSingleNode("FontColor");
+                if (subNode != null)
+                    settings.SubtitleBeaming.FontColor = Color.FromArgb(Convert.ToInt32(subNode.InnerText));
+                subNode = node.SelectSingleNode("FontSize");
+                if (subNode != null)
+                    settings.SubtitleBeaming.FontSize = Convert.ToInt32(subNode.InnerText);
+                subNode = node.SelectSingleNode("BorderColor");
+                if (subNode != null)
+                    settings.SubtitleBeaming.BorderColor = Color.FromArgb(Convert.ToInt32(subNode.InnerText));
+                subNode = node.SelectSingleNode("BorderWidth");
+                if (subNode != null)
+                    settings.SubtitleBeaming.BorderWidth = Convert.ToInt32(subNode.InnerText);
+            }
+
             return settings;
         }
 
@@ -1361,7 +1411,9 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("MainSynchronizationAdjustTimes", settings.Shortcuts.MainSynchronizationAdjustTimes);
             textWriter.WriteElementString("MainListViewItalic", settings.Shortcuts.MainListViewItalic);
             textWriter.WriteElementString("MainTextBoxItalic", settings.Shortcuts.MainTextBoxItalic);
-            textWriter.WriteElementString("MainAdjustViaEndAutoStartAndGoToNext", settings.Shortcuts.MainAdjustViaEndAutoStartAndGoToNext);                                    
+            textWriter.WriteElementString("MainAdjustSetStartAndOffsetTheRest", settings.Shortcuts.MainAdjustSetStartAndOffsetTheRest);
+            textWriter.WriteElementString("MainAdjustSetEndAndGotoNext", settings.Shortcuts.MainAdjustSetEndAndGotoNext);
+            textWriter.WriteElementString("MainAdjustViaEndAutoStartAndGoToNext", settings.Shortcuts.MainAdjustViaEndAutoStartAndGoToNext);
             textWriter.WriteEndElement();
 
             textWriter.WriteStartElement("RemoveTextForHearingImpaired", "");
@@ -1370,6 +1422,14 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("RemoveInterjections", settings.RemoveTextForHearingImpaired.RemoveInterjections.ToString());
             textWriter.WriteElementString("RemoveIfContains", settings.RemoveTextForHearingImpaired.RemoveIfContains.ToString());
             textWriter.WriteElementString("RemoveIfContainsText", settings.RemoveTextForHearingImpaired.RemoveIfContainsText);
+            textWriter.WriteEndElement();
+
+            textWriter.WriteStartElement("SubtitleBeaming", "");
+            textWriter.WriteElementString("FontName", settings.SubtitleBeaming.FontName);
+            textWriter.WriteElementString("FontColor", settings.SubtitleBeaming.FontColor.ToArgb().ToString());
+            textWriter.WriteElementString("FontSize", settings.SubtitleBeaming.FontSize.ToString());
+            textWriter.WriteElementString("BorderColor", settings.SubtitleBeaming.BorderColor.ToArgb().ToString());
+            textWriter.WriteElementString("BorderWidth", settings.SubtitleBeaming.BorderWidth.ToString());
             textWriter.WriteEndElement();
 
             textWriter.WriteEndElement();

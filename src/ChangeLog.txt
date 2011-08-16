@@ -3,7 +3,7 @@ Subtitle Edit Changelog
 
 3.2 (not yet released)
  * NEW:
-   * Can now display spectrogram (as well as waveform)
+   * Can now display spectrogram (and/or waveform)
    * Subtitle formats: D-Cinema, Cavena890, Timed Text 1.0, Captionate, Flash xml, YouTube annotations and more
    * Most important shortcuts in Options -> Settings
    * Export bdn-xml/images + import/ocr bdn-xml/images
@@ -34,6 +34,7 @@ Subtitle Edit Changelog
    * Crash when entering invalid text in source view (thx Frédéric)
    * Fixed a few bugs in DVD Architect format + added another two new variants (thx Jacob)
    * Fixed incorrect line-break in Microsoft Translate in last part of sub (thx Jacob)
+   * Fixed incorrect undo when working with waveform (thx Trottel/vmb)
 
 
 3.1 (3rd March 2011)
