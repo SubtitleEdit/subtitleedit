@@ -466,6 +466,8 @@ namespace Nikse.SubtitleEdit.Forms
             treeViewShortcuts.Nodes.Add(TextBoxNode);
 
             TreeNode adjustNode = new TreeNode(Configuration.Settings.Language.Main.VideoControls.Adjust);
+            adjustNode.Nodes.Add(Configuration.Settings.Language.Main.VideoControls.SetstartTimeAndOffsetOfRest + GetShortcutText(Configuration.Settings.Shortcuts.MainAdjustSetStartAndOffsetTheRest));
+            adjustNode.Nodes.Add(Configuration.Settings.Language.Main.VideoControls.SetEndTimeAndGoToNext + GetShortcutText(Configuration.Settings.Shortcuts.MainAdjustSetEndAndGotoNext));
             adjustNode.Nodes.Add(Configuration.Settings.Language.Settings.AdjustViaEndAutoStartAndGoToNext + GetShortcutText(Configuration.Settings.Shortcuts.MainAdjustViaEndAutoStartAndGoToNext));
             treeViewShortcuts.Nodes.Add(adjustNode);
 
@@ -900,6 +902,10 @@ namespace Nikse.SubtitleEdit.Forms
                     string text = node.Text.Substring(0, node.Text.IndexOf("[")).Trim();
                     if (text == Configuration.Settings.Language.Settings.AdjustViaEndAutoStartAndGoToNext.Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.MainAdjustViaEndAutoStartAndGoToNext = GetShortcut(node.Text);
+                    else if (text == Configuration.Settings.Language.Main.VideoControls.SetstartTimeAndOffsetOfRest.Replace("&", string.Empty))
+                        Configuration.Settings.Shortcuts.MainAdjustSetStartAndOffsetTheRest = GetShortcut(node.Text);
+                    else if (text == Configuration.Settings.Language.Main.VideoControls.SetEndTimeAndGoToNext.Replace("&", string.Empty))
+                        Configuration.Settings.Shortcuts.MainAdjustSetEndAndGotoNext = GetShortcut(node.Text);
                 }
             }
 
