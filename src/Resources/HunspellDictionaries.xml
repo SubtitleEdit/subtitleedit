@@ -152,6 +152,12 @@
     <Description>Italian and Latin spelling dictionaries</Description>
   </Dictionary>
   <Dictionary>
+    <EnglishName>Korean</EnglishName>
+    <NativeName>한글</NativeName>
+    <DownloadLink>http://spellcheck-ko.googlecode.com/files/ko-aff-dic-0.5.4.zip</DownloadLink>
+    <Description>Korean spellchecker</Description>
+  </Dictionary>
+  <Dictionary>
     <EnglishName>Kurdish</EnglishName>
     <NativeName>Kurdî</NativeName>
     <DownloadLink>http://ftp.osuosl.org/pub/openoffice/contrib/dictionaries/ku_TR.zip</DownloadLink>

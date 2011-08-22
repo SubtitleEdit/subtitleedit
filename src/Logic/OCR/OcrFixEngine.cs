@@ -149,7 +149,9 @@ namespace Nikse.SubtitleEdit.Logic.OCR
 
         private void LoadSpellingDictionariesViaDictionaryFileName(string threeLetterIsoLanguageName, CultureInfo culture, string dictionaryFileName, bool resetSkipList)
         {
-            _fiveLetterWordListLanguageName = Path.GetFileName(dictionaryFileName).Substring(0, 5);
+            _fiveLetterWordListLanguageName = Path.GetFileNameWithoutExtension(dictionaryFileName);
+            if (_fiveLetterWordListLanguageName.Length > 5)
+                _fiveLetterWordListLanguageName = _fiveLetterWordListLanguageName.Substring(0, 5);
             string dictionary = Utilities.DictionaryFolder + _fiveLetterWordListLanguageName;
             if (resetSkipList)
             {
