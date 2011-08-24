@@ -42,9 +42,10 @@ namespace Nikse.SubtitleEdit.Logic.SpellCheck
             List<string> results = new List<string>();
             for (int i = 0; i < resultCount; i++)
             {
-                IntPtr addressCharArray = Marshal.ReadIntPtr(addressStringArray, i * 4);
+                IntPtr addressCharArray = Marshal.ReadIntPtr(addressStringArray, i * IntPtr.Size);
                 string suggestion = Marshal.PtrToStringAuto(addressCharArray);
-                results.Add(suggestion);
+                if (string.IsNullOrEmpty(suggestion))
+                    results.Add(suggestion);
             }
             Hunspell_free_list(_hunspellHandle, pointerToAddressStringArray, resultCount);
             Marshal.FreeHGlobal(pointerToAddressStringArray);
