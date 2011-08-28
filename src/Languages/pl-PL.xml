@@ -2,7 +2,7 @@
 <Language Name="Polish">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.1</Version>
+    <Version>3.2</Version>
     <TranslatedBy>Tłumaczenie Adam "admas" Malich</TranslatedBy>
     <CultureName>pl-PL</CultureName>
     <OK>&amp;OK</OK>
@@ -56,6 +56,9 @@
     <UserNameAlreadyInUse>Nazwa użytkownika już w użyciu</UserNameAlreadyInUse>
     <WebServiceUrl>URL serwisu WWW</WebServiceUrl>
     <IP>IP</IP>
+    <VideoWindowTitle>Wideo - {0}</VideoWindowTitle>
+    <AudioWindowTitle>Audio - {0}</AudioWindowTitle>
+    <ControlsWindowTitle>Sterowanie - {0}</ControlsWindowTitle>
   </General>
   <About>
     <Title>O Subtitle Edit</Title>
@@ -83,6 +86,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <VlcMediaPlayerNotFound>Subtitle Edit potrzebuje do wypakowania danych audio VLC Media Player 1.1.x lub nowszego.</VlcMediaPlayerNotFound>
     <GoToVlcMediaPlayerHomePage>Chcesz przejść na stronę domową VLC Media Player?</GoToVlcMediaPlayerHomePage>
     <GeneratingPeakFile>Generowanie wartości szczytowych pliku</GeneratingPeakFile>
+    <GeneratingSpectrogram>Generuję spektrogram...</GeneratingSpectrogram>
     <ExtractingSeconds>Wypakowano audio: {0:0.0} sek.</ExtractingSeconds>
     <ExtractingMinutes>Wypakowano audio: {0:0.0} min.</ExtractingMinutes>
   </AddWaveForm>
@@ -184,6 +188,36 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <SubtitleImageXofYAndWidthXHeight>Obraz napisu {0}/{1}  -  {2}x{3} </SubtitleImageXofYAndWidthXHeight>
     <SubtitleImage>Obraz napisu</SubtitleImage>
   </DvdSubRipChooseLanguage>
+  <EbuSaveOtpions>
+    <Title>Opcje zapisu EBU</Title>
+    <GeneralSubtitleInformation>Ogólne informacje napisów</GeneralSubtitleInformation>
+    <CodePageNumber>Numer strony kodowej</CodePageNumber>
+    <DiskFormatCode>Format kodu dysku</DiskFormatCode>
+    <CharacterCodeTable>Tabela znaków</CharacterCodeTable>
+    <LanguageCode>Kod języka</LanguageCode>
+    <OriginalProgramTitle>Oryginalny tytuł programu</OriginalProgramTitle>
+    <OriginalEpisodeTitle>Oryginalny tytuł odcinka</OriginalEpisodeTitle>
+    <TranslatedProgramTitle>Przetłumaczony tytuł programu</TranslatedProgramTitle>
+    <TranslatedEpisodeTitle>Przetłumaczony tytuł odcinka</TranslatedEpisodeTitle>
+    <TranslatorsName>Nazwisko tłumacza</TranslatorsName>
+    <SubtitleListReferenceCode>Kod referencyjny listy napisów</SubtitleListReferenceCode>
+    <CountryOfOrigin>Kraj pochodzenia</CountryOfOrigin>
+    <RevisionNumber>Numer wersji</RevisionNumber>
+    <MaxNoOfDisplayableChars>Max# liczba znaków w wierszu</MaxNoOfDisplayableChars>
+    <MaxNumberOfDisplayableRows>Max# wierszy</MaxNumberOfDisplayableRows>
+    <DiskSequenceNumber>Kolejny numer dysku</DiskSequenceNumber>
+    <TotalNumberOfDisks>Całkowita liczba dysków</TotalNumberOfDisks>
+    <Import>Importuj...</Import>
+    <TextAndTimingInformation>Tekst i info czasów</TextAndTimingInformation>
+    <JustificationCode>Uzasadnienie kodu</JustificationCode>
+    <Errors>Błędy</Errors>
+    <ErrorsX>Błędów: {0}</ErrorsX>
+    <MaxLengthError>Linia {0} przekracza maks. długość ({1}) o {2}: {3}</MaxLengthError>
+    <TextUnchangedPresentation>Prezentacja bez zmian</TextUnchangedPresentation>
+    <TextLeftJustifiedText>Wyrównane tekstu do lewej</TextLeftJustifiedText>
+    <TextCentredText>Wyśrodkowanie tekstu</TextCentredText>
+    <TextRightJustifiedText>Wyrównane tekstu do prawej</TextRightJustifiedText>
+  </EbuSaveOtpions>
   <EffectKaraoke>
     <Title>Efekt Karaoke</Title>
     <ChooseColor>Wybierz kolor:</ChooseColor>
@@ -195,6 +229,18 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <TotalMilliseconds>Ogółem msek.:</TotalMilliseconds>
     <EndDelayInMillisecs>Koniec opóźnienia w msek.:</EndDelayInMillisecs>
   </EffectTypewriter>
+  <ExportPngXml>
+    <Title>Eksport BDN XML/PNG</Title>
+    <ImageSettings>Ustawienia obrazu</ImageSettings>
+    <FontFamily>Rodzaj czcionki</FontFamily>
+    <FontSize>Rozmiar czcionki</FontSize>
+    <FontColor>Kolor czcionki</FontColor>
+    <BorderColor>Kolor obramowania</BorderColor>
+    <BorderWidth>Szerokość obramowania</BorderWidth>
+    <AntiAlias>Anty alias</AntiAlias>
+    <ExportAllLines>Eksport wszystkich linii...</ExportAllLines>
+    <XImagesSavedInY>Zapisanych {0} obrazów w {1}</XImagesSavedInY>
+  </ExportPngXml>
   <FindDialog>
     <Title>Znajdź</Title>
     <Find>Znajdź</Find>
@@ -209,7 +255,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
   </FindSubtitleLine>
   <FixCommonErrors>
     <Title>Popraw pospolite błędy</Title>
-    <Step1>Krok 1/2 - Wybierz to, co ma być poprawione</Step1>
+    <Step1>Krok 1/2 - Wybierz co ma być poprawione</Step1>
     <WhatToFix>Co zostanie poprawione</WhatToFix>
     <Example>Przykład</Example>
     <SelectAll>Zaznacz</SelectAll>
@@ -246,6 +292,9 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FixLowercaseIToUppercaseI>Popraw samotne litery 'i' na 'I' (angielski)</FixLowercaseIToUppercaseI>
     <FixCommonOcrErrors>Popraw powszechne błędy OCR (używając listy zamienników OCR)</FixCommonOcrErrors>
     <CommonOcrErrorsFixed>Poprawiono {0} pospolitych błędów OCR (użyto plik OcrReplaceList )</CommonOcrErrorsFixed>
+    <RemoveSpaceBetweenNumber>Usuń odstęp pomiędzy liczbami</RemoveSpaceBetweenNumber>
+    <FixDialogsOnOneLine>Popraw dialogi w jednej linii</FixDialogsOnOneLine>
+    <RemoveSpaceBetweenNumbersFixed>Usunięte odstępy pomiędzy liczbami: {0}</RemoveSpaceBetweenNumbersFixed>
     <FixDanishLetterI>Popraw duńską literę 'i'</FixDanishLetterI>
     <FixSpanishInvertedQuestionAndExclamationMarks>Popraw hiszpańskie odwrócone znaki zapytania i wykrzykniki</FixSpanishInvertedQuestionAndExclamationMarks>
     <AddMissingQuote>Dodaj brakujący cudzysłów (")</AddMissingQuote>
@@ -351,6 +400,15 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <PoweredByGoogleTranslate>Wsparcie: tłumacz Google</PoweredByGoogleTranslate>
     <PoweredByMicrosoftTranslate>Wsparcie: tłumacz Microsoft</PoweredByMicrosoftTranslate>
   </GoogleTranslate>
+  <GoogleOrMicrosoftTranslate>
+    <Title>Tłumaczenie Google vs Microsoft</Title>
+    <From>z:</From>
+    <To>na:</To>
+    <Translate>Tłumacz</Translate>
+    <SourceText>Tekst źródłowy</SourceText>
+    <GoogleTranslate>Tłumaczenie Google</GoogleTranslate>
+    <MicrosoftTranslate>Tłumaczenie Microsoft</MicrosoftTranslate>
+  </GoogleOrMicrosoftTranslate>
   <GoToLine>
     <Title>Idź do numeru linii</Title>
     <XIsNotAValidNumber>{0} jest złym numerem</XIsNotAValidNumber>
@@ -397,6 +455,11 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <ImportSubtitleWithManualChosenEncoding>Importuj napisy z ręcznym wyborem kodowania...</ImportSubtitleWithManualChosenEncoding>
         <ImportText>Importuj tekst...</ImportText>
         <ImportTimecodes>Importuj kody czasowe...</ImportTimecodes>
+        <Export>Eksport</Export>
+        <ExportBdnXml>BDN xml/png...</ExportBdnXml>
+        <ExportCavena890>Cavena 890...</ExportCavena890>
+        <ExportEbu>EBU stl...</ExportEbu>
+        <ExportPac>PAC (Screen Electronics)...</ExportPac>
         <Exit>W&amp;yjdź</Exit>
       </File>
       <Edit>
@@ -425,6 +488,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <TextSingleLineMaximumLength>Tekst - maksymalna długość pojedynczej linii</TextSingleLineMaximumLength>
         <TextTotalLength>Tekst - całkowita długość</TextTotalLength>
         <TextNumberOfLines>Tekst - ilość linii</TextNumberOfLines>
+        <ShowOriginalTextInAudioAndVideoPreview>Pokaż oryginalny tekst z audio/video</ShowOriginalTextInAudioAndVideoPreview>
+        <MakeNewEmptyTranslationFromCurrentSubtitle>Dodaj nowy, pusty tłumaczenie z obecnych napisów</MakeNewEmptyTranslationFromCurrentSubtitle>
         <SplitSubtitle>Podziel napisy...</SplitSubtitle>
         <AppendSubtitle>Połącz napisy...</AppendSubtitle>
       </Tools>
@@ -435,6 +500,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <CloseVideo>Zamknij plik wideo</CloseVideo>
         <ShowHideVideo>Pokaż/Ukryj wideo</ShowHideVideo>
         <ShowHideWaveForm>Pokaż/Ukryj próbkowanie dźwięku</ShowHideWaveForm>
+        <ShowHideWaveformAndSpectrogram>Pokaż/Ukryj próbkowanie audio i spektrogram</ShowHideWaveformAndSpectrogram>
         <UnDockVideoControls>"Oddokuj" okno kontroli wideo</UnDockVideoControls>
         <ReDockVideoControls>"Dokuj" okno kontroli wideo</ReDockVideoControls>
       </Video>
@@ -442,6 +508,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <Title>Sprawdzenie pisowni</Title>
         <SpellCheck>&amp;Sprawdź pisownię...</SpellCheck>
         <FindDoubleWords>Znajdź podwójne wyrazy</FindDoubleWords>
+        <FindDoubleLines>Znajdź podwójne linie</FindDoubleLines>
         <GetDictionaries>Pobierz słowniki...</GetDictionaries>
         <AddToNamesEtcList>Dodaj do nazw własnych/listy etc</AddToNamesEtcList>
       </SpellCheck>
@@ -450,6 +517,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <AdjustAllTimes>Dostosuj wszystkie czasy (ukazywanie się wcześniej/później)</AdjustAllTimes>
         <VisualSync>Synchronizacja &amp;wizualna...</VisualSync>
         <PointSync>Punkt synchronizacji...</PointSync>
+        <PointSyncViaOtherSubtitle>Punkt synchronizacji za pośrednictwem innych napisów...</PointSyncViaOtherSubtitle>
       </Synchronization>
       <AutoTranslate>
         <Title>Automatyczne tłumaczenie</Title>
@@ -490,15 +558,18 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <ShowHideVideo>Pokaż/Ukryj wideo</ShowHideVideo>
       </ToolBar>
       <ContextMenu>
+        <SubStationAlphaSetStyle>(Zaawansowane) Sub Station Alpha - Ustawienia stylu</SubStationAlphaSetStyle>
         <Cut>Wytnij</Cut>
         <Copy>Kopiuj</Copy>
         <Paste>Wklej</Paste>
         <Delete>Usuń</Delete>
+        <SplitLineAtCursorPosition>Linii podziału na pozycji kursora</SplitLineAtCursorPosition>
         <SelectAll>Wybierz wszystko</SelectAll>
         <InsertFirstLine>Wstaw linię</InsertFirstLine>
         <InsertBefore>Wstaw przed</InsertBefore>
         <InsertAfter>Wstaw po</InsertAfter>
         <InsertSubtitleAfter>Wstaw napis po tej linii...</InsertSubtitleAfter>
+        <CopyToClipboard>Kopiuj jako tekst do schowka</CopyToClipboard>
         <Split>Podziel</Split>
         <MergeSelectedLines>Połącz wybrane linie</MergeSelectedLines>
         <MergeWithLineBefore>Połącz z linią przed</MergeWithLineBefore>
@@ -513,6 +584,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <KaraokeEffect>Efekt karaoke...</KaraokeEffect>
         <ShowSelectedLinesEarlierLater>Pokaż wybrane linie wcześniej/później...</ShowSelectedLinesEarlierLater>
         <VisualSyncSelectedLines>Synchronizacja wizualna wybranych linii...</VisualSyncSelectedLines>
+        <GoogleAndMicrosoftTranslateSelectedLine>Tłumaczenie Google/Microsoft oryginalnej linii</GoogleAndMicrosoftTranslateSelectedLine>
         <GoogleTranslateSelectedLines>Tłumaczenie Google wybranych linii...</GoogleTranslateSelectedLines>
         <AdjustDisplayDurationForSelectedLines>Dostosuj czas wyświetlania dla wybranych linii...</AdjustDisplayDurationForSelectedLines>
         <FixCommonErrorsInSelectedLines>Popraw pospolite błędy w wybranych liniach...</FixCommonErrorsInSelectedLines>
@@ -559,6 +631,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
       <GoToSubtitlePositionAndPause>Idź do podpozycji i pauza</GoToSubtitlePositionAndPause>
       <SetStartTime>Ustaw czas &amp;początku</SetStartTime>
       <SetEndTimeAndGoToNext>Ustaw &amp;koniec &amp;&amp; Idź dalej</SetEndTimeAndGoToNext>
+      <AdjustedViaEndTime>Dostosowano za pomocą czasu końcowego {0}</AdjustedViaEndTime>
       <SetEndTime>Ustaw czas &amp;końca</SetEndTime>
       <SetstartTimeAndOffsetOfRest>Ustaw sta&amp;rt i wyrównaj resztę</SetstartTimeAndOffsetOfRest>
       <SearchTextOnline>Szukaj tekst online</SearchTextOnline>
@@ -726,6 +799,7 @@ Kontynuować?</SubtitleAppendPrompt>
     <BluRaySupFiles>Pliki napisów BluRay (.sup)</BluRaySupFiles>
     <BeforeImportingVobSubFile>Przed importowaniem napisów VobSub</BeforeImportingVobSubFile>
     <BeforeImportingBluRaySupFile>Przed importowaniem napisów BluRay (.sup)</BeforeImportingBluRaySupFile>
+    <BeforeImportingBdnXml>Przed importem pliku BDN xml</BeforeImportingBdnXml>
     <BeforeShowSelectedLinesEarlierLater>Przed wybraniem wcześniejszego/późniejszego ukazywania się linii</BeforeShowSelectedLinesEarlierLater>
     <ShowSelectedLinesEarlierLaterPerformed>Wykonanie na wybranych liniach wcześniejszego/późniejszego ukazywania się</ShowSelectedLinesEarlierLaterPerformed>
     <DoubleWordsViaRegEx>Podwójne wyrazy via regex {0}</DoubleWordsViaRegEx>
@@ -755,6 +829,7 @@ Kontynuować?</SubtitleAppendPrompt>
     <TimeCodeImportedFromXY>Zaimportowanych kodów czasowych z {0}: {1}</TimeCodeImportedFromXY>
     <BeforeInsertSubtitleAtVideoPosition>Przed wstawieniem napisów w pozycji wideo</BeforeInsertSubtitleAtVideoPosition>
     <BeforeSetStartTimeAndOffsetTheRest>Przed ustawieniem czasu początku i przesunięcie pozostałych</BeforeSetStartTimeAndOffsetTheRest>
+    <BeforeSetEndAndVideoPosition>Przed ustawieniem czasu końcowego w pozycji wideo i automat. wyliczeniem początku</BeforeSetEndAndVideoPosition>
     <ContinueWithCurrentSpellCheck>Kontynuować aktualne sprawdzanie pisowni?</ContinueWithCurrentSpellCheck>
     <CharactersPerSecond>Znaki/sek: {0:0.00}</CharactersPerSecond>
     <GetFrameRateFromVideoFile>Pobierz szybkość klatek/sek. z pliku wideo</GetFrameRateFromVideoFile>
@@ -772,6 +847,7 @@ Kontynuować?</SubtitleAppendPrompt>
     <UnableToStartWord>Nie można uruchomić programu Microsoft Word</UnableToStartWord>
     <SpellCheckAbortedXCorrections>Sprawdzanie pisowni zostało przerwane. {0} linii zostało zmodyfikowanych.</SpellCheckAbortedXCorrections>
     <SpellCheckCompletedXCorrections>Sprawdzanie pisowni zakończone. {0} linii zostało zmodyfikowanych.</SpellCheckCompletedXCorrections>
+    <OpenOtherSubtitle>Otwórz inne napisy</OpenOtherSubtitle>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Wybór napisów z pliku Matroska</Title>
@@ -785,6 +861,7 @@ Kontynuować?</SubtitleAppendPrompt>
     <NumberOfMergesX>Ilość połączonych: {0}</NumberOfMergesX>
     <LineNumber>Linia#</LineNumber>
     <MergedText>Połączony tekst</MergedText>
+    <OnlyMergeContinuationLines>Tylko kontynuacja połączonych linii</OnlyMergeContinuationLines>
   </MergedShortLines>
   <MultipleReplace>
     <Title>Wielokrotna zamiana</Title>
@@ -874,7 +951,7 @@ Kontynuować?</SubtitleAppendPrompt>
     <General>Ogólne</General>
     <Toolbar>Pasek narzędzi</Toolbar>
     <VideoPlayer>Odtwarzacz wideo</VideoPlayer>
-    <WaveForm>Próbkowanie dźwięku</WaveForm>
+    <WaveformAndSpectrogram>Próbkowanie audio/Spektrogram</WaveformAndSpectrogram>
     <Tools>Narzędzia</Tools>
     <WordLists>Listy wyrazów</WordLists>
     <SsaStyle>Styl SSA</SsaStyle>
@@ -919,18 +996,20 @@ Kontynuować?</SubtitleAppendPrompt>
     <AutoBackupEveryFiveMinutes>Co 5 minut</AutoBackupEveryFiveMinutes>
     <AutoBackupEveryFifteenMinutes>Co 15 minut</AutoBackupEveryFifteenMinutes>
     <AllowEditOfOriginalSubtitle>Zezwalaj na edycję oryginalnych napisów</AllowEditOfOriginalSubtitle>
+    <PromptDeleteLines>Pytaj o usunięcie linii</PromptDeleteLines>
     <VideoEngine>Silnik wideo</VideoEngine>
     <DirectShow>DirectShow</DirectShow>
     <DirectShowDescription>quartz.dll z folderu system32</DirectShowDescription>
     <ManagedDirectX>Zarządca DirectX</ManagedDirectX>
     <ManagedDirectXDescription>Microsoft.DirectX.AudioVideoPlayback -  .NET Zarządca kodu z DirectX</ManagedDirectXDescription>
-    <WindowsMediaPlayer>Windows Media Player</WindowsMediaPlayer>
-    <WindowsMediaPlayerDescription>Kontrolki ActiveX WMP</WindowsMediaPlayerDescription>
+    <MPlayer>MPlayer</MPlayer>
+    <MPlayerDescription>MPlayer2/Mplayer</MPlayerDescription>
     <VlcMediaPlayer>VLC Media Player</VlcMediaPlayer>
     <VlcMediaPlayerDescription>libvlc.dll z VLC Media Player 1.1.0 lub nowszy</VlcMediaPlayerDescription>
     <ShowStopButton>Pokaż przycisk Stop</ShowStopButton>
     <DefaultVolume>Domyśl. głośność</DefaultVolume>
     <VolumeNotes>0 bez dźwięku, 100 najwyższa głośność</VolumeNotes>
+    <PreviewFontSize>Podgląd rozmiaru czcionki napisów</PreviewFontSize>
     <MainWindowVideoControls>Główne okno kontroli wideo</MainWindowVideoControls>
     <CustomSearchTextAndUrl>Domyślny url dla wyszukiwania tekstu</CustomSearchTextAndUrl>
     <WaveFormAppearance>Wygląd próbkowanego dźwięku</WaveFormAppearance>
@@ -940,8 +1019,13 @@ Kontynuować?</SubtitleAppendPrompt>
     <WaveFormSelectedColor>Kolor zaznaczenia</WaveFormSelectedColor>
     <WaveFormBackgroundColor>Kolor tła</WaveFormBackgroundColor>
     <WaveFormTextColor>Kolor tekstu</WaveFormTextColor>
-    <WaveFormsFolderEmpty>Opróżnij folder 'WaveForms'</WaveFormsFolderEmpty>
-    <WaveFormsFolderInfo>Folder 'WaveForms' zawiera {0} plik(i) ({1:0.00} MB)</WaveFormsFolderInfo>
+    <WaveformAndSpectrogramsFolderEmpty>Foldery 'Spectrograms' i 'Waveforms' są puste</WaveformAndSpectrogramsFolderEmpty>
+    <WaveformAndSpectrogramsFolderInfo>Foldery 'Waveforms' i  'Spectrograms' zawierają {0} pliki ({1:0.00} MB)</WaveformAndSpectrogramsFolderInfo>
+    <Spectrogram>Spektrogram</Spectrogram>
+    <GenerateSpectrogram>Generuj spektrogram</GenerateSpectrogram>
+    <SpectrogramAppearance>Wygląd spektrogramu</SpectrogramAppearance>
+    <SpectrogramOneColorGradient>Jeden kolor gradientu</SpectrogramOneColorGradient>
+    <SpectrogramClassic>Klasyczny</SpectrogramClassic>
     <SubStationAlphaStyle>Styl Sub Station Alpha</SubStationAlphaStyle>
     <ChooseFont>Wybierz czcionkę</ChooseFont>
     <ChooseColor>Wybierz kolor</ChooseColor>
@@ -978,6 +1062,17 @@ Kontynuować?</SubtitleAppendPrompt>
     <MusicSymbol>Symbol muzyczny</MusicSymbol>
     <MusicSymbolsToReplace>Symbole muzyczne do zamiany (oddzielone spacją)</MusicSymbolsToReplace>
     <FixCommonOcrErrorsUseHardcodedRules>Popraw pospolite błędy OCR - także używanych sztywnych zasad</FixCommonOcrErrorsUseHardcodedRules>
+    <Shortcuts>Skróty</Shortcuts>
+    <Shortcut>Skrót</Shortcut>
+    <Control>Control</Control>
+    <Alt>Alt</Alt>
+    <Shift>Shift</Shift>
+    <Key>Klawisz</Key>
+    <TextBox>Pole tekstowe</TextBox>
+    <UpdateShortcut>Aktualizacja</UpdateShortcut>
+    <ShortcutIsNotValid>Skrót nie jest poprawny: {0}</ShortcutIsNotValid>
+    <ToggleDockUndockOfVideoControls>Przełączanie dokowania/oddokowania kontroli wideo</ToggleDockUndockOfVideoControls>
+    <AdjustViaEndAutoStartAndGoToNext>Dopasuj za pomocą pozycji końcowej i przejdź do następnej</AdjustViaEndAutoStartAndGoToNext>
   </Settings>
   <ShowEarlierLater>
     <Title>Ukazywanie się wybranych linii wcześniej/później</Title>
@@ -1050,6 +1145,7 @@ Kontynuować?</SubtitleAppendPrompt>
   </StartNumberingFrom>
   <PointSync>
     <Title>Punkt synchronizacji</Title>
+    <TitleViaOtherSubtitle>Punkt synchronizacji za pomocą innych napisów</TitleViaOtherSubtitle>
     <SyncHelp>Ustaw przynajmniej dwa punkty synchronizacji, aby przeprowadzić synchronizację wstępną</SyncHelp>
     <SetSyncPoint>Ustaw punkt</SetSyncPoint>
     <RemoveSyncPoint>Usuń punkt</RemoveSyncPoint>
@@ -1121,14 +1217,20 @@ Kontynuować?</SubtitleAppendPrompt>
     <UnknownWords>Nieznane wyrazy</UnknownWords>
     <OcrAutoCorrectionSpellchecking>Automat. korekta OCR / sprawdzenie pisowni</OcrAutoCorrectionSpellchecking>
     <FixOcrErrors>Popraw błędy OCR</FixOcrErrors>
+    <ImportTextWithMatchingTimeCodes>Importuj tekst z pasującymi kodami czasowymi...</ImportTextWithMatchingTimeCodes>
     <SaveSubtitleImageAs>Zapisz obraz napisu jako...</SaveSubtitleImageAs>
-    <SaveAllSubtitleImagesAs>Zapisz wszystkie obrazy (png/bdn xml)...</SaveAllSubtitleImagesAs>
+    <SaveAllSubtitleImagesAsBdnXml>Zapisz wszystkie obrazy (png/BDN xml)...</SaveAllSubtitleImagesAsBdnXml>
+    <SaveAllSubtitleImagesWithHtml>Zapisz wszystkie obrazy z indeksem html...</SaveAllSubtitleImagesWithHtml>
     <XImagesSavedInY>Zapisano {0} obrazów w {1}</XImagesSavedInY>
     <TryModiForUnknownWords>Spróbuj MS MODI OCR dla nieznanych wyrazów</TryModiForUnknownWords>
     <DictionaryX>Słownik: {0}</DictionaryX>
     <RightToLeft>Prawy do lewego</RightToLeft>
     <ShowOnlyForcedSubtitles>Pokaż tylko wymuszone napisy</ShowOnlyForcedSubtitles>
     <UseTimeCodesFromIdx>Użyj kodów czasowych z pliku .idx</UseTimeCodesFromIdx>
+    <NoMatch>&lt;Brak zgodności&gt;</NoMatch>
+    <AutoTransparentBackground>Autom. przezroczyste tło</AutoTransparentBackground>
+    <InspectCompareMatchesForCurrentImage>Sprawdź porównane zgodności dla bieżącego obrazu...</InspectCompareMatchesForCurrentImage>
+    <EditLastAdditions>Edytuj ostatnio dodane porównania obrazu...</EditLastAdditions>
   </VobSubOcr>
   <VobSubOcrCharacter>
     <Title>VobSub - Ręcznie obrazy do tekstu</Title>
@@ -1139,13 +1241,24 @@ Kontynuować?</SubtitleAppendPrompt>
     <CharactersAsText>Znak(i) jako tekst</CharactersAsText>
     <Italic>&amp;Kursywa</Italic>
     <Abort>&amp;Przerwij</Abort>
+    <Skip>&amp;Pomiń</Skip>
+    <Nordic>Nordycki</Nordic>
+    <Spanish>Hiszpański</Spanish>
+    <German>Niemiecki</German>
+    <AutoSubmitOnFirstChar>Autom. proponuj &amp;pierwszy znak</AutoSubmitOnFirstChar>
+    <EditLastX>Ostatnio edytowane: {0}</EditLastX>
   </VobSubOcrCharacter>
+  <VobSubOcrCharacterInspect>
+    <Title>Sprawdź porównanie zgodności dla bieżącego obrazu</Title>
+    <InspectItems>Sprawdź elementy</InspectItems>
+  </VobSubOcrCharacterInspect>
   <VobSubOcrNewFolder>
     <Title>Nowy folder</Title>
     <Message>Nazwa folderu bazy nowych znaków</Message>
   </VobSubOcrNewFolder>
   <WaveForm>
     <ClickToAddWaveForm>Kliknij, aby dodać próbkowanie dźwięku</ClickToAddWaveForm>
+    <ClickToAddWaveformAndSpectrogram>Kliknij, aby dodać próbkowanie audio/spektrogram</ClickToAddWaveformAndSpectrogram>
     <Seconds>sekund</Seconds>
     <ZoomIn>Powiększ</ZoomIn>
     <ZoomOut>Pomniejsz</ZoomOut>
@@ -1156,5 +1269,8 @@ Kontynuować?</SubtitleAppendPrompt>
     <MergeWithPrevious>Połącz z poprzednim</MergeWithPrevious>
     <MergeWithNext>Połącz z następnym</MergeWithNext>
     <PlaySelection>Odtwórz wybrane</PlaySelection>
+    <ShowWaveformAndSpectrogram>Pokaż próbkowanie audio i spektrogram</ShowWaveformAndSpectrogram>
+    <ShowWaveformOnly>Pokaż tylko próbkowanie audio</ShowWaveformOnly>
+    <ShowSpectrogramOnly>Pokaż tylko spektrogram</ShowSpectrogramOnly>
   </WaveForm>
 </Language>
