@@ -3,11 +3,15 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Xml;
+using Nikse.SubtitleEdit.Forms;
+using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
     class YouTubeAnnotations : SubtitleFormat
     {
+        private bool _promtForStyles = true;
+
         public override string Extension
         {
             get { return ".xml"; }
@@ -31,7 +35,9 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         public override bool IsMine(List<string> lines, string fileName)
         {
             var subtitle = new Subtitle();
+            _promtForStyles = false;
             LoadSubtitle(subtitle, lines, fileName);
+            _promtForStyles = true;
             return subtitle.Paragraphs.Count > 0;
         }
 
@@ -137,12 +143,54 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             {
                 string xmlText = sb.ToString();
                 xml.LoadXml(xmlText);
+                List<string> styles = new List<string> { "speech" };
+
+                if (_promtForStyles)
+                {
+                    var stylesWithCount = new Dictionary<string, int>();
+                    foreach (XmlNode node in xml.SelectNodes("//annotation"))
+                    {
+                        try
+                        {
+                            if (node.Attributes["style"] != null && node.Attributes["style"].Value != null)
+                            {
+                                string style = node.Attributes["style"].Value;
+
+                                XmlNode textNode = node.SelectSingleNode("TEXT");
+                                XmlNodeList regions = node.SelectNodes("segment/movingRegion/anchoredRegion");
+
+                                if (regions.Count != 2)
+                                    regions = node.SelectNodes("segment/movingRegion/rectRegion");
+
+                                if (textNode != null && regions.Count == 2)
+                                {
+                                    if (stylesWithCount.ContainsKey(style))
+                                        stylesWithCount[style]++;
+                                    else
+                                        stylesWithCount.Add(style, 1);
+                                }
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            System.Diagnostics.Debug.WriteLine(ex.Message);
+                        }
+                    }
+                    if (stylesWithCount.Count > 1)
+                    {
+                        YouTubeAnnotationsImport import = new YouTubeAnnotationsImport(stylesWithCount);
+                        if (import.ShowDialog() == DialogResult.OK)
+                        { 
+                            styles = import.SelectedStyles;
+                        }
+                    }
+                }                   
 
                 foreach (XmlNode node in xml.SelectNodes("//annotation"))
                 {
                     try
                     {
-                        if (node.Attributes["style"] != null && node.Attributes["style"].Value == "speech")
+                        if (node.Attributes["style"] != null && styles.IndexOf(node.Attributes["style"].Value) >= 0)
                         {
                             XmlNode textNode = node.SelectSingleNode("TEXT");
                             XmlNodeList regions = node.SelectNodes("segment/movingRegion/anchoredRegion");
