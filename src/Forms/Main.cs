@@ -1401,11 +1401,18 @@ namespace Nikse.SubtitleEdit.Forms
 
                 if (Path.GetExtension(fileName).ToLower() == ".mkv")
                 {
-                    ImportSubtitleFromMatroskaFile();                    
+                    ImportSubtitleFromMatroskaFile();
                     return;
                 }
 
                 var fi = new FileInfo(fileName);
+
+                if (Path.GetExtension(fileName).ToLower() == ".ts" && fi.Length > 10000)
+                {
+                    //ImportSubtitleFromTransportStream();
+                    //return;
+                }
+
                 if (fi.Length > 1024 * 1024 * 10) // max 10 mb
                 {
                     if (MessageBox.Show(string.Format(_language.FileXIsLargerThan10Mb + Environment.NewLine +
@@ -3776,7 +3783,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ShowGetDictionaries()
         {
-            new GetDictionaries().ShowDialog(this);
+            new GetDictionaries().ShowDialog(this); // backup plan..
         }
 
         private void ContextMenuStripListviewOpening(object sender, System.ComponentModel.CancelEventArgs e)
@@ -4285,7 +4292,8 @@ namespace Nikse.SubtitleEdit.Forms
             const string zeroWhiteSpace = "\u200B";
             const string zeroWidthNoBreakSpace = "\uFEFF";
 
-            string s = Utilities.RemoveHtmlTags(paragraph.Text).Replace(" ", string.Empty).Replace(Environment.NewLine, string.Empty).Replace(zeroWhiteSpace, string.Empty).Replace(zeroWidthNoBreakSpace, string.Empty);
+//            string s = Utilities.RemoveHtmlTags(paragraph.Text).Replace(" ", string.Empty).Replace(Environment.NewLine, string.Empty).Replace(zeroWhiteSpace, string.Empty).Replace(zeroWidthNoBreakSpace, string.Empty);
+            string s = Utilities.RemoveHtmlTags(paragraph.Text).Replace(Environment.NewLine, string.Empty).Replace(zeroWhiteSpace, string.Empty).Replace(zeroWidthNoBreakSpace, string.Empty);
             if (paragraph.Duration.TotalSeconds > 0)
             {
                 double charactersPerSecond = s.Length / paragraph.Duration.TotalSeconds;                
@@ -4315,7 +4323,7 @@ namespace Nikse.SubtitleEdit.Forms
             Utilities.GetLineLengths(singleLine, text);
 
             buttonSplitLine.Visible = false;
-            string s = Utilities.RemoveHtmlTags(text).Replace(Environment.NewLine, " ");
+            string s = Utilities.RemoveHtmlTags(text).Replace(Environment.NewLine, string.Empty); // we don't count new line in total length... correct?
             if (s.Length < Configuration.Settings.General.SubtitleLineMaximumLength * 1.9)
             {
                 lineTotal.ForeColor = System.Drawing.Color.Black;
@@ -5725,6 +5733,18 @@ namespace Nikse.SubtitleEdit.Forms
                     Configuration.Settings.Save();
                 }
             }
+        }
+
+        private void ImportSubtitleFromTransportStream()
+        {
+            //TransportStreamParser tsParser = new TransportStreamParser();
+            //tsParser.ParseTsFile(openFileDialog1.FileName);
+
+            //var vobSubOcr = new VobSubOcr();
+            //vobSubOcr.Initialize(tsParser.MergeVobSubPacks(), null, Configuration.Settings.VobSubOcr, null);
+            //if (vobSubOcr.ShowDialog(this) == DialogResult.OK)
+            //{
+            //}
         }
 
         private void SubtitleListview1_DragEnter(object sender, DragEventArgs e)

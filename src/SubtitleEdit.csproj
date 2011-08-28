@@ -470,6 +470,12 @@
     <Compile Include="Forms\GoogleOrMicrosoftTranslate.Designer.cs">
       <DependentUpon>GoogleOrMicrosoftTranslate.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\YouTubeAnnotationsImport.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\YouTubeAnnotationsImport.Designer.cs">
+      <DependentUpon>YouTubeAnnotationsImport.cs</DependentUpon>
+    </Compile>
     <Compile Include="Logic\BluRaySup\BluRaySupPalette.cs" />
     <Compile Include="Logic\BluRaySup\BluRaySupParser.cs" />
     <Compile Include="Logic\BluRaySup\BluRaySupPicture.cs" />
@@ -855,6 +861,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\GoogleOrMicrosoftTranslate.resx">
       <DependentUpon>GoogleOrMicrosoftTranslate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\YouTubeAnnotationsImport.resx">
+      <DependentUpon>YouTubeAnnotationsImport.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
