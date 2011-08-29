@@ -1,9 +1,9 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Language Name="Français">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.1</Version>
-    <TranslatedBy>Traduction française par zwim (zwim@free.fr) corrigé par freMea</TranslatedBy>
+    <Version>3.2</Version>
+    <TranslatedBy>Traduction française par zwim (zwim@free.fr) corrigée et mise à jour par freMea</TranslatedBy>
     <CultureName>fr-FR</CultureName>
     <OK>&amp;OK</OK>
     <Cancel>A&amp;nnuler</Cancel>
@@ -56,6 +56,9 @@
     <UserNameAlreadyInUse>Nom d'utilisateur déjà utilisé</UserNameAlreadyInUse>
     <WebServiceUrl>url Webservice</WebServiceUrl>
     <IP>IP</IP>
+    <VideoWindowTitle>Video - {0}</VideoWindowTitle>
+    <AudioWindowTitle>Audio - {0}</AudioWindowTitle>
+    <ControlsWindowTitle>Contrôles - {0}</ControlsWindowTitle>
   </General>
   <About>
     <Title>A propos de Subtitle Edit</Title>
@@ -83,6 +86,7 @@ Email : mailto:nikse.dk@gmail.com</AboutText1>
     <VlcMediaPlayerNotFound>Subtitle Edit a besoin de VLC media player 1.1.x ou suivant pour extraire les données audio</VlcMediaPlayerNotFound>
     <GoToVlcMediaPlayerHomePage>Voulez-vous aller sur le site de VLC media player?</GoToVlcMediaPlayerHomePage>
     <GeneratingPeakFile>Génération du fichier des pics...</GeneratingPeakFile>
+    <GeneratingSpectrogram>Création du spectrogram...</GeneratingSpectrogram>
     <ExtractingSeconds>Extraction audio: {0:0.0} secondes</ExtractingSeconds>
     <ExtractingMinutes>Extraction audio: {0}:{1:00} secondes</ExtractingMinutes>
   </AddWaveForm>
@@ -183,9 +187,39 @@ Email : mailto:nikse.dk@gmail.com</AboutText1>
     <SubtitleImageXofYAndWidthXHeight>Image du sous-titre {0}/{1}  -  {2}x{3} </SubtitleImageXofYAndWidthXHeight>
     <SubtitleImage>Image de sous-titre</SubtitleImage>
   </DvdSubRipChooseLanguage>
+  <EbuSaveOtpions>
+    <Title>Options d'enregistrement EBU</Title>
+    <GeneralSubtitleInformation>Info générale de sous-titres</GeneralSubtitleInformation>
+    <CodePageNumber>Numéro de page de code</CodePageNumber>
+    <DiskFormatCode>Code de format de disque</DiskFormatCode>
+    <CharacterCodeTable>Table de caractères</CharacterCodeTable>
+    <LanguageCode>Code de langue</LanguageCode>
+    <OriginalProgramTitle>Titre du programme original</OriginalProgramTitle>
+    <OriginalEpisodeTitle>Titre de l'épisode original</OriginalEpisodeTitle>
+    <TranslatedProgramTitle>Titre du programme traduit</TranslatedProgramTitle>
+    <TranslatedEpisodeTitle>Titre de l'épisode traduit</TranslatedEpisodeTitle>
+    <TranslatorsName>Nom des traducteurs</TranslatorsName>
+    <SubtitleListReferenceCode>Liste de code référence du sous-titre</SubtitleListReferenceCode>
+    <CountryOfOrigin>Pays d'origine</CountryOfOrigin>
+    <RevisionNumber>Numéro de révision</RevisionNumber>
+    <MaxNoOfDisplayableChars>Nombre Max de caractères par ligne</MaxNoOfDisplayableChars>
+    <MaxNumberOfDisplayableRows>Nombre Max de lignes</MaxNumberOfDisplayableRows>
+    <DiskSequenceNumber>Numéro de séquence de disque</DiskSequenceNumber>
+    <TotalNumberOfDisks>Le nombre total de disques</TotalNumberOfDisks>
+    <Import>Importer...</Import>
+    <TextAndTimingInformation>Texte et informations de synchronisation</TextAndTimingInformation>
+    <JustificationCode>Justification du code</JustificationCode>
+    <Errors>Erreurs</Errors>
+    <ErrorsX>Erreurs: {0}</ErrorsX>
+    <MaxLengthError>Ligne {0} dépasse longueur max ({1}) à {2}: {3}</MaxLengthError>
+    <TextUnchangedPresentation>Présentation inchangée</TextUnchangedPresentation>
+    <TextLeftJustifiedText>Texte justifié à gauche</TextLeftJustifiedText>
+    <TextCentredText>Texte centré</TextCentredText>
+    <TextRightJustifiedText>Texte justifié à droite</TextRightJustifiedText>
+  </EbuSaveOtpions>
   <EffectKaraoke>
-    <Title>Effet karaoke</Title>
-    <ChooseColor>Choisissez une couleur :</ChooseColor>
+    <Title>Effet Karaoké</Title>
+    <ChooseColor>Choisir couleur:</ChooseColor>
     <TotalMilliseconds>Millisecs. total:</TotalMilliseconds>
     <EndDelayInMilliseconds>Délai de fin en millisecs.:</EndDelayInMilliseconds>
   </EffectKaraoke>
@@ -194,6 +228,18 @@ Email : mailto:nikse.dk@gmail.com</AboutText1>
     <TotalMilliseconds>Millisecs. total:</TotalMilliseconds>
     <EndDelayInMillisecs>Délai de fin en millisecs.:</EndDelayInMillisecs>
   </EffectTypewriter>
+  <ExportPngXml>
+    <Title>Exporter BDN XML/PNG</Title>
+    <ImageSettings>Paramètres des images</ImageSettings>
+    <FontFamily>Famille de polices</FontFamily>
+    <FontSize>Taille de la police</FontSize>
+    <FontColor>Couleur de la police</FontColor>
+    <BorderColor>Couleur de la bordure</BorderColor>
+    <BorderWidth>Largeur de la bordure</BorderWidth>
+    <AntiAlias>Lissage</AntiAlias>
+    <ExportAllLines>Exporter toutes les lignes...</ExportAllLines>
+    <XImagesSavedInY>{0} images sauvegardées dans {1}</XImagesSavedInY>
+  </ExportPngXml>
   <FindDialog>
     <Title>Rechercher</Title>
     <Find>Chercher</Find>
@@ -245,6 +291,9 @@ Email : mailto:nikse.dk@gmail.com</AboutText1>
     <FixLowercaseIToUppercaseI>Remplacer le i minuscule isolé par un I (Anglais) </FixLowercaseIToUppercaseI>
     <FixCommonOcrErrors>Corriger les erreurs OCR fréquentes (d'après la liste des correctifs OCR) </FixCommonOcrErrors>
     <CommonOcrErrorsFixed>Erreurs OCR fréquentes corrigées (d'après le fichier OcrReplaceList) : {0} </CommonOcrErrorsFixed>
+    <RemoveSpaceBetweenNumber>Supprimer les espaces entre les numéros</RemoveSpaceBetweenNumber>
+    <FixDialogsOnOneLine>Corriger les dialogues sur une ligne</FixDialogsOnOneLine>
+    <RemoveSpaceBetweenNumbersFixed>Suppressions des espaces entre les numéros: {0}</RemoveSpaceBetweenNumbersFixed>
     <FixDanishLetterI>Corriger le 'i' danois </FixDanishLetterI>
     <FixSpanishInvertedQuestionAndExclamationMarks>Retourner les points d'exclamation et d'interrogation espagnols </FixSpanishInvertedQuestionAndExclamationMarks>
     <AddMissingQuote>Ajout du guillemet (") manquant </AddMissingQuote>
@@ -327,6 +376,7 @@ Email : mailto:nikse.dk@gmail.com</AboutText1>
     <FixMissingOpenBracketExample>'clic] Attention !' --&gt; '[clic] Attention !'</FixMissingOpenBracketExample>
     <FixMusicNotationExample>'âTª sweet dreams are' --&gt; '♫ sweet dreams are'</FixMusicNotationExample>
     <NumberOfImportantLogMessages>{0} messages traces importants!</NumberOfImportantLogMessages>
+    <FixedOkXY>Corrigé et bon - '{0}': {1}</FixedOkXY>
   </FixCommonErrors>
   <GetDictionaries>
     <Title>Besoin de dictionnaires ?</Title>
@@ -349,6 +399,15 @@ Email : mailto:nikse.dk@gmail.com</AboutText1>
     <PoweredByGoogleTranslate>Réalisé avec Google traduction</PoweredByGoogleTranslate>
     <PoweredByMicrosoftTranslate>Réalisé avec Microsoft traduction</PoweredByMicrosoftTranslate>
   </GoogleTranslate>
+  <GoogleOrMicrosoftTranslate>
+    <Title>Google vs Microsoft translate</Title>
+    <From>De:</From>
+    <To>Vers:</To>
+    <Translate>Traduire</Translate>
+    <SourceText>Texte source</SourceText>
+    <GoogleTranslate>Google translate</GoogleTranslate>
+    <MicrosoftTranslate>Microsoft translate</MicrosoftTranslate>
+  </GoogleOrMicrosoftTranslate>
   <GoToLine>
     <Title>Aller au sous-titre numéro</Title>
     <XIsNotAValidNumber>{0} n'est pas un nombre valide</XIsNotAValidNumber>
@@ -395,6 +454,11 @@ Email : mailto:nikse.dk@gmail.com</AboutText1>
         <ImportSubtitleWithManualChosenEncoding>Importer Sous-titres en choisissant l'encodage...</ImportSubtitleWithManualChosenEncoding>
         <ImportText>Importer texte...</ImportText>
         <ImportTimecodes>Importer temporisation...</ImportTimecodes>
+        <Export>Exporter</Export>
+        <ExportBdnXml>BDN xml/png...</ExportBdnXml>
+        <ExportCavena890>Cavena 890...</ExportCavena890>
+        <ExportEbu>EBU stl...</ExportEbu>
+        <ExportPac>PAC (Screen Electronics)...</ExportPac>
         <Exit>&amp;Quitter</Exit>
       </File>
       <Edit>
@@ -423,6 +487,8 @@ Email : mailto:nikse.dk@gmail.com</AboutText1>
         <TextSingleLineMaximumLength>Texte - longueur max d'une ligne</TextSingleLineMaximumLength>
         <TextTotalLength>Texte - longueur totale</TextTotalLength>
         <TextNumberOfLines>Texte - nombre de lignes</TextNumberOfLines>
+        <ShowOriginalTextInAudioAndVideoPreview>Afficher le texte original dans les aperçus audio/vidéo</ShowOriginalTextInAudioAndVideoPreview>
+        <MakeNewEmptyTranslationFromCurrentSubtitle>Nouvelle traduction vide à partir du sous-titre en cours</MakeNewEmptyTranslationFromCurrentSubtitle>
         <SplitSubtitle>Part&amp;itionner les sous-titres...</SplitSubtitle>
         <AppendSubtitle>Ajouter des so&amp;us-titres depuis fichier...</AppendSubtitle>
       </Tools>
@@ -433,13 +499,15 @@ Email : mailto:nikse.dk@gmail.com</AboutText1>
         <CloseVideo>Choisir fichier vidéo</CloseVideo>
         <ShowHideVideo>Montrer/cacher vidéo</ShowHideVideo>
         <ShowHideWaveForm>Montrer/cacher diagramme sonore</ShowHideWaveForm>
-        <UnDockVideoControls>Désamarrer la fenêtre vidéo</UnDockVideoControls>
-        <ReDockVideoControls>Amarrer la fenêtre vidéo</ReDockVideoControls>
+        <ShowHideWaveformAndSpectrogram>Afficher/Masquer les formes d'onde et spectrogramme</ShowHideWaveformAndSpectrogram>
+        <UnDockVideoControls>Détacher la fenêtre vidéo</UnDockVideoControls>
+        <ReDockVideoControls>Attacher la fenêtre vidéo</ReDockVideoControls>
       </Video>
       <SpellCheck>
         <Title>Orthographe</Title>
         <SpellCheck>&amp;Vérifier orthographe</SpellCheck>
         <FindDoubleWords>Trouver doublons</FindDoubleWords>
+        <FindDoubleLines>Trouvez les lignes doublons</FindDoubleLines>
         <GetDictionaries>Télécharger dictionnaires...</GetDictionaries>
         <AddToNamesEtcList>Ajouter des mots à la liste de noms/etc</AddToNamesEtcList>
       </SpellCheck>
@@ -448,6 +516,7 @@ Email : mailto:nikse.dk@gmail.com</AboutText1>
         <AdjustAllTimes>Ajuster tous les temps (montrer +tôt/tard)</AdjustAllTimes>
         <VisualSync>&amp;Synchronisation visuelle...</VisualSync>
         <PointSync>Synchronisation par points...</PointSync>
+        <PointSyncViaOtherSubtitle>Point de synchro à partir d'un autre sous-tittre</PointSyncViaOtherSubtitle>
       </Synchronization>
       <AutoTranslate>
         <Title>Traduction</Title>
@@ -488,15 +557,18 @@ Email : mailto:nikse.dk@gmail.com</AboutText1>
         <ShowHideVideo>Montrer/cacher vidéo</ShowHideVideo>
       </ToolBar>
       <ContextMenu>
+        <SubStationAlphaSetStyle>(Avancé) Sub Station Alpha - Configurer style</SubStationAlphaSetStyle>
         <Cut>Couper</Cut>
         <Copy>Copier</Copy>
         <Paste>Coller</Paste>
         <Delete>Effacer</Delete>
+        <SplitLineAtCursorPosition>Couper ligne à la position du curseur</SplitLineAtCursorPosition>
         <SelectAll>Sélectionner tout</SelectAll>
         <InsertFirstLine>Insérer une ligne</InsertFirstLine>
         <InsertBefore>Insérer avant</InsertBefore>
         <InsertAfter>Insérer après</InsertAfter>
         <InsertSubtitleAfter>Insérer des sous-titres après cette ligne...</InsertSubtitleAfter>
+        <CopyToClipboard>Copier comme texte dans le presse papier</CopyToClipboard>
         <Split>Scinder</Split>
         <MergeSelectedLines>Fusionner les lignes sélectionnées</MergeSelectedLines>
         <MergeWithLineBefore>Fusionner avec la ligne précédente</MergeWithLineBefore>
@@ -511,6 +583,7 @@ Email : mailto:nikse.dk@gmail.com</AboutText1>
         <KaraokeEffect>Effet karaoké...</KaraokeEffect>
         <ShowSelectedLinesEarlierLater>Afficher les lignes +tôt/tard...</ShowSelectedLinesEarlierLater>
         <VisualSyncSelectedLines>Lignes choisies en synchronisation visuelle...</VisualSyncSelectedLines>
+        <GoogleAndMicrosoftTranslateSelectedLine>Ligne originale Google/Microsoft translate</GoogleAndMicrosoftTranslateSelectedLine>
         <GoogleTranslateSelectedLines>Traduction Google des lignes sélectionnées...</GoogleTranslateSelectedLines>
         <AdjustDisplayDurationForSelectedLines>Régler la durée des lignes sélectionnées...</AdjustDisplayDurationForSelectedLines>
         <FixCommonErrorsInSelectedLines>Correction des erreurs communes dans les lignes sélectionnées...</FixCommonErrorsInSelectedLines>
@@ -557,6 +630,7 @@ Email : mailto:nikse.dk@gmail.com</AboutText1>
       <GoToSubtitlePositionAndPause>Aller à la sélection puis pause</GoToSubtitlePositionAndPause>
       <SetStartTime>Définir &amp;début</SetStartTime>
       <SetEndTimeAndGoToNext>Définir &amp;fin et aller au suivant</SetEndTimeAndGoToNext>
+      <AdjustedViaEndTime>Ajusté par rapport au dernier temps {0}</AdjustedViaEndTime>
       <SetEndTime>Définir f&amp;in</SetEndTime>
       <SetstartTimeAndOffsetOfRest>Définir déb&amp;ut et décaler la suite</SetstartTimeAndOffsetOfRest>
       <SearchTextOnline>Chercher texte en ligne</SearchTextOnline>
@@ -721,6 +795,7 @@ Poursuivre?</SubtitleAppendPrompt>
     <BluRaySupFiles>Fichiers sous-titres Blu-ray</BluRaySupFiles>
     <BeforeImportingVobSubFile>Avant d'importer des sous-titres VobSub</BeforeImportingVobSubFile>
     <BeforeImportingBluRaySupFile>Avant d'importer des sous-titres Blu-ray</BeforeImportingBluRaySupFile>
+    <BeforeImportingBdnXml>Avant d'importer un fichier XML BDN</BeforeImportingBdnXml>
     <BeforeShowSelectedLinesEarlierLater>Avant de montrer les lignes précédentes/suivantes sélectionnées</BeforeShowSelectedLinesEarlierLater>
     <ShowSelectedLinesEarlierLaterPerformed>Montrer précédent/suivant effectué sur les lignes sélectionnées </ShowSelectedLinesEarlierLaterPerformed>
     <DoubleWordsViaRegEx>Double mots via regex {0}</DoubleWordsViaRegEx>
@@ -750,6 +825,7 @@ Poursuivre?</SubtitleAppendPrompt>
     <TimeCodeImportedFromXY>Codes de temps importés de {0}: {1}</TimeCodeImportedFromXY>
     <BeforeInsertSubtitleAtVideoPosition>Avant insertion du sous-titre à la position vidéo</BeforeInsertSubtitleAtVideoPosition>
     <BeforeSetStartTimeAndOffsetTheRest>Avant définir l'heure de début et décaler la suite</BeforeSetStartTimeAndOffsetTheRest>
+    <BeforeSetEndAndVideoPosition>Avant, définir le dernier temps selon la position vidéo et calcul auto du début</BeforeSetEndAndVideoPosition>
     <ContinueWithCurrentSpellCheck>Continuer avec la correction orthographique actuelle?</ContinueWithCurrentSpellCheck>
     <CharactersPerSecond>Chars/sec: {0:0.00}</CharactersPerSecond>
     <GetFrameRateFromVideoFile>Obtenir cadence de trame (fps) d'un  fichier vidéo</GetFrameRateFromVideoFile>
@@ -767,6 +843,7 @@ Poursuivre?</SubtitleAppendPrompt>
     <UnableToStartWord>Impossible de démarrer Microsoft Word</UnableToStartWord>
     <SpellCheckAbortedXCorrections>Vérification orthographique annulée. {0} lignes a été modifié.</SpellCheckAbortedXCorrections>
     <SpellCheckCompletedXCorrections>Vérification d'orthographe terminée. {0} lignes a été modifié.</SpellCheckCompletedXCorrections>
+    <OpenOtherSubtitle>Ouvrir un autre sous-titre</OpenOtherSubtitle>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Choisir les sous-titres du fichier Matroska
@@ -781,6 +858,7 @@ Poursuivre?</SubtitleAppendPrompt>
     <NumberOfMergesX>Nombre de fusions: {0}</NumberOfMergesX>
     <LineNumber>Ligne #</LineNumber>
     <MergedText>Texte fusionné</MergedText>
+    <OnlyMergeContinuationLines>Fusionner uniquement les lignes continues</OnlyMergeContinuationLines>
   </MergedShortLines>
   <MultipleReplace>
     <Title>Remplacement multiple</Title>
@@ -872,7 +950,7 @@ Poursuivre?</SubtitleAppendPrompt>
     <General>Général</General>
     <Toolbar>Barre d'outils</Toolbar>
     <VideoPlayer>Lecture vidéo</VideoPlayer>
-    <WaveForm>Forme de l'onde</WaveForm>
+    <WaveformAndSpectrogram>Waveform/spectrogramme</WaveformAndSpectrogram>
     <Tools>Outils</Tools>
     <WordLists>Listes de mots</WordLists>
     <SsaStyle>Style SSA</SsaStyle>
@@ -917,18 +995,20 @@ Poursuivre?</SubtitleAppendPrompt>
     <AutoBackupEveryFiveMinutes>Toutes les 5 minutes</AutoBackupEveryFiveMinutes>
     <AutoBackupEveryFifteenMinutes>Toutes les 15 minutes</AutoBackupEveryFifteenMinutes>
     <AllowEditOfOriginalSubtitle>Autoriser la modification du sous-titre original</AllowEditOfOriginalSubtitle>
+    <PromptDeleteLines>Confirmer la suppression des lignes</PromptDeleteLines>
     <VideoEngine>Moteur de rendu vidéo</VideoEngine>
     <DirectShow>DirectShow</DirectShow>
     <DirectShowDescription>quartz.dll du dossier system32/</DirectShowDescription>
     <ManagedDirectX>DirectX géré</ManagedDirectX>
     <ManagedDirectXDescription>Microsoft.DirectX.AudioVideoPlayback -  .NET Managed code de DirectX</ManagedDirectXDescription>
-    <WindowsMediaPlayer>Windows Media Player</WindowsMediaPlayer>
-    <WindowsMediaPlayerDescription>WMP ActiveX control</WindowsMediaPlayerDescription>
+    <MPlayer>MPlayer</MPlayer>
+    <MPlayerDescription>MPlayer2/Mplayer</MPlayerDescription>
     <VlcMediaPlayer>VLC Media Player</VlcMediaPlayer>
     <VlcMediaPlayerDescription>libvlc.dll de VLC Media Player 1.1.0 ou plus récent</VlcMediaPlayerDescription>
     <ShowStopButton>Montrer bouton stop</ShowStopButton>
     <DefaultVolume>Volume par défaut</DefaultVolume>
     <VolumeNotes>0 pour muet, 100 pour le volume le plus fort</VolumeNotes>
+    <PreviewFontSize>Taille de la police pour l'aperçu</PreviewFontSize>
     <MainWindowVideoControls>Contrôles principaux de la fenêtre vidéo</MainWindowVideoControls>
     <CustomSearchTextAndUrl>Recherche texte et url personnalisée </CustomSearchTextAndUrl>
     <WaveFormAppearance>Apparence de la forme de l'onde</WaveFormAppearance>
@@ -938,8 +1018,13 @@ Poursuivre?</SubtitleAppendPrompt>
     <WaveFormSelectedColor>Couleur sélectionnée</WaveFormSelectedColor>
     <WaveFormBackgroundColor>Couleur de fond</WaveFormBackgroundColor>
     <WaveFormTextColor>Couleur du texte</WaveFormTextColor>
-    <WaveFormsFolderEmpty>Vider le répertoire 'WaveForms'</WaveFormsFolderEmpty>
-    <WaveFormsFolderInfo>Le répertoire 'WaveForms' contient {0} fichiers ({1:0.00} MB)</WaveFormsFolderInfo>
+    <WaveformAndSpectrogramsFolderEmpty>Dossiers 'Spectrograms' et 'Waveforms' vides</WaveformAndSpectrogramsFolderEmpty>
+    <WaveformAndSpectrogramsFolderInfo>Dossiers 'Waveforms' et 'Spectrograms' contiennent {0} fichiers ({1:0.00} Mo)</WaveformAndSpectrogramsFolderInfo>
+    <Spectrogram>Spectrogramme</Spectrogram>
+    <GenerateSpectrogram>Générer spectrogramme</GenerateSpectrogram>
+    <SpectrogramAppearance>Apparence du Spectrogramme</SpectrogramAppearance>
+    <SpectrogramOneColorGradient>Gradient d'une seule couleur</SpectrogramOneColorGradient>
+    <SpectrogramClassic>Classique</SpectrogramClassic>
     <SubStationAlphaStyle>Style du SSA (Sub Station Alpha)</SubStationAlphaStyle>
     <ChooseFont>Choisir fonte</ChooseFont>
     <ChooseColor>Choisir couleur</ChooseColor>
@@ -976,6 +1061,17 @@ Poursuivre?</SubtitleAppendPrompt>
     <MusicSymbol>Symbole musical</MusicSymbol>
     <MusicSymbolsToReplace>Symboles musicaux à remplacer (séparer par des espaces)</MusicSymbolsToReplace>
     <FixCommonOcrErrorsUseHardcodedRules>Réparer les errerus OCR courantes</FixCommonOcrErrorsUseHardcodedRules>
+    <Shortcuts>Raccourcis</Shortcuts>
+    <Shortcut>Raccourci</Shortcut>
+    <Control>Contrôle</Control>
+    <Alt>Alt</Alt>
+    <Shift>Maj</Shift>
+    <Key>Clés</Key>
+    <TextBox>Textbox</TextBox>
+    <UpdateShortcut>Mise à jour</UpdateShortcut>
+    <ShortcutIsNotValid>Raccourci invalide: {0}</ShortcutIsNotValid>
+    <ToggleDockUndockOfVideoControls>Attacher/détacher les fenêtres vidéos</ToggleDockUndockOfVideoControls>
+    <AdjustViaEndAutoStartAndGoToNext>Ajuster par rapport à la dernière position et aller à la suite</AdjustViaEndAutoStartAndGoToNext>
   </Settings>
   <ShowEarlierLater>
     <Title>Afficher les sous-titres plus tôt ou plus tard</Title>
@@ -1025,8 +1121,8 @@ Poursuivre?</SubtitleAppendPrompt>
     <LineMaximumLength>Longueur maximale de ligne</LineMaximumLength>
     <LineContinuationBeginEndStrings>Continuation de la ligne début/fin</LineContinuationBeginEndStrings>
     <NumberOfSplits>Nombre de divisions: {0}</NumberOfSplits>
-    <LongestSingleLineIsXAtY>La plus longue ligne isolée est {0} à la ligne {1}</LongestSingleLineIsXAtY>
-    <LongestLineIsXAtY>La plus longue ligne est {0} à la ligne {1}</LongestLineIsXAtY>
+    <LongestSingleLineIsXAtY>La plus longue ligne isolée contient {0} caractères à la ligne {1}</LongestSingleLineIsXAtY>
+    <LongestLineIsXAtY>La plus longue ligne contient {0} caractères à la ligne {1}</LongestLineIsXAtY>
   </SplitLongLines>
   <SplitSubtitle>
     <Title>Diviser sous-titres</Title>
@@ -1048,11 +1144,13 @@ Poursuivre?</SubtitleAppendPrompt>
   </StartNumberingFrom>
   <PointSync>
     <Title>Synchronisation par points</Title>
+    <TitleViaOtherSubtitle>Point de synchro via autre sous-titre</TitleViaOtherSubtitle>
     <SyncHelp>Poser au moins deux points de synchro pour esquisser la synchro</SyncHelp>
     <SetSyncPoint>Déf. pt de sync.</SetSyncPoint>
     <RemoveSyncPoint>Enlever point de synchro</RemoveSyncPoint>
     <SyncPointsX>Points de synchro : {0}</SyncPointsX>
     <Info>Un point de synchro ajustera la position, deux ou plus ajusteront position + vitesse</Info>
+    <ApplySync>Appliquer</ApplySync>
   </PointSync>
   <UnknownSubtitle>
     <Title>Type de sous-titre inconnu</Title>
@@ -1118,14 +1216,20 @@ Poursuivre?</SubtitleAppendPrompt>
     <UnknownWords>Mots inconnus</UnknownWords>
     <OcrAutoCorrectionSpellchecking>Correction auto OCR /vérification orthographe</OcrAutoCorrectionSpellchecking>
     <FixOcrErrors>Correction des erreurs OCR</FixOcrErrors>
+    <ImportTextWithMatchingTimeCodes>Importer du texte avec les time codes correspondants...</ImportTextWithMatchingTimeCodes>
     <SaveSubtitleImageAs>Sauver sous-titre image sous...</SaveSubtitleImageAs>
-    <SaveAllSubtitleImagesAs>Enregistrer toutes les images (png/BDN xml)...</SaveAllSubtitleImagesAs>
+    <SaveAllSubtitleImagesAsBdnXml>Enregistrer toutes les images (PNG/BDN xml )...</SaveAllSubtitleImagesAsBdnXml>
+    <SaveAllSubtitleImagesWithHtml>Enregistrer toutes les images avec index html...</SaveAllSubtitleImagesWithHtml>
     <XImagesSavedInY>{0} images enregistrées dans {1}</XImagesSavedInY>
     <TryModiForUnknownWords>Tenter MS MODI OCR pour mots inconnus</TryModiForUnknownWords>
     <DictionaryX>Dictionnaire : {0}</DictionaryX>
     <RightToLeft>De droite à gauche</RightToLeft>
     <ShowOnlyForcedSubtitles>Montrer uniquement les sous-titres forcés</ShowOnlyForcedSubtitles>
     <UseTimeCodesFromIdx>Utiliser les codes de temps du fichier .idx</UseTimeCodesFromIdx>
+    <NoMatch>&lt;Aucune correspondance&gt;</NoMatch>
+    <AutoTransparentBackground>Fond transparent auto</AutoTransparentBackground>
+    <InspectCompareMatchesForCurrentImage>Comparer les correspondances de l'image actuelle...</InspectCompareMatchesForCurrentImage>
+    <EditLastAdditions>Modifier derniers ajouts de l'image...</EditLastAdditions>
   </VobSubOcr>
   <VobSubOcrCharacter>
     <Title>VobSub - Image vers texte manuel</Title>
@@ -1136,13 +1240,24 @@ Poursuivre?</SubtitleAppendPrompt>
     <CharactersAsText>Caractère(s) comme texte</CharactersAsText>
     <Italic>&amp;Italique</Italic>
     <Abort>Inte&amp;rrompre</Abort>
+    <Skip>&amp;Passer</Skip>
+    <Nordic>Nordic</Nordic>
+    <Spanish>Espagnol</Spanish>
+    <German>Allemand</German>
+    <AutoSubmitOnFirstChar>Soumission auto au premier caractère</AutoSubmitOnFirstChar>
+    <EditLastX>Dernière édition: {0}</EditLastX>
   </VobSubOcrCharacter>
+  <VobSubOcrCharacterInspect>
+    <Title>Comparer les correspondances de l'image actuelle...</Title>
+    <InspectItems>Inspecter éléments</InspectItems>
+  </VobSubOcrCharacterInspect>
   <VobSubOcrNewFolder>
     <Title>Nouveau dossier</Title>
     <Message>Nom du dossier de la base des caractères</Message>
   </VobSubOcrNewFolder>
   <WaveForm>
     <ClickToAddWaveForm>Cliquer pour ajouter une forme sonore</ClickToAddWaveForm>
+    <ClickToAddWaveformAndSpectrogram>Cliquer pour ajouter waveform/spectrogram</ClickToAddWaveformAndSpectrogram>
     <Seconds>secondes</Seconds>
     <ZoomIn>Agrandissement</ZoomIn>
     <ZoomOut>Rétrécissement</ZoomOut>
@@ -1153,5 +1268,8 @@ Poursuivre?</SubtitleAppendPrompt>
     <MergeWithPrevious>Fusionner avec le précédent</MergeWithPrevious>
     <MergeWithNext>Fusionner avec le suivant</MergeWithNext>
     <PlaySelection>Lire sélection</PlaySelection>
+    <ShowWaveformAndSpectrogram>Montrer forme d'onde et spectrogramme</ShowWaveformAndSpectrogram>
+    <ShowWaveformOnly>Montrer forme d'onde</ShowWaveformOnly>
+    <ShowSpectrogramOnly>Montrer spectrogramme</ShowSpectrogramOnly>
   </WaveForm>
 </Language>
