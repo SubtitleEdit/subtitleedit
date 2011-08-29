@@ -560,6 +560,7 @@ C# 源代码可从 http://code.google.com/p/subtitleedit 获得。
         <Copy>复制</Copy>
         <Paste>粘贴</Paste>
         <Delete>删除</Delete>
+        <SplitLineAtCursorPosition>在光标处分割行</SplitLineAtCursorPosition>
         <SelectAll>全部选择</SelectAll>
         <InsertFirstLine>插入行</InsertFirstLine>
         <InsertBefore>之前插入</InsertBefore>
