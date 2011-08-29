@@ -763,17 +763,13 @@ namespace Nikse.SubtitleEdit.Forms
                 p.Text = p.Text.Replace(zeroWidthNoBreakSpace, string.Empty);
                 p.Text = p.Text.Replace("", string.Empty); // some kind of hidden space!!!
                 while (p.Text.Contains("  "))
-                {
                     p.Text = p.Text.Replace("  ", " ");
-                }
+
                 if (p.Text.Contains(" " + Environment.NewLine))
-                {
                     p.Text = p.Text.Replace(" " + Environment.NewLine, Environment.NewLine);
-                }
+
                 if (p.Text.EndsWith(" "))
-                {
                     p.Text = p.Text.TrimEnd(' ');
-                }
 
                 p.Text = p.Text.Replace(". . ..", "...");
                 p.Text = p.Text.Replace(". ...", "...");
@@ -792,95 +788,59 @@ namespace Nikse.SubtitleEdit.Forms
                 p.Text = p.Text.Replace(" :", ":");
 
                 while (p.Text.Contains(" ,"))
-                {
                     p.Text = p.Text.Replace(" ,", ",");
-                }
+
                 if (p.Text.EndsWith(" ."))
-                {
                     p.Text = p.Text.Substring(0, p.Text.Length - " .".Length) + ".";
-                }
+
                 if (p.Text.EndsWith(" \""))
-                {
                     p.Text = p.Text.Remove(p.Text.Length - 2, 1);
-                }
+
                 if (p.Text.Contains(" \"" + Environment.NewLine))
-                {
                     p.Text = p.Text.Replace(" \"" + Environment.NewLine, "\"" + Environment.NewLine);
-                }
+
                 if (p.Text.Contains(" ." + Environment.NewLine))
-                {
                     p.Text = p.Text.Replace(" ." + Environment.NewLine, "." + Environment.NewLine);
-                }
-                if (p.Text.EndsWith(" !"))
-                {
-                    p.Text = p.Text.Substring(0, p.Text.Length - " !".Length) + "!";
-                }
-                if (p.Text.Contains(" !" + Environment.NewLine))
-                {
-                    p.Text = p.Text.Replace(" !" + Environment.NewLine, "!" + Environment.NewLine);
-                }
+
+                if (p.Text.Contains(" !"))
+                    p.Text = p.Text.Replace(" !", "!");
+
                 if (p.Text.Contains("! </i>" + Environment.NewLine))
-                {
                     p.Text = p.Text.Replace("! </i>" + Environment.NewLine, "!</i>" + Environment.NewLine);
-                }
-                if (p.Text.Contains(" !</i>" + Environment.NewLine))
-                {
-                    p.Text = p.Text.Replace(" !</i>" + Environment.NewLine, "!</i>" + Environment.NewLine);
-                }
-                if (p.Text.EndsWith(" ?</i>"))
-                {
-                    p.Text = p.Text.Replace(" ?</i>", "?</i>");
-                }                
-                if (p.Text.EndsWith(" ?"))
-                {
-                    p.Text = p.Text.Substring(0, p.Text.Length - " ?".Length) + "?";
-                }
-                if (p.Text.Contains(" ?" + Environment.NewLine))
-                {
-                    p.Text = p.Text.Replace(" ?" + Environment.NewLine, "?" + Environment.NewLine);
-                }
-                if (p.Text.Contains(" ?</i>" + Environment.NewLine))
-                {
-                    p.Text = p.Text.Replace(" ?</i>" + Environment.NewLine, "?</i>" + Environment.NewLine);
-                }
+
+                if (p.Text.Contains(" ?"))
+                    p.Text = p.Text.Replace(" ?", "?");
+
                 if (p.Text.Contains("? </i>" + Environment.NewLine))
-                {
                     p.Text = p.Text.Replace("? </i>" + Environment.NewLine, "?</i>" + Environment.NewLine);
-                }
+
                 if (p.Text.EndsWith(" </i>"))
-                {
                     p.Text = p.Text.Substring(0, p.Text.Length - " </i>".Length) + "</i>";
-                }
+
                 if (p.Text.Contains(" </i>" + Environment.NewLine))
-                {
                     p.Text = p.Text.Replace(" </i>" + Environment.NewLine, "</i>" + Environment.NewLine);
-                }
+
                 if (p.Text.EndsWith(" </I>"))
-                {
                     p.Text = p.Text.Substring(0, p.Text.Length - " </I>".Length) + "</I>";
-                }
+
                 if (p.Text.Contains(" </I>" + Environment.NewLine))
-                {
                     p.Text = p.Text.Replace(" </I>" + Environment.NewLine, "</I>" + Environment.NewLine);
-                }
+
                 if (p.Text.StartsWith("<i> "))
-                {
                     p.Text = "<i>" + p.Text.Substring("<i> ".Length);
-                }
+
                 if (p.Text.Contains(Environment.NewLine + "<i> "))
-                {
+
                     p.Text = p.Text.Replace(Environment.NewLine + "<i> ", Environment.NewLine + "<i>");
-                }
+
                 p.Text = p.Text.Trim();
                 p.Text = p.Text.Replace(Environment.NewLine + " ", Environment.NewLine);
                 if (p.Text.StartsWith("<I> "))
-                {
                     p.Text = "<I>" + p.Text.Substring("<I> ".Length);
-                }
+
                 if (p.Text.Contains(Environment.NewLine + "<I> "))
-                {
                     p.Text = p.Text.Replace(Environment.NewLine + "<I> ", Environment.NewLine + "<I>");
-                }
+
                 p.Text = p.Text.Trim();
                 p.Text = p.Text.Replace(Environment.NewLine + " ", Environment.NewLine);
 
@@ -1204,22 +1164,45 @@ namespace Nikse.SubtitleEdit.Forms
                 Paragraph p = _subtitle.Paragraphs[i];
                 if (Utilities.CountTagInText(p.Text, "\"") == 1)
                 {
+                    Paragraph next = _subtitle.GetParagraphOrDefault(i + 1);
+                    Paragraph prev = _subtitle.GetParagraphOrDefault(i - 1);
+
                     string oldText = p.Text;
                     if (p.Text.StartsWith("\""))
                     {
-                        Paragraph next = _subtitle.GetParagraphOrDefault(i + 1);
                         if (next == null || !next.Text.Contains("\""))
-                        { 
                             p.Text += "\"";
-                        }
+                    }
+                    else if (p.Text.StartsWith("<i>\"") && p.Text.EndsWith("</i>") && Utilities.CountTagInText(p.Text, "</i>") == 1)
+                    {
+                        if (next == null || !next.Text.Contains("\""))
+                            p.Text = p.Text.Replace("</i>", "\"</i>");
                     }
                     else if (p.Text.EndsWith("\""))
                     {
-                        Paragraph prev = _subtitle.GetParagraphOrDefault(i - 1);
                         if (prev == null || !prev.Text.Contains("\""))
-                        {
                             p.Text = "\"" + p.Text;
+                    }
+                    else if (p.Text.Contains(Environment.NewLine + "\"") && Utilities.CountTagInText(p.Text, Environment.NewLine) == 1)
+                    {
+                        if (next == null || !next.Text.Contains("\""))
+                            p.Text = p.Text + "\"";
+                    }
+                    else if ((p.Text.Contains(Environment.NewLine + "\"") || p.Text.Contains(Environment.NewLine + "-\"") || p.Text.Contains(Environment.NewLine + "- \"")) && 
+                             Utilities.CountTagInText(p.Text, Environment.NewLine) == 1 && p.Text.Length > 3)
+                    {
+                        if (next == null || !next.Text.Contains("\""))
+                        {
+                            if (p.Text.StartsWith("<i>") && p.Text.EndsWith("</i>") && Utilities.CountTagInText(p.Text, "</i>") == 1)
+                                p.Text = p.Text.Replace("</i>", "\"</i>");
+                            else
+                                p.Text = p.Text + "\"";
                         }
+                    }
+                    else if (p.Text.StartsWith("<i>") && p.Text.EndsWith("</i>") && Utilities.CountTagInText(p.Text, "<i>") == 1)
+                    {
+                        if (prev == null || !prev.Text.Contains("\""))
+                            p.Text = p.Text.Replace("<i>", "<i>\"");
                     }
 
                     if (oldText != p.Text)
