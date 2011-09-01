@@ -10932,7 +10932,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             var pac = new Pac();
             saveFileDialog1.Filter = pac.Name + "|*" + pac.Extension;
-            saveFileDialog1.Title = _language.Menu.File.ExportEbu;
+            saveFileDialog1.Title = _language.SaveSubtitleAs;
             saveFileDialog1.DefaultExt = "*" + pac.Extension;
             saveFileDialog1.AddExtension = true;
 
