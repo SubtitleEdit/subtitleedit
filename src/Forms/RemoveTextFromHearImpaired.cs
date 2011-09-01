@@ -361,12 +361,15 @@ namespace Nikse.SubtitleEdit.Forms
                                 string content = s.Substring(indexOfColon + 1).Trim();
                                 if (content != string.Empty)
                                 {
-                                    if (pre.Contains("<i>") && !content.Contains("</i>"))
+                                    if (pre.Contains("<i>") && content.Contains("</i>"))
                                         newText = newText + Environment.NewLine + "<i>" + content;
+                                    else if (pre.Contains("[") && content.Contains("]"))
+                                        newText = newText + Environment.NewLine + "[" + content;
+                                    else if (pre.Contains("(") && content.EndsWith(")"))
+                                        newText = newText + Environment.NewLine + "(" + content;
                                     else
                                         newText = newText + Environment.NewLine + content;
                                 }
-//                                newText = newText + Environment.NewLine + st.Pre + content + st.Post;
                                 newText = newText.Trim();
 
                                 if (text.StartsWith("(") && newText.EndsWith(")") && !newText.Contains("("))
@@ -405,13 +408,9 @@ namespace Nikse.SubtitleEdit.Forms
                                             endIndex = -10;
                                     }
                                     if (endIndex == -1)
-                                    {
                                         s2 = s2.Remove(0, colonIndex - endIndex);
-                                    }
                                     else if (endIndex > 0)
-                                    {
                                         s2 = s2.Remove(endIndex + 1, colonIndex - endIndex);
-                                    }
                                 }
                             }
                             newText = newText + Environment.NewLine + s2;
@@ -472,9 +471,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 StripableText st = new StripableText(newText);
                 if (st.Pre.Contains("-"))
-                { 
                     newText = st.Pre.Replace("-", string.Empty) + st.StrippedText + st.Post;
-                }
             }
             return newText;
         }
