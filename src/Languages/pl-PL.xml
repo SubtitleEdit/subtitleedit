@@ -21,7 +21,7 @@
     <PositionX>Pozycja / czas trwania: {0}</PositionX>
     <StartTime>Początek</StartTime>
     <EndTime>Koniec</EndTime>
-    <Duration>Trwanie</Duration>
+    <Duration>Czas trwania</Duration>
     <NumberSymbol>#</NumberSymbol>
     <Number>Numer</Number>
     <Text>Tekst</Text>
@@ -244,9 +244,9 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
   <FindDialog>
     <Title>Znajdź</Title>
     <Find>Znajdź</Find>
-    <Normal>Normal</Normal>
-    <CaseSensitive>Przypadk. wyraż.</CaseSensitive>
-    <RegularExpression>Regularne wyraż.</RegularExpression>
+    <Normal>Normalne</Normal>
+    <CaseSensitive>Wyrażenie przypadkowe</CaseSensitive>
+    <RegularExpression>Wyrażenie regularne</RegularExpression>
   </FindDialog>
   <FindSubtitleLine>
     <Title>Znajdź linię napisów</Title>
@@ -255,7 +255,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
   </FindSubtitleLine>
   <FixCommonErrors>
     <Title>Popraw pospolite błędy</Title>
-    <Step1>Krok 1/2 - Wybierz co ma być poprawione</Step1>
+    <Step1>Krok 1/2 - Wybierz co ma zostać poprawione</Step1>
     <WhatToFix>Co zostanie poprawione</WhatToFix>
     <Example>Przykład</Example>
     <SelectAll>Zaznacz</SelectAll>
@@ -352,9 +352,9 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FixMissingPeriodAtEndOfLine>Dodano brakujące kropki na końcu linii</FixMissingPeriodAtEndOfLine>
     <XDoubleApostrophesFixed>Poprawiono {0} podwójnych apostrofów.</XDoubleApostrophesFixed>
     <XUppercaseIsFoundInsideLowercaseWords>Znaleziono {0} małych 'i' wewnątrz wyrazów pisanych z dużej litery</XUppercaseIsFoundInsideLowercaseWords>
-    <RefreshFixes>Odśwież dost. poprawki</RefreshFixes>
+    <RefreshFixes>Odśwież dostępne poprawki</RefreshFixes>
     <ApplyFixes>Zastosuj wyb. poprawki</ApplyFixes>
-    <AutoBreak>&amp;Złam</AutoBreak>
+    <AutoBreak>&amp;Przełam</AutoBreak>
     <Unbreak>&amp;Cofnij</Unbreak>
     <FixDoubleDash>Popraw '--' -&gt; '...' </FixDoubleDash>
     <FixDoubleGreaterThan>Usuń &gt;&gt; </FixDoubleGreaterThan>
@@ -443,7 +443,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <Reopen>Otwórz &amp;ponownie</Reopen>
         <Save>&amp;Zapisz</Save>
         <SaveAs>Zapisz j&amp;ako...</SaveAs>
-        <OpenOriginal>Otwórz oryginalny tytuł (tryb tłumacz)...</OpenOriginal>
+        <OpenOriginal>Otwórz oryginalne napisy (tryb tłumacz)...</OpenOriginal>
         <SaveOriginal>Zapisz oryginalny</SaveOriginal>
         <CloseOriginal>Usuń oryginalny</CloseOriginal>
         <OpenContainingFolder>Otwórz zawartość folderu</OpenContainingFolder>
@@ -488,8 +488,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <TextSingleLineMaximumLength>Tekst - maksymalna długość pojedynczej linii</TextSingleLineMaximumLength>
         <TextTotalLength>Tekst - całkowita długość</TextTotalLength>
         <TextNumberOfLines>Tekst - ilość linii</TextNumberOfLines>
-        <ShowOriginalTextInAudioAndVideoPreview>Pokaż oryginalny tekst z audio/video</ShowOriginalTextInAudioAndVideoPreview>
-        <MakeNewEmptyTranslationFromCurrentSubtitle>Dodaj nowy, pusty tłumaczenie z obecnych napisów</MakeNewEmptyTranslationFromCurrentSubtitle>
+        <ShowOriginalTextInAudioAndVideoPreview>Pokaż oryginalny tekst z audio/wideo</ShowOriginalTextInAudioAndVideoPreview>
+        <MakeNewEmptyTranslationFromCurrentSubtitle>Dodaj nowe, puste tłumaczenie z obecnych napisów</MakeNewEmptyTranslationFromCurrentSubtitle>
         <SplitSubtitle>Podziel napisy...</SplitSubtitle>
         <AppendSubtitle>Połącz napisy...</AppendSubtitle>
       </Tools>
@@ -498,9 +498,9 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <OpenVideo>Otwórz plik wideo...</OpenVideo>
         <ChooseAudioTrack>Wybierz ścieżkę audio</ChooseAudioTrack>
         <CloseVideo>Zamknij plik wideo</CloseVideo>
-        <ShowHideVideo>Pokaż/Ukryj wideo</ShowHideVideo>
-        <ShowHideWaveForm>Pokaż/Ukryj próbkowanie dźwięku</ShowHideWaveForm>
-        <ShowHideWaveformAndSpectrogram>Pokaż/Ukryj próbkowanie audio i spektrogram</ShowHideWaveformAndSpectrogram>
+        <ShowHideVideo>Pokaż / Ukryj wideo</ShowHideVideo>
+        <ShowHideWaveForm>Pokaż / Ukryj próbkowanie dźwięku</ShowHideWaveForm>
+        <ShowHideWaveformAndSpectrogram>Pokaż / Ukryj próbkowanie dźwięku i spektrogram</ShowHideWaveformAndSpectrogram>
         <UnDockVideoControls>"Oddokuj" okno kontroli wideo</UnDockVideoControls>
         <ReDockVideoControls>"Dokuj" okno kontroli wideo</ReDockVideoControls>
       </Video>
@@ -520,7 +520,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <PointSyncViaOtherSubtitle>Punkt synchronizacji za pośrednictwem innych napisów...</PointSyncViaOtherSubtitle>
       </Synchronization>
       <AutoTranslate>
-        <Title>Automatyczne tłumaczenie</Title>
+        <Title>Tłumaczenie automatyczne</Title>
         <TranslatePoweredByGoogle>Przetłumacz (za pomocą Google)...</TranslatePoweredByGoogle>
         <TranslatePoweredByMicrosoft>Przetłumacz (za pomocą Microsoft)...</TranslatePoweredByMicrosoft>
         <TranslateFromSwedishToDanish>Przetłumacz ze szwedzkiego na duński (za pomocą nikse.dk)...</TranslateFromSwedishToDanish>
@@ -554,8 +554,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <SpellCheck>Sprawdź pisownię</SpellCheck>
         <Settings>Ustawienia</Settings>
         <Help>Pomoc</Help>
-        <ShowHideWaveForm>Pokaż/Ukryj próbkowanie dźwięku</ShowHideWaveForm>
-        <ShowHideVideo>Pokaż/Ukryj wideo</ShowHideVideo>
+        <ShowHideWaveForm>Pokaż / Ukryj próbkowanie dźwięku</ShowHideWaveForm>
+        <ShowHideVideo>Pokaż / Ukryj wideo</ShowHideVideo>
       </ToolBar>
       <ContextMenu>
         <SubStationAlphaSetStyle>(Zaawansowane) Sub Station Alpha - Ustawienia stylu</SubStationAlphaSetStyle>
@@ -563,7 +563,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <Copy>Kopiuj</Copy>
         <Paste>Wklej</Paste>
         <Delete>Usuń</Delete>
-        <SplitLineAtCursorPosition>Linii podziału na pozycji kursora</SplitLineAtCursorPosition>
+        <SplitLineAtCursorPosition>Linia podziału na pozycji kursora</SplitLineAtCursorPosition>
         <SelectAll>Wybierz wszystko</SelectAll>
         <InsertFirstLine>Wstaw linię</InsertFirstLine>
         <InsertBefore>Wstaw przed</InsertBefore>
@@ -574,7 +574,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <MergeSelectedLines>Połącz wybrane linie</MergeSelectedLines>
         <MergeWithLineBefore>Połącz z linią przed</MergeWithLineBefore>
         <MergeWithLineAfter>Połącz z linią po</MergeWithLineAfter>
-        <Normal>Normalna</Normal>
+        <Normal>Normalne</Normal>
         <Underline>Podkreślnie</Underline>
         <Color>Kolor...</Color>
         <FontName>Nazwa czcionki...</FontName>
@@ -599,8 +599,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
       <UndoChangesInEditPanel>Cofnij zmiany edycji</UndoChangesInEditPanel>
       <Previous>&lt; Wróć</Previous>
       <Next>Dalej &gt;</Next>
-      <AutoBreak>Złam</AutoBreak>
-      <Unbreak>Cofnij łamanie</Unbreak>
+      <AutoBreak>Przełam linię</AutoBreak>
+      <Unbreak>Cofnij łamanie linii</Unbreak>
     </Controls>
     <VideoControls>
       <Translate>Tłumacz</Translate>
@@ -626,11 +626,11 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
       <StillTypingAutoContinueStopped>Zatrz. pisanie na maszynie... automat. kont. zatrzymana</StillTypingAutoContinueStopped>
       <InsertNewSubtitleAtVideoPosition>&amp;Wstaw nowy napis w poz. wideo</InsertNewSubtitleAtVideoPosition>
       <Auto>Auto</Auto>
-      <PlayFromJustBeforeText>Zacznij odtw. przed &amp;tekstem</PlayFromJustBeforeText>
+      <PlayFromJustBeforeText>Rozpocznij odtw. przed &amp;tekstem</PlayFromJustBeforeText>
       <Pause>Pauza</Pause>
       <GoToSubtitlePositionAndPause>Idź do podpozycji i pauza</GoToSubtitlePositionAndPause>
       <SetStartTime>Ustaw czas &amp;początku</SetStartTime>
-      <SetEndTimeAndGoToNext>Ustaw &amp;koniec &amp;&amp; Idź dalej</SetEndTimeAndGoToNext>
+      <SetEndTimeAndGoToNext>Ustaw &amp;koniec &amp;&amp; Przejdź dalej</SetEndTimeAndGoToNext>
       <AdjustedViaEndTime>Dostosowano za pomocą czasu końcowego {0}</AdjustedViaEndTime>
       <SetEndTime>Ustaw czas &amp;końca</SetEndTime>
       <SetstartTimeAndOffsetOfRest>Ustaw sta&amp;rt i wyrównaj resztę</SetstartTimeAndOffsetOfRest>
@@ -867,9 +867,9 @@ Kontynuować?</SubtitleAppendPrompt>
     <Title>Wielokrotna zamiana</Title>
     <FindWhat>Znajdź</FindWhat>
     <ReplaceWith>Zamień na</ReplaceWith>
-    <Normal>Normal</Normal>
-    <CaseSensitive>Przypadk. wyraż.</CaseSensitive>
-    <RegularExpression>Regular. wyraż.</RegularExpression>
+    <Normal>Normalne</Normal>
+    <CaseSensitive>Wyrażenie przypadkowe</CaseSensitive>
+    <RegularExpression>Wyrażenie regularne</RegularExpression>
     <LineNumber>Linia#</LineNumber>
     <Before>Przed</Before>
     <After>Po</After>
@@ -924,13 +924,13 @@ Kontynuować?</SubtitleAppendPrompt>
   <ReplaceDialog>
     <Title>Zamień</Title>
     <FindWhat>Znajdź:</FindWhat>
-    <Normal>Normal</Normal>
-    <CaseSensitive>Przypadk. wyraż.</CaseSensitive>
-    <RegularExpression>Regular. wyraż.</RegularExpression>
+    <Normal>Normalne</Normal>
+    <CaseSensitive>Wyrażenie przypadkowe</CaseSensitive>
+    <RegularExpression>Wyrażenie regularne</RegularExpression>
     <ReplaceWith>Zamień na</ReplaceWith>
     <Find>&amp;Znajdź</Find>
     <Replace>Za&amp;mień</Replace>
-    <ReplaceAll>Zam. &amp;cał.</ReplaceAll>
+    <ReplaceAll>Zamień &amp;wszystko</ReplaceAll>
   </ReplaceDialog>
   <SetMinimumDisplayTimeBetweenParagraphs>
     <Title>Ustaw minimalny odstęp czasowy między wyświetlanymi wierszami</Title>
@@ -967,7 +967,7 @@ Kontynuować?</SubtitleAppendPrompt>
     <SpellCheck>Spr. pisowni</SpellCheck>
     <SettingsName>Ustawienia</SettingsName>
     <Help>Pomoc</Help>
-    <ShowFrameRate>Pokaż szybk. odtw. klatek na Pasku narzędzi</ShowFrameRate>
+    <ShowFrameRate>Pokaż szybkość odtwarzania klatek na Pasku narzędzi</ShowFrameRate>
     <DefaultFrameRate>Domyślna szybk. odtw. klatek</DefaultFrameRate>
     <DefaultFileEncoding>Domyślne kodowanie</DefaultFileEncoding>
     <AutoDetectAnsiEncoding>Auto. detekcja kodowania ANSI</AutoDetectAnsiEncoding>
@@ -1007,7 +1007,7 @@ Kontynuować?</SubtitleAppendPrompt>
     <VlcMediaPlayer>VLC Media Player</VlcMediaPlayer>
     <VlcMediaPlayerDescription>libvlc.dll z VLC Media Player 1.1.0 lub nowszy</VlcMediaPlayerDescription>
     <ShowStopButton>Pokaż przycisk Stop</ShowStopButton>
-    <DefaultVolume>Domyśl. głośność</DefaultVolume>
+    <DefaultVolume>Domyślna głośność</DefaultVolume>
     <VolumeNotes>0 bez dźwięku, 100 najwyższa głośność</VolumeNotes>
     <PreviewFontSize>Podgląd rozmiaru czcionki napisów</PreviewFontSize>
     <MainWindowVideoControls>Główne okno kontroli wideo</MainWindowVideoControls>
@@ -1019,7 +1019,7 @@ Kontynuować?</SubtitleAppendPrompt>
     <WaveFormSelectedColor>Kolor zaznaczenia</WaveFormSelectedColor>
     <WaveFormBackgroundColor>Kolor tła</WaveFormBackgroundColor>
     <WaveFormTextColor>Kolor tekstu</WaveFormTextColor>
-    <WaveformAndSpectrogramsFolderEmpty>Foldery 'Spectrograms' i 'Waveforms' są puste</WaveformAndSpectrogramsFolderEmpty>
+    <WaveformAndSpectrogramsFolderEmpty>Opróżnij foldery 'Spectrograms' i 'Waveforms'</WaveformAndSpectrogramsFolderEmpty>
     <WaveformAndSpectrogramsFolderInfo>Foldery 'Waveforms' i  'Spectrograms' zawierają {0} pliki ({1:0.00} MB)</WaveformAndSpectrogramsFolderInfo>
     <Spectrogram>Spektrogram</Spectrogram>
     <GenerateSpectrogram>Generuj spektrogram</GenerateSpectrogram>
