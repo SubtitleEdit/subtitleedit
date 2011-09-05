@@ -216,60 +216,11 @@ namespace Nikse.SubtitleEdit.Forms
             int count = 0;
             foreach (Paragraph p in _subtitle.Paragraphs)
             {
-                bool hit = false;
-
-                if (HasHearImpariedTagsAtStart(RemoveStartEndNoise(p.Text)))
-                    hit = true;
-
-                if (HasHearImpariedTagsAtEnd(RemoveStartEndNoise(p.Text)))
-                    hit = true;
-
-                if (!hit && checkBoxRemoveWhereContains.Checked && comboBoxRemoveIfTextContains.Text.Length > 0 && p.Text.Contains(comboBoxRemoveIfTextContains.Text))
-                    hit = true;
-                
-                if (!hit)
-                {
-                    foreach (string s in p.Text.Trim().Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries))
-                    {
-                        if (HasHearImpariedTagsAtStart(RemoveStartEndNoise(s)))
-                            hit = true;
-                    }
-                }
-
-                if (RemoveColon(p.Text) != p.Text.Trim())
-                {
-                    hit = true;
-                }
-
-                if (checkBoxRemoveInterjections.Checked && RemoveInterjections(p.Text) != p.Text.Trim())
-                {
-                    hit = true;
-                }
-
-                if (RemoveHearImpairedtagsInsideLine(p.Text) != p.Text.Trim())
-                {
-                    hit = true;
-                }
-
-                if (!hit)
-                { 
-                    string[] parts = p.Text.Trim().Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-                    foreach (string s in parts)
-                    {
-                        StripableText stSub = new StripableText(s, " >-\"'‘`´♪¿¡.", " -\"'`´♪.!?:");
-                        string newText = stSub.StrippedText;
-
-                        if (HasHearImpariedTagsAtStart(newText))
-                            hit = true;
-                        else if (HasHearImpariedTagsAtEnd(newText))
-                            hit = true;
-                    }
-                }
-
+                string newText = RemoveTextFromHearImpaired(p.Text);
+                bool hit = p.Text.Replace(" ", string.Empty) != newText.Replace(" ", string.Empty);
                 if (hit)
                 {
                     count++;
-                    string newText = RemoveTextFromHearImpaired(p.Text);
                     AddToListView(p, newText);
                 }
             }
