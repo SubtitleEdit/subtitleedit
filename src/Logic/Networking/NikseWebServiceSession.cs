@@ -267,14 +267,14 @@ namespace Nikse.SubtitleEdit.Logic.Networking
             {
                 sb.Append(index + ", ");
                 AdjustUpdateLogToDelete(index);
+                AppendToLog(string.Format(Configuration.Settings.Language.Main.NetworkDelete, CurrentUser.UserName, CurrentUser.Ip, index.ToString()));
             }
-            AppendToLog("Delete line: " + sb.ToString().Trim().TrimEnd(','));
         }
 
         internal void InsertLine(int index, Paragraph newParagraph)
         {
             _seWs.InsertLine(SessionId, index, (int)newParagraph.StartTime.TotalMilliseconds, (int)newParagraph.EndTime.TotalMilliseconds, newParagraph.Text, CurrentUser);
-            AppendToLog("Insert line at " + index + ": " + newParagraph);
+            AppendToLog(string.Format(Configuration.Settings.Language.Main.NetworkInsert, CurrentUser.UserName, CurrentUser.Ip, index.ToString(), newParagraph.Text.Replace(Environment.NewLine, Configuration.Settings.General.ListViewLineSeparatorString)));
         }
 
         internal void AdjustUpdateLogToInsert(int index)
