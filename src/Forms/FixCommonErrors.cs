@@ -1165,55 +1165,148 @@ namespace Nikse.SubtitleEdit.Forms
                 if (Utilities.CountTagInText(p.Text, "\"") == 1)
                 {
                     Paragraph next = _subtitle.GetParagraphOrDefault(i + 1);
+                    if (next != null)
+                    {
+                        double betweenMilliseconds = next.StartTime.TotalMilliseconds - p.EndTime.TotalMilliseconds;
+                        if (betweenMilliseconds > 1500)
+                            next = null; // cannot be quote spanning several lines of more than 1.5 seconds between lines!
+                        else if (next.Text.Replace("<i>", string.Empty).TrimStart().TrimStart('-').TrimStart().StartsWith("\"") &&
+                                 next.Text.Replace("</i>", string.Empty).TrimEnd().EndsWith("\"") &&
+                                 Utilities.CountTagInText(next.Text, "\"") == 2)
+                            next = null; // seems to have valid quotes, so no spanning
+                    }
+                    
                     Paragraph prev = _subtitle.GetParagraphOrDefault(i - 1);
+                    if (prev != null)
+                    {
+                        double betweenMilliseconds = p.StartTime.TotalMilliseconds - prev.EndTime.TotalMilliseconds;
+                        if (betweenMilliseconds > 1500)
+                            prev = null; // cannot be quote spanning several lines of more than 1.5 seconds between lines!
+                        else if (prev.Text.Replace("<i>",string.Empty).TrimStart().TrimStart('-').TrimStart().StartsWith("\"") &&
+                                 prev.Text.Replace("</i>", string.Empty).TrimEnd().EndsWith("\"") && 
+                                 Utilities.CountTagInText(prev.Text, "\"") == 2)
+                            prev = null; // seems to have valid quotes, so no spanning
+                    }
 
                     string oldText = p.Text;
-                    if (p.Text.StartsWith("\""))
-                    {
-                        if (next == null || !next.Text.Contains("\""))
-                            p.Text += "\"";
-                    }
-                    else if (p.Text.StartsWith("<i>\"") && p.Text.EndsWith("</i>") && Utilities.CountTagInText(p.Text, "</i>") == 1)
-                    {
-                        if (next == null || !next.Text.Contains("\""))
-                            p.Text = p.Text.Replace("</i>", "\"</i>");
-                    }
-                    else if (p.Text.EndsWith("\""))
-                    {
-                        if (prev == null || !prev.Text.Contains("\""))
-                            p.Text = "\"" + p.Text;
-                    }
-                    else if (p.Text.Contains(Environment.NewLine + "\"") && Utilities.CountTagInText(p.Text, Environment.NewLine) == 1)
-                    {
-                        if (next == null || !next.Text.Contains("\""))
-                            p.Text = p.Text + "\"";
-                    }
-                    else if ((p.Text.Contains(Environment.NewLine + "\"") || p.Text.Contains(Environment.NewLine + "-\"") || p.Text.Contains(Environment.NewLine + "- \"")) && 
-                             Utilities.CountTagInText(p.Text, Environment.NewLine) == 1 && p.Text.Length > 3)
-                    {
-                        if (next == null || !next.Text.Contains("\""))
+                    string[] lines = Utilities.RemoveHtmlTags(p.Text).Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                    if (lines.Length == 2 && lines[0].Trim().StartsWith("-") && lines[1].Trim().StartsWith("-"))
+                    { // dialogue
+                        lines = p.Text.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                        string line = lines[0].Trim();
+
+                        if (line.Length > 5 && line.TrimStart().StartsWith("- \"") && (line.EndsWith(".") || line.EndsWith("!") || line.EndsWith("?")))
                         {
-                            if (p.Text.StartsWith("<i>") && p.Text.EndsWith("</i>") && Utilities.CountTagInText(p.Text, "</i>") == 1)
-                                p.Text = p.Text.Replace("</i>", "\"</i>");
-                            else
-                                p.Text = p.Text + "\"";
+                            p.Text = p.Text.Trim().Replace(" " + Environment.NewLine, Environment.NewLine);
+                            p.Text = p.Text.Replace(Environment.NewLine, "\"" + Environment.NewLine);
+                        }
+                        else if (line.Length > 5 && line.EndsWith("\"") && line.IndexOf("- ") >= 0 && line.IndexOf("- ") < 4)
+                        {
+                            p.Text = p.Text.Insert(line.IndexOf("- ") + 2, "\"");
+                        }
+                        else if (line.Contains("\"") && line.IndexOf("\"") > 2 && line.IndexOf("\"") < line.Length - 3)
+                        {
+                            int index = line.IndexOf("\"");
+                            if (line[index - 1] == ' ')
+                            {
+                                p.Text = p.Text.Trim().Replace(" " + Environment.NewLine, Environment.NewLine);
+                                p.Text = p.Text.Replace(Environment.NewLine, "\"" + Environment.NewLine);
+                            }
+                            else if (line[index + 1] == ' ')
+                            {
+                                if (line.Length > 5 && line.IndexOf("- ") >= 0 && line.IndexOf("- ") < 4)
+                                    p.Text = p.Text.Insert(line.IndexOf("- ") + 2, "\"");
+                            }
+                        }
+                        else if (lines[1].Contains("\""))
+                        {
+                            line = lines[1].Trim();
+                            if (line.Length > 5 && line.TrimStart().StartsWith("- \"") && (line.EndsWith(".") || line.EndsWith("!") || line.EndsWith("?")))
+                            {
+                                p.Text = p.Text.Trim() + "\"";
+                            }
+                            else if (line.Length > 5 && line.EndsWith("\"") && p.Text.IndexOf(Environment.NewLine + "- ") >= 0)
+                            {
+                                p.Text = p.Text.Insert(p.Text.IndexOf(Environment.NewLine + "- ") + Environment.NewLine.Length + 2, "\"");
+                            }
+                            else if (line.Contains("\"") && line.IndexOf("\"") > 2 && line.IndexOf("\"") < line.Length - 3)
+                            {
+                                int index = line.IndexOf("\"");
+                                if (line[index - 1] == ' ')
+                                {
+                                    p.Text = p.Text.Trim() + "\"";
+                                }
+                                else if (line[index + 1] == ' ')
+                                {
+                                    if (line.Length > 5 && p.Text.IndexOf(Environment.NewLine + "- ") >= 0)
+                                        p.Text = p.Text.Insert(p.Text.IndexOf(Environment.NewLine + "- ") + Environment.NewLine.Length + 2, "\"");
+                                }
+                            }
                         }
                     }
-                    else if (p.Text.StartsWith("<i>") && p.Text.EndsWith("</i>") && Utilities.CountTagInText(p.Text, "<i>") == 1)
-                    {
-                        if (prev == null || !prev.Text.Contains("\""))
-                            p.Text = p.Text.Replace("<i>", "<i>\"");
+                    else
+                    { // not dialogue
+                        if (p.Text.StartsWith("\""))
+                        {
+                            if (next == null || !next.Text.Contains("\""))
+                                p.Text += "\"";
+                        }
+                        else if (p.Text.StartsWith("<i>\"") && p.Text.EndsWith("</i>") && Utilities.CountTagInText(p.Text, "</i>") == 1)
+                        {
+                            if (next == null || !next.Text.Contains("\""))
+                                p.Text = p.Text.Replace("</i>", "\"</i>");
+                        }
+                        else if (p.Text.EndsWith("\""))
+                        {
+                            if (prev == null || !prev.Text.Contains("\""))
+                                p.Text = "\"" + p.Text;
+                        }
+                        else if (p.Text.Contains(Environment.NewLine + "\"") && Utilities.CountTagInText(p.Text, Environment.NewLine) == 1)
+                        {
+                            if (next == null || !next.Text.Contains("\""))
+                                p.Text = p.Text + "\"";
+                        }
+                        else if ((p.Text.Contains(Environment.NewLine + "\"") || p.Text.Contains(Environment.NewLine + "-\"") || p.Text.Contains(Environment.NewLine + "- \"")) &&
+                                 Utilities.CountTagInText(p.Text, Environment.NewLine) == 1 && p.Text.Length > 3)
+                        {
+                            if (next == null || !next.Text.Contains("\""))
+                            {
+                                if (p.Text.StartsWith("<i>") && p.Text.EndsWith("</i>") && Utilities.CountTagInText(p.Text, "</i>") == 1)
+                                    p.Text = p.Text.Replace("</i>", "\"</i>");
+                                else
+                                    p.Text = p.Text + "\"";
+                            }
+                        }
+                        else if (p.Text.StartsWith("<i>") && p.Text.EndsWith("</i>") && Utilities.CountTagInText(p.Text, "<i>") == 1)
+                        {
+                            if (prev == null || !prev.Text.Contains("\""))
+                                p.Text = p.Text.Replace("<i>", "<i>\"");
+                        }
+                        else if (p.Text.Contains("\""))
+                        {
+                            string text = p.Text;
+                            int indexOfQuote = p.Text.IndexOf("\"");
+                            if (text.Contains("\"") && indexOfQuote > 2 && indexOfQuote < text.Length - 3)
+                            {
+                                int index = text.IndexOf("\"");
+                                if (text[index - 1] == ' ')
+                                    p.Text = p.Text.Trim() + "\"";
+                                else if (text[index + 1] == ' ')
+                                    p.Text = "\"" + p.Text;
+                            }
+                        }
                     }
 
                     if (oldText != p.Text)
                     {
                         if (AllowFix(i + 1, fixAction))
                         {
-                                _totalFixes++;
-                                noOfFixes++;
-                                AddFixToListView(p, i + 1, fixAction, oldText, p.Text);                            
+                            _totalFixes++;
+                            noOfFixes++;
+                            AddFixToListView(p, i + 1, fixAction, oldText, p.Text);
                         }
                     }
+
                 }
             }
             if (noOfFixes > 0)
