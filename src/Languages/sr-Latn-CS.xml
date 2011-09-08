@@ -170,7 +170,7 @@ E-pošta: mailto:nikse.dk@gmail.com</AboutText1>
     <Languages>Jezici</Languages>
     <PalNtsc>PAL/NTSC</PalNtsc>
     <Pal>PAL (25 fps)</Pal>
-    <Ntsc>NTSC (30 fps)</Ntsc>
+    <Ntsc>NTSC (23.976 fps)</Ntsc>
     <StartRipping>Započni vađenje</StartRipping>
     <Abort>Zaustavi</Abort>
     <AbortedByUser>Zaustavljeno od strane korisnika.</AbortedByUser>

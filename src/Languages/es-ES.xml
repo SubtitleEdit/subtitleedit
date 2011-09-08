@@ -169,7 +169,7 @@
     <Languages>Idiomas</Languages>
     <PalNtsc>PAL/NTSC</PalNtsc>
     <Pal>PAL (25fps)</Pal>
-    <Ntsc>NTSC (30fps)</Ntsc>
+    <Ntsc>NTSC (23.976fps)</Ntsc>
     <StartRipping>Iniciar la extracción</StartRipping>
     <Abort>Abortar</Abort>
     <AbortedByUser>Abortado por el usuario</AbortedByUser>

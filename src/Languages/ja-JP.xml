@@ -168,7 +168,7 @@ C# ソース コードは http://code.google.com/p/subtitleedit にあります�
     <Languages>言語</Languages>
     <PalNtsc>PAL/NTSC</PalNtsc>
     <Pal>PAL (25fps)</Pal>
-    <Ntsc>NTSC (30fps)</Ntsc>
+    <Ntsc>NTSC (23.976fps)</Ntsc>
     <StartRipping>抽出の開始</StartRipping>
     <Abort>中止</Abort>
     <AbortedByUser>ユーザーによって中止されました</AbortedByUser>
