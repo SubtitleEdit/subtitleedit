@@ -20,6 +20,7 @@ namespace Nikse.SubtitleEdit.Forms
         bool _googleTranslate = true;
         MicrosoftTranslationService.SoapService _microsoftTranslationService = null;
         private const string BingApiId = "C2C2E9A508E6748F0494D68DFD92FAA1FF9B0BA4";
+        bool _googleApiNotWorking = false;
 
         public class ComboBoxItem
         {
@@ -159,6 +160,10 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
+            // empty all texts
+            foreach (Paragraph p in _translatedSubtitle.Paragraphs)
+                p.Text = string.Empty;
+
             if (!_googleTranslate)
             {
                 string from = (comboBoxFrom.SelectedItem as ComboBoxItem).Value;
@@ -184,11 +189,24 @@ namespace Nikse.SubtitleEdit.Forms
                 int index = 0;
                 foreach (Paragraph p in _subtitle.Paragraphs)
                 {
-                    string text = string.Format("<p>{0}</p>", p.Text);
-                    if (HttpUtility.UrlEncode(sb.ToString() + text).Length >= textMaxSize)
+                    string text = string.Format("<p> {0} </p>", p.Text);
+                    if (_googleApiNotWorking)
+                    {
+                        FillTranslatedText(DoTranslate(text), index, index);
+                        sb = new StringBuilder();
+                        progressBar1.Refresh();
+                        Application.DoEvents();
+                        text = string.Empty;
+                    }
+                    else if (HttpUtility.UrlEncode(sb.ToString() + text).Length >= textMaxSize)
                     {
                         FillTranslatedText(DoTranslate(sb.ToString()), start, index-1);
-
+                        if (_googleApiNotWorking)
+                        {
+                            buttonTranslate.Text = Configuration.Settings.Language.GoogleTranslate.Translate;
+                            buttonTranslate_Click(null, null);
+                            return;
+                        }
                         sb = new StringBuilder();
                         progressBar1.Refresh();
                         Application.DoEvents();
@@ -258,24 +276,37 @@ namespace Nikse.SubtitleEdit.Forms
             }
             catch
             {
+                _googleApiNotWorking = true;
                 result = string.Empty;
             }
 
             // fallback to screen scraping
             if (string.IsNullOrEmpty(result))
+            {
+                _googleApiNotWorking = true;
                 result = TranslateTextViaScreenScraping(input, languagePair);
+            }
 
             return PostTranslate(result);
         }
 
         public static string TranslateTextViaApi(string input, string languagePair)
         {
+            string[] arr = languagePair.Split('|');
+            string from = arr[0];
+            string to = arr[1];
             input = input.Replace(Environment.NewLine, "<br/>");
             input = input.Replace("'", "&apos;");
             // create the web request to the Google Translate REST interface
-            WebRequest request = WebRequest.Create("http://ajax.googleapis.com/ajax/services/language/translate?v=1.0&q=" + HttpUtility.UrlEncode(input) + "&langpair=" + languagePair);
-            request.Proxy = Utilities.GetProxy();
 
+            //API V 1.0
+            string url = "http://ajax.googleapis.com/ajax/services/language/translate?v=1.0&q=" + HttpUtility.UrlEncode(input) + "&langpair=" + languagePair;
+
+            //API V 2.0 ?
+            //string url = String.Format("https://www.googleapis.com/language/translate/v2?key=INSERT-YOUR-KEY&q={0}&source={1}&target={2}", HttpUtility.UrlEncode(input), from, to);
+
+            WebRequest request = WebRequest.Create(url);
+            request.Proxy = Utilities.GetProxy();
             WebResponse response = request.GetResponse();
             StreamReader reader = new StreamReader(response.GetResponseStream(), Encoding.UTF8);
             string content = reader.ReadToEnd();
@@ -335,7 +366,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             //string url = String.Format("http://www.google.com/translate_t?hl=en&ie=UTF8&text={0}&langpair={1}", HttpUtility.UrlEncode(input), languagePair);
             string url = String.Format("http://translate.google.com/?hl=en&eotf=1&sl={0}&tl={1}&q={2}", languagePair.Substring(0, 2), languagePair.Substring(3), HttpUtility.UrlEncode(input));
-
+            
             WebClient webClient = new WebClient();
             webClient.Proxy = Utilities.GetProxy();
             webClient.Encoding = System.Text.Encoding.Default;
@@ -353,7 +384,16 @@ namespace Nikse.SubtitleEdit.Forms
                         startIndex++;
                         int endIndex = result.IndexOf("</span>", startIndex);
                         string translatedText = result.Substring(startIndex, endIndex - startIndex);
-                        string test = HttpUtility.HtmlDecode(translatedText);                                               
+                        string test = HttpUtility.HtmlDecode(translatedText);
+                        test = test.Replace(" </ P>", "</ p>");
+                        test = test.Replace(" <P>", "<p>");
+                        test = test.Replace(" <P >", "<p>");
+                        test = test.Replace(" < P >", "<p>");
+                        test = test.Replace(" </ p>", "</p>");
+                        test = test.Replace("</ p>", "</p>");
+                        test = test.Replace("</ P>", "</p>");
+                        test = test.Replace("</P>", "</p>");
+                        test = test.Replace("< /P >", "</p>");
                         sb.Append(test);
                         startIndex = result.IndexOf("<span title=", startIndex);
                     }
