@@ -17,6 +17,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         Paragraph _paragraph;
         ExpectingLine _expecting = ExpectingLine.Number;
         readonly Regex _regexTimeCodes = new Regex(@"^-?\d+:-?\d+:-?\d+[:,]-?\d+\s*-->\s*-?\d+:-?\d+:-?\d+[:,]-?\d+$", RegexOptions.Compiled);
+        readonly Regex _regexTimeCodes2 = new Regex(@"^\d+:\d+:\d+,\d+\s*-->\s*\d+:\d+:\d+,\d+$", RegexOptions.Compiled);
         readonly Regex _buggyTimeCodes = new Regex(@"^-?\d+:-?\d+:-?\d+[¡،]-?\d+\s*-->\s*-?\d+:-?\d+:-?\d+[¡،]-?\d+$", RegexOptions.Compiled);       
 
         public override string Extension
@@ -207,14 +208,14 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             line = line.Replace('.', ':');
             if (line.Length >= 29 && ":;".Contains(line[8].ToString()))
                 line = line.Substring(0, 8) + ',' + line.Substring(8 + 1);
-            if (line.Length >= 29 && ":;".Contains(line[25].ToString()))
+            if (line.Length >= 29 && line.Length <= 30 && ":;".Contains(line[25].ToString()))
                 line = line.Substring(0, 25) + ',' + line.Substring(25 + 1);
 
 
             if (_buggyTimeCodes.IsMatch(line)) // seen this in a few arabic subs: 00:00:05¡580 --> 00:01:00¡310
                 line = line.Replace("¡", ",");
 
-            if (_regexTimeCodes.IsMatch(line))
+            if (_regexTimeCodes.IsMatch(line) || _regexTimeCodes2.IsMatch(line))
             {
                 string[] parts = line.Replace("-->", ":").Replace(" ", string.Empty).Split(':', ',');
                 try
