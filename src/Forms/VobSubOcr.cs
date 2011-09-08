@@ -177,12 +177,14 @@ namespace Nikse.SubtitleEdit.Forms
             labelDictionaryLoaded.Text = string.Format(Configuration.Settings.Language.VobSubOcr.DictionaryX, string.Empty);
             comboBoxDictionaries.Left = labelDictionaryLoaded.Left + labelDictionaryLoaded.Width;
 
-            groupBoxImageCompareMethod.Text = language.OcrViaImageCompare;
-            groupBoxModiMethod.Text = language.OcrViaModi;
+            groupBoxImageCompareMethod.Text = string.Empty; // language.OcrViaImageCompare;
+            groupBoxModiMethod.Text = string.Empty; //language.OcrViaModi;
+            GroupBoxTesseractMethod.Text = string.Empty;
+
             checkBoxAutoFixCommonErrors.Text = language.FixOcrErrors;
             checkBoxRightToLeft.Text = language.RightToLeft;
             checkBoxRightToLeft.Left = numericUpDownPixelsIsSpace.Left;
-            groupBoxOCRControls.Text = language.StartOcr + " / " + language.Stop;
+            groupBoxOCRControls.Text = string.Empty; // language.StartOcr + " / " + language.Stop; TODO: Can text be removed from translations?
 
             comboBoxDictionaries.SelectedIndexChanged -= comboBoxDictionaries_SelectedIndexChanged;
             comboBoxDictionaries.Items.Clear();

@@ -289,8 +289,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (DialogResult == DialogResult.OK)
                 dr = DialogResult.Yes;
             else
-                dr = MessageBox.Show(_language.KeepChangesMessage + Environment.NewLine +
-                                     _language.KeepChangesTitle, _language.KeepChangesTitle, MessageBoxButtons.YesNoCancel);
+                dr = MessageBox.Show(_language.KeepChangesMessage, _language.KeepChangesTitle, MessageBoxButtons.YesNoCancel);
 
             if (dr == DialogResult.Cancel)
             {
