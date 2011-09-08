@@ -283,6 +283,8 @@ namespace Nikse.SubtitleEdit.Controls
 
         public void SelectNone()
         {
+            if (SelectedItems == null)
+                return;
             foreach (ListViewItem item in SelectedItems)
                 item.Selected = false;
         }

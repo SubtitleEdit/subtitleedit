@@ -94,6 +94,7 @@ namespace Nikse.SubtitleEdit.Forms
         Keys _mainAdjustInsertViaEndAutoStartAndGoToNext = Keys.None;
         bool _videoLoadedGoToSubPosAndPause = false;
         bool _makeHistory = true;
+        string _cutText = string.Empty;
 
         private bool AutoRepeatContinueOn
         {
@@ -114,7 +115,7 @@ namespace Nikse.SubtitleEdit.Forms
                     if (versionInfo.Length >= 3 && versionInfo[2] != "0")
                         _title += "." + versionInfo[2];
                 }
-                return _title + " RC 1";
+                return _title + " RC2";
             }
         }
 
@@ -658,6 +659,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (beforeParagraph == null)
                 beforeParagraph = paragraph;
 
+            int selectedIndex = FirstSelectedIndex;
             _change = true;
             _makeHistory = false;
             int index = _subtitle.Paragraphs.IndexOf(paragraph);
@@ -705,6 +707,14 @@ namespace Nikse.SubtitleEdit.Forms
 
                             SubtitleListview1.SetStartTime(index, paragraph);
                             SubtitleListview1.SetDuration(index, paragraph);
+
+                            if (index == selectedIndex)
+                            {
+                                timeUpDownStartTime.TimeCode = paragraph.StartTime;
+                                decimal durationInSeconds = (decimal)(paragraph.Duration.TotalSeconds);
+                                if (durationInSeconds >= numericUpDownDuration.Minimum && durationInSeconds <= numericUpDownDuration.Maximum)
+                                    numericUpDownDuration.Value = durationInSeconds;
+                            }
                         }
                     }
                 }
@@ -3976,7 +3986,16 @@ namespace Nikse.SubtitleEdit.Forms
                 }
 
                 if (Configuration.Settings.General.PromptDeleteLines && MessageBox.Show(askText, Title, MessageBoxButtons.YesNo) == DialogResult.No)
+                {
+                    _cutText = string.Empty;
                     return;
+                }
+
+                if (!string.IsNullOrEmpty(_cutText))
+                {
+                    Clipboard.SetText(_cutText);
+                    _cutText = string.Empty;
+                }
 
                 MakeHistoryForUndo(historyText);
                 _subtitleListViewIndex = -1;
@@ -6127,9 +6146,6 @@ namespace Nikse.SubtitleEdit.Forms
                 videoTimer.Stop();               
                 timer1.Stop();
 
-                //if (SubtitleListview1.SelectedIndices.Count > 1)
-                //    SubtitleListview1.EnsureVisible(SubtitleListview1.SelectedIndices[0]);
-
                 _showEarlierOrLater = new ShowEarlierLater();
                 if (!_formPositionsAndSizes.SetPositionAndSize(_showEarlierOrLater))
                 {
@@ -6590,7 +6606,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void SubtitleListview1_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.KeyCode == Keys.C && e.Control) //Copy to clipboard
+            if (e.KeyCode == Keys.C && e.Control) //Ctrl+c = Copy to clipboard
             {
                 Subtitle tmp = new Subtitle();
                 foreach (int i in SubtitleListview1.SelectedIndices)
@@ -6605,7 +6621,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 e.SuppressKeyPress = true;
             }
-            else if (e.KeyCode == Keys.V && e.Control) //Paste from clipboard
+            else if (e.KeyCode == Keys.V && e.Control) //Ctrl+vPaste from clipboard
             {
                 if (Clipboard.ContainsText())
                 {
@@ -6636,6 +6652,19 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
                 e.SuppressKeyPress = true;
+            }
+            else if (e.KeyCode == Keys.X && e.Control) //Ctrl+X = Cut to clipboard
+            {
+                Subtitle tmp = new Subtitle();
+                foreach (int i in SubtitleListview1.SelectedIndices)
+                {
+                    Paragraph p = _subtitle.GetParagraphOrDefault(i);
+                    if (p != null)
+                        tmp.Paragraphs.Add(new Paragraph(p));
+                }
+                e.SuppressKeyPress = true;
+                _cutText = tmp.ToText(new SubRip());
+                ToolStripMenuItemDeleteClick(null, null);
             }
             else if (e.KeyCode == Keys.A && e.Control) //SelectAll
             {

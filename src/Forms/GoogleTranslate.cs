@@ -20,7 +20,6 @@ namespace Nikse.SubtitleEdit.Forms
         bool _googleTranslate = true;
         MicrosoftTranslationService.SoapService _microsoftTranslationService = null;
         private const string BingApiId = "C2C2E9A508E6748F0494D68DFD92FAA1FF9B0BA4";
-        bool _googleApiNotWorking = false;
 
         public class ComboBoxItem
         {
@@ -189,24 +188,10 @@ namespace Nikse.SubtitleEdit.Forms
                 int index = 0;
                 foreach (Paragraph p in _subtitle.Paragraphs)
                 {
-                    string text = string.Format("<p> {0} </p>", p.Text);
-                    if (_googleApiNotWorking)
-                    {
-                        FillTranslatedText(DoTranslate(text), index, index);
-                        sb = new StringBuilder();
-                        progressBar1.Refresh();
-                        Application.DoEvents();
-                        text = string.Empty;
-                    }
-                    else if (HttpUtility.UrlEncode(sb.ToString() + text).Length >= textMaxSize)
+                    string text = string.Format("<p> {0} </p>|", p.Text.Replace("|", "<br />"));
+                    if (HttpUtility.UrlEncode(sb.ToString() + text).Length >= textMaxSize)
                     {
                         FillTranslatedText(DoTranslate(sb.ToString()), start, index-1);
-                        if (_googleApiNotWorking)
-                        {
-                            buttonTranslate.Text = Configuration.Settings.Language.GoogleTranslate.Translate;
-                            buttonTranslate_Click(null, null);
-                            return;
-                        }
                         sb = new StringBuilder();
                         progressBar1.Refresh();
                         Application.DoEvents();
@@ -236,9 +221,8 @@ namespace Nikse.SubtitleEdit.Forms
         private void FillTranslatedText(string translatedText, int start, int end)
         {          
             List<string> lines = new List<string>();
-            foreach (string s in translatedText.Split(new string[] { "<p>" }, StringSplitOptions.None))
+            foreach (string s in translatedText.Split(new string[] { "|" }, StringSplitOptions.None))
                 lines.Add(s);
-            lines.RemoveAt(0);
 
             int index = start;
             foreach (string s in  lines)
@@ -246,6 +230,9 @@ namespace Nikse.SubtitleEdit.Forms
                 if (index < _translatedSubtitle.Paragraphs.Count)
                 {
                     string cleanText = s.Replace("</p>", string.Empty).Trim();
+                    if (cleanText.IndexOf("<p>") < 4)
+                        cleanText = cleanText.Remove(0, cleanText.IndexOf("<p>"));
+                    cleanText = cleanText.Replace("<p>", string.Empty).Trim();
                     if (cleanText.Contains("\n") && !cleanText.Contains("\r"))
                         cleanText = cleanText.Replace("\n", Environment.NewLine);
                     cleanText = cleanText.Replace(" ...", "...");
@@ -269,23 +256,20 @@ namespace Nikse.SubtitleEdit.Forms
 
             input = PreTranslate(input);
 
-            string result;
-            try
-            {
-                result = TranslateTextViaApi(input, languagePair);
-            }
-            catch
-            {
-                _googleApiNotWorking = true;
-                result = string.Empty;
-            }
+            string result = null;
+            //try
+            //{
+            //    result = TranslateTextViaApi(input, languagePair);
+            //}
+            //catch
+            //{
+            //    _googleApiNotWorking = true;
+            //    result = string.Empty;
+            //}
 
             // fallback to screen scraping
-            if (string.IsNullOrEmpty(result))
-            {
-                _googleApiNotWorking = true;
+            //if (string.IsNullOrEmpty(result))
                 result = TranslateTextViaScreenScraping(input, languagePair);
-            }
 
             return PostTranslate(result);
         }
@@ -821,6 +805,30 @@ namespace Nikse.SubtitleEdit.Forms
                 Cursor.Current = Cursors.Default;
                 buttonTranslate.Text = Configuration.Settings.Language.GoogleTranslate.Translate;
                 buttonTranslate.Enabled = true;
+            }
+        }
+
+        private void subtitleListViewFrom_DoubleClick(object sender, EventArgs e)
+        {
+            if (subtitleListViewFrom.SelectedItems.Count > 0)
+            {
+                int index = subtitleListViewFrom.SelectedItems[0].Index;
+                if (index < subtitleListViewTo.Items.Count)
+                {
+                    subtitleListViewTo.SelectIndexAndEnsureVisible(index);
+                }
+            }
+        }
+
+        private void subtitleListViewTo_DoubleClick(object sender, EventArgs e)
+        {
+            if (subtitleListViewTo.SelectedItems.Count > 0)
+            {
+                int index = subtitleListViewTo.SelectedItems[0].Index;
+                if (index < subtitleListViewFrom.Items.Count)
+                {
+                    subtitleListViewFrom.SelectIndexAndEnsureVisible(index);
+                }
             }
         }
 
