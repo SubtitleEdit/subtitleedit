@@ -165,7 +165,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Languages>Nyelvek</Languages>
     <PalNtsc>PAL/NTSC</PalNtsc>
     <Pal>PAL (25 képkocka/s)</Pal>
-    <Ntsc>NTSC (30 képkocka/s)</Ntsc>
+    <Ntsc>NTSC (23.976 képkocka/s)</Ntsc>
     <StartRipping>Bemásolás indítása</StartRipping>
     <Abort>Megszakítás</Abort>
     <AbortedByUser>Felhasználó által megszakítva</AbortedByUser>

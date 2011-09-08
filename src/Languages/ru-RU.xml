@@ -178,7 +178,7 @@ http://code.google.com/p/subtitleedit.
     <Languages>Языки</Languages>
     <PalNtsc>PAL/NTSC</PalNtsc>
     <Pal>PAL (25fps)</Pal>
-    <Ntsc>NTSC (30fps)</Ntsc>
+    <Ntsc>NTSC (23.976fps)</Ntsc>
     <StartRipping>Начать захват</StartRipping>
     <Abort>Прервать</Abort>
     <AbortedByUser>Прервано пользователем</AbortedByUser>

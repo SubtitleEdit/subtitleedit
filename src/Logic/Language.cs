@@ -268,7 +268,7 @@ namespace Nikse.SubtitleEdit.Logic
                 Languages = "Languages",
                 PalNtsc = "PAL/NTSC",
                 Pal = "PAL (25fps)",
-                Ntsc = "NTSC (30fps)",
+                Ntsc = "NTSC (32.976fps)",
                 StartRipping = "Start ripping",
                 Abort = "Abort",
                 AbortedByUser = "Aborted by user",

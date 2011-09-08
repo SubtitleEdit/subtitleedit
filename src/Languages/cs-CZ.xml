@@ -172,7 +172,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Languages>Jazyky</Languages>
     <PalNtsc>PAL/NTSC</PalNtsc>
     <Pal>PAL (25 fps)</Pal>
-    <Ntsc>NTSC (30 fps)</Ntsc>
+    <Ntsc>NTSC (23.976 fps)</Ntsc>
     <StartRipping>Spustit vytažení</StartRipping>
     <Abort>Přerušit</Abort>
     <AbortedByUser>Přerušeno uživatelem</AbortedByUser>

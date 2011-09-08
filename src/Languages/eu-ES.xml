@@ -172,7 +172,7 @@ Emaila: mailto:nikse.dk@gmail.com</AboutText1>
     <Languages>Hizkuntzak</Languages>
     <PalNtsc>PAL/NTSC</PalNtsc>
     <Pal>PAL (25fseg)</Pal>
-    <Ntsc>NTSC (30fseg)</Ntsc>
+    <Ntsc>NTSC (23.976fseg)</Ntsc>
     <StartRipping>Hasi grabaketa</StartRipping>
     <Abort>Utzi</Abort>
     <AbortedByUser>Erabiltzaileak utzita</AbortedByUser>
