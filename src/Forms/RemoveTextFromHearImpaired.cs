@@ -307,6 +307,9 @@ namespace Nikse.SubtitleEdit.Forms
                                 if ("1234567890".Contains(s.Substring(indexOfColon - 1, 1)) && "1234567890".Contains(s.Substring(indexOfColon + 1, 1)))
                                     remove = false;
                             }
+                            if (s.StartsWith("Previously on") || s.StartsWith("<i>Previously on"))
+                                remove = false;
+
                             if (remove)
                             {
                                 string content = s.Substring(indexOfColon + 1).Trim();
@@ -325,6 +328,8 @@ namespace Nikse.SubtitleEdit.Forms
 
                                 if (text.StartsWith("(") && newText.EndsWith(")") && !newText.Contains("("))
                                     newText = newText.TrimEnd(')');
+                                else if (newText.EndsWith("</i>") && text.StartsWith("<i>") && !newText.StartsWith("<i>"))
+                                    newText = "<i>" + newText;
 
                                 if (!IsHIDescription(st.StrippedText))
                                     noOfNames++;
@@ -333,6 +338,8 @@ namespace Nikse.SubtitleEdit.Forms
                             {
                                 newText = newText + Environment.NewLine + s;
                                 newText = newText.Trim();
+                                if (newText.EndsWith("</i>") && text.StartsWith("<i>") && !newText.StartsWith("<i>"))
+                                    newText = "<i>" + newText;
                             }
                         }
                         else
@@ -373,6 +380,10 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     newText = newText + Environment.NewLine + s;
                     newText = newText.Trim();
+
+                    if (newText.EndsWith("</i>") && text.StartsWith("<i>") && !newText.StartsWith("<i>"))
+                        newText = "<i>" + newText;
+
                 }
             }
             newText = newText.Trim();

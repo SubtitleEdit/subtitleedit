@@ -1,5 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Nikse.SubtitleEdit.Forms;
+using System;
 
 namespace Test
 {
@@ -133,5 +134,20 @@ namespace Test
             Assert.AreEqual(expected, actual);
         }
 
+
+        /// <summary>
+        ///A test for RemoveHI
+        ///</summary>
+        [TestMethod()]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void RemoveHIMultilineItalic()
+        {
+            FormRemoveTextForHearImpaired_Accessor target = new FormRemoveTextForHearImpaired_Accessor(); 
+            string text = "<i>NARRATOR:" + Environment.NewLine + 
+                          "Previously on NCIS</i>";
+            string expected = "<i>Previously on NCIS</i>";
+            string actual = target.RemoveTextFromHearImpaired(text);
+            Assert.AreEqual(expected, actual);
+        }        
     }
 }

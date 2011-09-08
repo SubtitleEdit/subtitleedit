@@ -50,7 +50,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.comboBoxFrom.FormattingEnabled = true;
             this.comboBoxFrom.Location = new System.Drawing.Point(327, 34);
             this.comboBoxFrom.Name = "comboBoxFrom";
-            this.comboBoxFrom.Size = new System.Drawing.Size(121, 25);
+            this.comboBoxFrom.Size = new System.Drawing.Size(121, 21);
             this.comboBoxFrom.TabIndex = 0;
             // 
             // labelFrom
@@ -58,7 +58,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.labelFrom.AutoSize = true;
             this.labelFrom.Location = new System.Drawing.Point(285, 41);
             this.labelFrom.Name = "labelFrom";
-            this.labelFrom.Size = new System.Drawing.Size(45, 17);
+            this.labelFrom.Size = new System.Drawing.Size(35, 13);
             this.labelFrom.TabIndex = 1;
             this.labelFrom.Text = "From:";
             // 
@@ -67,7 +67,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.labelTo.AutoSize = true;
             this.labelTo.Location = new System.Drawing.Point(468, 37);
             this.labelTo.Name = "labelTo";
-            this.labelTo.Size = new System.Drawing.Size(29, 17);
+            this.labelTo.Size = new System.Drawing.Size(23, 13);
             this.labelTo.TabIndex = 4;
             this.labelTo.Text = "To:";
             // 
@@ -77,7 +77,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.comboBoxTo.FormattingEnabled = true;
             this.comboBoxTo.Location = new System.Drawing.Point(497, 34);
             this.comboBoxTo.Name = "comboBoxTo";
-            this.comboBoxTo.Size = new System.Drawing.Size(121, 25);
+            this.comboBoxTo.Size = new System.Drawing.Size(121, 21);
             this.comboBoxTo.TabIndex = 3;
             // 
             // buttonTranslate
@@ -118,7 +118,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.linkLabelPoweredByGoogleTranslate.AutoSize = true;
             this.linkLabelPoweredByGoogleTranslate.Location = new System.Drawing.Point(15, 529);
             this.linkLabelPoweredByGoogleTranslate.Name = "linkLabelPoweredByGoogleTranslate";
-            this.linkLabelPoweredByGoogleTranslate.Size = new System.Drawing.Size(183, 17);
+            this.linkLabelPoweredByGoogleTranslate.Size = new System.Drawing.Size(146, 13);
             this.linkLabelPoweredByGoogleTranslate.TabIndex = 8;
             this.linkLabelPoweredByGoogleTranslate.TabStop = true;
             this.linkLabelPoweredByGoogleTranslate.Text = "Powered by Google translate";
@@ -129,7 +129,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.labelPleaseWait.AutoSize = true;
             this.labelPleaseWait.Location = new System.Drawing.Point(703, 23);
             this.labelPleaseWait.Name = "labelPleaseWait";
-            this.labelPleaseWait.Size = new System.Drawing.Size(215, 17);
+            this.labelPleaseWait.Size = new System.Drawing.Size(176, 13);
             this.labelPleaseWait.TabIndex = 10;
             this.labelPleaseWait.Text = "Please wait... this may take a while";
             // 
@@ -142,33 +142,41 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             // subtitleListViewTo
             // 
+            this.subtitleListViewTo.DisplayExtraFromExtra = false;
             this.subtitleListViewTo.FirstVisibleIndex = -1;
             this.subtitleListViewTo.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.subtitleListViewTo.FullRowSelect = true;
             this.subtitleListViewTo.GridLines = true;
+            this.subtitleListViewTo.HideSelection = false;
             this.subtitleListViewTo.Location = new System.Drawing.Point(471, 64);
             this.subtitleListViewTo.Name = "subtitleListViewTo";
             this.subtitleListViewTo.Size = new System.Drawing.Size(428, 459);
             this.subtitleListViewTo.TabIndex = 2;
             this.subtitleListViewTo.UseCompatibleStateImageBehavior = false;
             this.subtitleListViewTo.View = System.Windows.Forms.View.Details;
+            this.subtitleListViewTo.Click += new System.EventHandler(this.subtitleListViewTo_DoubleClick);
+            this.subtitleListViewTo.DoubleClick += new System.EventHandler(this.subtitleListViewTo_DoubleClick);
             // 
             // subtitleListViewFrom
             // 
+            this.subtitleListViewFrom.DisplayExtraFromExtra = false;
             this.subtitleListViewFrom.FirstVisibleIndex = -1;
             this.subtitleListViewFrom.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.subtitleListViewFrom.FullRowSelect = true;
             this.subtitleListViewFrom.GridLines = true;
+            this.subtitleListViewFrom.HideSelection = false;
             this.subtitleListViewFrom.Location = new System.Drawing.Point(18, 64);
             this.subtitleListViewFrom.Name = "subtitleListViewFrom";
             this.subtitleListViewFrom.Size = new System.Drawing.Size(430, 459);
             this.subtitleListViewFrom.TabIndex = 0;
             this.subtitleListViewFrom.UseCompatibleStateImageBehavior = false;
             this.subtitleListViewFrom.View = System.Windows.Forms.View.Details;
+            this.subtitleListViewFrom.Click += new System.EventHandler(this.subtitleListViewFrom_DoubleClick);
+            this.subtitleListViewFrom.DoubleClick += new System.EventHandler(this.subtitleListViewFrom_DoubleClick);
             // 
             // GoogleTranslate
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 17F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(925, 558);
             this.Controls.Add(this.comboBoxFrom);
