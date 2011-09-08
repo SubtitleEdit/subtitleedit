@@ -915,10 +915,27 @@ namespace Nikse.SubtitleEdit.Forms
             toolStripMenuItemAutoSplitLongLines.Text = _language.Menu.Tools.SplitLongLines;
             setMinimumDisplayTimeBetweenParagraphsToolStripMenuItem.Text = _language.Menu.Tools.MinimumDisplayTimeBetweenParagraphs;
             toolStripMenuItem1.Text = _language.Menu.Tools.SortBy;
-            sortNumberToolStripMenuItem.Text = _languageGeneral.Number;
-            sortStartTimeToolStripMenuItem.Text = _languageGeneral.StartTime;
-            sortEndTimeToolStripMenuItem.Text = _languageGeneral.EndTime;
-            sortDisplayTimeToolStripMenuItem.Text = _languageGeneral.Duration;
+
+            if (!string.IsNullOrEmpty(_language.Menu.Tools.Number))
+                sortNumberToolStripMenuItem.Text = _language.Menu.Tools.Number;
+            else
+                sortNumberToolStripMenuItem.Text = _languageGeneral.Number;
+
+            if (!string.IsNullOrEmpty(_language.Menu.Tools.StartTime))
+                sortStartTimeToolStripMenuItem.Text = _language.Menu.Tools.StartTime;
+            else
+                sortStartTimeToolStripMenuItem.Text = _languageGeneral.StartTime;
+
+            if (!string.IsNullOrEmpty(_language.Menu.Tools.EndTime))
+                sortEndTimeToolStripMenuItem.Text = _language.Menu.Tools.EndTime;
+            else
+                sortEndTimeToolStripMenuItem.Text = _languageGeneral.EndTime;
+
+            if (!string.IsNullOrEmpty(_language.Menu.Tools.Duration))
+                sortDisplayTimeToolStripMenuItem.Text = _language.Menu.Tools.Duration;
+            else
+                sortDisplayTimeToolStripMenuItem.Text = _languageGeneral.Duration;
+
             sortTextAlphabeticallytoolStripMenuItem.Text = _language.Menu.Tools.TextAlphabetically;
             sortTextMaxLineLengthToolStripMenuItem.Text = _language.Menu.Tools.TextSingleLineMaximumLength;
             sortTextTotalLengthToolStripMenuItem.Text = _language.Menu.Tools.TextTotalLength;
@@ -1337,6 +1354,7 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         SubtitleListview1.EnsureVisible(SubtitleListview1.SelectedItems[SubtitleListview1.SelectedItems.Count - 1].Index);
                     }
+                    _change = true;
                 }
                 _videoFileName = visualSync.VideoFileName;
                 _formPositionsAndSizes.SavePositionAndSize(visualSync);
