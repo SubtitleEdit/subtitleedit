@@ -8039,9 +8039,16 @@ namespace Nikse.SubtitleEdit.Forms
             }
             _subtitle.Paragraphs.Insert(index, newParagraph);
 
+            // check if original is available - and insert new paragraph in the original too
+            if (Configuration.Settings.General.AllowEditOfOriginalSubtitle && _subtitleAlternate != null && _subtitleAlternate.Paragraphs.Count > 0)
+            {
+                _subtitleAlternate.InsertParagraphInCorrectTimeOrder(new Paragraph(newParagraph));
+                _subtitleAlternate.Renumber(1);
+            }
+
             _subtitleListViewIndex = -1;
             _subtitle.Renumber(startNumber);
-            SubtitleListview1.Fill(_subtitle.Paragraphs);
+            SubtitleListview1.Fill(_subtitle, _subtitleAlternate);            
             SubtitleListview1.SelectIndexAndEnsureVisible(index);
             return newParagraph;
         }
@@ -9056,7 +9063,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             _subtitleListViewIndex = -1;
             _subtitle.Renumber(startNumber);
-            SubtitleListview1.Fill(_subtitle.Paragraphs);
+            SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
             SubtitleListview1.SelectIndexAndEnsureVisible(index);
 
             textBoxListViewText.Focus();
