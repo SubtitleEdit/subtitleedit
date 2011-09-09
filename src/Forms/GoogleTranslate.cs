@@ -20,6 +20,7 @@ namespace Nikse.SubtitleEdit.Forms
         bool _googleTranslate = true;
         MicrosoftTranslationService.SoapService _microsoftTranslationService = null;
         private const string BingApiId = "C2C2E9A508E6748F0494D68DFD92FAA1FF9B0BA4";
+        private bool _googleApiNotWorking = false;
 
         public class ComboBoxItem
         {
@@ -146,6 +147,8 @@ namespace Nikse.SubtitleEdit.Forms
 
             subtitleListViewFrom.Fill(subtitle);
             GoogleTranslate_Resize(null, null);
+
+            _googleApiNotWorking = DateTime.Now.Year >= 2012; // google is closing free api service :(
         }
 
         private void buttonTranslate_Click(object sender, EventArgs e)
@@ -230,7 +233,8 @@ namespace Nikse.SubtitleEdit.Forms
                 if (index < _translatedSubtitle.Paragraphs.Count)
                 {
                     string cleanText = s.Replace("</p>", string.Empty).Trim();
-                    if (cleanText.IndexOf("<p>") < 4)
+                    int indexOfP = cleanText.IndexOf("<p>");
+                    if (indexOfP >= 0 && indexOfP < 4)
                         cleanText = cleanText.Remove(0, cleanText.IndexOf("<p>"));
                     cleanText = cleanText.Replace("<p>", string.Empty).Trim();
                     if (cleanText.Contains("\n") && !cleanText.Contains("\r"))
@@ -257,25 +261,33 @@ namespace Nikse.SubtitleEdit.Forms
             input = PreTranslate(input);
 
             string result = null;
-            //try
-            //{
-            //    result = TranslateTextViaApi(input, languagePair);
-            //}
-            //catch
-            //{
-            //    _googleApiNotWorking = true;
-            //    result = string.Empty;
-            //}
+            if (!_googleApiNotWorking)
+            {
+                try
+                {
+                    result = TranslateTextViaApi(input, languagePair);
+                }
+                catch
+                {
+                    _googleApiNotWorking = true;
+                    result = string.Empty;
+                }
+            }
 
             // fallback to screen scraping
-            //if (string.IsNullOrEmpty(result))
+            if (string.IsNullOrEmpty(result))
+            {
                 result = TranslateTextViaScreenScraping(input, languagePair);
+                _googleApiNotWorking = true;
+            }
 
             return PostTranslate(result);
         }
 
         public static string TranslateTextViaApi(string input, string languagePair)
         {
+            string googleApiKey = "ABQIAAAA4j5cWwa3lDH0RkZceh7PjBTDmNAghl5kWSyuukQ0wtoJG8nFBxRPlalq-gAvbeCXMCkmrysqjXV1Gw";
+
             string[] arr = languagePair.Split('|');
             string from = arr[0];
             string to = arr[1];
@@ -284,10 +296,10 @@ namespace Nikse.SubtitleEdit.Forms
             // create the web request to the Google Translate REST interface
 
             //API V 1.0
-            string url = "http://ajax.googleapis.com/ajax/services/language/translate?v=1.0&q=" + HttpUtility.UrlEncode(input) + "&langpair=" + languagePair;
+            string url = "http://ajax.googleapis.com/ajax/services/language/translate?v=1.0&q=" + HttpUtility.UrlEncode(input) + "&langpair=" + languagePair + "&key=" +googleApiKey;
 
             //API V 2.0 ?
-            //string url = String.Format("https://www.googleapis.com/language/translate/v2?key=INSERT-YOUR-KEY&q={0}&source={1}&target={2}", HttpUtility.UrlEncode(input), from, to);
+            //string url = String.Format("https://www.googleapis.com/language/translate/v2?key={3}&q={0}&source={1}&target={2}", HttpUtility.UrlEncode(input), from, to, googleApiKey);
 
             WebRequest request = WebRequest.Create(url);
             request.Proxy = Utilities.GetProxy();
@@ -779,7 +791,7 @@ namespace Nikse.SubtitleEdit.Forms
                 int index = 0;
                 foreach (Paragraph p in _subtitle.Paragraphs)
                 {
-                    string text = string.Format("<p>{0}</p>", p.Text);
+                    string text = string.Format("<p>{0}</p>|", p.Text);
                     if ((HttpUtility.UrlEncode(sb.ToString() + text)).Length >= textMaxSize)
                     {
                         FillTranslatedText(client.Translate(BingApiId, sb.ToString().Replace(Environment.NewLine, "<br />"), from, to), start, index - 1);
