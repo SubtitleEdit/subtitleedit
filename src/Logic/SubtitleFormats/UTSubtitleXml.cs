@@ -55,11 +55,11 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 XmlNode ut = xml.CreateElement("ut");
 
                 XmlAttribute et = xml.CreateAttribute("secOut");
-                et.InnerText = string.Format("{0:0.000}", p.EndTime.TotalSeconds).Replace(",", ".");
+                et.InnerText = string.Format("{0:0.0##}", p.EndTime.TotalSeconds).Replace(",", ".");
                 ut.Attributes.Append(et);
 
                 XmlAttribute st = xml.CreateAttribute("secIn");
-                st.InnerText = string.Format("{0:0.000}", p.StartTime.TotalSeconds).Replace(",", ".");
+                st.InnerText = string.Format("{0:0.0##}", p.StartTime.TotalSeconds).Replace(",", ".");
                 ut.Attributes.Append(st);
 
                 //ut.InnerText = p.Text;
@@ -100,8 +100,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         string text = node.InnerText;
                         text = text.Replace("<br>", Environment.NewLine).Replace("<br />", Environment.NewLine);
                         var p = new Paragraph();
-                        p.StartTime.TotalSeconds = Convert.ToDouble(startTime);
-                        p.EndTime.TotalSeconds = Convert.ToDouble(endTime);
+                        p.StartTime.TotalSeconds = Convert.ToDouble(startTime, System.Globalization.CultureInfo.InvariantCulture);
+                        p.EndTime.TotalSeconds = Convert.ToDouble(endTime, System.Globalization.CultureInfo.InvariantCulture);
                         p.Text = text;
                         subtitle.Paragraphs.Add(p);
                     }

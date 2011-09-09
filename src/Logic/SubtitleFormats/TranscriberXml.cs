@@ -124,8 +124,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         string startTime = node.Attributes["startTime"].InnerText;
                         string text = node.InnerText;
                         var p = new Paragraph();
-                        p.StartTime.TotalSeconds = Convert.ToDouble(startTime);
-                        p.EndTime.TotalSeconds = Convert.ToDouble(endTime);
+                        p.StartTime.TotalSeconds = Convert.ToDouble(startTime, System.Globalization.CultureInfo.InvariantCulture);
+                        p.EndTime.TotalSeconds = Convert.ToDouble(endTime, System.Globalization.CultureInfo.InvariantCulture);
                         p.Text = text;
                         subtitle.Paragraphs.Add(p);
                     }
