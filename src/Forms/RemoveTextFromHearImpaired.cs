@@ -502,11 +502,15 @@ namespace Nikse.SubtitleEdit.Forms
 
                     if (st.Pre.Contains("<i>") && stSub.Post.Contains("</i>"))
                         st.Pre = st.Pre.Replace("<i>", string.Empty);
+
+                    if (s.Contains("<i>") && !s.Contains("</i>") && st.Post.Contains("</i>"))
+                        st.Post = st.Post.Replace("</i>", string.Empty);
                 }
                 lineNumber++;
             }
 
             text = st.Pre + sb.ToString().Trim() + st.Post;
+            text = text.Replace("<i></i>", string.Empty).Trim();
             text = RemoveColon(text);
             text = RemoveHearImpairedtagsInsideLine(text);
             if (checkBoxRemoveInterjections.Checked)
