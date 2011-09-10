@@ -2374,7 +2374,10 @@ namespace Nikse.SubtitleEdit.Forms
 
             toolStripSeparatorFindReplace.Visible = gs.ShowToolbarFind || gs.ShowToolbarReplace;
             toolStripSeparatorHelp.Visible = gs.ShowToolbarHelp;
-        }
+
+            toolStrip1.Visible = gs.ShowToolbarNew || gs.ShowToolbarOpen || gs.ShowToolbarSave || gs.ShowToolbarSaveAs || gs.ShowToolbarFind || gs.ShowToolbarReplace ||
+                                 gs.ShowToolbarVisualSync || gs.ShowToolbarSettings || gs.ShowToolbarSpellCheck || gs.ShowToolbarHelp;             
+        }       
 
         private void ToolStripButtonFileNewClick(object sender, EventArgs e)
         {
