@@ -7820,7 +7820,7 @@ namespace Nikse.SubtitleEdit.Forms
         }
 
         private void Main_Resize(object sender, EventArgs e)
-        {            
+        {
             panelVideoPlayer.Invalidate();
 
             if (Configuration.Settings.General.AllowEditOfOriginalSubtitle && _subtitleAlternate != null && _subtitleAlternate.Paragraphs.Count > 0)
@@ -8639,7 +8639,6 @@ namespace Nikse.SubtitleEdit.Forms
                 _timerAutoSave.Start();
             }
             toolStripMenuItemPlayRateNormal_Click(null, null);
-            Main_Resize(null, null);
 
             SetPositionFromXYString(Configuration.Settings.General.UndockedVideoPosition, "VideoPlayerUnDocked");
             SetPositionFromXYString(Configuration.Settings.General.UndockedWaveformPosition, "WaveFormUnDocked");
@@ -8649,6 +8648,7 @@ namespace Nikse.SubtitleEdit.Forms
                 Configuration.Settings.General.Undocked = false;
                 undockVideoControlsToolStripMenuItem_Click(null, null);
             }
+            Main_Resize(null, null);
 
             toolStripButtonLockCenter.Checked = Configuration.Settings.General.WaveFormCenter;
             audioVisualizer.Locked = toolStripButtonLockCenter.Checked;
