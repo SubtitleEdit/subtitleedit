@@ -1128,13 +1128,15 @@ namespace Nikse.SubtitleEdit.Logic
         {
             GeneralSettings gs = Configuration.Settings.General;
 
-            if (Utilities.IsRunningOnLinux())
+            if (Utilities.IsRunningOnLinux() || Utilities.IsRunningOnMac())
                 return new MPlayer();
-            if (Utilities.IsRunningOnMac())
-                return new LibVlcMono();
+
+            //if (Utilities.IsRunningOnMac())
+            //    return new LibVlcMono();
 
             if (gs.VideoPlayer == "VLC" && LibVlc11xDynamic.IsInstalled)
                 return new LibVlc11xDynamic();
+
             //if (gs.VideoPlayer == "WindowsMediaPlayer" && IsWmpAvailable)
             //    return new WmpPlayer();
             //if (gs.VideoPlayer == "ManagedDirectX" && IsManagedDirectXInstalled)
