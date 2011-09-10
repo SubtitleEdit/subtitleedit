@@ -975,10 +975,10 @@
     <Content Include="Languages\ru-RU.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Languages\sr-Cyrl-CS.xml">
+    <Content Include="Languages\sr-Cyrl-RS.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Languages\sr-Latn-CS.xml">
+    <Content Include="Languages\sr-Latn-RS.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Languages\sv-SE.xml">
