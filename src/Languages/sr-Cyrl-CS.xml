@@ -1,10 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Language Name="Српски">
   <General>
-    <Title>Subtitle Edit</Title>
-    <Version>3.1</Version>
+    <Title>Сабтитл едит</Title>
+    <Version>3.2</Version>
     <TranslatedBy>Превод: Rancher</TranslatedBy>
-    <CultureName>sr-Cyrl-cs</CultureName>
+    <CultureName>sr-Cyrl-RS</CultureName>
     <OK>&amp;У реду</OK>
     <Cancel>&amp;Откажи</Cancel>
     <Apply>Примена</Apply>
@@ -13,9 +13,9 @@
     <SubtitleFiles>Титлови</SubtitleFiles>
     <AllFiles>Све датотеке</AllFiles>
     <VideoFiles>Видео датотеке</VideoFiles>
-    <OpenSubtitle>Отварање титла...</OpenSubtitle>
-    <OpenVideoFile>Отвори...</OpenVideoFile>
-    <OpenVideoFileTitle>Отварање видео датотеке...</OpenVideoFileTitle>
+    <OpenSubtitle>Отварање титла</OpenSubtitle>
+    <OpenVideoFile>Отвори…</OpenVideoFile>
+    <OpenVideoFileTitle>Отварање видео снимка…</OpenVideoFileTitle>
     <NoVideoLoaded>Видео снимак није учитан.</NoVideoLoaded>
     <VideoInformation>Подаци о видео снимку</VideoInformation>
     <PositionX>Положај/трајање: {0}</PositionX>
@@ -25,11 +25,11 @@
     <NumberSymbol>Број</NumberSymbol>
     <Number>Број</Number>
     <Text>Текст</Text>
-    <HourMinutesSecondsMilliseconds>h:min:sec:ms</HourMinutesSecondsMilliseconds>
+    <HourMinutesSecondsMilliseconds>сат:мин:сек:мсек</HourMinutesSecondsMilliseconds>
     <Bold>Подебљај</Bold>
     <Italic>Искоси</Italic>
-    <Visible>Видљив</Visible>
-    <FrameRate>Број кадрова</FrameRate>
+    <Visible>Покажи</Visible>
+    <FrameRate>&amp;Број кадрова</FrameRate>
     <Name>Ознака</Name>
     <FileNameXAndSize>Назив датотеке: {0} ({1})</FileNameXAndSize>
     <ResolutionX>Резолуција: {0}</ResolutionX>
@@ -39,36 +39,39 @@
     <SingleLineLengths>Дужина линије: </SingleLineLengths>
     <TotalLengthX>Укупна дужина: {0}</TotalLengthX>
     <TotalLengthXSplitLine>Укупна дужина: {0} (раздвојите линију!)</TotalLengthXSplitLine>
-    <SplitLine>Раздвојите линију!</SplitLine>
+    <SplitLine>Раздвоји линију</SplitLine>
     <NotAvailable>недоступно</NotAvailable>
     <OverlapPreviousLineX>Преклапање прошле линије ({0:#,##0.###})</OverlapPreviousLineX>
     <OverlapX>Преклапање ({0:#,##0.###})</OverlapX>
     <OverlapNextX>Преклапање идуће линије ({0:#,##0.###})</OverlapNextX>
     <Negative>Негативно.</Negative>
-    <RegularExpressionIsNotValid>Израз није исправан!</RegularExpressionIsNotValid>
+    <RegularExpressionIsNotValid>Регуларан израз није исправан.</RegularExpressionIsNotValid>
     <SubtitleSaved>Титл је сачуван.</SubtitleSaved>
     <CurrentSubtitle>Текући титл</CurrentSubtitle>
     <OriginalText>Изворни текст</OriginalText>
-    <OpenOriginalSubtitleFile>Отварање изворног титла...</OpenOriginalSubtitleFile>
-    <PleaseWait>Молимо, сачекајте...</PleaseWait>
+    <OpenOriginalSubtitleFile>Отварање изворног титла</OpenOriginalSubtitleFile>
+    <PleaseWait>Сачекајте…</PleaseWait>
     <SessionKey>Кључ:</SessionKey>
     <UserName>Корисник:</UserName>
-    <UserNameAlreadyInUse>Корисничко име је заузето!</UserNameAlreadyInUse>
+    <UserNameAlreadyInUse>Корисничко име је заузето.</UserNameAlreadyInUse>
     <WebServiceUrl>Адреса:</WebServiceUrl>
-    <IP>IP адреса</IP>
+    <IP>ИП адреса</IP>
+	<VideoWindowTitle>Видео – {0}</VideoWindowTitle>
+    <AudioWindowTitle>Звук – {0}</AudioWindowTitle>
+    <ControlsWindowTitle>Контроле – {0}</ControlsWindowTitle>
   </General>
   <About>
     <Title>О програму</Title>
-    <AboutText1>Subtitle Edit је бесплатан софтвер под јавном GNU лиценцом.
-Можете га дистрибуирати, мењати и користити по својој вољи.
+    <AboutText1>Сабтитл едит је бесплатан програм који је објављен под
+ГНУ-овом општом јавном лиценцом, а то значи да га можете
+расподељивати, мењати и користити како год ви желите.
 
-C# изворни кôд се налази на интернет страници издавача.
+Изворни кôд, као и најновије издање програма
+налазе се на интернет адреси www.nikse.dk.
 
-Посетите www.nikse.dk за најновије издање програма.
+Сваки предлог је добродошао.
 
-Предлози су добродошли.
-
-Е-пошта: mailto:nikse.dk@gmail.com</AboutText1>
+Е-адреса: mailto:nikse.dk@gmail.com</AboutText1>
   </About>
   <AddToNames>
     <Title>Додавање речи у списак назива/изузетака</Title>
@@ -77,22 +80,23 @@ C# изворни кôд се налази на интернет страниц�
   <AddWaveForm>
     <Title>Сачињавање таласног облика</Title>
     <SourceVideoFile>Изворна видео датотека:</SourceVideoFile>
-    <GenerateWaveFormData>Сачини таласни облик</GenerateWaveFormData>
-    <PleaseWait>Ова радња може потрајати. Сачекајте тренутак.</PleaseWait>
-    <VlcMediaPlayerNotFoundTitle>VLC Media Player није пронађен.</VlcMediaPlayerNotFoundTitle>
-    <VlcMediaPlayerNotFound>Subtitle Edit захтева VLC Media Player 1.1.x или новији за вађење аудио података.</VlcMediaPlayerNotFound>
-    <GoToVlcMediaPlayerHomePage>Желите ли да пређете на  интернет страницу VLC Media Player-а?</GoToVlcMediaPlayerHomePage>
-    <GeneratingPeakFile>Стварање датотеке за таласни облик...</GeneratingPeakFile>
-    <ExtractingSeconds>Вађење аудио записа: {0:0.0} s</ExtractingSeconds>
-    <ExtractingMinutes>Вађење аудио записа: {0}.{1:00} min</ExtractingMinutes>
+    <GenerateWaveFormData>&amp;Сачини таласни облик</GenerateWaveFormData>
+    <PleaseWait>Ова радња може потрајати. Сачекајте неколико тренутака.</PleaseWait>
+    <VlcMediaPlayerNotFoundTitle>VLC Media Player није пронађен</VlcMediaPlayerNotFoundTitle>
+    <VlcMediaPlayerNotFound>Програм захтева VLC Media Player 1.1.x или новији за вађење података о звуку.</VlcMediaPlayerNotFound>
+    <GoToVlcMediaPlayerHomePage>Желите ли да посетите интернет страницу програма?</GoToVlcMediaPlayerHomePage>
+    <GeneratingPeakFile>Правим датотеку за таласни облик…</GeneratingPeakFile>
+	<GeneratingSpectrogram>Правим спектрограм…</GeneratingSpectrogram>
+    <ExtractingSeconds>Вађење звучног записа: {0:0.0} с</ExtractingSeconds>
+    <ExtractingMinutes>Вађење звучног записа: {0}.{1:00} мин</ExtractingMinutes>
   </AddWaveForm>
   <AdjustDisplayDuration>
     <Title>Прилагођавање трајања</Title>
     <AdjustVia>Прилагоди преко:</AdjustVia>
-    <Seconds>секунди</Seconds>
-    <Percent>процената</Percent>
-    <AddSeconds>Додавање секунди</AddSeconds>
-    <SetAsPercent>Проценат трајања</SetAsPercent>
+    <Seconds>&amp;секунди</Seconds>
+    <Percent>&amp;постотака</Percent>
+    <AddSeconds>Додавање секунди:</AddSeconds>
+    <SetAsPercent>Постотак трајања:</SetAsPercent>
     <Note>Време приказа неће преклапати почетно време идуће линије.</Note>
     <PleaseSelectAValueFromTheDropDownList>Изаберите вредност из падајућег менија.</PleaseSelectAValueFromTheDropDownList>
     <PleaseChoose> – изаберите – </PleaseChoose>
@@ -110,40 +114,40 @@ C# изворни кôд се налази на интернет страниц�
   <ChangeCasing>
     <Title>Промена величине слова</Title>
     <ChangeCasingTo>Промена малих и великих слова</ChangeCasingTo>
-    <NormalCasing>Уобичајено правило. Реченице почињу с великим словом.</NormalCasing>
-    <FixNamesCasing>исправи величину слова</FixNamesCasing>
-    <FixOnlyNamesCasing>Исправи само величину слова</FixOnlyNamesCasing>
-    <OnlyChangeAllUppercaseLines>измени линије написане свим великим словима</OnlyChangeAllUppercaseLines>
-    <AllUppercase>Све великим словима</AllUppercase>
-    <AllLowercase>Све малим словима</AllLowercase>
+    <NormalCasing>&amp;Уобичајено правило. Реченице почињу с великим словом.</NormalCasing>
+    <FixNamesCasing>&amp;исправи величину слова за називе</FixNamesCasing>
+    <FixOnlyNamesCasing>И&amp;справи само величину слова за називе</FixOnlyNamesCasing>
+    <OnlyChangeAllUppercaseLines>и&amp;змени линије написане свим великим словима</OnlyChangeAllUppercaseLines>
+    <AllUppercase>Све &amp;великим словима</AllUppercase>
+    <AllLowercase>Све &amp;малим словима</AllLowercase>
   </ChangeCasing>
   <ChangeCasingNames>
-    <Title>Промени величину слова за називе</Title>
-    <NamesFoundInSubtitleX>Називи пронађени у титлу: {0}</NamesFoundInSubtitleX>
-    <Enabled>Омогућено</Enabled>
-    <Name>Име</Name>
-    <LineNumber>Број линије</LineNumber>
+    <Title>Промена величине слова за називе</Title>
+    <NamesFoundInSubtitleX>Пронађено назива: {0}</NamesFoundInSubtitleX>
+    <Enabled>Примена</Enabled>
+    <Name>Назив</Name>
+    <LineNumber>Линија</LineNumber>
     <Before>Пре</Before>
     <After>После</After>
     <LinesFoundX>Пронађено линија: {0}</LinesFoundX>
   </ChangeCasingNames>
   <ChangeFrameRate>
     <Title>Промена броја кадрова</Title>
-    <ConvertFrameRateOfSubtitle>Промени број кадрова титла:</ConvertFrameRateOfSubtitle>
+    <ConvertFrameRateOfSubtitle>Промените број кадрова титла.</ConvertFrameRateOfSubtitle>
     <FromFrameRate>Из:</FromFrameRate>
     <ToFrameRate>У:</ToFrameRate>
     <FrameRateNotCorrect>Број кадрова није исправан.</FrameRateNotCorrect>
     <FrameRateNotChanged>Број кадрова је исти. Промена није могућа.</FrameRateNotChanged>
   </ChangeFrameRate>
   <ChooseEncoding>
-    <Title>Избор кодног распореда</Title>
-    <CodePage>Кодни распоред</CodePage>
+    <Title>Одабир кодног распореда</Title>
+    <CodePage>Кодирање</CodePage>
     <DisplayName>Назив</DisplayName>
     <PleaseSelectAnEncoding>Изаберите кодни распоред.</PleaseSelectAnEncoding>
   </ChooseEncoding>
   <ChooseLanguage>
-    <Title>Избор језика</Title>
-    <Language>Језик</Language>
+    <Title>Одабир језика</Title>
+    <Language>Језик:</Language>
   </ChooseLanguage>
   <CompareSubtitles>
     <Title>Упоређивање титлова</Title>
@@ -151,55 +155,97 @@ C# изворни кôд се налази на интернет страниц�
     <NextDifference>&amp;Следећа разлика</NextDifference>
     <SubtitlesNotAlike>Титлови немају сличности.</SubtitlesNotAlike>
     <XNumberOfDifference>Број разлика: {0}</XNumberOfDifference>
-    <ShowOnlyDifferences>Прикажи само разлике</ShowOnlyDifferences>
-    <OnlyLookForDifferencesInText>Тражи само разлике у тексту</OnlyLookForDifferencesInText>
+    <ShowOnlyDifferences>П&amp;рикажи само разлике</ShowOnlyDifferences>
+    <OnlyLookForDifferencesInText>&amp;Тражи само разлике у тексту</OnlyLookForDifferencesInText>
   </CompareSubtitles>
   <DvdSubrip>
     <Title>Вађење ДВД титла</Title>
-    <DvdGroupTitle>ДВД датотеке</DvdGroupTitle>
-    <IfoFile>IFO датотека</IfoFile>
-    <IfoFiles>IFO датотеке</IfoFiles>
-    <VobFiles>VOB датотеке</VobFiles>
-    <Add>Додај...</Add>
-    <Remove>Уклони</Remove>
-    <Clear>Очисти</Clear>
-    <MoveUp>Нагоре</MoveUp>
-    <MoveDown>Надоле</MoveDown>
-    <Languages>Језици</Languages>
+    <DvdGroupTitle>Датотеке ДВД-ја</DvdGroupTitle>
+    <IfoFile>IFO</IfoFile>
+    <IfoFiles>IFO</IfoFiles>
+    <VobFiles>VOB</VobFiles>
+    <Add>&amp;Додај…</Add>
+    <Remove>&amp;Уклони</Remove>
+    <Clear>&amp;Очисти</Clear>
+    <MoveUp>На&amp;горе</MoveUp>
+    <MoveDown>На&amp;доле</MoveDown>
+    <Languages>Језици:</Languages>
     <PalNtsc>PAL/NTSC</PalNtsc>
-    <Pal>PAL (25 fps)</Pal>
-    <Ntsc>NTSC (23.976 fps)</Ntsc>
-    <StartRipping>Започни вађење</StartRipping>
-    <Abort>Заустави</Abort>
+    <Pal>&amp;PAL</Pal>
+    <Ntsc>&amp;NTSC</Ntsc>
+    <StartRipping>&amp;Започни</StartRipping>
+    <Abort>&amp;Заустави</Abort>
     <AbortedByUser>Заустављено од стране корисника.</AbortedByUser>
-    <ReadingSubtitleData>Учитавање титла...</ReadingSubtitleData>
-    <RippingVobFileXofYZ>Извршавање VOB датотеке {1} од {2}: {0}</RippingVobFileXofYZ>
-    <WrongIfoType>IFO врста је „{0}“, не „DVDVIDEO-VTS“. {1}Изаберите другачију датотеку од {2}</WrongIfoType>
+    <ReadingSubtitleData>Учитавам титл…</ReadingSubtitleData>
+    <RippingVobFileXofYZ>Извршавам VOB датотеку… ({1} од {2}): {0}</RippingVobFileXofYZ>
+    <WrongIfoType>IFO је погрешне врсте. {1}Изаберите другу датотеку.</WrongIfoType>
   </DvdSubrip>
   <DvdSubRipChooseLanguage>
-    <Title>Избор језика</Title>
-    <ChooseLanguageStreamId>Изаберите језик</ChooseLanguageStreamId>
-    <UnknownLanguage>Непознат језик.</UnknownLanguage>
-    <SubtitleImageXofYAndWidthXHeight>Слика титла {0}/{1}  –  {2}x{3} </SubtitleImageXofYAndWidthXHeight>
+    <Title>Одабир језика</Title>
+    <ChooseLanguageStreamId>Изаберите жељени језик испод:</ChooseLanguageStreamId>
+    <UnknownLanguage>Непознато</UnknownLanguage>
+    <SubtitleImageXofYAndWidthXHeight>Слика титла ({0}/{1} – {2}×{3}) </SubtitleImageXofYAndWidthXHeight>
     <SubtitleImage>Слика титла</SubtitleImage>
   </DvdSubRipChooseLanguage>
+  <EbuSaveOtpions>
+    <Title>Поставке чувања</Title>
+    <GeneralSubtitleInformation>Општи подаци о титлу</GeneralSubtitleInformation>
+    <CodePageNumber>Број кодног распореда:</CodePageNumber>
+    <DiskFormatCode>Облик диска:</DiskFormatCode>
+    <CharacterCodeTable>Скуп знакова:</CharacterCodeTable>
+    <LanguageCode>Језички кôд:</LanguageCode>
+    <OriginalProgramTitle>Изворни назив снимка:</OriginalProgramTitle>
+    <OriginalEpisodeTitle>Изворни назив епизоде:</OriginalEpisodeTitle>
+    <TranslatedProgramTitle>Преведени назив снимка:</TranslatedProgramTitle>
+    <TranslatedEpisodeTitle>Преведени назив епизоде:</TranslatedEpisodeTitle>
+    <TranslatorsName>Име преводиоца:</TranslatorsName>
+    <SubtitleListReferenceCode>Референтни кôд титлова:</SubtitleListReferenceCode>
+    <CountryOfOrigin>Земља настанка:</CountryOfOrigin>
+    <RevisionNumber>Број ревизије:</RevisionNumber>
+    <MaxNoOfDisplayableChars>Највише знакова:</MaxNoOfDisplayableChars>
+    <MaxNumberOfDisplayableRows>Највише редова:</MaxNumberOfDisplayableRows>
+    <DiskSequenceNumber>Број низа диска:</DiskSequenceNumber>
+    <TotalNumberOfDisks>Укупно дискова:</TotalNumberOfDisks>
+    <Import>У&amp;вези…</Import>
+    <TextAndTimingInformation>Подаци о тексту и времену</TextAndTimingInformation>
+    <JustificationCode>                       Поравнање:</JustificationCode>
+    <Errors>Грешке</Errors>
+    <ErrorsX>Грешака: {0}</ErrorsX>
+    <MaxLengthError>Линија {0} прелази дозвољену дужину ({1}) за {2}: {3}</MaxLengthError>
+    <TextUnchangedPresentation>неизмењено излагање</TextUnchangedPresentation>
+    <TextLeftJustifiedText>текст сложен улево</TextLeftJustifiedText>
+    <TextCentredText>центриран текст</TextCentredText>
+    <TextRightJustifiedText>текст сложен удесно</TextRightJustifiedText>
+  </EbuSaveOtpions>
   <EffectKaraoke>
     <Title>Караоке ефекат</Title>
     <ChooseColor>Изаберите боју:</ChooseColor>
     <TotalMilliseconds>Укупно милисекунди:</TotalMilliseconds>
-    <EndDelayInMilliseconds>Завршно кашњење у милисекундама:</EndDelayInMilliseconds>
+    <EndDelayInMilliseconds>Завршно кашњење:</EndDelayInMilliseconds>
   </EffectKaraoke>
   <EffectTypewriter>
     <Title>Ефекат писаће машине</Title>
     <TotalMilliseconds>Укупно време:</TotalMilliseconds>
-    <EndDelayInMillisecs>Завршно кашњење у милисекундама:</EndDelayInMillisecs>
+    <EndDelayInMillisecs>Завршно кашњење:</EndDelayInMillisecs>
   </EffectTypewriter>
+  <ExportPngXml>
+    <Title>Извоз BDN XML/PNG</Title>
+    <ImageSettings>Поставке слика</ImageSettings>
+    <FontFamily>Тип фонта:</FontFamily>
+    <FontSize>Величина:</FontSize>
+    <FontColor>Боја &amp;фонта</FontColor>
+    <BorderColor>Боја &amp;ивице</BorderColor>
+    <BorderWidth>Ширина ивице:</BorderWidth>
+    <AntiAlias>&amp;Умекшавање ивица</AntiAlias>
+    <ExportAllLines>И&amp;звези све линије…</ExportAllLines>
+    <XImagesSavedInY>Сачувано слика: {0}. Одредиште: {1}</XImagesSavedInY>
+  </ExportPngXml>
   <FindDialog>
     <Title>Претрага</Title>
-    <Find>Пронађи</Find>
-    <Normal>Обично</Normal>
-    <CaseSensitive>Подударање</CaseSensitive>
-    <RegularExpression>Израз</RegularExpression>
+    <Find>&amp;Пронађи</Find>
+    <Normal>&amp;Обична</Normal>
+    <CaseSensitive>П&amp;одударање</CaseSensitive>
+    <RegularExpression>&amp;Регуларан израз</RegularExpression>
   </FindDialog>
   <FindSubtitleLine>
     <Title>Тражење линије титла</Title>
@@ -208,14 +254,14 @@ C# изворни кôд се налази на интернет страниц�
   </FindSubtitleLine>
   <FixCommonErrors>
     <Title>Исправљање честих грешака</Title>
-    <Step1>Корак 1 од 2 – Изаберите шта желите да исправите</Step1>
+    <Step1>Корак 1 од 2: Изаберите шта желите да исправите</Step1>
     <WhatToFix>Исправке</WhatToFix>
     <Example>Пример</Example>
-    <SelectAll>Изабери све</SelectAll>
-    <InverseSelection>Обрни</InverseSelection>
-    <Back>&lt; &amp;Назад</Back>
-    <Next>Н&amp;апред &gt;</Next>
-    <Step2>Корак 2 од 2 – Провера исправности</Step2>
+    <SelectAll>О&amp;значи све</SelectAll>
+    <InverseSelection>О&amp;брни означено</InverseSelection>
+    <Back>← &amp;Назад</Back>
+    <Next>Н&amp;апред →</Next>
+    <Step2>Корак 2 од 2: Проверите исправност</Step2>
     <Fixes>Исправке</Fixes>
     <Log>Извештај</Log>
     <LineNumber>Број линије</LineNumber>
@@ -235,16 +281,19 @@ C# изворни кôд се налази на интернет страниц�
     <RemoveUnneededPeriods>Уклони непотребне тачке</RemoveUnneededPeriods>
     <FixMissingSpaces>Уклони недостајуће размаке</FixMissingSpaces>
     <BreakLongLines>Раздвоји дуге линије</BreakLongLines>
-    <RemoveLineBreaks>Уклони редове у кратким текстовима са само једном реченицом</RemoveLineBreaks>
+    <RemoveLineBreaks>Уклони редове у кратким текстовима (само једна реченица)</RemoveLineBreaks>
     <RemoveLineBreaksAll>Уклони редове у кратким текстовима (све осим дијалога)</RemoveLineBreaksAll>
     <FixUppercaseIInsindeLowercaseWords>Исправи велико латиничко слово И насред речи</FixUppercaseIInsindeLowercaseWords>
     <FixDoubleApostrophes>Промени двоструке апострофе у наводнике</FixDoubleApostrophes>
     <AddPeriods>Додај тачку после линија где следећа почиње с великим словом</AddPeriods>
     <StartWithUppercaseLetterAfterParagraph>Почни с великим словом после новог реда</StartWithUppercaseLetterAfterParagraph>
     <StartWithUppercaseLetterAfterPeriodInsideParagraph>Почни с великим словом после тачке у новом реду</StartWithUppercaseLetterAfterPeriodInsideParagraph>
-    <FixLowercaseIToUppercaseI>Промени мало латиничко слово И у велико када се налази сâмо</FixLowercaseIToUppercaseI>
+    <FixLowercaseIToUppercaseI>Промени мало латиничко И у велико када се налази сâмо</FixLowercaseIToUppercaseI>
     <FixCommonOcrErrors>Исправи честе грешке у препознавању знакова</FixCommonOcrErrors>
     <CommonOcrErrorsFixed>Исправљено грешака у препознавању знакова: {0}</CommonOcrErrorsFixed>
+    <RemoveSpaceBetweenNumber>Уклони размак између бројева</RemoveSpaceBetweenNumber>
+    <FixDialogsOnOneLine>Исправи дијалоге на једној линији</FixDialogsOnOneLine>
+    <RemoveSpaceBetweenNumbersFixed>Исправљено грешака у уклањању размака између бројева: {0}</RemoveSpaceBetweenNumbersFixed>
     <FixDanishLetterI>Исправи данско слово И</FixDanishLetterI>
     <FixSpanishInvertedQuestionAndExclamationMarks>Исправи обрнути упитник и узвичник у шпанском језику.</FixSpanishInvertedQuestionAndExclamationMarks>
     <AddMissingQuote>Додај недостајући наводник</AddMissingQuote>
@@ -252,20 +301,20 @@ C# изворни кôд се налази на интернет страниц�
     <FixHyphens>Исправи линију која почиње с цртицама</FixHyphens>
     <FixHyphen>Исправи линију која почиње с цртицом</FixHyphen>
     <XHyphensFixed>Исправљено цртица: {0}</XHyphensFixed>
-    <AddMissingQuotesExample>"Како си?  —&gt; "Како си?"</AddMissingQuotesExample>
+    <AddMissingQuotesExample>"Како си? → "Како си?"</AddMissingQuotesExample>
     <XMissingQuotesAdded>Додато недостајућих наводника: {0}</XMissingQuotesAdded>
     <Fix3PlusLines>Исправи титлове с више од две линије</Fix3PlusLines>
     <Fix3PlusLine>Исправи титл с више од две линије</Fix3PlusLine>
     <X3PlusLinesFixed>Исправљено линија с више од две линије: {0}</X3PlusLinesFixed>
-    <Analysing>Анализирање...</Analysing>
+    <Analysing>Анализирање…</Analysing>
     <NothingToFix>Нема ништа за исправљање.</NothingToFix>
     <FixesFoundX>Пронађено исправки: {0}</FixesFoundX>
     <XFixesApplied>Примењено исправки: {0}</XFixesApplied>
     <NothingToFixBut>Нема ништа за исправљање, али се неке ствари могу побољшати. Погледајте извештај за више информација.</NothingToFixBut>
-    <FixLowercaseIToUppercaseICheckedButCurrentLanguageIsNotEnglish>„Исправи мало латиничко слово И у велико када се налази сâмо“ је означено, али учитани титл није на енглеском.</FixLowercaseIToUppercaseICheckedButCurrentLanguageIsNotEnglish>
+    <FixLowercaseIToUppercaseICheckedButCurrentLanguageIsNotEnglish>„Промени мало латиничко И у велико када се налази сâмо“ је означено, али учитани титл није на енглеском.</FixLowercaseIToUppercaseICheckedButCurrentLanguageIsNotEnglish>
     <Continue>Настави</Continue>
     <ContinueAnyway>Желите ли да наставите?</ContinueAnyway>
-    <UncheckedFixLowercaseIToUppercaseI>„Исправи мало латиничко слово И у велико када се налази сâмо“ није означено.</UncheckedFixLowercaseIToUppercaseI>
+    <UncheckedFixLowercaseIToUppercaseI>„Промени мало латиничко И у велико када се налази сâмо“ није означено.</UncheckedFixLowercaseIToUppercaseI>
     <XIsChangedToUppercase>Промењено малих латиничких слова И у велика: {0}</XIsChangedToUppercase>
     <FixFirstLetterToUppercaseAfterParagraph>Исправи прво слово након новог реда у велико</FixFirstLetterToUppercaseAfterParagraph>
     <MergeShortLine>Споји кратке линије</MergeShortLine>
@@ -276,16 +325,16 @@ C# изворни кôд се налази на интернет страниц�
     <FixInvalidItalicTag>Исправи погрешне ознаке за курзив</FixInvalidItalicTag>
     <FixShortDisplayTime>Исправи кратко време приказа</FixShortDisplayTime>
     <FixOverlappingDisplayTime>Исправи преклапања времена</FixOverlappingDisplayTime>
-    <FixInvalidItalicTagsExample>&lt;i&gt;Пример.&lt;i&gt; —&gt; &lt;i&gt;Пример.&lt;/i&gt;</FixInvalidItalicTagsExample>
-    <RemoveUnneededSpacesExample>Хеј ,   ти , стани! —&gt; Хеј, ти, стани!</RemoveUnneededSpacesExample>
-    <RemoveUnneededPeriodsExample>Здраво!. —&gt; Здраво!</RemoveUnneededPeriodsExample>
-    <FixMissingSpacesExample>Здраво.Шта радиш? —&gt; Здраво. Шта радиш?</FixMissingSpacesExample>
-    <FixUppercaseIInsindeLowercaseWordsExample>VrIina. —&gt; Vrlina.</FixUppercaseIInsindeLowercaseWordsExample>
-    <FixLowercaseIToUppercaseIExample>What do i care. —&gt; What do I care.</FixLowercaseIToUppercaseIExample>
+    <FixInvalidItalicTagsExample>&lt;i&gt;Пример.&lt;i&gt; → &lt;i&gt;Пример.&lt;/i&gt;</FixInvalidItalicTagsExample>
+    <RemoveUnneededSpacesExample>Здраво ,  Ђорђе. → Здраво, Ђорђе.</RemoveUnneededSpacesExample>
+    <RemoveUnneededPeriodsExample>Здраво!. → Здраво!</RemoveUnneededPeriodsExample>
+    <FixMissingSpacesExample>Здраво.Шта радиш? → Здраво. Шта радиш?</FixMissingSpacesExample>
+    <FixUppercaseIInsindeLowercaseWordsExample>VrIina. → Vrlina.</FixUppercaseIInsindeLowercaseWordsExample>
+    <FixLowercaseIToUppercaseIExample>What do i care. → What do I care.</FixLowercaseIToUppercaseIExample>
     <StartTimeLaterThanEndTime>Текст број {0}: завршно време се појављује пре почетног: {4}{1} &gt;&gt; {2} {3}.</StartTimeLaterThanEndTime>
-    <UnableToFixStartTimeLaterThanEndTime>Исправљање текста број {0} није успело: завршно време се појављује пре почетног: {1}</UnableToFixStartTimeLaterThanEndTime>
+    <UnableToFixStartTimeLaterThanEndTime>Не могу да исправим текст под бројем {0}: завршно време се појављује пре почетног: {1}</UnableToFixStartTimeLaterThanEndTime>
     <XFixedToYZ>{0} је исправљено у: {1}{2}.</XFixedToYZ>
-    <UnableToFixTextXY>Исправљање текста број {0} није успело: {1}.</UnableToFixTextXY>
+    <UnableToFixTextXY>Не могу да исправим текст под бројем {0}: {1}.</UnableToFixTextXY>
     <XOverlappingTimestampsFixed>Исправљено преклапајућих линија: {0}</XOverlappingTimestampsFixed>
     <XDisplayTimesProlonged>Продужено времена приказа: {0}</XDisplayTimesProlonged>
     <XInvalidHtmlTagsFixed>Исправљено погрешних ознака: {0}</XInvalidHtmlTagsFixed>
@@ -302,73 +351,82 @@ C# изворни кôд се налази на интернет страниц�
     <FixMissingPeriodAtEndOfLine>Додај тачку на крају линије</FixMissingPeriodAtEndOfLine>
     <XDoubleApostrophesFixed>Исправљено двоструких апострофа: {0}</XDoubleApostrophesFixed>
     <XUppercaseIsFoundInsideLowercaseWords>Пронађено великих латиничких слова И насред речи: {0}</XUppercaseIsFoundInsideLowercaseWords>
-    <RefreshFixes>Освежи исправке</RefreshFixes>
-    <ApplyFixes>Примени исправке</ApplyFixes>
+    <RefreshFixes>О&amp;свежи исправке</RefreshFixes>
+    <ApplyFixes>&amp;Примени исправке</ApplyFixes>
     <AutoBreak>&amp;Доњи ред</AutoBreak>
     <Unbreak>&amp;Горњи ред</Unbreak>
     <FixDoubleDash>Исправи две цртице у три тачке</FixDoubleDash>
-    <FixDoubleGreaterThan>Уклони двоструки знак [&gt;&gt;]</FixDoubleGreaterThan>
+    <FixDoubleGreaterThan>Уклони двоструки знак за веће</FixDoubleGreaterThan>
     <FixEllipsesStart>Уклони три тачке</FixEllipsesStart>
-    <FixMissingOpenBracket>Исправи недостајућу угласту заграду у линији</FixMissingOpenBracket>
-    <FixMusicNotation>Замени звучне симболе с жељеним</FixMusicNotation>
+    <FixMissingOpenBracket>Додај углату заграду која недостаје</FixMissingOpenBracket>
+    <FixMusicNotation>Исправи музичке ноте</FixMusicNotation>
     <FixDoubleDashs>Исправи две цртице у три тачке</FixDoubleDashs>
     <FixDoubleGreaterThans>Уклони двоструки знак [&gt;&gt;] с почетка</FixDoubleGreaterThans>
     <FixEllipsesStarts>Уклони три тачке с почетка</FixEllipsesStarts>
-    <FixMissingOpenBrackets>Исправи недостајуће угласте заграде</FixMissingOpenBrackets>
+    <FixMissingOpenBrackets>Исправи углате заграде које недостају</FixMissingOpenBrackets>
     <FixMusicNotations>Замени ноту âTª' са знаком *'</FixMusicNotations>
     <XFixDoubleDash>Исправљено грешака с две цртице: {0}</XFixDoubleDash>
     <XFixDoubleGreaterThan>Уклоњено грешака с двоструким знаком [&gt;&gt;]: {0}</XFixDoubleGreaterThan>
     <XFixEllipsesStart>Уклоњено линија које почињу с три тачке: {0}</XFixEllipsesStart>
-    <XFixMissingOpenBracket>Исправљено недостајућих угластих заграда: {0}</XFixMissingOpenBracket>
+    <XFixMissingOpenBracket>Исправљено недостајућих углатих заграда: {0}</XFixMissingOpenBracket>
     <XFixMusicNotation>Исправљено музичких знакова: {0}</XFixMusicNotation>
-    <FixDoubleDashExample>Види-- па то је Марко! —&gt; Види... па то је Марко!</FixDoubleDashExample>
-    <FixDoubleGreaterThanExample>&gt;&gt; Ђорђе: Где си, брате?!  —&gt; Ђорђе: Где си, брате?!</FixDoubleGreaterThanExample>
-    <FixEllipsesStartExample>... а онда смо —&gt; а онда смо</FixEllipsesStartExample>
-    <FixMissingOpenBracketExample>звекет] Пази! —&gt; [звекет] Пази!</FixMissingOpenBracketExample>
-    <FixMusicNotationExample>âTª слатки снови —&gt; ♫ слатки снови</FixMusicNotationExample>
+    <FixDoubleDashExample>Види-- па то је Марко! → Види… па то је Марко!</FixDoubleDashExample>
+    <FixDoubleGreaterThanExample>&gt;&gt; Петар: Где си, друже? → Петар: Где си, друже?</FixDoubleGreaterThanExample>
+    <FixEllipsesStartExample>… а онда смо → а онда смо</FixEllipsesStartExample>
+    <FixMissingOpenBracketExample>звекет] Пази! → [звекет] Пази!</FixMissingOpenBracketExample>
+    <FixMusicNotationExample>âTª слатки снови → ♫ слатки снови</FixMusicNotationExample>
     <NumberOfImportantLogMessages>Број важних извештаја: {0}</NumberOfImportantLogMessages>
-    <FixedOkXY>У реду - '{0}': {1}</FixedOkXY>
+    <FixedOkXY>Исправљено – „{0}“ – {1}</FixedOkXY>
   </FixCommonErrors>
   <GetDictionaries>
     <Title>Преузимање речника</Title>
-    <DescriptionLine1>Subtitle Edit-ова провера правописа је заснована на NHunspell</DescriptionLine1>
-    <DescriptionLine2>механизму који користи речнике из програма Опенофис.</DescriptionLine2>
+    <DescriptionLine1>Провера писања заснована је на додатку NHunspell</DescriptionLine1>
+    <DescriptionLine2>који користи речнике из пакета Опенофис.</DescriptionLine2>
     <GetDictionariesHere>Преузмите речнике овде:</GetDictionariesHere>
     <OpenOpenOfficeWiki>Опенофис вики списак речника</OpenOpenOfficeWiki>
     <GetAllDictionaries>Преузми све речнике</GetAllDictionaries>
     <ChooseLanguageAndClickDownload>Изаберите језик и кликните на дугме за преузимање.</ChooseLanguageAndClickDownload>
-    <OpenDictionariesFolder>Отвори фасциклу „Dictionaries“</OpenDictionariesFolder>
-    <Download>Преузми</Download>
+    <OpenDictionariesFolder>Отвори фасциклу с речницима</OpenDictionariesFolder>
+    <Download>&amp;Преузми</Download>
     <XDownloaded>{0} је преузет и инсталиран.</XDownloaded>
   </GetDictionaries>
   <GoogleTranslate>
-    <Title>Гуглов преводилац</Title>
+    <Title>Гугл преводилац</Title>
     <From>Из:</From>
     <To>У:</To>
-    <Translate>Преведи</Translate>
-    <PleaseWait>Молимо, сачекајте...</PleaseWait>
-    <PoweredByGoogleTranslate>Покреће Гуглов преводилац</PoweredByGoogleTranslate>
-    <PoweredByMicrosoftTranslate>Покреће Мајкрософтов преводилац</PoweredByMicrosoftTranslate>
+    <Translate>&amp;Преведи</Translate>
+    <PleaseWait>Сачекајте…</PleaseWait>
+    <PoweredByGoogleTranslate>Покреће Гугл преводилац</PoweredByGoogleTranslate>
+    <PoweredByMicrosoftTranslate>Покреће Мајкрософт преводилац</PoweredByMicrosoftTranslate>
   </GoogleTranslate>
+  <GoogleOrMicrosoftTranslate>
+    <Title>Гугл против Мајкрософта</Title>
+    <From>Из:</From>
+    <To>У:</To>
+    <Translate>&amp;Преведи</Translate>
+    <SourceText>Изворни текст</SourceText>
+    <GoogleTranslate>Гугл преводилац</GoogleTranslate>
+    <MicrosoftTranslate>Мајкрософт преводилац</MicrosoftTranslate>
+  </GoogleOrMicrosoftTranslate>
   <GoToLine>
-    <Title>Прелазак на одређени титл</Title>
+    <Title>Прелазак на одређену линију</Title>
     <XIsNotAValidNumber>{0} није исправан број.</XIsNotAValidNumber>
   </GoToLine>
   <ImportText>
     <Title>Увоз чистог текста</Title>
-    <OpenTextFile>Увези текст...</OpenTextFile>
+    <OpenTextFile>У&amp;вези текст…</OpenTextFile>
     <ImportOptions>Поставке увоза</ImportOptions>
     <Splitting>Раздвајање</Splitting>
-    <AutoSplitText>Самостално раздвоји текст</AutoSplitText>
-    <OneLineIsOneSubtitle>Једна линија као један титл</OneLineIsOneSubtitle>
-    <MergeShortLines>Споји кратке линије с наставком</MergeShortLines>
-    <RemoveEmptyLines>Уклони празне линије</RemoveEmptyLines>
-    <RemoveLinesWithoutLetters>Уклони линије без слова</RemoveLinesWithoutLetters>
+    <AutoSplitText>&amp;Самостално раздвоји текст</AutoSplitText>
+    <OneLineIsOneSubtitle>&amp;Једна линија као један титл</OneLineIsOneSubtitle>
+    <MergeShortLines>Споји &amp;кратке линије</MergeShortLines>
+    <RemoveEmptyLines>Уклони &amp;празне линије</RemoveEmptyLines>
+    <RemoveLinesWithoutLetters>Уклони &amp;линије без слова</RemoveLinesWithoutLetters>
     <GapBetweenSubtitles>Међупростор између титлова:</GapBetweenSubtitles>
-    <Auto>Самостално</Auto>
-    <Fixed>Подеси:</Fixed>
+    <Auto>С&amp;амоподешено</Auto>
+    <Fixed>По&amp;деси:</Fixed>
     <Refresh>&amp;Освежи</Refresh>
-    <Next>&amp;Напред &gt;&gt;</Next>
+    <Next>&amp;Напред →</Next>
     <TextFiles>Текстуалне датотеке</TextFiles>
     <PreviewLinesModifiedX>Преглед – измењено редова: {0}</PreviewLinesModifiedX>
   </ImportText>
@@ -380,292 +438,312 @@ C# изворни кôд се налази на интернет страниц�
       <File>
         <Title>&amp;Датотека</Title>
         <New>&amp;Ново</New>
-        <Open>&amp;Отвори...</Open>
-        <Reopen>&amp;Историјат</Reopen>
+        <Open>&amp;Отвори…</Open>
+        <Reopen>&amp;Историја</Reopen>
         <Save>&amp;Сачувај</Save>
-        <SaveAs>Сачувај &amp;као...</SaveAs>
-        <OpenOriginal>Отвори изворни титл...</OpenOriginal>
-        <SaveOriginal>Сачувај изворни титл</SaveOriginal>
-        <CloseOriginal>Затвори изворни титл</CloseOriginal>
-        <OpenContainingFolder>Отвори фасциклу</OpenContainingFolder>
-        <Compare>&amp;Упореди...</Compare>
-        <ImportOcrFromDvd>Препознај знакове ДВД титла...</ImportOcrFromDvd>
-        <ImportOcrVobSubSubtitle>Препознај знакове VobSub титла...</ImportOcrVobSubSubtitle>
-        <ImportBluRaySupFile>Препознај знакове BluRay титла...</ImportBluRaySupFile>
-        <ImportSubtitleFromMatroskaFile>Увези титл из матрошка датотеке...</ImportSubtitleFromMatroskaFile>
-        <ImportSubtitleWithManualChosenEncoding>Увези титл с прилагођеним кодирањем...</ImportSubtitleWithManualChosenEncoding>
-        <ImportText>Увези чист текст...</ImportText>
-        <ImportTimecodes>Увези временске одреднице...</ImportTimecodes>
-        <Exit>&amp;Излаз</Exit>
+        <SaveAs>Сачувај &amp;као…</SaveAs>
+        <OpenOriginal>О&amp;твори изворни титл…</OpenOriginal>
+        <SaveOriginal>Са&amp;чувај изворни титл</SaveOriginal>
+        <CloseOriginal>&amp;Затвори изворни титл</CloseOriginal>
+        <OpenContainingFolder>Отвори &amp;фасциклу</OpenContainingFolder>
+        <Compare>&amp;Упореди…</Compare>
+        <ImportOcrFromDvd>Препознај знакове &amp;ДВД титла…</ImportOcrFromDvd>
+        <ImportOcrVobSubSubtitle>Препознај знакове &amp;Вобсаб титла…</ImportOcrVobSubSubtitle>
+        <ImportBluRaySupFile>Препознај знакове &amp;Блу-реј титла…</ImportBluRaySupFile>
+        <ImportSubtitleFromMatroskaFile>Увези титл из &amp;матрошка датотеке…</ImportSubtitleFromMatroskaFile>
+        <ImportSubtitleWithManualChosenEncoding>Увези титл с п&amp;рилагођеним кодирањем…</ImportSubtitleWithManualChosenEncoding>
+        <ImportText>Увези &amp;чист текст…</ImportText>
+        <ImportTimecodes>Ув&amp;ези временске одреднице…</ImportTimecodes>
+        <Export>И&amp;звези</Export>
+        <ExportBdnXml>&amp;BDN XML/PNG…</ExportBdnXml>
+        <ExportCavena890>&amp;Cavena 890…</ExportCavena890>
+        <ExportEbu>&amp;EBU STL…</ExportEbu>
+        <ExportPac>&amp;PAC (Скрин електроникс)…</ExportPac>
+        <Exit>Из&amp;ађи</Exit>
       </File>
       <Edit>
-        <Title>Уређивање</Title>
-        <ShowUndoHistory>Прикажи историјат</ShowUndoHistory>
-        <InsertUnicodeSymbol>Уникод симболи</InsertUnicodeSymbol>
-        <Find>&amp;Пронађи</Find>
+        <Title>&amp;Уређивање</Title>
+        <ShowUndoHistory>П&amp;рикажи историју</ShowUndoHistory>
+        <InsertUnicodeSymbol>&amp;Уникод симболи</InsertUnicodeSymbol>
+        <Find>&amp;Пронађи…</Find>
         <FindNext>Пронађи &amp;следеће</FindNext>
-        <Replace>&amp;Замени</Replace>
-        <MultipleReplace>&amp;Вишеструка замена...</MultipleReplace>
-        <GoToSubtitleNumber>Пређи на &amp;титл број...</GoToSubtitleNumber>
+        <Replace>&amp;Замени…</Replace>
+        <MultipleReplace>&amp;Вишеструка замена…</MultipleReplace>
+        <GoToSubtitleNumber>&amp;Иди на линију број…</GoToSubtitleNumber>
       </Edit>
       <Tools>
-        <Title>Алатке</Title>
-        <AdjustDisplayDuration>&amp;Прилагоди трајање...</AdjustDisplayDuration>
-        <FixCommonErrors>&amp;Исправи честе грешке...</FixCommonErrors>
-        <StartNumberingFrom>Набрајање...</StartNumberingFrom>
-        <RemoveTextForHearingImpaired>Уклони текст за глуве...</RemoveTextForHearingImpaired>
-        <ChangeCasing>Промени мала и велика слова...</ChangeCasing>
-        <ChangeFrameRate>Промени број кадрова...</ChangeFrameRate>
-        <MergeShortLines>Споји кратке линије...</MergeShortLines>
-        <SplitLongLines>Раздвоји дуге линије...</SplitLongLines>
-        <MinimumDisplayTimeBetweenParagraphs>Најмање време приказа између редова...</MinimumDisplayTimeBetweenParagraphs>
-        <SortBy>Сврставање</SortBy>
-        <TextAlphabetically>Алфабетни ред</TextAlphabetically>
-        <TextSingleLineMaximumLength>Највећа дужина линије</TextSingleLineMaximumLength>
-        <TextTotalLength>Укупна дужина</TextTotalLength>
-        <TextNumberOfLines>Број линија</TextNumberOfLines>
-        <SplitSubtitle>Раздвоји титл...</SplitSubtitle>
-        <AppendSubtitle>Прикачи титл...</AppendSubtitle>
+        <Title>&amp;Алатке</Title>
+        <AdjustDisplayDuration>&amp;Прилагоди трајање…</AdjustDisplayDuration>
+        <FixCommonErrors>&amp;Исправи честе грешке…</FixCommonErrors>
+        <StartNumberingFrom>Почни &amp;набрајање…</StartNumberingFrom>
+        <RemoveTextForHearingImpaired>&amp;Уклони текст за глуве…</RemoveTextForHearingImpaired>
+        <ChangeCasing>Промени &amp;мала и велика слова…</ChangeCasing>
+        <ChangeFrameRate>П&amp;ромени број кадрова…</ChangeFrameRate>
+        <MergeShortLines>&amp;Споји кратке линије…</MergeShortLines>
+        <SplitLongLines>&amp;Раздвоји дуге линије…</SplitLongLines>
+        <MinimumDisplayTimeBetweenParagraphs>На&amp;јмање време приказа између линија…</MinimumDisplayTimeBetweenParagraphs>
+        <SortBy>П&amp;оређај по</SortBy>
+		<Number>хронолошком реду</Number>
+        <StartTime>почетном времену</StartTime>
+        <EndTime>завршном времену</EndTime>
+        <Duration>трајању</Duration>
+        <TextAlphabetically>азбучном реду</TextAlphabetically>
+        <TextSingleLineMaximumLength>највећој дужини линије</TextSingleLineMaximumLength>
+        <TextTotalLength>укупној дужини</TextTotalLength>
+        <TextNumberOfLines>броју линија</TextNumberOfLines>
+		<TextNumberOfCharactersPerSeconds>броју знакова у секунди</TextNumberOfCharactersPerSeconds>
+        <ShowOriginalTextInAudioAndVideoPreview>При&amp;кажи изворни текст у прегледима звука и слике</ShowOriginalTextInAudioAndVideoPreview>
+        <MakeNewEmptyTranslationFromCurrentSubtitle>&amp;Начини празан превод из текућег титла</MakeNewEmptyTranslationFromCurrentSubtitle>
+        <SplitSubtitle>Раз&amp;двоји титл…</SplitSubtitle>
+        <AppendSubtitle>Прик&amp;ачи титл…</AppendSubtitle>
       </Tools>
       <Video>
-        <Title>Видео запис</Title>
-        <OpenVideo>Отвори видео снимак...</OpenVideo>
-        <ChooseAudioTrack>Изабери аудио запис</ChooseAudioTrack>
-        <CloseVideo>Изабери видео запис</CloseVideo>
-        <ShowHideVideo>Прикажи/сакриј видео снимак</ShowHideVideo>
-        <ShowHideWaveForm>Прикажи/сакриј таласни облик</ShowHideWaveForm>
-        <UnDockVideoControls>Откачи видео контроле</UnDockVideoControls>
-        <ReDockVideoControls>Прикачи видео контроле</ReDockVideoControls>
+        <Title>&amp;Видео запис</Title>
+        <OpenVideo>&amp;Отвори видео снимак…</OpenVideo>
+        <ChooseAudioTrack>Изабери звучни запис</ChooseAudioTrack>
+        <CloseVideo>&amp;Затвори видео снимак</CloseVideo>
+        <ShowHideVideo>Прикажи/сакриј &amp;видео снимак</ShowHideVideo>
+        <ShowHideWaveForm>Прикажи/сакриј &amp;таласни облик</ShowHideWaveForm>
+	    <ShowHideWaveformAndSpectrogram>Прикажи/сакриј таласни облик и &amp;спектрограм</ShowHideWaveformAndSpectrogram>
+        <UnDockVideoControls>О&amp;ткачи видео контроле</UnDockVideoControls>
+        <ReDockVideoControls>П&amp;рикачи видео контроле</ReDockVideoControls>
       </Video>
       <SpellCheck>
-        <Title>Провера правописа</Title>
-        <SpellCheck>&amp;Провери правопис...</SpellCheck>
-        <FindDoubleWords>Пронађи дуплиране речи</FindDoubleWords>
-        <GetDictionaries>Преузми речнике...</GetDictionaries>
-        <AddToNamesEtcList>Додај реч у списак назива/изузетака...</AddToNamesEtcList>
+        <Title>&amp;Провера писања</Title>
+        <SpellCheck>Провери &amp;писање…</SpellCheck>
+        <FindDoubleWords>Пронађи дуплиране &amp;речи</FindDoubleWords>
+        <FindDoubleLines>Пронађи дуплиране &amp;линије</FindDoubleLines>
+        <GetDictionaries>Пр&amp;еузми речнике…</GetDictionaries>
+        <AddToNamesEtcList>&amp;Додај реч у списак назива/изузетака…</AddToNamesEtcList>
       </SpellCheck>
       <Synchronization>
-        <Title>Усклађивање</Title>
-        <AdjustAllTimes>Усклади сва времена...</AdjustAllTimes>
-        <VisualSync>&amp;Визуелно усклађивање...</VisualSync>
-        <PointSync>Тачка усклађивања...</PointSync>
+        <Title>У&amp;склађивање</Title>
+        <AdjustAllTimes>&amp;Помери време линија…</AdjustAllTimes>
+        <VisualSync>&amp;Визуелно усклађивање…</VisualSync>
+        <PointSync>&amp;Тачка усклађивања…</PointSync>
+        <PointSyncViaOtherSubtitle>Т&amp;ачка усклађивања из другог титла…</PointSyncViaOtherSubtitle>
       </Synchronization>
       <AutoTranslate>
-        <Title>Машинско превођење</Title>
-        <TranslatePoweredByGoogle>Преведи преко Гугловог преводиоца...</TranslatePoweredByGoogle>
-        <TranslatePoweredByMicrosoft>Преведи преко Мајкрософтовог преводиоца...</TranslatePoweredByMicrosoft>
-        <TranslateFromSwedishToDanish>Преведи из шведског у дански...</TranslateFromSwedishToDanish>
+        <Title>&amp;Машинско превођење</Title>
+        <TranslatePoweredByGoogle>Преведи помоћу &amp;Гугла…</TranslatePoweredByGoogle>
+        <TranslatePoweredByMicrosoft>Преведи помоћу &amp;Мајкрософта…</TranslatePoweredByMicrosoft>
+        <TranslateFromSwedishToDanish>&amp;Преведи из шведског у дански…</TranslateFromSwedishToDanish>
       </AutoTranslate>
       <Options>
-        <Title>Подешавања</Title>
-        <Settings>&amp;Поставке...</Settings>
-        <ChooseLanguage>&amp;Изабери језик...</ChooseLanguage>
+        <Title>По&amp;дешавања</Title>
+        <Settings>&amp;Поставке…</Settings>
+        <ChooseLanguage>&amp;Језик…</ChooseLanguage>
       </Options>
       <Networking>
-        <Title>Умрежавање</Title>
-        <StartNewSession>Започни нову сесију</StartNewSession>
-        <JoinSession>Придружи ме сесији</JoinSession>
-        <ShowSessionInfoAndLog>Прикажи податке</ShowSessionInfoAndLog>
-        <Chat>Ћаскање</Chat>
-        <LeaveSession>Напусти сесију</LeaveSession>
+        <Title>Ум&amp;режавање</Title>
+        <StartNewSession>&amp;Започни нову сесију</StartNewSession>
+        <JoinSession>&amp;Придружи ме сесији</JoinSession>
+        <ShowSessionInfoAndLog>&amp;Прикажи податке</ShowSessionInfoAndLog>
+        <Chat>&amp;Ћаскање</Chat>
+        <LeaveSession>&amp;Напусти сесију</LeaveSession>
       </Networking>
       <Help>
-        <Title>Помоћ</Title>
+        <Title>П&amp;омоћ</Title>
         <Help>&amp;Помоћ</Help>
         <About>&amp;О програму</About>
       </Help>
       <ToolBar>
         <New>Ново</New>
-        <Open>Отвори...</Open>
+        <Open>Отвори…</Open>
         <Save>Сачувај</Save>
-        <SaveAs>Сачувај као...</SaveAs>
+        <SaveAs>Сачувај као…</SaveAs>
         <Find>Претрага</Find>
         <Replace>Замена</Replace>
         <VisualSync>Визуелно усклађивање</VisualSync>
-        <SpellCheck>Провера правописа</SpellCheck>
+        <SpellCheck>Провера писања</SpellCheck>
         <Settings>Поставке</Settings>
         <Help>Помоћ</Help>
         <ShowHideWaveForm>Прикажи/сакриј таласни облик</ShowHideWaveForm>
         <ShowHideVideo>Прикажи/сакриј видео снимак</ShowHideVideo>
       </ToolBar>
       <ContextMenu>
+        <SubStationAlphaSetStyle>SSA – Подешавање стила</SubStationAlphaSetStyle>
         <Cut>Исеци</Cut>
         <Copy>Умножи</Copy>
         <Paste>Убаци</Paste>
         <Delete>Обриши</Delete>
-        <SelectAll>Изабери све</SelectAll>
+        <SplitLineAtCursorPosition>Раздвоји линију према положају показивача</SplitLineAtCursorPosition>
+        <SelectAll>Из&amp;абери све</SelectAll>
         <InsertFirstLine>Убаци линију</InsertFirstLine>
         <InsertBefore>Убаци линију иза</InsertBefore>
         <InsertAfter>Убаци линију испред</InsertAfter>
-        <InsertSubtitleAfter>Убаци титл иза линије...</InsertSubtitleAfter>
+        <InsertSubtitleAfter>Убаци титл иза линије…</InsertSubtitleAfter>
+        <CopyToClipboard>Умножи као текст</CopyToClipboard>
         <Split>Раздвоји</Split>
         <MergeSelectedLines>Споји изабране линије</MergeSelectedLines>
         <MergeWithLineBefore>Споји с линијом иза</MergeWithLineBefore>
         <MergeWithLineAfter>Споји с линијом испред</MergeWithLineAfter>
         <Normal>Уклони ознаке</Normal>
         <Underline>Подвуци</Underline>
-        <Color>Промени боју...</Color>
-        <FontName>Промени фонт...</FontName>
-        <AutoBalanceSelectedLines>Преломи изабране линије...</AutoBalanceSelectedLines>
-        <RemoveLineBreaksFromSelectedLines>Уклони сувишне редове...</RemoveLineBreaksFromSelectedLines>
-        <TypewriterEffect>Додај ефекат писаће машине...</TypewriterEffect>
-        <KaraokeEffect>Додај караоке ефекат...</KaraokeEffect>
-        <ShowSelectedLinesEarlierLater>Постави линије раније или касније...</ShowSelectedLinesEarlierLater>
-        <VisualSyncSelectedLines>Усклади изабране линије...</VisualSyncSelectedLines>
-        <GoogleTranslateSelectedLines>Преведи изабране линије...</GoogleTranslateSelectedLines>
-        <AdjustDisplayDurationForSelectedLines>Прилагоди трајање...</AdjustDisplayDurationForSelectedLines>
-        <FixCommonErrorsInSelectedLines>Исправи честе грешке...</FixCommonErrorsInSelectedLines>
-        <ChangeCasingForSelectedLines>Промени мала и велика слова...</ChangeCasingForSelectedLines>
+        <Color>Промени боју…</Color>
+        <FontName>Промени фонт…</FontName>
+        <AutoBalanceSelectedLines>Преломи изабране линије…</AutoBalanceSelectedLines>
+        <RemoveLineBreaksFromSelectedLines>Уклони сувишне редове…</RemoveLineBreaksFromSelectedLines>
+        <TypewriterEffect>Додај ефекат писаће машине…</TypewriterEffect>
+        <KaraokeEffect>Додај караоке ефекат…</KaraokeEffect>
+        <ShowSelectedLinesEarlierLater>Постави линије раније или касније…</ShowSelectedLinesEarlierLater>
+        <VisualSyncSelectedLines>Усклади изабране линије…</VisualSyncSelectedLines>
+        <GoogleAndMicrosoftTranslateSelectedLine>Преведи помоћу Гугла или Мајкрософта</GoogleAndMicrosoftTranslateSelectedLine>
+        <GoogleTranslateSelectedLines>Преведи изабране линије…</GoogleTranslateSelectedLines>
+        <AdjustDisplayDurationForSelectedLines>Прилагоди трајање…</AdjustDisplayDurationForSelectedLines>
+        <FixCommonErrorsInSelectedLines>Исправи честе грешке…</FixCommonErrorsInSelectedLines>
+        <ChangeCasingForSelectedLines>Промени мала и велика слова…</ChangeCasingForSelectedLines>
       </ContextMenu>
     </Menu>
     <Controls>
-      <SubtitleFormat>Формат титла:</SubtitleFormat>
+      <SubtitleFormat>Облик титла:</SubtitleFormat>
       <FileEncoding>Кодни распоред:</FileEncoding>
       <ListView>Списак</ListView>
       <SourceView>Извор</SourceView>
-      <UndoChangesInEditPanel>Опозови</UndoChangesInEditPanel>
-      <Previous>&lt; Назад</Previous>
-      <Next>Напред &gt;</Next>
-      <AutoBreak>Доњи ред</AutoBreak>
-      <Unbreak>Горњи ред</Unbreak>
+      <UndoChangesInEditPanel>&amp;Опозови</UndoChangesInEditPanel>
+      <Previous>&lt; &amp;Назад</Previous>
+      <Next>Н&amp;апред &gt;</Next>
+      <AutoBreak>&amp;Доњи ред</AutoBreak>
+      <Unbreak>&amp;Горњи ред</Unbreak>
     </Controls>
     <VideoControls>
       <Translate>Превод</Translate>
       <Create>Стварање</Create>
       <Adjust>Усклађивање</Adjust>
-      <SelectCurrentElementWhilePlaying>Користи текући титл при репродукцији</SelectCurrentElementWhilePlaying>
-      <AutoRepeat>Самостално понављање</AutoRepeat>
-      <AutoRepeatOn>Самостално понављање</AutoRepeatOn>
+      <SelectCurrentElementWhilePlaying>&amp;Користи текући титл при извођењу</SelectCurrentElementWhilePlaying>
+      <AutoRepeat> </AutoRepeat>
+      <AutoRepeatOn>&amp;Самостално понављање</AutoRepeatOn>
       <AutoRepeatCount>Број понављања:</AutoRepeatCount>
-      <AutoContinue>Самостално настављање</AutoContinue>
-      <AutoContinueOn>Самостално настављање</AutoContinueOn>
+      <AutoContinue> </AutoContinue>
+      <AutoContinueOn>Са&amp;мостално настављање</AutoContinueOn>
       <DelayInSeconds>Кашњење (у секундама):</DelayInSeconds>
       <OriginalText>Изворни текст</OriginalText>
-      <Previous>&lt; На&amp;зад</Previous>
+      <Previous>← &amp;Назад</Previous>
       <Stop>&amp;Заустави</Stop>
-      <PlayCurrent>&amp;Репродукуј</PlayCurrent>
-      <Next>&amp;Напред &gt;</Next>
-      <Playing>Репродуковање...</Playing>
-      <RepeatingLastTime>Понављање... последњи пут</RepeatingLastTime>
-      <RepeatingXTimesLeft>Понављање... {0} пута преостало</RepeatingXTimesLeft>
+      <PlayCurrent>&amp;Пусти</PlayCurrent>
+      <Next>Н&amp;апред →</Next>
+      <Playing>Пуштам…</Playing>
+      <RepeatingLastTime>Понављам последњи пут.</RepeatingLastTime>
+      <RepeatingXTimesLeft>Понављам… ({0} пута преостало)</RepeatingXTimesLeft>
       <AutoContinueInOneSecond>Настави за једну секунду</AutoContinueInOneSecond>
-      <AutoContinueInXSeconds>Настави за {0} s</AutoContinueInXSeconds>
-      <StillTypingAutoContinueStopped>Куцање је у току... настављање је заустављено</StillTypingAutoContinueStopped>
-      <InsertNewSubtitleAtVideoPosition>&amp;Убаци нови титл на положај</InsertNewSubtitleAtVideoPosition>
+      <AutoContinueInXSeconds>Настави за {0} с</AutoContinueInXSeconds>
+      <StillTypingAutoContinueStopped>Куцање је у току… настављање је заустављено</StillTypingAutoContinueStopped>
+      <InsertNewSubtitleAtVideoPosition>&amp;Убаци нови титл преко положаја</InsertNewSubtitleAtVideoPosition>
       <Auto>Самостално</Auto>
-      <PlayFromJustBeforeText>Репродукуј одмах пре &amp;текста</PlayFromJustBeforeText>
-      <Pause>Паузирај</Pause>
-      <GoToSubtitlePositionAndPause>Потположај и паузирање</GoToSubtitlePositionAndPause>
-      <SetStartTime>Постави &amp;почетак</SetStartTime>
-      <SetEndTimeAndGoToNext>Постави крај и пређи на &amp;идуће</SetEndTimeAndGoToNext>
-      <SetEndTime>Постави &amp;крај</SetEndTime>
-      <SetstartTimeAndOffsetOfRest>Постави &amp;почетак и помакни</SetstartTimeAndOffsetOfRest>
+      <PlayFromJustBeforeText>&amp;Пусти одмах пре текста</PlayFromJustBeforeText>
+      <Pause>Пау&amp;зирај</Pause>
+      <GoToSubtitlePositionAndPause>&amp;Иди на положај и паузирај</GoToSubtitlePositionAndPause>
+      <SetStartTime>П&amp;остави почетак</SetStartTime>
+      <SetEndTimeAndGoToNext>Поста&amp;ви крај и иди на идуће</SetEndTimeAndGoToNext>
+      <AdjustedViaEndTime>Прилагођено преко завршног времена {0}</AdjustedViaEndTime>
+      <SetEndTime>По&amp;стави завршетак</SetEndTime>
+      <SetstartTimeAndOffsetOfRest>Пос&amp;тави почетак и помакни</SetstartTimeAndOffsetOfRest>
       <SearchTextOnline>Претрага текста на мрежи</SearchTextOnline>
-      <GoogleTranslate>Гуглов преводилац</GoogleTranslate>
-      <GoogleIt>Претражи</GoogleIt>
-      <SecondsBackShort>&lt;&lt; s</SecondsBackShort>
-      <SecondsForwardShort>s &gt;&gt;</SecondsForwardShort>
+      <GoogleTranslate>Пр&amp;еведи</GoogleTranslate>
+      <GoogleIt>П&amp;ретражи</GoogleIt>
+      <SecondsBackShort>← с</SecondsBackShort>
+      <SecondsForwardShort>с →</SecondsForwardShort>
       <VideoPosition>Положај:</VideoPosition>
-      <TranslateTip>Користите алт и горњу/доњу стрелицу да бисте прешли на претходни/следећи титл.</TranslateTip>
-      <CreateTip>Користите контрол и леву/десну стрелицу.</CreateTip>
-      <AdjustTip>Користите алт и горњу/доњу стрелицу да бисте прешли на претходни/следећи титл.</AdjustTip>
-      <BeforeChangingTimeInWaveFormX>Пре мењања времена у таласном облику: {0}</BeforeChangingTimeInWaveFormX>
-      <NewTextInsertAtX>Нови текст је убачен у {0}.</NewTextInsertAtX>
-      <Center>Средина</Center>
+      <TranslateTip>Користите алт и горњу или доњу стрелицу да одете на претходни или следећи титл.</TranslateTip>
+      <CreateTip>Користите ктрл и леву или десну стрелицу.</CreateTip>
+      <AdjustTip>Користите алт и горњу или доњу стрелицу да одете на претходни или следећи титл.</AdjustTip>
+      <BeforeChangingTimeInWaveFormX>Промењено време у таласном облику: {0}</BeforeChangingTimeInWaveFormX>
+      <NewTextInsertAtX>Створена је нова линија титла ({0}).</NewTextInsertAtX>
+      <Center>Центрирај</Center>
       <PlayRate>Брзина</PlayRate>
-      <Slow>Споро</Slow>
-      <Normal>Нормално</Normal>
-      <Fast>Брзо</Fast>
-      <VeryFast>Веома брзо</VeryFast>
+      <Slow>спора</Slow>
+      <Normal>нормална</Normal>
+      <Fast>брза</Fast>
+      <VeryFast>веома брза</VeryFast>
     </VideoControls>
-    <SaveChangesToUntitled>Сачувати измене?</SaveChangesToUntitled>
-    <SaveChangesToX>Сачувати измене за {0}?</SaveChangesToX>
+    <SaveChangesToUntitled>Желите ли да сачувате измене?</SaveChangesToUntitled>
+    <SaveChangesToX>Желите ли да сачувате измене за {0}?</SaveChangesToX>
     <SaveChangesToUntitledOriginal>Сачувати измене за неименовани изворни титл?</SaveChangesToUntitledOriginal>
     <SaveChangesToOriginalX>Сачувати измене за изворни титл {0}?</SaveChangesToOriginalX>
-    <SaveSubtitleAs>Сачувај титл као...</SaveSubtitleAs>
-    <SaveOriginalSubtitleAs>Сачувај изворни титл као...</SaveOriginalSubtitleAs>
+    <SaveSubtitleAs>Чување титла</SaveSubtitleAs>
+    <SaveOriginalSubtitleAs>Сачувај изворни титл као…</SaveOriginalSubtitleAs>
     <NoSubtitleLoaded>Нема учитаних титлова.</NoSubtitleLoaded>
     <VisualSyncSelectedLines>Визуелно усклађивање – изабране линије</VisualSyncSelectedLines>
     <VisualSyncTitle>Визуелно усклађивање</VisualSyncTitle>
-    <BeforeVisualSync>Пре визуелног усклађивања</BeforeVisualSync>
+    <BeforeVisualSync>Извршено визуелно усклађивање</BeforeVisualSync>
     <VisualSyncPerformedOnSelectedLines>Извршено је визуелно усклађивање на изабраним линијама</VisualSyncPerformedOnSelectedLines>
     <VisualSyncPerformed>Визуелно усклађивање је извршено.</VisualSyncPerformed>
-    <ImportThisVobSubSubtitle>Увести овај VobSub титл?</ImportThisVobSubSubtitle>
+    <ImportThisVobSubSubtitle>Увести овај Вобсаб титл?</ImportThisVobSubSubtitle>
     <FileXIsLargerThan10Mb>Датотека је већа од 10 MB: {0}</FileXIsLargerThan10Mb>
     <ContinueAnyway>Ипак наставити?</ContinueAnyway>
     <BeforeLoadOf>Пре учитавања {0}</BeforeLoadOf>
-    <LoadedSubtitleX>Учитан је {0} титл.</LoadedSubtitleX>
+    <LoadedSubtitleX>Учитан је титл {0}.</LoadedSubtitleX>
     <LoadedEmptyOrShort>Учитан је празан или веома кратак титл {0}</LoadedEmptyOrShort>
-    <FileIsEmptyOrShort>Датотека је празна или кратка!</FileIsEmptyOrShort>
-    <FileNotFound>Датотека није пронађена: {0}</FileNotFound>
-    <SavedSubtitleX>{0} титл је сачуван.</SavedSubtitleX>
+    <FileIsEmptyOrShort>Датотека је празна или кратка.</FileIsEmptyOrShort>
+    <FileNotFound>Не могу да пронађем датотеку: {0}</FileNotFound>
+    <SavedSubtitleX>Титл {0} је сачуван.</SavedSubtitleX>
     <SavedOriginalSubtitleX>Изворни титл {0} је сачуван.</SavedOriginalSubtitleX>
     <FileOnDiskModified>Датотека на диску је измењена.</FileOnDiskModified>
-    <OverwriteModifiedFile>Замени {0} датотеку измењену у {1} {2}{3} с учитаном датотеком са диска у {4} {5}?</OverwriteModifiedFile>
+    <OverwriteModifiedFile>Заменити датотеку {0} која је измењена у {1} {2}{3} с учитаном датотеком у {4} {5}?</OverwriteModifiedFile>
     <UnableToSaveSubtitleX>{0} титл није сачуван.</UnableToSaveSubtitleX>
-    <BeforeNew>Пре новог документа</BeforeNew>
+    <BeforeNew>Створена празна страница</BeforeNew>
     <New>Ново</New>
-    <BeforeConvertingToX>Пре претварања у {0}</BeforeConvertingToX>
-    <ConvertedToX>Претворено у {0}</ConvertedToX>
+    <BeforeConvertingToX>Претворено у {0}</BeforeConvertingToX>
+    <ConvertedToX>Претворено у {0}.</ConvertedToX>
     <BeforeShowEarlier>Постави раније</BeforeShowEarlier>
     <BeforeShowLater>Постави касније</BeforeShowLater>
     <LineNumberX>Линија број {0:#,##0.##}</LineNumberX>
-    <OpenVideoFile>Отварање видео датотеке...</OpenVideoFile>
+    <OpenVideoFile>Отварање видео снимка…</OpenVideoFile>
     <NewFrameRateUsedToCalculateTimeCodes>Нови број кадрова ({0}) је коришћен за рачунање почетка/краја.</NewFrameRateUsedToCalculateTimeCodes>
     <NewFrameRateUsedToCalculateFrameNumbers>Нови број кадрова ({0}) је коришћен за рачунање почетног/завршног броја кадрова.</NewFrameRateUsedToCalculateFrameNumbers>
-    <FindContinue>Ставка није пронађена.
-Желите ли да кренете с врха документа и пробате још једном?</FindContinue>
-    <FindContinueTitle>Наставити претрагу?</FindContinueTitle>
-    <XFoundAtLineNumberY>„{0}“ је пронађено на линији број {1}.</XFoundAtLineNumberY>
+    <FindContinue>Ниједна ставка није пронађена.
+Желите ли да кренем с врха странице?</FindContinue>
+    <FindContinueTitle>Настављање претраге</FindContinueTitle>
+    <XFoundAtLineNumberY>{0} су пронађене на линији број {1}.</XFoundAtLineNumberY>
     <XNotFound>{0} нису пронађене.</XNotFound>
-    <BeforeReplace>Пре замене: {0}</BeforeReplace>
+    <BeforeReplace>Замењено са: {0}</BeforeReplace>
     <MatchFoundX>Поклапања: {0}</MatchFoundX>
     <NoMatchFoundX>Нема поклапања: {0}</NoMatchFoundX>
     <FoundNothingToReplace>Ништа није пронађено за замену.</FoundNothingToReplace>
     <ReplaceCountX>Број замена: {0}</ReplaceCountX>
     <NoXFoundAtLineY>Поклапања на линији {0}: {1}</NoXFoundAtLineY>
     <OneReplacementMade>Учињена је једна замена.</OneReplacementMade>
-    <BeforeChangesMadeInSourceView>Пре направљених измена у изворном приказу</BeforeChangesMadeInSourceView>
+    <BeforeChangesMadeInSourceView>Направљене измене у приказу извора</BeforeChangesMadeInSourceView>
     <UnableToParseSourceView>Није могуће приступити изворном приказу текста!</UnableToParseSourceView>
-    <GoToLineNumberX>Пређи на линију број {0}.</GoToLineNumberX>
+    <GoToLineNumberX>Прешао сам на линију број {0}.</GoToLineNumberX>
     <CreateAdjustChangesApplied>Примењене су измене преко поставке „Направи/прилагоди линије“</CreateAdjustChangesApplied>
     <SelectedLines>изабране линије</SelectedLines>
-    <BeforeDisplayTimeAdjustment>Пре измена времена</BeforeDisplayTimeAdjustment>
-    <DisplayTimeAdjustedX>Постављено време приказа: {0}</DisplayTimeAdjustedX>
-    <DisplayTimesAdjustedX>Постављена времена приказа: {0}</DisplayTimesAdjustedX>
+    <BeforeDisplayTimeAdjustment>Измењено време</BeforeDisplayTimeAdjustment>
+    <DisplayTimeAdjustedX>Постављено је време приказа: {0}</DisplayTimeAdjustedX>
+    <DisplayTimesAdjustedX>Постављена су времена приказа: {0}</DisplayTimesAdjustedX>
     <StarTimeAdjustedX>Постављено почетно време: {0}</StarTimeAdjustedX>
-    <BeforeCommonErrorFixes>Пре исправки честих грешака</BeforeCommonErrorFixes>
+    <BeforeCommonErrorFixes>Исправљене честе грешке</BeforeCommonErrorFixes>
     <CommonErrorsFixedInSelectedLines>Исправљене су честе грешке у изабраним линијама.</CommonErrorsFixedInSelectedLines>
     <CommonErrorsFixed>Честе грешке су исправљене.</CommonErrorsFixed>
-    <BeforeRenumbering>Пре поновног набрајања</BeforeRenumbering>
-    <RenumberedStartingFromX>Поновно набрајање почиње од: {0}</RenumberedStartingFromX>
-    <BeforeRemovalOfTextingForHearingImpaired>Пре уклањања текста за глуве</BeforeRemovalOfTextingForHearingImpaired>
-    <TextingForHearingImpairedRemovedOneLine>Уклоњено текста за глуве: једна линија</TextingForHearingImpairedRemovedOneLine>
-    <TextingForHearingImpairedRemovedXLines>Уклоњено текста за глуве: {0} линија</TextingForHearingImpairedRemovedXLines>
+    <BeforeRenumbering>Извршено набрајање</BeforeRenumbering>
+    <RenumberedStartingFromX>Набрајање почиње од броја {0}.</RenumberedStartingFromX>
+    <BeforeRemovalOfTextingForHearingImpaired>Уклоњен текст за глуве</BeforeRemovalOfTextingForHearingImpaired>
+    <TextingForHearingImpairedRemovedOneLine>Текст за глуве је уклоњен у једној линији.</TextingForHearingImpairedRemovedOneLine>
+    <TextingForHearingImpairedRemovedXLines>Текст за глуве је уклоњен у {0} линија.</TextingForHearingImpairedRemovedXLines>
     <SubtitleSplitted>Титл је раздвојен.</SubtitleSplitted>
     <SubtitleAppendPrompt>Ова радња ће прикачити текући титл на учитани
 који би требало да је већ усклађен с видео снимком.
 
 Желите ли да наставите?</SubtitleAppendPrompt>
     <SubtitleAppendPromptTitle>Качење титла</SubtitleAppendPromptTitle>
-    <OpenSubtitleToAppend>Отвори титл за качење...</OpenSubtitleToAppend>
+    <OpenSubtitleToAppend>Отварање титла за качење</OpenSubtitleToAppend>
     <AppendViaVisualSyncTitle>Визуелно усклађивање – качење другог дела титла</AppendViaVisualSyncTitle>
     <AppendSynchronizedSubtitlePrompt>Додати овај усклађен титл?</AppendSynchronizedSubtitlePrompt>
-    <BeforeAppend>Пре качења</BeforeAppend>
+    <BeforeAppend>Прикачен титл</BeforeAppend>
     <SubtitleAppendedX>Прикачено титлова: {0}</SubtitleAppendedX>
-    <SubtitleNotAppended>Титл није прикачен!</SubtitleNotAppended>
-    <GoogleTranslate>Гуглов преводилац</GoogleTranslate>
-    <MicrosoftTranslate>Мајкрософтов преводилац</MicrosoftTranslate>
-    <BeforeGoogleTranslation>Пре Гугловог преводиоца</BeforeGoogleTranslation>
+    <SubtitleNotAppended>Не могу да прикачим титл.</SubtitleNotAppended>
+    <GoogleTranslate>Гугл преводилац</GoogleTranslate>
+    <MicrosoftTranslate>Мајкрософт преводилац</MicrosoftTranslate>
+    <BeforeGoogleTranslation>Преведено помоћу Гугла</BeforeGoogleTranslation>
     <SelectedLinesTranslated>Изабране линије су преведене.</SelectedLinesTranslated>
     <SubtitleTranslated>Титл је преведен.</SubtitleTranslated>
     <TranslateSwedishToDanish>Преведи учитан шведски титл у дански</TranslateSwedishToDanish>
     <TranslateSwedishToDanishWarning>Превести учитани шведски титл у дански?</TranslateSwedishToDanishWarning>
-    <TranslatingViaNikseDkMt>Превођење преко www.nikse.dk/mt...</TranslatingViaNikseDkMt>
-    <BeforeSwedishToDanishTranslation>Пре превођења са шведског у дански</BeforeSwedishToDanishTranslation>
-    <TranslationFromSwedishToDanishComplete>Превођење са шведског у дански је завршено.</TranslationFromSwedishToDanishComplete>
-    <TranslationFromSwedishToDanishFailed>Превођење са шведског у дански није успело.</TranslationFromSwedishToDanishFailed>
-    <BeforeUndo>Пре опозива радње</BeforeUndo>
+    <TranslatingViaNikseDkMt>Преводим преко www.nikse.dk/mt…</TranslatingViaNikseDkMt>
+    <BeforeSwedishToDanishTranslation>Преведено из шведског у дански</BeforeSwedishToDanishTranslation>
+    <TranslationFromSwedishToDanishComplete>Титл је преведен са шведског у дански.</TranslationFromSwedishToDanishComplete>
+    <TranslationFromSwedishToDanishFailed>Не могу да преведем титл са шведског у дански.</TranslationFromSwedishToDanishFailed>
+    <BeforeUndo>Опозвана радња</BeforeUndo>
     <UndoPerformed>Опозови извршено</UndoPerformed>
     <NothingToUndo>Нема ништа за опозивање.</NothingToUndo>
     <InvalidLanguageNameX>Неисправан назив језика: {0}</InvalidLanguageNameX>
@@ -675,350 +753,372 @@ C# изворни кôд се налази на интернет страниц�
     <NumberOfCorrectWords>Број исправних речи: {0}</NumberOfCorrectWords>
     <NumberOfWordsAddedToDictionary>Број речи додатих у речник: {0}</NumberOfWordsAddedToDictionary>
     <NumberOfNameHits>Број погодака: {0}</NumberOfNameHits>
-    <SpellCheck>Провера правописа</SpellCheck>
-    <BeforeSpellCheck>Пре провере правописа</BeforeSpellCheck>
-    <SpellCheckChangedXToY>Провера правописа: „{0}“ је измењен у „{1}“</SpellCheckChangedXToY>
-    <BeforeAddingTagX>Пре додавања &lt;{0}&gt; ознака</BeforeAddingTagX>
+    <SpellCheck>Провера писања</SpellCheck>
+    <BeforeSpellCheck>Проверено писање</BeforeSpellCheck>
+    <SpellCheckChangedXToY>Провера писања: „{0}“ је измењен у „{1}“</SpellCheckChangedXToY>
+    <BeforeAddingTagX>Додато &lt;{0}&gt; ознака</BeforeAddingTagX>
     <TagXAdded>Додато ознака: &lt;{0}&gt;</TagXAdded>
     <LineXOfY>линија {0} од {1}</LineXOfY>
     <XLinesDeleted>Обрисано линија: {0}</XLinesDeleted>
-    <BeforeDeletingXLines>Пре брисања {0} линија</BeforeDeletingXLines>
-    <DeleteXLinesPrompt>Обрисати {0} линија?</DeleteXLinesPrompt>
+    <BeforeDeletingXLines>Обрисано линија: {0}</BeforeDeletingXLines>
+    <DeleteXLinesPrompt>Желите ли да обришете изабране линије?</DeleteXLinesPrompt>
     <OneLineDeleted>Линија је обрисана.</OneLineDeleted>
-    <BeforeDeletingOneLine>Пре брисања линије</BeforeDeletingOneLine>
-    <DeleteOneLinePrompt>Обрисати линију?</DeleteOneLinePrompt>
-    <BeforeInsertLine>Пре уноса линије</BeforeInsertLine>
+    <BeforeDeletingOneLine>Обрисана линија</BeforeDeletingOneLine>
+    <DeleteOneLinePrompt>Желите ли да обришете линију?</DeleteOneLinePrompt>
+    <BeforeInsertLine>Убачена линија</BeforeInsertLine>
     <LineInserted>Линија је убачена.</LineInserted>
-    <BeforeLineUpdatedInListView>Пре мењања линије у списку</BeforeLineUpdatedInListView>
-    <BeforeSettingFontToNormal>Пре постављања фонта на обичан</BeforeSettingFontToNormal>
-    <BeforeSplitLine>Пре раздвајања линије</BeforeSplitLine>
+    <BeforeLineUpdatedInListView>Промењена линија у списку</BeforeLineUpdatedInListView>
+    <BeforeSettingFontToNormal>Постављен фонт на обичан</BeforeSettingFontToNormal>
+    <BeforeSplitLine>Раздвојена линија</BeforeSplitLine>
     <LineSplitted>Линија је раздвојена.</LineSplitted>
-    <BeforeMergeLines>Пре спајања линија</BeforeMergeLines>
+    <BeforeMergeLines>Спојена линија</BeforeMergeLines>
     <LinesMerged>Линије су спојене.</LinesMerged>
-    <BeforeSettingColor>Пре постављања боје</BeforeSettingColor>
-    <BeforeSettingFontName>Пре постављања назива фонта</BeforeSettingFontName>
-    <BeforeTypeWriterEffect>Пре ефекта писаће машине</BeforeTypeWriterEffect>
-    <BeforeKaraokeEffect>Пре караоке ефекта</BeforeKaraokeEffect>
-    <BeforeImportingDvdSubtitle>Пре увоза титла са ДВД-а</BeforeImportingDvdSubtitle>
-    <OpenMatroskaFile>Отварање матрошка датотеке...</OpenMatroskaFile>
+    <BeforeSettingColor>Постављена боја</BeforeSettingColor>
+    <BeforeSettingFontName>Постављен тип фонта</BeforeSettingFontName>
+    <BeforeTypeWriterEffect>Постављен ефекат писаће машине</BeforeTypeWriterEffect>
+    <BeforeKaraokeEffect>Постављен караоке ефекат</BeforeKaraokeEffect>
+    <BeforeImportingDvdSubtitle>Увезен титл с ДВД-ја</BeforeImportingDvdSubtitle>
+    <OpenMatroskaFile>Отварање матрошка датотеке…</OpenMatroskaFile>
     <MatroskaFiles>Матрошка датотеке</MatroskaFiles>
-    <NoSubtitlesFound>Титл није пронађен.</NoSubtitlesFound>
+    <NoSubtitlesFound>Не могу да пронађем титл.</NoSubtitlesFound>
     <NotAValidMatroskaFileX>Неисправна матрошка датотека: {0}</NotAValidMatroskaFileX>
-    <ParsingMatroskaFile>Рашчлањивање матрошка датотеке. Молимо, сачекајте...</ParsingMatroskaFile>
-    <BeforeImportFromMatroskaFile>Пре увоза титла из матрошка датотеке</BeforeImportFromMatroskaFile>
-    <SubtitleImportedFromMatroskaFile>Титл из матрошка датотеке је увезен.</SubtitleImportedFromMatroskaFile>
-    <DropFileXNotAccepted>„{0}“ датотека није прихваћена. Превелика је.</DropFileXNotAccepted>
+    <ParsingMatroskaFile>Рашчлањујем матрошка датотеку…</ParsingMatroskaFile>
+    <BeforeImportFromMatroskaFile>Увезен титл из матрошке</BeforeImportFromMatroskaFile>
+    <SubtitleImportedFromMatroskaFile>Увезен је титл из матрошке.</SubtitleImportedFromMatroskaFile>
+    <DropFileXNotAccepted>Не могу да прихватим датотеку „{0}“ јер је превелика.</DropFileXNotAccepted>
     <DropOnlyOneFile>Можете убацити само једну датотеку.</DropOnlyOneFile>
-    <BeforeCreateAdjustLines>Пре прављења/прилагођавања линија</BeforeCreateAdjustLines>
-    <OpenAnsiSubtitle>Отварање титла...</OpenAnsiSubtitle>
-    <BeforeChangeCasing>Пре мењања величине слова</BeforeChangeCasing>
+    <BeforeCreateAdjustLines>Направљене или прилагођене линије</BeforeCreateAdjustLines>
+    <OpenAnsiSubtitle>Отварање титла</OpenAnsiSubtitle>
+    <BeforeChangeCasing>Промењена величина слова</BeforeChangeCasing>
     <CasingCompleteMessageNoNames>Број линија с промењеном величином слова: {0}/{1}</CasingCompleteMessageNoNames>
     <CasingCompleteMessageOnlyNames>Број линија с промењеном величином слова за називе: {0}/{1}</CasingCompleteMessageOnlyNames>
-    <CasingCompleteMessage>Број линија с промењеном величином слова: {0}/{1}, промењена мала и велика слова за називе: {2}</CasingCompleteMessage>
-    <BeforeChangeFrameRate>Пре измене броја кадрова</BeforeChangeFrameRate>
+    <CasingCompleteMessage>Број линија с промењеном величином слова: {0}/{1}. Промењена мала и велика слова за називе: {2}</CasingCompleteMessage>
+    <BeforeChangeFrameRate>Промењен број кадрова</BeforeChangeFrameRate>
     <FrameRateChangedFromXToY>Број кадрова је измењен из {0} у {1}.</FrameRateChangedFromXToY>
-    <IdxFileNotFoundWarning>{0} није пронађено! Ипак увести VobSub датотеку?</IdxFileNotFoundWarning>
-    <InvalidVobSubHeader>Неисправна VobSub датотека: {0}</InvalidVobSubHeader>
-    <OpenVobSubFile>Отварање VobSub титла...</OpenVobSubFile>
-    <VobSubFiles>VobSub титлови</VobSubFiles>
-    <OpenBluRaySupFile>Отварање BluRay титла...</OpenBluRaySupFile>
-    <BluRaySupFiles>BluRay титлови</BluRaySupFiles>
-    <BeforeImportingVobSubFile>Пре увоза VobSub титла</BeforeImportingVobSubFile>
-    <BeforeImportingBluRaySupFile>Пре увоза BluRay титла</BeforeImportingBluRaySupFile>
-    <BeforeShowSelectedLinesEarlierLater>Пре приказивања линија раније или касније</BeforeShowSelectedLinesEarlierLater>
+    <IdxFileNotFoundWarning>Не могу да пронађем датотеку {0}. Желите ли да увезете Вобсаб титл?</IdxFileNotFoundWarning>
+    <InvalidVobSubHeader>Изабрани титл је неисправан: {0}</InvalidVobSubHeader>
+    <OpenVobSubFile>Отварање Вобсаб титла</OpenVobSubFile>
+    <VobSubFiles>Вобсаб титлови</VobSubFiles>
+    <OpenBluRaySupFile>Отварање Блу-реј титла</OpenBluRaySupFile>
+    <BluRaySupFiles>Блу-реј титлови</BluRaySupFiles>
+    <BeforeImportingVobSubFile>Увезен Вобсаб титл</BeforeImportingVobSubFile>
+    <BeforeImportingBluRaySupFile>Увезен Блу-реј титл</BeforeImportingBluRaySupFile>
+    <BeforeImportingBdnXml>Увезена датотека BDN XML</BeforeImportingBdnXml>
+    <BeforeShowSelectedLinesEarlierLater>Померен положај линије (раније или касније)</BeforeShowSelectedLinesEarlierLater>
     <ShowSelectedLinesEarlierLaterPerformed>Прикажи линије раније или касније</ShowSelectedLinesEarlierLaterPerformed>
     <DoubleWordsViaRegEx>Дуплиране речи путем регекса {0}</DoubleWordsViaRegEx>
-    <BeforeSortX>Пре сврставања: {0}</BeforeSortX>
+    <BeforeSortX>Разврстано: {0}</BeforeSortX>
     <SortedByX>Поређано по: {0}</SortedByX>
-    <BeforeAutoBalanceSelectedLines>Пре уравнотежења линија</BeforeAutoBalanceSelectedLines>
+    <BeforeAutoBalanceSelectedLines>Уравнотежене линије</BeforeAutoBalanceSelectedLines>
     <NumberOfLinesAutoBalancedX>Уравнотежено линија: {0}</NumberOfLinesAutoBalancedX>
-    <BeforeRemoveLineBreaksInSelectedLines>Пре уклањања редова из линија</BeforeRemoveLineBreaksInSelectedLines>
+    <BeforeRemoveLineBreaksInSelectedLines>Уклоњени редови из линија</BeforeRemoveLineBreaksInSelectedLines>
     <NumberOfWithRemovedLineBreakX>Број линија с уклоњеним редом: {0}</NumberOfWithRemovedLineBreakX>
-    <BeforeMultipleReplace>Пре вишеструке замене</BeforeMultipleReplace>
+    <BeforeMultipleReplace>Извршена вишеструка замена</BeforeMultipleReplace>
     <NumberOfLinesReplacedX>Број линија са замењеним текстом: {0}</NumberOfLinesReplacedX>
     <NameXAddedToNamesEtcList>Реч „{0}“ је додата у списак назива/изузетака.</NameXAddedToNamesEtcList>
-    <NameXNotAddedToNamesEtcList>Реч „{0}“ није додата у списак назива/изузетака.</NameXNotAddedToNamesEtcList>
+    <NameXNotAddedToNamesEtcList>Не могу да додам реч „{0}“ у списак назива/изузетака.</NameXNotAddedToNamesEtcList>
     <XLinesSelected>Изабрано линија: {0}</XLinesSelected>
-    <UnicodeMusicSymbolsAnsiWarning>Титл садржи уникод музичке ноте. Ако га сачувате преко ASCII кодног распореда, изгубићете их. Желите ли да наставите?</UnicodeMusicSymbolsAnsiWarning>
+    <UnicodeMusicSymbolsAnsiWarning>Титл садржи уникод музичке ноте. Ако га сачувате у кодном распореду ASCII, изгубићете их. Желите ли да наставите?</UnicodeMusicSymbolsAnsiWarning>
     <NegativeTimeWarning>Титл садржи негативне временске одреднице. Желите ли да наставите?</NegativeTimeWarning>
-    <BeforeMergeShortLines>Пре спајања кратких линија</BeforeMergeShortLines>
-    <BeforeSplitLongLines>Пре раздвајања дугих линија</BeforeSplitLongLines>
+    <BeforeMergeShortLines>Спојене кратке линије</BeforeMergeShortLines>
+    <BeforeSplitLongLines>Раздвојене дуге линије</BeforeSplitLongLines>
     <MergedShortLinesX>Спојено линија: {0}</MergedShortLinesX>
-    <BeforeSetMinimumDisplayTimeBetweenParagraphs>Пре постављања најмањег времена приказа између редова</BeforeSetMinimumDisplayTimeBetweenParagraphs>
-    <XMinimumDisplayTimeBetweenParagraphsChanged>Измењено линија с најмањим временом приказа између редова: {0}</XMinimumDisplayTimeBetweenParagraphsChanged>
-    <BeforeImportText>Пре увоза чистог текста</BeforeImportText>
+    <BeforeSetMinimumDisplayTimeBetweenParagraphs>Постављено најмање време приказа између линија</BeforeSetMinimumDisplayTimeBetweenParagraphs>
+    <XMinimumDisplayTimeBetweenParagraphsChanged>Измењено линија с најмањим временом приказа између линија: {0}</XMinimumDisplayTimeBetweenParagraphsChanged>
+    <BeforeImportText>Увезен чист текст</BeforeImportText>
     <TextImported>Текст је увезен.</TextImported>
-    <BeforePointSynchronization>Пре тачке усклађивања</BeforePointSynchronization>
+    <BeforePointSynchronization>Постављена тачка усклађивања</BeforePointSynchronization>
     <PointSynchronizationDone>Тачка усклађивања је постављена.</PointSynchronizationDone>
-    <BeforeTimeCodeImport>Пре увоза временских одредница</BeforeTimeCodeImport>
-    <TimeCodeImportedFromXY>Увезено временских одредница: {1} — извор: {0}</TimeCodeImportedFromXY>
-    <BeforeInsertSubtitleAtVideoPosition>Пре постављања титла у положај видео снимка</BeforeInsertSubtitleAtVideoPosition>
-    <BeforeSetStartTimeAndOffsetTheRest>Пре постављања почетка и помакнућа остатка</BeforeSetStartTimeAndOffsetTheRest>
-    <ContinueWithCurrentSpellCheck>Наставити с провером правописа?</ContinueWithCurrentSpellCheck>
+    <BeforeTimeCodeImport>Увезене временске одреднице</BeforeTimeCodeImport>
+    <TimeCodeImportedFromXY>Увезено временских одредница: {1}. Извор: {0}</TimeCodeImportedFromXY>
+    <BeforeInsertSubtitleAtVideoPosition>Постављен титл на положај снимка</BeforeInsertSubtitleAtVideoPosition>
+    <BeforeSetStartTimeAndOffsetTheRest>Постављен почетак и помакнут остатак</BeforeSetStartTimeAndOffsetTheRest>
+    <BeforeSetEndAndVideoPosition>Постављен завршетак и израчунат почетак</BeforeSetEndAndVideoPosition>
+    <ContinueWithCurrentSpellCheck>Наставити с провером писања?</ContinueWithCurrentSpellCheck>
     <CharactersPerSecond>Знакова по секунди: {0:0.00}</CharactersPerSecond>
     <GetFrameRateFromVideoFile>Добави број кадрова из видео снимка</GetFrameRateFromVideoFile>
     <NetworkMessage>Нова порука: {0} ({1}): {2}</NetworkMessage>
-    <NetworkUpdate>Измењено линија: {0} ({1}): попис={2}, текст={3}</NetworkUpdate>
-    <NetworkInsert>Убачено линија: {0} ({1}): попис={2}, текст={3}</NetworkInsert>
-    <NetworkDelete>Обрисано линија: {0} ({1}): попис={2}</NetworkDelete>
-    <NetworkNewUser>Нови корисник: {0} ({1}).</NetworkNewUser>
-    <NetworkByeUser>Здраво, {0} ({1}).</NetworkByeUser>
-    <NetworkUnableToConnectToServer>Повезивање на сервер није успело: {0}</NetworkUnableToConnectToServer>
+    <NetworkUpdate>Линија је измењена: {0} ({1}): попис – {2}, текст – {3}</NetworkUpdate>
+    <NetworkInsert>Линија је убачена: {0} ({1}): попис – {2}, текст – {3}</NetworkInsert>
+    <NetworkDelete>Линија је обрисана: {0} ({1}): попис – {2}</NetworkDelete>
+    <NetworkNewUser>{0} приступи сесији ({1}).</NetworkNewUser>
+    <NetworkByeUser>{0} напусти сесију ({1}).</NetworkByeUser>
+    <NetworkUnableToConnectToServer>Не могу да се повежем на сервер: {0}</NetworkUnableToConnectToServer>
     <UserAndAction>Корисник/радња</UserAndAction>
     <NetworkMode>Умрежено</NetworkMode>
-    <XStartedSessionYAtZ>{0}: започета је сесија „{1}“ у {2}.</XStartedSessionYAtZ>
-    <SpellChekingViaWordXLineYOfX>Провера правописа путем Ворда {0} – линија {1}/{2}</SpellChekingViaWordXLineYOfX>
-    <UnableToStartWord>Покретање Ворда није успело.</UnableToStartWord>
-    <SpellCheckAbortedXCorrections>Провера правописа је прекинута. Измењено линија: {0}.</SpellCheckAbortedXCorrections>
-    <SpellCheckCompletedXCorrections>Провера правописа је завршена. Измењено линија: {0}.</SpellCheckCompletedXCorrections>
+    <XStartedSessionYAtZ>{0}: сесија „{1}“ је започета у {2}.</XStartedSessionYAtZ>
+    <SpellChekingViaWordXLineYOfX>Провера писања путем Ворда {0} – линија {1}/{2}</SpellChekingViaWordXLineYOfX>
+    <UnableToStartWord>Не могу да покренем Ворд.</UnableToStartWord>
+    <SpellCheckAbortedXCorrections>Провера писања је прекинута. Измењено линија: {0}.</SpellCheckAbortedXCorrections>
+    <SpellCheckCompletedXCorrections>Провера писања је завршена. Измењено линија: {0}.</SpellCheckCompletedXCorrections>
+    <OpenOtherSubtitle>Отварање другог титла…</OpenOtherSubtitle>
   </Main>
   <MatroskaSubtitleChooser>
-    <Title>Избор титла из матрошка датотеке</Title>
+    <Title>Одабир титла из матрошке</Title>
     <PleaseChoose>Пронађено је више од једног титла. Изаберите који желите.</PleaseChoose>
     <TrackXLanguageYTypeZ>Запис {0} – {1} – језик: {2} – врста: {3}</TrackXLanguageYTypeZ>
   </MatroskaSubtitleChooser>
   <MergedShortLines>
     <Title>Спајање кратких линија</Title>
-    <MaximumCharacters>Највише знакова у реду:</MaximumCharacters>
+    <MaximumCharacters>Највише знакова по реду:</MaximumCharacters>
     <MaximumMillisecondsBetween>Највише милисекунди између линија:</MaximumMillisecondsBetween>
     <NumberOfMergesX>Број спајања: {0}</NumberOfMergesX>
     <LineNumber>Број линије</LineNumber>
     <MergedText>Спојен текст</MergedText>
+    <OnlyMergeContinuationLines>&amp;Споји само трајне линије</OnlyMergeContinuationLines>
   </MergedShortLines>
   <MultipleReplace>
     <Title>Вишеструка замена</Title>
     <FindWhat>Шта пронаћи:</FindWhat>
     <ReplaceWith>Замени са:</ReplaceWith>
-    <Normal>Обично</Normal>
-    <CaseSensitive>Подударање</CaseSensitive>
-    <RegularExpression>Израз</RegularExpression>
-    <LineNumber>Број линије</LineNumber>
+    <Normal>&amp;Обична</Normal>
+    <CaseSensitive>&amp;Подударање</CaseSensitive>
+    <RegularExpression>&amp;Регуларан израз</RegularExpression>
+    <LineNumber>Линија</LineNumber>
     <Before>Пре</Before>
     <After>После</After>
     <LinesFoundX>Пронађено линија: {0}</LinesFoundX>
     <Delete>Обриши</Delete>
-    <Add>Додај</Add>
+    <Add>&amp;Додај</Add>
     <Update>&amp;Ажурирај</Update>
     <Enabled>Омогућено</Enabled>
     <SearchType>Врста претраге</SearchType>
   </MultipleReplace>
   <NetworkChat>
     <Title>Ћаскање</Title>
-    <Send>Пошаљи</Send>
+    <Send>&amp;Пошаљи</Send>
   </NetworkChat>
   <NetworkJoin>
     <Title>Мрежна сесија</Title>
-    <Information>Придруживање на постојећу сесију где
-више особа могу да уређују исти титл.</Information>
-    <Join>Повежи ме</Join>
+    <Information>Овде можете да се придружите постојећој сесији у којој
+	можете да уређујете одређени титл с другим људима.</Information>
+    <Join>&amp;Повежи ме</Join>
   </NetworkJoin>
   <NetworkLogAndInfo>
     <Title>Подаци о сесији</Title>
-    <Log>Извештај:</Log>
+    <Log>Извештај</Log>
   </NetworkLogAndInfo>
   <NetworkStart>
     <Title>Мрежна сесија</Title>
-    <ConnectionTo>Повезивање на {0}...</ConnectionTo>
-    <Information>Покретање нове сесије где више
-особа могу да уређују исти титл.</Information>
-    <Start>Започни</Start>
+    <ConnectionTo>Повезујем се на {0}…</ConnectionTo>
+    <Information>Овде можете да направите сесију у којој ћете моћи да уређујете
+	одређени титл с другим људима.</Information>
+    <Start>&amp;Започни</Start>
   </NetworkStart>
   <RemoveTextFromHearImpaired>
     <Title>Уклањање текста за глуве</Title>
-    <RemoveTextConditions>Уклањање услова текста</RemoveTextConditions>
-    <RemoveTextBetween>Уклони услове текста</RemoveTextBetween>
-    <SquareBrackets>[ и ]</SquareBrackets>
-    <Brackets>{ и }</Brackets>
-    <Parentheses>( и )</Parentheses>
-    <QuestionMarks>? и ?</QuestionMarks>
+    <RemoveTextConditions>Уклањање ознака</RemoveTextConditions>
+    <RemoveTextBetween>Уклони следеће ознаке:</RemoveTextBetween>
+    <SquareBrackets>&amp;Углате заграде</SquareBrackets>
+    <Brackets>&amp;Витичасте заграде</Brackets>
+    <Parentheses>&amp;Обле заграде</Parentheses>
+    <QuestionMarks>&amp;Знаци питања</QuestionMarks>
     <And>и</And>
-    <RemoveTextBeforeColon>Уклони текст пре двотачке</RemoveTextBeforeColon>
-    <OnlyIfTextIsUppercase>Само ако је текст великим словима</OnlyIfTextIsUppercase>
-    <OnlyIfInSeparateLine>Само ако је у одвојеној линији</OnlyIfInSeparateLine>
+    <RemoveTextBeforeColon>У&amp;клони текст пре двотачке</RemoveTextBeforeColon>
+    <OnlyIfTextIsUppercase>&amp;Само ако је текст великим словима</OnlyIfTextIsUppercase>
+    <OnlyIfInSeparateLine>С&amp;амо ако је у одвојеној линији</OnlyIfInSeparateLine>
     <LineNumber>Број линије</LineNumber>
     <Before>Пре</Before>
     <After>После</After>
     <LinesFoundX>Пронађено линија: {0}</LinesFoundX>
-    <RemoveTextIfContains>Уклони текст ако садржи:</RemoveTextIfContains>
-    <RemoveInterjections>Уклони узвике</RemoveInterjections>
-    <EditInterjections>Уреди...</EditInterjections>
+    <RemoveTextIfContains>Ук&amp;лони текст ако садржи:</RemoveTextIfContains>
+    <RemoveInterjections>Укл&amp;они узвике</RemoveInterjections>
+    <EditInterjections>У&amp;реди…</EditInterjections>
   </RemoveTextFromHearImpaired>
   <ReplaceDialog>
     <Title>Замена</Title>
     <FindWhat>Шта пронаћи:</FindWhat>
-    <Normal>Обично</Normal>
-    <CaseSensitive>Подударање</CaseSensitive>
-    <RegularExpression>Израз</RegularExpression>
+    <Normal>&amp;Обична</Normal>
+    <CaseSensitive>&amp;Подударање</CaseSensitive>
+    <RegularExpression>&amp;Регуларан израз</RegularExpression>
     <ReplaceWith>Замени са:</ReplaceWith>
     <Find>&amp;Пронађи</Find>
     <Replace>&amp;Замени</Replace>
     <ReplaceAll>Замени &amp;све</ReplaceAll>
   </ReplaceDialog>
   <SetMinimumDisplayTimeBetweenParagraphs>
-    <Title>Постављање најмањег времена за приказ између редова</Title>
-    <PreviewLinesModifiedX>Преглед – измењено редова: {0}</PreviewLinesModifiedX>
-    <ShowOnlyModifiedLines>Прикажи само измењене линије</ShowOnlyModifiedLines>
+    <Title>Постављање најмањег времена између линија</Title>
+    <PreviewLinesModifiedX>Преглед – измењено линија: {0}</PreviewLinesModifiedX>
+    <ShowOnlyModifiedLines>&amp;Прикажи само измењене линије</ShowOnlyModifiedLines>
     <MinimumMillisecondsBetweenParagraphs>Милисекунди између линија:</MinimumMillisecondsBetweenParagraphs>
   </SetMinimumDisplayTimeBetweenParagraphs>
   <SetSyncPoint>
     <Title>Тачка усклађивања за линију {0}</Title>
-    <SyncPointTimeCode>Временска одредница тачке</SyncPointTimeCode>
-    <ThreeSecondsBack>&lt;&lt; 3 s</ThreeSecondsBack>
-    <HalfASecondBack>&lt;&lt; ½ s</HalfASecondBack>
-    <HalfASecondForward>½ s &gt;&gt;</HalfASecondForward>
-    <ThreeSecondsForward>3 s &gt;&gt;</ThreeSecondsForward>
+    <SyncPointTimeCode>Временска одредница тачке:</SyncPointTimeCode>
+    <ThreeSecondsBack>← 3 с</ThreeSecondsBack>
+    <HalfASecondBack>← ½ с</HalfASecondBack>
+    <HalfASecondForward>½ с →</HalfASecondForward>
+    <ThreeSecondsForward>3 с →</ThreeSecondsForward>
   </SetSyncPoint>
   <Settings>
     <Title>Поставке</Title>
     <General>Опште</General>
-    <Toolbar>Алатница</Toolbar>
+    <Toolbar>Алатна трака</Toolbar>
     <VideoPlayer>Видео запис</VideoPlayer>
     <WaveForm>Таласни облик</WaveForm>
     <Tools>Алатке</Tools>
     <WordLists>Списак речи</WordLists>
     <SsaStyle>SSA стил</SsaStyle>
     <Proxy>Посредник</Proxy>
-    <ShowToolBarButtons>Приказ иконица</ShowToolBarButtons>
+    <ShowToolBarButtons>Приказ икона</ShowToolBarButtons>
     <New>Ново</New>
-    <Open>Отвори</Open>
+    <Open>Отвори…</Open>
     <Save>Сачувај</Save>
-    <SaveAs>Сачувај као</SaveAs>
-    <Find>Пронађи</Find>
-    <Replace>Замени</Replace>
-    <VisualSync>Усклађење</VisualSync>
+    <SaveAs>Сачувај као…</SaveAs>
+    <Find>Претрага</Find>
+    <Replace>Замена</Replace>
+    <VisualSync>Усклађивање</VisualSync>
     <SpellCheck>Правопис</SpellCheck>
     <SettingsName>Поставке</SettingsName>
     <Help>Помоћ</Help>
     <ShowFrameRate>Број кадрова</ShowFrameRate>
     <DefaultFrameRate>Подразумевани број кадрова:</DefaultFrameRate>
     <DefaultFileEncoding>Подразумевано кодирање:</DefaultFileEncoding>
-    <AutoDetectAnsiEncoding>Самопрепознај кодирање</AutoDetectAnsiEncoding>
+    <AutoDetectAnsiEncoding>Самопрепознавање кодирања:</AutoDetectAnsiEncoding>
     <SubtitleLineMaximumLength>Највећа дужина титла:</SubtitleLineMaximumLength>
-    <AutoWrapWhileTyping>преломи при куцању</AutoWrapWhileTyping>
-    <SubtitleFont>Фонт:</SubtitleFont>
-    <SubtitleFontSize>Величина фонта:</SubtitleFontSize>
-    <SubtitleBold>подебљано</SubtitleBold>
+    <AutoWrapWhileTyping>п&amp;реламај при куцању</AutoWrapWhileTyping>
+    <SubtitleFont>Тип фонта:</SubtitleFont>
+    <SubtitleFontSize>Величина:</SubtitleFontSize>
+    <SubtitleBold>под&amp;ебљано</SubtitleBold>
     <SubtitleFontColor>Боја фонта:</SubtitleFontColor>
     <SubtitleBackgroundColor>Боја позадине:</SubtitleBackgroundColor>
-    <SpellChecker>Провера правописа:</SpellChecker>
-    <RememberRecentFiles>Запамти скорашње датотеке</RememberRecentFiles>
-    <StartWithLastFileLoaded>Покрени последње учитану датотеку</StartWithLastFileLoaded>
-    <RememberSelectedLine>Запамти изабрану линију</RememberSelectedLine>
-    <RememberPositionAndSize>Запамти положај и величину главног прозора</RememberPositionAndSize>
-    <StartInSourceView>Покрени у изворном приказу</StartInSourceView>
-    <RemoveBlankLinesWhenOpening>Уклони празне линије при отварању титла</RemoveBlankLinesWhenOpening>
+    <SpellChecker>Провера писања:</SpellChecker>
+    <RememberRecentFiles>Запамти &amp;скорашње датотеке</RememberRecentFiles>
+    <StartWithLastFileLoaded>О&amp;твори последњу учитану датотеку</StartWithLastFileLoaded>
+    <RememberSelectedLine>Запамти &amp;изабрану линију</RememberSelectedLine>
+    <RememberPositionAndSize>Запамти &amp;положај и величину прозора</RememberPositionAndSize>
+    <StartInSourceView>П&amp;окрени у приказу извора</StartInSourceView>
+    <RemoveBlankLinesWhenOpening>У&amp;клони празне линије при отварању титла</RemoveBlankLinesWhenOpening>
     <ShowLineBreaksAs>Прикажи редове у списку као:</ShowLineBreaksAs>
     <MainListViewDoubleClickAction>Двоклик на линију у главном прозору ће:</MainListViewDoubleClickAction>
     <MainListViewNothing>заборавити радњу</MainListViewNothing>
     <MainListViewVideoGoToPositionAndPause>прећи на положај снимка и паузирати</MainListViewVideoGoToPositionAndPause>
-    <MainListViewVideoGoToPositionAndPlay>прећи на положај снимка и репродуковати</MainListViewVideoGoToPositionAndPlay>
+    <MainListViewVideoGoToPositionAndPlay>прећи на положај снимка и пустити</MainListViewVideoGoToPositionAndPlay>
     <MainListViewEditText>прећи на поље за уређивање</MainListViewEditText>
     <AutoBackup>Стварање резерви:</AutoBackup>
     <AutoBackupEveryMinute>сваки минут</AutoBackupEveryMinute>
     <AutoBackupEveryFiveMinutes>сваких 5 минута</AutoBackupEveryFiveMinutes>
     <AutoBackupEveryFifteenMinutes>сваких 15 минута</AutoBackupEveryFifteenMinutes>
-    <AllowEditOfOriginalSubtitle>Дозволи уређивање изворног титла</AllowEditOfOriginalSubtitle>
-    <VideoEngine>Видео механизам</VideoEngine>
-    <DirectShow>DirectShow</DirectShow>
-    <DirectShowDescription>quartz.dll у system32 фасцикли</DirectShowDescription>
+    <AllowEditOfOriginalSubtitle>&amp;Дозволи уређивање изворног титла</AllowEditOfOriginalSubtitle>
+    <PromptDeleteLines>Питај за брисање линија</PromptDeleteLines>
+    <VideoEngine>Добављач слике</VideoEngine>
+    <DirectShow>Директшоу</DirectShow>
+    <DirectShowDescription>quartz.dll у фасцикли „System32“</DirectShowDescription>
     <ManagedDirectX>Managed DirectX</ManagedDirectX>
     <ManagedDirectXDescription>Microsoft.DirectX.AudioVideoPlayback —  .NET Managed code from DirectX</ManagedDirectXDescription>
     <WindowsMediaPlayer>Windows Media Player</WindowsMediaPlayer>
     <WindowsMediaPlayerDescription>WMP ActiveX control</WindowsMediaPlayerDescription>
-    <VlcMediaPlayer>VLC Media Player</VlcMediaPlayer>
-    <VlcMediaPlayerDescription>libvlc.dll из програма VLC Media Player 1.1.0 или новијег издања</VlcMediaPlayerDescription>
-    <ShowStopButton>Дугме „Заустави“</ShowStopButton>
+    <VlcMediaPlayer>ВЛЦ медија плејер</VlcMediaPlayer>
+    <VlcMediaPlayerDescription>libvlc.dll из ВЛЦ медија плејера 1.1.0 или новијег издања</VlcMediaPlayerDescription>
+    <ShowStopButton>&amp;Дугме за заустављање</ShowStopButton>
     <DefaultVolume>Јачина звука:</DefaultVolume>
     <VolumeNotes>(0 – искључено, 100 – најгласније)</VolumeNotes>
+    <PreviewFontSize>Преглед величине фонта</PreviewFontSize>
     <MainWindowVideoControls>Главни прозор за управљање видео снимком</MainWindowVideoControls>
     <CustomSearchTextAndUrl>Адреса за претрагу речи:</CustomSearchTextAndUrl>
     <WaveFormAppearance>Изглед таласног облика</WaveFormAppearance>
-    <WaveFormGridColor>Боја мреже</WaveFormGridColor>
-    <WaveFormShowGridLines>Линије мреже</WaveFormShowGridLines>
+    <WaveFormGridColor>Боја &amp;мреже</WaveFormGridColor>
+    <WaveFormShowGridLines>&amp;Линије мреже</WaveFormShowGridLines>
     <WaveFormColor>Боја</WaveFormColor>
-    <WaveFormSelectedColor>Изабрана боја</WaveFormSelectedColor>
-    <WaveFormBackgroundColor>Боја позадине</WaveFormBackgroundColor>
-    <WaveFormTextColor>Боја текста</WaveFormTextColor>
-    <WaveFormsFolderEmpty>Испразни „WaveForms“ фасциклу</WaveFormsFolderEmpty>
-    <WaveFormsFolderInfo>„WaveForms“ фасцикла садржи {0} датотека ({1:0.00} MB)</WaveFormsFolderInfo>
-    <SubStationAlphaStyle>Sub Station Alpha стил</SubStationAlphaStyle>
-    <ChooseFont>Изабери фонт...</ChooseFont>
-    <ChooseColor>Изабери боју...</ChooseColor>
+    <WaveFormSelectedColor>&amp;Изабрана боја</WaveFormSelectedColor>
+    <WaveFormBackgroundColor>Боја &amp;позадине</WaveFormBackgroundColor>
+    <WaveFormTextColor>Боја &amp;текста</WaveFormTextColor>
+    <WaveFormsFolderEmpty>Испразни фасциклу с облицима</WaveFormsFolderEmpty>
+    <WaveFormsFolderInfo>Фасцикла с облицима садржи {0} датотека ({1:0.00} MB)</WaveFormsFolderInfo>
+    <Spectrogram>Спектрограм</Spectrogram>
+    <GenerateSpectrogram>Створи спектрограм</GenerateSpectrogram>
+    <SpectrogramAppearance>Изглед спектрограма</SpectrogramAppearance>
+    <SpectrogramOneColorGradient>Једнобојни прелив</SpectrogramOneColorGradient>
+    <SpectrogramClassic>Класично</SpectrogramClassic>
+    <SubStationAlphaStyle>SSA стил</SubStationAlphaStyle>
+    <ChooseFont>Изабери фонт…</ChooseFont>
+    <ChooseColor>Изабери боју…</ChooseColor>
     <Example>Пример</Example>
-    <Testing123>Провера 123...</Testing123>
+    <Testing123>Провера 123…</Testing123>
     <Language>Језик:</Language>
     <NamesIgnoreLists>Називи/изузеци</NamesIgnoreLists>
-    <AddNameEtc>Додај назив</AddNameEtc>
-    <AddWord>Додај реч</AddWord>
-    <Remove>Уклони</Remove>
-    <AddPair>Додај пар</AddPair>
+    <AddNameEtc>Додај &amp;име</AddNameEtc>
+    <AddWord>Додај &amp;реч</AddWord>
+    <Remove>У&amp;клони</Remove>
+    <AddPair>Додај &amp;пар</AddPair>
     <UserWordList>Прилагођени списак речи</UserWordList>
-    <OcrFixList>OCR списак исправки</OcrFixList>
+    <OcrFixList>Списак исправки за OCR</OcrFixList>
     <Location>Адреса</Location>
-    <UseOnlineNamesEtc>Користи датотеку на мрежи</UseOnlineNamesEtc>
+    <UseOnlineNamesEtc>Користи &amp;датотеку на мрежи</UseOnlineNamesEtc>
     <WordAddedX>Додато речи: {0}</WordAddedX>
-    <WordAlreadyExists>Реч већ постоји!</WordAlreadyExists>
+    <WordAlreadyExists>Реч већ постоји.</WordAlreadyExists>
     <WordNotFound>Реч није пронађена.</WordNotFound>
-    <RemoveX>Уклонити {0}?</RemoveX>
-    <CannotUpdateNamesEtcOnline>Ажурирање датотеке NamesEtc.xml на мрежи није успело!</CannotUpdateNamesEtcOnline>
+    <RemoveX>Желите ли да уклоните „{0}“?</RemoveX>
+    <CannotUpdateNamesEtcOnline>Не могу да ажурирам мрежну датотеку „NamesEtc.xml“.</CannotUpdateNamesEtcOnline>
     <ProxyServerSettings>Поставке посредничког сервера</ProxyServerSettings>
-    <ProxyAddress>Адреса сервера:</ProxyAddress>
+    <ProxyAddress>   Адреса сервера:</ProxyAddress>
     <ProxyAuthentication>Потврда идентитета</ProxyAuthentication>
     <ProxyUserName>Корисничко име:</ProxyUserName>
     <ProxyPassword>Лозинка:</ProxyPassword>
     <ProxyDomain>Домен:</ProxyDomain>
-    <PlayXSecondsAndBack>Пусти x секунди па врати. X је:</PlayXSecondsAndBack>
-    <StartSceneIndex>Почетна сцена реда:</StartSceneIndex>
-    <EndSceneIndex>Завршна сцена реда:</EndSceneIndex>
+    <PlayXSecondsAndBack>Пусти икс секунди па врати. Икс је:</PlayXSecondsAndBack>
+    <StartSceneIndex>Пасус почетне сцене:</StartSceneIndex>
+    <EndSceneIndex>Пасус завршне сцене:</EndSceneIndex>
     <FirstPlusX>прва + {0}</FirstPlusX>
     <LastMinusX>задња – {0}</LastMinusX>
     <FixCommonerrors>Исправљање честих грешака</FixCommonerrors>
     <MergeLinesShorterThan>Споји линије краће од:</MergeLinesShorterThan>
     <MusicSymbol>Музички симболи:</MusicSymbol>
-    <MusicSymbolsToReplace>Музички симболи за замену (одмаћи размаком):</MusicSymbolsToReplace>
-    <FixCommonOcrErrorsUseHardcodedRules>Исправи честе OCR грешке</FixCommonOcrErrorsUseHardcodedRules>
+    <MusicSymbolsToReplace>Музички симболи за замену (одмакните размаком):</MusicSymbolsToReplace>
+    <FixCommonOcrErrorsUseHardcodedRules>И&amp;справи честе грешке у препознавању знакова</FixCommonOcrErrorsUseHardcodedRules>
+    <Shortcuts>Пречице</Shortcuts>
+    <Shortcut>Пречица</Shortcut>
+    <Control>Контрола</Control>
+    <Alt>Алт</Alt>
+    <Shift>Шифт</Shift>
+    <Key>Тастер</Key>
+    <TextBox>Поље за текст</TextBox>
+    <UpdateShortcut>Промени</UpdateShortcut>
+    <ShortcutIsNotValid>Пречица није исправна: {0}</ShortcutIsNotValid>
+    <ToggleDockUndockOfVideoControls>Закачи/откачи видео контроле</ToggleDockUndockOfVideoControls>
+    <AdjustViaEndAutoStartAndGoToNext>Прилагоди преко завршног положаја и пређи на следећи</AdjustViaEndAutoStartAndGoToNext>
   </Settings>
   <ShowEarlierLater>
     <Title>Постављање линија раније или касније</Title>
     <TitleAll>Постављање линија раније или касније</TitleAll>
-    <ShowEarlier>Постави раније</ShowEarlier>
-    <ShowLater>Постави касније</ShowLater>
+    <ShowEarlier>Постави &amp;раније</ShowEarlier>
+    <ShowLater>Постави &amp;касније</ShowLater>
     <TotalAdjustmentX>Укупно измена: {0}</TotalAdjustmentX>
-    <AllLines>Све линије</AllLines>
-    <SelectedLinesonly>Изабране линије</SelectedLinesonly>
+    <AllLines>&amp;Све линије</AllLines>
+    <SelectedLinesonly>&amp;Изабране линије</SelectedLinesonly>
   </ShowEarlierLater>
   <ShowHistory>
-    <Title>Историјат</Title>
+    <Title>Историја</Title>
     <SelectRollbackPoint>Изаберите време или опис за враћање на претходно стање.</SelectRollbackPoint>
     <Time>Време</Time>
     <Description>Опис</Description>
-    <CompareHistoryItems>Упореди историјске ставке</CompareHistoryItems>
-    <CompareWithCurrent>Упореди с текућим</CompareWithCurrent>
-    <Rollback>Поврати</Rollback>
+    <CompareHistoryItems>&amp;Упореди историјске ставке</CompareHistoryItems>
+    <CompareWithCurrent>У&amp;пореди с текућим</CompareWithCurrent>
+    <Rollback>&amp;Врати</Rollback>
   </ShowHistory>
   <SpellCheck>
-    <Title>Провера правописа</Title>
+    <Title>Провера писања</Title>
     <FullText>Цео текст</FullText>
     <WordNotFound>Реч није пронађена.</WordNotFound>
-    <Language>Језик</Language>
-    <Change>Промени</Change>
-    <ChangeAll>Промени све</ChangeAll>
+    <Language>Језик:</Language>
+    <Change>&amp;Промени</Change>
+    <ChangeAll>П&amp;ромени све</ChangeAll>
     <SkipOnce>Прескочи &amp;једну реч</SkipOnce>
-    <SkipAll>&amp;Прескочи све</SkipAll>
-    <AddToUserDictionary>Додај у прилагођени речник</AddToUserDictionary>
-    <AddToNamesAndIgnoreList>Додај у речник назива/непожељности</AddToNamesAndIgnoreList>
-    <Abort>Затвори</Abort>
-    <Use>Користи</Use>
-    <UseAlways>&amp;Увек користи</UseAlways>
+    <SkipAll>Пр&amp;ескочи све</SkipAll>
+    <AddToUserDictionary>Д&amp;одај у прилагођени речник</AddToUserDictionary>
+    <AddToNamesAndIgnoreList>&amp;Додај у речник назива/непожељности</AddToNamesAndIgnoreList>
+    <Abort>&amp;Затвори</Abort>
+    <Use>&amp;Користи</Use>
+    <UseAlways>Користи &amp;увек</UseAlways>
     <Suggestions>Предлози</Suggestions>
-    <SpellCheckProgress>Провера правописа [{0}] – {1}</SpellCheckProgress>
-    <EditWholeText>Уреди цео текст</EditWholeText>
-    <EditWordOnly>Уреди само реч</EditWordOnly>
+    <SpellCheckProgress>Провера писања [{0}] – {1}</SpellCheckProgress>
+    <EditWholeText>Уреди &amp;цео текст</EditWholeText>
+    <EditWordOnly>Уреди &amp;само реч</EditWordOnly>
     <AddXToNamesEtc>Додај „{0}“ у списак назива/изузетака</AddXToNamesEtc>
-    <AutoFixNames>Исправи речи у којима се разликује само величина слова</AutoFixNames>
+    <AutoFixNames>&amp;Исправи речи где је само величина слова различита</AutoFixNames>
     <ImageText>Текст слике</ImageText>
-    <SpellCheckCompleted>Провера правописа је завршена.</SpellCheckCompleted>
-    <SpellCheckAborted>Провера правописа је прекинута.</SpellCheckAborted>
+    <SpellCheckCompleted>Провера писања је завршена.</SpellCheckCompleted>
+    <SpellCheckAborted>Провера писања је прекинута.</SpellCheckAborted>
   </SpellCheck>
   <SplitLongLines>
     <Title>Раздвајање дугих линија</Title>
@@ -1032,55 +1132,58 @@ C# изворни кôд се налази на интернет страниц�
   <SplitSubtitle>
     <Title>Раздвајање титла</Title>
     <Description1>Унесите трајање првог дела видео</Description1>
-    <Description2>снимка или га добавите из датотеке:</Description2>
+    <Description2>снимка или га добавите из датотеке.</Description2>
     <Split>&amp;Раздвоји</Split>
-    <Done>&amp;Готово</Done>
-    <NothingToSplit>Раздвајање није могуће!</NothingToSplit>
-    <SavePartOneAs>Сачувај први део као...</SavePartOneAs>
-    <SavePartTwoAs>Сачувај други део као...</SavePartTwoAs>
+    <Done>&amp;Заврши</Done>
+    <NothingToSplit>Не могу да раздвојим титл.</NothingToSplit>
+    <SavePartOneAs>Чување првог дела титла</SavePartOneAs>
+    <SavePartTwoAs>Чување другог дела титла</SavePartTwoAs>
     <Part1>Први део</Part1>
     <Part2>Други део</Part2>
-    <UnableToSaveFileX>Чување датотеке {0} није успело.</UnableToSaveFileX>
+    <UnableToSaveFileX>Не могу да сачувам датотеку {0}.</UnableToSaveFileX>
   </SplitSubtitle>
   <StartNumberingFrom>
-    <Title>Набрајање...</Title>
+    <Title>Набрајање</Title>
     <StartFromNumber>Започни од броја:</StartFromNumber>
-    <PleaseEnterAValidNumber>Унесите број.</PleaseEnterAValidNumber>
+    <PleaseEnterAValidNumber>Унесите жељени број.</PleaseEnterAValidNumber>
   </StartNumberingFrom>
   <PointSync>
     <Title>Тачка усклађивања</Title>
+    <TitleViaOtherSubtitle>Тачка усклађивања из другог титла</TitleViaOtherSubtitle>
     <SyncHelp>Поставите бар две тачке да бисте направили грубу усклађеност.</SyncHelp>
-    <SetSyncPoint>Постави тачку</SetSyncPoint>
-    <RemoveSyncPoint>Уклони тачку</RemoveSyncPoint>
-    <SyncPointsX>Тачака усклађивања: {0}</SyncPointsX>
+    <SetSyncPoint>По&amp;стави тачку</SetSyncPoint>
+    <RemoveSyncPoint>У&amp;клони тачку</RemoveSyncPoint>
+    <SyncPointsX>Укупно тачака: {0}</SyncPointsX>
     <Info>Једна тачка усклађивања прилагодиће положај. Две или више тачака утицаће на положај и брзину.</Info>
-    <ApplySync>Примени</ApplySync>
+    <ApplySync>&amp;Примени</ApplySync>
   </PointSync>
   <UnknownSubtitle>
     <Title>Непозната врста титла.</Title>
-    <Message>Ако желите ово да исправимо, пошаљете е-поруку на mailto:niksedk@gmail.com и закачите титл.</Message>
+    <Message>Ако желите ово да исправимо, пошаљите нам поруку на mailto:niksedk@gmail.com и закачите спорни титл.</Message>
   </UnknownSubtitle>
   <VisualSync>
     <Title>Визуелно усклађивање</Title>
     <StartScene>Почетна сцена</StartScene>
     <EndScene>Завршна сцена</EndScene>
-    <Synchronize>Усклади</Synchronize>
-    <HalfASecondBack>&lt; ½ s</HalfASecondBack>
-    <ThreeSecondsBack>&lt; 3 s</ThreeSecondsBack>
-    <PlayXSecondsAndBack>Пусти {0} s и врати</PlayXSecondsAndBack>
-    <FindText>Пронађи текст</FindText>
-    <GoToSubPosition>Пређи</GoToSubPosition>
-    <KeepChangesTitle>Сачувати измене?</KeepChangesTitle>
-    <KeepChangesMessage>Дошло је до измене на титлу преко поставке „Визуелно усклађивање“.</KeepChangesMessage>
-    <SynchronizationDone>Усклађивање је завршено!</SynchronizationDone>
+    <Synchronize>У&amp;склади</Synchronize>
+    <HalfASecondBack>← ½ с</HalfASecondBack>
+    <ThreeSecondsBack>← 3 с</ThreeSecondsBack>
+    <PlayXSecondsAndBack>&amp;Пусти {0} с и врати</PlayXSecondsAndBack>
+    <FindText>П&amp;ронађи текст</FindText>
+    <GoToSubPosition>&amp;Иди</GoToSubPosition>
+    <KeepChangesTitle>Чување измена</KeepChangesTitle>
+    <KeepChangesMessage>Изменили сте титл користећи Визуелно усклађивање.
+	
+	Желите ли да сачувате измене?</KeepChangesMessage>
+    <SynchronizationDone>Усклађивање је завршено.</SynchronizationDone>
     <StartSceneMustComeBeforeEndScene>Почетна сцена мора бити пре завршне!</StartSceneMustComeBeforeEndScene>
-    <Tip>Користите контрол и леву/десну стрелицу да бисте померили 100 ms напред/назад.</Tip>
+    <Tip>Користите ктрл и леву или десну стрелицу да померите 100 мс уназад или унапред.</Tip>
   </VisualSync>
   <VobSubEditCharacters>
     <Title>Уређивање слика за упоређивање знакова</Title>
-    <ChooseCharacter>Изаберите знак</ChooseCharacter>
+    <ChooseCharacter>Изаберите знак испод:</ChooseCharacter>
     <ImageCompareFiles>Датотеке за упоређивање</ImageCompareFiles>
-    <CurrentCompareImage>Текућа упоредна слика</CurrentCompareImage>
+    <CurrentCompareImage>Текућа слика за поређење</CurrentCompareImage>
     <TextAssociatedWithImage>Текст повезан са сликом</TextAssociatedWithImage>
     <IsItalic>&amp;Искошено</IsItalic>
     <Update>&amp;Ажурирај</Update>
@@ -1090,70 +1193,91 @@ C# изворни кôд се налази на интернет страниц�
     <Image>Слика</Image>
   </VobSubEditCharacters>
   <VobSubOcr>
-    <Title>Препознавање знакова VobSub титла</Title>
-    <TitleBluRay>Препознавање знакова BluRay титла</TitleBluRay>
-    <OcrMethod>Начин препознавања знакова</OcrMethod>
-    <OcrViaModi>Препознавање знакова путем Microsoft Office Document Imaging (MODI). Захтева MS Office</OcrViaModi>
-    <OcrViaTesseract>Препознавање знакова путем хиперкоцке</OcrViaTesseract>
-    <Language>Језик</Language>
-    <OcrViaImageCompare>Препознавање знакова упоређивањем слика</OcrViaImageCompare>
-    <ImageDatabase>База слика</ImageDatabase>
-    <NoOfPixelsIsSpace>Број тачака</NoOfPixelsIsSpace>
-    <New>Ново</New>
-    <Edit>Уреди</Edit>
-    <StartOcr>Покрени препознавање знакова</StartOcr>
-    <Stop>Заустави</Stop>
-    <StartOcrFrom>Препознавање знакова с титла:</StartOcrFrom>
-    <LoadingVobSubImages>Учитавање VobSub слика...</LoadingVobSubImages>
+    <Title>Препознавање знакова Вобсаб титла</Title>
+    <TitleBluRay>Препознавање знакова Блу-реј титла</TitleBluRay>
+    <OcrMethod>  Начин препознавања знакова:</OcrMethod>
+    <OcrViaModi>Препознавање знакова путем Microsoft Office Document Imaging (MODI). Захтева Мајкрософт офис.</OcrViaModi>
+    <OcrViaTesseract>користећи хиперкоцку</OcrViaTesseract>
+    <Language>Језик:</Language>
+    <OcrViaImageCompare>упоређивањем слика</OcrViaImageCompare>
+    <ImageDatabase>База слика:</ImageDatabase>
+    <NoOfPixelsIsSpace>Број пиксела:</NoOfPixelsIsSpace>
+    <New>&amp;Ново</New>
+    <Edit>&amp;Уреди</Edit>
+    <StartOcr>&amp;Покрени</StartOcr>
+    <Stop>&amp;Заустави</Stop>
+    <StartOcrFrom>Почни од линије број:</StartOcrFrom>
+    <LoadingVobSubImages>Учитавам слике…</LoadingVobSubImages>
     <SubtitleImage>Слика титла</SubtitleImage>
-    <SubtitleText>Текстуални титл</SubtitleText>
+    <SubtitleText>Текст титла</SubtitleText>
     <UnableToCreateCharacterDatabaseFolder>Прављење фасцикле за базу знакова: {0}</UnableToCreateCharacterDatabaseFolder>
-    <SubtitleImageXofY>Слика титла {0} од {1}</SubtitleImageXofY>
+    <SubtitleImageXofY>Слика титла ({0} од {1})</SubtitleImageXofY>
     <ImagePalette>Палета слика</ImagePalette>
-    <UseCustomColors>Прилагођене боје</UseCustomColors>
+    <UseCustomColors>Прилагођене &amp;боје</UseCustomColors>
     <Transparent>Провидност</Transparent>
-    <PromptForUnknownWords>Питај ме за непознате речи</PromptForUnknownWords>
-    <TryToGuessUnkownWords>Нагађај непознате речи</TryToGuessUnkownWords>
-    <AutoBreakSubtitleIfMoreThanTwoLines>Размакни ред ако има више од две линије</AutoBreakSubtitleIfMoreThanTwoLines>
+    <PromptForUnknownWords>&amp;Питај ме за непознате речи</PromptForUnknownWords>
+    <TryToGuessUnkownWords>&amp;Нагађај непознате речи</TryToGuessUnkownWords>
+    <AutoBreakSubtitleIfMoreThanTwoLines>&amp;Размакни ред ако има више од две линије</AutoBreakSubtitleIfMoreThanTwoLines>
     <AllFixes>Све исправке</AllFixes>
     <GuessesUsed>Коришћена нагађања</GuessesUsed>
     <UnknownWords>Непознате речи</UnknownWords>
-    <OcrAutoCorrectionSpellchecking>OCR исправка / провера правописа</OcrAutoCorrectionSpellchecking>
-    <FixOcrErrors>Исправи грешке у препознавању знакова</FixOcrErrors>
-    <SaveSubtitleImageAs>Сачувај слику титла као...</SaveSubtitleImageAs>
-    <SaveAllSubtitleImagesAs>Сачувај све слике...</SaveAllSubtitleImagesAs>
+    <OcrAutoCorrectionSpellchecking>Исправљање погрешно препознатих знакова и провера писања</OcrAutoCorrectionSpellchecking>
+    <FixOcrErrors>&amp;Исправи грешке у препознавању знакова</FixOcrErrors>
+    <SaveSubtitleImageAs>Сачувај слику титла као…</SaveSubtitleImageAs>
+    <SaveAllSubtitleImagesAs>Сачувај све слике…</SaveAllSubtitleImagesAs>
+    <SaveAllSubtitleImagesAsBdnXml>Сачувај све слике (PNG/BDN XML)…</SaveAllSubtitleImagesAsBdnXml>
+    <SaveAllSubtitleImagesWithHtml>Сачувај све слике с HTML пописом…</SaveAllSubtitleImagesWithHtml>
     <XImagesSavedInY>{0} слика је сачувано у {1}</XImagesSavedInY>
     <TryModiForUnknownWords>MS MODI препознавање знакова за непознате речи</TryModiForUnknownWords>
     <DictionaryX>Речник: {0}</DictionaryX>
-    <RightToLeft>С десна на лево</RightToLeft>
-    <ShowOnlyForcedSubtitles>Прикажи само приморане титлове</ShowOnlyForcedSubtitles>
+    <RightToLeft>&amp;Здесна налево</RightToLeft>
+    <ShowOnlyForcedSubtitles>Пр&amp;икажи само приморане титлове</ShowOnlyForcedSubtitles>
     <UseTimeCodesFromIdx>Користи временске одреднице из IDX датотеке</UseTimeCodesFromIdx>
+    <NoMatch>&lt;Нема поклапања&gt;</NoMatch>
+    <AutoTransparentBackground>П&amp;ровидна позадина</AutoTransparentBackground>
+    <InspectCompareMatchesForCurrentImage>Провери поређења за текућу слику…</InspectCompareMatchesForCurrentImage>
+    <EditLastAdditions>Уреди допуне поређења за последњу слику…</EditLastAdditions>
   </VobSubOcr>
   <VobSubOcrCharacter>
-    <Title>VobSub – са слике у текст ручним путем</Title>
-    <ShrinkSelection>Скупи избор</ShrinkSelection>
-    <ExpandSelection>Прошири избор</ExpandSelection>
+    <Title>Прекуцавање</Title>
+    <ShrinkSelection>&amp;Скупи избор</ShrinkSelection>
+    <ExpandSelection>П&amp;рошири избор</ExpandSelection>
     <SubtitleImage>Слика титла</SubtitleImage>
     <Characters>Знак</Characters>
-    <CharactersAsText>Знак на горњој слици</CharactersAsText>
+    <CharactersAsText>Знак на горенаведеној слици:</CharactersAsText>
     <Italic>&amp;Искошено</Italic>
     <Abort>&amp;Заустави</Abort>
+    <Skip>&amp;Прескочи</Skip>
+    <Nordic>Скандинавски</Nordic>
+    <Spanish>Шпански</Spanish>
+    <German>Немачки</German>
+    <AutoSubmitOnFirstChar>С&amp;амостално пошаљи након првог знака</AutoSubmitOnFirstChar>
+    <EditLastX>Ур&amp;еди последњи знак: {0}</EditLastX>
   </VobSubOcrCharacter>
+  <VobSubOcrCharacterInspect>
+    <Title>Провера поређења за текућу слику</Title>
+    <InspectItems>Провери ставке</InspectItems>
+	<AddBetterMatch>Додај боље поклапање</AddBetterMatch>
+  </VobSubOcrCharacterInspect>
   <VobSubOcrNewFolder>
     <Title>Нова фасцикла</Title>
-    <Message>Назив нове фасцикле за базу знакова</Message>
+    <Message>Назив нове фасцикле за базу знакова:</Message>
   </VobSubOcrNewFolder>
   <WaveForm>
-    <ClickToAddWaveForm>Кликните овде да бисте додали таласни облик.</ClickToAddWaveForm>
+    <ClickToAddWaveForm>Кликните да додате таласни облик.</ClickToAddWaveForm>
+    <ClickToAddWaveformAndSpectrogram>Кликните да додате таласни облик или спектрограм.</ClickToAddWaveformAndSpectrogram>
     <Seconds>s</Seconds>
     <ZoomIn>Увећај</ZoomIn>
     <ZoomOut>Умањи</ZoomOut>
     <AddParagraphHere>Додај текст овде</AddParagraphHere>
     <DeleteParagraph>Oбриши текст</DeleteParagraph>
     <Split>Раздвоји</Split>
-    <SplitAtCursor>Раздвоји с курсором</SplitAtCursor>
+    <SplitAtCursor>Раздвоји према показивачу</SplitAtCursor>
     <MergeWithPrevious>Споји с прошлим</MergeWithPrevious>
     <MergeWithNext>Споји с идућим</MergeWithNext>
-    <PlaySelection>Репродукуј изабрано</PlaySelection>
+    <PlaySelection>Пусти изабрано</PlaySelection>
+    <ShowWaveformAndSpectrogram>Прикажи таласни облик и спектрограм</ShowWaveformAndSpectrogram>
+    <ShowWaveformOnly>Прикажи само таласни облик</ShowWaveformOnly>
+    <ShowSpectrogramOnly>Прикажи само спектрограм</ShowSpectrogramOnly>
   </WaveForm>
 </Language>
