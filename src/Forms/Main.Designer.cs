@@ -1649,7 +1649,7 @@
             this.fixCommonErrorsInSelectedLinesToolStripMenuItem,
             this.changeCasingForSelectedLinesToolStripMenuItem});
             this.contextMenuStripListview.Name = "contextMenuStripListview";
-            this.contextMenuStripListview.Size = new System.Drawing.Size(285, 650);
+            this.contextMenuStripListview.Size = new System.Drawing.Size(285, 628);
             this.contextMenuStripListview.Opening += new System.ComponentModel.CancelEventHandler(this.ContextMenuStripListviewOpening);
             // 
             // setStylesForSelectedLinesToolStripMenuItem
@@ -2862,7 +2862,7 @@
             this.showOnlyWaveformToolStripMenuItem,
             this.showOnlySpectrogramToolStripMenuItem});
             this.contextMenuStripWaveForm.Name = "contextMenuStripWaveForm";
-            this.contextMenuStripWaveForm.Size = new System.Drawing.Size(253, 214);
+            this.contextMenuStripWaveForm.Size = new System.Drawing.Size(253, 236);
             this.contextMenuStripWaveForm.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStripWaveForm_Opening);
             // 
             // addParagraphHereToolStripMenuItem
