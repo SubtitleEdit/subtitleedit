@@ -318,6 +318,12 @@ namespace Nikse.SubtitleEdit.Forms
             else
                 comboBoxSpellChecker.SelectedIndex = 0;
 
+            if (Utilities.IsRunningOnLinux() || Utilities.IsRunningOnMac())
+            {
+                comboBoxSpellChecker.SelectedIndex = 0;
+                comboBoxSpellChecker.Enabled = false;
+            }
+
             checkBoxAllowEditOfOriginalSubtitle.Checked = gs.AllowEditOfOriginalSubtitle;
             checkBoxPromptDeleteLines.Checked = gs.PromptDeleteLines;
 
