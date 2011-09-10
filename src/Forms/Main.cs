@@ -9064,6 +9064,13 @@ namespace Nikse.SubtitleEdit.Forms
             _subtitle.Paragraphs.Insert(index, newParagraph);
             _change = true;
 
+            if (_subtitleAlternate != null && SubtitleListview1.IsAlternateTextColumnVisible && Configuration.Settings.General.AllowEditOfOriginalSubtitle)
+            {
+                _subtitleAlternate.InsertParagraphInCorrectTimeOrder(new Paragraph(newParagraph));
+                _subtitleAlternate.Renumber(1);
+                _changeAlternate = true;
+            }
+
             _subtitleListViewIndex = -1;
             _subtitle.Renumber(startNumber);
             SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
