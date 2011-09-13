@@ -264,19 +264,64 @@
     <Word from="hardu" to="har du" />
     <Word from="giﬁ" to="gift" />
     <Word from="Iaeggerjeg" to="lægger jeg" />
+    <Word from="iet" to="i et" />
+    <Word from="sv/yte" to="svigte" />
+    <Word from="ti/" to="til" />
+    <Word from="Wdal" to="Vidal" />
+    <Word from="ﬁået" to="fået" />
+    <Word from="Hvo/for" to="Hvorfor" />
+    <Word from="hellerikke" to="heller ikke" />
+    <Word from="Wlle" to="Ville" />
+    <Word from="dr/ver" to="driver" />
+    <Word from="V\ﬂlliam" to="William" />
+    <Word from="V\ﬂlliams" to="Williams" />
+    <Word from="Vkﬁlliam" to="William" />
+    <Word from="vådejakke" to="våde jakke" />
+    <Word from="kæﬂl" to="kæft!" />
+    <Word from="sagdejeg" to="sagde jeg" />
+    <Word from="oven/ejet" to="overvejet" />
+    <Word from="karameisauce" to="karamelsauce" />
+    <Word from="Lfølgejødisk" to="Ifølge jødisk" />
+    <Word from="blevjo" to="blev jo" />
+    <Word from="asiateri" to="asiater i" />
+    <Word from="erV\ﬂlliam" to="er William" />
+    <Word from="lidtﬂov" to="lidt ﬂov" />
+    <Word from="sagdejo" to="sagde jo" />
+    <Word from="erlige" to="er lige" />
+    <Word from="Vtﬁlliam" to="William" />
+    <Word from="WﬁII" to="Will" />
+    <Word from="aﬂdarede" to="afklarede" />
+    <Word from="hjæiperjeg" to="hjælper jeg" />
+    <Word from="laderjeg" to="lader jeg" />
+    <Word from="Hândledsbeskyttere" to="Håndledsbeskyttere" />
+    <Word from="Lsabels" to="Isabels" />
+    <Word from="Gørjeg" to="Gør jeg" />
+    <Word from="mâjeg" to="må jeg" />
+    <Word from="ogjeg" to="og jeg" />
+    <Word from="gjordejeg" to="gjorde jeg" />
+    <Word from="villejeg" to="ville jeg" />
+    <Word from="Vlﬂlliams" to="Williams" />
+    <Word from="Dajeg" to="Da jeg" />
+    <Word from="iorden" to="i orden" />
+    <Word from="fandtjeg" to="fandt jeg" />
+    <Word from="Tilykke" to="Tillykke" />
+    <Word from="kørerjer" to="kører jer" />
+    <Word from="gøfjeg" to="gør jeg" />
   </WholeWords>
-  <PartialWords>
-    <!-- Will be used to check words not in dictionary -->
-    <!-- If new word(s) exists in spelling dictionary, it(they) is accepted -->
+  <PartialWordsAlways>
     <WordPart from="¤" to="o" />
-    <WordPart from="ﬁ" to="fi" />
-    <WordPart from="ﬂ" to="fl" />
-    <WordPart from="/" to="l" />
-    <WordPart from="vv" to="w" />
     <WordPart from="IVI" to="M" />
     <WordPart from="lVI" to="M" />
     <WordPart from="IVl" to="M" />
     <WordPart from="lVl" to="M" />
+  </PartialWordsAlways>
+  <PartialWords>
+    <!-- Will be used to check words not in dictionary -->
+    <!-- If new word(s) exists in spelling dictionary, it(they) is accepted -->
+    <WordPart from="ﬁ" to="fi" />
+    <WordPart from="ﬂ" to="fl" />
+    <WordPart from="/" to="l" />
+    <WordPart from="vv" to="w" />
     <WordPart from="m" to="rn" />
     <WordPart from="l" to="i" />
     <WordPart from="€" to="e" />
