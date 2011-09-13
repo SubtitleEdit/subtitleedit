@@ -310,21 +310,53 @@
     <Word from="undrarjag" to="undrar jag" />
     <Word from="ålderjag" to="ålder jag" />
     <Word from="vaﬁe" to="varje" />
-    <Word from="Lngen" to="Ingen" />
-    <Word from="Därjag" to="Där jag" />
-    <Word from="s/yna" to="slyna" />
-    <Word from="snutkàrer" to="snutkårer" />
-    <Word from="klà" to="klå" />
-    <Word from="tvä" to="två" />
-    <Word from="mä/et" to="målet" />
-    <Word from="Blàskrika" to="Blåskrika" />
-    <Word from="omrâdet" to="området" />
-    <Word from="Förlå" to="Förlåt" />
-    <Word from="Iåter" to="låter" />
-    <Word from="KOITI" to="Kom" />
-    <Word from="MGI1" to="Men" />
-    <Word from="Ramstein" to="Rammstein" />
-    <Word from="PepsL" to="Pepsi." />
+    <Word from="förfalskningl" to="förfalskning!" />
+    <Word from="Viﬁiiiam" to="William" />
+    <Word from="V\ﬁlliams" to="Williams" />
+    <Word from="attjobba" to="att jobba" />
+    <Word from="intei" to="inte i" />
+    <Word from="närV\ﬁlliam" to="när William" />
+    <Word from="V\ﬁlliam" to="William" />
+    <Word from="Eﬁersom" to="Eftersom" />
+    <Word from="Vlﬁlliam" to="William" />
+    <Word from="Iängejag" to="länge jag" />
+    <Word from="'ﬁdigare" to="Tidigare" />
+    <Word from="börjadei" to="började i" />
+    <Word from="merjust" to="mer just" />
+    <Word from="eﬁeråt" to="efteråt" />
+    <Word from="gjordejag" to="gjorde jag" />
+    <Word from="hadeju" to="hade ju" />
+    <Word from="gårvi" to="går vi" />
+    <Word from="köperjag" to="köper jag" />
+    <Word from="Måstejag" to="Måste jag" />
+    <Word from="kännerju" to="känner ju" />
+    <Word from="ﬂn" to="fin" />
+    <Word from="treviig" to="trevlig" />
+    <Word from="Grattisl" to="Grattis!" />
+    <Word from="kande" to="kände" />
+    <Word from="'llden" to="Tiden" />
+    <Word from="sakjag" to="sak jag" />
+    <Word from="klartjag" to="klart jag" />
+    <Word from="häﬁigt" to="häftigt" />
+    <Word from="Iämnarjag" to="lämnar jag" />
+    <Word from="gickju" to="gick ju" />
+    <Word from="skajag" to="ska jag" />
+    <Word from="Görjag" to="Gör jag" />
+    <Word from="måstejag" to="måste jag" />
+    <Word from="gra\/iditet" to="graviditet" />
+    <Word from="hittadqdin" to="hittade din" />
+    <Word from="ärjobbigt" to="är jobbigt" />
+    <Word from="Overdrivet" to="Överdrivet" />
+    <Word from="hOgtidlig" to="högtidlig" />
+    <Word from="Overtyga" to="Övertyga" />
+    <Word from="SKILSMASSA" to="SKILSMÄSSA" />
+    <Word from="brukarju" to="brukar ju" />
+    <Word from="lsabel" to="Isabel" />
+    <Word from="kundejag" to="kunde jag" />
+    <Word from="ärläget" to="är läget" />
+    <Word from="blirinte" to="blir inte" />
+    <Word from="l'm" to="I'm" />
+    <Word from="lt's" to="It's" />
   </WholeWords>
   <PartialWords>
     <!-- Will be used to check words not in dictionary -->
