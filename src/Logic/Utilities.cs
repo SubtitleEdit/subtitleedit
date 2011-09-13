@@ -1006,6 +1006,18 @@ namespace Nikse.SubtitleEdit.Logic
             return maxLength;
         }
 
+        public static double GetCharactersPerSecond(Paragraph paragraph)
+        {
+            if (paragraph.Duration.TotalMilliseconds < 1)
+                return 999;
+
+            const string zeroWhiteSpace = "\u200B";
+            const string zeroWidthNoBreakSpace = "\uFEFF";
+
+            string s = Utilities.RemoveHtmlTags(paragraph.Text).Replace(Environment.NewLine, string.Empty).Replace(zeroWhiteSpace, string.Empty).Replace(zeroWidthNoBreakSpace, string.Empty);
+            return s.Length / paragraph.Duration.TotalSeconds;
+        }
+
         public static bool IsRunningOnMono()
         {
             return Type.GetType("Mono.Runtime") != null;

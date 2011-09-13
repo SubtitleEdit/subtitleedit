@@ -115,7 +115,7 @@ namespace Nikse.SubtitleEdit.Forms
                     if (versionInfo.Length >= 3 && versionInfo[2] != "0")
                         _title += "." + versionInfo[2];
                 }
-                return _title + " RC2";
+                return _title;
             }
         }
 
@@ -940,6 +940,7 @@ namespace Nikse.SubtitleEdit.Forms
             sortTextMaxLineLengthToolStripMenuItem.Text = _language.Menu.Tools.TextSingleLineMaximumLength;
             sortTextTotalLengthToolStripMenuItem.Text = _language.Menu.Tools.TextTotalLength;
             sortTextNumberOfLinesToolStripMenuItem.Text = _language.Menu.Tools.TextNumberOfLines;
+            textCharssecToolStripMenuItem.Text = _language.Menu.Tools.TextNumberOfCharactersPerSeconds;
             toolStripMenuItemShowOriginalInPreview.Text = _language.Menu.Tools.ShowOriginalTextInAudioAndVideoPreview;
             toolStripMenuItemMakeEmptyFromCurrent.Text = _language.Menu.Tools.MakeNewEmptyTranslationFromCurrentSubtitle;
             splitToolStripMenuItem.Text = _language.Menu.Tools.SplitSubtitle;
@@ -4329,14 +4330,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void UpdateListViewTextCharactersPerSeconds(Label charsPerSecond, Paragraph paragraph)
         {
-            const string zeroWhiteSpace = "\u200B";
-            const string zeroWidthNoBreakSpace = "\uFEFF";
-
-//            string s = Utilities.RemoveHtmlTags(paragraph.Text).Replace(" ", string.Empty).Replace(Environment.NewLine, string.Empty).Replace(zeroWhiteSpace, string.Empty).Replace(zeroWidthNoBreakSpace, string.Empty);
-            string s = Utilities.RemoveHtmlTags(paragraph.Text).Replace(Environment.NewLine, string.Empty).Replace(zeroWhiteSpace, string.Empty).Replace(zeroWidthNoBreakSpace, string.Empty);
             if (paragraph.Duration.TotalSeconds > 0)
             {
-                double charactersPerSecond = s.Length / paragraph.Duration.TotalSeconds;                
+                double charactersPerSecond = Utilities.GetCharactersPerSecond(paragraph);                
                 if (charactersPerSecond > Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds + 7)
                     charsPerSecond.ForeColor = System.Drawing.Color.Red;
                 else if (charactersPerSecond > Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds)
@@ -6829,6 +6825,11 @@ namespace Nikse.SubtitleEdit.Forms
         private void SortTextAlphabeticallytoolStripMenuItemClick(object sender, EventArgs e)
         {
             SortSubtitle(SubtitleSortCriteria.Text, (sender as ToolStripItem).Text);
+        }
+
+        private void textCharssecToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SortSubtitle(SubtitleSortCriteria.TextCharactersPerSeconds, (sender as ToolStripItem).Text);
         }
 
         private void ChangeLanguageToolStripMenuItemClick(object sender, EventArgs e)

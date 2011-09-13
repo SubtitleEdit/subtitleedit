@@ -428,6 +428,12 @@ namespace Nikse.SubtitleEdit.Logic
                         return p1.NumberOfLines.CompareTo(p2.NumberOfLines);
                     });
                     break;
+                case SubtitleSortCriteria.TextCharactersPerSeconds:
+                    _paragraphs.Sort(delegate(Paragraph p1, Paragraph p2)
+                    {
+                        return Utilities.GetCharactersPerSecond(p1).CompareTo(Utilities.GetCharactersPerSecond(p2));
+                    });
+                    break;
                 default:
                     break;
             }
