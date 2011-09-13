@@ -937,8 +937,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Languages\bg-BG.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Languages\cs-CZ.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

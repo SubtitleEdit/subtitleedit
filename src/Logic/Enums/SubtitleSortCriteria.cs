@@ -11,5 +11,6 @@ namespace Nikse.SubtitleEdit.Logic.Enums
         TextMaxLineLength,
         TextTotalLength,
         TextNumberOfLines,
+        TextCharactersPerSeconds,
     }
 }

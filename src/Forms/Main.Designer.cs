@@ -126,6 +126,7 @@
             this.sortTextMaxLineLengthToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.sortTextTotalLengthToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.sortTextNumberOfLinesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.textCharssecToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator23 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripMenuItemShowOriginalInPreview = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemMakeEmptyFromCurrent = new System.Windows.Forms.ToolStripMenuItem();
@@ -156,8 +157,8 @@
             this.pointSyncViaOtherSubtitleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemChangeFrameRate2 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemAutoTranslate = new System.Windows.Forms.ToolStripMenuItem();
-            this.translateByGoogleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.translatepoweredByMicrosoftToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.translateByGoogleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.translateFromSwedishToDanishToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.optionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -1196,7 +1197,8 @@
             this.sortTextAlphabeticallytoolStripMenuItem,
             this.sortTextMaxLineLengthToolStripMenuItem,
             this.sortTextTotalLengthToolStripMenuItem,
-            this.sortTextNumberOfLinesToolStripMenuItem});
+            this.sortTextNumberOfLinesToolStripMenuItem,
+            this.textCharssecToolStripMenuItem});
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
             this.toolStripMenuItem1.Size = new System.Drawing.Size(346, 22);
             this.toolStripMenuItem1.Text = "Sort by";
@@ -1256,6 +1258,14 @@
             this.sortTextNumberOfLinesToolStripMenuItem.Size = new System.Drawing.Size(233, 22);
             this.sortTextNumberOfLinesToolStripMenuItem.Text = "Text - number of lines";
             this.sortTextNumberOfLinesToolStripMenuItem.Click += new System.EventHandler(this.SortTextNumberOfLinesToolStripMenuItemClick);
+            // 
+            // textCharssecToolStripMenuItem
+            // 
+            this.textCharssecToolStripMenuItem.Name = "textCharssecToolStripMenuItem";
+            this.textCharssecToolStripMenuItem.Size = new System.Drawing.Size(233, 22);
+            this.textCharssecToolStripMenuItem.Text = "Text - chars/sec";
+            this.textCharssecToolStripMenuItem.Visible = false;
+            this.textCharssecToolStripMenuItem.Click += new System.EventHandler(this.textCharssecToolStripMenuItem_Click);
             // 
             // toolStripSeparator23
             // 
@@ -1488,12 +1498,19 @@
             // toolStripMenuItemAutoTranslate
             // 
             this.toolStripMenuItemAutoTranslate.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.translateByGoogleToolStripMenuItem,
             this.translatepoweredByMicrosoftToolStripMenuItem,
+            this.translateByGoogleToolStripMenuItem,
             this.translateFromSwedishToDanishToolStripMenuItem});
             this.toolStripMenuItemAutoTranslate.Name = "toolStripMenuItemAutoTranslate";
             this.toolStripMenuItemAutoTranslate.Size = new System.Drawing.Size(97, 20);
             this.toolStripMenuItemAutoTranslate.Text = "Auto-translate";
+            // 
+            // translatepoweredByMicrosoftToolStripMenuItem
+            // 
+            this.translatepoweredByMicrosoftToolStripMenuItem.Name = "translatepoweredByMicrosoftToolStripMenuItem";
+            this.translatepoweredByMicrosoftToolStripMenuItem.Size = new System.Drawing.Size(414, 22);
+            this.translatepoweredByMicrosoftToolStripMenuItem.Text = "Translate (powered by Microsoft)...";
+            this.translatepoweredByMicrosoftToolStripMenuItem.Click += new System.EventHandler(this.translatepoweredByMicrosoftToolStripMenuItem_Click);
             // 
             // translateByGoogleToolStripMenuItem
             // 
@@ -1503,13 +1520,6 @@
             this.translateByGoogleToolStripMenuItem.Size = new System.Drawing.Size(414, 22);
             this.translateByGoogleToolStripMenuItem.Text = "Translate (powered by Google)...";
             this.translateByGoogleToolStripMenuItem.Click += new System.EventHandler(this.TranslateByGoogleToolStripMenuItemClick);
-            // 
-            // translatepoweredByMicrosoftToolStripMenuItem
-            // 
-            this.translatepoweredByMicrosoftToolStripMenuItem.Name = "translatepoweredByMicrosoftToolStripMenuItem";
-            this.translatepoweredByMicrosoftToolStripMenuItem.Size = new System.Drawing.Size(414, 22);
-            this.translatepoweredByMicrosoftToolStripMenuItem.Text = "Translate (powered by Microsoft)...";
-            this.translatepoweredByMicrosoftToolStripMenuItem.Click += new System.EventHandler(this.translatepoweredByMicrosoftToolStripMenuItem_Click);
             // 
             // translateFromSwedishToDanishToolStripMenuItem
             // 
@@ -2862,7 +2872,7 @@
             this.showOnlyWaveformToolStripMenuItem,
             this.showOnlySpectrogramToolStripMenuItem});
             this.contextMenuStripWaveForm.Name = "contextMenuStripWaveForm";
-            this.contextMenuStripWaveForm.Size = new System.Drawing.Size(253, 236);
+            this.contextMenuStripWaveForm.Size = new System.Drawing.Size(253, 214);
             this.contextMenuStripWaveForm.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStripWaveForm_Opening);
             // 
             // addParagraphHereToolStripMenuItem
@@ -4005,6 +4015,7 @@
         private System.Windows.Forms.ToolStripMenuItem pACScreenElectronicsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemCavena890;
         private Controls.SETextBox textBoxListViewTextAlternate;
+        private System.Windows.Forms.ToolStripMenuItem textCharssecToolStripMenuItem;
     }
 }
 
