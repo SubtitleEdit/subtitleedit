@@ -1,7 +1,7 @@
 Subtitle Edit Changelog
 
 
-3.2 (not yet released)
+3.2 (13th September 2011)
  * NEW:
    * Can now display spectrogram (and/or waveform)
    * Subtitle formats: D-Cinema, Cavena890, Timed Text 1.0, Captionate, Flash xml, YouTube annotations and more
