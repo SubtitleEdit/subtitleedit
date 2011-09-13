@@ -108,7 +108,17 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
                             commandIndex += 3;
                             break;
                         case (int)DisplayControlCommand.SetContrast: // 4
-                            imageContrast = new[] { _data[commandIndex + 1], _data[commandIndex + 2] };
+                            if (colorLookUpTable != null && fourColors.Count == 4)
+                            {
+                                imageContrast = new[] { _data[commandIndex + 1], _data[commandIndex + 2] };
+                                //if (imageContrast[0] + imageContrast[1] > 0)
+                                //{
+                                    SetTransparency(fourColors, 3, (imageContrast[0] & 0xF0) >> 4);
+                                    SetTransparency(fourColors, 2, imageContrast[0] & Helper.B00001111);
+                                    SetTransparency(fourColors, 1, (imageContrast[1] & 0xF0) >> 4);
+                                    SetTransparency(fourColors, 0, imageContrast[1] & Helper.B00001111);
+                                //}
+                            }
                             commandIndex += 3;
                             break;
                         case (int)DisplayControlCommand.SetDisplayArea: // 5
@@ -157,8 +167,16 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
 
         private static void SetColor(List<Color> fourColors, int fourColorIndex, int clutIndex, List<Color> colorLookUpTable)
         {
-            if (clutIndex >= 0 && clutIndex < colorLookUpTable.Count && fourColorIndex > 0)
+            if (clutIndex >= 0 && clutIndex < colorLookUpTable.Count && fourColorIndex >= 0)
                 fourColors[fourColorIndex] = colorLookUpTable[clutIndex];
+        }
+
+        private static void SetTransparency(List<Color> fourColors, int fourColorIndex, int alpha)
+        {
+            // alpha: 0x0 = transparent, 0xF = opaque (in C# 0 is fully transparent, and 255 is fully opaque so we have to multiply by 17)
+
+            if (fourColorIndex >= 0)
+                fourColors[fourColorIndex] = Color.FromArgb(alpha * 17, fourColors[fourColorIndex].R, fourColors[fourColorIndex].G, fourColors[fourColorIndex].B);
         }
 
         private Bitmap GenerateBitmap(Rectangle imageDisplayArea, int imageTopFieldDataAddress, int imageBottomFieldDataAddress, List<Color> fourColors)
