@@ -67,8 +67,6 @@ namespace Nikse.SubtitleEdit.Forms
         int _autoContinueDelayCount = -1;
         long _lastTextKeyDownTicks = 0;
         long _lastHistoryTicks = 0;
-        System.Windows.Forms.Timer _timerAddHistoryWhenDone = new Timer();
-        string _timerAddHistoryWhenDoneText;
         double? _audioWaveFormRightClickSeconds = null;
 
         System.Windows.Forms.Timer _timerAutoSave = new Timer();
@@ -318,9 +316,6 @@ namespace Nikse.SubtitleEdit.Forms
                 toolStripComboBoxWaveForm.SelectedIndexChanged += toolStripComboBoxWaveForm_SelectedIndexChanged;
 
                 FixLargeFonts();
-                _timerAddHistoryWhenDone.Interval = 500;
-                _timerAddHistoryWhenDone.Tick += new EventHandler(timerAddHistoryWhenDone_Tick);
-
             }
             catch (Exception exception)
             {
@@ -542,12 +537,6 @@ namespace Nikse.SubtitleEdit.Forms
                     SubtitleListview1.SelectIndexAndEnsureVisible(_subtitle.GetIndex(paragraph));
                 }
             }
-        }
-
-        void timerAddHistoryWhenDone_Tick(object sender, EventArgs e)
-        {
-            _timerAddHistoryWhenDone.Stop();
-            _subtitle.MakeHistoryForUndo(_timerAddHistoryWhenDoneText, GetCurrentSubtitleFormat(), _fileDateTime, _subtitleAlternate, _subtitleAlternateFileName);
         }
 
         void AudioWaveForm_OnZoomedChanged(object sender, EventArgs e)
