@@ -6843,7 +6843,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 else
                 {
-                    var reader = new System.IO.StreamReader(Path.Combine(Configuration.DataDirectory, "Languages") + Path.DirectorySeparatorChar + cultureName + ".xml");
+                    var reader = new System.IO.StreamReader(Path.Combine(Configuration.BaseDirectory, "Languages") + Path.DirectorySeparatorChar + cultureName + ".xml");
                     Configuration.Settings.Language = Language.Load(reader);
                     reader.Close();
                 }
