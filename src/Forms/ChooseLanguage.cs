@@ -47,9 +47,9 @@ namespace Nikse.SubtitleEdit.Forms
             InitializeComponent();
 
             List<string> list = new List<string>();
-            if (Directory.Exists(Path.Combine(Configuration.DataDirectory, "Languages")))
+            if (Directory.Exists(Path.Combine(Configuration.BaseDirectory, "Languages")))
             {
-                foreach (string fileName in Directory.GetFiles(Path.Combine(Configuration.DataDirectory, "Languages"), "*.xml"))
+                foreach (string fileName in Directory.GetFiles(Path.Combine(Configuration.BaseDirectory, "Languages"), "*.xml"))
                 {
                     string cultureName = Path.GetFileNameWithoutExtension(fileName);
                     list.Add(cultureName);
