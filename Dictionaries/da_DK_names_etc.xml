@@ -1,10 +1,43 @@
-﻿<ignore_words>
+<ignore_words>
+  <name>Asgård</name>
+  <name>Bartok</name>
+  <name>Cartier</name>
   <name>Danmark</name>
   <name>Diagonalstræde</name>
   <name>England</name>
+  <name>Falconberg</name>
   <name>Frankrig</name>
+  <name>Fulton</name>
+  <name>Fultons</name>
+  <name>Gerimax</name>
+  <name>Guangdong</name>
+  <name>Guarneri</name>
+  <name>Hepburn</name>
+  <name>Inc.</name>
   <name>Italien</name>
+  <name>Juliard</name>
+  <name>Karlsson</name>
   <name>København</name>
+  <name>Lyman</name>
+  <name>Lymans</name>
+  <name>Magnoliavej</name>
+  <name>Mandelbaum</name>
+  <name>Mandelbaums</name>
+  <name>McClellan</name>
+  <name>Nadjim</name>
   <name>Østrig</name>
+  <name>Petterson</name>
+  <name>Pransky</name>
+  <name>Primulavænget</name>
+  <name>Sheng</name>
+  <name>Silverton</name>
   <name>Slytherins</name>
+  <name>Splendini</name>
+  <name>Strombel</name>
+  <name>Tianjins</name>
+  <name>Tinsley</name>
+  <name>Trinity</name>
+  <name>Uzés</name>
+  <name>Waterman</name>
+  <name>Yardley</name>
 </ignore_words>
