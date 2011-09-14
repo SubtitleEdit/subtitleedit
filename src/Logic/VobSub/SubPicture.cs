@@ -28,11 +28,29 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
         private readonly byte[] _data;
         public Rectangle ImageDisplayArea;
         public bool Forced { get; private set; }
+        private int _pixelDataAddressOffset = 0;
+        private int _startDisplayControlSequenceTableAddress;
         
         public SubPicture(byte[] data)
         {
             _data = data;
             SubPictureDateSize = Helper.GetEndianWord(_data, 0);
+            _startDisplayControlSequenceTableAddress = Helper.GetEndianWord(_data, 2);
+            ParseDisplayControlCommands(false, null, null, false);
+        }
+       
+        /// <summary>
+        /// For SP packet with dvd subpictures
+        /// </summary>
+        /// <param name="data">Byte data buffer</param>
+        /// <param name="startDisplayControlSequenceTableAddress">Address of first control sequence in data</param>
+        /// <param name="pixelDataAddressOffset">Bitmap pixel data address offset</param>
+        public SubPicture(byte[] data, int startDisplayControlSequenceTableAddress, int pixelDataAddressOffset)
+        {
+            _data = data;
+            SubPictureDateSize = _data.Length;
+            _startDisplayControlSequenceTableAddress = startDisplayControlSequenceTableAddress;
+            _pixelDataAddressOffset = pixelDataAddressOffset;
             ParseDisplayControlCommands(false, null, null, false);
         }
 
@@ -61,7 +79,7 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
             int imageBottomFieldDataAddress = 0;
             bool bitmapGenerated = false;
             double largestDelay = -999999;
-            int displayControlSequenceTableAddress = Helper.GetEndianWord(_data, 2);
+            int displayControlSequenceTableAddress = _startDisplayControlSequenceTableAddress;
             int lastDisplayControlSequenceTableAddress = 0;
             displayControlSequenceTableAddresses.Add(displayControlSequenceTableAddress);
             int commandIndex = 0;
@@ -111,13 +129,13 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
                             if (colorLookUpTable != null && fourColors.Count == 4)
                             {
                                 imageContrast = new[] { _data[commandIndex + 1], _data[commandIndex + 2] };
-                                //if (imageContrast[0] + imageContrast[1] > 0)
-                                //{
+                                if (imageContrast[0] + imageContrast[1] > 0)
+                                {
                                     SetTransparency(fourColors, 3, (imageContrast[0] & 0xF0) >> 4);
                                     SetTransparency(fourColors, 2, imageContrast[0] & Helper.B00001111);
                                     SetTransparency(fourColors, 1, (imageContrast[1] & 0xF0) >> 4);
                                     SetTransparency(fourColors, 0, imageContrast[1] & Helper.B00001111);
-                                //}
+                                }
                             }
                             commandIndex += 3;
                             break;
@@ -134,8 +152,8 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
                             commandIndex += 7;
                             break;
                         case (int)DisplayControlCommand.SetPixelDataAddress: // 6
-                            imageTopFieldDataAddress = Helper.GetEndianWord(_data, commandIndex + 1);
-                            imageBottomFieldDataAddress = Helper.GetEndianWord(_data, commandIndex + 3);
+                            imageTopFieldDataAddress = Helper.GetEndianWord(_data, commandIndex + 1) + _pixelDataAddressOffset;
+                            imageBottomFieldDataAddress = Helper.GetEndianWord(_data, commandIndex + 3) + _pixelDataAddressOffset;
                             commandIndex += 5;
                             break;
                         case (int)DisplayControlCommand.ChangeColorAndContrast: // 7
