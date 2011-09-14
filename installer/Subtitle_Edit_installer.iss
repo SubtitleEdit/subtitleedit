@@ -26,7 +26,7 @@
   #error Update your Inno Setup version
 #endif
 
-#define installer_build_number "17"
+#define installer_build_number "18"
 
 #define app_copyright "Copyright © 2001-2011, Nikse"
 #define VerMajor
@@ -105,6 +105,7 @@ Name: cs; MessagesFile: compiler:Languages\Czech.isl
 Name: de; MessagesFile: compiler:Languages\German.isl
 Name: dk; MessagesFile: compiler:Languages\Danish.isl
 Name: es; MessagesFile: compiler:Languages\Spanish.isl
+Name: eu; MessagesFile: compiler:Languages\Basque.isl
 Name: fr; MessagesFile: compiler:Languages\French.isl
 Name: hu; MessagesFile: compiler:Languages\Hungarian.isl
 Name: it; MessagesFile: compiler:Languages\Italian.isl
@@ -165,6 +166,8 @@ Source: {#bindir}\Icons\SpellCheck.png;            DestDir: {app}\Icons;        
 Source: {#bindir}\Icons\VideoToogle.png;           DestDir: {app}\Icons;                              Flags: ignoreversion; Components: main
 Source: {#bindir}\Icons\VisualSync.png;            DestDir: {app}\Icons;                              Flags: ignoreversion; Components: main
 Source: {#bindir}\Icons\WaveFormToogle.png;        DestDir: {app}\Icons;                              Flags: ignoreversion; Components: main
+
+; Uncomment the language files when they are ready to be distributed again
 #ifdef localize
 Source: {#bindir}\Languages\bg-BG.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
 Source: {#bindir}\Languages\cs-CZ.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
@@ -176,13 +179,14 @@ Source: {#bindir}\Languages\fr-FR.xml;             DestDir: {app}\Languages;    
 ;Source: {#bindir}\Languages\it-IT.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
 ;Source: {#bindir}\Languages\ja-JP.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
 Source: {#bindir}\Languages\pl-PL.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
-Source: {#bindir}\Languages\ru-RU.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
 Source: {#bindir}\Languages\ro-RO.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
+Source: {#bindir}\Languages\ru-RU.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
 Source: {#bindir}\Languages\sr-Cyrl-RS.xml;        DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
 Source: {#bindir}\Languages\sr-Latn-RS.xml;        DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
 Source: {#bindir}\Languages\sv-SE.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
 Source: {#bindir}\Languages\zh-CHS.xml;            DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
 #endif
+
 Source: ..\Dictionaries\da_DK_names_etc.xml;       DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion onlyifdoesntexist uninsneveruninstall; Components: main
 Source: ..\Dictionaries\da_DK_user.xml;            DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion onlyifdoesntexist uninsneveruninstall; Components: main
 Source: ..\Dictionaries\dan_OCRFixReplaceList.xml; DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion onlyifdoesntexist uninsneveruninstall; Components: main
@@ -221,7 +225,7 @@ Type: files;      Name: {commondesktop}\Subtitle Edit.lnk; Check: NOT IsTaskSele
 
 Type: files;      Name: {userappdata}\Subtitle Edit\Settings.xml; Tasks: reset_settings
 
-; remove old files from the {app} dir
+; Remove old files from the {app} dir
 Type: files;      Name: {app}\Dictionaries\da_DK_names_etc.xml
 Type: files;      Name: {app}\Dictionaries\da_DK_user.xml
 Type: files;      Name: {app}\Dictionaries\dan_OCRFixReplaceList.xml
@@ -234,7 +238,18 @@ Type: files;      Name: {app}\Dictionaries\names_etc.xml
 Type: dirifempty; Name: {app}\Dictionaries
 Type: files;      Name: {app}\uninstall.ico
 
+Type: files;      Name: {app}\Languages\sr-Cyrl-CS.xml
+Type: files;      Name: {app}\Languages\sr-Latn-CS.xml
+
 #ifdef localize
+; The following language files are incompatible with this version of SE so remove them when it's an upgrade.
+; If they are updated remove this code
+Type: files;      Name: {app}\Languages\es-ES.xml;      Check: IsComponentSelected('translations') AND IsUpdate()
+Type: files;      Name: {app}\Languages\hu-HU.xml;      Check: IsComponentSelected('translations') AND IsUpdate()
+Type: files;      Name: {app}\Languages\it-IT.xml;      Check: IsComponentSelected('translations') AND IsUpdate()
+Type: files;      Name: {app}\Languages\ja-JP.xml;      Check: IsComponentSelected('translations') AND IsUpdate()
+
+; Cleanup language files if it's an upgrade and the translations are not selected
 Type: files;      Name: {app}\Languages\bg-BG.xml;      Check: NOT IsComponentSelected('translations') AND IsUpdate()
 Type: files;      Name: {app}\Languages\cs-CZ.xml;      Check: NOT IsComponentSelected('translations') AND IsUpdate()
 Type: files;      Name: {app}\Languages\da-DK.xml;      Check: NOT IsComponentSelected('translations') AND IsUpdate()
@@ -247,8 +262,8 @@ Type: files;      Name: {app}\Languages\ja-JP.xml;      Check: NOT IsComponentSe
 Type: files;      Name: {app}\Languages\pl-PL.xml;      Check: NOT IsComponentSelected('translations') AND IsUpdate()
 Type: files;      Name: {app}\Languages\ro-RO.xml;      Check: NOT IsComponentSelected('translations') AND IsUpdate()
 Type: files;      Name: {app}\Languages\ru-RU.xml;      Check: NOT IsComponentSelected('translations') AND IsUpdate()
-Type: files;      Name: {app}\Languages\sr-Cyrl-CS.xml; Check: NOT IsComponentSelected('translations') AND IsUpdate()
-Type: files;      Name: {app}\Languages\sr-Latn-CS.xml; Check: NOT IsComponentSelected('translations') AND IsUpdate()
+Type: files;      Name: {app}\Languages\sr-Cyrl-RS.xml; Check: NOT IsComponentSelected('translations') AND IsUpdate()
+Type: files;      Name: {app}\Languages\sr-Latn-RS.xml; Check: NOT IsComponentSelected('translations') AND IsUpdate()
 Type: files;      Name: {app}\Languages\sv-SE.xml;      Check: NOT IsComponentSelected('translations') AND IsUpdate()
 Type: files;      Name: {app}\Languages\zh-CHS.xml;     Check: NOT IsComponentSelected('translations') AND IsUpdate()
 Type: dirifempty; Name: {app}\Languages;                Check: NOT IsComponentSelected('translations') AND IsUpdate()
