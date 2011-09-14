@@ -42,7 +42,7 @@ IF "%~1" == "" (
 PUSHD "src"
 
 CALL "%VS100COMNTOOLS%vsvars32.bat"
-TITLE %BUILDTYPE%ing SubtitleEdit with MSVC 2010 - Release^|Any CPU...
+TITLE %BUILDTYPE%ing SubtitleEdit - Release^|Any CPU...
 
 "%WINDIR%\Microsoft.NET\Framework\v4.0.30319\MSBuild.exe" SubtitleEdit.sln^
  /t:%BUILDTYPE% /p:Configuration=Release /p:Platform="Any CPU" /maxcpucount^
