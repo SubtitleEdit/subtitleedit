@@ -275,21 +275,21 @@ ro.types_default=Default installation
 
 
 ; Russian
-ru.comp_translations=Translations
-ru.msg_AppIsRunning=Subtitle Edit is running! Please close it before proceeding.
-ru.msg_AskToDownNET=Subtitle Edit requires the .NET Framework 2.0. Please download and install the .NET Framework and run setup again.%n%nDo you want to download the .NET Framework 2.0 now?
-ru.msg_DeleteSettings=Do you also want to delete Subtitle Edit's settings and any custom changes you made in the dictionaries?%n%nIf you plan on reinstalling Subtitle Edit you do not have to delete them.
-ru.msg_OptimizingPerformance=Optimizing performance...
-ru.msg_SetupIsRunningWarning=Subtitle Edit Setup is already running!
-ru.run_VisitWebsite=Visit Subtitle Edit's Website
-ru.sm_com_Changelog=Subtitle Edit's Changelog
-ru.tsk_AllUsers=For all users
-ru.tsk_CurrentUser=For the current user only
-ru.tsk_Other=Other:
-ru.tsk_ResetDictionaries=Reset Dictionaries and delete any custom names
-ru.tsk_ResetSettings=Reset Subtitle Edit's settings
-ru.types_custom=Custom installation
-ru.types_default=Default installation
+ru.comp_translations=Файлы локализации программы
+ru.msg_AppIsRunning=Обнаружена работающая программа "Subtitle Edit"!%n%nПожалуйста, закройте её перед началом установки.
+ru.msg_AskToDownNET=Для работы "Subtitle Edit" требуется установленный .NET Framework 2.0.  Пожалуйста, загрузите и установите .NET Framework, а затем повторите инсталляцию.%n%nВыполнить загрузку .NET Framework 2.0 сейчас?
+ru.msg_DeleteSettings=Следует ли также удалить ваши настройки программы и пользовательские словари?%n%nЕсли вы будете обновлять программу, то не удаляйте ваши настройки и словари.
+ru.msg_OptimizingPerformance=Оптимизация производительности...
+ru.msg_SetupIsRunningWarning=Установка "Subtitle Edit" уже запущена!
+ru.run_VisitWebsite=Посетить домашнюю страницу
+ru.sm_com_Changelog=Журнал изменений "Subtitle Edit"
+ru.tsk_AllUsers=Для всех пользователей
+ru.tsk_CurrentUser=Только для текущего пользователя
+ru.tsk_Other=Другие задачи:
+ru.tsk_ResetDictionaries=Сброс и удаление пользовательских словарей
+ru.tsk_ResetSettings=Сброс настроек программы
+ru.types_custom=Выборочная установка
+ru.types_default=Обычная установка
 
 
 ; Swedish
