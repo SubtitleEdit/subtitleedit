@@ -97,19 +97,19 @@ de.types_default=Default installation
 
 ; Danish
 dk.comp_translations=Translations
-dk.msg_AppIsRunning=Subtitle Edit is running! Please close it before proceeding.
-dk.msg_AskToDownNET=Subtitle Edit kræver .NET Framework 2.0. Download and installer .NET Framework og kør setup igen.%n%nVil du downloade .NET Framework 2.0 nu?
+dk.msg_AppIsRunning=Subtitle Edit kører! Luk venligst Subtitle Edit for at fortsætte.
+dk.msg_AskToDownNET=Subtitle Edit kræver .NET Framework 2.0 eller nyere. Download and installer .NET Framework og kør setup igen.%n%nVil du downloade .NET Framework 2.0 nu?
 dk.msg_DeleteSettings=Vil du også slette Subtitle Edit's indstillinger og evt. ændringer i ordlister?%n%nHvis du vil geninstallere Subtitle Edit senere kan du beholde disse indstillinger.
-dk.msg_OptimizingPerformance=Optimizing performance...
+dk.msg_OptimizingPerformance=Optimerer performance...
 dk.msg_SetupIsRunningWarning=Subtitle Edit Setup kører allerede!
 dk.run_VisitWebsite=Besøg Subtitle Edits Website
 dk.sm_com_Changelog=Subtitle Edit ændringslog
 dk.tsk_AllUsers=For alle brugere
 dk.tsk_CurrentUser=Kun for aktulle bruger
 dk.tsk_Other=Andre:
-dk.tsk_ResetDictionaries=Reset Dictionaries and delete any custom names
+dk.tsk_ResetDictionaries=Nulstil ordbøger og slet bruger ordlister
 dk.tsk_ResetSettings=Nulstil Subtitle Edit indstillinger
-dk.types_custom=Custom installation
+dk.types_custom=Brugerdefineret installation
 dk.types_default=Default installation
 
 
