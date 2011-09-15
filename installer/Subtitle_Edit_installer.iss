@@ -238,10 +238,11 @@ Type: files;      Name: {app}\Dictionaries\names_etc.xml
 Type: dirifempty; Name: {app}\Dictionaries
 Type: files;      Name: {app}\uninstall.ico
 
+#ifdef localize
+; Language files not included anymore
 Type: files;      Name: {app}\Languages\sr-Cyrl-CS.xml
 Type: files;      Name: {app}\Languages\sr-Latn-CS.xml
 
-#ifdef localize
 ; The following language files are incompatible with this version of SE so remove them when it's an upgrade.
 ; If they are updated remove this code
 Type: files;      Name: {app}\Languages\es-ES.xml;      Check: IsComponentSelected('translations') AND IsUpdate()
