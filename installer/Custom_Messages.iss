@@ -166,6 +166,7 @@ fr.tsk_ResetSettings=Reset Subtitle Edit's settings
 fr.types_custom=Custom installation
 fr.types_default=Default installation
 
+
 ; Hungarian
 hu.comp_translations=Translations
 hu.msg_AppIsRunning=A Subtitle Edit fut! Kérjük, zárja be a folytatás elött.
