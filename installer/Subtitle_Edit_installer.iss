@@ -81,6 +81,7 @@ MinVersion=0,5.1
 LicenseFile=..\src\gpl.txt
 InfoAfterFile=..\src\Changelog.txt
 SetupIconFile=..\src\Icons\SE.ico
+WizardImageFile=Icons\WizardImageFile.bmp
 WizardSmallImageFile=Icons\WizardSmallImageFile.bmp
 OutputDir=.
 OutputBaseFilename=SubtitleEdit-{#simple_app_version}-setup
@@ -122,7 +123,7 @@ Name: sv; MessagesFile: Languages\Swedish.isl
 
 
 [Messages]
-BeveledLabel=Subtitle Edit v{#simple_app_version} by Nikse, Setup v{#installer_build_number} built on {#installer_build_date}
+BeveledLabel=Subtitle Edit v{#simple_app_version} by Nikse  -  Setup v{#installer_build_number} built on {#installer_build_date}
 
 
 [Types]
