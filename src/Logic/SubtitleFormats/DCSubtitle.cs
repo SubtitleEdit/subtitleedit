@@ -8,26 +8,19 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
 
 // http://code.google.com/p/subtitleedit/issues/detail?id=18
+//<?xml version="1.0" encoding="UTF-8"?>
 //<DCSubtitle Version="1.0">
-//<!-- *** www.digital-cinema-services.de *** -->
-//<!-- *** ElMariKonverter *** -->
-//<Id>urn:uuid:0b8a1af2-2073-493c-aea1-fa6b5601101a</Id>
-//<MovieTitle>Im Himmel unter der Erde</MovieTitle>
-//<ContentTitleText>de - Im Himmel unter der Erde</ContentTitleText>
-//<AnnotationText>de - Im Himmel unter der Erde</AnnotationText>
-//<IssueDate>2011-03-25T14:07:00</IssueDate>
-//<StartTime>00:00:00:000</StartTime>
-//<ReelNumber>1</ReelNumber>
-//<Language>de</Language>
-//<EditRate>24 1</EditRate>
-//<TimeCodeRate>24</TimeCodeRate>
-//<LoadFont Id="Font1" URI="Arial.ttf"/>
-//<SubtitleList>
-//<Font Id="Font1" Color="FFFFFFFF" Effect="outline" EffectColor="FF000000" Italic="no" Underlined="no" Script="normal" Size="52">
-//<Subtitle SpotNumber="1" FadeUpTime="20" FadeDownTime="20" TimeIn="00:50:05:10" TimeOut="00:50:10:01">
-//<Text Direction="horizontal" HAlign="center" HPosition="0" VAlign="bottom" VPosition="8"><Font Italic="yes">Meine Mutter und meine Schwester,</Font></Text>
-//</Subtitle>
-
+//  <SubtitleID>4EB245B8-4D3A-4158-9516-95DD20E8322E</SubtitleID>
+//  <MovieTitle>Unknown</MovieTitle>
+//  <ReelNumber>1</ReelNumber>
+//  <Language>Swedish</Language>
+//  <Font Italic="no">
+//    <Subtitle SpotNumber="1" TimeIn="00:00:06:040" TimeOut="00:00:08:040" FadeUpTime="20" FadeDownTime="20">
+//      <Text Direction="horizontal" HAlign="center" HPosition="0.0" VAlign="bottom" VPosition="6.0">DETTA HAR HÄNT...</Text>
+//    </Subtitle>
+//  </Font>
+//</DCSubtitle>
+ 
     class DCSubtitle : SubtitleFormat
     {
         public override string Extension
@@ -55,7 +48,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             StringBuilder sb = new StringBuilder();
             lines.ForEach(line => sb.AppendLine(line));
             string xmlAsString = sb.ToString().Trim();
-            if (xmlAsString.Contains("<DCSubtitle")) // &&                xmlAsString.Contains("<SubtitleList"))
+            if (xmlAsString.Contains("<DCSubtitle")) 
             {
                 XmlDocument xml = new XmlDocument();
                 try
@@ -79,45 +72,29 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             }
         }
 
-        private static string ConvertToTimeString(TimeCode time)
-        {
-            return string.Format("{0:00}:{1:00}:{2:00}.{3:00}", time.Hours, time.Minutes, time.Seconds, time.Milliseconds);
-        }
-
         public override string ToText(Subtitle subtitle, string title)
         {
-            string xmlStructure = "<DCSubtitle Version=\"1.0\">" + 
-@"   <Id>urn:uuid:0b8a1af2-2073-493c-aea1-fa6b5601101a</Id>
-    <MovieTitle>[TITLE]</MovieTitle>
-    <ContentTitleText>[TITLE]</ContentTitleText>
-    <AnnotationText>[TITLE]</AnnotationText>
-    <IssueDate>[DATE]</IssueDate>
-    <StartTime>00:00:00:000</StartTime>
-    <ReelNumber>1</ReelNumber>
-    <Language>de</Language>
-    <EditRate>24 1</EditRate>
-    <TimeCodeRate>24</TimeCodeRate>
-    <LoadFont Id=" + "\"Font1\" URI=\"Arial.ttf\"/>" + Environment.NewLine +
-"    <SubtitleList>" + Environment.NewLine +
-"         <Font Id=\"Font1\" Color=\"FFFFFFFF\" Effect=\"outline\" EffectColor=\"FF000000\" Italic=\"no\" Underlined=\"no\" Script=\"normal\" Size=\"52\">" + Environment.NewLine +
-"         </Font>" + Environment.NewLine +
-"    </SubtitleList>" + Environment.NewLine +
-"</DCSubtitle>";
-            XmlNode t = new XmlDocument().CreateElement("title");
-            t.InnerText = title;
-            xmlStructure = xmlStructure.Replace("[TITLE]", t.InnerXml);
-            xmlStructure = xmlStructure.Replace("[DATE]", string.Format("{0:0000}:{1:00}:{2:00}T{3:HH:mm:ss}", DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, DateTime.Now)); //2011-03-25T14:07:00
+            string date = string.Format("{0:0000}:{1:00}:{2:00}T{3:HH:mm:ss}", DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, DateTime.Now); //2011-03-25T14:07:00            
+            string xmlStructure = "<DCSubtitle Version=\"1.0\">" + Environment.NewLine +
+                                    "    <SubtitleID>4EB245B8-4D3A-4158-9516-95DD20E8322E</SubtitleID>" + Environment.NewLine +
+                                    "    <MovieTitle></MovieTitle>" + Environment.NewLine +
+                                    "    <ReelNumber>1</ReelNumber>" + Environment.NewLine +
+                                    "    <IssueDate>" + date + "</IssueDate>" + Environment.NewLine +
+                                    "    <Language>" + Utilities.AutoDetectGoogleLanguage(subtitle) + "</Language>" + Environment.NewLine +
+                                    "    <SubtitleList>" + Environment.NewLine +
+                                    "         <Font Color=\"FFFFFFFF\" Effect=\"outline\" EffectColor=\"FF000000\" Italic=\"no\" Underlined=\"no\" Script=\"normal\" Size=\"52\">" + Environment.NewLine +
+                                    "         </Font>" + Environment.NewLine +
+                                    "    </SubtitleList>" + Environment.NewLine +
+                                    "</DCSubtitle>";
 
             XmlDocument xml = new XmlDocument();
             xml.LoadXml(xmlStructure);
+            xml.DocumentElement.SelectSingleNode("MovieTitle").InnerText = title;
 
             XmlNode mainListFont = xml.DocumentElement.SelectSingleNode("//SubtitleList/Font");
             int no = 0;
             foreach (Paragraph p in subtitle.Paragraphs)
             {
-//<Subtitle SpotNumber="1" FadeUpTime="20" FadeDownTime="20" TimeIn="00:50:05:10" TimeOut="00:50:10:01">
-//<Text Direction="horizontal" HAlign="center" HPosition="0" VAlign="bottom" VPosition="8"><Font Italic="yes">Meine Mutter und meine Schwester,</Font></Text>
-//</Subtitle>
                 XmlNode subNode = xml.CreateElement("Subtitle");
 
                 XmlAttribute id = xml.CreateAttribute("SpotNumber");
@@ -140,7 +117,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 end.InnerText = ConvertToTimeString(p.EndTime);
                 subNode.Attributes.Append(end);
 
-//                <Text VPosition="8" VAlign="bottom" HPosition="0" HAlign="center" Direction="horizontal">Er hat uns allen geholfen:</Text>                
                 string[] lines = p.Text.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
                 int vPos = 1 + lines.Length * 7;
                 bool isItalic = false;
@@ -240,7 +216,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             XmlTextWriter writer = new XmlTextWriter(ms, Encoding.UTF8);
             writer.Formatting = Formatting.Indented;
             xml.Save(writer);
-            return Encoding.UTF8.GetString(ms.ToArray()).Trim();
+            return Encoding.UTF8.GetString(ms.ToArray()).Trim().Replace("encoding=\"utf-8\"", "encoding=\"UTF-8\"");
         }
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
@@ -262,9 +238,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     {
                         switch (innerNode.Name.ToString())
                         {
-                            //case "br":
-                            //    pText.AppendLine();
-                            //    break;
                             case "Text":
                                 if (innerNode.Attributes["VPosition"] != null)
                                 {
@@ -318,9 +291,20 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         private static TimeCode GetTimeCode(string s)
         {
             string[] parts = s.Split(new char[] { ':', '.', ',' });
-            TimeSpan ts = new TimeSpan(0, int.Parse(parts[0]), int.Parse(parts[1]), int.Parse(parts[2]), int.Parse(parts[3]));
+
+            int milliseconds = (int)(int.Parse(parts[3]) / 249.0 * 1000); // 000 to 249
+            if (milliseconds > 999)
+                milliseconds = 999;
+
+            TimeSpan ts = new TimeSpan(0, int.Parse(parts[0]), int.Parse(parts[1]), int.Parse(parts[2]), milliseconds);
             return new TimeCode(ts);
         }
+
+        private static string ConvertToTimeString(TimeCode time)
+        {
+            return string.Format("{0:00}:{1:00}:{2:00}.{3:000}", time.Hours, time.Minutes, time.Seconds, time.Milliseconds / 4);
+        }
+
     }
 }
 
