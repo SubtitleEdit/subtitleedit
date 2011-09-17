@@ -975,6 +975,7 @@
     </Content>
     <Content Include="Languages\ru-RU.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </Content>
     <Content Include="Languages\sr-Cyrl-RS.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
