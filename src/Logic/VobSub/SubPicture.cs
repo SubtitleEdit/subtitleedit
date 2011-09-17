@@ -243,6 +243,10 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
                     y++;
             }
             int minY = y;
+            if (minY > 3)
+                minY -= 3;
+            else
+                minY = 0;
 
             // Crop left
             x = 0;
@@ -259,6 +263,10 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
                     x++;
             }
             int minX = x;
+            if (minX > 3)
+                minX -= 3;
+            else
+                minX -= 0;
 
             // Crop bottom
             y = bmp.Height-1;
@@ -278,11 +286,13 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
                 if (IsBackgroundColor(c, backgroundColor))
                     y--;
             }
-            int maxY = y;
+            int maxY = y + 7;
+            if (maxY >= bmp.Height)
+                maxY = bmp.Height - 1;
 
             // Crop right
             x = bmp.Width - 1;
-            c = backgroundColor;
+            c = backgroundColor;            
             while (x > minX && IsBackgroundColor(c, backgroundColor))
             {
                 for (y = minY; y < bmp.Height; y++)
@@ -294,7 +304,9 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
                 if (IsBackgroundColor(c, backgroundColor))
                     x--;
             }
-            int maxX = x;
+            int maxX = x + 7;
+            if (maxX >= bmp.Width)
+                maxX = bmp.Width - 1;
 
             bmp.UnlockImage();
             Bitmap bmpImage = bmp.GetBitmap();
