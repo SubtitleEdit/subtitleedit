@@ -88,7 +88,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 index++;
                 Paragraph nextParagraph = subtitle.GetParagraphOrDefault(index);
                 if (nextParagraph != null)
-                    p.EndTime.TotalMilliseconds = nextParagraph.StartTime.TotalMilliseconds + 1;
+                    p.EndTime.TotalMilliseconds = nextParagraph.StartTime.TotalMilliseconds - 1;
                 else
                     p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + 2500;
                 p.Text = p.Text.Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine);
