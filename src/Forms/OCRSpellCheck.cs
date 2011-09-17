@@ -250,5 +250,11 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
+        private void textBoxWord_TextChanged(object sender, EventArgs e)
+        {
+            buttonChange.Enabled = textBoxWord.Text != _originalWord;
+            buttonChangeAll.Enabled = buttonChange.Enabled;
+        }
+
     }
 }
