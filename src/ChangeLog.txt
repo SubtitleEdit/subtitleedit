@@ -1,7 +1,7 @@
 Subtitle Edit Changelog
 
 
-3.2 (15th September 2011)
+3.2 (?th September 2011)
  * NEW:
    * Can now display spectrogram (and/or waveform)
    * Subtitle formats: D-Cinema, Cavena890, Timed Text 1.0, Captionate, Flash xml, YouTube annotations and more
@@ -30,6 +30,8 @@ Subtitle Edit Changelog
  * FIXED:
    * Adjust all times did not work for MicroDvd (thx Wolf)
    * Fixed a bug in VobSub parser which could cause scrabled images
+   * Fixed a bug in VobSub parser so it no longer ignores custom background color
+   * Fixed too much cropping for VobSub pictures
    * Now removes empty unicode white spaces from Google translate
    * Crash when entering invalid text in source view (thx Frédéric)
    * Fixed a few bugs in DVD Architect format + added another two new variants (thx Jacob)
