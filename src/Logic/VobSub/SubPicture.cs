@@ -79,14 +79,14 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
             int imageBottomFieldDataAddress = 0;
             bool bitmapGenerated = false;
             double largestDelay = -999999;
-            int displayControlSequenceTableAddress = _startDisplayControlSequenceTableAddress;
+            int displayControlSequenceTableAddress = _startDisplayControlSequenceTableAddress - _pixelDataAddressOffset;
             int lastDisplayControlSequenceTableAddress = 0;
             displayControlSequenceTableAddresses.Add(displayControlSequenceTableAddress);
             int commandIndex = 0;
-            while (displayControlSequenceTableAddress > lastDisplayControlSequenceTableAddress && displayControlSequenceTableAddress + 5 < _data.Length && commandIndex < _data.Length)
+            while (displayControlSequenceTableAddress > lastDisplayControlSequenceTableAddress && displayControlSequenceTableAddress + 1 < _data.Length && commandIndex < _data.Length)
             {
-                int delayBeforeExecute = Helper.GetEndianWord(_data, displayControlSequenceTableAddress);
-                commandIndex = displayControlSequenceTableAddress + 4;
+                int delayBeforeExecute = Helper.GetEndianWord(_data, displayControlSequenceTableAddress + _pixelDataAddressOffset);
+                commandIndex = displayControlSequenceTableAddress + 4 + _pixelDataAddressOffset;
                 int command = _data[commandIndex];
                 int numberOfCommands = 0;
                 while (command != 0xFF && numberOfCommands < 1000 && commandIndex < _data.Length)
@@ -168,6 +168,9 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
                             break;
                         case (int)DisplayControlCommand.End: // FF (255) - Stop looping of Display Control Commands
                             break;
+                        default:
+                            commandIndex++;
+                            break;
                     }
                     if (commandIndex >= _data.Length) // in case of bad files...
                         break;
@@ -175,7 +178,10 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
                 }
 
                 lastDisplayControlSequenceTableAddress = displayControlSequenceTableAddress;
-                displayControlSequenceTableAddress = Helper.GetEndianWord(_data, displayControlSequenceTableAddress + 2);
+                if (_pixelDataAddressOffset == -4)
+                    displayControlSequenceTableAddress = Helper.GetEndianWord(_data, commandIndex+3);
+                else
+                    displayControlSequenceTableAddress = Helper.GetEndianWord(_data, displayControlSequenceTableAddress + 2);
             }
             if (createBitmap && !bitmapGenerated) // StopDisplay not needed (delay will be zero - should be just before start of next subtitle)
                 bmp = GenerateBitmap(ImageDisplayArea, imageTopFieldDataAddress, imageBottomFieldDataAddress, fourColors);
