@@ -149,6 +149,7 @@
             this.textBoxWord.Name = "textBoxWord";
             this.textBoxWord.Size = new System.Drawing.Size(250, 21);
             this.textBoxWord.TabIndex = 1;
+            this.textBoxWord.TextChanged += new System.EventHandler(this.textBoxWord_TextChanged);
             // 
             // buttonAbort
             // 
@@ -254,7 +255,7 @@
             this.checkBoxAutoChangeNames.AutoSize = true;
             this.checkBoxAutoChangeNames.Location = new System.Drawing.Point(8, 157);
             this.checkBoxAutoChangeNames.Name = "checkBoxAutoChangeNames";
-            this.checkBoxAutoChangeNames.Size = new System.Drawing.Size(216, 17);
+            this.checkBoxAutoChangeNames.Size = new System.Drawing.Size(209, 17);
             this.checkBoxAutoChangeNames.TabIndex = 12;
             this.checkBoxAutoChangeNames.Text = "Auto fix names where only casing differ";
             this.checkBoxAutoChangeNames.UseVisualStyleBackColor = true;

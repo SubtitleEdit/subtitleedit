@@ -44,6 +44,7 @@ namespace Nikse.SubtitleEdit.Forms
         string[] _words;
         int _wordsIndex;
         Subtitle _subtitle;
+        string _originalWord;
 
         int _noOfSkippedWords = 0;
         int _noOfChangedWords = 0;
@@ -111,6 +112,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         public void Initialize(string languageName, string word, List<string> suggestions, string paragraph, string progress)
         {
+            _originalWord = word;
             _suggestions = suggestions;
             groupBoxWordNotFound.Visible = true;
             groupBoxEditWholeText.Visible = false;
@@ -122,6 +124,9 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 listBoxSuggestions.Items.Add(suggestion);
             }
+            if (listBoxSuggestions.Items.Count > 0)
+                listBoxSuggestions.SelectedIndex = 0;
+
             richTextBoxParagraph.Text = paragraph;
 
             comboBoxDictionaries.SelectedIndexChanged -= ComboBoxDictionariesSelectedIndexChanged;
@@ -727,6 +732,11 @@ namespace Nikse.SubtitleEdit.Forms
             PrepareNextWord();
         }
 
+        private void textBoxWord_TextChanged(object sender, EventArgs e)
+        {
+            buttonChange.Enabled = textBoxWord.Text != _originalWord;
+            buttonChangeAll.Enabled = buttonChange.Enabled;
+        }
 
     }
 }

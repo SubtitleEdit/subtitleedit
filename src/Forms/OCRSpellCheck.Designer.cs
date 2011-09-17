@@ -81,8 +81,8 @@
             // 
             // groupBoxSuggestions
             // 
-            this.groupBoxSuggestions.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxSuggestions.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBoxSuggestions.Controls.Add(this.buttonUseSuggestionAlways);
             this.groupBoxSuggestions.Controls.Add(this.buttonUseSuggestion);
             this.groupBoxSuggestions.Controls.Add(this.listBoxSuggestions);
@@ -117,8 +117,8 @@
             // 
             // listBoxSuggestions
             // 
-            this.listBoxSuggestions.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.listBoxSuggestions.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.listBoxSuggestions.FormattingEnabled = true;
             this.listBoxSuggestions.Location = new System.Drawing.Point(6, 39);
             this.listBoxSuggestions.Name = "listBoxSuggestions";
@@ -189,6 +189,7 @@
             this.textBoxWord.Name = "textBoxWord";
             this.textBoxWord.Size = new System.Drawing.Size(290, 22);
             this.textBoxWord.TabIndex = 31;
+            this.textBoxWord.TextChanged += new System.EventHandler(this.textBoxWord_TextChanged);
             this.textBoxWord.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxWordKeyDown);
             // 
             // buttonSkipOnce
@@ -255,9 +256,9 @@
             // 
             // groupBoxTextAsImage
             // 
-            this.groupBoxTextAsImage.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxTextAsImage.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBoxTextAsImage.Controls.Add(this.pictureBoxText);
             this.groupBoxTextAsImage.Location = new System.Drawing.Point(12, 12);
             this.groupBoxTextAsImage.Name = "groupBoxTextAsImage";
@@ -268,9 +269,9 @@
             // 
             // pictureBoxText
             // 
-            this.pictureBoxText.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.pictureBoxText.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.pictureBoxText.Location = new System.Drawing.Point(6, 18);
             this.pictureBoxText.Name = "pictureBoxText";
             this.pictureBoxText.Size = new System.Drawing.Size(684, 127);
@@ -279,8 +280,8 @@
             // 
             // groupBoxText
             // 
-            this.groupBoxText.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxText.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBoxText.Controls.Add(this.richTextBoxParagraph);
             this.groupBoxText.Controls.Add(this.buttonEditWholeText);
             this.groupBoxText.Controls.Add(this.buttonEditWord);
