@@ -1411,10 +1411,18 @@ namespace Nikse.SubtitleEdit.Forms
                     return;
                 }
 
-                if (Path.GetExtension(fileName).ToLower() == ".sup" && IsBluRaySupFile(fileName))
+                if (Path.GetExtension(fileName).ToLower() == ".sup")
                 {
-                    ImportAndOcrBluRaySup(fileName);
-                    return;
+                    if (IsBluRaySupFile(fileName))
+                    {
+                        ImportAndOcrBluRaySup(fileName);
+                        return;
+                    }
+                    else if (IsSpDvdSupFile(fileName))
+                    {
+                        ImportAndOcrSpDvdSup(fileName);
+                        return;
+                    }
                 }
 
                 if (Path.GetExtension(fileName).ToLower() == ".mkv")
@@ -6055,6 +6063,90 @@ namespace Nikse.SubtitleEdit.Forms
             return (buffer[0] == 0x50 && buffer[1] == 0x47); // 80 + 71 - P G                    
         }
 
+        private bool IsSpDvdSupFile(string subFileName)
+        {
+            byte[] buffer = new byte[SpHeader.SpHeaderLength];
+            var fs = new FileStream(subFileName, FileMode.Open, FileAccess.Read, FileShare.Read) { Position = 0 };
+            int bytesRead = fs.Read(buffer, 0, buffer.Length);
+            if (bytesRead == buffer.Length)
+            { 
+                var header = new SpHeader(buffer);
+                if (header.Identifier == "SP" && header.NextBlockPosition > 4)
+                {
+                    buffer = new byte[header.NextBlockPosition];
+                    bytesRead = fs.Read(buffer, 0, buffer.Length);
+                    if (bytesRead == buffer.Length)
+                    {
+                        buffer = new byte[SpHeader.SpHeaderLength];
+                        bytesRead = fs.Read(buffer, 0, buffer.Length);
+                        if (bytesRead == buffer.Length)
+                        {
+                            header = new SpHeader(buffer);
+                            fs.Close();
+                            return header.Identifier == "SP";
+                        }
+                    }
+                }
+            }
+            fs.Close();
+            return false;
+        }
+
+        private void ImportAndOcrSpDvdSup(string fileName)
+        {
+            var fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.Read) { Position = 0 };
+
+            byte[] buffer = new byte[SpHeader.SpHeaderLength];
+            int bytesRead = fs.Read(buffer, 0, buffer.Length);
+            var header = new SpHeader(buffer);
+            var spList = new List<SpHeader>();
+
+            while (header.Identifier == "SP" && bytesRead > 0 && header.NextBlockPosition > 4)
+            {
+                buffer = new byte[header.NextBlockPosition];
+                bytesRead = fs.Read(buffer, 0, buffer.Length);
+                if (bytesRead == buffer.Length)
+                {
+                    header.AddPicture(buffer);
+                    spList.Add(header);
+                }
+
+                buffer = new byte[SpHeader.SpHeaderLength];
+                bytesRead = fs.Read(buffer, 0, buffer.Length);
+                header = new SpHeader(buffer);
+            }
+            fs.Close();
+
+            var vobSubOcr = new VobSubOcr();
+            vobSubOcr.Initialize(fileName, null, Configuration.Settings.VobSubOcr, spList);
+            if (vobSubOcr.ShowDialog(this) == DialogResult.OK)
+            {
+                MakeHistoryForUndo(_language.BeforeImportingVobSubFile);
+                FileNew();
+                _subtitle.Paragraphs.Clear();
+                SetCurrentFormat(new SubRip().FriendlyName);
+                _subtitle.WasLoadedWithFrameNumbers = false;
+                _subtitle.CalculateFrameNumbersFromTimeCodes(CurrentFrameRate);
+                foreach (Paragraph p in vobSubOcr.SubtitleFromOcr.Paragraphs)
+                {
+                    _subtitle.Paragraphs.Add(p);
+                }
+
+                ShowSource();
+                SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
+                _change = true;
+                _subtitleListViewIndex = -1;
+                SubtitleListview1.FirstVisibleIndex = -1;
+                SubtitleListview1.SelectIndexAndEnsureVisible(0);
+
+                _fileName = Path.ChangeExtension(vobSubOcr.FileName, ".srt");
+                SetTitle();
+                _converted = true;
+
+                Configuration.Settings.Save();
+            }
+        }
+
         private void ImportAndOcrVobSubSubtitleNew(string fileName)
         {
             if (IsVobSubFile(fileName, true))
@@ -7502,7 +7594,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (SubtitleListview1.IsAlternateTextColumnVisible && Configuration.Settings.General.ShowOriginalAsPreviewIfAvailable)
             {
                 int index = -1;
-                if (SubtitleListview1.SelectedItems.Count > 0)
+                if (SubtitleListview1.SelectedItems.Count > 0 && _subtitle.Paragraphs.Count > 0)
                 {
                     int i = SubtitleListview1.SelectedItems[0].Index;
                     var p = Utilities.GetOriginalParagraph(i, _subtitle.Paragraphs[i], _subtitleAlternate.Paragraphs);

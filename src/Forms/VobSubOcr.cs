@@ -110,6 +110,9 @@ namespace Nikse.SubtitleEdit.Forms
         List<Logic.BluRaySup.BluRaySupPicture> _bluRaySubtitles;
         Nikse.SubtitleEdit.Logic.BluRaySup.BluRaySupPalette _defaultPaletteInfo;
 
+        // SP list
+        List<SpHeader> _spList;
+
         string _lastLine;
         string _languageId;
 
@@ -451,9 +454,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (ChooseLanguage.ShowDialog(this) == System.Windows.Forms.DialogResult.OK)
                 {
                     _vobSubMergedPackist = ChooseLanguage.SelectedVobSubMergedPacks;
-
                     SetTesseractLanguageFromLanguageString(ChooseLanguage.SelectedLanguageString);
-
                 }
                 else
                 {
@@ -683,8 +684,26 @@ namespace Nikse.SubtitleEdit.Forms
             Color pattern;   
             Color emphasis1;
             Color emphasis2;
-            
-            if (_bdnXmlSubtitle != null)
+
+            if (_spList != null)
+            {
+                Bitmap spBmp;
+                if (checkBoxCustomFourColors.Checked)
+                {
+                    GetCustomColors(out background, out pattern, out emphasis1, out emphasis2);
+
+                    spBmp = _spList[index].Picture.GetBitmap(null, background, pattern, emphasis1, emphasis2, true);
+                    if (checkBoxAutoTransparentBackground.Checked)
+                        spBmp.MakeTransparent();
+                    return spBmp;
+                }
+
+                spBmp = _spList[index].Picture.GetBitmap(null, Color.Transparent, Color.Black, Color.White, Color.Black, false);
+                if (checkBoxAutoTransparentBackground.Checked)
+                    spBmp.MakeTransparent();
+                return spBmp;
+            }
+            else if (_bdnXmlSubtitle != null)
             {
                 if (index >= 0 && index < _bdnXmlSubtitle.Paragraphs.Count)
                 {
@@ -716,7 +735,7 @@ namespace Nikse.SubtitleEdit.Forms
                                 }
                             }
                             fbmp.UnlockImage();
-                        }                        
+                        }
                         if (checkBoxAutoTransparentBackground.Checked)
                             b.MakeTransparent();
                         return b;
@@ -774,16 +793,20 @@ namespace Nikse.SubtitleEdit.Forms
 
         private long GetSubtitleStartTimeMilliseconds(int index)
         {
-            if (_bdnXmlSubtitle != null)
+            if (_spList != null)
+                return (long) (_spList[index].StartTime.TotalMilliseconds);
+            else if (_bdnXmlSubtitle != null)
                 return (long)_bdnXmlSubtitle.Paragraphs[index].StartTime.TotalMilliseconds;
             else if (_bluRaySubtitlesOriginal != null)
                 return (_bluRaySubtitles[index].StartTime + 45) / 90;
-            else 
+            else
                 return (long)_vobSubMergedPackist[index].StartTime.TotalMilliseconds;
         }      
       
         private long GetSubtitleEndTimeMilliseconds(int index)
         {
+            if (_spList != null)
+                return (long)(_spList[index].StartTime.TotalMilliseconds + _spList[index].Picture.Delay.TotalMilliseconds);
             if (_bdnXmlSubtitle != null)
                 return (long)_bdnXmlSubtitle.Paragraphs[index].EndTime.TotalMilliseconds;
             else if (_bluRaySubtitlesOriginal != null)
@@ -794,7 +817,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         private int GetSubtitleCount()
         {
-            if (_bdnXmlSubtitle != null)
+            if (_spList != null)
+                return _spList.Count;
+            else if (_bdnXmlSubtitle != null)
                 return _bdnXmlSubtitle.Paragraphs.Count;
             else if (_bluRaySubtitlesOriginal != null)
                 return _bluRaySubtitles.Count;
@@ -1565,7 +1590,20 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void FormVobSubOcr_Shown(object sender, EventArgs e)
         {
-            if (_bdnXmlOriginal != null)
+            if (_spList != null)
+            {
+                checkBoxShowOnlyForced.Visible = false;
+                checkBoxUseTimeCodesFromIdx.Visible = false;
+
+                buttonOK.Enabled = true;
+                buttonCancel.Enabled = true;
+                buttonStartOcr.Enabled = true;
+                buttonStop.Enabled = false;
+                buttonNewCharacterDatabase.Enabled = true;
+                buttonEditCharacterDatabase.Enabled = true;
+                buttonStartOcr.Focus();            
+            }
+            else if (_bdnXmlOriginal != null)
             {
                 LoadBdnXml();
                 bool hasForcedSubtitles = false;
@@ -2845,5 +2883,51 @@ namespace Nikse.SubtitleEdit.Forms
             SubtitleListView1SelectedIndexChanged(null, null);
         }
 
+
+        internal void Initialize(string fileName, List<Color> palette, VobSubOcrSettings vobSubOcrSettings, List<SpHeader> spList)
+        {
+            _spList = spList;
+            _useNewSubIdxCode = false;
+            buttonOK.Enabled = false;
+            buttonCancel.Enabled = false;
+            buttonStartOcr.Enabled = false;
+            buttonStop.Enabled = false;
+            buttonNewCharacterDatabase.Enabled = false;
+            buttonEditCharacterDatabase.Enabled = false;
+            labelStatus.Text = string.Empty;
+            progressBar1.Visible = false;
+            progressBar1.Maximum = 100;
+            progressBar1.Value = 0;
+            numericUpDownPixelsIsSpace.Value = vobSubOcrSettings.XOrMorePixelsMakesSpace;
+            _vobSubOcrSettings = vobSubOcrSettings;
+
+            InitializeModi();
+            InitializeTesseract();
+            LoadImageCompareCharacterDatabaseList();
+
+            _palette = palette;
+
+            if (_palette == null)
+                checkBoxCustomFourColors.Checked = true;
+
+
+            if (Configuration.Settings.VobSubOcr.LastOcrMethod == "BitmapCompare" && comboBoxOcrMethod.Items.Count > 1)
+                comboBoxOcrMethod.SelectedIndex = 1;
+            else if (Configuration.Settings.VobSubOcr.LastOcrMethod == "MODI" && comboBoxOcrMethod.Items.Count > 2)
+                comboBoxOcrMethod.SelectedIndex = 2;
+            else
+                comboBoxOcrMethod.SelectedIndex = 0;
+
+            FileName = fileName;
+            Text += " - " + Path.GetFileName(FileName);
+
+            foreach (SpHeader header in _spList)
+            {
+                Paragraph p = new Paragraph(string.Empty, header.StartTime.TotalMilliseconds, header.StartTime.TotalMilliseconds + header.Picture.Delay.TotalMilliseconds);
+                _subtitle.Paragraphs.Add(p);
+            }
+            subtitleListView1.Fill(_subtitle);
+            subtitleListView1.SelectIndexAndEnsureVisible(0);
+        }
     }
 }
