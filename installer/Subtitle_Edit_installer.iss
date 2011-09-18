@@ -26,7 +26,7 @@
   #error Update your Inno Setup version
 #endif
 
-#define installer_build_number "18"
+#define installer_build_number "19"
 
 #define app_copyright "Copyright © 2001-2011, Nikse"
 #define VerMajor
@@ -203,9 +203,9 @@ Source: ..\Dictionaries\ru_RU_names_etc.xml;       DestDir: {userappdata}\Subtit
 Source: ..\Dictionaries\ru_RU_user.xml;            DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion onlyifdoesntexist uninsneveruninstall; Components: main
 Source: ..\Dictionaries\rus_OCRFixReplaceList.xml; DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion onlyifdoesntexist uninsneveruninstall; Components: main
 Source: ..\Dictionaries\swe_OCRFixReplaceList.xml; DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion onlyifdoesntexist uninsneveruninstall; Components: main
-Source: ..\Tesseract\tessdata\eng.traineddata;     DestDir: {app}\Tesseract\tessdata;                 Flags: ignoreversion onlyifdoesntexist uninsneveruninstall; Components: main
-Source: ..\Tesseract\leptonlib.dll;                DestDir: {app}\Tesseract;                          Flags: ignoreversion onlyifdoesntexist uninsneveruninstall; Components: main
-Source: ..\Tesseract\tesseract.exe;                DestDir: {app}\Tesseract;                          Flags: ignoreversion onlyifdoesntexist uninsneveruninstall; Components: main
+Source: ..\Tesseract\tessdata\eng.traineddata;     DestDir: {app}\Tesseract\tessdata;                 Flags: ignoreversion onlyifdoesntexist;                     Components: main
+Source: ..\Tesseract\leptonlib.dll;                DestDir: {app}\Tesseract;                          Flags: ignoreversion onlyifdoesntexist;                     Components: main
+Source: ..\Tesseract\tesseract.exe;                DestDir: {app}\Tesseract;                          Flags: ignoreversion onlyifdoesntexist;                     Components: main
 
 
 [Icons]
