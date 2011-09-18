@@ -240,21 +240,21 @@ nl.types_default=Default installation
 
 
 ; Polish
-pl.comp_translations=Translations
-pl.msg_AppIsRunning=Subtitle Edit is running! Please close it before proceeding.
-pl.msg_AskToDownNET=Subtitle Edit requires the .NET Framework 2.0. Please download and install the .NET Framework and run setup again.%n%nDo you want to download the .NET Framework 2.0 now?
-pl.msg_DeleteSettings=Do you also want to delete Subtitle Edit's settings and any custom changes you made in the dictionaries?%n%nIf you plan on reinstalling Subtitle Edit you do not have to delete them.
-pl.msg_OptimizingPerformance=Optimizing performance...
-pl.msg_SetupIsRunningWarning=Subtitle Edit Setup is already running!
-pl.run_VisitWebsite=Visit Subtitle Edit's Website
-pl.sm_com_Changelog=Subtitle Edit's Changelog
-pl.tsk_AllUsers=For all users
-pl.tsk_CurrentUser=For the current user only
-pl.tsk_Other=Other:
-pl.tsk_ResetDictionaries=Reset Dictionaries and delete any custom names
-pl.tsk_ResetSettings=Reset Subtitle Edit's settings
-pl.types_custom=Custom installation
-pl.types_default=Default installation
+pl.comp_translations=Tłumaczenie
+pl.msg_AppIsRunning=Subtitle Edit jest uruchomiony! Proszę go zamknąć, aby kontynuować.
+pl.msg_AskToDownNET=Subtitle Edit wymaga do poprawnej pracy .NET Framework 2.0. Pobierz i zainstaluj the .NET Framework i uruchom ponownie instalator.%n%nChcesz teraz pobrać .NET Framework 2.0?
+pl.msg_DeleteSettings=Czy chcesz także usunąć ustawienia Subtitle Edit oraz wszelkie niestandardowe zmiany wprowadzone w słownikach?%n%nJeśli planujesz ponowną instalację Subtitle Edit, nie musisz ich usuwać.
+pl.msg_OptimizingPerformance=Optymalizowanie wydajności...
+pl.msg_SetupIsRunningWarning=Instalator Subtitle Edit już jest uruchomiony!
+pl.run_VisitWebsite=Odwiedź stronę Subtitle Edit
+pl.sm_com_Changelog=Lista zmian w Subtitle Edit
+pl.tsk_AllUsers=Dla wszystkich użytkowników
+pl.tsk_CurrentUser=Tylko dla bieżącego użytkownika
+pl.tsk_Other=Inne:
+pl.tsk_ResetDictionaries=Resetuj słowniki i usuń wszelkie niestandardowe nazwy
+pl.tsk_ResetSettings=Resetuj ustawienia Subtitle Edit
+pl.types_custom=Instalacja użytkownika
+pl.types_default=Instalacja domyślna
 
 
 ; Romanian
