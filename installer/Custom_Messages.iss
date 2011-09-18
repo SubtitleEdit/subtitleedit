@@ -277,7 +277,7 @@ ro.types_default=Default installation
 
 ; Russian
 ru.comp_translations=Файлы локализации программы
-ru.msg_AppIsRunning=Обнаружена работающая программа "Subtitle Edit"!%n%nПожалуйста, закройте её перед началом установки.
+ru.msg_AppIsRunning=Обнаружена работающая программа "Subtitle Edit"! Пожалуйста, закройте её перед началом установки.
 ru.msg_AskToDownNET=Для работы "Subtitle Edit" требуется установленный .NET Framework 2.0.  Пожалуйста, загрузите и установите .NET Framework, а затем повторите инсталляцию.%n%nВыполнить загрузку .NET Framework 2.0 сейчас?
 ru.msg_DeleteSettings=Следует ли также удалить ваши настройки программы и пользовательские словари?%n%nЕсли вы будете обновлять программу, то не удаляйте ваши настройки и словари.
 ru.msg_OptimizingPerformance=Оптимизация производительности...
