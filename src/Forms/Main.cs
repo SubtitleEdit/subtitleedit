@@ -5458,8 +5458,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void MatroskaProgress(long position, long total)
         {
             ShowStatus(string.Format("{0}, {1:0}%", _language.ParsingMatroskaFile, position * 100 / total));
-            System.Threading.Thread.Sleep(100);
-            statusStrip1.Refresh();
+            Application.DoEvents();
         }
 
         private void LoadMatroskaSubtitle(MatroskaSubtitleInfo matroskaSubtitleInfo, string fileName)
