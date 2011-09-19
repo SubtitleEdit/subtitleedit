@@ -42,6 +42,8 @@ namespace Nikse.SubtitleEdit.Logic
     public class Matroska
     {
 
+        public delegate void LoadMatroskaCallback(long position, long total);
+
         [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Explicit, Pack = 2)]
         private struct ByteLayout16
         {
@@ -1208,7 +1210,7 @@ namespace Nikse.SubtitleEdit.Logic
             return _subtitleList;
         }
 
-        public List<SubtitleSequence> GetMatroskaSubtitle(string fileName, int trackNumber, out bool isValid)
+        public List<SubtitleSequence> GetMatroskaSubtitle(string fileName, int trackNumber, out bool isValid, Matroska.LoadMatroskaCallback callback)
         {
             byte b;
             bool done;
@@ -1273,7 +1275,8 @@ namespace Nikse.SubtitleEdit.Logic
                             f.Seek(dataSize, SeekOrigin.Current);
                         }
                     }
-
+                    if (callback != null)
+                        callback.Invoke(f.Position, f.Length);
                     endOfFile = f.Position >= f.Length;
                 }
             }
