@@ -16,6 +16,7 @@ using Nikse.SubtitleEdit.Logic.VobSub;
 
 namespace Nikse.SubtitleEdit.Forms
 {
+
     public sealed partial class Main : Form
     {
 
@@ -5454,6 +5455,13 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
+        private void MatroskaProgress(long position, long total)
+        {
+            ShowStatus(string.Format("{0}, {1:0}%", _language.ParsingMatroskaFile, position * 100 / total));
+            System.Threading.Thread.Sleep(100);
+            statusStrip1.Refresh();
+        }
+
         private void LoadMatroskaSubtitle(MatroskaSubtitleInfo matroskaSubtitleInfo, string fileName)
         {
             bool isValid;
@@ -5489,7 +5497,7 @@ namespace Nikse.SubtitleEdit.Forms
             ShowStatus(_language.ParsingMatroskaFile);
             Refresh();
             Cursor.Current = Cursors.WaitCursor;
-            List<SubtitleSequence> sub = matroska.GetMatroskaSubtitle(fileName, (int)matroskaSubtitleInfo.TrackNumber, out isValid);
+            List<SubtitleSequence> sub = matroska.GetMatroskaSubtitle(fileName, (int)matroskaSubtitleInfo.TrackNumber, out isValid, MatroskaProgress);
             Cursor.Current = Cursors.Default;
             if (isValid)
             {
@@ -5587,7 +5595,7 @@ namespace Nikse.SubtitleEdit.Forms
             ShowStatus(_language.ParsingMatroskaFile);
             Refresh();
             Cursor.Current = Cursors.WaitCursor;
-            List<SubtitleSequence> sub = matroska.GetMatroskaSubtitle(fileName, (int)matroskaSubtitleInfo.TrackNumber, out isValid);
+            List<SubtitleSequence> sub = matroska.GetMatroskaSubtitle(fileName, (int)matroskaSubtitleInfo.TrackNumber, out isValid, MatroskaProgress);
             Cursor.Current = Cursors.Default;
 
             if (isValid)
@@ -5671,7 +5679,7 @@ namespace Nikse.SubtitleEdit.Forms
             ShowStatus(_language.ParsingMatroskaFile);
             Refresh();
             Cursor.Current = Cursors.WaitCursor;
-            List<SubtitleSequence> sub = matroska.GetMatroskaSubtitle(fileName, (int)matroskaSubtitleInfo.TrackNumber, out isValid);
+            List<SubtitleSequence> sub = matroska.GetMatroskaSubtitle(fileName, (int)matroskaSubtitleInfo.TrackNumber, out isValid, MatroskaProgress);
             Cursor.Current = Cursors.Default;
             int noOfErrors = 0;
             string lastError = string.Empty;
