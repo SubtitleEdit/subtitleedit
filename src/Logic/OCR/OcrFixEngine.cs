@@ -88,7 +88,7 @@ namespace Nikse.SubtitleEdit.Logic.OCR
                 doc.Load(_replaceListXmlFileName);
 
                 _wordReplaceList = LoadReplaceList(doc, "WholeWords");
-                _partialWordReplaceList = LoadReplaceList(doc, "PartialWordsAlways");
+                _partialWordReplaceListAlways = LoadReplaceList(doc, "PartialWordsAlways");
                 _partialWordReplaceList = LoadReplaceList(doc, "PartialWords");
                 _partialLineReplaceList = LoadReplaceList(doc, "PartialLines");
                 _beginLineReplaceList = LoadReplaceList(doc, "BeginLines");
@@ -767,7 +767,7 @@ namespace Nikse.SubtitleEdit.Logic.OCR
             }
 
             int idx = input.IndexOf(Environment.NewLine + "-");
-            if (idx > 0 && Utilities.GetLetters(true, false, false).Contains(input[idx+Environment.NewLine.Length+1].ToString()))
+            if (idx > 0 && idx + Environment.NewLine.Length + 1 < input.Length && Utilities.GetLetters(true, false, false).Contains(input[idx + Environment.NewLine.Length + 1].ToString()))
             {
                 input = input.Insert(idx + Environment.NewLine.Length + 1, " ");
             }
@@ -1186,12 +1186,14 @@ namespace Nikse.SubtitleEdit.Logic.OCR
                     {
                         bool startOk = i == 0;
                         if (!startOk)
-                            startOk = (" ¡¿<>-\"”“[]'‘`´¶()♪¿¡.…—!?,:;/" + Environment.NewLine).Contains(text.Substring(i - 1, 1));
+                            startOk = (" ¡¿<>-\"”“()[]'‘`´¶♪¿¡.…—!?,:;/" + Environment.NewLine).Contains(text.Substring(i - 1, 1));
                         if (startOk)
                         {
                             bool endOK = (i + word.Length == text.Length);
                             if (!endOK)
-                                endOK = (" ¡¿<>-\"”“[]'‘`´¶()♪¿¡.…—!?,:;/" + Environment.NewLine).Contains(text.Substring(i + word.Length, 1));
+                                endOK = (" ¡¿<>-\"”“()[]'‘`´¶♪¿¡.…—!?,:;/" + Environment.NewLine).Contains(text.Substring(i + word.Length, 1));
+                            if (!endOK)
+                                endOK = newWord.EndsWith(" ");
                             if (endOK)
                             {
                                 sb.Append(newWord);
