@@ -91,11 +91,18 @@ namespace Nikse.SubtitleEdit.Logic
             {
                 if (Instance._dataDir == null)
                 {
-                    string appDataPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Subtitle Edit");
-                    if (File.Exists(Path.Combine(BaseDirectory, "unins000.dat")) && Directory.Exists(appDataPath))
-                        Instance._dataDir = appDataPath + Path.DirectorySeparatorChar;
-                    else
+                    if (Utilities.IsRunningOnLinux())
+                    {
                         Instance._dataDir = BaseDirectory;
+                    }
+                    else
+                    {                        
+                        string appDataPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Subtitle Edit");
+                        if (File.Exists(Path.Combine(BaseDirectory, "unins000.dat")) && Directory.Exists(appDataPath))
+                            Instance._dataDir = appDataPath + Path.DirectorySeparatorChar;
+                        else
+                            Instance._dataDir = BaseDirectory;
+                    }
                 }
                 return Instance._dataDir;
             }
