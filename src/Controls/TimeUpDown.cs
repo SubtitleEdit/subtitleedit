@@ -15,6 +15,8 @@ namespace Nikse.SubtitleEdit.Controls
             InitializeComponent();
             numericUpDown1.ValueChanged += NumericUpDownValueChanged;
             numericUpDown1.Value = NumericUpDownValue;
+
+            maskedTextBox1.InsertKeyMode = InsertKeyMode.Overwrite;
         }
 
         void NumericUpDownValueChanged(object sender, EventArgs e)
