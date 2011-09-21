@@ -222,6 +222,8 @@ namespace Nikse.SubtitleEdit.Forms
             Utilities.InitializeSubtitleFont(subtitleListView1);
             subtitleListView1.AutoSizeAllColumns(this);
 
+            Utilities.InitializeSubtitleFont(textBoxCurrentText);
+
             italicToolStripMenuItem.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainListViewItalic);
 
             comboBoxTesseractLanguages.Left = labelTesseractLanguage.Left + labelTesseractLanguage.Width + 3;
