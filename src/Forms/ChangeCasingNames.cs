@@ -80,7 +80,7 @@ namespace Nikse.SubtitleEdit.Forms
                     string textNoTags = Utilities.RemoveHtmlTags(text);
                     if (textNoTags != textNoTags.ToUpper())
                     {
-                        if (item.Checked && text != null && text.ToLower().Contains(name.ToLower()) && name.Length > 2 && name != name.ToLower())
+                        if (item.Checked && text != null && text.ToLower().Contains(name.ToLower()) && name.Length > 1 && name != name.ToLower())
                         {
                             var st = new StripableText(text);
                             st.FixCasing(new List<string> { name }, true, false, false, string.Empty);
@@ -115,9 +115,13 @@ namespace Nikse.SubtitleEdit.Forms
             var namesEtcList = new List<string>();
             // Will contains both one word names and multi names
 
-            string languageCode = Utilities.AutoDetectGoogleLanguage(_subtitle);
+            //string languageCode = Utilities.AutoDetectGoogleLanguage(_subtitle);
+            string languageCode = Utilities.AutoDetectLanguageName("en_US", _subtitle);
+            if (string.IsNullOrEmpty(languageCode))
+                languageCode = "en_US";
+
             Utilities.LoadNamesEtcWordLists(namesEtcList, namesEtcList, languageCode);
-            if (languageCode == "en")
+            if (languageCode.StartsWith("en"))
             {
                 if (namesEtcList.Contains("Black"))
                     namesEtcList.Remove("Black");
@@ -138,7 +142,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 int startIndex = textToLower.IndexOf(name.ToLower());
                 while (startIndex >= 0 && startIndex < text.Length &&
-                       textToLower.Substring(startIndex).Contains(name.ToLower()) && name.Length > 2 && name != name.ToLower())
+                       textToLower.Substring(startIndex).Contains(name.ToLower()) && name.Length > 1 && name != name.ToLower())
                 {
                     bool startOk = (startIndex == 0) || (text[startIndex - 1] == ' ') || (text[startIndex - 1] == '-') ||
                                    (text[startIndex - 1] == '"') || (text[startIndex - 1] == '\'') || (text[startIndex - 1] == '>') ||
@@ -182,7 +186,7 @@ namespace Nikse.SubtitleEdit.Forms
                 string text = item.SubItems[2].Text.Replace(Configuration.Settings.General.ListViewLineSeparatorString, Environment.NewLine);
 
                 string lower = text.ToLower();
-                if (lower.Contains(name.ToLower()) && name.Length > 2 && name != name.ToLower())
+                if (lower.Contains(name.ToLower()) && name.Length > 1 && name != name.ToLower())
                 {
                     int start = lower.IndexOf(name.ToLower());
                     if (start >= 0)
