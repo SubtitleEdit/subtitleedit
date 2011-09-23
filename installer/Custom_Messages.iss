@@ -132,21 +132,21 @@ es.types_default=Default installation
 
 
 ; Basque
-eu.comp_translations=Translations
-eu.msg_AppIsRunning=Subtitle Edit is running! Please close it before proceeding.
-eu.msg_AskToDownNET=Subtitle Edit requires the .NET Framework 2.0. Please download and install the .NET Framework and run setup again.%n%nDo you want to download the .NET Framework 2.0 now?
-eu.msg_DeleteSettings=Do you also want to delete Subtitle Edit's settings and any custom changes you made in the dictionaries?%n%nIf you plan on reinstalling Subtitle Edit you do not have to delete them.
-eu.msg_OptimizingPerformance=Optimizing performance...
-eu.msg_SetupIsRunningWarning=Subtitle Edit Setup is already running!
-eu.run_VisitWebsite=Visit Subtitle Edit's Website
-eu.sm_com_Changelog=Subtitle Edit's Changelog
-eu.tsk_AllUsers=For all users
-eu.tsk_CurrentUser=For the current user only
-eu.tsk_Other=Other:
-eu.tsk_ResetDictionaries=Reset Dictionaries and delete any custom names
-eu.tsk_ResetSettings=Reset Subtitle Edit's settings
-eu.types_custom=Custom installation
-eu.types_default=Default installation
+eu.comp_translations=Itzulpenak
+eu.msg_AppIsRunning=Subtitle Edit lanean dago! Mesedez itxi jarraitu aurretik.
+eu.msg_AskToDownNET=Subtitle Edit-ek beharrezkoa du .NET Framework 2.0. Mesedez jeitsi eta ezarri .NET Framework eta abiarazi berriro ezartzailea.%n%nNahi duzu .NET Framework 2.0 orain jeistea?
+eu.msg_DeleteSettings=Nahi dituzu ere Subtitle Edit-en ezarpenak eta hiztegietan egin dituzun aldaketak ezabatzea?%n%nSubtitle Edit berriro ezartzeko asmoa baduzu ez dituzu ezabatu behar.
+eu.msg_OptimizingPerformance=Egintza hobereneratzen...
+eu.msg_SetupIsRunningWarning=Subtitle Edit Ezartzailea jadanik lanean dago!
+eu.run_VisitWebsite=Ikusi Subtitle Edit Webgunea
+eu.sm_com_Changelog=Subtitle Edit Aldaketa-oharra
+eu.tsk_AllUsers=Erabiltzaile guztientzat
+eu.tsk_CurrentUser=Uneko erabiltzailearentzat bakarrik
+eu.tsk_Other=Besterik:
+eu.tsk_ResetDictionaries=Berrezarri Hiztegiak eta ezabatu norbere izena
+eu.tsk_ResetSettings=Berrezarri Subtitle Edit ezarpenak
+eu.types_custom=Norbere ezarpena
+eu.types_default=Berezko ezarpena
 
 
 ; French
