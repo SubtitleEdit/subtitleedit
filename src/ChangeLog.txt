@@ -4,35 +4,38 @@ Subtitle Edit Changelog
 3.2 (?th September 2011)
  * NEW:
    * Can now display spectrogram (and/or waveform)
-   * Subtitle formats: D-Cinema, Cavena890, Timed Text 1.0, Captionate, Flash xml, YouTube annotations and more
+   * Subtitle formats: D-Cinema, Cavena890, Timed Text 1.0, Captionate, Flash xml,
+     YouTube annotations and more
    * Most important shortcuts in Options -> Settings
    * Export bdn-xml/images + import/ocr bdn-xml/images
    * Added "Point sync via other subtitle" (thx ioannis)
    * Tools -> Make empty translation from current subtitle (thx vmb)
    * Tools -> Show original text in audio/video previews (thx vmb)
-   * Command line conversion between subtitle formats (example: subtitleedit /convert *.srt microdvd - thx Carl)
+   * Command line conversion between subtitle formats
+     (Example: subtitleedit /convert *.srt microdvd - thx Carl)
    * Subtitle preview font size (below video player) is now available in Options -> Settings
    * Edit -> Select all
    * List view context menu: Copy as text to clipboard (you can also use ctrl+c/ctrl+v)
-   * Text box context menu -> Split line at cursor position (thx dr. Jackson)
+   * Text box context menu -> Split line at cursor position (thx DrJackson)
    * Import+ocr of blu-ray sup files inside matroska files
    * Now remembers undocked controls pos/size
-   * New customizable shortcut for Adjust mode: Set current subtitle end time at video pos, keep duration, and go to next sub (Shift+End, thx Bavo)
+   * New customizable shortcut for Adjust mode: Set current subtitle end time at video pos,
+     keep duration, and go to next sub (Shift+End, thx Bavo)
  * IMPROVED:
    * OCR unknown words highlighting now works better (thx sialivi)
-   * OCR image compare UI improved with "Edit last char" and much more (thx Zoltán)
+   * OCR image compare UI improved with "Edit last char" and much more (thx Zoltan)
    * OCR image compare: Compare more effective + word breaking improved
    * Merge short lines can now also merge lines ending with ".", "?", or "!" (optional)
    * Can now read Adobe Encore files starting with line numbers (thx Pier)
-   * Advanced Sub Station Alpha (and SSA) now keep original styles (thx Rebecca)
+   * Advanced Sub Station Alpha (and SSA) now keeps original styles (thx Rebecca)
    * Improved Remove text for HI (thx sialivi/aMvEL)
    * Undo now also works for original subtitle (thx Trottel)
  * FIXED:
    * Adjust all times did not work for MicroDvd (thx Wolf)
-   * Fixed a bug in VobSub parser which could cause scrabled images
+   * Fixed a bug in VobSub parser which could cause scrabbled images
    * Fixed a bug in VobSub parser so it no longer ignores custom background color
    * Fixed too much cropping for VobSub pictures
-   * Now removes empty unicode white spaces from Google translate
+   * Now removes empty Unicode white spaces from Google translate
    * Crash when entering invalid text in source view (thx Frédéric)
    * Fixed a few bugs in DVD Architect format + added another two new variants (thx Jacob)
    * Fixed incorrect line-break in Microsoft Translate in last part of sub (thx Jacob)
@@ -42,21 +45,22 @@ Subtitle Edit Changelog
 3.1 (3rd March 2011)
  * NEW:
    * Collaboration via the internet ("Networking", also has chat)
-   * Auto-backup (never, every minute, every 5th minute, or every 15th minute - thx swedelandster)
-   * Video player/controls/wave form can now be un-docked (e.g. for ppl for multiple monitors)
+   * Auto-backup (never, every minute, every 5th minute or every 15th minute - thx swedelandster)
+   * Video player/controls/wave form can now be un-docked (e.g. for people with multiple monitors)
    * Spell check via Word (Options -> Settings:General -> Spell checker)
-   * Edit original subtitle (Options -> Settings:General:Allow edit of original subtitle - thx for testing Luis)
-   * Wave form control can adjust play rate (slow, normal, fast, and very fast - vlc player only)
+   * Edit original subtitle
+     (Options -> Settings:General:Allow edit of original subtitle - thx Luis for testing)
+   * Wave form control can adjust play rate (slow, normal, fast and very fast - VLC player only)
    * Ability to remember the last selected line when re-opening subtitles (thx Frederic)
    * Now remembers video file and original subtitle (thx Luis)
-   * Support for the subtitle format "Quicktime text" (two variations) + Scenarist + Adobe Encore
+   * Support for the subtitle format "QuickTime text" (two variations) + Scenarist + Adobe Encore
    * Added "Chars/sec" info to textbox in main window (thx Kerensky)
    * Options to choose font color and background color (for list view/text-boxes)
    * Can now import VobSub subtitles embedded in Matroska (.mkv) files
      (thx mosu for mkv info + thx hawk for testing)
    * Wave form position can be locked at center via new 'Center' button (thx Krystian)
    * Can insert (a whole) subtitle after a line in the list view via context menu
-   * Auto-suggest line splitting with button while typing (thx Dr. Jackson)
+   * Auto-suggest line splitting with button while typing (thx DrJackson)
    * Auto-wrap text while typing (option, thx swedelandster)
    * Video menu will now have a "Choose audio track" if more than one audio track exists
      (only when using VLC as video player)
@@ -69,20 +73,21 @@ Subtitle Edit Changelog
    * Synchronization Show earlier/later changed a bit, also added a shortcut (Ctrl+Shift+A)
    * Added a few buttons to 'Multiple replace' which is now re-sizable (thx sialivi)
    * Moved video controls below subtitle preview (which now displays italic)
-   * Fix common ocr errors improved (thx aMvEL, sialivi, Alberto)
-   * Remove text for HI can now also remove interjections (thx Dr. Jackson)
+   * Fix common OCR errors improved (thx aMvEL, sialivi, Alberto)
+   * Remove text for HI can now also remove interjections (thx DrJackson)
    * Start/display time changes are now undo-able (thx Luis)
-   * Subtitle preview on video player now more precise (thx hawk) + uses font from Settings + bold (thx Leszek)
+   * Subtitle preview on video player is more precise now (thx hawk), uses the font from Settings
+     and bold (thx Leszek)
    * "Point sync" can now also sync using only one sync point (thx tttoan)
    * VLC media player - mouse click now toggles play/pause
  * FIXED:
-   * Wave form: Fixed unprecise (out of sync) wave form data for some sample rates
+   * Wave form: Fixed imprecise (out of sync) wave form data for some sample rates
    * Fixed crash with wave form track bar (thx Christian)
    * A minor bug in initialization of waveform (thx Frederic)
    * Fixed several bugs regarding 'large fonts' / higher dpi (thx Radbert)
    * Fixed memory leak in VobSub SubPicture class (thx Almogzt)
-   * Fixed a bug that froze vlc after playing to end of video
-   * Missing line break in Sony Dvd Architect w line numbers (thx Rosa)
+   * Fixed a bug that froze VLC after playing to end of video
+   * Missing line break in Sony DVD Architect w line numbers (thx Rosa)
    * A minor bug in Visual Sync, if end scene was after video length (thx tsieberg)
    * OCR Fix Engine: Lines after "..." will no longer be changed to start with uppercase
    * Fixed bug in reading of SSA files (',' was removed) - thx Péter
@@ -94,7 +99,7 @@ Subtitle Edit Changelog
  * NEW:
    * Wave form control with many sync/replay/creation commands
      (thx Kerensky for the feedback)
-   * Translator mode  (Edit -> Show original subtitle, thx dr.jackson)
+   * Translator mode  (Edit -> Show original subtitle, thx DrJackson)
    * Added Microsoft translate
    * Option to remove blank lines when opening a subtitle (thx honeybunny)
    * Can now read subtitles in the binary EBU format (thx corbin dallas/Iban)
@@ -105,13 +110,13 @@ Subtitle Edit Changelog
    * Layout changed - Translation helper + Create/adjust lines moved to main window
    * Ripping subtitles from DVD should now have correct time codes
      (thx JeanlDvd/DvdSubEdit +  gioni666)
-   * Ripping subtitles from DVD/Vobsub files now has a an option to only OCR
+   * Ripping subtitles from DVD/VobSub files now has a an option to only OCR
      "forced subtitles" (thx Rolf)
-   * Ripping subtitles from Vobsub files now has an option to use time codes
+   * Ripping subtitles from VobSub files now has an option to use time codes
      from idx file (now default)
    * Updated Tesseract 2.x to 3.0
    * Can now retrieve and install spell check dictionaries from the internet
-     (thx dr.jackson for the idea, Jaime Olivares for zip unpack code & Pierre for testing)
+     (thx DrJackson for the idea, Jaime Olivares for zip unpack code & Pierre for testing)
    * "Compare subtitle" color high-lighting is now more like other compare programs
    * Fix common errors - Fix alone lowercase 'i' to 'I' now works better close to
      html tags (thx Chamallow)
