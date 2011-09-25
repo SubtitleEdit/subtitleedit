@@ -78,21 +78,21 @@ cs.types_default=Default installation
 
 
 ; Deutsch
-de.comp_translations=Translations
-de.msg_AppIsRunning=Subtitle Edit läuft! Bitte schließen das Programm, bevor Sie fortfahren.
+de.comp_translations=Übersetzungen
+de.msg_AppIsRunning=Subtitle Edit läuft bereits! Bitte schließen das Programm, bevor Sie fortfahren.
 de.msg_AskToDownNET=Subtitle Edit benötigt .NET Framework 2.0 oder höher. Bitte laden und installieren Sie .NET Framework und starten Sie die Installation erneut.%n%nMöchten Sie .NET Framework jetzt herunterladen?
 de.msg_DeleteSettings=Möchten Sie ihre Einstellungen und Verzeichnisänderungen ebenfalls löschen?%n%nWenn Sie Subtitle Edit erneut installieren möchten, können Sie Ihre Einstellungen behalten.
-de.msg_OptimizingPerformance=Optimizing performance...
+de.msg_OptimizingPerformance=Leistungsoptimierung...
 de.msg_SetupIsRunningWarning=Subtitle Edit Setup läuft bereits!
 de.run_VisitWebsite=Besuchen Sie die Subtitle Edit Webseite
-de.sm_com_Changelog=Subtitle Edit's Changelog
+de.sm_com_Changelog=Änderungsliste von Subtitle Edit
 de.tsk_AllUsers=Für alle Benutzer
 de.tsk_CurrentUser=Nur für mich
 de.tsk_Other=Andere:
 de.tsk_ResetDictionaries=Wörterbücher zurücksetzen und sonstige Namen löschen
 de.tsk_ResetSettings=Subtitle Edit Einstellungen zurücksetzen
-de.types_custom=Custom installation
-de.types_default=Default installation
+de.types_custom=Benutzerdefinierte Installation
+de.types_default=Standardinstallation
 
 
 ; Danish
@@ -240,21 +240,21 @@ nl.types_default=Default installation
 
 
 ; Polish
-pl.comp_translations=Tłumaczenie
-pl.msg_AppIsRunning=Subtitle Edit jest uruchomiony! Proszę go zamknąć, aby kontynuować.
-pl.msg_AskToDownNET=Subtitle Edit wymaga do poprawnej pracy .NET Framework 2.0. Pobierz i zainstaluj the .NET Framework i uruchom ponownie instalator.%n%nChcesz teraz pobrać .NET Framework 2.0?
-pl.msg_DeleteSettings=Czy chcesz także usunąć ustawienia Subtitle Edit oraz wszelkie niestandardowe zmiany wprowadzone w słownikach?%n%nJeśli planujesz ponowną instalację Subtitle Edit, nie musisz ich usuwać.
-pl.msg_OptimizingPerformance=Optymalizowanie wydajności...
-pl.msg_SetupIsRunningWarning=Instalator Subtitle Edit już jest uruchomiony!
+pl.comp_translations=Tłumaczenia
+pl.msg_AppIsRunning=Subtitle Edit jest już uruchomiony! Proszę zamknij go przed kontynuowaniem.
+pl.msg_AskToDownNET=Subtitle Edit wymaga .NET Framework 2.0. Proszę pobrać i zainstalować .NET Framework i ponownie uruchomić instalację.%n%nCzy chcesz teraz pobrać .NET Framework 2.0?
+pl.msg_DeleteSettings=Czy chcesz także usunąć ustawienia Subtitle Edit oraz wszelkie dokonane zmiany w katalogach?%n%nJeśli planujesz ponowne zainstalować Subtitle Edit, nie usuwaj ich.
+pl.msg_OptimizingPerformance=Optymalizacja wydajności...
+pl.msg_SetupIsRunningWarning=Subtitle Edit jest już uruchomiony!
 pl.run_VisitWebsite=Odwiedź stronę Subtitle Edit
-pl.sm_com_Changelog=Lista zmian w Subtitle Edit
+pl.sm_com_Changelog=Lista zmian Subtitle Edit
 pl.tsk_AllUsers=Dla wszystkich użytkowników
-pl.tsk_CurrentUser=Tylko dla bieżącego użytkownika
+pl.tsk_CurrentUser=Dla bieżącego użytkownika
 pl.tsk_Other=Inne:
-pl.tsk_ResetDictionaries=Resetuj słowniki i usuń wszelkie niestandardowe nazwy
-pl.tsk_ResetSettings=Resetuj ustawienia Subtitle Edit
-pl.types_custom=Instalacja użytkownika
-pl.types_default=Instalacja domyślna
+pl.tsk_ResetDictionaries=Zresetuj Słowniki i usuń wszystkie własne nazwy
+pl.tsk_ResetSettings=Usuń ustawienia Subtitle Edit
+pl.types_custom=Instalacja niestandardowa
+pl.types_default=Domyślna instalacja
 
 
 ; Romanian
