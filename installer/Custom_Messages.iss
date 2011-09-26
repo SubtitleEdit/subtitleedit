@@ -81,7 +81,7 @@ cs.types_default=Default installation
 de.comp_translations=Übersetzungen
 de.msg_AppIsRunning=Subtitle Edit läuft bereits! Bitte schließen das Programm, bevor Sie fortfahren.
 de.msg_AskToDownNET=Subtitle Edit benötigt .NET Framework 2.0 oder höher. Bitte laden und installieren Sie .NET Framework und starten Sie die Installation erneut.%n%nMöchten Sie .NET Framework jetzt herunterladen?
-de.msg_DeleteSettings=Möchten Sie ihre Einstellungen und Verzeichnisänderungen ebenfalls löschen?%n%nWenn Sie Subtitle Edit erneut installieren möchten, können Sie Ihre Einstellungen behalten.
+de.msg_DeleteSettings=Möchten Sie ihre Einstellungen und die benutzerdefinierten Wörterbücher ebenfalls löschen?%n%nWenn Sie Subtitle Edit erneut installieren möchten, können Sie Ihre Einstellungen behalten.
 de.msg_OptimizingPerformance=Leistungsoptimierung...
 de.msg_SetupIsRunningWarning=Subtitle Edit Setup läuft bereits!
 de.run_VisitWebsite=Besuchen Sie die Subtitle Edit Webseite
@@ -241,20 +241,20 @@ nl.types_default=Default installation
 
 ; Polish
 pl.comp_translations=Tłumaczenia
-pl.msg_AppIsRunning=Subtitle Edit jest już uruchomiony! Proszę zamknij go przed kontynuowaniem.
-pl.msg_AskToDownNET=Subtitle Edit wymaga .NET Framework 2.0. Proszę pobrać i zainstalować .NET Framework i ponownie uruchomić instalację.%n%nCzy chcesz teraz pobrać .NET Framework 2.0?
-pl.msg_DeleteSettings=Czy chcesz także usunąć ustawienia Subtitle Edit oraz wszelkie dokonane zmiany w katalogach?%n%nJeśli planujesz ponowne zainstalować Subtitle Edit, nie usuwaj ich.
-pl.msg_OptimizingPerformance=Optymalizacja wydajności...
-pl.msg_SetupIsRunningWarning=Subtitle Edit jest już uruchomiony!
+pl.msg_AppIsRunning=Subtitle Edit jest uruchomiony! Proszę go zamknąć, aby kontynuować.
+pl.msg_AskToDownNET=Subtitle Edit wymaga do poprawnej pracy .NET Framework 2.0. Pobierz i zainstaluj .NET Framework i uruchom ponownie instalator.%n%nCzy chcesz teraz pobrać .NET Framework 2.0?
+pl.msg_DeleteSettings=Czy chcesz także usunąć ustawienia Subtitle Edit oraz wszelkie niestandardowe zmiany wprowadzone w słownikach?%n%nJeśli planujesz ponowną instalację Subtitle Edit, nie musisz ich usuwać.
+pl.msg_OptimizingPerformance=Optymalizowanie wydajności...
+pl.msg_SetupIsRunningWarning=Instalator Subtitle Edit już jest uruchomiony!
 pl.run_VisitWebsite=Odwiedź stronę Subtitle Edit
-pl.sm_com_Changelog=Lista zmian Subtitle Edit
+pl.sm_com_Changelog=Lista zmian w Subtitle Edit
 pl.tsk_AllUsers=Dla wszystkich użytkowników
-pl.tsk_CurrentUser=Dla bieżącego użytkownika
+pl.tsk_CurrentUser=Tylko dla bieżącego użytkownika
 pl.tsk_Other=Inne:
-pl.tsk_ResetDictionaries=Zresetuj Słowniki i usuń wszystkie własne nazwy
-pl.tsk_ResetSettings=Usuń ustawienia Subtitle Edit
-pl.types_custom=Instalacja niestandardowa
-pl.types_default=Domyślna instalacja
+pl.tsk_ResetDictionaries=Resetuj słowniki i usuń wszelkie niestandardowe nazwy
+pl.tsk_ResetSettings=Resetuj ustawienia Subtitle Edit
+pl.types_custom=Instalacja użytkownika
+pl.types_default=Instalacja domyślna
 
 
 ; Romanian
@@ -295,11 +295,11 @@ ru.types_default=Обычная установка
 
 ; Serbian Cyrillic
 srC.comp_translations=Преводи
-srC.msg_AppIsRunning=Програм је покренут. Затворите га пре него што наставите.
-srC.msg_AskToDownNET=Subtitle Edit requires the .NET Framework 2.0. Please download and install the .NET Framework and run setup again.%n%nDo you want to download the .NET Framework 2.0 now?
+srC.msg_AppIsRunning=Програм је покренут! Затворите га пре него што наставите.
+srC.msg_AskToDownNET=Програм захтева .NET радни оквир 2.0. Инсталирајте га и поново покрените инсталацију.%n%nЖелите ли да преузмете захтевани програм сада?
 srC.msg_DeleteSettings=Желите ли да обришете поставке и друге прилагођене измене које сте направили у речницима?%n%nАко планирате да поново инсталирате програм, не морате их брисати.
 srC.msg_OptimizingPerformance=Учитавам…
-srC.msg_SetupIsRunningWarning=Инсталација програма је већ покренута.
+srC.msg_SetupIsRunningWarning=Инсталација програма је већ покренута!
 srC.run_VisitWebsite=Посетите страницу пројекта
 srC.sm_com_Changelog=Дневник измена
 srC.tsk_AllUsers=За све кориснике
@@ -307,17 +307,17 @@ srC.tsk_CurrentUser=Само за текућег корисника
 srC.tsk_Other=Друго:
 srC.tsk_ResetDictionaries=Поништи речнике и обриши прилагођене измене
 srC.tsk_ResetSettings=Поништи поставке програма
-srC.types_custom=Прилагођено
-srC.types_default=Подразумевано
+srC.types_custom=Прилагођена инсталација
+srC.types_default=Подразумевана инсталација
 
 
 ; Serbian Latin
 srL.comp_translations=Prevodi
-srL.msg_AppIsRunning=Program je pokrenut. Zatvorite ga pre nego što nastavite.
-srL.msg_AskToDownNET=Subtitle Edit requires the .NET Framework 2.0. Please download and install the .NET Framework and run setup again.%n%nDo you want to download the .NET Framework 2.0 now?
+srL.msg_AppIsRunning=Program je pokrenut! Zatvorite ga pre nego što nastavite.
+srL.msg_AskToDownNET=Program zahteva .NET radni okvir 2.0. Instalirajte ga i ponovo pokrenite instalaciju.%n%Želite li da preuzmete zahtevani program sada?
 srL.msg_DeleteSettings=Želite li da obrišete postavke i druge prilagođene izmene koje ste napravili u rečnicima?%n%nAko planirate da ponovo instalirate program, ne morate ih brisati.
 srL.msg_OptimizingPerformance=Učitavam…
-srL.msg_SetupIsRunningWarning=Instalacija programa je već pokrenuta.
+srL.msg_SetupIsRunningWarning=Instalacija programa je već pokrenuta!
 srL.run_VisitWebsite=Posetite stranicu projekta
 srL.sm_com_Changelog=Dnevnik izmena
 srL.tsk_AllUsers=Za sve korisnike
@@ -325,8 +325,8 @@ srL.tsk_CurrentUser=Samo za tekućeg korisnika
 srL.tsk_Other=Drugo:
 srL.tsk_ResetDictionaries=Poništi rečnike i obriši prilagođene izmene
 srL.tsk_ResetSettings=Poništi postavke programa
-srL.types_custom=Prilagođeno
-srL.types_default=Podrazumevano
+srL.types_custom=Prilagođena instalacija
+srL.types_default=Podrazumevana instalacija
 
 
 ; Swedish
