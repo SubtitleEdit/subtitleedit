@@ -598,6 +598,7 @@
     <Compile Include="Logic\SubtitleFormats\UnknownSubtitle7.cs" />
     <Compile Include="Logic\SubtitleFormats\DigiBeta.cs" />
     <Compile Include="Logic\SubtitleFormats\UnknownSubtitle8.cs" />
+    <Compile Include="Logic\SubtitleFormats\UnknownSubtitle9.cs" />
     <Compile Include="Logic\SubtitleFormats\UTSubtitleXml.cs" />
     <Compile Include="Logic\SubtitleFormats\Wsb.cs" />
     <Compile Include="Logic\SubtitleFormats\YouTubeAnnotations.cs" />
