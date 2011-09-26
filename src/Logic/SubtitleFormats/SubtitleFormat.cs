@@ -69,6 +69,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     new UnknownSubtitle6(),
                     new UnknownSubtitle7(),
                     new UnknownSubtitle8(),
+                    new UnknownSubtitle9(),
                     new UTSubtitleXml(),
                     new YouTubeAnnotations(),
                     new YouTubeSbv(),

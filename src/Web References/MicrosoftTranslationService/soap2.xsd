@@ -156,6 +156,8 @@
         <xs:element minOccurs="0" name="text" nillable="true" type="xs:string" />
         <xs:element minOccurs="0" name="from" nillable="true" type="xs:string" />
         <xs:element minOccurs="0" name="to" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="contentType" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="category" nillable="true" type="xs:string" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>

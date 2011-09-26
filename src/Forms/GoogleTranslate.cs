@@ -794,7 +794,7 @@ namespace Nikse.SubtitleEdit.Forms
                     string text = string.Format("<p>{0}</p>|", p.Text);
                     if ((HttpUtility.UrlEncode(sb.ToString() + text)).Length >= textMaxSize)
                     {
-                        FillTranslatedText(client.Translate(BingApiId, sb.ToString().Replace(Environment.NewLine, "<br />"), from, to), start, index - 1);
+                        FillTranslatedText(client.Translate(BingApiId, sb.ToString().Replace(Environment.NewLine, "<br />"), from, to, "text/plain", "general"), start, index - 1);
 
                         sb = new StringBuilder();
                         progressBar1.Refresh();
@@ -808,7 +808,7 @@ namespace Nikse.SubtitleEdit.Forms
                         break;
                 }
                 if (sb.Length > 0)
-                    FillTranslatedText(client.Translate(BingApiId, sb.ToString().Replace(Environment.NewLine, "<br />"), from, to), start, index - 1);
+                    FillTranslatedText(client.Translate(BingApiId, sb.ToString().Replace(Environment.NewLine, "<br />"), from, to, "text/plain", "general"), start, index - 1);
             }
             finally
             {
