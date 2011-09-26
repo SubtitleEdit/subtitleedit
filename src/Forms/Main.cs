@@ -5458,7 +5458,9 @@ namespace Nikse.SubtitleEdit.Forms
         private void MatroskaProgress(long position, long total)
         {
             ShowStatus(string.Format("{0}, {1:0}%", _language.ParsingMatroskaFile, position * 100 / total));
-            Application.DoEvents();
+            statusStrip1.Refresh();
+            if (DateTime.Now.Ticks % 10 == 0)
+                Application.DoEvents();
         }
 
         private void LoadMatroskaSubtitle(MatroskaSubtitleInfo matroskaSubtitleInfo, string fileName)
@@ -10406,9 +10408,10 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void closeVideoToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            mediaPlayer.VideoPlayer.DisposeVideoPlayer();
-            mediaPlayer.VideoPlayer = null;
             timer1.Stop();
+            if (mediaPlayer != null && mediaPlayer.VideoPlayer != null)
+                mediaPlayer.VideoPlayer.DisposeVideoPlayer();
+            mediaPlayer.VideoPlayer = null;
             _videoFileName = null;
             _videoAudioTrackNumber = -1;
             labelVideoInfo.Text = Configuration.Settings.Language.General.NoVideoLoaded;
