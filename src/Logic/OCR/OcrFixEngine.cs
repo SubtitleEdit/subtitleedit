@@ -513,7 +513,11 @@ namespace Nikse.SubtitleEdit.Logic.OCR
                 word.Contains("6") ||
                 word.Contains("7") ||
                 word.Contains("8") ||
-                word.Contains("9"))
+                word.Contains("9") ||
+                word.EndsWith("a.m") ||
+                word.EndsWith("p.m") ||
+                word.EndsWith("am") ||
+                word.EndsWith("pm"))
                 return word;
 
             if (hexNumber.IsMatch(word))
