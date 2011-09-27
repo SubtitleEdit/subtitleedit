@@ -348,8 +348,8 @@ namespace Nikse.SubtitleEdit.Logic
 
         public VideoControlsSettings()
         {
-            CustomSearchText = "MS Encarta Thesaurus";
-            CustomSearchUrl = "http://encarta.msn.com/encnet/features/dictionary/DictionaryResults.aspx?lextype=2&search={0}";
+            CustomSearchText = "The Free Dictionary";
+            CustomSearchUrl = "http://www.thefreedictionary.com/{0}";
             LastActiveTab = "Translate";
             WaveFormDrawGrid = true;
             WaveFormGridColor = Color.FromArgb(255, 20, 20, 18);

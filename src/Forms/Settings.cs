@@ -1532,12 +1532,10 @@ namespace Nikse.SubtitleEdit.Forms
             if (comboBoxCustomSearch.SelectedIndex >= 0)
             {
                 if (comboBoxCustomSearch.SelectedIndex == 0)
-                    textBoxCustomSearchUrl.Text = "http://encarta.msn.com/encnet/features/dictionary/DictionaryResults.aspx?lextype=2&search={0}";
+                    textBoxCustomSearchUrl.Text = "http://www.thefreedictionary.com/{0}";
                 else if (comboBoxCustomSearch.SelectedIndex == 1)
                     textBoxCustomSearchUrl.Text = "http://dictionary.reference.com/browse/{0}";
                 else if (comboBoxCustomSearch.SelectedIndex == 2)
-                    textBoxCustomSearchUrl.Text = "http://www.thefreedictionary.com/{0}";
-                else if (comboBoxCustomSearch.SelectedIndex == 3)
                     textBoxCustomSearchUrl.Text = "http://www.visuwords.com/?word={0}";                
             }
         }
