@@ -980,9 +980,11 @@
     </Content>
     <Content Include="Languages\sr-Cyrl-RS.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </Content>
     <Content Include="Languages\sr-Latn-RS.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </Content>
     <Content Include="Languages\sv-SE.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

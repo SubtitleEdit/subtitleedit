@@ -119,8 +119,24 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         private double GetMillisecondsFromTimeCode(string time)
         {
-            string[] arr = time.Split(":;".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-            return new TimeSpan(0, int.Parse(arr[0]), int.Parse(arr[1]), int.Parse(arr[2]), int.Parse(arr[3])).TotalMilliseconds;
+            string[] parts = time.Split(":;".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+           
+            string hour = parts[0];
+            string minutes = parts[1];
+            string seconds = parts[2];
+            string frames = parts[3];
+
+            int milliseconds = (int)((1000.0 / Configuration.Settings.General.CurrentFrameRate) * int.Parse(frames));
+            if (milliseconds > 999)
+                milliseconds = 999;
+
+            return new TimeCode(int.Parse(hour), int.Parse(minutes), int.Parse(seconds), milliseconds).TotalMilliseconds;
+        }
+
+        private static string ConvertToTimeString(TimeCode time)
+        {
+            int frames = (int)(time.Milliseconds / (1000.0 / Configuration.Settings.General.CurrentFrameRate));
+            return string.Format("{0:00}:{1:00}:{2:00}:{3:00}", time.Hours, time.Minutes, time.Seconds, frames);
         }
 
     }
