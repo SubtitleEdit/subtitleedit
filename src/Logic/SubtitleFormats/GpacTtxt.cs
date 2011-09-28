@@ -1,0 +1,148 @@
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Text;
+using System.Xml;
+
+namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
+{
+    class GpacTtxt : SubtitleFormat
+    {
+
+        public override string Extension
+        {
+            get { return ".ttxt"; }
+        }
+
+        public override string Name
+        {
+            get { return "GPAC TTXT"; }
+        }
+
+        public override bool HasLineNumber
+        {
+            get { return false; }
+        }
+
+        public override bool IsTimeBased
+        {
+            get { return true; }
+        }
+
+        public override bool IsMine(List<string> lines, string fileName)
+        {
+            var subtitle = new Subtitle();
+            LoadSubtitle(subtitle, lines, fileName);
+            return subtitle.Paragraphs.Count > 0;
+        }
+
+        public override string ToText(Subtitle subtitle, string title)
+        {
+            string xmlStructure =
+                "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + Environment.NewLine +
+                "<!-- GPAC 3GPP Text Stream -->" + Environment.NewLine +
+                "<TextStream version=\"1.1\">" + Environment.NewLine +
+                "  <TextStreamHeader translation_y=\"0\" translation_x=\"0\" layer=\"0\" height=\"60\" width=\"400\">" + Environment.NewLine +
+                "    <TextSampleDescription scroll=\"None\" continuousKaraoke=\"no\" fillTextRegion=\"no\" verticalText=\"no\" backColor=\"0 0 0 0\" verticalJustification=\"bottom\" horizontalJustification=\"center\">" + Environment.NewLine +
+                "      <FontTable>" + Environment.NewLine +
+                "        <FontTableEntry fontID=\"1\" fontName=\"Serif\"/>" + Environment.NewLine +
+                "      </FontTable>" + Environment.NewLine +
+                "      <TextBox right=\"400\" bottom=\"60\" left=\"0\" top=\"0\"/>" + Environment.NewLine +
+                "      <Style fontID=\"1\" color=\"ff ff ff ff\" fontSize=\"18\" styles=\"Normal\"/>" + Environment.NewLine +
+                "    </TextSampleDescription>" + Environment.NewLine +
+                "  </TextStreamHeader>" + Environment.NewLine +
+                "</TextStream>";
+
+            var xml = new XmlDocument();
+            xml.LoadXml(xmlStructure);
+
+            foreach (Paragraph p in subtitle.Paragraphs)
+            {
+                XmlNode textSample = xml.CreateElement("TextSample");
+                
+                XmlAttribute preserveSpace = xml.CreateAttribute("xml:space");
+                preserveSpace.Value = "preserve";
+                textSample.Attributes.Append(preserveSpace);
+
+                XmlAttribute sampleTime = xml.CreateAttribute("sampleTime");
+                sampleTime.Value = p.StartTime.ToString().Replace(",", ".");
+                textSample.Attributes.Append(sampleTime);
+
+                textSample.InnerText = p.Text;
+
+                xml.DocumentElement.AppendChild(textSample);
+
+                textSample = xml.CreateElement("TextSample");
+                preserveSpace = xml.CreateAttribute("xml:space");
+                preserveSpace.Value = "preserve";
+                textSample.Attributes.Append(preserveSpace);
+                sampleTime = xml.CreateAttribute("sampleTime");
+                sampleTime.Value = p.EndTime.ToString().Replace(",", ".");
+                textSample.Attributes.Append(sampleTime);
+                xml.DocumentElement.AppendChild(textSample);
+            }
+
+            var ms = new MemoryStream();
+            var writer = new XmlTextWriter(ms, Encoding.UTF8) {Formatting = Formatting.Indented};
+            xml.Save(writer);
+            string xmlAsText = Encoding.UTF8.GetString(ms.ToArray()).Trim();
+            return xmlAsText;
+        }
+
+        public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
+        {
+            _errorCount = 0;
+            Paragraph last = null;
+            var sb = new StringBuilder();
+            lines.ForEach(line => sb.AppendLine(line));
+
+            if (!sb.ToString().Contains("<TextStream"))
+                return;
+
+            var xml = new XmlDocument();
+            try
+            {
+                xml.LoadXml(sb.ToString());
+
+                foreach (XmlNode node in xml.DocumentElement.SelectNodes("TextSample"))
+                {
+                    if (last != null)
+                        last.EndTime = GetTimeCode(node.Attributes["sampleTime"].Value);
+
+                    var p = new Paragraph();
+                    p.Text = node.InnerText;
+                    p.StartTime = GetTimeCode(node.Attributes["sampleTime"].Value);
+                    if (string.IsNullOrEmpty(p.Text))
+                    {
+                        var text = node.Attributes["text"];
+                        if (text != null)
+                            p.Text = text.Value;
+                    }
+                    if (!string.IsNullOrEmpty(p.Text))
+                    {
+                        subtitle.Paragraphs.Add(p);
+                        last = p;
+                    }
+                }
+                subtitle.Renumber(1);
+            }
+            catch
+            {
+                _errorCount = 1;
+                return;
+            }
+        }
+
+        private static TimeCode GetTimeCode(string timeString)
+        {
+            string[] timeParts = timeString.Split(":.".ToCharArray());
+            return new TimeCode(int.Parse(timeParts[0]), int.Parse(timeParts[1]), int.Parse(timeParts[2]), int.Parse(timeParts[3]));
+        }
+
+    }
+}
+
+
+
+
+
