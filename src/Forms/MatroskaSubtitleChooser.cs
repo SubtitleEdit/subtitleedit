@@ -39,7 +39,7 @@ namespace Nikse.SubtitleEdit.Forms
         }
 
         public void Initialize(List<MatroskaSubtitleInfo> subtitleInfoList)
-        { 
+        {
             foreach (MatroskaSubtitleInfo info in subtitleInfoList)
             {
                 string s = string.Format(Configuration.Settings.Language.MatroskaSubtitleChooser.TrackXLanguageYTypeZ, info.TrackNumber, info.Name, info.Language, info.CodecId);
@@ -47,6 +47,19 @@ namespace Nikse.SubtitleEdit.Forms
             }
             listBox1.SelectedIndex = 0;
         }
+
+        internal void Initialize(List<Logic.Mp4.Boxes.Trak> mp4SubtitleTracks)
+        {
+            int i = 0;
+            foreach (var track in mp4SubtitleTracks)
+            {
+                i++;
+                string s = string.Format("{0}: {1}", i, track.Mdia.Mdhd.LanguageString); 
+                listBox1.Items.Add(s);
+            }
+            listBox1.SelectedIndex = 0;
+        }
+
 
         private void FormMatroskaSubtitleChooser_KeyDown(object sender, KeyEventArgs e)
         {
@@ -58,5 +71,6 @@ namespace Nikse.SubtitleEdit.Forms
         {
             DialogResult = DialogResult.OK;
         }
+
     }
 }
