@@ -1440,6 +1440,14 @@ namespace Nikse.SubtitleEdit.Forms
                     //return;
                 }
 
+                if ((Path.GetExtension(fileName).ToLower() == ".mp4" ||
+                    Path.GetExtension(fileName).ToLower() == ".m4v")
+                    && fi.Length > 10000)
+                {
+                    if (ImportSubtitleFromMp4(fileName))
+                        return;
+                }
+
                 if (fi.Length > 1024 * 1024 * 10) // max 10 mb
                 {
                     if (MessageBox.Show(string.Format(_language.FileXIsLargerThan10Mb + Environment.NewLine +
@@ -5787,6 +5795,73 @@ namespace Nikse.SubtitleEdit.Forms
             //if (vobSubOcr.ShowDialog(this) == DialogResult.OK)
             //{
             //}
+        }
+
+        private bool ImportSubtitleFromMp4(string fileName)
+        {
+            Nikse.SubtitleEdit.Logic.Mp4.Mp4Parser mp4Parser = new Logic.Mp4.Mp4Parser(fileName);
+            var mp4SubtitleTracks = mp4Parser.GetSubtitleTracks();
+            if (mp4SubtitleTracks.Count == 00)
+            {
+                return false;
+            }
+            else if (mp4SubtitleTracks.Count == 1)
+            {
+                LoadMp4Subtitle(fileName, mp4SubtitleTracks[0]);
+                return true;
+            }
+            else
+            {
+                MatroskaSubtitleChooser subtitleChooser = new MatroskaSubtitleChooser();
+                subtitleChooser.Initialize(mp4SubtitleTracks);
+                if (subtitleChooser.ShowDialog(this) == DialogResult.OK)
+                {
+                    LoadMp4Subtitle(fileName, mp4SubtitleTracks[subtitleChooser.SelectedIndex]);
+                    return true;
+                }
+                return false;
+            }
+        }
+
+        private void LoadMp4Subtitle(string fileName, Logic.Mp4.Boxes.Trak mp4SubtitleTrack)
+        {
+            MakeHistoryForUndo(_language.BeforeImportFromMatroskaFile);
+            _subtitleListViewIndex = -1;
+            FileNew();
+            _subtitle.Paragraphs.Clear();
+
+            for (int i = 0; i < mp4SubtitleTrack.Mdia.Minf.Stbl.EndTimeCodes.Count; i++)
+            {
+                if (mp4SubtitleTrack.Mdia.Minf.Stbl.Texts.Count > i)
+                {
+                    var start = TimeSpan.FromSeconds(mp4SubtitleTrack.Mdia.Minf.Stbl.StartTimeCodes[i]);
+                    var end = TimeSpan.FromSeconds(mp4SubtitleTrack.Mdia.Minf.Stbl.EndTimeCodes[i]);
+                    string text = mp4SubtitleTrack.Mdia.Minf.Stbl.Texts[i];
+                    _subtitle.Paragraphs.Add(new Paragraph(text, start.TotalMilliseconds, end.TotalMilliseconds));
+                }
+            }
+
+            comboBoxEncoding.Text = "UTF-8";
+            ShowStatus(_language.SubtitleImportedFromMatroskaFile);
+            _subtitle.Renumber(1);
+            _subtitle.WasLoadedWithFrameNumbers = false;
+            if (fileName.ToLower().EndsWith(".mp4") || fileName.ToLower().EndsWith(".m4v"))
+            {
+                _fileName = fileName.Substring(0, fileName.Length - 4);
+                Text = Title + " - " + _fileName;
+            }
+            else
+            {
+                Text = Title;
+            }
+            _fileDateTime = new DateTime();
+
+            _converted = true;
+
+            SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
+            if (_subtitle.Paragraphs.Count > 0)
+                SubtitleListview1.SelectIndexAndEnsureVisible(0);
+            ShowSource();
         }
 
         private void SubtitleListview1_DragEnter(object sender, DragEventArgs e)
