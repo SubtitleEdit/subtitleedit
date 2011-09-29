@@ -4429,17 +4429,35 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
+        private string RemoveSsaStyle(string text)
+        {
+            int indexOfBegin = text.IndexOf("{");
+            while (indexOfBegin >= 0 && text.IndexOf("}") > indexOfBegin)
+            {
+                int indexOfEnd = text.IndexOf("}");
+                text = text.Remove(indexOfBegin, (indexOfEnd - indexOfBegin) + 1);
+                indexOfBegin = text.IndexOf("{");
+            }
+            return text;
+        }
+
         private void NormalToolStripMenuItemClick(object sender, EventArgs e)
         {
             if (_subtitle.Paragraphs.Count > 0 && SubtitleListview1.SelectedItems.Count > 0)
             {
                 MakeHistoryForUndo(_language.BeforeSettingFontToNormal);
+
+                bool isSsa = GetCurrentSubtitleFormat().FriendlyName == new SubStationAlpha().FriendlyName ||
+                             GetCurrentSubtitleFormat().FriendlyName == new AdvancedSubStationAlpha().FriendlyName;
+
                 foreach (ListViewItem item in SubtitleListview1.SelectedItems)
                 {
                     Paragraph p = _subtitle.GetParagraphOrDefault(item.Index);
                     if (p != null)
                     {
                         p.Text = Utilities.RemoveHtmlTags(p.Text);
+                        if (isSsa)
+                            p.Text = RemoveSsaStyle(p.Text);
                         SubtitleListview1.SetText(item.Index, p.Text);
 
                         if (_subtitleAlternate != null)
@@ -4448,6 +4466,8 @@ namespace Nikse.SubtitleEdit.Forms
                             if (original != null)
                             {
                                 original.Text = Utilities.RemoveHtmlTags(original.Text);
+                                if (isSsa)
+                                    original.Text = RemoveSsaStyle(original.Text);
                                 SubtitleListview1.SetAlternateText(item.Index, original.Text);
                                 _changeAlternate = true;
                             }
