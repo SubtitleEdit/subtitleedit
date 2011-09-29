@@ -246,7 +246,13 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
             foreach (string line in lines)
             {
                 if (!eventsStarted && !fontsStarted)
-                    header.AppendLine(line);                
+                    header.AppendLine(line);
+
+                if (line.Trim().ToLower().StartsWith("dialogue:")) // fix faulty font tags...
+                { 
+                    eventsStarted = true;
+                    fontsStarted = false;
+                }
 
                 if (line.Trim().ToLower() == "[events]")
                 {
