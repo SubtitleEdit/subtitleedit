@@ -9,22 +9,21 @@ namespace Nikse.SubtitleEdit.Logic.Mp4.Boxes
         public Mvhd Mvhd { get; private set; }
         public List<Trak> Tracks { get; private set; }
 
-        public Moov(FileStream fs, long maximumLength)
+        public Moov(FileStream fs, ulong maximumLength)
         {
             Tracks = new List<Trak>();
 
             var buffer = new byte[8];
-            long pos = fs.Position;
-            while (fs.Position < maximumLength)
+            ulong pos = (ulong) fs.Position;
+            while (fs.Position < (long)maximumLength)
             {
-                fs.Seek(pos, SeekOrigin.Begin);
-                int bytesRead = fs.Read(buffer, 0, 8);
-                if (bytesRead < buffer.Length)
+                int bytesRead;
+                fs.Seek((long)pos, SeekOrigin.Begin);
+                ulong size = Helper.ReadSize(buffer, out bytesRead, fs);
+                if (bytesRead < 8)
                     return;
-                var size = Helper.GetUInt(buffer, 0);
                 string name = Helper.GetString(buffer, 4, 4);
-
-                pos = fs.Position + size - 8;
+                pos = ((ulong)(fs.Position)) + size - 8;
                 if (name == "trak")
                 {
                     Tracks.Add(new Trak(fs, pos));

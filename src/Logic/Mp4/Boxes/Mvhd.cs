@@ -8,7 +8,7 @@ namespace Nikse.SubtitleEdit.Logic.Mp4.Boxes
     public class Mvhd
     {
 
-        public Mvhd(FileStream fs, long maximumLength)
+        public Mvhd(FileStream fs, ulong maximumLength)
         {
             var buffer = new byte[8];
             long pos = fs.Position;            

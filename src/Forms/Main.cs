@@ -1441,7 +1441,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
 
                 if ((Path.GetExtension(fileName).ToLower() == ".mp4" ||
-                    Path.GetExtension(fileName).ToLower() == ".m4v")
+                     Path.GetExtension(fileName).ToLower() == ".m4v")
                     && fi.Length > 10000)
                 {
                     if (ImportSubtitleFromMp4(fileName))

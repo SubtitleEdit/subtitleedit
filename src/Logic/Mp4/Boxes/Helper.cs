@@ -28,5 +28,22 @@ namespace Nikse.SubtitleEdit.Logic.Mp4.Boxes
             return Encoding.UTF8.GetString(buffer, index, count);
         }
 
+
+        internal static ulong ReadSize(byte[] buffer, out int bytesRead, System.IO.FileStream fs)
+        {
+            bytesRead = fs.Read(buffer, 0, 8);
+            UInt64 size = Helper.GetUInt(buffer, 0);
+            if (size == 0)
+            {
+                return (UInt64) (fs.Length - fs.Position);
+            }
+            else if (size == 1)
+            {
+                byte[] size64Buffer = new byte[8];
+                fs.Read(size64Buffer, 0, 8);
+                size = Helper.GetUInt64(size64Buffer, 0);
+            }
+            return size;
+        }
     }
 }

@@ -54,7 +54,7 @@ namespace Nikse.SubtitleEdit.Forms
             foreach (var track in mp4SubtitleTracks)
             {
                 i++;
-                string s = string.Format("{0}: {1}", i, track.Mdia.Mdhd.LanguageString); 
+                string s = string.Format("{0}: {1} - {2}", i, track.Mdia.Mdhd.Iso639ThreeLetterCode, track.Mdia.Mdhd.LanguageString); 
                 listBox1.Items.Add(s);
             }
             listBox1.SelectedIndex = 0;
@@ -68,6 +68,11 @@ namespace Nikse.SubtitleEdit.Forms
         }
 
         private void ButtonOkClick(object sender, EventArgs e)
+        {
+            DialogResult = DialogResult.OK;
+        }
+
+        private void listBox1_MouseDoubleClick(object sender, MouseEventArgs e)
         {
             DialogResult = DialogResult.OK;
         }
