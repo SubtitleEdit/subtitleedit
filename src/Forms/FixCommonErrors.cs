@@ -2254,7 +2254,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 if (text.EndsWith("-</i>"))
                 {
-                    text = text.Replace("-</i>", "...");
+                    text = text.Replace("-</i>", "...</i>");
                     text = text.Replace(" ...", "...");
                 }
 
