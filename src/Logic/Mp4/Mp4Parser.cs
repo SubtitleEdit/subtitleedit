@@ -2,20 +2,14 @@
 using System.IO;
 using Nikse.SubtitleEdit.Logic.Mp4.Boxes;
 using System;
-using System.Text;
 
 namespace Nikse.SubtitleEdit.Logic.Mp4
 {
-
     /// <summary>
     /// http://wiki.multimedia.cx/index.php?title=QuickTime_container
     /// </summary>
     public class Mp4Parser
-    {
-
-        
-
-
+    {      
         public string FileName { get; private set; }
         public Moov Moov { get; private set; }
 
@@ -53,15 +47,14 @@ namespace Nikse.SubtitleEdit.Logic.Mp4
         {
             int count = 0;
             var buffer = new byte[8];
-            long pos = 0;
+            ulong pos = 0;
             int bytesRead = 8;
             while (bytesRead == 8)
             {
-                fs.Seek(pos, SeekOrigin.Begin);
-                bytesRead = fs.Read(buffer, 0, 8);
-                var size = Helper.GetUInt(buffer, 0);
+                fs.Seek((long)pos, SeekOrigin.Begin);
+                ulong size = Helper.ReadSize(buffer, out bytesRead, fs);
                 string name = Helper.GetString(buffer, 4, 4);
-                pos = fs.Position + size - 8;
+                pos = ((ulong) (fs.Position)) + size - 8;
                 if (name == "moov")
                 {
                     Moov = new Moov(fs, pos);                 

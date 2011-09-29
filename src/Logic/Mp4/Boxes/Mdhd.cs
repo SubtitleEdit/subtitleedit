@@ -13,7 +13,7 @@ namespace Nikse.SubtitleEdit.Logic.Mp4.Boxes
         public readonly string Iso639ThreeLetterCode;
         public readonly int Quality;
 
-        public Mdhd(FileStream fs, uint size)
+        public Mdhd(FileStream fs, ulong size)
         {
             byte[] b = new byte[size - 4];
             fs.Read(b, 0, b.Length);
