@@ -1,17 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.IO;
+﻿using System.IO;
 
 namespace Nikse.SubtitleEdit.Logic.Mp4.Boxes
 {
-    public class Mvhd
+    public class Mvhd : Box
     {
+
+        public readonly uint Duration;
+        public readonly uint TimeScale;
 
         public Mvhd(FileStream fs, ulong maximumLength)
         {
-            var buffer = new byte[8];
-            long pos = fs.Position;            
+            buffer = new byte[20];
+            int bytesRead = fs.Read(buffer, 0, buffer.Length);
+            if (bytesRead < buffer.Length)
+                return;
+
+            uint TimeScale = GetUInt(12);
+            uint Duration = GetUInt(16);
         }
 
     }
