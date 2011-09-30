@@ -39,6 +39,9 @@ namespace Nikse.SubtitleEdit.Logic.Mp4
             }
         }
 
+        /// <summary>
+        /// Resolution of first video track. If not present returns 0.0
+        /// </summary>
         public System.Drawing.Point VideoResolution
         {
             get

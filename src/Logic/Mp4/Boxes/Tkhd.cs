@@ -7,29 +7,39 @@ namespace Nikse.SubtitleEdit.Logic.Mp4.Boxes
 {
     public class Tkhd : Box
     {
-
+        public readonly uint TrackId;
+        public readonly ulong Duration;
         public readonly uint Width;
         public readonly uint Height;
 
         public Tkhd(FileStream fs, ulong maximumLength)
         {
-            buffer = new byte[38];
+            buffer = new byte[84];
             int bytesRead = fs.Read(buffer, 0, buffer.Length);
             if (bytesRead < buffer.Length)
                 return;
 
-            //System.Windows.Forms.MessageBox.Show(Helper.GetUInt(buffer, 04).ToString());
-            //System.Windows.Forms.MessageBox.Show(Helper.GetUInt(buffer, 06).ToString());
-            //System.Windows.Forms.MessageBox.Show(Helper.GetUInt(buffer, 08).ToString());
-            //System.Windows.Forms.MessageBox.Show(Helper.GetUInt(buffer, 10).ToString());
-            //System.Windows.Forms.MessageBox.Show(Helper.GetUInt(buffer, 12).ToString());
-            //System.Windows.Forms.MessageBox.Show(Helper.GetUInt(buffer, 14).ToString());
-            //System.Windows.Forms.MessageBox.Show(Helper.GetUInt(buffer, 16).ToString());
-            //System.Windows.Forms.MessageBox.Show(Helper.GetUInt(buffer, 19).ToString());
-            //System.Windows.Forms.MessageBox.Show(Helper.GetUInt(buffer, 20).ToString());
-            //System.Windows.Forms.MessageBox.Show(Helper.GetUInt(buffer, 22).ToString());
-            //System.Windows.Forms.MessageBox.Show(Helper.GetUInt(buffer, 24).ToString());
+            int version = buffer[0];
+            int addToIndex64Bit = 0;
+            if (version == 1)
+                addToIndex64Bit = 8;
 
+            TrackId = GetUInt(12 + addToIndex64Bit);
+            if (version == 1)
+            {
+                Duration = GetUInt64(20 + addToIndex64Bit);
+                addToIndex64Bit += 4;
+            }
+            else
+            {
+                Duration = GetUInt(20 + addToIndex64Bit);
+            }
+
+            Width = (uint)GetWord(76 + addToIndex64Bit); // skip decimals
+            Height = (uint)GetWord(80 + addToIndex64Bit); // skip decimals
+
+            //System.Windows.Forms.MessageBox.Show("Width: " + GetWord(76 + addToIndex64Bit).ToString() + "." + GetWord(78 + addToIndex64Bit).ToString());
+            //System.Windows.Forms.MessageBox.Show("Height: " + GetWord(80 + addToIndex64Bit).ToString() + "." + GetWord(82 + addToIndex64Bit).ToString());
         }
     }
 }
