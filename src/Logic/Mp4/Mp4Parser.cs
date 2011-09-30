@@ -1,14 +1,14 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using Nikse.SubtitleEdit.Logic.Mp4.Boxes;
-using System;
 
 namespace Nikse.SubtitleEdit.Logic.Mp4
 {
     /// <summary>
     /// http://wiki.multimedia.cx/index.php?title=QuickTime_container
     /// </summary>
-    public class Mp4Parser
+    public class Mp4Parser : Box
     {      
         public string FileName { get; private set; }
         public Moov Moov { get; private set; }
@@ -20,13 +20,42 @@ namespace Nikse.SubtitleEdit.Logic.Mp4
             {
                 foreach (var trak in Moov.Tracks)
                 { 
-                    if (trak.Mdia != null && trak.Mdia.HandlerType == "sbtl" && trak.Mdia.Minf != null && trak.Mdia.Minf.Stbl != null)
+                    if (trak.Mdia != null && trak.Mdia.IsSubtitle && trak.Mdia.Minf != null && trak.Mdia.Minf.Stbl != null)
                     {
                         list.Add(trak);
                     }
                 }
             }
             return list;
+        }
+
+        public TimeSpan Duration
+        {
+            get
+            {
+                if (Moov != null && Moov.Mvhd != null && Moov.Mvhd.TimeScale > 0)
+                    return TimeSpan.FromSeconds((double)Moov.Mvhd.Duration / Moov.Mvhd.TimeScale);
+                return new TimeSpan();
+            }
+        }
+
+        public System.Drawing.Point VideoResolution
+        {
+            get
+            {
+                if (Moov != null && Moov.Tracks != null)
+                {
+                    foreach (var trak in Moov.Tracks)
+                    {
+                        if (trak != null && trak.Mdia != null && trak.Tkhd != null)
+                        {
+                            if (trak.Mdia.IsVideo)
+                                return new System.Drawing.Point((int)trak.Tkhd.Width, (int)trak.Tkhd.Height);
+                        }
+                    }
+                } 
+                return new System.Drawing.Point(0, 0);
+            }
         }
 
         public Mp4Parser(string fileName)
@@ -46,14 +75,13 @@ namespace Nikse.SubtitleEdit.Logic.Mp4
         private void ParseMp4(FileStream fs)
         {
             int count = 0;
-            var buffer = new byte[8];
-            ulong pos = 0;
-            int bytesRead = 8;
-            while (bytesRead == 8)
+            buffer = new byte[8];
+            pos = 0;
+            bool moreBytes = true;
+            while (moreBytes)
             {
                 fs.Seek((long)pos, SeekOrigin.Begin);
-                ulong size = Helper.ReadSize(buffer, out bytesRead, fs);
-                string name = Helper.GetString(buffer, 4, 4);
+                moreBytes = InitializeSizeAndName(fs);
                 pos = ((ulong) (fs.Position)) + size - 8;
                 if (name == "moov")
                 {

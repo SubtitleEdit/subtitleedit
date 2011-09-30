@@ -3,7 +3,7 @@ using System.IO;
 
 namespace Nikse.SubtitleEdit.Logic.Mp4.Boxes
 {
-    public class Mdhd
+    public class Mdhd : Box
     {
 
         public readonly UInt64 CreationTime;
@@ -15,32 +15,32 @@ namespace Nikse.SubtitleEdit.Logic.Mp4.Boxes
 
         public Mdhd(FileStream fs, ulong size)
         {
-            byte[] b = new byte[size - 4];
-            fs.Read(b, 0, b.Length);
+            buffer = new byte[size - 4];
+            fs.Read(buffer, 0, buffer.Length);
             int languageIndex = 20;
-            int version = b[0];
+            int version = buffer[0];
             if (version == 0)
             {
-                CreationTime = Helper.GetUInt(b, 4);
-                ModificationTime = Helper.GetUInt(b, 8);
-                TimeScale = Helper.GetUInt(b, 12);
-                Duration = Helper.GetUInt(b, 16);
-                Quality = Helper.GetWord(b, 22);
+                CreationTime = GetUInt(4);
+                ModificationTime = GetUInt(8);
+                TimeScale = GetUInt(12);
+                Duration = GetUInt(16);
+                Quality = GetWord(22);
             }
             else
             {
-                CreationTime = Helper.GetUInt64(b, 4);
-                ModificationTime = Helper.GetUInt64(b, 12);
-                TimeScale = Helper.GetUInt(b, 16);
-                Duration = Helper.GetUInt64(b, 20);
+                CreationTime = GetUInt64(4);
+                ModificationTime = GetUInt64(12);
+                TimeScale = GetUInt(16);
+                Duration = GetUInt64(20);
                 languageIndex = 24;
-                Quality = Helper.GetWord(b, 26);
+                Quality = GetWord(26);
             }
 
             // language code = skip first byte, 5 bytes + 5 bytes + 5 bytes (add 0x60 to get ascii value)
-            int languageByte = ((b[languageIndex] << 1) >> 3) + 0x60;
-            int languageByte2 = ((b[languageIndex] & 0x3) << 3) + (b[languageIndex+1] >> 5) + 0x60;
-            int languageByte3 = (b[languageIndex+1] & 0x1f) + 0x60;
+            int languageByte = ((buffer[languageIndex] << 1) >> 3) + 0x60;
+            int languageByte2 = ((buffer[languageIndex] & 0x3) << 3) + (buffer[languageIndex + 1] >> 5) + 0x60;
+            int languageByte3 = (buffer[languageIndex + 1] & 0x1f) + 0x60;
             char x = (char)languageByte;
             char x2 = (char)languageByte2;
             char x3 = (char)languageByte3;
