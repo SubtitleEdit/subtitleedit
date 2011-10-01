@@ -290,7 +290,7 @@ Type: files;      Name: {app}\Settings.xml
 [Run]
 Filename: {win}\Microsoft.NET\Framework\v2.0.50727\ngen.exe; Parameters: "install ""{app}\SubtitleEdit.exe"""; StatusMsg: {cm:msg_OptimizingPerformance}; Flags: runhidden runascurrentuser skipifdoesntexist
 Filename: {app}\SubtitleEdit.exe;  Description: {cm:LaunchProgram,Subtitle Edit}; WorkingDir: {app}; Flags: nowait postinstall skipifsilent unchecked
-Filename: http://www.nikse.dk/SubtitleEdit/; Description: {cm:run_VisitWebsite};                               Flags: nowait postinstall skipifsilent shellexec unchecked
+Filename: http://www.nikse.dk/SubtitleEdit/; Description: {cm:run_VisitWebsite};                     Flags: nowait postinstall skipifsilent shellexec unchecked
 
 
 [UninstallRun]
@@ -431,15 +431,14 @@ var
   ErrorCode: Integer;
 begin
   // Create a mutex for the installer and if it's already running then expose a message and stop installation
-  if CheckForMutexes(installer_mutex_name) then begin
-    if NOT WizardSilent() then
+  if CheckForMutexes(installer_mutex_name) AND NOT WizardSilent() then begin
       MsgBox(ExpandConstant('{cm:msg_SetupIsRunningWarning}'), mbError, MB_OK);
     exit;
   end;
 
   CreateMutex(installer_mutex_name);
 
-  if IsModuleLoaded( 'SubtitleEdit.exe' ) then begin
+  if IsModuleLoaded('SubtitleEdit.exe') then begin
     MsgBox(ExpandConstant('{cm:msg_AppIsRunning}'), mbError, MB_OK );
     Result := False;
     Abort;
@@ -471,21 +470,19 @@ end;
 function InitializeUninstall(): Boolean;
 begin
   // Check if app is running during uninstallation
-  if IsModuleLoadedU( 'SubtitleEdit.exe' ) then begin
+  if IsModuleLoadedU('SubtitleEdit.exe') then begin
     MsgBox(ExpandConstant('{cm:msg_AppIsRunning}'), mbError, MB_OK );
     Result := False;
   end else
     Result := True;
 
-  if NOT IsModuleLoadedU( 'SubtitleEdit.exe' ) then begin
-    if CheckForMutexes(installer_mutex_name) then begin
-      MsgBox(ExpandConstant('{cm:msg_SetupIsRunningWarning}'), mbError, MB_OK);
-      Result := False;
-    end
-    else begin
-      CreateMutex(installer_mutex_name);
-      Result := True;
-    end;
+  if NOT IsModuleLoadedU('SubtitleEdit.exe') AND CheckForMutexes(installer_mutex_name) then begin
+    MsgBox(ExpandConstant('{cm:msg_SetupIsRunningWarning}'), mbError, MB_OK);
+    Result := False;
+  end
+  else begin
+    CreateMutex(installer_mutex_name);
+    Result := True;
   end;
 
   // Unload the psvince.dll in order to be uninstalled
