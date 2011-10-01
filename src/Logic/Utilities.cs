@@ -34,6 +34,10 @@ namespace Nikse.SubtitleEdit.Logic
             if (info.Success)
                 return info;
 
+            info = TryReadVideoInfoViaMp4(fileName);
+            if (info.Success)
+                return info;          
+
             return new VideoInfo { VideoCodec = "Unknown" };
         }
 
@@ -96,6 +100,28 @@ namespace Nikse.SubtitleEdit.Logic
                     info.TotalFrames = dh.TotalFrames;
                     info.TotalMilliseconds = dh.TotalMilliseconds;
                     info.VideoCodec = dh.VideoHandler;
+                    info.Success = true;
+                }
+            }
+            catch
+            {
+            }
+            return info;
+        }
+
+        private static VideoInfo TryReadVideoInfoViaMp4(string fileName)
+        {
+            var info = new VideoInfo { Success = false };
+
+            try
+            {
+                var mp4Parser = new Mp4.Mp4Parser(fileName);
+                if (mp4Parser.Moov != null && mp4Parser.VideoResolution.X > 0)
+                {
+                    info.Width = mp4Parser.VideoResolution.X;
+                    info.Height = mp4Parser.VideoResolution.Y;
+                    info.TotalMilliseconds = mp4Parser.Duration.TotalSeconds;
+                    info.VideoCodec = "MP4";
                     info.Success = true;
                 }
             }

@@ -15,8 +15,8 @@ namespace Nikse.SubtitleEdit.Logic.Mp4.Boxes
             if (bytesRead < buffer.Length)
                 return;
 
-            uint TimeScale = GetUInt(12);
-            uint Duration = GetUInt(16);
+            TimeScale = GetUInt(12);
+            Duration = GetUInt(16);
         }
 
     }

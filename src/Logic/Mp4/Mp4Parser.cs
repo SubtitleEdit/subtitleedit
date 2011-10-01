@@ -85,6 +85,8 @@ namespace Nikse.SubtitleEdit.Logic.Mp4
             {
                 fs.Seek((long)pos, SeekOrigin.Begin);
                 moreBytes = InitializeSizeAndName(fs);
+                if (size < 8)
+                    return;
                 pos = ((ulong) (fs.Position)) + size - 8;
                 if (name == "moov")
                 {
