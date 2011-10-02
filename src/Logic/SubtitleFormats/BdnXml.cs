@@ -102,8 +102,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 {
                     string start = node.Attributes["InTC"].InnerText;
                     string end = node.Attributes["OutTC"].InnerText;
-                    string text = node.SelectSingleNode("Graphic").InnerText;
-                    Paragraph p = new Paragraph(text, GetMillisecondsFromTimeCode(start), GetMillisecondsFromTimeCode(end));
+                    StringBuilder textBuilder = new StringBuilder();
+                    foreach (XmlNode graphic in node.SelectNodes("Graphic"))
+                        textBuilder.AppendLine(graphic.InnerText);
+                    Paragraph p = new Paragraph(textBuilder.ToString().Trim(), GetMillisecondsFromTimeCode(start), GetMillisecondsFromTimeCode(end));
                     if (node.Attributes["Forced"] != null && node.Attributes["Forced"].Value.ToLower() == "true")
                         p.Forced = true;
                     subtitle.Paragraphs.Add(p);                    
