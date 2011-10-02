@@ -527,6 +527,7 @@
     <Compile Include="Logic\Fourier.cs" />
     <Compile Include="Logic\IfoParser.cs" />
     <Compile Include="Logic\Language.cs" />
+    <Compile Include="Logic\Mp4\Boxes\Box.cs" />
     <Compile Include="Logic\Mp4\Boxes\Helper.cs" />
     <Compile Include="Logic\Mp4\Boxes\Mdhd.cs" />
     <Compile Include="Logic\Mp4\Boxes\Mdia.cs" />
