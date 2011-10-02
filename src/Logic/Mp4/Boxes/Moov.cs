@@ -14,7 +14,6 @@ namespace Nikse.SubtitleEdit.Logic.Mp4.Boxes
             pos = (ulong) fs.Position;
             while (fs.Position < (long)maximumLength)
             {
-                fs.Seek((long)pos, SeekOrigin.Begin);
                 if (!InitializeSizeAndName(fs))
                     return;
 
@@ -22,6 +21,8 @@ namespace Nikse.SubtitleEdit.Logic.Mp4.Boxes
                     Tracks.Add(new Trak(fs, pos));
                 else if (name == "mvhd")
                     Mvhd = new Mvhd(fs, pos);
+
+                fs.Seek((long)pos, SeekOrigin.Begin);
             }
         }
     }

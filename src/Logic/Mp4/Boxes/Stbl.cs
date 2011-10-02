@@ -16,7 +16,6 @@ namespace Nikse.SubtitleEdit.Logic.Mp4.Boxes
             pos = (ulong)fs.Position;
             while (fs.Position < (long)maximumLength)
             {
-                fs.Seek((long)pos, SeekOrigin.Begin);
                 if (!InitializeSizeAndName(fs))
                     return;
 
@@ -36,11 +35,24 @@ namespace Nikse.SubtitleEdit.Logic.Mp4.Boxes
                             fs.Seek(offset, SeekOrigin.Begin);
                             byte[] data = new byte[150];
                             fs.Read(data, 0, data.Length);
-                            uint textSize = GetUInt(data, 0);
-                            if (textSize < data.Length - 4)
+
+                            uint textSize = (uint)GetWord(data, 0); // don't get it exactly - seems like mp4box sometimes uses 2 bytes length field... handbrake uses 4 bytes
+                            if (textSize > 0)
                             {
-                                string text = GetString(data, 4, (int)textSize - 1);
-                                Texts.Add(text);
+                                if (textSize < data.Length - 2)
+                                {
+                                    string text = GetString(data, 2, (int)textSize);
+                                    Texts.Add(text);
+                                }
+                            }
+                            else
+                            {
+                                textSize = GetUInt(data, 0);
+                                if (textSize > 0 && textSize < data.Length - 4)
+                                {
+                                    string text = GetString(data, 4, (int)textSize).TrimEnd();
+                                    Texts.Add(text);
+                                }
                             }
                         }
                         lastOffset = offset;
@@ -115,6 +127,8 @@ namespace Nikse.SubtitleEdit.Logic.Mp4.Boxes
                         uint sampleDescriptionIndex = GetUInt(16 + i * 12);
                     }
                 }
+
+                fs.Seek((long)pos, SeekOrigin.Begin);
             }
         }
 

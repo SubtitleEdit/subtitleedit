@@ -8,11 +8,11 @@ namespace Nikse.SubtitleEdit.Logic.Mp4.Boxes
         public readonly Mdhd Mdhd;
         public readonly Minf Minf;
         public readonly string HandlerType = null;
+        public readonly string HandlerName = string.Empty;
 
         public bool IsSubtitle
         {
-            get { return HandlerType == "sbtl"; }
-
+            get { return HandlerType == "sbtl" || HandlerType == "text"; }
         }
 
         public bool IsVideo
@@ -31,10 +31,10 @@ namespace Nikse.SubtitleEdit.Logic.Mp4.Boxes
             pos = (ulong)fs.Position;
             while (fs.Position < (long)maximumLength)
             {
-                fs.Seek((long)pos, SeekOrigin.Begin);
                 if (!InitializeSizeAndName(fs))
                     return;
-                if (name == "minf")
+
+                if (name == "minf" && IsSubtitle)
                 {
                     UInt32 timeScale = 90000;
                     if (Mdhd != null)
@@ -46,11 +46,13 @@ namespace Nikse.SubtitleEdit.Logic.Mp4.Boxes
                     buffer = new byte[size - 4];
                     fs.Read(buffer, 0, buffer.Length);
                     HandlerType = GetString(8, 4);
+                 //   HandlerName = GetString(12, buffer.Length - 12); -- //TODO: how to find this??
                 }
                 else if (name == "mdhd")
                 {
                     Mdhd = new Mdhd(fs, size);
                 }
+                fs.Seek((long)pos, SeekOrigin.Begin);
             }
         }
 
