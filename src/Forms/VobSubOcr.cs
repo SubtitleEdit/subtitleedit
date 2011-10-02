@@ -709,10 +709,48 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 if (index >= 0 && index < _bdnXmlSubtitle.Paragraphs.Count)
                 {
-                    string fileName = Path.Combine(Path.GetDirectoryName(_bdnFileName), _bdnXmlSubtitle.Paragraphs[index].Text);
-                    if (File.Exists(fileName))
+                    string[] fileNames = _bdnXmlSubtitle.Paragraphs[index].Text.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                    var bitmaps = new List<Bitmap>();
+                    int maxWidth = 0;
+                    int totalHeight = 0;
+
+                    foreach (string fn in fileNames)
                     {
-                        Bitmap b = new Bitmap(fileName);
+                        string fullFileName = Path.Combine(Path.GetDirectoryName(_bdnFileName), fn);
+                        if (File.Exists(fullFileName))
+                        {
+                            var temp = new Bitmap(fullFileName);
+                            if (temp.Width > maxWidth)
+                                maxWidth = temp.Width;
+                            totalHeight += temp.Height;
+                            bitmaps.Add(temp);
+                        }
+                    }
+
+                    Bitmap b = null;
+                    if (bitmaps.Count > 1)
+                    {
+                        var merged = new Bitmap(maxWidth, totalHeight + 7 * bitmaps.Count);
+                        int y = 0;
+                        for (int k=0; k<bitmaps.Count; k++)
+                        {
+                            Bitmap part = bitmaps[k];
+                            if (checkBoxAutoTransparentBackground.Checked)
+                                part.MakeTransparent();
+                            using (var g = Graphics.FromImage(merged))
+                                g.DrawImage(part, 0, y);
+                            y += part.Height + 7;
+                            part.Dispose();
+                        }
+                        b = merged;
+                    }
+                    else if (bitmaps.Count == 1)
+                    {
+                        b = bitmaps[0];
+                    }
+
+                    if (b != null) 
+                    {
                         if (_isSon && checkBoxCustomFourColors.Checked)
                         {
                             GetCustomColors(out background, out pattern, out emphasis1, out emphasis2);
@@ -2744,7 +2782,7 @@ namespace Nikse.SubtitleEdit.Forms
                 string fileName = openFileDialog1.FileName;
                 if (!File.Exists(fileName))
                     return;
-
+               
                 var fi = new FileInfo(fileName);
                 if (fi.Length > 1024 * 1024 * 10) // max 10 mb
                 {
