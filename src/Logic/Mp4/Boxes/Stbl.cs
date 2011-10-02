@@ -11,7 +11,7 @@ namespace Nikse.SubtitleEdit.Logic.Mp4.Boxes
         public readonly List<double> StartTimeCodes = new List<double>();
         public readonly List<double> EndTimeCodes = new List<double>();
 
-        public Stbl(FileStream fs, ulong maximumLength, UInt32 timeScale)
+        public Stbl(FileStream fs, ulong maximumLength, UInt32 timeScale, string handlerType)
         {
             pos = (ulong)fs.Position;
             while (fs.Position < (long)maximumLength)

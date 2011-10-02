@@ -20,7 +20,7 @@ namespace Nikse.SubtitleEdit.Logic.Mp4
             {
                 foreach (var trak in Moov.Tracks)
                 { 
-                    if (trak.Mdia != null && trak.Mdia.IsSubtitle && trak.Mdia.Minf != null && trak.Mdia.Minf.Stbl != null)
+                    if (trak.Mdia != null && trak.Mdia.IsTextSubtitle && trak.Mdia.Minf != null && trak.Mdia.Minf.Stbl != null)
                     {
                         list.Add(trak);
                     }
@@ -78,23 +78,23 @@ namespace Nikse.SubtitleEdit.Logic.Mp4
         private void ParseMp4(FileStream fs)
         {
             int count = 0;
-            buffer = new byte[8];
             pos = 0;
+            fs.Seek(0, SeekOrigin.Begin);
             bool moreBytes = true;
             while (moreBytes)
             {
-                fs.Seek((long)pos, SeekOrigin.Begin);
                 moreBytes = InitializeSizeAndName(fs);
                 if (size < 8)
                     return;
-                pos = ((ulong) (fs.Position)) + size - 8;
+
                 if (name == "moov")
-                {
                     Moov = new Moov(fs, pos);                 
-                }
+
                 count++;
                 if (count > 100)
                     break;
+
+                fs.Seek((long)pos, SeekOrigin.Begin);
             }
             fs.Close();
         }

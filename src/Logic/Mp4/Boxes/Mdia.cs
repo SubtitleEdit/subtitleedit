@@ -10,15 +10,19 @@ namespace Nikse.SubtitleEdit.Logic.Mp4.Boxes
         public readonly string HandlerType = null;
         public readonly string HandlerName = string.Empty;
 
-        public bool IsSubtitle
+        public bool IsTextSubtitle
         {
             get { return HandlerType == "sbtl" || HandlerType == "text"; }
         }
 
+        public bool IsVobSubSubtitle
+        {
+            get { return HandlerType == "subp"; }
+        }                
+
         public bool IsVideo
         {
             get { return HandlerType == "vide"; }
-
         }
 
         public bool IsAudio
@@ -34,19 +38,20 @@ namespace Nikse.SubtitleEdit.Logic.Mp4.Boxes
                 if (!InitializeSizeAndName(fs))
                     return;
 
-                if (name == "minf" && IsSubtitle)
+                if (name == "minf" && IsTextSubtitle) // || IsVobSubSubtitle)
                 {
                     UInt32 timeScale = 90000;
                     if (Mdhd != null)
                         timeScale = Mdhd.TimeScale;
-                    Minf = new Minf(fs, pos, timeScale);
+                    Minf = new Minf(fs, pos, timeScale, HandlerType);
                 }
                 else if (name == "hdlr")
                 {
                     buffer = new byte[size - 4];
                     fs.Read(buffer, 0, buffer.Length);
                     HandlerType = GetString(8, 4);
-                 //   HandlerName = GetString(12, buffer.Length - 12); -- //TODO: how to find this??
+                    if (size > 25)
+                        HandlerName = GetString(24, buffer.Length - (24 + 5)); // TODO: how to find this?
                 }
                 else if (name == "mdhd")
                 {

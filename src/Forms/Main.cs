@@ -3341,11 +3341,26 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             var subtitleToAppend = new Subtitle();
                             Encoding encoding;
-                            SubtitleFormat format = subtitleToAppend.LoadSubtitle(fileName, out encoding, null);
-                            if (GetCurrentSubtitleFormat().IsFrameBased)
-                                subtitleToAppend.CalculateTimeCodesFromFrameNumbers(CurrentFrameRate);
+                            SubtitleFormat format = null;
+
+                            // do not allow blu-ray/vobsub
+                            string extension = Path.GetExtension(fileName).ToLower();
+                            if (extension == ".sub" && (IsVobSubFile(fileName, false) || IsSpDvdSupFile(fileName)))
+                            { 
+                                format = null;
+                            }
+                            else if (extension == ".sup" && IsBluRaySupFile(fileName))
+                            {
+                                format = null;
+                            }
                             else
-                                subtitleToAppend.CalculateFrameNumbersFromTimeCodes(CurrentFrameRate);
+                            {
+                                format = subtitleToAppend.LoadSubtitle(fileName, out encoding, null);
+                                if (GetCurrentSubtitleFormat().IsFrameBased)
+                                    subtitleToAppend.CalculateTimeCodesFromFrameNumbers(CurrentFrameRate);
+                                else
+                                    subtitleToAppend.CalculateFrameNumbersFromTimeCodes(CurrentFrameRate);
+                            }
 
                             if (format != null)
                             {
@@ -6382,11 +6397,13 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 InsertAfter();
                 e.SuppressKeyPress = true;
+                textBoxListViewText.Focus();
             }
             else if (e.Shift && e.KeyCode == Keys.Insert)
             {
                 InsertBefore();
                 e.SuppressKeyPress = true;
+                textBoxListViewText.Focus();
             }
             else if (e.Modifiers == Keys.Control && e.KeyCode == Keys.Z)
             {
