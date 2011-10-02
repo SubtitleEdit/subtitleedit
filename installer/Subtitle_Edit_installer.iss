@@ -26,7 +26,7 @@
   #error Update your Inno Setup version
 #endif
 
-#define installer_build_number "19"
+#define installer_build_number "20"
 
 #define app_copyright "Copyright © 2001-2011, Nikse"
 #define VerMajor
@@ -403,7 +403,7 @@ begin
   // based on whether these files exist only
   if CurUninstallStep = usUninstall then begin
     if SettingsExistCheck OR DictionariesExistCheck then begin
-      if MsgBox(ExpandConstant('{cm:msg_DeleteSettings}'), mbConfirmation, MB_YESNO OR MB_DEFBUTTON2) = IDYES then begin
+      if SuppressibleMsgBox(ExpandConstant('{cm:msg_DeleteSettings}'), mbConfirmation, MB_YESNO OR MB_DEFBUTTON2, IDNO) = IDYES then begin
         CleanUpDictionaries;
         DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Settings.xml'));
       end;
@@ -432,37 +432,33 @@ var
 begin
   // Create a mutex for the installer and if it's already running then expose a message and stop installation
   if CheckForMutexes(installer_mutex_name) AND NOT WizardSilent() then begin
-      MsgBox(ExpandConstant('{cm:msg_SetupIsRunningWarning}'), mbError, MB_OK);
-    exit;
-  end;
-
-  CreateMutex(installer_mutex_name);
-
-  if IsModuleLoaded('SubtitleEdit.exe') then begin
-    MsgBox(ExpandConstant('{cm:msg_AppIsRunning}'), mbError, MB_OK );
+    SuppressibleMsgBox(ExpandConstant('{cm:msg_SetupIsRunningWarning}'), mbError, MB_OK, MB_OK);
     Result := False;
-    Abort;
-  end else
+  end else begin
     Result := True;
+    CreateMutex(installer_mutex_name);
 
-  // Check if .NET Framework 2.0 is installed and if not offer to download it
-  try
-    ExpandConstant('{dotnet20}');
-    Result := True;
-  except
-    begin
-      if NOT WizardSilent() then
-        if MsgBox(ExpandConstant('{cm:msg_AskToDownNET}'), mbCriticalError, MB_YESNO OR MB_DEFBUTTON1) = IDYES then begin
-          Result := False;
-          ShellExec('open','http://download.microsoft.com/download/5/6/7/567758a3-759e-473e-bf8f-52154438565a/dotnetfx.exe','','',SW_SHOWNORMAL,ewNoWait,ErrorCode);
-        end
-        else begin
-          Result := False;
+    if IsModuleLoaded('SubtitleEdit.exe') then begin
+      SuppressibleMsgBox(ExpandConstant('{cm:msg_AppIsRunning}'), mbError, MB_OK, MB_OK);
+      Result := False;
+    end else
+    // Check if .NET Framework 2.0 is installed and if not offer to download it
+    try
+      ExpandConstant('{dotnet20}');
+    except
+      begin
+        if NOT WizardSilent() then
+          if SuppressibleMsgBox(ExpandConstant('{cm:msg_AskToDownNET}'), mbCriticalError, MB_YESNO OR MB_DEFBUTTON1, IDYES) = IDYES then begin
+            ShellExec('open','http://download.microsoft.com/download/5/6/7/567758a3-759e-473e-bf8f-52154438565a/dotnetfx.exe','','',SW_SHOWNORMAL,ewNoWait,ErrorCode);
+            Result := False;
+          end
+          else begin
+            Result := False;
+          end;
         end;
       end;
     end;
-
-    is_update := RegKeyExists(HKLM, 'SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\SubtitleEdit_is1');
+      is_update := RegKeyExists(HKLM, 'SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\SubtitleEdit_is1');
 
 end;
 
@@ -471,20 +467,17 @@ function InitializeUninstall(): Boolean;
 begin
   // Check if app is running during uninstallation
   if IsModuleLoadedU('SubtitleEdit.exe') then begin
-    MsgBox(ExpandConstant('{cm:msg_AppIsRunning}'), mbError, MB_OK );
+    SuppressibleMsgBox(ExpandConstant('{cm:msg_AppIsRunning}'), mbError, MB_OK, MB_OK);
     Result := False;
   end else
     Result := True;
 
-  if NOT IsModuleLoadedU('SubtitleEdit.exe') AND CheckForMutexes(installer_mutex_name) then begin
-    MsgBox(ExpandConstant('{cm:msg_SetupIsRunningWarning}'), mbError, MB_OK);
-    Result := False;
-  end
-  else begin
-    CreateMutex(installer_mutex_name);
-    Result := True;
-  end;
+    if NOT IsModuleLoadedU('SubtitleEdit.exe') AND CheckForMutexes(installer_mutex_name) then begin
+      SuppressibleMsgBox(ExpandConstant('{cm:msg_SetupIsRunningWarning}'), mbError, MB_OK, MB_OK);
+      Result := False;
+    end else
+      CreateMutex(installer_mutex_name);
 
-  // Unload the psvince.dll in order to be uninstalled
-  UnloadDLL(ExpandConstant('{app}\psvince.dll'));
+      // Unload the psvince.dll in order to be uninstalled
+     UnloadDLL(ExpandConstant('{app}\psvince.dll'));
 end;
