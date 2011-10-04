@@ -19,8 +19,8 @@ namespace Nikse.SubtitleEdit.Logic.Mp4
             if (Moov != null && Moov.Tracks != null)
             {
                 foreach (var trak in Moov.Tracks)
-                { 
-                    if (trak.Mdia != null && trak.Mdia.IsTextSubtitle && trak.Mdia.Minf != null && trak.Mdia.Minf.Stbl != null)
+                {
+                    if (trak.Mdia != null && (trak.Mdia.IsTextSubtitle || trak.Mdia.IsVobSubSubtitle) && trak.Mdia.Minf != null && trak.Mdia.Minf.Stbl != null)
                     {
                         list.Add(trak);
                     }

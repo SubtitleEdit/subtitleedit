@@ -38,7 +38,7 @@ namespace Nikse.SubtitleEdit.Logic.Mp4.Boxes
                 if (!InitializeSizeAndName(fs))
                     return;
 
-                if (name == "minf" && IsTextSubtitle) // || IsVobSubSubtitle)
+                if (name == "minf" && IsTextSubtitle || IsVobSubSubtitle)
                 {
                     UInt32 timeScale = 90000;
                     if (Mdhd != null)

@@ -1,13 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using Nikse.SubtitleEdit.Logic.VobSub;
+using System.Drawing;
 
 namespace Nikse.SubtitleEdit.Logic.Mp4.Boxes
 {
     public class Stbl : Box
     {
-
         public readonly List<string> Texts = new List<string>();
+        public readonly List<SubPicture> SubPictures = new List<SubPicture>();
         public readonly List<double> StartTimeCodes = new List<double>();
         public readonly List<double> EndTimeCodes = new List<double>();
 
@@ -31,9 +33,7 @@ namespace Nikse.SubtitleEdit.Logic.Mp4.Boxes
                     {
                         uint offset = GetUInt(8 + i * 4);
                         if (lastOffset + 5 < offset)
-                        {
-                            ReadText(fs, offset);
-                        }
+                            ReadText(fs, offset, handlerType);
                         lastOffset = offset;
                     }
                 }
@@ -49,9 +49,7 @@ namespace Nikse.SubtitleEdit.Logic.Mp4.Boxes
                     {
                         ulong offset = GetUInt64(8 + i * 8);
                         if (lastOffset + 8 < offset)
-                        {
-                            ReadText(fs, offset);
-                        }
+                            ReadText(fs, offset, handlerType);
                         lastOffset = offset;
                     }
                 }
@@ -103,28 +101,36 @@ namespace Nikse.SubtitleEdit.Logic.Mp4.Boxes
             }
         }
 
-        private void ReadText(FileStream fs, ulong offset)
+        private void ReadText(FileStream fs, ulong offset, string  handlerType)
         {
             fs.Seek((long)offset, SeekOrigin.Begin);
-            byte[] data = new byte[150];
-            fs.Read(data, 0, data.Length);
+            byte[] data = new byte[4];
+            fs.Read(data, 0, 2);
+            uint textSize = (uint)GetWord(data, 0);
 
-            uint textSize = (uint)GetWord(data, 0); // don't get it exactly - seems like mp4box sometimes uses 2 bytes length field... handbrake uses 4 bytes
-            if (textSize > 0)
+            if (handlerType == "subp") // VobSub created with Mp4Box
             {
-                if (textSize < data.Length - 2)
+                if (textSize > 100)
                 {
-                    string text = GetString(data, 2, (int)textSize).TrimEnd();
-                    Texts.Add(text);
+                    fs.Seek((long)offset, SeekOrigin.Begin);
+                    data = new byte[textSize + 2];
+                    fs.Read(data, 0, data.Length);
+                    var subPicture = new SubPicture(data); //TODO: where is palette?
                 }
             }
             else
             {
-                textSize = GetUInt(data, 0);
-                if (textSize > 0 && textSize < data.Length - 4)
+                if (textSize == 0)
                 {
-                    string text = GetString(data, 4, (int)textSize).TrimEnd();
-                    Texts.Add(text);
+                    fs.Read(data, 2, 2);
+                    textSize = GetUInt(data, 0); // don't get it exactly - seems like mp4box sometimes uses 2 bytes length field (first text record only)... handbrake uses 4 bytes
+                }
+                if (textSize > 0 && textSize < 200)
+                {
+                    data = new byte[textSize];
+                    fs.Read(data, 0, data.Length);
+                    string text = GetString(data, 0, (int)textSize).TrimEnd();
+                    Texts.Add(text.Replace("\n", Environment.NewLine));
                 }
             }
         }

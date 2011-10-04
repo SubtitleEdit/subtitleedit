@@ -34,6 +34,21 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
+        internal class SubPicturesWithSeparateTimeCodes
+        {
+            public SubPicture Picture { get; private set; }
+            public TimeSpan Start { get; private set; }
+            public TimeSpan End { get; private set; }
+
+            public SubPicturesWithSeparateTimeCodes(SubPicture subPicture, TimeSpan start, TimeSpan end)
+            {
+                Picture = subPicture;
+                Start = start;
+                End = end;
+            }
+        }
+
+
         internal class CompareMatch
         {
             public string Text { get; set; }
@@ -112,6 +127,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         // SP list
         List<SpHeader> _spList;
+
+        // SP vobsub list (mp4)
+        List<SubPicturesWithSeparateTimeCodes> _mp4List;
 
         string _lastLine;
         string _languageId;
@@ -689,7 +707,26 @@ namespace Nikse.SubtitleEdit.Forms
             Color emphasis1;
             Color emphasis2;
 
-            if (_spList != null)
+            if (_mp4List != null)
+            {
+                Bitmap mp4Bmp;
+                if (checkBoxCustomFourColors.Checked)
+                {
+                    GetCustomColors(out background, out pattern, out emphasis1, out emphasis2);
+
+                    mp4Bmp = _mp4List[index].Picture.GetBitmap(null, background, pattern, emphasis1, emphasis2, true);
+                    if (checkBoxAutoTransparentBackground.Checked)
+                        mp4Bmp.MakeTransparent();
+                    return mp4Bmp;
+                }
+
+                mp4Bmp = _mp4List[index].Picture.GetBitmap(null, Color.Transparent, Color.Black, Color.White, Color.Black, false);
+                if (checkBoxAutoTransparentBackground.Checked)
+                    mp4Bmp.MakeTransparent();
+                return mp4Bmp;
+
+            }
+            else if (_spList != null)
             {
                 Bitmap spBmp;
                 if (checkBoxCustomFourColors.Checked)
@@ -835,7 +872,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         private long GetSubtitleStartTimeMilliseconds(int index)
         {
-            if (_spList != null)
+            if (_mp4List != null)
+                return (long)(_mp4List[index].Start.TotalMilliseconds);
+            else if (_spList != null)
                 return (long) (_spList[index].StartTime.TotalMilliseconds);
             else if (_bdnXmlSubtitle != null)
                 return (long)_bdnXmlSubtitle.Paragraphs[index].StartTime.TotalMilliseconds;
@@ -847,9 +886,11 @@ namespace Nikse.SubtitleEdit.Forms
       
         private long GetSubtitleEndTimeMilliseconds(int index)
         {
-            if (_spList != null)
+            if (_mp4List != null)
+                return (long)(_mp4List[index].End.TotalMilliseconds);
+            else if (_spList != null)
                 return (long)(_spList[index].StartTime.TotalMilliseconds + _spList[index].Picture.Delay.TotalMilliseconds);
-            if (_bdnXmlSubtitle != null)
+            else if (_bdnXmlSubtitle != null)
                 return (long)_bdnXmlSubtitle.Paragraphs[index].EndTime.TotalMilliseconds;
             else if (_bluRaySubtitlesOriginal != null)
                 return (_bluRaySubtitles[index].EndTime + 45) / 90;
@@ -859,7 +900,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         private int GetSubtitleCount()
         {
-            if (_spList != null)
+            if (_mp4List != null)
+                return _mp4List.Count;
+            else if (_spList != null)
                 return _spList.Count;
             else if (_bdnXmlSubtitle != null)
                 return _bdnXmlSubtitle.Paragraphs.Count;
@@ -1632,7 +1675,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void FormVobSubOcr_Shown(object sender, EventArgs e)
         {
-            if (_spList != null)
+            if (_mp4List != null)
             {
                 checkBoxShowOnlyForced.Visible = false;
                 checkBoxUseTimeCodesFromIdx.Visible = false;
@@ -1643,7 +1686,20 @@ namespace Nikse.SubtitleEdit.Forms
                 buttonStop.Enabled = false;
                 buttonNewCharacterDatabase.Enabled = true;
                 buttonEditCharacterDatabase.Enabled = true;
-                buttonStartOcr.Focus();            
+                buttonStartOcr.Focus();
+            }
+            else if (_spList != null)
+            {
+                checkBoxShowOnlyForced.Visible = false;
+                checkBoxUseTimeCodesFromIdx.Visible = false;
+
+                buttonOK.Enabled = true;
+                buttonCancel.Enabled = true;
+                buttonStartOcr.Enabled = true;
+                buttonStop.Enabled = false;
+                buttonNewCharacterDatabase.Enabled = true;
+                buttonEditCharacterDatabase.Enabled = true;
+                buttonStartOcr.Focus();
             }
             else if (_bdnXmlOriginal != null)
             {
@@ -2996,5 +3052,51 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
+
+        internal void Initialize(List<SubPicturesWithSeparateTimeCodes> subPicturesWithTimeCodes, VobSubOcrSettings vobSubOcrSettings, string fileName)
+        {
+            _mp4List = subPicturesWithTimeCodes;
+
+            _useNewSubIdxCode = false;
+            buttonOK.Enabled = false;
+            buttonCancel.Enabled = false;
+            buttonStartOcr.Enabled = false;
+            buttonStop.Enabled = false;
+            buttonNewCharacterDatabase.Enabled = false;
+            buttonEditCharacterDatabase.Enabled = false;
+            labelStatus.Text = string.Empty;
+            progressBar1.Visible = false;
+            progressBar1.Maximum = 100;
+            progressBar1.Value = 0;
+            numericUpDownPixelsIsSpace.Value = vobSubOcrSettings.XOrMorePixelsMakesSpace;
+            _vobSubOcrSettings = vobSubOcrSettings;
+
+            InitializeModi();
+            InitializeTesseract();
+            LoadImageCompareCharacterDatabaseList();
+
+            //_palette = palette;
+
+            if (_palette == null)
+                checkBoxCustomFourColors.Checked = true;
+
+            if (Configuration.Settings.VobSubOcr.LastOcrMethod == "BitmapCompare" && comboBoxOcrMethod.Items.Count > 1)
+                comboBoxOcrMethod.SelectedIndex = 1;
+            else if (Configuration.Settings.VobSubOcr.LastOcrMethod == "MODI" && comboBoxOcrMethod.Items.Count > 2)
+                comboBoxOcrMethod.SelectedIndex = 2;
+            else
+                comboBoxOcrMethod.SelectedIndex = 0;
+
+            FileName = fileName;
+            Text += " - " + Path.GetFileName(FileName);
+
+            foreach (SubPicturesWithSeparateTimeCodes subItem in _mp4List)
+            {
+                Paragraph p = new Paragraph(string.Empty, subItem.Start.TotalMilliseconds, subItem.End.TotalMilliseconds);
+                _subtitle.Paragraphs.Add(p);
+            }
+            subtitleListView1.Fill(_subtitle);
+            subtitleListView1.SelectIndexAndEnsureVisible(0);
+        }
     }
 }
