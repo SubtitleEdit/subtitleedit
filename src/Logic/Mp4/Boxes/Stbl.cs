@@ -32,28 +32,7 @@ namespace Nikse.SubtitleEdit.Logic.Mp4.Boxes
                         uint offset = GetUInt(8 + i * 4);
                         if (lastOffset + 5 < offset)
                         {
-                            fs.Seek(offset, SeekOrigin.Begin);
-                            byte[] data = new byte[150];
-                            fs.Read(data, 0, data.Length);
-
-                            uint textSize = (uint)GetWord(data, 0); // don't get it exactly - seems like mp4box sometimes uses 2 bytes length field... handbrake uses 4 bytes
-                            if (textSize > 0)
-                            {
-                                if (textSize < data.Length - 2)
-                                {
-                                    string text = GetString(data, 2, (int)textSize);
-                                    Texts.Add(text);
-                                }
-                            }
-                            else
-                            {
-                                textSize = GetUInt(data, 0);
-                                if (textSize > 0 && textSize < data.Length - 4)
-                                {
-                                    string text = GetString(data, 4, (int)textSize).TrimEnd();
-                                    Texts.Add(text);
-                                }
-                            }
+                            ReadText(fs, offset);
                         }
                         lastOffset = offset;
                     }
@@ -71,15 +50,7 @@ namespace Nikse.SubtitleEdit.Logic.Mp4.Boxes
                         ulong offset = GetUInt64(8 + i * 8);
                         if (lastOffset + 8 < offset)
                         {
-                            fs.Seek((long)offset, SeekOrigin.Begin);
-                            byte[] data = new byte[150];
-                            fs.Read(data, 0, data.Length);
-                            uint textSize = GetUInt(data, 0);
-                            if (textSize < data.Length - 4)
-                            {
-                                string text = GetString(data, 4, (int)textSize - 1);
-                                Texts.Add(text);
-                            }
+                            ReadText(fs, offset);
                         }
                         lastOffset = offset;
                     }
@@ -129,6 +100,32 @@ namespace Nikse.SubtitleEdit.Logic.Mp4.Boxes
                 }
 
                 fs.Seek((long)pos, SeekOrigin.Begin);
+            }
+        }
+
+        private void ReadText(FileStream fs, ulong offset)
+        {
+            fs.Seek((long)offset, SeekOrigin.Begin);
+            byte[] data = new byte[150];
+            fs.Read(data, 0, data.Length);
+
+            uint textSize = (uint)GetWord(data, 0); // don't get it exactly - seems like mp4box sometimes uses 2 bytes length field... handbrake uses 4 bytes
+            if (textSize > 0)
+            {
+                if (textSize < data.Length - 2)
+                {
+                    string text = GetString(data, 2, (int)textSize).TrimEnd();
+                    Texts.Add(text);
+                }
+            }
+            else
+            {
+                textSize = GetUInt(data, 0);
+                if (textSize > 0 && textSize < data.Length - 4)
+                {
+                    string text = GetString(data, 4, (int)textSize).TrimEnd();
+                    Texts.Add(text);
+                }
             }
         }
 
