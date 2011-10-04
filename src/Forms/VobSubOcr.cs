@@ -128,6 +128,8 @@ namespace Nikse.SubtitleEdit.Forms
         List<ImageCompareAddition> _lastAdditions = new List<ImageCompareAddition>();
         VobSubOcrCharacter _vobSubOcrCharacter = new VobSubOcrCharacter();
 
+        Keys _italicShortcut = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxItalic);
+
         public VobSubOcr()
         {
             InitializeComponent();
@@ -2840,7 +2842,7 @@ namespace Nikse.SubtitleEdit.Forms
                         bmp.Save(fileName, System.Drawing.Imaging.ImageFormat.Png);
                         imagesSavedCount++;
                         Paragraph p = _subtitle.Paragraphs[i];
-                        sb.AppendLine(string.Format("#{3}: {0}->{1}<div style='text-align:center'><img src='{2}.png' /></div><br /><hr />", p.StartTime.ToShortString(), p.EndTime.ToShortString(), numberString, i));
+                        sb.AppendLine(string.Format("#{3}: {0}->{1}<div style='text-align:center'><img src='{2}.png' /></div><br /><hr />", p.StartTime.ToShortString(), p.EndTime.ToShortString(), numberString, i+1));
                         bmp.Dispose();
                     }
                 }
@@ -2969,5 +2971,30 @@ namespace Nikse.SubtitleEdit.Forms
             subtitleListView1.Fill(_subtitle);
             subtitleListView1.SelectIndexAndEnsureVisible(0);
         }
+
+        private void textBoxCurrentText_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyData == _italicShortcut) // Ctrl+i (or cusstom) = italic 
+            {
+                TextBox tb = textBoxCurrentText;
+                string text = tb.SelectedText;
+                int selectionStart = tb.SelectionStart;
+                string tag = "i";
+                if (text.Contains("<" + tag + ">"))
+                {
+                    text = text.Replace("<" + tag + ">", string.Empty);
+                    text = text.Replace("</" + tag + ">", string.Empty);
+                }
+                else
+                {
+                    text = string.Format("<{0}>{1}</{0}>", tag, text);
+                }
+                tb.SelectedText = text;
+                tb.SelectionStart = selectionStart;
+                tb.SelectionLength = text.Length;
+                e.SuppressKeyPress = true;
+            }
+        }
+
     }
 }

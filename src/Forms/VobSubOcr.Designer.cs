@@ -66,7 +66,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.checkBoxUseModiInTesseractForUnknownWords = new System.Windows.Forms.CheckBox();
             this.labelTesseractLanguage = new System.Windows.Forms.Label();
             this.comboBoxTesseractLanguages = new System.Windows.Forms.ComboBox();
-            this.textBoxCurrentText = new System.Windows.Forms.TextBox();
+            this.textBoxCurrentText = new SETextBox();
             this.groupBoxOCRControls = new System.Windows.Forms.GroupBox();
             this.labelStartFrom = new System.Windows.Forms.Label();
             this.numericUpDownStartNumber = new System.Windows.Forms.NumericUpDown();
@@ -494,6 +494,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.textBoxCurrentText.Size = new System.Drawing.Size(354, 77);
             this.textBoxCurrentText.TabIndex = 5;
             this.textBoxCurrentText.TextChanged += new System.EventHandler(this.TextBoxCurrentTextTextChanged);
+            this.textBoxCurrentText.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textBoxCurrentText_KeyDown);
             // 
             // groupBoxOCRControls
             // 
@@ -1027,7 +1028,7 @@ namespace Nikse.SubtitleEdit.Forms
         private SubtitleListView subtitleListView1;
         private System.Windows.Forms.GroupBox groupBoxOcrMethod;
         private System.Windows.Forms.ComboBox comboBoxModiLanguage;
-        private System.Windows.Forms.TextBox textBoxCurrentText;
+        private SETextBox textBoxCurrentText;
         private System.Windows.Forms.GroupBox groupBoxOCRControls;
         private System.Windows.Forms.Label labelStartFrom;
         private System.Windows.Forms.NumericUpDown numericUpDownStartNumber;
