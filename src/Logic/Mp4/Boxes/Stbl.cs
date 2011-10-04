@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using Nikse.SubtitleEdit.Logic.VobSub;
-using System.Drawing;
 
 namespace Nikse.SubtitleEdit.Logic.Mp4.Boxes
 {
@@ -115,7 +114,7 @@ namespace Nikse.SubtitleEdit.Logic.Mp4.Boxes
                     fs.Seek((long)offset, SeekOrigin.Begin);
                     data = new byte[textSize + 2];
                     fs.Read(data, 0, data.Length);
-                    var subPicture = new SubPicture(data); //TODO: where is palette?
+                    SubPictures.Add(new SubPicture(data)); //TODO: where is palette?
                 }
             }
             else
