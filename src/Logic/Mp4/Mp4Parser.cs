@@ -94,6 +94,8 @@ namespace Nikse.SubtitleEdit.Logic.Mp4
                 if (count > 100)
                     break;
 
+                if (pos > (ulong)fs.Length)
+                    break;
                 fs.Seek((long)pos, SeekOrigin.Begin);
             }
             fs.Close();

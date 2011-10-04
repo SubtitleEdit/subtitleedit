@@ -22,14 +22,14 @@ namespace Nikse.SubtitleEdit.Logic.Mp4.Boxes
 
         public UInt64 GetUInt64(int index)
         {
-            return (UInt64)((buffer[index] << 56) + (buffer[index + 1] << 48) + (buffer[index + 2] << 40) + (buffer[index + 3] << 32) +
-                            (buffer[index+4] << 24) + (buffer[index + 5] << 16) + (buffer[index + 6] << 8) + buffer[index + 7]);
+            return (UInt64)buffer[index] << 56 | (UInt64)buffer[index + 1] << 48 | (UInt64)buffer[index + 2] << 40 | (UInt64)buffer[index+3] << 32 |
+                   (UInt64)buffer[index + 4] << 24 | (UInt64)buffer[index + 5] << 16 | (UInt64)buffer[index + 6] << 8 | (UInt64)buffer[index+7];
         }
 
         public UInt64 GetUInt64(byte[] buffer, int index)
         {
-            return (UInt64)((buffer[index] << 56) + (buffer[index + 1] << 48) + (buffer[index + 2] << 40) + (buffer[index + 3] << 32) +
-                            (buffer[index + 4] << 24) + (buffer[index + 5] << 16) + (buffer[index + 6] << 8) + buffer[index + 7]);
+            return (UInt64)buffer[index] << 56 | (UInt64)buffer[index + 1] << 48 | (UInt64)buffer[index + 2] << 40 | (UInt64)buffer[index + 3] << 32 |
+                   (UInt64)buffer[index + 4] << 24 | (UInt64)buffer[index + 5] << 16 | (UInt64)buffer[index + 6] << 8 | (UInt64)buffer[index + 7];
         }
 
         public int GetWord(byte[] buffer, int index)
@@ -72,10 +72,11 @@ namespace Nikse.SubtitleEdit.Logic.Mp4.Boxes
                 bytesRead = fs.Read(buffer, 0, buffer.Length);
                 if (bytesRead < buffer.Length)
                     return false;
-                size = GetUInt64(0);
+                size = GetUInt64(0) - 8;
             }
             pos = ((ulong)(fs.Position)) + size - 8;
             return true;
         }
+
     }
 }
