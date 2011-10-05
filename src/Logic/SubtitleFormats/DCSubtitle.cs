@@ -98,11 +98,12 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                                     "    <IssueDate>" + date + "</IssueDate>" + Environment.NewLine +
                                     "    <Language>" + languageEnglishName + "</Language>" + Environment.NewLine +
                                     "    <LoadFont URI=\"Arial.ttf\" Id=\"Font1\"/>" + Environment.NewLine +
-                                    "    <Font Color=\"FFFFFFFF\" Effect=\"outline\" EffectColor=\"FF000000\" Italic=\"no\" Underlined=\"no\" Script=\"normal\" Size=\"52\">" + Environment.NewLine +
+                                    "    <Font Color=\"FFFFFFFF\" Effect=\"outline\" EffectColor=\"FF000000\" Italic=\"no\" Underlined=\"no\" Script=\"normal\" Size=\"42\">" + Environment.NewLine +
                                     "    </Font>" + Environment.NewLine +
                                     "</DCSubtitle>";
 
             string loadedFontId = "Font1";
+            int fontSize = 42;
 
             XmlDocument xml = new XmlDocument();
             xml.LoadXml(xmlStructure);
@@ -142,6 +143,20 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     {
                         loadedFontId = null;
                         xml.DocumentElement.RemoveChild(xml.DocumentElement.SelectSingleNode("LoadFont"));
+                    }
+
+                    node = xmlHeader.DocumentElement.SelectSingleNode("Font");
+                    if (node != null && node.Attributes["Size"] != null)
+                    { 
+                        int temp;
+                        if (int.TryParse(node.Attributes["Size"].Value, out temp))
+                        { 
+                            if (temp > 4 && temp < 100)
+                            {
+                                fontSize = temp;
+                                xml.DocumentElement.SelectSingleNode("Font").Attributes["Size"].Value = fontSize.ToString();
+                            }
+                        }
                     }
                 }
                 catch
@@ -188,6 +203,9 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
                     string[] lines = p.Text.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
                     int vPos = 1 + lines.Length * 7;
+                    int vPosFactor = (int)Math.Round(fontSize / 7.4);
+                    vPos = (lines.Length * vPosFactor) - vPosFactor + 8; // always bottom margin 8
+
                     bool isItalic = false;
                     foreach (string line in lines)
                     {
@@ -274,7 +292,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         textNode.InnerXml = html.ToString();
 
                         subNode.AppendChild(textNode);
-                        vPos -= 7;
+                        vPos -= vPosFactor;
                     }
 
                     mainListFont.AppendChild(subNode);
