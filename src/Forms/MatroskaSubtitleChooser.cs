@@ -56,8 +56,8 @@ namespace Nikse.SubtitleEdit.Forms
                 i++;
                 string handler = track.Mdia.HandlerName;
                 if (handler != null && handler.Length > 1)
-                    handler = " - " + handler; 
-                string s = string.Format("{0}: {1} - {2}{3}", i, track.Mdia.Mdhd.Iso639ThreeLetterCode, track.Mdia.Mdhd.LanguageString, handler); 
+                    handler = " - " + handler;
+                string s = string.Format("{0}: {1} - {2}{3}", i, track.Mdia.Mdhd.Iso639ThreeLetterCode, track.Mdia.Mdhd.LanguageString, handler);
                 listBox1.Items.Add(s);
             }
             listBox1.SelectedIndex = 0;

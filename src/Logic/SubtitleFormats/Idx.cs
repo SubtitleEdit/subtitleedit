@@ -72,7 +72,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
                 foreach (int key in removeList)
                     tempNonTimeCodes.Remove(key);
-                
+
                 sb.AppendLine(string.Format(paragraphWriteFormat, p.StartTime, p.Text));
             }
             foreach (DictionaryEntry de in tempNonTimeCodes)
@@ -95,10 +95,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     else
                         _errorCount++;
                 }
-                else 
-                { 
+                else
+                {
                     int place;
-                    if (subtitle.Paragraphs.Count == 0 || 
+                    if (subtitle.Paragraphs.Count == 0 ||
                         !int.TryParse(subtitle.Paragraphs[subtitle.Paragraphs.Count-1].Text, out place))
                         place = -1;
 
@@ -119,7 +119,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             {
                 int hours;
                 int minutes;
-                int seconds; 
+                int seconds;
                 int milliseconds;
                 if (int.TryParse(parts[1], out hours) &&
                     int.TryParse(parts[2], out minutes) &&

@@ -45,7 +45,7 @@ namespace Nikse.SubtitleEdit.Forms
         public void Initialize(Subtitle subtitle)
         {
             if (subtitle.Paragraphs.Count > 0)
-                subtitle.Renumber(subtitle.Paragraphs[0].Number);                
+                subtitle.Renumber(subtitle.Paragraphs[0].Number);
 
             Text = Configuration.Settings.Language.MergedShortLines.Title;
             labelMaxCharacters.Text = Configuration.Settings.Language.MergedShortLines.MaximumCharacters;
@@ -88,7 +88,7 @@ namespace Nikse.SubtitleEdit.Forms
             var mergedIndexes = new List<int>();
 
             NumberOfMerges = 0;
-        	SubtitleListview1.Items.Clear();
+            SubtitleListview1.Items.Clear();
             SubtitleListview1.BeginUpdate();
             int count;
             _mergedSubtitle = MergeShortLinesInSubtitle(_subtitle, mergedIndexes, out count, (double)numericUpDownMaxMillisecondsBetweenLines.Value, (int)numericUpDownMaxCharacters.Value, true);
@@ -98,9 +98,9 @@ namespace Nikse.SubtitleEdit.Forms
 
             foreach(var index in mergedIndexes)
             {
-                SubtitleListview1.SetBackgroundColor(index, Color.Green);    
+                SubtitleListview1.SetBackgroundColor(index, Color.Green);
             }
-            
+
 
             SubtitleListview1.EndUpdate();
             groupBoxLinesFound.Text = string.Format(Configuration.Settings.Language.MergedShortLines.NumberOfMergesX, NumberOfMerges);
@@ -242,7 +242,7 @@ namespace Nikse.SubtitleEdit.Forms
                     if (!checkBoxOnlyContinuationLines.Checked)
                         return true;
 
-                    if (isLineContinuation)                       
+                    if (isLineContinuation)
                         return true;
                 }
             }
@@ -295,7 +295,7 @@ namespace Nikse.SubtitleEdit.Forms
         }
 
         private void listViewFixes_ItemChecked(object sender, ItemCheckedEventArgs e)
-        {            
+        {
             var mergedIndexes = new List<int>();
 
             NumberOfMerges = 0;

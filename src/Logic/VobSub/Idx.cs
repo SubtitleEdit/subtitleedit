@@ -8,7 +8,7 @@ using System.Text.RegularExpressions;
 namespace Nikse.SubtitleEdit.Logic.VobSub
 {
     class Idx
-    {      
+    {
         public readonly List<IdxParagraph> IdxParagraphs = new List<IdxParagraph>();
         public readonly List<Color> Palette = new List<Color>();
         public readonly List<string> Languages = new List<string>();
@@ -76,7 +76,7 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
             {
                 int hours;
                 int minutes;
-                int seconds; 
+                int seconds;
                 int milliseconds;
                 if (int.TryParse(parts[1], out hours) &&
                     int.TryParse(parts[2], out minutes) &&

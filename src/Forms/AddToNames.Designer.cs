@@ -24,9 +24,9 @@
             this.textBoxAddName = new System.Windows.Forms.TextBox();
             this.labelDescription = new System.Windows.Forms.Label();
             this.SuspendLayout();
-            // 
+            //
             // buttonOK
-            // 
+            //
             this.buttonOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonOK.Location = new System.Drawing.Point(80, 56);
             this.buttonOK.Name = "buttonOK";
@@ -35,9 +35,9 @@
             this.buttonOK.Text = "&OK";
             this.buttonOK.UseVisualStyleBackColor = true;
             this.buttonOK.Click += new System.EventHandler(this.ButtonOkClick);
-            // 
+            //
             // buttonCancel
-            // 
+            //
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonCancel.Location = new System.Drawing.Point(161, 56);
@@ -46,25 +46,25 @@
             this.buttonCancel.TabIndex = 16;
             this.buttonCancel.Text = "C&ancel";
             this.buttonCancel.UseVisualStyleBackColor = true;
-            // 
+            //
             // textBoxAddName
-            // 
+            //
             this.textBoxAddName.Location = new System.Drawing.Point(15, 26);
             this.textBoxAddName.Name = "textBoxAddName";
             this.textBoxAddName.Size = new System.Drawing.Size(221, 27);
             this.textBoxAddName.TabIndex = 15;
-            // 
+            //
             // labelDescription
-            // 
+            //
             this.labelDescription.AutoSize = true;
             this.labelDescription.Location = new System.Drawing.Point(12, 8);
             this.labelDescription.Name = "labelDescription";
             this.labelDescription.Size = new System.Drawing.Size(309, 21);
             this.labelDescription.TabIndex = 14;
             this.labelDescription.Text = "Add to names/noise list (case sensitive)";
-            // 
+            //
             // AddToNamesList
-            // 
+            //
             this.AcceptButton = this.buttonOK;
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 21F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;

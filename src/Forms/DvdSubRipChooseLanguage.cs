@@ -31,7 +31,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         public List<VobSubMergedPack> SelectedVobSubMergedPacks { get; private set; }
         public string SelectedLanguageString { get; private set; }
-        
+
         public DvdSubRipChooseLanguage()
         {
             InitializeComponent();

@@ -106,7 +106,7 @@ namespace Nikse.SubtitleEdit.Logic
         FileStream _fs;
 
         public IfoParser(string fileName)
-        {            
+        {
             try
             {
                 _fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.Read);
@@ -119,7 +119,7 @@ namespace Nikse.SubtitleEdit.Logic
                 {
                     ErrorMessage = string.Format(Configuration.Settings.Language.DvdSubrip.WrongIfoType,  id, Environment.NewLine, fileName);
                     return;
-                }                
+                }
                 ParseVtsVobs();
                 ParseVtsPgci();
                 _fs.Close();
@@ -179,7 +179,7 @@ namespace Nikse.SubtitleEdit.Logic
 
                 string subtitleFormat = string.Empty;
                 _fs.Read(buffer, 0, 2); // reserved for language code extension + code extension
-                switch (buffer[0])		// 4, 8, 10-12 unused
+                switch (buffer[0])      // 4, 8, 10-12 unused
                 {
                     // http://dvd.sourceforge.net/dvdinfo/sprm.html
                     case 1: subtitleFormat = "(caption/normal size char)"; break; //0 = unspecified caption
@@ -285,7 +285,7 @@ namespace Nikse.SubtitleEdit.Logic
 
                 //Parse Color LookUp Table (CLUT) - offset 00A4, 16*4 (0, Y, Cr, Cb)
                 _fs.Position = tableStart + programChainAdress + 0xA4;
-                for (int colorNumber = 0; colorNumber < 16; colorNumber++) 
+                for (int colorNumber = 0; colorNumber < 16; colorNumber++)
                 {
                     byte[] colors = new byte[4];
                     _fs.Read(colors, 0, 4);
@@ -296,8 +296,8 @@ namespace Nikse.SubtitleEdit.Logic
                     int g = (int)Math.Min(Math.Max(Math.Round(1.1644F * y - 0.813F * cr - 0.391F * cb), 0), 255);
                     int b = (int)Math.Min(Math.Max(Math.Round(1.1644F * y + 2.018F * cb), 0), 255);
 
-                    programChain.ColorLookupTable.Add(Color.FromArgb(r, g, b)); 
-                }             
+                    programChain.ColorLookupTable.Add(Color.FromArgb(r, g, b));
+                }
 
                 //Parse Program Map
                 _fs.Position = tableStart + programChainAdress + 0xE6;
@@ -355,7 +355,7 @@ namespace Nikse.SubtitleEdit.Logic
             result = result + StrToInt(IntToHex(BinToInt(MidStr(temp,16,8)),2))*1000;
             if (temp.Substring(24,2) == "11")
                 fps = 30;
-            else 
+            else
                 fps = 25;
             result += (int) Math.Round((1000.0 / fps) * StrToFloat(IntToHex(BinToInt(MidStr(temp, 26, 6)), 3)));
             return result;

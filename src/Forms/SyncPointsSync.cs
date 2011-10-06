@@ -27,7 +27,7 @@ namespace Nikse.SubtitleEdit.Forms
         Subtitle _otherSubtitle;
         System.Collections.Generic.SortedDictionary<int, TimeSpan> _syncronizationPoints = new SortedDictionary<int, TimeSpan>();
 
-        public string VideoFileName 
+        public string VideoFileName
         {
             get { return _videoFileName;  }
         }
@@ -40,7 +40,7 @@ namespace Nikse.SubtitleEdit.Forms
         public SyncPointsSync()
         {
             InitializeComponent();
-                        
+
             buttonSetSyncPoint.Text = Configuration.Settings.Language.PointSync.SetSyncPoint;
             buttonRemoveSyncPoint.Text = Configuration.Settings.Language.PointSync.RemoveSyncPoint;
             buttonOK.Text = Configuration.Settings.Language.General.OK;
@@ -125,7 +125,7 @@ namespace Nikse.SubtitleEdit.Forms
             listBoxSyncPoints.Anchor = AnchorStyles.Left;
             labelOtherSubtitleFileName.Visible = true;
             subtitleListView2.Visible = true;
-            Width = subtitleListView2.Width * 2 + 250;            
+            Width = subtitleListView2.Width * 2 + 250;
         }
 
         private void RefreshSyncronizationPointsUI()
@@ -191,7 +191,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 int index = SubtitleListview1.SelectedItems[0].Index;
                 int indexOther = subtitleListView2.SelectedItems[0].Index;
-                
+
                 if (_syncronizationPoints.ContainsKey(index))
                     _syncronizationPoints[index] = TimeSpan.FromMilliseconds(_otherSubtitle.Paragraphs[indexOther].StartTime.TotalMilliseconds);
                 else
@@ -279,11 +279,11 @@ namespace Nikse.SubtitleEdit.Forms
             int endIndex = -1;
             int minIndex = 0;
             int maxIndex;
-            List<int> syncIndices = new List<int>();         
+            List<int> syncIndices = new List<int>();
             foreach (KeyValuePair<int, TimeSpan> kvp in _syncronizationPoints)
                 syncIndices.Add(kvp.Key);
             for (int i = 0; i < syncIndices.Count; i++)
-            { 
+            {
                 if (i == 0)
                 {
                     endIndex = syncIndices[i];
@@ -318,7 +318,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void listBoxSyncPoints_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (listBoxSyncPoints.SelectedIndex >= 0)
-            { 
+            {
                 ListBoxSyncPoint item = (ListBoxSyncPoint) listBoxSyncPoints.Items[listBoxSyncPoints.SelectedIndex];
                 SubtitleListview1.SelectIndexAndEnsureVisible(item.Index);
             }
@@ -327,7 +327,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void SubtitleListview1_MouseDoubleClick(object sender, MouseEventArgs e)
         {
             if (SubtitleListview1.SelectedItems.Count == 1)
-            { 
+            {
                 int index = SubtitleListview1.SelectedItems[0].Index;
                 if (_syncronizationPoints.ContainsKey(index))
                     buttonRemoveSyncPoint_Click(null, null);

@@ -718,7 +718,7 @@ Vil du starte fra toppen af dokumentet og søge videre?</FindContinue>
     <TextingForHearingImpairedRemovedOneLine>Tekstning for hørehæmmede fjernet: En linje</TextingForHearingImpairedRemovedOneLine>
     <TextingForHearingImpairedRemovedXLines>Tekstning for hørehæmmede fjernet: {0} linjer</TextingForHearingImpairedRemovedXLines>
     <SubtitleSplitted>Undertekst delt</SubtitleSplitted>
-    <SubtitleAppendPrompt>Dette vil tilføje en eksisterende undertekst til den indlæste underttekst, 
+    <SubtitleAppendPrompt>Dette vil tilføje en eksisterende undertekst til den indlæste underttekst,
 som allerede er i sync med video-fil.
 
 Fortsæt?</SubtitleAppendPrompt>

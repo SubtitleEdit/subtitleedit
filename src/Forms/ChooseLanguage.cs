@@ -32,8 +32,8 @@ namespace Nikse.SubtitleEdit.Forms
 
         public string CultureName
         {
-            get 
-            { 
+            get
+            {
                 int index = comboBoxLanguages.SelectedIndex;
                 if (index == -1)
                     return "en-US";
@@ -73,7 +73,7 @@ namespace Nikse.SubtitleEdit.Forms
                     System.Diagnostics.Debug.WriteLine(cultureName + " is not a valid culture");
                 }
             }
-           
+
             int index = 0;
             for (int i=0; i< comboBoxLanguages.Items.Count; i++)
             {

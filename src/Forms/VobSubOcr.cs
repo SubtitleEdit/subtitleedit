@@ -111,7 +111,7 @@ namespace Nikse.SubtitleEdit.Forms
         bool _italicCheckedLast;
         bool _useNewSubIdxCode;
 
-        Type _modiType; 
+        Type _modiType;
         Object _modiDoc;
         bool _modiEnabled;
 
@@ -196,7 +196,7 @@ namespace Nikse.SubtitleEdit.Forms
             groupBoxSubtitleImage.Text = string.Empty;
             labelFixesMade.Text = string.Empty;
             labelFixesMade.Left = checkBoxAutoFixCommonErrors.Left + checkBoxAutoFixCommonErrors.Width;
-            
+
             labelDictionaryLoaded.Text = string.Format(Configuration.Settings.Language.VobSubOcr.DictionaryX, string.Empty);
             comboBoxDictionaries.Left = labelDictionaryLoaded.Left + labelDictionaryLoaded.Width;
 
@@ -248,7 +248,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             comboBoxTesseractLanguages.Left = labelTesseractLanguage.Left + labelTesseractLanguage.Width + 3;
             comboBoxModiLanguage.Left = label1.Left + label1.Width + 3;
-            
+
             comboBoxCharacterDatabase.Left = labelImageDatabase.Left + labelImageDatabase.Width + 3;
             buttonNewCharacterDatabase.Left = comboBoxCharacterDatabase.Left + comboBoxCharacterDatabase.Width + 3;
             buttonEditCharacterDatabase.Left = buttonNewCharacterDatabase.Left;
@@ -407,7 +407,7 @@ namespace Nikse.SubtitleEdit.Forms
             catch (Exception ex)
             {
                 MessageBox.Show(string.Format(Configuration.Settings.Language.VobSubOcr.UnableToCreateCharacterDatabaseFolder, ex.Message));
-            }            
+            }
         }
 
         private void LoadImageCompareBitmaps()
@@ -425,7 +425,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 XmlNode node = _compareDoc.DocumentElement.SelectSingleNode("FileName[.='" + name + "']");
                 if (node != null)
-                {                    
+                {
                     bool isItalic = node.Attributes["Italic"] != null;
                     int expandCount = 0;
                     if (node.Attributes["Expand"] != null)
@@ -599,7 +599,7 @@ namespace Nikse.SubtitleEdit.Forms
             buttonStop.Enabled = false;
             buttonNewCharacterDatabase.Enabled = true;
             buttonEditCharacterDatabase.Enabled = true;
-            buttonStartOcr.Focus();            
+            buttonStartOcr.Focus();
         }
 
         private void LoadBluRaySup()
@@ -703,7 +703,7 @@ namespace Nikse.SubtitleEdit.Forms
         private Bitmap GetSubtitleBitmap(int index)
         {
             Color background;
-            Color pattern;   
+            Color pattern;
             Color emphasis1;
             Color emphasis2;
 
@@ -788,7 +788,7 @@ namespace Nikse.SubtitleEdit.Forms
                         b = bitmaps[0];
                     }
 
-                    if (b != null) 
+                    if (b != null)
                     {
                         if (_isSon && checkBoxCustomFourColors.Checked)
                         {
@@ -882,8 +882,8 @@ namespace Nikse.SubtitleEdit.Forms
                 return (_bluRaySubtitles[index].StartTime + 45) / 90;
             else
                 return (long)_vobSubMergedPackist[index].StartTime.TotalMilliseconds;
-        }      
-      
+        }
+
         private long GetSubtitleEndTimeMilliseconds(int index)
         {
             if (_mp4List != null)
@@ -919,7 +919,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (index < numberOfImages)
             {
                 groupBoxSubtitleImage.Text = string.Format(Configuration.Settings.Language.VobSubOcr.SubtitleImageXofY, index + 1, numberOfImages);
-                pictureBoxSubtitleImage.Image = GetSubtitleBitmap(index); 
+                pictureBoxSubtitleImage.Image = GetSubtitleBitmap(index);
                 pictureBoxSubtitleImage.Refresh();
             }
             else
@@ -936,7 +936,7 @@ namespace Nikse.SubtitleEdit.Forms
             int smallestDifference = 10000;
             int smallestIndex = -1;
             Bitmap target = targetItem.Bitmap;
-            
+
             foreach (CompareItem compareItem in _compareBitmaps)
             {
                 // check for expand match!
@@ -989,7 +989,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (cutBitmap.Height != target.Height)
                     FindBestMatch(ref index, ref smallestDifference, ref smallestIndex, cutBitmap);
                 cutBitmap.Dispose();
-            }                      
+            }
 
 
             if (smallestDifference > 0 && target.Width > 15)
@@ -1000,7 +1000,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (cutBitmap.Height != target.Height)
                     FindBestMatch(ref index, ref smallestDifference, ref smallestIndex, cutBitmap);
                 cutBitmap.Dispose();
-            }                      
+            }
 
             if (smallestIndex >= 0)
             {
@@ -1324,7 +1324,7 @@ namespace Nikse.SubtitleEdit.Forms
             bool shrinkSelection = false;
             var expandSelectionList = new List<ImageSplitterItem>();
             while (index < list.Count)
-            {                
+            {
                 ImageSplitterItem item = list[index];
                 if (expandSelection || shrinkSelection)
                 {
@@ -1335,8 +1335,8 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     else if (index+1 < list.Count && list[index+1].Bitmap != null) // only allow expand to EndOfLine or space
                     {
-                        
-                        index++; 
+
+                        index++;
                         expandSelectionList.Add(list[index]);
                     }
                     item = GetExpandedSelection(bitmap, expandSelectionList);
@@ -1444,7 +1444,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (checkBoxAutoFixCommonErrors.Checked)
                     line = _ocrFixEngine.FixOcrErrors(line, index, _lastLine, true, checkBoxGuessUnknownWords.Checked);
                 int correctWords;
-                int wordsNotFound = _ocrFixEngine.CountUnknownWordsViaDictionary(line, out correctWords);                
+                int wordsNotFound = _ocrFixEngine.CountUnknownWordsViaDictionary(line, out correctWords);
 
                 if (wordsNotFound > 0 || correctWords == 0 || textWithOutFixes != null && textWithOutFixes.ToString().Replace("~", string.Empty).Trim().Length == 0)
                 {
@@ -1625,7 +1625,7 @@ namespace Nikse.SubtitleEdit.Forms
                 allItalic = false;
 
                 if (wordItalics > 0)
-                { 
+                {
                     string temp = line.ToString().Replace(" </i>", "</i> ");
                     line = new StringBuilder();
                     line.Append(temp);
@@ -1758,7 +1758,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (Configuration.Settings.VobSubOcr.XOrMorePixelsMakesSpace != (int)numericUpDownPixelsIsSpace.Value && _bluRaySubtitlesOriginal == null)
             {
-                Configuration.Settings.VobSubOcr.XOrMorePixelsMakesSpace = (int)numericUpDownPixelsIsSpace.Value;    
+                Configuration.Settings.VobSubOcr.XOrMorePixelsMakesSpace = (int)numericUpDownPixelsIsSpace.Value;
                 Configuration.Settings.Save();
             }
             DialogResult = DialogResult.OK;
@@ -1818,14 +1818,14 @@ namespace Nikse.SubtitleEdit.Forms
                     text = OcrViaTessnet(GetSubtitleBitmap(i), i);
                 else if (comboBoxOcrMethod.SelectedIndex == 1)
                     text = SplitAndOcrBitmapNormal(GetSubtitleBitmap(i), i);
-                else 
+                else
                     text = CallModi(i);
 
                 _lastLine = text;
 
                 // max allow 2 lines
                 if (checkBoxAutoBreakLines.Checked && text.Replace(Environment.NewLine, "*").Length + 2 <= text.Length)
-                    text = Utilities.AutoBreakLine(text);               
+                    text = Utilities.AutoBreakLine(text);
 
                 Application.DoEvents();
                 if (_abort)
@@ -1845,8 +1845,8 @@ namespace Nikse.SubtitleEdit.Forms
                 if (p != null)
                     p.Text = text;
                 textBoxCurrentText.Text = text;
-            }            
-            SetButtonsEnabledAfterOcrDone();            
+            }
+            SetButtonsEnabledAfterOcrDone();
         }
 
         private Bitmap ResizeBitmap(Bitmap b, int width, int height)
@@ -1903,7 +1903,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             Process process = new Process();
             process.StartInfo = new ProcessStartInfo(Configuration.TesseractFolder + "tesseract.exe");
-			process.StartInfo.UseShellExecute = true;
+            process.StartInfo.UseShellExecute = true;
             process.StartInfo.Arguments = "\"" + tempTiffFileName + "\" \"" + tempTextFileName + "\" -l " + language;
             process.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
 
@@ -1947,7 +1947,7 @@ namespace Nikse.SubtitleEdit.Forms
             string textWithOutFixes = Tesseract3DoOcrViaExe(bitmap, _languageId);
 
             if (textWithOutFixes.ToString().Trim().Length == 0)
-                textWithOutFixes = TesseractResizeAndRetry(bitmap);     
+                textWithOutFixes = TesseractResizeAndRetry(bitmap);
 
             int numberOfWords = textWithOutFixes.ToString().Split((" " + Environment.NewLine).ToCharArray(), StringSplitOptions.RemoveEmptyEntries).Length;
 
@@ -1960,7 +1960,7 @@ namespace Nikse.SubtitleEdit.Forms
                 int wordsNotFound = _ocrFixEngine.CountUnknownWordsViaDictionary(line, out correctWords);
 
                 if (wordsNotFound > 0 || correctWords == 0)
-                { 
+                {
                     string newUnfixedText = TesseractResizeAndRetry(bitmap);
                     string newText = _ocrFixEngine.FixOcrErrors(newUnfixedText, index, _lastLine, true, checkBoxGuessUnknownWords.Checked);
                     int newWordsNotFound = _ocrFixEngine.CountUnknownWordsViaDictionary(newText, out correctWords);
@@ -1985,7 +1985,7 @@ namespace Nikse.SubtitleEdit.Forms
                         if (modiText.Length == 0)
                             modiText = CallModi(index); // retry... strange MODI
                         if (modiText.Length == 0)
-                            modiText = CallModi(index); // retry... strange MODI                        
+                            modiText = CallModi(index); // retry... strange MODI
 
                         if (modiText.Length > 1)
                         {
@@ -2007,7 +2007,7 @@ namespace Nikse.SubtitleEdit.Forms
                         // take the best option - before ocr fixing, which we do again to save suggestions and prompt for user input
                         line = _ocrFixEngine.FixUnknownWordsViaGuessOrPrompt(out wordsNotFound, line, index, bitmap, checkBoxAutoFixCommonErrors.Checked, checkBoxPromptForUnknownWords.Checked, true, checkBoxGuessUnknownWords.Checked);
                     }
-                    else 
+                    else
                     { // fix some error manually (modi not available)
                         line = _ocrFixEngine.FixUnknownWordsViaGuessOrPrompt(out wordsNotFound, line, index, bitmap, checkBoxAutoFixCommonErrors.Checked, checkBoxPromptForUnknownWords.Checked, true, checkBoxGuessUnknownWords.Checked);
                     }
@@ -2057,7 +2057,7 @@ namespace Nikse.SubtitleEdit.Forms
                 else
                     subtitleListView1.SetBackgroundColor(index, Color.LightGreen);
             }
-           
+
             if (textWithOutFixes.ToString().Trim() != line.Trim())
             {
                 _tessnetOcrAutoFixes++;
@@ -2092,7 +2092,7 @@ namespace Nikse.SubtitleEdit.Forms
             // We call in a seperate thread... or app will crash sometimes :(
             var modiThread = new System.Threading.Thread(DoWork);
             modiThread.Start(mp);
-            modiThread.Join(3000); // wait max 3 seconds     
+            modiThread.Join(3000); // wait max 3 seconds
             modiThread.Abort();
 
             if (!string.IsNullOrEmpty(mp.Text) && mp.Text.Length > 3 && mp.Text.EndsWith(";0]"))
@@ -2107,7 +2107,7 @@ namespace Nikse.SubtitleEdit.Forms
                 // We call in a seperate thread... or app will crash sometimes :(
                 modiThread = new System.Threading.Thread(DoWork);
                 modiThread.Start(mp);
-                modiThread.Join(3000); // wait max 3 seconds     
+                modiThread.Join(3000); // wait max 3 seconds
                 modiThread.Abort();
             }
             if (string.IsNullOrEmpty(mp.Text))
@@ -2118,7 +2118,7 @@ namespace Nikse.SubtitleEdit.Forms
                 // We call in a seperate thread... or app will crash sometimes :(
                 modiThread = new System.Threading.Thread(DoWork);
                 modiThread.Start(mp);
-                modiThread.Join(3000); // wait max 3 seconds     
+                modiThread.Join(3000); // wait max 3 seconds
                 modiThread.Abort();
             }
 
@@ -2256,7 +2256,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (subtitleListView1.SelectedItems.Count > 0)
             {
-                _selectedIndex = subtitleListView1.SelectedItems[0].Index;                
+                _selectedIndex = subtitleListView1.SelectedItems[0].Index;
                 textBoxCurrentText.Text = _subtitle.Paragraphs[_selectedIndex].Text;
                 ShowSubtitleImage(subtitleListView1.SelectedItems[0].Index);
                 numericUpDownStartNumber.Value = _selectedIndex + 1;
@@ -2265,7 +2265,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 _selectedIndex = -1;
                 textBoxCurrentText.Text = string.Empty;
-            }          
+            }
         }
 
         private void TextBoxCurrentTextTextChanged(object sender, EventArgs e)
@@ -2493,7 +2493,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void SaveImageAsToolStripMenuItemClick(object sender, EventArgs e)
         {
             saveFileDialog1.Title = Configuration.Settings.Language.VobSubOcr.SaveSubtitleImageAs;
-            saveFileDialog1.AddExtension = true;                
+            saveFileDialog1.AddExtension = true;
             saveFileDialog1.FileName = "Image" + _selectedIndex;
             saveFileDialog1.Filter = "PNG image|*.png|BMP image|*.bmp|GIF image|*.gif|TIFF image|*.tiff";
             saveFileDialog1.FilterIndex = 0;
@@ -2706,7 +2706,7 @@ namespace Nikse.SubtitleEdit.Forms
             subtitleListView1.Fill(_subtitle);
             subtitleListView1.EndUpdate();
         }
-    
+
         private void checkBoxUseTimeCodesFromIdx_CheckedChanged(object sender, EventArgs e)
         {
             Subtitle oldSubtitle = new Subtitle(_subtitle);
@@ -2717,7 +2717,7 @@ namespace Nikse.SubtitleEdit.Forms
                 Paragraph p = oldSubtitle.GetParagraphOrDefault(i);
                 if (p != null && p.Text != string.Empty)
                 {
-                    _subtitle.Paragraphs[i].Text = p.Text;                    
+                    _subtitle.Paragraphs[i].Text = p.Text;
                 }
             }
             subtitleListView1.Fill(_subtitle);
@@ -2785,7 +2785,7 @@ namespace Nikse.SubtitleEdit.Forms
                 comboBoxOcrMethod.SelectedIndex = 2;
             else
                 comboBoxOcrMethod.SelectedIndex = 0;
-          
+
             groupBoxImagePalette.Visible = isSon;
 
             Text = Configuration.Settings.Language.VobSubOcr.TitleBluRay;
@@ -2798,7 +2798,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (_lastAdditions.Count > 0)
             {
-                var last = _lastAdditions[_lastAdditions.Count - 1]; 
+                var last = _lastAdditions[_lastAdditions.Count - 1];
                 numericUpDownStartNumber.Value = last.Index + 1;
                 Timer t = new Timer();
                 t.Interval = 200;
@@ -2827,7 +2827,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             listBoxUnknownWords.Top = listBoxLog.Top;
             listBoxUnknownWords.Left = listBoxLog.Left;
-            listBoxUnknownWords.Size = listBoxLog.Size;            
+            listBoxUnknownWords.Size = listBoxLog.Size;
         }
 
         private void importTextWithMatchingTimeCodesToolStripMenuItem_Click(object sender, EventArgs e)
@@ -2840,7 +2840,7 @@ namespace Nikse.SubtitleEdit.Forms
                 string fileName = openFileDialog1.FileName;
                 if (!File.Exists(fileName))
                     return;
-               
+
                 var fi = new FileInfo(fileName);
                 if (fi.Length > 1024 * 1024 * 10) // max 10 mb
                 {
@@ -2871,7 +2871,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     index++;
                 }
-                
+
             }
         }
 
@@ -2973,7 +2973,7 @@ namespace Nikse.SubtitleEdit.Forms
                 _compareDoc = formVobSubEditCharacters.ImageCompareDocument;
                 string path = Configuration.VobSubCompareFolder + comboBoxCharacterDatabase.SelectedItem + Path.DirectorySeparatorChar;
                 _compareDoc.Save(path + "CompareDescription.xml");
-            }            
+            }
         }
 
         private void checkBoxAutoTransparentBackground_CheckedChanged(object sender, EventArgs e)
@@ -3030,7 +3030,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void textBoxCurrentText_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.KeyData == _italicShortcut) // Ctrl+i (or cusstom) = italic 
+            if (e.KeyData == _italicShortcut) // Ctrl+i (or cusstom) = italic
             {
                 TextBox tb = textBoxCurrentText;
                 string text = tb.SelectedText;

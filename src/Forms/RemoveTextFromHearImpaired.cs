@@ -89,7 +89,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (s.StartsWith("-") && s.Length > 2)
                 s = s.TrimStart('-');
-    
+
             return s.Trim();
         }
 
@@ -135,7 +135,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             if (checkBoxRemoveTextBetweenQuestionMarks.Checked)
-            {               
+            {
                 text = RemoveTextBetweenTags("?", "?:", text);
                 text = RemoveTextBetweenTags("?", "?", text);
             }
@@ -388,10 +388,10 @@ namespace Nikse.SubtitleEdit.Forms
             }
             newText = newText.Trim();
             if (noOfNames > 0 && Utilities.CountTagInText(newText, Environment.NewLine) == 1)
-            { 
+            {
                 int indexOfDialogChar = newText.IndexOf('-');
                 bool insertDash = true;
-                string[] arr = newText.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);                
+                string[] arr = newText.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
                 if (arr.Length == 2 && arr[0].Length > 1 && arr[1].Length > 1)
                 {
                     string arr0 = new StripableText(arr[0]).StrippedText;
@@ -407,7 +407,7 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         insertDash = false;
                     }
-                    
+
                 }
 
                 if (insertDash)
@@ -437,7 +437,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             return newText;
         }
-       
+
         internal string RemoveTextFromHearImpaired(string text)
         {
             if (checkBoxRemoveWhereContains.Checked && comboBoxRemoveIfTextContains.Text.Length > 0 && text.Contains(comboBoxRemoveIfTextContains.Text))
@@ -526,7 +526,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             text = RemoveHearImpairedTags(text);
 
-            // fix 3 lines to two liners - if only two lines 
+            // fix 3 lines to two liners - if only two lines
             if (noOfNamesRemoved >= 1 && Utilities.CountTagInText(text, Environment.NewLine) == 2)
             {
                 string[] a = Utilities.RemoveHtmlTags(text).Replace(" ", string.Empty).Split("!?.".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
@@ -599,11 +599,11 @@ namespace Nikse.SubtitleEdit.Forms
             text = text.ToLower();
             text = text.TrimEnd(" ()[]?{}".ToCharArray());
             text = text.TrimStart(" ()[]?{}".ToCharArray());
-            
+
             if (text == "sighing" ||
                 text == "laughs" ||
                 text == "chuckles" ||
-                text == "scoff" ||                
+                text == "scoff" ||
                 text == "sighs" ||
                 text == "whispers" ||
                 text == "whisper" ||
@@ -631,7 +631,7 @@ namespace Nikse.SubtitleEdit.Forms
             result = result.TrimEnd(" ()[]?{}".ToCharArray());
             result = result.TrimStart(" ()[]?{}".ToCharArray());
             return result;
-        }       
+        }
 
         private string RemoveInterjections(string text)
         {
@@ -639,7 +639,7 @@ namespace Nikse.SubtitleEdit.Forms
             foreach (string s in arr)
             {
                 if (text.Contains(s))
-                { 
+                {
                     Regex regex = new Regex(s);
                     Match match = regex.Match(text);
                     if (match.Success)
@@ -671,7 +671,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
             return text;
-        }     
+        }
 
         private string RemoveStartEndTags(string text)
         {

@@ -39,7 +39,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             StringBuilder sb = new StringBuilder();
             int index = 0;
             foreach (Paragraph p in subtitle.Paragraphs)
-            {               
+            {
                 //00:50:34:22  00:50:39:13
                 //Ich muss dafür sorgen,
                 //dass die Epsteins weiterleben

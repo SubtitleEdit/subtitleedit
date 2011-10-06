@@ -45,7 +45,7 @@ namespace Nikse.SubtitleEdit.Logic.OCR
         public List<string> AutoGuessesUsed { get; set; }
         public List<string> UnknownWordsFound { get; set; }
         public bool IsDictionaryLoaded { get; private set; }
-        
+
         public CultureInfo DictionaryCulture { get; private set; }
 
         static Regex hexNumber = new Regex(@"^#?[\dABDEFabcdef]+$", RegexOptions.Compiled);
@@ -58,14 +58,14 @@ namespace Nikse.SubtitleEdit.Logic.OCR
         /// <param name="parentForm">Used for centering/show spellcheck dialog</param>
         public OcrFixEngine(string threeLetterIsoLanguageName, Form parentForm)
         {
-            _parentForm = parentForm;          
+            _parentForm = parentForm;
 
             _spellCheck = new OcrSpellCheck {StartPosition = FormStartPosition.Manual};
             _spellCheck.Location = new Point(parentForm.Left + (parentForm.Width / 2 - _spellCheck.Width / 2),
                                              parentForm.Top + (parentForm.Height / 2 - _spellCheck.Height / 2));
 
             LoadReplaceLists(threeLetterIsoLanguageName);
-            LoadSpellingDictionaries(threeLetterIsoLanguageName); // Hunspell etc.        
+            LoadSpellingDictionaries(threeLetterIsoLanguageName); // Hunspell etc.
 
             AutoGuessesUsed = new List<string>();
             UnknownWordsFound = new List<string>();
@@ -213,18 +213,18 @@ namespace Nikse.SubtitleEdit.Logic.OCR
             }
 
             // Load Hunspell spellchecker
-            try 
+            try
             {
                 _hunspell = Hunspell.GetHunspell(dictionary);
                 IsDictionaryLoaded = true;
                 _spellCheckDictionaryName = dictionary;
                 DictionaryCulture = culture;
-            } 
-            catch 
+            }
+            catch
             {
                 IsDictionaryLoaded = false;
             }
-                    
+
         }
 
         public string SpellCheckDictionaryName
@@ -282,7 +282,7 @@ namespace Nikse.SubtitleEdit.Logic.OCR
         {
             var sb = new StringBuilder();
             var word = new StringBuilder();
-            
+
             text = FixCommenOcrLineErrors(text, lastLine);
 
             string lastWord = null;
@@ -644,7 +644,7 @@ namespace Nikse.SubtitleEdit.Logic.OCR
                 {
                     input = input.Replace(".'", Configuration.Settings.Tools.MusicSymbol);
                 }
-                
+
             }
 
             return input;
@@ -657,7 +657,7 @@ namespace Nikse.SubtitleEdit.Logic.OCR
             for (int i = 0; i < lines.Length; i++)
             {
                 string l = lines[i];
-                
+
                     if (i > 0)
                         lastLine = lines[i - 1];
                     lastLine = Utilities.RemoveHtmlTags(lastLine);
@@ -676,7 +676,7 @@ namespace Nikse.SubtitleEdit.Logic.OCR
                             }
                         }
                     }
-                    sb.AppendLine(l);                
+                    sb.AppendLine(l);
             }
             return sb.ToString().TrimEnd('\r').TrimEnd('\n').TrimEnd('\r').TrimEnd('\n');
         }
@@ -1049,7 +1049,7 @@ namespace Nikse.SubtitleEdit.Logic.OCR
                                 word = word.Remove(0, 3);
 
                             if (word.EndsWith("</i>"))
-                                word = word.Remove(word.Length-4, 4);                           
+                                word = word.Remove(word.Length-4, 4);
 
                             SpellcheckOcrTextResult res = SpellcheckOcrText(line, bitmap, words, i, word, suggestions);
 
@@ -1140,7 +1140,7 @@ namespace Nikse.SubtitleEdit.Logic.OCR
                 case OcrSpellCheck.Action.AllwaysUseSuggestion:
                     SaveWordToWordList(word);
                     result.Fixed = true;
-                    result.Word = _spellCheck.Word;                    
+                    result.Word = _spellCheck.Word;
                     break;
                 case OcrSpellCheck.Action.ChangeAndSave:
                     SaveWordToWordList(word);
@@ -1232,7 +1232,7 @@ namespace Nikse.SubtitleEdit.Logic.OCR
                     }
                     else
                     {
-                        doc.LoadXml("<ReplaceList><WholeWords/><PartialLines/><BeginLines/><EndLines/><WholeLines/></ReplaceList>");                    
+                        doc.LoadXml("<ReplaceList><WholeWords/><PartialLines/><BeginLines/><EndLines/><WholeLines/></ReplaceList>");
                     }
                     if (!_wordReplaceList.ContainsKey(word))
                         _wordReplaceList.Add(word, _spellCheck.Word);
@@ -1269,7 +1269,7 @@ namespace Nikse.SubtitleEdit.Logic.OCR
         }
 
         public bool IsWordOrWordsCorrect(string word)
-        {            
+        {
             foreach (string s in word.Split(' '))
             {
                 if (!DoSpell(s))

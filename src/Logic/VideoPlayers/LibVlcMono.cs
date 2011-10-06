@@ -55,48 +55,48 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
         private static extern int libvlc_audio_get_volume(IntPtr mediaPlayer);
 
         [DllImport("libvlc")]
-		private static extern void libvlc_audio_set_volume(IntPtr mediaPlayer, int volume);
+        private static extern void libvlc_audio_set_volume(IntPtr mediaPlayer, int volume);
 
 
         // LibVLC Media Player - http://www.videolan.org/developers/vlc/doc/doxygen/html/group__libvlc__media__player.html
         [DllImport("libvlc")]
-		private static extern void libvlc_media_player_play(IntPtr mediaPlayer);
+        private static extern void libvlc_media_player_play(IntPtr mediaPlayer);
 
         [DllImport("libvlc")]
-		private static extern void libvlc_media_player_stop(IntPtr mediaPlayer);
+        private static extern void libvlc_media_player_stop(IntPtr mediaPlayer);
 
         [DllImport("libvlc")]
-		private static extern void libvlc_media_player_pause(IntPtr mediaPlayer);
+        private static extern void libvlc_media_player_pause(IntPtr mediaPlayer);
 
         [DllImport("libvlc")]
-		private static extern void libvlc_media_player_set_hwnd(IntPtr mediaPlayer, IntPtr windowsHandle);
+        private static extern void libvlc_media_player_set_hwnd(IntPtr mediaPlayer, IntPtr windowsHandle);
 
         [DllImport("libvlc")]
-		private static extern int libvlc_media_player_is_playing(IntPtr mediaPlayer);
+        private static extern int libvlc_media_player_is_playing(IntPtr mediaPlayer);
 
         [DllImport("libvlc")]
-		private static extern Int64 libvlc_media_player_get_time(IntPtr mediaPlayer);
+        private static extern Int64 libvlc_media_player_get_time(IntPtr mediaPlayer);
 
         [DllImport("libvlc")]
-		private static extern void libvlc_media_player_set_time(IntPtr mediaPlayer, Int64 position);
+        private static extern void libvlc_media_player_set_time(IntPtr mediaPlayer, Int64 position);
 
         [DllImport("libvlc")]
-		private static extern float libvlc_media_player_get_fps(IntPtr mediaPlayer);
+        private static extern float libvlc_media_player_get_fps(IntPtr mediaPlayer);
 
         [DllImport("libvlc")]
-		private static extern byte libvlc_media_player_get_state(IntPtr mediaPlayer);
+        private static extern byte libvlc_media_player_get_state(IntPtr mediaPlayer);
 
         [DllImport("libvlc")]
-		private static extern Int64 libvlc_media_player_get_length(IntPtr mediaPlayer);
+        private static extern Int64 libvlc_media_player_get_length(IntPtr mediaPlayer);
 
         [DllImport("libvlc")]
-		private static extern void libvlc_media_list_player_release(IntPtr mediaPlayer);
+        private static extern void libvlc_media_list_player_release(IntPtr mediaPlayer);
 
         [DllImport("libvlc")]
-		private static extern float libvlc_media_player_get_rate(IntPtr mediaPlayer);
+        private static extern float libvlc_media_player_get_rate(IntPtr mediaPlayer);
 
         [DllImport("libvlc")]
-		private static extern int libvlc_media_player_set_rate(IntPtr mediaPlayer, float rate);
+        private static extern int libvlc_media_player_set_rate(IntPtr mediaPlayer, float rate);
 
         private static byte[] StringToCharPointer(string s)
         {
@@ -230,7 +230,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
 
                 //  Linux: libvlc_media_player_set_xdrawable (_mediaPlayer, xdrawable);
                 //  Mac: libvlc_media_player_set_nsobject (_mediaPlayer, view);
-                libvlc_media_player_set_hwnd(newVlc._mediaPlayer, ownerControl.Handle); // windows                               
+                libvlc_media_player_set_hwnd(newVlc._mediaPlayer, ownerControl.Handle); // windows
 
                 if (onVideoEnded != null)
                 {
@@ -261,7 +261,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             if (OnVideoLoaded != null)
                 OnVideoLoaded.Invoke(_mediaPlayer, new EventArgs());
         }
-    
+
 
         public override void Initialize(System.Windows.Forms.Control ownerControl, string videoFileName, EventHandler onVideoLoaded, EventHandler onVideoEnded)
         {
@@ -282,7 +282,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
 
                 //  Linux: libvlc_media_player_set_xdrawable (_mediaPlayer, xdrawable);
                 //  Mac: libvlc_media_player_set_nsobject (_mediaPlayer, view);
-                libvlc_media_player_set_hwnd(_mediaPlayer, ownerControl.Handle); // windows                               
+                libvlc_media_player_set_hwnd(_mediaPlayer, ownerControl.Handle); // windows
 
                 if (onVideoEnded != null)
                 {
@@ -298,7 +298,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             }
         }
 
-       
+
 
         void VideoEndTimerTick(object sender, EventArgs e)
         {

@@ -67,12 +67,12 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public override string ToText(Subtitle subtitle, string title)
         {
-            string xmlStructure = 
+            string xmlStructure =
                 "<?xml version=\"1.0\" encoding=\"utf-8\" ?>" + Environment.NewLine +
                 "<tt xmlns=\"http://www.w3.org/2006/10/ttaf1\" xmlns:ttp=\"http://www.w3.org/2006/10/ttaf1#parameter\" ttp:timeBase=\"media\" xmlns:tts=\"http://www.w3.org/2006/10/ttaf1#style\" xml:lang=\"en\" xmlns:ttm=\"http://www.w3.org/2006/10/ttaf1#metadata\">" + Environment.NewLine +
                 "   <head>" + Environment.NewLine +
                 "       <metadata>" + Environment.NewLine +
-                "           <ttm:title></ttm:title>" + Environment.NewLine + 
+                "           <ttm:title></ttm:title>" + Environment.NewLine +
                 "      </metadata>" + Environment.NewLine +
                 "       <styling>" + Environment.NewLine +
                 "         <style id=\"s0\" tts:backgroundColor=\"black\" tts:fontStyle=\"normal\" tts:fontSize=\"16\" tts:fontFamily=\"sansSerif\" tts:color=\"white\" />" + Environment.NewLine +
@@ -95,7 +95,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             titleNode.InnerText = title;
 
             XmlNode div = xml.DocumentElement.SelectSingleNode("//ttaf1:body", nsmgr).FirstChild;
-            int no = 0;            
+            int no = 0;
             foreach (Paragraph p in subtitle.Paragraphs)
             {
                 XmlNode paragraph = xml.CreateElement("p", "http://www.w3.org/2006/10/ttaf1");
@@ -107,10 +107,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     if (!first)
                     {
                         XmlNode br = xml.CreateElement("br", "http://www.w3.org/2006/10/ttaf1");
-                        paragraph.AppendChild(br);    
+                        paragraph.AppendChild(br);
                     }
                     XmlNode textNode = xml.CreateTextNode(line);
-                    paragraph.AppendChild(textNode);    
+                    paragraph.AppendChild(textNode);
                     first = false;
                 }
 
@@ -176,7 +176,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     System.Diagnostics.Debug.WriteLine(ex.Message);
                     _errorCount++;
                 }
-            }            
+            }
             subtitle.Renumber(1);
         }
 

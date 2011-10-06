@@ -38,7 +38,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         {
             var subtitle = new Subtitle();
             LoadSubtitle(subtitle, lines, fileName);
-            return subtitle.Paragraphs.Count > _errorCount;            
+            return subtitle.Paragraphs.Count > _errorCount;
         }
 
         public override string ToText(Subtitle subtitle, string title)
@@ -62,7 +62,7 @@ SRPSKI
 
 00:00:00.00
 26.11.2008  18:54:15");
- 
+
 
             foreach (Paragraph p in subtitle.Paragraphs)
             {
@@ -77,14 +77,14 @@ SRPSKI
                     firstLine = lines[0];
                 if (lines.Length > 1)
                     secondLine = lines[1];
-               
-                sb.AppendLine(string.Format(" {0}          {1} " + Environment.NewLine + 
-                                            "1    0    0    0    0    0"+ Environment.NewLine + 
+
+                sb.AppendLine(string.Format(" {0}          {1} " + Environment.NewLine +
+                                            "1    0    0    0    0    0"+ Environment.NewLine +
                                             "{2}" + Environment.NewLine +
-                                            "{3}", p.StartTime.TotalMilliseconds /  10, p.EndTime.TotalMilliseconds / 10, firstLine, secondLine));                
+                                            "{3}", p.StartTime.TotalMilliseconds /  10, p.EndTime.TotalMilliseconds / 10, firstLine, secondLine));
             }
             return sb.ToString().Trim();
-        }    
+        }
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
@@ -119,7 +119,7 @@ SRPSKI
                         {
                             expecting = ExpectingLine.TimeCodes;
                         }
-                    }                   
+                    }
                 }
                 else if (regexBeforeText.IsMatch(s))
                 {

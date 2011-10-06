@@ -35,10 +35,10 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
 
         public PacketizedElementaryStream(byte[] buffer, int index)
         {
-            StartCode = Helper.GetEndian(buffer, index + 0, 3);           
+            StartCode = Helper.GetEndian(buffer, index + 0, 3);
             StreamId = buffer[index + 3];
             Length = Helper.GetEndianWord(buffer, index + 4);
-            
+
             ScramblingControl = (buffer[index + 6] >> 4) & Helper.B00000011;
             Priority = buffer[index + 6] & Helper.B00001000;
             DataAlignmentIndicator = buffer[index + 6] & Helper.B00000100;

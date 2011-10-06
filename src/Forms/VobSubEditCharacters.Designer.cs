@@ -48,9 +48,9 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
-            // 
+            //
             // comboBoxTexts
-            // 
+            //
             this.comboBoxTexts.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxTexts.FormattingEnabled = true;
             this.comboBoxTexts.Location = new System.Drawing.Point(12, 27);
@@ -58,18 +58,18 @@
             this.comboBoxTexts.Size = new System.Drawing.Size(240, 21);
             this.comboBoxTexts.TabIndex = 1;
             this.comboBoxTexts.SelectedIndexChanged += new System.EventHandler(this.ComboBoxTextsSelectedIndexChanged);
-            // 
+            //
             // listBoxFileNames
-            // 
+            //
             this.listBoxFileNames.FormattingEnabled = true;
             this.listBoxFileNames.Location = new System.Drawing.Point(12, 73);
             this.listBoxFileNames.Name = "listBoxFileNames";
             this.listBoxFileNames.Size = new System.Drawing.Size(240, 264);
             this.listBoxFileNames.TabIndex = 3;
             this.listBoxFileNames.SelectedIndexChanged += new System.EventHandler(this.ListBoxFileNamesSelectedIndexChanged);
-            // 
+            //
             // buttonOK
-            // 
+            //
             this.buttonOK.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.buttonOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonOK.Location = new System.Drawing.Point(368, 341);
@@ -78,9 +78,9 @@
             this.buttonOK.TabIndex = 0;
             this.buttonOK.Text = "&OK";
             this.buttonOK.UseVisualStyleBackColor = true;
-            // 
+            //
             // buttonDelete
-            // 
+            //
             this.buttonDelete.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonDelete.Location = new System.Drawing.Point(120, 62);
             this.buttonDelete.Name = "buttonDelete";
@@ -89,27 +89,27 @@
             this.buttonDelete.Text = "Delete ";
             this.buttonDelete.UseVisualStyleBackColor = true;
             this.buttonDelete.Click += new System.EventHandler(this.ButtonDeleteClick);
-            // 
+            //
             // labelChooseCharacters
-            // 
+            //
             this.labelChooseCharacters.AutoSize = true;
             this.labelChooseCharacters.Location = new System.Drawing.Point(12, 10);
             this.labelChooseCharacters.Name = "labelChooseCharacters";
             this.labelChooseCharacters.Size = new System.Drawing.Size(105, 13);
             this.labelChooseCharacters.TabIndex = 0;
             this.labelChooseCharacters.Text = "Choose character(s)";
-            // 
+            //
             // labelImageCompareFiles
-            // 
+            //
             this.labelImageCompareFiles.AutoSize = true;
             this.labelImageCompareFiles.Location = new System.Drawing.Point(12, 56);
             this.labelImageCompareFiles.Name = "labelImageCompareFiles";
             this.labelImageCompareFiles.Size = new System.Drawing.Size(103, 13);
             this.labelImageCompareFiles.TabIndex = 2;
             this.labelImageCompareFiles.Text = "Image compare files";
-            // 
+            //
             // groupBoxCurrentCompareImage
-            // 
+            //
             this.groupBoxCurrentCompareImage.Controls.Add(this.checkBoxItalic);
             this.groupBoxCurrentCompareImage.Controls.Add(this.labelDoubleSize);
             this.groupBoxCurrentCompareImage.Controls.Add(this.pictureBox2);
@@ -125,9 +125,9 @@
             this.groupBoxCurrentCompareImage.TabIndex = 6;
             this.groupBoxCurrentCompareImage.TabStop = false;
             this.groupBoxCurrentCompareImage.Text = "Current compare image";
-            // 
+            //
             // checkBoxItalic
-            // 
+            //
             this.checkBoxItalic.AutoSize = true;
             this.checkBoxItalic.Location = new System.Drawing.Point(15, 61);
             this.checkBoxItalic.Name = "checkBoxItalic";
@@ -135,18 +135,18 @@
             this.checkBoxItalic.TabIndex = 2;
             this.checkBoxItalic.Text = "Is &italic";
             this.checkBoxItalic.UseVisualStyleBackColor = true;
-            // 
+            //
             // labelDoubleSize
-            // 
+            //
             this.labelDoubleSize.AutoSize = true;
             this.labelDoubleSize.Location = new System.Drawing.Point(14, 172);
             this.labelDoubleSize.Name = "labelDoubleSize";
             this.labelDoubleSize.Size = new System.Drawing.Size(93, 13);
             this.labelDoubleSize.TabIndex = 6;
             this.labelDoubleSize.Text = "Image double size";
-            // 
+            //
             // pictureBox2
-            // 
+            //
             this.pictureBox2.BackColor = System.Drawing.Color.Red;
             this.pictureBox2.Location = new System.Drawing.Point(17, 188);
             this.pictureBox2.Name = "pictureBox2";
@@ -154,18 +154,18 @@
             this.pictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pictureBox2.TabIndex = 27;
             this.pictureBox2.TabStop = false;
-            // 
+            //
             // labelTextAssociatedWithImage
-            // 
+            //
             this.labelTextAssociatedWithImage.AutoSize = true;
             this.labelTextAssociatedWithImage.Location = new System.Drawing.Point(14, 19);
             this.labelTextAssociatedWithImage.Name = "labelTextAssociatedWithImage";
             this.labelTextAssociatedWithImage.Size = new System.Drawing.Size(137, 13);
             this.labelTextAssociatedWithImage.TabIndex = 0;
             this.labelTextAssociatedWithImage.Text = "Text associated with image";
-            // 
+            //
             // buttonUpdate
-            // 
+            //
             this.buttonUpdate.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonUpdate.Location = new System.Drawing.Point(120, 35);
             this.buttonUpdate.Name = "buttonUpdate";
@@ -174,35 +174,35 @@
             this.buttonUpdate.Text = "Update";
             this.buttonUpdate.UseVisualStyleBackColor = true;
             this.buttonUpdate.Click += new System.EventHandler(this.ButtonUpdateClick);
-            // 
+            //
             // labelImageInfo
-            // 
+            //
             this.labelImageInfo.AutoSize = true;
             this.labelImageInfo.Location = new System.Drawing.Point(12, 87);
             this.labelImageInfo.Name = "labelImageInfo";
             this.labelImageInfo.Size = new System.Drawing.Size(79, 13);
             this.labelImageInfo.TabIndex = 5;
             this.labelImageInfo.Text = "labelImageInfo";
-            // 
+            //
             // textBoxText
-            // 
+            //
             this.textBoxText.Location = new System.Drawing.Point(14, 35);
             this.textBoxText.Name = "textBoxText";
             this.textBoxText.Size = new System.Drawing.Size(100, 21);
             this.textBoxText.TabIndex = 1;
             this.textBoxText.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textBoxText_KeyDown);
-            // 
+            //
             // pictureBox1
-            // 
+            //
             this.pictureBox1.BackColor = System.Drawing.Color.Red;
             this.pictureBox1.Location = new System.Drawing.Point(17, 104);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(52, 52);
             this.pictureBox1.TabIndex = 22;
             this.pictureBox1.TabStop = false;
-            // 
+            //
             // buttonCancel
-            // 
+            //
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonCancel.Location = new System.Drawing.Point(449, 341);
@@ -211,9 +211,9 @@
             this.buttonCancel.TabIndex = 7;
             this.buttonCancel.Text = "C&ancel";
             this.buttonCancel.UseVisualStyleBackColor = true;
-            // 
+            //
             // VobSubEditCharacters
-            // 
+            //
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(536, 370);

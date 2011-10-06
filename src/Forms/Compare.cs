@@ -29,7 +29,7 @@ namespace Nikse.SubtitleEdit.Forms
                 checkBoxOnlyListDifferencesInText.Text = Configuration.Settings.Language.CompareSubtitles.OnlyLookForDifferencesInText;
             else
                 checkBoxOnlyListDifferencesInText.Visible = false;
-            buttonOK.Text = Configuration.Settings.Language.General.OK;            
+            buttonOK.Text = Configuration.Settings.Language.General.OK;
             subtitleListView1.InitializeLanguage(Configuration.Settings.Language.General, Configuration.Settings);
             subtitleListView2.InitializeLanguage(Configuration.Settings.Language.General, Configuration.Settings);
             FixLargeFonts();
@@ -64,7 +64,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     openFileDialog1.InitialDirectory = Path.GetDirectoryName(subtitleFileName1);
                 }
-                catch 
+                catch
                 {
                 }
             }
@@ -139,8 +139,8 @@ namespace Nikse.SubtitleEdit.Forms
                     if (p1.ToString() == p2.ToString())
                     {
                     }
-                    else 
-                    {                        
+                    else
+                    {
                         if (GetColumnsEqualExceptNumber(p1, p2) == 0)
                         {
                             int oldIndex = index;
@@ -310,7 +310,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (max != _differences.Count)
                 {
                     for (index = Math.Max(subtitleListView1.Items.Count, subtitleListView2.Items.Count); index >= 0; index--)
-                    {                        
+                    {
                         if (!_differences.Contains(index))
                         {
                             if (subtitleListView1.Items.Count > index)
@@ -404,7 +404,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ShowTextDifference()
         {
-            
+
 
             // from start
             int minLength = Math.Min(richTextBox1.Text.Length, richTextBox2.Text.Length);
@@ -518,7 +518,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 buttonPreviousDifference.Enabled = false;
                 buttonNextDifference.Enabled = false;
-            }            
+            }
         }
 
         private void SubtitleListView2SelectedIndexChanged(object sender, EventArgs e)

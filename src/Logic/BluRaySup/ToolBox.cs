@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  * NOTE: Converted to C# and modified by Nikse.dk@gmail.com
  */
 using System.Text;
@@ -51,7 +51,7 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
 
 
         /// <summary>
-        /// Convert an integer to a string with leading zeroes 
+        /// Convert an integer to a string with leading zeroes
         /// </summary>
         /// <param name="i">Integer value to convert</param>
         /// <param name="digits">Number of digits to display - note that a 32bit number can have only 10 digits</param>

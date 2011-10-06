@@ -34,34 +34,34 @@
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.SuspendLayout();
-            // 
+            //
             // labelGoToLine
-            // 
+            //
             resources.ApplyResources(this.labelGoToLine, "labelGoToLine");
             this.labelGoToLine.Name = "labelGoToLine";
-            // 
+            //
             // buttonOK
-            // 
+            //
             resources.ApplyResources(this.buttonOK, "buttonOK");
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.UseVisualStyleBackColor = true;
             this.buttonOK.Click += new System.EventHandler(this.ButtonOkClick);
-            // 
+            //
             // textBox1
-            // 
+            //
             resources.ApplyResources(this.textBox1, "textBox1");
             this.textBox1.Name = "textBox1";
             this.textBox1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBox1KeyDown);
-            // 
+            //
             // buttonCancel
-            // 
+            //
             resources.ApplyResources(this.buttonCancel, "buttonCancel");
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.UseVisualStyleBackColor = true;
             this.buttonCancel.Click += new System.EventHandler(this.ButtonCancelClick);
-            // 
+            //
             // GoToLine
-            // 
+            //
             resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.buttonCancel);

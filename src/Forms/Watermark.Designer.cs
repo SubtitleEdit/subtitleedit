@@ -38,18 +38,18 @@
             this.buttonOK = new System.Windows.Forms.Button();
             this.groupBoxGenerate.SuspendLayout();
             this.SuspendLayout();
-            // 
+            //
             // LabelWatermark
-            // 
+            //
             this.LabelWatermark.AutoSize = true;
             this.LabelWatermark.Location = new System.Drawing.Point(4, 19);
             this.LabelWatermark.Name = "LabelWatermark";
             this.LabelWatermark.Size = new System.Drawing.Size(62, 13);
             this.LabelWatermark.TabIndex = 0;
             this.LabelWatermark.Text = "Watermark:";
-            // 
+            //
             // groupBoxGenerate
-            // 
+            //
             this.groupBoxGenerate.Controls.Add(this.textBoxWatermark);
             this.groupBoxGenerate.Controls.Add(this.radioButtonSpread);
             this.groupBoxGenerate.Controls.Add(this.radioButtonCurrentLine);
@@ -60,17 +60,17 @@
             this.groupBoxGenerate.TabIndex = 1;
             this.groupBoxGenerate.TabStop = false;
             this.groupBoxGenerate.Text = "Generate watermark";
-            // 
+            //
             // textBoxWatermark
-            // 
+            //
             this.textBoxWatermark.Location = new System.Drawing.Point(87, 68);
             this.textBoxWatermark.MaxLength = 50;
             this.textBoxWatermark.Name = "textBoxWatermark";
             this.textBoxWatermark.Size = new System.Drawing.Size(195, 20);
             this.textBoxWatermark.TabIndex = 1;
-            // 
+            //
             // radioButtonSpread
-            // 
+            //
             this.radioButtonSpread.AutoSize = true;
             this.radioButtonSpread.Checked = true;
             this.radioButtonSpread.Location = new System.Drawing.Point(6, 19);
@@ -80,9 +80,9 @@
             this.radioButtonSpread.TabStop = true;
             this.radioButtonSpread.Text = "Spread over entire subtitle";
             this.radioButtonSpread.UseVisualStyleBackColor = true;
-            // 
+            //
             // radioButtonCurrentLine
-            // 
+            //
             this.radioButtonCurrentLine.AutoSize = true;
             this.radioButtonCurrentLine.Location = new System.Drawing.Point(6, 42);
             this.radioButtonCurrentLine.Name = "radioButtonCurrentLine";
@@ -90,9 +90,9 @@
             this.radioButtonCurrentLine.TabIndex = 1;
             this.radioButtonCurrentLine.Text = "Only on current line: ";
             this.radioButtonCurrentLine.UseVisualStyleBackColor = true;
-            // 
+            //
             // buttonGenerate
-            // 
+            //
             this.buttonGenerate.Location = new System.Drawing.Point(6, 65);
             this.buttonGenerate.Name = "buttonGenerate";
             this.buttonGenerate.Size = new System.Drawing.Size(75, 21);
@@ -100,9 +100,9 @@
             this.buttonGenerate.Text = "Generate";
             this.buttonGenerate.UseVisualStyleBackColor = true;
             this.buttonGenerate.Click += new System.EventHandler(this.buttonGenerate_Click);
-            // 
+            //
             // buttonRemove
-            // 
+            //
             this.buttonRemove.Location = new System.Drawing.Point(7, 38);
             this.buttonRemove.Name = "buttonRemove";
             this.buttonRemove.Size = new System.Drawing.Size(75, 21);
@@ -110,9 +110,9 @@
             this.buttonRemove.Text = "Remove";
             this.buttonRemove.UseVisualStyleBackColor = true;
             this.buttonRemove.Click += new System.EventHandler(this.buttonRemove_Click);
-            // 
+            //
             // buttonOK
-            // 
+            //
             this.buttonOK.Location = new System.Drawing.Point(276, 175);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 21);
@@ -120,9 +120,9 @@
             this.buttonOK.Text = "&OK";
             this.buttonOK.UseVisualStyleBackColor = true;
             this.buttonOK.Click += new System.EventHandler(this.buttonOK_Click);
-            // 
+            //
             // Watermark
-            // 
+            //
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(356, 202);

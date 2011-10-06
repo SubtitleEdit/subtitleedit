@@ -52,12 +52,12 @@ namespace Nikse.SubtitleEdit.Forms
             //    vlcPath = Logic.VideoPlayers.MPlayer.GetMPlayerFileName;
             //    parameters = "-ao pcm:fast:file=\"" + targetFile + "\" -vo null -vc null \"" + SourceVideoFileName + "\"";
             //}
-            //else 
+            //else
                 if (Utilities.IsRunningOnLinux() || Utilities.IsRunningOnMac())
             {
                 vlcPath = "cvlc";
                 parameters = "-vvv --no-sout-video --sout '#transcode{acodec=s16l}:std{mux=wav,access=file,dst=" + targetFile +"}' \"" + SourceVideoFileName + "\" vlc://quit";
-            }            
+            }
             else // windows
             {
                 vlcPath = Nikse.SubtitleEdit.Logic.VideoPlayers.LibVlc11xDynamic.GetVlcPath("vlc.exe");
@@ -136,7 +136,7 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
-            
+
 
 
             ReadWaveFile(targetFile);
@@ -155,7 +155,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             labelProgress.Text = Configuration.Settings.Language.AddWaveForm.GeneratingPeakFile;
             this.Refresh();
-            waveFile.GeneratePeakSamples(sampleRate); // samples per second - SampleRate 
+            waveFile.GeneratePeakSamples(sampleRate); // samples per second - SampleRate
 
             if (Configuration.Settings.VideoControls.GenerateSpectrogram)
             {
@@ -196,7 +196,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         internal void InitializeViaWaveFile(string fileName)
         {
-            _wavFileName = fileName;            
+            _wavFileName = fileName;
         }
 
         private void FixWaveOnly()

@@ -19,7 +19,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
         public float FramesPerSecond { get; private set; }
         public string VideoFormat { get; private set; }
         public string VideoCodec { get; private set; }
-        
+
         public override string PlayerName
         {
             get { return "MPlayer"; }
@@ -189,7 +189,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                 switch (code)
                 {
                     // Examples:
-                    //  ANS_time_pos=8.299958, ANS_width=624, ANS_height=352, ANS_fps=23.976025, ANS_video_format=1145656920, ANS_video_format=1145656920, ANS_video_codec=ffodivx, 
+                    //  ANS_time_pos=8.299958, ANS_width=624, ANS_height=352, ANS_fps=23.976025, ANS_video_format=1145656920, ANS_video_format=1145656920, ANS_video_codec=ffodivx,
                     //  ANS_length=1351.600213, ANS_volume=100.000000
                     case "ANS_time_pos":
                         _timePosition = Convert.ToDouble(value);

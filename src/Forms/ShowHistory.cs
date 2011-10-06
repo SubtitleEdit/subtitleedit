@@ -60,8 +60,8 @@ namespace Nikse.SubtitleEdit.Forms
             var item = new ListViewItem("")
                            {
                                Tag = hi,
-                               Text = string.Format("{0:00}:{1:00}:{2:00}", 
-                                                    hi.Timestamp.Hour, 
+                               Text = string.Format("{0:00}:{1:00}:{2:00}",
+                                                    hi.Timestamp.Hour,
                                                     hi.Timestamp.Minute,
                                                     hi.Timestamp.Second)
                            };
@@ -80,7 +80,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void ButtonOkClick(object sender, System.EventArgs e)
         {
             if (listViewHistory.SelectedItems.Count > 0)
-            {              
+            {
                 _selectedIndex = listViewHistory.SelectedItems[0].Index;
                 DialogResult = DialogResult.OK;
             }

@@ -8,7 +8,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
 
 //<?xml version="1.0" encoding="UTF-8"?>
-//<tt>  
+//<tt>
 //    <div>
 //      <p begin="00:00:00.700" end="00:00:05.000"><![CDATA[<sub>This is fully skinnable through XML<br/>using external images for each button</sub>]]></p>
 //      <p begin="00:00:05.200" end="00:00:10.000"><![CDATA[<sub>You can put in any order or enable/disable<br/>the control buttons</sub>]]></p>

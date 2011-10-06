@@ -37,7 +37,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         {
             var subtitle = new Subtitle();
             LoadSubtitle(subtitle, lines, fileName);
-            return subtitle.Paragraphs.Count > _errorCount;            
+            return subtitle.Paragraphs.Count > _errorCount;
         }
 
         public override string ToText(Subtitle subtitle, string title)
@@ -55,7 +55,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             {
                 string text = p.Text.Replace(Environment.NewLine, "|");
 
-                sb.AppendLine(string.Format(paragraphWriteFormat, 
+                sb.AppendLine(string.Format(paragraphWriteFormat,
                                         p.StartTime.Hours,
                                         p.StartTime.Minutes,
                                         p.StartTime.Seconds,
@@ -111,7 +111,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         {
                             expecting = ExpectingLine.TimeCodes;
                         }
-                    }                   
+                    }
                 }
                 else
                 {

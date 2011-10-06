@@ -80,7 +80,7 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
 
                                 int currentSubPictureStreamId = vsp.PacketizedElementaryStream.SubPictureStreamId.Value;
                                 while (vsp.PacketizedElementaryStream.SubPictureStreamId.HasValue &&
-                                       (vsp.PacketizedElementaryStream.Length == PacketizedElementaryStreamMaximumLength || 
+                                       (vsp.PacketizedElementaryStream.Length == PacketizedElementaryStreamMaximumLength ||
                                         currentSubPictureStreamId != vsp.PacketizedElementaryStream.SubPictureStreamId.Value) && position < fs.Length)
                                 {
                                     fs.Seek(position, SeekOrigin.Begin);
@@ -102,8 +102,8 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
                                         position += 0x800;
                                         fs.Seek(position, SeekOrigin.Begin);
                                     }
-                                }      
-                                
+                                }
+
                             }
                         }
                     }
@@ -129,7 +129,7 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
             bool continuation = false;
 
             float ticksPerMillisecond = 90.000F;
-            //if (!IsPal) 
+            //if (!IsPal)
             //    ticksPerMillisecond = 90.090F; TODO; What should this be for NTSC?
 
             // get unique streamIds
@@ -195,7 +195,7 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
                     if (i + 1 < list.Count)
                         pack.EndTime = TimeSpan.FromMilliseconds(list[i].StartTime.TotalMilliseconds - 100);
                     else
-                        pack.EndTime = TimeSpan.FromMilliseconds(pack.StartTime.TotalMilliseconds + 3000); 
+                        pack.EndTime = TimeSpan.FromMilliseconds(pack.StartTime.TotalMilliseconds + 3000);
                 }
             }
 
@@ -205,8 +205,8 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
         internal static bool IsMpeg2PackHeader(byte[] buffer)
         {
             return buffer.Length >= 3 &&
-                   buffer[0] == 0 && 
-                   buffer[1] == 0 && 
+                   buffer[0] == 0 &&
+                   buffer[1] == 0 &&
                    buffer[2] == 1 &&
                    buffer[3] == 0xba; // 0xba == 186 - MPEG-2 Pack Header
 
@@ -215,8 +215,8 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
         internal static bool IsPrivateStream1(byte[] buffer, int index)
         {
             return buffer.Length >= index + 3 &&
-                   buffer[index + 0] == 0 && 
-                   buffer[index + 1] == 0 && 
+                   buffer[index + 0] == 0 &&
+                   buffer[index + 1] == 0 &&
                    buffer[index + 2] == 1 &&
                    buffer[index + 3] == 0xbd; // 0xbd == 189 - MPEG-2 Private stream 1 (non MPEG audio, subpictures)
         }
@@ -224,21 +224,21 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
         internal static bool IsPrivateStream2(byte[] buffer, int index)
         {
             return buffer.Length >= index + 3 &&
-                   buffer[index + 0] == 0 && 
-                   buffer[index + 1] == 0 && 
+                   buffer[index + 0] == 0 &&
+                   buffer[index + 1] == 0 &&
                    buffer[index + 2] == 1 &&
-                   buffer[index + 3] == 0xbf; 
+                   buffer[index + 3] == 0xbf;
         }
 
         internal static bool IsSubtitlePack(byte[] buffer)
-        { 
+        {
             if (IsMpeg2PackHeader(buffer) && IsPrivateStream1(buffer, Mpeg2Header.Length))
             {
                 int pesHeaderDataLength = buffer[Mpeg2Header.Length + 8];
                 int streamId = buffer[Mpeg2Header.Length + 8 + 1 + pesHeaderDataLength];
                 if (streamId >= 0x20 && streamId <= 0x3f) // Subtitle IDs allowed (or x3f to x40?)
                     return true;
-            }            
+            }
             return false;
         }
 

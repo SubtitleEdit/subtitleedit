@@ -40,7 +40,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {plain} {size:20}
 {timeScale:30}
 {width:160} {height:32}
-{timeStamps:absolute} {language:0}";           
+{timeStamps:absolute} {language:0}";
 
             StringBuilder sb = new StringBuilder();
             sb.AppendLine(Header);
@@ -51,7 +51,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 //d’être perdu dans un brouillard de pensées, 
                 //[00:00:17.06] (this line is optional!)
                 //              (blank line optional too)
-                //[00:00:26.26] 
+                //[00:00:26.26]
                 //tout le temps,
                 //[00:00:35.08]
 
@@ -74,7 +74,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             //d’être perdu dans un brouillard de pensées, 
             //[00:00:17.06] (this line is optional!)
             //              (blank line optional too)
-            //[00:00:26.26] 
+            //[00:00:26.26]
             //tout le temps,
             //[00:00:35.08]
             Paragraph p = null;

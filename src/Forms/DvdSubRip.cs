@@ -23,7 +23,7 @@ namespace Nikse.SubtitleEdit.Forms
         public TimeSpan LastPresentationTimeStamp
         {
             get
-            { 
+            {
                 if (radioButtonPal.Checked)
                 {
                     float ticksPerMillisecond = 90.000F;
@@ -32,7 +32,7 @@ namespace Nikse.SubtitleEdit.Forms
                 else
                 {
                     float ticksPerMillisecond = 90.090F;
-                    return TimeSpan.FromMilliseconds(Convert.ToDouble(_lastPresentationTimeStamp / ticksPerMillisecond));                
+                    return TimeSpan.FromMilliseconds(Convert.ToDouble(_lastPresentationTimeStamp / ticksPerMillisecond));
                 }
             }
         }
@@ -40,17 +40,17 @@ namespace Nikse.SubtitleEdit.Forms
         public double FrameRate
         {
             get
-            { 
+            {
                 if (radioButtonPal.Checked)
                     return 25.0;
                 else
-                    return 30.0;                
+                    return 30.0;
             }
         }
-        
-        public string SelectedLanguage 
-        { 
-            get 
+
+        public string SelectedLanguage
+        {
+            get
             {
                 if (comboBoxLanguages.SelectedIndex >= 0)
                     return string.Format("{0} (0x{1:x})", comboBoxLanguages.Items[comboBoxLanguages.SelectedIndex], comboBoxLanguages.SelectedIndex + 32);
@@ -182,7 +182,7 @@ namespace Nikse.SubtitleEdit.Forms
             _lastPresentationTimeStamp = 0;
             _lastVobPresentationTimeStamp = 0;
             _lastNavEndPts = 0;
-            _accumulatedPresentationTimeStamp = 0; 
+            _accumulatedPresentationTimeStamp = 0;
 
             progressBarRip.Visible = true;
             var ms = new MemoryStream();
@@ -214,7 +214,7 @@ namespace Nikse.SubtitleEdit.Forms
             vobSub.Open(ms);
             ms.Close();
             labelStatus.Text = string.Empty;
-            
+
             MergedVobSubPacks = vobSub.MergeVobSubPacks(); // Merge splitted-packs to whole-packs
             Languages = new List<string>();
             for (int k = 0; k < comboBoxLanguages.Items.Count; k++)
@@ -257,7 +257,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 int bytesRead = 0;
 
-                // Reading and test for IO errors... and allow abort/retry/ignore 
+                // Reading and test for IO errors... and allow abort/retry/ignore
                 tryAgain = true;
                 while (tryAgain && position < fs.Length)
                 {
@@ -281,8 +281,8 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                     }
                 }
-                
-                if (VobSubParser.IsMpeg2PackHeader(buffer))                
+
+                if (VobSubParser.IsMpeg2PackHeader(buffer))
                 {
                     VobSubPack vsp = new VobSubPack(buffer, null);
                     if (IsSubtitlePack(buffer))
@@ -313,7 +313,7 @@ namespace Nikse.SubtitleEdit.Forms
                             {
                                 _accumulatedPresentationTimeStamp += _lastNavEndPts - vobu_s_ptm;
                             }
-                            else if (_lastNavEndPts > vobu_e_ptm) 
+                            else if (_lastNavEndPts > vobu_e_ptm)
                             {
                                 _accumulatedPresentationTimeStamp += _lastNavEndPts - vobu_s_ptm;
                             }
@@ -395,7 +395,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 foreach (var fileName in openFileDialog1.FileNames)
                 {
-                    listBoxVobFiles.Items.Add(fileName);                    
+                    listBoxVobFiles.Items.Add(fileName);
                 }
             }
             buttonStartRipping.Enabled = listBoxVobFiles.Items.Count > 0;
@@ -404,7 +404,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void ButtonMoveVobUp_Click(object sender, EventArgs e)
         {
             if (listBoxVobFiles.SelectedIndex > -1 && listBoxVobFiles.SelectedIndex > 0)
-            { 
+            {
                 int index = listBoxVobFiles.SelectedIndex;
                 string old = listBoxVobFiles.Items[index].ToString();
                 listBoxVobFiles.Items.RemoveAt(index);
@@ -516,6 +516,6 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
         }
-        
+
     }
 }

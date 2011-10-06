@@ -87,7 +87,7 @@ namespace Nikse.SubtitleEdit.Forms
             _subtitle.Renumber(1);
             FixDurations();
             MakePseudoStartTime();
-            
+
             groupBoxImportResult.Text = string.Format(Configuration.Settings.Language.ImportText.PreviewLinesModifiedX, _subtitle.Paragraphs.Count);
             SubtitleListview1.Fill(_subtitle);
             if (_subtitle.Paragraphs.Count > 0)
@@ -172,7 +172,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void ImportLineMode(IEnumerable<string> lines)
         {
             foreach (string line in lines)
-            { 
+            {
                 if (line.Trim().Length == 0)
                 {
                     if (!checkBoxRemoveEmptyLines.Checked)
@@ -186,7 +186,7 @@ namespace Nikse.SubtitleEdit.Forms
                 else
                 {
                     _subtitle.Paragraphs.Add(new Paragraph(0, 0, line.Trim()));
-                }               
+                }
             }
         }
 
@@ -252,7 +252,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             string letterList = Utilities.GetLetters(true, true, false);
             foreach (char ch in line.ToCharArray())
-            { 
+            {
                 if (letterList.Contains(ch.ToString()))
                     return true;
             }
@@ -274,7 +274,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void checkBoxRemoveLinesWithoutLettersOrNumbers_CheckedChanged(object sender, EventArgs e)
         {
-            GeneratePreview();        
+            GeneratePreview();
         }
 
         private void checkBoxRemoveEmptyLines_CheckedChanged(object sender, EventArgs e)
@@ -335,10 +335,10 @@ namespace Nikse.SubtitleEdit.Forms
                 XmlDocument doc = new XmlDocument();
                 doc.Load(fileName);
                 foreach (XmlNode node in doc.DocumentElement.SelectNodes("//paragraph[@element='Dialog']")) // <paragraph objID="1:28" element="Dialog">
-                { 
+                {
                     XmlNode textRun = node.SelectSingleNode("textRun"); // <textRun objID="1:259">Yeah...I suppose</textRun>
                     if (textRun != null)
-                        sb.AppendLine(textRun.InnerText);                    
+                        sb.AppendLine(textRun.InnerText);
                 }
                 textBoxText.Text = sb.ToString();
                 SetVideoFileName(fileName);

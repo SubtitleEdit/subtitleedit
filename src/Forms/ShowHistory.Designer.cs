@@ -37,9 +37,9 @@
             this.buttonCompare = new System.Windows.Forms.Button();
             this.buttonCompareHistory = new System.Windows.Forms.Button();
             this.SuspendLayout();
-            // 
+            //
             // listViewHistory
-            // 
+            //
             this.listViewHistory.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.columnHeader1,
             this.columnHeader2});
@@ -52,19 +52,19 @@
             this.listViewHistory.UseCompatibleStateImageBehavior = false;
             this.listViewHistory.View = System.Windows.Forms.View.Details;
             this.listViewHistory.SelectedIndexChanged += new System.EventHandler(this.ListViewHistorySelectedIndexChanged);
-            // 
+            //
             // columnHeader1
-            // 
+            //
             this.columnHeader1.Text = "Time";
             this.columnHeader1.Width = 80;
-            // 
+            //
             // columnHeader2
-            // 
+            //
             this.columnHeader2.Text = "Description";
             this.columnHeader2.Width = 365;
-            // 
+            //
             // buttonRollback
-            // 
+            //
             this.buttonRollback.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonRollback.Location = new System.Drawing.Point(490, 343);
             this.buttonRollback.Name = "buttonRollback";
@@ -73,9 +73,9 @@
             this.buttonRollback.Text = "&Rollback";
             this.buttonRollback.UseVisualStyleBackColor = true;
             this.buttonRollback.Click += new System.EventHandler(this.ButtonOkClick);
-            // 
+            //
             // buttonCancel
-            // 
+            //
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonCancel.Location = new System.Drawing.Point(594, 343);
@@ -84,18 +84,18 @@
             this.buttonCancel.TabIndex = 8;
             this.buttonCancel.Text = "C&ancel";
             this.buttonCancel.UseVisualStyleBackColor = true;
-            // 
+            //
             // label1
-            // 
+            //
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(12, 18);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(171, 13);
             this.label1.TabIndex = 10;
             this.label1.Text = "Select time/description for rollback";
-            // 
+            //
             // buttonCompare
-            // 
+            //
             this.buttonCompare.Enabled = false;
             this.buttonCompare.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonCompare.Location = new System.Drawing.Point(490, 198);
@@ -105,9 +105,9 @@
             this.buttonCompare.Text = "&Compare with current";
             this.buttonCompare.UseVisualStyleBackColor = true;
             this.buttonCompare.Click += new System.EventHandler(this.ButtonCompareClick);
-            // 
+            //
             // buttonCompareHistory
-            // 
+            //
             this.buttonCompareHistory.Enabled = false;
             this.buttonCompareHistory.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonCompareHistory.Location = new System.Drawing.Point(490, 171);
@@ -117,9 +117,9 @@
             this.buttonCompareHistory.Text = "&Compare history items";
             this.buttonCompareHistory.UseVisualStyleBackColor = true;
             this.buttonCompareHistory.Click += new System.EventHandler(this.ButtonCompareHistoryClick);
-            // 
+            //
             // ShowHistory
-            // 
+            //
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(680, 373);

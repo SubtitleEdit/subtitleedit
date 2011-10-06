@@ -57,7 +57,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (e.KeyCode == Keys.Escape)
             {
-                DialogResult = DialogResult.Cancel;                
+                DialogResult = DialogResult.Cancel;
             }
         }
 
@@ -118,7 +118,7 @@ namespace Nikse.SubtitleEdit.Forms
                 else if (findHelper.FindType == FindType.CaseSensitive)
                     radioButtonCaseSensitive.Checked = true;
                 else
-                    radioButtonNormal.Checked = true;                       
+                    radioButtonNormal.Checked = true;
             }
         }
 

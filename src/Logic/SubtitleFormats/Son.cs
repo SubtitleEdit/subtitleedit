@@ -60,7 +60,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
-            //0001	00:00:19:13	00:00:22:10	a_0001.tif
+            //0001  00:00:19:13 00:00:22:10 a_0001.tif
             Paragraph p = null;
             subtitle.Paragraphs.Clear();
             var regexTimeCodes = new Regex(@"^\d\d\d\d[\t]+\d\d:\d\d:\d\d:\d\d\t\d\d:\d\d:\d\d:\d\d\t[^\s]+\.(tif|tiff|png|bmp|TIF|TIFF|PNG|BMP)", RegexOptions.Compiled);

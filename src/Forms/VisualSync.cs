@@ -37,11 +37,11 @@ namespace Nikse.SubtitleEdit.Forms
 
         public double FrameRate
         {
-            get 
+            get
             {
                 if (_videoInfo == null)
                     return 0;
-                return _videoInfo.FramesPerSecond; 
+                return _videoInfo.FramesPerSecond;
             }
         }
 
@@ -113,7 +113,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 if (indexPositionInSeconds < 0)
                     indexPositionInSeconds = 0;
-                
+
                 mediaPlayer.CurrentPosition = indexPositionInSeconds;
                 mediaPlayer.RefreshProgressBar();
             }
@@ -170,8 +170,8 @@ namespace Nikse.SubtitleEdit.Forms
             _startGoBackPosition = MediaPlayerStart.CurrentPosition;
             _startStopPosition = _startGoBackPosition + 0.1;
             MediaPlayerStart.Play();
-           
-            if (MediaPlayerStart.VideoPlayer.GetType() == typeof(Nikse.SubtitleEdit.Logic.VideoPlayers.LibVlc11xDynamic))            
+
+            if (MediaPlayerStart.VideoPlayer.GetType() == typeof(Nikse.SubtitleEdit.Logic.VideoPlayers.LibVlc11xDynamic))
             {
                 MediaPlayerEnd.VideoPlayer = (MediaPlayerStart.VideoPlayer as Nikse.SubtitleEdit.Logic.VideoPlayers.LibVlc11xDynamic).MakeSecondMediaPlayer(MediaPlayerEnd.PanelPlayer, VideoFileName, VideoEndLoaded, VideoEndEnded);
             }
@@ -256,10 +256,10 @@ namespace Nikse.SubtitleEdit.Forms
                         _endStopPosition = -1;
                     }
                     Utilities.ShowSubtitle(_paragraphs, MediaPlayerEnd);
-                }                
+                }
             }
         }
-       
+
         private void FormVisualSync_FormClosing(object sender, FormClosingEventArgs e)
         {
             timer1.Stop();
@@ -271,7 +271,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             bool change = false;
             for (int i=0; i<_paragraphs.Count; i++)
-            { 
+            {
                 if (_paragraphs[i].ToString() != _originalSubtitle.Paragraphs[i].ToString())
                 {
                     change = true;

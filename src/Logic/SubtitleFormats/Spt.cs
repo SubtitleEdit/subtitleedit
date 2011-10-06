@@ -61,7 +61,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             WriteTimeCode(fs, p.StartTime);
             WriteTimeCode(fs, p.EndTime);
 
-            string text = p.Text; 
+            string text = p.Text;
             if (Utilities.CountTagInText(text, Environment.NewLine)> 1)
                 text = Utilities.AutoBreakLine(p.Text);
 
@@ -90,7 +90,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 {
                     byte[] buffer = File.ReadAllBytes(fileName);
 
-                    if (buffer[00] > 10 && 
+                    if (buffer[00] > 10 &&
                         buffer[01] == 0 &&
                         fileName.ToLower().EndsWith(".spt"))
                         return true;

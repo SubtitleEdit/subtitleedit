@@ -16,7 +16,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         Paragraph _paragraph;
         ExpectingLine _expecting = ExpectingLine.TimeCodes;
 
-        readonly Regex _regexTimeCodes = new Regex(@"^TIMEIN:\s*[0123456789-]+:[0123456789-]+:[0123456789-]+:[0123456789-]+\s*DURATION:\s*[0123456789-]+:[0123456789-]+\s*TIMEOUT:\s*[0123456789-]+:[0123456789-]+:[0123456789-]+:[0123456789-]+$", RegexOptions.Compiled);            
+        readonly Regex _regexTimeCodes = new Regex(@"^TIMEIN:\s*[0123456789-]+:[0123456789-]+:[0123456789-]+:[0123456789-]+\s*DURATION:\s*[0123456789-]+:[0123456789-]+\s*TIMEOUT:\s*[0123456789-]+:[0123456789-]+:[0123456789-]+:[0123456789-]+$", RegexOptions.Compiled);
 
         public override string Extension
         {
@@ -47,11 +47,11 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public override string ToText(Subtitle subtitle, string title)
         {
-//TIMEIN: 01:00:01:09	DURATION: 01:20	TIMEOUT: --:--:--:--
+//TIMEIN: 01:00:01:09   DURATION: 01:20 TIMEOUT: --:--:--:--
 //Broadcasting
 //from an undisclosed location...
 
-//TIMEIN: 01:00:04:12	DURATION: 04:25	TIMEOUT: 01:00:09:07
+//TIMEIN: 01:00:04:12   DURATION: 04:25 TIMEOUT: 01:00:09:07
 
             const string paragraphWriteFormat = "TIMEIN: {0}\tDURATION: {1}\tTIMEOUT: {2}\r\n{3}\r\n";
 
@@ -122,7 +122,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             if (_regexTimeCodes.IsMatch(line))
             {
 
-                //TIMEIN: 01:00:04:12	DURATION: 04:25	TIMEOUT: 01:00:09:07
+                //TIMEIN: 01:00:04:12   DURATION: 04:25 TIMEOUT: 01:00:09:07
                 string s = line.Replace("TIMEIN:", string.Empty).Replace("DURATION", string.Empty).Replace("TIMEOUT", string.Empty).Replace(" ", string.Empty).Replace("\t", string.Empty);
                 string[] parts = s.Split(':');
                 try

@@ -810,7 +810,7 @@
   </NetworkChat>
   <NetworkJoin>
     <Title>Unirse a una sesión de red</Title>
-    <Information>Unirse a una sesión existente con múltiples usuarios 
+    <Information>Unirse a una sesión existente con múltiples usuarios
 
 Join existing session where multiple persons
 can edit in same subtitle file (collaboration)</Information>

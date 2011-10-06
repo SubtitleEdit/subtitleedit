@@ -40,7 +40,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         private delegate IntPtr libvlc_get_version();
         libvlc_get_version _libvlc_get_version;
-        
+
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         private delegate void libvlc_release(IntPtr libVlc);
         libvlc_release _libvlc_release;
@@ -84,8 +84,8 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
 
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         private delegate void libvlc_audio_set_volume(IntPtr mediaPlayer, int volume);
-        libvlc_audio_set_volume _libvlc_audio_set_volume;       
-            
+        libvlc_audio_set_volume _libvlc_audio_set_volume;
+
 
         // LibVLC Media Player - http://www.videolan.org/developers/vlc/doc/doxygen/html/group__libvlc__media__player.html
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
@@ -99,7 +99,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         private delegate void libvlc_media_player_pause(IntPtr mediaPlayer);
         libvlc_media_player_pause _libvlc_media_player_pause;
-        
+
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         private delegate void libvlc_media_player_set_hwnd(IntPtr mediaPlayer, IntPtr windowsHandle);
         libvlc_media_player_set_hwnd _libvlc_media_player_set_hwnd;
@@ -107,7 +107,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         private delegate int libvlc_media_player_is_playing(IntPtr mediaPlayer);
         libvlc_media_player_is_playing _libvlc_media_player_is_playing;
-      
+
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         private delegate Int64 libvlc_media_player_get_time(IntPtr mediaPlayer);
         libvlc_media_player_get_time _libvlc_media_player_get_time;
@@ -119,7 +119,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         private delegate float libvlc_media_player_get_fps(IntPtr mediaPlayer);
         libvlc_media_player_get_fps _libvlc_media_player_get_fps;
-    
+
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         private delegate byte libvlc_media_player_get_state(IntPtr mediaPlayer);
         libvlc_media_player_get_state _libvlc_media_player_get_state;
@@ -170,7 +170,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
 
             _libvlc_media_player_play = (libvlc_media_player_play)GetDllType(typeof(libvlc_media_player_play), "libvlc_media_player_play");
             _libvlc_media_player_stop = (libvlc_media_player_stop)GetDllType(typeof(libvlc_media_player_stop), "libvlc_media_player_stop");
-            _libvlc_media_player_pause = (libvlc_media_player_pause)GetDllType(typeof(libvlc_media_player_pause), "libvlc_media_player_pause");            
+            _libvlc_media_player_pause = (libvlc_media_player_pause)GetDllType(typeof(libvlc_media_player_pause), "libvlc_media_player_pause");
             _libvlc_media_player_set_hwnd = (libvlc_media_player_set_hwnd)GetDllType(typeof(libvlc_media_player_set_hwnd), "libvlc_media_player_set_hwnd");
             _libvlc_media_player_is_playing = (libvlc_media_player_is_playing)GetDllType(typeof(libvlc_media_player_is_playing), "libvlc_media_player_is_playing");
             _libvlc_media_player_get_time = (libvlc_media_player_get_time)GetDllType(typeof(libvlc_media_player_get_time), "libvlc_media_player_get_time");
@@ -221,7 +221,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                 }
                 finally
                 {
-                    vlc.DisposeVideoPlayer();           
+                    vlc.DisposeVideoPlayer();
                 }
             }
         }
@@ -245,7 +245,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
 
         public override double Duration
         {
-            get 
+            get
             {
                 return _libvlc_media_player_get_length(_mediaPlayer) / 1000.0;
             }
@@ -294,17 +294,17 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
 
         public override bool IsPaused
         {
-            get 
+            get
             {
                 const int Paused = 4;
                 int state = _libvlc_media_player_get_state(_mediaPlayer);
-                return state == Paused; 
+                return state == Paused;
             }
         }
 
         public override bool IsPlaying
         {
-            get 
+            get
             {
                 const int Playing = 3;
                 int state = _libvlc_media_player_get_state(_mediaPlayer);
@@ -355,7 +355,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
 
                 //  Linux: libvlc_media_player_set_xdrawable (_mediaPlayer, xdrawable);
                 //  Mac: libvlc_media_player_set_nsobject (_mediaPlayer, view);
-                _libvlc_media_player_set_hwnd(newVlc._mediaPlayer, ownerControl.Handle); // windows                               
+                _libvlc_media_player_set_hwnd(newVlc._mediaPlayer, ownerControl.Handle); // windows
 
                 if (onVideoEnded != null)
                 {
@@ -402,7 +402,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             if (File.Exists(path))
                 return path;
 
-            // XP via registry path 
+            // XP via registry path
             var key = Microsoft.Win32.Registry.LocalMachine.OpenSubKey(@"SOFTWARE\VideoLAN\VLC");
             if (key != null)
             {
@@ -412,8 +412,8 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                 if (File.Exists(path))
                     return path;
             }
-                
-            // Winows 7 via registry path 
+
+            // Winows 7 via registry path
             key = Microsoft.Win32.Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Wow6432Node\VideoLAN\VLC");
             if (key != null)
             {
@@ -480,8 +480,8 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
 
                 //  Linux: libvlc_media_player_set_xdrawable (_mediaPlayer, xdrawable);
                 //  Mac: libvlc_media_player_set_nsobject (_mediaPlayer, view);
-                
-                _libvlc_media_player_set_hwnd(_mediaPlayer, ownerControl.Handle); // windows                               
+
+                _libvlc_media_player_set_hwnd(_mediaPlayer, ownerControl.Handle); // windows
 
                 //hack: sometimes vlc opens in it's own windows - this code seems to prevent this
                 for (int j = 0; j < 50; j++)
@@ -489,8 +489,8 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                     System.Threading.Thread.Sleep(10);
                     System.Windows.Forms.Application.DoEvents();
                 }
-                _libvlc_media_player_set_hwnd(_mediaPlayer, ownerControl.Handle); // windows   
-                
+                _libvlc_media_player_set_hwnd(_mediaPlayer, ownerControl.Handle); // windows
+
                 if (onVideoEnded != null)
                 {
                     _videoEndTimer = new System.Windows.Forms.Timer { Interval = 500 };
@@ -509,7 +509,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             }
         }
 
-        public static bool IsLeftMouseButtonDown() 
+        public static bool IsLeftMouseButtonDown()
         {
             const int KEY_PRESSED = 0x8000;
             const int VK_LBUTTON = 0x1;
@@ -541,13 +541,13 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
         }
 
         void VideoEndTimerTick(object sender, EventArgs e)
-        {            
+        {
             const int Ended = 6;
             int state = _libvlc_media_player_get_state(_mediaPlayer);
             if (state == Ended)
             {
                 // hack to make sure VLC is in ready state
-                Stop(); 
+                Stop();
                 Play();
                 Pause();
                 OnVideoEnded.Invoke(_mediaPlayer, new EventArgs());

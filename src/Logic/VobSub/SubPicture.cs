@@ -30,7 +30,7 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
         public bool Forced { get; private set; }
         private int _pixelDataAddressOffset = 0;
         private int _startDisplayControlSequenceTableAddress;
-        
+
         public SubPicture(byte[] data)
         {
             _data = data;
@@ -38,7 +38,7 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
             _startDisplayControlSequenceTableAddress = Helper.GetEndianWord(_data, 2);
             ParseDisplayControlCommands(false, null, null, false);
         }
-       
+
         /// <summary>
         /// For SP packet with dvd subpictures
         /// </summary>
@@ -292,7 +292,7 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
 
             // Crop right
             x = bmp.Width - 1;
-            c = backgroundColor;            
+            c = backgroundColor;
             while (x > minX && IsBackgroundColor(c, backgroundColor))
             {
                 for (y = minY; y < bmp.Height; y++)
@@ -340,7 +340,7 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
 
                 Color c = fourColors[color]; // set color via the four colors
                 for (int i = 0; i < runLength; i++, x++)
-                { 
+                {
                     if (x >= bmp.Width-1)
                     {
                         if (y < bmp.Height && x < bmp.Width && c != fourColors[0])
@@ -355,7 +355,7 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
                         y += 2;
                         break;
                     }
-                    if (y < bmp.Height && c != fourColors[0])                        
+                    if (y < bmp.Height && c != fourColors[0])
                        bmp.SetPixel(x, y, c);
                 }
             }
@@ -364,10 +364,10 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
         private static int DecodeRle(int index, byte[] data, out int color, out int runLength, ref bool onlyHalf, out bool restOfLine)
         {
             //Value      Bits   n=length, c=color
-            //1-3	     4	    n n c c                           (half a byte)
-            //4-15	     8	    0 0 n n n n c c                   (one byte)
-            //16-63	    12	    0 0 0 0 n n n n n n c c           (one and a half byte)
-            //64-255    16	    0 0 0 0 0 0 n n n n n n n n c c   (two bytes)
+            //1-3        4      n n c c                           (half a byte)
+            //4-15       8      0 0 n n n n c c                   (one byte)
+            //16-63     12      0 0 0 0 n n n n n n c c           (one and a half byte)
+            //64-255    16      0 0 0 0 0 0 n n n n n n n n c c   (two bytes)
             // When reaching EndOfLine, index is byte aligned (skip 4 bits if necessary)
             restOfLine = false;
             string binary2 = Helper.GetBinaryString(data, index, 3);
@@ -390,7 +390,7 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
                 }
                 return 2;
             }
-            
+
             if (binary2.StartsWith("0000"))
             {
                 runLength = (int)Helper.GetUInt32FromBinaryString(binary2.Substring(4, 6));
@@ -403,7 +403,7 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
                 onlyHalf = true;
                 return 1;
             }
-            
+
             if (binary2.StartsWith("00"))
             {
                 runLength = (int)Helper.GetUInt32FromBinaryString(binary2.Substring(2, 4));
@@ -412,7 +412,7 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
             }
 
             runLength = (int)Helper.GetUInt32FromBinaryString(binary2.Substring(0, 2));
-            color = (int)Helper.GetUInt32FromBinaryString(binary2.Substring(2, 2));            
+            color = (int)Helper.GetUInt32FromBinaryString(binary2.Substring(2, 2));
             if (onlyHalf)
             {
                 onlyHalf = false;
@@ -421,6 +421,6 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
             onlyHalf = true;
             return 0;
         }
-            
+
     }
 }

@@ -36,23 +36,23 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public override string ToText(Subtitle subtitle, string title)
         {
-            const string Header = @"$FontName			=	Arial
-$FontSize				=	34
-$HorzAlign			=	Left
-$VertAlign			=	Bottom
-$XOffset				=	0
-$YOffset				=	0
-$Bold					=	FALSE
-$UnderLined			=	FALSE
-$Italic				=	FALSE
-$TextContrast			=	15
-$Outline1Contrast		=	15
-$Outline2Contrast		=	15
-$BackgroundContrast	=	0
-$ForceDisplay			=	FALSE
-$FadeIn				=	0
-$FadeOut				=	0
-$TapeOffset			=	FALSE
+            const string Header = @"$FontName           =   Arial
+$FontSize               =   34
+$HorzAlign          =   Left
+$VertAlign          =   Bottom
+$XOffset                =   0
+$YOffset                =   0
+$Bold                   =   FALSE
+$UnderLined         =   FALSE
+$Italic             =   FALSE
+$TextContrast           =   15
+$Outline1Contrast       =   15
+$Outline2Contrast       =   15
+$BackgroundContrast =   0
+$ForceDisplay           =   FALSE
+$FadeIn             =   0
+$FadeOut                =   0
+$TapeOffset         =   FALSE
 
 \\Colour 0 = Black
 \\Colour 1 = Red
@@ -67,7 +67,7 @@ $TapeOffset			=	FALSE
             sb.AppendLine(Header);
             foreach (Paragraph p in subtitle.Paragraphs)
             {
-                sb.AppendLine(string.Format("$HorzAlign		= Center\r\n{0}, {1}, {2}", EncodeTimeCode(p.StartTime), EncodeTimeCode(p.EndTime), EncodeText(p.Text)));
+                sb.AppendLine(string.Format("$HorzAlign     = Center\r\n{0}, {1}, {2}", EncodeTimeCode(p.StartTime), EncodeTimeCode(p.EndTime), EncodeText(p.Text)));
             }
             return sb.ToString();
         }

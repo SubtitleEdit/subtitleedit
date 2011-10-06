@@ -38,7 +38,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         {
             var sb = new StringBuilder();
             foreach (Paragraph p in subtitle.Paragraphs)
-            { 
+            {
                 string text = Utilities.RemoveHtmlTags(p.Text);
                 text = text.Replace(Environment.NewLine, "\r");
                 sb.AppendLine(string.Format("{9:0000}  {0:00}:{1:00}:{2:00}:{3:00}  {4:00}:{5:00}:{6:00}:{7:00}    \t{8:00}" + Environment.NewLine,
@@ -50,8 +50,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         }
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
-        {   // 00:04:10:92 - 00:04:13:32  	Raise Yourself To Help Mankind
-            // 00:04:27:92 - 00:04:30:92  	الجهة المتولية للمسئولية الاجتماعية لشركتنا.
+        {   // 00:04:10:92 - 00:04:13:32    Raise Yourself To Help Mankind
+            // 00:04:27:92 - 00:04:30:92    الجهة المتولية للمسئولية الاجتماعية لشركتنا.
 
             var regex = new Regex(@"^\d\d\d\d  \d\d:\d\d:\d\d:\d\d  \d\d:\d\d:\d\d:\d\d", RegexOptions.Compiled);
             var regex1DigitMillisecs = new Regex(@"^\d\d\d\d  \d\d\d:\d\d:\d\d:\d  \d\d\d:\d\d:\d\d:\d", RegexOptions.Compiled);
@@ -59,7 +59,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             Paragraph lastParagraph = null;
             foreach (string line in lines)
             {
-                string s = line; 
+                string s = line;
                 if (s.Length > 0)
                 {
                     bool success = false;

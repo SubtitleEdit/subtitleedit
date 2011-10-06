@@ -40,20 +40,20 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         {
             const string paragraphWriteFormat = "{0} , {1} , {2}\r\n";
             const string timeFormat = "{0:00}:{1:00}:{2:00}:{3:00}";
-            const string header = @"$VertAlign			=	Bottom
-$Bold				=	FALSE
-$Underlined			=	FALSE
-$Italic				=	0
-$XOffset				=	0
-$YOffset				=	-5
-$TextContrast			=	15
-$Outline1Contrast			=	15
-$Outline2Contrast			=	13
-$BackgroundContrast		=	0
-$ForceDisplay			=	FALSE
-$FadeIn				=	0
-$FadeOut				=	0
-$HorzAlign			=	Center
+            const string header = @"$VertAlign          =   Bottom
+$Bold               =   FALSE
+$Underlined         =   FALSE
+$Italic             =   0
+$XOffset                =   0
+$YOffset                =   -5
+$TextContrast           =   15
+$Outline1Contrast           =   15
+$Outline2Contrast           =   13
+$BackgroundContrast     =   0
+$ForceDisplay           =   FALSE
+$FadeIn             =   0
+$FadeOut                =   0
+$HorzAlign          =   Center
 ";
 
             StringBuilder sb = new StringBuilder();

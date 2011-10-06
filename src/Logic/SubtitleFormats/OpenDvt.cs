@@ -88,11 +88,11 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 "</Lines>" + Environment.NewLine +
                 "<Streams Count=\"0\">" + Environment.NewLine +
                 "<Stream ID=\"0\">" + Environment.NewLine +
-                //"<URI>C:\Users\Eric\Desktop\Player Folder\Bing\Bing.mpg</URI> 
-                //"<FileSize>52158464</FileSize> 
-                //"<FileDate>06/02/2009 10:44:37</FileDate> 
-                //"<DurationMs>166144</DurationMs> 
-                //"<VolumeLabel>OS</VolumeLabel> 
+                //"<URI>C:\Users\Eric\Desktop\Player Folder\Bing\Bing.mpg</URI>
+                //"<FileSize>52158464</FileSize>
+                //"<FileDate>06/02/2009 10:44:37</FileDate>
+                //"<DurationMs>166144</DurationMs>
+                //"<VolumeLabel>OS</VolumeLabel>
                 "  </Stream>" + Environment.NewLine +
                 "</Streams>" + Environment.NewLine +
                 "</OpenDVT>";
@@ -189,7 +189,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         if (long.TryParse(ms, out milliseconds))
                             p.StartTime = new TimeCode(TimeSpan.FromMilliseconds(milliseconds));
                     }
-                    p.EndTime = new TimeCode(TimeSpan.FromMilliseconds(p.StartTime.TotalMilliseconds + Utilities.GetDisplayMillisecondsFromText(p.Text))); 
+                    p.EndTime = new TimeCode(TimeSpan.FromMilliseconds(p.StartTime.TotalMilliseconds + Utilities.GetDisplayMillisecondsFromText(p.Text)));
 
                     subtitle.Paragraphs.Add(p);
                 }

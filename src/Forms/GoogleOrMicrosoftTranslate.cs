@@ -48,7 +48,7 @@ namespace Nikse.SubtitleEdit.Forms
                 Nikse.SubtitleEdit.Forms.GoogleTranslate.ComboBoxItem item = (Nikse.SubtitleEdit.Forms.GoogleTranslate.ComboBoxItem)comboBox.Items[i];
                 if (item.Value != FixMsLocale(item.Value))
                     comboBox.Items.RemoveAt(i);
-            }            
+            }
         }
 
         internal void InitializeFromLanguage(string defaultFromLanguage, string defaultToLanguage)
@@ -87,7 +87,7 @@ namespace Nikse.SubtitleEdit.Forms
         }
 
         private void GoogleOrMicrosoftTranslate_Shown(object sender, EventArgs e)
-        {            
+        {
             Refresh();
             Translate();
         }

@@ -142,7 +142,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             StringBuilder sb = new StringBuilder();
             lines.ForEach(line => sb.AppendLine(line));
             XmlDocument xml = new XmlDocument();
-            xml.LoadXml(sb.ToString());            
+            xml.LoadXml(sb.ToString());
 
             XmlNamespaceManager nsmgr = new XmlNamespaceManager(xml.NameTable);
             nsmgr.AddNamespace("ttml", "http://www.w3.org/ns/ttml");
@@ -199,7 +199,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         endCode = new TimeCode(TimeSpan.FromMilliseconds(GetTimeCode(dur).TotalMilliseconds + startCode.TotalMilliseconds));
                     }
                     else
-                    { 
+                    {
                         endCode = new TimeCode(TimeSpan.FromMilliseconds(startCode.TotalMilliseconds + 3000));
                     }
                     startSeconds = endCode.TotalSeconds;

@@ -63,16 +63,16 @@
   </General>
   <About>
     <Title>О программе</Title>
-    <AboutText1>Редактор субтитров - свободное программное обеспечение, 
-распространяемое на основании общественной лицензии GNU. 
+    <AboutText1>Редактор субтитров - свободное программное обеспечение,
+распространяемое на основании общественной лицензии GNU.
 Это дает вам право копировать, модифицировать и использовать
-программу по своему усмотрению. 
+программу по своему усмотрению.
 
-Исходный код программы на языке C# доступен по адресу: 
-http://code.google.com/p/subtitleedit. 
+Исходный код программы на языке C# доступен по адресу:
+http://code.google.com/p/subtitleedit.
 
-Посетите сайт www.nikse.dk, чтобы получить последнюю версию и узнать новости. 
-Пожелания и предложения приветствуются. 
+Посетите сайт www.nikse.dk, чтобы получить последнюю версию и узнать новости.
+Пожелания и предложения приветствуются.
 
 Адрес эл. почты: mailto:nikse.dk@gmail.com
 
@@ -697,7 +697,7 @@ http://code.google.com/p/subtitleedit.
     <OpenVideoFile>Открыть файл видео...</OpenVideoFile>
     <NewFrameRateUsedToCalculateTimeCodes>Новая частота кадров ({0}) была использована для расчета временного сдвига</NewFrameRateUsedToCalculateTimeCodes>
     <NewFrameRateUsedToCalculateFrameNumbers>Новая частота кадров ({0}) была использована для расчета сдвига нумерации кадров</NewFrameRateUsedToCalculateFrameNumbers>
-    <FindContinue>Искомое слово не найдено. 
+    <FindContinue>Искомое слово не найдено.
 Продолжить поиск с самого начала документа?</FindContinue>
     <FindContinueTitle>Продолжить поиск?</FindContinueTitle>
     <XFoundAtLineNumberY>"{0}" найдено в строке {1}</XFoundAtLineNumberY>

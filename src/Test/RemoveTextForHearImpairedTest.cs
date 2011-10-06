@@ -4,8 +4,8 @@ using System;
 
 namespace Test
 {
-    
-    
+
+
     /// <summary>
     ///This is a test class for FormRemoveTextForHearImpairedTest and is intended
     ///to contain all FormRemoveTextForHearImpairedTest Unit Tests
@@ -34,7 +34,7 @@ namespace Test
         }
 
         #region Additional test attributes
-        // 
+        //
         //You can use the following additional attributes as you write your tests:
         //
         //Use ClassInitialize to run code before running the first test in the class
@@ -71,7 +71,7 @@ namespace Test
         [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveColonTest()
         {
-            FormRemoveTextForHearImpaired_Accessor target = new FormRemoveTextForHearImpaired_Accessor(); 
+            FormRemoveTextForHearImpaired_Accessor target = new FormRemoveTextForHearImpaired_Accessor();
             string text = "Man over P.A.:\r\nGive back our homes.";
             string expected = "Give back our homes.";
             string actual = target.RemoveColon(text);
@@ -85,7 +85,7 @@ namespace Test
         [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveHIInsideLine()
         {
-            FormRemoveTextForHearImpaired_Accessor target = new FormRemoveTextForHearImpaired_Accessor(); 
+            FormRemoveTextForHearImpaired_Accessor target = new FormRemoveTextForHearImpaired_Accessor();
             string text = "Be quiet. (SHUSHING) It's okay.";
             string expected = "Be quiet. It's okay.";
             string actual = target.RemoveHearImpairedtagsInsideLine(text);
@@ -99,7 +99,7 @@ namespace Test
         [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveHI1()
         {
-            FormRemoveTextForHearImpaired_Accessor target = new FormRemoveTextForHearImpaired_Accessor(); 
+            FormRemoveTextForHearImpaired_Accessor target = new FormRemoveTextForHearImpaired_Accessor();
             string text = "- Aw, save it. Storm?\r\n- [Storm]\r\nWe're outta here.";
             string expected = "- Aw, save it. Storm?\r\n- We're outta here.";
             string actual = target.RemoveTextFromHearImpaired(text);
@@ -113,13 +113,13 @@ namespace Test
         [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveHI2()
         {
-            FormRemoveTextForHearImpaired_Accessor target = new FormRemoveTextForHearImpaired_Accessor(); 
+            FormRemoveTextForHearImpaired_Accessor target = new FormRemoveTextForHearImpaired_Accessor();
             string text = "[Chuckles,\r\nCoughing]\r\nBut we lived through it.";
             string expected = "But we lived through it.";
             string actual = target.RemoveTextFromHearImpaired(text);
             Assert.AreEqual(expected, actual);
-        }        
-       
+        }
+
         /// <summary>
         ///A test for no removal
         ///</summary>
@@ -127,7 +127,7 @@ namespace Test
         [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveHINot()
         {
-            FormRemoveTextForHearImpaired_Accessor target = new FormRemoveTextForHearImpaired_Accessor(); 
+            FormRemoveTextForHearImpaired_Accessor target = new FormRemoveTextForHearImpaired_Accessor();
             string text = "is the body of a mutant kid\r\non the 6:00 news.";
             string expected = "is the body of a mutant kid\r\non the 6:00 news.";
             string actual = target.RemoveTextFromHearImpaired(text);
@@ -142,12 +142,12 @@ namespace Test
         [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveHIMultilineItalic()
         {
-            FormRemoveTextForHearImpaired_Accessor target = new FormRemoveTextForHearImpaired_Accessor(); 
-            string text = "<i>NARRATOR:" + Environment.NewLine + 
+            FormRemoveTextForHearImpaired_Accessor target = new FormRemoveTextForHearImpaired_Accessor();
+            string text = "<i>NARRATOR:" + Environment.NewLine +
                           "Previously on NCIS</i>";
             string expected = "<i>Previously on NCIS</i>";
             string actual = target.RemoveTextFromHearImpaired(text);
             Assert.AreEqual(expected, actual);
-        }        
+        }
     }
 }

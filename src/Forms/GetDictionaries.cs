@@ -39,7 +39,7 @@ namespace Nikse.SubtitleEdit.Forms
             _descriptions = new List<string>();
             _xmlName = xmlRessourceName;
             System.Reflection.Assembly asm = System.Reflection.Assembly.GetExecutingAssembly();
-            Stream strm = asm.GetManifestResourceStream(_xmlName); 
+            Stream strm = asm.GetManifestResourceStream(_xmlName);
             if (strm != null)
             {
                 comboBoxDictionaries.Items.Clear();
@@ -100,7 +100,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void LinkLabel3LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            System.Diagnostics.Process.Start("http://nhunspell.sourceforge.net/");                        
+            System.Diagnostics.Process.Start("http://nhunspell.sourceforge.net/");
         }
 
         private void LinkLabel4LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
@@ -109,7 +109,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (!Directory.Exists(dictionaryFolder))
                 Directory.CreateDirectory(dictionaryFolder);
 
-            System.Diagnostics.Process.Start(dictionaryFolder);            
+            System.Diagnostics.Process.Start(dictionaryFolder);
         }
 
         private void buttonDownload_Click(object sender, System.EventArgs e)
@@ -139,7 +139,7 @@ namespace Nikse.SubtitleEdit.Forms
                 comboBoxDictionaries.Enabled = true;
                 Cursor = Cursors.Default;
                 MessageBox.Show(exception.Message + Environment.NewLine + Environment.NewLine + exception.StackTrace);
-            }            
+            }
         }
 
         void wc_DownloadDataCompleted(object sender, DownloadDataCompletedEventArgs e)
@@ -167,7 +167,7 @@ namespace Nikse.SubtitleEdit.Forms
                 Directory.CreateDirectory(dictionaryFolder);
 
             int index = comboBoxDictionaries.SelectedIndex;
-            
+
             var ms = new MemoryStream(e.Result);
 
             ZipExtractor zip = ZipExtractor.Open(ms);
@@ -200,13 +200,13 @@ namespace Nikse.SubtitleEdit.Forms
             buttonOK.Enabled = true;
             buttonDownload.Enabled = true;
             comboBoxDictionaries.Enabled = true;
-            MessageBox.Show(string.Format(Configuration.Settings.Language.GetDictionaries.XDownloaded, comboBoxDictionaries.Items[index]));            
+            MessageBox.Show(string.Format(Configuration.Settings.Language.GetDictionaries.XDownloaded, comboBoxDictionaries.Items[index]));
         }
 
         private void comboBoxDictionaries_SelectedIndexChanged(object sender, EventArgs e)
         {
             int index = comboBoxDictionaries.SelectedIndex;
-            labelPleaseWait.Text = _descriptions[index];                
+            labelPleaseWait.Text = _descriptions[index];
         }
 
     }

@@ -18,7 +18,7 @@ namespace Nikse.SubtitleEdit.Logic.Mp4.Boxes
         public bool IsVobSubSubtitle
         {
             get { return HandlerType == "subp"; }
-        }                
+        }
 
         public bool IsVideo
         {

@@ -72,9 +72,9 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 int indexOfTen = line.IndexOf("     10     ");
                 if (line.Contains("7\0") && indexOfTen > 0)
                 {
-                    try                    
+                    try
                     {
-                    
+
                     string text = line.Substring(0, indexOfTen).Trim();
                     int indexOf7001 = line.IndexOf("7\0");
                     string time = line.Substring(indexOf7001 -16, 16);

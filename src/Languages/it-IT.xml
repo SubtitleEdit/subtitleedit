@@ -42,7 +42,7 @@ Aggiornamento alla v.3.1 di Marco A. (Pisa)</TranslatedBy>
     <TotalLengthXSplitLine>Lunghezza totale: {0} (dividi linea!)</TotalLengthXSplitLine>
     <SplitLine>Dividi linea!</SplitLine>
     <NotAvailable>N/D</NotAvailable>
-    <OverlapPreviousLineX>Sovrapposizione linea prec. 
+    <OverlapPreviousLineX>Sovrapposizione linea prec.
 ({0:#,##0.###})</OverlapPreviousLineX>
     <OverlapX>Sovrapponi ({0:#,##0.###})</OverlapX>
     <OverlapNextX>Sovrapposiz. succ. ({0:#,##0.###})</OverlapNextX>
@@ -61,7 +61,7 @@ Aggiornamento alla v.3.1 di Marco A. (Pisa)</TranslatedBy>
   </General>
   <About>
     <Title>A proposito di Subtitle Edit</Title>
-    <AboutText1>Subtitle Edit è un software free sotto la GNU Public License. 
+    <AboutText1>Subtitle Edit è un software free sotto la GNU Public License.
 Può essere distribuito, modificato e utilizzato liberamente.
 
 Il codice sorgente C# è disponibile su http://code.google.com/p/subtitleedit

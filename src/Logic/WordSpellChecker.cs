@@ -7,8 +7,8 @@ using Nikse.SubtitleEdit.Forms;
 namespace Nikse.SubtitleEdit.Logic
 {
     /// <summary>
-    /// MS Word methods (late bound) for spell checking by Nikse 
-    /// Mostly a bunch of hacks... 
+    /// MS Word methods (late bound) for spell checking by Nikse
+    /// Mostly a bunch of hacks...
     /// </summary>
     internal class WordSpellChecker
     {
@@ -39,9 +39,9 @@ namespace Nikse.SubtitleEdit.Logic
 
             _wordApplicationType = System.Type.GetTypeFromProgID("Word.Application");
             _wordApplication = Activator.CreateInstance(_wordApplicationType);
-            
+
             Application.DoEvents();
-            _wordApplicationType.InvokeMember("WindowState", BindingFlags.SetProperty, null, _wordApplication, new object[] { wdWindowStateNormal }); 
+            _wordApplicationType.InvokeMember("WindowState", BindingFlags.SetProperty, null, _wordApplication, new object[] { wdWindowStateNormal });
             _wordApplicationType.InvokeMember("Top", BindingFlags.SetProperty, null, _wordApplication, new object[] { -5000 }); // hide window - it's a hack
             Application.DoEvents();
         }
@@ -103,10 +103,10 @@ namespace Nikse.SubtitleEdit.Logic
             object p = Missing.Value;
             if (errorsBefore > 0)
             {
-                _wordApplicationType.InvokeMember("WindowState", BindingFlags.SetProperty, null, _wordApplication, new object[] { wdWindowStateNormal }); 
+                _wordApplicationType.InvokeMember("WindowState", BindingFlags.SetProperty, null, _wordApplication, new object[] { wdWindowStateNormal });
                 _wordApplicationType.InvokeMember("Top", BindingFlags.SetProperty, null, _wordApplication, new object[] { -10000 }); // hide window - it's a hack
                 SetWindowPos(_mainHandle, HWND_BOTTOM, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE); // make sure c# form is behind spell check dialog
-                _wordDocumentType.InvokeMember("CheckSpelling", BindingFlags.InvokeMethod, null, _wordDocument, new Object[] { p, p, p, p, p, p, p, p, p, p, p, p }); // 12 parameters               
+                _wordDocumentType.InvokeMember("CheckSpelling", BindingFlags.InvokeMethod, null, _wordDocument, new Object[] { p, p, p, p, p, p, p, p, p, p, p, p }); // 12 parameters
                 SetWindowPos(_mainHandle, 0 , 0, 0, 0, 0, SWP_SHOWWINDOW | SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE); // bring c# form to front again
                 _wordApplicationType.InvokeMember("Top", BindingFlags.SetProperty, null, _wordApplication, new object[] { -10000 }); // hide window - it's a hack
             }

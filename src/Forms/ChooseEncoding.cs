@@ -41,7 +41,7 @@ namespace Nikse.SubtitleEdit.Forms
             public int ColumnNumber { get; set; }
             public bool IsNumber { get; set; }
             public bool Descending { get; set; }
-        }   
+        }
 
 
 

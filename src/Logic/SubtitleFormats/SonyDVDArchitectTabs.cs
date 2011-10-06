@@ -50,8 +50,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         }
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
-        {   //00:02:09:34	00:02:13:07	- Hvad mener du så om konkurrencen?- Jo, det er helt fint.
-            //00:02:14:02	00:02:16:41	- Var det den rigtige der vandt?- Ja, bestemt.
+        {   //00:02:09:34   00:02:13:07 - Hvad mener du så om konkurrencen?- Jo, det er helt fint.
+            //00:02:14:02   00:02:16:41 - Var det den rigtige der vandt?- Ja, bestemt.
             //newline = \r (0D)
 
             var regex = new Regex(@"^\d\d:\d\d:\d\d:\d\d[ \t]+\d\d:\d\d:\d\d:\d\d[ \t]+", RegexOptions.Compiled);

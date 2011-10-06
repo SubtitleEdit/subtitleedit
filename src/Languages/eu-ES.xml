@@ -715,7 +715,7 @@ Nahi duzu agiriaren goialdetik hastea eta bilaketa beste behin egitea?</FindCont
     <TextingForHearingImpairedRemovedOneLine>Gorrentzako idatzia kenduta : Lerro bat</TextingForHearingImpairedRemovedOneLine>
     <TextingForHearingImpairedRemovedXLines>Gorrentzako idatzia kenduta : {0} lerro</TextingForHearingImpairedRemovedXLines>
     <SubtitleSplitted>Azpidatzia bananduta</SubtitleSplitted>
-    <SubtitleAppendPrompt>Honek dagoen azpidatzi bat gehituko du orain igota dagoen azpidatziarekin zein bideo agiriarekin 
+    <SubtitleAppendPrompt>Honek dagoen azpidatzi bat gehituko du orain igota dagoen azpidatziarekin zein bideo agiriarekin
 jadanik aldiberetuta dagoena.
 
 Jarraitu?</SubtitleAppendPrompt>
@@ -884,7 +884,7 @@ Jarraitu?</SubtitleAppendPrompt>
   </NetworkChat>
   <NetworkJoin>
     <Title>Batu sare saiora</Title>
-    <Information>Batu jende anitzek azpidatzi bera 
+    <Information>Batu jende anitzek azpidatzi bera
 editatu dezaketen saiora (elkarlana)</Information>
     <Join>Batu</Join>
   </NetworkJoin>
@@ -895,7 +895,7 @@ editatu dezaketen saiora (elkarlana)</Information>
   <NetworkStart>
     <Title>Hasi sare saioa</Title>
     <ConnectionTo>Elkarketatzen {0}...</ConnectionTo>
-    <Information>Hasi jende anitzek azpidatzi bera editatu 
+    <Information>Hasi jende anitzek azpidatzi bera editatu
 dezaketen saio berrira (elkarlana)</Information>
     <Start>Hasi</Start>
   </NetworkStart>

@@ -41,7 +41,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
 //E 1 0:50:20.22 0:50:21.38 Default NTP Die Frage ist:
 //E 1 0:50:21.54 0:50:25.86 Default NTP Wieso habe ich überlebt?
-//E 1 0:50:27.30 0:50:30.78 Default NTP Was habe ich richtig gemacht?  \n Ich weiß es nicht.    
+//E 1 0:50:27.30 0:50:30.78 Default NTP Was habe ich richtig gemacht?  \n Ich weiß es nicht.
             const string paragraphWriteFormat = "E 1 {0} {1} Default NTP {2}";
 
             StringBuilder sb = new StringBuilder();
@@ -59,7 +59,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         {
             _errorCount = 0;
             var regexTimeCode = new Regex(@"^E 1 \d:\d\d:\d\d.\d\d \d:\d\d:\d\d.\d\d Default NTP ", RegexOptions.Compiled);
-            //E 1 0:50:05.42 0:50:10.06 Default NTP 
+            //E 1 0:50:05.42 0:50:10.06 Default NTP
 
             subtitle.Paragraphs.Clear();
             foreach (string line in lines)

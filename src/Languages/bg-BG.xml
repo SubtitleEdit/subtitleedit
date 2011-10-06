@@ -716,7 +716,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
 <TextingForHearingImpairedRemovedOneLine>Изтрит текст за увредени със слуха : Един ред</TextingForHearingImpairedRemovedOneLine>
 <TextingForHearingImpairedRemovedXLines>Изтрит текст за увредени със слуха : {0} реда</TextingForHearingImpairedRemovedXLines>
 <SubtitleSplitted>Субтитрите са разделени</SubtitleSplitted>
-<SubtitleAppendPrompt>Обединяване на съществуващи субтитри към текущите заредени субтитри, 
+<SubtitleAppendPrompt>Обединяване на съществуващи субтитри към текущите заредени субтитри,
 които вече трябва да са синхронизирани с видео файла.
 
 Искате ли да продължите?</SubtitleAppendPrompt>

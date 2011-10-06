@@ -75,7 +75,7 @@ namespace Nikse.SubtitleEdit.Logic
             BlockAlign = BitConverter.ToInt16(buffer, 12);
             BitsPerSample = BitConverter.ToInt16(buffer, 14);
 
-            // data 
+            // data
             buffer = new byte[8];
             stream.Position = ConstantHeaderSize + FmtChunkSize;
             stream.Read(buffer, 0, buffer.Length);
@@ -185,7 +185,7 @@ namespace Nikse.SubtitleEdit.Logic
         }
 
         /// <summary>
-        /// Generate peaks (samples with some interval) for an uncompressed wave file 
+        /// Generate peaks (samples with some interval) for an uncompressed wave file
         /// </summary>
         /// <param name="peaksPerSecond">Sampeles per second / sample rate</param>
         public void GeneratePeakSamples(int peaksPerSecond)
@@ -389,7 +389,7 @@ namespace Nikse.SubtitleEdit.Logic
             DataMaxValue = int.MinValue;
             var samples = new List<int>();
             int index = 0;
-            int sampleSize = NFFT * 1024; // 1024 = bitmap width            
+            int sampleSize = NFFT * 1024; // 1024 = bitmap width
             int count = 0;
             long totalSamples = 0;
 
@@ -538,7 +538,7 @@ namespace Nikse.SubtitleEdit.Logic
 
         /// <summary>
         /// Maps magnitudes in the range [-rangedB .. 0] dB to palette index values in the range [0 .. rangeIndex-1]
-        /// and computes and returns the index value which corresponds to passed-in magnitude 
+        /// and computes and returns the index value which corresponds to passed-in magnitude
         /// </summary>
         private int MapToPixelIndex(double magnitude, double rangedB, int rangeIndex)
         {
@@ -584,4 +584,4 @@ namespace Nikse.SubtitleEdit.Logic
 
     }
 }
- 
+

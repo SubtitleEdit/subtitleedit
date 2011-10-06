@@ -20,7 +20,7 @@ namespace Nikse.SubtitleEdit.Logic
         public string Text
         {
             get
-            { 
+            {
                 if (BinaryData != null)
                     return System.Text.Encoding.UTF8.GetString(BinaryData).Replace("\\N", Environment.NewLine);
                 return string.Empty;
@@ -36,9 +36,9 @@ namespace Nikse.SubtitleEdit.Logic
         public string CodecId { get; set; }
         public string CodecPrivate { get; set; }
         public int ContentCompressionAlgorithm { get; set; }
-        public int ContentEncodingType { get; set; } 
+        public int ContentEncodingType { get; set; }
     }
-        
+
     public class Matroska
     {
 
@@ -477,7 +477,7 @@ namespace Nikse.SubtitleEdit.Logic
                 s == 0x3E83BB || // NextFilename
                 s == 0x2AD7B1)   // TimecodeScale
                 return s;
-            
+
             return 0;
         }
 
@@ -524,7 +524,7 @@ namespace Nikse.SubtitleEdit.Logic
         }
 
         private string GetMatroskaString(long size)
-        { 
+        {
             try
             {
                 byte[] buffer = new byte[size];
@@ -624,9 +624,9 @@ namespace Nikse.SubtitleEdit.Logic
                         f.Seek(afterPosition, SeekOrigin.Begin);
                     }
                     else if (matroskaId == 0x63A2) // CodecPrivate
-                    {                         
+                    {
                         afterPosition = f.Position + dataSize;
-                        codecPrivate = GetMatroskaString(dataSize);                        
+                        codecPrivate = GetMatroskaString(dataSize);
                         if (codecPrivate.Length > 20)
                             biCompression = codecPrivate.Substring(16, 4);
                         f.Seek(afterPosition, SeekOrigin.Begin);
@@ -647,7 +647,7 @@ namespace Nikse.SubtitleEdit.Logic
                         }
                         f.Seek(afterPosition, SeekOrigin.Begin);
                     }
-                        
+
                     else
                         f.Seek(dataSize, SeekOrigin.Current);
                 }
@@ -661,10 +661,10 @@ namespace Nikse.SubtitleEdit.Logic
             else if (isSubtitle)
             {
                 _subtitleList.Add(new MatroskaSubtitleInfo
-                { 
-                    Name = name, 
-                    TrackNumber = trackNumber, 
-                    CodecId = codecId, 
+                {
+                    Name = name,
+                    TrackNumber = trackNumber,
+                    CodecId = codecId,
                     Language = language,
                     CodecPrivate = codecPrivate,
                     ContentEncodingType = contentEncodingType,
@@ -717,7 +717,7 @@ namespace Nikse.SubtitleEdit.Logic
                                 int contentCompSettings = f.ReadByte() * 256 + f.ReadByte();
                                 System.Diagnostics.Debug.WriteLine("contentCompSettings: " + contentCompSettings.ToString());
                             }
-                            
+
                         }
                         f.Seek(afterPosition, SeekOrigin.Begin);
                     }
@@ -748,7 +748,7 @@ namespace Nikse.SubtitleEdit.Logic
                     sizeOfSize = GetMatroskaVariableIntLength(b);
                     dataSize = GetMatroskaDataSize(sizeOfSize, b);
 
-                    if (matroskaId == 0x2AD7B1)// TimecodeScale - u-integer  	Timecode scale in nanoseconds (1.000.000 means all timecodes in the segment are expressed in milliseconds).
+                    if (matroskaId == 0x2AD7B1)// TimecodeScale - u-integer     Timecode scale in nanoseconds (1.000.000 means all timecodes in the segment are expressed in milliseconds).
                     {
                         afterPosition = f.Position + dataSize;
                         b = (byte)f.ReadByte();
@@ -764,7 +764,7 @@ namespace Nikse.SubtitleEdit.Logic
                             duration8b = GetFloat32();
                         }
                         else
-                        {                            
+                        {
                             duration8b = GetFloat64();
                         }
 
@@ -972,7 +972,7 @@ namespace Nikse.SubtitleEdit.Logic
                 s == 0x58D7 || // SilentTrackNumber
                 s == 0x75A1) // BlockAdditions
                 return s;
-            
+
             return 0;
         }
 
@@ -1026,7 +1026,7 @@ namespace Nikse.SubtitleEdit.Logic
                             // lacing
                             byte flags = (byte)f.ReadByte();
                             byte numberOfFrames = 0;
-                            switch ((flags & 6))  // 6 = 00000110 
+                            switch ((flags & 6))  // 6 = 00000110
                             {
                                 case 0: System.Diagnostics.Debug.Print("No lacing");   // No lacing
                                     break;
@@ -1082,8 +1082,8 @@ namespace Nikse.SubtitleEdit.Logic
                 // lacing
                 byte flags = (byte)f.ReadByte();
                 byte numberOfFrames = 0;
-                switch ((flags & 6))  // 6 = 00000110 
-	            {
+                switch ((flags & 6))  // 6 = 00000110
+                {
                     case 0: System.Diagnostics.Debug.Print("No lacing");   // No lacing
                      break;
                     case 2: System.Diagnostics.Debug.Print("Xiph lacing"); // 2 = 00000010 = Xiph lacing

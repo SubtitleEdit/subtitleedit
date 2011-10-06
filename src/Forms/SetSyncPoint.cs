@@ -140,7 +140,7 @@ namespace Nikse.SubtitleEdit.Forms
             timer1.Start();
 
             videoPlayerContainer1.Pause();
-  
+
             if (_guess != null && _guess.TotalMilliseconds > 0 && _guess.TotalMilliseconds / 1000.0 < videoPlayerContainer1.VideoPlayer.Duration)
             {
                 videoPlayerContainer1.VideoPlayer.CurrentPosition = _guess.TotalMilliseconds / 1000.0;
@@ -314,7 +314,7 @@ namespace Nikse.SubtitleEdit.Forms
                 videoPlayerContainer1.Pause();
                 videoPlayerContainer1.CurrentPosition = _subtitle.Paragraphs[index].StartTime.TotalMilliseconds / 1000.0;
             }
-        }      
+        }
 
     }
 }

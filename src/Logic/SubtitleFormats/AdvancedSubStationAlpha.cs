@@ -57,7 +57,7 @@ Style: Default,Tahoma,25,&H00FFFFFF,&HF0000000,&H001509AE,&H32270EA8,-1,0,0,0,10
 [Events]
 Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text";
 
-            const string timeCodeFormat = "{0}:{1:00}:{2:00}.{3:00}"; // h:mm:ss.cc 
+            const string timeCodeFormat = "{0}:{1:00}:{2:00}.{3:00}"; // h:mm:ss.cc
             const string paragraphWriteFormat = "Dialogue: 0,{0},{1},{3},NTP,0000,0000,0000,,{2}";
 
             var sb = new StringBuilder();
@@ -180,7 +180,7 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
             if (Utilities.CountTagInText(text, "<b>") > Utilities.CountTagInText(text, "</b>"))
                 text += "</b>";
 
-            for (int i = 0; i < 5; i++) // just look five times... 
+            for (int i = 0; i < 5; i++) // just look five times...
             {
                 if (text.Contains(@"{\fn"))
                 {
@@ -249,7 +249,7 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                     header.AppendLine(line);
 
                 if (line.Trim().ToLower().StartsWith("dialogue:")) // fix faulty font tags...
-                { 
+                {
                     eventsStarted = true;
                     fontsStarted = false;
                 }
@@ -345,7 +345,7 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
 
         private static TimeCode GetTimeCodeFromString(string time)
         {
-            // h:mm:ss.cc 
+            // h:mm:ss.cc
             string[] timeCode = time.Split(':', '.');
             return new TimeCode(int.Parse(timeCode[0]),
                                 int.Parse(timeCode[1]),

@@ -34,7 +34,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         public void Save(string fileName, Subtitle subtitle)
         {
             FileStream fs = new FileStream(fileName, FileMode.Create, FileAccess.Write);
-            
+
             // header
             fs.WriteByte(1);
             for (int i=1; i<23; i++)
@@ -180,7 +180,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             {
                 Paragraph p = GetPacParagraph(ref index, buffer);
                 if (p != null)
-                    subtitle.Paragraphs.Add(p);                
+                    subtitle.Paragraphs.Add(p);
             }
             subtitle.Renumber(1);
         }

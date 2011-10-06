@@ -30,7 +30,7 @@ namespace Nikse.SubtitleEdit.Forms
             listViewFixes.Columns[0].Text = Configuration.Settings.Language.General.Apply;
             listViewFixes.Columns[1].Text = Configuration.Settings.Language.AutoBreakUnbreakLines.LineNumber;
             listViewFixes.Columns[2].Text = Configuration.Settings.Language.AutoBreakUnbreakLines.Before;
-            listViewFixes.Columns[3].Text = Configuration.Settings.Language.AutoBreakUnbreakLines.After;            
+            listViewFixes.Columns[3].Text = Configuration.Settings.Language.AutoBreakUnbreakLines.After;
             buttonOK.Text = Configuration.Settings.Language.General.OK;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
             FixLargeFonts();
@@ -57,12 +57,12 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (autoBalance)
             {
-                labelCondition.Text = Configuration.Settings.Language.AutoBreakUnbreakLines.OnlyBreakLinesLongerThan;            
+                labelCondition.Text = Configuration.Settings.Language.AutoBreakUnbreakLines.OnlyBreakLinesLongerThan;
                 const int start = 10;
                 const int max = 60;
                 for (int i = start; i <= max; i++)
                     comboBoxConditions.Items.Add(i.ToString());
-                
+
                 int index = Configuration.Settings.Tools.MergeLinesShorterThan - (start +1);
                 if (index > 0 && index < max)
                     comboBoxConditions.SelectedIndex = index;
@@ -165,7 +165,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 Paragraph p = _paragraphs[i];
                 if (!IsFixAllowed(p))
-                    _paragraphs.Remove(p);    
+                    _paragraphs.Remove(p);
             }
             DialogResult = DialogResult.OK;
         }

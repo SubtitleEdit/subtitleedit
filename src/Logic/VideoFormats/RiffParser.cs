@@ -48,10 +48,10 @@ namespace Nikse.SubtitleEdit.Logic
         public static readonly string RIFX4CC = "RIFX";
         public static readonly string LIST4CC = "LIST";
 
-		// Known file types
-		public static readonly int ckidAVI = ToFourCC("AVI ");
-		public static readonly int ckidWAV = ToFourCC("WAVE");
-		public static readonly int ckidRMID = ToFourCC("RMID");
+        // Known file types
+        public static readonly int ckidAVI = ToFourCC("AVI ");
+        public static readonly int ckidWAV = ToFourCC("WAVE");
+        public static readonly int ckidRMID = ToFourCC("RMID");
 
 
         #endregion
@@ -166,78 +166,78 @@ namespace Nikse.SubtitleEdit.Logic
                 throw new RiffParserException("RIFF file already open " + FileName);
             }
 
-			bool errorOccured = false;
+            bool errorOccured = false;
 
             // Opening a new file
-			try 
-			{
-				FileInfo fi = new FileInfo(filename);
-				m_filename = fi.FullName;
-				m_shortname = fi.Name;
-				m_filesize = fi.Length;
+            try
+            {
+                FileInfo fi = new FileInfo(filename);
+                m_filename = fi.FullName;
+                m_shortname = fi.Name;
+                m_filesize = fi.Length;
                 fi = null;
 
-				//Console.WriteLine(ShortName + " is a valid file.");
+                //Console.WriteLine(ShortName + " is a valid file.");
 
-				// Read the RIFF header
-				m_stream = new FileStream(m_filename, FileMode.Open, FileAccess.Read, FileShare.Read);
-				int FourCC;
-				int datasize;
-				int fileType;
+                // Read the RIFF header
+                m_stream = new FileStream(m_filename, FileMode.Open, FileAccess.Read, FileShare.Read);
+                int FourCC;
+                int datasize;
+                int fileType;
 
-				ReadTwoInts(out FourCC, out datasize);
-				ReadOneInt(out fileType);
+                ReadTwoInts(out FourCC, out datasize);
+                ReadOneInt(out fileType);
 
-				m_fileriff = FourCC;
-				m_filetype = fileType;
+                m_fileriff = FourCC;
+                m_filetype = fileType;
 
-				// Check for a valid RIFF header
-				string riff = FromFourCC(FourCC);
-				if ((0 == String.Compare(riff, RIFF4CC))
-					|| (0 == String.Compare(riff, RIFX4CC)))
-				{
-					// Good header. Check size
-					//Console.WriteLine(ShortName + " has a valid type \"" + riff + "\"");
-					//Console.WriteLine(ShortName + " has a specific type of \"" + FromFourCC(fileType) + "\"");
+                // Check for a valid RIFF header
+                string riff = FromFourCC(FourCC);
+                if ((0 == String.Compare(riff, RIFF4CC))
+                    || (0 == String.Compare(riff, RIFX4CC)))
+                {
+                    // Good header. Check size
+                    //Console.WriteLine(ShortName + " has a valid type \"" + riff + "\"");
+                    //Console.WriteLine(ShortName + " has a specific type of \"" + FromFourCC(fileType) + "\"");
 
-					m_datasize = datasize;
-					if (m_filesize >= m_datasize + TWODWORDSSIZE)
-					{
-						//Console.WriteLine(ShortName + " has a valid size");
-					}
-					else
-					{
-						m_stream.Close(); m_stream = null;
-						throw new RiffParserException("Error. Truncated file " + FileName);
-					}
-				}
-				else
-				{
-					m_stream.Close();
+                    m_datasize = datasize;
+                    if (m_filesize >= m_datasize + TWODWORDSSIZE)
+                    {
+                        //Console.WriteLine(ShortName + " has a valid size");
+                    }
+                    else
+                    {
+                        m_stream.Close(); m_stream = null;
+                        throw new RiffParserException("Error. Truncated file " + FileName);
+                    }
+                }
+                else
+                {
+                    m_stream.Close();
                     m_stream.Dispose();
                     m_stream = null;
-					throw new RiffParserException("Error. Not a valid RIFF file " + FileName);
-				}
-			}
-			catch (RiffParserException ex)
-			{
-				errorOccured = true;
-				throw ex;
-			}
-			catch (Exception exception)
-			{
-				errorOccured = true;
-				throw new RiffParserException("Error. Problem reading file " + FileName, exception);
-			}
-			finally 
-			{
-				if (errorOccured && (null != m_stream))
-				{
-					m_stream.Close();
+                    throw new RiffParserException("Error. Not a valid RIFF file " + FileName);
+                }
+            }
+            catch (RiffParserException ex)
+            {
+                errorOccured = true;
+                throw ex;
+            }
+            catch (Exception exception)
+            {
+                errorOccured = true;
+                throw new RiffParserException("Error. Problem reading file " + FileName, exception);
+            }
+            finally
+            {
+                if (errorOccured && (null != m_stream))
+                {
+                    m_stream.Close();
                     m_stream.Dispose();
                     m_stream = null;
-				}
-			}
+                }
+            }
         }
 
         /// <summary>

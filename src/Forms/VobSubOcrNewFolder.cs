@@ -9,7 +9,7 @@ namespace Nikse.SubtitleEdit.Forms
     public sealed partial class VobSubOcrNewFolder : Form
     {
         public string FolderName { get; set; }
-        
+
         public VobSubOcrNewFolder()
         {
             InitializeComponent();

@@ -23,7 +23,7 @@ namespace Nikse.SubtitleEdit.Forms
         List<string> _wordListNamesEtc = new List<string>();
         List<string> _userWordList = new List<string>();
         Dictionary<string, string> _ocrFixWords = new Dictionary<string, string>();
-        Dictionary<string, string> _ocrFixPartialLines = new Dictionary<string, string>();       
+        Dictionary<string, string> _ocrFixPartialLines = new Dictionary<string, string>();
 
         class ComboBoxLanguage
         {
@@ -35,7 +35,7 @@ namespace Nikse.SubtitleEdit.Forms
         }
 
         public Settings()
-        {            
+        {
             InitializeComponent();
 
             labelStatus.Text = string.Empty;
@@ -112,7 +112,7 @@ namespace Nikse.SubtitleEdit.Forms
             textBoxCustomSearchUrl.Text = Configuration.Settings.VideoControls.CustomSearchUrl;
 
             foreach (var x in System.Drawing.FontFamily.Families)
-            {               
+            {
                 comboBoxSubtitleFont.Items.Add(x.Name);
                 if (string.Compare(x.Name, gs.SubtitleFontName, true) == 0)
                     comboBoxSubtitleFont.SelectedIndex = comboBoxSubtitleFont.Items.Count - 1;
@@ -184,10 +184,10 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxAutoWrapWhileTyping.Text = language.AutoWrapWhileTyping;
             labelSubtitleFont.Text = language.SubtitleFont;
             labelSubtitleFontSize.Text = language.SubtitleFontSize;
-            checkBoxSubtitleFontBold.Text = language.SubtitleBold; 
+            checkBoxSubtitleFontBold.Text = language.SubtitleBold;
             labelSubtitleFontColor.Text = language.SubtitleFontColor;
             labelSubtitleFontBackgroundColor.Text = language.SubtitleBackgroundColor;
-            labelSpellChecker.Text = language.SpellChecker;            
+            labelSpellChecker.Text = language.SpellChecker;
             checkBoxRememberRecentFiles.Text = language.RememberRecentFiles;
             checkBoxReopenLastOpened.Text = language.StartWithLastFileLoaded;
             checkBoxRememberSelectedLine.Text = language.RememberSelectedLine;
@@ -344,7 +344,7 @@ namespace Nikse.SubtitleEdit.Forms
             comboBoxMergeShortLineLength.Items.Clear();
             for (int i = 10; i < 100; i++)
                 comboBoxMergeShortLineLength.Items.Add(i.ToString());
-                
+
             if (toolsSettings.MergeLinesShorterThan >= 10 && toolsSettings.MergeLinesShorterThan - 10 < comboBoxMergeShortLineLength.Items.Count)
                 comboBoxMergeShortLineLength.SelectedIndex = toolsSettings.MergeLinesShorterThan - 10;
             else
@@ -369,7 +369,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             comboBoxToolsMusicSymbol.Items.Clear();
             comboBoxToolsMusicSymbol.Items.Add("♪");
-            comboBoxToolsMusicSymbol.Items.Add("♫");            
+            comboBoxToolsMusicSymbol.Items.Add("♫");
             comboBoxToolsMusicSymbol.Items.Add("♪♪");
             comboBoxToolsMusicSymbol.Items.Add("*");
             comboBoxToolsMusicSymbol.Items.Add("#");
@@ -393,17 +393,17 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 comboBoxToolsMusicSymbol.SelectedIndex = 4;
             }
-            else 
+            else
             {
                 comboBoxToolsMusicSymbol.Items.Add(toolsSettings.MusicSymbol);
                 comboBoxToolsMusicSymbol.SelectedIndex = 5;
             }
-            
+
             textBoxMusicSymbolsToReplace.Text = toolsSettings.MusicSymbolToReplace;
             checkBoxFixCommonOcrErrorsUsingHardcodedRules.Checked = toolsSettings.OcrFixUseHardcodedRules;
             checkBoxSpellCheckAutoChangeNames.Checked = toolsSettings.SpellCheckAutoChangeNames;
-            
-            
+
+
             buttonOK.Text = Configuration.Settings.Language.General.OK;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
 
@@ -460,7 +460,7 @@ namespace Nikse.SubtitleEdit.Forms
             TreeNode SyncNode = new TreeNode(Configuration.Settings.Language.Main.Menu.Synchronization.Title);
             SyncNode.Nodes.Add(Configuration.Settings.Language.Main.Menu.Synchronization.AdjustAllTimes + GetShortcutText(Configuration.Settings.Shortcuts.MainSynchronizationAdjustTimes));
             treeViewShortcuts.Nodes.Add(SyncNode);
-            
+
             //<MainListViewItalic>Control+G</MainListViewItalic>
             TreeNode ListViewNode = new TreeNode(Configuration.Settings.Language.Main.Controls.ListView);
             ListViewNode.Nodes.Add(Configuration.Settings.Language.General.Italic + GetShortcutText(Configuration.Settings.Shortcuts.MainListViewItalic));
@@ -503,13 +503,13 @@ namespace Nikse.SubtitleEdit.Forms
             comboBoxShortcutKey.Items[0] = Configuration.Settings.Language.General.None;
 
             FixLargeFonts();
-        }       
+        }
 
         private string GetShortcutText(string shortcut)
         {
             if (string.IsNullOrEmpty(shortcut))
                 shortcut = Configuration.Settings.Language.General.None;
-            return string.Format(" [{0}]", shortcut); 
+            return string.Format(" [{0}]", shortcut);
         }
 
         private void FixLargeFonts()
@@ -568,7 +568,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             if (count > 0)
-            {                
+            {
                 buttonWaveFormsFolderEmpty.Enabled = true;
                 labelWaveFormsFolderInfo.Text = string.Format(language.WaveformAndSpectrogramsFolderInfo, count, bytes / 1024.0 / 1024.0);
 
@@ -576,11 +576,11 @@ namespace Nikse.SubtitleEdit.Forms
             else
             {
                 buttonWaveFormsFolderEmpty.Enabled = false;
-                labelWaveFormsFolderInfo.Text = string.Format(language.WaveformAndSpectrogramsFolderInfo, 0, 0); 
+                labelWaveFormsFolderInfo.Text = string.Format(language.WaveformAndSpectrogramsFolderInfo, 0, 0);
             }
         }
 
-        public void Initialize(Icon icon, Image newFile, Image openFile, Image saveFile, Image SaveFileAs, Image find, Image replace, 
+        public void Initialize(Icon icon, Image newFile, Image openFile, Image saveFile, Image SaveFileAs, Image find, Image replace,
                                Image visualSync, Image spellCheck, Image settings, Image help)
         {
             this.Icon = (Icon)icon.Clone();
@@ -756,7 +756,7 @@ namespace Nikse.SubtitleEdit.Forms
                 gs.SubtitleLineMaximumLength = 68;
             }
             gs.AutoWrapLineWhileTyping = checkBoxAutoWrapWhileTyping.Checked;
-            
+
             if (comboBoxSubtitleFont.SelectedItem != null)
                 gs.SubtitleFontName = comboBoxSubtitleFont.SelectedItem.ToString();
 
@@ -1016,7 +1016,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             var cb = comboBoxWordListLanguage.Items[comboBoxWordListLanguage.SelectedIndex] as ComboBoxLanguage;
             if (cb == null)
-                return;            
+                return;
 
             _ocrFixWords = new Dictionary<string, string>();
             _ocrFixPartialLines = new Dictionary<string, string>();
@@ -1110,7 +1110,7 @@ namespace Nikse.SubtitleEdit.Forms
                 listBoxNamesEtc.EndUpdate();
             }
             catch
-            { 
+            {
             }
         }
 
@@ -1300,7 +1300,7 @@ namespace Nikse.SubtitleEdit.Forms
                             node.InnerText = word;
                             doc.DocumentElement.AppendChild(node);
                         }
-                        doc.Save(userWordFileName);                        
+                        doc.Save(userWordFileName);
                         LoadUserWords(language, false); // reload
                         buttonRemoveUserWord.Enabled = false;
 
@@ -1357,7 +1357,7 @@ namespace Nikse.SubtitleEdit.Forms
             var sortedDictionary = new SortedDictionary<string, string>();
             foreach (var pair in dictionary)
                 sortedDictionary.Add(pair.Key, pair.Value);
-            
+
             string replaceListXmlFileName = Utilities.DictionaryFolder + cb.CultureInfo.ThreeLetterISOLanguageName + "_OCRFixReplaceList.xml";
             var doc = new XmlDocument();
             if (File.Exists(replaceListXmlFileName))
@@ -1474,13 +1474,13 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ListBoxKeyDownSearch(object sender, KeyEventArgs e)
         {
-             if (e.KeyCode == Keys.Escape || 
+             if (e.KeyCode == Keys.Escape ||
                  e.KeyCode == Keys.Tab ||
                  e.KeyCode == Keys.Return ||
                  e.KeyCode == Keys.Enter ||
-                 e.KeyCode == Keys.Down || 
+                 e.KeyCode == Keys.Down ||
                  e.KeyCode == Keys.Up  ||
-                 e.KeyCode == Keys.PageDown || 
+                 e.KeyCode == Keys.PageDown ||
                  e.KeyCode == Keys.PageUp ||
                  e.KeyCode == Keys.None ||
                  e.KeyCode == Keys.F1 ||
@@ -1516,7 +1516,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (s.ToLower().StartsWith(_listBoxSearchString.ToLower()))
                 {
                     listBox.SelectedIndex = i;
-                    break;                   
+                    break;
                 }
                 i++;
             }
@@ -1536,7 +1536,7 @@ namespace Nikse.SubtitleEdit.Forms
                 else if (comboBoxCustomSearch.SelectedIndex == 1)
                     textBoxCustomSearchUrl.Text = "http://dictionary.reference.com/browse/{0}";
                 else if (comboBoxCustomSearch.SelectedIndex == 2)
-                    textBoxCustomSearchUrl.Text = "http://www.visuwords.com/?word={0}";                
+                    textBoxCustomSearchUrl.Text = "http://www.visuwords.com/?word={0}";
             }
         }
 
@@ -1594,14 +1594,14 @@ namespace Nikse.SubtitleEdit.Forms
 
                 foreach (FileInfo fileName in di.GetFiles("*.wav"))
                 {
-                    try 
-	                {	        
-		                File.Delete(fileName.FullName);
-	                }
-	                catch (Exception exception)
-	                {
+                    try
+                    {
+                        File.Delete(fileName.FullName);
+                    }
+                    catch (Exception exception)
+                    {
                         MessageBox.Show(exception.Message);
-	                }
+                    }
                 }
             }
 
@@ -1721,10 +1721,10 @@ namespace Nikse.SubtitleEdit.Forms
                             i++;
                         }
                     }
-                
+
                 }
 
-                
+
             }
         }
 

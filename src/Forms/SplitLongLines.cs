@@ -92,7 +92,7 @@ namespace Nikse.SubtitleEdit.Forms
             var autoBreakedIndexes = new List<int>();
 
             NumberOfSplits = 0;
-        	SubtitleListview1.Items.Clear();
+            SubtitleListview1.Items.Clear();
             SubtitleListview1.BeginUpdate();
             int count;
             _splittedSubtitle = SplitLongLinesInSubtitle(_subtitle, splittedIndexes, autoBreakedIndexes, out count, (int)numericUpDownLineMaxCharacters.Value, (int)numericUpDownSingleLineMaxCharacters.Value, clearFixes);
@@ -136,7 +136,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
                 i++;
-            }                                        
+            }
             labelMaxSingleLineLengthIs.Text = string.Format(Configuration.Settings.Language.SplitLongLines.LongestSingleLineIsXAtY, singleLineMaxLength, singleLineMaxLengthIndex + 1);
             labelMaxSingleLineLengthIs.Tag = singleLineMaxLengthIndex.ToString();
             labelMaxLineLengthIs.Text = string.Format(Configuration.Settings.Language.SplitLongLines.LongestLineIsXAtY, maxLength, maxLengthIndex + 1);
@@ -208,7 +208,7 @@ namespace Nikse.SubtitleEdit.Forms
                                         p1Ends = true;
 
                                     if (!p1Ends)
-                                    {                                        
+                                    {
                                         string post = string.Empty;
                                         if (newParagraph1.Text.EndsWith("</i>"))
                                         {

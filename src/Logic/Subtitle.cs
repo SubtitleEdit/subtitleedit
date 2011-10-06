@@ -128,7 +128,7 @@ namespace Nikse.SubtitleEdit.Logic
             if (_history.Count > 50)
                 _history.RemoveAt(0);
 
-            _history.Add(new HistoryItem(_history.Count, this, description, FileName, fileModified, subtitleFormat.FriendlyName, original, originalSubtitleFileName));            
+            _history.Add(new HistoryItem(_history.Count, this, description, FileName, fileModified, subtitleFormat.FriendlyName, original, originalSubtitleFileName));
         }
 
         public bool CanUndo
@@ -369,7 +369,7 @@ namespace Nikse.SubtitleEdit.Logic
                 }
                 Renumber(firstNumber);
             }
-            return count;            
+            return count;
         }
 
         /// <summary>
@@ -442,7 +442,7 @@ namespace Nikse.SubtitleEdit.Logic
         internal void InsertParagraphInCorrectTimeOrder(Paragraph newParagraph)
         {
             for (int i=0; i<Paragraphs.Count; i++)
-            { 
+            {
                 Paragraph p = Paragraphs[i];
                 if (newParagraph.StartTime.TotalMilliseconds < p.StartTime.TotalMilliseconds)
                 {

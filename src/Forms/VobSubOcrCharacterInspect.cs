@@ -16,7 +16,7 @@ namespace Nikse.SubtitleEdit.Forms
         private List<Bitmap> _imageSources;
         private string _directoryPath;
         private XmlNode _selectedCompareNode = null;
-        
+
         public VobSubOcrCharacterInspect()
         {
             InitializeComponent();
@@ -71,7 +71,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void listBoxInspectItems_SelectedIndexChanged(object sender, EventArgs e)
         {
             labelImageInfo.Text = string.Empty;
- 
+
             if (listBoxInspectItems.SelectedIndex < 0)
                 return;
 

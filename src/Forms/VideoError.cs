@@ -132,10 +132,10 @@ namespace Nikse.SubtitleEdit.Forms
                 textBoxError.Text = "Message: " + exception.Message + Environment.NewLine +
                                     "Source: " + exception.Source + Environment.NewLine +
                                     Environment.NewLine +
-                                    "StackTrace: " + Environment.NewLine + 
+                                    "StackTrace: " + Environment.NewLine +
                                     exception.StackTrace;
             }
-            Text += fileName;            
+            Text += fileName;
         }
 
         private void VideoError_KeyDown(object sender, KeyEventArgs e)

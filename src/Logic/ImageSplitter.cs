@@ -11,7 +11,7 @@ namespace Nikse.SubtitleEdit.Logic
             if (a.A < 120 && b.A < 120)
                 return true; // transparent
 
-            if (a.A > 250 && a.R > 90 && a.G > 90 && a.B > 90 && 
+            if (a.A > 250 && a.R > 90 && a.G > 90 && a.B > 90 &&
                 b.A > 250 && b.R > 90 && b.G > 90 && b.B > 90)
                 return true; // dark, non transparent
 
@@ -85,7 +85,7 @@ namespace Nikse.SubtitleEdit.Logic
             int maxTop = bmp.Height - 2;
             if (maxTop > bmp.Height)
                 maxTop = bmp.Height;
-            
+
             for (int y = 0; y < maxTop; y++)
             {
                 int difference = 0;
@@ -125,7 +125,7 @@ namespace Nikse.SubtitleEdit.Logic
                         {
                             allTransparent = false;
                             break;
-                        }                        
+                        }
                     }
                 }
                 if (allTransparent == false)
@@ -174,7 +174,7 @@ namespace Nikse.SubtitleEdit.Logic
                 {
                     size++;
                 }
-                        
+
             }
             if (size > 2)
             {
@@ -236,12 +236,12 @@ namespace Nikse.SubtitleEdit.Logic
             {
                 bool allTransparent = IsVerticalLineTransparent(bmp, ref y, x);
 
-                // check if line is transparent and cursive 
+                // check if line is transparent and cursive
                 bool cursiveOk = false;
                 int tempY = 0;
-                if (allTransparent == false && 
-                    size > 5 && 
-                    y > 3 && 
+                if (allTransparent == false &&
+                    size > 5 &&
+                    y > 3 &&
                     x < bmp.Width-2 &&
                     !IsVerticalLineTransparent(bmp, ref tempY, x + 1))
                 {
@@ -263,12 +263,12 @@ namespace Nikse.SubtitleEdit.Logic
                         }
                     }
 
-                    var cursivePoints = new List<Point>();                 
-                    
+                    var cursivePoints = new List<Point>();
+
                     cursiveOk = IsCursiveVerticalLineTransparent(bmp, size, y, x, cursivePoints);
 
                     if (cursiveOk)
-                    {  
+                    {
                         // make letter image
                         int end = x + 1 - startX;
                         if (startX > 0)

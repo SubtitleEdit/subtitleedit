@@ -113,7 +113,7 @@ namespace Nikse.SubtitleEdit.Logic.Networking
                 foreach (var sequence in sequences)
                     OriginalSubtitle.Paragraphs.Add(new Paragraph(Utilities.HtmlDecode(sequence.Text).Replace("<br />", Environment.NewLine), sequence.StartMilliseconds, sequence.EndMilliseconds));
             }
-        
+
             SessionId = sessionKey;
             CurrentUser = users[users.Length - 1]; // me
             foreach (var user in users)
@@ -183,7 +183,7 @@ namespace Nikse.SubtitleEdit.Logic.Networking
         }
 
         public void AppendToLog(string text)
-        {            
+        {
             string timestamp = DateTime.Now.ToLongTimeString();
             Log.AppendLine(timestamp + ": " + text.TrimEnd().Replace(Environment.NewLine, Configuration.Settings.General.ListViewLineSeparatorString));
         }
@@ -255,7 +255,7 @@ namespace Nikse.SubtitleEdit.Logic.Networking
                 _seWs.Leave(SessionId, CurrentUser.UserName);
             }
             catch
-            { 
+            {
             }
         }
 

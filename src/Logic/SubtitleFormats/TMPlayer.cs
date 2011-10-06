@@ -54,7 +54,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         {
             var sb = new StringBuilder();
             foreach (Paragraph p in subtitle.Paragraphs)
-            { 
+            {
                 string text = Utilities.RemoveHtmlTags(p.Text);
                 text = text.Replace(Environment.NewLine, "|");
                 sb.AppendLine(string.Format("{0:00}:{1:00}:{2:00}:{3}", p.StartTime.Hours,
@@ -108,11 +108,11 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
             int index = 0;
             foreach (Paragraph p in subtitle.Paragraphs)
-            { 
+            {
                 Paragraph next = subtitle.GetParagraphOrDefault(index+1);
                 if (next != null && next.StartTime.TotalMilliseconds <= p.EndTime.TotalMilliseconds)
                     p.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - 1;
- 
+
                 index++;
                 p.Number = index;
             }
