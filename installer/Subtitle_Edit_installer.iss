@@ -26,7 +26,7 @@
   #error Update your Inno Setup version
 #endif
 
-#define installer_build_number "20"
+#define installer_build_number "21"
 
 #define app_copyright "Copyright © 2001-2011, Nikse"
 #define VerMajor
@@ -88,8 +88,6 @@ OutputBaseFilename=SubtitleEdit-{#simple_app_version}-setup
 AllowNoIcons=yes
 Compression=lzma2/ultra
 SolidCompression=yes
-EnableDirDoesntExistWarning=no
-DirExistsWarning=auto
 ShowTasksTreeLines=yes
 DisableReadyPage=yes
 PrivilegesRequired=admin
@@ -169,6 +167,9 @@ Source: {#bindir}\Icons\SpellCheck.png;            DestDir: {app}\Icons;        
 Source: {#bindir}\Icons\VideoToogle.png;           DestDir: {app}\Icons;                              Flags: ignoreversion; Components: main
 Source: {#bindir}\Icons\VisualSync.png;            DestDir: {app}\Icons;                              Flags: ignoreversion; Components: main
 Source: {#bindir}\Icons\WaveFormToogle.png;        DestDir: {app}\Icons;                              Flags: ignoreversion; Components: main
+Source: ..\Tesseract\leptonlib.dll;                DestDir: {app}\Tesseract;                          Flags: ignoreversion;                                       Components: main
+Source: ..\Tesseract\tessdata\eng.traineddata;     DestDir: {app}\Tesseract\tessdata;                 Flags: ignoreversion;                                       Components: main
+Source: ..\Tesseract\tesseract.exe;                DestDir: {app}\Tesseract;                          Flags: ignoreversion;                                       Components: main
 
 ; Uncomment the language files when they are ready to be distributed again
 #ifdef localize
@@ -205,9 +206,6 @@ Source: ..\Dictionaries\ru_RU_names_etc.xml;       DestDir: {userappdata}\Subtit
 Source: ..\Dictionaries\ru_RU_user.xml;            DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion onlyifdoesntexist uninsneveruninstall; Components: main
 Source: ..\Dictionaries\rus_OCRFixReplaceList.xml; DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion onlyifdoesntexist uninsneveruninstall; Components: main
 Source: ..\Dictionaries\swe_OCRFixReplaceList.xml; DestDir: {userappdata}\Subtitle Edit\Dictionaries; Flags: ignoreversion onlyifdoesntexist uninsneveruninstall; Components: main
-Source: ..\Tesseract\tessdata\eng.traineddata;     DestDir: {app}\Tesseract\tessdata;                 Flags: ignoreversion onlyifdoesntexist;                     Components: main
-Source: ..\Tesseract\leptonlib.dll;                DestDir: {app}\Tesseract;                          Flags: ignoreversion onlyifdoesntexist;                     Components: main
-Source: ..\Tesseract\tesseract.exe;                DestDir: {app}\Tesseract;                          Flags: ignoreversion onlyifdoesntexist;                     Components: main
 
 
 [Icons]
@@ -305,11 +303,11 @@ var
 
 
 // General functions
-function IsModuleLoaded(modulename: AnsiString ):  Boolean;
+function IsModuleLoaded(modulename: AnsiString ): Boolean;
 external 'IsModuleLoaded@files:psvince.dll stdcall setuponly';
 
 
-function IsModuleLoadedU(modulename: AnsiString ):  Boolean;
+function IsModuleLoadedU(modulename: AnsiString ): Boolean;
 external 'IsModuleLoaded@{app}\psvince.dll stdcall uninstallonly';
 
 
@@ -434,7 +432,8 @@ begin
   if CheckForMutexes(installer_mutex_name) AND NOT WizardSilent() then begin
     SuppressibleMsgBox(ExpandConstant('{cm:msg_SetupIsRunningWarning}'), mbError, MB_OK, MB_OK);
     Result := False;
-  end else begin
+  end
+  else begin
     Result := True;
     CreateMutex(installer_mutex_name);
 
@@ -465,15 +464,15 @@ end;
 
 function InitializeUninstall(): Boolean;
 begin
-  // Check if app is running during uninstallation
-  if IsModuleLoadedU('SubtitleEdit.exe') then begin
-    SuppressibleMsgBox(ExpandConstant('{cm:msg_AppIsRunning}'), mbError, MB_OK, MB_OK);
+  if CheckForMutexes(installer_mutex_name) then begin
+    SuppressibleMsgBox(ExpandConstant('{cm:msg_SetupIsRunningWarning}'), mbError, MB_OK, MB_OK);
     Result := False;
   end else
     Result := True;
 
-    if NOT IsModuleLoadedU('SubtitleEdit.exe') AND CheckForMutexes(installer_mutex_name) then begin
-      SuppressibleMsgBox(ExpandConstant('{cm:msg_SetupIsRunningWarning}'), mbError, MB_OK, MB_OK);
+    // Check if app is running during uninstallation
+    if IsModuleLoadedU('SubtitleEdit.exe') then begin
+      SuppressibleMsgBox(ExpandConstant('{cm:msg_AppIsRunning}'), mbError, MB_OK, MB_OK);
       Result := False;
     end else
       CreateMutex(installer_mutex_name);
