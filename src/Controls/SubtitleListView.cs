@@ -37,7 +37,7 @@ namespace Nikse.SubtitleEdit.Controls
             Columns[ColumnIndexStart].Text = general.StartTime;
             Columns[ColumnIndexEnd].Text = general.EndTime;
             Columns[ColumnIndexDuration].Text = general.Duration;
-            Columns[ColumnIndexText].Text = general.Text;            
+            Columns[ColumnIndexText].Text = general.Text;
             if (settings.General.ListViewLineSeparatorString != null)
                 _lineSeparatorString = settings.General.ListViewLineSeparatorString;
 
@@ -65,13 +65,13 @@ namespace Nikse.SubtitleEdit.Controls
         public SubtitleListView()
         {
             Font = new Font("Tahoma", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            Columns.AddRange(new[] 
+            Columns.AddRange(new[]
             {
-			    new ColumnHeader { Text="#", Width=55 },
-			    new ColumnHeader { Width = 80 },
-			    new ColumnHeader { Width = 80 },
-			    new ColumnHeader { Width= 55 },
-			    new ColumnHeader { Width = -2 } // -2 = as rest of space (300)
+                new ColumnHeader { Text="#", Width=55 },
+                new ColumnHeader { Width = 80 },
+                new ColumnHeader { Width = 80 },
+                new ColumnHeader { Width= 55 },
+                new ColumnHeader { Width = -2 } // -2 = as rest of space (300)
             });
             SubtitleListView_Resize(this, null);
 
@@ -125,7 +125,7 @@ namespace Nikse.SubtitleEdit.Controls
         {
             if (!IsAlternateTextColumnVisible)
             {
-                ColumnIndexExtra = ColumnIndexTextAlternate + 1;                    
+                ColumnIndexExtra = ColumnIndexTextAlternate + 1;
                 if (IsExtraColumnVisible)
                 {
                     Columns.Insert(ColumnIndexTextAlternate, new ColumnHeader { Text = text, Width = -2 });
@@ -206,10 +206,10 @@ namespace Nikse.SubtitleEdit.Controls
         internal void Fill(Subtitle subtitle, Subtitle subtitleAlternate)
         {
             Fill(subtitle.Paragraphs, subtitleAlternate.Paragraphs);
-        }       
+        }
 
         internal void Fill(List<Paragraph> paragraphs)
-        {        
+        {
             SaveFirstVisibleIndex();
             BeginUpdate();
             Items.Clear();
@@ -255,7 +255,7 @@ namespace Nikse.SubtitleEdit.Controls
 
             if (FirstVisibleIndex == 0)
                 FirstVisibleIndex = -1;
-        }        
+        }
 
         private void Add(Paragraph paragraph, string tag)
         {
@@ -299,9 +299,9 @@ namespace Nikse.SubtitleEdit.Controls
 
                 RestoreFirstVisibleIndex();
 
-                if (!ClientRectangle.Contains(new Rectangle(item.Bounds.Left, item.Bounds.Top-5, item.Bounds.Height+ 10, 10)))                
+                if (!ClientRectangle.Contains(new Rectangle(item.Bounds.Left, item.Bounds.Top-5, item.Bounds.Height+ 10, 10)))
                     item.EnsureVisible();
-                FocusedItem = item;                
+                FocusedItem = item;
             }
         }
 
@@ -446,7 +446,7 @@ namespace Nikse.SubtitleEdit.Controls
                     Items[index].SubItems.Add(new ListViewItem.ListViewSubItem());
                 Items[index].SubItems[ColumnIndexExtra].Text = text;
 
-                
+
                 Items[index].UseItemStyleForSubItems = false;
                 Items[index].SubItems[ColumnIndexExtra].BackColor = Color.AntiqueWhite;
                 Items[index].SubItems[ColumnIndexExtra].ForeColor = color;
@@ -566,7 +566,7 @@ namespace Nikse.SubtitleEdit.Controls
             {
                 Columns[ColumnIndexText].Width = -2;
             }
-        }        
+        }
 
     }
 }

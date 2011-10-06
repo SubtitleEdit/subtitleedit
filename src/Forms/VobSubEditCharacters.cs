@@ -118,7 +118,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void FillComboWithUniqueAndSortedTexts()
         {
-            List<string> texts = new List<string>();            
+            List<string> texts = new List<string>();
             foreach (XmlNode node in _compareDoc.DocumentElement.SelectNodes("FileName"))
             {
                 if (node.Attributes.Count >= 1)
@@ -192,7 +192,7 @@ namespace Nikse.SubtitleEdit.Forms
                     labelImageInfo.Text = string.Format(Configuration.Settings.Language.VobSubEditCharacters.Image + " - {0}x{1}", tmp.Width, tmp.Height);
                 }
                 catch
-                { 
+                {
                 }
                 bmp = new Bitmap(tmp);
                 tmp.Dispose();

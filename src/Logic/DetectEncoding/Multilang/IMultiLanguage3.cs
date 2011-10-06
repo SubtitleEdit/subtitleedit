@@ -46,20 +46,20 @@ namespace MultiLanguage
         void ConvertStringToUnicodeEx([In, Out] ref uint pdwMode, [In] uint dwEncoding, [In] ref sbyte pSrcStr, [In, Out] ref uint pcSrcSize, [In] ref ushort pDstStr, [In, Out] ref uint pcDstSize, [In] uint dwFlag, [In] ref ushort lpFallBack);
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType=MethodCodeType.Runtime)]
         void ConvertStringFromUnicodeEx([In, Out] ref uint pdwMode, [In] uint dwEncoding, [In] ref ushort pSrcStr, [In, Out] ref uint pcSrcSize, [In] ref sbyte pDstStr, [In, Out] ref uint pcDstSize, [In] uint dwFlag, [In] ref ushort lpFallBack);
-       
+
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType=MethodCodeType.Runtime)]
         void DetectCodepageInIStream([In] MLDETECTCP flags,
             [In] uint dwPrefWinCodePage,
             [In, MarshalAs(UnmanagedType.Interface)] IStream pstmIn,
-            [In, Out] ref DetectEncodingInfo lpEncoding, 
+            [In, Out] ref DetectEncodingInfo lpEncoding,
             [In, Out] ref int pnScores);
 
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
         void DetectInputCodepage([In] MLDETECTCP flags, [In] uint dwPrefWinCodePage,
             [In] ref byte pSrcStr, [In, Out] ref int pcSrcSize,
-            [In, Out] ref DetectEncodingInfo lpEncoding, 
+            [In, Out] ref DetectEncodingInfo lpEncoding,
             [In, Out] ref int pnScores);
-        
+
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType=MethodCodeType.Runtime)]
         void ValidateCodePage([In] uint uiCodePage, [In, ComAliasName("MultiLanguage.wireHWND")] ref _RemotableHandle hwnd);
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType=MethodCodeType.Runtime)]
@@ -74,19 +74,19 @@ namespace MultiLanguage
         void EnumScripts([In] uint dwFlags, [In] ushort LangId, [MarshalAs(UnmanagedType.Interface)] out IEnumScript ppEnumScript);
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType=MethodCodeType.Runtime)]
         void ValidateCodePageEx([In] uint uiCodePage, [In, ComAliasName("MultiLanguage.wireHWND")] ref _RemotableHandle hwnd, [In] uint dwfIODControl);
-        
-        
+
+
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType=MethodCodeType.Runtime)]
-        void DetectOutboundCodePage([In] MLCPF dwFlags, 
-            [In, MarshalAs(UnmanagedType.LPWStr)] string lpWideCharStr, 
+        void DetectOutboundCodePage([In] MLCPF dwFlags,
+            [In, MarshalAs(UnmanagedType.LPWStr)] string lpWideCharStr,
             [In] uint cchWideChar,
-            [In] IntPtr puiPreferredCodePages, 
-            [In] uint nPreferredCodePages, 
-            [In] IntPtr puiDetectedCodePages, 
-            [In, Out] ref uint pnDetectedCodePages, 
+            [In] IntPtr puiPreferredCodePages,
+            [In] uint nPreferredCodePages,
+            [In] IntPtr puiDetectedCodePages,
+            [In, Out] ref uint pnDetectedCodePages,
             [In] ref ushort lpSpecialChar);
-        
-        
+
+
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType=MethodCodeType.Runtime)]
         void DetectOutboundCodePageInIStream([In] uint dwFlags, [In, MarshalAs(UnmanagedType.Interface)] IStream pStrIn, [In] ref uint puiPreferredCodePages, [In] uint nPreferredCodePages, [In] ref uint puiDetectedCodePages, [In, Out] ref uint pnDetectedCodePages, [In] ref ushort lpSpecialChar);
     }

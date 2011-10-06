@@ -13,7 +13,7 @@ namespace Nikse.SubtitleEdit.Forms
     public sealed partial class ExportPngXml : Form
     {
         Subtitle _subtitle;
-        Color _subtitleColor = Color.White;        
+        Color _subtitleColor = Color.White;
         string _subtitleFontName = "Verdana";
         float _subtitleFontSize = 75.0f;
         Color _borderColor = Color.Black;
@@ -34,7 +34,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void buttonExport_Click(object sender, EventArgs e)
         {
             SetupImageParameters();
-            
+
             if (folderBrowserDialog1.ShowDialog(this) == DialogResult.OK)
             {
                 progressBar1.Value = 0;
@@ -46,7 +46,7 @@ namespace Nikse.SubtitleEdit.Forms
                 int imagesSavedCount = 0;
                 StringBuilder sb = new StringBuilder();
                 for (int i = 0; i < _subtitle.Paragraphs.Count; i++)
-                {                    
+                {
                     Bitmap bmp = GenerateImageFromTextWithStyle(_subtitle.Paragraphs[i].Text);
                     string numberString = string.Format("{0:0000}", i + 1);
                     if (bmp != null)
@@ -139,7 +139,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             StringFormat sf = new StringFormat();
             sf.Alignment = StringAlignment.Near;
-            sf.LineAlignment = StringAlignment.Near;// draw the text to a path            
+            sf.LineAlignment = StringAlignment.Near;// draw the text to a path
             System.Drawing.Drawing2D.GraphicsPath path = new System.Drawing.Drawing2D.GraphicsPath();
 
             // display italic

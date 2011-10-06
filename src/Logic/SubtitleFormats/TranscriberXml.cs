@@ -54,9 +54,9 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
             foreach (Paragraph p in subtitle.Paragraphs)
             {
-                //<Section type="filler" endTime="10.790" startTime="9.609"> 
-                //<Turn endTime="10.790" startTime="9.609" speaker="sp2"> <Sync time="9.609"/> le journal , Simon Tivolle : 
-                //</Turn> 
+                //<Section type="filler" endTime="10.790" startTime="9.609">
+                //<Turn endTime="10.790" startTime="9.609" speaker="sp2"> <Sync time="9.609"/> le journal , Simon Tivolle :
+                //</Turn>
                 //</Section>
                 XmlNode section = xml.CreateElement("Section");
                 XmlAttribute t = xml.CreateAttribute("type");

@@ -51,8 +51,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         }
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
-        {   //00:02:10.354	00:02:13.047	00:00:02.693	Her er endnu en tekstfil fra DVD-Architect.Med 2 linier.
-            //00:02:14.018	00:02:19.018	00:00:05.000	- Prøvetekst 2- Linie 2
+        {   //00:02:10.354  00:02:13.047    00:00:02.693    Her er endnu en tekstfil fra DVD-Architect.Med 2 linier.
+            //00:02:14.018  00:02:19.018    00:00:05.000    - Prøvetekst 2- Linie 2
             //newline = \r (0D)
 
             var regex = new Regex(@"^\d\d:\d\d:\d\d\.\d\d\d[ \t]+\d\d:\d\d:\d\d\.\d\d\d[ \t]+\d\d:\d\d:\d\d\.\d\d\d[ \t]+", RegexOptions.Compiled);
@@ -62,7 +62,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             {
                 if (line.Trim().Length > 0)
                 {
-                    string l = line; 
+                    string l = line;
                     string s = l;
                     bool success = false;
                     var match = regex.Match(s);

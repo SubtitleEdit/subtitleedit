@@ -59,7 +59,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             foreach (Paragraph p in subtitle.Paragraphs)
             {
                 XmlNode textSample = xml.CreateElement("TextSample");
-                
+
                 XmlAttribute preserveSpace = xml.CreateAttribute("xml:space");
                 preserveSpace.Value = "preserve";
                 textSample.Attributes.Append(preserveSpace);

@@ -30,17 +30,17 @@
         {
             this.panelContainer = new System.Windows.Forms.Panel();
             this.SuspendLayout();
-            // 
+            //
             // panelContainer
-            // 
+            //
             this.panelContainer.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panelContainer.Location = new System.Drawing.Point(0, 0);
             this.panelContainer.Name = "panelContainer";
             this.panelContainer.Size = new System.Drawing.Size(458, 311);
             this.panelContainer.TabIndex = 2;
-            // 
+            //
             // VideoControlsUndocked
-            // 
+            //
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(458, 311);

@@ -43,45 +43,45 @@ namespace Nikse.SubtitleEdit.Forms
             this.subtitleListViewTo = new Nikse.SubtitleEdit.Controls.SubtitleListView();
             this.subtitleListViewFrom = new Nikse.SubtitleEdit.Controls.SubtitleListView();
             this.SuspendLayout();
-            // 
+            //
             // comboBoxFrom
-            // 
+            //
             this.comboBoxFrom.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxFrom.FormattingEnabled = true;
             this.comboBoxFrom.Location = new System.Drawing.Point(327, 34);
             this.comboBoxFrom.Name = "comboBoxFrom";
             this.comboBoxFrom.Size = new System.Drawing.Size(121, 21);
             this.comboBoxFrom.TabIndex = 0;
-            // 
+            //
             // labelFrom
-            // 
+            //
             this.labelFrom.AutoSize = true;
             this.labelFrom.Location = new System.Drawing.Point(285, 41);
             this.labelFrom.Name = "labelFrom";
             this.labelFrom.Size = new System.Drawing.Size(35, 13);
             this.labelFrom.TabIndex = 1;
             this.labelFrom.Text = "From:";
-            // 
+            //
             // labelTo
-            // 
+            //
             this.labelTo.AutoSize = true;
             this.labelTo.Location = new System.Drawing.Point(468, 37);
             this.labelTo.Name = "labelTo";
             this.labelTo.Size = new System.Drawing.Size(23, 13);
             this.labelTo.TabIndex = 4;
             this.labelTo.Text = "To:";
-            // 
+            //
             // comboBoxTo
-            // 
+            //
             this.comboBoxTo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxTo.FormattingEnabled = true;
             this.comboBoxTo.Location = new System.Drawing.Point(497, 34);
             this.comboBoxTo.Name = "comboBoxTo";
             this.comboBoxTo.Size = new System.Drawing.Size(121, 21);
             this.comboBoxTo.TabIndex = 3;
-            // 
+            //
             // buttonTranslate
-            // 
+            //
             this.buttonTranslate.Location = new System.Drawing.Point(624, 34);
             this.buttonTranslate.Name = "buttonTranslate";
             this.buttonTranslate.Size = new System.Drawing.Size(75, 21);
@@ -89,9 +89,9 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonTranslate.Text = "Translate";
             this.buttonTranslate.UseVisualStyleBackColor = true;
             this.buttonTranslate.Click += new System.EventHandler(this.buttonTranslate_Click);
-            // 
+            //
             // buttonOK
-            // 
+            //
             this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonOK.Location = new System.Drawing.Point(754, 529);
             this.buttonOK.Name = "buttonOK";
@@ -100,9 +100,9 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonOK.Text = "&OK";
             this.buttonOK.UseVisualStyleBackColor = true;
             this.buttonOK.Click += new System.EventHandler(this.ButtonOkClick);
-            // 
+            //
             // buttonCancel
-            // 
+            //
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.buttonCancel.Location = new System.Drawing.Point(835, 529);
@@ -111,9 +111,9 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonCancel.TabIndex = 7;
             this.buttonCancel.Text = "C&ancel";
             this.buttonCancel.UseVisualStyleBackColor = true;
-            // 
+            //
             // linkLabelPoweredByGoogleTranslate
-            // 
+            //
             this.linkLabelPoweredByGoogleTranslate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.linkLabelPoweredByGoogleTranslate.AutoSize = true;
             this.linkLabelPoweredByGoogleTranslate.Location = new System.Drawing.Point(15, 529);
@@ -123,25 +123,25 @@ namespace Nikse.SubtitleEdit.Forms
             this.linkLabelPoweredByGoogleTranslate.TabStop = true;
             this.linkLabelPoweredByGoogleTranslate.Text = "Powered by Google translate";
             this.linkLabelPoweredByGoogleTranslate.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.LinkLabel1LinkClicked);
-            // 
+            //
             // labelPleaseWait
-            // 
+            //
             this.labelPleaseWait.AutoSize = true;
             this.labelPleaseWait.Location = new System.Drawing.Point(703, 23);
             this.labelPleaseWait.Name = "labelPleaseWait";
             this.labelPleaseWait.Size = new System.Drawing.Size(176, 13);
             this.labelPleaseWait.TabIndex = 10;
             this.labelPleaseWait.Text = "Please wait... this may take a while";
-            // 
+            //
             // progressBar1
-            // 
+            //
             this.progressBar1.Location = new System.Drawing.Point(705, 39);
             this.progressBar1.Name = "progressBar1";
             this.progressBar1.Size = new System.Drawing.Size(192, 16);
             this.progressBar1.TabIndex = 11;
-            // 
+            //
             // subtitleListViewTo
-            // 
+            //
             this.subtitleListViewTo.DisplayExtraFromExtra = false;
             this.subtitleListViewTo.FirstVisibleIndex = -1;
             this.subtitleListViewTo.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -156,9 +156,9 @@ namespace Nikse.SubtitleEdit.Forms
             this.subtitleListViewTo.View = System.Windows.Forms.View.Details;
             this.subtitleListViewTo.Click += new System.EventHandler(this.subtitleListViewTo_DoubleClick);
             this.subtitleListViewTo.DoubleClick += new System.EventHandler(this.subtitleListViewTo_DoubleClick);
-            // 
+            //
             // subtitleListViewFrom
-            // 
+            //
             this.subtitleListViewFrom.DisplayExtraFromExtra = false;
             this.subtitleListViewFrom.FirstVisibleIndex = -1;
             this.subtitleListViewFrom.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -173,9 +173,9 @@ namespace Nikse.SubtitleEdit.Forms
             this.subtitleListViewFrom.View = System.Windows.Forms.View.Details;
             this.subtitleListViewFrom.Click += new System.EventHandler(this.subtitleListViewFrom_DoubleClick);
             this.subtitleListViewFrom.DoubleClick += new System.EventHandler(this.subtitleListViewFrom_DoubleClick);
-            // 
+            //
             // GoogleTranslate
-            // 
+            //
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(925, 558);

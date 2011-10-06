@@ -46,7 +46,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         public bool ReplaceAll { get; set; }
         public bool FindOnly { get; set; }
-        
+
         public FindType GetFindType()
         {
             if (radioButtonNormal.Checked)

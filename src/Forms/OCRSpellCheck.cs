@@ -96,7 +96,7 @@ namespace Nikse.SubtitleEdit.Forms
                 for (int i = 0; i < richTextBoxParagraph.Text.Length; i++)
                 {
                     if (richTextBoxParagraph.Text.Substring(i).StartsWith(word))
-                    { 
+                    {
                         bool startOk = i == 0;
                         if (!startOk)
                             startOk = (" <>-\"”“[]'‘`´¶()♪¿¡.…—!?,:;/" + Environment.NewLine).Contains(richTextBoxParagraph.Text.Substring(i - 1, 1));
@@ -125,7 +125,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 richTextBoxParagraph.SelectionLength = 0;
                 richTextBoxParagraph.SelectionStart = 0;
-            }         
+            }
         }
 
         private void ButtonEditWholeTextClick(object sender, EventArgs e)

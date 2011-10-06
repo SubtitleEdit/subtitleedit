@@ -36,13 +36,13 @@ namespace Nikse.SubtitleEdit.Forms
         private void VideoPlayerUnDocked_FormClosing(object sender, FormClosingEventArgs e)
         {
             if (e.CloseReason == CloseReason.UserClosing && panelContainer.Controls.Count > 0)
-            { 
+            {
                 var control = panelContainer.Controls[0];
                 panelContainer.Controls.Clear();
                 _mainForm.ReDockVideoPlayer(control);
                 _mainForm.SetVideoPlayerToggleOff();
             }
-            _positionsAndSizes.SavePositionAndSize(this);            
+            _positionsAndSizes.SavePositionAndSize(this);
         }
 
         private void VideoPlayerUnDocked_KeyDown(object sender, KeyEventArgs e)
@@ -71,7 +71,7 @@ namespace Nikse.SubtitleEdit.Forms
                 _mainForm.redockVideoControlsToolStripMenuItem_Click(null, null);
                 e.SuppressKeyPress = true;
             }
-            else 
+            else
             {
                 _mainForm.Main_KeyDown(sender, e);
             }

@@ -8,7 +8,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
     public class Csv : SubtitleFormat
     {
         private string _seperator = ";";
-  
+
         public override string Extension
         {
             get { return ".csv"; }
@@ -46,7 +46,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         }
 
         public override string ToText(Subtitle subtitle, string title)
-        {            
+        {
             string format = "{1}{0}{2}{0}{3}{0}\"{4}\"";
             StringBuilder sb = new StringBuilder();
             sb.AppendLine(string.Format(format, _seperator, "Number", "Start time in milliseconds", "End time in milliseconds", "Text"));

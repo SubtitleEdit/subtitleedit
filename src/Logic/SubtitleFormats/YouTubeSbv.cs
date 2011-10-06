@@ -83,7 +83,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
                 // A new line is missing between two paragraphs (buggy srt file)
                 if (_expecting == ExpectingLine.Text && i + 1 < lines.Count &&
-                    _paragraph != null && !string.IsNullOrEmpty(_paragraph.Text) && 
+                    _paragraph != null && !string.IsNullOrEmpty(_paragraph.Text) &&
                     _regexTimeCodes.IsMatch(lines[i]))
                 {
                     ReadLine(subtitle, string.Empty, string.Empty);

@@ -22,9 +22,9 @@ namespace Nikse.SubtitleEdit.Logic
         public int dwWidth;
         public int dwHeight;
         public int dwReserved0;
-		public int dwReserved1;
-		public int dwReserved2;
-		public int dwReserved3;
+        public int dwReserved1;
+        public int dwReserved2;
+        public int dwReserved3;
     }
 
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
@@ -88,17 +88,17 @@ namespace Nikse.SubtitleEdit.Logic
         public int dwUser;
     }
 
-	[StructLayout(LayoutKind.Sequential, Pack = 1)]
-	struct WAVEFORMATEX 
-	{
-		public short  wFormatTag; 
-		public short  nChannels; 
-		public int	  nSamplesPerSec; 
-		public int	  nAvgBytesPerSec; 
-		public short  nBlockAlign; 
-		public short  wBitsPerSample; 
-		public short  cbSize; 
-	}
+    [StructLayout(LayoutKind.Sequential, Pack = 1)]
+    struct WAVEFORMATEX
+    {
+        public short  wFormatTag;
+        public short  nChannels;
+        public int    nSamplesPerSec;
+        public int    nAvgBytesPerSec;
+        public short  nBlockAlign;
+        public short  wBitsPerSample;
+        public short  cbSize;
+    }
 
 
     static class AviRiffData

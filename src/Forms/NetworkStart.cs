@@ -89,7 +89,7 @@ namespace Nikse.SubtitleEdit.Forms
             textBoxSessionKey.Enabled = false;
             textBoxUserName.Enabled = true;
             comboBoxWebServiceUrl.Enabled = true;
-            labelStatus.Text = string.Empty;                     
+            labelStatus.Text = string.Empty;
         }
 
         private void buttonCancel_Click(object sender, EventArgs e)

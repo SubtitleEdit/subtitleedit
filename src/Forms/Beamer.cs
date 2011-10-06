@@ -158,7 +158,7 @@ namespace Nikse.SubtitleEdit.Forms
                 pictureBox1.Image = bmp;
                 pictureBox1.Height = bmp.Height;
                 pictureBox1.Width = bmp.Width;
-                _showIndex = -2;                
+                _showIndex = -2;
             }
         }
 
@@ -208,7 +208,7 @@ namespace Nikse.SubtitleEdit.Forms
             textSize = g.MeasureString(text, font);
             g.Dispose();
             bmp.Dispose();
-            bmp = new Bitmap((int)(textSize.Width * 0.8), (int)(textSize.Height * 0.7) + 10);            
+            bmp = new Bitmap((int)(textSize.Width * 0.8), (int)(textSize.Height * 0.7) + 10);
             g = Graphics.FromImage(bmp);
             g.FillRectangle(new SolidBrush(Color.Black), 0, 0, bmp.Width, bmp.Height); // background color
             if (checkBoxAntiAlias.Checked)
@@ -218,7 +218,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             StringFormat sf = new StringFormat();
             sf.Alignment = StringAlignment.Near;
-            sf.LineAlignment = StringAlignment.Near;// draw the text to a path            
+            sf.LineAlignment = StringAlignment.Near;// draw the text to a path
             System.Drawing.Drawing2D.GraphicsPath path = new System.Drawing.Drawing2D.GraphicsPath();
 
             // display italic
@@ -345,7 +345,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 _seconds = _subtitle.Paragraphs[_index].StartTime.TotalSeconds;
                 _videoStartTick = DateTime.Now.Ticks- ((long) (_subtitle.Paragraphs[_index].StartTime.TotalMilliseconds) * 10000); //10,000 ticks = 1 millisecond
-            }           
+            }
 
             groupBoxImageSettings.Hide();
             buttonStart.Hide();

@@ -41,9 +41,9 @@
             this.buttonOK = new System.Windows.Forms.Button();
             this.groupBoxAdjustVia.SuspendLayout();
             this.SuspendLayout();
-            // 
+            //
             // radioButtonPercent
-            // 
+            //
             this.radioButtonPercent.AutoSize = true;
             this.radioButtonPercent.Location = new System.Drawing.Point(171, 21);
             this.radioButtonPercent.Name = "radioButtonPercent";
@@ -52,9 +52,9 @@
             this.radioButtonPercent.Text = "Percent";
             this.radioButtonPercent.UseVisualStyleBackColor = true;
             this.radioButtonPercent.CheckedChanged += new System.EventHandler(this.RadioButtonPercentCheckedChanged);
-            // 
+            //
             // radioButtonSeconds
-            // 
+            //
             this.radioButtonSeconds.AutoSize = true;
             this.radioButtonSeconds.Checked = true;
             this.radioButtonSeconds.Location = new System.Drawing.Point(11, 21);
@@ -65,9 +65,9 @@
             this.radioButtonSeconds.Text = "Seconds";
             this.radioButtonSeconds.UseVisualStyleBackColor = true;
             this.radioButtonSeconds.CheckedChanged += new System.EventHandler(this.RadioButtonSecondsCheckedChanged);
-            // 
+            //
             // groupBoxAdjustVia
-            // 
+            //
             this.groupBoxAdjustVia.Controls.Add(this.radioButtonPercent);
             this.groupBoxAdjustVia.Controls.Add(this.radioButtonSeconds);
             this.groupBoxAdjustVia.Location = new System.Drawing.Point(13, 13);
@@ -76,9 +76,9 @@
             this.groupBoxAdjustVia.TabIndex = 2;
             this.groupBoxAdjustVia.TabStop = false;
             this.groupBoxAdjustVia.Text = "Adjust via";
-            // 
+            //
             // comboBoxPercent
-            // 
+            //
             this.comboBoxPercent.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxPercent.Enabled = false;
             this.comboBoxPercent.FormattingEnabled = true;
@@ -123,9 +123,9 @@
             this.comboBoxPercent.Name = "comboBoxPercent";
             this.comboBoxPercent.Size = new System.Drawing.Size(141, 29);
             this.comboBoxPercent.TabIndex = 3;
-            // 
+            //
             // comboBoxSeconds
-            // 
+            //
             this.comboBoxSeconds.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxSeconds.FormattingEnabled = true;
             this.comboBoxSeconds.Items.AddRange(new object[] {
@@ -149,36 +149,36 @@
             this.comboBoxSeconds.Name = "comboBoxSeconds";
             this.comboBoxSeconds.Size = new System.Drawing.Size(141, 29);
             this.comboBoxSeconds.TabIndex = 4;
-            // 
+            //
             // labelNote
-            // 
+            //
             this.labelNote.AutoSize = true;
             this.labelNote.Location = new System.Drawing.Point(10, 135);
             this.labelNote.Name = "labelNote";
             this.labelNote.Size = new System.Drawing.Size(434, 21);
             this.labelNote.TabIndex = 5;
             this.labelNote.Text = "Note: Display time will not overlap start time of next text";
-            // 
+            //
             // labelAddInPercent
-            // 
+            //
             this.labelAddInPercent.AutoSize = true;
             this.labelAddInPercent.Location = new System.Drawing.Point(179, 70);
             this.labelAddInPercent.Name = "labelAddInPercent";
             this.labelAddInPercent.Size = new System.Drawing.Size(137, 21);
             this.labelAddInPercent.TabIndex = 6;
             this.labelAddInPercent.Text = "Adjust in percent";
-            // 
+            //
             // labelAddSeconds
-            // 
+            //
             this.labelAddSeconds.AutoSize = true;
             this.labelAddSeconds.Location = new System.Drawing.Point(10, 70);
             this.labelAddSeconds.Name = "labelAddSeconds";
             this.labelAddSeconds.Size = new System.Drawing.Size(104, 21);
             this.labelAddSeconds.TabIndex = 7;
             this.labelAddSeconds.Text = "Add seconds";
-            // 
+            //
             // buttonCancel
-            // 
+            //
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
@@ -188,9 +188,9 @@
             this.buttonCancel.TabIndex = 9;
             this.buttonCancel.Text = "C&ancel";
             this.buttonCancel.UseVisualStyleBackColor = true;
-            // 
+            //
             // buttonOK
-            // 
+            //
             this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonOK.Location = new System.Drawing.Point(222, 169);
@@ -200,9 +200,9 @@
             this.buttonOK.Text = "&OK";
             this.buttonOK.UseVisualStyleBackColor = true;
             this.buttonOK.Click += new System.EventHandler(this.ButtonOkClick);
-            // 
+            //
             // AdjustDisplayDuration
-            // 
+            //
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 21F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(390, 206);

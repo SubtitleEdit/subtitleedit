@@ -11,7 +11,7 @@
 //    {
 //        public override event EventHandler OnVideoLoaded;
 //        public override event EventHandler OnVideoEnded;
-        
+
 //        private System.Windows.Forms.Timer _videoEndTimer;
 //        private BackgroundWorker _videoLoader;
 //        private Video _managedDirectXVideo;
@@ -111,7 +111,7 @@
 
 //            _videoEndTimer = new System.Windows.Forms.Timer { Interval = 500 };
 //            _videoEndTimer.Tick += VideoEndTimerTick;
-//            _videoEndTimer.Start();            
+//            _videoEndTimer.Start();
 //        }
 
 //        void VideoLoaderDoWork(object sender, DoWorkEventArgs e)

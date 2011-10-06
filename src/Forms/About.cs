@@ -49,7 +49,7 @@ namespace Nikse.SubtitleEdit.Forms
                 Process.Start(e.LinkText);
             }
             catch
-            { 
+            {
                 MessageBox.Show("Unable to start link: " + e.LinkText, Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }

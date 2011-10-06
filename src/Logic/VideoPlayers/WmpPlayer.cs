@@ -102,7 +102,7 @@
 
 //        public override void DisposeVideoPlayer()
 //        {
-//            ThreadPool.QueueUserWorkItem(DisposeAxWindowsMediaPlayer, _axWindowsMediaPlayer); 
+//            ThreadPool.QueueUserWorkItem(DisposeAxWindowsMediaPlayer, _axWindowsMediaPlayer);
 //        }
 
 //        private static void DisposeAxWindowsMediaPlayer(object player)

@@ -45,7 +45,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             int index = 0;
             foreach (Paragraph p in subtitle.Paragraphs)
             {
-                //0003	00:00:28:16	00:00:31:04	Jeg vil lære jer	frygten for HERREN."  (newline is \t)
+                //0003  00:00:28:16 00:00:31:04 Jeg vil lære jer   frygten for HERREN."  (newline is \t)
                 sb.AppendLine(string.Format("{0:0000}\t{1}\t{2}\t{3}", index + 1, EncodeTimeCode(p.StartTime), EncodeTimeCode(p.EndTime), Utilities.RemoveHtmlTags(p.Text).Replace(Environment.NewLine, "\t")));
                 index++;
             }

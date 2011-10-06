@@ -21,7 +21,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 //    </Subtitle>
 //  </Font>
 //</DCSubtitle>
- 
+
     class DCSubtitle : SubtitleFormat
     {
         public override string Extension
@@ -49,7 +49,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             StringBuilder sb = new StringBuilder();
             lines.ForEach(line => sb.AppendLine(line));
             string xmlAsString = sb.ToString().Trim();
-            if (xmlAsString.Contains("<DCSubtitle")) 
+            if (xmlAsString.Contains("<DCSubtitle"))
             {
                 XmlDocument xml = new XmlDocument();
                 try
@@ -74,7 +74,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         }
 
         public override string ToText(Subtitle subtitle, string title)
-        {           
+        {
             string languageEnglishName;
             try
             {
@@ -90,7 +90,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 languageEnglishName = "English";
             }
 
-            string date = string.Format("{0:0000}:{1:00}:{2:00}T{3:HH:mm:ss}", DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, DateTime.Now); //2011-03-25T14:07:00            
+            string date = string.Format("{0:0000}:{1:00}:{2:00}T{3:HH:mm:ss}", DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, DateTime.Now); //2011-03-25T14:07:00
             string xmlStructure = "<DCSubtitle Version=\"1.0\">" + Environment.NewLine +
                                     "    <SubtitleID>4EB245B8-4D3A-4158-9516-95DD20E8322E</SubtitleID>" + Environment.NewLine +
                                     "    <MovieTitle></MovieTitle>" + Environment.NewLine +
@@ -133,7 +133,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
                     node = xmlHeader.DocumentElement.SelectSingleNode("LoadFont");
                     if (node != null)
-                    {                        
+                    {
                         if (node.Attributes["Id"] != null)
                             loadedFontId = node.Attributes["Id"].InnerText;
                         if (node.Attributes["URI"] != null)
@@ -147,10 +147,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
                     node = xmlHeader.DocumentElement.SelectSingleNode("Font");
                     if (node != null && node.Attributes["Size"] != null)
-                    { 
+                    {
                         int temp;
                         if (int.TryParse(node.Attributes["Size"].Value, out temp))
-                        { 
+                        {
                             if (temp > 4 && temp < 100)
                             {
                                 fontSize = temp;
@@ -354,7 +354,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                                         {
                                             pText.Append(innerInnerNode.InnerText);
                                         }
-                                    }                                    
+                                    }
                                 }
                                 break;
                             default:

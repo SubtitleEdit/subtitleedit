@@ -47,9 +47,9 @@ namespace Nikse.SubtitleEdit.Forms
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMaxMillisecondsBetweenLines)).BeginInit();
             this.groupBoxLinesFound.SuspendLayout();
             this.SuspendLayout();
-            // 
+            //
             // buttonOK
-            // 
+            //
             this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonOK.Location = new System.Drawing.Point(608, 562);
@@ -59,9 +59,9 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonOK.Text = "&OK";
             this.buttonOK.UseVisualStyleBackColor = true;
             this.buttonOK.Click += new System.EventHandler(this.ButtonOkClick);
-            // 
+            //
             // buttonCancel
-            // 
+            //
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
@@ -72,9 +72,9 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonCancel.Text = "C&ancel";
             this.buttonCancel.UseVisualStyleBackColor = true;
             this.buttonCancel.Click += new System.EventHandler(this.ButtonCancelClick);
-            // 
+            //
             // numericUpDownMaxCharacters
-            // 
+            //
             this.numericUpDownMaxCharacters.Location = new System.Drawing.Point(190, 27);
             this.numericUpDownMaxCharacters.Maximum = new decimal(new int[] {
             200,
@@ -95,27 +95,27 @@ namespace Nikse.SubtitleEdit.Forms
             0,
             0});
             this.numericUpDownMaxCharacters.ValueChanged += new System.EventHandler(this.NumericUpDownMaxCharactersValueChanged);
-            // 
+            //
             // labelMaxCharacters
-            // 
+            //
             this.labelMaxCharacters.AutoSize = true;
             this.labelMaxCharacters.Location = new System.Drawing.Point(187, 9);
             this.labelMaxCharacters.Name = "labelMaxCharacters";
             this.labelMaxCharacters.Size = new System.Drawing.Size(190, 13);
             this.labelMaxCharacters.TabIndex = 32;
             this.labelMaxCharacters.Text = "Maximum characters in one paragraph";
-            // 
+            //
             // labelMaxMillisecondsBetweenLines
-            // 
+            //
             this.labelMaxMillisecondsBetweenLines.AutoSize = true;
             this.labelMaxMillisecondsBetweenLines.Location = new System.Drawing.Point(483, 9);
             this.labelMaxMillisecondsBetweenLines.Name = "labelMaxMillisecondsBetweenLines";
             this.labelMaxMillisecondsBetweenLines.Size = new System.Drawing.Size(178, 13);
             this.labelMaxMillisecondsBetweenLines.TabIndex = 33;
             this.labelMaxMillisecondsBetweenLines.Text = "Maximum milliseconds between lines";
-            // 
+            //
             // numericUpDownMaxMillisecondsBetweenLines
-            // 
+            //
             this.numericUpDownMaxMillisecondsBetweenLines.Location = new System.Drawing.Point(486, 26);
             this.numericUpDownMaxMillisecondsBetweenLines.Maximum = new decimal(new int[] {
             2000,
@@ -136,10 +136,10 @@ namespace Nikse.SubtitleEdit.Forms
             0,
             0});
             this.numericUpDownMaxMillisecondsBetweenLines.ValueChanged += new System.EventHandler(this.NumericUpDownMaxMillisecondsBetweenLinesValueChanged);
-            // 
+            //
             // groupBoxLinesFound
-            // 
-            this.groupBoxLinesFound.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            //
+            this.groupBoxLinesFound.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBoxLinesFound.Controls.Add(this.listViewFixes);
             this.groupBoxLinesFound.Location = new System.Drawing.Point(13, 68);
@@ -148,10 +148,10 @@ namespace Nikse.SubtitleEdit.Forms
             this.groupBoxLinesFound.TabIndex = 36;
             this.groupBoxLinesFound.TabStop = false;
             this.groupBoxLinesFound.Text = "Lines that will be merged";
-            // 
+            //
             // listViewFixes
-            // 
-            this.listViewFixes.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            //
+            this.listViewFixes.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.listViewFixes.CheckBoxes = true;
             this.listViewFixes.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
@@ -166,24 +166,24 @@ namespace Nikse.SubtitleEdit.Forms
             this.listViewFixes.UseCompatibleStateImageBehavior = false;
             this.listViewFixes.View = System.Windows.Forms.View.Details;
             this.listViewFixes.SelectedIndexChanged += new System.EventHandler(this.listViewFixes_SelectedIndexChanged);
-            // 
+            //
             // columnHeader4
-            // 
+            //
             this.columnHeader4.Text = "Apply";
             this.columnHeader4.Width = 45;
-            // 
+            //
             // columnHeader5
-            // 
+            //
             this.columnHeader5.Text = "Line#";
             this.columnHeader5.Width = 122;
-            // 
+            //
             // columnHeader7
-            // 
+            //
             this.columnHeader7.Text = "New text";
             this.columnHeader7.Width = 500;
-            // 
+            //
             // checkBoxOnlyContinuationLines
-            // 
+            //
             this.checkBoxOnlyContinuationLines.AutoSize = true;
             this.checkBoxOnlyContinuationLines.Checked = true;
             this.checkBoxOnlyContinuationLines.CheckState = System.Windows.Forms.CheckState.Checked;
@@ -194,12 +194,12 @@ namespace Nikse.SubtitleEdit.Forms
             this.checkBoxOnlyContinuationLines.Text = "Only merge continuation lines";
             this.checkBoxOnlyContinuationLines.UseVisualStyleBackColor = true;
             this.checkBoxOnlyContinuationLines.CheckedChanged += new System.EventHandler(this.checkBoxOnlyContinuationLines_CheckedChanged);
-            // 
+            //
             // SubtitleListview1
-            // 
+            //
             this.SubtitleListview1.AllowDrop = true;
-            this.SubtitleListview1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
+            this.SubtitleListview1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+            | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.SubtitleListview1.FirstVisibleIndex = -1;
             this.SubtitleListview1.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -212,9 +212,9 @@ namespace Nikse.SubtitleEdit.Forms
             this.SubtitleListview1.TabIndex = 4;
             this.SubtitleListview1.UseCompatibleStateImageBehavior = false;
             this.SubtitleListview1.View = System.Windows.Forms.View.Details;
-            // 
+            //
             // MergeShortLines
-            // 
+            //
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(776, 595);

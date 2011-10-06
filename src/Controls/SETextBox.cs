@@ -40,6 +40,6 @@ namespace Nikse.SubtitleEdit.Controls
             if (selectionLength > 0)
                 this.OnMouseMove(null);
         }
-       
+
     }
 }

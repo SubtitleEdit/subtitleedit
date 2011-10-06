@@ -71,7 +71,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         }
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
-        {         
+        {
             var paragraph = new Paragraph();
             ExpectingLine expecting = ExpectingLine.TimeStart;
             _errorCount = 0;
@@ -132,7 +132,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         paragraph.StartTime.TotalMilliseconds = ms;
                         paragraph.StartFrame = frames;
                         paragraph.Text = line.Trim();
-                        expecting = ExpectingLine.TimeEndOrText;                        
+                        expecting = ExpectingLine.TimeEndOrText;
                     }
                 }
             }

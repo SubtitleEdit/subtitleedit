@@ -4,7 +4,7 @@ using Nikse.SubtitleEdit.Forms;
 using Nikse.SubtitleEdit.Logic;
 
 namespace Test
-{        
+{
     /// <summary>
     ///This is a test class for FixCommonErrors and is intended
     ///to contain all FixCommonErrorsTest Unit Tests
@@ -47,7 +47,7 @@ namespace Test
         }
 
         #region Additional test attributes
-        // 
+        //
         //You can use the following additional attributes as you write your tests:
         //
         //Use ClassInitialize to run code before running the first test in the class
@@ -76,7 +76,7 @@ namespace Test
         //
         #endregion
 
-        #region Merge short lines  
+        #region Merge short lines
         [TestMethod()]
         [DeploymentItem("SubtitleEdit.exe")]
         public void FixShortLinesNormal()
@@ -171,8 +171,8 @@ namespace Test
             InitializeFixCommonErrorsLine(target, "Seems their <i>attackers headed north.");
             target.FixInvalidItalicTags();
             Assert.AreEqual(target._subtitle.Paragraphs[0].Text, "Seems their attackers headed north.");
-        }        
-        
+        }
+
         [TestMethod()]
         [DeploymentItem("SubtitleEdit.exe")]
         public void FixItalicsEmptyStart()

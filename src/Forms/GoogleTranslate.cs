@@ -32,7 +32,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (text.Length > 1)
                     text = text.Substring(0, 1).ToUpper() + text.Substring(1).ToLower();
                 Text = text;
-                
+
                 Value = value;
             }
 
@@ -222,7 +222,7 @@ namespace Nikse.SubtitleEdit.Forms
         }
 
         private void FillTranslatedText(string translatedText, int start, int end)
-        {          
+        {
             List<string> lines = new List<string>();
             foreach (string s in translatedText.Split(new string[] { "|" }, StringSplitOptions.None))
                 lines.Add(s);
@@ -336,7 +336,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             string key = "<p style";
             while (test.Contains(key))
-            { 
+            {
                 int startPosition = test.IndexOf(key);
                 int endPosition = test.IndexOf(">", startPosition + key.Length);
                 if (endPosition == -1)
@@ -362,7 +362,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             //string url = String.Format("http://www.google.com/translate_t?hl=en&ie=UTF8&text={0}&langpair={1}", HttpUtility.UrlEncode(input), languagePair);
             string url = String.Format("http://translate.google.com/?hl=en&eotf=1&sl={0}&tl={1}&q={2}", languagePair.Substring(0, 2), languagePair.Substring(3), HttpUtility.UrlEncode(input));
-            
+
             WebClient webClient = new WebClient();
             webClient.Proxy = Utilities.GetProxy();
             webClient.Encoding = System.Text.Encoding.Default;
@@ -417,7 +417,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (end > 0)
             {
                 res = res.Substring(0, end);
-            }            
+            }
             return res;
         }
 
@@ -428,7 +428,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (comboBox == comboBoxTo)
                 {
                     foreach (ComboBoxItem item in comboBoxFrom.Items)
-                    { 
+                    {
                         comboBoxTo.Items.Add(new ComboBoxItem(item.Text, item.Value));
                     }
                     return;
@@ -710,7 +710,7 @@ namespace Nikse.SubtitleEdit.Forms
                 s = s.Replace(" gonna ", " ville ");
                 s = s.Replace("Gonna ", "Vil ");
 
-                s = s.Replace("Ked af.", "Undskyld.");                
+                s = s.Replace("Ked af.", "Undskyld.");
             }
             return s;
         }

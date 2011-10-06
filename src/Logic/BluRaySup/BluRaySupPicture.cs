@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- * 
+ *
  * NOTE: Converted to C# and modified by Nikse.dk@gmail.com
  */
 
@@ -51,13 +51,13 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
         public bool IsForced { get; set; }
 
         /// <summary>
-        /// composition number - increased at start and end PCS 
+        /// composition number - increased at start and end PCS
         /// </summary>
         public int CompositionNumber { get; set; }
 
         /// <summary>
         /// objectID used in decoded object
-        /// </summary>        
+        /// </summary>
         public int ObjectId { get; set; }
 
         /// <summary>
@@ -155,7 +155,7 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
 
 
         /// <summary>
-        /// decode palette from the input stream 
+        /// decode palette from the input stream
         /// </summary>
         /// <param name="pic">SubPicture object containing info about the current caption</param>
         /// <returns>Palette object</returns>
@@ -326,7 +326,7 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
             int x = index % bmp.Width;
             int y = index / bmp.Width;
             if (color > 0 && x < bmp.Width && y < bmp.Height)
-                bmp.SetPixel(x, y, Color.FromArgb(palette.GetArgb(color))); 
+                bmp.SetPixel(x, y, Color.FromArgb(palette.GetArgb(color)));
         }
 
 

@@ -687,7 +687,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <OpenVideoFile>Otwórz plik wideo...</OpenVideoFile>
     <NewFrameRateUsedToCalculateTimeCodes>Zastosowano nową szybkość klatek ({0}) po obliczeniu kodów czasowych początku/końca</NewFrameRateUsedToCalculateTimeCodes>
     <NewFrameRateUsedToCalculateFrameNumbers>Zastosowano nową szybkość klatek ({0}) po obliczeniu ilości klatek od początku/końca</NewFrameRateUsedToCalculateFrameNumbers>
-    <FindContinue>Nie odnaleziono poszukiwanego elementu. 
+    <FindContinue>Nie odnaleziono poszukiwanego elementu.
 Chcesz przeszukać jeszcze raz od samego początku?</FindContinue>
     <FindContinueTitle>Kontynuować wyszukiwanie?</FindContinueTitle>
     <XFoundAtLineNumberY>'{0}' znaleziono w linii o numerze {1}</XFoundAtLineNumberY>
@@ -717,7 +717,7 @@ Chcesz przeszukać jeszcze raz od samego początku?</FindContinue>
     <TextingForHearingImpairedRemovedOneLine>Usunięty tekst dla słabo słyszących : Jedna linia</TextingForHearingImpairedRemovedOneLine>
     <TextingForHearingImpairedRemovedXLines>Usunięto tekst dla słabo słyszących : {0} linii</TextingForHearingImpairedRemovedXLines>
     <SubtitleSplitted>Dzielenie napisów</SubtitleSplitted>
-    <SubtitleAppendPrompt>Opcja ta połączy drugi plik napisów z aktualnie wczytanymi napisami, 
+    <SubtitleAppendPrompt>Opcja ta połączy drugi plik napisów z aktualnie wczytanymi napisami,
 które powinnny już być zsynchronizowane z plikiem wideo.
 
 Kontynuować?</SubtitleAppendPrompt>

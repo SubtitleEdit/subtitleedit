@@ -83,7 +83,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 {
                     text = (text + Environment.NewLine + line).Trim();
                 }
-                else 
+                else
                 {
                     text = string.Empty;
                 }

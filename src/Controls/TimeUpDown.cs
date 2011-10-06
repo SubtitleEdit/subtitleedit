@@ -66,7 +66,7 @@ namespace Nikse.SubtitleEdit.Controls
         public TimeCode TimeCode
         {
             get
-            {                
+            {
                 string startTime = maskedTextBox1.Text;
                 startTime.Replace(' ', '0');
                 if (startTime.EndsWith("."))

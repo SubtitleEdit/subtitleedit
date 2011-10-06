@@ -98,7 +98,7 @@ namespace Nikse.SubtitleEdit.Forms
             public int ColumnNumber { get;  set; }
             public bool IsNumber { get; set; }
             public bool Descending { get; set; }
-        }   
+        }
 
         Subtitle _subtitle;
         Subtitle _originalSubtitle;
@@ -142,7 +142,7 @@ namespace Nikse.SubtitleEdit.Forms
             _fixActions.Add(new FixItem(_language.RemoveLineBreaksAll, string.Empty, delegate { FixShortLinesAll(); }, ce.MergeShortLinesAllTicked));
             _fixActions.Add(new FixItem(_language.FixUppercaseIInsindeLowercaseWords, _language.FixUppercaseIInsindeLowercaseWordsExample, delegate { FixUppercaseIInsideWords(); }, ce.UppercaseIInsideLowercaseWordTicked));
             _fixActions.Add(new FixItem(_language.FixDoubleApostrophes, string.Empty, delegate { FixDoubleApostrophes(); }, ce.DoubleApostropheToQuoteTicked));
-            _fixActions.Add(new FixItem(_language.FixMusicNotation, _language.FixMusicNotationExample, delegate { FixMusicNotation(); }, ce.FixMusicNotationTicked));    
+            _fixActions.Add(new FixItem(_language.FixMusicNotation, _language.FixMusicNotationExample, delegate { FixMusicNotation(); }, ce.FixMusicNotationTicked));
             _fixActions.Add(new FixItem(_language.AddPeriods, string.Empty, delegate { FixMissingPeriodsAtEndOfLine(); }, ce.AddPeriodAfterParagraphTicked));
             _fixActions.Add(new FixItem(_language.StartWithUppercaseLetterAfterParagraph, string.Empty, delegate { FixStartWithUppercaseLetterAfterParagraph(); }, ce.StartWithUppercaseLetterAfterParagraphTicked));
             _fixActions.Add(new FixItem(_language.StartWithUppercaseLetterAfterPeriodInsideParagraph, string.Empty, delegate { FixStartWithUppercaseLetterAfterPeriodInsideParagraph(); }, ce.StartWithUppercaseLetterAfterPeriodInsideParagraphTicked));
@@ -156,9 +156,9 @@ namespace Nikse.SubtitleEdit.Forms
             _fixActions.Add(new FixItem(_language.FixLowercaseIToUppercaseI, _language.FixLowercaseIToUppercaseIExample, delegate { FixAloneLowercaseIToUppercaseI(); }, ce.AloneLowercaseIToUppercaseIEnglishTicked));
             _fixActions.Add(new FixItem(_language.FixCommonOcrErrors, "D0n't -> Don't", delegate { FixOcrErrorsViaReplaceList(threeLetterISOLanguageName); }, ce.FixOcrErrorsViaReplaceListTicked));
             _fixActions.Add(new FixItem(_language.RemoveSpaceBetweenNumber, "1 100 -> 1100", delegate { RemoveSpaceBetweenNumbers(); }, ce.RemoveSpaceBetweenNumberTicked));
-            _fixActions.Add(new FixItem(_language.FixDialogsOnOneLine, "Hi John! - Hi Ida! > Hi John!" + Configuration.Settings.General.ListViewLineSeparatorString + "- Hi Ida!", delegate { DialogsOnOneLine(); }, ce.FixDialogsOnOneLineTicked));           
+            _fixActions.Add(new FixItem(_language.FixDialogsOnOneLine, "Hi John! - Hi Ida! > Hi John!" + Configuration.Settings.General.ListViewLineSeparatorString + "- Hi Ida!", delegate { DialogsOnOneLine(); }, ce.FixDialogsOnOneLineTicked));
 
-            if (_autoDetectGoogleLanguage == "da" || subtitle.Paragraphs.Count < 25) // && Thread.CurrentThread.CurrentCulture.Name == "da-DK" && 
+            if (_autoDetectGoogleLanguage == "da" || subtitle.Paragraphs.Count < 25) // && Thread.CurrentThread.CurrentCulture.Name == "da-DK" &&
             {
                 _danishLetterIIndex = _fixActions.Count;
                 _fixActions.Add(new FixItem(_language.FixDanishLetterI, "Jeg synes i er søde. -> Jeg synes I er søde.", delegate { FixDanishLetterI(); }, ce.DanishLetterITicked));
@@ -292,7 +292,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         public bool AllowFix(int lineNumber, string action)
         {
-             
+
             //if (!buttonBack.Enabled)
             if (_onlyListFixes)
                 return true;
@@ -324,7 +324,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         public void LogStatus(string sender, string message)
         {
-            if (!string.IsNullOrEmpty(message))            
+            if (!string.IsNullOrEmpty(message))
             {
                 message += Environment.NewLine;
                 if (_onlyListFixes)
@@ -353,7 +353,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (p.Text.Trim().Length == 0)
                 {
                 }
-                else 
+                else
                 {
                     string text = p.Text.Trim(' ');
                     if (text.StartsWith(Environment.NewLine))
@@ -466,7 +466,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
 
-            // overlapping display time             
+            // overlapping display time
             for (int i = 1; i < _subtitle.Paragraphs.Count; i++ )
             {
 
@@ -525,7 +525,7 @@ namespace Nikse.SubtitleEdit.Forms
                                 p.Text = "- " + p.Text.TrimStart();
 
                             prev.Text = prev.Text.Trim() + Environment.NewLine + p.Text;
-                            p.Text = string.Empty; 
+                            p.Text = string.Empty;
                             _totalFixes++;
                             noOfOverlappingDisplayTimesFixed++;
                             AddFixToListView(p, i + 1, fixAction, oldCurrent, p.ToString());
@@ -541,7 +541,7 @@ namespace Nikse.SubtitleEdit.Forms
                             LogStatus(_language.FixOverlappingDisplayTimes, string.Format(_language.UnableToFixTextXY, i + 1, Environment.NewLine + prev.Number + "  " + prev + Environment.NewLine + p.Number + "  " + p), true);
                             _totalErrors++;
                         }
-                        
+
                     }
                 }
             }
@@ -582,7 +582,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (noOfShortDisplayTimes > 0)
                 LogStatus(fixAction, string.Format(_language.XDisplayTimesProlonged, noOfShortDisplayTimes));
         }
-   
+
         public void FixInvalidItalicTags()
         {
             const string beginTag = "<i>";
@@ -688,7 +688,7 @@ namespace Nikse.SubtitleEdit.Forms
                 string s = Utilities.RemoveHtmlTags(p.Text);
                 if (s.Length < Configuration.Settings.Tools.MergeLinesShorterThan && p.Text.Contains(Environment.NewLine))
                 {
-                    s = s.TrimEnd().TrimEnd(".?!:;".ToCharArray());                    
+                    s = s.TrimEnd().TrimEnd(".?!:;".ToCharArray());
                     s = s.TrimStart('-');
                     if (!s.Contains(".") &&
                         !s.Contains("?") &&
@@ -696,7 +696,7 @@ namespace Nikse.SubtitleEdit.Forms
                         !s.Contains(":") &&
                         !s.Contains(";") &&
                         !s.Contains("-") &&
-                        p.Text != p.Text.ToUpper()) 
+                        p.Text != p.Text.ToUpper())
                     {
                         if (AllowFix(i + 1, fixAction))
                         {
@@ -710,7 +710,7 @@ namespace Nikse.SubtitleEdit.Forms
                             AddFixToListView(p, i + 1, fixAction, oldCurrent, p.Text);
                         }
                     }
-                }                
+                }
             }
             if (noOfShortLines > 0)
                 LogStatus(_language.RemoveLineBreaks, string.Format(_language.XLinesUnbreaked, noOfShortLines));
@@ -946,7 +946,7 @@ namespace Nikse.SubtitleEdit.Forms
             Regex rePeriod = new Regex(@"[a-z][.][a-zA-Z]", RegexOptions.Compiled);
             Regex reQuestionMark = new Regex(@"[^\s\d]\?[a-zA-Z]", RegexOptions.Compiled);
             Regex reExclamation = new Regex(@"[^\s\d]\![a-zA-Z]", RegexOptions.Compiled);
-            Regex reColon = new Regex(@"[^\s\d]\:[a-zA-Z]", RegexOptions.Compiled);          
+            Regex reColon = new Regex(@"[^\s\d]\:[a-zA-Z]", RegexOptions.Compiled);
 
             Regex urlCom = new Regex(@"\w\.com\b", RegexOptions.Compiled);
             Regex urlNet = new Regex(@"\w\.net\b", RegexOptions.Compiled);
@@ -1061,7 +1061,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     while (match.Success)
                     {
-                        if (!p.Text.ToLower().Contains("www.") && 
+                        if (!p.Text.ToLower().Contains("www.") &&
                             !p.Text.ToLower().Contains("http://") &&
                             !urlCom.IsMatch(p.Text) &&
                             !urlNet.IsMatch(p.Text) &&
@@ -1175,7 +1175,7 @@ namespace Nikse.SubtitleEdit.Forms
                                  Utilities.CountTagInText(next.Text, "\"") == 2)
                             next = null; // seems to have valid quotes, so no spanning
                     }
-                    
+
                     Paragraph prev = _subtitle.GetParagraphOrDefault(i - 1);
                     if (prev != null)
                     {
@@ -1183,7 +1183,7 @@ namespace Nikse.SubtitleEdit.Forms
                         if (betweenMilliseconds > 1500)
                             prev = null; // cannot be quote spanning several lines of more than 1.5 seconds between lines!
                         else if (prev.Text.Replace("<i>",string.Empty).TrimStart().TrimStart('-').TrimStart().StartsWith("\"") &&
-                                 prev.Text.Replace("</i>", string.Empty).TrimEnd().EndsWith("\"") && 
+                                 prev.Text.Replace("</i>", string.Empty).TrimEnd().EndsWith("\"") &&
                                  Utilities.CountTagInText(prev.Text, "\"") == 2)
                             prev = null; // seems to have valid quotes, so no spanning
                     }
@@ -1432,7 +1432,7 @@ namespace Nikse.SubtitleEdit.Forms
                                     else if (match.Index > 1 && ((st.StrippedText[match.Index - 1] == '\"') || (st.StrippedText[match.Index - 1] == '>') || (st.StrippedText[match.Index - 1] == '-')))
                                     {
                                     }
-                                    else 
+                                    else
                                     {
                                         string before = string.Empty;
                                         string after = string.Empty;
@@ -1477,7 +1477,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (uppercaseIsInsideLowercaseWords > 0)
                 LogStatus(_language.FixUppercaseIInsindeLowercaseWords, string.Format(_language.XUppercaseIsFoundInsideLowercaseWords, uppercaseIsInsideLowercaseWords));
         }
-        
+
         public void FixDoubleApostrophes()
         {
             string fixAction = _language.FixDoubleApostrophes;
@@ -1727,7 +1727,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                     if (!text.StartsWith("www.") &&
                         firstLetter != firstLetter.ToUpper() &&
-                        !"0123456789".Contains(firstLetter) && 
+                        !"0123456789".Contains(firstLetter) &&
                         prevText.Length > 1 &&
                         !prevText.EndsWith("...") &&
                         (prevText.EndsWith(".") ||
@@ -1787,7 +1787,7 @@ namespace Nikse.SubtitleEdit.Forms
                             firstLetter != firstLetter.ToUpper() &&
                             !prevText.EndsWith("...") &&
                             prevText.Length > 1 &&
-                            !"0123456789".Contains(firstLetter) && 
+                            !"0123456789".Contains(firstLetter) &&
                             (prevText.EndsWith(".") ||
                              prevText.EndsWith("!") ||
                              prevText.EndsWith("?") ||
@@ -1862,7 +1862,7 @@ namespace Nikse.SubtitleEdit.Forms
                     while (start != -1 && start < text.Length)
                     {
                         if (start > 0 && Utilities.IsInteger(text[start - 1].ToString()))
-                        { 
+                        {
                             // ignore periods after a number
                         }
                         else if (start + 4 < text.Length && text[start + 1] == ' ')
@@ -1992,7 +1992,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     string[] parts = text.Replace(" - ", Environment.NewLine).Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
                     if (parts.Length == 2)
-                    { 
+                    {
                         string part0 = Utilities.RemoveHtmlTags(parts[0]).Trim();
                         string part1 = Utilities.RemoveHtmlTags(parts[1]).Trim();
                         if (part0.Length > 1 && "!?.".Contains(part0.Substring(part0.Length - 1, 1)) &&
@@ -2006,7 +2006,7 @@ namespace Nikse.SubtitleEdit.Forms
                                 else
                                     text = "- " + text;
                             }
-                        }                            
+                        }
                     }
 
                     if (oldText != text)
@@ -2129,7 +2129,7 @@ namespace Nikse.SubtitleEdit.Forms
                     text.Contains(Environment.NewLine + "<I> -"))
                 {
                     Paragraph prev = _subtitle.GetParagraphOrDefault(i - 1);
-                    
+
                     if (prev == null || !Utilities.RemoveHtmlTags(prev.Text).Trim().EndsWith("-"))
                     {
                         if (Utilities.CountTagInText(text, "-") == 1)
@@ -2267,8 +2267,8 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     text = text.Substring(0, text.Length - 1) + "...";
                     text = text.Replace(" ...", "...");
-                } 
-                
+                }
+
                 if (text != oldText && AllowFix(i + 1, fixAction))
                 {
                     p.Text = text;
@@ -2417,29 +2417,29 @@ namespace Nikse.SubtitleEdit.Forms
                                  MyRegEx(@", i ved nok\b"),
                                  MyRegEx(@", i ved, "),
                                  MyRegEx(@", i ved."),
-                                 MyRegEx(@", i ikke blev\b"),                                 
-                                 MyRegEx(@"\b i føler at\b"),                                 
-                                 MyRegEx(@"\badvarede i os\b"), 
-                                 MyRegEx(@"\badvarede i dem\b"), 
-                                 MyRegEx(@"\bat i aldrig\b"), 
-                                 MyRegEx(@"\bat i alle bliver\b"), 
-                                 MyRegEx(@"\bat i alle er\b"), 
-                                 MyRegEx(@"\bat i alle forventer\b"), 
-                                 MyRegEx(@"\bat i alle gør\b"), 
-                                 MyRegEx(@"\bat i alle har\b"), 
-                                 MyRegEx(@"\bat i alle ved\b"), 
-                                 MyRegEx(@"\bat i alle vil\b"), 
+                                 MyRegEx(@", i ikke blev\b"),
+                                 MyRegEx(@"\b i føler at\b"),
+                                 MyRegEx(@"\badvarede i os\b"),
+                                 MyRegEx(@"\badvarede i dem\b"),
+                                 MyRegEx(@"\bat i aldrig\b"),
+                                 MyRegEx(@"\bat i alle bliver\b"),
+                                 MyRegEx(@"\bat i alle er\b"),
+                                 MyRegEx(@"\bat i alle forventer\b"),
+                                 MyRegEx(@"\bat i alle gør\b"),
+                                 MyRegEx(@"\bat i alle har\b"),
+                                 MyRegEx(@"\bat i alle ved\b"),
+                                 MyRegEx(@"\bat i alle vil\b"),
                                  MyRegEx(@"\bat i bare\b"),
                                  MyRegEx(@"\bat i bager\b"),
                                  MyRegEx(@"\bat i bruger\b"),
-                                 MyRegEx(@"\bat i dræber\b"), 
-                                 MyRegEx(@"\bat i dræbte\b"), 
+                                 MyRegEx(@"\bat i dræber\b"),
+                                 MyRegEx(@"\bat i dræbte\b"),
                                  MyRegEx(@"\bat i fandt\b"),
                                  MyRegEx(@"\bat i fik\b"),
                                  MyRegEx(@"\bat i finder\b"),
                                  MyRegEx(@"\bat i forstår\b"),
                                  MyRegEx(@"\bat i får\b"),
-                                 MyRegEx(@"\b[Aa]t i hver især\b"),                                 
+                                 MyRegEx(@"\b[Aa]t i hver især\b"),
                                  MyRegEx(@"\bAt i ikke\b"),
                                  MyRegEx(@"\bat i ikke\b"),
                                  MyRegEx(@"\bat i kom\b"),
@@ -2456,9 +2456,9 @@ namespace Nikse.SubtitleEdit.Forms
                                  MyRegEx(@"\bat i også tror\b"),
                                  MyRegEx(@"\bat i rev\b"),
                                  MyRegEx(@"\bat i river\b"),
-                                 MyRegEx(@"\bat i samarbejder\b"),                                 
+                                 MyRegEx(@"\bat i samarbejder\b"),
                                  MyRegEx(@"\bat i snakkede\b"),
-                                 MyRegEx(@"\bat i scorer\b"), 
+                                 MyRegEx(@"\bat i scorer\b"),
                                  MyRegEx(@"\bat i siger\b"),
                                  MyRegEx(@"\bat i skal\b"),
                                  MyRegEx(@"\bat i skulle\b"),
@@ -2470,119 +2470,119 @@ namespace Nikse.SubtitleEdit.Forms
                                  MyRegEx(@"\bat i to skal\b"),
                                  MyRegEx(@"\bat i to gør\b"),
                                  MyRegEx(@"\bat i to får\b"),
-                                 MyRegEx(@"\bat i udnyttede\b"), 
-                                 MyRegEx(@"\bat i udnytter\b"), 
-                                 MyRegEx(@"\bat i vil\b"), 
-                                 MyRegEx(@"\bat i ville\b"), 
-                                 MyRegEx(@"\bBehandler i mig\b"), 
-                                 MyRegEx(@"\bbehandler i mig\b"), 
-                                 MyRegEx(@"\bbliver i rige\b"), 
+                                 MyRegEx(@"\bat i udnyttede\b"),
+                                 MyRegEx(@"\bat i udnytter\b"),
+                                 MyRegEx(@"\bat i vil\b"),
+                                 MyRegEx(@"\bat i ville\b"),
+                                 MyRegEx(@"\bBehandler i mig\b"),
+                                 MyRegEx(@"\bbehandler i mig\b"),
+                                 MyRegEx(@"\bbliver i rige\b"),
                                  MyRegEx(@"\bbliver i ikke\b"),
-                                 MyRegEx(@"\bbliver i indkvarteret\b"),                                 
-                                 MyRegEx(@"\bbliver i indlogeret\b"),                                 
-                                 MyRegEx(@"\bburde i gøre\b"), 
-                                 MyRegEx(@"\bburde i ikke\b"), 
-                                 MyRegEx(@"\bburde i købe\b"), 
-                                 MyRegEx(@"\bburde i løbe\b"), 
-                                 MyRegEx(@"\bburde i se\b"), 
-                                 MyRegEx(@"\bburde i sige\b"), 
-                                 MyRegEx(@"\bburde i tage\b"), 
-                                 MyRegEx(@"\bDa i ankom\b"), 
-                                 MyRegEx(@"\bda i ankom\b"), 
-                                 MyRegEx(@"\bda i forlod\b"), 
-                                 MyRegEx(@"\bDa i forlod\b"), 
-                                 MyRegEx(@"\bda i fik\b"), 
-                                 MyRegEx(@"\bDa i fik\b"), 
-                                 MyRegEx(@"\bDa i gik\b"), 
-                                 MyRegEx(@"\bda i gik\b"), 
-                                 MyRegEx(@"\bda i kom\b"), 
-                                 MyRegEx(@"\bDa i kom\b"), 
-                                 MyRegEx(@"\bda i så "), 
-                                 MyRegEx(@"\bDa i så "), 
-                                 MyRegEx(@"\bdet får i\b"), 
-                                 MyRegEx(@"\bDet får i\b"), 
-                                 MyRegEx(@"\bDet har i\b"), 
-                                 MyRegEx(@"\bdet har i\b"), 
-                                 MyRegEx(@"\bDet må i "), 
-                                 MyRegEx(@"\bdet må i "), 
-                                 MyRegEx(@"\b[Dd]et Det kan i sgu"),                                  
-                                 MyRegEx(@"\bend i aner\b"), 
-                                 MyRegEx(@"\bend i tror\b"), 
-                                 MyRegEx(@"\bend i ved\b"), 
-                                 MyRegEx(@"\b, er i alle\b"), 
-                                 MyRegEx(@"\bellers får i "),                                  
-                                 MyRegEx(@"\bEr i alle\b"), 
-                                 MyRegEx(@"\ber i allerede\b"), 
-                                 MyRegEx(@"\bEr i allerede\b"), 
-                                 MyRegEx(@"\ber i allesammen\b"), 
-                                 MyRegEx(@"\bEr i allesammen\b"), 
-                                 MyRegEx(@"\ber i der\b"), 
-                                 MyRegEx(@"\bEr i der\b"), 
-                                 MyRegEx(@"\bEr i fra\b"), 
-                                 MyRegEx(@"\bEr i gennem\b"), 
-                                 MyRegEx(@"\ber i gennem\b"), 
-                                 MyRegEx(@"\ber i glade\b"), 
-                                 MyRegEx(@"\bEr i glade\b"), 
-                                 MyRegEx(@"\bEr i gået\b"), 
-                                 MyRegEx(@"\ber i gået\b"), 
-                                 MyRegEx(@"\ber i her\b"), 
-                                 MyRegEx(@"\bEr i her\b"), 
-                                 MyRegEx(@"\ber i imod\b"), 
-                                 MyRegEx(@"\bEr i imod\b"), 
-                                 MyRegEx(@"\ber i klar\b"), 
-                                 MyRegEx(@"\bEr i klar\b"), 
-                                 MyRegEx(@"\bEr i mætte\b"), 
-                                 MyRegEx(@"\ber i mætte\b"), 
-                                 MyRegEx(@"\bEr i med\b"), 
-                                 MyRegEx(@"\ber i med\b"), 
-                                 MyRegEx(@"\ber i mod\b"), 
-                                 MyRegEx(@"\bEr i mod\b"), 
-                                 MyRegEx(@"\ber i okay\b"), 
-                                 MyRegEx(@"\bEr i okay\b"), 
-                                 MyRegEx(@"\ber i på\b"), 
-                                 MyRegEx(@"\bEr i på\b"), 
-                                 MyRegEx(@"\bEr i parate\b"), 
-                                 MyRegEx(@"\ber i parate\b"), 
-                                 MyRegEx(@"\ber i sikker\b"), 
-                                 MyRegEx(@"\bEr i sikker\b"), 
-                                 MyRegEx(@"\bEr i sikre\b"), 
-                                 MyRegEx(@"\ber i sikre\b"), 
-                                 MyRegEx(@"\ber i skøre\b"), 
-                                 MyRegEx(@"\bEr i skøre\b"), 
-                                 MyRegEx(@"\ber i stadig\b"), 
-                                 MyRegEx(@"\bEr i stadig\b"), 
-                                 MyRegEx(@"\bEr i sultne\b"), 
-                                 MyRegEx(@"\ber i sultne\b"), 
-                                 MyRegEx(@"\bEr i tilfredse\b"), 
-                                 MyRegEx(@"\ber i tilfredse\b"), 
-                                 MyRegEx(@"\bEr i to\b"), 
-                                 MyRegEx(@"\ber i ved at\b"), 
-                                 MyRegEx(@"\ber i virkelig\b"), 
-                                 MyRegEx(@"\bEr i virkelig\b"), 
-                                 MyRegEx(@"\bEr i vågne\b"), 
-                                 MyRegEx(@"\ber i vågne\b"), 
+                                 MyRegEx(@"\bbliver i indkvarteret\b"),
+                                 MyRegEx(@"\bbliver i indlogeret\b"),
+                                 MyRegEx(@"\bburde i gøre\b"),
+                                 MyRegEx(@"\bburde i ikke\b"),
+                                 MyRegEx(@"\bburde i købe\b"),
+                                 MyRegEx(@"\bburde i løbe\b"),
+                                 MyRegEx(@"\bburde i se\b"),
+                                 MyRegEx(@"\bburde i sige\b"),
+                                 MyRegEx(@"\bburde i tage\b"),
+                                 MyRegEx(@"\bDa i ankom\b"),
+                                 MyRegEx(@"\bda i ankom\b"),
+                                 MyRegEx(@"\bda i forlod\b"),
+                                 MyRegEx(@"\bDa i forlod\b"),
+                                 MyRegEx(@"\bda i fik\b"),
+                                 MyRegEx(@"\bDa i fik\b"),
+                                 MyRegEx(@"\bDa i gik\b"),
+                                 MyRegEx(@"\bda i gik\b"),
+                                 MyRegEx(@"\bda i kom\b"),
+                                 MyRegEx(@"\bDa i kom\b"),
+                                 MyRegEx(@"\bda i så "),
+                                 MyRegEx(@"\bDa i så "),
+                                 MyRegEx(@"\bdet får i\b"),
+                                 MyRegEx(@"\bDet får i\b"),
+                                 MyRegEx(@"\bDet har i\b"),
+                                 MyRegEx(@"\bdet har i\b"),
+                                 MyRegEx(@"\bDet må i "),
+                                 MyRegEx(@"\bdet må i "),
+                                 MyRegEx(@"\b[Dd]et Det kan i sgu"),
+                                 MyRegEx(@"\bend i aner\b"),
+                                 MyRegEx(@"\bend i tror\b"),
+                                 MyRegEx(@"\bend i ved\b"),
+                                 MyRegEx(@"\b, er i alle\b"),
+                                 MyRegEx(@"\bellers får i "),
+                                 MyRegEx(@"\bEr i alle\b"),
+                                 MyRegEx(@"\ber i allerede\b"),
+                                 MyRegEx(@"\bEr i allerede\b"),
+                                 MyRegEx(@"\ber i allesammen\b"),
+                                 MyRegEx(@"\bEr i allesammen\b"),
+                                 MyRegEx(@"\ber i der\b"),
+                                 MyRegEx(@"\bEr i der\b"),
+                                 MyRegEx(@"\bEr i fra\b"),
+                                 MyRegEx(@"\bEr i gennem\b"),
+                                 MyRegEx(@"\ber i gennem\b"),
+                                 MyRegEx(@"\ber i glade\b"),
+                                 MyRegEx(@"\bEr i glade\b"),
+                                 MyRegEx(@"\bEr i gået\b"),
+                                 MyRegEx(@"\ber i gået\b"),
+                                 MyRegEx(@"\ber i her\b"),
+                                 MyRegEx(@"\bEr i her\b"),
+                                 MyRegEx(@"\ber i imod\b"),
+                                 MyRegEx(@"\bEr i imod\b"),
+                                 MyRegEx(@"\ber i klar\b"),
+                                 MyRegEx(@"\bEr i klar\b"),
+                                 MyRegEx(@"\bEr i mætte\b"),
+                                 MyRegEx(@"\ber i mætte\b"),
+                                 MyRegEx(@"\bEr i med\b"),
+                                 MyRegEx(@"\ber i med\b"),
+                                 MyRegEx(@"\ber i mod\b"),
+                                 MyRegEx(@"\bEr i mod\b"),
+                                 MyRegEx(@"\ber i okay\b"),
+                                 MyRegEx(@"\bEr i okay\b"),
+                                 MyRegEx(@"\ber i på\b"),
+                                 MyRegEx(@"\bEr i på\b"),
+                                 MyRegEx(@"\bEr i parate\b"),
+                                 MyRegEx(@"\ber i parate\b"),
+                                 MyRegEx(@"\ber i sikker\b"),
+                                 MyRegEx(@"\bEr i sikker\b"),
+                                 MyRegEx(@"\bEr i sikre\b"),
+                                 MyRegEx(@"\ber i sikre\b"),
+                                 MyRegEx(@"\ber i skøre\b"),
+                                 MyRegEx(@"\bEr i skøre\b"),
+                                 MyRegEx(@"\ber i stadig\b"),
+                                 MyRegEx(@"\bEr i stadig\b"),
+                                 MyRegEx(@"\bEr i sultne\b"),
+                                 MyRegEx(@"\ber i sultne\b"),
+                                 MyRegEx(@"\bEr i tilfredse\b"),
+                                 MyRegEx(@"\ber i tilfredse\b"),
+                                 MyRegEx(@"\bEr i to\b"),
+                                 MyRegEx(@"\ber i ved at\b"),
+                                 MyRegEx(@"\ber i virkelig\b"),
+                                 MyRegEx(@"\bEr i virkelig\b"),
+                                 MyRegEx(@"\bEr i vågne\b"),
+                                 MyRegEx(@"\ber i vågne\b"),
                                  MyRegEx(@"\bfanden vil i?"),
-                                 MyRegEx(@"\bfor ser i\b"), 
-                                 MyRegEx(@"\bFor ser i\b"), 
-                                 MyRegEx(@"\bFordi i ventede\b"), 
-                                 MyRegEx(@"\bfordi i ventede\b"), 
-                                 MyRegEx(@"\bFordi i deltog\b"), 
-                                 MyRegEx(@"\bfordi i deltog\b"), 
-                                 MyRegEx(@"\bforhandler i stadig\b"), 
-                                 MyRegEx(@"\bForhandler i stadig\b"), 
-                                 MyRegEx(@"\bforstår i\b"), 
-                                 MyRegEx(@"\bForstår i\b"), 
-                                 MyRegEx(@"\bFør i får\b"), 
-                                 MyRegEx(@"\bfør i får\b"), 
-                                 MyRegEx(@"\bFør i kommer\b"), 
-                                 MyRegEx(@"\bfør i kommer\b"), 
-                                 MyRegEx(@"\bFør i tager\b"), 
-                                 MyRegEx(@"\bfør i tager\b"), 
-                                 MyRegEx(@"\bfår i alle\b"), 
-                                 MyRegEx(@"\bfår i fratrukket\b"), 
-                                 MyRegEx(@"\bfår i ikke\b"), 
-                                 MyRegEx(@"\bfår i klø\b"), 
-                                 MyRegEx(@"\bfår i point\b"), 
+                                 MyRegEx(@"\bfor ser i\b"),
+                                 MyRegEx(@"\bFor ser i\b"),
+                                 MyRegEx(@"\bFordi i ventede\b"),
+                                 MyRegEx(@"\bfordi i ventede\b"),
+                                 MyRegEx(@"\bFordi i deltog\b"),
+                                 MyRegEx(@"\bfordi i deltog\b"),
+                                 MyRegEx(@"\bforhandler i stadig\b"),
+                                 MyRegEx(@"\bForhandler i stadig\b"),
+                                 MyRegEx(@"\bforstår i\b"),
+                                 MyRegEx(@"\bForstår i\b"),
+                                 MyRegEx(@"\bFør i får\b"),
+                                 MyRegEx(@"\bfør i får\b"),
+                                 MyRegEx(@"\bFør i kommer\b"),
+                                 MyRegEx(@"\bfør i kommer\b"),
+                                 MyRegEx(@"\bFør i tager\b"),
+                                 MyRegEx(@"\bfør i tager\b"),
+                                 MyRegEx(@"\bfår i alle\b"),
+                                 MyRegEx(@"\bfår i fratrukket\b"),
+                                 MyRegEx(@"\bfår i ikke\b"),
+                                 MyRegEx(@"\bfår i klø\b"),
+                                 MyRegEx(@"\bfår i point\b"),
                                  MyRegEx(@"\bgider i at\b"),
                                  MyRegEx(@"\bGider i at\b"),
                                  MyRegEx(@"\bGider i ikke\b"),
@@ -2624,10 +2624,10 @@ namespace Nikse.SubtitleEdit.Forms
                                  MyRegEx(@"\bhar i nogen\b"),
                                  MyRegEx(@"\bHar i nok\b"),
                                  MyRegEx(@"\bhar i nok\b"),
-                                 MyRegEx(@"\bhar i ordnet\b"),     
-                                 MyRegEx(@"\bHar i ordnet\b"),     
-                                 MyRegEx(@"\bhar i spist\b"),     
-                                 MyRegEx(@"\bHar i spist\b"),     
+                                 MyRegEx(@"\bhar i ordnet\b"),
+                                 MyRegEx(@"\bHar i ordnet\b"),
+                                 MyRegEx(@"\bhar i spist\b"),
+                                 MyRegEx(@"\bHar i spist\b"),
                                  MyRegEx(@"\bhar i tænkt\b"),
                                  MyRegEx(@"\bhar i tabt\b"),
                                  MyRegEx(@"\bhelvede vil i?"),
@@ -2635,85 +2635,85 @@ namespace Nikse.SubtitleEdit.Forms
                                  MyRegEx(@"\bher har i\b"),
                                  MyRegEx(@"\b[Hh]older i fast\b"),
                                  MyRegEx(@"\b[Hh]older i godt fast\b"),
-                                 MyRegEx(@"\bHvad fanden har i\b"), 
-                                 MyRegEx(@"\bhvad fanden har i\b"), 
-                                 MyRegEx(@"\bHvad fanden tror i\b"), 
-                                 MyRegEx(@"\bhvad fanden tror i\b"), 
-                                 MyRegEx(@"\bhvad fanden vil i\b"), 
-                                 MyRegEx(@"\bHvad fanden vil i\b"), 
-                                 MyRegEx(@"\bHvad gør i\b"), 
-                                 MyRegEx(@"\bhvad gør i\b"), 
-                                 MyRegEx(@"\bhvad har i\b"), 
-                                 MyRegEx(@"\bHvad har i\b"), 
-                                 MyRegEx(@"\bHvad i ikke\b"), 
-                                 MyRegEx(@"\bhvad i ikke\b"), 
-                                 MyRegEx(@"\b[Hh]vad laver i\b"), 
-                                 MyRegEx(@"\b[Hh]vad lavede i\b"), 
-                                 MyRegEx(@"\b[Hh]vad mener i\b"), 
-                                 MyRegEx(@"\b[Hh]vad siger i\b"), 
-                                 MyRegEx(@"\b[Hh]vad skal i\b"), 
-                                 MyRegEx(@"\b[Hh]vad snakker i\b"), 
-                                 MyRegEx(@"\b[Hh]vad sløver i\b"), 
-                                 MyRegEx(@"\b[Hh]vad synes i\b"), 
-                                 MyRegEx(@"\b[Hh]vad vil i\b"),                                  
-                                 MyRegEx(@"\b[Hh]vem er i\b"), 
-                                 MyRegEx(@"\b[Hh]vem fanden tror i\b"), 
-                                 MyRegEx(@"\b[Hh]vem tror i\b"), 
-                                 MyRegEx(@"\b[Hh]vilken slags mennesker er i?"), 
-                                 MyRegEx(@"\b[Hh]vilken slags folk er i?"), 
-                                 MyRegEx(@"\b[Hh]vis i altså\b"), 
-                                 MyRegEx(@"\b[Hh]vis i bare\b"), 
-                                 MyRegEx(@"\b[Hh]vis i forstår\b"), 
-                                 MyRegEx(@"\b[Hh]vis i får\b"), 
-                                 MyRegEx(@"\b[Hh]vis i går\b"), 
-                                 MyRegEx(@"\b[Hh]vis i ikke\b"), 
-                                 MyRegEx(@"\b[Hh]vis i lovede\b"), 
-                                 MyRegEx(@"\b[Hh]vis i lover\b"), 
-                                 MyRegEx(@"\b[Hh]vis i overholder\b"), 
-                                 MyRegEx(@"\b[Hh]vis i overtræder\b"), 
-                                 MyRegEx(@"\b[Hh]vis i slipper\b"), 
-                                 MyRegEx(@"\b[Hh]vis i taber\b"), 
-                                 MyRegEx(@"\b[Hh]vis i vandt\b"), 
-                                 MyRegEx(@"\b[Hh]vis i vinder\b"), 
-                                 MyRegEx(@"\b[Hh]vor er i\b"), 
-                                 MyRegEx(@"\b[Hh]vor får i\b"), 
-                                 MyRegEx(@"\b[Hh]vor gamle er i\b"),                                  
-                                 MyRegEx(@"\b[Hh]vor i begyndte\b"), 
-                                 MyRegEx(@"\b[Hh]vor i startede\b"), 
-                                 MyRegEx(@"\b[Hh]vor skal i\b"), 
-                                 MyRegEx(@"\b[Hh]vor var i\b"), 
-                                 MyRegEx(@"\b[Hh]vordan har i\b"), 
-                                 MyRegEx(@"\b[Hh]vordan hørte i\b"), 
-                                 MyRegEx(@"\b[Hh]vordan i når\b"), 
-                                 MyRegEx(@"\b[Hh]vordan i nåede\b"), 
-                                 MyRegEx(@"\b[Hh]vordan kunne i\b"), 
-                                 MyRegEx(@"\b[Hh]vorfor afleverer i det\b"), 
-                                 MyRegEx(@"\b[Hh]vorfor gør i "), 
-                                 MyRegEx(@"\b[Hh]vorfor gjorde i "), 
-                                 MyRegEx(@"\b[Hh]vorfor græder i "), 
-                                 MyRegEx(@"\b[Hh]vorfor har i "), 
-                                 MyRegEx(@"\b[Hh]vorfor kom i "), 
-                                 MyRegEx(@"\b[Hh]vorfor kommer i "), 
-                                 MyRegEx(@"\b[Hh]vorfor løb i "), 
-                                 MyRegEx(@"\b[Hh]vorfor lover i "), 
-                                 MyRegEx(@"\b[Hh]vorfor lovede i "), 
-                                 MyRegEx(@"\b[Hh]vorfor skal i\b"), 
-                                 MyRegEx(@"\b[Hh]vorfor skulle i\b"), 
-                                 MyRegEx(@"\b[Hh]vorfor sagde i\b"), 
-                                 MyRegEx(@"\b[Hh]vorfor synes i\b"), 
-                                 MyRegEx(@"\b[Hh]vornår gør i "), 
-                                 MyRegEx(@"\bHvornår kom i\b"), 
-                                 MyRegEx(@"\b[Hh]vornår ville i "), 
-                                 MyRegEx(@"\b[Hh]vornår giver i "), 
-                                 MyRegEx(@"\b[Hh]vornår gav i "), 
-                                 MyRegEx(@"\b[Hh]vornår rejser i\b"), 
-                                 MyRegEx(@"\b[Hh]vornår rejste i\b"), 
-                                 MyRegEx(@"\b[Hh]vornår skal i "), 
-                                 MyRegEx(@"\b[Hh]vornår skulle i "), 
-                                 MyRegEx(@"\b[Hh]ører i på\b"),                                 
-                                 MyRegEx(@"\b[Hh]ørte i på\b"),  
-                                 MyRegEx(@"\b[Hh]ører i,\b"),  
-                                 MyRegEx(@"\b[Hh]ører i ikke\b"),  
+                                 MyRegEx(@"\bHvad fanden har i\b"),
+                                 MyRegEx(@"\bhvad fanden har i\b"),
+                                 MyRegEx(@"\bHvad fanden tror i\b"),
+                                 MyRegEx(@"\bhvad fanden tror i\b"),
+                                 MyRegEx(@"\bhvad fanden vil i\b"),
+                                 MyRegEx(@"\bHvad fanden vil i\b"),
+                                 MyRegEx(@"\bHvad gør i\b"),
+                                 MyRegEx(@"\bhvad gør i\b"),
+                                 MyRegEx(@"\bhvad har i\b"),
+                                 MyRegEx(@"\bHvad har i\b"),
+                                 MyRegEx(@"\bHvad i ikke\b"),
+                                 MyRegEx(@"\bhvad i ikke\b"),
+                                 MyRegEx(@"\b[Hh]vad laver i\b"),
+                                 MyRegEx(@"\b[Hh]vad lavede i\b"),
+                                 MyRegEx(@"\b[Hh]vad mener i\b"),
+                                 MyRegEx(@"\b[Hh]vad siger i\b"),
+                                 MyRegEx(@"\b[Hh]vad skal i\b"),
+                                 MyRegEx(@"\b[Hh]vad snakker i\b"),
+                                 MyRegEx(@"\b[Hh]vad sløver i\b"),
+                                 MyRegEx(@"\b[Hh]vad synes i\b"),
+                                 MyRegEx(@"\b[Hh]vad vil i\b"),
+                                 MyRegEx(@"\b[Hh]vem er i\b"),
+                                 MyRegEx(@"\b[Hh]vem fanden tror i\b"),
+                                 MyRegEx(@"\b[Hh]vem tror i\b"),
+                                 MyRegEx(@"\b[Hh]vilken slags mennesker er i?"),
+                                 MyRegEx(@"\b[Hh]vilken slags folk er i?"),
+                                 MyRegEx(@"\b[Hh]vis i altså\b"),
+                                 MyRegEx(@"\b[Hh]vis i bare\b"),
+                                 MyRegEx(@"\b[Hh]vis i forstår\b"),
+                                 MyRegEx(@"\b[Hh]vis i får\b"),
+                                 MyRegEx(@"\b[Hh]vis i går\b"),
+                                 MyRegEx(@"\b[Hh]vis i ikke\b"),
+                                 MyRegEx(@"\b[Hh]vis i lovede\b"),
+                                 MyRegEx(@"\b[Hh]vis i lover\b"),
+                                 MyRegEx(@"\b[Hh]vis i overholder\b"),
+                                 MyRegEx(@"\b[Hh]vis i overtræder\b"),
+                                 MyRegEx(@"\b[Hh]vis i slipper\b"),
+                                 MyRegEx(@"\b[Hh]vis i taber\b"),
+                                 MyRegEx(@"\b[Hh]vis i vandt\b"),
+                                 MyRegEx(@"\b[Hh]vis i vinder\b"),
+                                 MyRegEx(@"\b[Hh]vor er i\b"),
+                                 MyRegEx(@"\b[Hh]vor får i\b"),
+                                 MyRegEx(@"\b[Hh]vor gamle er i\b"),
+                                 MyRegEx(@"\b[Hh]vor i begyndte\b"),
+                                 MyRegEx(@"\b[Hh]vor i startede\b"),
+                                 MyRegEx(@"\b[Hh]vor skal i\b"),
+                                 MyRegEx(@"\b[Hh]vor var i\b"),
+                                 MyRegEx(@"\b[Hh]vordan har i\b"),
+                                 MyRegEx(@"\b[Hh]vordan hørte i\b"),
+                                 MyRegEx(@"\b[Hh]vordan i når\b"),
+                                 MyRegEx(@"\b[Hh]vordan i nåede\b"),
+                                 MyRegEx(@"\b[Hh]vordan kunne i\b"),
+                                 MyRegEx(@"\b[Hh]vorfor afleverer i det\b"),
+                                 MyRegEx(@"\b[Hh]vorfor gør i "),
+                                 MyRegEx(@"\b[Hh]vorfor gjorde i "),
+                                 MyRegEx(@"\b[Hh]vorfor græder i "),
+                                 MyRegEx(@"\b[Hh]vorfor har i "),
+                                 MyRegEx(@"\b[Hh]vorfor kom i "),
+                                 MyRegEx(@"\b[Hh]vorfor kommer i "),
+                                 MyRegEx(@"\b[Hh]vorfor løb i "),
+                                 MyRegEx(@"\b[Hh]vorfor lover i "),
+                                 MyRegEx(@"\b[Hh]vorfor lovede i "),
+                                 MyRegEx(@"\b[Hh]vorfor skal i\b"),
+                                 MyRegEx(@"\b[Hh]vorfor skulle i\b"),
+                                 MyRegEx(@"\b[Hh]vorfor sagde i\b"),
+                                 MyRegEx(@"\b[Hh]vorfor synes i\b"),
+                                 MyRegEx(@"\b[Hh]vornår gør i "),
+                                 MyRegEx(@"\bHvornår kom i\b"),
+                                 MyRegEx(@"\b[Hh]vornår ville i "),
+                                 MyRegEx(@"\b[Hh]vornår giver i "),
+                                 MyRegEx(@"\b[Hh]vornår gav i "),
+                                 MyRegEx(@"\b[Hh]vornår rejser i\b"),
+                                 MyRegEx(@"\b[Hh]vornår rejste i\b"),
+                                 MyRegEx(@"\b[Hh]vornår skal i "),
+                                 MyRegEx(@"\b[Hh]vornår skulle i "),
+                                 MyRegEx(@"\b[Hh]ører i på\b"),
+                                 MyRegEx(@"\b[Hh]ørte i på\b"),
+                                 MyRegEx(@"\b[Hh]ører i,\b"),
+                                 MyRegEx(@"\b[Hh]ører i ikke\b"),
                                  MyRegEx(@"\bi altid\b"),
                                  MyRegEx(@"\bi ankomme\b"),
                                  MyRegEx(@"\bi ankommer\b"),
@@ -2770,7 +2770,7 @@ namespace Nikse.SubtitleEdit.Forms
                                  MyRegEx(@"\bi må give\b"),
                                  MyRegEx(@"\bi må da\b"),
                                  MyRegEx(@"\bi nåede\b"),
-                                 MyRegEx(@"\bi når\b"),                                 
+                                 MyRegEx(@"\bi når\b"),
                                  MyRegEx(@"\bi prøve\b"),
                                  MyRegEx(@"\bi prøvede\b"),
                                  MyRegEx(@"\bi prøver\b"),
@@ -2785,7 +2785,7 @@ namespace Nikse.SubtitleEdit.Forms
                                  MyRegEx(@"\bi sikkert ikke vil\b"),
                                  MyRegEx(@"\bi skal\b"),
                                  MyRegEx(@"\bi skulle\b"),
-                                 MyRegEx(@"\bi små stakler\b"),                                 
+                                 MyRegEx(@"\bi små stakler\b"),
                                  MyRegEx(@"\bi stopper\b"),
                                  MyRegEx(@"\bi synes\b"),
                                  MyRegEx(@"\bi troede\b"),
@@ -2794,14 +2794,14 @@ namespace Nikse.SubtitleEdit.Forms
                                  MyRegEx(@"\bi vel ikke\b"),
                                  MyRegEx(@"\bi vil\b"),
                                  MyRegEx(@"\bi ville\b"),
-                                 MyRegEx(@"\b[Kk]an i lugte\b"), 
-                                 MyRegEx(@"\b[Kk]an i overleve\b"), 
-                                 MyRegEx(@"\b[Kk]an i spise\b"), 
-                                 MyRegEx(@"\b[Kk]an i se\b"), 
-                                 MyRegEx(@"\b[Kk]an i smage\b"), 
-                                 MyRegEx(@"\b[Kk]an i forstå\b"), 
-                                 MyRegEx(@"\b[Kk]ørte i hele\b"), 
-                                 MyRegEx(@"\b[Kk]ørte i ikke\b"), 
+                                 MyRegEx(@"\b[Kk]an i lugte\b"),
+                                 MyRegEx(@"\b[Kk]an i overleve\b"),
+                                 MyRegEx(@"\b[Kk]an i spise\b"),
+                                 MyRegEx(@"\b[Kk]an i se\b"),
+                                 MyRegEx(@"\b[Kk]an i smage\b"),
+                                 MyRegEx(@"\b[Kk]an i forstå\b"),
+                                 MyRegEx(@"\b[Kk]ørte i hele\b"),
+                                 MyRegEx(@"\b[Kk]ørte i ikke\b"),
                                  MyRegEx(@"\b[Kk]an i godt\b"),
                                  MyRegEx(@"\b[Kk]an i gøre\b"),
                                  MyRegEx(@"\b[Kk]an i huske\b"),
@@ -2832,32 +2832,32 @@ namespace Nikse.SubtitleEdit.Forms
                                  MyRegEx(@"\b[Kk]unne i give\b"),
                                  MyRegEx(@"\b[Kk]unne i gøre\b"),
                                  MyRegEx(@"\b[Kk]unne i ikke\b"),
-                                 MyRegEx(@"\b[Kk]unne i lide\b"), 
-                                 MyRegEx(@"\b[Kk]unne i mødes\b"), 
-                                 MyRegEx(@"\b[Kk]unne i se\b"), 
-                                 MyRegEx(@"\b[Ll]eder i efter\b"), 
-                                 MyRegEx(@"\b[Ll]aver i ikke\b"), 
-                                 MyRegEx(@"\blaver i her\b"), 
-                                 MyRegEx(@"\b[Ll]igner i far\b"), 
-                                 MyRegEx(@"\b[Ll]igner i hinanden\b"), 
-                                 MyRegEx(@"\b[Ll]igner i mor\b"), 
-                                 MyRegEx(@"\bLover i\b"), 
-                                 MyRegEx(@"\b[Ll]ykkes i med\b"),                                  
-                                 MyRegEx(@"\b[Ll]ykkedes i med\b"),                                  
-                                 MyRegEx(@"\b[Ll]øb i hellere\b"),                                  
+                                 MyRegEx(@"\b[Kk]unne i lide\b"),
+                                 MyRegEx(@"\b[Kk]unne i mødes\b"),
+                                 MyRegEx(@"\b[Kk]unne i se\b"),
+                                 MyRegEx(@"\b[Ll]eder i efter\b"),
+                                 MyRegEx(@"\b[Ll]aver i ikke\b"),
+                                 MyRegEx(@"\blaver i her\b"),
+                                 MyRegEx(@"\b[Ll]igner i far\b"),
+                                 MyRegEx(@"\b[Ll]igner i hinanden\b"),
+                                 MyRegEx(@"\b[Ll]igner i mor\b"),
+                                 MyRegEx(@"\bLover i\b"),
+                                 MyRegEx(@"\b[Ll]ykkes i med\b"),
+                                 MyRegEx(@"\b[Ll]ykkedes i med\b"),
+                                 MyRegEx(@"\b[Ll]øb i hellere\b"),
                                  MyRegEx(@"\b[Mm]ødte i "),
-                                 MyRegEx(@"\b[Mm]angler i en\b"), 
+                                 MyRegEx(@"\b[Mm]angler i en\b"),
                                  MyRegEx(@"\b[Mm]en i gutter\b"),
                                  MyRegEx(@"\b[Mm]en i drenge\b"),
                                  MyRegEx(@"\b[Mm]en i fyre\b"),
-                                 MyRegEx(@"\b[Mm]en i står\b"),                                 
+                                 MyRegEx(@"\b[Mm]en i står\b"),
                                  MyRegEx(@"\b[Mm]ener i at\b"),
                                  MyRegEx(@"\b[Mm]ener i det\b"),
                                  MyRegEx(@"\b[Mm]ener i virkelig\b"),
                                  MyRegEx(@"\b[Mm]ens i sov\b"),
                                  MyRegEx(@"\b[Mm]ens i stadig\b"),
                                  MyRegEx(@"\b[Mm]ens i lå\b"),
-                                 MyRegEx(@"\b[Mm]ister i point\b"), 
+                                 MyRegEx(@"\b[Mm]ister i point\b"),
                                  MyRegEx(@"\b[Mm]orer i jer\b"),
                                  MyRegEx(@"\b[Mm]å i alle"),
                                  MyRegEx(@"\b[Mm]å i gerne"),
@@ -2878,47 +2878,47 @@ namespace Nikse.SubtitleEdit.Forms
                                  MyRegEx(@"\b[Pp]å at i ikke\b"),
                                  MyRegEx(@"\b[Ss]agde i ikke\b"),
                                  MyRegEx(@"\b[Ss]amlede i ham\b"),
-                                 MyRegEx(@"\bSer i\b"), 
-                                 MyRegEx(@"\bSiger i\b"), 
+                                 MyRegEx(@"\bSer i\b"),
+                                 MyRegEx(@"\bSiger i\b"),
                                  MyRegEx(@"\b[Ss]ikker på i ikke\b"),
                                  MyRegEx(@"\b[Ss]ikre på i ikke\b"),
-                                 MyRegEx(@"\b[Ss]kal i alle\b"), 
-                                 MyRegEx(@"\b[Ss]kal i allesammen\b"), 
-                                 MyRegEx(@"\b[Ss]kal i begge dø\b"), 
-                                 MyRegEx(@"\b[Ss]kal i bare\b"), 
-                                 MyRegEx(@"\b[Ss]kal i dele\b"), 
-                                 MyRegEx(@"\b[Ss]kal i dø\b"), 
-                                 MyRegEx(@"\b[Ss]kal i fordele\b"), 
-                                 MyRegEx(@"\b[Ss]kal i fordeles\b"), 
-                                 MyRegEx(@"\b[Ss]kal i fortælle\b"),                                  
-                                 MyRegEx(@"\b[Ss]kal i gøre\b"), 
-                                 MyRegEx(@"\b[Ss]kal i have\b"), 
-                                 MyRegEx(@"\b[Ss]kal i ikke\b"), 
-                                 MyRegEx(@"\b[Ss]kal i klare\b"), 
-                                 MyRegEx(@"\b[Ss]kal i klatre\b"), 
-                                 MyRegEx(@"\b[Ss]kal i larme\b"), 
-                                 MyRegEx(@"\b[Ss]kal i lave\b"), 
-                                 MyRegEx(@"\b[Ss]kal i løfte\b"), 
-                                 MyRegEx(@"\b[Ss]kal i med\b"), 
-                                 MyRegEx(@"\b[Ss]kal i på\b"), 
-                                 MyRegEx(@"\b[Ss]kal i til\b"), 
-                                 MyRegEx(@"\b[Ss]kal i ud\b"), 
-                                 MyRegEx(@"\b[Ss]lap i ud\b"), 
-                                 MyRegEx(@"\b[Ss]lap i væk\b"), 
-                                 MyRegEx(@"\b[Ss]nart er i\b"), 
+                                 MyRegEx(@"\b[Ss]kal i alle\b"),
+                                 MyRegEx(@"\b[Ss]kal i allesammen\b"),
+                                 MyRegEx(@"\b[Ss]kal i begge dø\b"),
+                                 MyRegEx(@"\b[Ss]kal i bare\b"),
+                                 MyRegEx(@"\b[Ss]kal i dele\b"),
+                                 MyRegEx(@"\b[Ss]kal i dø\b"),
+                                 MyRegEx(@"\b[Ss]kal i fordele\b"),
+                                 MyRegEx(@"\b[Ss]kal i fordeles\b"),
+                                 MyRegEx(@"\b[Ss]kal i fortælle\b"),
+                                 MyRegEx(@"\b[Ss]kal i gøre\b"),
+                                 MyRegEx(@"\b[Ss]kal i have\b"),
+                                 MyRegEx(@"\b[Ss]kal i ikke\b"),
+                                 MyRegEx(@"\b[Ss]kal i klare\b"),
+                                 MyRegEx(@"\b[Ss]kal i klatre\b"),
+                                 MyRegEx(@"\b[Ss]kal i larme\b"),
+                                 MyRegEx(@"\b[Ss]kal i lave\b"),
+                                 MyRegEx(@"\b[Ss]kal i løfte\b"),
+                                 MyRegEx(@"\b[Ss]kal i med\b"),
+                                 MyRegEx(@"\b[Ss]kal i på\b"),
+                                 MyRegEx(@"\b[Ss]kal i til\b"),
+                                 MyRegEx(@"\b[Ss]kal i ud\b"),
+                                 MyRegEx(@"\b[Ss]lap i ud\b"),
+                                 MyRegEx(@"\b[Ss]lap i væk\b"),
+                                 MyRegEx(@"\b[Ss]nart er i\b"),
                                  MyRegEx(@"\b[Ss]om i måske\b"),
                                  MyRegEx(@"\b[Ss]om i nok\b"),
                                  MyRegEx(@"\b[Ss]om i ved\b"),
-                                 MyRegEx(@"\b[Ss]pis i bare\b"), 
-                                 MyRegEx(@"\b[Ss]pis i dem\b"), 
+                                 MyRegEx(@"\b[Ss]pis i bare\b"),
+                                 MyRegEx(@"\b[Ss]pis i dem\b"),
                                  MyRegEx(@"\b[Ss]ynes i at\b"),
                                  MyRegEx(@"\b[Ss]ynes i det\b"),
-                                 MyRegEx(@"\b[Ss]ynes i,"),                                
-                                 MyRegEx(@"\b[Ss]ætter i en\b"), 
-                                 MyRegEx(@"\bSå i at\b"), 
-                                 MyRegEx(@"\bSå i det\b"), 
-                                 MyRegEx(@"\bSå i noget\b"), 
-                                 MyRegEx(@"\b[Ss]å tager i\b"), 
+                                 MyRegEx(@"\b[Ss]ynes i,"),
+                                 MyRegEx(@"\b[Ss]ætter i en\b"),
+                                 MyRegEx(@"\bSå i at\b"),
+                                 MyRegEx(@"\bSå i det\b"),
+                                 MyRegEx(@"\bSå i noget\b"),
+                                 MyRegEx(@"\b[Ss]å tager i\b"),
                                  MyRegEx(@"\bTænder i på\b"),
                                  MyRegEx(@"\btænder i på\b"),
                                  MyRegEx(@"\btog i bilen\b"),
@@ -2943,11 +2943,11 @@ namespace Nikse.SubtitleEdit.Forms
                                  MyRegEx(@"\b[Vv]ed i allesammen\b"),
                                  MyRegEx(@"\b[Vv]ed i er\b"),
                                  MyRegEx(@"\b[Vv]ed i ikke\b"),
-                                 MyRegEx(@"\b[Vv]ed i hvad\b"), 
-                                 MyRegEx(@"\b[Vv]ed i hvem\b"), 
-                                 MyRegEx(@"\b[Vv]ed i hvor\b"), 
-                                 MyRegEx(@"\b[Vv]ed i hvorfor\b"), 
-                                 MyRegEx(@"\b[Vv]ed i hvordan\b"), 
+                                 MyRegEx(@"\b[Vv]ed i hvad\b"),
+                                 MyRegEx(@"\b[Vv]ed i hvem\b"),
+                                 MyRegEx(@"\b[Vv]ed i hvor\b"),
+                                 MyRegEx(@"\b[Vv]ed i hvorfor\b"),
+                                 MyRegEx(@"\b[Vv]ed i hvordan\b"),
                                  MyRegEx(@"\b[Vv]ed i var\b"),
                                  MyRegEx(@"\b[Vv]ed i ville\b"),
                                  MyRegEx(@"\b[Vv]ed i har\b"),
@@ -2959,7 +2959,7 @@ namespace Nikse.SubtitleEdit.Forms
                                  MyRegEx(@"\b[Vv]ed i tror\b"),
                                  MyRegEx(@"\b[Vv]enter i på\b"),
                                  MyRegEx(@"\b[Vv]il i besegle\b"),
-                                 MyRegEx(@"\b[Vv]il i dræbe\b"),                                 
+                                 MyRegEx(@"\b[Vv]il i dræbe\b"),
                                  MyRegEx(@"\b[Vv]il i fjerne\b"),
                                  MyRegEx(@"\b[Vv]il i fortryde\b"),
                                  MyRegEx(@"\b[Vv]il i gerne\b"),
@@ -3004,9 +3004,9 @@ namespace Nikse.SubtitleEdit.Forms
                                  MyRegEx(@"\bville i være\b"),
                                  MyRegEx(@"\bville i være\b"),
                                  MyRegEx(@"\b[Vv]iste i, at\b"),
-                                 MyRegEx(@"\b[Vv]iste i at\b"),                            
-                                 MyRegEx(@"\bvover i\b"),                            
-                          
+                                 MyRegEx(@"\b[Vv]iste i at\b"),
+                                 MyRegEx(@"\bvover i\b"),
+
                              };
 
             Regex regExIDag = new Regex(@"\bidag\b", RegexOptions.Compiled);
@@ -3082,17 +3082,17 @@ namespace Nikse.SubtitleEdit.Forms
         /// Will try to fix issues with Spanish special letters ¿? and ¡!.
         /// Sentences ending with "?" must start with "¿".
         /// Sentences ending with "!" must start with "¡".
-        /// </summary>  
+        /// </summary>
         private void FixSpanishInvertedQuestionAndExclamationMarks()
-        { 
-            string fixAction = _language.FixSpanishInvertedQuestionAndExclamationMarks; 
+        {
+            string fixAction = _language.FixSpanishInvertedQuestionAndExclamationMarks;
             int fixCount = 0;
             for (int i = 0; i < _subtitle.Paragraphs.Count; i++)
             {
                 Paragraph p = _subtitle.Paragraphs[i];
                 Paragraph last = _subtitle.GetParagraphOrDefault(i - 1);
 
-                bool wasLastLineClosed = last == null || last.Text.EndsWith("?") || last.Text.EndsWith("!") || last.Text.EndsWith(".") || 
+                bool wasLastLineClosed = last == null || last.Text.EndsWith("?") || last.Text.EndsWith("!") || last.Text.EndsWith(".") ||
                                          last.Text.EndsWith(":") || last.Text.EndsWith(")") || last.Text.EndsWith("]");
                 string trimmedStart = p.Text.TrimStart(("- ").ToCharArray());
                 if (last != null && last.Text.EndsWith("...") && trimmedStart.Length > 0 && trimmedStart[0].ToString() == trimmedStart[0].ToString().ToLower())
@@ -3146,8 +3146,8 @@ namespace Nikse.SubtitleEdit.Forms
                                     j--;
 
                                 while (j > startIndex &&
-                                       (p.Text[j] != '.' || IsSpanishAbbreviation(p.Text, j)) && 
-                                       p.Text[j] != '!' && 
+                                       (p.Text[j] != '.' || IsSpanishAbbreviation(p.Text, j)) &&
+                                       p.Text[j] != '!' &&
                                        p.Text[j] != '?' &&
                                        !(j > 3 && p.Text.Substring(j - 3, 3) == Environment.NewLine + "-") &&
                                        !(j > 4 && p.Text.Substring(j - 4, 4) == Environment.NewLine + " -") &&
@@ -3225,7 +3225,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (text[index] != '.')
                 return false;
-                
+
             if (index +3 < text.Length && text[index+2] == '.') //  X
                 return true;                                    // O.R.
 
@@ -3358,7 +3358,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             ce.UppercaseIInsideLowercaseWordTicked = listView1.Items[IndexUppercaseIInsideLowercaseWord].Checked;
             ce.DoubleApostropheToQuoteTicked = listView1.Items[IndexDoubleApostropheToQuote].Checked;
-            ce.FixMusicNotationTicked = listView1.Items[IndexFixMusicNotation].Checked; 
+            ce.FixMusicNotationTicked = listView1.Items[IndexFixMusicNotation].Checked;
             ce.AddPeriodAfterParagraphTicked = listView1.Items[IndexAddPeriodAfterParagraph].Checked;
             ce.StartWithUppercaseLetterAfterParagraphTicked = listView1.Items[IndexStartWithUppercaseLetterAfterParagraph].Checked;
             ce.StartWithUppercaseLetterAfterPeriodInsideParagraphTicked = listView1.Items[IndexStartWithUppercaseLetterAfterPeriodInsideParagraph].Checked;
@@ -3378,8 +3378,8 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (_spanishInvertedQuestionAndExclamationMarksIndex > -1)
                 ce.SpanishInvertedQuestionAndExclamationMarksTicked = listView1.Items[_spanishInvertedQuestionAndExclamationMarksIndex].Checked;
-                
-            
+
+
 
             Configuration.Settings.Save();
         }
@@ -3439,11 +3439,11 @@ namespace Nikse.SubtitleEdit.Forms
                 Paragraph p = (Paragraph) listViewFixes.SelectedItems[0].Tag;
 
                 for (int i = 0; i < p.Number; i++)
-                { 
-                    if (_deleteIndices.Contains(i))    
+                {
+                    if (_deleteIndices.Contains(i))
                         addNumber++;
                 }
-                
+
                 p = _originalSubtitle.GetFirstParagraphByLineNumber(p.Number+addNumber);
                 if (p != null)
                 {
@@ -3598,12 +3598,12 @@ namespace Nikse.SubtitleEdit.Forms
 
                 UpdateOverlapErrors();
 
-                // update _subtitle + listview                    
+                // update _subtitle + listview
                 _originalSubtitle.Paragraphs[_subtitleListViewIndex].EndTime.TotalMilliseconds +=
                     (startTime.TotalMilliseconds - _originalSubtitle.Paragraphs[_subtitleListViewIndex].StartTime.TotalMilliseconds);
                 _originalSubtitle.Paragraphs[_subtitleListViewIndex].StartTime = startTime;
                 subtitleListView1.SetStartTime(_subtitleListViewIndex, _originalSubtitle.Paragraphs[_subtitleListViewIndex]);
-            } 
+            }
         }
 
         private void UpdateListViewTextInfo(string text)

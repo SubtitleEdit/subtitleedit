@@ -66,7 +66,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 //      <anchoredRegion x="6.005" y="9.231" w="26.328" h="18.154" sx="40.647" sy="14.462" t="0:01:13.0" d="0"/>
                 //    </movingRegion>
                 //  </segment>
-                //</annotation>              
+                //</annotation>
 
                 XmlNode annotation = xml.CreateElement("annotation");
 
@@ -180,11 +180,11 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     {
                         YouTubeAnnotationsImport import = new YouTubeAnnotationsImport(stylesWithCount);
                         if (import.ShowDialog() == DialogResult.OK)
-                        { 
+                        {
                             styles = import.SelectedStyles;
                         }
                     }
-                }                   
+                }
 
                 foreach (XmlNode node in xml.SelectNodes("//annotation"))
                 {

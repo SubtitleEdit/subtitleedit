@@ -88,7 +88,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 MaximumNumberOfDisplayableRows = "23";
                 TimeCodeStatus = "1";
                 TimeCodeStartOfProgramme = "00000000";
-                TimeCodeFirstInCue = "00000001"; 
+                TimeCodeFirstInCue = "00000001";
                 TotalNumberOfDisks = "1";
                 DiskSequenceNumber = "1";
                 CountryOfOrigin = "USA";
@@ -132,7 +132,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                           EditorsName +
                           EditorsContactDetails +
                           SpareBytes +
-                          UserDefinedArea;                                    
+                          UserDefinedArea;
                 if (result.Length == 1024)
                     return result;
                 throw new Exception("Length must be 1024");
@@ -141,7 +141,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         }
 
         /// <summary>
-        /// TTI block 128 bytes 
+        /// TTI block 128 bytes
         /// </summary>
         private class EbuTextTimingInformation
         {
@@ -304,13 +304,13 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 // newline
                 string newline = encoding.GetString(new byte[] { 0x0a, 0x0a, 0x8a, 0x8a });
                 TextField = TextField.Replace(Environment.NewLine, newline);
-                
+
                 string endOfLine = encoding.GetString(new byte[] { 0x0a, 0x0a, 0x8a });
                 TextField += endOfLine;
 
                 // convert text to bytes
                 byte[] bytes = encoding.GetBytes(TextField);
-                
+
                 for (int i = 0; i < 112; i++)
                 {
                     if (i < bytes.Length)
@@ -426,7 +426,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             if (saveOptions.ShowDialog() != DialogResult.OK)
                 return;
 
-            FileStream fs = new FileStream(fileName, FileMode.Create, FileAccess.Write);            
+            FileStream fs = new FileStream(fileName, FileMode.Create, FileAccess.Write);
             header.TotalNumberOfSubtitles = ((subtitle.Paragraphs.Count+1).ToString()).PadLeft(5, '0'); // seems to be 1 higher than actual number of subtitles
             header.TotalNumberOfTextAndTimingInformationBlocks = header.TotalNumberOfSubtitles;
 
@@ -485,7 +485,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     byte[] buffer = File.ReadAllBytes(fileName);
                     EbuGeneralSubtitleInformation header = ReadHeader(buffer);
                     if (header.DiskFormatCode.StartsWith("STL25") ||
-                        header.DiskFormatCode.StartsWith("STL30"))                    
+                        header.DiskFormatCode.StartsWith("STL30"))
                     {
                         return Utilities.IsInteger(header.CodePageNumber);
                     }
@@ -604,7 +604,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                             case "e": return "é";
                             case "g": return "ģ";
                             case "i": return "í";
-                            case "l": return "ĺ"; 
+                            case "l": return "ĺ";
                             case "n": return "ń";
                             case "o": return "ó";
                             case "r": return "ŕ";
@@ -615,7 +615,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         }
                         return string.Empty;
                     case 0xc3: // Circumflex
-                        skipNext = "ACEGHIJOSUWYaceghijosuwy".Contains(next); 
+                        skipNext = "ACEGHIJOSUWYaceghijosuwy".Contains(next);
                         switch (next)
                         {
                             case "A": return "Â";
@@ -662,7 +662,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         return string.Empty;
                     case 0xc5: // Macron
                         skipNext = "AEIOUaeiou".Contains(next);
-                        switch (next) 
+                        switch (next)
                         {
                             case "A": return "Ā";
                             case "E": return "Ē";
@@ -845,7 +845,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             while (index + TTISize <= buffer.Length)
             {
                 var tti = new EbuTextTimingInformation();
-                
+
                 tti.SubtitleGroupNumber = buffer[index];
                 tti.SubtitleNumber = (ushort)(buffer[index + 2] * 256+ buffer[index + 1]);
                 tti.ExtensionBlockNumber = buffer[index + 3];
@@ -868,7 +868,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 // build text
                 bool skipNext = false;
                 StringBuilder sb = new StringBuilder();
-                string endTags = string.Empty;                
+                string endTags = string.Empty;
                 string color = string.Empty;
                 string lastColor = string.Empty;
                 for (int i = 0; i < 112; i++) // skip fist byte (seems to be always 0xd/32/space - thx Iban)
@@ -876,7 +876,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     byte b = buffer[index + 16 + i];
                     if (b <= 0xf && (i == 0 || i == 2 || i == 3))
                     {
-                        // not used, 0=0xd, 2=0xb, 3=0xb 
+                        // not used, 0=0xd, 2=0xb, 3=0xb
                     }
                     else if (skipNext)
                     {

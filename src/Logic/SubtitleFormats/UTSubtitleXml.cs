@@ -49,7 +49,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
             foreach (Paragraph p in subtitle.Paragraphs)
             {
-                //<ut secOut="26.4" secIn="21.8"> 
+                //<ut secOut="26.4" secIn="21.8">
                 //  <![CDATA[Pozdrav i dobrodošli natrag<br>u drugi dio naše emisije]]>
                 //</ut>
                 XmlNode ut = xml.CreateElement("ut");

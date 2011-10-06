@@ -18,7 +18,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         ExpectingLine _expecting = ExpectingLine.Number;
         readonly Regex _regexTimeCodes = new Regex(@"^-?\d+:-?\d+:-?\d+[:,]-?\d+\s*-->\s*-?\d+:-?\d+:-?\d+[:,]-?\d+$", RegexOptions.Compiled);
         readonly Regex _regexTimeCodes2 = new Regex(@"^\d+:\d+:\d+,\d+\s*-->\s*\d+:\d+:\d+,\d+$", RegexOptions.Compiled);
-        readonly Regex _buggyTimeCodes = new Regex(@"^-?\d+:-?\d+:-?\d+[¡،]-?\d+\s*-->\s*-?\d+:-?\d+:-?\d+[¡،]-?\d+$", RegexOptions.Compiled);       
+        readonly Regex _buggyTimeCodes = new Regex(@"^-?\d+:-?\d+:-?\d+[¡،]-?\d+\s*-->\s*-?\d+:-?\d+:-?\d+[¡،]-?\d+$", RegexOptions.Compiled);
 
         public override string Extension
         {
@@ -106,7 +106,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             {
                 case ExpectingLine.Number:
                     if (Utilities.IsInteger(line))
-                    { 
+                    {
                         _paragraph.Number = int.Parse(line);
                         _expecting = ExpectingLine.TimeCodes;
                     }

@@ -74,7 +74,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             //<SYNC Start=65264><P>Let's go!
             //<SYNC Start=66697><P><BR>
 
-            const string paragraphWriteFormat = 
+            const string paragraphWriteFormat =
 @"<SYNC Start={0}><P Class={3}>{2}</P></SYNC>
 <SYNC Start={1}><P Class={3}>&nbsp;</P></SYNC>";
 

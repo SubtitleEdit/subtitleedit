@@ -125,7 +125,7 @@ namespace Nikse.SubtitleEdit.Forms
             textBoxTranslatorsName.Text = header.TranslatorsName.TrimEnd();
             textBoxSubtitleListReferenceCode.Text = header.SubtitleListReferenceCode.TrimEnd();
             textBoxCountryOfOrigin.Text = header.CountryOfOrigin;
-            
+
             int number;
             if (int.TryParse(header.RevisionNumber, out number))
                 numericUpDownRevisionNumber.Value = number;
@@ -146,7 +146,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (int.TryParse(header.TotalNumberOfDisks, out number))
                 numericUpDownTotalNumberOfDiscs.Value = number;
             else
-                numericUpDownTotalNumberOfDiscs.Value = 1;            
+                numericUpDownTotalNumberOfDiscs.Value = 1;
         }
 
         private void buttonOK_Click(object sender, EventArgs e)
@@ -157,13 +157,13 @@ namespace Nikse.SubtitleEdit.Forms
                 _header.DiskFormatCode = "STL30.01";
             else
                 _header.DiskFormatCode = "STL25.01";
-            
+
             _header.CharacterCodeTableNumber = "0" + comboBoxCharacterCodeTable.SelectedIndex.ToString();
             _header.OriginalProgrammeTitle = textBoxOriginalProgramTitle.Text.PadRight(32, ' ');
-            _header.OriginalEpisodeTitle = textBoxOriginalEpisodeTitle.Text.PadRight(32, ' '); 
-            _header.TranslatedProgrammeTitle = textBoxTranslatedProgramTitle.Text.PadRight(32, ' '); 
-            _header.TranslatedEpisodeTitle = textBoxTranslatedEpisodeTitle.Text.PadRight(32, ' '); 
-            _header.TranslatorsName = textBoxTranslatorsName.Text.PadRight(32, ' '); 
+            _header.OriginalEpisodeTitle = textBoxOriginalEpisodeTitle.Text.PadRight(32, ' ');
+            _header.TranslatedProgrammeTitle = textBoxTranslatedProgramTitle.Text.PadRight(32, ' ');
+            _header.TranslatedEpisodeTitle = textBoxTranslatedEpisodeTitle.Text.PadRight(32, ' ');
+            _header.TranslatorsName = textBoxTranslatorsName.Text.PadRight(32, ' ');
             _header.SubtitleListReferenceCode = textBoxSubtitleListReferenceCode.Text.PadRight(16, ' ');
             _header.CountryOfOrigin = textBoxCountryOfOrigin.Text;
             if (_header.CountryOfOrigin.Length != 3)

@@ -157,7 +157,7 @@
             public string Title { get; set; }
             public string CodePage { get; set; }
             public string DisplayName { get; set; }
-            public string PleaseSelectAnEncoding { get; set; }            
+            public string PleaseSelectAnEncoding { get; set; }
         }
 
         public class ChooseLanguage
@@ -232,7 +232,7 @@
             public string TotalNumberOfDisks { get; set; }
             public string Import { get; set; }
             public string TextAndTimingInformation { get; set; }
-            public string JustificationCode { get; set; }            
+            public string JustificationCode { get; set; }
             public string Errors { get; set; }
             public string ErrorsX { get; set; }
             public string MaxLengthError { get; set; }
@@ -328,7 +328,7 @@
             public string FixCommonOcrErrors { get; set; }
             public string CommonOcrErrorsFixed { get; set; }
             public string RemoveSpaceBetweenNumber { get; set; }
-            public string FixDialogsOnOneLine { get; set; }            
+            public string FixDialogsOnOneLine { get; set; }
             public string RemoveSpaceBetweenNumbersFixed { get; set; }
             public string FixDanishLetterI { get; set; }
             public string FixSpanishInvertedQuestionAndExclamationMarks { get; set; }
@@ -412,9 +412,9 @@
             public string FixMissingOpenBracketExample { get; set; }
             public string FixMusicNotationExample { get; set; }
             public string NumberOfImportantLogMessages { get; set; }
-            public string FixedOkXY { get; set; }      
+            public string FixedOkXY { get; set; }
         }
-        
+
         public class GetDictionaries
         {
             public string Title { get; set; }
@@ -671,7 +671,7 @@
             public string NetworkNewUser { get; set; }
             public string NetworkByeUser { get; set; }
             public string NetworkUnableToConnectToServer { get; set; }
-            public string UserAndAction { get; set; }            
+            public string UserAndAction { get; set; }
             public string NetworkMode { get; set; }
             public string XStartedSessionYAtZ { get; set; }
             public string SpellChekingViaWordXLineYOfX { get; set; }
@@ -679,7 +679,7 @@
             public string SpellCheckAbortedXCorrections { get; set; }
             public string SpellCheckCompletedXCorrections { get; set; }
             public string OpenOtherSubtitle { get; set; }
-           
+
             public class MainMenu
             {
                 public class FileMenu
@@ -836,7 +836,7 @@
                     public string InsertBefore { get; set; }
                     public string InsertAfter { get; set; }
                     public string InsertSubtitleAfter { get; set; }
-                    public string CopyToClipboard { get; set; }                    
+                    public string CopyToClipboard { get; set; }
                     public string Split { get; set; }
                     public string MergeSelectedLines { get; set; }
                     public string MergeWithLineBefore { get; set; }
@@ -855,7 +855,7 @@
                     public string GoogleTranslateSelectedLines { get; set; }
                     public string AdjustDisplayDurationForSelectedLines { get; set; }
                     public string FixCommonErrorsInSelectedLines { get; set; }
-                    public string ChangeCasingForSelectedLines { get; set; }                    
+                    public string ChangeCasingForSelectedLines { get; set; }
                 }
 
                 public FileMenu File { get; set; }
@@ -869,7 +869,7 @@
                 public NetworkingMenu Networking { get; set; }
                 public HelpMenu Help { get; set; }
                 public ToolBarMenu ToolBar { get; set; }
-                public ListViewContextMenu ContextMenu { get; set; }              
+                public ListViewContextMenu ContextMenu { get; set; }
             }
 
             public class MainControls
@@ -961,7 +961,7 @@
             public string NumberOfMergesX { get; set; }
             public string LineNumber { get; set; }
             public string MergedText { get; set; }
-            public string OnlyMergeContinuationLines { get; set; }            
+            public string OnlyMergeContinuationLines { get; set; }
         }
 
         public class MultipleReplace
@@ -1114,7 +1114,7 @@
             public string AutoBackupEveryFiveMinutes { get; set; }
             public string AutoBackupEveryFifteenMinutes { get; set; }
             public string AllowEditOfOriginalSubtitle { get; set; }
-            public string PromptDeleteLines { get; set; }            
+            public string PromptDeleteLines { get; set; }
             public string VideoEngine { get; set; }
             public string DirectShow { get; set; }
             public string DirectShowDescription { get; set; }
@@ -1190,7 +1190,7 @@
             public string UpdateShortcut { get; set; }
             public string ShortcutIsNotValid { get; set; }
             public string ToggleDockUndockOfVideoControls { get; set; }
-            public string AdjustViaEndAutoStartAndGoToNext { get; set; }            
+            public string AdjustViaEndAutoStartAndGoToNext { get; set; }
         }
 
         public class ShowEarlierLater
@@ -1340,7 +1340,7 @@
             public string Edit { get; set; }
             public string StartOcr { get; set; }
             public string Stop { get; set; }
-            public string StartOcrFrom { get; set; }            
+            public string StartOcrFrom { get; set; }
             public string LoadingVobSubImages { get; set; }
             public string SubtitleImage { get; set; }
             public string SubtitleText { get; set; }

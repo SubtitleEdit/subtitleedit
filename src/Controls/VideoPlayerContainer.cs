@@ -28,7 +28,7 @@ namespace Nikse.SubtitleEdit.Controls
                 if (m.Msg == 0x204) return; // WM_RBUTTONDOWN
                 if (m.Msg == 0x205) return; // WM_RBUTTONUP
                 base.WndProc(ref m);
-            }           
+            }
         }
 
         public event EventHandler OnButtonClicked;
@@ -51,7 +51,7 @@ namespace Nikse.SubtitleEdit.Controls
         private readonly System.ComponentModel.ComponentResourceManager _resources;
         private const int ControlsHeight = 47;
         private const int SubtitlesHeight = 57;
-        private readonly Color _backgroundColor = Color.FromArgb(18, 18, 18); 
+        private readonly Color _backgroundColor = Color.FromArgb(18, 18, 18);
         private Panel _panelcontrols;
 
         private PictureBox _pictureBoxBackground;
@@ -96,8 +96,8 @@ namespace Nikse.SubtitleEdit.Controls
                     HideAllStopImages();
                 }
             }
-        }                
-        
+        }
+
         public VideoPlayerContainer()
         {
             BorderStyle = System.Windows.Forms.BorderStyle.None;
@@ -165,7 +165,7 @@ namespace Nikse.SubtitleEdit.Controls
             _subtitleTextBox.BackColor = _backgroundColor;
             _subtitleTextBox.ForeColor = Color.White;
             _subtitleTextBox.Dock = DockStyle.Fill;
-            SetSubtitleFont();          
+            SetSubtitleFont();
             _subtitleTextBox.MouseClick += SubtitleTextBox_MouseClick;
             return _panelSubtitle;
         }
@@ -176,7 +176,7 @@ namespace Nikse.SubtitleEdit.Controls
             if (string.IsNullOrEmpty(gs.SubtitleFontName))
                 gs.SubtitleFontName = "Tahoma";
             _subtitleTextBox.Font = new Font(gs.SubtitleFontName, gs.VideoPlayerPreviewFontSize, FontStyle.Bold);
-        }    
+        }
 
         void SubtitleTextBox_MouseClick(object sender, MouseEventArgs e)
         {
@@ -247,7 +247,7 @@ namespace Nikse.SubtitleEdit.Controls
                     {
                         sb.Append(text.Substring(i, 1));
                     }
-                    else 
+                    else
                     {
                         sb.Append(text.Substring(i, 1));
                         letterCount++;
@@ -301,7 +301,7 @@ namespace Nikse.SubtitleEdit.Controls
                                             Size = new Size(200, 45),
                                             SizeMode = PictureBoxSizeMode.StretchImage,
                                             TabStop = false
-                                        };           
+                                        };
             _panelcontrols.Controls.Add(_pictureBoxBackground);
 
             _pictureBoxPlay = new PictureBox
@@ -769,7 +769,7 @@ namespace Nikse.SubtitleEdit.Controls
 
         private void PictureBoxMuteOverMouseUp(object sender, MouseEventArgs e)
         {
-            HideAllMuteImages();           
+            HideAllMuteImages();
             Mute = true;
             _pictureBoxMuteDown.Visible = true;
         }
@@ -820,7 +820,7 @@ namespace Nikse.SubtitleEdit.Controls
 
         private void PictureBoxReverseOverMouseUp(object sender, MouseEventArgs e)
         {
-            HideAllReverseImages();           
+            HideAllReverseImages();
             _pictureBoxReverse.Visible = true;
         }
 
@@ -916,7 +916,7 @@ namespace Nikse.SubtitleEdit.Controls
                     pos = 0;
                 var span = TimeSpan.FromSeconds(pos);
                 var dur = TimeSpan.FromSeconds(Duration);
-                _labelTimeCode.Text = string.Format("{0:00}:{1:00}:{2:00},{3:000} / {4:00}:{5:00}:{6:00},{7:000}", span.Hours, span.Minutes, span.Seconds, span.Milliseconds, 
+                _labelTimeCode.Text = string.Format("{0:00}:{1:00}:{2:00},{3:000} / {4:00}:{5:00}:{6:00},{7:000}", span.Hours, span.Minutes, span.Seconds, span.Milliseconds,
                                                      dur.Hours, dur.Minutes, dur.Seconds, dur.Milliseconds);
 
                 RefreshPlayPauseButtons();
@@ -1035,7 +1035,7 @@ namespace Nikse.SubtitleEdit.Controls
                 if (VideoPlayer != null)
                     return VideoPlayer.Volume;
                 return 0;
-            } 
+            }
             set
             {
                 if (VideoPlayer != null)
@@ -1094,7 +1094,7 @@ namespace Nikse.SubtitleEdit.Controls
             {
                 if (VideoPlayer != null)
                 {
-                    return _isMuted;                    
+                    return _isMuted;
                 }
                 return false;
             }
@@ -1116,6 +1116,6 @@ namespace Nikse.SubtitleEdit.Controls
             }
         }
         #endregion
-    
+
     }
 }

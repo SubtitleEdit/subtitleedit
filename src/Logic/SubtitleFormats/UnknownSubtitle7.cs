@@ -48,10 +48,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         public override string ToText(Subtitle subtitle, string title)
         {
             //00:00:54:16 Bisakah kalian diam,Tolong!
-            //00:00:56:07	
-            //00:00:57:16 Benar, tepatnya saya tidak memiliki "Anda 
+            //00:00:56:07
+            //00:00:57:16 Benar, tepatnya saya tidak memiliki "Anda
             //sudah mendapat 24 jam" adegan... tapi
-            //00:01:02:03	
+            //00:01:02:03
 
             const string paragraphWriteFormat = "{0} {2}{3}{1}\t";
 
@@ -103,7 +103,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     }
                 }
                 else if (regexTimeCodeEnd.IsMatch(line))
-                { 
+                {
                     string[] parts = line.Substring(0,11).Split(":".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
                     if (parts.Length == 4)
                     {

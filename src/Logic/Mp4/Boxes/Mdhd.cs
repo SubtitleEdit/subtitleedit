@@ -389,7 +389,7 @@ namespace Nikse.SubtitleEdit.Logic.Mp4.Boxes
                     case ("sco"): return "Scots";
                     case ("sel"): return "Selkup";
                     case ("sem"): return "Semitic (Other)";
-                    case ("srp"): return "Serbian"; 
+                    case ("srp"): return "Serbian";
                     case ("scr"): return "Serbo-Croatian";
                     case ("srr"): return "Serer";
                     case ("shn"): return "Shan";

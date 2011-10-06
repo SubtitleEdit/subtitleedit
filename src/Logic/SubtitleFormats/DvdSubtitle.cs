@@ -99,7 +99,7 @@ LICENSE=
                     {
                         if (text.Length == 0)
                             text = line;
-                        else 
+                        else
                             text += Environment.NewLine + line;
                     }
                 }

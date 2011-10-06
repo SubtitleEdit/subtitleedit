@@ -17,7 +17,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             InitializeComponent();
 
-            Text = Configuration.Settings.Language.EffectKaraoke.Title;           
+            Text = Configuration.Settings.Language.EffectKaraoke.Title;
             labelChooseColor.Text = Configuration.Settings.Language.EffectKaraoke.ChooseColor;
             labelTM.Text = Configuration.Settings.Language.EffectKaraoke.TotalMilliseconds;
             labelEndDelay.Text = Configuration.Settings.Language.EffectKaraoke.EndDelayInMilliseconds;
@@ -65,7 +65,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void AddToPreview(RichTextBox rtb, string text)
         {
             richTextBoxPreview.ForeColor = Color.White;
-            
+
             int bold = 0;
             int underline = 0;
             int italic = 0;
@@ -122,7 +122,7 @@ namespace Nikse.SubtitleEdit.Forms
                                 }
                                 if (!string.IsNullOrEmpty(currentColor))
                                     fontColors.Push(currentColor);
-                                currentColor = tempColor;                                                               
+                                currentColor = tempColor;
                             }
                         }
                     }
@@ -168,7 +168,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             StringBuilder sb = new StringBuilder();
             for (int i = 0; i < text.Length; i++)
-            { 
+            {
                 sb.Append(text[i]);
                 if (text[i] == '>')
                     return sb.ToString();

@@ -62,7 +62,7 @@ namespace Nikse.SubtitleEdit.Logic
                         text = text.Substring(0, text.Length - 1);
                     }
 
-                    // tags </i> </b> </u> 
+                    // tags </i> </b> </u>
                     if (text.ToLower().EndsWith("</i>") ||
                         text.ToLower().EndsWith("</b>") ||
                         text.ToLower().EndsWith("</u>"))
@@ -184,17 +184,17 @@ namespace Nikse.SubtitleEdit.Logic
                 }
             }
 
-            if (makeUppercaseAfterBreak && 
+            if (makeUppercaseAfterBreak &&
                 (StrippedText.Contains(".") ||
                 StrippedText.Contains("!") ||
                 StrippedText.Contains("?") ||
-                StrippedText.Contains(":") || 
-                StrippedText.Contains(";") || 
-                StrippedText.Contains(")") || 
-                StrippedText.Contains("]") || 
-                StrippedText.Contains("}") || 
-                StrippedText.Contains("(") || 
-                StrippedText.Contains("[") || 
+                StrippedText.Contains(":") ||
+                StrippedText.Contains(";") ||
+                StrippedText.Contains(")") ||
+                StrippedText.Contains("]") ||
+                StrippedText.Contains("}") ||
+                StrippedText.Contains("(") ||
+                StrippedText.Contains("[") ||
                 StrippedText.Contains("{")))
             {
                 var sb = new StringBuilder();

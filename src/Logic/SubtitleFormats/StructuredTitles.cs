@@ -49,7 +49,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 ");
 
 //0001 : 01:07:25:08,01:07:29:00,10
-//80 80 80 
+//80 80 80
 //C1Y00 Niemand zal je helpen ontsnappen.
 //C1Y00 - Een agent heeft me geholpen.
             foreach (Paragraph p in subtitle.Paragraphs)
@@ -124,7 +124,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                             p.Text = line.Trim();
                         else
                             p.Text += Environment.NewLine + line.Trim();
-                    }                    
+                    }
                 }
             }
             if (p != null && !string.IsNullOrEmpty(p.Text))

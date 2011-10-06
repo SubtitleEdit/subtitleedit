@@ -29,7 +29,7 @@ namespace Nikse.SubtitleEdit.Forms
             labelReplaceWith.Text = Configuration.Settings.Language.MultipleReplace.ReplaceWith;
             radioButtonNormal.Text = Configuration.Settings.Language.MultipleReplace.Normal;
             radioButtonRegEx.Text = Configuration.Settings.Language.MultipleReplace.RegularExpression;
-            radioButtonCaseSensitive.Text = Configuration.Settings.Language.MultipleReplace.CaseSensitive;            
+            radioButtonCaseSensitive.Text = Configuration.Settings.Language.MultipleReplace.CaseSensitive;
             buttonAdd.Text = Configuration.Settings.Language.MultipleReplace.Add;
             buttonUpdate.Text = Configuration.Settings.Language.MultipleReplace.Update;
             listViewReplaceList.Columns[0].Text = Configuration.Settings.Language.MultipleReplace.Enabled;
@@ -109,7 +109,7 @@ namespace Nikse.SubtitleEdit.Forms
                 AddToReplaceListView(true, textBoxFind.Text, textBoxReplace.Text, EnglishSearchTypeToLocal(searchType));
                 GeneratePreview();
                 textBoxFind.Text = string.Empty;
-                textBoxReplace.Text = string.Empty;                
+                textBoxReplace.Text = string.Empty;
                 textBoxFind.Select();
                 SaveReplaceList();
             }
@@ -168,10 +168,10 @@ namespace Nikse.SubtitleEdit.Forms
                             while (index >= 0)
                             {
                                 if (index < newText.Length)
-                                    newText = newText.Substring(0, index) + replaceWith + newText.Substring(index + findWhat.Length); 
+                                    newText = newText.Substring(0, index) + replaceWith + newText.Substring(index + findWhat.Length);
                                 else
                                     newText = newText.Substring(0, index) + replaceWith;
-                                
+
                                 hit = true;
                                 index = newText.ToLower().IndexOf(findWhat.ToLower(), index+replaceWith.Length);
                             }
@@ -242,7 +242,7 @@ namespace Nikse.SubtitleEdit.Forms
         }
 
         private void ButtonOkClick(object sender, EventArgs e)
-        {            
+        {
             ResetUncheckLines();
             SaveReplaceList();
             DialogResult = DialogResult.OK;
@@ -331,7 +331,7 @@ namespace Nikse.SubtitleEdit.Forms
                     radioButtonNormal.Checked = true;
             }
             else
-            { 
+            {
                 buttonUpdate.Enabled = false;
             }
         }

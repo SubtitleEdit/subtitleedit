@@ -81,7 +81,7 @@ namespace Nikse.SubtitleEdit.Logic
                 _time = value;
             }
         }
-       
+
         public void AddTime(int hour, int minutes, int seconds, int milliseconds)
         {
             Hours += hour;

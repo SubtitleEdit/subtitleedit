@@ -136,7 +136,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         }
 
         public virtual void RemoveNativeFormatting(Subtitle subtitle)
-        { 
+        {
         }
 
         public virtual List<string> AlternateExtensions

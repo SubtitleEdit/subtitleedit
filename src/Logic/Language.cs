@@ -28,7 +28,7 @@ namespace Nikse.SubtitleEdit.Logic
         public LanguageStructure.EbuSaveOtpions EbuSaveOtpions;
         public LanguageStructure.EffectKaraoke EffectKaraoke;
         public LanguageStructure.EffectTypewriter EffectTypewriter;
-        public LanguageStructure.ExportPngXml ExportPngXml;        
+        public LanguageStructure.ExportPngXml ExportPngXml;
         public LanguageStructure.FindDialog FindDialog;
         public LanguageStructure.FindSubtitleLine FindSubtitleLine;
         public LanguageStructure.FixCommonErrors FixCommonErrors;
@@ -155,8 +155,8 @@ namespace Nikse.SubtitleEdit.Logic
                                  Description = "Add to names/noise list (case sensitive)",
                              };
 
-            AddWaveForm = new LanguageStructure.AddWareForm 
-            { 
+            AddWaveForm = new LanguageStructure.AddWareForm
+            {
                 Title = "Generate wave form data",
                 GenerateWaveFormData = "Generate wave form data",
                 SourceVideoFile = "Source video file:",
@@ -289,7 +289,7 @@ namespace Nikse.SubtitleEdit.Logic
 
             EbuSaveOtpions = new LanguageStructure.EbuSaveOtpions
             {
-                Title = "EBU save options",                
+                Title = "EBU save options",
                 GeneralSubtitleInformation = "General subtitle information",
                 CodePageNumber = "Code page number",
                 DiskFormatCode = "Disk format code",
@@ -345,7 +345,7 @@ namespace Nikse.SubtitleEdit.Logic
                 FontColor = "Font color",
                 FontFamily = "Font family",
                 FontSize = "Font size",
-                XImagesSavedInY = "{0} images saved in {1}", 
+                XImagesSavedInY = "{0} images saved in {1}",
             };
 
             FindDialog = new LanguageStructure.FindDialog
@@ -357,7 +357,7 @@ namespace Nikse.SubtitleEdit.Logic
                 RegularExpression = "Regular expression",
             };
 
-            FindSubtitleLine = new LanguageStructure.FindSubtitleLine 
+            FindSubtitleLine = new LanguageStructure.FindSubtitleLine
             {
                 Title = "Find subtitle line",
                 Find = "&Find",
@@ -401,10 +401,10 @@ namespace Nikse.SubtitleEdit.Logic
                 AddPeriods = "Add period after lines where next line start with uppercase letter",
                 StartWithUppercaseLetterAfterParagraph = "Start with uppercase letter after paragraph",
                 StartWithUppercaseLetterAfterPeriodInsideParagraph = "Start with uppercase letter after period inside paragraph",
-                CommonOcrErrorsFixed = "Common OCR errors fixed (OcrReplaceList file used): {0}",                
+                CommonOcrErrorsFixed = "Common OCR errors fixed (OcrReplaceList file used): {0}",
                 RemoveSpaceBetweenNumber = "Remove space between numbers",
                 FixDialogsOnOneLine = "Fix dialogs on one line",
-                RemoveSpaceBetweenNumbersFixed = "Remove space between numbers fixed: {0}",                
+                RemoveSpaceBetweenNumbersFixed = "Remove space between numbers fixed: {0}",
                 FixLowercaseIToUppercaseI = "Fix alone lowercase 'i' to 'I' (English)",
                 FixDanishLetterI = "Fix Danish letter 'i'",
                 FixSpanishInvertedQuestionAndExclamationMarks = "Fix Spanish inverted question and exclamation marks",
@@ -487,7 +487,7 @@ namespace Nikse.SubtitleEdit.Logic
                 XFixMusicNotation = "{0} fix music notation in line",
                 AutoBreak = "Auto &br",
                 Unbreak = "&Unbreak",
-                FixCommonOcrErrors = "Fix common OCR errors (using OCR replace list)",                 
+                FixCommonOcrErrors = "Fix common OCR errors (using OCR replace list)",
                 NumberOfImportantLogMessages = "{0} important log messages!",
                 FixedOkXY = "Fixed and OK - '{0}': {1}",
             };
@@ -743,9 +743,9 @@ namespace Nikse.SubtitleEdit.Logic
                 CharactersPerSecond = "Chars/sec: {0:0.00}",
                 GetFrameRateFromVideoFile =  "Get frame rate from video file",
                 NetworkMessage = "New message: {0} ({1}): {2}",
-                NetworkUpdate = "Line updated: {0} ({1}): Index={2}, Text={3}",                
-                NetworkInsert = "Line inserted: {0} ({1}): Index={2}, Text={3}",                
-                NetworkDelete = "Line deleted: {0} ({1}): Index={2}",                
+                NetworkUpdate = "Line updated: {0} ({1}): Index={2}, Text={3}",
+                NetworkInsert = "Line inserted: {0} ({1}): Index={2}, Text={3}",
+                NetworkDelete = "Line deleted: {0} ({1}): Index={2}",
                 NetworkNewUser = "New user: {0} ({1})",
                 NetworkByeUser = "Bye {0} ({1})",
                 NetworkUnableToConnectToServer = "Unable to connect to server: {0}",
@@ -957,7 +957,7 @@ namespace Nikse.SubtitleEdit.Logic
                     Unbreak = "Unbreak"
                 },
 
-                VideoControls = new LanguageStructure.Main.MainVideoControls 
+                VideoControls = new LanguageStructure.Main.MainVideoControls
                 {
                     Translate = "Translate",
                     Create = "Create",
@@ -1063,7 +1063,7 @@ namespace Nikse.SubtitleEdit.Logic
                 Title = "Join network session",
                 Information = @"Join existing session where multiple persons
 can edit in same subtitle file (collaboration)",
-                Join = "Join",                 
+                Join = "Join",
             };
 
             NetworkLogAndInfo = new LanguageStructure.NetworkLogAndInfo
@@ -1219,7 +1219,7 @@ can edit in same subtitle file (collaboration)",
                 ChooseFont = "Choose font",
                 ChooseColor = "Choose color",
                 Example = "Example",
-                Testing123 = "Testing 123...",                
+                Testing123 = "Testing 123...",
                 Language = "Language",
                 NamesIgnoreLists = "Names/ignore list (case sensitive)",
                 AddNameEtc =  "Add name",
@@ -1248,7 +1248,7 @@ can edit in same subtitle file (collaboration)",
                 LastMinusX = "Last - {0}",
                 FixCommonerrors = "Fix common errors",
                 MergeLinesShorterThan = "Merge lines shorter than",
-                MusicSymbol = "Music symbol",                
+                MusicSymbol = "Music symbol",
                 MusicSymbolsToReplace = "Music symbols to replace (separate by space)",
                 FixCommonOcrErrorsUseHardcodedRules = "Fix common OCR errors - also use hardcoded rules",
                 Shortcuts = "Shortcuts",
@@ -1320,7 +1320,7 @@ can edit in same subtitle file (collaboration)",
                 LineContinuationBeginEndStrings = "Line continuation begin/end strings",
                 NumberOfSplits = "Number of splits: {0}",
                 LongestSingleLineIsXAtY = "Longest single line length is {0} at line {1}",
-                LongestLineIsXAtY = "Longest total line length is {0} at line {1}",                                                
+                LongestLineIsXAtY = "Longest total line length is {0} at line {1}",
             };
 
             SplitSubtitle = new LanguageStructure.SplitSubtitle
@@ -1335,7 +1335,7 @@ can edit in same subtitle file (collaboration)",
                 SavePartOneAs = "Save part 1 as...",
                 SavePartTwoAs = "Save part 2 as...",
                 NothingToSplit = "Nothing to split!",
-                UnableToSaveFileX =  "Unable to save {0}",                  
+                UnableToSaveFileX =  "Unable to save {0}",
             };
 
             StartNumberingFrom = new LanguageStructure.StartNumberingFrom
@@ -1376,7 +1376,7 @@ can edit in same subtitle file (collaboration)",
                 GoToSubPosition = "Go to sub pos",
                 KeepChangesTitle = "Keep changes?",
                 KeepChangesMessage = @"Changes have been made to subtitle in 'Visual sync'.
-                
+
 Keep changes?",
                 SynchronizationDone = "Sync done!",
                 StartSceneMustComeBeforeEndScene = "Start scene must come before end scene!",
@@ -1516,12 +1516,12 @@ Keep changes?",
             var b = new byte[ms.Length];
             ms.Position = 0;
             ms.Read(b, 0, (int)ms.Length);
-            
+
             using (var f2 = new FileStream(Configuration.BaseDirectory + "Language.xml.zip", FileMode.Create))
             using (var gz = new GZipStream(f2, CompressionMode.Compress, false))
             {
                 gz.Write(b, 0, b.Length);
-            }           
+            }
         }
 
         public static Language Load(StreamReader sr)
@@ -1557,11 +1557,11 @@ Keep changes?",
                 string oldText = node.InnerText;
                 string newText = Forms.GoogleTranslate.TranslateTextViaApi(node.InnerText, languagePair);
                 if (!string.IsNullOrEmpty(oldText) && !string.IsNullOrEmpty(newText))
-                { 
+                {
                     if (oldText.Contains("{0:"))
                     {
                         newText = oldText;
-                    }                    
+                    }
                     else
                     {
                         if (!oldText.Contains(" / "))

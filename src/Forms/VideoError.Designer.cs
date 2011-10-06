@@ -34,9 +34,9 @@
             this.buttonCancel = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
-            // 
+            //
             // groupBox1
-            // 
+            //
             this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                         | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
@@ -47,9 +47,9 @@
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Error message";
-            // 
+            //
             // textBoxError
-            // 
+            //
             this.textBoxError.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                         | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
@@ -59,9 +59,9 @@
             this.textBoxError.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.textBoxError.Size = new System.Drawing.Size(661, 134);
             this.textBoxError.TabIndex = 0;
-            // 
+            //
             // richTextBoxMessage
-            // 
+            //
             this.richTextBoxMessage.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.richTextBoxMessage.BorderStyle = System.Windows.Forms.BorderStyle.None;
@@ -73,9 +73,9 @@
             this.richTextBoxMessage.TabIndex = 1;
             this.richTextBoxMessage.Text = "";
             this.richTextBoxMessage.LinkClicked += new System.Windows.Forms.LinkClickedEventHandler(this.richTextBoxMessage_LinkClicked);
-            // 
+            //
             // buttonCancel
-            // 
+            //
             this.buttonCancel.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
@@ -85,9 +85,9 @@
             this.buttonCancel.TabIndex = 11;
             this.buttonCancel.Text = "&OK";
             this.buttonCancel.UseVisualStyleBackColor = true;
-            // 
+            //
             // VideoError
-            // 
+            //
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(699, 503);

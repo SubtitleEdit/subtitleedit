@@ -50,7 +50,7 @@ Style: Default,{1},{2},{3},65535,65535,-2147483640,-1,0,1,3,0,2,30,30,30,0,0
 [Events]
 Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text";
 
-            const string timeCodeFormat = "{0}:{1:00}:{2:00}.{3:00}"; // h:mm:ss.cc 
+            const string timeCodeFormat = "{0}:{1:00}:{2:00}.{3:00}"; // h:mm:ss.cc
             const string paragraphWriteFormat = "Dialogue: Marked=0,{0},{1},{3},NTP,0000,0000,0000,!Effect,{2}";
 
             var sb = new StringBuilder();
@@ -152,7 +152,7 @@ Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
             if (Utilities.CountTagInText(text, "<b>") > Utilities.CountTagInText(text, "</b>"))
                 text += "</b>";
 
-            for (int i = 0; i < 5; i++) // just look five times... 
+            for (int i = 0; i < 5; i++) // just look five times...
             {
                 if (text.Contains(@"{\fn"))
                 {
@@ -243,7 +243,7 @@ Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
                             }
                         }
                     }
-                    else 
+                    else
                     {
                         string text = string.Empty;
                         string start = string.Empty;
@@ -251,7 +251,7 @@ Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
                         string style = string.Empty;
 
                         string[] splittedLine;
-                        
+
                         if (s.StartsWith("dialogue:"))
                             splittedLine = line.Substring(10).Split(',');
                         else
@@ -284,9 +284,9 @@ Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
                         }
                         catch
                         {
-                            _errorCount++;    
+                            _errorCount++;
                         }
-                    }                        
+                    }
                 }
             }
             if (header.Length > 0)
@@ -296,7 +296,7 @@ Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
 
         private static TimeCode GetTimeCodeFromString(string time)
         {
-            // h:mm:ss.cc 
+            // h:mm:ss.cc
             string[] timeCode = time.Split(':', '.');
             return new TimeCode(int.Parse(timeCode[0]),
                                 int.Parse(timeCode[1]),

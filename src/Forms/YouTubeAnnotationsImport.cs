@@ -39,12 +39,12 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        public System.Collections.Generic.List<string> SelectedStyles 
+        public System.Collections.Generic.List<string> SelectedStyles
         {
             get
             {
                 List<string> styles = new List<string>();
-                foreach (ListViewItem item in listViewFixes.Items)                
+                foreach (ListViewItem item in listViewFixes.Items)
                 {
                     if (item.Checked)
                         styles.Add(item.SubItems[1].Text);

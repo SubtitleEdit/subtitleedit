@@ -36,7 +36,7 @@ namespace Nikse.SubtitleEdit.Forms
                 Utilities.SetButtonHeight(this, newButtonHeight, 1);
             }
         }
-                
+
         public void Initialize(Subtitle subtitle, string text)
         {
             _subtitle = subtitle;
@@ -56,7 +56,7 @@ namespace Nikse.SubtitleEdit.Forms
                 NewName = textBoxAddName.Text.Trim();
                 string languageName = null;
                 _language = Configuration.Settings.Language.Main;
-                    
+
                 if (!string.IsNullOrEmpty(Configuration.Settings.General.SpellCheckLanguage))
                 {
                     languageName = Configuration.Settings.General.SpellCheckLanguage;

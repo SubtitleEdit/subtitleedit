@@ -40,9 +40,9 @@
             this.labelCondition = new System.Windows.Forms.Label();
             this.groupBoxLinesFound.SuspendLayout();
             this.SuspendLayout();
-            // 
+            //
             // listViewFixes
-            // 
+            //
             this.listViewFixes.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                         | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
@@ -59,29 +59,29 @@
             this.listViewFixes.TabIndex = 9;
             this.listViewFixes.UseCompatibleStateImageBehavior = false;
             this.listViewFixes.View = System.Windows.Forms.View.Details;
-            // 
+            //
             // columnHeader4
-            // 
+            //
             this.columnHeader4.Text = "Apply";
             this.columnHeader4.Width = 45;
-            // 
+            //
             // columnHeader5
-            // 
+            //
             this.columnHeader5.Text = "Line#";
             this.columnHeader5.Width = 61;
-            // 
+            //
             // columnHeader7
-            // 
+            //
             this.columnHeader7.Text = "Before";
             this.columnHeader7.Width = 292;
-            // 
+            //
             // columnHeader8
-            // 
+            //
             this.columnHeader8.Text = "After";
             this.columnHeader8.Width = 292;
-            // 
+            //
             // groupBoxLinesFound
-            // 
+            //
             this.groupBoxLinesFound.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                         | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
@@ -92,9 +92,9 @@
             this.groupBoxLinesFound.TabIndex = 7;
             this.groupBoxLinesFound.TabStop = false;
             this.groupBoxLinesFound.Text = "Lines found: {0}";
-            // 
+            //
             // buttonOK
-            // 
+            //
             this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonOK.Location = new System.Drawing.Point(606, 425);
             this.buttonOK.Name = "buttonOK";
@@ -103,9 +103,9 @@
             this.buttonOK.Text = "&OK";
             this.buttonOK.UseVisualStyleBackColor = true;
             this.buttonOK.Click += new System.EventHandler(this.ButtonOkClick);
-            // 
+            //
             // buttonCancel
-            // 
+            //
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.buttonCancel.Location = new System.Drawing.Point(687, 425);
@@ -114,9 +114,9 @@
             this.buttonCancel.TabIndex = 6;
             this.buttonCancel.Text = "C&ancel";
             this.buttonCancel.UseVisualStyleBackColor = true;
-            // 
+            //
             // comboBoxConditions
-            // 
+            //
             this.comboBoxConditions.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxConditions.FormattingEnabled = true;
             this.comboBoxConditions.Location = new System.Drawing.Point(12, 30);
@@ -124,18 +124,18 @@
             this.comboBoxConditions.Size = new System.Drawing.Size(150, 25);
             this.comboBoxConditions.TabIndex = 8;
             this.comboBoxConditions.SelectedIndexChanged += new System.EventHandler(this.comboBoxConditions_SelectedIndexChanged);
-            // 
+            //
             // labelCondition
-            // 
+            //
             this.labelCondition.AutoSize = true;
             this.labelCondition.Location = new System.Drawing.Point(13, 13);
             this.labelCondition.Name = "labelCondition";
             this.labelCondition.Size = new System.Drawing.Size(177, 17);
             this.labelCondition.TabIndex = 9;
             this.labelCondition.Text = "Only break lines longer than";
-            // 
+            //
             // AutoBreakUnbreakLines
-            // 
+            //
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(774, 454);

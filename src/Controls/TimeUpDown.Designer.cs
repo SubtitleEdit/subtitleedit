@@ -2,12 +2,12 @@
 {
     partial class TimeUpDown
     {
-        /// <summary> 
+        /// <summary>
         /// Required designer variable.
         /// </summary>
         private System.ComponentModel.IContainer components = null;
 
-        /// <summary> 
+        /// <summary>
         /// Clean up any resources being used.
         /// </summary>
         /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
@@ -22,8 +22,8 @@
 
         #region Component Designer generated code
 
-        /// <summary> 
-        /// Required method for Designer support - do not modify 
+        /// <summary>
+        /// Required method for Designer support - do not modify
         /// the contents of this method with the code editor.
         /// </summary>
         private void InitializeComponent()
@@ -32,9 +32,9 @@
             this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
             this.SuspendLayout();
-            // 
+            //
             // maskedTextBox1
-            // 
+            //
             this.maskedTextBox1.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.maskedTextBox1.InsertKeyMode = System.Windows.Forms.InsertKeyMode.Overwrite;
             this.maskedTextBox1.Location = new System.Drawing.Point(4, 4);
@@ -43,17 +43,17 @@
             this.maskedTextBox1.Size = new System.Drawing.Size(67, 13);
             this.maskedTextBox1.TabIndex = 21;
             this.maskedTextBox1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.MaskedTextBox1KeyDown);
-            // 
+            //
             // numericUpDown1
-            // 
+            //
             this.numericUpDown1.Location = new System.Drawing.Point(2, 1);
             this.numericUpDown1.Name = "numericUpDown1";
             this.numericUpDown1.Size = new System.Drawing.Size(87, 20);
             this.numericUpDown1.TabIndex = 20;
             this.numericUpDown1.TabStop = false;
-            // 
+            //
             // TimeUpDown
-            // 
+            //
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;

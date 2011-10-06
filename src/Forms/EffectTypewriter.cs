@@ -81,7 +81,7 @@ namespace Nikse.SubtitleEdit.Forms
         }
 
         private void MakeAnimation()
-        {           
+        {
             _animation = new List<Paragraph>();
             double duration = _paragraph.Duration.TotalMilliseconds - ((double)numericUpDownDelay.Value * 1000.0);
             double stepsLength = CalculateStepLength(_paragraph.Text, duration);
@@ -89,7 +89,7 @@ namespace Nikse.SubtitleEdit.Forms
             double startMilliseconds;
             double endMilliseconds;
             TimeSpan start;
-            TimeSpan end;         
+            TimeSpan end;
             int index = 0;
             string text = string.Empty;
             bool tagOn = false;
@@ -124,7 +124,7 @@ namespace Nikse.SubtitleEdit.Forms
                             i++;
                         }
                         text += tag;
-                    }                        
+                    }
 
                     startMilliseconds = index * stepsLength;
                     startMilliseconds += _paragraph.StartTime.TotalMilliseconds;
@@ -135,7 +135,7 @@ namespace Nikse.SubtitleEdit.Forms
                     _animation.Add(new Paragraph(new TimeCode(start), new TimeCode(end), text));
                     index++;
                 }
-                i++;   
+                i++;
             }
 
             if (numericUpDownDelay.Value > 0)

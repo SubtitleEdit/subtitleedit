@@ -153,7 +153,7 @@ namespace Nikse.SubtitleEdit.Forms
             Match match = regEx.Match(richTextBoxParagraph.Text);
             if (match.Success)
             {
-                
+
 
                 richTextBoxParagraph.SelectionStart = match.Index;
                 richTextBoxParagraph.SelectionLength = word.Length;
@@ -183,7 +183,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void ButtonAbortClick(object sender, EventArgs e)
         {
             ShowEndStatusMessage(Configuration.Settings.Language.SpellCheck.SpellCheckAborted);
-            DialogResult = DialogResult.Abort;            
+            DialogResult = DialogResult.Abort;
         }
 
         private void ButtonChangeClick(object sender, EventArgs e)
@@ -249,12 +249,12 @@ namespace Nikse.SubtitleEdit.Forms
 
         public bool DoSpell(string word)
         {
-			return _hunspell.Spell(word);
+            return _hunspell.Spell(word);
         }
 
         public List<string> DoSuggest(string word)
         {
-			return _hunspell.Suggest(word);
+            return _hunspell.Suggest(word);
         }
 
         private void ButtonChangeAllClick(object sender, EventArgs e)
@@ -383,7 +383,7 @@ namespace Nikse.SubtitleEdit.Forms
                             string s = ChangeWord.Trim().ToLower();
                             if (s.Contains(" "))
                                 _userPhraseList.Add(s);
-                            else 
+                            else
                                 _userWordList.Add(s);
                             XmlNode node = _userWordDictionary.CreateElement("word");
                             node.InnerText = s;
@@ -448,7 +448,7 @@ namespace Nikse.SubtitleEdit.Forms
                         _words = s.Split(" .,-?!:;\"“”()[]{}|<>/+\r\n¿¡…—♪♫".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
                         _wordsIndex = 0;
                         if (_words.Length == 0)
-                        { 
+                        {
                             _currentWord = string.Empty;
                         }
                         else

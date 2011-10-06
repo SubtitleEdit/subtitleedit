@@ -33,7 +33,7 @@ namespace Nikse.SubtitleEdit.Forms
             spanishToolStripMenuItem.Text = language.Spanish;
             germanToolStripMenuItem.Text = language.German;
             checkBoxAutoSubmitOfFirstChar.Text = language.AutoSubmitOnFirstChar;
-            
+
             FixLargeFonts();
         }
 
@@ -104,7 +104,7 @@ namespace Nikse.SubtitleEdit.Forms
                 Left = position.X;
                 Top = position.Y;
             }
-            
+
             pictureBoxSubtitleImage.Image = vobSubImage;
             pictureBoxCharacter.Image = character.Bitmap;
 
@@ -115,7 +115,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (last.Italic)
                     buttonLastEdit.Font = new System.Drawing.Font(buttonLastEdit.Font.FontFamily, buttonLastEdit.Font.Size, FontStyle.Italic);
                 else
-                    buttonLastEdit.Font = new System.Drawing.Font(buttonLastEdit.Font.FontFamily, buttonLastEdit.Font.Size);                
+                    buttonLastEdit.Font = new System.Drawing.Font(buttonLastEdit.Font.FontFamily, buttonLastEdit.Font.Size);
                 pictureBoxLastEdit.Visible = true;
                 pictureBoxLastEdit.Image = last.Image;
                 buttonLastEdit.Text = string.Format(Configuration.Settings.Language.VobSubOcrCharacter.EditLastX, last.Text);
@@ -125,7 +125,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 buttonLastEdit.Visible = false;
                 pictureBoxLastEdit.Visible = false;
-            }            
+            }
 
             Bitmap org = (Bitmap)vobSubImage.Clone();
             Bitmap bm = new Bitmap(org.Width, org.Height);

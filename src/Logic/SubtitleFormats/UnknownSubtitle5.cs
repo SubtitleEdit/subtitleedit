@@ -37,7 +37,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public override string ToText(Subtitle subtitle, string title)
         {
-            string xmlStructure = 
+            string xmlStructure =
                 "<?xml version=\"1.0\" encoding=\"utf-8\" ?>" + Environment.NewLine +
                 "<transcript/>";
 

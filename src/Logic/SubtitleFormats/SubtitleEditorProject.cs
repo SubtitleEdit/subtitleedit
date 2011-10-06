@@ -60,20 +60,20 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         public override string ToText(Subtitle subtitle, string title)
         {
             string xmlStructure =
-                "<?xml version=\"1.0\"?>" + Environment.NewLine + 
-                "<SubtitleEditorProject version=\"1.0\">"  + Environment.NewLine + 
-                "  <player />" + Environment.NewLine + 
-                "  <waveform />" + Environment.NewLine + 
+                "<?xml version=\"1.0\"?>" + Environment.NewLine +
+                "<SubtitleEditorProject version=\"1.0\">"  + Environment.NewLine +
+                "  <player />" + Environment.NewLine +
+                "  <waveform />" + Environment.NewLine +
                 "  <styles />" + Environment.NewLine +
-                "  <subtitles timing_mode=\"TIME\" edit_timing_mode=\"TIME\" framerate=\"25\">" + Environment.NewLine + 
+                "  <subtitles timing_mode=\"TIME\" edit_timing_mode=\"TIME\" framerate=\"25\">" + Environment.NewLine +
                 "  </subtitles>" + Environment.NewLine +
-                "  <subtitles-selection />" + Environment.NewLine + 
+                "  <subtitles-selection />" + Environment.NewLine +
                 "</SubtitleEditorProject>";
-  
+
             XmlDocument xml = new XmlDocument();
             xml.LoadXml(xmlStructure);
 
-//          <subtitle duration="2256" effect="" end="124581" layer="0" margin-l="0" margin-r="0" margin-v="0" name="" note="" path="0" start="122325" style="Default" text="The fever hath weakened thee." translation="" /> 
+//          <subtitle duration="2256" effect="" end="124581" layer="0" margin-l="0" margin-r="0" margin-v="0" name="" note="" path="0" start="122325" style="Default" text="The fever hath weakened thee." translation="" />
             XmlNode div = xml.DocumentElement.SelectSingleNode("subtitles");
             int no = 0;
             foreach (Paragraph p in subtitle.Paragraphs)
@@ -162,7 +162,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             {
                 try
                 {
-                    //<subtitle duration="2256" effect="" end="124581" layer="0" margin-l="0" margin-r="0" margin-v="0" name="" note="" path="0" start="122325" style="Default" text="The fever hath weakened thee." translation="" /> 
+                    //<subtitle duration="2256" effect="" end="124581" layer="0" margin-l="0" margin-r="0" margin-v="0" name="" note="" path="0" start="122325" style="Default" text="The fever hath weakened thee." translation="" />
                     Paragraph p = new Paragraph();
                     p.StartTime.TotalMilliseconds = int.Parse(node.Attributes["start"].Value);
                     p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + int.Parse(node.Attributes["duration"].Value);

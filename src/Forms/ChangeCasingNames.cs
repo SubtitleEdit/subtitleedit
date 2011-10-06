@@ -62,7 +62,7 @@ namespace Nikse.SubtitleEdit.Forms
             _subtitle = subtitle;
 
             FindAllNames();
-            GeneratePreview();            
+            GeneratePreview();
         }
 
         private void GeneratePreview()
@@ -191,7 +191,7 @@ namespace Nikse.SubtitleEdit.Forms
                     int start = lower.IndexOf(name.ToLower());
                     if (start >= 0)
                     {
-                        bool startOk = (start == 0) || (lower[start - 1] == ' ') || (lower[start - 1] == '-') || (lower[start - 1] == '"') || 
+                        bool startOk = (start == 0) || (lower[start - 1] == ' ') || (lower[start - 1] == '-') || (lower[start - 1] == '"') ||
                                        (lower[start - 1] == '\'') || (lower[start - 1] == '>') || (Environment.NewLine.EndsWith(lower[start - 1].ToString()));
 
                         if (startOk)

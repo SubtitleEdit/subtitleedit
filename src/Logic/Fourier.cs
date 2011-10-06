@@ -4,7 +4,7 @@ namespace Nikse.SubtitleEdit.Logic
 {
     /// <summary>
     /// Fourier transform
-    /// 
+    ///
     /// *****************************************************************************
     /// *
     /// * Copyright (c) 2002, Wilhelm Kurz.  All Rights Reserved.
@@ -156,7 +156,7 @@ namespace Nikse.SubtitleEdit.Logic
                 a *= 2;
                 b *= 2;
             }
-        }    
+        }
 
     }
 }

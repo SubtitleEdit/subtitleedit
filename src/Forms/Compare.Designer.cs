@@ -48,9 +48,9 @@ namespace Nikse.SubtitleEdit.Forms
             this.subtitleListView2 = new Nikse.SubtitleEdit.Controls.SubtitleListView();
             this.subtitleListView1 = new Nikse.SubtitleEdit.Controls.SubtitleListView();
             this.SuspendLayout();
-            // 
+            //
             // buttonOK
-            // 
+            //
             this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonOK.Location = new System.Drawing.Point(884, 539);
             this.buttonOK.Name = "buttonOK";
@@ -59,27 +59,27 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonOK.Text = "&Close";
             this.buttonOK.UseVisualStyleBackColor = true;
             this.buttonOK.Click += new System.EventHandler(this.ButtonOkClick);
-            // 
+            //
             // labelSubtitle2
-            // 
+            //
             this.labelSubtitle2.AutoSize = true;
             this.labelSubtitle2.Location = new System.Drawing.Point(492, 31);
             this.labelSubtitle2.Name = "labelSubtitle2";
             this.labelSubtitle2.Size = new System.Drawing.Size(38, 17);
             this.labelSubtitle2.TabIndex = 10;
             this.labelSubtitle2.Text = "sub2";
-            // 
+            //
             // labelSubtitle1
-            // 
+            //
             this.labelSubtitle1.AutoSize = true;
             this.labelSubtitle1.Location = new System.Drawing.Point(9, 32);
             this.labelSubtitle1.Name = "labelSubtitle1";
             this.labelSubtitle1.Size = new System.Drawing.Size(38, 17);
             this.labelSubtitle1.TabIndex = 8;
             this.labelSubtitle1.Text = "sub1";
-            // 
+            //
             // buttonOpenSubtitle1
-            // 
+            //
             this.buttonOpenSubtitle1.Location = new System.Drawing.Point(9, 8);
             this.buttonOpenSubtitle1.Name = "buttonOpenSubtitle1";
             this.buttonOpenSubtitle1.Size = new System.Drawing.Size(24, 21);
@@ -87,9 +87,9 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonOpenSubtitle1.Text = "...";
             this.buttonOpenSubtitle1.UseVisualStyleBackColor = true;
             this.buttonOpenSubtitle1.Click += new System.EventHandler(this.ButtonOpenSubtitle1Click);
-            // 
+            //
             // buttonOpenSubtitle2
-            // 
+            //
             this.buttonOpenSubtitle2.Location = new System.Drawing.Point(491, 8);
             this.buttonOpenSubtitle2.Name = "buttonOpenSubtitle2";
             this.buttonOpenSubtitle2.Size = new System.Drawing.Size(24, 21);
@@ -97,13 +97,13 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonOpenSubtitle2.Text = "...";
             this.buttonOpenSubtitle2.UseVisualStyleBackColor = true;
             this.buttonOpenSubtitle2.Click += new System.EventHandler(this.ButtonOpenSubtitle2Click);
-            // 
+            //
             // openFileDialog1
-            // 
+            //
             this.openFileDialog1.FileName = "openFileDialog1";
-            // 
+            //
             // buttonNextDifference
-            // 
+            //
             this.buttonNextDifference.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.buttonNextDifference.Enabled = false;
             this.buttonNextDifference.Location = new System.Drawing.Point(167, 539);
@@ -113,9 +113,9 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonNextDifference.Text = "&Next difference";
             this.buttonNextDifference.UseVisualStyleBackColor = true;
             this.buttonNextDifference.Click += new System.EventHandler(this.ButtonNextDifferenceClick);
-            // 
+            //
             // buttonPreviousDifference
-            // 
+            //
             this.buttonPreviousDifference.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.buttonPreviousDifference.Enabled = false;
             this.buttonPreviousDifference.Location = new System.Drawing.Point(5, 539);
@@ -125,9 +125,9 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonPreviousDifference.Text = "&Previous difference";
             this.buttonPreviousDifference.UseVisualStyleBackColor = true;
             this.buttonPreviousDifference.Click += new System.EventHandler(this.ButtonPreviousDifferenceClick);
-            // 
+            //
             // labelStatus
-            // 
+            //
             this.labelStatus.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.labelStatus.AutoSize = true;
             this.labelStatus.Location = new System.Drawing.Point(4, 560);
@@ -135,13 +135,13 @@ namespace Nikse.SubtitleEdit.Forms
             this.labelStatus.Size = new System.Drawing.Size(45, 17);
             this.labelStatus.TabIndex = 17;
             this.labelStatus.Text = "status";
-            // 
+            //
             // timer1
-            // 
+            //
             this.timer1.Tick += new System.EventHandler(this.Timer1Tick);
-            // 
+            //
             // richTextBox1
-            // 
+            //
             this.richTextBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.richTextBox1.BackColor = System.Drawing.SystemColors.Control;
             this.richTextBox1.Location = new System.Drawing.Point(8, 490);
@@ -150,9 +150,9 @@ namespace Nikse.SubtitleEdit.Forms
             this.richTextBox1.Size = new System.Drawing.Size(476, 43);
             this.richTextBox1.TabIndex = 18;
             this.richTextBox1.Text = "";
-            // 
+            //
             // richTextBox2
-            // 
+            //
             this.richTextBox2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.richTextBox2.BackColor = System.Drawing.SystemColors.Control;
             this.richTextBox2.Location = new System.Drawing.Point(490, 489);
@@ -161,9 +161,9 @@ namespace Nikse.SubtitleEdit.Forms
             this.richTextBox2.Size = new System.Drawing.Size(478, 43);
             this.richTextBox2.TabIndex = 19;
             this.richTextBox2.Text = "";
-            // 
+            //
             // checkBoxShowOnlyDifferences
-            // 
+            //
             this.checkBoxShowOnlyDifferences.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.checkBoxShowOnlyDifferences.AutoSize = true;
             this.checkBoxShowOnlyDifferences.Location = new System.Drawing.Point(330, 538);
@@ -173,9 +173,9 @@ namespace Nikse.SubtitleEdit.Forms
             this.checkBoxShowOnlyDifferences.Text = "Show only differences";
             this.checkBoxShowOnlyDifferences.UseVisualStyleBackColor = true;
             this.checkBoxShowOnlyDifferences.CheckedChanged += new System.EventHandler(this.checkBoxShowOnlyDifferences_CheckedChanged);
-            // 
+            //
             // checkBoxOnlyListDifferencesInText
-            // 
+            //
             this.checkBoxOnlyListDifferencesInText.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.checkBoxOnlyListDifferencesInText.AutoSize = true;
             this.checkBoxOnlyListDifferencesInText.Location = new System.Drawing.Point(330, 556);
@@ -185,9 +185,9 @@ namespace Nikse.SubtitleEdit.Forms
             this.checkBoxOnlyListDifferencesInText.Text = "Only look for differences in the text";
             this.checkBoxOnlyListDifferencesInText.UseVisualStyleBackColor = true;
             this.checkBoxOnlyListDifferencesInText.CheckedChanged += new System.EventHandler(this.checkBoxOnlyListDifferencesInText_CheckedChanged);
-            // 
+            //
             // subtitleListView2
-            // 
+            //
             this.subtitleListView2.FirstVisibleIndex = -1;
             this.subtitleListView2.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.subtitleListView2.FullRowSelect = true;
@@ -202,9 +202,9 @@ namespace Nikse.SubtitleEdit.Forms
             this.subtitleListView2.SelectedIndexChanged += new System.EventHandler(this.SubtitleListView2SelectedIndexChanged);
             this.subtitleListView2.Enter += new System.EventHandler(this.SubtitleListView2Enter);
             this.subtitleListView2.Leave += new System.EventHandler(this.SubtitleListView2Leave);
-            // 
+            //
             // subtitleListView1
-            // 
+            //
             this.subtitleListView1.FirstVisibleIndex = -1;
             this.subtitleListView1.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.subtitleListView1.FullRowSelect = true;
@@ -217,9 +217,9 @@ namespace Nikse.SubtitleEdit.Forms
             this.subtitleListView1.UseCompatibleStateImageBehavior = false;
             this.subtitleListView1.View = System.Windows.Forms.View.Details;
             this.subtitleListView1.SelectedIndexChanged += new System.EventHandler(this.SubtitleListView1SelectedIndexChanged);
-            // 
+            //
             // Compare
-            // 
+            //
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(974, 582);

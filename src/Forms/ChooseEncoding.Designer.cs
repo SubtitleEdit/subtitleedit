@@ -37,9 +37,9 @@
             this.textBoxPreview = new System.Windows.Forms.TextBox();
             this.LabelPreview = new System.Windows.Forms.Label();
             this.SuspendLayout();
-            // 
+            //
             // buttonCancel
-            // 
+            //
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.buttonCancel.Location = new System.Drawing.Point(542, 473);
@@ -48,9 +48,9 @@
             this.buttonCancel.TabIndex = 7;
             this.buttonCancel.Text = "C&ancel";
             this.buttonCancel.UseVisualStyleBackColor = true;
-            // 
+            //
             // buttonOK
-            // 
+            //
             this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonOK.Location = new System.Drawing.Point(461, 473);
             this.buttonOK.Name = "buttonOK";
@@ -59,9 +59,9 @@
             this.buttonOK.Text = "&OK";
             this.buttonOK.UseVisualStyleBackColor = true;
             this.buttonOK.Click += new System.EventHandler(this.ButtonOkClick);
-            // 
+            //
             // listView1
-            // 
+            //
             this.listView1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.listView1.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
@@ -80,24 +80,24 @@
             this.listView1.View = System.Windows.Forms.View.Details;
             this.listView1.ColumnClick += new System.Windows.Forms.ColumnClickEventHandler(this.listView1_ColumnClick);
             this.listView1.SelectedIndexChanged += new System.EventHandler(this.listView1_SelectedIndexChanged);
-            // 
+            //
             // columnHeader1
-            // 
+            //
             this.columnHeader1.Text = "Codepage";
             this.columnHeader1.Width = 75;
-            // 
+            //
             // columnHeader2
-            // 
+            //
             this.columnHeader2.Text = "Name";
             this.columnHeader2.Width = 124;
-            // 
+            //
             // columnHeader3
-            // 
+            //
             this.columnHeader3.Text = "DisplayName";
             this.columnHeader3.Width = 384;
-            // 
+            //
             // textBoxPreview
-            // 
+            //
             this.textBoxPreview.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                         | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
@@ -107,18 +107,18 @@
             this.textBoxPreview.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.textBoxPreview.Size = new System.Drawing.Size(604, 156);
             this.textBoxPreview.TabIndex = 9;
-            // 
+            //
             // LabelPreview
-            // 
+            //
             this.LabelPreview.AutoSize = true;
             this.LabelPreview.Location = new System.Drawing.Point(12, 284);
             this.LabelPreview.Name = "LabelPreview";
             this.LabelPreview.Size = new System.Drawing.Size(55, 17);
             this.LabelPreview.TabIndex = 10;
             this.LabelPreview.Text = "Preview";
-            // 
+            //
             // ChooseEncoding
-            // 
+            //
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(629, 503);

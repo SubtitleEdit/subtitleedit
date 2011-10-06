@@ -59,9 +59,9 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxText)).BeginInit();
             this.groupBoxText.SuspendLayout();
             this.SuspendLayout();
-            // 
+            //
             // buttonAbort
-            // 
+            //
             this.buttonAbort.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonAbort.Location = new System.Drawing.Point(623, 442);
             this.buttonAbort.Name = "buttonAbort";
@@ -70,18 +70,18 @@
             this.buttonAbort.Text = "Abort";
             this.buttonAbort.UseVisualStyleBackColor = true;
             this.buttonAbort.Click += new System.EventHandler(this.ButtonAbortClick);
-            // 
+            //
             // labelWordNotFound
-            // 
+            //
             this.labelWordNotFound.AutoSize = true;
             this.labelWordNotFound.Location = new System.Drawing.Point(9, 112);
             this.labelWordNotFound.Name = "labelWordNotFound";
             this.labelWordNotFound.Size = new System.Drawing.Size(0, 13);
             this.labelWordNotFound.TabIndex = 23;
-            // 
+            //
             // groupBoxSuggestions
-            // 
-            this.groupBoxSuggestions.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            //
+            this.groupBoxSuggestions.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBoxSuggestions.Controls.Add(this.buttonUseSuggestionAlways);
             this.groupBoxSuggestions.Controls.Add(this.buttonUseSuggestion);
@@ -92,9 +92,9 @@
             this.groupBoxSuggestions.TabIndex = 32;
             this.groupBoxSuggestions.TabStop = false;
             this.groupBoxSuggestions.Text = "Suggestions";
-            // 
+            //
             // buttonUseSuggestionAlways
-            // 
+            //
             this.buttonUseSuggestionAlways.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonUseSuggestionAlways.Location = new System.Drawing.Point(291, 16);
             this.buttonUseSuggestionAlways.Name = "buttonUseSuggestionAlways";
@@ -103,9 +103,9 @@
             this.buttonUseSuggestionAlways.Text = "Use always";
             this.buttonUseSuggestionAlways.UseVisualStyleBackColor = true;
             this.buttonUseSuggestionAlways.Click += new System.EventHandler(this.ButtonUseSuggestionAlwaysClick);
-            // 
+            //
             // buttonUseSuggestion
-            // 
+            //
             this.buttonUseSuggestion.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonUseSuggestion.Location = new System.Drawing.Point(206, 16);
             this.buttonUseSuggestion.Name = "buttonUseSuggestion";
@@ -114,19 +114,19 @@
             this.buttonUseSuggestion.Text = "Use";
             this.buttonUseSuggestion.UseVisualStyleBackColor = true;
             this.buttonUseSuggestion.Click += new System.EventHandler(this.ButtonUseSuggestionClick);
-            // 
+            //
             // listBoxSuggestions
-            // 
-            this.listBoxSuggestions.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            //
+            this.listBoxSuggestions.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.listBoxSuggestions.FormattingEnabled = true;
             this.listBoxSuggestions.Location = new System.Drawing.Point(6, 39);
             this.listBoxSuggestions.Name = "listBoxSuggestions";
             this.listBoxSuggestions.Size = new System.Drawing.Size(372, 134);
             this.listBoxSuggestions.TabIndex = 30;
-            // 
+            //
             // GroupBoxEditWord
-            // 
+            //
             this.GroupBoxEditWord.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.GroupBoxEditWord.Controls.Add(this.buttonAddToDictionary);
             this.GroupBoxEditWord.Controls.Add(this.buttonChangeAll);
@@ -141,9 +141,9 @@
             this.GroupBoxEditWord.TabIndex = 33;
             this.GroupBoxEditWord.TabStop = false;
             this.GroupBoxEditWord.Text = "Word not found";
-            // 
+            //
             // buttonAddToDictionary
-            // 
+            //
             this.buttonAddToDictionary.Location = new System.Drawing.Point(6, 151);
             this.buttonAddToDictionary.Name = "buttonAddToDictionary";
             this.buttonAddToDictionary.Size = new System.Drawing.Size(290, 21);
@@ -151,9 +151,9 @@
             this.buttonAddToDictionary.Text = "Add to user dictionary (not case sensitive)";
             this.buttonAddToDictionary.UseVisualStyleBackColor = true;
             this.buttonAddToDictionary.Click += new System.EventHandler(this.ButtonAddToDictionaryClick);
-            // 
+            //
             // buttonChangeAll
-            // 
+            //
             this.buttonChangeAll.Location = new System.Drawing.Point(6, 45);
             this.buttonChangeAll.Name = "buttonChangeAll";
             this.buttonChangeAll.Size = new System.Drawing.Size(290, 21);
@@ -161,9 +161,9 @@
             this.buttonChangeAll.Text = "Change and add to ocr fix list (case sensitive)";
             this.buttonChangeAll.UseVisualStyleBackColor = true;
             this.buttonChangeAll.Click += new System.EventHandler(this.ButtonChangeAllClick);
-            // 
+            //
             // buttonChange
-            // 
+            //
             this.buttonChange.Location = new System.Drawing.Point(6, 72);
             this.buttonChange.Name = "buttonChange";
             this.buttonChange.Size = new System.Drawing.Size(141, 21);
@@ -171,9 +171,9 @@
             this.buttonChange.Text = "Change once";
             this.buttonChange.UseVisualStyleBackColor = true;
             this.buttonChange.Click += new System.EventHandler(this.ButtonChangeClick);
-            // 
+            //
             // buttonSkipAll
-            // 
+            //
             this.buttonSkipAll.Location = new System.Drawing.Point(155, 97);
             this.buttonSkipAll.Name = "buttonSkipAll";
             this.buttonSkipAll.Size = new System.Drawing.Size(141, 21);
@@ -181,9 +181,9 @@
             this.buttonSkipAll.Text = "&Skip all";
             this.buttonSkipAll.UseVisualStyleBackColor = true;
             this.buttonSkipAll.Click += new System.EventHandler(this.ButtonSkipAllClick);
-            // 
+            //
             // textBoxWord
-            // 
+            //
             this.textBoxWord.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.textBoxWord.Location = new System.Drawing.Point(6, 19);
             this.textBoxWord.Name = "textBoxWord";
@@ -191,9 +191,9 @@
             this.textBoxWord.TabIndex = 31;
             this.textBoxWord.TextChanged += new System.EventHandler(this.textBoxWord_TextChanged);
             this.textBoxWord.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxWordKeyDown);
-            // 
+            //
             // buttonSkipOnce
-            // 
+            //
             this.buttonSkipOnce.Location = new System.Drawing.Point(155, 72);
             this.buttonSkipOnce.Name = "buttonSkipOnce";
             this.buttonSkipOnce.Size = new System.Drawing.Size(141, 21);
@@ -201,9 +201,9 @@
             this.buttonSkipOnce.Text = "Skip &once";
             this.buttonSkipOnce.UseVisualStyleBackColor = true;
             this.buttonSkipOnce.Click += new System.EventHandler(this.ButtonSkipOnceClick);
-            // 
+            //
             // buttonAddToNames
-            // 
+            //
             this.buttonAddToNames.Location = new System.Drawing.Point(6, 124);
             this.buttonAddToNames.Name = "buttonAddToNames";
             this.buttonAddToNames.Size = new System.Drawing.Size(290, 21);
@@ -211,9 +211,9 @@
             this.buttonAddToNames.Text = "Add to names/noise list (case sensitive)";
             this.buttonAddToNames.UseVisualStyleBackColor = true;
             this.buttonAddToNames.Click += new System.EventHandler(this.ButtonAddToNamesClick);
-            // 
+            //
             // groupBoxEditWholeText
-            // 
+            //
             this.groupBoxEditWholeText.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.groupBoxEditWholeText.Controls.Add(this.buttonSkipText);
             this.groupBoxEditWholeText.Controls.Add(this.buttonChangeWholeText);
@@ -224,9 +224,9 @@
             this.groupBoxEditWholeText.TabIndex = 37;
             this.groupBoxEditWholeText.TabStop = false;
             this.groupBoxEditWholeText.Text = "Edit whole text";
-            // 
+            //
             // buttonSkipText
-            // 
+            //
             this.buttonSkipText.Location = new System.Drawing.Point(156, 88);
             this.buttonSkipText.Name = "buttonSkipText";
             this.buttonSkipText.Size = new System.Drawing.Size(139, 21);
@@ -234,9 +234,9 @@
             this.buttonSkipText.Text = "Skip text";
             this.buttonSkipText.UseVisualStyleBackColor = true;
             this.buttonSkipText.Click += new System.EventHandler(this.ButtonSkipTextClick);
-            // 
+            //
             // buttonChangeWholeText
-            // 
+            //
             this.buttonChangeWholeText.Location = new System.Drawing.Point(6, 88);
             this.buttonChangeWholeText.Name = "buttonChangeWholeText";
             this.buttonChangeWholeText.Size = new System.Drawing.Size(143, 21);
@@ -244,20 +244,20 @@
             this.buttonChangeWholeText.Text = "Change";
             this.buttonChangeWholeText.UseVisualStyleBackColor = true;
             this.buttonChangeWholeText.Click += new System.EventHandler(this.ButtonChangeWholeTextClick);
-            // 
+            //
             // textBoxWholeText
-            // 
+            //
             this.textBoxWholeText.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.textBoxWholeText.Location = new System.Drawing.Point(6, 19);
             this.textBoxWholeText.Multiline = true;
             this.textBoxWholeText.Name = "textBoxWholeText";
             this.textBoxWholeText.Size = new System.Drawing.Size(290, 63);
             this.textBoxWholeText.TabIndex = 31;
-            // 
+            //
             // groupBoxTextAsImage
-            // 
-            this.groupBoxTextAsImage.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
+            //
+            this.groupBoxTextAsImage.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+            | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBoxTextAsImage.Controls.Add(this.pictureBoxText);
             this.groupBoxTextAsImage.Location = new System.Drawing.Point(12, 12);
@@ -266,21 +266,21 @@
             this.groupBoxTextAsImage.TabIndex = 34;
             this.groupBoxTextAsImage.TabStop = false;
             this.groupBoxTextAsImage.Text = "Image text";
-            // 
+            //
             // pictureBoxText
-            // 
-            this.pictureBoxText.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
+            //
+            this.pictureBoxText.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+            | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.pictureBoxText.Location = new System.Drawing.Point(6, 18);
             this.pictureBoxText.Name = "pictureBoxText";
             this.pictureBoxText.Size = new System.Drawing.Size(684, 127);
             this.pictureBoxText.TabIndex = 32;
             this.pictureBoxText.TabStop = false;
-            // 
+            //
             // groupBoxText
-            // 
-            this.groupBoxText.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            //
+            this.groupBoxText.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBoxText.Controls.Add(this.richTextBoxParagraph);
             this.groupBoxText.Controls.Add(this.buttonEditWholeText);
@@ -291,9 +291,9 @@
             this.groupBoxText.TabIndex = 38;
             this.groupBoxText.TabStop = false;
             this.groupBoxText.Text = "Text";
-            // 
+            //
             // richTextBoxParagraph
-            // 
+            //
             this.richTextBoxParagraph.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.richTextBoxParagraph.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.richTextBoxParagraph.Location = new System.Drawing.Point(6, 12);
@@ -302,9 +302,9 @@
             this.richTextBoxParagraph.Size = new System.Drawing.Size(296, 54);
             this.richTextBoxParagraph.TabIndex = 39;
             this.richTextBoxParagraph.Text = "";
-            // 
+            //
             // buttonEditWholeText
-            // 
+            //
             this.buttonEditWholeText.Location = new System.Drawing.Point(308, 17);
             this.buttonEditWholeText.Name = "buttonEditWholeText";
             this.buttonEditWholeText.Size = new System.Drawing.Size(128, 21);
@@ -312,9 +312,9 @@
             this.buttonEditWholeText.Text = "Edit whole text";
             this.buttonEditWholeText.UseVisualStyleBackColor = true;
             this.buttonEditWholeText.Click += new System.EventHandler(this.ButtonEditWholeTextClick);
-            // 
+            //
             // buttonEditWord
-            // 
+            //
             this.buttonEditWord.Location = new System.Drawing.Point(308, 43);
             this.buttonEditWord.Name = "buttonEditWord";
             this.buttonEditWord.Size = new System.Drawing.Size(128, 21);
@@ -322,9 +322,9 @@
             this.buttonEditWord.Text = "Edit word";
             this.buttonEditWord.UseVisualStyleBackColor = true;
             this.buttonEditWord.Click += new System.EventHandler(this.ButtonEditWordClick);
-            // 
+            //
             // OcrSpellCheck
-            // 
+            //
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(720, 473);

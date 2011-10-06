@@ -38,9 +38,9 @@
             this.labelHoursMinSecsMilliSecs = new System.Windows.Forms.Label();
             this.splitTimeUpDownAdjust = new Nikse.SubtitleEdit.Controls.TimeUpDown();
             this.SuspendLayout();
-            // 
+            //
             // buttonGetFrameRate
-            // 
+            //
             this.buttonGetFrameRate.Location = new System.Drawing.Point(137, 69);
             this.buttonGetFrameRate.Name = "buttonGetFrameRate";
             this.buttonGetFrameRate.Size = new System.Drawing.Size(24, 22);
@@ -48,9 +48,9 @@
             this.buttonGetFrameRate.Text = "...";
             this.buttonGetFrameRate.UseVisualStyleBackColor = true;
             this.buttonGetFrameRate.Click += new System.EventHandler(this.buttonGetFrameRate_Click);
-            // 
+            //
             // buttonDone
-            // 
+            //
             this.buttonDone.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.buttonDone.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonDone.Location = new System.Drawing.Point(239, 109);
@@ -59,9 +59,9 @@
             this.buttonDone.TabIndex = 18;
             this.buttonDone.Text = "&Done";
             this.buttonDone.UseVisualStyleBackColor = true;
-            // 
+            //
             // buttonSplit
-            // 
+            //
             this.buttonSplit.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonSplit.Location = new System.Drawing.Point(158, 109);
             this.buttonSplit.Name = "buttonSplit";
@@ -70,40 +70,40 @@
             this.buttonSplit.Text = "&Split";
             this.buttonSplit.UseVisualStyleBackColor = true;
             this.buttonSplit.Click += new System.EventHandler(this.ButtonFixClick);
-            // 
+            //
             // label1
-            // 
+            //
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(16, 12);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(217, 13);
             this.label1.TabIndex = 19;
             this.label1.Text = "Enter length of first part of video or browse";
-            // 
+            //
             // label2
-            // 
+            //
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(16, 29);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(152, 13);
             this.label2.TabIndex = 20;
             this.label2.Text = "and get length from video file:";
-            // 
+            //
             // openFileDialog1
-            // 
+            //
             this.openFileDialog1.FileName = "openFileDialog1";
-            // 
+            //
             // labelHoursMinSecsMilliSecs
-            // 
+            //
             this.labelHoursMinSecsMilliSecs.AutoSize = true;
             this.labelHoursMinSecsMilliSecs.Location = new System.Drawing.Point(26, 52);
             this.labelHoursMinSecsMilliSecs.Name = "labelHoursMinSecsMilliSecs";
             this.labelHoursMinSecsMilliSecs.Size = new System.Drawing.Size(108, 13);
             this.labelHoursMinSecsMilliSecs.TabIndex = 22;
             this.labelHoursMinSecsMilliSecs.Text = "Hours:min:sec.msecs";
-            // 
+            //
             // splitTimeUpDownAdjust
-            // 
+            //
             this.splitTimeUpDownAdjust.AutoSize = true;
             this.splitTimeUpDownAdjust.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.splitTimeUpDownAdjust.Location = new System.Drawing.Point(29, 69);
@@ -111,9 +111,9 @@
             this.splitTimeUpDownAdjust.Name = "splitTimeUpDownAdjust";
             this.splitTimeUpDownAdjust.Size = new System.Drawing.Size(92, 25);
             this.splitTimeUpDownAdjust.TabIndex = 21;
-            // 
+            //
             // SplitSubtitle
-            // 
+            //
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(325, 140);

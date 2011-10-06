@@ -50,9 +50,9 @@
             this.groupBoxInspectItems.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxInspectItem)).BeginInit();
             this.SuspendLayout();
-            // 
+            //
             // buttonCancel
-            // 
+            //
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonCancel.Location = new System.Drawing.Point(634, 286);
@@ -61,9 +61,9 @@
             this.buttonCancel.TabIndex = 8;
             this.buttonCancel.Text = "C&ancel";
             this.buttonCancel.UseVisualStyleBackColor = true;
-            // 
+            //
             // groupBoxCurrentCompareImage
-            // 
+            //
             this.groupBoxCurrentCompareImage.Controls.Add(this.buttonAddBetterMatch);
             this.groupBoxCurrentCompareImage.Controls.Add(this.checkBoxItalic);
             this.groupBoxCurrentCompareImage.Controls.Add(this.labelDoubleSize);
@@ -80,9 +80,9 @@
             this.groupBoxCurrentCompareImage.TabIndex = 11;
             this.groupBoxCurrentCompareImage.TabStop = false;
             this.groupBoxCurrentCompareImage.Text = "Current compare image";
-            // 
+            //
             // buttonAddBetterMatch
-            // 
+            //
             this.buttonAddBetterMatch.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonAddBetterMatch.Location = new System.Drawing.Point(120, 98);
             this.buttonAddBetterMatch.Name = "buttonAddBetterMatch";
@@ -91,9 +91,9 @@
             this.buttonAddBetterMatch.Text = "Add better match";
             this.buttonAddBetterMatch.UseVisualStyleBackColor = true;
             this.buttonAddBetterMatch.Click += new System.EventHandler(this.buttonAddBetterMatch_Click);
-            // 
+            //
             // checkBoxItalic
-            // 
+            //
             this.checkBoxItalic.AutoSize = true;
             this.checkBoxItalic.Location = new System.Drawing.Point(15, 61);
             this.checkBoxItalic.Name = "checkBoxItalic";
@@ -101,18 +101,18 @@
             this.checkBoxItalic.TabIndex = 2;
             this.checkBoxItalic.Text = "Is &italic";
             this.checkBoxItalic.UseVisualStyleBackColor = true;
-            // 
+            //
             // labelDoubleSize
-            // 
+            //
             this.labelDoubleSize.AutoSize = true;
             this.labelDoubleSize.Location = new System.Drawing.Point(14, 172);
             this.labelDoubleSize.Name = "labelDoubleSize";
             this.labelDoubleSize.Size = new System.Drawing.Size(92, 13);
             this.labelDoubleSize.TabIndex = 6;
             this.labelDoubleSize.Text = "Image double size";
-            // 
+            //
             // pictureBoxCompareBitmapDouble
-            // 
+            //
             this.pictureBoxCompareBitmapDouble.BackColor = System.Drawing.Color.Red;
             this.pictureBoxCompareBitmapDouble.Location = new System.Drawing.Point(17, 188);
             this.pictureBoxCompareBitmapDouble.Name = "pictureBoxCompareBitmapDouble";
@@ -120,18 +120,18 @@
             this.pictureBoxCompareBitmapDouble.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pictureBoxCompareBitmapDouble.TabIndex = 27;
             this.pictureBoxCompareBitmapDouble.TabStop = false;
-            // 
+            //
             // labelTextAssociatedWithImage
-            // 
+            //
             this.labelTextAssociatedWithImage.AutoSize = true;
             this.labelTextAssociatedWithImage.Location = new System.Drawing.Point(14, 19);
             this.labelTextAssociatedWithImage.Name = "labelTextAssociatedWithImage";
             this.labelTextAssociatedWithImage.Size = new System.Drawing.Size(135, 13);
             this.labelTextAssociatedWithImage.TabIndex = 0;
             this.labelTextAssociatedWithImage.Text = "Text associated with image";
-            // 
+            //
             // buttonDelete
-            // 
+            //
             this.buttonDelete.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonDelete.Location = new System.Drawing.Point(120, 62);
             this.buttonDelete.Name = "buttonDelete";
@@ -140,9 +140,9 @@
             this.buttonDelete.Text = "Delete ";
             this.buttonDelete.UseVisualStyleBackColor = true;
             this.buttonDelete.Click += new System.EventHandler(this.buttonDelete_Click);
-            // 
+            //
             // buttonUpdate
-            // 
+            //
             this.buttonUpdate.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonUpdate.Location = new System.Drawing.Point(120, 35);
             this.buttonUpdate.Name = "buttonUpdate";
@@ -151,34 +151,34 @@
             this.buttonUpdate.Text = "Update";
             this.buttonUpdate.UseVisualStyleBackColor = true;
             this.buttonUpdate.Click += new System.EventHandler(this.buttonUpdate_Click);
-            // 
+            //
             // labelImageInfo
-            // 
+            //
             this.labelImageInfo.AutoSize = true;
             this.labelImageInfo.Location = new System.Drawing.Point(12, 87);
             this.labelImageInfo.Name = "labelImageInfo";
             this.labelImageInfo.Size = new System.Drawing.Size(76, 13);
             this.labelImageInfo.TabIndex = 5;
             this.labelImageInfo.Text = "labelImageInfo";
-            // 
+            //
             // textBoxText
-            // 
+            //
             this.textBoxText.Location = new System.Drawing.Point(14, 35);
             this.textBoxText.Name = "textBoxText";
             this.textBoxText.Size = new System.Drawing.Size(100, 20);
             this.textBoxText.TabIndex = 1;
-            // 
+            //
             // pictureBoxCompareBitmap
-            // 
+            //
             this.pictureBoxCompareBitmap.BackColor = System.Drawing.Color.Red;
             this.pictureBoxCompareBitmap.Location = new System.Drawing.Point(17, 104);
             this.pictureBoxCompareBitmap.Name = "pictureBoxCompareBitmap";
             this.pictureBoxCompareBitmap.Size = new System.Drawing.Size(52, 52);
             this.pictureBoxCompareBitmap.TabIndex = 22;
             this.pictureBoxCompareBitmap.TabStop = false;
-            // 
+            //
             // buttonOK
-            // 
+            //
             this.buttonOK.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.buttonOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonOK.Location = new System.Drawing.Point(553, 286);
@@ -187,18 +187,18 @@
             this.buttonOK.TabIndex = 7;
             this.buttonOK.Text = "&OK";
             this.buttonOK.UseVisualStyleBackColor = true;
-            // 
+            //
             // listBoxInspectItems
-            // 
+            //
             this.listBoxInspectItems.FormattingEnabled = true;
             this.listBoxInspectItems.Location = new System.Drawing.Point(6, 19);
             this.listBoxInspectItems.Name = "listBoxInspectItems";
             this.listBoxInspectItems.Size = new System.Drawing.Size(240, 238);
             this.listBoxInspectItems.TabIndex = 12;
             this.listBoxInspectItems.SelectedIndexChanged += new System.EventHandler(this.listBoxInspectItems_SelectedIndexChanged);
-            // 
+            //
             // groupBoxInspectItems
-            // 
+            //
             this.groupBoxInspectItems.Controls.Add(this.pictureBoxInspectItem);
             this.groupBoxInspectItems.Controls.Add(this.listBoxInspectItems);
             this.groupBoxInspectItems.Location = new System.Drawing.Point(12, 12);
@@ -207,18 +207,18 @@
             this.groupBoxInspectItems.TabIndex = 13;
             this.groupBoxInspectItems.TabStop = false;
             this.groupBoxInspectItems.Text = "Inspect items";
-            // 
+            //
             // pictureBoxInspectItem
-            // 
+            //
             this.pictureBoxInspectItem.BackColor = System.Drawing.Color.Red;
             this.pictureBoxInspectItem.Location = new System.Drawing.Point(252, 114);
             this.pictureBoxInspectItem.Name = "pictureBoxInspectItem";
             this.pictureBoxInspectItem.Size = new System.Drawing.Size(52, 52);
             this.pictureBoxInspectItem.TabIndex = 23;
             this.pictureBoxInspectItem.TabStop = false;
-            // 
+            //
             // VobSubOcrCharacterInspect
-            // 
+            //
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(722, 323);

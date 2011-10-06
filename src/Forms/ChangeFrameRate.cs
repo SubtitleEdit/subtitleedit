@@ -113,6 +113,6 @@ namespace Nikse.SubtitleEdit.Forms
                 return double.Parse(comboBoxFrameRateTo.Text);
             }
         }
- 
+
     }
 }

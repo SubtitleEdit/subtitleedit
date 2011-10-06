@@ -7,7 +7,7 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
     /// </summary>
     public class Mpeg2Header
     {
-        public const int Length = 14;        
+        public const int Length = 14;
 
         public readonly UInt32 StartCode;
         public readonly byte PackIndentifier;
