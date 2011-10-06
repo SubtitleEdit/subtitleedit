@@ -5872,13 +5872,13 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
 
-
                 var formSubOcr = new VobSubOcr();
                 formSubOcr.Initialize(subPicturesWithTimeCodes, Configuration.Settings.VobSubOcr, fileName); //TODO - language???
                 if (formSubOcr.ShowDialog(this) == DialogResult.OK)
                 {
-                    ResetSubtitle();
-                    _subtitle.Paragraphs.Clear();
+                    MakeHistoryForUndo(_language.BeforeImportFromMatroskaFile);
+                    _subtitleListViewIndex = -1;
+                    FileNew();
                     _subtitle.WasLoadedWithFrameNumbers = false;
                     foreach (Paragraph p in formSubOcr.SubtitleFromOcr.Paragraphs)
                         _subtitle.Paragraphs.Add(p);
@@ -5896,14 +5896,12 @@ namespace Nikse.SubtitleEdit.Forms
 
                     Configuration.Settings.Save();
                 }
-
             }
             else
             {
                 MakeHistoryForUndo(_language.BeforeImportFromMatroskaFile);
                 _subtitleListViewIndex = -1;
                 FileNew();
-                _subtitle.Paragraphs.Clear();
 
                 for (int i = 0; i < mp4SubtitleTrack.Mdia.Minf.Stbl.EndTimeCodes.Count; i++)
                 {
@@ -6740,6 +6738,33 @@ namespace Nikse.SubtitleEdit.Forms
                     SetTitle();
 
                     _fileDateTime = new DateTime();
+                }
+            }
+            else if (e.Modifiers == (Keys.Control | Keys.Shift | Keys.Alt) && e.KeyCode == Keys.M) // Ctrl+Shift+U = switch original/current
+            {
+                if (_subtitleAlternate != null && _subtitleAlternate.Paragraphs.Count > 0 && _networkSession == null)
+                {
+                    if (ContinueNewOrExit())
+                    {
+                        Subtitle subtitle = new Subtitle();
+                        foreach (var p in _subtitle.Paragraphs)
+                        {
+                            var newP = new Paragraph(p);
+                            var original = Utilities.GetOriginalParagraph(_subtitle.GetIndex(p), p, _subtitleAlternate.Paragraphs);
+                            if (original != null)
+                                newP.Text += Environment.NewLine + Environment.NewLine + original.Text;
+                            subtitle.Paragraphs.Add(newP);
+                        }
+                        RemoveAlternate(true);
+                        FileNew();
+                        _subtitle = subtitle;
+                        _subtitleListViewIndex = -1;
+                        ShowSource();
+                        SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
+                        SubtitleListview1.SelectIndexAndEnsureVisible(0);
+
+                        e.SuppressKeyPress = true;
+                    }
                 }
             }
             else if (e.KeyData == _toggleVideoDockUndock)
