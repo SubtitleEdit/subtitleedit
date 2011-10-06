@@ -182,6 +182,16 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (_selectedCompareNode != null)
             {
+                if (listBoxInspectItems.SelectedIndex < 0)
+                    return;
+
+                if (listBoxInspectItems.Items[listBoxInspectItems.SelectedIndex].ToString() == textBoxText.Text)
+                {
+                    textBoxText.SelectAll();
+                    textBoxText.Focus();
+                    return;
+                }
+
                 XmlNode newNode = ImageCompareDocument.CreateElement("FileName");
                 XmlAttribute text = newNode.OwnerDocument.CreateAttribute("Text");
                 text.InnerText = textBoxText.Text;

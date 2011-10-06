@@ -39,9 +39,15 @@ namespace Nikse.SubtitleEdit.Logic
             get
             {
                 if (Utilities.IsRunningOnLinux() || Utilities.IsRunningOnMac())
-                    return "/usr/share/tesseract-ocr/tessdata";
-                else
-                    return TesseractFolder + "tessdata";
+                {
+                    if (System.IO.Directory.Exists("/usr/share/tesseract-ocr/tessdata"))
+                        return "/usr/share/tesseract-ocr/tessdata";
+                    else if (System.IO.Directory.Exists("/usr/share/tesseract/tessdata"))
+                        return "/usr/share/tesseract/tessdata";
+                    else if (System.IO.Directory.Exists("/usr/share/tessdata"))
+                        return "/usr/share/tessdata";
+                }
+                return TesseractFolder + "tessdata";
             }
         }
 
