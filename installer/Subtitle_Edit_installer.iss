@@ -114,7 +114,7 @@ Name: pl;  MessagesFile: compiler:Languages\Polish.isl
 Name: ro;  MessagesFile: Languages\Romanian.isl
 Name: ru;  MessagesFile: compiler:Languages\Russian.isl
 Name: srC; MessagesFile: Languages\SerbianCyrillic.isl
-Name: srL; MessagesFile: Languages\Serbian.isl
+Name: srL; MessagesFile: Languages\SerbianLatin.isl
 Name: sv;  MessagesFile: Languages\Swedish.isl
 #endif
 

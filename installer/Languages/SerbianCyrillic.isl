@@ -1,6 +1,6 @@
 ; *** Inno Setup version 5.1.11+ Serbian (Cyrillic) messages ***
 ;
-; Vladimir Stefanovic, antivari@gmail.com, 18.10.2008
+; Translated by Rancher (theranchcowboy@googlemail.com).
 ;
 ; Note: When translating this text, do not add periods (.) to the end of
 ; messages that didn't have them already, because on those messages Inno
@@ -8,6 +8,8 @@
 ; two periods being displayed).
 
 [LangOptions]
+; The following three entries are very important. Be sure to read and 
+; understand the '[LangOptions] section' topic in the help file.
 LanguageName=<0421><0440><043F><0441><043A><0438>
 LanguageID=$0C1A
 LanguageCodePage=1251
@@ -26,289 +28,289 @@ LanguageCodePage=1251
 
 ; *** Application titles
 SetupAppTitle=Инсталација
-SetupWindowTitle=Инсталација - %1
-UninstallAppTitle=Деинсталација
-UninstallAppFullTitle=%1 Деинсталација
+SetupWindowTitle=Инсталација – %1
+UninstallAppTitle=Уклањање
+UninstallAppFullTitle=Уклањање програма %1
 
 ; *** Misc. common
-InformationTitle=Информације
+InformationTitle=Подаци
 ConfirmTitle=Потврда
 ErrorTitle=Грешка
 
 ; *** SetupLdr messages
-SetupLdrStartupMessage=Овим програмом ћете инсталирати %1. Да ли желите да наставите?
-LdrCannotCreateTemp=Није могуће направити привремену датотеку. Инсталација је прекинута
-LdrCannotExecTemp=Није могуће покренути датотеку у привременом директоријуму. Инсталација је прекинута
+SetupLdrStartupMessage=Инсталираћете %1. Желите ли да наставите?
+LdrCannotCreateTemp=Не могу да направим привремену датотеку. Инсталација је прекинута
+LdrCannotExecTemp=Не могу да покренем датотеку у привременој фасцикли. Инсталација је прекинута
 
 ; *** Startup error messages
 LastErrorMessage=%1.%n%nГрешка %2: %3
-SetupFileMissing=Датотека %1 недостаје у инсталационом директоријуму. Молимо Вас исправите проблем или набавите нову копију програма.
-SetupFileCorrupt=Инсталационе датотеке су неисправне. Молимо Вас да набавите нову копију програма.
-SetupFileCorruptOrWrongVer=Инсталационе датотеке су неисправне, или нису усаглашене са овом верзијом инсталације. Молимо Вас исправите проблем или набавите нову копију програма.
-NotOnThisPlatform=Овај програм се неће покренути на %1.
-OnlyOnThisPlatform=Овај програм се мора покренути на %1.
-OnlyOnTheseArchitectures=Овај програм се може инсталирати само на верзијама Windows-а пројектованим за следеће процесорске архитектуре:%n%n%1
-MissingWOW64APIs=Верзија Windows-а коју користите не садржи могућности потребне за инсталациону процедуру да уради 64-битну инсталацију. Да би решили овај проблем, молимо инсталирајте Service Pаck %1.
-WinVersionTooLowError=Овај програм захтева %1 верзију %2 или новију.
-WinVersionTooHighError=Овај програм се не може инсталирати на %1 верзији %2 или новијој.
-AdminPrivilegesRequired=Морате бити пријављени као администратор да би сте инсталирали овај програм.
-PowerUserPrivilegesRequired=Морате бити пријављени као администратор или као члан Power Users групе када инсталирате овај програм.
-SetupAppRunningError=Инсталација је открила да се %1 тренутно извршава.%n%nМолимо да одмах затворите све његове инстанце, а затим притисните OK за наставак, или Cancel да одустанете.
-UninstallAppRunningError=Деинсталација је открила да се %1 тренутно извршава.%n%nМолимо да одмах затворите све његове инстанце, а затим притисните OK за наставак, или Cancel да одустанете.
+SetupFileMissing=Датотека %1 недостаје у фасцикли за инсталацију. Исправите проблем или набавите нови примерак програма.
+SetupFileCorrupt=Датотеке за инсталацију су оштећене. Набавите нови примерак програма.
+SetupFileCorruptOrWrongVer=Датотеке за инсталацију су оштећене или нису сагласне с овим издањем инсталације. Исправите проблем или набавите нови примерак програма.
+NotOnThisPlatform=Програм неће радити на %1.
+OnlyOnThisPlatform=Програм ће радити на %1.
+OnlyOnTheseArchitectures=Програм се може инсталирати само на издањима виндоуса који раде са следећим архитектурама процесора:%n%n%1
+MissingWOW64APIs=Издање виндоуса које користите не садржи могућности потребне за извршавање 64-битних инсталација. Инсталирајте сервисни пакет %1 да бисте решили овај проблем.
+WinVersionTooLowError=Програм захтева %1, издање %2 или новије.
+WinVersionTooHighError=Програм не можете инсталирати на %1 издању %2 или новијем.
+AdminPrivilegesRequired=Морате бити пријављени као администратор да бисте инсталирали програм.
+PowerUserPrivilegesRequired=Морате бити пријављени као администратор или овлашћени корисник да бисте инсталирали програм.
+SetupAppRunningError=Програм %1 је тренутно покренут.%n%nЗатворите га и кликните на дугме „У реду“ да наставите или „Откажи“ да напустите инсталацију.
+UninstallAppRunningError=Програм %1 је тренутно покренут.%n%nЗатворите га и кликните на дугме „У реду“ да наставите или „Откажи“ да напустите инсталацију.
 
 ; *** Misc. errors
-ErrorCreatingDir=Инсталација није могла да направи директоријум "%1"
-ErrorTooManyFilesInDir=Није могуће направити датотеку у директоријуму "%1" зато што садржи превише датотека
+ErrorCreatingDir=Не могу да направим фасциклу „%1“
+ErrorTooManyFilesInDir=Не могу да направим датотеку у фасцикли „%1“ јер садржи превише датотека
 
 ; *** Setup common messages
-ExitSetupTitle=Прекидање инсталације
-ExitSetupMessage=Инсталација није завршена. Ако сада прекинете Инсталацију, програм неће бити инсталиран.%n%nИнсталацију можете покренути и довршити неком дугом приликом.%n%nПрекид инсталације?
-AboutSetupMenuItem=&О инсталацији...
-AboutSetupTitle=О инсталацији
-AboutSetupMessage=%1 верзија %2%n%3%n%n%1 матична страница:%n%4
+ExitSetupTitle=Напуштање инсталације
+ExitSetupMessage=Инсталација није завршена. Ако сада изађете, програм неће бити инсталиран.%n%nИнсталацију можете покренути и довршити неком дугом приликом.%n%nЖелите ли да је затворите?
+AboutSetupMenuItem=&О програму
+AboutSetupTitle=Подаци о програму
+AboutSetupMessage=%1 издање %2%n%3%n%n%1 почетна страница:%n%4
 AboutSetupNote=
-TranslatorNote=
+TranslatorNote=Serbian translation by Rancher
 
 ; *** Buttons
 ButtonBack=< &Назад
 ButtonNext=&Даље >
 ButtonInstall=&Инсталирај
-ButtonOK=ОК
-ButtonCancel=Одустани
+ButtonOK=&У реду
+ButtonCancel=&Откажи
 ButtonYes=&Да
-ButtonYesToAll=Да за &Све
+ButtonYesToAll=Д&а за све
 ButtonNo=&Не
-ButtonNoToAll=Н&е за Све
-ButtonFinish=&Завршетак
-ButtonBrowse=&Изабери...
-ButtonWizardBrowse=И&забери...
-ButtonNewFolder=&Направи нови директоријум
+ButtonNoToAll=Н&е за све
+ButtonFinish=&Заврши
+ButtonBrowse=&Потражи…
+ButtonWizardBrowse=&Потражи…
+ButtonNewFolder=&Направи фасциклу
 
 ; *** "Select Language" dialog messages
-SelectLanguageTitle=Изаберите језик инсталације
+SelectLanguageTitle=Одабир језика
 SelectLanguageLabel=Изаберите језик који желите да користите приликом инсталације:
 
 ; *** Common wizard text
-ClickNext=Притисните Даље да наставите, или Одустани да напустите инсталацију.
+ClickNext=Кликните на „Даље“ да наставите или „Откажи“ да напустите инсталацију.
 BeveledLabel=
-BrowseDialogTitle=Изаберите директоријум
-BrowseDialogLabel=Изаберите један од понуђених директоријума из листе, а затим притисните ОК.
-NewFolderName=Нови Директоријум
+BrowseDialogTitle=Одабир фасцикле
+BrowseDialogLabel=Изаберите фасциклу са списка и кликните на „У реду“.
+NewFolderName=Нова фасцикла
 
 ; *** "Welcome" wizard page
-WelcomeLabel1=Добродошли у [name] инсталациону процедуру
-WelcomeLabel2=Сада ће се инсталирати [name/ver] на Ваш рачунар.%n%nПрепоручује се да затворите све друге програме пре наставка.
+WelcomeLabel1=Добро дошли на инсталацију програма [name]
+WelcomeLabel2=Инсталираћете [name/ver] на свој рачунар.%n%nПрепоручује се да затворите све друге програме пре него што наставите.
 
 ; *** "Password" wizard page
-WizardPassword=Шифра
-PasswordLabel1=Ова инсталација је заштићена шифром.
-PasswordLabel3=Молимо упишите шифру, а затим притисните Даље за наставак. Водите рачуна да су велика и мала слова у шифри битна.
-PasswordEditLabel=&Шифра:
-IncorrectPassword=Шифра коју сте уписали није исправна. Молимо покушајте поново.
+WizardPassword=Лозинка
+PasswordLabel1=Инсталација је заштићена лозинком.
+PasswordLabel3=Унесите лозинку и кликните на „Даље“ да наставите. Имајте на уму да је лозинка осетљива на мала и велика слова.
+PasswordEditLabel=&Лозинка:
+IncorrectPassword=Наведена лозинка није исправна. Покушајте поново.
 
 ; *** "License Agreement" wizard
-WizardLicense=Уговор о коришћењу
-LicenseLabel=Молимо прочитајте пажљиво следеће важне информације пре наставка.
-LicenseLabel3=Молимо прочитајте Уговор о коришћењу, који следи. Морате прихватити услове овог уговора пре наставка инсталације.
+WizardLicense=Уговор о лиценци
+LicenseLabel=Пажљиво прочитајте следеће пре него што наставите.
+LicenseLabel3=Прочитајте Уговор о лиценци који се налази испод. Морате прихватити услове овог уговора пре него што наставите.
 LicenseAccepted=&Прихватам уговор
 LicenseNotAccepted=&Не прихватам уговор
 
 ; *** "Information" wizard pages
 WizardInfoBefore=Информације
-InfoBeforeLabel=Молимо прочитајте пажљиво следеће важне информације пре наставка.
-InfoBeforeClickLabel=Када будете спремни да наставите инсталацију, притисните Даље.
+InfoBeforeLabel=Пажљиво прочитајте следеће пре него што наставите.
+InfoBeforeClickLabel=Када будете спремни да наставите инсталацију, кликните на „Даље“.
 WizardInfoAfter=Информације
-InfoAfterLabel=Молимо Вас прочитајте пажљиво следеће важне информације пре наставка.
-InfoAfterClickLabel=Када будете спремни да наставите инсталацију, притисните Даље.
+InfoAfterLabel=Пажљиво прочитајте следеће пре него што наставите.
+InfoAfterClickLabel=Када будете спремни да наставите инсталацију, кликните на „Даље“.
 
 ; *** "User Information" wizard page
-WizardUserInfo=Подаци о кориснику
-UserInfoDesc=Молимо унесите Ваше податке.
+WizardUserInfo=Кориснички подаци
+UserInfoDesc=Унесите своје податке.
 UserInfoName=&Корисник:
 UserInfoOrg=&Организација:
 UserInfoSerial=&Серијски број:
-UserInfoNameRequired=Морате уписати име.
+UserInfoNameRequired=Морате навести име.
 
 ; *** "Select Destination Location" wizard page
-WizardSelectDir=Изаберите одредишну локацију
-SelectDirDesc=Где [name] треба да се инсталира?
-SelectDirLabel3=Инсталација ће поставити [name] у следећи директоријум.
-SelectDirBrowseLabel=Да наставите, притисните Даље. Ако желите да изаберете неки други директоријум, притисните Изабери.
+WizardSelectDir=Одабир одредишне фасцикле
+SelectDirDesc=Изаберите место на ком желите да инсталирате [name].
+SelectDirLabel3=Програм ће инсталирати [name] у следећу фасциклу.
+SelectDirBrowseLabel=Кликните на „Даље“ да наставите. Ако желите да изаберете другу фасциклу, кликните на „Потражи…“.
 DiskSpaceMBLabel=Потребно је најмање [mb] MB слободног простора на диску.
-ToUNCPathname=Путања за инсталацију не сме бити у UNC облику. Ако покушавате да инсталирате програм на мрежу, мораћете претходно да мапирате мрежни диск.
-InvalidPath=Морате уписати пуну путању са обележјем диска; на пример:%n%nC:\APP%n%nили UNC путања у облику:%n%n\\server\shаre
-InvalidDrive=Диск или UNC путања коју сте изабрали не постоје или нису доступни. Молимо изаберите нешто друго.
+ToUNCPathname=Не могу да инсталирам програм у наведену фасциклу. Ако покушавате да га инсталирате на мрежи, прво ћете морати да мапирате мрежни диск.
+InvalidPath=Морате навести пуну путању с обележјем диска (нпр.%n%nC:\APP%n%nили путања у облику%n%n\\server\shаre)
+InvalidDrive=Диск који сте изабрали не постоји или није доступан. Изаберите неки други.
 DiskSpaceWarningTitle=Нема довољно простора на диску
-DiskSpaceWarning=Инсталација захтева најмање %1 KB слободног простора, а изабрани диск има само %2 KB на располагању.%n%nДа ли ипак желите да наставите?
-DirNameTooLong=Назив директоријума или путања су предугачки.
-InvalidDirName=Назив директоријума није исправан.
-BadDirName32=Називи директоријума не смеју имати било које од следећих слова:%n%n%1
-DirExistsTitle=Директоријум постоји
-DirExists=Директоријум:%n%n%1%n%nвећ постоји. Да ли ипак желите да програм инсталирате у њему?
-DirDoesntExistTitle=Директоријум не постоји
-DirDoesntExist=Директоријум:%n%n%1%n%nне постоји. Да ли желите да га направим?
+DiskSpaceWarning=Програм захтева најмање %1 kB слободног простора, а изабрани диск на располагању има само %2 kB.%n%nЖелите ли ипак да наставите?
+DirNameTooLong=Назив фасцикле или путања је предугачка.
+InvalidDirName=Назив фасцикле није исправан.
+BadDirName32=Назив фасцикле не сме садржати ништа од следећег:%n%n%1
+DirExistsTitle=Фасцикла већ постоји
+DirExists=Фасцикла:%n%n%1%n%nвећ постоји. Желите ли ипак да инсталирате програм у њу?
+DirDoesntExistTitle=Фасцикла не постоји
+DirDoesntExist=Фасцикла:%n%n%1%n%nне постоји. Желите ли да је направите?
 
 ; *** "Select Components" wizard page
-WizardSelectComponents=Изаберите компоненте
-SelectComponentsDesc=Које компоненте ћете инсталирати?
-SelectComponentsLabel2=Изаберите компоненте које желите да инсталирате; обришите компоненте које не желите да инсталирате. Притисните Даље када будете спремни да наставите.
+WizardSelectComponents=Одабир делова
+SelectComponentsDesc=Које делове желите да инсталирате?
+SelectComponentsLabel2=Изаберите делове које желите да инсталирате, а очистите оне које не желите. Кликните на „Даље“ да наставите.
 FullInstallation=Пуна инсталација
 ; if possible don't translate 'Compact' as 'Minimal' (I mean 'Minimal' in your language)
-CompactInstallation=Компактна инсталација
-CustomInstallation=Инсталација само жељених компоненти
-NoUninstallWarningTitle=Компоненте постоје
-NoUninstallWarning=Инсталација је открила да следеће компоненте већ постоје на Вашем рачунару:%n%n%1%n%nНеодабирање ових компоненти их неће уклонити.%n%nДа ли ипак желите да наставите?
-ComponentSize1=%1 KB
+CompactInstallation=Подразумевана инсталација
+CustomInstallation=Прилагођена инсталација
+NoUninstallWarningTitle=Делови већ постоје
+NoUninstallWarning=Следећи делови већ постоје на вашем рачунару:%n%n%1%n%nДештриклирање ових делова их неће уклонити.%n%nЖелите ли да наставите?
+ComponentSize1=%1 kB
 ComponentSize2=%1 MB
-ComponentsDiskSpaceMBLabel=Тренутно одабране ставке захтевају најмање [mb] MB простора на диску.
+ComponentsDiskSpaceMBLabel=Изабране ставке захтевају најмање [mb] MB слободног простора.
 
 ; *** "Select Additional Tasks" wizard page
-WizardSelectTasks=Изаберите додатне задатке
-SelectTasksDesc=Какве додатне задатке је још потребно обавити?
-SelectTasksLabel2=Изаберите додатне задатке које желите да Инсталација [name] обави, а затим притисните Даље.
+WizardSelectTasks=Одабир додатних задатака
+SelectTasksDesc=Изаберите неке додатне задатке.
+SelectTasksLabel2=Изаберите додатне задатке које желите да извршите при инсталирању програма [name] и кликните на „Даље“.
 
 ; *** "Select Start Menu Folder" wizard page
-WizardSelectProgramGroup=Изаберите директоријум за Старт мени
-SelectStartMenuFolderDesc=Где желите да инсталација постави пречице за програм?
-SelectStartMenuFolderLabel3=Инсталација ће поставити пречице за програм у следећем директоријуму Старт менија.
-SelectStartMenuFolderBrowseLabel=Да наставите, притисните Даље. Ако желите да изаберете неки други директоријум, притисните Изабери.
-MustEnterGroupName=Морате уписати назив директоријума.
-GroupNameTooLong=Назив директоријума или путања су предугачки.
-InvalidGroupName=Назив директоријума није исправан.
-BadGroupName=Назив директоријума не сме имати било које од следећих слова:%n%n%1
-NoProgramGroupCheck2=&Немој да правиш директоријум у Старт менију
+WizardSelectProgramGroup=Одабир фасцикле на менију „Старт“
+SelectStartMenuFolderDesc=Изаберите место на ком желите да поставите пречице.
+SelectStartMenuFolderLabel3=Инсталација ће поставити пречице програма у следећој фасцикли на менију „Старт“.
+SelectStartMenuFolderBrowseLabel=Кликните на „Даље“ да наставите. Ако желите да изаберете другу фасциклу, кликните на „Потражи…“.
+MustEnterGroupName=Морате навести назив фасцикле.
+GroupNameTooLong=Назив фасцикле или путања је предугачка.
+InvalidGroupName=Назив фасцикле није исправан.
+BadGroupName=Назив фасцикле не сме садржати ништа од следећег:%n%n%1
+NoProgramGroupCheck2=Н&е прави фасциклу у менију „Старт“
 
 ; *** "Ready to Install" wizard page
 WizardReady=Инсталација је спремна
-ReadyLabel1=Инсталација је спремна да постави [name] на Ваш рачунар.
-ReadyLabel2a=Притисните Инсталирај да наставите са инсталацијом, или притисните Назад ако желите да поново прегледате или промените нека подешавања.
-ReadyLabel2b=Притисните Инсталирај да наставите са инсталацијом.
-ReadyMemoUserInfo=Подаци о кориснику:
-ReadyMemoDir=Одредишна локација:
-ReadyMemoType=Тип инсталације:
-ReadyMemoComponents=Изабране компоненте:
-ReadyMemoGroup=Директоријум Старт менија:
-ReadyMemoTasks=Додатни послови:
+ReadyLabel1=Програм је спреман да инсталира [name] на ваш рачунар.
+ReadyLabel2a=Кликните на „Инсталирај“ да започнете инсталацију или „Назад“ да поново прегледате и промените поједине поставке.
+ReadyLabel2b=Кликните на „Инсталирај“ да започнете инсталацију.
+ReadyMemoUserInfo=Кориснички подаци:
+ReadyMemoDir=Одредишна фасцикла:
+ReadyMemoType=Врста инсталације:
+ReadyMemoComponents=Изабрани делови:
+ReadyMemoGroup=Фасцикла на менију „Старт“:
+ReadyMemoTasks=Додатни задаци:
 
 ; *** "Preparing to Install" wizard page
 WizardPreparing=Припрема за инсталацију
-PreparingDesc=Инсталација се припрема да постави [name] на Ваш рачунар.
-PreviousInstallNotCompleted=Инсталација/уклањање претходног програма није завршена. Потребно је да рестартујете Ваш рачунар да би се инсталација завршила.%n%nНакон рестартовања рачунара, покрените поново Инсталацију [name] да би сте је довршили.
-CannotContinue=Инсталација се не може наставити. Молимо притисните Одустани да изађете.
+PreparingDesc=Програм се припрема да инсталира [name] на ваш рачунар.
+PreviousInstallNotCompleted=Инсталација или уклањање претходног програма није завршено. Потребно је да поново покренете рачунар да би се инсталација завршила.%n%nНакон поновног покретања, отворите инсталацију и инсталирајте програм [name].
+CannotContinue=Не могу да наставим инсталирање. Кликните на „Откажи“ да изађете.
 
 ; *** "Installing" wizard page
 WizardInstalling=Инсталирање
-InstallingLabel=Молимо сачекајте док се [name] инсталира на Ваш рачунар.
+InstallingLabel=Сачекајте да се [name] инсталира на ваш рачунар.
 
 ; *** "Setup Completed" wizard page
-FinishedHeadingLabel=[name] - завршетак инсталације
-FinishedLabelNoIcons=Инсталација програма [name] на Ваш рачунар је завршена.
-FinishedLabel=Инсталација програма [name] на Ваш рачунар је завршена. Програм можете покренути преко постављених икона.
-ClickFinish=Притисните Завршетак да изађете.
-FinishedRestartLabel=Да би се инсталација [name] довршила, мора се рестартовати рачунар. Да ли желите да га рестартујете одмах?
-FinishedRestartMessage=Да би се инсталација [name] довршила, мора се рестартовати рачунар.%n%nДа ли желите да га рестартујете одмах?
-ShowReadmeCheck=Да, желим да погледам README датотеку
-YesRadio=&Да, рестартуј рачунар одмах
-NoRadio=&Не, рестартоваћу рачунар касније
+FinishedHeadingLabel=[name] – завршетак инсталације
+FinishedLabelNoIcons=Инсталирање програма [name] је завршено.
+FinishedLabel=Инсталирање програма [name] је завршено. Можете га покренути преко постављених икона.
+ClickFinish=Кликните на „Заврши“ да изађете.
+FinishedRestartLabel=Потребно је поновно покретање рачунара да би се инсталација завршила. Желите ли да га поново покренете?
+FinishedRestartMessage=Потребно је поновно покретање рачунара да би се инсталација завршила.%n%nЖелите ли да га поново покренете?
+ShowReadmeCheck=Да, желим да погледам текстуалну датотеку
+YesRadio=&Да, поново покрени рачунар
+NoRadio=&Не, касније ћу га покренути
 ; used for example as 'Run MyProg.exe'
-RunEntryExec=Покрени %1
+RunEntryExec=&Покрени %1
 ; used for example as 'View Readme.txt'
 RunEntryShellExec=Погледај %1
 
 ; *** "Setup Needs the Next Disk" stuff
-ChangeDiskTitle=Инсталацији је потребан наредни диск
-SelectDiskLabel2=Молимо ставите Диск %1 и притисните ОК.%n%nАко се датотеке на овом диску могу пронаћи у неком другом директоријуму него што је испод приказано, упишите одговарајућу путању или притисните Изабери.
+ChangeDiskTitle=Следећи диск
+SelectDiskLabel2=Убаците диск %1 и кликните на „У реду“.%n%nАко се датотеке на овом диску могу пронаћи у некој другој фасцикли, унесите одговарајућу путању или кликните на „Потражи…“.
 PathLabel=&Путања:
-FileNotInDir2=Датотека "%1" се не може пронаћи у "%2". Молимо ставите прави диск или изаберите други директоријум.
-SelectDirectoryLabel=Молимо изаберите локацију наредног диска.
+FileNotInDir2=Датотека „%1“ се не налази у „%2“. Убаците прави диск или изаберите другу фасциклу.
+SelectDirectoryLabel=Изаберите место следећег диска.
 
 ; *** Installation phase messages
-SetupAborted=Инсталација није завршена.%n%nМолимо исправите проблем и покрените Инсталацију поново.
-EntryAbortRetryIgnore=Притисните Retry да пробате поново, Ignore да наставите у сваком случају, или Abort да прекинете инсталацију.
+SetupAborted=Инсталација није завршена.%n%nИсправите проблем и покрените је поново.
+EntryAbortRetryIgnore=Кликните на „Покушај опет“ да поновите радњу, „Занемари“ да наставите у сваком случају или „Прекини“ да обуставите инсталацију.
 
 ; *** Installation status messages
-StatusCreateDirs=Прављење директоријума...
-StatusExtractFiles=Распакивање датотека...
-StatusCreateIcons=Постављање пречица...
-StatusCreateIniEntries=Постављање INI уписа...
-StatusCreateRegistryEntries=Постављање Registry уписа...
-StatusRegisterFiles=Пријављивање датотека...
-StatusSavingUninstall=Бележење података за деинсталацију...
-StatusRunProgram=Завршавање инсталације...
-StatusRollback=Поништавање извршених измена и враћање на претходно стање...
+StatusCreateDirs=Правим фасцикле…
+StatusExtractFiles=Распакујем датотеке…
+StatusCreateIcons=Постављам пречице…
+StatusCreateIniEntries=Постављам уносе INI…
+StatusCreateRegistryEntries=Постављам уносе у регистар…
+StatusRegisterFiles=Уписујем датотеке…
+StatusSavingUninstall=Чувам податке о уклањању…
+StatusRunProgram=Завршавам инсталацију…
+StatusRollback=Поништавам измене…
 
 ; *** Misc. errors
-ErrorInternal2=Интерна грешка: %1
-ErrorFunctionFailedNoCode=%1 није успело
-ErrorFunctionFailed=%1 није успело; код %2
-ErrorFunctionFailedWithMessage=%1 није успело; код %2.%n%3
-ErrorExecutingProgram=Није могуће покренути датотеку:%n%1
+ErrorInternal2=Унутрашња грешка: %1
+ErrorFunctionFailedNoCode=%1 неуспех
+ErrorFunctionFailed=%1 неуспех; код %2
+ErrorFunctionFailedWithMessage=%1 неуспех; код %2.%n%3
+ErrorExecutingProgram=Не могу да покренем датотеку:%n%1
 
 ; *** Registry errors
-ErrorRegOpenKey=Грешка при отварању Registry кључа:%n%1\%2
-ErrorRegCreateKey=Грешка при постављању Registry кључа:%n%1\%2
-ErrorRegWriteKey=Грешка при упису Registry кључа:%n%1\%2
+ErrorRegOpenKey=Грешка при отварању уноса у регистру:%n%1\%2
+ErrorRegCreateKey=Грешка при стварању уноса у регистру:%n%1\%2
+ErrorRegWriteKey=Грешка при уписивању уноса у регистар:%n%1\%2
 
 ; *** INI errors
-ErrorIniEntry=Грешка при упису у INI датотеку "%1".
+ErrorIniEntry=Грешка при стварању уноса INI у датотеци „%1“.
 
 ; *** File copying errors
-FileAbortRetryIgnore=Притисните Retry да пробате поново, Ignore да прескочите ову датотеку (није препоручљиво), или Abort да прекинете инсталацију.
-FileAbortRetryIgnore2=Притисните Retry да пробате поново, Ignore да наставите у сваком случају (није препоручљиво), или Abort да прекинете инсталацију.
-SourceIsCorrupted=Изворна датотека је неисправна
-SourceDoesntExist=Изворна датотека "%1" не постоји
-ExistingFileReadOnly=Постојећа датотека је означена 'само за читање'.%n%nПритисните Retry да уклоните атрибут 'само за читање' и пробате поново, Ignore да прескочите ову датотеку, или Abort да прекинете инсталацију.
-ErrorReadingExistingDest=Дошло је до грешке приликом покушаја читања следеће датотеке:
-FileExists=Датотека већ постоји.%n%nДа ли желите да је Инсталација замени?
-ExistingFileNewer=Постојећа датотека је новија од оне коју Инсталација треба да постави. Препоручује се да задржите постојећу датотеку.%n%nДа ли желите да сачувате постојећу датотеку?
-ErrorChangingAttr=Дошло је до грешке приликом покушаја промене атрибута за следећу датотеку:
-ErrorCreatingTemp=Дошло је до грешке приликом покушаја прављења датотеке у одредишном директоријуму:
-ErrorReadingSource=Дошло је до грешке приликом покушаја читања изворне датотеке:
-ErrorCopying=Дошло је до грешке приликом покушаја копирања датотеке:
-ErrorReplacingExistingFile=Дошло је до грешке приликом покушаја замене постојеће датотеке:
-ErrorRestartReplace=RestartReplace није успео:
-ErrorRenamingTemp=Dошло је до грешке приликом покушаја промене назива датотеке у одредишном директоријуму:
-ErrorRegisterServer=Није могуће регистровати DLL/OCX: %1
-ErrorRegSvr32Failed=RegSvr32 није успешно извршен, грешка %1
-ErrorRegisterTypeLib=Није успело регистровање 'type librаry': %1
+FileAbortRetryIgnore=Кликните на „Покушај опет“ да поновите радњу, „Занемари“ да прескочите датотеку (не препоручује се) или „Прекини“ да обуставите инсталацију.
+FileAbortRetryIgnore2=Кликните на „Покушај опет“ да поновите радњу, „Занемари“ да наставите у сваком случају (не препоручује се) или „Прекини“ да обуставите инсталацију.
+SourceIsCorrupted=Изворна датотека је оштећена
+SourceDoesntExist=Изворна датотека „%1“ не постоји
+ExistingFileReadOnly=Постојећа датотека је само за читање.%n%nКликните на „Покушај опет“ да уклоните особину „само за читање“ и поновите радњу, „Занемари“ да прескочите датотеку или „Прекини“ да обуставите инсталацију.
+ErrorReadingExistingDest=Дошло је до грешке при покушају читања постојеће датотеке:
+FileExists=Датотека већ постоји.%n%nЖелите ли да је замените?
+ExistingFileNewer=Постојећа датотека је новија од оне коју треба поставити. Препоручује се да задржите постојећу датотеку.%n%nЖелите ли то да урадим?
+ErrorChangingAttr=Дошло је до грешке при измени особине следеће датотеке:
+ErrorCreatingTemp=Дошло је до грешке при стварању датотеке у одредишној фасцикли:
+ErrorReadingSource=Дошло је до грешке при читању изворне датотеке:
+ErrorCopying=Дошло је до грешке при умножавању датотеке:
+ErrorReplacingExistingFile=Дошло је до грешке при замени постојеће датотеке:
+ErrorRestartReplace=Не могу да заменим:
+ErrorRenamingTemp=Дошло је до грешке при преименовању датотеке у одредишној фасцикли:
+ErrorRegisterServer=Не могу да упишем DLL/OCX: %1
+ErrorRegSvr32Failed=RegSvr32 није успео. Грешка %1
+ErrorRegisterTypeLib=Не могу да упишем библиотеку типова: %1
 
 ; *** Post-installation errors
-ErrorOpeningReadme=Дошло је до грешке приликом отварања README датотеке.
-ErrorRestartingComputer=Инсталација није успела да рестартује рачунар. Молимо Вас урадите то сами.
+ErrorOpeningReadme=Дошло је до грешке при отварању текстуалне датотеке.
+ErrorRestartingComputer=Не могу да поново покренем рачунар. Урадите то сами.
 
 ; *** Uninstaller messages
-UninstallNotFound=Датотека "%1" не постоји. Деинсталирање није успело.
-UninstallOpenError=Датотека "%1" се не може отворити. Деинсталирање није успело
-UninstallUnsupportedVer=Деинсталациона Log датотека "%1" је у облику који не препознаје ова верзија деинсталера. Деинсталирање није успело
-UninstallUnknownEntry=Непознат упис (%1) се појавио у деинсталационој Log датотеци
-ConfirmUninstall=Да ли сте сигурни да желите да потпуно уклоните %1 и све његове компоненте?
-UninstallOnlyOnWin64=Овај програм се може деинсталирати само на 64-битном Windows-у.
-OnlyAdminCanUninstall=Овај програм може деинсталирати само корисник са администраторским правима.
-UninstallStatusLabel=Молимо сачекајте док %1 не буде уклоњен са Вашег рачунара.
-UninstalledAll=%1 jе успешно уклоњен са Вашег рачунара.
-UninstalledMost=%1 деинсталација је завршена.%n%nНеки делови се нису могли уклонити. Они се могу уклонити ручно.
-UninstalledAndNeedsRestart=Да довршите деинсталацију %1, Ваш рачунар се мора рестартовати.%n%nДа ли желите да га рестартујете одмах?
-UninstallDataCorrupted="%1" датотека је оштећена. Деинсталирање није успело
+UninstallNotFound=Датотека „%1“ не постоји. Не могу да уклоним програм.
+UninstallOpenError=Датотека „%1“ се не може отворити. Не могу да уклоним програм
+UninstallUnsupportedVer=Извештај „%1“ је у непрепознатљивом формату. Не могу да уклоним програм
+UninstallUnknownEntry=Непознат унос (%1) се појавио у извештају уклањања
+ConfirmUninstall=Желите ли да уклоните %1 и све његове делове?
+UninstallOnlyOnWin64=Програм се може уклонити само на 64-битном виндоусу.
+OnlyAdminCanUninstall=Програм може уклонити само корисник с администраторским правима.
+UninstallStatusLabel=Сачекајте да се %1 уклони с вашег рачунара.
+UninstalledAll=%1 је уклоњен с вашег рачунара.
+UninstalledMost=%1 је уклоњен.%n%nНеке делове ипак морати сами обрисати.
+UninstalledAndNeedsRestart=Потребно је поновно покретање рачунара да би се инсталација завршила.%n%nЖелите ли да поново покренете рачунар?
+UninstallDataCorrupted=Датотека „%1“ је оштећена. Не могу да уклоним програм
 
 ; *** Uninstallation phase messages
-ConfirmDeleteSharedFileTitle=Обриши заједничку датотеку?
-ConfirmDeleteSharedFile2=Систем показује да следеће заједничке датотеке више не користи ни један програм. Да ли желите да деинсталација уклони ову заједничку датотеку?%n%nАко неки програми и даље користе ову датотеку, можда неће исправно функционисати. Ако нисте сигурни, изаберите No. Остављање ове датотеке неће проузроковати никакву штету систему.
+ConfirmDeleteSharedFileTitle=Брисање дељене датотеке
+ConfirmDeleteSharedFile2=Систем је пријавио да следећу дељену датотеку више не користи ниједан програм. Желите ли да је уклоните?%n%nАко неким програмима и даље треба ова датотека а она је обрисана, ти програми можда неће исправно радити. Ако нисте сигурни шта да радите, кликните на „Не“. Остављање датотеке на диску неће проузроковати никакву штету.
 SharedFileNameLabel=Назив датотеке:
 SharedFileLocationLabel=Путања:
-WizardUninstalling=Стање деинсталације
-StatusUninstalling=Деинсталирање %1...
+WizardUninstalling=Стање уклањања
+StatusUninstalling=Уклањам %1…
 
 ; The custom messages below aren't used by Setup itself, but if you make
 ; use of them in your scripts, you'll want to translate them.
 
 [CustomMessages]
 
-NameAndVersion=%1 верзија %2
+NameAndVersion=%1 издање %2
 AdditionalIcons=Додатне иконе:
-CreateDesktopIcon=Постави &Desktop икону
-CreateQuickLaunchIcon=Постави &Quick Launch икону
-ProgramOnTheWeb=%1 на Интернету
-UninstallProgram=Деинсталација %1
+CreateDesktopIcon=&Постави икону на радну површину
+CreateQuickLaunchIcon=П&остави икону на траку за брзо покретање
+ProgramOnTheWeb=%1 на интернету
+UninstallProgram=Уклони %1
 LaunchProgram=Покрени %1
-AssocFileExtension=&Придружи %1 са %2 типом датотеке
-AssocingFileExtension=Придруживање %1 са %2 типом датотеке...
+AssocFileExtension=&Повежи %1 с форматом %2
+AssocingFileExtension=Повезивање %1 с форматом %2…
