@@ -167,9 +167,9 @@ Source: {#bindir}\Icons\SpellCheck.png;            DestDir: {app}\Icons;        
 Source: {#bindir}\Icons\VideoToogle.png;           DestDir: {app}\Icons;                              Flags: ignoreversion; Components: main
 Source: {#bindir}\Icons\VisualSync.png;            DestDir: {app}\Icons;                              Flags: ignoreversion; Components: main
 Source: {#bindir}\Icons\WaveFormToogle.png;        DestDir: {app}\Icons;                              Flags: ignoreversion; Components: main
-Source: ..\Tesseract\leptonlib.dll;                DestDir: {app}\Tesseract;                          Flags: ignoreversion;                                       Components: main
-Source: ..\Tesseract\tessdata\eng.traineddata;     DestDir: {app}\Tesseract\tessdata;                 Flags: ignoreversion;                                       Components: main
-Source: ..\Tesseract\tesseract.exe;                DestDir: {app}\Tesseract;                          Flags: ignoreversion;                                       Components: main
+Source: ..\Tesseract\leptonlib.dll;                DestDir: {app}\Tesseract;                          Flags: ignoreversion; Components: main
+Source: ..\Tesseract\tessdata\eng.traineddata;     DestDir: {app}\Tesseract\tessdata;                 Flags: ignoreversion; Components: main
+Source: ..\Tesseract\tesseract.exe;                DestDir: {app}\Tesseract;                          Flags: ignoreversion; Components: main
 
 ; Uncomment the language files when they are ready to be distributed again
 #ifdef localize
@@ -179,7 +179,7 @@ Source: {#bindir}\Languages\da-DK.xml;             DestDir: {app}\Languages;    
 ;Source: {#bindir}\Languages\es-ES.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
 Source: {#bindir}\Languages\eu-ES.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
 Source: {#bindir}\Languages\fr-FR.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
-;Source: {#bindir}\Languages\hu-HU.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
+Source: {#bindir}\Languages\hu-HU.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
 ;Source: {#bindir}\Languages\it-IT.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
 ;Source: {#bindir}\Languages\ja-JP.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
 Source: {#bindir}\Languages\pl-PL.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
@@ -244,10 +244,9 @@ Type: files;      Name: {app}\uninstall.ico
 Type: files;      Name: {app}\Languages\sr-Cyrl-CS.xml
 Type: files;      Name: {app}\Languages\sr-Latn-CS.xml
 
-; The following language files are incompatible with this version of SE so remove them when it's an upgrade.
-; If they are updated remove this code
+; The following language files are incompatible with this SE version,
+; so remove them when we are upgrading. If they are updated remove this code.
 Type: files;      Name: {app}\Languages\es-ES.xml;      Check: IsComponentSelected('translations') AND IsUpdate()
-Type: files;      Name: {app}\Languages\hu-HU.xml;      Check: IsComponentSelected('translations') AND IsUpdate()
 Type: files;      Name: {app}\Languages\it-IT.xml;      Check: IsComponentSelected('translations') AND IsUpdate()
 Type: files;      Name: {app}\Languages\ja-JP.xml;      Check: IsComponentSelected('translations') AND IsUpdate()
 
@@ -457,7 +456,8 @@ begin
         end;
       end;
     end;
-      is_update := RegKeyExists(HKLM, 'SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\SubtitleEdit_is1');
+
+    is_update := RegKeyExists(HKLM, 'SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\SubtitleEdit_is1');
 
 end;
 
