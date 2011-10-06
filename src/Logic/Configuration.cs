@@ -97,21 +97,65 @@ namespace Nikse.SubtitleEdit.Logic
             {
                 if (Instance._dataDir == null)
                 {
-                    if (Utilities.IsRunningOnLinux())
+                    if (Utilities.IsRunningOnLinux() || Utilities.IsRunningOnMac())
                     {
                         Instance._dataDir = BaseDirectory;
                     }
                     else
-                    {                        
-                        string appDataPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Subtitle Edit");
-                        if (File.Exists(Path.Combine(BaseDirectory, "unins000.dat")) && Directory.Exists(appDataPath))
-                            Instance._dataDir = appDataPath + Path.DirectorySeparatorChar;
-                        else
+                    {   
+                        string installerPath = GetInstallerPath();
+                        string pf = System.Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles).TrimEnd('\\');
+                        string appDataRoamingPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Subtitle Edit");
+                        if (installerPath != null && BaseDirectory.ToLower().StartsWith(installerPath.ToLower().TrimEnd('\\')))
+                        {
+                            if (Directory.Exists(appDataRoamingPath))
+                            {
+                                Instance._dataDir = appDataRoamingPath + Path.DirectorySeparatorChar;
+                            }
+                            else
+                            {
+                                Instance._dataDir = BaseDirectory;
+                                System.Windows.Forms.MessageBox.Show("Please re-install Subtitle Edit (installer version)");
+                                System.Windows.Forms.Application.ExitThread();
+                            }
+                        }
+                        else if (BaseDirectory.ToLower().StartsWith(pf.ToLower()) && Environment.OSVersion.Version.Major >= 6 ) // 6 == Vista/Win2008Server/Win7
+                        { // windows vista and newer does not like programs writing to PF
                             Instance._dataDir = BaseDirectory;
+                            System.Windows.Forms.MessageBox.Show("Subtitle Edit portable should not be installed in " + pf);
+                            System.Windows.Forms.Application.ExitThread();
+                        }
+                        else
+                        {
+                            Instance._dataDir = BaseDirectory;
+                        }
                     }
                 }
                 return Instance._dataDir;
             }
+        }
+
+        private static string GetInstallerPath()
+        {
+            string installerPath = null;
+            var key = Microsoft.Win32.Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\SubtitleEdit_is1");
+            if (key != null)
+            {
+                string temp = (string)key.GetValue("InstallLocation");
+                if (temp != null && Directory.Exists(temp))
+                    installerPath = temp;
+            }
+            if (installerPath == null)
+            {
+                key = Microsoft.Win32.Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\SubtitleEdit_is1");
+                if (key != null)
+                {
+                    string temp = (string)key.GetValue("InstallLocation");
+                    if (temp != null && Directory.Exists(temp))
+                        installerPath = temp;
+                }
+            }
+            return installerPath;
         }
 
         public static string BaseDirectory
