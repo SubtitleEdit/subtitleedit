@@ -1,4 +1,4 @@
-<OCRFixReplaceList>
+﻿<OCRFixReplaceList>
   <WholeWords>
     <Word from="/'ve" to="I've" />
     <Word from="\/\/e're" to="We're" />
@@ -997,11 +997,6 @@
     <Word from="OId" to="Old" />
     <Word from="CIark" to="Clark" />
     <Word from="thatgoes" to="that goes" />
-    <Word from="llte" to="lite" />
-    <Word from="lnte" to="inte" />
-    <Word from="flra" to="fira" />
-    <Word from="vlll" to="vill" />
-    <Word from="dlg" to="dig" />
     <Word from="BIood" to="Blood" />
     <Word from="underyour" to="under your" />
     <Word from="BIess" to="Bless" />
@@ -1164,6 +1159,67 @@
     <Word from="can'tletgo" to="can't let go" />
     <Word from="needyou" to="need you" />
     <Word from="Chequeredlove" to="Chequered love" />
+    <Word from="kiokflip" to="kickflip" />
+    <Word from="VVe've" to="We've" />
+    <Word from="VVe'II" to="We'll" />
+    <Word from="oousin's" to="cousin's" />
+    <Word from="Viva/di's" to="Vivaldi's" />
+    <Word from="oouldn't" to="couldn't" />
+    <Word from="desperate/»y" to="desperately" />
+    <Word from="VVhat" to="What" />
+    <Word from="LVly" to="Lily" />
+    <Word from="Ol&lt;" to="Ole" />
+    <Word from="ANSWER/NG" to="ANSWERING" />
+    <Word from="MACH/NE" to="MACHINE" />
+    <Word from="nojurisdiction" to="no jurisdiction" />
+    <Word from="Itjust" to="It just" />
+    <Word from="g0in9" to="going" />
+    <Word from="tnat's" to="that's" />
+    <Word from="Tnat's" to="That's" />
+    <Word from="SPEAK/NG" to="SPEAKING" />
+    <Word from="ca/I" to="call" />
+    <Word from="AIVIBULANCE" to="AMBULANCE" />
+    <Word from="We//" to="Well" />
+    <Word from="ANNOUNC/NG" to="ANNOUNCING" />
+    <Word from="LVly" to="Lily" />
+    <Word from="LVly" to="My" />
+    <Word from="VVhen" to="When" />
+    <Word from="oan'tjust" to="can't just" />
+    <Word from="whatjust" to="what just" />
+    <Word from="thejudges" to="the judges" />
+    <Word from="so/id" to="solid" />
+    <Word from="v\/Hoops" to="Whoops" />
+    <Word from="it'S" to="it's" />
+    <Word from="Mexioo" to="Mexico" />
+    <Word from="VvHooPING" to="WHOOPING" />
+    <Word from="SCREAlvllNG" to="SCREAMING" />
+    <Word from="OKGY" to="Okay" />
+    <Word from="HONMNG" to="HONKING" />
+    <Word from="LNAuDll3LE" to="INAUDIBLE" />
+    <Word from="SoBl3lNG" to="SOBBING" />
+    <Word from="Igotyou" to="I got you" />
+    <Word from="slGHING" to="SIGHING" />
+    <Word from="Putyourhand" to="Put your hand" />
+    <Word from="jalapeno" to="jalapeño" />
+    <Word from="BLOVVS" to="BLOWS" />
+    <Word from="sCREAlvllNG" to="SCREAMING" />
+    <Word from="lNAuDll3LE" to="INAUDIBLE" />
+    <Word from="/ook" to="look" />
+    <Word from="LNDlsTINcT" to="INDISTINCT" />
+    <Word from="CHATTERWG" to="CHATTERING" />
+    <Word from="yOu" to="you" />
+    <Word from="Fnends" to="Fiends" />
+    <Word from="lT'S" to="IT'S" />
+    <Word from="Nlalina" to="Malina" />
+    <Word from="VvHooPING" to="WHOOPING" />
+    <Word from="vvHooPING" to="WHOOPING" />
+    <Word from="Thejudges" to="The judges" />
+    <Word from="Wil/" to="Will" />
+    <Word from="vvay" to="way" />
+    <Word from="be//y" to="belly" />
+    <Word from="/'m" to="I'm" />
+    <Word from="Nlornin" to="Mornin" />
+    <Word from="novv" to="now" />
   </WholeWords>
   <PartialWordsAlways>
     <!-- Will be used to check words not in dictionary -->
@@ -1173,6 +1229,13 @@
     <WordPart from="lVI" to="M" />
     <WordPart from="IVl" to="M" />
     <WordPart from="lVl" to="M" />
+    <WordPart from="IVl" to="M" />
+    <WordPart from="I\/I" to="M" />
+    <WordPart from="I\/I" to="M" />
+    <WordPart from="l\/I" to="M" />
+    <WordPart from="I\/l" to="M" />
+    <WordPart from="l\/l" to="M" />
+    <WordPart from="I\/l" to="M" />
   </PartialWordsAlways>
   <PartialWords>
     <!-- Will be used to check words not in dictionary -->
@@ -1265,6 +1328,8 @@
     <LinePart from="you' ve " to="you've " />
     <LinePart from="Wal-I\/Iart" to="Wal-Mart" />
     <LinePart from=" I']I " to=" I'll " />
+    <LinePart from="REPEA TING " to="REPEATING " />
+    <LinePart from="Mr_ " to="Mr. " />
   </PartialLines>
   <BeginLines>
     <Beginning from="l... I " to="I... I " />
