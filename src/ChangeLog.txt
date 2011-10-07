@@ -1,7 +1,7 @@
 Subtitle Edit Changelog
 
 
-3.2 (?th September 2011)
+3.2 (8th October 2011)
  * NEW:
    * Can now display spectrogram (and/or waveform)
    * Subtitle formats: D-Cinema, Cavena890, Timed Text 1.0, Captionate, Flash xml,
@@ -21,6 +21,7 @@ Subtitle Edit Changelog
    * Now remembers undocked controls pos/size
    * New customizable shortcut for Adjust mode: Set current subtitle end time at video pos,
      keep duration, and go to next sub (Shift+End, thx Bavo)
+   * Can now import subtitles from mp4/mv4 files
  * IMPROVED:
    * OCR unknown words highlighting now works better (thx sialivi)
    * OCR image compare UI improved with "Edit last char" and much more (thx Zoltan)
