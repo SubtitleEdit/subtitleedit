@@ -1,9 +1,9 @@
 ﻿using System;
+using System.Drawing;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Enums;
-using System.Drawing;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -12,6 +12,7 @@ namespace Nikse.SubtitleEdit.Forms
         Regex _regEx;
         int _left;
         int _top;
+        bool _userAction = false;
 
         public ReplaceDialog()
         {
@@ -64,9 +65,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void FormReplaceDialog_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Escape)
-            {
                 DialogResult = DialogResult.Cancel;
-            }
         }
 
         internal void Initialize(string selectedText, FindReplaceDialogHelper findHelper)
@@ -115,10 +114,12 @@ namespace Nikse.SubtitleEdit.Forms
             else if (radioButtonNormal.Checked)
             {
                 DialogResult = DialogResult.OK;
+                _userAction = true;
             }
             else if (radioButtonCaseSensitive.Checked)
             {
                 DialogResult = DialogResult.OK;
+                _userAction = true;
             }
             else if (radioButtonRegEx.Checked)
             {
@@ -126,6 +127,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     _regEx = new Regex(textBoxFind.Text, RegexOptions.Compiled);
                     DialogResult = DialogResult.OK;
+                    _userAction = true;
                 }
                 catch (Exception exception)
                 {
@@ -189,6 +191,12 @@ namespace Nikse.SubtitleEdit.Forms
                 IntPtr Hicon = bitmap.GetHicon();
                 this.Icon = System.Drawing.Icon.FromHandle(Hicon);
             }
+        }
+
+        private void ReplaceDialog_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (!_userAction)
+                DialogResult = DialogResult.Cancel;
         }
     }
 }
