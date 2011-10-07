@@ -122,8 +122,11 @@ namespace Nikse.SubtitleEdit.Logic
                         else if (BaseDirectory.ToLower().StartsWith(pf.ToLower()) && Environment.OSVersion.Version.Major >= 6 ) // 6 == Vista/Win2008Server/Win7
                         { // windows vista and newer does not like programs writing to PF
                             Instance._dataDir = BaseDirectory;
-                            System.Windows.Forms.MessageBox.Show("Subtitle Edit portable should not be installed in " + pf);
-                            System.Windows.Forms.Application.ExitThread();
+                            //if (Configuration.Settings.General.ShowOriginalAsPreviewIfAvailable)
+                            //{
+                            //    System.Windows.Forms.MessageBox.Show("Warning: Subtitle Edit portable should not be installed in " + pf);
+                            //    Configuration.Settings.General.ShowOriginalAsPreviewIfAvailable = false;
+                            //}
                         }
                         else
                         {
