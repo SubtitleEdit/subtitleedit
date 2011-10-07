@@ -4,8 +4,8 @@ Subtitle Edit Changelog
 3.2 (8th October 2011)
  * NEW:
    * Can now display spectrogram (and/or waveform)
-   * Subtitle formats: D-Cinema, Cavena890, Timed Text 1.0, Captionate, Flash xml,
-     YouTube annotations and more
+   * Subtitle formats: D-Cinema, Cavena890, Timed Text 1.0, Captionate, 
+     Flash xml, YouTube annotations and more
    * Most important shortcuts in Options -> Settings
    * Export bdn-xml/images + import/ocr bdn-xml/images
    * Added "Point sync via other subtitle" (thx ioannis)
@@ -13,33 +13,42 @@ Subtitle Edit Changelog
    * Tools -> Show original text in audio/video previews (thx vmb)
    * Command line conversion between subtitle formats
      (Example: subtitleedit /convert *.srt microdvd - thx Carl)
-   * Subtitle preview font size (below video player) is now available in Options -> Settings
+   * Subtitle preview font size (below video player) is now available in 
+     Options -> Settings
    * Edit -> Select all
-   * List view context menu: Copy as text to clipboard (you can also use ctrl+c/ctrl+v)
+   * List view context menu: Copy as text to clipboard 
+     (you can also use ctrl+c/ctrl+v)
    * Text box context menu -> Split line at cursor position (thx DrJackson)
    * Import+ocr of blu-ray sup files inside matroska files
    * Now remembers undocked controls pos/size
-   * New customizable shortcut for Adjust mode: Set current subtitle end time at video pos,
-     keep duration, and go to next sub (Shift+End, thx Bavo)
+   * New customizable shortcut for Adjust mode: 
+     Set current subtitle end time 
+     at video pos, keep duration, and go to next sub (Shift+End, thx Bavo)
    * Can now import subtitles from mp4/mv4 files
  * IMPROVED:
    * OCR unknown words highlighting now works better (thx sialivi)
-   * OCR image compare UI improved with "Edit last char" and much more (thx Zoltan)
+   * OCR image compare UI improved with "Edit last char" and much more 
+     (thx Zoltan)
    * OCR image compare: Compare more effective + word breaking improved
-   * Merge short lines can now also merge lines ending with ".", "?", or "!" (optional)
+   * Merge short lines can now also merge lines ending with ".", "?", 
+     or "!" (optional)
    * Can now read Adobe Encore files starting with line numbers (thx Pier)
-   * Advanced Sub Station Alpha (and SSA) now keeps original styles (thx Rebecca)
+   * Advanced Sub Station Alpha (and SSA) now keeps original styles 
+     (thx Rebecca)
    * Improved Remove text for HI (thx sialivi/aMvEL)
    * Undo now also works for original subtitle (thx Trottel)
  * FIXED:
    * Adjust all times did not work for MicroDvd (thx Wolf)
    * Fixed a bug in VobSub parser which could cause scrabbled images
-   * Fixed a bug in VobSub parser so it no longer ignores custom background color
+   * Fixed a bug in VobSub parser so it no longer ignores custom 
+     background color
    * Fixed too much cropping for VobSub pictures
    * Now removes empty Unicode white spaces from Google translate
    * Crash when entering invalid text in source view (thx Frédéric)
-   * Fixed a few bugs in DVD Architect format + added another two new variants (thx Jacob)
-   * Fixed incorrect line-break in Microsoft Translate in last part of sub (thx Jacob)
+   * Fixed a few bugs in DVD Architect format + added another two 
+     new variants (thx Jacob)
+   * Fixed incorrect line-break in Microsoft Translate in last part of 
+     sub (thx Jacob)
    * Fixed incorrect undo when working with waveform (thx Trottel/vmb)
 
 
