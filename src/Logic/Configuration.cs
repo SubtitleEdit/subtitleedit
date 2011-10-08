@@ -102,7 +102,7 @@ namespace Nikse.SubtitleEdit.Logic
                         Instance._dataDir = BaseDirectory;
                     }
                     else
-                    {   
+                    {
                         string installerPath = GetInstallerPath();
                         string pf = System.Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles).TrimEnd('\\');
                         string appDataRoamingPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Subtitle Edit");

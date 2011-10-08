@@ -36,7 +36,7 @@ namespace Nikse.SubtitleEdit.Logic
 
             info = TryReadVideoInfoViaMp4(fileName);
             if (info.Success)
-                return info;          
+                return info;
 
             return new VideoInfo { VideoCodec = "Unknown" };
         }
@@ -530,7 +530,7 @@ namespace Nikse.SubtitleEdit.Logic
 
         /// <summary>
         /// Will try to determine if buffer is utf-8 encoded or not.
-        /// If any non-utf8 sequences are found then false is returned, if no utf8 multibytes sequences are found then false is returned.       
+        /// If any non-utf8 sequences are found then false is returned, if no utf8 multibytes sequences are found then false is returned.
         /// </summary>
         private static bool IsUtf8(byte[] buffer)
         {
@@ -567,7 +567,7 @@ namespace Nikse.SubtitleEdit.Logic
                 i++;
             }
             if (utf8Count == 0)
-                return false; // not utf-8            
+                return false; // not utf-8
 
             return true;
         }
@@ -1096,7 +1096,7 @@ namespace Nikse.SubtitleEdit.Logic
             sb.Append("*.mp4;"); // mp4 video files (can contain subtitles)
             sb.Append("*.m4v;"); // mp4 video files (can contain subtitles)
             sb.Append("*.mkv;"); // matroska files (can contain subtitles)
-            sb.Append("*.sup;"); // blu-ray sup 
+            sb.Append("*.sup;"); // blu-ray sup
             sb.Append("*.son"); // SON text/tif
             sb.Append("|" + Configuration.Settings.Language.General.AllFiles + "|*.*");
             return sb.ToString();
@@ -1295,7 +1295,7 @@ namespace Nikse.SubtitleEdit.Logic
                     return true;
                 }
                 catch (ArgumentException)
-                { // BAD PATTERN: Syntax error                 
+                { // BAD PATTERN: Syntax error
                 }
             }
             return false;
@@ -2047,7 +2047,7 @@ namespace Nikse.SubtitleEdit.Logic
                             break;
                         case "":
                             sb.Append("");
-                            break;                           
+                            break;
                         default:
                             code = code.TrimStart('#');
                             if (code.StartsWith("x") || code.StartsWith("X"))
@@ -2060,7 +2060,7 @@ namespace Nikse.SubtitleEdit.Logic
                                     sb.Append(Convert.ToChar(value));
                                 }
                                 catch
-                                { 
+                                {
                                 }
                             }
                             else if (IsInteger(code))
@@ -2100,7 +2100,7 @@ namespace Nikse.SubtitleEdit.Logic
 
         internal static bool IsWordInUserPhrases(List<string> userPhraseList, int index, string[] words)
         {
-            string current = words[index];            
+            string current = words[index];
             string prev = "-";
             if (index > 0)
                 prev = words[index-1];
@@ -2169,6 +2169,6 @@ namespace Nikse.SubtitleEdit.Logic
 
             return resultKeys;
         }
-        
+
     }
 }
