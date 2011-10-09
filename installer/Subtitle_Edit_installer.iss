@@ -26,7 +26,7 @@
   #error Update your Inno Setup version
 #endif
 
-#define installer_build_number "21"
+#define installer_build_number "22"
 
 #define app_copyright "Copyright © 2001-2011, Nikse"
 #define VerMajor
@@ -221,8 +221,8 @@ Name: {userappdata}\Microsoft\Internet Explorer\Quick Launch\Subtitle Edit; File
 
 
 [InstallDelete]
-Type: files;      Name: {userdesktop}\Subtitle Edit.lnk;   Check: NOT IsTaskSelected('desktopicon\user')   AND IsUpdate()
-Type: files;      Name: {commondesktop}\Subtitle Edit.lnk; Check: NOT IsTaskSelected('desktopicon\common') AND IsUpdate()
+Type: files;      Name: {userdesktop}\Subtitle Edit.lnk;   Check: NOT IsTaskSelected('desktopicon\user')   AND IsUpgrade()
+Type: files;      Name: {commondesktop}\Subtitle Edit.lnk; Check: NOT IsTaskSelected('desktopicon\common') AND IsUpgrade()
 
 Type: files;      Name: {userappdata}\Subtitle Edit\Settings.xml; Tasks: reset_settings
 
@@ -246,28 +246,28 @@ Type: files;      Name: {app}\Languages\sr-Latn-CS.xml
 
 ; The following language files are incompatible with this SE version,
 ; so remove them when we are upgrading. If they are updated remove this code.
-Type: files;      Name: {app}\Languages\es-ES.xml;      Check: IsComponentSelected('translations') AND IsUpdate()
-Type: files;      Name: {app}\Languages\it-IT.xml;      Check: IsComponentSelected('translations') AND IsUpdate()
-Type: files;      Name: {app}\Languages\ja-JP.xml;      Check: IsComponentSelected('translations') AND IsUpdate()
+Type: files;      Name: {app}\Languages\es-ES.xml;      Check: IsComponentSelected('translations') AND IsUpgrade()
+Type: files;      Name: {app}\Languages\it-IT.xml;      Check: IsComponentSelected('translations') AND IsUpgrade()
+Type: files;      Name: {app}\Languages\ja-JP.xml;      Check: IsComponentSelected('translations') AND IsUpgrade()
 
 ; Cleanup language files if it's an upgrade and the translations are not selected
-Type: files;      Name: {app}\Languages\bg-BG.xml;      Check: NOT IsComponentSelected('translations') AND IsUpdate()
-Type: files;      Name: {app}\Languages\cs-CZ.xml;      Check: NOT IsComponentSelected('translations') AND IsUpdate()
-Type: files;      Name: {app}\Languages\da-DK.xml;      Check: NOT IsComponentSelected('translations') AND IsUpdate()
-Type: files;      Name: {app}\Languages\es-ES.xml;      Check: NOT IsComponentSelected('translations') AND IsUpdate()
-Type: files;      Name: {app}\Languages\eu-ES.xml;      Check: NOT IsComponentSelected('translations') AND IsUpdate()
-Type: files;      Name: {app}\Languages\fr-FR.xml;      Check: NOT IsComponentSelected('translations') AND IsUpdate()
-Type: files;      Name: {app}\Languages\hu-HU.xml;      Check: NOT IsComponentSelected('translations') AND IsUpdate()
-Type: files;      Name: {app}\Languages\it-IT.xml;      Check: NOT IsComponentSelected('translations') AND IsUpdate()
-Type: files;      Name: {app}\Languages\ja-JP.xml;      Check: NOT IsComponentSelected('translations') AND IsUpdate()
-Type: files;      Name: {app}\Languages\pl-PL.xml;      Check: NOT IsComponentSelected('translations') AND IsUpdate()
-Type: files;      Name: {app}\Languages\ro-RO.xml;      Check: NOT IsComponentSelected('translations') AND IsUpdate()
-Type: files;      Name: {app}\Languages\ru-RU.xml;      Check: NOT IsComponentSelected('translations') AND IsUpdate()
-Type: files;      Name: {app}\Languages\sr-Cyrl-RS.xml; Check: NOT IsComponentSelected('translations') AND IsUpdate()
-Type: files;      Name: {app}\Languages\sr-Latn-RS.xml; Check: NOT IsComponentSelected('translations') AND IsUpdate()
-Type: files;      Name: {app}\Languages\sv-SE.xml;      Check: NOT IsComponentSelected('translations') AND IsUpdate()
-Type: files;      Name: {app}\Languages\zh-CHS.xml;     Check: NOT IsComponentSelected('translations') AND IsUpdate()
-Type: dirifempty; Name: {app}\Languages;                Check: NOT IsComponentSelected('translations') AND IsUpdate()
+Type: files;      Name: {app}\Languages\bg-BG.xml;      Check: NOT IsComponentSelected('translations') AND IsUpgrade()
+Type: files;      Name: {app}\Languages\cs-CZ.xml;      Check: NOT IsComponentSelected('translations') AND IsUpgrade()
+Type: files;      Name: {app}\Languages\da-DK.xml;      Check: NOT IsComponentSelected('translations') AND IsUpgrade()
+Type: files;      Name: {app}\Languages\es-ES.xml;      Check: NOT IsComponentSelected('translations') AND IsUpgrade()
+Type: files;      Name: {app}\Languages\eu-ES.xml;      Check: NOT IsComponentSelected('translations') AND IsUpgrade()
+Type: files;      Name: {app}\Languages\fr-FR.xml;      Check: NOT IsComponentSelected('translations') AND IsUpgrade()
+Type: files;      Name: {app}\Languages\hu-HU.xml;      Check: NOT IsComponentSelected('translations') AND IsUpgrade()
+Type: files;      Name: {app}\Languages\it-IT.xml;      Check: NOT IsComponentSelected('translations') AND IsUpgrade()
+Type: files;      Name: {app}\Languages\ja-JP.xml;      Check: NOT IsComponentSelected('translations') AND IsUpgrade()
+Type: files;      Name: {app}\Languages\pl-PL.xml;      Check: NOT IsComponentSelected('translations') AND IsUpgrade()
+Type: files;      Name: {app}\Languages\ro-RO.xml;      Check: NOT IsComponentSelected('translations') AND IsUpgrade()
+Type: files;      Name: {app}\Languages\ru-RU.xml;      Check: NOT IsComponentSelected('translations') AND IsUpgrade()
+Type: files;      Name: {app}\Languages\sr-Cyrl-RS.xml; Check: NOT IsComponentSelected('translations') AND IsUpgrade()
+Type: files;      Name: {app}\Languages\sr-Latn-RS.xml; Check: NOT IsComponentSelected('translations') AND IsUpgrade()
+Type: files;      Name: {app}\Languages\sv-SE.xml;      Check: NOT IsComponentSelected('translations') AND IsUpgrade()
+Type: files;      Name: {app}\Languages\zh-CHS.xml;     Check: NOT IsComponentSelected('translations') AND IsUpgrade()
+Type: dirifempty; Name: {app}\Languages;                Check: NOT IsComponentSelected('translations') AND IsUpgrade()
 #endif
 
 Type: files;      Name: {app}\tessnet2_32.dll
@@ -297,9 +297,6 @@ Filename: {win}\Microsoft.NET\Framework\v2.0.50727\ngen.exe; Parameters: "uninst
 [Code]
 // Global variables and constants
 const installer_mutex_name = 'subtitle_edit_setup_mutex';
-var
-  is_update: Boolean;
-
 
 // General functions
 function IsModuleLoaded(modulename: AnsiString ): Boolean;
@@ -354,19 +351,23 @@ begin
 end;
 
 
-function IsUpdate(): Boolean;
+function IsUpgrade(): Boolean;
+var
+  sPrevPath: String;
 begin
-  Result := is_update;
+  sPrevPath := WizardForm.PrevAppDir;
+  Result := (sPrevPath <> '');
 end;
 
 
 function ShouldSkipPage(PageID: Integer): Boolean;
 begin
-  if IsUpdate then begin
-    Case PageID of
-      // Hide the license page
-      wpLicense: Result := True;
-    else
+  if IsUpgrade() then begin
+    // Hide the license page
+    if PageID = wpLicense then begin
+      Result := True;
+    end
+    else begin
       Result := False;
     end;
   end;
@@ -399,7 +400,7 @@ begin
   // When uninstalling ask user to delete Subtitle Edit's dictionaries and settings
   // based on whether these files exist only
   if CurUninstallStep = usUninstall then begin
-    if SettingsExistCheck OR DictionariesExistCheck then begin
+    if SettingsExistCheck() OR DictionariesExistCheck() then begin
       if SuppressibleMsgBox(ExpandConstant('{cm:msg_DeleteSettings}'), mbConfirmation, MB_YESNO OR MB_DEFBUTTON2, IDNO) = IDYES then begin
         CleanUpDictionaries;
         DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Settings.xml'));
@@ -456,9 +457,6 @@ begin
         end;
       end;
     end;
-
-    is_update := RegKeyExists(HKLM, 'SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\SubtitleEdit_is1');
-
 end;
 
 
