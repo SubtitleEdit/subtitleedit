@@ -3,7 +3,7 @@
   <General>
     <Title>Subtitle Edit</Title>
     <Version>3.2</Version>
-    <TranslatedBy>Itzultzailea Xabier Aramendi</TranslatedBy>
+    <TranslatedBy>Itzultzailea: Xabier Aramendi</TranslatedBy>
     <CultureName>eu-ES</CultureName>
     <OK>&amp;Ongi</OK>
     <Cancel>E&amp;zeztatu</Cancel>
@@ -38,8 +38,8 @@
     <VideoEncodingX>Bideo kodeaketa: {0}</VideoEncodingX>
     <SingleLineLengths>Lerro bakarraren luzera : </SingleLineLengths>
     <TotalLengthX>Luzera guztira: {0}</TotalLengthX>
-    <TotalLengthXSplitLine>Luzera guztira: {0} (banaketa lerroa!)</TotalLengthXSplitLine>
-    <SplitLine>Banaketa lerroa!</SplitLine>
+    <TotalLengthXSplitLine>Luzera guztira: {0} (banandu lerroa!)</TotalLengthXSplitLine>
+    <SplitLine>Banandu lerroa!</SplitLine>
     <NotAvailable>E/E</NotAvailable>
     <OverlapPreviousLineX>Gainjarrita aurr. lerroari ({0:#,##0.###})</OverlapPreviousLineX>
     <OverlapX>Gainjarrita ({0:#,##0.###})</OverlapX>
@@ -75,7 +75,7 @@ Emaila: mailto:nikse.dk@gmail.com</AboutText1>
   </About>
   <AddToNames>
     <Title>Gehitu izenak/etab. zerrenda</Title>
-    <Description>Gehitu izen/zarata zerrendara</Description>
+    <Description>Gehitu izen/etab. zerrendara</Description>
   </AddToNames>
   <AddWaveForm>
     <Title>Sortu uhinerako datuak</Title>
@@ -115,7 +115,7 @@ Emaila: mailto:nikse.dk@gmail.com</AboutText1>
     <Title>Aldatu azala</Title>
     <ChangeCasingTo>Aldatu azala hona</ChangeCasingTo>
     <NormalCasing>Azal arrunta. Esaldiak hizki larriz hasten dira.</NormalCasing>
-    <FixNamesCasing>Zuzendu azaleko izenak (Hiztegiak\IzenakEtab.xml bidez)</FixNamesCasing>
+    <FixNamesCasing>Zuzendu azaleko izenak (Hiztegiak\Izenak Etab.xml bidez)</FixNamesCasing>
     <FixOnlyNamesCasing>Zuzendu bakarrik azaleko izenak (Hiztegiak\Izenak Etab.xml bidez)</FixOnlyNamesCasing>
     <OnlyChangeAllUppercaseLines>Aldatu bakarrik hizki larrizko lerroak.</OnlyChangeAllUppercaseLines>
     <AllUppercase>HIZKI LARRI GUZTIAK</AllUppercase>
@@ -410,7 +410,7 @@ Emaila: mailto:nikse.dk@gmail.com</AboutText1>
   </GoogleOrMicrosoftTranslate>
   <GoToLine>
     <Title>Joan azpidatzi zenbakira</Title>
-    <XIsNotAValidNumber>{0} ez da baliozko zenbakia</XIsNotAValidNumber>
+    <XIsNotAValidNumber>{0} Ez da baliozko zenbakia</XIsNotAValidNumber>
   </GoToLine>
   <ImportText>
     <Title>Inportatu idazki laua</Title>
@@ -442,14 +442,14 @@ Emaila: mailto:nikse.dk@gmail.com</AboutText1>
         <Reopen>&amp;Birrireki</Reopen>
         <Save>&amp;Gorde</Save>
         <SaveAs>Gorde &amp;honela...</SaveAs>
-        <OpenOriginal>Ireki jatorrizko azpidatzaia (itzultzaile eran)...</OpenOriginal>
+        <OpenOriginal>Ireki jatorrizko azpidatzia (itzultzaile eran)...</OpenOriginal>
         <SaveOriginal>Gorde jatorrizko azpidatzia</SaveOriginal>
         <CloseOriginal>Itxi jatorrizko azpidatzia</CloseOriginal>
         <OpenContainingFolder>Ireki edukiaren agiritegia</OpenContainingFolder>
         <Compare>&amp;Alderatu...</Compare>
         <ImportOcrFromDvd>Inportatu/OCR azpidatzia vob/ifo (dvd)-tik...</ImportOcrFromDvd>
         <ImportOcrVobSubSubtitle>Inportatu/OCR VobSub (sub/idx) azpidatzia...</ImportOcrVobSubSubtitle>
-        <ImportBluRaySupFile>Inportatu/OCR Blu-ray azp. agiria...</ImportBluRaySupFile>
+        <ImportBluRaySupFile>Inportatu/OCR Blu-ray azpidatzi agiria...</ImportBluRaySupFile>
         <ImportSubtitleFromMatroskaFile>Inportatu azpidatzia Matroska agiritik...</ImportSubtitleFromMatroskaFile>
         <ImportSubtitleWithManualChosenEncoding>Inportatu azpidatzia eskuzko kodeaketa hautapenarekin...</ImportSubtitleWithManualChosenEncoding>
         <ImportText>Inportatu idatzi laua...</ImportText>
@@ -463,7 +463,7 @@ Emaila: mailto:nikse.dk@gmail.com</AboutText1>
       </File>
       <Edit>
         <Title>Editatu</Title>
-        <ShowUndoHistory>Erakutsi historia (ezegiteko)</ShowUndoHistory>
+        <ShowUndoHistory>Erakutsi historia (desegiteko)</ShowUndoHistory>
         <InsertUnicodeSymbol>Sartu unicode ikurra</InsertUnicodeSymbol>
         <Find>&amp;Bilatu</Find>
         <FindNext>Bilatu &amp;hurrengoa</FindNext>
@@ -485,7 +485,7 @@ Emaila: mailto:nikse.dk@gmail.com</AboutText1>
         <SortBy>Antolatu honela</SortBy>
         <TextAlphabetically>Idatzia - A-tik Z-ra</TextAlphabetically>
         <TextSingleLineMaximumLength>Idatzia - Lerro bakar baten geh. luzera</TextSingleLineMaximumLength>
-        <TextTotalLength>Idatzia - Luzera gutira</TextTotalLength>
+        <TextTotalLength>Idatzia - Luzera guztira</TextTotalLength>
         <TextNumberOfLines>Idatzia - Lerro zenbatekoa</TextNumberOfLines>
         <ShowOriginalTextInAudioAndVideoPreview>Erakutsi jatorrizko idazkia audio/bideo aurreikuspenetan</ShowOriginalTextInAudioAndVideoPreview>
         <MakeNewEmptyTranslationFromCurrentSubtitle>Egin itzulpen huts berri bat uneko azpidatzitik</MakeNewEmptyTranslationFromCurrentSubtitle>
@@ -508,7 +508,7 @@ Emaila: mailto:nikse.dk@gmail.com</AboutText1>
         <SpellCheck>&amp;Idaz egiaztapena...</SpellCheck>
         <FindDoubleWords>Bilatu hitz bikoitzak</FindDoubleWords>
         <FindDoubleLines>Bilatu lerro bikoitzak</FindDoubleLines>
-        <GetDictionaries>Eskuratu hitztegiak...</GetDictionaries>
+        <GetDictionaries>Eskuratu hiztegiak...</GetDictionaries>
         <AddToNamesEtcList>Gehitu hitza izen/etab. zerrendatik</AddToNamesEtcList>
       </SpellCheck>
       <Synchronization>
@@ -549,7 +549,7 @@ Emaila: mailto:nikse.dk@gmail.com</AboutText1>
         <SaveAs>Gorde honela</SaveAs>
         <Find>Bilatu</Find>
         <Replace>Ordeztu</Replace>
-        <VisualSync>Ikusi aldiberetzea</VisualSync>
+        <VisualSync>Ikus aldiberetzea</VisualSync>
         <SpellCheck>Idaz egiaztapena</SpellCheck>
         <Settings>Ezarpenak</Settings>
         <Help>Laguntza</Help>
@@ -737,9 +737,9 @@ Jarraitu?</SubtitleAppendPrompt>
     <BeforeSwedishToDanishTranslation>Suedieratik Danierarako itzulpenaren aurretik</BeforeSwedishToDanishTranslation>
     <TranslationFromSwedishToDanishComplete>Suedieratik Danierarako itzulpena osatuta</TranslationFromSwedishToDanishComplete>
     <TranslationFromSwedishToDanishFailed>Suedieratik Danierarako itzulpenak huts egin du</TranslationFromSwedishToDanishFailed>
-    <BeforeUndo>Ezegin aurretik</BeforeUndo>
-    <UndoPerformed>Ezeginketa eginda</UndoPerformed>
-    <NothingToUndo>Ezer ez ezegiteko</NothingToUndo>
+    <BeforeUndo>Desgin aurretik</BeforeUndo>
+    <UndoPerformed>Desegitea eginda</UndoPerformed>
+    <NothingToUndo>Ezer ez desegiteko</NothingToUndo>
     <InvalidLanguageNameX>Hizkuntz izen baliogabea: {0}</InvalidLanguageNameX>
     <UnableToChangeLanguage>Ezin da hizkuntza aldatu!</UnableToChangeLanguage>
     <NumberOfCorrectedWords>Hitz zuzenen zenbatekoa: {0}</NumberOfCorrectedWords>
@@ -834,7 +834,7 @@ Jarraitu?</SubtitleAppendPrompt>
     <NetworkMessage>Mezu berria: {0} ({1}): {2}</NetworkMessage>
     <NetworkUpdate>Lerro eguneratuta: {0} ({1}): Aurkib={2}, Idatzia={3}</NetworkUpdate>
     <NetworkInsert>Lerro gehituta: {0} ({1}): Aurkib={2}, Idatzia={3}</NetworkInsert>
-    <NetworkDelete>Lerri ezabatuta: {0} ({1}): Aurkib={2}</NetworkDelete>
+    <NetworkDelete>Lerro ezabatuta: {0} ({1}): Aurkib={2}</NetworkDelete>
     <NetworkNewUser>Erabiltzaile berria: {0} ({1})</NetworkNewUser>
     <NetworkByeUser>Hartugabe {0} ({1})</NetworkByeUser>
     <NetworkUnableToConnectToServer>Ezin da zerbitzariarekin elkarketatu: {0}</NetworkUnableToConnectToServer>
@@ -866,9 +866,9 @@ Jarraitu?</SubtitleAppendPrompt>
     <FindWhat>Bilatu</FindWhat>
     <ReplaceWith>Ordeztu honekin</ReplaceWith>
     <Normal>Arrunta</Normal>
-    <CaseSensitive>Hizki larri eta xehe artean</CaseSensitive>
+    <CaseSensitive>Hizki larri-xehe artean</CaseSensitive>
     <RegularExpression>Esaera arrunta</RegularExpression>
-    <LineNumber>Lerro zenb</LineNumber>
+    <LineNumber>Lerro zenbakia</LineNumber>
     <Before>Aurretik</Before>
     <After>Ondoren</After>
     <LinesFoundX>Lerro aurkituta: {0}</LinesFoundX>
@@ -928,7 +928,7 @@ dezaketen saio berrira (elkarlana)</Information>
     <ReplaceWith>Ordeztu honekin</ReplaceWith>
     <Find>&amp;Bilatu</Find>
     <Replace>&amp;Ordeztu</Replace>
-    <ReplaceAll>Ordeztu &amp;dena</ReplaceAll>
+    <ReplaceAll>Ordeztu &amp;denak</ReplaceAll>
   </ReplaceDialog>
   <SetMinimumDisplayTimeBetweenParagraphs>
     <Title>Ezarri erakus denbora gutxiena esaldi artean</Title>
@@ -949,7 +949,7 @@ dezaketen saio berrira (elkarlana)</Information>
     <General>Orokorra</General>
     <Toolbar>Tresnabarra</Toolbar>
     <VideoPlayer>Bideo irakurgailua</VideoPlayer>
-    <WaveformAndSpectrogram>Uhinera/argiltzaera</WaveformAndSpectrogram>
+    <WaveformAndSpectrogram>Uhinera/argilitzaera</WaveformAndSpectrogram>
     <Tools>Tresnak</Tools>
     <WordLists>Hitz zerrendak</WordLists>
     <SsaStyle>SSA Estiloa</SsaStyle>
@@ -1007,7 +1007,7 @@ dezaketen saio berrira (elkarlana)</Information>
     <ShowStopButton>Erakutsi gelditu botoia</ShowStopButton>
     <DefaultVolume>Berezko bolumena:</DefaultVolume>
     <VolumeNotes>0 soinu gabe da, 100 bolumen handienean</VolumeNotes>
-    <PreviewFontSize>Azpidatzi aurreikuspen hizki neurria</PreviewFontSize>
+    <PreviewFontSize>Azpidatzi aurreikuspen hizki neurria:</PreviewFontSize>
     <MainWindowVideoControls>Leiho nagusiko bideo aginteak</MainWindowVideoControls>
     <CustomSearchTextAndUrl>Norbererarako idatzi eta url bilaketa</CustomSearchTextAndUrl>
     <WaveFormAppearance>Uhinera itxurapena</WaveFormAppearance>
@@ -1043,7 +1043,7 @@ dezaketen saio berrira (elkarlana)</Information>
     <WordAlreadyExists>Hitza jadanik badago!</WordAlreadyExists>
     <WordNotFound>Hitza ez da aurkitu</WordNotFound>
     <RemoveX>Kendu {0}?</RemoveX>
-    <CannotUpdateNamesEtcOnline>Ezin da eguneratu IzenakEtab.xml online!</CannotUpdateNamesEtcOnline>
+    <CannotUpdateNamesEtcOnline>Ezin da eguneratu Izenak Etab.xml online!</CannotUpdateNamesEtcOnline>
     <ProxyServerSettings>Proxy zerbitzari ezarpenak</ProxyServerSettings>
     <ProxyAddress>Proxy helbidea:</ProxyAddress>
     <ProxyAuthentication>Egiaztapena</ProxyAuthentication>
@@ -1059,7 +1059,7 @@ dezaketen saio berrira (elkarlana)</Information>
     <MergeLinesShorterThan>Batu hau baino labur. diren lerroak:</MergeLinesShorterThan>
     <MusicSymbol>Musika ikurrak:</MusicSymbol>
     <MusicSymbolsToReplace>Musika ikurrak ordezteko (tarte batez bananduta)</MusicSymbolsToReplace>
-    <FixCommonOcrErrorsUseHardcodedRules>Zuzendu OCR akats arruntak - baita ere erabili kodegogor arauak</FixCommonOcrErrorsUseHardcodedRules>
+    <FixCommonOcrErrorsUseHardcodedRules>Zuzendu OCR akats arruntak - erabili baita ere kodegogor arauak</FixCommonOcrErrorsUseHardcodedRules>
     <Shortcuts>Lasterbideak</Shortcuts>
     <Shortcut>Lasterbidea</Shortcut>
     <Control>Agintea</Control>
@@ -1097,10 +1097,10 @@ dezaketen saio berrira (elkarlana)</Information>
     <Language>Hizkuntza</Language>
     <Change>Aldatu</Change>
     <ChangeAll>Aldatu dena</ChangeAll>
-    <SkipOnce>Ahaztu &amp;bat</SkipOnce>
-    <SkipAll>&amp;Ahaztu dena</SkipAll>
+    <SkipOnce>Jauzi &amp;bat</SkipOnce>
+    <SkipAll>&amp;Jauzi dena</SkipAll>
     <AddToUserDictionary>Gehitu erabiltzaile hiztegira</AddToUserDictionary>
-    <AddToNamesAndIgnoreList>Gehitu izen/zarata zerrendara (hizki larri eta xehe artekoa)</AddToNamesAndIgnoreList>
+    <AddToNamesAndIgnoreList>Geh izen/etab. zerr. (hizki larri-xehe artekoa)</AddToNamesAndIgnoreList>
     <Abort>Utzi</Abort>
     <Use>Erabili</Use>
     <UseAlways>&amp;Erabili betik</UseAlways>
@@ -1120,8 +1120,8 @@ dezaketen saio berrira (elkarlana)</Information>
     <LineMaximumLength>Lerroaren gehienezko luzera</LineMaximumLength>
     <LineContinuationBeginEndStrings>Kate hasiera/amaiera lerroak</LineContinuationBeginEndStrings>
     <NumberOfSplits>Banantze zenbatekoa: {0}</NumberOfSplits>
-    <LongestSingleLineIsXAtY>Lerro bakar luzeenaren luzera da {0} lerro honetan {1}</LongestSingleLineIsXAtY>
-    <LongestLineIsXAtY>Lerro luzeenaren luzera da {0} lerro honetan {1}</LongestLineIsXAtY>
+    <LongestSingleLineIsXAtY>Lerro bakar luzeenaren luzera da {0}  Lerro honetan {1}</LongestSingleLineIsXAtY>
+    <LongestLineIsXAtY>Lerro luzeenaren luzera da {0}  Lerro honetan {1}</LongestLineIsXAtY>
   </SplitLongLines>
   <SplitSubtitle>
     <Title>Banadu azpidatzia</Title>
@@ -1137,7 +1137,7 @@ dezaketen saio berrira (elkarlana)</Information>
     <UnableToSaveFileX>Ezinda gorde {0}</UnableToSaveFileX>
   </SplitSubtitle>
   <StartNumberingFrom>
-    <Title>Hasi zenbakiketa hemendik...</Title>
+    <Title>Hasi zenbakitzea hemendik...</Title>
     <StartFromNumber>Hasi zenbaki honetatik:</StartFromNumber>
     <PleaseEnterAValidNumber>Gehiago, mesedez sartu zenbaki bat</PleaseEnterAValidNumber>
   </StartNumberingFrom>
@@ -1148,8 +1148,8 @@ dezaketen saio berrira (elkarlana)</Information>
     <SetSyncPoint>Ezarri aldiberetze gunea</SetSyncPoint>
     <RemoveSyncPoint>Kendu aldiberetze gunea</RemoveSyncPoint>
     <SyncPointsX>Aldiberetze gunea: {0}</SyncPointsX>
-    <Info>Aldiberetze gune batek kokopena zehaztuko du, aldiberetze gune bik edo gehiagok kokapena eta abiadura zehaztuko dute</Info>
-    <ApplySync>Apply</ApplySync>
+    <Info>Aldiberetze gune batek kokapena zehaztuko du, aldiberetze gune bik edo gehiagok kokapena eta abiadura zehaztuko dute</Info>
+    <ApplySync>Ezarri</ApplySync>
   </PointSync>
   <UnknownSubtitle>
     <Title>Azpidatzi mota ezezaguna</Title>
@@ -1164,7 +1164,7 @@ dezaketen saio berrira (elkarlana)</Information>
     <ThreeSecondsBack>&lt; 3 seg</ThreeSecondsBack>
     <PlayXSecondsAndBack>Irakurri {0} segundu eta atzera</PlayXSecondsAndBack>
     <FindText>Bilatu idazkia</FindText>
-    <GoToSubPosition>Joan azpi kokap.</GoToSubPosition>
+    <GoToSubPosition>Joan azp.</GoToSubPosition>
     <KeepChangesTitle>Aldaketak gorde?</KeepChangesTitle>
     <KeepChangesMessage>Azpidatzian aldaketak 'Ikus aldiberetzearekin' egin dira.</KeepChangesMessage>
     <SynchronizationDone>Aldiberetzea eginda!</SynchronizationDone>
@@ -1198,7 +1198,7 @@ dezaketen saio berrira (elkarlana)</Information>
     <Edit>Editatu</Edit>
     <StartOcr>Hasi OCR-a</StartOcr>
     <Stop>Gelditu</Stop>
-    <StartOcrFrom>Hasi OCR-a azpidatzi zenbaki honetatik:</StartOcrFrom>
+    <StartOcrFrom>Hasi OCR-a azp zenbaki honetatik:</StartOcrFrom>
     <LoadingVobSubImages>VobSub irudiak igotzen...</LoadingVobSubImages>
     <SubtitleImage>Azpidatzi irudia</SubtitleImage>
     <SubtitleText>Azpidatzi idazkia</SubtitleText>
@@ -1215,7 +1215,7 @@ dezaketen saio berrira (elkarlana)</Information>
     <UnknownWords>Hitz ezezagunak</UnknownWords>
     <OcrAutoCorrectionSpellchecking>OCR berez zuzenketa / idaz-egiaztapena</OcrAutoCorrectionSpellchecking>
     <FixOcrErrors>Zuzendu OCR akatsak</FixOcrErrors>
-    <ImportTextWithMatchingTimeCodes>Inportatu idazkia bat datoezen denbora kodeekin...</ImportTextWithMatchingTimeCodes>
+    <ImportTextWithMatchingTimeCodes>Inportatu idazkia bat datozen denbora kodeekin...</ImportTextWithMatchingTimeCodes>
     <SaveSubtitleImageAs>Gorde azpidatzi irudia honela...</SaveSubtitleImageAs>
     <SaveAllSubtitleImagesAsBdnXml>Gorde irudi guztiak (png/bdn xml)...</SaveAllSubtitleImagesAsBdnXml>
     <SaveAllSubtitleImagesWithHtml>Gorde irudi guztiak html aurkibidearekin...</SaveAllSubtitleImagesWithHtml>
@@ -1263,7 +1263,7 @@ dezaketen saio berrira (elkarlana)</Information>
     <AddParagraphHere>Gehitu idazkia hemen</AddParagraphHere>
     <DeleteParagraph>Ezabatu idazkia</DeleteParagraph>
     <Split>Banandu</Split>
-    <SplitAtCursor>Banandu kursorean</SplitAtCursor>
+    <SplitAtCursor>Banandu kurtsorean</SplitAtCursor>
     <MergeWithPrevious>Alderatu aurrekoarekin</MergeWithPrevious>
     <MergeWithNext>Alderatu hurrengoarekin</MergeWithNext>
     <PlaySelection>Irakurri hautapena</PlaySelection>
