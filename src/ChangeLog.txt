@@ -39,7 +39,7 @@ Subtitle Edit Changelog
    * Undo now also works for original subtitle (thx Trottel)
  * FIXED:
    * Adjust all times did not work for MicroDvd (thx Wolf)
-   * Fixed a bug in VobSub parser which could cause scrabbled images
+   * Fixed a bug in VobSub parser which could cause scrambled images
    * Fixed a bug in VobSub parser so it no longer ignores custom 
      background color
    * Fixed too much cropping for VobSub pictures
