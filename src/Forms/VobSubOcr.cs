@@ -2204,10 +2204,13 @@ namespace Nikse.SubtitleEdit.Forms
                     string tesseractName = culture.ThreeLetterISOLanguageName;
                     if (culture.LCID == 0x4 && !File.Exists(dir + Path.DirectorySeparatorChar + tesseractName + ".traineddata"))
                         tesseractName = "chi_sim";
+                    if (culture.Name == "zh-CHT" && !File.Exists(dir + Path.DirectorySeparatorChar + tesseractName + ".traineddata"))
+                        tesseractName = "chi_tra";
                     string trainDataFileName = dir + Path.DirectorySeparatorChar + tesseractName + ".traineddata";
                     if (!list.Contains(culture.ThreeLetterISOLanguageName) && File.Exists(trainDataFileName))
                     {
-                        list.Add(culture.ThreeLetterISOLanguageName);
+                        if (culture.ThreeLetterISOLanguageName != "zho")
+                            list.Add(culture.ThreeLetterISOLanguageName);
                         comboBoxTesseractLanguages.Items.Add(new TesseractLanguage { Id = tesseractName, Text = culture.EnglishName });
                     }
                 }
