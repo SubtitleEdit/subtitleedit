@@ -32,10 +32,12 @@ namespace Nikse.SubtitleEdit.Logic
         private Type _wordApplicationType;
         private Type _wordDocumentType;
         IntPtr _mainHandle;
+        int _languageId = 1033; // english
 
-        public WordSpellChecker(Main main)
+        public WordSpellChecker(Main main, string languageId)
         {
             _mainHandle = main.Handle;
+            SetLanguageId(languageId);
 
             _wordApplicationType = System.Type.GetTypeFromProgID("Word.Application");
             _wordApplication = Activator.CreateInstance(_wordApplicationType);
@@ -44,6 +46,19 @@ namespace Nikse.SubtitleEdit.Logic
             _wordApplicationType.InvokeMember("WindowState", BindingFlags.SetProperty, null, _wordApplication, new object[] { wdWindowStateNormal });
             _wordApplicationType.InvokeMember("Top", BindingFlags.SetProperty, null, _wordApplication, new object[] { -5000 }); // hide window - it's a hack
             Application.DoEvents();
+        }
+
+        private void SetLanguageId(string languageId)
+        {
+            try
+            {
+                System.Globalization.CultureInfo ci = new System.Globalization.CultureInfo(languageId);
+                _languageId = ci.LCID;
+            }
+            catch
+            {
+                _languageId = System.Globalization.CultureInfo.CurrentUICulture.LCID;
+            }
         }
 
         public void NewDocument()
@@ -92,6 +107,9 @@ namespace Nikse.SubtitleEdit.Logic
             object words = _wordDocumentType.InvokeMember("Words", BindingFlags.GetProperty, null, _wordDocument, null);
             object range = words.GetType().InvokeMember("First", BindingFlags.GetProperty, null, words, null);
             range.GetType().InvokeMember("InsertBefore", BindingFlags.InvokeMethod, null, range, new Object[] { text });
+
+            // set language...
+            range.GetType().InvokeMember("LanguageId", BindingFlags.SetProperty, null, range, new object[] { _languageId });
 
             // spell check error count
             object spellingErrors = _wordDocumentType.InvokeMember("SpellingErrors", BindingFlags.GetProperty, null, _wordDocument, null);
