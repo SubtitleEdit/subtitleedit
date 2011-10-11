@@ -167,9 +167,22 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         }
                     }
                     string start = node.Attributes["begin"].InnerText;
-                    string end = node.Attributes["end"].InnerText;
+                    string end;
+                    if (node.Attributes["end"] != null)
+                    {
+                        end = node.Attributes["end"].InnerText;
+                        subtitle.Paragraphs.Add(new Paragraph(GetTimeCode(start), GetTimeCode(end), pText.ToString()));
+                    }
+                    else if (node.Attributes["dur"] != null)
+                    {
+                        TimeCode duration = GetTimeCode(node.Attributes["dur"].InnerText);
+                        TimeCode startTime = GetTimeCode(start);
+                        TimeCode endTime = new TimeCode(TimeSpan.FromMilliseconds(startTime.TotalMilliseconds + duration.TotalMilliseconds));
+                        subtitle.Paragraphs.Add(new Paragraph(startTime, endTime, pText.ToString()));
+                    }
 
-                    subtitle.Paragraphs.Add(new Paragraph(GetTimeCode(start),GetTimeCode(end), pText.ToString()));
+
+                    
                 }
                 catch (Exception ex)
                 {
