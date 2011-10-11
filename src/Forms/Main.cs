@@ -3644,7 +3644,7 @@ namespace Nikse.SubtitleEdit.Forms
             int totalLinesChanged = 0;
             try
             {
-                wordSpellChecker = new WordSpellChecker(this);
+                wordSpellChecker = new WordSpellChecker(this, Utilities.AutoDetectGoogleLanguage(_subtitle));
                 wordSpellChecker.NewDocument();
                 Application.DoEvents();
             }
@@ -6432,13 +6432,18 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
-            if (e.Modifiers == Keys.Alt && e.KeyCode == Keys.Insert)
+            if (e.Modifiers == Keys.Shift && e.KeyCode == Keys.ShiftKey)
+                return;
+
+            bool inListView = tabControlSubtitle.SelectedIndex == TabControlListView;
+
+            if (e.Modifiers == Keys.Alt && e.KeyCode == Keys.Insert && inListView)
             {
                 InsertAfter();
                 e.SuppressKeyPress = true;
                 textBoxListViewText.Focus();
             }
-            else if (e.Shift && e.KeyCode == Keys.Insert)
+            else if (e.Modifiers == (Keys.Shift | Keys.Control) && e.KeyCode == Keys.Insert && inListView)
             {
                 InsertBefore();
                 e.SuppressKeyPress = true;
@@ -6891,7 +6896,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void SubtitleListview1_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.KeyCode == Keys.C && e.Control) //Ctrl+c = Copy to clipboard
+            if (e.KeyCode == Keys.C && e.Modifiers == Keys.Control) //Ctrl+c = Copy to clipboard
             {
                 Subtitle tmp = new Subtitle();
                 foreach (int i in SubtitleListview1.SelectedIndices)
@@ -6906,7 +6911,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 e.SuppressKeyPress = true;
             }
-            else if (e.KeyCode == Keys.V && e.Control) //Ctrl+vPaste from clipboard
+            else if (e.KeyCode == Keys.V && e.Modifiers == Keys.Control) //Ctrl+vPaste from clipboard
             {
                 if (Clipboard.ContainsText())
                 {
@@ -6938,7 +6943,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 e.SuppressKeyPress = true;
             }
-            else if (e.KeyCode == Keys.X && e.Control) //Ctrl+X = Cut to clipboard
+            else if (e.KeyCode == Keys.X && e.Modifiers == Keys.Control) //Ctrl+X = Cut to clipboard
             {
                 Subtitle tmp = new Subtitle();
                 foreach (int i in SubtitleListview1.SelectedIndices)
@@ -6951,13 +6956,13 @@ namespace Nikse.SubtitleEdit.Forms
                 _cutText = tmp.ToText(new SubRip());
                 ToolStripMenuItemDeleteClick(null, null);
             }
-            else if (e.KeyCode == Keys.A && e.Control) //SelectAll
+            else if (e.KeyCode == Keys.A && e.Modifiers == Keys.Control) //SelectAll
             {
                 foreach (ListViewItem item in SubtitleListview1.Items)
                     item.Selected = true;
                 e.SuppressKeyPress = true;
             }
-            else if (e.KeyCode == Keys.D && e.Control) //SelectFirstSelectedItemOnly
+            else if (e.KeyCode == Keys.D && e.Modifiers == Keys.Control) //SelectFirstSelectedItemOnly
             {
                 if (SubtitleListview1.SelectedItems.Count > 0)
                 {
@@ -6976,7 +6981,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 ToolStripMenuItemDeleteClick(null, null);
             }
-            else if (e.Shift && e.KeyCode == Keys.Insert)
+            else if (e.Modifiers == Keys.Shift && e.KeyCode == Keys.Insert)
             {
                 InsertBefore();
                 e.SuppressKeyPress = true;
@@ -6986,7 +6991,7 @@ namespace Nikse.SubtitleEdit.Forms
                 InsertAfter();
                 e.SuppressKeyPress = true;
             }
-            else if (e.Shift && e.Control && e.KeyCode == Keys.I) //InverseSelection
+            else if (e.Modifiers == (Keys.Shift | Keys.Control) && e.KeyCode == Keys.I) //InverseSelection
             {
                 foreach (ListViewItem item in SubtitleListview1.Items)
                     item.Selected = !item.Selected;
