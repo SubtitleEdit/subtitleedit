@@ -132,7 +132,10 @@ namespace Nikse.SubtitleEdit.Logic
                             lower = StrippedText.ToLower();
                         }
                     }
-                    start = lower.IndexOf(name.ToLower(), start +3);
+                    if (start + 3 > lower.Length)
+                        start = lower.Length + 1;
+                    else
+                        start = lower.IndexOf(name.ToLower(), start +3);
                 }
             }
 
