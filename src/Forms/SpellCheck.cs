@@ -30,6 +30,8 @@ namespace Nikse.SubtitleEdit.Forms
         List<string> _namesEtcListUppercase = new List<string>();
         List<string> _namesEtcListWithApostrophe = new List<string>();
         List<string> _skipAllList = new List<string>();
+        List<string> _wordsWithDashesOrPeriods = new List<string>(); 
+
         Dictionary<string, string> _changeAllDictionary = new Dictionary<string, string>();
         List<string> _userWordList = new List<string>();
         List<string> _userPhraseList = new List<string>();
@@ -374,22 +376,18 @@ namespace Nikse.SubtitleEdit.Forms
                     _skipAllList.Add(_currentWord.ToUpper());
                     break;
                 case SpellCheckAction.AddToDictionary:
-                    bool correct = DoSpell(ChangeWord);
-                    if (!correct)
+                    if (_userWordList.IndexOf(ChangeWord) < 0)
                     {
-                        if (_userWordList.IndexOf(ChangeWord) < 0)
-                        {
-                            _noOfAddedWords++;
-                            string s = ChangeWord.Trim().ToLower();
-                            if (s.Contains(" "))
-                                _userPhraseList.Add(s);
-                            else
-                                _userWordList.Add(s);
-                            XmlNode node = _userWordDictionary.CreateElement("word");
-                            node.InnerText = s;
-                            _userWordDictionary.DocumentElement.AppendChild(node);
-                            _userWordDictionary.Save(_dictionaryFolder + _languageName + "_user.xml");
-                        }
+                        _noOfAddedWords++;
+                        string s = ChangeWord.Trim().ToLower();
+                        if (s.Contains(" "))
+                            _userPhraseList.Add(s);
+                        else
+                            _userWordList.Add(s);
+                        XmlNode node = _userWordDictionary.CreateElement("word");
+                        node.InnerText = s;
+                        _userWordDictionary.DocumentElement.AppendChild(node);
+                        _userWordDictionary.Save(_dictionaryFolder + _languageName + "_user.xml");
                     }
                     break;
                 case SpellCheckAction.AddToNamesEtc:
@@ -426,7 +424,7 @@ namespace Nikse.SubtitleEdit.Forms
                     break;
             }
             PrepareNextWord();
-        }
+        }       
 
         private void PrepareNextWord()
         {
@@ -445,7 +443,9 @@ namespace Nikse.SubtitleEdit.Forms
                         _currentIndex++;
                         _currentParagraph = _subtitle.Paragraphs[_currentIndex];
                         string s = Utilities.RemoveHtmlTags(_currentParagraph.Text);
-                        _words = s.Split(" .,-?!:;\"“”()[]{}|<>/+\r\n¿¡…—♪♫".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+
+                        SetWords(s);
+
                         _wordsIndex = 0;
                         if (_words.Length == 0)
                         {
@@ -464,7 +464,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
 
-                if (_currentWord.Trim().Length > 1 &&
+                if (_currentWord.Trim().Length > 0 &&
                     !_currentWord.Contains("0") &&
                     !_currentWord.Contains("1") &&
                     !_currentWord.Contains("2") &&
@@ -554,7 +554,21 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     else
                     {
-                        bool correct = DoSpell(_currentWord);
+                        bool correct;
+
+                        if (_currentWord.Length > 1)
+                        {
+                            correct = DoSpell(_currentWord);
+                        }
+                        else
+                        {
+                            correct = false;
+                            if (_languageName.StartsWith("en_") && (_currentWord.ToLower() == "a" || _currentWord == "I"))
+                                correct = true;
+                            else if (_languageName.StartsWith("da_") && _currentWord.ToLower() == "i")
+                                correct = true;
+                        }
+
                         if (correct)
                         {
                             _noOfCorrectWords++;
@@ -574,7 +588,6 @@ namespace Nikse.SubtitleEdit.Forms
                                 if (_currentWord.ToUpper() != "LT'S" && _currentWord.ToUpper() != "SOX'S") //TODO: get fixed nhunspell
                                     suggestions = DoSuggest(_currentWord); //TODO: 0.9.6 fails on "Lt'S"
                             }
-
 
 
                             if (AutoFixNames && _currentWord.Length > 1 && suggestions.Contains(_currentWord.Substring(0, 1).ToUpper() + _currentWord.Substring(1)))
@@ -606,6 +619,85 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
+        private string SetWords(string s)
+        {
+            List<string> replaceIds = new List<string>();
+            List<string> replaceNames = new List<string>();
+            s = GetTextWithoutUserWordsAndNames(replaceIds, replaceNames, s);
+            _words = s.Split(" -.,?!:;\"“”()[]{}|<>/+\r\n¿¡…—♪♫".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+            _words = FixWordsInserUserWordAndNames(replaceIds, replaceNames, _words);
+            return s;
+        }
+
+        /// <summary>
+        /// Removes words with dash'es that are correct, so spell check can ignore the combination (do not split correct words with dash'es)
+        /// </summary>
+        private string GetTextWithoutUserWordsAndNames(List<string> replaceIds, List<string> replaceNames, string text)
+        {
+
+            string[] wordsWithDash = text.Split(" .,?!:;\"“”()[]{}|<>/+\r\n¿¡…—♪♫".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+            foreach (string w in wordsWithDash)
+            {
+                if (w.Contains("-") && DoSpell(w) && !_wordsWithDashesOrPeriods.Contains(w))
+                    _wordsWithDashesOrPeriods.Add(w);
+            }
+
+            if (text.Contains(".") || text.Contains("-"))
+            {               
+                int i = 0;
+                string id = string.Format("_@{0}_", i);
+                foreach (string wordWithDashesOrPeriods in _wordsWithDashesOrPeriods)
+                {
+                    bool found = true;
+                    int startSearchIndex = 0;
+                    while (found)
+                    {
+                        int indexStart = text.IndexOf(wordWithDashesOrPeriods, startSearchIndex);
+
+                        if (indexStart >= 0)
+                        {
+                            found = true;
+                            int endIndexPlus = indexStart + wordWithDashesOrPeriods.Length;
+                            bool startOk = indexStart == 0 || (" ['\"" + Environment.NewLine).Contains(text.Substring(indexStart - 1, 1));
+                            bool endOk = endIndexPlus == text.Length;
+                            if (!endOk && endIndexPlus < text.Length && ("!?:;. ]").Contains(text.Substring(endIndexPlus, 1)))
+                                endOk = true;
+                            if (startOk && endOk)
+                            {
+                                i++;
+                                id = string.Format("_@{0}_", i);
+                                replaceIds.Add(id);
+                                replaceNames.Add(wordWithDashesOrPeriods);
+                                text = text.Remove(indexStart, wordWithDashesOrPeriods.Length).Insert(indexStart, id);
+                            }
+                            else
+                            {
+                                startSearchIndex = indexStart + 1;
+                            }
+                        }
+                        else
+                        {
+                            found = false;
+                        }
+                    }
+                }
+            }
+            return text;
+        }
+
+        private string[] FixWordsInserUserWordAndNames(List<string> replaceIds, List<string> replaceNames, string[] words)
+        {
+            if (replaceIds.Count == 0)
+                return words;
+
+            for (int i = 0; i < words.Length; i++)
+            { 
+                if (replaceIds.Contains(words[i]))
+                    words[i] = replaceNames[replaceIds.IndexOf(words[i])];
+            }
+            return words;
+        }
+
         private void ShowEndStatusMessage(string completedMessage)
         {
             LanguageStructure.Main mainLanguage = Configuration.Settings.Language.Main;
@@ -633,8 +725,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (_currentParagraph == null)
                 return;
 
-            string s = Utilities.RemoveHtmlTags(_currentParagraph.Text);
-            _words = s.Split(" .,-?!:;\"“”()[]{}|<>/+\r\n¿¡♪♫".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+            SetWords(_currentParagraph.Text);
             _wordsIndex = -1;
 
             PrepareNextWord();
@@ -721,12 +812,27 @@ namespace Nikse.SubtitleEdit.Forms
                 _userWordDictionary.LoadXml("<words />");
             }
 
+            // Add names/userdic with "." or " " or "-" 
+            _wordsWithDashesOrPeriods = new List<string>();
+            _wordsWithDashesOrPeriods.AddRange(_namesEtcMultiWordList);
+            foreach (string name in _namesEtcList)
+            {
+                if (name.Contains(".") || name.Contains("-"))
+                    _wordsWithDashesOrPeriods.Add(name);
+            }
+            foreach (string word in _userWordList)
+            {
+                if (word.Contains(".") || word.Contains("-"))
+                    _wordsWithDashesOrPeriods.Add(word);
+            }
+            _wordsWithDashesOrPeriods.AddRange(_userPhraseList);
+
+
             _changeAllDictionary = new Dictionary<string, string>();
             _hunspell = Hunspell.GetHunspell(dictionary);
             _currentIndex = 0;
             _currentParagraph = _subtitle.Paragraphs[_currentIndex];
-            string s = Utilities.RemoveHtmlTags(_currentParagraph.Text);
-            _words = s.Split(" .,-?!:;\"“”()[]{}|<>/+\r\n¿¡♪♫".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+            SetWords(_currentParagraph.Text);
             _wordsIndex = -1;
 
             PrepareNextWord();
