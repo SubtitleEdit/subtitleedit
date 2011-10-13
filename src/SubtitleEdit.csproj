@@ -640,6 +640,12 @@
     <Compile Include="Logic\SubtitleFormats\UnknownSubtitle4.cs" />
     <Compile Include="Logic\SubtitleFormats\ZeroG.cs" />
     <Compile Include="Logic\TimeCode.cs" />
+    <Compile Include="Logic\TransportStream\AdaptationField.cs" />
+    <Compile Include="Logic\TransportStream\Helper.cs" />
+    <Compile Include="Logic\TransportStream\Packet.cs" />
+    <Compile Include="Logic\TransportStream\PacketizedElementaryStream.cs" />
+    <Compile Include="Logic\TransportStream\ProgramAssociationTable.cs" />
+    <Compile Include="Logic\TransportStream\TransportStreamParser.cs" />
     <Compile Include="Logic\Utilities.cs" />
     <Compile Include="Logic\VideoFormats\AviRiffData.cs" />
     <Compile Include="Logic\VideoFormats\Matroska.cs" />
@@ -962,6 +968,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <SubType>Designer</SubType>
     </Content>
+    <Content Include="Languages\de-DE.xml" />
     <Content Include="Languages\es-ES.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
