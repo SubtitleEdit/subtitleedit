@@ -1192,6 +1192,10 @@ namespace Nikse.SubtitleEdit.Logic
             //    return new WmpPlayer();
             //if (gs.VideoPlayer == "ManagedDirectX" && IsManagedDirectXInstalled)
             //    return new ManagedDirectXPlayer();
+
+            if (gs.VideoPlayer == "MPlayer" && MPlayer.IsInstalled)
+                return new MPlayer();
+
             if (IsQuartsDllInstalled)
                 return new QuartsPlayer();
             //if (IsWmpAvailable)
