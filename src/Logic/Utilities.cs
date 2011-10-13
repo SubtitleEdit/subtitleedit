@@ -801,6 +801,10 @@ namespace Nikse.SubtitleEdit.Logic
             if (count > bestCount)
                 return "zh"; // Chinese (simplified) - not tested...
 
+            count = GetCount(text, "hogy", "lesz", "tudom", "vagy", "mondtam", "még"); 
+            if (count > bestCount)
+                return "hu"; // Hungarian
+
             return string.Empty;
         }
 
@@ -1007,6 +1011,12 @@ namespace Nikse.SubtitleEdit.Logic
                         if (count > bestCount)
                             languageName = shortName;
                         break;
+                    case "hu_HU": // Hungarian
+                        count = GetCount(text, "hogy", "lesz", "tudom", "vagy", "mondtam", "még"); 
+                        if (count > bestCount)
+                            languageName = shortName;
+                        break;
+
                     default:
                         break;
                 }
