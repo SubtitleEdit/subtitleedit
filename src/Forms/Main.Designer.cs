@@ -157,8 +157,8 @@
             this.pointSyncViaOtherSubtitleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemChangeFrameRate2 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemAutoTranslate = new System.Windows.Forms.ToolStripMenuItem();
-            this.translatepoweredByMicrosoftToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.translateByGoogleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.translatepoweredByMicrosoftToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.translateFromSwedishToDanishToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.optionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -1505,13 +1505,6 @@
             this.toolStripMenuItemAutoTranslate.Size = new System.Drawing.Size(97, 20);
             this.toolStripMenuItemAutoTranslate.Text = "Auto-translate";
             // 
-            // translatepoweredByMicrosoftToolStripMenuItem
-            // 
-            this.translatepoweredByMicrosoftToolStripMenuItem.Name = "translatepoweredByMicrosoftToolStripMenuItem";
-            this.translatepoweredByMicrosoftToolStripMenuItem.Size = new System.Drawing.Size(414, 22);
-            this.translatepoweredByMicrosoftToolStripMenuItem.Text = "Translate (powered by Microsoft)...";
-            this.translatepoweredByMicrosoftToolStripMenuItem.Click += new System.EventHandler(this.translatepoweredByMicrosoftToolStripMenuItem_Click);
-            // 
             // translateByGoogleToolStripMenuItem
             // 
             this.translateByGoogleToolStripMenuItem.Name = "translateByGoogleToolStripMenuItem";
@@ -1520,6 +1513,13 @@
             this.translateByGoogleToolStripMenuItem.Size = new System.Drawing.Size(414, 22);
             this.translateByGoogleToolStripMenuItem.Text = "Translate (powered by Google)...";
             this.translateByGoogleToolStripMenuItem.Click += new System.EventHandler(this.TranslateByGoogleToolStripMenuItemClick);
+            // 
+            // translatepoweredByMicrosoftToolStripMenuItem
+            // 
+            this.translatepoweredByMicrosoftToolStripMenuItem.Name = "translatepoweredByMicrosoftToolStripMenuItem";
+            this.translatepoweredByMicrosoftToolStripMenuItem.Size = new System.Drawing.Size(414, 22);
+            this.translatepoweredByMicrosoftToolStripMenuItem.Text = "Translate (powered by Microsoft)...";
+            this.translatepoweredByMicrosoftToolStripMenuItem.Click += new System.EventHandler(this.translatepoweredByMicrosoftToolStripMenuItem_Click);
             // 
             // translateFromSwedishToDanishToolStripMenuItem
             // 

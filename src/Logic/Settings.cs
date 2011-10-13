@@ -427,10 +427,14 @@ namespace Nikse.SubtitleEdit.Logic
         public string MainVideoToggleVideoControls { get; set; }
         public string MainSynchronizationAdjustTimes { get; set; }
         public string MainListViewItalic { get; set; }
+        public string MainListViewToggleDashes { get; set; }
         public string MainTextBoxItalic { get; set; }
         public string MainAdjustSetStartAndOffsetTheRest { get; set; }
         public string MainAdjustSetEndAndGotoNext { get; set; }
         public string MainAdjustViaEndAutoStartAndGoToNext { get; set; }
+        public string MainInsertAfter { get; set; }
+        public string MainInsertBefore { get; set; }
+        public string WaveformVerticalZoom { get; set; }
 
         public Shortcuts()
         {
@@ -451,6 +455,9 @@ namespace Nikse.SubtitleEdit.Logic
             MainAdjustSetStartAndOffsetTheRest = "Control+Space";
             MainAdjustSetEndAndGotoNext = "Shift+Space";
             MainAdjustViaEndAutoStartAndGoToNext = "Shift+End";
+            MainInsertAfter = "Alt+Ins";
+            MainInsertBefore = "Control+Shift+Ins";
+            WaveformVerticalZoom = string.Empty;
         }
     }
 
@@ -530,10 +537,8 @@ namespace Nikse.SubtitleEdit.Logic
 
         public void Save()
         {
-            //slow
-            //Serialize(Configuration.BaseDirectory + "Settings.xml", this);
+            //this is too slow: Serialize(Configuration.BaseDirectory + "Settings.xml", this);
 
-            //Fast - TODO: Fix in release
             CustomSerialize(Configuration.SettingsFileName, this);
         }
 
@@ -553,11 +558,9 @@ namespace Nikse.SubtitleEdit.Logic
             {
                 try
                 {
-                    //TODO: Fix in release
                     settings = CustomDeserialize(settingsFileName); //  15 msecs
 
-                    //too slow... :(
-                    //settings = Deserialize(Configuration.BaseDirectory + "Settings.xml"); // 688 msecs
+                    //too slow... :(  - settings = Deserialize(Configuration.BaseDirectory + "Settings.xml"); // 688 msecs
                 }
                 catch
                 {
@@ -1138,6 +1141,9 @@ namespace Nikse.SubtitleEdit.Logic
                 subNode = node.SelectSingleNode("MainListViewItalic");
                 if (subNode != null)
                     settings.Shortcuts.MainListViewItalic = subNode.InnerText;
+                subNode = node.SelectSingleNode("MainListViewToggleDashes");
+                if (subNode != null)
+                    settings.Shortcuts.MainListViewToggleDashes = subNode.InnerText;
                 subNode = node.SelectSingleNode("MainTextBoxItalic");
                 if (subNode != null)
                     settings.Shortcuts.MainTextBoxItalic = subNode.InnerText;
@@ -1150,6 +1156,15 @@ namespace Nikse.SubtitleEdit.Logic
                 subNode = node.SelectSingleNode("MainAdjustViaEndAutoStartAndGoToNext");
                 if (subNode != null)
                     settings.Shortcuts.MainAdjustViaEndAutoStartAndGoToNext = subNode.InnerText;
+                subNode = node.SelectSingleNode("MainInsertAfter");
+                if (subNode != null)
+                    settings.Shortcuts.MainInsertAfter = subNode.InnerText;
+                subNode = node.SelectSingleNode("MainInsertBefore");
+                if (subNode != null)
+                    settings.Shortcuts.MainInsertBefore = subNode.InnerText;
+                subNode = node.SelectSingleNode("WaveformVerticalZoom");
+                if (subNode != null)
+                    settings.Shortcuts.WaveformVerticalZoom = subNode.InnerText;
             }
 
             settings.RemoveTextForHearingImpaired = new RemoveTextForHearingImpairedSettings();
@@ -1410,10 +1425,14 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("MainVideoToggleVideoControls", settings.Shortcuts.MainVideoToggleVideoControls);
             textWriter.WriteElementString("MainSynchronizationAdjustTimes", settings.Shortcuts.MainSynchronizationAdjustTimes);
             textWriter.WriteElementString("MainListViewItalic", settings.Shortcuts.MainListViewItalic);
+            textWriter.WriteElementString("MainListViewToggleDashes", settings.Shortcuts.MainListViewToggleDashes);
             textWriter.WriteElementString("MainTextBoxItalic", settings.Shortcuts.MainTextBoxItalic);
             textWriter.WriteElementString("MainAdjustSetStartAndOffsetTheRest", settings.Shortcuts.MainAdjustSetStartAndOffsetTheRest);
             textWriter.WriteElementString("MainAdjustSetEndAndGotoNext", settings.Shortcuts.MainAdjustSetEndAndGotoNext);
             textWriter.WriteElementString("MainAdjustViaEndAutoStartAndGoToNext", settings.Shortcuts.MainAdjustViaEndAutoStartAndGoToNext);
+            textWriter.WriteElementString("MainInsertAfter", settings.Shortcuts.MainInsertAfter);
+            textWriter.WriteElementString("MainInsertBefore", settings.Shortcuts.MainInsertBefore);
+            textWriter.WriteElementString("WaveformVerticalZoom", settings.Shortcuts.WaveformVerticalZoom);            
             textWriter.WriteEndElement();
 
             textWriter.WriteStartElement("RemoveTextForHearingImpaired", "");

@@ -128,6 +128,8 @@ namespace Nikse.SubtitleEdit.Controls
 
         public bool Locked { get; set; }
 
+        public double VerticalZoomPercent { get; set; }
+
         public double EndPositionSeconds
         {
             get
@@ -198,6 +200,7 @@ namespace Nikse.SubtitleEdit.Controls
             AllowNewSelection = true;
             ShowSpectrogram = true;
             ShowWaveform = true;
+            VerticalZoomPercent = 1.0;            
         }
 
         public void NearestSubtitles(Subtitle subtitle, double currentVideoPositionSeconds, int subtitleIndex)
@@ -316,6 +319,9 @@ namespace Nikse.SubtitleEdit.Controls
                 }
                 int imageHeight = Height;
                 int maxHeight = (int)(Math.Max(Math.Abs(_wavePeaks.DataMinValue), Math.Abs(_wavePeaks.DataMaxValue)) + 0.5);
+                maxHeight = (int)(maxHeight * VerticalZoomPercent);
+                if (maxHeight < 0)
+                    maxHeight = 1000;
                 Pen pen = new System.Drawing.Pen(Color);
 
                 DrawBackground(graphics);
