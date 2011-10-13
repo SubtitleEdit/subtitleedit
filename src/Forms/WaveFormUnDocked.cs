@@ -29,7 +29,6 @@ namespace Nikse.SubtitleEdit.Forms
 
         public WaveFormUnDocked()
         {
-            // TODO: Complete member initialization
         }
 
         private void WaveFormUnDocked_FormClosing(object sender, FormClosingEventArgs e)

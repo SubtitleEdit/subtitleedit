@@ -51,7 +51,6 @@ namespace Nikse.SubtitleEdit.Forms
             labelMaxCharacters.Text = Configuration.Settings.Language.MergedShortLines.MaximumCharacters;
             labelMaxMillisecondsBetweenLines.Text = Configuration.Settings.Language.MergedShortLines.MaximumMillisecondsBetween;
 
-            checkBoxOnlyContinuationLines.Visible = !string.IsNullOrEmpty(Configuration.Settings.Language.MergedShortLines.OnlyMergeContinuationLines); //TODO: Remove in se 3.2
             checkBoxOnlyContinuationLines.Text = Configuration.Settings.Language.MergedShortLines.OnlyMergeContinuationLines;
 
             listViewFixes.Columns[0].Text = Configuration.Settings.Language.General.Apply;

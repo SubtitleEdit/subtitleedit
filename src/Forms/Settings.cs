@@ -423,10 +423,6 @@ namespace Nikse.SubtitleEdit.Forms
                 comboBoxSpectrogramAppearance.SelectedIndex = 1;
 
 
-            //<MainFileNew>Control+N</MainFileNew>
-            //<MainFileOpen>Control+O</MainFileOpen>
-            //<MainFileSave>Control+S</MainFileSave>
-            //<MainFileSaveAs>Control+Shift+S</MainFileSaveAs>
             TreeNode fileNode = new TreeNode(Configuration.Settings.Language.Main.Menu.File.Title);
             fileNode.Nodes.Add(Configuration.Settings.Language.Main.Menu.File.New + GetShortcutText(Configuration.Settings.Shortcuts.MainFileNew));
             fileNode.Nodes.Add(Configuration.Settings.Language.Main.Menu.File.Open + GetShortcutText(Configuration.Settings.Shortcuts.MainFileOpen));
@@ -435,10 +431,6 @@ namespace Nikse.SubtitleEdit.Forms
             fileNode.Nodes.Add(Configuration.Settings.Language.Main.Menu.File.Export + " -> " + Configuration.Settings.Language.Main.Menu.File.ExportEbu + GetShortcutText(Configuration.Settings.Shortcuts.MainFileExportEbu));
             treeViewShortcuts.Nodes.Add(fileNode);
 
-            //<MainEditFind>Control+F</MainEditFind>
-            //<MainEditFindNext>F3</MainEditFindNext>
-            //<MainEditReplace>Control+H</MainEditReplace>
-            //<MainEditGoToLineNumber>Control+G</MainEditGoToLineNumber>
             TreeNode editNode = new TreeNode(Configuration.Settings.Language.Main.Menu.Edit.Title);
             editNode.Nodes.Add(Configuration.Settings.Language.Main.Menu.Edit.Find + GetShortcutText(Configuration.Settings.Shortcuts.MainEditFind));
             editNode.Nodes.Add(Configuration.Settings.Language.Main.Menu.Edit.FindNext + GetShortcutText(Configuration.Settings.Shortcuts.MainEditFindNext));
@@ -450,23 +442,22 @@ namespace Nikse.SubtitleEdit.Forms
             toolsNode.Nodes.Add(Configuration.Settings.Language.Main.Menu.Tools.FixCommonErrors + GetShortcutText(Configuration.Settings.Shortcuts.MainToolsFixCommonErrors));
             treeViewShortcuts.Nodes.Add(toolsNode);
 
-            //<MainVideoShowHideVideo>Control+Q</MainVideoShowHideVideo>
             TreeNode videoNode = new TreeNode(Configuration.Settings.Language.Main.Menu.Video.Title);
             videoNode.Nodes.Add(Configuration.Settings.Language.Main.Menu.Video.ShowHideVideo + GetShortcutText(Configuration.Settings.Shortcuts.MainVideoShowHideVideo));
             videoNode.Nodes.Add(Configuration.Settings.Language.Settings.ToggleDockUndockOfVideoControls + GetShortcutText(Configuration.Settings.Shortcuts.MainVideoToggleVideoControls));
             treeViewShortcuts.Nodes.Add(videoNode);
 
-            //<MainSynchronizationAdjustTimes>Control+Shift+A</MainSynchronizationAdjustTimes>
             TreeNode SyncNode = new TreeNode(Configuration.Settings.Language.Main.Menu.Synchronization.Title);
             SyncNode.Nodes.Add(Configuration.Settings.Language.Main.Menu.Synchronization.AdjustAllTimes + GetShortcutText(Configuration.Settings.Shortcuts.MainSynchronizationAdjustTimes));
             treeViewShortcuts.Nodes.Add(SyncNode);
 
-            //<MainListViewItalic>Control+G</MainListViewItalic>
             TreeNode ListViewNode = new TreeNode(Configuration.Settings.Language.Main.Controls.ListView);
             ListViewNode.Nodes.Add(Configuration.Settings.Language.General.Italic + GetShortcutText(Configuration.Settings.Shortcuts.MainListViewItalic));
+            ListViewNode.Nodes.Add(Configuration.Settings.Language.Main.Menu.ContextMenu.InsertAfter + GetShortcutText(Configuration.Settings.Shortcuts.MainInsertAfter));
+            ListViewNode.Nodes.Add(Configuration.Settings.Language.Main.Menu.ContextMenu.InsertBefore + GetShortcutText(Configuration.Settings.Shortcuts.MainInsertBefore));
+            ListViewNode.Nodes.Add("Toggle dashes" + GetShortcutText(Configuration.Settings.Shortcuts.MainListViewToggleDashes));
             treeViewShortcuts.Nodes.Add(ListViewNode);
 
-            //<MainTextBoxItalic>Control+I</MainTextBoxItalic>
             TreeNode TextBoxNode = new TreeNode(Configuration.Settings.Language.Settings.TextBox);
             TextBoxNode.Nodes.Add(Configuration.Settings.Language.General.Italic + GetShortcutText(Configuration.Settings.Shortcuts.MainTextBoxItalic));
             treeViewShortcuts.Nodes.Add(TextBoxNode);
@@ -476,6 +467,11 @@ namespace Nikse.SubtitleEdit.Forms
             adjustNode.Nodes.Add(Configuration.Settings.Language.Main.VideoControls.SetEndTimeAndGoToNext + GetShortcutText(Configuration.Settings.Shortcuts.MainAdjustSetEndAndGotoNext));
             adjustNode.Nodes.Add(Configuration.Settings.Language.Settings.AdjustViaEndAutoStartAndGoToNext + GetShortcutText(Configuration.Settings.Shortcuts.MainAdjustViaEndAutoStartAndGoToNext));
             treeViewShortcuts.Nodes.Add(adjustNode);
+
+            TreeNode audioVisualizerNode = new TreeNode(Configuration.Settings.Language.Settings.WaveformAndSpectrogram);
+            audioVisualizerNode.Nodes.Add("Vertical zoom" + GetShortcutText(Configuration.Settings.Shortcuts.WaveformVerticalZoom));
+            treeViewShortcuts.Nodes.Add(audioVisualizerNode);
+
 
             foreach (TreeNode node in treeViewShortcuts.Nodes)
             {
@@ -886,6 +882,12 @@ namespace Nikse.SubtitleEdit.Forms
                     string text = node.Text.Substring(0, node.Text.IndexOf("[")).Trim();
                     if (text == Configuration.Settings.Language.General.Italic.Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.MainListViewItalic = GetShortcut(node.Text);
+                    else if (text == Configuration.Settings.Language.Main.Menu.ContextMenu.InsertAfter.Replace("&", string.Empty))
+                        Configuration.Settings.Shortcuts.MainInsertAfter = GetShortcut(node.Text);
+                    else if (text == Configuration.Settings.Language.Main.Menu.ContextMenu.InsertBefore.Replace("&", string.Empty))
+                        Configuration.Settings.Shortcuts.MainInsertBefore = GetShortcut(node.Text);
+                    else if (text == ("Toggle dashes").Replace("&", string.Empty))
+                        Configuration.Settings.Shortcuts.MainListViewToggleDashes = GetShortcut(node.Text);
                 }
             }
 
@@ -912,6 +914,17 @@ namespace Nikse.SubtitleEdit.Forms
                         Configuration.Settings.Shortcuts.MainAdjustSetStartAndOffsetTheRest = GetShortcut(node.Text);
                     else if (text == Configuration.Settings.Language.Main.VideoControls.SetEndTimeAndGoToNext.Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.MainAdjustSetEndAndGotoNext = GetShortcut(node.Text);
+                }
+            }
+
+            //Audio-visualizer
+            foreach (TreeNode node in treeViewShortcuts.Nodes[8].Nodes)
+            {
+                if (node.Text.Contains("["))
+                {
+                    string text = node.Text.Substring(0, node.Text.IndexOf("[")).Trim();
+                    if (text == ("Vertical zoom").Replace("&", string.Empty))
+                        Configuration.Settings.Shortcuts.WaveformVerticalZoom = GetShortcut(node.Text);
                 }
             }
 

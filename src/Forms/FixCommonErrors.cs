@@ -123,6 +123,8 @@ namespace Nikse.SubtitleEdit.Forms
         public void Initialize(Subtitle subtitle)
         {
             _autoDetectGoogleLanguage = Utilities.AutoDetectGoogleLanguage(subtitle);
+            if (_autoDetectGoogleLanguage.ToLower() == "zh")
+                _autoDetectGoogleLanguage = "zh-CHS"; // Note that "zh-CHS" (Simplified Chinese) and "zh-CHT" (Traditional Chinese) are neutral cultures
             CultureInfo ci = CultureInfo.GetCultureInfo(_autoDetectGoogleLanguage);
             string threeLetterISOLanguageName = ci.ThreeLetterISOLanguageName;
 
