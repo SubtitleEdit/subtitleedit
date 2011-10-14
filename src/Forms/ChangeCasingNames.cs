@@ -16,6 +16,7 @@ namespace Nikse.SubtitleEdit.Forms
         public ChangeCasingNames()
         {
             InitializeComponent();
+            labelXLinesSelected.Text = string.Empty;
             Text = Configuration.Settings.Language.ChangeCasingNames.Title;
             groupBoxNames.Text = string.Empty;
             listViewNames.Columns[0].Text = Configuration.Settings.Language.ChangeCasingNames.Enabled;
@@ -174,6 +175,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ListViewNamesSelectedIndexChanged(object sender, EventArgs e)
         {
+            labelXLinesSelected.Text = string.Empty;
             if (listViewNames.SelectedItems.Count != 1)
                 return;
 
@@ -223,7 +225,6 @@ namespace Nikse.SubtitleEdit.Forms
             listViewNames.ItemChecked += ListViewNamesItemChecked;
         }
 
-
         internal void FixCasing()
         {
             foreach (ListViewItem item in listViewFixes.Items)
@@ -249,6 +250,14 @@ namespace Nikse.SubtitleEdit.Forms
         private void ButtonOkClick(object sender, EventArgs e)
         {
             DialogResult = DialogResult.OK;
+        }
+
+        private void listViewFixes_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (listViewFixes.SelectedItems.Count > 1)
+                labelXLinesSelected.Text = string.Format(Configuration.Settings.Language.Main.XLinesSelected, listViewFixes.SelectedItems.Count);
+            else
+                labelXLinesSelected.Text = string.Empty;
         }
     }
 }

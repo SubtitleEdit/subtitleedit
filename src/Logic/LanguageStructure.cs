@@ -679,6 +679,7 @@
             public string SpellCheckAbortedXCorrections { get; set; }
             public string SpellCheckCompletedXCorrections { get; set; }
             public string OpenOtherSubtitle { get; set; }
+            public string BeforeToggleDialogueDashes { get; set; }
 
             public class MainMenu
             {
@@ -1191,6 +1192,12 @@
             public string ShortcutIsNotValid { get; set; }
             public string ToggleDockUndockOfVideoControls { get; set; }
             public string AdjustViaEndAutoStartAndGoToNext { get; set; }
+            public string ToggleDialogueDashes { get; set; }
+            public string VerticalZoom { get; set; }
+            public string GoBack100Milliseconds { get; set; }
+            public string GoForward100Milliseconds { get; set; }
+            public string GoBack500Milliseconds { get; set; }
+            public string GoForward500Milliseconds { get; set; }
         }
 
         public class ShowEarlierLater

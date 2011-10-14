@@ -1060,15 +1060,11 @@ namespace Nikse.SubtitleEdit.Controls
         {
             if (e.Modifiers == Keys.None && e.KeyCode == Keys.Add)
             {
-                ZoomFactor = ZoomFactor + 0.1;
-                if (OnZoomedChanged != null)
-                    OnZoomedChanged.Invoke(null, null);
+                ZoomIn();
             }
             else if (e.Modifiers == Keys.None && e.KeyCode == Keys.Subtract)
             {
-                ZoomFactor = ZoomFactor - 0.1;
-                if (OnZoomedChanged != null)
-                    OnZoomedChanged.Invoke(null, null);
+                ZoomOut();
             }
             else if (e.Modifiers == Keys.None && e.KeyCode == Keys.Z)
             {
@@ -1096,6 +1092,20 @@ namespace Nikse.SubtitleEdit.Controls
                 Invalidate();
                 e.SuppressKeyPress = true;
             }
+        }
+
+        public void ZoomIn()
+        {
+            ZoomFactor = ZoomFactor + 0.1;
+            if (OnZoomedChanged != null)
+                OnZoomedChanged.Invoke(null, null);
+        }
+        
+        public void ZoomOut()
+        {
+            ZoomFactor = ZoomFactor - 0.1;
+            if (OnZoomedChanged != null)
+                OnZoomedChanged.Invoke(null, null);
         }
 
         void WaveForm_MouseWheel(object sender, MouseEventArgs e)
