@@ -176,6 +176,7 @@ Source: ..\Tesseract\tesseract.exe;                DestDir: {app}\Tesseract;    
 Source: {#bindir}\Languages\bg-BG.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
 Source: {#bindir}\Languages\cs-CZ.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
 Source: {#bindir}\Languages\da-DK.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
+Source: {#bindir}\Languages\de-De.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
 ;Source: {#bindir}\Languages\es-ES.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
 Source: {#bindir}\Languages\eu-ES.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
 Source: {#bindir}\Languages\fr-FR.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
@@ -254,6 +255,7 @@ Type: files;      Name: {app}\Languages\ja-JP.xml;      Check: IsComponentSelect
 Type: files;      Name: {app}\Languages\bg-BG.xml;      Check: NOT IsComponentSelected('translations') AND IsUpgrade()
 Type: files;      Name: {app}\Languages\cs-CZ.xml;      Check: NOT IsComponentSelected('translations') AND IsUpgrade()
 Type: files;      Name: {app}\Languages\da-DK.xml;      Check: NOT IsComponentSelected('translations') AND IsUpgrade()
+Type: files;      Name: {app}\Languages\de-De.xml;      Check: NOT IsComponentSelected('translations') AND IsUpgrade()
 Type: files;      Name: {app}\Languages\es-ES.xml;      Check: NOT IsComponentSelected('translations') AND IsUpgrade()
 Type: files;      Name: {app}\Languages\eu-ES.xml;      Check: NOT IsComponentSelected('translations') AND IsUpgrade()
 Type: files;      Name: {app}\Languages\fr-FR.xml;      Check: NOT IsComponentSelected('translations') AND IsUpgrade()
@@ -295,13 +297,11 @@ Filename: {win}\Microsoft.NET\Framework\v2.0.50727\ngen.exe; Parameters: "uninst
 
 
 [Code]
-// Global variables and constants
+// Global variables/constants and general functions
 const installer_mutex_name = 'subtitle_edit_setup_mutex';
 
-// General functions
 function IsModuleLoaded(modulename: AnsiString ): Boolean;
 external 'IsModuleLoaded@files:psvince.dll stdcall setuponly';
-
 
 function IsModuleLoadedU(modulename: AnsiString ): Boolean;
 external 'IsModuleLoaded@{app}\psvince.dll stdcall uninstallonly';
