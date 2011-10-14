@@ -425,6 +425,10 @@ namespace Nikse.SubtitleEdit.Logic
         public string MainToolsFixCommonErrors { get; set; }
         public string MainVideoShowHideVideo { get; set; }
         public string MainVideoToggleVideoControls { get; set; }
+        public string MainVideo100MsLeft { get; set; }
+        public string MainVideo100MsRight { get; set; }
+        public string MainVideo500MsLeft { get; set; }
+        public string MainVideo500MsRight { get; set; }
         public string MainSynchronizationAdjustTimes { get; set; }
         public string MainListViewItalic { get; set; }
         public string MainListViewToggleDashes { get; set; }
@@ -435,6 +439,9 @@ namespace Nikse.SubtitleEdit.Logic
         public string MainInsertAfter { get; set; }
         public string MainInsertBefore { get; set; }
         public string WaveformVerticalZoom { get; set; }
+        public string WaveformZoomIn { get; set; }
+        public string WaveformZoomOut { get; set; }
+        public string WaveformPlaySelection { get; set; }
 
         public Shortcuts()
         {
@@ -449,6 +456,10 @@ namespace Nikse.SubtitleEdit.Logic
             MainEditGoToLineNumber = "Control+G";
             MainToolsFixCommonErrors = "Control+Shift+F";
             MainVideoShowHideVideo = "Control+Q";
+            MainVideo100MsLeft = "Control+Left";
+            MainVideo100MsRight = "Control+Right";
+            MainVideo500MsLeft = "Alt+Left";
+            MainVideo500MsRight = "Alt+Right";
             MainSynchronizationAdjustTimes = "Control+Shift+A";
             MainListViewItalic = "Control+I";
             MainTextBoxItalic = "Control+I";
@@ -458,6 +469,7 @@ namespace Nikse.SubtitleEdit.Logic
             MainInsertAfter = "Alt+Ins";
             MainInsertBefore = "Control+Shift+Ins";
             WaveformVerticalZoom = string.Empty;
+            WaveformPlaySelection = string.Empty;
         }
     }
 
@@ -1135,6 +1147,18 @@ namespace Nikse.SubtitleEdit.Logic
                 subNode = node.SelectSingleNode("MainVideoToggleVideoControls");
                 if (subNode != null)
                     settings.Shortcuts.MainVideoToggleVideoControls = subNode.InnerText;
+                subNode = node.SelectSingleNode("MainVideo100MsLeft");
+                if (subNode != null)
+                    settings.Shortcuts.MainVideo100MsLeft = subNode.InnerText;
+                subNode = node.SelectSingleNode("MainVideo100MsRight");
+                if (subNode != null)
+                    settings.Shortcuts.MainVideo100MsRight = subNode.InnerText;
+                subNode = node.SelectSingleNode("MainVideo500MsLeft");
+                if (subNode != null)
+                    settings.Shortcuts.MainVideo500MsLeft = subNode.InnerText;
+                subNode = node.SelectSingleNode("MainVideo500MsRight");
+                if (subNode != null)
+                    settings.Shortcuts.MainVideo500MsRight = subNode.InnerText;
                 subNode = node.SelectSingleNode("MainSynchronizationAdjustTimes");
                 if (subNode != null)
                     settings.Shortcuts.MainSynchronizationAdjustTimes = subNode.InnerText;
@@ -1165,6 +1189,15 @@ namespace Nikse.SubtitleEdit.Logic
                 subNode = node.SelectSingleNode("WaveformVerticalZoom");
                 if (subNode != null)
                     settings.Shortcuts.WaveformVerticalZoom = subNode.InnerText;
+                subNode = node.SelectSingleNode("WaveformZoomIn");
+                if (subNode != null)
+                    settings.Shortcuts.WaveformZoomIn = subNode.InnerText;
+                subNode = node.SelectSingleNode("WaveformZoomOut");
+                if (subNode != null)
+                    settings.Shortcuts.WaveformZoomOut = subNode.InnerText;
+                subNode = node.SelectSingleNode("WaveformPlaySelection");
+                if (subNode != null)
+                    settings.Shortcuts.WaveformPlaySelection = subNode.InnerText;
             }
 
             settings.RemoveTextForHearingImpaired = new RemoveTextForHearingImpairedSettings();
@@ -1423,6 +1456,10 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("MainToolsFixCommonErrors", settings.Shortcuts.MainToolsFixCommonErrors);
             textWriter.WriteElementString("MainVideoShowHideVideo", settings.Shortcuts.MainVideoShowHideVideo);
             textWriter.WriteElementString("MainVideoToggleVideoControls", settings.Shortcuts.MainVideoToggleVideoControls);
+            textWriter.WriteElementString("MainVideo100MsLeft", settings.Shortcuts.MainVideo100MsLeft);
+            textWriter.WriteElementString("MainVideo100MsRight", settings.Shortcuts.MainVideo100MsRight);
+            textWriter.WriteElementString("MainVideo500MsLeft", settings.Shortcuts.MainVideo500MsLeft);
+            textWriter.WriteElementString("MainVideo500MsRight", settings.Shortcuts.MainVideo500MsRight);
             textWriter.WriteElementString("MainSynchronizationAdjustTimes", settings.Shortcuts.MainSynchronizationAdjustTimes);
             textWriter.WriteElementString("MainListViewItalic", settings.Shortcuts.MainListViewItalic);
             textWriter.WriteElementString("MainListViewToggleDashes", settings.Shortcuts.MainListViewToggleDashes);
@@ -1432,7 +1469,10 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("MainAdjustViaEndAutoStartAndGoToNext", settings.Shortcuts.MainAdjustViaEndAutoStartAndGoToNext);
             textWriter.WriteElementString("MainInsertAfter", settings.Shortcuts.MainInsertAfter);
             textWriter.WriteElementString("MainInsertBefore", settings.Shortcuts.MainInsertBefore);
-            textWriter.WriteElementString("WaveformVerticalZoom", settings.Shortcuts.WaveformVerticalZoom);            
+            textWriter.WriteElementString("WaveformVerticalZoom", settings.Shortcuts.WaveformVerticalZoom);
+            textWriter.WriteElementString("WaveformZoomIn", settings.Shortcuts.WaveformZoomIn);
+            textWriter.WriteElementString("WaveformZoomOut", settings.Shortcuts.WaveformZoomOut);
+            textWriter.WriteElementString("WaveformPlaySelection", settings.Shortcuts.WaveformPlaySelection);
             textWriter.WriteEndElement();
 
             textWriter.WriteStartElement("RemoveTextForHearingImpaired", "");

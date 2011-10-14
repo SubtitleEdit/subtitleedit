@@ -1201,7 +1201,7 @@ namespace Nikse.SubtitleEdit.Logic
             //if (IsWmpAvailable)
             //    return new WmpPlayer();
 
-            throw new NotSupportedException("You need DirectX or VLC media player 1.1.x installed as well as Subtitle Edit dll files!");
+            throw new NotSupportedException("You need DirectX, VLC media player 1.1.x, or MPlayer2 installed as well as Subtitle Edit dll files in order to use the video player!");
         }
 
         public static void InitializeVideoPlayerAndContainer(string fileName, VideoInfo videoInfo, VideoPlayerContainer videoPlayerContainer, EventHandler onVideoLoaded, EventHandler onVideoEnded)

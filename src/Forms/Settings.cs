@@ -445,6 +445,14 @@ namespace Nikse.SubtitleEdit.Forms
             TreeNode videoNode = new TreeNode(Configuration.Settings.Language.Main.Menu.Video.Title);
             videoNode.Nodes.Add(Configuration.Settings.Language.Main.Menu.Video.ShowHideVideo + GetShortcutText(Configuration.Settings.Shortcuts.MainVideoShowHideVideo));
             videoNode.Nodes.Add(Configuration.Settings.Language.Settings.ToggleDockUndockOfVideoControls + GetShortcutText(Configuration.Settings.Shortcuts.MainVideoToggleVideoControls));
+            if (!string.IsNullOrEmpty(Configuration.Settings.Language.Settings.GoBack100Milliseconds))
+                videoNode.Nodes.Add(Configuration.Settings.Language.Settings.GoBack100Milliseconds + GetShortcutText(Configuration.Settings.Shortcuts.MainVideo100MsLeft));
+            if (!string.IsNullOrEmpty(Configuration.Settings.Language.Settings.GoForward100Milliseconds))
+                videoNode.Nodes.Add(Configuration.Settings.Language.Settings.GoForward100Milliseconds + GetShortcutText(Configuration.Settings.Shortcuts.MainVideo100MsRight));
+            if (!string.IsNullOrEmpty(Configuration.Settings.Language.Settings.GoBack500Milliseconds))
+                videoNode.Nodes.Add(Configuration.Settings.Language.Settings.GoBack500Milliseconds + GetShortcutText(Configuration.Settings.Shortcuts.MainVideo500MsLeft));
+            if (!string.IsNullOrEmpty(Configuration.Settings.Language.Settings.GoForward500Milliseconds))
+                videoNode.Nodes.Add(Configuration.Settings.Language.Settings.GoForward500Milliseconds + GetShortcutText(Configuration.Settings.Shortcuts.MainVideo500MsRight));
             treeViewShortcuts.Nodes.Add(videoNode);
 
             TreeNode SyncNode = new TreeNode(Configuration.Settings.Language.Main.Menu.Synchronization.Title);
@@ -455,7 +463,8 @@ namespace Nikse.SubtitleEdit.Forms
             ListViewNode.Nodes.Add(Configuration.Settings.Language.General.Italic + GetShortcutText(Configuration.Settings.Shortcuts.MainListViewItalic));
             ListViewNode.Nodes.Add(Configuration.Settings.Language.Main.Menu.ContextMenu.InsertAfter + GetShortcutText(Configuration.Settings.Shortcuts.MainInsertAfter));
             ListViewNode.Nodes.Add(Configuration.Settings.Language.Main.Menu.ContextMenu.InsertBefore + GetShortcutText(Configuration.Settings.Shortcuts.MainInsertBefore));
-            ListViewNode.Nodes.Add("Toggle dashes" + GetShortcutText(Configuration.Settings.Shortcuts.MainListViewToggleDashes));
+            if (!string.IsNullOrEmpty(Configuration.Settings.Language.Settings.ToggleDialogueDashes)) // TODO: Remove in SE 3.3
+                ListViewNode.Nodes.Add(Configuration.Settings.Language.Settings.ToggleDialogueDashes + GetShortcutText(Configuration.Settings.Shortcuts.MainListViewToggleDashes));
             treeViewShortcuts.Nodes.Add(ListViewNode);
 
             TreeNode TextBoxNode = new TreeNode(Configuration.Settings.Language.Settings.TextBox);
@@ -469,7 +478,11 @@ namespace Nikse.SubtitleEdit.Forms
             treeViewShortcuts.Nodes.Add(adjustNode);
 
             TreeNode audioVisualizerNode = new TreeNode(Configuration.Settings.Language.Settings.WaveformAndSpectrogram);
-            audioVisualizerNode.Nodes.Add("Vertical zoom" + GetShortcutText(Configuration.Settings.Shortcuts.WaveformVerticalZoom));
+            audioVisualizerNode.Nodes.Add(Configuration.Settings.Language.WaveForm.ZoomIn + GetShortcutText(Configuration.Settings.Shortcuts.WaveformZoomIn));
+            audioVisualizerNode.Nodes.Add(Configuration.Settings.Language.WaveForm.ZoomOut + GetShortcutText(Configuration.Settings.Shortcuts.WaveformZoomOut));
+            if (!string.IsNullOrEmpty(Configuration.Settings.Language.Settings.VerticalZoom)) // TODO: Remove in SE 3.3
+                audioVisualizerNode.Nodes.Add(Configuration.Settings.Language.Settings.VerticalZoom + GetShortcutText(Configuration.Settings.Shortcuts.WaveformVerticalZoom));
+            audioVisualizerNode.Nodes.Add(Configuration.Settings.Language.WaveForm.PlaySelection + GetShortcutText(Configuration.Settings.Shortcuts.WaveformPlaySelection));
             treeViewShortcuts.Nodes.Add(audioVisualizerNode);
 
 
@@ -860,6 +873,14 @@ namespace Nikse.SubtitleEdit.Forms
                         Configuration.Settings.Shortcuts.MainVideoShowHideVideo = GetShortcut(node.Text);
                     else if (text == Configuration.Settings.Language.Settings.ToggleDockUndockOfVideoControls.Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.MainVideoToggleVideoControls = GetShortcut(node.Text);
+                    else if (text == Configuration.Settings.Language.Settings.GoBack100Milliseconds.Replace("&", string.Empty))
+                        Configuration.Settings.Shortcuts.MainVideo100MsLeft = GetShortcut(node.Text);
+                    else if (text == Configuration.Settings.Language.Settings.GoForward100Milliseconds.Replace("&", string.Empty))
+                        Configuration.Settings.Shortcuts.MainVideo100MsRight = GetShortcut(node.Text);
+                    else if (text == Configuration.Settings.Language.Settings.GoBack500Milliseconds.Replace("&", string.Empty))
+                        Configuration.Settings.Shortcuts.MainVideo500MsLeft = GetShortcut(node.Text);
+                    else if (text == Configuration.Settings.Language.Settings.GoForward500Milliseconds.Replace("&", string.Empty))
+                        Configuration.Settings.Shortcuts.MainVideo500MsRight = GetShortcut(node.Text);
                 }
             }
 
@@ -886,7 +907,7 @@ namespace Nikse.SubtitleEdit.Forms
                         Configuration.Settings.Shortcuts.MainInsertAfter = GetShortcut(node.Text);
                     else if (text == Configuration.Settings.Language.Main.Menu.ContextMenu.InsertBefore.Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.MainInsertBefore = GetShortcut(node.Text);
-                    else if (text == ("Toggle dashes").Replace("&", string.Empty))
+                    else if (text == Configuration.Settings.Language.Settings.ToggleDialogueDashes.Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.MainListViewToggleDashes = GetShortcut(node.Text);
                 }
             }
@@ -923,8 +944,14 @@ namespace Nikse.SubtitleEdit.Forms
                 if (node.Text.Contains("["))
                 {
                     string text = node.Text.Substring(0, node.Text.IndexOf("[")).Trim();
-                    if (text == ("Vertical zoom").Replace("&", string.Empty))
+                    if (text == (Configuration.Settings.Language.Settings.VerticalZoom).Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.WaveformVerticalZoom = GetShortcut(node.Text);
+                    else if (text == (Configuration.Settings.Language.WaveForm.ZoomIn).Replace("&", string.Empty))
+                        Configuration.Settings.Shortcuts.WaveformZoomIn = GetShortcut(node.Text);
+                    else if (text == (Configuration.Settings.Language.WaveForm.ZoomOut).Replace("&", string.Empty))
+                        Configuration.Settings.Shortcuts.WaveformZoomOut = GetShortcut(node.Text);
+                    else if (text == (Configuration.Settings.Language.WaveForm.PlaySelection).Replace("&", string.Empty))
+                        Configuration.Settings.Shortcuts.WaveformPlaySelection = GetShortcut(node.Text);
                 }
             }
 

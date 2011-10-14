@@ -88,6 +88,10 @@ namespace Nikse.SubtitleEdit.Forms
         bool _cancelWordSpellCheck = false;
 
         Keys _toggleVideoDockUndock = Keys.None;
+        Keys _video100MsLeft = Keys.None;
+        Keys _video100MsRight = Keys.None;
+        Keys _video500MsLeft = Keys.None;
+        Keys _video500MsRight = Keys.None;
         Keys _mainAdjustSetStartAndOffsetTheRest = Keys.None;
         Keys _mainAdjustSetEndAndGotoNext = Keys.None;
         Keys _mainAdjustInsertViaEndAutoStartAndGoToNext = Keys.None;
@@ -95,6 +99,9 @@ namespace Nikse.SubtitleEdit.Forms
         Keys _mainInsertBefore = Keys.None;
         Keys _mainListViewToggleDashes = Keys.None;
         Keys _waveformVerticalZoom = Keys.None;
+        Keys _waveformZoomIn = Keys.None;
+        Keys _waveformZoomOut = Keys.None;
+        Keys _waveformPlaySelection = Keys.None;
         bool _videoLoadedGoToSubPosAndPause = false;
         bool _makeHistory = true;
         string _cutText = string.Empty;
@@ -6505,16 +6512,28 @@ namespace Nikse.SubtitleEdit.Forms
 
             bool inListView = tabControlSubtitle.SelectedIndex == TabControlListView;
 
-            if (audioVisualizer != null && audioVisualizer.Visible)
+            if (audioVisualizer != null && audioVisualizer.Visible & e.KeyData == _waveformVerticalZoom)
             {
-                if (e.KeyData == _waveformVerticalZoom)
-                {
-                    if (audioVisualizer.VerticalZoomPercent > 0.2)
-                        audioVisualizer.VerticalZoomPercent -= 0.1;
-                    else
-                        audioVisualizer.VerticalZoomPercent = 1;
-                    e.SuppressKeyPress = true;
-                }
+                if (audioVisualizer.VerticalZoomPercent > 0.2)
+                    audioVisualizer.VerticalZoomPercent -= 0.1;
+                else
+                    audioVisualizer.VerticalZoomPercent = 1;
+                e.SuppressKeyPress = true;
+            }
+            if (audioVisualizer != null && audioVisualizer.Visible & e.KeyData == _waveformZoomIn)
+            {
+                audioVisualizer.ZoomIn();
+                e.SuppressKeyPress = true;
+            }
+            if (audioVisualizer != null && audioVisualizer.Visible & e.KeyData == _waveformZoomOut)
+            {
+                audioVisualizer.ZoomOut();
+                e.SuppressKeyPress = true;
+            }
+            else if (audioVisualizer != null && audioVisualizer.Visible & e.KeyData == _waveformPlaySelection)
+            {
+                toolStripMenuItemWaveFormPlaySelection_Click(null, null);
+                e.SuppressKeyPress = true;
             }
             else if (_mainInsertBefore == e.KeyData && inListView)
             {
@@ -6857,6 +6876,26 @@ namespace Nikse.SubtitleEdit.Forms
                 else
                     undockVideoControlsToolStripMenuItem_Click(null, null);
             }
+            else if (mediaPlayer != null && mediaPlayer.VideoPlayer != null && e.KeyData == _video100MsLeft)
+            {
+                mediaPlayer.CurrentPosition -= 0.1;
+                e.SuppressKeyPress = true;
+            }
+            else if (mediaPlayer != null && mediaPlayer.VideoPlayer != null && e.KeyData == _video100MsRight)
+            {
+                mediaPlayer.CurrentPosition += 0.1;
+                e.SuppressKeyPress = true;
+            }
+            else if (mediaPlayer != null && mediaPlayer.VideoPlayer != null && e.KeyData == _video500MsLeft)
+            {
+                mediaPlayer.CurrentPosition -= 0.5;
+                e.SuppressKeyPress = true;
+            }
+            else if (mediaPlayer != null && mediaPlayer.VideoPlayer != null && e.KeyData == _video500MsRight)
+            {
+                mediaPlayer.CurrentPosition += 0.5;
+                e.SuppressKeyPress = true;
+            }
             else if (e.Modifiers == (Keys.Control | Keys.Alt | Keys.Shift) && e.KeyCode == Keys.B) // Ctrl+Alt+Shift+B = Beam subtitles
             {
                 Beamer beamer = new Beamer(this, _subtitle, _subtitleListViewIndex);
@@ -6962,6 +7001,7 @@ namespace Nikse.SubtitleEdit.Forms
                     if (line.Trim().StartsWith("-") || line.Trim().StartsWith("<i>-") || line.Trim().StartsWith("<i> -"))
                         hasStartDash = true;
                 }
+                MakeHistoryForUndo(_language.BeforeToggleDialogueDashes);
                 if (hasStartDash)
                     RemoveDashes();
                 else
@@ -8811,14 +8851,15 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void textBoxListViewText_MouseMove(object sender, MouseEventArgs e)
         {
-            if (Control.ModifierKeys == Keys.Control && MouseButtons == System.Windows.Forms.MouseButtons.Left)
-            {
-                if (!string.IsNullOrEmpty(textBoxListViewText.SelectedText))
-                    textBoxListViewText.DoDragDrop(textBoxListViewText.SelectedText, DragDropEffects.Copy);
-                else
-                    textBoxListViewText.DoDragDrop(textBoxListViewText.Text, DragDropEffects.Copy);
-            }
-            else if (AutoRepeatContinueOn && !textBoxSearchWord.Focused)
+            //if (Control.ModifierKeys == Keys.Control && MouseButtons == System.Windows.Forms.MouseButtons.Left)
+            //{
+            //    if (!string.IsNullOrEmpty(textBoxListViewText.SelectedText))
+            //        textBoxListViewText.DoDragDrop(textBoxListViewText.SelectedText, DragDropEffects.Copy);
+            //    else
+            //        textBoxListViewText.DoDragDrop(textBoxListViewText.Text, DragDropEffects.Copy);                
+            //}
+            //else 
+                if (AutoRepeatContinueOn && !textBoxSearchWord.Focused)
             {
                 string selectedText = textBoxListViewText.SelectedText;
                 if (!string.IsNullOrEmpty(selectedText))
@@ -9146,6 +9187,8 @@ namespace Nikse.SubtitleEdit.Forms
             _mainInsertAfter = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainInsertAfter);
             _mainInsertBefore = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainInsertBefore);
             _waveformVerticalZoom = Utilities.GetKeys(Configuration.Settings.Shortcuts.WaveformVerticalZoom);
+            _waveformZoomIn = Utilities.GetKeys(Configuration.Settings.Shortcuts.WaveformZoomIn);
+            _waveformZoomOut = Utilities.GetKeys(Configuration.Settings.Shortcuts.WaveformZoomOut);
         }
 
         private void LoadPlugins()
