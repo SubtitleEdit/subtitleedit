@@ -26,7 +26,7 @@
   #error Update your Inno Setup version
 #endif
 
-#define installer_build_number "22"
+#define installer_build_number "23"
 
 #define app_copyright "Copyright © 2001-2011, Nikse"
 #define VerMajor
@@ -103,6 +103,7 @@ Name: bg;  MessagesFile: Languages\Bulgarian.isl
 Name: cs;  MessagesFile: compiler:Languages\Czech.isl
 Name: de;  MessagesFile: compiler:Languages\German.isl
 Name: dk;  MessagesFile: compiler:Languages\Danish.isl
+Name: el;  MessagesFile: Languages\Greek.isl
 Name: es;  MessagesFile: compiler:Languages\Spanish.isl
 Name: eu;  MessagesFile: compiler:Languages\Basque.isl
 Name: fr;  MessagesFile: compiler:Languages\French.isl
@@ -177,6 +178,7 @@ Source: {#bindir}\Languages\bg-BG.xml;             DestDir: {app}\Languages;    
 Source: {#bindir}\Languages\cs-CZ.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
 Source: {#bindir}\Languages\da-DK.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
 Source: {#bindir}\Languages\de-De.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
+Source: {#bindir}\Languages\el-GR.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
 ;Source: {#bindir}\Languages\es-ES.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
 Source: {#bindir}\Languages\eu-ES.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
 Source: {#bindir}\Languages\fr-FR.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
@@ -256,6 +258,7 @@ Type: files;      Name: {app}\Languages\bg-BG.xml;      Check: NOT IsComponentSe
 Type: files;      Name: {app}\Languages\cs-CZ.xml;      Check: NOT IsComponentSelected('translations') AND IsUpgrade()
 Type: files;      Name: {app}\Languages\da-DK.xml;      Check: NOT IsComponentSelected('translations') AND IsUpgrade()
 Type: files;      Name: {app}\Languages\de-De.xml;      Check: NOT IsComponentSelected('translations') AND IsUpgrade()
+Type: files;      Name: {app}\Languages\el-GR.xml;      Check: NOT IsComponentSelected('translations') AND IsUpgrade()
 Type: files;      Name: {app}\Languages\es-ES.xml;      Check: NOT IsComponentSelected('translations') AND IsUpgrade()
 Type: files;      Name: {app}\Languages\eu-ES.xml;      Check: NOT IsComponentSelected('translations') AND IsUpgrade()
 Type: files;      Name: {app}\Languages\fr-FR.xml;      Check: NOT IsComponentSelected('translations') AND IsUpgrade()

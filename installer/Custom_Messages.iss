@@ -113,6 +113,24 @@ dk.types_custom=Brugerdefineret installation
 dk.types_default=Default installation
 
 
+;Greek
+el.comp_translations=Μεταφράσεις
+el.msg_AppIsRunning=Το Subtitle Edit είναι ανοιχτό! Κλείστε το πριν συνεχίσετε.
+el.msg_AskToDownNET=Το Subtitle Edit χρειάζεται το .NET Framework 2.0. Κατεβάστε και εγκαταστήστε το .NET Framework και επαναλάβετε την εγκατάσταση.%n%nΘέλετε να κατεβάσετε το .NET Framework 2.0 τώρα;
+el.msg_DeleteSettings=Θέλετε επίσης να διαγράψετε τις ρυθμίσεις του Subtitle Edit και οποιεσδήποτε τροποποιήσεις έχετε κάνει στους φακέλους;%n%nΑν σκοπεύετε να επανεγκαταστήσετε το Subtitle Edit δε χρειάζεται να τις διαγράψετε.
+el.msg_OptimizingPerformance=Βελτιστοποίηση απόδοσης...
+el.msg_SetupIsRunningWarning=Η Εγκατάσταση του Subtitle Edit είναι ήδη ανοιχτή!
+el.run_VisitWebsite=Επισκεφτείτε την Ιστοσελίδα του Subtitle Edit
+el.sm_com_Changelog=Ιστορικό του Subtitle Edit
+el.tsk_AllUsers=Για όλους τους χρήστες
+el.tsk_CurrentUser=Μόνο για τον τρέχων χρήστη
+el.tsk_Other=Άλλα:
+el.tsk_ResetDictionaries=Επαναφορά Λεξικών και διαγραφή πρόσθετων ονομάτων
+el.tsk_ResetSettings=Επαναφορά ρυθμίσεων του Subtitle Edit
+el.types_custom=Προσαρμοσμένη εγκατάσταση
+el.types_default=Προεπιλεγμένη εγκατάσταση
+
+
 ; Spanish
 es.comp_translations=Translations
 es.msg_AppIsRunning=¡Subtitle Edit está en ejecución! Por favor, ciérrelo antes de proceder.
