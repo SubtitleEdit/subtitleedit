@@ -613,6 +613,7 @@
     <Compile Include="Logic\SubtitleFormats\UTSubtitleXml.cs" />
     <Compile Include="Logic\SubtitleFormats\Utx.cs" />
     <Compile Include="Logic\SubtitleFormats\UtxFrames.cs" />
+    <Compile Include="Logic\SubtitleFormats\WebVTT.cs" />
     <Compile Include="Logic\SubtitleFormats\Wsb.cs" />
     <Compile Include="Logic\SubtitleFormats\YouTubeAnnotations.cs" />
     <Compile Include="Logic\SubtitleFormats\YouTubeSbv.cs" />
@@ -969,6 +970,9 @@
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Languages\de-DE.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Languages\el-GR.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Languages\es-ES.xml">
