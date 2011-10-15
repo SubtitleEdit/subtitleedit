@@ -29,6 +29,7 @@
 #define installer_build_number "23"
 
 #define app_copyright "Copyright © 2001-2011, Nikse"
+
 #define VerMajor
 #define VerMinor
 #define VerBuild
@@ -230,17 +231,17 @@ Type: files;      Name: {commondesktop}\Subtitle Edit.lnk; Check: NOT IsTaskSele
 Type: files;      Name: {userappdata}\Subtitle Edit\Settings.xml; Tasks: reset_settings
 
 ; Remove old files from the {app} dir
-Type: files;      Name: {app}\Dictionaries\da_DK_names_etc.xml
-Type: files;      Name: {app}\Dictionaries\da_DK_user.xml
-Type: files;      Name: {app}\Dictionaries\dan_OCRFixReplaceList.xml
-Type: files;      Name: {app}\Dictionaries\en_US.aff
-Type: files;      Name: {app}\Dictionaries\en_US.dic
-Type: files;      Name: {app}\Dictionaries\en_US_names_etc.xml
-Type: files;      Name: {app}\Dictionaries\en_US_user.xml
-Type: files;      Name: {app}\Dictionaries\eng_OCRFixReplaceList.xml
-Type: files;      Name: {app}\Dictionaries\names_etc.xml
-Type: dirifempty; Name: {app}\Dictionaries
-Type: files;      Name: {app}\uninstall.ico
+Type: files;      Name: {app}\Dictionaries\da_DK_names_etc.xml;       Check: IsUpgrade()
+Type: files;      Name: {app}\Dictionaries\da_DK_user.xml;            Check: IsUpgrade()
+Type: files;      Name: {app}\Dictionaries\dan_OCRFixReplaceList.xml; Check: IsUpgrade()
+Type: files;      Name: {app}\Dictionaries\en_US.aff;                 Check: IsUpgrade()
+Type: files;      Name: {app}\Dictionaries\en_US.dic;                 Check: IsUpgrade()
+Type: files;      Name: {app}\Dictionaries\en_US_names_etc.xml;       Check: IsUpgrade()
+Type: files;      Name: {app}\Dictionaries\en_US_user.xml;            Check: IsUpgrade()
+Type: files;      Name: {app}\Dictionaries\eng_OCRFixReplaceList.xml; Check: IsUpgrade()
+Type: files;      Name: {app}\Dictionaries\names_etc.xml;             Check: IsUpgrade()
+Type: dirifempty; Name: {app}\Dictionaries;                           Check: IsUpgrade()
+Type: files;      Name: {app}\uninstall.ico;                          Check: IsUpgrade()
 
 #ifdef localize
 ; Language files not included anymore
@@ -275,18 +276,18 @@ Type: files;      Name: {app}\Languages\zh-CHS.xml;     Check: NOT IsComponentSe
 Type: dirifempty; Name: {app}\Languages;                Check: NOT IsComponentSelected('translations') AND IsUpgrade()
 #endif
 
-Type: files;      Name: {app}\tessnet2_32.dll
-Type: files;      Name: {app}\TessData\eng.DangAmbigs
-Type: files;      Name: {app}\TessData\eng.freq-dawg
-Type: files;      Name: {app}\TessData\eng.inttemp
-Type: files;      Name: {app}\TessData\eng.normproto
-Type: files;      Name: {app}\TessData\eng.pffmtable
-Type: files;      Name: {app}\TessData\eng.unicharset
-Type: files;      Name: {app}\TessData\eng.user-words
-Type: files;      Name: {app}\TessData\eng.word-dawg
-Type: dirifempty; Name: {app}\TessData
+Type: files;      Name: {app}\tessnet2_32.dll;         Check: IsUpgrade()
+Type: files;      Name: {app}\TessData\eng.DangAmbigs; Check: IsUpgrade()
+Type: files;      Name: {app}\TessData\eng.freq-dawg;  Check: IsUpgrade()
+Type: files;      Name: {app}\TessData\eng.inttemp;    Check: IsUpgrade()
+Type: files;      Name: {app}\TessData\eng.normproto;  Check: IsUpgrade()
+Type: files;      Name: {app}\TessData\eng.pffmtable;  Check: IsUpgrade()
+Type: files;      Name: {app}\TessData\eng.unicharset; Check: IsUpgrade()
+Type: files;      Name: {app}\TessData\eng.user-words; Check: IsUpgrade()
+Type: files;      Name: {app}\TessData\eng.word-dawg;  Check: IsUpgrade()
+Type: dirifempty; Name: {app}\TessData;                Check: IsUpgrade()
 
-Type: files;      Name: {app}\Settings.xml
+Type: files;      Name: {app}\Settings.xml;            Check: IsUpgrade()
 
 
 [Run]
