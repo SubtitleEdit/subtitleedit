@@ -21,5 +21,10 @@ namespace Nikse.SubtitleEdit.Logic.SpellCheck
             return _hunspell.Suggest(word);
         }
 
+        ~WindowsHunspell()
+        {
+            _hunspell.Dispose();
+        }
+
     }
 }
