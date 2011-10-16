@@ -1682,7 +1682,18 @@ namespace Nikse.SubtitleEdit.Logic
                 if (italicBeginTagCount == 1 && italicEndTagCount == 2)
                 {
                     int firstIndex = text.IndexOf(endTag);
-                    text = text.Substring(0, firstIndex - 1) + text.Substring(firstIndex + endTag.Length);
+                    if (text.StartsWith("</i>-<i>-"))
+                        text = text.Remove(0, 5);
+                    else if (text.StartsWith("</i>- <i>-"))
+                        text = text.Remove(0, 5);
+                    else if (text.StartsWith("</i>- <i> -"))
+                        text = text.Remove(0, 5);
+                    else if (text.StartsWith("</i>-<i> -"))
+                        text = text.Remove(0, 5);
+                    else if (firstIndex == 0)
+                        text = text.Remove(0, 4);
+                    else
+                        text = text.Substring(0, firstIndex - 1) + text.Substring(firstIndex + endTag.Length);
                 }
 
                 if (italicBeginTagCount == 2 && italicEndTagCount == 1)
