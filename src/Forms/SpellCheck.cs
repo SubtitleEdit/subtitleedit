@@ -563,7 +563,9 @@ namespace Nikse.SubtitleEdit.Forms
                         else
                         {
                             correct = false;
-                            if (_languageName.StartsWith("en_") && (_currentWord.ToLower() == "a" || _currentWord == "I"))
+                            if (_currentWord == "'")
+                                correct = true;
+                            else if (_languageName.StartsWith("en_") && (_currentWord.ToLower() == "a" || _currentWord == "I"))
                                 correct = true;
                             else if (_languageName.StartsWith("da_") && _currentWord.ToLower() == "i")
                                 correct = true;
