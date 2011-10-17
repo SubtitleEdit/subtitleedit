@@ -680,6 +680,8 @@
             public string SpellCheckCompletedXCorrections { get; set; }
             public string OpenOtherSubtitle { get; set; }
             public string BeforeToggleDialogueDashes { get; set; }
+            public string ExportPlainTextAs { get; set; }
+            public string TextFiles { get; set; }
 
             public class MainMenu
             {
@@ -708,6 +710,8 @@
                     public string ExportCavena890 { get; set; }
                     public string ExportEbu { get; set; }
                     public string ExportPac { get; set; }
+                    public string ExportPlainText { get; set; }
+                    public string ExportPlainTextWithoutLineBreaks { get; set; }
                     public string Exit { get; set; }
                 }
                 public class EditMenu
@@ -1134,6 +1138,7 @@
             public string WaveFormAppearance { get; set; }
             public string WaveFormGridColor { get; set; }
             public string WaveFormShowGridLines { get; set; }
+            public string ReverseMouseWheelScrollDirection { get; set; }
             public string WaveFormColor { get; set; }
             public string WaveFormSelectedColor { get; set; }
             public string WaveFormBackgroundColor { get; set; }
