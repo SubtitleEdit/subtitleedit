@@ -90,6 +90,8 @@
             this.toolStripMenuItemCavena890 = new System.Windows.Forms.ToolStripMenuItem();
             this.eBUSTLToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.pACScreenElectronicsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.plainTextToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.plainTextWithoutLineBreaksToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator10 = new System.Windows.Forms.ToolStripSeparator();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -929,7 +931,9 @@
             this.toolStripMenuItemExportPngXml,
             this.toolStripMenuItemCavena890,
             this.eBUSTLToolStripMenuItem,
-            this.pACScreenElectronicsToolStripMenuItem});
+            this.pACScreenElectronicsToolStripMenuItem,
+            this.plainTextToolStripMenuItem,
+            this.plainTextWithoutLineBreaksToolStripMenuItem});
             this.toolStripMenuItemExport.Name = "toolStripMenuItemExport";
             this.toolStripMenuItemExport.Size = new System.Drawing.Size(334, 22);
             this.toolStripMenuItemExport.Text = "Export";
@@ -937,30 +941,44 @@
             // toolStripMenuItemExportPngXml
             // 
             this.toolStripMenuItemExportPngXml.Name = "toolStripMenuItemExportPngXml";
-            this.toolStripMenuItemExportPngXml.Size = new System.Drawing.Size(222, 22);
+            this.toolStripMenuItemExportPngXml.Size = new System.Drawing.Size(245, 22);
             this.toolStripMenuItemExportPngXml.Text = "BDN xml/png...";
             this.toolStripMenuItemExportPngXml.Click += new System.EventHandler(this.toolStripMenuItemExportPngXml_Click);
             // 
             // toolStripMenuItemCavena890
             // 
             this.toolStripMenuItemCavena890.Name = "toolStripMenuItemCavena890";
-            this.toolStripMenuItemCavena890.Size = new System.Drawing.Size(222, 22);
+            this.toolStripMenuItemCavena890.Size = new System.Drawing.Size(245, 22);
             this.toolStripMenuItemCavena890.Text = "Cavena 890...";
             this.toolStripMenuItemCavena890.Click += new System.EventHandler(this.toolStripMenuItemCavena890_Click);
             // 
             // eBUSTLToolStripMenuItem
             // 
             this.eBUSTLToolStripMenuItem.Name = "eBUSTLToolStripMenuItem";
-            this.eBUSTLToolStripMenuItem.Size = new System.Drawing.Size(222, 22);
+            this.eBUSTLToolStripMenuItem.Size = new System.Drawing.Size(245, 22);
             this.eBUSTLToolStripMenuItem.Text = "EBU STL...";
             this.eBUSTLToolStripMenuItem.Click += new System.EventHandler(this.eBUSTLToolStripMenuItem_Click);
             // 
             // pACScreenElectronicsToolStripMenuItem
             // 
             this.pACScreenElectronicsToolStripMenuItem.Name = "pACScreenElectronicsToolStripMenuItem";
-            this.pACScreenElectronicsToolStripMenuItem.Size = new System.Drawing.Size(222, 22);
+            this.pACScreenElectronicsToolStripMenuItem.Size = new System.Drawing.Size(245, 22);
             this.pACScreenElectronicsToolStripMenuItem.Text = "PAC (Screen Electronics)...";
             this.pACScreenElectronicsToolStripMenuItem.Click += new System.EventHandler(this.pACScreenElectronicsToolStripMenuItem_Click);
+            // 
+            // plainTextToolStripMenuItem
+            // 
+            this.plainTextToolStripMenuItem.Name = "plainTextToolStripMenuItem";
+            this.plainTextToolStripMenuItem.Size = new System.Drawing.Size(245, 22);
+            this.plainTextToolStripMenuItem.Text = "Plain text...";
+            this.plainTextToolStripMenuItem.Click += new System.EventHandler(this.plainTextToolStripMenuItem_Click);
+            // 
+            // plainTextWithoutLineBreaksToolStripMenuItem
+            // 
+            this.plainTextWithoutLineBreaksToolStripMenuItem.Name = "plainTextWithoutLineBreaksToolStripMenuItem";
+            this.plainTextWithoutLineBreaksToolStripMenuItem.Size = new System.Drawing.Size(245, 22);
+            this.plainTextWithoutLineBreaksToolStripMenuItem.Text = "Plain text without line breaks...";
+            this.plainTextWithoutLineBreaksToolStripMenuItem.Click += new System.EventHandler(this.plainTextWithoutLineBreaksToolStripMenuItem_Click);
             // 
             // toolStripSeparator10
             // 
@@ -2099,6 +2117,7 @@
             this.audioVisualizer.StartPositionSeconds = 0D;
             this.audioVisualizer.TabIndex = 6;
             this.audioVisualizer.TextColor = System.Drawing.Color.Gray;
+            this.audioVisualizer.VerticalZoomPercent = 1D;
             this.audioVisualizer.WaveFormNotLoadedText = "Click to add wave form";
             this.audioVisualizer.WavePeaks = null;
             this.audioVisualizer.ZoomFactor = 1D;
@@ -3121,6 +3140,7 @@
             // 
             // textBoxListViewTextAlternate
             // 
+            this.textBoxListViewTextAlternate.AllowDrop = true;
             this.textBoxListViewTextAlternate.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxListViewTextAlternate.ContextMenuStrip = this.contextMenuStripTextBoxListView;
@@ -3459,6 +3479,7 @@
             // 
             // textBoxListViewText
             // 
+            this.textBoxListViewText.AllowDrop = true;
             this.textBoxListViewText.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxListViewText.ContextMenuStrip = this.contextMenuStripTextBoxListView;
@@ -4016,6 +4037,8 @@
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemCavena890;
         private Controls.SETextBox textBoxListViewTextAlternate;
         private System.Windows.Forms.ToolStripMenuItem textCharssecToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem plainTextToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem plainTextWithoutLineBreaksToolStripMenuItem;
     }
 }
 

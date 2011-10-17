@@ -1220,6 +1220,5 @@ namespace Nikse.SubtitleEdit.Controls
             bmpDestination.Dispose();
         }
 
-
     }
 }

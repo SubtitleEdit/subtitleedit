@@ -758,6 +758,8 @@ namespace Nikse.SubtitleEdit.Logic
                 SpellCheckCompletedXCorrections = "Spell check completed. {0} lines were modified.",
                 OpenOtherSubtitle = "Open other subtitle",
                 BeforeToggleDialogueDashes = "Before toggle of dialogue dashes",
+                TextFiles = "Text files",
+                ExportPlainTextAs = "Export plain text as",
 
                 Menu = new LanguageStructure.Main.MainMenu
                 {
@@ -786,6 +788,8 @@ namespace Nikse.SubtitleEdit.Logic
                         ExportCavena890 = "Cavena 890...",
                         ExportEbu = "EBU stl...",
                         ExportPac = "PAC (Screen Electronics)...",
+                        ExportPlainText = "Export plain text...",
+                        ExportPlainTextWithoutLineBreaks = "Export plain text without line breaks...",
                         Exit = "E&xit"
                     },
 
@@ -1205,6 +1209,7 @@ can edit in same subtitle file (collaboration)",
                 WaveFormAppearance = "Wave form appearance",
                 WaveFormGridColor = "Grid color",
                 WaveFormShowGridLines = "Show grid lines",
+                ReverseMouseWheelScrollDirection = "Reverse mouse wheel scroll direction",
                 WaveFormColor = "Color",
                 WaveFormSelectedColor = "Selected color",
                 WaveFormBackgroundColor = "Back color",

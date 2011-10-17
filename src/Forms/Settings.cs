@@ -231,6 +231,8 @@ namespace Nikse.SubtitleEdit.Forms
 
             groupBoxWaveFormAppearence.Text = language.WaveFormAppearance;
             checkBoxWaveFormShowGrid.Text = language.WaveFormShowGridLines;
+            checkBoxReverseMouseWheelScrollDirection.Text = language.ReverseMouseWheelScrollDirection;
+            checkBoxReverseMouseWheelScrollDirection.Visible = !string.IsNullOrEmpty(language.ReverseMouseWheelScrollDirection); // TODO: Remove in 3.3
             buttonWaveFormGridColor.Text = language.WaveFormGridColor;
             buttonWaveFormColor.Text = language.WaveFormColor;
             buttonWaveFormSelectedColor.Text = language.WaveFormSelectedColor;
@@ -421,7 +423,7 @@ namespace Nikse.SubtitleEdit.Forms
                 comboBoxSpectrogramAppearance.SelectedIndex = 0;
             else
                 comboBoxSpectrogramAppearance.SelectedIndex = 1;
-
+            checkBoxReverseMouseWheelScrollDirection.Checked = Configuration.Settings.VideoControls.WaveFormMouseWheelScrollUpIsForward;
 
             TreeNode fileNode = new TreeNode(Configuration.Settings.Language.Main.Menu.File.Title);
             fileNode.Nodes.Add(Configuration.Settings.Language.Main.Menu.File.New + GetShortcutText(Configuration.Settings.Shortcuts.MainFileNew));
@@ -810,11 +812,11 @@ namespace Nikse.SubtitleEdit.Forms
             Configuration.Settings.VideoControls.WaveFormBackgroundColor = panelWaveFormBackgroundColor.BackColor;
             Configuration.Settings.VideoControls.WaveFormTextColor = panelWaveFormTextColor.BackColor;
             Configuration.Settings.VideoControls.GenerateSpectrogram = checkBoxGenerateSpectrogram.Checked;
-
             if (comboBoxSpectrogramAppearance.SelectedIndex == 0)
                 Configuration.Settings.VideoControls.SpectrogramAppearance = "OneColorGradient";
             else
                 Configuration.Settings.VideoControls.SpectrogramAppearance = "Classic";
+            Configuration.Settings.VideoControls.WaveFormMouseWheelScrollUpIsForward = checkBoxReverseMouseWheelScrollDirection.Checked;
 
             //Main File
             foreach (TreeNode node in treeViewShortcuts.Nodes[0].Nodes)

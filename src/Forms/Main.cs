@@ -891,6 +891,10 @@ namespace Nikse.SubtitleEdit.Forms
             toolStripMenuItemCavena890.Text = _language.Menu.File.ExportCavena890;
             eBUSTLToolStripMenuItem.Text = _language.Menu.File.ExportEbu;
             pACScreenElectronicsToolStripMenuItem.Text = _language.Menu.File.ExportPac;
+            plainTextToolStripMenuItem.Text = _language.Menu.File.ExportPlainText;
+            plainTextToolStripMenuItem.Visible = !string.IsNullOrEmpty(_language.Menu.File.ExportPlainText); //TODO: Remove in 3.3
+            plainTextWithoutLineBreaksToolStripMenuItem.Text = _language.Menu.File.ExportPlainTextWithoutLineBreaks;
+            plainTextWithoutLineBreaksToolStripMenuItem.Visible = !string.IsNullOrEmpty(_language.Menu.File.ExportPlainTextWithoutLineBreaks); //TODO: Remove in 3.3
             exitToolStripMenuItem.Text = _language.Menu.File.Exit;
 
             editToolStripMenuItem.Text = _language.Menu.Edit.Title;
@@ -2274,6 +2278,7 @@ namespace Nikse.SubtitleEdit.Forms
             audioVisualizer.Color = Configuration.Settings.VideoControls.WaveFormColor;
             audioVisualizer.BackgroundColor = Configuration.Settings.VideoControls.WaveFormBackgroundColor;
             audioVisualizer.TextColor =  Configuration.Settings.VideoControls.WaveFormTextColor;
+            audioVisualizer.MouseWheelScrollUpIsForward = Configuration.Settings.VideoControls.WaveFormMouseWheelScrollUpIsForward;
 
             if (oldSubtitleFontSettings != Configuration.Settings.General.SubtitleFontName +
                                           Configuration.Settings.General.SubtitleFontBold +
@@ -11504,6 +11509,43 @@ namespace Nikse.SubtitleEdit.Forms
             if (_findHelper != null)
                 _findHelper.MatchInOriginal = true;
         }
+
+        private void plainTextToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ExportTextOnly(false);
+        }
+
+        private void plainTextWithoutLineBreaksToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ExportTextOnly(true);
+        }
+
+        private void ExportTextOnly(bool removeLineBreaks)
+        {
+            if (SubtitleListview1.Items.Count > 0)
+            {
+                if (!string.IsNullOrEmpty(openFileDialog1.InitialDirectory))
+                    saveFileDialog1.InitialDirectory = openFileDialog1.InitialDirectory;
+                saveFileDialog1.Title = _language.ExportPlainTextAs;
+                saveFileDialog1.Filter =  _language.TextFiles +  "|*.txt";
+                if (saveFileDialog1.ShowDialog(this) == DialogResult.OK)
+                {
+                    var sb = new StringBuilder();
+                    foreach (Paragraph p in _subtitle.Paragraphs)
+                    {
+                        sb.AppendLine(Utilities.RemoveHtmlTags(p.Text));
+                    }
+                    string text = sb.ToString().Trim();
+                    if (removeLineBreaks)
+                    {
+                        text = text.Replace(Environment.NewLine, " ");
+                        text = text.Replace("  ", " ").Replace("  ", " ");
+                    }
+                    File.WriteAllText(saveFileDialog1.FileName, text);
+                }
+            }
+        }
+
 
     }
 }
