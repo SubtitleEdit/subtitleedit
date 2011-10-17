@@ -69,7 +69,7 @@ namespace Nikse.SubtitleEdit.Controls
             {
                 string startTime = maskedTextBox1.Text;
                 startTime.Replace(' ', '0');
-                if (startTime.EndsWith("."))
+                if (startTime.EndsWith(System.Globalization.CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator))
                     startTime += "000";
 
                 string[] times = startTime.Split(":,.".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
