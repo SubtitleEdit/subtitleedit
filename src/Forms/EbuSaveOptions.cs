@@ -159,6 +159,9 @@ namespace Nikse.SubtitleEdit.Forms
                 _header.DiskFormatCode = "STL25.01";
 
             _header.CharacterCodeTableNumber = "0" + comboBoxCharacterCodeTable.SelectedIndex.ToString();
+            _header.LanguageCode = textBoxLanguageCode.Text;
+            if (_header.LanguageCode.Length != 2)
+                _header.LanguageCode = "0A";
             _header.OriginalProgrammeTitle = textBoxOriginalProgramTitle.Text.PadRight(32, ' ');
             _header.OriginalEpisodeTitle = textBoxOriginalEpisodeTitle.Text.PadRight(32, ' ');
             _header.TranslatedProgrammeTitle = textBoxTranslatedProgramTitle.Text.PadRight(32, ' ');

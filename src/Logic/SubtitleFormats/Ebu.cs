@@ -411,6 +411,9 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public void Save(string fileName, Subtitle subtitle)
         {
+            if (fileName.Length > 32)
+                fileName = fileName.Substring(0, 32).Trim();
+
             EbuGeneralSubtitleInformation header = new EbuGeneralSubtitleInformation();
             EbuSaveOptions saveOptions = new EbuSaveOptions();
             if (subtitle.Header != null && subtitle.Header.Length > 1024 && (subtitle.Header.Contains("STL25") || subtitle.Header.Contains("STL30")))
