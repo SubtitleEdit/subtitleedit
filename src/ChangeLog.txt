@@ -4,7 +4,7 @@ Subtitle Edit Changelog
  * NEW:
    * Added German language file - thx JW 301
    * Added Greek language file - thx The Rabbit
-   * Some basic support for subtitle format WebVTT 
+   * Some basic support for subtitle format WebVTT
    * Some basic support for subtitle format SCC
  * IMPROVED:
    * Updated Basque language file - thx xabier aramendi
@@ -18,7 +18,7 @@ Subtitle Edit Changelog
    * Can now acutally use MPlayer2 on windows - thx rotulos1
    * Fixed a (rare) crash in change casing - fix names
    * Fixed a bug in format Timed Text draft - thx Thomas
-   * Fix for using Chinese traditional tesseract ocr dictionary 
+   * Fix for using Chinese traditional tesseract ocr dictionary
 
 
 3.2 (8th October 2011)
