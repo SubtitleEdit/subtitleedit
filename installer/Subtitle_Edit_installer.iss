@@ -45,8 +45,8 @@
 #define app_version str(VerMajor) + "." + str(VerMinor) + "." + str(VerBuild) + "." + str(VerRevision)
 
 ; the following simple_app_version is for 3 digit releases, one of the two must be uncommented at a time
-;#define simple_app_version str(VerMajor) + "." + str(VerMinor) + "." + str(VerBuild)
-#define simple_app_version str(VerMajor) + "." + str(VerMinor)
+#define simple_app_version str(VerMajor) + "." + str(VerMinor) + "." + str(VerBuild)
+;#define simple_app_version str(VerMajor) + "." + str(VerMinor)
 
 #define installer_build_date GetDateTimeString('mmm, d yyyy', '', '')
 
