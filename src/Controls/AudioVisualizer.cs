@@ -169,8 +169,17 @@ namespace Nikse.SubtitleEdit.Controls
         {
             if (_spectrogramBitmaps != null)
             {
-                foreach (Bitmap bmp in _spectrogramBitmaps)
-                    bmp.Dispose();
+                for (int i = 0; i < _spectrogramBitmaps.Count; i++)
+                {
+                    try
+                    {
+                        Bitmap bmp = _spectrogramBitmaps[i];
+                        bmp.Dispose();
+                    }
+                    catch
+                    { 
+                    }
+                }
             }
             _spectrogramBitmaps = new List<Bitmap>();
         }

@@ -587,6 +587,7 @@
     <Compile Include="Logic\SubtitleFormats\QuickTimeText.cs" />
     <Compile Include="Logic\SubtitleFormats\RealTime.cs" />
     <Compile Include="Logic\SubtitleFormats\Scenarist.cs" />
+    <Compile Include="Logic\SubtitleFormats\ScenaristClosedCaptions.cs" />
     <Compile Include="Logic\SubtitleFormats\Son.cs" />
     <Compile Include="Logic\SubtitleFormats\SonyDVDArchitectExplicitDuration.cs" />
     <Compile Include="Logic\SubtitleFormats\SonyDVDArchitectTabs.cs" />

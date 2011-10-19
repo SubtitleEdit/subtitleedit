@@ -42,6 +42,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     new QuickTimeText(),
                     new RealTime(),
                     new Scenarist(),
+                    new ScenaristClosedCaptions(),
                     new SonyDVDArchitect(),
                     new SonyDVDArchitectExplicitDuration(),
                     new SonyDVDArchitectTabs(),
