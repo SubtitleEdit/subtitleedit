@@ -1,24 +1,25 @@
 Subtitle Edit Changelog
 
-3.2.1 (xth October 2011)
+3.2.2 (19th October 2011)
  * NEW:
-   * Added German language file - thx JW 301 :)
-   * Added Greek language file - thx The Rabbit :)
+   * Added German language file - thx JW 301
+   * Added Greek language file - thx The Rabbit
    * Some basic support for subtitle format WebVTT 
    * Some basic support for subtitle format SCC
  * IMPROVED:
-   * Updated Basque language file - thx xabier aramendi :) 
-   * Improved drag-and-drop support in textbox - thx vmb :)
+   * Updated Basque language file - thx xabier aramendi
+   * Improved drag-and-drop support in textbox - thx vmb
  * FIXED:
    * Possible crash when saving ebu files
-   * Possible crash when fixing italics - thx StainlessS :) 
-   * Fixed bug when editing time codes - issue 46, thx mobo... :) 
-   * Fixed memory leak in spell check - thx thx aMvEL :) 
-   * Fixed WinXP crash when ocr'ing blu-ray/SON - thx edea :) 
-   * Can now acutally use MPlayer2 on windows - thx rotulos1 :) 
+   * Possible crash when fixing italics - thx StainlessS
+   * Fixed bug when editing time codes - issue 46, thx mobo
+   * Fixed memory leak in spell check - thx thx aMvEL
+   * Fixed WinXP crash when ocr'ing blu-ray/SON - thx edea
+   * Can now acutally use MPlayer2 on windows - thx rotulos1
    * Fixed a (rare) crash in change casing - fix names
-   * Fixed a bug in format Timed Text draft - thx Thomas :)
+   * Fixed a bug in format Timed Text draft - thx Thomas
    * Fix for using Chinese traditional tesseract ocr dictionary 
+
 
 3.2 (8th October 2011)
  * NEW:
