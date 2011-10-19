@@ -9,7 +9,6 @@ namespace Nikse.SubtitleEdit.Controls
     /// </summary>
     public class SETextBox : TextBox
     {
-
         string _dragText = string.Empty;
         int _dragStartFrom = 0;
         long _dragStartTicks = 0;
@@ -47,9 +46,6 @@ namespace Nikse.SubtitleEdit.Controls
                     DataObject dataObject = new DataObject();
                     dataObject.SetText(_dragText, TextDataFormat.UnicodeText);
                     dataObject.SetText(_dragText, TextDataFormat.Text);
-                    //dataObject.SetData(System.Windows.Forms.DataFormats.OemText, _dragText);
-                    //dataObject.SetData(System.Windows.Forms.DataFormats.StringFormat, _dragText);
-                    //dataObject.SetData(System.Windows.Forms.DataFormats.Rtf, _dragText);
 
                     _dragFromThis = true;
                     if (Control.ModifierKeys == Keys.Control)
@@ -71,7 +67,6 @@ namespace Nikse.SubtitleEdit.Controls
             Point pt = new Point(e.X, e.Y);
             pt = PointToClient(pt);
             int index = GetCharIndexFromPosition(pt);
-
 
             string newText = string.Empty;
             if (e.Data.GetDataPresent(DataFormats.UnicodeText))
