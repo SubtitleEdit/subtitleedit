@@ -109,7 +109,7 @@ namespace Nikse.SubtitleEdit.Logic
         {
             try
             {
-                _fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.Read);
+                _fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
 
                 byte[] buffer = new byte[12];
                 _fs.Position = 0;

@@ -79,7 +79,7 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
             0x00, 0x00, 0x00, 0x00, // 0: video_width, video_height
             0x10,                   // 4: hi nibble: frame_rate (0x10=24p), lo nibble: reserved
             0x00, 0x00,             // 5: composition_number (increased by start and end header)
-            (byte)0x80,             // 7: composition_state (0x80: epoch start)
+            0x80,                   // 7: composition_state (0x80: epoch start)
             0x00,                   // 8: palette_update_flag (0x80), 7bit reserved
             0x00,                   // 9: palette_id_ref (0..7)
             0x01,                   // 10: number_of_composition_objects (0..2)
@@ -104,7 +104,7 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
         {
             0x00, 0x00,             // 0: object_id
             0x00,                   // 2: object_version_number
-            (byte)0xC0,             // 3: first_in_sequence (0x80), last_in_sequence (0x40), 6bits reserved
+            0xC0,                   // 3: first_in_sequence (0x80), last_in_sequence (0x40), 6bits reserved
             0x00, 0x00, 0x00,       // 4: object_data_length - full RLE buffer length (including 4 bytes size info)
             0x00, 0x00, 0x00, 0x00, // 7: object_width, object_height
         };
@@ -113,7 +113,7 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
         {
             0x00, 0x00,             // 0: object_id
             0x00,                   // 2: object_version_number
-            (byte)0x40,             // 3: first_in_sequence (0x80), last_in_sequence (0x40), 6bits reserved
+            0x40,                   // 3: first_in_sequence (0x80), last_in_sequence (0x40), 6bits reserved
         };
 
         private static byte[] headerWDS =
@@ -133,7 +133,7 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
         /// <returns>List of BluRaySupPictures</returns>
         public static List<BluRaySupPicture> ParseBluRaySup(string fileName, StringBuilder log)
         {
-            using (var fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.Read))
+            using (var fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
             {
                 return  ParseBluRaySup(fs, log, false);
             }
@@ -627,7 +627,8 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
             }
             else
             {
-                log.AppendLine("Unable to read segment - PG missing!");
+                if (log.Length < 2000)
+                    log.AppendLine("Unable to read segment - PG missing!");
             }
             return segment;
         }

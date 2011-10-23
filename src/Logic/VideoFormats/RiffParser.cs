@@ -180,7 +180,7 @@ namespace Nikse.SubtitleEdit.Logic
                 //Console.WriteLine(ShortName + " is a valid file.");
 
                 // Read the RIFF header
-                m_stream = new FileStream(m_filename, FileMode.Open, FileAccess.Read, FileShare.Read);
+                m_stream = new FileStream(m_filename, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
                 int FourCC;
                 int datasize;
                 int fileType;

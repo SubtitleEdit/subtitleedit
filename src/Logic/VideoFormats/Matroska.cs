@@ -862,7 +862,7 @@ namespace Nikse.SubtitleEdit.Logic
 
             _durationInMilliseconds = 0;
 
-            f = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.Read);
+            f = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
 
             matroskaId = GetMatroskaId();
             if (matroskaId != 0x1A45DFA3) // matroska file must start with ebml header
@@ -1149,7 +1149,7 @@ namespace Nikse.SubtitleEdit.Logic
             long afterPosition;
             bool endOfFile;
 
-            f = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.Read);
+            f = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
 
             matroskaId = GetMatroskaId();
             if (matroskaId != 0x1A45DFA3) // matroska file must start with ebml header
@@ -1221,7 +1221,7 @@ namespace Nikse.SubtitleEdit.Logic
             bool endOfFile;
             _subtitleRipTrackNumber = trackNumber;
 
-            f = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.Read);
+            f = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
 
             matroskaId = GetMatroskaId();
             if (matroskaId != 0x1A45DFA3) // matroska file must start with ebml header

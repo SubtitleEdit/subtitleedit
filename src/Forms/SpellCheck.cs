@@ -57,6 +57,24 @@ namespace Nikse.SubtitleEdit.Forms
         string _languageName;
         Main _mainWindow;
 
+        string _currentDictionary = null;
+
+        public class SuggestionParameter
+        {
+            public string InputWord { get; set; }
+            public List<string> Suggestions { get; set; }
+            public Hunspell Hunspell { get; set; }
+            public bool Success { get; set; }
+
+            public SuggestionParameter(string word, Hunspell hunspell)
+            {
+                InputWord = word;
+                Suggestions = new List<string>();
+                Hunspell = hunspell;
+                Success = false;
+            }
+        }
+
         public string LanguageString
         {
             get
@@ -244,9 +262,15 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             _changeAllDictionary = new Dictionary<string, string>();
-            _hunspell = Hunspell.GetHunspell(dictionary);
+            LoadHunspell(dictionary);
             _wordsIndex--;
             PrepareNextWord();
+        }
+
+        private void LoadHunspell(string dictionary)
+        {
+            _currentDictionary = dictionary;
+            _hunspell = Hunspell.GetHunspell(dictionary);
         }
 
         public bool DoSpell(string word)
@@ -256,7 +280,21 @@ namespace Nikse.SubtitleEdit.Forms
 
         public List<string> DoSuggest(string word)
         {
-            return _hunspell.Suggest(word);
+            var parameter = new SuggestionParameter(word, _hunspell);
+            var suggestThread = new System.Threading.Thread(DoWork);
+            suggestThread.Start(parameter);
+            suggestThread.Join(3000); // wait max 3 seconds
+            suggestThread.Abort();
+            if (!parameter.Success)
+                LoadHunspell(_currentDictionary);
+            return parameter.Suggestions;
+        }
+
+        public static void DoWork(object data)
+        {
+            var parameter = (SuggestionParameter)data;
+            parameter.Suggestions = parameter.Hunspell.Suggest(parameter.InputWord);
+            parameter.Success = true;
         }
 
         private void ButtonChangeAllClick(object sender, EventArgs e)
@@ -430,7 +468,6 @@ namespace Nikse.SubtitleEdit.Forms
         {
             while (true)
             {
-
                 if (_wordsIndex + 1 < _words.Length)
                 {
                     _wordsIndex++;
@@ -591,7 +628,6 @@ namespace Nikse.SubtitleEdit.Forms
                                     suggestions = DoSuggest(_currentWord); //TODO: 0.9.6 fails on "Lt'S"
                             }
 
-
                             if (AutoFixNames && _currentWord.Length > 1 && suggestions.Contains(_currentWord.Substring(0, 1).ToUpper() + _currentWord.Substring(1)))
                             {
                                 ChangeWord = _currentWord.Substring(0, 1).ToUpper() + _currentWord.Substring(1);
@@ -625,6 +661,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             List<string> replaceIds = new List<string>();
             List<string> replaceNames = new List<string>();
+            s = Utilities.RemoveHtmlTags(s);
             s = GetTextWithoutUserWordsAndNames(replaceIds, replaceNames, s);
             _words = s.Split(" -.,?!:;\"“”()[]{}|<>/+\r\n¿¡…—♪♫".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
             _words = FixWordsInserUserWordAndNames(replaceIds, replaceNames, _words);
@@ -831,7 +868,7 @@ namespace Nikse.SubtitleEdit.Forms
 
 
             _changeAllDictionary = new Dictionary<string, string>();
-            _hunspell = Hunspell.GetHunspell(dictionary);
+            LoadHunspell(dictionary);
             _currentIndex = 0;
             _currentParagraph = _subtitle.Paragraphs[_currentIndex];
             SetWords(_currentParagraph.Text);

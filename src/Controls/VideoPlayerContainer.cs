@@ -79,6 +79,20 @@ namespace Nikse.SubtitleEdit.Controls
         private PictureBox _pictureBoxVolumeBar = new PictureBox();
         private Label _labelTimeCode = new Label();
 
+        public RightToLeft RightToLeft
+        {
+            get
+            {
+                return _subtitleTextBox.RightToLeft;
+            }
+            set
+            {
+                _subtitleTextBox.RightToLeft = value;
+                _subtitleTextBox.SelectAll();
+                _subtitleTextBox.SelectionAlignment = HorizontalAlignment.Center;
+            }
+        }
+
         public bool ShowStopButton
         {
             get

@@ -278,6 +278,12 @@
     <Compile Include="Forms\NetworkStart.Designer.cs">
       <DependentUpon>NetworkStart.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\PacEncoding.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\PacEncoding.Designer.cs">
+      <DependentUpon>PacEncoding.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\SetSyncPoint.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -543,6 +549,7 @@
     <Compile Include="Logic\Networking\UpdateLogEntry.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Logic\NikseBitmap.cs" />
     <Compile Include="Logic\OCR\ModiLanguage.cs" />
     <Compile Include="Logic\OCR\OcrAlphabet.cs" />
     <Compile Include="Logic\OCR\OcrCharacter.cs" />
@@ -793,6 +800,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\NetworkStart.resx">
       <DependentUpon>NetworkStart.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\PacEncoding.resx">
+      <DependentUpon>PacEncoding.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\SetSyncPoint.resx">
       <DependentUpon>SetSyncPoint.cs</DependentUpon>

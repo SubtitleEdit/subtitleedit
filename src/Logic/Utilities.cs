@@ -464,7 +464,7 @@ namespace Nikse.SubtitleEdit.Logic
             Encoding encoding = Encoding.Default;
             try
             {
-                var file = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.Read);
+                var file = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
 
                 var bom = new byte[12]; // Get the byte-order mark, if there is one
                 file.Position = 0;

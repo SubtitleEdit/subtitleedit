@@ -1,9 +1,9 @@
 ﻿using System;
+using System.Drawing;
+using System.IO;
 using System.Text;
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Logic;
-using System.IO;
-using System.Drawing;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -44,7 +44,6 @@ namespace Nikse.SubtitleEdit.Forms
         }
 
 
-
         private Encoding _encoding;
         private byte[] _fileBuffer;
 
@@ -78,7 +77,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             try
             {
-                var file = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.Read);
+                var file = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
 
                 int length = (int)file.Length;
                 if (length > 100000)
