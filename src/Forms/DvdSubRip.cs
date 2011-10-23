@@ -235,7 +235,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 try
                 {
-                    fs = new FileStream(vobFileName, FileMode.Open, FileAccess.Read, FileShare.Read);
+                    fs = new FileStream(vobFileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
                     tryAgain = false;
                 }
                 catch (IOException exception)

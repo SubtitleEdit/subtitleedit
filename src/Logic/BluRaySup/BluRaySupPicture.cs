@@ -201,7 +201,7 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
 
                     int alphaOld = palette.GetAlpha(palIndex);
                     // avoid fading out
-                    if (alpha >= alphaOld)
+                    if (alpha >= alphaOld || alpha == 0)
                     {
                         if (alpha < Core.GetAlphaCrop())
                         {// to not mess with scaling algorithms, make transparent color black
@@ -211,7 +211,10 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
                         }
                         palette.SetAlpha(palIndex, alpha);
                     }
-                    else fadeOut = true;
+                    else
+                    {
+                        fadeOut = true;
+                    }
 
                     palette.SetYCbCr(palIndex, y, cb, cr);
                     index++;
@@ -325,7 +328,7 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
         {
             int x = index % bmp.Width;
             int y = index / bmp.Width;
-            if (color > 0 && x < bmp.Width && y < bmp.Height)
+            if (color >= 0 && x < bmp.Width && y < bmp.Height)
                 bmp.SetPixel(x, y, Color.FromArgb(palette.GetArgb(color)));
         }
 

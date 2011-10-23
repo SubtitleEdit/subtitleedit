@@ -22,7 +22,7 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
 
         public void Open(string fileName)
         {
-            var fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.Read);
+            var fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
             Open(fs);
             fs.Close();
         }
@@ -60,7 +60,7 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
                 if (idx.IdxParagraphs.Count > 0)
                 {
                     var buffer = new byte[0x800]; // 2048
-                    var fs = new FileStream(vobSubFileName, FileMode.Open, FileAccess.Read, FileShare.Read);
+                    var fs = new FileStream(vobSubFileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
                     foreach (var p in idx.IdxParagraphs)
                     {
                         if (p.FilePosition + 100 < fs.Length)

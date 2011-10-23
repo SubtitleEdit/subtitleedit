@@ -6295,7 +6295,7 @@ namespace Nikse.SubtitleEdit.Forms
         private bool IsBluRaySupFile(string subFileName)
         {
             var buffer = new byte[4];
-            var fs = new FileStream(subFileName, FileMode.Open, FileAccess.Read, FileShare.Read) {Position = 0};
+            var fs = new FileStream(subFileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite ) {Position = 0};
             fs.Read(buffer, 0, 4);
             fs.Close();
             return (buffer[0] == 0x50 && buffer[1] == 0x47); // 80 + 71 - P G
@@ -6619,11 +6619,11 @@ namespace Nikse.SubtitleEdit.Forms
                     SubtitleListview1.SelectedItems[0].EnsureVisible();
                 e.SuppressKeyPress = true;
             }
-            else if (e.Modifiers == (Keys.Control | Keys.Alt | Keys.Shift) && e.KeyCode == Keys.R) // reload "Language.xml"
-            {
-                if (File.Exists(Configuration.BaseDirectory + "Language.xml"))
-                    SetLanguage("Language.xml");
-            }
+            //else if (e.Modifiers == (Keys.Control | Keys.Alt | Keys.Shift) && e.KeyCode == Keys.R) // reload "Language.xml"
+            //{
+            //    if (File.Exists(Configuration.BaseDirectory + "Language.xml"))
+            //        SetLanguage("Language.xml");
+            //}
             else if (e.Modifiers == (Keys.Control | Keys.Shift) && e.KeyCode == Keys.M)
             {
                 if (_subtitle.Paragraphs.Count > 0 && SubtitleListview1.SelectedItems.Count >= 1)
@@ -6905,6 +6905,25 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 Beamer beamer = new Beamer(this, _subtitle, _subtitleListViewIndex);
                 beamer.ShowDialog(this);
+            }
+            else if (e.Modifiers == (Keys.Control | Keys.Alt | Keys.Shift) && e.KeyCode == Keys.R) // Ctrl+Alt+Shift+R = Toggle RightToLeft
+            {
+                if (textBoxListViewText.RightToLeft == System.Windows.Forms.RightToLeft.Yes)
+                {
+                    textBoxListViewText.RightToLeft = System.Windows.Forms.RightToLeft.No;
+                    SubtitleListview1.RightToLeft = System.Windows.Forms.RightToLeft.No;
+                    textBoxSource.RightToLeft = System.Windows.Forms.RightToLeft.No;
+                    if (mediaPlayer != null)
+                        mediaPlayer.RightToLeft = System.Windows.Forms.RightToLeft.No;
+                }
+                else
+                {
+                    textBoxListViewText.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+                    SubtitleListview1.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+                    textBoxSource.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+                    if (mediaPlayer != null)
+                        mediaPlayer.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+                }
             }
 
             // TABS - MUST BE LAST

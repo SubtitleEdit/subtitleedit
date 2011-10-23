@@ -263,6 +263,7 @@ namespace Nikse.SubtitleEdit.Logic
         public int SmallDelayMilliseconds { get; set; }
         public int LargeDelayMilliseconds { get; set; }
         public bool ShowOriginalAsPreviewIfAvailable { get; set; }
+        public int LastPacCodePage { get; set; }
 
         public GeneralSettings()
         {
@@ -839,6 +840,9 @@ namespace Nikse.SubtitleEdit.Logic
             subNode = node.SelectSingleNode("ShowOriginalAsPreviewIfAvailable");
             if (subNode != null)
                 settings.General.ShowOriginalAsPreviewIfAvailable = Convert.ToBoolean(subNode.InnerText);
+            subNode = node.SelectSingleNode("LastPacCodePage");
+            if (subNode != null)
+                settings.General.LastPacCodePage = Convert.ToInt32((subNode.InnerText));
 
             settings.Tools = new Nikse.SubtitleEdit.Logic.ToolsSettings();
             node = doc.DocumentElement.SelectSingleNode("Tools");
@@ -1331,6 +1335,7 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("SmallDelayMilliseconds", settings.General.SmallDelayMilliseconds.ToString());
             textWriter.WriteElementString("LargeDelayMilliseconds", settings.General.LargeDelayMilliseconds.ToString());
             textWriter.WriteElementString("ShowOriginalAsPreviewIfAvailable", settings.General.ShowOriginalAsPreviewIfAvailable.ToString());
+            textWriter.WriteElementString("LastPacCodePage", settings.General.LastPacCodePage.ToString());
             textWriter.WriteEndElement();
 
             textWriter.WriteStartElement("Tools", "");
