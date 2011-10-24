@@ -173,21 +173,11 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             WriteTimeCode(fs, p.EndTime);
 
             if (_codePage == -1)
-                GetCodePage(null, 0, 0, 0);
+                GetCodePage(null, 0, 0);
 
             string text = Utilities.RemoveHtmlTags(p.Text);
             text = text.Replace(Environment.NewLine, System.Text.Encoding.Default.GetString(new byte[] { 0xfe, 0x02, 0x03 })); // fix line breaks
 //            text = text.Replace(Environment.NewLine, System.Text.Encoding.Default.GetString(new byte[] { 0xfe, 0x0a, 0x03 })); // fix line breaks
-
-            byte length = (byte)(text.Length + 4);
-            fs.WriteByte(length);
-
-            // TODO: What is this?
-            fs.WriteByte(0);
-            fs.WriteByte(0x0a); // sometimes 0x0b?
-            fs.WriteByte(0xfe);
-            fs.WriteByte(0x02); //2=centered, 1=left aligned, 0=right aligned,
-            fs.WriteByte(0x03);
 
             Encoding encoding = GetEncoding(_codePage);
             byte[] textBuffer;
@@ -197,6 +187,19 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 textBuffer = GetLatinBytes(encoding, text);
             else
                 textBuffer = encoding.GetBytes(text);
+
+
+            byte length = (byte)(textBuffer.Length+4);
+            fs.WriteByte(length);
+
+            // TODO: What is this?
+            fs.WriteByte(0);
+            fs.WriteByte(0x0a); // sometimes 0x0b?
+            fs.WriteByte(0xfe);
+            fs.WriteByte(0x02); //2=centered, 1=left aligned, 0=right aligned,
+            fs.WriteByte(0x03);
+
+
             fs.Write(textBuffer, 0, textBuffer.Length);
 
             if (!isLast)
@@ -317,29 +320,32 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 if (index +20 >= buffer.Length)
                     return null;
 
-                if (buffer[index] == 0xFE && buffer[index - 15] == 0x60)
+                if (buffer[index] == 0xFE && (buffer[index - 15] == 0x60 ||buffer[index - 15] == 0x61))
                     con = false;
-                if (buffer[index] == 0xFE && buffer[index - 12] == 0x60)
+                if (buffer[index] == 0xFE && (buffer[index - 12] == 0x60 || buffer[index - 12] == 0x61))
                     con = false;
             }
 
             int FEIndex = index;
-            int endDelimiter1 = 0x00;
-            int endDelimiter2 = 0xff;
+            int endDelimiter = 0x00;
 
             if (_codePage == -1)
-                GetCodePage(buffer, index, endDelimiter1, endDelimiter2);
+                GetCodePage(buffer, index, endDelimiter);
 
             StringBuilder sb = new StringBuilder();
             index = FEIndex + 3;
-            while (index < buffer.Length && buffer[index] != endDelimiter1 && buffer[index] != endDelimiter2)
+            while (index < buffer.Length && buffer[index] != endDelimiter)
             {
-                if (buffer[index] == 0xFE)
+                if (buffer[index] == 0xFF)
+                {
+                    sb.Append(" ");
+                }
+                else if (buffer[index] == 0xFE)
                 {
                     sb.AppendLine();
-                    index += 3;
+                    index += 2;
                 }
-                if (_codePage == 0)
+                else if (_codePage == 0)
                     sb.Append(GetLatinString(GetEncoding(_codePage), buffer, ref index));
                 else if (_codePage == 3)
                     sb.Append(GetArabicString(buffer, ref index));
@@ -372,18 +378,13 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             return p;
         }
 
-        private string FixEnglishTextInArabic(string text)
+        public static string FixEnglishTextInArabic(string text)
         {
-            //return text; 
             var sb = new StringBuilder();
             string[] lines = text.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
             foreach (string line in lines)
             {
                 string s = line.Trim();
-                //if (s.EndsWith("(") && s.Length > 1)
-                //    s = "(" + s.Substring(0, s.Length - 2);
-                //if (s.StartsWith(")") && s.Length > 1)
-                //    s = s.Substring(1, s.Length - 2) + ")";
                 for (int i = 0; i < s.Length; i++)
                 {
                     if (s.Substring(i, 1) == ")")
@@ -394,9 +395,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
                 bool numbersOn = false;
                 string numbers = string.Empty;
+                string reverseChars = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
                 for (int i = 0; i < s.Length; i++)
                 {
-                    if (numbersOn && "0123456789".Contains(s.Substring(i, 1)))
+                    if (numbersOn && reverseChars.Contains(s.Substring(i, 1)))
                     {
                         numbers = s.Substring(i, 1) + numbers;
                     }
@@ -406,13 +408,18 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         s = s.Remove(i - numbers.Length, numbers.Length).Insert(i - numbers.Length, numbers.ToString());
                         numbers = string.Empty;
                     }
-                    else if ("0123456789".Contains(s.Substring(i, 1)))
+                    else if (reverseChars.Contains(s.Substring(i, 1)))
                     {
                         numbers = s.Substring(i, 1) + numbers;
                         numbersOn = true;
                     }
                 }
-
+                if (numbersOn)
+                {
+                    int i = s.Length;
+                    s = s.Remove(i - numbers.Length, numbers.Length).Insert(i - numbers.Length, numbers.ToString());
+                    numbers = string.Empty;
+                }
 
                 sb.AppendLine(s);
             }
@@ -441,7 +448,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             }
         }
 
-        private void GetCodePage( byte[] buffer, int index, int endDelimiter1, int endDelimiter2)
+        private void GetCodePage( byte[] buffer, int index, int endDelimiter)
         {
             byte[] previewBuffer = null;
 
@@ -449,9 +456,13 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             {
                 byte[] textSample = new byte[200];
                 int textIndex = 0;
-                while (index < buffer.Length && buffer[index] != endDelimiter1 && buffer[index] != endDelimiter2)
+                while (index < buffer.Length && buffer[index] != endDelimiter)
                 {
-                    if (buffer[index] == 0xFE)
+                    if (buffer[index] == 0xFF)
+                    {
+                        textSample[textIndex++] = 32; // space
+                    }
+                    else if (buffer[index] == 0xFE)
                     {
                         if (textIndex < textSample.Length - 3)
                         {
@@ -536,8 +547,21 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             int extra = 0;
             while (i < text.Length)
             {
-                string letter = text.Substring(i, 1);
-                int idx = _arabicLetters.IndexOf(letter);
+                bool doubleCharacter = false;
+                string letter = string.Empty;
+                int idx = -1;
+                if (i + 1 < text.Length)
+                {
+                     letter = text.Substring(i, 2);
+                     idx = _arabicLetters.IndexOf(letter);
+                     if (idx >= 0)
+                         doubleCharacter = true;
+                }
+                if (idx < 0)
+                {
+                    letter = text.Substring(i, 1);
+                    idx = _arabicLetters.IndexOf(letter);
+                }
                 if (idx >= 0)
                 {
                     int byteValue = _arabicCodes[idx];
@@ -550,7 +574,15 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         int high = byteValue / 256;
                         int low = byteValue % 256;
                         buffer[i + extra] = (byte)high;
-                        extra++;
+                        if (doubleCharacter)
+                        {
+                            i++;
+                            doubleCharacter = false;
+                        }
+                        else
+                        {
+                            extra++;
+                        }
                         buffer[i + extra] = (byte)low;
                     }
                 }
@@ -566,6 +598,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     }
                 }
                 i++;
+                if (doubleCharacter)
+                    i++;
             }
 
             byte[] result = new byte[i+extra];

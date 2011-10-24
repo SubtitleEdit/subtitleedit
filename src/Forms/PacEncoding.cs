@@ -58,18 +58,19 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     Encoding encoding = Pac.GetEncoding(CodePageIndex);
                     int FEIndex = 0;
-                    int endDelimiter1 = 0x00;
-                    int endDelimiter2 = 0xff;
+                    int endDelimiter = 0x00;
                     StringBuilder sb = new StringBuilder();
                     int index = FEIndex + 3;
-                    while (index < _previewBuffer.Length && _previewBuffer[index] != endDelimiter1 && _previewBuffer[index] != endDelimiter2)
+                    while (index < _previewBuffer.Length && _previewBuffer[index] != endDelimiter)
                     {
                         if (_previewBuffer[index] == 0xFE)
                         {
                             sb.AppendLine();
-                            index += 3;
+                            index += 2;
                         }
-                        if (CodePageIndex == 0)
+                        else if (_previewBuffer[index] == 0xFF)
+                            sb.Append(" ");
+                        else if (CodePageIndex == 0)
                             sb.Append(Pac.GetLatinString(encoding, _previewBuffer, ref index));
                         else if (CodePageIndex == 3)
                             sb.Append(Pac.GetArabicString(_previewBuffer, ref index));
@@ -78,7 +79,10 @@ namespace Nikse.SubtitleEdit.Forms
 
                         index++;
                     }
-                    textBoxPreview.Text = sb.ToString();
+                    if (CodePageIndex == 3)
+                        textBoxPreview.Text = Pac.FixEnglishTextInArabic(sb.ToString());
+                    else
+                        textBoxPreview.Text = sb.ToString();
                 }
             }
 
