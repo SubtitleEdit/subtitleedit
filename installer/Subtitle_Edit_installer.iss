@@ -364,14 +364,12 @@ end;
 
 function ShouldSkipPage(PageID: Integer): Boolean;
 begin
-  if IsUpgrade() then begin
-    // Hide the license page
-    if PageID = wpLicense then begin
-      Result := True;
-    end
-    else begin
+  // Hide the license page
+  if IsUpgrade() AND (PageID = wpLicense) then begin
+    Result := True;
+  end
+  else begin
       Result := False;
-    end;
   end;
 end;
 
