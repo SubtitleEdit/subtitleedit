@@ -23,7 +23,8 @@ namespace Nikse.SubtitleEdit.Logic.SpellCheck
 
         ~WindowsHunspell()
         {
-            _hunspell.Dispose();
+            if (_hunspell != null && !_hunspell.IsDisposed)
+                _hunspell.Dispose();
         }
 
     }
