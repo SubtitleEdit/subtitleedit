@@ -12,6 +12,9 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
     public class Pac : SubtitleFormat
     {
+        /// <summary>
+        /// Contains Swedish, Danish, German, Spanish, and French letters
+        /// </summary>
         static List<int> _latinCodes = new List<int> {
             0xe161, // å
             0xe141, // Å
@@ -19,7 +22,70 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             0x7d, // ø
             0x5c, // Æ
             0x5d, // Ø
-        };
+            0xE54f, // Ö
+            0xE56f, // ö
+            0xe541, // Ä
+            0xe561, // ä
+            0xe555, // Ü
+            0xe575, // ü
+            0x81,   // ß
+            0xe265, // é
+            0xe245, // É
+            0xe365, // è
+            0xe345, // È
+            0xe443, // Ĉ
+            0xe447, // Ĝ
+            0xe448, // Ĥ
+            0xe44A, // Ĵ
+            0xe453, // Ŝ
+            0xeA55, // Ŭ
+            0xe463, // ĉ
+            0xe467, // ĝ
+            0xe468, // ĥ
+            0xe46A, // ĵ
+            0xe473, // ŝ
+            0xeA75, // ŭ            
+            0xe341, // À
+            0xe361, // à
+            0xe441, // Â
+            0xe461, // â
+            0xe643, // Ç
+            0xe663, // ç
+            0xe445, // Ê
+            0xe465, // ê
+            0xe545, // Ë
+            0xe565, // ë
+            0xe449, // Î
+            0xe469, // î
+            0xe549, // Ï
+            0xe569, // ï
+            0xe44F, // Ô
+            0xe46F, // ô
+            0xe355, // Ù
+            0xe375, // ù
+            0xe455, // Û
+            0xe475, // û
+            0xe559, // Ÿ
+            0xe579, // ÿ
+            0xeb41, // Ą
+            0xeb61, // ą
+            0xe243, // Ć
+            0xe263, // ć
+            0xeB45, // Ę
+            0xeB65, // ę
+            0x9c,   // Ł
+            0xbc,   // ł
+            0xe24e, // Ń
+            0xe26e, // ń
+            0xe24f, // Ó
+            0xe26f, // ó
+            0xe253, // Ś
+            0xe273, // ś
+            0xe25a, // Ź
+            0xe27a, // ź
+            0xe85a, // Ż
+            0xe87a, // ż
+        };          
 
         static List<string> _latinLetters = new List<string> {
             "å",
@@ -28,6 +94,69 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             "ø",
             "Æ",
             "Ø",
+            "Ö",
+            "ö",
+            "Ä",
+            "ä",
+            "Ü",
+            "ü",
+            "ß",
+            "é",
+            "É",
+            "è",
+            "È",
+            "Ĉ",
+            "Ĝ",
+            "Ĥ",
+            "Ĵ",
+            "Ŝ",
+            "Ŭ",
+            "ĉ",
+            "ĝ",
+            "ĥ",
+            "ĵ",
+            "ŝ",
+            "ŭ",
+            "À",
+            "à",
+            "Â",
+            "â",
+            "Ç",
+            "ç",
+            "Ê",
+            "ê",
+            "Ë",
+            "ë",
+            "Î",
+            "î",
+            "Ï",
+            "ï",
+            "Ô",
+            "ô",
+            "Ù",
+            "ù",
+            "Û",
+            "û",
+            "Ÿ",
+            "ÿ",
+            "Ą",
+            "ą",
+            "Ć",
+            "ć",
+            "Ę",
+            "ę",
+            "Ł",
+            "ł",
+            "Ń",
+            "ń",
+            "Ó",
+            "ó",
+            "Ś",
+            "ś",
+            "Ź",
+            "ź",
+            "Ż",
+            "ż",
         };
 
 

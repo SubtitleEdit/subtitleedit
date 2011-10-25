@@ -449,7 +449,7 @@ namespace Nikse.SubtitleEdit.Logic
             MainFileNew = "Control+N";
             MainFileOpen = "Control+O";
             MainFileSave = "Control+S";
-            MainFileSaveAs = "Control+Shift+S";
+            MainFileSaveAs = "";
             MainFileExportEbu = string.Empty;
             MainEditFind = "Control+F";
             MainEditFindNext = "F3";
