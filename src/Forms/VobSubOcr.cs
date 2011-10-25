@@ -148,6 +148,10 @@ namespace Nikse.SubtitleEdit.Forms
 
         Keys _italicShortcut = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxItalic);
 
+        private string[] _tesseractAsyncStrings = null;
+        private int _tesseractAsyncIndex = 0;
+        private BackgroundWorker _tesseractThread;
+
         public VobSubOcr()
         {
             InitializeComponent();
@@ -957,49 +961,52 @@ namespace Nikse.SubtitleEdit.Forms
             // Search images with minor location changes
             FindBestMatch(ref index, ref smallestDifference, ref smallestIndex, target);
 
-            if (smallestDifference > 0 && target.Width > 12)
-            {
-                Bitmap cutBitmap = CopyBitmapSection(target, new Rectangle(1, 0, target.Width - 2, target.Height));
-                FindBestMatch(ref index, ref smallestDifference, ref smallestIndex, cutBitmap);
-                cutBitmap.Dispose();
-            }
 
-            if (smallestDifference > 0 && target.Width > 12)
+            if (target.Height < 35)
             {
-                Bitmap cutBitmap = CopyBitmapSection(target, new Rectangle(0, 0, target.Width - 2, target.Height));
-                FindBestMatch(ref index, ref smallestDifference, ref smallestIndex, cutBitmap);
-                cutBitmap.Dispose();
-            }
-
-            if (smallestDifference > 0 && target.Width > 12)
-            {
-                Bitmap cutBitmap = CopyBitmapSection(target, new Rectangle(1, 0, target.Width - 2, target.Height));
-                int topCrop = 0;
-                cutBitmap = ImageSplitter.CropTopAndBottom(cutBitmap, out topCrop, 2);
-                if (cutBitmap.Height != target.Height)
+                if (smallestDifference > 0 && target.Width > 12)
+                {
+                    Bitmap cutBitmap = CopyBitmapSection(target, new Rectangle(1, 0, target.Width - 2, target.Height));
                     FindBestMatch(ref index, ref smallestDifference, ref smallestIndex, cutBitmap);
-                cutBitmap.Dispose();
-            }
+                    cutBitmap.Dispose();
+                }
 
-            if (smallestDifference > 0 && target.Width > 15)
-            {
-                Bitmap cutBitmap = CopyBitmapSection(target, new Rectangle(1, 0, target.Width - 2, target.Height));
-                int topCrop = 0;
-                cutBitmap = ImageSplitter.CropTopAndBottom(cutBitmap, out topCrop);
-                if (cutBitmap.Height != target.Height)
+                if (smallestDifference > 0 && target.Width > 12)
+                {
+                    Bitmap cutBitmap = CopyBitmapSection(target, new Rectangle(0, 0, target.Width - 2, target.Height));
                     FindBestMatch(ref index, ref smallestDifference, ref smallestIndex, cutBitmap);
-                cutBitmap.Dispose();
-            }
+                    cutBitmap.Dispose();
+                }
 
+                if (smallestDifference > 0 && target.Width > 12)
+                {
+                    Bitmap cutBitmap = CopyBitmapSection(target, new Rectangle(1, 0, target.Width - 2, target.Height));
+                    int topCrop = 0;
+                    cutBitmap = ImageSplitter.CropTopAndBottom(cutBitmap, out topCrop, 2);
+                    if (cutBitmap.Height != target.Height)
+                        FindBestMatch(ref index, ref smallestDifference, ref smallestIndex, cutBitmap);
+                    cutBitmap.Dispose();
+                }
 
-            if (smallestDifference > 0 && target.Width > 15)
-            {
-                Bitmap cutBitmap = CopyBitmapSection(target, new Rectangle(1, 0, target.Width - 2, target.Height));
-                int topCrop = 0;
-                cutBitmap = ImageSplitter.CropTopAndBottom(cutBitmap, out topCrop);
-                if (cutBitmap.Height != target.Height)
-                    FindBestMatch(ref index, ref smallestDifference, ref smallestIndex, cutBitmap);
-                cutBitmap.Dispose();
+                if (smallestDifference > 0 && target.Width > 15)
+                {
+                    Bitmap cutBitmap = CopyBitmapSection(target, new Rectangle(1, 0, target.Width - 2, target.Height));
+                    int topCrop = 0;
+                    cutBitmap = ImageSplitter.CropTopAndBottom(cutBitmap, out topCrop);
+                    if (cutBitmap.Height != target.Height)
+                        FindBestMatch(ref index, ref smallestDifference, ref smallestIndex, cutBitmap);
+                    cutBitmap.Dispose();
+                }
+
+                if (smallestDifference > 0 && target.Width > 15)
+                {
+                    Bitmap cutBitmap = CopyBitmapSection(target, new Rectangle(1, 0, target.Width - 2, target.Height));
+                    int topCrop = 0;
+                    cutBitmap = ImageSplitter.CropTopAndBottom(cutBitmap, out topCrop);
+                    if (cutBitmap.Height != target.Height)
+                        FindBestMatch(ref index, ref smallestDifference, ref smallestIndex, cutBitmap);
+                    cutBitmap.Dispose();
+                }
             }
 
             if (smallestIndex >= 0)
@@ -1755,7 +1762,7 @@ namespace Nikse.SubtitleEdit.Forms
         }
 
         private void ButtonOkClick(object sender, EventArgs e)
-        {
+        {            
             if (Configuration.Settings.VobSubOcr.XOrMorePixelsMakesSpace != (int)numericUpDownPixelsIsSpace.Value && _bluRaySubtitlesOriginal == null)
             {
                 Configuration.Settings.VobSubOcr.XOrMorePixelsMakesSpace = (int)numericUpDownPixelsIsSpace.Value;
@@ -1777,6 +1784,26 @@ namespace Nikse.SubtitleEdit.Forms
             progressBar1.Visible = false;
         }
 
+        void TesseractThreadDoWork(object sender, DoWorkEventArgs e)
+        {
+            var bitmap = (Bitmap)e.Argument;
+            if (_tesseractAsyncIndex >= 0 && _tesseractAsyncIndex < _tesseractAsyncStrings.Length)
+            {
+                if (string.IsNullOrEmpty(_tesseractAsyncStrings[_tesseractAsyncIndex]))
+                    _tesseractAsyncStrings[_tesseractAsyncIndex] = Tesseract3DoOcrViaExe(bitmap, _languageId);
+            }
+        }
+
+        void TesseractThreadRunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            if (!e.Cancelled)
+            {
+                _tesseractAsyncIndex++;
+                if (_tesseractAsyncIndex >= 0 && _tesseractAsyncIndex < _tesseractAsyncStrings.Length)
+                    _tesseractThread.RunWorkerAsync(GetSubtitleBitmap(_tesseractAsyncIndex));
+            }
+        }
+
         private void ButtonStartOcrClick(object sender, EventArgs e)
         {
             Configuration.Settings.VobSubOcr.RightToLeft = checkBoxRightToLeft.Checked;
@@ -1791,6 +1818,17 @@ namespace Nikse.SubtitleEdit.Forms
             _abort = false;
 
             int max = GetSubtitleCount();
+
+            if (comboBoxOcrMethod.SelectedIndex == 0 && _tesseractAsyncStrings == null)
+            {
+                _tesseractAsyncStrings = new string[max];
+                _tesseractAsyncIndex = (int)numericUpDownStartNumber.Value + 5;
+                _tesseractThread = new BackgroundWorker();
+                _tesseractThread.DoWork += TesseractThreadDoWork;
+                _tesseractThread.RunWorkerCompleted += TesseractThreadRunWorkerCompleted;
+                _tesseractThread.WorkerSupportsCancellation = true;
+                _tesseractThread.RunWorkerAsync(GetSubtitleBitmap(_tesseractAsyncIndex));
+            }
 
             progressBar1.Maximum = max;
             progressBar1.Value = 0;
@@ -1944,7 +1982,17 @@ namespace Nikse.SubtitleEdit.Forms
                 LoadOcrFixEngine();
 
             int badWords = 0;
-            string textWithOutFixes = Tesseract3DoOcrViaExe(bitmap, _languageId);
+            string textWithOutFixes;
+            if (!string.IsNullOrEmpty(_tesseractAsyncStrings[index]))
+            {
+                textWithOutFixes = _tesseractAsyncStrings[index];
+            }
+            else
+            {
+                if (_tesseractAsyncIndex <= index || _tesseractAsyncIndex > index + 50)
+                    _tesseractAsyncIndex = index + 10;
+                textWithOutFixes = Tesseract3DoOcrViaExe(bitmap, _languageId);
+            }
 
             if (textWithOutFixes.ToString().Trim().Length == 0)
                 textWithOutFixes = TesseractResizeAndRetry(bitmap);
@@ -2734,7 +2782,7 @@ namespace Nikse.SubtitleEdit.Forms
                 string name = comboBoxDictionaries.SelectedItem.ToString();
                 int start = name.LastIndexOf("[");
                 int end = name.LastIndexOf("]");
-                if (start > 0 && end > start)
+                if (start >= 0 && end > start)
                 {
                     start++;
                     name = name.Substring(start, end - start);
@@ -2984,7 +3032,6 @@ namespace Nikse.SubtitleEdit.Forms
             SubtitleListView1SelectedIndexChanged(null, null);
         }
 
-
         internal void Initialize(string fileName, List<Color> palette, VobSubOcrSettings vobSubOcrSettings, List<SpHeader> spList)
         {
             _spList = spList;
@@ -3079,7 +3126,6 @@ namespace Nikse.SubtitleEdit.Forms
             LoadImageCompareCharacterDatabaseList();
 
             //_palette = palette;
-
             if (_palette == null)
                 checkBoxCustomFourColors.Checked = true;
 
@@ -3100,6 +3146,13 @@ namespace Nikse.SubtitleEdit.Forms
             }
             subtitleListView1.Fill(_subtitle);
             subtitleListView1.SelectIndexAndEnsureVisible(0);
+        }
+
+        private void VobSubOcr_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (_tesseractThread != null)
+                _tesseractThread.CancelAsync();
+            _tesseractAsyncIndex = 10000;
         }
     }
 }
