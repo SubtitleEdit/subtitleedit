@@ -123,7 +123,10 @@ namespace Nikse.SubtitleEdit.Logic.OCR
                         {
                             try
                             {
-                                var ci = new CultureInfo(name.Replace("_", "-"));
+                                name = name.Replace("_", "-");
+                                if (name.Length > 5)
+                                    name = name.Substring(0, 5);
+                                var ci = new CultureInfo(name);
                                 if (ci.ThreeLetterISOLanguageName == threeLetterIsoLanguageName || string.Compare(ci.ThreeLetterWindowsLanguageName, threeLetterIsoLanguageName, true) == 0)
                                 {
                                     dictionaryFileName = dic;
@@ -215,6 +218,12 @@ namespace Nikse.SubtitleEdit.Logic.OCR
             // Load Hunspell spellchecker
             try
             {
+                if (!File.Exists(dictionary + ".dic"))
+                {
+                    var fileMatches = Directory.GetFiles(Utilities.DictionaryFolder, _fiveLetterWordListLanguageName + "*.dic");
+                    if (fileMatches.Length > 0)
+                        dictionary = fileMatches[0].Substring(0, fileMatches[0].Length - 4);
+                }
                 _hunspell = Hunspell.GetHunspell(dictionary);
                 IsDictionaryLoaded = true;
                 _spellCheckDictionaryName = dictionary;
