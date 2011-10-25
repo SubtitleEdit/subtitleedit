@@ -217,7 +217,7 @@ Name: {group}\Subtitle Edit;                Filename: {app}\SubtitleEdit.exe; Wo
 Name: {group}\Help and Support\Changelog;   Filename: {app}\Changelog.txt;    WorkingDir: {app}; Comment: {cm:sm_com_Changelog}
 Name: {group}\Help and Support\Online Help; Filename: http://www.nikse.dk/SubtitleEdit/Help.aspx
 Name: {group}\Help and Support\{cm:ProgramOnTheWeb,Subtitle Edit}; Filename: http://www.nikse.dk/SubtitleEdit/;  Comment: {cm:ProgramOnTheWeb,Subtitle Edit}
-Name: {group}\{cm:UninstallProgram,Subtitle Edit};                 Filename: {uninstallexe};           Comment: {cm:UninstallProgram,Subtitle Edit}; WorkingDir: {app}; IconFilename: {app}\Icons\uninstall.ico
+Name: {group}\{cm:UninstallProgram,Subtitle Edit};                 Filename: {uninstallexe};                     Comment: {cm:UninstallProgram,Subtitle Edit}; WorkingDir: {app}; IconFilename: {app}\Icons\uninstall.ico
 
 Name: {commondesktop}\Subtitle Edit;        Filename: {app}\SubtitleEdit.exe; WorkingDir: {app}; Comment: Subtitle Edit v{#simple_app_version}; AppUserModelID: Nikse.SubtitleEdit; IconFilename: {app}\SubtitleEdit.exe; IconIndex: 0; Tasks: desktopicon\common
 Name: {userdesktop}\Subtitle Edit;          Filename: {app}\SubtitleEdit.exe; WorkingDir: {app}; Comment: Subtitle Edit v{#simple_app_version}; AppUserModelID: Nikse.SubtitleEdit; IconFilename: {app}\SubtitleEdit.exe; IconIndex: 0; Tasks: desktopicon\user
@@ -241,6 +241,17 @@ Type: files;      Name: {app}\Dictionaries\en_US_user.xml;            Check: IsU
 Type: files;      Name: {app}\Dictionaries\eng_OCRFixReplaceList.xml; Check: IsUpgrade()
 Type: files;      Name: {app}\Dictionaries\names_etc.xml;             Check: IsUpgrade()
 Type: dirifempty; Name: {app}\Dictionaries;                           Check: IsUpgrade()
+Type: files;      Name: {app}\TessData\eng.DangAmbigs;                Check: IsUpgrade()
+Type: files;      Name: {app}\TessData\eng.freq-dawg;                 Check: IsUpgrade()
+Type: files;      Name: {app}\TessData\eng.inttemp;                   Check: IsUpgrade()
+Type: files;      Name: {app}\TessData\eng.normproto;                 Check: IsUpgrade()
+Type: files;      Name: {app}\TessData\eng.pffmtable;                 Check: IsUpgrade()
+Type: files;      Name: {app}\TessData\eng.unicharset;                Check: IsUpgrade()
+Type: files;      Name: {app}\TessData\eng.user-words;                Check: IsUpgrade()
+Type: files;      Name: {app}\TessData\eng.word-dawg;                 Check: IsUpgrade()
+Type: dirifempty; Name: {app}\TessData;                               Check: IsUpgrade()
+Type: files;      Name: {app}\Settings.xml;                           Check: IsUpgrade()
+Type: files;      Name: {app}\tessnet2_32.dll;                        Check: IsUpgrade()
 Type: files;      Name: {app}\uninstall.ico;                          Check: IsUpgrade()
 
 #ifdef localize
@@ -275,19 +286,6 @@ Type: files;      Name: {app}\Languages\sv-SE.xml;      Check: NOT IsComponentSe
 Type: files;      Name: {app}\Languages\zh-CHS.xml;     Check: NOT IsComponentSelected('translations') AND IsUpgrade()
 Type: dirifempty; Name: {app}\Languages;                Check: NOT IsComponentSelected('translations') AND IsUpgrade()
 #endif
-
-Type: files;      Name: {app}\tessnet2_32.dll;         Check: IsUpgrade()
-Type: files;      Name: {app}\TessData\eng.DangAmbigs; Check: IsUpgrade()
-Type: files;      Name: {app}\TessData\eng.freq-dawg;  Check: IsUpgrade()
-Type: files;      Name: {app}\TessData\eng.inttemp;    Check: IsUpgrade()
-Type: files;      Name: {app}\TessData\eng.normproto;  Check: IsUpgrade()
-Type: files;      Name: {app}\TessData\eng.pffmtable;  Check: IsUpgrade()
-Type: files;      Name: {app}\TessData\eng.unicharset; Check: IsUpgrade()
-Type: files;      Name: {app}\TessData\eng.user-words; Check: IsUpgrade()
-Type: files;      Name: {app}\TessData\eng.word-dawg;  Check: IsUpgrade()
-Type: dirifempty; Name: {app}\TessData;                Check: IsUpgrade()
-
-Type: files;      Name: {app}\Settings.xml;            Check: IsUpgrade()
 
 
 [Run]
