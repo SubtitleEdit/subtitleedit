@@ -79,7 +79,7 @@ namespace Nikse.SubtitleEdit.Controls
         private PictureBox _pictureBoxVolumeBar = new PictureBox();
         private Label _labelTimeCode = new Label();
 
-        public RightToLeft RightToLeft
+        public RightToLeft TextRightToLeft
         {
             get
             {

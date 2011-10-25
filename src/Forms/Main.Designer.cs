@@ -3599,6 +3599,7 @@
             this.mediaPlayer.Size = new System.Drawing.Size(281, 278);
             this.mediaPlayer.SubtitleText = "";
             this.mediaPlayer.TabIndex = 5;
+            this.mediaPlayer.TextRightToLeft = System.Windows.Forms.RightToLeft.No;
             this.mediaPlayer.VideoHeight = 0;
             this.mediaPlayer.VideoPlayer = null;
             this.mediaPlayer.VideoWidth = 0;
