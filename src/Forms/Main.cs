@@ -2158,6 +2158,8 @@ namespace Nikse.SubtitleEdit.Forms
             _converted = false;
 
             SetUndockedWindowsTitle();
+            if (mediaPlayer != null)
+                mediaPlayer.SubtitleText = string.Empty;
         }
 
         private void FileNew()
@@ -6914,7 +6916,7 @@ namespace Nikse.SubtitleEdit.Forms
                     SubtitleListview1.RightToLeft = System.Windows.Forms.RightToLeft.No;
                     textBoxSource.RightToLeft = System.Windows.Forms.RightToLeft.No;
                     if (mediaPlayer != null)
-                        mediaPlayer.RightToLeft = System.Windows.Forms.RightToLeft.No;
+                        mediaPlayer.TextRightToLeft = System.Windows.Forms.RightToLeft.No;
                 }
                 else
                 {
@@ -6922,7 +6924,7 @@ namespace Nikse.SubtitleEdit.Forms
                     SubtitleListview1.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
                     textBoxSource.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
                     if (mediaPlayer != null)
-                        mediaPlayer.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+                        mediaPlayer.TextRightToLeft = System.Windows.Forms.RightToLeft.Yes;
                 }
             }
 
@@ -10810,7 +10812,10 @@ namespace Nikse.SubtitleEdit.Forms
         {
             timer1.Stop();
             if (mediaPlayer != null && mediaPlayer.VideoPlayer != null)
+            {
+                mediaPlayer.SubtitleText = string.Empty;
                 mediaPlayer.VideoPlayer.DisposeVideoPlayer();
+            }
             mediaPlayer.VideoPlayer = null;
             _videoFileName = null;
             _videoAudioTrackNumber = -1;
@@ -10818,6 +10823,7 @@ namespace Nikse.SubtitleEdit.Forms
             audioVisualizer.WavePeaks = null;
             audioVisualizer.ResetSpectrogram();
             audioVisualizer.Invalidate();
+
         }
 
         private void toolStripMenuItemVideo_DropDownOpening(object sender, EventArgs e)
