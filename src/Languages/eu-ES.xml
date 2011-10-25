@@ -14,7 +14,7 @@
     <AllFiles>Agiri guztiak</AllFiles>
     <VideoFiles>Bideo agiriak</VideoFiles>
     <OpenSubtitle>Ireki azpidatzia...</OpenSubtitle>
-    <OpenVideoFile>Ireki bideo agiria...</OpenVideoFile>
+    <OpenVideoFile>Ireki bideoa</OpenVideoFile>
     <OpenVideoFileTitle>Ireki bideo agiria...</OpenVideoFileTitle>
     <NoVideoLoaded>Ez dago bideorik igota</NoVideoLoaded>
     <VideoInformation>Bideoaren argibideak</VideoInformation>
@@ -683,13 +683,13 @@ Emaila: mailto:nikse.dk@gmail.com</AboutText1>
     <BeforeShowLater>Hurrengoa erakutsi geroago</BeforeShowLater>
     <LineNumberX>Lerro zenbatekoa: {0:#,##0.##}</LineNumberX>
     <OpenVideoFile>Ireki bideo agiria...</OpenVideoFile>
-    <NewFrameRateUsedToCalculateTimeCodes>Frame neurri berria ({0}) erabili da kalkulatzeko hasiera/amaiera denbora kodeak</NewFrameRateUsedToCalculateTimeCodes>
-    <NewFrameRateUsedToCalculateFrameNumbers>Frame neurri berria ({0}) erabili da kalkulatzeko hasiera/amaiera frame zenbatekoak</NewFrameRateUsedToCalculateFrameNumbers>
+    <NewFrameRateUsedToCalculateTimeCodes>Frame neurri berria ({0}) erabili da hasiera/amaiera denbora kodeak kalkulatzeko</NewFrameRateUsedToCalculateTimeCodes>
+    <NewFrameRateUsedToCalculateFrameNumbers>Frame neurri berria ({0}) erabili da hasiera/amaiera frame zenbatekoak kalkulatzeko</NewFrameRateUsedToCalculateFrameNumbers> 
     <FindContinue>Bilaketa gaia ez da aurkitu.
 Nahi duzu agiriaren goialdetik hastea eta bilaketa beste behin egitea?</FindContinue>
     <FindContinueTitle>Jarraitu Bilatzen?</FindContinueTitle>
     <XFoundAtLineNumberY>'{0}' aurkitzen direnak lerro zenbaki honetan {1}</XFoundAtLineNumberY>
-    <XNotFound>'{0}' ez da aurkitu</XNotFound>
+    <XNotFound>'{0}' ez dira aurkitu</XNotFound>
     <BeforeReplace>Ordeztu aurretik: {0}</BeforeReplace>
     <MatchFoundX>Berdintasuna aurkitu da: {0}</MatchFoundX>
     <NoMatchFoundX>Ez da berdintasunik aurkitu: {0}</NoMatchFoundX>
@@ -863,8 +863,8 @@ Jarraitu?</SubtitleAppendPrompt>
   </MergedShortLines>
   <MultipleReplace>
     <Title>Ordezte anitza</Title>
-    <FindWhat>Bilatu</FindWhat>
-    <ReplaceWith>Ordeztu honekin</ReplaceWith>
+    <FindWhat>Bilatu:</FindWhat>
+    <ReplaceWith>Ordeztu honekin:</ReplaceWith>
     <Normal>Arrunta</Normal>
     <CaseSensitive>Hizki larri-xehe artean</CaseSensitive>
     <RegularExpression>Esaera arrunta</RegularExpression>
@@ -925,7 +925,7 @@ dezaketen saio berrira (elkarlana)</Information>
     <Normal>Arrunta</Normal>
     <CaseSensitive>Hizki larri-xehe artean</CaseSensitive>
     <RegularExpression>Esaera arrunta</RegularExpression>
-    <ReplaceWith>Ordeztu honekin</ReplaceWith>
+    <ReplaceWith>Ordeztu honekin:</ReplaceWith>
     <Find>&amp;Bilatu</Find>
     <Replace>&amp;Ordeztu</Replace>
     <ReplaceAll>Ordeztu &amp;denak</ReplaceAll>
@@ -938,7 +938,7 @@ dezaketen saio berrira (elkarlana)</Information>
   </SetMinimumDisplayTimeBetweenParagraphs>
   <SetSyncPoint>
     <Title>Ezarri Albiberetze gunea lerro honi {0}</Title>
-    <SyncPointTimeCode>Aldiberetze gunearen denbora kodea</SyncPointTimeCode>
+    <SyncPointTimeCode>Aldiberetze gunearen denbora</SyncPointTimeCode>
     <ThreeSecondsBack>&lt;&lt; 3 seg</ThreeSecondsBack>
     <HalfASecondBack>&lt;&lt; seg½</HalfASecondBack>
     <HalfASecondForward>seg ½ &gt;&gt;</HalfASecondForward>
@@ -1109,7 +1109,7 @@ dezaketen saio berrira (elkarlana)</Information>
     <EditWholeText>Editatu idatzi osoa</EditWholeText>
     <EditWordOnly>Editatu hitza bakarrik</EditWordOnly>
     <AddXToNamesEtc>Gehitu '{0}' izen/etab. zerrendara</AddXToNamesEtc>
-    <AutoFixNames>Berez zuzendu azalean bakarrik ezberdintzen diren izenak</AutoFixNames>
+    <AutoFixNames>Berez zuzendu azalean bakarrik ezberd. diren izenak</AutoFixNames>
     <ImageText>Irudi idazkia</ImageText>
     <SpellCheckCompleted>Idaz egiaztapena osatuta.</SpellCheckCompleted>
     <SpellCheckAborted>Idaz egiaztapena utzita</SpellCheckAborted>
@@ -1145,7 +1145,7 @@ dezaketen saio berrira (elkarlana)</Information>
     <Title>Aldiberetze gunea</Title>
     <TitleViaOtherSubtitle>Aldiberetze gunea beste azpidatzi baten bidez</TitleViaOtherSubtitle>
     <SyncHelp>Ezarri gutxienez bi aldiberetze gune aldiberetze zakarra egiteko</SyncHelp>
-    <SetSyncPoint>Ezarri aldiberetze gunea</SetSyncPoint>
+    <SetSyncPoint>Ezarri aldiberetzea</SetSyncPoint>
     <RemoveSyncPoint>Kendu aldiberetze gunea</RemoveSyncPoint>
     <SyncPointsX>Aldiberetze gunea: {0}</SyncPointsX>
     <Info>Aldiberetze gune batek kokapena zehaztuko du, aldiberetze gune bik edo gehiagok kokapena eta abiadura zehaztuko dute</Info>
