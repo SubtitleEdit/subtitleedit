@@ -44,7 +44,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             0xe468, // ĥ
             0xe46A, // ĵ
             0xe473, // ŝ
-            0xeA75, // ŭ            
+            0xeA75, // ŭ
             0xe341, // À
             0xe361, // à
             0xe441, // Â
@@ -85,7 +85,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             0xe27a, // ź
             0xe85a, // Ż
             0xe87a, // ż
-        };          
+        };
 
         static List<string> _latinLetters = new List<string> {
             "å",
@@ -268,7 +268,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         public void Save(string fileName, Subtitle subtitle)
         {
             FileStream fs = new FileStream(fileName, FileMode.Create, FileAccess.Write);
-            _fileName = fileName; 
+            _fileName = fileName;
 
             // header
             fs.WriteByte(1);
@@ -482,7 +482,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 {
                     sb.Append(GetEncoding(_codePage).GetString(buffer, index, 1));
                 }
-                
+
                 index++;
             }
             if (index + 20 >= buffer.Length)

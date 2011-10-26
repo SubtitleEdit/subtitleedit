@@ -19,8 +19,8 @@ namespace Nikse.SubtitleEdit.Logic
             Width = _workingBitmap.Width;
             Height = _workingBitmap.Height;
 
-            if (_workingBitmap.PixelFormat != PixelFormat.Format32bppArgb) 
-            { 
+            if (_workingBitmap.PixelFormat != PixelFormat.Format32bppArgb)
+            {
                 var newBitmap = new Bitmap(_workingBitmap.Width, _workingBitmap.Height, PixelFormat.Format32bppArgb);
                 for (int y = 0; y < _workingBitmap.Height; y++)
                     for (int x = 0; x < _workingBitmap.Width; x++)
@@ -29,8 +29,8 @@ namespace Nikse.SubtitleEdit.Logic
             }
 
             _bitmapData = new byte[Width * Height * 4];
-            BitmapData bitmapdata = _workingBitmap.LockBits(new Rectangle(0, 0, Width, Height), ImageLockMode.ReadOnly, PixelFormat.Format32bppArgb);    
-            
+            BitmapData bitmapdata = _workingBitmap.LockBits(new Rectangle(0, 0, Width, Height), ImageLockMode.ReadOnly, PixelFormat.Format32bppArgb);
+
             //Buffer.BlockCopy(buffer, dataIndex, DataBuffer, 0, dataSize);
             System.Runtime.InteropServices.Marshal.Copy(bitmapdata.Scan0, _bitmapData, 0, _bitmapData.Length);
             _workingBitmap.UnlockBits(bitmapdata);

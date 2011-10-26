@@ -30,7 +30,7 @@ namespace Nikse.SubtitleEdit.Forms
         List<string> _namesEtcListUppercase = new List<string>();
         List<string> _namesEtcListWithApostrophe = new List<string>();
         List<string> _skipAllList = new List<string>();
-        List<string> _wordsWithDashesOrPeriods = new List<string>(); 
+        List<string> _wordsWithDashesOrPeriods = new List<string>();
 
         Dictionary<string, string> _changeAllDictionary = new Dictionary<string, string>();
         List<string> _userWordList = new List<string>();
@@ -462,7 +462,7 @@ namespace Nikse.SubtitleEdit.Forms
                     break;
             }
             PrepareNextWord();
-        }       
+        }
 
         private void PrepareNextWord()
         {
@@ -682,7 +682,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             if (text.Contains(".") || text.Contains("-"))
-            {               
+            {
                 int i = 0;
                 string id = string.Format("_@{0}_", i);
                 foreach (string wordWithDashesOrPeriods in _wordsWithDashesOrPeriods)
@@ -730,7 +730,7 @@ namespace Nikse.SubtitleEdit.Forms
                 return words;
 
             for (int i = 0; i < words.Length; i++)
-            { 
+            {
                 if (replaceIds.Contains(words[i]))
                     words[i] = replaceNames[replaceIds.IndexOf(words[i])];
             }
@@ -851,7 +851,7 @@ namespace Nikse.SubtitleEdit.Forms
                 _userWordDictionary.LoadXml("<words />");
             }
 
-            // Add names/userdic with "." or " " or "-" 
+            // Add names/userdic with "." or " " or "-"
             _wordsWithDashesOrPeriods = new List<string>();
             _wordsWithDashesOrPeriods.AddRange(_namesEtcMultiWordList);
             foreach (string name in _namesEtcList)

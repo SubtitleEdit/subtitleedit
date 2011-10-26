@@ -14,7 +14,7 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
         public int NumberOfNullPackets { get; private set; }
         public long TotalNumberOfPackets { get; private set; }
         public long TotalNumberOfPrivateStream1 { get; private set; }
-        public long TotalNumberOfPrivateStream1Continuation0 { get; private set; }        
+        public long TotalNumberOfPrivateStream1Continuation0 { get; private set; }
         public List<int> SubtitlePacketIds { get; private set; }
         public List<Packet> SubtitlePackets { get; private set; }
 
@@ -107,10 +107,10 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
 
                             int pes_extensionlength = 0xFF &  packetBuffer[12 + packet.AdaptionFieldLength];
                             int pes_offset = 13 + packet.AdaptionFieldLength + pes_extensionlength;
-						    bool isTeletext = (pes_extensionlength == 0x24 && (0xFF & packetBuffer[pes_offset])>>4 == 1);
+                            bool isTeletext = (pes_extensionlength == 0x24 && (0xFF & packetBuffer[pes_offset])>>4 == 1);
 
-							// workaround uk freesat teletext
-							if (!isTeletext)
+                            // workaround uk freesat teletext
+                            if (!isTeletext)
                                 isTeletext = (pes_extensionlength == 0x24 && (0xFF & packetBuffer[pes_offset]) == 0x99);
 
                             //if (isTeletext)
@@ -125,7 +125,7 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
                 }
                 else
                 {
-                    position++; 
+                    position++;
                     break;
                 }
             }
@@ -138,7 +138,7 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
         }
 
         public List<PacketizedElementaryStream> GetSubtitlePesPackets(int packetId)
-        { 
+        {
             var list = new List<PacketizedElementaryStream>();
             var buffer = new byte[20000];
             int index =0;
@@ -162,7 +162,7 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
         private int DeterminePacketLength(Stream ms)
         {
             return 188;
-        }    
+        }
 
     }
 }

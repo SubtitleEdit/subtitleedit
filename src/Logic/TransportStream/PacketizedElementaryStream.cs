@@ -10,7 +10,7 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
     public class PacketizedElementaryStream
     {
         public const int HeaderLength = 6;
-        public const int Mpeg2HeaderLength = 14;        
+        public const int Mpeg2HeaderLength = 14;
 
         public readonly UInt32 StartCode;
         public readonly int StreamId;
@@ -39,8 +39,8 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
         public PacketizedElementaryStream(byte[] buffer, int index)
         {
             StartCode = Helper.GetEndian(buffer, index + 0, 3);
-            StreamId = buffer[index + 3]; 
-            Length = Helper.GetEndianWord(buffer, index + 4); 
+            StreamId = buffer[index + 3];
+            Length = Helper.GetEndianWord(buffer, index + 4);
 
             ScramblingControl = (buffer[index + 6] >> 4) & Helper.B00000011;
             Priority = buffer[index + 6] & Helper.B00001000;

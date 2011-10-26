@@ -13,7 +13,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
     /// </summary>
     public class ScenaristClosedCaptions : SubtitleFormat
     {
-        //00:01:00:29	9420 9420 94ae 94ae 94d0 94d0 4920 f761 7320 ...
+        //00:01:00:29   9420 9420 94ae 94ae 94d0 94d0 4920 f761 7320 ...
         readonly Regex _regexTimeCodes = new Regex(@"^\d+:\d\d:\d\d[:,]\d\d\t", RegexOptions.Compiled);
 
         private readonly List<string> _letters = new List<string>
@@ -432,7 +432,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 sb.AppendLine(string.Format("{0}\t94ae 94ae 9420 9420 {1} 942f 942f", ToTimeCode(p.StartTime.TotalMilliseconds), ToSccText(p.Text)));
                 sb.AppendLine();
                 sb.AppendLine(string.Format("{0}\t942c 942c", ToTimeCode(p.EndTime.TotalMilliseconds)));
-                sb.AppendLine();                
+                sb.AppendLine();
             }
 
             return sb.ToString();
@@ -477,7 +477,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     newCode = string.Empty;
                 }
                 else if (newCode.Length == 2 && code.Length == 0)
-                { 
+                {
                     code = newCode;
                     newCode = string.Empty;
                 }
