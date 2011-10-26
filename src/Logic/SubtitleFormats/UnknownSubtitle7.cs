@@ -123,6 +123,12 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                             string text = line.Replace("|", Environment.NewLine);
                             paragraph.Text += Environment.NewLine + text;
                             expecting = ExpectingLine.TimeEndOrText;
+
+                            if (paragraph.Text.Length > 2000)
+                            {
+                                _errorCount += 100;
+                                return;
+                            }
                         }
                     }
                 }
