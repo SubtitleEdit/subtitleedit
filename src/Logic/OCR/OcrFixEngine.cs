@@ -359,6 +359,8 @@ namespace Nikse.SubtitleEdit.Logic.OCR
         {
             if (Configuration.Settings.Tools.OcrFixUseHardcodedRules)
             {
+                word = word.Replace("ﬁ", "fi");
+
                 while (word.Contains("--"))
                     word = word.Replace("--", "-");
 
@@ -395,6 +397,11 @@ namespace Nikse.SubtitleEdit.Logic.OCR
             string pre = string.Empty;
             string post = string.Empty;
 
+            if (word.StartsWith("<i>"))
+            {
+                pre += "<i>";
+                word = word.Remove(0, 3);
+            }
             while (word.StartsWith(Environment.NewLine) && word.Length > 2)
             {
                 pre += Environment.NewLine;
@@ -420,6 +427,11 @@ namespace Nikse.SubtitleEdit.Logic.OCR
             {
                 pre += "(";
                 word = word.Substring(1);
+            }
+            if (word.StartsWith("<i>"))
+            {
+                pre += "<i>";
+                word = word.Remove(0, 3);
             }
             while (word.EndsWith(Environment.NewLine) && word.Length > 2)
             {
@@ -456,6 +468,13 @@ namespace Nikse.SubtitleEdit.Logic.OCR
                 post = post + ")";
                 word = word.Substring(0, word.Length - 1);
             }
+            if (word.EndsWith("</i>"))
+            {
+                post = post + "</i>";
+                word = word.Remove(word.Length - 4, 4);
+            }
+            if (word.Length == 0)
+                return pre + word + post;
 
             if (word.Contains("?"))
             {
@@ -965,19 +984,20 @@ namespace Nikse.SubtitleEdit.Logic.OCR
                 }
             }
 
-            string[] words = tempLine.Split((Environment.NewLine + " ¡¿,.!?:;()[]{}+-$£\"”“#&%…—♪").ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+            string[] words = tempLine.Split((Environment.NewLine + " ¡¿,.!?:;()[]{}+-£\"”“#&%…—♪").ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
             for (int i = 0; i < words.Length; i++)
             {
                 string word = words[i].TrimStart('\'');
                 word = word.TrimEnd('\'');
-                if (!IsWordKnownOrNumber(word, line) && !localIgnoreWords.Contains(word))
+                string wordNoItalics = word.Replace("<i>", string.Empty).Replace("</i>", string.Empty);
+                if (!IsWordKnownOrNumber(wordNoItalics, line) && !localIgnoreWords.Contains(wordNoItalics))
                 {
                     bool correct = DoSpell(word);
                     if (!correct)
                         correct = DoSpell(word.Trim('\''));
                     if (!correct)
-                        correct = DoSpell(word.Replace("<i>", string.Empty).Replace("</i>", string.Empty));
-                    if (!correct && _userWordList.Contains(word.ToLower().Replace("<i>", string.Empty).Replace("</i>", string.Empty)))
+                        correct = DoSpell(wordNoItalics);
+                    if (!correct && _userWordList.Contains(wordNoItalics))
                         correct = true;
 
                     if (!correct && !line.Contains(word))
@@ -999,6 +1019,9 @@ namespace Nikse.SubtitleEdit.Logic.OCR
                                 if (word[0] == 'L')
                                     guesses.Add("I" + word.Substring(1));
 
+                                if (word.Contains("$"))
+                                    guesses.Add(word.Replace("$", "s"));
+
                                 string wordWithCasingChanged = GetWordWithDominatedCasing(word);
                                 if (DoSpell(word.ToLower()))
                                     guesses.Insert(0, wordWithCasingChanged);
@@ -1018,6 +1041,8 @@ namespace Nikse.SubtitleEdit.Logic.OCR
                                 guesses.Add(word.Replace("ﬁ", "fi"));
                                 guesses.Add(word.Replace("ﬁ", "fj"));
                                 guesses.Add(word.Replace("ﬂ", "fl"));
+                                if (word.Contains("$"))
+                                    guesses.Add(word.Replace("$", "s"));
                                 if (!word.EndsWith("€") && !word.StartsWith("€"))
                                     guesses.Add(word.Replace("€", "e"));
                             }
@@ -1343,10 +1368,10 @@ namespace Nikse.SubtitleEdit.Logic.OCR
             if (_wordSkipList.IndexOf(word) >= 0)
                 return true;
 
-            if (_namesEtcList.IndexOf(word) >= 0)
+            if (_namesEtcList.IndexOf(word.Trim('\'')) >= 0)
                 return true;
 
-            if (_namesEtcList.IndexOf(word.Trim('\'')) >= 0)
+            if (_namesEtcListUppercase.IndexOf(word.Trim('\'')) >= 0)
                 return true;
 
             if (_userWordList.IndexOf(word.ToLower()) >= 0)
@@ -1374,7 +1399,7 @@ namespace Nikse.SubtitleEdit.Logic.OCR
                 return 0;
 
             int wordsNotFound = 0;
-            string[] words = line.Split((Environment.NewLine + " ¡¿,.!?:;()[]{}+-$£\"#&%…“”").ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+            string[] words = line.Replace("<i>", string.Empty).Replace("</i>", string.Empty).Split((Environment.NewLine + " ¡¿,.!?:;()[]{}+-$£\"#&%…“”").ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
             for (int i = 0; i < words.Length; i++)
             {
                 string word = words[i];
