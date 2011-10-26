@@ -44,9 +44,9 @@
             this.groupBoxNames.SuspendLayout();
             this.groupBoxLinesFound.SuspendLayout();
             this.SuspendLayout();
-            // 
+            //
             // buttonOK
-            // 
+            //
             this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonOK.Location = new System.Drawing.Point(570, 559);
             this.buttonOK.Name = "buttonOK";
@@ -55,9 +55,9 @@
             this.buttonOK.Text = "&OK";
             this.buttonOK.UseVisualStyleBackColor = true;
             this.buttonOK.Click += new System.EventHandler(this.ButtonOkClick);
-            // 
+            //
             // buttonCancel
-            // 
+            //
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.buttonCancel.Location = new System.Drawing.Point(651, 559);
@@ -66,10 +66,10 @@
             this.buttonCancel.TabIndex = 15;
             this.buttonCancel.Text = "C&ancel";
             this.buttonCancel.UseVisualStyleBackColor = true;
-            // 
+            //
             // groupBoxNames
-            // 
-            this.groupBoxNames.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            //
+            this.groupBoxNames.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBoxNames.Controls.Add(this.listViewNames);
             this.groupBoxNames.Location = new System.Drawing.Point(5, 9);
@@ -78,10 +78,10 @@
             this.groupBoxNames.TabIndex = 12;
             this.groupBoxNames.TabStop = false;
             this.groupBoxNames.Text = "Names found in subtitle";
-            // 
+            //
             // listViewNames
-            // 
-            this.listViewNames.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            //
+            this.listViewNames.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.listViewNames.CheckBoxes = true;
             this.listViewNames.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
@@ -97,21 +97,21 @@
             this.listViewNames.UseCompatibleStateImageBehavior = false;
             this.listViewNames.View = System.Windows.Forms.View.Details;
             this.listViewNames.SelectedIndexChanged += new System.EventHandler(this.ListViewNamesSelectedIndexChanged);
-            // 
+            //
             // columnHeader1
-            // 
+            //
             this.columnHeader1.Text = "Enabled";
             this.columnHeader1.Width = 70;
-            // 
+            //
             // columnHeader2
-            // 
+            //
             this.columnHeader2.Text = "Name";
             this.columnHeader2.Width = 620;
-            // 
+            //
             // groupBoxLinesFound
-            // 
-            this.groupBoxLinesFound.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
+            //
+            this.groupBoxLinesFound.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+            | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBoxLinesFound.Controls.Add(this.listViewFixes);
             this.groupBoxLinesFound.Location = new System.Drawing.Point(5, 283);
@@ -120,11 +120,11 @@
             this.groupBoxLinesFound.TabIndex = 13;
             this.groupBoxLinesFound.TabStop = false;
             this.groupBoxLinesFound.Text = "Lines found: {0}";
-            // 
+            //
             // listViewFixes
-            // 
-            this.listViewFixes.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
+            //
+            this.listViewFixes.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+            | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.listViewFixes.CheckBoxes = true;
             this.listViewFixes.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
@@ -141,29 +141,29 @@
             this.listViewFixes.UseCompatibleStateImageBehavior = false;
             this.listViewFixes.View = System.Windows.Forms.View.Details;
             this.listViewFixes.SelectedIndexChanged += new System.EventHandler(this.listViewFixes_SelectedIndexChanged);
-            // 
+            //
             // columnHeader4
-            // 
+            //
             this.columnHeader4.Text = "Apply";
             this.columnHeader4.Width = 45;
-            // 
+            //
             // columnHeader5
-            // 
+            //
             this.columnHeader5.Text = "Line#";
             this.columnHeader5.Width = 61;
-            // 
+            //
             // columnHeader7
-            // 
+            //
             this.columnHeader7.Text = "Before";
             this.columnHeader7.Width = 292;
-            // 
+            //
             // columnHeader8
-            // 
+            //
             this.columnHeader8.Text = "After";
             this.columnHeader8.Width = 292;
-            // 
+            //
             // labelXLinesSelected
-            // 
+            //
             this.labelXLinesSelected.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.labelXLinesSelected.AutoSize = true;
             this.labelXLinesSelected.Location = new System.Drawing.Point(5, 559);
@@ -171,9 +171,9 @@
             this.labelXLinesSelected.Size = new System.Drawing.Size(78, 13);
             this.labelXLinesSelected.TabIndex = 16;
             this.labelXLinesSelected.Text = "XLinesSelected";
-            // 
+            //
             // ChangeCasingNames
-            // 
+            //
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(736, 589);

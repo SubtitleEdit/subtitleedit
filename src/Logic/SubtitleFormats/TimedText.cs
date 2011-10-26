@@ -182,7 +182,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     }
 
 
-                    
+
                 }
                 catch (Exception ex)
                 {

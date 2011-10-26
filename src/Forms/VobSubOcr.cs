@@ -151,7 +151,7 @@ namespace Nikse.SubtitleEdit.Forms
         private string[] _tesseractAsyncStrings = null;
         private int _tesseractAsyncIndex = 0;
         private BackgroundWorker _tesseractThread;
-        
+
         public VobSubOcr()
         {
             InitializeComponent();
@@ -1769,7 +1769,7 @@ namespace Nikse.SubtitleEdit.Forms
         }
 
         private void ButtonOkClick(object sender, EventArgs e)
-        {            
+        {
             if (Configuration.Settings.VobSubOcr.XOrMorePixelsMakesSpace != (int)numericUpDownPixelsIsSpace.Value && _bluRaySubtitlesOriginal == null)
             {
                 Configuration.Settings.VobSubOcr.XOrMorePixelsMakesSpace = (int)numericUpDownPixelsIsSpace.Value;
@@ -1809,7 +1809,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (_tesseractAsyncIndex >= 0 && _tesseractAsyncIndex < _tesseractAsyncStrings.Length)
                     _tesseractThread.RunWorkerAsync(GetSubtitleBitmap(_tesseractAsyncIndex));
             }
-        }        
+        }
 
         private void ButtonStartOcrClick(object sender, EventArgs e)
         {
@@ -1956,7 +1956,7 @@ namespace Nikse.SubtitleEdit.Forms
             process.StartInfo.Arguments = "\"" + tempTiffFileName + "\" \"" + tempTextFileName + "\" -l " + language;
 
             if (!string.IsNullOrEmpty(psmMode))
-                process.StartInfo.Arguments += " " + psmMode.Trim(); 
+                process.StartInfo.Arguments += " " + psmMode.Trim();
 
             if (useHocr)
                 process.StartInfo.Arguments += " hocr";
@@ -2050,7 +2050,7 @@ namespace Nikse.SubtitleEdit.Forms
                 s = s.Replace("\n\n", "\n");
             s = s.Replace("</i>\n<i>", "\n");
             s = s.Replace("\n", Environment.NewLine);
-            
+
             return s;
         }
 
@@ -2126,7 +2126,7 @@ namespace Nikse.SubtitleEdit.Forms
                         if (modiText.Length == 0)
                             modiText = CallModi(index); // retry... strange MODI
 
-                        if (modiText.Length > 1 && !modiText.Contains("0") && !modiText.Contains("9") && 
+                        if (modiText.Length > 1 && !modiText.Contains("0") && !modiText.Contains("9") &&
                             Utilities.CountTagInText(modiText,"(") < 2 &&  Utilities.CountTagInText(modiText,")") < 2)
                         {
                             int modiWordsNotFound = _ocrFixEngine.CountUnknownWordsViaDictionary(modiText, out correctWords);
@@ -2321,7 +2321,7 @@ namespace Nikse.SubtitleEdit.Forms
                 _modiDoc = Activator.CreateInstance(_modiType);
 
                 _modiEnabled = _modiDoc != null;
-                comboBoxModiLanguage.Enabled = _modiEnabled;                
+                comboBoxModiLanguage.Enabled = _modiEnabled;
                 checkBoxUseModiInTesseractForUnknownWords.Enabled = _modiEnabled;
             }
             catch

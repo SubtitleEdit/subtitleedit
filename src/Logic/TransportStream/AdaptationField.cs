@@ -84,7 +84,7 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
                 index += 4;
             }
 
-            if (SplicingPointFlag) 
+            if (SplicingPointFlag)
             {
                 SpliceCountdown = packetBuffer[index];
                 index++;
@@ -100,7 +100,7 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
             }
 
             if (AdaptationFieldExtensionFlag)
-            { 
+            {
                 AdaptationFieldExtensionLength = packetBuffer[index];
             }
 

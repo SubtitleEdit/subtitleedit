@@ -27,7 +27,7 @@ namespace Nikse.SubtitleEdit.Forms
                 labelPreview.Visible = false;
                 textBoxPreview.Visible = false;
                 Height -= textBoxPreview.Height;
-            }            
+            }
 
             FixLargeFonts();
         }

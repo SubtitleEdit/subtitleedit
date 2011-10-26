@@ -23,7 +23,7 @@ namespace Nikse.SubtitleEdit.Controls
             DragDrop += new DragEventHandler(SETextBox_DragDrop);
             MouseDown += new MouseEventHandler(SETextBox_MouseDown);
             MouseUp += new MouseEventHandler(SETextBox_MouseUp);
-        }        
+        }
 
         void SETextBox_MouseUp(object sender, MouseEventArgs e)
         {
@@ -125,7 +125,7 @@ namespace Nikse.SubtitleEdit.Controls
                 if (justAppend)
                 {
                     index = Text.Length;
-                    Text += newText;                    
+                    Text += newText;
                 }
                 else
                 {

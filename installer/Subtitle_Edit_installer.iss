@@ -369,7 +369,7 @@ begin
     Result := True;
   end
   else begin
-      Result := False;
+    Result := False;
   end;
 end;
 
@@ -389,7 +389,7 @@ procedure CurStepChanged(CurStep: TSetupStep);
 begin
   if CurStep = ssInstall then begin
     if IsTaskSelected('reset_dictionaries') then begin
-      CleanUpDictionaries;
+      CleanUpDictionaries();
     end;
   end;
 end;
@@ -402,7 +402,7 @@ begin
   if CurUninstallStep = usUninstall then begin
     if SettingsExistCheck() OR DictionariesExistCheck() then begin
       if SuppressibleMsgBox(ExpandConstant('{cm:msg_DeleteSettings}'), mbConfirmation, MB_YESNO OR MB_DEFBUTTON2, IDNO) = IDYES then begin
-        CleanUpDictionaries;
+        CleanUpDictionaries();
         DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Settings.xml'));
       end;
 
@@ -476,5 +476,5 @@ begin
       CreateMutex(installer_mutex_name);
 
       // Unload the psvince.dll in order to be uninstalled
-     UnloadDLL(ExpandConstant('{app}\psvince.dll'));
+      UnloadDLL(ExpandConstant('{app}\psvince.dll'));
 end;

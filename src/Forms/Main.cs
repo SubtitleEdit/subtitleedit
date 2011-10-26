@@ -5862,7 +5862,7 @@ namespace Nikse.SubtitleEdit.Forms
             var log = new StringBuilder();
             List<BluRaySupPicture> subtitles = new List<BluRaySupPicture>();
             var pesList = tsParser.GetSubtitlePesPackets(tsParser.SubtitlePacketIds[0]);
-            foreach (var sp in pesList) 
+            foreach (var sp in pesList)
             {
                 if (sp.DataBuffer != null)
                 {
@@ -8888,9 +8888,9 @@ namespace Nikse.SubtitleEdit.Forms
             //    if (!string.IsNullOrEmpty(textBoxListViewText.SelectedText))
             //        textBoxListViewText.DoDragDrop(textBoxListViewText.SelectedText, DragDropEffects.Copy);
             //    else
-            //        textBoxListViewText.DoDragDrop(textBoxListViewText.Text, DragDropEffects.Copy);                
+            //        textBoxListViewText.DoDragDrop(textBoxListViewText.Text, DragDropEffects.Copy);
             //}
-            //else 
+            //else
                 if (AutoRepeatContinueOn && !textBoxSearchWord.Focused)
             {
                 string selectedText = textBoxListViewText.SelectedText;

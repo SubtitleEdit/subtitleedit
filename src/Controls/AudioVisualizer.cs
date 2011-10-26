@@ -177,7 +177,7 @@ namespace Nikse.SubtitleEdit.Controls
                         bmp.Dispose();
                     }
                     catch
-                    { 
+                    {
                     }
                 }
             }
@@ -209,7 +209,7 @@ namespace Nikse.SubtitleEdit.Controls
             AllowNewSelection = true;
             ShowSpectrogram = true;
             ShowWaveform = true;
-            VerticalZoomPercent = 1.0;            
+            VerticalZoomPercent = 1.0;
         }
 
         public void NearestSubtitles(Subtitle subtitle, double currentVideoPositionSeconds, int subtitleIndex)
@@ -1109,7 +1109,7 @@ namespace Nikse.SubtitleEdit.Controls
             if (OnZoomedChanged != null)
                 OnZoomedChanged.Invoke(null, null);
         }
-        
+
         public void ZoomOut()
         {
             ZoomFactor = ZoomFactor - 0.1;

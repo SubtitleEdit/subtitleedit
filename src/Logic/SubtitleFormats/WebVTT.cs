@@ -42,7 +42,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         }
 
         public override string ToText(Subtitle subtitle, string title)
-        {            
+        {
             const string timeCodeFormat = "{0}:{1:00}:{2:00}.{3:000}"; // h:mm:ss.cc
             const string paragraphWriteFormat = "{0} --> {1}{4}{2}{3}{4}";
 
@@ -123,7 +123,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         {
             int indexOfTag = text.IndexOf("<" + tag + " ");
             if (indexOfTag >= 0)
-            { 
+            {
                 int indexOfEnd = text.IndexOf(">", indexOfTag);
                 if (indexOfEnd > 0)
                 {
