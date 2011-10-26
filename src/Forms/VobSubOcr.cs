@@ -151,7 +151,7 @@ namespace Nikse.SubtitleEdit.Forms
         private string[] _tesseractAsyncStrings = null;
         private int _tesseractAsyncIndex = 0;
         private BackgroundWorker _tesseractThread;
-
+        
         public VobSubOcr()
         {
             InitializeComponent();
@@ -345,7 +345,7 @@ namespace Nikse.SubtitleEdit.Forms
             SetTesseractLanguageFromLanguageString(languageString);
         }
 
-        internal void Initialize(List<Logic.BluRaySup.BluRaySupPicture> subtitles, VobSubOcrSettings vobSubOcrSettings)
+        internal void Initialize(List<Logic.BluRaySup.BluRaySupPicture> subtitles, VobSubOcrSettings vobSubOcrSettings, string fileName)
         {
             buttonOK.Enabled = false;
             buttonCancel.Enabled = false;
@@ -376,6 +376,12 @@ namespace Nikse.SubtitleEdit.Forms
             groupBoxImagePalette.Visible = false;
 
             Text = Configuration.Settings.Language.VobSubOcr.TitleBluRay;
+            if (!string.IsNullOrEmpty(fileName))
+            {
+                if (fileName.Length > 40)
+                    fileName = Path.GetFileName(fileName);
+                Text += " - " + fileName;
+            }
             checkBoxAutoTransparentBackground.Checked = false;
             checkBoxAutoTransparentBackground.Visible = false;
         }
@@ -1682,6 +1688,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void FormVobSubOcr_Shown(object sender, EventArgs e)
         {
+            checkBoxUseModiInTesseractForUnknownWords.Checked = Configuration.Settings.VobSubOcr.UseModiInTesseractForUnknownWords;
             if (_mp4List != null)
             {
                 checkBoxShowOnlyForced.Visible = false;
@@ -1790,7 +1797,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (_tesseractAsyncIndex >= 0 && _tesseractAsyncIndex < _tesseractAsyncStrings.Length)
             {
                 if (string.IsNullOrEmpty(_tesseractAsyncStrings[_tesseractAsyncIndex]))
-                    _tesseractAsyncStrings[_tesseractAsyncIndex] = Tesseract3DoOcrViaExe(bitmap, _languageId);
+                    _tesseractAsyncStrings[_tesseractAsyncIndex] = Tesseract3DoOcrViaExe(bitmap, _languageId, "-psm 6"); // 6 = Assume a single uniform block of text.);
             }
         }
 
@@ -1802,7 +1809,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (_tesseractAsyncIndex >= 0 && _tesseractAsyncIndex < _tesseractAsyncStrings.Length)
                     _tesseractThread.RunWorkerAsync(GetSubtitleBitmap(_tesseractAsyncIndex));
             }
-        }
+        }        
 
         private void ButtonStartOcrClick(object sender, EventArgs e)
         {
@@ -1827,7 +1834,8 @@ namespace Nikse.SubtitleEdit.Forms
                 _tesseractThread.DoWork += TesseractThreadDoWork;
                 _tesseractThread.RunWorkerCompleted += TesseractThreadRunWorkerCompleted;
                 _tesseractThread.WorkerSupportsCancellation = true;
-                _tesseractThread.RunWorkerAsync(GetSubtitleBitmap(_tesseractAsyncIndex));
+                if (_tesseractAsyncIndex >=0 && _tesseractAsyncIndex < max)
+                    _tesseractThread.RunWorkerAsync(GetSubtitleBitmap(_tesseractAsyncIndex));
             }
 
             progressBar1.Maximum = max;
@@ -1882,7 +1890,8 @@ namespace Nikse.SubtitleEdit.Forms
                 Paragraph p = _subtitle.GetParagraphOrDefault(i);
                 if (p != null)
                     p.Text = text;
-                textBoxCurrentText.Text = text;
+                if (subtitleListView1.SelectedItems.Count == 1 && subtitleListView1.SelectedItems[0].Index == i)
+                    textBoxCurrentText.Text = text;
             }
             SetButtonsEnabledAfterOcrDone();
         }
@@ -1933,8 +1942,10 @@ namespace Nikse.SubtitleEdit.Forms
         //    }
         //}
 
-        private string Tesseract3DoOcrViaExe(Bitmap bmp, string language)
+        private string Tesseract3DoOcrViaExe(Bitmap bmp, string language, string psmMode)
         {
+            bool useHocr = true;
+
             string tempTiffFileName = Path.GetTempPath() + Guid.NewGuid().ToString() + ".png";
             bmp.Save(tempTiffFileName, System.Drawing.Imaging.ImageFormat.Png);
             string tempTextFileName = Path.GetTempPath() + Guid.NewGuid().ToString();
@@ -1943,6 +1954,12 @@ namespace Nikse.SubtitleEdit.Forms
             process.StartInfo = new ProcessStartInfo(Configuration.TesseractFolder + "tesseract.exe");
             process.StartInfo.UseShellExecute = true;
             process.StartInfo.Arguments = "\"" + tempTiffFileName + "\" \"" + tempTextFileName + "\" -l " + language;
+
+            if (!string.IsNullOrEmpty(psmMode))
+                process.StartInfo.Arguments += " " + psmMode.Trim(); 
+
+            if (useHocr)
+                process.StartInfo.Arguments += " hocr";
             process.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
 
             if (Utilities.IsRunningOnLinux() || Utilities.IsRunningOnMac())
@@ -1959,21 +1976,82 @@ namespace Nikse.SubtitleEdit.Forms
             process.Start();
             process.WaitForExit(5000);
 
-            string outputFileName = tempTextFileName + ".txt";
             string result = string.Empty;
-            try
+            if (useHocr)
             {
-                if (File.Exists(outputFileName))
+                string outputFileName = tempTextFileName + ".html";
+                try
                 {
-                    result = File.ReadAllText(outputFileName);
-                    File.Delete(tempTextFileName + ".txt");
+                    if (File.Exists(outputFileName))
+                    {
+                        result = File.ReadAllText(outputFileName);
+                        result = ParseHocr(result);
+                        File.Delete(outputFileName);
+                    }
+                    File.Delete(tempTiffFileName);
                 }
-                File.Delete(tempTiffFileName);
+                catch
+                {
+                }
             }
-            catch
+            else
             {
+                string outputFileName = tempTextFileName + ".txt";
+                try
+                {
+                    if (File.Exists(outputFileName))
+                    {
+                        result = File.ReadAllText(outputFileName);
+                        File.Delete(outputFileName);
+                    }
+                    File.Delete(tempTiffFileName);
+                }
+                catch
+                {
+                }
             }
             return result;
+        }
+
+        private string ParseHocr(string html)
+        {
+            string s = html.Replace("<em>", "@001_____").Replace("</em>", "@002_____");
+
+            int first = s.IndexOf("<");
+            while (first >= 0)
+            {
+                int last = s.IndexOf(">", first);
+                if (last > 0)
+                {
+                    s = s.Remove(first, last - first + 1);
+                    first = s.IndexOf("<");
+                }
+                else
+                {
+                    first = -1;
+                }
+            }
+
+            s = s.Trim();
+            s = s.Replace("@001_____", "<i>").Replace("@002_____", "</i>");
+            while (s.Contains("  "))
+                s = s.Replace("  ", " ");
+            s = s.Replace("</i> <i>", " ");
+
+            // html escape decoding
+            s = s.Replace("&amp;", "&");
+            s = s.Replace("&lt;", "<");
+            s = s.Replace("&gt;", ">");
+            s = s.Replace("&quot;", "\"");
+            s = s.Replace("&#39;", "'");
+            s = s.Replace("&apos;", "'");
+
+            while (s.Contains("\n\n"))
+                s = s.Replace("\n\n", "\n");
+            s = s.Replace("</i>\n<i>", "\n");
+            s = s.Replace("\n", Environment.NewLine);
+            
+            return s;
         }
 
         private string OcrViaTessnet(Bitmap bitmap, int index)
@@ -1990,8 +2068,21 @@ namespace Nikse.SubtitleEdit.Forms
             else
             {
                 if (_tesseractAsyncIndex <= index || _tesseractAsyncIndex > index + 50)
-                    _tesseractAsyncIndex = index + 10;
-                textWithOutFixes = Tesseract3DoOcrViaExe(bitmap, _languageId);
+                      _tesseractAsyncIndex = index + 10;
+                textWithOutFixes = Tesseract3DoOcrViaExe(bitmap, _languageId, "-psm 6"); // 6 = Assume a single uniform block of text.
+            }
+
+            if (!textWithOutFixes.Contains(Environment.NewLine) && textWithOutFixes.Length < 8)
+            {
+                string psm = Tesseract3DoOcrViaExe(bitmap, _languageId, "-psm 7"); // 7 = Treat the image as a single text line.
+                if (psm.Length > textWithOutFixes.Length)
+                    textWithOutFixes = psm;
+                else if (psm.Length == textWithOutFixes.Length &&
+                         (!psm.Contains("0") && textWithOutFixes.Contains("0") ||
+                          !psm.Contains("9") && textWithOutFixes.Contains("9") ||
+                          !psm.Contains("1") && textWithOutFixes.Contains("1") ||
+                          !psm.Contains("_") && textWithOutFixes.Contains("_")))
+                    textWithOutFixes = psm;
             }
 
             if (textWithOutFixes.ToString().Trim().Length == 0)
@@ -2035,7 +2126,8 @@ namespace Nikse.SubtitleEdit.Forms
                         if (modiText.Length == 0)
                             modiText = CallModi(index); // retry... strange MODI
 
-                        if (modiText.Length > 1)
+                        if (modiText.Length > 1 && !modiText.Contains("0") && !modiText.Contains("9") && 
+                            Utilities.CountTagInText(modiText,"(") < 2 &&  Utilities.CountTagInText(modiText,")") < 2)
                         {
                             int modiWordsNotFound = _ocrFixEngine.CountUnknownWordsViaDictionary(modiText, out correctWords);
                             if (modiWordsNotFound > 0)
@@ -2121,9 +2213,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         private string TesseractResizeAndRetry(Bitmap bitmap)
         {
-            string result = Tesseract3DoOcrViaExe(ResizeBitmap(bitmap, bitmap.Width * 3, bitmap.Height * 2), _languageId);
+            string result = Tesseract3DoOcrViaExe(ResizeBitmap(bitmap, bitmap.Width * 3, bitmap.Height * 2), _languageId, null);
             if (result.ToString().Trim().Length == 0)
-                result = Tesseract3DoOcrViaExe(ResizeBitmap(bitmap, bitmap.Width * 4, bitmap.Height * 2), _languageId);
+                result = Tesseract3DoOcrViaExe(ResizeBitmap(bitmap, bitmap.Width * 4, bitmap.Height * 2), _languageId, "-psm 7");
             return result.TrimEnd();
         }
 
@@ -2229,7 +2321,7 @@ namespace Nikse.SubtitleEdit.Forms
                 _modiDoc = Activator.CreateInstance(_modiType);
 
                 _modiEnabled = _modiDoc != null;
-                comboBoxModiLanguage.Enabled = _modiEnabled;
+                comboBoxModiLanguage.Enabled = _modiEnabled;                
                 checkBoxUseModiInTesseractForUnknownWords.Enabled = _modiEnabled;
             }
             catch
@@ -3102,7 +3194,6 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-
         internal void Initialize(List<SubPicturesWithSeparateTimeCodes> subPicturesWithTimeCodes, VobSubOcrSettings vobSubOcrSettings, string fileName)
         {
             _mp4List = subPicturesWithTimeCodes;
@@ -3150,6 +3241,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void VobSubOcr_FormClosing(object sender, FormClosingEventArgs e)
         {
+            Configuration.Settings.VobSubOcr.UseModiInTesseractForUnknownWords = checkBoxUseModiInTesseractForUnknownWords.Checked;
             if (_tesseractThread != null)
                 _tesseractThread.CancelAsync();
             _tesseractAsyncIndex = 10000;

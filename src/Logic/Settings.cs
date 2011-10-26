@@ -373,6 +373,7 @@ namespace Nikse.SubtitleEdit.Logic
         public int LastModiLanguageId { get; set; }
         public string LastOcrMethod { get; set; }
         public string TesseractLastLanguage { get; set; }
+        public bool UseModiInTesseractForUnknownWords { get; set; }
         public bool RightToLeft { get; set; }
         public bool TopToBottom { get; set; }
         public int DefaultMillisecondsForUnknownDurations { get; set; }
@@ -437,6 +438,7 @@ namespace Nikse.SubtitleEdit.Logic
         public string MainAdjustSetStartAndOffsetTheRest { get; set; }
         public string MainAdjustSetEndAndGotoNext { get; set; }
         public string MainAdjustViaEndAutoStartAndGoToNext { get; set; }
+        public string MainAdjustSetStartAutoDurationAndGoToNext { get; set; }
         public string MainInsertAfter { get; set; }
         public string MainInsertBefore { get; set; }
         public string WaveformVerticalZoom { get; set; }
@@ -467,6 +469,7 @@ namespace Nikse.SubtitleEdit.Logic
             MainAdjustSetStartAndOffsetTheRest = "Control+Space";
             MainAdjustSetEndAndGotoNext = "Shift+Space";
             MainAdjustViaEndAutoStartAndGoToNext = "Shift+End";
+            MainAdjustSetStartAutoDurationAndGoToNext = string.Empty;
             MainInsertAfter = "Alt+Ins";
             MainInsertBefore = "Control+Shift+Ins";
             WaveformVerticalZoom = string.Empty;
@@ -1083,6 +1086,9 @@ namespace Nikse.SubtitleEdit.Logic
             subNode = node.SelectSingleNode("TesseractLastLanguage");
             if (subNode != null)
                 settings.VobSubOcr.TesseractLastLanguage = subNode.InnerText;
+            subNode = node.SelectSingleNode("UseModiInTesseractForUnknownWords");
+            if (subNode != null)
+                settings.VobSubOcr.UseModiInTesseractForUnknownWords = Convert.ToBoolean(subNode.InnerText);
             subNode = node.SelectSingleNode("RightToLeft");
             if (subNode != null)
                 settings.VobSubOcr.RightToLeft = Convert.ToBoolean(subNode.InnerText);
@@ -1184,6 +1190,9 @@ namespace Nikse.SubtitleEdit.Logic
                 subNode = node.SelectSingleNode("MainAdjustViaEndAutoStartAndGoToNext");
                 if (subNode != null)
                     settings.Shortcuts.MainAdjustViaEndAutoStartAndGoToNext = subNode.InnerText;
+                subNode = node.SelectSingleNode("MainAdjustSetStartAutoDurationAndGoToNext");
+                if (subNode != null)
+                    settings.Shortcuts.MainAdjustSetStartAutoDurationAndGoToNext = subNode.InnerText;
                 subNode = node.SelectSingleNode("MainInsertAfter");
                 if (subNode != null)
                     settings.Shortcuts.MainInsertAfter = subNode.InnerText;
@@ -1431,6 +1440,7 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("LastModiLanguageId", settings.VobSubOcr.LastModiLanguageId.ToString());
             textWriter.WriteElementString("LastOcrMethod", settings.VobSubOcr.LastOcrMethod);
             textWriter.WriteElementString("TesseractLastLanguage", settings.VobSubOcr.TesseractLastLanguage);
+            textWriter.WriteElementString("UseModiInTesseractForUnknownWords", settings.VobSubOcr.UseModiInTesseractForUnknownWords.ToString());
             textWriter.WriteElementString("RightToLeft", settings.VobSubOcr.RightToLeft.ToString());
             textWriter.WriteElementString("TopToBottom", settings.VobSubOcr.TopToBottom.ToString());
             textWriter.WriteElementString("DefaultMillisecondsForUnknownDurations", settings.VobSubOcr.DefaultMillisecondsForUnknownDurations.ToString());
@@ -1472,6 +1482,7 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("MainAdjustSetStartAndOffsetTheRest", settings.Shortcuts.MainAdjustSetStartAndOffsetTheRest);
             textWriter.WriteElementString("MainAdjustSetEndAndGotoNext", settings.Shortcuts.MainAdjustSetEndAndGotoNext);
             textWriter.WriteElementString("MainAdjustViaEndAutoStartAndGoToNext", settings.Shortcuts.MainAdjustViaEndAutoStartAndGoToNext);
+            textWriter.WriteElementString("MainAdjustSetStartAutoDurationAndGoToNext", settings.Shortcuts.MainAdjustViaEndAutoStartAndGoToNext);            
             textWriter.WriteElementString("MainInsertAfter", settings.Shortcuts.MainInsertAfter);
             textWriter.WriteElementString("MainInsertBefore", settings.Shortcuts.MainInsertBefore);
             textWriter.WriteElementString("WaveformVerticalZoom", settings.Shortcuts.WaveformVerticalZoom);

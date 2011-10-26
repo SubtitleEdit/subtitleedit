@@ -95,6 +95,7 @@ namespace Nikse.SubtitleEdit.Forms
         Keys _mainAdjustSetStartAndOffsetTheRest = Keys.None;
         Keys _mainAdjustSetEndAndGotoNext = Keys.None;
         Keys _mainAdjustInsertViaEndAutoStartAndGoToNext = Keys.None;
+        Keys _mainAdjustSetStartAutoDurationAndGoToNext = Keys.None;
         Keys _mainInsertAfter = Keys.None;
         Keys _mainInsertBefore = Keys.None;
         Keys _mainListViewToggleDashes = Keys.None;
@@ -5818,7 +5819,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
 
                 var formSubOcr = new VobSubOcr();
-                formSubOcr.Initialize(subtitles, Configuration.Settings.VobSubOcr);
+                formSubOcr.Initialize(subtitles, Configuration.Settings.VobSubOcr, fileName);
                 if (formSubOcr.ShowDialog(this) == DialogResult.OK)
                 {
                     MakeHistoryForUndo(_language.BeforeImportingDvdSubtitle);
@@ -5882,7 +5883,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             var formSubOcr = new VobSubOcr();
-            formSubOcr.Initialize(subtitles, Configuration.Settings.VobSubOcr);
+            formSubOcr.Initialize(subtitles, Configuration.Settings.VobSubOcr, openFileDialog1.FileName);
             if (formSubOcr.ShowDialog(this) == DialogResult.OK)
             {
                 MakeHistoryForUndo(_language.BeforeImportingDvdSubtitle);
@@ -6965,6 +6966,11 @@ namespace Nikse.SubtitleEdit.Forms
                 else if (_mainAdjustInsertViaEndAutoStartAndGoToNext == e.KeyData)
                 {
                     SetCurrentViaEndPositionAndGotoNext(FirstSelectedIndex);
+                    e.SuppressKeyPress = true;
+                }
+                else if (_mainAdjustSetStartAutoDurationAndGoToNext == e.KeyData)
+                {
+                    SetCurrentStartAutoDurationAndGotoNext(FirstSelectedIndex);
                     e.SuppressKeyPress = true;
                 }
             }
@@ -9210,6 +9216,7 @@ namespace Nikse.SubtitleEdit.Forms
             _mainAdjustSetStartAndOffsetTheRest = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainAdjustSetStartAndOffsetTheRest);
             _mainAdjustSetEndAndGotoNext = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainAdjustSetEndAndGotoNext);
             _mainAdjustInsertViaEndAutoStartAndGoToNext = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainAdjustViaEndAutoStartAndGoToNext);
+            _mainAdjustSetStartAutoDurationAndGoToNext = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainAdjustSetStartAutoDurationAndGoToNext);
             _mainInsertAfter = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainInsertAfter);
             _mainInsertBefore = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainInsertBefore);
             _waveformVerticalZoom = Utilities.GetKeys(Configuration.Settings.Shortcuts.WaveformVerticalZoom);
@@ -9812,7 +9819,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (subtitles.Count > 0)
             {
                 var vobSubOcr = new VobSubOcr();
-                vobSubOcr.Initialize(subtitles, Configuration.Settings.VobSubOcr);
+                vobSubOcr.Initialize(subtitles, Configuration.Settings.VobSubOcr, fileName);
                 vobSubOcr.FileName = Path.GetFileName(fileName);
                 if (vobSubOcr.ShowDialog(this) == DialogResult.OK)
                 {
@@ -11164,6 +11171,47 @@ namespace Nikse.SubtitleEdit.Forms
             ShowStatus(string.Format(_language.VideoControls.AdjustedViaEndTime, p.StartTime.ToShortString()));
             audioVisualizer.Invalidate();
             _makeHistory = true;
+        }
+
+        public void SetCurrentStartAutoDurationAndGotoNext(int index)
+        {
+            Paragraph prev = _subtitle.GetParagraphOrDefault(index-1);
+            Paragraph p = _subtitle.GetParagraphOrDefault(index);
+            if (p == null)
+                return;
+
+            if (mediaPlayer.VideoPlayer == null || string.IsNullOrEmpty(_videoFileName))
+            {
+                MessageBox.Show(Configuration.Settings.Language.General.NoVideoLoaded);
+                return;
+            }
+
+            timeUpDownStartTime.MaskedTextBox.TextChanged -= MaskedTextBox_TextChanged;
+            Paragraph oldParagraph = new Paragraph(_subtitle.Paragraphs[index]);
+            double videoPosition = mediaPlayer.CurrentPosition;
+
+            timeUpDownStartTime.TimeCode = new TimeCode(TimeSpan.FromSeconds(videoPosition));
+
+            double duration = Utilities.GetDisplayMillisecondsFromText(textBoxListViewText.Text) * 1.4;
+
+            _subtitle.Paragraphs[index].StartTime.TotalMilliseconds = TimeSpan.FromSeconds(videoPosition).TotalMilliseconds;
+            if (prev != null && prev.EndTime.TotalMilliseconds > _subtitle.Paragraphs[index].StartTime.TotalMilliseconds)
+            {
+                int minDiff = Configuration.Settings.General.MininumMillisecondsBetweenLines + 1;
+                if (minDiff < 1)
+                    minDiff = 1;
+                prev.EndTime.TotalMilliseconds = _subtitle.Paragraphs[index].StartTime.TotalMilliseconds - minDiff;
+            }
+            _subtitle.Paragraphs[index].EndTime.TotalMilliseconds = _subtitle.Paragraphs[index].StartTime.TotalMilliseconds + duration;
+            SubtitleListview1.SetStartTime(index, _subtitle.Paragraphs[index]);
+            SubtitleListview1.SetDuration(index, _subtitle.Paragraphs[index]);
+            timeUpDownStartTime.TimeCode = _subtitle.Paragraphs[index].StartTime;
+            timeUpDownStartTime.MaskedTextBox.TextChanged += MaskedTextBox_TextChanged;
+            UpdateOriginalTimeCodes(oldParagraph);
+            _change = true;
+
+            SubtitleListview1.SelectIndexAndEnsureVisible(index + 1);
+            audioVisualizer.Invalidate();
         }
 
         private void editSelectAllToolStripMenuItem_Click(object sender, EventArgs e)
