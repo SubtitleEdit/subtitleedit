@@ -82,7 +82,7 @@ namespace Nikse.SubtitleEdit.Forms
                 string name = comboBoxDictionaries.SelectedItem.ToString();
                 int start = name.LastIndexOf("[");
                 int end = name.LastIndexOf("]");
-                if (start > 0 && end > start)
+                if (start >= 0 && end > start)
                 {
                     start++;
                     name = name.Substring(start, end - start);
