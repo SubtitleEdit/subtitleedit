@@ -950,14 +950,15 @@ namespace Nikse.SubtitleEdit.Forms
                 if (node.Text.Contains("["))
                 {
                     string text = node.Text.Substring(0, node.Text.IndexOf("[")).Trim();
-                    if (text == (Configuration.Settings.Language.Settings.VerticalZoom).Replace("&", string.Empty))
-                        Configuration.Settings.Shortcuts.WaveformVerticalZoom = GetShortcut(node.Text);
-                    else if (text == (Configuration.Settings.Language.WaveForm.ZoomIn).Replace("&", string.Empty))
+                    if (text == (Configuration.Settings.Language.WaveForm.ZoomIn).Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.WaveformZoomIn = GetShortcut(node.Text);
                     else if (text == (Configuration.Settings.Language.WaveForm.ZoomOut).Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.WaveformZoomOut = GetShortcut(node.Text);
                     else if (text == (Configuration.Settings.Language.WaveForm.PlaySelection).Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.WaveformPlaySelection = GetShortcut(node.Text);
+                    else if (text == (Configuration.Settings.Language.Settings.VerticalZoom).Replace("&", string.Empty))
+                        Configuration.Settings.Shortcuts.WaveformVerticalZoom = GetShortcut(node.Text);
+
                 }
             }
 
