@@ -2067,20 +2067,24 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else
             {
-                if (_tesseractAsyncIndex <= index || _tesseractAsyncIndex > index + 50)
+                if (_tesseractAsyncIndex <= index)
                       _tesseractAsyncIndex = index + 10;
                 textWithOutFixes = Tesseract3DoOcrViaExe(bitmap, _languageId, "-psm 6"); // 6 = Assume a single uniform block of text.
             }
 
-            if (!textWithOutFixes.Contains(Environment.NewLine) && textWithOutFixes.Length < 8)
+            if (!textWithOutFixes.Contains(Environment.NewLine) && textWithOutFixes.Length < 12)
             {
                 string psm = Tesseract3DoOcrViaExe(bitmap, _languageId, "-psm 7"); // 7 = Treat the image as a single text line.
                 if (psm.Length > textWithOutFixes.Length)
                     textWithOutFixes = psm;
-                else if (psm.Length == textWithOutFixes.Length &&
-                         (!psm.Contains("0") && textWithOutFixes.Contains("0") ||
+                else if (psm.Length == textWithOutFixes.Length && 
+                         (!psm.Contains("0") && textWithOutFixes.Contains("0") ||  // these chars are often mistaken
                           !psm.Contains("9") && textWithOutFixes.Contains("9") ||
                           !psm.Contains("1") && textWithOutFixes.Contains("1") ||
+                          !psm.Contains("$") && textWithOutFixes.Contains("$") ||
+                          !psm.Contains("/") && textWithOutFixes.Contains("/") ||
+                          !psm.Contains("(") && textWithOutFixes.Contains("(") ||
+                          !psm.Contains(")") && textWithOutFixes.Contains(")") ||
                           !psm.Contains("_") && textWithOutFixes.Contains("_")))
                     textWithOutFixes = psm;
             }
