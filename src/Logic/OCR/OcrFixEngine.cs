@@ -1202,6 +1202,9 @@ namespace Nikse.SubtitleEdit.Logic.OCR
                     break;
                 case OcrSpellCheck.Action.SkipAll:
                     _wordSkipList.Add(_spellCheck.Word);
+                    _wordSkipList.Add(_spellCheck.Word.ToUpper());
+                    if (_spellCheck.Word.Length > 1)
+                        _wordSkipList.Add(_spellCheck.Word.Substring(0,1).ToUpper() + _spellCheck.Word.Substring(1));
                     break;
                 case OcrSpellCheck.Action.SkipOnce:
                     break;

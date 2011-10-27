@@ -2072,7 +2072,7 @@ namespace Nikse.SubtitleEdit.Forms
                 textWithOutFixes = Tesseract3DoOcrViaExe(bitmap, _languageId, "-psm 6"); // 6 = Assume a single uniform block of text.
             }
 
-            if (!textWithOutFixes.Contains(Environment.NewLine) && textWithOutFixes.Length < 12)
+            if (!textWithOutFixes.Contains(Environment.NewLine) && textWithOutFixes.Length < 17)
             {
                 string psm = Tesseract3DoOcrViaExe(bitmap, _languageId, "-psm 7"); // 7 = Treat the image as a single text line.
                 if (psm.Length > textWithOutFixes.Length)
@@ -2104,14 +2104,23 @@ namespace Nikse.SubtitleEdit.Forms
 
                 if (wordsNotFound > 0 || correctWords == 0)
                 {
+                    List<string> oldUnkownWords = new List<string>();
+                    oldUnkownWords.AddRange(_ocrFixEngine.UnknownWordsFound);
+                    _ocrFixEngine.UnknownWordsFound.Clear();
+
                     string newUnfixedText = TesseractResizeAndRetry(bitmap);
                     string newText = _ocrFixEngine.FixOcrErrors(newUnfixedText, index, _lastLine, true, checkBoxGuessUnknownWords.Checked);
                     int newWordsNotFound = _ocrFixEngine.CountUnknownWordsViaDictionary(newText, out correctWords);
-                    if (newWordsNotFound < wordsNotFound)
+                    if (newWordsNotFound < wordsNotFound || (newWordsNotFound == wordsNotFound && newText.EndsWith("!") && textWithOutFixes.EndsWith("l")))
                     {
                         wordsNotFound = newWordsNotFound;
                         textWithOutFixes = newUnfixedText;
                         line = newText;
+                    }
+                    else
+                    {
+                        _ocrFixEngine.UnknownWordsFound.Clear();
+                        _ocrFixEngine.UnknownWordsFound.AddRange(oldUnkownWords);
                     }
                 }
 
