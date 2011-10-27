@@ -1160,7 +1160,18 @@ namespace Nikse.SubtitleEdit.Logic.OCR
                         if (s.Contains(" "))
                             _namesEtcMultiWordList.Add(s);
                         else
+                        {
                             _namesEtcList.Add(s);
+                            _namesEtcListUppercase.Add(s.ToUpper());
+                            if (_fiveLetterWordListLanguageName.StartsWith("en"))
+                            {
+                                if (!s.EndsWith("s"))
+                                    _namesEtcListWithApostrophe.Add(s + "'s");
+                                else
+                                    _namesEtcListWithApostrophe.Add(s + "'");
+                            }
+
+                        }
                         Utilities.AddWordToLocalNamesEtcList(s, _fiveLetterWordListLanguageName);
                     }
                     catch

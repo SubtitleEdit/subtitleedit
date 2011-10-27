@@ -9,53 +9,77 @@ namespace Nikse.SubtitleEdit.Logic
         public int Width { get; private set; }
         public int Height { get; private set; }
 
-        private readonly Bitmap _workingBitmap;
         private byte[] _bitmapData;
         private int _pixelAddress = 0;
 
+        public NikseBitmap(int width, int height)
+        {
+            Width = width;
+            Height = height;
+            _bitmapData = new byte[Width * Height * 4];
+        }
+
         public NikseBitmap(Bitmap inputBitmap)
         {
-            _workingBitmap = inputBitmap;
-            Width = _workingBitmap.Width;
-            Height = _workingBitmap.Height;
+            Width = inputBitmap.Width;
+            Height = inputBitmap.Height;
 
-            if (_workingBitmap.PixelFormat != PixelFormat.Format32bppArgb)
+            if (inputBitmap.PixelFormat != PixelFormat.Format32bppArgb)
             {
-                var newBitmap = new Bitmap(_workingBitmap.Width, _workingBitmap.Height, PixelFormat.Format32bppArgb);
-                for (int y = 0; y < _workingBitmap.Height; y++)
-                    for (int x = 0; x < _workingBitmap.Width; x++)
-                        newBitmap.SetPixel(x, y, _workingBitmap.GetPixel(x, y));
-                _workingBitmap = newBitmap;
+                var newBitmap = new Bitmap(inputBitmap.Width, inputBitmap.Height, PixelFormat.Format32bppArgb);
+                for (int y = 0; y < inputBitmap.Height; y++)
+                    for (int x = 0; x < inputBitmap.Width; x++)
+                        newBitmap.SetPixel(x, y, inputBitmap.GetPixel(x, y));
+                inputBitmap = newBitmap;
             }
 
             _bitmapData = new byte[Width * Height * 4];
-            BitmapData bitmapdata = _workingBitmap.LockBits(new Rectangle(0, 0, Width, Height), ImageLockMode.ReadOnly, PixelFormat.Format32bppArgb);
+            BitmapData bitmapdata = inputBitmap.LockBits(new Rectangle(0, 0, Width, Height), ImageLockMode.ReadOnly, PixelFormat.Format32bppArgb);
 
             //Buffer.BlockCopy(buffer, dataIndex, DataBuffer, 0, dataSize);
             System.Runtime.InteropServices.Marshal.Copy(bitmapdata.Scan0, _bitmapData, 0, _bitmapData.Length);
-            _workingBitmap.UnlockBits(bitmapdata);
+            inputBitmap.UnlockBits(bitmapdata);        
+        }
 
+        public void Fill(Color color)
+        {
+            byte[] buffer = new byte[4];
+            buffer[0] = (byte)color.B;
+            buffer[1] = (byte)color.G;
+            buffer[2] = (byte)color.R;
+            buffer[3] = (byte)color.A;
+            for (int i=0; i<_bitmapData.Length; i+=4)
+                Buffer.BlockCopy(buffer, 0, _bitmapData, i, 4);
         }
 
         public Color GetPixel(int x, int y)
         {
             int _pixelAddress = x * y * 4;
-            return Color.FromArgb(_bitmapData[_pixelAddress], _bitmapData[_pixelAddress+1], _bitmapData[_pixelAddress+2], _bitmapData[_pixelAddress+3]);
+            return Color.FromArgb(_bitmapData[_pixelAddress+3], _bitmapData[_pixelAddress+2], _bitmapData[_pixelAddress+1], _bitmapData[_pixelAddress]);
         }
 
         public Color GetPixelNext()
         {
             _pixelAddress += 4;
-            return Color.FromArgb(_bitmapData[_pixelAddress], _bitmapData[_pixelAddress + 1], _bitmapData[_pixelAddress + 2], _bitmapData[_pixelAddress + 3]);
+            return Color.FromArgb(_bitmapData[_pixelAddress+3], _bitmapData[_pixelAddress + 2], _bitmapData[_pixelAddress + 1], _bitmapData[_pixelAddress]);
         }
 
         public void SetPixel(int x, int y, Color color)
         {
             int _pixelAddress = x * y * 4;
-            _bitmapData[_pixelAddress] = (byte)color.A;
-            _bitmapData[_pixelAddress+1] = (byte)color.R;
-            _bitmapData[_pixelAddress+2] = (byte)color.G;
-            _bitmapData[_pixelAddress+3] = (byte)color.B;
+            _bitmapData[_pixelAddress] = (byte)color.B;
+            _bitmapData[_pixelAddress+1] = (byte)color.G;
+            _bitmapData[_pixelAddress+2] = (byte)color.R;
+            _bitmapData[_pixelAddress+3] = (byte)color.A;
+        }
+
+        public void SetPixelNext(Color color)
+        {
+            _pixelAddress += 4;
+            _bitmapData[_pixelAddress] = (byte)color.B;
+            _bitmapData[_pixelAddress + 1] = (byte)color.G;
+            _bitmapData[_pixelAddress + 2] = (byte)color.R;
+            _bitmapData[_pixelAddress + 3] = (byte)color.A;
         }
 
         public Bitmap GetBitmap()
