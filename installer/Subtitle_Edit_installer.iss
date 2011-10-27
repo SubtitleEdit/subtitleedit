@@ -44,9 +44,9 @@
 #expr ParseVersion(bindir + "\SubtitleEdit.exe", VerMajor, VerMinor, VerBuild, VerRevision)
 #define app_version str(VerMajor) + "." + str(VerMinor) + "." + str(VerBuild) + "." + str(VerRevision)
 
-; the following simple_app_version is for 3 digit releases, one of the two must be uncommented at a time
-#define simple_app_version str(VerMajor) + "." + str(VerMinor) + "." + str(VerBuild)
 ;#define simple_app_version str(VerMajor) + "." + str(VerMinor)
+; The following simple_app_version is for 3 digit releases, one of the two must be uncommented at a time
+#define simple_app_version str(VerMajor) + "." + str(VerMinor) + "." + str(VerBuild)
 
 #define installer_build_date GetDateTimeString('mmm, d yyyy', '', '')
 
@@ -302,10 +302,10 @@ Filename: {win}\Microsoft.NET\Framework\v2.0.50727\ngen.exe; Parameters: "uninst
 // Global variables/constants and general functions
 const installer_mutex_name = 'subtitle_edit_setup_mutex';
 
-function IsModuleLoaded(modulename: AnsiString ): Boolean;
+function IsModuleLoaded(modulename: AnsiString): Boolean;
 external 'IsModuleLoaded@files:psvince.dll stdcall setuponly';
 
-function IsModuleLoadedU(modulename: AnsiString ): Boolean;
+function IsModuleLoadedU(modulename: AnsiString): Boolean;
 external 'IsModuleLoaded@{app}\psvince.dll stdcall uninstallonly';
 
 
@@ -447,7 +447,7 @@ begin
     except
       begin
         if NOT WizardSilent() then
-          if SuppressibleMsgBox(ExpandConstant('{cm:msg_AskToDownNET}'), mbCriticalError, MB_YESNO OR MB_DEFBUTTON1, IDYES) = IDYES then begin
+          if SuppressibleMsgBox(ExpandConstant('{cm:msg_AskToDownNET}'), mbCriticalError, MB_YESNO OR MB_DEFBUTTON1, IDNO) = IDYES then begin
             ShellExec('open','http://download.microsoft.com/download/5/6/7/567758a3-759e-473e-bf8f-52154438565a/dotnetfx.exe','','',SW_SHOWNORMAL,ewNoWait,ErrorCode);
             Result := False;
           end
