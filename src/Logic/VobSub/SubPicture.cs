@@ -205,6 +205,9 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
 
         private Bitmap GenerateBitmap(Rectangle imageDisplayArea, int imageTopFieldDataAddress, int imageBottomFieldDataAddress, List<Color> fourColors)
         {
+            if (imageDisplayArea.Width <= 0 || imageDisplayArea.Height <= 0)
+                return new Bitmap(1,1);
+
             var bmp = new Bitmap(imageDisplayArea.Width + 1, imageDisplayArea.Height + 1);
             if (fourColors[0] != Color.Transparent)
             {

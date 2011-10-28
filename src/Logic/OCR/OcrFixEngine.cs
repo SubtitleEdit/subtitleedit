@@ -297,7 +297,7 @@ namespace Nikse.SubtitleEdit.Logic.OCR
             string lastWord = null;
             for (int i = 0; i < text.Length; i++)
             {
-                if (" ¡¿,.!?:;()[]{}+-$£\"#&%\r\n".Contains(text[i].ToString()))
+                if (" ¡¿,.!?:;()[]{}+-£\"#&%\r\n".Contains(text[i].ToString())) // removed $
                 {
                     if (word.Length > 0)
                     {
@@ -319,7 +319,7 @@ namespace Nikse.SubtitleEdit.Logic.OCR
                 else
                 {
                     word.Append(text[i]);
-                }
+                }                
             }
             if (word.Length > 0) // last word
             {
@@ -929,6 +929,12 @@ namespace Nikse.SubtitleEdit.Logic.OCR
             newText = sb.ToString().TrimEnd('\r').TrimEnd('\n').TrimEnd('\r').TrimEnd('\n');
             newText = pre + newText;
 
+            string post = string.Empty;
+            if (newText.EndsWith("</i>"))
+            {
+                newText = newText.Remove(newText.Length - 4, 4);
+                post = "</i>";
+            }
             foreach (string from in _endLineReplaceList.Keys)
             {
                 if (newText.EndsWith(from))
@@ -937,6 +943,7 @@ namespace Nikse.SubtitleEdit.Logic.OCR
                     newText = newText.Remove(position).Insert(position, _endLineReplaceList[from]);
                 }
             }
+            newText += post;
 
             foreach (string from in _partialLineReplaceList.Keys)
             {
@@ -952,6 +959,16 @@ namespace Nikse.SubtitleEdit.Logic.OCR
         {
             List<string> localIgnoreWords = new List<string>();
             wordsNotFound = 0;
+
+            if (line.Length == 1 && !IsWordKnownOrNumber(line, line))
+            {
+                SpellcheckOcrTextResult res = SpellcheckOcrText(line, bitmap, new string[1] { line}, 0, line, localIgnoreWords);
+                if (res.FixedWholeLine || res.Fixed)
+                    return res.Line;
+                wordsNotFound++;
+                return line;
+            }
+
             if (_hunspell == null)
                 return line;
 
@@ -1002,6 +1019,25 @@ namespace Nikse.SubtitleEdit.Logic.OCR
 
                     if (!correct && !line.Contains(word))
                         correct = true; // already fixed
+
+                    if (!correct)
+                    {
+                        //look for match via dash'ed word, e.g. sci-fi
+                        string dashedWord = GetDashedWordBefore(wordNoItalics, line, words, i);
+                        if (!string.IsNullOrEmpty(dashedWord))
+                        {
+                            correct = IsWordKnownOrNumber(dashedWord, line);
+                            if (!correct)
+                                correct = DoSpell(dashedWord);
+                        }
+                        dashedWord = GetDashedWordAfter(wordNoItalics, line, words, i);
+                        if (!string.IsNullOrEmpty(dashedWord))
+                        {
+                            correct = IsWordKnownOrNumber(dashedWord, line);
+                            if (!correct)
+                                correct = DoSpell(dashedWord);
+                        }
+                    }
 
                     if (!correct)
                     {
@@ -1102,6 +1138,22 @@ namespace Nikse.SubtitleEdit.Logic.OCR
                 }
             }
             return line;
+        }
+
+        private string GetDashedWordBefore(string word, string line, string[] words, int index)
+        {
+            if (index > 1 && line.Contains(words[index - 1] + "-" + word))
+                return words[index - 1] + "-" + word;
+
+            return null;
+        }
+
+        private string GetDashedWordAfter(string word, string line, string[] words, int index)
+        {
+            if (index < words.Length - 1 && line.Contains(word + "-" + words[index + 1]))
+                return word + "-" + words[index + 1];
+
+            return null;
         }
 
         private string GetWordWithDominatedCasing(string word)

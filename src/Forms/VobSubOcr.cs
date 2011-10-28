@@ -2055,7 +2055,7 @@ namespace Nikse.SubtitleEdit.Forms
         }
 
         private string OcrViaTessnet(Bitmap bitmap, int index)
-        {
+        {           
             if (_ocrFixEngine == null)
                 LoadOcrFixEngine();
 
@@ -2075,22 +2075,51 @@ namespace Nikse.SubtitleEdit.Forms
             if (!textWithOutFixes.Contains(Environment.NewLine) && textWithOutFixes.Length < 17)
             {
                 string psm = Tesseract3DoOcrViaExe(bitmap, _languageId, "-psm 7"); // 7 = Treat the image as a single text line.
-                if (psm.Length > textWithOutFixes.Length)
-                    textWithOutFixes = psm;
-                else if (psm.Length == textWithOutFixes.Length && 
-                         (!psm.Contains("0") && textWithOutFixes.Contains("0") ||  // these chars are often mistaken
-                          !psm.Contains("9") && textWithOutFixes.Contains("9") ||
-                          !psm.Contains("1") && textWithOutFixes.Contains("1") ||
-                          !psm.Contains("$") && textWithOutFixes.Contains("$") ||
-                          !psm.Contains("/") && textWithOutFixes.Contains("/") ||
-                          !psm.Contains("(") && textWithOutFixes.Contains("(") ||
-                          !psm.Contains(")") && textWithOutFixes.Contains(")") ||
-                          !psm.Contains("_") && textWithOutFixes.Contains("_")))
-                    textWithOutFixes = psm;
+                if (textWithOutFixes != psm)
+                {
+                    if (textWithOutFixes.Trim().Length == 0)
+                    {
+                        textWithOutFixes = psm;
+                    }
+                    else if (psm.Length > textWithOutFixes.Length)
+                    {
+                        if ((!psm.Contains("9") && textWithOutFixes.Contains("9")) ||
+                            (!psm.Contains("6") && textWithOutFixes.Contains("6")) ||
+                            (!psm.Contains("5") && textWithOutFixes.Contains("5")) ||
+                            (!psm.Contains("3") && textWithOutFixes.Contains("3")) ||
+                            (!psm.Contains("1") && textWithOutFixes.Contains("1")) ||
+                            (!psm.Contains("$") && textWithOutFixes.Contains("$")) ||
+                            (!psm.Contains("€") && textWithOutFixes.Contains("€")))
+                            textWithOutFixes = psm;
+                    }
+                    else if (psm.Length == textWithOutFixes.Length &&
+                             (!psm.Contains("0") && textWithOutFixes.Contains("0") ||  // these chars are often mistaken
+                              !psm.Contains("9") && textWithOutFixes.Contains("9") ||
+                              !psm.Contains("8") && textWithOutFixes.Contains("8") ||
+                              !psm.Contains("5") && textWithOutFixes.Contains("5") ||
+                              !psm.Contains("3") && textWithOutFixes.Contains("3") ||
+                              !psm.Contains("1") && textWithOutFixes.Contains("1") ||
+                              !psm.Contains("$") && textWithOutFixes.Contains("$") ||
+                              !psm.Contains("€") && textWithOutFixes.Contains("€") ||
+                              !psm.Contains("/") && textWithOutFixes.Contains("/") ||
+                              !psm.Contains("(") && textWithOutFixes.Contains("(") ||
+                              !psm.Contains(")") && textWithOutFixes.Contains(")") ||
+                              !psm.Contains("_") && textWithOutFixes.Contains("_")))
+                    {
+                        textWithOutFixes = psm;
+                    }
+                    else if (psm.Length == textWithOutFixes.Length && psm.EndsWith(".") && !textWithOutFixes.EndsWith("."))
+                    {
+                        textWithOutFixes = psm;
+                    }
+                }
             }
 
             if (textWithOutFixes.ToString().Trim().Length == 0)
                 textWithOutFixes = TesseractResizeAndRetry(bitmap);
+
+            if (textWithOutFixes.Contains("<i>") && Utilities.CountTagInText(textWithOutFixes, "<i>") > 1)
+                textWithOutFixes = "<i>" + textWithOutFixes.Replace("<i>", string.Empty).Replace("</i>", string.Empty) + "</i>";
 
             int numberOfWords = textWithOutFixes.ToString().Split((" " + Environment.NewLine).ToCharArray(), StringSplitOptions.RemoveEmptyEntries).Length;
 
@@ -2124,7 +2153,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
 
-                if (wordsNotFound > 0 || correctWords == 0 || textWithOutFixes != null && textWithOutFixes.ToString().Replace("~", string.Empty).Trim().Length == 0)
+                if (wordsNotFound > 0 || correctWords == 0 || textWithOutFixes != null && textWithOutFixes.ToString().Replace("~", string.Empty).Trim().Length < 2)
                 {
                     _ocrFixEngine.AutoGuessesUsed.Clear();
                     _ocrFixEngine.UnknownWordsFound.Clear();
@@ -2139,7 +2168,7 @@ namespace Nikse.SubtitleEdit.Forms
                         if (modiText.Length == 0)
                             modiText = CallModi(index); // retry... strange MODI
 
-                        if (modiText.Length > 1 && !modiText.Contains("0") && !modiText.Contains("9") &&
+                        if (modiText.Length > 1 && (!modiText.Contains("0") || line.Contains("0")) && (!modiText.Contains("9") || line.Contains("9")) &&
                             Utilities.CountTagInText(modiText,"(") < 2 &&  Utilities.CountTagInText(modiText,")") < 2)
                         {
                             int modiWordsNotFound = _ocrFixEngine.CountUnknownWordsViaDictionary(modiText, out correctWords);
@@ -2153,8 +2182,10 @@ namespace Nikse.SubtitleEdit.Forms
                                     modiText = modiTextOcrFixed;
                             }
 
-                            if (modiWordsNotFound < wordsNotFound)
+                            if (modiWordsNotFound < wordsNotFound || (textWithOutFixes.Length == 1 && modiWordsNotFound == 0))
                                 line = modiText; // use the modi ocr'ed text
+                            else if (wordsNotFound == modiWordsNotFound && modiText.EndsWith("!") && (line.EndsWith("l") || line.EndsWith("ﬂ")))
+                                line = modiText;
                         }
 
                         // take the best option - before ocr fixing, which we do again to save suggestions and prompt for user input
@@ -2187,7 +2218,7 @@ namespace Nikse.SubtitleEdit.Forms
                     subtitleListView1.SetBackgroundColor(index, Color.Red);
                 if (wordsNotFound == 2)
                     subtitleListView1.SetBackgroundColor(index, Color.Orange);
-                else if (wordsNotFound == 1)
+                else if (wordsNotFound == 1 || line.Length == 1)
                     subtitleListView1.SetBackgroundColor(index, Color.Yellow);
                 else if (line.Trim().Length == 0)
                     subtitleListView1.SetBackgroundColor(index, Color.Orange);
