@@ -26,7 +26,7 @@
   #error Update your Inno Setup version
 #endif
 
-#define installer_build_number "23"
+#define installer_build_number "24"
 
 #define app_copyright "Copyright © 2001-2011, Nikse"
 
@@ -53,6 +53,8 @@
 ; If you don't define "localize", i.e. comment out the following line then no translations
 ; for SubtitleEdit or the installer itself will be included in the installer
 #define localize
+
+#define quick_launch "{userappdata}\Microsoft\Internet Explorer\Quick Launch"
 
 
 [Setup]
@@ -221,12 +223,13 @@ Name: {group}\{cm:UninstallProgram,Subtitle Edit};                 Filename: {un
 
 Name: {commondesktop}\Subtitle Edit;        Filename: {app}\SubtitleEdit.exe; WorkingDir: {app}; Comment: Subtitle Edit v{#simple_app_version}; AppUserModelID: Nikse.SubtitleEdit; IconFilename: {app}\SubtitleEdit.exe; IconIndex: 0; Tasks: desktopicon\common
 Name: {userdesktop}\Subtitle Edit;          Filename: {app}\SubtitleEdit.exe; WorkingDir: {app}; Comment: Subtitle Edit v{#simple_app_version}; AppUserModelID: Nikse.SubtitleEdit; IconFilename: {app}\SubtitleEdit.exe; IconIndex: 0; Tasks: desktopicon\user
-Name: {userappdata}\Microsoft\Internet Explorer\Quick Launch\Subtitle Edit; Filename: {app}\SubtitleEdit.exe; Comment: Subtitle Edit v{#simple_app_version}; WorkingDir: {app};     IconFilename: {app}\SubtitleEdit.exe; IconIndex: 0; Tasks: quicklaunchicon
+Name: {#quick_launch}\Subtitle Edit;        Filename: {app}\SubtitleEdit.exe; WorkingDir: {app}; Comment: Subtitle Edit v{#simple_app_version};                                     IconFilename: {app}\SubtitleEdit.exe; IconIndex: 0; Tasks: quicklaunchicon
 
 
 [InstallDelete]
-Type: files;      Name: {userdesktop}\Subtitle Edit.lnk;   Check: NOT IsTaskSelected('desktopicon\user')   AND IsUpgrade()
-Type: files;      Name: {commondesktop}\Subtitle Edit.lnk; Check: NOT IsTaskSelected('desktopicon\common') AND IsUpgrade()
+Type: files;      Name: {userdesktop}\Subtitle Edit.lnk;   Check: not IsTaskSelected('desktopicon\user')   and IsUpgrade()
+Type: files;      Name: {commondesktop}\Subtitle Edit.lnk; Check: not IsTaskSelected('desktopicon\common') and IsUpgrade()
+Type: files;      Name: {#quick_launch}\Subtitle Edit.lnk; Check: not IsTaskSelected('quicklaunchicon')    and IsUpgrade(); OnlyBelowVersion: 0,6.01
 
 Type: files;      Name: {userappdata}\Subtitle Edit\Settings.xml; Tasks: reset_settings
 
@@ -261,30 +264,30 @@ Type: files;      Name: {app}\Languages\sr-Latn-CS.xml
 
 ; The following language files are incompatible with this SE version,
 ; so remove them when we are upgrading. If they are updated remove this code.
-Type: files;      Name: {app}\Languages\es-ES.xml;      Check: IsComponentSelected('translations') AND IsUpgrade()
-Type: files;      Name: {app}\Languages\it-IT.xml;      Check: IsComponentSelected('translations') AND IsUpgrade()
-Type: files;      Name: {app}\Languages\ja-JP.xml;      Check: IsComponentSelected('translations') AND IsUpgrade()
+Type: files;      Name: {app}\Languages\es-ES.xml;      Check: IsComponentSelected('translations') and IsUpgrade()
+Type: files;      Name: {app}\Languages\it-IT.xml;      Check: IsComponentSelected('translations') and IsUpgrade()
+Type: files;      Name: {app}\Languages\ja-JP.xml;      Check: IsComponentSelected('translations') and IsUpgrade()
 
 ; Cleanup language files if it's an upgrade and the translations are not selected
-Type: files;      Name: {app}\Languages\bg-BG.xml;      Check: NOT IsComponentSelected('translations') AND IsUpgrade()
-Type: files;      Name: {app}\Languages\cs-CZ.xml;      Check: NOT IsComponentSelected('translations') AND IsUpgrade()
-Type: files;      Name: {app}\Languages\da-DK.xml;      Check: NOT IsComponentSelected('translations') AND IsUpgrade()
-Type: files;      Name: {app}\Languages\de-De.xml;      Check: NOT IsComponentSelected('translations') AND IsUpgrade()
-Type: files;      Name: {app}\Languages\el-GR.xml;      Check: NOT IsComponentSelected('translations') AND IsUpgrade()
-Type: files;      Name: {app}\Languages\es-ES.xml;      Check: NOT IsComponentSelected('translations') AND IsUpgrade()
-Type: files;      Name: {app}\Languages\eu-ES.xml;      Check: NOT IsComponentSelected('translations') AND IsUpgrade()
-Type: files;      Name: {app}\Languages\fr-FR.xml;      Check: NOT IsComponentSelected('translations') AND IsUpgrade()
-Type: files;      Name: {app}\Languages\hu-HU.xml;      Check: NOT IsComponentSelected('translations') AND IsUpgrade()
-Type: files;      Name: {app}\Languages\it-IT.xml;      Check: NOT IsComponentSelected('translations') AND IsUpgrade()
-Type: files;      Name: {app}\Languages\ja-JP.xml;      Check: NOT IsComponentSelected('translations') AND IsUpgrade()
-Type: files;      Name: {app}\Languages\pl-PL.xml;      Check: NOT IsComponentSelected('translations') AND IsUpgrade()
-Type: files;      Name: {app}\Languages\ro-RO.xml;      Check: NOT IsComponentSelected('translations') AND IsUpgrade()
-Type: files;      Name: {app}\Languages\ru-RU.xml;      Check: NOT IsComponentSelected('translations') AND IsUpgrade()
-Type: files;      Name: {app}\Languages\sr-Cyrl-RS.xml; Check: NOT IsComponentSelected('translations') AND IsUpgrade()
-Type: files;      Name: {app}\Languages\sr-Latn-RS.xml; Check: NOT IsComponentSelected('translations') AND IsUpgrade()
-Type: files;      Name: {app}\Languages\sv-SE.xml;      Check: NOT IsComponentSelected('translations') AND IsUpgrade()
-Type: files;      Name: {app}\Languages\zh-CHS.xml;     Check: NOT IsComponentSelected('translations') AND IsUpgrade()
-Type: dirifempty; Name: {app}\Languages;                Check: NOT IsComponentSelected('translations') AND IsUpgrade()
+Type: files;      Name: {app}\Languages\bg-BG.xml;      Check: not IsComponentSelected('translations') and IsUpgrade()
+Type: files;      Name: {app}\Languages\cs-CZ.xml;      Check: not IsComponentSelected('translations') and IsUpgrade()
+Type: files;      Name: {app}\Languages\da-DK.xml;      Check: not IsComponentSelected('translations') and IsUpgrade()
+Type: files;      Name: {app}\Languages\de-De.xml;      Check: not IsComponentSelected('translations') and IsUpgrade()
+Type: files;      Name: {app}\Languages\el-GR.xml;      Check: not IsComponentSelected('translations') and IsUpgrade()
+Type: files;      Name: {app}\Languages\es-ES.xml;      Check: not IsComponentSelected('translations') and IsUpgrade()
+Type: files;      Name: {app}\Languages\eu-ES.xml;      Check: not IsComponentSelected('translations') and IsUpgrade()
+Type: files;      Name: {app}\Languages\fr-FR.xml;      Check: not IsComponentSelected('translations') and IsUpgrade()
+Type: files;      Name: {app}\Languages\hu-HU.xml;      Check: not IsComponentSelected('translations') and IsUpgrade()
+Type: files;      Name: {app}\Languages\it-IT.xml;      Check: not IsComponentSelected('translations') and IsUpgrade()
+Type: files;      Name: {app}\Languages\ja-JP.xml;      Check: not IsComponentSelected('translations') and IsUpgrade()
+Type: files;      Name: {app}\Languages\pl-PL.xml;      Check: not IsComponentSelected('translations') and IsUpgrade()
+Type: files;      Name: {app}\Languages\ro-RO.xml;      Check: not IsComponentSelected('translations') and IsUpgrade()
+Type: files;      Name: {app}\Languages\ru-RU.xml;      Check: not IsComponentSelected('translations') and IsUpgrade()
+Type: files;      Name: {app}\Languages\sr-Cyrl-RS.xml; Check: not IsComponentSelected('translations') and IsUpgrade()
+Type: files;      Name: {app}\Languages\sr-Latn-RS.xml; Check: not IsComponentSelected('translations') and IsUpgrade()
+Type: files;      Name: {app}\Languages\sv-SE.xml;      Check: not IsComponentSelected('translations') and IsUpgrade()
+Type: files;      Name: {app}\Languages\zh-CHS.xml;     Check: not IsComponentSelected('translations') and IsUpgrade()
+Type: dirifempty; Name: {app}\Languages;                Check: not IsComponentSelected('translations') and IsUpgrade()
 #endif
 
 
@@ -324,8 +327,8 @@ function DictionariesExistCheck(): Boolean;
 var
   FindRec: TFindRec;
 begin
-  if FindFirst(ExpandConstant('{userappdata}\Subtitle Edit\Dictionaries\*.aff'), FindRec) OR
-  FindFirst(ExpandConstant('{userappdata}\Subtitle Edit\Dictionaries\*.dic'), FindRec) OR
+  if FindFirst(ExpandConstant('{userappdata}\Subtitle Edit\Dictionaries\*.aff'), FindRec) or
+  FindFirst(ExpandConstant('{userappdata}\Subtitle Edit\Dictionaries\*.dic'), FindRec) or
   FindFirst(ExpandConstant('{userappdata}\Subtitle Edit\Dictionaries\*.xml'), FindRec) then begin
     Result := True;
     FindClose(FindRec);
@@ -365,7 +368,7 @@ end;
 function ShouldSkipPage(PageID: Integer): Boolean;
 begin
   // Hide the license page
-  if IsUpgrade() AND (PageID = wpLicense) then begin
+  if IsUpgrade() and (PageID = wpLicense) then begin
     Result := True;
   end
   else begin
@@ -400,8 +403,8 @@ begin
   // When uninstalling ask user to delete Subtitle Edit's dictionaries and settings
   // based on whether these files exist only
   if CurUninstallStep = usUninstall then begin
-    if SettingsExistCheck() OR DictionariesExistCheck() then begin
-      if SuppressibleMsgBox(ExpandConstant('{cm:msg_DeleteSettings}'), mbConfirmation, MB_YESNO OR MB_DEFBUTTON2, IDNO) = IDYES then begin
+    if SettingsExistCheck() or DictionariesExistCheck() then begin
+      if SuppressibleMsgBox(ExpandConstant('{cm:msg_DeleteSettings}'), mbConfirmation, MB_YESNO or MB_DEFBUTTON2, IDNO) = IDYES then begin
         CleanUpDictionaries();
         DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Settings.xml'));
       end;
@@ -426,10 +429,10 @@ end;
 
 function InitializeSetup(): Boolean;
 var
-  ErrorCode: Integer;
+  ErrorCode, nMsgBoxResult: Integer;
 begin
   // Create a mutex for the installer and if it's already running then expose a message and stop installation
-  if CheckForMutexes(installer_mutex_name) AND NOT WizardSilent() then begin
+  if CheckForMutexes(installer_mutex_name) and not WizardSilent() then begin
     SuppressibleMsgBox(ExpandConstant('{cm:msg_SetupIsRunningWarning}'), mbError, MB_OK, MB_OK);
     Result := False;
   end
@@ -437,8 +440,11 @@ begin
     Result := True;
     CreateMutex(installer_mutex_name);
 
-    if IsModuleLoaded('SubtitleEdit.exe') then begin
-      SuppressibleMsgBox(ExpandConstant('{cm:msg_AppIsRunning}'), mbError, MB_OK, MB_OK);
+    while IsModuleLoaded('SubtitleEdit.exe') and (nMsgBoxResult <> IDCANCEL) do begin
+      nMsgBoxResult := SuppressibleMsgBox(ExpandConstant('{cm:msg_AppIsRunning}'), mbError, MB_OKCANCEL, IDCANCEL);
+    end;
+
+    if nMsgBoxResult = IDCANCEL then begin
       Result := False;
     end else
     // Check if .NET Framework 2.0 is installed and if not offer to download it
@@ -446,8 +452,8 @@ begin
       ExpandConstant('{dotnet20}');
     except
       begin
-        if NOT WizardSilent() then
-          if SuppressibleMsgBox(ExpandConstant('{cm:msg_AskToDownNET}'), mbCriticalError, MB_YESNO OR MB_DEFBUTTON1, IDNO) = IDYES then begin
+        if not WizardSilent() then
+          if SuppressibleMsgBox(ExpandConstant('{cm:msg_AskToDownNET}'), mbCriticalError, MB_YESNO or MB_DEFBUTTON1, IDNO) = IDYES then begin
             ShellExec('open','http://download.microsoft.com/download/5/6/7/567758a3-759e-473e-bf8f-52154438565a/dotnetfx.exe','','',SW_SHOWNORMAL,ewNoWait,ErrorCode);
             Result := False;
           end
@@ -461,20 +467,26 @@ end;
 
 
 function InitializeUninstall(): Boolean;
+var
+  nMsgBoxResult: Integer;
 begin
   if CheckForMutexes(installer_mutex_name) then begin
     SuppressibleMsgBox(ExpandConstant('{cm:msg_SetupIsRunningWarning}'), mbError, MB_OK, MB_OK);
     Result := False;
-  end else
+  end
+  else begin
     Result := True;
+    CreateMutex(installer_mutex_name);
 
     // Check if app is running during uninstallation
-    if IsModuleLoadedU('SubtitleEdit.exe') then begin
-      SuppressibleMsgBox(ExpandConstant('{cm:msg_AppIsRunning}'), mbError, MB_OK, MB_OK);
+    while IsModuleLoadedU('SubtitleEdit.exe') and (nMsgBoxResult <> IDCANCEL) do begin
+      nMsgBoxResult := SuppressibleMsgBox(ExpandConstant('{cm:msg_AppIsRunningUninstall}'), mbError, MB_OKCANCEL, IDCANCEL);
+    end;
+
+    if nMsgBoxResult = IDCANCEL then begin
       Result := False;
     end else
-      CreateMutex(installer_mutex_name);
-
       // Unload the psvince.dll in order to be uninstalled
       UnloadDLL(ExpandConstant('{app}\psvince.dll'));
+  end;
 end;

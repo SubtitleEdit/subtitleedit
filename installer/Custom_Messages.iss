@@ -25,7 +25,8 @@
 [CustomMessages]
 ; English
 en.comp_translations=Translations
-en.msg_AppIsRunning=Subtitle Edit is running! Please close it before proceeding.
+en.msg_AppIsRunning=Setup has detected that Subtitle Edit is currently running.%n%nPlease close all instances of it now, then click OK to continue, or Cancel to exit.
+en.msg_AppIsRunningUninstall=Uninstall has detected that Subtitle Edit is currently running.%n%nPlease close all instances of it now, then click OK to continue, or Cancel to exit.
 en.msg_AskToDownNET=Subtitle Edit requires the .NET Framework 2.0. Please download and install the .NET Framework and run setup again.%n%nDo you want to download the .NET Framework 2.0 now?
 en.msg_DeleteSettings=Do you also want to delete Subtitle Edit's settings and any custom changes you made in the dictionaries?%n%nIf you plan on reinstalling Subtitle Edit you do not have to delete them.
 en.msg_OptimizingPerformance=Optimizing performance...
@@ -44,7 +45,8 @@ en.types_default=Default installation
 #ifdef localize
 ; Bulgarian
 bg.comp_translations=Translations
-bg.msg_AppIsRunning=Subtitle Edit is running! Please close it before proceeding.
+bg.msg_AppIsRunning=Setup has detected that Subtitle Edit is currently running.%n%nPlease close all instances of it now, then click OK to continue, or Cancel to exit.
+bg.msg_AppIsRunningUninstall=Uninstall has detected that Subtitle Edit is currently running.%n%nPlease close all instances of it now, then click OK to continue, or Cancel to exit.
 bg.msg_AskToDownNET=Subtitle Edit requires the .NET Framework 2.0. Please download and install the .NET Framework and run setup again.%n%nDo you want to download the .NET Framework 2.0 now?
 bg.msg_DeleteSettings=Do you also want to delete Subtitle Edit's settings and any custom changes you made in the dictionaries?%n%nIf you plan on reinstalling Subtitle Edit you do not have to delete them.
 bg.msg_OptimizingPerformance=Optimizing performance...
@@ -62,7 +64,8 @@ bg.types_default=Default installation
 
 ; Czech
 cs.comp_translations=Translations
-cs.msg_AppIsRunning=Subtitle Edit is running! Please close it before proceeding.
+cs.msg_AppIsRunning=Setup has detected that Subtitle Edit is currently running.%n%nPlease close all instances of it now, then click OK to continue, or Cancel to exit.
+cs.msg_AppIsRunningUninstall=Uninstall has detected that Subtitle Edit is currently running.%n%nPlease close all instances of it now, then click OK to continue, or Cancel to exit.
 cs.msg_AskToDownNET=Subtitle Edit requires the .NET Framework 2.0. Please download and install the .NET Framework and run setup again.%n%nDo you want to download the .NET Framework 2.0 now?
 cs.msg_DeleteSettings=Do you also want to delete Subtitle Edit's settings and any custom changes you made in the dictionaries?%n%nIf you plan on reinstalling Subtitle Edit you do not have to delete them.
 cs.msg_OptimizingPerformance=Optimizing performance...
@@ -80,7 +83,8 @@ cs.types_default=Default installation
 
 ; Deutsch
 de.comp_translations=Übersetzungen
-de.msg_AppIsRunning=Subtitle Edit läuft bereits! Bitte schließen das Programm, bevor Sie fortfahren.
+de.msg_AppIsRunning=Setup has detected that Subtitle Edit is currently running.%n%nPlease close all instances of it now, then click OK to continue, or Cancel to exit.
+de.msg_AppIsRunningUninstall=Uninstall has detected that Subtitle Edit is currently running.%n%nPlease close all instances of it now, then click OK to continue, or Cancel to exit.
 de.msg_AskToDownNET=Subtitle Edit benötigt .NET Framework 2.0 oder höher. Bitte laden und installieren Sie .NET Framework und starten Sie die Installation erneut.%n%nMöchten Sie .NET Framework jetzt herunterladen?
 de.msg_DeleteSettings=Möchten Sie ihre Einstellungen und die benutzerdefinierten Wörterbücher ebenfalls löschen?%n%nWenn Sie Subtitle Edit erneut installieren möchten, können Sie Ihre Einstellungen behalten.
 de.msg_OptimizingPerformance=Leistungsoptimierung...
@@ -98,7 +102,8 @@ de.types_default=Standardinstallation
 
 ; Danish
 dk.comp_translations=Translations
-dk.msg_AppIsRunning=Subtitle Edit kører! Luk venligst Subtitle Edit for at fortsætte.
+dk.msg_AppIsRunning=Setup has detected that Subtitle Edit is currently running.%n%nPlease close all instances of it now, then click OK to continue, or Cancel to exit.
+dk.msg_AppIsRunningUninstall=Uninstall has detected that Subtitle Edit is currently running.%n%nPlease close all instances of it now, then click OK to continue, or Cancel to exit.
 dk.msg_AskToDownNET=Subtitle Edit kræver .NET Framework 2.0 eller nyere. Download and installer .NET Framework og kør setup igen.%n%nVil du downloade .NET Framework 2.0 nu?
 dk.msg_DeleteSettings=Vil du også slette Subtitle Edit's indstillinger og evt. ændringer i ordlister?%n%nHvis du vil geninstallere Subtitle Edit senere kan du beholde disse indstillinger.
 dk.msg_OptimizingPerformance=Optimerer performance...
@@ -116,7 +121,8 @@ dk.types_default=Default installation
 
 ;Greek
 el.comp_translations=Μεταφράσεις
-el.msg_AppIsRunning=Το Subtitle Edit είναι ανοιχτό! Κλείστε το πριν συνεχίσετε.
+el.msg_AppIsRunning=Η εγκατάσταση εντόπισε ότι εκτελείται η εφαρμογή Subtitle Edit.%n%nΠαρακαλώ κλείστε την εφαρμογή τώρα και πατήστε Εντάξει για να συνεχίσετε, ή Άκυρο για έξοδο.
+el.msg_AppIsRunningUninstall=Η απεγκατάσταση εντόπισε ότι εκτελείται η εφαρμογή Subtitle Edit.%n%nΠαρακαλώ κλείστε την εφαρμογή τώρα και πατήστε Εντάξει για να συνεχίσετε, ή Άκυρο για έξοδο.
 el.msg_AskToDownNET=Το Subtitle Edit χρειάζεται το .NET Framework 2.0. Κατεβάστε και εγκαταστήστε το .NET Framework και επαναλάβετε την εγκατάσταση.%n%nΘέλετε να κατεβάσετε το .NET Framework 2.0 τώρα;
 el.msg_DeleteSettings=Θέλετε επίσης να διαγράψετε τις ρυθμίσεις του Subtitle Edit και οποιεσδήποτε τροποποιήσεις έχετε κάνει στους φακέλους;%n%nΑν σκοπεύετε να επανεγκαταστήσετε το Subtitle Edit δε χρειάζεται να τις διαγράψετε.
 el.msg_OptimizingPerformance=Βελτιστοποίηση απόδοσης...
@@ -134,7 +140,8 @@ el.types_default=Προεπιλεγμένη εγκατάσταση
 
 ; Spanish
 es.comp_translations=Translations
-es.msg_AppIsRunning=¡Subtitle Edit está en ejecución! Por favor, ciérrelo antes de proceder.
+es.msg_AppIsRunning=Setup has detected that Subtitle Edit is currently running.%n%nPlease close all instances of it now, then click OK to continue, or Cancel to exit.
+es.msg_AppIsRunningUninstall=Uninstall has detected that Subtitle Edit is currently running.%n%nPlease close all instances of it now, then click OK to continue, or Cancel to exit.
 es.msg_AskToDownNET=Subtitle Edit requiere .NET Framework 2.0. Por favor, descargue e instale .NET Framework y ejecute de nuevo la instalación.%n%n¿Desea descargar .NET Framework 2.0 ahora?
 es.msg_DeleteSettings=¿Desea eliminar también la configuración de Subtitle Edit y cualquier otro cambio que se haya podido realizar en los diccionarios?%n%nSi piensa reinstalar más adelante Subtitle Edit no tiene por qué eliminarlos.
 es.msg_OptimizingPerformance=Optimizing performance...
@@ -152,7 +159,8 @@ es.types_default=Default installation
 
 ; Basque
 eu.comp_translations=Itzulpenak
-eu.msg_AppIsRunning=Subtitle Edit lanean dago! Mesedez itxi jarraitu aurretik.
+eu.msg_AppIsRunning=Setup has detected that Subtitle Edit is currently running.%n%nPlease close all instances of it now, then click OK to continue, or Cancel to exit.
+eu.msg_AppIsRunningUninstall=Uninstall has detected that Subtitle Edit is currently running.%n%nPlease close all instances of it now, then click OK to continue, or Cancel to exit.
 eu.msg_AskToDownNET=Subtitle Edit-ek beharrezkoa du .NET Framework 2.0. Mesedez jeitsi eta ezarri .NET Framework eta abiarazi berriro ezartzailea.%n%nNahi duzu .NET Framework 2.0 orain jeistea?
 eu.msg_DeleteSettings=Nahi dituzu ere Subtitle Edit-en ezarpenak eta hiztegietan egin dituzun aldaketak ezabatzea?%n%nSubtitle Edit berriro ezartzeko asmoa baduzu ez dituzu ezabatu behar.
 eu.msg_OptimizingPerformance=Egintza hobereneratzen...
@@ -170,7 +178,8 @@ eu.types_default=Berezko ezarpena
 
 ; French
 fr.comp_translations=Translations
-fr.msg_AppIsRunning=Subtitle Edit is running! Please close it before proceeding.
+fr.msg_AppIsRunning=Setup has detected that Subtitle Edit is currently running.%n%nPlease close all instances of it now, then click OK to continue, or Cancel to exit.
+fr.msg_AppIsRunningUninstall=Uninstall has detected that Subtitle Edit is currently running.%n%nPlease close all instances of it now, then click OK to continue, or Cancel to exit.
 fr.msg_AskToDownNET=Subtitle Edit requires the .NET Framework 2.0. Please download and install the .NET Framework and run setup again.%n%nDo you want to download the .NET Framework 2.0 now?
 fr.msg_DeleteSettings=Do you also want to delete Subtitle Edit's settings and any custom changes you made in the dictionaries?%n%nIf you plan on reinstalling Subtitle Edit you do not have to delete them.
 fr.msg_OptimizingPerformance=Optimizing performance...
@@ -188,7 +197,8 @@ fr.types_default=Default installation
 
 ; Hungarian
 hu.comp_translations=Translations
-hu.msg_AppIsRunning=A Subtitle Edit fut! Kérjük, zárja be a folytatás elött.
+hu.msg_AppIsRunning=Setup has detected that Subtitle Edit is currently running.%n%nPlease close all instances of it now, then click OK to continue, or Cancel to exit.
+hu.msg_AppIsRunningUninstall=Uninstall has detected that Subtitle Edit is currently running.%n%nPlease close all instances of it now, then click OK to continue, or Cancel to exit.
 hu.msg_AskToDownNET=A Subtitle Edit futtatásához .NET Framework 2.0 szükséges. Kérjük, töltse le és telepítse a .NET Framework keretprogramot és futtassa újra a telepítőt.%n%nLetölti a .NET Framework 2.0 telepítőt most?
 hu.msg_DeleteSettings=Törölni szeretné a Subtitle Edit beállításait és a szótárakban végrehajtott egyéni módosításokat?%n%nHa a Subtitle Edit újratelepítését tervezi, Önnek nem kell törölni azt.
 hu.msg_OptimizingPerformance=Optimizing performance...
@@ -206,7 +216,8 @@ hu.types_default=Default installation
 
 ; Italian
 it.comp_translations=Translations
-it.msg_AppIsRunning=Subtitle Edit is running! Please close it before proceeding.
+it.msg_AppIsRunning=Setup has detected that Subtitle Edit is currently running.%n%nPlease close all instances of it now, then click OK to continue, or Cancel to exit.
+it.msg_AppIsRunningUninstall=Uninstall has detected that Subtitle Edit is currently running.%n%nPlease close all instances of it now, then click OK to continue, or Cancel to exit.
 it.msg_AskToDownNET=Subtitle Edit requires the .NET Framework 2.0. Please download and install the .NET Framework and run setup again.%n%nDo you want to download the .NET Framework 2.0 now?
 it.msg_DeleteSettings=Do you also want to delete Subtitle Edit's settings and any custom changes you made in the dictionaries?%n%nIf you plan on reinstalling Subtitle Edit you do not have to delete them.
 it.msg_OptimizingPerformance=Optimizing performance...
@@ -224,7 +235,8 @@ it.types_default=Default installation
 
 ; Japanese
 ja.comp_translations=Translations
-ja.msg_AppIsRunning=Subtitle Edit is running! Please close it before proceeding.
+ja.msg_AppIsRunning=Setup has detected that Subtitle Edit is currently running.%n%nPlease close all instances of it now, then click OK to continue, or Cancel to exit.
+ja.msg_AppIsRunningUninstall=Uninstall has detected that Subtitle Edit is currently running.%n%nPlease close all instances of it now, then click OK to continue, or Cancel to exit.
 ja.msg_AskToDownNET=Subtitle Edit requires the .NET Framework 2.0. Please download and install the .NET Framework and run setup again.%n%nDo you want to download the .NET Framework 2.0 now?
 ja.msg_DeleteSettings=Do you also want to delete Subtitle Edit's settings and any custom changes you made in the dictionaries?%n%nIf you plan on reinstalling Subtitle Edit you do not have to delete them.
 ja.msg_OptimizingPerformance=Optimizing performance...
@@ -242,7 +254,8 @@ ja.types_default=Default installation
 
 ; Dutch
 nl.comp_translations=Translations
-nl.msg_AppIsRunning=Subtitle Edit is running! Please close it before proceeding.
+nl.msg_AppIsRunning=Setup has detected that Subtitle Edit is currently running.%n%nPlease close all instances of it now, then click OK to continue, or Cancel to exit.
+nl.msg_AppIsRunningUninstall=Uninstall has detected that Subtitle Edit is currently running.%n%nPlease close all instances of it now, then click OK to continue, or Cancel to exit.
 nl.msg_AskToDownNET=Subtitle Edit requires the .NET Framework 2.0. Please download and install the .NET Framework and run setup again.%n%nDo you want to download the .NET Framework 2.0 now?
 nl.msg_DeleteSettings=Do you also want to delete Subtitle Edit's settings and any custom changes you made in the dictionaries?%n%nIf you plan on reinstalling Subtitle Edit you do not have to delete them.
 nl.msg_OptimizingPerformance=Optimizing performance...
@@ -260,7 +273,8 @@ nl.types_default=Default installation
 
 ; Polish
 pl.comp_translations=Tłumaczenia
-pl.msg_AppIsRunning=Subtitle Edit jest uruchomiony! Proszę go zamknąć, aby kontynuować.
+pl.msg_AppIsRunning=Setup has detected that Subtitle Edit is currently running.%n%nPlease close all instances of it now, then click OK to continue, or Cancel to exit.
+pl.msg_AppIsRunningUninstall=Uninstall has detected that Subtitle Edit is currently running.%n%nPlease close all instances of it now, then click OK to continue, or Cancel to exit.
 pl.msg_AskToDownNET=Subtitle Edit wymaga do poprawnej pracy .NET Framework 2.0. Pobierz i zainstaluj .NET Framework i uruchom ponownie instalator.%n%nCzy chcesz teraz pobrać .NET Framework 2.0?
 pl.msg_DeleteSettings=Czy chcesz także usunąć ustawienia Subtitle Edit oraz wszelkie niestandardowe zmiany wprowadzone w słownikach?%n%nJeśli planujesz ponowną instalację Subtitle Edit, nie musisz ich usuwać.
 pl.msg_OptimizingPerformance=Optymalizowanie wydajności...
@@ -278,7 +292,8 @@ pl.types_default=Instalacja domyślna
 
 ; Romanian
 ro.comp_translations=Translations
-ro.msg_AppIsRunning=Subtitle Edit is running! Please close it before proceeding.
+ro.msg_AppIsRunning=Setup has detected that Subtitle Edit is currently running.%n%nPlease close all instances of it now, then click OK to continue, or Cancel to exit.
+ro.msg_AppIsRunningUninstall=Uninstall has detected that Subtitle Edit is currently running.%n%nPlease close all instances of it now, then click OK to continue, or Cancel to exit.
 ro.msg_AskToDownNET=Subtitle Edit necesită .NET Framework 2.0. Vă rog să descărcaţi şi să instalaţi .NET Framework şi apoi reinstalaţi.%n%nVreţi să descărcaţi acum .NET Framework 2.0?
 ro.msg_DeleteSettings=Vreţi de asemenea să ştergeţi setările şi personalizările făcute în dicţionare?%n%nDacă aveţi de gând să reinstalaţi Subtitle Edit, nu este nevoie să le ştergeţi.
 ro.msg_OptimizingPerformance=Optimizing performance...
@@ -296,7 +311,8 @@ ro.types_default=Default installation
 
 ; Russian
 ru.comp_translations=Файлы локализации программы
-ru.msg_AppIsRunning=Обнаружена работающая программа "Subtitle Edit"! Пожалуйста, закройте её перед началом установки.
+ru.msg_AppIsRunning=Setup has detected that Subtitle Edit is currently running.%n%nPlease close all instances of it now, then click OK to continue, or Cancel to exit.
+ru.msg_AppIsRunningUninstall=Uninstall has detected that Subtitle Edit is currently running.%n%nPlease close all instances of it now, then click OK to continue, or Cancel to exit.
 ru.msg_AskToDownNET=Для работы "Subtitle Edit" требуется установленный .NET Framework 2.0. Пожалуйста, загрузите и установите .NET Framework, а затем повторите инсталляцию.%n%nВыполнить загрузку .NET Framework 2.0 сейчас?
 ru.msg_DeleteSettings=Следует ли также удалить ваши настройки программы и пользовательские словари?%n%nЕсли вы будете обновлять программу, то не удаляйте ваши настройки и словари.
 ru.msg_OptimizingPerformance=Оптимизация производительности...
@@ -314,7 +330,8 @@ ru.types_default=Обычная установка
 
 ; Serbian Cyrillic
 srC.comp_translations=Преводи
-srC.msg_AppIsRunning=Програм је покренут! Затворите га пре него што наставите.
+srC.msg_AppIsRunning=Setup has detected that Subtitle Edit is currently running.%n%nPlease close all instances of it now, then click OK to continue, or Cancel to exit.
+srC.msg_AppIsRunningUninstall=Uninstall has detected that Subtitle Edit is currently running.%n%nPlease close all instances of it now, then click OK to continue, or Cancel to exit.
 srC.msg_AskToDownNET=Програм захтева .NET радни оквир 2.0. Инсталирајте га и поново покрените инсталацију.%n%nЖелите ли да преузмете захтевани програм сада?
 srC.msg_DeleteSettings=Желите ли да обришете поставке и друге прилагођене измене које сте направили у речницима?%n%nАко планирате да поново инсталирате програм, не морате их брисати.
 srC.msg_OptimizingPerformance=Учитавам…
@@ -332,7 +349,8 @@ srC.types_default=Подразумевана инсталација
 
 ; Serbian Latin
 srL.comp_translations=Prevodi
-srL.msg_AppIsRunning=Program je pokrenut! Zatvorite ga pre nego što nastavite.
+srL.msg_AppIsRunning=Setup has detected that Subtitle Edit is currently running.%n%nPlease close all instances of it now, then click OK to continue, or Cancel to exit.
+srL.msg_AppIsRunningUninstall=Uninstall has detected that Subtitle Edit is currently running.%n%nPlease close all instances of it now, then click OK to continue, or Cancel to exit.
 srL.msg_AskToDownNET=Program zahteva .NET radni okvir 2.0. Instalirajte ga i ponovo pokrenite instalaciju.%n%Želite li da preuzmete zahtevani program sada?
 srL.msg_DeleteSettings=Želite li da obrišete postavke i druge prilagođene izmene koje ste napravili u rečnicima?%n%nAko planirate da ponovo instalirate program, ne morate ih brisati.
 srL.msg_OptimizingPerformance=Učitavam…
@@ -350,7 +368,8 @@ srL.types_default=Podrazumevana instalacija
 
 ; Swedish
 sv.comp_translations=Translations
-sv.msg_AppIsRunning=Subtitle Edit is running! Please close it before proceeding.
+sv.msg_AppIsRunning=Setup has detected that Subtitle Edit is currently running.%n%nPlease close all instances of it now, then click OK to continue, or Cancel to exit.
+sv.msg_AppIsRunningUninstall=Uninstall has detected that Subtitle Edit is currently running.%n%nPlease close all instances of it now, then click OK to continue, or Cancel to exit.
 sv.msg_AskToDownNET=Subtitle Edit requires the .NET Framework 2.0. Please download and install the .NET Framework and run setup again.%n%nDo you want to download the .NET Framework 2.0 now?
 sv.msg_DeleteSettings=Do you also want to delete Subtitle Edit's settings and any custom changes you made in the dictionaries?%n%nIf you plan on reinstalling Subtitle Edit you do not have to delete them.
 sv.msg_OptimizingPerformance=Optimizing performance...
