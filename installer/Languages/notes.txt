@@ -3,4 +3,4 @@ Inno Setup translations that can be found on the Inno Setup webpage.
 Be careful when updating them.
 
 Greek and both Serbian translations are posted to their mailing lists,
-but they are not made official or unofficial yet as of 15/10/2011.
+but they are not made official or unofficial yet as of 29/10/2011, v5.4.2.
