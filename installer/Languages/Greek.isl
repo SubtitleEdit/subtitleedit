@@ -9,11 +9,14 @@
 ;               http://anasto.go.to
 ;               baldycom@hotmail.com
 ;
+; 29th October 2011 [XhmikosR, my_nickname at yahoo dot com]:
+; various cleanup and minor updates
+;
 
 [LangOptions]
 ; The following three entries are very important. Be sure to read and 
 ; understand the '[LangOptions] section' topic in the help file.
-LanguageName=Greek
+LanguageName=<0395><03BB><03BB><03B7><03BD><03B9><03BA><03AC>
 LanguageID=$408
 LanguageCodePage=1253
 ; If the language you are translating to requires special font faces or
@@ -58,8 +61,8 @@ WinVersionTooLowError=Αυτό το πρόγραμμα απαιτεί %1 έκδοση η νεότερη.
 WinVersionTooHighError=Αυτό το πρόγραμμα δεν μπορεί να εκτελεστεί σε %1 έκδοση η νεότερη.
 AdminPrivilegesRequired=Πρέπει να είστε ο Διαχειριστής συστήματος για να εγκαταστήσετε αυτό το πρόγραμμα.
 PowerUserPrivilegesRequired=Πρέπει να είστε ο Διαχειριστής συστήματος ή Power User για να εγκαταστήσετε αυτό το πρόγραμμα.
-SetupAppRunningError=Η εγκατάσταση εντόπισε ότι εκτελείται η εφαρμογή %1.%n%nΠαρακαλώ κλείστε την εφαρμογή τώρα και πατήστε Εντάξει για να συνεχίσετε.
-UninstallAppRunningError=Η απεγκατάσταση εντόπισε ότι εκτελείται η εφαρμογή %1.%n%nΠαρακαλώ κλείστε την εφαρμογή τώρα και πατήστε Εντάξει για να συνεχίσετε.
+SetupAppRunningError=Η εγκατάσταση εντόπισε ότι εκτελείται η εφαρμογή %1.%n%nΠαρακαλώ κλείστε την εφαρμογή τώρα και πατήστε Εντάξει για να συνεχίσετε, ή ’κυρο για έξοδο.
+UninstallAppRunningError=Η απεγκατάσταση εντόπισε ότι εκτελείται η εφαρμογή %1.%n%nΠαρακαλώ κλείστε την εφαρμογή τώρα και πατήστε Εντάξει για να συνεχίσετε, ή ’κυρο για έξοδο.
 
 ; *** Misc. errors
 ErrorCreatingDir=Η εγκατάσταση δεν μπορεί να δημιουργήσει τον κατάλογο %1
