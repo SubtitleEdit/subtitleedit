@@ -75,7 +75,7 @@ namespace Nikse.SubtitleEdit.Logic
             {
                 Title = "Subtitle Edit",
                 Version = "3.2",
-                TranslatedBy = "Translated by Nikse",
+                TranslatedBy = " ",
                 CultureName = "en-US",
                 HelpFile = string.Empty,
                 OK = "&OK",

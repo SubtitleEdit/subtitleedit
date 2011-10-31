@@ -118,13 +118,23 @@ namespace Nikse.SubtitleEdit.Forms
             text = text.Replace("</U>", string.Empty);
             text = Logic.Utilities.RemoveHtmlFontTag(text);
 
-            Font font = new System.Drawing.Font(_subtitleFontName, _subtitleFontSize);
+            Font font;
+            try
+            {
+                font = new System.Drawing.Font(_subtitleFontName, _subtitleFontSize);
+            }
+            catch (Exception exception)
+            {
+                MessageBox.Show(exception.Message);
+                font = new System.Drawing.Font("Verdena", _subtitleFontSize);
+            }
             Bitmap bmp = new Bitmap(400, 200);
             Graphics g = Graphics.FromImage(bmp);
 
 
             SizeF textSize = g.MeasureString("Hj!", font);
             var lineHeight = (textSize.Height * 0.64f);
+            float italicSpacing = textSize.Width / 6;
 
             textSize = g.MeasureString(text, font);
             g.Dispose();
@@ -149,27 +159,35 @@ namespace Nikse.SubtitleEdit.Forms
             int left = 5;
             float top = 5;
             bool newLine = false;
+            float addX = 0;
             while (i < text.Length)
             {
                 if (text.Substring(i).ToLower().StartsWith("<i>"))
                 {
                     if (sb.Length > 0)
-                        DrawText(font, sf, path, sb, isItalic, left, top, ref newLine);
+                    {
+                        DrawText(font, sf, path, sb, isItalic, left, top, ref newLine, addX);
+                        addX = 0;
+                    }
                     isItalic = true;
                     i += 2;
                 }
                 else if (text.Substring(i).ToLower().StartsWith("</i>") && isItalic)
                 {
-                    DrawText(font, sf, path, sb, isItalic, left, top, ref newLine);
+                    addX = italicSpacing;
+                    DrawText(font, sf, path, sb, isItalic, left, top, ref newLine, addX);
+                    addX = 1;
                     isItalic = false;
                     i += 3;
                 }
                 else if (text.Substring(i).StartsWith(Environment.NewLine))
                 {
-                    DrawText(font, sf, path, sb, isItalic, left, top, ref newLine);
+                    DrawText(font, sf, path, sb, isItalic, left, top, ref newLine, addX);
+                    addX = 0;
                     top += lineHeight;
                     newLine = true;
                     i += Environment.NewLine.Length - 1;
+                    addX = 0;
                 }
                 else
                 {
@@ -178,9 +196,7 @@ namespace Nikse.SubtitleEdit.Forms
                 i++;
             }
             if (sb.Length > 0)
-            {
-                DrawText(font, sf, path, sb, isItalic, left, top, ref newLine);
-            }
+                DrawText(font, sf, path, sb, isItalic, left, top, ref newLine, addX);
 
             if (_borderWidth > 0)
                 g.DrawPath(new Pen(_borderColor, _borderWidth), path);
@@ -189,11 +205,13 @@ namespace Nikse.SubtitleEdit.Forms
             return bmp;
         }
 
-        private static void DrawText(Font font, StringFormat sf, System.Drawing.Drawing2D.GraphicsPath path, StringBuilder sb, bool isItalic, int left, float top, ref bool newLine)
+        private static void DrawText(Font font, StringFormat sf, System.Drawing.Drawing2D.GraphicsPath path, StringBuilder sb, bool isItalic, int left, float top, ref bool newLine, float addX)
         {
             PointF next = new PointF(left, top);
             if (path.PointCount > 0)
                 next.X = path.GetLastPoint().X;
+
+            next.X += addX;
             if (newLine)
             {
                 next.X = 5;

@@ -150,7 +150,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private string[] _tesseractAsyncStrings = null;
         private int _tesseractAsyncIndex = 0;
-        private BackgroundWorker _tesseractThread;
+        private BackgroundWorker _tesseractThread = null;
 
         public VobSubOcr()
         {
@@ -1024,6 +1024,8 @@ namespace Nikse.SubtitleEdit.Forms
                 if (differencePercentage < maxDiff) //_vobSubOcrSettings.AllowDifferenceInPercent) // should be around 1.0...
                 {
                     XmlNode node = _compareDoc.DocumentElement.SelectSingleNode("FileName[.='" + _compareBitmaps[smallestIndex].Name + "']");
+                    if (node != null && _bluRaySubtitlesOriginal != null && "ceoil".Contains(node.Attributes["Text"].InnerText) && differencePercentage > 12)
+                        node = null;
                     if (node != null)
                     {
                         bool isItalic = node.Attributes["Italic"] != null;
@@ -2072,7 +2074,8 @@ namespace Nikse.SubtitleEdit.Forms
                 textWithOutFixes = Tesseract3DoOcrViaExe(bitmap, _languageId, "-psm 6"); // 6 = Assume a single uniform block of text.
             }
 
-            if (!textWithOutFixes.Contains(Environment.NewLine) && textWithOutFixes.Length < 17)
+            if ((!textWithOutFixes.Contains(Environment.NewLine) || Utilities.CountTagInText("\n", textWithOutFixes) > 2)
+                && textWithOutFixes.Length < 17)
             {
                 string psm = Tesseract3DoOcrViaExe(bitmap, _languageId, "-psm 7"); // 7 = Treat the image as a single text line.
                 if (textWithOutFixes != psm)
@@ -2115,10 +2118,20 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
 
-            if (textWithOutFixes.ToString().Trim().Length == 0)
-                textWithOutFixes = TesseractResizeAndRetry(bitmap);
+            // Sometimes Tesseract has problems with small fonts - it helps to make the image larger
+            if (textWithOutFixes.Replace("<i>", string.Empty).Replace("</i>", string.Empty).Replace("@", string.Empty).Replace("%", string.Empty).Trim().Length < 3 ||
+                Utilities.CountTagInText("\n", textWithOutFixes) > 2)
+            {
+                string rs = TesseractResizeAndRetry(bitmap);
+                textWithOutFixes = rs;
+            }
 
-            if (textWithOutFixes.Contains("<i>") && Utilities.CountTagInText(textWithOutFixes, "<i>") > 1)
+            // fix italics
+            int italicStartCount = Utilities.CountTagInText(textWithOutFixes, "<i>");
+            if (textWithOutFixes.Contains("<i>") && italicStartCount > 1)
+                textWithOutFixes = "<i>" + textWithOutFixes.Replace("<i>", string.Empty).Replace("</i>", string.Empty) + "</i>";
+            else if (italicStartCount == 1 && textWithOutFixes.Length > 20 && 
+                     textWithOutFixes.IndexOf("<i>") > 1 && textWithOutFixes.IndexOf("<i>") < 10 && textWithOutFixes.EndsWith("</i>"))
                 textWithOutFixes = "<i>" + textWithOutFixes.Replace("<i>", string.Empty).Replace("</i>", string.Empty) + "</i>";
 
             int numberOfWords = textWithOutFixes.ToString().Split((" " + Environment.NewLine).ToCharArray(), StringSplitOptions.RemoveEmptyEntries).Length;
@@ -2168,17 +2181,25 @@ namespace Nikse.SubtitleEdit.Forms
                         if (modiText.Length == 0)
                             modiText = CallModi(index); // retry... strange MODI
 
-                        if (modiText.Length > 1 && (!modiText.Contains("0") || line.Contains("0")) && (!modiText.Contains("9") || line.Contains("9")) &&
-                            Utilities.CountTagInText(modiText,"(") < 2 &&  Utilities.CountTagInText(modiText,")") < 2)
+                        if (modiText.Length > 1 && 
+                            !modiText.Contains("CD") &&
+                            (!modiText.Contains("0") || line.Contains("0")) &&
+                            (!modiText.Contains("2") || line.Contains("2")) &&
+                            (!modiText.Contains("3") || line.Contains("4")) &&
+                            (!modiText.Contains("5") || line.Contains("5")) &&
+                            (!modiText.Contains("9") || line.Contains("9")) &&
+                            (!modiText.Contains(")") || line.Contains(")")) &&
+                            Utilities.CountTagInText(modiText, "(") < 2 && Utilities.CountTagInText(modiText, ")") < 2 &&
+                            Utilities.CountTagInText(modiText, Environment.NewLine) < 3)
                         {
                             int modiWordsNotFound = _ocrFixEngine.CountUnknownWordsViaDictionary(modiText, out correctWords);
-                            if (modiWordsNotFound > 0)
+                            //if (modiWordsNotFound > 0)
                             {
                                 string modiTextOcrFixed = modiText;
                                 if (checkBoxAutoFixCommonErrors.Checked)
                                     modiTextOcrFixed = _ocrFixEngine.FixOcrErrors(modiText, index, _lastLine, false, checkBoxGuessUnknownWords.Checked);
                                 int modiOcrCorrectedWordsNotFound = _ocrFixEngine.CountUnknownWordsViaDictionary(modiTextOcrFixed, out correctWords);
-                                if (modiOcrCorrectedWordsNotFound < modiWordsNotFound)
+                                if (modiOcrCorrectedWordsNotFound <= modiWordsNotFound)
                                     modiText = modiTextOcrFixed;
                             }
 
@@ -2821,6 +2842,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void CheckBoxCustomFourColorsCheckedChanged(object sender, EventArgs e)
         {
+            ResetTesseractThread();
             if (checkBoxCustomFourColors.Checked)
             {
                 pictureBoxPattern.BackColor = Color.White;
@@ -2844,30 +2866,57 @@ namespace Nikse.SubtitleEdit.Forms
             SubtitleListView1SelectedIndexChanged(null, null);
         }
 
+        private void ResetTesseractThread()
+        {
+            if (_tesseractThread != null)
+            {
+                _tesseractThread.CancelAsync();
+                for (int i = 0; i < _tesseractAsyncStrings.Length; i++)
+                    _tesseractAsyncStrings[i] = string.Empty;
+                _tesseractAsyncIndex = 0;
+            }            
+        }
+
         private void PictureBoxColorChooserClick(object sender, EventArgs e)
         {
             if (colorDialog1.ShowDialog(this) == DialogResult.OK)
                 (sender as PictureBox).BackColor = colorDialog1.Color;
             SubtitleListView1SelectedIndexChanged(null, null);
+            ResetTesseractThread();
         }
 
         private void CheckBoxPatternTransparentCheckedChanged(object sender, EventArgs e)
         {
             SubtitleListView1SelectedIndexChanged(null, null);
+            ResetTesseractThread();
         }
 
         private void CheckBoxEmphasis1TransparentCheckedChanged(object sender, EventArgs e)
         {
             SubtitleListView1SelectedIndexChanged(null, null);
+            ResetTesseractThread();
         }
 
         private void CheckBoxEmphasis2TransparentCheckedChanged(object sender, EventArgs e)
         {
             SubtitleListView1SelectedIndexChanged(null, null);
+            ResetTesseractThread();
         }
 
         private void checkBoxShowOnlyForced_CheckedChanged(object sender, EventArgs e)
         {
+            if (_tesseractThread != null)
+            {
+                _tesseractThread.CancelAsync();
+                int i = 0;
+                while (i < 10 && _tesseractThread.IsBusy)
+                {
+                    System.Threading.Thread.Sleep(100);
+                    i++;
+                }
+                _tesseractAsyncStrings = null;
+            }            
+
             Subtitle oldSubtitle = new Subtitle(_subtitle);
             subtitleListView1.BeginUpdate();
             if (_bdnXmlOriginal != null)
@@ -3085,7 +3134,10 @@ namespace Nikse.SubtitleEdit.Forms
                         bmp.Save(fileName, System.Drawing.Imaging.ImageFormat.Png);
                         imagesSavedCount++;
                         Paragraph p = _subtitle.Paragraphs[i];
-                        sb.AppendLine(string.Format("#{3}: {0}->{1}<div style='text-align:center'><img src='{2}.png' /></div><br /><hr />", p.StartTime.ToShortString(), p.EndTime.ToShortString(), numberString, i+1));
+                        string text = string.Empty;
+                        if (!string.IsNullOrEmpty(p.Text))
+                           text = "<br /><font size='22'>" + Utilities.HtmlEncode(p.Text.Replace("<i>", "@1__").Replace("</i>", "@2__")).Replace("@1__", "<i>").Replace("@2__", "</i>").Replace(Environment.NewLine, "<br />") + "</font>";
+                        sb.AppendLine(string.Format("#{3}:{0}->{1}<div style='text-align:center'><img src='{2}.png' />" +  text + "</div><br /><hr />", p.StartTime.ToShortString(), p.EndTime.ToShortString(), numberString, i+1));                        
                         bmp.Dispose();
                     }
                 }
@@ -3165,6 +3217,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void checkBoxAutoTransparentBackground_CheckedChanged(object sender, EventArgs e)
         {
+            ResetTesseractThread();
             SubtitleListView1SelectedIndexChanged(null, null);
         }
 
@@ -3290,5 +3343,32 @@ namespace Nikse.SubtitleEdit.Forms
                 _tesseractThread.CancelAsync();
             _tesseractAsyncIndex = 10000;
         }
+
+        private void subtitleListView1_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Modifiers == Keys.Control && e.KeyCode == Keys.A)
+            {
+                subtitleListView1.SelectedIndexChanged -= SubtitleListView1SelectedIndexChanged;
+                subtitleListView1.BeginUpdate();
+                for (int i=0; i<subtitleListView1.Items.Count; i++)
+                    subtitleListView1.Items[i].Selected = true;
+                subtitleListView1.EndUpdate();
+                subtitleListView1.SelectedIndexChanged += SubtitleListView1SelectedIndexChanged;
+                e.Handled = true;
+                e.SuppressKeyPress = true;
+            }
+            if (e.Modifiers == Keys.Control && e.KeyCode == Keys.D)
+            {
+                subtitleListView1.SelectedIndexChanged -= SubtitleListView1SelectedIndexChanged;
+                subtitleListView1.BeginUpdate();
+                for (int i = 0; i < subtitleListView1.Items.Count; i++)
+                    subtitleListView1.Items[i].Selected = false;
+                subtitleListView1.EndUpdate();
+                subtitleListView1.SelectedIndexChanged += SubtitleListView1SelectedIndexChanged;
+                e.Handled = true;
+                e.SuppressKeyPress = true;
+            }
+        }
+
     }
 }
