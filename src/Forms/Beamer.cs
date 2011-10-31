@@ -204,6 +204,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             SizeF textSize = g.MeasureString("Hj!", font);
             var lineHeight = (textSize.Height * 0.64f);
+            float italicSpacing = textSize.Width / 6;
 
             textSize = g.MeasureString(text, font);
             g.Dispose();
@@ -228,24 +229,31 @@ namespace Nikse.SubtitleEdit.Forms
             int left = 5;
             float top = 5;
             bool newLine = false;
+            float addX = 0;
             while (i < text.Length)
             {
                 if (text.Substring(i).ToLower().StartsWith("<i>"))
                 {
                     if (sb.Length > 0)
-                        DrawText(font, sf, path, sb, isItalic, left, top, ref newLine);
+                    {
+                        DrawText(font, sf, path, sb, isItalic, left, top, ref newLine, addX);
+                        addX = 0;
+                    }
                     isItalic = true;
                     i += 2;
                 }
                 else if (text.Substring(i).ToLower().StartsWith("</i>") && isItalic)
                 {
-                    DrawText(font, sf, path, sb, isItalic, left, top, ref newLine);
+                    addX = italicSpacing;
+                    DrawText(font, sf, path, sb, isItalic, left, top, ref newLine, addX);
+                    addX = 1;
                     isItalic = false;
                     i += 3;
                 }
                 else if (text.Substring(i).StartsWith(Environment.NewLine))
                 {
-                    DrawText(font, sf, path, sb, isItalic, left, top, ref newLine);
+                    DrawText(font, sf, path, sb, isItalic, left, top, ref newLine, addX);
+                    addX = 0;
                     top += lineHeight;
                     newLine = true;
                     i += Environment.NewLine.Length - 1;
@@ -257,9 +265,7 @@ namespace Nikse.SubtitleEdit.Forms
                 i++;
             }
             if (sb.Length > 0)
-            {
-                DrawText(font, sf, path, sb, isItalic, left, top, ref newLine);
-            }
+                DrawText(font, sf, path, sb, isItalic, left, top, ref newLine, addX);
 
             if (_borderWidth > 0)
                 g.DrawPath(new Pen(_borderColor, _borderWidth), path);
@@ -268,11 +274,13 @@ namespace Nikse.SubtitleEdit.Forms
             return bmp;
         }
 
-        private static void DrawText(Font font, StringFormat sf, System.Drawing.Drawing2D.GraphicsPath path, StringBuilder sb, bool isItalic, int left, float top, ref bool newLine)
+        private static void DrawText(Font font, StringFormat sf, System.Drawing.Drawing2D.GraphicsPath path, StringBuilder sb, bool isItalic, int left, float top, ref bool newLine, float addX)
         {
             PointF next = new PointF(left, top);
             if (path.PointCount > 0)
                 next.X = path.GetLastPoint().X;
+
+            next.X += addX;
             if (newLine)
             {
                 next.X = 5;
@@ -441,28 +449,39 @@ namespace Nikse.SubtitleEdit.Forms
             else if (e.KeyCode == Keys.Pause)
             {
                 timer1.Stop();
+                timer1.Enabled = false;
             }
             else if (e.KeyCode == Keys.Space || (e.KeyCode == Keys.Down && e.Modifiers == Keys.Alt))
             {
-                _noTimerAction = true;
+                bool timer1Enabled = timer1.Enabled;
+                timer1.Enabled = false;
+                System.Threading.Thread.Sleep(100);
                 if (_index < _subtitle.Paragraphs.Count - 1)
                     _index++;
                 _seconds = _subtitle.Paragraphs[_index].StartTime.TotalSeconds;
+
+                _seconds = _subtitle.Paragraphs[_index].StartTime.TotalSeconds;
+                _videoStartTick = DateTime.Now.Ticks - ((long)(_subtitle.Paragraphs[_index].StartTime.TotalMilliseconds) * 10000); //10,000 ticks = 1 millisecond
+
                 ShowCurrent();
-                if (!timer1.Enabled)
-                {
-                    _videoStartTick = (long)(_subtitle.Paragraphs[_index].StartTime.TotalMilliseconds) * 10000; //10,000 ticks = 1 millisecond
-                    timer1.Start();
-                }
                 _noTimerAction = false;
+                if (timer1Enabled || _fullscreen)
+                    timer1.Start();
+
                 e.Handled = true;
             }
             else if (e.KeyCode == Keys.Up && e.Modifiers == Keys.Alt)
             {
+                bool timer1Enabled = timer1.Enabled;
+                timer1.Enabled = false;
+                System.Threading.Thread.Sleep(100);
                 if (_index > 0)
                     _index--;
                 _seconds = _subtitle.Paragraphs[_index].StartTime.TotalSeconds;
+                _videoStartTick = DateTime.Now.Ticks - ((long)(_subtitle.Paragraphs[_index].StartTime.TotalMilliseconds) * 10000); //10,000 ticks = 1 millisecond
                 ShowCurrent();
+                if (timer1Enabled)
+                    timer1.Start();
             }
             else if (e.Modifiers == Keys.None && e.KeyCode == Keys.PageDown)
             {
