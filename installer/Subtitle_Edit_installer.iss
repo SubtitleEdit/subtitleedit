@@ -26,9 +26,13 @@
   #error Update your Inno Setup version
 #endif
 
-#define installer_build_number "24"
+#ifndef UNICODE
+  #error Use Inno Setup unicode
+#endif
 
-#define app_copyright "Copyright © 2001-2011, Nikse"
+
+#define installer_build_number "24"
+#define app_copyright          "Copyright © 2001-2011, Nikse"
 
 #define VerMajor
 #define VerMinor
@@ -404,7 +408,7 @@ begin
   // based on whether these files exist only
   if CurUninstallStep = usUninstall then begin
     if SettingsExistCheck() or DictionariesExistCheck() then begin
-      if SuppressibleMsgBox(ExpandConstant('{cm:msg_DeleteSettings}'), mbConfirmation, MB_YESNO or MB_DEFBUTTON2, IDNO) = IDYES then begin
+      if SuppressibleMsgBox(CustomMessage('msg_DeleteSettings'), mbConfirmation, MB_YESNO or MB_DEFBUTTON2, IDNO) = IDYES then begin
         CleanUpDictionaries();
         DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Settings.xml'));
       end;
@@ -433,7 +437,7 @@ var
 begin
   // Create a mutex for the installer and if it's already running then expose a message and stop installation
   if CheckForMutexes(installer_mutex_name) and not WizardSilent() then begin
-    SuppressibleMsgBox(ExpandConstant('{cm:msg_SetupIsRunningWarning}'), mbError, MB_OK, MB_OK);
+    SuppressibleMsgBox(CustomMessage('msg_SetupIsRunningWarning'), mbError, MB_OK, MB_OK);
     Result := False;
   end
   else begin
@@ -441,19 +445,20 @@ begin
     CreateMutex(installer_mutex_name);
 
     while IsModuleLoaded('SubtitleEdit.exe') and (nMsgBoxResult <> IDCANCEL) do begin
-      nMsgBoxResult := SuppressibleMsgBox(ExpandConstant('{cm:msg_AppIsRunning}'), mbError, MB_OKCANCEL, IDCANCEL);
+      nMsgBoxResult := SuppressibleMsgBox(CustomMessage('msg_AppIsRunning'), mbError, MB_OKCANCEL, IDCANCEL);
     end;
 
     if nMsgBoxResult = IDCANCEL then begin
       Result := False;
-    end else
+    end;
+
     // Check if .NET Framework 2.0 is installed and if not offer to download it
     try
       ExpandConstant('{dotnet20}');
     except
       begin
         if not WizardSilent() then
-          if SuppressibleMsgBox(ExpandConstant('{cm:msg_AskToDownNET}'), mbCriticalError, MB_YESNO or MB_DEFBUTTON1, IDNO) = IDYES then begin
+          if SuppressibleMsgBox(CustomMessage('msg_AskToDownNET'), mbCriticalError, MB_YESNO or MB_DEFBUTTON1, IDNO) = IDYES then begin
             ShellExec('open','http://download.microsoft.com/download/5/6/7/567758a3-759e-473e-bf8f-52154438565a/dotnetfx.exe','','',SW_SHOWNORMAL,ewNoWait,ErrorCode);
             Result := False;
           end
@@ -471,7 +476,7 @@ var
   nMsgBoxResult: Integer;
 begin
   if CheckForMutexes(installer_mutex_name) then begin
-    SuppressibleMsgBox(ExpandConstant('{cm:msg_SetupIsRunningWarning}'), mbError, MB_OK, MB_OK);
+    SuppressibleMsgBox(CustomMessage('msg_SetupIsRunningWarning'), mbError, MB_OK, MB_OK);
     Result := False;
   end
   else begin
@@ -480,13 +485,14 @@ begin
 
     // Check if app is running during uninstallation
     while IsModuleLoadedU('SubtitleEdit.exe') and (nMsgBoxResult <> IDCANCEL) do begin
-      nMsgBoxResult := SuppressibleMsgBox(ExpandConstant('{cm:msg_AppIsRunningUninstall}'), mbError, MB_OKCANCEL, IDCANCEL);
+      nMsgBoxResult := SuppressibleMsgBox(CustomMessage('msg_AppIsRunningUninstall'), mbError, MB_OKCANCEL, IDCANCEL);
     end;
 
     if nMsgBoxResult = IDCANCEL then begin
       Result := False;
-    end else
-      // Unload the psvince.dll in order to be uninstalled
-      UnloadDLL(ExpandConstant('{app}\psvince.dll'));
+    end;
+
+    // Unload the psvince.dll in order to be uninstalled
+    UnloadDLL(ExpandConstant('{app}\psvince.dll'));
   end;
 end;
