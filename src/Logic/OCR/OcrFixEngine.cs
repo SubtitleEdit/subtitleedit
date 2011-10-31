@@ -973,19 +973,19 @@ namespace Nikse.SubtitleEdit.Logic.OCR
                 return line;
 
             string tempLine = line;
-            foreach (string name in _namesEtcList)
-            {
-                int start = tempLine.IndexOf(name);
-                if (start >= 0)
-                {
-                    if (start == 0 || (Environment.NewLine + " ¡¿,.!?:;()[]{}+-$£\"”“#&%…—").Contains(tempLine[start - 1].ToString()))
-                    {
-                        int end = start + name.Length;
-                        if (end >= tempLine.Length || (Environment.NewLine + " ¡¿,.!?:;()[]{}+-$£\"”“#&%…—").Contains(tempLine[end].ToString()))
-                            tempLine = tempLine.Remove(start, name.Length);
-                    }
-                }
-            }
+            //foreach (string name in _namesEtcList)
+            //{
+            //    int start = tempLine.IndexOf(name);
+            //    if (start >= 0)
+            //    {
+            //        if (start == 0 || (Environment.NewLine + " ¡¿,.!?:;()[]{}+-$£\"”“#&%…—").Contains(tempLine[start - 1].ToString()))
+            //        {
+            //            int end = start + name.Length;
+            //            if (end >= tempLine.Length || (Environment.NewLine + " ¡¿,.!?:;()[]{}+-$£\"”“#&%…—").Contains(tempLine[end].ToString()))
+            //                tempLine = tempLine.Remove(start, name.Length);
+            //        }
+            //    }
+            //}
 
             foreach (string name in _namesEtcMultiWordList)
             {
@@ -1030,12 +1030,15 @@ namespace Nikse.SubtitleEdit.Logic.OCR
                             if (!correct)
                                 correct = DoSpell(dashedWord);
                         }
-                        dashedWord = GetDashedWordAfter(wordNoItalics, line, words, i);
-                        if (!string.IsNullOrEmpty(dashedWord))
+                        if (!correct)
                         {
-                            correct = IsWordKnownOrNumber(dashedWord, line);
-                            if (!correct)
-                                correct = DoSpell(dashedWord);
+                            dashedWord = GetDashedWordAfter(wordNoItalics, line, words, i);
+                            if (!string.IsNullOrEmpty(dashedWord))
+                            {
+                                correct = IsWordKnownOrNumber(dashedWord, line);
+                                if (!correct)
+                                    correct = DoSpell(dashedWord);
+                            }
                         }
                     }
 
@@ -1142,16 +1145,16 @@ namespace Nikse.SubtitleEdit.Logic.OCR
 
         private string GetDashedWordBefore(string word, string line, string[] words, int index)
         {
-            if (index > 1 && line.Contains(words[index - 1] + "-" + word))
-                return words[index - 1] + "-" + word;
+            if (index > 0 && line.Contains(words[index - 1] + "-" + word))
+                return (words[index - 1] + "-" + word).Replace("<i>", string.Empty).Replace("</i>", string.Empty);
 
             return null;
         }
 
         private string GetDashedWordAfter(string word, string line, string[] words, int index)
         {
-            if (index < words.Length - 1 && line.Contains(word + "-" + words[index + 1]))
-                return word + "-" + words[index + 1];
+            if (index < words.Length - 1 && line.Contains(word + "-" + words[index + 1].Replace("</i>", string.Empty)))
+                return (word + "-" + words[index + 1]).Replace("<i>", string.Empty).Replace("</i>", string.Empty);
 
             return null;
         }
@@ -1374,8 +1377,30 @@ namespace Nikse.SubtitleEdit.Logic.OCR
             {
                 if (!DoSpell(s))
                 {
-                    if (!IsWordKnownOrNumber(word, word))
-                        return false;
+                    if (IsWordKnownOrNumber(word, word))
+                        return true;
+
+                    if (s.Length > 10 && s.Contains("/"))
+                    {
+                        string[] ar = s.Split('/');
+                        if (ar.Length == 2)
+                        {
+                            if (ar[0].Length > 3 && ar[1].Length > 3)
+                            {
+                                string a = ar[0];
+                                if (a == a.ToUpper())
+                                    a = a.Substring(0, 1) + a.Substring(1).ToLower();
+                                string b = ar[0];
+                                if (b == b.ToUpper())
+                                    b = b.Substring(0, 1) + b.Substring(1).ToLower();
+
+                                if ((DoSpell(a) || IsWordKnownOrNumber(a, word)) &&
+                                    (DoSpell(b) || IsWordKnownOrNumber(b, word)))
+                                    return true;
+                            }
+                        }
+                    }
+                    return false;
                 }
             }
             return true;
