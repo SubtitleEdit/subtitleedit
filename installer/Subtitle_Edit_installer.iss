@@ -52,12 +52,11 @@
 ; The following simple_app_version is for 3 digit releases, one of the two must be uncommented at a time
 #define simple_app_version str(VerMajor) + "." + str(VerMinor) + "." + str(VerBuild)
 
-#define installer_build_date GetDateTimeString('mmm, d yyyy', '', '')
-
 ; If you don't define "localize", i.e. comment out the following line then no translations
 ; for SubtitleEdit or the installer itself will be included in the installer
 #define localize
 
+#define installer_build_date GetDateTimeString('mmm, d yyyy', '', '')
 #define quick_launch "{userappdata}\Microsoft\Internet Explorer\Quick Launch"
 
 
@@ -297,8 +296,8 @@ Type: dirifempty; Name: {app}\Languages;                Check: not IsComponentSe
 
 [Run]
 Filename: {win}\Microsoft.NET\Framework\v2.0.50727\ngen.exe; Parameters: "install ""{app}\SubtitleEdit.exe"""; StatusMsg: {cm:msg_OptimizingPerformance}; Flags: runhidden runascurrentuser skipifdoesntexist
-Filename: {app}\SubtitleEdit.exe;  Description: {cm:LaunchProgram,Subtitle Edit}; WorkingDir: {app}; Flags: nowait postinstall skipifsilent unchecked
-Filename: http://www.nikse.dk/SubtitleEdit/; Description: {cm:run_VisitWebsite};                     Flags: nowait postinstall skipifsilent shellexec unchecked
+Filename: {app}\SubtitleEdit.exe;            Description: {cm:LaunchProgram,Subtitle Edit}; WorkingDir: {app}; Flags: nowait postinstall skipifsilent unchecked
+Filename: http://www.nikse.dk/SubtitleEdit/; Description: {cm:run_VisitWebsite};                               Flags: nowait postinstall skipifsilent unchecked shellexec
 
 
 [UninstallRun]
@@ -433,7 +432,7 @@ end;
 
 function InitializeSetup(): Boolean;
 var
-  ErrorCode, nMsgBoxResult: Integer;
+  iErrorCode, iMsgBoxResult: Integer;
 begin
   // Create a mutex for the installer and if it's already running then expose a message and stop installation
   if CheckForMutexes(installer_mutex_name) and not WizardSilent() then begin
@@ -444,11 +443,11 @@ begin
     Result := True;
     CreateMutex(installer_mutex_name);
 
-    while IsModuleLoaded('SubtitleEdit.exe') and (nMsgBoxResult <> IDCANCEL) do begin
-      nMsgBoxResult := SuppressibleMsgBox(CustomMessage('msg_AppIsRunning'), mbError, MB_OKCANCEL, IDCANCEL);
+    while IsModuleLoaded('SubtitleEdit.exe') and (iMsgBoxResult <> IDCANCEL) do begin
+      iMsgBoxResult := SuppressibleMsgBox(CustomMessage('msg_AppIsRunning'), mbError, MB_OKCANCEL, IDCANCEL);
     end;
 
-    if nMsgBoxResult = IDCANCEL then begin
+    if iMsgBoxResult = IDCANCEL then begin
       Result := False;
     end;
 
@@ -459,7 +458,7 @@ begin
       begin
         if not WizardSilent() then
           if SuppressibleMsgBox(CustomMessage('msg_AskToDownNET'), mbCriticalError, MB_YESNO or MB_DEFBUTTON1, IDNO) = IDYES then begin
-            ShellExec('open','http://download.microsoft.com/download/5/6/7/567758a3-759e-473e-bf8f-52154438565a/dotnetfx.exe','','',SW_SHOWNORMAL,ewNoWait,ErrorCode);
+            ShellExec('open','http://download.microsoft.com/download/5/6/7/567758a3-759e-473e-bf8f-52154438565a/dotnetfx.exe','','',SW_SHOWNORMAL,ewNoWait,iErrorCode);
             Result := False;
           end
           else begin
@@ -473,7 +472,7 @@ end;
 
 function InitializeUninstall(): Boolean;
 var
-  nMsgBoxResult: Integer;
+  iMsgBoxResult: Integer;
 begin
   if CheckForMutexes(installer_mutex_name) then begin
     SuppressibleMsgBox(CustomMessage('msg_SetupIsRunningWarning'), mbError, MB_OK, MB_OK);
@@ -484,11 +483,11 @@ begin
     CreateMutex(installer_mutex_name);
 
     // Check if app is running during uninstallation
-    while IsModuleLoadedU('SubtitleEdit.exe') and (nMsgBoxResult <> IDCANCEL) do begin
-      nMsgBoxResult := SuppressibleMsgBox(CustomMessage('msg_AppIsRunningUninstall'), mbError, MB_OKCANCEL, IDCANCEL);
+    while IsModuleLoadedU('SubtitleEdit.exe') and (iMsgBoxResult <> IDCANCEL) do begin
+      iMsgBoxResult := SuppressibleMsgBox(CustomMessage('msg_AppIsRunningUninstall'), mbError, MB_OKCANCEL, IDCANCEL);
     end;
 
-    if nMsgBoxResult = IDCANCEL then begin
+    if iMsgBoxResult = IDCANCEL then begin
       Result := False;
     end;
 
