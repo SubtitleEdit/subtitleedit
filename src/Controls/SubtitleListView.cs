@@ -524,6 +524,16 @@ namespace Nikse.SubtitleEdit.Controls
             }
         }
 
+        public Color GetBackgroundColor(int index)
+        {
+            if (index >= 0 && index < Items.Count)
+            {
+                ListViewItem item = Items[index];
+                return item.BackColor;
+            }
+            return Control.DefaultBackColor;
+        }
+
         /// <summary>
         /// Removes all text and set background color
         /// </summary>

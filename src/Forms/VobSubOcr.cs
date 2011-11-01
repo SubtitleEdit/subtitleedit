@@ -136,7 +136,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         // Dictionaries/spellchecking/fixing
         OcrFixEngine _ocrFixEngine;
-        int _tessnetOcrAutoFixes;
+        int _tesseractOcrAutoFixes;
 
         Subtitle _bdnXmlOriginal;
         Subtitle _bdnXmlSubtitle;
@@ -1499,8 +1499,8 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (textWithOutFixes.Trim() != line.Trim())
             {
-                _tessnetOcrAutoFixes++;
-                labelFixesMade.Text = string.Format(" - {0}", _tessnetOcrAutoFixes);
+                _tesseractOcrAutoFixes++;
+                labelFixesMade.Text = string.Format(" - {0}", _tesseractOcrAutoFixes);
                 LogOcrFix(listViewIndex, textWithOutFixes.ToString(), line);
             }
 
@@ -1863,7 +1863,7 @@ namespace Nikse.SubtitleEdit.Forms
                 subtitleListView1.SelectIndexAndEnsureVisible(i);
                 string text;
                 if (comboBoxOcrMethod.SelectedIndex == 0)
-                    text = OcrViaTessnet(GetSubtitleBitmap(i), i);
+                    text = OcrViaTesseract(GetSubtitleBitmap(i), i);
                 else if (comboBoxOcrMethod.SelectedIndex == 1)
                     text = SplitAndOcrBitmapNormal(GetSubtitleBitmap(i), i);
                 else
@@ -2056,7 +2056,26 @@ namespace Nikse.SubtitleEdit.Forms
             return s;
         }
 
-        private string OcrViaTessnet(Bitmap bitmap, int index)
+        private bool HasSingleLetters(string line)
+        {
+            if (!_ocrFixEngine.IsDictionaryLoaded || !_ocrFixEngine.SpellCheckDictionaryName.StartsWith("en_"))
+                return false;
+
+            int count = 0;
+            var arr = line.Replace("<i>", string.Empty).Replace("</i>", string.Empty).Replace("a.m", string.Empty).Replace("p.m", string.Empty).
+                           Replace("o.r", string.Empty).Replace("e.g", string.Empty).Replace("Ph.D", string.Empty).Replace("d.t.s", string.Empty).
+                           Split(" .?!()\r\n\t".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+            foreach (string s in arr)
+            {
+                if (s.Length == 1 && !"'”1234567890&aAI\"".Contains(s))
+                    count++;
+            }
+            if (count > 0)
+                return true;
+            return false;
+        }
+
+        private string OcrViaTesseract(Bitmap bitmap, int index)
         {           
             if (_ocrFixEngine == null)
                 LoadOcrFixEngine();
@@ -2092,7 +2111,9 @@ namespace Nikse.SubtitleEdit.Forms
                             (!psm.Contains("3") && textWithOutFixes.Contains("3")) ||
                             (!psm.Contains("1") && textWithOutFixes.Contains("1")) ||
                             (!psm.Contains("$") && textWithOutFixes.Contains("$")) ||
+                            (!psm.Contains("•") && textWithOutFixes.Contains("•")) ||
                             (!psm.Contains("€") && textWithOutFixes.Contains("€")))
+                            
                             textWithOutFixes = psm;
                     }
                     else if (psm.Length == textWithOutFixes.Length &&
@@ -2104,6 +2125,7 @@ namespace Nikse.SubtitleEdit.Forms
                               !psm.Contains("1") && textWithOutFixes.Contains("1") ||
                               !psm.Contains("$") && textWithOutFixes.Contains("$") ||
                               !psm.Contains("€") && textWithOutFixes.Contains("€") ||
+                              !psm.Contains("•") && textWithOutFixes.Contains("•") ||
                               !psm.Contains("/") && textWithOutFixes.Contains("/") ||
                               !psm.Contains("(") && textWithOutFixes.Contains("(") ||
                               !psm.Contains(")") && textWithOutFixes.Contains(")") ||
@@ -2119,7 +2141,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             // Sometimes Tesseract has problems with small fonts - it helps to make the image larger
-            if (textWithOutFixes.Replace("<i>", string.Empty).Replace("</i>", string.Empty).Replace("@", string.Empty).Replace("%", string.Empty).Trim().Length < 3 ||
+            if (textWithOutFixes.Replace("<i>", string.Empty).Replace("</i>", string.Empty).Replace("@", string.Empty).Replace("%", string.Empty).Replace("|", string.Empty).Trim().Length < 3 ||
                 Utilities.CountTagInText("\n", textWithOutFixes) > 2)
             {
                 string rs = TesseractResizeAndRetry(bitmap);
@@ -2153,7 +2175,8 @@ namespace Nikse.SubtitleEdit.Forms
                     string newUnfixedText = TesseractResizeAndRetry(bitmap);
                     string newText = _ocrFixEngine.FixOcrErrors(newUnfixedText, index, _lastLine, true, checkBoxGuessUnknownWords.Checked);
                     int newWordsNotFound = _ocrFixEngine.CountUnknownWordsViaDictionary(newText, out correctWords);
-                    if (newWordsNotFound < wordsNotFound || (newWordsNotFound == wordsNotFound && newText.EndsWith("!") && textWithOutFixes.EndsWith("l")))
+                    if ((!newText.Contains("9") || textWithOutFixes.Contains("9")) && newUnfixedText.Trim().Length > 0 && 
+                         newWordsNotFound < wordsNotFound || (newWordsNotFound == wordsNotFound && newText.EndsWith("!") && textWithOutFixes.EndsWith("l")))
                     {
                         wordsNotFound = newWordsNotFound;
                         textWithOutFixes = newUnfixedText;
@@ -2239,7 +2262,7 @@ namespace Nikse.SubtitleEdit.Forms
                     subtitleListView1.SetBackgroundColor(index, Color.Red);
                 if (wordsNotFound == 2)
                     subtitleListView1.SetBackgroundColor(index, Color.Orange);
-                else if (wordsNotFound == 1 || line.Length == 1)
+                else if (wordsNotFound == 1 || line.Length == 1 || line.Contains("_") || HasSingleLetters(line))
                     subtitleListView1.SetBackgroundColor(index, Color.Yellow);
                 else if (line.Trim().Length == 0)
                     subtitleListView1.SetBackgroundColor(index, Color.Orange);
@@ -2255,9 +2278,9 @@ namespace Nikse.SubtitleEdit.Forms
                     subtitleListView1.SetBackgroundColor(index, Color.Red);
                 else if (badWords >= numberOfWords / 2) // result.Count / 2)
                     subtitleListView1.SetBackgroundColor(index, Color.Orange);
-                else if (badWords > 0)
+                else if (badWords > 0 || line.Contains("_") || HasSingleLetters(line))
                     subtitleListView1.SetBackgroundColor(index, Color.Yellow);
-                else if (line.Trim().Length == 0)
+                else if (line.Replace("<i>", string.Empty).Replace("</i>", string.Empty).Trim().Length == 0)
                     subtitleListView1.SetBackgroundColor(index, Color.Orange);
                 else
                     subtitleListView1.SetBackgroundColor(index, Color.LightGreen);
@@ -2265,8 +2288,8 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (textWithOutFixes.ToString().Trim() != line.Trim())
             {
-                _tessnetOcrAutoFixes++;
-                labelFixesMade.Text = string.Format(" - {0}", _tessnetOcrAutoFixes);
+                _tesseractOcrAutoFixes++;
+                labelFixesMade.Text = string.Format(" - {0}", _tesseractOcrAutoFixes);
                 LogOcrFix(index, textWithOutFixes.ToString(), line);
             }
 
@@ -3136,7 +3159,10 @@ namespace Nikse.SubtitleEdit.Forms
                         Paragraph p = _subtitle.Paragraphs[i];
                         string text = string.Empty;
                         if (!string.IsNullOrEmpty(p.Text))
-                           text = "<br /><font size='22'>" + Utilities.HtmlEncode(p.Text.Replace("<i>", "@1__").Replace("</i>", "@2__")).Replace("@1__", "<i>").Replace("@2__", "</i>").Replace(Environment.NewLine, "<br />") + "</font>";
+                        {
+                            string backgroundColor = System.Drawing.ColorTranslator.ToHtml(subtitleListView1.GetBackgroundColor(i));
+                            text = "<br /><div style='font-size:22px; background-color:" + backgroundColor + "'>" + Utilities.HtmlEncode(p.Text.Replace("<i>", "@1__").Replace("</i>", "@2__")).Replace("@1__", "<i>").Replace("@2__", "</i>").Replace(Environment.NewLine, "<br />") + "</div>";
+                        }
                         sb.AppendLine(string.Format("#{3}:{0}->{1}<div style='text-align:center'><img src='{2}.png' />" +  text + "</div><br /><hr />", p.StartTime.ToShortString(), p.EndTime.ToShortString(), numberString, i+1));                        
                         bmp.Dispose();
                     }

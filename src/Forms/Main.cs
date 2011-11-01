@@ -3216,6 +3216,7 @@ namespace Nikse.SubtitleEdit.Forms
                 var fixErrors = new FixCommonErrors();
                 _formPositionsAndSizes.SetPositionAndSize(fixErrors);
 
+                ShowInTaskbar = false;
                 if (onlySelectedLines)
                 {
                     var selectedLines = new Subtitle { WasLoadedWithFrameNumbers = _subtitle.WasLoadedWithFrameNumbers };
@@ -3260,6 +3261,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 MessageBox.Show(_language.NoSubtitleLoaded, Title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
+            ShowInTaskbar = true;
         }
 
         private void StartNumberingFromToolStripMenuItemClick(object sender, EventArgs e)
