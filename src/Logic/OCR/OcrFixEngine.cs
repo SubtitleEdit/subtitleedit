@@ -653,6 +653,11 @@ namespace Nikse.SubtitleEdit.Logic.OCR
 
             if (Configuration.Settings.Tools.OcrFixUseHardcodedRules)
             {
+                if (input.Length < 10 && input.Length > 4 && !input.Contains(Environment.NewLine) && input.StartsWith("II") && input.EndsWith("II"))
+                {
+                    input = "\"" + input.Substring(2, input.Length - 4) + "\"";
+                }
+
                 // e.g. "selectionsu." -> "selections..."
                 if (input.EndsWith("u.") && _hunspell != null )
                 {
@@ -696,7 +701,7 @@ namespace Nikse.SubtitleEdit.Logic.OCR
                         lastLine.EndsWith("?"))
                     {
                         StripableText st = new StripableText(l);
-                        if (st.StrippedText.StartsWith("i"))
+                        if (st.StrippedText.StartsWith("i") && !st.Pre.EndsWith("[") && !st.Pre.EndsWith("("))
                         {
                             if (string.IsNullOrEmpty(lastLine) || (!lastLine.EndsWith("...") && !EndsWithAbbreviation(lastLine, _abbreviationList)))
                             {
@@ -820,7 +825,7 @@ namespace Nikse.SubtitleEdit.Logic.OCR
                 StripableText st = new StripableText(input);
                 if (lastLine == null || (!lastLine.EndsWith("...") && !EndsWithAbbreviation(lastLine, abbreviationList)))
                 {
-                    if (st.StrippedText.Length > 0 && st.StrippedText[0].ToString() != st.StrippedText[0].ToString().ToUpper())
+                    if (st.StrippedText.Length > 0 && st.StrippedText[0].ToString() != st.StrippedText[0].ToString().ToUpper() && !st.Pre.EndsWith("[") && !st.Pre.EndsWith("("))
                     {
                         string uppercaseLetter = st.StrippedText[0].ToString().ToUpper();
                         if (st.StrippedText.Length > 1 && uppercaseLetter == "L" && "abcdfghjklmnpqrstvwxz".Contains(st.StrippedText[1].ToString()))
