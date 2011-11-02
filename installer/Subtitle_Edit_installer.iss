@@ -190,7 +190,7 @@ Source: {#bindir}\Languages\eu-ES.xml;             DestDir: {app}\Languages;    
 Source: {#bindir}\Languages\fr-FR.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
 Source: {#bindir}\Languages\hu-HU.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
 ;Source: {#bindir}\Languages\it-IT.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
-;Source: {#bindir}\Languages\ja-JP.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
+Source: {#bindir}\Languages\ja-JP.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
 Source: {#bindir}\Languages\pl-PL.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
 Source: {#bindir}\Languages\ro-RO.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
 Source: {#bindir}\Languages\ru-RU.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
@@ -269,7 +269,6 @@ Type: files;      Name: {app}\Languages\sr-Latn-CS.xml
 ; so remove them when we are upgrading. If they are updated remove this code.
 Type: files;      Name: {app}\Languages\es-ES.xml;      Check: IsComponentSelected('translations') and IsUpgrade()
 Type: files;      Name: {app}\Languages\it-IT.xml;      Check: IsComponentSelected('translations') and IsUpgrade()
-Type: files;      Name: {app}\Languages\ja-JP.xml;      Check: IsComponentSelected('translations') and IsUpgrade()
 
 ; Cleanup language files if it's an upgrade and the translations are not selected
 Type: files;      Name: {app}\Languages\bg-BG.xml;      Check: not IsComponentSelected('translations') and IsUpgrade()
