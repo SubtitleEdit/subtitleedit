@@ -1946,11 +1946,24 @@ namespace Nikse.SubtitleEdit.Forms
 
         private string Tesseract3DoOcrViaExe(Bitmap bmp, string language, string psmMode)
         {
+            // change yellow color to white - easier for Tesseract
+            NikseBitmap nbmp = new NikseBitmap(bmp);
+            nbmp.ReplaceYellowWithWhite(); // optimized replace
+            //for (int y = 0; y < bmp.Height; y++)
+            //    for (int x = 0; x < bmp.Width; x++)
+            //    {
+            //        Color c = bmp.GetPixel(x, y);
+            //        if (c.A > 200 && c.R > 220 && c.G > 220 && c.B < 40)
+            //            bmp.SetPixel(x, y, Color.White);
+            //    }
+
             bool useHocr = true;
 
             string tempTiffFileName = Path.GetTempPath() + Guid.NewGuid().ToString() + ".png";
-            bmp.Save(tempTiffFileName, System.Drawing.Imaging.ImageFormat.Png);
+            var b = nbmp.GetBitmap();
+            b.Save(tempTiffFileName, System.Drawing.Imaging.ImageFormat.Png);
             string tempTextFileName = Path.GetTempPath() + Guid.NewGuid().ToString();
+            b.Dispose();
 
             Process process = new Process();
             process.StartInfo = new ProcessStartInfo(Configuration.TesseractFolder + "tesseract.exe");
@@ -2105,14 +2118,16 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     else if (psm.Length > textWithOutFixes.Length)
                     {
-                        if ((!psm.Contains("9") && textWithOutFixes.Contains("9")) ||
-                            (!psm.Contains("6") && textWithOutFixes.Contains("6")) ||
-                            (!psm.Contains("5") && textWithOutFixes.Contains("5")) ||
-                            (!psm.Contains("3") && textWithOutFixes.Contains("3")) ||
-                            (!psm.Contains("1") && textWithOutFixes.Contains("1")) ||
-                            (!psm.Contains("$") && textWithOutFixes.Contains("$")) ||
-                            (!psm.Contains("•") && textWithOutFixes.Contains("•")) ||
-                            (!psm.Contains("€") && textWithOutFixes.Contains("€")))
+                        if (!psm.Contains("9") && textWithOutFixes.Contains("9") ||
+                            !psm.Contains("6") && textWithOutFixes.Contains("6") ||
+                            !psm.Contains("5") && textWithOutFixes.Contains("5") ||
+                            !psm.Contains("3") && textWithOutFixes.Contains("3") ||
+                            !psm.Contains("1") && textWithOutFixes.Contains("1") ||
+                            !psm.Contains("$") && textWithOutFixes.Contains("$") ||
+                            !psm.Contains("•") && textWithOutFixes.Contains("•") ||
+                            !psm.Contains("Y") && textWithOutFixes.Contains("Y") ||
+                            !psm.Contains("'") && textWithOutFixes.Contains("'") ||
+                            !psm.Contains("€") && textWithOutFixes.Contains("€"))
                             
                             textWithOutFixes = psm;
                     }
@@ -2126,6 +2141,8 @@ namespace Nikse.SubtitleEdit.Forms
                               !psm.Contains("$") && textWithOutFixes.Contains("$") ||
                               !psm.Contains("€") && textWithOutFixes.Contains("€") ||
                               !psm.Contains("•") && textWithOutFixes.Contains("•") ||
+                              !psm.Contains("Y") && textWithOutFixes.Contains("Y") ||
+                              !psm.Contains("'") && textWithOutFixes.Contains("'") ||
                               !psm.Contains("/") && textWithOutFixes.Contains("/") ||
                               !psm.Contains("(") && textWithOutFixes.Contains("(") ||
                               !psm.Contains(")") && textWithOutFixes.Contains(")") ||

@@ -41,6 +41,19 @@ namespace Nikse.SubtitleEdit.Logic
             inputBitmap.UnlockBits(bitmapdata);        
         }
 
+        public void ReplaceYellowWithWhite()
+        {
+            byte[] buffer = new byte[3];
+            buffer[0] = 255;
+            buffer[1] = 255;
+            buffer[2] = 255;
+            for (int i = 0; i < _bitmapData.Length; i += 4)
+            {
+                if (_bitmapData[i+3] > 200 &&  _bitmapData[i+2] > 220 && _bitmapData[i+1] > 220 && _bitmapData[i] < 40)
+                    Buffer.BlockCopy(buffer, 0, _bitmapData, i, 3);
+            }
+        }
+
         public void Fill(Color color)
         {
             byte[] buffer = new byte[4];
