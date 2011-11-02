@@ -319,7 +319,7 @@ namespace Nikse.SubtitleEdit.Logic.OCR
                 else
                 {
                     word.Append(text[i]);
-                }                
+                }
             }
             if (word.Length > 0) // last word
             {

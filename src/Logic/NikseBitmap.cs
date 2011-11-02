@@ -38,7 +38,7 @@ namespace Nikse.SubtitleEdit.Logic
 
             //Buffer.BlockCopy(buffer, dataIndex, DataBuffer, 0, dataSize);
             System.Runtime.InteropServices.Marshal.Copy(bitmapdata.Scan0, _bitmapData, 0, _bitmapData.Length);
-            inputBitmap.UnlockBits(bitmapdata);        
+            inputBitmap.UnlockBits(bitmapdata);
         }
 
         public void ReplaceYellowWithWhite()
