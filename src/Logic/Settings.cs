@@ -939,6 +939,9 @@ namespace Nikse.SubtitleEdit.Logic
             subNode = node.SelectSingleNode("MergeShortLinesTicked");
             if (subNode != null)
                 settings.CommonErrors.MergeShortLinesTicked = Convert.ToBoolean(subNode.InnerText);
+            subNode = node.SelectSingleNode("MergeShortLinesAllTicked");
+            if (subNode != null)
+                settings.CommonErrors.MergeShortLinesAllTicked = Convert.ToBoolean(subNode.InnerText);
             subNode = node.SelectSingleNode("UnneededSpacesTicked");
             if (subNode != null)
                 settings.CommonErrors.UnneededSpacesTicked = Convert.ToBoolean(subNode.InnerText);
@@ -1386,6 +1389,7 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("InvalidItalicTagsTicked", settings.CommonErrors.InvalidItalicTagsTicked.ToString());
             textWriter.WriteElementString("BreakLongLinesTicked", settings.CommonErrors.BreakLongLinesTicked.ToString());
             textWriter.WriteElementString("MergeShortLinesTicked", settings.CommonErrors.MergeShortLinesTicked.ToString());
+            textWriter.WriteElementString("MergeShortLinesAllTicked", settings.CommonErrors.MergeShortLinesAllTicked.ToString());
             textWriter.WriteElementString("UnneededSpacesTicked", settings.CommonErrors.UnneededSpacesTicked.ToString());
             textWriter.WriteElementString("UnneededPeriodsTicked", settings.CommonErrors.UnneededPeriodsTicked.ToString());
             textWriter.WriteElementString("MissingSpacesTicked", settings.CommonErrors.MissingSpacesTicked.ToString());
