@@ -2,7 +2,7 @@
 <Language Name="日本語">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.1</Version>
+    <Version>3.2</Version>
     <TranslatedBy>Narog</TranslatedBy>
     <CultureName>ja-JP</CultureName>
     <OK>OK(&amp;O)</OK>
@@ -48,14 +48,17 @@
     <RegularExpressionIsNotValid>正規表現が無効です!</RegularExpressionIsNotValid>
     <SubtitleSaved>字幕が保存されました</SubtitleSaved>
     <CurrentSubtitle>現在の字幕</CurrentSubtitle>
-    <OriginalText>元のテキスト</OriginalText>
-    <OpenOriginalSubtitleFile>元の字幕ファイルを開く...</OpenOriginalSubtitleFile>
+    <OriginalText>翻訳前のテキスト</OriginalText>
+    <OpenOriginalSubtitleFile>翻訳前の字幕ファイルを開く...</OpenOriginalSubtitleFile>
     <PleaseWait>お待ちください...</PleaseWait>
     <SessionKey>セッション キー</SessionKey>
     <UserName>ユーザー名</UserName>
     <UserNameAlreadyInUse>ユーザー名が既に使用されています</UserNameAlreadyInUse>
     <WebServiceUrl>サービスの URL</WebServiceUrl>
     <IP>IP</IP>
+    <VideoWindowTitle>ビデオ - {0}</VideoWindowTitle>
+    <AudioWindowTitle>オーディオ - {0}</AudioWindowTitle>
+    <ControlsWindowTitle>コントロール - {0}</ControlsWindowTitle>
   </General>
   <About>
     <Title>Subtitle Edit のバージョン情報</Title>
@@ -83,6 +86,7 @@ C# ソース コードは http://code.google.com/p/subtitleedit にあります�
     <VlcMediaPlayerNotFound>Subtitle Edit は オーディオ データの抽出に VLC media player 1.1.x 以降を必要とします</VlcMediaPlayerNotFound>
     <GoToVlcMediaPlayerHomePage>VLC media player のホーム ページへ移動しますか?</GoToVlcMediaPlayerHomePage>
     <GeneratingPeakFile>ピーク ファイルを生成しています...</GeneratingPeakFile>
+    <GeneratingSpectrogram>スペクトログラムを生成しています...</GeneratingSpectrogram>
     <ExtractingSeconds>オーディオの抽出中: {0:0.0} 秒</ExtractingSeconds>
     <ExtractingMinutes>オーディオの抽出中: {0}.{1:00} 分</ExtractingMinutes>
   </AddWaveForm>
@@ -130,8 +134,8 @@ C# ソース コードは http://code.google.com/p/subtitleedit にあります�
   <ChangeFrameRate>
     <Title>フレーム レートの変更</Title>
     <ConvertFrameRateOfSubtitle>字幕のフレーム レートを変換します</ConvertFrameRateOfSubtitle>
-    <FromFrameRate>元のフレーム レート</FromFrameRate>
-    <ToFrameRate>先のフレーム レート</ToFrameRate>
+    <FromFrameRate>前のフレーム レート</FromFrameRate>
+    <ToFrameRate>後のフレーム レート</ToFrameRate>
     <FrameRateNotCorrect>フレーム レートが正しくありません</FrameRateNotCorrect>
     <FrameRateNotChanged>フレーム レートが同じです - 変換するものがありません</FrameRateNotChanged>
   </ChangeFrameRate>
@@ -183,6 +187,36 @@ C# ソース コードは http://code.google.com/p/subtitleedit にあります�
     <SubtitleImageXofYAndWidthXHeight>字幕イメージ {0}/{1}  -  {2}x{3} </SubtitleImageXofYAndWidthXHeight>
     <SubtitleImage>字幕イメージ</SubtitleImage>
   </DvdSubRipChooseLanguage>
+  <EbuSaveOtpions>
+    <Title>EBU の保存のオプション</Title>
+    <GeneralSubtitleInformation>全般的な字幕の情報</GeneralSubtitleInformation>
+    <CodePageNumber>コード ページ番号</CodePageNumber>
+    <DiskFormatCode>ディスク フォーマット コード</DiskFormatCode>
+    <CharacterCodeTable>文字テーブル</CharacterCodeTable>
+    <LanguageCode>言語コード</LanguageCode>
+    <OriginalProgramTitle>翻訳前の番組のタイトル</OriginalProgramTitle>
+    <OriginalEpisodeTitle>翻訳前のエピソードのタイトル</OriginalEpisodeTitle>
+    <TranslatedProgramTitle>翻訳後の番組のタイトル</TranslatedProgramTitle>
+    <TranslatedEpisodeTitle>翻訳後のエピソードのタイトル</TranslatedEpisodeTitle>
+    <TranslatorsName>訳者名</TranslatorsName>
+    <SubtitleListReferenceCode>字幕リスト参照コード</SubtitleListReferenceCode>
+    <CountryOfOrigin>製作国</CountryOfOrigin>
+    <RevisionNumber>リビジョン番号</RevisionNumber>
+    <MaxNoOfDisplayableChars>1 行あたりの最大文字数</MaxNoOfDisplayableChars>
+    <MaxNumberOfDisplayableRows>最大行数</MaxNumberOfDisplayableRows>
+    <DiskSequenceNumber>ディスク シーケンス番号</DiskSequenceNumber>
+    <TotalNumberOfDisks>ディスクの合計枚数</TotalNumberOfDisks>
+    <Import>インポート...</Import>
+    <TextAndTimingInformation>テキストとタイミングの情報</TextAndTimingInformation>
+    <JustificationCode>配置コード</JustificationCode>
+    <Errors>エラー</Errors>
+    <ErrorsX>エラー: {0}</ErrorsX>
+    <MaxLengthError>行 {0} が {2} による最大の長さ ({1}) を超えています: {3}</MaxLengthError>
+    <TextUnchangedPresentation>身変更の提示</TextUnchangedPresentation>
+    <TextLeftJustifiedText>左揃え</TextLeftJustifiedText>
+    <TextCentredText>中央揃え</TextCentredText>
+    <TextRightJustifiedText>右揃え</TextRightJustifiedText>
+  </EbuSaveOtpions>
   <EffectKaraoke>
     <Title>カラオケ効果</Title>
     <ChooseColor>色の選択:</ChooseColor>
@@ -194,6 +228,18 @@ C# ソース コードは http://code.google.com/p/subtitleedit にあります�
     <TotalMilliseconds>総ミリ秒:</TotalMilliseconds>
     <EndDelayInMillisecs>末尾の遅延 (ミリ秒).:</EndDelayInMillisecs>
   </EffectTypewriter>
+  <ExportPngXml>
+    <Title>BDN XML/PNG のエクスポート</Title>
+    <ImageSettings>イメージの設定</ImageSettings>
+    <FontFamily>フォント ファミリ</FontFamily>
+    <FontSize>フォント サイズ</FontSize>
+    <FontColor>フォントの色</FontColor>
+    <BorderColor>枠の色</BorderColor>
+    <BorderWidth>枠の幅</BorderWidth>
+    <AntiAlias>アンチ エイリアス</AntiAlias>
+    <ExportAllLines>すべての行のエクスポート...</ExportAllLines>
+    <XImagesSavedInY>{0} 個のイメージが {1} に保存されました</XImagesSavedInY>
+  </ExportPngXml>
   <FindDialog>
     <Title>検索</Title>
     <Find>検索</Find>
@@ -245,6 +291,9 @@ C# ソース コードは http://code.google.com/p/subtitleedit にあります�
     <FixLowercaseIToUppercaseI>小文字の 'i' 1 文字を 'I' に修正する (英語)</FixLowercaseIToUppercaseI>
     <FixCommonOcrErrors>ありがちな OCR エラーを修正する (OCR の置換の一覧を使用します)</FixCommonOcrErrors>
     <CommonOcrErrorsFixed>修正されたありがちな OCR エラー (OcrReplaceList ファイルが使用されました): {0}</CommonOcrErrorsFixed>
+    <RemoveSpaceBetweenNumber>数字の間のスペースを削除する</RemoveSpaceBetweenNumber>
+    <FixDialogsOnOneLine>1 行中の複数の会話を修正する</FixDialogsOnOneLine>
+    <RemoveSpaceBetweenNumbersFixed>修正された数字の間のスペース: {0}</RemoveSpaceBetweenNumbersFixed>
     <FixDanishLetterI>デンマーク語の文字 'i' を修正する</FixDanishLetterI>
     <FixSpanishInvertedQuestionAndExclamationMarks>スペイン語の逆疑問符と逆感嘆符を修正する</FixSpanishInvertedQuestionAndExclamationMarks>
     <AddMissingQuote>足りない引用符 (") を追加する</AddMissingQuote>
@@ -350,6 +399,15 @@ C# ソース コードは http://code.google.com/p/subtitleedit にあります�
     <PoweredByGoogleTranslate>Powered by Google 翻訳</PoweredByGoogleTranslate>
     <PoweredByMicrosoftTranslate>Powered by Microsoft 翻訳</PoweredByMicrosoftTranslate>
   </GoogleTranslate>
+  <GoogleOrMicrosoftTranslate>
+    <Title>Google vs Microsoft 翻訳</Title>
+    <From>翻訳元:</From>
+    <To>翻訳先:</To>
+    <Translate>翻訳</Translate>
+    <SourceText>翻訳前のテキスト</SourceText>
+    <GoogleTranslate>Google 翻訳</GoogleTranslate>
+    <MicrosoftTranslate>Microsoft 翻訳</MicrosoftTranslate>
+  </GoogleOrMicrosoftTranslate>
   <GoToLine>
     <Title>字幕番号へ移動</Title>
     <XIsNotAValidNumber>{0} は有効な番号ではありません</XIsNotAValidNumber>
@@ -384,9 +442,9 @@ C# ソース コードは http://code.google.com/p/subtitleedit にあります�
         <Reopen>開き直す(&amp;R)</Reopen>
         <Save>上書き保存(&amp;S)</Save>
         <SaveAs>名前を付けて保存(&amp;A)...</SaveAs>
-        <OpenOriginal>元の字幕を開く (翻訳モード)...</OpenOriginal>
-        <SaveOriginal>元の字幕の保存</SaveOriginal>
-        <CloseOriginal>元の字幕を閉じる</CloseOriginal>
+        <OpenOriginal>翻訳前の字幕を開く (翻訳モード)...</OpenOriginal>
+        <SaveOriginal>翻訳前の字幕の保存</SaveOriginal>
+        <CloseOriginal>翻訳前の字幕を閉じる</CloseOriginal>
         <OpenContainingFolder>含まれているフォルダーを開く</OpenContainingFolder>
         <Compare>比較(&amp;C)...</Compare>
         <ImportOcrFromDvd>vob/ifo (DVD) から字幕をインポート/OCR...</ImportOcrFromDvd>
@@ -396,6 +454,13 @@ C# ソース コードは http://code.google.com/p/subtitleedit にあります�
         <ImportSubtitleWithManualChosenEncoding>選択したエンコードで字幕をインポート...</ImportSubtitleWithManualChosenEncoding>
         <ImportText>プレーン テキストのインポート...</ImportText>
         <ImportTimecodes>タイム コードのインポート...</ImportTimecodes>
+        <Export>エクスポート</Export>
+        <ExportBdnXml>BDN xml/png...</ExportBdnXml>
+        <ExportCavena890>Cavena 890...</ExportCavena890>
+        <ExportEbu>EBU stl...</ExportEbu>
+        <ExportPac>PAC (Screen Electronics)...</ExportPac>
+        <ExportPlainText>プレーン テキストのエクスポート...</ExportPlainText>
+        <ExportPlainTextWithoutLineBreaks>改行なしでプレーン テキストをエクスポート...</ExportPlainTextWithoutLineBreaks>
         <Exit>終了(&amp;X)</Exit>
       </File>
       <Edit>
@@ -420,10 +485,17 @@ C# ソース コードは http://code.google.com/p/subtitleedit にあります�
         <SplitLongLines>長い行の分割...</SplitLongLines>
         <MinimumDisplayTimeBetweenParagraphs>段落間の最小表示時間...</MinimumDisplayTimeBetweenParagraphs>
         <SortBy>並べ替え</SortBy>
+        <Number>番号</Number>
+        <StartTime>開始時間</StartTime>
+        <EndTime>終了時間</EndTime>
+        <Duration>長さ</Duration>
         <TextAlphabetically>テキスト - 通常</TextAlphabetically>
         <TextSingleLineMaximumLength>テキスト - 各行の文字数</TextSingleLineMaximumLength>
         <TextTotalLength>テキスト - 総文字数</TextTotalLength>
         <TextNumberOfLines>テキスト - 行数</TextNumberOfLines>
+        <TextNumberOfCharactersPerSeconds>テキスト - 1 文字あたりの秒数</TextNumberOfCharactersPerSeconds>
+        <ShowOriginalTextInAudioAndVideoPreview>オーディオ/ビデオ プレビューに翻訳前のテキストを表示する</ShowOriginalTextInAudioAndVideoPreview>
+        <MakeNewEmptyTranslationFromCurrentSubtitle>現在の字幕から新規翻訳</MakeNewEmptyTranslationFromCurrentSubtitle>
         <SplitSubtitle>字幕の分割...</SplitSubtitle>
         <AppendSubtitle>字幕の追加...</AppendSubtitle>
       </Tools>
@@ -434,6 +506,7 @@ C# ソース コードは http://code.google.com/p/subtitleedit にあります�
         <CloseVideo>ビデオ ファイルを閉じる</CloseVideo>
         <ShowHideVideo>ビデオの表示/非表示の切り替え</ShowHideVideo>
         <ShowHideWaveForm>Wave フォームの表示/非表示の切り替え</ShowHideWaveForm>
+        <ShowHideWaveformAndSpectrogram>Wave フォームとスペクトログラムの表示/非表示の切り替え</ShowHideWaveformAndSpectrogram>
         <UnDockVideoControls>ビデオ コントロールのドッキング解除</UnDockVideoControls>
         <ReDockVideoControls>ビデオ コントロールの再ドッキング</ReDockVideoControls>
       </Video>
@@ -441,6 +514,7 @@ C# ソース コードは http://code.google.com/p/subtitleedit にあります�
         <Title>スペル チェック</Title>
         <SpellCheck>スペル チェック(&amp;S)...</SpellCheck>
         <FindDoubleWords>重複語の検索</FindDoubleWords>
+        <FindDoubleLines>重複行の検索</FindDoubleLines>
         <GetDictionaries>辞書の取得...</GetDictionaries>
         <AddToNamesEtcList>単語を names/ect の一覧に追加</AddToNamesEtcList>
       </SpellCheck>
@@ -449,6 +523,7 @@ C# ソース コードは http://code.google.com/p/subtitleedit にあります�
         <AdjustAllTimes>すべての時間の調整 (早く/遅くする)...</AdjustAllTimes>
         <VisualSync>視覚同期(&amp;V)...</VisualSync>
         <PointSync>ポイント同期...</PointSync>
+        <PointSyncViaOtherSubtitle>他の字幕からポイント同期...</PointSyncViaOtherSubtitle>
       </Synchronization>
       <AutoTranslate>
         <Title>自動翻訳</Title>
@@ -489,15 +564,18 @@ C# ソース コードは http://code.google.com/p/subtitleedit にあります�
         <ShowHideVideo>ビデオの表示/非表示の切り替え</ShowHideVideo>
       </ToolBar>
       <ContextMenu>
+        <SubStationAlphaSetStyle>(高度な設定) Sub Station Alpha - スタイルの設定</SubStationAlphaSetStyle>
         <Cut>切り取り</Cut>
         <Copy>コピー</Copy>
         <Paste>貼り付け</Paste>
         <Delete>削除</Delete>
+        <SplitLineAtCursorPosition>カーソルの位置で行を分割</SplitLineAtCursorPosition>
         <SelectAll>すべて選択</SelectAll>
         <InsertFirstLine>行の挿入</InsertFirstLine>
         <InsertBefore>前に挿入</InsertBefore>
         <InsertAfter>後に挿入</InsertAfter>
         <InsertSubtitleAfter>この行の後に字幕を挿入...</InsertSubtitleAfter>
+        <CopyToClipboard>クリップボードへテキストとしてコピー</CopyToClipboard>
         <Split>分割</Split>
         <MergeSelectedLines>選択された行の結合</MergeSelectedLines>
         <MergeWithLineBefore>前の行と結合</MergeWithLineBefore>
@@ -512,6 +590,7 @@ C# ソース コードは http://code.google.com/p/subtitleedit にあります�
         <KaraokeEffect>カラオケ効果...</KaraokeEffect>
         <ShowSelectedLinesEarlierLater>選択された行を早く/遅くする...</ShowSelectedLinesEarlierLater>
         <VisualSyncSelectedLines>選択された行の視覚同期...</VisualSyncSelectedLines>
+        <GoogleAndMicrosoftTranslateSelectedLine>翻訳前の行の Google/Microsoft 翻訳</GoogleAndMicrosoftTranslateSelectedLine>
         <GoogleTranslateSelectedLines>選択された行の Google 翻訳...</GoogleTranslateSelectedLines>
         <AdjustDisplayDurationForSelectedLines>選択された行の表示時間の自動調整...</AdjustDisplayDurationForSelectedLines>
         <FixCommonErrorsInSelectedLines>選択された行のありがちなエラーを修正...</FixCommonErrorsInSelectedLines>
@@ -540,7 +619,7 @@ C# ソース コードは http://code.google.com/p/subtitleedit にあります�
       <AutoContinue>自動続行</AutoContinue>
       <AutoContinueOn>自動続行 オン</AutoContinueOn>
       <DelayInSeconds>遅延 (秒)</DelayInSeconds>
-      <OriginalText>元のテキスト</OriginalText>
+      <OriginalText>翻訳前のテキスト</OriginalText>
       <Previous>&lt; 前へ(&amp;V)</Previous>
       <Stop>停止(&amp;S)</Stop>
       <PlayCurrent>現在を再生(&amp;P)</PlayCurrent>
@@ -558,6 +637,7 @@ C# ソース コードは http://code.google.com/p/subtitleedit にあります�
       <GoToSubtitlePositionAndPause>字幕の位置へ移動して一時停止</GoToSubtitlePositionAndPause>
       <SetStartTime>開始時間に設定(&amp;S)</SetStartTime>
       <SetEndTimeAndGoToNext>終了時間に設定して次へ移動(&amp;E)</SetEndTimeAndGoToNext>
+      <AdjustedViaEndTime>終了時間 {0} から調整ました</AdjustedViaEndTime>
       <SetEndTime>終了時間に設定(&amp;N)</SetEndTime>
       <SetstartTimeAndOffsetOfRest>開始時間に設定して残りを補正(&amp;R)</SetstartTimeAndOffsetOfRest>
       <SearchTextOnline>テキストのオンライン検索</SearchTextOnline>
@@ -581,9 +661,9 @@ C# ソース コードは http://code.google.com/p/subtitleedit にあります�
     <SaveChangesToUntitled>無題への変更を保存しますか?</SaveChangesToUntitled>
     <SaveChangesToX>{0} への変更を保存しますか?</SaveChangesToX>
     <SaveChangesToUntitledOriginal>無題の元への変更を保存しますか?</SaveChangesToUntitledOriginal>
-    <SaveChangesToOriginalX>元の {0} への変更を保存しますか?</SaveChangesToOriginalX>
+    <SaveChangesToOriginalX>翻訳前の {0} への変更を保存しますか?</SaveChangesToOriginalX>
     <SaveSubtitleAs>名前を付けて字幕を保存...</SaveSubtitleAs>
-    <SaveOriginalSubtitleAs>名前を付けて元の字幕を保存...</SaveOriginalSubtitleAs>
+    <SaveOriginalSubtitleAs>名前を付けて翻訳前の字幕を保存...</SaveOriginalSubtitleAs>
     <NoSubtitleLoaded>字幕が読み込まれていません</NoSubtitleLoaded>
     <VisualSyncSelectedLines>視覚同期 - 選択された行</VisualSyncSelectedLines>
     <VisualSyncTitle>視覚同期</VisualSyncTitle>
@@ -599,7 +679,7 @@ C# ソース コードは http://code.google.com/p/subtitleedit にあります�
     <FileIsEmptyOrShort>ファイルが空か短すぎます!</FileIsEmptyOrShort>
     <FileNotFound>ファイルが見つかりません: {0}</FileNotFound>
     <SavedSubtitleX>字幕 {0} を保存しました</SavedSubtitleX>
-    <SavedOriginalSubtitleX>元の字幕 {0} を保存しました</SavedOriginalSubtitleX>
+    <SavedOriginalSubtitleX>翻訳前の字幕 {0} を保存しました</SavedOriginalSubtitleX>
     <FileOnDiskModified>ディスク上のファイルが変更されました</FileOnDiskModified>
     <OverwriteModifiedFile>{1} {2}{3} に変更されたファイル {0} に {4} {5} のディスクから読み込まれた現在のファイルを上書きしますか?</OverwriteModifiedFile>
     <UnableToSaveSubtitleX>字幕ファイル {0} を保存することができません</UnableToSaveSubtitleX>
@@ -631,9 +711,9 @@ C# ソース コードは http://code.google.com/p/subtitleedit にあります�
     <CreateAdjustChangesApplied>行の作成/調整の変更が適用されました</CreateAdjustChangesApplied>
     <SelectedLines>選択された行</SelectedLines>
     <BeforeDisplayTimeAdjustment>表示時間の調整前</BeforeDisplayTimeAdjustment>
-    <DisplayTimeAdjustedX>表示時間が調整されました: {0}</DisplayTimeAdjustedX>
-    <DisplayTimesAdjustedX>表示時間が調整されました: {0}</DisplayTimesAdjustedX>
-    <StarTimeAdjustedX>開始時間が調整されました: {0}</StarTimeAdjustedX>
+    <DisplayTimeAdjustedX>調整された表示時間: {0}</DisplayTimeAdjustedX>
+    <DisplayTimesAdjustedX>調整された表示時間: {0}</DisplayTimesAdjustedX>
+    <StarTimeAdjustedX>調整された開始時間: {0}</StarTimeAdjustedX>
     <BeforeCommonErrorFixes>ありがちなエラーの修正前</BeforeCommonErrorFixes>
     <CommonErrorsFixedInSelectedLines>選択された行のありがちなエラーが修正されました</CommonErrorsFixedInSelectedLines>
     <CommonErrorsFixed>ありがちなエラーが修正されました</CommonErrorsFixed>
@@ -725,6 +805,7 @@ C# ソース コードは http://code.google.com/p/subtitleedit にあります�
     <BluRaySupFiles>Blu-ray .sup ファイル</BluRaySupFiles>
     <BeforeImportingVobSubFile>VobSub 字幕のインポート前</BeforeImportingVobSubFile>
     <BeforeImportingBluRaySupFile>Blu-ray sup ファイルのインポート前</BeforeImportingBluRaySupFile>
+    <BeforeImportingBdnXml>BDN xml ファイルのインポート前</BeforeImportingBdnXml>
     <BeforeShowSelectedLinesEarlierLater>選択された行を早く遅くする前</BeforeShowSelectedLinesEarlierLater>
     <ShowSelectedLinesEarlierLaterPerformed>選択された行の早く/遅くするが実行されました</ShowSelectedLinesEarlierLaterPerformed>
     <DoubleWordsViaRegEx>正規表現 {0} による重複語</DoubleWordsViaRegEx>
@@ -754,6 +835,7 @@ C# ソース コードは http://code.google.com/p/subtitleedit にあります�
     <TimeCodeImportedFromXY>{0} からタイム コードがインポートされました: {1}</TimeCodeImportedFromXY>
     <BeforeInsertSubtitleAtVideoPosition>ビデオの次の位置に字幕を追加する前</BeforeInsertSubtitleAtVideoPosition>
     <BeforeSetStartTimeAndOffsetTheRest>開始時間に設定して残りを補正する前</BeforeSetStartTimeAndOffsetTheRest>
+    <BeforeSetEndAndVideoPosition>ビデオの位置に終了時間を設定して開始を自動計算する前</BeforeSetEndAndVideoPosition>
     <ContinueWithCurrentSpellCheck>現在のスペル チェックを続行しますか?</ContinueWithCurrentSpellCheck>
     <CharactersPerSecond>文字/秒: {0:0.00}</CharactersPerSecond>
     <GetFrameRateFromVideoFile>ビデオ ファイルからフレーム レートを取得</GetFrameRateFromVideoFile>
@@ -771,6 +853,10 @@ C# ソース コードは http://code.google.com/p/subtitleedit にあります�
     <UnableToStartWord>Microsoft Word を起動することができません</UnableToStartWord>
     <SpellCheckAbortedXCorrections>スペル チェックが中止されました。{0} 行変更されました。</SpellCheckAbortedXCorrections>
     <SpellCheckCompletedXCorrections>スペル チェックが完了しました。{0} 行変更されました。</SpellCheckCompletedXCorrections>
+    <OpenOtherSubtitle>他の字幕を開く</OpenOtherSubtitle>
+    <BeforeToggleDialogueDashes>会話のダッシュの切り替え前</BeforeToggleDialogueDashes>
+    <ExportPlainTextAs>プレーン テキストとしてエクスポート</ExportPlainTextAs>
+    <TextFiles>テキスト ファイル</TextFiles>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Matroska ファイルから字幕を選択</Title>
@@ -784,6 +870,7 @@ C# ソース コードは http://code.google.com/p/subtitleedit にあります�
     <NumberOfMergesX>結合数: {0}</NumberOfMergesX>
     <LineNumber>行番号</LineNumber>
     <MergedText>結合されたテキスト</MergedText>
+    <OnlyMergeContinuationLines>連続した行のみ結合する</OnlyMergeContinuationLines>
   </MergedShortLines>
   <MultipleReplace>
     <Title>一括置換</Title>
@@ -873,7 +960,7 @@ C# ソース コードは http://code.google.com/p/subtitleedit にあります�
     <General>全般</General>
     <Toolbar>ツール バー</Toolbar>
     <VideoPlayer>ビデオ プレーヤー</VideoPlayer>
-    <WaveForm>Wave フォーム</WaveForm>
+    <WaveformAndSpectrogram>Wave フォーム/スペクトログラム</WaveformAndSpectrogram>
     <Tools>ツール</Tools>
     <WordLists>単語の一覧</WordLists>
     <SsaStyle>SSA スタイル</SsaStyle>
@@ -917,30 +1004,38 @@ C# ソース コードは http://code.google.com/p/subtitleedit にあります�
     <AutoBackupEveryMinute>1 分ごと</AutoBackupEveryMinute>
     <AutoBackupEveryFiveMinutes>5 分ごと</AutoBackupEveryFiveMinutes>
     <AutoBackupEveryFifteenMinutes>15 分ごと</AutoBackupEveryFifteenMinutes>
-    <AllowEditOfOriginalSubtitle>元の字幕の編集を許可する</AllowEditOfOriginalSubtitle>
+    <AllowEditOfOriginalSubtitle>翻訳前の字幕の編集を許可する</AllowEditOfOriginalSubtitle>
+    <PromptDeleteLines>行の削除を確認する</PromptDeleteLines>
     <VideoEngine>ビデオ エンジン</VideoEngine>
     <DirectShow>DirectShow</DirectShow>
     <DirectShowDescription>system32 フォルダーの quartz.dll</DirectShowDescription>
     <ManagedDirectX>Managed DirectX</ManagedDirectX>
     <ManagedDirectXDescription>Microsoft.DirectX.AudioVideoPlayback -  DirectX の .NET Managed コード</ManagedDirectXDescription>
-    <WindowsMediaPlayer>Windows Media Player</WindowsMediaPlayer>
-    <WindowsMediaPlayerDescription>WMP ActiveX コントロール</WindowsMediaPlayerDescription>
+    <MPlayer>MPlayer</MPlayer>
+    <MPlayerDescription>MPlayer2/Mplayer</MPlayerDescription>
     <VlcMediaPlayer>VLC Media Player</VlcMediaPlayer>
     <VlcMediaPlayerDescription>VLC Media Player 1.1.0 以降の libvlc.dll</VlcMediaPlayerDescription>
     <ShowStopButton>停止ボタンを表示する</ShowStopButton>
     <DefaultVolume>既定の音量</DefaultVolume>
     <VolumeNotes>0 が無音、100 が最大の音量です</VolumeNotes>
+    <PreviewFontSize>字幕プレビューのフォント サイズ</PreviewFontSize>
     <MainWindowVideoControls>メイン ウィンドウのビデオ コントロール</MainWindowVideoControls>
     <CustomSearchTextAndUrl>カスタム検索のテキストと URL</CustomSearchTextAndUrl>
     <WaveFormAppearance>Wave フォームの外観</WaveFormAppearance>
     <WaveFormGridColor>グリッドの色</WaveFormGridColor>
     <WaveFormShowGridLines>グリッド線を表示する</WaveFormShowGridLines>
+    <ReverseMouseWheelScrollDirection>マウス ホイールのスクロール方向を反転する</ReverseMouseWheelScrollDirection>
     <WaveFormColor>色</WaveFormColor>
     <WaveFormSelectedColor>選択済みの色</WaveFormSelectedColor>
     <WaveFormBackgroundColor>背景色</WaveFormBackgroundColor>
     <WaveFormTextColor>テキストの色</WaveFormTextColor>
-    <WaveFormsFolderEmpty>'WaveForms' フォルダーを空にする</WaveFormsFolderEmpty>
-    <WaveFormsFolderInfo>'WaveForms' フォルダーには {0} 個のファイルが含まれています ({1:0.00} MB)</WaveFormsFolderInfo>
+    <WaveformAndSpectrogramsFolderEmpty>'Spectrograms' および 'Waveforms' フォルダーを空にする</WaveformAndSpectrogramsFolderEmpty>
+    <WaveformAndSpectrogramsFolderInfo>'Waveforms' および 'Spectrograms' フォルダーには {0} 個のファイルが含まれています ({1:0.00} MB)</WaveformAndSpectrogramsFolderInfo>
+    <Spectrogram>スペクトログラム</Spectrogram>
+    <GenerateSpectrogram>スペクトログラムを生成する</GenerateSpectrogram>
+    <SpectrogramAppearance>スペクトログラムの概観</SpectrogramAppearance>
+    <SpectrogramOneColorGradient>単色グラデーション</SpectrogramOneColorGradient>
+    <SpectrogramClassic>クラシック</SpectrogramClassic>
     <SubStationAlphaStyle>Sub Station Alpha スタイル</SubStationAlphaStyle>
     <ChooseFont>フォントの選択</ChooseFont>
     <ChooseColor>色の選択</ChooseColor>
@@ -977,6 +1072,24 @@ C# ソース コードは http://code.google.com/p/subtitleedit にあります�
     <MusicSymbol>音符</MusicSymbol>
     <MusicSymbolsToReplace>置換する音符 (スペースで区切ります)</MusicSymbolsToReplace>
     <FixCommonOcrErrorsUseHardcodedRules>ありがちな OCR エラーを修正する - 固定されたルールも使用します</FixCommonOcrErrorsUseHardcodedRules>
+    <Shortcuts>ショートカット</Shortcuts>
+    <Shortcut>ショートカット</Shortcut>
+    <Control>Control</Control>
+    <Alt>Alt</Alt>
+    <Shift>Shift</Shift>
+    <Key>キー</Key>
+    <TextBox>テキストボックス</TextBox>
+    <UpdateShortcut>更新</UpdateShortcut>
+    <ShortcutIsNotValid>ショートカットが有効ではありません: {0}</ShortcutIsNotValid>
+    <ToggleDockUndockOfVideoControls>ビデオ コントロールのドック/ドック解除の切り替え</ToggleDockUndockOfVideoControls>
+    <AdjustViaEndAutoStartAndGoToNext>終了位置から調整して次へ</AdjustViaEndAutoStartAndGoToNext>
+    <AdjustSetStartAutoDurationAndGoToNext>開始を設定して長さを自動設定して次へ</AdjustSetStartAutoDurationAndGoToNext>
+    <ToggleDialogueDashes>会話のダッシュの切り替え</ToggleDialogueDashes>
+    <VerticalZoom>垂直ズーム</VerticalZoom>
+    <GoBack100Milliseconds>100 ms 戻る</GoBack100Milliseconds>
+    <GoForward100Milliseconds>100 ms 進む</GoForward100Milliseconds>
+    <GoBack500Milliseconds>500 ms 戻る</GoBack500Milliseconds>
+    <GoForward500Milliseconds>500 ms 進む</GoForward500Milliseconds>
   </Settings>
   <ShowEarlierLater>
     <Title>選択された行を早く/遅くする</Title>
@@ -1049,6 +1162,7 @@ C# ソース コードは http://code.google.com/p/subtitleedit にあります�
   </StartNumberingFrom>
   <PointSync>
     <Title>ポイント同期</Title>
+    <TitleViaOtherSubtitle>他の字幕からポイント同期</TitleViaOtherSubtitle>
     <SyncHelp>大まかに同期するには少なくとも 2 個の同期ポイントを設定します</SyncHelp>
     <SetSyncPoint>同期ポイントの設定</SetSyncPoint>
     <RemoveSyncPoint>同期ポイントの削除</RemoveSyncPoint>
@@ -1071,7 +1185,9 @@ C# ソース コードは http://code.google.com/p/subtitleedit にあります�
     <FindText>検索</FindText>
     <GoToSubPosition>字幕の位置へ移動</GoToSubPosition>
     <KeepChangesTitle>変更を保存しますか?</KeepChangesTitle>
-    <KeepChangesMessage>'視覚同期' で字幕が変更されました。</KeepChangesMessage>
+    <KeepChangesMessage>'視覚同期' で字幕が変更されました。
+
+変更を保存しますか?</KeepChangesMessage>
     <SynchronizationDone>同期が完了しました!</SynchronizationDone>
     <StartSceneMustComeBeforeEndScene>開始シーンは終了シーンの前である必要があります!</StartSceneMustComeBeforeEndScene>
     <Tip>ヒント: 100 ms ごとに戻る/進むには &lt;ctrl+←/→&gt; キーを使用します</Tip>
@@ -1120,14 +1236,20 @@ C# ソース コードは http://code.google.com/p/subtitleedit にあります�
     <UnknownWords>不明な単語</UnknownWords>
     <OcrAutoCorrectionSpellchecking>OCR 自動修正 / スペル チェック</OcrAutoCorrectionSpellchecking>
     <FixOcrErrors>OCR エラーを修正する</FixOcrErrors>
+    <ImportTextWithMatchingTimeCodes>一致するタイム コード付きテキストのインポート...</ImportTextWithMatchingTimeCodes>
     <SaveSubtitleImageAs>名前を付けて字幕イメージを保存...</SaveSubtitleImageAs>
-    <SaveAllSubtitleImagesAs>すべてのイメージ (png/bdn xml) の保存...</SaveAllSubtitleImagesAs>
+    <SaveAllSubtitleImagesAsBdnXml>すべてのイメージ (png/bdn xml) の保存...</SaveAllSubtitleImagesAsBdnXml>
+    <SaveAllSubtitleImagesWithHtml>html インデックスを付けてすべてのイメージを保存...</SaveAllSubtitleImagesWithHtml>
     <XImagesSavedInY>{1} に {0} 個のイメージが保存されました</XImagesSavedInY>
     <TryModiForUnknownWords>不明な単語に MS MODI OCR を使用する</TryModiForUnknownWords>
     <DictionaryX>辞書: {0}</DictionaryX>
     <RightToLeft>右から左</RightToLeft>
     <ShowOnlyForcedSubtitles>強制された字幕のみ表示する</ShowOnlyForcedSubtitles>
     <UseTimeCodesFromIdx>.idx ファイルからのタイム コードを使用する</UseTimeCodesFromIdx>
+    <NoMatch>&lt;一致なし&gt;</NoMatch>
+    <AutoTransparentBackground>自動で背景を透明にする</AutoTransparentBackground>
+    <InspectCompareMatchesForCurrentImage>現在のイメージの比較一致の点検...</InspectCompareMatchesForCurrentImage>
+    <EditLastAdditions>最後のイメージの比較追加の編集...</EditLastAdditions>
   </VobSubOcr>
   <VobSubOcrCharacter>
     <Title>VobSub - マニュアル イメージからテキストへ</Title>
@@ -1138,13 +1260,25 @@ C# ソース コードは http://code.google.com/p/subtitleedit にあります�
     <CharactersAsText>テキストとしての文字</CharactersAsText>
     <Italic>斜体(&amp;I)</Italic>
     <Abort>中止(&amp;A)</Abort>
+    <Skip>スキップ(&amp;S)</Skip>
+    <Nordic>北欧語</Nordic>
+    <Spanish>スペイン語</Spanish>
+    <German>ドイツ語</German>
+    <AutoSubmitOnFirstChar>最初の文字で自動送信(&amp;F)</AutoSubmitOnFirstChar>
+    <EditLastX>最後の編集: {0}</EditLastX>
   </VobSubOcrCharacter>
+  <VobSubOcrCharacterInspect>
+    <Title>現在のイメージの比較一致の点検</Title>
+    <InspectItems>アイテムの点検</InspectItems>
+    <AddBetterMatch>より優れた一致の追加</AddBetterMatch>
+  </VobSubOcrCharacterInspect>
   <VobSubOcrNewFolder>
     <Title>新しいフォルダー</Title>
     <Message>新しい文字データベース フォルダーの名前</Message>
   </VobSubOcrNewFolder>
   <WaveForm>
     <ClickToAddWaveForm>Wave フォームを追加する</ClickToAddWaveForm>
+    <ClickToAddWaveformAndSpectrogram>Wave フォーム/スペクトログラムを追加する</ClickToAddWaveformAndSpectrogram>
     <Seconds>秒</Seconds>
     <ZoomIn>拡大</ZoomIn>
     <ZoomOut>縮小</ZoomOut>
@@ -1155,5 +1289,8 @@ C# ソース コードは http://code.google.com/p/subtitleedit にあります�
     <MergeWithPrevious>前と結合</MergeWithPrevious>
     <MergeWithNext>次と結合</MergeWithNext>
     <PlaySelection>選択範囲の再生</PlaySelection>
+    <ShowWaveformAndSpectrogram>Wave フォームとスペクトログラムの表示</ShowWaveformAndSpectrogram>
+    <ShowWaveformOnly>Wave フォームのみ表示</ShowWaveformOnly>
+    <ShowSpectrogramOnly>スペクトログラムのみ表示</ShowSpectrogramOnly>
   </WaveForm>
 </Language>
