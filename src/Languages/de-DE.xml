@@ -1173,7 +1173,6 @@ Untertitel-Datei bearbeiten k&#246;nnen (Zusammenarbeit)</Information>
     <GoToSubPosition>Zu Item-Pos springen</GoToSubPosition>
     <KeepChangesTitle>&#196;nderungen speichern?</KeepChangesTitle>
     <KeepChangesMessage>Es wurden &#196;nderungen am Untertitel mittels 'Visueller Anpassung' vorgenommen.
-                
 &#196;nderungen speichern?</KeepChangesMessage>
     <SynchronizationDone>Anpassung erfolgreich!</SynchronizationDone>
     <StartSceneMustComeBeforeEndScene>Anfangsszene muss vor Endszene liegen!</StartSceneMustComeBeforeEndScene>

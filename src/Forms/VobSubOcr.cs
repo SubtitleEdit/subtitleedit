@@ -2089,7 +2089,7 @@ namespace Nikse.SubtitleEdit.Forms
         }
 
         private string OcrViaTesseract(Bitmap bitmap, int index)
-        {           
+        {
             if (_ocrFixEngine == null)
                 LoadOcrFixEngine();
 
@@ -2128,7 +2128,7 @@ namespace Nikse.SubtitleEdit.Forms
                             !psm.Contains("Y") && textWithOutFixes.Contains("Y") ||
                             !psm.Contains("'") && textWithOutFixes.Contains("'") ||
                             !psm.Contains("€") && textWithOutFixes.Contains("€"))
-                            
+
                             textWithOutFixes = psm;
                     }
                     else if (psm.Length == textWithOutFixes.Length &&
@@ -2169,7 +2169,7 @@ namespace Nikse.SubtitleEdit.Forms
             int italicStartCount = Utilities.CountTagInText(textWithOutFixes, "<i>");
             if (textWithOutFixes.Contains("<i>") && italicStartCount > 1)
                 textWithOutFixes = "<i>" + textWithOutFixes.Replace("<i>", string.Empty).Replace("</i>", string.Empty) + "</i>";
-            else if (italicStartCount == 1 && textWithOutFixes.Length > 20 && 
+            else if (italicStartCount == 1 && textWithOutFixes.Length > 20 &&
                      textWithOutFixes.IndexOf("<i>") > 1 && textWithOutFixes.IndexOf("<i>") < 10 && textWithOutFixes.EndsWith("</i>"))
                 textWithOutFixes = "<i>" + textWithOutFixes.Replace("<i>", string.Empty).Replace("</i>", string.Empty) + "</i>";
 
@@ -2192,7 +2192,7 @@ namespace Nikse.SubtitleEdit.Forms
                     string newUnfixedText = TesseractResizeAndRetry(bitmap);
                     string newText = _ocrFixEngine.FixOcrErrors(newUnfixedText, index, _lastLine, true, checkBoxGuessUnknownWords.Checked);
                     int newWordsNotFound = _ocrFixEngine.CountUnknownWordsViaDictionary(newText, out correctWords);
-                    if ((!newText.Contains("9") || textWithOutFixes.Contains("9")) && newUnfixedText.Trim().Length > 0 && 
+                    if ((!newText.Contains("9") || textWithOutFixes.Contains("9")) && newUnfixedText.Trim().Length > 0 &&
                          newWordsNotFound < wordsNotFound || (newWordsNotFound == wordsNotFound && newText.EndsWith("!") && textWithOutFixes.EndsWith("l")))
                     {
                         wordsNotFound = newWordsNotFound;
@@ -2221,7 +2221,7 @@ namespace Nikse.SubtitleEdit.Forms
                         if (modiText.Length == 0)
                             modiText = CallModi(index); // retry... strange MODI
 
-                        if (modiText.Length > 1 && 
+                        if (modiText.Length > 1 &&
                             !modiText.Contains("CD") &&
                             (!modiText.Contains("0") || line.Contains("0")) &&
                             (!modiText.Contains("2") || line.Contains("2")) &&
@@ -2914,7 +2914,7 @@ namespace Nikse.SubtitleEdit.Forms
                 for (int i = 0; i < _tesseractAsyncStrings.Length; i++)
                     _tesseractAsyncStrings[i] = string.Empty;
                 _tesseractAsyncIndex = 0;
-            }            
+            }
         }
 
         private void PictureBoxColorChooserClick(object sender, EventArgs e)
@@ -2955,7 +2955,7 @@ namespace Nikse.SubtitleEdit.Forms
                     i++;
                 }
                 _tesseractAsyncStrings = null;
-            }            
+            }
 
             Subtitle oldSubtitle = new Subtitle(_subtitle);
             subtitleListView1.BeginUpdate();
@@ -3180,7 +3180,7 @@ namespace Nikse.SubtitleEdit.Forms
                             string backgroundColor = System.Drawing.ColorTranslator.ToHtml(subtitleListView1.GetBackgroundColor(i));
                             text = "<br /><div style='font-size:22px; background-color:" + backgroundColor + "'>" + Utilities.HtmlEncode(p.Text.Replace("<i>", "@1__").Replace("</i>", "@2__")).Replace("@1__", "<i>").Replace("@2__", "</i>").Replace(Environment.NewLine, "<br />") + "</div>";
                         }
-                        sb.AppendLine(string.Format("#{3}:{0}->{1}<div style='text-align:center'><img src='{2}.png' />" +  text + "</div><br /><hr />", p.StartTime.ToShortString(), p.EndTime.ToShortString(), numberString, i+1));                        
+                        sb.AppendLine(string.Format("#{3}:{0}->{1}<div style='text-align:center'><img src='{2}.png' />" +  text + "</div><br /><hr />", p.StartTime.ToShortString(), p.EndTime.ToShortString(), numberString, i+1));
                         bmp.Dispose();
                     }
                 }

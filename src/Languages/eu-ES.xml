@@ -684,7 +684,7 @@ Emaila: mailto:nikse.dk@gmail.com</AboutText1>
     <LineNumberX>Lerro zenbatekoa: {0:#,##0.##}</LineNumberX>
     <OpenVideoFile>Ireki bideo agiria...</OpenVideoFile>
     <NewFrameRateUsedToCalculateTimeCodes>Frame neurri berria ({0}) erabili da hasiera/amaiera denbora kodeak kalkulatzeko</NewFrameRateUsedToCalculateTimeCodes>
-    <NewFrameRateUsedToCalculateFrameNumbers>Frame neurri berria ({0}) erabili da hasiera/amaiera frame zenbatekoak kalkulatzeko</NewFrameRateUsedToCalculateFrameNumbers> 
+    <NewFrameRateUsedToCalculateFrameNumbers>Frame neurri berria ({0}) erabili da hasiera/amaiera frame zenbatekoak kalkulatzeko</NewFrameRateUsedToCalculateFrameNumbers>
     <FindContinue>Bilaketa gaia ez da aurkitu.
 Nahi duzu agiriaren goialdetik hastea eta bilaketa beste behin egitea?</FindContinue>
     <FindContinueTitle>Jarraitu Bilatzen?</FindContinueTitle>
