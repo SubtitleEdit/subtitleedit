@@ -34,6 +34,8 @@
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.groupBoxImageSettings = new System.Windows.Forms.GroupBox();
+            this.comboBoxHAlign = new System.Windows.Forms.ComboBox();
+            this.labelHorizontalAlign = new System.Windows.Forms.Label();
             this.checkBoxAntiAlias = new System.Windows.Forms.CheckBox();
             this.labelSubtitleFontSize = new System.Windows.Forms.Label();
             this.comboBoxSubtitleFont = new System.Windows.Forms.ComboBox();
@@ -48,9 +50,9 @@
             this.colorDialog1 = new System.Windows.Forms.ColorDialog();
             this.labelImageResolution = new System.Windows.Forms.Label();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
-            this.labelHorizontalAlign = new System.Windows.Forms.Label();
-            this.comboBoxHAlign = new System.Windows.Forms.ComboBox();
             this.subtitleListView1 = new Nikse.SubtitleEdit.Controls.SubtitleListView();
+            this.comboBoxResolution = new System.Windows.Forms.ComboBox();
+            this.label1 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.groupBoxImageSettings.SuspendLayout();
             this.SuspendLayout();
@@ -60,9 +62,9 @@
             this.pictureBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.pictureBox1.Location = new System.Drawing.Point(12, 355);
+            this.pictureBox1.Location = new System.Drawing.Point(12, 375);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(712, 154);
+            this.pictureBox1.Size = new System.Drawing.Size(712, 181);
             this.pictureBox1.TabIndex = 1;
             this.pictureBox1.TabStop = false;
             // 
@@ -70,7 +72,7 @@
             // 
             this.buttonExport.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonExport.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonExport.Location = new System.Drawing.Point(517, 515);
+            this.buttonExport.Location = new System.Drawing.Point(517, 562);
             this.buttonExport.Name = "buttonExport";
             this.buttonExport.Size = new System.Drawing.Size(126, 21);
             this.buttonExport.TabIndex = 19;
@@ -83,7 +85,7 @@
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonCancel.Location = new System.Drawing.Point(649, 515);
+            this.buttonCancel.Location = new System.Drawing.Point(649, 562);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 21);
             this.buttonCancel.TabIndex = 18;
@@ -94,7 +96,7 @@
             // 
             this.progressBar1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.progressBar1.Location = new System.Drawing.Point(12, 515);
+            this.progressBar1.Location = new System.Drawing.Point(12, 562);
             this.progressBar1.Name = "progressBar1";
             this.progressBar1.Size = new System.Drawing.Size(499, 21);
             this.progressBar1.TabIndex = 20;
@@ -104,6 +106,8 @@
             // 
             this.groupBoxImageSettings.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxImageSettings.Controls.Add(this.label1);
+            this.groupBoxImageSettings.Controls.Add(this.comboBoxResolution);
             this.groupBoxImageSettings.Controls.Add(this.comboBoxHAlign);
             this.groupBoxImageSettings.Controls.Add(this.labelHorizontalAlign);
             this.groupBoxImageSettings.Controls.Add(this.checkBoxAntiAlias);
@@ -119,10 +123,32 @@
             this.groupBoxImageSettings.Controls.Add(this.buttonColor);
             this.groupBoxImageSettings.Location = new System.Drawing.Point(12, 218);
             this.groupBoxImageSettings.Name = "groupBoxImageSettings";
-            this.groupBoxImageSettings.Size = new System.Drawing.Size(712, 117);
+            this.groupBoxImageSettings.Size = new System.Drawing.Size(712, 137);
             this.groupBoxImageSettings.TabIndex = 21;
             this.groupBoxImageSettings.TabStop = false;
             this.groupBoxImageSettings.Text = "Image settings";
+            // 
+            // comboBoxHAlign
+            // 
+            this.comboBoxHAlign.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxHAlign.FormattingEnabled = true;
+            this.comboBoxHAlign.Items.AddRange(new object[] {
+            "Left",
+            "Center"});
+            this.comboBoxHAlign.Location = new System.Drawing.Point(100, 79);
+            this.comboBoxHAlign.Name = "comboBoxHAlign";
+            this.comboBoxHAlign.Size = new System.Drawing.Size(121, 21);
+            this.comboBoxHAlign.TabIndex = 23;
+            this.comboBoxHAlign.SelectedIndexChanged += new System.EventHandler(this.comboBoxHAlign_SelectedIndexChanged);
+            // 
+            // labelHorizontalAlign
+            // 
+            this.labelHorizontalAlign.AutoSize = true;
+            this.labelHorizontalAlign.Location = new System.Drawing.Point(10, 82);
+            this.labelHorizontalAlign.Name = "labelHorizontalAlign";
+            this.labelHorizontalAlign.Size = new System.Drawing.Size(30, 13);
+            this.labelHorizontalAlign.TabIndex = 22;
+            this.labelHorizontalAlign.Text = "Align";
             // 
             // checkBoxAntiAlias
             // 
@@ -243,7 +269,7 @@
             // 
             // labelBorderWidth
             // 
-            this.labelBorderWidth.Location = new System.Drawing.Point(426, 56);
+            this.labelBorderWidth.Location = new System.Drawing.Point(416, 55);
             this.labelBorderWidth.Name = "labelBorderWidth";
             this.labelBorderWidth.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.labelBorderWidth.Size = new System.Drawing.Size(110, 13);
@@ -310,34 +336,12 @@
             // 
             this.labelImageResolution.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.labelImageResolution.BackColor = System.Drawing.Color.Transparent;
-            this.labelImageResolution.Location = new System.Drawing.Point(651, 338);
+            this.labelImageResolution.Location = new System.Drawing.Point(651, 358);
             this.labelImageResolution.Name = "labelImageResolution";
             this.labelImageResolution.Size = new System.Drawing.Size(73, 14);
             this.labelImageResolution.TabIndex = 22;
             this.labelImageResolution.Text = "320x240";
             this.labelImageResolution.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            // 
-            // labelHorizontalAlign
-            // 
-            this.labelHorizontalAlign.AutoSize = true;
-            this.labelHorizontalAlign.Location = new System.Drawing.Point(10, 82);
-            this.labelHorizontalAlign.Name = "labelHorizontalAlign";
-            this.labelHorizontalAlign.Size = new System.Drawing.Size(30, 13);
-            this.labelHorizontalAlign.TabIndex = 22;
-            this.labelHorizontalAlign.Text = "Align";
-            // 
-            // comboBoxHAlign
-            // 
-            this.comboBoxHAlign.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBoxHAlign.FormattingEnabled = true;
-            this.comboBoxHAlign.Items.AddRange(new object[] {
-            "Left",
-            "Center"});
-            this.comboBoxHAlign.Location = new System.Drawing.Point(100, 79);
-            this.comboBoxHAlign.Name = "comboBoxHAlign";
-            this.comboBoxHAlign.Size = new System.Drawing.Size(121, 21);
-            this.comboBoxHAlign.TabIndex = 23;
-            this.comboBoxHAlign.SelectedIndexChanged += new System.EventHandler(this.comboBoxHAlign_SelectedIndexChanged);
             // 
             // subtitleListView1
             // 
@@ -356,11 +360,35 @@
             this.subtitleListView1.View = System.Windows.Forms.View.Details;
             this.subtitleListView1.SelectedIndexChanged += new System.EventHandler(this.subtitleListView1_SelectedIndexChanged);
             // 
+            // comboBoxResolution
+            // 
+            this.comboBoxResolution.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxResolution.FormattingEnabled = true;
+            this.comboBoxResolution.Items.AddRange(new object[] {
+            "1080p (1920x1080)",
+            "720p (1280x720)",
+            "480p (848x480)",
+            "PAL (720x576)",
+            "NTSC (720x480)"});
+            this.comboBoxResolution.Location = new System.Drawing.Point(100, 106);
+            this.comboBoxResolution.Name = "comboBoxResolution";
+            this.comboBoxResolution.Size = new System.Drawing.Size(121, 21);
+            this.comboBoxResolution.TabIndex = 25;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(10, 109);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(51, 13);
+            this.label1.TabIndex = 26;
+            this.label1.Text = "Video res";
+            // 
             // ExportPngXml
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(730, 541);
+            this.ClientSize = new System.Drawing.Size(730, 588);
             this.Controls.Add(this.labelImageResolution);
             this.Controls.Add(this.groupBoxImageSettings);
             this.Controls.Add(this.progressBar1);
@@ -409,5 +437,7 @@
         private System.Windows.Forms.SaveFileDialog saveFileDialog1;
         private System.Windows.Forms.ComboBox comboBoxHAlign;
         private System.Windows.Forms.Label labelHorizontalAlign;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.ComboBox comboBoxResolution;
     }
 }
