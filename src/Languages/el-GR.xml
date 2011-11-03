@@ -322,7 +322,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <XLineBreaksAdded>{0} αλλαγές γραμμής προστέθηκαν</XLineBreaksAdded>
     <BreakLongLine>Διάσπαση μεγάλης γραμμής</BreakLongLine>
     <FixLongDisplayTime>Επιδιόρθωση μεγάλου χρόνου εμφάνισης</FixLongDisplayTime>
-    <FixInvalidItalicTag>Επιδιόρθωση λανθασμέωης ετικέτας πλαγιαστής γραφής</FixInvalidItalicTag>
+    <FixInvalidItalicTag>Επιδιόρθωση λανθασμένης ετικέτας πλαγιαστής γραφής</FixInvalidItalicTag>
     <FixShortDisplayTime>Επιδιόρθωση σύντομου χρόνου εμφάνισης</FixShortDisplayTime>
     <FixOverlappingDisplayTime>Επιδιόρθωση επικαλυπτόμενου χρόνου εμφάνισης</FixOverlappingDisplayTime>
     <FixInvalidItalicTagsExample>&lt;i&gt;Δε με ενδιαφέρει.&lt;i&gt; -&gt; &lt;i&gt;Δε με ενδιαφέρει.&lt;/i&gt;</FixInvalidItalicTagsExample>
@@ -338,10 +338,10 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <XOverlappingTimestampsFixed>{0} επικαλυπτόμενες χρονικές στιγμές επιδιορθώθηκαν</XOverlappingTimestampsFixed>
     <XDisplayTimesProlonged>{0} χρόνοι εμφάνισης επεκτάθηκαν</XDisplayTimesProlonged>
     <XInvalidHtmlTagsFixed>{0} με έγκυρες ετικέτες html επιδιορθώθηκαν</XInvalidHtmlTagsFixed>
-    <XDisplayTimesShortned>{0} χρόνοι εμφάνισης σμυκρίνθηκαν</XDisplayTimesShortned>
+    <XDisplayTimesShortned>{0} χρόνοι εμφάνισης σμικρύνθηκαν</XDisplayTimesShortned>
     <XLinesUnbreaked>{0} γραμμές ενώθηκαν</XLinesUnbreaked>
     <UnneededSpace>Αχρείαστο διάστημα</UnneededSpace>
-    <XUnneededSpacesRemoved>{0} αχρείαστα διάστηματα αφαιρέθηκαν</XUnneededSpacesRemoved>
+    <XUnneededSpacesRemoved>{0} αχρείαστα διαστήματα αφαιρέθηκαν</XUnneededSpacesRemoved>
     <UnneededPeriod>Αχρείαστη τελεία</UnneededPeriod>
     <XUnneededPeriodsRemoved>{0} αχρείαστες τελείες αφαιρέθηκαν</XUnneededPeriodsRemoved>
     <FixMissingSpace>Επιδιόρθωση διάστημα που λείπουν</FixMissingSpace>
@@ -361,16 +361,16 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FixMissingOpenBracket>Επιδιόρθωση [ που λείπει από γραμμή</FixMissingOpenBracket>
     <FixMusicNotation>Αντικατάσταση συμβόλου μουσικής (π.χ. âTª) με προτιμώμενο σύμβολο</FixMusicNotation>
     <FixDoubleDashs>Επιδιόρθωση πολλαπλών '--' -&gt; '...' </FixDoubleDashs>
-    <FixDoubleGreaterThans>Αφαίρεση &gt;&gt; από αρχή γρμμής</FixDoubleGreaterThans>
-    <FixEllipsesStarts>Αφαίρεση ... από αρχή γρμμής</FixEllipsesStarts>
+    <FixDoubleGreaterThans>Αφαίρεση &gt;&gt; από αρχή γραμμής</FixDoubleGreaterThans>
+    <FixEllipsesStarts>Αφαίρεση ... από αρχή γραμμής</FixEllipsesStarts>
     <FixMissingOpenBrackets>Επιδιόρθωση [ που λείπουν </FixMissingOpenBrackets>
     <FixMusicNotations>Αντικατάσταση των âTª με *</FixMusicNotations>
     <XFixDoubleDash>{0} '--' επιδιορθώθηκαν </XFixDoubleDash>
     <XFixDoubleGreaterThan>{0} &gt;&gt; αφαιρέθηκαν </XFixDoubleGreaterThan>
-    <XFixEllipsesStart>{0} '...' αφαιρέθηκαν από αρχή γρμμής</XFixEllipsesStart>
+    <XFixEllipsesStart>{0} '...' αφαιρέθηκαν από αρχή γραμμής</XFixEllipsesStart>
     <XFixMissingOpenBracket>{0} [ που λείπουν επιδιορθώθηκαν</XFixMissingOpenBracket>
-    <XFixMusicNotation>{0} συμβολα μουσικής αντικαταστάθηκαν</XFixMusicNotation>
-    <FixDoubleDashExample>'Τι-- αα ναί!' --&gt; 'Τι... αα ναί!'</FixDoubleDashExample>
+    <XFixMusicNotation>{0} σύμβολα μουσικής αντικαταστάθηκαν</XFixMusicNotation>
+    <FixDoubleDashExample>'Τι-- αα ναι!' --&gt; 'Τι... αα ναι!'</FixDoubleDashExample>
     <FixDoubleGreaterThanExample>'&gt;&gt; Ρόμπερτ: Τι τρέχει!'  --&gt; 'Ρόμπερτ: Τι τρέχει!'</FixDoubleGreaterThanExample>
     <FixEllipsesStartExample>'... και τότε εμείς' -&gt; 'και τότε εμείς'</FixEllipsesStartExample>
     <FixMissingOpenBracketExample>'κλανκ] Πρόσεξε!' --&gt; '[κλανκ] Πρόσεξε!'</FixMissingOpenBracketExample>
@@ -418,7 +418,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <ImportOptions>Επιλογές εισαγωγής</ImportOptions>
     <Splitting>Διαχωρισμός</Splitting>
     <AutoSplitText>Αυτόματος διαχωρισμός κειμένου</AutoSplitText>
-    <OneLineIsOneSubtitle>Μία γραμμή είναι ένα υπότιτλος</OneLineIsOneSubtitle>
+    <OneLineIsOneSubtitle>Μία γραμμή είναι ένας υπότιτλος</OneLineIsOneSubtitle>
     <MergeShortLines>Συγχώνευση σύντομων γραμμών με συνέχιση</MergeShortLines>
     <RemoveEmptyLines>Αφαίρεση κενών γραμμών</RemoveEmptyLines>
     <RemoveLinesWithoutLetters>Αφαίρεση γραμμών χωρίς γράμματα</RemoveLinesWithoutLetters>
