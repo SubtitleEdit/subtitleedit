@@ -5,6 +5,7 @@ using System.Drawing.Text;
 using System.Text;
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Logic;
+using System.Collections.Generic;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -58,6 +59,7 @@ namespace Nikse.SubtitleEdit.Forms
                 comboBoxBorderWidth.SelectedIndex = (int)_borderWidth;
             else
                 comboBoxBorderWidth.SelectedIndex = 2;
+            comboBoxHAlign.SelectedIndex = 1;
 
             foreach (var x in System.Drawing.FontFamily.Families)
             {
@@ -182,9 +184,6 @@ namespace Nikse.SubtitleEdit.Forms
 
         private Bitmap GenerateImageFromTextWithStyle(string text)
         {
-            if (string.IsNullOrEmpty(text))
-                text = " ";
-
             // remove styles for display text (except italic)
             text = RemoveSubStationAlphaFormatting(text);
             text = text.Replace("<b>", string.Empty);
@@ -197,21 +196,39 @@ namespace Nikse.SubtitleEdit.Forms
             text = text.Replace("</U>", string.Empty);
             text = Logic.Utilities.RemoveHtmlFontTag(text);
 
-            Font font = new System.Drawing.Font(_subtitleFontName, _subtitleFontSize);
+            Font font;
+            try
+            {
+                font = new System.Drawing.Font(_subtitleFontName, _subtitleFontSize);
+            }
+            catch (Exception exception)
+            {
+                MessageBox.Show(exception.Message);
+                font = new System.Drawing.Font("Verdana", _subtitleFontSize);
+            }
             Bitmap bmp = new Bitmap(400, 200);
             Graphics g = Graphics.FromImage(bmp);
 
-
             SizeF textSize = g.MeasureString("Hj!", font);
             var lineHeight = (textSize.Height * 0.64f);
-            float italicSpacing = textSize.Width / 6;
+            float italicSpacing = textSize.Width / 8;
 
             textSize = g.MeasureString(text, font);
             g.Dispose();
             bmp.Dispose();
             bmp = new Bitmap((int)(textSize.Width * 0.8), (int)(textSize.Height * 0.7) + 10);
             g = Graphics.FromImage(bmp);
-            g.FillRectangle(new SolidBrush(Color.Black), 0, 0, bmp.Width, bmp.Height); // background color
+
+            List<float> lefts = new List<float>();
+            foreach (string line in text.Replace("<i>", "i").Replace("</i>", "i").Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries))
+            {
+                if (comboBoxHAlign.SelectedIndex == 0) // left
+                    lefts.Add(5);
+                else
+                    lefts.Add((float)(bmp.Width - g.MeasureString(line, font).Width * 0.8) / 2);
+            }
+
+
             if (checkBoxAntiAlias.Checked)
             {
                 g.TextRenderingHint = TextRenderingHint.AntiAlias;
@@ -226,17 +243,23 @@ namespace Nikse.SubtitleEdit.Forms
             StringBuilder sb = new StringBuilder();
             int i = 0;
             bool isItalic = false;
-            int left = 5;
+            float left = 5;
+            if (lefts.Count >= 0)
+                left = lefts[0];
             float top = 5;
             bool newLine = false;
             float addX = 0;
+            int lineNumber = 0;
+            float leftMargin = left;
+            bool italicFromStart = false;
             while (i < text.Length)
             {
                 if (text.Substring(i).ToLower().StartsWith("<i>"))
                 {
+                    italicFromStart = i == 0;
                     if (sb.Length > 0)
                     {
-                        DrawText(font, sf, path, sb, isItalic, left, top, ref newLine, addX);
+                        TextDraw.DrawText(font, sf, path, sb, isItalic, left, top, ref newLine, addX, leftMargin);
                         addX = 0;
                     }
                     isItalic = true;
@@ -244,19 +267,36 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 else if (text.Substring(i).ToLower().StartsWith("</i>") && isItalic)
                 {
-                    addX = italicSpacing;
-                    DrawText(font, sf, path, sb, isItalic, left, top, ref newLine, addX);
+                    if (italicFromStart)
+                        addX = 0;
+                    else
+                        addX = italicSpacing;
+                    TextDraw.DrawText(font, sf, path, sb, isItalic, left, top, ref newLine, addX, leftMargin);
                     addX = 1;
+                    if (_subtitleFontName.StartsWith("Arial"))
+                        addX = 3;
                     isItalic = false;
                     i += 3;
                 }
                 else if (text.Substring(i).StartsWith(Environment.NewLine))
                 {
-                    DrawText(font, sf, path, sb, isItalic, left, top, ref newLine, addX);
+                    if (italicFromStart)
+                        addX = 0;
+                    else
+                        addX = italicSpacing;
+
+                    TextDraw.DrawText(font, sf, path, sb, isItalic, left, top, ref newLine, addX, leftMargin);
+
                     addX = 0;
                     top += lineHeight;
                     newLine = true;
                     i += Environment.NewLine.Length - 1;
+                    addX = 0;
+                    lineNumber++;
+                    if (lineNumber < lefts.Count)
+                        leftMargin = lefts[lineNumber];
+                    if (isItalic)
+                        italicFromStart = true;
                 }
                 else
                 {
@@ -265,7 +305,13 @@ namespace Nikse.SubtitleEdit.Forms
                 i++;
             }
             if (sb.Length > 0)
-                DrawText(font, sf, path, sb, isItalic, left, top, ref newLine, addX);
+            {
+                if (italicFromStart)
+                    addX = 0;
+                else
+                    addX = italicSpacing;
+                TextDraw.DrawText(font, sf, path, sb, isItalic, left, top, ref newLine, addX, leftMargin);
+            }
 
             if (_borderWidth > 0)
                 g.DrawPath(new Pen(_borderColor, _borderWidth), path);
@@ -560,6 +606,11 @@ namespace Nikse.SubtitleEdit.Forms
         private void Beamer_FormClosing(object sender, FormClosingEventArgs e)
         {
             Cursor.Show();
+        }
+
+        private void comboBoxHAlign_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            ShowCurrent();
         }
 
     }

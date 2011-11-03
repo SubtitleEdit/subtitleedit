@@ -156,15 +156,14 @@ namespace Nikse.SubtitleEdit.Forms
             catch (Exception exception)
             {
                 MessageBox.Show(exception.Message);
-                font = new System.Drawing.Font("Verdena", _subtitleFontSize);
+                font = new System.Drawing.Font("Verdana", _subtitleFontSize);
             }
             Bitmap bmp = new Bitmap(400, 200);
             Graphics g = Graphics.FromImage(bmp);
 
-
             SizeF textSize = g.MeasureString("Hj!", font);
             var lineHeight = (textSize.Height * 0.64f);
-            float italicSpacing = textSize.Width / 6;
+            float italicSpacing = textSize.Width / 8;
 
             textSize = g.MeasureString(text, font);
             g.Dispose();
@@ -176,15 +175,11 @@ namespace Nikse.SubtitleEdit.Forms
             foreach (string line in text.Replace("<i>", "i").Replace("</i>", "i").Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries))
             {
                 if (comboBoxHAlign.SelectedIndex == 0) // left
-                {
                     lefts.Add(5);
-                }
                 else
-                {
                     lefts.Add((float)(bmp.Width - g.MeasureString(line, font).Width * 0.8) / 2);
-                }
             }
-            
+           
 
             if (checkBoxAntiAlias.Checked)
             {
@@ -208,13 +203,15 @@ namespace Nikse.SubtitleEdit.Forms
             float addX = 0;
             int lineNumber = 0;
             float leftMargin = left;
+            bool italicFromStart = false;
             while (i < text.Length)
             {
                 if (text.Substring(i).ToLower().StartsWith("<i>"))
                 {
+                    italicFromStart = i == 0;
                     if (sb.Length > 0)
                     {
-                        DrawText(font, sf, path, sb, isItalic, left, top, ref newLine, addX, leftMargin);
+                        TextDraw.DrawText(font, sf, path, sb, isItalic, left, top, ref newLine, addX, leftMargin);
                         addX = 0;
                     }
                     isItalic = true;
@@ -222,8 +219,11 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 else if (text.Substring(i).ToLower().StartsWith("</i>") && isItalic)
                 {
-                    addX = italicSpacing;
-                    DrawText(font, sf, path, sb, isItalic, left, top, ref newLine, addX, leftMargin);
+                    if (italicFromStart)
+                        addX = 0;
+                    else
+                        addX = italicSpacing;
+                    TextDraw.DrawText(font, sf, path, sb, isItalic, left, top, ref newLine, addX, leftMargin);
                     addX = 1;
                     if (_subtitleFontName.StartsWith("Arial"))
                         addX = 3;
@@ -232,7 +232,13 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 else if (text.Substring(i).StartsWith(Environment.NewLine))
                 {
-                    DrawText(font, sf, path, sb, isItalic, left, top, ref newLine, addX, leftMargin);
+                    if (italicFromStart)
+                        addX = 0;
+                    else
+                        addX = italicSpacing;
+
+                    TextDraw.DrawText(font, sf, path, sb, isItalic, left, top, ref newLine, addX, leftMargin);
+
                     addX = 0;
                     top += lineHeight;
                     newLine = true;
@@ -241,6 +247,8 @@ namespace Nikse.SubtitleEdit.Forms
                     lineNumber++;
                     if (lineNumber < lefts.Count)
                         leftMargin = lefts[lineNumber];
+                    if (isItalic)
+                        italicFromStart = true;
                 }
                 else
                 {
@@ -249,34 +257,19 @@ namespace Nikse.SubtitleEdit.Forms
                 i++;
             }
             if (sb.Length > 0)
-                DrawText(font, sf, path, sb, isItalic, left, top, ref newLine, addX, leftMargin);
+            {
+                if (italicFromStart)
+                    addX = 0;
+                else
+                    addX = italicSpacing;
+                TextDraw.DrawText(font, sf, path, sb, isItalic, left, top, ref newLine, addX, leftMargin);
+            }
 
             if (_borderWidth > 0)
                 g.DrawPath(new Pen(_borderColor, _borderWidth), path);
             g.FillPath(new SolidBrush(_subtitleColor), path);
             g.Dispose();
             return bmp;
-        }
-
-        private static void DrawText(Font font, StringFormat sf, System.Drawing.Drawing2D.GraphicsPath path, StringBuilder sb, bool isItalic, float left, float top, ref bool newLine, float addX, float leftMargin)
-        {
-            PointF next = new PointF(left, top);
-            if (path.PointCount > 0)
-                next.X = path.GetLastPoint().X;
-
-            next.X += addX;
-            if (newLine)
-            {
-                next.X = leftMargin;
-                newLine = false;
-            }
-
-            if (isItalic)
-                path.AddString(sb.ToString(), font.FontFamily, (int)System.Drawing.FontStyle.Italic, font.Size, next, sf);
-            else
-                path.AddString(sb.ToString(), font.FontFamily, 0, font.Size, next, sf);
-
-            sb.Length = 0;
         }
 
         private static string RemoveSubStationAlphaFormatting(string s)
