@@ -575,6 +575,9 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
             size += (2 + palSize * 5) /* PDS */;
             size += rleBuf.Length;
 
+            pic.WindowXOffset = (pic.Width - bm.Width) / 2;
+            pic.WindowYOffset = pic.Height - (bm.Height + (pic.Height / 12));
+
             int yOfs = pic.WindowYOffset - Core.CropOfsY;
             if (yOfs < 0)
             {

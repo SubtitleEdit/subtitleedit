@@ -38,7 +38,7 @@ namespace Nikse.SubtitleEdit.Forms
             SetupImageParameters();
 
             saveFileDialog1.Title = "Choose Blu-ray sup file name...";
-            saveFileDialog1.DefaultExt = "*.sup";
+            saveFileDialog1.DefaultExt = ".sup";
             saveFileDialog1.AddExtension = true;
 
             if (_exportType == "BLURAYSUP" &&  saveFileDialog1.ShowDialog(this) == DialogResult.OK || 
@@ -46,13 +46,35 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 FileStream bluRaySupFile = null;
                 if (_exportType == "BLURAYSUP")
-                    bluRaySupFile = new FileStream(saveFileDialog1.FileName, FileMode.CreateNew);
+                    bluRaySupFile = new FileStream(saveFileDialog1.FileName, FileMode.Create);
 
                 progressBar1.Value = 0;
                 progressBar1.Maximum = _subtitle.Paragraphs.Count-1;
                 progressBar1.Visible = true;
-                const int height = 1080;
-                const int width = 1920;
+
+                int width = 1920;
+                int height = 1080;
+                if (comboBoxResolution.SelectedIndex == 1)
+                { 
+                    width = 1280;
+                    height = 720;
+                }
+                else if (comboBoxResolution.SelectedIndex == 2)
+                { 
+                    width = 848;
+                    height = 480;
+                }
+                else if (comboBoxResolution.SelectedIndex == 3)
+                { 
+                    width = 720;
+                    height = 576;
+                }
+                else if (comboBoxResolution.SelectedIndex == 4)
+                { 
+                    width = 720;
+                    height = 480;
+                }
+
                 const int border = 25;
                 int imagesSavedCount = 0;
                 StringBuilder sb = new StringBuilder();
@@ -68,8 +90,8 @@ namespace Nikse.SubtitleEdit.Forms
                             Nikse.SubtitleEdit.Logic.BluRaySup.BluRaySupPicture brSub = new Logic.BluRaySup.BluRaySupPicture();
                             brSub.StartTime = (long)p.StartTime.TotalMilliseconds;
                             brSub.EndTime = (long)p.EndTime.TotalMilliseconds;
-                            brSub.Width = bmp.Width;
-                            brSub.Height = bmp.Height;
+                            brSub.Width = height;
+                            brSub.Height = width;
                             byte[] buffer = Nikse.SubtitleEdit.Logic.BluRaySup.BluRaySupPicture.CreateSupFrame(brSub, bmp);
                             bluRaySupFile.Write(buffer, 0, buffer.Length);
                         }
@@ -314,6 +336,7 @@ namespace Nikse.SubtitleEdit.Forms
             panelBorderColor.BackColor = _borderColor;
             comboBoxBorderWidth.SelectedIndex = 2;
             comboBoxHAlign.SelectedIndex = 1;
+            comboBoxResolution.SelectedIndex = 0;
 
             foreach (var x in System.Drawing.FontFamily.Families)
             {
