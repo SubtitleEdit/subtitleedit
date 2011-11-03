@@ -83,5 +83,8 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
             return AlphaCrop;
         }
 
+        public static int CropOfsY { get; set; }
+
+        public static double fpsTrg = FpsPal;
     }
 }

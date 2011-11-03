@@ -228,6 +228,8 @@ namespace Nikse.SubtitleEdit.Forms
             comboBoxOcrMethod.Items.Add(language.OcrViaModi);
 
             checkBoxUseModiInTesseractForUnknownWords.Text = language.TryModiForUnknownWords;
+            checkBoxTesseractItalicsOn.Checked = Configuration.Settings.VobSubOcr.UseItalicsInTesseract;
+            checkBoxTesseractItalicsOn.Text = Configuration.Settings.Language.General.Italic;
             checkBoxShowOnlyForced.Text = language.ShowOnlyForcedSubtitles;
             checkBoxUseTimeCodesFromIdx.Text = language.UseTimeCodesFromIdx;
 
@@ -2080,7 +2082,7 @@ namespace Nikse.SubtitleEdit.Forms
                            Split(" .?!()\r\n\t".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
             foreach (string s in arr)
             {
-                if (s.Length == 1 && !"'”1234567890&aAI\"".Contains(s))
+                if (s.Length == 1 && !"-:'”1234567890&aAI\"".Contains(s))
                     count++;
             }
             if (count > 0)
@@ -2156,6 +2158,8 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
             }
+            if (!checkBoxTesseractItalicsOn.Checked)
+                textWithOutFixes = textWithOutFixes.Replace("<i>", string.Empty).Replace("</i>", string.Empty);
 
             // Sometimes Tesseract has problems with small fonts - it helps to make the image larger
             if (textWithOutFixes.Replace("<i>", string.Empty).Replace("</i>", string.Empty).Replace("@", string.Empty).Replace("%", string.Empty).Replace("|", string.Empty).Trim().Length < 3 ||
@@ -2163,6 +2167,8 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 string rs = TesseractResizeAndRetry(bitmap);
                 textWithOutFixes = rs;
+                if (!checkBoxTesseractItalicsOn.Checked)
+                    textWithOutFixes = textWithOutFixes.Replace("<i>", string.Empty).Replace("</i>", string.Empty);
             }
 
             // fix italics
@@ -2192,6 +2198,14 @@ namespace Nikse.SubtitleEdit.Forms
                     string newUnfixedText = TesseractResizeAndRetry(bitmap);
                     string newText = _ocrFixEngine.FixOcrErrors(newUnfixedText, index, _lastLine, true, checkBoxGuessUnknownWords.Checked);
                     int newWordsNotFound = _ocrFixEngine.CountUnknownWordsViaDictionary(newText, out correctWords);
+
+                    if (wordsNotFound == 1 && newWordsNotFound == 1 && newUnfixedText.EndsWith("!!") && textWithOutFixes.EndsWith("u") && newText.Length > 1)
+                    {
+                        _ocrFixEngine.UnknownWordsFound.Clear();
+                        newText = textWithOutFixes.Substring(0, textWithOutFixes.Length - 1) + "!!";
+                        newWordsNotFound = _ocrFixEngine.CountUnknownWordsViaDictionary(newText, out correctWords);
+                    }
+
                     if ((!newText.Contains("9") || textWithOutFixes.Contains("9")) && newUnfixedText.Trim().Length > 0 &&
                          newWordsNotFound < wordsNotFound || (newWordsNotFound == wordsNotFound && newText.EndsWith("!") && textWithOutFixes.EndsWith("l")))
                     {
@@ -2228,6 +2242,7 @@ namespace Nikse.SubtitleEdit.Forms
                             (!modiText.Contains("3") || line.Contains("4")) &&
                             (!modiText.Contains("5") || line.Contains("5")) &&
                             (!modiText.Contains("9") || line.Contains("9")) &&
+                            (!modiText.Contains("•") || line.Contains("•")) &&
                             (!modiText.Contains(")") || line.Contains(")")) &&
                             Utilities.CountTagInText(modiText, "(") < 2 && Utilities.CountTagInText(modiText, ")") < 2 &&
                             Utilities.CountTagInText(modiText, Environment.NewLine) < 3)
@@ -3381,10 +3396,11 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void VobSubOcr_FormClosing(object sender, FormClosingEventArgs e)
         {
-            Configuration.Settings.VobSubOcr.UseModiInTesseractForUnknownWords = checkBoxUseModiInTesseractForUnknownWords.Checked;
             if (_tesseractThread != null)
                 _tesseractThread.CancelAsync();
             _tesseractAsyncIndex = 10000;
+            Configuration.Settings.VobSubOcr.UseItalicsInTesseract = checkBoxTesseractItalicsOn.Checked;
+            Configuration.Settings.VobSubOcr.UseModiInTesseractForUnknownWords = checkBoxUseModiInTesseractForUnknownWords.Checked;
         }
 
         private void subtitleListView1_KeyDown(object sender, KeyEventArgs e)

@@ -274,6 +274,12 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
             return ((a[index] & 0xff) << 24) | ((r[index] & 0xff) << 16) | ((g[index] & 0xff) << 8) | (b[index] & 0xff);
         }
 
+        internal void SetColor(int index, System.Drawing.Color color)
+        {
+            SetRgb(index, color.R, color.G, color.B);
+            SetAlpha(index, color.A);
+        }
+
         /**
          * Set palette entry (RGB mode)
          * @param index Palette index

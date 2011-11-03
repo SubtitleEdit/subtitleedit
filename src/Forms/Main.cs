@@ -11256,7 +11256,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void toolStripMenuItemExportPngXml_Click(object sender, EventArgs e)
         {
             ExportPngXml exportBdnXmlPng = new ExportPngXml();
-            exportBdnXmlPng.Initialize(_subtitle);
+            exportBdnXmlPng.Initialize(_subtitle, "BDNXML");
             exportBdnXmlPng.ShowDialog(this);
         }
 
@@ -11621,6 +11621,12 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
+        private void bluraySupToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ExportPngXml exportBdnXmlPng = new ExportPngXml();
+            exportBdnXmlPng.Initialize(_subtitle, "BLURAYSUP");
+            exportBdnXmlPng.ShowDialog(this);
+        }
 
     }
 }

@@ -83,15 +83,52 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
             return time;
         }
 
-        /**
-        * Convert time in 90kHz ticks to string hh:mm:ss.ms
-        * @param pts Time in 90kHz resolution
-        * @return String in format hh:mm:ss:ms
-        */
+        /// <summary>
+        /// Convert time in 90kHz ticks to string hh:mm:ss.ms
+        /// </summary>
+        /// <param name="pts">Time in 90kHz resolution</param>
+        /// <returns>String in format hh:mm:ss:ms</returns>
         public static string PtsToTimeString(long pts)
         {
             int[] time = MillisecondsToTime((pts + 45) / 90);
             return ZeroTrim(time[0], 2) + ":" + ZeroTrim(time[1], 2) + ":" + ZeroTrim(time[2], 2) + "." + ZeroTrim(time[3], 3);
+        }
+
+        /// <summary>
+        /// Write (big endian) double word to buffer[index] (index points at most significant byte)
+        /// </summary>
+        /// <param name="buffer">Byte array</param>
+        /// <param name="index">Index to write to</param>
+        /// <param name="val">Integer value of double word to write</param>
+        public static void SetDWord(byte[] buffer, int index, int val)
+        {
+            buffer[index] = (byte)(val >> 24);
+            buffer[index + 1] = (byte)(val >> 16);
+            buffer[index + 2] = (byte)(val >> 8);
+            buffer[index + 3] = (byte)(val);
+        }
+
+        /// <summary>
+        /// Write (big endian) word to buffer[index] (index points at most significant byte)
+        /// </summary>
+        /// <param name="buffer">Byte array</param>
+        /// <param name="index">index Index to write to</param>
+        /// <param name="val">val Integer value of word to write</param>
+        public static void SetWord(byte[] buffer, int index, int val)
+        {
+            buffer[index] = (byte)(val >> 8);
+            buffer[index + 1] = (byte)(val);
+        }    
+
+        /// <summary>
+        /// Write byte to buffer[index]
+        /// </summary>
+        /// <param name="buffer">Byte array</param>
+        /// <param name="index">Index to write to</param>
+        /// <param name="val">Integer value of byte to write</param>
+        public static void SetByte(byte[] buffer, int index, int val)
+        {
+            buffer[index] = (byte)(val);
         }
 
     }

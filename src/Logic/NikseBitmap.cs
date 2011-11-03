@@ -67,7 +67,7 @@ namespace Nikse.SubtitleEdit.Logic
 
         public Color GetPixel(int x, int y)
         {
-            int _pixelAddress = x + y * 4;
+            _pixelAddress = (x * 4) + (y * 4 * Width);
             return Color.FromArgb(_bitmapData[_pixelAddress+3], _bitmapData[_pixelAddress+2], _bitmapData[_pixelAddress+1], _bitmapData[_pixelAddress]);
         }
 
@@ -79,7 +79,7 @@ namespace Nikse.SubtitleEdit.Logic
 
         public void SetPixel(int x, int y, Color color)
         {
-            int _pixelAddress = x + y * 4;
+            _pixelAddress = (x * 4) + (y * 4 * Width);
             _bitmapData[_pixelAddress] = (byte)color.B;
             _bitmapData[_pixelAddress+1] = (byte)color.G;
             _bitmapData[_pixelAddress+2] = (byte)color.R;

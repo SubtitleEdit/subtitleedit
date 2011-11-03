@@ -374,6 +374,7 @@ namespace Nikse.SubtitleEdit.Logic
         public string LastOcrMethod { get; set; }
         public string TesseractLastLanguage { get; set; }
         public bool UseModiInTesseractForUnknownWords { get; set; }
+        public bool UseItalicsInTesseract { get; set; }
         public bool RightToLeft { get; set; }
         public bool TopToBottom { get; set; }
         public int DefaultMillisecondsForUnknownDurations { get; set; }
@@ -385,6 +386,7 @@ namespace Nikse.SubtitleEdit.Logic
             LastImageCompareFolder = "English";
             LastModiLanguageId = 9;
             LastOcrMethod = "Tesseract";
+            UseItalicsInTesseract = true;
             RightToLeft = false;
             TopToBottom = true;
             DefaultMillisecondsForUnknownDurations = 5000;
@@ -1092,6 +1094,9 @@ namespace Nikse.SubtitleEdit.Logic
             subNode = node.SelectSingleNode("UseModiInTesseractForUnknownWords");
             if (subNode != null)
                 settings.VobSubOcr.UseModiInTesseractForUnknownWords = Convert.ToBoolean(subNode.InnerText);
+            subNode = node.SelectSingleNode("UseItalicsInTesseract");
+            if (subNode != null)
+                settings.VobSubOcr.UseItalicsInTesseract = Convert.ToBoolean(subNode.InnerText);            
             subNode = node.SelectSingleNode("RightToLeft");
             if (subNode != null)
                 settings.VobSubOcr.RightToLeft = Convert.ToBoolean(subNode.InnerText);
@@ -1445,6 +1450,7 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("LastOcrMethod", settings.VobSubOcr.LastOcrMethod);
             textWriter.WriteElementString("TesseractLastLanguage", settings.VobSubOcr.TesseractLastLanguage);
             textWriter.WriteElementString("UseModiInTesseractForUnknownWords", settings.VobSubOcr.UseModiInTesseractForUnknownWords.ToString());
+            textWriter.WriteElementString("UseItalicsInTesseract", settings.VobSubOcr.UseItalicsInTesseract.ToString());            
             textWriter.WriteElementString("RightToLeft", settings.VobSubOcr.RightToLeft.ToString());
             textWriter.WriteElementString("TopToBottom", settings.VobSubOcr.TopToBottom.ToString());
             textWriter.WriteElementString("DefaultMillisecondsForUnknownDurations", settings.VobSubOcr.DefaultMillisecondsForUnknownDurations.ToString());
