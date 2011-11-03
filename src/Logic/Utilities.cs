@@ -480,8 +480,8 @@ namespace Nikse.SubtitleEdit.Logic
                 else if (encoding == Encoding.Default && file.Length > 12)
                 {
                     int length = (int)file.Length;
-                    if (length > 100000)
-                        length = 100000;
+                    if (length > 500000)
+                        length = 500000;
 
                     file.Position = 0;
                     var buffer = new byte[length];
