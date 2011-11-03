@@ -486,6 +486,9 @@
     <Compile Include="Logic\BluRaySup\BluRaySupParser.cs" />
     <Compile Include="Logic\BluRaySup\BluRaySupPicture.cs" />
     <Compile Include="Logic\BluRaySup\Core.cs" />
+    <Compile Include="Logic\BluRaySup\ImageObject.cs" />
+    <Compile Include="Logic\BluRaySup\ImageObjectFragment.cs" />
+    <Compile Include="Logic\BluRaySup\PaletteInfo.cs" />
     <Compile Include="Logic\BluRaySup\ToolBox.cs" />
     <Compile Include="Logic\DetectEncoding\EncodingTools.cs" />
     <Compile Include="Logic\DetectEncoding\Multilang\CMLangConvertCharset.cs" />
