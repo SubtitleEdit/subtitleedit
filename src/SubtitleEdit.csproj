@@ -651,6 +651,7 @@
     <Compile Include="Logic\SubtitleFormats\UnknownSubtitle3.cs" />
     <Compile Include="Logic\SubtitleFormats\UnknownSubtitle4.cs" />
     <Compile Include="Logic\SubtitleFormats\ZeroG.cs" />
+    <Compile Include="Logic\TextDraw.cs" />
     <Compile Include="Logic\TimeCode.cs" />
     <Compile Include="Logic\TransportStream\AdaptationField.cs" />
     <Compile Include="Logic\TransportStream\Helper.cs" />
