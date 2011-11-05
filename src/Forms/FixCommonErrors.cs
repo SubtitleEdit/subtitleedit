@@ -191,6 +191,35 @@ namespace Nikse.SubtitleEdit.Forms
             Utilities.InitializeSubtitleFont(subtitleListView1);
             listViewFixes.ListViewItemSorter = new ListViewSorter { ColumnNumber = 1, IsNumber = true };
 
+            if (!string.IsNullOrEmpty(Configuration.Settings.CommonErrors.StartSize))
+            {
+                StartPosition = FormStartPosition.Manual;
+                string[] arr = Configuration.Settings.CommonErrors.StartSize.Split(';');
+                int x, y;
+                if (arr.Length == 2 && int.TryParse(arr[0], out x) && int.TryParse(arr[1], out y))
+                {
+                    if (x > 10 && x < 10000 && y > 10 && y < 10000)
+                    {
+                        Width = x;
+                        Height = y;
+                    }
+                }
+            }
+            if (!string.IsNullOrEmpty(Configuration.Settings.CommonErrors.StartPosition))
+            {
+                StartPosition = FormStartPosition.Manual;
+                string[] arr = Configuration.Settings.CommonErrors.StartPosition.Split(';');
+                int x, y;
+                if (arr.Length == 2 && int.TryParse(arr[0], out x) && int.TryParse(arr[1], out y))
+                {
+                    if (x > 0 && x < Screen.PrimaryScreen.WorkingArea.Width && y > 0 && y < Screen.PrimaryScreen.WorkingArea.Height)
+                    {
+                        Left = x;
+                        Top = y;
+                    }
+                }
+            }
+
             if (Screen.PrimaryScreen.WorkingArea.Width <= 124)
             {
                 this.Width = this.MinimumSize.Width;

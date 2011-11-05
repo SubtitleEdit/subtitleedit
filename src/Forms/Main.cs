@@ -3214,7 +3214,7 @@ namespace Nikse.SubtitleEdit.Forms
                 ReloadFromSourceView();
                 SaveSubtitleListviewIndexes();
                 var fixErrors = new FixCommonErrors();
-                _formPositionsAndSizes.SetPositionAndSize(fixErrors);
+                //_formPositionsAndSizes.SetPositionAndSize(fixErrors);
 
                 ShowInTaskbar = false;
                 if (onlySelectedLines)
@@ -3254,8 +3254,10 @@ namespace Nikse.SubtitleEdit.Forms
                     SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
                     RestoreSubtitleListviewIndexes();
                     _change = true;
-                    _formPositionsAndSizes.SavePositionAndSize(fixErrors);
+                    //_formPositionsAndSizes.SavePositionAndSize(fixErrors);
                 }
+                Configuration.Settings.CommonErrors.StartSize = fixErrors.Width + ";" + fixErrors.Height;
+                Configuration.Settings.CommonErrors.StartPosition = fixErrors.Left + ";" + fixErrors.Top;
             }
             else
             {
@@ -5291,6 +5293,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void SetFontColor(Paragraph p, string color)
         {
+            if (p == null)
+                return;
+
             bool done = false;
 
             string s = p.Text;
@@ -5359,6 +5364,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void SetFontName(Paragraph p)
         {
+            if (p == null)
+                return;
+
             bool done = false;
 
             string s = p.Text;
