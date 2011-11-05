@@ -140,6 +140,8 @@ namespace Nikse.SubtitleEdit.Logic
 
     public class FixCommonErrorsSettings
     {
+        public string StartPosition { get; set; }
+        public string StartSize { get; set; }
         public bool EmptyLinesTicked { get; set; }
         public bool OverlappingDisplayTimeTicked { get; set; }
         public bool TooShortDisplayTimeTicked { get; set; }
@@ -920,6 +922,12 @@ namespace Nikse.SubtitleEdit.Logic
 
             settings.CommonErrors = new Nikse.SubtitleEdit.Logic.FixCommonErrorsSettings();
             node = doc.DocumentElement.SelectSingleNode("CommonErrors");
+            subNode = node.SelectSingleNode("StartPosition");
+            if (subNode != null)
+                settings.CommonErrors.StartPosition = subNode.InnerText;
+            subNode = node.SelectSingleNode("StartSize");
+            if (subNode != null)
+                settings.CommonErrors.StartSize = subNode.InnerText;
             subNode = node.SelectSingleNode("EmptyLinesTicked");
             if (subNode != null)
                 settings.CommonErrors.EmptyLinesTicked = Convert.ToBoolean(subNode.InnerText);
@@ -1387,6 +1395,8 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteEndElement();
 
             textWriter.WriteStartElement("CommonErrors", "");
+            textWriter.WriteElementString("StartPosition", settings.CommonErrors.StartPosition);
+            textWriter.WriteElementString("StartSize", settings.CommonErrors.StartSize);
             textWriter.WriteElementString("EmptyLinesTicked", settings.CommonErrors.EmptyLinesTicked.ToString());
             textWriter.WriteElementString("OverlappingDisplayTimeTicked", settings.CommonErrors.OverlappingDisplayTimeTicked.ToString());
             textWriter.WriteElementString("TooShortDisplayTimeTicked", settings.CommonErrors.TooShortDisplayTimeTicked.ToString());
