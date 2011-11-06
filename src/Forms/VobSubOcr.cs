@@ -2076,6 +2076,9 @@ namespace Nikse.SubtitleEdit.Forms
             if (!_ocrFixEngine.IsDictionaryLoaded || !_ocrFixEngine.SpellCheckDictionaryName.StartsWith("en_"))
                 return false;
 
+            if (line.Contains("[") && line.Contains("]"))
+                line = line.Replace("[", string.Empty).Replace("]", string.Empty);
+
             int count = 0;
             var arr = line.Replace("<i>", string.Empty).Replace("</i>", string.Empty).Replace("a.m", string.Empty).Replace("p.m", string.Empty).
                            Replace("o.r", string.Empty).Replace("e.g", string.Empty).Replace("Ph.D", string.Empty).Replace("d.t.s", string.Empty).
@@ -2205,9 +2208,10 @@ namespace Nikse.SubtitleEdit.Forms
                         newText = textWithOutFixes.Substring(0, textWithOutFixes.Length - 1) + "!!";
                         newWordsNotFound = _ocrFixEngine.CountUnknownWordsViaDictionary(newText, out correctWords);
                     }
-
-                    if ((!newText.Contains("9") || textWithOutFixes.Contains("9")) && newUnfixedText.Trim().Length > 0 &&
-                         newWordsNotFound < wordsNotFound || (newWordsNotFound == wordsNotFound && newText.EndsWith("!") && textWithOutFixes.EndsWith("l")))
+                    else if ((!newText.Contains("9") || textWithOutFixes.Contains("9")) && 
+                             (!newText.Replace("</i>", string.Empty).Contains("/") || textWithOutFixes.Replace("</i>", string.Empty).Contains("/")) && 
+                             newUnfixedText.Trim().Length > 0 &&
+                             newWordsNotFound < wordsNotFound || (newWordsNotFound == wordsNotFound && newText.EndsWith("!") && textWithOutFixes.EndsWith("l")))
                     {
                         wordsNotFound = newWordsNotFound;
                         textWithOutFixes = newUnfixedText;
