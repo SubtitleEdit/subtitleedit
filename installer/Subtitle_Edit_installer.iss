@@ -175,6 +175,7 @@ Source: {#bindir}\Icons\SpellCheck.png;            DestDir: {app}\Icons;        
 Source: {#bindir}\Icons\VideoToogle.png;           DestDir: {app}\Icons;                              Flags: ignoreversion; Components: main
 Source: {#bindir}\Icons\VisualSync.png;            DestDir: {app}\Icons;                              Flags: ignoreversion; Components: main
 Source: {#bindir}\Icons\WaveFormToogle.png;        DestDir: {app}\Icons;                              Flags: ignoreversion; Components: main
+Source: ..\Tesseract\tessdata\configs\hocr;        DestDir: {app}\Tesseract\tessdata\configs;         Flags: ignoreversion; Components: main
 Source: ..\Tesseract\tessdata\eng.traineddata;     DestDir: {app}\Tesseract\tessdata;                 Flags: ignoreversion; Components: main
 Source: ..\Tesseract\tesseract.exe;                DestDir: {app}\Tesseract;                          Flags: ignoreversion; Components: main
 

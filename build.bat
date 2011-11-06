@@ -84,11 +84,12 @@ EXIT /B
 :SubZipFile
 TITLE Creating the ZIP file...
 PUSHD "src\bin\Release"
-IF EXIST "temp_zip"                        RD /S /Q "temp_zip"
-IF NOT EXIST "temp_zip"                    MD "temp_zip"
-IF NOT EXIST "temp_zip\Languages"          MD "temp_zip\Languages"
-IF NOT EXIST "temp_zip\Tesseract"          MD "temp_zip\Tesseract"
-IF NOT EXIST "temp_zip\Tesseract\tessdata" MD "temp_zip\Tesseract\tessdata"
+IF EXIST "temp_zip"                                RD /S /Q "temp_zip"
+IF NOT EXIST "temp_zip"                            MD "temp_zip"
+IF NOT EXIST "temp_zip\Languages"                  MD "temp_zip\Languages"
+IF NOT EXIST "temp_zip\Tesseract"                  MD "temp_zip\Tesseract"
+IF NOT EXIST "temp_zip\Tesseract\tessdata"         MD "temp_zip\Tesseract\tessdata"
+IF NOT EXIST "temp_zip\Tesseract\tessdata\configs" MD "temp_zip\Tesseract\tessdata\configs"
 
 COPY /Y /V "..\..\gpl.txt"                               "temp_zip\"
 COPY /Y /V "..\..\Changelog.txt"                         "temp_zip\"
@@ -98,6 +99,7 @@ COPY /Y /V "NHunspell.dll"                               "temp_zip\"
 COPY /Y /V "SubtitleEdit.exe"                            "temp_zip\"
 COPY /Y /V "Languages\*.xml"                             "temp_zip\Languages\"
 COPY /Y /V "..\..\..\Tesseract\tesseract.exe"            "temp_zip\Tesseract\"
+COPY /Y /V "..\..\..\Tesseract\tessdata\configs\hocr"    "temp_zip\Tesseract\tessdata\configs\"
 COPY /Y /V "..\..\..\Tesseract\tessdata\eng.traineddata" "temp_zip\Tesseract\tessdata\"
 
 PUSHD "temp_zip"
