@@ -1355,7 +1355,7 @@ namespace Nikse.SubtitleEdit.Forms
                         ShowStatus(_language.VisualSyncPerformed);
                     }
                     if (visualSync.FrameRateChanged)
-                        toolStripComboBoxFrameRate.Text = visualSync.FrameRate.ToString();
+                        toolStripComboBoxFrameRate.Text = string.Format("{0:0.###}", visualSync.FrameRate);
                     if (IsFramesRelevant && visualSync.FrameRate > 0)
                         _subtitle.CalculateFrameNumbersFromTimeCodesNoCheck(CurrentFrameRate);
                     ShowSource();
@@ -2525,7 +2525,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (info != null && info.Success)
                 {
                     string oldFrameRate = toolStripComboBoxFrameRate.Text;
-                    toolStripComboBoxFrameRate.Text = info.FramesPerSecond.ToString();
+                    toolStripComboBoxFrameRate.Text = string.Format("{0:0.###}", info.FramesPerSecond);
 
                     if (oldFrameRate != toolStripComboBoxFrameRate.Text)
                     {
@@ -7988,7 +7988,7 @@ namespace Nikse.SubtitleEdit.Forms
                 _endSeconds = -1;
 
                 VideoInfo videoInfo = ShowVideoInfo(fileName);
-                toolStripComboBoxFrameRate.Text = videoInfo.FramesPerSecond.ToString();
+                toolStripComboBoxFrameRate.Text = string.Format("{0:0.###}", videoInfo.FramesPerSecond);
 
                 Utilities.InitializeVideoPlayerAndContainer(fileName, videoInfo, mediaPlayer, VideoLoaded, VideoEnded);
                 mediaPlayer.Volume = 0;
