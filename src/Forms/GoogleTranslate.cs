@@ -19,7 +19,6 @@ namespace Nikse.SubtitleEdit.Forms
         bool _breakTranslation;
         bool _googleTranslate = true;
         MicrosoftTranslationService.SoapService _microsoftTranslationService = null;
-        private const string BingApiId = "C2C2E9A508E6748F0494D68DFD92FAA1FF9B0BA4";
         private bool _googleApiNotWorking = false;
 
         public class ComboBoxItem
@@ -286,7 +285,8 @@ namespace Nikse.SubtitleEdit.Forms
 
         public static string TranslateTextViaApi(string input, string languagePair)
         {
-            string googleApiKey = "ABQIAAAA4j5cWwa3lDH0RkZceh7PjBTDmNAghl5kWSyuukQ0wtoJG8nFBxRPlalq-gAvbeCXMCkmrysqjXV1Gw";
+//            string googleApiKey = "ABQIAAAA4j5cWwa3lDH0RkZceh7PjBTDmNAghl5kWSyuukQ0wtoJG8nFBxRPlalq-gAvbeCXMCkmrysqjXV1Gw";
+            string googleApiKey = Configuration.Settings.Tools.GoogleApiKey;
 
             string[] arr = languagePair.Split('|');
             string from = arr[0];
@@ -785,6 +785,7 @@ namespace Nikse.SubtitleEdit.Forms
             progressBar1.Visible = true;
             labelPleaseWait.Visible = true;
             int start = 0;
+            bool overQuota = false;
             try
             {
                 StringBuilder sb = new StringBuilder();
@@ -792,23 +793,43 @@ namespace Nikse.SubtitleEdit.Forms
                 foreach (Paragraph p in _subtitle.Paragraphs)
                 {
                     string text = string.Format("<p>{0}</p>|", p.Text);
-                    if ((HttpUtility.UrlEncode(sb.ToString() + text)).Length >= textMaxSize)
+                    if (!overQuota)
                     {
-                        FillTranslatedText(client.Translate(BingApiId, sb.ToString().Replace(Environment.NewLine, "<br />"), from, to, "text/plain", "general"), start, index - 1);
-
-                        sb = new StringBuilder();
-                        progressBar1.Refresh();
-                        Application.DoEvents();
-                        start = index;
+                        if ((HttpUtility.UrlEncode(sb.ToString() + text)).Length >= textMaxSize)
+                        {
+                            try
+                            {
+                                FillTranslatedText(client.Translate(Configuration.Settings.Tools.MicrosoftBingApiId, sb.ToString().Replace(Environment.NewLine, "<br />"), from, to, "text/plain", "general"), start, index - 1);
+                            }
+                            catch (System.Web.Services.Protocols.SoapHeaderException exception)
+                            {
+                                MessageBox.Show("Sorry, MS is closing their free api: " + exception.Message);
+                                overQuota = true;
+                            }
+                            sb = new StringBuilder();
+                            progressBar1.Refresh();
+                            Application.DoEvents();
+                            start = index;
+                        }
+                        sb.Append(text);
                     }
-                    sb.Append(text);
                     index++;
                     progressBar1.Value = index;
                     if (_breakTranslation)
                         break;
                 }
-                if (sb.Length > 0)
-                    FillTranslatedText(client.Translate(BingApiId, sb.ToString().Replace(Environment.NewLine, "<br />"), from, to, "text/plain", "general"), start, index - 1);
+                if (sb.Length > 0 && !overQuota)
+                {
+                    try
+                    {
+                        FillTranslatedText(client.Translate(Configuration.Settings.Tools.MicrosoftBingApiId, sb.ToString().Replace(Environment.NewLine, "<br />"), from, to, "text/plain", "general"), start, index - 1);
+                    }
+                    catch (System.Web.Services.Protocols.SoapHeaderException exception)
+                    {
+                        MessageBox.Show("Sorry, MS is closing their free api: " + exception.Message);
+                        overQuota = true;
+                    }
+                }
             }
             finally
             {

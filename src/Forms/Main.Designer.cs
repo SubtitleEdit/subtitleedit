@@ -88,6 +88,7 @@
             this.toolStripMenuItemExport = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemExportPngXml = new System.Windows.Forms.ToolStripMenuItem();
             this.bluraySupToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.vobSubsubidxToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemCavena890 = new System.Windows.Forms.ToolStripMenuItem();
             this.eBUSTLToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.pACScreenElectronicsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -931,6 +932,7 @@
             this.toolStripMenuItemExport.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripMenuItemExportPngXml,
             this.bluraySupToolStripMenuItem,
+            this.vobSubsubidxToolStripMenuItem,
             this.toolStripMenuItemCavena890,
             this.eBUSTLToolStripMenuItem,
             this.pACScreenElectronicsToolStripMenuItem,
@@ -953,6 +955,14 @@
             this.bluraySupToolStripMenuItem.Size = new System.Drawing.Size(245, 22);
             this.bluraySupToolStripMenuItem.Text = "Blu-ray sup...";
             this.bluraySupToolStripMenuItem.Click += new System.EventHandler(this.bluraySupToolStripMenuItem_Click);
+            // 
+            // vobSubsubidxToolStripMenuItem
+            // 
+            this.vobSubsubidxToolStripMenuItem.Name = "vobSubsubidxToolStripMenuItem";
+            this.vobSubsubidxToolStripMenuItem.Size = new System.Drawing.Size(245, 22);
+            this.vobSubsubidxToolStripMenuItem.Text = "VobSub (sub/idx)...";
+            this.vobSubsubidxToolStripMenuItem.Visible = false;
+            this.vobSubsubidxToolStripMenuItem.Click += new System.EventHandler(this.vobSubsubidxToolStripMenuItem_Click);
             // 
             // toolStripMenuItemCavena890
             // 
@@ -4050,6 +4060,7 @@
         private System.Windows.Forms.ToolStripMenuItem plainTextToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem plainTextWithoutLineBreaksToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem bluraySupToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem vobSubsubidxToolStripMenuItem;
     }
 }
 

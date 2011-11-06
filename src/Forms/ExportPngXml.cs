@@ -37,16 +37,30 @@ namespace Nikse.SubtitleEdit.Forms
         {
             SetupImageParameters();
 
-            saveFileDialog1.Title = "Choose Blu-ray sup file name...";
-            saveFileDialog1.DefaultExt = ".sup";
-            saveFileDialog1.AddExtension = true;
+            if (_exportType == "BLURAYSUP")
+            {
+                saveFileDialog1.Title = "Choose Blu-ray sup file name...";
+                saveFileDialog1.DefaultExt = "sup";
+                saveFileDialog1.AddExtension = true;
+            }
+            else if (_exportType == "VOBSUB")
+            {
+                saveFileDialog1.Title = "Choose Vobsub file name...";
+                saveFileDialog1.DefaultExt = "sub";
+                saveFileDialog1.AddExtension = true;
+            }
 
-            if (_exportType == "BLURAYSUP" &&  saveFileDialog1.ShowDialog(this) == DialogResult.OK || 
+
+            if (_exportType == "BLURAYSUP" &&  saveFileDialog1.ShowDialog(this) == DialogResult.OK ||
+                _exportType == "VOBSUB" && saveFileDialog1.ShowDialog(this) == DialogResult.OK || 
                 _exportType == "BDNXML" && folderBrowserDialog1.ShowDialog(this) == DialogResult.OK)
             {
-                FileStream bluRaySupFile = null;
-                if (_exportType == "BLURAYSUP")
-                    bluRaySupFile = new FileStream(saveFileDialog1.FileName, FileMode.Create);
+                FileStream binarySubtitleFile = null;
+                Nikse.SubtitleEdit.Logic.VobSub.VobSubWriter vobSubWriter = null;
+                if (_exportType == "BLURAYSUP") 
+                    binarySubtitleFile = new FileStream(saveFileDialog1.FileName, FileMode.Create);
+                else if (_exportType == "VOBSUB")
+                    vobSubWriter = new Logic.VobSub.VobSubWriter(saveFileDialog1.FileName);
 
                 progressBar1.Value = 0;
                 progressBar1.Maximum = _subtitle.Paragraphs.Count-1;
@@ -74,7 +88,7 @@ namespace Nikse.SubtitleEdit.Forms
                     width = 720;
                     height = 480;
                 }
-
+                
                 const int border = 25;
                 int imagesSavedCount = 0;
                 StringBuilder sb = new StringBuilder();
@@ -93,7 +107,11 @@ namespace Nikse.SubtitleEdit.Forms
                             brSub.Width = height;
                             brSub.Height = width;
                             byte[] buffer = Nikse.SubtitleEdit.Logic.BluRaySup.BluRaySupPicture.CreateSupFrame(brSub, bmp);
-                            bluRaySupFile.Write(buffer, 0, buffer.Length);
+                            binarySubtitleFile.Write(buffer, 0, buffer.Length);
+                        }
+                        else if (_exportType == "VOBSUB")
+                        {
+                            vobSubWriter.WriteParagraph(p, bmp);
                         }
                         else
                         {
@@ -117,7 +135,13 @@ namespace Nikse.SubtitleEdit.Forms
                 progressBar1.Visible = false;
                 if (_exportType == "BLURAYSUP")
                 {
-                    bluRaySupFile.Close();
+                    binarySubtitleFile.Close();
+                    MessageBox.Show(string.Format(Configuration.Settings.Language.Main.SavedSubtitleX, saveFileDialog1.FileName));
+                }
+                else if (_exportType == "VOBSUB")
+                {
+                    vobSubWriter.CloseSubFile();
+                    vobSubWriter.WriteIdxFile();
                     MessageBox.Show(string.Format(Configuration.Settings.Language.Main.SavedSubtitleX, saveFileDialog1.FileName));
                 }
                 else
@@ -306,17 +330,15 @@ namespace Nikse.SubtitleEdit.Forms
             return s;
         }
 
-        internal void Initialize(Subtitle subtitle, string exportType)
+        internal void Initialize(Subtitle subtitle, string exportType, string fileName)
         {
             _exportType = exportType;
             if (exportType == "BLURAYSUP")
-            {
-                this.Text = "Blu-ray SUP";
-            }
+                Text = "Blu-ray SUP";
+            else if (exportType == "VOBSUB")
+                Text = "VobSub (sub/idx)";
             else
-            {
-                this.Text = Configuration.Settings.Language.ExportPngXml.Title;
-            }            
+                Text = Configuration.Settings.Language.ExportPngXml.Title;
             groupBoxImageSettings.Text = Configuration.Settings.Language.ExportPngXml.ImageSettings;
             labelSubtitleFont.Text = Configuration.Settings.Language.ExportPngXml.FontFamily;
             labelSubtitleFontSize.Text = Configuration.Settings.Language.ExportPngXml.FontSize;
@@ -325,7 +347,7 @@ namespace Nikse.SubtitleEdit.Forms
             buttonBorderColor.Text = Configuration.Settings.Language.ExportPngXml.BorderColor;
             labelBorderWidth.Text = Configuration.Settings.Language.ExportPngXml.BorderWidth;
             buttonExport.Text = Configuration.Settings.Language.ExportPngXml.ExportAllLines;
-            buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
+            buttonCancel.Text = Configuration.Settings.Language.General.OK;
             labelImageResolution.Text = string.Empty;
             subtitleListView1.InitializeLanguage(Configuration.Settings.Language.General, Configuration.Settings);
             Utilities.InitializeSubtitleFont(subtitleListView1);
