@@ -682,6 +682,7 @@
     <Compile Include="Logic\VobSub\VobSubParser.cs" />
     <Compile Include="Logic\VobSub\VobSubMergedPack.cs" />
     <Compile Include="Logic\VobSub\VobSubPack.cs" />
+    <Compile Include="Logic\VobSub\VobSubWriter.cs" />
     <Compile Include="Logic\WordSpellChecker.cs" />
     <Compile Include="Logic\zlib\Adler32.cs" />
     <Compile Include="Logic\zlib\Deflate.cs" />

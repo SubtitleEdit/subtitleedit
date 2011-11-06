@@ -707,6 +707,8 @@
                     public string ImportTimecodes { get; set; }
                     public string Export { get; set; }
                     public string ExportBdnXml { get; set; }
+                    public string ExportBluRaySup { get; set; }
+                    public string ExportVobSub { get; set; }
                     public string ExportCavena890 { get; set; }
                     public string ExportEbu { get; set; }
                     public string ExportPac { get; set; }

@@ -34,6 +34,8 @@
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.groupBoxImageSettings = new System.Windows.Forms.GroupBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.comboBoxResolution = new System.Windows.Forms.ComboBox();
             this.comboBoxHAlign = new System.Windows.Forms.ComboBox();
             this.labelHorizontalAlign = new System.Windows.Forms.Label();
             this.checkBoxAntiAlias = new System.Windows.Forms.CheckBox();
@@ -51,8 +53,6 @@
             this.labelImageResolution = new System.Windows.Forms.Label();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.subtitleListView1 = new Nikse.SubtitleEdit.Controls.SubtitleListView();
-            this.comboBoxResolution = new System.Windows.Forms.ComboBox();
-            this.label1 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.groupBoxImageSettings.SuspendLayout();
             this.SuspendLayout();
@@ -128,6 +128,31 @@
             this.groupBoxImageSettings.TabStop = false;
             this.groupBoxImageSettings.Text = "Image settings";
             // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(10, 81);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(51, 13);
+            this.label1.TabIndex = 26;
+            this.label1.Text = "Video res";
+            this.label1.Visible = false;
+            // 
+            // comboBoxResolution
+            // 
+            this.comboBoxResolution.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxResolution.FormattingEnabled = true;
+            this.comboBoxResolution.Items.AddRange(new object[] {
+            "1080p (1920x1080)",
+            "720p (1280x720)",
+            "480p (848x480)",
+            "PAL (720x576)",
+            "NTSC (720x480)"});
+            this.comboBoxResolution.Location = new System.Drawing.Point(100, 78);
+            this.comboBoxResolution.Name = "comboBoxResolution";
+            this.comboBoxResolution.Size = new System.Drawing.Size(121, 21);
+            this.comboBoxResolution.TabIndex = 25;
+            // 
             // comboBoxHAlign
             // 
             this.comboBoxHAlign.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
@@ -135,20 +160,22 @@
             this.comboBoxHAlign.Items.AddRange(new object[] {
             "Left",
             "Center"});
-            this.comboBoxHAlign.Location = new System.Drawing.Point(100, 79);
+            this.comboBoxHAlign.Location = new System.Drawing.Point(100, 105);
             this.comboBoxHAlign.Name = "comboBoxHAlign";
             this.comboBoxHAlign.Size = new System.Drawing.Size(121, 21);
             this.comboBoxHAlign.TabIndex = 23;
+            this.comboBoxHAlign.Visible = false;
             this.comboBoxHAlign.SelectedIndexChanged += new System.EventHandler(this.comboBoxHAlign_SelectedIndexChanged);
             // 
             // labelHorizontalAlign
             // 
             this.labelHorizontalAlign.AutoSize = true;
-            this.labelHorizontalAlign.Location = new System.Drawing.Point(10, 82);
+            this.labelHorizontalAlign.Location = new System.Drawing.Point(10, 108);
             this.labelHorizontalAlign.Name = "labelHorizontalAlign";
             this.labelHorizontalAlign.Size = new System.Drawing.Size(30, 13);
             this.labelHorizontalAlign.TabIndex = 22;
             this.labelHorizontalAlign.Text = "Align";
+            this.labelHorizontalAlign.Visible = false;
             // 
             // checkBoxAntiAlias
             // 
@@ -359,30 +386,6 @@
             this.subtitleListView1.UseCompatibleStateImageBehavior = false;
             this.subtitleListView1.View = System.Windows.Forms.View.Details;
             this.subtitleListView1.SelectedIndexChanged += new System.EventHandler(this.subtitleListView1_SelectedIndexChanged);
-            // 
-            // comboBoxResolution
-            // 
-            this.comboBoxResolution.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBoxResolution.FormattingEnabled = true;
-            this.comboBoxResolution.Items.AddRange(new object[] {
-            "1080p (1920x1080)",
-            "720p (1280x720)",
-            "480p (848x480)",
-            "PAL (720x576)",
-            "NTSC (720x480)"});
-            this.comboBoxResolution.Location = new System.Drawing.Point(100, 106);
-            this.comboBoxResolution.Name = "comboBoxResolution";
-            this.comboBoxResolution.Size = new System.Drawing.Size(121, 21);
-            this.comboBoxResolution.TabIndex = 25;
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(10, 109);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(51, 13);
-            this.label1.TabIndex = 26;
-            this.label1.Text = "Video res";
             // 
             // ExportPngXml
             // 

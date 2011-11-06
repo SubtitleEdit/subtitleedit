@@ -889,6 +889,9 @@ namespace Nikse.SubtitleEdit.Forms
             toolStripMenuItemImportTimeCodes.Text = _language.Menu.File.ImportTimecodes;
             toolStripMenuItemExport.Text = _language.Menu.File.Export;
             toolStripMenuItemExportPngXml.Text = _language.Menu.File.ExportBdnXml;
+            if (!string.IsNullOrEmpty(_language.Menu.File.ExportBluRaySup)) //TODO: Remove in 3.3
+                bluraySupToolStripMenuItem.Text = _language.Menu.File.ExportBluRaySup;
+            vobSubsubidxToolStripMenuItem.Text = _language.Menu.File.ExportVobSub;
             toolStripMenuItemCavena890.Text = _language.Menu.File.ExportCavena890;
             eBUSTLToolStripMenuItem.Text = _language.Menu.File.ExportEbu;
             pACScreenElectronicsToolStripMenuItem.Text = _language.Menu.File.ExportPac;
@@ -982,6 +985,7 @@ namespace Nikse.SubtitleEdit.Forms
             toolStripMenuItemAutoTranslate.Text = _language.Menu.AutoTranslate.Title;
             translateByGoogleToolStripMenuItem.Text = _language.Menu.AutoTranslate.TranslatePoweredByGoogle;
             translatepoweredByMicrosoftToolStripMenuItem.Text = _language.Menu.AutoTranslate.TranslatePoweredByMicrosoft;
+            translatepoweredByMicrosoftToolStripMenuItem.Visible = Configuration.Settings.Tools.MicrosoftBingApiId != "C2C2E9A508E6748F0494D68DFD92FAA1FF9B0BA4";
             translateFromSwedishToDanishToolStripMenuItem.Text = _language.Menu.AutoTranslate.TranslateFromSwedishToDanish;
 
             optionsToolStripMenuItem.Text = _language.Menu.Options.Title;
@@ -11264,7 +11268,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void toolStripMenuItemExportPngXml_Click(object sender, EventArgs e)
         {
             ExportPngXml exportBdnXmlPng = new ExportPngXml();
-            exportBdnXmlPng.Initialize(_subtitle, "BDNXML");
+            exportBdnXmlPng.Initialize(_subtitle, "BDNXML", _fileName);
             exportBdnXmlPng.ShowDialog(this);
         }
 
@@ -11632,7 +11636,14 @@ namespace Nikse.SubtitleEdit.Forms
         private void bluraySupToolStripMenuItem_Click(object sender, EventArgs e)
         {
             ExportPngXml exportBdnXmlPng = new ExportPngXml();
-            exportBdnXmlPng.Initialize(_subtitle, "BLURAYSUP");
+            exportBdnXmlPng.Initialize(_subtitle, "BLURAYSUP", _fileName);
+            exportBdnXmlPng.ShowDialog(this);
+        }
+
+        private void vobSubsubidxToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ExportPngXml exportBdnXmlPng = new ExportPngXml();
+            exportBdnXmlPng.Initialize(_subtitle, "VOBSUB", _fileName);
             exportBdnXmlPng.ShowDialog(this);
         }
 

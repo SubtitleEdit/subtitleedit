@@ -785,6 +785,8 @@ namespace Nikse.SubtitleEdit.Logic
                         ImportTimecodes = "Import time codes...",
                         Export = "Export",
                         ExportBdnXml = "BDN xml/png...",
+                        ExportBluRaySup = "Blu-ray sup...",
+                        ExportVobSub = "VobSub (sub/idx)...",
                         ExportCavena890 = "Cavena 890...",
                         ExportEbu = "EBU stl...",
                         ExportPac = "PAC (Screen Electronics)...",

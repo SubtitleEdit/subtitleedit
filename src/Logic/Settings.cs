@@ -79,6 +79,8 @@ namespace Nikse.SubtitleEdit.Logic
         public bool SpellCheckAutoChangeNames { get; set; }
         public bool OcrFixUseHardcodedRules { get; set; }
         public string Interjections { get; set; }
+        public string MicrosoftBingApiId { get; set; }
+        public string GoogleApiKey { get; set; }
 
         public ToolsSettings()
         {
@@ -91,6 +93,8 @@ namespace Nikse.SubtitleEdit.Logic
             SpellCheckAutoChangeNames = true;
             OcrFixUseHardcodedRules = true;
             Interjections = "Ah;Ahh;Ahhh;Eh;Ehh;Ehhh;Hm;Hmm;Hmmm;Phew;Gah;Oh;Ohh;Ohhh;Ow;Oww;Owww;Ugh;Ughh;Uh;Uhh;Uhhh;Whew";
+            MicrosoftBingApiId = "C2C2E9A508E6748F0494D68DFD92FAA1FF9B0BA4";
+            GoogleApiKey = "ABQIAAAA4j5cWwa3lDH0RkZceh7PjBTDmNAghl5kWSyuukQ0wtoJG8nFBxRPlalq-gAvbeCXMCkmrysqjXV1Gw";
         }
     }
 
@@ -880,6 +884,12 @@ namespace Nikse.SubtitleEdit.Logic
             subNode = node.SelectSingleNode("Interjections");
             if (subNode != null)
                 settings.Tools.Interjections = subNode.InnerText;
+            subNode = node.SelectSingleNode("MicrosoftBingApiId");
+            if (subNode != null)
+                settings.Tools.MicrosoftBingApiId = subNode.InnerText;
+            subNode = node.SelectSingleNode("GoogleApiKey");
+            if (subNode != null)
+                settings.Tools.GoogleApiKey = subNode.InnerText;           
 
             settings.SsaStyle = new Nikse.SubtitleEdit.Logic.SsaStyleSettings();
             node = doc.DocumentElement.SelectSingleNode("SsaStyle");
@@ -1373,6 +1383,8 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("SpellCheckAutoChangeNames", settings.Tools.SpellCheckAutoChangeNames.ToString());
             textWriter.WriteElementString("OcrFixUseHardcodedRules", settings.Tools.OcrFixUseHardcodedRules.ToString());
             textWriter.WriteElementString("Interjections", settings.Tools.Interjections);
+            textWriter.WriteElementString("MicrosoftBingApiId", settings.Tools.MicrosoftBingApiId);
+            textWriter.WriteElementString("GoogleApiKey", settings.Tools.GoogleApiKey);            
             textWriter.WriteEndElement();
 
             textWriter.WriteStartElement("SsaStyle", "");
