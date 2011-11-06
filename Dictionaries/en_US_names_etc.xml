@@ -1,4 +1,4 @@
-<!-- This list contains names/words with specific casing - and specific to english only -->
+﻿<!-- This list contains names/words with specific casing - and specific to english only -->
 <ignore_list>
   <name>A.M.</name>
   <name>Abolfazl</name>
@@ -126,4 +126,94 @@
   <name>Yousouf</name>
   <name>Yutani</name>
   <name>Zefram</name>
+  <name>1A</name>
+  <name>2A</name>
+  <name>Akashi</name>
+  <name>Atsuko</name>
+  <name>Bakuretsu</name>
+  <name>Benelli</name>
+  <name>Bifrost</name>
+  <name>Bleriot</name>
+  <name>Blyth</name>
+  <name>Botan</name>
+  <name>Branagh</name>
+  <name>Byakko</name>
+  <name>Chevallier</name>
+  <name>CONKLIN</name>
+  <name>D'Alessandro</name>
+  <name>Dennings</name>
+  <name>Foo Fighters</name>
+  <name>Furneaux</name>
+  <name>Genkai</name>
+  <name>Haris</name>
+  <name>Heimdall</name>
+  <name>Hiddleston</name>
+  <name>Iwamoto</name>
+  <name>Jo</name>
+  <name>Jotunheim</name>
+  <name>Kamiya</name>
+  <name>Kazuma</name>
+  <name>Keiko-chan</name>
+  <name>Kirishima</name>
+  <name>Kiyoshi</name>
+  <name>Koenma</name>
+  <name>Koenma-sama</name>
+  <name>Kreutz</name>
+  <name>Kuchinashi</name>
+  <name>Kurama</name>
+  <name>Kuwabara</name>
+  <name>Kuwabara-kun</name>
+  <name>Kuwabara-san</name>
+  <name>Kuwa-chan</name>
+  <name>Makaichu</name>
+  <name>Masaru</name>
+  <name>Merantau</name>
+  <name>Minamino</name>
+  <name>Mjolnir</name>
+  <name>Nadeshiko</name>
+  <name>Neuschwanstein</name>
+  <name>Nussbaum</name>
+  <name>Okubo</name>
+  <name>Pont Neuf</name>
+  <name>Puente Antiguo</name>
+  <name>Rei-gun</name>
+  <name>Reihado</name>
+  <name>Reikai</name>
+  <name>Reikai-ju</name>
+  <name>Riddick</name>
+  <name>Riom</name>
+  <name>Rubell</name>
+  <name>Sakashita</name>
+  <name>Sakyo</name>
+  <name>Sakyo-san</name>
+  <name>Sarayashiki</name>
+  <name>Sayaka</name>
+  <name>Setsuna</name>
+  <name>Sewell</name>
+  <name>Silverado</name>
+  <name>Skarsgård</name>
+  <name>Spectravision</name>
+  <name>Stellan</name>
+  <name>Stentz</name>
+  <name>Straczynski</name>
+  <name>Succinylcholine</name>
+  <name>Suzaku</name>
+  <name>Takenaka</name>
+  <name>Tarukane-san</name>
+  <name>Toguro</name>
+  <name>Urameshi</name>
+  <name>Urameshi-kun</name>
+  <name>Urameshi-san</name>
+  <name>VFX</name>
+  <name>Wazowski</name>
+  <name>Whedon</name>
+  <name>Yamada</name>
+  <name>Yanagisawa</name>
+  <name>Yokai</name>
+  <name>Yoki</name>
+  <name>Yukimura</name>
+  <name>Yukina-san</name>
+  <name>Yusuke</name>
+  <name>Zac</name>
+  <name>Zambarloukos</name>
 </ignore_list>
