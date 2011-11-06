@@ -1,7 +1,7 @@
 @ECHO OFF
 SETLOCAL
 
-SET "VERSION=3.2.2"
+SET "VERSION=3.2.3"
 SET "SEVENZIP_PATH=%PROGRAMFILES%\7-Zip\7z.exe"
 
 CD /D %~dp0
@@ -97,7 +97,6 @@ COPY /Y /V "Hunspellx86.dll"                             "temp_zip\"
 COPY /Y /V "NHunspell.dll"                               "temp_zip\"
 COPY /Y /V "SubtitleEdit.exe"                            "temp_zip\"
 COPY /Y /V "Languages\*.xml"                             "temp_zip\Languages\"
-COPY /Y /V "..\..\..\Tesseract\leptonlib.dll"            "temp_zip\Tesseract\"
 COPY /Y /V "..\..\..\Tesseract\tesseract.exe"            "temp_zip\Tesseract\"
 COPY /Y /V "..\..\..\Tesseract\tessdata\eng.traineddata" "temp_zip\Tesseract\tessdata\"
 
