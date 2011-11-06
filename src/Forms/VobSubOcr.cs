@@ -188,6 +188,7 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxEmphasis2Transparent.Text = language.Transparent;
             checkBoxAutoTransparentBackground.Text = language.AutoTransparentBackground;
             checkBoxPromptForUnknownWords.Text = language.PromptForUnknownWords;
+            checkBoxPromptForUnknownWords.Checked = Configuration.Settings.VobSubOcr.PromptForUnknownWords;
 
             groupBoxOcrAutoFix.Text = language.OcrAutoCorrectionSpellchecking;
             checkBoxGuessUnknownWords.Text = language.TryToGuessUnkownWords;
@@ -3405,6 +3406,7 @@ namespace Nikse.SubtitleEdit.Forms
             _tesseractAsyncIndex = 10000;
             Configuration.Settings.VobSubOcr.UseItalicsInTesseract = checkBoxTesseractItalicsOn.Checked;
             Configuration.Settings.VobSubOcr.UseModiInTesseractForUnknownWords = checkBoxUseModiInTesseractForUnknownWords.Checked;
+            Configuration.Settings.VobSubOcr.PromptForUnknownWords = checkBoxPromptForUnknownWords.Checked;
         }
 
         private void subtitleListView1_KeyDown(object sender, KeyEventArgs e)

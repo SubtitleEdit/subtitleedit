@@ -384,6 +384,7 @@ namespace Nikse.SubtitleEdit.Logic
         public bool RightToLeft { get; set; }
         public bool TopToBottom { get; set; }
         public int DefaultMillisecondsForUnknownDurations { get; set; }
+        public bool PromptForUnknownWords { get; set; }
 
         public VobSubOcrSettings()
         {
@@ -396,6 +397,7 @@ namespace Nikse.SubtitleEdit.Logic
             RightToLeft = false;
             TopToBottom = true;
             DefaultMillisecondsForUnknownDurations = 5000;
+            PromptForUnknownWords = true;
         }
     }
 
@@ -1124,6 +1126,9 @@ namespace Nikse.SubtitleEdit.Logic
             subNode = node.SelectSingleNode("DefaultMillisecondsForUnknownDurations");
             if (subNode != null)
                 settings.VobSubOcr.DefaultMillisecondsForUnknownDurations = Convert.ToInt32(subNode.InnerText);
+            subNode = node.SelectSingleNode("PromptForUnknownWords");
+            if (subNode != null)
+                settings.VobSubOcr.PromptForUnknownWords = Convert.ToBoolean(subNode.InnerText);           
 
             foreach (XmlNode listNode in doc.DocumentElement.SelectNodes("MultipleSearchAndReplaceList/MultipleSearchAndReplaceItem"))
             {
@@ -1476,6 +1481,7 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("RightToLeft", settings.VobSubOcr.RightToLeft.ToString());
             textWriter.WriteElementString("TopToBottom", settings.VobSubOcr.TopToBottom.ToString());
             textWriter.WriteElementString("DefaultMillisecondsForUnknownDurations", settings.VobSubOcr.DefaultMillisecondsForUnknownDurations.ToString());
+            textWriter.WriteElementString("PromptForUnknownWords", settings.VobSubOcr.PromptForUnknownWords.ToString());
             textWriter.WriteEndElement();
 
             textWriter.WriteStartElement("MultipleSearchAndReplaceList", "");
