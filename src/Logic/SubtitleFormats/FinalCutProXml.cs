@@ -52,7 +52,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             else
                 FrameRate = 25;
 
-            string xmlStructure = 
+            string xmlStructure =
                 "<?xml version=\"1.0\" encoding=\"utf-8\" ?>" + Environment.NewLine +
                 "<xmeml version=\"5\">" + Environment.NewLine +
                 "<sequence id=\"LOF_master til dialogliste\">" + Environment.NewLine +
@@ -130,7 +130,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
     </media>
   </sequence>
 </xmeml>";
-          
+
 
             string xmlTrackStructure3 =
                 @"          <generatoritem id='Outline Text[NUMBER]'>
@@ -401,7 +401,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             if (subtitle.Header != null && subtitle.Header.StartsWith("<uuid>") && subtitle.Header.EndsWith("</uuid>"))
                 xml.DocumentElement.SelectSingleNode("sequence/uuid").InnerText = subtitle.Header.Replace("<uuid>", string.Empty).Replace("</uuid>", string.Empty).Trim();
             else
-                xml.DocumentElement.SelectSingleNode("sequence/uuid").InnerText = Guid.NewGuid().ToString().ToUpper();  
+                xml.DocumentElement.SelectSingleNode("sequence/uuid").InnerText = Guid.NewGuid().ToString().ToUpper();
 
             XmlNode trackNode = xml.DocumentElement.SelectSingleNode("sequence/media/video/track");
 
@@ -420,7 +420,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
                 XmlNode text = generatorItem.SelectSingleNode("generatoritem/effect/parameter[parameterid='str']/value");
                 text.InnerText = Utilities.RemoveHtmlTags(p.Text);
-                
+
                 trackNode.AppendChild(generatorItem.SelectSingleNode("generatoritem"));
                 number++;
             }

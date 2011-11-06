@@ -52,12 +52,12 @@ namespace Nikse.SubtitleEdit.Forms
 
 
             if (_exportType == "BLURAYSUP" &&  saveFileDialog1.ShowDialog(this) == DialogResult.OK ||
-                _exportType == "VOBSUB" && saveFileDialog1.ShowDialog(this) == DialogResult.OK || 
+                _exportType == "VOBSUB" && saveFileDialog1.ShowDialog(this) == DialogResult.OK ||
                 _exportType == "BDNXML" && folderBrowserDialog1.ShowDialog(this) == DialogResult.OK)
             {
                 FileStream binarySubtitleFile = null;
                 Nikse.SubtitleEdit.Logic.VobSub.VobSubWriter vobSubWriter = null;
-                if (_exportType == "BLURAYSUP") 
+                if (_exportType == "BLURAYSUP")
                     binarySubtitleFile = new FileStream(saveFileDialog1.FileName, FileMode.Create);
                 else if (_exportType == "VOBSUB")
                     vobSubWriter = new Logic.VobSub.VobSubWriter(saveFileDialog1.FileName);
@@ -69,26 +69,26 @@ namespace Nikse.SubtitleEdit.Forms
                 int width = 1920;
                 int height = 1080;
                 if (comboBoxResolution.SelectedIndex == 1)
-                { 
+                {
                     width = 1280;
                     height = 720;
                 }
                 else if (comboBoxResolution.SelectedIndex == 2)
-                { 
+                {
                     width = 848;
                     height = 480;
                 }
                 else if (comboBoxResolution.SelectedIndex == 3)
-                { 
+                {
                     width = 720;
                     height = 576;
                 }
                 else if (comboBoxResolution.SelectedIndex == 4)
-                { 
+                {
                     width = 720;
                     height = 480;
                 }
-                
+
                 const int border = 25;
                 int imagesSavedCount = 0;
                 StringBuilder sb = new StringBuilder();
@@ -225,7 +225,7 @@ namespace Nikse.SubtitleEdit.Forms
                 else
                     lefts.Add((float)(bmp.Width - g.MeasureString(line, font).Width * 0.8) / 2);
             }
-           
+
 
             if (checkBoxAntiAlias.Checked)
             {

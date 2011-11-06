@@ -172,7 +172,7 @@ namespace Nikse.SubtitleEdit.Logic
                         WriteRLE(ref indexHalfNibble, lastColor, count, ref index, buffer);
                         lastColor = color;
                         count = 1;
-                    }                    
+                    }
                 }
                 if (count > 0)
                     WriteRLE(ref indexHalfNibble, lastColor, count, ref index, buffer);
@@ -238,7 +238,7 @@ namespace Nikse.SubtitleEdit.Logic
                 buffer[index] = (byte)secondNibble;
             }
             else
-            {             
+            {
                 byte firstNibble = (byte)(n >> 8);
                 buffer[index] = firstNibble;
                 index++;
@@ -274,7 +274,7 @@ namespace Nikse.SubtitleEdit.Logic
                 buffer[index] = (byte)(buffer[index] & firstNibble);
                 byte secondNibble = (byte)(n << 4);
                 index++;
-                buffer[index] = (byte)secondNibble;                
+                buffer[index] = (byte)secondNibble;
             }
             else
             {
@@ -306,7 +306,7 @@ namespace Nikse.SubtitleEdit.Logic
             else if (emphasis1 == c)
                 return 2;
             if (pattern == c)
-                return 1;            
+                return 1;
             return 0;
         }
 
