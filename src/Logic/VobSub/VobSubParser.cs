@@ -179,7 +179,7 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
             for (int i = list.Count - 1; i >= 0; i--)
             {
                 VobSubMergedPack pack = list[i];
-                if (pack.SubPicture == null || pack.SubPicture.ImageDisplayArea.Width <= 1 || pack.SubPicture.ImageDisplayArea.Height <= 1)
+                if (pack.SubPicture == null || pack.SubPicture.ImageDisplayArea.Width <= 3 || pack.SubPicture.ImageDisplayArea.Height <= 2)
                     list.RemoveAt(i);
             }
 
