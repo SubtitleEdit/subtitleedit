@@ -86,7 +86,13 @@ namespace Nikse.SubtitleEdit.Controls
                     _dragFromThis = false;
                     long milliseconds = (DateTime.Now.Ticks - _dragStartTicks) / 10000;
                     if (milliseconds < 400)
+                    {
+                        SelectionLength = 0;
+                        if (index == Text.Length - 1 && index > 0)
+                            index++;
+                        SelectionStart = index;
                         return; // too fast - nobody can drag'n'drop this fast
+                    }
 
                     if (index >= _dragStartFrom && index <= _dragStartFrom + _dragText.Length)
                         return; // don't drop same text at same position
