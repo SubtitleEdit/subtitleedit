@@ -175,7 +175,6 @@ Source: {#bindir}\Icons\SpellCheck.png;            DestDir: {app}\Icons;        
 Source: {#bindir}\Icons\VideoToogle.png;           DestDir: {app}\Icons;                              Flags: ignoreversion; Components: main
 Source: {#bindir}\Icons\VisualSync.png;            DestDir: {app}\Icons;                              Flags: ignoreversion; Components: main
 Source: {#bindir}\Icons\WaveFormToogle.png;        DestDir: {app}\Icons;                              Flags: ignoreversion; Components: main
-Source: ..\Tesseract\leptonlib.dll;                DestDir: {app}\Tesseract;                          Flags: ignoreversion; Components: main
 Source: ..\Tesseract\tessdata\eng.traineddata;     DestDir: {app}\Tesseract\tessdata;                 Flags: ignoreversion; Components: main
 Source: ..\Tesseract\tesseract.exe;                DestDir: {app}\Tesseract;                          Flags: ignoreversion; Components: main
 
@@ -257,6 +256,7 @@ Type: files;      Name: {app}\TessData\eng.unicharset;                Check: IsU
 Type: files;      Name: {app}\TessData\eng.user-words;                Check: IsUpgrade()
 Type: files;      Name: {app}\TessData\eng.word-dawg;                 Check: IsUpgrade()
 Type: dirifempty; Name: {app}\TessData;                               Check: IsUpgrade()
+Type: files;      Name: {app}\Tesseract\leptonlib.dll;                Check: IsUpgrade()
 Type: files;      Name: {app}\Settings.xml;                           Check: IsUpgrade()
 Type: files;      Name: {app}\tessnet2_32.dll;                        Check: IsUpgrade()
 Type: files;      Name: {app}\uninstall.ico;                          Check: IsUpgrade()
