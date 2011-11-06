@@ -48,7 +48,7 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
             /// </summary>
             public long DtsTimestamp;
         }
-        
+
         /// <summary>
         /// PGS composition state
         /// </summary>

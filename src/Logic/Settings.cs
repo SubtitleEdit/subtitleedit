@@ -891,7 +891,7 @@ namespace Nikse.SubtitleEdit.Logic
                 settings.Tools.MicrosoftBingApiId = subNode.InnerText;
             subNode = node.SelectSingleNode("GoogleApiKey");
             if (subNode != null)
-                settings.Tools.GoogleApiKey = subNode.InnerText;           
+                settings.Tools.GoogleApiKey = subNode.InnerText;
 
             settings.SsaStyle = new Nikse.SubtitleEdit.Logic.SsaStyleSettings();
             node = doc.DocumentElement.SelectSingleNode("SsaStyle");
@@ -1116,7 +1116,7 @@ namespace Nikse.SubtitleEdit.Logic
                 settings.VobSubOcr.UseModiInTesseractForUnknownWords = Convert.ToBoolean(subNode.InnerText);
             subNode = node.SelectSingleNode("UseItalicsInTesseract");
             if (subNode != null)
-                settings.VobSubOcr.UseItalicsInTesseract = Convert.ToBoolean(subNode.InnerText);            
+                settings.VobSubOcr.UseItalicsInTesseract = Convert.ToBoolean(subNode.InnerText);
             subNode = node.SelectSingleNode("RightToLeft");
             if (subNode != null)
                 settings.VobSubOcr.RightToLeft = Convert.ToBoolean(subNode.InnerText);
@@ -1128,7 +1128,7 @@ namespace Nikse.SubtitleEdit.Logic
                 settings.VobSubOcr.DefaultMillisecondsForUnknownDurations = Convert.ToInt32(subNode.InnerText);
             subNode = node.SelectSingleNode("PromptForUnknownWords");
             if (subNode != null)
-                settings.VobSubOcr.PromptForUnknownWords = Convert.ToBoolean(subNode.InnerText);           
+                settings.VobSubOcr.PromptForUnknownWords = Convert.ToBoolean(subNode.InnerText);
 
             foreach (XmlNode listNode in doc.DocumentElement.SelectNodes("MultipleSearchAndReplaceList/MultipleSearchAndReplaceItem"))
             {
@@ -1389,7 +1389,7 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("OcrFixUseHardcodedRules", settings.Tools.OcrFixUseHardcodedRules.ToString());
             textWriter.WriteElementString("Interjections", settings.Tools.Interjections);
             textWriter.WriteElementString("MicrosoftBingApiId", settings.Tools.MicrosoftBingApiId);
-            textWriter.WriteElementString("GoogleApiKey", settings.Tools.GoogleApiKey);            
+            textWriter.WriteElementString("GoogleApiKey", settings.Tools.GoogleApiKey);
             textWriter.WriteEndElement();
 
             textWriter.WriteStartElement("SsaStyle", "");
@@ -1477,7 +1477,7 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("LastOcrMethod", settings.VobSubOcr.LastOcrMethod);
             textWriter.WriteElementString("TesseractLastLanguage", settings.VobSubOcr.TesseractLastLanguage);
             textWriter.WriteElementString("UseModiInTesseractForUnknownWords", settings.VobSubOcr.UseModiInTesseractForUnknownWords.ToString());
-            textWriter.WriteElementString("UseItalicsInTesseract", settings.VobSubOcr.UseItalicsInTesseract.ToString());            
+            textWriter.WriteElementString("UseItalicsInTesseract", settings.VobSubOcr.UseItalicsInTesseract.ToString());
             textWriter.WriteElementString("RightToLeft", settings.VobSubOcr.RightToLeft.ToString());
             textWriter.WriteElementString("TopToBottom", settings.VobSubOcr.TopToBottom.ToString());
             textWriter.WriteElementString("DefaultMillisecondsForUnknownDurations", settings.VobSubOcr.DefaultMillisecondsForUnknownDurations.ToString());

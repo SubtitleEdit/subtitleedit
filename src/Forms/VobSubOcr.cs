@@ -2209,8 +2209,8 @@ namespace Nikse.SubtitleEdit.Forms
                         newText = textWithOutFixes.Substring(0, textWithOutFixes.Length - 1) + "!!";
                         newWordsNotFound = _ocrFixEngine.CountUnknownWordsViaDictionary(newText, out correctWords);
                     }
-                    else if ((!newText.Contains("9") || textWithOutFixes.Contains("9")) && 
-                             (!newText.Replace("</i>", string.Empty).Contains("/") || textWithOutFixes.Replace("</i>", string.Empty).Contains("/")) && 
+                    else if ((!newText.Contains("9") || textWithOutFixes.Contains("9")) &&
+                             (!newText.Replace("</i>", string.Empty).Contains("/") || textWithOutFixes.Replace("</i>", string.Empty).Contains("/")) &&
                              newUnfixedText.Trim().Length > 0 &&
                              newWordsNotFound < wordsNotFound || (newWordsNotFound == wordsNotFound && newText.EndsWith("!") && textWithOutFixes.EndsWith("l")))
                     {

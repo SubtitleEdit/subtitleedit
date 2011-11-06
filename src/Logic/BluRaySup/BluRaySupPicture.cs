@@ -401,7 +401,7 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
             byte color = 0;
             int ofs = 0;
             int len = 0;
-            //boolean eol;            
+            //boolean eol;
             for (int y = 0; y < bm.Height; y++)
             {
                 ofs = y * bm.Width;
@@ -414,7 +414,7 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
                         color = (byte)palette[c];
                     else
                         color = FindBestMatch(c, palette);
-                    
+
                     for (len = 1; x + len < bm.Width; len++)
                         if (bm.GetPixel(x + len, y) != c)
                             break;
@@ -432,11 +432,11 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
                             len = 0x3fff;
                         bytes.Add(0); // rle id
                         // commented out due to bug in SupRip
-                        /*if (color == 0 && x+len == bm.Width) 
+                        /*if (color == 0 && x+len == bm.Width)
                         {
                             bytes.Add(0);
                             eol = true;
-                        } 
+                        }
                         else */
                         if (color == 0 && len < 0x40)
                         {
@@ -509,10 +509,10 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
             return pal;
         }
 
-	    /// <summary>
-	    /// Get ID for given frame rate
-	    /// </summary>
-	    /// <param name="fps">frame rate</param>
+        /// <summary>
+        /// Get ID for given frame rate
+        /// </summary>
+        /// <param name="fps">frame rate</param>
         /// <returns>byte ID for the given frame rate</returns>
         private static int getFpsId(double fps)
         {
@@ -608,15 +608,15 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
                    based on the decoding pixel rate of 128e6 bit/s - always rounded up  */
                 int imageDecodeTime = (bm.Width * bm.Height * 9 + 1599) / 1600;
                 // write PCS start
-                packetHeader[10] = 0x16;											// ID
+                packetHeader[10] = 0x16;                                            // ID
                 int dts = (int)pic.StartTime - (frameInitTime + windowInitTime);
-                ToolBox.SetDWord(packetHeader, 2, (int)pic.StartTime);				// PTS
-                ToolBox.SetDWord(packetHeader, 6, dts);								// DTS
-                ToolBox.SetWord(packetHeader, 11, headerPCSStart.Length);			// size
+                ToolBox.SetDWord(packetHeader, 2, (int)pic.StartTime);              // PTS
+                ToolBox.SetDWord(packetHeader, 6, dts);                             // DTS
+                ToolBox.SetWord(packetHeader, 11, headerPCSStart.Length);           // size
                 for (int i = 0; i < packetHeader.Length; i++)
                     buf[index++] = packetHeader[i];
                 ToolBox.SetWord(headerPCSStart, 0, pic.Width);
-                ToolBox.SetWord(headerPCSStart, 2, h);								// cropped height
+                ToolBox.SetWord(headerPCSStart, 2, h);                              // cropped height
                 ToolBox.SetByte(headerPCSStart, 4, fpsId);
                 ToolBox.SetWord(headerPCSStart, 5, pic.CompositionNumber);
                 headerPCSStart[14] = (byte)(pic.IsForced ? (byte)0x40 : 0);
@@ -626,10 +626,10 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
                     buf[index++] = headerPCSStart[i];
 
                 // write WDS
-                packetHeader[10] = 0x17;											// ID
+                packetHeader[10] = 0x17;                                            // ID
                 int timeStamp = (int)pic.StartTime - windowInitTime;
-                ToolBox.SetDWord(packetHeader, 2, timeStamp);						// PTS (keep DTS)
-                ToolBox.SetWord(packetHeader, 11, headerWDS.Length);				// size
+                ToolBox.SetDWord(packetHeader, 2, timeStamp);                       // PTS (keep DTS)
+                ToolBox.SetWord(packetHeader, 11, headerWDS.Length);                // size
                 for (int i = 0; i < packetHeader.Length; i++)
                     buf[index++] = packetHeader[i];
                 ToolBox.SetWord(headerWDS, 2, pic.WindowXOffset);
@@ -640,21 +640,21 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
                     buf[index++] = headerWDS[i];
 
                 // write PDS
-                packetHeader[10] = 0x14;											// ID
-                ToolBox.SetDWord(packetHeader, 2, dts);								// PTS (=DTS of PCS/WDS)
-                ToolBox.SetDWord(packetHeader, 6, 0);								// DTS (0)
-                ToolBox.SetWord(packetHeader, 11, (2 + palSize * 5));				// size
+                packetHeader[10] = 0x14;                                            // ID
+                ToolBox.SetDWord(packetHeader, 2, dts);                             // PTS (=DTS of PCS/WDS)
+                ToolBox.SetDWord(packetHeader, 6, 0);                               // DTS (0)
+                ToolBox.SetWord(packetHeader, 11, (2 + palSize * 5));               // size
                 for (int i = 0; i < packetHeader.Length; i++)
                     buf[index++] = packetHeader[i];
                 buf[index++] = 0;
                 buf[index++] = 0;
                 for (int i = 0; i < palSize; i++)
                 {
-                    buf[index++] = (byte)i;											// index
-                    buf[index++] = pal.GetY()[i];									// Y
-                    buf[index++] = pal.GetCr()[i];									// Cr
-                    buf[index++] = pal.GetCb()[i];									// Cb
-                    buf[index++] = pal.GetAlpha()[i];								// Alpha
+                    buf[index++] = (byte)i;                                         // index
+                    buf[index++] = pal.GetY()[i];                                   // Y
+                    buf[index++] = pal.GetCr()[i];                                  // Cr
+                    buf[index++] = pal.GetCb()[i];                                  // Cb
+                    buf[index++] = pal.GetAlpha()[i];                               // Alpha
                 }
 
                 // write first OBJ
@@ -662,11 +662,11 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
                 int rleIndex = 0;
                 if (bufSize > 0xffe4)
                     bufSize = 0xffe4;
-                packetHeader[10] = 0x15;											// ID
+                packetHeader[10] = 0x15;                                            // ID
                 timeStamp = dts + imageDecodeTime;
-                ToolBox.SetDWord(packetHeader, 2, timeStamp);						// PTS
-                ToolBox.SetDWord(packetHeader, 6, dts);								// DTS
-                ToolBox.SetWord(packetHeader, 11, headerODSFirst.Length + bufSize);	// size
+                ToolBox.SetDWord(packetHeader, 2, timeStamp);                       // PTS
+                ToolBox.SetDWord(packetHeader, 6, dts);                             // DTS
+                ToolBox.SetWord(packetHeader, 11, headerODSFirst.Length + bufSize); // size
                 for (int i = 0; i < packetHeader.Length; i++)
                     buf[index++] = packetHeader[i];
                 int marker = (int)((numAddPackets == 0) ? 0xC0000000 : 0x80000000);
@@ -697,18 +697,18 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
                 }
 
                 // write END
-                packetHeader[10] = (byte)0x80;										// ID
-                ToolBox.SetDWord(packetHeader, 6, 0);								// DTS (0) (keep PTS of ODS)
-                ToolBox.SetWord(packetHeader, 11, 0);								// size
+                packetHeader[10] = (byte)0x80;                                      // ID
+                ToolBox.SetDWord(packetHeader, 6, 0);                               // DTS (0) (keep PTS of ODS)
+                ToolBox.SetWord(packetHeader, 11, 0);                               // size
                 for (int i = 0; i < packetHeader.Length; i++)
                     buf[index++] = packetHeader[i];
 
                 // write PCS end
-                packetHeader[10] = 0x16;											// ID
-                ToolBox.SetDWord(packetHeader, 2, (int)pic.EndTime);				// PTS
+                packetHeader[10] = 0x16;                                            // ID
+                ToolBox.SetDWord(packetHeader, 2, (int)pic.EndTime);                // PTS
                 dts = (int)pic.StartTime - 1;
-                ToolBox.SetDWord(packetHeader, 6, dts);								// DTS
-                ToolBox.SetWord(packetHeader, 11, headerPCSEnd.Length);				// size
+                ToolBox.SetDWord(packetHeader, 6, dts);                             // DTS
+                ToolBox.SetWord(packetHeader, 11, headerPCSEnd.Length);             // size
                 for (int i = 0; i < packetHeader.Length; i++)
                     buf[index++] = packetHeader[i];
                 ToolBox.SetWord(headerPCSEnd, 0, pic.Width);
@@ -719,10 +719,10 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
                     buf[index++] = headerPCSEnd[i];
 
                 // write WDS
-                packetHeader[10] = 0x17;											// ID
+                packetHeader[10] = 0x17;                                            // ID
                 timeStamp = (int)pic.EndTime - windowInitTime;
-                ToolBox.SetDWord(packetHeader, 2, timeStamp);						// PTS (keep DTS of PCS)
-                ToolBox.SetWord(packetHeader, 11, headerWDS.Length);				// size
+                ToolBox.SetDWord(packetHeader, 2, timeStamp);                       // PTS (keep DTS of PCS)
+                ToolBox.SetWord(packetHeader, 11, headerWDS.Length);                // size
                 for (int i = 0; i < packetHeader.Length; i++)
                     buf[index++] = packetHeader[i];
                 ToolBox.SetWord(headerWDS, 2, pic.WindowXOffset);
@@ -733,10 +733,10 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
                     buf[index++] = headerWDS[i];
 
                 // write END
-                packetHeader[10] = (byte)0x80;										// ID
-                ToolBox.SetDWord(packetHeader, 2, dts);								// PTS (DTS of end PCS)
-                ToolBox.SetDWord(packetHeader, 6, 0);								// DTS (0)
-                ToolBox.SetWord(packetHeader, 11, 0);								// size
+                packetHeader[10] = (byte)0x80;                                      // ID
+                ToolBox.SetDWord(packetHeader, 2, dts);                             // PTS (DTS of end PCS)
+                ToolBox.SetDWord(packetHeader, 6, 0);                               // DTS (0)
+                ToolBox.SetWord(packetHeader, 11, 0);                               // size
                 for (int i = 0; i < packetHeader.Length; i++)
                     buf[index++] = packetHeader[i];
 

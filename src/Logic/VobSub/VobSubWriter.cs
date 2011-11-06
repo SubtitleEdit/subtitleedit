@@ -16,11 +16,11 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
             0x00, 0x00, 0x01,       // Start code
             0xba,                   // MPEG-2 Pack ID
             0x44, 0x02, 0xec, 0xdf, // System clock reference
-            0xfe, 0x57,             
+            0xfe, 0x57,
             0x01, 0x89, 0xc3,       // Program mux rate
             0xf8,                   // stuffing byte
         };
-        
+
         /// <summary>
         /// 9 bytes packetized elementary stream header (PES)
         /// </summary>
@@ -34,17 +34,17 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
             0x05,                   // PES header data length
         };
 
-        
+
         /// <summary>
         /// 5 bytes presentation time stamp (PTS)
         /// </summary>
         private static byte[] PresentationTimeStampBuffer =
         {
-            0x21,                   // 0010	3=PTS 32..30 1	
+            0x21,                   // 0010 3=PTS 32..30 1
             0x00, 0x01,             // 15=PTS 29..15 1
             0x00, 0x01,             // 15=PTS 14..00 1
         };
-        
+
         private string _subFileName;
         private FileStream _subFile;
         StringBuilder _idx = new StringBuilder();
@@ -68,8 +68,8 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
 
             NikseBitmap nbmp = new NikseBitmap(bmp);
             nbmp.ConverToFourColors(Color.Transparent, Color.White, Color.FromArgb(200, 0, 0, 0), Color.FromArgb(200, 25, 25, 25));
-            
-            
+
+
             var outBmp = nbmp.GetBitmap();
             outBmp.Save(@"D:\download\-_-" + p.Number.ToString() + ".bmp");
             bmp.Save(@"D:\download\-__" + p.Number.ToString() + ".bmp");
@@ -77,7 +77,7 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
 
             var imageBuffer = nbmp.RunLengthEncodeForDvd(Color.Transparent, Color.White, Color.FromArgb(200, 0, 0, 0), Color.FromArgb(200, 25, 25, 25));
 
-            // PES size 
+            // PES size
             int length = Mpeg2PackHeaderBuffer.Length + PacketizedElementaryStreamHeaderBuffer.Length + 10 + imageBuffer.Length;
             PacketizedElementaryStreamHeaderBuffer[4] = (byte)(length / 256);
             PacketizedElementaryStreamHeaderBuffer[5] = (byte)(length % 256);
@@ -138,20 +138,20 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
         {
             StringBuilder sb = new StringBuilder();
             sb.AppendLine(@"# VobSub index file, v7 (do not modify this line!)
-# 
+#
 # To repair desyncronization, you can insert gaps this way:
 # (it usually happens after vob id changes)
-# 
-#	 delay: [sign]hh:mm:ss:ms
-# 
+#
+#    delay: [sign]hh:mm:ss:ms
+#
 # Where:
-#	 [sign]: +, - (optional)
-#	 hh: hours (0 <= hh)
-#	 mm/ss: minutes/seconds (0 <= mm/ss <= 59)
-#	 ms: milliseconds (0 <= ms <= 999)
-# 
-#	 Note: You can't position a sub before the previous with a negative value.
-# 
+#    [sign]: +, - (optional)
+#    hh: hours (0 <= hh)
+#    mm/ss: minutes/seconds (0 <= mm/ss <= 59)
+#    ms: milliseconds (0 <= ms <= 999)
+#
+#    Note: You can't position a sub before the previous with a negative value.
+#
 # You can also modify timestamps or delete a few subs you don't like.
 # Just make sure they stay in increasing order.
 

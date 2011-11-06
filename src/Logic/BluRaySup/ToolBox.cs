@@ -118,7 +118,7 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
         {
             buffer[index] = (byte)(val >> 8);
             buffer[index + 1] = (byte)(val);
-        }    
+        }
 
         /// <summary>
         /// Write byte to buffer[index]
