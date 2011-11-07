@@ -21,6 +21,7 @@ namespace Nikse.SubtitleEdit.Forms
         float _borderWidth = 2.0f;
         bool _isLoading = true;
         string _exportType = "BDNXML";
+        string _fileName;
 
         public ExportPngXml()
         {
@@ -37,19 +38,23 @@ namespace Nikse.SubtitleEdit.Forms
         {
             SetupImageParameters();
 
+            if (!string.IsNullOrEmpty(_fileName))
+                saveFileDialog1.FileName = Path.GetFileNameWithoutExtension(_fileName);
+
             if (_exportType == "BLURAYSUP")
             {
                 saveFileDialog1.Title = "Choose Blu-ray sup file name...";
-                saveFileDialog1.DefaultExt = "sup";
+                saveFileDialog1.DefaultExt = "*.sup";
                 saveFileDialog1.AddExtension = true;
+                saveFileDialog1.Filter = "Blu-Ray sup|*.sup";
             }
             else if (_exportType == "VOBSUB")
             {
                 saveFileDialog1.Title = "Choose Vobsub file name...";
-                saveFileDialog1.DefaultExt = "sub";
+                saveFileDialog1.DefaultExt = "*.sub";
                 saveFileDialog1.AddExtension = true;
+                saveFileDialog1.Filter = "VobSub|*.sub";
             }
-
 
             if (_exportType == "BLURAYSUP" &&  saveFileDialog1.ShowDialog(this) == DialogResult.OK ||
                 _exportType == "VOBSUB" && saveFileDialog1.ShowDialog(this) == DialogResult.OK ||
@@ -333,6 +338,7 @@ namespace Nikse.SubtitleEdit.Forms
         internal void Initialize(Subtitle subtitle, string exportType, string fileName)
         {
             _exportType = exportType;
+            _fileName = fileName;
             if (exportType == "BLURAYSUP")
                 Text = "Blu-ray SUP";
             else if (exportType == "VOBSUB")
@@ -359,6 +365,9 @@ namespace Nikse.SubtitleEdit.Forms
             comboBoxBorderWidth.SelectedIndex = 2;
             comboBoxHAlign.SelectedIndex = 1;
             comboBoxResolution.SelectedIndex = 0;
+
+            if (exportType == "VOBSUB")
+                comboBoxBorderWidth.SelectedIndex = 3;
 
             foreach (var x in System.Drawing.FontFamily.Families)
             {
@@ -449,7 +458,10 @@ namespace Nikse.SubtitleEdit.Forms
         private void ExportPngXml_Shown(object sender, EventArgs e)
         {
             _isLoading = false;
-            comboBoxSubtitleFontSize.SelectedIndex = 15;
+            if (_exportType == "VOBSUB")
+                comboBoxSubtitleFontSize.SelectedIndex = 7;
+            else
+                comboBoxSubtitleFontSize.SelectedIndex = 16;
         }
 
         private void comboBoxHAlign_SelectedIndexChanged(object sender, EventArgs e)
