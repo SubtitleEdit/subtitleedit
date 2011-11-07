@@ -1897,6 +1897,8 @@ namespace Nikse.SubtitleEdit.Forms
                     p.Text = text;
                 if (subtitleListView1.SelectedItems.Count == 1 && subtitleListView1.SelectedItems[0].Index == i)
                     textBoxCurrentText.Text = text;
+                else
+                    subtitleListView1.SetText(i, text);
             }
             SetButtonsEnabledAfterOcrDone();
         }
