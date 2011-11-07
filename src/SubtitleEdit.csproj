@@ -580,6 +580,7 @@
     <Compile Include="Logic\SubtitleFormats\AdobeEncoreWithLineNumbers.cs" />
     <Compile Include="Logic\SubtitleFormats\AdvancedSubStationAlpha.cs" />
     <Compile Include="Logic\SubtitleFormats\AQTitle.cs" />
+    <Compile Include="Logic\SubtitleFormats\AvidCaption.cs" />
     <Compile Include="Logic\SubtitleFormats\BdnXml.cs" />
     <Compile Include="Logic\SubtitleFormats\Captionate.cs" />
     <Compile Include="Logic\SubtitleFormats\CaraokeXml.cs" />
@@ -596,6 +597,7 @@
     <Compile Include="Logic\SubtitleFormats\PinnacleImpression.cs" />
     <Compile Include="Logic\SubtitleFormats\QuickTimeText.cs" />
     <Compile Include="Logic\SubtitleFormats\RealTime.cs" />
+    <Compile Include="Logic\SubtitleFormats\Scantitling890.cs" />
     <Compile Include="Logic\SubtitleFormats\Scenarist.cs" />
     <Compile Include="Logic\SubtitleFormats\ScenaristClosedCaptions.cs" />
     <Compile Include="Logic\SubtitleFormats\Son.cs" />
