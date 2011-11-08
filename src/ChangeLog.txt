@@ -6,7 +6,7 @@ Subtitle Edit Changelog
    * Support for subtitle format AvidCaption - thx Laszlo
    * Export to Blu-ray sup format
  * IMPROVED:
-   * Upgraded Tesseract to 3.01 
+   * Updated Tesseract to 3.01 
      Now includes italic + adds support for Arabic, Hebrew, Hindi, and Thai
    * OCR tweaked a bit + BluRay sup files is processed faster
    * Subtitle format PAC much improved
@@ -19,7 +19,6 @@ Subtitle Edit Changelog
    * Fixed de-selecting text in textbox via single click - thx XhmikosR 
    * Fixed possible crash in spell check + German dictionary should work
    * Fixed  missing save/load of a fix common errors setting - thx menes
-   * Fixed de-selecting text in textbox via single click - thx XhmikosR
    * Removed Microsoft translate as it's useless with new quotas
 
 
