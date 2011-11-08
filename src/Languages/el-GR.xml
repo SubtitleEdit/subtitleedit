@@ -466,7 +466,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <ShowUndoHistory>Εμφάνιση ιστορικού (για αναίρεση)</ShowUndoHistory>
         <InsertUnicodeSymbol>Εισαγωγή συμβόλου unicode</InsertUnicodeSymbol>
         <Find>Εύ&amp;ρεση</Find>
-        <FindNext>Εύρεση &amp;επόπενου</FindNext>
+        <FindNext>Εύρεση &amp;επόμενου</FindNext>
         <Replace>Α&amp;ντικατάσταση</Replace>
         <MultipleReplace>&amp;Πολλαπλές αντικαταστάσεις...</MultipleReplace>
         <GoToSubtitleNumber>&amp;Μεταβείτε σε αριθμό υπότιτλου...</GoToSubtitleNumber>
@@ -493,7 +493,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <TextNumberOfLines>Κείμενο - σύνολο γραμμών</TextNumberOfLines>
         <TextNumberOfCharactersPerSeconds>Κείμενο - σύνολο χαρακτήρων/δευτ.</TextNumberOfCharactersPerSeconds>
         <ShowOriginalTextInAudioAndVideoPreview>Εμφάνιση αρχικού κειμένου στις προεπισκοπήσεις ήχου/βίντεο</ShowOriginalTextInAudioAndVideoPreview>
-        <MakeNewEmptyTranslationFromCurrentSubtitle>Δημιουργεία νέας κενής μετάφρασης από τρέχοντα υπότιτλο</MakeNewEmptyTranslationFromCurrentSubtitle>
+        <MakeNewEmptyTranslationFromCurrentSubtitle>Δημιουργία νέας κενής μετάφρασης από τρέχοντα υπότιτλο</MakeNewEmptyTranslationFromCurrentSubtitle>
         <SplitSubtitle>Διάσπαση υπότιτλου...</SplitSubtitle>
         <AppendSubtitle>Προσάρτηση υπότιτλου...</AppendSubtitle>
       </Tools>
@@ -582,7 +582,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <Underline>Υπογράμμιση</Underline>
         <Color>Χρώμα...</Color>
         <FontName>Όνομα γραμματοσειράς...</FontName>
-        <AutoBalanceSelectedLines>Αυτόματη ισορρόπιση επιλεγμένων γραμμών...</AutoBalanceSelectedLines>
+        <AutoBalanceSelectedLines>Αυτόματη ισορρόπηση επιλεγμένων γραμμών...</AutoBalanceSelectedLines>
         <RemoveLineBreaksFromSelectedLines>Αφαίρεση αλλαγών γραμμής από επιλεγμένες γραμμές...</RemoveLineBreaksFromSelectedLines>
         <TypewriterEffect>Εφέ γραφομηχανής...</TypewriterEffect>
         <KaraokeEffect>Εφέ καραόκε...</KaraokeEffect>
