@@ -18,7 +18,7 @@ Subtitle Edit Changelog
    * Fixed bug when clicking in list view while running ocr - thx sialivi
    * Fixed de-selecting text in textbox via single click - thx XhmikosR 
    * Fixed possible crash in spell check + German dictionary should work
-   * Fixed  missing save/load of a fix common errors setting - thx menes
+   * Fixed missing save/load of a fix common errors setting - thx menes
    * Removed Microsoft translate as it's useless with new quotas
 
 
@@ -151,7 +151,7 @@ Subtitle Edit Changelog
  * NEW:
    * Wave form control with many sync/replay/creation commands
      (thx Kerensky for the feedback)
-   * Translator mode  (Edit -> Show original subtitle, thx DrJackson)
+   * Translator mode (Edit -> Show original subtitle, thx DrJackson)
    * Added Microsoft translate
    * Option to remove blank lines when opening a subtitle (thx honeybunny)
    * Can now read subtitles in the binary EBU format (thx corbin dallas/Iban)
@@ -161,7 +161,7 @@ Subtitle Edit Changelog
  * IMPROVED:
    * Layout changed - Translation helper + Create/adjust lines moved to main window
    * Ripping subtitles from DVD should now have correct time codes
-     (thx JeanlDvd/DvdSubEdit +  gioni666)
+     (thx JeanlDvd/DvdSubEdit + gioni666)
    * Ripping subtitles from DVD/VobSub files now has a an option to only OCR
      "forced subtitles" (thx Rolf)
    * Ripping subtitles from VobSub files now has an option to use time codes
