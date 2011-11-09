@@ -217,9 +217,9 @@ namespace Nikse.SubtitleEdit.Forms
             while (text.Contains("  "))
                 text = text.Replace("  ", " ");
 
-             text = text.Replace("!", "_@EXM_.");
-             text = text.Replace("?", "_@QST_.");
-             text = text.Replace(".", "_@PER_.");
+             text = text.Replace("!", "_@EXM_");
+             text = text.Replace("?", "_@QST_");
+             text = text.Replace(".", "_@PER_");
 
             string[] lines = text.Split('.');
 
