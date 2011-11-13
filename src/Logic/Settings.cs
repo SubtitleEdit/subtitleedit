@@ -451,6 +451,8 @@ namespace Nikse.SubtitleEdit.Logic
         public string MainAdjustSetStartAutoDurationAndGoToNext { get; set; }
         public string MainInsertAfter { get; set; }
         public string MainInsertBefore { get; set; }
+        public string MainGoToNext { get; set; }
+        public string MainGoToPrevious { get; set; }
         public string WaveformVerticalZoom { get; set; }
         public string WaveformZoomIn { get; set; }
         public string WaveformZoomOut { get; set; }
@@ -1230,6 +1232,12 @@ namespace Nikse.SubtitleEdit.Logic
                 subNode = node.SelectSingleNode("MainInsertBefore");
                 if (subNode != null)
                     settings.Shortcuts.MainInsertBefore = subNode.InnerText;
+                subNode = node.SelectSingleNode("MainGoToNext");
+                if (subNode != null)
+                    settings.Shortcuts.MainGoToNext = subNode.InnerText;
+                subNode = node.SelectSingleNode("MainGoToPrevious");
+                if (subNode != null)
+                    settings.Shortcuts.MainGoToPrevious = subNode.InnerText;
                 subNode = node.SelectSingleNode("WaveformVerticalZoom");
                 if (subNode != null)
                     settings.Shortcuts.WaveformVerticalZoom = subNode.InnerText;
@@ -1523,6 +1531,8 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("MainAdjustSetStartAutoDurationAndGoToNext", settings.Shortcuts.MainAdjustViaEndAutoStartAndGoToNext);
             textWriter.WriteElementString("MainInsertAfter", settings.Shortcuts.MainInsertAfter);
             textWriter.WriteElementString("MainInsertBefore", settings.Shortcuts.MainInsertBefore);
+            textWriter.WriteElementString("MainGoToNext", settings.Shortcuts.MainGoToNext);
+            textWriter.WriteElementString("MainGoToPrevious", settings.Shortcuts.MainGoToPrevious);
             textWriter.WriteElementString("WaveformVerticalZoom", settings.Shortcuts.WaveformVerticalZoom);
             textWriter.WriteElementString("WaveformZoomIn", settings.Shortcuts.WaveformZoomIn);
             textWriter.WriteElementString("WaveformZoomOut", settings.Shortcuts.WaveformZoomOut);

@@ -98,6 +98,8 @@ namespace Nikse.SubtitleEdit.Forms
         Keys _mainAdjustSetStartAutoDurationAndGoToNext = Keys.None;
         Keys _mainInsertAfter = Keys.None;
         Keys _mainInsertBefore = Keys.None;
+        Keys _mainGoToNext = Keys.None;
+        Keys _mainGoToPrevious = Keys.None;
         Keys _mainListViewToggleDashes = Keys.None;
         Keys _waveformVerticalZoom = Keys.None;
         Keys _waveformZoomIn = Keys.None;
@@ -6621,6 +6623,22 @@ namespace Nikse.SubtitleEdit.Forms
                     PlayPrevious();
                 else
                     ButtonPreviousClick(null, null);
+            }                
+            else if (_mainGoToNext == e.KeyData && inListView)
+            {
+                if (AutoRepeatContinueOn)
+                    Next();
+                else
+                    ButtonNextClick(null, null);
+                e.SuppressKeyPress = true;
+            }
+            else if (_mainGoToPrevious == e.KeyData && inListView)
+            {
+                if (AutoRepeatContinueOn)
+                    PlayPrevious();
+                else
+                    ButtonPreviousClick(null, null);
+                e.SuppressKeyPress = true;
             }
             else if (e.KeyCode == Keys.Home && e.Modifiers == Keys.Alt)
             {
@@ -9236,6 +9254,8 @@ namespace Nikse.SubtitleEdit.Forms
             _mainAdjustSetStartAutoDurationAndGoToNext = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainAdjustSetStartAutoDurationAndGoToNext);
             _mainInsertAfter = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainInsertAfter);
             _mainInsertBefore = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainInsertBefore);
+            _mainGoToNext = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainGoToNext);
+            _mainGoToPrevious = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainGoToPrevious);
             _waveformVerticalZoom = Utilities.GetKeys(Configuration.Settings.Shortcuts.WaveformVerticalZoom);
             _waveformZoomIn = Utilities.GetKeys(Configuration.Settings.Shortcuts.WaveformZoomIn);
             _waveformZoomOut = Utilities.GetKeys(Configuration.Settings.Shortcuts.WaveformZoomOut);
