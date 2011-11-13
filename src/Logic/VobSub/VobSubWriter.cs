@@ -1,8 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Drawing;
 using System.IO;
+using System.Text;
 
 namespace Nikse.SubtitleEdit.Logic.VobSub
 {
@@ -24,16 +23,29 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
         /// <summary>
         /// 9 bytes packetized elementary stream header (PES)
         /// </summary>
-        private static byte[] PacketizedElementaryStreamHeaderBuffer =
+        private static byte[] PacketizedElementaryStreamHeaderBufferFirst =
+        {
+            0x00, 0x00, 0x01,       // Start code
+            0xbd,                   // bd = Private stream 1 (non MPEG audio, subpictures)
+            0x00, 0x00,             // 18-19=PES packet length
+            0x81,                   // 20=Flags: PES scrambling control, PES priority, data alignment indicator, copyright, original or copy
+            0x81,                   // 21=Flags: PTS DTS flags, ESCR flag, ES rate flag, DSM trick mode flag, additional copy info flag, PES CRC flag, PES extension flag
+            0x05,                   // 22=PES header data length
+        };
+
+
+        /// <summary>
+        /// 9 bytes packetized elementary stream header (PES)
+        /// </summary>
+        private static byte[] PacketizedElementaryStreamHeaderBufferNext =
         {
             0x00, 0x00, 0x01,       // Start code
             0xbd,                   // bd = Private stream 1 (non MPEG audio, subpictures)
             0x00, 0x00,             // PES packet length
-            0x81,                   // Flags: PES scrambling control, PES priority, data alignment indicator, copyright, original or copy
-            0x81,                   // Flags: PTS DTS flags, ESCR flag, ES rate flag, DSM trick mode flag, additional copy info flag, PES CRC flag, PES extension flag
-            0x05,                   // PES header data length
+            0x81,                   // 20=Flags: PES scrambling control, PES priority, data alignment indicator, copyright, original or copy
+            0x00,                   // 21=Flags: PTS DTS flags, ESCR flag, ES rate flag, DSM trick mode flag, additional copy info flag, PES CRC flag, PES extension flag
+            0x00,                   // 22=PES header data length
         };
-
 
         /// <summary>
         /// 5 bytes presentation time stamp (PTS)
@@ -69,7 +81,6 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
             NikseBitmap nbmp = new NikseBitmap(bmp);
             nbmp.ConverToFourColors(Color.Transparent, Color.White, Color.FromArgb(200, 0, 0, 0), Color.FromArgb(200, 25, 25, 25));
 
-
             var outBmp = nbmp.GetBitmap();
             outBmp.Save(@"D:\download\-_-" + p.Number.ToString() + ".bmp");
             bmp.Save(@"D:\download\-__" + p.Number.ToString() + ".bmp");
@@ -78,15 +89,31 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
             var imageBuffer = nbmp.RunLengthEncodeForDvd(Color.Transparent, Color.White, Color.FromArgb(200, 0, 0, 0), Color.FromArgb(200, 25, 25, 25));
 
             // PES size
-            int length = Mpeg2PackHeaderBuffer.Length + PacketizedElementaryStreamHeaderBuffer.Length + 10 + imageBuffer.Length;
-            PacketizedElementaryStreamHeaderBuffer[4] = (byte)(length / 256);
-            PacketizedElementaryStreamHeaderBuffer[5] = (byte)(length % 256);
-            _subFile.Write(PacketizedElementaryStreamHeaderBuffer, 0, PacketizedElementaryStreamHeaderBuffer.Length);
+            int length = Mpeg2PackHeaderBuffer.Length + PacketizedElementaryStreamHeaderBufferFirst.Length + 10 + imageBuffer.Length;
+
+            //block_size = 0x800 - header_size;
+            //long j = (header_size - 20) + block_size;
+            //SubHeader[18] = (byte)(j / 0x100);
+            //SubHeader[19] = (byte)(j % 0x100);
+
+            PacketizedElementaryStreamHeaderBufferFirst[4] = (byte)(length / 256);
+            PacketizedElementaryStreamHeaderBufferFirst[5] = (byte)(length % 256);
+            _subFile.Write(PacketizedElementaryStreamHeaderBufferFirst, 0, PacketizedElementaryStreamHeaderBufferFirst.Length);
 
             // PTS (timestamp)
             FillPTS(p.StartTime);
             _subFile.Write(PresentationTimeStampBuffer, 0, PresentationTimeStampBuffer.Length);
 
+            _subFile.WriteByte(0x32); //sub-stream number
+
+            if (imageBuffer.Length < 0x800 - (_subFile.Position - start))
+            {
+                _subFile.Write(imageBuffer, 0, imageBuffer.Length);
+            }
+            else
+            {
+                System.Windows.Forms.MessageBox.Show("Too long for payload!!!");
+            }
 
 //            HeaderDataLength = buffer[index + 8];
 
@@ -198,8 +225,7 @@ langidx: 0
 # English
 id: en, index: 0
 # Decomment next line to activate alternative name in DirectVobSub / Windows Media Player 6.x
-# alt: English
-# Vob/Cell ID: 3, 1 (PTS: 0)");
+# alt: English");
             return sb;
         }
 

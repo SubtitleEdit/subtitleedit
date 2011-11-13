@@ -84,8 +84,9 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             {
                 xml.LoadXml(allText);
             }
-            catch
+            catch (Exception exception)
             {
+                System.Diagnostics.Debug.WriteLine(exception.Message);
                 _errorCount = 1;
                 return;
             }

@@ -1,18 +1,38 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Text;
 using System.IO;
 using System.Text;
+using System.Threading;
 using System.Windows.Forms;
 using System.Xml;
 using Nikse.SubtitleEdit.Logic;
-using System.Collections.Generic;
+using Nikse.SubtitleEdit.Logic.VobSub;
 
 namespace Nikse.SubtitleEdit.Forms
 {
+   
     public sealed partial class ExportPngXml : Form
     {
+        private class MakeBitmapParameter
+        {
+            public Bitmap Bitmap { get; set; }
+            public Paragraph P  { get; set; }
+            public string Type { get; set; }
+            public Color SubtitleColor { get; set; }
+            public string SubtitleFontName { get; set; }
+            public float SubtitleFontSize { get; set; }
+            public Color BorderColor { get; set; }
+            public float BorderWidth { get; set; }
+            public bool AntiAlias { get; set; }
+            public bool AlignLeft { get; set; }
+            public byte[] Buffer { get; set; }
+            public int ScreenWidth { get; set; }
+            public int ScreenHeight { get; set; }
+        }
+
         Subtitle _subtitle;
         Color _subtitleColor = Color.White;
         string _subtitleFontName = "Verdana";
@@ -32,6 +52,54 @@ namespace Nikse.SubtitleEdit.Forms
         {
             int frames = timecode.Milliseconds / 40; // 40==25fps (1000/25)
             return string.Format("{0:00}:{1:00}:{2:00}:{3:00}", timecode.Hours, timecode.Minutes, timecode.Seconds, frames);
+        }
+
+        public static void DoWork(object data)
+        {
+            var paramter = (MakeBitmapParameter)data;
+            paramter.Bitmap = GenerateImageFromTextWithStyle(paramter);
+            if (paramter.Type == "BLURAYSUP")
+            {
+                var brSub = new Logic.BluRaySup.BluRaySupPicture
+                                {
+                                    StartTime = (long) paramter.P.StartTime.TotalMilliseconds,
+                                    EndTime = (long) paramter.P.EndTime.TotalMilliseconds,
+                                    Width = paramter.ScreenWidth,
+                                    Height = paramter.ScreenHeight
+                                };
+                paramter.Buffer = Logic.BluRaySup.BluRaySupPicture.CreateSupFrame(brSub, paramter.Bitmap);
+            }
+            else if (paramter.Type == "VOBSUB")
+            {
+                
+            }
+        }
+
+        private MakeBitmapParameter MakeMakeBitmapParameter(int index, int screenWidth,int screenHeight)
+        {
+            var parameter = new MakeBitmapParameter
+                                {
+                                    Type = _exportType,
+                                    SubtitleColor = _subtitleColor,
+                                    SubtitleFontName = _subtitleFontName,
+                                    SubtitleFontSize = _subtitleFontSize,
+                                    BorderColor = _borderColor,
+                                    BorderWidth = _borderWidth,
+                                    AntiAlias = checkBoxAntiAlias.Checked,
+                                    AlignLeft = comboBoxHAlign.SelectedIndex == 0,
+                                    ScreenWidth = screenWidth,
+                                    ScreenHeight = screenHeight,
+                                    Bitmap = null,
+                                };
+            if (index < _subtitle.Paragraphs.Count)
+            {
+                parameter.P = _subtitle.Paragraphs[index];
+            }
+            else
+            {
+                parameter.P = null;
+            }
+            return parameter;
         }
 
         private void buttonExport_Click(object sender, EventArgs e)
@@ -61,11 +129,11 @@ namespace Nikse.SubtitleEdit.Forms
                 _exportType == "BDNXML" && folderBrowserDialog1.ShowDialog(this) == DialogResult.OK)
             {
                 FileStream binarySubtitleFile = null;
-                Nikse.SubtitleEdit.Logic.VobSub.VobSubWriter vobSubWriter = null;
+                VobSubWriter vobSubWriter = null;
                 if (_exportType == "BLURAYSUP")
                     binarySubtitleFile = new FileStream(saveFileDialog1.FileName, FileMode.Create);
                 else if (_exportType == "VOBSUB")
-                    vobSubWriter = new Logic.VobSub.VobSubWriter(saveFileDialog1.FileName);
+                    vobSubWriter = new VobSubWriter(saveFileDialog1.FileName);
 
                 progressBar1.Value = 0;
                 progressBar1.Maximum = _subtitle.Paragraphs.Count-1;
@@ -96,47 +164,65 @@ namespace Nikse.SubtitleEdit.Forms
 
                 const int border = 25;
                 int imagesSavedCount = 0;
-                StringBuilder sb = new StringBuilder();
-                for (int i = 0; i < _subtitle.Paragraphs.Count; i++)
-                {
-                    Paragraph p = _subtitle.Paragraphs[i];
-                    Bitmap bmp = GenerateImageFromTextWithStyle(p.Text);
-                    string numberString = string.Format("{0:0000}", i + 1);
-                    if (bmp != null)
-                    {
-                        if (_exportType == "BLURAYSUP")
-                        {
-                            Nikse.SubtitleEdit.Logic.BluRaySup.BluRaySupPicture brSub = new Logic.BluRaySup.BluRaySupPicture();
-                            brSub.StartTime = (long)p.StartTime.TotalMilliseconds;
-                            brSub.EndTime = (long)p.EndTime.TotalMilliseconds;
-                            brSub.Width = height;
-                            brSub.Height = width;
-                            byte[] buffer = Nikse.SubtitleEdit.Logic.BluRaySup.BluRaySupPicture.CreateSupFrame(brSub, bmp);
-                            binarySubtitleFile.Write(buffer, 0, buffer.Length);
-                        }
-                        else if (_exportType == "VOBSUB")
-                        {
-                            vobSubWriter.WriteParagraph(p, bmp);
-                        }
-                        else
-                        {
-                            string fileName = Path.Combine(folderBrowserDialog1.SelectedPath, numberString + ".png");
-                            bmp.Save(fileName, System.Drawing.Imaging.ImageFormat.Png);
-                            imagesSavedCount++;
+                var sb = new StringBuilder();
 
-                            //<Event InTC="00:00:24:07" OutTC="00:00:31:13" Forced="False">
-                            //  <Graphic Width="696" Height="111" X="612" Y="930">subtitle_exp_0001.png</Graphic>
-                            //</Event>
-                            sb.AppendLine("<Event InTC=\"" + BdnXmlTimeCode(p.StartTime) + "\" OutTC=\"" + BdnXmlTimeCode(p.EndTime) + "\" Forced=\"False\">");
-                            int x = (width - bmp.Width) / 2;
-                            int y = height - (bmp.Height + border);
-                            sb.AppendLine("  <Graphic Width=\"" + bmp.Width.ToString() + "\" Height=\"" + bmp.Height.ToString() + "\" X=\"" + x.ToString() + "\" Y=\"" + y.ToString() + "\">" + numberString + ".png</Graphic>");
-                            sb.AppendLine("</Event>");
-                        }
-                        bmp.Dispose();
-                        progressBar1.Value = i;
+                // We call in a seperate thread... or app will crash sometimes :(
+                var threadEqual = new Thread(DoWork);
+                var paramEqual = MakeMakeBitmapParameter(0, width, height);
+                var threadUnEqual = new Thread(DoWork);
+                var paramUnEqual = MakeMakeBitmapParameter(1, width, height);
+
+                threadEqual.Start(paramEqual);
+                int i = 1;
+                for (; i < _subtitle.Paragraphs.Count; i++)
+                {                 
+                    if (i % 2 == 0)
+                    {                       
+                        if (threadEqual.ThreadState == ThreadState.Running)
+                          threadEqual.Join(3000);
+                        imagesSavedCount = WriteParagraph(width, sb, border, height, imagesSavedCount, vobSubWriter, binarySubtitleFile, paramEqual, i);
+
+                        paramEqual = MakeMakeBitmapParameter(i, width, height);
+                        threadEqual = new Thread(DoWork);
+                        threadEqual.Start(paramEqual);
                     }
+                    else
+                    {
+                        if (threadUnEqual.ThreadState == ThreadState.Running)
+                            threadUnEqual.Join(3000);
+
+                        imagesSavedCount = WriteParagraph(width, sb, border, height, imagesSavedCount, vobSubWriter, binarySubtitleFile, paramUnEqual, i);
+
+                        paramUnEqual = MakeMakeBitmapParameter(i, width, height);
+                        threadUnEqual = new Thread(DoWork);
+                        threadUnEqual.Start(paramUnEqual);
+                    }
+                    progressBar1.Refresh();
+                    Application.DoEvents();                  
+                    progressBar1.Value = i;           
                 }
+
+                if (i % 2 == 0)
+                {
+                    if (threadEqual.ThreadState == ThreadState.Running)
+                        threadEqual.Join(3000);
+                    imagesSavedCount = WriteParagraph(width, sb, border, height, imagesSavedCount, vobSubWriter, binarySubtitleFile, paramEqual, i);
+                    if (threadUnEqual.ThreadState == ThreadState.Running)
+                        threadUnEqual.Join(3000);
+                    imagesSavedCount = WriteParagraph(width, sb, border, height, imagesSavedCount, vobSubWriter, binarySubtitleFile, paramUnEqual, i);
+                }
+                else
+                {
+                    if (threadUnEqual.ThreadState == ThreadState.Running)
+                        threadUnEqual.Join(3000);
+                    imagesSavedCount = WriteParagraph(width, sb, border, height, imagesSavedCount, vobSubWriter,
+                                                      binarySubtitleFile, paramUnEqual, i);
+                        if (threadEqual.ThreadState == ThreadState.Running)
+                        threadEqual.Join(3000);
+                    imagesSavedCount = WriteParagraph(width, sb, border, height, imagesSavedCount, vobSubWriter,
+                                                      binarySubtitleFile, paramEqual, i);
+                }
+
                 progressBar1.Visible = false;
                 if (_exportType == "BLURAYSUP")
                 {
@@ -151,7 +237,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 else
                 {
-                    XmlDocument doc = new XmlDocument();
+                    var doc = new XmlDocument();
                     Paragraph first = _subtitle.Paragraphs[0];
                     Paragraph last = _subtitle.Paragraphs[_subtitle.Paragraphs.Count - 1];
                     doc.LoadXml("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + Environment.NewLine +
@@ -171,6 +257,43 @@ namespace Nikse.SubtitleEdit.Forms
                     MessageBox.Show(string.Format(Configuration.Settings.Language.ExportPngXml.XImagesSavedInY, imagesSavedCount, folderBrowserDialog1.SelectedPath));
                 }
             }
+        }
+
+        private int WriteParagraph(int width, StringBuilder sb, int border, int height, int imagesSavedCount,
+                                   VobSubWriter vobSubWriter, FileStream binarySubtitleFile, MakeBitmapParameter paramEqual,
+                                   int i)
+        {
+            if (paramEqual.Bitmap != null)
+            {
+                if (_exportType == "BLURAYSUP")
+                {
+                    binarySubtitleFile.Write(paramEqual.Buffer, 0, paramEqual.Buffer.Length);
+                }
+                else if (_exportType == "VOBSUB")
+                {
+                    vobSubWriter.WriteParagraph(paramEqual.P, paramEqual.Bitmap);
+                }
+                else
+                {
+                    string numberString = string.Format("{0:0000}", i + 1);
+                    string fileName = Path.Combine(folderBrowserDialog1.SelectedPath, numberString + ".png");
+                    paramEqual.Bitmap.Save(fileName, System.Drawing.Imaging.ImageFormat.Png);
+                    imagesSavedCount++;
+
+                    //<Event InTC="00:00:24:07" OutTC="00:00:31:13" Forced="False">
+                    //  <Graphic Width="696" Height="111" X="612" Y="930">subtitle_exp_0001.png</Graphic>
+                    //</Event>
+                    sb.AppendLine("<Event InTC=\"" + BdnXmlTimeCode(paramEqual.P.StartTime) + "\" OutTC=\"" +
+                                  BdnXmlTimeCode(paramEqual.P.EndTime) + "\" Forced=\"False\">");
+                    int x = (width - paramEqual.Bitmap.Width)/2;
+                    int y = height - (paramEqual.Bitmap.Height + border);
+                    sb.AppendLine("  <Graphic Width=\"" + paramEqual.Bitmap.Width.ToString() + "\" Height=\"" +
+                                  paramEqual.Bitmap.Height.ToString() + "\" X=\"" + x.ToString() + "\" Y=\"" + y.ToString() +
+                                  "\">" + numberString + ".png</Graphic>");
+                    sb.AppendLine("</Event>");
+                }
+            }
+            return imagesSavedCount;
         }
 
         private void SetupImageParameters()
@@ -197,20 +320,20 @@ namespace Nikse.SubtitleEdit.Forms
             text = text.Replace("</u>", string.Empty);
             text = text.Replace("<U>", string.Empty);
             text = text.Replace("</U>", string.Empty);
-            text = Logic.Utilities.RemoveHtmlFontTag(text);
+            text = Utilities.RemoveHtmlFontTag(text);
 
             Font font;
             try
             {
-                font = new System.Drawing.Font(_subtitleFontName, _subtitleFontSize);
+                font = new Font(_subtitleFontName, _subtitleFontSize);
             }
             catch (Exception exception)
             {
                 MessageBox.Show(exception.Message);
-                font = new System.Drawing.Font("Verdana", _subtitleFontSize);
+                font = new Font("Verdana", _subtitleFontSize);
             }
-            Bitmap bmp = new Bitmap(400, 200);
-            Graphics g = Graphics.FromImage(bmp);
+            var bmp = new Bitmap(400, 200);
+            var g = Graphics.FromImage(bmp);
 
             SizeF textSize = g.MeasureString("Hj!", font);
             var lineHeight = (textSize.Height * 0.64f);
@@ -222,7 +345,7 @@ namespace Nikse.SubtitleEdit.Forms
             bmp = new Bitmap((int)(textSize.Width * 0.8), (int)(textSize.Height * 0.7)+10);
             g = Graphics.FromImage(bmp);
 
-            List<float> lefts = new List<float>();
+            var lefts = new List<float>();
             foreach (string line in text.Replace("<i>", "i").Replace("</i>", "i").Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries))
             {
                 if (comboBoxHAlign.SelectedIndex == 0) // left
@@ -237,13 +360,13 @@ namespace Nikse.SubtitleEdit.Forms
                 g.TextRenderingHint = TextRenderingHint.AntiAlias;
                 g.SmoothingMode = SmoothingMode.AntiAlias;
             }
-            StringFormat sf = new StringFormat();
+            var sf = new StringFormat();
             sf.Alignment = StringAlignment.Near;
             sf.LineAlignment = StringAlignment.Near;// draw the text to a path
-            System.Drawing.Drawing2D.GraphicsPath path = new System.Drawing.Drawing2D.GraphicsPath();
+            var path = new GraphicsPath();
 
             // display italic
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             int i = 0;
             bool isItalic = false;
             float left = 5;
@@ -323,6 +446,146 @@ namespace Nikse.SubtitleEdit.Forms
             return bmp;
         }
 
+        private static Bitmap GenerateImageFromTextWithStyle(MakeBitmapParameter parameter)
+        {
+            string text = parameter.P.Text;
+
+            // remove styles for display text (except italic)
+            text = RemoveSubStationAlphaFormatting(text);
+            text = text.Replace("<b>", string.Empty);
+            text = text.Replace("</b>", string.Empty);
+            text = text.Replace("<B>", string.Empty);
+            text = text.Replace("</B>", string.Empty);
+            text = text.Replace("<u>", string.Empty);
+            text = text.Replace("</u>", string.Empty);
+            text = text.Replace("<U>", string.Empty);
+            text = text.Replace("</U>", string.Empty);
+            text = Utilities.RemoveHtmlFontTag(text);
+
+            Font font;
+            try
+            {
+                font = new Font(parameter.SubtitleFontName, parameter.SubtitleFontSize);
+            }
+            catch (Exception exception)
+            {
+                MessageBox.Show(exception.Message);
+                font = new Font("Verdana", parameter.SubtitleFontSize);
+            }
+            var bmp = new Bitmap(400, 200);
+            var g = Graphics.FromImage(bmp);
+
+            SizeF textSize = g.MeasureString("Hj!", font);
+            var lineHeight = (textSize.Height * 0.64f);
+            float italicSpacing = textSize.Width / 8;
+
+            textSize = g.MeasureString(text, font);
+            g.Dispose();
+            bmp.Dispose();
+            bmp = new Bitmap((int)(textSize.Width * 0.8), (int)(textSize.Height * 0.7) + 10);
+            g = Graphics.FromImage(bmp);
+
+            var lefts = new List<float>();
+            foreach (string line in text.Replace("<i>", "i").Replace("</i>", "i").Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries))
+            {
+                if (parameter.AlignLeft) //comboBoxHAlign.SelectedIndex == 0) // left
+                    lefts.Add(5);
+                else
+                    lefts.Add((float)(bmp.Width - g.MeasureString(line, font).Width * 0.8) / 2);
+            }
+
+
+            if (parameter.AntiAlias)
+            {
+                g.TextRenderingHint = TextRenderingHint.AntiAlias;
+                g.SmoothingMode = SmoothingMode.AntiAlias;
+            }
+            var sf = new StringFormat();
+            sf.Alignment = StringAlignment.Near;
+            sf.LineAlignment = StringAlignment.Near;// draw the text to a path
+            var path = new GraphicsPath();
+
+            // display italic
+            var sb = new StringBuilder();
+            int i = 0;
+            bool isItalic = false;
+            float left = 5;
+            if (lefts.Count >= 0)
+                left = lefts[0];
+            float top = 5;
+            bool newLine = false;
+            float addX = 0;
+            int lineNumber = 0;
+            float leftMargin = left;
+            bool italicFromStart = false;
+            while (i < text.Length)
+            {
+                if (text.Substring(i).ToLower().StartsWith("<i>"))
+                {
+                    italicFromStart = i == 0;
+                    if (sb.Length > 0)
+                    {
+                        TextDraw.DrawText(font, sf, path, sb, isItalic, left, top, ref newLine, addX, leftMargin);
+                        addX = 0;
+                    }
+                    isItalic = true;
+                    i += 2;
+                }
+                else if (text.Substring(i).ToLower().StartsWith("</i>") && isItalic)
+                {
+                    if (italicFromStart)
+                        addX = 0;
+                    else
+                        addX = italicSpacing;
+                    TextDraw.DrawText(font, sf, path, sb, isItalic, left, top, ref newLine, addX, leftMargin);
+                    addX = 1;
+                    if (parameter.SubtitleFontName.StartsWith("Arial"))
+                        addX = 3;
+                    isItalic = false;
+                    i += 3;
+                }
+                else if (text.Substring(i).StartsWith(Environment.NewLine))
+                {
+                    if (italicFromStart)
+                        addX = 0;
+                    else
+                        addX = italicSpacing;
+
+                    TextDraw.DrawText(font, sf, path, sb, isItalic, left, top, ref newLine, addX, leftMargin);
+
+                    addX = 0;
+                    top += lineHeight;
+                    newLine = true;
+                    i += Environment.NewLine.Length - 1;
+                    addX = 0;
+                    lineNumber++;
+                    if (lineNumber < lefts.Count)
+                        leftMargin = lefts[lineNumber];
+                    if (isItalic)
+                        italicFromStart = true;
+                }
+                else
+                {
+                    sb.Append(text.Substring(i, 1));
+                }
+                i++;
+            }
+            if (sb.Length > 0)
+            {
+                if (italicFromStart)
+                    addX = 0;
+                else
+                    addX = italicSpacing;
+                TextDraw.DrawText(font, sf, path, sb, isItalic, left, top, ref newLine, addX, leftMargin);
+            }
+
+            if (parameter.BorderWidth > 0)
+                g.DrawPath(new Pen(parameter.BorderColor, parameter.BorderWidth), path);
+            g.FillPath(new SolidBrush(parameter.SubtitleColor), path);
+            g.Dispose();
+            return bmp;
+        }
+
         private static string RemoveSubStationAlphaFormatting(string s)
         {
             int indexOfBegin = s.IndexOf("{");
@@ -369,7 +632,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (exportType == "VOBSUB")
                 comboBoxBorderWidth.SelectedIndex = 3;
 
-            foreach (var x in System.Drawing.FontFamily.Families)
+            foreach (var x in FontFamily.Families)
             {
                 comboBoxSubtitleFont.Items.Add(x.Name);
                 if (string.Compare(x.Name, _subtitleFontName, true) == 0)
