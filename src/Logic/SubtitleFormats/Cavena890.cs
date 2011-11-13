@@ -8,6 +8,55 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
     class Cavena890 : SubtitleFormat
     {
 
+        static List<int> _hebrewCodes = new List<int> {
+            0x40, // א
+            0x41, // ב 
+            0x42, // ג
+            0x43, // ד
+            0x44, // ה
+            0x45, // ו
+            0x46, // ז
+            0x47, // ח
+            0x49, // י
+            0x4c, // ל
+            0x4d, // ם
+            0x4e, // מ
+            0x4f, // ן
+            0x50, // נ
+            0x51, // ס
+            0x52, // ע
+            0x54, // פ
+            0x56, // צ
+            0x57, // ק
+            0x58, // ר
+            0x59, // ש         
+        
+        };
+
+        static List<string> _hebrewLetters = new List<string> {
+            "א",
+            "ב",
+            "ג",
+            "ד",
+            "ה",
+            "ו",
+            "ז",
+            "ח",
+            "י",
+            "ל",
+            "ם",
+            "מ",
+            "ן",
+            "נ",
+            "ס",
+            "ע",
+            "פ",
+            "צ",
+            "ק",
+            "ר",
+            "ש",
+        };
+
         public override string Extension
         {
             get { return ".890"; }
@@ -28,8 +77,13 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             get { return false; }
         }
 
+        private string _language;
+
         public void Save(string fileName, Subtitle subtitle)
         {
+            if (subtitle.Header.StartsWith("890-language:"))
+                _language = subtitle.Header.Remove(0, "890-language:".Length);
+
             FileStream fs = new FileStream(fileName, FileMode.Create, FileAccess.Write);
 
             //header
@@ -167,9 +221,9 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         buffer[index] = 0x8C;
                         buffer[index + 1] = 0x41;
                     }
-                    else if (text.Substring(i, 3) == "<i>")
+                    else if (i+3 < text.Length && text.Substring(i, 3) == "<i>")
                         buffer[index] = 0x88;
-                    else if (text.Substring(i, 4) == "</i>")
+                    else if (i + 4 < text.Length && text.Substring(i, 4) == "</i>")
                         buffer[index] = 0x98;
                     else
                         buffer[index] = encoding.GetBytes(current)[0];
@@ -226,7 +280,12 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             subtitle.Paragraphs.Clear();
             byte[] buffer = File.ReadAllBytes(fileName);
 
+            _language = GetLanguage(buffer);
+            if (_language != null)
+                subtitle.Header = "890-language:" + _language;
+
             int i = 455;
+            int lastNumber = -1;
             while (i < buffer.Length - 20)
             {
                 if (i == 455 ||
@@ -239,22 +298,30 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 {
                     int start = i - TextLength;
 
-                    //int number = buffer[start - 16] * 256 + buffer[start - 15];
-
-                    double startFrame = buffer[start - 14] * 256 * 256 + buffer[start - 13] * 256 + buffer[start - 12];
-                    double endFrame = buffer[start - 11] * 256 * 256 + buffer[start - 10] * 256 + buffer[start - 9];
-
-
-                    string line1 = FixText(buffer, start, TextLength);
-                    string line2 = FixText(buffer, start + TextLength + 6, TextLength);
+                    int number = buffer[start - 16] * 256 + buffer[start - 15];
 
                     Paragraph p = new Paragraph();
-                    p.Text = (line1 + Environment.NewLine + line2).Trim();
-                    p.StartTime.TotalMilliseconds = ((1000.0 / Configuration.Settings.General.CurrentFrameRate) * startFrame);
-                    p.EndTime.TotalMilliseconds = ((1000.0 / Configuration.Settings.General.CurrentFrameRate) * endFrame);
+                    double startFrame = buffer[start - 14] * 256 * 256 + buffer[start - 13] * 256 + buffer[start - 12];
+                    double endFrame = buffer[start - 11] * 256 * 256 + buffer[start - 10] * 256 + buffer[start - 9];
+                    string line1 = FixText(buffer, start, TextLength);
+                    string line2 = FixText(buffer, start + TextLength + 6, TextLength);
+                    if (lastNumber == number)
+                    {
+                        p = subtitle.Paragraphs[subtitle.Paragraphs.Count - 1];
+                        string temp = (line1 + Environment.NewLine + line2).Trim();
+                        if (temp.Length > 0)
+                            p.Text = temp;
+                    }
+                    else
+                    {
+                        subtitle.Paragraphs.Add(p);
+                        p.StartTime.TotalMilliseconds = ((1000.0 / Configuration.Settings.General.CurrentFrameRate) * startFrame);
+                        p.EndTime.TotalMilliseconds = ((1000.0 / Configuration.Settings.General.CurrentFrameRate) * endFrame);
+                        p.Text = (line1 + Environment.NewLine + line2).Trim();
+                    }                    
 
-                    subtitle.Paragraphs.Add(p);
                     i += TextLength * 2;
+                    lastNumber = number;
                 }
                 else
                 {
@@ -265,39 +332,74 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             subtitle.Renumber(1);
         }
 
-        private static string FixText(byte[] buffer, int start, int textLength)
+        private string GetLanguage(byte[] buffer)
         {
-            var encoding = Encoding.Default; // which encoding?? Encoding.GetEncoding("ISO-8859-5")
+            if (buffer.Length < 200)
+                return null;
 
-            string text = encoding.GetString(buffer, start, textLength);
+            if (buffer[179] == 0xf6 && buffer[180] == 1)
+                return Encoding.ASCII.GetString(buffer, 187, 6);
 
-            text = text.Replace(encoding.GetString(new byte[] { 0x7F }), string.Empty); // Used to fill empty space upto 51 bytes
-            text = text.Replace(encoding.GetString(new byte[] { 0xBE }), string.Empty); // Unknown?
+            return null;
+        }
 
-            text = text.Replace(encoding.GetString(new byte[] { 0x1B }), "æ");
-            text = text.Replace(encoding.GetString(new byte[] { 0x1C }), "ø");
-            text = text.Replace(encoding.GetString(new byte[] { 0x1D }), "å");
-            text = text.Replace(encoding.GetString(new byte[] { 0x1E }), "Æ");
+        private string FixText(byte[] buffer, int start, int textLength)
+        {
+            string text;
+            if (_language == "HEBNOA")
+            {
+                var encoding = Encoding.Default; // which encoding?? Encoding.GetEncoding("ISO-8859-5")
+                StringBuilder sb = new StringBuilder();
+                for (int i = 0; i < textLength; i++)
+                {
+                    int b = buffer[start + i];
+                    int idx = _hebrewCodes.IndexOf(b);
+                    if (idx >= 0)
+                        sb.Append(_hebrewLetters[idx]);
+                    else
+                        sb.Append(encoding.GetString(buffer, start+i, 1));
+                }
 
-            text = text.Replace(encoding.GetString(new byte[] { 0x5B }), "Æ");
-            text = text.Replace(encoding.GetString(new byte[] { 0x5C }), "Ø");
-            text = text.Replace(encoding.GetString(new byte[] { 0x5D }), "Å");
+                text = sb.ToString();
+
+                text = text.Replace(encoding.GetString(new byte[] { 0x7F }), string.Empty); // Used to fill empty space upto 51 bytes
+                text = text.Replace(encoding.GetString(new byte[] { 0xBE }), string.Empty); // Unknown?
+
+                text = Utilities.FixEnglishTextInRightToLeftLanguage(text);
+            }
+            else
+            {
+                var encoding = Encoding.Default; // which encoding?? Encoding.GetEncoding("ISO-8859-5")
+                text = encoding.GetString(buffer, start, textLength);
+
+                text = text.Replace(encoding.GetString(new byte[] { 0x7F }), string.Empty); // Used to fill empty space upto 51 bytes
+                text = text.Replace(encoding.GetString(new byte[] { 0xBE }), string.Empty); // Unknown?
+                text = text.Replace(encoding.GetString(new byte[] { 0x1B }), "æ");
+                text = text.Replace(encoding.GetString(new byte[] { 0x1C }), "ø");
+                text = text.Replace(encoding.GetString(new byte[] { 0x1D }), "å");
+                text = text.Replace(encoding.GetString(new byte[] { 0x1E }), "Æ");
+
+                text = text.Replace(encoding.GetString(new byte[] { 0x5B }), "Æ");
+                text = text.Replace(encoding.GetString(new byte[] { 0x5C }), "Ø");
+                text = text.Replace(encoding.GetString(new byte[] { 0x5D }), "Å");
 
 
-            text = text.Replace(encoding.GetString(new byte[] { 0x86, 0x41 }), "Ä");
-            text = text.Replace(encoding.GetString(new byte[] { 0x86, 0x61 }), "ä");
-            text = text.Replace(encoding.GetString(new byte[] { 0x86, 0x4F }), "Ö");
-            text = text.Replace(encoding.GetString(new byte[] { 0x86, 0x6F }), "ö");
+                text = text.Replace(encoding.GetString(new byte[] { 0x86, 0x41 }), "Ä");
+                text = text.Replace(encoding.GetString(new byte[] { 0x86, 0x61 }), "ä");
+                text = text.Replace(encoding.GetString(new byte[] { 0x86, 0x4F }), "Ö");
+                text = text.Replace(encoding.GetString(new byte[] { 0x86, 0x6F }), "ö");
 
-            text = text.Replace(encoding.GetString(new byte[] { 0x8C, 0x61 }), "å");
-            text = text.Replace(encoding.GetString(new byte[] { 0x8C, 0x41 }), "Å");
+                text = text.Replace(encoding.GetString(new byte[] { 0x8C, 0x61 }), "å");
+                text = text.Replace(encoding.GetString(new byte[] { 0x8C, 0x41 }), "Å");
 
-            text = text.Replace(encoding.GetString(new byte[] { 0x88 }), "<i>");
-            text = text.Replace(encoding.GetString(new byte[] { 0x98 }), "</i>");
-            if (text.Contains("<i></i>"))
-                text = text.Replace("<i></i>", "<i>");
-            if (text.Contains("<i>") && !text.Contains("</i>"))
-                text += "</i>";
+                text = text.Replace(encoding.GetString(new byte[] { 0x88 }), "<i>");
+                text = text.Replace(encoding.GetString(new byte[] { 0x98 }), "</i>");
+
+                if (text.Contains("<i></i>"))
+                    text = text.Replace("<i></i>", "<i>");
+                if (text.Contains("<i>") && !text.Contains("</i>"))
+                    text += "</i>";
+            }
 
             return text;
         }
