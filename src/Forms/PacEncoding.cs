@@ -80,7 +80,7 @@ namespace Nikse.SubtitleEdit.Forms
                         index++;
                     }
                     if (CodePageIndex == 3)
-                        textBoxPreview.Text = Pac.FixEnglishTextInArabic(sb.ToString());
+                        textBoxPreview.Text = Utilities.FixEnglishTextInRightToLeftLanguage(sb.ToString());
                     else
                         textBoxPreview.Text = sb.ToString();
                 }

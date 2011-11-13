@@ -2195,5 +2195,53 @@ namespace Nikse.SubtitleEdit.Logic
             return resultKeys;
         }
 
+        public static string FixEnglishTextInRightToLeftLanguage(string text)
+        {
+            var sb = new StringBuilder();
+            string[] lines = text.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+            foreach (string line in lines)
+            {
+                string s = line.Trim();
+                for (int i = 0; i < s.Length; i++)
+                {
+                    if (s.Substring(i, 1) == ")")
+                        s = s.Remove(i, 1).Insert(i, "(");
+                    else if (s.Substring(i, 1) == "(")
+                        s = s.Remove(i, 1).Insert(i, ")");
+                }
+
+                bool numbersOn = false;
+                string numbers = string.Empty;
+                string reverseChars = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+                for (int i = 0; i < s.Length; i++)
+                {
+                    if (numbersOn && reverseChars.Contains(s.Substring(i, 1)))
+                    {
+                        numbers = s.Substring(i, 1) + numbers;
+                    }
+                    else if (numbersOn)
+                    {
+                        numbersOn = false;
+                        s = s.Remove(i - numbers.Length, numbers.Length).Insert(i - numbers.Length, numbers.ToString());
+                        numbers = string.Empty;
+                    }
+                    else if (reverseChars.Contains(s.Substring(i, 1)))
+                    {
+                        numbers = s.Substring(i, 1) + numbers;
+                        numbersOn = true;
+                    }
+                }
+                if (numbersOn)
+                {
+                    int i = s.Length;
+                    s = s.Remove(i - numbers.Length, numbers.Length).Insert(i - numbers.Length, numbers.ToString());
+                    numbers = string.Empty;
+                }
+
+                sb.AppendLine(s);
+            }
+            return sb.ToString().Trim();
+        }
+
     }
 }

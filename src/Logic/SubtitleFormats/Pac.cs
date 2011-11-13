@@ -311,7 +311,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             Encoding encoding = GetEncoding(_codePage);
             byte[] textBuffer;
             if (_codePage == 3)
-                textBuffer = GetArabicBytes(FixEnglishTextInArabic(text));
+                textBuffer = GetArabicBytes(Utilities.FixEnglishTextInRightToLeftLanguage(text));
             else if (_codePage == 0)
                 textBuffer = GetLatinBytes(encoding, text);
             else
@@ -491,7 +491,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             Paragraph p = new Paragraph();
             p.Text = sb.ToString();
             if (_codePage == 3)
-                p.Text = FixEnglishTextInArabic(p.Text);
+                p.Text = Utilities.FixEnglishTextInRightToLeftLanguage(p.Text);
             int timeStartIndex = FEIndex - 15;
             if (buffer[timeStartIndex] == 0x60)
             {
@@ -505,55 +505,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 p.EndTime = GetTimeCode(timeStartIndex + 5, buffer);
             }
             return p;
-        }
-
-        public static string FixEnglishTextInArabic(string text)
-        {
-            var sb = new StringBuilder();
-            string[] lines = text.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-            foreach (string line in lines)
-            {
-                string s = line.Trim();
-                for (int i = 0; i < s.Length; i++)
-                {
-                    if (s.Substring(i, 1) == ")")
-                        s = s.Remove(i, 1).Insert(i, "(");
-                    else if (s.Substring(i, 1) == "(")
-                        s = s.Remove(i, 1).Insert(i, ")");
-                }
-
-                bool numbersOn = false;
-                string numbers = string.Empty;
-                string reverseChars = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
-                for (int i = 0; i < s.Length; i++)
-                {
-                    if (numbersOn && reverseChars.Contains(s.Substring(i, 1)))
-                    {
-                        numbers = s.Substring(i, 1) + numbers;
-                    }
-                    else if (numbersOn)
-                    {
-                        numbersOn = false;
-                        s = s.Remove(i - numbers.Length, numbers.Length).Insert(i - numbers.Length, numbers.ToString());
-                        numbers = string.Empty;
-                    }
-                    else if (reverseChars.Contains(s.Substring(i, 1)))
-                    {
-                        numbers = s.Substring(i, 1) + numbers;
-                        numbersOn = true;
-                    }
-                }
-                if (numbersOn)
-                {
-                    int i = s.Length;
-                    s = s.Remove(i - numbers.Length, numbers.Length).Insert(i - numbers.Length, numbers.ToString());
-                    numbers = string.Empty;
-                }
-
-                sb.AppendLine(s);
-            }
-            return sb.ToString().Trim();
-        }
+        }       
 
         public static Encoding GetEncoding(int codePage)
         {
