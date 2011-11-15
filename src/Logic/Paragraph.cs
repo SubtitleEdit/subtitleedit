@@ -53,6 +53,7 @@ namespace Nikse.SubtitleEdit.Logic
             StartFrame = paragraph.StartFrame;
             EndFrame = paragraph.EndFrame;
             Forced = paragraph.Forced;
+            Extra = paragraph.Extra;
         }
 
         public Paragraph(int startFrame, int endFrame, string text)
