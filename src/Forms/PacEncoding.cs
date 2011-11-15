@@ -1,7 +1,7 @@
 ﻿using System.Drawing;
+using System.Text;
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Logic;
-using System.Text;
 using Nikse.SubtitleEdit.Logic.SubtitleFormats;
 
 namespace Nikse.SubtitleEdit.Forms
@@ -74,13 +74,15 @@ namespace Nikse.SubtitleEdit.Forms
                             sb.Append(Pac.GetLatinString(encoding, _previewBuffer, ref index));
                         else if (CodePageIndex == 3)
                             sb.Append(Pac.GetArabicString(_previewBuffer, ref index));
+                        else if (CodePageIndex == 4)
+                            sb.Append(Pac.GetHebrewString(_previewBuffer, ref index));
                         else
                             sb.Append(encoding.GetString(_previewBuffer, index, 1));
 
                         index++;
                     }
                     if (CodePageIndex == 3)
-                        textBoxPreview.Text = Utilities.FixEnglishTextInRightToLeftLanguage(sb.ToString());
+                        textBoxPreview.Text = Utilities.FixEnglishTextInRightToLeftLanguage(sb.ToString(), "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ");
                     else
                         textBoxPreview.Text = sb.ToString();
                 }

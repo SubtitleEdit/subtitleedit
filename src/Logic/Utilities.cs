@@ -2195,7 +2195,7 @@ namespace Nikse.SubtitleEdit.Logic
             return resultKeys;
         }
 
-        public static string FixEnglishTextInRightToLeftLanguage(string text)
+        public static string FixEnglishTextInRightToLeftLanguage(string text, string reverseChars)
         {
             var sb = new StringBuilder();
             string[] lines = text.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
@@ -2212,7 +2212,6 @@ namespace Nikse.SubtitleEdit.Logic
 
                 bool numbersOn = false;
                 string numbers = string.Empty;
-                string reverseChars = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
                 for (int i = 0; i < s.Length; i++)
                 {
                     if (numbersOn && reverseChars.Contains(s.Substring(i, 1)))

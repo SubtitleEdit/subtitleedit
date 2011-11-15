@@ -4666,8 +4666,16 @@ namespace Nikse.SubtitleEdit.Forms
                 string[] lines = currentParagraph.Text.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
                 if (textIndex != null && textIndex.Value > 2 && textIndex.Value < oldText.Length -2)
                 {
-                    currentParagraph.Text = Utilities.AutoBreakLine(oldText.Substring(0, textIndex.Value).Trim());
-                    newParagraph.Text = Utilities.AutoBreakLine(oldText.Substring(textIndex.Value).Trim());
+                    string a = oldText.Substring(0, textIndex.Value).Trim();
+                    string b = oldText.Substring(textIndex.Value).Trim();
+                    if (oldText.TrimStart().StartsWith("<i>") && oldText.TrimEnd().EndsWith("</i>") &&
+                        Utilities.CountTagInText(oldText, "<i>") == 1 && Utilities.CountTagInText(oldText, "</i>") == 1)
+                    {
+                        a = a + "</i>";
+                        b = "<i>" + b;
+                    }
+                    currentParagraph.Text = Utilities.AutoBreakLine(a);
+                    newParagraph.Text = Utilities.AutoBreakLine(b);
                 }
                 else
                 {
@@ -4868,6 +4876,35 @@ namespace Nikse.SubtitleEdit.Forms
                 if (nextParagraph != null && currentParagraph.EndTime.TotalMilliseconds > nextParagraph.StartTime.TotalMilliseconds && currentParagraph.StartTime.TotalMilliseconds < nextParagraph.StartTime.TotalMilliseconds)
                 {
                     currentParagraph.EndTime.TotalMilliseconds = nextParagraph.StartTime.TotalMilliseconds - 1;
+                }
+
+                // original subtitle
+                if (_subtitleAlternate != null && Configuration.Settings.General.AllowEditOfOriginalSubtitle)
+                {
+                    Paragraph original = Utilities.GetOriginalParagraph(firstIndex, currentParagraph, _subtitleAlternate.Paragraphs);
+                    if (original != null)
+                    {
+                        StringBuilder originalTexts = new StringBuilder();
+                        originalTexts.Append(original.Text + " ");
+                        for (int i = 0; i < deleteIndices.Count; i++)
+                        {
+                            Paragraph originalNext = Utilities.GetOriginalParagraph(deleteIndices[i], _subtitle.Paragraphs[deleteIndices[i]], _subtitleAlternate.Paragraphs);
+                            if (originalNext != null)
+                                originalTexts.Append(originalNext.Text + " ");
+                        }
+                        for (int i = deleteIndices.Count - 1; i >= 0; i--)
+                        {
+                            Paragraph originalNext = Utilities.GetOriginalParagraph(deleteIndices[i], _subtitle.Paragraphs[deleteIndices[i]], _subtitleAlternate.Paragraphs);
+                            if (originalNext != null)
+                                _subtitleAlternate.Paragraphs.Remove(originalNext);
+                        }
+                        original.Text = originalTexts.ToString().Replace("  ", " ");
+                        original.Text = original.Text.Replace(Environment.NewLine, " ");
+                        original.Text = ChangeAllLinesItalictoSingleItalic(original.Text);
+                        original.Text = Utilities.AutoBreakLine(original.Text);
+                        original.EndTime.TotalMilliseconds = currentParagraph.EndTime.TotalMilliseconds;
+                        _subtitleAlternate.Renumber(1);
+                    }                    
                 }
 
                 if (_networkSession != null)

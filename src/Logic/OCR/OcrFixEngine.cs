@@ -254,7 +254,10 @@ namespace Nikse.SubtitleEdit.Logic.OCR
                 CultureInfo ci;
                 try
                 {
-                    ci = new CultureInfo(value);
+                    if (value == "sh")
+                        ci = new CultureInfo("sr-Latn-RS");
+                    else
+                        ci = new CultureInfo(value);
                 }
                 catch
                 {
