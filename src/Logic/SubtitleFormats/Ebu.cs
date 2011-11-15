@@ -503,6 +503,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
             subtitle.Paragraphs.Clear();
+            subtitle.Header = null;
             byte[] buffer = File.ReadAllBytes(fileName);
             EbuGeneralSubtitleInformation header = ReadHeader(buffer);
             subtitle.Header = Encoding.UTF8.GetString(buffer);

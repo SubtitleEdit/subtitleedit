@@ -159,6 +159,70 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             "ż",
         };
 
+        static List<int> _hebrewCodes = new List<int> 
+        {
+            0xa0, // א
+            0xa1, // ב
+            0xa2, // ג
+            0xa3, // ד
+            0xa4, // ה
+            0xa5, // ו
+            0xa6, // ז
+            0xa7, // ח
+            0xa8, // ץ
+            0xa9, // י
+            0xaa, // ף
+            0xab, // מ
+            0xac, // ל 
+            0xad, // ם
+            0xae, // מ
+            0xaf, // ן
+            0xb0, // נ
+            0xb1, // ס
+            0xb3, // ך
+            0xb2, // ע
+            0xb4, // פ
+            0xb5, // ט
+            0xb6, // צ
+            0xb7, // ק
+            0xb8, // ר
+            0xb9, // ש
+            0xba, // י
+        
+        };
+
+        static List<string> _hebrewLetters = new List<string> 
+        {
+            "א", // 0xa0
+            "ב", // 0xa1
+            "ג", // 0xa2
+            "ד", // 0xa3
+            "ה", // 0xa4
+            "ו", // 0xa5
+            "ז", // 0xa6
+            "ח", // 0xa7
+            "ץ", // 0xa8
+            "י", // 0xa9
+            "ף", // 0xaa
+            "מ", // 0xab
+            "ל", // 0xac
+            "ם", // 0xad
+            "מ", // 0xae
+            "ן", // 0xaf
+            "נ", // 0xb0
+            "ס", // 0xb1
+            "ע", // 0xb2
+            "ך", // 0xb3
+            "פ", // 0xb4
+            "ט", // 0xb5
+            "צ", // 0xb6
+            "ק", // 0xb7
+            "ר", // 0xb8
+            "ש", // 0xb9
+            "י", // 0xba
+        };
+
+        
 
         static List<int> _arabicCodes = new List<int> {
             0xe081, //=أ
@@ -311,7 +375,9 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             Encoding encoding = GetEncoding(_codePage);
             byte[] textBuffer;
             if (_codePage == 3)
-                textBuffer = GetArabicBytes(Utilities.FixEnglishTextInRightToLeftLanguage(text));
+                textBuffer = GetArabicBytes(Utilities.FixEnglishTextInRightToLeftLanguage(text, "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"));
+            else if (_codePage == 4)
+                textBuffer = GetHebrewBytes(Utilities.FixEnglishTextInRightToLeftLanguage(text, "0123456789abcdefghijklmnopqrstuvwxyz"));
             else if (_codePage == 0)
                 textBuffer = GetLatinBytes(encoding, text);
             else
@@ -424,6 +490,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         {
             _fileName = fileName;
             subtitle.Paragraphs.Clear();
+            subtitle.Header = null;
             byte[] buffer = File.ReadAllBytes(fileName);
 
             int index = 0;
@@ -478,6 +545,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     sb.Append(GetLatinString(GetEncoding(_codePage), buffer, ref index));
                 else if (_codePage == 3)
                     sb.Append(GetArabicString(buffer, ref index));
+                else if (_codePage == 4)
+                    sb.Append(GetHebrewString(buffer, ref index));
                 else
                 {
                     sb.Append(GetEncoding(_codePage).GetString(buffer, index, 1));
@@ -491,7 +560,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             Paragraph p = new Paragraph();
             p.Text = sb.ToString();
             if (_codePage == 3)
-                p.Text = Utilities.FixEnglishTextInRightToLeftLanguage(p.Text);
+                p.Text = Utilities.FixEnglishTextInRightToLeftLanguage(p.Text, "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ");
             int timeStartIndex = FEIndex - 15;
             if (buffer[timeStartIndex] == 0x60)
             {
@@ -623,6 +692,16 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         private byte[] GetArabicBytes(string text)
         {
+            return GetBytesViaLists(text, _arabicLetters, _arabicCodes);
+        }
+
+        private byte[] GetHebrewBytes(string text)
+        {
+            return GetBytesViaLists(text, _hebrewLetters, _hebrewCodes);
+        }
+
+        private byte[] GetBytesViaLists(string text, List<string> letters, List<int> codes)
+        {
             int i = 0;
             byte[] buffer = new byte[text.Length * 2];
             int extra = 0;
@@ -633,19 +712,19 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 int idx = -1;
                 if (i + 1 < text.Length)
                 {
-                     letter = text.Substring(i, 2);
-                     idx = _arabicLetters.IndexOf(letter);
-                     if (idx >= 0)
-                         doubleCharacter = true;
+                    letter = text.Substring(i, 2);
+                    idx = letters.IndexOf(letter);
+                    if (idx >= 0)
+                        doubleCharacter = true;
                 }
                 if (idx < 0)
                 {
                     letter = text.Substring(i, 1);
-                    idx = _arabicLetters.IndexOf(letter);
+                    idx = letters.IndexOf(letter);
                 }
                 if (idx >= 0)
                 {
-                    int byteValue = _arabicCodes[idx];
+                    int byteValue = codes[idx];
                     if (byteValue < 256)
                     {
                         buffer[i + extra] = (byte)byteValue;
@@ -683,7 +762,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     i++;
             }
 
-            byte[] result = new byte[i+extra];
+            byte[] result = new byte[i + extra];
             for (int j = 0; j < i + extra; j++)
                 result[j] = buffer[j];
             return result;
@@ -708,6 +787,19 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     return _arabicLetters[idx];
                 }
             }
+
+            return string.Format("({0})", b);
+        }
+
+        public static string GetHebrewString(byte[] buffer, ref int index)
+        {
+            byte b = buffer[index];
+            if (b >= 0x20 && b < 0x70)
+                return Encoding.ASCII.GetString(buffer, index, 1);
+
+            int idx = _hebrewCodes.IndexOf(b);
+            if (idx >= 0)
+                return _hebrewLetters[idx];
 
             return string.Format("({0})", b);
         }

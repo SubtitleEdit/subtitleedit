@@ -67,6 +67,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             //01072508010729007
             Paragraph p = null;
             subtitle.Paragraphs.Clear();
+            subtitle.Header = null;
             foreach (string line in lines)
             {
                 int indexOfTen = line.IndexOf("     10     ");

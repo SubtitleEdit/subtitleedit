@@ -109,6 +109,7 @@ namespace Nikse.SubtitleEdit.Logic
             {
                 if (subtitleFormat.IsMine(lines, fileName))
                 {
+                    Header = null;
                     subtitleFormat.LoadSubtitle(this, lines, fileName);
                     _format = subtitleFormat;
                     _wasLoadedWithFrameNumbers = _format.IsFrameBased;
