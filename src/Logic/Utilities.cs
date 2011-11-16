@@ -487,9 +487,14 @@ namespace Nikse.SubtitleEdit.Logic
                     var buffer = new byte[length];
                     file.Read(buffer, 0, length);
 
-                    if (IsUtf8(buffer))
+                    bool couldBeUtf8;
+                    if (IsUtf8(buffer, out couldBeUtf8))
                     {
                         encoding = Encoding.UTF8;
+                    }
+                    else if (couldBeUtf8 && fileName.ToLower().EndsWith(".xml") && Encoding.Default.GetString(buffer).ToLower().Replace("'", "\"").Contains("encoding=\"utf-8\""))
+                    { // keep utf-8 encoding for xml files with utf-8 in header (without any utf-8 encoded characters, but with only allowed utf-8 characters)
+                        encoding = Encoding.UTF8; 
                     }
                     else if (Configuration.Settings.General.AutoGuessAnsiEncoding)
                     {
@@ -532,8 +537,9 @@ namespace Nikse.SubtitleEdit.Logic
         /// Will try to determine if buffer is utf-8 encoded or not.
         /// If any non-utf8 sequences are found then false is returned, if no utf8 multibytes sequences are found then false is returned.
         /// </summary>
-        private static bool IsUtf8(byte[] buffer)
+        private static bool IsUtf8(byte[] buffer, out bool couldBeUtf8)
         {
+            couldBeUtf8 = false;
             int utf8Count = 0;
             int i = 0;
             while (i < buffer.Length - 3)
@@ -566,8 +572,9 @@ namespace Nikse.SubtitleEdit.Logic
                 }
                 i++;
             }
+            couldBeUtf8 = true;
             if (utf8Count == 0)
-                return false; // not utf-8
+                return false; // not utf-8 (no characters utf-8 encoded...)
 
             return true;
         }
