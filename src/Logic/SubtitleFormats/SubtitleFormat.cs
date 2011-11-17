@@ -40,6 +40,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     new MPlayer2(),
                     new OpenDvt(),
                     new PinnacleImpression(),
+                    new PListCaption(),
                     new QuickTimeText(),
                     new RealTime(),
                     new Scenarist(),
