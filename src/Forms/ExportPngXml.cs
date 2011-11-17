@@ -13,7 +13,7 @@ using Nikse.SubtitleEdit.Logic.VobSub;
 
 namespace Nikse.SubtitleEdit.Forms
 {
-   
+
     public sealed partial class ExportPngXml : Form
     {
         private class MakeBitmapParameter
@@ -71,7 +71,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (paramter.Type == "VOBSUB")
             {
-                
+
             }
         }
 
@@ -175,9 +175,9 @@ namespace Nikse.SubtitleEdit.Forms
                 threadEqual.Start(paramEqual);
                 int i = 1;
                 for (; i < _subtitle.Paragraphs.Count; i++)
-                {                 
+                {
                     if (i % 2 == 0)
-                    {                       
+                    {
                         if (threadEqual.ThreadState == ThreadState.Running)
                           threadEqual.Join(3000);
                         imagesSavedCount = WriteParagraph(width, sb, border, height, imagesSavedCount, vobSubWriter, binarySubtitleFile, paramEqual, i);
@@ -198,8 +198,8 @@ namespace Nikse.SubtitleEdit.Forms
                         threadUnEqual.Start(paramUnEqual);
                     }
                     progressBar1.Refresh();
-                    Application.DoEvents();                  
-                    progressBar1.Value = i;           
+                    Application.DoEvents();
+                    progressBar1.Value = i;
                 }
 
                 if (i % 2 == 0)

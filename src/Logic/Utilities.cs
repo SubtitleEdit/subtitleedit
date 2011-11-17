@@ -494,7 +494,7 @@ namespace Nikse.SubtitleEdit.Logic
                     }
                     else if (couldBeUtf8 && fileName.ToLower().EndsWith(".xml") && Encoding.Default.GetString(buffer).ToLower().Replace("'", "\"").Contains("encoding=\"utf-8\""))
                     { // keep utf-8 encoding for xml files with utf-8 in header (without any utf-8 encoded characters, but with only allowed utf-8 characters)
-                        encoding = Encoding.UTF8; 
+                        encoding = Encoding.UTF8;
                     }
                     else if (Configuration.Settings.General.AutoGuessAnsiEncoding)
                     {

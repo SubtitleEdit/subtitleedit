@@ -4940,7 +4940,7 @@ namespace Nikse.SubtitleEdit.Forms
                         original.Text = Utilities.AutoBreakLine(original.Text);
                         original.EndTime.TotalMilliseconds = currentParagraph.EndTime.TotalMilliseconds;
                         _subtitleAlternate.Renumber(1);
-                    }                    
+                    }
                 }
 
                 if (_networkSession != null)
@@ -6696,7 +6696,7 @@ namespace Nikse.SubtitleEdit.Forms
                     PlayPrevious();
                 else
                     ButtonPreviousClick(null, null);
-            }                
+            }
             else if (_mainGoToNext == e.KeyData && inListView)
             {
                 if (AutoRepeatContinueOn)

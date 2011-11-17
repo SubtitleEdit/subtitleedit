@@ -159,7 +159,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             "ż",
         };
 
-        static List<int> _hebrewCodes = new List<int> 
+        static List<int> _hebrewCodes = new List<int>
         {
             0xa0, // א
             0xa1, // ב
@@ -173,7 +173,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             0xa9, // י
             0xaa, // ף
             0xab, // מ
-            0xac, // ל 
+            0xac, // ל
             0xad, // ם
             0xae, // מ
             0xaf, // ן
@@ -188,10 +188,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             0xb8, // ר
             0xb9, // ש
             0xba, // י
-        
+
         };
 
-        static List<string> _hebrewLetters = new List<string> 
+        static List<string> _hebrewLetters = new List<string>
         {
             "א", // 0xa0
             "ב", // 0xa1
@@ -222,7 +222,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             "י", // 0xba
         };
 
-        
+
 
         static List<int> _arabicCodes = new List<int> {
             0xe081, //=أ
@@ -574,7 +574,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 p.EndTime = GetTimeCode(timeStartIndex + 5, buffer);
             }
             return p;
-        }       
+        }
 
         public static Encoding GetEncoding(int codePage)
         {
