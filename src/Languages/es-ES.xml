@@ -1,205 +1,251 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Language Name="Inglés">
+<Language Name="Español">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.1</Version>
-    <TranslatedBy>
-    </TranslatedBy>
-    <CultureName>en-US</CultureName>
+    <Version>3.2</Version>
+    <TranslatedBy>Traducido por m2s</TranslatedBy>
+    <CultureName>es-ES</CultureName>
+    <HelpFile />
     <OK>&amp;OK</OK>
     <Cancel>C&amp;ancelar</Cancel>
     <Apply>Aplicar</Apply>
-    <None>Ninguno</None>
-    <Preview>Previsualización</Preview>
+    <None>Cancelar</None>
+    <Preview>Vista Previa</Preview>
     <SubtitleFiles>Archivos de subtítulos</SubtitleFiles>
     <AllFiles>Todos los archivos</AllFiles>
-    <VideoFiles>Archivos de vídeo</VideoFiles>
-    <OpenSubtitle>Abrir subtítulos...</OpenSubtitle>
-    <OpenVideoFile>Abrir archivo de vídeo...</OpenVideoFile>
-    <OpenVideoFileTitle>Abrir el titulo del archivo de vídeo...</OpenVideoFileTitle>
-    <NoVideoLoaded>No hay video cargado</NoVideoLoaded>
-    <VideoInformation>Video Info</VideoInformation>
+    <VideoFiles>Archivos de Video</VideoFiles>
+    <OpenSubtitle>Abrir subtítulo...</OpenSubtitle>
+    <OpenVideoFile>Abrir video...</OpenVideoFile>
+    <OpenVideoFileTitle>Abrir video...</OpenVideoFileTitle>
+    <NoVideoLoaded>Ningún video cargado</NoVideoLoaded>
+    <VideoInformation>Info del Video</VideoInformation>
     <PositionX>Posición / duración: {0}</PositionX>
-    <StartTime>Hora de inicio</StartTime>
-    <EndTime>Hora de finalización</EndTime>
+    <StartTime>Tiempo inicio</StartTime>
+    <EndTime>Tiempo fin</EndTime>
     <Duration>Duración</Duration>
     <NumberSymbol>#</NumberSymbol>
     <Number>Número</Number>
     <Text>Texto</Text>
-    <HourMinutesSecondsMilliseconds>Hora: min: seg: ms</HourMinutesSecondsMilliseconds>
+    <HourMinutesSecondsMilliseconds>Hora:min:sec:msec</HourMinutesSecondsMilliseconds>
     <Bold>Negrita</Bold>
     <Italic>Cursiva</Italic>
     <Visible>Visible</Visible>
-    <FrameRate>Frame rate</FrameRate>
+    <FrameRate>Tasa de cuadros</FrameRate>
     <Name>Nombre</Name>
     <FileNameXAndSize>Nombre de archivo: {0} ({1})</FileNameXAndSize>
     <ResolutionX>Resolución: {0}</ResolutionX>
-    <FrameRateX>Frame rate: {0:0.0###}</FrameRateX>
-    <TotalFramesX>Frames totales: {0:#,##0.##}</TotalFramesX>
-    <VideoEncodingX>Codificación de vídeo: {0}</VideoEncodingX>
-    <SingleLineLengths>longitud de la línea individual:</SingleLineLengths>
-    <TotalLengthX>Longitud total: {0}</TotalLengthX>
-    <TotalLengthXSplitLine>Longitud total: {0} (línea de división!)</TotalLengthXSplitLine>
-    <SplitLine>línea de división!</SplitLine>
+    <FrameRateX>Tasa de cuadros: {0:0.0###}</FrameRateX>
+    <TotalFramesX>Total cuadros: {0:#,##0.##}</TotalFramesX>
+    <VideoEncodingX>Codificación de video: {0}</VideoEncodingX>
+    <SingleLineLengths>Longitud línea individual: </SingleLineLengths>
+    <TotalLengthX>Longitud Total: {0}</TotalLengthX>
+    <TotalLengthXSplitLine>Longitud Total: {0} (¡dividir línea!)</TotalLengthXSplitLine>
+    <SplitLine>¡Dividir línea!</SplitLine>
     <NotAvailable>N/A</NotAvailable>
-    <OverlapPreviousLineX>Solapamiento en la linea anterior ({0:#,##0.###})</OverlapPreviousLineX>
+    <OverlapPreviousLineX>Solapamiento línea previa ({0:#,##0.###})</OverlapPreviousLineX>
     <OverlapX>Solapamiento ({0:#,##0.###})</OverlapX>
-    <OverlapNextX>Solapamiento en la siguiente linea ({0:#,##0.###})</OverlapNextX>
+    <OverlapNextX>Solapamiento siguiente ({0:#,##0.###})</OverlapNextX>
     <Negative>Negativo</Negative>
     <RegularExpressionIsNotValid>Expresión regular no válida!</RegularExpressionIsNotValid>
     <SubtitleSaved>Subtítulo guardado</SubtitleSaved>
-    <CurrentSubtitle>subtítulo actual</CurrentSubtitle>
+    <CurrentSubtitle>Subtítulo actual</CurrentSubtitle>
     <OriginalText>Texto original</OriginalText>
-    <OpenOriginalSubtitleFile>Abrir el archivo de subtítulos originales...</OpenOriginalSubtitleFile>
-    <PleaseWait>Por favor espere...</PleaseWait>
-    <SessionKey>Contraseña</SessionKey>
-    <UserName>Nombre de usuario</UserName>
-    <UserNameAlreadyInUse>Nombre de usuario ya está en uso</UserNameAlreadyInUse>
-    <WebServiceUrl>Webservice url</WebServiceUrl>
+    <OpenOriginalSubtitleFile>Abrir subtítulo original...</OpenOriginalSubtitleFile>
+    <PleaseWait>Por favor, espere...</PleaseWait>
+    <SessionKey>Clave de sesión</SessionKey>
+    <UserName>Usuario</UserName>
+    <UserNameAlreadyInUse>Usuario ya en uso</UserNameAlreadyInUse>
+    <WebServiceUrl>URL</WebServiceUrl>
     <IP>IP</IP>
+    <VideoWindowTitle>Video - {0}</VideoWindowTitle>
+    <AudioWindowTitle>Audio - {0}</AudioWindowTitle>
+    <ControlsWindowTitle>Controles - {0}</ControlsWindowTitle>
   </General>
   <About>
-    <Title>Acerca del Subtitle Edit</Title>
-    <AboutText1>Subtitle Edit  es un software libre bajo la Licencia Pública GNU.
- Usted puede distribuir, modificar y utilizar libremente.
+    <Title>Acerca de Subtitle Edit</Title>
+    <AboutText1>Subtitle Edit es Software libre bajo licencia pública GNU.
+Usted puede distribuirlo, modificarlo y usarlo libremente.
 
- C # código fuente está disponible en http://code.google.com/p/subtitleedit
+Código fuente en C# disponible en http://code.google.com/p/subtitleedit
 
- Visita www.nikse.dk para la última versión.
+Visite www.nikse.dk para la última versión.
 
- Las sugerencias son bienvenidas.
+Se agradecen sugerencias.
 
- Correo electrónico: mailto: nikse.dk gmail.com @</AboutText1>
+Email: mailto:nikse.dk@gmail.com</AboutText1>
   </About>
   <AddToNames>
-    <Title>Añadir a los nombres de/lista etc</Title>
-    <Description>Añadir a los nombres/ruido lista (mayúsculas y minúsculas)</Description>
+    <Title>Añadir al listado de nombres</Title>
+    <Description>Añadir a la lista names/noise (sensible a mayúsculas)</Description>
   </AddToNames>
   <AddWaveForm>
     <Title>Generar datos de forma de onda</Title>
-    <SourceVideoFile>Fuente archivo de vídeo:</SourceVideoFile>
+    <SourceVideoFile>Archivo fuente de video:</SourceVideoFile>
     <GenerateWaveFormData>Generar datos de forma de onda</GenerateWaveFormData>
-    <PleaseWait>Este proceso puede tardar unos minutos - por favor espere</PleaseWait>
-    <VlcMediaPlayerNotFoundTitle>VLC Media Player no se encuentra</VlcMediaPlayerNotFoundTitle>
-    <VlcMediaPlayerNotFound>Subtitle Edit necesita VLC Media Player 1.1.x o posterior para extraer datos de audio.</VlcMediaPlayerNotFound>
-    <GoToVlcMediaPlayerHomePage>¿Desea ir a la página de inicio de VLC media player?</GoToVlcMediaPlayerHomePage>
-    <GeneratingPeakFile>Generación de archivo máximo...</GeneratingPeakFile>
+    <PleaseWait>Puede tardar unos minutos - Por favor, espere</PleaseWait>
+    <VlcMediaPlayerNotFoundTitle>No se encuentra VLC Media Player</VlcMediaPlayerNotFoundTitle>
+    <VlcMediaPlayerNotFound>Subtitle Edit necesita VLC media player 1.1.x o superior para extraer audio.</VlcMediaPlayerNotFound>
+    <GoToVlcMediaPlayerHomePage>¿Quiere ir a la web de VLC media player?</GoToVlcMediaPlayerHomePage>
+    <GeneratingPeakFile>Generando archivo de picos...</GeneratingPeakFile>
+    <GeneratingSpectrogram>Generando espectrograma...</GeneratingSpectrogram>
     <ExtractingSeconds>Extrayendo audio: {0:0.0} segundos</ExtractingSeconds>
-    <ExtractingMinutes>Extrayendo audio:. {0} {01:00} minutos</ExtractingMinutes>
+    <ExtractingMinutes>Extrayendo audio: {0}.{1:00} minutos</ExtractingMinutes>
   </AddWaveForm>
   <AdjustDisplayDuration>
     <Title>Ajustar duración</Title>
-    <AdjustVia>Ajustar a través de</AdjustVia>
+    <AdjustVia>Ajustar por</AdjustVia>
     <Seconds>Segundos</Seconds>
     <Percent>Porcentaje</Percent>
     <AddSeconds>Añadir segundos</AddSeconds>
-    <SetAsPercent>Establecer porcentaje de la duración</SetAsPercent>
-    <Note>Nota: El tiempo de visualización no se solapará con el tiempo de inicio del siguiente texto</Note>
+    <SetAsPercent>Ajustar como porcentaje de duración</SetAsPercent>
+    <Note>Nota: La duración no puede solapar el tiempo de inicio del texto siguiente</Note>
     <PleaseSelectAValueFromTheDropDownList>Por favor, seleccione un valor de la lista desplegable</PleaseSelectAValueFromTheDropDownList>
-    <PleaseChoose>- Por favor, elija -</PleaseChoose>
+    <PleaseChoose> - Por favor, seleccione - </PleaseChoose>
   </AdjustDisplayDuration>
   <AutoBreakUnbreakLines>
-    <TitleAutoBreak>Auto balance de las líneas seleccionadas</TitleAutoBreak>
-    <TitleUnbreak>Quitar saltos de línea de las líneas seleccionadas</TitleUnbreak>
-    <LineNumber>Línea #</LineNumber>
-    <Before>Antes de</Before>
-    <After>Después de</After>
+    <TitleAutoBreak>Autoajustar líneas seleccionadas</TitleAutoBreak>
+    <TitleUnbreak>Eliminar saltos de línea de las líneas seleccionadas</TitleUnbreak>
+    <LineNumber>Línea#</LineNumber>
+    <Before>Antes</Before>
+    <After>Después</After>
     <LinesFoundX>Líneas encontradas: {0}</LinesFoundX>
-    <OnlyBreakLinesLongerThan>Dividir lineas mayores que</OnlyBreakLinesLongerThan>
-    <OnlyUnbreakLinesShorterThan>Unir lineas menores que</OnlyUnbreakLinesShorterThan>
+    <OnlyBreakLinesLongerThan>Dividir solo líneas más largas de</OnlyBreakLinesLongerThan>
+    <OnlyUnbreakLinesShorterThan>Combinar solo líneas mas cortas de</OnlyUnbreakLinesShorterThan>
   </AutoBreakUnbreakLines>
   <ChangeCasing>
-    <Title>Cambio de mayusculas a minusculas</Title>
-    <ChangeCasingTo>Cambio de mayusculas a minusculas</ChangeCasingTo>
-    <NormalCasing>Comenzar oraciones con letra mayúscula.</NormalCasing>
-    <FixNamesCasing>Corregir minusculas/mayusculas en nombres  (a través de Diccionario\NombresEtc.xml)</FixNamesCasing>
-    <FixOnlyNamesCasing>Corregir minusculas/mayusculas sólo en nombres  (a través de Diccionario\NombresEtc.xml)</FixOnlyNamesCasing>
-    <OnlyChangeAllUppercaseLines>Sólo cambiar todas las líneas en mayúsculas.</OnlyChangeAllUppercaseLines>
-    <AllUppercase>TODO EN  MAYÚSCULAS</AllUppercase>
-    <AllLowercase>todo en minúsculas</AllLowercase>
+    <Title>Cambiar mayúsculas</Title>
+    <ChangeCasingTo>Cambiar mayúsculas a</ChangeCasingTo>
+    <NormalCasing>Mayúsculas normales. Primera letra de cada frase en mayúscula.</NormalCasing>
+    <FixNamesCasing>Corregir mayúsculas de nombres (vía Dictionaries\NamesEtc.xml)</FixNamesCasing>
+    <FixOnlyNamesCasing>Corregir solo mayúsculas de nombres (via Dictionaries\NamesEtc.xml)</FixOnlyNamesCasing>
+    <OnlyChangeAllUppercaseLines>Cambiar solo líneas con todo en mayúsculas.</OnlyChangeAllUppercaseLines>
+    <AllUppercase>TODO MAYÚSCULAS</AllUppercase>
+    <AllLowercase>todo minúsculas</AllLowercase>
   </ChangeCasing>
   <ChangeCasingNames>
-    <Title>caja de cambios - Nombres</Title>
-    <NamesFoundInSubtitleX>nombres encontrados en el subtítulo: {0}</NamesFoundInSubtitleX>
+    <Title>Cambiar mayúsculas - Nombres</Title>
+    <NamesFoundInSubtitleX>Nombres encontrados en subtítulo: {0}</NamesFoundInSubtitleX>
     <Enabled>Habilitado</Enabled>
     <Name>Nombre</Name>
-    <LineNumber>Línea #</LineNumber>
-    <Before>Antes de</Before>
-    <After>Después de</After>
+    <LineNumber>Línea#</LineNumber>
+    <Before>Antes</Before>
+    <After>Después</After>
     <LinesFoundX>Líneas encontradas: {0}</LinesFoundX>
   </ChangeCasingNames>
   <ChangeFrameRate>
-    <Title>Cambiar frame rate</Title>
-    <ConvertFrameRateOfSubtitle>Convertir el frame rate de los subtítulos</ConvertFrameRateOfSubtitle>
-    <FromFrameRate>Desde el frame rate</FromFrameRate>
-    <ToFrameRate>Hasta el frame rate</ToFrameRate>
-    <FrameRateNotCorrect>Frame rate no correcto</FrameRateNotCorrect>
-    <FrameRateNotChanged>Mismo frame rate - nada para convertir</FrameRateNotChanged>
+    <Title>Cambiar tasa de cuadros</Title>
+    <ConvertFrameRateOfSubtitle>Convertir tasa de cuadros del subtítulo</ConvertFrameRateOfSubtitle>
+    <FromFrameRate>De tasa de cuadros</FromFrameRate>
+    <ToFrameRate>A tasa de cuadros</ToFrameRate>
+    <FrameRateNotCorrect>La tasa de cuadros no es correcta</FrameRateNotCorrect>
+    <FrameRateNotChanged>Tasa de cuadros idéntica - nada que convertir</FrameRateNotChanged>
   </ChangeFrameRate>
   <ChooseEncoding>
-    <Title>Elegir codificación</Title>
-    <CodePage>Código de la página</CodePage>
-    <DisplayName>Nombre para mostrar</DisplayName>
-    <PleaseSelectAnEncoding>Por favor, seleccione una codificación</PleaseSelectAnEncoding>
+    <Title>Seleccionar codificador</Title>
+    <CodePage>Página de códigos</CodePage>
+    <DisplayName>Mostrar nombre</DisplayName>
+    <PleaseSelectAnEncoding>Por favor, escoja un codificador</PleaseSelectAnEncoding>
   </ChooseEncoding>
   <ChooseLanguage>
-    <Title>Seleccione su idioma</Title>
+    <Title>Seleccionar idioma</Title>
     <Language>Idioma</Language>
   </ChooseLanguage>
   <CompareSubtitles>
     <Title>Comparar subtítulos</Title>
-    <PreviousDifference>Diferencia anterior</PreviousDifference>
-    <NextDifference>Diferencia posterior</NextDifference>
-    <SubtitlesNotAlike>Los subtítulos no tienen ningún parecido</SubtitlesNotAlike>
+    <PreviousDifference>Diferencia &amp;Previa</PreviousDifference>
+    <NextDifference>Diferencia siguie&amp;nte</NextDifference>
+    <SubtitlesNotAlike>Los subtítulos no son similares</SubtitlesNotAlike>
     <XNumberOfDifference>Número de diferencias: {0}</XNumberOfDifference>
-    <ShowOnlyDifferences>Mostrar sólo las diferencias</ShowOnlyDifferences>
-    <OnlyLookForDifferencesInText>Sólo buscar diferencias en el texto</OnlyLookForDifferencesInText>
+    <ShowOnlyDifferences>Mostrar solo diferencias</ShowOnlyDifferences>
+    <OnlyLookForDifferencesInText>Buscar solo diferencias en el texto</OnlyLookForDifferencesInText>
   </CompareSubtitles>
   <DvdSubrip>
-    <Title>Extraer los subtítulos de IFO/VOB (DVD)</Title>
-    <DvdGroupTitle>Archivos de DVD/info</DvdGroupTitle>
+    <Title>Ripear subtítulos de ifo/vobs (dvd)</Title>
+    <DvdGroupTitle>DVD archivos/info</DvdGroupTitle>
     <IfoFile>Archivo IFO</IfoFile>
     <IfoFiles>Archivos IFO</IfoFiles>
-    <VobFiles>Archivo VOB</VobFiles>
+    <VobFiles>Archivos VOB</VobFiles>
     <Add>Añadir...</Add>
-    <Remove>Quitar</Remove>
+    <Remove>Eliminar</Remove>
     <Clear>Borrar</Clear>
-    <MoveUp>Subir</MoveUp>
-    <MoveDown>Bajar</MoveDown>
+    <MoveUp>Desp. arriba</MoveUp>
+    <MoveDown>Desp. abajo</MoveDown>
     <Languages>Idiomas</Languages>
     <PalNtsc>PAL/NTSC</PalNtsc>
     <Pal>PAL (25fps)</Pal>
     <Ntsc>NTSC (23.976fps)</Ntsc>
-    <StartRipping>Iniciar la extracción</StartRipping>
-    <Abort>Abortar</Abort>
-    <AbortedByUser>Abortado por el usuario</AbortedByUser>
-    <ReadingSubtitleData>Lectura de datos de los subtítulos...</ReadingSubtitleData>
-    <RippingVobFileXofYZ>Extrayendo archivos VOB {1} de {2}: {0}</RippingVobFileXofYZ>
-    <WrongIfoType>tipo IFO es '{0}' y no 'DVD-Video-VTS. {1} Pruebe con otro archivo como {2}</WrongIfoType>
+    <StartRipping>Empezar ripeado</StartRipping>
+    <Abort>Cancelar</Abort>
+    <AbortedByUser>Cancelado por el usuario</AbortedByUser>
+    <ReadingSubtitleData>Leyendo datos del subtítulo...</ReadingSubtitleData>
+    <RippingVobFileXofYZ>Ripeando archivo vob {1} of {2}: {0}</RippingVobFileXofYZ>
+    <WrongIfoType>El tipo IFO es '{0}' en lugar de 'DVDVIDEO-VTS'.{1}Pruebe con otro archivo que {2}</WrongIfoType>
   </DvdSubrip>
   <DvdSubRipChooseLanguage>
-    <Title>Seleccione su idioma</Title>
-    <ChooseLanguageStreamId>Elija idioma (corriente-id)</ChooseLanguageStreamId>
-    <UnknownLanguage>idioma desconocido</UnknownLanguage>
-    <SubtitleImageXofYAndWidthXHeight>imagen del subtítulo {0}/{1} - {2} x {3}</SubtitleImageXofYAndWidthXHeight>
-    <SubtitleImage>Imagen del subtitulo</SubtitleImage>
+    <Title>Seleccionar idioma</Title>
+    <ChooseLanguageStreamId>Seleccioneidioma (stream-id)</ChooseLanguageStreamId>
+    <UnknownLanguage>Idioma desconocido</UnknownLanguage>
+    <SubtitleImageXofYAndWidthXHeight>Imagen de subtítulo {0}/{1}  -  {2}x{3} </SubtitleImageXofYAndWidthXHeight>
+    <SubtitleImage>Imagen de subtítulo</SubtitleImage>
   </DvdSubRipChooseLanguage>
+  <EbuSaveOtpions>
+    <Title>Opciones de guardar EBU</Title>
+    <GeneralSubtitleInformation>Información general del subtítulo</GeneralSubtitleInformation>
+    <CodePageNumber>Número de página de códigos</CodePageNumber>
+    <DiskFormatCode>Código de formato del disco</DiskFormatCode>
+    <CharacterCodeTable>Tabla de caracteres</CharacterCodeTable>
+    <LanguageCode>Código de idioma</LanguageCode>
+    <OriginalProgramTitle>Título original del programa</OriginalProgramTitle>
+    <OriginalEpisodeTitle>Título original del episodio</OriginalEpisodeTitle>
+    <TranslatedProgramTitle>Título traducido del programa</TranslatedProgramTitle>
+    <TranslatedEpisodeTitle>Título traducido del episodio</TranslatedEpisodeTitle>
+    <TranslatorsName>Nombre de los traductores</TranslatorsName>
+    <SubtitleListReferenceCode>Código de referencia de la lista de subtítulos</SubtitleListReferenceCode>
+    <CountryOfOrigin>País de origen</CountryOfOrigin>
+    <RevisionNumber>Revisión número</RevisionNumber>
+    <MaxNoOfDisplayableChars>Max# de caracteres por cuadro</MaxNoOfDisplayableChars>
+    <MaxNumberOfDisplayableRows>Max# de cuadros</MaxNumberOfDisplayableRows>
+    <DiskSequenceNumber>Número de orden del disco</DiskSequenceNumber>
+    <TotalNumberOfDisks>Número total de discos</TotalNumberOfDisks>
+    <Import>Importar...</Import>
+    <TextAndTimingInformation>Información del texto y temporización</TextAndTimingInformation>
+    <JustificationCode>Código de justificación</JustificationCode>
+    <Errors>Errores</Errors>
+    <ErrorsX>Errores: {0}</ErrorsX>
+    <MaxLengthError>Línea {0} excede la longitud máxima ({1}) en {2}: {3}</MaxLengthError>
+    <TextUnchangedPresentation>Presentación original</TextUnchangedPresentation>
+    <TextLeftJustifiedText>Justificación izquierda</TextLeftJustifiedText>
+    <TextCentredText>Justificación centrado</TextCentredText>
+    <TextRightJustifiedText>Justificación derecha</TextRightJustifiedText>
+  </EbuSaveOtpions>
   <EffectKaraoke>
-    <Title>Efecto karaoke</Title>
-    <ChooseColor>Elige el color:</ChooseColor>
-    <TotalMilliseconds>Milisegundos totales:</TotalMilliseconds>
-    <EndDelayInMilliseconds>Retardo final en milisegundos</EndDelayInMilliseconds>
+    <Title>Efecto Karaoke</Title>
+    <ChooseColor>Seleccione color:</ChooseColor>
+    <TotalMilliseconds>Total miliseg.:</TotalMilliseconds>
+    <EndDelayInMilliseconds>Retraso del fin en miliseg.:</EndDelayInMilliseconds>
   </EffectKaraoke>
   <EffectTypewriter>
-    <Title>Efecto maquina de escribir</Title>
-    <TotalMilliseconds>Milisegundos totales:</TotalMilliseconds>
-    <EndDelayInMillisecs>Retardo final en milisegundos:</EndDelayInMillisecs>
+    <Title>Efecto máquina de escribir</Title>
+    <TotalMilliseconds>Total milliseg.:</TotalMilliseconds>
+    <EndDelayInMillisecs>Retraso del fin en miliseg.:</EndDelayInMillisecs>
   </EffectTypewriter>
+  <ExportPngXml>
+    <Title>Exportar BDN XML/PNG</Title>
+    <ImageSettings>Ajustes de imagen</ImageSettings>
+    <FontFamily>Fuente</FontFamily>
+    <FontSize>Tamaño de fuente</FontSize>
+    <FontColor>Color de fuente</FontColor>
+    <BorderColor>Color de borde</BorderColor>
+    <BorderWidth>Ancho de borde</BorderWidth>
+    <AntiAlias>Anti alias</AntiAlias>
+    <ExportAllLines>Exportar todas las líneas...</ExportAllLines>
+    <XImagesSavedInY>{0} imágenes guardadas en {1}</XImagesSavedInY>
+  </ExportPngXml>
   <FindDialog>
     <Title>Buscar</Title>
     <Find>Buscar</Find>
     <Normal>Normal</Normal>
-    <CaseSensitive>Entre mayúsculas y minúsculas</CaseSensitive>
+    <CaseSensitive>Sensible a mayúsculas</CaseSensitive>
     <RegularExpression>Expresión regular</RegularExpression>
   </FindDialog>
   <FindSubtitleLine>
@@ -208,170 +254,182 @@
     <FindNext>Buscar siguiente</FindNext>
   </FindSubtitleLine>
   <FixCommonErrors>
-    <Title>Corregir los errores comunes</Title>
-    <Step1>Paso 1/2 - Seleccione los errores a corregir</Step1>
-    <WhatToFix>Que corregir</WhatToFix>
+    <Title>Corregir errores comunes</Title>
+    <Step1>Paso 1/2 - Seleccionar error</Step1>
+    <WhatToFix>Qué corregir</WhatToFix>
     <Example>Ejemplo</Example>
-    <SelectAll>Seleccionar todos</SelectAll>
-    <InverseSelection>selección inversa</InverseSelection>
-    <Back>&lt;&amp;Atrás</Back>
-    <Next>&amp;Siguiente&gt;</Next>
+    <SelectAll>Seleccionar todo</SelectAll>
+    <InverseSelection>Invertir selección</InverseSelection>
+    <Back>&lt; Atrás</Back>
+    <Next>Siguiente &gt;</Next>
     <Step2>Paso 2/2 - Verificar correcciones</Step2>
     <Fixes>Correcciones</Fixes>
-    <Log>Registrarse</Log>
-    <LineNumber>Línea #</LineNumber>
+    <Log>Registro</Log>
+    <LineNumber>línea#</LineNumber>
     <Function>Función</Function>
-    <Before>Antes de</Before>
-    <After>Después de</After>
-    <RemovedEmptyLine>Eliminada la línea en blanco</RemovedEmptyLine>
-    <RemovedEmptyLineAtTop>Eliminada la línea en blanco en la parte superior</RemovedEmptyLineAtTop>
-    <RemovedEmptyLineAtBottom>Eliminada la línea en blanco en la parte inferior</RemovedEmptyLineAtBottom>
-    <RemovedEmptyLinesUnsedLineBreaks>Eliminar líneas en blanco/saltos de linea </RemovedEmptyLinesUnsedLineBreaks>
-    <EmptyLinesRemovedX>Lineas en blanco eliminadas: {0}</EmptyLinesRemovedX>
-    <FixOverlappingDisplayTimes>Fijar la superposición tiempos de visualización</FixOverlappingDisplayTimes>
-    <FixShortDisplayTimes>Fijar el tiempo de visualización de corto</FixShortDisplayTimes>
-    <FixLongDisplayTimes>Fijar el tiempo de visualización de largo</FixLongDisplayTimes>
-    <FixInvalidItalicTags>Fijar etiquetas en cursiva no válidas</FixInvalidItalicTags>
+    <Before>Antes</Before>
+    <After>Después</After>
+    <RemovedEmptyLine>Eliminar línea en blanco</RemovedEmptyLine>
+    <RemovedEmptyLineAtTop>Eliminar línea inicial en blanco</RemovedEmptyLineAtTop>
+    <RemovedEmptyLineAtBottom>Eliminar línea final en blanco</RemovedEmptyLineAtBottom>
+    <RemovedEmptyLinesUnsedLineBreaks>Eliminar saltos de línea de líneas en blanco/sin uso</RemovedEmptyLinesUnsedLineBreaks>
+    <EmptyLinesRemovedX>Líneas en blanco eliminadas: {0}</EmptyLinesRemovedX>
+    <FixOverlappingDisplayTimes>Corregir solapamientos de tiempo</FixOverlappingDisplayTimes>
+    <FixShortDisplayTimes>Corregir tiempos cortos</FixShortDisplayTimes>
+    <FixLongDisplayTimes>Corregir tiempos largos</FixLongDisplayTimes>
+    <FixInvalidItalicTags>Corregir etiquetas inválidas en cursiva</FixInvalidItalicTags>
     <RemoveUnneededSpaces>Eliminar espacios innecesarios</RemoveUnneededSpaces>
-    <RemoveUnneededPeriods>Eliminar periodos innecesarios</RemoveUnneededPeriods>
-    <FixMissingSpaces>Fijar espacios que faltan </FixMissingSpaces>
-    <BreakLongLines>Dividir lineas largas</BreakLongLines>
+    <RemoveUnneededPeriods>Eliminar puntos innecesarios</RemoveUnneededPeriods>
+    <FixMissingSpaces>Corregir espacios olvidados</FixMissingSpaces>
+    <BreakLongLines>Dividir líneas largas</BreakLongLines>
     <RemoveLineBreaks>Eliminar saltos de línea en textos cortos con una sola frase</RemoveLineBreaks>
     <RemoveLineBreaksAll>Eliminar saltos de línea en textos cortos (todos excepto diálogos)</RemoveLineBreaksAll>
-    <FixUppercaseIInsindeLowercaseWords>Cambiar mayúsculas "i" dentro de palabras en minúscula (error de OCR)</FixUppercaseIInsindeLowercaseWords>
-    <FixDoubleApostrophes>Cambiar caracteres de doble comilla ('') a una comilla simple (")</FixDoubleApostrophes>
-    <AddPeriods>Añadir un espacio cuando la siguiente linea comienza en mayuscula</AddPeriods>
-    <StartWithUppercaseLetterAfterParagraph>Comience con letra mayúscula después del párrafo</StartWithUppercaseLetterAfterParagraph>
-    <StartWithUppercaseLetterAfterPeriodInsideParagraph>Comience con letra mayúscula después de un período dentro del mismo párrafo</StartWithUppercaseLetterAfterPeriodInsideParagraph>
-    <FixLowercaseIToUppercaseI>Fijar solo minúsculas 'i' a la 'I' (Inglés)</FixLowercaseIToUppercaseI>
-    <FixCommonOcrErrors>Corregir los errores OCR comunes (usando la lista de reemplazo OCR)</FixCommonOcrErrors>
-    <CommonOcrErrorsFixed>Reparados los errores comunes OCR(Usado el fichero OcrReplaceList):{0}</CommonOcrErrorsFixed>
-    <FixDanishLetterI>Corregir letra danesa «i»</FixDanishLetterI>
-    <FixSpanishInvertedQuestionAndExclamationMarks>Fijar signos de interrogación y exclamación invertidos (solo español)</FixSpanishInvertedQuestionAndExclamationMarks>
-    <AddMissingQuote>Añadir comilla (")</AddMissingQuote>
-    <AddMissingQuotes>Añadir comillas (")</AddMissingQuotes>
-    <FixHyphens>Fijar las líneas que comienzan con un guión (-)</FixHyphens>
-    <FixHyphen>Fijar línea que comienza con un guión (-)</FixHyphen>
-    <XHyphensFixed>Guiones fijados: {0}</XHyphensFixed>
-    <AddMissingQuotesExample>"¿Cómo estás? -&gt;" ¿Cómo estás? "</AddMissingQuotesExample>
-    <XMissingQuotesAdded>Comiillas añadidas: {0}</XMissingQuotesAdded>
+    <FixUppercaseIInsindeLowercaseWords>Corregir 'i' mayúscula en palabras en minúscula (error de ocr)</FixUppercaseIInsindeLowercaseWords>
+    <FixDoubleApostrophes>Sustituir doble coma ('') por comillas (")</FixDoubleApostrophes>
+    <AddPeriods>Añadir espacio después de líneas cuando la siguiente línea comienza con mayúscula</AddPeriods>
+    <StartWithUppercaseLetterAfterParagraph>Comenzar párrafo con mayúscula</StartWithUppercaseLetterAfterParagraph>
+    <StartWithUppercaseLetterAfterPeriodInsideParagraph>Comenzar con mayúscula después de punto dentro del párrafo</StartWithUppercaseLetterAfterPeriodInsideParagraph>
+    <FixLowercaseIToUppercaseI>Fijar "i" minúscula sola a "I" mayúscula (Inglés)</FixLowercaseIToUppercaseI>
+    <FixCommonOcrErrors>Corregir errores comunes de OCR (usando lista de sustitución OCR)</FixCommonOcrErrors>
+    <CommonOcrErrorsFixed>Errores comunes de OCR corregidos (archivo OcrReplaceList usado): {0}</CommonOcrErrorsFixed>
+    <RemoveSpaceBetweenNumber>Eliminar espacios entre números</RemoveSpaceBetweenNumber>
+    <FixDialogsOnOneLine>Corregir diálogos en una línea</FixDialogsOnOneLine>
+    <RemoveSpaceBetweenNumbersFixed>Eliminar espacios entre números solucionado: {0}</RemoveSpaceBetweenNumbersFixed>
+    <FixDanishLetterI>Corregir letra danesa 'i'</FixDanishLetterI>
+    <FixSpanishInvertedQuestionAndExclamationMarks>Corregir signos invertidos de interrogación y exclamación en español</FixSpanishInvertedQuestionAndExclamationMarks>
+    <AddMissingQuote>Añadir comillas omitidas (")</AddMissingQuote>
+    <AddMissingQuotes>Añadir comillas omitidas (")</AddMissingQuotes>
+    <FixHyphens>Corregir líneas que comienzan con guión (-)</FixHyphens>
+    <FixHyphen>Corregir líneas que comienzan con guión (-)</FixHyphen>
+    <XHyphensFixed>Guiones solucionados: {0}</XHyphensFixed>
+    <AddMissingQuotesExample>"How are you?  -&gt; "How are you?"</AddMissingQuotesExample>
+    <XMissingQuotesAdded>Comillas omitidas añadidas: {0}</XMissingQuotesAdded>
     <Fix3PlusLines>Corregir subtítulos con más de dos líneas</Fix3PlusLines>
     <Fix3PlusLine>Corregir subtítulo con más de dos líneas</Fix3PlusLine>
-    <X3PlusLinesFixed>Subtítulos con más de dos líneas fijadas: {0}</X3PlusLinesFixed>
+    <X3PlusLinesFixed>Subtítulos con más de dos líneas corregidos: {0}</X3PlusLinesFixed>
     <Analysing>Analizando...</Analysing>
-    <NothingToFix>No hay nada que arreglar:)</NothingToFix>
-    <FixesFoundX>Correcciones encontrados: {0}</FixesFoundX>
-    <XFixesApplied>Arreglos aplicados: {0}</XFixesApplied>
-    <NothingToFixBut>No hay nada que corregir, pero algunas cosas se pueden mejorar - vea el registro para obtener más detalles</NothingToFixBut>
-    <FixLowercaseIToUppercaseICheckedButCurrentLanguageIsNotEnglish>"Corregir minúsculas sola 'i' a la 'I' (Inglés)" está marcada, pero el subtitulo cargado no parece estar en Inglés.</FixLowercaseIToUppercaseICheckedButCurrentLanguageIsNotEnglish>
+    <NothingToFix>Nada que corregir :)</NothingToFix>
+    <FixesFoundX>Correcciones encontradas: {0}</FixesFoundX>
+    <XFixesApplied>Correcciones aplicadas: {0}</XFixesApplied>
+    <NothingToFixBut>Nada que corregir, pero algunas cosas por mejorar - ver detalles en archivo de registro</NothingToFixBut>
+    <FixLowercaseIToUppercaseICheckedButCurrentLanguageIsNotEnglish>"Fijar "i" minúscula sola a "I" mayúscula (Inglés)" está marcado pero el subtítulo cargado no parece ser en inglés.</FixLowercaseIToUppercaseICheckedButCurrentLanguageIsNotEnglish>
     <Continue>Continuar</Continue>
-    <ContinueAnyway>¿Desea continuar?</ContinueAnyway>
-    <UncheckedFixLowercaseIToUppercaseI>Fijar sin comprobrar la minúscula sola i por I (Inglés)</UncheckedFixLowercaseIToUppercaseI>
-    <XIsChangedToUppercase>{0} i ha sido cambiado a mayúsculas</XIsChangedToUppercase>
-    <FixFirstLetterToUppercaseAfterParagraph>Fijar la primera letra después de cada párrafo a mayuscula</FixFirstLetterToUppercaseAfterParagraph>
-    <MergeShortLine>Combinar la línea corta (frase)</MergeShortLine>
-    <MergeShortLineAll>Combinar la línea corta (todo excepto diálogos)</MergeShortLineAll>
-    <XLineBreaksAdded>{0} saltos de línea añadidos</XLineBreaksAdded>
-    <BreakLongLine>Dividir linea larga</BreakLongLine>
-    <FixLongDisplayTime>Fijar tiempo de visualización largo</FixLongDisplayTime>
-    <FixInvalidItalicTag>Fijar etiqueta en cursiva no válida</FixInvalidItalicTag>
-    <FixShortDisplayTime>Fijar tiempo de visualización corto</FixShortDisplayTime>
-    <FixOverlappingDisplayTime>Fijar la superposición del tiempo de visualización</FixOverlappingDisplayTime>
-    <FixInvalidItalicTagsExample>&lt;i&gt;¿Qué me importa -.&gt; ¿Qué me importa.&lt;/i&gt;</FixInvalidItalicTagsExample>
-    <RemoveUnneededSpacesExample>¡Eh, tú, no. -&gt; Eh, tú, no.</RemoveUnneededSpacesExample>
-    <RemoveUnneededPeriodsExample>¡Eh, tú!. -&gt; ¡Eh, tú!</RemoveUnneededPeriodsExample>
-    <FixMissingSpacesExample>Eh, tú. -&gt; Eh, tú</FixMissingSpacesExample>
-    <FixUppercaseIInsindeLowercaseWordsExample>La tierra es plana. -&gt; La tierra es plana.</FixUppercaseIInsindeLowercaseWordsExample>
+    <ContinueAnyway>¿Continuar de todas formas?</ContinueAnyway>
+    <UncheckedFixLowercaseIToUppercaseI>Desmarcar "Fijar "i" minúscula sola a "I" mayúscula (Inglés)"</UncheckedFixLowercaseIToUppercaseI>
+    <XIsChangedToUppercase>{0}i cambiadas a mayúscula</XIsChangedToUppercase>
+    <FixFirstLetterToUppercaseAfterParagraph>Cambiar primera letra de párrafo a mayúscula</FixFirstLetterToUppercaseAfterParagraph>
+    <MergeShortLine>combinar línea corta (una frase)</MergeShortLine>
+    <MergeShortLineAll>Combinar líneas cortas (excepto diálogos)</MergeShortLineAll>
+    <XLineBreaksAdded>{0} Saltos de línea añadidos</XLineBreaksAdded>
+    <BreakLongLine>Dividir línea larga</BreakLongLine>
+    <FixLongDisplayTime>Corregir duración excesiva</FixLongDisplayTime>
+    <FixInvalidItalicTag>Corregir etiqueta inválida en cursiva</FixInvalidItalicTag>
+    <FixShortDisplayTime>Corregir duración demasiado corta</FixShortDisplayTime>
+    <FixOverlappingDisplayTime>Corregir solapamiento duración</FixOverlappingDisplayTime>
+    <FixInvalidItalicTagsExample>&lt;i&gt;What do i care.&lt;i&gt; -&gt; &lt;i&gt;What do I care.&lt;/i&gt;</FixInvalidItalicTagsExample>
+    <RemoveUnneededSpacesExample>Hey   you , there. -&gt; Hey you, there.</RemoveUnneededSpacesExample>
+    <RemoveUnneededPeriodsExample>Hey you!. -&gt; Hey you!</RemoveUnneededPeriodsExample>
+    <FixMissingSpacesExample>Hey.You. -&gt; Hey. You.</FixMissingSpacesExample>
+    <FixUppercaseIInsindeLowercaseWordsExample>The earth is fIat. -&gt; The earth is flat.</FixUppercaseIInsindeLowercaseWordsExample>
     <FixLowercaseIToUppercaseIExample>What do i care. -&gt; What do I care.</FixLowercaseIToUppercaseIExample>
-    <StartTimeLaterThanEndTime>Número de texto {0}: El tiempo inicial es posterior al tiempo final: {4} {1} -&gt; {2} {3}</StartTimeLaterThanEndTime>
-    <UnableToFixStartTimeLaterThanEndTime>No se puede fijar el número de texto {0}: El tiempo inicial es posterior al tiempo final: {1}</UnableToFixStartTimeLaterThanEndTime>
-    <XFixedToYZ>{0}fijar a: {1} {2}</XFixedToYZ>
-    <UnableToFixTextXY>No se puede fijar el número de texto {0}: {1}</UnableToFixTextXY>
-    <XOverlappingTimestampsFixed>{0} Fijado el solapamiento de las marcas de tiempo.</XOverlappingTimestampsFixed>
-    <XDisplayTimesProlonged>{0} tiempo de visualización prolongado</XDisplayTimesProlonged>
-    <XInvalidHtmlTagsFixed>{0} etiquetas html no válidas </XInvalidHtmlTagsFixed>
-    <XDisplayTimesShortned>{0} tiempo de visualización acortado</XDisplayTimesShortned>
-    <XLinesUnbreaked>{0} líneas no divididas</XLinesUnbreaked>
-    <UnneededSpace>Espacio innecesario</UnneededSpace>
+    <StartTimeLaterThanEndTime>Número de texto {0}: Tiempo inicial es posterior a tiempo final: {4}{1} --&gt; {2} {3}</StartTimeLaterThanEndTime>
+    <UnableToFixStartTimeLaterThanEndTime>No se pudo solucionar número de texto {0}: Tiempo inicial es posterior a tiempo final: {1}</UnableToFixStartTimeLaterThanEndTime>
+    <XFixedToYZ>{0}convertido a: {1}{2}</XFixedToYZ>
+    <UnableToFixTextXY>No se pudo corregir número de texto {0}: {1}</UnableToFixTextXY>
+    <XOverlappingTimestampsFixed>{0} solapamientos de tiempo solucionados</XOverlappingTimestampsFixed>
+    <XDisplayTimesProlonged>{0} Duraciones prolongadas</XDisplayTimesProlonged>
+    <XInvalidHtmlTagsFixed>{0} Etiquetas html arregladas</XInvalidHtmlTagsFixed>
+    <XDisplayTimesShortned>{0} duración acortada</XDisplayTimesShortned>
+    <XLinesUnbreaked>{0} líneas unidas</XLinesUnbreaked>
+    <UnneededSpace>Espacios innecesarios</UnneededSpace>
     <XUnneededSpacesRemoved>{0} Espacios innecesarios eliminados</XUnneededSpacesRemoved>
-    <UnneededPeriod>Periodos innecesarios</UnneededPeriod>
-    <XUnneededPeriodsRemoved>{0} periodos innecesarios eliminados</XUnneededPeriodsRemoved>
-    <FixMissingSpace>Fijar espacios que faltan</FixMissingSpace>
-    <XMissingSpacesAdded>{0} Añadidos espacios que faltan</XMissingSpacesAdded>
-    <FixUppercaseIInsideLowercaseWord>Corregir 'i' mayuscula dentro de palabras en minúscula</FixUppercaseIInsideLowercaseWord>
-    <XPeriodsAdded>{0} periodos añadidos.</XPeriodsAdded>
-    <FixMissingPeriodAtEndOfLine>Agregar periodo que falta al final de la línea</FixMissingPeriodAtEndOfLine>
-    <XDoubleApostrophesFixed>{0} comillas dobles fijadas.</XDoubleApostrophesFixed>
-    <XUppercaseIsFoundInsideLowercaseWords>{0} 'i's mayusculas encontradas dentro de palabras en minuscula</XUppercaseIsFoundInsideLowercaseWords>
-    <RefreshFixes>Actualizar correcciones disponibles</RefreshFixes>
+    <UnneededPeriod>Puntos innecesarios</UnneededPeriod>
+    <XUnneededPeriodsRemoved>{0} Puntos innecesarios eliminados</XUnneededPeriodsRemoved>
+    <FixMissingSpace>Corregir espacio omitido</FixMissingSpace>
+    <XMissingSpacesAdded>{0} Espacios omitidos añadidos</XMissingSpacesAdded>
+    <FixUppercaseIInsideLowercaseWord>Corregir 'i' mayúscula en palabras en minúscula</FixUppercaseIInsideLowercaseWord>
+    <XPeriodsAdded>{0} puntos añadidos</XPeriodsAdded>
+    <FixMissingPeriodAtEndOfLine>Añadir punto omitido al final de línea</FixMissingPeriodAtEndOfLine>
+    <XDoubleApostrophesFixed>{0} dobles comas corregidas.</XDoubleApostrophesFixed>
+    <XUppercaseIsFoundInsideLowercaseWords>{0} 'i' mayúscula encontradas en palabras en minúscula</XUppercaseIsFoundInsideLowercaseWords>
+    <RefreshFixes>Refrescar correcciones disponibles</RefreshFixes>
     <ApplyFixes>Aplicar correcciones seleccionadas</ApplyFixes>
     <AutoBreak>Auto &amp;br</AutoBreak>
-    <Unbreak>Unir</Unbreak>
+    <Unbreak>Combinar</Unbreak>
     <FixDoubleDash>Corregir '--' -&gt; '...' </FixDoubleDash>
-    <FixDoubleGreaterThan>Eliminar&gt;&gt;</FixDoubleGreaterThan>
-    <FixEllipsesStart>Eliminar principales'...'</FixEllipsesStart>
-    <FixMissingOpenBracket>Corregir que faltan [en línea</FixMissingOpenBracket>
-    <FixMusicNotation>Reemplazar simbolos especiales (por ejemplo, ª) por simbolos fijados por defecto</FixMusicNotation>
-    <FixDoubleDashs>Corregir '--'s-&gt;'...'s</FixDoubleDashs>
-    <FixDoubleGreaterThans>Eliminar&gt;&gt; desde el principio</FixDoubleGreaterThans>
-    <FixEllipsesStarts>Eliminar ... desde el principio</FixEllipsesStarts>
-    <FixMissingOpenBrackets>Corregir ['s ausentes </FixMissingOpenBrackets>
-    <FixMusicNotations>Reemplazar âTª's por *'s</FixMusicNotations>
-    <XFixDoubleDash>{0} fijado '--'</XFixDoubleDash>
-    <XFixDoubleGreaterThan>{0} eliminado&gt;&gt;</XFixDoubleGreaterThan>
-    <XFixEllipsesStart>{0} eliminar a partir'...'</XFixEllipsesStart>
-    <XFixMissingOpenBracket>{0} corregido el simbolo [ en la linea</XFixMissingOpenBracket>
-    <XFixMusicNotation>{0} fix caracteres especiales en la linea</XFixMusicNotation>
+    <FixDoubleGreaterThan>Eliminar &gt;&gt; </FixDoubleGreaterThan>
+    <FixEllipsesStart>Eliminar '...' al inicio</FixEllipsesStart>
+    <FixMissingOpenBracket>Corregir [ omitido en la línea</FixMissingOpenBracket>
+    <FixMusicNotation>Sustituir símbolos musicales (e.g. âTª) con símbolos adecuados</FixMusicNotation>
+    <FixDoubleDashs>Corregir '--'s -&gt; '...'s </FixDoubleDashs>
+    <FixDoubleGreaterThans>Eliminar &gt;&gt; del inicio</FixDoubleGreaterThans>
+    <FixEllipsesStarts>Eliminar ... del inicio</FixEllipsesStarts>
+    <FixMissingOpenBrackets>Corregir [ omitidos </FixMissingOpenBrackets>
+    <FixMusicNotations>Sustituir âTª's por *'s</FixMusicNotations>
+    <XFixDoubleDash>{0} '--' corregidos</XFixDoubleDash>
+    <XFixDoubleGreaterThan>{0} &gt;&gt; eliminados</XFixDoubleGreaterThan>
+    <XFixEllipsesStart>{0} '...' iniciales eliminados</XFixEllipsesStart>
+    <XFixMissingOpenBracket>{0} [ omitidos en línea corregidos</XFixMissingOpenBracket>
+    <XFixMusicNotation>{0} nota musical en línea corregida</XFixMusicNotation>
     <FixDoubleDashExample>'Whoa-- um yeah!' --&gt; 'Whoa... um yeah!'</FixDoubleDashExample>
     <FixDoubleGreaterThanExample>'&gt;&gt; Robert: Sup dude!'  --&gt; 'Robert: Sup dude!'</FixDoubleGreaterThanExample>
     <FixEllipsesStartExample>'... and then we' -&gt; 'and then we'</FixEllipsesStartExample>
     <FixMissingOpenBracketExample>'clanks] Look out!' --&gt; '[clanks] Look out!'</FixMissingOpenBracketExample>
     <FixMusicNotationExample>'âTª sweet dreams are' --&gt; '♫ sweet dreams are'</FixMusicNotationExample>
-    <NumberOfImportantLogMessages>{0} mensajes de registro importantes!</NumberOfImportantLogMessages>
-    <FixedOkXY>Corregido y verificado - '{0}': {1}</FixedOkXY>
+    <NumberOfImportantLogMessages>{0} !Mensajes de registro importantes!</NumberOfImportantLogMessages>
+    <FixedOkXY>Corregidos y OK - '{0}': {1}</FixedOkXY>
   </FixCommonErrors>
   <GetDictionaries>
-    <Title>¿Necesitas diccionario?</Title>
-    <DescriptionLine1>La revision ortográfica realizada por Subtitle Edit se basa en el motor NHunspell que</DescriptionLine1>
-    <DescriptionLine2>utiliza el corrector ortográfico de Open Office.</DescriptionLine2>
-    <GetDictionariesHere>Obtener diccionarios aquí:</GetDictionariesHere>
-    <OpenOpenOfficeWiki>Lista de diccionarios del Open Office Wiki</OpenOpenOfficeWiki>
-    <GetAllDictionaries>Obtener todos los diccionarios</GetAllDictionaries>
-    <ChooseLanguageAndClickDownload>Elija su idioma y haga clic en descargar</ChooseLanguageAndClickDownload>
-    <OpenDictionariesFolder>Abrir la carpeta 'Diccionarios' </OpenDictionariesFolder>
-    <Download>Descargar</Download>
-    <XDownloaded>{0} ha sido descargado e instalado</XDownloaded>
+    <Title>¿Necesita diccionarios?</Title>
+    <DescriptionLine1>La revisión ortográfica de Subtitle Edit está basada en al motor NHunspell</DescriptionLine1>
+    <DescriptionLine2>que usa los diccionarios de Open Office.</DescriptionLine2>
+    <GetDictionariesHere>Consiga diccionarios aquí:</GetDictionariesHere>
+    <OpenOpenOfficeWiki>Lista de Diccionarios de Open Office Wiki</OpenOpenOfficeWiki>
+    <GetAllDictionaries>Conseguir todos los diccionarios</GetAllDictionaries>
+    <ChooseLanguageAndClickDownload>Seleccione idioma y clique descargar</ChooseLanguageAndClickDownload>
+    <OpenDictionariesFolder>Carpeta de Open 'Dictionaries'</OpenDictionariesFolder>
+    <Download>Descarga</Download>
+    <XDownloaded>{0} han sido descargados e instalados</XDownloaded>
   </GetDictionaries>
   <GoogleTranslate>
     <Title>Traductor Google</Title>
     <From>De:</From>
-    <To>a:</To>
+    <To>A:</To>
     <Translate>Traducir</Translate>
-    <PleaseWait>Por favor espere... esto puede tardar un rato</PleaseWait>
-    <PoweredByGoogleTranslate>Desarrollado por traductor de Google</PoweredByGoogleTranslate>
-    <PoweredByMicrosoftTranslate>Desarrollado por traductor de Microsoft</PoweredByMicrosoftTranslate>
+    <PleaseWait>Por favor, espere... puede tardar unos momentos</PleaseWait>
+    <PoweredByGoogleTranslate>Powered by Google translate</PoweredByGoogleTranslate>
+    <PoweredByMicrosoftTranslate>Powered by Microsoft translate</PoweredByMicrosoftTranslate>
   </GoogleTranslate>
+  <GoogleOrMicrosoftTranslate>
+    <Title>Traductor Google vs Microsoft</Title>
+    <From>De:</From>
+    <To>A:</To>
+    <Translate>Traducir</Translate>
+    <SourceText>Texto original</SourceText>
+    <GoogleTranslate>Traductor Google</GoogleTranslate>
+    <MicrosoftTranslate>Traductor Microsoft</MicrosoftTranslate>
+  </GoogleOrMicrosoftTranslate>
   <GoToLine>
-    <Title>Ir al número de subtítulo</Title>
+    <Title>Ir a subtítulo número</Title>
     <XIsNotAValidNumber>{0} no es un número válido</XIsNotAValidNumber>
   </GoToLine>
   <ImportText>
-    <Title>Importación del texto plano</Title>
-    <OpenTextFile>Abrir el archivo de texto...</OpenTextFile>
+    <Title>Importar texto plano</Title>
+    <OpenTextFile>Abrir archivo de texto...</OpenTextFile>
     <ImportOptions>Opciones de importación</ImportOptions>
-    <Splitting>Dividir</Splitting>
-    <AutoSplitText>División de texto auto</AutoSplitText>
-    <OneLineIsOneSubtitle>Una línea es un subtítulo</OneLineIsOneSubtitle>
-    <MergeShortLines>Combinar líneas cortas con continuación</MergeShortLines>
-    <RemoveEmptyLines>Eliminar líneas vacías</RemoveEmptyLines>
+    <Splitting>Dividiendo</Splitting>
+    <AutoSplitText>Autodividir texto</AutoSplitText>
+    <OneLineIsOneSubtitle>Una línea un subtítulo</OneLineIsOneSubtitle>
+    <MergeShortLines>combinar líneas cortas que continúan</MergeShortLines>
+    <RemoveEmptyLines>Eliminar líneas en blanco</RemoveEmptyLines>
     <RemoveLinesWithoutLetters>Eliminar líneas sin letras</RemoveLinesWithoutLetters>
-    <GapBetweenSubtitles>Separación entre subtítulos (milisegundos)</GapBetweenSubtitles>
+    <GapBetweenSubtitles>Espacio entre subtítulos (milisegundos)</GapBetweenSubtitles>
     <Auto>Auto</Auto>
     <Fixed>Corregido</Fixed>
-    <Refresh>&amp;Actualizar</Refresh>
-    <Next>&amp;Siguiente&gt;&gt;</Next>
+    <Refresh>&amp;Refrescar</Refresh>
+    <Next>Siguie&amp;nte &gt;&gt;</Next>
     <TextFiles>Archivos de texto</TextFiles>
-    <PreviewLinesModifiedX>Preview - párrafo modificados: {0}</PreviewLinesModifiedX>
+    <PreviewLinesModifiedX>Vista previa - párrafos modificados: {0}</PreviewLinesModifiedX>
   </ImportText>
   <Interjections>
     <Title>Interjecciones</Title>
@@ -380,427 +438,455 @@
     <Menu>
       <File>
         <Title>&amp;Archivo</Title>
-        <New>Nuevo</New>
+        <New>&amp;Nuevo</New>
         <Open>Abrir</Open>
-        <Reopen>Reabrir</Reopen>
-        <Save>Guardar</Save>
-        <SaveAs>Guardar como...</SaveAs>
-        <OpenOriginal>Abrir los subtítulos originales (modo de traductor)...</OpenOriginal>
+        <Reopen>&amp;Reabrir</Reopen>
+        <Save>&amp;Guardar</Save>
+        <SaveAs>Guardar &amp;como...</SaveAs>
+        <OpenOriginal>Abrir subtítulo original (modo tranductor)...</OpenOriginal>
         <SaveOriginal>Guardar subtítulo original</SaveOriginal>
         <CloseOriginal>Cerrar subtítulo original</CloseOriginal>
         <OpenContainingFolder>Abrir carpeta contenedora</OpenContainingFolder>
-        <Compare>Comparar...</Compare>
-        <ImportOcrFromDvd>Importar/subtítulo OCR de VOB/IFO (DVD) ...</ImportOcrFromDvd>
-        <ImportOcrVobSubSubtitle>Importar/OCR VobSub (sub/idx) subtítulos...</ImportOcrVobSubSubtitle>
-        <ImportBluRaySupFile>Importar/OCR Blu-ray archivo sup...</ImportBluRaySupFile>
-        <ImportSubtitleFromMatroskaFile>Importar los subtítulos desde archivo Matroska...</ImportSubtitleFromMatroskaFile>
-        <ImportSubtitleWithManualChosenEncoding>Importar los subtítulos con la codificación manual elegida...</ImportSubtitleWithManualChosenEncoding>
+        <Compare>&amp;Comparar...</Compare>
+        <ImportOcrFromDvd>Importar subtítulo /OCR de vob/ifo (dvd) ...</ImportOcrFromDvd>
+        <ImportOcrVobSubSubtitle>Importar subtítulo /OCR VobSub (sub/idx)...</ImportOcrVobSubSubtitle>
+        <ImportBluRaySupFile>Importar archivo /OCR Blu-ray sup...</ImportBluRaySupFile>
+        <ImportSubtitleFromMatroskaFile>Importar subtítulo de archivo Matroska...</ImportSubtitleFromMatroskaFile>
+        <ImportSubtitleWithManualChosenEncoding>Importar subtítulo seleccionando codificador manualmente...</ImportSubtitleWithManualChosenEncoding>
         <ImportText>Importar texto plano...</ImportText>
-        <ImportTimecodes>Importar time codes...</ImportTimecodes>
+        <ImportTimecodes>Importar códigos de tiempo...</ImportTimecodes>
+        <Export>Exportar</Export>
+        <ExportBdnXml>BDN xml/png...</ExportBdnXml>
+        <ExportCavena890>Cavena 890...</ExportCavena890>
+        <ExportEbu>EBU stl...</ExportEbu>
+        <ExportPac>PAC (Screen Electronics)...</ExportPac>
+        <ExportPlainText>Exportar texto plano...</ExportPlainText>
+        <ExportPlainTextWithoutLineBreaks>Exportar texto plano sin saltos de línea...</ExportPlainTextWithoutLineBreaks>
         <Exit>Salir</Exit>
       </File>
       <Edit>
         <Title>Editar</Title>
-        <ShowUndoHistory>Mostrar historial(para deshacer)</ShowUndoHistory>
-        <InsertUnicodeSymbol>Insertar símbolo Unicode</InsertUnicodeSymbol>
+        <ShowUndoHistory>Mostrar historial (para deshacer)</ShowUndoHistory>
+        <InsertUnicodeSymbol>Insertar símbolo unicode</InsertUnicodeSymbol>
         <Find>Buscar</Find>
-        <FindNext>Buscar y siguiente</FindNext>
-        <Replace>Reemplazar</Replace>
-        <MultipleReplace>Reemplazo múltiple...</MultipleReplace>
-        <GoToSubtitleNumber>Ir al  número de subtítulo...</GoToSubtitleNumber>
+        <FindNext>Buscar siguie&amp;nte</FindNext>
+        <Replace>&amp;Reemplazar</Replace>
+        <MultipleReplace>Reemplazar &amp;Multiple...</MultipleReplace>
+        <GoToSubtitleNumber>Ir a subtítulo número...</GoToSubtitleNumber>
       </Edit>
       <Tools>
         <Title>Herramientas</Title>
-        <AdjustDisplayDuration>Ajustar duración...</AdjustDisplayDuration>
-        <FixCommonErrors>Corregir errores comunes...</FixCommonErrors>
-        <StartNumberingFrom>Iniciar la numeración desde...</StartNumberingFrom>
-        <RemoveTextForHearingImpaired>Eliminar texto para los sordos...</RemoveTextForHearingImpaired>
-        <ChangeCasing>Cambiar el formato...</ChangeCasing>
-        <ChangeFrameRate>Cambiar el frame rate...</ChangeFrameRate>
-        <MergeShortLines>Combinar líneas cortas...</MergeShortLines>
-        <SplitLongLines>Dividir lineas largas...</SplitLongLines>
-        <MinimumDisplayTimeBetweenParagraphs>Mínimo tiempo de visualización entre los párrafos...</MinimumDisplayTimeBetweenParagraphs>
+        <AdjustDisplayDuration>&amp;Ajustar duraciones...</AdjustDisplayDuration>
+        <FixCommonErrors>&amp;Fijar errores comunes...</FixCommonErrors>
+        <StartNumberingFrom>Iniciar numeración desde...</StartNumberingFrom>
+        <RemoveTextForHearingImpaired>Eliminar texto para sordos...</RemoveTextForHearingImpaired>
+        <ChangeCasing>Cambiar mayúsculas...</ChangeCasing>
+        <ChangeFrameRate>Cambiar tasa de cuadros...</ChangeFrameRate>
+        <MergeShortLines>combinar líneas cortas...</MergeShortLines>
+        <SplitLongLines>Dividir líneas largas...</SplitLongLines>
+        <MinimumDisplayTimeBetweenParagraphs>Duración mínima entre párrafos...</MinimumDisplayTimeBetweenParagraphs>
         <SortBy>Ordenar por</SortBy>
-        <TextAlphabetically>Texto - Alfabeticamente</TextAlphabetically>
-        <TextSingleLineMaximumLength>Texto - longitud máxima de linea</TextSingleLineMaximumLength>
+        <Number>Número</Number>
+        <StartTime>Tiempo inicial</StartTime>
+        <EndTime>Tiempo final</EndTime>
+        <Duration>Duración</Duration>
+        <TextAlphabetically>Texto - alfabéticamente</TextAlphabetically>
+        <TextSingleLineMaximumLength>Texto - línea única máx. longitud</TextSingleLineMaximumLength>
         <TextTotalLength>Texto - longitud total</TextTotalLength>
         <TextNumberOfLines>Texto - número de líneas</TextNumberOfLines>
-        <SplitSubtitle>Dividir subtítulos...</SplitSubtitle>
-        <AppendSubtitle>Añadir subtítulos...</AppendSubtitle>
+        <TextNumberOfCharactersPerSeconds>Texto - número de caracteres/sec</TextNumberOfCharactersPerSeconds>
+        <ShowOriginalTextInAudioAndVideoPreview>Mostrar texto original en vista previa de audio/video</ShowOriginalTextInAudioAndVideoPreview>
+        <MakeNewEmptyTranslationFromCurrentSubtitle>Hacer nueva traducción desde 0 del subtítulo actual</MakeNewEmptyTranslationFromCurrentSubtitle>
+        <SplitSubtitle>Dividir subtítulo...</SplitSubtitle>
+        <AppendSubtitle>Anexar subtítulo...</AppendSubtitle>
       </Tools>
       <Video>
         <Title>Video</Title>
-        <OpenVideo>Abrir el archivo de vídeo...</OpenVideo>
-        <ChooseAudioTrack>Seleccione la pista de audio</ChooseAudioTrack>
-        <CloseVideo>Cerrar el archivo de vídeo</CloseVideo>
-        <ShowHideVideo>Mostrar/Ocultar vídeo</ShowHideVideo>
-        <ShowHideWaveForm>Mostrar/Ocultar la forma de onda</ShowHideWaveForm>
-        <UnDockVideoControls>los  controles de video</UnDockVideoControls>
-        <ReDockVideoControls>los  controles de video</ReDockVideoControls>
+        <OpenVideo>Abrir archivo de video...</OpenVideo>
+        <ChooseAudioTrack>Seleccionar pista de audio</ChooseAudioTrack>
+        <CloseVideo>Cerrar archivo de video</CloseVideo>
+        <ShowHideVideo>Mostrar/esconder video</ShowHideVideo>
+        <ShowHideWaveForm>Mostrar/esconder forma de onda</ShowHideWaveForm>
+        <ShowHideWaveformAndSpectrogram>Mostrar/esconder forma de onda y espectrograma</ShowHideWaveformAndSpectrogram>
+        <UnDockVideoControls>Desacoplar controles de vídeo</UnDockVideoControls>
+        <ReDockVideoControls>Acoplar controles de vídeo</ReDockVideoControls>
       </Video>
       <SpellCheck>
-        <Title>Corrector ortográfico</Title>
-        <SpellCheck>Corrector ortográfico...</SpellCheck>
+        <Title>Ortografía</Title>
+        <SpellCheck>Ortografía...</SpellCheck>
         <FindDoubleWords>Buscar palabras dobles</FindDoubleWords>
-        <GetDictionaries>Obtener diccionarios...</GetDictionaries>
-        <AddToNamesEtcList>Añadir la palabra a los nombres / lista etc</AddToNamesEtcList>
+        <FindDoubleLines>Buscar líneas dobles</FindDoubleLines>
+        <GetDictionaries>Conseguir diccionarios...</GetDictionaries>
+        <AddToNamesEtcList>Añadir palabra al listado de nombres</AddToNamesEtcList>
       </SpellCheck>
       <Synchronization>
         <Title>Sincronización</Title>
         <AdjustAllTimes>Ajustar todos los tiempos (mostrar antes/después)...</AdjustAllTimes>
-        <VisualSync>Sincronizacióm visual...</VisualSync>
-        <PointSync>Punto de sincronización...</PointSync>
+        <VisualSync>Sincronización &amp;Visual...</VisualSync>
+        <PointSync>Sincronicación puntual...</PointSync>
+        <PointSyncViaOtherSubtitle>Sincronicación puntual desde otro subtítulo...</PointSyncViaOtherSubtitle>
       </Synchronization>
       <AutoTranslate>
-        <Title>Traducción automática</Title>
-        <TranslatePoweredByGoogle>Traducir (por Google)...</TranslatePoweredByGoogle>
-        <TranslatePoweredByMicrosoft>Traducir ( por Microsoft)...</TranslatePoweredByMicrosoft>
-        <TranslateFromSwedishToDanish>Traducción del sueco al danés (por nikse.dk)...</TranslateFromSwedishToDanish>
+        <Title>Auto-traducción</Title>
+        <TranslatePoweredByGoogle>Traducir (powered by Google)...</TranslatePoweredByGoogle>
+        <TranslatePoweredByMicrosoft>Traducir (powered by Microsoft)...</TranslatePoweredByMicrosoft>
+        <TranslateFromSwedishToDanish>Traducir de Sueco a Danés (powered by nikse.dk)...</TranslateFromSwedishToDanish>
       </AutoTranslate>
       <Options>
         <Title>Opciones</Title>
-        <Settings>Configuración ...</Settings>
-        <ChooseLanguage>Seleccionar idioma...</ChooseLanguage>
+        <Settings>Aju&amp;stes...</Settings>
+        <ChooseLanguage>Sele&amp;ccionar idioma...</ChooseLanguage>
       </Options>
       <Networking>
-        <Title>Redes</Title>
-        <StartNewSession>Iniciar nueva sesión </StartNewSession>
-        <JoinSession>Unirse a una sesión</JoinSession>
-        <ShowSessionInfoAndLog>Mostrar información de sesión y registro</ShowSessionInfoAndLog>
+        <Title>Red</Title>
+        <StartNewSession>Iniciar sesión</StartNewSession>
+        <JoinSession>Unirse a sesión</JoinSession>
+        <ShowSessionInfoAndLog>Mostrar info de sesión y registro</ShowSessionInfoAndLog>
         <Chat>Chat</Chat>
         <LeaveSession>Abandonar sesión</LeaveSession>
       </Networking>
       <Help>
         <Title>Ayuda</Title>
         <Help>Ayuda</Help>
-        <About>Acerca de</About>
+        <About>&amp;Acerca de</About>
       </Help>
       <ToolBar>
         <New>Nuevo</New>
-        <Open>Abierto</Open>
+        <Open>Abrir</Open>
         <Save>Guardar</Save>
         <SaveAs>Guardar como</SaveAs>
         <Find>Buscar</Find>
         <Replace>Reemplazar</Replace>
         <VisualSync>Sincronización visual</VisualSync>
-        <SpellCheck>Corrector ortográfico</SpellCheck>
-        <Settings>Configuración</Settings>
+        <SpellCheck>Ortografía</SpellCheck>
+        <Settings>Ajustes</Settings>
         <Help>Ayuda</Help>
-        <ShowHideWaveForm>Mostrar/Ocultar la forma de onda</ShowHideWaveForm>
-        <ShowHideVideo>Mostrar/Ocultar vídeo</ShowHideVideo>
+        <ShowHideWaveForm>Mostrar/ocultar forma de onda</ShowHideWaveForm>
+        <ShowHideVideo>Mostrar/ocultar vídeo</ShowHideVideo>
       </ToolBar>
       <ContextMenu>
+        <SubStationAlphaSetStyle>(Avanzado) Sub Station Alpha - Ajustar estilo</SubStationAlphaSetStyle>
         <Cut>Cortar</Cut>
         <Copy>Copiar</Copy>
         <Paste>Pegar</Paste>
-        <Delete>Eliminar</Delete>
+        <Delete>Borrar</Delete>
+        <SplitLineAtCursorPosition>Dividir línea desde el cursor</SplitLineAtCursorPosition>
         <SelectAll>Seleccionar todo</SelectAll>
         <InsertFirstLine>Insertar línea</InsertFirstLine>
-        <InsertBefore>Insertar antes</InsertBefore>
-        <InsertAfter>Insertar después </InsertAfter>
-        <InsertSubtitleAfter>Insertar subtítulos después de esta línea...</InsertSubtitleAfter>
+        <InsertBefore>Insertar delante</InsertBefore>
+        <InsertAfter>Insertar detrás</InsertAfter>
+        <InsertSubtitleAfter>Insertar subtítulo después de esta línea...</InsertSubtitleAfter>
+        <CopyToClipboard>Copiar como texto al portapapeles</CopyToClipboard>
         <Split>Dividir</Split>
-        <MergeSelectedLines>Combinar las líneas seleccionadas</MergeSelectedLines>
-        <MergeWithLineBefore>Combinar con la línea anterior</MergeWithLineBefore>
-        <MergeWithLineAfter>Combinar con línea posterior</MergeWithLineAfter>
+        <MergeSelectedLines>combinar líneas seleccionadas</MergeSelectedLines>
+        <MergeWithLineBefore>combinar con línea anterior</MergeWithLineBefore>
+        <MergeWithLineAfter>combinar con línea siguiente</MergeWithLineAfter>
         <Normal>Normal</Normal>
-        <Underline>Subrayar</Underline>
+        <Underline>Subrrallado</Underline>
         <Color>Color...</Color>
-        <FontName>Nombre de fuente ...</FontName>
-        <AutoBalanceSelectedLines>Auto balance de las líneas seleccionadas...</AutoBalanceSelectedLines>
+        <FontName>Nombre de fuente...</FontName>
+        <AutoBalanceSelectedLines>Autoajustar líneas seleccionadas...</AutoBalanceSelectedLines>
         <RemoveLineBreaksFromSelectedLines>Eliminar saltos de línea de las líneas seleccionadas...</RemoveLineBreaksFromSelectedLines>
-        <TypewriterEffect>Efecto de máquina de escribir...</TypewriterEffect>
-        <KaraokeEffect>Efecto karaoke...</KaraokeEffect>
-        <ShowSelectedLinesEarlierLater>Mostrar las líneas seleccionadas antes/después...</ShowSelectedLinesEarlierLater>
-        <VisualSyncSelectedLines>Sincronización visual de las  líneas seleccionadas...</VisualSyncSelectedLines>
-        <GoogleTranslateSelectedLines>Traducción de  Google de las líneas seleccionadas...</GoogleTranslateSelectedLines>
-        <AdjustDisplayDurationForSelectedLines>Ajustar la duración de las líneas seleccionadas...</AdjustDisplayDurationForSelectedLines>
-        <FixCommonErrorsInSelectedLines>Corregir los errores comunes en las líneas seleccionadas...</FixCommonErrorsInSelectedLines>
-        <ChangeCasingForSelectedLines>Cambio de formato de las líneas seleccionadas...</ChangeCasingForSelectedLines>
+        <TypewriterEffect>Efecto máquina de escribir...</TypewriterEffect>
+        <KaraokeEffect>Efecto Karaoke...</KaraokeEffect>
+        <ShowSelectedLinesEarlierLater>Mostrar líneas seleccionadas antes/después...</ShowSelectedLinesEarlierLater>
+        <VisualSyncSelectedLines>Sincro. visual líneas seleccionadas...</VisualSyncSelectedLines>
+        <GoogleAndMicrosoftTranslateSelectedLine>Google/Microsoft traducir línea original</GoogleAndMicrosoftTranslateSelectedLine>
+        <GoogleTranslateSelectedLines>Google traducir líneas seleccionadas...</GoogleTranslateSelectedLines>
+        <AdjustDisplayDurationForSelectedLines>Ajustar duración líneas seleccionadas...</AdjustDisplayDurationForSelectedLines>
+        <FixCommonErrorsInSelectedLines>Corregir problemas comunes líneas seleccionadas...</FixCommonErrorsInSelectedLines>
+        <ChangeCasingForSelectedLines>Cambiar mayúsc. líneas seleccionadas...</ChangeCasingForSelectedLines>
       </ContextMenu>
     </Menu>
     <Controls>
       <SubtitleFormat>Formato</SubtitleFormat>
-      <FileEncoding>Codificación</FileEncoding>
+      <FileEncoding>Codificador</FileEncoding>
       <ListView>Vista de lista</ListView>
-      <SourceView>Ver código fuente</SourceView>
-      <UndoChangesInEditPanel>Deshacer los cambios realizados en el panel de edición</UndoChangesInEditPanel>
-      <Previous>&lt;Anterior</Previous>
-      <Next>Siguiente&gt;</Next>
-      <AutoBreak>Auto /br</AutoBreak>
-      <Unbreak>Unir</Unbreak>
+      <SourceView>Vista original</SourceView>
+      <UndoChangesInEditPanel>Deshacer cambios en panel de edición</UndoChangesInEditPanel>
+      <Previous>&lt; Previo</Previous>
+      <Next>Siguiente &gt;</Next>
+      <AutoBreak>Auto &amp;br</AutoBreak>
+      <Unbreak>combinar</Unbreak>
     </Controls>
     <VideoControls>
       <Translate>Traducir</Translate>
       <Create>Crear</Create>
       <Adjust>Ajustar</Adjust>
-      <SelectCurrentElementWhilePlaying>Seleccionar el subtítulo actual durante la reproducción</SelectCurrentElementWhilePlaying>
-      <AutoRepeat>Repetición automática</AutoRepeat>
-      <AutoRepeatOn>Repetición automática activada</AutoRepeatOn>
-      <AutoRepeatCount>Número de repeticiones (veces)</AutoRepeatCount>
-      <AutoContinue>Autocontinuar</AutoContinue>
-      <AutoContinueOn>Auto continuación activada</AutoContinueOn>
-      <DelayInSeconds>Retardo (segundos)</DelayInSeconds>
-      <OriginalText>Texto original</OriginalText>
-      <Previous>&lt;Anterior</Previous>
-      <Stop>Parar</Stop>
-      <PlayCurrent>Reproducir actual</PlayCurrent>
-      <Next>Siguiente&gt;</Next>
+      <SelectCurrentElementWhilePlaying>Selec. subtítulo actual durante la reproducción</SelectCurrentElementWhilePlaying>
+      <AutoRepeat>Repetir automático</AutoRepeat>
+      <AutoRepeatOn>Repetir automático activado</AutoRepeatOn>
+      <AutoRepeatCount>Contador de repeticiones (veces)</AutoRepeatCount>
+      <AutoContinue>Auto continuar</AutoContinue>
+      <AutoContinueOn>Auto continuar activado</AutoContinueOn>
+      <DelayInSeconds>Retraso (segundos)</DelayInSeconds>
+      <OriginalText>Texto Original</OriginalText>
+      <Previous>&lt; Pre&amp;vio</Previous>
+      <Stop>&amp;Stop</Stop>
+      <PlayCurrent>Re&amp;producir actual</PlayCurrent>
+      <Next>Siguie&amp;nte &gt;</Next>
       <Playing>Reproduciendo...</Playing>
-      <RepeatingLastTime>Repitiendo ... la última vez</RepeatingLastTime>
-      <RepeatingXTimesLeft>Repitiendo de... {0} veces a la izquierda</RepeatingXTimesLeft>
+      <RepeatingLastTime>Repitiendo... última vez</RepeatingLastTime>
+      <RepeatingXTimesLeft>Repitiendo... faltan {0} veces</RepeatingXTimesLeft>
       <AutoContinueInOneSecond>Auto continuar en un segundo</AutoContinueInOneSecond>
       <AutoContinueInXSeconds>Auto continuar en {0} segundos</AutoContinueInXSeconds>
-      <StillTypingAutoContinueStopped>Aún escribiendo... Auto continuación detenida</StillTypingAutoContinueStopped>
-      <InsertNewSubtitleAtVideoPosition>Insertar nuevos subtítulos después del vídeo</InsertNewSubtitleAtVideoPosition>
+      <StillTypingAutoContinueStopped>Escribiendo... auto continuar detenido</StillTypingAutoContinueStopped>
+      <InsertNewSubtitleAtVideoPosition>&amp;Insertar subtít. en pos. video</InsertNewSubtitleAtVideoPosition>
       <Auto>Auto</Auto>
-      <PlayFromJustBeforeText>Escuchar desde poco antes del texto</PlayFromJustBeforeText>
-      <Pause>Pausar</Pause>
-      <GoToSubtitlePositionAndPause>Ir a la subposition y pausar</GoToSubtitlePositionAndPause>
-      <SetStartTime>Establecer hora de inicio</SetStartTime>
-      <SetEndTimeAndGoToNext>Ajustar finalización e ir a siguiente</SetEndTimeAndGoToNext>
-      <SetEndTime>Establecer fin</SetEndTime>
-      <SetstartTimeAndOffsetOfRest>Establecer inicio y ajustar el resto</SetstartTimeAndOffsetOfRest>
-      <SearchTextOnline>Buscar línea de texto </SearchTextOnline>
+      <PlayFromJustBeforeText>Repr. desde justo antes del &amp;texto</PlayFromJustBeforeText>
+      <Pause>Pausa</Pause>
+      <GoToSubtitlePositionAndPause>Ir a pos. subtítulo y pausa</GoToSubtitlePositionAndPause>
+      <SetStartTime>Aju&amp;star tiempo inicial</SetStartTime>
+      <SetEndTimeAndGoToNext>Ajustar ti&amp;empo final / siguiente</SetEndTimeAndGoToNext>
+      <AdjustedViaEndTime>Ajustado via tiempo final {0}</AdjustedViaEndTime>
+      <SetEndTime>Ajustar tiempo fi&amp;nal</SetEndTime>
+      <SetstartTimeAndOffsetOfRest>Ajusta&amp;r inicio y compensar el resto</SetstartTimeAndOffsetOfRest>
+      <SearchTextOnline>Buscar texto en línea</SearchTextOnline>
       <GoogleTranslate>Traductor Google</GoogleTranslate>
-      <GoogleIt>Ir a Google</GoogleIt>
+      <GoogleIt>Google</GoogleIt>
       <SecondsBackShort>&lt;&lt;</SecondsBackShort>
       <SecondsForwardShort>&gt;&gt;</SecondsForwardShort>
-      <VideoPosition>Posición de video:</VideoPosition>
-      <TranslateTip>Consejo: Usar &lt;alt+flecha arriba/abajo&gt; para ir al subtítulo anterior/posterior</TranslateTip>
-      <CreateTip>Consejo: Usar &lt;ctrl+arrow izquierda/derecha&gt; contraseña</CreateTip>
-      <AdjustTip>Consejo: Usar &lt;alt+flecha arriba/abajo&gt; para ir al subtítulo anterior/posterior</AdjustTip>
-      <BeforeChangingTimeInWaveFormX>Antes de modificar  su tiempo  en la forma de onda: {0}</BeforeChangingTimeInWaveFormX>
+      <VideoPosition>Posición vídeo:</VideoPosition>
+      <TranslateTip>Tip: Use &lt;alt+flecha arriba/abajo&gt; para ir al subt. prev/sig</TranslateTip>
+      <CreateTip>Tip: Use &lt;ctrl+flecha izquierda/derecha&gt;</CreateTip>
+      <AdjustTip>Tip: Use &lt;alt+flecha arriba/abajo&gt; para ir sub. previo/sig</AdjustTip>
+      <BeforeChangingTimeInWaveFormX>Antes de cambiar el tiempo en forma de onda: {0}</BeforeChangingTimeInWaveFormX>
       <NewTextInsertAtX>Nuevo texto insertado en {0}</NewTextInsertAtX>
       <Center>Centrar</Center>
-      <PlayRate>Velocidad de reproducción </PlayRate>
+      <PlayRate>Velocidad de reproducción</PlayRate>
       <Slow>Lento</Slow>
       <Normal>Normal</Normal>
       <Fast>Rápido</Fast>
       <VeryFast>Muy rápido</VeryFast>
     </VideoControls>
-    <SaveChangesToUntitled>Guardar cambios sin título?</SaveChangesToUntitled>
-    <SaveChangesToX>Guardar los cambios a {0}?</SaveChangesToX>
-    <SaveChangesToUntitledOriginal>Guardar cambios sin título original?</SaveChangesToUntitledOriginal>
-    <SaveChangesToOriginalX>Guardar los cambios al original {0}?</SaveChangesToOriginalX>
-    <SaveSubtitleAs>Guardar subtítulos como...</SaveSubtitleAs>
-    <SaveOriginalSubtitleAs>Guardar los subtítulos originales como...</SaveOriginalSubtitleAs>
-    <NoSubtitleLoaded>No hay subtítulos cargados</NoSubtitleLoaded>
-    <VisualSyncSelectedLines>sincronización visual - líneas seleccionadas</VisualSyncSelectedLines>
+    <SaveChangesToUntitled>¿Guardar cambios a sin título?</SaveChangesToUntitled>
+    <SaveChangesToX>Guardar cambios a {0}?</SaveChangesToX>
+    <SaveChangesToUntitledOriginal>¿Guardar cambios al original sin título?</SaveChangesToUntitledOriginal>
+    <SaveChangesToOriginalX>Guardar cambios al original {0}?</SaveChangesToOriginalX>
+    <SaveSubtitleAs>Guardar subtítulo como...</SaveSubtitleAs>
+    <SaveOriginalSubtitleAs>Guardar subtítulo original como...</SaveOriginalSubtitleAs>
+    <NoSubtitleLoaded>Ningún subtítulo cargado</NoSubtitleLoaded>
+    <VisualSyncSelectedLines>Sincronización visual - líneas seleccionadas</VisualSyncSelectedLines>
     <VisualSyncTitle>Sincronización visual</VisualSyncTitle>
-    <BeforeVisualSync>Antes de la sincronización visual</BeforeVisualSync>
-    <VisualSyncPerformedOnSelectedLines>Sincronización visual de las líneas seleccionadas</VisualSyncPerformedOnSelectedLines>
+    <BeforeVisualSync>Sincronización visual antes</BeforeVisualSync>
+    <VisualSyncPerformedOnSelectedLines>Sincronización visual aplicada a las líneas seleccionadas</VisualSyncPerformedOnSelectedLines>
     <VisualSyncPerformed>Sincronización visual realizada</VisualSyncPerformed>
-    <ImportThisVobSubSubtitle>Importar este subtítulo VobSub?</ImportThisVobSubSubtitle>
-    <FileXIsLargerThan10Mb>El archivo es mayor que 10 MB: {0}</FileXIsLargerThan10Mb>
-    <ContinueAnyway>¿Desea continuar?</ContinueAnyway>
-    <BeforeLoadOf>Antes de cargar {0}</BeforeLoadOf>
+    <ImportThisVobSubSubtitle>¿Importar este subtítulo VobSub?</ImportThisVobSubSubtitle>
+    <FileXIsLargerThan10Mb>El archivo es mayor de 10 MB: {0}</FileXIsLargerThan10Mb>
+    <ContinueAnyway>¿Continuar de todas formas?</ContinueAnyway>
+    <BeforeLoadOf>Antes de carga de {0}</BeforeLoadOf>
     <LoadedSubtitleX>Subtítulo cargado {0}</LoadedSubtitleX>
-    <LoadedEmptyOrShort>Cargado subtítulo vacío o muy corto {0}</LoadedEmptyOrShort>
-    <FileIsEmptyOrShort>El archivo está vacío o es muy corto</FileIsEmptyOrShort>
+    <LoadedEmptyOrShort>Cargado subtítulo vacío o muy pequeño {0}</LoadedEmptyOrShort>
+    <FileIsEmptyOrShort>¡Archivo vacío o muy pequeño!</FileIsEmptyOrShort>
     <FileNotFound>Archivo no encontrado: {0}</FileNotFound>
-    <SavedSubtitleX>Subtítulos guardado {0}</SavedSubtitleX>
-    <SavedOriginalSubtitleX>Guardado subtítulo original  {0}</SavedOriginalSubtitleX>
-    <FileOnDiskModified>Modificado archivo en disco </FileOnDiskModified>
-    <OverwriteModifiedFile>Sobrescribir el archivo {0} modificado en {1} {2} {3} con el archivo actual cargado desde el disco en {4} {5}?</OverwriteModifiedFile>
-    <UnableToSaveSubtitleX>No se puede guardar el archivo de subtítulos {0}</UnableToSaveSubtitleX>
-    <BeforeNew>Antes del nuevo</BeforeNew>
+    <SavedSubtitleX>Subtítulo guardado {0}</SavedSubtitleX>
+    <SavedOriginalSubtitleX>Subtítulo original guardado {0}</SavedOriginalSubtitleX>
+    <FileOnDiskModified>Modificado archivo en disco</FileOnDiskModified>
+    <OverwriteModifiedFile>¿Sobreescribir archivo {0} modificado a {1} {2}{3} con archivo actual cargado del disco a {4} {5}?</OverwriteModifiedFile>
+    <UnableToSaveSubtitleX>Imposible guardar archivo de subtítulo {0}</UnableToSaveSubtitleX>
+    <BeforeNew>Anterior nuevo</BeforeNew>
     <New>Nuevo</New>
-    <BeforeConvertingToX>Antes de convertir a {0}</BeforeConvertingToX>
-    <ConvertedToX>Convertido {0}</ConvertedToX>
+    <BeforeConvertingToX>Convirtiendo anterior a {0}</BeforeConvertingToX>
+    <ConvertedToX>Convertido a {0}</ConvertedToX>
     <BeforeShowEarlier>Antes de mostrar el anterior</BeforeShowEarlier>
     <BeforeShowLater>Antes de mostrar el siguiente</BeforeShowLater>
-    <LineNumberX>Número de línea: {0:#,##0.##}</LineNumberX>
-    <OpenVideoFile>Abrir el archivo de vídeo...</OpenVideoFile>
-    <NewFrameRateUsedToCalculateTimeCodes>Nuevo frame rate ({0}) fue usado para calcular nuevos time codes de inicio/final</NewFrameRateUsedToCalculateTimeCodes>
-    <NewFrameRateUsedToCalculateFrameNumbers>Nuevo frame rate ({0}) fue usado para calcular nuevos números de imágenes de inicio/final</NewFrameRateUsedToCalculateFrameNumbers>
-    <FindContinue>La busqueda no ha dado resultados
- ¿Le gustaría comenzar desde la parte superior del documento e iniciar la búsqueda una vez más?</FindContinue>
-    <FindContinueTitle>Continuar buscando?</FindContinueTitle>
-    <XFoundAtLineNumberY>'{0}' encontrado en el número de línea {1}</XFoundAtLineNumberY>
+    <LineNumberX>Línea número: {0:#,##0.##}</LineNumberX>
+    <OpenVideoFile>Abrir archivo de vídeo...</OpenVideoFile>
+    <NewFrameRateUsedToCalculateTimeCodes>Nueva tasa de cuadros ({0}) usada para calcular inicio/fin del código de tiempos</NewFrameRateUsedToCalculateTimeCodes>
+    <NewFrameRateUsedToCalculateFrameNumbers>Nueva tasa de cuadros ({0}) usada para calcular inicio/fin número de cuadro</NewFrameRateUsedToCalculateFrameNumbers>
+    <FindContinue>La busqueda no ha dado resultados.
+¿Quiere reintentarlo desde el inicio del documento?</FindContinue>
+    <FindContinueTitle>¿Continuar buscando?</FindContinueTitle>
+    <XFoundAtLineNumberY>'{0}' encontrado en línea número {1}</XFoundAtLineNumberY>
     <XNotFound>'{0}' no encontrado</XNotFound>
     <BeforeReplace>Antes de reemplazar: {0}</BeforeReplace>
     <MatchFoundX>Coincidencias encontradas: {0}</MatchFoundX>
     <NoMatchFoundX>No se han encontrado coincidencias: {0}</NoMatchFoundX>
     <FoundNothingToReplace>No se ha encontrado nada que reemplazar</FoundNothingToReplace>
-    <ReplaceCountX>Número de palabras reemplazadas: {0}</ReplaceCountX>
+    <ReplaceCountX>Número de reemplazos: {0}</ReplaceCountX>
     <NoXFoundAtLineY>Concidencias encontradas en la línea {0}: {1}</NoXFoundAtLineY>
     <OneReplacementMade>Un reemplazo realizado.</OneReplacementMade>
-    <BeforeChangesMadeInSourceView>Antes de los cambios realizados en la vista de origen</BeforeChangesMadeInSourceView>
-    <UnableToParseSourceView>No se puede analizar el texto original!</UnableToParseSourceView>
+    <BeforeChangesMadeInSourceView>Antes de realizar cambios en la vista de origen</BeforeChangesMadeInSourceView>
+    <UnableToParseSourceView>!No se puede analizar el texto original!</UnableToParseSourceView>
     <GoToLineNumberX>Ir a la línea {0}</GoToLineNumberX>
-    <CreateAdjustChangesApplied>Crear/ajustar las líneas de los cambios aplicados</CreateAdjustChangesApplied>
+    <CreateAdjustChangesApplied>Cambios aplicados en Crear/ajustar líneas</CreateAdjustChangesApplied>
     <SelectedLines>líneas seleccionadas</SelectedLines>
-    <BeforeDisplayTimeAdjustment>Antes del ajuste del tiempo</BeforeDisplayTimeAdjustment>
-    <DisplayTimeAdjustedX>Mostrar el tiempo ajustado: {0}</DisplayTimeAdjustedX>
-    <DisplayTimesAdjustedX>Mostrar los tiempos ajustado: {0}</DisplayTimesAdjustedX>
-    <StarTimeAdjustedX>Tiempo de inicio ajustado: {0}</StarTimeAdjustedX>
+    <BeforeDisplayTimeAdjustment>Antes del ajuste de la duración</BeforeDisplayTimeAdjustment>
+    <DisplayTimeAdjustedX>Duración ajustada: {0}</DisplayTimeAdjustedX>
+    <DisplayTimesAdjustedX>Duraciones ajustadas: {0}</DisplayTimesAdjustedX>
+    <StarTimeAdjustedX>Tiempos de inicio ajustados: {0}</StarTimeAdjustedX>
     <BeforeCommonErrorFixes>Antes de corregir errores comunes</BeforeCommonErrorFixes>
-    <CommonErrorsFixedInSelectedLines>Errores comunes corregidos en las líneas seleccionadas</CommonErrorsFixedInSelectedLines>
+    <CommonErrorsFixedInSelectedLines>Errores comunes corregidos en líneas seleccionadas</CommonErrorsFixedInSelectedLines>
     <CommonErrorsFixed>Errores comunes corregidos</CommonErrorsFixed>
-    <BeforeRenumbering>Antes de volver a numerar</BeforeRenumbering>
-    <RenumberedStartingFromX>Volver a numerar a partir de: {0}</RenumberedStartingFromX>
-    <BeforeRemovalOfTextingForHearingImpaired>Antes de eliminar los  mensajes de texto para los sordos</BeforeRemovalOfTextingForHearingImpaired>
-    <TextingForHearingImpairedRemovedOneLine>Eliminados los mensajes de texto para los sordos: Una línea</TextingForHearingImpairedRemovedOneLine>
-    <TextingForHearingImpairedRemovedXLines>Eliminados los mensajes de texto para los sordos: : {0} lineas</TextingForHearingImpairedRemovedXLines>
+    <BeforeRenumbering>Antes de renumerar</BeforeRenumbering>
+    <RenumberedStartingFromX>Renumerar a partir de: {0}</RenumberedStartingFromX>
+    <BeforeRemovalOfTextingForHearingImpaired>Antes de eliminar los  mensajes de texto para sordos</BeforeRemovalOfTextingForHearingImpaired>
+    <TextingForHearingImpairedRemovedOneLine>Eliminados los mensajes de texto para sordos: Una línea</TextingForHearingImpairedRemovedOneLine>
+    <TextingForHearingImpairedRemovedXLines>Texto para sordos eliminado : {0} líneas</TextingForHearingImpairedRemovedXLines>
     <SubtitleSplitted>Subtítulo dividido</SubtitleSplitted>
-    <SubtitleAppendPrompt>Esto añadirá un subtítulo existente al subtítulo actual cargado que debe
- estar sincronizado con el archivo de vídeo.
+    <SubtitleAppendPrompt>Esto añadirá un subtítulo existente, que debería estar sincronizado
+con el archivo de vídeo, al subtítulo actual cargado.
 
- ¿Desea continuar?</SubtitleAppendPrompt>
-    <SubtitleAppendPromptTitle>Añadir subtítulo</SubtitleAppendPromptTitle>
-    <OpenSubtitleToAppend>Abrir subtítulo para añadir...</OpenSubtitleToAppend>
-    <AppendViaVisualSyncTitle>Sincronización visual - añadir la segunda parte del subtítulo</AppendViaVisualSyncTitle>
-    <AppendSynchronizedSubtitlePrompt>Añadir este subtítulo sincronizado?</AppendSynchronizedSubtitlePrompt>
-    <BeforeAppend>Antes de añadir</BeforeAppend>
-    <SubtitleAppendedX>Subtítulo añadido: {0}</SubtitleAppendedX>
-    <SubtitleNotAppended>Subtítulo NO añadido!</SubtitleNotAppended>
+¿Desea continuar?</SubtitleAppendPrompt>
+    <SubtitleAppendPromptTitle>Anexar subtítulo</SubtitleAppendPromptTitle>
+    <OpenSubtitleToAppend>Abrir subtítulo para anexar...</OpenSubtitleToAppend>
+    <AppendViaVisualSyncTitle>Sincronización visual - anexar la segunda parte del subtítulo</AppendViaVisualSyncTitle>
+    <AppendSynchronizedSubtitlePrompt>¿Anexar este subtítulo sincronizado?</AppendSynchronizedSubtitlePrompt>
+    <BeforeAppend>Antes de anexar</BeforeAppend>
+    <SubtitleAppendedX>Subtítulo anexado: {0}</SubtitleAppendedX>
+    <SubtitleNotAppended>¡Subtítulo NO anexado!</SubtitleNotAppended>
     <GoogleTranslate>Traductor Google</GoogleTranslate>
-    <MicrosoftTranslate>Traductor Microsoft </MicrosoftTranslate>
+    <MicrosoftTranslate>Traductor Microsoft</MicrosoftTranslate>
     <BeforeGoogleTranslation>Antes de la traducción de Google</BeforeGoogleTranslation>
     <SelectedLinesTranslated>Líneas seleccionadas traducidas</SelectedLinesTranslated>
     <SubtitleTranslated>Subtítulo traducido</SubtitleTranslated>
-    <TranslateSwedishToDanish>Traducir el subtítulos actualmente cargado del sueco al danés</TranslateSwedishToDanish>
-    <TranslateSwedishToDanishWarning>Translate currently loaded SWEDISH (are you sure it's Swedish?) subtitle to Danish?
-¿Traducir el subtitulo actualmente cargado del sueco al danes?(¿Estás seguro de que es sueco?)</TranslateSwedishToDanishWarning>
-    <TranslatingViaNikseDkMt>Traduciendo a través de www.nikse.dk/mt...</TranslatingViaNikseDkMt>
-    <BeforeSwedishToDanishTranslation>Antes de traducir del sueco al danés</BeforeSwedishToDanishTranslation>
-    <TranslationFromSwedishToDanishComplete>Traducción del sueco al danés completada</TranslationFromSwedishToDanishComplete>
-    <TranslationFromSwedishToDanishFailed>Traducción del sueco al danés fallida</TranslationFromSwedishToDanishFailed>
+    <TranslateSwedishToDanish>Traducir el subtítulo actualmente cargado del Sueco al Danés</TranslateSwedishToDanish>
+    <TranslateSwedishToDanishWarning>¿Traducir el subtítulo actualmente cargado del SUECO (¿Estás seguro de que es sueco?) al Danés?</TranslateSwedishToDanishWarning>
+    <TranslatingViaNikseDkMt>Traduciendo via www.nikse.dk/mt...</TranslatingViaNikseDkMt>
+    <BeforeSwedishToDanishTranslation>Antes de traducir del Sueco al Danés</BeforeSwedishToDanishTranslation>
+    <TranslationFromSwedishToDanishComplete>Traducción del Sueco al Danés completada</TranslationFromSwedishToDanishComplete>
+    <TranslationFromSwedishToDanishFailed>Traducción del Sueco al Danés fallida</TranslationFromSwedishToDanishFailed>
     <BeforeUndo>Antes de deshacer</BeforeUndo>
     <UndoPerformed>Deshacer realizado</UndoPerformed>
     <NothingToUndo>Nada que deshacer</NothingToUndo>
-    <InvalidLanguageNameX>Nombre del idioma no válido: {0}</InvalidLanguageNameX>
-    <UnableToChangeLanguage>No se puede cambiar el idioma!</UnableToChangeLanguage>
+    <InvalidLanguageNameX>Nombre de idioma no válido: {0}</InvalidLanguageNameX>
+    <UnableToChangeLanguage>¡No se puede cambiar el idioma!</UnableToChangeLanguage>
     <NumberOfCorrectedWords>Número de palabras corregidas: {0}</NumberOfCorrectedWords>
     <NumberOfSkippedWords>Número de palabras omitidas: {0}</NumberOfSkippedWords>
     <NumberOfCorrectWords>Número de palabras correctas: {0}</NumberOfCorrectWords>
     <NumberOfWordsAddedToDictionary>Número de palabras añadidas al diccionario: {0}</NumberOfWordsAddedToDictionary>
-    <NumberOfNameHits>Número de accesos de nombre: {0}</NumberOfNameHits>
-    <SpellCheck>Corrector ortográfico</SpellCheck>
-    <BeforeSpellCheck>Antes de la corrección ortográfica</BeforeSpellCheck>
-    <SpellCheckChangedXToY>Corrector ortográfico: Se ha cambiado '{0}' por '{1}</SpellCheckChangedXToY>
-    <BeforeAddingTagX>Antes de añadir &lt;{0}&gt; etiquetas</BeforeAddingTagX>
-    <TagXAdded>&lt;0} {&gt; Etiquetas añadidas</TagXAdded>
+    <NumberOfNameHits>Número de nombres afectados: {0}</NumberOfNameHits>
+    <SpellCheck>Revisión ortográfica</SpellCheck>
+    <BeforeSpellCheck>Antes de la revisión ortográfica</BeforeSpellCheck>
+    <SpellCheckChangedXToY>Revisión ortográfica: Cambiado '{0}' por '{1}'</SpellCheckChangedXToY>
+    <BeforeAddingTagX>Antes de añadir &lt;{0}&gt; etiqueta</BeforeAddingTagX>
+    <TagXAdded>&lt;{0}&gt; Etiquetas añadidas</TagXAdded>
     <LineXOfY>línea {0} de {1}</LineXOfY>
     <XLinesDeleted>{0} líneas eliminadas</XLinesDeleted>
     <BeforeDeletingXLines>Antes de borrar {0} líneas</BeforeDeletingXLines>
-    <DeleteXLinesPrompt>Eliminar {0} líneas?</DeleteXLinesPrompt>
+    <DeleteXLinesPrompt>¿Eliminar {0} líneas?</DeleteXLinesPrompt>
     <OneLineDeleted>Línea eliminada</OneLineDeleted>
     <BeforeDeletingOneLine>Antes de eliminar una línea</BeforeDeletingOneLine>
-    <DeleteOneLinePrompt>Eliminar una línea?</DeleteOneLinePrompt>
-    <BeforeInsertLine>Antes de insertar una linea</BeforeInsertLine>
+    <DeleteOneLinePrompt>¿Eliminar una línea?</DeleteOneLinePrompt>
+    <BeforeInsertLine>Antes de insertar una línea</BeforeInsertLine>
     <LineInserted>Línea insertada</LineInserted>
-    <BeforeLineUpdatedInListView>Antes de la línea de actualizada en listview</BeforeLineUpdatedInListView>
+    <BeforeLineUpdatedInListView>Antes de actualizar línea en vista de lista</BeforeLineUpdatedInListView>
     <BeforeSettingFontToNormal>Antes de establecer la fuente a normal</BeforeSettingFontToNormal>
     <BeforeSplitLine>Antes de dividir la línea</BeforeSplitLine>
     <LineSplitted>Línea dividida</LineSplitted>
     <BeforeMergeLines>Antes de combinar las líneas</BeforeMergeLines>
     <LinesMerged>Líneas combinadas</LinesMerged>
-    <BeforeSettingColor>Antes del ajuste de color</BeforeSettingColor>
-    <BeforeSettingFontName>Antes del ajuste del nombre de la fuente</BeforeSettingFontName>
+    <BeforeSettingColor>Antes de ajustar el color</BeforeSettingColor>
+    <BeforeSettingFontName>Antes de ajustar el nombre de fuente</BeforeSettingFontName>
     <BeforeTypeWriterEffect>Antes del efecto maquina de escribir</BeforeTypeWriterEffect>
     <BeforeKaraokeEffect>Antes del efecto karaoke</BeforeKaraokeEffect>
     <BeforeImportingDvdSubtitle>Antes de importar los subtítulos desde DVD</BeforeImportingDvdSubtitle>
-    <OpenMatroskaFile>Abrir archivos Matroska...</OpenMatroskaFile>
+    <OpenMatroskaFile>Abrir archivo Matroska...</OpenMatroskaFile>
     <MatroskaFiles>Archivos Matroska</MatroskaFiles>
-    <NoSubtitlesFound>Subtitulos no encontrados</NoSubtitlesFound>
-    <NotAValidMatroskaFileX>Esto no es un archivo matroska válido: {0}</NotAValidMatroskaFileX>
+    <NoSubtitlesFound>subtítulos no encontrados</NoSubtitlesFound>
+    <NotAValidMatroskaFileX>No es un archivo matroska válido: {0}</NotAValidMatroskaFileX>
     <ParsingMatroskaFile>Analizando archivo Matroska. Por favor espere...</ParsingMatroskaFile>
-    <BeforeImportFromMatroskaFile>Antes de importar los subtitulos de los archivos Matroska</BeforeImportFromMatroskaFile>
-    <SubtitleImportedFromMatroskaFile>Subtítulo importados desde archivo Matroska</SubtitleImportedFromMatroskaFile>
-    <DropFileXNotAccepted>Archivo '{0}' no aceptado - archivo es demasiado grande</DropFileXNotAccepted>
+    <BeforeImportFromMatroskaFile>Antes de importar subtítulo de archivo Matroska</BeforeImportFromMatroskaFile>
+    <SubtitleImportedFromMatroskaFile>Subtítulo importado desde archivo Matroska</SubtitleImportedFromMatroskaFile>
+    <DropFileXNotAccepted>Archivo '{0}' no aceptado - archivo demasiado grande</DropFileXNotAccepted>
     <DropOnlyOneFile>Sólo puede bajar un archivo</DropOnlyOneFile>
-    <BeforeCreateAdjustLines>Antes de crear o ajustar las líneas</BeforeCreateAdjustLines>
-    <OpenAnsiSubtitle>Abrir subtítulos...</OpenAnsiSubtitle>
+    <BeforeCreateAdjustLines>Antes de crear/ajustar líneas</BeforeCreateAdjustLines>
+    <OpenAnsiSubtitle>Abrir subtítulo...</OpenAnsiSubtitle>
     <BeforeChangeCasing>Antes de cambiar el formato</BeforeChangeCasing>
     <CasingCompleteMessageNoNames>Número de líneas con formato cambiado: {0}/{1}</CasingCompleteMessageNoNames>
-    <CasingCompleteMessageOnlyNames>Número de líneas con nombres formato cambiado: {0}/{1}</CasingCompleteMessageOnlyNames>
-    <CasingCompleteMessage>Número de líneas con formato cambiado: {0}/{1},  ha cambiado el formato de los nombres: {2}</CasingCompleteMessage>
-    <BeforeChangeFrameRate>Antes de cambiar el frame rate</BeforeChangeFrameRate>
-    <FrameRateChangedFromXToY>Frame rate cambiado de {0} a {1}</FrameRateChangedFromXToY>
-    <IdxFileNotFoundWarning>{0} no encontrado! Importar archivo VobSub  de todos modos?</IdxFileNotFoundWarning>
-    <InvalidVobSubHeader>Cabecera del archivo VobSub no válido: {0}</InvalidVobSubHeader>
-    <OpenVobSubFile>Abrir el subtitulo VobSub (sub/idx) ...</OpenVobSubFile>
-    <VobSubFiles>Archivos de subtítulos VobSub </VobSubFiles>
+    <CasingCompleteMessageOnlyNames>Número de líneas con formato de nombres cambiado: {0}/{1}</CasingCompleteMessageOnlyNames>
+    <CasingCompleteMessage>Número de líneas con formato cambiado: {0}/{1}, nombres con formato cambiado: {2}</CasingCompleteMessage>
+    <BeforeChangeFrameRate>Antes de cambiar la tasa de cuadros</BeforeChangeFrameRate>
+    <FrameRateChangedFromXToY>Tasa de cuadros cambiada de {0} a {1}</FrameRateChangedFromXToY>
+    <IdxFileNotFoundWarning>{0} ¡no encontrado! ¿Importar archivo VobSub  de todos modos?</IdxFileNotFoundWarning>
+    <InvalidVobSubHeader>Cabecera de archivo VobSub no válida: {0}</InvalidVobSubHeader>
+    <OpenVobSubFile>Abrir subtítulo VobSub (sub/idx)...</OpenVobSubFile>
+    <VobSubFiles>Archivos de subtítulos VobSub</VobSubFiles>
     <OpenBluRaySupFile>Abrir archivos Blu-ray .sup...</OpenBluRaySupFile>
     <BluRaySupFiles>Archivos Blu-ray .sup</BluRaySupFiles>
     <BeforeImportingVobSubFile>Antes de importar los subtítulos VobSub</BeforeImportingVobSubFile>
-    <BeforeImportingBluRaySupFile>Antes de importar archivos Blu-ray sup</BeforeImportingBluRaySupFile>
+    <BeforeImportingBluRaySupFile>Antes de importar archivo Blu-ray sup</BeforeImportingBluRaySupFile>
+    <BeforeImportingBdnXml>Antes de importar archivo BDN xml</BeforeImportingBdnXml>
     <BeforeShowSelectedLinesEarlierLater>Antes de mostrar las líneas seleccionadas antes/después</BeforeShowSelectedLinesEarlierLater>
-    <ShowSelectedLinesEarlierLaterPerformed>Mostrar interpretación anterior/posterior en las líneas seleccionadas</ShowSelectedLinesEarlierLaterPerformed>
-    <DoubleWordsViaRegEx>Palabras dobles a través de regex {0}</DoubleWordsViaRegEx>
+    <ShowSelectedLinesEarlierLaterPerformed>Mostrar antes/después aplicado a las líneas seleccionadas</ShowSelectedLinesEarlierLaterPerformed>
+    <DoubleWordsViaRegEx>Palabras dobles vía regex {0}</DoubleWordsViaRegEx>
     <BeforeSortX>Antes de ordenar: {0}</BeforeSortX>
-    <SortedByX>Ordenar por: {0}</SortedByX>
-    <BeforeAutoBalanceSelectedLines>Antes de auto balancear las lineas seleccionadas</BeforeAutoBalanceSelectedLines>
-    <NumberOfLinesAutoBalancedX>Número de líneas auto balanceadas: {0}</NumberOfLinesAutoBalancedX>
-    <BeforeRemoveLineBreaksInSelectedLines>Antes de eliminar los saltos de líneas de las líneas seleccionadas</BeforeRemoveLineBreaksInSelectedLines>
-    <NumberOfWithRemovedLineBreakX>Numero de líneas en los que se ha eliminado el salto de línea: {0}</NumberOfWithRemovedLineBreakX>
+    <SortedByX>Ordenado por: {0}</SortedByX>
+    <BeforeAutoBalanceSelectedLines>Antes de autoajustar líneas seleccionadas</BeforeAutoBalanceSelectedLines>
+    <NumberOfLinesAutoBalancedX>Número de líneas autoajustadas: {0}</NumberOfLinesAutoBalancedX>
+    <BeforeRemoveLineBreaksInSelectedLines>Antes de eliminar saltos de línea de líneas seleccionadas</BeforeRemoveLineBreaksInSelectedLines>
+    <NumberOfWithRemovedLineBreakX>Numero de líneas con salto de línea eliminado: {0}</NumberOfWithRemovedLineBreakX>
     <BeforeMultipleReplace>Antes del reemplazo múltiple</BeforeMultipleReplace>
-    <NumberOfLinesReplacedX>Numero de líneas con el texto reemplazado: {0}</NumberOfLinesReplacedX>
+    <NumberOfLinesReplacedX>Numero de líneas con texto reemplazado: {0}</NumberOfLinesReplacedX>
     <NameXAddedToNamesEtcList>El nombre '{0}' se ha añadido al listado de nombres</NameXAddedToNamesEtcList>
     <NameXNotAddedToNamesEtcList>El nombre '{0}' NO se ha añadido al listado de nombres</NameXNotAddedToNamesEtcList>
     <XLinesSelected>{0} líneas seleccionadas</XLinesSelected>
-    <UnicodeMusicSymbolsAnsiWarning>Subtítulo contiene caracteres especiales unicode. Guardar codificación ANSI puede perder información.Desea continuar?</UnicodeMusicSymbolsAnsiWarning>
-    <NegativeTimeWarning>El subtitulo contiene time codes negativos. Aún asi desea guardarlo?</NegativeTimeWarning>
-    <BeforeMergeShortLines>Antes de combinar las líneas cortas</BeforeMergeShortLines>
-    <BeforeSplitLongLines>Antes de separar las lineas largas</BeforeSplitLongLines>
-    <MergedShortLinesX>Número de lineas combinadas: {0}</MergedShortLinesX>
-    <BeforeSetMinimumDisplayTimeBetweenParagraphs>Antes de establecer el tiempo de visualización minimo entre párrafos</BeforeSetMinimumDisplayTimeBetweenParagraphs>
-    <XMinimumDisplayTimeBetweenParagraphsChanged>Número de líneas modificadas con el tiempo mínimo de visualización entre párrafos cambiado: {0}</XMinimumDisplayTimeBetweenParagraphsChanged>
+    <UnicodeMusicSymbolsAnsiWarning>El subtítulo contiene notas musicales unicode. Guardar con codificación ANSI se las hará perder.¿Continuar?</UnicodeMusicSymbolsAnsiWarning>
+    <NegativeTimeWarning>Subtítulo con códigos de tiempo negativos. ¿Continuar guardar?</NegativeTimeWarning>
+    <BeforeMergeShortLines>Antes de combinar líneas cortas</BeforeMergeShortLines>
+    <BeforeSplitLongLines>Antes de dividir líneas largas</BeforeSplitLongLines>
+    <MergedShortLinesX>Número de líneas combinadas: {0}</MergedShortLinesX>
+    <BeforeSetMinimumDisplayTimeBetweenParagraphs>Antes de establecer el tiempo de visualización mínimo entre párrafos</BeforeSetMinimumDisplayTimeBetweenParagraphs>
+    <XMinimumDisplayTimeBetweenParagraphsChanged>Número de líneas con tiempo de visualización mínimo entre párrafos cambiado: {0}</XMinimumDisplayTimeBetweenParagraphsChanged>
     <BeforeImportText>Antes de importar texto plano</BeforeImportText>
     <TextImported>Texto importado</TextImported>
-    <BeforePointSynchronization>Antes del punto de sincronización </BeforePointSynchronization>
-    <PointSynchronizationDone>Punto de sincronización realizado</PointSynchronizationDone>
-    <BeforeTimeCodeImport>Antes de importar los time codes</BeforeTimeCodeImport>
-    <TimeCodeImportedFromXY>Time codes importados desde {0}: {1}</TimeCodeImportedFromXY>
-    <BeforeInsertSubtitleAtVideoPosition>Antes de insertar el subtitulo en la posición del video</BeforeInsertSubtitleAtVideoPosition>
-    <BeforeSetStartTimeAndOffsetTheRest>Antes de ajustar el tiempo de inicio y el offset</BeforeSetStartTimeAndOffsetTheRest>
-    <ContinueWithCurrentSpellCheck>Continuar con la revisión ortográfica actual?</ContinueWithCurrentSpellCheck>
+    <BeforePointSynchronization>Antes de sincronización puntual</BeforePointSynchronization>
+    <PointSynchronizationDone>Sincronización puntual realizada</PointSynchronizationDone>
+    <BeforeTimeCodeImport>Antes de importar códigos de tiempo</BeforeTimeCodeImport>
+    <TimeCodeImportedFromXY>Códigos de tiempo importados desde {0}: {1}</TimeCodeImportedFromXY>
+    <BeforeInsertSubtitleAtVideoPosition>Antes de insertar subtítulo en la posición del video</BeforeInsertSubtitleAtVideoPosition>
+    <BeforeSetStartTimeAndOffsetTheRest>Antes de ajustar el tiempo inicial y compensar el resto</BeforeSetStartTimeAndOffsetTheRest>
+    <BeforeSetEndAndVideoPosition>Antes de ajustar el tiempo final y auto calcular el inicio</BeforeSetEndAndVideoPosition>
+    <ContinueWithCurrentSpellCheck>¿Continuar con la revisión ortográfica actual?</ContinueWithCurrentSpellCheck>
     <CharactersPerSecond>Caracteres/seg: {0:0.00}</CharactersPerSecond>
-    <GetFrameRateFromVideoFile>Obtener el frame rate del archivo de vídeo</GetFrameRateFromVideoFile>
+    <GetFrameRateFromVideoFile>Obtener la tasa de cuadros desde archivo de vídeo</GetFrameRateFromVideoFile>
     <NetworkMessage>Nuevo mensaje: {0} ({1}): {2}</NetworkMessage>
-    <NetworkUpdate>Línea Actualizada: {0} ({1}): Índice = {2}, Texto = {3}</NetworkUpdate>
-    <NetworkInsert>Línea insertada: {0} ({1}): Índice = {2}, Texto = {3}</NetworkInsert>
-    <NetworkDelete>Línea eliminada: {0} ({1}): Índice = {2}</NetworkDelete>
+    <NetworkUpdate>Línea Actualizada: {0} ({1}): Índice={2}, Texto={3}</NetworkUpdate>
+    <NetworkInsert>Línea insertada: {0} ({1}): Índice={2}, Texot={3}</NetworkInsert>
+    <NetworkDelete>Línea eliminada: {0} ({1}): Índice={2}</NetworkDelete>
     <NetworkNewUser>Nuevo usuario: {0} ({1})</NetworkNewUser>
-    <NetworkByeUser>Adios {0} ({1})</NetworkByeUser>
+    <NetworkByeUser>Adiós {0} ({1})</NetworkByeUser>
     <NetworkUnableToConnectToServer>No se puede conectar con el servidor: {0}</NetworkUnableToConnectToServer>
     <UserAndAction>Usuario/acción</UserAndAction>
     <NetworkMode>Modo red</NetworkMode>
-    <XStartedSessionYAtZ>{0} Sesión iniciada  {1} de {2}</XStartedSessionYAtZ>
-    <SpellChekingViaWordXLineYOfX>Corrección ortográfica con Word {0} - la línea {1} / {2} - </SpellChekingViaWordXLineYOfX>
+    <XStartedSessionYAtZ>{0}: Sesión iniciada {1} at {2}</XStartedSessionYAtZ>
+    <SpellChekingViaWordXLineYOfX>Revisión ortográfica con Word {0} - línea {1} / {2}</SpellChekingViaWordXLineYOfX>
     <UnableToStartWord>No se puede iniciar Microsoft Word</UnableToStartWord>
-    <SpellCheckAbortedXCorrections>Corrector ortográfico abortado. {0} las lineas fueron modificadas</SpellCheckAbortedXCorrections>
-    <SpellCheckCompletedXCorrections>Correccion ortográfica completada. {0} las lineas fueron modificadas </SpellCheckCompletedXCorrections>
+    <SpellCheckAbortedXCorrections>Rev. ortográfica cancelada. {0} líneas modificadas.</SpellCheckAbortedXCorrections>
+    <SpellCheckCompletedXCorrections>Rev. ortográfica completada. {0} líneas modificadas.</SpellCheckCompletedXCorrections>
+    <OpenOtherSubtitle>Abrir otro subtítulo</OpenOtherSubtitle>
+    <BeforeToggleDialogueDashes>Antes de cambiar guiones de diálogo</BeforeToggleDialogueDashes>
+    <ExportPlainTextAs>Exportar texto plano como</ExportPlainTextAs>
+    <TextFiles>Archivos de texto</TextFiles>
   </Main>
   <MatroskaSubtitleChooser>
-    <Title>Seleccione los subtítulos desde archivo Matroska</Title>
-    <PleaseChoose>Se ha encontrado más de un subtitulo - Elija uno por favor.</PleaseChoose>
-    <TrackXLanguageYTypeZ>Pista {0} - {1} - Idioma: {2} - tipo: {3}</TrackXLanguageYTypeZ>
+    <Title>Seleccionar subtítulos desde archivo Matroska</Title>
+    <PleaseChoose>Se ha encontrado más de un subtítulo - Elija uno por favor.</PleaseChoose>
+    <TrackXLanguageYTypeZ>Pista {0} - {1} - idioma: {2} - tipo: {3}</TrackXLanguageYTypeZ>
   </MatroskaSubtitleChooser>
   <MergedShortLines>
     <Title>Combinar líneas cortas</Title>
     <MaximumCharacters>Número máximo de caracteres en un párrafo</MaximumCharacters>
-    <MaximumMillisecondsBetween>Número máximo de milisegundos entre líneas</MaximumMillisecondsBetween>
+    <MaximumMillisecondsBetween>Máximo de milisegundos entre líneas</MaximumMillisecondsBetween>
     <NumberOfMergesX>Número de combinaciones: {0}</NumberOfMergesX>
-    <LineNumber>Línea #</LineNumber>
+    <LineNumber>Línea#</LineNumber>
     <MergedText>Texto combinado</MergedText>
+    <OnlyMergeContinuationLines>Combinar solo líneas que continúan</OnlyMergeContinuationLines>
   </MergedShortLines>
   <MultipleReplace>
     <Title>Reemplazo múltiple</Title>
-    <FindWhat>Encuentra lo que</FindWhat>
+    <FindWhat>Buscar</FindWhat>
     <ReplaceWith>Reemplazar con</ReplaceWith>
     <Normal>Normal</Normal>
-    <CaseSensitive>Entre mayúsculas y minúsculas</CaseSensitive>
+    <CaseSensitive>Sensible a mayúsculas</CaseSensitive>
     <RegularExpression>Expresión regular</RegularExpression>
-    <LineNumber>Línea #</LineNumber>
-    <Before>Antes de</Before>
-    <After>Después de</After>
+    <LineNumber>Línea#</LineNumber>
+    <Before>Antes</Before>
+    <After>Después</After>
     <LinesFoundX>Líneas encontradas: {0}</LinesFoundX>
     <Delete>Eliminar</Delete>
     <Add>Añadir</Add>
-    <Update>Actualizar</Update>
+    <Update>Act&amp;ualizar</Update>
     <Enabled>Habilitado</Enabled>
     <SearchType>Tipo de búsqueda</SearchType>
   </MultipleReplace>
@@ -810,10 +896,8 @@
   </NetworkChat>
   <NetworkJoin>
     <Title>Unirse a una sesión de red</Title>
-    <Information>Unirse a una sesión existente con múltiples usuarios
-
-Join existing session where multiple persons
-can edit in same subtitle file (collaboration)</Information>
+    <Information>Unirse a una sesión existente con múltiples usuarios que
+pueden editar el mismo archivo de subtítulo (colaboración)</Information>
     <Join>Unirse</Join>
   </NetworkJoin>
   <NetworkLogAndInfo>
@@ -824,340 +908,390 @@ can edit in same subtitle file (collaboration)</Information>
     <Title>Iniciar sesión de red</Title>
     <ConnectionTo>Conectando a {0}...</ConnectionTo>
     <Information>Comenzar una nueva sesión en la que varias personas
- puede editar el mismo archivo de subtitulo (colaboración)</Information>
+ puede editar el mismo archivo de subtítulo (colaboración)</Information>
     <Start>Inicio</Start>
   </NetworkStart>
   <RemoveTextFromHearImpaired>
-    <Title>Eliminar texto para los sordos</Title>
+    <Title>Eliminar texto para sordos</Title>
     <RemoveTextConditions>Eliminar las condiciones de texto</RemoveTextConditions>
-    <RemoveTextBetween>Eliminar las condiciones de texto</RemoveTextBetween>
-    <SquareBrackets>'[' Y ']'</SquareBrackets>
-    <Brackets>'{' Y '}'</Brackets>
-    <Parentheses>'(Y') '</Parentheses>
-    <QuestionMarks>'?' y "?"</QuestionMarks>
+    <RemoveTextBetween>Eliminar texto entre</RemoveTextBetween>
+    <SquareBrackets>'[' y ']'</SquareBrackets>
+    <Brackets>'{' y '}'</Brackets>
+    <Parentheses>'(' y ')'</Parentheses>
+    <QuestionMarks>'?' y '?'</QuestionMarks>
     <And>y</And>
     <RemoveTextBeforeColon>Eliminar texto antes de dos puntos (':')</RemoveTextBeforeColon>
     <OnlyIfTextIsUppercase>Sólo si el texto está en MAYÚSCULAS</OnlyIfTextIsUppercase>
-    <OnlyIfInSeparateLine>Sólo si está en una linea separada</OnlyIfInSeparateLine>
-    <LineNumber>Línea #</LineNumber>
-    <Before>Antes de</Before>
-    <After>Después de</After>
+    <OnlyIfInSeparateLine>Sólo si está en una línea separada</OnlyIfInSeparateLine>
+    <LineNumber>Línea#</LineNumber>
+    <Before>Antes</Before>
+    <After>Después</After>
     <LinesFoundX>Líneas encontradas: {0}</LinesFoundX>
-    <RemoveTextIfContains>Quitar el texto si contiene:</RemoveTextIfContains>
-    <RemoveInterjections>Eliminar interjecciones (shh, hmm, etc)</RemoveInterjections>
+    <RemoveTextIfContains>Eliminar el texto si contiene:</RemoveTextIfContains>
+    <RemoveInterjections>Eliminar interjecciones (shh, hmm, etc.)</RemoveInterjections>
     <EditInterjections>Editar...</EditInterjections>
   </RemoveTextFromHearImpaired>
   <ReplaceDialog>
     <Title>Reemplazar</Title>
     <FindWhat>Buscar:</FindWhat>
     <Normal>Normal</Normal>
-    <CaseSensitive>Entre mayúsculas y minúsculas</CaseSensitive>
+    <CaseSensitive>Sensible a mayúsculas</CaseSensitive>
     <RegularExpression>Expresión regular</RegularExpression>
     <ReplaceWith>Reemplazar con</ReplaceWith>
     <Find>Buscar</Find>
-    <Replace>Reemplazar</Replace>
-    <ReplaceAll>Reemplazar todos</ReplaceAll>
+    <Replace>&amp;Reemplazar</Replace>
+    <ReplaceAll>Reempl&amp;azar todo</ReplaceAll>
   </ReplaceDialog>
   <SetMinimumDisplayTimeBetweenParagraphs>
-    <Title>Establecer el tiempo mínimo de visualización entre párrafos</Title>
-    <PreviewLinesModifiedX>Previsualización - Párrafos modificados: {0}</PreviewLinesModifiedX>
+    <Title>Establecer tiempo mínimo de visualización entre párrafos</Title>
+    <PreviewLinesModifiedX>Vista previa - Párrafos modificados: {0}</PreviewLinesModifiedX>
     <ShowOnlyModifiedLines>Mostrar sólo las líneas modificadas</ShowOnlyModifiedLines>
-    <MinimumMillisecondsBetweenParagraphs>Mínimo tiempo en milisegundos entre líneas</MinimumMillisecondsBetweenParagraphs>
+    <MinimumMillisecondsBetweenParagraphs>Milisegundos mínimos entre líneas</MinimumMillisecondsBetweenParagraphs>
   </SetMinimumDisplayTimeBetweenParagraphs>
   <SetSyncPoint>
-    <Title>Establecer punto de sincronización para la línea {0}</Title>
-    <SyncPointTimeCode>punto de sincronización del time code</SyncPointTimeCode>
-    <ThreeSecondsBack>&lt;&lt;3 segundos</ThreeSecondsBack>
-    <HalfASecondBack>&lt;&lt;½ s.</HalfASecondBack>
-    <HalfASecondForward>½ s&gt;&gt;</HalfASecondForward>
-    <ThreeSecondsForward>3 segundos&gt;&gt;</ThreeSecondsForward>
+    <Title>Establecer sincronización puntual para la línea {0}</Title>
+    <SyncPointTimeCode>Código de tiempo de la sincronización puntual</SyncPointTimeCode>
+    <ThreeSecondsBack>&lt;&lt; 3 segundos</ThreeSecondsBack>
+    <HalfASecondBack>&lt;&lt; ½ segundo</HalfASecondBack>
+    <HalfASecondForward>½ segundo &gt;&gt;</HalfASecondForward>
+    <ThreeSecondsForward>3 segundos &gt;&gt;</ThreeSecondsForward>
   </SetSyncPoint>
   <Settings>
     <Title>Configuración</Title>
     <General>General</General>
     <Toolbar>Barra de herramientas</Toolbar>
-    <VideoPlayer>Reproductor de video</VideoPlayer>
-    <WaveForm>Forma de onda</WaveForm>
+    <VideoPlayer>Reproductor de vídeo</VideoPlayer>
+    <WaveformAndSpectrogram>Forma de onda/espectrograma</WaveformAndSpectrogram>
     <Tools>Herramientas</Tools>
     <WordLists>Listas de palabras</WordLists>
-    <SsaStyle>Estilo SSA </SsaStyle>
+    <SsaStyle>Estilo SSA</SsaStyle>
     <Proxy>Proxy</Proxy>
-    <ShowToolBarButtons>Mostrar botones de la barra de herramientas</ShowToolBarButtons>
+    <ShowToolBarButtons>Mostrar botones barra herramientas</ShowToolBarButtons>
     <New>Nuevo</New>
     <Open>Abrir</Open>
     <Save>Guardar</Save>
     <SaveAs>Guardar como</SaveAs>
     <Find>Buscar</Find>
     <Replace>Reemplazar</Replace>
-    <VisualSync>Sincronización visual</VisualSync>
-    <SpellCheck>Corrector ortográfico</SpellCheck>
+    <VisualSync>Sincro visual</VisualSync>
+    <SpellCheck>Rev.ortográfica</SpellCheck>
     <SettingsName>Configuración</SettingsName>
     <Help>Ayuda</Help>
-    <ShowFrameRate>Mostrar el frame rate en la barra de herramientas</ShowFrameRate>
-    <DefaultFrameRate>Frame rate por defecto</DefaultFrameRate>
+    <ShowFrameRate>Mostrar tasa de cuadros en barra herramientas</ShowFrameRate>
+    <DefaultFrameRate>Tasa de cuadros por defecto</DefaultFrameRate>
     <DefaultFileEncoding>Codificación del fichero por defecto</DefaultFileEncoding>
-    <AutoDetectAnsiEncoding>Detección automática de codificación ANSI</AutoDetectAnsiEncoding>
-    <SubtitleLineMaximumLength>Longitud máxima de una linea simple</SubtitleLineMaximumLength>
-    <AutoWrapWhileTyping>Auto-wrap durante la escritura</AutoWrapWhileTyping>
+    <AutoDetectAnsiEncoding>Autodetectar codificación ANSI</AutoDetectAnsiEncoding>
+    <SubtitleLineMaximumLength>Longitud máxima línea simple</SubtitleLineMaximumLength>
+    <AutoWrapWhileTyping>Autoajuste de línea durante escritura</AutoWrapWhileTyping>
     <SubtitleFont>Fuente del subtítulo</SubtitleFont>
-    <SubtitleFontSize>Tamaño de la fuente del subtítulo</SubtitleFontSize>
+    <SubtitleFontSize>Tamaño de fuente del subtítulo</SubtitleFontSize>
     <SubtitleBold>Negrita</SubtitleBold>
-    <SubtitleFontColor>Color de la fuente del subtítulo</SubtitleFontColor>
+    <SubtitleFontColor>Color de fuente del subtítulo</SubtitleFontColor>
     <SubtitleBackgroundColor>Color de fondo del subtítulo</SubtitleBackgroundColor>
     <SpellChecker>Corrector ortográfico</SpellChecker>
     <RememberRecentFiles>Recordar archivos recientes (para reabrir)</RememberRecentFiles>
     <StartWithLastFileLoaded>Comenzar con el último archivo cargado</StartWithLastFileLoaded>
     <RememberSelectedLine>Recordar la línea seleccionada</RememberSelectedLine>
-    <RememberPositionAndSize>Recordar el tamaño y la posición de la ventana principal</RememberPositionAndSize>
-    <StartInSourceView>Iniciar con la vista por defecto</StartInSourceView>
-    <RemoveBlankLinesWhenOpening>Eliminar las líneas en blanco al abrir un subtítulo</RemoveBlankLinesWhenOpening>
-    <ShowLineBreaksAs>Mostrar saltos de línea en la lista de visualización como</ShowLineBreaksAs>
-    <MainListViewDoubleClickAction>Doble clic en el listview de la línea de la ventana principal </MainListViewDoubleClickAction>
+    <RememberPositionAndSize>Recordar tamaño y posición de la ventana principal</RememberPositionAndSize>
+    <StartInSourceView>Iniciar en vista de origen</StartInSourceView>
+    <RemoveBlankLinesWhenOpening>Eliminar líneas en blanco al abrir un subtítulo</RemoveBlankLinesWhenOpening>
+    <ShowLineBreaksAs>Mostrar saltos de línea en vista de lista como</ShowLineBreaksAs>
+    <MainListViewDoubleClickAction>Doble clic en la línea en la ventana principal de vista de lista hará...</MainListViewDoubleClickAction>
     <MainListViewNothing>Nada</MainListViewNothing>
-    <MainListViewVideoGoToPositionAndPause>Ir a la pos de video y pausar</MainListViewVideoGoToPositionAndPause>
-    <MainListViewVideoGoToPositionAndPlay>Ir a la pos de video y reproducir</MainListViewVideoGoToPositionAndPlay>
+    <MainListViewVideoGoToPositionAndPause>Ir a pos. video y pausar</MainListViewVideoGoToPositionAndPause>
+    <MainListViewVideoGoToPositionAndPlay>Ir a pos. video y reprod.</MainListViewVideoGoToPositionAndPlay>
     <MainListViewEditText>Ir al cuadro de edición de texto</MainListViewEditText>
-    <AutoBackup>Auto-backup</AutoBackup>
+    <AutoBackup>Copia seg. automática</AutoBackup>
     <AutoBackupEveryMinute>Cada minuto</AutoBackupEveryMinute>
     <AutoBackupEveryFiveMinutes>Cada 5 minutos</AutoBackupEveryFiveMinutes>
     <AutoBackupEveryFifteenMinutes>Cada 15 minutos</AutoBackupEveryFifteenMinutes>
-    <AllowEditOfOriginalSubtitle>Permitir la edición de subtítulos originales</AllowEditOfOriginalSubtitle>
-    <VideoEngine>Motor de video</VideoEngine>
+    <AllowEditOfOriginalSubtitle>Permitir la edición del subtítulo original</AllowEditOfOriginalSubtitle>
+    <PromptDeleteLines>Confirmar la eliminación de líneas</PromptDeleteLines>
+    <VideoEngine>Motor de vídeo</VideoEngine>
     <DirectShow>DirectShow</DirectShow>
     <DirectShowDescription>quartz.dll en la carpeta system32</DirectShowDescription>
-    <ManagedDirectX>Managed DirectX</ManagedDirectX>
-    <ManagedDirectXDescription>Microsoft.DirectX.AudioVideoPlayback -  .NET Managed code from DirectX</ManagedDirectXDescription>
-    <WindowsMediaPlayer>Windows Media Player</WindowsMediaPlayer>
-    <WindowsMediaPlayerDescription>WMP ActiveX control</WindowsMediaPlayerDescription>
+    <ManagedDirectX>Gestión de DirectX</ManagedDirectX>
+    <ManagedDirectXDescription>Microsoft.DirectX.AudioVideoPlayback -  .NET Código gestionado desde DirectX</ManagedDirectXDescription>
+    <MPlayer>MPlayer</MPlayer>
+    <MPlayerDescription>MPlayer2/Mplayer</MPlayerDescription>
     <VlcMediaPlayer>VLC Media Player</VlcMediaPlayer>
-    <VlcMediaPlayerDescription>librería libvlc.dll  de VLC Media Player 1.1.0 o superior</VlcMediaPlayerDescription>
+    <VlcMediaPlayerDescription>libvlc.dll de VLC Media Player 1.1.0 o superior</VlcMediaPlayerDescription>
     <ShowStopButton>Mostrar el botón stop</ShowStopButton>
     <DefaultVolume>Volumen por defecto</DefaultVolume>
     <VolumeNotes>0 silencio, 100 máximo volumen</VolumeNotes>
-    <MainWindowVideoControls>Controles de video de la ventana principal</MainWindowVideoControls>
+    <PreviewFontSize>Tamaño de fuente en vista previa del subtítulo</PreviewFontSize>
+    <MainWindowVideoControls>Controles de vídeo en la ventana principal</MainWindowVideoControls>
     <CustomSearchTextAndUrl>Búsqueda de texto y URL personalizada</CustomSearchTextAndUrl>
-    <WaveFormAppearance>Apariencia de la forma de onda</WaveFormAppearance>
-    <WaveFormGridColor>Cuadrícula de colores</WaveFormGridColor>
+    <WaveFormAppearance>Apariencia de forma de onda</WaveFormAppearance>
+    <WaveFormGridColor>Color de la cuadrícula</WaveFormGridColor>
     <WaveFormShowGridLines>Mostrar líneas de cuadrícula</WaveFormShowGridLines>
+    <ReverseMouseWheelScrollDirection>Invertir dirección de la rueda del ratón</ReverseMouseWheelScrollDirection>
     <WaveFormColor>Color</WaveFormColor>
     <WaveFormSelectedColor>Color seleccionado</WaveFormSelectedColor>
     <WaveFormBackgroundColor>Color de fondo</WaveFormBackgroundColor>
     <WaveFormTextColor>Color del texto</WaveFormTextColor>
-    <WaveFormsFolderEmpty>Vaciar la carpeta 'Forma de onda' </WaveFormsFolderEmpty>
-    <WaveFormsFolderInfo>La carpeta 'Forma de onda' contiene  {0} archivos ({1:0.00} MB)</WaveFormsFolderInfo>
+    <WaveformAndSpectrogramsFolderEmpty>Vaciar las carpetas de "Espectrogramas" y "Formas de onda"</WaveformAndSpectrogramsFolderEmpty>
+    <WaveformAndSpectrogramsFolderInfo>Las carpetas de "Espectrogramas" y "Formas de onda" contienen {0} archivos ({1:0.00} MB)</WaveformAndSpectrogramsFolderInfo>
+    <Spectrogram>Espectrograma</Spectrogram>
+    <GenerateSpectrogram>Generar espectrograma</GenerateSpectrogram>
+    <SpectrogramAppearance>Apariencia del Espectrograma</SpectrogramAppearance>
+    <SpectrogramOneColorGradient>Degradado de color</SpectrogramOneColorGradient>
+    <SpectrogramClassic>Clásico</SpectrogramClassic>
     <SubStationAlphaStyle>Estilo Sub Station Alpha</SubStationAlphaStyle>
     <ChooseFont>Elegir fuente</ChooseFont>
     <ChooseColor>Elegir color</ChooseColor>
     <Example>Ejemplo</Example>
-    <Testing123>Test de 123...</Testing123>
+    <Testing123>Probando 123...</Testing123>
     <Language>Idioma</Language>
-    <NamesIgnoreLists>Nombres/Ignorar lista (diferenciación entre mayúsculas y minúsculas)</NamesIgnoreLists>
+    <NamesIgnoreLists>Nombres a ignorar (sens. mayúsc.)</NamesIgnoreLists>
     <AddNameEtc>Añadir nombre</AddNameEtc>
     <AddWord>Añadir palabra</AddWord>
     <Remove>Eliminar</Remove>
-    <AddPair>Añadir par</AddPair>
-    <UserWordList>Lista de palabras del usuario</UserWordList>
-    <OcrFixList>Lista de soluciones OCR</OcrFixList>
+    <AddPair>Añadir pareja</AddPair>
+    <UserWordList>Lista de palabras de usuario</UserWordList>
+    <OcrFixList>Lista de correcciones OCR</OcrFixList>
     <Location>Localización</Location>
-    <UseOnlineNamesEtc>Usar nombres online etc archivos xml</UseOnlineNamesEtc>
+    <UseOnlineNamesEtc>Usar listado de nombre xml en línea</UseOnlineNamesEtc>
     <WordAddedX>Palabra añadida: {0}</WordAddedX>
-    <WordAlreadyExists>La palabra ya existe!</WordAlreadyExists>
+    <WordAlreadyExists>!La palabra ya existe!</WordAlreadyExists>
     <WordNotFound>Palabra no encontrada</WordNotFound>
-    <RemoveX>Eliminar {0}?</RemoveX>
-    <CannotUpdateNamesEtcOnline>No se puede actualizar  el NombreEtc.xml online!</CannotUpdateNamesEtcOnline>
+    <RemoveX>¿Eliminar {0}?</RemoveX>
+    <CannotUpdateNamesEtcOnline>¡No se puede actualizar el listado de nombres xml en línea!</CannotUpdateNamesEtcOnline>
     <ProxyServerSettings>Configuración del servidor proxy</ProxyServerSettings>
-    <ProxyAddress>Dirrección proxy</ProxyAddress>
+    <ProxyAddress>Dirección proxy</ProxyAddress>
     <ProxyAuthentication>Autenticación</ProxyAuthentication>
     <ProxyUserName>Nombre de usuario</ProxyUserName>
     <ProxyPassword>Contraseña</ProxyPassword>
     <ProxyDomain>Dominio</ProxyDomain>
-    <PlayXSecondsAndBack>Escuchar X segundos y volver, X es</PlayXSecondsAndBack>
+    <PlayXSecondsAndBack>Reproducir X segundos y volver, X es</PlayXSecondsAndBack>
     <StartSceneIndex>El párrafo de inicio de escena es</StartSceneIndex>
     <EndSceneIndex>El párrafo de fin de escena es</EndSceneIndex>
     <FirstPlusX>Primero + {0}</FirstPlusX>
     <LastMinusX>Último - {0}</LastMinusX>
-    <FixCommonerrors>Corregir los errores comunes</FixCommonerrors>
+    <FixCommonerrors>Corregir errores comunes</FixCommonerrors>
     <MergeLinesShorterThan>Combinar líneas menores que</MergeLinesShorterThan>
-    <MusicSymbol>Símbolos especiales</MusicSymbol>
-    <MusicSymbolsToReplace>Símbolos especiales que reemplazar (separados por espacios)</MusicSymbolsToReplace>
-    <FixCommonOcrErrorsUseHardcodedRules>Fix common OCR errors - also use hardcoded rules</FixCommonOcrErrorsUseHardcodedRules>
+    <MusicSymbol>Símbolos musicales</MusicSymbol>
+    <MusicSymbolsToReplace>Símbolos musicales a reemplazar (separados por espacios)</MusicSymbolsToReplace>
+    <FixCommonOcrErrorsUseHardcodedRules>Corregir los errores comunes de OCR - utilizar también reglas codificadas</FixCommonOcrErrorsUseHardcodedRules>
+    <Shortcuts>Accesos directos</Shortcuts>
+    <Shortcut>Acceso directo</Shortcut>
+    <Control>Control</Control>
+    <Alt>Alt</Alt>
+    <Shift>Mayúscula</Shift>
+    <Key>Tecla</Key>
+    <TextBox>Cuadro de texto</TextBox>
+    <UpdateShortcut>Actualizar</UpdateShortcut>
+    <ShortcutIsNotValid>Acceso directo no válido: {0}</ShortcutIsNotValid>
+    <ToggleDockUndockOfVideoControls>Cambiar acoplar/desacoplar controles de vídeo</ToggleDockUndockOfVideoControls>
+    <AdjustViaEndAutoStartAndGoToNext>Ajustar posición final e ir al siguiente</AdjustViaEndAutoStartAndGoToNext>
+    <AdjustSetStartAutoDurationAndGoToNext>Ajustar inicio de autoduración e ir al siguiente</AdjustSetStartAutoDurationAndGoToNext>
+    <ToggleDialogueDashes>Cambiar guiones de diálogo</ToggleDialogueDashes>
+    <VerticalZoom>Zoom Vertical </VerticalZoom>
+    <GoBack100Milliseconds>100 ms atrás</GoBack100Milliseconds>
+    <GoForward100Milliseconds>100 ms adelante</GoForward100Milliseconds>
+    <GoBack500Milliseconds>500 ms atrás</GoBack500Milliseconds>
+    <GoForward500Milliseconds>500 ms adelante</GoForward500Milliseconds>
   </Settings>
   <ShowEarlierLater>
-    <Title>Mostrar las líneas seleccionadas antes/después</Title>
-    <TitleAll>Mostrar todas las líneas de antes/después</TitleAll>
+    <Title>Mostrar líneas selecc. antes/después</Title>
+    <TitleAll>Mostrar todas las líneas antes/después</TitleAll>
     <ShowEarlier>Mostrar antes</ShowEarlier>
     <ShowLater>Mostrar después</ShowLater>
-    <TotalAdjustmentX>Ajuestes totales: {0}</TotalAdjustmentX>
+    <TotalAdjustmentX>Total de ajustes: {0}</TotalAdjustmentX>
     <AllLines>Todas las líneas</AllLines>
-    <SelectedLinesonly>Sólo las líneas seleccionadas </SelectedLinesonly>
+    <SelectedLinesonly>Sólo líneas seleccionadas</SelectedLinesonly>
   </ShowEarlierLater>
   <ShowHistory>
     <Title>Historial (para deshacer)</Title>
-    <SelectRollbackPoint>Seleccione el tiempo/descripción de retroceso</SelectRollbackPoint>
+    <SelectRollbackPoint>Seleccione tiempo/descripción para deshacer</SelectRollbackPoint>
     <Time>Tiempo</Time>
     <Description>Descripción</Description>
-    <CompareHistoryItems>Comparación de los elementos del historial</CompareHistoryItems>
-    <CompareWithCurrent>Comparar con las actuales</CompareWithCurrent>
-    <Rollback>Retroceso</Rollback>
+    <CompareHistoryItems>Comparación elementos historial</CompareHistoryItems>
+    <CompareWithCurrent>Comparar con actual</CompareWithCurrent>
+    <Rollback>Deshacer</Rollback>
   </ShowHistory>
   <SpellCheck>
-    <Title>Corrector ortográfico</Title>
+    <Title>Revisión ortográfica</Title>
     <FullText>Texto completo</FullText>
     <WordNotFound>Palabra no encontrada</WordNotFound>
     <Language>Idioma</Language>
     <Change>Cambiar</Change>
     <ChangeAll>Cambiar todo</ChangeAll>
-    <SkipOnce>Saltar uno</SkipOnce>
-    <SkipAll>Salte todo</SkipAll>
-    <AddToUserDictionary>Añadir al diccionario de usuarios</AddToUserDictionary>
-    <AddToNamesAndIgnoreList>Añadir a los nombres/ruido lista (mayúsculas y minúsculas)</AddToNamesAndIgnoreList>
-    <Abort>Abortar</Abort>
+    <SkipOnce>Saltar un&amp;o</SkipOnce>
+    <SkipAll>&amp;Saltar todos</SkipAll>
+    <AddToUserDictionary>Añadir al diccionario del usuario</AddToUserDictionary>
+    <AddToNamesAndIgnoreList>Añadir a list.nombres (sensible mayúsculas)</AddToNamesAndIgnoreList>
+    <Abort>Cancelar</Abort>
     <Use>Utilizar</Use>
-    <UseAlways>Utilizar siempre</UseAlways>
+    <UseAlways>&amp;Utilizar siempre</UseAlways>
     <Suggestions>Sugerencias</Suggestions>
-    <SpellCheckProgress>Corrector ortográfico [{0}] - {1}</SpellCheckProgress>
+    <SpellCheckProgress>Revisión ortográfica [{0}] - {1}</SpellCheckProgress>
     <EditWholeText>Editar texto completo</EditWholeText>
     <EditWordOnly>Editar sólo palabra</EditWordOnly>
-    <AddXToNamesEtc>Añadir '{0}' a los nombres de/etc lista</AddXToNamesEtc>
-    <AutoFixNames>Auto corrección nombres que difieren sólo en mayusculas/minusculas</AutoFixNames>
+    <AddXToNamesEtc>Añadir '{0}' al listado de nombres</AddXToNamesEtc>
+    <AutoFixNames>Autocorregir formato en nombres</AutoFixNames>
     <ImageText>Imagen de texto</ImageText>
-    <SpellCheckCompleted>Corrección ortográfica completada</SpellCheckCompleted>
-    <SpellCheckAborted>Corrección ortográfica cancelada</SpellCheckAborted>
+    <SpellCheckCompleted>Revisión ortográfica completada.</SpellCheckCompleted>
+    <SpellCheckAborted>Revisión ortográfica cancelada</SpellCheckAborted>
   </SpellCheck>
   <SplitLongLines>
-    <Title>Seperar líneas largas</Title>
+    <Title>Dividir líneas largas</Title>
     <SingleLineMaximumLength>Longitud máxima de una línea</SingleLineMaximumLength>
     <LineMaximumLength>Longitud máxima de línea</LineMaximumLength>
-    <LineContinuationBeginEndStrings>Continuación de la línea cadenas de inicio/fin </LineContinuationBeginEndStrings>
+    <LineContinuationBeginEndStrings>Cadenas de principio/fin de continuación de línea</LineContinuationBeginEndStrings>
     <NumberOfSplits>Número de divisiones: {0}</NumberOfSplits>
-    <LongestSingleLineIsXAtY>La longitud máxima de una línea es {0} en la línea {1}</LongestSingleLineIsXAtY>
-    <LongestLineIsXAtY>La longitud máxima total de línea es {0} en la línea {1}</LongestLineIsXAtY>
+    <LongestSingleLineIsXAtY>La longitud de la línea individual más larga es {0} en la línea {1}</LongestSingleLineIsXAtY>
+    <LongestLineIsXAtY>La longitud de la línea más larga es {0} en la línea {1}</LongestLineIsXAtY>
   </SplitLongLines>
   <SplitSubtitle>
-    <Title>Separar subtítulos</Title>
-    <Description1>Introduzca la longitud de la primera parte del vídeo o navega</Description1>
-    <Description2>y obtener la longitud del archivo de vídeo:</Description2>
+    <Title>Dividir subtítulos</Title>
+    <Description1>Introduzca la longitud de la primera parte del vídeo o navegue</Description1>
+    <Description2>y obtenga la longitud desde el archivo de vídeo:</Description2>
     <Split>Dividir</Split>
     <Done>Hecho</Done>
-    <NothingToSplit>Nada que dividir!</NothingToSplit>
-    <SavePartOneAs>Guardar parte 1 como... </SavePartOneAs>
-    <SavePartTwoAs>Guardar parte 2 como... </SavePartTwoAs>
-    <Part1>Parte 1</Part1>
-    <Part2>Parte 2</Part2>
+    <NothingToSplit>¡Nada que dividir!</NothingToSplit>
+    <SavePartOneAs>Guardar parte 1 como...</SavePartOneAs>
+    <SavePartTwoAs>Guardar parte 2 como...</SavePartTwoAs>
+    <Part1>Parte1</Part1>
+    <Part2>Parte2</Part2>
     <UnableToSaveFileX>No se puede guardar {0}</UnableToSaveFileX>
   </SplitSubtitle>
   <StartNumberingFrom>
-    <Title>Empezar a numerar a partir de...</Title>
+    <Title>Empezar numeración a partir de...</Title>
     <StartFromNumber>Empezar por el número:</StartFromNumber>
     <PleaseEnterAValidNumber>Por favor, introduzca un número</PleaseEnterAValidNumber>
   </StartNumberingFrom>
   <PointSync>
-    <Title>Punto de sincronización</Title>
-    <SyncHelp>Establecer al menos dos puntos de sincronización para la sincronización en bruto</SyncHelp>
-    <SetSyncPoint>Establecer punto de sincronización</SetSyncPoint>
-    <RemoveSyncPoint>Eliminar punto de sincronización</RemoveSyncPoint>
+    <Title>Sincronización puntual</Title>
+    <TitleViaOtherSubtitle>Sincronización puntual desde otro subtítulo</TitleViaOtherSubtitle>
+    <SyncHelp>Establecer al menos dos puntos para la sincronización en bruto</SyncHelp>
+    <SetSyncPoint>Establ. punto sincro.</SetSyncPoint>
+    <RemoveSyncPoint>Elimin. punto sincro.</RemoveSyncPoint>
     <SyncPointsX>Puntos de sincronización: {0}</SyncPointsX>
-    <Info>Uno de los puntos de sincronización ajusta la posición, dos o más puntos de sincronización ajustan la posición y velocidad</Info>
+    <Info>Un punto de sincronización ajusta posición, dos o más puntos de sincronización ajustan posición y velocidad</Info>
     <ApplySync>Aplicar</ApplySync>
   </PointSync>
   <UnknownSubtitle>
-    <Title>Tipo de subtítulo desconocida</Title>
-    <Message>Si desea esta corrección por favor envíe un correo electrónico a mailto: niksedk@gmail.com e incluya una copia de los subtítulos</Message>
+    <Title>Tipo de subtítulo desconocido</Title>
+    <Message>Si desea que esto se corrija, por favor envíe un correo electrónico a mailto: niksedk@gmail.com e incluya una copia de los subtítulos.</Message>
   </UnknownSubtitle>
   <VisualSync>
     <Title>Sincronización visual</Title>
-    <StartScene>Escena de inicio</StartScene>
-    <EndScene>Escena final</EndScene>
+    <StartScene>Principio de escena</StartScene>
+    <EndScene>Final de escena</EndScene>
     <Synchronize>Sincronización</Synchronize>
     <HalfASecondBack>&lt; ½ seg</HalfASecondBack>
     <ThreeSecondsBack>&lt; 3 segs</ThreeSecondsBack>
     <PlayXSecondsAndBack>Reproducir {0} segundos y volver</PlayXSecondsAndBack>
-    <FindText>Búscar texto</FindText>
-    <GoToSubPosition>Ir al subtítulo posterior</GoToSubPosition>
-    <KeepChangesTitle>Mantener los cambios?</KeepChangesTitle>
-    <KeepChangesMessage>Se han hecho los cambios de los subtítulos en  "Visual sync».</KeepChangesMessage>
-    <SynchronizationDone>Sincronización hecha!</SynchronizationDone>
-    <StartSceneMustComeBeforeEndScene>La escena de inicio debe venir antes de la escena final!</StartSceneMustComeBeforeEndScene>
-    <Tip>Consejo: Utilizar &lt;ctrl+flecha izquierda/derecha&gt; para mover 100 ms atrás/hacia</Tip>
+    <FindText>Buscar texto</FindText>
+    <GoToSubPosition>Ir a pos. subt.</GoToSubPosition>
+    <KeepChangesTitle>¿Mantener los cambios?</KeepChangesTitle>
+    <KeepChangesMessage>Se han hecho cambios en los subtítulos con sincronización visual.
+
+¿Mantener los cambios?</KeepChangesMessage>
+    <SynchronizationDone>¡Sincronización realizada!</SynchronizationDone>
+    <StartSceneMustComeBeforeEndScene>¡El inicio de escena debe venir antes del final de escena!</StartSceneMustComeBeforeEndScene>
+    <Tip>Consejo: Use las teclas &lt;ctrl+flecha izquierda/derecha&gt; para mover 100 ms atrás/adelante</Tip>
   </VisualSync>
   <VobSubEditCharacters>
-    <Title>Editar imagen comparar base de datos</Title>
-    <ChooseCharacter>Elige personaje (s)</ChooseCharacter>
-    <ImageCompareFiles>Imagen comparar archivos</ImageCompareFiles>
+    <Title>Editar imagen comparando la base de datos</Title>
+    <ChooseCharacter>Elija caracter(es)</ChooseCharacter>
+    <ImageCompareFiles>Comparar archivo de imagen</ImageCompareFiles>
     <CurrentCompareImage>Comparar la imagen actual</CurrentCompareImage>
     <TextAssociatedWithImage>Texto asociado con la imagen</TextAssociatedWithImage>
-    <IsItalic>Es cursiva</IsItalic>
-    <Update>Actualizar</Update>
+    <IsItalic>Es curs&amp;iva</IsItalic>
+    <Update>Act&amp;ualizar</Update>
     <Delete>Eliminar</Delete>
-    <ImageDoubleSize>Imagen de tamaño doble</ImageDoubleSize>
+    <ImageDoubleSize>imagen de tamaño doble</ImageDoubleSize>
     <ImageFileNotFound>Archivo de imagen no encontrado</ImageFileNotFound>
     <Image>Imagen</Image>
   </VobSubEditCharacters>
   <VobSubOcr>
-    <Title>Importar/OCR VobSub (sub/idx) subtítulo</Title>
-    <TitleBluRay>Importar/OCR Blu-ray (.sup) subtítulo</TitleBluRay>
-    <OcrMethod>Método OCR </OcrMethod>
-    <OcrViaModi>OCR a través de Microsoft Office Document Imaging (MODI). Necesita MS Office</OcrViaModi>
-    <OcrViaTesseract>OCR a través de Tesseract</OcrViaTesseract>
+    <Title>Importar subtítulo OCR VobSub (sub/idx) </Title>
+    <TitleBluRay>Importar subtítulo OCR Blu-ray (.sup)</TitleBluRay>
+    <OcrMethod>Método OCR</OcrMethod>
+    <OcrViaModi>OCR con Microsoft Office Document Imaging (MODI). Necesita MS Office</OcrViaModi>
+    <OcrViaTesseract>OCR con Tesseract</OcrViaTesseract>
     <Language>Idioma</Language>
-    <OcrViaImageCompare>OCR via comparación de imágenes</OcrViaImageCompare>
-    <ImageDatabase>Base de datos de imagen </ImageDatabase>
-    <NoOfPixelsIsSpace>Ninguno de los pixeles es espacio</NoOfPixelsIsSpace>
+    <OcrViaImageCompare>OCR por comparación de imágenes</OcrViaImageCompare>
+    <ImageDatabase>Base de datos de imagen</ImageDatabase>
+    <NoOfPixelsIsSpace>Ninguno de los píxeles es espacio</NoOfPixelsIsSpace>
     <New>Nuevo</New>
     <Edit>Editar</Edit>
     <StartOcr>Empezar OCR</StartOcr>
-    <Stop>Detener</Stop>
-    <StartOcrFrom>Empezar OCRdesde el subtítulo:</StartOcrFrom>
-    <LoadingVobSubImages>Cargando imágenes VobSub ...</LoadingVobSubImages>
+    <Stop>Stop</Stop>
+    <StartOcrFrom>Empezar OCR desde subtítulo:</StartOcrFrom>
+    <LoadingVobSubImages>Cargando imágenes VobSub...</LoadingVobSubImages>
     <SubtitleImage>Imágenes de subtítulo</SubtitleImage>
     <SubtitleText>Texto de subtítulo</SubtitleText>
-    <UnableToCreateCharacterDatabaseFolder>No se puede crear 'Caracter de la  carpeta de base de datos': {0}</UnableToCreateCharacterDatabaseFolder>
+    <UnableToCreateCharacterDatabaseFolder>No se puede crear carpeta de base de datos de caracteres: {0}</UnableToCreateCharacterDatabaseFolder>
     <SubtitleImageXofY>Imagen del subtítulo {0} de {1}</SubtitleImageXofY>
     <ImagePalette>Paleta de imágenes</ImagePalette>
     <UseCustomColors>Utilizar colores personalizados</UseCustomColors>
     <Transparent>Transparente</Transparent>
-    <PromptForUnknownWords>Preguntar por las palabras desconocidas</PromptForUnknownWords>
-    <TryToGuessUnkownWords>Tratar de adivinar las palabras desconocidas</TryToGuessUnkownWords>
+    <PromptForUnknownWords>Comfirmar palabras desconocidas</PromptForUnknownWords>
+    <TryToGuessUnkownWords>Tratar de adivinar palabras desconocidas</TryToGuessUnkownWords>
     <AutoBreakSubtitleIfMoreThanTwoLines>Salto de párrafo automático si son mas de 2 líneas</AutoBreakSubtitleIfMoreThanTwoLines>
-    <AllFixes>Todas las correcciones</AllFixes>
-    <GuessesUsed>Suposiciones utilizadas</GuessesUsed>
+    <AllFixes>Corregir todo</AllFixes>
+    <GuessesUsed>Utilizar suposiciones</GuessesUsed>
     <UnknownWords>Palabras desconocidas</UnknownWords>
-    <OcrAutoCorrectionSpellchecking>OCR corrección automática / corrección ortográfica</OcrAutoCorrectionSpellchecking>
-    <FixOcrErrors>Corregir los errores de OCR</FixOcrErrors>
-    <SaveSubtitleImageAs>Guardar imagen de subtítulo  como... </SaveSubtitleImageAs>
-    <SaveAllSubtitleImagesAs>Guardar todas las imágenes (png/xml BDN)...</SaveAllSubtitleImagesAs>
-    <XImagesSavedInY>{0} guardar las imágenes en {1}</XImagesSavedInY>
+    <OcrAutoCorrectionSpellchecking>OCR autocorrección / revisión ortográfica</OcrAutoCorrectionSpellchecking>
+    <FixOcrErrors>Corregir errores de OCR</FixOcrErrors>
+    <ImportTextWithMatchingTimeCodes>Importar texto con código de tiempo coincidente...</ImportTextWithMatchingTimeCodes>
+    <SaveSubtitleImageAs>Guardar imagen de subtítulo  como...</SaveSubtitleImageAs>
+    <SaveAllSubtitleImagesAsBdnXml>Guardar todas las imágenes (png/bdn xml)...</SaveAllSubtitleImagesAsBdnXml>
+    <SaveAllSubtitleImagesWithHtml>Guardar todas las imágenes con índice HTML...</SaveAllSubtitleImagesWithHtml>
+    <XImagesSavedInY>{0} imágenes guardadas en {1}</XImagesSavedInY>
     <TryModiForUnknownWords>Probar MS MODI OCR para palabras desconocidas</TryModiForUnknownWords>
     <DictionaryX>Diccionario: {0}</DictionaryX>
     <RightToLeft>De derecha a izquierda</RightToLeft>
-    <ShowOnlyForcedSubtitles>Mostrar sólo los subtítulos forzados</ShowOnlyForcedSubtitles>
-    <UseTimeCodesFromIdx>Usar los time codes del archivo .idx</UseTimeCodesFromIdx>
+    <ShowOnlyForcedSubtitles>Mostrar sólo subtítulos forzados</ShowOnlyForcedSubtitles>
+    <UseTimeCodesFromIdx>Usar los códigos de tiempo del archivo .idx</UseTimeCodesFromIdx>
+    <NoMatch>&lt;No hay coincidencias&gt;</NoMatch>
+    <AutoTransparentBackground>Fondo transparente auto</AutoTransparentBackground>
+    <InspectCompareMatchesForCurrentImage>Inspeccionar coincidencias para la imagen actual...</InspectCompareMatchesForCurrentImage>
+    <EditLastAdditions>Editar última imagen comparando con las añadidas...</EditLastAdditions>
   </VobSubOcr>
   <VobSubOcrCharacter>
-    <Title>VobSub - Manual de imagen a texto</Title>
+    <Title>VobSub - Imagen a texto manualmente</Title>
     <ShrinkSelection>Reducir selección</ShrinkSelection>
-    <ExpandSelection>Ampliar la selección</ExpandSelection>
-    <SubtitleImage>Imágenes de subtítulos</SubtitleImage>
+    <ExpandSelection>Ampliar selección</ExpandSelection>
+    <SubtitleImage>Imagen de subtítulo</SubtitleImage>
     <Characters>Caracter(es)</Characters>
     <CharactersAsText>Caracter(es) como texto</CharactersAsText>
-    <Italic>Cursiva</Italic>
-    <Abort>Cancelar</Abort>
+    <Italic>Curs&amp;iva</Italic>
+    <Abort>C&amp;ancelar</Abort>
+    <Skip>&amp;Saltar</Skip>
+    <Nordic>Nórdico</Nordic>
+    <Spanish>Español</Spanish>
+    <German>Alemán</German>
+    <AutoSubmitOnFirstChar>Autopresentar primer carácter</AutoSubmitOnFirstChar>
+    <EditLastX>Editar el último: {0}</EditLastX>
   </VobSubOcrCharacter>
+  <VobSubOcrCharacterInspect>
+    <Title>Inspeccionar coincidencias para la imagen actual</Title>
+    <InspectItems>Revisar elementos</InspectItems>
+    <AddBetterMatch>Añadir la mejor coincidencia</AddBetterMatch>
+  </VobSubOcrCharacterInspect>
   <VobSubOcrNewFolder>
     <Title>Nueva carpeta</Title>
-    <Message>Nombre del nuevo caracter de la carpeta de la base de datos</Message>
+    <Message>Nombre de la nueva carpeta de base de datos de caracteres</Message>
   </VobSubOcrNewFolder>
   <WaveForm>
-    <ClickToAddWaveForm>Haga clic para añadir forma de onda</ClickToAddWaveForm>
-    <Seconds>Segundos</Seconds>
-    <ZoomIn>Hacer zoom</ZoomIn>
-    <ZoomOut>Deshacer zoom</ZoomOut>
+    <ClickToAddWaveForm>Clique para añadir forma de onda</ClickToAddWaveForm>
+    <ClickToAddWaveformAndSpectrogram>Clique para añadir forma de onda/espectrograma</ClickToAddWaveformAndSpectrogram>
+    <Seconds>segundos</Seconds>
+    <ZoomIn>Zoom +</ZoomIn>
+    <ZoomOut>Zoom -</ZoomOut>
     <AddParagraphHere>Añadir texto aquí</AddParagraphHere>
     <DeleteParagraph>Eliminar texto</DeleteParagraph>
-    <Split>Separar</Split>
-    <SplitAtCursor>Separar en el cursor</SplitAtCursor>
-    <MergeWithPrevious>Combinar con el  anterior</MergeWithPrevious>
-    <MergeWithNext>Combinar con el siguiente</MergeWithNext>
-    <PlaySelection>Reproducir lo seleccionado</PlaySelection>
+    <Split>Dividir</Split>
+    <SplitAtCursor>Dividir desde el cursor</SplitAtCursor>
+    <MergeWithPrevious>Combinar con anterior</MergeWithPrevious>
+    <MergeWithNext>Combinar con siguiente</MergeWithNext>
+    <PlaySelection>Reproducir selección</PlaySelection>
+    <ShowWaveformAndSpectrogram>Mostrar  forma de onda y espectrograma</ShowWaveformAndSpectrogram>
+    <ShowWaveformOnly>Mostrar solo  forma de onda</ShowWaveformOnly>
+    <ShowSpectrogramOnly>Mostrar solo espectrograma</ShowSpectrogramOnly>
   </WaveForm>
 </Language>
