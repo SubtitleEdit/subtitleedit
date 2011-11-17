@@ -117,7 +117,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     valueNode = xml.CreateElement("string");
                     valueNode.InnerText = line;
                     paragraph.AppendChild(valueNode);
-                }                
+                }
                 div.AppendChild(paragraph);
                 no++;
             }
@@ -126,7 +126,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             XmlTextWriter writer = new XmlTextWriter(ms, Encoding.UTF8);
             writer.Formatting = Formatting.Indented;
             xml.Save(writer);
-            return Encoding.UTF8.GetString(ms.ToArray()).Trim().Replace("<plist>", "<!DOCTYPE plist PUBLIC \"-//Apple//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">" +  Environment.NewLine + 
+            return Encoding.UTF8.GetString(ms.ToArray()).Trim().Replace("<plist>", "<!DOCTYPE plist PUBLIC \"-//Apple//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">" +  Environment.NewLine +
                              "<plist version=\"1.0\">;");
         }
 
@@ -173,7 +173,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             }
             subtitle.Renumber(1);
         }
-     
+
     }
 }
 

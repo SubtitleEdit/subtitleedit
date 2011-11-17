@@ -10,7 +10,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         static List<int> _hebrewCodes = new List<int> {
             0x40, // א
-            0x41, // ב 
+            0x41, // ב
             0x42, // ג
             0x43, // ד
             0x44, // ה
@@ -29,8 +29,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             0x56, // צ
             0x57, // ק
             0x58, // ר
-            0x59, // ש         
-        
+            0x59, // ש
+
         };
 
         static List<string> _hebrewLetters = new List<string> {
@@ -138,17 +138,17 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 buffer[251] = 0x4C;
                 buffer[252] = 0x2E;
                 buffer[253] = 0x56;
-                buffer[254] = 0x4B;         
+                buffer[254] = 0x4B;
                 buffer[255] = 0x02;
                 buffer[256] = 0x30;
                 buffer[257] = 0x30;
-                buffer[258] = 0x3A;   
+                buffer[258] = 0x3A;
                 buffer[259] = 0x30;
                 buffer[260] = 0x30;
-                buffer[261] = 0x3A;   
+                buffer[261] = 0x3A;
                 buffer[262] = 0x30;
                 buffer[263] = 0x30;
-                buffer[264] = 0x3A;   
+                buffer[264] = 0x3A;
                 buffer[265] = 0x30;
                 buffer[266] = 0x30;
 
@@ -240,7 +240,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             byte[] buffer = new byte[51];
 
             for (int i = 0; i < buffer.Length; i++)
-                buffer[i] = 0x7F;    
+                buffer[i] = 0x7F;
 
             var encoding = Encoding.Default;
             int index = 0;
@@ -412,7 +412,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         p.StartTime.TotalMilliseconds = ((1000.0 / Configuration.Settings.General.CurrentFrameRate) * startFrame);
                         p.EndTime.TotalMilliseconds = ((1000.0 / Configuration.Settings.General.CurrentFrameRate) * endFrame);
                         p.Text = (line1 + Environment.NewLine + line2).Trim();
-                    }                    
+                    }
 
                     i += TextLength * 2;
                     lastNumber = number;

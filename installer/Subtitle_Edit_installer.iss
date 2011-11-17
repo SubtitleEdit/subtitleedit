@@ -51,12 +51,12 @@
 
 #expr ParseVersion(bindir + "\SubtitleEdit.exe", VerMajor, VerMinor, VerBuild, VerRevision)
 
-;#define app_version str(VerMajor) + "." + str(VerMinor)
+;#define app_version   str(VerMajor) + "." + str(VerMinor)
 ; The following app_version is for 3 digit releases, one of the two must be uncommented at a time
-#define app_version          str(VerMajor) + "." + str(VerMinor) + "." + str(VerBuild)
+#define app_version   str(VerMajor) + "." + str(VerMinor) + "." + str(VerBuild)
 
 #define installer_build_date GetDateTimeString('mmm, d yyyy', '', '')
-#define quick_launch         "{userappdata}\Microsoft\Internet Explorer\Quick Launch"
+#define quick_launch  "{userappdata}\Microsoft\Internet Explorer\Quick Launch"
 
 
 [Setup]
@@ -188,7 +188,7 @@ Source: {#bindir}\Languages\cs-CZ.xml;             DestDir: {app}\Languages;    
 Source: {#bindir}\Languages\da-DK.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
 Source: {#bindir}\Languages\de-De.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
 Source: {#bindir}\Languages\el-GR.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
-;Source: {#bindir}\Languages\es-ES.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
+Source: {#bindir}\Languages\es-ES.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
 Source: {#bindir}\Languages\eu-ES.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
 Source: {#bindir}\Languages\fr-FR.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
 Source: {#bindir}\Languages\hu-HU.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
@@ -273,7 +273,6 @@ Type: files;      Name: {app}\Languages\sr-Latn-CS.xml
 
 ; The following language files are incompatible with this SE version,
 ; so remove them when we are upgrading. If they are updated remove this code.
-Type: files;      Name: {app}\Languages\es-ES.xml;      Check: IsComponentSelected('translations') and IsUpgrade()
 Type: files;      Name: {app}\Languages\it-IT.xml;      Check: IsComponentSelected('translations') and IsUpgrade()
 
 ; Cleanup language files if it's an upgrade and the translations are not selected
