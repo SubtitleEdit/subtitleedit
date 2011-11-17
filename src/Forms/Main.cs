@@ -4674,6 +4674,19 @@ namespace Nikse.SubtitleEdit.Forms
                         a = a + "</i>";
                         b = "<i>" + b;
                     }
+                    if (a.StartsWith("-") && (a.EndsWith(".") || a.EndsWith("!") || a.EndsWith("?")) &&
+                        b.StartsWith("-") && (b.EndsWith(".") || b.EndsWith("!") || b.EndsWith("?")))
+                    {
+                        a = a.TrimStart('-').TrimStart();
+                        b = b.TrimStart('-').TrimStart();
+                    }
+                    if (a.StartsWith("<i>-") && (a.EndsWith(".</i>") || a.EndsWith("!</i>") || a.EndsWith("?</i>")) &&
+                        b.StartsWith("<i>-") && (b.EndsWith(".</i>") || b.EndsWith("!</i>") || b.EndsWith("?</i>")))
+                    {
+                        a = a.Remove(3,1).Replace("  ", " ");
+                        b = b.Remove(3, 1).Replace("  ", " ");
+                    }
+
                     currentParagraph.Text = Utilities.AutoBreakLine(a);
                     newParagraph.Text = Utilities.AutoBreakLine(b);
                 }
@@ -4728,8 +4741,31 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                         else if (lines.Length == 2 && (lines[0].EndsWith(".") || lines[0].EndsWith("!") || lines[0].EndsWith("?")))
                         {
-                            originalCurrent.Text = Utilities.AutoBreakLine(lines[0]);
-                            originalNew.Text = Utilities.AutoBreakLine(lines[1]);
+                            string a = lines[0].Trim();
+                            string b = lines[1].Trim();
+                            if (oldText.TrimStart().StartsWith("<i>") && oldText.TrimEnd().EndsWith("</i>") &&
+                                Utilities.CountTagInText(oldText, "<i>") == 1 && Utilities.CountTagInText(oldText, "</i>") == 1)
+                            {
+                                a = a + "</i>";
+                                b = "<i>" + b;
+                            }
+                            if (a.StartsWith("-") && (a.EndsWith(".") || a.EndsWith("!") || a.EndsWith("?")) &&
+                                b.StartsWith("-") && (b.EndsWith(".") || b.EndsWith("!") || b.EndsWith("?")))
+                            {
+                                a = a.TrimStart('-').TrimStart();
+                                b = b.TrimStart('-').TrimStart();
+                            }
+                            if (a.StartsWith("<i>-") && (a.EndsWith(".</i>") || a.EndsWith("!</i>") || a.EndsWith("?</i>")) &&
+                                b.StartsWith("<i>-") && (b.EndsWith(".</i>") || b.EndsWith("!</i>") || b.EndsWith("?</i>")))
+                            {
+                                a = a.Remove(3, 1).Replace("  ", " ");
+                                b = b.Remove(3, 1).Replace("  ", " ");
+                            }
+
+                            lines[0] = a;
+                            lines[1] = b;
+                            originalCurrent.Text = Utilities.AutoBreakLine(a);
+                            originalNew.Text = Utilities.AutoBreakLine(b);
                         }
                         else
                         {
@@ -7735,7 +7771,9 @@ namespace Nikse.SubtitleEdit.Forms
             if (setMinDisplayDiff.ShowDialog() == System.Windows.Forms.DialogResult.OK && setMinDisplayDiff.FixCount > 0)
             {
                 MakeHistoryForUndo(_language.BeforeSetMinimumDisplayTimeBetweenParagraphs);
-                _subtitle = setMinDisplayDiff.FixedSubtitle;
+                _subtitle.Paragraphs.Clear();
+                foreach (Paragraph p in setMinDisplayDiff.FixedSubtitle.Paragraphs)
+                    _subtitle.Paragraphs.Add(p);
                 _subtitle.CalculateFrameNumbersFromTimeCodesNoCheck(CurrentFrameRate);
                 ShowStatus(string.Format(_language.XMinimumDisplayTimeBetweenParagraphsChanged, setMinDisplayDiff.FixCount));
                 SaveSubtitleListviewIndexes();
