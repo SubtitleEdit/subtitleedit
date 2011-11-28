@@ -612,9 +612,12 @@
     <Compile Include="Logic\SubtitleFormats\StructuredTitles.cs" />
     <Compile Include="Logic\SubtitleFormats\SubtitleEditorProject.cs" />
     <Compile Include="Logic\SubtitleFormats\TimedText10.cs" />
+    <Compile Include="Logic\SubtitleFormats\TmpegEncText.cs" />
+    <Compile Include="Logic\SubtitleFormats\TmpegEncXml.cs" />
     <Compile Include="Logic\SubtitleFormats\TranscriberXml.cs" />
     <Compile Include="Logic\SubtitleFormats\TurboTitler.cs" />
     <Compile Include="Logic\SubtitleFormats\UleadSubtitleFormat.cs" />
+    <Compile Include="Logic\SubtitleFormats\UnknownSubtitle10.cs" />
     <Compile Include="Logic\SubtitleFormats\UnknownSubtitle5.cs" />
     <Compile Include="Logic\SubtitleFormats\OpenDvt.cs" />
     <Compile Include="Logic\SubtitleFormats\AbcIViewer.cs" />

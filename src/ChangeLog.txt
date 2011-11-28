@@ -3,14 +3,16 @@ Subtitle Edit Changelog
 3.2.3 (xth November 2011)
  * NEW:
    * Added Japanese language file - thx Nardog
+   * Added Spanish language file - thx m2s
    * Support for subtitle format AvidCaption - thx Laszlo
    * Export to Blu-ray sup format
  * IMPROVED:
    * Updated Tesseract to 3.01 
      Now includes italic + adds support for Arabic, Hebrew, Hindi, and Thai
-   * OCR tweaked a bit + BluRay sup files is processed faster
+   * OCR tweaked a bit + BluRay sup files are processed faster
    * Subtitle format PAC much improved
    * Subtitle format FCP Xml improved - thx Ulrik
+   * Splitting of lines - Thx Trottel
  * FIXED:
    * Fixed crash when setting Options - thx karmazyn
    * Fixed crash in set color (or set font) - thx LEO33
@@ -20,6 +22,7 @@ Subtitle Edit Changelog
    * Fixed possible crash in spell check + German dictionary should work
    * Fixed missing save/load of a fix common errors setting - thx menes
    * Removed Microsoft translate as it's useless with new quotas
+   * Fixed milliseconds in timed text - thx Calle
 
 
 3.2.2 (19th October 2011)
