@@ -134,7 +134,7 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
                 switch (segment.Type)
                 {
                     case 0x14: // Palette
-                        log.AppendLine(string.Format("0x14 - Palette - PDS offset={0} size={1}", position, segment.Size));
+                        log.Append(string.Format("0x14 - Palette - PDS offset={0} size={1}", position, segment.Size));
 
                         if (compNum != compNumOld)
                         {
@@ -167,7 +167,7 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
                         break;
 
                     case 0x15: // Image bitmap data
-                        log.AppendLine(string.Format("0x15 - bitmap data - ODS offset={0} size={1}", position, segment.Size));
+                        log.Append(string.Format("0x15 - bitmap data - ODS offset={0} size={1}", position, segment.Size));
 
                         if (compNum != compNumOld)
                         {
@@ -201,7 +201,7 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
                         break;
 
                     case 0x16:
-                        log.AppendLine(string.Format("0x16 - Time codes, offset={0} size={1}", position, segment.Size));
+                        log.Append(string.Format("0x16 - Time codes, offset={0} size={1}", position, segment.Size));
 
                         compNum = BigEndianInt16(buffer, 5);
                         cs = GetCompositionState(buffer[7]);
@@ -234,7 +234,7 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
                             pic = new BluRaySupPicture();
                             subPictures.Add(pic); // add to list
                             pic.StartTime = segment.PtsTimestamp;
-                            log.AppendLine("#> " + (subPictures.Count) + " (" + ToolBox.PtsToTimeString(pic.StartTime) + ")");
+                            log.Append("#> " + (subPictures.Count) + " (" + ToolBox.PtsToTimeString(pic.StartTime) + ")");
 
                             so[0] = null;
                             ParsePcs(segment, pic, so, buffer);
@@ -243,10 +243,8 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
                                 picLast.EndTime = pic.StartTime;
 
                             if (so[0] != null)
-                                log.AppendLine(", " + so[0]);
-                            else
-                                log.AppendLine();
-                            log.Append(Environment.NewLine + "PTS start: " + ToolBox.PtsToTimeString(pic.StartTime));
+                                log.Append(", " + so[0]);
+                            log.Append(", PTS start: " + ToolBox.PtsToTimeString(pic.StartTime));
                             log.AppendLine(", screen size: " + pic.Width + "*" + pic.Height);
                             odsCtr = 0;
                             pdsCtr = 0;
@@ -274,7 +272,7 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
                                     log.AppendLine(" NORM, ");
                                     break;
                             }
-                            log.AppendLine("size: " + segment.Size + ", comp#: " + compNum + ", forced: " + pic.IsForced);
+                            log.Append("size: " + segment.Size + ", comp#: " + compNum + ", forced: " + pic.IsForced);
                             if (compNum != compNumOld)
                             {
                                 so[0] = null;
@@ -285,25 +283,25 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
                                 ParsePcs(segment, pic, so, buffer);
                             }
                             if (so[0] != null)
-                                log.AppendLine(", " + so[0]);
+                                log.Append(", " + so[0]);
                             log.AppendLine(", pal update: " + paletteUpdate);
                             log.AppendLine("PTS: " + ToolBox.PtsToTimeString(segment.PtsTimestamp));
                         }
                         break;
 
                     case 0x17:
-                        log.AppendLine(string.Format("0x17 - WDS offset={0} size={1}", position, segment.Size));
+                        log.Append(string.Format("0x17 - WDS offset={0} size={1}", position, segment.Size));
 
                         int x = BigEndianInt16(buffer, 2);
                         int y = BigEndianInt16(buffer, 4);
                         int width = BigEndianInt16(buffer, 6);
                         int height = BigEndianInt16(buffer, 8);
 
-                        log.AppendLine(string.Format("width:{0}, height:{1}", width, height));
+                        log.AppendLine(string.Format(", width:{0}, height:{1}   x,y={2},{3}", width, height, x, y));
                         break;
 
                     case 0x80:
-                        log.AppendLine(string.Format("0x18 - END offset={0} size={1}", position, segment.Size));
+                        log.Append(string.Format("0x80 - END offset={0} size={1}", position, segment.Size));
 
                         // decide whether to store this last composition section as caption or merge it
                         if (cs == CompositionState.EpochStart)
@@ -373,6 +371,7 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
                 position += segment.Size;
                 i++;
             }
+        //    File.WriteAllText(@"C:\Users\Nikse\Desktop\Blu-Ray Sup\log.txt", log.ToString());
             return subPictures;
         }
 

@@ -300,7 +300,7 @@ namespace Nikse.SubtitleEdit.Logic
             SubtitleFontColor = System.Drawing.Color.Black;
             SubtitleBackgroundColor = System.Drawing.Color.White;
             DefaultEncoding = "UTF-8";
-            AutoGuessAnsiEncoding = false;
+            AutoGuessAnsiEncoding = true;
             ShowRecentFiles = true;
             RememberSelectedLine = true;
             StartLoadLastFile = true;
@@ -480,7 +480,7 @@ namespace Nikse.SubtitleEdit.Logic
             MainTextBoxItalic = "Control+I";
             MainAdjustSetStartAndOffsetTheRest = "Control+Space";
             MainAdjustSetEndAndGotoNext = "Shift+Space";
-            MainAdjustViaEndAutoStartAndGoToNext = "Shift+End";
+            MainAdjustViaEndAutoStartAndGoToNext = string.Empty;
             MainAdjustSetStartAutoDurationAndGoToNext = string.Empty;
             MainInsertAfter = "Alt+Ins";
             MainInsertBefore = "Control+Shift+Ins";
@@ -1528,7 +1528,7 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("MainAdjustSetStartAndOffsetTheRest", settings.Shortcuts.MainAdjustSetStartAndOffsetTheRest);
             textWriter.WriteElementString("MainAdjustSetEndAndGotoNext", settings.Shortcuts.MainAdjustSetEndAndGotoNext);
             textWriter.WriteElementString("MainAdjustViaEndAutoStartAndGoToNext", settings.Shortcuts.MainAdjustViaEndAutoStartAndGoToNext);
-            textWriter.WriteElementString("MainAdjustSetStartAutoDurationAndGoToNext", settings.Shortcuts.MainAdjustViaEndAutoStartAndGoToNext);
+            textWriter.WriteElementString("MainAdjustSetStartAutoDurationAndGoToNext", settings.Shortcuts.MainAdjustSetStartAutoDurationAndGoToNext);
             textWriter.WriteElementString("MainInsertAfter", settings.Shortcuts.MainInsertAfter);
             textWriter.WriteElementString("MainInsertBefore", settings.Shortcuts.MainInsertBefore);
             textWriter.WriteElementString("MainGoToNext", settings.Shortcuts.MainGoToNext);

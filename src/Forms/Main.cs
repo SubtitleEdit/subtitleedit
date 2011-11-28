@@ -1451,10 +1451,22 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
 
-                if (Path.GetExtension(fileName).ToLower() == ".mkv")
+                if (Path.GetExtension(fileName).ToLower() == ".mkv" || Path.GetExtension(fileName).ToLower() == ".mks")
                 {
-                    ImportSubtitleFromMatroskaFile();
-                    return;
+                    Matroska mkv = new Matroska();
+                    bool isValid = false;
+                    bool hasConstantFrameRate = false;
+                    double frameRate = 0;
+                    int width = 0;
+                    int height = 0;
+                    double milliseconds = 0;
+                    string videoCodec = string.Empty;
+                    mkv.GetMatroskaInfo(fileName, ref isValid, ref hasConstantFrameRate, ref frameRate, ref width, ref height, ref milliseconds, ref videoCodec);
+                    if (isValid)
+                    {
+                        ImportSubtitleFromMatroskaFile();
+                        return;
+                    }
                 }
 
                 var fi = new FileInfo(fileName);
@@ -9928,6 +9940,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             StringBuilder log = new StringBuilder();
             var subtitles = BluRaySupParser.ParseBluRaySup(fileName, log);
+            subtitles = SplitBitmaps(subtitles);
             if (subtitles.Count > 0)
             {
                 var vobSubOcr = new VobSubOcr();
@@ -9960,6 +9973,44 @@ namespace Nikse.SubtitleEdit.Forms
                     Configuration.Settings.Save();
                 }
             }
+        }
+
+        private List<BluRaySupPicture> SplitBitmaps(List<BluRaySupPicture> subtitles)
+        {
+            return subtitles;
+            var list = new List<BluRaySupPicture>();
+            int lastCompositionNumber = -1;
+
+            foreach (var sub in subtitles)
+            { 
+                for (int i=0; i<sub.ImageObjects.Count; i++)
+                {
+                    var s = new BluRaySupPicture(sub);
+                    s.ObjectId = i;
+                    if (s.CompositionNumber >= lastCompositionNumber)
+                    {
+                        int start = list.Count - 20;
+                        if (start < 0)
+                            start = 0;
+                        bool found = false;
+                        if (sub.ImageObjects.Count > 1)
+                        {
+                            
+                            for (int k = start; k < list.Count; k++)
+                            {
+                                if (list[k].ObjectIdImage.Width == sub.ObjectIdImage.Width && list[k].ObjectIdImage.Height == sub.ObjectIdImage.Height &&
+                                    list[k].ObjectIdImage.XOffset == sub.ObjectIdImage.XOffset && list[k].ObjectIdImage.YOffset == sub.ObjectIdImage.YOffset)
+                                    found = true;
+                            }
+                        }
+
+                        if (!found)
+                            list.Add(s);
+                    }
+                    lastCompositionNumber = s.CompositionNumber;
+                }
+            }
+            return list;
         }
 
         private void selectAllToolStripMenuItem_Click(object sender, EventArgs e)
