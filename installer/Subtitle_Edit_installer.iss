@@ -31,8 +31,7 @@
 #endif
 
 
-#define installer_build_number "25"
-#define app_copyright          "Copyright © 2001-2011, Nikse"
+#define app_copyright "Copyright © 2001-2011, Nikse"
 ; If you don't define "localize", i.e. comment out the following line then no translations
 ; for SubtitleEdit or the installer itself will be included in the installer
 #define localize
@@ -55,7 +54,6 @@
 ; The following app_version is for 3 digit releases, one of the two must be uncommented at a time
 #define app_version   str(VerMajor) + "." + str(VerMinor) + "." + str(VerBuild)
 
-#define installer_build_date GetDateTimeString('mmm, d yyyy', '', '')
 #define quick_launch  "{userappdata}\Microsoft\Internet Explorer\Quick Launch"
 
 
@@ -129,7 +127,7 @@ Name: sv;  MessagesFile: Languages\Swedish.isl
 
 
 [Messages]
-BeveledLabel=Subtitle Edit {#app_version} by Nikse  -  Setup v{#installer_build_number} built on {#installer_build_date}
+BeveledLabel=Subtitle Edit {#app_version} by Nikse
 SetupAppTitle=Setup - Subtitle Edit
 SetupWindowTitle=Setup - Subtitle Edit
 
@@ -322,9 +320,9 @@ external 'IsModuleLoaded@{app}\psvince.dll stdcall uninstallonly';
 // Check if Subtitle Edit's settings exist
 function SettingsExistCheck(): Boolean;
 begin
-  if FileExists(ExpandConstant('{userappdata}\Subtitle Edit\Settings.xml')) then begin
-    Result := True;
-  end else
+  if FileExists(ExpandConstant('{userappdata}\Subtitle Edit\Settings.xml')) then
+    Result := True
+  else
     Result := False;
 end;
 
@@ -379,12 +377,10 @@ end;
 function ShouldSkipPage(PageID: Integer): Boolean;
 begin
   // Hide the license page
-  if IsUpgrade() and (PageID = wpLicense) then begin
-    Result := True;
-  end
-  else begin
+  if IsUpgrade() and (PageID = wpLicense) then
+    Result := True
+  else
     Result := False;
-  end;
 end;
 
 
@@ -455,9 +451,8 @@ begin
       iMsgBoxResult := SuppressibleMsgBox(CustomMessage('msg_AppIsRunning'), mbError, MB_OKCANCEL, IDCANCEL);
     end;
 
-    if iMsgBoxResult = IDCANCEL then begin
+    if iMsgBoxResult = IDCANCEL then
       Result := False;
-    end;
 
     // Check if .NET Framework 2.0 is installed and if not offer to download it
     try
@@ -495,9 +490,8 @@ begin
       iMsgBoxResult := SuppressibleMsgBox(CustomMessage('msg_AppIsRunningUninstall'), mbError, MB_OKCANCEL, IDCANCEL);
     end;
 
-    if iMsgBoxResult = IDCANCEL then begin
+    if iMsgBoxResult = IDCANCEL then
       Result := False;
-    end;
 
     // Unload the psvince.dll in order to be uninstalled
     UnloadDLL(ExpandConstant('{app}\psvince.dll'));
