@@ -915,11 +915,11 @@ namespace Nikse.SubtitleEdit.Forms
                         Configuration.Settings.Shortcuts.MainInsertAfter = GetShortcut(node.Text);
                     else if (text == Configuration.Settings.Language.Main.Menu.ContextMenu.InsertBefore.Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.MainInsertBefore = GetShortcut(node.Text);
-                    else if (text == Configuration.Settings.Language.Settings.GoToNext.Replace("&", string.Empty))
+                    else if (Configuration.Settings.Language.Settings.GoToNext != null && text == Configuration.Settings.Language.Settings.GoToNext.Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.MainGoToNext = GetShortcut(node.Text);
-                    else if (text == Configuration.Settings.Language.Settings.GoToPrevious.Replace("&", string.Empty))
+                    else if (Configuration.Settings.Language.Settings.GoToPrevious != null && text == Configuration.Settings.Language.Settings.GoToPrevious.Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.MainGoToPrevious = GetShortcut(node.Text);
-                    else if (text == Configuration.Settings.Language.Settings.ToggleDialogueDashes.Replace("&", string.Empty))
+                    else if (Configuration.Settings.Language.Settings.ToggleDialogueDashes != null && text == Configuration.Settings.Language.Settings.ToggleDialogueDashes.Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.MainListViewToggleDashes = GetShortcut(node.Text);
                 }
             }
