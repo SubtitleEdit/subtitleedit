@@ -215,22 +215,22 @@ hu.types_default=Default installation
 
 
 ; Italian
-it.comp_translations=Translations
-it.msg_AppIsRunning=Setup has detected that Subtitle Edit is currently running.%n%nPlease close all instances of it now, then click OK to continue, or Cancel to exit.
-it.msg_AppIsRunningUninstall=Uninstall has detected that Subtitle Edit is currently running.%n%nPlease close all instances of it now, then click OK to continue, or Cancel to exit.
-it.msg_AskToDownNET=Subtitle Edit requires the .NET Framework 2.0. Please download and install the .NET Framework and run setup again.%n%nDo you want to download the .NET Framework 2.0 now?
-it.msg_DeleteSettings=Do you also want to delete Subtitle Edit's settings and any custom changes you made in the dictionaries?%n%nIf you plan on reinstalling Subtitle Edit you do not have to delete them.
-it.msg_OptimizingPerformance=Optimizing performance...
-it.msg_SetupIsRunningWarning=Subtitle Edit Setup is already running!
-it.run_VisitWebsite=Visit Subtitle Edit's Website
-it.sm_com_Changelog=Subtitle Edit's Changelog
-it.tsk_AllUsers=For all users
-it.tsk_CurrentUser=For the current user only
+it.comp_translations=Traduzioni
+it.msg_AppIsRunning=Il processo di installazione ha rilevato che Subtitle Edit è in esecuzione.%n%nPer favore, chiudi tutte le sue finestre, poi clicca OK per continuare, o Annulla per uscire.
+it.msg_AppIsRunningUninstall=Il processo di disinstallazione ha rilevato che Subtitle Edit è in esecuzione.%n%nPer favore, chiudi tutte le sue finestre, poi clicca OK per continuare, o Annulla per uscire.
+it.msg_AskToDownNET=Subtitle Edit richiede .NET Framework 2.0. Per favore scarica e installa .NET Framework ed esegui nuovamente l'installazione.%n%nVuoi scaricare .NET Framework 2.0 adesso?
+it.msg_DeleteSettings=Vuoi anche cancellare le impostazioni di Subtitle Edit e le modifiche che hai apportato ai dizionari?%n%nSe hai intenzione di reinstallare Subtitle Edit puoi non farlo.
+it.msg_OptimizingPerformance=Ottimizzazione prestazioni in corso...
+it.msg_SetupIsRunningWarning=Il processo di installazione di Subtitle Edit è già in esecuzione!
+it.run_VisitWebsite=Visita il sito di Subtitle Edit
+it.sm_com_Changelog=Lista delle novità di Subtitle Edit
+it.tsk_AllUsers=Per tutti gli utenti
+it.tsk_CurrentUser=Solo per l'utente corrente
 it.tsk_Other=Other:
-it.tsk_ResetDictionaries=Reset Dictionaries and delete any custom names
-it.tsk_ResetSettings=Reset Subtitle Edit's settings
-it.types_custom=Custom installation
-it.types_default=Default installation
+it.tsk_ResetDictionaries=Ripristina i dizionari e cancella i nomi personali
+it.tsk_ResetSettings=Ripristina le impostazioni di Subtitle Edit
+it.types_custom=Installazione personalizzata
+it.types_default=Installazione predefinita
 
 
 ; Japanese
