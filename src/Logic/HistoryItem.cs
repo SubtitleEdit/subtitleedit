@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Nikse.SubtitleEdit.Logic
 {
@@ -13,8 +14,13 @@ namespace Nikse.SubtitleEdit.Logic
         public string SubtitleFormatFriendlyName { get; set; }
         public Subtitle OriginalSubtitle { get; set; }
         public string OriginalSubtitleFileName { get; set; }
+        public List<Paragraph> RedoParagraphs { get; set; }
+        public int RedoLineIndex { get; set; }
+        public int RedoLinePosition { get; set; }
+        public int LineIndex { get; set; }
+        public int LinePosition { get; set; }
 
-        public HistoryItem(int index, Subtitle subtitle, string description, string fileName, DateTime fileModified, string subtitleFormatFriendlyName, Subtitle originalSubtitle, string originalSubtitleFileName)
+        public HistoryItem(int index, Subtitle subtitle, string description, string fileName, DateTime fileModified, string subtitleFormatFriendlyName, Subtitle originalSubtitle, string originalSubtitleFileName, int lineIndex, int linePosition)
         {
             Index = index;
             Timestamp = DateTime.Now;
@@ -25,6 +31,10 @@ namespace Nikse.SubtitleEdit.Logic
             SubtitleFormatFriendlyName = subtitleFormatFriendlyName;
             OriginalSubtitle = new Subtitle(originalSubtitle);
             OriginalSubtitleFileName = originalSubtitleFileName;
+            LineIndex = lineIndex;
+            LinePosition = linePosition;
+            RedoLineIndex = -1;
+            RedoLinePosition = -1;
         }
     }
 }

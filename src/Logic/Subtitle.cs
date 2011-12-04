@@ -18,6 +18,8 @@ namespace Nikse.SubtitleEdit.Logic
 
         public string FileName { get; set; }
 
+        public const int MaximumHistoryItems = 100;
+
         public SubtitleFormat OriginalFormat
         {
             get
@@ -123,13 +125,13 @@ namespace Nikse.SubtitleEdit.Logic
             return null;
         }
 
-        public void MakeHistoryForUndo(string description, SubtitleFormat subtitleFormat, DateTime fileModified, Subtitle original, string originalSubtitleFileName)
+        public void MakeHistoryForUndo(string description, SubtitleFormat subtitleFormat, DateTime fileModified, Subtitle original, string originalSubtitleFileName, int lineNumber, int linePosition)
         {
             // don't fill memory with history - use a max rollback points
-            if (_history.Count > 50)
+            if (_history.Count > MaximumHistoryItems)
                 _history.RemoveAt(0);
 
-            _history.Add(new HistoryItem(_history.Count, this, description, FileName, fileModified, subtitleFormat.FriendlyName, original, originalSubtitleFileName));
+            _history.Add(new HistoryItem(_history.Count, this, description, FileName, fileModified, subtitleFormat.FriendlyName, original, originalSubtitleFileName, lineNumber, linePosition));
         }
 
         public bool CanUndo

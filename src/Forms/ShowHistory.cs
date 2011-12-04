@@ -8,6 +8,7 @@ namespace Nikse.SubtitleEdit.Forms
     {
         private int _selectedIndex = -1;
         private Subtitle _subtitle;
+        private int _undoIndex;
 
         public ShowHistory()
         {
@@ -43,19 +44,22 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        public void Initialize(Subtitle subtitle)
+        public void Initialize(Subtitle subtitle, int undoIndex)
         {
             _subtitle = subtitle;
+            _undoIndex = undoIndex;
+            int i = 0;
             foreach (HistoryItem item in subtitle.HistoryItems)
             {
-                AddHistoryItemToListView(item);
+                AddHistoryItemToListView(item, i);
+                i++;
             }
             ListViewHistorySelectedIndexChanged(null, null);
-            if (listViewHistory.Items.Count > 0)
-                listViewHistory.Items[listViewHistory.Items.Count - 1].Selected = true;
+            if (listViewHistory.Items.Count > 0 && _undoIndex >= 0 && _undoIndex < listViewHistory.Items.Count)
+                listViewHistory.Items[_undoIndex].Selected = true;
         }
 
-        private void AddHistoryItemToListView(HistoryItem hi)
+        private void AddHistoryItemToListView(HistoryItem hi, int index)
         {
             var item = new ListViewItem("")
                            {
@@ -66,6 +70,12 @@ namespace Nikse.SubtitleEdit.Forms
                                                     hi.Timestamp.Second)
                            };
 
+            if (index > _undoIndex)
+            {
+                item.UseItemStyleForSubItems = true;
+                item.Font = new Font(item.Font.FontFamily, item.Font.SizeInPoints, FontStyle.Italic);
+                item.ForeColor = Color.Gray;
+            }
             var subItem = new ListViewItem.ListViewSubItem(item, hi.Description);
             item.SubItems.Add(subItem);
             listViewHistory.Items.Add(item);
@@ -110,6 +120,7 @@ namespace Nikse.SubtitleEdit.Forms
             buttonRollback.Enabled = listViewHistory.SelectedItems.Count == 1;
             buttonCompare.Enabled = listViewHistory.SelectedItems.Count == 1;
             buttonCompareHistory.Enabled = listViewHistory.SelectedItems.Count == 2;
+            buttonRollback.Enabled = listViewHistory.SelectedItems.Count == 1 && listViewHistory.SelectedItems[0].Index <= _undoIndex;
         }
 
         private void ButtonCompareHistoryClick(object sender, System.EventArgs e)
