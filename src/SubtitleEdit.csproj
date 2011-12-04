@@ -588,6 +588,9 @@
     <Compile Include="Logic\SubtitleFormats\DCSubtitle.cs" />
     <Compile Include="Logic\SubtitleFormats\DvdStudioProSpace.cs" />
     <Compile Include="Logic\SubtitleFormats\Eeg708.cs" />
+    <Compile Include="Logic\SubtitleFormats\F4Rtf.cs" />
+    <Compile Include="Logic\SubtitleFormats\F4Text.cs" />
+    <Compile Include="Logic\SubtitleFormats\F4Xml.cs" />
     <Compile Include="Logic\SubtitleFormats\FabSubtitler.cs" />
     <Compile Include="Logic\SubtitleFormats\FinalCutProTextXml.cs" />
     <Compile Include="Logic\SubtitleFormats\FinalCutProXml.cs" />
