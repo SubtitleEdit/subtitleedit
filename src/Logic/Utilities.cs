@@ -720,7 +720,7 @@ namespace Nikse.SubtitleEdit.Logic
             count = GetCount(text, "vi", "er", "og", "jeg", "var", "men");
             if (count > bestCount)
             {
-                int danishCount = GetCount(text, "siger", "dig", "mig", "mærkelig", "meget", "spørge");
+                int danishCount = GetCount(text, "siger", "dig", "mig", "mærkelig", "tilbage", "spørge");
                 if (danishCount < 2)
                     return "no";
             }
@@ -882,7 +882,7 @@ namespace Nikse.SubtitleEdit.Logic
                         count = GetCount(text, "vi", "er", "og", "jeg", "var", "men");
                         if (count > bestCount)
                         {
-                            int danishCount = GetCount(text, "siger", "dig", "mig", "mærkelig", "meget", "spørge");
+                            int danishCount = GetCount(text, "siger", "dig", "mig", "mærkelig", "tilbage", "spørge");
                             if (danishCount < 2)
                                 languageName = shortName;
                         }
