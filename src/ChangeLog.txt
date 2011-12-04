@@ -2,9 +2,11 @@ Subtitle Edit Changelog
 
 3.2.3 (xth November 2011)
  * NEW:
+   * Added Italian language file - thx Maff
    * Added Japanese language file - thx Nardog
    * Added Spanish language file - thx m2s
    * Support for subtitle format AvidCaption - thx Laszlo
+   * Support for F4 subtitle formats - thx Fred
    * Export to Blu-ray sup format
  * IMPROVED:
    * Updated Tesseract to 3.01 
