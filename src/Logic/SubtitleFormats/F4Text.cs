@@ -43,10 +43,15 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public static string ToF4Text(Subtitle subtitle, string title)
         {
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();            
+            double lastEndTimeMilliseconds = -1;
             foreach (Paragraph p in subtitle.Paragraphs)
             {
-                sb.Append(string.Format("{0}{1}{2}", EncodeTimeCode(p.StartTime), Utilities.RemoveHtmlTags(p.Text), EncodeTimeCode(p.EndTime)));
+                if (p.StartTime.TotalMilliseconds == lastEndTimeMilliseconds)
+                    sb.Append(string.Format("{0}{1}", Utilities.RemoveHtmlTags(p.Text), EncodeTimeCode(p.EndTime)));
+                else
+                    sb.Append(string.Format("{0}{1}{2}", EncodeTimeCode(p.StartTime), Utilities.RemoveHtmlTags(p.Text), EncodeTimeCode(p.EndTime)));
+                lastEndTimeMilliseconds = p.EndTime.TotalMilliseconds;
             }
             return sb.ToString().Trim();
         }
@@ -63,11 +68,11 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             foreach (string line in lines)
                 sb.AppendLine(line);
             string text = sb.ToString();
-            if (text.Contains("{\\rtf"))
+            if (text.Contains("{\\rtf") || text.Contains("<transcript>"))
                 return;
             LoadF4TextSubtitle(subtitle, text);
         }
@@ -81,7 +86,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             var currentText = new StringBuilder();
             foreach (string line in arr)
             {
-
                 if (regexTimeCodes.IsMatch(line))
                 {
                     if (p == null)
@@ -139,7 +143,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         private TimeCode DecodeTimeCode(string[] parts)
         {
-            TimeCode tc = new TimeCode(0, 0, 0, 0);
+            var tc = new TimeCode(0, 0, 0, 0);
             try
             {
                 string hour = parts[0];
