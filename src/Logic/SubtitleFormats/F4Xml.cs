@@ -30,7 +30,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public override bool IsMine(List<string> lines, string fileName)
         {
-            if (!fileName.ToLower().EndsWith(Extension))
+            if (fileName != null && !fileName.ToLower().EndsWith(Extension))
                 return false;
 
             var subtitle = new Subtitle();
