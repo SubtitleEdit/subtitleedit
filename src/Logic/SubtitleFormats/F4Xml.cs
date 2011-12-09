@@ -1,8 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.IO;
 using System.Text;
 using System.Xml;
-using System.IO;
 
 namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
@@ -60,13 +59,24 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             foreach (string line in lines)
                 sb.AppendLine(line);
 
+            string xml = sb.ToString();
+            if (!xml.Contains("<transcript") || !xml.Contains("<content"))
+                return;
+
             var doc = new XmlDocument();
-            doc.LoadXml(sb.ToString());
-            string text = doc.DocumentElement.SelectSingleNode("content").Attributes["content"].Value;           
+            doc.LoadXml(xml);
+            var content = doc.DocumentElement.SelectSingleNode("content");
+            if (content == null)
+                return;
+            var contentAttribute = content.Attributes["content"];
+            if (contentAttribute == null)
+                return;
+            
+            string text = contentAttribute.Value;           
             LoadF4TextSubtitle(subtitle, text);
         }
     }
