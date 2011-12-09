@@ -166,9 +166,9 @@ namespace Nikse.SubtitleEdit.Forms
                 int imagesSavedCount = 0;
                 var sb = new StringBuilder();
 
-                // We call in a seperate thread... or app will crash sometimes :(
                 var threadEqual = new Thread(DoWork);
                 var paramEqual = MakeMakeBitmapParameter(0, width, height);
+
                 var threadUnEqual = new Thread(DoWork);
                 var paramUnEqual = MakeMakeBitmapParameter(1, width, height);
 
@@ -178,24 +178,23 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     if (i % 2 == 0)
                     {
-                        if (threadEqual.ThreadState == ThreadState.Running)
-                          threadEqual.Join(3000);
-                        imagesSavedCount = WriteParagraph(width, sb, border, height, imagesSavedCount, vobSubWriter, binarySubtitleFile, paramEqual, i);
-
                         paramEqual = MakeMakeBitmapParameter(i, width, height);
                         threadEqual = new Thread(DoWork);
                         threadEqual.Start(paramEqual);
+
+                        if (threadUnEqual.ThreadState == ThreadState.Running)
+                            threadUnEqual.Join(3000);
+                        imagesSavedCount = WriteParagraph(width, sb, border, height, imagesSavedCount, vobSubWriter, binarySubtitleFile, paramUnEqual, i);
                     }
                     else
                     {
-                        if (threadUnEqual.ThreadState == ThreadState.Running)
-                            threadUnEqual.Join(3000);
-
-                        imagesSavedCount = WriteParagraph(width, sb, border, height, imagesSavedCount, vobSubWriter, binarySubtitleFile, paramUnEqual, i);
-
                         paramUnEqual = MakeMakeBitmapParameter(i, width, height);
                         threadUnEqual = new Thread(DoWork);
                         threadUnEqual.Start(paramUnEqual);
+
+                        if (threadEqual.ThreadState == ThreadState.Running)
+                            threadEqual.Join(3000);
+                        imagesSavedCount = WriteParagraph(width, sb, border, height, imagesSavedCount, vobSubWriter, binarySubtitleFile, paramEqual, i);
                     }
                     progressBar1.Refresh();
                     Application.DoEvents();
@@ -275,7 +274,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 else
                 {
-                    string numberString = string.Format("{0:0000}", i + 1);
+                    string numberString = string.Format("{0:0000}", i);
                     string fileName = Path.Combine(folderBrowserDialog1.SelectedPath, numberString + ".png");
                     paramEqual.Bitmap.Save(fileName, System.Drawing.Imaging.ImageFormat.Png);
                     imagesSavedCount++;
