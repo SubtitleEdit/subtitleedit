@@ -15,12 +15,15 @@ namespace Nikse.SubtitleEdit.Logic
         public Subtitle OriginalSubtitle { get; set; }
         public string OriginalSubtitleFileName { get; set; }
         public List<Paragraph> RedoParagraphs { get; set; }
+        public List<Paragraph> RedoParagraphsAlternate { get; set; }
         public int RedoLineIndex { get; set; }
         public int RedoLinePosition { get; set; }
+        public int RedoLinePositionAlternate { get; set; }
         public int LineIndex { get; set; }
         public int LinePosition { get; set; }
+        public int LinePositionAlternate { get; set; }
 
-        public HistoryItem(int index, Subtitle subtitle, string description, string fileName, DateTime fileModified, string subtitleFormatFriendlyName, Subtitle originalSubtitle, string originalSubtitleFileName, int lineIndex, int linePosition)
+        public HistoryItem(int index, Subtitle subtitle, string description, string fileName, DateTime fileModified, string subtitleFormatFriendlyName, Subtitle originalSubtitle, string originalSubtitleFileName, int lineIndex, int linePosition, int linePositionAlternate)
         {
             Index = index;
             Timestamp = DateTime.Now;
@@ -33,6 +36,7 @@ namespace Nikse.SubtitleEdit.Logic
             OriginalSubtitleFileName = originalSubtitleFileName;
             LineIndex = lineIndex;
             LinePosition = linePosition;
+            LinePositionAlternate = linePositionAlternate;
             RedoLineIndex = -1;
             RedoLinePosition = -1;
         }

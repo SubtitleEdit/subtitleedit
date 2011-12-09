@@ -35,10 +35,12 @@ namespace Nikse.SubtitleEdit.Forms
 
         Subtitle _subtitle = new Subtitle();
 
-        int _undoIndex = -1;        
+        int _undoIndex = -1;
         string _listViewTextUndoLast = null;
         int _listViewTextUndoIndex = -1;
         long _listViewTextTicks = -1;
+        string _listViewAlternateTextUndoLast = null;
+        long _listViewAlternateTextTicks = -1;
 
         Subtitle _subtitleAlternate = new Subtitle();
         string _subtitleAlternateFileName;
@@ -1307,7 +1309,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (resetTextUndo)
             {
                 _listViewTextUndoLast = null;
-                //_listViewTextUndoIndex = -1;
+                _listViewAlternateTextUndoLast = null;
             }
 
             if (_undoIndex == -1)
@@ -1317,10 +1319,10 @@ namespace Nikse.SubtitleEdit.Forms
             else
             {
                 // remove items for redo
-                while (_subtitle.HistoryItems.Count > _undoIndex+1)
+                while (_subtitle.HistoryItems.Count > _undoIndex + 1)
                     _subtitle.HistoryItems.RemoveAt(_subtitle.HistoryItems.Count - 1);
             }
-            _subtitle.MakeHistoryForUndo(description, GetCurrentSubtitleFormat(), _fileDateTime, _subtitleAlternate, _subtitleAlternateFileName, _subtitleListViewIndex, textBoxListViewText.SelectionStart);
+            _subtitle.MakeHistoryForUndo(description, GetCurrentSubtitleFormat(), _fileDateTime, _subtitleAlternate, _subtitleAlternateFileName, _subtitleListViewIndex, textBoxListViewText.SelectionStart, textBoxListViewTextAlternate.SelectionStart);
             _undoIndex++;
             if (_undoIndex > Subtitle.MaximumHistoryItems)
                 _undoIndex--;
@@ -2233,7 +2235,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else
             {
-                _subtitle.MakeHistoryForUndo(string.Format(_language.BeforeConvertingToX, GetCurrentSubtitleFormat().FriendlyName), _oldSubtitleFormat, _fileDateTime, _subtitleAlternate, _subtitleAlternateFileName, _subtitleListViewIndex, textBoxListViewText.SelectionStart);
+                _subtitle.MakeHistoryForUndo(string.Format(_language.BeforeConvertingToX, GetCurrentSubtitleFormat().FriendlyName), _oldSubtitleFormat, _fileDateTime, _subtitleAlternate, _subtitleAlternateFileName, _subtitleListViewIndex, textBoxListViewText.SelectionStart, textBoxListViewTextAlternate.SelectionStart);
                 _oldSubtitleFormat.RemoveNativeFormatting(_subtitle);
                 SaveSubtitleListviewIndexes();
                 SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
@@ -3671,18 +3673,28 @@ namespace Nikse.SubtitleEdit.Forms
         private void UndoToIndex(bool undo)
         {
             int selectedIndex = FirstSelectedIndex;
-            var temp = new Subtitle();
             string text = string.Empty;
             if (undo)
             {                
                 _subtitle.HistoryItems[_undoIndex].RedoParagraphs = new List<Paragraph>();
+                _subtitle.HistoryItems[_undoIndex].RedoParagraphsAlternate = new List<Paragraph>();
+                
                 foreach (Paragraph p in _subtitle.Paragraphs)
                     _subtitle.HistoryItems[_undoIndex].RedoParagraphs.Add(new Paragraph(p));
+                if (Configuration.Settings.General.AllowEditOfOriginalSubtitle && _subtitleAlternate != null)
+                {
+                    foreach (Paragraph p in _subtitleAlternate.Paragraphs)
+                        _subtitle.HistoryItems[_undoIndex].RedoParagraphsAlternate.Add(new Paragraph(p));
+                }
+
                 if (selectedIndex >= 0)
                 {
                     _subtitle.HistoryItems[_undoIndex].RedoParagraphs[selectedIndex].Text = textBoxListViewText.Text;
+                    if (Configuration.Settings.General.AllowEditOfOriginalSubtitle && _subtitleAlternate != null && selectedIndex < _subtitle.HistoryItems[_undoIndex].RedoParagraphsAlternate.Count)
+                        _subtitle.HistoryItems[_undoIndex].RedoParagraphsAlternate[selectedIndex].Text = textBoxListViewTextAlternate.Text;
                     _subtitle.HistoryItems[_undoIndex].RedoLineIndex = selectedIndex;
                     _subtitle.HistoryItems[_undoIndex].RedoLinePosition = textBoxListViewText.SelectionStart;
+                    _subtitle.HistoryItems[_undoIndex].RedoLinePositionAlternate = textBoxListViewTextAlternate.SelectionStart;
                 }
                 else
                 {
@@ -3708,9 +3720,18 @@ namespace Nikse.SubtitleEdit.Forms
             if (!undo)
             {
                 _subtitle.Paragraphs.Clear();
+                if (Configuration.Settings.General.AllowEditOfOriginalSubtitle && _subtitleAlternate != null)
+                    _subtitleAlternate.Paragraphs.Clear();
                 foreach (Paragraph p in _subtitle.HistoryItems[_undoIndex].RedoParagraphs)
                     _subtitle.Paragraphs.Add(new Paragraph(p));
+                if (Configuration.Settings.General.AllowEditOfOriginalSubtitle && _subtitleAlternate != null)
+                {
+                    foreach (Paragraph p in _subtitle.HistoryItems[_undoIndex].RedoParagraphsAlternate)
+                        _subtitleAlternate.Paragraphs.Add(new Paragraph(p));
+                }
+
                 _subtitle.HistoryItems[_undoIndex].RedoParagraphs = null;
+                _subtitle.HistoryItems[_undoIndex].RedoParagraphsAlternate = null;
             }
 
             if (string.Compare(oldFileName, _fileName, true) == 0)
@@ -3735,8 +3756,12 @@ namespace Nikse.SubtitleEdit.Forms
             if (undo)
             {
                 if (_subtitle.HistoryItems[_undoIndex].LineIndex == FirstSelectedIndex)
+                {
                     textBoxListViewText.SelectionStart = _subtitle.HistoryItems[_undoIndex].LinePosition;
-
+                    if (_subtitleAlternate != null)
+                        textBoxListViewTextAlternate.SelectionStart = _subtitle.HistoryItems[_undoIndex].LinePositionAlternate;
+                }
+                    
                 ShowStatus(_language.UndoPerformed + ": " + text);
                 _undoIndex--;
             }
@@ -3744,6 +3769,8 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 if (_subtitle.HistoryItems[_undoIndex].RedoLineIndex >= 0 && _subtitle.HistoryItems[_undoIndex].RedoLineIndex == FirstSelectedIndex)
                     textBoxListViewText.SelectionStart = _subtitle.HistoryItems[_undoIndex].RedoLinePosition;
+                if (_subtitleAlternate != null && _subtitle.HistoryItems[_undoIndex].RedoLineIndex >= 0 && _subtitle.HistoryItems[_undoIndex].RedoLineIndex == FirstSelectedIndex)
+                    textBoxListViewTextAlternate.SelectionStart = _subtitle.HistoryItems[_undoIndex].RedoLinePositionAlternate;
 
                 ShowStatus("Redo performed");  //TODO:WORKING ON UNDO
             }
@@ -4522,9 +4549,13 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 MakeHistoryForUndo(Configuration.Settings.Language.General.Text + ": " + _listViewTextUndoLast.TrimEnd() + " -> " + _subtitle.Paragraphs[_listViewTextUndoIndex].Text.TrimEnd(), false);
                 _subtitle.HistoryItems[_subtitle.HistoryItems.Count - 1].Subtitle.Paragraphs[_listViewTextUndoIndex].Text = _listViewTextUndoLast;
+                if (Configuration.Settings.General.AllowEditOfOriginalSubtitle && _subtitleAlternate != null)
+                { 
+                }
             }
             _listViewTextUndoLast = null;
             _listViewTextUndoIndex = -1;
+            _listViewAlternateTextUndoLast = null;
 
             SubtitleListView1SelectedIndexChange();
         }
@@ -4727,6 +4758,7 @@ namespace Nikse.SubtitleEdit.Forms
                     UpdateListViewTextInfo(labelTextAlternateLineLengths, labelAlternateSingleLine, labelTextAlternateLineTotal, labelAlternateCharactersPerSecond, original);
                     SubtitleListview1.SetAlternateText(_subtitleListViewIndex, text);
                     _changeAlternate = true;
+                    _listViewTextUndoIndex = _subtitleListViewIndex;
                 }
                 else
                 {
@@ -5348,6 +5380,7 @@ namespace Nikse.SubtitleEdit.Forms
                     textBoxListViewTextAlternate.TextChanged += TextBoxListViewTextAlternateTextChanged;
                     //UpdateOverlapErrors(timeUpDownStartTime.TimeCode);
                     UpdateListViewTextCharactersPerSeconds(labelAlternateCharactersPerSecond, p);
+                    _listViewAlternateTextUndoLast = original.Text;
                 }
             }
         }
@@ -9441,6 +9474,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             _loading = false;
             timerTextUndo.Start();
+            timerAlternateTextUndo.Start();
         }
 
         private void SetPositionFromXYString(string positionAndSize, string name)
@@ -9603,7 +9637,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                     if (!string.IsNullOrEmpty(pluginResult) && pluginResult.Length > 10 && text != pluginResult)
                     {
-                        _subtitle.MakeHistoryForUndo(string.Format("Before running plugin: {0} {1}", name, version), GetCurrentSubtitleFormat(), _fileDateTime, _subtitleAlternate, _subtitleAlternateFileName, _subtitleListViewIndex, textBoxListViewText.SelectionStart);
+                        _subtitle.MakeHistoryForUndo(string.Format("Before running plugin: {0} {1}", name, version), GetCurrentSubtitleFormat(), _fileDateTime, _subtitleAlternate, _subtitleAlternateFileName, _subtitleListViewIndex, textBoxListViewText.SelectionStart, textBoxListViewTextAlternate.SelectionStart);
                         string[] lineArray = pluginResult.Split(Environment.NewLine.ToCharArray());
                         List<string> lines = new List<string>();
                         foreach (string line in lineArray)
@@ -11217,6 +11251,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void textBoxListViewTextAlternate_KeyDown(object sender, KeyEventArgs e)
         {
+            _listViewAlternateTextTicks = DateTime.Now.Ticks;
             if (_subtitleAlternate == null || _subtitleAlternate.Paragraphs.Count < 1)
                 return;
 
@@ -11954,7 +11989,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void timerTextUndo_Tick(object sender, EventArgs e)
         {
             int index = _listViewTextUndoIndex;
-            if (!this.CanFocus | _subtitle == null || _subtitle.Paragraphs.Count == 0 || index < 0 || index >= _subtitle.Paragraphs.Count)
+            if (_listViewTextTicks == -1 || !this.CanFocus | _subtitle == null || _subtitle.Paragraphs.Count == 0 || index < 0 || index >= _subtitle.Paragraphs.Count)
                 return;
 
             if ((DateTime.Now.Ticks - _listViewTextTicks) > 10000 * 700) // only if last typed char was entered > 700 milliseconds
@@ -11974,6 +12009,42 @@ namespace Nikse.SubtitleEdit.Forms
 
                     _listViewTextUndoLast = newText;
                     _listViewTextUndoIndex = -1;
+                }
+            }
+        }
+
+        private void timerAlternateTextUndo_Tick(object sender, EventArgs e)
+        {
+            if (Configuration.Settings.General.AllowEditOfOriginalSubtitle && _subtitleAlternate != null && _subtitleAlternate.Paragraphs.Count > 0)
+            {
+                int index = _listViewTextUndoIndex;
+                if (_listViewAlternateTextTicks == -1 || !this.CanFocus | _subtitleAlternate == null || _subtitleAlternate.Paragraphs.Count == 0 || index < 0 || index >= _subtitleAlternate.Paragraphs.Count)
+                    return;
+
+                if ((DateTime.Now.Ticks - _listViewAlternateTextTicks) > 10000 * 700) // only if last typed char was entered > 700 milliseconds
+                {
+                    var original = Utilities.GetOriginalParagraph(index, _subtitle.Paragraphs[index], _subtitleAlternate.Paragraphs);
+                    if (original != null)
+                        index = _subtitleAlternate.Paragraphs.IndexOf(original);
+                    else
+                        return;
+
+                    string newText = _subtitleAlternate.Paragraphs[index].Text.TrimEnd();
+                    string oldText = _listViewAlternateTextUndoLast;
+                    if (oldText == null)
+                    {
+                        oldText = newText;
+                        return;
+                    }
+
+                    if (_listViewAlternateTextUndoLast != newText)
+                    {
+                        MakeHistoryForUndo(Configuration.Settings.Language.General.Text + ": " + _listViewAlternateTextUndoLast.TrimEnd() + " -> " + newText, false);
+                        _subtitle.HistoryItems[_subtitle.HistoryItems.Count - 1].OriginalSubtitle.Paragraphs[index].Text = _listViewAlternateTextUndoLast;
+
+                        _listViewAlternateTextUndoLast = newText;
+                        _listViewTextUndoIndex = -1;
+                    }
                 }
             }
         }

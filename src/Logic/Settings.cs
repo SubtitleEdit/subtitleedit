@@ -479,7 +479,7 @@ namespace Nikse.SubtitleEdit.Logic
             MainListViewItalic = "Control+I";
             MainTextBoxItalic = "Control+I";
             MainAdjustSetStartAndOffsetTheRest = "Control+Space";
-            MainAdjustSetEndAndGotoNext = "Shift+Space";
+            MainAdjustSetEndAndGotoNext = string.Empty;
             MainAdjustViaEndAutoStartAndGoToNext = string.Empty;
             MainAdjustSetStartAutoDurationAndGoToNext = string.Empty;
             MainInsertAfter = "Alt+Ins";
