@@ -134,7 +134,7 @@ namespace Nikse.SubtitleEdit.Forms
                     string[] versionInfo = Utilities.AssemblyVersion.Split('.');
                     _title = String.Format("{0} {1}.{2}", _languageGeneral.Title, versionInfo[0], versionInfo[1]);
                     if (versionInfo.Length >= 3 && versionInfo[2] != "0")
-                        _title += "." + versionInfo[2];
+                        _title += "." + versionInfo[2] + " beta 1";
                 }
                 return _title;
             }
@@ -2201,6 +2201,10 @@ namespace Nikse.SubtitleEdit.Forms
             labelTextLineLengths.Text = string.Empty;
             labelCharactersPerSecond.Text = string.Empty;
             labelTextLineTotal.Text = string.Empty;
+
+            _listViewTextUndoLast = null;
+            _listViewAlternateTextUndoLast = null;
+            _listViewTextUndoIndex = -1;
 
             if (mediaPlayer.VideoPlayer != null)
             {
@@ -4550,13 +4554,28 @@ namespace Nikse.SubtitleEdit.Forms
                 MakeHistoryForUndo(Configuration.Settings.Language.General.Text + ": " + _listViewTextUndoLast.TrimEnd() + " -> " + _subtitle.Paragraphs[_listViewTextUndoIndex].Text.TrimEnd(), false);
                 _subtitle.HistoryItems[_subtitle.HistoryItems.Count - 1].Subtitle.Paragraphs[_listViewTextUndoIndex].Text = _listViewTextUndoLast;
                 if (Configuration.Settings.General.AllowEditOfOriginalSubtitle && _subtitleAlternate != null)
-                { 
+                {
+                    var original = Utilities.GetOriginalParagraph(_listViewTextUndoIndex, _subtitle.Paragraphs[_listViewTextUndoIndex], _subtitleAlternate.Paragraphs);
+                    var idx = _subtitleAlternate.GetIndex(original);
+                    if (idx >= 0)
+                        _subtitle.HistoryItems[_subtitle.HistoryItems.Count - 1].OriginalSubtitle.Paragraphs[idx].Text = _listViewAlternateTextUndoLast;
                 }
             }
-            _listViewTextUndoLast = null;
+            else if (Configuration.Settings.General.AllowEditOfOriginalSubtitle && _subtitleAlternate != null && _listViewAlternateTextUndoLast != null &&
+                    _subtitle.Paragraphs.Count > _listViewTextUndoIndex && _listViewTextUndoIndex >= 0)
+            {
+                var original = Utilities.GetOriginalParagraph(_listViewTextUndoIndex, _subtitle.Paragraphs[_listViewTextUndoIndex], _subtitleAlternate.Paragraphs);
+                if (original != null && original.Text.TrimEnd() != _listViewAlternateTextUndoLast.TrimEnd())
+                {
+                    var idx = _subtitleAlternate.GetIndex(original);
+                    if (idx >= 0)
+                    {
+                        MakeHistoryForUndo(Configuration.Settings.Language.General.Text + ": " + _listViewAlternateTextUndoLast.TrimEnd() + " -> " + original.Text.TrimEnd(), false);
+                        _subtitle.HistoryItems[_subtitle.HistoryItems.Count - 1].OriginalSubtitle.Paragraphs[idx].Text = _listViewAlternateTextUndoLast;
+                    }
+                }
+            }
             _listViewTextUndoIndex = -1;
-            _listViewAlternateTextUndoLast = null;
-
             SubtitleListView1SelectedIndexChange();
         }
 
