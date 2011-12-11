@@ -20,6 +20,7 @@ namespace Nikse.SubtitleEdit.Forms
         bool _googleTranslate = true;
         MicrosoftTranslationService.SoapService _microsoftTranslationService = null;
         private bool _googleApiNotWorking = false;
+        private const string _splitterString  = "==";
 
         public class ComboBoxItem
         {
@@ -147,7 +148,7 @@ namespace Nikse.SubtitleEdit.Forms
             subtitleListViewFrom.Fill(subtitle);
             GoogleTranslate_Resize(null, null);
 
-            _googleApiNotWorking = DateTime.Now.Year >= 2012; // google is closing free api service :(
+            _googleApiNotWorking = true; // google has closed their free api service :(
         }
 
         private void buttonTranslate_Click(object sender, EventArgs e)
@@ -186,11 +187,11 @@ namespace Nikse.SubtitleEdit.Forms
             int start = 0;
             try
             {
-                StringBuilder sb = new StringBuilder();
+                var sb = new StringBuilder();
                 int index = 0;
                 foreach (Paragraph p in _subtitle.Paragraphs)
                 {
-                    string text = string.Format("<p> {0} </p>|", p.Text.Replace("|", "<br />"));
+                    string text = string.Format("{1} {0} |", p.Text.Replace("|", "<br />"), _splitterString);
                     if (HttpUtility.UrlEncode(sb.ToString() + text).Length >= textMaxSize)
                     {
                         FillTranslatedText(DoTranslate(sb.ToString()), start, index-1);
@@ -232,10 +233,10 @@ namespace Nikse.SubtitleEdit.Forms
                 if (index < _translatedSubtitle.Paragraphs.Count)
                 {
                     string cleanText = s.Replace("</p>", string.Empty).Trim();
-                    int indexOfP = cleanText.IndexOf("<p>");
+                    int indexOfP = cleanText.IndexOf(_splitterString);
                     if (indexOfP >= 0 && indexOfP < 4)
-                        cleanText = cleanText.Remove(0, cleanText.IndexOf("<p>"));
-                    cleanText = cleanText.Replace("<p>", string.Empty).Trim();
+                        cleanText = cleanText.Remove(0, cleanText.IndexOf(_splitterString));
+                    cleanText = cleanText.Replace(_splitterString, string.Empty).Trim();
                     if (cleanText.Contains("\n") && !cleanText.Contains("\r"))
                         cleanText = cleanText.Replace("\n", Environment.NewLine);
                     cleanText = cleanText.Replace(" ...", "...");
@@ -257,7 +258,7 @@ namespace Nikse.SubtitleEdit.Forms
             string languagePair = (comboBoxFrom.SelectedItem as ComboBoxItem).Value + "|" +
                                   (comboBoxTo.SelectedItem as ComboBoxItem).Value;
 
-            input = PreTranslate(input);
+            input = PreTranslate(input.TrimEnd('|').Trim());
 
             string result = null;
             if (!_googleApiNotWorking)
@@ -363,12 +364,12 @@ namespace Nikse.SubtitleEdit.Forms
             //string url = String.Format("http://www.google.com/translate_t?hl=en&ie=UTF8&text={0}&langpair={1}", HttpUtility.UrlEncode(input), languagePair);
             string url = String.Format("http://translate.google.com/?hl=en&eotf=1&sl={0}&tl={1}&q={2}", languagePair.Substring(0, 2), languagePair.Substring(3), HttpUtility.UrlEncode(input));
 
-            WebClient webClient = new WebClient();
+            var webClient = new WebClient();
             webClient.Proxy = Utilities.GetProxy();
             webClient.Encoding = System.Text.Encoding.Default;
             string result = webClient.DownloadString(url);
             int startIndex = result.IndexOf("<span id=result_box");
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             if (startIndex > 0)
             {
                 startIndex = result.IndexOf("<span title=", startIndex);
@@ -381,43 +382,25 @@ namespace Nikse.SubtitleEdit.Forms
                         int endIndex = result.IndexOf("</span>", startIndex);
                         string translatedText = result.Substring(startIndex, endIndex - startIndex);
                         string test = HttpUtility.HtmlDecode(translatedText);
-                        test = test.Replace(" </ P>", "</ p>");
-                        test = test.Replace(" <P>", "<p>");
-                        test = test.Replace(" <P >", "<p>");
-                        test = test.Replace(" < P >", "<p>");
-                        test = test.Replace(" </ p>", "</p>");
-                        test = test.Replace("</ p>", "</p>");
-                        test = test.Replace("</ P>", "</p>");
-                        test = test.Replace("</P>", "</p>");
-                        test = test.Replace("< /P >", "</p>");
                         sb.Append(test);
                         startIndex = result.IndexOf("<span title=", startIndex);
                     }
                 }
             }
             string res = sb.ToString();
+            res = res.Replace("<BR>", Environment.NewLine);
+            res = res.Replace("<BR />", Environment.NewLine);
+            res = res.Replace("<BR/>", Environment.NewLine);
+            res = res.Replace("< br />", Environment.NewLine);
+            res = res.Replace("< br / >", Environment.NewLine);
+            res = res.Replace("<br / >", Environment.NewLine);
+            res = res.Replace(" <br/>", Environment.NewLine);
             res = res.Replace(" <br/>", Environment.NewLine);
             res = res.Replace("<br/>", Environment.NewLine);
             res = res.Replace("<br />", Environment.NewLine);
-            res = res.Replace("< p >", "<p>");
-            res = res.Replace("< p>", "<p>");
-            res = res.Replace("<p >", "<p>");
-            res = res.Replace("</ p>", "</p>");
-            res = res.Replace("< / p >", "</p>");
-            res = res.Replace("< / p>", "</p>");
-            res = res.Replace(" </p>", "</p>");
-            res = res.Replace(" </p>", "</p>");
-            res = res.Replace("</p>  ", "</p>");
-            res = res.Replace("</p> ", "</p>");
-            res = res.Replace("</p> ", "</p>");
-            res = res.Replace("</p><p>", "@__P_TAG");
-            res = res.Replace("</p>", "</p><p>");
-            res = res.Replace("@__P_TAG", "</p><p>");
             int end = res.LastIndexOf("<p>");
             if (end > 0)
-            {
                 res = res.Substring(0, end);
-            }
             return res;
         }
 
@@ -788,11 +771,11 @@ namespace Nikse.SubtitleEdit.Forms
             bool overQuota = false;
             try
             {
-                StringBuilder sb = new StringBuilder();
+                var sb = new StringBuilder();
                 int index = 0;
                 foreach (Paragraph p in _subtitle.Paragraphs)
                 {
-                    string text = string.Format("<p>{0}</p>|", p.Text);
+                    string text = string.Format("{1}{0}|", p.Text, _splitterString);
                     if (!overQuota)
                     {
                         if ((HttpUtility.UrlEncode(sb.ToString() + text)).Length >= textMaxSize)
