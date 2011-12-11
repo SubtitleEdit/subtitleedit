@@ -134,7 +134,7 @@ namespace Nikse.SubtitleEdit.Forms
                     string[] versionInfo = Utilities.AssemblyVersion.Split('.');
                     _title = String.Format("{0} {1}.{2}", _languageGeneral.Title, versionInfo[0], versionInfo[1]);
                     if (versionInfo.Length >= 3 && versionInfo[2] != "0")
-                        _title += "." + versionInfo[2] + " beta 1";
+                        _title += "." + versionInfo[2] + " beta 2";
                 }
                 return _title;
             }
@@ -1093,7 +1093,7 @@ namespace Nikse.SubtitleEdit.Forms
             labelStartTime.Text = _languageGeneral.StartTime;
             labelText.Text = _languageGeneral.Text;
             toolStripLabelFrameRate.Text = _languageGeneral.FrameRate;
-            buttonUndoListViewChanges.Text = _language.Controls.UndoChangesInEditPanel;
+//            buttonUndoListViewChanges.Text = _language.Controls.UndoChangesInEditPanel;
             buttonPrevious.Text = _language.Controls.Previous;
             buttonNext.Text = _language.Controls.Next;
             buttonAutoBreak.Text = _language.Controls.AutoBreak;
@@ -2378,7 +2378,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (Configuration.Settings.General.AllowEditOfOriginalSubtitle)
                 {
                     buttonUnBreak.Visible = false;
-                    buttonUndoListViewChanges.Visible = false;
+                    buttonAutoBreak.Visible = false;
                     buttonSplitLine.Visible = false;
                     textBoxListViewTextAlternate.Visible = true;
                     labelAlternateText.Visible = true;
@@ -4475,8 +4475,8 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void SubtitleListView1SelectedIndexChange()
         {
-            if (buttonUndoListViewChanges.Visible)
-                buttonUndoListViewChanges.Enabled = false;
+            //if (buttonUndoListViewChanges.Visible)
+            //    buttonUndoListViewChanges.Enabled = false;
             StopAutoDuration();
             ShowLineInformationListView();
             if (_subtitle.Paragraphs.Count > 0)
@@ -4534,7 +4534,7 @@ namespace Nikse.SubtitleEdit.Forms
                     InitializeListViewEditBox(p);
                     _subtitleListViewIndex = firstSelectedIndex;
                     _oldSelectedParagraph = new Paragraph(p);
-                    UpdateListViewTextInfo(labelTextLineLengths, labelSingleLine, labelTextLineTotal, labelCharactersPerSecond, p);
+                    UpdateListViewTextInfo(labelTextLineLengths, labelSingleLine, labelTextLineTotal, labelCharactersPerSecond, p, textBoxListViewText);
 
                     if (Configuration.Settings.General.AllowEditOfOriginalSubtitle && _subtitleAlternate != null && _subtitleAlternate.Paragraphs.Count > 0)
                     {
@@ -4607,11 +4607,11 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void UpdateListViewTextInfo(Label lineLengths, Label singleLine, Label lineTotal, Label charactersPerSecond, Paragraph paragraph)
+        private void UpdateListViewTextInfo(Label lineLengths, Label singleLine, Label lineTotal, Label charactersPerSecond, Paragraph paragraph, TextBox textBox)
         {
             if (paragraph == null)
                 return;
-
+            bool textBoxHasFocus = textBox.Focused;
             string text = paragraph.Text;
             lineLengths.Text = _languageGeneral.SingleLineLengths;
             singleLine.Left = lineLengths.Left + lineLengths.Width - 6;
@@ -4622,26 +4622,43 @@ namespace Nikse.SubtitleEdit.Forms
             if (s.Length < Configuration.Settings.General.SubtitleLineMaximumLength * 1.9)
             {
                 lineTotal.ForeColor = System.Drawing.Color.Black;
-                lineTotal.Text = string.Format(_languageGeneral.TotalLengthX, s.Length);
+                if (!textBoxHasFocus)
+                    lineTotal.Text = string.Format(_languageGeneral.TotalLengthX, s.Length);
             }
             else if (s.Length < Configuration.Settings.General.SubtitleLineMaximumLength * 2.1)
             {
                 lineTotal.ForeColor = System.Drawing.Color.Orange;
-                lineTotal.Text = string.Format(_languageGeneral.TotalLengthX, s.Length);
+                if (!textBoxHasFocus)
+                    lineTotal.Text = string.Format(_languageGeneral.TotalLengthX, s.Length);
             }
             else
             {
                 lineTotal.ForeColor = System.Drawing.Color.Red;
-                lineTotal.Text = string.Format(_languageGeneral.TotalLengthXSplitLine, s.Length);
+                if (!textBoxHasFocus)
+                    lineTotal.Text = string.Format(_languageGeneral.TotalLengthXSplitLine, s.Length);
                 if (buttonUnBreak.Visible)
                 {
-                    lineTotal.Text = string.Format(_languageGeneral.TotalLengthX, s.Length);
+                    if (!textBoxHasFocus)
+                        lineTotal.Text = string.Format(_languageGeneral.TotalLengthX, s.Length);
                     buttonSplitLine.Visible = true;
                 }
-            }
+            }          
             UpdateListViewTextCharactersPerSeconds(charactersPerSecond, paragraph);
-            labelCharactersPerSecond.Left = textBoxListViewText.Left + (textBoxListViewText.Width - labelCharactersPerSecond.Width);
-            labelTextLineTotal.Left = textBoxListViewText.Left + (textBoxListViewText.Width - labelTextLineTotal.Width);
+            labelCharactersPerSecond.Left = textBox.Left + (textBox.Width - labelCharactersPerSecond.Width);
+            lineTotal.Left = textBox.Left + (textBox.Width - lineTotal.Width);
+        }
+
+        private void UpdatePositionAndTotalLength(Label lineTotal, TextBox textBox)
+        {
+            if (string.IsNullOrEmpty(textBox.Text))
+            {
+                lineTotal.Text = string.Empty;
+            }
+            else
+            {
+                lineTotal.Text = textBox.SelectionStart + "/" + textBox.Text.Length;
+                lineTotal.Left = textBox.Left + (textBox.Width - lineTotal.Width);
+            }
         }
 
         private void ButtonNextClick(object sender, EventArgs e)
@@ -4749,12 +4766,12 @@ namespace Nikse.SubtitleEdit.Forms
 
                 // update _subtitle + listview
                 _subtitle.Paragraphs[_subtitleListViewIndex].Text = text;
-                UpdateListViewTextInfo(labelTextLineLengths, labelSingleLine, labelTextLineTotal, labelCharactersPerSecond, _subtitle.Paragraphs[_subtitleListViewIndex]);
+                UpdateListViewTextInfo(labelTextLineLengths, labelSingleLine, labelTextLineTotal, labelCharactersPerSecond, _subtitle.Paragraphs[_subtitleListViewIndex], textBoxListViewText);
                 SubtitleListview1.SetText(_subtitleListViewIndex, text);
                 _change = true;
 
-                if (buttonUndoListViewChanges.Visible)
-                    buttonUndoListViewChanges.Enabled = _oldSelectedParagraph != null && text != _oldSelectedParagraph.Text;
+                //if (buttonUndoListViewChanges.Visible)
+                //    buttonUndoListViewChanges.Enabled = _oldSelectedParagraph != null && text != _oldSelectedParagraph.Text;
                 _listViewTextUndoIndex = _subtitleListViewIndex;
             }
         }
@@ -4774,7 +4791,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                     // update _subtitle + listview
                     original.Text = text;
-                    UpdateListViewTextInfo(labelTextAlternateLineLengths, labelAlternateSingleLine, labelTextAlternateLineTotal, labelAlternateCharactersPerSecond, original);
+                    UpdateListViewTextInfo(labelTextAlternateLineLengths, labelAlternateSingleLine, labelTextAlternateLineTotal, labelAlternateCharactersPerSecond, original, textBoxListViewTextAlternate);
                     SubtitleListview1.SetAlternateText(_subtitleListViewIndex, text);
                     _changeAlternate = true;
                     _listViewTextUndoIndex = _subtitleListViewIndex;
@@ -4845,6 +4862,8 @@ namespace Nikse.SubtitleEdit.Forms
 
             // last key down in text
             _lastTextKeyDownTicks = DateTime.Now.Ticks;
+
+            UpdatePositionAndTotalLength(labelTextLineTotal, textBoxListViewText);
         }
 
         private void SplitLineToolStripMenuItemClick(object sender, EventArgs e)
@@ -5373,7 +5392,7 @@ namespace Nikse.SubtitleEdit.Forms
                 SubtitleListview1.SetDuration(_subtitleListViewIndex, p);
 
                 InitializeListViewEditBox(p);
-                buttonUndoListViewChanges.Enabled = false;
+//                buttonUndoListViewChanges.Enabled = false;
             }
         }
 
@@ -8154,7 +8173,7 @@ namespace Nikse.SubtitleEdit.Forms
                 _subtitleAlternateFileName = null;
 
                 buttonUnBreak.Visible = true;
-                buttonUndoListViewChanges.Visible = true;
+                buttonAutoBreak.Visible = true;
                 textBoxListViewTextAlternate.Visible = false;
                 labelAlternateText.Visible = false;
                 labelAlternateCharactersPerSecond.Visible = false;
@@ -8235,7 +8254,7 @@ namespace Nikse.SubtitleEdit.Forms
                 InsertMissingParagraphs(_subtitleAlternate, _subtitle);
 
                 buttonUnBreak.Visible = false;
-                buttonUndoListViewChanges.Visible = false;
+                buttonAutoBreak.Visible = false;
                 buttonSplitLine.Visible = false;
 
                 textBoxListViewText.Anchor = AnchorStyles.Left | AnchorStyles.Top;
@@ -9235,6 +9254,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             textBoxListViewText_MouseMove(sender, null);
             textBoxListViewText.ClearUndo();
+            UpdatePositionAndTotalLength(labelTextLineTotal, textBoxListViewText);
         }
 
         private void buttonGoogleIt_Click(object sender, EventArgs e)
@@ -11261,7 +11281,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                     // update _subtitle + listview
                     original.Text = text;
-                    UpdateListViewTextInfo(labelTextAlternateLineLengths, labelAlternateSingleLine, labelTextAlternateLineTotal, labelAlternateCharactersPerSecond, original);
+                    UpdateListViewTextInfo(labelTextAlternateLineLengths, labelAlternateSingleLine, labelTextAlternateLineTotal, labelAlternateCharactersPerSecond, original, textBoxListViewTextAlternate);
                     SubtitleListview1.SetAlternateText(_subtitleListViewIndex, text);
                     _changeAlternate = true;
                 }
@@ -11321,6 +11341,9 @@ namespace Nikse.SubtitleEdit.Forms
 
             // last key down in text
             _lastTextKeyDownTicks = DateTime.Now.Ticks;
+
+            UpdatePositionAndTotalLength(labelTextAlternateLineTotal, textBoxListViewTextAlternate);
+
         }
 
         private void openOriginalToolStripMenuItem_Click(object sender, EventArgs e)
@@ -11390,7 +11413,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             buttonUnBreak.Visible = true;
-            buttonUndoListViewChanges.Visible = true;
+            buttonAutoBreak.Visible = true;
             textBoxListViewTextAlternate.Visible = false;
             labelAlternateText.Visible = false;
             labelAlternateCharactersPerSecond.Visible = false;
@@ -12003,6 +12026,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void textBoxListViewTextAlternate_KeyUp(object sender, KeyEventArgs e)
         {
             textBoxListViewTextAlternate.ClearUndo();
+            UpdatePositionAndTotalLength(labelTextAlternateLineTotal, textBoxListViewTextAlternate);
         }
 
         private void timerTextUndo_Tick(object sender, EventArgs e)
@@ -12066,6 +12090,16 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
             }
+        }
+
+        private void textBoxListViewText_MouseClick(object sender, MouseEventArgs e)
+        {
+            UpdatePositionAndTotalLength(labelTextLineTotal, textBoxListViewText);
+        }
+
+        private void textBoxListViewTextAlternate_MouseClick(object sender, MouseEventArgs e)
+        {
+            UpdatePositionAndTotalLength(labelTextAlternateLineTotal, textBoxListViewTextAlternate);
         }
 
     }

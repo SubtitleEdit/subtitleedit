@@ -350,7 +350,6 @@
             this.labelCharactersPerSecond = new System.Windows.Forms.Label();
             this.buttonUnBreak = new System.Windows.Forms.Button();
             this.timeUpDownStartTime = new Nikse.SubtitleEdit.Controls.TimeUpDown();
-            this.buttonUndoListViewChanges = new System.Windows.Forms.Button();
             this.labelStartTimeWarning = new System.Windows.Forms.Label();
             this.labelDurationWarning = new System.Windows.Forms.Label();
             this.numericUpDownDuration = new System.Windows.Forms.NumericUpDown();
@@ -3074,7 +3073,6 @@
             this.groupBoxEdit.Controls.Add(this.labelCharactersPerSecond);
             this.groupBoxEdit.Controls.Add(this.buttonUnBreak);
             this.groupBoxEdit.Controls.Add(this.timeUpDownStartTime);
-            this.groupBoxEdit.Controls.Add(this.buttonUndoListViewChanges);
             this.groupBoxEdit.Controls.Add(this.labelStartTimeWarning);
             this.groupBoxEdit.Controls.Add(this.labelDurationWarning);
             this.groupBoxEdit.Controls.Add(this.numericUpDownDuration);
@@ -3094,7 +3092,7 @@
             // 
             this.buttonSplitLine.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonSplitLine.ForeColor = System.Drawing.Color.Red;
-            this.buttonSplitLine.Location = new System.Drawing.Point(810, 78);
+            this.buttonSplitLine.Location = new System.Drawing.Point(810, 81);
             this.buttonSplitLine.Name = "buttonSplitLine";
             this.buttonSplitLine.Size = new System.Drawing.Size(115, 21);
             this.buttonSplitLine.TabIndex = 39;
@@ -3174,6 +3172,7 @@
             this.textBoxListViewTextAlternate.Size = new System.Drawing.Size(17, 56);
             this.textBoxListViewTextAlternate.TabIndex = 33;
             this.textBoxListViewTextAlternate.Visible = false;
+            this.textBoxListViewTextAlternate.MouseClick += new System.Windows.Forms.MouseEventHandler(this.textBoxListViewTextAlternate_MouseClick);
             this.textBoxListViewTextAlternate.TextChanged += new System.EventHandler(this.textBoxListViewTextAlternate_TextChanged);
             this.textBoxListViewTextAlternate.Enter += new System.EventHandler(this.textBoxListViewTextAlternate_Enter);
             this.textBoxListViewTextAlternate.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textBoxListViewTextAlternate_KeyDown);
@@ -3357,10 +3356,11 @@
             // 
             // buttonAutoBreak
             // 
-            this.buttonAutoBreak.Location = new System.Drawing.Point(141, 78);
+            this.buttonAutoBreak.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonAutoBreak.Location = new System.Drawing.Point(810, 56);
             this.buttonAutoBreak.Name = "buttonAutoBreak";
-            this.buttonAutoBreak.Size = new System.Drawing.Size(90, 21);
-            this.buttonAutoBreak.TabIndex = 4;
+            this.buttonAutoBreak.Size = new System.Drawing.Size(115, 21);
+            this.buttonAutoBreak.TabIndex = 7;
             this.buttonAutoBreak.Text = "Auto br";
             this.buttonAutoBreak.UseVisualStyleBackColor = true;
             this.buttonAutoBreak.Click += new System.EventHandler(this.ButtonAutoBreakClick);
@@ -3414,18 +3414,6 @@
             this.timeUpDownStartTime.Name = "timeUpDownStartTime";
             this.timeUpDownStartTime.Size = new System.Drawing.Size(92, 25);
             this.timeUpDownStartTime.TabIndex = 0;
-            // 
-            // buttonUndoListViewChanges
-            // 
-            this.buttonUndoListViewChanges.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonUndoListViewChanges.Enabled = false;
-            this.buttonUndoListViewChanges.Location = new System.Drawing.Point(810, 54);
-            this.buttonUndoListViewChanges.Name = "buttonUndoListViewChanges";
-            this.buttonUndoListViewChanges.Size = new System.Drawing.Size(115, 21);
-            this.buttonUndoListViewChanges.TabIndex = 7;
-            this.buttonUndoListViewChanges.Text = "Undo changes ";
-            this.buttonUndoListViewChanges.UseVisualStyleBackColor = true;
-            this.buttonUndoListViewChanges.Click += new System.EventHandler(this.ButtonUndoListViewChangesClick);
             // 
             // labelStartTimeWarning
             // 
@@ -3513,6 +3501,7 @@
             this.textBoxListViewText.Name = "textBoxListViewText";
             this.textBoxListViewText.Size = new System.Drawing.Size(570, 56);
             this.textBoxListViewText.TabIndex = 5;
+            this.textBoxListViewText.MouseClick += new System.Windows.Forms.MouseEventHandler(this.textBoxListViewText_MouseClick);
             this.textBoxListViewText.TextChanged += new System.EventHandler(this.TextBoxListViewTextTextChanged);
             this.textBoxListViewText.Enter += new System.EventHandler(this.textBoxListViewText_Enter);
             this.textBoxListViewText.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxListViewTextKeyDown);
@@ -3814,7 +3803,6 @@
         private System.Windows.Forms.NumericUpDown numericUpDownDuration;
         private System.Windows.Forms.Label labelDurationWarning;
         private System.Windows.Forms.Label labelStartTimeWarning;
-        private System.Windows.Forms.Button buttonUndoListViewChanges;
         private System.Windows.Forms.Button buttonUnBreak;
         private System.Windows.Forms.ToolStripMenuItem colorToolStripMenuItem;
         private System.Windows.Forms.ColorDialog colorDialog1;
