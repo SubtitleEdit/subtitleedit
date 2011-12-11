@@ -5,6 +5,7 @@
     <Version>3.2</Version>
     <TranslatedBy>Trottel</TranslatedBy>
     <CultureName>cs-CZ</CultureName>
+    <HelpFile />
     <OK>&amp;OK</OK>
     <Cancel>&amp;Storno</Cancel>
     <Apply>Použít</Apply>
@@ -172,7 +173,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Languages>Jazyky</Languages>
     <PalNtsc>PAL/NTSC</PalNtsc>
     <Pal>PAL (25 fps)</Pal>
-    <Ntsc>NTSC (23.976 fps)</Ntsc>
+    <Ntsc>NTSC (23,976 fps)</Ntsc>
     <StartRipping>Spustit vytažení</StartRipping>
     <Abort>Přerušit</Abort>
     <AbortedByUser>Přerušeno uživatelem</AbortedByUser>
@@ -459,6 +460,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <ExportCavena890>Cavena 890...</ExportCavena890>
         <ExportEbu>EBU stl...</ExportEbu>
         <ExportPac>PAC (Screen Electronics)...</ExportPac>
+        <ExportPlainText>Exportovat prostý text...</ExportPlainText>
+        <ExportPlainTextWithoutLineBreaks>Exportovat prostý text bez zalomení řádků...</ExportPlainTextWithoutLineBreaks>
         <Exit>&amp;Konec</Exit>
       </File>
       <Edit>
@@ -483,10 +486,15 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <SplitLongLines>Rozdělit dlouhé řádky...</SplitLongLines>
         <MinimumDisplayTimeBetweenParagraphs>Minimální čas zobrazení mezi odstavci...</MinimumDisplayTimeBetweenParagraphs>
         <SortBy>Seřadit podle</SortBy>
-        <TextAlphabetically>Text - abecedně</TextAlphabetically>
-        <TextSingleLineMaximumLength>Text - maximální délka jednoho řádku</TextSingleLineMaximumLength>
-        <TextTotalLength>Text - celková délka</TextTotalLength>
-        <TextNumberOfLines>Text - počet řádků</TextNumberOfLines>
+        <Number>Čísla</Number>
+        <StartTime>Začátku</StartTime>
+        <EndTime>Konce</EndTime>
+        <Duration>Trvání</Duration>
+        <TextAlphabetically>Textu - abecedně</TextAlphabetically>
+        <TextSingleLineMaximumLength>Textu - maximální délky jednoho řádku</TextSingleLineMaximumLength>
+        <TextTotalLength>Textu - celkové délky</TextTotalLength>
+        <TextNumberOfLines>Textu - počtu řádků</TextNumberOfLines>
+        <TextNumberOfCharactersPerSeconds>Textu - počtu znaků za sekundu</TextNumberOfCharactersPerSeconds>
         <ShowOriginalTextInAudioAndVideoPreview>Zobrazit původní text v náhledech audia a videa</ShowOriginalTextInAudioAndVideoPreview>
         <MakeNewEmptyTranslationFromCurrentSubtitle>Vytvořit nový prázdný překlad z aktuálních titulků</MakeNewEmptyTranslationFromCurrentSubtitle>
         <SplitSubtitle>Rozdělit titulky...</SplitSubtitle>
@@ -567,7 +575,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <InsertFirstLine>Vložit řádek</InsertFirstLine>
         <InsertBefore>Vložit před</InsertBefore>
         <InsertAfter>Vložit za</InsertAfter>
-        <InsertSubtitleAfter>Vložit titulek za tento řádek...</InsertSubtitleAfter>
+        <InsertSubtitleAfter>Vložit titulky za tento řádek...</InsertSubtitleAfter>
         <CopyToClipboard>Kopírovat jako text do schránky</CopyToClipboard>
         <Split>Rozdělit</Split>
         <MergeSelectedLines>Sloučit vybrané řádky</MergeSelectedLines>
@@ -847,6 +855,9 @@ Pokračovat?</SubtitleAppendPrompt>
     <SpellCheckAbortedXCorrections>Kontrola pravopisu přerušena. {0} řádků bylo upraveno.</SpellCheckAbortedXCorrections>
     <SpellCheckCompletedXCorrections>Kontrola pravopisu dokončena. {0} řádků bylo upraveno.</SpellCheckCompletedXCorrections>
     <OpenOtherSubtitle>Otevřít jiné titulky</OpenOtherSubtitle>
+    <BeforeToggleDialogueDashes>Před přepnutím dialogových pomlček</BeforeToggleDialogueDashes>
+    <ExportPlainTextAs>Exportovat prostý text jako</ExportPlainTextAs>
+    <TextFiles>Textové soubory</TextFiles>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Vybrat titulky ze souboru Matroska</Title>
@@ -1014,6 +1025,7 @@ upravovat stejný soubor titulků (spolupráce)</Information>
     <WaveFormAppearance>Vzhled vlnovky</WaveFormAppearance>
     <WaveFormGridColor>Barva mřížky</WaveFormGridColor>
     <WaveFormShowGridLines>Zobrazit mřížku</WaveFormShowGridLines>
+    <ReverseMouseWheelScrollDirection>Obrátit směr posouvání kolečkem myši</ReverseMouseWheelScrollDirection>
     <WaveFormColor>Barva</WaveFormColor>
     <WaveFormSelectedColor>Barva výběru</WaveFormSelectedColor>
     <WaveFormBackgroundColor>Barva pozadí</WaveFormBackgroundColor>
@@ -1072,6 +1084,13 @@ upravovat stejný soubor titulků (spolupráce)</Information>
     <ShortcutIsNotValid>SKlávesová zkratka není platná: {0}</ShortcutIsNotValid>
     <ToggleDockUndockOfVideoControls>Ukotvit/zrušit ukotvení ovládání videa</ToggleDockUndockOfVideoControls>
     <AdjustViaEndAutoStartAndGoToNext>Nastavit podle pozice konce a přejít na další</AdjustViaEndAutoStartAndGoToNext>
+    <AdjustSetStartAutoDurationAndGoToNext>Nastavit začátek, automatické trvání a přejít na další</AdjustSetStartAutoDurationAndGoToNext>
+    <ToggleDialogueDashes>Přepnout dialogové pomlčky</ToggleDialogueDashes>
+    <VerticalZoom>Svislé zvětšení</VerticalZoom>
+    <GoBack100Milliseconds>100 ms zpět</GoBack100Milliseconds>
+    <GoForward100Milliseconds>100 ms vpřed</GoForward100Milliseconds>
+    <GoBack500Milliseconds>500 ms zpět</GoBack500Milliseconds>
+    <GoForward500Milliseconds>500 ms vpřed</GoForward500Milliseconds>
   </Settings>
   <ShowEarlierLater>
     <Title>Zobrazit vybrané řádky dříve nebo později</Title>
@@ -1167,7 +1186,9 @@ upravovat stejný soubor titulků (spolupráce)</Information>
     <FindText>Najít text</FindText>
     <GoToSubPosition>Přejít na pozici titulků</GoToSubPosition>
     <KeepChangesTitle>Zachovat změny?</KeepChangesTitle>
-    <KeepChangesMessage>Byly provedeny změny v titulcích ve 'Vizuální synchronizaci'.</KeepChangesMessage>
+    <KeepChangesMessage>Byly provedeny změny v titulcích ve 'Vizuální synchronizaci'.
+
+Zachovat změny?</KeepChangesMessage>
     <SynchronizationDone>Synchronizace dokončena!</SynchronizationDone>
     <StartSceneMustComeBeforeEndScene>Začáteční scéna musí být před konečnou scénou!</StartSceneMustComeBeforeEndScene>
     <Tip>Tip: Použít &lt;ctrl+šipka vlevo/vpravo&gt; pro přechod o 100 ms zpět/vpřed</Tip>
@@ -1250,6 +1271,7 @@ upravovat stejný soubor titulků (spolupráce)</Information>
   <VobSubOcrCharacterInspect>
     <Title>Prozkoumat porovnání shod pro aktuální snímek</Title>
     <InspectItems>Prozkoumat položky</InspectItems>
+    <AddBetterMatch>Přidat lepší shodu</AddBetterMatch>
   </VobSubOcrCharacterInspect>
   <VobSubOcrNewFolder>
     <Title>Nová složka</Title>
