@@ -902,7 +902,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (!string.IsNullOrEmpty(_language.Menu.File.ExportBluRaySup)) //TODO: Remove in 3.3
                 bluraySupToolStripMenuItem.Text = _language.Menu.File.ExportBluRaySup;
 
-            vobSubsubidxToolStripMenuItem.Visible = true;
+            //vobSubsubidxToolStripMenuItem.Visible = true;
             //vobSubsubidxToolStripMenuItem.Text = _language.Menu.File.ExportVobSub;
 
             toolStripMenuItemCavena890.Text = _language.Menu.File.ExportCavena890;
