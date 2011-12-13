@@ -300,7 +300,7 @@ namespace Nikse.SubtitleEdit.Logic
             SubtitleFontColor = System.Drawing.Color.Black;
             SubtitleBackgroundColor = System.Drawing.Color.White;
             DefaultEncoding = "UTF-8";
-            AutoGuessAnsiEncoding = true;
+            AutoGuessAnsiEncoding = false;
             ShowRecentFiles = true;
             RememberSelectedLine = true;
             StartLoadLastFile = true;
