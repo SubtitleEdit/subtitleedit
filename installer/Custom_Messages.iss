@@ -62,6 +62,25 @@ bg.types_custom=Custom installation
 bg.types_default=Default installation
 
 
+; Portuguese (Brazil)
+br.comp_translations=Translations
+br.msg_AppIsRunning=Setup has detected that Subtitle Edit is currently running.%n%nPlease close all instances of it now, then click OK to continue, or Cancel to exit.
+br.msg_AppIsRunningUninstall=Uninstall has detected that Subtitle Edit is currently running.%n%nPlease close all instances of it now, then click OK to continue, or Cancel to exit.
+br.msg_AskToDownNET=Subtitle Edit requires the .NET Framework 2.0. Please download and install the .NET Framework and run setup again.%n%nDo you want to download the .NET Framework 2.0 now?
+br.msg_DeleteSettings=Do you also want to delete Subtitle Edit's settings and any custom changes you made in the dictionaries?%n%nIf you plan on reinstalling Subtitle Edit you do not have to delete them.
+br.msg_OptimizingPerformance=Optimizing performance...
+br.msg_SetupIsRunningWarning=Subtitle Edit Setup is already running!
+br.run_VisitWebsite=Visit Subtitle Edit's Website
+br.sm_com_Changelog=Subtitle Edit's Changelog
+br.tsk_AllUsers=For all users
+br.tsk_CurrentUser=For the current user only
+br.tsk_Other=Other:
+br.tsk_ResetDictionaries=Reset Dictionaries and delete any custom names
+br.tsk_ResetSettings=Reset Subtitle Edit's settings
+br.types_custom=Custom installation
+br.types_default=Default installation
+
+
 ; Czech
 cs.comp_translations=Translations
 cs.msg_AppIsRunning=Setup has detected that Subtitle Edit is currently running.%n%nPlease close all instances of it now, then click OK to continue, or Cancel to exit.
