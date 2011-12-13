@@ -2552,6 +2552,7 @@ namespace Nikse.SubtitleEdit.Forms
             ShowSourceLineNumber();
             _sourceViewChange = true;
             _change = true;
+            labelStatus.Text = string.Empty;
         }
 
 
@@ -4648,19 +4649,6 @@ namespace Nikse.SubtitleEdit.Forms
             lineTotal.Left = textBox.Left + (textBox.Width - lineTotal.Width);
         }
 
-        private void UpdatePositionAndTotalLength(Label lineTotal, TextBox textBox)
-        {
-            if (string.IsNullOrEmpty(textBox.Text))
-            {
-                lineTotal.Text = string.Empty;
-            }
-            else
-            {
-                lineTotal.Text = textBox.SelectionStart + "/" + textBox.Text.Length;
-                lineTotal.Left = textBox.Left + (textBox.Width - lineTotal.Width);
-            }
-        }
-
         private void ButtonNextClick(object sender, EventArgs e)
         {
             if (_subtitle.Paragraphs.Count > 0)
@@ -4770,9 +4758,8 @@ namespace Nikse.SubtitleEdit.Forms
                 SubtitleListview1.SetText(_subtitleListViewIndex, text);
                 _change = true;
 
-                //if (buttonUndoListViewChanges.Visible)
-                //    buttonUndoListViewChanges.Enabled = _oldSelectedParagraph != null && text != _oldSelectedParagraph.Text;
                 _listViewTextUndoIndex = _subtitleListViewIndex;
+                labelStatus.Text = string.Empty;
             }
         }
 
@@ -4796,9 +4783,7 @@ namespace Nikse.SubtitleEdit.Forms
                     _changeAlternate = true;
                     _listViewTextUndoIndex = _subtitleListViewIndex;
                 }
-                else
-                {
-                }
+                labelStatus.Text = string.Empty;
             }
         }
 
@@ -5377,6 +5362,7 @@ namespace Nikse.SubtitleEdit.Forms
                         currentParagraph.CalculateTimeCodesFromFrameNumbers(CurrentFrameRate);
                     }
                 }
+                labelStatus.Text = string.Empty;
             }
         }
 
@@ -5416,7 +5402,6 @@ namespace Nikse.SubtitleEdit.Forms
                     textBoxListViewTextAlternate.Text = original.Text;
                     _changeAlternate = changeAlternate;
                     textBoxListViewTextAlternate.TextChanged += TextBoxListViewTextAlternateTextChanged;
-                    //UpdateOverlapErrors(timeUpDownStartTime.TimeCode);
                     UpdateListViewTextCharactersPerSeconds(labelAlternateCharactersPerSecond, p);
                     _listViewAlternateTextUndoLast = original.Text;
                 }
@@ -5460,6 +5445,7 @@ namespace Nikse.SubtitleEdit.Forms
                 _change = true;
 
                 UpdateOriginalTimeCodes(oldParagraph);
+                labelStatus.Text = string.Empty;
             }
         }
 
@@ -8322,7 +8308,8 @@ namespace Nikse.SubtitleEdit.Forms
                 _endSeconds = -1;
 
                 VideoInfo videoInfo = ShowVideoInfo(fileName);
-                toolStripComboBoxFrameRate.Text = string.Format("{0:0.###}", videoInfo.FramesPerSecond);
+                if (videoInfo.FramesPerSecond > 0)
+                    toolStripComboBoxFrameRate.Text = string.Format("{0:0.###}", videoInfo.FramesPerSecond);
 
                 Utilities.InitializeVideoPlayerAndContainer(fileName, videoInfo, mediaPlayer, VideoLoaded, VideoEnded);
                 mediaPlayer.Volume = 0;
@@ -12090,6 +12077,58 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
             }
+        }
+
+        private void UpdatePositionAndTotalLength(Label lineTotal, TextBox textBox)
+        {
+            if (string.IsNullOrEmpty(textBox.Text))
+            {
+                lineTotal.Text = string.Empty;
+                return;
+            }
+
+            int extraNewLineLength = Environment.NewLine.Length - 1;
+            int lineBreakPos = textBox.Text.IndexOf(Environment.NewLine);
+            int pos = textBox.SelectionStart;
+            int totalLength = Utilities.RemoveHtmlTags(textBox.Text).Replace(Environment.NewLine, string.Empty).Length; // we don't count new line in total length... correct?
+            string totalL = "     " + string.Format(_languageGeneral.TotalLengthX, totalLength);
+            if (lineBreakPos == -1 || pos <= lineBreakPos)
+            {
+                lineTotal.Text = "1," + (pos+1) + totalL; 
+                lineTotal.Left = textBox.Left + (textBox.Width - lineTotal.Width);
+                return;
+            }
+            else
+            {
+                int secondLineBreakPos = textBox.Text.IndexOf(Environment.NewLine, lineBreakPos + 1);
+                if (secondLineBreakPos == -1 || pos <= secondLineBreakPos + extraNewLineLength)
+                {
+                    lineTotal.Text = "2," + (pos - (lineBreakPos + extraNewLineLength)) + totalL;
+                    lineTotal.Left = textBox.Left + (textBox.Width - lineTotal.Width);
+                    return;
+                }
+                else
+                {
+                    int thirdLineBreakPos = textBox.Text.IndexOf(Environment.NewLine, secondLineBreakPos + 1);
+                    if (thirdLineBreakPos == -1 || pos < thirdLineBreakPos + (extraNewLineLength * 2))
+                    {
+                        lineTotal.Text = "3," + (pos - (secondLineBreakPos + extraNewLineLength)) + totalL;
+                        lineTotal.Left = textBox.Left + (textBox.Width - lineTotal.Width);
+                        return;
+                    }
+                    else
+                    {
+                        int forthLineBreakPos = textBox.Text.IndexOf(Environment.NewLine, thirdLineBreakPos + 1);
+                        if (forthLineBreakPos == -1 || pos < forthLineBreakPos + (extraNewLineLength * 3))
+                        {
+                            lineTotal.Text = "4," + (pos - (thirdLineBreakPos + extraNewLineLength)) + totalL;
+                            lineTotal.Left = textBox.Left + (textBox.Width - lineTotal.Width);
+                            return;
+                        }
+                    }
+                }
+            }
+            lineTotal.Text = string.Empty;
         }
 
         private void textBoxListViewText_MouseClick(object sender, MouseEventArgs e)
