@@ -46,7 +46,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
             XmlDocument xml = new XmlDocument();
             xml.LoadXml(xmlStructure);
-
+            XmlNode reel = xml.DocumentElement.SelectSingleNode("reel");
             foreach (Paragraph p in subtitle.Paragraphs)
             {
                 XmlNode paragraph = xml.CreateElement("title");
@@ -61,7 +61,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
                 paragraph.InnerText = Utilities.RemoveHtmlTags(p.Text.Replace(Environment.NewLine, "|"));
 
-                xml.DocumentElement.AppendChild(paragraph);
+                reel.AppendChild(paragraph);
             }
 
             MemoryStream ms = new MemoryStream();
