@@ -45,12 +45,25 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             foreach (string line in lines)
                 sb.AppendLine(line);
 
-            System.Windows.Forms.RichTextBox rtBox = new System.Windows.Forms.RichTextBox();
-            rtBox.Rtf = sb.ToString();
+            string rtf = sb.ToString().Trim();
+            if (!rtf.StartsWith("{\\rtf"))
+                return;                                                                                                                                                                                                                                                                                                                                                               
+
+            var rtBox = new System.Windows.Forms.RichTextBox();
+            try
+            {
+                rtBox.Rtf = rtf;
+            }
+            catch (Exception exception)
+            {
+                System.Diagnostics.Debug.WriteLine(exception.Message);
+                return;
+            }
+
             LoadF4TextSubtitle(subtitle, rtBox.Text);
         }
     }
