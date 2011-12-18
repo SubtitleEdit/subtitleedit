@@ -306,6 +306,261 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             "ء",
         };
 
+
+        static List<int> _cyrillicCodes = new List<int> {
+            0x20, //space
+            0x21, //!
+            0x22, //Э
+            0x23, // /
+            0x24, //?
+            0x25, //:
+            0x26, //.
+            0x27, //э
+            0x28, //(
+            0x29, //)
+            0x2c, //,
+            0x2d, //_
+            0x2e, //ю
+            0x3c, //>
+            0x41, //Ф
+            0x42, //И
+            0x43, //C
+            0x44, //В
+            0x45, //У
+            0x46, //F
+            0x48, //Р
+            0x49, //Ш
+            0x4a, //О
+            0x4d, //Ь
+            0x4e, //Т
+            0x53, //Ы
+            0x57, //Ц
+            0x58, //Ч
+            0x5a, //Я
+            0x5b, //х
+            0x5d, //ъ
+            0x5e, //,
+            0x5f, //-
+            0x61, //ф
+            0x62, //и
+            0x63, //c
+            0x64, //в
+            0x65, //у
+            0x66, //a
+            0x67, //п
+            0x68, //p
+            0x69, //ш
+            0x6c, //д
+            0x6d, //ь
+            0x6e, //т
+            0x6f, //э
+            0x70, //з
+            0x73, //ы
+            0x74, //e
+            0x75, //г
+            0x77, //ц
+            0x78, //ч
+            0x79, //н            
+            0x7a, //я
+            0x7b, //Х
+            0x7d, //Ъ
+            0x81, //Ю
+            0x92, //ђ
+            0x94, //,
+            0x95, //-
+            0x96, //і
+            0x98, //ј
+            0x99, //љ
+            0x9a, //њ
+            0x9b, //ћ
+            0x9d, //§
+            0x9f, //џ
+            0xac, //C
+            0xad, //D
+            0xae, //E
+            0xaf, //F
+            0xb0, //G
+            0xb1, //H
+            0xb2, //'
+            0xb3, //"
+            0xb4, //I
+            0xb5, //J
+            0xb6, //K
+            0xb7, //L
+            0xb8, //M
+            0xb9, //N
+            0xba, //P
+            0xbb, //Q
+            0xbc, //R
+            0xbd, //S
+            0xbe, //T
+            0xbf, //U
+            0xc0, //V
+            0xc2, //W
+            0xc3, //X
+            0xc4, //Y
+            0xc5, //Z
+            0xc6, //b
+            0xc7, //c
+            0xc8, //d
+            0xc9, //e
+            0xca, //f
+            0xcb, //g
+            0xcc, //h
+            0xcd, //i
+            0xce, //j
+            0xcf, //k
+            0xd1, //l
+            0xd2, //m
+            0xd3, //n
+            0xd4, //o
+            0xd5, //p
+            0xd6, //q
+            0xd7, //r
+            0xd8, //s
+            0xd9, //t
+            0xda, //u
+            0xdb, //v
+            0xdc, //w
+            0xdd, //э
+            0xde, //ю
+            0xdf, //z
+            0xe065, //ў
+            0xe574, //ё 
+            0xe272, //ќ            
+            0xe275, //ѓ
+            0xe596, //ї
+            0x6938, //ш
+            
+        };
+
+        static List<string> _cyrillicLetters = new List<string> {
+            " ", //0x20
+            "!", //0x21
+            "Э", //0x22
+            "/", //0x23
+            "?", //0x24
+            ":", //0x25
+            ".", //0x26 
+            "э", //0x27
+            "(", //0x28
+            ")", //0x29
+            ",", //0x2c
+            "_", //0x2d
+            "ю", //0x2e
+            ">", //0x3c
+            "Ф", //0x41
+            "И", //0x42
+            "C", //0x43
+            "B", //0x44
+            "У", //0x45
+            "F", //0x46
+            "Р", //0x48
+            "Ш", //0x49
+            "О", //0x4a
+            "Ь", //0x4d
+            "Т", //0x4e
+            "Ы", //0x53
+            "Ц", //0x57
+            "Ч", //0x58
+            "Я", //0x5a
+            "х", //0x5b
+            "ъ", //0x5d
+            ",", //0x5e
+            "-", //0x5f
+            "ф", //0x61
+            "и", //0x62
+            "с", //0x63
+            "в", //0x64
+            "у", //0x65
+            "a", //0x66
+            "п", //0x67
+            "p", //0x68
+            "ш", //0x69
+            "д", //0x6c
+            "ь", //0x6d
+            "т", //0x6e
+            "э", //0x6f
+            "з", //0x70
+            "ы", //0x73
+            "e", //0x74
+            "г", //0x75
+            "ц", //0x77
+            "ч", //0x78
+            "н", //0x79            
+            "я", //0x7a
+            "Х", //0x7b
+            "Ъ", //0x7d
+            "Ю", //0x81
+            "ђ", //0x92
+            ",", //0x94
+            "-", //0x95
+            "і", //0x96
+            "ј", //0x98
+            "љ", //0x99
+            "ћ", //0x9b
+            "њ", //0x9a
+            "§", //0x9d
+            "џ", //0x9f
+            "C", //0xac
+            "D", //0xad
+            "E", //0xae
+            "F", //0xaf
+            "G", //0xb0
+            "H", //0xb1
+            "'", //0xb2
+            "\"", //0xb3
+            "I", //0xb4
+            "J", //0xb5
+            "K", //0xb6
+            "L", //0xb7
+            "M", //0xb8
+            "N", //0xb9
+            "P", //0xba
+            "Q", //0xbb
+            "R", //0xbc
+            "S", //0xbd
+            "T", //0xbe
+            "U", //0xbf
+            "V", //0xc0
+            "W", //0xc2
+            "X", //0xc3
+            "Y", //0xc4
+            "Z", //0xc5
+            "b", //0xc6
+            "c", //0xc7
+            "d", //0xc8
+            "e", //0xc9
+            "f", //0xca
+            "g", //0xcb
+            "h", //0xcc
+            "i", //0xcd
+            "j", //0xce
+            "k", //0xcf
+            "l", //0xd1
+            "m", //0xd2
+            "n", //0xd3
+            "o", //0xd4
+            "p", //0xd5
+            "q", //0xd6
+            "r", //0xd7
+            "s", //0xd8
+            "t", //0xd9
+            "u", //0xda
+            "v", //0xdb
+            "w", //0xdc
+            "э", //0xdd
+            "ю", //0xde
+            "z", //0xdf
+            "ў", //0xe065
+            "ё", //0xe574
+            "ќ", //0xe272
+            "ѓ", //0xe275
+            "ї", //0xe596
+            "ш", //0x6938
+        };
+
+
         private string _fileName = string.Empty;
         private int _codePage = -1;
 
@@ -380,6 +635,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 textBuffer = GetHebrewBytes(Utilities.FixEnglishTextInRightToLeftLanguage(text, "0123456789abcdefghijklmnopqrstuvwxyz"));
             else if (_codePage == 0)
                 textBuffer = GetLatinBytes(encoding, text);
+            else if (_codePage == 6)
+                textBuffer = GetCyrillicBytes(text);
             else
                 textBuffer = encoding.GetBytes(text);
 
@@ -547,6 +804,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     sb.Append(GetArabicString(buffer, ref index));
                 else if (_codePage == 4)
                     sb.Append(GetHebrewString(buffer, ref index));
+                else if (_codePage == 6)
+                    sb.Append(GetCyrillicString(buffer, ref index));
                 else
                 {
                     sb.Append(GetEncoding(_codePage).GetString(buffer, index, 1));
@@ -700,6 +959,11 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             return GetBytesViaLists(text, _hebrewLetters, _hebrewCodes);
         }
 
+        private byte[] GetCyrillicBytes(string text)
+        {
+            return GetBytesViaLists(text, _cyrillicLetters, _cyrillicCodes);
+        }
+
         private byte[] GetBytesViaLists(string text, List<string> letters, List<int> codes)
         {
             int i = 0;
@@ -823,6 +1087,30 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             }
 
             return encoding.GetString(buffer, index, 1);
+        }
+
+        public static string GetCyrillicString(byte[] buffer, ref int index)
+        {
+            byte b = buffer[index];
+
+            if (b >= 0x30 && b <= 0x39) // numbers
+                return Encoding.ASCII.GetString(buffer, index, 1);
+
+            int idx = _cyrillicCodes.IndexOf(b);
+            if (idx >= 0)
+                return _cyrillicLetters[idx];
+
+            if (buffer.Length > index + 1)
+            {
+                idx = _cyrillicCodes.IndexOf(b * 256 + buffer[index + 1]);
+                if (idx >= 0)
+                {
+                    index++;
+                    return _cyrillicLetters[idx];
+                }
+            }
+
+            return string.Format("({0})", b);
         }
 
         private TimeCode GetTimeCode(int timeCodeIndex, byte[] buffer)
