@@ -3724,6 +3724,9 @@ namespace Nikse.SubtitleEdit.Forms
             _fileName = _subtitle.UndoHistory(_undoIndex, out subtitleFormatFriendlyName, out _fileDateTime, out _subtitleAlternate, out _subtitleAlternateFileName);
             if (!undo)
             {
+                if (_subtitle.HistoryItems[_undoIndex].RedoParagraphs == null) //TODO: why? Fast keypresses?
+                    return;
+
                 _subtitle.Paragraphs.Clear();
                 if (Configuration.Settings.General.AllowEditOfOriginalSubtitle && _subtitleAlternate != null)
                     _subtitleAlternate.Paragraphs.Clear();
@@ -3767,7 +3770,7 @@ namespace Nikse.SubtitleEdit.Forms
                         textBoxListViewTextAlternate.SelectionStart = _subtitle.HistoryItems[_undoIndex].LinePositionAlternate;
                 }
                     
-                ShowStatus(_language.UndoPerformed + ": " + text);
+                ShowStatus(_language.UndoPerformed + ": " + text.Replace(Environment.NewLine, "  "));
                 _undoIndex--;
             }
             else
