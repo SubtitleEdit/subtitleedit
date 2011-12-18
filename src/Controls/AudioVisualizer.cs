@@ -476,7 +476,7 @@ namespace Nikse.SubtitleEdit.Controls
             Font textFont = new Font(Font.FontFamily, 7);
             while (position < Width)
             {
-                if (_zoomFactor > 0.3 || (int)Math.Round(StartPositionSeconds + seconds) % 5 == 0)
+                if (_zoomFactor * _wavePeaks.Header.SampleRate > 38 || (int)Math.Round(StartPositionSeconds + seconds) % 5 == 0)
                 {
                     e.Graphics.DrawLine(pen, position, imageHeight, position, imageHeight - 10);
                     e.Graphics.DrawString(GetDisplayTime(StartPositionSeconds + seconds), textFont, textBrush, new PointF(position + 2, imageHeight - 13));
@@ -485,7 +485,7 @@ namespace Nikse.SubtitleEdit.Controls
                 seconds += 0.5;
                 position = SecondsToXPosition(seconds);
 
-                if (_zoomFactor > 0.5)
+                if (_zoomFactor * _wavePeaks.Header.SampleRate > 64)
                     e.Graphics.DrawLine(pen, position, imageHeight, position, imageHeight - 5);
 
                 seconds += 0.5;
@@ -521,15 +521,15 @@ namespace Nikse.SubtitleEdit.Controls
                 pen.DashStyle = System.Drawing.Drawing2D.DashStyle.Dash;
                 e.Graphics.DrawLine(pen, currentRegionRight, 0, currentRegionRight, e.Graphics.VisibleClipBounds.Height);
 
-                SolidBrush textBrush = new SolidBrush(TextColor);
-                if (_zoomFactor > 0.6)
+                var textBrush = new SolidBrush(TextColor);
+                if (_zoomFactor * _wavePeaks.Header.SampleRate > 80)
+                {
                     e.Graphics.DrawString(paragraph.Text.Replace(Environment.NewLine, "  "), Font, textBrush, new PointF(currentRegionLeft + 3, 10));
-
-                if (_zoomFactor > 0.6)
                     e.Graphics.DrawString("#" + paragraph.Number + "  " + paragraph.StartTime.ToShortString() + " --> " + paragraph.EndTime.ToShortString(), Font, textBrush, new PointF(currentRegionLeft + 3, Height - 32));
-                else if (_zoomFactor > 0.4)
+                }
+                else if (_zoomFactor * _wavePeaks.Header.SampleRate > 51)
                     e.Graphics.DrawString("#" + paragraph.Number + "  " + paragraph.StartTime.ToShortString(), Font, textBrush, new PointF(currentRegionLeft + 3, Height - 32));
-                else if (_zoomFactor > 0.2)
+                else if (_zoomFactor * _wavePeaks.Header.SampleRate > 25)
                     e.Graphics.DrawString("#" + paragraph.Number, Font, textBrush, new PointF(currentRegionLeft + 3, Height - 32));
             }
         }

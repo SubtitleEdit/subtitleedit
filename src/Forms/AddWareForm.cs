@@ -47,13 +47,7 @@ namespace Nikse.SubtitleEdit.Forms
             string parameters = "-I dummy -vvv --no-sout-video --sout #transcode{acodec=s16l}:std{mux=wav,access=file,dst=\"" + targetFile + "\"} \"" + SourceVideoFileName + "\" vlc://quit";
 
             string vlcPath;
-            //if (Logic.VideoPlayers.MPlayer.IsInstalled)
-            //{
-            //    vlcPath = Logic.VideoPlayers.MPlayer.GetMPlayerFileName;
-            //    parameters = "-ao pcm:fast:file=\"" + targetFile + "\" -vo null -vc null \"" + SourceVideoFileName + "\"";
-            //}
-            //else
-                if (Utilities.IsRunningOnLinux() || Utilities.IsRunningOnMac())
+            if (Utilities.IsRunningOnLinux() || Utilities.IsRunningOnMac())
             {
                 vlcPath = "cvlc";
                 parameters = "-vvv --no-sout-video --sout '#transcode{acodec=s16l}:std{mux=wav,access=file,dst=" + targetFile +"}' \"" + SourceVideoFileName + "\" vlc://quit";
@@ -136,9 +130,6 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
-
-
-
             ReadWaveFile(targetFile);
             labelProgress.Text = string.Empty;
             File.Delete(targetFile);
@@ -149,8 +140,8 @@ namespace Nikse.SubtitleEdit.Forms
         {
             WavePeakGenerator waveFile = new WavePeakGenerator(targetFile);
 
-            int sampleRate = 126;
-            while (!(waveFile.Header.SampleRate % sampleRate == 0) && sampleRate < 1000)
+            int sampleRate = Configuration.Settings.VideoControls.WaveFormMininumSampleRate; // Normally 128
+            while (!(waveFile.Header.SampleRate % sampleRate == 0) && sampleRate < 5000)
                 sampleRate++; // old sample-rate / new sample-rate must have rest = 0
 
             labelProgress.Text = Configuration.Settings.Language.AddWaveForm.GeneratingPeakFile;
