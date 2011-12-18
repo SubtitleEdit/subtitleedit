@@ -77,6 +77,7 @@ namespace Nikse.SubtitleEdit.Logic
         public string MusicSymbol { get; set; }
         public string MusicSymbolToReplace { get; set; }
         public bool SpellCheckAutoChangeNames { get; set; }
+        public bool SpellCheckOneLetterWords { get; set; }
         public bool OcrFixUseHardcodedRules { get; set; }
         public string Interjections { get; set; }
         public string MicrosoftBingApiId { get; set; }
@@ -95,6 +96,7 @@ namespace Nikse.SubtitleEdit.Logic
             Interjections = "Ah;Ahh;Ahhh;Eh;Ehh;Ehhh;Hm;Hmm;Hmmm;Phew;Gah;Oh;Ohh;Ohhh;Ow;Oww;Owww;Ugh;Ughh;Uh;Uhh;Uhhh;Whew";
             MicrosoftBingApiId = "C2C2E9A508E6748F0494D68DFD92FAA1FF9B0BA4";
             GoogleApiKey = "ABQIAAAA4j5cWwa3lDH0RkZceh7PjBTDmNAghl5kWSyuukQ0wtoJG8nFBxRPlalq-gAvbeCXMCkmrysqjXV1Gw";
+            SpellCheckOneLetterWords = true;
         }
     }
 
@@ -884,6 +886,9 @@ namespace Nikse.SubtitleEdit.Logic
             subNode = node.SelectSingleNode("SpellCheckAutoChangeNames");
             if (subNode != null)
                 settings.Tools.SpellCheckAutoChangeNames = Convert.ToBoolean(subNode.InnerText);
+            subNode = node.SelectSingleNode("SpellCheckOneLetterWords");
+            if (subNode != null)
+                settings.Tools.SpellCheckOneLetterWords = Convert.ToBoolean(subNode.InnerText);            
             subNode = node.SelectSingleNode("OcrFixUseHardcodedRules");
             if (subNode != null)
                 settings.Tools.OcrFixUseHardcodedRules = Convert.ToBoolean(subNode.InnerText);
@@ -1399,6 +1404,7 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("MusicSymbol", settings.Tools.MusicSymbol);
             textWriter.WriteElementString("MusicSymbolToReplace", settings.Tools.MusicSymbolToReplace);
             textWriter.WriteElementString("SpellCheckAutoChangeNames", settings.Tools.SpellCheckAutoChangeNames.ToString());
+            textWriter.WriteElementString("SpellCheckOneLetterWords", settings.Tools.SpellCheckOneLetterWords.ToString());
             textWriter.WriteElementString("OcrFixUseHardcodedRules", settings.Tools.OcrFixUseHardcodedRules.ToString());
             textWriter.WriteElementString("Interjections", settings.Tools.Interjections);
             textWriter.WriteElementString("MicrosoftBingApiId", settings.Tools.MicrosoftBingApiId);
