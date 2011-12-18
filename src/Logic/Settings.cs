@@ -352,6 +352,7 @@ namespace Nikse.SubtitleEdit.Logic
         public bool WaveFormMouseWheelScrollUpIsForward { get; set; }
         public bool GenerateSpectrogram { get; set; }
         public string SpectrogramAppearance { get; set; }
+        public int WaveFormMininumSampleRate { get; set; }
 
         public VideoControlsSettings()
         {
@@ -368,6 +369,7 @@ namespace Nikse.SubtitleEdit.Logic
             WaveFormDoubleClickOnNonParagraphAction = string.Empty;
             WaveFormMouseWheelScrollUpIsForward = true;
             SpectrogramAppearance = "OneColorGradient";
+            WaveFormMininumSampleRate = 126;
         }
     }
 
@@ -1077,6 +1079,9 @@ namespace Nikse.SubtitleEdit.Logic
             subNode = node.SelectSingleNode("SpectrogramAppearance");
             if (subNode != null)
                 settings.VideoControls.SpectrogramAppearance = subNode.InnerText;
+            subNode = node.SelectSingleNode("WaveFormMininumSampleRate");
+            if (subNode != null)
+                settings.VideoControls.WaveFormMininumSampleRate = Convert.ToInt32(subNode.InnerText);
 
             settings.NetworkSettings = new NetworkSettings();
             node = doc.DocumentElement.SelectSingleNode("NetworkSettings");
@@ -1469,6 +1474,7 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("WaveFormMouseWheelScrollUpIsForward", settings.VideoControls.WaveFormMouseWheelScrollUpIsForward.ToString());
             textWriter.WriteElementString("GenerateSpectrogram", settings.VideoControls.GenerateSpectrogram.ToString());
             textWriter.WriteElementString("SpectrogramAppearance", settings.VideoControls.SpectrogramAppearance);
+            textWriter.WriteElementString("WaveFormMininumSampleRate", settings.VideoControls.WaveFormMininumSampleRate.ToString());
             textWriter.WriteEndElement();
 
             textWriter.WriteStartElement("NetworkSettings", "");
