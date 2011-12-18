@@ -501,7 +501,11 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
 
-                if (_currentWord.Trim().Length > 0 &&
+                int minLength = 2;
+                if (Configuration.Settings.Tools.SpellCheckOneLetterWords)
+                    minLength = 1;
+
+                if (_currentWord.Trim().Length >= minLength &&
                     !_currentWord.Contains("0") &&
                     !_currentWord.Contains("1") &&
                     !_currentWord.Contains("2") &&
