@@ -51,7 +51,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
             string rtf = sb.ToString().Trim();
             if (!rtf.StartsWith("{\\rtf"))
-                return;                                                                                                                                                                                                                                                                                                                                                               
+                return;
 
             var rtBox = new System.Windows.Forms.RichTextBox();
             try

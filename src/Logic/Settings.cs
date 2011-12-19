@@ -888,7 +888,7 @@ namespace Nikse.SubtitleEdit.Logic
                 settings.Tools.SpellCheckAutoChangeNames = Convert.ToBoolean(subNode.InnerText);
             subNode = node.SelectSingleNode("SpellCheckOneLetterWords");
             if (subNode != null)
-                settings.Tools.SpellCheckOneLetterWords = Convert.ToBoolean(subNode.InnerText);            
+                settings.Tools.SpellCheckOneLetterWords = Convert.ToBoolean(subNode.InnerText);
             subNode = node.SelectSingleNode("OcrFixUseHardcodedRules");
             if (subNode != null)
                 settings.Tools.OcrFixUseHardcodedRules = Convert.ToBoolean(subNode.InnerText);

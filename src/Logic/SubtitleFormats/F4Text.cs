@@ -43,7 +43,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public static string ToF4Text(Subtitle subtitle, string title)
         {
-            var sb = new StringBuilder();            
+            var sb = new StringBuilder();
             double lastEndTimeMilliseconds = -1;
             foreach (Paragraph p in subtitle.Paragraphs)
             {

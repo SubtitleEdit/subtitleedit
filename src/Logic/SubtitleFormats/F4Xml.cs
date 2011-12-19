@@ -75,8 +75,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             var contentAttribute = content.Attributes["content"];
             if (contentAttribute == null)
                 return;
-            
-            string text = contentAttribute.Value;           
+
+            string text = contentAttribute.Value;
             LoadF4TextSubtitle(subtitle, text);
         }
     }

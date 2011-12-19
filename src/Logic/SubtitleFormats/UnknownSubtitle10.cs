@@ -64,7 +64,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
             var arr = all.Replace("\n", string.Empty).Replace("{\"content\":\"", "\n").Split("\n".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
 
-            
+
             _errorCount = 0;
             subtitle.Paragraphs.Clear();
 

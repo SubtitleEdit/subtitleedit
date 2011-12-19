@@ -360,7 +360,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             0x75, //г
             0x77, //ц
             0x78, //ч
-            0x79, //н            
+            0x79, //н
             0x7a, //я
             0x7b, //Х
             0x7d, //Ъ
@@ -426,12 +426,12 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             0xde, //ю
             0xdf, //z
             0xe065, //ў
-            0xe574, //ё 
-            0xe272, //ќ            
+            0xe574, //ё
+            0xe272, //ќ
             0xe275, //ѓ
             0xe596, //ї
             0x6938, //ш
-            
+
         };
 
         static List<string> _cyrillicLetters = new List<string> {
@@ -441,7 +441,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             "/", //0x23
             "?", //0x24
             ":", //0x25
-            ".", //0x26 
+            ".", //0x26
             "э", //0x27
             "(", //0x28
             ")", //0x29
@@ -487,7 +487,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             "г", //0x75
             "ц", //0x77
             "ч", //0x78
-            "н", //0x79            
+            "н", //0x79
             "я", //0x7a
             "Х", //0x7b
             "Ъ", //0x7d
