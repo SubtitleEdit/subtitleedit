@@ -64,102 +64,102 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         {
             string xmlStructure = @"<?xml version='1.0' encoding='utf-8' ?>
 <TMPGEncVMESubtitleTextFormat>
-	<Layout>
-		<LayoutItem index='0'>
-			<Name>
-				<![CDATA[Picture bottom layout]]>
-			</Name>
-			<Position>4</Position>
-			<FontName>
-				<![CDATA[Tahoma]]>
-			</FontName>
-			<FontHeight>0.069</FontHeight>
-			<FontColor>17588159451135</FontColor>
-			<FontBold>0</FontBold>
-			<FontItalic>0</FontItalic>
-			<FontUnderline>0</FontUnderline>
-			<FontStrikeOut>0</FontStrikeOut>
-			<HorizonAlign>1</HorizonAlign>
-			<VerticalAlign>2</VerticalAlign>
-			<DirectionVertical>0</DirectionVertical>
-			<BorderActive>1</BorderActive>
-			<BorderSize>0.00345</BorderSize>
-			<BorderColor>0</BorderColor>
-			<TextAlign>1</TextAlign>
-			<DirectionRightToLeft>0</DirectionRightToLeft>
-		</LayoutItem>
-		<LayoutItem index='1'>
-			<Name>
-				<![CDATA[Picture top layout]]>
-			</Name>
-			<Position>4</Position>
-			<FontName>
-				<![CDATA[Tahoma]]>
-			</FontName>
-			<FontHeight>0.1</FontHeight>
-			<FontColor>17588159451135</FontColor>
-			<FontBold>0</FontBold>
-			<FontItalic>0</FontItalic>
-			<FontUnderline>0</FontUnderline>
-			<FontStrikeOut>0</FontStrikeOut>
-			<HorizonAlign>1</HorizonAlign>
-			<VerticalAlign>0</VerticalAlign>
-			<DirectionVertical>0</DirectionVertical>
-			<BorderActive>1</BorderActive>
-			<BorderSize>0.005</BorderSize>
-			<BorderColor>0</BorderColor>
-			<TextAlign>1</TextAlign>
-			<DirectionRightToLeft>0</DirectionRightToLeft>
-		</LayoutItem>
-		<LayoutItem index='2'>
-			<Name>
-				<![CDATA[Picture left layout]]>
-			</Name>
-			<Position>4</Position>
-			<FontName>
-				<![CDATA[Tahoma]]>
-			</FontName>
-			<FontHeight>0.1</FontHeight>
-			<FontColor>17588159451135</FontColor>
-			<FontBold>0</FontBold>
-			<FontItalic>0</FontItalic>
-			<FontUnderline>0</FontUnderline>
-			<FontStrikeOut>0</FontStrikeOut>
-			<HorizonAlign>0</HorizonAlign>
-			<VerticalAlign>1</VerticalAlign>
-			<DirectionVertical>1</DirectionVertical>
-			<BorderActive>1</BorderActive>
-			<BorderSize>0.005</BorderSize>
-			<BorderColor>0</BorderColor>
-			<TextAlign>1</TextAlign>
-			<DirectionRightToLeft>0</DirectionRightToLeft>
-		</LayoutItem>
-		<LayoutItem index='3'>
-			<Name>
-				<![CDATA[Picture right layout]]>
-			</Name>
-			<Position>4</Position>
-			<FontName>
-				<![CDATA[Tahoma]]>
-			</FontName>
-			<FontHeight>0.1</FontHeight>
-			<FontColor>17588159451135</FontColor>
-			<FontBold>0</FontBold>
-			<FontItalic>0</FontItalic>
-			<FontUnderline>0</FontUnderline>
-			<FontStrikeOut>0</FontStrikeOut>
-			<HorizonAlign>2</HorizonAlign>
-			<VerticalAlign>1</VerticalAlign>
-			<DirectionVertical>1</DirectionVertical>
-			<BorderActive>1</BorderActive>
-			<BorderSize>0.005</BorderSize>
-			<BorderColor>0</BorderColor>
-			<TextAlign>1</TextAlign>
-			<DirectionRightToLeft>1</DirectionRightToLeft>
-		</LayoutItem>
-	</Layout>
-	<Subtitle>
-	</Subtitle>
+    <Layout>
+        <LayoutItem index='0'>
+            <Name>
+                <![CDATA[Picture bottom layout]]>
+            </Name>
+            <Position>4</Position>
+            <FontName>
+                <![CDATA[Tahoma]]>
+            </FontName>
+            <FontHeight>0.069</FontHeight>
+            <FontColor>17588159451135</FontColor>
+            <FontBold>0</FontBold>
+            <FontItalic>0</FontItalic>
+            <FontUnderline>0</FontUnderline>
+            <FontStrikeOut>0</FontStrikeOut>
+            <HorizonAlign>1</HorizonAlign>
+            <VerticalAlign>2</VerticalAlign>
+            <DirectionVertical>0</DirectionVertical>
+            <BorderActive>1</BorderActive>
+            <BorderSize>0.00345</BorderSize>
+            <BorderColor>0</BorderColor>
+            <TextAlign>1</TextAlign>
+            <DirectionRightToLeft>0</DirectionRightToLeft>
+        </LayoutItem>
+        <LayoutItem index='1'>
+            <Name>
+                <![CDATA[Picture top layout]]>
+            </Name>
+            <Position>4</Position>
+            <FontName>
+                <![CDATA[Tahoma]]>
+            </FontName>
+            <FontHeight>0.1</FontHeight>
+            <FontColor>17588159451135</FontColor>
+            <FontBold>0</FontBold>
+            <FontItalic>0</FontItalic>
+            <FontUnderline>0</FontUnderline>
+            <FontStrikeOut>0</FontStrikeOut>
+            <HorizonAlign>1</HorizonAlign>
+            <VerticalAlign>0</VerticalAlign>
+            <DirectionVertical>0</DirectionVertical>
+            <BorderActive>1</BorderActive>
+            <BorderSize>0.005</BorderSize>
+            <BorderColor>0</BorderColor>
+            <TextAlign>1</TextAlign>
+            <DirectionRightToLeft>0</DirectionRightToLeft>
+        </LayoutItem>
+        <LayoutItem index='2'>
+            <Name>
+                <![CDATA[Picture left layout]]>
+            </Name>
+            <Position>4</Position>
+            <FontName>
+                <![CDATA[Tahoma]]>
+            </FontName>
+            <FontHeight>0.1</FontHeight>
+            <FontColor>17588159451135</FontColor>
+            <FontBold>0</FontBold>
+            <FontItalic>0</FontItalic>
+            <FontUnderline>0</FontUnderline>
+            <FontStrikeOut>0</FontStrikeOut>
+            <HorizonAlign>0</HorizonAlign>
+            <VerticalAlign>1</VerticalAlign>
+            <DirectionVertical>1</DirectionVertical>
+            <BorderActive>1</BorderActive>
+            <BorderSize>0.005</BorderSize>
+            <BorderColor>0</BorderColor>
+            <TextAlign>1</TextAlign>
+            <DirectionRightToLeft>0</DirectionRightToLeft>
+        </LayoutItem>
+        <LayoutItem index='3'>
+            <Name>
+                <![CDATA[Picture right layout]]>
+            </Name>
+            <Position>4</Position>
+            <FontName>
+                <![CDATA[Tahoma]]>
+            </FontName>
+            <FontHeight>0.1</FontHeight>
+            <FontColor>17588159451135</FontColor>
+            <FontBold>0</FontBold>
+            <FontItalic>0</FontItalic>
+            <FontUnderline>0</FontUnderline>
+            <FontStrikeOut>0</FontStrikeOut>
+            <HorizonAlign>2</HorizonAlign>
+            <VerticalAlign>1</VerticalAlign>
+            <DirectionVertical>1</DirectionVertical>
+            <BorderActive>1</BorderActive>
+            <BorderSize>0.005</BorderSize>
+            <BorderColor>0</BorderColor>
+            <TextAlign>1</TextAlign>
+            <DirectionRightToLeft>1</DirectionRightToLeft>
+        </LayoutItem>
+    </Layout>
+    <Subtitle>
+    </Subtitle>
 </TMPGEncVMESubtitleTextFormat>".Replace("'", "\"");
 
             var xml = new XmlDocument();
@@ -171,7 +171,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 XmlNode paragraph = xml.CreateElement("SubtitleItem");
 
                 string text = Utilities.RemoveHtmlTags(p.Text);
-                paragraph.InnerXml = "<Text><![CDATA[" + text.Replace(Environment.NewLine, "\\n") + "]]></Text>";               
+                paragraph.InnerXml = "<Text><![CDATA[" + text.Replace(Environment.NewLine, "\\n") + "]]></Text>";
 
                 XmlAttribute layoutIndex = xml.CreateAttribute("layoutindex");
                 layoutIndex.InnerText = "0";
@@ -238,7 +238,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     if (node.Attributes["endtime"] != null)
                     {
                         end = node.Attributes["endtime"].InnerText;
-                    }                   
+                    }
 
                     TimeCode startCode = new TimeCode(TimeSpan.FromSeconds(startSeconds));
                     if (start != string.Empty)

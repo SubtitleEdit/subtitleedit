@@ -3680,10 +3680,10 @@ namespace Nikse.SubtitleEdit.Forms
             int selectedIndex = FirstSelectedIndex;
             string text = string.Empty;
             if (undo)
-            {                
+            {
                 _subtitle.HistoryItems[_undoIndex].RedoParagraphs = new List<Paragraph>();
                 _subtitle.HistoryItems[_undoIndex].RedoParagraphsAlternate = new List<Paragraph>();
-                
+
                 foreach (Paragraph p in _subtitle.Paragraphs)
                     _subtitle.HistoryItems[_undoIndex].RedoParagraphs.Add(new Paragraph(p));
                 if (Configuration.Settings.General.AllowEditOfOriginalSubtitle && _subtitleAlternate != null)
@@ -3769,7 +3769,7 @@ namespace Nikse.SubtitleEdit.Forms
                     if (_subtitleAlternate != null)
                         textBoxListViewTextAlternate.SelectionStart = _subtitle.HistoryItems[_undoIndex].LinePositionAlternate;
                 }
-                    
+
                 ShowStatus(_language.UndoPerformed + ": " + text.Replace(Environment.NewLine, "  "));
                 _undoIndex--;
             }
@@ -4646,7 +4646,7 @@ namespace Nikse.SubtitleEdit.Forms
                         lineTotal.Text = string.Format(_languageGeneral.TotalLengthX, s.Length);
                     buttonSplitLine.Visible = true;
                 }
-            }          
+            }
             UpdateListViewTextCharactersPerSeconds(charactersPerSecond, paragraph);
             labelCharactersPerSecond.Left = textBox.Left + (textBox.Width - labelCharactersPerSecond.Width);
             lineTotal.Left = textBox.Left + (textBox.Width - lineTotal.Width);
@@ -10195,7 +10195,7 @@ namespace Nikse.SubtitleEdit.Forms
             int lastCompositionNumber = -1;
 
             foreach (var sub in subtitles)
-            { 
+            {
                 for (int i=0; i<sub.ImageObjects.Count; i++)
                 {
                     var s = new BluRaySupPicture(sub);
@@ -10208,7 +10208,7 @@ namespace Nikse.SubtitleEdit.Forms
                         bool found = false;
                         if (sub.ImageObjects.Count > 1)
                         {
-                            
+
                             for (int k = start; k < list.Count; k++)
                             {
                                 if (list[k].ObjectIdImage.Width == sub.ObjectIdImage.Width && list[k].ObjectIdImage.Height == sub.ObjectIdImage.Height &&
@@ -12034,7 +12034,7 @@ namespace Nikse.SubtitleEdit.Forms
                     oldText = newText;
                     return;
                 }
-                
+
                 if (_listViewTextUndoLast != newText)
                 {
                     MakeHistoryForUndo(Configuration.Settings.Language.General.Text + ": " + _listViewTextUndoLast.TrimEnd() + " -> " + newText, false);
@@ -12097,7 +12097,7 @@ namespace Nikse.SubtitleEdit.Forms
             string totalL = "     " + string.Format(_languageGeneral.TotalLengthX, totalLength);
             if (lineBreakPos == -1 || pos <= lineBreakPos)
             {
-                lineTotal.Text = "1," + (pos+1) + totalL; 
+                lineTotal.Text = "1," + (pos+1) + totalL;
                 lineTotal.Left = textBox.Left + (textBox.Width - lineTotal.Width);
                 return;
             }
