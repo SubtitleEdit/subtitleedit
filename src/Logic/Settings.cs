@@ -113,17 +113,23 @@ namespace Nikse.SubtitleEdit.Logic
         }
     }
 
-    public class SsaStyleSettings
+    public class SubtitleSettings
     {
-        public string FontName { get; set; }
-        public double FontSize { get; set; }
-        public int FontColorArgb { get; set; }
+        public string SsaFontName { get; set; }
+        public double SsaFontSize { get; set; }
+        public int SsaFontColorArgb { get; set; }
+        public string DCinemaFontFile { get; set; }
+        public int DCinemaFontSize { get; set; }
+        public int DCinemaVPosition { get; set; }
 
-        public SsaStyleSettings()
+        public SubtitleSettings()
         {
-            FontName = "Tahoma";
-            FontSize = 18;
-            FontColorArgb = System.Drawing.Color.FromArgb(255, 255, 255).ToArgb();
+            SsaFontName = "Tahoma";
+            SsaFontSize = 18;
+            SsaFontColorArgb = System.Drawing.Color.FromArgb(255, 255, 255).ToArgb();
+            DCinemaFontFile = "Arial.tff";
+            DCinemaFontSize = 42;
+            DCinemaVPosition = 14;
         }
     }
 
@@ -531,7 +537,7 @@ namespace Nikse.SubtitleEdit.Logic
         public RecentFilesSettings RecentFiles { get; set; }
         public GeneralSettings General { get; set; }
         public ToolsSettings Tools { get; set; }
-        public SsaStyleSettings SsaStyle { get; set; }
+        public SubtitleSettings SubtitleSettings { get; set; }
         public ProxySettings Proxy { get; set; }
         public WordListSettings WordLists { get; set; }
         public FixCommonErrorsSettings CommonErrors { get; set; }
@@ -554,7 +560,7 @@ namespace Nikse.SubtitleEdit.Logic
             General = new GeneralSettings();
             Tools = new ToolsSettings();
             WordLists = new WordListSettings();
-            SsaStyle = new SsaStyleSettings();
+            SubtitleSettings = new SubtitleSettings();
             Proxy = new ProxySettings();
             CommonErrors = new FixCommonErrorsSettings();
             VobSubOcr = new VobSubOcrSettings();
@@ -902,17 +908,29 @@ namespace Nikse.SubtitleEdit.Logic
             if (subNode != null)
                 settings.Tools.GoogleApiKey = subNode.InnerText;
 
-            settings.SsaStyle = new Nikse.SubtitleEdit.Logic.SsaStyleSettings();
-            node = doc.DocumentElement.SelectSingleNode("SsaStyle");
-            subNode = node.SelectSingleNode("FontName");
-            if (subNode != null)
-                settings.SsaStyle.FontName = subNode.InnerText;
-            subNode = node.SelectSingleNode("FontSize");
-            if (subNode != null)
-                settings.SsaStyle.FontSize = Convert.ToDouble(subNode.InnerText);
-            subNode = node.SelectSingleNode("FontColorArgb");
-            if (subNode != null)
-                settings.SsaStyle.FontColorArgb = Convert.ToInt32(subNode.InnerText);
+            settings.SubtitleSettings = new Nikse.SubtitleEdit.Logic.SubtitleSettings();
+            node = doc.DocumentElement.SelectSingleNode("SubtitleSettings");
+            if (node != null)
+            {
+                subNode = node.SelectSingleNode("SsaFontName");
+                if (subNode != null)
+                    settings.SubtitleSettings.SsaFontName = subNode.InnerText;
+                subNode = node.SelectSingleNode("SsaFontSize");
+                if (subNode != null)
+                    settings.SubtitleSettings.SsaFontSize = Convert.ToDouble(subNode.InnerText);
+                subNode = node.SelectSingleNode("SsaFontColorArgb");
+                if (subNode != null)
+                    settings.SubtitleSettings.SsaFontColorArgb = Convert.ToInt32(subNode.InnerText);
+                subNode = node.SelectSingleNode("DCinemaFontFile");
+                if (subNode != null)
+                    settings.SubtitleSettings.DCinemaFontFile = subNode.InnerText;
+                subNode = node.SelectSingleNode("DCinemaFontSize");
+                if (subNode != null)
+                    settings.SubtitleSettings.DCinemaFontSize = Convert.ToInt32(subNode.InnerText);
+                subNode = node.SelectSingleNode("DCinemaVPosition");
+                if (subNode != null)
+                    settings.SubtitleSettings.DCinemaVPosition = Convert.ToInt32(subNode.InnerText);
+            }
 
             settings.Proxy = new Nikse.SubtitleEdit.Logic.ProxySettings();
             node = doc.DocumentElement.SelectSingleNode("Proxy");
@@ -1411,10 +1429,13 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("GoogleApiKey", settings.Tools.GoogleApiKey);
             textWriter.WriteEndElement();
 
-            textWriter.WriteStartElement("SsaStyle", "");
-            textWriter.WriteElementString("FontName", settings.SsaStyle.FontName);
-            textWriter.WriteElementString("FontSize", settings.SsaStyle.FontSize.ToString());
-            textWriter.WriteElementString("FontColorArgb", settings.SsaStyle.FontColorArgb.ToString());
+            textWriter.WriteStartElement("SubtitleSettings", "");
+            textWriter.WriteElementString("SsaFontName", settings.SubtitleSettings.SsaFontName);
+            textWriter.WriteElementString("SsaFontSize", settings.SubtitleSettings.SsaFontSize.ToString());
+            textWriter.WriteElementString("SsaFontColorArgb", settings.SubtitleSettings.SsaFontColorArgb.ToString());
+            textWriter.WriteElementString("DCinemaFontFile", settings.SubtitleSettings.DCinemaFontFile);
+            textWriter.WriteElementString("DCinemaFontSize", settings.SubtitleSettings.DCinemaFontSize.ToString());
+            textWriter.WriteElementString("DCinemaVPosition", settings.SubtitleSettings.DCinemaVPosition.ToString());
             textWriter.WriteEndElement();
 
             textWriter.WriteStartElement("Proxy", "");

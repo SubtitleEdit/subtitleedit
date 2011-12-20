@@ -61,7 +61,7 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
             const string paragraphWriteFormat = "Dialogue: 0,{0},{1},{3},NTP,0000,0000,0000,,{2}";
 
             var sb = new StringBuilder();
-            System.Drawing.Color fontColor = System.Drawing.Color.FromArgb(Configuration.Settings.SsaStyle.FontColorArgb);
+            System.Drawing.Color fontColor = System.Drawing.Color.FromArgb(Configuration.Settings.SubtitleSettings.SsaFontColorArgb);
             bool isValidAssHeader =!string.IsNullOrEmpty(subtitle.Header) && subtitle.Header.Contains("[V4+ Styles]");
             List<string> styles = new List<string>();
             if (isValidAssHeader)
@@ -74,8 +74,8 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
             {
                 sb.AppendLine(string.Format(header,
                                             title,
-                                            Configuration.Settings.SsaStyle.FontName,
-                                            (int)Configuration.Settings.SsaStyle.FontSize,
+                                            Configuration.Settings.SubtitleSettings.SsaFontName,
+                                            (int)Configuration.Settings.SubtitleSettings.SsaFontSize,
                                             System.Drawing.ColorTranslator.ToWin32(fontColor)));
             }
             foreach (Paragraph p in subtitle.Paragraphs)

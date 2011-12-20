@@ -122,11 +122,11 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxNamesEtcOnline.Checked = wordListSettings.UseOnlineNamesEtc;
             textBoxNamesEtcOnline.Text = wordListSettings.NamesEtcUrl;
 
-            SsaStyleSettings ssa = Configuration.Settings.SsaStyle;
-            _ssaFontName = ssa.FontName;
-            _ssaFontSize = ssa.FontSize;
-            _ssaFontColor = ssa.FontColorArgb;
-            fontDialogSSAStyle.Font = new System.Drawing.Font(ssa.FontName, (float)ssa.FontSize);
+            SubtitleSettings ssa = Configuration.Settings.SubtitleSettings;
+            _ssaFontName = ssa.SsaFontName;
+            _ssaFontSize = ssa.SsaFontSize;
+            _ssaFontColor = ssa.SsaFontColorArgb;
+            fontDialogSSAStyle.Font = new System.Drawing.Font(ssa.SsaFontName, (float)ssa.SsaFontSize);
             fontDialogSSAStyle.Color = System.Drawing.Color.FromArgb(_ssaFontColor);
             UpdateSsaExample();
 
@@ -797,10 +797,10 @@ namespace Nikse.SubtitleEdit.Forms
                     Configuration.Settings.WordLists.LastLanguage = ci.CultureInfo.Name;
             }
 
-            SsaStyleSettings ssa = Configuration.Settings.SsaStyle;
-            ssa.FontName = _ssaFontName;
-            ssa.FontSize = _ssaFontSize;
-            ssa.FontColorArgb = _ssaFontColor;
+            SubtitleSettings ssa = Configuration.Settings.SubtitleSettings;
+            ssa.SsaFontName = _ssaFontName;
+            ssa.SsaFontSize = _ssaFontSize;
+            ssa.SsaFontColorArgb = _ssaFontColor;
 
             ProxySettings proxy = Configuration.Settings.Proxy;
             proxy.ProxyAddress = textBoxProxyAddress.Text ;

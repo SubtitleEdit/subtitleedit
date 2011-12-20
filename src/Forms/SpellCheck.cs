@@ -369,8 +369,8 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (richTextBoxParagraph.SelectedText.Trim().Length > 0)
             {
-                string word = richTextBoxParagraph.SelectedText.Trim();
-                Utilities.AddWordToLocalNamesEtcList(word, LanguageString);
+                ChangeWord = richTextBoxParagraph.SelectedText.Trim();
+                DoAction(SpellCheckAction.AddToNamesEtc);
             }
         }
 

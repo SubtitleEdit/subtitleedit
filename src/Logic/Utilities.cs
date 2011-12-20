@@ -1489,6 +1489,8 @@ namespace Nikse.SubtitleEdit.Logic
                 {
                     if (s.StartsWith(word + " ") || s.EndsWith(" " + word) || s.Contains(" " + word + " "))
                         return true;
+                    if (word == s)
+                        return true;
                 }
             }
             return false;

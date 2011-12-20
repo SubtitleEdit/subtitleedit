@@ -95,10 +95,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                                     "    <SubtitleID>4EB245B8-4D3A-4158-9516-95DD20E8322E</SubtitleID>" + Environment.NewLine +
                                     "    <MovieTitle></MovieTitle>" + Environment.NewLine +
                                     "    <ReelNumber>1</ReelNumber>" + Environment.NewLine +
-                                    "    <IssueDate>" + date + "</IssueDate>" + Environment.NewLine +
+//                                    "    <IssueDate>" + date + "</IssueDate>" + Environment.NewLine +
                                     "    <Language>" + languageEnglishName + "</Language>" + Environment.NewLine +
                                     "    <LoadFont URI=\"Arial.ttf\" Id=\"Font1\"/>" + Environment.NewLine +
-                                    "    <Font Color=\"FFFFFFFF\" Effect=\"outline\" EffectColor=\"FF000000\" Italic=\"no\" Underlined=\"no\" Script=\"normal\" Size=\"42\">" + Environment.NewLine +
+                                    "    <Font Color=\"FFFFFFFF\" Effect=\"shadow\" EffectColor=\"FF000000\" Italic=\"no\" Underlined=\"no\" Script=\"normal\" Size=\"42\">" + Environment.NewLine +
                                     "    </Font>" + Environment.NewLine +
                                     "</DCSubtitle>";
 
