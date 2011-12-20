@@ -670,7 +670,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             if (timeCode.Hours == 7 && timeCode.Minutes == 35)
                 highPart = "065535";
 
-            byte frames = (byte)(timeCode.Milliseconds / (1000.0 / Configuration.Settings.General.CurrentFrameRate));
+            byte frames = (byte)MillisecondsToFrames(timeCode.Milliseconds);
             string lowPart = string.Format("{0:00}", timeCode.Seconds) + string.Format("{0:00}", frames);
 
             int high = int.Parse(highPart);

@@ -139,8 +139,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         private string EncodeTimeCode(TimeCode time)
         {
-            int frames = (int)(time.Milliseconds / (1000.0 / Configuration.Settings.General.CurrentFrameRate))+1;
-            return string.Format("{0:00}:{1:00}:{2:00}:{3:00}", time.Hours, time.Minutes, time.Seconds, frames);
+            return string.Format("{0:00}:{1:00}:{2:00}:{3:00}", time.Hours, time.Minutes, time.Seconds, MillisecondsToFrames(time.Milliseconds));
         }
 
         private TimeCode DecodeTimeCode(string[] parts)

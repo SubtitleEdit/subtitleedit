@@ -5,7 +5,7 @@ using System.Text.RegularExpressions;
 
 namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
-    class Scenarist : SubtitleFormat
+    class AdobeEncoreLineTabs : SubtitleFormat
     {
         public override string Extension
         {
@@ -14,7 +14,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public override string Name
         {
-            get { return "Scenarist"; }
+            get { return "Adobe Encore (line/tabs)"; }
         }
 
         public override bool HasLineNumber
@@ -31,7 +31,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         {
             var subtitle = new Subtitle();
 
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             foreach (string line in lines)
                 sb.AppendLine(line);
 
@@ -45,9 +45,13 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             int index = 0;
             foreach (Paragraph p in subtitle.Paragraphs)
             {
-                //0003  00:00:28:16 00:00:31:04 Jeg vil lære jer   frygten for HERREN."  (newline is \t)
-                sb.AppendLine(string.Format("{0:0000}\t{1}\t{2}\t{3}", index + 1, EncodeTimeCode(p.StartTime), EncodeTimeCode(p.EndTime), Utilities.RemoveHtmlTags(p.Text).Replace(Environment.NewLine, "\t")));
                 index++;
+                //0002       00:01:48:22       00:01:52:17       - I need those samples, fast!//- Yes, professor.
+                string text = p.Text;
+                text = text.Replace("<i>", "@Italic@");
+                text = text.Replace("</i>", "@Italic@");
+                text = text.Replace(Environment.NewLine, "//");
+                sb.AppendLine(string.Format("{0:0000}\t{1}\t{2}\t{3}", index, EncodeTimeCode(p.StartTime), EncodeTimeCode(p.EndTime), Utilities.RemoveHtmlTags(text)));
             }
             return sb.ToString();
         }
@@ -60,28 +64,45 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
-            //00:03:15:22 00:03:23:10 This is line one.
-            //This is line two.
+            //0002       00:01:48:22       00:01:52:17       - I need those samples, fast!//- Yes, professor.
             Paragraph p = null;
             subtitle.Paragraphs.Clear();
             var regexTimeCodes = new Regex(@"^\d\d\d\d\t\d\d:\d\d:\d\d:\d\d\t\d\d:\d\d:\d\d:\d\d\t", RegexOptions.Compiled);
             foreach (string line in lines)
             {
-                if (regexTimeCodes.IsMatch(line))
+                string s = line.Replace("       ", "\t");
+                if (regexTimeCodes.IsMatch(s))
                 {
-                    string temp = line.Substring(0, regexTimeCodes.Match(line).Length);
-                    string start = temp.Substring(5, 11);
-                    string end = temp.Substring(12+5, 11);
-
-                    string[] startParts = start.Split(":".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-                    string[] endParts = end.Split(":".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-                    if (startParts.Length == 4 && endParts.Length == 4)
+                    var temp = s.Split('\t');
+                    if (temp.Length > 1)
                     {
-                        string text = line.Remove(0, regexTimeCodes.Match(line).Length - 1).Trim();
-                        if (!text.Contains(Environment.NewLine))
-                            text = text.Replace("\t", Environment.NewLine);
-                        p = new Paragraph(DecodeTimeCode(startParts), DecodeTimeCode(endParts), text);
-                        subtitle.Paragraphs.Add(p);
+                        string start = temp[1];
+                        string end = temp[2];
+
+                        string[] startParts = start.Split(":".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                        string[] endParts = end.Split(":".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                        if (startParts.Length == 4 && endParts.Length == 4)
+                        {
+                            string text = s.Remove(0, regexTimeCodes.Match(s).Length - 1).Trim();
+                            if (!text.Contains(Environment.NewLine))
+                                text = text.Replace("//", Environment.NewLine);
+                            if (text.Contains("@Italic@"))
+                            {
+                                bool italicOn = false;
+                                while (text.Contains("@Italic@"))
+                                {
+                                    int index = text.IndexOf("@Italic@");
+                                    string italicTag = "<i>";
+                                    if (italicOn)
+                                        italicTag = "</i>";
+                                    text = text.Remove(index, "@Italic@".Length).Insert(index, italicTag); 
+                                    italicOn = !italicOn;
+                                }
+                                text = Utilities.FixInvalidItalicTags(text);
+                            }
+                            p = new Paragraph(DecodeTimeCode(startParts), DecodeTimeCode(endParts), text);
+                            subtitle.Paragraphs.Add(p);
+                        }
                     }
                 }
                 else if (line.Trim().Length == 0)
@@ -93,6 +114,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     _errorCount++;
                 }
             }
+
             subtitle.Renumber(1);
         }
 

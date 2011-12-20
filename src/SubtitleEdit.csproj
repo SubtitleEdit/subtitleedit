@@ -576,6 +576,7 @@
     <Compile Include="Logic\Spellcheck\WindowsHunspell.cs" />
     <Compile Include="Logic\StripableText.cs" />
     <Compile Include="Logic\SubtitleFormats\AdobeEncore.cs" />
+    <Compile Include="Logic\SubtitleFormats\AdobeEncoreLineTabs.cs" />
     <Compile Include="Logic\SubtitleFormats\AdobeEncoreTabs.cs" />
     <Compile Include="Logic\SubtitleFormats\AdobeEncoreWithLineNumbers.cs" />
     <Compile Include="Logic\SubtitleFormats\AdvancedSubStationAlpha.cs" />
@@ -605,6 +606,7 @@
     <Compile Include="Logic\SubtitleFormats\ScenaristClosedCaptions.cs" />
     <Compile Include="Logic\SubtitleFormats\Son.cs" />
     <Compile Include="Logic\SubtitleFormats\SonyDVDArchitectExplicitDuration.cs" />
+    <Compile Include="Logic\SubtitleFormats\SonyDVDArchitectLineAndDuration.cs" />
     <Compile Include="Logic\SubtitleFormats\SonyDVDArchitectTabs.cs" />
     <Compile Include="Logic\SubtitleFormats\SonyDVDArchitectWithLineNumbers.cs" />
     <Compile Include="Logic\SubtitleFormats\Ebu.cs" />
