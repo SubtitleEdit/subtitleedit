@@ -47,6 +47,15 @@ namespace Nikse.SubtitleEdit.Forms
                 if (textBoxAddName.Text.Length > 1)
                     textBoxAddName.Text = textBoxAddName.Text.Substring(0, 1).ToUpper() + textBoxAddName.Text.Substring(1);
             }
+
+            comboBoxDictionaries.Items.Clear();
+            string languageName = Utilities.AutoDetectLanguageName(Configuration.Settings.General.SpellCheckLanguage, _subtitle);
+            foreach (string name in Utilities.GetDictionaryLanguages())
+            {
+                comboBoxDictionaries.Items.Add(name);
+                if (name.Contains("[" + languageName + "]"))
+                    comboBoxDictionaries.SelectedIndex = comboBoxDictionaries.Items.Count - 1;
+            }
         }
 
         private void ButtonOkClick(object sender, EventArgs e)
@@ -82,7 +91,21 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                     }
                 }
+
                 languageName = Utilities.AutoDetectLanguageName(languageName, _subtitle);
+                if (comboBoxDictionaries.Items.Count > 0)
+                {
+                    string name = comboBoxDictionaries.SelectedItem.ToString();
+                    int start = name.LastIndexOf("[");
+                    int end = name.LastIndexOf("]");
+                    if (start >= 0 && end > start)
+                    {
+                        start++;
+                        name = name.Substring(start, end - start);
+                        languageName = name;
+                    }
+                }
+                
                 if (string.IsNullOrEmpty(languageName))
                     languageName = "en_US";
                 if (Utilities.AddWordToLocalNamesEtcList(textBoxAddName.Text, languageName))
