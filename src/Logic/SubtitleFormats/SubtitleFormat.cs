@@ -17,6 +17,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     new SubRip(),
                     new AbcIViewer(),
                     new AdobeEncore(),
+                    new AdobeEncoreLineTabs(),
                     new AdobeEncoreTabs(),
                     new AdobeEncoreWithLineNumbers(),
                     new AdvancedSubStationAlpha(),
@@ -50,6 +51,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     new ScenaristClosedCaptions(),
                     new SonyDVDArchitect(),
                     new SonyDVDArchitectExplicitDuration(),
+                    new SonyDVDArchitectLineAndDuration(),
                     new SonyDVDArchitectTabs(),
                     new SonyDVDArchitectWithLineNumbers(),
                     new SubStationAlpha(),
@@ -155,6 +157,11 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             {
                 return new List<string>();
             }
+        }
+
+        public static int MillisecondsToFrames(double milliseconds)
+        {
+            return (int)(milliseconds / (1000.0 / Configuration.Settings.General.CurrentFrameRate));
         }
 
     }
