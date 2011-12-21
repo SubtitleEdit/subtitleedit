@@ -22,7 +22,7 @@
 
 
 ; preprocessor checks
-#if VER < 0x05040200
+#if VER < 0x05040300
   #error Update your Inno Setup version
 #endif
 
@@ -42,11 +42,11 @@
 #define VerBuild
 #define VerRevision
 
-#define bindir "..\src\Bin\Release"
-
-#ifnexist SourcePath + "..\src\bin\Release\SubtitleEdit.exe"
+#ifnexist "..\src\bin\Release\SubtitleEdit.exe"
   #error Compile Subtitle Edit first
 #endif
+
+#define bindir "..\src\Bin\Release"
 
 #expr ParseVersion(bindir + "\SubtitleEdit.exe", VerMajor, VerMinor, VerBuild, VerRevision)
 
@@ -118,8 +118,8 @@ Name: nl;  MessagesFile: compiler:Languages\Dutch.isl
 Name: pl;  MessagesFile: compiler:Languages\Polish.isl
 Name: ro;  MessagesFile: Languages\Romanian.isl
 Name: ru;  MessagesFile: compiler:Languages\Russian.isl
-Name: srC; MessagesFile: Languages\SerbianCyrillic.isl
-Name: srL; MessagesFile: Languages\SerbianLatin.isl
+Name: srC; MessagesFile: compiler:Languages\SerbianCyrillic.isl
+Name: srL; MessagesFile: compiler:Languages\SerbianLatin.isl
 Name: sv;  MessagesFile: Languages\Swedish.isl
 #endif
 
