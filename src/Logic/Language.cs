@@ -1279,6 +1279,7 @@ can edit in same subtitle file (collaboration)",
                 GoForward100Milliseconds = "100 ms forward",
                 GoBack500Milliseconds = "500 ms back",
                 GoForward500Milliseconds = "500 ms forward",
+                Fullscreen = "Fullscreen",
             };
 
             ShowEarlierLater = new LanguageStructure.ShowEarlierLater

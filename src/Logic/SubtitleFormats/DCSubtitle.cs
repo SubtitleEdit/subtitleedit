@@ -90,25 +90,22 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 languageEnglishName = "English";
             }
 
-            string date = string.Format("{0:0000}:{1:00}:{2:00}T{3:HH:mm:ss}", DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, DateTime.Now); //2011-03-25T14:07:00
             string xmlStructure = "<DCSubtitle Version=\"1.0\">" + Environment.NewLine +
                                     "    <SubtitleID>4EB245B8-4D3A-4158-9516-95DD20E8322E</SubtitleID>" + Environment.NewLine +
                                     "    <MovieTitle></MovieTitle>" + Environment.NewLine +
                                     "    <ReelNumber>1</ReelNumber>" + Environment.NewLine +
-//                                    "    <IssueDate>" + date + "</IssueDate>" + Environment.NewLine +
                                     "    <Language>" + languageEnglishName + "</Language>" + Environment.NewLine +
-                                    "    <LoadFont URI=\"Arial.ttf\" Id=\"Font1\"/>" + Environment.NewLine +
+                                    "    <LoadFont URI=\"" + Configuration.Settings.SubtitleSettings.DCinemaFontFile + "\" Id=\"Font1\"/>" + Environment.NewLine +
                                     "    <Font Color=\"FFFFFFFF\" Effect=\"shadow\" EffectColor=\"FF000000\" Italic=\"no\" Underlined=\"no\" Script=\"normal\" Size=\"42\">" + Environment.NewLine +
                                     "    </Font>" + Environment.NewLine +
                                     "</DCSubtitle>";
 
             string loadedFontId = "Font1";
-            int fontSize = 42;
+            int fontSize = Configuration.Settings.SubtitleSettings.DCinemaFontSize;
 
             XmlDocument xml = new XmlDocument();
             xml.LoadXml(xmlStructure);
             xml.DocumentElement.SelectSingleNode("MovieTitle").InnerText = title;
-
 
             // use settings from exsiting header if available
             XmlDocument xmlHeader = null;
@@ -186,11 +183,11 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     subNode.Attributes.Append(id);
 
                     XmlAttribute fadeUpTime = xml.CreateAttribute("FadeUpTime");
-                    fadeUpTime.InnerText = "20";
+                    fadeUpTime.InnerText = Configuration.Settings.SubtitleSettings.DCinemaFadeUpDownTime.ToString();
                     subNode.Attributes.Append(fadeUpTime);
 
                     XmlAttribute fadeDownTime = xml.CreateAttribute("FadeDownTime");
-                    fadeDownTime.InnerText = "20";
+                    fadeDownTime.InnerText = Configuration.Settings.SubtitleSettings.DCinemaFadeUpDownTime.ToString();
                     subNode.Attributes.Append(fadeDownTime);
 
                     XmlAttribute start = xml.CreateAttribute("TimeIn");
@@ -204,7 +201,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     string[] lines = p.Text.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
                     int vPos = 1 + lines.Length * 7;
                     int vPosFactor = (int)Math.Round(fontSize / 7.4);
-                    vPos = (lines.Length * vPosFactor) - vPosFactor + 8; // always bottom margin 8
+                    vPos = (lines.Length * vPosFactor) - vPosFactor + Configuration.Settings.SubtitleSettings.DCinemaBottomMargin; // Bottom margin is normally 8
 
                     bool isItalic = false;
                     foreach (string line in lines)
@@ -300,8 +297,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 }
             }
 
-            MemoryStream ms = new MemoryStream();
-            XmlTextWriter writer = new XmlTextWriter(ms, Encoding.UTF8);
+            var ms = new MemoryStream();
+            var writer = new XmlTextWriter(ms, Encoding.UTF8);
             writer.Formatting = Formatting.Indented;
             xml.Save(writer);
             return Encoding.UTF8.GetString(ms.ToArray()).Trim().Replace("encoding=\"utf-8\"", "encoding=\"UTF-8\"");
@@ -311,9 +308,9 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         {
             _errorCount = 0;
 
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             lines.ForEach(line => sb.AppendLine(line));
-            XmlDocument xml = new XmlDocument();
+            var xml = new XmlDocument();
             xml.LoadXml(sb.ToString());
 
             foreach (XmlNode node in xml.DocumentElement.SelectNodes("//Subtitle"))
@@ -388,7 +385,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             if (milliseconds > 999)
                 milliseconds = 999;
 
-            TimeSpan ts = new TimeSpan(0, int.Parse(parts[0]), int.Parse(parts[1]), int.Parse(parts[2]), milliseconds);
+            var ts = new TimeSpan(0, int.Parse(parts[0]), int.Parse(parts[1]), int.Parse(parts[2]), milliseconds);
             return new TimeCode(ts);
         }
 

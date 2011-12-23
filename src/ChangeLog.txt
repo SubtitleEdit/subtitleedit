@@ -1,7 +1,8 @@
 Subtitle Edit Changelog
 
-3.2.3 (xth November 2011)
+3.2.3 (xth December 2011)
  * NEW:
+   * Added Brazilian Portuguese - thx XXXXXXXXXX 
    * Added Italian language file - thx Maff
    * Added Japanese language file - thx Nardog
    * Added Spanish language file - thx m2s
@@ -10,11 +11,16 @@ Subtitle Edit Changelog
    * Export to Blu-ray sup format
  * IMPROVED:
    * Updated Tesseract to 3.01 
-     Now includes italic + adds support for Arabic, Hebrew, Hindi, and Thai
+     Now includes (some) italic detection + adds support for 
+	 Arabic, Hebrew, Hindi, and Thai
+   * Undo improved so it also works for textbox + redo (Ctrl+Y)
    * OCR tweaked a bit + BluRay sup files are processed faster
+   * TextBox with current subtitle now shows cursor position - thx Leszek
    * Subtitle format PAC much improved
    * Subtitle format FCP Xml improved - thx Ulrik
+   * Subtitle format D-Cinema improved - thx Karam
    * Splitting of lines - Thx Trottel
+   * More configurable shortcuts
  * FIXED:
    * Fixed crash when setting Options - thx karmazyn
    * Fixed crash in set color (or set font) - thx LEO33
@@ -25,6 +31,8 @@ Subtitle Edit Changelog
    * Fixed missing save/load of a fix common errors setting - thx menes
    * Removed Microsoft translate as it's useless with new quotas
    * Fixed milliseconds in timed text - thx Calle
+   * Names with spaces now works in spell check - thx Dr. jackson
+   * Do not use frame rate if it's zero (audio files) - thx dixie.fever
 
 
 3.2.2 (19th October 2011)

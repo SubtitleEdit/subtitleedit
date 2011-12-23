@@ -455,6 +455,8 @@ namespace Nikse.SubtitleEdit.Forms
                 videoNode.Nodes.Add(Configuration.Settings.Language.Settings.GoBack500Milliseconds + GetShortcutText(Configuration.Settings.Shortcuts.MainVideo500MsLeft));
             if (!string.IsNullOrEmpty(Configuration.Settings.Language.Settings.GoForward500Milliseconds))
                 videoNode.Nodes.Add(Configuration.Settings.Language.Settings.GoForward500Milliseconds + GetShortcutText(Configuration.Settings.Shortcuts.MainVideo500MsRight));
+            if (!string.IsNullOrEmpty(Configuration.Settings.Language.Settings.Fullscreen))
+                videoNode.Nodes.Add(Configuration.Settings.Language.Settings.Fullscreen + GetShortcutText(Configuration.Settings.Shortcuts.MainVideoFullscreen));
             treeViewShortcuts.Nodes.Add(videoNode);
 
             TreeNode SyncNode = new TreeNode(Configuration.Settings.Language.Main.Menu.Synchronization.Title);
@@ -477,12 +479,21 @@ namespace Nikse.SubtitleEdit.Forms
             TextBoxNode.Nodes.Add(Configuration.Settings.Language.General.Italic + GetShortcutText(Configuration.Settings.Shortcuts.MainTextBoxItalic));
             treeViewShortcuts.Nodes.Add(TextBoxNode);
 
+            TreeNode createNode = new TreeNode(Configuration.Settings.Language.Main.VideoControls.Create);
+            createNode.Nodes.Add(Configuration.Settings.Language.Main.VideoControls.InsertNewSubtitleAtVideoPosition + GetShortcutText(Configuration.Settings.Shortcuts.MainCreateInsertSubAtVideoPos));
+            createNode.Nodes.Add(Configuration.Settings.Language.Main.VideoControls.PlayFromJustBeforeText + GetShortcutText(Configuration.Settings.Shortcuts.MainCreatePlayFromJustBefore));
+            createNode.Nodes.Add(Configuration.Settings.Language.Main.VideoControls.SetStartTime + GetShortcutText(Configuration.Settings.Shortcuts.MainCreateSetStart));
+            createNode.Nodes.Add(Configuration.Settings.Language.Main.VideoControls.SetEndTime + GetShortcutText(Configuration.Settings.Shortcuts.MainCreateSetEnd));
+            treeViewShortcuts.Nodes.Add(createNode);
+
             TreeNode adjustNode = new TreeNode(Configuration.Settings.Language.Main.VideoControls.Adjust);
             adjustNode.Nodes.Add(Configuration.Settings.Language.Main.VideoControls.SetstartTimeAndOffsetOfRest + GetShortcutText(Configuration.Settings.Shortcuts.MainAdjustSetStartAndOffsetTheRest));
             adjustNode.Nodes.Add(Configuration.Settings.Language.Main.VideoControls.SetEndTimeAndGoToNext + GetShortcutText(Configuration.Settings.Shortcuts.MainAdjustSetEndAndGotoNext));
             adjustNode.Nodes.Add(Configuration.Settings.Language.Settings.AdjustViaEndAutoStartAndGoToNext + GetShortcutText(Configuration.Settings.Shortcuts.MainAdjustViaEndAutoStartAndGoToNext));
             if (!string.IsNullOrEmpty(Configuration.Settings.Language.Settings.AdjustSetStartAutoDurationAndGoToNext)) // TODO: Remove in SE 3.3
                 adjustNode.Nodes.Add(Configuration.Settings.Language.Settings.AdjustSetStartAutoDurationAndGoToNext + GetShortcutText(Configuration.Settings.Shortcuts.MainAdjustSetStartAutoDurationAndGoToNext));
+            adjustNode.Nodes.Add(Configuration.Settings.Language.Main.VideoControls.SetStartTime + GetShortcutText(Configuration.Settings.Shortcuts.MainAdjustSetStart));
+            adjustNode.Nodes.Add(Configuration.Settings.Language.Main.VideoControls.SetEndTime + GetShortcutText(Configuration.Settings.Shortcuts.MainAdjustSetEnd));
             treeViewShortcuts.Nodes.Add(adjustNode);
 
             TreeNode audioVisualizerNode = new TreeNode(Configuration.Settings.Language.Settings.WaveformAndSpectrogram);
@@ -889,6 +900,8 @@ namespace Nikse.SubtitleEdit.Forms
                         Configuration.Settings.Shortcuts.MainVideo500MsLeft = GetShortcut(node.Text);
                     else if (text == Configuration.Settings.Language.Settings.GoForward500Milliseconds.Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.MainVideo500MsRight = GetShortcut(node.Text);
+                    else if (text == Configuration.Settings.Language.Settings.Fullscreen.Replace("&", string.Empty))
+                        Configuration.Settings.Shortcuts.MainVideoFullscreen = GetShortcut(node.Text);
                 }
             }
 
@@ -935,8 +948,26 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
 
-            //Adjust
+            //Create
             foreach (TreeNode node in treeViewShortcuts.Nodes[7].Nodes)
+            {
+                if (node.Text.Contains("["))
+                {
+                    string text = node.Text.Substring(0, node.Text.IndexOf("[")).Trim();
+                    if (text == Configuration.Settings.Language.Main.VideoControls.InsertNewSubtitleAtVideoPosition.Replace("&", string.Empty))
+                        Configuration.Settings.Shortcuts.MainCreateInsertSubAtVideoPos = GetShortcut(node.Text);
+                    else if (text == Configuration.Settings.Language.Main.VideoControls.PlayFromJustBeforeText.Replace("&", string.Empty))
+                        Configuration.Settings.Shortcuts.MainCreatePlayFromJustBefore = GetShortcut(node.Text);
+                    else if (text == Configuration.Settings.Language.Main.VideoControls.SetStartTime.Replace("&", string.Empty))
+                        Configuration.Settings.Shortcuts.MainCreateSetStart = GetShortcut(node.Text);
+                    else if (text == Configuration.Settings.Language.Main.VideoControls.SetEndTime.Replace("&", string.Empty))
+                        Configuration.Settings.Shortcuts.MainCreateSetEnd = GetShortcut(node.Text);
+                }
+            }
+
+
+            //Adjust
+            foreach (TreeNode node in treeViewShortcuts.Nodes[8].Nodes)
             {
                 if (node.Text.Contains("["))
                 {
@@ -949,11 +980,15 @@ namespace Nikse.SubtitleEdit.Forms
                         Configuration.Settings.Shortcuts.MainAdjustSetEndAndGotoNext = GetShortcut(node.Text);
                     else if (text == Configuration.Settings.Language.Settings.AdjustSetStartAutoDurationAndGoToNext.Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.MainAdjustSetStartAutoDurationAndGoToNext = GetShortcut(node.Text);
+                    else if (text == Configuration.Settings.Language.Main.VideoControls.SetStartTime.Replace("&", string.Empty))
+                        Configuration.Settings.Shortcuts.MainAdjustSetStart = GetShortcut(node.Text);
+                    else if (text == Configuration.Settings.Language.Main.VideoControls.SetEndTime.Replace("&", string.Empty))
+                        Configuration.Settings.Shortcuts.MainAdjustSetEnd = GetShortcut(node.Text);
                 }
             }
 
             //Audio-visualizer
-            foreach (TreeNode node in treeViewShortcuts.Nodes[8].Nodes)
+            foreach (TreeNode node in treeViewShortcuts.Nodes[9].Nodes)
             {
                 if (node.Text.Contains("["))
                 {
@@ -1215,19 +1250,52 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ButtonRemoveNameEtcClick(object sender, EventArgs e)
         {
+            if (listBoxNamesEtc.SelectedIndices.Count == 0)
+                return;
+
             string language = GetCurrentWordListLanguage();
             int index = listBoxNamesEtc.SelectedIndex;
             string text = listBoxNamesEtc.Items[index].ToString();
+            int itemsToRemoveCount = listBoxNamesEtc.SelectedIndices.Count;
             if (!string.IsNullOrEmpty(language) && index >= 0)
             {
-                if (MessageBox.Show(string.Format(Configuration.Settings.Language.Settings.RemoveX, text), null, MessageBoxButtons.YesNo) == DialogResult.Yes)
+                DialogResult result;
+                if (itemsToRemoveCount == 1)
+                    result = MessageBox.Show(string.Format(Configuration.Settings.Language.Settings.RemoveX, text), "Subtitle Edit", MessageBoxButtons.YesNo);
+                else
+                    result = MessageBox.Show(string.Format(Configuration.Settings.Language.Main.DeleteXLinesPrompt, itemsToRemoveCount), "Subtitle Edit", MessageBoxButtons.YesNo);
+                if (result == DialogResult.Yes)
                 {
-                    // Check local names etc. first
+                    int removeCount = 0;
                     var namesEtc = new List<string>();
+                    var globalNamesEtc = new List<string>();
                     string localNamesEtcFileName = Utilities.LoadLocalNamesEtc(namesEtc, namesEtc, language);
-                    if (namesEtc.Contains(text))
+                    Utilities.LoadGlobalNamesEtc(globalNamesEtc, globalNamesEtc);
+                    for (int idx = listBoxNamesEtc.SelectedIndices.Count - 1; idx >= 0; idx--)
                     {
-                        namesEtc.Remove(text);
+                        index = listBoxNamesEtc.SelectedIndices[idx];
+                        text = listBoxNamesEtc.Items[index].ToString();
+                        if (namesEtc.Contains(text))
+                        {
+                            namesEtc.Remove(text);
+                            removeCount++;
+                        }
+                        if (globalNamesEtc.Contains(text))
+                        {
+                            globalNamesEtc.Remove(text);
+                            removeCount++;
+                        }
+                        listBoxNamesEtc.Items.RemoveAt(index);
+                    }
+
+                    if (removeCount > 0)
+                    {
+                        if (index < listBoxNamesEtc.Items.Count)
+                            listBoxNamesEtc.SelectedIndex = index;
+                        else if (listBoxNamesEtc.Items.Count > 0)
+                            listBoxNamesEtc.SelectedIndex = index - 1;
+                        listBoxNamesEtc.Focus();
+
                         namesEtc.Sort();
                         var doc = new XmlDocument();
                         doc.Load(localNamesEtcFileName);
@@ -1240,34 +1308,12 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                         doc.Save(localNamesEtcFileName);
                         LoadNamesEtc(language, false, false); // reload
-                        buttonRemoveNameEtc.Enabled = false;
 
-                        listBoxNamesEtc.Items.RemoveAt(index);
-                        if (index < listBoxNamesEtc.Items.Count)
-                            listBoxNamesEtc.SelectedIndex = index;
-                        else if (listBoxNamesEtc.Items.Count > 0)
-                            listBoxNamesEtc.SelectedIndex = index - 1;
-                        listBoxNamesEtc.Focus();
-
-                        return;
-                    }
-
-                    if (Configuration.Settings.WordLists.UseOnlineNamesEtc && !string.IsNullOrEmpty(Configuration.Settings.WordLists.NamesEtcUrl))
-                    {
-                        MessageBox.Show(Configuration.Settings.Language.Settings.CannotUpdateNamesEtcOnline);
-                        return;
-                    }
-
-                    namesEtc = new List<string>();
-                    Utilities.LoadGlobalNamesEtc(namesEtc, namesEtc);
-                    if (namesEtc.Contains(text))
-                    {
-                        namesEtc.Remove(text);
-                        namesEtc.Sort();
-                        var doc = new XmlDocument();
+                        globalNamesEtc.Sort();
+                        doc = new XmlDocument();
                         doc.Load(Utilities.DictionaryFolder + "names_etc.xml");
                         doc.DocumentElement.RemoveAll();
-                        foreach (string name in namesEtc)
+                        foreach (string name in globalNamesEtc)
                         {
                             XmlNode node = doc.CreateElement("name");
                             node.InnerText = name;
@@ -1275,9 +1321,19 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                         doc.Save(Utilities.DictionaryFolder + "names_etc.xml");
                         LoadNamesEtc(language, false, true); // reload
+
+                        buttonRemoveNameEtc.Enabled = false;
                         return;
                     }
-                    MessageBox.Show(Configuration.Settings.Language.Settings.WordNotFound);
+
+                    if (removeCount < itemsToRemoveCount && Configuration.Settings.WordLists.UseOnlineNamesEtc && !string.IsNullOrEmpty(Configuration.Settings.WordLists.NamesEtcUrl))
+                    {
+                        MessageBox.Show(Configuration.Settings.Language.Settings.CannotUpdateNamesEtcOnline);
+                        return;
+                    }
+
+                    if (removeCount == 0)
+                        MessageBox.Show(Configuration.Settings.Language.Settings.WordNotFound);
                 }
             }
         }
@@ -1333,18 +1389,41 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ButtonRemoveUserWordClick(object sender, EventArgs e)
         {
+            if (listBoxUserWordLists.SelectedIndices.Count == 0)
+                return;
+
             string language = GetCurrentWordListLanguage();
             int index = listBoxUserWordLists.SelectedIndex;
+            int itemsToRemoveCount = listBoxUserWordLists.SelectedIndices.Count;
             string text = listBoxUserWordLists.Items[index].ToString();
             if (!string.IsNullOrEmpty(language) && index >= 0)
             {
-                if (MessageBox.Show(string.Format(Configuration.Settings.Language.Settings.RemoveX, text), null, MessageBoxButtons.YesNo) == DialogResult.Yes)
+                DialogResult result;
+                if (itemsToRemoveCount == 1)
+                    result = MessageBox.Show(string.Format(Configuration.Settings.Language.Settings.RemoveX, text), "Subtitle Edit", MessageBoxButtons.YesNo);
+                else
+                    result = MessageBox.Show(string.Format(Configuration.Settings.Language.Main.DeleteXLinesPrompt, itemsToRemoveCount), "Subtitle Edit", MessageBoxButtons.YesNo);
+                if (result == DialogResult.Yes)
                 {
+                    int removeCount = 0;
                     var words = new List<string>();
                     string userWordFileName = Utilities.LoadUserWordList(words, language);
-                    if (words.Contains(text))
+
+                    for (int idx = listBoxUserWordLists.SelectedIndices.Count - 1; idx >= 0; idx--)
                     {
-                        words.Remove(text);
+                        index = listBoxUserWordLists.SelectedIndices[idx];
+                        text = listBoxUserWordLists.Items[index].ToString();
+
+                        if (words.Contains(text))
+                        {
+                            words.Remove(text);
+                            removeCount++;
+                        }
+                        listBoxUserWordLists.Items.RemoveAt(index);
+                    }
+
+                    if (removeCount > 0)
+                    {
                         words.Sort();
                         var doc = new XmlDocument();
                         doc.Load(userWordFileName);
@@ -1359,7 +1438,6 @@ namespace Nikse.SubtitleEdit.Forms
                         LoadUserWords(language, false); // reload
                         buttonRemoveUserWord.Enabled = false;
 
-                        listBoxUserWordLists.Items.RemoveAt(index);
                         if (index < listBoxUserWordLists.Items.Count)
                             listBoxUserWordLists.SelectedIndex = index;
                         else if (listBoxUserWordLists.Items.Count > 0)
@@ -1368,7 +1446,8 @@ namespace Nikse.SubtitleEdit.Forms
                         return;
                     }
 
-                    MessageBox.Show(Configuration.Settings.Language.Settings.WordNotFound);
+                    if (removeCount < itemsToRemoveCount)
+                        MessageBox.Show(Configuration.Settings.Language.Settings.WordNotFound);
                 }
             }
         }
@@ -1411,7 +1490,10 @@ namespace Nikse.SubtitleEdit.Forms
             //Sort
             var sortedDictionary = new SortedDictionary<string, string>();
             foreach (var pair in dictionary)
-                sortedDictionary.Add(pair.Key, pair.Value);
+            {
+                if (!sortedDictionary.ContainsKey(pair.Key))
+                    sortedDictionary.Add(pair.Key, pair.Value);
+            }
 
             string replaceListXmlFileName = Utilities.DictionaryFolder + cb.CultureInfo.ThreeLetterISOLanguageName + "_OCRFixReplaceList.xml";
             var doc = new XmlDocument();
@@ -1469,15 +1551,38 @@ namespace Nikse.SubtitleEdit.Forms
             if (cb == null)
                 return;
 
+            if (listBoxOcrFixList.SelectedIndices.Count == 0)
+                return;
+
+            int itemsToRemoveCount = listBoxOcrFixList.SelectedIndices.Count;
+
             int index = listBoxOcrFixList.SelectedIndex;
             string text = listBoxOcrFixList.Items[index].ToString();
             string key = text.Substring(0, text.IndexOf(" --> ")).Trim();
-
             if (_ocrFixWords.ContainsKey(key))
             {
-                if (MessageBox.Show(string.Format(Configuration.Settings.Language.Settings.RemoveX, text), null, MessageBoxButtons.YesNo) == DialogResult.Yes)
+                DialogResult result;
+                if (itemsToRemoveCount == 1)
+                    result = MessageBox.Show(string.Format(Configuration.Settings.Language.Settings.RemoveX, text), "Subtitle Edit", MessageBoxButtons.YesNo);
+                else
+                    result = MessageBox.Show(string.Format(Configuration.Settings.Language.Main.DeleteXLinesPrompt, itemsToRemoveCount), "Subtitle Edit", MessageBoxButtons.YesNo);
+                if (result == DialogResult.Yes)
                 {
-                    _ocrFixWords.Remove(key);
+                    int removeCount = 0;
+
+                    for (int idx = listBoxOcrFixList.SelectedIndices.Count - 1; idx >= 0; idx--)
+                    {
+                        index = listBoxOcrFixList.SelectedIndices[idx];
+                        text = listBoxOcrFixList.Items[index].ToString();
+                        key = text.Substring(0, text.IndexOf(" --> ")).Trim();
+
+                        if (_ocrFixWords.ContainsKey(key))
+                        {
+                            _ocrFixWords.Remove(key);
+                            removeCount++;
+                        }
+                        listBoxOcrFixList.Items.RemoveAt(index);
+                    }
                     string replaceListXmlFileName = Utilities.DictionaryFolder + cb.CultureInfo.ThreeLetterISOLanguageName + "_OCRFixReplaceList.xml";
                     var doc = new XmlDocument();
                     doc.Load(replaceListXmlFileName);
@@ -1503,7 +1608,6 @@ namespace Nikse.SubtitleEdit.Forms
                     LoadOcrFixList(false);
                     buttonRemoveOcrFix.Enabled = false;
 
-                    listBoxOcrFixList.Items.RemoveAt(index);
                     if (index < listBoxOcrFixList.Items.Count)
                         listBoxOcrFixList.SelectedIndex = index;
                     else if (listBoxOcrFixList.Items.Count > 0)

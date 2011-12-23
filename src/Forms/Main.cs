@@ -100,10 +100,17 @@ namespace Nikse.SubtitleEdit.Forms
         Keys _video100MsRight = Keys.None;
         Keys _video500MsLeft = Keys.None;
         Keys _video500MsRight = Keys.None;
+        Keys _mainVideoFullscreen = Keys.None;
+        Keys _mainCreateInsertSubAtVideoPos = Keys.None;
+        Keys _mainCreatePlayFromJustBefore = Keys.None;
+        Keys _mainCreateSetStart = Keys.None;
+        Keys _mainCreateSetEnd = Keys.None;
         Keys _mainAdjustSetStartAndOffsetTheRest = Keys.None;
         Keys _mainAdjustSetEndAndGotoNext = Keys.None;
         Keys _mainAdjustInsertViaEndAutoStartAndGoToNext = Keys.None;
         Keys _mainAdjustSetStartAutoDurationAndGoToNext = Keys.None;
+        Keys _mainAdjustSetStart = Keys.None;
+        Keys _mainAdjustSetEnd = Keys.None;
         Keys _mainInsertAfter = Keys.None;
         Keys _mainInsertBefore = Keys.None;
         Keys _mainGoToNext = Keys.None;
@@ -7263,6 +7270,14 @@ namespace Nikse.SubtitleEdit.Forms
                         mediaPlayer.TextRightToLeft = System.Windows.Forms.RightToLeft.Yes;
                 }
             }
+            else if (e.KeyData == _mainVideoFullscreen) // fullscreen
+            {
+                if (_videoPlayerUnDocked == null || _videoPlayerUnDocked.IsDisposed)
+                    undockVideoControlsToolStripMenuItem_Click(null, null);
+                _videoPlayerUnDocked.Focus();
+                _videoPlayerUnDocked.GoFullscreen();
+                _videoPlayerUnDocked.RedockOnFullscreenEnd = true;
+            }
 
             // TABS - MUST BE LAST
             else if (tabControlButtons.SelectedTab == tabPageAdjust && mediaPlayer.VideoPlayer != null)
@@ -7287,12 +7302,12 @@ namespace Nikse.SubtitleEdit.Forms
                     buttonSetEndAndGoToNext_Click(null, null);
                     e.SuppressKeyPress = true;
                 }
-                else if (e.Modifiers == Keys.None && e.KeyCode == Keys.F11)
+                else if ((e.Modifiers == Keys.None && e.KeyCode == Keys.F11) || _mainAdjustSetStart == e.KeyData)
                 {
                     buttonSetStartTime_Click(null, null);
                     e.SuppressKeyPress = true;
                 }
-                else if (e.Modifiers == Keys.None && e.KeyCode == Keys.F12)
+                else if ((e.Modifiers == Keys.None && e.KeyCode == Keys.F12) || _mainAdjustSetEnd == e.KeyData)
                 {
                     StopAutoDuration();
                     buttonSetEnd_Click(null, null);
@@ -7316,7 +7331,7 @@ namespace Nikse.SubtitleEdit.Forms
                     InsertNewTextAtVideoPosition();
                     e.SuppressKeyPress = true;
                 }
-                else if (e.Modifiers == Keys.Shift && e.KeyCode == Keys.F9)
+                else if ((e.Modifiers == Keys.Shift && e.KeyCode == Keys.F9) || _mainCreateInsertSubAtVideoPos == e.KeyData)
                 {
                     var p = InsertNewTextAtVideoPosition();
                     p.Text = p.StartTime.ToShortString();
@@ -7335,17 +7350,17 @@ namespace Nikse.SubtitleEdit.Forms
                     buttonInsertNewText_Click(null, null);
                     e.SuppressKeyPress = true;
                 }
-                else if (e.Modifiers == Keys.None && e.KeyCode == Keys.F10)
+                else if ((e.Modifiers == Keys.None && e.KeyCode == Keys.F10) || _mainCreatePlayFromJustBefore == e.KeyData)
                 {
                     buttonBeforeText_Click(null, null);
                     e.SuppressKeyPress = true;
                 }
-                else if (e.Modifiers == Keys.None && e.KeyCode == Keys.F11)
+                else if ((e.Modifiers == Keys.None && e.KeyCode == Keys.F11) || _mainCreateSetStart == e.KeyData)
                 {
                     buttonSetStartTime_Click(null, null);
                     e.SuppressKeyPress = true;
                 }
-                else if (e.Modifiers == Keys.None && e.KeyCode == Keys.F12)
+                else if ((e.Modifiers == Keys.None && e.KeyCode == Keys.F12) || _mainCreateSetEnd == e.KeyData)
                 {
                     StopAutoDuration();
                     buttonSetEnd_Click(null, null);
@@ -9543,15 +9558,22 @@ namespace Nikse.SubtitleEdit.Forms
 
             showhideVideoToolStripMenuItem.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainVideoShowHideVideo);
             _toggleVideoDockUndock = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainVideoToggleVideoControls);
+            _mainVideoFullscreen = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainVideoFullscreen);
 
             toolStripMenuItemAdjustAllTimes.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainSynchronizationAdjustTimes);
             italicToolStripMenuItem.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainListViewItalic);
             _mainListViewToggleDashes = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainListViewToggleDashes);
             italicToolStripMenuItem1.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxItalic);
+            _mainCreateInsertSubAtVideoPos = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainCreateInsertSubAtVideoPos);
+            _mainCreatePlayFromJustBefore = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainCreatePlayFromJustBefore);
+            _mainCreateSetStart = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainCreateSetStart);
+            _mainCreateSetEnd = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainCreateSetEnd);
             _mainAdjustSetStartAndOffsetTheRest = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainAdjustSetStartAndOffsetTheRest);
             _mainAdjustSetEndAndGotoNext = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainAdjustSetEndAndGotoNext);
             _mainAdjustInsertViaEndAutoStartAndGoToNext = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainAdjustViaEndAutoStartAndGoToNext);
             _mainAdjustSetStartAutoDurationAndGoToNext = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainAdjustSetStartAutoDurationAndGoToNext);
+            _mainAdjustSetStart = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainAdjustSetStart);
+            _mainAdjustSetEnd = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainAdjustSetEnd);
             _mainInsertAfter = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainInsertAfter);
             _mainInsertBefore = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainInsertBefore);
             _mainGoToNext = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainGoToNext);
@@ -10912,6 +10934,9 @@ namespace Nikse.SubtitleEdit.Forms
         public void ReDockVideoPlayer(Control control)
         {
             groupBoxVideo.Controls.Add(control);
+            mediaPlayer.FontSizeFactor = 1.0F;
+            mediaPlayer.SetSubtitleFont();
+            mediaPlayer.SubtitleText = string.Empty;
         }
 
         private void UnDockWaveForm()
