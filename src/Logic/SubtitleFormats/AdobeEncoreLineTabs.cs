@@ -34,6 +34,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             var sb = new StringBuilder();
             foreach (string line in lines)
                 sb.AppendLine(line);
+            if (sb.ToString().Contains(Environment.NewLine + "SP_NUMBER	START	END	FILE_NAME"))
+                return false; // SON
 
             LoadSubtitle(subtitle, lines, fileName);
             return subtitle.Paragraphs.Count > _errorCount;
@@ -83,31 +85,39 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         string[] endParts = end.Split(":".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
                         if (startParts.Length == 4 && endParts.Length == 4)
                         {
-                            string text = s.Remove(0, regexTimeCodes.Match(s).Length - 1).Trim();
-                            if (!text.Contains(Environment.NewLine))
-                                text = text.Replace("//", Environment.NewLine);
-                            if (text.Contains("@Italic@"))
+                            try
                             {
-                                bool italicOn = false;
-                                while (text.Contains("@Italic@"))
+                                string text = s.Remove(0, regexTimeCodes.Match(s).Length - 1).Trim();
+                                if (!text.Contains(Environment.NewLine))
+                                    text = text.Replace("//", Environment.NewLine);
+                                if (text.Contains("@Italic@"))
                                 {
-                                    int index = text.IndexOf("@Italic@");
-                                    string italicTag = "<i>";
-                                    if (italicOn)
-                                        italicTag = "</i>";
-                                    text = text.Remove(index, "@Italic@".Length).Insert(index, italicTag); 
-                                    italicOn = !italicOn;
+                                    bool italicOn = false;
+                                    while (text.Contains("@Italic@"))
+                                    {
+                                        int index = text.IndexOf("@Italic@");
+                                        string italicTag = "<i>";
+                                        if (italicOn)
+                                            italicTag = "</i>";
+                                        text = text.Remove(index, "@Italic@".Length).Insert(index, italicTag);
+                                        italicOn = !italicOn;
+                                    }
+                                    text = Utilities.FixInvalidItalicTags(text);
                                 }
-                                text = Utilities.FixInvalidItalicTags(text);
+                                p = new Paragraph(DecodeTimeCode(startParts), DecodeTimeCode(endParts), text);
+                                subtitle.Paragraphs.Add(p);
                             }
-                            p = new Paragraph(DecodeTimeCode(startParts), DecodeTimeCode(endParts), text);
-                            subtitle.Paragraphs.Add(p);
+                            catch (Exception exception)
+                            {
+                                _errorCount++;
+                                System.Diagnostics.Debug.WriteLine(exception.Message);
+                            }
                         }
                     }
                 }
                 else if (line.Trim().Length == 0)
                 {
-                    // skip these lines
+                    // skip empty lines
                 }
                 else if (line.Trim().Length > 0 && p != null)
                 {

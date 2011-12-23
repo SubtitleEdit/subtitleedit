@@ -37,6 +37,7 @@ namespace Nikse.SubtitleEdit.Controls
         private RichTextBoxViewOnly _subtitleTextBox;
         private string _subtitleText = string.Empty;
         private VideoPlayer _videoPlayer;
+        public float FontSizeFactor { get; set; }
         public VideoPlayer VideoPlayer
         {
             get { return _videoPlayer; }
@@ -114,6 +115,7 @@ namespace Nikse.SubtitleEdit.Controls
 
         public VideoPlayerContainer()
         {
+            FontSizeFactor = 1.0F;
             BorderStyle = System.Windows.Forms.BorderStyle.None;
             _resources = new System.ComponentModel.ComponentResourceManager(typeof(VideoPlayerContainer));
             BackColor = _backgroundColor;
@@ -189,7 +191,7 @@ namespace Nikse.SubtitleEdit.Controls
             var gs = Nikse.SubtitleEdit.Logic.Configuration.Settings.General;
             if (string.IsNullOrEmpty(gs.SubtitleFontName))
                 gs.SubtitleFontName = "Tahoma";
-            _subtitleTextBox.Font = new Font(gs.SubtitleFontName, gs.VideoPlayerPreviewFontSize, FontStyle.Bold);
+            _subtitleTextBox.Font = new Font(gs.SubtitleFontName, gs.VideoPlayerPreviewFontSize * FontSizeFactor, FontStyle.Bold);
         }
 
         void SubtitleTextBox_MouseClick(object sender, MouseEventArgs e)
@@ -301,6 +303,24 @@ namespace Nikse.SubtitleEdit.Controls
         {
             PanelPlayer = new Panel { BackColor = _backgroundColor, Left = 0, Top = 0 };
             return PanelPlayer;
+        }
+
+        public void HideControls()
+        {
+            if (_panelcontrols.Visible)
+            {
+                _panelSubtitle.Height = _panelSubtitle.Height + ControlsHeight;
+                _panelcontrols.Visible = false;
+            }
+        }
+
+        public void ShowControls()
+        {
+            if (!_panelcontrols.Visible)
+            {
+                _panelcontrols.Visible = true;
+                _panelSubtitle.Height = _panelSubtitle.Height - ControlsHeight;
+            }
         }
 
         private Control MakeControlsPanel()

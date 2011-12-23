@@ -1208,6 +1208,7 @@
             public string GoForward100Milliseconds { get; set; }
             public string GoBack500Milliseconds { get; set; }
             public string GoForward500Milliseconds { get; set; }
+            public string Fullscreen { get; set; }
         }
 
         public class ShowEarlierLater

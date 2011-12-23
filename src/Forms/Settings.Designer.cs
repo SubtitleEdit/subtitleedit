@@ -1770,6 +1770,7 @@
             this.listBoxOcrFixList.FormattingEnabled = true;
             this.listBoxOcrFixList.Location = new System.Drawing.Point(6, 16);
             this.listBoxOcrFixList.Name = "listBoxOcrFixList";
+            this.listBoxOcrFixList.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
             this.listBoxOcrFixList.Size = new System.Drawing.Size(150, 199);
             this.listBoxOcrFixList.TabIndex = 40;
             this.listBoxOcrFixList.SelectedIndexChanged += new System.EventHandler(this.ListBoxOcrFixListSelectedIndexChanged);
@@ -1821,6 +1822,7 @@
             this.listBoxUserWordLists.FormattingEnabled = true;
             this.listBoxUserWordLists.Location = new System.Drawing.Point(3, 16);
             this.listBoxUserWordLists.Name = "listBoxUserWordLists";
+            this.listBoxUserWordLists.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
             this.listBoxUserWordLists.Size = new System.Drawing.Size(150, 199);
             this.listBoxUserWordLists.TabIndex = 30;
             this.listBoxUserWordLists.SelectedIndexChanged += new System.EventHandler(this.ListBoxUserWordListsSelectedIndexChanged);
@@ -1902,6 +1904,7 @@
             this.listBoxNamesEtc.FormattingEnabled = true;
             this.listBoxNamesEtc.Location = new System.Drawing.Point(3, 16);
             this.listBoxNamesEtc.Name = "listBoxNamesEtc";
+            this.listBoxNamesEtc.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
             this.listBoxNamesEtc.Size = new System.Drawing.Size(150, 199);
             this.listBoxNamesEtc.TabIndex = 20;
             this.listBoxNamesEtc.SelectedIndexChanged += new System.EventHandler(this.ListBoxNamesEtcSelectedIndexChanged);
