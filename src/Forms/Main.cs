@@ -141,7 +141,7 @@ namespace Nikse.SubtitleEdit.Forms
                     string[] versionInfo = Utilities.AssemblyVersion.Split('.');
                     _title = String.Format("{0} {1}.{2}", _languageGeneral.Title, versionInfo[0], versionInfo[1]);
                     if (versionInfo.Length >= 3 && versionInfo[2] != "0")
-                        _title += "." + versionInfo[2] + " beta 2";
+                        _title += "." + versionInfo[2] + " beta 3";
                 }
                 return _title;
             }
