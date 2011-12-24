@@ -3682,8 +3682,21 @@ namespace Nikse.SubtitleEdit.Forms
                 UndoToIndex(true);
         }
 
+        /// <summary>
+        /// Undo or Redo
+        /// </summary>
+        /// <param name="undo">True equals undo, false triggers redo</param>
         private void UndoToIndex(bool undo)
         {
+            // Add latest changes if any (also stop changes from being added while redoing/undoing)
+            timerTextUndo.Stop();
+            timerAlternateTextUndo.Stop();
+            _listViewTextTicks = 0;
+            _listViewAlternateTextTicks = 0;
+            timerTextUndo_Tick(null, null);
+            timerAlternateTextUndo_Tick(null, null);
+
+
             int selectedIndex = FirstSelectedIndex;
             string text = string.Empty;
             if (undo)
@@ -3731,9 +3744,6 @@ namespace Nikse.SubtitleEdit.Forms
             _fileName = _subtitle.UndoHistory(_undoIndex, out subtitleFormatFriendlyName, out _fileDateTime, out _subtitleAlternate, out _subtitleAlternateFileName);
             if (!undo)
             {
-                if (_subtitle.HistoryItems[_undoIndex].RedoParagraphs == null) //TODO: why? Fast keypresses?
-                    return;
-
                 _subtitle.Paragraphs.Clear();
                 if (Configuration.Settings.General.AllowEditOfOriginalSubtitle && _subtitleAlternate != null)
                     _subtitleAlternate.Paragraphs.Clear();
@@ -3787,8 +3797,10 @@ namespace Nikse.SubtitleEdit.Forms
                 if (_subtitleAlternate != null && _subtitle.HistoryItems[_undoIndex].RedoLineIndex >= 0 && _subtitle.HistoryItems[_undoIndex].RedoLineIndex == FirstSelectedIndex)
                     textBoxListViewTextAlternate.SelectionStart = _subtitle.HistoryItems[_undoIndex].RedoLinePositionAlternate;
 
-                ShowStatus("Redo performed");  //TODO:WORKING ON UNDO
+                ShowStatus("Redo performed");  //TODO: do not hardcode text... SE 3.3
             }
+            timerTextUndo.Start();
+            timerAlternateTextUndo.Start();
         }
 
         private void RedoLastAction()

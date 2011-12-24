@@ -14,13 +14,13 @@ Subtitle Edit Changelog
      Now includes (some) italic detection + adds support for 
 	 Arabic, Hebrew, Hindi, and Thai
    * Undo improved so it also works for textbox + redo (Ctrl+Y)
+   * Many new configurable shortcuts
    * OCR tweaked a bit + BluRay sup files are processed faster
    * TextBox with current subtitle now shows cursor position - thx Leszek
    * Subtitle format PAC much improved
    * Subtitle format FCP Xml improved - thx Ulrik
    * Subtitle format D-Cinema improved - thx Karam
    * Splitting of lines - Thx Trottel
-   * More configurable shortcuts
  * FIXED:
    * Fixed crash when setting Options - thx karmazyn
    * Fixed crash in set color (or set font) - thx LEO33
