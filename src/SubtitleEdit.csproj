@@ -1020,6 +1020,10 @@
     <Content Include="Languages\ja-JP.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Languages\nl-NL.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Languages\pl-PL.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
