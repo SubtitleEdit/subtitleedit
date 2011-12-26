@@ -137,6 +137,7 @@ namespace Nikse.SubtitleEdit.Forms
             _videoPlayerContainer.FontSizeFactor = 1.5F;
             _videoPlayerContainer.SetSubtitleFont();
             _videoPlayerContainer.SubtitleText = string.Empty;
+            timer1.Start();
         }
     }
 }
