@@ -68,7 +68,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 "    <name>Text</name>" + Environment.NewLine +
                 "    <rate>" + Environment.NewLine +
                 "        <ntsc>" + IsNtsc() + "</ntsc>" + Environment.NewLine +
-                "        <timebase>" + (int)Math.Round(FrameRate) + "</timebase>" + Environment.NewLine +
+                "        <timebase>" + string.Format("{0:0.##}", FrameRate) + "</timebase>" + Environment.NewLine +
                 "    </rate>" + Environment.NewLine +
                 "    <start></start>" + Environment.NewLine + // start frame?
                 "    <end></end>" + Environment.NewLine + // end frame?
@@ -336,7 +336,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
     <duration>3600</duration>
     <rate>
         <ntsc>TRUE</ntsc>
-        <timebase>30</timebase>
+        <timebase>" + string.Format("{0:0.##}", FrameRate) + @"</timebase>
     </rate>
     <in>1650</in>
     <out>1784</out>
