@@ -12,7 +12,7 @@ Subtitle Edit Changelog
  * IMPROVED:
    * Updated Tesseract to 3.01 
      Now includes (some) italic detection + adds support for 
-	 Arabic, Hebrew, Hindi, and Thai
+     Arabic, Hebrew, Hindi and Thai
    * Undo improved so it also works for textbox + redo (Ctrl+Y)
    * Many new configurable shortcuts
    * OCR tweaked a bit + BluRay sup files are processed faster
