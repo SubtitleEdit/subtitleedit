@@ -22,8 +22,8 @@
 
 
 ; preprocessor checks
-#if VER < 0x05040300
-  #error Update your Inno Setup version
+#if VER < EncodeVer(5,4,3)
+  #error Update your Inno Setup version (5.4.3 or newer)
 #endif
 
 #ifndef UNICODE
@@ -141,7 +141,7 @@ Name: custom;             Description: {cm:types_custom}; Flags: iscustom
 [Components]
 Name: main;               Description: Subtitle Edit {#app_version}; Types: default custom; Flags: fixed
 #ifdef localize
-Name: translations;       Description: {cm:comp_translations};              Types: default custom; Flags: disablenouninstallwarning
+Name: translations;       Description: {cm:comp_translations};       Types: default custom; Flags: disablenouninstallwarning
 #endif
 
 [Tasks]
@@ -180,7 +180,6 @@ Source: ..\Tesseract\msvcp90.dll;                  DestDir: {app}\Tesseract;    
 Source: ..\Tesseract\msvcr90.dll;                  DestDir: {app}\Tesseract;                          Flags: ignoreversion; Components: main
 Source: ..\Tesseract\tesseract.exe;                DestDir: {app}\Tesseract;                          Flags: ignoreversion; Components: main
 
-; Uncomment the language files when they are ready to be distributed again
 #ifdef localize
 Source: {#bindir}\Languages\bg-BG.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
 Source: {#bindir}\Languages\cs-CZ.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
@@ -193,6 +192,7 @@ Source: {#bindir}\Languages\fr-FR.xml;             DestDir: {app}\Languages;    
 Source: {#bindir}\Languages\hu-HU.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
 Source: {#bindir}\Languages\it-IT.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
 Source: {#bindir}\Languages\ja-JP.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
+Source: {#bindir}\Languages\nl-NL.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
 Source: {#bindir}\Languages\pl-PL.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
 Source: {#bindir}\Languages\pt-BR.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
 Source: {#bindir}\Languages\ro-RO.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
@@ -283,6 +283,7 @@ Type: files;      Name: {app}\Languages\fr-FR.xml;      Check: not IsComponentSe
 Type: files;      Name: {app}\Languages\hu-HU.xml;      Check: not IsComponentSelected('translations') and IsUpgrade()
 Type: files;      Name: {app}\Languages\it-IT.xml;      Check: not IsComponentSelected('translations') and IsUpgrade()
 Type: files;      Name: {app}\Languages\ja-JP.xml;      Check: not IsComponentSelected('translations') and IsUpgrade()
+Type: files;      Name: {app}\Languages\nl-NL.xml;      Check: not IsComponentSelected('translations') and IsUpgrade()
 Type: files;      Name: {app}\Languages\pl-PL.xml;      Check: not IsComponentSelected('translations') and IsUpgrade()
 Type: files;      Name: {app}\Languages\pt-BR.xml;      Check: not IsComponentSelected('translations') and IsUpgrade()
 Type: files;      Name: {app}\Languages\ro-RO.xml;      Check: not IsComponentSelected('translations') and IsUpgrade()
