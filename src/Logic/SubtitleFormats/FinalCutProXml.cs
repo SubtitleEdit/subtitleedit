@@ -9,8 +9,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
     class FinalCutProXml : SubtitleFormat
     {
-        public double FrameRate { get; set; }
-
         public override string Extension
         {
             get { return ".xml"; }
@@ -38,19 +36,50 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             return subtitle.Paragraphs.Count > 0;
         }
 
-        private string IsNtsc()
+        public string GetFrameRateAsString()
         {
-            if (FrameRate >= 29.976 && FrameRate <= 30.0)
-                return "TRUE";
+            if (Configuration.Settings.General.CurrentFrameRate < 24)
+                return "24"; // ntsc 23.976
+            else if (Configuration.Settings.General.CurrentFrameRate < 25)
+                return "24";
+            else if (Configuration.Settings.General.CurrentFrameRate < 29)
+                return "25";
+            else if (Configuration.Settings.General.CurrentFrameRate < 29)
+                return "25";
+            else if (Configuration.Settings.General.CurrentFrameRate < 30)
+                return "30"; // ntsc 29.97 
+            else if (Configuration.Settings.General.CurrentFrameRate < 40)
+                return "30";
+            else if (Configuration.Settings.General.CurrentFrameRate < 40)
+                return "30";
+            else if (Configuration.Settings.General.CurrentFrameRate < 60)
+                return "60"; // ntsc 59.94
+            return "60";
+        }
+
+        public string GetNtsc()
+        {
+            if (Configuration.Settings.General.CurrentFrameRate < 24)
+                return "TRUE"; // ntsc 23.976
+            else if (Configuration.Settings.General.CurrentFrameRate < 25)
+                return "FALSE";
+            else if (Configuration.Settings.General.CurrentFrameRate < 29)
+                return "FALSE";
+            else if (Configuration.Settings.General.CurrentFrameRate < 29)
+                return "FALSE";
+            else if (Configuration.Settings.General.CurrentFrameRate < 30)
+                return "TRUE"; // ntsc 29.97 
+            else if (Configuration.Settings.General.CurrentFrameRate < 40)
+                return "FALSE";
+            else if (Configuration.Settings.General.CurrentFrameRate < 40)
+                return "FALSE";
+            else if (Configuration.Settings.General.CurrentFrameRate < 60)
+                return "TRUE"; // ntsc 59.94
             return "FALSE";
         }
 
         public override string ToText(Subtitle subtitle, string title)
         {
-            if (Configuration.Settings.General.CurrentFrameRate > 26)
-                FrameRate = 30;
-            else
-                FrameRate = 25;
 
             string xmlStructure =
                 "<?xml version=\"1.0\" encoding=\"utf-8\" ?>" + Environment.NewLine +
@@ -61,13 +90,13 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
     <name>LOF_master til dialogliste</name>
     <duration>73574</duration>
     <rate>
-      <ntsc>FALSE</ntsc>
-      <timebase>25</timebase>
+      <ntsc>" + GetNtsc() + @"</ntsc>
+      <timebase>" + GetFrameRateAsString() + @"</timebase>
     </rate>
     <timecode>
       <rate>
-        <ntsc>FALSE</ntsc>
-        <timebase>25</timebase>
+        <ntsc>" + GetNtsc() + @"</ntsc>
+        <timebase>" + GetFrameRateAsString() + @"</timebase>
       </rate>
       <string>00:00:00:00</string>
       <frame>0</frame>
@@ -86,8 +115,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             <pixelaspectratio>Square</pixelaspectratio>
             <fielddominance>none</fielddominance>
             <rate>
-              <ntsc>FALSE</ntsc>
-              <timebase>25</timebase>
+              <ntsc>" + GetNtsc() + @"</ntsc>
+              <timebase>" + GetFrameRateAsString() + @"</timebase>
             </rate>
             <colordepth>24</colordepth>
             <codec>
@@ -137,8 +166,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             <name>Outline Text</name>
             <duration>3000</duration>
             <rate>
-              <ntsc>FALSE</ntsc>
-              <timebase>25</timebase>
+              <ntsc>" + GetNtsc() + @"</ntsc>
+              <timebase>" + GetFrameRateAsString() + @"</timebase>
             </rate>
             <in>1380</in>
             <out>1474</out>
@@ -395,7 +424,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             </itemhistory>
           </generatoritem>";
 
-            XmlDocument xml = new XmlDocument();
+            var xml = new XmlDocument();
             xml.LoadXml(xmlStructure);
             xml.DocumentElement.SelectSingleNode("sequence/name").InnerText = title;
             if (subtitle.Header != null && subtitle.Header.StartsWith("<uuid>") && subtitle.Header.EndsWith("</uuid>"))
@@ -425,8 +454,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 number++;
             }
 
-            MemoryStream ms = new MemoryStream();
-            XmlTextWriter writer = new XmlTextWriter(ms, Encoding.UTF8);
+            var ms = new MemoryStream();
+            var writer = new XmlTextWriter(ms, Encoding.UTF8);
             writer.Formatting = Formatting.Indented;
             xml.Save(writer);
             string xmlAsText = Encoding.UTF8.GetString(ms.ToArray()).Trim();
@@ -437,11 +466,11 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
             _errorCount = 0;
-            FrameRate = Configuration.Settings.General.CurrentFrameRate;
+            var FrameRate = Configuration.Settings.General.CurrentFrameRate;
 
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             lines.ForEach(line => sb.AppendLine(line));
-            XmlDocument xml = new XmlDocument();
+            var xml = new XmlDocument();
             try
             {
                 xml.LoadXml(sb.ToString());
@@ -510,7 +539,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 _errorCount = 1;
                 return;
             }
-
+            Configuration.Settings.General.CurrentFrameRate = FrameRate;
         }
 
     }

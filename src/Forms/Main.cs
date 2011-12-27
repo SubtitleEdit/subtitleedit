@@ -111,6 +111,8 @@ namespace Nikse.SubtitleEdit.Forms
         Keys _mainAdjustSetStartAutoDurationAndGoToNext = Keys.None;
         Keys _mainAdjustSetStart = Keys.None;
         Keys _mainAdjustSetEnd = Keys.None;
+        Keys _mainAdjustCurrent100MsForward = Keys.None;
+        Keys _mainAdjustCurrent100MsBack = Keys.None;
         Keys _mainInsertAfter = Keys.None;
         Keys _mainInsertBefore = Keys.None;
         Keys _mainGoToNext = Keys.None;
@@ -7335,6 +7337,19 @@ namespace Nikse.SubtitleEdit.Forms
                     SetCurrentStartAutoDurationAndGotoNext(FirstSelectedIndex);
                     e.SuppressKeyPress = true;
                 }
+                else if (_mainAdjustCurrent100MsForward == e.KeyData)
+                {
+                    TimeCode tc = new TimeCode(TimeSpan.FromMilliseconds(timeUpDownStartTime.TimeCode.TotalMilliseconds +  100));
+                    timeUpDownStartTime.MaskedTextBox.Text =  tc.ToString();
+                    e.SuppressKeyPress = true;
+                }
+                else if (_mainAdjustCurrent100MsBack == e.KeyData)
+                {
+                    TimeCode tc = new TimeCode(TimeSpan.FromMilliseconds(timeUpDownStartTime.TimeCode.TotalMilliseconds - 100));
+                    if (tc.TotalMilliseconds > 0)
+                        timeUpDownStartTime.MaskedTextBox.Text = tc.ToString();
+                    e.SuppressKeyPress = true;
+                }
             }
             else if (tabControlButtons.SelectedTab == tabPageCreate && mediaPlayer.VideoPlayer != null)
             {
@@ -9586,6 +9601,8 @@ namespace Nikse.SubtitleEdit.Forms
             _mainAdjustSetStartAutoDurationAndGoToNext = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainAdjustSetStartAutoDurationAndGoToNext);
             _mainAdjustSetStart = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainAdjustSetStart);
             _mainAdjustSetEnd = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainAdjustSetEnd);
+            _mainAdjustCurrent100MsForward = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainAdjustCurrent100MsForward);
+            _mainAdjustCurrent100MsBack = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainAdjustCurrent100MsBack);
             _mainInsertAfter = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainInsertAfter);
             _mainInsertBefore = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainInsertBefore);
             _mainGoToNext = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainGoToNext);
