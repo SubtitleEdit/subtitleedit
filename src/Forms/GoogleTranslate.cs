@@ -21,6 +21,7 @@ namespace Nikse.SubtitleEdit.Forms
         MicrosoftTranslationService.SoapService _microsoftTranslationService = null;
         private bool _googleApiNotWorking = false;
         private const string _splitterString  = "==";
+        private Encoding _screenScrapingEncoding = null;
 
         public class ComboBoxItem
         {
@@ -277,7 +278,9 @@ namespace Nikse.SubtitleEdit.Forms
             // fallback to screen scraping
             if (string.IsNullOrEmpty(result))
             {
-                result = TranslateTextViaScreenScraping(input, languagePair);
+                if (_screenScrapingEncoding == null)
+                    _screenScrapingEncoding = GetScreenScrapingEncoding(languagePair);
+                result = TranslateTextViaScreenScraping(input, languagePair, _screenScrapingEncoding);
                 _googleApiNotWorking = true;
             }
 
@@ -348,6 +351,25 @@ namespace Nikse.SubtitleEdit.Forms
             return test;
         }
 
+        public static Encoding GetScreenScrapingEncoding(string languagePair)
+        {
+            try
+            {
+                string url = String.Format("http://translate.google.com/?hl=en&eotf=1&sl={0}&tl={1}&q={2}", languagePair.Substring(0, 2), languagePair.Substring(3), "123 456");
+                var webClient = new WebClient();
+                webClient.Proxy = Utilities.GetProxy();
+                string result = webClient.DownloadString(url).ToLower();
+                int idx = result.IndexOf("charset");
+                int end = result.IndexOf("\"", idx+8);
+                string charset = result.Substring(idx, end-idx).Replace("charset=", string.Empty);
+                return Encoding.GetEncoding(charset); // "koi8-r");
+            }
+            catch
+            {
+                return System.Text.Encoding.Default;
+            }            
+        }
+
         /// <summary>
         /// Translate Text using Google Translate API's
         /// Google URL - http://www.google.com/translate_t?hl=en&ie=UTF8&text={0}&langpair={1}
@@ -356,17 +378,16 @@ namespace Nikse.SubtitleEdit.Forms
         /// <param name="languagePair">2 letter Language Pair, delimited by "|".
         /// E.g. "ar|en" language pair means to translate from Arabic to English</param>
         /// <returns>Translated to String</returns>
-        public static string TranslateTextViaScreenScraping(string input, string languagePair)
+        public static string TranslateTextViaScreenScraping(string input, string languagePair, Encoding encoding)
         {
             input = input.Replace(Environment.NewLine, "<br/>");
             input = input.Replace("'", "&apos;");
 
             //string url = String.Format("http://www.google.com/translate_t?hl=en&ie=UTF8&text={0}&langpair={1}", HttpUtility.UrlEncode(input), languagePair);
             string url = String.Format("http://translate.google.com/?hl=en&eotf=1&sl={0}&tl={1}&q={2}", languagePair.Substring(0, 2), languagePair.Substring(3), HttpUtility.UrlEncode(input));
-
             var webClient = new WebClient();
             webClient.Proxy = Utilities.GetProxy();
-            webClient.Encoding = System.Text.Encoding.Default;
+            webClient.Encoding = encoding;
             string result = webClient.DownloadString(url);
             int startIndex = result.IndexOf("<span id=result_box");
             var sb = new StringBuilder();
