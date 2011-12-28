@@ -1200,8 +1200,8 @@
             public string ToggleDockUndockOfVideoControls { get; set; }
             public string AdjustViaEndAutoStartAndGoToNext { get; set; }
             public string AdjustSetStartAutoDurationAndGoToNext { get; set; }
-            public string AdjustCurrent100MsForward { get; set; }
-            public string AdjustCurrent100MsBack { get; set; }
+            public string AdjustSelected100MsForward { get; set; }
+            public string AdjustSelected100MsBack { get; set; }
             public string GoToNext { get; set; }
             public string GoToPrevious { get; set; }
             public string ToggleDialogueDashes { get; set; }
