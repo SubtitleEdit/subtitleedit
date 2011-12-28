@@ -494,10 +494,10 @@ namespace Nikse.SubtitleEdit.Forms
                 adjustNode.Nodes.Add(Configuration.Settings.Language.Settings.AdjustSetStartAutoDurationAndGoToNext + GetShortcutText(Configuration.Settings.Shortcuts.MainAdjustSetStartAutoDurationAndGoToNext));
             adjustNode.Nodes.Add(Configuration.Settings.Language.Main.VideoControls.SetStartTime + GetShortcutText(Configuration.Settings.Shortcuts.MainAdjustSetStart));
             adjustNode.Nodes.Add(Configuration.Settings.Language.Main.VideoControls.SetEndTime + GetShortcutText(Configuration.Settings.Shortcuts.MainAdjustSetEnd));
-            if (!string.IsNullOrEmpty(Configuration.Settings.Language.Settings.AdjustCurrent100MsForward)) // TODO: Remove in SE 3.3
-                adjustNode.Nodes.Add(Configuration.Settings.Language.Settings.AdjustCurrent100MsForward + GetShortcutText(Configuration.Settings.Shortcuts.MainAdjustCurrent100MsForward));
-            if (!string.IsNullOrEmpty(Configuration.Settings.Language.Settings.AdjustCurrent100MsBack)) // TODO: Remove in SE 3.3
-                adjustNode.Nodes.Add(Configuration.Settings.Language.Settings.AdjustCurrent100MsBack + GetShortcutText(Configuration.Settings.Shortcuts.MainAdjustCurrent100MsBack));
+            if (!string.IsNullOrEmpty(Configuration.Settings.Language.Settings.AdjustSelected100MsForward)) // TODO: Remove in SE 3.3
+                adjustNode.Nodes.Add(Configuration.Settings.Language.Settings.AdjustSelected100MsForward + GetShortcutText(Configuration.Settings.Shortcuts.MainAdjustSelected100MsForward));
+            if (!string.IsNullOrEmpty(Configuration.Settings.Language.Settings.AdjustSelected100MsBack)) // TODO: Remove in SE 3.3
+                adjustNode.Nodes.Add(Configuration.Settings.Language.Settings.AdjustSelected100MsBack + GetShortcutText(Configuration.Settings.Shortcuts.MainAdjustSelected100MsBack));
             treeViewShortcuts.Nodes.Add(adjustNode);
 
             TreeNode audioVisualizerNode = new TreeNode(Configuration.Settings.Language.Settings.WaveformAndSpectrogram);
@@ -988,10 +988,10 @@ namespace Nikse.SubtitleEdit.Forms
                         Configuration.Settings.Shortcuts.MainAdjustSetStart = GetShortcut(node.Text);
                     else if (text == Configuration.Settings.Language.Main.VideoControls.SetEndTime.Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.MainAdjustSetEnd = GetShortcut(node.Text);
-                    else if (Configuration.Settings.Language.Settings.AdjustCurrent100MsForward != null && text == Configuration.Settings.Language.Settings.AdjustCurrent100MsForward.Replace("&", string.Empty))
-                        Configuration.Settings.Shortcuts.MainAdjustCurrent100MsForward = GetShortcut(node.Text);
-                    else if (Configuration.Settings.Language.Settings.AdjustCurrent100MsBack != null && text == Configuration.Settings.Language.Settings.AdjustCurrent100MsBack.Replace("&", string.Empty))
-                        Configuration.Settings.Shortcuts.MainAdjustCurrent100MsBack = GetShortcut(node.Text);
+                    else if (Configuration.Settings.Language.Settings.AdjustSelected100MsForward != null && text == Configuration.Settings.Language.Settings.AdjustSelected100MsForward.Replace("&", string.Empty))
+                        Configuration.Settings.Shortcuts.MainAdjustSelected100MsForward = GetShortcut(node.Text);
+                    else if (Configuration.Settings.Language.Settings.AdjustSelected100MsBack != null && text == Configuration.Settings.Language.Settings.AdjustSelected100MsBack.Replace("&", string.Empty))
+                        Configuration.Settings.Shortcuts.MainAdjustSelected100MsBack = GetShortcut(node.Text);
                 }
             }
 

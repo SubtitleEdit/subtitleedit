@@ -468,8 +468,8 @@ namespace Nikse.SubtitleEdit.Logic
         public string MainAdjustSetStartAutoDurationAndGoToNext { get; set; }
         public string MainAdjustSetStart { get; set; }
         public string MainAdjustSetEnd { get; set; }
-        public string MainAdjustCurrent100MsForward { get; set; }
-        public string MainAdjustCurrent100MsBack { get; set; }
+        public string MainAdjustSelected100MsForward { get; set; }
+        public string MainAdjustSelected100MsBack { get; set; }
         public string MainInsertAfter { get; set; }
         public string MainInsertBefore { get; set; }
         public string MainGoToNext { get; set; }
@@ -510,8 +510,8 @@ namespace Nikse.SubtitleEdit.Logic
             MainAdjustSetStartAutoDurationAndGoToNext = string.Empty;
             MainAdjustSetStart = string.Empty;
             MainAdjustSetEnd = string.Empty;
-            MainAdjustCurrent100MsForward = string.Empty;
-            MainAdjustCurrent100MsBack = string.Empty;
+            MainAdjustSelected100MsForward = string.Empty;
+            MainAdjustSelected100MsBack = string.Empty;
             MainInsertAfter = "Alt+Ins";
             MainInsertBefore = "Control+Shift+Ins";
             WaveformVerticalZoom = string.Empty;
@@ -1295,12 +1295,12 @@ namespace Nikse.SubtitleEdit.Logic
                 subNode = node.SelectSingleNode("MainAdjustSetEnd");
                 if (subNode != null)
                     settings.Shortcuts.MainAdjustSetEnd = subNode.InnerText;
-                subNode = node.SelectSingleNode("MainAdjustCurrent100MsForward");
+                subNode = node.SelectSingleNode("MainAdjustSelected100MsForward");
                 if (subNode != null)
-                    settings.Shortcuts.MainAdjustCurrent100MsForward = subNode.InnerText;
-                subNode = node.SelectSingleNode("MainAdjustCurrent100MsBack");
+                    settings.Shortcuts.MainAdjustSelected100MsForward = subNode.InnerText;
+                subNode = node.SelectSingleNode("MainAdjustSelected100MsBack");
                 if (subNode != null)
-                    settings.Shortcuts.MainAdjustCurrent100MsBack = subNode.InnerText;
+                    settings.Shortcuts.MainAdjustSelected100MsBack = subNode.InnerText;
                 subNode = node.SelectSingleNode("MainInsertAfter");
                 if (subNode != null)
                     settings.Shortcuts.MainInsertAfter = subNode.InnerText;
@@ -1617,8 +1617,8 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("MainAdjustSetStartAutoDurationAndGoToNext", settings.Shortcuts.MainAdjustSetStartAutoDurationAndGoToNext);
             textWriter.WriteElementString("MainAdjustSetStart", settings.Shortcuts.MainAdjustSetStart);
             textWriter.WriteElementString("MainAdjustSetEnd", settings.Shortcuts.MainAdjustSetEnd);
-            textWriter.WriteElementString("MainAdjustCurrent100MsForward", settings.Shortcuts.MainAdjustCurrent100MsForward);
-            textWriter.WriteElementString("MainAdjustCurrent100MsBack", settings.Shortcuts.MainAdjustCurrent100MsBack);
+            textWriter.WriteElementString("MainAdjustSelected100MsForward", settings.Shortcuts.MainAdjustSelected100MsForward);
+            textWriter.WriteElementString("MainAdjustSelected100MsBack", settings.Shortcuts.MainAdjustSelected100MsBack);
             textWriter.WriteElementString("MainInsertAfter", settings.Shortcuts.MainInsertAfter);
             textWriter.WriteElementString("MainInsertBefore", settings.Shortcuts.MainInsertBefore);
             textWriter.WriteElementString("MainGoToNext", settings.Shortcuts.MainGoToNext);
