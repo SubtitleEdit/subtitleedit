@@ -273,21 +273,21 @@ ja.types_default=Default installation
 
 ; Dutch
 nl.comp_translations=Translations
-nl.msg_AppIsRunning=Setup has detected that Subtitle Edit is currently running.%n%nPlease close all instances of it now, then click OK to continue, or Cancel to exit.
-nl.msg_AppIsRunningUninstall=Uninstall has detected that Subtitle Edit is currently running.%n%nPlease close all instances of it now, then click OK to continue, or Cancel to exit.
-nl.msg_AskToDownNET=Subtitle Edit requires the .NET Framework 2.0. Please download and install the .NET Framework and run setup again.%n%nDo you want to download the .NET Framework 2.0 now?
-nl.msg_DeleteSettings=Do you also want to delete Subtitle Edit's settings and any custom changes you made in the dictionaries?%n%nIf you plan on reinstalling Subtitle Edit you do not have to delete them.
-nl.msg_OptimizingPerformance=Optimizing performance...
-nl.msg_SetupIsRunningWarning=Subtitle Edit Setup is already running!
-nl.run_VisitWebsite=Visit Subtitle Edit's Website
-nl.sm_com_Changelog=Subtitle Edit's Changelog
-nl.tsk_AllUsers=For all users
-nl.tsk_CurrentUser=For the current user only
-nl.tsk_Other=Other:
-nl.tsk_ResetDictionaries=Reset Dictionaries and delete any custom names
-nl.tsk_ResetSettings=Reset Subtitle Edit's settings
-nl.types_custom=Custom installation
-nl.types_default=Default installation
+nl.msg_AppIsRunning=Setup constateert dat Subtitle Edit al aktief is.%n%nSluit alstublieft alle geopende vensters, dan klik OK om door te gaan of Cancel om af te sluiten.
+nl.msg_AppIsRunningUninstall=Uninstall constateert dat Subtitle Edit al geopend is.%n%nSluit alstublieft alle geopende vensters, dan klik OK om door te gaan of Cancel om af te sluiten.
+nl.msg_AskToDownNET=Subtitle Edit vereist .NET Framework 2.0. Download en instaleer deze software alstublieft en doe de setup opnieuw.%n%nWilt u nu .NET Framework 2.0 instaleren?
+nl.msg_DeleteSettings=Wilt u de instellingen en persoonlijke aanpassingen in de woordenboeken van Subtitle Edit verwijderen?%n%nAls u Subtitle Edit opnieuw installeert hoeft u deze niet te verwijderen.
+nl.msg_OptimizingPerformance=Prestatie optimaliseren...
+nl.msg_SetupIsRunningWarning=Subtitle Edit Setup is in gebruik!
+nl.run_VisitWebsite=Bezoek Subtitle Edit Website
+nl.sm_com_Changelog=Subtitle Edit Changelog
+nl.tsk_AllUsers=Voor alle gebruikers
+nl.tsk_CurrentUser=Alleen voor huidige gebruiker
+nl.tsk_Other=Anders:
+nl.tsk_ResetDictionaries=Herstel woordenboeken en verwijder elke persoonlijke toevoeging
+nl.tsk_ResetSettings=Herstel Subtitle Edit settings
+nl.types_custom=Gebruiker specifieke installatie
+nl.types_default=Standaard installatie
 
 
 ; Polish
