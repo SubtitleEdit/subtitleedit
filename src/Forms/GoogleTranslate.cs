@@ -367,7 +367,7 @@ namespace Nikse.SubtitleEdit.Forms
             catch
             {
                 return System.Text.Encoding.Default;
-            }            
+            }
         }
 
         /// <summary>

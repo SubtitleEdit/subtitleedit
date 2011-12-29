@@ -47,7 +47,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             else if (Configuration.Settings.General.CurrentFrameRate < 29)
                 return "25";
             else if (Configuration.Settings.General.CurrentFrameRate < 30)
-                return "30"; // ntsc 29.97 
+                return "30"; // ntsc 29.97
             else if (Configuration.Settings.General.CurrentFrameRate < 40)
                 return "30";
             else if (Configuration.Settings.General.CurrentFrameRate < 40)
@@ -68,7 +68,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             else if (Configuration.Settings.General.CurrentFrameRate < 29)
                 return "FALSE";
             else if (Configuration.Settings.General.CurrentFrameRate < 30)
-                return "TRUE"; // ntsc 29.97 
+                return "TRUE"; // ntsc 29.97
             else if (Configuration.Settings.General.CurrentFrameRate < 40)
                 return "FALSE";
             else if (Configuration.Settings.General.CurrentFrameRate < 40)

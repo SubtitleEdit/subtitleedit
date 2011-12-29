@@ -105,7 +105,7 @@ namespace Nikse.SubtitleEdit.Forms
                         languageName = name;
                     }
                 }
-                
+
                 if (string.IsNullOrEmpty(languageName))
                     languageName = "en_US";
                 if (Utilities.AddWordToLocalNamesEtcList(textBoxAddName.Text, languageName))
