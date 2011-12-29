@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <Language Name="Nederlands">
   <General>
     <Title>Subtitle Edit</Title>
@@ -25,7 +25,7 @@
     <Duration>Duur</Duration>
     <NumberSymbol>#</NumberSymbol>
     <Number>Nummer</Number>
-    <Text>Tekst</Text>
+    <Text>TEKST</Text>
     <HourMinutesSecondsMilliseconds>Uur : min : sec : millisec</HourMinutesSecondsMilliseconds>
     <Bold>Vet</Bold>
     <Italic>Cursief</Italic>
@@ -49,7 +49,7 @@
     <RegularExpressionIsNotValid>Gebruikelijke uitdrukking is niet geldig!</RegularExpressionIsNotValid>
     <SubtitleSaved>Ondertitel bewaard</SubtitleSaved>
     <CurrentSubtitle>Huidige ondertitel</CurrentSubtitle>
-    <OriginalText>Originele tekst</OriginalText>
+    <OriginalText>VERTALING</OriginalText>
     <OpenOriginalSubtitleFile>Open originele ondertitelbestand...</OpenOriginalSubtitleFile>
     <PleaseWait>Even geduld a.u.b.</PleaseWait>
     <SessionKey>Sessie Sleutel</SessionKey>
@@ -63,15 +63,17 @@
   </General>
   <About>
     <Title>Over Subtitle Edit</Title>
-    <AboutText1>Subtitle Edit is vrije software onder de GNU Public License. 
+    <AboutText1>
+Subtitle Edit is vrije software onder de GNU Public License.
 U mag deze verspreiden, wijzigen en vrij gebruiken.
-De C # broncode is beschikbaar, hetzij op de website of 
-kan per e-mail worden aangevraagd. 
+De C # broncode is beschikbaar, hetzij op de website of
+kan per e-mail worden aangevraagd.
 
-Bezoek www.nikse.dk voor de nieuwste versie. 
+Bezoek www.nikse.dk voor de nieuwste versie.
 Suggesties zijn zeer welkom.
 
-E-mail: mailto:nikse.dk@gmail.com</AboutText1>
+E-mail: mailto:nikse.dk@gmail.com
+    </AboutText1>
   </About>
   <AddToNames>
     <Title>Voeg toe aan naamlijst / etc</Title>
@@ -438,13 +440,13 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
       <File>
         <Title>&amp;Bestand</Title>
         <New>&amp;Nieuw</New>
-        <Open>&amp;Open</Open>
+        <Open>&amp;Open tekst</Open>
         <Reopen>&amp;Heropen</Reopen>
-        <Save>&amp;Opslaan</Save>
-        <SaveAs>Opslaan &amp;als...</SaveAs>
-        <OpenOriginal>Open originele ondertitel (vertaalmodus)</OpenOriginal>
-        <SaveOriginal>Opslaan originele ondertitel</SaveOriginal>
-        <CloseOriginal>Sluit originele ondertitel</CloseOriginal>
+        <Save>&amp;Opslaan tekst</Save>
+        <SaveAs>Opslaan tekst &amp;als...</SaveAs>
+        <OpenOriginal>Open vertaling (vertaalmodus aan)</OpenOriginal>
+        <SaveOriginal>Opslaan vertaling</SaveOriginal>
+        <CloseOriginal>Sluit vertaling (vertaalmodus uit)</CloseOriginal>
         <OpenContainingFolder>Open huidig bestand</OpenContainingFolder>
         <Compare>&amp;Vergelijk...</Compare>
         <ImportOcrFromDvd>Importeer OCR ondertitel van vob/ifo (DVD)</ImportOcrFromDvd>
@@ -664,8 +666,8 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <SaveChangesToX>Bewaar wijzigingen opslaan in {0}?</SaveChangesToX>
     <SaveChangesToUntitledOriginal>Bewaar wijzigingen opslaan in origineel zonder titel?</SaveChangesToUntitledOriginal>
     <SaveChangesToOriginalX>Bewaar wijzingen in origineel{0}?</SaveChangesToOriginalX>
-    <SaveSubtitleAs>Bewaar ondertitel op als...</SaveSubtitleAs>
-    <SaveOriginalSubtitleAs>Bewaar ondertitel op als...</SaveOriginalSubtitleAs>
+    <SaveSubtitleAs>Opslaan vertaling</SaveSubtitleAs>
+    <SaveOriginalSubtitleAs>Opslaan vertaling als...</SaveOriginalSubtitleAs>
     <NoSubtitleLoaded>Geen ondertitel geladen</NoSubtitleLoaded>
     <VisualSyncSelectedLines>Visuele sync geselecteerde regels</VisualSyncSelectedLines>
     <VisualSyncTitle>Visuele sync</VisualSyncTitle>
@@ -1064,7 +1066,7 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <FirstPlusX>Eerste  + {0}</FirstPlusX>
     <LastMinusX>Laatste  - {0}</LastMinusX>
     <FixCommonerrors>Herstel gebruikelijke fouten</FixCommonerrors>
-    <MergeLinesShorterThan>Voeg regels seman korter dan</MergeLinesShorterThan>
+    <MergeLinesShorterThan>Voeg regels samen korter dan</MergeLinesShorterThan>
     <MusicSymbol>Muzieksymbool</MusicSymbol>
     <MusicSymbolsToReplace>Muzieksymbolen vervangen door (gescheiden met spatie)</MusicSymbolsToReplace>
     <FixCommonOcrErrorsUseHardcodedRules>Herstel OCR fouten  inclusief vaste afspraken</FixCommonOcrErrorsUseHardcodedRules>
