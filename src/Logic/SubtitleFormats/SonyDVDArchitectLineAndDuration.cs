@@ -65,7 +65,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         }
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
-        {   //22	00:04:19:12	00:04:21:09	00:00:01:21
+        {   //22    00:04:19:12 00:04:21:09 00:00:01:21
 
             var regex = new Regex(@"^\d+\t\d\d:\d\d:\d\d:\d\d\t\d\d:\d\d:\d\d:\d\d\t\d\d:\d\d:\d\d:\d\d$", RegexOptions.Compiled);
             _errorCount = 0;

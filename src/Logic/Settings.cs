@@ -121,7 +121,7 @@ namespace Nikse.SubtitleEdit.Logic
         public string DCinemaFontFile { get; set; }
         public int DCinemaFontSize { get; set; }
         public int DCinemaBottomMargin { get; set; }
-        public int DCinemaFadeUpDownTime { get; set; }        
+        public int DCinemaFadeUpDownTime { get; set; }
 
         public SubtitleSettings()
         {
@@ -1608,7 +1608,7 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("MainListViewToggleDashes", settings.Shortcuts.MainListViewToggleDashes);
             textWriter.WriteElementString("MainTextBoxItalic", settings.Shortcuts.MainTextBoxItalic);
             textWriter.WriteElementString("MainCreateInsertSubAtVideoPos", settings.Shortcuts.MainCreateInsertSubAtVideoPos);
-            textWriter.WriteElementString("MainCreatePlayFromJustBefore", settings.Shortcuts.MainCreatePlayFromJustBefore);            
+            textWriter.WriteElementString("MainCreatePlayFromJustBefore", settings.Shortcuts.MainCreatePlayFromJustBefore);
             textWriter.WriteElementString("MainCreateSetStart", settings.Shortcuts.MainCreateSetStart);
             textWriter.WriteElementString("MainCreateSetEnd", settings.Shortcuts.MainCreateSetEnd);
             textWriter.WriteElementString("MainAdjustSetStartAndOffsetTheRest", settings.Shortcuts.MainAdjustSetStartAndOffsetTheRest);
