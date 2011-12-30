@@ -445,6 +445,7 @@ namespace Nikse.SubtitleEdit.Logic
         public string MainEditFind { get; set; }
         public string MainEditFindNext { get; set; }
         public string MainEditReplace { get; set; }
+        public string MainEditMultipleReplace { get; set; }
         public string MainEditGoToLineNumber { get; set; }
         public string MainToolsFixCommonErrors { get; set; }
         public string MainVideoShowHideVideo { get; set; }
@@ -489,6 +490,7 @@ namespace Nikse.SubtitleEdit.Logic
             MainEditFind = "Control+F";
             MainEditFindNext = "F3";
             MainEditReplace = "Control+H";
+            MainEditMultipleReplace = string.Empty;
             MainEditGoToLineNumber = "Control+G";
             MainToolsFixCommonErrors = "Control+Shift+F";
             MainVideoShowHideVideo = "Control+Q";
@@ -1226,6 +1228,9 @@ namespace Nikse.SubtitleEdit.Logic
                 subNode = node.SelectSingleNode("MainEditReplace");
                 if (subNode != null)
                     settings.Shortcuts.MainEditReplace = subNode.InnerText;
+                subNode = node.SelectSingleNode("MainEditMultipleReplace");
+                if (subNode != null)
+                    settings.Shortcuts.MainEditMultipleReplace = subNode.InnerText;
                 subNode = node.SelectSingleNode("MainEditGoToLineNumber");
                 if (subNode != null)
                     settings.Shortcuts.MainEditGoToLineNumber = subNode.InnerText;
@@ -1594,6 +1599,7 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("MainEditFind", settings.Shortcuts.MainEditFind);
             textWriter.WriteElementString("MainEditFindNext", settings.Shortcuts.MainEditFindNext);
             textWriter.WriteElementString("MainEditReplace", settings.Shortcuts.MainEditReplace);
+            textWriter.WriteElementString("MainEditMultipleReplace", settings.Shortcuts.MainEditMultipleReplace);
             textWriter.WriteElementString("MainEditGoToLineNumber", settings.Shortcuts.MainEditGoToLineNumber);
             textWriter.WriteElementString("MainToolsFixCommonErrors", settings.Shortcuts.MainToolsFixCommonErrors);
             textWriter.WriteElementString("MainVideoShowHideVideo", settings.Shortcuts.MainVideoShowHideVideo);
