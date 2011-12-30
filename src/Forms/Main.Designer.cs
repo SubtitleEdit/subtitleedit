@@ -2151,11 +2151,13 @@
             this.tabControlButtons.Controls.Add(this.tabPageTranslate);
             this.tabControlButtons.Controls.Add(this.tabPageCreate);
             this.tabControlButtons.Controls.Add(this.tabPageAdjust);
+            this.tabControlButtons.DrawMode = System.Windows.Forms.TabDrawMode.OwnerDrawFixed;
             this.tabControlButtons.Location = new System.Drawing.Point(6, 12);
             this.tabControlButtons.Name = "tabControlButtons";
             this.tabControlButtons.SelectedIndex = 0;
             this.tabControlButtons.Size = new System.Drawing.Size(467, 283);
             this.tabControlButtons.TabIndex = 0;
+            this.tabControlButtons.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.tabControlButtons_DrawItem);
             this.tabControlButtons.SelectedIndexChanged += new System.EventHandler(this.tabControl1_SelectedIndexChanged);
             // 
             // tabPageTranslate

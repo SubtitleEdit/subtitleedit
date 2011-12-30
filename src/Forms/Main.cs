@@ -9368,11 +9368,12 @@ namespace Nikse.SubtitleEdit.Forms
         }
 
         private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
-        {
+        {           
             if (tabControlButtons.SelectedIndex == 0)
             {
                 tabControlButtons.Width = groupBoxTranslateSearch.Left + groupBoxTranslateSearch.Width + 10;
                 Configuration.Settings.VideoControls.LastActiveTab = "Translate";
+                
             }
             else if (tabControlButtons.SelectedIndex == 1)
             {
@@ -12209,6 +12210,22 @@ namespace Nikse.SubtitleEdit.Forms
         private void textBoxListViewTextAlternate_MouseClick(object sender, MouseEventArgs e)
         {
             UpdatePositionAndTotalLength(labelTextAlternateLineTotal, textBoxListViewTextAlternate);
+        }
+
+        private void tabControlButtons_DrawItem(object sender, DrawItemEventArgs e)
+        {
+            TabControl tc = (TabControl)sender;
+            Brush textBrush = new SolidBrush(this.ForeColor);
+            Font tabFont = new Font(tc.Font, FontStyle.Regular); 
+            if (e.State == DrawItemState.Selected)
+            {
+                tabFont = new Font(tc.Font, FontStyle.Bold); 
+                e.Graphics.FillRectangle(new SolidBrush(SystemColors.Window), e.Bounds);
+
+            }
+            Rectangle tabBounds = tc.GetTabRect(e.Index);
+            var stringFlags = new StringFormat { Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center };
+            e.Graphics.DrawString(tc.TabPages[e.Index].Text, tabFont, textBrush, tabBounds, new StringFormat(stringFlags));
         }
 
     }
