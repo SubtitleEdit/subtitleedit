@@ -1100,7 +1100,69 @@ namespace Nikse.SubtitleEdit.Controls
                 Locked = !Locked;
                 Invalidate();
                 e.SuppressKeyPress = true;
+            }           
+        }
+
+        public double FindDataBelowThresshold(int thresshold, double durationInSeconds)
+        {
+            int begin = SecondsToXPosition(_currentVideoPositionSeconds+1);
+            int length = SecondsToXPosition(durationInSeconds);
+
+            int hitCount = 0;
+            for (int i = begin; i < _wavePeaks.AllSamples.Count; i++)
+            {
+                if (i > 0 && i < _wavePeaks.AllSamples.Count && Math.Abs(_wavePeaks.AllSamples[i]) <= thresshold)
+                    hitCount++;
+                else
+                    hitCount = 0;
+                if (hitCount > length)
+                {
+                    double seconds = ((i - (length / 2)) / (double)_wavePeaks.Header.SampleRate) / _zoomFactor;
+                    if (seconds >= 0)
+                    {
+
+                        StartPositionSeconds = seconds;
+                        if (StartPositionSeconds > 1)
+                            StartPositionSeconds -= 1;
+                        OnSingleClick.Invoke(seconds, null);
+                        Invalidate();
+                    }
+                    return seconds;
+                }
             }
+            return -1;
+        }
+
+        public double FindDataBelowThressholdBack(int thresshold, double durationInSeconds)
+        {
+            int begin = SecondsToXPosition(_currentVideoPositionSeconds-1);
+            int length = SecondsToXPosition(durationInSeconds);
+
+            int hitCount = 0;
+            for (int i = begin; i > 0; i--)
+            {
+                if (i > 0 && i < _wavePeaks.AllSamples.Count && Math.Abs(_wavePeaks.AllSamples[i]) <= thresshold)
+                    hitCount++;
+                else
+                    hitCount = 0;
+                if (hitCount > length)
+                {
+                    double seconds = (i + (length / 2)) / (double)_wavePeaks.Header.SampleRate / _zoomFactor;
+                    if (seconds >= 0)
+                    {
+
+                        StartPositionSeconds = seconds;
+                        if (StartPositionSeconds > 1)
+                            StartPositionSeconds -= 1;
+                        else
+                            StartPositionSeconds = 0;
+                        OnSingleClick.Invoke(seconds, null);
+                        Invalidate();
+                    }
+                    return seconds;
+                }
+            }
+            return -1;
         }
 
         public void ZoomIn()

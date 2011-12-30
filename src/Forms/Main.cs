@@ -122,6 +122,8 @@ namespace Nikse.SubtitleEdit.Forms
         Keys _waveformZoomIn = Keys.None;
         Keys _waveformZoomOut = Keys.None;
         Keys _waveformPlaySelection = Keys.None;
+        Keys _waveformSearchSilenceForward = Keys.None;
+        Keys _waveformSearchSilenceBack = Keys.None;
         bool _videoLoadedGoToSubPosAndPause = false;
         bool _makeHistory = true;
         string _cutText = string.Empty;
@@ -6878,6 +6880,16 @@ namespace Nikse.SubtitleEdit.Forms
                 toolStripMenuItemWaveFormPlaySelection_Click(null, null);
                 e.SuppressKeyPress = true;
             }
+            else if (audioVisualizer != null && audioVisualizer.Visible & e.KeyData == _waveformSearchSilenceForward)
+            {
+                audioVisualizer.FindDataBelowThresshold(Configuration.Settings.VideoControls.WaveformSeeksSilenceMaxVolume, Configuration.Settings.VideoControls.WaveformSeeksSilenceDurationSeconds);
+                e.SuppressKeyPress = true;
+            }
+            else if (audioVisualizer != null && audioVisualizer.Visible & e.KeyData == _waveformSearchSilenceBack)
+            {
+                audioVisualizer.FindDataBelowThressholdBack(Configuration.Settings.VideoControls.WaveformSeeksSilenceMaxVolume, Configuration.Settings.VideoControls.WaveformSeeksSilenceDurationSeconds);
+                e.SuppressKeyPress = true;
+            }
             else if (_mainInsertBefore == e.KeyData && inListView)
             {
                 InsertBefore();
@@ -9608,6 +9620,9 @@ namespace Nikse.SubtitleEdit.Forms
             _waveformVerticalZoom = Utilities.GetKeys(Configuration.Settings.Shortcuts.WaveformVerticalZoom);
             _waveformZoomIn = Utilities.GetKeys(Configuration.Settings.Shortcuts.WaveformZoomIn);
             _waveformZoomOut = Utilities.GetKeys(Configuration.Settings.Shortcuts.WaveformZoomOut);
+            _waveformPlaySelection = Utilities.GetKeys(Configuration.Settings.Shortcuts.WaveformPlaySelection);
+            _waveformSearchSilenceForward = Utilities.GetKeys(Configuration.Settings.Shortcuts.WaveformSearchSilenceForward);
+            _waveformSearchSilenceBack = Utilities.GetKeys(Configuration.Settings.Shortcuts.WaveformSearchSilenceBack);
         }
 
         private void LoadPlugins()
