@@ -5,6 +5,8 @@
     <Version>3.2</Version>
     <TranslatedBy>Oversat til dansk af Nikse (mailto:nikse.dk@gmail.com)</TranslatedBy>
     <CultureName>da-DK</CultureName>
+    <HelpFile>
+    </HelpFile>
     <OK>&amp;OK</OK>
     <Cancel>&amp;Fortryd</Cancel>
     <Apply>Anvend</Apply>
@@ -458,9 +460,13 @@
         <ImportTimecodes>Import tidskoder...</ImportTimecodes>
         <Export>Eksporter</Export>
         <ExportBdnXml>BDN xml/png...</ExportBdnXml>
+        <ExportBluRaySup>Blu-ray sup...</ExportBluRaySup>
+        <ExportVobSub>VobSub (sub/idx)...</ExportVobSub>
         <ExportCavena890>Cavena 890...</ExportCavena890>
         <ExportEbu>EBU STL...</ExportEbu>
         <ExportPac>PAC (Screen Electronics)...</ExportPac>
+        <ExportPlainText>Eksporter almindelig tekst...</ExportPlainText>
+        <ExportPlainTextWithoutLineBreaks>Eksporter almindelig tekst uden linjeskift...</ExportPlainTextWithoutLineBreaks>
         <Exit>&amp;Afslut</Exit>
       </File>
       <Edit>
@@ -485,14 +491,19 @@
         <SplitLongLines>Split lange linjer...</SplitLongLines>
         <MinimumDisplayTimeBetweenParagraphs>Minimum visningstid mellem tekster...</MinimumDisplayTimeBetweenParagraphs>
         <SortBy>Sorter efter</SortBy>
+        <Number>Number</Number>
+        <StartTime>Starttidspunkt</StartTime>
+        <EndTime>Sluttidspunkt</EndTime>
+        <Duration>Varighed</Duration>
         <TextAlphabetically>Tekst - alfabetisk</TextAlphabetically>
         <TextSingleLineMaximumLength>Tekst - enkelt linje max. længde</TextSingleLineMaximumLength>
         <TextTotalLength>Tekst - samlet længde</TextTotalLength>
         <TextNumberOfLines>Tekst - antal linjer</TextNumberOfLines>
+        <TextNumberOfCharactersPerSeconds>Tekst - antallet af tegn/sek</TextNumberOfCharactersPerSeconds>
         <ShowOriginalTextInAudioAndVideoPreview>Vis oprindelig tekst i audio/video previews</ShowOriginalTextInAudioAndVideoPreview>
         <MakeNewEmptyTranslationFromCurrentSubtitle>Dan ny tom oversættelse fra aktuelle undertekst</MakeNewEmptyTranslationFromCurrentSubtitle>
         <SplitSubtitle>Split undertekst...</SplitSubtitle>
-        <AppendSubtitle>Append subtitle...</AppendSubtitle>
+        <AppendSubtitle>Tilføj/append undertekst...</AppendSubtitle>
       </Tools>
       <Video>
         <Title>Video</Title>
@@ -849,6 +860,9 @@ Fortsæt?</SubtitleAppendPrompt>
     <SpellCheckAbortedXCorrections>Stavekontrol afbrudt. {0} korrektioner blev foretaget.</SpellCheckAbortedXCorrections>
     <SpellCheckCompletedXCorrections>Stavekontrol færdig. {0} korrektioner blev foretaget.</SpellCheckCompletedXCorrections>
     <OpenOtherSubtitle>Åbne anden undertekst</OpenOtherSubtitle>
+    <BeforeToggleDialogueDashes>Før skift af dialog tankestreger</BeforeToggleDialogueDashes>
+    <ExportPlainTextAs>Eksporter almindelig tekst som</ExportPlainTextAs>
+    <TextFiles>Tekst filer</TextFiles>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Vælg undertekst fra Matroska fil</Title>
@@ -1016,6 +1030,7 @@ Fortsæt?</SubtitleAppendPrompt>
     <WaveFormAppearance>Lyd kurve udseende</WaveFormAppearance>
     <WaveFormGridColor>Gitter farve</WaveFormGridColor>
     <WaveFormShowGridLines>Vis gitterlinjer</WaveFormShowGridLines>
+    <ReverseMouseWheelScrollDirection>Skift musehjul rulle retning</ReverseMouseWheelScrollDirection>
     <WaveFormColor>Farve</WaveFormColor>
     <WaveFormSelectedColor>Valgte farve</WaveFormSelectedColor>
     <WaveFormBackgroundColor>Baggrundsfarve</WaveFormBackgroundColor>
@@ -1074,6 +1089,20 @@ Fortsæt?</SubtitleAppendPrompt>
     <ShortcutIsNotValid>Genvej er ikke gyldig: {0}</ShortcutIsNotValid>
     <ToggleDockUndockOfVideoControls>Skift dok/frigør af video kontrol</ToggleDockUndockOfVideoControls>
     <AdjustViaEndAutoStartAndGoToNext>Juster via slutposition og gå til næste</AdjustViaEndAutoStartAndGoToNext>
+    <AdjustSetStartAutoDurationAndGoToNext>Set start, auto varighed og gå til næste</AdjustSetStartAutoDurationAndGoToNext>
+    <AdjustSelected100MsForward>Flyt valgte linjer 100 ms frem</AdjustSelected100MsForward>
+    <AdjustSelected100MsBack>Flyt valgte linjer 100 ms tilbage</AdjustSelected100MsBack>
+    <GoToNext>Gå til næste linje</GoToNext>
+    <GoToPrevious>Gå til forrige line</GoToPrevious>
+    <ToggleDialogueDashes>Toogle dialog tankestreger</ToggleDialogueDashes>
+    <VerticalZoom>Lodret zoom</VerticalZoom>
+    <WaveformSeekSilenceForward>Søg stilhed frem</WaveformSeekSilenceForward>
+    <WaveformSeekSilenceBack>Søg stilhed tilbage</WaveformSeekSilenceBack>
+    <GoBack100Milliseconds>100 ms tilbage</GoBack100Milliseconds>
+    <GoForward100Milliseconds>100 ms frem</GoForward100Milliseconds>
+    <GoBack500Milliseconds>500 ms tilbage</GoBack500Milliseconds>
+    <GoForward500Milliseconds>500 ms frem</GoForward500Milliseconds>
+    <Fullscreen>Fuldskærm</Fullscreen>
   </Settings>
   <ShowEarlierLater>
     <Title>Vis valgte linjer tidligere/senere</Title>
@@ -1252,6 +1281,7 @@ Fortsæt?</SubtitleAppendPrompt>
   <VobSubOcrCharacterInspect>
     <Title>Undersøg resultater for aktuelle billede</Title>
     <InspectItems>Undersøg elementer</InspectItems>
+    <AddBetterMatch>Tilføj bedre match</AddBetterMatch>
   </VobSubOcrCharacterInspect>
   <VobSubOcrNewFolder>
     <Title>Ny mappe</Title>
