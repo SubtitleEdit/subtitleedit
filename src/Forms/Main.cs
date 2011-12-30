@@ -1113,9 +1113,9 @@ namespace Nikse.SubtitleEdit.Forms
             ShowSourceLineNumber();
 
             // Video controls
-            tabPageTranslate.Text = _language.VideoControls.Translate;
-            tabPageCreate.Text = _language.VideoControls.Create;
-            tabPageAdjust.Text = _language.VideoControls.Adjust;
+            tabPageTranslate.Text = _language.VideoControls.Translate + "  ";
+            tabPageCreate.Text = _language.VideoControls.Create + "  ";
+            tabPageAdjust.Text = _language.VideoControls.Adjust + "  ";
             checkBoxSyncListViewWithVideoWhilePlaying.Text = _language.VideoControls.SelectCurrentElementWhilePlaying;
             if (_videoFileName == null)
                 labelVideoInfo.Text = Configuration.Settings.Language.General.NoVideoLoaded;
@@ -12221,11 +12221,11 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 tabFont = new Font(tc.Font, FontStyle.Bold); 
                 e.Graphics.FillRectangle(new SolidBrush(SystemColors.Window), e.Bounds);
-
             }
             Rectangle tabBounds = tc.GetTabRect(e.Index);
             var stringFlags = new StringFormat { Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center };
-            e.Graphics.DrawString(tc.TabPages[e.Index].Text, tabFont, textBrush, tabBounds, new StringFormat(stringFlags));
+            e.Graphics.DrawString(tc.TabPages[e.Index].Text.Trim(), tabFont, textBrush, tabBounds, new StringFormat(stringFlags));
+            //tc.DrawMode = TabDrawMode.Normal;
         }
 
     }
