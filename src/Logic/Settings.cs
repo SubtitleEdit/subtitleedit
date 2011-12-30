@@ -363,6 +363,8 @@ namespace Nikse.SubtitleEdit.Logic
         public bool GenerateSpectrogram { get; set; }
         public string SpectrogramAppearance { get; set; }
         public int WaveFormMininumSampleRate { get; set; }
+        public double WaveformSeeksSilenceDurationSeconds { get; set; }
+        public int WaveformSeeksSilenceMaxVolume { get; set; }
 
         public VideoControlsSettings()
         {
@@ -380,6 +382,8 @@ namespace Nikse.SubtitleEdit.Logic
             WaveFormMouseWheelScrollUpIsForward = true;
             SpectrogramAppearance = "OneColorGradient";
             WaveFormMininumSampleRate = 126;
+            WaveformSeeksSilenceDurationSeconds = 0.3;
+            WaveformSeeksSilenceMaxVolume = 10;
         }
     }
 
@@ -479,6 +483,9 @@ namespace Nikse.SubtitleEdit.Logic
         public string WaveformZoomIn { get; set; }
         public string WaveformZoomOut { get; set; }
         public string WaveformPlaySelection { get; set; }
+        public string WaveformSearchSilenceForward { get; set; }
+        public string WaveformSearchSilenceBack { get; set; }
+        
 
         public Shortcuts()
         {
@@ -518,6 +525,8 @@ namespace Nikse.SubtitleEdit.Logic
             MainInsertBefore = "Control+Shift+Ins";
             WaveformVerticalZoom = string.Empty;
             WaveformPlaySelection = string.Empty;
+            WaveformSearchSilenceForward = string.Empty;
+            WaveformSearchSilenceBack = string.Empty;
         }
     }
 
@@ -1127,6 +1136,12 @@ namespace Nikse.SubtitleEdit.Logic
             subNode = node.SelectSingleNode("WaveFormMininumSampleRate");
             if (subNode != null)
                 settings.VideoControls.WaveFormMininumSampleRate = Convert.ToInt32(subNode.InnerText);
+            subNode = node.SelectSingleNode("WaveformSeeksSilenceDurationSeconds");
+            if (subNode != null)
+                settings.VideoControls.WaveformSeeksSilenceDurationSeconds = Convert.ToDouble(subNode.InnerText, System.Globalization.CultureInfo.InvariantCulture);
+            subNode = node.SelectSingleNode("WaveformSeeksSilenceMaxVolume");
+            if (subNode != null)
+                settings.VideoControls.WaveformSeeksSilenceMaxVolume = Convert.ToInt32(subNode.InnerText);
 
             settings.NetworkSettings = new NetworkSettings();
             node = doc.DocumentElement.SelectSingleNode("NetworkSettings");
@@ -1330,6 +1345,12 @@ namespace Nikse.SubtitleEdit.Logic
                 subNode = node.SelectSingleNode("WaveformPlaySelection");
                 if (subNode != null)
                     settings.Shortcuts.WaveformPlaySelection = subNode.InnerText;
+                subNode = node.SelectSingleNode("WaveformSearchSilenceForward");
+                if (subNode != null)
+                    settings.Shortcuts.WaveformSearchSilenceForward = subNode.InnerText;
+                subNode = node.SelectSingleNode("WaveformSearchSilenceBack");
+                if (subNode != null)
+                    settings.Shortcuts.WaveformSearchSilenceBack = subNode.InnerText;
             }
 
             settings.RemoveTextForHearingImpaired = new RemoveTextForHearingImpairedSettings();
@@ -1555,6 +1576,8 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("GenerateSpectrogram", settings.VideoControls.GenerateSpectrogram.ToString());
             textWriter.WriteElementString("SpectrogramAppearance", settings.VideoControls.SpectrogramAppearance);
             textWriter.WriteElementString("WaveFormMininumSampleRate", settings.VideoControls.WaveFormMininumSampleRate.ToString());
+            textWriter.WriteElementString("WaveformSeeksSilenceDurationSeconds", settings.VideoControls.WaveformSeeksSilenceDurationSeconds.ToString(System.Globalization.CultureInfo.InvariantCulture));
+            textWriter.WriteElementString("WaveformSeeksSilenceMaxVolume", settings.VideoControls.WaveformSeeksSilenceMaxVolume.ToString());
             textWriter.WriteEndElement();
 
             textWriter.WriteStartElement("NetworkSettings", "");
@@ -1633,6 +1656,8 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("WaveformZoomIn", settings.Shortcuts.WaveformZoomIn);
             textWriter.WriteElementString("WaveformZoomOut", settings.Shortcuts.WaveformZoomOut);
             textWriter.WriteElementString("WaveformPlaySelection", settings.Shortcuts.WaveformPlaySelection);
+            textWriter.WriteElementString("WaveformSearchSilenceForward", settings.Shortcuts.WaveformSearchSilenceForward);
+            textWriter.WriteElementString("WaveformSearchSilenceBack", settings.Shortcuts.WaveformSearchSilenceBack);
             textWriter.WriteEndElement();
 
             textWriter.WriteStartElement("RemoveTextForHearingImpaired", "");

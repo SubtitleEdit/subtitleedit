@@ -1206,6 +1206,8 @@
             public string GoToPrevious { get; set; }
             public string ToggleDialogueDashes { get; set; }
             public string VerticalZoom { get; set; }
+            public string WaveformSeekSilenceForward { get; set; }
+            public string WaveformSeekSilenceBack { get; set; }
             public string GoBack100Milliseconds { get; set; }
             public string GoForward100Milliseconds { get; set; }
             public string GoBack500Milliseconds { get; set; }

@@ -506,6 +506,10 @@ namespace Nikse.SubtitleEdit.Forms
             audioVisualizerNode.Nodes.Add(Configuration.Settings.Language.WaveForm.ZoomOut + GetShortcutText(Configuration.Settings.Shortcuts.WaveformZoomOut));
             if (!string.IsNullOrEmpty(Configuration.Settings.Language.Settings.VerticalZoom)) // TODO: Remove in SE 3.3
                 audioVisualizerNode.Nodes.Add(Configuration.Settings.Language.Settings.VerticalZoom + GetShortcutText(Configuration.Settings.Shortcuts.WaveformVerticalZoom));
+            if (!string.IsNullOrEmpty(Configuration.Settings.Language.Settings.WaveformSeekSilenceForward)) // TODO: Remove in SE 3.3
+                audioVisualizerNode.Nodes.Add(Configuration.Settings.Language.Settings.WaveformSeekSilenceForward + GetShortcutText(Configuration.Settings.Shortcuts.WaveformSearchSilenceForward));
+            if (!string.IsNullOrEmpty(Configuration.Settings.Language.Settings.WaveformSeekSilenceBack)) // TODO: Remove in SE 3.3
+                audioVisualizerNode.Nodes.Add(Configuration.Settings.Language.Settings.WaveformSeekSilenceBack + GetShortcutText(Configuration.Settings.Shortcuts.WaveformSearchSilenceBack));
             audioVisualizerNode.Nodes.Add(Configuration.Settings.Language.WaveForm.PlaySelection + GetShortcutText(Configuration.Settings.Shortcuts.WaveformPlaySelection));
             treeViewShortcuts.Nodes.Add(audioVisualizerNode);
 
@@ -1012,7 +1016,10 @@ namespace Nikse.SubtitleEdit.Forms
                         Configuration.Settings.Shortcuts.WaveformPlaySelection = GetShortcut(node.Text);
                     else if (text == (Configuration.Settings.Language.Settings.VerticalZoom).Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.WaveformVerticalZoom = GetShortcut(node.Text);
-
+                    else if (Configuration.Settings.Language.Settings.WaveformSeekSilenceForward != null && text == (Configuration.Settings.Language.Settings.WaveformSeekSilenceForward).Replace("&", string.Empty)) // SE 3.3
+                        Configuration.Settings.Shortcuts.WaveformSearchSilenceForward = GetShortcut(node.Text);
+                    else if (Configuration.Settings.Language.Settings.WaveformSeekSilenceBack != null && text == (Configuration.Settings.Language.Settings.WaveformSeekSilenceBack).Replace("&", string.Empty)) // SE 3.3
+                        Configuration.Settings.Shortcuts.WaveformSearchSilenceBack = GetShortcut(node.Text);
                 }
             }
 
