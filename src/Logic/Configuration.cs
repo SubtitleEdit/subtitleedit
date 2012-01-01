@@ -104,9 +104,9 @@ namespace Nikse.SubtitleEdit.Logic
                     else
                     {
                         string installerPath = GetInstallerPath();
-                        string pf = System.Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles).TrimEnd('\\');
+                        string pf = System.Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles).TrimEnd(Path.DirectorySeparatorChar);
                         string appDataRoamingPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Subtitle Edit");
-                        if (installerPath != null && BaseDirectory.ToLower().StartsWith(installerPath.ToLower().TrimEnd('\\')))
+                        if (installerPath != null && BaseDirectory.ToLower().StartsWith(installerPath.ToLower().TrimEnd(Path.DirectorySeparatorChar)))
                         {
                             if (Directory.Exists(appDataRoamingPath))
                             {
@@ -114,9 +114,18 @@ namespace Nikse.SubtitleEdit.Logic
                             }
                             else
                             {
-                                Instance._dataDir = BaseDirectory;
-                                System.Windows.Forms.MessageBox.Show("Please re-install Subtitle Edit (installer version)");
-                                System.Windows.Forms.Application.ExitThread();
+                                try
+                                {
+                                    System.IO.Directory.CreateDirectory(appDataRoamingPath);
+                                    System.IO.Directory.CreateDirectory(Path.Combine(appDataRoamingPath, "Dictionaries"));
+                                    Instance._dataDir = appDataRoamingPath + Path.DirectorySeparatorChar;
+                                }
+                                catch
+                                {
+                                    Instance._dataDir = BaseDirectory;
+                                    System.Windows.Forms.MessageBox.Show("Please re-install Subtitle Edit (installer version)");
+                                    System.Windows.Forms.Application.ExitThread();
+                                }
                             }
                         }
                         else if (BaseDirectory.ToLower().StartsWith(pf.ToLower()) && Environment.OSVersion.Version.Major >= 6 ) // 6 == Vista/Win2008Server/Win7
