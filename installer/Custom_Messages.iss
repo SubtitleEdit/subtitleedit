@@ -120,9 +120,9 @@ de.types_default=Standardinstallation
 
 
 ; Danish
-dk.comp_translations=Translations
-dk.msg_AppIsRunning=Setup has detected that Subtitle Edit is currently running.%n%nPlease close all instances of it now, then click OK to continue, or Cancel to exit.
-dk.msg_AppIsRunningUninstall=Uninstall has detected that Subtitle Edit is currently running.%n%nPlease close all instances of it now, then click OK to continue, or Cancel to exit.
+dk.comp_translations=Oversættelser
+dk.msg_AppIsRunning=Subtitle Edit kører i øjeblikket.%n%nLuk venligst Subtitle Edit og klik på OK for at fortsætte eller Fortryd for at afbryde installationen.
+dk.msg_AppIsRunningUninstall=Subtitle Edit kører i øjeblikket.%n%nLuk venligst Subtitle Edit og klik på OK for at fortsætte eller Fortryd for at afbryde afinstallationen.
 dk.msg_AskToDownNET=Subtitle Edit kræver .NET Framework 2.0 eller nyere. Download and installer .NET Framework og kør setup igen.%n%nVil du downloade .NET Framework 2.0 nu?
 dk.msg_DeleteSettings=Vil du også slette Subtitle Edit's indstillinger og evt. ændringer i ordlister?%n%nHvis du vil geninstallere Subtitle Edit senere kan du beholde disse indstillinger.
 dk.msg_OptimizingPerformance=Optimerer performance...
