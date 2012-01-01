@@ -1,6 +1,6 @@
 ;* Subtitle Edit - Installer script
 ;*
-;* Copyright (C) 2010-2011 XhmikosR
+;* Copyright (C) 2010-2012 XhmikosR
 ;*
 ;* This file is part of Subtitle Edit.
 ;*
@@ -31,7 +31,7 @@
 #endif
 
 
-#define app_copyright "Copyright © 2001-2011, Nikse"
+#define app_copyright "Copyright © 2001-2012, Nikse"
 ; If you don't define "localize", i.e. comment out the following line then no translations
 ; for SubtitleEdit or the installer itself will be included in the installer
 #define localize
