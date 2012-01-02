@@ -1,9 +1,10 @@
 Subtitle Edit Changelog
 
-3.2.3 (xth December 2011)
+3.2.3 (xth January 2011)
  * NEW:
    * Added Brazilian Portuguese - thx XXXXXXXXXX 
    * Added Italian language file - thx Maff
+   * Added Portuguese (Portugal) language file - thx Ricardo Perdigão
    * Added Japanese language file - thx Nardog
    * Added Spanish language file - thx m2s
    * Support for subtitle format AvidCaption - thx Laszlo
@@ -21,6 +22,7 @@ Subtitle Edit Changelog
    * Subtitle format FCP Xml improved - thx Ulrik
    * Subtitle format D-Cinema improved - thx Karam
    * Splitting of lines - Thx Trottel
+   * Auto break lines - thx Majid
  * FIXED:
    * Fixed crash when setting Options - thx karmazyn
    * Fixed crash in set color (or set font) - thx LEO33
