@@ -116,6 +116,7 @@ Name: it;  MessagesFile: compiler:Languages\Italian.isl
 Name: ja;  MessagesFile: compiler:Languages\Japanese.isl
 Name: nl;  MessagesFile: compiler:Languages\Dutch.isl
 Name: pl;  MessagesFile: compiler:Languages\Polish.isl
+Name: pt;  MessagesFile: compiler:Languages\Portuguese.isl
 Name: ro;  MessagesFile: Languages\Romanian.isl
 Name: ru;  MessagesFile: compiler:Languages\Russian.isl
 Name: srC; MessagesFile: compiler:Languages\SerbianCyrillic.isl
@@ -195,6 +196,7 @@ Source: {#bindir}\Languages\ja-JP.xml;             DestDir: {app}\Languages;    
 Source: {#bindir}\Languages\nl-NL.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
 Source: {#bindir}\Languages\pl-PL.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
 Source: {#bindir}\Languages\pt-BR.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
+Source: {#bindir}\Languages\pt-PT.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
 Source: {#bindir}\Languages\ro-RO.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
 Source: {#bindir}\Languages\ru-RU.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
 Source: {#bindir}\Languages\sr-Cyrl-RS.xml;        DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
@@ -286,6 +288,7 @@ Type: files;      Name: {app}\Languages\ja-JP.xml;      Check: not IsComponentSe
 Type: files;      Name: {app}\Languages\nl-NL.xml;      Check: not IsComponentSelected('translations') and IsUpgrade()
 Type: files;      Name: {app}\Languages\pl-PL.xml;      Check: not IsComponentSelected('translations') and IsUpgrade()
 Type: files;      Name: {app}\Languages\pt-BR.xml;      Check: not IsComponentSelected('translations') and IsUpgrade()
+Type: files;      Name: {app}\Languages\pt-PT.xml;      Check: not IsComponentSelected('translations') and IsUpgrade()
 Type: files;      Name: {app}\Languages\ro-RO.xml;      Check: not IsComponentSelected('translations') and IsUpgrade()
 Type: files;      Name: {app}\Languages\ru-RU.xml;      Check: not IsComponentSelected('translations') and IsUpgrade()
 Type: files;      Name: {app}\Languages\sr-Cyrl-RS.xml; Check: not IsComponentSelected('translations') and IsUpgrade()
