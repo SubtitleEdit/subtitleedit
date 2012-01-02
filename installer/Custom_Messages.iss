@@ -64,19 +64,19 @@ bg.types_default=Default installation
 
 ; Portuguese (Brazil)
 br.comp_translations=Traduções
-br.msg_AppIsRunning=A instalação detectou que o Subtitle Edit está em execução.%n%nPor favor, feche todas as instâncias agora, então clique OK para continuar, ou Cancelar para sair.
-br.msg_AppIsRunningUninstall=A desinstalação detectou que o Subtitle Edit está em execução.%n%nPor favor, feche todas as instâncias, então clique OK para continuar, ou Cancelar para sair.
-br.msg_AskToDownNET=O Subtitle Edit necessita do .NET Framework 2.0. Por favor, baixe e instale o .NET Framework e execute a instalação novamente.%n%nDeseja baixar o .NET Framework 2.0 agora?
-br.msg_DeleteSettings=Deseja também deletar as configurações do Subtitle Edit e quaisquer mudanças feitas nos dicionários?%n%nSe você planeja reinstalar o Subtitle Edit você não precisa deletar estes itens.
+br.msg_AppIsRunning=A instalação detectou que o Subtitle Edit está em execução.%n%nPor favor, feche todas as instâncias agora, e clique OK para continuar, ou Cancelar para sair.
+br.msg_AppIsRunningUninstall=A desinstalação detectou que o Subtitle Edit está em execução.%n%nPor favor, feche todas as instâncias, e clique OK para continuar, ou Cancelar para sair.
+br.msg_AskToDownNET=O Subtitle Edit necessita do .NET Framework 2.0. Por favor, baixe e instale o .NET Framework, e execute a instalação novamente.%n%nDeseja baixar o .NET Framework 2.0 agora?
+br.msg_DeleteSettings=Deseja remover as configurações do Subtitle Edit e quaisquer mudanças feitas nos dicionários?%n%nSe planeia reinstalar o Subtitle Edit não necessita remover estes itens.
 br.msg_OptimizingPerformance=Otimizando performance...
 br.msg_SetupIsRunningWarning=A instalação do Subtitle Edit já está em execução!
-br.run_VisitWebsite=Visitar site do Subtitle Edit
-br.sm_com_Changelog=Changelog do Subtitle Edit
-br.tsk_AllUsers=Todos os usuários
-br.tsk_CurrentUser=Usuário atual
+br.run_VisitWebsite=Visitar o site do Subtitle Edit
+br.sm_com_Changelog=Relatório de alterações do Subtitle Edit
+br.tsk_AllUsers=Todos os utilizadores
+br.tsk_CurrentUser=Utilizador atual
 br.tsk_Other=Outro:
-br.tsk_ResetDictionaries=Resetar Dicionários e deletar quaisquer nomes personalizados
-br.tsk_ResetSettings=Resetar configurações do  Subtitle Edit
+br.tsk_ResetDictionaries=Reiniciar Dicionários e remover quaisquer nomes personalizados
+br.tsk_ResetSettings=Reiniciar configurações do  Subtitle Edit
 br.types_custom=Instalação personalizada
 br.types_default=Instalação padrão
 
@@ -402,4 +402,5 @@ sv.tsk_ResetDictionaries=Reset Dictionaries and delete any custom names
 sv.tsk_ResetSettings=Reset Subtitle Edit's settings
 sv.types_custom=Custom installation
 sv.types_default=Default installation
+
 #endif
