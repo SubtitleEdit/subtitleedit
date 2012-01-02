@@ -9374,12 +9374,12 @@ namespace Nikse.SubtitleEdit.Forms
         }
 
         private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
-        {           
+        {
             if (tabControlButtons.SelectedIndex == 0)
             {
                 tabControlButtons.Width = groupBoxTranslateSearch.Left + groupBoxTranslateSearch.Width + 10;
                 Configuration.Settings.VideoControls.LastActiveTab = "Translate";
-                
+
             }
             else if (tabControlButtons.SelectedIndex == 1)
             {
@@ -12222,10 +12222,10 @@ namespace Nikse.SubtitleEdit.Forms
         {
             TabControl tc = (TabControl)sender;
             Brush textBrush = new SolidBrush(this.ForeColor);
-            Font tabFont = new Font(tc.Font, FontStyle.Regular); 
+            Font tabFont = new Font(tc.Font, FontStyle.Regular);
             if (e.State == DrawItemState.Selected)
             {
-                tabFont = new Font(tc.Font, FontStyle.Bold); 
+                tabFont = new Font(tc.Font, FontStyle.Bold);
                 e.Graphics.FillRectangle(new SolidBrush(SystemColors.Window), e.Bounds);
             }
             Rectangle tabBounds = tc.GetTabRect(e.Index);
