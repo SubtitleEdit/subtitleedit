@@ -1100,7 +1100,7 @@ namespace Nikse.SubtitleEdit.Controls
                 Locked = !Locked;
                 Invalidate();
                 e.SuppressKeyPress = true;
-            }           
+            }
         }
 
         public double FindDataBelowThresshold(int thresshold, double durationInSeconds)

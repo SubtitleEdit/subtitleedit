@@ -985,7 +985,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Languages\bg-BG.xml">
-      <SubType>Designer</SubType>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Languages\cs-CZ.xml">
@@ -993,7 +992,6 @@
     </Content>
     <Content Include="Languages\da-DK.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <SubType>Designer</SubType>
     </Content>
     <Content Include="Languages\de-DE.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -1006,7 +1004,6 @@
     </Content>
     <Content Include="Languages\eu-ES.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <SubType>Designer</SubType>
     </Content>
     <Content Include="Languages\fr-FR.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -1016,14 +1013,12 @@
     </Content>
     <Content Include="Languages\it-IT.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <SubType>Designer</SubType>
     </Content>
     <Content Include="Languages\ja-JP.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Languages\nl-NL.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <SubType>Designer</SubType>
     </Content>
     <Content Include="Languages\pl-PL.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -1033,22 +1028,18 @@
     </Content>
     <Content Include="Languages\pt-PT.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <SubType>Designer</SubType>
     </Content>
     <Content Include="Languages\ro-RO.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Languages\ru-RU.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <SubType>Designer</SubType>
     </Content>
     <Content Include="Languages\sr-Cyrl-RS.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <SubType>Designer</SubType>
     </Content>
     <Content Include="Languages\sr-Latn-RS.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <SubType>Designer</SubType>
     </Content>
     <Content Include="Languages\sv-SE.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
