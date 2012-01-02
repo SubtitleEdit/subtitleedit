@@ -96,12 +96,18 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
+                if (Main.HasVobSubHeader(openFileDialog1.FileName) || Main.IsBluRaySupFile(openFileDialog1.FileName))
+                {
+                    MessageBox.Show("Cannot compare with image based subtitles"); //TODO: fix language string in SE 3.3
+                    return;
+                }
                 _subtitle1 = new Subtitle();
                 Encoding encoding;
                 _subtitle1.LoadSubtitle(openFileDialog1.FileName, out encoding, null);
                 subtitleListView1.Fill(_subtitle1);
                 labelSubtitle1.Text = openFileDialog1.FileName;
-                CompareSubtitles();
+                if (_subtitle1.Paragraphs.Count > 0)
+                    CompareSubtitles();
             }
         }
 
@@ -111,12 +117,18 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
+                if (Main.HasVobSubHeader(openFileDialog1.FileName) || Main.IsBluRaySupFile(openFileDialog1.FileName))
+                {
+                    MessageBox.Show("Cannot compare with image based subtitles"); //TODO: fix language string in SE 3.3
+                    return;
+                }
                 _subtitle2 = new Subtitle();
                 Encoding encoding;
                 _subtitle2.LoadSubtitle(openFileDialog1.FileName, out encoding, null);
                 subtitleListView2.Fill(_subtitle2);
                 labelSubtitle2.Text = openFileDialog1.FileName;
-                CompareSubtitles();
+                if (_subtitle2.Paragraphs.Count > 0)
+                    CompareSubtitles();
             }
         }
 

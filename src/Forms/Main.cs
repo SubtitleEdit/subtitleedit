@@ -6604,11 +6604,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             try
             {
-                var buffer = new byte[4];
-                var fs = new FileStream(subFileName, FileMode.Open, FileAccess.Read, FileShare.Read) {Position = 0};
-                fs.Read(buffer, 0, 4);
-                bool isHeaderOk = VobSubParser.IsMpeg2PackHeader(buffer) || VobSubParser.IsPrivateStream1(buffer, 0);
-                fs.Close();
+                bool isHeaderOk = HasVobSubHeader(subFileName);
                 if (isHeaderOk)
                 {
                     if (!verbose)
@@ -6630,7 +6626,17 @@ namespace Nikse.SubtitleEdit.Forms
             return false;
         }
 
-        private bool IsBluRaySupFile(string subFileName)
+        public static bool HasVobSubHeader(string subFileName)
+        {
+            var buffer = new byte[4];
+            var fs = new FileStream(subFileName, FileMode.Open, FileAccess.Read, FileShare.Read) { Position = 0 };
+            fs.Read(buffer, 0, 4);
+            bool isHeaderOk = VobSubParser.IsMpeg2PackHeader(buffer) || VobSubParser.IsPrivateStream1(buffer, 0);
+            fs.Close();
+            return isHeaderOk;
+        }
+
+        public static bool IsBluRaySupFile(string subFileName)
         {
             var buffer = new byte[4];
             var fs = new FileStream(subFileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite ) {Position = 0};
