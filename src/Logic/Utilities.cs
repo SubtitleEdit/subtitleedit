@@ -258,6 +258,14 @@ namespace Nikse.SubtitleEdit.Logic
             return AutoBreakLine(text, 5, Configuration.Settings.General.SubtitleLineMaximumLength, Configuration.Settings.Tools.MergeLinesShorterThan);
         }
 
+        private static bool CanBreak(string s, int index)
+        {
+             char nextChar = ' ';
+             if (index < s.Length)
+                 nextChar = s[index];
+             return "\r\n\t ".Contains(nextChar.ToString());
+        }
+
         public static string AutoBreakLine(string text, int mininumLength, int maximumLength, int mergeLinesShorterThan)
         {
             string s = text.Replace(Environment.NewLine, " ");
@@ -315,7 +323,7 @@ namespace Nikse.SubtitleEdit.Logic
                 {
                     if (mid + j + 1 < s.Length && mid + j > 0)
                     {
-                        if (".!?".Contains(s[mid + j].ToString()) && !IsPartOfNumber(s, mid + j))
+                        if (".!?".Contains(s[mid + j].ToString()) && !IsPartOfNumber(s, mid + j) && CanBreak(s, mid + j + 1))
                         {
                             splitPos = mid + j + 1;
                             if (".!?0123456789".Contains(s[splitPos].ToString()))
@@ -326,7 +334,7 @@ namespace Nikse.SubtitleEdit.Logic
                             }
                             break;
                         }
-                        if (".!?".Contains(s[mid - j].ToString()) && !IsPartOfNumber(s, mid - j))
+                        if (".!?".Contains(s[mid - j].ToString()) && !IsPartOfNumber(s, mid - j) && CanBreak(s, (mid - j) + 1))
                         {
                             splitPos = mid - j;
                             splitPos++;
