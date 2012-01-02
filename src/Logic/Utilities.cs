@@ -133,7 +133,7 @@ namespace Nikse.SubtitleEdit.Logic
 
         public static IEnumerable<string> GetMovieFileExtensions()
         {
-            return new List<string> { ".avi", ".mkv", ".wmv", ".mpg", ".mpeg", ".divx", ".mp4", ".asf", ".flv", ".mov", ".m4v", ".vob" };
+            return new List<string> { ".avi", ".mkv", ".wmv", ".mpg", ".mpeg", ".divx", ".mp4", ".asf", ".flv", ".mov", ".m4v", ".vob", ".ogv", ".webm" };
         }
 
         public static string GetVideoFileFilter()
