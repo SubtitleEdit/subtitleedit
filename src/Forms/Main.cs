@@ -1438,9 +1438,7 @@ namespace Nikse.SubtitleEdit.Forms
             openFileDialog1.FileName = string.Empty;
             openFileDialog1.Filter = Utilities.GetOpenDialogFilter();
             if (openFileDialog1.ShowDialog(this) == DialogResult.OK)
-            {
                 OpenSubtitle(openFileDialog1.FileName, null);
-            }
         }
 
         public double CurrentFrameRate
@@ -1507,7 +1505,12 @@ namespace Nikse.SubtitleEdit.Forms
                     mkv.GetMatroskaInfo(fileName, ref isValid, ref hasConstantFrameRate, ref frameRate, ref width, ref height, ref milliseconds, ref videoCodec);
                     if (isValid)
                     {
-                        ImportSubtitleFromMatroskaFile();
+                        ImportSubtitleFromMatroskaFile(fileName);
+                        if (Path.GetExtension(fileName).ToLower() == ".mkv")
+                        {
+                            videoFileName = fileName;
+                            CheckOpenVideo(fileName, videoFileName);
+                        }
                         return;
                     }
                 }
@@ -1516,7 +1519,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 //if (Path.GetExtension(fileName).ToLower() == ".ts" && fi.Length > 10000  && IsTransportStream(fileName)) //TODO: Also check mpg, mpeg - and file header!
                 //{
-                //    ImportSubtitleFromTransportStream();
+                //    ImportSubtitleFromTransportStream(fileName);
                 //    return;
                 //}
 
@@ -1683,19 +1686,7 @@ namespace Nikse.SubtitleEdit.Forms
                     audioVisualizer.ResetSpectrogram();
                     audioVisualizer.Invalidate();
 
-                    if (Configuration.Settings.General.ShowVideoPlayer || Configuration.Settings.General.ShowAudioVisualizer)
-                    {
-                        if (!string.IsNullOrEmpty(videoFileName) && File.Exists(videoFileName))
-                        {
-                            OpenVideo(videoFileName);
-                        }
-                        else if (!string.IsNullOrEmpty(fileName) && (toolStripButtonToggleVideo.Checked || toolStripButtonToggleWaveForm.Checked))
-                        {
-                            TryToFindAndOpenVideoFile(Path.Combine(Path.GetDirectoryName(fileName), Path.GetFileNameWithoutExtension(fileName)));
-                        }
-                    }
-                    videoFileLoaded = _videoFileName != null;
-
+                    videoFileLoaded = CheckOpenVideo(fileName, videoFileName);
 
                     if (Configuration.Settings.RecentFiles.Files.Count > 0 &&
                         Configuration.Settings.RecentFiles.Files[0].FileName == fileName)
@@ -1777,6 +1768,22 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 MessageBox.Show(string.Format(_language.FileNotFound, fileName));
             }
+        }
+
+        private bool CheckOpenVideo(string fileName, string videoFileName)
+        {
+            if (Configuration.Settings.General.ShowVideoPlayer || Configuration.Settings.General.ShowAudioVisualizer)
+            {
+                if (!string.IsNullOrEmpty(videoFileName) && File.Exists(videoFileName))
+                {
+                    OpenVideo(videoFileName);
+                }
+                else if (!string.IsNullOrEmpty(fileName) && (toolStripButtonToggleVideo.Checked || toolStripButtonToggleWaveForm.Checked))
+                {
+                    TryToFindAndOpenVideoFile(Path.Combine(Path.GetDirectoryName(fileName), Path.GetFileNameWithoutExtension(fileName)));
+                }
+            }
+            return _videoFileName != null;
         }
 
         private bool IsTransportStream(string fileName)
@@ -5820,15 +5827,15 @@ namespace Nikse.SubtitleEdit.Forms
             if (openFileDialog1.ShowDialog(this) == DialogResult.OK)
             {
                 openFileDialog1.InitialDirectory = Path.GetDirectoryName(openFileDialog1.FileName);
-                ImportSubtitleFromMatroskaFile();
+                ImportSubtitleFromMatroskaFile(openFileDialog1.FileName);
             }
         }
 
-        private void ImportSubtitleFromMatroskaFile()
+        private void ImportSubtitleFromMatroskaFile(string fileName)
         {
             bool isValid;
             var matroska = new Matroska();
-            var subtitleList = matroska.GetMatroskaSubtitleTracks(openFileDialog1.FileName, out isValid);
+            var subtitleList = matroska.GetMatroskaSubtitleTracks(fileName, out isValid);
             if (isValid)
             {
                 if (subtitleList.Count == 0)
@@ -5845,19 +5852,19 @@ namespace Nikse.SubtitleEdit.Forms
                             subtitleChooser.Initialize(subtitleList);
                             if (subtitleChooser.ShowDialog(this) == DialogResult.OK)
                             {
-                                LoadMatroskaSubtitle(subtitleList[subtitleChooser.SelectedIndex], openFileDialog1.FileName);
+                                LoadMatroskaSubtitle(subtitleList[subtitleChooser.SelectedIndex], fileName);
                             }
                         }
                         else
                         {
-                            LoadMatroskaSubtitle(subtitleList[0], openFileDialog1.FileName);
+                            LoadMatroskaSubtitle(subtitleList[0], fileName);
                         }
                     }
                 }
             }
             else
             {
-                MessageBox.Show(string.Format(_language.NotAValidMatroskaFileX, openFileDialog1.FileName));
+                MessageBox.Show(string.Format(_language.NotAValidMatroskaFileX, fileName));
             }
         }
 
@@ -6183,10 +6190,10 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private bool ImportSubtitleFromTransportStream()
+        private bool ImportSubtitleFromTransportStream(string fileName)
         {
             var tsParser = new Nikse.SubtitleEdit.Logic.TransportStream.TransportStreamParser();
-            tsParser.ParseTsFile(openFileDialog1.FileName);
+            tsParser.ParseTsFile(fileName);
 
             if (tsParser.SubtitlePacketIds.Count == 0)
             {
@@ -6218,7 +6225,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             var formSubOcr = new VobSubOcr();
-            formSubOcr.Initialize(subtitles, Configuration.Settings.VobSubOcr, openFileDialog1.FileName);
+            formSubOcr.Initialize(subtitles, Configuration.Settings.VobSubOcr, fileName);
             if (formSubOcr.ShowDialog(this) == DialogResult.OK)
             {
                 MakeHistoryForUndo(_language.BeforeImportingDvdSubtitle);
