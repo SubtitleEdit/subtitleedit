@@ -82,6 +82,9 @@ namespace Nikse.SubtitleEdit.Logic
         public string Interjections { get; set; }
         public string MicrosoftBingApiId { get; set; }
         public string GoogleApiKey { get; set; }
+        public bool ListViewSyntaxColorDuration { get; set; }
+        public bool ListViewSyntaxColorOverlap { get; set; }
+        public bool ListViewSyntaxColorLongLines { get; set; }
 
         public ToolsSettings()
         {
@@ -937,6 +940,15 @@ namespace Nikse.SubtitleEdit.Logic
             subNode = node.SelectSingleNode("GoogleApiKey");
             if (subNode != null)
                 settings.Tools.GoogleApiKey = subNode.InnerText;
+            subNode = node.SelectSingleNode("ListViewSyntaxColorDuration");
+            if (subNode != null)
+                settings.Tools.ListViewSyntaxColorDuration = Convert.ToBoolean(subNode.InnerText);
+            subNode = node.SelectSingleNode("ListViewSyntaxColorLongLines");
+            if (subNode != null)
+                settings.Tools.ListViewSyntaxColorLongLines = Convert.ToBoolean(subNode.InnerText);
+            subNode = node.SelectSingleNode("ListViewSyntaxColorOverlap");
+            if (subNode != null)
+                settings.Tools.ListViewSyntaxColorOverlap = Convert.ToBoolean(subNode.InnerText);
 
             settings.SubtitleSettings = new Nikse.SubtitleEdit.Logic.SubtitleSettings();
             node = doc.DocumentElement.SelectSingleNode("SubtitleSettings");
@@ -1499,6 +1511,9 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("Interjections", settings.Tools.Interjections);
             textWriter.WriteElementString("MicrosoftBingApiId", settings.Tools.MicrosoftBingApiId);
             textWriter.WriteElementString("GoogleApiKey", settings.Tools.GoogleApiKey);
+            textWriter.WriteElementString("ListViewSyntaxColorDuration", settings.Tools.ListViewSyntaxColorDuration.ToString());
+            textWriter.WriteElementString("ListViewSyntaxColorLongLines", settings.Tools.ListViewSyntaxColorLongLines.ToString());
+            textWriter.WriteElementString("ListViewSyntaxColorOverlap", settings.Tools.ListViewSyntaxColorOverlap.ToString());
             textWriter.WriteEndElement();
 
             textWriter.WriteStartElement("SubtitleSettings", "");

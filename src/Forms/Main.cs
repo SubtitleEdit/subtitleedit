@@ -1505,12 +1505,9 @@ namespace Nikse.SubtitleEdit.Forms
                     mkv.GetMatroskaInfo(fileName, ref isValid, ref hasConstantFrameRate, ref frameRate, ref width, ref height, ref milliseconds, ref videoCodec);
                     if (isValid)
                     {
-                        ImportSubtitleFromMatroskaFile(fileName);
+                        ImportSubtitleFromMatroskaFile(fileName);                        
                         if (Path.GetExtension(fileName).ToLower() == ".mkv")
-                        {
-                            videoFileName = fileName;
-                            CheckOpenVideo(fileName, videoFileName);
-                        }
+                            OpenVideo(fileName);
                         return;
                     }
                 }
@@ -1686,7 +1683,18 @@ namespace Nikse.SubtitleEdit.Forms
                     audioVisualizer.ResetSpectrogram();
                     audioVisualizer.Invalidate();
 
-                    videoFileLoaded = CheckOpenVideo(fileName, videoFileName);
+                    if (Configuration.Settings.General.ShowVideoPlayer || Configuration.Settings.General.ShowAudioVisualizer)
+                    {
+                        if (!string.IsNullOrEmpty(videoFileName) && File.Exists(videoFileName))
+                        {
+                            OpenVideo(videoFileName);
+                        }
+                        else if (!string.IsNullOrEmpty(fileName) && (toolStripButtonToggleVideo.Checked || toolStripButtonToggleWaveForm.Checked))
+                        {
+                            TryToFindAndOpenVideoFile(Path.Combine(Path.GetDirectoryName(fileName), Path.GetFileNameWithoutExtension(fileName)));
+                        }
+                    }
+                    videoFileLoaded = _videoFileName != null;
 
                     if (Configuration.Settings.RecentFiles.Files.Count > 0 &&
                         Configuration.Settings.RecentFiles.Files[0].FileName == fileName)
@@ -1768,23 +1776,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 MessageBox.Show(string.Format(_language.FileNotFound, fileName));
             }
-        }
-
-        private bool CheckOpenVideo(string fileName, string videoFileName)
-        {
-            if (Configuration.Settings.General.ShowVideoPlayer || Configuration.Settings.General.ShowAudioVisualizer)
-            {
-                if (!string.IsNullOrEmpty(videoFileName) && File.Exists(videoFileName))
-                {
-                    OpenVideo(videoFileName);
-                }
-                else if (!string.IsNullOrEmpty(fileName) && (toolStripButtonToggleVideo.Checked || toolStripButtonToggleWaveForm.Checked))
-                {
-                    TryToFindAndOpenVideoFile(Path.Combine(Path.GetDirectoryName(fileName), Path.GetFileNameWithoutExtension(fileName)));
-                }
-            }
-            return _videoFileName != null;
-        }
+        }     
 
         private bool IsTransportStream(string fileName)
         {
@@ -5853,11 +5845,15 @@ namespace Nikse.SubtitleEdit.Forms
                             if (subtitleChooser.ShowDialog(this) == DialogResult.OK)
                             {
                                 LoadMatroskaSubtitle(subtitleList[subtitleChooser.SelectedIndex], fileName);
+                                if (Path.GetExtension(fileName).ToLower() == ".mkv")
+                                    OpenVideo(fileName);
                             }
                         }
                         else
                         {
                             LoadMatroskaSubtitle(subtitleList[0], fileName);
+                            if (Path.GetExtension(fileName).ToLower() == ".mkv")
+                                OpenVideo(fileName);
                         }
                     }
                 }
