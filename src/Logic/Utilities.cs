@@ -260,10 +260,18 @@ namespace Nikse.SubtitleEdit.Logic
 
         private static bool CanBreak(string s, int index)
         {
-             char nextChar = ' ';
-             if (index < s.Length)
-                 nextChar = s[index];
-             return "\r\n\t ".Contains(nextChar.ToString());
+            char nextChar = ' ';
+            if (index < s.Length)
+                nextChar = s[index];
+            if (!"\r\n\t ".Contains(nextChar.ToString()))
+                return false;
+
+            // Some words we don't like breaking after
+            string s2 = s.Substring(0, index);
+            if (s2.EndsWith(" Mrs.") || s2.EndsWith(" Ms.") || s2.EndsWith(" Mr.") || s2.EndsWith(" Dr."))
+                return false;
+
+            return true;
         }
 
         public static string AutoBreakLine(string text, int mininumLength, int maximumLength, int mergeLinesShorterThan)
