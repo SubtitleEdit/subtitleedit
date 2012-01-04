@@ -295,6 +295,8 @@ namespace Nikse.SubtitleEdit.Logic.OCR
             var sb = new StringBuilder();
             var word = new StringBuilder();
 
+            text = ReplaceWordsBeforeLineFixes(text);
+
             text = FixCommenOcrLineErrors(text, lastLine);
 
             string lastWord = null;
@@ -306,13 +308,9 @@ namespace Nikse.SubtitleEdit.Logic.OCR
                     {
                         string fixedWord;
                         if (lastWord != null && lastWord.ToUpper().Contains("COLOR="))
-                        {
                             fixedWord = word.ToString();
-                        }
                         else
-                        {
                             fixedWord = FixCommonWordErrors(word.ToString(), lastWord);
-                        }
                         sb.Append(fixedWord);
                         lastWord = fixedWord;
                         word = new StringBuilder();
@@ -345,6 +343,41 @@ namespace Nikse.SubtitleEdit.Logic.OCR
                 text = RemoveSpaceBetweenNumbers(text);
             }
             return text;
+        }
+
+        private string ReplaceWordsBeforeLineFixes(string text)
+        {
+            string lastWord = null;
+            var sb = new StringBuilder();
+            var word = new StringBuilder();
+            for (int i = 0; i < text.Length; i++)
+            {
+                if (" ¡¿,.!?:;()[]{}+-£\"#&%\r\n".Contains(text[i].ToString())) // removed $
+                {
+                    if (word.Length > 0)
+                    {
+                        string fixedWord;
+                        if (lastWord != null && lastWord.ToUpper().Contains("COLOR="))
+                            fixedWord = word.ToString();
+                        else
+                            fixedWord = FixCommonWordErrorsQuick(word.ToString(), lastWord);
+                        sb.Append(fixedWord);
+                        lastWord = fixedWord;
+                        word = new StringBuilder();
+                    }
+                    sb.Append(text[i]);
+                }
+                else
+                {
+                    word.Append(text[i]);
+                }
+            }
+            if (word.Length > 0) // last word
+            {
+                string fixedWord = FixCommonWordErrorsQuick(word.ToString(), lastWord);
+                sb.Append(fixedWord);
+            }
+            return sb.ToString();
         }
 
         private string RemoveSpaceBetweenNumbers(string text)
@@ -529,6 +562,111 @@ namespace Nikse.SubtitleEdit.Logic.OCR
             }
 
             return pre + word + post;
+        }     
+
+        private string FixCommonWordErrorsQuick(string word, string lastWord)
+        {
+            //always replace list
+            foreach (string letter in _partialWordReplaceListAlways.Keys)
+                word = word.Replace(letter, _partialWordReplaceListAlways[letter]);
+
+            string pre = string.Empty;
+            string post = string.Empty;
+
+            if (word.StartsWith("<i>"))
+            {
+                pre += "<i>";
+                word = word.Remove(0, 3);
+            }
+            while (word.StartsWith(Environment.NewLine) && word.Length > 2)
+            {
+                pre += Environment.NewLine;
+                word = word.Substring(2);
+            }
+
+            while (word.StartsWith("-") && word.Length > 1)
+            {
+                pre += "-";
+                word = word.Substring(1);
+            }
+            while (word.StartsWith(".") && word.Length > 1)
+            {
+                pre += ".";
+                word = word.Substring(1);
+            }
+            while (word.StartsWith("\"") && word.Length > 1)
+            {
+                pre += "\"";
+                word = word.Substring(1);
+            }
+            if (word.StartsWith("(") && word.Length > 1)
+            {
+                pre += "(";
+                word = word.Substring(1);
+            }
+            if (word.StartsWith("<i>"))
+            {
+                pre += "<i>";
+                word = word.Remove(0, 3);
+            }
+            while (word.EndsWith(Environment.NewLine) && word.Length > 2)
+            {
+                post += Environment.NewLine;
+                word = word.Substring(0, word.Length - 2);
+            }
+            while (word.EndsWith("\"") && word.Length > 1)
+            {
+                post = post + "\"";
+                word = word.Substring(0, word.Length - 1);
+            }
+            while (word.EndsWith(".") && word.Length > 1)
+            {
+                post = post + ".";
+                word = word.Substring(0, word.Length - 1);
+            }
+            while (word.EndsWith(",") && word.Length > 1)
+            {
+                post = post + ",";
+                word = word.Substring(0, word.Length - 1);
+            }
+            while (word.EndsWith("?") && word.Length > 1)
+            {
+                post = post + "?";
+                word = word.Substring(0, word.Length - 1);
+            }
+            while (word.EndsWith("!") && word.Length > 1)
+            {
+                post = post + "!";
+                word = word.Substring(0, word.Length - 1);
+            }
+            while (word.EndsWith(")") && word.Length > 1)
+            {
+                post = post + ")";
+                word = word.Substring(0, word.Length - 1);
+            }
+            if (word.EndsWith("</i>"))
+            {
+                post = post + "</i>";
+                word = word.Remove(word.Length - 4, 4);
+            }
+            if (word.Length == 0)
+                return pre + word + post;
+
+            foreach (string from in _wordReplaceList.Keys)
+            {
+                if (from.Contains(word))
+                {
+                    if (word == from)
+                        return pre + _wordReplaceList[from] + post;
+                    if (word + post == from)
+                        return pre + _wordReplaceList[from];
+                    if (pre + word + post == from)
+                        return _wordReplaceList[from];
+                }
+            }
+
+
+            return pre + word + post;
         }
 
         public static string Fix0InsideLowerCaseWord(string word)
@@ -595,6 +733,7 @@ namespace Nikse.SubtitleEdit.Logic.OCR
             }
             return word;
         }
+
 
         public static string FixIor1InsideLowerCaseWord(string word)
         {
