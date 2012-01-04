@@ -90,9 +90,9 @@ namespace Nikse.SubtitleEdit.Forms
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDuration)).BeginInit();
             this.tabPageLog.SuspendLayout();
             this.SuspendLayout();
-            //
+            // 
             // buttonCancel
-            //
+            // 
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
@@ -103,9 +103,9 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonCancel.Text = "C&ancel";
             this.buttonCancel.UseVisualStyleBackColor = true;
             this.buttonCancel.Click += new System.EventHandler(this.ButtonCancelClick);
-            //
+            // 
             // buttonNextFinish
-            //
+            // 
             this.buttonNextFinish.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonNextFinish.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonNextFinish.Location = new System.Drawing.Point(678, 559);
@@ -115,9 +115,9 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonNextFinish.Text = "&Next >";
             this.buttonNextFinish.UseVisualStyleBackColor = true;
             this.buttonNextFinish.Click += new System.EventHandler(this.ButtonFixClick);
-            //
+            // 
             // labelStatus
-            //
+            // 
             this.labelStatus.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.labelStatus.AutoSize = true;
             this.labelStatus.Location = new System.Drawing.Point(12, 561);
@@ -125,9 +125,9 @@ namespace Nikse.SubtitleEdit.Forms
             this.labelStatus.Size = new System.Drawing.Size(60, 13);
             this.labelStatus.TabIndex = 5;
             this.labelStatus.Text = "labelStatus";
-            //
+            // 
             // buttonBack
-            //
+            // 
             this.buttonBack.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonBack.Enabled = false;
             this.buttonBack.ImeMode = System.Windows.Forms.ImeMode.NoControl;
@@ -138,11 +138,11 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonBack.Text = "< &Back";
             this.buttonBack.UseVisualStyleBackColor = true;
             this.buttonBack.Click += new System.EventHandler(this.ButtonBackClick);
-            //
+            // 
             // groupBoxStep1
-            //
-            this.groupBoxStep1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-            | System.Windows.Forms.AnchorStyles.Left)
+            // 
+            this.groupBoxStep1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBoxStep1.Controls.Add(this.buttonInverseSelection);
             this.groupBoxStep1.Controls.Add(this.buttonSelectAll);
@@ -153,9 +153,9 @@ namespace Nikse.SubtitleEdit.Forms
             this.groupBoxStep1.TabIndex = 9;
             this.groupBoxStep1.TabStop = false;
             this.groupBoxStep1.Text = "Step 1/2 - Choose which errors to fix";
-            //
+            // 
             // buttonInverseSelection
-            //
+            // 
             this.buttonInverseSelection.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.buttonInverseSelection.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonInverseSelection.Location = new System.Drawing.Point(87, 514);
@@ -165,9 +165,9 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonInverseSelection.Text = "Inverse selection";
             this.buttonInverseSelection.UseVisualStyleBackColor = true;
             this.buttonInverseSelection.Click += new System.EventHandler(this.ButtonInverseSelectionClick);
-            //
+            // 
             // buttonSelectAll
-            //
+            // 
             this.buttonSelectAll.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.buttonSelectAll.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonSelectAll.Location = new System.Drawing.Point(6, 514);
@@ -177,11 +177,11 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonSelectAll.Text = "Select all";
             this.buttonSelectAll.UseVisualStyleBackColor = true;
             this.buttonSelectAll.Click += new System.EventHandler(this.ButtonSelectAllClick);
-            //
+            // 
             // listView1
-            //
-            this.listView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-            | System.Windows.Forms.AnchorStyles.Left)
+            // 
+            this.listView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.listView1.CheckBoxes = true;
             this.listView1.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
@@ -195,26 +195,26 @@ namespace Nikse.SubtitleEdit.Forms
             this.listView1.TabIndex = 3;
             this.listView1.UseCompatibleStateImageBehavior = false;
             this.listView1.View = System.Windows.Forms.View.Details;
-            //
+            // 
             // columnHeader1
-            //
+            // 
             this.columnHeader1.Text = "Apply";
             this.columnHeader1.Width = 53;
-            //
+            // 
             // columnHeader2
-            //
+            // 
             this.columnHeader2.Text = "What to fix";
             this.columnHeader2.Width = 99;
-            //
+            // 
             // columnHeader3
-            //
+            // 
             this.columnHeader3.Text = "Example";
             this.columnHeader3.Width = 158;
-            //
+            // 
             // groupBox2
-            //
-            this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-            | System.Windows.Forms.AnchorStyles.Left)
+            // 
+            this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox2.Controls.Add(this.tabControl1);
             this.groupBox2.Location = new System.Drawing.Point(12, 12);
@@ -223,11 +223,11 @@ namespace Nikse.SubtitleEdit.Forms
             this.groupBox2.TabIndex = 10;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Step 2/2 - Verify fixes";
-            //
+            // 
             // tabControl1
-            //
-            this.tabControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-            | System.Windows.Forms.AnchorStyles.Left)
+            // 
+            this.tabControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.tabControl1.Controls.Add(this.tabPageFixes);
             this.tabControl1.Controls.Add(this.tabPageLog);
@@ -236,9 +236,9 @@ namespace Nikse.SubtitleEdit.Forms
             this.tabControl1.SelectedIndex = 0;
             this.tabControl1.Size = new System.Drawing.Size(810, 516);
             this.tabControl1.TabIndex = 7;
-            //
+            // 
             // tabPageFixes
-            //
+            // 
             this.tabPageFixes.Controls.Add(this.splitContainerStep2);
             this.tabPageFixes.Location = new System.Drawing.Point(4, 22);
             this.tabPageFixes.Name = "tabPageFixes";
@@ -247,34 +247,34 @@ namespace Nikse.SubtitleEdit.Forms
             this.tabPageFixes.TabIndex = 1;
             this.tabPageFixes.Text = "Fixes";
             this.tabPageFixes.UseVisualStyleBackColor = true;
-            //
+            // 
             // splitContainerStep2
-            //
+            // 
             this.splitContainerStep2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.splitContainerStep2.Location = new System.Drawing.Point(3, 3);
             this.splitContainerStep2.Name = "splitContainerStep2";
             this.splitContainerStep2.Orientation = System.Windows.Forms.Orientation.Horizontal;
-            //
+            // 
             // splitContainerStep2.Panel1
-            //
+            // 
             this.splitContainerStep2.Panel1.Controls.Add(this.listViewFixes);
             this.splitContainerStep2.Panel1.Controls.Add(this.buttonFixesApply);
             this.splitContainerStep2.Panel1.Controls.Add(this.buttonRefreshFixes);
             this.splitContainerStep2.Panel1.Controls.Add(this.buttonFixesSelectAll);
             this.splitContainerStep2.Panel1.Controls.Add(this.buttonFixesInverse);
-            //
+            // 
             // splitContainerStep2.Panel2
-            //
+            // 
             this.splitContainerStep2.Panel2.Controls.Add(this.subtitleListView1);
             this.splitContainerStep2.Panel2.Controls.Add(this.groupBoxEditPanel);
             this.splitContainerStep2.Size = new System.Drawing.Size(796, 484);
             this.splitContainerStep2.SplitterDistance = 225;
             this.splitContainerStep2.TabIndex = 112;
-            //
+            // 
             // listViewFixes
-            //
-            this.listViewFixes.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-            | System.Windows.Forms.AnchorStyles.Left)
+            // 
+            this.listViewFixes.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.listViewFixes.CheckBoxes = true;
             this.listViewFixes.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
@@ -293,34 +293,34 @@ namespace Nikse.SubtitleEdit.Forms
             this.listViewFixes.View = System.Windows.Forms.View.Details;
             this.listViewFixes.ColumnClick += new System.Windows.Forms.ColumnClickEventHandler(this.ListViewFixesColumnClick);
             this.listViewFixes.SelectedIndexChanged += new System.EventHandler(this.ListViewFixesSelectedIndexChanged);
-            //
+            // 
             // columnHeader4
-            //
+            // 
             this.columnHeader4.Text = "Apply";
             this.columnHeader4.Width = 50;
-            //
+            // 
             // columnHeader5
-            //
+            // 
             this.columnHeader5.Text = "Line#";
             this.columnHeader5.Width = 61;
-            //
+            // 
             // columnHeader6
-            //
+            // 
             this.columnHeader6.Text = "Function";
             this.columnHeader6.Width = 134;
-            //
+            // 
             // columnHeader7
-            //
+            // 
             this.columnHeader7.Text = "Before";
             this.columnHeader7.Width = 281;
-            //
+            // 
             // columnHeader8
-            //
+            // 
             this.columnHeader8.Text = "After";
             this.columnHeader8.Width = 244;
-            //
+            // 
             // buttonFixesApply
-            //
+            // 
             this.buttonFixesApply.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonFixesApply.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.buttonFixesApply.ImeMode = System.Windows.Forms.ImeMode.NoControl;
@@ -331,9 +331,9 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonFixesApply.Text = "Apply &selected fixes";
             this.buttonFixesApply.UseVisualStyleBackColor = true;
             this.buttonFixesApply.Click += new System.EventHandler(this.ButtonFixesApplyClick);
-            //
+            // 
             // buttonRefreshFixes
-            //
+            // 
             this.buttonRefreshFixes.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonRefreshFixes.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonRefreshFixes.Location = new System.Drawing.Point(457, 200);
@@ -343,9 +343,9 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonRefreshFixes.Text = "&Refresh available fixes";
             this.buttonRefreshFixes.UseVisualStyleBackColor = true;
             this.buttonRefreshFixes.Click += new System.EventHandler(this.ButtonRefreshFixesClick);
-            //
+            // 
             // buttonFixesSelectAll
-            //
+            // 
             this.buttonFixesSelectAll.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.buttonFixesSelectAll.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonFixesSelectAll.Location = new System.Drawing.Point(3, 200);
@@ -355,9 +355,9 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonFixesSelectAll.Text = "Select &all";
             this.buttonFixesSelectAll.UseVisualStyleBackColor = true;
             this.buttonFixesSelectAll.Click += new System.EventHandler(this.ButtonFixesSelectAllClick);
-            //
+            // 
             // buttonFixesInverse
-            //
+            // 
             this.buttonFixesInverse.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.buttonFixesInverse.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonFixesInverse.Location = new System.Drawing.Point(84, 200);
@@ -367,11 +367,11 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonFixesInverse.Text = "&Inverse selection";
             this.buttonFixesInverse.UseVisualStyleBackColor = true;
             this.buttonFixesInverse.Click += new System.EventHandler(this.ButtonFixesInverseClick);
-            //
+            // 
             // subtitleListView1
-            //
-            this.subtitleListView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-            | System.Windows.Forms.AnchorStyles.Left)
+            // 
+            this.subtitleListView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.subtitleListView1.ContextMenuStrip = this.contextMenuStripListview;
             this.subtitleListView1.DisplayExtraFromExtra = false;
@@ -387,9 +387,9 @@ namespace Nikse.SubtitleEdit.Forms
             this.subtitleListView1.UseCompatibleStateImageBehavior = false;
             this.subtitleListView1.View = System.Windows.Forms.View.Details;
             this.subtitleListView1.SelectedIndexChanged += new System.EventHandler(this.SubtitleListView1SelectedIndexChanged);
-            //
+            // 
             // contextMenuStripListview
-            //
+            // 
             this.contextMenuStripListview.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripMenuItemDelete,
             this.toolStripSeparator1,
@@ -397,29 +397,29 @@ namespace Nikse.SubtitleEdit.Forms
             this.contextMenuStripListview.Name = "contextMenuStripListview";
             this.contextMenuStripListview.Size = new System.Drawing.Size(182, 54);
             this.contextMenuStripListview.Opening += new System.ComponentModel.CancelEventHandler(this.ContextMenuStripListviewOpening);
-            //
+            // 
             // toolStripMenuItemDelete
-            //
+            // 
             this.toolStripMenuItemDelete.Name = "toolStripMenuItemDelete";
             this.toolStripMenuItemDelete.Size = new System.Drawing.Size(181, 22);
             this.toolStripMenuItemDelete.Text = "Delete";
             this.toolStripMenuItemDelete.Click += new System.EventHandler(this.ToolStripMenuItemDeleteClick);
-            //
+            // 
             // toolStripSeparator1
-            //
+            // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
             this.toolStripSeparator1.Size = new System.Drawing.Size(178, 6);
-            //
+            // 
             // mergeSelectedLinesToolStripMenuItem
-            //
+            // 
             this.mergeSelectedLinesToolStripMenuItem.Name = "mergeSelectedLinesToolStripMenuItem";
             this.mergeSelectedLinesToolStripMenuItem.Size = new System.Drawing.Size(181, 22);
             this.mergeSelectedLinesToolStripMenuItem.Text = "Merge selected lines";
             this.mergeSelectedLinesToolStripMenuItem.Click += new System.EventHandler(this.MergeSelectedLinesToolStripMenuItemClick);
-            //
+            // 
             // groupBoxEditPanel
-            //
-            this.groupBoxEditPanel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
+            // 
+            this.groupBoxEditPanel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBoxEditPanel.Controls.Add(this.buttonSplitLine);
             this.groupBoxEditPanel.Controls.Add(this.labelSingleLine);
@@ -439,9 +439,9 @@ namespace Nikse.SubtitleEdit.Forms
             this.groupBoxEditPanel.Size = new System.Drawing.Size(780, 85);
             this.groupBoxEditPanel.TabIndex = 111;
             this.groupBoxEditPanel.TabStop = false;
-            //
+            // 
             // buttonSplitLine
-            //
+            // 
             this.buttonSplitLine.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonSplitLine.ForeColor = System.Drawing.Color.Red;
             this.buttonSplitLine.Location = new System.Drawing.Point(627, 60);
@@ -451,18 +451,18 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonSplitLine.Text = "Split line";
             this.buttonSplitLine.UseVisualStyleBackColor = true;
             this.buttonSplitLine.Click += new System.EventHandler(this.buttonSplitLine_Click);
-            //
+            // 
             // labelSingleLine
-            //
+            // 
             this.labelSingleLine.AutoSize = true;
             this.labelSingleLine.Location = new System.Drawing.Point(296, 65);
             this.labelSingleLine.Name = "labelSingleLine";
             this.labelSingleLine.Size = new System.Drawing.Size(23, 13);
             this.labelSingleLine.TabIndex = 123;
             this.labelSingleLine.Text = "1/1";
-            //
+            // 
             // buttonUnBreak
-            //
+            // 
             this.buttonUnBreak.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonUnBreak.Location = new System.Drawing.Point(627, 36);
             this.buttonUnBreak.Name = "buttonUnBreak";
@@ -471,9 +471,9 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonUnBreak.Text = "&Unbreak";
             this.buttonUnBreak.UseVisualStyleBackColor = true;
             this.buttonUnBreak.Click += new System.EventHandler(this.ButtonUnBreakClick);
-            //
+            // 
             // buttonAutoBreak
-            //
+            // 
             this.buttonAutoBreak.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonAutoBreak.Location = new System.Drawing.Point(627, 12);
             this.buttonAutoBreak.Name = "buttonAutoBreak";
@@ -482,9 +482,9 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonAutoBreak.Text = "Auto &br";
             this.buttonAutoBreak.UseVisualStyleBackColor = true;
             this.buttonAutoBreak.Click += new System.EventHandler(this.ButtonAutoBreakClick);
-            //
+            // 
             // labelStartTimeWarning
-            //
+            // 
             this.labelStartTimeWarning.AutoSize = true;
             this.labelStartTimeWarning.ForeColor = System.Drawing.Color.Red;
             this.labelStartTimeWarning.Location = new System.Drawing.Point(6, 51);
@@ -492,9 +492,9 @@ namespace Nikse.SubtitleEdit.Forms
             this.labelStartTimeWarning.Size = new System.Drawing.Size(115, 13);
             this.labelStartTimeWarning.TabIndex = 32;
             this.labelStartTimeWarning.Text = "labelStartTimeWarning";
-            //
+            // 
             // labelDurationWarning
-            //
+            // 
             this.labelDurationWarning.AutoSize = true;
             this.labelDurationWarning.ForeColor = System.Drawing.Color.Red;
             this.labelDurationWarning.Location = new System.Drawing.Point(57, 64);
@@ -502,9 +502,9 @@ namespace Nikse.SubtitleEdit.Forms
             this.labelDurationWarning.Size = new System.Drawing.Size(110, 13);
             this.labelDurationWarning.TabIndex = 31;
             this.labelDurationWarning.Text = "labelDurationWarning";
-            //
+            // 
             // timeUpDownStartTime
-            //
+            // 
             this.timeUpDownStartTime.AutoSize = true;
             this.timeUpDownStartTime.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.timeUpDownStartTime.Location = new System.Drawing.Point(8, 27);
@@ -512,9 +512,9 @@ namespace Nikse.SubtitleEdit.Forms
             this.timeUpDownStartTime.Name = "timeUpDownStartTime";
             this.timeUpDownStartTime.Size = new System.Drawing.Size(92, 25);
             this.timeUpDownStartTime.TabIndex = 112;
-            //
+            // 
             // numericUpDownDuration
-            //
+            // 
             this.numericUpDownDuration.DecimalPlaces = 3;
             this.numericUpDownDuration.Increment = new decimal(new int[] {
             1,
@@ -536,27 +536,27 @@ namespace Nikse.SubtitleEdit.Forms
             this.numericUpDownDuration.Size = new System.Drawing.Size(56, 21);
             this.numericUpDownDuration.TabIndex = 114;
             this.numericUpDownDuration.ValueChanged += new System.EventHandler(this.NumericUpDownDurationValueChanged);
-            //
+            // 
             // labelDuration
-            //
+            // 
             this.labelDuration.AutoSize = true;
             this.labelDuration.Location = new System.Drawing.Point(97, 12);
             this.labelDuration.Name = "labelDuration";
             this.labelDuration.Size = new System.Drawing.Size(48, 13);
             this.labelDuration.TabIndex = 28;
             this.labelDuration.Text = "Duration";
-            //
+            // 
             // labelStartTime
-            //
+            // 
             this.labelStartTime.AutoSize = true;
             this.labelStartTime.Location = new System.Drawing.Point(6, 12);
             this.labelStartTime.Name = "labelStartTime";
             this.labelStartTime.Size = new System.Drawing.Size(54, 13);
             this.labelStartTime.TabIndex = 27;
             this.labelStartTime.Text = "Start time";
-            //
+            // 
             // labelTextLineTotal
-            //
+            // 
             this.labelTextLineTotal.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.labelTextLineTotal.Location = new System.Drawing.Point(444, 65);
             this.labelTextLineTotal.Name = "labelTextLineTotal";
@@ -564,19 +564,19 @@ namespace Nikse.SubtitleEdit.Forms
             this.labelTextLineTotal.TabIndex = 26;
             this.labelTextLineTotal.Text = "labelTextLineTotal";
             this.labelTextLineTotal.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            //
+            // 
             // labelTextLineLengths
-            //
+            // 
             this.labelTextLineLengths.AutoSize = true;
             this.labelTextLineLengths.Location = new System.Drawing.Point(191, 65);
             this.labelTextLineLengths.Name = "labelTextLineLengths";
             this.labelTextLineLengths.Size = new System.Drawing.Size(108, 13);
             this.labelTextLineLengths.TabIndex = 25;
             this.labelTextLineLengths.Text = "labelTextLineLengths";
-            //
+            // 
             // textBoxListViewText
-            //
-            this.textBoxListViewText.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+            // 
+            this.textBoxListViewText.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxListViewText.HideSelection = false;
             this.textBoxListViewText.Location = new System.Drawing.Point(194, 9);
@@ -586,9 +586,9 @@ namespace Nikse.SubtitleEdit.Forms
             this.textBoxListViewText.TabIndex = 118;
             this.textBoxListViewText.TextChanged += new System.EventHandler(this.TextBoxListViewTextTextChanged);
             this.textBoxListViewText.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textBoxListViewText_KeyDown);
-            //
+            // 
             // tabPageLog
-            //
+            // 
             this.tabPageLog.Controls.Add(this.textBoxFixedIssues);
             this.tabPageLog.Location = new System.Drawing.Point(4, 22);
             this.tabPageLog.Name = "tabPageLog";
@@ -596,11 +596,11 @@ namespace Nikse.SubtitleEdit.Forms
             this.tabPageLog.TabIndex = 2;
             this.tabPageLog.Text = "Log";
             this.tabPageLog.UseVisualStyleBackColor = true;
-            //
+            // 
             // textBoxFixedIssues
-            //
-            this.textBoxFixedIssues.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-            | System.Windows.Forms.AnchorStyles.Left)
+            // 
+            this.textBoxFixedIssues.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxFixedIssues.Location = new System.Drawing.Point(3, 3);
             this.textBoxFixedIssues.MaxLength = 65767;
@@ -611,9 +611,9 @@ namespace Nikse.SubtitleEdit.Forms
             this.textBoxFixedIssues.Size = new System.Drawing.Size(796, 466);
             this.textBoxFixedIssues.TabIndex = 5;
             this.textBoxFixedIssues.WordWrap = false;
-            //
+            // 
             // labelNumberOfImportantLogMessages
-            //
+            // 
             this.labelNumberOfImportantLogMessages.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.labelNumberOfImportantLogMessages.AutoSize = true;
             this.labelNumberOfImportantLogMessages.ForeColor = System.Drawing.Color.Red;
@@ -622,9 +622,9 @@ namespace Nikse.SubtitleEdit.Forms
             this.labelNumberOfImportantLogMessages.Size = new System.Drawing.Size(190, 13);
             this.labelNumberOfImportantLogMessages.TabIndex = 11;
             this.labelNumberOfImportantLogMessages.Text = "labelNumberOfImportantLogMessages";
-            //
+            // 
             // FixCommonErrors
-            //
+            // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.buttonCancel;
@@ -643,6 +643,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.MinimumSize = new System.Drawing.Size(840, 580);
             this.Name = "FixCommonErrors";
             this.ShowIcon = false;
+            this.ShowInTaskbar = false;
             this.Text = "Fix common errors";
             this.Shown += new System.EventHandler(this.FixCommonErrors_Shown);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.FormFix_KeyDown);
