@@ -4785,6 +4785,8 @@ namespace Nikse.SubtitleEdit.Forms
 
                 _listViewTextUndoIndex = _subtitleListViewIndex;
                 labelStatus.Text = string.Empty;
+
+                UpdateListSyntaxColoring();
             }
         }
 
@@ -4809,6 +4811,8 @@ namespace Nikse.SubtitleEdit.Forms
                     _listViewTextUndoIndex = _subtitleListViewIndex;
                 }
                 labelStatus.Text = string.Empty;
+
+                UpdateListSyntaxColoring();
             }
         }
 
@@ -5306,7 +5310,23 @@ namespace Nikse.SubtitleEdit.Forms
                     p.CalculateFrameNumbersFromTimeCodes(CurrentFrameRate);
                     p.CalculateTimeCodesFromFrameNumbers(CurrentFrameRate);
                 }
+
+                UpdateListSyntaxColoring();
             }
+        }
+
+        private void UpdateListSyntaxColoring()
+        {
+            if (_loading)
+                return;
+
+            if (_subtitle == null || _subtitle.Paragraphs.Count == 0 || _subtitleListViewIndex < 0 || _subtitleListViewIndex >= _subtitle.Paragraphs.Count)
+                return;
+
+            SubtitleListview1.SyntaxColorLine(_subtitle.Paragraphs, _subtitleListViewIndex, _subtitle.Paragraphs[_subtitleListViewIndex]);
+            Paragraph next = _subtitle.GetParagraphOrDefault(_subtitleListViewIndex + 1);
+            if (next != null)
+                SubtitleListview1.SyntaxColorLine(_subtitle.Paragraphs, _subtitleListViewIndex + 1, _subtitle.Paragraphs[_subtitleListViewIndex + 1]);
         }
 
         private void UpdateOverlapErrors(TimeCode startTime)
@@ -5380,6 +5400,8 @@ namespace Nikse.SubtitleEdit.Forms
                             _changeAlternate = true;
                         }
                     }
+                    
+                    UpdateListSyntaxColoring();
 
                     if (GetCurrentSubtitleFormat().IsFrameBased)
                     {
@@ -5452,6 +5474,8 @@ namespace Nikse.SubtitleEdit.Forms
             UpdateListViewTextCharactersPerSeconds(labelCharactersPerSecond, p);
             if (_subtitle != null && _subtitle.Paragraphs.Count > 0)
                 textBoxListViewText.Enabled = true;
+
+            UpdateListSyntaxColoring();
         }
 
         void MaskedTextBox_TextChanged(object sender, EventArgs e)
@@ -8355,8 +8379,14 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void OpenVideo(string fileName)
         {
-            if (File.Exists(fileName))
+            if (!string.IsNullOrEmpty(fileName) && File.Exists(fileName))
             {
+                if (_loading)
+                {
+                    _videoFileName = fileName;
+                    return;
+                }
+                
                 FileInfo fi = new FileInfo(fileName);
                 if (fi.Length < 1000)
                     return;
@@ -9563,6 +9593,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
             _loading = false;
+            OpenVideo(_videoFileName);
             timerTextUndo.Start();
             timerAlternateTextUndo.Start();
         }

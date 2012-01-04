@@ -24,6 +24,7 @@ namespace Nikse.SubtitleEdit.Controls
         public bool IsAlternateTextColumnVisible { get; private set; }
         public bool IsExtraColumnVisible { get; private set; }
         public bool DisplayExtraFromExtra { get; set; }
+        Settings _settings = null;
 
         public int FirstVisibleIndex
         {
@@ -48,6 +49,7 @@ namespace Nikse.SubtitleEdit.Controls
                 SubtitleFontSize = settings.General.SubtitleFontSize;
             ForeColor = settings.General.SubtitleFontColor;
             BackColor = settings.General.SubtitleBackgroundColor;
+            _settings = settings;
         }
 
         public void InitializeTimeStampColumWidths(Form parentForm)
@@ -221,6 +223,7 @@ namespace Nikse.SubtitleEdit.Controls
                 Add(paragraph, i.ToString());
                 if (DisplayExtraFromExtra && IsExtraColumnVisible)
                     Items[i].SubItems[ColumnIndexExtra].Text = paragraph.Extra;
+                SyntaxColorLine(paragraphs, i, paragraph);
                 i++;
             }
 
@@ -247,14 +250,72 @@ namespace Nikse.SubtitleEdit.Controls
                     SetAlternateText(i, alternate.Text);
                 if (DisplayExtraFromExtra && IsExtraColumnVisible)
                     SetExtraText(i, paragraph.Extra, ForeColor);
+                SyntaxColorLine(paragraphs, i, paragraph);
                 i++;
             }
+
 
             ListViewItemSorter = x;
             EndUpdate();
 
             if (FirstVisibleIndex == 0)
                 FirstVisibleIndex = -1;
+        }
+
+        public void SyntaxColorLine(List<Paragraph> paragraphs, int i, Paragraph paragraph)
+        {
+            if (_settings != null)
+            {
+                Items[i].UseItemStyleForSubItems = false;
+                if (_settings.Tools.ListViewSyntaxColorDuration)
+                {                    
+                    double charactersPerSecond = Utilities.GetCharactersPerSecond(paragraph);
+                    if (charactersPerSecond > Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds + 7)
+                        Items[i].SubItems[ColumnIndexDuration].BackColor = System.Drawing.Color.Red;
+                    else if (charactersPerSecond > Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds)
+                        Items[i].SubItems[ColumnIndexDuration].BackColor = System.Drawing.Color.Orange;
+                    else
+                        Items[i].SubItems[ColumnIndexDuration].BackColor = SystemColors.ControlLightLight;
+                }
+
+                if (_settings.Tools.ListViewSyntaxColorOverlap && i > 0)
+                {
+                    Paragraph prev = paragraphs[i - 1];
+                    if (paragraph.StartTime.TotalMilliseconds < prev.EndTime.TotalMilliseconds)
+                    {
+                        Items[i - 1].SubItems[ColumnIndexEnd].BackColor = Color.Orange;
+                        Items[i].SubItems[ColumnIndexStart].BackColor = Color.Orange;
+                    }
+                    else
+                    {
+                        Items[i - 1].SubItems[ColumnIndexEnd].BackColor = SystemColors.ControlLightLight;
+                        Items[i].SubItems[ColumnIndexStart].BackColor = SystemColors.ControlLightLight;
+                    }
+                }
+
+                if (_settings.Tools.ListViewSyntaxColorLongLines)
+                {
+                    int noOfLines = paragraph.Text.Split(Environment.NewLine[0]).Length;
+                    string s = Utilities.RemoveHtmlTags(paragraph.Text).Replace(Environment.NewLine, string.Empty); // we don't count new line in total length... correct?
+                    if (s.Length < Configuration.Settings.General.SubtitleLineMaximumLength * 1.9)
+                    {
+                        if (noOfLines == 3)
+                            Items[i].SubItems[ColumnIndexText].BackColor = System.Drawing.Color.Orange;
+                        else if (noOfLines > 3)
+                            Items[i].SubItems[ColumnIndexText].BackColor = System.Drawing.Color.Red;
+                        else
+                            Items[i].SubItems[ColumnIndexText].BackColor = SystemColors.ControlLightLight;
+                    }
+                    else if (s.Length < Configuration.Settings.General.SubtitleLineMaximumLength * 2.1)
+                    {
+                        Items[i].SubItems[ColumnIndexText].BackColor = System.Drawing.Color.Orange;
+                    }
+                    else
+                    {
+                        Items[i].SubItems[ColumnIndexText].BackColor = System.Drawing.Color.Red;
+                    }
+                }
+            }
         }
 
         private void Add(Paragraph paragraph, string tag)
