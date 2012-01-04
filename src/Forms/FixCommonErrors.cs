@@ -225,6 +225,7 @@ namespace Nikse.SubtitleEdit.Forms
                 this.Width = this.MinimumSize.Width;
                 this.Height = this.MinimumSize.Height;
             }
+            BringToFront();
         }
 
         public FixCommonErrors()

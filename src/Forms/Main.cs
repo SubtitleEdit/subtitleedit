@@ -3285,7 +3285,6 @@ namespace Nikse.SubtitleEdit.Forms
                 var fixErrors = new FixCommonErrors();
                 //_formPositionsAndSizes.SetPositionAndSize(fixErrors);
 
-                ShowInTaskbar = false;
                 if (onlySelectedLines)
                 {
                     var selectedLines = new Subtitle { WasLoadedWithFrameNumbers = _subtitle.WasLoadedWithFrameNumbers };
