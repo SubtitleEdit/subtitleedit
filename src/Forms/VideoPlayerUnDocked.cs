@@ -44,16 +44,13 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (e.CloseReason == CloseReason.UserClosing && panelContainer.Controls.Count > 0)
             {
-                if (panelContainer.Controls.Count > 0)
+                var control = panelContainer.Controls[0];
+                if (control is Panel)
                 {
-                    var control = panelContainer.Controls[0];
-                    if (control is Controls.VideoPlayerContainer)
-                    {
-                        panelContainer.Controls.Clear();
-                        _mainForm.ReDockVideoPlayer(control);
-                        _mainForm.SetVideoPlayerToggleOff();
-                    }
-                }
+                    panelContainer.Controls.Clear();
+                    _mainForm.ReDockVideoPlayer(control);
+                    _mainForm.SetVideoPlayerToggleOff();
+                }                
             }
             _positionsAndSizes.SavePositionAndSize(this);
         }
