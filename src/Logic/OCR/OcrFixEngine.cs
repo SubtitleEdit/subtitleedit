@@ -924,11 +924,19 @@ namespace Nikse.SubtitleEdit.Logic.OCR
             if (input.EndsWith(". ...</i>"))
                 input = input.Remove(input.Length - 9, 9) + "...</i>";
 
-            input = input.Replace("....", "...");
-            input = input.Replace("....", "...");
+            input = input.Replace(".. ?", "..?");
+            input = input.Replace("..?", "...?");
+            input = input.Replace("....?", "...?");
+
+            input = input.Replace(".. !", "..!");
+            input = input.Replace("..!", "...!");
+            input = input.Replace("....!", "...!");
 
             input = input.Replace("... ?", "...?");
             input = input.Replace("... !", "...!");
+
+            input = input.Replace("....", "...");
+            input = input.Replace("....", "...");
 
             if (input.StartsWith("- ...") && lastLine != null && lastLine.EndsWith("..."))
                 input = input.Remove(0, 2);
