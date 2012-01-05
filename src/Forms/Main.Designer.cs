@@ -2327,6 +2327,7 @@
             this.comboBoxAutoRepeat.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxAutoRepeat.FormattingEnabled = true;
             this.comboBoxAutoRepeat.Items.AddRange(new object[] {
+            "0",
             "1",
             "2",
             "3",
