@@ -1095,9 +1095,7 @@ namespace Nikse.SubtitleEdit.Logic.OCR
             foreach (string from in _partialLineReplaceList.Keys)
             {
                 if (newText.Contains(from))
-                {
                     newText = ReplaceWord(newText, from, _partialLineReplaceList[from]);
-                }
             }
             return newText;
         }
@@ -1441,6 +1439,8 @@ namespace Nikse.SubtitleEdit.Logic.OCR
                         bool startOk = i == 0;
                         if (!startOk)
                             startOk = (" ¡¿<>-\"”“()[]'‘`´¶♪¿¡.…—!?,:;/" + Environment.NewLine).Contains(text.Substring(i - 1, 1));
+                        if (!startOk && word.StartsWith(" "))
+                            startOk = true;
                         if (startOk)
                         {
                             bool endOK = (i + word.Length == text.Length);
