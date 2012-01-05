@@ -1146,6 +1146,55 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
 
+                //fix missing spaces before/after quotes - Get a"get out of jail free"card. -> Get a "get out of jail free" card.
+                if (Utilities.CountTagInText(p.Text, "\"") == 2)
+                { 
+                    int start = p.Text.IndexOf('"');
+                    int end = p.Text.LastIndexOf('"');
+                    string quote = p.Text.Substring(start, end - start + 1);
+                    if (!quote.Contains(Environment.NewLine))
+                    {
+                        string newText = p.Text;
+                        if (start > 0 && !(Environment.NewLine + " >[(♪♫").Contains(p.Text[start - 1].ToString()))
+                        {
+                            newText = newText.Insert(start, " ");
+                            end++;
+                        }
+                        if (end < newText.Length - 2 && !(Environment.NewLine + " <,.!?:;])♪♫").Contains(p.Text[end + 1].ToString())) 
+                        {
+                            newText = newText.Insert(end + 1, " ");
+                        }
+                        if (newText != p.Text && AllowFix(i + 1, fixAction))
+                        {
+                            _totalFixes++;
+                            missingSpaces++;
+
+                            string oldText = p.Text;
+                            p.Text = newText;
+                            AddFixToListView(p, i + 1, fixAction, oldText, p.Text);
+                        }
+                    }
+                }
+
+                //fix missing spaces before/after music quotes - #He's so happy# -> #He's so happy#
+                if (p.Text.Contains("#") || p.Text.Contains("♪") || p.Text.Contains("♫") && p.Text.Length > 5)
+                {
+                    string newText = p.Text;
+                    if ("#♪♫".Contains(newText[0].ToString()) && !" <".Contains(newText[1].ToString()))
+                        newText = newText.Insert(1, " ");
+                    if ("#♪♫".Contains(newText[newText.Length - 1].ToString()) && !" >".Contains(newText[newText.Length - 1].ToString()))
+                        newText = newText.Insert(newText.Length - 1, " ");
+                    if (newText != p.Text && AllowFix(i + 1, fixAction))
+                    {
+                        _totalFixes++;
+                        missingSpaces++;
+
+                        string oldText = p.Text;
+                        p.Text = newText;
+                        AddFixToListView(p, i + 1, fixAction, oldText, p.Text);
+                    }
+                }
+
             }
             if (missingSpaces > 0)
                 LogStatus(_language.FixMissingSpaces, string.Format(_language.XMissingSpacesAdded, missingSpaces));
