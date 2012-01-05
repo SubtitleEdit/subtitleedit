@@ -95,7 +95,7 @@ namespace Nikse.SubtitleEdit.Forms
         public SpellCheck()
         {
             InitializeComponent();
-
+            labelActionInfo.Text = string.Empty;
             Text = Configuration.Settings.Language.SpellCheck.Title;
             labelFullText.Text = Configuration.Settings.Language.SpellCheck.FullText;
             labelLanguage.Text = Configuration.Settings.Language.SpellCheck.Language;
@@ -407,7 +407,7 @@ namespace Nikse.SubtitleEdit.Forms
                     _mainWindow.CorrectWord(_prefix + ChangeWord + _postfix, _currentParagraph, _prefix + _currentWord + _postfix, ref _firstChange);
                     break;
                 case SpellCheckAction.Skip:
-                    _noOfSkippedWords++;
+                    _noOfSkippedWords++;                    
                     break;
                 case SpellCheckAction.SkipAll:
                     _noOfSkippedWords++;
@@ -885,6 +885,71 @@ namespace Nikse.SubtitleEdit.Forms
         {
             buttonChange.Enabled = textBoxWord.Text != _originalWord;
             buttonChangeAll.Enabled = buttonChange.Enabled;
+        }
+
+        private void buttonAddToDictionary_MouseEnter(object sender, EventArgs e)
+        {
+            ShowActionInfo(Configuration.Settings.Language.SpellCheck.AddToUserDictionary, textBoxWord.Text);
+        }
+
+        private void ShowActionInfo(string label, string text)
+        {
+            labelActionInfo.Text = string.Format("{0}: {1}", label, text.Trim());
+        }
+
+        private void buttonAddToDictionary_MouseLeave(object sender, EventArgs e)
+        {
+            labelActionInfo.Text = string.Empty;
+        }
+
+        private void buttonAddToNames_MouseEnter(object sender, EventArgs e)
+        {
+            ShowActionInfo(Configuration.Settings.Language.SpellCheck.AddToNamesAndIgnoreList, textBoxWord.Text);
+        }
+
+        private void buttonAddToNames_MouseLeave(object sender, EventArgs e)
+        {
+            labelActionInfo.Text = string.Empty;
+        }
+
+        private void buttonSkipOnce_MouseEnter(object sender, EventArgs e)
+        {
+            ShowActionInfo(Configuration.Settings.Language.SpellCheck.SkipOnce, textBoxWord.Text);
+        }
+
+        private void buttonSkipOnce_MouseLeave(object sender, EventArgs e)
+        {
+            labelActionInfo.Text = string.Empty;
+        }
+
+        private void buttonSkipAll_MouseEnter(object sender, EventArgs e)
+        {
+            ShowActionInfo(Configuration.Settings.Language.SpellCheck.SkipAll, textBoxWord.Text);
+        }
+
+        private void buttonSkipAll_MouseLeave(object sender, EventArgs e)
+        {
+            labelActionInfo.Text = string.Empty;
+        }
+
+        private void buttonChange_MouseEnter(object sender, EventArgs e)
+        {
+            ShowActionInfo(Configuration.Settings.Language.SpellCheck.Change, _currentWord + " > " + textBoxWord.Text);
+        }
+
+        private void buttonChange_MouseLeave(object sender, EventArgs e)
+        {
+            labelActionInfo.Text = string.Empty;
+        }
+
+        private void buttonChangeAll_MouseEnter(object sender, EventArgs e)
+        {
+            ShowActionInfo(Configuration.Settings.Language.SpellCheck.ChangeAll, _currentWord + " > " + textBoxWord.Text);
+        }
+
+        private void buttonChangeAll_MouseLeave(object sender, EventArgs e)
+        {
+            labelActionInfo.Text = string.Empty;
         }
 
     }
