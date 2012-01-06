@@ -23,21 +23,21 @@ namespace Nikse.SubtitleEdit.Forms
         const int IndexBreakLongLines = 8;
         const int IndexMergeShortLines = 9;
         const int IndexMergeShortLinesAll = 10;
-        const int IndexUppercaseIInsideLowercaseWord = 11;
-        const int IndexDoubleApostropheToQuote = 12;
-        const int IndexFixMusicNotation = 13;
-        const int IndexAddPeriodAfterParagraph = 14;
-        const int IndexStartWithUppercaseLetterAfterParagraph = 15;
-        const int IndexStartWithUppercaseLetterAfterPeriodInsideParagraph = 16;
-        const int IndexAddMissingQuotes = 17;
-        const int IndexFixHyphens = 18;
-        const int IndexFix3PlusLines = 19;
-        const int IndexFixDoubleDash = 20;
-        const int IndexFixDoubleGreaterThan = 21;
-        const int IndexFixEllipsesStart = 22;
-        const int IndexFixMissingOpenBracket = 23;
-        const int IndexAloneLowercaseIToUppercaseIEnglish = 24;
-        const int IndexFixOcrErrorsViaReplaceList = 25;
+        const int IndexDoubleApostropheToQuote = 11;
+        const int IndexFixMusicNotation = 12;
+        const int IndexAddPeriodAfterParagraph = 13;
+        const int IndexStartWithUppercaseLetterAfterParagraph = 14;
+        const int IndexStartWithUppercaseLetterAfterPeriodInsideParagraph = 15;
+        const int IndexAddMissingQuotes = 16;
+        const int IndexFixHyphens = 17;
+        const int IndexFix3PlusLines = 18;
+        const int IndexFixDoubleDash = 19;
+        const int IndexFixDoubleGreaterThan = 20;
+        const int IndexFixEllipsesStart = 21;
+        const int IndexFixMissingOpenBracket = 22;
+        const int IndexFixOcrErrorsViaReplaceList = 23;
+        const int IndexUppercaseIInsideLowercaseWord = 24;
+        const int IndexAloneLowercaseIToUppercaseIEnglish = 25;
         const int IndexRemoveSpaceBetweenNumbers = 26;
         const int IndexDialogsOnOneLine = 27;
         const int IndexDanishLetterI = 28;
@@ -142,7 +142,6 @@ namespace Nikse.SubtitleEdit.Forms
             _fixActions.Add(new FixItem(_language.BreakLongLines, string.Empty, delegate { FixLongLines(); }, ce.BreakLongLinesTicked));
             _fixActions.Add(new FixItem(_language.RemoveLineBreaks, string.Empty, delegate { FixShortLines(); }, ce.MergeShortLinesTicked));
             _fixActions.Add(new FixItem(_language.RemoveLineBreaksAll, string.Empty, delegate { FixShortLinesAll(); }, ce.MergeShortLinesAllTicked));
-            _fixActions.Add(new FixItem(_language.FixUppercaseIInsindeLowercaseWords, _language.FixUppercaseIInsindeLowercaseWordsExample, delegate { FixUppercaseIInsideWords(); }, ce.UppercaseIInsideLowercaseWordTicked));
             _fixActions.Add(new FixItem(_language.FixDoubleApostrophes, string.Empty, delegate { FixDoubleApostrophes(); }, ce.DoubleApostropheToQuoteTicked));
             _fixActions.Add(new FixItem(_language.FixMusicNotation, _language.FixMusicNotationExample, delegate { FixMusicNotation(); }, ce.FixMusicNotationTicked));
             _fixActions.Add(new FixItem(_language.AddPeriods, string.Empty, delegate { FixMissingPeriodsAtEndOfLine(); }, ce.AddPeriodAfterParagraphTicked));
@@ -155,8 +154,9 @@ namespace Nikse.SubtitleEdit.Forms
             _fixActions.Add(new FixItem(_language.FixDoubleGreaterThan, _language.FixDoubleGreaterThanExample, delegate { FixDoubleGreaterThan(); }, ce.FixDoubleGreaterThanTicked));
             _fixActions.Add(new FixItem(_language.FixEllipsesStart, _language.FixEllipsesStartExample, delegate { FixEllipsesStart(); }, ce.FixEllipsesStartTicked));
             _fixActions.Add(new FixItem(_language.FixMissingOpenBracket, _language.FixMissingOpenBracketExample, delegate { FixMissingOpenBracket(); }, ce.FixMissingOpenBracketTicked));
-            _fixActions.Add(new FixItem(_language.FixLowercaseIToUppercaseI, _language.FixLowercaseIToUppercaseIExample, delegate { FixAloneLowercaseIToUppercaseI(); }, ce.AloneLowercaseIToUppercaseIEnglishTicked));
             _fixActions.Add(new FixItem(_language.FixCommonOcrErrors, "D0n't -> Don't", delegate { FixOcrErrorsViaReplaceList(threeLetterISOLanguageName); }, ce.FixOcrErrorsViaReplaceListTicked));
+            _fixActions.Add(new FixItem(_language.FixUppercaseIInsindeLowercaseWords, _language.FixUppercaseIInsindeLowercaseWordsExample, delegate { FixUppercaseIInsideWords(); }, ce.UppercaseIInsideLowercaseWordTicked));
+            _fixActions.Add(new FixItem(_language.FixLowercaseIToUppercaseI, _language.FixLowercaseIToUppercaseIExample, delegate { FixAloneLowercaseIToUppercaseI(); }, ce.AloneLowercaseIToUppercaseIEnglishTicked));
             _fixActions.Add(new FixItem(_language.RemoveSpaceBetweenNumber, "1 100 -> 1100", delegate { RemoveSpaceBetweenNumbers(); }, ce.RemoveSpaceBetweenNumberTicked));
             _fixActions.Add(new FixItem(_language.FixDialogsOnOneLine, "Hi John! - Hi Ida! > Hi John!" + Configuration.Settings.General.ListViewLineSeparatorString + "- Hi Ida!", delegate { DialogsOnOneLine(); }, ce.FixDialogsOnOneLineTicked));
 
@@ -1177,7 +1177,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
 
                 //fix missing spaces before/after music quotes - #He's so happy# -> #He's so happy#
-                if (p.Text.Contains("#") || p.Text.Contains("♪") || p.Text.Contains("♫") && p.Text.Length > 5)
+                if ((p.Text.Contains("#") || p.Text.Contains("♪") || p.Text.Contains("♫")) && p.Text.Length > 5)
                 {
                     string newText = p.Text;
                     if ("#♪♫".Contains(newText[0].ToString()) && !" <".Contains(newText[1].ToString()))
@@ -1601,13 +1601,13 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     ; // ignore urls
                 }
-                else if (next != null &&
+                else if (!string.IsNullOrEmpty(nextText) && next != null &&
                     next.Text.Length > 0 &&
                     Utilities.GetLetters(true, false, false).Contains(nextText[0].ToString()) &&
                     tempNoHtml.Length > 0 &&
                     (!"\",.!?:;>-])♪♫".Contains(tempNoHtml[tempNoHtml.Length - 1].ToString())))
                 {
-                    if (!tempNoHtml.EndsWith(")") && !tempNoHtml.EndsWith("]") && !tempNoHtml.EndsWith("*") && !tempNoHtml.EndsWith("¶")) // hear impaired
+                    if (!tempNoHtml.EndsWith(")") && !tempNoHtml.EndsWith("]") && !tempNoHtml.EndsWith("*") && !tempNoHtml.EndsWith("#") && !tempNoHtml.EndsWith("¶")) // hear impaired
                     {
                         if (p.Text != p.Text.ToUpper())
                         {
@@ -3788,12 +3788,13 @@ namespace Nikse.SubtitleEdit.Forms
                 ShowStatus(string.Format(_language.FixesFoundX, _totalFixes));
             else if (_totalErrors > 0)
                 ShowStatus(_language.NothingToFixBut);
+            BringToFront();
         }
 
         private void RefreshFixes()
         {
             // save de-seleced fixes
-            List<string> deSelectedFixes = new List<string>();
+            var deSelectedFixes = new List<string>();
             foreach (ListViewItem item in listViewFixes.Items)
             {
                 if (!item.Checked)
@@ -4091,6 +4092,11 @@ namespace Nikse.SubtitleEdit.Forms
         {
             int numberOfNewLines = textBoxListViewText.Text.Length - textBoxListViewText.Text.Replace(Environment.NewLine, " ").Length;
             Utilities.CheckAutoWrap(textBoxListViewText, e, numberOfNewLines);
+        }
+
+        private void FixCommonErrors_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            Owner = null;
         }
 
     }
