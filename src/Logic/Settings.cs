@@ -93,7 +93,7 @@ namespace Nikse.SubtitleEdit.Logic
             VerifyPlaySeconds = 2;
             MergeLinesShorterThan = 33;
             MusicSymbol = "♪";
-            MusicSymbolToReplace = "âª â¶ â™ª âTª ã¢â™âª ?t×3 ?t¤3";
+            MusicSymbolToReplace = "âª â¶ â™ª âTª ã¢â™âª ?t×3 ?t¤3 #";
             SpellCheckAutoChangeNames = true;
             OcrFixUseHardcodedRules = true;
             Interjections = "Ah;Ahh;Ahhh;Eh;Ehh;Ehhh;Hm;Hmm;Hmmm;Phew;Gah;Oh;Ohh;Ohhh;Ow;Oww;Owww;Ugh;Ughh;Uh;Uhh;Uhhh;Whew";

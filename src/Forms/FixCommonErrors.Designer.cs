@@ -645,6 +645,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
             this.Text = "Fix common errors";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FixCommonErrors_FormClosing);
             this.Shown += new System.EventHandler(this.FixCommonErrors_Shown);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.FormFix_KeyDown);
             this.Resize += new System.EventHandler(this.FixCommonErrors_Resize);
