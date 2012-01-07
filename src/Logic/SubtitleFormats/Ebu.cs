@@ -13,6 +13,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
     /// </summary>
     public class Ebu : SubtitleFormat
     {
+        static Regex regExpr = new Regex(@"^[a-f0-9]{6}$", RegexOptions.Compiled);
 
         internal EbuGeneralSubtitleInformation Header;
 
@@ -343,8 +344,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 else if (color == "white" || color == "ffffff")
                     return encoding.GetString(new byte[] { 0x07 }); // white
                 else if (color.Length == 6)
-                {
-                    Regex regExpr = new Regex(@"^[a-f0-9]{6}$", RegexOptions.Compiled);
+                {                    
                     if (regExpr.IsMatch(color))
                     {
                         const int MaxDiff = 130;

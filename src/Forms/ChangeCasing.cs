@@ -10,6 +10,7 @@ namespace Nikse.SubtitleEdit.Forms
     public sealed partial class ChangeCasing : Form
     {
         private int _noOfLinesChanged;
+        Regex aloneI = new Regex(@"\bi\b", RegexOptions.Compiled);
 
         public ChangeCasing()
         {
@@ -73,8 +74,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             // Longer names must be first
             namesEtc.Sort((s1, s2) => s2.Length.CompareTo(s1.Length));
-
-            var aloneI = new Regex(@"\bi\b", RegexOptions.Compiled);
+            
             string lastLine = string.Empty;
             foreach (Paragraph p in subtitle.Paragraphs)
             {

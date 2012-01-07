@@ -2023,6 +2023,7 @@ namespace Nikse.SubtitleEdit.Forms
                         _totalFixes++;
                         AddFixToListView(p, i + 1, fixAction, oldText, p.Text);
                     }
+                    Application.DoEvents();
                 }
             }
             if (noOfFixes > 0)
@@ -3514,21 +3515,17 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ListViewFixesSelectedIndexChanged(object sender, EventArgs e)
         {
-            int addNumber = 0;
             if (listViewFixes.SelectedItems.Count > 0)
             {
-                Paragraph p = (Paragraph) listViewFixes.SelectedItems[0].Tag;
-
-                for (int i = 0; i < p.Number; i++)
+                var p = (Paragraph) listViewFixes.SelectedItems[0].Tag;
+                int index = _subtitle.GetIndex(p);
+                if (index >= 0)
                 {
-                    if (_deleteIndices.Contains(i))
-                        addNumber++;
-                }
-
-                p = _originalSubtitle.GetFirstParagraphByLineNumber(p.Number+addNumber);
-                if (p != null)
-                {
-                    int index = _originalSubtitle.GetIndex(p);
+                    for (int i = 0; i < index; i++)
+                    {
+                        if (_deleteIndices.Contains(i))
+                            index++;
+                    }
                     if (index - 1 > 0)
                         subtitleListView1.EnsureVisible(index - 1);
                     if (index + 1 < subtitleListView1.Items.Count)
@@ -3537,7 +3534,6 @@ namespace Nikse.SubtitleEdit.Forms
                     subtitleListView1.SelectNone();
                     subtitleListView1.Items[index].Selected = true;
                     subtitleListView1.EnsureVisible(index);
-                    return;
                 }
             }
         }

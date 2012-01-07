@@ -11,6 +11,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
     /// </summary>
     public class F4Text : SubtitleFormat
     {
+        Regex regexTimeCodes = new Regex(@"^\d\d:\d\d:\d\d-\d$", RegexOptions.Compiled);
+
         public override string Extension
         {
             get { return ".txt"; }
@@ -79,7 +81,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         protected void LoadF4TextSubtitle(Subtitle subtitle, string text)
         {
-            var regexTimeCodes = new Regex(@"^\d\d:\d\d:\d\d-\d$", RegexOptions.Compiled);
             Paragraph p = null;
             subtitle.Paragraphs.Clear();
             var arr = text.ToString().Trim().Split("#".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
