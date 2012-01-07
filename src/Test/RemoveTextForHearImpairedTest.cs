@@ -157,10 +157,14 @@ namespace Test
         [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveHISecondLineDelay()
         {
+            var config = new Nikse.SubtitleEdit.Logic.Configuration_Accessor();
+            config._settings.RemoveTextForHearingImpaired.RemoveInterjections = false;
+            config._settings.RemoveTextForHearingImpaired.RemoveTextBeforeColon = true;
+            config._settings.RemoveTextForHearingImpaired.RemoveTextBetweenCustom = false;
             FormRemoveTextForHearImpaired_Accessor target = new FormRemoveTextForHearImpaired_Accessor();
             string text = "- JOHN: Hey." + Environment.NewLine +
                           "- ...hey.";
-            string expected = "Hey."+ Environment.NewLine +"- ...hey.";
+            string expected = "- Hey."+ Environment.NewLine +"- ...hey.";
             string actual = target.RemoveTextFromHearImpaired(text);
             Assert.AreEqual(expected, actual);
         }
