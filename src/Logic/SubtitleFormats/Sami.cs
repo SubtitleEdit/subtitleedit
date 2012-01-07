@@ -89,15 +89,42 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             return sb.ToString().Trim();
         }
 
+        public List<string> GetClasses(Subtitle subtitle)
+        {
+            var list = new List<string>();
+            if (subtitle.Header.ToLower().StartsWith("<style"))
+            {
+                foreach (string line in subtitle.Header.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries))
+                {
+                    string s = line.Trim();
+                    if (s.StartsWith(".") && s.IndexOf(" ") > 2)
+                    {
+                        string name = s.Substring(1, s.IndexOf(" ") - 1);
+                        list.Add(name);
+                    }
+                }
+            }
+            return list;
+        }
+
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
-            _errorCount = 0;
-
+            _errorCount = 0;           
             var sb = new StringBuilder();
             foreach (string l in lines)
                 sb.AppendLine(l);
             string allInput = sb.ToString();
             string allInputLower = allInput.ToLower();
+
+            int styleStart = allInputLower.IndexOf("<style");
+            if (styleStart > 0)
+            {
+                int styleEnd = allInputLower.IndexOf("</style>");
+                if (styleEnd > 0)
+                {
+                    subtitle.Header = allInput.Substring(styleStart, styleEnd - styleStart + 8);
+                }
+            }
 
             const string syncTag = "<sync start=";
             int syncStartPos = allInputLower.IndexOf(syncTag);
@@ -123,6 +150,20 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     text = allInput.Substring(index, syncEndPos - index);
                 else
                     text = allInput.Substring(index);
+
+                string textToLower = text.ToLower();
+                if (textToLower.Contains(" class="))
+                {
+                    var className = new StringBuilder();
+                    int startClass = textToLower.IndexOf(" class=");
+                    int indexClass = startClass + 7;
+                    while (indexClass < textToLower.Length && Utilities.GetLetters(false, true, true).Contains(textToLower[indexClass].ToString()))
+                    {
+                        className.Append(text[indexClass].ToString());
+                        indexClass++;
+                    }
+                    p.Extra = className.ToString().Trim(" '\"".ToCharArray());
+                }
 
                 if (text.Contains("ID=\"Source\"") || text.Contains("ID=Source"))
                 {

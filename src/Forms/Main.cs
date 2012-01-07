@@ -477,6 +477,26 @@ namespace Nikse.SubtitleEdit.Forms
                             else if (sf.IsTimeBased && sub.WasLoadedWithFrameNumbers)
                                 sub.CalculateTimeCodesFromFrameNumbers(Configuration.Settings.General.DefaultFrameRate);
                             System.IO.File.WriteAllText(outputFileName, sub.ToText(sf));
+                            if (format.GetType() == typeof(Sami))
+                            {
+                                Sami sami = (Sami)format;
+                                foreach (string className in sami.GetClasses(sub))
+                                {
+                                    Subtitle newSub = new Subtitle();
+                                    foreach (Paragraph p in sub.Paragraphs)
+                                    {
+                                        if (p.Extra == className)
+                                            newSub.Paragraphs.Add(p);
+                                    }
+                                    if (newSub.Paragraphs.Count > 0 && newSub.Paragraphs.Count < sub.Paragraphs.Count)
+                                    { 
+                                        outputFileName = Path.GetFileNameWithoutExtension(fileName) + "_" + className +  sf.Extension;
+                                        if (File.Exists(outputFileName))
+                                            outputFileName = Path.GetFileNameWithoutExtension(fileName) + "_" + className + "_"  + Guid.NewGuid().ToString() + sf;
+                                        System.IO.File.WriteAllText(outputFileName, newSub.ToText(sf));
+                                    }
+                                }
+                            }
                             Console.WriteLine(" done.");
                         }
                     }
