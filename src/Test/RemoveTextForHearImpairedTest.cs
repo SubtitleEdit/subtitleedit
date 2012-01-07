@@ -149,5 +149,24 @@ namespace Test
             string actual = target.RemoveTextFromHearImpaired(text);
             Assert.AreEqual(expected, actual);
         }
+
+        /// <summary>
+        ///A test for RemoveHI
+        ///</summary>
+        [TestMethod()]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void RemoveHISecondLineDelay()
+        {
+            FormRemoveTextForHearImpaired_Accessor target = new FormRemoveTextForHearImpaired_Accessor();
+            string text = "- JOHN: Hey." + Environment.NewLine +
+                          "- ...hey.";
+            string expected = "Hey."+ Environment.NewLine +"- ...hey.";
+            string actual = target.RemoveTextFromHearImpaired(text);
+            Assert.AreEqual(expected, actual);
+        }
+
+
+        //
+        //
     }
 }
