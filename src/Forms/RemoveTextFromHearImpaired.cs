@@ -269,6 +269,7 @@ namespace Nikse.SubtitleEdit.Forms
                             newText = newText.Replace("<i> </i>", " ");
                             newText = newText.Replace("  ", " ");
                             newText = newText.Replace("  ", " ");
+                            newText = newText.Replace(" " + Environment.NewLine, Environment.NewLine);
                         }
                     }
                 }
@@ -583,24 +584,27 @@ namespace Nikse.SubtitleEdit.Forms
                 text = text.TrimStart().TrimStart('-').TrimStart();
             }
 
-            // insert spaces before "-"
-            text = text.Replace(Environment.NewLine + "- <i>", Environment.NewLine + "<i>- ");
-            text = text.Replace(Environment.NewLine + "-<i>", Environment.NewLine + "<i>- ");
-            if (text.StartsWith("-") && text.Length > 2 && text[1] != ' ' && text[1] != '-')
-                text = text.Insert(1, " ");
-            if (text.StartsWith("<i>-") && text.Length > 5 && text[4] != ' ' && text[4] != '-')
-                text = text.Insert(4, " ");
-            if (text.Contains(Environment.NewLine + "-"))
+            if (oldText != text)
             {
-                int index = text.IndexOf(Environment.NewLine + "-");
-                if (index + 4 < text.Length && text[index + Environment.NewLine.Length + 1] != ' ' && text[index + Environment.NewLine.Length + 1] != '-')
-                    text = text.Insert(index + Environment.NewLine.Length + 1, " ");
-            }
-            if (text.Contains(Environment.NewLine + "<i>-"))
-            {
-                int index = text.IndexOf(Environment.NewLine + "<i>-");
-                if (index + 5 < text.Length && text[index + Environment.NewLine.Length + 4] != ' ' && text[index + Environment.NewLine.Length + 4] != '-')
-                    text = text.Insert(index + Environment.NewLine.Length + 4, " ");
+                // insert spaces before "-"
+                text = text.Replace(Environment.NewLine + "- <i>", Environment.NewLine + "<i>- ");
+                text = text.Replace(Environment.NewLine + "-<i>", Environment.NewLine + "<i>- ");
+                if (text.StartsWith("-") && text.Length > 2 && text[1] != ' ' && text[1] != '-')
+                    text = text.Insert(1, " ");
+                if (text.StartsWith("<i>-") && text.Length > 5 && text[4] != ' ' && text[4] != '-')
+                    text = text.Insert(4, " ");
+                if (text.Contains(Environment.NewLine + "-"))
+                {
+                    int index = text.IndexOf(Environment.NewLine + "-");
+                    if (index + 4 < text.Length && text[index + Environment.NewLine.Length + 1] != ' ' && text[index + Environment.NewLine.Length + 1] != '-')
+                        text = text.Insert(index + Environment.NewLine.Length + 1, " ");
+                }
+                if (text.Contains(Environment.NewLine + "<i>-"))
+                {
+                    int index = text.IndexOf(Environment.NewLine + "<i>-");
+                    if (index + 5 < text.Length && text[index + Environment.NewLine.Length + 4] != ' ' && text[index + Environment.NewLine.Length + 4] != '-')
+                        text = text.Insert(index + Environment.NewLine.Length + 4, " ");
+                }
             }
             return text.Trim();
         }
@@ -636,7 +640,7 @@ namespace Nikse.SubtitleEdit.Forms
             int start = oldText.IndexOf(newText);
             string result;
             if (start > 0)
-                result = oldText.Substring(0, newText.Length);
+                result = oldText.Substring(0, oldText.Length - newText.Length);
             else
                 result = oldText.Substring(newText.Length);
             result = result.TrimEnd(" ()[]?{}".ToCharArray());
