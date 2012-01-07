@@ -40,6 +40,13 @@ namespace Nikse.SubtitleEdit.Logic.OCR
         Regex regexAloneI = new Regex(@"\bi\b", RegexOptions.Compiled);
         Regex regexAloneIAsL = new Regex(@"\bl\b", RegexOptions.Compiled);
         Regex regexSpaceBetweenNumbers = new Regex(@"\d \d", RegexOptions.Compiled);
+        static Regex regExLowercaseL = new Regex("[A-ZÆØÅÄÖÉÁ]l[A-ZÆØÅÄÖÉÁ]", RegexOptions.Compiled);
+        static Regex regExUppercaseI = new Regex("[a-zæøåöäé]I.", RegexOptions.Compiled);
+        static Regex regExNumber1 = new Regex(@"\d\ 1", RegexOptions.Compiled);
+        static Regex regExQuestion = new Regex(@"\S\?[A-ZÆØÅÄÖÉÈÀÙÂÊÎÔÛËÏa-zæøåäöéèàùâêîôûëï]", RegexOptions.Compiled);
+        static Regex regExIandZero = new Regex(@"[a-zæøåäöé][I1]", RegexOptions.Compiled);
+        static Regex regExTime1 = new Regex(@"[a-zæøåäöé][0]", RegexOptions.Compiled);
+        static Regex regExTime2 = new Regex(@"0[a-zæøåäöé]", RegexOptions.Compiled);
 
         public bool Abort { get; set; }
         public List<string> AutoGuessesUsed { get; set; }
@@ -513,9 +520,8 @@ namespace Nikse.SubtitleEdit.Logic.OCR
                 return pre + word + post;
 
             if (word.Contains("?"))
-            {
-                var regex = new Regex(@"\S\?[A-ZÆØÅÄÖÉÈÀÙÂÊÎÔÛËÏa-zæøåäöéèàùâêîôûëï]");
-                Match match = regex.Match(word);
+            {                
+                Match match = regExQuestion.Match(word);
                 if (match.Success)
                     word = word.Insert(match.Index + 2, " ");
             }
@@ -693,9 +699,8 @@ namespace Nikse.SubtitleEdit.Logic.OCR
                 return word;
 
             if (word.LastIndexOf('0') > 0)
-            {
-                var re = new Regex(@"[a-zæøåäöé][0]", RegexOptions.Compiled);
-                Match match = re.Match(word);
+            {                
+                Match match = regExTime1.Match(word);
                 if (match.Success)
                 {
                     while (match.Success)
@@ -707,12 +712,11 @@ namespace Nikse.SubtitleEdit.Logic.OCR
                             if (match.Index + 2 < oldText.Length)
                                 word += oldText.Substring(match.Index + 2);
                         }
-                        match = re.Match(word);
+                        match = regExTime1.Match(word);
                     }
                 }
-
-                re = new Regex(@"0[a-zæøåäöé]", RegexOptions.Compiled);
-                match = re.Match(word);
+                
+                match = regExTime2.Match(word);
                 if (match.Success)
                 {
                     while (match.Success)
@@ -727,7 +731,7 @@ namespace Nikse.SubtitleEdit.Logic.OCR
                                     word += oldText.Substring(match.Index + 1);
                             }
                         }
-                        match = re.Match(word, match.Index + 1);
+                        match = regExTime2.Match(word, match.Index + 1);
                     }
                 }
             }
@@ -754,9 +758,8 @@ namespace Nikse.SubtitleEdit.Logic.OCR
                 return word;
 
             if (word.LastIndexOf('I') > 0 || word.LastIndexOf('1') > 0)
-            {
-                var re = new Regex(@"[a-zæøåäöé][I1]", RegexOptions.Compiled);
-                Match match = re.Match(word);
+            {                
+                Match match = regExIandZero.Match(word);
                 if (match.Success)
                 {
                     while (match.Success)
@@ -768,7 +771,7 @@ namespace Nikse.SubtitleEdit.Logic.OCR
                             if (match.Index + 2 < oldText.Length)
                                 word += oldText.Substring(match.Index + 2);
                         }
-                        match = re.Match(word, match.Index + 1);
+                        match = regExIandZero.Match(word, match.Index + 1);
                     }
                 }
             }
@@ -995,33 +998,39 @@ namespace Nikse.SubtitleEdit.Logic.OCR
             }
 
             // change '<number><space>1' to '<number>1'
-            var regEx = new Regex(@"\d\ 1");
-            Match match = regEx.Match(input);
-            while (match.Success)
-            {
-                input = input.Substring(0, match.Index + 1) + input.Substring(match.Index + 2);
-                match = regEx.Match(input);
+            if (input.Contains("1"))
+            {                
+                Match match = regExNumber1.Match(input);
+                while (match.Success)
+                {
+                    input = input.Substring(0, match.Index + 1) + input.Substring(match.Index + 2);
+                    match = regExNumber1.Match(input);
+                }
             }
 
             // change '' to "
             input = input.Replace("''", "\"");
 
             // change 'sequeI of' to 'sequel of'
-            regEx = new Regex("[a-zæøåöäé]I.");
-            match = regEx.Match(input);
-            while (match.Success)
-            {
-                input = input.Substring(0, match.Index + 1) + "l" + input.Substring(match.Index + 2);
-                match = regEx.Match(input);
+            if (input.Contains("I"))
+            {                
+                var match = regExUppercaseI.Match(input);
+                while (match.Success)
+                {
+                    input = input.Substring(0, match.Index + 1) + "l" + input.Substring(match.Index + 2);
+                    match = regExUppercaseI.Match(input);
+                }
             }
 
             // change 'NlCE' to 'NICE'
-            regEx = new Regex("[A-ZÆØÅÄÖÉÁ]l[A-ZÆØÅÄÖÉÁ]");
-            match = regEx.Match(input);
-            while (match.Success)
-            {
-                input = input.Substring(0, match.Index + 1) + "I" + input.Substring(match.Index + 2);
-                match = regEx.Match(input);
+            if (input.Contains("l"))
+            {                
+                var match = regExLowercaseL.Match(input);
+                while (match.Success)
+                {
+                    input = input.Substring(0, match.Index + 1) + "I" + input.Substring(match.Index + 2);
+                    match = regExLowercaseL.Match(input);
+                }
             }
 
             return input;

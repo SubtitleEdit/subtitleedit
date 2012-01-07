@@ -7,6 +7,9 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
     public class DvdSubtitle : SubtitleFormat
     {
+
+        Regex regexTimeCodes = new Regex(@"^\{T\ \d+:\d+:\d+:\d+$", RegexOptions.Compiled);
+
         public override string Extension
         {
             get { return ".sub"; }
@@ -72,7 +75,6 @@ LICENSE=
 //{T 00:03:14:27
 //Some text
 //}
-            Regex regexTimeCodes = new Regex(@"^\{T\ \d+:\d+:\d+:\d+$", RegexOptions.Compiled);
             bool textOn = false;
             string text = string.Empty;
             TimeSpan start = TimeSpan.FromMilliseconds(0);

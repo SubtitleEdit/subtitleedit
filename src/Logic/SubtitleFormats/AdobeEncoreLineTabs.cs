@@ -7,6 +7,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
     class AdobeEncoreLineTabs : SubtitleFormat
     {
+        Regex regexTimeCodes = new Regex(@"^\d\d\d\d\t\d\d:\d\d:\d\d:\d\d\t\d\d:\d\d:\d\d:\d\d\t", RegexOptions.Compiled);
+
         public override string Extension
         {
             get { return ".txt"; }
@@ -68,8 +70,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         {
             //0002       00:01:48:22       00:01:52:17       - I need those samples, fast!//- Yes, professor.
             Paragraph p = null;
-            subtitle.Paragraphs.Clear();
-            var regexTimeCodes = new Regex(@"^\d\d\d\d\t\d\d:\d\d:\d\d:\d\d\t\d\d:\d\d:\d\d:\d\d\t", RegexOptions.Compiled);
+            subtitle.Paragraphs.Clear();            
             foreach (string line in lines)
             {
                 string s = line.Replace("       ", "\t");

@@ -7,7 +7,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
     public class Csv : SubtitleFormat
     {
-        private string _seperator = ";";
+        private const string _seperator = ";";
+        Regex csvLine = new Regex(@"^""?\d+""?" + _seperator + @"""?\d+""?" + _seperator + @"""?\d+""?" + _seperator + @"""?[^""]*""?$", RegexOptions.Compiled);
 
         public override string Extension
         {
@@ -31,7 +32,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public override bool IsMine(List<string> lines, string fileName)
         {
-            Regex csvLine = new Regex(@"^""?\d+""?" + _seperator + @"""?\d+""?" + _seperator + @"""?\d+""?" + _seperator + @"""?[^""]*""?$", RegexOptions.Compiled);
             int fine = 0;
             int failed = 0;
             foreach (string line in lines)
@@ -59,7 +59,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
-            Regex csvLine = new Regex(@"^""?\d+""?" + _seperator + @"""?\d+""?" + _seperator + @"""?\d+""?" + _seperator + @"""?[^""]*""?$", RegexOptions.Compiled);
             _errorCount = 0;
 
             foreach (string line in lines)

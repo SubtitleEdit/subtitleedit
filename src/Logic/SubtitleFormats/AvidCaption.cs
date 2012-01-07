@@ -7,6 +7,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
     public class AvidCaption : SubtitleFormat
     {
+        Regex regexTimeCodes = new Regex(@"^\d\d:\d\d:\d\d:\d\d \d\d:\d\d:\d\d:\d\d$", RegexOptions.Compiled);
+
         public override string Extension
         {
             get { return ".txt"; }
@@ -65,8 +67,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             //00:03:15:22  00:03:23:10 This is line one.
             //This is line two.
             Paragraph p = null;
-            subtitle.Paragraphs.Clear();
-            var regexTimeCodes = new Regex(@"^\d\d:\d\d:\d\d:\d\d \d\d:\d\d:\d\d:\d\d$", RegexOptions.Compiled);
+            subtitle.Paragraphs.Clear();            
             bool beginFound = false;
             bool endFound = false;
             foreach (string line in lines)

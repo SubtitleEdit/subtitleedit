@@ -7,6 +7,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
     class DigiBeta : SubtitleFormat
     {
+        Regex regexTimeCode = new Regex(@"^\d\d \d\d \d\d \d\d\t\d\d \d\d \d\d \d\d\t", RegexOptions.Compiled);
 
         public override string Extension
         {
@@ -50,8 +51,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
-            var regexTimeCode = new Regex(@"^\d\d \d\d \d\d \d\d\t\d\d \d\d \d\d \d\d\t", RegexOptions.Compiled);
-
             var paragraph = new Paragraph();
             _errorCount = 0;
 
