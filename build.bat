@@ -126,22 +126,22 @@ EXIT
 
 
 :SHOWHELP
-TITLE "%~nx0 %1"
+TITLE %~nx0 %1
 ECHO. & ECHO.
 ECHO Usage:   %~nx0 [Clean^|Build^|Rebuild]
 ECHO.
 ECHO Notes:   You can also prefix the commands with "-", "--" or "/".
 ECHO          The arguments are not case sensitive.
 ECHO. & ECHO.
-ECHO Executing "%~nx0" will use the defaults: "%~nx0 build"
+ECHO Executing %~nx0 without any arguments is equivalent to "%~nx0 build"
 ECHO.
 ENDLOCAL
 EXIT /B
 
 
 :SubDetectInnoSetup
-REM Detect if we are running on 64bit WIN and use Wow6432Node, and set the path
-REM of Inno Setup accordingly
+rem Detect if we are running on 64bit Windows and use Wow6432Node since Inno Setup is
+rem a 32-bit application, and set the registry key of Inno Setup accordingly
 IF DEFINED PROGRAMFILES(x86) (
   SET "U_=HKLM\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall"
 ) ELSE (
@@ -155,5 +155,5 @@ EXIT /B
 
 
 :SubInnoSetup
-SET InnoSetupPath=%*
+SET "InnoSetupPath=%*"
 EXIT /B
