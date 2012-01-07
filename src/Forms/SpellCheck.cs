@@ -407,7 +407,7 @@ namespace Nikse.SubtitleEdit.Forms
                     _mainWindow.CorrectWord(_prefix + ChangeWord + _postfix, _currentParagraph, _prefix + _currentWord + _postfix, ref _firstChange);
                     break;
                 case SpellCheckAction.Skip:
-                    _noOfSkippedWords++;                    
+                    _noOfSkippedWords++;
                     break;
                 case SpellCheckAction.SkipAll:
                     _noOfSkippedWords++;

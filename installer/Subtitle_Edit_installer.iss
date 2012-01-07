@@ -381,9 +381,7 @@ function ShouldSkipPage(PageID: Integer): Boolean;
 begin
   // Hide the license page
   if IsUpgrade() and (PageID = wpLicense) then
-    Result := True
-  else
-    Result := False;
+    Result := True;
 end;
 
 
@@ -401,9 +399,8 @@ end;
 procedure CurStepChanged(CurStep: TSetupStep);
 begin
   if CurStep = ssInstall then begin
-    if IsTaskSelected('reset_dictionaries') then begin
+    if IsTaskSelected('reset_dictionaries') then
       CleanUpDictionaries();
-    end;
   end;
 end;
 
@@ -450,9 +447,8 @@ begin
     Result := True;
     CreateMutex(installer_mutex_name);
 
-    while IsModuleLoaded('SubtitleEdit.exe') and (iMsgBoxResult <> IDCANCEL) do begin
+    while IsModuleLoaded('SubtitleEdit.exe') and (iMsgBoxResult <> IDCANCEL) do
       iMsgBoxResult := SuppressibleMsgBox(CustomMessage('msg_AppIsRunning'), mbError, MB_OKCANCEL, IDCANCEL);
-    end;
 
     if iMsgBoxResult = IDCANCEL then
       Result := False;
@@ -467,9 +463,8 @@ begin
             ShellExec('open','http://download.microsoft.com/download/5/6/7/567758a3-759e-473e-bf8f-52154438565a/dotnetfx.exe','','',SW_SHOWNORMAL,ewNoWait,iErrorCode);
             Result := False;
           end
-          else begin
+          else
             Result := False;
-          end;
         end;
       end;
     end;
@@ -489,9 +484,8 @@ begin
     CreateMutex(installer_mutex_name);
 
     // Check if app is running during uninstallation
-    while IsModuleLoadedU('SubtitleEdit.exe') and (iMsgBoxResult <> IDCANCEL) do begin
+    while IsModuleLoadedU('SubtitleEdit.exe') and (iMsgBoxResult <> IDCANCEL) do
       iMsgBoxResult := SuppressibleMsgBox(CustomMessage('msg_AppIsRunningUninstall'), mbError, MB_OKCANCEL, IDCANCEL);
-    end;
 
     if iMsgBoxResult = IDCANCEL then
       Result := False;

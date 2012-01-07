@@ -489,7 +489,7 @@ namespace Nikse.SubtitleEdit.Forms
                                             newSub.Paragraphs.Add(p);
                                     }
                                     if (newSub.Paragraphs.Count > 0 && newSub.Paragraphs.Count < sub.Paragraphs.Count)
-                                    { 
+                                    {
                                         outputFileName = Path.GetFileNameWithoutExtension(fileName) + "_" + className +  sf.Extension;
                                         if (File.Exists(outputFileName))
                                             outputFileName = Path.GetFileNameWithoutExtension(fileName) + "_" + className + "_"  + Guid.NewGuid().ToString() + sf;
@@ -1525,7 +1525,7 @@ namespace Nikse.SubtitleEdit.Forms
                     mkv.GetMatroskaInfo(fileName, ref isValid, ref hasConstantFrameRate, ref frameRate, ref width, ref height, ref milliseconds, ref videoCodec);
                     if (isValid)
                     {
-                        ImportSubtitleFromMatroskaFile(fileName);                        
+                        ImportSubtitleFromMatroskaFile(fileName);
                         if (Path.GetExtension(fileName).ToLower() == ".mkv")
                             OpenVideo(fileName);
                         return;
@@ -1796,7 +1796,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 MessageBox.Show(string.Format(_language.FileNotFound, fileName));
             }
-        }     
+        }
 
         private bool IsTransportStream(string fileName)
         {
@@ -5419,7 +5419,7 @@ namespace Nikse.SubtitleEdit.Forms
                             _changeAlternate = true;
                         }
                     }
-                    
+
                     UpdateListSyntaxColoring();
 
                     if (GetCurrentSubtitleFormat().IsFrameBased)
@@ -8405,7 +8405,7 @@ namespace Nikse.SubtitleEdit.Forms
                     _videoFileName = fileName;
                     return;
                 }
-                
+
                 FileInfo fi = new FileInfo(fileName);
                 if (fi.Length < 1000)
                     return;

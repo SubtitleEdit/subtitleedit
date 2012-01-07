@@ -283,17 +283,17 @@ namespace Nikse.SubtitleEdit.Logic
             if (temp.Length < mergeLinesShorterThan)
             {
                 string[] lines = text.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-				if (lines.Length > 1) {
-					bool isDialog = true;
-					foreach (string line in lines) {
-						string cleanLine = Utilities.RemoveHtmlTags(line).Trim();
-						isDialog = isDialog && (cleanLine.StartsWith("-") ||
-						                        cleanLine.StartsWith("—"));
-					}
-					if (isDialog) {
-						return text;
-					}
-				}
+                if (lines.Length > 1) {
+                    bool isDialog = true;
+                    foreach (string line in lines) {
+                        string cleanLine = Utilities.RemoveHtmlTags(line).Trim();
+                        isDialog = isDialog && (cleanLine.StartsWith("-") ||
+                                                cleanLine.StartsWith("—"));
+                    }
+                    if (isDialog) {
+                        return text;
+                    }
+                }
                 return s;
             }
 

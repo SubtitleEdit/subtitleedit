@@ -562,7 +562,7 @@ namespace Nikse.SubtitleEdit.Logic.OCR
             }
 
             return pre + word + post;
-        }     
+        }
 
         private string FixCommonWordErrorsQuick(string word, string lastWord)
         {

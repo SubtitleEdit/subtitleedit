@@ -268,7 +268,7 @@ namespace Nikse.SubtitleEdit.Controls
             {
                 Items[i].UseItemStyleForSubItems = false;
                 if (_settings.Tools.ListViewSyntaxColorDuration)
-                {                    
+                {
                     double charactersPerSecond = Utilities.GetCharactersPerSecond(paragraph);
                     if (charactersPerSecond > Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds + 7)
                         Items[i].SubItems[ColumnIndexDuration].BackColor = System.Drawing.Color.Red;

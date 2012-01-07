@@ -1148,7 +1148,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 //fix missing spaces before/after quotes - Get a"get out of jail free"card. -> Get a "get out of jail free" card.
                 if (Utilities.CountTagInText(p.Text, "\"") == 2)
-                { 
+                {
                     int start = p.Text.IndexOf('"');
                     int end = p.Text.LastIndexOf('"');
                     string quote = p.Text.Substring(start, end - start + 1);
@@ -1160,7 +1160,7 @@ namespace Nikse.SubtitleEdit.Forms
                             newText = newText.Insert(start, " ");
                             end++;
                         }
-                        if (end < newText.Length - 2 && !(Environment.NewLine + " <,.!?:;])♪♫").Contains(p.Text[end + 1].ToString())) 
+                        if (end < newText.Length - 2 && !(Environment.NewLine + " <,.!?:;])♪♫").Contains(p.Text[end + 1].ToString()))
                         {
                             newText = newText.Insert(end + 1, " ");
                         }
