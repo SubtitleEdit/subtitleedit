@@ -534,15 +534,30 @@ namespace Nikse.SubtitleEdit.Logic
 
     public class RemoveTextForHearingImpairedSettings
     {
-        public bool RemoveTextBeforeColor { get; set; }
-        public bool RemoveTextBeforeColorOnlyIfUppercase { get; set; }
+        public bool RemoveTextBetweenBrackets { get; set; }
+        public bool RemoveTextBetweenParentheses { get; set; }
+        public bool RemoveTextBetweenCurlyBrackets { get; set; }
+        public bool RemoveTextBetweenQuestionMarks { get; set; }
+        public bool RemoveTextBetweenCustom { get; set; }
+        public string RemoveTextBetweenCustomBefore { get; set; }
+        public string RemoveTextBetweenCustomAfter { get; set; }
+        public bool RemoveTextBetweenOnlySeperateLines { get; set; }
+        public bool RemoveTextBeforeColon { get; set; }
+        public bool RemoveTextBeforeColonOnlyIfUppercase { get; set; }
         public bool RemoveInterjections { get; set; }
         public bool RemoveIfContains { get; set; }
         public string RemoveIfContainsText { get; set; }
 
         public RemoveTextForHearingImpairedSettings()
         {
-            RemoveTextBeforeColor = true;
+            RemoveTextBetweenBrackets = true;
+            RemoveTextBetweenParentheses = true;
+            RemoveTextBetweenCurlyBrackets = true;
+            RemoveTextBetweenQuestionMarks = true;
+            RemoveTextBetweenCustom = false;
+            RemoveTextBetweenCustomBefore = "¶";
+            RemoveTextBetweenCustomAfter = "¶";
+            RemoveTextBeforeColon = true;
             RemoveIfContainsText = "¶";
         }
     }
@@ -1368,12 +1383,36 @@ namespace Nikse.SubtitleEdit.Logic
             node = doc.DocumentElement.SelectSingleNode("RemoveTextForHearingImpaired");
             if (node != null)
             {
-                subNode = node.SelectSingleNode("RemoveTextBeforeColor");
+                subNode = node.SelectSingleNode("RemoveTextBetweenBrackets");
                 if (subNode != null)
-                    settings.RemoveTextForHearingImpaired.RemoveTextBeforeColor = Convert.ToBoolean(subNode.InnerText);
-                subNode = node.SelectSingleNode("RemoveTextBeforeColorOnlyIfUppercase");
+                    settings.RemoveTextForHearingImpaired.RemoveTextBetweenBrackets = Convert.ToBoolean(subNode.InnerText);
+                subNode = node.SelectSingleNode("RemoveTextBetweenParentheses");
                 if (subNode != null)
-                    settings.RemoveTextForHearingImpaired.RemoveTextBeforeColorOnlyIfUppercase = Convert.ToBoolean(subNode.InnerText);
+                    settings.RemoveTextForHearingImpaired.RemoveTextBetweenParentheses = Convert.ToBoolean(subNode.InnerText);
+                subNode = node.SelectSingleNode("RemoveTextBetweenCurlyBrackets");
+                if (subNode != null)
+                    settings.RemoveTextForHearingImpaired.RemoveTextBetweenCurlyBrackets = Convert.ToBoolean(subNode.InnerText);
+                subNode = node.SelectSingleNode("RemoveTextBetweenQuestionMarks");
+                if (subNode != null)
+                    settings.RemoveTextForHearingImpaired.RemoveTextBetweenQuestionMarks = Convert.ToBoolean(subNode.InnerText);
+                subNode = node.SelectSingleNode("RemoveTextBetweenCustom");
+                if (subNode != null)
+                    settings.RemoveTextForHearingImpaired.RemoveTextBetweenCustom = Convert.ToBoolean(subNode.InnerText);
+                subNode = node.SelectSingleNode("RemoveTextBetweenCustomBefore");
+                if (subNode != null)
+                    settings.RemoveTextForHearingImpaired.RemoveTextBetweenCustomBefore = subNode.InnerText;
+                subNode = node.SelectSingleNode("RemoveTextBetweenCustomAfter");
+                if (subNode != null)
+                    settings.RemoveTextForHearingImpaired.RemoveTextBetweenCustomAfter = subNode.InnerText;
+                subNode = node.SelectSingleNode("RemoveTextBetweenOnlySeperateLines");
+                if (subNode != null)
+                    settings.RemoveTextForHearingImpaired.RemoveTextBetweenOnlySeperateLines = Convert.ToBoolean(subNode.InnerText);
+                subNode = node.SelectSingleNode("RemoveTextBeforeColon");
+                if (subNode != null)
+                    settings.RemoveTextForHearingImpaired.RemoveTextBeforeColon = Convert.ToBoolean(subNode.InnerText);
+                subNode = node.SelectSingleNode("RemoveTextBeforeColonOnlyIfUppercase");
+                if (subNode != null)
+                    settings.RemoveTextForHearingImpaired.RemoveTextBeforeColonOnlyIfUppercase = Convert.ToBoolean(subNode.InnerText);
                 subNode = node.SelectSingleNode("RemoveInterjections");
                 if (subNode != null)
                     settings.RemoveTextForHearingImpaired.RemoveInterjections = Convert.ToBoolean(subNode.InnerText);
@@ -1675,8 +1714,16 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteEndElement();
 
             textWriter.WriteStartElement("RemoveTextForHearingImpaired", "");
-            textWriter.WriteElementString("RemoveTextBeforeColor", settings.RemoveTextForHearingImpaired.RemoveTextBeforeColor.ToString());
-            textWriter.WriteElementString("RemoveTextBeforeColorOnlyIfUppercase", settings.RemoveTextForHearingImpaired.RemoveTextBeforeColorOnlyIfUppercase.ToString());
+            textWriter.WriteElementString("RemoveTextBetweenBrackets", settings.RemoveTextForHearingImpaired.RemoveTextBetweenBrackets.ToString());
+            textWriter.WriteElementString("RemoveTextBetweenParentheses", settings.RemoveTextForHearingImpaired.RemoveTextBetweenParentheses.ToString());
+            textWriter.WriteElementString("RemoveTextBetweenCurlyBrackets", settings.RemoveTextForHearingImpaired.RemoveTextBetweenCurlyBrackets.ToString());
+            textWriter.WriteElementString("RemoveTextBetweenQuestionMarks", settings.RemoveTextForHearingImpaired.RemoveTextBetweenQuestionMarks.ToString());
+            textWriter.WriteElementString("RemoveTextBetweenCustom", settings.RemoveTextForHearingImpaired.RemoveTextBetweenCustom.ToString());
+            textWriter.WriteElementString("RemoveTextBetweenCustomBefore", settings.RemoveTextForHearingImpaired.RemoveTextBetweenCustomBefore);
+            textWriter.WriteElementString("RemoveTextBetweenCustomAfter", settings.RemoveTextForHearingImpaired.RemoveTextBetweenCustomAfter);
+            textWriter.WriteElementString("RemoveTextBetweenOnlySeperateLines", settings.RemoveTextForHearingImpaired.RemoveTextBetweenOnlySeperateLines.ToString());
+            textWriter.WriteElementString("RemoveTextBeforeColon", settings.RemoveTextForHearingImpaired.RemoveTextBeforeColon.ToString());
+            textWriter.WriteElementString("RemoveTextBeforeColonOnlyIfUppercase", settings.RemoveTextForHearingImpaired.RemoveTextBeforeColonOnlyIfUppercase.ToString());
             textWriter.WriteElementString("RemoveInterjections", settings.RemoveTextForHearingImpaired.RemoveInterjections.ToString());
             textWriter.WriteElementString("RemoveIfContains", settings.RemoveTextForHearingImpaired.RemoveIfContains.ToString());
             textWriter.WriteElementString("RemoveIfContainsText", settings.RemoveTextForHearingImpaired.RemoveIfContainsText);

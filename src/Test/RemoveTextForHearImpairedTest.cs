@@ -70,7 +70,7 @@ namespace Test
         [TestMethod()]
         [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveColonTest()
-        {
+        {            
             FormRemoveTextForHearImpaired_Accessor target = new FormRemoveTextForHearImpaired_Accessor();
             string text = "Man over P.A.:\r\nGive back our homes.";
             string expected = "Give back our homes.";
