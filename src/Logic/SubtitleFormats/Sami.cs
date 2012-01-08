@@ -92,7 +92,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         public List<string> GetClasses(Subtitle subtitle)
         {
             var list = new List<string>();
-            if (subtitle.Header.ToLower().StartsWith("<style"))
+            if (!string.IsNullOrEmpty(subtitle.Header) && subtitle.Header.ToLower().StartsWith("<style"))
             {
                 foreach (string line in subtitle.Header.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries))
                 {
