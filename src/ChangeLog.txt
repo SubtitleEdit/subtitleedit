@@ -1,6 +1,6 @@
 Subtitle Edit Changelog
 
-3.2.3 (xth January 2011)
+3.2.3 (xth January 2012)
  * NEW:
    * Added Brazilian Portuguese - thx XXXXXXXXXX 
    * Added Italian language file - thx Maff
@@ -15,7 +15,7 @@ Subtitle Edit Changelog
      Now includes (some) italic detection + adds support for 
      Arabic, Hebrew, Hindi and Thai
    * Undo improved so it also works for textbox + redo (Ctrl+Y)
-   * Many new configurable shortcuts
+   * Many new configurable shortcuts (e.g. for fullscreen video player)
    * OCR tweaked a bit + BluRay sup files are processed faster
    * TextBox with current subtitle now shows cursor position - thx Leszek
    * Subtitle format PAC much improved
@@ -23,6 +23,8 @@ Subtitle Edit Changelog
    * Subtitle format D-Cinema improved - thx Karam
    * Splitting of lines - Thx Trottel
    * Auto break lines - thx Majid
+   * Some fixes for Fix common errors/Remove text for HI - thx Majid
+   * Optimized Fix Common Errors
  * FIXED:
    * Fixed crash when setting Options - thx karmazyn
    * Fixed crash in set color (or set font) - thx LEO33
