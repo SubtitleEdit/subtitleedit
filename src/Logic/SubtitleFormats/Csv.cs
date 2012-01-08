@@ -8,7 +8,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
     public class Csv : SubtitleFormat
     {
         private const string _seperator = ";";
-        Regex csvLine = new Regex(@"^""?\d+""?" + _seperator + @"""?\d+""?" + _seperator + @"""?\d+""?" + _seperator + @"""?[^""]*""?$", RegexOptions.Compiled);
+        static Regex csvLine = new Regex(@"^""?\d+""?" + _seperator + @"""?\d+""?" + _seperator + @"""?\d+""?" + _seperator + @"""?[^""]*""?$", RegexOptions.Compiled);
 
         public override string Extension
         {

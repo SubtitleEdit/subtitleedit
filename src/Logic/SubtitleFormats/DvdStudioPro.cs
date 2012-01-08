@@ -7,7 +7,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
     public class DvdStudioPro : SubtitleFormat
     {
-        readonly Regex _regexTimeCodes = new Regex(@"^\d+:\d+:\d+:\d+\t,\t\d+:\d+:\d+:\d+\t,\t.*$", RegexOptions.Compiled);
+        static Regex _regexTimeCodes = new Regex(@"^\d+:\d+:\d+:\d+\t,\t\d+:\d+:\d+:\d+\t,\t.*$", RegexOptions.Compiled);
 
         public override string Extension
         {

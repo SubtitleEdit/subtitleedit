@@ -7,7 +7,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
     public class MicroDvd : SubtitleFormat
     {
-        readonly Regex _regexMicroDvdLine = new Regex(@"^\{-?\d+}\{-?\d+}.*$", RegexOptions.Compiled);
+        static Regex _regexMicroDvdLine = new Regex(@"^\{-?\d+}\{-?\d+}.*$", RegexOptions.Compiled);
 
         public override string Extension
         {

@@ -7,6 +7,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
     class QuickTimeText : SubtitleFormat
     {
+        static Regex regexTimeCodes = new Regex(@"^\[\d\d:\d\d:\d\d.\d\d\]", RegexOptions.Compiled);
+
         public override string Extension
         {
             get { return ".txt"; }
@@ -77,8 +79,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             //tout le temps,
             //[00:00:35.08]
             Paragraph p = null;
-            subtitle.Paragraphs.Clear();
-            var regexTimeCodes = new Regex(@"^\[\d\d:\d\d:\d\d.\d\d\]", RegexOptions.Compiled);
+            subtitle.Paragraphs.Clear();            
             foreach (string line in lines)
             {
                 if (regexTimeCodes.IsMatch(line))

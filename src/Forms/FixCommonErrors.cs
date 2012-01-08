@@ -50,6 +50,23 @@ namespace Nikse.SubtitleEdit.Forms
         readonly LanguageStructure.General _languageGeneral;
         private bool _hasFixesBeenMade;
 
+        static Regex fixMissingSpacesReComma = new Regex(@"[^\s\d],[^\s]", RegexOptions.Compiled);
+        static Regex fixMissingSpacesRePeriod = new Regex(@"[a-z][.][a-zA-Z]", RegexOptions.Compiled);
+        static Regex fixMissingSpacesReQuestionMark = new Regex(@"[^\s\d]\?[a-zA-Z]", RegexOptions.Compiled);
+        static Regex fixMissingSpacesReExclamation = new Regex(@"[^\s\d]\![a-zA-Z]", RegexOptions.Compiled);
+        static Regex fixMissingSpacesReColon = new Regex(@"[^\s\d]\:[a-zA-Z]", RegexOptions.Compiled);
+        static Regex urlCom = new Regex(@"\w\.com\b", RegexOptions.Compiled);
+        static Regex urlNet = new Regex(@"\w\.net\b", RegexOptions.Compiled);
+        static Regex urlOrg = new Regex(@"\w\.org\b", RegexOptions.Compiled);
+
+        static Regex reAfterLowercaseLetter = new Regex(@"[a-zæøåäöé]I", RegexOptions.Compiled);
+        static Regex reBeforeLowercaseLetter = new Regex(@"I[a-zæøåäöé]", RegexOptions.Compiled);
+
+        static Regex removeSpaceBetweenNumbersRegEx = new Regex(@"\d \d", RegexOptions.Compiled);
+
+        static Regex fixAloneLowercaseIToUppercaseIRE = new Regex(@"\bi\b", RegexOptions.Compiled);
+
+
         class FixItem
         {
             public string Name { get; set; }
@@ -998,23 +1015,13 @@ namespace Nikse.SubtitleEdit.Forms
         public void FixMissingSpaces()
         {
             string fixAction = _language.FixMissingSpace;
-            Regex reComma = new Regex(@"[^\s\d],[^\s]", RegexOptions.Compiled);
-            Regex rePeriod = new Regex(@"[a-z][.][a-zA-Z]", RegexOptions.Compiled);
-            Regex reQuestionMark = new Regex(@"[^\s\d]\?[a-zA-Z]", RegexOptions.Compiled);
-            Regex reExclamation = new Regex(@"[^\s\d]\![a-zA-Z]", RegexOptions.Compiled);
-            Regex reColon = new Regex(@"[^\s\d]\:[a-zA-Z]", RegexOptions.Compiled);
-
-            Regex urlCom = new Regex(@"\w\.com\b", RegexOptions.Compiled);
-            Regex urlNet = new Regex(@"\w\.net\b", RegexOptions.Compiled);
-            Regex urlOrg = new Regex(@"\w\.org\b", RegexOptions.Compiled);
-
             int missingSpaces = 0;
             for (int i = 0; i < _subtitle.Paragraphs.Count; i++)
             {
                 Paragraph p = _subtitle.Paragraphs[i];
 
                 // missing space after comma ","
-                Match match = reComma.Match(p.Text);
+                Match match = fixMissingSpacesReComma.Match(p.Text);
                 if (match.Success)
                 {
                     while (match.Success)
@@ -1036,7 +1043,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
 
                 // missing space after "?"
-                match = reQuestionMark.Match(p.Text);
+                match = fixMissingSpacesReQuestionMark.Match(p.Text);
                 if (match.Success)
                 {
                     while (match.Success)
@@ -1053,12 +1060,12 @@ namespace Nikse.SubtitleEdit.Forms
                                 AddFixToListView(p, i + 1, fixAction, oldText, p.Text);
                             }
                         }
-                        match = reQuestionMark.Match(p.Text, match.Index + 1);
+                        match = fixMissingSpacesReQuestionMark.Match(p.Text, match.Index + 1);
                     }
                 }
 
                 // missing space after "!"
-                match = reExclamation.Match(p.Text);
+                match = fixMissingSpacesReExclamation.Match(p.Text);
                 if (match.Success)
                 {
                     while (match.Success)
@@ -1075,12 +1082,12 @@ namespace Nikse.SubtitleEdit.Forms
                                 AddFixToListView(p, i + 1, fixAction, oldText, p.Text);
                             }
                         }
-                        match = reExclamation.Match(p.Text, match.Index + 1);
+                        match = fixMissingSpacesReExclamation.Match(p.Text, match.Index + 1);
                     }
                 }
 
                 // missing space after ":"
-                match = reColon.Match(p.Text);
+                match = fixMissingSpacesReColon.Match(p.Text);
                 if (match.Success)
                 {
                     while (match.Success)
@@ -1107,12 +1114,12 @@ namespace Nikse.SubtitleEdit.Forms
                                 AddFixToListView(p, i + 1, fixAction, oldText, p.Text);
                             }
                         }
-                        match = reColon.Match(p.Text, match.Index + 1);
+                        match = fixMissingSpacesReColon.Match(p.Text, match.Index + 1);
                     }
                 }
 
                 // missing space after period "."
-                match = rePeriod.Match(p.Text);
+                match = fixMissingSpacesRePeriod.Match(p.Text);
                 if (match.Success)
                 {
                     while (match.Success)
@@ -1435,8 +1442,6 @@ namespace Nikse.SubtitleEdit.Forms
         {
             string fixAction = _language.FixUppercaseIInsideLowercaseWord;
             int uppercaseIsInsideLowercaseWords = 0;
-            Regex reAfterLowercaseLetter = new Regex(@"[a-zæøåäöé]I", RegexOptions.Compiled);
-            Regex reBeforeLowercaseLetter = new Regex(@"I[a-zæøåäöé]", RegexOptions.Compiled);
 //            bool isLineContinuation = false;
             for (int i = 0; i < _subtitle.Paragraphs.Count; i++)
             {
@@ -2057,17 +2062,16 @@ namespace Nikse.SubtitleEdit.Forms
         private void RemoveSpaceBetweenNumbers()
         {
             string fixAction = _language.FixCommonOcrErrors;
-            int noOfFixes = 0;
-            Regex regex = new Regex(@"\d \d", RegexOptions.Compiled);
+            int noOfFixes = 0;            
             for (int i = 0; i < _subtitle.Paragraphs.Count; i++)
             {
                 Paragraph p = _subtitle.Paragraphs[i];
                 string text = p.Text;
-                Match match = regex.Match(text);
+                Match match = removeSpaceBetweenNumbersRegEx.Match(text);
                 while (match.Success)
                 {
                     text = text.Remove(match.Index + 1, 1);
-                    match = regex.Match(text);
+                    match = removeSpaceBetweenNumbersRegEx.Match(text);
                 }
                 if (p.Text != text)
                 {
@@ -2137,7 +2141,6 @@ namespace Nikse.SubtitleEdit.Forms
         {
             string fixAction = _language.FixLowercaseIToUppercaseI;
             int iFixes = 0;
-            var re = new Regex(@"\bi\b", RegexOptions.Compiled);
             for (int i = 0; i < _subtitle.Paragraphs.Count; i++)
             {
                 Paragraph p = _subtitle.Paragraphs[i];
@@ -2146,7 +2149,7 @@ namespace Nikse.SubtitleEdit.Forms
                 string s = p.Text;
                 if (s.Contains("i"))
                 {
-                    s = FixAloneLowercaseIToUppercaseLine(re, oldText, s, 'i');
+                    s = FixAloneLowercaseIToUppercaseLine(fixAloneLowercaseIToUppercaseIRE, oldText, s, 'i');
 
                     if (s != oldText && AllowFix(i + 1, fixAction))
                     {

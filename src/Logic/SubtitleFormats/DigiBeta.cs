@@ -7,7 +7,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
     class DigiBeta : SubtitleFormat
     {
-        Regex regexTimeCode = new Regex(@"^\d\d \d\d \d\d \d\d\t\d\d \d\d \d\d \d\d\t", RegexOptions.Compiled);
+        static Regex regexTimeCode = new Regex(@"^\d\d \d\d \d\d \d\d\t\d\d \d\d \d\d \d\d\t", RegexOptions.Compiled);
 
         public override string Extension
         {

@@ -7,7 +7,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
     public class MPlayer2 : SubtitleFormat
     {
-        readonly Regex _regexMPlayer2Line = new Regex(@"^\[-?\d+]\[-?\d+].*$", RegexOptions.Compiled);
+        static Regex _regexMPlayer2Line = new Regex(@"^\[-?\d+]\[-?\d+].*$", RegexOptions.Compiled);
 
         public override string Extension
         {

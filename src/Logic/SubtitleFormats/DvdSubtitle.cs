@@ -8,7 +8,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
     public class DvdSubtitle : SubtitleFormat
     {
 
-        Regex regexTimeCodes = new Regex(@"^\{T\ \d+:\d+:\d+:\d+$", RegexOptions.Compiled);
+        static Regex regexTimeCodes = new Regex(@"^\{T\ \d+:\d+:\d+:\d+$", RegexOptions.Compiled);
 
         public override string Extension
         {
