@@ -876,6 +876,30 @@ namespace Nikse.SubtitleEdit.Forms
                 p.Text = p.Text.Trim();
                 p.Text = p.Text.Replace(Environment.NewLine + " ", Environment.NewLine);
 
+                if (p.Text.Contains("- ") && p.Text.Length > 5)
+                {
+                    int idx = p.Text.IndexOf("- ", 2);
+                    if (idx > 0 && idx < p.Text.Length - 2)
+                    {
+                        string before = string.Empty;
+                        int k = idx - 1;
+                        while (k > 0 && Utilities.GetLetters(true, true, false).Contains(p.Text[k].ToString()))
+                        {
+                            before = p.Text[k].ToString() + before;
+                            k--;
+                        }
+                        string after = string.Empty;
+                        k = idx + 2;
+                        while (k < p.Text.Length && Utilities.GetLetters(true, true, false).Contains(p.Text[k].ToString()))
+                        {
+                            after = after + p.Text[k].ToString();
+                            k++;
+                        }
+                        if (after.Length > 0 && after.ToLower() == before.ToLower())
+                            p.Text = p.Text.Remove(idx + 1, 1);
+                    }
+                }
+
                 if (p.Text != oldText)
                 {
                     if (AllowFix(i + 1, fixAction))
@@ -1182,7 +1206,7 @@ namespace Nikse.SubtitleEdit.Forms
                     string newText = p.Text;
                     if ("#♪♫".Contains(newText[0].ToString()) && !" <".Contains(newText[1].ToString()))
                         newText = newText.Insert(1, " ");
-                    if ("#♪♫".Contains(newText[newText.Length - 1].ToString()) && !" >".Contains(newText[newText.Length - 1].ToString()))
+                    if ("#♪♫".Contains(newText[newText.Length - 1].ToString()) && !" >".Contains(newText[newText.Length - 2].ToString()))
                         newText = newText.Insert(newText.Length - 1, " ");
                     if (newText != p.Text && AllowFix(i + 1, fixAction))
                     {
@@ -1953,7 +1977,7 @@ namespace Nikse.SubtitleEdit.Forms
                                 StripableText subText = new StripableText(text.Substring(start + 2));
                                 if (subText.StrippedText.Length > 0 && Configuration.Settings.General.UppercaseLetters.ToLower().Contains(subText.StrippedText[0].ToString()))
                                 {
-                                    if (subText.StrippedText.Length > 1)
+                                    if (subText.StrippedText.Length > 1 && !(subText.Pre.Contains("'") && subText.StrippedText.StartsWith("s")))
                                     {
                                         text = text.Substring(0, start + 2) + subText.Pre + subText.StrippedText[0].ToString().ToUpper() + subText.StrippedText.Substring(1) + subText.Post;
                                         if (AllowFix(i + 1, fixAction))
@@ -2214,7 +2238,14 @@ namespace Nikse.SubtitleEdit.Forms
 
                     if (prev == null || !Utilities.RemoveHtmlTags(prev.Text).Trim().EndsWith("-"))
                     {
-                        if (Utilities.CountTagInText(text, "-") == 1)
+                        var lines = Utilities.RemoveHtmlTags(p.Text).Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                        int startHyphenCount = 0;
+                        foreach (string line in lines)
+                        {
+                            if (line.Trim().StartsWith("-"))
+                                startHyphenCount++;
+                        }
+                        if (startHyphenCount == 1)
                         {
                             string oldText = p.Text;
 
