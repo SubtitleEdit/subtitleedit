@@ -186,8 +186,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     }
                     text = text.Substring(0, st) + text.Substring(et);
                 }
-                text.Replace(Environment.NewLine, " ");
-                text.Replace("  ", " ");
+                text = text.Replace(Environment.NewLine, " ");
+                text = text.Replace("  ", " ");
 
                 text = text.TrimEnd();
                 text = text.Replace("<BR>", Environment.NewLine);
