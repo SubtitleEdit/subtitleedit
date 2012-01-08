@@ -197,7 +197,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         public Main()
         {
-            try
+            //try
             {
                 InitializeComponent();
 
@@ -351,17 +351,18 @@ namespace Nikse.SubtitleEdit.Forms
 
                 FixLargeFonts();
             }
-            catch (Exception exception)
-            {
-                Cursor = Cursors.Default;
-                MessageBox.Show(exception.Message + Environment.NewLine + exception.StackTrace);
-            }
+            //catch (Exception exception)
+            //{
+            //    Cursor = Cursors.Default;
+            //    MessageBox.Show(exception.Message + Environment.NewLine + exception.StackTrace);
+            //}
         }
 
         private void BatchConvert(string[] args) // E.g.: /convert *.txt SubRip
         {
             const int ATTACH_PARENT_PROCESS = -1;
-            AttachConsole(ATTACH_PARENT_PROCESS);
+            if (!Utilities.IsRunningOnMac() && !Utilities.IsRunningOnLinux())
+                AttachConsole(ATTACH_PARENT_PROCESS);
 
             Console.WriteLine();
             Console.WriteLine();
@@ -382,10 +383,10 @@ namespace Nikse.SubtitleEdit.Forms
 
             string inputDirectory = Directory.GetCurrentDirectory();
             int indexOfDirectorySeparatorChar = pattern.LastIndexOf(Path.DirectorySeparatorChar.ToString());
-            if (indexOfDirectorySeparatorChar > 0)
+            if (indexOfDirectorySeparatorChar > 0 && indexOfDirectorySeparatorChar < pattern.Length)
             {
-                pattern = pattern.Substring(indexOfDirectorySeparatorChar);
-                inputDirectory = pattern.Substring(0, indexOfDirectorySeparatorChar -1);
+                pattern = pattern.Substring(indexOfDirectorySeparatorChar+1);
+                inputDirectory = args[2].Substring(0, indexOfDirectorySeparatorChar);
             }
 
             int count = 0;
