@@ -324,7 +324,7 @@ namespace Nikse.SubtitleEdit.Logic
             SubtitleMaximumCharactersPerSeconds = 25;
             SpellCheckLanguage = null;
             VideoPlayer = string.Empty;
-            VideoPlayerDefaultVolume = 50;
+            VideoPlayerDefaultVolume = 75;
             VideoPlayerPreviewFontSize = 10;
             VideoPlayerShowStopButton = true;
             ListViewLineSeparatorString = "<br />";
