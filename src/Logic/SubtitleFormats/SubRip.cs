@@ -16,9 +16,9 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         Paragraph _paragraph;
         ExpectingLine _expecting = ExpectingLine.Number;
-        readonly Regex _regexTimeCodes = new Regex(@"^-?\d+:-?\d+:-?\d+[:,]-?\d+\s*-->\s*-?\d+:-?\d+:-?\d+[:,]-?\d+$", RegexOptions.Compiled);
-        readonly Regex _regexTimeCodes2 = new Regex(@"^\d+:\d+:\d+,\d+\s*-->\s*\d+:\d+:\d+,\d+$", RegexOptions.Compiled);
-        readonly Regex _buggyTimeCodes = new Regex(@"^-?\d+:-?\d+:-?\d+[¡،]-?\d+\s*-->\s*-?\d+:-?\d+:-?\d+[¡،]-?\d+$", RegexOptions.Compiled);
+        static Regex _regexTimeCodes = new Regex(@"^-?\d+:-?\d+:-?\d+[:,]-?\d+\s*-->\s*-?\d+:-?\d+:-?\d+[:,]-?\d+$", RegexOptions.Compiled);
+        static Regex _regexTimeCodes2 = new Regex(@"^\d+:\d+:\d+,\d+\s*-->\s*\d+:\d+:\d+,\d+$", RegexOptions.Compiled);
+        static Regex _buggyTimeCodes = new Regex(@"^-?\d+:-?\d+:-?\d+[¡،]-?\d+\s*-->\s*-?\d+:-?\d+:-?\d+[¡،]-?\d+$", RegexOptions.Compiled);
 
         public override string Extension
         {

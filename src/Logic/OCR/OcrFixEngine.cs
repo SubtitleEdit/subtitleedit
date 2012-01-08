@@ -37,9 +37,9 @@ namespace Nikse.SubtitleEdit.Logic.OCR
         readonly Form _parentForm;
         private string _spellCheckDictionaryName;
 
-        Regex regexAloneI = new Regex(@"\bi\b", RegexOptions.Compiled);
-        Regex regexAloneIAsL = new Regex(@"\bl\b", RegexOptions.Compiled);
-        Regex regexSpaceBetweenNumbers = new Regex(@"\d \d", RegexOptions.Compiled);
+        static Regex regexAloneI = new Regex(@"\bi\b", RegexOptions.Compiled);
+        static Regex regexAloneIAsL = new Regex(@"\bl\b", RegexOptions.Compiled);
+        static Regex regexSpaceBetweenNumbers = new Regex(@"\d \d", RegexOptions.Compiled);
         static Regex regExLowercaseL = new Regex("[A-ZÆØÅÄÖÉÁ]l[A-ZÆØÅÄÖÉÁ]", RegexOptions.Compiled);
         static Regex regExUppercaseI = new Regex("[a-zæøåöäé]I.", RegexOptions.Compiled);
         static Regex regExNumber1 = new Regex(@"\d\ 1", RegexOptions.Compiled);
@@ -47,6 +47,8 @@ namespace Nikse.SubtitleEdit.Logic.OCR
         static Regex regExIandZero = new Regex(@"[a-zæøåäöé][I1]", RegexOptions.Compiled);
         static Regex regExTime1 = new Regex(@"[a-zæøåäöé][0]", RegexOptions.Compiled);
         static Regex regExTime2 = new Regex(@"0[a-zæøåäöé]", RegexOptions.Compiled);
+        static Regex hexNumber = new Regex(@"^#?[\dABDEFabcdef]+$", RegexOptions.Compiled);
+        static Regex startEndEndsWithNumber = new Regex(@"^\d+.+\d$", RegexOptions.Compiled);
 
         public bool Abort { get; set; }
         public List<string> AutoGuessesUsed { get; set; }
@@ -54,9 +56,6 @@ namespace Nikse.SubtitleEdit.Logic.OCR
         public bool IsDictionaryLoaded { get; private set; }
 
         public CultureInfo DictionaryCulture { get; private set; }
-
-        static Regex hexNumber = new Regex(@"^#?[\dABDEFabcdef]+$", RegexOptions.Compiled);
-        static Regex startEndEndsWithNumber = new Regex(@"^\d+.+\d$", RegexOptions.Compiled);
 
         /// <summary>
         /// Advanced ocr fixing via replace/spelling dictionaries + some hardcoded rules

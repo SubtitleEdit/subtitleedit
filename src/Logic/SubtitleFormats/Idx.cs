@@ -10,7 +10,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
     public class Idx : SubtitleFormat
     {
         // timestamp: 00:00:01:401, filepos: 000000000
-        readonly Regex _regexTimeCodes = new Regex(@"^timestamp: \d+:\d+:\d+:\d+, filepos: [\dabcdefABCDEF]+$", RegexOptions.Compiled);
+        static Regex _regexTimeCodes = new Regex(@"^timestamp: \d+:\d+:\d+:\d+, filepos: [\dabcdefABCDEF]+$", RegexOptions.Compiled);
 
         public Hashtable NonTimeCodes = new Hashtable();
 

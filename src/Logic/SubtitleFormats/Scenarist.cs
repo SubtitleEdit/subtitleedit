@@ -7,6 +7,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
     class Scenarist : SubtitleFormat
     {
+        static Regex regexTimeCodes = new Regex(@"^\d\d\d\d\t\d\d:\d\d:\d\d:\d\d\t\d\d:\d\d:\d\d:\d\d\t", RegexOptions.Compiled);
+
         public override string Extension
         {
             get { return ".txt"; }
@@ -64,7 +66,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             //This is line two.
             Paragraph p = null;
             subtitle.Paragraphs.Clear();
-            var regexTimeCodes = new Regex(@"^\d\d\d\d\t\d\d:\d\d:\d\d:\d\d\t\d\d:\d\d:\d\d:\d\d\t", RegexOptions.Compiled);
             foreach (string line in lines)
             {
                 if (regexTimeCodes.IsMatch(line))
