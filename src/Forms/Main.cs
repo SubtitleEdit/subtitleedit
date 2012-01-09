@@ -7359,50 +7359,9 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             // TABS - MUST BE LAST
-            else if (tabControlButtons.SelectedTab == tabPageAdjust && mediaPlayer.VideoPlayer != null)
+            else if (tabControlButtons.SelectedTab == tabPageAdjust)
             {
-                if (_mainAdjustSetStartAndOffsetTheRest == e.KeyData) // ((e.Modifiers == Keys.Control && e.KeyCode == Keys.Space))
-                {
-                    ButtonSetStartAndOffsetRestClick(null, null);
-                    e.SuppressKeyPress = true;
-                }
-                else if (_mainAdjustSetEndAndGotoNext == e.KeyData) // e.Modifiers == Keys.Shift && e.KeyCode == Keys.Space)
-                {
-                    buttonSetEndAndGoToNext_Click(null, null);
-                    e.SuppressKeyPress = true;
-                }
-                else if (e.Modifiers == Keys.None && e.KeyCode == Keys.F9)
-                {
-                    ButtonSetStartAndOffsetRestClick(null, null);
-                    e.SuppressKeyPress = true;
-                }
-                else if (e.Modifiers == Keys.None && e.KeyCode == Keys.F10)
-                {
-                    buttonSetEndAndGoToNext_Click(null, null);
-                    e.SuppressKeyPress = true;
-                }
-                else if ((e.Modifiers == Keys.None && e.KeyCode == Keys.F11) || _mainAdjustSetStart == e.KeyData)
-                {
-                    buttonSetStartTime_Click(null, null);
-                    e.SuppressKeyPress = true;
-                }
-                else if ((e.Modifiers == Keys.None && e.KeyCode == Keys.F12) || _mainAdjustSetEnd == e.KeyData)
-                {
-                    StopAutoDuration();
-                    buttonSetEnd_Click(null, null);
-                    e.SuppressKeyPress = true;
-                }
-                else if (_mainAdjustInsertViaEndAutoStartAndGoToNext == e.KeyData)
-                {
-                    SetCurrentViaEndPositionAndGotoNext(FirstSelectedIndex);
-                    e.SuppressKeyPress = true;
-                }
-                else if (_mainAdjustSetStartAutoDurationAndGoToNext == e.KeyData)
-                {
-                    SetCurrentStartAutoDurationAndGotoNext(FirstSelectedIndex);
-                    e.SuppressKeyPress = true;
-                }
-                else if (_mainAdjustSelected100MsForward == e.KeyData)
+                if (_mainAdjustSelected100MsForward == e.KeyData)
                 {
                     ShowEarlierOrLater(100, true);
                     e.SuppressKeyPress = true;
@@ -7411,6 +7370,50 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     ShowEarlierOrLater(-100, true);
                     e.SuppressKeyPress = true;
+                }
+                else if (mediaPlayer.VideoPlayer != null)
+                {
+                    if (_mainAdjustSetStartAndOffsetTheRest == e.KeyData) // ((e.Modifiers == Keys.Control && e.KeyCode == Keys.Space))
+                    {
+                        ButtonSetStartAndOffsetRestClick(null, null);
+                        e.SuppressKeyPress = true;
+                    }
+                    else if (_mainAdjustSetEndAndGotoNext == e.KeyData) // e.Modifiers == Keys.Shift && e.KeyCode == Keys.Space)
+                    {
+                        buttonSetEndAndGoToNext_Click(null, null);
+                        e.SuppressKeyPress = true;
+                    }
+                    else if (e.Modifiers == Keys.None && e.KeyCode == Keys.F9)
+                    {
+                        ButtonSetStartAndOffsetRestClick(null, null);
+                        e.SuppressKeyPress = true;
+                    }
+                    else if (e.Modifiers == Keys.None && e.KeyCode == Keys.F10)
+                    {
+                        buttonSetEndAndGoToNext_Click(null, null);
+                        e.SuppressKeyPress = true;
+                    }
+                    else if ((e.Modifiers == Keys.None && e.KeyCode == Keys.F11) || _mainAdjustSetStart == e.KeyData)
+                    {
+                        buttonSetStartTime_Click(null, null);
+                        e.SuppressKeyPress = true;
+                    }
+                    else if ((e.Modifiers == Keys.None && e.KeyCode == Keys.F12) || _mainAdjustSetEnd == e.KeyData)
+                    {
+                        StopAutoDuration();
+                        buttonSetEnd_Click(null, null);
+                        e.SuppressKeyPress = true;
+                    }
+                    else if (_mainAdjustInsertViaEndAutoStartAndGoToNext == e.KeyData)
+                    {
+                        SetCurrentViaEndPositionAndGotoNext(FirstSelectedIndex);
+                        e.SuppressKeyPress = true;
+                    }
+                    else if (_mainAdjustSetStartAutoDurationAndGoToNext == e.KeyData)
+                    {
+                        SetCurrentStartAutoDurationAndGotoNext(FirstSelectedIndex);
+                        e.SuppressKeyPress = true;
+                    }
                 }
             }
             else if (tabControlButtons.SelectedTab == tabPageCreate && mediaPlayer.VideoPlayer != null)
