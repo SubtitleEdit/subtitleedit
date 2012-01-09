@@ -5487,7 +5487,10 @@ namespace Nikse.SubtitleEdit.Forms
             timeUpDownStartTime.MaskedTextBox.TextChanged += MaskedTextBox_TextChanged;
 
             numericUpDownDuration.ValueChanged -= NumericUpDownDurationValueChanged;
-            numericUpDownDuration.Value = (decimal)(p.Duration.TotalSeconds);
+            if (p.Duration.TotalSeconds > (double)numericUpDownDuration.Maximum)
+                numericUpDownDuration.Value = numericUpDownDuration.Maximum;
+            else
+                numericUpDownDuration.Value = (decimal)(p.Duration.TotalSeconds);
             numericUpDownDuration.ValueChanged += NumericUpDownDurationValueChanged;
 
             UpdateOverlapErrors(timeUpDownStartTime.TimeCode);
