@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Language Name="Српски">
   <General>
-    <Title>Сабтитл едит</Title>
+    <Title>Сабтајтл едит</Title>
     <Version>3.2</Version>
     <TranslatedBy>Превод: Rancher</TranslatedBy>
     <CultureName>sr-Cyrl-RS</CultureName>
@@ -62,7 +62,7 @@
   </General>
   <About>
     <Title>О програму</Title>
-    <AboutText1>Сабтитл едит је бесплатан програм који је објављен под
+    <AboutText1>Сабтајтл едит је бесплатан програм који је објављен под
 ГНУ-овом општом јавном лиценцом, а то значи да га можете
 расподељивати, мењати и користити како год ви желите.
 
@@ -886,7 +886,7 @@
   <NetworkJoin>
     <Title>Мрежна сесија</Title>
     <Information>Овде можете да се придружите постојећој сесији у којој
-    можете да уређујете одређени титл с другим људима.</Information>
+	можете да уређујете одређени титл с другим људима.</Information>
     <Join>&amp;Повежи ме</Join>
   </NetworkJoin>
   <NetworkLogAndInfo>
@@ -897,7 +897,7 @@
     <Title>Мрежна сесија</Title>
     <ConnectionTo>Повезујем се на {0}…</ConnectionTo>
     <Information>Овде можете да направите сесију у којој ћете моћи да уређујете
-    одређени титл с другим људима.</Information>
+	одређени титл с другим људима.</Information>
     <Start>&amp;Започни</Start>
   </NetworkStart>
   <RemoveTextFromHearImpaired>
@@ -1168,8 +1168,8 @@
     <GoToSubPosition>&amp;Иди</GoToSubPosition>
     <KeepChangesTitle>Чување измена</KeepChangesTitle>
     <KeepChangesMessage>Изменили сте титл користећи Визуелно усклађивање.
-
-    Желите ли да сачувате измене?</KeepChangesMessage>
+	
+	Желите ли да сачувате измене?</KeepChangesMessage>
     <SynchronizationDone>Усклађивање је завршено.</SynchronizationDone>
     <StartSceneMustComeBeforeEndScene>Почетна сцена мора бити пре завршне!</StartSceneMustComeBeforeEndScene>
     <Tip>Користите ктрл и леву или десну стрелицу да померите 100 мс уназад или унапред.</Tip>
