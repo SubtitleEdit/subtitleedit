@@ -896,6 +896,8 @@ namespace Nikse.SubtitleEdit.Forms
                 if (p.Text.Contains("- ") && p.Text.Length > 5)
                 {
                     int idx = p.Text.IndexOf("- ", 2);
+                    if (p.Text.ToLower().StartsWith("<i>"))
+                        idx = p.Text.IndexOf("- ", 5);
                     if (idx > 0 && idx < p.Text.Length - 2)
                     {
                         string before = string.Empty;
@@ -2265,10 +2267,36 @@ namespace Nikse.SubtitleEdit.Forms
 
                             if (remove)
                             {
-                                text = text.Replace(" - ", string.Empty);
-                                text = text.Replace(" -", string.Empty);
-                                text = text.Replace("- ", string.Empty);
-                                text = text.Replace("-", string.Empty);
+                                int idx = text.IndexOf("-");
+                                if (idx < 5)
+                                {
+                                    text = text.Remove(idx, 1).TrimStart();
+                                    text = text.Replace("  ", " ");
+                                    text = text.Replace("> ", ">");
+                                    text = text.Replace(" <", "<");
+                                }
+                                else 
+                                {
+                                    int idxNL = text.IndexOf(Environment.NewLine);
+                                    if (idxNL > 0)
+                                    {
+                                        idx = text.IndexOf("-", idxNL);
+                                        if (idxNL + 5 > idxNL)
+                                        {
+                                            text = text.Remove(idx, 1).TrimStart();
+                                            text = text.Replace("  ", " ");
+                                            text = text.Remove(idx, 1).Replace(Environment.NewLine + " ", Environment.NewLine);
+                                            text = text.Replace("> ", ">");
+                                            text = text.Replace(" <", "<");
+                                        }
+                                    }
+                                    
+                                }
+                                    
+                                //text = text.Replace(" - ", string.Empty);
+                                //text = text.Replace(" -", string.Empty);
+                                //text = text.Replace("- ", string.Empty);
+                                //text = text.Replace("-", string.Empty);
                                 if (text != oldText)
                                 {
                                     if (AllowFix(i + 1, fixAction))
