@@ -14,7 +14,7 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
         public readonly List<string> Languages = new List<string>();
 
         static Regex timeCodeLinePattern = new Regex(@"^timestamp: \d+:\d+:\d+:\d+, filepos: [\dabcdefABCDEF]+$", RegexOptions.Compiled);
-        
+
         public Idx(string fileName):this(File.ReadAllLines(fileName))
         {
         }

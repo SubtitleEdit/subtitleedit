@@ -74,7 +74,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             // Longer names must be first
             namesEtc.Sort((s1, s2) => s2.Length.CompareTo(s1.Length));
-            
+
             string lastLine = string.Empty;
             foreach (Paragraph p in subtitle.Paragraphs)
             {

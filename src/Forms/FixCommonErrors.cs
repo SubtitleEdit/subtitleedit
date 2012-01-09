@@ -2064,7 +2064,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void RemoveSpaceBetweenNumbers()
         {
             string fixAction = _language.FixCommonOcrErrors;
-            int noOfFixes = 0;            
+            int noOfFixes = 0;
             for (int i = 0; i < _subtitle.Paragraphs.Count; i++)
             {
                 Paragraph p = _subtitle.Paragraphs[i];
@@ -2275,7 +2275,7 @@ namespace Nikse.SubtitleEdit.Forms
                                     text = text.Replace("> ", ">");
                                     text = text.Replace(" <", "<");
                                 }
-                                else 
+                                else
                                 {
                                     int idxNL = text.IndexOf(Environment.NewLine);
                                     if (idxNL > 0)
@@ -2290,9 +2290,9 @@ namespace Nikse.SubtitleEdit.Forms
                                             text = text.Replace(" <", "<");
                                         }
                                     }
-                                    
+
                                 }
-                                    
+
                                 //text = text.Replace(" - ", string.Empty);
                                 //text = text.Replace(" -", string.Empty);
                                 //text = text.Replace("- ", string.Empty);
