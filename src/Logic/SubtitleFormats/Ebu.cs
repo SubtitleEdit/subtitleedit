@@ -344,7 +344,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 else if (color == "white" || color == "ffffff")
                     return encoding.GetString(new byte[] { 0x07 }); // white
                 else if (color.Length == 6)
-                {                    
+                {
                     if (regExpr.IsMatch(color))
                     {
                         const int MaxDiff = 130;

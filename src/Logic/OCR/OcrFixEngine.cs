@@ -519,7 +519,7 @@ namespace Nikse.SubtitleEdit.Logic.OCR
                 return pre + word + post;
 
             if (word.Contains("?"))
-            {                
+            {
                 Match match = regExQuestion.Match(word);
                 if (match.Success)
                     word = word.Insert(match.Index + 2, " ");
@@ -698,7 +698,7 @@ namespace Nikse.SubtitleEdit.Logic.OCR
                 return word;
 
             if (word.LastIndexOf('0') > 0)
-            {                
+            {
                 Match match = regExTime1.Match(word);
                 if (match.Success)
                 {
@@ -714,7 +714,7 @@ namespace Nikse.SubtitleEdit.Logic.OCR
                         match = regExTime1.Match(word);
                     }
                 }
-                
+
                 match = regExTime2.Match(word);
                 if (match.Success)
                 {
@@ -757,7 +757,7 @@ namespace Nikse.SubtitleEdit.Logic.OCR
                 return word;
 
             if (word.LastIndexOf('I') > 0 || word.LastIndexOf('1') > 0)
-            {                
+            {
                 Match match = regExIandZero.Match(word);
                 if (match.Success)
                 {
@@ -998,7 +998,7 @@ namespace Nikse.SubtitleEdit.Logic.OCR
 
             // change '<number><space>1' to '<number>1'
             if (input.Contains("1"))
-            {                
+            {
                 Match match = regExNumber1.Match(input);
                 while (match.Success)
                 {
@@ -1012,7 +1012,7 @@ namespace Nikse.SubtitleEdit.Logic.OCR
 
             // change 'sequeI of' to 'sequel of'
             if (input.Contains("I"))
-            {                
+            {
                 var match = regExUppercaseI.Match(input);
                 while (match.Success)
                 {
@@ -1023,7 +1023,7 @@ namespace Nikse.SubtitleEdit.Logic.OCR
 
             // change 'NlCE' to 'NICE'
             if (input.Contains("l"))
-            {                
+            {
                 var match = regExLowercaseL.Match(input);
                 while (match.Success)
                 {

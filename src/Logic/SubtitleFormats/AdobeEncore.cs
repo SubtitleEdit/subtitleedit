@@ -68,7 +68,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             //00:03:15:22 00:03:23:10 This is line one.
             //This is line two.
             Paragraph p = null;
-            subtitle.Paragraphs.Clear();            
+            subtitle.Paragraphs.Clear();
             foreach (string line in lines)
             {
                 if (regexTimeCodes.IsMatch(line))
