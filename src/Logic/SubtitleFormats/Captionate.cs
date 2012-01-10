@@ -97,7 +97,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
                 XmlNode track0 = xml.CreateElement("track0");
                 track0.InnerText = Utilities.RemoveHtmlTags(p.Text);
-                track0.InnerXml = track0.InnerText.Replace(Environment.NewLine, "<br />");
+                track0.InnerXml = track0.InnerXml.Replace(Environment.NewLine, "<br />");
                 tracks.AppendChild(track0);
             }
             xml.DocumentElement.SelectSingleNode("captions").AppendChild(paragraph);

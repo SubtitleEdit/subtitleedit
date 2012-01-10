@@ -62,9 +62,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 st.InnerText = string.Format("{0:0.0##}", p.StartTime.TotalSeconds).Replace(",", ".");
                 ut.Attributes.Append(st);
 
-                //ut.InnerText = p.Text;
-                ut.InnerXml = "<![CDATA[" + p.Text.Replace(Environment.NewLine, "<br>") + "]]>";
-
+                ut.InnerText = p.Text;
+                ut.InnerXml = "<![CDATA[" + ut.InnerXml.Replace(Environment.NewLine, "<br>") + "]]>";
 
                 root.AppendChild(ut);
             }
