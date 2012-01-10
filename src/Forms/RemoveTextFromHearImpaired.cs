@@ -294,6 +294,9 @@ namespace Nikse.SubtitleEdit.Forms
             string newText = string.Empty;
             string[] parts = text.Trim().Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
             int noOfNames = 0;
+            int count = 0;
+            bool removedInFirstLine = false;
+            bool removedInSecondLine = false;
             foreach (string s in parts)
             {
                 int indexOfColon = s.IndexOf(":");
@@ -332,6 +335,11 @@ namespace Nikse.SubtitleEdit.Forms
                                         newText = newText + Environment.NewLine + "(" + content;
                                     else
                                         newText = newText + Environment.NewLine + content;
+
+                                    if (count == 0)
+                                        removedInFirstLine = true;
+                                    else if (count == 1)
+                                        removedInSecondLine = true;
                                 }
                                 newText = newText.Trim();
 
@@ -378,6 +386,11 @@ namespace Nikse.SubtitleEdit.Forms
                                         s2 = s2.Remove(0, colonIndex - endIndex);
                                     else if (endIndex > 0)
                                         s2 = s2.Remove(endIndex + 1, colonIndex - endIndex);
+
+                                    if (count == 0)
+                                        removedInFirstLine = true;
+                                    else if (count == 1)
+                                        removedInSecondLine = true;
                                 }
                             }
                             newText = newText + Environment.NewLine + s2;
@@ -394,6 +407,7 @@ namespace Nikse.SubtitleEdit.Forms
                         newText = "<i>" + newText;
 
                 }
+                count++;
             }
             newText = newText.Trim();
             if (noOfNames > 0 && Utilities.CountTagInText(newText, Environment.NewLine) == 1)
@@ -420,6 +434,8 @@ namespace Nikse.SubtitleEdit.Forms
                         insertDash = false;
                     }
 
+                    if (removedInFirstLine && !removedInSecondLine && !text.StartsWith("-") && !text.StartsWith("<i>-"))
+                        insertDash = false;
                 }
 
                 if (insertDash)
@@ -566,10 +582,13 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     if (part0.Length > 0 && ".!?".Contains(part0.Substring(part0.Length - 1)))
                     {
-                        if (!st.Pre.Contains("-"))
-                            text = "- " + text.Replace(Environment.NewLine, Environment.NewLine + "- ");
-                        if (!text.Contains(Environment.NewLine + "-") && !text.Contains(Environment.NewLine + "<i>-"))
-                            text = text.Replace(Environment.NewLine, Environment.NewLine + "- ");
+                        if (noOfNamesRemovedNotInLineOne > 0)
+                        {
+                            if (!st.Pre.Contains("-"))
+                                text = "- " + text.Replace(Environment.NewLine, Environment.NewLine + "- ");
+                            if (!text.Contains(Environment.NewLine + "-") && !text.Contains(Environment.NewLine + "<i>-"))
+                                text = text.Replace(Environment.NewLine, Environment.NewLine + "- ");
+                        }
                     }
                 }
             }
