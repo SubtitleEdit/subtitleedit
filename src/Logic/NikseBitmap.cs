@@ -4,6 +4,13 @@ using System.Drawing.Imaging;
 
 namespace Nikse.SubtitleEdit.Logic
 {
+    public class RunLengthTwoParts
+    {
+        public byte[] Buffer1 { get; set; }
+        public byte[] Buffer2 {get; set;}
+        public int Length { get { return Buffer1.Length + Buffer2.Length;  } }               
+    }
+
     unsafe public class NikseBitmap
     {
         public int Width { get; private set; }
@@ -125,7 +132,7 @@ namespace Nikse.SubtitleEdit.Logic
             }
         }
 
-        public byte[] RunLengthEncodeForDvd(Color background, Color pattern, Color emphasis1, Color emphasis2)
+        public RunLengthTwoParts RunLengthEncodeForDvd(Color background, Color pattern, Color emphasis1, Color emphasis2)
         {
             byte[] bufferEqual = new byte[Width * Height];
             byte[] bufferUnEqual = new byte[Width * Height];
@@ -192,11 +199,12 @@ namespace Nikse.SubtitleEdit.Logic
                 }
             }
 
-            byte[] result = new byte[indexBufferEqual + indexBufferUnEqual];
-            Buffer.BlockCopy(bufferEqual, 0, result, 0, indexBufferEqual);
-            Buffer.BlockCopy(bufferUnEqual, 0, result, indexBufferEqual, indexBufferUnEqual);
-
-            return result;
+            var twoParts = new RunLengthTwoParts();
+            twoParts.Buffer1 = new byte[indexBufferEqual];
+            Buffer.BlockCopy(bufferEqual, 0, twoParts.Buffer1, 0, indexBufferEqual);
+            twoParts.Buffer2 = new byte[indexBufferUnEqual];
+            Buffer.BlockCopy(bufferEqual, 0, twoParts.Buffer2, 0, indexBufferUnEqual);
+            return twoParts;
         }
 
         private void WriteRLE(ref bool indexHalfNibble, int lastColor, int count, ref int index, byte[] buffer)
