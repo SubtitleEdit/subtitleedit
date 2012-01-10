@@ -370,7 +370,7 @@ namespace Nikse.SubtitleEdit.Forms
             Console.WriteLine();
             Console.WriteLine(Title + " - Batch converter");
             Console.WriteLine();
-            Console.WriteLine("- Syntax: SubtitleEdit /convert <pattern> <name-of-format-without-spaces> [/offset:hh:mm:ss:msec]");
+            Console.WriteLine("- Syntax: SubtitleEdit /convert <pattern> <name-of-format-without-spaces> [/offset:hh:mm:ss:msec] [/encoding:<encoding name>]");
             Console.WriteLine("    example: SubtitleEdit /convert *.srt sami");
             Console.WriteLine();
             Console.WriteLine();
@@ -378,8 +378,27 @@ namespace Nikse.SubtitleEdit.Forms
             string pattern = args[2];
             string toFormat = args[3];
             string offset = string.Empty;
-            if (args.Length > 4)
+            if (args.Length > 4 && args[4].ToLower().StartsWith("/offset:"))
                 offset = args[4].ToLower();
+            else if (args.Length > 5 && args[5].ToLower().StartsWith("/offset:"))
+                offset = args[5].ToLower();
+            string targetEncodingName = string.Empty;
+            if (args.Length > 4 && args[4].ToLower().StartsWith("/encoding:"))
+                targetEncodingName = args[4].ToLower();
+            else if (args.Length > 5 && args[5].ToLower().StartsWith("/encoding:"))
+                targetEncodingName = args[5].ToLower();
+
+            Encoding targetEncoding = Encoding.UTF8;
+            try
+            {
+                if (!string.IsNullOrEmpty(targetEncodingName))
+                    targetEncoding = Encoding.GetEncoding(targetEncodingName);
+            }
+            catch (Exception exception)
+            { 
+                Console.WriteLine("Unable to set encoding (" + exception.Message +") - using UTF-8");
+                targetEncoding = Encoding.UTF8;
+            }
 
             string inputDirectory = Directory.GetCurrentDirectory();
             int indexOfDirectorySeparatorChar = pattern.LastIndexOf(Path.DirectorySeparatorChar.ToString());
@@ -477,7 +496,7 @@ namespace Nikse.SubtitleEdit.Forms
                                 sub.CalculateFrameNumbersFromTimeCodesNoCheck(Configuration.Settings.General.DefaultFrameRate);
                             else if (sf.IsTimeBased && sub.WasLoadedWithFrameNumbers)
                                 sub.CalculateTimeCodesFromFrameNumbers(Configuration.Settings.General.DefaultFrameRate);
-                            System.IO.File.WriteAllText(outputFileName, sub.ToText(sf));
+                            System.IO.File.WriteAllText(outputFileName, sub.ToText(sf), targetEncoding);
                             if (format.GetType() == typeof(Sami))
                             {
                                 Sami sami = (Sami)format;
@@ -494,7 +513,7 @@ namespace Nikse.SubtitleEdit.Forms
                                         outputFileName = Path.GetFileNameWithoutExtension(fileName) + "_" + className +  sf.Extension;
                                         if (File.Exists(outputFileName))
                                             outputFileName = Path.GetFileNameWithoutExtension(fileName) + "_" + className + "_"  + Guid.NewGuid().ToString() + sf;
-                                        System.IO.File.WriteAllText(outputFileName, newSub.ToText(sf));
+                                        System.IO.File.WriteAllText(outputFileName, newSub.ToText(sf), targetEncoding);
                                     }
                                 }
                             }

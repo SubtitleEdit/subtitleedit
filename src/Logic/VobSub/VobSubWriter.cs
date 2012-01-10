@@ -86,10 +86,10 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
             bmp.Save(@"D:\download\-__" + p.Number.ToString() + ".bmp");
             outBmp.Dispose();
 
-            var imageBuffer = nbmp.RunLengthEncodeForDvd(Color.Transparent, Color.White, Color.FromArgb(200, 0, 0, 0), Color.FromArgb(200, 25, 25, 25));
+            var twoPartBuffer = nbmp.RunLengthEncodeForDvd(Color.Transparent, Color.White, Color.FromArgb(200, 0, 0, 0), Color.FromArgb(200, 25, 25, 25));
 
             // PES size
-            int length = Mpeg2PackHeaderBuffer.Length + PacketizedElementaryStreamHeaderBufferFirst.Length + 10 + imageBuffer.Length;
+            int length = Mpeg2PackHeaderBuffer.Length + PacketizedElementaryStreamHeaderBufferFirst.Length + 10 + twoPartBuffer.Length;
 
             //block_size = 0x800 - header_size;
             //long j = (header_size - 20) + block_size;
@@ -106,9 +106,10 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
 
             _subFile.WriteByte(0x32); //sub-stream number
 
-            if (imageBuffer.Length < 0x800 - (_subFile.Position - start))
+            if (twoPartBuffer.Length < 0x800 - (_subFile.Position - start))
             {
-                _subFile.Write(imageBuffer, 0, imageBuffer.Length);
+                _subFile.Write(twoPartBuffer.Buffer1, 0, twoPartBuffer.Buffer1.Length);
+                _subFile.Write(twoPartBuffer.Buffer2, 0, twoPartBuffer.Buffer2.Length);
             }
             else
             {
