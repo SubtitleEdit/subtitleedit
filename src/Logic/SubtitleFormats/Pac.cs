@@ -671,9 +671,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             if (_codePage == -1)
                 GetCodePage(null, 0, 0);
 
-            string text = Utilities.RemoveHtmlTags(p.Text);
+            string text = MakePacItalicsAndRemoveOtherTags(p.Text);
             text = text.Replace(Environment.NewLine, System.Text.Encoding.Default.GetString(new byte[] { 0xfe, 0x02, 0x03 })); // fix line breaks
-//            text = text.Replace(Environment.NewLine, System.Text.Encoding.Default.GetString(new byte[] { 0xfe, 0x0a, 0x03 })); // fix line breaks
 
             Encoding encoding = GetEncoding(_codePage);
             byte[] textBuffer;
@@ -699,7 +698,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             fs.WriteByte(0x02); //2=centered, 1=left aligned, 0=right aligned,
             fs.WriteByte(0x03);
 
-
             fs.Write(textBuffer, 0, textBuffer.Length);
 
             if (!isLast)
@@ -709,6 +707,41 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 fs.WriteByte(0);
                 fs.WriteByte(0x60);
             }
+        }
+
+        private string MakePacItalicsAndRemoveOtherTags(string text)
+        {
+            text = Utilities.RemoveHtmlFontTag(text).Trim();
+            text = text.Replace("<u>", string.Empty);
+            text = text.Replace("</u>", string.Empty);
+            text = text.Replace("<I>", "<i>");
+            text = text.Replace("</I>", "</i>");
+            if (!text.Contains("<i>"))
+                return text;
+            
+            if (Utilities.CountTagInText(text, "<i>") == 1 && text.StartsWith("<i>") && text.EndsWith("</i>"))
+                    return "<" +  Utilities.RemoveHtmlTags(text).Replace(Environment.NewLine, Environment.NewLine + "<");
+
+            var sb = new StringBuilder();
+            string[] parts = text.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+            foreach (string line in parts)
+            {
+                string s = line.Trim();
+                if (Utilities.CountTagInText(s, "<i>") == 1 && s.StartsWith("<i>") && s.EndsWith("</i>"))
+                {
+                    sb.AppendLine("<" + Utilities.RemoveHtmlTags(s));
+                }
+                else
+                {
+                    s = s.Replace("</i>", "___@___");
+                    s = s.Replace("<i>", "<");
+                    s = s.Replace("___@___", ">");
+                    s = s.Replace(" <", "<");
+                    s = s.Replace("> ", ">");
+                    sb.AppendLine(s);
+                }
+            }
+            return sb.ToString().Trim();
         }
 
         private void WriteTimeCode(FileStream fs, TimeCode timeCode)
@@ -884,6 +917,9 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             return p;
         }
 
+        /// <summary>
+        /// Fix italic tags, lines starting with ">" - whole line is italic, words between <> is italic
+        /// </summary>
         private string FixItalics(string text)
         {
             int index = text.IndexOf("<");
