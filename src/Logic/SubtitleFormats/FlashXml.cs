@@ -83,8 +83,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 XmlNode paragraph = xml.CreateElement("p");
                 string text = Utilities.RemoveHtmlTags(p.Text);
 
-                paragraph.InnerText = p.Text;
-                paragraph.InnerXml = "<![CDATA[<sub>" + text.Replace(Environment.NewLine, "<br />") + "</sub>]]>";
+                paragraph.InnerText = text;
+                paragraph.InnerXml = "<![CDATA[<sub>" + paragraph.InnerXml.Replace(Environment.NewLine, "<br />") + "</sub>]]>";
 
                 XmlAttribute start = xml.CreateAttribute("begin");
                 start.InnerText = ConvertToTimeString(p.StartTime);

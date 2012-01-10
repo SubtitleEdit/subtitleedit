@@ -171,7 +171,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 XmlNode paragraph = xml.CreateElement("SubtitleItem");
 
                 string text = Utilities.RemoveHtmlTags(p.Text);
-                paragraph.InnerXml = "<Text><![CDATA[" + text.Replace(Environment.NewLine, "\\n") + "]]></Text>";
+                paragraph.InnerText = text;
+                paragraph.InnerXml = "<Text><![CDATA[" + paragraph.InnerXml.Replace(Environment.NewLine, "\\n") + "]]></Text>";
 
                 XmlAttribute layoutIndex = xml.CreateAttribute("layoutindex");
                 layoutIndex.InnerText = "0";
