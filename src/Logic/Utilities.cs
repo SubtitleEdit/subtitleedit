@@ -196,7 +196,11 @@ namespace Nikse.SubtitleEdit.Logic
                         p.EndTime.TotalMilliseconds > positionInMilliseconds)
                     {
                         text = p.Text.Replace("|", Environment.NewLine);
-                        break;
+                        bool isInfo = false;
+                        if (p == paragraphs[0] && p.StartTime.TotalMilliseconds == 0 && positionInMilliseconds > 3000)
+                            isInfo = true;
+                        if (!isInfo)
+                            break;
                     }
                     index++;
                 }
