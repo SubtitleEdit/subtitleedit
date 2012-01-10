@@ -16,12 +16,21 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         /// Contains Swedish, Danish, German, Spanish, and French letters
         /// </summary>
         static List<int> _latinCodes = new List<int> {
+            0xe041, // Ã
+            0xe04e, // Ñ
+            0xe04f, // Õ
+            0xe061, // ã
+            0xe06e, // ñ
+            0xe06f, // õ
             0xe161, // å
             0xe141, // Å
+            0x23, // £
             0x7c, // æ
             0x7d, // ø
+            0x7e, // §
             0x5c, // Æ
             0x5d, // Ø
+            0x5e, // ÷
             0x5f, // -
             0xE54f, // Ö
             0xE56f, // ö
@@ -30,10 +39,23 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             0xe555, // Ü
             0xe575, // ü
             0x81,   // ß
+            0xe241, // Á
+            0xe249, // Í
+            0xe255, // Ú
+            0xe259, // Ý
+            0xe261, // á
             0xe265, // é
+            0xe269, // í
             0xe245, // É
+            0xe275, // ú
+            0xe279, // ý
+            0xe361, // à
             0xe365, // è
+            0xe36f, // ò
             0xe345, // È
+            0xe349, // Ì
+            0xe34f, // Ò
+            0xe369, // ì
             0xe443, // Ĉ
             0xe447, // Ĝ
             0xe448, // Ĥ
@@ -56,6 +78,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             0xe465, // ê
             0xe545, // Ë
             0xe565, // ë
+            0xe56f, // ö
             0xe449, // Î
             0xe469, // î
             0xe549, // Ï
@@ -89,12 +112,21 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         };
 
         static List<string> _latinLetters = new List<string> {
+            "Ã",
+            "Ñ",
+            "Õ",
+            "ã",
+            "ñ",
+            "õ",
             "å",
             "Å",
+            "£",
             "æ",
             "ø",
+            "§",
             "Æ",
             "Ø",
+            "÷",
             "-",
             "Ö",
             "ö",
@@ -103,10 +135,23 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             "Ü",
             "ü",
             "ß",
+            "Á",
+            "Í",
+            "Ú",
+            "Ý",
+            "á",
             "é",
+            "í",
             "É",
+            "ú",
+            "ý",
+            "à",
             "è",
+            "ò",
             "È",
+            "Ì",
+            "Ò",
+            "ì",
             "Ĉ",
             "Ĝ",
             "Ĥ",
@@ -129,6 +174,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             "ê",
             "Ë",
             "ë",
+            "ö",
             "Î",
             "î",
             "Ï",
@@ -818,8 +864,9 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             if (index + 20 >= buffer.Length)
                 return null;
 
-            Paragraph p = new Paragraph();
+            var p = new Paragraph();
             p.Text = sb.ToString();
+            p.Text = FixItalics(p.Text);
             if (_codePage == 3)
                 p.Text = Utilities.FixEnglishTextInRightToLeftLanguage(p.Text, "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ");
             int timeStartIndex = FEIndex - 15;
@@ -835,6 +882,43 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 p.EndTime = GetTimeCode(timeStartIndex + 5, buffer);
             }
             return p;
+        }
+
+        private string FixItalics(string text)
+        {
+            int index = text.IndexOf("<");
+            if (index < 0)
+                return text;
+
+            while (index >= 0 && index < text.Length-1)
+            {
+                text = text.Insert(index+1, "i>");
+                int indexOfNewLine = text.IndexOf(Environment.NewLine, index);
+                int indexOfEnd = text.IndexOf(">", index+3);
+                if (indexOfNewLine < 0 && indexOfEnd < 0)
+                {
+                    index = -1;
+                    text += "</i>";
+                }
+                else
+                {
+                    if (indexOfNewLine < 0 || (indexOfEnd > 0 && indexOfEnd < indexOfNewLine))
+                    {
+                        text = text.Insert(indexOfEnd, "</i");
+                        index = text.IndexOf("<", indexOfEnd+3);
+                    }
+                    else
+                    {
+                        text = text.Insert(indexOfNewLine, "</i>");
+                        index = text.IndexOf("<", indexOfNewLine + 4);
+                    }
+                }
+            }
+            text = text.Replace("<i>", " <i>");
+            text = text.Replace("</i>", "</i> ");
+            text = text.Replace("  ", " ");
+            text = text.Replace(" " + Environment.NewLine , Environment.NewLine);
+            return text.Trim();
         }
 
         public static Encoding GetEncoding(int codePage)
