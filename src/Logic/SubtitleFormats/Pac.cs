@@ -687,12 +687,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             else
                 textBuffer = encoding.GetBytes(text);
 
+            // write text length
+            UInt16 length = (UInt16)(textBuffer.Length + 4);
+            fs.Write(BitConverter.GetBytes(length), 0, 2);
 
-            byte length = (byte)(textBuffer.Length+4);
-            fs.WriteByte(length);
-
-            // TODO: What is this?
-            fs.WriteByte(0);
             fs.WriteByte(0x0a); // sometimes 0x0b?
             fs.WriteByte(0xfe);
             fs.WriteByte(0x02); //2=centered, 1=left aligned, 0=right aligned,
