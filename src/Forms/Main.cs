@@ -391,6 +391,7 @@ namespace Nikse.SubtitleEdit.Forms
             Encoding targetEncoding = Encoding.UTF8;
             try
             {
+                targetEncodingName = targetEncodingName.Substring(10);
                 if (!string.IsNullOrEmpty(targetEncodingName))
                     targetEncoding = Encoding.GetEncoding(targetEncodingName);
             }
@@ -400,183 +401,206 @@ namespace Nikse.SubtitleEdit.Forms
                 targetEncoding = Encoding.UTF8;
             }
 
+            string[] files;
             string inputDirectory = Directory.GetCurrentDirectory();
-            int indexOfDirectorySeparatorChar = pattern.LastIndexOf(Path.DirectorySeparatorChar.ToString());
-            if (indexOfDirectorySeparatorChar > 0 && indexOfDirectorySeparatorChar < pattern.Length)
+            if (pattern.Contains(","))
             {
-                pattern = pattern.Substring(indexOfDirectorySeparatorChar+1);
-                inputDirectory = args[2].Substring(0, indexOfDirectorySeparatorChar);
+                files = pattern.Split(",".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                for (int k = 0; k < files.Length; k++)
+                    files[k] = files[k].Trim();
+            }
+            else
+            {
+                int indexOfDirectorySeparatorChar = pattern.LastIndexOf(Path.DirectorySeparatorChar.ToString());
+                if (indexOfDirectorySeparatorChar > 0 && indexOfDirectorySeparatorChar < pattern.Length)
+                {
+                    pattern = pattern.Substring(indexOfDirectorySeparatorChar + 1);
+                    inputDirectory = args[2].Substring(0, indexOfDirectorySeparatorChar);
+                }
+                files = Directory.GetFiles(inputDirectory, pattern);
             }
 
             int count = 0;
             int converted = 0;
+            int errors = 0;
             var formats = SubtitleFormat.AllSubtitleFormats;
-            foreach (string fileName in Directory.GetFiles(inputDirectory, pattern))
+
+            foreach (string fileName in files)
             {
                 count++;
 
-                Encoding encoding;
-                Subtitle sub = new Subtitle();
-                SubtitleFormat format = sub.LoadSubtitle(fileName, out encoding, null);
-                if (format == null)
+                if (File.Exists(fileName))
                 {
-                    var ebu = new Ebu();
-                    if (ebu.IsMine(null, fileName))
-                    {
-                        ebu.LoadSubtitle(sub, null, fileName);
-                        format = ebu;
-                    }
-                }
-                if (format == null)
-                {
-                    var pac = new Pac();
-                    if (pac.IsMine(null, fileName))
-                    {
-                        pac.LoadSubtitle(sub, null, fileName);
-                        format = pac;
-                    }
-                }
-                if (format == null)
-                {
-                    var cavena890 = new Cavena890();
-                    if (cavena890.IsMine(null, fileName))
-                    {
-                        cavena890.LoadSubtitle(sub, null, fileName);
-                        format = cavena890;
-                    }
-                }
-                if (format == null)
-                {
-                    var spt = new Spt();
-                    if (spt.IsMine(null, fileName))
-                    {
-                        spt.LoadSubtitle(sub, null, fileName);
-                        format = spt;
-                    }
-                }
 
-                if (format == null)
-                {
-                    Console.WriteLine(string.Format("{0}: {1} - input file format unknown!", count, fileName, toFormat));
-                }
-                else
-                {
-                    // adjust offset
-                    if (!string.IsNullOrEmpty(offset) && (offset.StartsWith("/offset:") || offset.StartsWith("offset:")))
-                    {
-                        string[] parts = offset.Split(":".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-                        if (parts.Length == 5)
-                        {
-                            try
-                            {
-                                TimeSpan ts = new TimeSpan(0, int.Parse(parts[1].TrimStart('-')), int.Parse(parts[2]), int.Parse(parts[3]), int.Parse(parts[4]));
-                                if (parts[1].StartsWith("-"))
-                                    sub.AddTimeToAllParagraphs(ts.Negate());
-                                else
-                                    sub.AddTimeToAllParagraphs(ts);
-                            }
-                            catch
-                            {
-                                Console.Write(" (unable to read offset " + offset + ")");
-                            }
-                        }
-                    }
-
-                    bool targetFormatFound = false;
-                    foreach (SubtitleFormat sf in formats)
-                    {
-                        if (sf.Name.ToLower().Replace(" ", string.Empty) == toFormat.ToLower())
-                        {
-                            targetFormatFound = true;
-                            string outputFileName = Path.GetFileNameWithoutExtension(fileName) + sf.Extension;
-                            if (File.Exists(outputFileName))
-                                outputFileName = Path.GetFileNameWithoutExtension(fileName) + "_" + Guid.NewGuid().ToString() + sf.Extension;
-                            Console.Write(string.Format("{0}: {1} -> {2}...", count, Path.GetFileName(fileName), outputFileName));
-                            if (sf.IsFrameBased && !sub.WasLoadedWithFrameNumbers)
-                                sub.CalculateFrameNumbersFromTimeCodesNoCheck(Configuration.Settings.General.DefaultFrameRate);
-                            else if (sf.IsTimeBased && sub.WasLoadedWithFrameNumbers)
-                                sub.CalculateTimeCodesFromFrameNumbers(Configuration.Settings.General.DefaultFrameRate);
-                            System.IO.File.WriteAllText(outputFileName, sub.ToText(sf), targetEncoding);
-                            if (format.GetType() == typeof(Sami))
-                            {
-                                Sami sami = (Sami)format;
-                                foreach (string className in sami.GetClasses(sub))
-                                {
-                                    Subtitle newSub = new Subtitle();
-                                    foreach (Paragraph p in sub.Paragraphs)
-                                    {
-                                        if (p.Extra == className)
-                                            newSub.Paragraphs.Add(p);
-                                    }
-                                    if (newSub.Paragraphs.Count > 0 && newSub.Paragraphs.Count < sub.Paragraphs.Count)
-                                    {
-                                        outputFileName = Path.GetFileNameWithoutExtension(fileName) + "_" + className +  sf.Extension;
-                                        if (File.Exists(outputFileName))
-                                            outputFileName = Path.GetFileNameWithoutExtension(fileName) + "_" + className + "_"  + Guid.NewGuid().ToString() + sf;
-                                        System.IO.File.WriteAllText(outputFileName, newSub.ToText(sf), targetEncoding);
-                                    }
-                                }
-                            }
-                            Console.WriteLine(" done.");
-                        }
-                    }
-                    if (!targetFormatFound)
+                    Encoding encoding;
+                    Subtitle sub = new Subtitle();
+                    SubtitleFormat format = sub.LoadSubtitle(fileName, out encoding, null);
+                    if (format == null)
                     {
                         var ebu = new Ebu();
-                        if (ebu.Name.ToLower().Replace(" ", string.Empty) == toFormat.ToLower())
+                        if (ebu.IsMine(null, fileName))
                         {
-                            targetFormatFound = true;
-                            string outputFileName = Path.GetFileNameWithoutExtension(fileName) + ebu.Extension;
-                            if (File.Exists(outputFileName))
-                                outputFileName = Path.GetFileNameWithoutExtension(fileName) + "_" + Guid.NewGuid().ToString() + ebu.Extension;
-                            Console.Write(string.Format("{0}: {1} -> {2}...", count, Path.GetFileName(fileName), outputFileName));
-                            ebu.Save(outputFileName, sub);
-                            Console.WriteLine(" done.");
+                            ebu.LoadSubtitle(sub, null, fileName);
+                            format = ebu;
                         }
                     }
-                    if (!targetFormatFound)
+                    if (format == null)
                     {
                         var pac = new Pac();
-                        if (pac.Name.ToLower().Replace(" ", string.Empty) == toFormat.ToLower())
+                        if (pac.IsMine(null, fileName))
                         {
-                            targetFormatFound = true;
-                            string outputFileName = Path.GetFileNameWithoutExtension(fileName) + pac.Extension;
-                            if (File.Exists(outputFileName))
-                                outputFileName = Path.GetFileNameWithoutExtension(fileName) + "_" + Guid.NewGuid().ToString() + pac.Extension;
-                            Console.Write(string.Format("{0}: {1} -> {2}...", count, Path.GetFileName(fileName), outputFileName));
-                            pac.Save(outputFileName, sub);
-                            Console.WriteLine(" done.");
+                            pac.LoadSubtitle(sub, null, fileName);
+                            format = pac;
                         }
                     }
-                    if (!targetFormatFound)
+                    if (format == null)
                     {
                         var cavena890 = new Cavena890();
-                        if (cavena890.Name.ToLower().Replace(" ", string.Empty) == toFormat.ToLower())
+                        if (cavena890.IsMine(null, fileName))
                         {
-                            targetFormatFound = true;
-                            string outputFileName = Path.GetFileNameWithoutExtension(fileName) + cavena890.Extension;
-                            if (File.Exists(outputFileName))
-                                outputFileName = Path.GetFileNameWithoutExtension(fileName) + "_" + Guid.NewGuid().ToString() + cavena890.Extension;
-                            Console.Write(string.Format("{0}: {1} -> {2}...", count, Path.GetFileName(fileName), outputFileName));
-                            cavena890.Save(outputFileName, sub);
-                            Console.WriteLine(" done.");
+                            cavena890.LoadSubtitle(sub, null, fileName);
+                            format = cavena890;
                         }
                     }
-                    if (!targetFormatFound)
+                    if (format == null)
                     {
-                        Console.WriteLine(string.Format("{0}: {1} - target format '{2}' not found!", count, fileName, toFormat));
+                        var spt = new Spt();
+                        if (spt.IsMine(null, fileName))
+                        {
+                            spt.LoadSubtitle(sub, null, fileName);
+                            format = spt;
+                        }
+                    }
+
+                    if (format == null)
+                    {
+                        Console.WriteLine(string.Format("{0}: {1} - input file format unknown!", count, fileName, toFormat));
                     }
                     else
                     {
-                        converted++;
+                        // adjust offset
+                        if (!string.IsNullOrEmpty(offset) && (offset.StartsWith("/offset:") || offset.StartsWith("offset:")))
+                        {
+                            string[] parts = offset.Split(":".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                            if (parts.Length == 5)
+                            {
+                                try
+                                {
+                                    TimeSpan ts = new TimeSpan(0, int.Parse(parts[1].TrimStart('-')), int.Parse(parts[2]), int.Parse(parts[3]), int.Parse(parts[4]));
+                                    if (parts[1].StartsWith("-"))
+                                        sub.AddTimeToAllParagraphs(ts.Negate());
+                                    else
+                                        sub.AddTimeToAllParagraphs(ts);
+                                }
+                                catch
+                                {
+                                    Console.Write(" (unable to read offset " + offset + ")");
+                                }
+                            }
+                        }
+
+                        bool targetFormatFound = false;
+                        foreach (SubtitleFormat sf in formats)
+                        {
+                            if (sf.Name.ToLower().Replace(" ", string.Empty) == toFormat.ToLower())
+                            {
+                                targetFormatFound = true;
+                                string outputFileName = Path.GetFileNameWithoutExtension(fileName) + sf.Extension;
+                                if (File.Exists(outputFileName))
+                                    outputFileName = Path.GetFileNameWithoutExtension(fileName) + "_" + Guid.NewGuid().ToString() + sf.Extension;
+                                Console.Write(string.Format("{0}: {1} -> {2}...", count, Path.GetFileName(fileName), outputFileName));
+                                if (sf.IsFrameBased && !sub.WasLoadedWithFrameNumbers)
+                                    sub.CalculateFrameNumbersFromTimeCodesNoCheck(Configuration.Settings.General.DefaultFrameRate);
+                                else if (sf.IsTimeBased && sub.WasLoadedWithFrameNumbers)
+                                    sub.CalculateTimeCodesFromFrameNumbers(Configuration.Settings.General.DefaultFrameRate);
+                                System.IO.File.WriteAllText(outputFileName, sub.ToText(sf), targetEncoding);
+                                if (format.GetType() == typeof(Sami))
+                                {
+                                    Sami sami = (Sami)format;
+                                    foreach (string className in sami.GetClasses(sub))
+                                    {
+                                        Subtitle newSub = new Subtitle();
+                                        foreach (Paragraph p in sub.Paragraphs)
+                                        {
+                                            if (p.Extra == className)
+                                                newSub.Paragraphs.Add(p);
+                                        }
+                                        if (newSub.Paragraphs.Count > 0 && newSub.Paragraphs.Count < sub.Paragraphs.Count)
+                                        {
+                                            outputFileName = Path.GetFileNameWithoutExtension(fileName) + "_" + className + sf.Extension;
+                                            if (File.Exists(outputFileName))
+                                                outputFileName = Path.GetFileNameWithoutExtension(fileName) + "_" + className + "_" + Guid.NewGuid().ToString() + sf;
+                                            System.IO.File.WriteAllText(outputFileName, newSub.ToText(sf), targetEncoding);
+                                        }
+                                    }
+                                }
+                                Console.WriteLine(" done.");
+                            }
+                        }
+                        if (!targetFormatFound)
+                        {
+                            var ebu = new Ebu();
+                            if (ebu.Name.ToLower().Replace(" ", string.Empty) == toFormat.ToLower())
+                            {
+                                targetFormatFound = true;
+                                string outputFileName = Path.GetFileNameWithoutExtension(fileName) + ebu.Extension;
+                                if (File.Exists(outputFileName))
+                                    outputFileName = Path.GetFileNameWithoutExtension(fileName) + "_" + Guid.NewGuid().ToString() + ebu.Extension;
+                                Console.Write(string.Format("{0}: {1} -> {2}...", count, Path.GetFileName(fileName), outputFileName));
+                                ebu.Save(outputFileName, sub);
+                                Console.WriteLine(" done.");
+                            }
+                        }
+                        if (!targetFormatFound)
+                        {
+                            var pac = new Pac();
+                            if (pac.Name.ToLower().Replace(" ", string.Empty) == toFormat.ToLower())
+                            {
+                                targetFormatFound = true;
+                                string outputFileName = Path.GetFileNameWithoutExtension(fileName) + pac.Extension;
+                                if (File.Exists(outputFileName))
+                                    outputFileName = Path.GetFileNameWithoutExtension(fileName) + "_" + Guid.NewGuid().ToString() + pac.Extension;
+                                Console.Write(string.Format("{0}: {1} -> {2}...", count, Path.GetFileName(fileName), outputFileName));
+                                pac.Save(outputFileName, sub);
+                                Console.WriteLine(" done.");
+                            }
+                        }
+                        if (!targetFormatFound)
+                        {
+                            var cavena890 = new Cavena890();
+                            if (cavena890.Name.ToLower().Replace(" ", string.Empty) == toFormat.ToLower())
+                            {
+                                targetFormatFound = true;
+                                string outputFileName = Path.GetFileNameWithoutExtension(fileName) + cavena890.Extension;
+                                if (File.Exists(outputFileName))
+                                    outputFileName = Path.GetFileNameWithoutExtension(fileName) + "_" + Guid.NewGuid().ToString() + cavena890.Extension;
+                                Console.Write(string.Format("{0}: {1} -> {2}...", count, Path.GetFileName(fileName), outputFileName));
+                                cavena890.Save(outputFileName, sub);
+                                Console.WriteLine(" done.");
+                            }
+                        }
+                        if (!targetFormatFound)
+                        {
+                            Console.WriteLine(string.Format("{0}: {1} - target format '{2}' not found!", count, fileName, toFormat));
+                            errors++;
+                        }
+                        else
+                        {
+                            converted++;
+                        }
                     }
+                }
+                else
+                {
+                    Console.WriteLine(string.Format("{0}: {1} - file not found!", count, fileName));
+                    errors++;
                 }
             }
             Console.WriteLine();
             Console.WriteLine(string.Format("{0} file(s) converted", converted));
             Console.WriteLine();
             Console.Write(inputDirectory + ">");
-            if (count == converted)
+            if (count == converted && errors == 0)
                 Environment.Exit(0);
             else
                 Environment.Exit(1);
