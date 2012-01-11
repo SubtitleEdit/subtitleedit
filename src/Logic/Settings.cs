@@ -131,7 +131,7 @@ namespace Nikse.SubtitleEdit.Logic
             SsaFontName = "Tahoma";
             SsaFontSize = 18;
             SsaFontColorArgb = System.Drawing.Color.FromArgb(255, 255, 255).ToArgb();
-            DCinemaFontFile = "Arial.tff";
+            DCinemaFontFile = "Arial.ttf";
             DCinemaFontSize = 42;
             DCinemaBottomMargin = 8;
             DCinemaFadeUpDownTime = 20;
