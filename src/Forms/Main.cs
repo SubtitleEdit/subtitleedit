@@ -424,7 +424,8 @@ namespace Nikse.SubtitleEdit.Forms
             int converted = 0;
             int errors = 0;
             var formats = SubtitleFormat.AllSubtitleFormats;
-
+			string outputFileName;
+			
             foreach (string fileName in files)
             {
                 count++;
@@ -505,9 +506,7 @@ namespace Nikse.SubtitleEdit.Forms
                             if (sf.Name.ToLower().Replace(" ", string.Empty) == toFormat.ToLower())
                             {
                                 targetFormatFound = true;
-                                string outputFileName = Path.GetFileNameWithoutExtension(fileName) + sf.Extension;
-                                if (File.Exists(outputFileName))
-                                    outputFileName = Path.GetFileNameWithoutExtension(fileName) + "_" + Guid.NewGuid().ToString() + sf.Extension;
+                                outputFileName = FormatOutputFileNameForBatchConvert(fileName, sf.Extension);
                                 Console.Write(string.Format("{0}: {1} -> {2}...", count, Path.GetFileName(fileName), outputFileName));
                                 if (sf.IsFrameBased && !sub.WasLoadedWithFrameNumbers)
                                     sub.CalculateFrameNumbersFromTimeCodesNoCheck(Configuration.Settings.General.DefaultFrameRate);
@@ -527,9 +526,7 @@ namespace Nikse.SubtitleEdit.Forms
                                         }
                                         if (newSub.Paragraphs.Count > 0 && newSub.Paragraphs.Count < sub.Paragraphs.Count)
                                         {
-                                            outputFileName = Path.GetFileNameWithoutExtension(fileName) + "_" + className + sf.Extension;
-                                            if (File.Exists(outputFileName))
-                                                outputFileName = Path.GetFileNameWithoutExtension(fileName) + "_" + className + "_" + Guid.NewGuid().ToString() + sf;
+                                            outputFileName = FormatOutputFileNameForBatchConvert(fileName + "_" + className, sf.Extension);
                                             System.IO.File.WriteAllText(outputFileName, newSub.ToText(sf), targetEncoding);
                                         }
                                     }
@@ -543,9 +540,7 @@ namespace Nikse.SubtitleEdit.Forms
                             if (ebu.Name.ToLower().Replace(" ", string.Empty) == toFormat.ToLower())
                             {
                                 targetFormatFound = true;
-                                string outputFileName = Path.GetFileNameWithoutExtension(fileName) + ebu.Extension;
-                                if (File.Exists(outputFileName))
-                                    outputFileName = Path.GetFileNameWithoutExtension(fileName) + "_" + Guid.NewGuid().ToString() + ebu.Extension;
+                                outputFileName = FormatOutputFileNameForBatchConvert(fileName, ebu.Extension);
                                 Console.Write(string.Format("{0}: {1} -> {2}...", count, Path.GetFileName(fileName), outputFileName));
                                 ebu.Save(outputFileName, sub);
                                 Console.WriteLine(" done.");
@@ -557,9 +552,7 @@ namespace Nikse.SubtitleEdit.Forms
                             if (pac.Name.ToLower().Replace(" ", string.Empty) == toFormat.ToLower())
                             {
                                 targetFormatFound = true;
-                                string outputFileName = Path.GetFileNameWithoutExtension(fileName) + pac.Extension;
-                                if (File.Exists(outputFileName))
-                                    outputFileName = Path.GetFileNameWithoutExtension(fileName) + "_" + Guid.NewGuid().ToString() + pac.Extension;
+                                outputFileName = FormatOutputFileNameForBatchConvert(fileName, pac.Extension);
                                 Console.Write(string.Format("{0}: {1} -> {2}...", count, Path.GetFileName(fileName), outputFileName));
                                 pac.Save(outputFileName, sub);
                                 Console.WriteLine(" done.");
@@ -571,9 +564,7 @@ namespace Nikse.SubtitleEdit.Forms
                             if (cavena890.Name.ToLower().Replace(" ", string.Empty) == toFormat.ToLower())
                             {
                                 targetFormatFound = true;
-                                string outputFileName = Path.GetFileNameWithoutExtension(fileName) + cavena890.Extension;
-                                if (File.Exists(outputFileName))
-                                    outputFileName = Path.GetFileNameWithoutExtension(fileName) + "_" + Guid.NewGuid().ToString() + cavena890.Extension;
+                                outputFileName = FormatOutputFileNameForBatchConvert(fileName, cavena890.Extension);
                                 Console.Write(string.Format("{0}: {1} -> {2}...", count, Path.GetFileName(fileName), outputFileName));
                                 cavena890.Save(outputFileName, sub);
                                 Console.WriteLine(" done.");
@@ -607,6 +598,15 @@ namespace Nikse.SubtitleEdit.Forms
             FreeConsole();
         }
 
+		string FormatOutputFileNameForBatchConvert(string fileName, string extension)
+		{
+			string outputFileName = Path.ChangeExtension(fileName,extension);
+            if (File.Exists(outputFileName))
+                outputFileName = Path.ChangeExtension(fileName, Guid.NewGuid().ToString() + extension);
+
+			return outputFileName;
+		}
+		
         void AudioWaveForm_OnNonParagraphRightClicked(double seconds, Paragraph paragraph)
         {
             addParagraphHereToolStripMenuItem.Visible = false;
