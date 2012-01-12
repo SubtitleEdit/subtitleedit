@@ -99,6 +99,21 @@ namespace Nikse.SubtitleEdit.Forms
                     e.SuppressKeyPress = true;
                 }
             }
+
+            else if (e.KeyCode == Keys.Up && e.Modifiers == Keys.Alt && WindowState == FormWindowState.Maximized)
+            {
+                _mainForm.GotoPrevSubPosFromvideoPos();
+                e.Handled = true;          
+            }
+            else if (e.Modifiers == Keys.Alt && e.KeyCode == Keys.Down && WindowState == FormWindowState.Maximized)
+            {
+                _mainForm.GotoNextSubPosFromvideoPos();
+                e.Handled = true;
+            }
+
+
+
+
             else if (_redockKeys == e.KeyData)
             {
                 _mainForm.redockVideoControlsToolStripMenuItem_Click(null, null);

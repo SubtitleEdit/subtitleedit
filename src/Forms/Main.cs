@@ -197,7 +197,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         public Main()
         {
-            //try
+            try
             {
                 InitializeComponent();
 
@@ -351,11 +351,11 @@ namespace Nikse.SubtitleEdit.Forms
 
                 FixLargeFonts();
             }
-            //catch (Exception exception)
-            //{
-            //    Cursor = Cursors.Default;
-            //    MessageBox.Show(exception.Message + Environment.NewLine + exception.StackTrace);
-            //}
+            catch (Exception exception)
+            {
+                Cursor = Cursors.Default;
+                MessageBox.Show(exception.Message + Environment.NewLine + exception.StackTrace);
+            }
         }
 
         private void BatchConvert(string[] args) // E.g.: /convert *.txt SubRip
@@ -366,13 +366,10 @@ namespace Nikse.SubtitleEdit.Forms
 
             Console.WriteLine();
             Console.WriteLine();
-            Console.WriteLine();
-            Console.WriteLine();
             Console.WriteLine(Title + " - Batch converter");
             Console.WriteLine();
             Console.WriteLine("- Syntax: SubtitleEdit /convert <pattern> <name-of-format-without-spaces> [/offset:hh:mm:ss:msec] [/encoding:<encoding name>]");
             Console.WriteLine("    example: SubtitleEdit /convert *.srt sami");
-            Console.WriteLine();
             Console.WriteLine();
 
             string pattern = args[2];
@@ -391,9 +388,12 @@ namespace Nikse.SubtitleEdit.Forms
             Encoding targetEncoding = Encoding.UTF8;
             try
             {
-                targetEncodingName = targetEncodingName.Substring(10);
                 if (!string.IsNullOrEmpty(targetEncodingName))
-                    targetEncoding = Encoding.GetEncoding(targetEncodingName);
+                {
+                    targetEncodingName = targetEncodingName.Substring(10);
+                    if (!string.IsNullOrEmpty(targetEncodingName))
+                        targetEncoding = Encoding.GetEncoding(targetEncodingName);
+                }
             }
             catch (Exception exception)
             { 
@@ -12336,6 +12336,50 @@ namespace Nikse.SubtitleEdit.Forms
             e.Graphics.DrawString(tc.TabPages[e.Index].Text.Trim(), tabFont, textBrush, tabBounds, new StringFormat(stringFlags));
             //tc.DrawMode = TabDrawMode.Normal;
         }
+
+        public void GotoNextSubPosFromvideoPos()
+        {
+            if (mediaPlayer.VideoPlayer != null && _subtitle != null)
+            {
+                double ms = mediaPlayer.VideoPlayer.CurrentPosition * 1000.0;
+                foreach (Paragraph p in _subtitle.Paragraphs)
+                {
+                    if (p.EndTime.TotalMilliseconds > ms && p.StartTime.TotalMilliseconds < ms)
+                    {
+                        // currrent sub
+                    }
+                    else if (p.Duration.TotalSeconds < 10 && p.StartTime.TotalMilliseconds > ms)
+                    {
+                        mediaPlayer.VideoPlayer.CurrentPosition = p.StartTime.TotalSeconds;
+                        return;
+                    }
+                }
+            }
+        }
+
+        public void GotoPrevSubPosFromvideoPos()
+        {
+            if (mediaPlayer.VideoPlayer != null && _subtitle != null)
+            {
+                double ms = mediaPlayer.VideoPlayer.CurrentPosition * 1000.0;
+                int i = _subtitle.Paragraphs.Count-1;
+                while (i>0)
+                {
+                    Paragraph p = _subtitle.Paragraphs[i];
+                    if (p.EndTime.TotalMilliseconds > ms && p.StartTime.TotalMilliseconds < ms)
+                    {
+                        // currrent sub
+                    }
+                    else if (p.Duration.TotalSeconds < 10 && p.StartTime.TotalMilliseconds < ms)
+                    {
+                        mediaPlayer.VideoPlayer.CurrentPosition = p.StartTime.TotalSeconds;
+                        return;
+                    }
+                    i--;
+                }
+            }
+        }
+
 
     }
 }
