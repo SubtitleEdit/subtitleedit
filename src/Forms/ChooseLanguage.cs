@@ -106,17 +106,8 @@ namespace Nikse.SubtitleEdit.Forms
             if (e.KeyCode == Keys.Escape)
                 DialogResult = DialogResult.Cancel;
             else if (e.Shift && e.Control && e.Alt && e.KeyCode == Keys.L)
-            {
                 Configuration.Settings.Language.Save();
-                Configuration.Settings.Language.SaveAndCompress();
-            }
-            else if (e.Shift && e.Control && e.Alt && e.KeyCode == Keys.C)
-                CompareTags();
         }
 
-        private static void CompareTags()
-        {
-            Configuration.Settings.Language.CompareWithEnglish();
-        }
     }
 }

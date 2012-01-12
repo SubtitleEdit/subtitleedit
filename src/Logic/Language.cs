@@ -1530,22 +1530,6 @@ Keep changes?",
             }
         }
 
-        public void SaveAndCompress()
-        {
-            var s = new XmlSerializer(typeof(Language));
-            var ms = new MemoryStream();
-            s.Serialize(ms, this);
-            var b = new byte[ms.Length];
-            ms.Position = 0;
-            ms.Read(b, 0, (int)ms.Length);
-
-            using (var f2 = new FileStream(Configuration.BaseDirectory + "Language.xml.zip", FileMode.Create))
-            using (var gz = new GZipStream(f2, CompressionMode.Compress, false))
-            {
-                gz.Write(b, 0, b.Length);
-            }
-        }
-
         public static Language Load(StreamReader sr)
         {
             var s = new XmlSerializer(typeof(Language));
@@ -1621,29 +1605,6 @@ Keep changes?",
                 foreach (XmlNode childNode in node.ChildNodes)
                     TranslateNode(childNode, languagePair);
             }
-        }
-
-        internal void CompareWithEnglish()
-        {
-            var s = new XmlSerializer(typeof(Language));
-            TextWriter w = new StreamWriter(Configuration.BaseDirectory + "English.xml");
-            s.Serialize(w, new Language());
-            w.Close();
-            var english = new XmlDocument();
-            english.Load(Configuration.BaseDirectory + "English.xml");
-
-            Save();
-            var doc = new XmlDocument();
-            doc.Load(Configuration.BaseDirectory + "Language.xml");
-
-            var sb = new StringBuilder();
-            sb.AppendLine("The following tags are missing:");
-            sb.AppendLine();
-            if (english.DocumentElement != null)
-                foreach (XmlNode node in english.DocumentElement.ChildNodes)
-                    CompareNode(node, english.DocumentElement.Name + "/" + node.Name, doc, sb);
-
-            System.Windows.Forms.MessageBox.Show(sb.ToString());
         }
 
         private static void CompareNode(XmlNode node, string name, XmlDocument localLanguage, StringBuilder sb)
