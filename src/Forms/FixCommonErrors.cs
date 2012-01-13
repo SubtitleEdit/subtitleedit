@@ -468,7 +468,7 @@ namespace Nikse.SubtitleEdit.Forms
                                                     i+1, p.StartTime, p.EndTime, p.Text, Environment.NewLine);
 
                     Paragraph prev = _subtitle.GetParagraphOrDefault(i - 1);
-                    Paragraph next = _subtitle.GetParagraphOrDefault(i + 1);                    
+                    Paragraph next = _subtitle.GetParagraphOrDefault(i + 1);
 
                     double wantedDisplayTime = Utilities.GetDisplayMillisecondsFromText(p.Text);
 

@@ -693,7 +693,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
             fs.WriteByte(0x0a); // sometimes 0x0b?
             fs.WriteByte(0xfe);
-            fs.WriteByte(0x02); //2=centered, 1=left aligned, 0=right aligned, 09=Fount2 (large font), 
+            fs.WriteByte(0x02); //2=centered, 1=left aligned, 0=right aligned, 09=Fount2 (large font),
                                 //55=safe area override (too long line), 0A=Fount2 + centered, 06=centered + safe area override
             fs.WriteByte(0x03);
 
@@ -717,7 +717,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             text = text.Replace("</I>", "</i>");
             if (!text.Contains("<i>"))
                 return text;
-            
+
             if (Utilities.CountTagInText(text, "<i>") == 1 && text.StartsWith("<i>") && text.EndsWith("</i>"))
                     return "<" +  Utilities.RemoveHtmlTags(text).Replace(Environment.NewLine, Environment.NewLine + "<");
 
