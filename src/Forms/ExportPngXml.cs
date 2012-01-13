@@ -469,7 +469,7 @@ namespace Nikse.SubtitleEdit.Forms
             catch (Exception exception)
             {
                 MessageBox.Show(exception.Message);
-                font = new Font("Verdana", parameter.SubtitleFontSize);
+                font = new Font(FontFamily.Families[0].Name, parameter.SubtitleFontSize);
             }
             var bmp = new Bitmap(400, 200);
             var g = Graphics.FromImage(bmp);
@@ -637,6 +637,8 @@ namespace Nikse.SubtitleEdit.Forms
                 if (string.Compare(x.Name, _subtitleFontName, true) == 0)
                     comboBoxSubtitleFont.SelectedIndex = comboBoxSubtitleFont.Items.Count - 1;
             }
+            if (comboBoxSubtitleFont.SelectedIndex == -1)
+                comboBoxSubtitleFont.SelectedIndex = 0; // take first font if default font not found (e.g. linux)
 
             subtitleListView1.Fill(_subtitle);
             subtitleListView1.SelectIndexAndEnsureVisible(0);
