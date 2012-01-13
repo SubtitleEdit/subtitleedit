@@ -122,6 +122,9 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
         {
             const int wsChild = 0x40000000;
 
+            string ext = System.IO.Path.GetExtension(videoFileName).ToLower();
+            bool isAudio = ext == ".mp3" || ext == ".wav" || ext == ".wma" || ext == ".m4a";
+
             OnVideoLoaded = onVideoLoaded;
             OnVideoEnded = onVideoEnded;
 
@@ -129,12 +132,19 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             _owner = ownerControl;
             _quartzFilgraphManager = new FilgraphManager();
             _quartzFilgraphManager.RenderFile(VideoFileName);
-            _quartzVideo = _quartzFilgraphManager as IVideoWindow;
-            _quartzVideo.Owner = (int)ownerControl.Handle;
-            _quartzVideo.SetWindowPosition(0, 0, ownerControl.Width, ownerControl.Height);
-            _quartzVideo.WindowStyle = wsChild;
+
+            if (!isAudio)
+            {
+                _quartzVideo = _quartzFilgraphManager as IVideoWindow;
+                _quartzVideo.Owner = (int)ownerControl.Handle;
+                _quartzVideo.SetWindowPosition(0, 0, ownerControl.Width, ownerControl.Height);
+                _quartzVideo.WindowStyle = wsChild;
+            }
             _quartzFilgraphManager.Run();
-            (_quartzFilgraphManager as IBasicVideo).GetVideoSize(out _sourceWidth, out _sourceHeight);
+
+            if (!isAudio)
+                (_quartzFilgraphManager as IBasicVideo).GetVideoSize(out _sourceWidth, out _sourceHeight);
+
             _owner.Resize += OwnerControlResize;
             _mediaPosition = (IMediaPosition)_quartzFilgraphManager;
             if (OnVideoLoaded != null)
@@ -150,7 +160,8 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             _videoEndTimer.Tick += VideoEndTimerTick;
             _videoEndTimer.Start();
 
-            _quartzVideo.MessageDrain = (int)ownerControl.Handle;
+            if (!isAudio)
+                _quartzVideo.MessageDrain = (int)ownerControl.Handle;
         }
 
         public static VideoInfo GetVideoInfo(string videoFileName)
