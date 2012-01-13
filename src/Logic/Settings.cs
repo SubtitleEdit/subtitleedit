@@ -85,6 +85,7 @@ namespace Nikse.SubtitleEdit.Logic
         public bool ListViewSyntaxColorDuration { get; set; }
         public bool ListViewSyntaxColorOverlap { get; set; }
         public bool ListViewSyntaxColorLongLines { get; set; }
+        public bool ListViewSyntaxMoreThanTwoLines { get; set; }
 
         public ToolsSettings()
         {
@@ -254,6 +255,7 @@ namespace Nikse.SubtitleEdit.Logic
         public bool StartInSourceView { get; set; }
         public bool RemoveBlankLinesWhenOpening { get; set; }
         public int SubtitleLineMaximumLength { get; set; }
+        public int SubtitleMinimumDisplayMilliseconds { get; set; }
         public int MininumMillisecondsBetweenLines { get; set; }
         public bool AutoWrapLineWhileTyping { get; set; }
         public int SubtitleMaximumCharactersPerSeconds { get; set; }
@@ -319,6 +321,7 @@ namespace Nikse.SubtitleEdit.Logic
             StartLoadLastFile = true;
             StartRememberPositionAndSize = true;
             SubtitleLineMaximumLength = 43;
+            SubtitleMinimumDisplayMilliseconds = 500;
             MininumMillisecondsBetweenLines = 25;
             AutoWrapLineWhileTyping = false;
             SubtitleMaximumCharactersPerSeconds = 25;
@@ -829,6 +832,9 @@ namespace Nikse.SubtitleEdit.Logic
             subNode = node.SelectSingleNode("SubtitleLineMaximumLength");
             if (subNode != null)
                 settings.General.SubtitleLineMaximumLength = Convert.ToInt32(subNode.InnerText);
+            subNode = node.SelectSingleNode("SubtitleMinimumDisplayMilliseconds");
+            if (subNode != null)
+                settings.General.SubtitleMinimumDisplayMilliseconds = Convert.ToInt32(subNode.InnerText);
             subNode = node.SelectSingleNode("MininumMillisecondsBetweenLines");
             if (subNode != null)
                 settings.General.MininumMillisecondsBetweenLines = Convert.ToInt32(subNode.InnerText);
@@ -961,6 +967,9 @@ namespace Nikse.SubtitleEdit.Logic
             subNode = node.SelectSingleNode("ListViewSyntaxColorLongLines");
             if (subNode != null)
                 settings.Tools.ListViewSyntaxColorLongLines = Convert.ToBoolean(subNode.InnerText);
+            subNode = node.SelectSingleNode("ListViewSyntaxMoreThanTwoLines");
+            if (subNode != null)
+                settings.Tools.ListViewSyntaxMoreThanTwoLines = Convert.ToBoolean(subNode.InnerText);           
             subNode = node.SelectSingleNode("ListViewSyntaxColorOverlap");
             if (subNode != null)
                 settings.Tools.ListViewSyntaxColorOverlap = Convert.ToBoolean(subNode.InnerText);
@@ -1506,6 +1515,7 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("StartInSourceView", settings.General.StartInSourceView.ToString());
             textWriter.WriteElementString("RemoveBlankLinesWhenOpening", settings.General.RemoveBlankLinesWhenOpening.ToString());
             textWriter.WriteElementString("SubtitleLineMaximumLength", settings.General.SubtitleLineMaximumLength.ToString());
+            textWriter.WriteElementString("SubtitleMinimumDisplayMilliseconds", settings.General.SubtitleMinimumDisplayMilliseconds.ToString());
             textWriter.WriteElementString("MininumMillisecondsBetweenLines", settings.General.MininumMillisecondsBetweenLines.ToString());
             textWriter.WriteElementString("AutoWrapLineWhileTyping", settings.General.AutoWrapLineWhileTyping.ToString());
             textWriter.WriteElementString("SubtitleMaximumCharactersPerSeconds", settings.General.SubtitleMaximumCharactersPerSeconds.ToString());
@@ -1552,6 +1562,7 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("GoogleApiKey", settings.Tools.GoogleApiKey);
             textWriter.WriteElementString("ListViewSyntaxColorDuration", settings.Tools.ListViewSyntaxColorDuration.ToString());
             textWriter.WriteElementString("ListViewSyntaxColorLongLines", settings.Tools.ListViewSyntaxColorLongLines.ToString());
+            textWriter.WriteElementString("ListViewSyntaxMoreThanTwoLines", settings.Tools.ListViewSyntaxMoreThanTwoLines.ToString());            
             textWriter.WriteElementString("ListViewSyntaxColorOverlap", settings.Tools.ListViewSyntaxColorOverlap.ToString());
             textWriter.WriteEndElement();
 

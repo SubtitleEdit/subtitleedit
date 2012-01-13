@@ -592,7 +592,6 @@ namespace Nikse.SubtitleEdit.Forms
                             LogStatus(_language.FixOverlappingDisplayTimes, string.Format(_language.UnableToFixTextXY, i + 1, Environment.NewLine + prev.Number + "  " + prev + Environment.NewLine + p.Number + "  " + p), true);
                             _totalErrors++;
                         }
-
                     }
                 }
             }
@@ -608,6 +607,8 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 Paragraph p = _subtitle.Paragraphs[i];
                 double minDisplayTime = Utilities.GetDisplayMillisecondsFromText(p.Text) * 0.5;
+                if (minDisplayTime < Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds)
+                    minDisplayTime = Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds;
                 double displayTime = p.Duration.TotalMilliseconds;
                 if (displayTime < minDisplayTime)
                 {
@@ -1158,26 +1159,29 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
 
-                string[] arr = p.Text.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-                if (arr.Length == 2 && arr[0].Length > 1 && arr[1].Length > 1)
+                if (!p.Text.StartsWith("--"))
                 {
-                    if (arr[0][0] == '-' && arr[0][1] != ' ')
-                        arr[0] = arr[0].Insert(1, " ");
-                    if (arr[0].Length > 6 && arr[0].StartsWith("<i>-") &&  arr[0][4] != ' ')
-                        arr[0] = arr[0].Insert(4, " ");
-                    if (arr[1][0] == '-' && arr[1][1] != ' ')
-                        arr[1] = arr[1].Insert(1, " ");
-                    if (arr[1].Length > 6 && arr[1].StartsWith("<i>-") && arr[1][4] != ' ')
-                        arr[1] = arr[1].Insert(4, " ");
-                    string newText = arr[0] + Environment.NewLine + arr[1];
-                    if (newText != p.Text && AllowFix(i + 1, fixAction))
+                    string[] arr = p.Text.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                    if (arr.Length == 2 && arr[0].Length > 1 && arr[1].Length > 1)
                     {
-                        _totalFixes++;
-                        missingSpaces++;
+                        if (arr[0][0] == '-' && arr[0][1] != ' ')
+                            arr[0] = arr[0].Insert(1, " ");
+                        if (arr[0].Length > 6 && arr[0].StartsWith("<i>-") && arr[0][4] != ' ')
+                            arr[0] = arr[0].Insert(4, " ");
+                        if (arr[1][0] == '-' && arr[1][1] != ' ')
+                            arr[1] = arr[1].Insert(1, " ");
+                        if (arr[1].Length > 6 && arr[1].StartsWith("<i>-") && arr[1][4] != ' ')
+                            arr[1] = arr[1].Insert(4, " ");
+                        string newText = arr[0] + Environment.NewLine + arr[1];
+                        if (newText != p.Text && AllowFix(i + 1, fixAction))
+                        {
+                            _totalFixes++;
+                            missingSpaces++;
 
-                        string oldText = p.Text;
-                        p.Text = newText;
-                        AddFixToListView(p, i + 1, fixAction, oldText, p.Text);
+                            string oldText = p.Text;
+                            p.Text = newText;
+                            AddFixToListView(p, i + 1, fixAction, oldText, p.Text);
+                        }
                     }
                 }
 
@@ -2387,11 +2391,25 @@ namespace Nikse.SubtitleEdit.Forms
                 string text = p.Text;
                 string oldText = p.Text;
 
-                if (p.Text.Contains("--"))
+                while (text.Contains("---"))
+                {
+                    text = text.Replace("---", "--");
+                }
+
+                if (text.Contains("--"))
                 {
                     text = text.Replace("--", "... ");
                     text = text.Replace("...  ", "... ");
                     text = text.Replace(" ...", "...");
+                    text = text.TrimEnd();
+                    text = text.Replace("... " + Environment.NewLine, "..." + Environment.NewLine);
+                    text = text.Replace("... </i>", "...</i>");
+                    text = text.Replace("... ?", "...?");
+                    text = text.Replace("... !", "...!");
+                    if (text.StartsWith("... "))
+                        text = text.Remove(3, 1);
+                    if (text.StartsWith("<i>... "))
+                        text = text.Remove(6, 1);
                 }
                 if (text.EndsWith("-"))
                 {
@@ -3636,6 +3654,7 @@ namespace Nikse.SubtitleEdit.Forms
                 subtitleListView1.SetText(_subtitleListViewIndex, text);
 
                 EnableOKButton();
+                UpdateListSyntaxColoring();
             }
         }
 
@@ -3724,6 +3743,18 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
             }
+            UpdateListSyntaxColoring();
+        }
+
+        private void UpdateListSyntaxColoring()
+        {
+            if (_subtitle == null || _subtitle.Paragraphs.Count == 0 || _subtitleListViewIndex < 0 || _subtitleListViewIndex >= _subtitle.Paragraphs.Count)
+                return;
+
+            subtitleListView1.SyntaxColorLine(_subtitle.Paragraphs, _subtitleListViewIndex, _subtitle.Paragraphs[_subtitleListViewIndex]);
+            Paragraph next = _subtitle.GetParagraphOrDefault(_subtitleListViewIndex + 1);
+            if (next != null)
+                subtitleListView1.SyntaxColorLine(_subtitle.Paragraphs, _subtitleListViewIndex + 1, _subtitle.Paragraphs[_subtitleListViewIndex + 1]);
         }
 
         void MaskedTextBox_TextChanged(object sender, EventArgs e)
