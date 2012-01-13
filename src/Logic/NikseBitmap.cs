@@ -8,7 +8,7 @@ namespace Nikse.SubtitleEdit.Logic
     {
         public byte[] Buffer1 { get; set; }
         public byte[] Buffer2 {get; set;}
-        public int Length { get { return Buffer1.Length + Buffer2.Length;  } }               
+        public int Length { get { return Buffer1.Length + Buffer2.Length;  } }
     }
 
     unsafe public class NikseBitmap

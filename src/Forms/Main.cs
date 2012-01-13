@@ -396,7 +396,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
             catch (Exception exception)
-            { 
+            {
                 Console.WriteLine("Unable to set encoding (" + exception.Message +") - using UTF-8");
                 targetEncoding = Encoding.UTF8;
             }
@@ -424,8 +424,8 @@ namespace Nikse.SubtitleEdit.Forms
             int converted = 0;
             int errors = 0;
             var formats = SubtitleFormat.AllSubtitleFormats;
-			string outputFileName;
-			
+            string outputFileName;
+
             foreach (string fileName in files)
             {
                 count++;
@@ -598,15 +598,15 @@ namespace Nikse.SubtitleEdit.Forms
             FreeConsole();
         }
 
-		string FormatOutputFileNameForBatchConvert(string fileName, string extension)
-		{
-			string outputFileName = Path.ChangeExtension(fileName,extension);
+        string FormatOutputFileNameForBatchConvert(string fileName, string extension)
+        {
+            string outputFileName = Path.ChangeExtension(fileName,extension);
             if (File.Exists(outputFileName))
                 outputFileName = Path.ChangeExtension(fileName, Guid.NewGuid().ToString() + extension);
 
-			return outputFileName;
-		}
-		
+            return outputFileName;
+        }
+
         void AudioWaveForm_OnNonParagraphRightClicked(double seconds, Paragraph paragraph)
         {
             addParagraphHereToolStripMenuItem.Visible = false;

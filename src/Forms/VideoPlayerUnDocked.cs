@@ -103,7 +103,7 @@ namespace Nikse.SubtitleEdit.Forms
             else if (e.KeyCode == Keys.Up && e.Modifiers == Keys.Alt && WindowState == FormWindowState.Maximized)
             {
                 _mainForm.GotoPrevSubPosFromvideoPos();
-                e.Handled = true;          
+                e.Handled = true;
             }
             else if (e.Modifiers == Keys.Alt && e.KeyCode == Keys.Down && WindowState == FormWindowState.Maximized)
             {
