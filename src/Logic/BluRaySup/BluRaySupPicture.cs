@@ -619,7 +619,7 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
                 ToolBox.SetWord(headerPCSStart, 2, h);                              // cropped height
                 ToolBox.SetByte(headerPCSStart, 4, fpsId);
                 ToolBox.SetWord(headerPCSStart, 5, pic.CompositionNumber);
-                headerPCSStart[14] = (byte)(pic.IsForced ? (byte)0x40 : 0);
+                headerPCSStart[14] = (byte)(pic.IsForced ? 0x40 : 0);
                 ToolBox.SetWord(headerPCSStart, 15, pic.WindowXOffset);
                 ToolBox.SetWord(headerPCSStart, 17, yOfs);
                 for (int i = 0; i < headerPCSStart.Length; i++)
