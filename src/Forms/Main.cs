@@ -145,7 +145,7 @@ namespace Nikse.SubtitleEdit.Forms
                     string[] versionInfo = Utilities.AssemblyVersion.Split('.');
                     _title = String.Format("{0} {1}.{2}", _languageGeneral.Title, versionInfo[0], versionInfo[1]);
                     if (versionInfo.Length >= 3 && versionInfo[2] != "0")
-                        _title += "." + versionInfo[2] + " beta 4";
+                        _title += "." + versionInfo[2];
                 }
                 return _title;
             }
@@ -12351,6 +12351,7 @@ namespace Nikse.SubtitleEdit.Forms
                     else if (p.Duration.TotalSeconds < 10 && p.StartTime.TotalMilliseconds > ms)
                     {
                         mediaPlayer.VideoPlayer.CurrentPosition = p.StartTime.TotalSeconds;
+                        SubtitleListview1.SelectIndexAndEnsureVisible(_subtitle.GetIndex(p));
                         return;
                     }
                 }
@@ -12373,6 +12374,7 @@ namespace Nikse.SubtitleEdit.Forms
                     else if (p.Duration.TotalSeconds < 10 && p.StartTime.TotalMilliseconds < ms)
                     {
                         mediaPlayer.VideoPlayer.CurrentPosition = p.StartTime.TotalSeconds;
+                        SubtitleListview1.SelectIndexAndEnsureVisible(_subtitle.GetIndex(p));
                         return;
                     }
                     i--;
