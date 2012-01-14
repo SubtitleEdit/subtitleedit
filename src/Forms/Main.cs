@@ -521,12 +521,17 @@ namespace Nikse.SubtitleEdit.Forms
                                         Subtitle newSub = new Subtitle();
                                         foreach (Paragraph p in sub.Paragraphs)
                                         {
-                                            if (p.Extra == className)
+                                            if (p.Extra.ToLower().Trim() == className.ToLower().Trim())
                                                 newSub.Paragraphs.Add(p);
                                         }
                                         if (newSub.Paragraphs.Count > 0 && newSub.Paragraphs.Count < sub.Paragraphs.Count)
                                         {
-                                            outputFileName = FormatOutputFileNameForBatchConvert(fileName + "_" + className, sf.Extension);
+                                            string s = fileName;
+                                            if (s.LastIndexOf('.') > 0)
+                                                s = s.Insert(s.LastIndexOf('.'),  "_" + className);
+                                            else
+                                                s += "_" + className + format.Extension;
+                                            outputFileName = FormatOutputFileNameForBatchConvert(s , sf.Extension);
                                             System.IO.File.WriteAllText(outputFileName, newSub.ToText(sf), targetEncoding);
                                         }
                                     }

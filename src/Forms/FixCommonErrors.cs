@@ -1843,16 +1843,11 @@ namespace Nikse.SubtitleEdit.Forms
                     if (prev != null)
                         prevText = Utilities.RemoveHtmlTags(prev.Text);
 
+                    bool isPrevEndOfLine = IsPrevoiusTextEndOfParagraph(prevText);
                     if (!text.StartsWith("www.") &&
                         firstLetter != firstLetter.ToUpper() &&
                         !"0123456789".Contains(firstLetter) &&
-                        prevText.Length > 1 &&
-                        !prevText.EndsWith("...") &&
-                        (prevText.EndsWith(".") ||
-                         prevText.EndsWith("!") ||
-                         prevText.EndsWith("?") ||
-                         prevText.EndsWith(":") ||
-                         prevText.EndsWith(";")))
+                        isPrevEndOfLine)
                     {
                         bool isMatchInKnowAbbreviations = _autoDetectGoogleLanguage == "en" &&
                             (prevText.EndsWith(" o.r.") ||
@@ -1900,17 +1895,11 @@ namespace Nikse.SubtitleEdit.Forms
                         string oldText = p.Text;
                         string firstLetter = text.Substring(0, 1);
                         string prevText = Utilities.RemoveHtmlTags(arr[0]);
-
+                        bool isPrevEndOfLine = IsPrevoiusTextEndOfParagraph(prevText);
                         if (!text.StartsWith("www.") &&
                             firstLetter != firstLetter.ToUpper() &&
                             !prevText.EndsWith("...") &&
-                            prevText.Length > 1 &&
-                            !"0123456789".Contains(firstLetter) &&
-                            (prevText.EndsWith(".") ||
-                             prevText.EndsWith("!") ||
-                             prevText.EndsWith("?") ||
-                             prevText.EndsWith(":") ||
-                             prevText.EndsWith(";")))
+                            isPrevEndOfLine)
                         {
                             bool isMatchInKnowAbbreviations = _autoDetectGoogleLanguage == "en" &&
                                 (prevText.EndsWith(" o.r.") ||
@@ -1962,6 +1951,23 @@ namespace Nikse.SubtitleEdit.Forms
             }
             if (fixedStartWithUppercaseLetterAfterParagraphTicked > 0)
                 LogStatus(_language.StartWithUppercaseLetterAfterParagraph, fixedStartWithUppercaseLetterAfterParagraphTicked.ToString());
+        }
+
+        private static bool IsPrevoiusTextEndOfParagraph(string prevText)
+        {
+            bool isPrevEndOfLine = prevText.Length > 1 &&
+                                   !prevText.EndsWith("...") &&
+                                   (prevText.EndsWith(".") ||
+                                    prevText.EndsWith("!") ||
+                                    prevText.EndsWith("?") ||
+                                    prevText.EndsWith(":") ||
+                                    prevText.EndsWith(";"));
+
+            if (isPrevEndOfLine && prevText.Length > 5 && prevText.EndsWith(".") &&
+                prevText[prevText.Length - 3] == '.' &&
+                Utilities.GetLetters(true, true, false).Contains(prevText[prevText.Length - 2].ToString()))
+                isPrevEndOfLine = false;
+            return isPrevEndOfLine;
         }
 
         private void FixStartWithUppercaseLetterAfterPeriodInsideParagraph()
