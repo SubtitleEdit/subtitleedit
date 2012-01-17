@@ -40,10 +40,20 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
         /// </summary>
         public long StartTime { get; set; }
 
+        public int StartTimeForWrite
+        {
+            get { return (int)((StartTime - 45) * 90.0); }
+        }
+
         /// <summary>
         /// end time in milliseconds
         /// </summary>
         public long EndTime { get; set; }
+
+        public int EndTimeForWrite
+        {
+            get { return (int)((EndTime - 45) * 90.0); }
+        }
 
         /// <summary>
         /// if true, this is a forced subtitle
@@ -595,6 +605,7 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
             byte[] buf = new byte[size];
                 int index = 0;
 
+
                 int fpsId = getFpsId(Core.fpsTrg);
 
                 /* time (in 90kHz resolution) needed to initialize (clear) the screen buffer
@@ -609,8 +620,8 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
                 int imageDecodeTime = (bm.Width * bm.Height * 9 + 1599) / 1600;
                 // write PCS start
                 packetHeader[10] = 0x16;                                            // ID
-                int dts = (int)pic.StartTime - (frameInitTime + windowInitTime);
-                ToolBox.SetDWord(packetHeader, 2, (int)pic.StartTime);              // PTS
+                int dts = pic.StartTimeForWrite - (frameInitTime + windowInitTime);
+                ToolBox.SetDWord(packetHeader, 2, pic.StartTimeForWrite);              // PTS
                 ToolBox.SetDWord(packetHeader, 6, dts);                             // DTS
                 ToolBox.SetWord(packetHeader, 11, headerPCSStart.Length);           // size
                 for (int i = 0; i < packetHeader.Length; i++)
@@ -627,7 +638,7 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
 
                 // write WDS
                 packetHeader[10] = 0x17;                                            // ID
-                int timeStamp = (int)pic.StartTime - windowInitTime;
+                int timeStamp = pic.StartTimeForWrite - windowInitTime;
                 ToolBox.SetDWord(packetHeader, 2, timeStamp);                       // PTS (keep DTS)
                 ToolBox.SetWord(packetHeader, 11, headerWDS.Length);                // size
                 for (int i = 0; i < packetHeader.Length; i++)
@@ -705,8 +716,8 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
 
                 // write PCS end
                 packetHeader[10] = 0x16;                                            // ID
-                ToolBox.SetDWord(packetHeader, 2, (int)pic.EndTime);                // PTS
-                dts = (int)pic.StartTime - 1;
+                ToolBox.SetDWord(packetHeader, 2, pic.EndTimeForWrite);             // PTS
+                dts = (int)pic.StartTimeForWrite - 1;
                 ToolBox.SetDWord(packetHeader, 6, dts);                             // DTS
                 ToolBox.SetWord(packetHeader, 11, headerPCSEnd.Length);             // size
                 for (int i = 0; i < packetHeader.Length; i++)
@@ -720,7 +731,7 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
 
                 // write WDS
                 packetHeader[10] = 0x17;                                            // ID
-                timeStamp = (int)pic.EndTime - windowInitTime;
+                timeStamp = pic.EndTimeForWrite - windowInitTime;
                 ToolBox.SetDWord(packetHeader, 2, timeStamp);                       // PTS (keep DTS of PCS)
                 ToolBox.SetWord(packetHeader, 11, headerWDS.Length);                // size
                 for (int i = 0; i < packetHeader.Length; i++)
