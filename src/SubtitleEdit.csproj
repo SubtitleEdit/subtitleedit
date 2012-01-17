@@ -624,6 +624,8 @@
     <Compile Include="Logic\SubtitleFormats\UleadSubtitleFormat.cs" />
     <Compile Include="Logic\SubtitleFormats\UnknownSubtitle10.cs" />
     <Compile Include="Logic\SubtitleFormats\UnknownSubtitle11.cs" />
+    <Compile Include="Logic\SubtitleFormats\UnknownSubtitle12.cs" />
+    <Compile Include="Logic\SubtitleFormats\UnknownSubtitle13.cs" />
     <Compile Include="Logic\SubtitleFormats\UnknownSubtitle5.cs" />
     <Compile Include="Logic\SubtitleFormats\OpenDvt.cs" />
     <Compile Include="Logic\SubtitleFormats\AbcIViewer.cs" />
