@@ -35,8 +35,7 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
                     string[] colors = s.Split(", ".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
                     foreach (string hex in colors)
                     {
-                        if (hex.Length == 6)
-                            Palette.Add(HexToColor(hex));
+                        Palette.Add(HexToColor(hex));
                     }
                 }
                 else if (line.ToLower().StartsWith("id:") && line.Length > 4)
@@ -63,10 +62,23 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
 
         private static Color HexToColor(string hex)
         {
-            int r = Convert.ToInt32(hex.Substring(0, 2), 16);
-            int g = Convert.ToInt32(hex.Substring(2, 2), 16);
-            int b = Convert.ToInt32(hex.Substring(4, 2), 16);
-            return Color.FromArgb(r, g, b);
+            hex = hex.TrimStart('#').Trim();
+            if (hex.Length == 6)
+            {
+                int r = Convert.ToInt32(hex.Substring(0, 2), 16);
+                int g = Convert.ToInt32(hex.Substring(2, 2), 16);
+                int b = Convert.ToInt32(hex.Substring(4, 2), 16);
+                return Color.FromArgb(r, g, b);
+            }
+            else if (hex.Length == 8)
+            {
+                int a = Convert.ToInt32(hex.Substring(0, 2), 16);
+                int r = Convert.ToInt32(hex.Substring(2, 2), 16);
+                int g = Convert.ToInt32(hex.Substring(4, 2), 16);
+                int b = Convert.ToInt32(hex.Substring(6, 2), 16);
+                return Color.FromArgb(a, r, g, b);
+            }
+            return Color.Red;
         }
 
         private static IdxParagraph GetTimeCodeAndFilePosition(string line)

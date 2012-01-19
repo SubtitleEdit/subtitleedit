@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using System.Drawing.Imaging;
+using Nikse.SubtitleEdit.Logic.VobSub;
 
 namespace Nikse.SubtitleEdit.Logic
 {
@@ -93,47 +94,74 @@ namespace Nikse.SubtitleEdit.Logic
             emphasis2Buffer[0] = (byte)emphasis2.B;
             emphasis2Buffer[1] = (byte)emphasis2.G;
             emphasis2Buffer[2] = (byte)emphasis2.R;
-            emphasis2Buffer[3] = (byte)emphasis2.A;
+            emphasis2Buffer[3] = (byte)emphasis2.A;           
 
             for (int i = 0; i < _bitmapData.Length; i += 4)
-            {
-                int smallestDiff = 10000; // Math.Abs(backgroundBuffer[0] - _bitmapData[i]) + Math.Abs(backgroundBuffer[1] - _bitmapData[i + 1]) + Math.Abs(backgroundBuffer[2] - _bitmapData[i + 2]) + Math.Abs(backgroundBuffer[3] - _bitmapData[i + 3]);
+            {                               
+                int smallestDiff = 10000; 
                 byte[] buffer = backgroundBuffer;
-                if (backgroundBuffer[3] == 0 && _bitmapData[i+3] < 10) // transparent
+                if (backgroundBuffer[3] == 0 && _bitmapData[i + 3] < 10) // transparent
+                {
                     smallestDiff = 0;
-
-                int patternDiff = Math.Abs(patternBuffer[0] - _bitmapData[i]) + Math.Abs(patternBuffer[1] - _bitmapData[i + 1]) + Math.Abs(patternBuffer[2] - _bitmapData[i + 2]) + Math.Abs(patternBuffer[3] - _bitmapData[i + 3]);
-                if (patternDiff < smallestDiff)
-                {
-                    smallestDiff = patternDiff;
-                    buffer = patternBuffer;
                 }
-
-                int emphasis1Diff = Math.Abs(emphasis1Buffer[0] - _bitmapData[i]) + Math.Abs(emphasis1Buffer[1] - _bitmapData[i + 1]) + Math.Abs(emphasis1Buffer[2] - _bitmapData[i + 2]) + Math.Abs(emphasis1Buffer[3] - _bitmapData[i + 3]);
-                if (emphasis1Diff < smallestDiff)
+                else
                 {
-                    smallestDiff = emphasis1Diff;
-                    buffer = emphasis1Buffer;
-                }
+                    int patternDiff = Math.Abs(patternBuffer[0] - _bitmapData[i]) + Math.Abs(patternBuffer[1] - _bitmapData[i + 1]) + Math.Abs(patternBuffer[2] - _bitmapData[i + 2]) + Math.Abs(patternBuffer[3] - _bitmapData[i + 3]);
+                    if (patternDiff < smallestDiff)
+                    {
+                        smallestDiff = patternDiff;
+                        buffer = patternBuffer;
+                    }
 
-                int emphasis2Diff = Math.Abs(emphasis2Buffer[0] - _bitmapData[i]) + Math.Abs(emphasis2Buffer[1] - _bitmapData[i + 1]) + Math.Abs(emphasis2Buffer[2] - _bitmapData[i + 2]) + Math.Abs(emphasis2Buffer[3] - _bitmapData[i + 3]);
-                if (emphasis2Diff < smallestDiff)
-                {
-                    smallestDiff = emphasis2Diff;
-                    buffer = emphasis2Buffer;
-                }
-                else if (_bitmapData[i + 3] >= 10 && _bitmapData[i + 3] < 90) // anti-alias
-                {
-                    smallestDiff = emphasis2Diff;
-                    buffer = emphasis2Buffer;
-                }
+                    int emphasis1Diff = Math.Abs(emphasis1Buffer[0] - _bitmapData[i]) + Math.Abs(emphasis1Buffer[1] - _bitmapData[i + 1]) + Math.Abs(emphasis1Buffer[2] - _bitmapData[i + 2]) + Math.Abs(emphasis1Buffer[3] - _bitmapData[i + 3]);
+                    if (emphasis1Diff < smallestDiff)
+                    {
+                        smallestDiff = emphasis1Diff;
+                        buffer = emphasis1Buffer;
+                    }
 
+                    int emphasis2Diff = Math.Abs(emphasis2Buffer[0] - _bitmapData[i]) + Math.Abs(emphasis2Buffer[1] - _bitmapData[i + 1]) + Math.Abs(emphasis2Buffer[2] - _bitmapData[i + 2]) + Math.Abs(emphasis2Buffer[3] - _bitmapData[i + 3]);
+                    if (emphasis2Diff < smallestDiff)
+                    {
+                        smallestDiff = emphasis2Diff;
+                        buffer = emphasis2Buffer;
+                    }
+                    else if (_bitmapData[i + 3] >= 10 && _bitmapData[i + 3] < 90) // anti-alias
+                    {
+                        smallestDiff = emphasis2Diff;
+                        buffer = emphasis2Buffer;
+                    }
+                }
                 Buffer.BlockCopy(buffer, 0, _bitmapData, i, 4);
             }
         }
 
         public RunLengthTwoParts RunLengthEncodeForDvd(Color background, Color pattern, Color emphasis1, Color emphasis2)
         {
+            byte[] backgroundBuffer = new byte[4];
+            backgroundBuffer[0] = (byte)background.B;
+            backgroundBuffer[1] = (byte)background.G;
+            backgroundBuffer[2] = (byte)background.R;
+            backgroundBuffer[3] = (byte)background.A;
+
+            byte[] patternBuffer = new byte[4];
+            patternBuffer[0] = (byte)pattern.B;
+            patternBuffer[1] = (byte)pattern.G;
+            patternBuffer[2] = (byte)pattern.R;
+            patternBuffer[3] = (byte)pattern.A;
+
+            byte[] emphasis1Buffer = new byte[4];
+            emphasis1Buffer[0] = (byte)emphasis1.B;
+            emphasis1Buffer[1] = (byte)emphasis1.G;
+            emphasis1Buffer[2] = (byte)emphasis1.R;
+            emphasis1Buffer[3] = (byte)emphasis1.A;
+
+            byte[] emphasis2Buffer = new byte[4];
+            emphasis2Buffer[0] = (byte)emphasis2.B;
+            emphasis2Buffer[1] = (byte)emphasis2.G;
+            emphasis2Buffer[2] = (byte)emphasis2.R;
+            emphasis2Buffer[3] = (byte)emphasis2.A;
+
             byte[] bufferEqual = new byte[Width * Height];
             byte[] bufferUnEqual = new byte[Width * Height];
             int indexBufferEqual = 0;
@@ -163,7 +191,7 @@ namespace Nikse.SubtitleEdit.Logic
 
                 for (int x = 0; x < Width; x++)
                 {
-                    int color = GetDvdColor(x, y, background, pattern, emphasis1, emphasis2);
+                    int color = GetDvdColor(x, y, backgroundBuffer, patternBuffer, emphasis1Buffer, emphasis2Buffer);
 
                     if (lastColor == -1)
                     {
@@ -203,7 +231,7 @@ namespace Nikse.SubtitleEdit.Logic
             twoParts.Buffer1 = new byte[indexBufferEqual];
             Buffer.BlockCopy(bufferEqual, 0, twoParts.Buffer1, 0, indexBufferEqual);
             twoParts.Buffer2 = new byte[indexBufferUnEqual];
-            Buffer.BlockCopy(bufferEqual, 0, twoParts.Buffer2, 0, indexBufferUnEqual);
+            Buffer.BlockCopy(bufferUnEqual, 0, twoParts.Buffer2, 0, indexBufferUnEqual);
             return twoParts;
         }
 
@@ -252,22 +280,26 @@ namespace Nikse.SubtitleEdit.Logic
                 index++;
                 byte secondNibble = (byte)(n & Nikse.SubtitleEdit.Logic.VobSub.Helper.B11111111);
                 buffer[index] = (byte)secondNibble;
+                index++;
             }
         }
 
         private void WriteThreeNibbles(byte[] buffer, int count, int color, ref int index, ref bool indexHalfNibble)
         {
-            byte n = (byte)((count << 2) + color);
+            //Value     Bits   n=length, c=color
+            //16-63     12     0 0 0 0 n n n n n n c c           (one and a half byte)
+            ushort n = (ushort)((count << 2) + color);
             if (indexHalfNibble)
             {
+                index++; // there should already zeroes in last nibble
+                buffer[index] = (byte)n;
                 index++;
-                buffer[index] = n;
             }
             else
             {
                 buffer[index] = (byte)(n >> 4);
                 index++;
-                buffer[index] = (byte)(n << 4);
+                buffer[index] = (byte)((n & Helper.B00011111) << 4);
             }
             indexHalfNibble = !indexHalfNibble;
         }
@@ -275,14 +307,16 @@ namespace Nikse.SubtitleEdit.Logic
 
         private void WriteTwoNibbles(byte[] buffer, int count, int color, ref int index, bool indexHalfNibble)
         {
+            //Value      Bits   n=length, c=color
+            //4-15       8      0 0 n n n n c c                   (one byte)
             byte n = (byte)((count << 2) + color);
             if (indexHalfNibble)
             {
                 byte firstNibble = (byte)(n >> 4);
-                buffer[index] = (byte)(buffer[index] & firstNibble);
-                byte secondNibble = (byte)(n << 4);
+                buffer[index] = (byte)(buffer[index] | firstNibble);
+                byte secondNibble = (byte)((n & Helper.B00001111) << 4);
                 index++;
-                buffer[index] = (byte)secondNibble;
+                buffer[index] = secondNibble;
             }
             else
             {
@@ -296,7 +330,7 @@ namespace Nikse.SubtitleEdit.Logic
             byte n = (byte)((count << 2) + color);
             if (indexHalfNibble)
             {
-                buffer[index] = (byte)(buffer[index] & n);
+                buffer[index] = (byte)(buffer[index] | n);
                 index++;
             }
             else
@@ -306,15 +340,20 @@ namespace Nikse.SubtitleEdit.Logic
             indexHalfNibble = !indexHalfNibble;
         }
 
-        private int GetDvdColor(int x, int y, Color background, Color pattern, Color emphasis1, Color emphasis2)
+        private int GetDvdColor(int x, int y, byte[] background, byte[] pattern, byte[] emphasis1, byte[] emphasis2)
         {
-            Color c = GetPixelNext();
-            if (emphasis2 == c)
-                return 3;
-            else if (emphasis1 == c)
-                return 2;
-            if (pattern == c)
+            _pixelAddress += 4;
+            int a = _bitmapData[_pixelAddress + 3];
+            int r = _bitmapData[_pixelAddress + 2];
+            int g = _bitmapData[_pixelAddress + 1];
+            int b = _bitmapData[_pixelAddress];
+
+            if (pattern[0] == _bitmapData[_pixelAddress] && pattern[1] == _bitmapData[_pixelAddress + 1] && pattern[2] == _bitmapData[_pixelAddress + 2] && pattern[3] == _bitmapData[_pixelAddress + 3])
                 return 1;
+            if (emphasis1[0] == _bitmapData[_pixelAddress] && emphasis1[1] == _bitmapData[_pixelAddress + 1] && emphasis1[2] == _bitmapData[_pixelAddress + 2] && emphasis1[3] == _bitmapData[_pixelAddress + 3])
+                return 2;
+            if (emphasis2[0] == _bitmapData[_pixelAddress] && emphasis2[1] == _bitmapData[_pixelAddress + 1] && emphasis2[2] == _bitmapData[_pixelAddress + 2] && emphasis2[3] == _bitmapData[_pixelAddress + 3])
+                return 3;
             return 0;
         }
 

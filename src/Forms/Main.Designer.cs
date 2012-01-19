@@ -963,7 +963,6 @@
             this.vobSubsubidxToolStripMenuItem.Name = "vobSubsubidxToolStripMenuItem";
             this.vobSubsubidxToolStripMenuItem.Size = new System.Drawing.Size(245, 22);
             this.vobSubsubidxToolStripMenuItem.Text = "VobSub (sub/idx)...";
-            this.vobSubsubidxToolStripMenuItem.Visible = false;
             this.vobSubsubidxToolStripMenuItem.Click += new System.EventHandler(this.vobSubsubidxToolStripMenuItem_Click);
             // 
             // toolStripMenuItemCavena890

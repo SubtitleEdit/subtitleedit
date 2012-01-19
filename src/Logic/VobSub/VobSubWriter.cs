@@ -7,6 +7,8 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
 {
     public class VobSubWriter
     {
+        private const int PacketizedElementaryStreamMaximumLength = 2028;
+
         /// <summary>
         /// 14 bytes Mpeg 2 pack header
         /// </summary>
@@ -30,9 +32,8 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
             0x00, 0x00,             // 18-19=PES packet length
             0x81,                   // 20=Flags: PES scrambling control, PES priority, data alignment indicator, copyright, original or copy
             0x81,                   // 21=Flags: PTS DTS flags, ESCR flag, ES rate flag, DSM trick mode flag, additional copy info flag, PES CRC flag, PES extension flag
-            0x05,                   // 22=PES header data length
+            0x08,                   // 22=PES header data length
         };
-
 
         /// <summary>
         /// 9 bytes packetized elementary stream header (PES)
@@ -60,73 +61,180 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
         private string _subFileName;
         private FileStream _subFile;
         StringBuilder _idx = new StringBuilder();
+        int _screenWidth = 720;
+        int _screenHeight = 480;
+        int _bottomMargin = 15;
+        int _languageStreamId = 32;
 
-        public VobSubWriter(string subFileName)
+        Color _background = Color.Transparent;
+        Color _pattern = Color.White;
+        Color _emphasis1 = Color.Black;
+        Color _emphasis2 = Color.FromArgb(240, Color.Black);
+
+
+        public VobSubWriter(string subFileName, int screenWidth, int screenHeight, int bottomMargin, int languageStreamId, Color pattern, Color emphasis1)
         {
             _subFileName = subFileName;
+            _screenWidth = screenWidth;
+            _screenHeight = screenHeight;
+            _bottomMargin = bottomMargin;
+            _languageStreamId = languageStreamId;
+            _pattern = pattern;
+            _emphasis1 = emphasis1;
+            _emphasis2 = Color.FromArgb(240, emphasis1);
             _idx = CreateIdxHeader();
             _subFile = new FileStream(subFileName, FileMode.Create);
+        }
+
+        public void WriteEndianWord(int i)
+        {
+            _subFile.WriteByte((byte)(i / 256));
+            _subFile.WriteByte((byte)(i % 256));
+        }
+
+        private byte[] GetImageBuffer()
+        { 
+            var buffer = new byte[];
+            return buffer;
         }
 
         public void WriteParagraph(Paragraph p, Bitmap bmp)
         {
             // timestamp: 00:00:33:900, filepos: 000000000
-            _idx.AppendLine(string.Format("timestamp: {0:00}:{1:00}:{2:00}:{3:000}, filepos: {4}", p.StartTime.Hours, p.StartTime.Minutes, p.StartTime.Seconds, p.StartTime.Milliseconds, _subFile.Position.ToString("X").PadLeft(9, '0')));
-
+            _idx.AppendLine(string.Format("timestamp: {0:00}:{1:00}:{2:00}:{3:000}, filepos: {4}", p.StartTime.Hours, p.StartTime.Minutes, p.StartTime.Seconds, p.StartTime.Milliseconds, _subFile.Position.ToString("X").PadLeft(9, '0')));            
 
             // write binary vobsub file (duration + image)
             long start = _subFile.Position;
             _subFile.Write(Mpeg2PackHeaderBuffer, 0, Mpeg2PackHeaderBuffer.Length);
 
-            NikseBitmap nbmp = new NikseBitmap(bmp);
-            nbmp.ConverToFourColors(Color.Transparent, Color.White, Color.FromArgb(200, 0, 0, 0), Color.FromArgb(200, 25, 25, 25));
-
-            var outBmp = nbmp.GetBitmap();
-            outBmp.Save(@"D:\download\-_-" + p.Number.ToString() + ".bmp");
-            bmp.Save(@"D:\download\-__" + p.Number.ToString() + ".bmp");
-            outBmp.Dispose();
-
-            var twoPartBuffer = nbmp.RunLengthEncodeForDvd(Color.Transparent, Color.White, Color.FromArgb(200, 0, 0, 0), Color.FromArgb(200, 25, 25, 25));
+            var nbmp = new NikseBitmap(bmp);
+            nbmp.ConverToFourColors(_background, _pattern, _emphasis1, _emphasis2);
+            var twoPartBuffer = nbmp.RunLengthEncodeForDvd(_background, _pattern, _emphasis1, _emphasis2);
 
             // PES size
-            int length = Mpeg2PackHeaderBuffer.Length + PacketizedElementaryStreamHeaderBufferFirst.Length + 10 + twoPartBuffer.Length;
-
-            //block_size = 0x800 - header_size;
-            //long j = (header_size - 20) + block_size;
-            //SubHeader[18] = (byte)(j / 0x100);
-            //SubHeader[19] = (byte)(j % 0x100);
+            int length = Mpeg2PackHeaderBuffer.Length + PacketizedElementaryStreamHeaderBufferFirst.Length + twoPartBuffer.Length + 31;
 
             PacketizedElementaryStreamHeaderBufferFirst[4] = (byte)(length / 256);
             PacketizedElementaryStreamHeaderBufferFirst[5] = (byte)(length % 256);
+
             _subFile.Write(PacketizedElementaryStreamHeaderBufferFirst, 0, PacketizedElementaryStreamHeaderBufferFirst.Length);
 
             // PTS (timestamp)
             FillPTS(p.StartTime);
             _subFile.Write(PresentationTimeStampBuffer, 0, PresentationTimeStampBuffer.Length);
 
-            _subFile.WriteByte(0x32); //sub-stream number
+            _subFile.WriteByte(0x1e); // ??
+            _subFile.WriteByte(0x60); // ??
+            _subFile.WriteByte(0x3a); // ??
 
+            _subFile.WriteByte((byte)_languageStreamId); //sub-stream number, 32=english
+
+            // sup picture datasize
+            WriteEndianWord(twoPartBuffer.Length + 42);
+
+            // first display control sequence table address
+            int startDisplayControlSequenceTableAddress = twoPartBuffer.Length + 4;
+            WriteEndianWord(startDisplayControlSequenceTableAddress);
+            
             if (twoPartBuffer.Length < 0x800 - (_subFile.Position - start))
             {
+                // Write image
+                int imageTopFieldDataAddress = (int) (4);
                 _subFile.Write(twoPartBuffer.Buffer1, 0, twoPartBuffer.Buffer1.Length);
+                int imageBottomFieldDataAddress = 4 + twoPartBuffer.Buffer1.Length;
                 _subFile.Write(twoPartBuffer.Buffer2, 0, twoPartBuffer.Buffer2.Length);
-            }
-            else
-            {
-                System.Windows.Forms.MessageBox.Show("Too long for payload!!!");
-            }
 
-//            HeaderDataLength = buffer[index + 8];
+                // Write zero delay
+                _subFile.WriteByte(0);
+                _subFile.WriteByte(0);
 
-            // language id
-            //    int id = buffer[9 + HeaderDataLength];
-            //    if (id >= 0x20 && id <= 0x40) // x3f 0r x40 ?
-            //        SubPictureStreamId = id;
+                // next display control sequence table address (use current is last)
+                WriteEndianWord(startDisplayControlSequenceTableAddress+24); // start of display control sequence table address
+
+                // Control command 1 = ForcedStartDisplay
+                _subFile.WriteByte(1);
+
+                // Control command 3 = SetColor
+                WriteColors(_subFile); // 3 bytes
+
+                // Control command 4 = SetContrast                
+                WriteContrast(_subFile); // 3 bytes
+
+                // Control command 5 = SetDisplayArea                
+                WriteDisplayArea(_subFile, nbmp); // 7 bytes
+
+                // Control command 6 = SetPixelDataAddress
+                WritePixelDataAddress(_subFile, imageTopFieldDataAddress, imageBottomFieldDataAddress); // 5 bytes
+
+                // Control command exit
+                _subFile.WriteByte(255); // 1 bytes
+
+                // Control Sequence Table
+                // Write delay - subtitle duration
+                WriteEndianWord((int)((Convert.ToInt32(p.Duration.TotalMilliseconds * 90.0 - 1023) >> 10))); //
+
+                // next display control sequence table address (use current is last)
+                WriteEndianWord(startDisplayControlSequenceTableAddress+24); // start of display control sequence table address
+
+                // Control command 2 = StopDisplay
+                _subFile.WriteByte(2);
+            }
+            //else
+            //{
+            //    System.Windows.Forms.MessageBox.Show("Too long for payload!!!");
             //}
-
 
             for (long i = _subFile.Position - start; i < 0x800; i++) // 2048 packet size - pad with 0xff
                 _subFile.WriteByte(0xff);
+        }
+
+        private void WritePixelDataAddress(FileStream _subFile, int imageTopFieldDataAddress, int imageBottomFieldDataAddress)
+        {
+            _subFile.WriteByte(6);
+            WriteEndianWord(imageTopFieldDataAddress);
+            WriteEndianWord(imageBottomFieldDataAddress);
+        }
+
+        private void WriteDisplayArea(FileStream _subFile, NikseBitmap nbmp)
+        {
+            _subFile.WriteByte(5);
+
+            // Write 6 bytes of area - starting X, ending X, starting Y, ending Y, each 12 bits
+            ushort startX = (ushort) ((_screenWidth - nbmp.Width) / 2);
+            ushort endX = (ushort)(startX + nbmp.Width-1);
+            ushort startY = (ushort)(_screenHeight - nbmp.Height - _bottomMargin);
+            ushort endY = (ushort)(startY + nbmp.Height-1);
+
+            WriteEndianWord((ushort)(startX << 4 | endX >> 8)); // 16 - 12 start x + 4 end x
+            WriteEndianWord((ushort)(endX << 8 | startY >> 4)); // 16 - 8 endx + 8 starty
+            WriteEndianWord((ushort)(startY << 12 | endY));     // 16 - 4 start y + 12 end y
+        }
+
+        /// <summary>
+        /// Directly provides the four contrast (alpha blend) values to associate with the four pixel values. One nibble per pixel value for a total of 2 bytes. 0x0 = transparent, 0xF = opaque 
+        /// </summary>
+        /// <param name="_subFile"></param>
+        private void WriteContrast(FileStream _subFile)
+        {
+            _subFile.WriteByte(4);
+            _subFile.WriteByte((byte)((_emphasis2.A << 4) | _emphasis1.A)); // emphasis2 + emphasis1
+            _subFile.WriteByte((byte)((_pattern.A << 4) | _background.A)); // pattern + background
+        }
+
+        /// <summary>
+        /// provides four indices into the CLUT for the current PGC to associate with the four pixel values. One nibble per pixel value for a total of 2 bytes.
+        /// </summary>
+        private void WriteColors(FileStream _subFile)
+        {
+            // Index to palette
+            byte emphasis2 = 3;
+            byte emphasis1 = 2;
+            byte pattern = 1;
+            byte background = 0;
+                
+            _subFile.WriteByte(3);
+            _subFile.WriteByte((byte)((emphasis2 << 4) | emphasis1)); // emphasis2 + emphasis1
+            _subFile.WriteByte((byte)((pattern << 4) | background)); // pattern + background
         }
 
         /// <summary>
@@ -135,13 +243,9 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
         private void FillPTS(TimeCode timeCode)
         {
             string pre = "0011"; // 0011 or 0010 ?
-//                pre = "0010";
-
             long newPts = (long)(timeCode.TotalMilliseconds); // TODO: Calculation from milliseconds
             string bString = Convert.ToString(newPts, 2).PadLeft(33, '0');
-
             string fiveBytesString = pre + bString.Substring(0, 3) + "1" + bString.Substring(3, 15) + "1" + bString.Substring(18, 15) + "1";
-
             for (int i = 0; i < 5; i++)
             {
                 byte b = Convert.ToByte(fiveBytesString.Substring((i * 8), 8), 2);
@@ -164,7 +268,7 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
 
         private StringBuilder CreateIdxHeader()
         {
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             sb.AppendLine(@"# VobSub index file, v7 (do not modify this line!)
 #
 # To repair desyncronization, you can insert gaps this way:
@@ -187,7 +291,7 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
 # Settings
 
 # Original frame size
-size: 720x480
+size: " + _screenWidth + "x" + _screenHeight + @"
 
 # Origin, relative to the upper-left corner, can be overloaded by aligment
 org: 0, 0
@@ -215,7 +319,7 @@ time offset: 0
 forced subs: OFF
 
 # The original palette of the DVD
-palette: 000000, ffffff, 000000, 191919, 828282, 828282, 828282, ffffff, 828282, bababa, 828282, 828282, 828282, 828282, 828282, 828282
+palette: 00000000, " + ToHexColor(_pattern) + ", " + ToHexColor(_emphasis1) + ", " + ToHexColor(_emphasis2) + @", 828282, 828282, 828282, ffffff, 828282, bababa, 828282, 828282, 828282, 828282, 828282, 828282
 
 # Custom colors (transp idxs and the four colors)
 custom colors: OFF, tridx: 0000, colors: 000000, 000000, 000000, 000000
@@ -230,5 +334,10 @@ id: en, index: 0
             return sb;
         }
 
-    }
+        private string ToHexColor(Color c)
+        {
+            return (c.A.ToString("X2") + c.R.ToString("X2") + c.G.ToString("X2") + c.B.ToString("X2")).ToLower();
+        }
+
+    }    
 }

@@ -31,6 +31,7 @@ namespace Nikse.SubtitleEdit.Forms
             public byte[] Buffer { get; set; }
             public int ScreenWidth { get; set; }
             public int ScreenHeight { get; set; }
+            public bool Saved { get; set; }
         }
 
         Subtitle _subtitle;
@@ -90,6 +91,7 @@ namespace Nikse.SubtitleEdit.Forms
                                     ScreenWidth = screenWidth,
                                     ScreenHeight = screenHeight,
                                     Bitmap = null,
+                                    Saved = false,
                                 };
             if (index < _subtitle.Paragraphs.Count)
             {
@@ -104,6 +106,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonExport_Click(object sender, EventArgs e)
         {
+            buttonExport.Enabled = false;
             SetupImageParameters();
 
             if (!string.IsNullOrEmpty(_fileName))
@@ -128,17 +131,6 @@ namespace Nikse.SubtitleEdit.Forms
                 _exportType == "VOBSUB" && saveFileDialog1.ShowDialog(this) == DialogResult.OK ||
                 _exportType == "BDNXML" && folderBrowserDialog1.ShowDialog(this) == DialogResult.OK)
             {
-                FileStream binarySubtitleFile = null;
-                VobSubWriter vobSubWriter = null;
-                if (_exportType == "BLURAYSUP")
-                    binarySubtitleFile = new FileStream(saveFileDialog1.FileName, FileMode.Create);
-                else if (_exportType == "VOBSUB")
-                    vobSubWriter = new VobSubWriter(saveFileDialog1.FileName);
-
-                progressBar1.Value = 0;
-                progressBar1.Maximum = _subtitle.Paragraphs.Count-1;
-                progressBar1.Visible = true;
-
                 int width = 1920;
                 int height = 1080;
                 if (comboBoxResolution.SelectedIndex == 1)
@@ -161,6 +153,17 @@ namespace Nikse.SubtitleEdit.Forms
                     width = 720;
                     height = 480;
                 }
+
+                FileStream binarySubtitleFile = null;
+                VobSubWriter vobSubWriter = null;
+                if (_exportType == "BLURAYSUP")
+                    binarySubtitleFile = new FileStream(saveFileDialog1.FileName, FileMode.Create);
+                else if (_exportType == "VOBSUB")
+                    vobSubWriter = new VobSubWriter(saveFileDialog1.FileName, width, height, 15, 32, _subtitleColor, _borderColor);
+
+                progressBar1.Value = 0;
+                progressBar1.Maximum = _subtitle.Paragraphs.Count-1;
+                progressBar1.Visible = true;
 
                 const int border = 25;
                 int imagesSavedCount = 0;
@@ -256,40 +259,49 @@ namespace Nikse.SubtitleEdit.Forms
                     MessageBox.Show(string.Format(Configuration.Settings.Language.ExportPngXml.XImagesSavedInY, imagesSavedCount, folderBrowserDialog1.SelectedPath));
                 }
             }
+            buttonExport.Enabled = true;
         }
 
         private int WriteParagraph(int width, StringBuilder sb, int border, int height, int imagesSavedCount,
-                                   VobSubWriter vobSubWriter, FileStream binarySubtitleFile, MakeBitmapParameter paramEqual,
+                                   VobSubWriter vobSubWriter, FileStream binarySubtitleFile, MakeBitmapParameter param,
                                    int i)
         {
-            if (paramEqual.Bitmap != null)
+            if (param.Bitmap != null)
             {
                 if (_exportType == "BLURAYSUP")
                 {
-                    binarySubtitleFile.Write(paramEqual.Buffer, 0, paramEqual.Buffer.Length);
+                    if (!param.Saved)
+                        binarySubtitleFile.Write(param.Buffer, 0, param.Buffer.Length);
+                    param.Saved = true;
                 }
                 else if (_exportType == "VOBSUB")
                 {
-                    vobSubWriter.WriteParagraph(paramEqual.P, paramEqual.Bitmap);
+                    if (!param.Saved)
+                        vobSubWriter.WriteParagraph(param.P, param.Bitmap);
+                    param.Saved = true;
                 }
                 else
                 {
-                    string numberString = string.Format("{0:0000}", i);
-                    string fileName = Path.Combine(folderBrowserDialog1.SelectedPath, numberString + ".png");
-                    paramEqual.Bitmap.Save(fileName, System.Drawing.Imaging.ImageFormat.Png);
-                    imagesSavedCount++;
+                    if (!param.Saved)
+                    {
+                        string numberString = string.Format("{0:0000}", i);
+                        string fileName = Path.Combine(folderBrowserDialog1.SelectedPath, numberString + ".png");
+                        param.Bitmap.Save(fileName, System.Drawing.Imaging.ImageFormat.Png);
+                        imagesSavedCount++;
 
-                    //<Event InTC="00:00:24:07" OutTC="00:00:31:13" Forced="False">
-                    //  <Graphic Width="696" Height="111" X="612" Y="930">subtitle_exp_0001.png</Graphic>
-                    //</Event>
-                    sb.AppendLine("<Event InTC=\"" + BdnXmlTimeCode(paramEqual.P.StartTime) + "\" OutTC=\"" +
-                                  BdnXmlTimeCode(paramEqual.P.EndTime) + "\" Forced=\"False\">");
-                    int x = (width - paramEqual.Bitmap.Width)/2;
-                    int y = height - (paramEqual.Bitmap.Height + border);
-                    sb.AppendLine("  <Graphic Width=\"" + paramEqual.Bitmap.Width.ToString() + "\" Height=\"" +
-                                  paramEqual.Bitmap.Height.ToString() + "\" X=\"" + x.ToString() + "\" Y=\"" + y.ToString() +
-                                  "\">" + numberString + ".png</Graphic>");
-                    sb.AppendLine("</Event>");
+                        //<Event InTC="00:00:24:07" OutTC="00:00:31:13" Forced="False">
+                        //  <Graphic Width="696" Height="111" X="612" Y="930">subtitle_exp_0001.png</Graphic>
+                        //</Event>
+                        sb.AppendLine("<Event InTC=\"" + BdnXmlTimeCode(param.P.StartTime) + "\" OutTC=\"" +
+                                      BdnXmlTimeCode(param.P.EndTime) + "\" Forced=\"False\">");
+                        int x = (width - param.Bitmap.Width) / 2;
+                        int y = height - (param.Bitmap.Height + border);
+                        sb.AppendLine("  <Graphic Width=\"" + param.Bitmap.Width.ToString() + "\" Height=\"" +
+                                      param.Bitmap.Height.ToString() + "\" X=\"" + x.ToString() + "\" Y=\"" + y.ToString() +
+                                      "\">" + numberString + ".png</Graphic>");
+                        sb.AppendLine("</Event>");
+                        param.Saved = true;
+                    }
                 }
             }
             return imagesSavedCount;
@@ -629,7 +641,10 @@ namespace Nikse.SubtitleEdit.Forms
             comboBoxResolution.SelectedIndex = 0;
 
             if (exportType == "VOBSUB")
+            {
                 comboBoxBorderWidth.SelectedIndex = 3;
+                comboBoxResolution.SelectedIndex = 3;
+            }
 
             foreach (var x in FontFamily.Families)
             {
