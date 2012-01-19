@@ -142,11 +142,10 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
                         case (int)DisplayControlCommand.SetDisplayArea: // 5
                             if (_data.Length > commandIndex + 6)
                             {
-                                string binary = Helper.GetBinaryString(_data, commandIndex + 1, 6);
-                                int startingX = (int)Helper.GetUInt32FromBinaryString(binary.Substring(0, 12));
-                                int endingX = (int)Helper.GetUInt32FromBinaryString(binary.Substring(12, 12));
-                                int startingY = (int)Helper.GetUInt32FromBinaryString(binary.Substring(24, 12));
-                                int endingY = (int)Helper.GetUInt32FromBinaryString(binary.Substring(36, 12));
+                                int startingX = (_data[commandIndex + 1] << 8 | _data[commandIndex + 2]) >> 4;
+                                int endingX = (_data[commandIndex + 2] & Helper.B00001111) << 8 | _data[commandIndex + 3];
+                                int startingY = (_data[commandIndex + 4] << 8 | _data[commandIndex + 5]) >> 4;
+                                int endingY = (_data[commandIndex + 5] & Helper.B00001111) << 8 | _data[commandIndex + 6];                                
                                 ImageDisplayArea = new Rectangle(startingX, startingY, endingX - startingX, endingY - startingY);
                             }
                             commandIndex += 7;
