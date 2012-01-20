@@ -369,7 +369,7 @@ namespace Nikse.SubtitleEdit.Forms
             textSize = g.MeasureString(text, font);
             g.Dispose();
             bmp.Dispose();
-            bmp = new Bitmap((int)(textSize.Width * 0.8 + 1), (int)(textSize.Height * 0.7) + 10);
+            bmp = new Bitmap((int)(textSize.Width * 0.8), (int)(textSize.Height * 0.7) + 10);
             g = Graphics.FromImage(bmp);
 
             var lefts = new List<float>();
@@ -378,7 +378,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (parameter.AlignLeft) //comboBoxHAlign.SelectedIndex == 0) // left
                     lefts.Add(5);
                 else
-                    lefts.Add((float)(bmp.Width - g.MeasureString(line, font).Width * 0.8) / 2);
+                    lefts.Add((float)(bmp.Width - g.MeasureString(line, font).Width * 0.8+15) / 2);
             }
 
 
