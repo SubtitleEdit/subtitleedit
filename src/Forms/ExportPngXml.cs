@@ -321,6 +321,22 @@ namespace Nikse.SubtitleEdit.Forms
 
         private Bitmap GenerateImageFromTextWithStyle(string text)
         {
+            MakeBitmapParameter mbp = new MakeBitmapParameter();
+            mbp.AlignLeft = comboBoxHAlign.SelectedIndex == 0;
+            mbp.AntiAlias = checkBoxAntiAlias.Checked;
+            mbp.BorderWidth = _borderWidth;
+            mbp.BorderColor = _borderColor;
+            mbp.SubtitleFontName = _subtitleFontName;
+            mbp.SubtitleColor = _subtitleColor;
+            mbp.SubtitleFontSize = _subtitleFontSize;
+            mbp.P = new Paragraph(text, 0, 0);
+            return GenerateImageFromTextWithStyle(mbp);
+        }
+
+        private static Bitmap GenerateImageFromTextWithStyle(MakeBitmapParameter parameter)
+        {
+            string text = parameter.P.Text;
+
             // remove styles for display text (except italic)
             text = RemoveSubStationAlphaFormatting(text);
             text = text.Replace("<b>", string.Empty);
@@ -336,12 +352,12 @@ namespace Nikse.SubtitleEdit.Forms
             Font font;
             try
             {
-                font = new Font(_subtitleFontName, _subtitleFontSize);
+                font = new Font(parameter.SubtitleFontName, parameter.SubtitleFontSize);
             }
             catch (Exception exception)
             {
                 MessageBox.Show(exception.Message);
-                font = new Font("Verdana", _subtitleFontSize);
+                font = new Font(FontFamily.Families[0].Name, parameter.SubtitleFontSize);
             }
             var bmp = new Bitmap(400, 200);
             var g = Graphics.FromImage(bmp);
@@ -353,20 +369,20 @@ namespace Nikse.SubtitleEdit.Forms
             textSize = g.MeasureString(text, font);
             g.Dispose();
             bmp.Dispose();
-            bmp = new Bitmap((int)(textSize.Width * 0.8 + 1), (int)(textSize.Height * 0.7)+10);
+            bmp = new Bitmap((int)(textSize.Width * 0.8 + 1), (int)(textSize.Height * 0.7) + 10);
             g = Graphics.FromImage(bmp);
 
             var lefts = new List<float>();
-            foreach (string line in text.Replace("<i>", "").Replace("</i>", "").Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries))
+            foreach (string line in text.Replace("<i>", string.Empty).Replace("</i>", string.Empty).Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries))
             {
-                if (comboBoxHAlign.SelectedIndex == 0) // left
+                if (parameter.AlignLeft) //comboBoxHAlign.SelectedIndex == 0) // left
                     lefts.Add(5);
                 else
                     lefts.Add((float)(bmp.Width - g.MeasureString(line, font).Width * 0.8) / 2);
             }
 
 
-            if (checkBoxAntiAlias.Checked)
+            if (parameter.AntiAlias)
             {
                 g.TextRenderingHint = TextRenderingHint.AntiAlias;
                 g.SmoothingMode = SmoothingMode.AntiAlias;
@@ -413,7 +429,7 @@ namespace Nikse.SubtitleEdit.Forms
                     TextDraw.DrawText(font, sf, path, sb, isItalic, left, top, ref newLine, addX, leftMargin);
                     firstLinePart = false;
                     addX = 1;
-                    if (_subtitleFontName.StartsWith("Arial"))
+                    if (parameter.SubtitleFontName.StartsWith("Arial"))
                         addX = 3;
                     isItalic = false;
                     i += 3;
@@ -448,146 +464,6 @@ namespace Nikse.SubtitleEdit.Forms
             if (sb.Length > 0)
             {
                 if ((italicFromStart || firstLinePart) && !isItalic)
-                    addX = 0;
-                else
-                    addX = italicSpacing;
-                TextDraw.DrawText(font, sf, path, sb, isItalic, left, top, ref newLine, addX, leftMargin);
-            }
-
-            if (_borderWidth > 0)
-                g.DrawPath(new Pen(_borderColor, _borderWidth), path);
-            g.FillPath(new SolidBrush(_subtitleColor), path);
-            g.Dispose();
-            return bmp;
-        }
-
-        private static Bitmap GenerateImageFromTextWithStyle(MakeBitmapParameter parameter)
-        {
-            string text = parameter.P.Text;
-
-            // remove styles for display text (except italic)
-            text = RemoveSubStationAlphaFormatting(text);
-            text = text.Replace("<b>", string.Empty);
-            text = text.Replace("</b>", string.Empty);
-            text = text.Replace("<B>", string.Empty);
-            text = text.Replace("</B>", string.Empty);
-            text = text.Replace("<u>", string.Empty);
-            text = text.Replace("</u>", string.Empty);
-            text = text.Replace("<U>", string.Empty);
-            text = text.Replace("</U>", string.Empty);
-            text = Utilities.RemoveHtmlFontTag(text);
-
-            Font font;
-            try
-            {
-                font = new Font(parameter.SubtitleFontName, parameter.SubtitleFontSize);
-            }
-            catch (Exception exception)
-            {
-                MessageBox.Show(exception.Message);
-                font = new Font(FontFamily.Families[0].Name, parameter.SubtitleFontSize);
-            }
-            var bmp = new Bitmap(400, 200);
-            var g = Graphics.FromImage(bmp);
-
-            SizeF textSize = g.MeasureString("Hj!", font);
-            var lineHeight = (textSize.Height * 0.64f);
-            float italicSpacing = textSize.Width / 8;
-
-            textSize = g.MeasureString(text, font);
-            g.Dispose();
-            bmp.Dispose();
-            bmp = new Bitmap((int)(textSize.Width * 0.8), (int)(textSize.Height * 0.7) + 10);
-            g = Graphics.FromImage(bmp);
-
-            var lefts = new List<float>();
-            foreach (string line in text.Replace("<i>", "i").Replace("</i>", "i").Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries))
-            {
-                if (parameter.AlignLeft) //comboBoxHAlign.SelectedIndex == 0) // left
-                    lefts.Add(5);
-                else
-                    lefts.Add((float)(bmp.Width - g.MeasureString(line, font).Width * 0.8) / 2);
-            }
-
-
-            if (parameter.AntiAlias)
-            {
-                g.TextRenderingHint = TextRenderingHint.AntiAlias;
-                g.SmoothingMode = SmoothingMode.AntiAlias;
-            }
-            var sf = new StringFormat();
-            sf.Alignment = StringAlignment.Near;
-            sf.LineAlignment = StringAlignment.Near;// draw the text to a path
-            var path = new GraphicsPath();
-
-            // display italic
-            var sb = new StringBuilder();
-            int i = 0;
-            bool isItalic = false;
-            float left = 5;
-            if (lefts.Count >= 0)
-                left = lefts[0];
-            float top = 5;
-            bool newLine = false;
-            float addX = 0;
-            int lineNumber = 0;
-            float leftMargin = left;
-            bool italicFromStart = false;
-            while (i < text.Length)
-            {
-                if (text.Substring(i).ToLower().StartsWith("<i>"))
-                {
-                    italicFromStart = i == 0;
-                    if (sb.Length > 0)
-                    {
-                        TextDraw.DrawText(font, sf, path, sb, isItalic, left, top, ref newLine, addX, leftMargin);
-                        addX = 0;
-                    }
-                    isItalic = true;
-                    i += 2;
-                }
-                else if (text.Substring(i).ToLower().StartsWith("</i>") && isItalic)
-                {
-                    if (italicFromStart)
-                        addX = 0;
-                    else
-                        addX = italicSpacing;
-                    TextDraw.DrawText(font, sf, path, sb, isItalic, left, top, ref newLine, addX, leftMargin);
-                    addX = 1;
-                    if (parameter.SubtitleFontName.StartsWith("Arial"))
-                        addX = 3;
-                    isItalic = false;
-                    i += 3;
-                }
-                else if (text.Substring(i).StartsWith(Environment.NewLine))
-                {
-                    if (italicFromStart)
-                        addX = 0;
-                    else
-                        addX = italicSpacing;
-
-                    TextDraw.DrawText(font, sf, path, sb, isItalic, left, top, ref newLine, addX, leftMargin);
-
-                    addX = 0;
-                    top += lineHeight;
-                    newLine = true;
-                    i += Environment.NewLine.Length - 1;
-                    addX = 0;
-                    lineNumber++;
-                    if (lineNumber < lefts.Count)
-                        leftMargin = lefts[lineNumber];
-                    if (isItalic)
-                        italicFromStart = true;
-                }
-                else
-                {
-                    sb.Append(text.Substring(i, 1));
-                }
-                i++;
-            }
-            if (sb.Length > 0)
-            {
-                if (italicFromStart)
                     addX = 0;
                 else
                     addX = italicSpacing;
