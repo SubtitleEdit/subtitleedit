@@ -474,7 +474,10 @@ namespace Nikse.SubtitleEdit.Forms
                 g.DrawPath(new Pen(parameter.BorderColor, parameter.BorderWidth), path);
             g.FillPath(new SolidBrush(parameter.SubtitleColor), path);
             g.Dispose();
-            return bmp;
+            NikseBitmap nbmp = new NikseBitmap(bmp);
+            nbmp.CropTransparentSides(5);
+            return nbmp.GetBitmap();
+            //return bmp;
         }
 
         private static string RemoveSubStationAlphaFormatting(string s)

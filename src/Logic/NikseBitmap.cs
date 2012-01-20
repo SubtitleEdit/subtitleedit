@@ -357,6 +357,66 @@ namespace Nikse.SubtitleEdit.Logic
             return 0;
         }
 
+        public void CropTransparentSides(int maximumCropping)
+        {
+            int leftStart = 0;
+            bool done = false;
+            for (int x = 0; x < Width; x++)
+            {
+                for (int y = 0; y < Height; y++)
+                {
+                    Color c = GetPixel(x, y);
+                    if (c.A != 0)
+                    {
+                        done = true;
+                        leftStart = x;
+                        leftStart -= maximumCropping;
+                        if (leftStart < 0)
+                            leftStart = 0;
+                        break;
+                    }
+                    if (done)
+                        break;
+                }
+            }
+
+            int rightEnd = Width-1;
+            done = false;
+            for (int x = Width - 1; x >= 0; x--)
+            {
+                for (int y = 0; y < Height; y++)
+                {
+                    Color c = GetPixel(x, y);
+                    if (c.A != 0)
+                    {
+                        done = true;
+                        rightEnd = x;
+                        rightEnd += maximumCropping;
+                        if (rightEnd >= Width)
+                            rightEnd = Width-1;
+                        break;
+                    }
+                    if (done)
+                        break;
+                }
+            }
+
+            if (leftStart < 2 && rightEnd >= Width - 3)
+                return;
+
+            int newWidth = rightEnd - leftStart + 1;
+            var newBitmapData = new byte[newWidth * Height * 4];
+            int index = 0;
+            for (int y = 0; y < Height; y++)
+            {
+                int pixelAddress = (leftStart * 4) + (y * 4 * Width);
+                Buffer.BlockCopy(_bitmapData, pixelAddress, newBitmapData, index, 4 * newWidth);
+                index += 4 * newWidth;
+            }
+            Width = newWidth;
+            _bitmapData = newBitmapData;
+        }
+
         public void Fill(Color color)
         {
             byte[] buffer = new byte[4];
