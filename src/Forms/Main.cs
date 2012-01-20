@@ -1473,8 +1473,12 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     if (visualSync.FrameRateChanged)
                         toolStripComboBoxFrameRate.Text = string.Format("{0:0.###}", visualSync.FrameRate);
-                    if (IsFramesRelevant && visualSync.FrameRate > 0)
+                    if (IsFramesRelevant && CurrentFrameRate > 0)
+                    {
                         _subtitle.CalculateFrameNumbersFromTimeCodesNoCheck(CurrentFrameRate);
+                        if (tabControlSubtitle.SelectedIndex == TabControlSourceView)
+                            ShowSource();
+                    }
                     ShowSource();
                     SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
                     RestoreSubtitleListviewIndexes();
@@ -3317,8 +3321,12 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     ShowStatus(string.Format(_language.DisplayTimesAdjustedX, adjustDisplayTime.AdjustValue));
                     SaveSubtitleListviewIndexes();
-                    if (IsFramesRelevant)
+                    if (IsFramesRelevant && CurrentFrameRate > 0)
+                    {
                         _subtitle.CalculateFrameNumbersFromTimeCodesNoCheck(CurrentFrameRate);
+                        if (tabControlSubtitle.SelectedIndex == TabControlSourceView)
+                            ShowSource();
+                    }
                     ShowSource();
                     SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
                     RestoreSubtitleListviewIndexes();
@@ -8949,6 +8957,12 @@ namespace Nikse.SubtitleEdit.Forms
                 timeUpDownStartTime.TimeCode = _subtitle.Paragraphs[index].StartTime;
                 timeUpDownStartTime.MaskedTextBox.TextChanged += MaskedTextBox_TextChanged;
                 UpdateOriginalTimeCodes(oldParagraph);
+                if (IsFramesRelevant && CurrentFrameRate > 0)
+                {
+                    _subtitle.CalculateFrameNumbersFromTimeCodesNoCheck(CurrentFrameRate);
+                    if (tabControlSubtitle.SelectedIndex == TabControlSourceView)
+                        ShowSource();
+                }
                 _change = true;
             }
         }
@@ -8975,6 +8989,12 @@ namespace Nikse.SubtitleEdit.Forms
                 else
                 {
                     numericUpDownDuration.Value = (decimal)(_subtitle.Paragraphs[index].Duration.TotalSeconds);
+                }
+                if (IsFramesRelevant && CurrentFrameRate > 0)
+                {
+                    _subtitle.CalculateFrameNumbersFromTimeCodesNoCheck(CurrentFrameRate);
+                    if (tabControlSubtitle.SelectedIndex == TabControlSourceView)
+                        ShowSource();
                 }
             }
         }
@@ -9570,6 +9590,13 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                     }
                 }
+                if (IsFramesRelevant && CurrentFrameRate > 0)
+                {
+                    _subtitle.CalculateFrameNumbersFromTimeCodesNoCheck(CurrentFrameRate);
+                    if (tabControlSubtitle.SelectedIndex == TabControlSourceView)
+                        ShowSource();
+                }
+
                 checkBoxSyncListViewWithVideoWhilePlaying.Checked = oldSync;
                 timeUpDownStartTime.MaskedTextBox.TextChanged += MaskedTextBox_TextChanged;
             }
@@ -9598,6 +9625,12 @@ namespace Nikse.SubtitleEdit.Forms
                     SubtitleListview1.Items[index].Selected = false;
                     SubtitleListview1.Items[index + 1].Selected = true;
                     _subtitle.Paragraphs[index + 1].StartTime = new TimeCode(TimeSpan.FromSeconds(videoPosition+0.001));
+                    if (IsFramesRelevant && CurrentFrameRate > 0)
+                    {
+                        _subtitle.CalculateFrameNumbersFromTimeCodesNoCheck(CurrentFrameRate);
+                        if (tabControlSubtitle.SelectedIndex == TabControlSourceView)
+                            ShowSource();
+                    }
                     SubtitleListview1.SetStartTime(index + 1, _subtitle.Paragraphs[index + 1]);
                     SubtitleListview1.AutoScrollOffset.Offset(0, index * 16);
                     SubtitleListview1.EnsureVisible(Math.Min(SubtitleListview1.Items.Count - 1, index + 5));

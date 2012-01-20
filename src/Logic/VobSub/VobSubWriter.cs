@@ -7,8 +7,6 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
 {
     public class VobSubWriter
     {
-        private const int PacketizedElementaryStreamMaximumLength = 2028;
-
         /// <summary>
         /// 14 bytes Mpeg 2 pack header
         /// </summary>
@@ -58,6 +56,8 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
             0x00, 0x01,             // 15=PTS 14..00 1
         };
 
+        private const int PacketizedElementaryStreamMaximumLength = 2028;
+
         private string _subFileName;
         private FileStream _subFile;
         StringBuilder _idx = new StringBuilder();
@@ -65,12 +65,10 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
         int _screenHeight = 480;
         int _bottomMargin = 15;
         int _languageStreamId = 32;
-
         Color _background = Color.Transparent;
         Color _pattern = Color.White;
         Color _emphasis1 = Color.Black;
         Color _emphasis2 = Color.FromArgb(240, Color.Black);
-
 
         public VobSubWriter(string subFileName, int screenWidth, int screenHeight, int bottomMargin, int languageStreamId, Color pattern, Color emphasis1)
         {
@@ -81,16 +79,10 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
             _languageStreamId = languageStreamId;
             _pattern = pattern;
             _emphasis1 = emphasis1;
-            _emphasis2 = Color.FromArgb(240, emphasis1);
+            _emphasis2 = Color.FromArgb(225, emphasis1);
             _idx = CreateIdxHeader();
             _subFile = new FileStream(subFileName, FileMode.Create);
         }
-
-        //public void WriteEndianWord(int i)
-        //{
-        //    _subFile.WriteByte((byte)(i / 256));
-        //    _subFile.WriteByte((byte)(i % 256));
-        //}
 
         public void WriteEndianWord(int i, Stream stream)
         {
@@ -100,62 +92,55 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
 
         private byte[] GetSubImageBuffer(RunLengthTwoParts twoPartBuffer, NikseBitmap nbmp, Paragraph p)
         {
-            MemoryStream ms = new MemoryStream();
+            var ms = new MemoryStream();
 
             // sup picture datasize
-            WriteEndianWord(twoPartBuffer.Length + 42, ms);
+            WriteEndianWord(twoPartBuffer.Length + 33, ms);
 
             // first display control sequence table address
             int startDisplayControlSequenceTableAddress = twoPartBuffer.Length + 4;
             WriteEndianWord(startDisplayControlSequenceTableAddress, ms);
 
-            //if (twoPartBuffer.Length < 0x800 - (_subFile.Position - start))
-            {
-                // Write image
-                int imageTopFieldDataAddress = (int)(4);
-                ms.Write(twoPartBuffer.Buffer1, 0, twoPartBuffer.Buffer1.Length);
-                int imageBottomFieldDataAddress = 4 + twoPartBuffer.Buffer1.Length;
-                ms.Write(twoPartBuffer.Buffer2, 0, twoPartBuffer.Buffer2.Length);
+            // Write image
+            int imageTopFieldDataAddress = (int)(4);
+            ms.Write(twoPartBuffer.Buffer1, 0, twoPartBuffer.Buffer1.Length);
+            int imageBottomFieldDataAddress = 4 + twoPartBuffer.Buffer1.Length;
+            ms.Write(twoPartBuffer.Buffer2, 0, twoPartBuffer.Buffer2.Length);
 
-                // Write zero delay
-                ms.WriteByte(0);
-                ms.WriteByte(0);
+            // Write zero delay
+            ms.WriteByte(0);
+            ms.WriteByte(0);
 
-                // next display control sequence table address (use current is last)
-                WriteEndianWord(startDisplayControlSequenceTableAddress + 24, ms); // start of display control sequence table address
+            // next display control sequence table address (use current is last)
+            WriteEndianWord(startDisplayControlSequenceTableAddress + 24, ms); // start of display control sequence table address
 
-                // Control command 1 = ForcedStartDisplay
-                ms.WriteByte(1);
+            // Control command 1 = ForcedStartDisplay
+            ms.WriteByte(1);
 
-                // Control command 3 = SetColor
-                WriteColors(ms); // 3 bytes
+            // Control command 3 = SetColor
+            WriteColors(ms); // 3 bytes
 
-                // Control command 4 = SetContrast                
-                WriteContrast(ms); // 3 bytes
+            // Control command 4 = SetContrast                
+            WriteContrast(ms); // 3 bytes
 
-                // Control command 5 = SetDisplayArea                
-                WriteDisplayArea(ms, nbmp); // 7 bytes
+            // Control command 5 = SetDisplayArea                
+            WriteDisplayArea(ms, nbmp); // 7 bytes
 
-                // Control command 6 = SetPixelDataAddress
-                WritePixelDataAddress(ms, imageTopFieldDataAddress, imageBottomFieldDataAddress); // 5 bytes
+            // Control command 6 = SetPixelDataAddress
+            WritePixelDataAddress(ms, imageTopFieldDataAddress, imageBottomFieldDataAddress); // 5 bytes
 
-                // Control command exit
-                ms.WriteByte(255); // 1 bytes
+            // Control command exit
+            ms.WriteByte(255); // 1 bytes
 
-                // Control Sequence Table
-                // Write delay - subtitle duration
-                WriteEndianWord((int)((Convert.ToInt32(p.Duration.TotalMilliseconds * 90.0 - 1023) >> 10)), ms); 
+            // Control Sequence Table
+            // Write delay - subtitle duration
+            WriteEndianWord((int)((Convert.ToInt32(p.Duration.TotalMilliseconds * 90.0 - 1023) >> 10)), ms); 
 
-                // next display control sequence table address (use current is last)
-                WriteEndianWord(startDisplayControlSequenceTableAddress + 24, ms); // start of display control sequence table address
+            // next display control sequence table address (use current is last)
+            WriteEndianWord(startDisplayControlSequenceTableAddress + 24, ms); // start of display control sequence table address
 
-                // Control command 2 = StopDisplay
-                ms.WriteByte(2);
-            }
-            //else
-            //{
-            //    System.Windows.Forms.MessageBox.Show("Too long for payload!!!");
-            //}
+            // Control command 2 = StopDisplay
+            ms.WriteByte(2);
 
             return ms.ToArray();
         }
@@ -166,19 +151,15 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
             _idx.AppendLine(string.Format("timestamp: {0:00}:{1:00}:{2:00}:{3:000}, filepos: {4}", p.StartTime.Hours, p.StartTime.Minutes, p.StartTime.Seconds, p.StartTime.Milliseconds, _subFile.Position.ToString("X").PadLeft(9, '0')));            
 
             // write binary vobsub file (duration + image)
-            long start = _subFile.Position;
             _subFile.Write(Mpeg2PackHeaderBuffer, 0, Mpeg2PackHeaderBuffer.Length);
 
             var nbmp = new NikseBitmap(bmp);
             nbmp.ConverToFourColors(_background, _pattern, _emphasis1, _emphasis2);
             var twoPartBuffer = nbmp.RunLengthEncodeForDvd(_background, _pattern, _emphasis1, _emphasis2);
+            var imageBuffer = GetSubImageBuffer(twoPartBuffer, nbmp, p);
 
             // PES size
-            int length = Mpeg2PackHeaderBuffer.Length + PacketizedElementaryStreamHeaderBufferFirst.Length + twoPartBuffer.Length + 31;
-
-            PacketizedElementaryStreamHeaderBufferFirst[4] = (byte)(length / 256);
-            PacketizedElementaryStreamHeaderBufferFirst[5] = (byte)(length % 256);
-
+            WritePesSize(0, imageBuffer, PacketizedElementaryStreamHeaderBufferFirst);
             _subFile.Write(PacketizedElementaryStreamHeaderBufferFirst, 0, PacketizedElementaryStreamHeaderBufferFirst.Length);
 
             // PTS (timestamp)
@@ -191,11 +172,44 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
 
             _subFile.WriteByte((byte)_languageStreamId); //sub-stream number, 32=english
 
-            var imageBuffer = GetSubImageBuffer(twoPartBuffer, nbmp, p);
-            _subFile.Write(imageBuffer, 0, imageBuffer.Length);
+            if (Mpeg2PackHeaderBuffer.Length + imageBuffer.Length + 7 > PacketizedElementaryStreamMaximumLength)
+            {
+                int index = 0;
+                while (index < imageBuffer.Length)
+                {
+                    _subFile.WriteByte(imageBuffer[index]);
+                    if (_subFile.Position % 0x800 == 0) // write header for next PES packet
+                    {
+                        _subFile.Write(Mpeg2PackHeaderBuffer, 0, Mpeg2PackHeaderBuffer.Length);
+                        WritePesSize(index, imageBuffer, PacketizedElementaryStreamHeaderBufferNext);
+                        _subFile.Write(PacketizedElementaryStreamHeaderBufferNext, 0, PacketizedElementaryStreamHeaderBufferNext.Length);
+                        _subFile.WriteByte((byte)_languageStreamId); //sub-stream number, 32=english
+                    }
+                    index++;
+                }
+            }
+            else
+            {
+                _subFile.Write(imageBuffer, 0, imageBuffer.Length); // write image bytes + control sequence
+            }
 
             while  (_subFile.Position % 0x800 != 0) // 2048 packet size - pad with 0xff
                 _subFile.WriteByte(0xff);
+        }
+
+        private static void WritePesSize(int subtract, byte[] imageBuffer, byte[] writeBuffer)
+        {
+            int length = Mpeg2PackHeaderBuffer.Length + imageBuffer.Length - subtract;
+            if (length > PacketizedElementaryStreamMaximumLength)
+            {
+                writeBuffer[4] = (byte)(PacketizedElementaryStreamMaximumLength / 256);
+                writeBuffer[5] = (byte)(PacketizedElementaryStreamMaximumLength % 256);
+            }
+            else
+            {
+                writeBuffer[4] = (byte)(length / 256);
+                writeBuffer[5] = (byte)(length % 256);
+            }            
         }
 
         private void WritePixelDataAddress(Stream stream, int imageTopFieldDataAddress, int imageBottomFieldDataAddress)
@@ -253,7 +267,7 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
         private void FillPTS(TimeCode timeCode)
         {
             string pre = "0011"; // 0011 or 0010 ?
-            long newPts = (long)(timeCode.TotalMilliseconds); // TODO: Calculation from milliseconds
+            long newPts = (long)(timeCode.TotalSeconds * 90000.0 + 0.5);
             string bString = Convert.ToString(newPts, 2).PadLeft(33, '0');
             string fiveBytesString = pre + bString.Substring(0, 3) + "1" + bString.Substring(3, 15) + "1" + bString.Substring(18, 15) + "1";
             for (int i = 0; i < 5; i++)
@@ -329,7 +343,7 @@ time offset: 0
 forced subs: OFF
 
 # The original palette of the DVD
-palette: 00000000, " + ToHexColor(_pattern) + ", " + ToHexColor(_emphasis1) + ", " + ToHexColor(_emphasis2) + @", 828282, 828282, 828282, ffffff, 828282, bababa, 828282, 828282, 828282, 828282, 828282, 828282
+palette: 000000, " + ToHexColor(_pattern) + ", " + ToHexColor(_emphasis1) + ", " + ToHexColor(_emphasis2) + @", 828282, 828282, 828282, ffffff, 828282, bababa, 828282, 828282, 828282, 828282, 828282, 828282
 
 # Custom colors (transp idxs and the four colors)
 custom colors: OFF, tridx: 0000, colors: 000000, 000000, 000000, 000000
@@ -344,9 +358,9 @@ id: en, index: 0
             return sb;
         }
 
-        private string ToHexColor(Color c)
+        private static string ToHexColor(Color c)
         {
-            return (c.A.ToString("X2") + c.R.ToString("X2") + c.G.ToString("X2") + c.B.ToString("X2")).ToLower();
+            return (c.R.ToString("X2") + c.G.ToString("X2") + c.B.ToString("X2")).ToLower();
         }
 
     }    
