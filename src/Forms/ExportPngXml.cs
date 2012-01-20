@@ -353,11 +353,11 @@ namespace Nikse.SubtitleEdit.Forms
             textSize = g.MeasureString(text, font);
             g.Dispose();
             bmp.Dispose();
-            bmp = new Bitmap((int)(textSize.Width * 0.8), (int)(textSize.Height * 0.7)+10);
+            bmp = new Bitmap((int)(textSize.Width * 0.8 + 1), (int)(textSize.Height * 0.7)+10);
             g = Graphics.FromImage(bmp);
 
             var lefts = new List<float>();
-            foreach (string line in text.Replace("<i>", "i").Replace("</i>", "i").Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries))
+            foreach (string line in text.Replace("<i>", "").Replace("</i>", "").Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries))
             {
                 if (comboBoxHAlign.SelectedIndex == 0) // left
                     lefts.Add(5);
@@ -389,6 +389,7 @@ namespace Nikse.SubtitleEdit.Forms
             int lineNumber = 0;
             float leftMargin = left;
             bool italicFromStart = false;
+            bool firstLinePart = true;
             while (i < text.Length)
             {
                 if (text.Substring(i).ToLower().StartsWith("<i>"))
@@ -398,17 +399,19 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         TextDraw.DrawText(font, sf, path, sb, isItalic, left, top, ref newLine, addX, leftMargin);
                         addX = 0;
+                        firstLinePart = false;
                     }
                     isItalic = true;
                     i += 2;
                 }
                 else if (text.Substring(i).ToLower().StartsWith("</i>") && isItalic)
                 {
-                    if (italicFromStart)
+                    if (italicFromStart || firstLinePart || !isItalic)
                         addX = 0;
                     else
                         addX = italicSpacing;
                     TextDraw.DrawText(font, sf, path, sb, isItalic, left, top, ref newLine, addX, leftMargin);
+                    firstLinePart = false;
                     addX = 1;
                     if (_subtitleFontName.StartsWith("Arial"))
                         addX = 3;
@@ -417,12 +420,13 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 else if (text.Substring(i).StartsWith(Environment.NewLine))
                 {
-                    if (italicFromStart)
+                    if (italicFromStart || firstLinePart || !isItalic)
                         addX = 0;
                     else
                         addX = italicSpacing;
 
                     TextDraw.DrawText(font, sf, path, sb, isItalic, left, top, ref newLine, addX, leftMargin);
+                    firstLinePart = true;
 
                     addX = 0;
                     top += lineHeight;
@@ -443,7 +447,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             if (sb.Length > 0)
             {
-                if (italicFromStart)
+                if ((italicFromStart || firstLinePart) && !isItalic)
                     addX = 0;
                 else
                     addX = italicSpacing;
