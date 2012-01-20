@@ -123,6 +123,9 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (File.Exists(fileName))
             {
+                timer1.Stop();
+                timerProgressBarRefresh.Stop();
+
                 VideoFileName = fileName;
 
                 FileInfo fi = new FileInfo(fileName);

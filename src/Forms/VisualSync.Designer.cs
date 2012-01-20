@@ -56,7 +56,6 @@ namespace Nikse.SubtitleEdit.Forms
             this.groupBoxMovieInfo = new System.Windows.Forms.GroupBox();
             this.buttonSync = new System.Windows.Forms.Button();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
-            this.timer2 = new System.Windows.Forms.Timer(this.components);
             this.labelTip = new System.Windows.Forms.Label();
             this.timerProgressBarRefresh = new System.Windows.Forms.Timer(this.components);
             this.groupBoxStartScene.SuspendLayout();
@@ -65,9 +64,9 @@ namespace Nikse.SubtitleEdit.Forms
             this.panelControlsEnd.SuspendLayout();
             this.groupBoxMovieInfo.SuspendLayout();
             this.SuspendLayout();
-            //
+            // 
             // buttonOpenMovie
-            //
+            // 
             this.buttonOpenMovie.Location = new System.Drawing.Point(12, 12);
             this.buttonOpenMovie.Name = "buttonOpenMovie";
             this.buttonOpenMovie.Size = new System.Drawing.Size(100, 21);
@@ -75,14 +74,14 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonOpenMovie.Text = "Open movie...";
             this.buttonOpenMovie.UseVisualStyleBackColor = true;
             this.buttonOpenMovie.Click += new System.EventHandler(this.ButtonOpenMovieClick);
-            //
+            // 
             // timer1
-            //
+            // 
             this.timer1.Interval = 50;
             this.timer1.Tick += new System.EventHandler(this.Timer1Tick);
-            //
+            // 
             // buttonOK
-            //
+            // 
             this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonOK.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.buttonOK.Location = new System.Drawing.Point(749, 498);
@@ -92,9 +91,9 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonOK.Text = "&OK";
             this.buttonOK.UseVisualStyleBackColor = true;
             this.buttonOK.Click += new System.EventHandler(this.buttonOK_Click);
-            //
+            // 
             // groupBoxStartScene
-            //
+            // 
             this.groupBoxStartScene.Controls.Add(this.MediaPlayerStart);
             this.groupBoxStartScene.Controls.Add(this.panelControlsStart);
             this.groupBoxStartScene.Location = new System.Drawing.Point(12, 65);
@@ -104,23 +103,27 @@ namespace Nikse.SubtitleEdit.Forms
             this.groupBoxStartScene.TabStop = false;
             this.groupBoxStartScene.Text = "Start scene";
             this.groupBoxStartScene.Enter += new System.EventHandler(this.GroupBoxStartSceneEnter);
-            //
+            // 
             // MediaPlayerStart
-            //
+            // 
             this.MediaPlayerStart.BackColor = System.Drawing.Color.Black;
             this.MediaPlayerStart.CurrentPosition = 0D;
+            this.MediaPlayerStart.FontSizeFactor = 1F;
             this.MediaPlayerStart.Location = new System.Drawing.Point(6, 34);
             this.MediaPlayerStart.Name = "MediaPlayerStart";
             this.MediaPlayerStart.ShowStopButton = true;
             this.MediaPlayerStart.Size = new System.Drawing.Size(450, 287);
             this.MediaPlayerStart.SubtitleText = "";
             this.MediaPlayerStart.TabIndex = 13;
+            this.MediaPlayerStart.TextRightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.MediaPlayerStart.VideoHeight = 0;
             this.MediaPlayerStart.VideoPlayer = null;
+            this.MediaPlayerStart.VideoWidth = 0;
             this.MediaPlayerStart.Volume = 0D;
             this.MediaPlayerStart.OnButtonClicked += new System.EventHandler(this.MediaPlayerStart_OnButtonClicked);
-            //
+            // 
             // panelControlsStart
-            //
+            // 
             this.panelControlsStart.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.panelControlsStart.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panelControlsStart.Controls.Add(this.buttonStartVerify);
@@ -133,9 +136,9 @@ namespace Nikse.SubtitleEdit.Forms
             this.panelControlsStart.Name = "panelControlsStart";
             this.panelControlsStart.Size = new System.Drawing.Size(438, 68);
             this.panelControlsStart.TabIndex = 1;
-            //
+            // 
             // buttonStartVerify
-            //
+            // 
             this.buttonStartVerify.Location = new System.Drawing.Point(138, 37);
             this.buttonStartVerify.Name = "buttonStartVerify";
             this.buttonStartVerify.Size = new System.Drawing.Size(119, 21);
@@ -143,9 +146,9 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonStartVerify.Text = "Play 2 secs and back";
             this.buttonStartVerify.UseVisualStyleBackColor = true;
             this.buttonStartVerify.Click += new System.EventHandler(this.ButtonStartVerifyClick);
-            //
+            // 
             // buttonGotoStartSubtitlePosition
-            //
+            // 
             this.buttonGotoStartSubtitlePosition.Location = new System.Drawing.Point(263, 37);
             this.buttonGotoStartSubtitlePosition.Name = "buttonGotoStartSubtitlePosition";
             this.buttonGotoStartSubtitlePosition.Size = new System.Drawing.Size(90, 21);
@@ -153,9 +156,9 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonGotoStartSubtitlePosition.Text = "Goto sub pos";
             this.buttonGotoStartSubtitlePosition.UseVisualStyleBackColor = true;
             this.buttonGotoStartSubtitlePosition.Click += new System.EventHandler(this.ButtonGotoStartSubtitlePositionClick);
-            //
+            // 
             // buttonFindTextStart
-            //
+            // 
             this.buttonFindTextStart.Location = new System.Drawing.Point(359, 37);
             this.buttonFindTextStart.Name = "buttonFindTextStart";
             this.buttonFindTextStart.Size = new System.Drawing.Size(70, 21);
@@ -163,9 +166,9 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonFindTextStart.Text = "Find text...";
             this.buttonFindTextStart.UseVisualStyleBackColor = true;
             this.buttonFindTextStart.Click += new System.EventHandler(this.ButtonFindTextStartClick);
-            //
+            // 
             // buttonStartThreeSecondsBack
-            //
+            // 
             this.buttonStartThreeSecondsBack.Location = new System.Drawing.Point(6, 37);
             this.buttonStartThreeSecondsBack.Name = "buttonStartThreeSecondsBack";
             this.buttonStartThreeSecondsBack.Size = new System.Drawing.Size(60, 21);
@@ -173,9 +176,9 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonStartThreeSecondsBack.Text = "< 3 secs";
             this.buttonStartThreeSecondsBack.UseVisualStyleBackColor = true;
             this.buttonStartThreeSecondsBack.Click += new System.EventHandler(this.ButtonStartThreeSecondsBackClick);
-            //
+            // 
             // buttonStartHalfASecondBack
-            //
+            // 
             this.buttonStartHalfASecondBack.Location = new System.Drawing.Point(72, 37);
             this.buttonStartHalfASecondBack.Name = "buttonStartHalfASecondBack";
             this.buttonStartHalfASecondBack.Size = new System.Drawing.Size(60, 21);
@@ -183,18 +186,18 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonStartHalfASecondBack.Text = "< ½ sec";
             this.buttonStartHalfASecondBack.UseVisualStyleBackColor = true;
             this.buttonStartHalfASecondBack.Click += new System.EventHandler(this.ButtonStartHalfASecondBackClick);
-            //
+            // 
             // comboBoxStartTexts
-            //
+            // 
             this.comboBoxStartTexts.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxStartTexts.FormattingEnabled = true;
             this.comboBoxStartTexts.Location = new System.Drawing.Point(7, 10);
             this.comboBoxStartTexts.Name = "comboBoxStartTexts";
             this.comboBoxStartTexts.Size = new System.Drawing.Size(422, 21);
             this.comboBoxStartTexts.TabIndex = 0;
-            //
+            // 
             // groupBoxEndScene
-            //
+            // 
             this.groupBoxEndScene.Controls.Add(this.MediaPlayerEnd);
             this.groupBoxEndScene.Controls.Add(this.panelControlsEnd);
             this.groupBoxEndScene.Location = new System.Drawing.Point(468, 65);
@@ -204,23 +207,27 @@ namespace Nikse.SubtitleEdit.Forms
             this.groupBoxEndScene.TabStop = false;
             this.groupBoxEndScene.Text = "End scene";
             this.groupBoxEndScene.Enter += new System.EventHandler(this.GroupBoxEndSceneEnter);
-            //
+            // 
             // MediaPlayerEnd
-            //
+            // 
             this.MediaPlayerEnd.BackColor = System.Drawing.Color.Black;
             this.MediaPlayerEnd.CurrentPosition = 0D;
+            this.MediaPlayerEnd.FontSizeFactor = 1F;
             this.MediaPlayerEnd.Location = new System.Drawing.Point(6, 34);
             this.MediaPlayerEnd.Name = "MediaPlayerEnd";
             this.MediaPlayerEnd.ShowStopButton = true;
             this.MediaPlayerEnd.Size = new System.Drawing.Size(438, 287);
             this.MediaPlayerEnd.SubtitleText = "";
             this.MediaPlayerEnd.TabIndex = 14;
+            this.MediaPlayerEnd.TextRightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.MediaPlayerEnd.VideoHeight = 0;
             this.MediaPlayerEnd.VideoPlayer = null;
+            this.MediaPlayerEnd.VideoWidth = 0;
             this.MediaPlayerEnd.Volume = 0D;
             this.MediaPlayerEnd.OnButtonClicked += new System.EventHandler(this.MediaPlayerEnd_OnButtonClicked);
-            //
+            // 
             // panelControlsEnd
-            //
+            // 
             this.panelControlsEnd.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.panelControlsEnd.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panelControlsEnd.Controls.Add(this.buttonEndVerify);
@@ -233,9 +240,9 @@ namespace Nikse.SubtitleEdit.Forms
             this.panelControlsEnd.Name = "panelControlsEnd";
             this.panelControlsEnd.Size = new System.Drawing.Size(438, 68);
             this.panelControlsEnd.TabIndex = 1;
-            //
+            // 
             // buttonEndVerify
-            //
+            // 
             this.buttonEndVerify.Location = new System.Drawing.Point(139, 37);
             this.buttonEndVerify.Name = "buttonEndVerify";
             this.buttonEndVerify.Size = new System.Drawing.Size(118, 21);
@@ -243,9 +250,9 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonEndVerify.Text = "Play 2 secs and back";
             this.buttonEndVerify.UseVisualStyleBackColor = true;
             this.buttonEndVerify.Click += new System.EventHandler(this.ButtonEndVerifyClick);
-            //
+            // 
             // buttonGotoEndSubtitlePosition
-            //
+            // 
             this.buttonGotoEndSubtitlePosition.Location = new System.Drawing.Point(263, 37);
             this.buttonGotoEndSubtitlePosition.Name = "buttonGotoEndSubtitlePosition";
             this.buttonGotoEndSubtitlePosition.Size = new System.Drawing.Size(90, 21);
@@ -253,9 +260,9 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonGotoEndSubtitlePosition.Text = "Goto sub pos";
             this.buttonGotoEndSubtitlePosition.UseVisualStyleBackColor = true;
             this.buttonGotoEndSubtitlePosition.Click += new System.EventHandler(this.ButtonGotoEndSubtitlePositionClick);
-            //
+            // 
             // buttonFindTextEnd
-            //
+            // 
             this.buttonFindTextEnd.Location = new System.Drawing.Point(359, 37);
             this.buttonFindTextEnd.Name = "buttonFindTextEnd";
             this.buttonFindTextEnd.Size = new System.Drawing.Size(70, 21);
@@ -263,9 +270,9 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonFindTextEnd.Text = "Find text...";
             this.buttonFindTextEnd.UseVisualStyleBackColor = true;
             this.buttonFindTextEnd.Click += new System.EventHandler(this.ButtonFindTextEndClick);
-            //
+            // 
             // buttonThreeSecondsBack
-            //
+            // 
             this.buttonThreeSecondsBack.Location = new System.Drawing.Point(7, 37);
             this.buttonThreeSecondsBack.Name = "buttonThreeSecondsBack";
             this.buttonThreeSecondsBack.Size = new System.Drawing.Size(60, 21);
@@ -273,9 +280,9 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonThreeSecondsBack.Text = "< 3 secs";
             this.buttonThreeSecondsBack.UseVisualStyleBackColor = true;
             this.buttonThreeSecondsBack.Click += new System.EventHandler(this.ButtonThreeSecondsBackClick);
-            //
+            // 
             // buttonEndHalfASecondBack
-            //
+            // 
             this.buttonEndHalfASecondBack.Location = new System.Drawing.Point(73, 37);
             this.buttonEndHalfASecondBack.Name = "buttonEndHalfASecondBack";
             this.buttonEndHalfASecondBack.Size = new System.Drawing.Size(60, 21);
@@ -283,18 +290,18 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonEndHalfASecondBack.Text = "< ½ sec";
             this.buttonEndHalfASecondBack.UseVisualStyleBackColor = true;
             this.buttonEndHalfASecondBack.Click += new System.EventHandler(this.ButtonEndHalfASecondBackClick);
-            //
+            // 
             // comboBoxEndTexts
-            //
+            // 
             this.comboBoxEndTexts.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxEndTexts.FormattingEnabled = true;
             this.comboBoxEndTexts.Location = new System.Drawing.Point(7, 10);
             this.comboBoxEndTexts.Name = "comboBoxEndTexts";
             this.comboBoxEndTexts.Size = new System.Drawing.Size(422, 21);
             this.comboBoxEndTexts.TabIndex = 0;
-            //
+            // 
             // buttonCancel
-            //
+            // 
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.buttonCancel.Location = new System.Drawing.Point(830, 498);
@@ -303,20 +310,20 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonCancel.TabIndex = 4;
             this.buttonCancel.Text = "C&ancel";
             this.buttonCancel.UseVisualStyleBackColor = true;
-            //
+            // 
             // labelVideoInfo
-            //
+            // 
             this.labelVideoInfo.AutoSize = true;
             this.labelVideoInfo.Location = new System.Drawing.Point(6, 16);
             this.labelVideoInfo.Name = "labelVideoInfo";
             this.labelVideoInfo.Size = new System.Drawing.Size(84, 13);
             this.labelVideoInfo.TabIndex = 13;
             this.labelVideoInfo.Text = "No video loaded";
-            //
+            // 
             // groupBoxMovieInfo
-            //
-            this.groupBoxMovieInfo.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            // 
+            this.groupBoxMovieInfo.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBoxMovieInfo.Controls.Add(this.labelVideoInfo);
             this.groupBoxMovieInfo.Location = new System.Drawing.Point(132, 8);
             this.groupBoxMovieInfo.Name = "groupBoxMovieInfo";
@@ -324,9 +331,9 @@ namespace Nikse.SubtitleEdit.Forms
             this.groupBoxMovieInfo.TabIndex = 14;
             this.groupBoxMovieInfo.TabStop = false;
             this.groupBoxMovieInfo.Text = "Movie info";
-            //
+            // 
             // buttonSync
-            //
+            // 
             this.buttonSync.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.buttonSync.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.buttonSync.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -337,13 +344,13 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonSync.Text = "Sync!";
             this.buttonSync.UseVisualStyleBackColor = true;
             this.buttonSync.Click += new System.EventHandler(this.ButtonSyncClick);
-            //
+            // 
             // openFileDialog1
-            //
+            // 
             this.openFileDialog1.FileName = "openFileDialog1";
-            //
+            // 
             // labelTip
-            //
+            // 
             this.labelTip.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.labelTip.AutoSize = true;
             this.labelTip.ForeColor = System.Drawing.Color.Gray;
@@ -352,13 +359,13 @@ namespace Nikse.SubtitleEdit.Forms
             this.labelTip.Size = new System.Drawing.Size(332, 13);
             this.labelTip.TabIndex = 15;
             this.labelTip.Text = "Tip: Use <ctrl+arrow left/right> keys to move 100 ms back/forward";
-            //
+            // 
             // timerProgressBarRefresh
-            //
+            // 
             this.timerProgressBarRefresh.Tick += new System.EventHandler(this.timerProgressBarRefresh_Tick);
-            //
+            // 
             // VisualSync
-            //
+            // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(927, 525);
@@ -420,7 +427,6 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.Button buttonEndVerify;
         private Nikse.SubtitleEdit.Controls.VideoPlayerContainer MediaPlayerStart;
         private Nikse.SubtitleEdit.Controls.VideoPlayerContainer MediaPlayerEnd;
-        private System.Windows.Forms.Timer timer2;
         private System.Windows.Forms.Label labelTip;
         private System.Windows.Forms.Timer timerProgressBarRefresh;
     }
