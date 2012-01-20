@@ -86,16 +86,78 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
             _subFile = new FileStream(subFileName, FileMode.Create);
         }
 
-        public void WriteEndianWord(int i)
+        //public void WriteEndianWord(int i)
+        //{
+        //    _subFile.WriteByte((byte)(i / 256));
+        //    _subFile.WriteByte((byte)(i % 256));
+        //}
+
+        public void WriteEndianWord(int i, Stream stream)
         {
-            _subFile.WriteByte((byte)(i / 256));
-            _subFile.WriteByte((byte)(i % 256));
+            stream.WriteByte((byte)(i / 256));
+            stream.WriteByte((byte)(i % 256));
         }
 
-        private byte[] GetImageBuffer()
-        { 
-            var buffer = new byte[];
-            return buffer;
+        private byte[] GetSubImageBuffer(RunLengthTwoParts twoPartBuffer, NikseBitmap nbmp, Paragraph p)
+        {
+            MemoryStream ms = new MemoryStream();
+
+            // sup picture datasize
+            WriteEndianWord(twoPartBuffer.Length + 42, ms);
+
+            // first display control sequence table address
+            int startDisplayControlSequenceTableAddress = twoPartBuffer.Length + 4;
+            WriteEndianWord(startDisplayControlSequenceTableAddress, ms);
+
+            //if (twoPartBuffer.Length < 0x800 - (_subFile.Position - start))
+            {
+                // Write image
+                int imageTopFieldDataAddress = (int)(4);
+                ms.Write(twoPartBuffer.Buffer1, 0, twoPartBuffer.Buffer1.Length);
+                int imageBottomFieldDataAddress = 4 + twoPartBuffer.Buffer1.Length;
+                ms.Write(twoPartBuffer.Buffer2, 0, twoPartBuffer.Buffer2.Length);
+
+                // Write zero delay
+                ms.WriteByte(0);
+                ms.WriteByte(0);
+
+                // next display control sequence table address (use current is last)
+                WriteEndianWord(startDisplayControlSequenceTableAddress + 24, ms); // start of display control sequence table address
+
+                // Control command 1 = ForcedStartDisplay
+                ms.WriteByte(1);
+
+                // Control command 3 = SetColor
+                WriteColors(ms); // 3 bytes
+
+                // Control command 4 = SetContrast                
+                WriteContrast(ms); // 3 bytes
+
+                // Control command 5 = SetDisplayArea                
+                WriteDisplayArea(ms, nbmp); // 7 bytes
+
+                // Control command 6 = SetPixelDataAddress
+                WritePixelDataAddress(ms, imageTopFieldDataAddress, imageBottomFieldDataAddress); // 5 bytes
+
+                // Control command exit
+                ms.WriteByte(255); // 1 bytes
+
+                // Control Sequence Table
+                // Write delay - subtitle duration
+                WriteEndianWord((int)((Convert.ToInt32(p.Duration.TotalMilliseconds * 90.0 - 1023) >> 10)), ms); 
+
+                // next display control sequence table address (use current is last)
+                WriteEndianWord(startDisplayControlSequenceTableAddress + 24, ms); // start of display control sequence table address
+
+                // Control command 2 = StopDisplay
+                ms.WriteByte(2);
+            }
+            //else
+            //{
+            //    System.Windows.Forms.MessageBox.Show("Too long for payload!!!");
+            //}
+
+            return ms.ToArray();
         }
 
         public void WriteParagraph(Paragraph p, Bitmap bmp)
@@ -129,75 +191,23 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
 
             _subFile.WriteByte((byte)_languageStreamId); //sub-stream number, 32=english
 
-            // sup picture datasize
-            WriteEndianWord(twoPartBuffer.Length + 42);
+            var imageBuffer = GetSubImageBuffer(twoPartBuffer, nbmp, p);
+            _subFile.Write(imageBuffer, 0, imageBuffer.Length);
 
-            // first display control sequence table address
-            int startDisplayControlSequenceTableAddress = twoPartBuffer.Length + 4;
-            WriteEndianWord(startDisplayControlSequenceTableAddress);
-            
-            if (twoPartBuffer.Length < 0x800 - (_subFile.Position - start))
-            {
-                // Write image
-                int imageTopFieldDataAddress = (int) (4);
-                _subFile.Write(twoPartBuffer.Buffer1, 0, twoPartBuffer.Buffer1.Length);
-                int imageBottomFieldDataAddress = 4 + twoPartBuffer.Buffer1.Length;
-                _subFile.Write(twoPartBuffer.Buffer2, 0, twoPartBuffer.Buffer2.Length);
-
-                // Write zero delay
-                _subFile.WriteByte(0);
-                _subFile.WriteByte(0);
-
-                // next display control sequence table address (use current is last)
-                WriteEndianWord(startDisplayControlSequenceTableAddress+24); // start of display control sequence table address
-
-                // Control command 1 = ForcedStartDisplay
-                _subFile.WriteByte(1);
-
-                // Control command 3 = SetColor
-                WriteColors(_subFile); // 3 bytes
-
-                // Control command 4 = SetContrast                
-                WriteContrast(_subFile); // 3 bytes
-
-                // Control command 5 = SetDisplayArea                
-                WriteDisplayArea(_subFile, nbmp); // 7 bytes
-
-                // Control command 6 = SetPixelDataAddress
-                WritePixelDataAddress(_subFile, imageTopFieldDataAddress, imageBottomFieldDataAddress); // 5 bytes
-
-                // Control command exit
-                _subFile.WriteByte(255); // 1 bytes
-
-                // Control Sequence Table
-                // Write delay - subtitle duration
-                WriteEndianWord((int)((Convert.ToInt32(p.Duration.TotalMilliseconds * 90.0 - 1023) >> 10))); //
-
-                // next display control sequence table address (use current is last)
-                WriteEndianWord(startDisplayControlSequenceTableAddress+24); // start of display control sequence table address
-
-                // Control command 2 = StopDisplay
-                _subFile.WriteByte(2);
-            }
-            //else
-            //{
-            //    System.Windows.Forms.MessageBox.Show("Too long for payload!!!");
-            //}
-
-            for (long i = _subFile.Position - start; i < 0x800; i++) // 2048 packet size - pad with 0xff
+            while  (_subFile.Position % 0x800 != 0) // 2048 packet size - pad with 0xff
                 _subFile.WriteByte(0xff);
         }
 
-        private void WritePixelDataAddress(FileStream _subFile, int imageTopFieldDataAddress, int imageBottomFieldDataAddress)
+        private void WritePixelDataAddress(Stream stream, int imageTopFieldDataAddress, int imageBottomFieldDataAddress)
         {
-            _subFile.WriteByte(6);
-            WriteEndianWord(imageTopFieldDataAddress);
-            WriteEndianWord(imageBottomFieldDataAddress);
+            stream.WriteByte(6);
+            WriteEndianWord(imageTopFieldDataAddress, stream);
+            WriteEndianWord(imageBottomFieldDataAddress, stream);
         }
 
-        private void WriteDisplayArea(FileStream _subFile, NikseBitmap nbmp)
+        private void WriteDisplayArea(Stream stream, NikseBitmap nbmp)
         {
-            _subFile.WriteByte(5);
+            stream.WriteByte(5);
 
             // Write 6 bytes of area - starting X, ending X, starting Y, ending Y, each 12 bits
             ushort startX = (ushort) ((_screenWidth - nbmp.Width) / 2);
@@ -205,36 +215,36 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
             ushort startY = (ushort)(_screenHeight - nbmp.Height - _bottomMargin);
             ushort endY = (ushort)(startY + nbmp.Height-1);
 
-            WriteEndianWord((ushort)(startX << 4 | endX >> 8)); // 16 - 12 start x + 4 end x
-            WriteEndianWord((ushort)(endX << 8 | startY >> 4)); // 16 - 8 endx + 8 starty
-            WriteEndianWord((ushort)(startY << 12 | endY));     // 16 - 4 start y + 12 end y
+            WriteEndianWord((ushort)(startX << 4 | endX >> 8), stream); // 16 - 12 start x + 4 end x
+            WriteEndianWord((ushort)(endX << 8 | startY >> 4), stream); // 16 - 8 endx + 8 starty
+            WriteEndianWord((ushort)(startY << 12 | endY), stream);     // 16 - 4 start y + 12 end y
         }
 
         /// <summary>
         /// Directly provides the four contrast (alpha blend) values to associate with the four pixel values. One nibble per pixel value for a total of 2 bytes. 0x0 = transparent, 0xF = opaque 
         /// </summary>
         /// <param name="_subFile"></param>
-        private void WriteContrast(FileStream _subFile)
+        private void WriteContrast(Stream stream)
         {
-            _subFile.WriteByte(4);
-            _subFile.WriteByte((byte)((_emphasis2.A << 4) | _emphasis1.A)); // emphasis2 + emphasis1
-            _subFile.WriteByte((byte)((_pattern.A << 4) | _background.A)); // pattern + background
+            stream.WriteByte(4);
+            stream.WriteByte((byte)((_emphasis2.A << 4) | _emphasis1.A)); // emphasis2 + emphasis1
+            stream.WriteByte((byte)((_pattern.A << 4) | _background.A)); // pattern + background
         }
 
         /// <summary>
         /// provides four indices into the CLUT for the current PGC to associate with the four pixel values. One nibble per pixel value for a total of 2 bytes.
         /// </summary>
-        private void WriteColors(FileStream _subFile)
+        private void WriteColors(Stream stream)
         {
             // Index to palette
             byte emphasis2 = 3;
             byte emphasis1 = 2;
             byte pattern = 1;
             byte background = 0;
-                
-            _subFile.WriteByte(3);
-            _subFile.WriteByte((byte)((emphasis2 << 4) | emphasis1)); // emphasis2 + emphasis1
-            _subFile.WriteByte((byte)((pattern << 4) | background)); // pattern + background
+
+            stream.WriteByte(3);
+            stream.WriteByte((byte)((emphasis2 << 4) | emphasis1)); // emphasis2 + emphasis1
+            stream.WriteByte((byte)((pattern << 4) | background)); // pattern + background
         }
 
         /// <summary>
