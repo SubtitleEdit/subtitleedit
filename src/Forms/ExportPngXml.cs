@@ -159,7 +159,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (_exportType == "BLURAYSUP")
                     binarySubtitleFile = new FileStream(saveFileDialog1.FileName, FileMode.Create);
                 else if (_exportType == "VOBSUB")
-                    vobSubWriter = new VobSubWriter(saveFileDialog1.FileName, width, height, 15, 32, _subtitleColor, _borderColor);
+                    vobSubWriter = new VobSubWriter(saveFileDialog1.FileName, width, height, 15, 32, _subtitleColor, _borderColor, GetOutlineColor(_borderColor), "English", "en");
 
                 progressBar1.Value = 0;
                 progressBar1.Maximum = _subtitle.Paragraphs.Count-1;
@@ -319,6 +319,13 @@ namespace Nikse.SubtitleEdit.Forms
             _borderWidth = float.Parse(comboBoxBorderWidth.SelectedItem.ToString());
         }
 
+        private static Color GetOutlineColor(Color borderColor)
+        { 
+            if (borderColor.R + borderColor.G + borderColor.B < 30)
+                return Color.FromArgb(200, 75, 75, 75);
+            return Color.FromArgb(200, borderColor.A, borderColor.R, borderColor.B);
+        }
+
         private Bitmap GenerateImageFromTextWithStyle(string text)
         {
             MakeBitmapParameter mbp = new MakeBitmapParameter();
@@ -330,7 +337,15 @@ namespace Nikse.SubtitleEdit.Forms
             mbp.SubtitleColor = _subtitleColor;
             mbp.SubtitleFontSize = _subtitleFontSize;
             mbp.P = new Paragraph(text, 0, 0);
-            return GenerateImageFromTextWithStyle(mbp);
+
+            var bmp = GenerateImageFromTextWithStyle(mbp);
+            if (_exportType == "VOBSUB")
+            {
+                NikseBitmap nbmp = new NikseBitmap(bmp);
+                nbmp.ConverToFourColors(Color.Transparent, _subtitleColor, _borderColor, GetOutlineColor(_borderColor));
+                bmp = nbmp.GetBitmap();
+            }
+            return bmp;
         }
 
         private static Bitmap GenerateImageFromTextWithStyle(MakeBitmapParameter parameter)
@@ -476,8 +491,8 @@ namespace Nikse.SubtitleEdit.Forms
             g.Dispose();
             NikseBitmap nbmp = new NikseBitmap(bmp);
             nbmp.CropTransparentSides(5);
+
             return nbmp.GetBitmap();
-            //return bmp;
         }
 
         private static string RemoveSubStationAlphaFormatting(string s)

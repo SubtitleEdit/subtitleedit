@@ -1,5 +1,19 @@
 Subtitle Edit Changelog
 
+3.2.4 (xth February 2012)
+ * NEW:
+   * Export to VobSub format
+   * Added a few new subtitle formats (now more than 80!)
+ * IMPROVED:
+   * Updated Basque languaged file - thx Xabier Aramendi
+   * Export images alignment - thx Marcin
+ * FIXED:
+   * Export to Blu-ray sup timestamps
+   * Crash in Visual Sync - thx XhmikosR
+   * Incorrect timestamps in MicroDVD format after using
+     "Set start time and offset the rest" + a few more buttons - thx whuras
+
+
 3.2.3 (13th January 2012)
  * NEW:
    * Added Brazilian Portuguese - thx XXXXXXXXXX 

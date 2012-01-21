@@ -69,8 +69,11 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
         Color _pattern = Color.White;
         Color _emphasis1 = Color.Black;
         Color _emphasis2 = Color.FromArgb(240, Color.Black);
+        string _languageName = "English";
+        string _languageNameShort = "en";
 
-        public VobSubWriter(string subFileName, int screenWidth, int screenHeight, int bottomMargin, int languageStreamId, Color pattern, Color emphasis1)
+        public VobSubWriter(string subFileName, int screenWidth, int screenHeight, int bottomMargin, int languageStreamId, Color pattern, Color emphasis1, Color emphasis2, 
+                            string languageName, string languageNameShort)
         {
             _subFileName = subFileName;
             _screenWidth = screenWidth;
@@ -79,7 +82,9 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
             _languageStreamId = languageStreamId;
             _pattern = pattern;
             _emphasis1 = emphasis1;
-            _emphasis2 = Color.FromArgb(225, emphasis1);
+            _emphasis2 = emphasis2;
+            _languageName = languageName;
+            _languageNameShort = languageNameShort;
             _idx = CreateIdxHeader();
             _subFile = new FileStream(subFileName, FileMode.Create);
         }
@@ -351,8 +356,8 @@ custom colors: OFF, tridx: 0000, colors: 000000, 000000, 000000, 000000
 # Language index in use
 langidx: 0
 
-# English
-id: en, index: 0
+# " + _languageName + @"
+id: " + _languageNameShort + @", index: 0
 # Decomment next line to activate alternative name in DirectVobSub / Windows Media Player 6.x
 # alt: English");
             return sb;

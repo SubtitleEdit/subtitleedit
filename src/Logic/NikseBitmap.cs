@@ -405,6 +405,9 @@ namespace Nikse.SubtitleEdit.Logic
                 return;
 
             int newWidth = rightEnd - leftStart + 1;
+            if (newWidth <= 0)
+                return;
+
             var newBitmapData = new byte[newWidth * Height * 4];
             int index = 0;
             for (int y = 0; y < Height; y++)

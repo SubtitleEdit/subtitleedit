@@ -84,13 +84,13 @@ namespace Nikse.SubtitleEdit.Logic
         readonly List<string> ArrayOfCodingMode = new List<string> { "MPEG1", "MPEG2" };
         readonly List<string> ArrayOfNTSCResolution = new List<string> { "720x480", "704x480", "352x480", "352x240" };
         readonly List<string> ArrayOfPALResolution = new List<string> { "720x576", "704x576", "352x576", "352x288" };
-        readonly List<string> ArrayOfLangageCode = new List<string> { "  ", "aa", "ab", "af", "am", "ar", "as", "ay", "az", "ba", "be", "bg", "bh", "bi", "bn", "bo", "br", "ca", "co", "cs", "cy", "da", "de", "dz", "el",
+        public static List<string> ArrayOfLanguageCode = new List<string> { "  ", "aa", "ab", "af", "am", "ar", "as", "ay", "az", "ba", "be", "bg", "bh", "bi", "bn", "bo", "br", "ca", "co", "cs", "cy", "da", "de", "dz", "el",
            "en", "eo", "es", "et", "eu", "fa", "fi", "fj", "fo", "fr", "fy", "ga", "gd", "gl", "gn", "gu", "ha", "he", "hi", "hr", "hu", "hy", "ia", "id", "ie", "ik",
            "in", "is", "it", "iu", "iw", "ja", "ji", "jw", "ka", "kk", "kl", "km", "kn", "ko", "ks", "ku", "ky", "la", "ln", "lo", "lt", "lv", "mg", "mi", "mk", "ml",
            "mn", "mo", "mr", "ms", "mt", "my", "na", "ne", "nl", "no", "oc", "om", "or", "pa", "pl", "ps", "pt", "qu", "rm", "rn", "ro", "ru", "rw", "sa", "sd", "sg",
            "sh", "si", "sk", "sl", "sm", "sn", "so", "sq", "sr", "ss", "st", "su", "sv", "sw", "ta", "te", "tg", "th", "ti", "tk", "tl", "tn", "to", "tr", "ts", "tt",
            "tw", "ug", "uk", "ur", "uz", "vi", "vo", "wo", "xh", "yi", "yo", "za", "zh", "zu", ""};
-        readonly List<string> ArrayOfLangage = new List<string> { "Not Specified", "Afar", "Abkhazian", "Afrikaans", "Amharic", "Arabic", "Assamese", "Aymara", "Azerbaijani", "Bashkir", "Byelorussian", "Bulgarian", "Bihari", "Bislama", "Bengali; Bangla", "Tibetan", "Breton", "Catalan", "Corsican", "Czech(Ceske)", "Welsh", "Dansk", "Deutsch", "Bhutani", "Greek",
+        public static List<string> ArrayOfLanguage = new List<string> { "Not Specified", "Afar", "Abkhazian", "Afrikaans", "Amharic", "Arabic", "Assamese", "Aymara", "Azerbaijani", "Bashkir", "Byelorussian", "Bulgarian", "Bihari", "Bislama", "Bengali; Bangla", "Tibetan", "Breton", "Catalan", "Corsican", "Czech(Ceske)", "Welsh", "Dansk", "Deutsch", "Bhutani", "Greek",
            "English", "Esperanto", "Espanol", "Estonian", "Basque", "Persian", "Suomi", "Fiji", "Faroese", "Français", "Frisian", "Irish", "Scots Gaelic", "Galician", "Guarani", "Gujarati", "Hausa", "Hebrew", "Hindi", "Hrvatski", "Magyar", "Armenian", "Interlingua", "Indonesian", "Interlingue", "Inupiak",
            "Indonesian", "Islenska", "Italiano", "Inuktitut", "Hebrew", "Japanese", "Yiddish", "Javanese", "Georgian", "Kazakh", "Greenlandic", "Cambodian", "Kannada", "Korean", "Kashmiri", "Kurdish", "Kirghiz", "Latin", "Lingala", "Laothian", "Lithuanian", "Latvian, Lettish", "Malagasy", "Maori", "Macedonian", "Malayalam",
            "Mongolian", "Moldavian", "Marathi", "Malay", "Maltese", "Burmese", "Nauru", "Nepali", "Nederlands", "Norsk", "Occitan", "(Afan) Oromo", "Oriya", "Punjabi", "Polish", "Pashto, Pushto", "Portugues", "Quechua", "Rhaeto-Romance", "Kirundi", "Romanian", "Russian", "Kinyarwanda", "Sanskrit", "Sindhi", "Sangho",
@@ -159,8 +159,8 @@ namespace Nikse.SubtitleEdit.Logic
                 audioStream.Channels = BinToInt(MidStr(data, 13, 3)) + 1;
                 _fs.Read(buffer, 0, 2);
                 audioStream.LangageCode = Convert.ToChar(buffer[0]).ToString() + Convert.ToChar(buffer[1]).ToString();
-                if (ArrayOfLangageCode.Contains(audioStream.LangageCode))
-                    audioStream.Langage = ArrayOfLangage[ArrayOfLangageCode.IndexOf(audioStream.LangageCode)];
+                if (ArrayOfLanguageCode.Contains(audioStream.LangageCode))
+                    audioStream.Langage = ArrayOfLanguage[ArrayOfLanguageCode.IndexOf(audioStream.LangageCode)];
                 _fs.Seek(1, SeekOrigin.Current);
                 audioStream.Extension = ArrayOfAudioExtension[_fs.ReadByte()];
                 _fs.Seek(2, SeekOrigin.Current);
@@ -235,11 +235,11 @@ namespace Nikse.SubtitleEdit.Logic
         private string InterpretLangageCode(string code)
         {
             int i = 0;
-            while (ArrayOfLangageCode[i] != code && i < 143)
+            while (ArrayOfLanguageCode[i] != code && i < 143)
             {
                 i++;
             }
-            return ArrayOfLangage[i];
+            return ArrayOfLanguage[i];
         }
 
         private void ParseVtsPgci()
