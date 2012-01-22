@@ -865,7 +865,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             if (_codePage == -1)
                 GetCodePage(buffer, index, endDelimiter);
 
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             index = FEIndex + 3;
             while (index < buffer.Length && buffer[index] != endDelimiter)
             {
@@ -907,11 +907,15 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 p.StartTime = GetTimeCode(timeStartIndex + 1, buffer);
                 p.EndTime = GetTimeCode(timeStartIndex + 5, buffer);
             }
-            else if (buffer[timeStartIndex+3] == 0x60)
+            else if (buffer[timeStartIndex + 3] == 0x60)
             {
                 timeStartIndex += 3;
                 p.StartTime = GetTimeCode(timeStartIndex + 1, buffer);
                 p.EndTime = GetTimeCode(timeStartIndex + 5, buffer);
+            }
+            else
+            {
+                return null;
             }
             return p;
         }
