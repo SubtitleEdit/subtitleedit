@@ -268,7 +268,7 @@ namespace Nikse.SubtitleEdit.Controls
             {
                 Items[i].UseItemStyleForSubItems = false;
                 if (_settings.Tools.ListViewSyntaxColorDuration)
-                {                    
+                {
                     double charactersPerSecond = Utilities.GetCharactersPerSecond(paragraph);
                     if (charactersPerSecond > Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds + 7)
                         Items[i].SubItems[ColumnIndexDuration].BackColor = System.Drawing.Color.Red;
@@ -319,7 +319,7 @@ namespace Nikse.SubtitleEdit.Controls
                         Items[i].SubItems[ColumnIndexText].BackColor = Color.Red;
                     }
                 }
-                if (_settings.Tools.ListViewSyntaxMoreThanTwoLines && 
+                if (_settings.Tools.ListViewSyntaxMoreThanTwoLines &&
                     Items[i].SubItems[ColumnIndexText].BackColor != Color.Orange &&
                     Items[i].SubItems[ColumnIndexText].BackColor != Color.Red)
                 {
@@ -327,7 +327,7 @@ namespace Nikse.SubtitleEdit.Controls
                     if (newLines == 3)
                         Items[i].SubItems[ColumnIndexText].BackColor = Color.Orange;
                     else if (newLines > 3)
-                        Items[i].SubItems[ColumnIndexText].BackColor = Color.Red; 
+                        Items[i].SubItems[ColumnIndexText].BackColor = Color.Red;
                 }
             }
         }

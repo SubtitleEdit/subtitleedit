@@ -94,11 +94,11 @@ namespace Nikse.SubtitleEdit.Logic
             emphasis2Buffer[0] = (byte)emphasis2.B;
             emphasis2Buffer[1] = (byte)emphasis2.G;
             emphasis2Buffer[2] = (byte)emphasis2.R;
-            emphasis2Buffer[3] = (byte)emphasis2.A;           
+            emphasis2Buffer[3] = (byte)emphasis2.A;
 
             for (int i = 0; i < _bitmapData.Length; i += 4)
-            {                               
-                int smallestDiff = 10000; 
+            {
+                int smallestDiff = 10000;
                 byte[] buffer = backgroundBuffer;
                 if (backgroundBuffer[3] == 0 && _bitmapData[i + 3] < 10) // transparent
                 {

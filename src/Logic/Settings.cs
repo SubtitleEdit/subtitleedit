@@ -969,7 +969,7 @@ namespace Nikse.SubtitleEdit.Logic
                 settings.Tools.ListViewSyntaxColorLongLines = Convert.ToBoolean(subNode.InnerText);
             subNode = node.SelectSingleNode("ListViewSyntaxMoreThanTwoLines");
             if (subNode != null)
-                settings.Tools.ListViewSyntaxMoreThanTwoLines = Convert.ToBoolean(subNode.InnerText);           
+                settings.Tools.ListViewSyntaxMoreThanTwoLines = Convert.ToBoolean(subNode.InnerText);
             subNode = node.SelectSingleNode("ListViewSyntaxColorOverlap");
             if (subNode != null)
                 settings.Tools.ListViewSyntaxColorOverlap = Convert.ToBoolean(subNode.InnerText);
@@ -1562,7 +1562,7 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("GoogleApiKey", settings.Tools.GoogleApiKey);
             textWriter.WriteElementString("ListViewSyntaxColorDuration", settings.Tools.ListViewSyntaxColorDuration.ToString());
             textWriter.WriteElementString("ListViewSyntaxColorLongLines", settings.Tools.ListViewSyntaxColorLongLines.ToString());
-            textWriter.WriteElementString("ListViewSyntaxMoreThanTwoLines", settings.Tools.ListViewSyntaxMoreThanTwoLines.ToString());            
+            textWriter.WriteElementString("ListViewSyntaxMoreThanTwoLines", settings.Tools.ListViewSyntaxMoreThanTwoLines.ToString());
             textWriter.WriteElementString("ListViewSyntaxColorOverlap", settings.Tools.ListViewSyntaxColorOverlap.ToString());
             textWriter.WriteEndElement();
 

@@ -6,7 +6,7 @@ using System.Text.RegularExpressions;
 namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
     /// <summary>
-    ///4.01		5.12
+    ///4.01     5.12
     ///Dit is de dag.
     /// </summary>
     public class UnknownSubtitle12 : SubtitleFormat
@@ -39,7 +39,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             LoadSubtitle(subtitle, lines, fileName);
             return subtitle.Paragraphs.Count > _errorCount;
         }
-       
+
         private string MakeTimeCode(TimeCode tc)
         {
             return string.Format("{0:0.00}", tc.TotalSeconds);
@@ -60,7 +60,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         }
 
         private TimeCode DecodeTimeCode(string timeCode)
-        {            
+        {
             return new TimeCode(TimeSpan.FromSeconds(double.Parse(timeCode.Trim())));
         }
 
@@ -102,6 +102,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             }
             subtitle.Renumber(1);
         }
-        
+
     }
 }
