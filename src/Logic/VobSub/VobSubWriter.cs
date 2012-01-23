@@ -72,7 +72,7 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
         string _languageName = "English";
         string _languageNameShort = "en";
 
-        public VobSubWriter(string subFileName, int screenWidth, int screenHeight, int bottomMargin, int languageStreamId, Color pattern, Color emphasis1, Color emphasis2, 
+        public VobSubWriter(string subFileName, int screenWidth, int screenHeight, int bottomMargin, int languageStreamId, Color pattern, Color emphasis1, Color emphasis2,
                             string languageName, string languageNameShort)
         {
             _subFileName = subFileName;
@@ -125,10 +125,10 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
             // Control command 3 = SetColor
             WriteColors(ms); // 3 bytes
 
-            // Control command 4 = SetContrast                
+            // Control command 4 = SetContrast
             WriteContrast(ms); // 3 bytes
 
-            // Control command 5 = SetDisplayArea                
+            // Control command 5 = SetDisplayArea
             WriteDisplayArea(ms, nbmp); // 7 bytes
 
             // Control command 6 = SetPixelDataAddress
@@ -139,7 +139,7 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
 
             // Control Sequence Table
             // Write delay - subtitle duration
-            WriteEndianWord((int)((Convert.ToInt32(p.Duration.TotalMilliseconds * 90.0 - 1023) >> 10)), ms); 
+            WriteEndianWord((int)((Convert.ToInt32(p.Duration.TotalMilliseconds * 90.0 - 1023) >> 10)), ms);
 
             // next display control sequence table address (use current is last)
             WriteEndianWord(startDisplayControlSequenceTableAddress + 24, ms); // start of display control sequence table address
@@ -153,7 +153,7 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
         public void WriteParagraph(Paragraph p, Bitmap bmp)
         {
             // timestamp: 00:00:33:900, filepos: 000000000
-            _idx.AppendLine(string.Format("timestamp: {0:00}:{1:00}:{2:00}:{3:000}, filepos: {4}", p.StartTime.Hours, p.StartTime.Minutes, p.StartTime.Seconds, p.StartTime.Milliseconds, _subFile.Position.ToString("X").PadLeft(9, '0')));            
+            _idx.AppendLine(string.Format("timestamp: {0:00}:{1:00}:{2:00}:{3:000}, filepos: {4}", p.StartTime.Hours, p.StartTime.Minutes, p.StartTime.Seconds, p.StartTime.Milliseconds, _subFile.Position.ToString("X").PadLeft(9, '0')));
 
             // write binary vobsub file (duration + image)
             _subFile.Write(Mpeg2PackHeaderBuffer, 0, Mpeg2PackHeaderBuffer.Length);
@@ -214,7 +214,7 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
             {
                 writeBuffer[4] = (byte)(length / 256);
                 writeBuffer[5] = (byte)(length % 256);
-            }            
+            }
         }
 
         private void WritePixelDataAddress(Stream stream, int imageTopFieldDataAddress, int imageBottomFieldDataAddress)
@@ -240,7 +240,7 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
         }
 
         /// <summary>
-        /// Directly provides the four contrast (alpha blend) values to associate with the four pixel values. One nibble per pixel value for a total of 2 bytes. 0x0 = transparent, 0xF = opaque 
+        /// Directly provides the four contrast (alpha blend) values to associate with the four pixel values. One nibble per pixel value for a total of 2 bytes. 0x0 = transparent, 0xF = opaque
         /// </summary>
         /// <param name="_subFile"></param>
         private void WriteContrast(Stream stream)
@@ -368,5 +368,5 @@ id: " + _languageNameShort + @", index: 0
             return (c.R.ToString("X2") + c.G.ToString("X2") + c.B.ToString("X2")).ToLower();
         }
 
-    }    
+    }
 }

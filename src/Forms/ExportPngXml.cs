@@ -320,7 +320,7 @@ namespace Nikse.SubtitleEdit.Forms
         }
 
         private static Color GetOutlineColor(Color borderColor)
-        { 
+        {
             if (borderColor.R + borderColor.G + borderColor.B < 30)
                 return Color.FromArgb(200, 75, 75, 75);
             return Color.FromArgb(200, borderColor.A, borderColor.R, borderColor.B);

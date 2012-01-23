@@ -145,7 +145,7 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
                                 int startingX = (_data[commandIndex + 1] << 8 | _data[commandIndex + 2]) >> 4;
                                 int endingX = (_data[commandIndex + 2] & Helper.B00001111) << 8 | _data[commandIndex + 3];
                                 int startingY = (_data[commandIndex + 4] << 8 | _data[commandIndex + 5]) >> 4;
-                                int endingY = (_data[commandIndex + 5] & Helper.B00001111) << 8 | _data[commandIndex + 6];                                
+                                int endingY = (_data[commandIndex + 5] & Helper.B00001111) << 8 | _data[commandIndex + 6];
                                 ImageDisplayArea = new Rectangle(startingX, startingY, endingX - startingX, endingY - startingY);
                             }
                             commandIndex += 7;
