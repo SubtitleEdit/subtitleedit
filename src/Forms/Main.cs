@@ -96,6 +96,8 @@ namespace Nikse.SubtitleEdit.Forms
         bool _cancelWordSpellCheck = false;
 
         Keys _toggleVideoDockUndock = Keys.None;
+        Keys _videoPause = Keys.None;
+        Keys _videoPlayPauseToggle = Keys.None;
         Keys _video100MsLeft = Keys.None;
         Keys _video100MsRight = Keys.None;
         Keys _video500MsLeft = Keys.None;
@@ -7134,12 +7136,21 @@ namespace Nikse.SubtitleEdit.Forms
                 EditToolStripMenuItemDropDownOpening(null, null);
                 toolStripMenuItemTranslationMode_Click(null, null);
             }
-            else if (e.Modifiers == Keys.Control && e.KeyCode == Keys.P)
+            else if (e.KeyData == _videoPlayPauseToggle)
             {
                 if (mediaPlayer.VideoPlayer != null)
                 {
                     _endSeconds = -1;
                     mediaPlayer.TogglePlayPause();
+                    e.SuppressKeyPress = true;
+                }
+            }
+            else if (e.KeyData == _videoPause)
+            {
+                if (mediaPlayer.VideoPlayer != null)
+                {
+                    _endSeconds = -1;
+                    mediaPlayer.Pause();
                     e.SuppressKeyPress = true;
                 }
             }
@@ -9743,6 +9754,12 @@ namespace Nikse.SubtitleEdit.Forms
 
             showhideVideoToolStripMenuItem.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainVideoShowHideVideo);
             _toggleVideoDockUndock = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainVideoToggleVideoControls);
+            _videoPause = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainVideoPause);
+            _videoPlayPauseToggle = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainVideoPlayPauseToggle);
+            _video100MsLeft = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainVideo100MsLeft);
+            _video100MsRight = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainVideo100MsRight);
+            _video500MsLeft  = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainVideo500MsLeft);
+            _video500MsRight = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainVideo500MsRight);
             _mainVideoFullscreen = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainVideoFullscreen);
 
             toolStripMenuItemAdjustAllTimes.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainSynchronizationAdjustTimes);

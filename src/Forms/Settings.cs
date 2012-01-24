@@ -446,6 +446,10 @@ namespace Nikse.SubtitleEdit.Forms
             treeViewShortcuts.Nodes.Add(toolsNode);
 
             TreeNode videoNode = new TreeNode(Configuration.Settings.Language.Main.Menu.Video.Title);
+            if (!string.IsNullOrEmpty(Configuration.Settings.Language.Settings.TogglePlayPause))
+                videoNode.Nodes.Add(Configuration.Settings.Language.Settings.TogglePlayPause + GetShortcutText(Configuration.Settings.Shortcuts.MainVideoPlayPauseToggle));
+            if (!string.IsNullOrEmpty(Configuration.Settings.Language.Settings.Pause))
+                videoNode.Nodes.Add(Configuration.Settings.Language.Settings.Pause + GetShortcutText(Configuration.Settings.Shortcuts.MainVideoPause));
             videoNode.Nodes.Add(Configuration.Settings.Language.Main.Menu.Video.ShowHideVideo + GetShortcutText(Configuration.Settings.Shortcuts.MainVideoShowHideVideo));
             videoNode.Nodes.Add(Configuration.Settings.Language.Settings.ToggleDockUndockOfVideoControls + GetShortcutText(Configuration.Settings.Shortcuts.MainVideoToggleVideoControls));
             if (!string.IsNullOrEmpty(Configuration.Settings.Language.Settings.GoBack100Milliseconds))
@@ -913,6 +917,10 @@ namespace Nikse.SubtitleEdit.Forms
                         Configuration.Settings.Shortcuts.MainVideo500MsRight = GetShortcut(node.Text);
                     else if (text == Configuration.Settings.Language.Settings.Fullscreen.Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.MainVideoFullscreen = GetShortcut(node.Text);
+                    else if (text == Configuration.Settings.Language.Settings.Pause.Replace("&", string.Empty))
+                        Configuration.Settings.Shortcuts.MainVideoPause = GetShortcut(node.Text);
+                    else if (text == Configuration.Settings.Language.Settings.TogglePlayPause.Replace("&", string.Empty))
+                        Configuration.Settings.Shortcuts.MainVideoPlayPauseToggle = GetShortcut(node.Text);
                 }
             }
 

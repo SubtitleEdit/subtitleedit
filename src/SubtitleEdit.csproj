@@ -597,6 +597,7 @@
     <Compile Include="Logic\SubtitleFormats\FinalCutProXml.cs" />
     <Compile Include="Logic\SubtitleFormats\FlashXml.cs" />
     <Compile Include="Logic\SubtitleFormats\GpacTtxt.cs" />
+    <Compile Include="Logic\SubtitleFormats\Json.cs" />
     <Compile Include="Logic\SubtitleFormats\Pac.cs" />
     <Compile Include="Logic\SubtitleFormats\PinnacleImpression.cs" />
     <Compile Include="Logic\SubtitleFormats\PListCaption.cs" />
