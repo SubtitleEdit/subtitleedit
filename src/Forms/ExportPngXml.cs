@@ -323,7 +323,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (borderColor.R + borderColor.G + borderColor.B < 30)
                 return Color.FromArgb(200, 75, 75, 75);
-            return Color.FromArgb(200, borderColor.A, borderColor.R, borderColor.B);
+            return Color.FromArgb(150, borderColor.R, borderColor.G, borderColor.B);
         }
 
         private Bitmap GenerateImageFromTextWithStyle(string text)
