@@ -40,6 +40,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     new FinalCutProTestXml(),
                     new FlashXml(),
                     new GpacTtxt(),
+                    new Json(),
                     new MicroDvd(),
                     new MPlayer2(),
                     new OpenDvt(),

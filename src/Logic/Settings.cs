@@ -458,6 +458,8 @@ namespace Nikse.SubtitleEdit.Logic
         public string MainEditMultipleReplace { get; set; }
         public string MainEditGoToLineNumber { get; set; }
         public string MainToolsFixCommonErrors { get; set; }
+        public string MainVideoPause { get; set; }
+        public string MainVideoPlayPauseToggle { get; set; }
         public string MainVideoShowHideVideo { get; set; }
         public string MainVideoToggleVideoControls { get; set; }
         public string MainVideo100MsLeft { get; set; }
@@ -505,6 +507,8 @@ namespace Nikse.SubtitleEdit.Logic
             MainEditMultipleReplace = string.Empty;
             MainEditGoToLineNumber = "Control+G";
             MainToolsFixCommonErrors = "Control+Shift+F";
+            MainVideoPlayPauseToggle = "Control+P";
+            MainVideoPause = "Control+Alt+P";
             MainVideoShowHideVideo = "Control+Q";
             MainVideo100MsLeft = "Control+Left";
             MainVideo100MsRight = "Control+Right";
@@ -1287,6 +1291,12 @@ namespace Nikse.SubtitleEdit.Logic
                 subNode = node.SelectSingleNode("MainToolsFixCommonErrors");
                 if (subNode != null)
                     settings.Shortcuts.MainToolsFixCommonErrors = subNode.InnerText;
+                subNode = node.SelectSingleNode("MainVideoPause");
+                if (subNode != null)
+                    settings.Shortcuts.MainVideoPause = subNode.InnerText;
+                subNode = node.SelectSingleNode("MainVideoPlayPauseToggle");
+                if (subNode != null)
+                    settings.Shortcuts.MainVideoPlayPauseToggle = subNode.InnerText;
                 subNode = node.SelectSingleNode("MainVideoShowHideVideo");
                 if (subNode != null)
                     settings.Shortcuts.MainVideoShowHideVideo = subNode.InnerText;
@@ -1689,6 +1699,8 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("MainEditMultipleReplace", settings.Shortcuts.MainEditMultipleReplace);
             textWriter.WriteElementString("MainEditGoToLineNumber", settings.Shortcuts.MainEditGoToLineNumber);
             textWriter.WriteElementString("MainToolsFixCommonErrors", settings.Shortcuts.MainToolsFixCommonErrors);
+            textWriter.WriteElementString("MainVideoPause", settings.Shortcuts.MainVideoPause);
+            textWriter.WriteElementString("MainVideoPlayPauseToggle", settings.Shortcuts.MainVideoPlayPauseToggle);
             textWriter.WriteElementString("MainVideoShowHideVideo", settings.Shortcuts.MainVideoShowHideVideo);
             textWriter.WriteElementString("MainVideoToggleVideoControls", settings.Shortcuts.MainVideoToggleVideoControls);
             textWriter.WriteElementString("MainVideo100MsLeft", settings.Shortcuts.MainVideo100MsLeft);

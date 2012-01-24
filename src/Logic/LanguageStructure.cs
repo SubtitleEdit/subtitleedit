@@ -1212,6 +1212,8 @@
             public string GoForward100Milliseconds { get; set; }
             public string GoBack500Milliseconds { get; set; }
             public string GoForward500Milliseconds { get; set; }
+            public string TogglePlayPause { get; set; }
+            public string Pause { get; set; }
             public string Fullscreen { get; set; }
         }
 
