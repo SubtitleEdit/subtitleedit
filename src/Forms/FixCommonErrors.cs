@@ -1234,6 +1234,33 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
 
+                //fix missing spaces in "Hey...move it!" to "Hey... move it!"
+                if ((p.Text.Contains("...") && p.Text.Length > 5))
+                {
+                    int index = p.Text.IndexOf("...");
+                    string newText = p.Text;
+                    while (index != -1)
+                    {
+                        if (newText.Length > index + 4 && index > 1)
+                        {
+                            if (Utilities.GetLetters(true, true, true).Contains(newText[index + 3].ToString()) && 
+                                Utilities.GetLetters(true, true, true).Contains(newText[index -1].ToString()))
+                                newText = newText.Insert(index + 3, " ");
+                        }
+                        index = newText.IndexOf("...", index +2);
+                    }
+                    if (newText != p.Text && AllowFix(i + 1, fixAction))
+                    {
+                        _totalFixes++;
+                        missingSpaces++;
+
+                        string oldText = p.Text;
+                        p.Text = newText;
+                        AddFixToListView(p, i + 1, fixAction, oldText, p.Text);
+                    }
+                }
+
+
             }
             if (missingSpaces > 0)
                 LogStatus(_language.FixMissingSpaces, string.Format(_language.XMissingSpacesAdded, missingSpaces));
