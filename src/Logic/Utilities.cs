@@ -280,9 +280,14 @@ namespace Nikse.SubtitleEdit.Logic
 
         public static string AutoBreakLine(string text, int mininumLength, int maximumLength, int mergeLinesShorterThan)
         {
-            string s = text.Replace(Environment.NewLine, " ");
+            string s = text;
+            s = s.Replace("</i> " + Environment.NewLine + "<i>", " ");
+            s = s.Replace("</i>" + Environment.NewLine + " <i>", " ");
+            s = s.Replace("</i>" + Environment.NewLine + "<i>", " ");
+            s = s.Replace(Environment.NewLine, " ");
             s = s.Replace("  ", " ");
             s = s.Replace("  ", " ");
+            
             string temp = RemoveHtmlTags(s);
             if (temp.Length < mergeLinesShorterThan)
             {
