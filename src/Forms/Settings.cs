@@ -1158,6 +1158,7 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         listBoxOcrFixList.Items.Add(pair.Key + " --> " + pair.Value);
                     }
+                    listBoxOcrFixList.Sorted = true;
                     listBoxOcrFixList.EndUpdate();
                 }
             }
