@@ -1574,7 +1574,8 @@ namespace Nikse.SubtitleEdit.Forms
                                             }
                                         }
                                     }
-                                    else if (match.Index > 1 && ((st.StrippedText[match.Index - 1] == '\"') || (st.StrippedText[match.Index - 1] == '>') || (st.StrippedText[match.Index - 1] == '-')))
+                                    else if (match.Index > 1 && ((st.StrippedText[match.Index - 1] == '\"') || (st.StrippedText[match.Index - 1] == '\'') || 
+                                                                 (st.StrippedText[match.Index - 1] == '>') || (st.StrippedText[match.Index - 1] == '-')))
                                     {
                                     }
                                     else
