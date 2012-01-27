@@ -1121,7 +1121,7 @@ namespace Nikse.SubtitleEdit.Logic.OCR
             List<string> localIgnoreWords = new List<string>();
             wordsNotFound = 0;
 
-            if (line.Length == 1 && !IsWordKnownOrNumber(line, line))
+            if (promptForFixingErrors && line.Length == 1 && !IsWordKnownOrNumber(line, line))
             {
                 SpellcheckOcrTextResult res = SpellcheckOcrText(line, bitmap, new string[1] { line}, 0, line, localIgnoreWords);
                 if (res.FixedWholeLine || res.Fixed)
