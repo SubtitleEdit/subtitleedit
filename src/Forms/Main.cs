@@ -3799,6 +3799,8 @@ namespace Nikse.SubtitleEdit.Forms
                         foreach (Paragraph p in _subtitleAlternate.Paragraphs)
                             _subtitle.HistoryItems[_undoIndex].RedoParagraphsAlternate.Add(new Paragraph(p));
                     }
+                    _subtitle.HistoryItems[_undoIndex].RedoFileName = _fileName;
+                    _subtitle.HistoryItems[_undoIndex].RedoFileModified = _fileDateTime;
 
                     if (selectedIndex >= 0)
                     {
@@ -3856,8 +3858,6 @@ namespace Nikse.SubtitleEdit.Forms
                 if (string.Compare(oldFileName, _fileName, true) == 0)
                     _fileDateTime = oldFileDateTime; // undo will not give overwrite-newer-file warning
 
-                SetTitle();
-
                 comboBoxSubtitleFormats.SelectedIndexChanged -= ComboBoxSubtitleFormatsSelectedIndexChanged;
                 SetCurrentFormat(subtitleFormatFriendlyName);
                 comboBoxSubtitleFormats.SelectedIndexChanged += ComboBoxSubtitleFormatsSelectedIndexChanged;
@@ -3880,9 +3880,6 @@ namespace Nikse.SubtitleEdit.Forms
                         if (_subtitleAlternate != null)
                             textBoxListViewTextAlternate.SelectionStart = _subtitle.HistoryItems[_undoIndex].LinePositionAlternate;
                     }
-                 //TODO:   _subtitle.HistoryItems[_undoIndex].RedoFileName = oldFileName;
-                    //TODO: _subtitle.HistoryItems[_undoIndex].RedoFileModified = oldFileDateTime;
-
                     ShowStatus(_language.UndoPerformed + ": " + text.Replace(Environment.NewLine, "  "));
                     _undoIndex--;
                 }
@@ -3892,11 +3889,14 @@ namespace Nikse.SubtitleEdit.Forms
                         textBoxListViewText.SelectionStart = _subtitle.HistoryItems[_undoIndex].RedoLinePosition;
                     if (_subtitleAlternate != null && _subtitle.HistoryItems[_undoIndex].RedoLineIndex >= 0 && _subtitle.HistoryItems[_undoIndex].RedoLineIndex == FirstSelectedIndex)
                         textBoxListViewTextAlternate.SelectionStart = _subtitle.HistoryItems[_undoIndex].RedoLinePositionAlternate;
-
+                    if (string.Compare(_subtitle.HistoryItems[_undoIndex].RedoFileName, _fileName, true) == 0)
+                        _fileDateTime = _subtitle.HistoryItems[_undoIndex].RedoFileModified;
+                    _fileName = _subtitle.HistoryItems[_undoIndex].RedoFileName;
                     ShowStatus("Redo performed");  //TODO: do not hardcode text... SE 3.3
                 }
                 timerTextUndo.Start();
                 timerAlternateTextUndo.Start();
+                SetTitle();
             }
         }
 
