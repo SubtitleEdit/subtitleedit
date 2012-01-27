@@ -2240,7 +2240,7 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             bool fix = true;
 
-                            if (prev == ".")
+                            if (prev == "." || prev == "'")
                                 fix = false;
 
                             if (fix)
