@@ -60,7 +60,18 @@ namespace Nikse.SubtitleEdit.Forms
 
             checkBoxShowFrameRate.Checked = gs.ShowFrameRate;
             comboBoxFramerate.Text = gs.DefaultFrameRate.ToString();
-            comboBoxEncoding.Text = gs.DefaultEncoding;
+
+            comboBoxEncoding.Items.Clear();
+            foreach (EncodingInfo ei in Encoding.GetEncodings())
+            {
+                var item = new ListViewItem(new[] { ei.CodePage.ToString(), ei.Name, ei.DisplayName });
+                comboBoxEncoding.Items.Add(ei.Name);
+                if (ei.Name == gs.DefaultEncoding)
+                    item.Selected = true;
+                else if (comboBoxEncoding.SelectedIndex == -1 && ei.Name == "utf-8")
+                    item.Selected = true;
+            }
+
             checkBoxAutoDetectAnsiEncoding.Checked = gs.AutoGuessAnsiEncoding;
             comboBoxSubtitleFontSize.Text = gs.SubtitleFontSize.ToString();
             checkBoxSubtitleFontBold.Checked = gs.SubtitleFontBold;
