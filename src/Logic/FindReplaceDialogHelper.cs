@@ -58,7 +58,7 @@ namespace Nikse.SubtitleEdit.Logic
 
         public bool Find(Subtitle subtitle, Subtitle originalSubtitle, int startIndex)
         {
-            return FindNext(subtitle, originalSubtitle, startIndex, 0);
+            return FindNext(subtitle, originalSubtitle, startIndex, 0, Configuration.Settings.General.AllowEditOfOriginalSubtitle);
         }
 
         public bool Find(TextBox textBox, int startIndex)
@@ -97,7 +97,7 @@ namespace Nikse.SubtitleEdit.Logic
             return -1;
         }
 
-        public bool FindNext(Subtitle subtitle, Subtitle originalSubtitle, int startIndex, int position)
+        public bool FindNext(Subtitle subtitle, Subtitle originalSubtitle, int startIndex, int position, bool allowEditOfOriginalSubtitle)
         {
             Success = false;
             int index = 0;
@@ -123,7 +123,7 @@ namespace Nikse.SubtitleEdit.Logic
                     }
                     MatchInOriginal = false;
 
-                    if (originalSubtitle != null)
+                    if (originalSubtitle != null && allowEditOfOriginalSubtitle)
                     {
                         Paragraph o = Utilities.GetOriginalParagraph(index, p, originalSubtitle.Paragraphs);
                         if (o != null)
