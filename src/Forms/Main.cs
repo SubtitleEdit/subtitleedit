@@ -227,15 +227,17 @@ namespace Nikse.SubtitleEdit.Forms
 
                 SetFormatToSubRip();
 
-                if (Configuration.Settings.General.DefaultEncoding == "ANSI")
+                comboBoxEncoding.Items.Clear();
+                foreach (EncodingInfo ei in Encoding.GetEncodings())
                 {
-                    comboBoxEncoding.SelectedIndex = 0;
-                    comboBoxEncoding.Items[0] = "ANSI - " + Encoding.Default.CodePage.ToString();
+                    var item = new ListViewItem(new[] { ei.CodePage.ToString(), ei.Name, ei.DisplayName });
+                    comboBoxEncoding.Items.Add(ei.Name);
+                    if (ei.Name == Configuration.Settings.General.DefaultEncoding)
+                        item.Selected = true;
+                    else if (comboBoxEncoding.SelectedIndex == -1 && ei.Name == "utf-8")
+                        item.Selected = true;
                 }
-                else
-                {
-                    comboBoxEncoding.Text = Configuration.Settings.General.DefaultEncoding;
-                }
+                comboBoxEncoding.Sorted = true;
 
                 toolStripComboBoxFrameRate.Items.Add((23.976).ToString());
                 toolStripComboBoxFrameRate.Items.Add((24.0).ToString());
@@ -357,6 +359,44 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 Cursor = Cursors.Default;
                 MessageBox.Show(exception.Message + Environment.NewLine + exception.StackTrace);
+            }
+        }
+
+        private void SetEncoding(Encoding encoding)
+        {
+            foreach (EncodingInfo ei in Encoding.GetEncodings())
+            {
+                if (ei.Name == encoding.BodyName || ei.Name == encoding.HeaderName)
+                {
+                    comboBoxEncoding.Text = ei.Name;
+                    return;
+                }
+            }
+            comboBoxEncoding.Text = "utf-8";
+        }
+
+        private void SetEncoding(string encodingName)
+        {
+            foreach (EncodingInfo ei in Encoding.GetEncodings())
+            {
+                if (ei.Name == encodingName)
+                {
+                    comboBoxEncoding.Text = encodingName;
+                    return;
+                }
+            }
+            comboBoxEncoding.Text = "utf-8";
+        }
+
+        private Encoding GetCurrentEncoding()
+        {
+            try
+            {
+                return System.Text.Encoding.GetEncoding(comboBoxEncoding.Text);
+            }
+            catch
+            {
+                return Encoding.UTF8;
             }
         }
 
@@ -1795,20 +1835,7 @@ namespace Nikse.SubtitleEdit.Forms
                         _converted = true;
                         ShowStatus(string.Format(_language.LoadedSubtitleX, _fileName) + " - " + string.Format(_language.ConvertedToX, format.FriendlyName));
                     }
-
-                    if (encoding == Encoding.UTF7)
-                        comboBoxEncoding.Text = "UTF-7";
-                    else if (encoding == Encoding.UTF8)
-                        comboBoxEncoding.Text = "UTF-8";
-                    else if (encoding == System.Text.Encoding.Unicode)
-                        comboBoxEncoding.Text = "Unicode";
-                    else if (encoding == System.Text.Encoding.BigEndianUnicode)
-                        comboBoxEncoding.Text = "Unicode (big endian)";
-                    else
-                    {
-                        comboBoxEncoding.Items[0] = "ANSI - " + encoding.CodePage.ToString();
-                        comboBoxEncoding.SelectedIndex = 0;
-                    }
+                    SetEncoding(encoding);
                 }
                 else
                 {
@@ -2115,31 +2142,6 @@ namespace Nikse.SubtitleEdit.Forms
             return result;
         }
 
-        private Encoding GetCurrentEncoding()
-        {
-            if (comboBoxEncoding.Text == "UTF-7")
-                return System.Text.Encoding.UTF7;
-            if (comboBoxEncoding.Text == "UTF-8")
-                return System.Text.Encoding.UTF8;
-            else if (comboBoxEncoding.Text == "Unicode")
-                return System.Text.Encoding.Unicode;
-            else if (comboBoxEncoding.Text == "Unicode (big endian)")
-                return System.Text.Encoding.BigEndianUnicode;
-            else
-            {
-                if (comboBoxEncoding.Text.StartsWith("ANSI - "))
-                {
-                    string codePage = comboBoxEncoding.Text.Substring(6).Trim();
-                    int codePageNumber = 0;
-                    if (int.TryParse(codePage, out codePageNumber))
-                    {
-                        return Encoding.GetEncoding(codePageNumber);
-                    }
-                }
-                return System.Text.Encoding.Default;
-            }
-        }
-
         private DialogResult SaveSubtitle(SubtitleFormat format)
         {
             if (string.IsNullOrEmpty(_fileName) || _converted)
@@ -2260,11 +2262,7 @@ namespace Nikse.SubtitleEdit.Forms
             RemoveAlternate(true);
             toolStripComboBoxFrameRate.Text = Configuration.Settings.General.DefaultFrameRate.ToString();
 
-            comboBoxEncoding.Items[0] = "ANSI - " + Encoding.Default.CodePage.ToString();
-            if (Configuration.Settings.General.DefaultEncoding == "ANSI")
-                comboBoxEncoding.SelectedIndex = 0;
-            else
-                comboBoxEncoding.Text = Configuration.Settings.General.DefaultEncoding;
+            SetEncoding(Configuration.Settings.General.DefaultEncoding);
 
             toolStripComboBoxFrameRate.Text = Configuration.Settings.General.DefaultFrameRate.ToString();
             _findHelper = null;
@@ -3619,10 +3617,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     _subtitleListViewIndex = -1;
 
-                    _subtitleAlternate = new Subtitle(_subtitle);
-                    _subtitleAlternateFileName = null;
                     MakeHistoryForUndo(_language.BeforeGoogleTranslation);
-
                     if (onlySelectedLines)
                     { // we only update selected lines
                         int i = 0;
@@ -3635,7 +3630,9 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     else
                     {
-
+                        _subtitleAlternate = new Subtitle(_subtitle);
+                        _subtitleAlternateFileName = _fileName;
+                        _fileName = null;
                         _subtitle.Paragraphs.Clear();
                         foreach (Paragraph p in googleTranslate.TranslatedSubtitle.Paragraphs)
                             _subtitle.Paragraphs.Add(new Paragraph(p));
@@ -3643,13 +3640,20 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     ShowSource();
 
-                    SubtitleListview1.ShowAlternateTextColumn(Configuration.Settings.Language.General.OriginalText);
-                    SubtitleListview1.AutoSizeAllColumns(this);
+                    if (!onlySelectedLines)
+                    {
+                        SubtitleListview1.ShowAlternateTextColumn(Configuration.Settings.Language.General.OriginalText);
+                        SubtitleListview1.AutoSizeAllColumns(this);
+                        SetupAlternateEdit();
+                    }
                     SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
 
                     RestoreSubtitleListviewIndexes();
                     _change = true;
                     _converted = true;
+                    SetTitle();
+                    if (googleTranslate.ScreenScrapingEncoding != null)
+                        SetEncoding(googleTranslate.ScreenScrapingEncoding);
                 }
                 _formPositionsAndSizes.SavePositionAndSize(googleTranslate);
             }
@@ -6075,7 +6079,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
 
-                comboBoxEncoding.Text = "UTF-8";
+                SetEncoding(Encoding.UTF8);                
                 ShowStatus(_language.SubtitleImportedFromMatroskaFile);
                 _subtitle.Renumber(1);
                 _subtitle.WasLoadedWithFrameNumbers = false;
@@ -6456,7 +6460,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
 
-                comboBoxEncoding.Text = "UTF-8";
+                SetEncoding(Encoding.UTF8);
                 ShowStatus(_language.SubtitleImportedFromMatroskaFile);
                 _subtitle.Renumber(1);
                 _subtitle.WasLoadedWithFrameNumbers = false;
@@ -6583,7 +6587,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (chooseEncoding.ShowDialog(this) == DialogResult.OK)
                 {
                     Encoding encoding = chooseEncoding.GetEncoding();
-                    comboBoxEncoding.Text = "UTF-8";
+                    SetEncoding(Encoding.UTF8);
                     OpenSubtitle(openFileDialog1.FileName, encoding);
                     _converted = true;
                 }
@@ -7304,7 +7308,8 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (e.Modifiers == (Keys.Control | Keys.Alt | Keys.Shift) && e.KeyCode == Keys.W) // watermak
             {
-                if (comboBoxEncoding.Text.StartsWith("ANSI - "))
+                Encoding enc = GetCurrentEncoding();
+                if (enc != Encoding.UTF8 && enc != Encoding.UTF32 && enc != Encoding.Unicode && enc != Encoding.UTF7)
                 {
                     MessageBox.Show("Watermark only works with unicode file encoding");
                 }
