@@ -21,7 +21,12 @@ namespace Nikse.SubtitleEdit.Forms
         MicrosoftTranslationService.SoapService _microsoftTranslationService = null;
         private bool _googleApiNotWorking = false;
         private const string _splitterString  = "==";
+
         private Encoding _screenScrapingEncoding = null;
+        public Encoding ScreenScrapingEncoding
+        {
+            get { return _screenScrapingEncoding; }
+        }
 
         public class ComboBoxItem
         {
