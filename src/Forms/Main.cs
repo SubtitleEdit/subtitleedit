@@ -5193,12 +5193,20 @@ namespace Nikse.SubtitleEdit.Forms
 
                         if (currentOriginal != null)
                         {
-                            prevOriginal.Text = prevOriginal.Text.Replace(Environment.NewLine, " ");
-                            prevOriginal.Text += Environment.NewLine + currentOriginal.Text.Replace(Environment.NewLine, " ");
-                            prevOriginal.Text = ChangeAllLinesItalictoSingleItalic(prevOriginal.Text);
-                            prevOriginal.Text = Utilities.AutoBreakLine(prevOriginal.Text);
-                            prevOriginal.EndTime = currentOriginal.EndTime;
-                            _subtitleAlternate.Paragraphs.Remove(currentOriginal);
+                            if (prevOriginal == null)
+                            {
+                                currentOriginal.StartTime = prevParagraph.StartTime;
+                                currentOriginal.EndTime = currentParagraph.EndTime;
+                            }
+                            else
+                            {
+                                prevOriginal.Text = prevOriginal.Text.Replace(Environment.NewLine, " ");
+                                prevOriginal.Text += Environment.NewLine + currentOriginal.Text.Replace(Environment.NewLine, " ");
+                                prevOriginal.Text = ChangeAllLinesItalictoSingleItalic(prevOriginal.Text);
+                                prevOriginal.Text = Utilities.AutoBreakLine(prevOriginal.Text);
+                                prevOriginal.EndTime = currentOriginal.EndTime;
+                                _subtitleAlternate.Paragraphs.Remove(currentOriginal);
+                            }
                             _subtitleAlternate.Renumber(1);
                         }
                     }
@@ -5368,12 +5376,20 @@ namespace Nikse.SubtitleEdit.Forms
 
                         if (originalNext != null)
                         {
-                            original.Text = original.Text.Replace(Environment.NewLine, " ");
-                            original.Text += Environment.NewLine + originalNext.Text.Replace(Environment.NewLine, " ");
-                            original.Text = ChangeAllLinesItalictoSingleItalic(original.Text);
-                            original.Text = Utilities.AutoBreakLine(original.Text);
-                            original.EndTime = originalNext.EndTime;
-                            _subtitleAlternate.Paragraphs.Remove(originalNext);
+                            if (original == null)
+                            {
+                                originalNext.StartTime.TotalMilliseconds = currentParagraph.StartTime.TotalMilliseconds;
+                                originalNext.EndTime.TotalMilliseconds = nextParagraph.EndTime.TotalMilliseconds;
+                            }
+                            else
+                            {
+                                original.Text = original.Text.Replace(Environment.NewLine, " ");
+                                original.Text += Environment.NewLine + originalNext.Text.Replace(Environment.NewLine, " ");
+                                original.Text = ChangeAllLinesItalictoSingleItalic(original.Text);
+                                original.Text = Utilities.AutoBreakLine(original.Text);
+                                original.EndTime = originalNext.EndTime;
+                                _subtitleAlternate.Paragraphs.Remove(originalNext);
+                            }
                             _subtitleAlternate.Renumber(1);
                         }
                     }
