@@ -7,11 +7,17 @@ Subtitle Edit Changelog
  * IMPROVED:
    * Updated Basque languaged file - thx Xabier Aramendi
    * Export images alignment - thx Marcin
+   * Some improvements to fix common errors - thx Majid
+   * Settings -> Word lists -> "Ocr fix list" is now sorted - thx Majid
+   * Main window now list all encodings
+   * New Google translate encoding saved to main window
  * FIXED:
    * Export to Blu-ray sup timestamps
    * Crash in Visual Sync - thx XhmikosR
    * Incorrect timestamps in MicroDVD format after using
      "Set start time and offset the rest" + a few more buttons - thx whuras
+   * Bug in replace when showing original subtitle - thx Krystian
+   * Bug in auto break lines regarding italic tags - thx Majid
 
 
 3.2.3 (13th January 2012)
