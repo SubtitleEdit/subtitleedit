@@ -10,7 +10,7 @@ Subtitle Edit Changelog
    * Some improvements to fix common errors - thx Majid
    * Settings -> Word lists -> "Ocr fix list" is now sorted - thx Majid
    * Main window now list all encodings
-   * New Google translate encoding saved to main window
+   * Google translate encoding saved to main window
  * FIXED:
    * Export to Blu-ray sup timestamps
    * Crash in Visual Sync - thx XhmikosR
@@ -18,6 +18,7 @@ Subtitle Edit Changelog
      "Set start time and offset the rest" + a few more buttons - thx whuras
    * Bug in replace when showing original subtitle - thx Krystian
    * Bug in auto break lines regarding italic tags - thx Majid
+   * Crash when merging lines (original sub) in some cases - thx Krystian
 
 
 3.2.3 (13th January 2012)
