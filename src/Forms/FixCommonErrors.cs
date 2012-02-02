@@ -546,7 +546,7 @@ namespace Nikse.SubtitleEdit.Forms
                             p.StartTime.TotalMilliseconds = prev.EndTime.TotalMilliseconds + 1;
                             _totalFixes++;
                             noOfOverlappingDisplayTimesFixed++;
-                            AddFixToListView(target, i + 1, fixAction, oldCurrent, p.ToString());
+                            AddFixToListView(p, i + 1, fixAction, oldCurrent, p.ToString());
                         }
                     }
                     else if (Math.Abs(p.StartTime.TotalMilliseconds - prev.EndTime.TotalMilliseconds) < 10 && p.Duration.TotalMilliseconds > 1)
@@ -557,7 +557,7 @@ namespace Nikse.SubtitleEdit.Forms
                             p.StartTime.TotalMilliseconds = prev.EndTime.TotalMilliseconds+1;
                             _totalFixes++;
                             noOfOverlappingDisplayTimesFixed++;
-                            AddFixToListView(target, i + 1, fixAction, oldCurrent, p.ToString());
+                            AddFixToListView(p, i + 1, fixAction, oldCurrent, p.ToString());
                         }
                     }
                     else if (Math.Abs(p.StartTime.TotalMilliseconds - prev.StartTime.TotalMilliseconds) < 10 && Math.Abs(p.EndTime.TotalMilliseconds - prev.EndTime.TotalMilliseconds) < 10)
