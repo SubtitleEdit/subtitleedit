@@ -112,6 +112,7 @@ namespace Nikse.SubtitleEdit.Forms
         Keys _mainAdjustInsertViaEndAutoStartAndGoToNext = Keys.None;
         Keys _mainAdjustSetStartAutoDurationAndGoToNext = Keys.None;
         Keys _mainAdjustSetStart = Keys.None;
+        Keys _mainAdjustSetStartOnly = Keys.None;
         Keys _mainAdjustSetEnd = Keys.None;
         Keys _mainAdjustSelected100MsForward = Keys.None;
         Keys _mainAdjustSelected100MsBack = Keys.None;
@@ -7523,6 +7524,11 @@ namespace Nikse.SubtitleEdit.Forms
                         buttonSetStartTime_Click(null, null);
                         e.SuppressKeyPress = true;
                     }
+                    else if ((e.Modifiers == Keys.None && e.KeyCode == Keys.F11) || _mainAdjustSetStartOnly == e.KeyData)
+                    {
+                        SetStartTime(false);
+                        e.SuppressKeyPress = true;
+                    }
                     else if ((e.Modifiers == Keys.None && e.KeyCode == Keys.F12) || _mainAdjustSetEnd == e.KeyData)
                     {
                         StopAutoDuration();
@@ -9005,6 +9011,11 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonSetStartTime_Click(object sender, EventArgs e)
         {
+            SetStartTime(true);
+        }
+
+        private void SetStartTime(bool adjustEndTime)
+        {
             if (SubtitleListview1.SelectedItems.Count == 1)
             {
                 timeUpDownStartTime.MaskedTextBox.TextChanged -= MaskedTextBox_TextChanged;
@@ -9017,7 +9028,8 @@ namespace Nikse.SubtitleEdit.Forms
                 var duration = _subtitle.Paragraphs[index].Duration.TotalMilliseconds;
 
                 _subtitle.Paragraphs[index].StartTime.TotalMilliseconds = TimeSpan.FromSeconds(videoPosition).TotalMilliseconds;
-                _subtitle.Paragraphs[index].EndTime.TotalMilliseconds = _subtitle.Paragraphs[index].StartTime.TotalMilliseconds + duration;
+                if (adjustEndTime)
+                    _subtitle.Paragraphs[index].EndTime.TotalMilliseconds = _subtitle.Paragraphs[index].StartTime.TotalMilliseconds + duration;
                 SubtitleListview1.SetStartTime(index, _subtitle.Paragraphs[index]);
                 SubtitleListview1.SetDuration(index, _subtitle.Paragraphs[index]);
                 timeUpDownStartTime.TimeCode = _subtitle.Paragraphs[index].StartTime;
@@ -9032,6 +9044,7 @@ namespace Nikse.SubtitleEdit.Forms
                 _change = true;
             }
         }
+
 
         private void buttonSetEndTime_Click(object sender, EventArgs e)
         {
@@ -9833,6 +9846,7 @@ namespace Nikse.SubtitleEdit.Forms
             _mainAdjustInsertViaEndAutoStartAndGoToNext = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainAdjustViaEndAutoStartAndGoToNext);
             _mainAdjustSetStartAutoDurationAndGoToNext = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainAdjustSetStartAutoDurationAndGoToNext);
             _mainAdjustSetStart = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainAdjustSetStart);
+            _mainAdjustSetStartOnly = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainAdjustSetStartOnly);
             _mainAdjustSetEnd = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainAdjustSetEnd);
             _mainAdjustSelected100MsForward = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainAdjustSelected100MsForward);
             _mainAdjustSelected100MsBack = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainAdjustSelected100MsBack);
