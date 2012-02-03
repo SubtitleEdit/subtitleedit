@@ -44,6 +44,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     new MicroDvd(),
                     new MPlayer2(),
                     new OpenDvt(),
+                    new PE2(),
                     new PinnacleImpression(),
                     new PListCaption(),
                     new QuickTimeText(),
