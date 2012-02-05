@@ -785,7 +785,9 @@ namespace Nikse.SubtitleEdit.Logic
             if (subNode != null)
             {
                 settings.General.DefaultFrameRate = Convert.ToDouble(subNode.InnerText);
-                settings.General.CurrentFrameRate = Convert.ToDouble(subNode.InnerText);
+                if (settings.General.DefaultFrameRate > 23975)
+                    settings.General.DefaultFrameRate = 23.976;
+                settings.General.CurrentFrameRate = settings.General.DefaultFrameRate;
             }
             subNode = node.SelectSingleNode("DefaultEncoding");
             if (subNode != null)
