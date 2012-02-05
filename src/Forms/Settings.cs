@@ -744,7 +744,9 @@ namespace Nikse.SubtitleEdit.Forms
             gs.ShowToolbarHelp = checkBoxHelp.Checked;
 
             gs.ShowFrameRate = checkBoxShowFrameRate.Checked;
-            gs.DefaultFrameRate = double.Parse(comboBoxFramerate.Text);
+            double outFrameRate;
+            if (double.TryParse(comboBoxFramerate.Text.Replace(",", "."), NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out outFrameRate))
+                gs.DefaultFrameRate = outFrameRate;
             gs.DefaultEncoding = comboBoxEncoding.Text;
             gs.AutoGuessAnsiEncoding = checkBoxAutoDetectAnsiEncoding.Checked;
             gs.SubtitleFontSize = int.Parse(comboBoxSubtitleFontSize.Text);
