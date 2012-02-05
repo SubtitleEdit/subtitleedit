@@ -259,7 +259,7 @@ namespace Nikse.SubtitleEdit.Forms
                     italicFromStart = i == 0;
                     if (sb.Length > 0)
                     {
-                        TextDraw.DrawText(font, sf, path, sb, isItalic, left, top, ref newLine, addX, leftMargin);
+                        TextDraw.DrawText(font, sf, path, sb, isItalic, false, left, top, ref newLine, addX, leftMargin);
                         addX = 0;
                     }
                     isItalic = true;
@@ -271,7 +271,7 @@ namespace Nikse.SubtitleEdit.Forms
                         addX = 0;
                     else
                         addX = italicSpacing;
-                    TextDraw.DrawText(font, sf, path, sb, isItalic, left, top, ref newLine, addX, leftMargin);
+                    TextDraw.DrawText(font, sf, path, sb, isItalic, false, left, top, ref newLine, addX, leftMargin);
                     addX = 1;
                     if (_subtitleFontName.StartsWith("Arial"))
                         addX = 3;
@@ -285,7 +285,7 @@ namespace Nikse.SubtitleEdit.Forms
                     else
                         addX = italicSpacing;
 
-                    TextDraw.DrawText(font, sf, path, sb, isItalic, left, top, ref newLine, addX, leftMargin);
+                    TextDraw.DrawText(font, sf, path, sb, isItalic, false, left, top, ref newLine, addX, leftMargin);
 
                     addX = 0;
                     top += lineHeight;
@@ -310,7 +310,7 @@ namespace Nikse.SubtitleEdit.Forms
                     addX = 0;
                 else
                     addX = italicSpacing;
-                TextDraw.DrawText(font, sf, path, sb, isItalic, left, top, ref newLine, addX, leftMargin);
+                TextDraw.DrawText(font, sf, path, sb, isItalic, false, left, top, ref newLine, addX, leftMargin);
             }
 
             if (_borderWidth > 0)
