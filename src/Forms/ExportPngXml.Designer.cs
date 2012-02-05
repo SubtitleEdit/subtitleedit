@@ -34,7 +34,8 @@
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.groupBoxImageSettings = new System.Windows.Forms.GroupBox();
-            this.label1 = new System.Windows.Forms.Label();
+            this.checkBoxBold = new System.Windows.Forms.CheckBox();
+            this.labelResolution = new System.Windows.Forms.Label();
             this.comboBoxResolution = new System.Windows.Forms.ComboBox();
             this.comboBoxHAlign = new System.Windows.Forms.ComboBox();
             this.labelHorizontalAlign = new System.Windows.Forms.Label();
@@ -106,7 +107,8 @@
             // 
             this.groupBoxImageSettings.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBoxImageSettings.Controls.Add(this.label1);
+            this.groupBoxImageSettings.Controls.Add(this.checkBoxBold);
+            this.groupBoxImageSettings.Controls.Add(this.labelResolution);
             this.groupBoxImageSettings.Controls.Add(this.comboBoxResolution);
             this.groupBoxImageSettings.Controls.Add(this.comboBoxHAlign);
             this.groupBoxImageSettings.Controls.Add(this.labelHorizontalAlign);
@@ -128,15 +130,25 @@
             this.groupBoxImageSettings.TabStop = false;
             this.groupBoxImageSettings.Text = "Image settings";
             // 
-            // label1
+            // checkBoxBold
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(10, 81);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(51, 13);
-            this.label1.TabIndex = 26;
-            this.label1.Text = "Video res";
-            this.label1.Visible = false;
+            this.checkBoxBold.AutoSize = true;
+            this.checkBoxBold.Location = new System.Drawing.Point(276, 91);
+            this.checkBoxBold.Name = "checkBoxBold";
+            this.checkBoxBold.Size = new System.Drawing.Size(47, 17);
+            this.checkBoxBold.TabIndex = 27;
+            this.checkBoxBold.Text = "Bold";
+            this.checkBoxBold.UseVisualStyleBackColor = true;
+            this.checkBoxBold.CheckedChanged += new System.EventHandler(this.checkBoxBold_CheckedChanged);
+            // 
+            // labelResolution
+            // 
+            this.labelResolution.AutoSize = true;
+            this.labelResolution.Location = new System.Drawing.Point(10, 81);
+            this.labelResolution.Name = "labelResolution";
+            this.labelResolution.Size = new System.Drawing.Size(51, 13);
+            this.labelResolution.TabIndex = 26;
+            this.labelResolution.Text = "Video res";
             // 
             // comboBoxResolution
             // 
@@ -144,10 +156,14 @@
             this.comboBoxResolution.FormattingEnabled = true;
             this.comboBoxResolution.Items.AddRange(new object[] {
             "1080p (1920x1080)",
+            "1440x1080",
             "720p (1280x720)",
+            "960x720",
             "480p (848x480)",
             "PAL (720x576)",
-            "NTSC (720x480)"});
+            "NTSC (720x480)",
+            "640×352",
+            "640×272"});
             this.comboBoxResolution.Location = new System.Drawing.Point(100, 78);
             this.comboBoxResolution.Name = "comboBoxResolution";
             this.comboBoxResolution.Size = new System.Drawing.Size(121, 21);
@@ -159,12 +175,12 @@
             this.comboBoxHAlign.FormattingEnabled = true;
             this.comboBoxHAlign.Items.AddRange(new object[] {
             "Left",
-            "Center"});
+            "Center",
+            "Right"});
             this.comboBoxHAlign.Location = new System.Drawing.Point(100, 105);
             this.comboBoxHAlign.Name = "comboBoxHAlign";
             this.comboBoxHAlign.Size = new System.Drawing.Size(121, 21);
             this.comboBoxHAlign.TabIndex = 23;
-            this.comboBoxHAlign.Visible = false;
             this.comboBoxHAlign.SelectedIndexChanged += new System.EventHandler(this.comboBoxHAlign_SelectedIndexChanged);
             // 
             // labelHorizontalAlign
@@ -175,7 +191,6 @@
             this.labelHorizontalAlign.Size = new System.Drawing.Size(30, 13);
             this.labelHorizontalAlign.TabIndex = 22;
             this.labelHorizontalAlign.Text = "Align";
-            this.labelHorizontalAlign.Visible = false;
             // 
             // checkBoxAntiAlias
             // 
@@ -440,7 +455,8 @@
         private System.Windows.Forms.SaveFileDialog saveFileDialog1;
         private System.Windows.Forms.ComboBox comboBoxHAlign;
         private System.Windows.Forms.Label labelHorizontalAlign;
-        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label labelResolution;
         private System.Windows.Forms.ComboBox comboBoxResolution;
+        private System.Windows.Forms.CheckBox checkBoxBold;
     }
 }

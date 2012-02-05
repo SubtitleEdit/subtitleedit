@@ -6,7 +6,7 @@ namespace Nikse.SubtitleEdit.Logic
     public static class TextDraw
     {
 
-        public static void DrawText(Font font, StringFormat sf, System.Drawing.Drawing2D.GraphicsPath path, StringBuilder sb, bool isItalic, float left, float top, ref bool newLine, float addX, float leftMargin)
+        public static void DrawText(Font font, StringFormat sf, System.Drawing.Drawing2D.GraphicsPath path, StringBuilder sb, bool isItalic, bool isBold, float left, float top, ref bool newLine, float addX, float leftMargin)
         {
             PointF next = new PointF(left, top);
 
@@ -30,10 +30,14 @@ namespace Nikse.SubtitleEdit.Logic
                 newLine = false;
             }
 
-            if (isItalic)
-                path.AddString(sb.ToString(), font.FontFamily, (int)System.Drawing.FontStyle.Italic, font.Size, next, sf);
-            else
-                path.AddString(sb.ToString(), font.FontFamily, 0, font.Size, next, sf);
+            var fontStyle = FontStyle.Regular;
+            if (isItalic && isBold)
+                fontStyle = FontStyle.Italic | FontStyle.Bold;
+            else if (isItalic)
+                fontStyle = FontStyle.Italic;
+            else if (isBold)
+                fontStyle = FontStyle.Bold;
+            path.AddString(sb.ToString(), font.FontFamily, (int)fontStyle, font.Size, next, sf);
 
             sb.Length = 0;
         }

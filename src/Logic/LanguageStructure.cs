@@ -269,6 +269,11 @@
             public string AntiAlias { get; set; }
             public string ExportAllLines { get; set; }
             public string XImagesSavedInY { get; set; }
+            public string VideoResolution { get; set; }
+            public string Align { get; set; }
+            public string Left { get; set; }
+            public string Right { get; set; }
+            public string Center { get; set; }
         }
 
         public class FindDialog

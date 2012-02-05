@@ -346,6 +346,11 @@ namespace Nikse.SubtitleEdit.Logic
                 FontFamily = "Font family",
                 FontSize = "Font size",
                 XImagesSavedInY = "{0} images saved in {1}",
+                VideoResolution = "Video res",
+                Align = "Align",
+                Left = "Left",
+                Center = "Center",
+                Right = "Right",
             };
 
             FindDialog = new LanguageStructure.FindDialog

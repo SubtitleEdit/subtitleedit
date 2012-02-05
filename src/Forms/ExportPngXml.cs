@@ -24,10 +24,12 @@ namespace Nikse.SubtitleEdit.Forms
             public Color SubtitleColor { get; set; }
             public string SubtitleFontName { get; set; }
             public float SubtitleFontSize { get; set; }
+            public bool SubtitleFontBold { get; set; }
             public Color BorderColor { get; set; }
             public float BorderWidth { get; set; }
             public bool AntiAlias { get; set; }
             public bool AlignLeft { get; set; }
+            public bool AlignRight { get; set; }
             public byte[] Buffer { get; set; }
             public int ScreenWidth { get; set; }
             public int ScreenHeight { get; set; }
@@ -38,6 +40,7 @@ namespace Nikse.SubtitleEdit.Forms
         Color _subtitleColor = Color.White;
         string _subtitleFontName = "Verdana";
         float _subtitleFontSize = 75.0f;
+        bool _subtitleFontBold = false;
         Color _borderColor = Color.Black;
         float _borderWidth = 2.0f;
         bool _isLoading = true;
@@ -84,10 +87,12 @@ namespace Nikse.SubtitleEdit.Forms
                                     SubtitleColor = _subtitleColor,
                                     SubtitleFontName = _subtitleFontName,
                                     SubtitleFontSize = _subtitleFontSize,
+                                    SubtitleFontBold = _subtitleFontBold,
                                     BorderColor = _borderColor,
                                     BorderWidth = _borderWidth,
                                     AntiAlias = checkBoxAntiAlias.Checked,
                                     AlignLeft = comboBoxHAlign.SelectedIndex == 0,
+                                    AlignRight = comboBoxHAlign.SelectedIndex == 2,
                                     ScreenWidth = screenWidth,
                                     ScreenHeight = screenHeight,
                                     Bitmap = null,
@@ -135,23 +140,43 @@ namespace Nikse.SubtitleEdit.Forms
                 int height = 1080;
                 if (comboBoxResolution.SelectedIndex == 1)
                 {
+                    width = 1440;
+                    height = 1080;
+                }
+                else if (comboBoxResolution.SelectedIndex == 2)
+                {
                     width = 1280;
                     height = 720;
                 }
-                else if (comboBoxResolution.SelectedIndex == 2)
+                else if (comboBoxResolution.SelectedIndex == 3)
+                {
+                    width = 960;
+                    height = 720;
+                }
+                else if (comboBoxResolution.SelectedIndex == 4)
                 {
                     width = 848;
                     height = 480;
                 }
-                else if (comboBoxResolution.SelectedIndex == 3)
+                else if (comboBoxResolution.SelectedIndex == 5)
                 {
                     width = 720;
                     height = 576;
                 }
-                else if (comboBoxResolution.SelectedIndex == 4)
+                else if (comboBoxResolution.SelectedIndex == 6)
                 {
                     width = 720;
                     height = 480;
+                }
+                else if (comboBoxResolution.SelectedIndex == 7)
+                {
+                    width = 640;
+                    height = 352;
+                }
+                else if (comboBoxResolution.SelectedIndex == 8)
+                {
+                    width = 640;
+                    height = 272;
                 }
 
                 FileStream binarySubtitleFile = null;
@@ -316,6 +341,7 @@ namespace Nikse.SubtitleEdit.Forms
             _borderColor = panelBorderColor.BackColor;
             _subtitleFontName = comboBoxSubtitleFont.SelectedItem.ToString();
             _subtitleFontSize = float.Parse(comboBoxSubtitleFontSize.SelectedItem.ToString());
+            _subtitleFontBold = checkBoxBold.Checked;
             _borderWidth = float.Parse(comboBoxBorderWidth.SelectedItem.ToString());
         }
 
@@ -330,12 +356,14 @@ namespace Nikse.SubtitleEdit.Forms
         {
             MakeBitmapParameter mbp = new MakeBitmapParameter();
             mbp.AlignLeft = comboBoxHAlign.SelectedIndex == 0;
+            mbp.AlignRight = comboBoxHAlign.SelectedIndex == 2;
             mbp.AntiAlias = checkBoxAntiAlias.Checked;
             mbp.BorderWidth = _borderWidth;
             mbp.BorderColor = _borderColor;
             mbp.SubtitleFontName = _subtitleFontName;
             mbp.SubtitleColor = _subtitleColor;
             mbp.SubtitleFontSize = _subtitleFontSize;
+            mbp.SubtitleFontBold = _subtitleFontBold;
             mbp.P = new Paragraph(text, 0, 0);
 
             var bmp = GenerateImageFromTextWithStyle(mbp);
@@ -346,6 +374,32 @@ namespace Nikse.SubtitleEdit.Forms
                 bmp = nbmp.GetBitmap();
             }
             return bmp;
+        }
+
+        private static float MeasureText(Font font, string text, bool bold)
+        {
+            var sf = new StringFormat();
+            sf.Alignment = StringAlignment.Near;
+            sf.LineAlignment = StringAlignment.Near;
+            var path = new GraphicsPath();
+
+            var sb = new StringBuilder(text);
+            bool isItalic = false;
+            bool newLine = false;
+            int addX = 0;
+            int leftMargin = 0;
+            TextDraw.DrawText(font, sf, path, sb, isItalic, bold, 0, 0, ref newLine, addX, leftMargin);
+
+            float width = 0;
+            int index = path.PathPoints.Length - 30;
+            if (index < 0)
+                index = 0;
+            for (int i = index; i < path.PathPoints.Length; i++)
+            {
+                if (path.PathPoints[i].X > width)
+                    width = path.PathPoints[i].X;
+            }
+            return width;
         }
 
         private static Bitmap GenerateImageFromTextWithStyle(MakeBitmapParameter parameter)
@@ -367,7 +421,10 @@ namespace Nikse.SubtitleEdit.Forms
             Font font;
             try
             {
-                font = new Font(parameter.SubtitleFontName, parameter.SubtitleFontSize);
+                var fontStyle = FontStyle.Regular;
+                if (parameter.SubtitleFontBold)
+                    fontStyle = FontStyle.Bold;
+                font = new Font(parameter.SubtitleFontName, parameter.SubtitleFontSize, fontStyle);
             }
             catch (Exception exception)
             {
@@ -390,12 +447,13 @@ namespace Nikse.SubtitleEdit.Forms
             var lefts = new List<float>();
             foreach (string line in text.Replace("<i>", string.Empty).Replace("</i>", string.Empty).Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries))
             {
-                if (parameter.AlignLeft) //comboBoxHAlign.SelectedIndex == 0) // left
+                if (parameter.AlignLeft) 
                     lefts.Add(5);
+                else if (parameter.AlignRight)
+                    lefts.Add((float)(bmp.Width - (MeasureText(font, line, parameter.SubtitleFontBold) + 15)));                                           
                 else
                     lefts.Add((float)(bmp.Width - g.MeasureString(line, font).Width * 0.8+15) / 2);
             }
-
 
             if (parameter.AntiAlias)
             {
@@ -428,7 +486,7 @@ namespace Nikse.SubtitleEdit.Forms
                     italicFromStart = i == 0;
                     if (sb.Length > 0)
                     {
-                        TextDraw.DrawText(font, sf, path, sb, isItalic, left, top, ref newLine, addX, leftMargin);
+                        TextDraw.DrawText(font, sf, path, sb, isItalic, parameter.SubtitleFontBold, left, top, ref newLine, addX, leftMargin);
                         addX = 0;
                         firstLinePart = false;
                     }
@@ -441,7 +499,7 @@ namespace Nikse.SubtitleEdit.Forms
                         addX = 0;
                     else
                         addX = italicSpacing;
-                    TextDraw.DrawText(font, sf, path, sb, isItalic, left, top, ref newLine, addX, leftMargin);
+                    TextDraw.DrawText(font, sf, path, sb, isItalic, parameter.SubtitleFontBold, left, top, ref newLine, addX, leftMargin);
                     firstLinePart = false;
                     addX = 1;
                     if (parameter.SubtitleFontName.StartsWith("Arial"))
@@ -456,7 +514,7 @@ namespace Nikse.SubtitleEdit.Forms
                     else
                         addX = italicSpacing;
 
-                    TextDraw.DrawText(font, sf, path, sb, isItalic, left, top, ref newLine, addX, leftMargin);
+                    TextDraw.DrawText(font, sf, path, sb, isItalic, parameter.SubtitleFontBold, left, top, ref newLine, addX, leftMargin);
                     firstLinePart = true;
 
                     addX = 0;
@@ -482,7 +540,7 @@ namespace Nikse.SubtitleEdit.Forms
                     addX = 0;
                 else
                     addX = italicSpacing;
-                TextDraw.DrawText(font, sf, path, sb, isItalic, left, top, ref newLine, addX, leftMargin);
+                TextDraw.DrawText(font, sf, path, sb, isItalic, parameter.SubtitleFontBold, left, top, ref newLine, addX, leftMargin);
             }
 
             if (parameter.BorderWidth > 0)
@@ -522,11 +580,23 @@ namespace Nikse.SubtitleEdit.Forms
             labelSubtitleFontSize.Text = Configuration.Settings.Language.ExportPngXml.FontSize;
             buttonColor.Text = Configuration.Settings.Language.ExportPngXml.FontColor;
             checkBoxAntiAlias.Text = Configuration.Settings.Language.ExportPngXml.AntiAlias;
+            checkBoxBold.Text = Configuration.Settings.Language.General.Bold;
             buttonBorderColor.Text = Configuration.Settings.Language.ExportPngXml.BorderColor;
             labelBorderWidth.Text = Configuration.Settings.Language.ExportPngXml.BorderWidth;
             buttonExport.Text = Configuration.Settings.Language.ExportPngXml.ExportAllLines;
             buttonCancel.Text = Configuration.Settings.Language.General.OK;
             labelImageResolution.Text = string.Empty;
+            labelHorizontalAlign.Text = Configuration.Settings.Language.ExportPngXml.Align;
+            if (Configuration.Settings.Language.ExportPngXml.Left != null &&
+                Configuration.Settings.Language.ExportPngXml.Center != null &&
+                Configuration.Settings.Language.ExportPngXml.Right != null)
+            {
+                comboBoxHAlign.Items.Clear();
+                comboBoxHAlign.Items.Add(Configuration.Settings.Language.ExportPngXml.Left);
+                comboBoxHAlign.Items.Add(Configuration.Settings.Language.ExportPngXml.Center);
+                comboBoxHAlign.Items.Add(Configuration.Settings.Language.ExportPngXml.Right);
+            }
+
             subtitleListView1.InitializeLanguage(Configuration.Settings.Language.General, Configuration.Settings);
             Utilities.InitializeSubtitleFont(subtitleListView1);
             subtitleListView1.AutoSizeAllColumns(this);
@@ -541,7 +611,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (exportType == "VOBSUB")
             {
                 comboBoxBorderWidth.SelectedIndex = 3;
-                comboBoxResolution.SelectedIndex = 3;
+                comboBoxResolution.SelectedIndex = 5;
             }
 
             foreach (var x in FontFamily.Families)
@@ -642,6 +712,11 @@ namespace Nikse.SubtitleEdit.Forms
         }
 
         private void comboBoxHAlign_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            subtitleListView1_SelectedIndexChanged(null, null);
+        }
+
+        private void checkBoxBold_CheckedChanged(object sender, EventArgs e)
         {
             subtitleListView1_SelectedIndexChanged(null, null);
         }
