@@ -3,7 +3,7 @@ Subtitle Edit Changelog
 3.2.4 (xth February 2012)
  * NEW:
    * Export to VobSub format
-   * Added a few new subtitle formats (now more than 80!)
+   * Added new subtitle formats (now more than 80!)
  * IMPROVED:
    * Updated Basque languaged file - thx Xabier Aramendi
    * Export images alignment - thx Marcin
@@ -19,6 +19,7 @@ Subtitle Edit Changelog
    * Bug in replace when showing original subtitle - thx Krystian
    * Bug in auto break lines regarding italic tags - thx Majid
    * Crash when merging lines (original sub) in some cases - thx Krystian
+   * Bug when saving framerate with "," instead of "." - thx yannick
 
 
 3.2.3 (13th January 2012)
