@@ -376,7 +376,7 @@ namespace Nikse.SubtitleEdit.Forms
             return bmp;
         }
 
-        private static float MeasureText(Font font, string text, bool bold)
+        private static float MeasureTextWidth(Font font, string text, bool bold)
         {
             var sf = new StringFormat();
             sf.Alignment = StringAlignment.Near;
@@ -399,6 +399,15 @@ namespace Nikse.SubtitleEdit.Forms
                 if (path.PathPoints[i].X > width)
                     width = path.PathPoints[i].X;
             }
+            int max = 30;
+            if (30 >= path.PathPoints.Length)
+                max = path.PathPoints.Length;
+            for (int i = 0; i < max; i++)
+            {
+                if (path.PathPoints[i].X > width)
+                    width = path.PathPoints[i].X;
+            }
+
             return width;
         }
 
@@ -450,7 +459,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (parameter.AlignLeft) 
                     lefts.Add(5);
                 else if (parameter.AlignRight)
-                    lefts.Add((float)(bmp.Width - (MeasureText(font, line, parameter.SubtitleFontBold) + 15)));                                           
+                    lefts.Add((float)(bmp.Width - (MeasureTextWidth(font, line, parameter.SubtitleFontBold) + 15)));                                           
                 else
                     lefts.Add((float)(bmp.Width - g.MeasureString(line, font).Width * 0.8+15) / 2);
             }
