@@ -17,6 +17,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
         private IntPtr _mediaPlayer;
         private System.Windows.Forms.Control _ownerControl;
         private System.Windows.Forms.Form _parentForm;
+        private double? _pausePosition = null; // Hack to hold precise seeking when paused
 
         [DllImport("user32")]
         private static extern short GetKeyState(int vKey);
@@ -255,11 +256,15 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
         {
             get
             {
+                if (_pausePosition != null)
+                    return _pausePosition.Value;
                 return _libvlc_media_player_get_time(_mediaPlayer) / 1000.0;
             }
             set
             {
-                _libvlc_media_player_set_time(_mediaPlayer, (long)(value * 1000.0));
+                if (IsPaused && value <= Duration)
+                    _pausePosition = value;
+                _libvlc_media_player_set_time(_mediaPlayer, (long)(value * 1000.0 + 0.5));
             }
         }
 
@@ -279,6 +284,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
         public override void Play()
         {
             _libvlc_media_player_play(_mediaPlayer);
+            _pausePosition = null;
         }
 
         public override void Pause()
@@ -290,6 +296,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
         public override void Stop()
         {
             _libvlc_media_player_stop(_mediaPlayer);
+            _pausePosition = null;
         }
 
         public override bool IsPaused
