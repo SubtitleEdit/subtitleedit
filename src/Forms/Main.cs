@@ -744,18 +744,6 @@ namespace Nikse.SubtitleEdit.Forms
             if (SubtitleListview1.SelectedItems.Count > 0)
                 index = SubtitleListview1.SelectedItems[0].Index;
             SetWaveFormPosition(audioVisualizer.StartPositionSeconds, seconds, index);
-
-            //if (mediaPlayer.VideoPlayer != null && mediaPlayer.VideoPlayer is Nikse.SubtitleEdit.Logic.VideoPlayers.LibVlc11xDynamic) //TODO: Fix this hack!
-            //{
-            //    double newPosition = seconds - 0.015;
-            //    for (int i = 0; i < 200; i++)
-            //    {
-            //        if (mediaPlayer.CurrentPosition > seconds)
-            //            mediaPlayer.CurrentPosition = newPosition;
-            //        System.Threading.Thread.Sleep(1);
-            //        Application.DoEvents();
-            //    }
-            //}
             timerWaveForm.Start();
         }
 
