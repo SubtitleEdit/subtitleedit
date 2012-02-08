@@ -257,7 +257,11 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             get
             {
                 if (_pausePosition != null)
+                {
+                    if (_pausePosition < 0)
+                        return 0;
                     return _pausePosition.Value;
+                }
                 return _libvlc_media_player_get_time(_mediaPlayer) / 1000.0;
             }
             set
