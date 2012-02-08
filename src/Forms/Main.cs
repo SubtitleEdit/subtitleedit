@@ -3560,11 +3560,16 @@ namespace Nikse.SubtitleEdit.Forms
                                         if (MessageBox.Show(_language.AppendSynchronizedSubtitlePrompt, _language.SubtitleAppendPromptTitle, MessageBoxButtons.YesNo) == DialogResult.Yes)
                                         {
                                             int start = _subtitle.Paragraphs.Count +1;
-
+                                            var fr = CurrentFrameRate;
                                             MakeHistoryForUndo(_language.BeforeAppend);
                                             foreach (Paragraph p in visualSync.Paragraphs)
+                                            {
+                                                if (format.IsFrameBased)
+                                                    p.CalculateFrameNumbersFromTimeCodes(fr);
                                                 _subtitle.Paragraphs.Add(new Paragraph(p));
+                                            }
                                             _subtitle.Renumber(1);
+
                                             ShowSource();
                                             SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
 

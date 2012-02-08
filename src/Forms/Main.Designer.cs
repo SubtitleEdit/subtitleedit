@@ -1058,7 +1058,7 @@
             // 
             this.toolStripMenuItemSingleNote.Font = new System.Drawing.Font("Times New Roman", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.toolStripMenuItemSingleNote.Name = "toolStripMenuItemSingleNote";
-            this.toolStripMenuItemSingleNote.Size = new System.Drawing.Size(152, 22);
+            this.toolStripMenuItemSingleNote.Size = new System.Drawing.Size(86, 22);
             this.toolStripMenuItemSingleNote.Text = "♪";
             this.toolStripMenuItemSingleNote.Click += new System.EventHandler(this.InsertUnicodeSymbol);
             // 
@@ -1066,7 +1066,7 @@
             // 
             this.toolStripMenuItemDoubleNote.Font = new System.Drawing.Font("Times New Roman", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.toolStripMenuItemDoubleNote.Name = "toolStripMenuItemDoubleNote";
-            this.toolStripMenuItemDoubleNote.Size = new System.Drawing.Size(152, 22);
+            this.toolStripMenuItemDoubleNote.Size = new System.Drawing.Size(86, 22);
             this.toolStripMenuItemDoubleNote.Text = "♫";
             this.toolStripMenuItemDoubleNote.Click += new System.EventHandler(this.InsertUnicodeSymbol);
             // 
@@ -1074,7 +1074,7 @@
             // 
             this.toolStripMenuItemSmiley.Font = new System.Drawing.Font("Times New Roman", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.toolStripMenuItemSmiley.Name = "toolStripMenuItemSmiley";
-            this.toolStripMenuItemSmiley.Size = new System.Drawing.Size(152, 22);
+            this.toolStripMenuItemSmiley.Size = new System.Drawing.Size(86, 22);
             this.toolStripMenuItemSmiley.Text = "☺";
             this.toolStripMenuItemSmiley.Click += new System.EventHandler(this.InsertUnicodeSymbol);
             // 
@@ -1082,7 +1082,7 @@
             // 
             this.toolStripMenuItemLove.Font = new System.Drawing.Font("Times New Roman", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.toolStripMenuItemLove.Name = "toolStripMenuItemLove";
-            this.toolStripMenuItemLove.Size = new System.Drawing.Size(152, 22);
+            this.toolStripMenuItemLove.Size = new System.Drawing.Size(86, 22);
             this.toolStripMenuItemLove.Text = "♥";
             this.toolStripMenuItemLove.Click += new System.EventHandler(this.InsertUnicodeSymbol);
             // 
@@ -3326,28 +3326,28 @@
             // toolStripMenuItem3
             // 
             this.toolStripMenuItem3.Name = "toolStripMenuItem3";
-            this.toolStripMenuItem3.Size = new System.Drawing.Size(82, 22);
+            this.toolStripMenuItem3.Size = new System.Drawing.Size(86, 22);
             this.toolStripMenuItem3.Text = "♪";
             this.toolStripMenuItem3.Click += new System.EventHandler(this.InsertUnicodeSymbol);
             // 
             // toolStripMenuItem4
             // 
             this.toolStripMenuItem4.Name = "toolStripMenuItem4";
-            this.toolStripMenuItem4.Size = new System.Drawing.Size(82, 22);
+            this.toolStripMenuItem4.Size = new System.Drawing.Size(86, 22);
             this.toolStripMenuItem4.Text = "♫";
             this.toolStripMenuItem4.Click += new System.EventHandler(this.InsertUnicodeSymbol);
             // 
             // toolStripMenuItem5
             // 
             this.toolStripMenuItem5.Name = "toolStripMenuItem5";
-            this.toolStripMenuItem5.Size = new System.Drawing.Size(82, 22);
+            this.toolStripMenuItem5.Size = new System.Drawing.Size(86, 22);
             this.toolStripMenuItem5.Text = "☺";
             this.toolStripMenuItem5.Click += new System.EventHandler(this.InsertUnicodeSymbol);
             // 
             // toolStripMenuItem6
             // 
             this.toolStripMenuItem6.Name = "toolStripMenuItem6";
-            this.toolStripMenuItem6.Size = new System.Drawing.Size(82, 22);
+            this.toolStripMenuItem6.Size = new System.Drawing.Size(86, 22);
             this.toolStripMenuItem6.Text = "♥";
             this.toolStripMenuItem6.Click += new System.EventHandler(this.InsertUnicodeSymbol);
             // 
