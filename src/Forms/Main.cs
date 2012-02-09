@@ -3374,11 +3374,11 @@ namespace Nikse.SubtitleEdit.Forms
                     var selectedLines = new Subtitle { WasLoadedWithFrameNumbers = _subtitle.WasLoadedWithFrameNumbers };
                     foreach (int index in SubtitleListview1.SelectedIndices)
                         selectedLines.Paragraphs.Add(_subtitle.Paragraphs[index]);
-                    fixErrors.Initialize(selectedLines);
+                    fixErrors.Initialize(selectedLines, GetCurrentSubtitleFormat());
                 }
                 else
                 {
-                    fixErrors.Initialize(_subtitle);
+                    fixErrors.Initialize(_subtitle, GetCurrentSubtitleFormat());
                 }
 
                 if (fixErrors.ShowDialog(this) == DialogResult.OK)

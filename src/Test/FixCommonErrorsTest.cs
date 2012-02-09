@@ -35,7 +35,7 @@ namespace Test
         {
             Subtitle subtitle = new Subtitle();
             subtitle.Paragraphs.Add(new Paragraph(line, 100, 10000));
-            target.Initialize(subtitle);
+            target.Initialize(subtitle, new Nikse.SubtitleEdit.Logic.SubtitleFormats.SubRip());
         }
 
         private static void InitializeFixCommonErrorsLine(FixCommonErrors_Accessor target, string line, string line2)
@@ -43,7 +43,7 @@ namespace Test
             Subtitle subtitle = new Subtitle();
             subtitle.Paragraphs.Add(new Paragraph(line, 100, 10000));
             subtitle.Paragraphs.Add(new Paragraph(line2, 10001, 30000));
-            target.Initialize(subtitle);
+            target.Initialize(subtitle, new Nikse.SubtitleEdit.Logic.SubtitleFormats.SubRip());
         }
 
         #region Additional test attributes
