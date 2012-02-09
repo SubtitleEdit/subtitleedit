@@ -19,6 +19,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
         public float FramesPerSecond { get; private set; }
         public string VideoFormat { get; private set; }
         public string VideoCodec { get; private set; }
+        private double? _pausePosition = null; // Hack to hold precise seeking when paused
 
         public override string PlayerName
         {
@@ -52,39 +53,43 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
         {
             get
             {
+                if (_pausePosition != null)
+                {
+                    if (_pausePosition < 0)
+                        return 0;
+                    return _pausePosition.Value;
+                }
                 return _timePosition;
             }
             set
             {
                 // NOTE: FOR ACCURATE SEARCH USE MPlayer2 - http://www.mplayer2.org/)
                 _timePosition = value;
-                _mplayer.StandardInput.WriteLine(string.Format("pausing_keep seek {0:0.0} 2", value));
-                _mplayer.StandardInput.Flush();
+                if (IsPaused && value <= Duration)
+                    _pausePosition = value;
+                _mplayer.StandardInput.WriteLine(string.Format("seek {0:0.0} 2", value));
             }
         }
 
         public override void Play()
         {
-//            SetProperty("pause", "1", false);
-            _mplayer.StandardInput.WriteLine("pause");
-            _mplayer.StandardInput.Flush();
+            _mplayer.StandardInput.WriteLine("set_property pause 0");
             _paused = false;
+            _pausePosition = null;
         }
 
         public override void Pause()
         {
-            //_mplayer.StandardInput.WriteLine("pausing set_property pause 1");
-            _mplayer.StandardInput.WriteLine("pause");
-            _mplayer.StandardInput.Flush();
+            _mplayer.StandardInput.WriteLine("set_property pause 1");
             _paused = true;
         }
 
         public override void Stop()
         {
             _mplayer.StandardInput.WriteLine("stop");
-            _mplayer.StandardInput.Flush();
             _paused = true;
             _lastLengthInSeconds = _lengthInSeconds;
+            _pausePosition = null;
         }
 
         public override bool IsPaused
@@ -109,7 +114,8 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                 if (Utilities.IsRunningOnLinux() || Utilities.IsRunningOnMac())
                     _mplayer.StartInfo.Arguments = "-slave -idle -quiet -osdlevel 0 -vsync -wid " + ownerControl.Handle.ToInt32() + " \"" + videoFileName + "\" ";
                 else
-                    _mplayer.StartInfo.Arguments = "-slave -idle -quiet -osdlevel 0 -vsync -vo directx:noaccel -wid " + ownerControl.Handle.ToInt32() + " \"" + videoFileName + "\" ";
+                    _mplayer.StartInfo.Arguments = "-nofs -quiet -slave -osdlevel 0 -vo direct3d -wid " + (int)ownerControl.Handle + " \"" + videoFileName + "\" ";
+
                 _mplayer.StartInfo.UseShellExecute = false;
                 _mplayer.StartInfo.RedirectStandardInput = true;
                 _mplayer.StartInfo.RedirectStandardOutput = true;
@@ -146,7 +152,6 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             // variable properties
             _mplayer.StandardInput.WriteLine("pausing_keep_force get_property time_pos");
             _mplayer.StandardInput.WriteLine("pausing_keep_force get_property pause");
-            _mplayer.StandardInput.Flush();
 
             if (!_ended && OnVideoEnded != null && _lengthInSeconds.TotalSeconds == Duration)
             {
@@ -163,7 +168,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                 timer.Stop();
                 _loaded = false;
                 OnVideoLoaded.Invoke(this, null);
-                timer.Interval = 200;
+                timer.Interval = 100;
                 timer.Start();
             }
 
@@ -176,6 +181,8 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
         {
             if (e.Data == null)
                 return;
+
+          //  System.Diagnostics.Debug.WriteLine("MPlayer: " + e.Data);
 
             if (e.Data.StartsWith("Playing "))
                 _loaded = true;
@@ -268,7 +275,6 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                 _mplayer.StandardInput.WriteLine("pausing_keep get_property " + propertyName);
             else
                 _mplayer.StandardInput.WriteLine("get_property " + propertyName);
-            _mplayer.StandardInput.Flush();
         }
 
         private void SetProperty(string propertyName, string value, bool keepPause)
@@ -277,7 +283,6 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                 _mplayer.StandardInput.WriteLine("pausing_keep set_property " + propertyName + " " + value);
             else
                 _mplayer.StandardInput.WriteLine("set_property " + propertyName + " " + value);
-            _mplayer.StandardInput.Flush();
 
             UglySleep();
         }
@@ -303,7 +308,6 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             {
                 _mplayer.OutputDataReceived -= MPlayerOutputDataReceived;
                 _mplayer.StandardInput.WriteLine("quit");
-                _mplayer.StandardInput.Flush();
             }
         }
 
