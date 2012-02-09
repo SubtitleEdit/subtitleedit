@@ -585,6 +585,7 @@
     <Compile Include="Logic\SubtitleFormats\AvidCaption.cs" />
     <Compile Include="Logic\SubtitleFormats\BdnXml.cs" />
     <Compile Include="Logic\SubtitleFormats\Captionate.cs" />
+    <Compile Include="Logic\SubtitleFormats\CaptionateMs.cs" />
     <Compile Include="Logic\SubtitleFormats\CaraokeXml.cs" />
     <Compile Include="Logic\SubtitleFormats\Cavena890.cs" />
     <Compile Include="Logic\SubtitleFormats\DCSubtitle.cs" />

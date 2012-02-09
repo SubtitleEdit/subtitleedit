@@ -25,6 +25,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     new AQTitle(),
                     new AvidCaption(),
                     new Captionate(),
+                    new CaptionateMs(),
                     new CaraokeXml(),
                     new Csv(),
                     new DCSubtitle(),
