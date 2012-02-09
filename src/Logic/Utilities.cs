@@ -1673,14 +1673,18 @@ namespace Nikse.SubtitleEdit.Logic
             const string beginTag = "<i>";
             const string endTag = "</i>";
 
+            text = text.Replace("< i >", beginTag);
             text = text.Replace("< i>", beginTag);
             text = text.Replace("<i >", beginTag);
             text = text.Replace("< I>", beginTag);
             text = text.Replace("<I >", beginTag);
 
+            text = text.Replace("< / i >", "</i>");
             text = text.Replace("< /i>", endTag);
             text = text.Replace("</ i>", endTag);
             text = text.Replace("< /i>", endTag);
+            text = text.Replace("< /i >", endTag);
+            text = text.Replace("</i >", endTag);
             text = text.Replace("< /I>", endTag);
             text = text.Replace("</ I>", endTag);            
             text = text.Replace("< /I>", endTag);
