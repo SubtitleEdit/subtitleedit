@@ -2370,7 +2370,9 @@ namespace Nikse.SubtitleEdit.Forms
                     return;
                 }
             }
-            textBoxSource.Text = string.Empty;
+            textBoxSource.TextChanged -= TextBoxSourceTextChanged;
+            textBoxSource.Text = string.Empty;            
+            textBoxSource.TextChanged += TextBoxSourceTextChanged;
         }
 
         private void SettingsToolStripMenuItemClick(object sender, EventArgs e)
