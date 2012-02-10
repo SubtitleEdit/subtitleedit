@@ -998,7 +998,7 @@ namespace Nikse.SubtitleEdit.Logic
                     PlayFromJustBeforeText = "Play from just before &text",
                     Pause = "Pause",
                     GoToSubtitlePositionAndPause = "Go to subposition and pause",
-                    SetStartTime = "Set &start time",                    
+                    SetStartTime = "Set &start time",
                     SetEndTimeAndGoToNext = "Set &end && goto next",
                     AdjustedViaEndTime = "Adjusted via end time {0}",
                     SetEndTime = "Set e&nd time",
