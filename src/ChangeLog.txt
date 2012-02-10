@@ -27,7 +27,7 @@ Subtitle Edit Changelog
 
 3.2.3 (13th January 2012)
  * NEW:
-   * Added Brazilian Portuguese - thx XXXXXXXXXX 
+   * Added Brazilian Portuguese - thx XXXXXXXXXX
    * Added Italian language file - thx Maff
    * Added Portuguese (Portugal) language file - thx Ricardo Perdigão
    * Added Japanese language file - thx Nardog
@@ -36,8 +36,8 @@ Subtitle Edit Changelog
    * Support for F4 subtitle formats - thx Fred
    * Export to Blu-ray sup format
  * IMPROVED:
-   * Updated Tesseract to 3.01 
-     Now includes (some) italic detection + adds support for 
+   * Updated Tesseract to 3.01
+     Now includes (some) italic detection + adds support for
      Arabic, Hebrew, Hindi and Thai
    * Undo improved so it also works for textbox + redo (Ctrl+Y)
    * Many new configurable shortcuts (e.g. for fullscreen video player)
@@ -56,7 +56,7 @@ Subtitle Edit Changelog
    * Fixed crash in set color (or set font) - thx LEO33
    * Fixed crash/freeze when loading large subtitle files - thx Ulrik
    * Fixed bug when clicking in list view while running ocr - thx sialivi
-   * Fixed de-selecting text in textbox via single click - thx XhmikosR 
+   * Fixed de-selecting text in textbox via single click - thx XhmikosR
    * Fixed possible crash in spell check + German dictionary should work
    * Fixed missing save/load of a fix common errors setting - thx menes
    * Removed Microsoft translate as it's useless with new quotas

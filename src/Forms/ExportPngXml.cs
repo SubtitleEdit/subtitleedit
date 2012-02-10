@@ -456,10 +456,10 @@ namespace Nikse.SubtitleEdit.Forms
             var lefts = new List<float>();
             foreach (string line in text.Replace("<i>", string.Empty).Replace("</i>", string.Empty).Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries))
             {
-                if (parameter.AlignLeft) 
+                if (parameter.AlignLeft)
                     lefts.Add(5);
                 else if (parameter.AlignRight)
-                    lefts.Add((float)(bmp.Width - (MeasureTextWidth(font, line, parameter.SubtitleFontBold) + 15)));                                           
+                    lefts.Add((float)(bmp.Width - (MeasureTextWidth(font, line, parameter.SubtitleFontBold) + 15)));
                 else
                     lefts.Add((float)(bmp.Width - g.MeasureString(line, font).Width * 0.8+15) / 2);
             }

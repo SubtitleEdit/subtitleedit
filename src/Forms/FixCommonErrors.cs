@@ -1262,7 +1262,7 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         if (newText.Length > index + 4 && index > 1)
                         {
-                            if (Utilities.GetLetters(true, true, true).Contains(newText[index + 3].ToString()) && 
+                            if (Utilities.GetLetters(true, true, true).Contains(newText[index + 3].ToString()) &&
                                 Utilities.GetLetters(true, true, true).Contains(newText[index -1].ToString()))
                                 newText = newText.Insert(index + 3, " ");
                         }
@@ -1593,7 +1593,7 @@ namespace Nikse.SubtitleEdit.Forms
                                             }
                                         }
                                     }
-                                    else if (match.Index > 1 && ((st.StrippedText[match.Index - 1] == '\"') || (st.StrippedText[match.Index - 1] == '\'') || 
+                                    else if (match.Index > 1 && ((st.StrippedText[match.Index - 1] == '\"') || (st.StrippedText[match.Index - 1] == '\'') ||
                                                                  (st.StrippedText[match.Index - 1] == '>') || (st.StrippedText[match.Index - 1] == '-')))
                                     {
                                     }

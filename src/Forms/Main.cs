@@ -6107,7 +6107,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
 
-                SetEncoding(Encoding.UTF8);                
+                SetEncoding(Encoding.UTF8);
                 ShowStatus(_language.SubtitleImportedFromMatroskaFile);
                 _subtitle.Renumber(1);
                 _subtitle.WasLoadedWithFrameNumbers = false;

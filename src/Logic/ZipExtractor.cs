@@ -19,7 +19,7 @@ namespace System.IO.Compression
         /// </summary>
         public enum Compression : ushort
         {
-            /// <summary>Uncompressed storage</summary> 
+            /// <summary>Uncompressed storage</summary>
             Store = 0,
             /// <summary>Deflate compression method</summary>
             Deflate = 8
@@ -142,7 +142,7 @@ namespace System.IO.Compression
         }
 
         /// <summary>
-        /// Read all the file records in the central directory 
+        /// Read all the file records in the central directory
         /// </summary>
         /// <returns>List of all entries in directory</returns>
         public List<ZipFileEntry> ReadCentralDir()
@@ -271,7 +271,7 @@ namespace System.IO.Compression
         #region Private methods
 
         /// <summary>
-        /// Calculate the file offset by reading the corresponding local header 
+        /// Calculate the file offset by reading the corresponding local header
         /// </summary>
         private uint GetFileOffset(uint _headerOffset)
         {
@@ -324,8 +324,8 @@ namespace System.IO.Compression
             filename (variable size)
             extra field (variable size)
             file comment (variable size)
-        
-         * 
+
+         *
         /* End of central dir record:
             end of central dir signature    4 bytes  (0x06054b50)
             number of this disk             2 bytes
@@ -345,14 +345,14 @@ namespace System.IO.Compression
 
 
         /* DOS Date and time:
-            MS-DOS date. The date is a packed value with the following format. Bits Description 
-                0-4 Day of the month (1–31) 
-                5-8 Month (1 = January, 2 = February, and so on) 
-                9-15 Year offset from 1980 (add 1980 to get actual year) 
-            MS-DOS time. The time is a packed value with the following format. Bits Description 
-                0-4 Second divided by 2 
-                5-10 Minute (0–59) 
-                11-15 Hour (0–23 on a 24-hour clock) 
+            MS-DOS date. The date is a packed value with the following format. Bits Description
+                0-4 Day of the month (1–31)
+                5-8 Month (1 = January, 2 = February, and so on)
+                9-15 Year offset from 1980 (add 1980 to get actual year)
+            MS-DOS time. The time is a packed value with the following format. Bits Description
+                0-4 Second divided by 2
+                5-10 Minute (0–59)
+                11-15 Hour (0–23 on a 24-hour clock)
         */
 
         private static DateTime DosTimeToDateTime(uint _dt)

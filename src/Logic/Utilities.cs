@@ -287,7 +287,7 @@ namespace Nikse.SubtitleEdit.Logic
             s = s.Replace(Environment.NewLine, " ");
             s = s.Replace("  ", " ");
             s = s.Replace("  ", " ");
-            
+
             string temp = RemoveHtmlTags(s);
             if (temp.Length < mergeLinesShorterThan)
             {
@@ -1686,7 +1686,7 @@ namespace Nikse.SubtitleEdit.Logic
             text = text.Replace("< /i >", endTag);
             text = text.Replace("</i >", endTag);
             text = text.Replace("< /I>", endTag);
-            text = text.Replace("</ I>", endTag);            
+            text = text.Replace("</ I>", endTag);
             text = text.Replace("< /I>", endTag);
 
             text = text.Replace("</i> <i>", "_@_");
