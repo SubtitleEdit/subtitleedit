@@ -21,6 +21,7 @@ namespace Nikse.SubtitleEdit.Forms
         MicrosoftTranslationService.SoapService _microsoftTranslationService = null;
         private bool _googleApiNotWorking = false;
         private const string _splitterString  = "==";
+        private const string _newlineString = "__";
 
         private Encoding _screenScrapingEncoding = null;
         public Encoding ScreenScrapingEncoding
@@ -197,7 +198,7 @@ namespace Nikse.SubtitleEdit.Forms
                 int index = 0;
                 foreach (Paragraph p in _subtitle.Paragraphs)
                 {
-                    string text = string.Format("{1} {0} |", p.Text.Replace("|", "<br />"), _splitterString);
+                    string text = string.Format("{1} {0} |", p.Text.Replace("|", _newlineString), _splitterString);
                     if (HttpUtility.UrlEncode(sb.ToString() + text).Length >= textMaxSize)
                     {
                         FillTranslatedText(DoTranslate(sb.ToString()), start, index-1);
@@ -246,7 +247,8 @@ namespace Nikse.SubtitleEdit.Forms
                     if (cleanText.Contains("\n") && !cleanText.Contains("\r"))
                         cleanText = cleanText.Replace("\n", Environment.NewLine);
                     cleanText = cleanText.Replace(" ...", "...");
-                    cleanText = cleanText.Replace("<br>", Environment.NewLine);
+                    cleanText = cleanText.Replace(_newlineString, Environment.NewLine);
+                    cleanText = cleanText.Replace("<br />", Environment.NewLine);
                     cleanText = cleanText.Replace("<br/>", Environment.NewLine);
                     cleanText = cleanText.Replace("<br />", Environment.NewLine);
                     cleanText = cleanText.Replace(Environment.NewLine + " ", Environment.NewLine);
@@ -300,7 +302,7 @@ namespace Nikse.SubtitleEdit.Forms
             string[] arr = languagePair.Split('|');
             string from = arr[0];
             string to = arr[1];
-            input = input.Replace(Environment.NewLine, "<br/>");
+            input = input.Replace(Environment.NewLine, _newlineString);
             input = input.Replace("'", "&apos;");
             // create the web request to the Google Translate REST interface
 
@@ -385,7 +387,7 @@ namespace Nikse.SubtitleEdit.Forms
         /// <returns>Translated to String</returns>
         public static string TranslateTextViaScreenScraping(string input, string languagePair, Encoding encoding)
         {
-            input = input.Replace(Environment.NewLine, "<br/>");
+            input = input.Replace(Environment.NewLine, _newlineString);
             input = input.Replace("'", "&apos;");
 
             //string url = String.Format("http://www.google.com/translate_t?hl=en&ie=UTF8&text={0}&langpair={1}", HttpUtility.UrlEncode(input), languagePair);
@@ -414,6 +416,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
             string res = sb.ToString();
+            res = res.Replace(_newlineString, Environment.NewLine);
             res = res.Replace("<BR>", Environment.NewLine);
             res = res.Replace("<BR />", Environment.NewLine);
             res = res.Replace("<BR/>", Environment.NewLine);
