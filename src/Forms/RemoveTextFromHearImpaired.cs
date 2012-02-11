@@ -4,6 +4,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Logic;
+using System.Collections.Generic;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -670,37 +671,55 @@ namespace Nikse.SubtitleEdit.Forms
         private string RemoveInterjections(string text)
         {
             string[] arr = Configuration.Settings.Tools.Interjections.Split(";".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+            List<string> list = new List<string>();
             foreach (string s in arr)
             {
-                if (text.Contains(s))
+                if (!list.Contains(s))
+                    list.Add(s);
+                string lower = s.ToLower();
+                if (!list.Contains(lower))
+                    list.Add(lower);
+            }
+
+            bool doRepeat = true;
+            while (doRepeat)
+            {
+                doRepeat = false;
+                foreach (string s in arr)
                 {
-                    Regex regex = new Regex(s);
-                    Match match = regex.Match(text);
-                    if (match.Success)
+                    if (text.Contains(s))
                     {
-                        int index = match.Index;
-                        string temp = text.Remove(index, s.Length);
-                        string pre = string.Empty;
-                        if (index > 0)
+                        var regex = new Regex("\\b" + s + "\\b");
+                        Match match = regex.Match(text);
+                        if (match.Success)
                         {
-                            pre = text.Substring(0, index);
-                            temp = temp.Remove(0, index);
-                        }
+                            int index = match.Index;
+                            string temp = text.Remove(index, s.Length);
+                            string pre = string.Empty;
+                            if (index > 0)
+                            {
+                                pre = text.Substring(0, index);
+                                temp = temp.Remove(0, index);
+                                doRepeat = true;
+                            }
 
-                        while (temp.Length > 0 && (temp.StartsWith(" ") || temp.StartsWith(",") || temp.StartsWith(".") || temp.StartsWith("!") || temp.StartsWith("?")))
-                        {
-                            temp = temp.Remove(0, 1);
-                        }
-                        if (temp.Length > 0 &&  s[0].ToString() != s[0].ToString().ToLower())
-                        {
-                            temp = temp.Remove(0,1).Insert(0, temp[0].ToString().ToUpper());
-                        }
-                        temp = pre + temp;
+                            while (temp.Length > 0 && (temp.StartsWith(" ") || temp.StartsWith(",") || temp.StartsWith(".") || temp.StartsWith("!") || temp.StartsWith("?")))
+                            {
+                                temp = temp.Remove(0, 1);
+                                doRepeat = true;
+                            }
+                            if (temp.Length > 0 && s[0].ToString() != s[0].ToString().ToLower())
+                            {
+                                temp = temp.Remove(0, 1).Insert(0, temp[0].ToString().ToUpper());
+                                doRepeat = true;
+                            }
+                            temp = pre + temp;
 
-                        StripableText st = new StripableText(temp);
-                        if (st.StrippedText.Length == 0)
-                            return string.Empty;
-                        return temp;
+                            var st = new StripableText(temp);
+                            if (st.StrippedText.Length == 0)
+                                return string.Empty;
+                            text = temp;
+                        }
                     }
                 }
             }
