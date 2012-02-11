@@ -13,6 +13,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
         private bool _paused;
         private bool _loaded = false;
         private bool _ended = false;
+		private string _videoFileName;
         private bool _waitForChange = false;
         public int Width { get; private set; }
         public int Height { get; private set; }
@@ -20,6 +21,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
         public string VideoFormat { get; private set; }
         public string VideoCodec { get; private set; }
         private double? _pausePosition = null; // Hack to hold precise seeking when paused
+		private int _pauseCounts = 0;
 
         public override string PlayerName
         {
@@ -53,7 +55,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
         {
             get
             {
-                if (_pausePosition != null)
+                if (_paused && _pausePosition != null)
                 {
                     if (_pausePosition < 0)
                         return 0;
@@ -67,26 +69,32 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                 _timePosition = value;
                 if (IsPaused && value <= Duration)
                     _pausePosition = value;
-                _mplayer.StandardInput.WriteLine(string.Format("seek {0:0.0} 2", value));
+                _mplayer.StandardInput.WriteLine(string.Format("pausing_keep seek {0:0.0} 2", value));
             }
         }
 
         public override void Play()
         {
-            _mplayer.StandardInput.WriteLine("set_property pause 0");
+    		_mplayer.StandardInput.WriteLine("pause");
+			_pauseCounts = 0;
             _paused = false;
             _pausePosition = null;
         }
 
         public override void Pause()
         {
-            _mplayer.StandardInput.WriteLine("set_property pause 1");
+			if (!_paused)
+				_mplayer.StandardInput.WriteLine("pause");
+			_pauseCounts = 0;
             _paused = true;
         }
 
         public override void Stop()
         {
-            _mplayer.StandardInput.WriteLine("stop");
+            CurrentPosition = 0;
+            Pause();
+			_mplayer.StandardInput.WriteLine(string.Format("pausing_keep_force seek 0 2", 0));
+			_pauseCounts = 0;
             _paused = true;
             _lastLengthInSeconds = _lengthInSeconds;
             _pausePosition = null;
@@ -105,6 +113,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
         public override void Initialize(System.Windows.Forms.Control ownerControl, string videoFileName, EventHandler onVideoLoaded, EventHandler onVideoEnded)
         {
             _loaded = false;
+			_videoFileName = videoFileName;
             string mplayerExeName = GetMPlayerFileName;
             if (!string.IsNullOrEmpty(mplayerExeName))
             {
@@ -112,9 +121,9 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                 _mplayer.StartInfo.FileName = mplayerExeName;
                 //vo options: gl, gl2, directx:noaccel
                 if (Utilities.IsRunningOnLinux() || Utilities.IsRunningOnMac())
-                    _mplayer.StartInfo.Arguments = "-slave -idle -quiet -osdlevel 0 -vsync -wid " + ownerControl.Handle.ToInt32() + " \"" + videoFileName + "\" ";
+                    _mplayer.StartInfo.Arguments = "-nofs -quiet -slave -idle -loop 0 -osdlevel 0 -vsync -wid " + ownerControl.Handle.ToInt32() + " \"" + videoFileName + "\" ";
                 else
-                    _mplayer.StartInfo.Arguments = "-nofs -quiet -slave -osdlevel 0 -vo direct3d -wid " + (int)ownerControl.Handle + " \"" + videoFileName + "\" ";
+                    _mplayer.StartInfo.Arguments = "-nofs -quiet -slave -idle -loop 0 -osdlevel 0 -vo direct3d -wid " + (int)ownerControl.Handle + " \"" + videoFileName + "\" ";
 
                 _mplayer.StartInfo.UseShellExecute = false;
                 _mplayer.StartInfo.RedirectStandardInput = true;
@@ -154,9 +163,9 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             _mplayer.StandardInput.WriteLine("pausing_keep_force get_property pause");
 
             if (!_ended && OnVideoEnded != null && _lengthInSeconds.TotalSeconds == Duration)
-            {
-                _ended = true;
-                OnVideoEnded.Invoke(this, null);
+            {				
+              //  _ended = true;
+              //  OnVideoEnded.Invoke(this, null);
             }
             else if (_lengthInSeconds.TotalSeconds < Duration)
             {
@@ -182,10 +191,26 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             if (e.Data == null)
                 return;
 
-          //  System.Diagnostics.Debug.WriteLine("MPlayer: " + e.Data);
+            System.Diagnostics.Debug.WriteLine("MPlayer: " + e.Data);
 
             if (e.Data.StartsWith("Playing "))
+			{
                 _loaded = true;
+				return;
+			}
+
+            if (e.Data.StartsWith("Exiting..."))
+			{
+				_ended = true;
+				if (_loaded)
+				{
+					_mplayer.StandardInput.WriteLine("loadfile " + _videoFileName);
+					if (OnVideoEnded != null)
+                		OnVideoEnded.Invoke(this, null);
+					
+				}
+				return;
+			}
 
             int indexOfEqual = e.Data.IndexOf("=");
             if (indexOfEqual > 0 && indexOfEqual + 1 < e.Data.Length && e.Data.StartsWith("ANS_"))
@@ -223,7 +248,19 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                         _volume = (float)Convert.ToDouble(value);
                         break;
                     case "ANS_pause":
-                        _paused = value == "yes" || value == "1";
+						if (value == "yes" || value == "1")
+							_pauseCounts++;
+						else
+							_pauseCounts--;
+						if (_pauseCounts > 3)
+							_paused = true;
+						else if (_pauseCounts < -3)
+						{
+							_paused = false;
+							_pausePosition = null;
+						}
+						else if (Math.Abs(_pauseCounts) > 10)
+							_pauseCounts = 0;
                         break;
                 }
                 _waitForChange = false;
