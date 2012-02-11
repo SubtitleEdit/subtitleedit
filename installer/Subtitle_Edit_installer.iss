@@ -102,6 +102,7 @@ DisableProgramGroupPage=auto
 [Languages]
 Name: en; MessagesFile: compiler:Default.isl
 #ifdef localize
+Name: ar;  MessagesFile: Languages\Arabic.isl
 Name: bg;  MessagesFile: Languages\Bulgarian.isl
 Name: br;  MessagesFile: compiler:Languages\BrazilianPortuguese.isl
 Name: cs;  MessagesFile: compiler:Languages\Czech.isl
@@ -182,6 +183,7 @@ Source: ..\Tesseract\msvcr90.dll;                  DestDir: {app}\Tesseract;    
 Source: ..\Tesseract\tesseract.exe;                DestDir: {app}\Tesseract;                          Flags: ignoreversion; Components: main
 
 #ifdef localize
+Source: {#bindir}\Languages\ar-EG.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
 Source: {#bindir}\Languages\bg-BG.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
 Source: {#bindir}\Languages\cs-CZ.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
 Source: {#bindir}\Languages\da-DK.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
@@ -273,7 +275,8 @@ Type: files;      Name: {app}\uninstall.ico;                          Check: IsU
 Type: files;      Name: {app}\Languages\sr-Cyrl-CS.xml
 Type: files;      Name: {app}\Languages\sr-Latn-CS.xml
 
-; Cleanup language files if it's an upgrade and the translations are not selected
+; Remove the language files if it's an upgrade and the translations are not selected
+Type: files;      Name: {app}\Languages\ar-EG.xml;      Check: not IsComponentSelected('translations') and IsUpgrade()
 Type: files;      Name: {app}\Languages\bg-BG.xml;      Check: not IsComponentSelected('translations') and IsUpgrade()
 Type: files;      Name: {app}\Languages\cs-CZ.xml;      Check: not IsComponentSelected('translations') and IsUpgrade()
 Type: files;      Name: {app}\Languages\da-DK.xml;      Check: not IsComponentSelected('translations') and IsUpgrade()
