@@ -992,6 +992,9 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Languages\ar-EG.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Languages\bg-BG.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
