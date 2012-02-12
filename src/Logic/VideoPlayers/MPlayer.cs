@@ -22,6 +22,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
         public string VideoCodec { get; private set; }
         private double? _pausePosition = null; // Hack to hold precise seeking when paused
 		private int _pauseCounts = 0;
+        private double _speed = 1.0;
 
         public override string PlayerName
         {
@@ -70,6 +71,22 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                 if (IsPaused && value <= Duration)
                     _pausePosition = value;
                 _mplayer.StandardInput.WriteLine(string.Format("pausing_keep seek {0:0.0} 2", value));
+            }
+        }
+
+        public override double PlayRate
+        {
+            get
+            {
+                return _speed;
+            }
+            set
+            {
+                if (value >= 0 && value <= 2.0)
+                {
+                    _speed = value;
+                    SetProperty("speed", value.ToString(System.Globalization.CultureInfo.InvariantCulture), true);
+                }
             }
         }
 
