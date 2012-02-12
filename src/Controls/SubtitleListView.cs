@@ -365,20 +365,38 @@ namespace Nikse.SubtitleEdit.Controls
         }
 
         public void SelectIndexAndEnsureVisible(int index)
-        {
-            SelectNone();
-            if (index >= 0 && index < Items.Count)
+        { 
+            if (index < 0 || index >= Items.Count || Items.Count == 0)
+                return;
+
+            int bottomIndex = TopItem.Index + ((Height - 25) / 16);
+            int itemsBeforeAfterCount = ((bottomIndex - TopItem.Index) / 2)- 1;
+            if (itemsBeforeAfterCount < 0)
+                itemsBeforeAfterCount = 1;
+
+            int beforeIndex = index - itemsBeforeAfterCount;
+            if (beforeIndex < 0)
+                beforeIndex = 0;
+
+            int afterIndex = index + itemsBeforeAfterCount;
+            if (afterIndex >= Items.Count)
+                afterIndex = Items.Count - 1;
+
+            SelectNone();           
+            if (TopItem.Index <= beforeIndex && bottomIndex > afterIndex)
             {
-                ListViewItem item = Items[index];
-                item.Selected = true;
-
-                RestoreFirstVisibleIndex();
-
-                if (!ClientRectangle.Contains(new Rectangle(item.Bounds.Left, item.Bounds.Top-5, item.Bounds.Height+ 10, 10)))
-                    item.EnsureVisible();
-                FocusedItem = item;
+                Items[index].Selected = true;
+                Items[index].EnsureVisible();
+                return;
             }
-        }
+
+            Items[beforeIndex].EnsureVisible();
+            EnsureVisible(beforeIndex);
+            Items[afterIndex].EnsureVisible();
+            EnsureVisible(afterIndex);
+            Items[index].Selected = true;
+            Items[index].EnsureVisible();
+        }     
 
         public void SelectIndexAndEnsureVisible(Paragraph p)
         {
