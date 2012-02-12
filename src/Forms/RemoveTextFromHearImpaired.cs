@@ -648,6 +648,7 @@ namespace Nikse.SubtitleEdit.Forms
                 text == "exclaims" ||
                 text.StartsWith("engine ") ||
                 text == "singing" ||
+                text == "stutters" ||
                 text.EndsWith("ing"))
                 return true;
             return false;
