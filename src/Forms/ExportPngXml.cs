@@ -50,6 +50,7 @@ namespace Nikse.SubtitleEdit.Forms
         public ExportPngXml()
         {
             InitializeComponent();
+            comboBoxImageFormat.SelectedIndex = 4;
         }
 
         private static string BdnXmlTimeCode(TimeCode timecode)
@@ -74,6 +75,10 @@ namespace Nikse.SubtitleEdit.Forms
                 paramter.Buffer = Logic.BluRaySup.BluRaySupPicture.CreateSupFrame(brSub, paramter.Bitmap);
             }
             else if (paramter.Type == "VOBSUB")
+            {
+
+            }
+            else if (paramter.Type == "FAB")
             {
 
             }
@@ -131,10 +136,18 @@ namespace Nikse.SubtitleEdit.Forms
                 saveFileDialog1.AddExtension = true;
                 saveFileDialog1.Filter = "VobSub|*.sub";
             }
+            else if (_exportType == "FAB")
+            {
+                saveFileDialog1.Title = "Choose FAB image script file name...";
+                saveFileDialog1.DefaultExt = "*.txt";
+                saveFileDialog1.AddExtension = true;
+                saveFileDialog1.Filter = "FAB image scripts|*.txt";
+            }
 
             if (_exportType == "BLURAYSUP" &&  saveFileDialog1.ShowDialog(this) == DialogResult.OK ||
                 _exportType == "VOBSUB" && saveFileDialog1.ShowDialog(this) == DialogResult.OK ||
-                _exportType == "BDNXML" && folderBrowserDialog1.ShowDialog(this) == DialogResult.OK)
+                _exportType == "BDNXML" && folderBrowserDialog1.ShowDialog(this) == DialogResult.OK ||
+                _exportType == "FAB" && folderBrowserDialog1.ShowDialog(this) == DialogResult.OK)
             {
                 int width = 1920;
                 int height = 1080;
@@ -262,6 +275,11 @@ namespace Nikse.SubtitleEdit.Forms
                     vobSubWriter.WriteIdxFile();
                     MessageBox.Show(string.Format(Configuration.Settings.Language.Main.SavedSubtitleX, saveFileDialog1.FileName));
                 }
+                else if (_exportType == "FAB")
+                {
+                    File.WriteAllText(Path.Combine(folderBrowserDialog1.SelectedPath, "Fab_Image_script.txt"), sb.ToString());
+                    MessageBox.Show(string.Format(Configuration.Settings.Language.ExportPngXml.XImagesSavedInY, imagesSavedCount, folderBrowserDialog1.SelectedPath));
+                }
                 else
                 {
                     var doc = new XmlDocument();
@@ -305,6 +323,36 @@ namespace Nikse.SubtitleEdit.Forms
                         vobSubWriter.WriteParagraph(param.P, param.Bitmap);
                     param.Saved = true;
                 }
+                else if (_exportType == "FAB")
+                {
+                    if (!param.Saved)
+                    {
+                        string numberString = string.Format("IMAGE{0:000}", i);
+                        string fileName = Path.Combine(folderBrowserDialog1.SelectedPath, numberString + "." + comboBoxImageFormat.Text.ToLower());
+                        var imageFormat = System.Drawing.Imaging.ImageFormat.Png; ;
+                        if (comboBoxImageFormat.SelectedIndex == 0)
+                            imageFormat = System.Drawing.Imaging.ImageFormat.Bmp;
+                        else if (comboBoxImageFormat.SelectedIndex == 1)
+                            imageFormat = System.Drawing.Imaging.ImageFormat.Exif;
+                        else if (comboBoxImageFormat.SelectedIndex == 2)
+                            imageFormat = System.Drawing.Imaging.ImageFormat.Gif;
+                        else if (comboBoxImageFormat.SelectedIndex == 3)
+                            imageFormat = System.Drawing.Imaging.ImageFormat.Jpeg;
+                        else if (comboBoxImageFormat.SelectedIndex == 4)
+                            imageFormat = System.Drawing.Imaging.ImageFormat.Png;
+                        else if (comboBoxImageFormat.SelectedIndex == 5)
+                            imageFormat = System.Drawing.Imaging.ImageFormat.Tiff;
+
+                        param.Bitmap.Save(fileName, imageFormat);
+                        imagesSavedCount++;
+
+                        //RACE001.TIF 00;00;02;02 00;00;03;15 000 000 720 480
+                        //RACE002.TIF 00;00;05;18 00;00;09;20 000 000 720 480
+                        int top = param.ScreenHeight - (param.Bitmap.Height + 20); // bottom margin=20
+                        sb.AppendLine(string.Format("{0} {1} {2} {3} {4} {5} {6}", Path.GetFileName(fileName), FormatFabTime(param.P.StartTime), FormatFabTime(param.P.EndTime), 0, top, param.ScreenWidth, param.ScreenHeight));
+                        param.Saved = true;
+                    }
+                }
                 else
                 {
                     if (!param.Saved)
@@ -330,6 +378,11 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
             return imagesSavedCount;
+        }
+
+        private string FormatFabTime(TimeCode time)
+        {
+            return string.Format("{0:00};{1:00};{2:00};{3:00}", time.Hours, time.Minutes, time.Seconds, Nikse.SubtitleEdit.Logic.SubtitleFormats.SubtitleFormat.MillisecondsToFrames(time.Milliseconds));
         }
 
         private void SetupImageParameters()
@@ -582,6 +635,8 @@ namespace Nikse.SubtitleEdit.Forms
                 Text = "Blu-ray SUP";
             else if (exportType == "VOBSUB")
                 Text = "VobSub (sub/idx)";
+            else if (exportType == "FAB")
+                Text = "FAB Image Script";
             else
                 Text = Configuration.Settings.Language.ExportPngXml.Title;
             groupBoxImageSettings.Text = Configuration.Settings.Language.ExportPngXml.ImageSettings;
@@ -622,6 +677,7 @@ namespace Nikse.SubtitleEdit.Forms
                 comboBoxBorderWidth.SelectedIndex = 3;
                 comboBoxResolution.SelectedIndex = 5;
             }
+            comboBoxImageFormat.Visible = exportType == "FAB";
 
             foreach (var x in FontFamily.Families)
             {

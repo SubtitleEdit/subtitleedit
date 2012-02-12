@@ -54,6 +54,8 @@
             this.labelImageResolution = new System.Windows.Forms.Label();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.subtitleListView1 = new Nikse.SubtitleEdit.Controls.SubtitleListView();
+            this.label1 = new System.Windows.Forms.Label();
+            this.comboBoxImageFormat = new System.Windows.Forms.ComboBox();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.groupBoxImageSettings.SuspendLayout();
             this.SuspendLayout();
@@ -76,7 +78,7 @@
             this.buttonExport.Location = new System.Drawing.Point(517, 562);
             this.buttonExport.Name = "buttonExport";
             this.buttonExport.Size = new System.Drawing.Size(126, 21);
-            this.buttonExport.TabIndex = 19;
+            this.buttonExport.TabIndex = 2;
             this.buttonExport.Text = "Export all lines...";
             this.buttonExport.UseVisualStyleBackColor = true;
             this.buttonExport.Click += new System.EventHandler(this.buttonExport_Click);
@@ -89,7 +91,7 @@
             this.buttonCancel.Location = new System.Drawing.Point(649, 562);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 21);
-            this.buttonCancel.TabIndex = 18;
+            this.buttonCancel.TabIndex = 3;
             this.buttonCancel.Text = "C&ancel";
             this.buttonCancel.UseVisualStyleBackColor = true;
             // 
@@ -107,6 +109,8 @@
             // 
             this.groupBoxImageSettings.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxImageSettings.Controls.Add(this.label1);
+            this.groupBoxImageSettings.Controls.Add(this.comboBoxImageFormat);
             this.groupBoxImageSettings.Controls.Add(this.checkBoxBold);
             this.groupBoxImageSettings.Controls.Add(this.labelResolution);
             this.groupBoxImageSettings.Controls.Add(this.comboBoxResolution);
@@ -126,17 +130,17 @@
             this.groupBoxImageSettings.Location = new System.Drawing.Point(12, 218);
             this.groupBoxImageSettings.Name = "groupBoxImageSettings";
             this.groupBoxImageSettings.Size = new System.Drawing.Size(712, 137);
-            this.groupBoxImageSettings.TabIndex = 21;
+            this.groupBoxImageSettings.TabIndex = 1;
             this.groupBoxImageSettings.TabStop = false;
             this.groupBoxImageSettings.Text = "Image settings";
             // 
             // checkBoxBold
             // 
             this.checkBoxBold.AutoSize = true;
-            this.checkBoxBold.Location = new System.Drawing.Point(276, 91);
+            this.checkBoxBold.Location = new System.Drawing.Point(276, 59);
             this.checkBoxBold.Name = "checkBoxBold";
             this.checkBoxBold.Size = new System.Drawing.Size(47, 17);
-            this.checkBoxBold.TabIndex = 27;
+            this.checkBoxBold.TabIndex = 5;
             this.checkBoxBold.Text = "Bold";
             this.checkBoxBold.UseVisualStyleBackColor = true;
             this.checkBoxBold.CheckedChanged += new System.EventHandler(this.checkBoxBold_CheckedChanged);
@@ -167,7 +171,7 @@
             this.comboBoxResolution.Location = new System.Drawing.Point(100, 78);
             this.comboBoxResolution.Name = "comboBoxResolution";
             this.comboBoxResolution.Size = new System.Drawing.Size(121, 21);
-            this.comboBoxResolution.TabIndex = 25;
+            this.comboBoxResolution.TabIndex = 2;
             // 
             // comboBoxHAlign
             // 
@@ -180,7 +184,7 @@
             this.comboBoxHAlign.Location = new System.Drawing.Point(100, 105);
             this.comboBoxHAlign.Name = "comboBoxHAlign";
             this.comboBoxHAlign.Size = new System.Drawing.Size(121, 21);
-            this.comboBoxHAlign.TabIndex = 23;
+            this.comboBoxHAlign.TabIndex = 3;
             this.comboBoxHAlign.SelectedIndexChanged += new System.EventHandler(this.comboBoxHAlign_SelectedIndexChanged);
             // 
             // labelHorizontalAlign
@@ -197,10 +201,10 @@
             this.checkBoxAntiAlias.AutoSize = true;
             this.checkBoxAntiAlias.Checked = true;
             this.checkBoxAntiAlias.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBoxAntiAlias.Location = new System.Drawing.Point(276, 55);
+            this.checkBoxAntiAlias.Location = new System.Drawing.Point(276, 86);
             this.checkBoxAntiAlias.Name = "checkBoxAntiAlias";
             this.checkBoxAntiAlias.Size = new System.Drawing.Size(66, 17);
-            this.checkBoxAntiAlias.TabIndex = 21;
+            this.checkBoxAntiAlias.TabIndex = 6;
             this.checkBoxAntiAlias.Text = "AntiAlias";
             this.checkBoxAntiAlias.UseVisualStyleBackColor = true;
             this.checkBoxAntiAlias.CheckedChanged += new System.EventHandler(this.checkBoxAntiAlias_CheckedChanged);
@@ -221,7 +225,7 @@
             this.comboBoxSubtitleFont.Location = new System.Drawing.Point(100, 24);
             this.comboBoxSubtitleFont.Name = "comboBoxSubtitleFont";
             this.comboBoxSubtitleFont.Size = new System.Drawing.Size(121, 21);
-            this.comboBoxSubtitleFont.TabIndex = 17;
+            this.comboBoxSubtitleFont.TabIndex = 0;
             this.comboBoxSubtitleFont.SelectedValueChanged += new System.EventHandler(this.comboBoxSubtitleFont_SelectedValueChanged);
             // 
             // comboBoxSubtitleFontSize
@@ -297,7 +301,7 @@
             this.comboBoxSubtitleFontSize.Location = new System.Drawing.Point(100, 51);
             this.comboBoxSubtitleFontSize.Name = "comboBoxSubtitleFontSize";
             this.comboBoxSubtitleFontSize.Size = new System.Drawing.Size(121, 21);
-            this.comboBoxSubtitleFontSize.TabIndex = 18;
+            this.comboBoxSubtitleFontSize.TabIndex = 1;
             this.comboBoxSubtitleFontSize.SelectedIndexChanged += new System.EventHandler(this.comboBoxSubtitleFontSize_SelectedIndexChanged);
             // 
             // labelSubtitleFont
@@ -333,7 +337,7 @@
             this.comboBoxBorderWidth.Location = new System.Drawing.Point(537, 51);
             this.comboBoxBorderWidth.Name = "comboBoxBorderWidth";
             this.comboBoxBorderWidth.Size = new System.Drawing.Size(121, 21);
-            this.comboBoxBorderWidth.TabIndex = 15;
+            this.comboBoxBorderWidth.TabIndex = 8;
             this.comboBoxBorderWidth.SelectedIndexChanged += new System.EventHandler(this.comboBoxBorderWidth_SelectedIndexChanged);
             // 
             // panelBorderColor
@@ -350,7 +354,7 @@
             this.buttonBorderColor.Location = new System.Drawing.Point(537, 24);
             this.buttonBorderColor.Name = "buttonBorderColor";
             this.buttonBorderColor.Size = new System.Drawing.Size(121, 21);
-            this.buttonBorderColor.TabIndex = 13;
+            this.buttonBorderColor.TabIndex = 7;
             this.buttonBorderColor.Text = "Border color";
             this.buttonBorderColor.UseVisualStyleBackColor = true;
             this.buttonBorderColor.Click += new System.EventHandler(this.buttonBorderColor_Click);
@@ -369,7 +373,7 @@
             this.buttonColor.Location = new System.Drawing.Point(276, 24);
             this.buttonColor.Name = "buttonColor";
             this.buttonColor.Size = new System.Drawing.Size(121, 21);
-            this.buttonColor.TabIndex = 11;
+            this.buttonColor.TabIndex = 4;
             this.buttonColor.Text = "Color";
             this.buttonColor.UseVisualStyleBackColor = true;
             this.buttonColor.Click += new System.EventHandler(this.buttonColor_Click);
@@ -401,6 +405,32 @@
             this.subtitleListView1.UseCompatibleStateImageBehavior = false;
             this.subtitleListView1.View = System.Windows.Forms.View.Details;
             this.subtitleListView1.SelectedIndexChanged += new System.EventHandler(this.subtitleListView1_SelectedIndexChanged);
+            // 
+            // label1
+            // 
+            this.label1.Location = new System.Drawing.Point(416, 90);
+            this.label1.Name = "label1";
+            this.label1.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.label1.Size = new System.Drawing.Size(110, 13);
+            this.label1.TabIndex = 28;
+            this.label1.Text = "Image format";
+            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // comboBoxImageFormat
+            // 
+            this.comboBoxImageFormat.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxImageFormat.FormattingEnabled = true;
+            this.comboBoxImageFormat.Items.AddRange(new object[] {
+            "Bmp",
+            "Exif",
+            "Gif",
+            "Jpg",
+            "Png",
+            "Tiff"});
+            this.comboBoxImageFormat.Location = new System.Drawing.Point(537, 86);
+            this.comboBoxImageFormat.Name = "comboBoxImageFormat";
+            this.comboBoxImageFormat.Size = new System.Drawing.Size(121, 21);
+            this.comboBoxImageFormat.TabIndex = 27;
             // 
             // ExportPngXml
             // 
@@ -458,5 +488,7 @@
         private System.Windows.Forms.Label labelResolution;
         private System.Windows.Forms.ComboBox comboBoxResolution;
         private System.Windows.Forms.CheckBox checkBoxBold;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.ComboBox comboBoxImageFormat;
     }
 }
