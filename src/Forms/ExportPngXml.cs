@@ -349,7 +349,7 @@ namespace Nikse.SubtitleEdit.Forms
                         //RACE001.TIF 00;00;02;02 00;00;03;15 000 000 720 480
                         //RACE002.TIF 00;00;05;18 00;00;09;20 000 000 720 480
                         int top = param.ScreenHeight - (param.Bitmap.Height + 20); // bottom margin=20
-                        sb.AppendLine(string.Format("{0} {1} {2} {3} {4} {5} {6}", Path.GetFileName(fileName), FormatFabTime(param.P.StartTime), FormatFabTime(param.P.EndTime), 0, top, param.ScreenWidth, param.ScreenHeight));
+                        sb.AppendLine(string.Format("{0} {1} {2} {3} {4} {5} {6}", Path.GetFileName(fileName), FormatFabTime(param.P.StartTime, param), FormatFabTime(param.P.EndTime, param), 0, top, param.ScreenWidth, param.ScreenHeight));
                         param.Saved = true;
                     }
                 }
@@ -380,9 +380,12 @@ namespace Nikse.SubtitleEdit.Forms
             return imagesSavedCount;
         }
 
-        private string FormatFabTime(TimeCode time)
+        private string FormatFabTime(TimeCode time, MakeBitmapParameter param)
         {
-            return string.Format("{0:00};{1:00};{2:00};{3:00}", time.Hours, time.Minutes, time.Seconds, Nikse.SubtitleEdit.Logic.SubtitleFormats.SubtitleFormat.MillisecondsToFrames(time.Milliseconds));
+            if (param.Bitmap.Width == 720 && param.Bitmap.Width == 480) // NTSC
+                return string.Format("{0:00};{1:00};{2:00};{3:00}", time.Hours, time.Minutes, time.Seconds, Nikse.SubtitleEdit.Logic.SubtitleFormats.SubtitleFormat.MillisecondsToFrames(time.Milliseconds));
+            else
+                return string.Format("{0:00}:{1:00}:{2:00}:{3:00}", time.Hours, time.Minutes, time.Seconds, Nikse.SubtitleEdit.Logic.SubtitleFormats.SubtitleFormat.MillisecondsToFrames(time.Milliseconds));
         }
 
         private void SetupImageParameters()
