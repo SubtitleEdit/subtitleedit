@@ -666,7 +666,7 @@ namespace Nikse.SubtitleEdit.Forms
             toolStripMenuItemWaveFormPlaySelection.Visible = false;
             toolStripSeparator24.Visible = false;
             contextMenuStripWaveForm.Show(MousePosition.X, MousePosition.Y);
-        }
+        }     
 
         void AudioWaveForm_OnDoubleClickNonParagraph(double seconds, Paragraph paragraph)
         {
@@ -4784,6 +4784,7 @@ namespace Nikse.SubtitleEdit.Forms
             UpdateListViewTextCharactersPerSeconds(charactersPerSecond, paragraph);
             labelCharactersPerSecond.Left = textBox.Left + (textBox.Width - labelCharactersPerSecond.Width);
             lineTotal.Left = textBox.Left + (textBox.Width - lineTotal.Width);
+            FixVerticalScrollBars(textBox);
         }
 
         private void ButtonNextClick(object sender, EventArgs e)
@@ -4797,11 +4798,7 @@ namespace Nikse.SubtitleEdit.Forms
                 firstSelectedIndex++;
                 Paragraph p = _subtitle.GetParagraphOrDefault(firstSelectedIndex);
                 if (p != null)
-                {
-                    SubtitleListview1.SelectNone();
-                    SubtitleListview1.Items[firstSelectedIndex].Selected = true;
-                    SubtitleListview1.EnsureVisible(firstSelectedIndex);
-                }
+                    SubtitleListview1.SelectIndexAndEnsureVisible(firstSelectedIndex);
             }
         }
 
@@ -4816,11 +4813,7 @@ namespace Nikse.SubtitleEdit.Forms
                 firstSelectedIndex--;
                 Paragraph p = _subtitle.GetParagraphOrDefault(firstSelectedIndex);
                 if (p != null)
-                {
-                    SubtitleListview1.SelectNone();
-                    SubtitleListview1.Items[firstSelectedIndex].Selected = true;
-                    SubtitleListview1.EnsureVisible(firstSelectedIndex);
-                }
+                    SubtitleListview1.SelectIndexAndEnsureVisible(firstSelectedIndex);
             }
         }
 
@@ -4883,6 +4876,15 @@ namespace Nikse.SubtitleEdit.Forms
                 textBoxListViewTextAlternate.Text = Utilities.AutoBreakLine(textBoxListViewTextAlternate.Text);
         }
 
+        private void FixVerticalScrollBars(TextBox tb)
+        {
+            var lineCount = Utilities.CountTagInText(tb.Text, Environment.NewLine)+1;
+            if (lineCount > 3)
+                tb.ScrollBars = ScrollBars.Vertical;
+            else
+                tb.ScrollBars = ScrollBars.None;
+        }
+
         private void TextBoxListViewTextTextChanged(object sender, EventArgs e)
         {
             if (_subtitleListViewIndex >= 0)
@@ -4899,6 +4901,7 @@ namespace Nikse.SubtitleEdit.Forms
                 labelStatus.Text = string.Empty;
 
                 UpdateListSyntaxColoring();
+                FixVerticalScrollBars(textBoxListViewText);
             }
         }
 
@@ -4925,7 +4928,9 @@ namespace Nikse.SubtitleEdit.Forms
                 labelStatus.Text = string.Empty;
 
                 UpdateListSyntaxColoring();
+                FixVerticalScrollBars(textBoxListViewTextAlternate);
             }
+            
         }
 
         private void TextBoxListViewTextKeyDown(object sender, KeyEventArgs e)
