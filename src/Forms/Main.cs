@@ -12509,6 +12509,12 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
+        private void adobeEncoreFABImageScriptToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ExportPngXml exportBdnXmlPng = new ExportPngXml();
+            exportBdnXmlPng.Initialize(_subtitle, "FAB", _fileName);
+            exportBdnXmlPng.ShowDialog(this);
+        }
 
     }
 }

@@ -795,8 +795,8 @@ namespace Nikse.SubtitleEdit.Logic
                         ExportCavena890 = "Cavena 890...",
                         ExportEbu = "EBU stl...",
                         ExportPac = "PAC (Screen Electronics)...",
-                        ExportPlainText = "Export plain text...",
-                        ExportPlainTextWithoutLineBreaks = "Export plain text without line breaks...",
+                        ExportPlainText = "Plain text...",
+                        ExportPlainTextWithoutLineBreaks = "Plain text without line breaks...",
                         Exit = "E&xit"
                     },
 

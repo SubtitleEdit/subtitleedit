@@ -14,6 +14,9 @@ Subtitle Edit Changelog
    * Main window now lists all encodings
    * Google translate encoding saved to main window
    * Current position in time line (waveform) does not jump when using VLC
+   * Subtitle text box now shows vertical scroll-bar when 3+ lines
+   * Go to next/prev sub (or double click in time line) will center selected 
+     line in listview - thx Sean/vmb/Leszek
  * FIXED:
    * Export to Blu-ray sup timestamps
    * Crash in Visual Sync - thx XhmikosR
@@ -24,6 +27,8 @@ Subtitle Edit Changelog
    * Crash when merging lines (original sub) in some cases - thx Krystian
    * Bug when saving framerate with "," instead of "." - thx yannick
    * Wrong time codes when appending frame based subs - thx Klos
+   * MPlayer works much better now, also on Linux. 
+     Use MPlayer2 for precise seeking
 
 
 3.2.3 (13th January 2012)

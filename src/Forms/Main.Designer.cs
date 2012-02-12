@@ -86,14 +86,15 @@
             this.toolStripMenuItemImportTimeCodes = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator22 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripMenuItemExport = new System.Windows.Forms.ToolStripMenuItem();
+            this.adobeEncoreFABImageScriptToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemExportPngXml = new System.Windows.Forms.ToolStripMenuItem();
             this.bluraySupToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.vobSubsubidxToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemCavena890 = new System.Windows.Forms.ToolStripMenuItem();
             this.eBUSTLToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.pACScreenElectronicsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.plainTextToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.plainTextWithoutLineBreaksToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.vobSubsubidxToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator10 = new System.Windows.Forms.ToolStripSeparator();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -932,73 +933,81 @@
             // toolStripMenuItemExport
             // 
             this.toolStripMenuItemExport.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.adobeEncoreFABImageScriptToolStripMenuItem,
             this.toolStripMenuItemExportPngXml,
             this.bluraySupToolStripMenuItem,
-            this.vobSubsubidxToolStripMenuItem,
             this.toolStripMenuItemCavena890,
             this.eBUSTLToolStripMenuItem,
             this.pACScreenElectronicsToolStripMenuItem,
             this.plainTextToolStripMenuItem,
-            this.plainTextWithoutLineBreaksToolStripMenuItem});
+            this.plainTextWithoutLineBreaksToolStripMenuItem,
+            this.vobSubsubidxToolStripMenuItem});
             this.toolStripMenuItemExport.Name = "toolStripMenuItemExport";
             this.toolStripMenuItemExport.Size = new System.Drawing.Size(334, 22);
             this.toolStripMenuItemExport.Text = "Export";
             // 
+            // adobeEncoreFABImageScriptToolStripMenuItem
+            // 
+            this.adobeEncoreFABImageScriptToolStripMenuItem.Name = "adobeEncoreFABImageScriptToolStripMenuItem";
+            this.adobeEncoreFABImageScriptToolStripMenuItem.Size = new System.Drawing.Size(258, 22);
+            this.adobeEncoreFABImageScriptToolStripMenuItem.Text = "Adobe Encore FAB image script...";
+            this.adobeEncoreFABImageScriptToolStripMenuItem.Click += new System.EventHandler(this.adobeEncoreFABImageScriptToolStripMenuItem_Click);
+            // 
             // toolStripMenuItemExportPngXml
             // 
             this.toolStripMenuItemExportPngXml.Name = "toolStripMenuItemExportPngXml";
-            this.toolStripMenuItemExportPngXml.Size = new System.Drawing.Size(245, 22);
+            this.toolStripMenuItemExportPngXml.Size = new System.Drawing.Size(258, 22);
             this.toolStripMenuItemExportPngXml.Text = "BDN xml/png...";
             this.toolStripMenuItemExportPngXml.Click += new System.EventHandler(this.toolStripMenuItemExportPngXml_Click);
             // 
             // bluraySupToolStripMenuItem
             // 
             this.bluraySupToolStripMenuItem.Name = "bluraySupToolStripMenuItem";
-            this.bluraySupToolStripMenuItem.Size = new System.Drawing.Size(245, 22);
+            this.bluraySupToolStripMenuItem.Size = new System.Drawing.Size(258, 22);
             this.bluraySupToolStripMenuItem.Text = "Blu-ray sup...";
             this.bluraySupToolStripMenuItem.Click += new System.EventHandler(this.bluraySupToolStripMenuItem_Click);
-            // 
-            // vobSubsubidxToolStripMenuItem
-            // 
-            this.vobSubsubidxToolStripMenuItem.Name = "vobSubsubidxToolStripMenuItem";
-            this.vobSubsubidxToolStripMenuItem.Size = new System.Drawing.Size(245, 22);
-            this.vobSubsubidxToolStripMenuItem.Text = "VobSub (sub/idx)...";
-            this.vobSubsubidxToolStripMenuItem.Click += new System.EventHandler(this.vobSubsubidxToolStripMenuItem_Click);
             // 
             // toolStripMenuItemCavena890
             // 
             this.toolStripMenuItemCavena890.Name = "toolStripMenuItemCavena890";
-            this.toolStripMenuItemCavena890.Size = new System.Drawing.Size(245, 22);
+            this.toolStripMenuItemCavena890.Size = new System.Drawing.Size(258, 22);
             this.toolStripMenuItemCavena890.Text = "Cavena 890...";
             this.toolStripMenuItemCavena890.Click += new System.EventHandler(this.toolStripMenuItemCavena890_Click);
             // 
             // eBUSTLToolStripMenuItem
             // 
             this.eBUSTLToolStripMenuItem.Name = "eBUSTLToolStripMenuItem";
-            this.eBUSTLToolStripMenuItem.Size = new System.Drawing.Size(245, 22);
+            this.eBUSTLToolStripMenuItem.Size = new System.Drawing.Size(258, 22);
             this.eBUSTLToolStripMenuItem.Text = "EBU STL...";
             this.eBUSTLToolStripMenuItem.Click += new System.EventHandler(this.eBUSTLToolStripMenuItem_Click);
             // 
             // pACScreenElectronicsToolStripMenuItem
             // 
             this.pACScreenElectronicsToolStripMenuItem.Name = "pACScreenElectronicsToolStripMenuItem";
-            this.pACScreenElectronicsToolStripMenuItem.Size = new System.Drawing.Size(245, 22);
+            this.pACScreenElectronicsToolStripMenuItem.Size = new System.Drawing.Size(258, 22);
             this.pACScreenElectronicsToolStripMenuItem.Text = "PAC (Screen Electronics)...";
             this.pACScreenElectronicsToolStripMenuItem.Click += new System.EventHandler(this.pACScreenElectronicsToolStripMenuItem_Click);
             // 
             // plainTextToolStripMenuItem
             // 
             this.plainTextToolStripMenuItem.Name = "plainTextToolStripMenuItem";
-            this.plainTextToolStripMenuItem.Size = new System.Drawing.Size(245, 22);
+            this.plainTextToolStripMenuItem.Size = new System.Drawing.Size(258, 22);
             this.plainTextToolStripMenuItem.Text = "Plain text...";
             this.plainTextToolStripMenuItem.Click += new System.EventHandler(this.plainTextToolStripMenuItem_Click);
             // 
             // plainTextWithoutLineBreaksToolStripMenuItem
             // 
             this.plainTextWithoutLineBreaksToolStripMenuItem.Name = "plainTextWithoutLineBreaksToolStripMenuItem";
-            this.plainTextWithoutLineBreaksToolStripMenuItem.Size = new System.Drawing.Size(245, 22);
+            this.plainTextWithoutLineBreaksToolStripMenuItem.Size = new System.Drawing.Size(258, 22);
             this.plainTextWithoutLineBreaksToolStripMenuItem.Text = "Plain text without line breaks...";
             this.plainTextWithoutLineBreaksToolStripMenuItem.Click += new System.EventHandler(this.plainTextWithoutLineBreaksToolStripMenuItem_Click);
+            // 
+            // vobSubsubidxToolStripMenuItem
+            // 
+            this.vobSubsubidxToolStripMenuItem.Name = "vobSubsubidxToolStripMenuItem";
+            this.vobSubsubidxToolStripMenuItem.Size = new System.Drawing.Size(258, 22);
+            this.vobSubsubidxToolStripMenuItem.Text = "VobSub (sub/idx)...";
+            this.vobSubsubidxToolStripMenuItem.Click += new System.EventHandler(this.vobSubsubidxToolStripMenuItem_Click);
             // 
             // toolStripSeparator10
             // 
@@ -4072,6 +4081,7 @@
         private System.Windows.Forms.ToolStripMenuItem vobSubsubidxToolStripMenuItem;
         private System.Windows.Forms.Timer timerTextUndo;
         private System.Windows.Forms.Timer timerAlternateTextUndo;
+        private System.Windows.Forms.ToolStripMenuItem adobeEncoreFABImageScriptToolStripMenuItem;
     }
 }
 

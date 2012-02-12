@@ -170,7 +170,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public static int MillisecondsToFrames(double milliseconds)
         {
-            return (int)(milliseconds / (1000.0 / Configuration.Settings.General.CurrentFrameRate));
+            return (int)System.Math.Round(milliseconds / (1000.0 / Configuration.Settings.General.CurrentFrameRate));
         }
 
     }

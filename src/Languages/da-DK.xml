@@ -465,8 +465,8 @@
         <ExportCavena890>Cavena 890...</ExportCavena890>
         <ExportEbu>EBU STL...</ExportEbu>
         <ExportPac>PAC (Screen Electronics)...</ExportPac>
-        <ExportPlainText>Eksporter almindelig tekst...</ExportPlainText>
-        <ExportPlainTextWithoutLineBreaks>Eksporter almindelig tekst uden linjeskift...</ExportPlainTextWithoutLineBreaks>
+        <ExportPlainText>Almindelig tekst...</ExportPlainText>
+        <ExportPlainTextWithoutLineBreaks>Almindelig tekst uden linjeskift...</ExportPlainTextWithoutLineBreaks>
         <Exit>&amp;Afslut</Exit>
       </File>
       <Edit>
