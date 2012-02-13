@@ -44,7 +44,7 @@ namespace Nikse.SubtitleEdit.Logic.SpellCheck
             {
                 IntPtr addressCharArray = Marshal.ReadIntPtr(addressStringArray, i * IntPtr.Size);
                 string suggestion = Marshal.PtrToStringAuto(addressCharArray);
-                if (string.IsNullOrEmpty(suggestion))
+                if (!string.IsNullOrEmpty(suggestion))
                     results.Add(suggestion);
             }
             Hunspell_free_list(_hunspellHandle, pointerToAddressStringArray, resultCount);
