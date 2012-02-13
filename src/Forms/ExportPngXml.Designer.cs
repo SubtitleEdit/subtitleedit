@@ -34,6 +34,8 @@
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.groupBoxImageSettings = new System.Windows.Forms.GroupBox();
+            this.labelImageFormat = new System.Windows.Forms.Label();
+            this.comboBoxImageFormat = new System.Windows.Forms.ComboBox();
             this.checkBoxBold = new System.Windows.Forms.CheckBox();
             this.labelResolution = new System.Windows.Forms.Label();
             this.comboBoxResolution = new System.Windows.Forms.ComboBox();
@@ -53,9 +55,9 @@
             this.colorDialog1 = new System.Windows.Forms.ColorDialog();
             this.labelImageResolution = new System.Windows.Forms.Label();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
+            this.labelLanguage = new System.Windows.Forms.Label();
+            this.comboBoxLanguage = new System.Windows.Forms.ComboBox();
             this.subtitleListView1 = new Nikse.SubtitleEdit.Controls.SubtitleListView();
-            this.label1 = new System.Windows.Forms.Label();
-            this.comboBoxImageFormat = new System.Windows.Forms.ComboBox();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.groupBoxImageSettings.SuspendLayout();
             this.SuspendLayout();
@@ -109,7 +111,9 @@
             // 
             this.groupBoxImageSettings.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBoxImageSettings.Controls.Add(this.label1);
+            this.groupBoxImageSettings.Controls.Add(this.labelLanguage);
+            this.groupBoxImageSettings.Controls.Add(this.comboBoxLanguage);
+            this.groupBoxImageSettings.Controls.Add(this.labelImageFormat);
             this.groupBoxImageSettings.Controls.Add(this.comboBoxImageFormat);
             this.groupBoxImageSettings.Controls.Add(this.checkBoxBold);
             this.groupBoxImageSettings.Controls.Add(this.labelResolution);
@@ -133,6 +137,32 @@
             this.groupBoxImageSettings.TabIndex = 1;
             this.groupBoxImageSettings.TabStop = false;
             this.groupBoxImageSettings.Text = "Image settings";
+            // 
+            // labelImageFormat
+            // 
+            this.labelImageFormat.Location = new System.Drawing.Point(416, 81);
+            this.labelImageFormat.Name = "labelImageFormat";
+            this.labelImageFormat.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.labelImageFormat.Size = new System.Drawing.Size(110, 13);
+            this.labelImageFormat.TabIndex = 28;
+            this.labelImageFormat.Text = "Image format";
+            this.labelImageFormat.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // comboBoxImageFormat
+            // 
+            this.comboBoxImageFormat.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxImageFormat.FormattingEnabled = true;
+            this.comboBoxImageFormat.Items.AddRange(new object[] {
+            "Bmp",
+            "Exif",
+            "Gif",
+            "Jpg",
+            "Png",
+            "Tiff"});
+            this.comboBoxImageFormat.Location = new System.Drawing.Point(537, 78);
+            this.comboBoxImageFormat.Name = "comboBoxImageFormat";
+            this.comboBoxImageFormat.Size = new System.Drawing.Size(121, 21);
+            this.comboBoxImageFormat.TabIndex = 27;
             // 
             // checkBoxBold
             // 
@@ -389,6 +419,34 @@
             this.labelImageResolution.Text = "320x240";
             this.labelImageResolution.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
+            // labelLanguage
+            // 
+            this.labelLanguage.Location = new System.Drawing.Point(416, 108);
+            this.labelLanguage.Name = "labelLanguage";
+            this.labelLanguage.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.labelLanguage.Size = new System.Drawing.Size(110, 13);
+            this.labelLanguage.TabIndex = 30;
+            this.labelLanguage.Text = "Language";
+            this.labelLanguage.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.labelLanguage.Visible = false;
+            // 
+            // comboBoxLanguage
+            // 
+            this.comboBoxLanguage.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxLanguage.FormattingEnabled = true;
+            this.comboBoxLanguage.Items.AddRange(new object[] {
+            "Bmp",
+            "Exif",
+            "Gif",
+            "Jpg",
+            "Png",
+            "Tiff"});
+            this.comboBoxLanguage.Location = new System.Drawing.Point(537, 105);
+            this.comboBoxLanguage.Name = "comboBoxLanguage";
+            this.comboBoxLanguage.Size = new System.Drawing.Size(121, 21);
+            this.comboBoxLanguage.TabIndex = 29;
+            this.comboBoxLanguage.Visible = false;
+            // 
             // subtitleListView1
             // 
             this.subtitleListView1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
@@ -405,32 +463,6 @@
             this.subtitleListView1.UseCompatibleStateImageBehavior = false;
             this.subtitleListView1.View = System.Windows.Forms.View.Details;
             this.subtitleListView1.SelectedIndexChanged += new System.EventHandler(this.subtitleListView1_SelectedIndexChanged);
-            // 
-            // label1
-            // 
-            this.label1.Location = new System.Drawing.Point(416, 90);
-            this.label1.Name = "label1";
-            this.label1.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.label1.Size = new System.Drawing.Size(110, 13);
-            this.label1.TabIndex = 28;
-            this.label1.Text = "Image format";
-            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // comboBoxImageFormat
-            // 
-            this.comboBoxImageFormat.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBoxImageFormat.FormattingEnabled = true;
-            this.comboBoxImageFormat.Items.AddRange(new object[] {
-            "Bmp",
-            "Exif",
-            "Gif",
-            "Jpg",
-            "Png",
-            "Tiff"});
-            this.comboBoxImageFormat.Location = new System.Drawing.Point(537, 86);
-            this.comboBoxImageFormat.Name = "comboBoxImageFormat";
-            this.comboBoxImageFormat.Size = new System.Drawing.Size(121, 21);
-            this.comboBoxImageFormat.TabIndex = 27;
             // 
             // ExportPngXml
             // 
@@ -488,7 +520,9 @@
         private System.Windows.Forms.Label labelResolution;
         private System.Windows.Forms.ComboBox comboBoxResolution;
         private System.Windows.Forms.CheckBox checkBoxBold;
-        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label labelImageFormat;
         private System.Windows.Forms.ComboBox comboBoxImageFormat;
+        private System.Windows.Forms.Label labelLanguage;
+        private System.Windows.Forms.ComboBox comboBoxLanguage;
     }
 }

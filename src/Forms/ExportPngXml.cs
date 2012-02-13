@@ -197,7 +197,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (_exportType == "BLURAYSUP")
                     binarySubtitleFile = new FileStream(saveFileDialog1.FileName, FileMode.Create);
                 else if (_exportType == "VOBSUB")
-                    vobSubWriter = new VobSubWriter(saveFileDialog1.FileName, width, height, 15, 32, _subtitleColor, _borderColor, GetOutlineColor(_borderColor), "English", "en");
+                    vobSubWriter = new VobSubWriter(saveFileDialog1.FileName, width, height, 15, 32, _subtitleColor, _borderColor, GetOutlineColor(_borderColor), IfoParser.ArrayOfLanguage[comboBoxLanguage.SelectedIndex], IfoParser.ArrayOfLanguageCode[comboBoxLanguage.SelectedIndex]);
 
                 progressBar1.Value = 0;
                 progressBar1.Maximum = _subtitle.Paragraphs.Count-1;
@@ -653,6 +653,7 @@ namespace Nikse.SubtitleEdit.Forms
             buttonExport.Text = Configuration.Settings.Language.ExportPngXml.ExportAllLines;
             buttonCancel.Text = Configuration.Settings.Language.General.OK;
             labelImageResolution.Text = string.Empty;
+            labelLanguage.Text = Configuration.Settings.Language.ChooseLanguage.Language;
             labelHorizontalAlign.Text = Configuration.Settings.Language.ExportPngXml.Align;
             if (Configuration.Settings.Language.ExportPngXml.Left != null &&
                 Configuration.Settings.Language.ExportPngXml.Center != null &&
@@ -679,8 +680,20 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 comboBoxBorderWidth.SelectedIndex = 3;
                 comboBoxResolution.SelectedIndex = 5;
+                labelLanguage.Visible = true;
+                comboBoxLanguage.Visible = true;
+                comboBoxLanguage.Items.Clear();
+                string languageCode = Utilities.AutoDetectGoogleLanguage(subtitle);
+                for (int i = 0; i < IfoParser.ArrayOfLanguage.Count; i++)
+                {
+                    comboBoxLanguage.Items.Add(IfoParser.ArrayOfLanguage[i]);
+                    if (IfoParser.ArrayOfLanguageCode[i] == languageCode)
+                        comboBoxLanguage.SelectedIndex = i;
+                }
+                comboBoxLanguage.SelectedIndex = 25;                
             }
             comboBoxImageFormat.Visible = exportType == "FAB";
+            labelImageFormat.Visible = exportType == "FAB";
 
             foreach (var x in FontFamily.Families)
             {
