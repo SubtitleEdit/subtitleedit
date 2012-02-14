@@ -661,7 +661,7 @@ namespace Nikse.SubtitleEdit.Forms
                 var cultures = new List<CultureInfo>();
                 foreach (var culture in CultureInfo.GetCultures(CultureTypes.SpecificCultures))
                 {
-                    string name = culture.CompareInfo.Name;
+                    string name = culture.Name;
 
                     if (!string.IsNullOrEmpty(name))
                     {
