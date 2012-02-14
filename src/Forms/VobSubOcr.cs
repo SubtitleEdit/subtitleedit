@@ -1993,7 +1993,15 @@ namespace Nikse.SubtitleEdit.Forms
                 process.StartInfo.WorkingDirectory = (Configuration.TesseractFolder);
             }
 
-            process.Start();
+            try
+            {
+                process.Start();
+            }
+            catch
+            {
+                MessageBox.Show("Unable to start 'tesseract' - make sure tesseract-ocr 3.x is installed!");
+                throw;
+            }
             process.WaitForExit(5000);
 
             string result = string.Empty;
