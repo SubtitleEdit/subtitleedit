@@ -299,9 +299,6 @@ namespace Nikse.SubtitleEdit.Forms
 //            string googleApiKey = "ABQIAAAA4j5cWwa3lDH0RkZceh7PjBTDmNAghl5kWSyuukQ0wtoJG8nFBxRPlalq-gAvbeCXMCkmrysqjXV1Gw";
             string googleApiKey = Configuration.Settings.Tools.GoogleApiKey;
 
-            string[] arr = languagePair.Split('|');
-            string from = arr[0];
-            string to = arr[1];
             input = input.Replace(Environment.NewLine, _newlineString);
             input = input.Replace("'", "&apos;");
             // create the web request to the Google Translate REST interface
@@ -310,6 +307,9 @@ namespace Nikse.SubtitleEdit.Forms
             string url = "http://ajax.googleapis.com/ajax/services/language/translate?v=1.0&q=" + HttpUtility.UrlEncode(input) + "&langpair=" + languagePair + "&key=" +googleApiKey;
 
             //API V 2.0 ?
+            //string[] arr = languagePair.Split('|');
+            //string from = arr[0];
+            //string to = arr[1];
             //string url = String.Format("https://www.googleapis.com/language/translate/v2?key={3}&q={0}&source={1}&target={2}", HttpUtility.UrlEncode(input), from, to, googleApiKey);
 
             WebRequest request = WebRequest.Create(url);

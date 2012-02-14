@@ -23,10 +23,18 @@ namespace Nikse.SubtitleEdit.Logic.SpellCheck
 
         private IntPtr _hunspellHandle = IntPtr.Zero;
 
-        public LinuxHunspell (string affDirectory, string dicDictory)
+        public LinuxHunspell(string affDirectory, string dicDictory)
         {
             //Also search - /usr/share/hunspell
-            _hunspellHandle = Hunspell_create(affDirectory, dicDictory);
+            try
+            {
+                _hunspellHandle = Hunspell_create(affDirectory, dicDictory);
+            }
+            catch
+            {
+                System.Windows.Forms.MessageBox.Show("Unable to start hunspell spell checker - make sure hunspell is installed!");
+                throw;
+            }
         }
 
         public override bool Spell(string word)
@@ -55,7 +63,8 @@ namespace Nikse.SubtitleEdit.Logic.SpellCheck
 
         ~ LinuxHunspell()
         {
-            Hunspell_destroy(_hunspellHandle);
+            if (_hunspellHandle != IntPtr.Zero)
+                Hunspell_destroy(_hunspellHandle);
         }
     }
 }

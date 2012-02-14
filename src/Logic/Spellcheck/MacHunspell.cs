@@ -55,7 +55,8 @@ namespace Nikse.SubtitleEdit.Logic.SpellCheck
 
         ~MacHunspell()
         {
-            Hunspell_destroy(_hunspellHandle);
+            if (_hunspellHandle != IntPtr.Zero)
+                Hunspell_destroy(_hunspellHandle);
         }
     }
 }

@@ -361,14 +361,12 @@ namespace Nikse.SubtitleEdit.Forms
             _seconds += 0.025;
             double positionInMilliseconds = (DateTime.Now.Ticks - _videoStartTick) / 10000; // 10,000 ticks = 1 millisecond
             positionInMilliseconds *= _millisecondsFactor;
-            string text = string.Empty;
             int index = 0;
             foreach (Paragraph p in _subtitle.Paragraphs)
             {
                 if (p.StartTime.TotalMilliseconds <= positionInMilliseconds &&
                     p.EndTime.TotalMilliseconds > positionInMilliseconds)
                 {
-                    text = p.Text.Replace("|", Environment.NewLine);
                     break;
                 }
                 index++;

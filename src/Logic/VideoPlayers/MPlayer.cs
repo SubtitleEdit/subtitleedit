@@ -147,7 +147,17 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                 _mplayer.StartInfo.RedirectStandardOutput = true;
                 _mplayer.StartInfo.CreateNoWindow = true;
                 _mplayer.OutputDataReceived += new DataReceivedEventHandler(MPlayerOutputDataReceived);
-                _mplayer.Start();
+
+                try
+                {
+                    _mplayer.Start();
+                }
+                catch
+                {
+                    System.Windows.Forms.MessageBox.Show("Unable to start MPlayer - make sure MPlayer is installed!");
+                    throw;
+                }
+
                 _mplayer.StandardInput.NewLine = "\n";
                 _mplayer.BeginOutputReadLine(); // Async reading of output to prevent deadlock
 
