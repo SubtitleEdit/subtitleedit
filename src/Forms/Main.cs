@@ -9785,6 +9785,12 @@ namespace Nikse.SubtitleEdit.Forms
             OpenVideo(_videoFileName);
             timerTextUndo.Start();
             timerAlternateTextUndo.Start();
+            if (Utilities.IsRunningOnLinux())
+            {
+                numericUpDownDuration.Left = timeUpDownStartTime.Left + timeUpDownStartTime.Width + 10;
+                numericUpDownDuration.Width = numericUpDownDuration.Width + 10;
+                labelDuration.Left = numericUpDownDuration.Left;
+            }
         }
 
         private void SetPositionFromXYString(string positionAndSize, string name)

@@ -192,7 +192,7 @@ namespace Nikse.SubtitleEdit.Logic
                 After = "After",
                 LinesFoundX = "Lines found: {0}",
                 OnlyBreakLinesLongerThan = "Only break lines longer than",
-                OnlyUnbreakLinesShorterThan = "Only un-break lines shorter than",
+                OnlyUnbreakLinesLongerThan = "Only un-break lines longer than",
             };
 
             ChangeCasing = new LanguageStructure.ChangeCasing

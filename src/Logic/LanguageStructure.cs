@@ -115,7 +115,7 @@
             public string After { get; set; }
             public string LinesFoundX { get; set; }
             public string OnlyBreakLinesLongerThan { get; set; }
-            public string OnlyUnbreakLinesShorterThan { get; set; }
+            public string OnlyUnbreakLinesLongerThan { get; set; }
         }
 
         public class ChangeCasing
