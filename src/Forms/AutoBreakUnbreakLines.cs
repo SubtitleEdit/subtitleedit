@@ -73,7 +73,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else
             {
-                labelCondition.Text = Configuration.Settings.Language.AutoBreakUnbreakLines.OnlyUnbreakLinesShorterThan;
+                labelCondition.Text = Configuration.Settings.Language.AutoBreakUnbreakLines.OnlyUnbreakLinesLongerThan;
                 for (int i = 5; i < 51; i++)
                     comboBoxConditions.Items.Add(i.ToString());
                 comboBoxConditions.SelectedIndex = 5;
