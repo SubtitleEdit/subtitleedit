@@ -1142,11 +1142,19 @@ namespace Nikse.SubtitleEdit.Logic
             sb.Append("*" + new Cavena890().Extension + ";");
             sb.Append("*" + new Spt().Extension + ";");
             sb.Append("*" + new Wsb().Extension + ";");
-            sb.Append("*.mp4;"); // mp4 video files (can contain subtitles)
-            sb.Append("*.m4v;"); // mp4 video files (can contain subtitles)
-            sb.Append("*.mkv;"); // matroska files (can contain subtitles)
             sb.Append("*.mks;"); // matroska subtitlefiles (normally contain subtitles)
             sb.Append("*.sup;"); // blu-ray sup
+
+            if (!string.IsNullOrEmpty(Configuration.Settings.General.OpenSubtitleExtraExtensions))
+            {
+                var extraExtensions = Configuration.Settings.General.OpenSubtitleExtraExtensions.Split(";".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                foreach (string ext in extraExtensions)
+                {
+                    if (ext.StartsWith("*.") && !sb.ToString().Contains(ext))
+                        sb.Append(ext + ";");
+                }
+            }
+
             sb.Append("*.son"); // SON text/tif
             sb.Append("|" + Configuration.Settings.Language.General.AllFiles + "|*.*");
             return sb.ToString();

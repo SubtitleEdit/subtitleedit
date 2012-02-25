@@ -1315,7 +1315,6 @@
             this.textCharssecToolStripMenuItem.Name = "textCharssecToolStripMenuItem";
             this.textCharssecToolStripMenuItem.Size = new System.Drawing.Size(233, 22);
             this.textCharssecToolStripMenuItem.Text = "Text - chars/sec";
-            this.textCharssecToolStripMenuItem.Visible = false;
             this.textCharssecToolStripMenuItem.Click += new System.EventHandler(this.textCharssecToolStripMenuItem_Click);
             // 
             // toolStripSeparator23
@@ -1710,7 +1709,7 @@
             this.fixCommonErrorsInSelectedLinesToolStripMenuItem,
             this.changeCasingForSelectedLinesToolStripMenuItem});
             this.contextMenuStripListview.Name = "contextMenuStripListview";
-            this.contextMenuStripListview.Size = new System.Drawing.Size(285, 650);
+            this.contextMenuStripListview.Size = new System.Drawing.Size(285, 628);
             this.contextMenuStripListview.Opening += new System.ComponentModel.CancelEventHandler(this.ContextMenuStripListviewOpening);
             // 
             // setStylesForSelectedLinesToolStripMenuItem
