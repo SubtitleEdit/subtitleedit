@@ -851,6 +851,12 @@ namespace Nikse.SubtitleEdit.Forms
                 p.Text = p.Text.Replace("....", "...");
                 p.Text = p.Text.Replace("....", "...");
                 p.Text = p.Text.Replace("....", "...");
+                p.Text = p.Text.Replace(" ..." + Environment.NewLine, "..." + Environment.NewLine);
+                p.Text = p.Text.Replace(Environment.NewLine + "... ", Environment.NewLine + "...");
+                if (p.Text.StartsWith("... "))
+                    p.Text = p.Text.Remove(3, 1);
+                if (p.Text.EndsWith(" ..."))
+                    p.Text = p.Text.Remove(p.Text.Length-4, 1);
 
                 p.Text = p.Text.Replace("... ?", "...?");
                 p.Text = p.Text.Replace("... !", "...!");
@@ -924,7 +930,7 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         string before = string.Empty;
                         int k = idx - 1;
-                        while (k > 0 && Utilities.GetLetters(true, true, false).Contains(p.Text[k].ToString()))
+                        while (k >= 0 && Utilities.GetLetters(true, true, false).Contains(p.Text[k].ToString()))
                         {
                             before = p.Text[k].ToString() + before;
                             k--;
@@ -941,7 +947,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
 
-                if (p.Text != oldText)
+                if (p.Text.Length != oldText.Length && Utilities.CountTagInText(p.Text, " ") != Utilities.CountTagInText(oldText, " "))
                 {
                     if (AllowFix(i + 1, fixAction))
                     {
@@ -949,6 +955,14 @@ namespace Nikse.SubtitleEdit.Forms
                         _totalFixes++;
                         AddFixToListView(p, i + 1, fixAction, oldText, p.Text);
                     }
+                    else
+                    {
+                        p.Text = oldText;
+                    }
+                }
+                else
+                {
+                    p.Text = oldText;
                 }
 
             }
@@ -1050,7 +1064,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     while (match.Success)
                     {
-                        if ("\"<".Contains(p.Text[match.Index + 2].ToString()) == false)
+                        if ("\"<.".Contains(p.Text[match.Index + 2].ToString()) == false)
                         {
                             if (AllowFix(i + 1, fixAction))
                             {
@@ -1681,7 +1695,7 @@ namespace Nikse.SubtitleEdit.Forms
                 string tempNoHtml = Utilities.RemoveHtmlTags(p.Text).TrimEnd();
 
 
-                if (IsOneLineUrl(p.Text))
+                if (IsOneLineUrl(p.Text) || p.Text.Contains("♪") || p.Text.Contains("♫") || p.Text.EndsWith("'"))
                 {
                     ; // ignore urls
                 }
@@ -2077,8 +2091,8 @@ namespace Nikse.SubtitleEdit.Forms
             if (text[index] != '.' && text[index] != '!' && text[index] != '?')
                 return false;
 
-            if (index - 3 > 0 && text[index - 1] != '.' && text[index - 2] == '.') // e.g: O.R.
-                return false;
+            if (index - 3 > 0 && Utilities.GetLetters(true, true, true).Contains(text[index - 1].ToString()) && text[index - 2] == '.') // e.g: O.R.
+                return true;
 
             string word = string.Empty;
             int i = index - 1;
@@ -2262,6 +2276,9 @@ namespace Nikse.SubtitleEdit.Forms
                             if (prev == "." || prev == "'")
                                 fix = false;
 
+                            if (prev == "-" && match.Index > 2)
+                                fix = false;
+
                             if (fix)
                             {
                                 string temp = s.Substring(0, match.Index) + "I";
@@ -2330,6 +2347,13 @@ namespace Nikse.SubtitleEdit.Forms
                                 if (idx < 5)
                                 {
                                     text = text.Remove(idx, 1).TrimStart();
+                                    idx = text.IndexOf("-");
+                                    if (idx < 5 && idx >= 0)
+                                        text = text.Remove(idx, 1).TrimStart();
+                                    idx = text.IndexOf("-");
+                                    if (idx < 5 && idx >= 0)
+                                        text = text.Remove(idx, 1).TrimStart();
+
                                     text = text.Replace("  ", " ");
                                     text = text.Replace("> ", ">");
                                     text = text.Replace(" <", "<");
@@ -2340,22 +2364,24 @@ namespace Nikse.SubtitleEdit.Forms
                                     if (idxNL > 0)
                                     {
                                         idx = text.IndexOf("-", idxNL);
-                                        if (idxNL + 5 > idxNL)
+                                        if (idx >=0 && idxNL + 5 > idxNL)
                                         {
                                             text = text.Remove(idx, 1).TrimStart();
-                                            text = text.Replace("  ", " ");
-                                            text = text.Remove(idx, 1).Replace(Environment.NewLine + " ", Environment.NewLine);
-                                            text = text.Replace("> ", ">");
-                                            text = text.Replace(" <", "<");
+
+                                            idx = text.IndexOf("-", idxNL);
+                                            if (idx >= 0 && idxNL + 5 > idxNL)
+                                            {
+                                                text = text.Remove(idx, 1).TrimStart();
+
+                                                text = text.Replace("  ", " ");
+                                                text = text.Remove(idx, 1).Replace(Environment.NewLine + " ", Environment.NewLine);
+                                                text = text.Replace("> ", ">");
+                                                text = text.Replace(" <", "<");
+                                            }
                                         }
                                     }
-
                                 }
 
-                                //text = text.Replace(" - ", string.Empty);
-                                //text = text.Replace(" -", string.Empty);
-                                //text = text.Replace("- ", string.Empty);
-                                //text = text.Replace("-", string.Empty);
                                 if (text != oldText)
                                 {
                                     if (AllowFix(i + 1, fixAction))
@@ -2414,16 +2440,18 @@ namespace Nikse.SubtitleEdit.Forms
                 string[] musicSymbols = Configuration.Settings.Tools.MusicSymbolToReplace.Split(" ".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
                 string oldText = p.Text;
 
+                string newText = p.Text;
                 foreach (string musicSymbol in musicSymbols)
                 {
-                    p.Text = p.Text.Replace(musicSymbol, Configuration.Settings.Tools.MusicSymbol);
-                    p.Text = p.Text.Replace(musicSymbol.ToUpper(), Configuration.Settings.Tools.MusicSymbol);
+                    newText = newText.Replace(musicSymbol, Configuration.Settings.Tools.MusicSymbol);
+                    newText = newText.Replace(musicSymbol.ToUpper(), Configuration.Settings.Tools.MusicSymbol);
                 }
 
-                if (!p.Text.Equals(oldText))
+                if (!newText.Equals(oldText))
                 {
                     if (AllowFix(i + 1, fixAction))
                     {
+                        p.Text = newText;
                         fixCount++;
                         _totalFixes++;
                         AddFixToListView(p, i + 1, fixAction, oldText, p.Text);
@@ -2547,7 +2575,7 @@ namespace Nikse.SubtitleEdit.Forms
                     if (AllowFix(i + 1, fixAction))
                     {
                         string oldText = p.Text;
-                        p.Text = p.Text.Substring(3, p.Text.Length - 3);
+                        p.Text = p.Text.TrimStart('.');
                         fixCount++;
                         _totalFixes++;
                         AddFixToListView(p, i + 1, fixAction, oldText, p.Text);
@@ -2560,6 +2588,8 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         string oldText = p.Text;
                         p.Text = "<i>" + p.Text.Substring(6, p.Text.Length - 6);
+                        while (p.Text.StartsWith("<i>."))
+                            p.Text = "<i>" + p.Text.Substring(4, p.Text.Length - 6);
                         fixCount++;
                         _totalFixes++;
                         AddFixToListView(p, i + 1, fixAction, oldText, p.Text);
