@@ -314,9 +314,19 @@ namespace Nikse.SubtitleEdit.Logic.OCR
                     {
                         string fixedWord;
                         if (lastWord != null && lastWord.ToUpper().Contains("COLOR="))
+                        {
                             fixedWord = word.ToString();
+                        }
                         else
-                            fixedWord = FixCommonWordErrors(word.ToString(), lastWord);
+                        {
+                            bool doFixWord = true;
+                            if (word.Length == 1 && sb.ToString().EndsWith("-") && sb.Length > 1)
+                                doFixWord = false;
+                            if (doFixWord)
+                                fixedWord = FixCommonWordErrors(word.ToString(), lastWord);
+                            else
+                                fixedWord = word.ToString();
+                        }
                         sb.Append(fixedWord);
                         lastWord = fixedWord;
                         word = new StringBuilder();
@@ -330,7 +340,15 @@ namespace Nikse.SubtitleEdit.Logic.OCR
             }
             if (word.Length > 0) // last word
             {
-                string fixedWord = FixCommonWordErrors(word.ToString(), lastWord);
+                string fixedWord;
+                bool doFixWord = true;
+                if (word.Length == 1 && sb.ToString().EndsWith("-") && sb.Length > 1)
+                    doFixWord = false;
+                if (doFixWord)
+                    fixedWord = FixCommonWordErrors(word.ToString(), lastWord);
+                else
+                    fixedWord = word.ToString();
+
                 sb.Append(fixedWord);
             }
 
@@ -391,8 +409,20 @@ namespace Nikse.SubtitleEdit.Logic.OCR
             Match match = regexSpaceBetweenNumbers.Match(text);
             while (match.Success)
             {
-                text = text.Remove(match.Index + 1, 1);
-                match = regexSpaceBetweenNumbers.Match(text);
+                bool doFix = true;
+
+                if (match.Index + 4 < text.Length && text[match.Index + 3] == '/' && "0123456789".Contains(text[match.Index + 4].ToString()))
+                    doFix = false;
+
+                if (doFix)
+                {
+                    text = text.Remove(match.Index + 1, 1);
+                    match = regexSpaceBetweenNumbers.Match(text);
+                }
+                else
+                {
+                    match = regexSpaceBetweenNumbers.Match(text, match.Index+1);
+                }
             }
             return text;
         }
@@ -810,6 +840,7 @@ namespace Nikse.SubtitleEdit.Logic.OCR
                     {
                         string lastWord = words[words.Length - 1].Trim();
                         if (lastWord.Length > 2 &&
+                            lastWord[0].ToString() == lastWord[0].ToString().ToLower() &&
                             !IsWordOrWordsCorrect(lastWord) &&
                             IsWordOrWordsCorrect(lastWord.Substring(0, lastWord.Length - 1)))
                             input = input.Substring(0, input.Length - 2) + "...";
@@ -829,7 +860,7 @@ namespace Nikse.SubtitleEdit.Logic.OCR
 
         private string FixLowercaseIToUppercaseI(string input, string lastLine)
         {
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             string[] lines = input.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
             for (int i = 0; i < lines.Length; i++)
             {
@@ -876,6 +907,11 @@ namespace Nikse.SubtitleEdit.Logic.OCR
         {
             if (!Configuration.Settings.Tools.OcrFixUseHardcodedRules)
                 return input;
+
+            input = input.Replace(",...", "...");
+
+            if (input.StartsWith("..") && !input.StartsWith("..."))
+                input = "." + input;           
 
             string pre = string.Empty;
             if (input.StartsWith("- "))
@@ -940,9 +976,9 @@ namespace Nikse.SubtitleEdit.Logic.OCR
             input = input.Replace("....", "...");
             input = input.Replace("....", "...");
 
-            if (input.StartsWith("- ...") && lastLine != null && lastLine.EndsWith("..."))
+            if (input.StartsWith("- ...") && lastLine != null && lastLine.EndsWith("...") && !(input.Contains(Environment.NewLine + "-")))
                 input = input.Remove(0, 2);
-            if (input.StartsWith("-...") && lastLine != null && lastLine.EndsWith("..."))
+            if (input.StartsWith("-...") && lastLine != null && lastLine.EndsWith("...") && !(input.Contains(Environment.NewLine + "-")))
                 input = input.Remove(0, 1);
 
             if (input.Length > 2 && input[0] == '-' && Utilities.GetLetters(true, false, false).Contains(input[1].ToString()))
@@ -977,7 +1013,7 @@ namespace Nikse.SubtitleEdit.Logic.OCR
                 StripableText st = new StripableText(input);
                 if (lastLine == null || (!lastLine.EndsWith("...") && !EndsWithAbbreviation(lastLine, abbreviationList)))
                 {
-                    if (st.StrippedText.Length > 0 && st.StrippedText[0].ToString() != st.StrippedText[0].ToString().ToUpper() && !st.Pre.EndsWith("[") && !st.Pre.EndsWith("("))
+                    if (st.StrippedText.Length > 0 && st.StrippedText[0].ToString() != st.StrippedText[0].ToString().ToUpper() && !st.Pre.EndsWith("[") && !st.Pre.EndsWith("(") && !st.Pre.EndsWith("..."))
                     {
                         string uppercaseLetter = st.StrippedText[0].ToString().ToUpper();
                         if (st.StrippedText.Length > 1 && uppercaseLetter == "L" && "abcdfghjklmnpqrstvwxz".Contains(st.StrippedText[1].ToString()))
@@ -990,10 +1026,14 @@ namespace Nikse.SubtitleEdit.Logic.OCR
 
             // lines ending with ". should often end at ... (of no other quotes exists near by)
             if ((lastLine == null || !lastLine.Contains("\"")) && input != null &&
-                input.EndsWith("\".") && input.IndexOf("\"") == input.LastIndexOf("\""))
+                input.EndsWith("\".") && input.IndexOf("\"") == input.LastIndexOf("\"") && input.Length > 3)
             {
-                int position = input.Length - 2;
-                input = input.Remove(position).Insert(position, "...");
+                string lastChar = input.Substring(input.Length - 3, 1);
+                if (!"0123456789".Contains(lastChar))
+                {
+                    int position = input.Length - 2;
+                    input = input.Remove(position).Insert(position, "...");
+                }
             }
 
             // change '<number><space>1' to '<number>1'
@@ -1002,8 +1042,20 @@ namespace Nikse.SubtitleEdit.Logic.OCR
                 Match match = regExNumber1.Match(input);
                 while (match.Success)
                 {
-                    input = input.Substring(0, match.Index + 1) + input.Substring(match.Index + 2);
-                    match = regExNumber1.Match(input);
+                    bool doFix = true;
+
+                    if (match.Index + 4 < input.Length && input[match.Index + 3] == '/' && "0123456789".Contains(input[match.Index + 4].ToString()))
+                        doFix = false;
+
+                    if (doFix)
+                    {
+                        input = input.Substring(0, match.Index + 1) + input.Substring(match.Index + 2);
+                        match = regExNumber1.Match(input);
+                    }
+                    else
+                    {
+                        match = regExNumber1.Match(input, match.Index + 1);
+                    }
                 }
             }
 
@@ -1248,7 +1300,7 @@ namespace Nikse.SubtitleEdit.Logic.OCR
                             }
                             foreach (string guess in guesses)
                             {
-                                if (IsWordOrWordsCorrect(guess))
+                                if (IsWordOrWordsCorrect(guess) && !guess.StartsWith("f "))
                                 {
                                     string replacedLine = ReplaceWord(line, word, guess);
                                     if (replacedLine != line)
