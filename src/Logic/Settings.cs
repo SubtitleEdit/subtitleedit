@@ -82,7 +82,8 @@ namespace Nikse.SubtitleEdit.Logic
         public string Interjections { get; set; }
         public string MicrosoftBingApiId { get; set; }
         public string GoogleApiKey { get; set; }
-        public bool ListViewSyntaxColorDuration { get; set; }
+        public bool ListViewSyntaxColorDurationSmall { get; set; }
+        public bool ListViewSyntaxColorDurationBig { get; set; }
         public bool ListViewSyntaxColorOverlap { get; set; }
         public bool ListViewSyntaxColorLongLines { get; set; }
         public bool ListViewSyntaxMoreThanTwoLines { get; set; }
@@ -101,6 +102,11 @@ namespace Nikse.SubtitleEdit.Logic
             MicrosoftBingApiId = "C2C2E9A508E6748F0494D68DFD92FAA1FF9B0BA4";
             GoogleApiKey = "ABQIAAAA4j5cWwa3lDH0RkZceh7PjBTDmNAghl5kWSyuukQ0wtoJG8nFBxRPlalq-gAvbeCXMCkmrysqjXV1Gw";
             SpellCheckOneLetterWords = true;
+            ListViewSyntaxColorDurationSmall = true;
+            ListViewSyntaxColorDurationBig = true;
+            ListViewSyntaxColorOverlap = true;
+            ListViewSyntaxColorLongLines = true;
+            ListViewSyntaxMoreThanTwoLines = true;
         }
     }
 
@@ -256,9 +262,10 @@ namespace Nikse.SubtitleEdit.Logic
         public bool RemoveBlankLinesWhenOpening { get; set; }
         public int SubtitleLineMaximumLength { get; set; }
         public int SubtitleMinimumDisplayMilliseconds { get; set; }
+        public int SubtitleMaximumDisplayMilliseconds { get; set; }
         public int MininumMillisecondsBetweenLines { get; set; }
         public bool AutoWrapLineWhileTyping { get; set; }
-        public int SubtitleMaximumCharactersPerSeconds { get; set; }
+        public double SubtitleMaximumCharactersPerSeconds { get; set; }
         public string SpellCheckLanguage { get; set; }
         public string VideoPlayer { get; set; }
         public int VideoPlayerDefaultVolume { get; set; }
@@ -285,6 +292,7 @@ namespace Nikse.SubtitleEdit.Logic
         public int LargeDelayMilliseconds { get; set; }
         public bool ShowOriginalAsPreviewIfAvailable { get; set; }
         public int LastPacCodePage { get; set; }
+        public string OpenSubtitleExtraExtensions { get; set; }
 
         public GeneralSettings()
         {
@@ -322,9 +330,10 @@ namespace Nikse.SubtitleEdit.Logic
             StartRememberPositionAndSize = true;
             SubtitleLineMaximumLength = 43;
             SubtitleMinimumDisplayMilliseconds = 500;
+            SubtitleMaximumDisplayMilliseconds = 8 * 1000;
             MininumMillisecondsBetweenLines = 25;
             AutoWrapLineWhileTyping = false;
-            SubtitleMaximumCharactersPerSeconds = 25;
+            SubtitleMaximumCharactersPerSeconds = 25.0;
             SpellCheckLanguage = null;
             VideoPlayer = string.Empty;
             VideoPlayerDefaultVolume = 75;
@@ -348,6 +357,8 @@ namespace Nikse.SubtitleEdit.Logic
 
             SmallDelayMilliseconds = 500;
             LargeDelayMilliseconds = 5000;
+
+            OpenSubtitleExtraExtensions = "*.mp4;*.m4v;*.mkv;"; // matroska/mp4/m4v files (can contain subtitles)
         }
     }
 
@@ -843,6 +854,9 @@ namespace Nikse.SubtitleEdit.Logic
             subNode = node.SelectSingleNode("SubtitleMinimumDisplayMilliseconds");
             if (subNode != null)
                 settings.General.SubtitleMinimumDisplayMilliseconds = Convert.ToInt32(subNode.InnerText);
+            subNode = node.SelectSingleNode("SubtitleMaximumDisplayMilliseconds");
+            if (subNode != null)
+                settings.General.SubtitleMaximumDisplayMilliseconds = Convert.ToInt32(subNode.InnerText);
             subNode = node.SelectSingleNode("MininumMillisecondsBetweenLines");
             if (subNode != null)
                 settings.General.MininumMillisecondsBetweenLines = Convert.ToInt32(subNode.InnerText);
@@ -851,7 +865,7 @@ namespace Nikse.SubtitleEdit.Logic
                 settings.General.AutoWrapLineWhileTyping = Convert.ToBoolean(subNode.InnerText);
             subNode = node.SelectSingleNode("SubtitleMaximumCharactersPerSeconds");
             if (subNode != null)
-                settings.General.SubtitleMaximumCharactersPerSeconds = Convert.ToInt32(subNode.InnerText);
+                settings.General.SubtitleMaximumCharactersPerSeconds = Convert.ToDouble(subNode.InnerText, System.Globalization.CultureInfo.InvariantCulture);
             subNode = node.SelectSingleNode("SpellCheckLanguage");
             if (subNode != null)
                 settings.General.SpellCheckLanguage = subNode.InnerText;
@@ -930,6 +944,9 @@ namespace Nikse.SubtitleEdit.Logic
             subNode = node.SelectSingleNode("LastPacCodePage");
             if (subNode != null)
                 settings.General.LastPacCodePage = Convert.ToInt32((subNode.InnerText));
+            subNode = node.SelectSingleNode("OpenSubtitleExtraExtensions");
+            if (subNode != null)
+                settings.General.OpenSubtitleExtraExtensions = subNode.InnerText.Trim();
 
             settings.Tools = new Nikse.SubtitleEdit.Logic.ToolsSettings();
             node = doc.DocumentElement.SelectSingleNode("Tools");
@@ -969,9 +986,12 @@ namespace Nikse.SubtitleEdit.Logic
             subNode = node.SelectSingleNode("GoogleApiKey");
             if (subNode != null)
                 settings.Tools.GoogleApiKey = subNode.InnerText;
-            subNode = node.SelectSingleNode("ListViewSyntaxColorDuration");
+            subNode = node.SelectSingleNode("ListViewSyntaxColorDurationSmall");
             if (subNode != null)
-                settings.Tools.ListViewSyntaxColorDuration = Convert.ToBoolean(subNode.InnerText);
+                settings.Tools.ListViewSyntaxColorDurationSmall = Convert.ToBoolean(subNode.InnerText);
+            subNode = node.SelectSingleNode("ListViewSyntaxColorDurationBig");
+            if (subNode != null)
+                settings.Tools.ListViewSyntaxColorDurationBig = Convert.ToBoolean(subNode.InnerText);
             subNode = node.SelectSingleNode("ListViewSyntaxColorLongLines");
             if (subNode != null)
                 settings.Tools.ListViewSyntaxColorLongLines = Convert.ToBoolean(subNode.InnerText);
@@ -1533,9 +1553,10 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("RemoveBlankLinesWhenOpening", settings.General.RemoveBlankLinesWhenOpening.ToString());
             textWriter.WriteElementString("SubtitleLineMaximumLength", settings.General.SubtitleLineMaximumLength.ToString());
             textWriter.WriteElementString("SubtitleMinimumDisplayMilliseconds", settings.General.SubtitleMinimumDisplayMilliseconds.ToString());
+            textWriter.WriteElementString("SubtitleMaxinumDisplayMilliseconds", settings.General.SubtitleMaximumDisplayMilliseconds.ToString());
             textWriter.WriteElementString("MininumMillisecondsBetweenLines", settings.General.MininumMillisecondsBetweenLines.ToString());
             textWriter.WriteElementString("AutoWrapLineWhileTyping", settings.General.AutoWrapLineWhileTyping.ToString());
-            textWriter.WriteElementString("SubtitleMaximumCharactersPerSeconds", settings.General.SubtitleMaximumCharactersPerSeconds.ToString());
+            textWriter.WriteElementString("SubtitleMaximumCharactersPerSeconds", settings.General.SubtitleMaximumCharactersPerSeconds.ToString(System.Globalization.CultureInfo.InvariantCulture));
             textWriter.WriteElementString("SpellCheckLanguage", settings.General.SpellCheckLanguage);
             textWriter.WriteElementString("VideoPlayer", settings.General.VideoPlayer);
             textWriter.WriteElementString("VideoPlayerDefaultVolume", settings.General.VideoPlayerDefaultVolume.ToString());
@@ -1562,6 +1583,7 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("LargeDelayMilliseconds", settings.General.LargeDelayMilliseconds.ToString());
             textWriter.WriteElementString("ShowOriginalAsPreviewIfAvailable", settings.General.ShowOriginalAsPreviewIfAvailable.ToString());
             textWriter.WriteElementString("LastPacCodePage", settings.General.LastPacCodePage.ToString());
+            textWriter.WriteElementString("OpenSubtitleExtraExtensions", settings.General.OpenSubtitleExtraExtensions);
             textWriter.WriteEndElement();
 
             textWriter.WriteStartElement("Tools", "");
@@ -1577,7 +1599,8 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("Interjections", settings.Tools.Interjections);
             textWriter.WriteElementString("MicrosoftBingApiId", settings.Tools.MicrosoftBingApiId);
             textWriter.WriteElementString("GoogleApiKey", settings.Tools.GoogleApiKey);
-            textWriter.WriteElementString("ListViewSyntaxColorDuration", settings.Tools.ListViewSyntaxColorDuration.ToString());
+            textWriter.WriteElementString("ListViewSyntaxColorDurationSmall", settings.Tools.ListViewSyntaxColorDurationSmall.ToString());
+            textWriter.WriteElementString("ListViewSyntaxColorDurationBig", settings.Tools.ListViewSyntaxColorDurationBig.ToString());
             textWriter.WriteElementString("ListViewSyntaxColorLongLines", settings.Tools.ListViewSyntaxColorLongLines.ToString());
             textWriter.WriteElementString("ListViewSyntaxMoreThanTwoLines", settings.Tools.ListViewSyntaxMoreThanTwoLines.ToString());
             textWriter.WriteElementString("ListViewSyntaxColorOverlap", settings.Tools.ListViewSyntaxColorOverlap.ToString());

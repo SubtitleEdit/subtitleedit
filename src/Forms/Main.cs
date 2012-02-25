@@ -150,7 +150,7 @@ namespace Nikse.SubtitleEdit.Forms
                     if (versionInfo.Length >= 3 && versionInfo[2] != "0")
                         _title += "." + versionInfo[2];
                 }
-                return _title;
+                return _title + " beta 1";
             }
         }
 
@@ -200,7 +200,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         public Main()
         {
-            try
+           // try
             {
                 InitializeComponent();
 
@@ -356,11 +356,11 @@ namespace Nikse.SubtitleEdit.Forms
 
                 FixLargeFonts();
             }
-            catch (Exception exception)
-            {
-                Cursor = Cursors.Default;
-                MessageBox.Show(exception.Message + Environment.NewLine + exception.StackTrace);
-            }
+            //catch (Exception exception)
+            //{
+            //    Cursor = Cursors.Default;
+            //    MessageBox.Show(exception.Message + Environment.NewLine + exception.StackTrace);
+            //}
         }
 
         private void SetEncoding(Encoding encoding)
@@ -1073,7 +1073,16 @@ namespace Nikse.SubtitleEdit.Forms
             sortTextMaxLineLengthToolStripMenuItem.Text = _language.Menu.Tools.TextSingleLineMaximumLength;
             sortTextTotalLengthToolStripMenuItem.Text = _language.Menu.Tools.TextTotalLength;
             sortTextNumberOfLinesToolStripMenuItem.Text = _language.Menu.Tools.TextNumberOfLines;
-            textCharssecToolStripMenuItem.Text = _language.Menu.Tools.TextNumberOfCharactersPerSeconds;
+            if (!string.IsNullOrEmpty(_language.Menu.Tools.TextNumberOfCharactersPerSeconds))
+            {
+                textCharssecToolStripMenuItem.Text = _language.Menu.Tools.TextNumberOfCharactersPerSeconds;
+                textCharssecToolStripMenuItem.Visible = true;
+            }
+            else
+            {
+                textCharssecToolStripMenuItem.Visible = false;
+            }
+           
             toolStripMenuItemShowOriginalInPreview.Text = _language.Menu.Tools.ShowOriginalTextInAudioAndVideoPreview;
             toolStripMenuItemMakeEmptyFromCurrent.Text = _language.Menu.Tools.MakeNewEmptyTranslationFromCurrentSubtitle;
             splitToolStripMenuItem.Text = _language.Menu.Tools.SplitSubtitle;
