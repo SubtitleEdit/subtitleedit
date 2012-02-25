@@ -3,7 +3,7 @@
   <General>
     <Title>Subtitle Edit</Title>
     <Version>3.2</Version>
-    <TranslatedBy>Trottel</TranslatedBy>
+    <TranslatedBy>Translated by Trottel</TranslatedBy>
     <CultureName>cs-CZ</CultureName>
     <HelpFile />
     <OK>&amp;OK</OK>
@@ -457,6 +457,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <ImportTimecodes>Importovat časové kódy...</ImportTimecodes>
         <Export>Exportovat</Export>
         <ExportBdnXml>BDN xml/png...</ExportBdnXml>
+        <ExportBluRaySup>Blu-ray sup...</ExportBluRaySup>
+        <ExportVobSub>VobSub (sub/idx)...</ExportVobSub>
         <ExportCavena890>Cavena 890...</ExportCavena890>
         <ExportEbu>EBU stl...</ExportEbu>
         <ExportPac>PAC (Screen Electronics)...</ExportPac>
@@ -1081,16 +1083,23 @@ upravovat stejný soubor titulků (spolupráce)</Information>
     <Key>Klávesa</Key>
     <TextBox>Textové pole</TextBox>
     <UpdateShortcut>Aktualizovat</UpdateShortcut>
-    <ShortcutIsNotValid>SKlávesová zkratka není platná: {0}</ShortcutIsNotValid>
+    <ShortcutIsNotValid>Klávesová zkratka není platná: {0}</ShortcutIsNotValid>
     <ToggleDockUndockOfVideoControls>Ukotvit/zrušit ukotvení ovládání videa</ToggleDockUndockOfVideoControls>
     <AdjustViaEndAutoStartAndGoToNext>Nastavit podle pozice konce a přejít na další</AdjustViaEndAutoStartAndGoToNext>
     <AdjustSetStartAutoDurationAndGoToNext>Nastavit začátek, automatické trvání a přejít na další</AdjustSetStartAutoDurationAndGoToNext>
+    <AdjustSelected100MsForward>Posunout vybrané řádky o 100 ms vpřed</AdjustSelected100MsForward>
+    <AdjustSelected100MsBack>Posunout vybrané řádky o 100 ms zpět</AdjustSelected100MsBack>
+    <GoToNext>Přejít na další řádek</GoToNext>
+    <GoToPrevious>Přejít na předchozí řádek</GoToPrevious>
     <ToggleDialogueDashes>Přepnout dialogové pomlčky</ToggleDialogueDashes>
     <VerticalZoom>Svislé zvětšení</VerticalZoom>
+    <WaveformSeekSilenceForward>Tiché hledání vpřed</WaveformSeekSilenceForward>
+    <WaveformSeekSilenceBack>Tiché hledání zpět</WaveformSeekSilenceBack>
     <GoBack100Milliseconds>100 ms zpět</GoBack100Milliseconds>
     <GoForward100Milliseconds>100 ms vpřed</GoForward100Milliseconds>
     <GoBack500Milliseconds>500 ms zpět</GoBack500Milliseconds>
     <GoForward500Milliseconds>500 ms vpřed</GoForward500Milliseconds>
+    <Fullscreen>Na celou obrazovku</Fullscreen>
   </Settings>
   <ShowEarlierLater>
     <Title>Zobrazit vybrané řádky dříve nebo později</Title>
