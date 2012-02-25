@@ -218,7 +218,9 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 }
 
                 p.Text = cleanText;
-                p.StartTime = new TimeCode(TimeSpan.FromMilliseconds(long.Parse(millisecAsString)));
+                long l;
+                if (long.TryParse(millisecAsString, out l))
+                    p.StartTime = new TimeCode(TimeSpan.FromMilliseconds(l));
 
                 if (syncEndPos <= 0)
                 {
