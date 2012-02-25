@@ -564,7 +564,7 @@ namespace Nikse.SubtitleEdit.Forms
                                         Subtitle newSub = new Subtitle();
                                         foreach (Paragraph p in sub.Paragraphs)
                                         {
-                                            if (p.Extra.ToLower().Trim() == className.ToLower().Trim())
+                                            if (p.Extra != null && p.Extra.ToLower().Trim() == className.ToLower().Trim())
                                                 newSub.Paragraphs.Add(p);
                                         }
                                         if (newSub.Paragraphs.Count > 0 && newSub.Paragraphs.Count < sub.Paragraphs.Count)
@@ -9314,6 +9314,7 @@ namespace Nikse.SubtitleEdit.Forms
                 _subtitle.CalculateFrameNumbersFromTimeCodesNoCheck(frameRate);
             RefreshSelectedParagraph();
             UpdateSourceView();
+            UpdateListSyntaxColoring();
         }
 
         private void UpdateSourceView()
@@ -9789,6 +9790,10 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 numericUpDownDuration.Left = timeUpDownStartTime.Left + timeUpDownStartTime.Width + 10;
                 numericUpDownDuration.Width = numericUpDownDuration.Width + 10;
+                numericUpDownSec1.Width = numericUpDownSec1.Width + 10;
+                numericUpDownSec2.Width = numericUpDownSec2.Width + 10;
+                numericUpDownSecAdjust1.Width = numericUpDownSecAdjust1.Width + 10;
+                numericUpDownSecAdjust2.Width = numericUpDownSecAdjust2.Width + 10;
                 labelDuration.Left = numericUpDownDuration.Left;
             }
         }
