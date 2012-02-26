@@ -497,6 +497,7 @@ namespace Nikse.SubtitleEdit.Logic
         public string MainAdjustSelected100MsBack { get; set; }
         public string MainInsertAfter { get; set; }
         public string MainInsertBefore { get; set; }
+        public string MainMergeDialogue { get; set; }
         public string MainGoToNext { get; set; }
         public string MainGoToPrevious { get; set; }
         public string WaveformVerticalZoom { get; set; }
@@ -545,6 +546,7 @@ namespace Nikse.SubtitleEdit.Logic
             MainAdjustSelected100MsBack = string.Empty;
             MainInsertAfter = "Alt+Ins";
             MainInsertBefore = "Control+Shift+Ins";
+            MainMergeDialogue = string.Empty;
             WaveformVerticalZoom = string.Empty;
             WaveformPlaySelection = string.Empty;
             WaveformSearchSilenceForward = string.Empty;
@@ -1399,6 +1401,9 @@ namespace Nikse.SubtitleEdit.Logic
                 subNode = node.SelectSingleNode("MainInsertBefore");
                 if (subNode != null)
                     settings.Shortcuts.MainInsertBefore = subNode.InnerText;
+                subNode = node.SelectSingleNode("MainMergeDialogue");
+                if (subNode != null)
+                    settings.Shortcuts.MainMergeDialogue = subNode.InnerText;
                 subNode = node.SelectSingleNode("MainGoToNext");
                 if (subNode != null)
                     settings.Shortcuts.MainGoToNext = subNode.InnerText;
@@ -1757,6 +1762,7 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("MainAdjustSelected100MsBack", settings.Shortcuts.MainAdjustSelected100MsBack);
             textWriter.WriteElementString("MainInsertAfter", settings.Shortcuts.MainInsertAfter);
             textWriter.WriteElementString("MainInsertBefore", settings.Shortcuts.MainInsertBefore);
+            textWriter.WriteElementString("MainMergeDialogue", settings.Shortcuts.MainMergeDialogue);
             textWriter.WriteElementString("MainGoToNext", settings.Shortcuts.MainGoToNext);
             textWriter.WriteElementString("MainGoToPrevious", settings.Shortcuts.MainGoToPrevious);
             textWriter.WriteElementString("WaveformVerticalZoom", settings.Shortcuts.WaveformVerticalZoom);

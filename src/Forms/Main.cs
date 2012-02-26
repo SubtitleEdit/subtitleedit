@@ -118,6 +118,7 @@ namespace Nikse.SubtitleEdit.Forms
         Keys _mainAdjustSelected100MsBack = Keys.None;
         Keys _mainInsertAfter = Keys.None;
         Keys _mainInsertBefore = Keys.None;
+        Keys _mainMergeDialogue = Keys.None;
         Keys _mainGoToNext = Keys.None;
         Keys _mainGoToPrevious = Keys.None;
         Keys _mainListViewToggleDashes = Keys.None;
@@ -1213,7 +1214,6 @@ namespace Nikse.SubtitleEdit.Forms
             labelStartTime.Text = _languageGeneral.StartTime;
             labelText.Text = _languageGeneral.Text;
             toolStripLabelFrameRate.Text = _languageGeneral.FrameRate;
-//            buttonUndoListViewChanges.Text = _language.Controls.UndoChangesInEditPanel;
             buttonPrevious.Text = _language.Controls.Previous;
             buttonNext.Text = _language.Controls.Next;
             buttonAutoBreak.Text = _language.Controls.AutoBreak;
@@ -3675,8 +3675,9 @@ namespace Nikse.SubtitleEdit.Forms
                     _change = true;
                     _converted = true;
                     SetTitle();
-                    if (googleTranslate.ScreenScrapingEncoding != null)
-                        SetEncoding(googleTranslate.ScreenScrapingEncoding);
+                    //if (googleTranslate.ScreenScrapingEncoding != null)
+                    //    SetEncoding(googleTranslate.ScreenScrapingEncoding);
+                    SetEncoding(Encoding.UTF8);
                 }
                 _formPositionsAndSizes.SavePositionAndSize(googleTranslate);
             }
@@ -4498,7 +4499,7 @@ namespace Nikse.SubtitleEdit.Forms
             else if (prev != null)
             {
                 newParagraph.StartTime.TotalMilliseconds = prev.EndTime.TotalMilliseconds + addMilliseconds;
-                newParagraph.EndTime.TotalMilliseconds = newParagraph.StartTime.TotalMilliseconds + 1200;
+                newParagraph.EndTime.TotalMilliseconds = newParagraph.StartTime.TotalMilliseconds + 2000;
                 if (next != null && newParagraph.EndTime.TotalMilliseconds > next.StartTime.TotalMilliseconds)
                     newParagraph.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - 1;
                 if (newParagraph.StartTime.TotalMilliseconds > newParagraph.EndTime.TotalMilliseconds)
@@ -4506,7 +4507,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (next != null)
             {
-                newParagraph.StartTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - 1200;
+                newParagraph.StartTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - 2001;
                 newParagraph.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - 1;
             }
             else
@@ -4575,7 +4576,7 @@ namespace Nikse.SubtitleEdit.Forms
                     addMilliseconds = 1;
 
                 newParagraph.StartTime.TotalMilliseconds = prev.EndTime.TotalMilliseconds + addMilliseconds;
-                newParagraph.EndTime.TotalMilliseconds = newParagraph.StartTime.TotalMilliseconds + 1200;
+                newParagraph.EndTime.TotalMilliseconds = newParagraph.StartTime.TotalMilliseconds + 2000;
                 if (next != null && newParagraph.EndTime.TotalMilliseconds > next.StartTime.TotalMilliseconds)
                     newParagraph.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - 1;
                 if (newParagraph.StartTime.TotalMilliseconds > newParagraph.EndTime.TotalMilliseconds)
@@ -4583,7 +4584,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (next != null)
             {
-                newParagraph.StartTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - 1200;
+                newParagraph.StartTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - 2000;
                 newParagraph.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - 1;
             }
             else
@@ -4622,8 +4623,6 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void SubtitleListView1SelectedIndexChange()
         {
-            //if (buttonUndoListViewChanges.Visible)
-            //    buttonUndoListViewChanges.Enabled = false;
             StopAutoDuration();
             ShowLineInformationListView();
             if (_subtitle.Paragraphs.Count > 0)
@@ -5065,6 +5064,28 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         currentParagraph.Text = Utilities.AutoBreakLine(lines[0]);
                         newParagraph.Text = Utilities.AutoBreakLine(lines[1]);
+                        if (lines[0].Length > 2 && lines[0][0] == '-' && lines[0][1] != '-' &&
+                            lines[1].Length > 2 && lines[1][0] == '-' && lines[1][1] != '-')
+                        {
+                            currentParagraph.Text = currentParagraph.Text.TrimStart('-').Trim();
+                            newParagraph.Text = newParagraph.Text.TrimStart('-').Trim();
+                        }
+                    }
+                    else if (lines.Length == 2 && (lines[0].EndsWith(".</i>") || lines[0].EndsWith("!</i>") || lines[0].EndsWith("?</i>")))
+                    {
+                        currentParagraph.Text = Utilities.AutoBreakLine(lines[0]);
+                        newParagraph.Text = Utilities.AutoBreakLine(lines[1]);
+                        if (lines[0].Length > 5 && lines[0].StartsWith("<i>-") && lines[0][4] != '-' &&
+                            lines[1].Length > 5 && lines[1].StartsWith("<i>-") && lines[1][4] != '-')
+                        {
+                            currentParagraph.Text = currentParagraph.Text.Remove(3, 1);
+                            if (currentParagraph.Text[3] == ' ')
+                                currentParagraph.Text = currentParagraph.Text.Remove(3, 1);
+
+                            newParagraph.Text = newParagraph.Text.Remove(3, 1);
+                            if (newParagraph.Text[3] == ' ')
+                                newParagraph.Text = newParagraph.Text.Remove(3, 1);
+                        }
                     }
                     else
                     {
@@ -5252,12 +5273,12 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void MergeSelectedLines()
+        private void MergeSelectedLines(bool insertDash)
         {
             if (_subtitle.Paragraphs.Count > 0 && SubtitleListview1.SelectedItems.Count > 1)
             {
-                StringBuilder sb = new StringBuilder();
-                List<int> deleteIndices = new List<int>();
+                var sb = new StringBuilder();
+                var deleteIndices = new List<int>();
                 bool first = true;
                 int firstIndex = 0;
                 foreach (int index in SubtitleListview1.SelectedIndices)
@@ -5266,7 +5287,20 @@ namespace Nikse.SubtitleEdit.Forms
                         firstIndex = index;
                     else
                         deleteIndices.Add(index);
-                    sb.AppendLine(_subtitle.Paragraphs[index].Text);
+                    if (insertDash)
+                    {
+                        string s = Utilities.UnbreakLine(_subtitle.Paragraphs[index].Text);
+                        if (s.StartsWith("-") || s.StartsWith("<i>-"))
+                            sb.AppendLine(s);
+                        else if (s.StartsWith("<i>"))
+                            sb.AppendLine(s.Insert(3, "- "));
+                        else
+                            sb.AppendLine("- " + s);
+                    }
+                    else
+                    {
+                        sb.AppendLine(_subtitle.Paragraphs[index].Text);
+                    }
                     first = false;
                 }
 
@@ -5297,13 +5331,28 @@ namespace Nikse.SubtitleEdit.Forms
                     Paragraph original = Utilities.GetOriginalParagraph(firstIndex, currentParagraph, _subtitleAlternate.Paragraphs);
                     if (original != null)
                     {
-                        StringBuilder originalTexts = new StringBuilder();
+                        var originalTexts = new StringBuilder();
                         originalTexts.Append(original.Text + " ");
                         for (int i = 0; i < deleteIndices.Count; i++)
                         {
                             Paragraph originalNext = Utilities.GetOriginalParagraph(deleteIndices[i], _subtitle.Paragraphs[deleteIndices[i]], _subtitleAlternate.Paragraphs);
                             if (originalNext != null)
-                                originalTexts.Append(originalNext.Text + " ");
+                            {
+                                if (insertDash)
+                                {
+                                    string s = Utilities.UnbreakLine(originalNext.Text);
+                                    if (s.StartsWith("-") || s.StartsWith("<i>-"))
+                                        originalTexts.AppendLine(s);
+                                    else if (s.StartsWith("<i>"))
+                                        originalTexts.AppendLine(s.Insert(3, "- "));
+                                    else
+                                        originalTexts.AppendLine("- " + s);
+                                }
+                                else
+                                {
+                                    originalTexts.Append(originalNext.Text + " ");
+                                }
+                            }
                         }
                         for (int i = deleteIndices.Count - 1; i >= 0; i--)
                         {
@@ -5364,7 +5413,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 if (SubtitleListview1.SelectedItems.Count > 2)
                 {
-                    MergeSelectedLines();
+                    MergeSelectedLines(false);
                     return;
                 }
 
@@ -5554,23 +5603,6 @@ namespace Nikse.SubtitleEdit.Forms
                 labelStatus.Text = string.Empty;
             }
         }
-
-        private void ButtonUndoListViewChangesClick(object sender, EventArgs e)
-        {
-            if (_subtitleListViewIndex >= 0 && _oldSelectedParagraph != null)
-            {
-                var p = new Paragraph(_oldSelectedParagraph);
-                _subtitle.Paragraphs[_subtitleListViewIndex] = p;
-
-                SubtitleListview1.SetText(_subtitleListViewIndex, p.Text);
-                SubtitleListview1.SetStartTime(_subtitleListViewIndex, p);
-                SubtitleListview1.SetDuration(_subtitleListViewIndex, p);
-
-                InitializeListViewEditBox(p);
-//                buttonUndoListViewChanges.Enabled = false;
-            }
-        }
-
 
         private void InitializeListViewEditBoxAlternate(Paragraph p, int firstSelectedIndex)
         {
@@ -7074,6 +7106,12 @@ namespace Nikse.SubtitleEdit.Forms
                 e.SuppressKeyPress = true;
                 textBoxListViewText.Focus();
             }
+            else if (_mainMergeDialogue == e.KeyData && inListView)
+            {
+                MergeDialogues();
+                e.SuppressKeyPress = true;
+                textBoxListViewText.Focus();
+            }
             else if (_mainListViewToggleDashes == e.KeyData && inListView)
             {
                 ToggleDashes();
@@ -7181,7 +7219,7 @@ namespace Nikse.SubtitleEdit.Forms
                     if (SubtitleListview1.SelectedItems.Count == 2)
                         MergeAfterToolStripMenuItemClick(null, null);
                     else
-                        MergeSelectedLines();
+                        MergeSelectedLines(false);
                 }
             }
             else if (e.Modifiers == Keys.Control && e.KeyCode == Keys.K)
@@ -7192,7 +7230,7 @@ namespace Nikse.SubtitleEdit.Forms
                     if (SubtitleListview1.SelectedItems.Count == 2)
                         MergeAfterToolStripMenuItemClick(null, null);
                     else
-                        MergeSelectedLines();
+                        MergeSelectedLines(false);
                 }
             }
             else if (e.Modifiers == Keys.Control && e.KeyCode == Keys.U)
@@ -7600,6 +7638,12 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
             // put new entries above tabs
+        }
+
+        private void MergeDialogues()
+        {
+            if (SubtitleListview1.SelectedItems.Count == 2)
+                MergeSelectedLines(true);
         }
 
         private void ToggleDashes()
@@ -9872,6 +9916,7 @@ namespace Nikse.SubtitleEdit.Forms
             _mainAdjustSelected100MsBack = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainAdjustSelected100MsBack);
             _mainInsertAfter = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainInsertAfter);
             _mainInsertBefore = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainInsertBefore);
+            _mainMergeDialogue = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainMergeDialogue);
             _mainGoToNext = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainGoToNext);
             _mainGoToPrevious = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainGoToPrevious);
             _waveformVerticalZoom = Utilities.GetKeys(Configuration.Settings.Shortcuts.WaveformVerticalZoom);

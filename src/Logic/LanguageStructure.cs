@@ -1208,6 +1208,7 @@
             public string AdjustSelected100MsForward { get; set; }
             public string AdjustSelected100MsBack { get; set; }
             public string AdjustSetStartTimeOnly { get; set; }
+            public string MergeDialogue { get; set; }
             public string GoToNext { get; set; }
             public string GoToPrevious { get; set; }
             public string ToggleDialogueDashes { get; set; }
