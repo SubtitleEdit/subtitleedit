@@ -483,6 +483,8 @@ namespace Nikse.SubtitleEdit.Forms
             ListViewNode.Nodes.Add(Configuration.Settings.Language.General.Italic + GetShortcutText(Configuration.Settings.Shortcuts.MainListViewItalic));
             ListViewNode.Nodes.Add(Configuration.Settings.Language.Main.Menu.ContextMenu.InsertAfter + GetShortcutText(Configuration.Settings.Shortcuts.MainInsertAfter));
             ListViewNode.Nodes.Add(Configuration.Settings.Language.Main.Menu.ContextMenu.InsertBefore + GetShortcutText(Configuration.Settings.Shortcuts.MainInsertBefore));
+            if (!string.IsNullOrEmpty(Configuration.Settings.Language.Settings.MergeDialogue)) // TODO: Remove in SE 3.3
+                ListViewNode.Nodes.Add(Configuration.Settings.Language.Settings.MergeDialogue + GetShortcutText(Configuration.Settings.Shortcuts.MainMergeDialogue));
             if (!string.IsNullOrEmpty(Configuration.Settings.Language.Settings.GoToNext)) // TODO: Remove in SE 3.3
                 ListViewNode.Nodes.Add(Configuration.Settings.Language.Settings.GoToNext + GetShortcutText(Configuration.Settings.Shortcuts.MainGoToNext));
             if (!string.IsNullOrEmpty(Configuration.Settings.Language.Settings.GoToPrevious)) // TODO: Remove in SE 3.3
@@ -962,6 +964,8 @@ namespace Nikse.SubtitleEdit.Forms
                         Configuration.Settings.Shortcuts.MainInsertAfter = GetShortcut(node.Text);
                     else if (text == Configuration.Settings.Language.Main.Menu.ContextMenu.InsertBefore.Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.MainInsertBefore = GetShortcut(node.Text);
+                    else if (Configuration.Settings.Language.Settings.MergeDialogue != null && text == Configuration.Settings.Language.Settings.MergeDialogue.Replace("&", string.Empty))
+                        Configuration.Settings.Shortcuts.MainMergeDialogue = GetShortcut(node.Text);
                     else if (Configuration.Settings.Language.Settings.GoToNext != null && text == Configuration.Settings.Language.Settings.GoToNext.Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.MainGoToNext = GetShortcut(node.Text);
                     else if (Configuration.Settings.Language.Settings.GoToPrevious != null && text == Configuration.Settings.Language.Settings.GoToPrevious.Replace("&", string.Empty))
