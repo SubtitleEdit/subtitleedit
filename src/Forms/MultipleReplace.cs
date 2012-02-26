@@ -49,6 +49,9 @@ namespace Nikse.SubtitleEdit.Forms
             FixLargeFonts();
             splitContainer1.Panel1MinSize = 200;
             splitContainer1.Panel2MinSize = 200;
+
+            moveUpToolStripMenuItem.Text = Configuration.Settings.Language.DvdSubrip.MoveUp;
+            moveDownToolStripMenuItem.Text = Configuration.Settings.Language.DvdSubrip.MoveDown;
         }
 
         private void FixLargeFonts()
@@ -111,7 +114,7 @@ namespace Nikse.SubtitleEdit.Forms
                 textBoxFind.Text = string.Empty;
                 textBoxReplace.Text = string.Empty;
                 textBoxFind.Select();
-                SaveReplaceList();
+                SaveReplaceList(false);
             }
         }
 
@@ -244,11 +247,11 @@ namespace Nikse.SubtitleEdit.Forms
         private void ButtonOkClick(object sender, EventArgs e)
         {
             ResetUncheckLines();
-            SaveReplaceList();
+            SaveReplaceList(true);
             DialogResult = DialogResult.OK;
         }
 
-        private void SaveReplaceList()
+        private void SaveReplaceList(bool saveToDisk)
         {
             Configuration.Settings.MultipleSearchAndReplaceList = new List<MultipleSearchAndReplaceSetting>();
             foreach (ListViewItem item in listViewReplaceList.Items)
@@ -290,7 +293,7 @@ namespace Nikse.SubtitleEdit.Forms
                     item.Remove();
             }
             GeneratePreview();
-            SaveReplaceList();
+            SaveReplaceList(false);
         }
 
         private void ListViewReplaceListKeyDown(object sender, KeyEventArgs e)
@@ -301,6 +304,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ButtonUpdateClick(object sender, EventArgs e)
         {
+            if (listViewReplaceList.SelectedItems.Count != 1)
+                return;
+
             if (textBoxFind.Text.Length > 0)
             {
 
@@ -310,8 +316,32 @@ namespace Nikse.SubtitleEdit.Forms
                     textBoxFind.Select();
                     return;
                 }
-                DeleteToolStripMenuItemClick(null, null);
-                ButtonAddClick(null, null);
+
+                if (textBoxFind.Text.Length > 0)
+                {
+                    string searchType = SearchTypeNormal;
+                    if (radioButtonCaseSensitive.Checked)
+                        searchType = SearchTypeCaseSensitive;
+                    else if (radioButtonRegEx.Checked)
+                    {
+                        searchType = SearchTypeRegularExpression;
+                        if (!Utilities.IsValidRegex(textBoxFind.Text))
+                        {
+                            MessageBox.Show(Configuration.Settings.Language.General.RegularExpressionIsNotValid);
+                            textBoxFind.Select();
+                            return;
+                        }
+                    }
+
+                    var item = listViewReplaceList.SelectedItems[0];
+                    item.SubItems[1].Text = textBoxFind.Text;
+                    item.SubItems[2].Text = textBoxReplace.Text;
+                    item.SubItems[3].Text = searchType;
+
+                    GeneratePreview();
+                    textBoxFind.Select();
+                    SaveReplaceList(false);
+                }
             }
         }
 
@@ -352,6 +382,52 @@ namespace Nikse.SubtitleEdit.Forms
         {
             foreach (ListViewItem item in listViewFixes.Items)
                 item.Checked = !item.Checked;
+        }
+
+        private void contextMenuStrip1_Opening(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            moveUpToolStripMenuItem.Visible = listViewReplaceList.Items.Count > 1 && listViewReplaceList.SelectedItems.Count == 1;
+            moveDownToolStripMenuItem.Visible = listViewReplaceList.Items.Count > 1 && listViewReplaceList.SelectedItems.Count == 1;
+        }
+
+        private void moveUpToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            int index = listViewReplaceList.SelectedIndices[0];
+            if (index == 0)
+                return;
+
+            SwapReplaceList(index, index - 1);
+        }
+
+        private void SwapReplaceList(int index, int index2)
+        {
+            bool enabled = listViewReplaceList.Items[index].Checked;
+            string findWhat = listViewReplaceList.Items[index].SubItems[1].Text;
+            string replaceWith = listViewReplaceList.Items[index].SubItems[2].Text;
+            string searchType = listViewReplaceList.Items[index].SubItems[3].Text;
+
+            listViewReplaceList.Items[index].Checked = listViewReplaceList.Items[index2].Checked;
+            listViewReplaceList.Items[index].SubItems[1].Text = listViewReplaceList.Items[index2].SubItems[1].Text;
+            listViewReplaceList.Items[index].SubItems[2].Text = listViewReplaceList.Items[index2].SubItems[2].Text;
+            listViewReplaceList.Items[index].SubItems[3].Text = listViewReplaceList.Items[index2].SubItems[3].Text;
+
+            listViewReplaceList.Items[index2].Checked = enabled;
+            listViewReplaceList.Items[index2].SubItems[1].Text = findWhat;
+            listViewReplaceList.Items[index2].SubItems[2].Text = replaceWith;
+            listViewReplaceList.Items[index2].SubItems[3].Text = searchType;
+
+            listViewReplaceList.Items[index].Selected = false;
+            listViewReplaceList.Items[index2].Selected = true;
+            SaveReplaceList(false);
+        }
+
+        private void moveDownToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            int index = listViewReplaceList.SelectedIndices[0];
+            if (index == listViewReplaceList.Items.Count - 1)
+                return;
+
+            SwapReplaceList(index, index + 1);
         }
 
     }
