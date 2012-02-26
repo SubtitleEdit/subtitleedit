@@ -35,9 +35,9 @@
             this.buttonCancel = new System.Windows.Forms.Button();
             this.buttonOK = new System.Windows.Forms.Button();
             this.SuspendLayout();
-            //
+            // 
             // comboBoxCodePage
-            //
+            // 
             this.comboBoxCodePage.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxCodePage.FormattingEnabled = true;
             this.comboBoxCodePage.Items.AddRange(new object[] {
@@ -53,36 +53,36 @@
             this.comboBoxCodePage.Size = new System.Drawing.Size(203, 21);
             this.comboBoxCodePage.TabIndex = 0;
             this.comboBoxCodePage.SelectedIndexChanged += new System.EventHandler(this.comboBoxCodePage_SelectedIndexChanged);
-            //
+            // 
             // labelCodePage
-            //
+            // 
             this.labelCodePage.AutoSize = true;
             this.labelCodePage.Location = new System.Drawing.Point(9, 21);
             this.labelCodePage.Name = "labelCodePage";
             this.labelCodePage.Size = new System.Drawing.Size(155, 13);
             this.labelCodePage.TabIndex = 1;
             this.labelCodePage.Text = "Please choose PAC code page";
-            //
+            // 
             // labelPreview
-            //
+            // 
             this.labelPreview.AutoSize = true;
             this.labelPreview.Location = new System.Drawing.Point(9, 73);
             this.labelPreview.Name = "labelPreview";
             this.labelPreview.Size = new System.Drawing.Size(122, 13);
             this.labelPreview.TabIndex = 2;
             this.labelPreview.Text = "PAC code page preview";
-            //
+            // 
             // textBoxPreview
-            //
+            // 
             this.textBoxPreview.Location = new System.Drawing.Point(12, 89);
             this.textBoxPreview.Multiline = true;
             this.textBoxPreview.Name = "textBoxPreview";
             this.textBoxPreview.ReadOnly = true;
             this.textBoxPreview.Size = new System.Drawing.Size(344, 44);
             this.textBoxPreview.TabIndex = 3;
-            //
+            // 
             // buttonCancel
-            //
+            // 
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonCancel.Location = new System.Drawing.Point(281, 148);
@@ -92,9 +92,9 @@
             this.buttonCancel.Text = "C&ancel";
             this.buttonCancel.UseVisualStyleBackColor = true;
             this.buttonCancel.Click += new System.EventHandler(this.buttonCancel_Click);
-            //
+            // 
             // buttonOK
-            //
+            // 
             this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonOK.Location = new System.Drawing.Point(200, 148);
@@ -104,9 +104,9 @@
             this.buttonOK.Text = "&OK";
             this.buttonOK.UseVisualStyleBackColor = true;
             this.buttonOK.Click += new System.EventHandler(this.buttonOK_Click);
-            //
+            // 
             // PacEncoding
-            //
+            // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(371, 177);
@@ -121,6 +121,7 @@
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "PacEncoding";
+            this.ShowInTaskbar = false;
             this.Text = "PacEncoding";
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.PacEncoding_KeyDown);
             this.ResumeLayout(false);

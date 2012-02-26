@@ -39,9 +39,9 @@
             this.labelSessionKey = new System.Windows.Forms.Label();
             this.textBoxSessionKey = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
-            //
+            // 
             // buttonCancel
-            //
+            // 
             this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonCancel.Location = new System.Drawing.Point(312, 147);
             this.buttonCancel.Name = "buttonCancel";
@@ -50,16 +50,16 @@
             this.buttonCancel.Text = "C&ancel";
             this.buttonCancel.UseVisualStyleBackColor = true;
             this.buttonCancel.Click += new System.EventHandler(this.buttonCancel_Click);
-            //
+            // 
             // textBoxUserName
-            //
+            // 
             this.textBoxUserName.Location = new System.Drawing.Point(125, 83);
             this.textBoxUserName.Name = "textBoxUserName";
             this.textBoxUserName.Size = new System.Drawing.Size(262, 20);
             this.textBoxUserName.TabIndex = 1;
-            //
+            // 
             // buttonStart
-            //
+            // 
             this.buttonStart.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonStart.Location = new System.Drawing.Point(231, 147);
             this.buttonStart.Name = "buttonStart";
@@ -68,9 +68,9 @@
             this.buttonStart.Text = "&Start";
             this.buttonStart.UseVisualStyleBackColor = true;
             this.buttonStart.Click += new System.EventHandler(this.buttonStart_Click);
-            //
+            // 
             // labelUserName
-            //
+            // 
             this.labelUserName.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.labelUserName.Location = new System.Drawing.Point(5, 86);
             this.labelUserName.Name = "labelUserName";
@@ -78,9 +78,9 @@
             this.labelUserName.TabIndex = 3;
             this.labelUserName.Text = "Username";
             this.labelUserName.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            //
+            // 
             // comboBoxWebServiceUrl
-            //
+            // 
             this.comboBoxWebServiceUrl.FormattingEnabled = true;
             this.comboBoxWebServiceUrl.Items.AddRange(new object[] {
             "http://www.nikse.dk/se/SeService.asmx",
@@ -89,9 +89,9 @@
             this.comboBoxWebServiceUrl.Name = "comboBoxWebServiceUrl";
             this.comboBoxWebServiceUrl.Size = new System.Drawing.Size(262, 21);
             this.comboBoxWebServiceUrl.TabIndex = 2;
-            //
+            // 
             // labelWebServiceUrl
-            //
+            // 
             this.labelWebServiceUrl.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.labelWebServiceUrl.Location = new System.Drawing.Point(5, 112);
             this.labelWebServiceUrl.Name = "labelWebServiceUrl";
@@ -99,27 +99,27 @@
             this.labelWebServiceUrl.TabIndex = 8;
             this.labelWebServiceUrl.Text = "Web service url";
             this.labelWebServiceUrl.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            //
+            // 
             // labelInfo
-            //
+            // 
             this.labelInfo.AutoSize = true;
             this.labelInfo.Location = new System.Drawing.Point(16, 13);
             this.labelInfo.Name = "labelInfo";
             this.labelInfo.Size = new System.Drawing.Size(200, 26);
             this.labelInfo.TabIndex = 9;
             this.labelInfo.Text = "Start new session where multiple persons\r\ncan edit in same subtitle file.\r\n";
-            //
+            // 
             // labelStatus
-            //
+            // 
             this.labelStatus.AutoSize = true;
             this.labelStatus.Location = new System.Drawing.Point(16, 167);
             this.labelStatus.Name = "labelStatus";
             this.labelStatus.Size = new System.Drawing.Size(59, 13);
             this.labelStatus.TabIndex = 10;
             this.labelStatus.Text = "labelStatus";
-            //
+            // 
             // labelSessionKey
-            //
+            // 
             this.labelSessionKey.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.labelSessionKey.Location = new System.Drawing.Point(5, 60);
             this.labelSessionKey.Name = "labelSessionKey";
@@ -127,16 +127,16 @@
             this.labelSessionKey.TabIndex = 11;
             this.labelSessionKey.Text = "Session Key";
             this.labelSessionKey.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            //
+            // 
             // textBoxSessionKey
-            //
+            // 
             this.textBoxSessionKey.Location = new System.Drawing.Point(125, 57);
             this.textBoxSessionKey.Name = "textBoxSessionKey";
             this.textBoxSessionKey.Size = new System.Drawing.Size(262, 20);
             this.textBoxSessionKey.TabIndex = 0;
-            //
+            // 
             // NetworkStart
-            //
+            // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(402, 185);
@@ -154,6 +154,7 @@
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "NetworkStart";
+            this.ShowInTaskbar = false;
             this.Text = "Start network session";
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.NetworkNew_KeyDown);
             this.ResumeLayout(false);

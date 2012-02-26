@@ -39,9 +39,9 @@
             this.labelFindWhat = new System.Windows.Forms.Label();
             this.buttonFind = new System.Windows.Forms.Button();
             this.SuspendLayout();
-            //
+            // 
             // radioButtonRegEx
-            //
+            // 
             this.radioButtonRegEx.AutoSize = true;
             this.radioButtonRegEx.Location = new System.Drawing.Point(17, 97);
             this.radioButtonRegEx.Name = "radioButtonRegEx";
@@ -50,9 +50,9 @@
             this.radioButtonRegEx.Text = "RegEx";
             this.radioButtonRegEx.UseVisualStyleBackColor = true;
             this.radioButtonRegEx.CheckedChanged += new System.EventHandler(this.RadioButtonCheckedChanged);
-            //
+            // 
             // radioButtonCaseSensitive
-            //
+            // 
             this.radioButtonCaseSensitive.AutoSize = true;
             this.radioButtonCaseSensitive.Location = new System.Drawing.Point(17, 74);
             this.radioButtonCaseSensitive.Name = "radioButtonCaseSensitive";
@@ -61,9 +61,9 @@
             this.radioButtonCaseSensitive.Text = "Case sensitive";
             this.radioButtonCaseSensitive.UseVisualStyleBackColor = true;
             this.radioButtonCaseSensitive.CheckedChanged += new System.EventHandler(this.RadioButtonCheckedChanged);
-            //
+            // 
             // radioButtonNormal
-            //
+            // 
             this.radioButtonNormal.AutoSize = true;
             this.radioButtonNormal.Checked = true;
             this.radioButtonNormal.Location = new System.Drawing.Point(17, 51);
@@ -74,9 +74,9 @@
             this.radioButtonNormal.Text = "Normal";
             this.radioButtonNormal.UseVisualStyleBackColor = true;
             this.radioButtonNormal.CheckedChanged += new System.EventHandler(this.RadioButtonCheckedChanged);
-            //
+            // 
             // buttonReplace
-            //
+            // 
             this.buttonReplace.Location = new System.Drawing.Point(96, 180);
             this.buttonReplace.Name = "buttonReplace";
             this.buttonReplace.Size = new System.Drawing.Size(75, 21);
@@ -84,17 +84,17 @@
             this.buttonReplace.Text = "Replace";
             this.buttonReplace.UseVisualStyleBackColor = true;
             this.buttonReplace.Click += new System.EventHandler(this.ButtonReplaceClick);
-            //
+            // 
             // textBoxFind
-            //
+            // 
             this.textBoxFind.Location = new System.Drawing.Point(15, 25);
             this.textBoxFind.Name = "textBoxFind";
             this.textBoxFind.Size = new System.Drawing.Size(262, 21);
             this.textBoxFind.TabIndex = 0;
             this.textBoxFind.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxFindKeyDown);
-            //
+            // 
             // buttonReplaceAll
-            //
+            // 
             this.buttonReplaceAll.Location = new System.Drawing.Point(177, 180);
             this.buttonReplaceAll.Name = "buttonReplaceAll";
             this.buttonReplaceAll.Size = new System.Drawing.Size(103, 21);
@@ -102,35 +102,35 @@
             this.buttonReplaceAll.Text = "Replace all";
             this.buttonReplaceAll.UseVisualStyleBackColor = true;
             this.buttonReplaceAll.Click += new System.EventHandler(this.ButtonReplaceAllClick);
-            //
+            // 
             // textBoxReplace
-            //
+            // 
             this.textBoxReplace.Location = new System.Drawing.Point(15, 144);
             this.textBoxReplace.Name = "textBoxReplace";
             this.textBoxReplace.Size = new System.Drawing.Size(265, 21);
             this.textBoxReplace.TabIndex = 4;
             this.textBoxReplace.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxFindKeyDown);
-            //
+            // 
             // labelReplaceWith
-            //
+            // 
             this.labelReplaceWith.AutoSize = true;
             this.labelReplaceWith.Location = new System.Drawing.Point(12, 127);
             this.labelReplaceWith.Name = "labelReplaceWith";
             this.labelReplaceWith.Size = new System.Drawing.Size(72, 13);
             this.labelReplaceWith.TabIndex = 14;
             this.labelReplaceWith.Text = "Replace with:";
-            //
+            // 
             // labelFindWhat
-            //
+            // 
             this.labelFindWhat.AutoSize = true;
             this.labelFindWhat.Location = new System.Drawing.Point(12, 8);
             this.labelFindWhat.Name = "labelFindWhat";
             this.labelFindWhat.Size = new System.Drawing.Size(58, 13);
             this.labelFindWhat.TabIndex = 15;
             this.labelFindWhat.Text = "Find what:";
-            //
+            // 
             // buttonFind
-            //
+            // 
             this.buttonFind.Location = new System.Drawing.Point(15, 180);
             this.buttonFind.Name = "buttonFind";
             this.buttonFind.Size = new System.Drawing.Size(75, 21);
@@ -138,9 +138,9 @@
             this.buttonFind.Text = "Find";
             this.buttonFind.UseVisualStyleBackColor = true;
             this.buttonFind.Click += new System.EventHandler(this.ButtonFindClick);
-            //
+            // 
             // ReplaceDialog
-            //
+            // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(330, 208);
@@ -160,6 +160,7 @@
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "ReplaceDialog";
+            this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
             this.Text = "Replace";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.ReplaceDialog_FormClosing);

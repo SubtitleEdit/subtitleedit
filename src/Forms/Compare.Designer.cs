@@ -244,6 +244,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.MinimumSize = new System.Drawing.Size(800, 400);
             this.Name = "Compare";
             this.ShowIcon = false;
+            this.ShowInTaskbar = false;
             this.Text = "Compare subtitles";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Compare_FormClosing);
             this.Shown += new System.EventHandler(this.Compare_Shown);

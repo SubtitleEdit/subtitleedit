@@ -35,17 +35,17 @@
             this.radioButtonCaseSensitive = new System.Windows.Forms.RadioButton();
             this.radioButtonRegEx = new System.Windows.Forms.RadioButton();
             this.SuspendLayout();
-            //
+            // 
             // textBoxFind
-            //
+            // 
             this.textBoxFind.Location = new System.Drawing.Point(12, 12);
             this.textBoxFind.Name = "textBoxFind";
             this.textBoxFind.Size = new System.Drawing.Size(189, 21);
             this.textBoxFind.TabIndex = 0;
             this.textBoxFind.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxFindKeyDown);
-            //
+            // 
             // buttonFind
-            //
+            // 
             this.buttonFind.Location = new System.Drawing.Point(207, 11);
             this.buttonFind.Name = "buttonFind";
             this.buttonFind.Size = new System.Drawing.Size(75, 21);
@@ -53,9 +53,9 @@
             this.buttonFind.Text = "Find";
             this.buttonFind.UseVisualStyleBackColor = true;
             this.buttonFind.Click += new System.EventHandler(this.ButtonFindClick);
-            //
+            // 
             // buttonCancel
-            //
+            // 
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.buttonCancel.Location = new System.Drawing.Point(207, 36);
             this.buttonCancel.Name = "buttonCancel";
@@ -63,9 +63,9 @@
             this.buttonCancel.TabIndex = 3;
             this.buttonCancel.Text = "C&ancel";
             this.buttonCancel.UseVisualStyleBackColor = true;
-            //
+            // 
             // radioButtonNormal
-            //
+            // 
             this.radioButtonNormal.AutoSize = true;
             this.radioButtonNormal.Checked = true;
             this.radioButtonNormal.Location = new System.Drawing.Point(12, 63);
@@ -76,9 +76,9 @@
             this.radioButtonNormal.Text = "Normal";
             this.radioButtonNormal.UseVisualStyleBackColor = true;
             this.radioButtonNormal.CheckedChanged += new System.EventHandler(this.RadioButtonCheckedChanged);
-            //
+            // 
             // radioButtonCaseSensitive
-            //
+            // 
             this.radioButtonCaseSensitive.AutoSize = true;
             this.radioButtonCaseSensitive.Location = new System.Drawing.Point(12, 86);
             this.radioButtonCaseSensitive.Name = "radioButtonCaseSensitive";
@@ -87,9 +87,9 @@
             this.radioButtonCaseSensitive.Text = "Case sensitive";
             this.radioButtonCaseSensitive.UseVisualStyleBackColor = true;
             this.radioButtonCaseSensitive.CheckedChanged += new System.EventHandler(this.RadioButtonCheckedChanged);
-            //
+            // 
             // radioButtonRegEx
-            //
+            // 
             this.radioButtonRegEx.AutoSize = true;
             this.radioButtonRegEx.Location = new System.Drawing.Point(12, 109);
             this.radioButtonRegEx.Name = "radioButtonRegEx";
@@ -98,9 +98,9 @@
             this.radioButtonRegEx.Text = "RegEx";
             this.radioButtonRegEx.UseVisualStyleBackColor = true;
             this.radioButtonRegEx.CheckedChanged += new System.EventHandler(this.RadioButtonCheckedChanged);
-            //
+            // 
             // FindDialog
-            //
+            // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(298, 135);
@@ -116,6 +116,7 @@
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "FindDialog";
+            this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Find";
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.FormFindDialog_KeyDown);

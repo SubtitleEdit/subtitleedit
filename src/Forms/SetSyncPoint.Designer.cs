@@ -49,11 +49,11 @@
             this.groupBoxSyncPointTimeCode.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.SuspendLayout();
-            //
+            // 
             // groupBoxSyncPointTimeCode
-            //
-            this.groupBoxSyncPointTimeCode.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)));
+            // 
+            this.groupBoxSyncPointTimeCode.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
             this.groupBoxSyncPointTimeCode.Controls.Add(this.timeUpDownLine);
             this.groupBoxSyncPointTimeCode.Location = new System.Drawing.Point(12, 12);
             this.groupBoxSyncPointTimeCode.Name = "groupBoxSyncPointTimeCode";
@@ -61,9 +61,9 @@
             this.groupBoxSyncPointTimeCode.TabIndex = 1;
             this.groupBoxSyncPointTimeCode.TabStop = false;
             this.groupBoxSyncPointTimeCode.Text = "Sync point time code";
-            //
+            // 
             // timeUpDownLine
-            //
+            // 
             this.timeUpDownLine.AutoSize = true;
             this.timeUpDownLine.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.timeUpDownLine.Location = new System.Drawing.Point(18, 19);
@@ -71,24 +71,25 @@
             this.timeUpDownLine.Name = "timeUpDownLine";
             this.timeUpDownLine.Size = new System.Drawing.Size(92, 25);
             this.timeUpDownLine.TabIndex = 1;
-            //
+            // 
             // groupBox2
-            //
-            this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            // 
+            this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox2.Controls.Add(this.subtitleListView1);
             this.groupBox2.Location = new System.Drawing.Point(190, 13);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(554, 182);
             this.groupBox2.TabIndex = 10;
             this.groupBox2.TabStop = false;
-            //
+            // 
             // subtitleListView1
-            //
-            this.subtitleListView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            // 
+            this.subtitleListView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.subtitleListView1.DisplayExtraFromExtra = false;
             this.subtitleListView1.FirstVisibleIndex = -1;
             this.subtitleListView1.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.subtitleListView1.FullRowSelect = true;
@@ -101,9 +102,9 @@
             this.subtitleListView1.UseCompatibleStateImageBehavior = false;
             this.subtitleListView1.View = System.Windows.Forms.View.Details;
             this.subtitleListView1.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.subtitleListView1_MouseDoubleClick);
-            //
+            // 
             // buttonCancel
-            //
+            // 
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonCancel.Location = new System.Drawing.Point(662, 542);
@@ -113,9 +114,9 @@
             this.buttonCancel.Text = "C&ancel";
             this.buttonCancel.UseVisualStyleBackColor = true;
             this.buttonCancel.Click += new System.EventHandler(this.buttonCancel_Click);
-            //
+            // 
             // buttonSetSyncPoint
-            //
+            // 
             this.buttonSetSyncPoint.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonSetSyncPoint.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonSetSyncPoint.Location = new System.Drawing.Point(533, 542);
@@ -125,13 +126,13 @@
             this.buttonSetSyncPoint.Text = "&Set sync point";
             this.buttonSetSyncPoint.UseVisualStyleBackColor = true;
             this.buttonSetSyncPoint.Click += new System.EventHandler(this.buttonOK_Click);
-            //
+            // 
             // openFileDialog1
-            //
+            // 
             this.openFileDialog1.FileName = "openFileDialog1";
-            //
+            // 
             // buttonOpenMovie
-            //
+            // 
             this.buttonOpenMovie.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonOpenMovie.Location = new System.Drawing.Point(631, 200);
             this.buttonOpenMovie.Name = "buttonOpenMovie";
@@ -140,14 +141,14 @@
             this.buttonOpenMovie.Text = "Open movie...";
             this.buttonOpenMovie.UseVisualStyleBackColor = true;
             this.buttonOpenMovie.Click += new System.EventHandler(this.buttonOpenMovie_Click);
-            //
+            // 
             // timer1
-            //
+            // 
             this.timer1.Interval = 50;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
-            //
+            // 
             // labelVideoFileName
-            //
+            // 
             this.labelVideoFileName.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.labelVideoFileName.AutoSize = true;
             this.labelVideoFileName.Location = new System.Drawing.Point(12, 209);
@@ -155,9 +156,9 @@
             this.labelVideoFileName.Size = new System.Drawing.Size(98, 13);
             this.labelVideoFileName.TabIndex = 21;
             this.labelVideoFileName.Text = "labelVideoFileName";
-            //
+            // 
             // buttonHalfASecondBack
-            //
+            // 
             this.buttonHalfASecondBack.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.buttonHalfASecondBack.Location = new System.Drawing.Point(12, 526);
             this.buttonHalfASecondBack.Name = "buttonHalfASecondBack";
@@ -166,9 +167,9 @@
             this.buttonHalfASecondBack.Text = "&½ second <";
             this.buttonHalfASecondBack.UseVisualStyleBackColor = true;
             this.buttonHalfASecondBack.Click += new System.EventHandler(this.buttonStartHalfASecondBack_Click);
-            //
+            // 
             // buttonThreeSecondsBack
-            //
+            // 
             this.buttonThreeSecondsBack.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.buttonThreeSecondsBack.Location = new System.Drawing.Point(95, 526);
             this.buttonThreeSecondsBack.Name = "buttonThreeSecondsBack";
@@ -177,9 +178,9 @@
             this.buttonThreeSecondsBack.Text = "&3 seconds <";
             this.buttonThreeSecondsBack.UseVisualStyleBackColor = true;
             this.buttonThreeSecondsBack.Click += new System.EventHandler(this.buttonStartThreeSecondsBack_Click);
-            //
+            // 
             // buttonThreeSecondsAhead
-            //
+            // 
             this.buttonThreeSecondsAhead.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.buttonThreeSecondsAhead.Location = new System.Drawing.Point(303, 526);
             this.buttonThreeSecondsAhead.Name = "buttonThreeSecondsAhead";
@@ -188,9 +189,9 @@
             this.buttonThreeSecondsAhead.Text = "3 seconds >";
             this.buttonThreeSecondsAhead.UseVisualStyleBackColor = true;
             this.buttonThreeSecondsAhead.Click += new System.EventHandler(this.buttonStartThreeSecondsAhead_Click);
-            //
+            // 
             // buttonHalfASecondAhead
-            //
+            // 
             this.buttonHalfASecondAhead.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.buttonHalfASecondAhead.Location = new System.Drawing.Point(386, 526);
             this.buttonHalfASecondAhead.Name = "buttonHalfASecondAhead";
@@ -199,9 +200,9 @@
             this.buttonHalfASecondAhead.Text = "½ second >";
             this.buttonHalfASecondAhead.UseVisualStyleBackColor = true;
             this.buttonHalfASecondAhead.Click += new System.EventHandler(this.buttonStartHalfASecondAhead_Click);
-            //
+            // 
             // buttonVerify
-            //
+            // 
             this.buttonVerify.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.buttonVerify.Location = new System.Drawing.Point(178, 526);
             this.buttonVerify.Name = "buttonVerify";
@@ -210,11 +211,11 @@
             this.buttonVerify.Text = "Play 2 secs and back";
             this.buttonVerify.UseVisualStyleBackColor = true;
             this.buttonVerify.Click += new System.EventHandler(this.buttonStartVerify_Click);
-            //
+            // 
             // labelSubtitle
-            //
-            this.labelSubtitle.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            // 
+            this.labelSubtitle.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.labelSubtitle.BackColor = System.Drawing.Color.Black;
             this.labelSubtitle.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelSubtitle.ForeColor = System.Drawing.Color.White;
@@ -224,24 +225,28 @@
             this.labelSubtitle.TabIndex = 27;
             this.labelSubtitle.Text = "labelSubtitle";
             this.labelSubtitle.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            //
+            // 
             // videoPlayerContainer1
-            //
-            this.videoPlayerContainer1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            // 
+            this.videoPlayerContainer1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.videoPlayerContainer1.BackColor = System.Drawing.Color.Black;
             this.videoPlayerContainer1.CurrentPosition = 0D;
+            this.videoPlayerContainer1.FontSizeFactor = 1F;
             this.videoPlayerContainer1.Location = new System.Drawing.Point(12, 226);
             this.videoPlayerContainer1.Name = "videoPlayerContainer1";
             this.videoPlayerContainer1.ShowStopButton = true;
             this.videoPlayerContainer1.Size = new System.Drawing.Size(728, 265);
             this.videoPlayerContainer1.SubtitleText = "";
             this.videoPlayerContainer1.TabIndex = 13;
+            this.videoPlayerContainer1.TextRightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.videoPlayerContainer1.VideoHeight = 0;
             this.videoPlayerContainer1.VideoPlayer = null;
+            this.videoPlayerContainer1.VideoWidth = 0;
             this.videoPlayerContainer1.Volume = 0D;
-            //
+            // 
             // SetSyncPoint
-            //
+            // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(749, 568);
@@ -265,6 +270,7 @@
             this.MinimumSize = new System.Drawing.Size(700, 600);
             this.Name = "SetSyncPoint";
             this.ShowIcon = false;
+            this.ShowInTaskbar = false;
             this.Text = "Set sync point";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.GetTime_FormClosing);
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.GetTime_FormClosed);

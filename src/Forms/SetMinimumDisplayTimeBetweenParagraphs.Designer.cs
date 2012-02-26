@@ -38,12 +38,12 @@
             this.groupBoxLinesFound.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMinMillisecondsBetweenLines)).BeginInit();
             this.SuspendLayout();
-            //
+            // 
             // groupBoxLinesFound
-            //
-            this.groupBoxLinesFound.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            // 
+            this.groupBoxLinesFound.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBoxLinesFound.Controls.Add(this.SubtitleListview1);
             this.groupBoxLinesFound.Location = new System.Drawing.Point(18, 75);
             this.groupBoxLinesFound.Name = "groupBoxLinesFound";
@@ -51,13 +51,14 @@
             this.groupBoxLinesFound.TabIndex = 14;
             this.groupBoxLinesFound.TabStop = false;
             this.groupBoxLinesFound.Text = "Preview";
-            //
+            // 
             // SubtitleListview1
-            //
+            // 
             this.SubtitleListview1.AllowDrop = true;
-            this.SubtitleListview1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.SubtitleListview1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.SubtitleListview1.DisplayExtraFromExtra = false;
             this.SubtitleListview1.FirstVisibleIndex = -1;
             this.SubtitleListview1.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.SubtitleListview1.FullRowSelect = true;
@@ -69,9 +70,9 @@
             this.SubtitleListview1.TabIndex = 5;
             this.SubtitleListview1.UseCompatibleStateImageBehavior = false;
             this.SubtitleListview1.View = System.Windows.Forms.View.Details;
-            //
+            // 
             // numericUpDownMinMillisecondsBetweenLines
-            //
+            // 
             this.numericUpDownMinMillisecondsBetweenLines.Location = new System.Drawing.Point(18, 34);
             this.numericUpDownMinMillisecondsBetweenLines.Maximum = new decimal(new int[] {
             1000,
@@ -93,18 +94,18 @@
             0});
             this.numericUpDownMinMillisecondsBetweenLines.ValueChanged += new System.EventHandler(this.numericUpDownMinMillisecondsBetweenLines_ValueChanged);
             this.numericUpDownMinMillisecondsBetweenLines.KeyUp += new System.Windows.Forms.KeyEventHandler(this.numericUpDownMinMillisecondsBetweenLines_KeyUp);
-            //
+            // 
             // labelMaxMillisecondsBetweenLines
-            //
+            // 
             this.labelMaxMillisecondsBetweenLines.AutoSize = true;
             this.labelMaxMillisecondsBetweenLines.Location = new System.Drawing.Point(15, 18);
             this.labelMaxMillisecondsBetweenLines.Name = "labelMaxMillisecondsBetweenLines";
             this.labelMaxMillisecondsBetweenLines.Size = new System.Drawing.Size(172, 13);
             this.labelMaxMillisecondsBetweenLines.TabIndex = 35;
             this.labelMaxMillisecondsBetweenLines.Text = "Mininum milliseconds between lines";
-            //
+            // 
             // buttonOK
-            //
+            // 
             this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonOK.Location = new System.Drawing.Point(595, 447);
             this.buttonOK.Name = "buttonOK";
@@ -113,9 +114,9 @@
             this.buttonOK.Text = "&OK";
             this.buttonOK.UseVisualStyleBackColor = true;
             this.buttonOK.Click += new System.EventHandler(this.buttonOK_Click);
-            //
+            // 
             // buttonCancel
-            //
+            // 
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.buttonCancel.Location = new System.Drawing.Point(676, 447);
@@ -125,9 +126,9 @@
             this.buttonCancel.Text = "C&ancel";
             this.buttonCancel.UseVisualStyleBackColor = true;
             this.buttonCancel.Click += new System.EventHandler(this.buttonCancel_Click);
-            //
+            // 
             // checkBoxShowOnlyChangedLines
-            //
+            // 
             this.checkBoxShowOnlyChangedLines.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.checkBoxShowOnlyChangedLines.AutoSize = true;
             this.checkBoxShowOnlyChangedLines.Location = new System.Drawing.Point(18, 448);
@@ -137,9 +138,9 @@
             this.checkBoxShowOnlyChangedLines.Text = "Show only modified lines";
             this.checkBoxShowOnlyChangedLines.UseVisualStyleBackColor = true;
             this.checkBoxShowOnlyChangedLines.CheckedChanged += new System.EventHandler(this.checkBoxShowOnlyChangedLines_CheckedChanged);
-            //
+            // 
             // SetMinimumDisplayTimeBetweenParagraphs
-            //
+            // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(754, 480);
@@ -152,6 +153,7 @@
             this.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Name = "SetMinimumDisplayTimeBetweenParagraphs";
             this.ShowIcon = false;
+            this.ShowInTaskbar = false;
             this.Text = "Set minimum display time between paragraphs";
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.SetMinimalDisplayTimeDifference_KeyDown);
             this.groupBoxLinesFound.ResumeLayout(false);

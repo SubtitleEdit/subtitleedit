@@ -33,9 +33,9 @@
             this.listBox1 = new System.Windows.Forms.ListBox();
             this.labelChoose = new System.Windows.Forms.Label();
             this.SuspendLayout();
-            //
+            // 
             // buttonCancel
-            //
+            // 
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.BackColor = System.Drawing.SystemColors.Control;
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
@@ -45,9 +45,9 @@
             this.buttonCancel.TabIndex = 46;
             this.buttonCancel.Text = "C&ancel";
             this.buttonCancel.UseVisualStyleBackColor = false;
-            //
+            // 
             // buttonOK
-            //
+            // 
             this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonOK.Location = new System.Drawing.Point(281, 250);
             this.buttonOK.Name = "buttonOK";
@@ -56,11 +56,11 @@
             this.buttonOK.Text = "OK";
             this.buttonOK.UseVisualStyleBackColor = true;
             this.buttonOK.Click += new System.EventHandler(this.ButtonOkClick);
-            //
+            // 
             // listBox1
-            //
-            this.listBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-            | System.Windows.Forms.AnchorStyles.Left)
+            // 
+            this.listBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.listBox1.FormattingEnabled = true;
             this.listBox1.Location = new System.Drawing.Point(12, 43);
@@ -68,18 +68,18 @@
             this.listBox1.Size = new System.Drawing.Size(425, 199);
             this.listBox1.TabIndex = 47;
             this.listBox1.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.listBox1_MouseDoubleClick);
-            //
+            // 
             // labelChoose
-            //
+            // 
             this.labelChoose.AutoSize = true;
             this.labelChoose.Location = new System.Drawing.Point(9, 20);
             this.labelChoose.Name = "labelChoose";
             this.labelChoose.Size = new System.Drawing.Size(224, 13);
             this.labelChoose.TabIndex = 48;
             this.labelChoose.Text = "More than one subtitle found - please choose";
-            //
+            // 
             // MatroskaSubtitleChooser
-            //
+            // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(450, 277);
@@ -94,6 +94,7 @@
             this.MinimumSize = new System.Drawing.Size(400, 250);
             this.Name = "MatroskaSubtitleChooser";
             this.ShowIcon = false;
+            this.ShowInTaskbar = false;
             this.Text = "Choose subtitle from Matroska file";
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.FormMatroskaSubtitleChooser_KeyDown);
             this.ResumeLayout(false);

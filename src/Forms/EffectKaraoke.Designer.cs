@@ -45,27 +45,27 @@
             this.richTextBoxPreview = new System.Windows.Forms.RichTextBox();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDelay)).BeginInit();
             this.SuspendLayout();
-            //
+            // 
             // labelTotalMillisecs
-            //
+            // 
             this.labelTotalMillisecs.AutoSize = true;
             this.labelTotalMillisecs.Location = new System.Drawing.Point(159, 52);
             this.labelTotalMillisecs.Name = "labelTotalMillisecs";
             this.labelTotalMillisecs.Size = new System.Drawing.Size(90, 13);
             this.labelTotalMillisecs.TabIndex = 49;
             this.labelTotalMillisecs.Text = "labelTotalMillisecs";
-            //
+            // 
             // labelTM
-            //
+            // 
             this.labelTM.Location = new System.Drawing.Point(16, 52);
             this.labelTM.Name = "labelTM";
             this.labelTM.Size = new System.Drawing.Size(140, 13);
             this.labelTM.TabIndex = 48;
             this.labelTM.Text = "Total millisecs.:";
             this.labelTM.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            //
+            // 
             // numericUpDownDelay
-            //
+            // 
             this.numericUpDownDelay.DecimalPlaces = 3;
             this.numericUpDownDelay.Increment = new decimal(new int[] {
             1,
@@ -86,27 +86,27 @@
             this.numericUpDownDelay.Name = "numericUpDownDelay";
             this.numericUpDownDelay.Size = new System.Drawing.Size(54, 21);
             this.numericUpDownDelay.TabIndex = 47;
-            //
+            // 
             // labelColor
-            //
+            // 
             this.labelColor.AutoSize = true;
             this.labelColor.Location = new System.Drawing.Point(218, 22);
             this.labelColor.Name = "labelColor";
             this.labelColor.Size = new System.Drawing.Size(32, 13);
             this.labelColor.TabIndex = 46;
             this.labelColor.Text = "Color";
-            //
+            // 
             // labelEndDelay
-            //
+            // 
             this.labelEndDelay.Location = new System.Drawing.Point(16, 76);
             this.labelEndDelay.Name = "labelEndDelay";
             this.labelEndDelay.Size = new System.Drawing.Size(140, 13);
             this.labelEndDelay.TabIndex = 45;
             this.labelEndDelay.Text = "End delay in millisecs.:";
             this.labelEndDelay.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            //
+            // 
             // buttonCancel
-            //
+            // 
             this.buttonCancel.BackColor = System.Drawing.SystemColors.Control;
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.buttonCancel.Location = new System.Drawing.Point(353, 181);
@@ -115,9 +115,9 @@
             this.buttonCancel.TabIndex = 44;
             this.buttonCancel.Text = "C&ancel";
             this.buttonCancel.UseVisualStyleBackColor = false;
-            //
+            // 
             // buttonOK
-            //
+            // 
             this.buttonOK.Location = new System.Drawing.Point(272, 181);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 21);
@@ -125,9 +125,9 @@
             this.buttonOK.Text = "OK";
             this.buttonOK.UseVisualStyleBackColor = true;
             this.buttonOK.Click += new System.EventHandler(this.ButtonOkClick);
-            //
+            // 
             // buttonChooseColor
-            //
+            // 
             this.buttonChooseColor.Location = new System.Drawing.Point(159, 17);
             this.buttonChooseColor.Name = "buttonChooseColor";
             this.buttonChooseColor.Size = new System.Drawing.Size(27, 23);
@@ -135,25 +135,25 @@
             this.buttonChooseColor.Text = "...";
             this.buttonChooseColor.UseVisualStyleBackColor = true;
             this.buttonChooseColor.Click += new System.EventHandler(this.ButtonChooseColorClick);
-            //
+            // 
             // panelColor
-            //
+            // 
             this.panelColor.Location = new System.Drawing.Point(192, 19);
             this.panelColor.Name = "panelColor";
             this.panelColor.Size = new System.Drawing.Size(20, 20);
             this.panelColor.TabIndex = 41;
-            //
+            // 
             // labelChooseColor
-            //
+            // 
             this.labelChooseColor.Location = new System.Drawing.Point(16, 22);
             this.labelChooseColor.Name = "labelChooseColor";
             this.labelChooseColor.Size = new System.Drawing.Size(140, 13);
             this.labelChooseColor.TabIndex = 40;
             this.labelChooseColor.Text = "Choose color:";
             this.labelChooseColor.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            //
+            // 
             // buttonPreview
-            //
+            // 
             this.buttonPreview.Location = new System.Drawing.Point(12, 154);
             this.buttonPreview.Name = "buttonPreview";
             this.buttonPreview.Size = new System.Drawing.Size(100, 21);
@@ -161,13 +161,13 @@
             this.buttonPreview.Text = "Preview";
             this.buttonPreview.UseVisualStyleBackColor = true;
             this.buttonPreview.Click += new System.EventHandler(this.ButtonPreviewClick);
-            //
+            // 
             // timer1
-            //
+            // 
             this.timer1.Tick += new System.EventHandler(this.Timer1Tick);
-            //
+            // 
             // richTextBoxPreview
-            //
+            // 
             this.richTextBoxPreview.BackColor = System.Drawing.Color.Black;
             this.richTextBoxPreview.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.richTextBoxPreview.DetectUrls = false;
@@ -178,10 +178,10 @@
             this.richTextBoxPreview.TabIndex = 50;
             this.richTextBoxPreview.TabStop = false;
             this.richTextBoxPreview.Text = "";
-            //
+            // 
             // EffectKaraoke
-            //
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 17F);
+            // 
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(440, 208);
             this.Controls.Add(this.richTextBoxPreview);
@@ -202,6 +202,7 @@
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "EffectKaraoke";
+            this.ShowInTaskbar = false;
             this.Text = "Karaoke effect";
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.FormEffectkaraoke_KeyDown);
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDelay)).EndInit();

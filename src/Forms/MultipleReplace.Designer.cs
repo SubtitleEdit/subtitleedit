@@ -38,15 +38,15 @@
             this.columnHeader7 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader8 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.groupBoxReplaces = new System.Windows.Forms.GroupBox();
+            this.textBoxFind = new System.Windows.Forms.TextBox();
+            this.textBoxReplace = new System.Windows.Forms.TextBox();
             this.buttonUpdate = new System.Windows.Forms.Button();
             this.buttonAdd = new System.Windows.Forms.Button();
             this.labelFindWhat = new System.Windows.Forms.Label();
             this.labelReplaceWith = new System.Windows.Forms.Label();
-            this.textBoxReplace = new System.Windows.Forms.TextBox();
             this.radioButtonRegEx = new System.Windows.Forms.RadioButton();
             this.radioButtonCaseSensitive = new System.Windows.Forms.RadioButton();
             this.radioButtonNormal = new System.Windows.Forms.RadioButton();
-            this.textBoxFind = new System.Windows.Forms.TextBox();
             this.listViewReplaceList = new System.Windows.Forms.ListView();
             this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -64,12 +64,12 @@
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
             this.SuspendLayout();
-            //
+            // 
             // groupBoxLinesFound
-            //
-            this.groupBoxLinesFound.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            // 
+            this.groupBoxLinesFound.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBoxLinesFound.Controls.Add(this.buttonReplacesInverseSelection);
             this.groupBoxLinesFound.Controls.Add(this.buttonReplacesSelectAll);
             this.groupBoxLinesFound.Controls.Add(this.listViewFixes);
@@ -79,9 +79,9 @@
             this.groupBoxLinesFound.TabIndex = 8;
             this.groupBoxLinesFound.TabStop = false;
             this.groupBoxLinesFound.Text = "Lines found: {0}";
-            //
+            // 
             // buttonReplacesInverseSelection
-            //
+            // 
             this.buttonReplacesInverseSelection.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.buttonReplacesInverseSelection.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonReplacesInverseSelection.Location = new System.Drawing.Point(91, 287);
@@ -91,9 +91,9 @@
             this.buttonReplacesInverseSelection.Text = "&Inverse selection";
             this.buttonReplacesInverseSelection.UseVisualStyleBackColor = true;
             this.buttonReplacesInverseSelection.Click += new System.EventHandler(this.buttonReplacesInverseSelection_Click);
-            //
+            // 
             // buttonReplacesSelectAll
-            //
+            // 
             this.buttonReplacesSelectAll.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.buttonReplacesSelectAll.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonReplacesSelectAll.Location = new System.Drawing.Point(10, 287);
@@ -103,12 +103,12 @@
             this.buttonReplacesSelectAll.Text = "Select &all";
             this.buttonReplacesSelectAll.UseVisualStyleBackColor = true;
             this.buttonReplacesSelectAll.Click += new System.EventHandler(this.buttonReplacesSelectAll_Click);
-            //
+            // 
             // listViewFixes
-            //
-            this.listViewFixes.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            // 
+            this.listViewFixes.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.listViewFixes.CheckBoxes = true;
             this.listViewFixes.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.columnHeader4,
@@ -123,32 +123,32 @@
             this.listViewFixes.TabIndex = 9;
             this.listViewFixes.UseCompatibleStateImageBehavior = false;
             this.listViewFixes.View = System.Windows.Forms.View.Details;
-            //
+            // 
             // columnHeader4
-            //
+            // 
             this.columnHeader4.Text = "Apply";
             this.columnHeader4.Width = 48;
-            //
+            // 
             // columnHeader5
-            //
+            // 
             this.columnHeader5.Text = "Line#";
             this.columnHeader5.Width = 61;
-            //
+            // 
             // columnHeader7
-            //
+            // 
             this.columnHeader7.Text = "Before";
             this.columnHeader7.Width = 330;
-            //
+            // 
             // columnHeader8
-            //
+            // 
             this.columnHeader8.Text = "After";
             this.columnHeader8.Width = 440;
-            //
+            // 
             // groupBoxReplaces
-            //
-            this.groupBoxReplaces.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            // 
+            this.groupBoxReplaces.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBoxReplaces.Controls.Add(this.textBoxFind);
             this.groupBoxReplaces.Controls.Add(this.textBoxReplace);
             this.groupBoxReplaces.Controls.Add(this.buttonUpdate);
@@ -164,9 +164,24 @@
             this.groupBoxReplaces.Size = new System.Drawing.Size(922, 297);
             this.groupBoxReplaces.TabIndex = 0;
             this.groupBoxReplaces.TabStop = false;
-            //
+            // 
+            // textBoxFind
+            // 
+            this.textBoxFind.Location = new System.Drawing.Point(20, 35);
+            this.textBoxFind.Name = "textBoxFind";
+            this.textBoxFind.Size = new System.Drawing.Size(224, 21);
+            this.textBoxFind.TabIndex = 1;
+            // 
+            // textBoxReplace
+            // 
+            this.textBoxReplace.Location = new System.Drawing.Point(250, 35);
+            this.textBoxReplace.Name = "textBoxReplace";
+            this.textBoxReplace.Size = new System.Drawing.Size(227, 21);
+            this.textBoxReplace.TabIndex = 2;
+            this.textBoxReplace.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxReplaceKeyDown);
+            // 
             // buttonUpdate
-            //
+            // 
             this.buttonUpdate.Location = new System.Drawing.Point(588, 35);
             this.buttonUpdate.Name = "buttonUpdate";
             this.buttonUpdate.Size = new System.Drawing.Size(99, 21);
@@ -174,9 +189,9 @@
             this.buttonUpdate.Text = "&Update";
             this.buttonUpdate.UseVisualStyleBackColor = true;
             this.buttonUpdate.Click += new System.EventHandler(this.ButtonUpdateClick);
-            //
+            // 
             // buttonAdd
-            //
+            // 
             this.buttonAdd.Location = new System.Drawing.Point(483, 35);
             this.buttonAdd.Name = "buttonAdd";
             this.buttonAdd.Size = new System.Drawing.Size(99, 21);
@@ -184,80 +199,65 @@
             this.buttonAdd.Text = "&Add";
             this.buttonAdd.UseVisualStyleBackColor = true;
             this.buttonAdd.Click += new System.EventHandler(this.ButtonAddClick);
-            //
+            // 
             // labelFindWhat
-            //
+            // 
             this.labelFindWhat.AutoSize = true;
             this.labelFindWhat.Location = new System.Drawing.Point(17, 16);
             this.labelFindWhat.Name = "labelFindWhat";
-            this.labelFindWhat.Size = new System.Drawing.Size(89, 21);
+            this.labelFindWhat.Size = new System.Drawing.Size(58, 13);
             this.labelFindWhat.TabIndex = 22;
             this.labelFindWhat.Text = "Find what:";
-            //
+            // 
             // labelReplaceWith
-            //
+            // 
             this.labelReplaceWith.AutoSize = true;
             this.labelReplaceWith.Location = new System.Drawing.Point(247, 16);
             this.labelReplaceWith.Name = "labelReplaceWith";
-            this.labelReplaceWith.Size = new System.Drawing.Size(112, 21);
+            this.labelReplaceWith.Size = new System.Drawing.Size(72, 13);
             this.labelReplaceWith.TabIndex = 21;
             this.labelReplaceWith.Text = "Replace with:";
-            //
-            // textBoxReplace
-            //
-            this.textBoxReplace.Location = new System.Drawing.Point(250, 35);
-            this.textBoxReplace.Name = "textBoxReplace";
-            this.textBoxReplace.Size = new System.Drawing.Size(227, 27);
-            this.textBoxReplace.TabIndex = 2;
-            this.textBoxReplace.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxReplaceKeyDown);
-            //
+            // 
             // radioButtonRegEx
-            //
+            // 
             this.radioButtonRegEx.AutoSize = true;
             this.radioButtonRegEx.Location = new System.Drawing.Point(286, 62);
             this.radioButtonRegEx.Name = "radioButtonRegEx";
-            this.radioButtonRegEx.Size = new System.Drawing.Size(82, 25);
+            this.radioButtonRegEx.Size = new System.Drawing.Size(57, 17);
             this.radioButtonRegEx.TabIndex = 6;
             this.radioButtonRegEx.Text = "RegEx";
             this.radioButtonRegEx.UseVisualStyleBackColor = true;
             this.radioButtonRegEx.CheckedChanged += new System.EventHandler(this.RadioButtonCheckedChanged);
-            //
+            // 
             // radioButtonCaseSensitive
-            //
+            // 
             this.radioButtonCaseSensitive.AutoSize = true;
             this.radioButtonCaseSensitive.Location = new System.Drawing.Point(146, 62);
             this.radioButtonCaseSensitive.Name = "radioButtonCaseSensitive";
-            this.radioButtonCaseSensitive.Size = new System.Drawing.Size(141, 25);
+            this.radioButtonCaseSensitive.Size = new System.Drawing.Size(93, 17);
             this.radioButtonCaseSensitive.TabIndex = 5;
             this.radioButtonCaseSensitive.Text = "Case sensitive";
             this.radioButtonCaseSensitive.UseVisualStyleBackColor = true;
             this.radioButtonCaseSensitive.CheckedChanged += new System.EventHandler(this.RadioButtonCheckedChanged);
-            //
+            // 
             // radioButtonNormal
-            //
+            // 
             this.radioButtonNormal.AutoSize = true;
             this.radioButtonNormal.Checked = true;
             this.radioButtonNormal.Location = new System.Drawing.Point(22, 62);
             this.radioButtonNormal.Name = "radioButtonNormal";
-            this.radioButtonNormal.Size = new System.Drawing.Size(88, 25);
+            this.radioButtonNormal.Size = new System.Drawing.Size(58, 17);
             this.radioButtonNormal.TabIndex = 4;
             this.radioButtonNormal.TabStop = true;
             this.radioButtonNormal.Text = "Normal";
             this.radioButtonNormal.UseVisualStyleBackColor = true;
             this.radioButtonNormal.CheckedChanged += new System.EventHandler(this.RadioButtonCheckedChanged);
-            //
-            // textBoxFind
-            //
-            this.textBoxFind.Location = new System.Drawing.Point(20, 35);
-            this.textBoxFind.Name = "textBoxFind";
-            this.textBoxFind.Size = new System.Drawing.Size(224, 27);
-            this.textBoxFind.TabIndex = 1;
-            //
+            // 
             // listViewReplaceList
-            //
-            this.listViewReplaceList.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            // 
+            this.listViewReplaceList.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.listViewReplaceList.CheckBoxes = true;
             this.listViewReplaceList.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.columnHeader1,
@@ -276,43 +276,43 @@
             this.listViewReplaceList.ItemChecked += new System.Windows.Forms.ItemCheckedEventHandler(this.ListViewReplaceListItemChecked);
             this.listViewReplaceList.SelectedIndexChanged += new System.EventHandler(this.ListViewReplaceListSelectedIndexChanged);
             this.listViewReplaceList.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ListViewReplaceListKeyDown);
-            //
+            // 
             // columnHeader1
-            //
+            // 
             this.columnHeader1.Text = "Enabled";
             this.columnHeader1.Width = 70;
-            //
+            // 
             // columnHeader2
-            //
+            // 
             this.columnHeader2.Text = "Find what";
             this.columnHeader2.Width = 210;
-            //
+            // 
             // columnHeader3
-            //
+            // 
             this.columnHeader3.Text = "Replace with";
             this.columnHeader3.Width = 210;
-            //
+            // 
             // columnHeader6
-            //
+            // 
             this.columnHeader6.Text = "Search type";
             this.columnHeader6.Width = 200;
-            //
+            // 
             // contextMenuStrip1
-            //
+            // 
             this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.deleteToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
             this.contextMenuStrip1.Size = new System.Drawing.Size(117, 26);
-            //
+            // 
             // deleteToolStripMenuItem
-            //
+            // 
             this.deleteToolStripMenuItem.Name = "deleteToolStripMenuItem";
             this.deleteToolStripMenuItem.Size = new System.Drawing.Size(116, 22);
             this.deleteToolStripMenuItem.Text = "Delete";
             this.deleteToolStripMenuItem.Click += new System.EventHandler(this.DeleteToolStripMenuItemClick);
-            //
+            // 
             // buttonOK
-            //
+            // 
             this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonOK.Location = new System.Drawing.Point(768, 323);
             this.buttonOK.Name = "buttonOK";
@@ -321,9 +321,9 @@
             this.buttonOK.Text = "&OK";
             this.buttonOK.UseVisualStyleBackColor = true;
             this.buttonOK.Click += new System.EventHandler(this.ButtonOkClick);
-            //
+            // 
             // buttonCancel
-            //
+            // 
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.buttonCancel.Location = new System.Drawing.Point(849, 323);
@@ -332,30 +332,30 @@
             this.buttonCancel.TabIndex = 11;
             this.buttonCancel.Text = "C&ancel";
             this.buttonCancel.UseVisualStyleBackColor = true;
-            //
+            // 
             // splitContainer1
-            //
+            // 
             this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.splitContainer1.Location = new System.Drawing.Point(0, 0);
             this.splitContainer1.Name = "splitContainer1";
             this.splitContainer1.Orientation = System.Windows.Forms.Orientation.Horizontal;
-            //
+            // 
             // splitContainer1.Panel1
-            //
+            // 
             this.splitContainer1.Panel1.Controls.Add(this.groupBoxReplaces);
-            //
+            // 
             // splitContainer1.Panel2
-            //
+            // 
             this.splitContainer1.Panel2.Controls.Add(this.groupBoxLinesFound);
             this.splitContainer1.Panel2.Controls.Add(this.buttonOK);
             this.splitContainer1.Panel2.Controls.Add(this.buttonCancel);
             this.splitContainer1.Size = new System.Drawing.Size(933, 667);
             this.splitContainer1.SplitterDistance = 303;
             this.splitContainer1.TabIndex = 12;
-            //
+            // 
             // MultipleReplace
-            //
-            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 21F);
+            // 
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(933, 667);
             this.Controls.Add(this.splitContainer1);
@@ -365,6 +365,7 @@
             this.MinimumSize = new System.Drawing.Size(750, 500);
             this.Name = "MultipleReplace";
             this.ShowIcon = false;
+            this.ShowInTaskbar = false;
             this.Text = "Multiple replace";
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.MultipleReplace_KeyDown);
             this.groupBoxLinesFound.ResumeLayout(false);
