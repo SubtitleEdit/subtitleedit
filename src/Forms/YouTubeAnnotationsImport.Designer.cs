@@ -35,9 +35,9 @@
             this.columnHeader5 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader7 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.SuspendLayout();
-            //
+            // 
             // buttonOK
-            //
+            // 
             this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonOK.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.buttonOK.Location = new System.Drawing.Point(360, 259);
@@ -46,9 +46,9 @@
             this.buttonOK.TabIndex = 3;
             this.buttonOK.Text = "&OK";
             this.buttonOK.UseVisualStyleBackColor = true;
-            //
+            // 
             // buttonCancel
-            //
+            // 
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.buttonCancel.Location = new System.Drawing.Point(442, 259);
@@ -57,11 +57,11 @@
             this.buttonCancel.TabIndex = 4;
             this.buttonCancel.Text = "C&ancel";
             this.buttonCancel.UseVisualStyleBackColor = true;
-            //
+            // 
             // listViewFixes
-            //
-            this.listViewFixes.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-            | System.Windows.Forms.AnchorStyles.Left)
+            // 
+            this.listViewFixes.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.listViewFixes.CheckBoxes = true;
             this.listViewFixes.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
@@ -75,24 +75,24 @@
             this.listViewFixes.TabIndex = 5;
             this.listViewFixes.UseCompatibleStateImageBehavior = false;
             this.listViewFixes.View = System.Windows.Forms.View.Details;
-            //
+            // 
             // columnHeader4
-            //
+            // 
             this.columnHeader4.Text = "Apply";
             this.columnHeader4.Width = 45;
-            //
+            // 
             // columnHeader5
-            //
+            // 
             this.columnHeader5.Text = "Style";
             this.columnHeader5.Width = 150;
-            //
+            // 
             // columnHeader7
-            //
+            // 
             this.columnHeader7.Text = "#";
             this.columnHeader7.Width = 300;
-            //
+            // 
             // YouTubeAnnotationsImport
-            //
+            // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(529, 292);
@@ -104,6 +104,7 @@
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "YouTubeAnnotationsImport";
+            this.ShowInTaskbar = false;
             this.Text = "YouTubeAnnotationsImport";
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.YouTubeAnnotationsImport_KeyDown);
             this.ResumeLayout(false);

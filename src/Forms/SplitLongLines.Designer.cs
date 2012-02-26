@@ -49,11 +49,11 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSingleLineMaxCharacters)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownLineMaxCharacters)).BeginInit();
             this.SuspendLayout();
-            //
+            // 
             // groupBoxLinesFound
-            //
-            this.groupBoxLinesFound.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            // 
+            this.groupBoxLinesFound.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBoxLinesFound.Controls.Add(this.listViewFixes);
             this.groupBoxLinesFound.Location = new System.Drawing.Point(12, 64);
             this.groupBoxLinesFound.Name = "groupBoxLinesFound";
@@ -61,11 +61,11 @@
             this.groupBoxLinesFound.TabIndex = 4;
             this.groupBoxLinesFound.TabStop = false;
             this.groupBoxLinesFound.Text = "Lines that will be splittet";
-            //
+            // 
             // listViewFixes
-            //
-            this.listViewFixes.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            // 
+            this.listViewFixes.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.listViewFixes.CheckBoxes = true;
             this.listViewFixes.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.columnHeader4,
@@ -79,24 +79,24 @@
             this.listViewFixes.UseCompatibleStateImageBehavior = false;
             this.listViewFixes.View = System.Windows.Forms.View.Details;
             this.listViewFixes.SelectedIndexChanged += new System.EventHandler(this.listViewFixes_SelectedIndexChanged);
-            //
+            // 
             // columnHeader4
-            //
+            // 
             this.columnHeader4.Text = "Apply";
             this.columnHeader4.Width = 45;
-            //
+            // 
             // columnHeader5
-            //
+            // 
             this.columnHeader5.Text = "Line#";
             this.columnHeader5.Width = 122;
-            //
+            // 
             // columnHeader7
-            //
+            // 
             this.columnHeader7.Text = "New text";
             this.columnHeader7.Width = 500;
-            //
+            // 
             // numericUpDownSingleLineMaxCharacters
-            //
+            // 
             this.numericUpDownSingleLineMaxCharacters.Location = new System.Drawing.Point(28, 33);
             this.numericUpDownSingleLineMaxCharacters.Maximum = new decimal(new int[] {
             200,
@@ -117,27 +117,27 @@
             0,
             0});
             this.numericUpDownSingleLineMaxCharacters.ValueChanged += new System.EventHandler(this.NumericUpDownMaxCharactersValueChanged);
-            //
+            // 
             // labelLineMaxLength
-            //
+            // 
             this.labelLineMaxLength.AutoSize = true;
             this.labelLineMaxLength.Location = new System.Drawing.Point(240, 16);
             this.labelLineMaxLength.Name = "labelLineMaxLength";
             this.labelLineMaxLength.Size = new System.Drawing.Size(105, 13);
             this.labelLineMaxLength.TabIndex = 43;
             this.labelLineMaxLength.Text = "Line maximum length";
-            //
+            // 
             // labelSingleLineMaxLength
-            //
+            // 
             this.labelSingleLineMaxLength.AutoSize = true;
             this.labelSingleLineMaxLength.Location = new System.Drawing.Point(25, 16);
             this.labelSingleLineMaxLength.Name = "labelSingleLineMaxLength";
             this.labelSingleLineMaxLength.Size = new System.Drawing.Size(133, 13);
             this.labelSingleLineMaxLength.TabIndex = 42;
             this.labelSingleLineMaxLength.Text = "Single line maximum length";
-            //
+            // 
             // buttonOK
-            //
+            // 
             this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonOK.Location = new System.Drawing.Point(606, 581);
@@ -147,9 +147,9 @@
             this.buttonOK.Text = "&OK";
             this.buttonOK.UseVisualStyleBackColor = true;
             this.buttonOK.Click += new System.EventHandler(this.buttonOK_Click);
-            //
+            // 
             // buttonCancel
-            //
+            // 
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
@@ -160,9 +160,9 @@
             this.buttonCancel.Text = "C&ancel";
             this.buttonCancel.UseVisualStyleBackColor = true;
             this.buttonCancel.Click += new System.EventHandler(this.buttonCancel_Click);
-            //
+            // 
             // numericUpDownLineMaxCharacters
-            //
+            // 
             this.numericUpDownLineMaxCharacters.Location = new System.Drawing.Point(243, 33);
             this.numericUpDownLineMaxCharacters.Maximum = new decimal(new int[] {
             200,
@@ -183,9 +183,9 @@
             0,
             0});
             this.numericUpDownLineMaxCharacters.ValueChanged += new System.EventHandler(this.NumericUpDownMaxCharactersValueChanged);
-            //
+            // 
             // labelMaxSingleLineLengthIs
-            //
+            // 
             this.labelMaxSingleLineLengthIs.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.labelMaxSingleLineLengthIs.AutoSize = true;
             this.labelMaxSingleLineLengthIs.Location = new System.Drawing.Point(9, 579);
@@ -194,9 +194,9 @@
             this.labelMaxSingleLineLengthIs.TabIndex = 45;
             this.labelMaxSingleLineLengthIs.Text = "Single line maximum length";
             this.labelMaxSingleLineLengthIs.Click += new System.EventHandler(this.labelMaxSingleLineLengthIs_Click);
-            //
+            // 
             // labelMaxLineLengthIs
-            //
+            // 
             this.labelMaxLineLengthIs.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.labelMaxLineLengthIs.AutoSize = true;
             this.labelMaxLineLengthIs.Location = new System.Drawing.Point(9, 597);
@@ -205,9 +205,9 @@
             this.labelMaxLineLengthIs.TabIndex = 46;
             this.labelMaxLineLengthIs.Text = "Maximum length";
             this.labelMaxLineLengthIs.Click += new System.EventHandler(this.labelMaxLineLengthIs_Click);
-            //
+            // 
             // comboBoxLineContinuationBegin
-            //
+            // 
             this.comboBoxLineContinuationBegin.FormattingEnabled = true;
             this.comboBoxLineContinuationBegin.Items.AddRange(new object[] {
             "- ",
@@ -217,18 +217,18 @@
             this.comboBoxLineContinuationBegin.Size = new System.Drawing.Size(80, 21);
             this.comboBoxLineContinuationBegin.TabIndex = 2;
             this.comboBoxLineContinuationBegin.SelectedIndexChanged += new System.EventHandler(this.ContinuationBeginEndChanged);
-            //
+            // 
             // labelLineContinuationBeginEnd
-            //
+            // 
             this.labelLineContinuationBeginEnd.AutoSize = true;
             this.labelLineContinuationBeginEnd.Location = new System.Drawing.Point(475, 16);
             this.labelLineContinuationBeginEnd.Name = "labelLineContinuationBeginEnd";
             this.labelLineContinuationBeginEnd.Size = new System.Drawing.Size(173, 13);
             this.labelLineContinuationBeginEnd.TabIndex = 48;
             this.labelLineContinuationBeginEnd.Text = "Line continuation begin/end strings";
-            //
+            // 
             // comboBoxLineContinuationEnd
-            //
+            // 
             this.comboBoxLineContinuationEnd.FormattingEnabled = true;
             this.comboBoxLineContinuationEnd.Items.AddRange(new object[] {
             " -",
@@ -238,13 +238,14 @@
             this.comboBoxLineContinuationEnd.Size = new System.Drawing.Size(80, 21);
             this.comboBoxLineContinuationEnd.TabIndex = 3;
             this.comboBoxLineContinuationEnd.SelectedIndexChanged += new System.EventHandler(this.ContinuationBeginEndChanged);
-            //
+            // 
             // SubtitleListview1
-            //
+            // 
             this.SubtitleListview1.AllowDrop = true;
-            this.SubtitleListview1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.SubtitleListview1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.SubtitleListview1.DisplayExtraFromExtra = false;
             this.SubtitleListview1.FirstVisibleIndex = -1;
             this.SubtitleListview1.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.SubtitleListview1.FullRowSelect = true;
@@ -256,9 +257,9 @@
             this.SubtitleListview1.TabIndex = 5;
             this.SubtitleListview1.UseCompatibleStateImageBehavior = false;
             this.SubtitleListview1.View = System.Windows.Forms.View.Details;
-            //
+            // 
             // SplitLongLines
-            //
+            // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(774, 614);
@@ -277,6 +278,7 @@
             this.Controls.Add(this.buttonCancel);
             this.Name = "SplitLongLines";
             this.ShowIcon = false;
+            this.ShowInTaskbar = false;
             this.Text = "Split long lines";
             this.Shown += new System.EventHandler(this.SplitLongLines_Shown);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.SplitLongLines_KeyDown);

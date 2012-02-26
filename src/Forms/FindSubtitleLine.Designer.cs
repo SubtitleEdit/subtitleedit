@@ -38,9 +38,9 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonFindNext = new System.Windows.Forms.Button();
             this.subtitleListView1 = new Nikse.SubtitleEdit.Controls.SubtitleListView();
             this.SuspendLayout();
-            //
+            // 
             // buttonOK
-            //
+            // 
             this.buttonOK.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.buttonOK.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.buttonOK.Location = new System.Drawing.Point(428, 315);
@@ -50,9 +50,9 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonOK.Text = "&OK";
             this.buttonOK.UseVisualStyleBackColor = true;
             this.buttonOK.Click += new System.EventHandler(this.ButtonOkClick);
-            //
+            // 
             // buttonCancel
-            //
+            // 
             this.buttonCancel.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.buttonCancel.Location = new System.Drawing.Point(509, 315);
@@ -62,9 +62,9 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonCancel.Text = "C&ancel";
             this.buttonCancel.UseVisualStyleBackColor = true;
             this.buttonCancel.Click += new System.EventHandler(this.ButtonCancelClick);
-            //
+            // 
             // buttonFind
-            //
+            // 
             this.buttonFind.Location = new System.Drawing.Point(196, 32);
             this.buttonFind.Name = "buttonFind";
             this.buttonFind.Size = new System.Drawing.Size(75, 21);
@@ -72,18 +72,18 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonFind.Text = "Find";
             this.buttonFind.UseVisualStyleBackColor = true;
             this.buttonFind.Click += new System.EventHandler(this.ButtonFindClick);
-            //
+            // 
             // textBoxFindText
-            //
+            // 
             this.textBoxFindText.Location = new System.Drawing.Point(12, 32);
             this.textBoxFindText.Name = "textBoxFindText";
             this.textBoxFindText.Size = new System.Drawing.Size(178, 21);
             this.textBoxFindText.TabIndex = 0;
             this.textBoxFindText.TextChanged += new System.EventHandler(this.TextBoxFindTextTextChanged);
             this.textBoxFindText.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxFindTextKeyDown);
-            //
+            // 
             // buttonFindNext
-            //
+            // 
             this.buttonFindNext.Location = new System.Drawing.Point(277, 32);
             this.buttonFindNext.Name = "buttonFindNext";
             this.buttonFindNext.Size = new System.Drawing.Size(75, 21);
@@ -91,13 +91,15 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonFindNext.Text = "Find next";
             this.buttonFindNext.UseVisualStyleBackColor = true;
             this.buttonFindNext.Click += new System.EventHandler(this.ButtonFindNextClick);
-            //
+            // 
             // subtitleListView1
-            //
-            this.subtitleListView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            // 
+            this.subtitleListView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.subtitleListView1.DisplayExtraFromExtra = false;
             this.subtitleListView1.FirstVisibleIndex = -1;
+            this.subtitleListView1.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.subtitleListView1.FullRowSelect = true;
             this.subtitleListView1.GridLines = true;
             this.subtitleListView1.HideSelection = false;
@@ -109,9 +111,9 @@ namespace Nikse.SubtitleEdit.Forms
             this.subtitleListView1.UseCompatibleStateImageBehavior = false;
             this.subtitleListView1.View = System.Windows.Forms.View.Details;
             this.subtitleListView1.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.SubtitleListView1MouseDoubleClick);
-            //
+            // 
             // FindSubtitleLine
-            //
+            // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(596, 345);
@@ -127,6 +129,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "FindSubtitleLine";
+            this.ShowInTaskbar = false;
             this.Text = "Find subtitle line";
             this.Load += new System.EventHandler(this.FormFindSubtitleLine_Load);
             this.Shown += new System.EventHandler(this.FormFindSubtitleLine_Shown);

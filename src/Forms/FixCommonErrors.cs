@@ -245,7 +245,9 @@ namespace Nikse.SubtitleEdit.Forms
                 this.Width = this.MinimumSize.Width;
                 this.Height = this.MinimumSize.Height;
             }
+            TopMost = true;
             BringToFront();
+            TopMost = false;
         }
 
         public FixCommonErrors()
@@ -856,13 +858,17 @@ namespace Nikse.SubtitleEdit.Forms
                 if (p.Text.StartsWith("... "))
                     p.Text = p.Text.Remove(3, 1);
                 if (p.Text.EndsWith(" ..."))
-                    p.Text = p.Text.Remove(p.Text.Length-4, 1);
+                    p.Text = p.Text.Remove(p.Text.Length - 4, 1);
+                if (p.Text.EndsWith(" ...</i>"))
+                    p.Text = p.Text.Remove(p.Text.Length - 8, 1);
 
                 p.Text = p.Text.Replace("... ?", "...?");
                 p.Text = p.Text.Replace("... !", "...!");
 
                 p.Text = p.Text.Replace(" :", ":");
                 p.Text = p.Text.Replace(" :", ":");
+
+                p.Text = p.Text.Replace(" ... ", "... ");
 
                 while (p.Text.Contains(" ,"))
                     p.Text = p.Text.Replace(" ,", ",");
@@ -921,29 +927,39 @@ namespace Nikse.SubtitleEdit.Forms
                 p.Text = p.Text.Trim();
                 p.Text = p.Text.Replace(Environment.NewLine + " ", Environment.NewLine);
 
+                
                 if (p.Text.Contains("- ") && p.Text.Length > 5)
                 {
                     int idx = p.Text.IndexOf("- ", 2);
-                    if (p.Text.ToLower().StartsWith("<i>"))
-                        idx = p.Text.IndexOf("- ", 5);
-                    if (idx > 0 && idx < p.Text.Length - 2)
+                    while (idx > 0)
                     {
-                        string before = string.Empty;
-                        int k = idx - 1;
-                        while (k >= 0 && Utilities.GetLetters(true, true, false).Contains(p.Text[k].ToString()))
+                        if (p.Text.ToLower().StartsWith("<i>"))
+                            idx = p.Text.IndexOf("- ", 5);
+                        if (idx > 0 && idx < p.Text.Length - 2)
                         {
-                            before = p.Text[k].ToString() + before;
-                            k--;
+                            string before = string.Empty;
+                            int k = idx - 1;
+                            while (k >= 0 && Utilities.GetLetters(true, true, true).Contains(p.Text[k].ToString()))
+                            {
+                                before = p.Text[k].ToString() + before;
+                                k--;
+                            }
+                            string after = string.Empty;
+                            k = idx + 2;
+                            while (k < p.Text.Length && Utilities.GetLetters(true, true, false).Contains(p.Text[k].ToString()))
+                            {
+                                after = after + p.Text[k].ToString();
+                                k++;
+                            }
+                            if (after.Length > 0 && after.ToLower() == before.ToLower())
+                                p.Text = p.Text.Remove(idx + 1, 1);
+                            else if (before.Length > 0)
+                                p.Text = p.Text.Remove(idx + 1, 1);
                         }
-                        string after = string.Empty;
-                        k = idx + 2;
-                        while (k < p.Text.Length && Utilities.GetLetters(true, true, false).Contains(p.Text[k].ToString()))
-                        {
-                            after = after + p.Text[k].ToString();
-                            k++;
-                        }
-                        if (after.Length > 0 && after.ToLower() == before.ToLower())
-                            p.Text = p.Text.Remove(idx + 1, 1);
+                        if (idx + 1 < p.Text.Length)
+                            idx = p.Text.IndexOf("- ", idx + 1);
+                        else
+                            idx = -1;
                     }
                 }
 
@@ -3962,7 +3978,10 @@ namespace Nikse.SubtitleEdit.Forms
                 ShowStatus(string.Format(_language.FixesFoundX, _totalFixes));
             else if (_totalErrors > 0)
                 ShowStatus(_language.NothingToFixBut);
+
+            TopMost = true;
             BringToFront();
+            TopMost = false;
         }
 
         private void RefreshFixes()

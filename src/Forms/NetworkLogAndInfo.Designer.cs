@@ -38,17 +38,17 @@
             this.labelUserName = new System.Windows.Forms.Label();
             this.textBoxWebServiceUrl = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
-            //
+            // 
             // textBoxSessionKey
-            //
+            // 
             this.textBoxSessionKey.Location = new System.Drawing.Point(157, 16);
             this.textBoxSessionKey.Name = "textBoxSessionKey";
             this.textBoxSessionKey.ReadOnly = true;
             this.textBoxSessionKey.Size = new System.Drawing.Size(290, 20);
             this.textBoxSessionKey.TabIndex = 1;
-            //
+            // 
             // labelSessionKey
-            //
+            // 
             this.labelSessionKey.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.labelSessionKey.Location = new System.Drawing.Point(12, 19);
             this.labelSessionKey.Name = "labelSessionKey";
@@ -56,21 +56,21 @@
             this.labelSessionKey.TabIndex = 21;
             this.labelSessionKey.Text = "Session key";
             this.labelSessionKey.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            //
+            // 
             // labelLog
-            //
+            // 
             this.labelLog.AutoSize = true;
             this.labelLog.Location = new System.Drawing.Point(9, 109);
             this.labelLog.Name = "labelLog";
             this.labelLog.Size = new System.Drawing.Size(28, 13);
             this.labelLog.TabIndex = 24;
             this.labelLog.Text = "Log:";
-            //
+            // 
             // textBoxLog
-            //
-            this.textBoxLog.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            // 
+            this.textBoxLog.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxLog.Location = new System.Drawing.Point(12, 125);
             this.textBoxLog.Multiline = true;
             this.textBoxLog.Name = "textBoxLog";
@@ -78,9 +78,9 @@
             this.textBoxLog.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.textBoxLog.Size = new System.Drawing.Size(543, 179);
             this.textBoxLog.TabIndex = 4;
-            //
+            // 
             // buttonOK
-            //
+            // 
             this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.buttonOK.Location = new System.Drawing.Point(480, 310);
@@ -90,9 +90,9 @@
             this.buttonOK.Text = "&OK";
             this.buttonOK.UseVisualStyleBackColor = true;
             this.buttonOK.Click += new System.EventHandler(this.buttonOK_Click);
-            //
+            // 
             // labelWebServiceUrl
-            //
+            // 
             this.labelWebServiceUrl.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.labelWebServiceUrl.Location = new System.Drawing.Point(12, 71);
             this.labelWebServiceUrl.Name = "labelWebServiceUrl";
@@ -100,17 +100,17 @@
             this.labelWebServiceUrl.TabIndex = 29;
             this.labelWebServiceUrl.Text = "Web service url";
             this.labelWebServiceUrl.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            //
+            // 
             // textBoxUserName
-            //
+            // 
             this.textBoxUserName.Location = new System.Drawing.Point(157, 42);
             this.textBoxUserName.Name = "textBoxUserName";
             this.textBoxUserName.ReadOnly = true;
             this.textBoxUserName.Size = new System.Drawing.Size(290, 20);
             this.textBoxUserName.TabIndex = 2;
-            //
+            // 
             // labelUserName
-            //
+            // 
             this.labelUserName.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.labelUserName.Location = new System.Drawing.Point(12, 45);
             this.labelUserName.Name = "labelUserName";
@@ -118,17 +118,17 @@
             this.labelUserName.TabIndex = 28;
             this.labelUserName.Text = "Username";
             this.labelUserName.TextAlign = System.Drawing.ContentAlignment.TopRight;
-            //
+            // 
             // textBoxWebServiceUrl
-            //
+            // 
             this.textBoxWebServiceUrl.Location = new System.Drawing.Point(157, 68);
             this.textBoxWebServiceUrl.Name = "textBoxWebServiceUrl";
             this.textBoxWebServiceUrl.ReadOnly = true;
             this.textBoxWebServiceUrl.Size = new System.Drawing.Size(290, 20);
             this.textBoxWebServiceUrl.TabIndex = 3;
-            //
+            // 
             // NetworkLogAndInfo
-            //
+            // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(565, 337);
@@ -147,6 +147,7 @@
             this.MinimumSize = new System.Drawing.Size(500, 350);
             this.Name = "NetworkLogAndInfo";
             this.ShowIcon = false;
+            this.ShowInTaskbar = false;
             this.Text = "Network session info and log";
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.NetworkLogAndInfo_KeyDown);
             this.ResumeLayout(false);

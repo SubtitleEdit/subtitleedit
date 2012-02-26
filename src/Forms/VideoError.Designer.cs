@@ -34,12 +34,12 @@
             this.buttonCancel = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
-            //
+            // 
             // groupBox1
-            //
-            this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            // 
+            this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox1.Controls.Add(this.textBoxError);
             this.groupBox1.Location = new System.Drawing.Point(13, 304);
             this.groupBox1.Name = "groupBox1";
@@ -47,23 +47,23 @@
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Error message";
-            //
+            // 
             // textBoxError
-            //
-            this.textBoxError.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            // 
+            this.textBoxError.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxError.Location = new System.Drawing.Point(7, 20);
             this.textBoxError.Multiline = true;
             this.textBoxError.Name = "textBoxError";
             this.textBoxError.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.textBoxError.Size = new System.Drawing.Size(661, 134);
             this.textBoxError.TabIndex = 0;
-            //
+            // 
             // richTextBoxMessage
-            //
-            this.richTextBoxMessage.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            // 
+            this.richTextBoxMessage.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.richTextBoxMessage.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.richTextBoxMessage.Location = new System.Drawing.Point(13, 13);
             this.richTextBoxMessage.Name = "richTextBoxMessage";
@@ -73,9 +73,9 @@
             this.richTextBoxMessage.TabIndex = 1;
             this.richTextBoxMessage.Text = "";
             this.richTextBoxMessage.LinkClicked += new System.Windows.Forms.LinkClickedEventHandler(this.richTextBoxMessage_LinkClicked);
-            //
+            // 
             // buttonCancel
-            //
+            // 
             this.buttonCancel.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
@@ -85,9 +85,9 @@
             this.buttonCancel.TabIndex = 11;
             this.buttonCancel.Text = "&OK";
             this.buttonCancel.UseVisualStyleBackColor = true;
-            //
+            // 
             // VideoError
-            //
+            // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(699, 503);
@@ -100,6 +100,7 @@
             this.MinimizeBox = false;
             this.MinimumSize = new System.Drawing.Size(700, 500);
             this.Name = "VideoError";
+            this.ShowInTaskbar = false;
             this.Text = "Error playing video file - ";
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.VideoError_KeyDown);
             this.groupBox1.ResumeLayout(false);
