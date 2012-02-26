@@ -308,6 +308,12 @@
     <Description>Swedish spelling dictionary</Description>
   </Dictionary>
   <Dictionary>
+    <EnglishName>Thai</EnglishName>
+    <NativeName>ภาษาไทย</NativeName>
+    <DownloadLink>http://ftp.osuosl.org/pub/openoffice/contrib/dictionaries/th_TH.zip</DownloadLink>
+    <Description>Thai Spellchecker Dictionary</Description>
+  </Dictionary>
+  <Dictionary>
     <EnglishName>Tsonga</EnglishName>
     <NativeName>Xitsonga</NativeName>
     <DownloadLink>http://ftp.osuosl.org/pub/openoffice/contrib/dictionaries/ts_ZA.zip</DownloadLink>
