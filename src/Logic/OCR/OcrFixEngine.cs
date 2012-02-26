@@ -1007,7 +1007,9 @@ namespace Nikse.SubtitleEdit.Logic.OCR
             if (string.IsNullOrEmpty(lastLine) ||
                 lastLine.EndsWith(".") ||
                 lastLine.EndsWith("!") ||
-                lastLine.EndsWith("?"))
+                lastLine.EndsWith("?") ||
+                lastLine.EndsWith("]") ||
+                lastLine.EndsWith("♪"))
             {
                 lastLine = Utilities.RemoveHtmlTags(lastLine);
                 StripableText st = new StripableText(input);
