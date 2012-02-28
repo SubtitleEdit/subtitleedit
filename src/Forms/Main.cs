@@ -121,6 +121,7 @@ namespace Nikse.SubtitleEdit.Forms
         Keys _mainMergeDialogue = Keys.None;
         Keys _mainGoToNext = Keys.None;
         Keys _mainGoToPrevious = Keys.None;
+        Keys _mainToggleFocus = Keys.None;        
         Keys _mainListViewToggleDashes = Keys.None;
         Keys _waveformVerticalZoom = Keys.None;
         Keys _waveformZoomIn = Keys.None;
@@ -7192,6 +7193,14 @@ namespace Nikse.SubtitleEdit.Forms
                     ButtonPreviousClick(null, null);
                 e.SuppressKeyPress = true;
             }
+            else if (_mainToggleFocus == e.KeyData && inListView)
+            {
+                if (SubtitleListview1.Focused)
+                    textBoxListViewText.Focus();
+                else
+                    SubtitleListview1.Focus();
+                e.SuppressKeyPress = true;
+            }
             else if (e.KeyCode == Keys.Home && e.Modifiers == Keys.Alt)
             {
                 SubtitleListview1.FirstVisibleIndex = -1;
@@ -9922,6 +9931,7 @@ namespace Nikse.SubtitleEdit.Forms
             _mainMergeDialogue = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainMergeDialogue);
             _mainGoToNext = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainGoToNext);
             _mainGoToPrevious = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainGoToPrevious);
+            _mainToggleFocus = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainToogleFocus);
             _waveformVerticalZoom = Utilities.GetKeys(Configuration.Settings.Shortcuts.WaveformVerticalZoom);
             _waveformZoomIn = Utilities.GetKeys(Configuration.Settings.Shortcuts.WaveformZoomIn);
             _waveformZoomOut = Utilities.GetKeys(Configuration.Settings.Shortcuts.WaveformZoomOut);
