@@ -640,11 +640,14 @@ namespace Nikse.SubtitleEdit.Forms
             Console.WriteLine(string.Format("{0} file(s) converted", converted));
             Console.WriteLine();
             Console.Write(inputDirectory + ">");
+
+            if (!Utilities.IsRunningOnMac() && !Utilities.IsRunningOnLinux())
+                FreeConsole();
+
             if (count == converted && errors == 0)
                 Environment.Exit(0);
             else
                 Environment.Exit(1);
-            FreeConsole();
         }
 
         string FormatOutputFileNameForBatchConvert(string fileName, string extension)
