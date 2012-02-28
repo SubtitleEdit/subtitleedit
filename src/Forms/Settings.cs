@@ -489,6 +489,8 @@ namespace Nikse.SubtitleEdit.Forms
                 ListViewNode.Nodes.Add(Configuration.Settings.Language.Settings.GoToNext + GetShortcutText(Configuration.Settings.Shortcuts.MainGoToNext));
             if (!string.IsNullOrEmpty(Configuration.Settings.Language.Settings.GoToPrevious)) // TODO: Remove in SE 3.3
                 ListViewNode.Nodes.Add(Configuration.Settings.Language.Settings.GoToPrevious + GetShortcutText(Configuration.Settings.Shortcuts.MainGoToPrevious));
+            if (!string.IsNullOrEmpty(Configuration.Settings.Language.Settings.ToggleFocus)) // TODO: Remove in SE 3.3
+                ListViewNode.Nodes.Add(Configuration.Settings.Language.Settings.ToggleFocus + GetShortcutText(Configuration.Settings.Shortcuts.MainToogleFocus));
             if (!string.IsNullOrEmpty(Configuration.Settings.Language.Settings.ToggleDialogueDashes)) // TODO: Remove in SE 3.3
                 ListViewNode.Nodes.Add(Configuration.Settings.Language.Settings.ToggleDialogueDashes + GetShortcutText(Configuration.Settings.Shortcuts.MainListViewToggleDashes));
             treeViewShortcuts.Nodes.Add(ListViewNode);
@@ -970,6 +972,8 @@ namespace Nikse.SubtitleEdit.Forms
                         Configuration.Settings.Shortcuts.MainGoToNext = GetShortcut(node.Text);
                     else if (Configuration.Settings.Language.Settings.GoToPrevious != null && text == Configuration.Settings.Language.Settings.GoToPrevious.Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.MainGoToPrevious = GetShortcut(node.Text);
+                    else if (Configuration.Settings.Language.Settings.ToggleFocus != null && text == Configuration.Settings.Language.Settings.ToggleFocus.Replace("&", string.Empty))
+                        Configuration.Settings.Shortcuts.MainToogleFocus = GetShortcut(node.Text);
                     else if (Configuration.Settings.Language.Settings.ToggleDialogueDashes != null && text == Configuration.Settings.Language.Settings.ToggleDialogueDashes.Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.MainListViewToggleDashes = GetShortcut(node.Text);
                 }

@@ -500,6 +500,7 @@ namespace Nikse.SubtitleEdit.Logic
         public string MainMergeDialogue { get; set; }
         public string MainGoToNext { get; set; }
         public string MainGoToPrevious { get; set; }
+        public string MainToogleFocus { get; set; }
         public string WaveformVerticalZoom { get; set; }
         public string WaveformZoomIn { get; set; }
         public string WaveformZoomOut { get; set; }
@@ -1410,6 +1411,9 @@ namespace Nikse.SubtitleEdit.Logic
                 subNode = node.SelectSingleNode("MainGoToPrevious");
                 if (subNode != null)
                     settings.Shortcuts.MainGoToPrevious = subNode.InnerText;
+                subNode = node.SelectSingleNode("MainToogleFocus");
+                if (subNode != null)
+                    settings.Shortcuts.MainToogleFocus = subNode.InnerText;
                 subNode = node.SelectSingleNode("WaveformVerticalZoom");
                 if (subNode != null)
                     settings.Shortcuts.WaveformVerticalZoom = subNode.InnerText;
@@ -1765,6 +1769,7 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("MainMergeDialogue", settings.Shortcuts.MainMergeDialogue);
             textWriter.WriteElementString("MainGoToNext", settings.Shortcuts.MainGoToNext);
             textWriter.WriteElementString("MainGoToPrevious", settings.Shortcuts.MainGoToPrevious);
+            textWriter.WriteElementString("MainToogleFocus", settings.Shortcuts.MainToogleFocus);
             textWriter.WriteElementString("WaveformVerticalZoom", settings.Shortcuts.WaveformVerticalZoom);
             textWriter.WriteElementString("WaveformZoomIn", settings.Shortcuts.WaveformZoomIn);
             textWriter.WriteElementString("WaveformZoomOut", settings.Shortcuts.WaveformZoomOut);

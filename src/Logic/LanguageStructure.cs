@@ -1211,6 +1211,7 @@
             public string MergeDialogue { get; set; }
             public string GoToNext { get; set; }
             public string GoToPrevious { get; set; }
+            public string ToggleFocus { get; set; }
             public string ToggleDialogueDashes { get; set; }
             public string VerticalZoom { get; set; }
             public string WaveformSeekSilenceForward { get; set; }
