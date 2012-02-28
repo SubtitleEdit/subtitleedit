@@ -10,14 +10,15 @@ Subtitle Edit Changelog
    * Updated Basque languaged file - thx Xabier Aramendi
    * Export images alignment - thx Marcin
    * Export images can now use bold font
-   * Some improvements to fix common errors - thx Majid
+   * Many improvements to fix common errors - thx Majid
    * Settings -> Word lists -> "Ocr fix list" is now sorted - thx Majid
    * Main window now lists all encodings
-   * Google translate encoding saved to main window
-   * Current position in time line (waveform) does not jump when using VLC
+   * Current pos in time line (waveform) does not jump when using VLC/MPlayer
    * Subtitle text box now shows vertical scroll-bar when 3+ lines
    * Go to next/prev sub (or double click in time line) will center selected 
      line in listview - thx Sean/vmb/Leszek
+   * Multiple replace can now move items up/down - thx Majid
+   * Improved support of SCCP format
  * FIXED:
    * Export to Blu-ray sup timestamps
    * Crash in Visual Sync - thx XhmikosR
@@ -29,7 +30,7 @@ Subtitle Edit Changelog
    * Bug when saving framerate with "," instead of "." - thx yannick
    * Wrong time codes when appending frame based subs - thx Klos
    * MPlayer works much better now, also on Linux. 
-     Use MPlayer2 for precise seeking
+     (Use MPlayer2 for precise seeking)
 
 
 3.2.3 (13th January 2012)
