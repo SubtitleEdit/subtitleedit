@@ -184,6 +184,16 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                             styles = import.SelectedStyles;
                         }
                     }
+                    else
+                    {
+                        styles.Clear();
+                        foreach (var k in stylesWithCount.Keys)
+                            styles.Add(k);
+                    }
+                }
+                else
+                {
+                    styles.Add("popup");
                 }
 
                 foreach (XmlNode node in xml.SelectNodes("//annotation"))
