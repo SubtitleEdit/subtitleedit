@@ -5277,7 +5277,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void MergeSelectedLines(bool insertDash)
+        private void MergeSelectedLines()
         {
             if (_subtitle.Paragraphs.Count > 0 && SubtitleListview1.SelectedItems.Count > 1)
             {
@@ -5291,20 +5291,6 @@ namespace Nikse.SubtitleEdit.Forms
                         firstIndex = index;
                     else
                         deleteIndices.Add(index);
-                    if (insertDash)
-                    {
-                        string s = Utilities.UnbreakLine(_subtitle.Paragraphs[index].Text);
-                        if (s.StartsWith("-") || s.StartsWith("<i>-"))
-                            sb.AppendLine(s);
-                        else if (s.StartsWith("<i>"))
-                            sb.AppendLine(s.Insert(3, "- "));
-                        else
-                            sb.AppendLine("- " + s);
-                    }
-                    else
-                    {
-                        sb.AppendLine(_subtitle.Paragraphs[index].Text);
-                    }
                     first = false;
                 }
 
@@ -5341,22 +5327,7 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             Paragraph originalNext = Utilities.GetOriginalParagraph(deleteIndices[i], _subtitle.Paragraphs[deleteIndices[i]], _subtitleAlternate.Paragraphs);
                             if (originalNext != null)
-                            {
-                                if (insertDash)
-                                {
-                                    string s = Utilities.UnbreakLine(originalNext.Text);
-                                    if (s.StartsWith("-") || s.StartsWith("<i>-"))
-                                        originalTexts.AppendLine(s);
-                                    else if (s.StartsWith("<i>"))
-                                        originalTexts.AppendLine(s.Insert(3, "- "));
-                                    else
-                                        originalTexts.AppendLine("- " + s);
-                                }
-                                else
-                                {
-                                    originalTexts.Append(originalNext.Text + " ");
-                                }
-                            }
+                                originalTexts.Append(originalNext.Text + " ");
                         }
                         for (int i = deleteIndices.Count - 1; i >= 0; i--)
                         {
@@ -5417,75 +5388,127 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 if (SubtitleListview1.SelectedItems.Count > 2)
                 {
-                    MergeSelectedLines(false);
+                    MergeSelectedLines();
                     return;
                 }
 
-                int startNumber = _subtitle.Paragraphs[0].Number;
-                int firstSelectedIndex = SubtitleListview1.SelectedItems[0].Index;
+                MergeWithLineAfter(false);
+            }
+        }
 
-                Paragraph currentParagraph = _subtitle.GetParagraphOrDefault(firstSelectedIndex);
-                Paragraph nextParagraph = _subtitle.GetParagraphOrDefault(firstSelectedIndex + 1);
+        private void MergeWithLineAfter(bool insertDash)
+        {
+            int startNumber = _subtitle.Paragraphs[0].Number;
+            int firstSelectedIndex = SubtitleListview1.SelectedItems[0].Index;
 
-                if (nextParagraph != null && currentParagraph != null)
+            Paragraph currentParagraph = _subtitle.GetParagraphOrDefault(firstSelectedIndex);
+            Paragraph nextParagraph = _subtitle.GetParagraphOrDefault(firstSelectedIndex + 1);
+
+            if (nextParagraph != null && currentParagraph != null)
+            {
+                SubtitleListview1.SelectedIndexChanged -= SubtitleListview1_SelectedIndexChanged;
+                MakeHistoryForUndo(_language.BeforeMergeLines);
+
+                if (_subtitleAlternate != null)
                 {
-                    SubtitleListview1.SelectedIndexChanged -= SubtitleListview1_SelectedIndexChanged;
-                    MakeHistoryForUndo(_language.BeforeMergeLines);
+                    Paragraph original = Utilities.GetOriginalParagraph(firstSelectedIndex, currentParagraph, _subtitleAlternate.Paragraphs);
+                    Paragraph originalNext = Utilities.GetOriginalParagraph(firstSelectedIndex + 1, nextParagraph, _subtitleAlternate.Paragraphs);
 
-                    if (_subtitleAlternate != null)
+                    if (originalNext != null)
                     {
-                        Paragraph original = Utilities.GetOriginalParagraph(firstSelectedIndex, currentParagraph, _subtitleAlternate.Paragraphs);
-                        Paragraph originalNext = Utilities.GetOriginalParagraph(firstSelectedIndex+1,nextParagraph, _subtitleAlternate.Paragraphs);
-
-                        if (originalNext != null)
+                        if (original == null)
                         {
-                            if (original == null)
+                            originalNext.StartTime.TotalMilliseconds = currentParagraph.StartTime.TotalMilliseconds;
+                            originalNext.EndTime.TotalMilliseconds = nextParagraph.EndTime.TotalMilliseconds;
+                        }
+                        else
+                        {
+                            if (insertDash)
                             {
-                                originalNext.StartTime.TotalMilliseconds = currentParagraph.StartTime.TotalMilliseconds;
-                                originalNext.EndTime.TotalMilliseconds = nextParagraph.EndTime.TotalMilliseconds;
+                                string s = Utilities.UnbreakLine(original.Text);
+                                if (s.StartsWith("-") || s.StartsWith("<i>-"))
+                                    original.Text = s;
+                                else if (s.StartsWith("<i>"))
+                                    original.Text = s.Insert(3, "- ");
+                                else
+                                    original.Text = "- " + s;
+
+                                s = Utilities.UnbreakLine(originalNext.Text);
+                                if (s.StartsWith("-") || s.StartsWith("<i>-"))
+                                    original.Text += Environment.NewLine + s;
+                                else if (s.StartsWith("<i>"))
+                                    original.Text += Environment.NewLine + s.Insert(3, "- ");
+                                else
+                                    original.Text += Environment.NewLine + "- " + s;
+
+                                original.Text = original.Text.Replace("</i>" + Environment.NewLine + "<i>", Environment.NewLine);
                             }
                             else
                             {
+
                                 original.Text = original.Text.Replace(Environment.NewLine, " ");
                                 original.Text += Environment.NewLine + originalNext.Text.Replace(Environment.NewLine, " ");
                                 original.Text = ChangeAllLinesItalictoSingleItalic(original.Text);
                                 original.Text = Utilities.AutoBreakLine(original.Text);
-                                original.EndTime = originalNext.EndTime;
-                                _subtitleAlternate.Paragraphs.Remove(originalNext);
                             }
-                            _subtitleAlternate.Renumber(1);
+                            original.EndTime = originalNext.EndTime;
+                            _subtitleAlternate.Paragraphs.Remove(originalNext);
                         }
+                        _subtitleAlternate.Renumber(1);
                     }
+                }
 
+                if (insertDash)
+                {
+                    string s = Utilities.UnbreakLine(currentParagraph.Text);
+                    if (s.StartsWith("-") || s.StartsWith("<i>-"))
+                        currentParagraph.Text = s;
+                    else if (s.StartsWith("<i>"))
+                        currentParagraph.Text = s.Insert(3, "- ");
+                    else
+                        currentParagraph.Text = "- " + s;
+
+                    s = Utilities.UnbreakLine(nextParagraph.Text);
+                    if (s.StartsWith("-") || s.StartsWith("<i>-"))
+                        currentParagraph.Text += Environment.NewLine + s;
+                    else if (s.StartsWith("<i>"))
+                        currentParagraph.Text += Environment.NewLine + s.Insert(3, "- ");
+                    else
+                        currentParagraph.Text += Environment.NewLine + "- " + s;
+
+                    currentParagraph.Text = currentParagraph.Text.Replace("</i>" + Environment.NewLine + "<i>", Environment.NewLine);
+                }
+                else
+                {
                     currentParagraph.Text = currentParagraph.Text.Replace(Environment.NewLine, " ");
                     currentParagraph.Text += Environment.NewLine + nextParagraph.Text.Replace(Environment.NewLine, " ");
                     currentParagraph.Text = ChangeAllLinesItalictoSingleItalic(currentParagraph.Text);
                     currentParagraph.Text = Utilities.AutoBreakLine(currentParagraph.Text);
-
-                    //currentParagraph.EndTime.TotalMilliseconds = currentParagraph.EndTime.TotalMilliseconds + nextParagraph.Duration.TotalMilliseconds; //nextParagraph.EndTime;
-                    currentParagraph.EndTime.TotalMilliseconds = nextParagraph.EndTime.TotalMilliseconds;
-
-                    if (_networkSession != null)
-                    {
-                        _networkSession.TimerStop();
-                        _networkSession.UpdateLine(_subtitle.GetIndex(currentParagraph), currentParagraph);
-                        List<int> deleteIndices = new List<int>();
-                        deleteIndices.Add(_subtitle.GetIndex(nextParagraph));
-                        NetworkGetSendUpdates(deleteIndices, 0, null);
-                    }
-                    else
-                    {
-                        _subtitle.Paragraphs.Remove(nextParagraph);
-                        _subtitle.Renumber(startNumber);
-                        SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
-                    }
-                    ShowSource();
-                    ShowStatus(_language.LinesMerged);
-                    SubtitleListview1.SelectIndexAndEnsureVisible(firstSelectedIndex);
-                    SubtitleListview1.SelectedIndexChanged += SubtitleListview1_SelectedIndexChanged;
-                    RefreshSelectedParagraph();
-                    _change = true;
                 }
+
+                //currentParagraph.EndTime.TotalMilliseconds = currentParagraph.EndTime.TotalMilliseconds + nextParagraph.Duration.TotalMilliseconds; //nextParagraph.EndTime;
+                currentParagraph.EndTime.TotalMilliseconds = nextParagraph.EndTime.TotalMilliseconds;
+
+                if (_networkSession != null)
+                {
+                    _networkSession.TimerStop();
+                    _networkSession.UpdateLine(_subtitle.GetIndex(currentParagraph), currentParagraph);
+                    List<int> deleteIndices = new List<int>();
+                    deleteIndices.Add(_subtitle.GetIndex(nextParagraph));
+                    NetworkGetSendUpdates(deleteIndices, 0, null);
+                }
+                else
+                {
+                    _subtitle.Paragraphs.Remove(nextParagraph);
+                    _subtitle.Renumber(startNumber);
+                    SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
+                }
+                ShowSource();
+                ShowStatus(_language.LinesMerged);
+                SubtitleListview1.SelectIndexAndEnsureVisible(firstSelectedIndex);
+                SubtitleListview1.SelectedIndexChanged += SubtitleListview1_SelectedIndexChanged;
+                RefreshSelectedParagraph();
+                _change = true;
             }
         }
 
@@ -7231,7 +7254,7 @@ namespace Nikse.SubtitleEdit.Forms
                     if (SubtitleListview1.SelectedItems.Count == 2)
                         MergeAfterToolStripMenuItemClick(null, null);
                     else
-                        MergeSelectedLines(false);
+                        MergeSelectedLines();
                 }
             }
             else if (e.Modifiers == Keys.Control && e.KeyCode == Keys.K)
@@ -7242,7 +7265,7 @@ namespace Nikse.SubtitleEdit.Forms
                     if (SubtitleListview1.SelectedItems.Count == 2)
                         MergeAfterToolStripMenuItemClick(null, null);
                     else
-                        MergeSelectedLines(false);
+                        MergeSelectedLines();
                 }
             }
             else if (e.Modifiers == Keys.Control && e.KeyCode == Keys.U)
@@ -7654,8 +7677,8 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void MergeDialogues()
         {
-            if (SubtitleListview1.SelectedItems.Count == 2)
-                MergeSelectedLines(true);
+            if (SubtitleListview1.SelectedItems.Count == 2 && SubtitleListview1.SelectedIndices[0] + 1 == SubtitleListview1.SelectedIndices[1])
+                MergeWithLineAfter(true);
         }
 
         private void ToggleDashes()
