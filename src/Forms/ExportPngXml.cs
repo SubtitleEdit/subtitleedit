@@ -690,7 +690,7 @@ namespace Nikse.SubtitleEdit.Forms
                     if (IfoParser.ArrayOfLanguageCode[i] == languageCode)
                         comboBoxLanguage.SelectedIndex = i;
                 }
-                comboBoxLanguage.SelectedIndex = 25;                
+                comboBoxLanguage.SelectedIndex = 25;
             }
             comboBoxImageFormat.Visible = exportType == "FAB";
             labelImageFormat.Visible = exportType == "FAB";

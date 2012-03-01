@@ -121,7 +121,7 @@ namespace Nikse.SubtitleEdit.Forms
         Keys _mainMergeDialogue = Keys.None;
         Keys _mainGoToNext = Keys.None;
         Keys _mainGoToPrevious = Keys.None;
-        Keys _mainToggleFocus = Keys.None;        
+        Keys _mainToggleFocus = Keys.None;
         Keys _mainListViewToggleDashes = Keys.None;
         Keys _waveformVerticalZoom = Keys.None;
         Keys _waveformZoomIn = Keys.None;
@@ -671,7 +671,7 @@ namespace Nikse.SubtitleEdit.Forms
             toolStripMenuItemWaveFormPlaySelection.Visible = false;
             toolStripSeparator24.Visible = false;
             contextMenuStripWaveForm.Show(MousePosition.X, MousePosition.Y);
-        }     
+        }
 
         void AudioWaveForm_OnDoubleClickNonParagraph(double seconds, Paragraph paragraph)
         {
@@ -1087,7 +1087,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 textCharssecToolStripMenuItem.Visible = false;
             }
-           
+
             toolStripMenuItemShowOriginalInPreview.Text = _language.Menu.Tools.ShowOriginalTextInAudioAndVideoPreview;
             toolStripMenuItemMakeEmptyFromCurrent.Text = _language.Menu.Tools.MakeNewEmptyTranslationFromCurrentSubtitle;
             splitToolStripMenuItem.Text = _language.Menu.Tools.SplitSubtitle;
@@ -2384,7 +2384,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
             textBoxSource.TextChanged -= TextBoxSourceTextChanged;
-            textBoxSource.Text = string.Empty;            
+            textBoxSource.Text = string.Empty;
             textBoxSource.TextChanged += TextBoxSourceTextChanged;
         }
 
@@ -4942,7 +4942,7 @@ namespace Nikse.SubtitleEdit.Forms
                 UpdateListSyntaxColoring();
                 FixVerticalScrollBars(textBoxListViewTextAlternate);
             }
-            
+
         }
 
         private void TextBoxListViewTextKeyDown(object sender, KeyEventArgs e)

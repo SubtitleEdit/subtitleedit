@@ -911,7 +911,7 @@ namespace Nikse.SubtitleEdit.Logic.OCR
             input = input.Replace(",...", "...");
 
             if (input.StartsWith("..") && !input.StartsWith("..."))
-                input = "." + input;           
+                input = "." + input;
 
             string pre = string.Empty;
             if (input.StartsWith("- "))

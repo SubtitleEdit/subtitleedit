@@ -589,7 +589,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 }
                 return sb.ToString().Trim();
             }
-            return text;            
+            return text;
         }
 
         public override string ToText(Subtitle subtitle, string title)
@@ -717,12 +717,12 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         private string ToTimeCode(double totalMilliseconds)
         {
-            TimeSpan ts = TimeSpan.FromMilliseconds(totalMilliseconds);            
+            TimeSpan ts = TimeSpan.FromMilliseconds(totalMilliseconds);
             return string.Format("{0:00}:{1:00}:{2:00}:{3:00}", ts.Hours, ts.Minutes, ts.Seconds, MillisecondsToFrames(ts.Milliseconds));
         }
 
         private SCCPositionAndStyle GetColorAndPosition(string code)
-        { 
+        {
             switch (code.ToLower())
             {
                 case "91d0": return new SCCPositionAndStyle(Color.White, FontStyle.Regular, 1, 0);
@@ -770,7 +770,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 case "92cb": return new SCCPositionAndStyle(Color.Yellow, FontStyle.Underline, 3, 0);
                 case "924c": return new SCCPositionAndStyle(Color.Magenta, FontStyle.Regular, 3, 0);
                 case "92cd": return new SCCPositionAndStyle(Color.Magenta, FontStyle.Underline, 3, 0);
-                        
+
                 case "9270": return new SCCPositionAndStyle(Color.White, FontStyle.Regular, 4, 0);
                 case "92f1": return new SCCPositionAndStyle(Color.White, FontStyle.Underline, 4, 0);
                 case "9262": return new SCCPositionAndStyle(Color.Green, FontStyle.Regular, 4, 0);
@@ -832,7 +832,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 case "16cb": return new SCCPositionAndStyle(Color.Yellow, FontStyle.Underline, 7, 0);
                 case "164c": return new SCCPositionAndStyle(Color.Magenta, FontStyle.Regular, 7, 0);
                 case "16cd": return new SCCPositionAndStyle(Color.Magenta, FontStyle.Underline, 7, 0);
-                      
+
                 case "1670": return new SCCPositionAndStyle(Color.White, FontStyle.Regular, 8, 0);
                 case "16f1": return new SCCPositionAndStyle(Color.White, FontStyle.Underline, 8, 0);
                 case "1662": return new SCCPositionAndStyle(Color.Green, FontStyle.Regular, 8, 0);
@@ -863,7 +863,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 case "97cb": return new SCCPositionAndStyle(Color.Yellow, FontStyle.Underline, 9, 0);
                 case "974c": return new SCCPositionAndStyle(Color.Magenta, FontStyle.Regular, 9, 0);
                 case "97cd": return new SCCPositionAndStyle(Color.Magenta, FontStyle.Underline, 9, 0);
-                      
+
                 case "9770": return new SCCPositionAndStyle(Color.White, FontStyle.Regular, 10, 0);
                 case "97f1": return new SCCPositionAndStyle(Color.White, FontStyle.Underline, 10, 0);
                 case "9762": return new SCCPositionAndStyle(Color.Green, FontStyle.Regular, 10, 0);
@@ -910,7 +910,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 case "13cb": return new SCCPositionAndStyle(Color.Yellow, FontStyle.Underline, 12, 0);
                 case "134c": return new SCCPositionAndStyle(Color.Magenta, FontStyle.Regular, 12, 0);
                 case "13cd": return new SCCPositionAndStyle(Color.Magenta, FontStyle.Underline, 12, 0);
-                      
+
                 case "1370": return new SCCPositionAndStyle(Color.White, FontStyle.Regular, 13, 0);
                 case "13f1": return new SCCPositionAndStyle(Color.White, FontStyle.Underline, 13, 0);
                 case "1362": return new SCCPositionAndStyle(Color.Green, FontStyle.Regular, 13, 0);
@@ -941,7 +941,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 case "94cb": return new SCCPositionAndStyle(Color.Yellow, FontStyle.Underline, 14, 0);
                 case "944c": return new SCCPositionAndStyle(Color.Magenta, FontStyle.Regular, 14, 0);
                 case "94cd": return new SCCPositionAndStyle(Color.Magenta, FontStyle.Underline, 14, 0);
-                      
+
                 case "9470": return new SCCPositionAndStyle(Color.White, FontStyle.Regular, 15, 0);
                 case "94f1": return new SCCPositionAndStyle(Color.White, FontStyle.Underline, 15, 0);
                 case "9462": return new SCCPositionAndStyle(Color.Green, FontStyle.Regular, 15, 0);
@@ -1194,11 +1194,11 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 case "947f": return new SCCPositionAndStyle(Color.Transparent, FontStyle.Underline, 15, 28);
 
 
-                // mid-row commands 
+                // mid-row commands
                 case "9120": return new SCCPositionAndStyle(Color.White, FontStyle.Regular, -1, -1);
                 case "91a1": return new SCCPositionAndStyle(Color.White, FontStyle.Underline, -1, -1);
                 case "91a2": return new SCCPositionAndStyle(Color.Green, FontStyle.Regular, -1, -1);
-                case "9123": return new SCCPositionAndStyle(Color.Green, FontStyle.Underline, -1, -1); 
+                case "9123": return new SCCPositionAndStyle(Color.Green, FontStyle.Underline, -1, -1);
                 case "91a4": return new SCCPositionAndStyle(Color.Blue, FontStyle.Regular, -1, -1);
                 case "9125": return new SCCPositionAndStyle(Color.Blue, FontStyle.Underline, -1, -1);
                 case "9126": return new SCCPositionAndStyle(Color.Cyan, FontStyle.Regular, -1, -1);
@@ -1215,7 +1215,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
                 case "94a8": return new SCCPositionAndStyle(Color.Transparent, FontStyle.Regular, -1, -1); // turn flash on
             }
-            return null;            
+            return null;
         }
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
@@ -1301,7 +1301,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                                     sb.AppendLine();
                             }
                             else if (part == "2c94"|| part == "2c52")
-                            { 
+                            {
                             }
                             else if (result == null)
                             {
