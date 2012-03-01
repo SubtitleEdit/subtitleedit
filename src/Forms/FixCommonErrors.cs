@@ -1499,6 +1499,10 @@ namespace Nikse.SubtitleEdit.Forms
                             noOfFixes++;
                             AddFixToListView(p, fixAction, oldText, p.Text);
                         }
+                        else
+                        {
+                            p.Text = oldText;
+                        }
                     }
 
                 }
