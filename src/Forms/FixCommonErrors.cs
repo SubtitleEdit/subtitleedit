@@ -925,7 +925,7 @@ namespace Nikse.SubtitleEdit.Forms
                 p.Text = p.Text.Trim();
                 p.Text = p.Text.Replace(Environment.NewLine + " ", Environment.NewLine);
 
-                
+
                 if (p.Text.Contains("- ") && p.Text.Length > 5)
                 {
                     int idx = p.Text.IndexOf("- ", 2);
