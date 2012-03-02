@@ -31,9 +31,9 @@ namespace Nikse.SubtitleEdit.Logic
             return new TimeCode(int.Parse(parts[0]), int.Parse(parts[1]), int.Parse(parts[2]), int.Parse(parts[3]));
         }
 
-        public Bitmap GetImage()
+        public Bitmap GetImage(Color background, Color pattern, Color emphasis1, Color emphasis2)
         {
-            List<Color> fourColors = new List<Color> { Color.Transparent, Color.White, Color.Black, Color.Black };
+            var fourColors = new List<Color> { background, pattern, emphasis1, emphasis2 };
             var bmp = new Bitmap(Width, Height);
             if (fourColors[0] != Color.Transparent)
             {
@@ -46,6 +46,16 @@ namespace Nikse.SubtitleEdit.Logic
             SubPicture.GenerateBitmap(rleBuffer, fastBmp, 0, 0, fourColors, 1);
             fastBmp.UnlockImage();
             return bmp;
+        }
+
+        private Color GetColor(int start)
+        {
+            return Color.FromArgb(colorBuffer[start], colorBuffer[start+1], colorBuffer[start+2]);
+        }
+
+        public Bitmap GetImage()
+        {
+            return GetImage(Color.Transparent, GetColor(3), GetColor(6), GetColor(9));
         }
 
     }
