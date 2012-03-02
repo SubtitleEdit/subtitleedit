@@ -840,7 +840,15 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (_xSubList != null)
             {
-                return _xSubList[index].GetImage();
+                if (checkBoxCustomFourColors.Checked)
+                {
+                    GetCustomColors(out background, out pattern, out emphasis1, out emphasis2);
+                    return _xSubList[index].GetImage(background, pattern, emphasis1, emphasis2);
+                }
+                else
+                {
+                    return _xSubList[index].GetImage();
+                }
             }
 
             if (_bluRaySubtitlesOriginal != null)
@@ -3457,9 +3465,10 @@ namespace Nikse.SubtitleEdit.Forms
             InitializeTesseract();
             LoadImageCompareCharacterDatabaseList();
 
-            //_palette = palette;
-            if (_palette == null)
-                checkBoxCustomFourColors.Checked = true;
+            checkBoxCustomFourColors.Enabled = true;
+            checkBoxCustomFourColors.Checked = true;
+            checkBoxAutoTransparentBackground.Enabled = true;
+            checkBoxAutoTransparentBackground.Enabled = false;
 
             if (Configuration.Settings.VobSubOcr.LastOcrMethod == "BitmapCompare" && comboBoxOcrMethod.Items.Count > 1)
                 comboBoxOcrMethod.SelectedIndex = 1;
