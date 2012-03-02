@@ -704,6 +704,7 @@
     <Compile Include="Logic\VobSub\VobSubPack.cs" />
     <Compile Include="Logic\VobSub\VobSubWriter.cs" />
     <Compile Include="Logic\WordSpellChecker.cs" />
+    <Compile Include="Logic\XSub.cs" />
     <Compile Include="Logic\zlib\Adler32.cs" />
     <Compile Include="Logic\zlib\Deflate.cs" />
     <Compile Include="Logic\zlib\InfBlocks.cs" />

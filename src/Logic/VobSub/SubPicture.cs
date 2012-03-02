@@ -216,8 +216,8 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
             }
             var fastBmp = new FastBitmap(bmp);
             fastBmp.LockImage();
-            GenerateBitmap(_data, fastBmp, 0, imageTopFieldDataAddress, fourColors);
-            GenerateBitmap(_data, fastBmp, 1, imageBottomFieldDataAddress, fourColors);
+            GenerateBitmap(_data, fastBmp, 0, imageTopFieldDataAddress, fourColors, 2);
+            GenerateBitmap(_data, fastBmp, 1, imageBottomFieldDataAddress, fourColors, 2);
             Bitmap cropped = CropBitmapAndUnlok(fastBmp, fourColors[0]);
             bmp.Dispose();
             return cropped;
@@ -326,7 +326,7 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
             return c.ToArgb() == backgroundColor.ToArgb() || c.A == 0;
         }
 
-        private static void GenerateBitmap(byte[] data, FastBitmap bmp, int startY, int dataAddress, List<Color> fourColors)
+        public static void GenerateBitmap(byte[] data, FastBitmap bmp, int startY, int dataAddress, List<Color> fourColors, int addY)
         {
             int index = 0;
             bool onlyHalf = false;
@@ -355,7 +355,7 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
                             index++;
                         }
                         x = 0;
-                        y += 2;
+                        y += addY;
                         break;
                     }
                     if (y < bmp.Height && c != fourColors[0])
