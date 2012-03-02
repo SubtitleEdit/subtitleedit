@@ -152,7 +152,7 @@ namespace Nikse.SubtitleEdit.Forms
                     if (versionInfo.Length >= 3 && versionInfo[2] != "0")
                         _title += "." + versionInfo[2];
                 }
-                return _title + " beta 1";
+                return _title + " beta 2";
             }
         }
 
@@ -1627,6 +1627,12 @@ namespace Nikse.SubtitleEdit.Forms
                             OpenVideo(fileName);
                         return;
                     }
+                }
+
+                if (Path.GetExtension(fileName).ToLower() == ".divx" || Path.GetExtension(fileName).ToLower() == ".avi")
+                {
+                    if (ImportSubtitleFromDivX(fileName))                       
+                        return;
                 }
 
                 var fi = new FileInfo(fileName);
@@ -6504,6 +6510,106 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 return false;
             }
+        }
+
+        private bool ImportSubtitleFromDivX(string fileName)
+        {
+            var f = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+            int count = 0;
+            f.Position = 0;
+            var list = new List<XSub>();
+            var searchBuffer = new byte[2048];
+            long pos = 0;
+            long length = f.Length - 50;
+            while (pos < length)
+            {                
+                f.Position = pos;
+                int readCount = f.Read(searchBuffer, 0, searchBuffer.Length);
+                for (int i = 0; i < readCount; i++)
+                {
+                    if (searchBuffer[i] == 0x5b && 
+                        (i + 4 >= readCount || (searchBuffer[i + 1] >= 0x30 && searchBuffer[i + 1] <= 0x39 && searchBuffer[i + 3] == 0x3a))) 
+                    {
+                        f.Position =  pos + i + 1;
+
+                        byte[] buffer = new byte[26];
+                        f.Read(buffer, 0, 26);
+
+                        if (buffer[2] == 0x3a && // :
+                            buffer[5] == 0x3a && // :
+                            buffer[8] == 0x2e && // .
+                            buffer[12] == 0x2d && // -
+                            buffer[15] == 0x3a && // :
+                            buffer[18] == 0x3a && // :
+                            buffer[21] == 0x2e && // .
+                            buffer[25] == 0x5d) // ]
+                        { // subtitle time code
+                            string timeCode = Encoding.ASCII.GetString(buffer, 0, 25);
+
+                            f.Read(buffer, 0, 2);
+                            int width = (int)BitConverter.ToUInt16(buffer, 0);
+                            f.Read(buffer, 0, 2);
+                            int height = (int)BitConverter.ToUInt16(buffer, 0);
+                            f.Read(buffer, 0, 2);
+                            int x = (int)BitConverter.ToUInt16(buffer, 0);
+                            f.Read(buffer, 0, 2);
+                            int y = (int)BitConverter.ToUInt16(buffer, 0);
+                            f.Read(buffer, 0, 2);
+                            int xEnd = (int)BitConverter.ToUInt16(buffer, 0);
+                            f.Read(buffer, 0, 2);
+                            int yEnd = (int)BitConverter.ToUInt16(buffer, 0);
+                            f.Read(buffer, 0, 2);
+                            int RleLength = (int)BitConverter.ToUInt16(buffer, 0);
+
+                            byte[] colorBuffer = new byte[4 * 3]; // four colors with rgb (3 bytes)
+                            f.Read(colorBuffer, 0, colorBuffer.Length);
+
+                            buffer = new byte[RleLength];
+                            int bytesRead = f.Read(buffer, 0, buffer.Length);
+
+                            if (width > 0 && height > 0 && bytesRead == buffer.Length)
+                            {
+                                var xSub = new XSub(timeCode, width, height, colorBuffer, buffer);
+                                list.Add(xSub);
+                                count++;
+                            }
+                        }
+                    }
+                }
+                pos += searchBuffer.Length;
+            }
+            f.Close();
+
+            if (count > 0)
+            {
+                var formSubOcr = new VobSubOcr();
+                formSubOcr.Initialize(list, Configuration.Settings.VobSubOcr, fileName); //TODO - language???
+                if (formSubOcr.ShowDialog(this) == DialogResult.OK)
+                {
+                    MakeHistoryForUndo(_language.BeforeImportFromMatroskaFile);
+                    _subtitleListViewIndex = -1;
+                    FileNew();
+                    _subtitle.WasLoadedWithFrameNumbers = false;
+                    foreach (Paragraph p in formSubOcr.SubtitleFromOcr.Paragraphs)
+                        _subtitle.Paragraphs.Add(p);
+
+                    ShowSource();
+                    SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
+                    _change = true;
+                    _subtitleListViewIndex = -1;
+                    SubtitleListview1.FirstVisibleIndex = -1;
+                    SubtitleListview1.SelectIndexAndEnsureVisible(0);
+
+                    _fileName = Path.GetFileNameWithoutExtension(fileName);
+                    _converted = true;
+                    Text = Title;
+
+                    Configuration.Settings.Save();
+                    OpenVideo(fileName);
+                }
+            }
+
+            return count > 0;
         }
 
         private void LoadMp4Subtitle(string fileName, Logic.Mp4.Boxes.Trak mp4SubtitleTrack)

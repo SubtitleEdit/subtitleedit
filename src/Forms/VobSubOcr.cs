@@ -131,6 +131,9 @@ namespace Nikse.SubtitleEdit.Forms
         // SP vobsub list (mp4)
         List<SubPicturesWithSeparateTimeCodes> _mp4List;
 
+        // XSub (DivX)
+        List<XSub> _xSubList;
+
         string _lastLine;
         string _languageId;
 
@@ -835,6 +838,10 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 return null;
             }
+            else if (_xSubList != null)
+            {
+                return _xSubList[index].GetImage();
+            }
 
             if (_bluRaySubtitlesOriginal != null)
             {
@@ -888,11 +895,13 @@ namespace Nikse.SubtitleEdit.Forms
             if (_mp4List != null)
                 return (long)(_mp4List[index].Start.TotalMilliseconds);
             else if (_spList != null)
-                return (long) (_spList[index].StartTime.TotalMilliseconds);
+                return (long)(_spList[index].StartTime.TotalMilliseconds);
             else if (_bdnXmlSubtitle != null)
                 return (long)_bdnXmlSubtitle.Paragraphs[index].StartTime.TotalMilliseconds;
             else if (_bluRaySubtitlesOriginal != null)
                 return (_bluRaySubtitles[index].StartTime + 45) / 90;
+            else if (_xSubList != null)
+                return (long)_xSubList[index].Start.TotalMilliseconds;
             else
                 return (long)_vobSubMergedPackist[index].StartTime.TotalMilliseconds;
         }
@@ -907,6 +916,8 @@ namespace Nikse.SubtitleEdit.Forms
                 return (long)_bdnXmlSubtitle.Paragraphs[index].EndTime.TotalMilliseconds;
             else if (_bluRaySubtitlesOriginal != null)
                 return (_bluRaySubtitles[index].EndTime + 45) / 90;
+            else if (_xSubList != null)
+                return (long)_xSubList[index].End.TotalMilliseconds;
             else
                 return (long)_vobSubMergedPackist[index].EndTime.TotalMilliseconds;
         }
@@ -921,6 +932,8 @@ namespace Nikse.SubtitleEdit.Forms
                 return _bdnXmlSubtitle.Paragraphs.Count;
             else if (_bluRaySubtitlesOriginal != null)
                 return _bluRaySubtitles.Count;
+            else if (_xSubList != null)
+                return _xSubList.Count;
             else
                 return _vobSubMergedPackist.Count;
         }
@@ -1749,6 +1762,19 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 checkBoxShowOnlyForced.Enabled = hasForcedSubtitles;
                 checkBoxUseTimeCodesFromIdx.Visible = false;
+            }
+            else if (_xSubList != null)
+            {
+                checkBoxShowOnlyForced.Visible = false;
+                checkBoxUseTimeCodesFromIdx.Visible = false;
+
+                buttonOK.Enabled = true;
+                buttonCancel.Enabled = true;
+                buttonStartOcr.Enabled = true;
+                buttonStop.Enabled = false;
+                buttonNewCharacterDatabase.Enabled = true;
+                buttonEditCharacterDatabase.Enabled = true;
+                buttonStartOcr.Focus();
             }
             else
             {
@@ -3402,12 +3428,59 @@ namespace Nikse.SubtitleEdit.Forms
 
             foreach (SubPicturesWithSeparateTimeCodes subItem in _mp4List)
             {
-                Paragraph p = new Paragraph(string.Empty, subItem.Start.TotalMilliseconds, subItem.End.TotalMilliseconds);
+                var p = new Paragraph(string.Empty, subItem.Start.TotalMilliseconds, subItem.End.TotalMilliseconds);
                 _subtitle.Paragraphs.Add(p);
             }
             subtitleListView1.Fill(_subtitle);
             subtitleListView1.SelectIndexAndEnsureVisible(0);
         }
+
+        internal void Initialize(List<XSub> subPictures, VobSubOcrSettings vobSubOcrSettings, string fileName)
+        {
+            _xSubList = subPictures;
+
+            _useNewSubIdxCode = false;
+            buttonOK.Enabled = false;
+            buttonCancel.Enabled = false;
+            buttonStartOcr.Enabled = false;
+            buttonStop.Enabled = false;
+            buttonNewCharacterDatabase.Enabled = false;
+            buttonEditCharacterDatabase.Enabled = false;
+            labelStatus.Text = string.Empty;
+            progressBar1.Visible = false;
+            progressBar1.Maximum = 100;
+            progressBar1.Value = 0;
+            numericUpDownPixelsIsSpace.Value = vobSubOcrSettings.XOrMorePixelsMakesSpace;
+            _vobSubOcrSettings = vobSubOcrSettings;
+
+            InitializeModi();
+            InitializeTesseract();
+            LoadImageCompareCharacterDatabaseList();
+
+            //_palette = palette;
+            if (_palette == null)
+                checkBoxCustomFourColors.Checked = true;
+
+            if (Configuration.Settings.VobSubOcr.LastOcrMethod == "BitmapCompare" && comboBoxOcrMethod.Items.Count > 1)
+                comboBoxOcrMethod.SelectedIndex = 1;
+            else if (Configuration.Settings.VobSubOcr.LastOcrMethod == "MODI" && comboBoxOcrMethod.Items.Count > 2)
+                comboBoxOcrMethod.SelectedIndex = 2;
+            else
+                comboBoxOcrMethod.SelectedIndex = 0;
+
+            FileName = fileName;
+            Text += " - " + Path.GetFileName(FileName);
+
+            foreach (XSub subItem in _xSubList)
+            {
+                var p = new Paragraph(string.Empty, subItem.Start.TotalMilliseconds, subItem.End.TotalMilliseconds);
+                _subtitle.Paragraphs.Add(p);
+            }
+            _subtitle.Renumber(1);
+            subtitleListView1.Fill(_subtitle);
+            subtitleListView1.SelectIndexAndEnsureVisible(0);
+        }
+
 
         private void VobSubOcr_FormClosing(object sender, FormClosingEventArgs e)
         {

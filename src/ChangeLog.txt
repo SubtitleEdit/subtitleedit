@@ -1,6 +1,6 @@
 Subtitle Edit Changelog
 
-3.2.4 (xth February 2012)
+3.2.4 (xth March 2012)
  * NEW:
    * Arabic language file - thx Zakaria Farah Abu Wael
    * Export to VobSub format
@@ -31,6 +31,8 @@ Subtitle Edit Changelog
    * Wrong time codes when appending frame based subs - thx Klos
    * MPlayer works much better now, also on Linux. 
      (Use MPlayer2 for precise seeking)
+   * Crash (memory leak) when exporting images from a vobsub - thx Pete
+   * Bug in Fix common errors with uncheck fix quotes -  thx jofafrazze
 
 
 3.2.3 (13th January 2012)
