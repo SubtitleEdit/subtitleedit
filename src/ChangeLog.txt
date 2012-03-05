@@ -4,8 +4,9 @@ Subtitle Edit Changelog
  * NEW:
    * Arabic language file - thx Zakaria Farah Abu Wael
    * Export to VobSub format
-   * Added new subtitle formats (now more than 80!)
+   * Added new subtitle formats (now ~90!)
    * Added export to FAB image script
+   * Added import of XSub from DivX files (use File -> Open)
  * IMPROVED:
    * Updated Basque languaged file - thx Xabier Aramendi
    * Export images alignment - thx Marcin

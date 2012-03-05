@@ -1215,7 +1215,7 @@ namespace Nikse.SubtitleEdit.Forms
                             arr[0] = arr[0].Insert(1, " ");
                         if (arr[0].Length > 6 && arr[0].StartsWith("<i>-") && arr[0][4] != ' ')
                             arr[0] = arr[0].Insert(4, " ");
-                        if (arr[1][0] == '-' && arr[1][1] != ' ')
+                        if (arr[1][0] == '-' && arr[1][1] != ' ' && arr[1][1] != '-')
                             arr[1] = arr[1].Insert(1, " ");
                         if (arr[1].Length > 6 && arr[1].StartsWith("<i>-") && arr[1][4] != ' ')
                             arr[1] = arr[1].Insert(4, " ");
@@ -1484,7 +1484,12 @@ namespace Nikse.SubtitleEdit.Forms
                             {
                                 int index = text.IndexOf("\"");
                                 if (text[index - 1] == ' ')
-                                    p.Text = p.Text.Trim() + "\"";
+                                {
+                                    if (p.Text.EndsWith(","))
+                                        p.Text = p.Text.Insert(p.Text.Length - 1, "\"").Trim();
+                                    else
+                                        p.Text = p.Text.Trim() + "\"";
+                                }
                                 else if (text[index + 1] == ' ')
                                     p.Text = "\"" + p.Text;
                             }
@@ -2297,6 +2302,9 @@ namespace Nikse.SubtitleEdit.Forms
                             if (prev == "-" && match.Index > 2)
                                 fix = false;
 
+                            if (fix && next == "-" && match.Index < s.Length - 5 && s[match.Index + 2] == 'l' && !(Environment.NewLine + " <>!.?:;,").Contains(s[match.Index + 3].ToString()))
+                                fix = false;
+
                             if (fix)
                             {
                                 string temp = s.Substring(0, match.Index) + "I";
@@ -2384,7 +2392,7 @@ namespace Nikse.SubtitleEdit.Forms
                                         idx = text.IndexOf("-", idxNL);
                                         if (idx >=0 && idxNL + 5 > idxNL)
                                         {
-                                            text = text.Remove(idx, 1).TrimStart();
+                                            text = text.Remove(idx, 1).TrimStart().Replace(Environment.NewLine + " ", Environment.NewLine);
 
                                             idx = text.IndexOf("-", idxNL);
                                             if (idx >= 0 && idxNL + 5 > idxNL)
@@ -2392,7 +2400,7 @@ namespace Nikse.SubtitleEdit.Forms
                                                 text = text.Remove(idx, 1).TrimStart();
 
                                                 text = text.Replace("  ", " ");
-                                                text = text.Remove(idx, 1).Replace(Environment.NewLine + " ", Environment.NewLine);
+                                                text = text.Replace(Environment.NewLine + " ", Environment.NewLine);
                                                 text = text.Replace("> ", ">");
                                                 text = text.Replace(" <", "<");
                                             }
