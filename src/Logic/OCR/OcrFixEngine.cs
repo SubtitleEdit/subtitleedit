@@ -900,6 +900,10 @@ namespace Nikse.SubtitleEdit.Logic.OCR
                 if (line.EndsWith(" " + abbreviation.ToLower()))
                     return true;
             }
+
+            if (line.Length > 5 && line[line.Length - 3] == '.' && Utilities.GetLetters(true, true, false).Contains(line[line.Length - 2].ToString()))
+                return true;
+
             return false;
         }
 
@@ -1216,7 +1220,7 @@ namespace Nikse.SubtitleEdit.Logic.OCR
                 }
             }
 
-            string[] words = tempLine.Split((Environment.NewLine + " ¡¿,.!?:;()[]{}+-£\"”“#&%…—♪").ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+            string[] words = tempLine.Split((Environment.NewLine + " ¡¿,.!?:;()[]{}+-£\"”“#&%…—♪/").ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
             for (int i = 0; i < words.Length; i++)
             {
                 string word = words[i].TrimStart('\'');
