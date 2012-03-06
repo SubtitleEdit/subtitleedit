@@ -113,7 +113,7 @@ namespace Nikse.SubtitleEdit.Forms
                     if (merge && (p.Text.TrimEnd().EndsWith("!") || p.Text.TrimEnd().EndsWith(".") || p.Text.TrimEnd().EndsWith("!")))
                     {
                         StripableText st = new StripableText(p.Text);
-                        if (st.StrippedText.Length > 0 && Utilities.GetLetters(true, false, false).Contains(st.StrippedText[0].ToString()))
+                        if (st.StrippedText.Length > 0 && Utilities.UppercaseLetters.Contains(st.StrippedText[0].ToString()))
                             merge = false;
                     }
 
@@ -250,7 +250,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private bool ContainsLetters(string line)
         {
-            string letterList = Utilities.GetLetters(true, true, false);
+            string letterList = Utilities.AllLetters;
             foreach (char ch in line.ToCharArray())
             {
                 if (letterList.Contains(ch.ToString()))

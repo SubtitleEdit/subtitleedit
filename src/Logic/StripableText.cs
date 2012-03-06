@@ -31,7 +31,7 @@ namespace Nikse.SubtitleEdit.Logic
             OriginalText = text;
 
             Pre = string.Empty;
-            if (text.Length > 0 && !Utilities.GetLetters(true, true, true).Contains(text[0].ToString()))
+            if (text.Length > 0 && !Utilities.AllLettersAndNumbers.Contains(text[0].ToString()))
             {
                 for (int i = 0; i < 5; i++)
                 {
@@ -52,7 +52,7 @@ namespace Nikse.SubtitleEdit.Logic
             }
 
             Post = string.Empty;
-            if (text.Length > 0 && !Utilities.GetLetters(true, true, true).Contains(text[text.Length - 1].ToString()))
+            if (text.Length > 0 && !Utilities.AllLettersAndNumbers.Contains(text[text.Length - 1].ToString()))
             {
                 for (int i = 0; i < 5; i++)
                 {
@@ -245,7 +245,7 @@ namespace Nikse.SubtitleEdit.Logic
                             if (s == "]" && sb.ToString().IndexOf("[") > 1)
                             { // I [Motor roaring] love you!
                                 string temp = sb.ToString().Substring(0, sb.ToString().IndexOf("[") - 1).Trim();
-                                if (temp.Length > 0 && !Utilities.GetLetters(false, true, false).Contains(temp[temp.Length - 1].ToString()))
+                                if (temp.Length > 0 && !Utilities.LowercaseLetters.Contains(temp[temp.Length - 1].ToString()))
                                     lastWasBreak = true;
                             }
                             else
