@@ -1719,8 +1719,8 @@ namespace Nikse.SubtitleEdit.Forms
 
                 if (format == null && Path.GetExtension(fileName).ToLower() == ".wsb")
                 {
-                    string[] arr = File.ReadAllLines(fileName);
-                    List<string> list = new List<string>();
+                    string[] arr = File.ReadAllLines(fileName, Utilities.GetEncodingFromFile(fileName));
+                    var list = new List<string>();
                     foreach (string l in arr)
                         list.Add(l);
                     var wsb = new Wsb();
@@ -1737,8 +1737,8 @@ namespace Nikse.SubtitleEdit.Forms
                 if (format == null)
                 {
                     var bdnXml = new BdnXml();
-                    string[] arr = File.ReadAllLines(fileName);
-                    List<string> list = new List<string>();
+                    string[] arr = File.ReadAllLines(fileName, Utilities.GetEncodingFromFile(fileName));
+                    var list = new List<string>();
                     foreach (string l in arr)
                         list.Add(l);
                     if (bdnXml.IsMine(list, fileName))
@@ -1754,16 +1754,14 @@ namespace Nikse.SubtitleEdit.Forms
                 if (format == null || format.Name == new Scenarist().Name)
                 {
                     var son = new Son();
-                    string[] arr = File.ReadAllLines(fileName);
-                    List<string> list = new List<string>();
+                    string[] arr = File.ReadAllLines(fileName, Utilities.GetEncodingFromFile(fileName));
+                    var list = new List<string>();
                     foreach (string l in arr)
                         list.Add(l);
                     if (son.IsMine(list, fileName))
                     {
                         if (ContinueNewOrExit())
-                        {
                             ImportAndOcrSon(fileName, son, list);
-                        }
                         return;
                     }
                 }
