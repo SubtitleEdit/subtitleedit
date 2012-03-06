@@ -201,7 +201,7 @@ namespace Nikse.SubtitleEdit.Forms
                     string text = string.Format("{1} {0} |", p.Text.Replace("|", _newlineString), _splitterString);
                     if (HttpUtility.UrlEncode(sb.ToString() + text).Length >= textMaxSize)
                     {
-                        FillTranslatedText(DoTranslate(sb.ToString()), start, index-1);
+                        FillTranslatedText(DoTranslate(sb.ToString()), start, index - 1);
                         sb = new StringBuilder();
                         progressBar1.Refresh();
                         Application.DoEvents();
@@ -214,7 +214,11 @@ namespace Nikse.SubtitleEdit.Forms
                         break;
                 }
                 if (sb.Length > 0)
-                    FillTranslatedText(DoTranslate(sb.ToString()), start, index-1);
+                    FillTranslatedText(DoTranslate(sb.ToString()), start, index - 1);
+            }
+            catch (WebException webException)
+            {
+                MessageBox.Show(webException.Source + ": " + webException.Message);
             }
             finally
             {
