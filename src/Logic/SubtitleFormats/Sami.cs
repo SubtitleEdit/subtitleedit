@@ -157,7 +157,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     var className = new StringBuilder();
                     int startClass = textToLower.IndexOf(" class=");
                     int indexClass = startClass + 7;
-                    while (indexClass < textToLower.Length && Utilities.GetLetters(false, true, true).Contains(textToLower[indexClass].ToString()))
+                    while (indexClass < textToLower.Length && Utilities.LowercaseLettersWithNumbers.Contains(textToLower[indexClass].ToString()))
                     {
                         className.Append(text[indexClass].ToString());
                         indexClass++;

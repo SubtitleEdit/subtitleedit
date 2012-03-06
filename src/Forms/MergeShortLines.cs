@@ -236,7 +236,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     if (string.IsNullOrEmpty(s))
                         return true;
-                    bool isLineContinuation = s.EndsWith(",") || s.EndsWith("-") || s.EndsWith("...") || Utilities.GetLetters(true, true, true).Contains(s.Substring(s.Length - 1));
+                    bool isLineContinuation = s.EndsWith(",") || s.EndsWith("-") || s.EndsWith("...") || Utilities.AllLettersAndNumbers.Contains(s.Substring(s.Length - 1));
 
                     if (!checkBoxOnlyContinuationLines.Checked)
                         return true;

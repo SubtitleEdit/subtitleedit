@@ -320,7 +320,7 @@ namespace Nikse.SubtitleEdit.Logic.OCR
                         else
                         {
                             bool doFixWord = true;
-                            if (word.Length == 1 && sb.ToString().EndsWith("-") && sb.Length > 1)
+                            if (word.Length == 1 && sb.Length > 1 && sb.ToString().EndsWith("-"))
                                 doFixWord = false;
                             if (doFixWord)
                                 fixedWord = FixCommonWordErrors(word.ToString(), lastWord);
@@ -342,7 +342,7 @@ namespace Nikse.SubtitleEdit.Logic.OCR
             {
                 string fixedWord;
                 bool doFixWord = true;
-                if (word.Length == 1 && sb.ToString().EndsWith("-") && sb.Length > 1)
+                if (word.Length == 1 && sb.Length > 1 && sb.ToString().EndsWith("-"))
                     doFixWord = false;
                 if (doFixWord)
                     fixedWord = FixCommonWordErrors(word.ToString(), lastWord);
@@ -474,28 +474,28 @@ namespace Nikse.SubtitleEdit.Logic.OCR
                 pre += "<i>";
                 word = word.Remove(0, 3);
             }
-            while (word.StartsWith(Environment.NewLine) && word.Length > 2)
+            while (word.Length > 2 && word.StartsWith(Environment.NewLine))
             {
                 pre += Environment.NewLine;
                 word = word.Substring(2);
             }
 
-            while (word.StartsWith("-") && word.Length > 1)
+            while (word.Length > 1 && word.StartsWith("-"))
             {
                 pre += "-";
                 word = word.Substring(1);
             }
-            while (word.StartsWith(".") && word.Length > 1)
+            while (word.Length > 1 && word.StartsWith("."))
             {
                 pre += ".";
                 word = word.Substring(1);
             }
-            while (word.StartsWith("\"") && word.Length > 1)
+            while (word.Length > 1 && word.StartsWith("\""))
             {
                 pre += "\"";
                 word = word.Substring(1);
             }
-            if (word.StartsWith("(") && word.Length > 1)
+            if (word.Length > 1 && word.StartsWith("("))
             {
                 pre += "(";
                 word = word.Substring(1);
@@ -505,17 +505,17 @@ namespace Nikse.SubtitleEdit.Logic.OCR
                 pre += "<i>";
                 word = word.Remove(0, 3);
             }
-            while (word.EndsWith(Environment.NewLine) && word.Length > 2)
+            while (word.Length > 2 && word.EndsWith(Environment.NewLine))
             {
                 post += Environment.NewLine;
                 word = word.Substring(0, word.Length - 2);
             }
-            while (word.EndsWith("\"") && word.Length > 1)
+            while (word.Length > 1 && word.EndsWith("\""))
             {
                 post = post + "\"";
                 word = word.Substring(0, word.Length - 1);
             }
-            while (word.EndsWith(".") && word.Length > 1)
+            while (word.Length > 1 && word.EndsWith("."))
             {
                 post = post + ".";
                 word = word.Substring(0, word.Length - 1);
@@ -866,25 +866,23 @@ namespace Nikse.SubtitleEdit.Logic.OCR
             {
                 string l = lines[i];
 
-                    if (i > 0)
-                        lastLine = lines[i - 1];
-                    lastLine = Utilities.RemoveHtmlTags(lastLine);
+                if (i > 0)
+                    lastLine = lines[i - 1];
+                lastLine = Utilities.RemoveHtmlTags(lastLine);
 
-                    if (string.IsNullOrEmpty(lastLine) ||
-                        lastLine.EndsWith(".") ||
-                        lastLine.EndsWith("!") ||
-                        lastLine.EndsWith("?"))
+                if (string.IsNullOrEmpty(lastLine) ||
+                    lastLine.EndsWith(".") ||
+                    lastLine.EndsWith("!") ||
+                    lastLine.EndsWith("?"))
+                {
+                    StripableText st = new StripableText(l);
+                    if (st.StrippedText.StartsWith("i") && !st.Pre.EndsWith("[") && !st.Pre.EndsWith("("))
                     {
-                        StripableText st = new StripableText(l);
-                        if (st.StrippedText.StartsWith("i") && !st.Pre.EndsWith("[") && !st.Pre.EndsWith("("))
-                        {
-                            if (string.IsNullOrEmpty(lastLine) || (!lastLine.EndsWith("...") && !EndsWithAbbreviation(lastLine, _abbreviationList)))
-                            {
-                                l = st.Pre + "I" + st.StrippedText.Remove(0, 1) + st.Post;
-                            }
-                        }
+                        if (string.IsNullOrEmpty(lastLine) || (!lastLine.EndsWith("...") && !EndsWithAbbreviation(lastLine, _abbreviationList)))
+                            l = st.Pre + "I" + st.StrippedText.Remove(0, 1) + st.Post;
                     }
-                    sb.AppendLine(l);
+                }
+                sb.AppendLine(l);
             }
             return sb.ToString().TrimEnd('\r').TrimEnd('\n').TrimEnd('\r').TrimEnd('\n');
         }
@@ -901,7 +899,7 @@ namespace Nikse.SubtitleEdit.Logic.OCR
                     return true;
             }
 
-            if (line.Length > 5 && line[line.Length - 3] == '.' && Utilities.GetLetters(true, true, false).Contains(line[line.Length - 2].ToString()))
+            if (line.Length > 5 && line[line.Length - 3] == '.' && Utilities.AllLetters.Contains(line[line.Length - 2].ToString()))
                 return true;
 
             return false;
@@ -985,24 +983,24 @@ namespace Nikse.SubtitleEdit.Logic.OCR
             if (input.StartsWith("-...") && lastLine != null && lastLine.EndsWith("...") && !(input.Contains(Environment.NewLine + "-")))
                 input = input.Remove(0, 1);
 
-            if (input.Length > 2 && input[0] == '-' && Utilities.GetLetters(true, false, false).Contains(input[1].ToString()))
+            if (input.Length > 2 && input[0] == '-' && Utilities.UppercaseLetters.Contains(input[1].ToString()))
             {
                 input = input.Insert(1, " ");
             }
 
-            if (input.Length > 5 && input.StartsWith("<i>-") && Utilities.GetLetters(true, false, false).Contains(input[4].ToString()))
+            if (input.Length > 5 && input.StartsWith("<i>-") && Utilities.UppercaseLetters.Contains(input[4].ToString()))
             {
                 input = input.Insert(4, " ");
             }
 
             int idx = input.IndexOf(Environment.NewLine + "-");
-            if (idx > 0 && idx + Environment.NewLine.Length + 1 < input.Length && Utilities.GetLetters(true, false, false).Contains(input[idx + Environment.NewLine.Length + 1].ToString()))
+            if (idx > 0 && idx + Environment.NewLine.Length + 1 < input.Length && Utilities.UppercaseLetters.Contains(input[idx + Environment.NewLine.Length + 1].ToString()))
             {
                 input = input.Insert(idx + Environment.NewLine.Length + 1, " ");
             }
 
             idx = input.IndexOf(Environment.NewLine + "<i>-");
-            if (idx > 0 && Utilities.GetLetters(true, false, false).Contains(input[idx + Environment.NewLine.Length + 4].ToString()))
+            if (idx > 0 && Utilities.UppercaseLetters.Contains(input[idx + Environment.NewLine.Length + 4].ToString()))
             {
                 input = input.Insert(idx + Environment.NewLine.Length + 4, " ");
             }
@@ -1380,15 +1378,13 @@ namespace Nikse.SubtitleEdit.Logic.OCR
 
         private string GetWordWithDominatedCasing(string word)
         {
-            string uppercaseLetters = Utilities.GetLetters(true, false, false);
-            string lowercaseLetters = Utilities.GetLetters(false, true, false);
             int lowercase = 0;
             int uppercase = 0;
             for (int i = 0; i < word.Length; i++)
             {
-                if (lowercaseLetters.Contains(word.Substring(i, 1)))
+                if (Utilities.LowercaseLetters.Contains(word.Substring(i, 1)))
                     lowercase++;
-                else if (uppercaseLetters.Contains(word.Substring(i, 1)))
+                else if (Utilities.UppercaseLetters.Contains(word.Substring(i, 1)))
                     uppercase++;
             }
             if (uppercase > lowercase)

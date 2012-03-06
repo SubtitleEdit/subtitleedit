@@ -1554,20 +1554,26 @@ namespace Nikse.SubtitleEdit.Logic
             return userWordListXmlFileName;
         }
 
-        public static string GetLetters(bool uppercase, bool lowercase, bool numbers)
+        public static string UppercaseLetters = GetLetters(true, false, false);
+        public static string LowercaseLetters = GetLetters(false, true, false);
+        public static string LowercaseLettersWithNumbers = GetLetters(false, true, false);
+        public static string AllLetters = GetLetters(true, true, false);
+        public static string AllLettersAndNumbers = GetLetters(true, true, false);
+
+        private static string GetLetters(bool uppercase, bool lowercase, bool numbers)
         {
-            string s = string.Empty;
+            var sb = new StringBuilder();
 
             if (uppercase)
-                s += Configuration.Settings.General.UppercaseLetters;
+                sb.Append(Configuration.Settings.General.UppercaseLetters);
 
             if (lowercase)
-                s += Configuration.Settings.General.UppercaseLetters.ToLower();
+                sb.Append(Configuration.Settings.General.UppercaseLetters.ToLower());
 
             if (numbers)
-                s += "0123456789";
+                sb.Append("0123456789");
 
-            return s;
+            return sb.ToString();
         }
 
         internal static Color GetColorFromUserName(string userName)

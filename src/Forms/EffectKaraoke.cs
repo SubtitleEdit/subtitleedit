@@ -115,7 +115,7 @@ namespace Nikse.SubtitleEdit.Forms
                                 int j = start + colorTag.Length;
                                 if ("\"'".Contains(tag[j].ToString()))
                                     j++;
-                                while (j < tag.Length && ("#" + Utilities.GetLetters(false, true, true)).Contains(tag[j].ToString()))
+                                while (j < tag.Length && ("#" + Utilities.LowercaseLettersWithNumbers).Contains(tag[j].ToString()))
                                 {
                                     tempColor += tag[j].ToString();
                                     j++;

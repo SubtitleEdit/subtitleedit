@@ -422,8 +422,8 @@ namespace Nikse.SubtitleEdit.Forms
                     string arr1 = new StripableText(arr[1]).StrippedText;
 
                     //line continuation?
-                    if (arr0.Length > 0 && arr1.Length > 1 && (Utilities.GetLetters(false, true, false) + ",").Contains(arr0.Substring(arr0.Length - 1)) &&
-                        Utilities.GetLetters(false, true, false).Contains(arr1.Substring(0, 1)))
+                    if (arr0.Length > 0 && arr1.Length > 1 && (Utilities.LowercaseLetters + ",").Contains(arr0.Substring(arr0.Length - 1)) &&
+                        Utilities.LowercaseLetters.Contains(arr1.Substring(0, 1)))
                     {
                         if (new StripableText(arr[1]).Pre.Contains("...") == false)
                             insertDash = false;
