@@ -1835,7 +1835,7 @@ namespace Nikse.SubtitleEdit.Forms
             var bitmap = (Bitmap)e.Argument;
             if (_tesseractAsyncIndex >= 0 && _tesseractAsyncIndex < _tesseractAsyncStrings.Length)
             {
-                if (string.IsNullOrEmpty(_tesseractAsyncStrings[_tesseractAsyncIndex]))
+                if (string.IsNullOrEmpty(_tesseractAsyncStrings[_tesseractAsyncIndex]) && bitmap != null)
                     _tesseractAsyncStrings[_tesseractAsyncIndex] = Tesseract3DoOcrViaExe(bitmap, _languageId, "-psm 6"); // 6 = Assume a single uniform block of text.);
             }
         }
@@ -2140,6 +2140,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         private string OcrViaTesseract(Bitmap bitmap, int index)
         {
+            if (bitmap == null)
+                return string.Empty;
+
             if (_ocrFixEngine == null)
                 LoadOcrFixEngine();
 
