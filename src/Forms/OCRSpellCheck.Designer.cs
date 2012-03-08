@@ -43,6 +43,7 @@
             this.buttonSkipOnce = new System.Windows.Forms.Button();
             this.buttonAddToNames = new System.Windows.Forms.Button();
             this.groupBoxEditWholeText = new System.Windows.Forms.GroupBox();
+            this.buttonChangeAllWholeText = new System.Windows.Forms.Button();
             this.buttonSkipText = new System.Windows.Forms.Button();
             this.buttonChangeWholeText = new System.Windows.Forms.Button();
             this.textBoxWholeText = new System.Windows.Forms.TextBox();
@@ -215,6 +216,7 @@
             // groupBoxEditWholeText
             // 
             this.groupBoxEditWholeText.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.groupBoxEditWholeText.Controls.Add(this.buttonChangeAllWholeText);
             this.groupBoxEditWholeText.Controls.Add(this.buttonSkipText);
             this.groupBoxEditWholeText.Controls.Add(this.buttonChangeWholeText);
             this.groupBoxEditWholeText.Controls.Add(this.textBoxWholeText);
@@ -224,6 +226,16 @@
             this.groupBoxEditWholeText.TabIndex = 37;
             this.groupBoxEditWholeText.TabStop = false;
             this.groupBoxEditWholeText.Text = "Edit whole text";
+            // 
+            // buttonChangeAllWholeText
+            // 
+            this.buttonChangeAllWholeText.Location = new System.Drawing.Point(6, 115);
+            this.buttonChangeAllWholeText.Name = "buttonChangeAllWholeText";
+            this.buttonChangeAllWholeText.Size = new System.Drawing.Size(141, 21);
+            this.buttonChangeAllWholeText.TabIndex = 36;
+            this.buttonChangeAllWholeText.Text = "Change all";
+            this.buttonChangeAllWholeText.UseVisualStyleBackColor = true;
+            this.buttonChangeAllWholeText.Click += new System.EventHandler(this.buttonChangeAllWholeText_Click);
             // 
             // buttonSkipText
             // 
@@ -253,6 +265,7 @@
             this.textBoxWholeText.Name = "textBoxWholeText";
             this.textBoxWholeText.Size = new System.Drawing.Size(290, 63);
             this.textBoxWholeText.TabIndex = 31;
+            this.textBoxWholeText.TextChanged += new System.EventHandler(this.textBoxWholeText_TextChanged);
             // 
             // groupBoxTextAsImage
             // 
@@ -333,8 +346,8 @@
             this.Controls.Add(this.buttonAbort);
             this.Controls.Add(this.labelWordNotFound);
             this.Controls.Add(this.groupBoxSuggestions);
-            this.Controls.Add(this.GroupBoxEditWord);
             this.Controls.Add(this.groupBoxEditWholeText);
+            this.Controls.Add(this.GroupBoxEditWord);
             this.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Name = "OcrSpellCheck";
             this.ShowIcon = false;
@@ -379,5 +392,6 @@
         private System.Windows.Forms.RichTextBox richTextBoxParagraph;
         private System.Windows.Forms.Button buttonAddToDictionary;
         private System.Windows.Forms.Button buttonSkipText;
+        private System.Windows.Forms.Button buttonChangeAllWholeText;
     }
 }

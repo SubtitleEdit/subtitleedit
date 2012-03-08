@@ -946,6 +946,9 @@ namespace Nikse.SubtitleEdit.Logic.OCR
             if (input.StartsWith("<i>... "))
                 input = input.Remove(6, 1);
 
+            if (input.StartsWith("...<i>") && (input.IndexOf("</i>") > input.IndexOf(" ")))
+                input = "<i>..." + input.Remove(0, 6);
+
             if (input.EndsWith(". .."))
                 input = input.Remove(input.Length - 4, 4) + "...";
             if (input.EndsWith(".. ."))
@@ -963,6 +966,12 @@ namespace Nikse.SubtitleEdit.Logic.OCR
                 input = input.Remove(input.Length - 9, 9) + "...</i>";
             if (input.EndsWith(". ...</i>"))
                 input = input.Remove(input.Length - 9, 9) + "...</i>";
+
+            if (input.EndsWith(".</i> . ."))
+                input = input.Remove(input.Length - 9, 9) + "...</i>";
+            if (input.EndsWith(".</i>.."))
+                input = input.Remove(input.Length - 7, 7) + "...</i>";
+            input = input.Replace(".</i> . ." + Environment.NewLine, "...</i>" + Environment.NewLine);
 
             input = input.Replace(".. ?", "..?");
             input = input.Replace("..?", "...?");
@@ -1218,7 +1227,7 @@ namespace Nikse.SubtitleEdit.Logic.OCR
                 }
             }
 
-            string[] words = tempLine.Split((Environment.NewLine + " ¡¿,.!?:;()[]{}+-£\"”“#&%…—♪/").ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+            string[] words = tempLine.Replace("</i>", string.Empty).Split((Environment.NewLine + " ¡¿,.!?:;()[]{}+-£\"”“#&%…—♪/").ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
             for (int i = 0; i < words.Length; i++)
             {
                 string word = words[i].TrimStart('\'');
@@ -1470,6 +1479,11 @@ namespace Nikse.SubtitleEdit.Logic.OCR
                     result.Line = _spellCheck.Paragraph;
                     result.FixedWholeLine = true;
                     break;
+                case OcrSpellCheck.Action.ChangeAllWholeText:
+                    SaveWordToWholeLineList(_spellCheck.OriginalWholeText);
+                    result.Line = _spellCheck.Paragraph;
+                    result.FixedWholeLine = true;
+                    break;
                 case OcrSpellCheck.Action.SkipAll:
                     _wordSkipList.Add(_spellCheck.Word);
                     _wordSkipList.Add(_spellCheck.Word.ToUpper());
@@ -1575,6 +1589,51 @@ namespace Nikse.SubtitleEdit.Logic.OCR
             {
                 MessageBox.Show(exception + Environment.NewLine + exception.StackTrace);
                 _wordSkipList.Add(word);
+            }
+        }
+
+        private void SaveWordToWholeLineList(string line)
+        {
+            try
+            {
+                if (_replaceListXmlFileName != null)
+                {
+                    var doc = new XmlDocument();
+                    if (File.Exists(_replaceListXmlFileName))
+                    {
+                        try
+                        {
+                            doc.Load(_replaceListXmlFileName);
+                        }
+                        catch
+                        {
+                            doc.LoadXml("<ReplaceList><WholeWords/><PartialLines/><BeginLines/><EndLines/><WholeLines/></ReplaceList>");
+                        }
+                    }
+                    else
+                    {
+                        doc.LoadXml("<ReplaceList><WholeWords/><PartialLines/><BeginLines/><EndLines/><WholeLines/></ReplaceList>");
+                    }
+                    if (!_wholeLineReplaceList.ContainsKey(line))
+                        _wholeLineReplaceList.Add(line, _spellCheck.Paragraph);
+                    XmlNode wholeWordsNode = doc.DocumentElement.SelectSingleNode("WholeLines");
+                    if (wholeWordsNode != null)
+                    {
+                        XmlNode newNode = doc.CreateNode(XmlNodeType.Element, "Line", null);
+                        XmlAttribute aFrom = doc.CreateAttribute("from");
+                        XmlAttribute aTo = doc.CreateAttribute("to");
+                        aFrom.InnerText = line;
+                        aTo.InnerText = _spellCheck.Paragraph;
+                        newNode.Attributes.Append(aFrom);
+                        newNode.Attributes.Append(aTo);
+                        wholeWordsNode.AppendChild(newNode);
+                        doc.Save(_replaceListXmlFileName);
+                    }
+                }
+            }
+            catch (Exception exception)
+            {
+                MessageBox.Show(exception + Environment.NewLine + exception.StackTrace);
             }
         }
 
