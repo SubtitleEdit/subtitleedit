@@ -774,11 +774,18 @@ namespace Nikse.SubtitleEdit.Forms
                         string fullFileName = Path.Combine(Path.GetDirectoryName(_bdnFileName), fn);
                         if (File.Exists(fullFileName))
                         {
-                            var temp = new Bitmap(fullFileName);
-                            if (temp.Width > maxWidth)
-                                maxWidth = temp.Width;
-                            totalHeight += temp.Height;
-                            bitmaps.Add(temp);
+                            try
+                            {
+                                var temp = new Bitmap(fullFileName);
+                                if (temp.Width > maxWidth)
+                                    maxWidth = temp.Width;
+                                totalHeight += temp.Height;
+                                bitmaps.Add(temp);
+                            }
+                            catch
+                            {
+                                return null;
+                            }
                         }
                     }
 
