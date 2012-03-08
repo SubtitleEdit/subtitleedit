@@ -1333,7 +1333,7 @@
             // labelSpectrogramAppearance
             // 
             this.labelSpectrogramAppearance.AutoSize = true;
-            this.labelSpectrogramAppearance.Location = new System.Drawing.Point(10, 54);
+            this.labelSpectrogramAppearance.Location = new System.Drawing.Point(10, 52);
             this.labelSpectrogramAppearance.Name = "labelSpectrogramAppearance";
             this.labelSpectrogramAppearance.Size = new System.Drawing.Size(164, 13);
             this.labelSpectrogramAppearance.TabIndex = 15;
@@ -1356,7 +1356,7 @@
             this.checkBoxGenerateSpectrogram.AutoSize = true;
             this.checkBoxGenerateSpectrogram.Location = new System.Drawing.Point(10, 20);
             this.checkBoxGenerateSpectrogram.Name = "checkBoxGenerateSpectrogram";
-            this.checkBoxGenerateSpectrogram.Size = new System.Drawing.Size(131, 17);
+            this.checkBoxGenerateSpectrogram.Size = new System.Drawing.Size(134, 17);
             this.checkBoxGenerateSpectrogram.TabIndex = 11;
             this.checkBoxGenerateSpectrogram.Text = "Generate spectrogram";
             this.checkBoxGenerateSpectrogram.UseVisualStyleBackColor = true;

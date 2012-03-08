@@ -19,7 +19,7 @@ Subtitle Edit Changelog
    * Go to next/prev sub (or double click in time line) will center selected 
      line in listview - thx Sean/vmb/Leszek
    * Multiple replace can now move items up/down - thx Majid
-   * Improved support of SCCP format
+   * Improved support for the SCC format
  * FIXED:
    * Export to Blu-ray sup timestamps
    * Crash in Visual Sync - thx XhmikosR

@@ -578,6 +578,8 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 int newButtonHeight = (int)(textSize.Height + 7 + 0.5);
                 Utilities.SetButtonHeight(this, newButtonHeight, 1);
+                Utilities.SetButtonHeight(groupBoxSsaStyle, newButtonHeight, 2);
+                Utilities.SetButtonHeight(groupBoxWaveFormAppearence, newButtonHeight, 1);
             }
         }
 
