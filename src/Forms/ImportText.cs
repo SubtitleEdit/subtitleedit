@@ -250,10 +250,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         private bool ContainsLetters(string line)
         {
-            string letterList = Utilities.AllLetters;
             foreach (char ch in line.ToCharArray())
             {
-                if (letterList.Contains(ch.ToString()))
+                if (!("\r\n\t .?" + Convert.ToChar(0)).Contains(ch.ToString()))
                     return true;
             }
             return false;
