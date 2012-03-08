@@ -17,15 +17,17 @@ namespace Nikse.SubtitleEdit.Forms
             ChangeAndSave,
             ChangeOnce,
             ChangeWholeText,
+            ChangeAllWholeText,
             SkipAll,
             SkipWholeText,
             SkipOnce,
-            UseSuggestion,
+            UseSuggestion,            
         }
 
         public Action ActionResult { get; private set; }
         public string Word { get; private set; }
         public string Paragraph { get; private set; }
+        public string OriginalWholeText { get; private set; }
 
         private string _originalWord;
 
@@ -75,6 +77,7 @@ namespace Nikse.SubtitleEdit.Forms
         internal void Initialize(string word, List<string> suggestions, string line, string[] words, int i, Bitmap bitmap)
         {
             _originalWord = word;
+            OriginalWholeText = line;
             pictureBoxText.Image = bitmap;
             textBoxWord.Text = word;
             richTextBoxParagraph.Text = line;
@@ -210,6 +213,13 @@ namespace Nikse.SubtitleEdit.Forms
             DialogResult = DialogResult.OK;
         }
 
+        private void buttonChangeAllWholeText_Click(object sender, EventArgs e)
+        {
+            Paragraph = textBoxWholeText.Text.Trim();
+            ActionResult = Action.ChangeAllWholeText;
+            DialogResult = DialogResult.OK;
+        }
+
         private void ButtonAddToNamesClick(object sender, EventArgs e)
         {
             Word = textBoxWord.Text.Trim();
@@ -254,6 +264,12 @@ namespace Nikse.SubtitleEdit.Forms
         {
             buttonChange.Enabled = textBoxWord.Text != _originalWord;
             buttonChangeAll.Enabled = buttonChange.Enabled;
+        }
+
+        private void textBoxWholeText_TextChanged(object sender, EventArgs e)
+        {
+            buttonChangeWholeText.Enabled = textBoxWholeText.Text != OriginalWholeText;
+            buttonChangeAllWholeText.Enabled = buttonChangeWholeText.Enabled;
         }
 
     }
