@@ -9087,6 +9087,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void Main_Resize(object sender, EventArgs e)
         {
+            if (_loading)
+                return;
+
             panelVideoPlayer.Invalidate();
 
             if (Configuration.Settings.General.AllowEditOfOriginalSubtitle && _subtitleAlternate != null && _subtitleAlternate.Paragraphs.Count > 0)
@@ -9417,7 +9420,6 @@ namespace Nikse.SubtitleEdit.Forms
             toolStripButtonToggleVideo.Checked = !toolStripButtonToggleVideo.Checked;
             panelVideoPlayer.Visible = toolStripButtonToggleVideo.Checked;
             mediaPlayer.BringToFront();
-//            labelSubtitle.BringToFront();
             if (!toolStripButtonToggleVideo.Checked && !toolStripButtonToggleWaveForm.Checked)
             {
                 if (_isVideoControlsUnDocked)
@@ -9430,7 +9432,8 @@ namespace Nikse.SubtitleEdit.Forms
                 ShowVideoPlayer();
             }
             Configuration.Settings.General.ShowVideoPlayer = toolStripButtonToggleVideo.Checked;
-            Refresh();
+            if (!_loading)
+                Refresh();
         }
 
         private void toolStripButtonToggleWaveForm_Click(object sender, EventArgs e)
@@ -9808,9 +9811,10 @@ namespace Nikse.SubtitleEdit.Forms
                 panelWaveFormControls.Left = audioVisualizer.Left;
                 trackBarWaveFormPosition.Left = panelWaveFormControls.Left + panelWaveFormControls.Width + 5;
                 trackBarWaveFormPosition.Width = groupBoxVideo.Width - (trackBarWaveFormPosition.Left + 10);
-                this.Main_Resize(null, null);
+                Main_Resize(null, null);
                 checkBoxSyncListViewWithVideoWhilePlaying.Left = tabControlButtons.Left + tabControlButtons.Width + 5;
-                Refresh();
+                if (!_loading)
+                    Refresh();
             }
             else if (_videoControlsUnDocked != null && !_videoControlsUnDocked.IsDisposed)
             {
@@ -9987,7 +9991,7 @@ namespace Nikse.SubtitleEdit.Forms
                 numericUpDownSecAdjust1.Width = numericUpDownSecAdjust1.Width + 10;
                 numericUpDownSecAdjust2.Width = numericUpDownSecAdjust2.Width + 10;
                 labelDuration.Left = numericUpDownDuration.Left;
-            }
+            }            
         }
 
         private void SetPositionFromXYString(string positionAndSize, string name)
@@ -12719,7 +12723,7 @@ namespace Nikse.SubtitleEdit.Forms
             ExportPngXml exportBdnXmlPng = new ExportPngXml();
             exportBdnXmlPng.Initialize(_subtitle, "FAB", _fileName);
             exportBdnXmlPng.ShowDialog(this);
-        }
+        }       
 
     }
 }
