@@ -37,18 +37,18 @@ namespace Nikse.SubtitleEdit.Logic.OCR
         readonly Form _parentForm;
         private string _spellCheckDictionaryName;
 
-        static Regex regexAloneI = new Regex(@"\bi\b", RegexOptions.Compiled);
-        static Regex regexAloneIAsL = new Regex(@"\bl\b", RegexOptions.Compiled);
-        static Regex regexSpaceBetweenNumbers = new Regex(@"\d \d", RegexOptions.Compiled);
-        static Regex regExLowercaseL = new Regex("[A-ZÆØÅÄÖÉÁ]l[A-ZÆØÅÄÖÉÁ]", RegexOptions.Compiled);
-        static Regex regExUppercaseI = new Regex("[a-zæøåöäé]I.", RegexOptions.Compiled);
-        static Regex regExNumber1 = new Regex(@"\d\ 1", RegexOptions.Compiled);
-        static Regex regExQuestion = new Regex(@"\S\?[A-ZÆØÅÄÖÉÈÀÙÂÊÎÔÛËÏa-zæøåäöéèàùâêîôûëï]", RegexOptions.Compiled);
-        static Regex regExIandZero = new Regex(@"[a-zæøåäöé][I1]", RegexOptions.Compiled);
-        static Regex regExTime1 = new Regex(@"[a-zæøåäöé][0]", RegexOptions.Compiled);
-        static Regex regExTime2 = new Regex(@"0[a-zæøåäöé]", RegexOptions.Compiled);
-        static Regex hexNumber = new Regex(@"^#?[\dABDEFabcdef]+$", RegexOptions.Compiled);
-        static Regex startEndEndsWithNumber = new Regex(@"^\d+.+\d$", RegexOptions.Compiled);
+        static readonly Regex RegexAloneI = new Regex(@"\bi\b", RegexOptions.Compiled);
+        static readonly Regex RegexAloneIasL = new Regex(@"\bl\b", RegexOptions.Compiled);
+        static readonly Regex RegexSpaceBetweenNumbers = new Regex(@"\d \d", RegexOptions.Compiled);
+        static readonly Regex RegExLowercaseL = new Regex("[A-ZÆØÅÄÖÉÁ]l[A-ZÆØÅÄÖÉÁ]", RegexOptions.Compiled);
+        static readonly Regex RegExUppercaseI = new Regex("[a-zæøåöäé]I.", RegexOptions.Compiled);
+        static readonly Regex RegExNumber1 = new Regex(@"\d\ 1", RegexOptions.Compiled);
+        static readonly Regex RegExQuestion = new Regex(@"\S\?[A-ZÆØÅÄÖÉÈÀÙÂÊÎÔÛËÏa-zæøåäöéèàùâêîôûëï]", RegexOptions.Compiled);
+        static readonly Regex RegExIandZero = new Regex(@"[a-zæøåäöé][I1]", RegexOptions.Compiled);
+        static readonly Regex RegExTime1 = new Regex(@"[a-zæøåäöé][0]", RegexOptions.Compiled);
+        static readonly Regex RegExTime2 = new Regex(@"0[a-zæøåäöé]", RegexOptions.Compiled);
+        static readonly Regex HexNumber = new Regex(@"^#?[\dABDEFabcdef]+$", RegexOptions.Compiled);
+        static readonly Regex StartEndEndsWithNumber = new Regex(@"^\d+.+\d$", RegexOptions.Compiled);
 
         public bool Abort { get; set; }
         public List<string> AutoGuessesUsed { get; set; }
@@ -164,13 +164,7 @@ namespace Nikse.SubtitleEdit.Logic.OCR
             string dictionary = Utilities.DictionaryFolder + _fiveLetterWordListLanguageName;
             if (resetSkipList)
             {
-                _wordSkipList = new List<string>();
-                _wordSkipList.Add(Configuration.Settings.Tools.MusicSymbol);
-                _wordSkipList.Add("*");
-                _wordSkipList.Add("%");
-                _wordSkipList.Add("#");
-                _wordSkipList.Add("+");
-                _wordSkipList.Add("$");
+                _wordSkipList = new List<string> {Configuration.Settings.Tools.MusicSymbol, "*", "%", "#", "+", "$"};
             }
 
             // Load names etc list (names/noise words)
@@ -361,8 +355,8 @@ namespace Nikse.SubtitleEdit.Logic.OCR
                 if (SpellCheckDictionaryName.StartsWith("en_"))
                 {
                     string oldText = text;
-                    text = FixCommonErrors.FixAloneLowercaseIToUppercaseLine(regexAloneI, oldText, text, 'i');
-                    text = FixCommonErrors.FixAloneLowercaseIToUppercaseLine(regexAloneIAsL, oldText, text, 'l');
+                    text = FixCommonErrors.FixAloneLowercaseIToUppercaseLine(RegexAloneI, oldText, text, 'i');
+                    text = FixCommonErrors.FixAloneLowercaseIToUppercaseLine(RegexAloneIasL, oldText, text, 'l');
                 }
                 text = RemoveSpaceBetweenNumbers(text);
             }
@@ -406,7 +400,7 @@ namespace Nikse.SubtitleEdit.Logic.OCR
 
         private string RemoveSpaceBetweenNumbers(string text)
         {
-            Match match = regexSpaceBetweenNumbers.Match(text);
+            Match match = RegexSpaceBetweenNumbers.Match(text);
             while (match.Success)
             {
                 bool doFix = true;
@@ -417,11 +411,11 @@ namespace Nikse.SubtitleEdit.Logic.OCR
                 if (doFix)
                 {
                     text = text.Remove(match.Index + 1, 1);
-                    match = regexSpaceBetweenNumbers.Match(text);
+                    match = RegexSpaceBetweenNumbers.Match(text);
                 }
                 else
                 {
-                    match = regexSpaceBetweenNumbers.Match(text, match.Index+1);
+                    match = RegexSpaceBetweenNumbers.Match(text, match.Index+1);
                 }
             }
             return text;
@@ -550,21 +544,26 @@ namespace Nikse.SubtitleEdit.Logic.OCR
 
             if (word.Contains("?"))
             {
-                Match match = regExQuestion.Match(word);
+                Match match = RegExQuestion.Match(word);
                 if (match.Success)
                     word = word.Insert(match.Index + 2, " ");
             }
 
             foreach (string from in _wordReplaceList.Keys)
             {
-                if (from.Contains(word))
+                if (word.Length == from.Length)
                 {
                     if (word == from)
                         return pre + _wordReplaceList[from] + post;
+                }
+                else if (word.Length + post.Length == from.Length)
+                {
                     if (word + post == from)
                         return pre + _wordReplaceList[from];
-                    if (pre + word + post == from)
-                        return _wordReplaceList[from];
+                }
+                if (pre.Length + word.Length + post.Length == from.Length && pre + word + post == from)
+                {
+                    return _wordReplaceList[from];
                 }
             }
 
@@ -585,14 +584,19 @@ namespace Nikse.SubtitleEdit.Logic.OCR
             // Retry word replace list
             foreach (string from in _wordReplaceList.Keys)
             {
-                if (from.Contains(word))
+                if (word.Length == from.Length)
                 {
                     if (word == from)
                         return pre + _wordReplaceList[from] + post;
+                }
+                else if (word.Length + post.Length == from.Length)
+                {
                     if (word + post == from)
                         return pre + _wordReplaceList[from];
-                    if (pre + word + post == from)
-                        return _wordReplaceList[from];
+                }
+                if (pre.Length + word.Length + post.Length == from.Length && pre + word + post == from)
+                {
+                    return _wordReplaceList[from];
                 }
             }
 
@@ -689,24 +693,28 @@ namespace Nikse.SubtitleEdit.Logic.OCR
 
             foreach (string from in _wordReplaceList.Keys)
             {
-                if (from.Contains(word))
+                if (word.Length == from.Length)
                 {
                     if (word == from)
                         return pre + _wordReplaceList[from] + post;
+                }
+                else if (word.Length + post.Length == from.Length)
+                {
                     if (word + post == from)
                         return pre + _wordReplaceList[from];
-                    if (pre + word + post == from)
-                        return _wordReplaceList[from];
+                }
+                if (pre.Length + word.Length + post.Length == from.Length && pre + word + post == from)
+                {
+                    return _wordReplaceList[from];
                 }
             }
-
 
             return pre + word + post;
         }
 
         public static string Fix0InsideLowerCaseWord(string word)
         {
-            if (startEndEndsWithNumber.IsMatch(word))
+            if (StartEndEndsWithNumber.IsMatch(word))
                 return word;
 
             if (word.Contains("1") ||
@@ -724,12 +732,12 @@ namespace Nikse.SubtitleEdit.Logic.OCR
                 word.EndsWith("pm"))
                 return word;
 
-            if (hexNumber.IsMatch(word))
+            if (HexNumber.IsMatch(word))
                 return word;
 
             if (word.LastIndexOf('0') > 0)
             {
-                Match match = regExTime1.Match(word);
+                Match match = RegExTime1.Match(word);
                 if (match.Success)
                 {
                     while (match.Success)
@@ -741,11 +749,11 @@ namespace Nikse.SubtitleEdit.Logic.OCR
                             if (match.Index + 2 < oldText.Length)
                                 word += oldText.Substring(match.Index + 2);
                         }
-                        match = regExTime1.Match(word);
+                        match = RegExTime1.Match(word);
                     }
                 }
 
-                match = regExTime2.Match(word);
+                match = RegExTime2.Match(word);
                 if (match.Success)
                 {
                     while (match.Success)
@@ -760,7 +768,7 @@ namespace Nikse.SubtitleEdit.Logic.OCR
                                     word += oldText.Substring(match.Index + 1);
                             }
                         }
-                        match = regExTime2.Match(word, match.Index + 1);
+                        match = RegExTime2.Match(word, match.Index + 1);
                     }
                 }
             }
@@ -770,7 +778,7 @@ namespace Nikse.SubtitleEdit.Logic.OCR
 
         public static string FixIor1InsideLowerCaseWord(string word)
         {
-            if (startEndEndsWithNumber.IsMatch(word))
+            if (StartEndEndsWithNumber.IsMatch(word))
                 return word;
 
             if (word.Contains("2") ||
@@ -783,12 +791,12 @@ namespace Nikse.SubtitleEdit.Logic.OCR
                 word.Contains("9"))
                 return word;
 
-            if (hexNumber.IsMatch(word))
+            if (HexNumber.IsMatch(word))
                 return word;
 
             if (word.LastIndexOf('I') > 0 || word.LastIndexOf('1') > 0)
             {
-                Match match = regExIandZero.Match(word);
+                Match match = RegExIandZero.Match(word);
                 if (match.Success)
                 {
                     while (match.Success)
@@ -800,7 +808,7 @@ namespace Nikse.SubtitleEdit.Logic.OCR
                             if (match.Index + 2 < oldText.Length)
                                 word += oldText.Substring(match.Index + 2);
                         }
-                        match = regExIandZero.Match(word, match.Index + 1);
+                        match = RegExIandZero.Match(word, match.Index + 1);
                     }
                 }
             }
@@ -875,7 +883,7 @@ namespace Nikse.SubtitleEdit.Logic.OCR
                     lastLine.EndsWith("!") ||
                     lastLine.EndsWith("?"))
                 {
-                    StripableText st = new StripableText(l);
+                    var st = new StripableText(l);
                     if (st.StrippedText.StartsWith("i") && !st.Pre.EndsWith("[") && !st.Pre.EndsWith("("))
                     {
                         if (string.IsNullOrEmpty(lastLine) || (!lastLine.EndsWith("...") && !EndsWithAbbreviation(lastLine, _abbreviationList)))
@@ -1023,7 +1031,7 @@ namespace Nikse.SubtitleEdit.Logic.OCR
                 lastLine.EndsWith("♪"))
             {
                 lastLine = Utilities.RemoveHtmlTags(lastLine);
-                StripableText st = new StripableText(input);
+                var st = new StripableText(input);
                 if (lastLine == null || (!lastLine.EndsWith("...") && !EndsWithAbbreviation(lastLine, abbreviationList)))
                 {
                     if (st.StrippedText.Length > 0 && st.StrippedText[0].ToString() != st.StrippedText[0].ToString().ToUpper() && !st.Pre.EndsWith("[") && !st.Pre.EndsWith("(") && !st.Pre.EndsWith("..."))
@@ -1052,7 +1060,7 @@ namespace Nikse.SubtitleEdit.Logic.OCR
             // change '<number><space>1' to '<number>1'
             if (input.Contains("1"))
             {
-                Match match = regExNumber1.Match(input);
+                Match match = RegExNumber1.Match(input);
                 while (match.Success)
                 {
                     bool doFix = true;
@@ -1063,11 +1071,11 @@ namespace Nikse.SubtitleEdit.Logic.OCR
                     if (doFix)
                     {
                         input = input.Substring(0, match.Index + 1) + input.Substring(match.Index + 2);
-                        match = regExNumber1.Match(input);
+                        match = RegExNumber1.Match(input);
                     }
                     else
                     {
-                        match = regExNumber1.Match(input, match.Index + 1);
+                        match = RegExNumber1.Match(input, match.Index + 1);
                     }
                 }
             }
@@ -1078,22 +1086,22 @@ namespace Nikse.SubtitleEdit.Logic.OCR
             // change 'sequeI of' to 'sequel of'
             if (input.Contains("I"))
             {
-                var match = regExUppercaseI.Match(input);
+                var match = RegExUppercaseI.Match(input);
                 while (match.Success)
                 {
                     input = input.Substring(0, match.Index + 1) + "l" + input.Substring(match.Index + 2);
-                    match = regExUppercaseI.Match(input);
+                    match = RegExUppercaseI.Match(input);
                 }
             }
 
             // change 'NlCE' to 'NICE'
             if (input.Contains("l"))
             {
-                var match = regExLowercaseL.Match(input);
+                var match = RegExLowercaseL.Match(input);
                 while (match.Success)
                 {
                     input = input.Substring(0, match.Index + 1) + "I" + input.Substring(match.Index + 2);
-                    match = regExLowercaseL.Match(input);
+                    match = RegExLowercaseL.Match(input);
                 }
             }
 
@@ -1129,7 +1137,7 @@ namespace Nikse.SubtitleEdit.Logic.OCR
 
             // begin line
             string[] lines = newText.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             foreach (string l in lines)
             {
                 string s = l;
@@ -1183,7 +1191,7 @@ namespace Nikse.SubtitleEdit.Logic.OCR
 
         public string FixUnknownWordsViaGuessOrPrompt(out int wordsNotFound, string line, int index, Bitmap bitmap, bool autoFix, bool promptForFixingErrors, bool log, bool useAutoGuess)
         {
-            List<string> localIgnoreWords = new List<string>();
+            var localIgnoreWords = new List<string>();
             wordsNotFound = 0;
 
             if (promptForFixingErrors && line.Length == 1 && !IsWordKnownOrNumber(line, line))
@@ -1276,7 +1284,7 @@ namespace Nikse.SubtitleEdit.Logic.OCR
 
                         if (autoFix && useAutoGuess)
                         {
-                            List<string> guesses = new List<string>();
+                            var guesses = new List<string>();
                             if (word.Length > 5)
                             {
                                 guesses = (List<string>)CreateGuessesFromLetters(word);
@@ -1332,7 +1340,7 @@ namespace Nikse.SubtitleEdit.Logic.OCR
                         }
                         if (!correct && promptForFixingErrors)
                         {
-                            List<string> suggestions = new List<string>();
+                            var suggestions = new List<string>();
 
                             if ((word == "Lt's" || word == "Lt'S") && SpellCheckDictionaryName.StartsWith("en_"))
                             {
@@ -1398,8 +1406,7 @@ namespace Nikse.SubtitleEdit.Logic.OCR
             }
             if (uppercase > lowercase)
                 return word.ToUpper();
-            else
-                return word.ToLower();
+            return word.ToLower();
         }
 
         /// <summary>
@@ -1500,8 +1507,6 @@ namespace Nikse.SubtitleEdit.Logic.OCR
                     result.Word = _spellCheck.Word;
                     result.Fixed = true;
                     break;
-                default:
-                    break;
             }
             if (result.Fixed)
             {
@@ -1512,7 +1517,7 @@ namespace Nikse.SubtitleEdit.Logic.OCR
 
         private string ReplaceWord(string text, string word, string newWord)
         {
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             if (word != null && text != null && text.Contains(word))
             {
                 int appendFrom = 0;
@@ -1780,7 +1785,6 @@ namespace Nikse.SubtitleEdit.Logic.OCR
                         numberOfCorrectWords++;
                     else
                         wordsNotFound++;
-
                 }
             }
             return wordsNotFound;
