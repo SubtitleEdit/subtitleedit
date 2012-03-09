@@ -2241,22 +2241,29 @@ namespace Nikse.SubtitleEdit.Logic
             }
         }
 
+        private static readonly Dictionary<string, Keys> AllKeys = new Dictionary<string, Keys>();
         public static Keys GetKeys(string keysInString)
         {
             if (string.IsNullOrEmpty(keysInString))
                 return Keys.None;
 
+            if (AllKeys.Count == 0)
+            {
+                foreach (Keys val in Enum.GetValues(typeof(Keys)))
+                {
+                    string k = val.ToString().ToLower();
+                    if (!AllKeys.ContainsKey(k))
+                        AllKeys.Add(k, val);
+                }
+            }
+
             string[] parts = keysInString.ToLower().Split("+".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
             Keys resultKeys = Keys.None;
             foreach (string k in parts)
             {
-                foreach (Keys val in Enum.GetValues(typeof(Keys)))
-                {
-                    if (k == val.ToString().ToLower())
-                        resultKeys = resultKeys | val;
-                }
+                if (AllKeys.ContainsKey(k))
+                    resultKeys = resultKeys | AllKeys[k];
             }
-
             return resultKeys;
         }
 
