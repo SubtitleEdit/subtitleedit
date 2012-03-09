@@ -20,8 +20,8 @@ namespace Nikse.SubtitleEdit.Forms
         bool _googleTranslate = true;
         MicrosoftTranslationService.SoapService _microsoftTranslationService = null;
         private bool _googleApiNotWorking = false;
-        private const string _splitterString  = "==";
-        private const string _newlineString = "__";
+        private const string _splitterString  = " == ";
+        private const string _newlineString = " __ ";
 
         private Encoding _screenScrapingEncoding = null;
         public Encoding ScreenScrapingEncoding
@@ -244,14 +244,14 @@ namespace Nikse.SubtitleEdit.Forms
                 if (index < _translatedSubtitle.Paragraphs.Count)
                 {
                     string cleanText = s.Replace("</p>", string.Empty).Trim();
-                    int indexOfP = cleanText.IndexOf(_splitterString);
+                    int indexOfP = cleanText.IndexOf(_splitterString.Trim());
                     if (indexOfP >= 0 && indexOfP < 4)
-                        cleanText = cleanText.Remove(0, cleanText.IndexOf(_splitterString));
-                    cleanText = cleanText.Replace(_splitterString, string.Empty).Trim();
+                        cleanText = cleanText.Remove(0, cleanText.IndexOf(_splitterString.Trim()));
+                    cleanText = cleanText.Replace(_splitterString.Trim(), string.Empty).Trim();
                     if (cleanText.Contains("\n") && !cleanText.Contains("\r"))
                         cleanText = cleanText.Replace("\n", Environment.NewLine);
                     cleanText = cleanText.Replace(" ...", "...");
-                    cleanText = cleanText.Replace(_newlineString, Environment.NewLine);
+                    cleanText = cleanText.Replace(_newlineString.Trim(), Environment.NewLine);
                     cleanText = cleanText.Replace("<br />", Environment.NewLine);
                     cleanText = cleanText.Replace("<br/>", Environment.NewLine);
                     cleanText = cleanText.Replace("<br />", Environment.NewLine);
@@ -431,6 +431,11 @@ namespace Nikse.SubtitleEdit.Forms
             res = res.Replace(" <br/>", Environment.NewLine);
             res = res.Replace("<br/>", Environment.NewLine);
             res = res.Replace("<br />", Environment.NewLine);
+            res = res.Replace("  ", " ").Trim();
+            res = res.Replace(Environment.NewLine + " ", Environment.NewLine).Trim();
+            res = res.Replace(Environment.NewLine + " ", Environment.NewLine).Trim();
+            res = res.Replace(" " + Environment.NewLine, Environment.NewLine).Trim();
+            res = res.Replace(" " + Environment.NewLine, Environment.NewLine).Trim();
             int end = res.LastIndexOf("<p>");
             if (end > 0)
                 res = res.Substring(0, end);

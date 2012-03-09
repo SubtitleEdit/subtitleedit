@@ -34,6 +34,8 @@ Subtitle Edit Changelog
      (Use MPlayer2 for precise seeking)
    * Crash (memory leak) when exporting images from a vobsub - thx Pete
    * Bug in Fix common errors with uncheck fix quotes -  thx jofafrazze
+   * Bug in Import plain text when only non-English letters - thx Jasper
+   * Now detects encoding when opening son files - thx Jørgen
 
 
 3.2.3 (13th January 2012)
