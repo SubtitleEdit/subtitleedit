@@ -57,7 +57,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
             subtitle.Paragraphs.Clear();
-            string text = string.Empty;
+            var text = new StringBuilder();
             for (int i=0; i<lines.Count; i++)
             {
                 string line = lines[i].Trim();
@@ -71,7 +71,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         {
                             TimeCode start = DecodeTimeCode(timeParts[0]);
                             TimeCode end = DecodeTimeCode(timeParts[1]);
-                            subtitle.Paragraphs.Add(new Paragraph(start, end, text));
+                            subtitle.Paragraphs.Add(new Paragraph(start, end, text.ToString().Trim()));
                         }
                         catch
                         {
@@ -79,13 +79,15 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         }
                     }
                 }
-                else if (line.Length > 0)
+                else if (line.Trim().Length > 0)
                 {
-                    text = (text + Environment.NewLine + line).Trim();
+                    text.AppendLine(line.Trim());
+                    if (text.Length > 5000)
+                        return;
                 }
                 else
                 {
-                    text = string.Empty;
+                    text = new StringBuilder();
                 }
             }
             subtitle.Renumber(1);
