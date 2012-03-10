@@ -11,8 +11,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
     public class WebVTT : SubtitleFormat
     {
 
-        readonly Regex _regexTimeCodes = new Regex(@"^-?\d+:-?\d+:-?\d+\.-?\d+\s*-->\s*-?\d+:-?\d+:-?\d+\.-?\d+", RegexOptions.Compiled);
-        readonly Regex _regexTimeCodesShort = new Regex(@"^-?\d+:-?\d+\.-?\d+\s*-->\s*-?\d+:-?\d+\.-?\d+", RegexOptions.Compiled);
+        static readonly Regex RegexTimeCodes = new Regex(@"^-?\d+:-?\d+:-?\d+\.-?\d+\s*-->\s*-?\d+:-?\d+:-?\d+\.-?\d+", RegexOptions.Compiled);
+        static readonly Regex RegexTimeCodesShort = new Regex(@"^-?\d+:-?\d+\.-?\d+\s*-->\s*-?\d+:-?\d+\.-?\d+", RegexOptions.Compiled);
 
         public override string Extension
         {
@@ -73,12 +73,12 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             foreach (string line in lines)
             {
                 string s = line;
-                if (_regexTimeCodesShort.IsMatch(s))
+                if (RegexTimeCodesShort.IsMatch(s))
                 {
                     s = "00:" + s.Replace("--> ", "--> 00:");
                 }
 
-                if (_regexTimeCodes.IsMatch(s))
+                if (RegexTimeCodes.IsMatch(s))
                 {
                     if (p != null)
                     {

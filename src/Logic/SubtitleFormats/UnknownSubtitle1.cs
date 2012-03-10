@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -14,9 +13,11 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         }
 
         Paragraph _paragraph;
+        StringBuilder _text = new StringBuilder();
         ExpectingLine _expecting = ExpectingLine.TimeCodes;
 
-        readonly Regex _regexTimeCodes = new Regex(@"^TIMEIN:\s*[0123456789-]+:[0123456789-]+:[0123456789-]+:[0123456789-]+\s*DURATION:\s*[0123456789-]+:[0123456789-]+\s*TIMEOUT:\s*[0123456789-]+:[0123456789-]+:[0123456789-]+:[0123456789-]+$", RegexOptions.Compiled);
+
+        static readonly Regex RegexTimeCodes = new Regex(@"^TIMEIN:\s*[0123456789-]+:[0123456789-]+:[0123456789-]+:[0123456789-]+\s*DURATION:\s*[0123456789-]+:[0123456789-]+\s*TIMEOUT:\s*[0123456789-]+:[0123456789-]+:[0123456789-]+:[0123456789-]+$", RegexOptions.Compiled);
 
         public override string Extension
         {
@@ -90,7 +91,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 case ExpectingLine.TimeCodes:
                     if (TryReadTimeCodesLine(line, _paragraph))
                     {
-                        _paragraph.Text = string.Empty;
+                        _text = new StringBuilder();
                         _expecting = ExpectingLine.Text;
                     }
                     else if (line.Trim().Length > 0)
@@ -102,12 +103,11 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 case ExpectingLine.Text:
                     if (line.Trim().Length > 0)
                     {
-                        if (_paragraph.Text.Length > 0)
-                            _paragraph.Text += Environment.NewLine;
-                        _paragraph.Text += line.TrimEnd();
+                        _text.AppendLine(line.TrimEnd());
                     }
                     else
                     {
+                        _paragraph.Text = _text.ToString().Trim();
                         subtitle.Paragraphs.Add(_paragraph);
                         _paragraph = new Paragraph();
                         _expecting = ExpectingLine.TimeCodes;
@@ -119,7 +119,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         private bool TryReadTimeCodesLine(string line, Paragraph paragraph)
         {
             line = line.Trim();
-            if (_regexTimeCodes.IsMatch(line))
+            if (RegexTimeCodes.IsMatch(line))
             {
 
                 //TIMEIN: 01:00:04:12   DURATION: 04:25 TIMEOUT: 01:00:09:07
@@ -151,7 +151,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     int endMilliseconds = 0;
                     if (parts[9] != "--")
                         endMilliseconds = int.Parse(parts[9]) * 10;
-
 
                     paragraph.StartTime = new TimeCode(startHours, startMinutes, startSeconds, startMilliseconds);
 

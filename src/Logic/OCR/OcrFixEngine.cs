@@ -953,6 +953,8 @@ namespace Nikse.SubtitleEdit.Logic.OCR
                 input = "<i>..." + input.Remove(0, 8);
             if (input.StartsWith("<i>... "))
                 input = input.Remove(6, 1);
+            if (input.StartsWith(". . <i>."))
+                input = "<i>..." + input.Remove(0, 8);
 
             if (input.StartsWith("...<i>") && (input.IndexOf("</i>") > input.IndexOf(" ")))
                 input = "<i>..." + input.Remove(0, 6);

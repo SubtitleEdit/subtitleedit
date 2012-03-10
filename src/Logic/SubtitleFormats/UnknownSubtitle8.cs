@@ -10,7 +10,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         //00:04:04.219
         //The city council of long beach
 
-        readonly Regex _regexTimeCodes = new Regex(@"^\d\d:\d\d:\d\d.\d\d\d$", RegexOptions.Compiled);
+        static readonly Regex RegexTimeCodes = new Regex(@"^\d\d:\d\d:\d\d.\d\d\d$", RegexOptions.Compiled);
 
         public override string Extension
         {
@@ -63,7 +63,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 if (i + 1 < lines.Count)
                     next = lines[i + 1];
 
-                if (line.Contains(":") && !next.Contains(":") && _regexTimeCodes.IsMatch(line) && !_regexTimeCodes.IsMatch(next))
+                if (line.Contains(":") && !next.Contains(":") && RegexTimeCodes.IsMatch(line) && !RegexTimeCodes.IsMatch(next))
                 {
                     paragraph = new Paragraph();
                     if (TryReadTimeCodesLine(line, paragraph))

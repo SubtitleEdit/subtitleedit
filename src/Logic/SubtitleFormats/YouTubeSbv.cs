@@ -15,7 +15,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         Paragraph _paragraph;
         ExpectingLine _expecting = ExpectingLine.TimeCodes;
-        readonly Regex _regexTimeCodes = new Regex(@"^-?\d+:-?\d+:-?\d+[:,.]-?\d+,\d+:-?\d+:-?\d+[:,.]-?\d+$", RegexOptions.Compiled);
+        static readonly Regex RegexTimeCodes = new Regex(@"^-?\d+:-?\d+:-?\d+[:,.]-?\d+,\d+:-?\d+:-?\d+[:,.]-?\d+$", RegexOptions.Compiled);
 
         public override string Extension
         {
@@ -84,7 +84,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 // A new line is missing between two paragraphs (buggy srt file)
                 if (_expecting == ExpectingLine.Text && i + 1 < lines.Count &&
                     _paragraph != null && !string.IsNullOrEmpty(_paragraph.Text) &&
-                    _regexTimeCodes.IsMatch(lines[i]))
+                    RegexTimeCodes.IsMatch(lines[i]))
                 {
                     ReadLine(subtitle, string.Empty, string.Empty);
                 }
@@ -147,7 +147,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             if (Utilities.IsInteger(text))
                 return false;
 
-            if (_regexTimeCodes.IsMatch(text))
+            if (RegexTimeCodes.IsMatch(text))
                 return false;
 
             return true;
@@ -166,7 +166,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             line = line.Replace("،", ",");
             line = line.Replace("¡", ":");
 
-            if (_regexTimeCodes.IsMatch(line))
+            if (RegexTimeCodes.IsMatch(line))
             {
                 line = line.Replace(",", ":");
                 string[] parts = line.Replace(" ", string.Empty).Split(':', ',');

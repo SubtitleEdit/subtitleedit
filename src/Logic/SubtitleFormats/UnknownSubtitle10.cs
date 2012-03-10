@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using System.Text.RegularExpressions;
 
 namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
@@ -55,7 +54,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
-            StringBuilder temp = new StringBuilder();
+            var temp = new StringBuilder();
             foreach (string l in lines)
                 temp.Append(l);
             string all = temp.ToString();
@@ -93,10 +92,12 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     {
                         string start = line.Substring(indexStartTime);
                         string end = line.Substring(indexEndTime);
-                        Paragraph paragraph = new Paragraph();
-                        paragraph.Text = text;
-                        paragraph.StartTime.TotalMilliseconds = GetMilliseconds(start);
-                        paragraph.EndTime.TotalMilliseconds = GetMilliseconds(end);
+                        var paragraph = new Paragraph
+                                            {
+                                                Text = text,
+                                                StartTime = {TotalMilliseconds = GetMilliseconds(start)},
+                                                EndTime = {TotalMilliseconds = GetMilliseconds(end)}
+                                            };
                         subtitle.Paragraphs.Add(paragraph);
                     }
                     catch (Exception exception)

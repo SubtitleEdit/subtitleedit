@@ -20,6 +20,7 @@ Subtitle Edit Changelog
      line in listview - thx Sean/vmb/Leszek
    * Multiple replace can now move items up/down - thx Majid
    * Improved support for the SCC format
+   * Optimized Fix Common Errors + startup
  * FIXED:
    * Export to Blu-ray sup timestamps
    * Crash in Visual Sync - thx XhmikosR

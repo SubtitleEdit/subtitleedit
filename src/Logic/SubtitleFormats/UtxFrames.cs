@@ -29,7 +29,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public override bool IsMine(List<string> lines, string fileName)
         {
-            Subtitle subtitle = new Subtitle();
+            var subtitle = new Subtitle();
             LoadSubtitle(subtitle, lines, fileName);
             return subtitle.Paragraphs.Count > _errorCount;
         }
@@ -46,10 +46,9 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
             const string paragraphWriteFormat = "{0}{1}#{2},{3}{1}";
 
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             foreach (Paragraph p in subtitle.Paragraphs)
             {
-                string text = p.Text;
                 sb.AppendLine(string.Format(paragraphWriteFormat, p.Text, Environment.NewLine, EncodeTimeCode(p.StartTime), EncodeTimeCode(p.EndTime)));
             }
             return sb.ToString().Trim();
@@ -58,7 +57,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
             subtitle.Paragraphs.Clear();
-            string text = string.Empty;
+            var text = new StringBuilder();
             for (int i = 0; i < lines.Count; i++)
             {
                 string line = lines[i].Trim();
@@ -72,7 +71,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         {
                             TimeCode start = DecodeTimeCode(timeParts[0]);
                             TimeCode end = DecodeTimeCode(timeParts[1]);
-                            subtitle.Paragraphs.Add(new Paragraph(start, end, text));
+                            subtitle.Paragraphs.Add(new Paragraph(start, end, text.ToString().Trim()));
                         }
                         catch
                         {
@@ -80,13 +79,15 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         }
                     }
                 }
-                else if (line.Length > 0)
+                else if (line.Trim().Length > 0)
                 {
-                    text = (text + Environment.NewLine + line).Trim();
+                    text.AppendLine(line.Trim());
+                    if (text.Length > 5000)
+                        return;
                 }
                 else
                 {
-                    text = string.Empty;
+                    text = new StringBuilder();
                 }
             }
             subtitle.Renumber(1);
