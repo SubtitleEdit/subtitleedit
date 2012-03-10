@@ -62,15 +62,18 @@ namespace Nikse.SubtitleEdit.Forms
             comboBoxFramerate.Text = gs.DefaultFrameRate.ToString();
 
             comboBoxEncoding.Items.Clear();
+            int encodingSelectedIndex = 0;
+            comboBoxEncoding.Items.Add(Encoding.UTF8.EncodingName);
             foreach (EncodingInfo ei in Encoding.GetEncodings())
             {
-                var item = new ListViewItem(new[] { ei.CodePage.ToString(), ei.Name, ei.DisplayName });
-                comboBoxEncoding.Items.Add(ei.Name);
-                if (ei.Name == gs.DefaultEncoding)
-                    item.Selected = true;
-                else if (comboBoxEncoding.SelectedIndex == -1 && ei.Name == "utf-8")
-                    item.Selected = true;
+                if (ei.Name != Encoding.UTF8.BodyName && ei.CodePage >= Configuration.Settings.General.EncodingMininumCodePage)                        
+                {
+                    comboBoxEncoding.Items.Add(ei.CodePage + ": " + ei.DisplayName);
+                    if (ei.Name == gs.DefaultEncoding)
+                        encodingSelectedIndex = comboBoxEncoding.Items.Count - 1;
+                }
             }
+            comboBoxEncoding.SelectedIndex = encodingSelectedIndex;
 
             checkBoxAutoDetectAnsiEncoding.Checked = gs.AutoGuessAnsiEncoding;
             comboBoxSubtitleFontSize.Text = gs.SubtitleFontSize.ToString();
@@ -753,7 +756,14 @@ namespace Nikse.SubtitleEdit.Forms
             double outFrameRate;
             if (double.TryParse(comboBoxFramerate.Text.Replace(",", "."), NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out outFrameRate))
                 gs.DefaultFrameRate = outFrameRate;
-            gs.DefaultEncoding = comboBoxEncoding.Text;
+
+            gs.DefaultEncoding = Encoding.UTF8.BodyName;
+            foreach (EncodingInfo ei in Encoding.GetEncodings())
+            {
+                if (ei.CodePage + ": " + ei.DisplayName == comboBoxEncoding.Text)
+                    gs.DefaultEncoding = comboBoxEncoding.Text;
+            }
+
             gs.AutoGuessAnsiEncoding = checkBoxAutoDetectAnsiEncoding.Checked;
             gs.SubtitleFontSize = int.Parse(comboBoxSubtitleFontSize.Text);
             gs.SubtitleFontBold = checkBoxSubtitleFontBold.Checked;

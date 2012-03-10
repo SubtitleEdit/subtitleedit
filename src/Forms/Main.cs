@@ -152,7 +152,7 @@ namespace Nikse.SubtitleEdit.Forms
                     if (versionInfo.Length >= 3 && versionInfo[2] != "0")
                         _title += "." + versionInfo[2];
                 }
-                return _title + " beta 3";
+                return _title;
             }
         }
 
@@ -231,16 +231,21 @@ namespace Nikse.SubtitleEdit.Forms
                 SetFormatToSubRip();
 
                 comboBoxEncoding.Items.Clear();
+                int encodingSelectedIndex = 0;
+                comboBoxEncoding.Items.Add(Encoding.UTF8.EncodingName);
                 foreach (EncodingInfo ei in Encoding.GetEncodings())
                 {
-                    var item = new ListViewItem(new[] { ei.CodePage.ToString(), ei.Name, ei.DisplayName });
-                    comboBoxEncoding.Items.Add(ei.Name);
-                    if (ei.Name == Configuration.Settings.General.DefaultEncoding)
-                        item.Selected = true;
-                    else if (comboBoxEncoding.SelectedIndex == -1 && ei.Name == "utf-8")
-                        item.Selected = true;
+                    if (ei.Name != Encoding.UTF8.BodyName)
+                    {
+                        if (ei.CodePage >= Configuration.Settings.General.EncodingMininumCodePage)
+                        {
+                            comboBoxEncoding.Items.Add(ei.CodePage + ": " + ei.DisplayName);
+                            if (ei.Name == Configuration.Settings.General.DefaultEncoding)
+                                encodingSelectedIndex = comboBoxEncoding.Items.Count - 1;
+                        }
+                    }
                 }
-                comboBoxEncoding.Sorted = true;
+                comboBoxEncoding.SelectedIndex = encodingSelectedIndex;
 
                 toolStripComboBoxFrameRate.Items.Add((23.976).ToString());
                 toolStripComboBoxFrameRate.Items.Add((24.0).ToString());
@@ -367,40 +372,60 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void SetEncoding(Encoding encoding)
         {
-            foreach (EncodingInfo ei in Encoding.GetEncodings())
+            if (encoding.BodyName == Encoding.UTF8.BodyName)
             {
-                if (ei.Name == encoding.BodyName || ei.Name == encoding.HeaderName)
+                comboBoxEncoding.SelectedIndex= 0;
+                return;
+            }
+
+            int i = 0;
+            foreach (string s in comboBoxEncoding.Items)
+            {
+                if (s == encoding.CodePage + ": " + encoding.EncodingName)
                 {
-                    comboBoxEncoding.Text = ei.Name;
+                    comboBoxEncoding.SelectedIndex = i;
                     return;
                 }
+                i++;
             }
-            comboBoxEncoding.Text = "utf-8";
+            comboBoxEncoding.SelectedIndex = 0;
         }
 
         private void SetEncoding(string encodingName)
         {
-            foreach (EncodingInfo ei in Encoding.GetEncodings())
+            if (encodingName == Encoding.UTF8.BodyName || encodingName == Encoding.UTF8.EncodingName || encodingName == "utf-8")
             {
-                if (ei.Name == encodingName)
+                comboBoxEncoding.SelectedIndex = 0;
+                return;
+            }
+
+            int i = 0;
+            foreach (string s in comboBoxEncoding.Items)
+            {
+                if (s == encodingName)
                 {
-                    comboBoxEncoding.Text = encodingName;
+                    comboBoxEncoding.SelectedIndex = i;
                     return;
                 }
+                i++;
             }
-            comboBoxEncoding.Text = "utf-8";
+            comboBoxEncoding.SelectedIndex = 0;
         }
 
         private Encoding GetCurrentEncoding()
         {
-            try
-            {
-                return System.Text.Encoding.GetEncoding(comboBoxEncoding.Text);
-            }
-            catch
+            if (comboBoxEncoding.Text == Encoding.UTF8.BodyName || comboBoxEncoding.Text == Encoding.UTF8.EncodingName || comboBoxEncoding.Text == "utf-8")
             {
                 return Encoding.UTF8;
             }
+
+            foreach (EncodingInfo ei in Encoding.GetEncodings())
+            {
+                if (ei.CodePage + ": " + ei.DisplayName == comboBoxEncoding.Text)
+                    return ei.GetEncoding();
+            }
+
+            return Encoding.UTF8;
         }
 
         private void BatchConvert(string[] args) // E.g.: /convert *.txt SubRip
