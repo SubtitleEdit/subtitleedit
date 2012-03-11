@@ -1366,6 +1366,12 @@
     <Word from="Yuu've" to="You've" />
     <Word from="z'housand" to="thousand" />
     <Word from="zlPPING" to="ZIPPING" />
+    <Word from="Offioer's" to="Officer's" />
+    <Word from="expreusion" to="expression" />
+    <Word from="Orthat" to="Or that" />
+    <Word from="sfill" to="still" />
+    <Word from="objecl" to="object" />
+    <Word from="yourpoorleg" to="your poor leg" />
   </WholeWords>
   <PartialWordsAlways>
     <!-- Will be replaced always -->
@@ -1614,5 +1620,6 @@
     <Line from="N0." to="No." />
     <Line from="-N0." to="-No." />
     <Line from="Noll" to="No!!" />
+    <Line from="Where're you gﬂing?" to="Where're you going?" />
   </WholeLines>
 </OCRFixReplaceList>
