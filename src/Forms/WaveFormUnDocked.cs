@@ -48,7 +48,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void WaveFormUnDocked_KeyDown(object sender, KeyEventArgs e)
         {
             if (_redockKeys == e.KeyData)
-                _mainForm.redockVideoControlsToolStripMenuItem_Click(null, null);
+                _mainForm.RedockVideoControlsToolStripMenuItemClick(null, null);
             else
                 _mainForm.Main_KeyDown(sender, e);
         }
