@@ -1,6 +1,6 @@
 Subtitle Edit Changelog
 
-3.2.4 (xth March 2012)
+3.2.4 (11th March 2012)
  * NEW:
    * Arabic language file - thx Zakaria Farah Abu Wael
    * Export to VobSub format
