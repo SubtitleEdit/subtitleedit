@@ -9,18 +9,18 @@ namespace Nikse.SubtitleEdit.Controls
     public sealed class VideoPlayerContainer : Panel
     {
 
-        class RichTextBoxViewOnly : System.Windows.Forms.RichTextBox
+        class RichTextBoxViewOnly : RichTextBox
         {
             public RichTextBoxViewOnly()
             {
-                base.ReadOnly = true;
-                base.BorderStyle = BorderStyle.None;
-                base.TabStop = false;
-                base.SetStyle(ControlStyles.Selectable, false);
-                base.SetStyle(ControlStyles.UserMouse, true);
-                base.MouseEnter += delegate(object sender, EventArgs e) { this.Cursor = Cursors.Default; };
-                base.ScrollBars = RichTextBoxScrollBars.None;
-                base.Margin = new System.Windows.Forms.Padding(0);
+                ReadOnly = true;
+                BorderStyle = BorderStyle.None;
+                TabStop = false;
+                SetStyle(ControlStyles.Selectable, false);
+                SetStyle(ControlStyles.UserMouse, true);
+                MouseEnter += delegate { Cursor = Cursors.Default; };
+                ScrollBars = RichTextBoxScrollBars.None;
+                Margin = new Padding(0);
             }
 
             protected override void WndProc(ref Message m)
@@ -41,7 +41,12 @@ namespace Nikse.SubtitleEdit.Controls
         public VideoPlayer VideoPlayer
         {
             get { return _videoPlayer; }
-            set { _videoPlayer = value; }
+            set
+            {
+                _videoPlayer = value;
+                if (_videoPlayer != null)
+                    SetPlayerName(_videoPlayer.PlayerName);
+            }
         }
 
         public int VideoWidth { get; set; }
@@ -79,6 +84,7 @@ namespace Nikse.SubtitleEdit.Controls
         private PictureBox _pictureBoxVolumeBarBackground = new PictureBox();
         private PictureBox _pictureBoxVolumeBar = new PictureBox();
         private Label _labelTimeCode = new Label();
+        private Label _labelVideoPlayerName = new Label();
 
         public RightToLeft TextRightToLeft
         {
@@ -116,7 +122,7 @@ namespace Nikse.SubtitleEdit.Controls
         public VideoPlayerContainer()
         {
             FontSizeFactor = 1.0F;
-            BorderStyle = System.Windows.Forms.BorderStyle.None;
+            BorderStyle = BorderStyle.None;
             _resources = new System.ComponentModel.ComponentResourceManager(typeof(VideoPlayerContainer));
             BackColor = _backgroundColor;
             Controls.Add(MakePlayerPanel());
@@ -146,7 +152,7 @@ namespace Nikse.SubtitleEdit.Controls
 
             _pictureBoxProgressBar.Width = 0;
 
-            PanelPlayer.MouseDown += PanelPlayer_MouseDown;
+            PanelPlayer.MouseDown += PanelPlayerMouseDown;
         }
 
         public void EnableMouseWheelStep()
@@ -154,14 +160,25 @@ namespace Nikse.SubtitleEdit.Controls
             AddMouseWheelEvent(this);
         }
 
+        public void SetPlayerName(string s)
+        {
+            _labelVideoPlayerName.Text = s;
+            _labelVideoPlayerName.Left = Width - _labelVideoPlayerName.Width - 3;
+        }
+
+        public void ResetTimeLabel()
+        {
+            _labelTimeCode.Text = string.Empty;
+        }
+
         private void AddMouseWheelEvent(Control control)
         {
-            control.MouseWheel += Control_MouseWheel;
+            control.MouseWheel += ControlMouseWheel;
             foreach (Control ctrl in control.Controls)
                 AddMouseWheelEvent(ctrl);
         }
 
-        void Control_MouseWheel(object sender, MouseEventArgs e)
+        private void ControlMouseWheel(object sender, MouseEventArgs e)
         {
             int delta = e.Delta;
             double newPosition = CurrentPosition - (delta / 256.0);
@@ -174,39 +191,38 @@ namespace Nikse.SubtitleEdit.Controls
 
         private Control MakeSubtitlesPanel()
         {
-            _panelSubtitle = new Panel { BackColor = _backgroundColor, Left = 0, Top = 0 };
-            _panelSubtitle.Height = SubtitlesHeight + 1;
+            _panelSubtitle = new Panel {BackColor = _backgroundColor, Left = 0, Top = 0, Height = SubtitlesHeight + 1};
             _subtitleTextBox = new RichTextBoxViewOnly();
             _panelSubtitle.Controls.Add(_subtitleTextBox);
             _subtitleTextBox.BackColor = _backgroundColor;
             _subtitleTextBox.ForeColor = Color.White;
             _subtitleTextBox.Dock = DockStyle.Fill;
             SetSubtitleFont();
-            _subtitleTextBox.MouseClick += SubtitleTextBox_MouseClick;
+            _subtitleTextBox.MouseClick += SubtitleTextBoxMouseClick;
             return _panelSubtitle;
         }
 
         public void SetSubtitleFont()
         {
-            var gs = Nikse.SubtitleEdit.Logic.Configuration.Settings.General;
+            var gs = Logic.Configuration.Settings.General;
             if (string.IsNullOrEmpty(gs.SubtitleFontName))
                 gs.SubtitleFontName = "Tahoma";
             _subtitleTextBox.Font = new Font(gs.SubtitleFontName, gs.VideoPlayerPreviewFontSize * FontSizeFactor, FontStyle.Bold);
         }
 
-        void SubtitleTextBox_MouseClick(object sender, MouseEventArgs e)
+        private void SubtitleTextBoxMouseClick(object sender, MouseEventArgs e)
         {
             TogglePlayPause();
         }
 
         private static string RemoveSubStationAlphaFormatting(string s)
         {
-            int indexOfBegin = s.IndexOf("{");
-            while (indexOfBegin >= 0 && s.IndexOf("}") > indexOfBegin)
+            int indexOfBegin = s.IndexOf("{", StringComparison.Ordinal);
+            while (indexOfBegin >= 0 && s.IndexOf("}", StringComparison.Ordinal) > indexOfBegin)
             {
-                int indexOfEnd = s.IndexOf("}");
+                int indexOfEnd = s.IndexOf("}", StringComparison.Ordinal);
                 s = s.Remove(indexOfBegin, (indexOfEnd - indexOfBegin) + 1);
-                indexOfBegin = s.IndexOf("{");
+                indexOfBegin = s.IndexOf("{", StringComparison.Ordinal);
             }
             return s;
         }
@@ -234,13 +250,13 @@ namespace Nikse.SubtitleEdit.Controls
                 text = Logic.Utilities.RemoveHtmlFontTag(text);
 
                 // display italic
-                StringBuilder sb = new StringBuilder();
+                var sb = new StringBuilder();
                 int i = 0;
                 bool isItalic = false;
                 int italicBegin = 0;
                 _subtitleTextBox.Text = string.Empty;
                 int letterCount = 0;
-                System.Collections.Generic.Dictionary<int, int> italicLookups = new System.Collections.Generic.Dictionary<int, int>();
+                var italicLookups = new System.Collections.Generic.Dictionary<int, int>();
                 while  (i < text.Length)
                 {
                     if (text.Substring(i).ToLower().StartsWith("<i>"))
@@ -276,10 +292,8 @@ namespace Nikse.SubtitleEdit.Controls
                 _subtitleTextBox.DeselectAll();
                 foreach (var entry in italicLookups)
                 {
-                    System.Drawing.Font currentFont = _subtitleTextBox.SelectionFont;
-                    System.Drawing.FontStyle newFontStyle = FontStyle.Italic;
-//                    if (Nikse.SubtitleEdit.Logic.Configuration.Settings.General.SubtitleFontBold)
-                        newFontStyle = FontStyle.Italic | FontStyle.Bold;
+                    Font currentFont = _subtitleTextBox.SelectionFont;
+                    FontStyle newFontStyle = FontStyle.Italic | FontStyle.Bold;
                     _subtitleTextBox.SelectionStart = entry.Key;
                     _subtitleTextBox.SelectionLength = entry.Value;
                     _subtitleTextBox.SelectionFont = new Font(currentFont.FontFamily, currentFont.Size, newFontStyle);
@@ -288,7 +302,7 @@ namespace Nikse.SubtitleEdit.Controls
             }
         }
 
-        void PanelPlayer_MouseDown(object sender, MouseEventArgs e)
+        private void PanelPlayerMouseDown(object sender, MouseEventArgs e)
         {
             TogglePlayPause();
         }
@@ -501,66 +515,79 @@ namespace Nikse.SubtitleEdit.Controls
             _panelcontrols.Controls.Add(_pictureBoxVolumeBar);
             _pictureBoxVolumeBar.BringToFront();
 
-            _pictureBoxReverse = new PictureBox();
-            _pictureBoxReverse.Image = ((Image)(_resources.GetObject("pictureBoxReverse.Image")));
-            _pictureBoxReverse.Location = new Point(28, 3);
-            _pictureBoxReverse.Name = "_pictureBoxReverse";
-            _pictureBoxReverse.Size = new Size(16, 8);
-            _pictureBoxReverse.SizeMode = PictureBoxSizeMode.AutoSize;
-            _pictureBoxReverse.TabStop = false;
+            _pictureBoxReverse = new PictureBox
+                                     {
+                                         Image = ((Image) (_resources.GetObject("pictureBoxReverse.Image"))),
+                                         Location = new Point(28, 3),
+                                         Name = "_pictureBoxReverse",
+                                         Size = new Size(16, 8),
+                                         SizeMode = PictureBoxSizeMode.AutoSize,
+                                         TabStop = false
+                                     };
             _panelcontrols.Controls.Add(_pictureBoxReverse);
             _pictureBoxReverse.MouseEnter += PictureBoxReverseMouseEnter;
 
-            _pictureBoxReverseOver = new PictureBox();
-            _pictureBoxReverseOver.Image = ((Image)(_resources.GetObject("pictureBoxReverseMouseOver.Image")));
-            _pictureBoxReverseOver.Location = _pictureBoxReverse.Location;
-            _pictureBoxReverseOver.Name = "_pictureBoxReverseOver";
-            _pictureBoxReverseOver.Size = _pictureBoxReverse.Size;
-            _pictureBoxReverseOver.SizeMode = PictureBoxSizeMode.AutoSize;
-            _pictureBoxReverseOver.TabStop = false;
+            _pictureBoxReverseOver = new PictureBox
+                                         {
+                                             Image =
+                                                 ((Image) (_resources.GetObject("pictureBoxReverseMouseOver.Image"))),
+                                             Location = _pictureBoxReverse.Location,
+                                             Name = "_pictureBoxReverseOver",
+                                             Size = _pictureBoxReverse.Size,
+                                             SizeMode = PictureBoxSizeMode.AutoSize,
+                                             TabStop = false
+                                         };
             _panelcontrols.Controls.Add(_pictureBoxReverseOver);
             _pictureBoxReverseOver.MouseLeave += PictureBoxReverseOverMouseLeave;
             _pictureBoxReverseOver.MouseDown += PictureBoxReverseOverMouseDown;
             _pictureBoxReverseOver.MouseUp += PictureBoxReverseOverMouseUp;
 
-            _pictureBoxReverseDown = new PictureBox();
-            _pictureBoxReverseDown.Image = ((Image)(_resources.GetObject("pictureBoxReverseMouseDown.Image")));
-            _pictureBoxReverseDown.Location = _pictureBoxReverse.Location;
-            _pictureBoxReverseDown.Name = "_pictureBoxReverseOver";
-            _pictureBoxReverseDown.Size = _pictureBoxReverse.Size;
-            _pictureBoxReverseDown.SizeMode = PictureBoxSizeMode.AutoSize;
-            _pictureBoxReverseDown.TabStop = false;
+            _pictureBoxReverseDown = new PictureBox
+                                         {
+                                             Image = ((Image) (_resources.GetObject("pictureBoxReverseMouseDown.Image"))),
+                                             Location = _pictureBoxReverse.Location,
+                                             Name = "_pictureBoxReverseOver",
+                                             Size = _pictureBoxReverse.Size,
+                                             SizeMode = PictureBoxSizeMode.AutoSize,
+                                             TabStop = false
+                                         };
             _panelcontrols.Controls.Add(_pictureBoxReverseDown);
 
-            _pictureBoxFastForward = new PictureBox();
-            _pictureBoxFastForward.Image = ((Image)(_resources.GetObject("pictureBoxFastForward.Image")));
-            _pictureBoxFastForward.Location = new Point(571, 1);
-            _pictureBoxFastForward.Name = "_pictureBoxFastForward";
-            _pictureBoxFastForward.Size = new Size(17, 13);
-            _pictureBoxFastForward.SizeMode = PictureBoxSizeMode.AutoSize;
-            _pictureBoxFastForward.TabStop = false;
+            _pictureBoxFastForward = new PictureBox
+                                         {
+                                             Image = ((Image) (_resources.GetObject("pictureBoxFastForward.Image"))),
+                                             Location = new Point(571, 1),
+                                             Name = "_pictureBoxFastForward",
+                                             Size = new Size(17, 13),
+                                             SizeMode = PictureBoxSizeMode.AutoSize,
+                                             TabStop = false
+                                         };
             _panelcontrols.Controls.Add(_pictureBoxFastForward);
             _pictureBoxFastForward.MouseEnter += PictureBoxFastForwardMouseEnter;
 
-            _pictureBoxFastForwardOver = new PictureBox();
-            _pictureBoxFastForwardOver.Image = ((Image)(_resources.GetObject("pictureBoxFastForwardMouseOver.Image")));
-            _pictureBoxFastForwardOver.Location = _pictureBoxFastForward.Location;
-            _pictureBoxFastForwardOver.Name = "_pictureBoxFastForwardOver";
-            _pictureBoxFastForwardOver.Size = _pictureBoxFastForward.Size;
-            _pictureBoxFastForwardOver.SizeMode = PictureBoxSizeMode.AutoSize;
-            _pictureBoxFastForwardOver.TabStop = false;
+            _pictureBoxFastForwardOver = new PictureBox
+                                             {
+                                                 Image = ((Image)(_resources.GetObject("pictureBoxFastForwardMouseOver.Image"))),
+                                                 Location = _pictureBoxFastForward.Location,
+                                                 Name = "_pictureBoxFastForwardOver",
+                                                 Size = _pictureBoxFastForward.Size,
+                                                 SizeMode = PictureBoxSizeMode.AutoSize,
+                                                 TabStop = false
+                                             };
             _panelcontrols.Controls.Add(_pictureBoxFastForwardOver);
             _pictureBoxFastForwardOver.MouseLeave += PictureBoxFastForwardOverMouseLeave;
             _pictureBoxFastForwardOver.MouseDown += PictureBoxFastForwardOverMouseDown;
             _pictureBoxFastForwardOver.MouseUp += PictureBoxFastForwardOverMouseUp;
 
-            _pictureBoxFastForwardDown = new PictureBox();
-            _pictureBoxFastForwardDown.Image = ((Image)(_resources.GetObject("pictureBoxFastForwardMouseDown.Image")));
-            _pictureBoxFastForwardDown.Location = _pictureBoxFastForward.Location;
-            _pictureBoxFastForwardDown.Name = "_pictureBoxFastForwardDown";
-            _pictureBoxFastForwardDown.Size = _pictureBoxFastForward.Size;
-            _pictureBoxFastForwardDown.SizeMode = PictureBoxSizeMode.AutoSize;
-            _pictureBoxFastForwardDown.TabStop = false;
+            _pictureBoxFastForwardDown = new PictureBox
+                                             {
+                                                 Image = ((Image)(_resources.GetObject("pictureBoxFastForwardMouseDown.Image"))),
+                                                 Location = _pictureBoxFastForward.Location,
+                                                 Name = "_pictureBoxFastForwardDown",
+                                                 Size = _pictureBoxFastForward.Size,
+                                                 SizeMode = PictureBoxSizeMode.AutoSize,
+                                                 TabStop = false
+                                             };
             _panelcontrols.Controls.Add(_pictureBoxFastForwardDown);
 
             _labelTimeCode.Location = new Point(280, 28);
@@ -568,6 +595,14 @@ namespace Nikse.SubtitleEdit.Controls
             _labelTimeCode.Font = new Font(_labelTimeCode.Font.FontFamily, 7);
             _labelTimeCode.AutoSize = true;
             _panelcontrols.Controls.Add(_labelTimeCode);
+
+            _labelVideoPlayerName.Location = new Point(280, 17);
+            _labelVideoPlayerName.ForeColor = Color.Gray;
+            _labelVideoPlayerName.BackColor = Color.FromArgb(67, 75, 93);
+            _labelVideoPlayerName.AutoSize = true;
+            _labelVideoPlayerName.Font = new Font(_labelTimeCode.Font.FontFamily, 5);
+            
+            _panelcontrols.Controls.Add(_labelVideoPlayerName);
 
             _pictureBoxBackground.SendToBack();
             _pictureBoxFastForward.BringToFront();
@@ -600,6 +635,7 @@ namespace Nikse.SubtitleEdit.Controls
             _pictureBoxFastForwardOver.Left = _pictureBoxFastForward.Left;
 
             _labelTimeCode.Left = Width - 170;
+            _labelVideoPlayerName.Left = Width - _labelVideoPlayerName.Width - 3;
         }
 
         #region PlayPauseButtons
@@ -942,7 +978,7 @@ namespace Nikse.SubtitleEdit.Controls
                 double percent = (VideoPlayer.CurrentPosition * 100.0) / VideoPlayer.Duration;
                 _pictureBoxProgressBar.Width = (int)(max * percent / 100.0);
 
-                if (VideoPlayer.Duration == 0)
+                if (Convert.ToInt64(Duration) == 0)
                     return;
 
                 var pos = CurrentPosition;

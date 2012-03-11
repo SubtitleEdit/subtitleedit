@@ -40,7 +40,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (RedockOnFullscreenEnd)
             {
-                _mainForm.redockVideoControlsToolStripMenuItem_Click(null, null);
+                _mainForm.RedockVideoControlsToolStripMenuItemClick(null, null);
             }
             else if (e.CloseReason == CloseReason.UserClosing && panelContainer.Controls.Count > 0)
             {
@@ -116,7 +116,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             else if (_redockKeys == e.KeyData)
             {
-                _mainForm.redockVideoControlsToolStripMenuItem_Click(null, null);
+                _mainForm.RedockVideoControlsToolStripMenuItemClick(null, null);
                 e.SuppressKeyPress = true;
             }
             else
