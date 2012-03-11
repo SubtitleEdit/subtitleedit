@@ -954,7 +954,7 @@ namespace Nikse.SubtitleEdit.Forms
                             else if (before.Length > 0)
                                 p.Text = p.Text.Remove(idx + 1, 1);
                         }
-                        if (idx + 1 < p.Text.Length)
+                        if (idx + 1 < p.Text.Length && idx != -1)
                             idx = p.Text.IndexOf("- ", idx + 1);
                         else
                             idx = -1;
