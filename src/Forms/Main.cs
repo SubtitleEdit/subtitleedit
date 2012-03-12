@@ -1576,6 +1576,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void OpenNewFile()
         {
+            if (!ContinueNewOrExit())
+                return;
+
             openFileDialog1.Title = _languageGeneral.OpenSubtitle;
             openFileDialog1.FileName = string.Empty;
             openFileDialog1.Filter = Utilities.GetOpenDialogFilter();
