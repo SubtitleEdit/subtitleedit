@@ -5322,13 +5322,25 @@ namespace Nikse.SubtitleEdit.Forms
                 var deleteIndices = new List<int>();
                 bool first = true;
                 int firstIndex = 0;
+                double durationMilliseconds = 0;
+                int next = 0;
                 foreach (int index in SubtitleListview1.SelectedIndices)
                 {
                     if (first)
+                    {
                         firstIndex = index;
+                        next = index + 1;
+                    }
                     else
+                    {
                         deleteIndices.Add(index);
+                        if (next != index)
+                            return;
+                        next++;
+                    }
                     first = false;
+                    sb.AppendLine(_subtitle.Paragraphs[index].Text);
+                    durationMilliseconds += _subtitle.Paragraphs[index].Duration.TotalMilliseconds;
                 }
 
                 if (sb.Length > 200)
@@ -5345,8 +5357,9 @@ namespace Nikse.SubtitleEdit.Forms
                 currentParagraph.Text = text;
 
                 //display time
-                currentParagraph.EndTime.TotalMilliseconds = currentParagraph.StartTime.TotalMilliseconds + Utilities.GetDisplayMillisecondsFromText(text);
-                Paragraph nextParagraph = _subtitle.GetParagraphOrDefault(_subtitle.GetIndex(currentParagraph) + 1);
+                currentParagraph.EndTime.TotalMilliseconds = currentParagraph.StartTime.TotalMilliseconds + durationMilliseconds;
+
+                Paragraph nextParagraph = _subtitle.GetParagraphOrDefault(next);
                 if (nextParagraph != null && currentParagraph.EndTime.TotalMilliseconds > nextParagraph.StartTime.TotalMilliseconds && currentParagraph.StartTime.TotalMilliseconds < nextParagraph.StartTime.TotalMilliseconds)
                 {
                     currentParagraph.EndTime.TotalMilliseconds = nextParagraph.StartTime.TotalMilliseconds - 1;
@@ -5405,7 +5418,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private static string ChangeAllLinesItalictoSingleItalic(string text)
         {
-            bool allLinesStartAndEndsWithItalic = true;
+            bool allLinesStartAndEndsWithItalic = text.Contains("<i>");
             foreach (string line in text.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries))
             {
                 if (!line.Trim().StartsWith("<i>") || !line.Trim().EndsWith("</i>"))
