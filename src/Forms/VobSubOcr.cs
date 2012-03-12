@@ -2925,7 +2925,8 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         p.Text = Utilities.RemoveHtmlTags(p.Text);
                         subtitleListView1.SetText(item.Index, p.Text);
-                        textBoxCurrentText.Text = p.Text;
+                        if (item.Index == _selectedIndex)
+                            textBoxCurrentText.Text = p.Text;
                     }
                 }
             }
@@ -2948,7 +2949,8 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                         p.Text = string.Format("<{0}>{1}</{0}>", tag, p.Text);
                         subtitleListView1.SetText(item.Index, p.Text);
-                        textBoxCurrentText.Text = p.Text;
+                        if (item.Index == _selectedIndex)
+                            textBoxCurrentText.Text = p.Text;
                     }
                 }
             }
