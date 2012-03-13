@@ -30,20 +30,19 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public override bool IsMine(List<string> lines, string fileName)
         {
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             lines.ForEach(line => sb.AppendLine(line));
             string xmlAsString = sb.ToString().Trim();
             if (xmlAsString.Contains("http://www.w3.org/") &&
                 xmlAsString.Contains("/ttaf1"))
             {
-                XmlDocument xml = new XmlDocument();
+                var xml = new XmlDocument();
                 try
                 {
                     xml.LoadXml(xmlAsString);
 
-                    XmlNamespaceManager nsmgr = new XmlNamespaceManager(xml.NameTable);
+                    var nsmgr = new XmlNamespaceManager(xml.NameTable);
                     nsmgr.AddNamespace("ttaf1", xml.DocumentElement.NamespaceURI);
-
                     XmlNode div = xml.DocumentElement.SelectSingleNode("//ttaf1:body", nsmgr).FirstChild;
                     int numberOfParagraphs = div.ChildNodes.Count;
                     return numberOfParagraphs > 0;
@@ -54,10 +53,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     return false;
                 }
             }
-            else
-            {
-                return false;
-            }
+            return false;
         }
 
         private static string ConvertToTimeString(TimeCode time)
@@ -83,9 +79,9 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 "   </body>" + Environment.NewLine +
                 "</tt>";
 
-            XmlDocument xml = new XmlDocument();
+            var xml = new XmlDocument();
             xml.LoadXml(xmlStructure);
-            XmlNamespaceManager nsmgr = new XmlNamespaceManager(xml.NameTable);
+            var nsmgr = new XmlNamespaceManager(xml.NameTable);
             nsmgr.AddNamespace("ttaf1", "http://www.w3.org/2006/10/ttaf1");
             nsmgr.AddNamespace("ttp", "http://www.w3.org/2006/10/ttaf1#parameter");
             nsmgr.AddNamespace("tts", "http://www.w3.org/2006/10/ttaf1#style");
@@ -130,9 +126,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 no++;
             }
 
-            MemoryStream ms = new MemoryStream();
-            XmlTextWriter writer = new XmlTextWriter(ms, Encoding.UTF8);
-            writer.Formatting = Formatting.Indented;
+            var ms = new MemoryStream();
+            var writer = new XmlTextWriter(ms, Encoding.UTF8) {Formatting = Formatting.Indented};
             xml.Save(writer);
             return Encoding.UTF8.GetString(ms.ToArray()).Trim();
         }
@@ -141,25 +136,57 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         {
             _errorCount = 0;
 
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             lines.ForEach(line => sb.AppendLine(line));
-            XmlDocument xml = new XmlDocument();
+            var xml = new XmlDocument();
             xml.LoadXml(sb.ToString());
 
-            XmlNamespaceManager nsmgr = new XmlNamespaceManager(xml.NameTable);
+            var nsmgr = new XmlNamespaceManager(xml.NameTable);
             nsmgr.AddNamespace("ttaf1", xml.DocumentElement.NamespaceURI);
             XmlNode div = xml.DocumentElement.SelectSingleNode("//ttaf1:body", nsmgr).FirstChild;
             foreach (XmlNode node in div.ChildNodes)
             {
                 try
                 {
-                    StringBuilder pText = new StringBuilder();
+                    var pText = new StringBuilder();
                     foreach (XmlNode innerNode in node.ChildNodes)
                     {
-                        switch (innerNode.Name.ToString())
+                        switch (innerNode.Name)
                         {
                             case "br":
                                 pText.AppendLine();
+                                break;
+                            case "span":
+                                bool italic = false;
+                                if (innerNode.Attributes != null)
+                                {
+                                    var fs = innerNode.Attributes.GetNamedItem("tts:fontStyle");
+                                    if (fs != null && fs.Value == "italic")
+                                    {
+                                        italic = true;
+                                        pText.Append("<i>");
+                                    }
+                                }                                                                   
+                                if (innerNode.HasChildNodes)
+                                {
+                                    foreach (XmlNode innerInnerNode in innerNode.ChildNodes)
+                                    {
+                                        if (innerInnerNode.Name == "br")
+                                        {
+                                            pText.AppendLine();
+                                        }
+                                        else
+                                        {
+                                            pText.Append(innerInnerNode.InnerText);
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    pText.Append(innerNode.InnerText);
+                                }
+                                if (italic)
+                                    pText.Append("</i>");
                                 break;
                             default:
                                 pText.Append(innerNode.InnerText);
@@ -167,22 +194,21 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         }
                     }
                     string start = node.Attributes["begin"].InnerText;
-                    string end;
+                    string text = pText.ToString();
+                    text = text.Replace(Environment.NewLine + "</i>", "</i>" + Environment.NewLine);
+                    text = text.Replace("<i></i>", string.Empty);
                     if (node.Attributes["end"] != null)
                     {
-                        end = node.Attributes["end"].InnerText;
-                        subtitle.Paragraphs.Add(new Paragraph(GetTimeCode(start), GetTimeCode(end), pText.ToString()));
+                        string end = node.Attributes["end"].InnerText;
+                        subtitle.Paragraphs.Add(new Paragraph(GetTimeCode(start), GetTimeCode(end), text));
                     }
                     else if (node.Attributes["dur"] != null)
                     {
                         TimeCode duration = GetTimeCode(node.Attributes["dur"].InnerText);
                         TimeCode startTime = GetTimeCode(start);
                         TimeCode endTime = new TimeCode(TimeSpan.FromMilliseconds(startTime.TotalMilliseconds + duration.TotalMilliseconds));
-                        subtitle.Paragraphs.Add(new Paragraph(startTime, endTime, pText.ToString()));
+                        subtitle.Paragraphs.Add(new Paragraph(startTime, endTime, text));
                     }
-
-
-
                 }
                 catch (Exception ex)
                 {
@@ -204,7 +230,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             }
             else
             {
-                string[] parts = s.Split(new char[] { ':', '.', ',' });
+                string[] parts = s.Split(new[] { ':', '.', ',' });
                 ts = new TimeSpan(0, int.Parse(parts[0]), int.Parse(parts[1]), int.Parse(parts[2]), int.Parse(parts[3]));
             }
             return new TimeCode(ts);
