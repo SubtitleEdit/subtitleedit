@@ -101,22 +101,22 @@ br.types_default=Instalação padrão
 
 
 ; Czech
-cs.comp_translations=Translations
-cs.msg_AppIsRunning=Setup has detected that Subtitle Edit is currently running.%n%nPlease close all instances of it now, then click OK to continue, or Cancel to exit.
-cs.msg_AppIsRunningUninstall=Uninstall has detected that Subtitle Edit is currently running.%n%nPlease close all instances of it now, then click OK to continue, or Cancel to exit.
-cs.msg_AskToDownNET=Subtitle Edit requires the .NET Framework 2.0. Please download and install the .NET Framework and run setup again.%n%nDo you want to download the .NET Framework 2.0 now?
-cs.msg_DeleteSettings=Do you also want to delete Subtitle Edit's settings and any custom changes you made in the dictionaries?%n%nIf you plan on reinstalling Subtitle Edit you do not have to delete them.
-cs.msg_OptimizingPerformance=Optimizing performance...
-cs.msg_SetupIsRunningWarning=Subtitle Edit Setup is already running!
-cs.run_VisitWebsite=Visit Subtitle Edit's Website
-cs.sm_com_Changelog=Subtitle Edit's Changelog
-cs.tsk_AllUsers=For all users
-cs.tsk_CurrentUser=For the current user only
-cs.tsk_Other=Other:
-cs.tsk_ResetDictionaries=Reset Dictionaries and delete any custom names
-cs.tsk_ResetSettings=Reset Subtitle Edit's settings
-cs.types_custom=Custom installation
-cs.types_default=Default installation
+cs.comp_translations=Překlady
+cs.msg_AppIsRunning=Instalační program zjistil, že je Subtitle Edit aktuálně spuštěn.%n%nZavřete všechny jeho instance a pak klepnutím na tlačítko OK pokračujte nebo klepnutím na tlačítko Storno ukončete instalaci.
+cs.msg_AppIsRunningUninstall=Odinstalační program zjistil, že je Subtitle Edit aktuálně spuštěn.%n%nZavřete všechny jeho instance a pak klepnutím na tlačítko OK pokračujte nebo klepnutím na tlačítko Storno ukončete instalaci.
+cs.msg_AskToDownNET=Subtitle Edit vyžaduje .NET Framework 2.0. Stáhněte a nainstalujte .NET Framework a spusťte znovu instalaci.%n%nChcete nyní stáhnout .NET Framework 2.0?
+cs.msg_DeleteSettings=Chcete také odstranit nastavení Subtitle Edit a všechny vlastní změny, které jste provedli ve slovnících?%n%nPokud zamýšlíte přeinstalaci Subtitle Edit, nemusíte je odstraňovat.
+cs.msg_OptimizingPerformance=Optimalizace výkonu...
+cs.msg_SetupIsRunningWarning=Instalace Subtitle Edit je již spuštěna!
+cs.run_VisitWebsite=Navštivte webovou stránku Subtitle Edit
+cs.sm_com_Changelog=Seznam změn Subtitle Edit
+cs.tsk_AllUsers=Pro všechny uživatele
+cs.tsk_CurrentUser=Pouze pro aktuálního uživatele
+cs.tsk_Other=Ostatní:
+cs.tsk_ResetDictionaries=Obnovit slovníky a odstranit všechna vlastní jména
+cs.tsk_ResetSettings=Obnovit nastavení Subtitle Edit
+cs.types_custom=Vlastní instalace
+cs.types_default=Výchozí instalace
 
 
 ; Deutsch
