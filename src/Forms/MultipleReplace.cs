@@ -147,7 +147,7 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                         else if (searchType == Configuration.Settings.Language.MultipleReplace.RegularExpression)
                         {
-                            Regex regex = new Regex(findWhat);
+                            var regex = new Regex(findWhat, RegexOptions.Multiline);
                             var match = regex.Match(newText);
                             if (match.Success)
                             {
@@ -264,7 +264,8 @@ namespace Nikse.SubtitleEdit.Forms
                     SearchType = LocalSearchTypeToEnglish(item.SubItems[3].Text)
                 });
             }
-            Configuration.Settings.Save();
+            if (saveToDisk)
+                Configuration.Settings.Save();
         }
 
         private void ResetUncheckLines()
@@ -336,7 +337,7 @@ namespace Nikse.SubtitleEdit.Forms
                     var item = listViewReplaceList.SelectedItems[0];
                     item.SubItems[1].Text = textBoxFind.Text;
                     item.SubItems[2].Text = textBoxReplace.Text;
-                    item.SubItems[3].Text = searchType;
+                    item.SubItems[3].Text = EnglishSearchTypeToLocal(searchType);
 
                     GeneratePreview();
                     textBoxFind.Select();

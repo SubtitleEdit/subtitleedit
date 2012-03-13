@@ -4811,19 +4811,19 @@ namespace Nikse.SubtitleEdit.Forms
             string s = Utilities.RemoveHtmlTags(text).Replace(Environment.NewLine, string.Empty); // we don't count new line in total length... correct?
             if (s.Length < Configuration.Settings.General.SubtitleLineMaximumLength * 1.9)
             {
-                lineTotal.ForeColor = System.Drawing.Color.Black;
+                lineTotal.ForeColor = Color.Black;
                 if (!textBoxHasFocus)
                     lineTotal.Text = string.Format(_languageGeneral.TotalLengthX, s.Length);
             }
             else if (s.Length < Configuration.Settings.General.SubtitleLineMaximumLength * 2.1)
             {
-                lineTotal.ForeColor = System.Drawing.Color.Orange;
+                lineTotal.ForeColor = Color.Orange;
                 if (!textBoxHasFocus)
                     lineTotal.Text = string.Format(_languageGeneral.TotalLengthX, s.Length);
             }
             else
             {
-                lineTotal.ForeColor = System.Drawing.Color.Red;
+                lineTotal.ForeColor = Color.Red;
                 if (!textBoxHasFocus)
                     lineTotal.Text = string.Format(_languageGeneral.TotalLengthXSplitLine, s.Length);
                 if (buttonUnBreak.Visible)
@@ -4834,7 +4834,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
             UpdateListViewTextCharactersPerSeconds(charactersPerSecond, paragraph);
-            labelCharactersPerSecond.Left = textBox.Left + (textBox.Width - labelCharactersPerSecond.Width);
+            charactersPerSecond.Left = textBox.Left + (textBox.Width - labelCharactersPerSecond.Width); 
             lineTotal.Left = textBox.Left + (textBox.Width - lineTotal.Width);
             FixVerticalScrollBars(textBox);
         }
@@ -9141,23 +9141,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             panelVideoPlayer.Invalidate();
 
-            if (Configuration.Settings.General.AllowEditOfOriginalSubtitle && _subtitleAlternate != null && _subtitleAlternate.Paragraphs.Count > 0)
-            {
-                textBoxListViewText.Width = (groupBoxEdit.Width - (textBoxListViewText.Left + 10)) / 2;
-                textBoxListViewTextAlternate.Left = textBoxListViewText.Left + textBoxListViewText.Width + 3;
-                labelAlternateText.Left = textBoxListViewTextAlternate.Left;
-
-                textBoxListViewTextAlternate.Width = textBoxListViewText.Width;
-
-                labelAlternateCharactersPerSecond.Left = textBoxListViewTextAlternate.Left + (textBoxListViewTextAlternate.Width - labelAlternateCharactersPerSecond.Width);
-                labelTextAlternateLineLengths.Left = textBoxListViewTextAlternate.Left;
-                labelAlternateSingleLine.Left = labelTextAlternateLineLengths.Left + labelTextAlternateLineLengths.Width;
-                labelTextAlternateLineTotal.Left = textBoxListViewTextAlternate.Left + (textBoxListViewTextAlternate.Width - labelTextAlternateLineTotal.Width);
-            }
-
-            labelCharactersPerSecond.Left = textBoxListViewText.Left + (textBoxListViewText.Width - labelCharactersPerSecond.Width);
-            labelTextLineTotal.Left = textBoxListViewText.Left + (textBoxListViewText.Width - labelTextLineTotal.Width);
-            SubtitleListview1.AutoSizeAllColumns(this);
+            MainResize();
 
             // Due to strange bug in listview when maximizing
             SaveSubtitleListviewIndexes();
@@ -9165,6 +9149,32 @@ namespace Nikse.SubtitleEdit.Forms
             RestoreSubtitleListviewIndexes();
 
             panelVideoPlayer.Refresh();
+        }
+
+        private void MainResize()
+        {
+            if (Configuration.Settings.General.AllowEditOfOriginalSubtitle && _subtitleAlternate != null &&
+                _subtitleAlternate.Paragraphs.Count > 0)
+            {
+                textBoxListViewText.Width = (groupBoxEdit.Width - (textBoxListViewText.Left + 10))/2;
+                textBoxListViewTextAlternate.Left = textBoxListViewText.Left + textBoxListViewText.Width + 3;
+                labelAlternateText.Left = textBoxListViewTextAlternate.Left;
+
+                textBoxListViewTextAlternate.Width = textBoxListViewText.Width;
+
+                labelAlternateCharactersPerSecond.Left = textBoxListViewTextAlternate.Left +
+                                                         (textBoxListViewTextAlternate.Width -
+                                                          labelAlternateCharactersPerSecond.Width);
+                labelTextAlternateLineLengths.Left = textBoxListViewTextAlternate.Left;
+                labelAlternateSingleLine.Left = labelTextAlternateLineLengths.Left + labelTextAlternateLineLengths.Width;
+                labelTextAlternateLineTotal.Left = textBoxListViewTextAlternate.Left +
+                                                   (textBoxListViewTextAlternate.Width - labelTextAlternateLineTotal.Width);
+            }
+
+            labelCharactersPerSecond.Left = textBoxListViewText.Left +
+                                            (textBoxListViewText.Width - labelCharactersPerSecond.Width);
+            labelTextLineTotal.Left = textBoxListViewText.Left + (textBoxListViewText.Width - labelTextLineTotal.Width);
+            SubtitleListview1.AutoSizeAllColumns(this);
         }
 
         private void PlayCurrent()
@@ -10027,6 +10037,7 @@ namespace Nikse.SubtitleEdit.Forms
                     SubtitleListview1.Items[index].Focused = true;
                 }
             }
+            MainResize();
             _loading = false;
             OpenVideo(_videoFileName);
             timerTextUndo.Start();
