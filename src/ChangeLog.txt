@@ -1,5 +1,19 @@
 Subtitle Edit Changelog
 
+3.2.5 (xth March 2012)
+ * NEW:
+   * Added new subtitle formats (now +90!)
+ * IMPROVED:
+   * Many improvements to fix common errors - thx Majid
+ * FIXED:
+   * Crash in fix common errors (remove unneeded spaces) - thx menes
+   * Merge selected lines with 2+ lines - thx Verteller
+   * Prompt for save changes when opening new sub (if changed) - thx Chris
+   * Context menu normal/italic in ocr window - thx cipry
+   * Editing search type for "Multiple replace"
+   * Wrong positioning of some texts (mostly at startup) - thx Trottel
+
+
 3.2.4 (11th March 2012)
  * NEW:
    * Arabic language file - thx Zakaria Farah Abu Wael
