@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
+using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
@@ -51,21 +52,21 @@ namespace Nikse.SubtitleEdit.Forms
         readonly LanguageStructure.General _languageGeneral;
         private bool _hasFixesBeenMade;
 
-        static Regex fixMissingSpacesReComma = new Regex(@"[^\s\d],[^\s]", RegexOptions.Compiled);
-        static Regex fixMissingSpacesRePeriod = new Regex(@"[a-z][.][a-zA-Z]", RegexOptions.Compiled);
-        static Regex fixMissingSpacesReQuestionMark = new Regex(@"[^\s\d]\?[a-zA-Z]", RegexOptions.Compiled);
-        static Regex fixMissingSpacesReExclamation = new Regex(@"[^\s\d]\![a-zA-Z]", RegexOptions.Compiled);
-        static Regex fixMissingSpacesReColon = new Regex(@"[^\s\d]\:[a-zA-Z]", RegexOptions.Compiled);
-        static Regex urlCom = new Regex(@"\w\.com\b", RegexOptions.Compiled);
-        static Regex urlNet = new Regex(@"\w\.net\b", RegexOptions.Compiled);
-        static Regex urlOrg = new Regex(@"\w\.org\b", RegexOptions.Compiled);
+        static readonly Regex fixMissingSpacesReComma = new Regex(@"[^\s\d],[^\s]", RegexOptions.Compiled);
+        static readonly Regex fixMissingSpacesRePeriod = new Regex(@"[a-z][.][a-zA-Z]", RegexOptions.Compiled);
+        static readonly Regex fixMissingSpacesReQuestionMark = new Regex(@"[^\s\d]\?[a-zA-Z]", RegexOptions.Compiled);
+        static readonly Regex fixMissingSpacesReExclamation = new Regex(@"[^\s\d]\![a-zA-Z]", RegexOptions.Compiled);
+        static readonly Regex fixMissingSpacesReColon = new Regex(@"[^\s\d]\:[a-zA-Z]", RegexOptions.Compiled);
+        static readonly Regex urlCom = new Regex(@"\w\.com\b", RegexOptions.Compiled);
+        static readonly Regex urlNet = new Regex(@"\w\.net\b", RegexOptions.Compiled);
+        static readonly Regex urlOrg = new Regex(@"\w\.org\b", RegexOptions.Compiled);
 
-        static Regex reAfterLowercaseLetter = new Regex(@"[a-zæøåäöé]I", RegexOptions.Compiled);
-        static Regex reBeforeLowercaseLetter = new Regex(@"I[a-zæøåäöé]", RegexOptions.Compiled);
+        static readonly Regex reAfterLowercaseLetter = new Regex(@"[a-zæøåäöé]I", RegexOptions.Compiled);
+        static readonly Regex reBeforeLowercaseLetter = new Regex(@"I[a-zæøåäöé]", RegexOptions.Compiled);
 
-        static Regex removeSpaceBetweenNumbersRegEx = new Regex(@"\d \d", RegexOptions.Compiled);
+        static readonly Regex removeSpaceBetweenNumbersRegEx = new Regex(@"\d \d", RegexOptions.Compiled);
 
-        static Regex fixAloneLowercaseIToUppercaseIRE = new Regex(@"\bi\b", RegexOptions.Compiled);
+        static readonly Regex fixAloneLowercaseIToUppercaseIRE = new Regex(@"\bi\b", RegexOptions.Compiled);
 
 
         class FixItem
@@ -242,8 +243,8 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (Screen.PrimaryScreen.WorkingArea.Width <= 124)
             {
-                this.Width = this.MinimumSize.Width;
-                this.Height = this.MinimumSize.Height;
+                Width = MinimumSize.Width;
+                Height = MinimumSize.Height;
             }
             TopMost = true;
             BringToFront();
@@ -311,11 +312,11 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void AddFixActionItemToListView(FixItem fi)
         {
-            ListViewItem item = new ListViewItem(string.Empty);
+            var item = new ListViewItem(string.Empty);
             item.Tag = fi;
             item.Checked = fi.DefaultChecked;
 
-            ListViewItem.ListViewSubItem subItem = new ListViewItem.ListViewSubItem(item, fi.Name);
+            var subItem = new ListViewItem.ListViewSubItem(item, fi.Name);
             item.SubItems.Add(subItem);
             subItem = new ListViewItem.ListViewSubItem(item, fi.Example);
             item.SubItems.Add(subItem);
@@ -1237,18 +1238,25 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     int start = p.Text.IndexOf('"');
                     int end = p.Text.LastIndexOf('"');
-                    string quote = p.Text.Substring(start, end - start + 1);
+                    string quote = p.Text.Substring(start, end - start + 1);                    
                     if (!quote.Contains(Environment.NewLine))
                     {
                         string newText = p.Text;
+                        int indexOfFontTag = newText.ToLower().IndexOf("<font ");
                         if (start > 0 && !(Environment.NewLine + " >[(♪♫").Contains(p.Text[start - 1].ToString()))
                         {
-                            newText = newText.Insert(start, " ");
-                            end++;
+                            if (indexOfFontTag == -1 || start > newText.IndexOf('>', indexOfFontTag)) // font tags can contain "
+                            {
+                                newText = newText.Insert(start, " ");
+                                end++;
+                            }
                         }
                         if (end < newText.Length - 2 && !(Environment.NewLine + " <,.!?:;])♪♫").Contains(p.Text[end + 1].ToString()))
                         {
-                            newText = newText.Insert(end + 1, " ");
+                            if (indexOfFontTag == -1 || end > newText.IndexOf('>', indexOfFontTag)) // font tags can contain "
+                            {
+                                newText = newText.Insert(end + 1, " ");
+                            }
                         }
                         if (newText != p.Text && AllowFix(p, fixAction))
                         {
@@ -1714,7 +1722,7 @@ namespace Nikse.SubtitleEdit.Forms
                 Paragraph next = _subtitle.GetParagraphOrDefault(i + 1);
                 string nextText = string.Empty;
                 if (next != null)
-                    nextText = Utilities.RemoveHtmlTags(next.Text).TrimStart('-').TrimStart();
+                    nextText = Utilities.RemoveHtmlTags(next.Text).TrimStart('-').TrimStart('"').TrimStart('„').TrimStart();
                 string tempNoHtml = Utilities.RemoveHtmlTags(p.Text).TrimEnd();
 
 
@@ -1726,9 +1734,10 @@ namespace Nikse.SubtitleEdit.Forms
                     next.Text.Length > 0 &&
                     Utilities.UppercaseLetters.Contains(nextText[0].ToString()) &&
                     tempNoHtml.Length > 0 &&
-                    (!"\",.!?:;>-])♪♫".Contains(tempNoHtml[tempNoHtml.Length - 1].ToString())))
+                    (!",.!?:;>-])♪♫".Contains(tempNoHtml[tempNoHtml.Length - 1].ToString())))
                 {
-                    if (!tempNoHtml.EndsWith(")") && !tempNoHtml.EndsWith("]") && !tempNoHtml.EndsWith("*") && !tempNoHtml.EndsWith("#") && !tempNoHtml.EndsWith("¶")) // hear impaired
+                    if (!tempNoHtml.EndsWith(")") && !tempNoHtml.EndsWith("]") && !tempNoHtml.EndsWith("*") && !tempNoHtml.EndsWith("#") && !tempNoHtml.EndsWith("¶") && // hear impaired
+                        !tempNoHtml.EndsWith(".\"") && !tempNoHtml.EndsWith(".“"))
                     {
                         if (p.Text != p.Text.ToUpper())
                         {
@@ -1749,7 +1758,12 @@ namespace Nikse.SubtitleEdit.Forms
                                         }
                                         else
                                         {
-                                            p.Text += ".";
+                                            if (p.Text.EndsWith("“") && tempNoHtml.StartsWith("„"))
+                                                p.Text = p.Text.Trim('“') + ".“";
+                                            else if (p.Text.EndsWith("\"") && tempNoHtml.StartsWith("\""))
+                                                p.Text = p.Text.Trim('"') + ".\"";
+                                            else
+                                                p.Text += ".";
                                         }
                                         if (p.Text != oldText)
                                         {
@@ -2467,20 +2481,26 @@ namespace Nikse.SubtitleEdit.Forms
                 string oldText = p.Text;
 
                 string newText = p.Text;
+                string noTagsText = Utilities.RemoveHtmlTags(newText);
                 foreach (string musicSymbol in musicSymbols)
                 {
                     newText = newText.Replace(musicSymbol, Configuration.Settings.Tools.MusicSymbol);
                     newText = newText.Replace(musicSymbol.ToUpper(), Configuration.Settings.Tools.MusicSymbol);
+                    noTagsText = noTagsText.Replace(musicSymbol, Configuration.Settings.Tools.MusicSymbol);
+                    noTagsText = noTagsText.Replace(musicSymbol.ToUpper(), Configuration.Settings.Tools.MusicSymbol);
                 }
 
                 if (!newText.Equals(oldText))
                 {
-                    if (AllowFix(p, fixAction))
+                    if (!noTagsText.Equals(Utilities.RemoveHtmlFontTag(oldText)))
                     {
-                        p.Text = newText;
-                        fixCount++;
-                        _totalFixes++;
-                        AddFixToListView(p, fixAction, oldText, p.Text);
+                        if (AllowFix(p, fixAction))
+                        {
+                            p.Text = newText;
+                            fixCount++;
+                            _totalFixes++;
+                            AddFixToListView(p, fixAction, oldText, p.Text);
+                        }
                     }
                 }
             }
@@ -3611,6 +3631,178 @@ namespace Nikse.SubtitleEdit.Forms
                 Utilities.ShowHelp("#fixcommonerrors");
             else if (e.KeyCode == Keys.Enter && buttonNextFinish.Text == _language.Next)
                 ButtonFixClick(null, null);
+            else if (e.Modifiers == Keys.Control && e.KeyCode == Keys.P && listViewFixes.Items.Count > 0)
+                GenerateDiff();
+        }
+
+        private void GenerateDiff()
+        {
+            string htmlFileName = Path.GetTempFileName() + ".html";
+            var sb = new StringBuilder();
+            sb.Append("<html><head><meta charset='utf-8'><title>Subtitle Edit - Fix common errors preview</title><style>body,p,td {font-size:90%; font-family:Tahoma;} td {border:1px solid black;padding:5px} table {border-collapse: collapse;}</style></head><body><table><tbody>");
+            sb.AppendLine(string.Format("<tr><td style='font-weight:bold'>{0}</td><td style='font-weight:bold'>{1}</td><td style='font-weight:bold'>{2}</td><td style='font-weight:bold'>{3}</td></tr>", _language.LineNumber, _language.Function, _language.Before, _language.After));
+            foreach (ListViewItem item in listViewFixes.Items)
+            {
+                if (item.Checked)
+                {
+                    var p = (Paragraph) item.Tag;
+                    string what = item.SubItems[2].Text;
+                    string before = item.SubItems[3].Text;
+                    string after = item.SubItems[4].Text;
+                    var arr = MakeDiffHtml(before, after);
+                    sb.AppendLine(string.Format("<tr><td>{0}</td><td>{1}</td><td><pre>{2}</pre></td><td><pre>{3}</pre></td></tr>", p.Number, what, arr[0], arr[1]));
+                }
+            }
+            sb.Append("</table></body></html>");
+            File.WriteAllText(htmlFileName, sb.ToString());
+            System.Diagnostics.Process.Start(htmlFileName);
+        }
+
+        private string[] MakeDiffHtml(string before, string after)
+        {
+
+            before = before.Replace("<br />", "↲");
+            after = after.Replace("<br />", "↲");
+            before = before.Replace(Environment.NewLine, "↲");
+            after = after.Replace(Environment.NewLine, "↲");
+
+            var beforeColors = new Dictionary<int, Color>();
+            var beforeBackgroundColors = new Dictionary<int, Color>();
+            var afterColors = new Dictionary<int, Color>();
+            var afterBackgroundColors = new Dictionary<int, Color>();
+
+            // from start
+            int minLength = Math.Min(before.Length, after.Length);
+            int startCharactersOk = 0;
+            for (int i=0; i < minLength; i++)
+            {
+                if (before[i] == after[i])
+                {
+                    startCharactersOk++;
+                }
+                else
+                {
+                    if (before.Length > i + 4 && after.Length > i + 4 &&
+                        before[i + 1] == after[i + 1] &&
+                        before[i + 2] == after[i + 2] &&
+                        before[i + 3] == after[i + 3] &&
+                        before[i + 4] == after[i + 4])
+                    {
+                        startCharactersOk++;
+
+                        if (before.Substring(i, 1).Trim().Length == 0)
+                            beforeBackgroundColors.Add(i, Color.Red);
+                        else
+                            beforeColors.Add(i, Color.Red);
+
+                        if (after.Substring(i, 1).Trim().Length == 0)
+                            afterBackgroundColors.Add(i, Color.Red);
+                        else
+                            afterColors.Add(i, Color.Red);
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+            }
+
+            int maxLength = Math.Max(before.Length, after.Length);
+            for (int i = startCharactersOk; i <= maxLength; i++)
+            {
+                if (i < before.Length)
+                {
+                    if (before.Substring(i, 1).Trim().Length == 0)
+                        beforeBackgroundColors.Add(i, Color.Red);
+                    else
+                        beforeColors.Add(i, Color.Red);
+                }
+                if (i < after.Length)
+                {
+                    if (after.Substring(i, 1).Trim().Length == 0)
+                        afterBackgroundColors.Add(i, Color.Red);
+                    else
+                        afterColors.Add(i, Color.Red);
+                }
+            }
+
+            // from end
+            for (int i = 1; i < minLength; i++)
+            {
+                int bLength = before.Length - i;
+                int aLength = after.Length - i;
+                if (before[bLength] == after[aLength])
+                {
+                    if (beforeColors.ContainsKey(bLength))
+                        beforeColors.Remove(bLength);
+                    if (beforeBackgroundColors.ContainsKey(bLength))
+                        beforeBackgroundColors.Remove(bLength);
+
+                    if (afterColors.ContainsKey(aLength))
+                        afterColors.Remove(aLength);
+                    if (afterBackgroundColors.ContainsKey(aLength))
+                        afterBackgroundColors.Remove(aLength);
+                }
+                else
+                {
+                    if (i == 0 && i > 4 &&
+                        before[before.Length - (i + 1)] == after[after.Length - (i + 1)] &&
+                        before[before.Length - (i + 2)] == after[after.Length - (i + 2)] &&
+                        before[before.Length - (i + 3)] == after[after.Length - (i + 3)] &&
+                        before[before.Length - (i + 4)] == after[after.Length - (i + 4)])
+                    {
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+            }
+
+            var sb = new StringBuilder();
+            for (int i=0; i<before.Length; i++)
+            {
+                string s = before.Substring(i, 1);
+                if (beforeColors.ContainsKey(i) && beforeBackgroundColors.ContainsKey(i))
+                {
+                    sb.Append(string.Format("<span style=\"color:{0}; background-color: {1}\">{2}</span>", ColorTranslator.ToHtml(beforeColors[i]), ColorTranslator.ToHtml(beforeBackgroundColors[i]), s));                    
+                }
+                else if (beforeColors.ContainsKey(i))
+                {
+                    sb.Append(string.Format("<span style=\"color:{0}; \">{1}</span>", ColorTranslator.ToHtml(beforeColors[i]), s));
+                }
+                else if (beforeBackgroundColors.ContainsKey(i))
+                {
+                    sb.Append(string.Format("<span style=\"background-color: {0}\">{1}</span>", ColorTranslator.ToHtml(beforeBackgroundColors[i]), s));
+                }
+                else
+                {
+                    sb.Append(before.Substring(i, 1));
+                }
+            }
+            var sb2 = new StringBuilder();
+            for (int i=0; i<after.Length; i++)
+            {
+                string s = after.Substring(i, 1);
+                if (afterColors.ContainsKey(i) && afterBackgroundColors.ContainsKey(i))
+                {
+                    sb2.Append(string.Format("<span style=\"color:{0}; background-color: {1}\">{2}</span>", ColorTranslator.ToHtml(afterColors[i]), ColorTranslator.ToHtml(afterBackgroundColors[i]), s));                    
+                }
+                else if (afterColors.ContainsKey(i))
+                {
+                    sb2.Append(string.Format("<span style=\"color:{0}; \">{1}</span>", ColorTranslator.ToHtml(afterColors[i]), s));
+                }
+                else if (afterBackgroundColors.ContainsKey(i))
+                {
+                    sb2.Append(string.Format("<span style=\"background-color: {0}\">{1}</span>", ColorTranslator.ToHtml(afterBackgroundColors[i]), s));
+                }
+                else
+                {
+                    sb2.Append(s);
+                }
+            }
+
+            return new string[] { sb.ToString(), sb2.ToString()};
         }
 
         private void SaveConfiguration()
