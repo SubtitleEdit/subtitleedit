@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Text;
+using System.Globalization;
 using System.IO;
 using System.Text;
 using System.Threading;
@@ -19,7 +20,7 @@ namespace Nikse.SubtitleEdit.Forms
         private class MakeBitmapParameter
         {
             public Bitmap Bitmap { get; set; }
-            public Paragraph P  { get; set; }
+            public Paragraph P { get; set; }
             public string Type { get; set; }
             public Color SubtitleColor { get; set; }
             public string SubtitleFontName { get; set; }
@@ -33,19 +34,21 @@ namespace Nikse.SubtitleEdit.Forms
             public byte[] Buffer { get; set; }
             public int ScreenWidth { get; set; }
             public int ScreenHeight { get; set; }
+            public double FramesPerSeconds { get; set; }
+            public int BottomMargin { get; set; }
             public bool Saved { get; set; }
         }
 
-        Subtitle _subtitle;
-        Color _subtitleColor = Color.White;
-        string _subtitleFontName = "Verdana";
-        float _subtitleFontSize = 75.0f;
-        bool _subtitleFontBold = false;
-        Color _borderColor = Color.Black;
-        float _borderWidth = 2.0f;
-        bool _isLoading = true;
-        string _exportType = "BDNXML";
-        string _fileName;
+        private Subtitle _subtitle;
+        private Color _subtitleColor = Color.White;
+        private string _subtitleFontName = "Verdana";
+        private float _subtitleFontSize = 75.0f;
+        private bool _subtitleFontBold = false;
+        private Color _borderColor = Color.Black;
+        private float _borderWidth = 2.0f;
+        private bool _isLoading = true;
+        private string _exportType = "BDNXML";
+        private string _fileName;
 
         public ExportPngXml()
         {
@@ -53,9 +56,25 @@ namespace Nikse.SubtitleEdit.Forms
             comboBoxImageFormat.SelectedIndex = 4;
         }
 
-        private static string BdnXmlTimeCode(TimeCode timecode)
+        private double FrameRate 
         {
-            int frames = timecode.Milliseconds / 40; // 40==25fps (1000/25)
+            get 
+            {
+                if (comboBoxFramerate.SelectedItem == null)
+                    return 25;
+
+                string s = comboBoxFramerate.SelectedItem.ToString();
+                s = s.Replace(",", ".").Trim();
+                double d;
+                if (double.TryParse(s, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out d))
+                    return d;
+                return 25;
+            }
+        }
+
+        private string BdnXmlTimeCode(TimeCode timecode)
+        {
+            int frames = (int)Math.Round(timecode.Milliseconds / (1000.0 / FrameRate));
             return string.Format("{0:00}:{1:00}:{2:00}:{3:00}", timecode.Hours, timecode.Minutes, timecode.Seconds, frames);
         }
 
@@ -72,7 +91,7 @@ namespace Nikse.SubtitleEdit.Forms
                                     Width = paramter.ScreenWidth,
                                     Height = paramter.ScreenHeight
                                 };
-                paramter.Buffer = Logic.BluRaySup.BluRaySupPicture.CreateSupFrame(brSub, paramter.Bitmap);
+                paramter.Buffer = Logic.BluRaySup.BluRaySupPicture.CreateSupFrame(brSub, paramter.Bitmap, paramter.FramesPerSeconds, paramter.BottomMargin);
             }
             else if (paramter.Type == "VOBSUB")
             {
@@ -101,6 +120,8 @@ namespace Nikse.SubtitleEdit.Forms
                                     ScreenWidth = screenWidth,
                                     ScreenHeight = screenHeight,
                                     Bitmap = null,
+                                    FramesPerSeconds = FrameRate,
+                                    BottomMargin =  comboBoxBottomMargin.SelectedIndex,
                                     Saved = false,
                                 };
             if (index < _subtitle.Paragraphs.Count)
@@ -197,13 +218,13 @@ namespace Nikse.SubtitleEdit.Forms
                 if (_exportType == "BLURAYSUP")
                     binarySubtitleFile = new FileStream(saveFileDialog1.FileName, FileMode.Create);
                 else if (_exportType == "VOBSUB")
-                    vobSubWriter = new VobSubWriter(saveFileDialog1.FileName, width, height, 15, 32, _subtitleColor, _borderColor, GetOutlineColor(_borderColor), IfoParser.ArrayOfLanguage[comboBoxLanguage.SelectedIndex], IfoParser.ArrayOfLanguageCode[comboBoxLanguage.SelectedIndex]);
+                    vobSubWriter = new VobSubWriter(saveFileDialog1.FileName, width, height, comboBoxBottomMargin.SelectedIndex, 32, _subtitleColor, _borderColor, GetOutlineColor(_borderColor), IfoParser.ArrayOfLanguage[comboBoxLanguage.SelectedIndex], IfoParser.ArrayOfLanguageCode[comboBoxLanguage.SelectedIndex]);
 
                 progressBar1.Value = 0;
                 progressBar1.Maximum = _subtitle.Paragraphs.Count-1;
                 progressBar1.Visible = true;
 
-                const int border = 25;
+                int border = comboBoxBottomMargin.SelectedIndex;
                 int imagesSavedCount = 0;
                 var sb = new StringBuilder();
 
@@ -282,6 +303,22 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 else
                 {
+                    string videoFormat = "1080p";
+                    if (comboBoxResolution.SelectedIndex == 2)
+                        videoFormat = "720p";
+                    else if (comboBoxResolution.SelectedIndex == 3)
+                        videoFormat = "960x720";
+                    else if (comboBoxResolution.SelectedIndex == 4)
+                        videoFormat = "480p";
+                    else if (comboBoxResolution.SelectedIndex == 5)
+                        videoFormat = "720x576";
+                    else if (comboBoxResolution.SelectedIndex == 6)
+                        videoFormat = "720x480";
+                    else if (comboBoxResolution.SelectedIndex == 7)
+                        videoFormat = "640x352";
+                    else if (comboBoxResolution.SelectedIndex == 8)
+                        videoFormat = "640x272";
+
                     var doc = new XmlDocument();
                     Paragraph first = _subtitle.Paragraphs[0];
                     Paragraph last = _subtitle.Paragraphs[_subtitle.Paragraphs.Count - 1];
@@ -290,7 +327,7 @@ namespace Nikse.SubtitleEdit.Forms
                                 "<Description>" + Environment.NewLine +
                                 "<Name Title=\"subtitle_exp\" Content=\"\"/>" + Environment.NewLine +
                                 "<Language Code=\"eng\"/>" + Environment.NewLine +
-                                "<Format VideoFormat=\"1080p\" FrameRate=\"25\" DropFrame=\"False\"/>" + Environment.NewLine +
+                                "<Format VideoFormat=\""+videoFormat + "\" FrameRate=\""+  FrameRate.ToString(CultureInfo.InvariantCulture) +  "\" DropFrame=\"False\"/>" + Environment.NewLine +
                                 "<Events Type=\"Graphic\" FirstEventInTC=\"" + BdnXmlTimeCode(first.StartTime) + "\" LastEventOutTC=\"" + BdnXmlTimeCode(last.EndTime) + "\" NumberofEvents=\"" + imagesSavedCount.ToString() + "\"/>" + Environment.NewLine +
                                 "</Description>" + Environment.NewLine +
                                 "<Events>" + Environment.NewLine +
@@ -329,7 +366,7 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         string numberString = string.Format("IMAGE{0:000}", i);
                         string fileName = Path.Combine(folderBrowserDialog1.SelectedPath, numberString + "." + comboBoxImageFormat.Text.ToLower());
-                        var imageFormat = System.Drawing.Imaging.ImageFormat.Png; ;
+                        var imageFormat = System.Drawing.Imaging.ImageFormat.Png; 
                         if (comboBoxImageFormat.SelectedIndex == 0)
                             imageFormat = System.Drawing.Imaging.ImageFormat.Bmp;
                         else if (comboBoxImageFormat.SelectedIndex == 1)
@@ -383,9 +420,8 @@ namespace Nikse.SubtitleEdit.Forms
         private string FormatFabTime(TimeCode time, MakeBitmapParameter param)
         {
             if (param.Bitmap.Width == 720 && param.Bitmap.Width == 480) // NTSC
-                return string.Format("{0:00};{1:00};{2:00};{3:00}", time.Hours, time.Minutes, time.Seconds, Nikse.SubtitleEdit.Logic.SubtitleFormats.SubtitleFormat.MillisecondsToFrames(time.Milliseconds));
-            else
-                return string.Format("{0:00}:{1:00}:{2:00}:{3:00}", time.Hours, time.Minutes, time.Seconds, Nikse.SubtitleEdit.Logic.SubtitleFormats.SubtitleFormat.MillisecondsToFrames(time.Milliseconds));
+                return string.Format("{0:00};{1:00};{2:00};{3:00}", time.Hours, time.Minutes, time.Seconds, Logic.SubtitleFormats.SubtitleFormat.MillisecondsToFrames(time.Milliseconds));
+            return string.Format("{0:00}:{1:00}:{2:00}:{3:00}", time.Hours, time.Minutes, time.Seconds, Logic.SubtitleFormats.SubtitleFormat.MillisecondsToFrames(time.Milliseconds));
         }
 
         private void SetupImageParameters()
@@ -410,7 +446,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private Bitmap GenerateImageFromTextWithStyle(string text)
         {
-            MakeBitmapParameter mbp = new MakeBitmapParameter();
+            var mbp = new MakeBitmapParameter();
             mbp.AlignLeft = comboBoxHAlign.SelectedIndex == 0;
             mbp.AlignRight = comboBoxHAlign.SelectedIndex == 2;
             mbp.AntiAlias = checkBoxAntiAlias.Checked;
@@ -425,7 +461,7 @@ namespace Nikse.SubtitleEdit.Forms
             var bmp = GenerateImageFromTextWithStyle(mbp);
             if (_exportType == "VOBSUB")
             {
-                NikseBitmap nbmp = new NikseBitmap(bmp);
+                var nbmp = new NikseBitmap(bmp);
                 nbmp.ConverToFourColors(Color.Transparent, _subtitleColor, _borderColor, GetOutlineColor(_borderColor));
                 bmp = nbmp.GetBitmap();
             }
@@ -434,9 +470,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private static float MeasureTextWidth(Font font, string text, bool bold)
         {
-            var sf = new StringFormat();
-            sf.Alignment = StringAlignment.Near;
-            sf.LineAlignment = StringAlignment.Near;
+            var sf = new StringFormat {Alignment = StringAlignment.Near, LineAlignment = StringAlignment.Near};
             var path = new GraphicsPath();
 
             var sb = new StringBuilder(text);
@@ -515,7 +549,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (parameter.AlignLeft)
                     lefts.Add(5);
                 else if (parameter.AlignRight)
-                    lefts.Add((float)(bmp.Width - (MeasureTextWidth(font, line, parameter.SubtitleFontBold) + 15)));
+                    lefts.Add(bmp.Width - (MeasureTextWidth(font, line, parameter.SubtitleFontBold) + 15));
                 else
                     lefts.Add((float)(bmp.Width - g.MeasureString(line, font).Width * 0.8+15) / 2);
             }
@@ -654,6 +688,7 @@ namespace Nikse.SubtitleEdit.Forms
             buttonCancel.Text = Configuration.Settings.Language.General.OK;
             labelImageResolution.Text = string.Empty;
             labelLanguage.Text = Configuration.Settings.Language.ChooseLanguage.Language;
+            labelFrameRate.Text = Configuration.Settings.Language.General.FrameRate;
             labelHorizontalAlign.Text = Configuration.Settings.Language.ExportPngXml.Align;
             if (Configuration.Settings.Language.ExportPngXml.Left != null &&
                 Configuration.Settings.Language.ExportPngXml.Center != null &&
@@ -694,6 +729,49 @@ namespace Nikse.SubtitleEdit.Forms
             }
             comboBoxImageFormat.Visible = exportType == "FAB";
             labelImageFormat.Visible = exportType == "FAB";
+            labelFrameRate.Visible = exportType == "BDNXML" || exportType == "BLURAYSUP";
+            comboBoxFramerate.Visible = exportType == "BDNXML" || exportType == "BLURAYSUP";
+            if (exportType == "BDNXML")
+            {
+                labelFrameRate.Top = labelLanguage.Top;
+                comboBoxFramerate.Top = comboBoxLanguage.Top;
+                comboBoxFramerate.Items.Add("23.976");
+                comboBoxFramerate.Items.Add("24");
+                comboBoxFramerate.Items.Add("25");
+                comboBoxFramerate.Items.Add("29.97");
+                comboBoxFramerate.Items.Add("50");
+                comboBoxFramerate.Items.Add("59.94");
+                comboBoxFramerate.SelectedIndex = 2;
+            }
+            else if (exportType == "BLURAYSUP")
+            {
+                labelFrameRate.Top = labelLanguage.Top;
+                comboBoxFramerate.Top = comboBoxLanguage.Top;
+                comboBoxFramerate.Items.Add("23.976");
+                comboBoxFramerate.Items.Add("24");
+                comboBoxFramerate.Items.Add("25");
+                comboBoxFramerate.Items.Add("29.97");
+                comboBoxFramerate.Items.Add("50");
+                comboBoxFramerate.Items.Add("59.94");
+                comboBoxFramerate.SelectedIndex = 1;
+                comboBoxFramerate.DropDownStyle = ComboBoxStyle.DropDownList;
+            }
+
+            for (int i=0; i<1000; i++)
+                comboBoxBottomMargin.Items.Add(i);
+            comboBoxBottomMargin.SelectedIndex = 15;
+            if (exportType == "BLURAYSUP")
+                comboBoxBottomMargin.SelectedIndex = 20;
+            if (_exportType == "BLURAYSUP" || _exportType == "VOBSUB")
+            {
+                comboBoxBottomMargin.Visible = true;
+                labelBottomMargin.Visible = true;
+            }
+            else
+            {
+                comboBoxBottomMargin.Visible = false;
+                labelBottomMargin.Visible = false;
+            }
 
             foreach (var x in FontFamily.Families)
             {

@@ -10,67 +10,67 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
         /// <summary>
         /// 14 bytes Mpeg 2 pack header
         /// </summary>
-        private static byte[] Mpeg2PackHeaderBuffer =
+        private static readonly byte[] Mpeg2PackHeaderBuffer =
         {
             0x00, 0x00, 0x01,       // Start code
             0xba,                   // MPEG-2 Pack ID
             0x44, 0x02, 0xec, 0xdf, // System clock reference
             0xfe, 0x57,
             0x01, 0x89, 0xc3,       // Program mux rate
-            0xf8,                   // stuffing byte
+            0xf8                    // stuffing byte
         };
 
         /// <summary>
         /// 9 bytes packetized elementary stream header (PES)
         /// </summary>
-        private static byte[] PacketizedElementaryStreamHeaderBufferFirst =
+        private static readonly byte[] PacketizedElementaryStreamHeaderBufferFirst =
         {
             0x00, 0x00, 0x01,       // Start code
             0xbd,                   // bd = Private stream 1 (non MPEG audio, subpictures)
             0x00, 0x00,             // 18-19=PES packet length
             0x81,                   // 20=Flags: PES scrambling control, PES priority, data alignment indicator, copyright, original or copy
             0x81,                   // 21=Flags: PTS DTS flags, ESCR flag, ES rate flag, DSM trick mode flag, additional copy info flag, PES CRC flag, PES extension flag
-            0x08,                   // 22=PES header data length
+            0x08                    // 22=PES header data length
         };
 
         /// <summary>
         /// 9 bytes packetized elementary stream header (PES)
         /// </summary>
-        private static byte[] PacketizedElementaryStreamHeaderBufferNext =
+        private static readonly byte[] PacketizedElementaryStreamHeaderBufferNext =
         {
             0x00, 0x00, 0x01,       // Start code
             0xbd,                   // bd = Private stream 1 (non MPEG audio, subpictures)
             0x00, 0x00,             // PES packet length
             0x81,                   // 20=Flags: PES scrambling control, PES priority, data alignment indicator, copyright, original or copy
             0x00,                   // 21=Flags: PTS DTS flags, ESCR flag, ES rate flag, DSM trick mode flag, additional copy info flag, PES CRC flag, PES extension flag
-            0x00,                   // 22=PES header data length
+            0x00                    // 22=PES header data length
         };
 
         /// <summary>
         /// 5 bytes presentation time stamp (PTS)
         /// </summary>
-        private static byte[] PresentationTimeStampBuffer =
+        private static readonly byte[] PresentationTimeStampBuffer =
         {
             0x21,                   // 0010 3=PTS 32..30 1
             0x00, 0x01,             // 15=PTS 29..15 1
-            0x00, 0x01,             // 15=PTS 14..00 1
+            0x00, 0x01              // 15=PTS 14..00 1
         };
 
         private const int PacketizedElementaryStreamMaximumLength = 2028;
 
-        private string _subFileName;
+        private readonly string _subFileName;
         private FileStream _subFile;
-        StringBuilder _idx = new StringBuilder();
-        int _screenWidth = 720;
-        int _screenHeight = 480;
-        int _bottomMargin = 15;
-        int _languageStreamId = 32;
+        readonly StringBuilder _idx = new StringBuilder();
+        readonly int _screenWidth = 720;
+        readonly int _screenHeight = 480;
+        readonly int _bottomMargin = 15;
+        readonly int _languageStreamId = 32;
         Color _background = Color.Transparent;
         Color _pattern = Color.White;
         Color _emphasis1 = Color.Black;
         Color _emphasis2 = Color.FromArgb(240, Color.Black);
-        string _languageName = "English";
-        string _languageNameShort = "en";
+        readonly string _languageName = "English";
+        readonly string _languageNameShort = "en";
 
         public VobSubWriter(string subFileName, int screenWidth, int screenHeight, int bottomMargin, int languageStreamId, Color pattern, Color emphasis1, Color emphasis2,
                             string languageName, string languageNameShort)
@@ -107,7 +107,7 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
             WriteEndianWord(startDisplayControlSequenceTableAddress, ms);
 
             // Write image
-            int imageTopFieldDataAddress = (int)(4);
+            const int imageTopFieldDataAddress = 4;
             ms.Write(twoPartBuffer.Buffer1, 0, twoPartBuffer.Buffer1.Length);
             int imageBottomFieldDataAddress = 4 + twoPartBuffer.Buffer1.Length;
             ms.Write(twoPartBuffer.Buffer2, 0, twoPartBuffer.Buffer2.Length);
@@ -139,7 +139,7 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
 
             // Control Sequence Table
             // Write delay - subtitle duration
-            WriteEndianWord((int)((Convert.ToInt32(p.Duration.TotalMilliseconds * 90.0 - 1023) >> 10)), ms);
+            WriteEndianWord(Convert.ToInt32(p.Duration.TotalMilliseconds * 90.0 - 1023) >> 10, ms);
 
             // next display control sequence table address (use current is last)
             WriteEndianWord(startDisplayControlSequenceTableAddress + 24, ms); // start of display control sequence table address
@@ -207,8 +207,8 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
             int length = Mpeg2PackHeaderBuffer.Length + imageBuffer.Length - subtract;
             if (length > PacketizedElementaryStreamMaximumLength)
             {
-                writeBuffer[4] = (byte)(PacketizedElementaryStreamMaximumLength / 256);
-                writeBuffer[5] = (byte)(PacketizedElementaryStreamMaximumLength % 256);
+                writeBuffer[4] = PacketizedElementaryStreamMaximumLength / 256;
+                writeBuffer[5] = PacketizedElementaryStreamMaximumLength % 256;
             }
             else
             {
@@ -242,7 +242,6 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
         /// <summary>
         /// Directly provides the four contrast (alpha blend) values to associate with the four pixel values. One nibble per pixel value for a total of 2 bytes. 0x0 = transparent, 0xF = opaque
         /// </summary>
-        /// <param name="_subFile"></param>
         private void WriteContrast(Stream stream)
         {
             stream.WriteByte(4);
@@ -256,14 +255,14 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
         private void WriteColors(Stream stream)
         {
             // Index to palette
-            byte emphasis2 = 3;
-            byte emphasis1 = 2;
-            byte pattern = 1;
-            byte background = 0;
+            const byte emphasis2 = 3;
+            const byte emphasis1 = 2;
+            const byte pattern = 1;
+            const byte background = 0;
 
             stream.WriteByte(3);
-            stream.WriteByte((byte)((emphasis2 << 4) | emphasis1)); // emphasis2 + emphasis1
-            stream.WriteByte((byte)((pattern << 4) | background)); // pattern + background
+            stream.WriteByte((emphasis2 << 4) | emphasis1); // emphasis2 + emphasis1
+            stream.WriteByte((pattern << 4) | background); // pattern + background
         }
 
         /// <summary>
@@ -271,7 +270,7 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
         /// </summary>
         private void FillPTS(TimeCode timeCode)
         {
-            string pre = "0011"; // 0011 or 0010 ?
+            const string pre = "0011"; // 0011 or 0010 ?
             long newPts = (long)(timeCode.TotalSeconds * 90000.0 + 0.5);
             string bString = Convert.ToString(newPts, 2).PadLeft(33, '0');
             string fiveBytesString = pre + bString.Substring(0, 3) + "1" + bString.Substring(3, 15) + "1" + bString.Substring(18, 15) + "1";
@@ -292,7 +291,7 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
         public void WriteIdxFile()
         {
             string idxFileName = _subFileName.Substring(0, _subFileName.Length - 3) + "idx";
-            System.IO.File.WriteAllText(idxFileName, _idx.ToString().Trim());
+            File.WriteAllText(idxFileName, _idx.ToString().Trim());
         }
 
         private StringBuilder CreateIdxHeader()

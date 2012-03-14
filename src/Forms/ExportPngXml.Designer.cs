@@ -34,6 +34,8 @@
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.groupBoxImageSettings = new System.Windows.Forms.GroupBox();
+            this.labelLanguage = new System.Windows.Forms.Label();
+            this.comboBoxLanguage = new System.Windows.Forms.ComboBox();
             this.labelImageFormat = new System.Windows.Forms.Label();
             this.comboBoxImageFormat = new System.Windows.Forms.ComboBox();
             this.checkBoxBold = new System.Windows.Forms.CheckBox();
@@ -55,9 +57,11 @@
             this.colorDialog1 = new System.Windows.Forms.ColorDialog();
             this.labelImageResolution = new System.Windows.Forms.Label();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
-            this.labelLanguage = new System.Windows.Forms.Label();
-            this.comboBoxLanguage = new System.Windows.Forms.ComboBox();
+            this.comboBoxFramerate = new System.Windows.Forms.ComboBox();
+            this.labelFrameRate = new System.Windows.Forms.Label();
             this.subtitleListView1 = new Nikse.SubtitleEdit.Controls.SubtitleListView();
+            this.comboBoxBottomMargin = new System.Windows.Forms.ComboBox();
+            this.labelBottomMargin = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.groupBoxImageSettings.SuspendLayout();
             this.SuspendLayout();
@@ -67,9 +71,9 @@
             this.pictureBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.pictureBox1.Location = new System.Drawing.Point(12, 375);
+            this.pictureBox1.Location = new System.Drawing.Point(12, 399);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(712, 181);
+            this.pictureBox1.Size = new System.Drawing.Size(712, 249);
             this.pictureBox1.TabIndex = 1;
             this.pictureBox1.TabStop = false;
             // 
@@ -77,7 +81,7 @@
             // 
             this.buttonExport.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonExport.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonExport.Location = new System.Drawing.Point(517, 562);
+            this.buttonExport.Location = new System.Drawing.Point(517, 654);
             this.buttonExport.Name = "buttonExport";
             this.buttonExport.Size = new System.Drawing.Size(126, 21);
             this.buttonExport.TabIndex = 2;
@@ -90,7 +94,7 @@
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonCancel.Location = new System.Drawing.Point(649, 562);
+            this.buttonCancel.Location = new System.Drawing.Point(649, 654);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 21);
             this.buttonCancel.TabIndex = 3;
@@ -101,7 +105,7 @@
             // 
             this.progressBar1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.progressBar1.Location = new System.Drawing.Point(12, 562);
+            this.progressBar1.Location = new System.Drawing.Point(12, 654);
             this.progressBar1.Name = "progressBar1";
             this.progressBar1.Size = new System.Drawing.Size(499, 21);
             this.progressBar1.TabIndex = 20;
@@ -111,6 +115,10 @@
             // 
             this.groupBoxImageSettings.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxImageSettings.Controls.Add(this.comboBoxBottomMargin);
+            this.groupBoxImageSettings.Controls.Add(this.labelBottomMargin);
+            this.groupBoxImageSettings.Controls.Add(this.labelFrameRate);
+            this.groupBoxImageSettings.Controls.Add(this.comboBoxFramerate);
             this.groupBoxImageSettings.Controls.Add(this.labelLanguage);
             this.groupBoxImageSettings.Controls.Add(this.comboBoxLanguage);
             this.groupBoxImageSettings.Controls.Add(this.labelImageFormat);
@@ -133,14 +141,42 @@
             this.groupBoxImageSettings.Controls.Add(this.buttonColor);
             this.groupBoxImageSettings.Location = new System.Drawing.Point(12, 218);
             this.groupBoxImageSettings.Name = "groupBoxImageSettings";
-            this.groupBoxImageSettings.Size = new System.Drawing.Size(712, 137);
+            this.groupBoxImageSettings.Size = new System.Drawing.Size(712, 161);
             this.groupBoxImageSettings.TabIndex = 1;
             this.groupBoxImageSettings.TabStop = false;
             this.groupBoxImageSettings.Text = "Image settings";
             // 
+            // labelLanguage
+            // 
+            this.labelLanguage.Location = new System.Drawing.Point(421, 108);
+            this.labelLanguage.Name = "labelLanguage";
+            this.labelLanguage.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.labelLanguage.Size = new System.Drawing.Size(110, 13);
+            this.labelLanguage.TabIndex = 30;
+            this.labelLanguage.Text = "Language";
+            this.labelLanguage.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.labelLanguage.Visible = false;
+            // 
+            // comboBoxLanguage
+            // 
+            this.comboBoxLanguage.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxLanguage.FormattingEnabled = true;
+            this.comboBoxLanguage.Items.AddRange(new object[] {
+            "Bmp",
+            "Exif",
+            "Gif",
+            "Jpg",
+            "Png",
+            "Tiff"});
+            this.comboBoxLanguage.Location = new System.Drawing.Point(537, 105);
+            this.comboBoxLanguage.Name = "comboBoxLanguage";
+            this.comboBoxLanguage.Size = new System.Drawing.Size(121, 21);
+            this.comboBoxLanguage.TabIndex = 29;
+            this.comboBoxLanguage.Visible = false;
+            // 
             // labelImageFormat
             // 
-            this.labelImageFormat.Location = new System.Drawing.Point(416, 81);
+            this.labelImageFormat.Location = new System.Drawing.Point(421, 81);
             this.labelImageFormat.Name = "labelImageFormat";
             this.labelImageFormat.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.labelImageFormat.Size = new System.Drawing.Size(110, 13);
@@ -167,7 +203,7 @@
             // checkBoxBold
             // 
             this.checkBoxBold.AutoSize = true;
-            this.checkBoxBold.Location = new System.Drawing.Point(276, 59);
+            this.checkBoxBold.Location = new System.Drawing.Point(276, 53);
             this.checkBoxBold.Name = "checkBoxBold";
             this.checkBoxBold.Size = new System.Drawing.Size(47, 17);
             this.checkBoxBold.TabIndex = 5;
@@ -231,7 +267,7 @@
             this.checkBoxAntiAlias.AutoSize = true;
             this.checkBoxAntiAlias.Checked = true;
             this.checkBoxAntiAlias.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBoxAntiAlias.Location = new System.Drawing.Point(276, 86);
+            this.checkBoxAntiAlias.Location = new System.Drawing.Point(276, 76);
             this.checkBoxAntiAlias.Name = "checkBoxAntiAlias";
             this.checkBoxAntiAlias.Size = new System.Drawing.Size(66, 17);
             this.checkBoxAntiAlias.TabIndex = 6;
@@ -345,7 +381,7 @@
             // 
             // labelBorderWidth
             // 
-            this.labelBorderWidth.Location = new System.Drawing.Point(416, 55);
+            this.labelBorderWidth.Location = new System.Drawing.Point(421, 54);
             this.labelBorderWidth.Name = "labelBorderWidth";
             this.labelBorderWidth.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.labelBorderWidth.Size = new System.Drawing.Size(110, 13);
@@ -412,40 +448,31 @@
             // 
             this.labelImageResolution.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.labelImageResolution.BackColor = System.Drawing.Color.Transparent;
-            this.labelImageResolution.Location = new System.Drawing.Point(651, 358);
+            this.labelImageResolution.Location = new System.Drawing.Point(651, 382);
             this.labelImageResolution.Name = "labelImageResolution";
             this.labelImageResolution.Size = new System.Drawing.Size(73, 14);
             this.labelImageResolution.TabIndex = 22;
             this.labelImageResolution.Text = "320x240";
             this.labelImageResolution.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
-            // labelLanguage
+            // comboBoxFramerate
             // 
-            this.labelLanguage.Location = new System.Drawing.Point(416, 108);
-            this.labelLanguage.Name = "labelLanguage";
-            this.labelLanguage.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.labelLanguage.Size = new System.Drawing.Size(110, 13);
-            this.labelLanguage.TabIndex = 30;
-            this.labelLanguage.Text = "Language";
-            this.labelLanguage.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.labelLanguage.Visible = false;
+            this.comboBoxFramerate.FormattingEnabled = true;
+            this.comboBoxFramerate.Location = new System.Drawing.Point(537, 134);
+            this.comboBoxFramerate.Name = "comboBoxFramerate";
+            this.comboBoxFramerate.Size = new System.Drawing.Size(121, 21);
+            this.comboBoxFramerate.TabIndex = 33;
             // 
-            // comboBoxLanguage
+            // labelFrameRate
             // 
-            this.comboBoxLanguage.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBoxLanguage.FormattingEnabled = true;
-            this.comboBoxLanguage.Items.AddRange(new object[] {
-            "Bmp",
-            "Exif",
-            "Gif",
-            "Jpg",
-            "Png",
-            "Tiff"});
-            this.comboBoxLanguage.Location = new System.Drawing.Point(537, 105);
-            this.comboBoxLanguage.Name = "comboBoxLanguage";
-            this.comboBoxLanguage.Size = new System.Drawing.Size(121, 21);
-            this.comboBoxLanguage.TabIndex = 29;
-            this.comboBoxLanguage.Visible = false;
+            this.labelFrameRate.Location = new System.Drawing.Point(421, 137);
+            this.labelFrameRate.Name = "labelFrameRate";
+            this.labelFrameRate.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.labelFrameRate.Size = new System.Drawing.Size(110, 13);
+            this.labelFrameRate.TabIndex = 34;
+            this.labelFrameRate.Text = "Frame rate";
+            this.labelFrameRate.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.labelFrameRate.Visible = false;
             // 
             // subtitleListView1
             // 
@@ -464,11 +491,29 @@
             this.subtitleListView1.View = System.Windows.Forms.View.Details;
             this.subtitleListView1.SelectedIndexChanged += new System.EventHandler(this.subtitleListView1_SelectedIndexChanged);
             // 
+            // comboBoxBottomMargin
+            // 
+            this.comboBoxBottomMargin.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxBottomMargin.FormattingEnabled = true;
+            this.comboBoxBottomMargin.Location = new System.Drawing.Point(100, 132);
+            this.comboBoxBottomMargin.Name = "comboBoxBottomMargin";
+            this.comboBoxBottomMargin.Size = new System.Drawing.Size(121, 21);
+            this.comboBoxBottomMargin.TabIndex = 35;
+            // 
+            // labelBottomMargin
+            // 
+            this.labelBottomMargin.AutoSize = true;
+            this.labelBottomMargin.Location = new System.Drawing.Point(10, 135);
+            this.labelBottomMargin.Name = "labelBottomMargin";
+            this.labelBottomMargin.Size = new System.Drawing.Size(74, 13);
+            this.labelBottomMargin.TabIndex = 36;
+            this.labelBottomMargin.Text = "Bottom margin";
+            // 
             // ExportPngXml
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(730, 588);
+            this.ClientSize = new System.Drawing.Size(730, 680);
             this.Controls.Add(this.labelImageResolution);
             this.Controls.Add(this.groupBoxImageSettings);
             this.Controls.Add(this.progressBar1);
@@ -524,5 +569,9 @@
         private System.Windows.Forms.ComboBox comboBoxImageFormat;
         private System.Windows.Forms.Label labelLanguage;
         private System.Windows.Forms.ComboBox comboBoxLanguage;
+        private System.Windows.Forms.Label labelFrameRate;
+        private System.Windows.Forms.ComboBox comboBoxFramerate;
+        private System.Windows.Forms.ComboBox comboBoxBottomMargin;
+        private System.Windows.Forms.Label labelBottomMargin;
     }
 }

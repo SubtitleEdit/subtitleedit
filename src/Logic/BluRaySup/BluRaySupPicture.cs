@@ -103,7 +103,7 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
         /** list of (list of) palette info - there are up to 8 palettes per epoch, each can be updated several times */
         public List<List<PaletteInfo>> Palettes;
 
-        private static byte[] packetHeader =
+        private static readonly byte[] PacketHeader =
         {
             0x50, 0x47,             // 0:  "PG"
             0x00, 0x00, 0x00, 0x00, // 2:  PTS - presentation time stamp
@@ -112,7 +112,7 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
             0x00, 0x00,             // 11: segment_length (bytes following till next PG)
         };
 
-        private static byte[] headerPCSStart =
+        private static readonly byte[] HeaderPCSStart =
         {
             0x00, 0x00, 0x00, 0x00, // 0: video_width, video_height
             0x10,                   // 4: hi nibble: frame_rate (0x10=24p), lo nibble: reserved
@@ -127,7 +127,7 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
             0x00, 0x00, 0x00, 0x00  // 15: composition_object_horizontal_position, composition_object_vertical_position
         };
 
-        private static byte[] headerPCSEnd =
+        private static readonly byte[] HeaderPCSEnd =
         {
             0x00, 0x00, 0x00, 0x00, // 0: video_width, video_height
             0x10,                   // 4: hi nibble: frame_rate (0x10=24p), lo nibble: reserved
@@ -138,7 +138,7 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
             0x00,                   // 10: number_of_composition_objects (0..2)
         };
 
-        private static byte[] headerODSFirst =
+        private static readonly byte[] HeaderODSFirst =
         {
             0x00, 0x00,             // 0: object_id
             0x00,                   // 2: object_version_number
@@ -147,14 +147,14 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
             0x00, 0x00, 0x00, 0x00, // 7: object_width, object_height
         };
 
-        private static byte[] headerODSNext =
+        private static readonly byte[] HeaderODSNext =
         {
             0x00, 0x00,             // 0: object_id
             0x00,                   // 2: object_version_number
             0x40,                   // 3: first_in_sequence (0x80), last_in_sequence (0x40), 6bits reserved
         };
 
-        private static byte[] headerWDS =
+        private static readonly byte[] HeaderWds =
         {
             0x01,                   // 0 : number of windows (currently assumed 1, 0..2 is legal)
             0x00,                   // 1 : window id (0..1)
@@ -183,7 +183,7 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
             Palettes = new List<List<PaletteInfo>>();
             foreach (List<PaletteInfo> palette in subPicture.Palettes)
             {
-                List<PaletteInfo> p = new List<PaletteInfo>();
+                var p = new List<PaletteInfo>();
                 foreach (PaletteInfo pi in palette)
                 {
                     p.Add(new PaletteInfo(pi));
@@ -210,22 +210,18 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
                     System.Diagnostics.Debug.WriteLine("Invalid Blu-ray SupPicture - ImageObjects is null - BluRaySupPictures.cs: internal ImageObject ObjectIdImage");
                     return null;
                 }
-                else if (ObjectId < ImageObjects.Count)
+                if (ObjectId < ImageObjects.Count)
                 {
                     return ImageObjects[ObjectId];
                 }
-                else
-                {
-                    System.Diagnostics.Debug.WriteLine("Invalid Blu-ray SupPicture index - BluRaySupPictures.cs: internal ImageObject ObjectIdImage");
-                    return ImageObjects[ImageObjects.Count - 1];
-                }
+                System.Diagnostics.Debug.WriteLine("Invalid Blu-ray SupPicture index - BluRaySupPictures.cs: internal ImageObject ObjectIdImage");
+                return ImageObjects[ImageObjects.Count - 1];
             }
         }
 
         /// <summary>
         /// decode palette from the input stream
         /// </summary>
-        /// <param name="pic">SubPicture object containing info about the current caption</param>
         /// <returns>Palette object</returns>
         public BluRaySupPalette DecodePalette(BluRaySupPalette defaultPalette)
         {
@@ -240,7 +236,7 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
                     return new BluRaySupPalette(defaultPalette);
             }
             List<PaletteInfo> pl = pic.Palettes[pic.ObjectIdImage.PaletteId];
-            BluRaySupPalette palette = new BluRaySupPalette(256, Core.UsesBt601());
+            var palette = new BluRaySupPalette(256, Core.UsesBt601());
             // by definition, index 0xff is always completely transparent
             // also all entries must be fully transparent after initialization
 
@@ -296,8 +292,6 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
         /// <summary>
         /// Decode caption from the input stream
         /// </summary>
-        /// <param name="pic">SubPicture object containing info about the caption</param>
-        /// <param name="transIdx">index of the transparent color</param>
         /// <returns>bitmap of the decoded caption</returns>
         public Bitmap DecodeImage(BluRaySupPalette defaultPalette)
         {
@@ -311,7 +305,7 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
                 throw new Exception("Subpicture too large: " + w + "x" + h);
 
             //Bitmap bm = new Bitmap(w, h);
-            FastBitmap bm = new FastBitmap(new Bitmap(w, h));
+            var bm = new FastBitmap(new Bitmap(w, h));
             bm.LockImage();
             BluRaySupPalette pal = DecodePalette(defaultPalette);
 
@@ -326,7 +320,6 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
                 Buffer.BlockCopy(fragment.ImageBuffer, 0, buf, index, fragment.ImagePacketSize);
                 index += fragment.ImagePacketSize;
             }
-
 
             index = 0;
             do
@@ -407,7 +400,7 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
         /// <returns>RLE buffer</returns>
         private static byte[] EncodeImage(Bitmap bm, Dictionary<Color, int> palette)
         {
-            List<Byte> bytes = new List<Byte>();
+            var bytes = new List<Byte>();
             byte color = 0;
             int ofs = 0;
             int len = 0;
@@ -505,7 +498,7 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
 
         private static Dictionary<Color, int> GetBitmapPalette(Bitmap bitmap)
         {
-            Dictionary<Color, int> pal = new Dictionary<Color, int>();
+            var pal = new Dictionary<Color, int>();
             for (int y = 0; y < bitmap.Height; y++)
             {
                 for (int x = 0; x < bitmap.Width; x++)
@@ -524,17 +517,17 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
         /// </summary>
         /// <param name="fps">frame rate</param>
         /// <returns>byte ID for the given frame rate</returns>
-        private static int getFpsId(double fps)
+        private static int GetFpsId(double fps)
         {
             if (fps == Core.Fps24Hz)
                 return 0x20;
             if (fps == Core.FpsPal)
                 return 0x30;
-            if (fps == Core.FpsNtsc)
+            if (Math.Abs(fps - Core.FpsNtsc) < 0.05)
                 return 0x40;
             if (fps == Core.FpsPalI)
                 return 0x60;
-            if (fps == Core.FpsNtscI)
+            if (Math.Abs(fps - Core.FpsNtscI) < 0.05)
                 return 0x70;
             // assume FPS_24P (also for FPS_23_975)
             return 0x10;
@@ -545,13 +538,13 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
         /// </summary>
         /// <param name="pic">SubPicture object containing caption info</param>
         /// <param name="bm">bitmap</param>
-        /// <param name="pal">palette</param>
+        /// <param name="fps">frames per second</param>
+        /// <param name="bottomMargin">image bottom margin</param>
         /// <returns>byte buffer containing the binary stream representation of one caption</returns>
-        public static byte[] CreateSupFrame(BluRaySupPicture pic, Bitmap bm)
+        public static byte[] CreateSupFrame(BluRaySupPicture pic, Bitmap bm, double fps, int bottomMargin)
         {
-            int size = 0;
             var colorPalette = GetBitmapPalette(bm);
-            BluRaySupPalette pal = new BluRaySupPalette(colorPalette.Count);
+            var pal = new BluRaySupPalette(colorPalette.Count);
             int k = 0;
             foreach (var kvp in colorPalette)
             {
@@ -578,16 +571,16 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
             // object frames
             int palSize = colorPalette.Count;
 
-            size = packetHeader.Length * (8 + numAddPackets);
-            size += headerPCSStart.Length + headerPCSEnd.Length;
-            size += 2 * headerWDS.Length + headerODSFirst.Length;
-            size += numAddPackets * headerODSNext.Length;
+            int size = PacketHeader.Length * (8 + numAddPackets);
+            size += HeaderPCSStart.Length + HeaderPCSEnd.Length;
+            size += 2 * HeaderWds.Length + HeaderODSFirst.Length;
+            size += numAddPackets * HeaderODSNext.Length;
             size += (2 + palSize * 5) /* PDS */;
             size += rleBuf.Length;
 
             pic.WindowXOffset = (pic.Width - bm.Width) / 2;
-            pic.WindowYOffset = pic.Height - (bm.Height + (pic.Height / 12));
-
+            pic.WindowYOffset = pic.Height - (bm.Height + bottomMargin);
+            
             int yOfs = pic.WindowYOffset - Core.CropOfsY;
             if (yOfs < 0)
             {
@@ -603,153 +596,153 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
             int h = pic.Height - 2 * Core.CropOfsY;
 
             byte[] buf = new byte[size];
-                int index = 0;
+            int index = 0;
 
 
-                int fpsId = getFpsId(Core.fpsTrg);
+            int fpsId = GetFpsId(fps);
 
-                /* time (in 90kHz resolution) needed to initialize (clear) the screen buffer
-                   based on the composition pixel rate of 256e6 bit/s - always rounded up */
-                int frameInitTime = (pic.Width * pic.Height * 9 + 3199) / 3200; // better use default height here
-                /* time (in 90kHz resolution) needed to initialize (clear) the window area
-                   based on the composition pixel rate of 256e6 bit/s - always rounded up
-                   Note: no cropping etc. -> window size == image size */
-                int windowInitTime = (bm.Width * bm.Height * 9 + 3199) / 3200;
-                /* time (in 90kHz resolution) needed to decode the image
-                   based on the decoding pixel rate of 128e6 bit/s - always rounded up  */
-                int imageDecodeTime = (bm.Width * bm.Height * 9 + 1599) / 1600;
-                // write PCS start
-                packetHeader[10] = 0x16;                                            // ID
-                int dts = pic.StartTimeForWrite - (frameInitTime + windowInitTime);
-                ToolBox.SetDWord(packetHeader, 2, pic.StartTimeForWrite);              // PTS
-                ToolBox.SetDWord(packetHeader, 6, dts);                             // DTS
-                ToolBox.SetWord(packetHeader, 11, headerPCSStart.Length);           // size
-                for (int i = 0; i < packetHeader.Length; i++)
-                    buf[index++] = packetHeader[i];
-                ToolBox.SetWord(headerPCSStart, 0, pic.Width);
-                ToolBox.SetWord(headerPCSStart, 2, h);                              // cropped height
-                ToolBox.SetByte(headerPCSStart, 4, fpsId);
-                ToolBox.SetWord(headerPCSStart, 5, pic.CompositionNumber);
-                headerPCSStart[14] = (byte)(pic.IsForced ? 0x40 : 0);
-                ToolBox.SetWord(headerPCSStart, 15, pic.WindowXOffset);
-                ToolBox.SetWord(headerPCSStart, 17, yOfs);
-                for (int i = 0; i < headerPCSStart.Length; i++)
-                    buf[index++] = headerPCSStart[i];
+            /* time (in 90kHz resolution) needed to initialize (clear) the screen buffer
+                based on the composition pixel rate of 256e6 bit/s - always rounded up */
+            int frameInitTime = (pic.Width * pic.Height * 9 + 3199) / 3200; // better use default height here
+            /* time (in 90kHz resolution) needed to initialize (clear) the window area
+                based on the composition pixel rate of 256e6 bit/s - always rounded up
+                Note: no cropping etc. -> window size == image size */
+            int windowInitTime = (bm.Width * bm.Height * 9 + 3199) / 3200;
+            /* time (in 90kHz resolution) needed to decode the image
+                based on the decoding pixel rate of 128e6 bit/s - always rounded up  */
+            int imageDecodeTime = (bm.Width * bm.Height * 9 + 1599) / 1600;
+            // write PCS start
+            PacketHeader[10] = 0x16;                                            // ID
+            int dts = pic.StartTimeForWrite - (frameInitTime + windowInitTime);
+            ToolBox.SetDWord(PacketHeader, 2, pic.StartTimeForWrite);              // PTS
+            ToolBox.SetDWord(PacketHeader, 6, dts);                             // DTS
+            ToolBox.SetWord(PacketHeader, 11, HeaderPCSStart.Length);           // size
+            for (int i = 0; i < PacketHeader.Length; i++)
+                buf[index++] = PacketHeader[i];
+            ToolBox.SetWord(HeaderPCSStart, 0, pic.Width);
+            ToolBox.SetWord(HeaderPCSStart, 2, h);                              // cropped height
+            ToolBox.SetByte(HeaderPCSStart, 4, fpsId);
+            ToolBox.SetWord(HeaderPCSStart, 5, pic.CompositionNumber);
+            HeaderPCSStart[14] = (byte)(pic.IsForced ? 0x40 : 0);
+            ToolBox.SetWord(HeaderPCSStart, 15, pic.WindowXOffset);
+            ToolBox.SetWord(HeaderPCSStart, 17, yOfs);
+            for (int i = 0; i < HeaderPCSStart.Length; i++)
+                buf[index++] = HeaderPCSStart[i];
 
-                // write WDS
-                packetHeader[10] = 0x17;                                            // ID
-                int timeStamp = pic.StartTimeForWrite - windowInitTime;
-                ToolBox.SetDWord(packetHeader, 2, timeStamp);                       // PTS (keep DTS)
-                ToolBox.SetWord(packetHeader, 11, headerWDS.Length);                // size
-                for (int i = 0; i < packetHeader.Length; i++)
-                    buf[index++] = packetHeader[i];
-                ToolBox.SetWord(headerWDS, 2, pic.WindowXOffset);
-                ToolBox.SetWord(headerWDS, 4, yOfs);
-                ToolBox.SetWord(headerWDS, 6, bm.Width);
-                ToolBox.SetWord(headerWDS, 8, bm.Height);
-                for (int i = 0; i < headerWDS.Length; i++)
-                    buf[index++] = headerWDS[i];
+            // write WDS
+            PacketHeader[10] = 0x17;                                            // ID
+            int timeStamp = pic.StartTimeForWrite - windowInitTime;
+            ToolBox.SetDWord(PacketHeader, 2, timeStamp);                       // PTS (keep DTS)
+            ToolBox.SetWord(PacketHeader, 11, HeaderWds.Length);                // size
+            for (int i = 0; i < PacketHeader.Length; i++)
+                buf[index++] = PacketHeader[i];
+            ToolBox.SetWord(HeaderWds, 2, pic.WindowXOffset);
+            ToolBox.SetWord(HeaderWds, 4, yOfs);
+            ToolBox.SetWord(HeaderWds, 6, bm.Width);
+            ToolBox.SetWord(HeaderWds, 8, bm.Height);
+            for (int i = 0; i < HeaderWds.Length; i++)
+                buf[index++] = HeaderWds[i];
 
-                // write PDS
-                packetHeader[10] = 0x14;                                            // ID
-                ToolBox.SetDWord(packetHeader, 2, dts);                             // PTS (=DTS of PCS/WDS)
-                ToolBox.SetDWord(packetHeader, 6, 0);                               // DTS (0)
-                ToolBox.SetWord(packetHeader, 11, (2 + palSize * 5));               // size
-                for (int i = 0; i < packetHeader.Length; i++)
-                    buf[index++] = packetHeader[i];
-                buf[index++] = 0;
-                buf[index++] = 0;
-                for (int i = 0; i < palSize; i++)
-                {
-                    buf[index++] = (byte)i;                                         // index
-                    buf[index++] = pal.GetY()[i];                                   // Y
-                    buf[index++] = pal.GetCr()[i];                                  // Cr
-                    buf[index++] = pal.GetCb()[i];                                  // Cb
-                    buf[index++] = pal.GetAlpha()[i];                               // Alpha
-                }
+            // write PDS
+            PacketHeader[10] = 0x14;                                            // ID
+            ToolBox.SetDWord(PacketHeader, 2, dts);                             // PTS (=DTS of PCS/WDS)
+            ToolBox.SetDWord(PacketHeader, 6, 0);                               // DTS (0)
+            ToolBox.SetWord(PacketHeader, 11, (2 + palSize * 5));               // size
+            for (int i = 0; i < PacketHeader.Length; i++)
+                buf[index++] = PacketHeader[i];
+            buf[index++] = 0;
+            buf[index++] = 0;
+            for (int i = 0; i < palSize; i++)
+            {
+                buf[index++] = (byte)i;                                         // index
+                buf[index++] = pal.GetY()[i];                                   // Y
+                buf[index++] = pal.GetCr()[i];                                  // Cr
+                buf[index++] = pal.GetCb()[i];                                  // Cb
+                buf[index++] = pal.GetAlpha()[i];                               // Alpha
+            }
 
-                // write first OBJ
-                int bufSize = rleBuf.Length;
-                int rleIndex = 0;
-                if (bufSize > 0xffe4)
-                    bufSize = 0xffe4;
-                packetHeader[10] = 0x15;                                            // ID
-                timeStamp = dts + imageDecodeTime;
-                ToolBox.SetDWord(packetHeader, 2, timeStamp);                       // PTS
-                ToolBox.SetDWord(packetHeader, 6, dts);                             // DTS
-                ToolBox.SetWord(packetHeader, 11, headerODSFirst.Length + bufSize); // size
-                for (int i = 0; i < packetHeader.Length; i++)
-                    buf[index++] = packetHeader[i];
-                int marker = (int)((numAddPackets == 0) ? 0xC0000000 : 0x80000000);
-                ToolBox.SetDWord(headerODSFirst, 3, marker | (rleBuf.Length + 4));
-                ToolBox.SetWord(headerODSFirst, 7, bm.Width);
-                ToolBox.SetWord(headerODSFirst, 9, bm.Height);
-                for (int i = 0; i < headerODSFirst.Length; i++)
-                    buf[index++] = headerODSFirst[i];
-                for (int i = 0; i < bufSize; i++)
+            // write first OBJ
+            int bufSize = rleBuf.Length;
+            int rleIndex = 0;
+            if (bufSize > 0xffe4)
+                bufSize = 0xffe4;
+            PacketHeader[10] = 0x15;                                            // ID
+            timeStamp = dts + imageDecodeTime;
+            ToolBox.SetDWord(PacketHeader, 2, timeStamp);                       // PTS
+            ToolBox.SetDWord(PacketHeader, 6, dts);                             // DTS
+            ToolBox.SetWord(PacketHeader, 11, HeaderODSFirst.Length + bufSize); // size
+            for (int i = 0; i < PacketHeader.Length; i++)
+                buf[index++] = PacketHeader[i];
+            int marker = (int)((numAddPackets == 0) ? 0xC0000000 : 0x80000000);
+            ToolBox.SetDWord(HeaderODSFirst, 3, marker | (rleBuf.Length + 4));
+            ToolBox.SetWord(HeaderODSFirst, 7, bm.Width);
+            ToolBox.SetWord(HeaderODSFirst, 9, bm.Height);
+            for (int i = 0; i < HeaderODSFirst.Length; i++)
+                buf[index++] = HeaderODSFirst[i];
+            for (int i = 0; i < bufSize; i++)
+                buf[index++] = rleBuf[rleIndex++];
+
+            // write additional OBJ packets
+            bufSize = rleBuf.Length - bufSize; // remaining bytes to write
+            for (int p = 0; p < numAddPackets; p++)
+            {
+                int psize = bufSize;
+                if (psize > 0xffeb)
+                    psize = 0xffeb;
+                PacketHeader[10] = 0x15;                                            // ID (keep DTS & PTS)
+                ToolBox.SetWord(PacketHeader, 11, HeaderODSNext.Length + psize);    // size
+                for (int i = 0; i < PacketHeader.Length; i++)
+                    buf[index++] = PacketHeader[i];
+                for (int i = 0; i < HeaderODSNext.Length; i++)
+                    buf[index++] = HeaderODSNext[i];
+                for (int i = 0; i < psize; i++)
                     buf[index++] = rleBuf[rleIndex++];
+                bufSize -= psize;
+            }
 
-                // write additional OBJ packets
-                bufSize = rleBuf.Length - bufSize; // remaining bytes to write
-                for (int p = 0; p < numAddPackets; p++)
-                {
-                    int psize = bufSize;
-                    if (psize > 0xffeb)
-                        psize = 0xffeb;
-                    packetHeader[10] = 0x15;                                            // ID (keep DTS & PTS)
-                    ToolBox.SetWord(packetHeader, 11, headerODSNext.Length + psize);    // size
-                    for (int i = 0; i < packetHeader.Length; i++)
-                        buf[index++] = packetHeader[i];
-                    for (int i = 0; i < headerODSNext.Length; i++)
-                        buf[index++] = headerODSNext[i];
-                    for (int i = 0; i < psize; i++)
-                        buf[index++] = rleBuf[rleIndex++];
-                    bufSize -= psize;
-                }
+            // write END
+            PacketHeader[10] = 0x80;                                      // ID
+            ToolBox.SetDWord(PacketHeader, 6, 0);                               // DTS (0) (keep PTS of ODS)
+            ToolBox.SetWord(PacketHeader, 11, 0);                               // size
+            for (int i = 0; i < PacketHeader.Length; i++)
+                buf[index++] = PacketHeader[i];
 
-                // write END
-                packetHeader[10] = (byte)0x80;                                      // ID
-                ToolBox.SetDWord(packetHeader, 6, 0);                               // DTS (0) (keep PTS of ODS)
-                ToolBox.SetWord(packetHeader, 11, 0);                               // size
-                for (int i = 0; i < packetHeader.Length; i++)
-                    buf[index++] = packetHeader[i];
+            // write PCS end
+            PacketHeader[10] = 0x16;                                            // ID
+            ToolBox.SetDWord(PacketHeader, 2, pic.EndTimeForWrite);             // PTS
+            dts = pic.StartTimeForWrite - 1;
+            ToolBox.SetDWord(PacketHeader, 6, dts);                             // DTS
+            ToolBox.SetWord(PacketHeader, 11, HeaderPCSEnd.Length);             // size
+            for (int i = 0; i < PacketHeader.Length; i++)
+                buf[index++] = PacketHeader[i];
+            ToolBox.SetWord(HeaderPCSEnd, 0, pic.Width);
+            ToolBox.SetWord(HeaderPCSEnd, 2, h);                                // cropped height
+            ToolBox.SetByte(HeaderPCSEnd, 4, fpsId);
+            ToolBox.SetWord(HeaderPCSEnd, 5, pic.CompositionNumber + 1);
+            for (int i = 0; i < HeaderPCSEnd.Length; i++)
+                buf[index++] = HeaderPCSEnd[i];
 
-                // write PCS end
-                packetHeader[10] = 0x16;                                            // ID
-                ToolBox.SetDWord(packetHeader, 2, pic.EndTimeForWrite);             // PTS
-                dts = (int)pic.StartTimeForWrite - 1;
-                ToolBox.SetDWord(packetHeader, 6, dts);                             // DTS
-                ToolBox.SetWord(packetHeader, 11, headerPCSEnd.Length);             // size
-                for (int i = 0; i < packetHeader.Length; i++)
-                    buf[index++] = packetHeader[i];
-                ToolBox.SetWord(headerPCSEnd, 0, pic.Width);
-                ToolBox.SetWord(headerPCSEnd, 2, h);                                // cropped height
-                ToolBox.SetByte(headerPCSEnd, 4, fpsId);
-                ToolBox.SetWord(headerPCSEnd, 5, pic.CompositionNumber + 1);
-                for (int i = 0; i < headerPCSEnd.Length; i++)
-                    buf[index++] = headerPCSEnd[i];
+            // write WDS
+            PacketHeader[10] = 0x17;                                            // ID
+            timeStamp = pic.EndTimeForWrite - windowInitTime;
+            ToolBox.SetDWord(PacketHeader, 2, timeStamp);                       // PTS (keep DTS of PCS)
+            ToolBox.SetWord(PacketHeader, 11, HeaderWds.Length);                // size
+            for (int i = 0; i < PacketHeader.Length; i++)
+                buf[index++] = PacketHeader[i];
+            ToolBox.SetWord(HeaderWds, 2, pic.WindowXOffset);
+            ToolBox.SetWord(HeaderWds, 4, yOfs);
+            ToolBox.SetWord(HeaderWds, 6, bm.Width);
+            ToolBox.SetWord(HeaderWds, 8, bm.Height);
+            for (int i = 0; i < HeaderWds.Length; i++)
+                buf[index++] = HeaderWds[i];
 
-                // write WDS
-                packetHeader[10] = 0x17;                                            // ID
-                timeStamp = pic.EndTimeForWrite - windowInitTime;
-                ToolBox.SetDWord(packetHeader, 2, timeStamp);                       // PTS (keep DTS of PCS)
-                ToolBox.SetWord(packetHeader, 11, headerWDS.Length);                // size
-                for (int i = 0; i < packetHeader.Length; i++)
-                    buf[index++] = packetHeader[i];
-                ToolBox.SetWord(headerWDS, 2, pic.WindowXOffset);
-                ToolBox.SetWord(headerWDS, 4, yOfs);
-                ToolBox.SetWord(headerWDS, 6, bm.Width);
-                ToolBox.SetWord(headerWDS, 8, bm.Height);
-                for (int i = 0; i < headerWDS.Length; i++)
-                    buf[index++] = headerWDS[i];
-
-                // write END
-                packetHeader[10] = (byte)0x80;                                      // ID
-                ToolBox.SetDWord(packetHeader, 2, dts);                             // PTS (DTS of end PCS)
-                ToolBox.SetDWord(packetHeader, 6, 0);                               // DTS (0)
-                ToolBox.SetWord(packetHeader, 11, 0);                               // size
-                for (int i = 0; i < packetHeader.Length; i++)
-                    buf[index++] = packetHeader[i];
+            // write END
+            PacketHeader[10] = 0x80;                                      // ID
+            ToolBox.SetDWord(PacketHeader, 2, dts);                             // PTS (DTS of end PCS)
+            ToolBox.SetDWord(PacketHeader, 6, 0);                               // DTS (0)
+            ToolBox.SetWord(PacketHeader, 11, 0);                               // size
+            for (int i = 0; i < PacketHeader.Length; i++)
+                buf[index++] = PacketHeader[i];
 
             return buf;
         }
