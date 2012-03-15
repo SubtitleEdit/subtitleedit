@@ -196,9 +196,7 @@ namespace Nikse.SubtitleEdit.Logic
                         p.EndTime.TotalMilliseconds > positionInMilliseconds)
                     {
                         text = p.Text.Replace("|", Environment.NewLine);
-                        bool isInfo = false;
-                        if (p == paragraphs[0] && p.StartTime.TotalMilliseconds == 0 && positionInMilliseconds > 3000)
-                            isInfo = true;
+                        bool isInfo = p == paragraphs[0] && p.StartTime.TotalMilliseconds == 0 && positionInMilliseconds > 3000;
                         if (!isInfo)
                             break;
                     }
@@ -285,6 +283,8 @@ namespace Nikse.SubtitleEdit.Logic
             s = s.Replace("</i>" + Environment.NewLine + " <i>", " ");
             s = s.Replace("</i>" + Environment.NewLine + "<i>", " ");
             s = s.Replace(Environment.NewLine, " ");
+            s = s.Replace("   ", " ");
+            s = s.Replace("  ", " ");
             s = s.Replace("  ", " ");
             s = s.Replace("  ", " ");
 
@@ -305,6 +305,42 @@ namespace Nikse.SubtitleEdit.Logic
                 }
                 return s;
             }
+
+            var htmlTags = new Dictionary<int, string>();
+            var sb = new StringBuilder();
+            int six = 0;
+            while (six < s.Length)
+            {
+                string letter = s[six].ToString();
+                bool tagFound = letter == "<" && (s.Substring(six).StartsWith("<font ") || s.Substring(six).StartsWith("</font ") ||
+                                                s.Substring(six).StartsWith("</font") || s.Substring(six).StartsWith("</FONT") ||
+                                                s.Substring(six).StartsWith("</Font") || s.Substring(six).StartsWith("</Font") ||
+                                                s.Substring(six).StartsWith("<u") || s.Substring(six).StartsWith("</u") ||
+                                                s.Substring(six).StartsWith("<U") || s.Substring(six).StartsWith("</U") ||
+                                                s.Substring(six).StartsWith("<b") || s.Substring(six).StartsWith("</b") ||
+                                                s.Substring(six).StartsWith("<B") || s.Substring(six).StartsWith("</B") ||
+                                                s.Substring(six).StartsWith("<i") || s.Substring(six).StartsWith("</i") ||
+                                                s.Substring(six).StartsWith("<I") || s.Substring(six).StartsWith("<I"));
+                int endIndex = -1;
+                if (tagFound)
+                    endIndex = s.IndexOf(">", six + 1);
+
+                if (tagFound && endIndex > 0)
+                {
+                    string tag = s.Substring(six, endIndex - six + 1);
+                    s = s.Remove(six, tag.Length);
+                    if (htmlTags.ContainsKey(six))
+                        htmlTags[six] = htmlTags[six] + tag;
+                    else
+                        htmlTags.Add(six, tag);
+                }
+                else
+                {
+                    sb.Append(letter);
+                    six++;
+                }
+            }
+            s = sb.ToString();
 
             int splitPos = -1;
             int mid = s.Length / 2;
@@ -403,12 +439,53 @@ namespace Nikse.SubtitleEdit.Logic
             if (splitPos == -1)
             {
                 splitPos = mid;
-                s = s.Insert(mid - 1, "-");
+                s = s.Insert(mid - 1, Environment.NewLine);
+                s = ReInsertHtmlTags(s, htmlTags);
+                htmlTags = new Dictionary<int, string>();
+                s = s.Replace(Environment.NewLine, "-");
             }
             if (splitPos < s.Length - 2)
-                s = s.Substring(0, splitPos).TrimEnd() + Environment.NewLine + s.Substring(splitPos).Trim();
+                s = s.Substring(0, splitPos) + Environment.NewLine + s.Substring(splitPos);
+
+            s = ReInsertHtmlTags(s, htmlTags);
+            s = s.Replace(" " + Environment.NewLine, Environment.NewLine);
+            s = s.Replace(Environment.NewLine + " ", Environment.NewLine);
+
             return s.TrimEnd();
         }
+
+        private static string ReInsertHtmlTags(string s, Dictionary<int, string> htmlTags)
+        {
+            if (htmlTags.Count > 0)
+            {
+                var sb = new StringBuilder();
+                int six = 0;
+                for (int i = 0; i < s.Length; i++)
+                {
+                    string letter = s[i].ToString();
+                    if (Environment.NewLine.Contains(letter))
+                    {
+                        sb.Append(letter);
+                    }
+                    else
+                    {
+                        if (htmlTags.ContainsKey(six))
+                        {
+                            sb.Append(htmlTags[six]);
+                        }
+                        sb.Append(letter);
+                        six++;
+                    }
+                }
+                if (htmlTags.ContainsKey(six))
+                {
+                    sb.Append(htmlTags[six]);
+                }
+                s = sb.ToString();
+            }
+            return s;
+        }
+
 
         public static string UnbreakLine(string text)
         {
@@ -442,6 +519,9 @@ namespace Nikse.SubtitleEdit.Logic
         {
             if (s == null)
                 return null;
+
+            if (!s.Contains("<"))
+                return s;
 
             s = s.Replace("<i>", string.Empty);
             s = s.Replace("</i>", string.Empty);

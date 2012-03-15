@@ -2492,7 +2492,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 if (!newText.Equals(oldText))
                 {
-                    if (!noTagsText.Equals(Utilities.RemoveHtmlFontTag(oldText)))
+                    if (!noTagsText.Equals(Utilities.RemoveHtmlTags(oldText)))
                     {
                         if (AllowFix(p, fixAction))
                         {
