@@ -3909,14 +3909,17 @@ namespace Nikse.SubtitleEdit.Forms
                         if (_deleteIndices.Contains(i))
                             index++;
                     }
-                    if (index - 1 > 0)
-                        subtitleListView1.EnsureVisible(index - 1);
-                    if (index + 1 < subtitleListView1.Items.Count)
-                        subtitleListView1.EnsureVisible(index + 1);
 
-                    subtitleListView1.SelectNone();
-                    subtitleListView1.Items[index].Selected = true;
-                    subtitleListView1.EnsureVisible(index);
+                    if (index >= 0 && index < subtitleListView1.Items.Count)
+                    {
+                        if (index - 1 > 0)
+                            subtitleListView1.EnsureVisible(index - 1);
+                        if (index + 1 < subtitleListView1.Items.Count)
+                            subtitleListView1.EnsureVisible(index + 1);
+                        subtitleListView1.SelectNone();
+                        subtitleListView1.Items[index].Selected = true;
+                        subtitleListView1.EnsureVisible(index);
+                    }
                 }
             }
         }
