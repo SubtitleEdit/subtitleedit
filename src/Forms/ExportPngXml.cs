@@ -540,7 +540,13 @@ namespace Nikse.SubtitleEdit.Forms
             textSize = g.MeasureString(text, font);
             g.Dispose();
             bmp.Dispose();
-            bmp = new Bitmap((int)(textSize.Width * 0.8), (int)(textSize.Height * 0.7) + 10);
+            int sizeX = (int) (textSize.Width*0.8);
+            int sizeY = (int)(textSize.Height * 0.7) + 10;
+            if (sizeX < 1)
+                sizeX = 1;
+            if (sizeY < 1)
+                sizeY = 1;
+            bmp = new Bitmap(sizeX, sizeY);
             g = Graphics.FromImage(bmp);
 
             var lefts = new List<float>();
@@ -569,7 +575,7 @@ namespace Nikse.SubtitleEdit.Forms
             int i = 0;
             bool isItalic = false;
             float left = 5;
-            if (lefts.Count >= 0)
+            if (lefts.Count > 0)
                 left = lefts[0];
             float top = 5;
             bool newLine = false;
