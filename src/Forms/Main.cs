@@ -5137,6 +5137,11 @@ namespace Nikse.SubtitleEdit.Forms
                         lines = s.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
                         if (lines.Length == 2)
                         {
+                            if (Utilities.CountTagInText(s, "<i>") == 1 && lines[0].StartsWith("<i>") && lines[1].EndsWith("</i>"))
+                            {
+                                lines[0] += "</i>";
+                                lines[1] = "<i>" + lines[1];
+                            }
                             currentParagraph.Text = Utilities.AutoBreakLine(lines[0]);
                             newParagraph.Text = Utilities.AutoBreakLine(lines[1]);
                         }
