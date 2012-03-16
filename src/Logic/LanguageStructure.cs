@@ -851,6 +851,7 @@
                     public string CopyToClipboard { get; set; }
                     public string Split { get; set; }
                     public string MergeSelectedLines { get; set; }
+                    public string MergeSelectedLinesASDialogue { get; set; }                    
                     public string MergeWithLineBefore { get; set; }
                     public string MergeWithLineAfter { get; set; }
                     public string Normal { get; set; }

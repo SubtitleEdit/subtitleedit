@@ -273,8 +273,14 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
 
             if (_quartzFilgraphManager != null)
             {
-                _quartzFilgraphManager.Stop();
-                Marshal.ReleaseComObject(_quartzFilgraphManager);
+                try
+                {
+                    _quartzFilgraphManager.Stop();
+                    Marshal.ReleaseComObject(_quartzFilgraphManager);
+                }
+                catch 
+                {
+                }
             }
 
             _quartzFilgraphManager = null;

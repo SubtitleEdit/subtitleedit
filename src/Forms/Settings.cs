@@ -1813,7 +1813,7 @@ namespace Nikse.SubtitleEdit.Forms
             string waveFormsFolder = Configuration.WaveFormsFolder.TrimEnd(Path.DirectorySeparatorChar);
             if (Directory.Exists(waveFormsFolder))
             {
-                DirectoryInfo di = new DirectoryInfo(waveFormsFolder);
+                var di = new DirectoryInfo(waveFormsFolder);
 
                 foreach (FileInfo fileName in di.GetFiles("*.wav"))
                 {
@@ -1831,11 +1831,11 @@ namespace Nikse.SubtitleEdit.Forms
             string spectrogramsFolder = Configuration.SpectrogramsFolder.TrimEnd(Path.DirectorySeparatorChar);
             if (Directory.Exists(spectrogramsFolder))
             {
-                DirectoryInfo di = new DirectoryInfo(spectrogramsFolder);
+                var di = new DirectoryInfo(spectrogramsFolder);
 
                 foreach (DirectoryInfo dir in di.GetDirectories())
                 {
-                    DirectoryInfo spectrogramDir = new DirectoryInfo(dir.FullName);
+                    var spectrogramDir = new DirectoryInfo(dir.FullName);
                     foreach (FileInfo fileName in spectrogramDir.GetFiles("*.gif"))
                     {
                         File.Delete(fileName.FullName);
@@ -1896,7 +1896,6 @@ namespace Nikse.SubtitleEdit.Forms
                 comboBoxShortcutKey.SelectedIndex = 0;
                 comboBoxShortcutKey.Enabled = false;
                 buttonUpdateShortcut.Enabled = false;
-
             }
             else if (e.Node != null || e.Node.Nodes.Count == 0)
             {
@@ -1912,7 +1911,6 @@ namespace Nikse.SubtitleEdit.Forms
 
                 comboBoxShortcutKey.Enabled = true;
                 buttonUpdateShortcut.Enabled = true;
-
 
                 string shortcut = GetShortcut(e.Node.Text);
 
@@ -1944,10 +1942,7 @@ namespace Nikse.SubtitleEdit.Forms
                             i++;
                         }
                     }
-
                 }
-
-
             }
         }
 
@@ -1955,6 +1950,8 @@ namespace Nikse.SubtitleEdit.Forms
         {
             string shortcut = text.Substring(text.IndexOf("["));
             shortcut = shortcut.TrimEnd(']').TrimStart('[');
+            if (shortcut == Configuration.Settings.Language.General.None)
+                return string.Empty;
             return shortcut;
         }
 
@@ -1970,7 +1967,7 @@ namespace Nikse.SubtitleEdit.Forms
                     return;
                 }
 
-                StringBuilder sb = new StringBuilder();
+                var sb = new StringBuilder();
                 sb.Append("[");
                 if (checkBoxShortcutsControl.Checked)
                     sb.Append("Control+");
@@ -1983,18 +1980,13 @@ namespace Nikse.SubtitleEdit.Forms
 
                 if (sb.Length < 4 || sb.ToString().EndsWith("+]"))
                 {
-                    MessageBox.Show(string.Format(Configuration.Settings.Language.Settings.ShortcutIsNotValid, sb.ToString()));
+                    MessageBox.Show(string.Format(Configuration.Settings.Language.Settings.ShortcutIsNotValid, sb));
                     return;
                 }
 
-                treeViewShortcuts.SelectedNode.Text = text + " " + sb.ToString();
+                treeViewShortcuts.SelectedNode.Text = text + " " + sb;
 
             }
-        }
-
-        private void buttonSpectrogramsFolderEmpty_Click(object sender, EventArgs e)
-        {
-            InitializeWaveformsAndSpectrogramsFolderEmpty(Configuration.Settings.Language.Settings);
         }
 
     }
