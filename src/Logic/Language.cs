@@ -936,6 +936,7 @@ namespace Nikse.SubtitleEdit.Logic
                         CopyToClipboard = "Copy as text to clipboard",
                         Split = "Split",
                         MergeSelectedLines = "Merge selected lines",
+                        MergeSelectedLinesASDialogue = "Merge selected lines as dialogue",
                         MergeWithLineBefore = "Merge with line before",
                         MergeWithLineAfter = "Merge with line after",
                         Normal = "Normal",

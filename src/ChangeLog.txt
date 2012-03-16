@@ -4,7 +4,7 @@ Subtitle Edit Changelog
  * NEW:
    * Added new subtitle formats (now +90!)
  * IMPROVED:
-   * Many improvements to fix common errors - thx Majid
+   * Improvements to fix common errors - thx Trottel
  * FIXED:
    * Crash in fix common errors (remove unneeded spaces) - thx menes
    * Merge selected lines with 2+ lines - thx Verteller
@@ -12,6 +12,10 @@ Subtitle Edit Changelog
    * Context menu normal/italic in ocr window - thx cipry
    * Editing search type for "Multiple replace"
    * Wrong positioning of some texts (mostly at startup) - thx Trottel
+   * Fix crash in image export (due to blank lines) - thx Mahdi
+   * Line-breaking now works better with font tags - thx Trottel/XhmikosR
+   * Moving subtitles in timeline (waveform/spectrogram) with 
+     mouse is now fast again
 
 
 3.2.4 (11th March 2012)

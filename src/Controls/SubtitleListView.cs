@@ -272,21 +272,21 @@ namespace Nikse.SubtitleEdit.Controls
                 {
                     double charactersPerSecond = Utilities.GetCharactersPerSecond(paragraph);
                     if (charactersPerSecond > Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds + 7)
-                        Items[i].SubItems[ColumnIndexDuration].BackColor = System.Drawing.Color.Red;
+                        Items[i].SubItems[ColumnIndexDuration].BackColor = Color.Red;
                     else if (charactersPerSecond > Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds)
-                        Items[i].SubItems[ColumnIndexDuration].BackColor = System.Drawing.Color.Orange;
+                        Items[i].SubItems[ColumnIndexDuration].BackColor = Color.Orange;
                     else if (paragraph.Duration.TotalMilliseconds < Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds - 100)
-                        Items[i].SubItems[ColumnIndexDuration].BackColor = System.Drawing.Color.Red;
+                        Items[i].SubItems[ColumnIndexDuration].BackColor = Color.Red;
                     else if (paragraph.Duration.TotalMilliseconds < Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds)
-                        Items[i].SubItems[ColumnIndexDuration].BackColor = System.Drawing.Color.Orange;
+                        Items[i].SubItems[ColumnIndexDuration].BackColor = Color.Orange;
                 }
                 if (_settings.Tools.ListViewSyntaxColorDurationBig)
                 {
-                    double charactersPerSecond = Utilities.GetCharactersPerSecond(paragraph);
+                //    double charactersPerSecond = Utilities.GetCharactersPerSecond(paragraph);
                     if (paragraph.Duration.TotalMilliseconds > Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds + 100)
-                        Items[i].SubItems[ColumnIndexDuration].BackColor = System.Drawing.Color.Red;
+                        Items[i].SubItems[ColumnIndexDuration].BackColor = Color.Red;
                     else if (paragraph.Duration.TotalMilliseconds > Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds)
-                        Items[i].SubItems[ColumnIndexDuration].BackColor = System.Drawing.Color.Orange;
+                        Items[i].SubItems[ColumnIndexDuration].BackColor = Color.Orange;
                 }
 
                 if (_settings.Tools.ListViewSyntaxColorOverlap && i > 0)
