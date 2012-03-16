@@ -439,7 +439,7 @@ namespace Nikse.SubtitleEdit.Forms
                 comboBoxSpectrogramAppearance.SelectedIndex = 1;
             checkBoxReverseMouseWheelScrollDirection.Checked = Configuration.Settings.VideoControls.WaveFormMouseWheelScrollUpIsForward;
 
-            TreeNode fileNode = new TreeNode(Configuration.Settings.Language.Main.Menu.File.Title);
+            var fileNode = new TreeNode(Configuration.Settings.Language.Main.Menu.File.Title);
             fileNode.Nodes.Add(Configuration.Settings.Language.Main.Menu.File.New + GetShortcutText(Configuration.Settings.Shortcuts.MainFileNew));
             fileNode.Nodes.Add(Configuration.Settings.Language.Main.Menu.File.Open + GetShortcutText(Configuration.Settings.Shortcuts.MainFileOpen));
             fileNode.Nodes.Add(Configuration.Settings.Language.Main.Menu.File.Save + GetShortcutText(Configuration.Settings.Shortcuts.MainFileSave));
@@ -447,7 +447,7 @@ namespace Nikse.SubtitleEdit.Forms
             fileNode.Nodes.Add(Configuration.Settings.Language.Main.Menu.File.Export + " -> " + Configuration.Settings.Language.Main.Menu.File.ExportEbu + GetShortcutText(Configuration.Settings.Shortcuts.MainFileExportEbu));
             treeViewShortcuts.Nodes.Add(fileNode);
 
-            TreeNode editNode = new TreeNode(Configuration.Settings.Language.Main.Menu.Edit.Title);
+            var editNode = new TreeNode(Configuration.Settings.Language.Main.Menu.Edit.Title);
             editNode.Nodes.Add(Configuration.Settings.Language.Main.Menu.Edit.Find + GetShortcutText(Configuration.Settings.Shortcuts.MainEditFind));
             editNode.Nodes.Add(Configuration.Settings.Language.Main.Menu.Edit.FindNext + GetShortcutText(Configuration.Settings.Shortcuts.MainEditFindNext));
             editNode.Nodes.Add(Configuration.Settings.Language.Main.Menu.Edit.Replace + GetShortcutText(Configuration.Settings.Shortcuts.MainEditReplace));
@@ -455,11 +455,11 @@ namespace Nikse.SubtitleEdit.Forms
             editNode.Nodes.Add(Configuration.Settings.Language.Main.Menu.Edit.GoToSubtitleNumber + GetShortcutText(Configuration.Settings.Shortcuts.MainEditGoToLineNumber));
             treeViewShortcuts.Nodes.Add(editNode);
 
-            TreeNode toolsNode = new TreeNode(Configuration.Settings.Language.Main.Menu.Tools.Title);
+            var toolsNode = new TreeNode(Configuration.Settings.Language.Main.Menu.Tools.Title);
             toolsNode.Nodes.Add(Configuration.Settings.Language.Main.Menu.Tools.FixCommonErrors + GetShortcutText(Configuration.Settings.Shortcuts.MainToolsFixCommonErrors));
             treeViewShortcuts.Nodes.Add(toolsNode);
 
-            TreeNode videoNode = new TreeNode(Configuration.Settings.Language.Main.Menu.Video.Title);
+            var videoNode = new TreeNode(Configuration.Settings.Language.Main.Menu.Video.Title);
             if (!string.IsNullOrEmpty(Configuration.Settings.Language.Settings.TogglePlayPause))
                 videoNode.Nodes.Add(Configuration.Settings.Language.Settings.TogglePlayPause + GetShortcutText(Configuration.Settings.Shortcuts.MainVideoPlayPauseToggle));
             if (!string.IsNullOrEmpty(Configuration.Settings.Language.Settings.Pause))
@@ -478,38 +478,40 @@ namespace Nikse.SubtitleEdit.Forms
                 videoNode.Nodes.Add(Configuration.Settings.Language.Settings.Fullscreen + GetShortcutText(Configuration.Settings.Shortcuts.MainVideoFullscreen));
             treeViewShortcuts.Nodes.Add(videoNode);
 
-            TreeNode SyncNode = new TreeNode(Configuration.Settings.Language.Main.Menu.Synchronization.Title);
-            SyncNode.Nodes.Add(Configuration.Settings.Language.Main.Menu.Synchronization.AdjustAllTimes + GetShortcutText(Configuration.Settings.Shortcuts.MainSynchronizationAdjustTimes));
-            treeViewShortcuts.Nodes.Add(SyncNode);
+            var syncNode = new TreeNode(Configuration.Settings.Language.Main.Menu.Synchronization.Title);
+            syncNode.Nodes.Add(Configuration.Settings.Language.Main.Menu.Synchronization.AdjustAllTimes + GetShortcutText(Configuration.Settings.Shortcuts.MainSynchronizationAdjustTimes));
+            treeViewShortcuts.Nodes.Add(syncNode);
 
-            TreeNode ListViewNode = new TreeNode(Configuration.Settings.Language.Main.Controls.ListView);
-            ListViewNode.Nodes.Add(Configuration.Settings.Language.General.Italic + GetShortcutText(Configuration.Settings.Shortcuts.MainListViewItalic));
-            ListViewNode.Nodes.Add(Configuration.Settings.Language.Main.Menu.ContextMenu.InsertAfter + GetShortcutText(Configuration.Settings.Shortcuts.MainInsertAfter));
-            ListViewNode.Nodes.Add(Configuration.Settings.Language.Main.Menu.ContextMenu.InsertBefore + GetShortcutText(Configuration.Settings.Shortcuts.MainInsertBefore));
+            var listViewNode = new TreeNode(Configuration.Settings.Language.Main.Controls.ListView);
+            listViewNode.Nodes.Add(Configuration.Settings.Language.General.Italic + GetShortcutText(Configuration.Settings.Shortcuts.MainListViewItalic));
+            listViewNode.Nodes.Add(Configuration.Settings.Language.Main.Menu.ContextMenu.InsertAfter + GetShortcutText(Configuration.Settings.Shortcuts.MainInsertAfter));
+            listViewNode.Nodes.Add(Configuration.Settings.Language.Main.Menu.ContextMenu.InsertBefore + GetShortcutText(Configuration.Settings.Shortcuts.MainInsertBefore));
             if (!string.IsNullOrEmpty(Configuration.Settings.Language.Settings.MergeDialogue)) // TODO: Remove in SE 3.3
-                ListViewNode.Nodes.Add(Configuration.Settings.Language.Settings.MergeDialogue + GetShortcutText(Configuration.Settings.Shortcuts.MainMergeDialogue));
+                listViewNode.Nodes.Add(Configuration.Settings.Language.Settings.MergeDialogue + GetShortcutText(Configuration.Settings.Shortcuts.MainMergeDialogue));
             if (!string.IsNullOrEmpty(Configuration.Settings.Language.Settings.GoToNext)) // TODO: Remove in SE 3.3
-                ListViewNode.Nodes.Add(Configuration.Settings.Language.Settings.GoToNext + GetShortcutText(Configuration.Settings.Shortcuts.MainGoToNext));
+                listViewNode.Nodes.Add(Configuration.Settings.Language.Settings.GoToNext + GetShortcutText(Configuration.Settings.Shortcuts.MainGoToNext));
             if (!string.IsNullOrEmpty(Configuration.Settings.Language.Settings.GoToPrevious)) // TODO: Remove in SE 3.3
-                ListViewNode.Nodes.Add(Configuration.Settings.Language.Settings.GoToPrevious + GetShortcutText(Configuration.Settings.Shortcuts.MainGoToPrevious));
+                listViewNode.Nodes.Add(Configuration.Settings.Language.Settings.GoToPrevious + GetShortcutText(Configuration.Settings.Shortcuts.MainGoToPrevious));
             if (!string.IsNullOrEmpty(Configuration.Settings.Language.Settings.ToggleFocus)) // TODO: Remove in SE 3.3
-                ListViewNode.Nodes.Add(Configuration.Settings.Language.Settings.ToggleFocus + GetShortcutText(Configuration.Settings.Shortcuts.MainToogleFocus));
+                listViewNode.Nodes.Add(Configuration.Settings.Language.Settings.ToggleFocus + GetShortcutText(Configuration.Settings.Shortcuts.MainToogleFocus));
             if (!string.IsNullOrEmpty(Configuration.Settings.Language.Settings.ToggleDialogueDashes)) // TODO: Remove in SE 3.3
-                ListViewNode.Nodes.Add(Configuration.Settings.Language.Settings.ToggleDialogueDashes + GetShortcutText(Configuration.Settings.Shortcuts.MainListViewToggleDashes));
-            treeViewShortcuts.Nodes.Add(ListViewNode);
+                listViewNode.Nodes.Add(Configuration.Settings.Language.Settings.ToggleDialogueDashes + GetShortcutText(Configuration.Settings.Shortcuts.MainListViewToggleDashes));
+            treeViewShortcuts.Nodes.Add(listViewNode);
 
-            TreeNode TextBoxNode = new TreeNode(Configuration.Settings.Language.Settings.TextBox);
-            TextBoxNode.Nodes.Add(Configuration.Settings.Language.General.Italic + GetShortcutText(Configuration.Settings.Shortcuts.MainTextBoxItalic));
-            treeViewShortcuts.Nodes.Add(TextBoxNode);
+            var textBoxNode = new TreeNode(Configuration.Settings.Language.Settings.TextBox);
+            textBoxNode.Nodes.Add(Configuration.Settings.Language.General.Italic + GetShortcutText(Configuration.Settings.Shortcuts.MainTextBoxItalic));
+            treeViewShortcuts.Nodes.Add(textBoxNode);
 
-            TreeNode createNode = new TreeNode(Configuration.Settings.Language.Main.VideoControls.Create);
+            var createNode = new TreeNode(Configuration.Settings.Language.Main.VideoControls.Create);
             createNode.Nodes.Add(Configuration.Settings.Language.Main.VideoControls.InsertNewSubtitleAtVideoPosition + GetShortcutText(Configuration.Settings.Shortcuts.MainCreateInsertSubAtVideoPos));
             createNode.Nodes.Add(Configuration.Settings.Language.Main.VideoControls.PlayFromJustBeforeText + GetShortcutText(Configuration.Settings.Shortcuts.MainCreatePlayFromJustBefore));
             createNode.Nodes.Add(Configuration.Settings.Language.Main.VideoControls.SetStartTime + GetShortcutText(Configuration.Settings.Shortcuts.MainCreateSetStart));
             createNode.Nodes.Add(Configuration.Settings.Language.Main.VideoControls.SetEndTime + GetShortcutText(Configuration.Settings.Shortcuts.MainCreateSetEnd));
+            if (!string.IsNullOrEmpty(Configuration.Settings.Language.Settings.MainCreateStartDownEndUp)) // TODO: Remove in SE 3.3
+                createNode.Nodes.Add(Configuration.Settings.Language.Settings.MainCreateStartDownEndUp + GetShortcutText(Configuration.Settings.Shortcuts.MainCreateStartDownEndUp));
             treeViewShortcuts.Nodes.Add(createNode);
 
-            TreeNode adjustNode = new TreeNode(Configuration.Settings.Language.Main.VideoControls.Adjust);
+            var adjustNode = new TreeNode(Configuration.Settings.Language.Main.VideoControls.Adjust);
             adjustNode.Nodes.Add(Configuration.Settings.Language.Main.VideoControls.SetstartTimeAndOffsetOfRest + GetShortcutText(Configuration.Settings.Shortcuts.MainAdjustSetStartAndOffsetTheRest));
             adjustNode.Nodes.Add(Configuration.Settings.Language.Main.VideoControls.SetEndTimeAndGoToNext + GetShortcutText(Configuration.Settings.Shortcuts.MainAdjustSetEndAndGotoNext));
             adjustNode.Nodes.Add(Configuration.Settings.Language.Settings.AdjustViaEndAutoStartAndGoToNext + GetShortcutText(Configuration.Settings.Shortcuts.MainAdjustViaEndAutoStartAndGoToNext));
@@ -525,7 +527,7 @@ namespace Nikse.SubtitleEdit.Forms
                 adjustNode.Nodes.Add(Configuration.Settings.Language.Settings.AdjustSelected100MsBack + GetShortcutText(Configuration.Settings.Shortcuts.MainAdjustSelected100MsBack));
             treeViewShortcuts.Nodes.Add(adjustNode);
 
-            TreeNode audioVisualizerNode = new TreeNode(Configuration.Settings.Language.Settings.WaveformAndSpectrogram);
+            var audioVisualizerNode = new TreeNode(Configuration.Settings.Language.Settings.WaveformAndSpectrogram);
             audioVisualizerNode.Nodes.Add(Configuration.Settings.Language.WaveForm.ZoomIn + GetShortcutText(Configuration.Settings.Shortcuts.WaveformZoomIn));
             audioVisualizerNode.Nodes.Add(Configuration.Settings.Language.WaveForm.ZoomOut + GetShortcutText(Configuration.Settings.Shortcuts.WaveformZoomOut));
             if (!string.IsNullOrEmpty(Configuration.Settings.Language.Settings.VerticalZoom)) // TODO: Remove in SE 3.3
@@ -1016,6 +1018,8 @@ namespace Nikse.SubtitleEdit.Forms
                         Configuration.Settings.Shortcuts.MainCreateSetStart = GetShortcut(node.Text);
                     else if (text == Configuration.Settings.Language.Main.VideoControls.SetEndTime.Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.MainCreateSetEnd = GetShortcut(node.Text);
+                    if (!string.IsNullOrEmpty(Configuration.Settings.Language.Settings.MainCreateStartDownEndUp) && text == Configuration.Settings.Language.Settings.MainCreateStartDownEndUp.Replace("&", string.Empty)) // TODO: Remove in SE 3.3
+                        Configuration.Settings.Shortcuts.MainCreateStartDownEndUp = GetShortcut(node.Text);
                 }
             }
 

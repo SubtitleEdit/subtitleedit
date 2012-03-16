@@ -107,6 +107,7 @@ namespace Nikse.SubtitleEdit.Forms
         Keys _mainCreatePlayFromJustBefore = Keys.None;
         Keys _mainCreateSetStart = Keys.None;
         Keys _mainCreateSetEnd = Keys.None;
+        Keys _mainCreateStartDownEndUp = Keys.None;
         Keys _mainAdjustSetStartAndOffsetTheRest = Keys.None;
         Keys _mainAdjustSetEndAndGotoNext = Keys.None;
         Keys _mainAdjustInsertViaEndAutoStartAndGoToNext = Keys.None;
@@ -132,6 +133,7 @@ namespace Nikse.SubtitleEdit.Forms
         bool _videoLoadedGoToSubPosAndPause = false;
         bool _makeHistory = true;
         string _cutText = string.Empty;
+        private Paragraph _mainCreateStartDownEndUpParagraph;
 
         private bool AutoRepeatContinueOn
         {
@@ -7838,6 +7840,12 @@ namespace Nikse.SubtitleEdit.Forms
                     buttonSetEnd_Click(null, null);
                     e.SuppressKeyPress = true;
                 }
+                else if (_mainCreateStartDownEndUp == e.KeyData)
+                {
+                    if (_mainCreateStartDownEndUpParagraph == null)
+                        _mainCreateStartDownEndUpParagraph = InsertNewTextAtVideoPosition();
+                    e.SuppressKeyPress = true;
+                }
             }
             // put new entries above tabs
         }
@@ -7940,11 +7948,11 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void SubtitleListview1_KeyDown(object sender, KeyEventArgs e)
+        private void SubtitleListview1KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.C && e.Modifiers == Keys.Control) //Ctrl+c = Copy to clipboard
             {
-                Subtitle tmp = new Subtitle();
+                var tmp = new Subtitle();
                 foreach (int i in SubtitleListview1.SelectedIndices)
                 {
                     Paragraph p = _subtitle.GetParagraphOrDefault(i);
@@ -9397,7 +9405,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (_subtitle.Paragraphs.Count > 0)
                 startNumber = _subtitle.Paragraphs[0].Number;
 
-            TimeCode tc = new TimeCode(TimeSpan.FromMilliseconds(totalMilliseconds));
+            var tc = new TimeCode(TimeSpan.FromMilliseconds(totalMilliseconds));
             MakeHistoryForUndo(_language.BeforeInsertSubtitleAtVideoPosition + "  " + tc.ToString());
 
             // find index where to insert
@@ -10146,6 +10154,7 @@ namespace Nikse.SubtitleEdit.Forms
             _mainCreatePlayFromJustBefore = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainCreatePlayFromJustBefore);
             _mainCreateSetStart = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainCreateSetStart);
             _mainCreateSetEnd = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainCreateSetEnd);
+            _mainCreateStartDownEndUp = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainCreateStartDownEndUp);
             _mainAdjustSetStartAndOffsetTheRest = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainAdjustSetStartAndOffsetTheRest);
             _mainAdjustSetEndAndGotoNext = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainAdjustSetEndAndGotoNext);
             _mainAdjustInsertViaEndAutoStartAndGoToNext = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainAdjustViaEndAutoStartAndGoToNext);
@@ -12808,9 +12817,20 @@ namespace Nikse.SubtitleEdit.Forms
             exportBdnXmlPng.ShowDialog(this);
         }
 
-        private void toolStripMenuItemMergeDialogue_Click(object sender, EventArgs e)
+        private void ToolStripMenuItemMergeDialogueClick(object sender, EventArgs e)
         {
             MergeDialogues();
+        }
+
+        private void MainKeyUp(object sender, KeyEventArgs e)
+        {
+            if (_mainCreateStartDownEndUpParagraph != null)
+            {
+                var p = _subtitle.Paragraphs[_subtitleListViewIndex];
+                if (p.ToString() == _mainCreateStartDownEndUpParagraph.ToString())
+                    buttonSetEnd_Click(null, null);
+                _mainCreateStartDownEndUpParagraph = null;
+            }
         }       
 
     }
