@@ -278,7 +278,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                     _quartzFilgraphManager.Stop();
                     Marshal.ReleaseComObject(_quartzFilgraphManager);
                 }
-                catch 
+                catch
                 {
                 }
             }

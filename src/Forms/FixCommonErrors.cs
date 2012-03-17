@@ -1238,7 +1238,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     int start = p.Text.IndexOf('"');
                     int end = p.Text.LastIndexOf('"');
-                    string quote = p.Text.Substring(start, end - start + 1);                    
+                    string quote = p.Text.Substring(start, end - start + 1);
                     if (!quote.Contains(Environment.NewLine))
                     {
                         string newText = p.Text;
@@ -3765,7 +3765,7 @@ namespace Nikse.SubtitleEdit.Forms
                 string s = before.Substring(i, 1);
                 if (beforeColors.ContainsKey(i) && beforeBackgroundColors.ContainsKey(i))
                 {
-                    sb.Append(string.Format("<span style=\"color:{0}; background-color: {1}\">{2}</span>", ColorTranslator.ToHtml(beforeColors[i]), ColorTranslator.ToHtml(beforeBackgroundColors[i]), s));                    
+                    sb.Append(string.Format("<span style=\"color:{0}; background-color: {1}\">{2}</span>", ColorTranslator.ToHtml(beforeColors[i]), ColorTranslator.ToHtml(beforeBackgroundColors[i]), s));
                 }
                 else if (beforeColors.ContainsKey(i))
                 {
@@ -3786,7 +3786,7 @@ namespace Nikse.SubtitleEdit.Forms
                 string s = after.Substring(i, 1);
                 if (afterColors.ContainsKey(i) && afterBackgroundColors.ContainsKey(i))
                 {
-                    sb2.Append(string.Format("<span style=\"color:{0}; background-color: {1}\">{2}</span>", ColorTranslator.ToHtml(afterColors[i]), ColorTranslator.ToHtml(afterBackgroundColors[i]), s));                    
+                    sb2.Append(string.Format("<span style=\"color:{0}; background-color: {1}\">{2}</span>", ColorTranslator.ToHtml(afterColors[i]), ColorTranslator.ToHtml(afterBackgroundColors[i]), s));
                 }
                 else if (afterColors.ContainsKey(i))
                 {

@@ -580,7 +580,7 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
 
             pic.WindowXOffset = (pic.Width - bm.Width) / 2;
             pic.WindowYOffset = pic.Height - (bm.Height + bottomMargin);
-            
+
             int yOfs = pic.WindowYOffset - Core.CropOfsY;
             if (yOfs < 0)
             {

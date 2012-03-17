@@ -21,7 +21,7 @@ namespace Nikse.SubtitleEdit.Forms
             SkipAll,
             SkipWholeText,
             SkipOnce,
-            UseSuggestion,            
+            UseSuggestion,
         }
 
         public Action ActionResult { get; private set; }

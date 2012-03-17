@@ -27,7 +27,7 @@ namespace Nikse.SubtitleEdit.Logic
 
         private TimeCode DecodeTimeCode(string timeCode)
         {
-            var parts = timeCode.Split(":;.,-".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);            
+            var parts = timeCode.Split(":;.,-".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
             return new TimeCode(int.Parse(parts[0]), int.Parse(parts[1]), int.Parse(parts[2]), int.Parse(parts[3]));
         }
 
