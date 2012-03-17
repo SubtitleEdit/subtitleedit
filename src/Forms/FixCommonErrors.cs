@@ -720,7 +720,7 @@ namespace Nikse.SubtitleEdit.Forms
                 bool tooLong = false;
                 foreach (string line in lines)
                 {
-                    if (line.Length > Configuration.Settings.General.SubtitleLineMaximumLength)
+                    if (Utilities.RemoveHtmlTags(line).Length > Configuration.Settings.General.SubtitleLineMaximumLength)
                     {
                         tooLong = true;
                     }
