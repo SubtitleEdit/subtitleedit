@@ -66,7 +66,7 @@ namespace Nikse.SubtitleEdit.Forms
             comboBoxEncoding.Items.Add(Encoding.UTF8.EncodingName);
             foreach (EncodingInfo ei in Encoding.GetEncodings())
             {
-                if (ei.Name != Encoding.UTF8.BodyName && ei.CodePage >= Configuration.Settings.General.EncodingMininumCodePage)                        
+                if (ei.Name != Encoding.UTF8.BodyName && ei.CodePage >= Configuration.Settings.General.EncodingMininumCodePage)
                 {
                     comboBoxEncoding.Items.Add(ei.CodePage + ": " + ei.DisplayName);
                     if (ei.Name == gs.DefaultEncoding)

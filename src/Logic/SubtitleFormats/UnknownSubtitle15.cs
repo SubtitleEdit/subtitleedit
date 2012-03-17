@@ -50,12 +50,12 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public override string ToText(Subtitle subtitle, string title)
         {
-            //<page> 
-            // <video> 
-            //   <cuepoint> 
-            //     <name>That's 123. That's the number one hundred twenty three.</name> 
-            //     <startTime>00:00:04:67</startTime> 
-            //     <endTime>00:00:07:50</endTime> 
+            //<page>
+            // <video>
+            //   <cuepoint>
+            //     <name>That's 123. That's the number one hundred twenty three.</name>
+            //     <startTime>00:00:04:67</startTime>
+            //     <endTime>00:00:07:50</endTime>
             //   </cuepoint>
 
             string xmlStructure =

@@ -812,7 +812,7 @@ namespace Nikse.SubtitleEdit.Logic
                 settings.General.DefaultEncoding = subNode.InnerText;
             subNode = node.SelectSingleNode("EncodingMininumCodePage");
             if (subNode != null)
-                settings.General.EncodingMininumCodePage = Convert.ToInt32(subNode.InnerText);            
+                settings.General.EncodingMininumCodePage = Convert.ToInt32(subNode.InnerText);
             subNode = node.SelectSingleNode("AutoGuessAnsiEncoding");
             if (subNode != null)
                 settings.General.AutoGuessAnsiEncoding = Convert.ToBoolean(subNode.InnerText);
@@ -1555,7 +1555,7 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("ShowSpectrogram", settings.General.ShowSpectrogram.ToString());
             textWriter.WriteElementString("DefaultFrameRate", settings.General.DefaultFrameRate.ToString());
             textWriter.WriteElementString("DefaultEncoding", settings.General.DefaultEncoding);
-            textWriter.WriteElementString("EncodingMininumCodePage", settings.General.EncodingMininumCodePage.ToString());            
+            textWriter.WriteElementString("EncodingMininumCodePage", settings.General.EncodingMininumCodePage.ToString());
             textWriter.WriteElementString("AutoGuessAnsiEncoding", settings.General.AutoGuessAnsiEncoding.ToString());
             textWriter.WriteElementString("SubtitleFontName", settings.General.SubtitleFontName);
             textWriter.WriteElementString("SubtitleFontSize", settings.General.SubtitleFontSize.ToString());

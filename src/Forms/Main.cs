@@ -1662,7 +1662,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 if (Path.GetExtension(fileName).ToLower() == ".divx" || Path.GetExtension(fileName).ToLower() == ".avi")
                 {
-                    if (ImportSubtitleFromDivX(fileName))                       
+                    if (ImportSubtitleFromDivX(fileName))
                         return;
                 }
 
@@ -4839,7 +4839,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
             UpdateListViewTextCharactersPerSeconds(charactersPerSecond, paragraph);
-            charactersPerSecond.Left = textBox.Left + (textBox.Width - labelCharactersPerSecond.Width); 
+            charactersPerSecond.Left = textBox.Left + (textBox.Width - labelCharactersPerSecond.Width);
             lineTotal.Left = textBox.Left + (textBox.Width - lineTotal.Width);
             FixVerticalScrollBars(textBox);
         }
@@ -6585,13 +6585,13 @@ namespace Nikse.SubtitleEdit.Forms
             long pos = 0;
             long length = f.Length - 50;
             while (pos < length)
-            {                
+            {
                 f.Position = pos;
                 int readCount = f.Read(searchBuffer, 0, searchBuffer.Length);
                 for (int i = 0; i < readCount; i++)
                 {
-                    if (searchBuffer[i] == 0x5b && 
-                        (i + 4 >= readCount || (searchBuffer[i + 1] >= 0x30 && searchBuffer[i + 1] <= 0x39 && searchBuffer[i + 3] == 0x3a))) 
+                    if (searchBuffer[i] == 0x5b &&
+                        (i + 4 >= readCount || (searchBuffer[i + 1] >= 0x30 && searchBuffer[i + 1] <= 0x39 && searchBuffer[i + 3] == 0x3a)))
                     {
                         f.Position =  pos + i + 1;
 
@@ -10097,7 +10097,7 @@ namespace Nikse.SubtitleEdit.Forms
         void  _timerDoSyntaxColoring_Tick(object sender, EventArgs e)
         {
             UpdateListSyntaxColoring();
- 	        _timerDoSyntaxColoring.Stop();
+            _timerDoSyntaxColoring.Stop();
         }
 
         private void SetPositionFromXYString(string positionAndSize, string name)
@@ -12831,7 +12831,7 @@ namespace Nikse.SubtitleEdit.Forms
                     buttonSetEnd_Click(null, null);
                 _mainCreateStartDownEndUpParagraph = null;
             }
-        }       
+        }
 
     }
 }

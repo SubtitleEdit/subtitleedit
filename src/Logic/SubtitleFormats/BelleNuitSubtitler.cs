@@ -171,7 +171,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 	<true/>
 	<key>pagesetup</key>
 	<null/>
-	<key>titlelist</key>	
+	<key>titlelist</key>
 </xmldict>");
             XmlNode node = doc.CreateElement("string");
             node.InnerText = sb.ToString().Trim() + Environment.NewLine + Environment.NewLine;

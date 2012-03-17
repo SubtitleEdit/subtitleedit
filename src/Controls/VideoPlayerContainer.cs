@@ -601,7 +601,7 @@ namespace Nikse.SubtitleEdit.Controls
             _labelVideoPlayerName.BackColor = Color.FromArgb(67, 75, 93);
             _labelVideoPlayerName.AutoSize = true;
             _labelVideoPlayerName.Font = new Font(_labelTimeCode.Font.FontFamily, 5);
-            
+
             _panelcontrols.Controls.Add(_labelVideoPlayerName);
 
             _pictureBoxBackground.SendToBack();

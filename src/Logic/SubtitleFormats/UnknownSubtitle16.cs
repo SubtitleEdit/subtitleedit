@@ -119,7 +119,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                             if (index > 0)
                                 s = s.Substring(0, index);
                             text.AppendLine(s.Trim());
-                        }                    
+                        }
                     }
                     else
                     {

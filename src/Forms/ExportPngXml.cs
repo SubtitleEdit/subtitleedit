@@ -56,9 +56,9 @@ namespace Nikse.SubtitleEdit.Forms
             comboBoxImageFormat.SelectedIndex = 4;
         }
 
-        private double FrameRate 
+        private double FrameRate
         {
-            get 
+            get
             {
                 if (comboBoxFramerate.SelectedItem == null)
                     return 25;
@@ -366,7 +366,7 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         string numberString = string.Format("IMAGE{0:000}", i);
                         string fileName = Path.Combine(folderBrowserDialog1.SelectedPath, numberString + "." + comboBoxImageFormat.Text.ToLower());
-                        var imageFormat = System.Drawing.Imaging.ImageFormat.Png; 
+                        var imageFormat = System.Drawing.Imaging.ImageFormat.Png;
                         if (comboBoxImageFormat.SelectedIndex == 0)
                             imageFormat = System.Drawing.Imaging.ImageFormat.Bmp;
                         else if (comboBoxImageFormat.SelectedIndex == 1)

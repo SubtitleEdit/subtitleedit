@@ -166,7 +166,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                                         italic = true;
                                         pText.Append("<i>");
                                     }
-                                }                                                                   
+                                }
                                 if (innerNode.HasChildNodes)
                                 {
                                     foreach (XmlNode innerInnerNode in innerNode.ChildNodes)
