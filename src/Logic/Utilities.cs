@@ -1527,6 +1527,18 @@ namespace Nikse.SubtitleEdit.Logic
             return userNamesEtcXmlFileName;
         }
 
+        public static string LoadNamesEtcWordLists(HashSet<string> namesEtcList, HashSet<string> namesEtcMultiWordList, string languageName)
+        {
+            namesEtcList.Clear();
+            namesEtcMultiWordList.Clear();
+
+            LoadGlobalNamesEtc(namesEtcList, namesEtcMultiWordList);
+
+            string userNamesEtcXmlFileName = LoadLocalNamesEtc(namesEtcList, namesEtcMultiWordList, languageName);
+            return userNamesEtcXmlFileName;
+        }
+
+
         internal static void LoadGlobalNamesEtc(List<string> namesEtcList, List<string> namesEtcMultiWordList)
         {
             // Load names etc list (names/noise words)
@@ -1566,6 +1578,46 @@ namespace Nikse.SubtitleEdit.Logic
                 }
         }
 
+        internal static void LoadGlobalNamesEtc(HashSet<string> namesEtcList, HashSet<string> namesEtcMultiWordList)
+        {
+            // Load names etc list (names/noise words)
+            var namesEtcDoc = new XmlDocument();
+            bool loaded = false;
+            if (Configuration.Settings.WordLists.UseOnlineNamesEtc && !string.IsNullOrEmpty(Configuration.Settings.WordLists.NamesEtcUrl))
+            {
+                try
+                {
+                    string xml = ReadTextFileViaUrlAndProxyIfAvailable(Configuration.Settings.WordLists.NamesEtcUrl);
+                    namesEtcDoc.LoadXml(xml);
+                    loaded = true;
+                }
+                catch (Exception exception)
+                {
+                    MessageBox.Show(exception.Message + Environment.NewLine + exception.StackTrace);
+                }
+            }
+            if (!loaded && File.Exists(DictionaryFolder + "names_etc.xml"))
+            {
+                namesEtcDoc.Load(DictionaryFolder + "names_etc.xml");
+            }
+            if (namesEtcDoc.DocumentElement != null)
+                foreach (XmlNode node in namesEtcDoc.DocumentElement.SelectNodes("name"))
+                {
+                    string s = node.InnerText.Trim();
+                    if (s.Contains(" "))
+                    {
+                        if (!namesEtcMultiWordList.Contains(s))
+                            namesEtcMultiWordList.Add(s);
+                    }
+                    else
+                    {
+                        if (!namesEtcList.Contains(s))
+                            namesEtcList.Add(s);
+                    }
+                }
+        }
+
+
         internal static string LoadLocalNamesEtc(List<string> namesEtcList, List<string> namesEtcMultiWordList, string languageName)
         {
             string userNamesEtcXmlFileName = DictionaryFolder + languageName + "_names_etc.xml";
@@ -1598,6 +1650,39 @@ namespace Nikse.SubtitleEdit.Logic
             return userNamesEtcXmlFileName;
         }
 
+        internal static string LoadLocalNamesEtc(HashSet<string> namesEtcList, HashSet<string> namesEtcMultiWordList, string languageName)
+        {
+            string userNamesEtcXmlFileName = DictionaryFolder + languageName + "_names_etc.xml";
+            if (languageName.Length == 2)
+            {
+                string[] files = Directory.GetFiles(DictionaryFolder, languageName + "_??_names_etc.xml");
+                if (files.Length > 0)
+                    userNamesEtcXmlFileName = files[0];
+            }
+
+            if (File.Exists(userNamesEtcXmlFileName))
+            {
+                var namesEtcDoc = new XmlDocument();
+                namesEtcDoc.Load(userNamesEtcXmlFileName);
+                foreach (XmlNode node in namesEtcDoc.DocumentElement.SelectNodes("name"))
+                {
+                    string s = node.InnerText.Trim();
+                    if (s.Contains(" "))
+                    {
+                        if (!namesEtcMultiWordList.Contains(s))
+                            namesEtcMultiWordList.Add(s);
+                    }
+                    else
+                    {
+                        if (!namesEtcList.Contains(s))
+                            namesEtcList.Add(s);
+                    }
+                }
+            }
+            return userNamesEtcXmlFileName;
+        }
+
+
         internal static bool IsInNamesEtcMultiWordList(List<string> namesEtcMultiWordList, string line, string word)
         {
             string text = line.Replace(Environment.NewLine, " ");
@@ -1616,7 +1701,43 @@ namespace Nikse.SubtitleEdit.Logic
             return false;
         }
 
+        internal static bool IsInNamesEtcMultiWordList(HashSet<string> namesEtcMultiWordList, string line, string word)
+        {
+            string text = line.Replace(Environment.NewLine, " ");
+            text = text.Replace("  ", " ");
+
+            foreach (string s in namesEtcMultiWordList)
+            {
+                if (s.Contains(word) && text.Contains(s))
+                {
+                    if (s.StartsWith(word + " ") || s.EndsWith(" " + word) || s.Contains(" " + word + " "))
+                        return true;
+                    if (word == s)
+                        return true;
+                }
+            }
+            return false;
+        }
+
         public static string LoadUserWordList(List<string> userWordList, string languageName)
+        {
+            userWordList.Clear();
+            var userWordDictionary = new XmlDocument();
+            string userWordListXmlFileName = DictionaryFolder + languageName + "_user.xml";
+            if (File.Exists(userWordListXmlFileName))
+            {
+                userWordDictionary.Load(userWordListXmlFileName);
+                foreach (XmlNode node in userWordDictionary.DocumentElement.SelectNodes("word"))
+                {
+                    string s = node.InnerText.ToLower();
+                    if (!userWordList.Contains(s))
+                        userWordList.Add(s);
+                }
+            }
+            return userWordListXmlFileName;
+        }
+
+        public static string LoadUserWordList(HashSet<string> userWordList, string languageName)
         {
             userWordList.Clear();
             var userWordDictionary = new XmlDocument();

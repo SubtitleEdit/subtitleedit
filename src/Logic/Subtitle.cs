@@ -326,8 +326,13 @@ namespace Nikse.SubtitleEdit.Logic
                 if (p.StartTime.TotalMilliseconds == _paragraphs[i].StartTime.TotalMilliseconds &&
                     p.EndTime.TotalMilliseconds == _paragraphs[i].EndTime.TotalMilliseconds)
                     return i;
+                if (p.Number == _paragraphs[i].Number && (p.StartTime.TotalMilliseconds == _paragraphs[i].StartTime.TotalMilliseconds ||
+                    p.EndTime.TotalMilliseconds == _paragraphs[i].EndTime.TotalMilliseconds))
+                    return i;
+                if (p.Text == _paragraphs[i].Text && (p.StartTime.TotalMilliseconds == _paragraphs[i].StartTime.TotalMilliseconds ||
+                    p.EndTime.TotalMilliseconds == _paragraphs[i].EndTime.TotalMilliseconds))
+                    return i;
             }
-
             return -1;
         }
 

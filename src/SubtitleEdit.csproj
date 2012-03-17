@@ -534,6 +534,7 @@
     <Compile Include="Logic\DetectEncoding\Multilang\__MIDL_IWinTypes_0009.cs" />
     <Compile Include="Logic\FastBitmap.cs" />
     <Compile Include="Logic\Fourier.cs" />
+    <Compile Include="Logic\HashSet.cs" />
     <Compile Include="Logic\IfoParser.cs" />
     <Compile Include="Logic\Language.cs" />
     <Compile Include="Logic\Mp4\Boxes\Box.cs" />
