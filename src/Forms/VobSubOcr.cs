@@ -2246,6 +2246,7 @@ namespace Nikse.SubtitleEdit.Forms
                     line = _ocrFixEngine.FixOcrErrors(line, index, _lastLine, true, checkBoxGuessUnknownWords.Checked);
                 int correctWords;
                 int wordsNotFound = _ocrFixEngine.CountUnknownWordsViaDictionary(line, out correctWords);
+                int oldCorrectWords = correctWords;
 
                 if (wordsNotFound > 0 || correctWords == 0)
                 {
@@ -2267,6 +2268,12 @@ namespace Nikse.SubtitleEdit.Forms
                              (!newText.Replace("</i>", string.Empty).Contains("/") || textWithOutFixes.Replace("</i>", string.Empty).Contains("/")) &&
                              newUnfixedText.Trim().Length > 0 &&
                              newWordsNotFound < wordsNotFound || (newWordsNotFound == wordsNotFound && newText.EndsWith("!") && textWithOutFixes.EndsWith("l")))
+                    {
+                        wordsNotFound = newWordsNotFound;
+                        textWithOutFixes = newUnfixedText;
+                        line = newText;
+                    }
+                    else if (correctWords > oldCorrectWords + 1 || (correctWords > oldCorrectWords && !textWithOutFixes.Contains(" ")))
                     {
                         wordsNotFound = newWordsNotFound;
                         textWithOutFixes = newUnfixedText;
