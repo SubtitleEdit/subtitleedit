@@ -1,4 +1,4 @@
-<OCRFixReplaceList>
+﻿<OCRFixReplaceList>
   <WholeWords>
     <Word from="$COff$" to="scoffs" />
     <Word from="$ergei" to="Sergei" />
@@ -139,7 +139,6 @@
     <Word from="answerwhat" to="answer what" />
     <Word from="anyhcdy's" to="anybody's" />
     <Word from="Anyidea" to="Any idea" />
-    <Word from="anymore" to="any more" />
     <Word from="anyone's_" to="anyone's." />
     <Word from="ARABlc" to="ARABIC" />
     <Word from="aren't_" to="aren't." />
@@ -1372,6 +1371,12 @@
     <Word from="sfill" to="still" />
     <Word from="objecl" to="object" />
     <Word from="yourpoorleg" to="your poor leg" />
+    <Word from="worfd" to="world" />
+    <Word from="crappyjob" to="crappy job" />
+    <Word from="giris" to="girls" />
+    <Word from="giﬂfriend" to="girlfriend" />
+    <Word from="valedictolian" to="valedictorian" />
+    <Word from="woﬂd" to="world" />
   </WholeWords>
   <PartialWordsAlways>
     <!-- Will be replaced always -->
