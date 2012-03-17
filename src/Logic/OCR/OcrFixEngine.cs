@@ -25,13 +25,14 @@ namespace Nikse.SubtitleEdit.Logic.OCR
         string _replaceListXmlFileName;
         string _userWordListXmlFileName;
         string _fiveLetterWordListLanguageName;
-        List<string> _namesEtcList = new List<string>();
-        List<string> _namesEtcListUppercase = new List<string>();
-        List<string> _namesEtcListWithApostrophe = new List<string>();
-        List<string> _namesEtcMultiWordList = new List<string>(); // case sensitive phrases
-        List<string> _abbreviationList;
-        List<string> _userWordList = new List<string>();
-        List<string> _wordSkipList = new List<string>();
+
+        HashSet<string> _namesEtcList = new HashSet<string>();
+        HashSet<string> _namesEtcListUppercase = new HashSet<string>();
+        HashSet<string> _namesEtcListWithApostrophe = new HashSet<string>();
+        HashSet<string> _namesEtcMultiWordList = new HashSet<string>(); // case sensitive phrases
+        HashSet<string> _abbreviationList;
+        HashSet<string> _userWordList = new HashSet<string>();
+        HashSet<string> _wordSkipList = new HashSet<string>();
         Hunspell _hunspell;
         readonly OcrSpellCheck _spellCheck;
         readonly Form _parentForm;
@@ -164,19 +165,19 @@ namespace Nikse.SubtitleEdit.Logic.OCR
             string dictionary = Utilities.DictionaryFolder + _fiveLetterWordListLanguageName;
             if (resetSkipList)
             {
-                _wordSkipList = new List<string> {Configuration.Settings.Tools.MusicSymbol, "*", "%", "#", "+", "$"};
+                _wordSkipList = new HashSet<string> {Configuration.Settings.Tools.MusicSymbol, "*", "%", "#", "+", "$"};
             }
 
             // Load names etc list (names/noise words)
-            _namesEtcList = new List<string>();
-            _namesEtcMultiWordList = new List<string>();
+            _namesEtcList = new HashSet<string>();
+            _namesEtcMultiWordList = new HashSet<string>();
             Utilities.LoadNamesEtcWordLists(_namesEtcList, _namesEtcMultiWordList, _fiveLetterWordListLanguageName);
 
-            _namesEtcListUppercase = new List<string>();
+            _namesEtcListUppercase = new HashSet<string>();
             foreach (string name in _namesEtcList)
                 _namesEtcListUppercase.Add(name.ToUpper());
 
-            _namesEtcListWithApostrophe = new List<string>();
+            _namesEtcListWithApostrophe = new HashSet<string>();
             if (threeLetterIsoLanguageName.ToLower() == "eng")
             {
                 foreach (string namesItem in _namesEtcList)
@@ -189,11 +190,11 @@ namespace Nikse.SubtitleEdit.Logic.OCR
             }
 
             // Load user words
-            _userWordList = new List<string>();
+            _userWordList = new HashSet<string>();
             _userWordListXmlFileName = Utilities.LoadUserWordList(_userWordList, _fiveLetterWordListLanguageName);
 
             // Find abbreviations
-            _abbreviationList = new List<string>();
+            _abbreviationList = new HashSet<string>();
             foreach (string name in _namesEtcList)
             {
                 if (name.EndsWith("."))
@@ -895,7 +896,7 @@ namespace Nikse.SubtitleEdit.Logic.OCR
             return sb.ToString().TrimEnd('\r').TrimEnd('\n').TrimEnd('\r').TrimEnd('\n');
         }
 
-        private static bool EndsWithAbbreviation(string line, List<string> abbreviationList)
+        private static bool EndsWithAbbreviation(string line, HashSet<string> abbreviationList)
         {
             if (string.IsNullOrEmpty(line) || abbreviationList == null)
                 return false;
@@ -913,7 +914,7 @@ namespace Nikse.SubtitleEdit.Logic.OCR
             return false;
         }
 
-        public static string FixOcrErrorsViaHardcodedRules(string input, string lastLine, List<string> abbreviationList)
+        public static string FixOcrErrorsViaHardcodedRules(string input, string lastLine, HashSet<string> abbreviationList)
         {
             if (!Configuration.Settings.Tools.OcrFixUseHardcodedRules)
                 return input;
@@ -1739,25 +1740,25 @@ namespace Nikse.SubtitleEdit.Logic.OCR
             if (double.TryParse(word.TrimStart('\'').Replace("$", string.Empty).Replace("£", string.Empty).Replace("¢", string.Empty), out number))
                 return true;
 
-            if (_wordSkipList.IndexOf(word) >= 0)
+            if (_wordSkipList.Contains(word))
                 return true;
 
-            if (_namesEtcList.IndexOf(word.Trim('\'')) >= 0)
+            if (_namesEtcList.Contains(word.Trim('\'')))
                 return true;
 
-            if (_namesEtcListUppercase.IndexOf(word.Trim('\'')) >= 0)
+            if (_namesEtcListUppercase.Contains(word.Trim('\'')))
                 return true;
 
-            if (_userWordList.IndexOf(word.ToLower()) >= 0)
+            if (_userWordList.Contains(word.ToLower()))
                 return true;
 
-            if (_userWordList.IndexOf(word.Trim('\'').ToLower()) >= 0)
+            if (_userWordList.Contains(word.Trim('\'').ToLower()))
                 return true;
 
-            if (word.Length > 2 && _namesEtcListUppercase.IndexOf(word) >= 0)
+            if (word.Length > 2 && _namesEtcListUppercase.Contains(word))
                 return true;
 
-            if (word.Length > 2 && _namesEtcListWithApostrophe.IndexOf(word) >= 0)
+            if (word.Length > 2 && _namesEtcListWithApostrophe.Contains(word))
                 return true;
 
             if (Utilities.IsInNamesEtcMultiWordList(_namesEtcMultiWordList, line, word))
