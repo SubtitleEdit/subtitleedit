@@ -1238,7 +1238,7 @@ namespace Nikse.SubtitleEdit.Logic.OCR
                 }
             }
 
-            string[] words = tempLine.Replace("</i>", string.Empty).Split((Environment.NewLine + " ¡¿,.!?:;()[]{}+-£\"”“#&%…—♪/").ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+            string[] words = tempLine.Replace("</i>", string.Empty).Split((Environment.NewLine + " ¡¿,.!?:;()[]{}+-£\"”“#&%…—♪").ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
             for (int i = 0; i < words.Length; i++)
             {
                 string word = words[i].TrimStart('\'');
@@ -1277,6 +1277,18 @@ namespace Nikse.SubtitleEdit.Logic.OCR
                                     correct = DoSpell(dashedWord);
                             }
                         }
+                    }
+
+                    if (!correct && word.Contains("/") && !word.Contains("//"))
+                    {
+                        var slashedWords = word.Split("/".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                        bool allSlashedCorrect = true;
+                        foreach (var slashedWord in slashedWords)
+                        {
+                            if (!IsWordKnownOrNumber(slashedWord, line))
+                                allSlashedCorrect = false;
+                        }
+                        correct = allSlashedCorrect;
                     }
 
                     if (!correct)
