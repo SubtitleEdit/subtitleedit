@@ -52,21 +52,23 @@ namespace Nikse.SubtitleEdit.Forms
         readonly LanguageStructure.General _languageGeneral;
         private bool _hasFixesBeenMade;
 
-        static readonly Regex fixMissingSpacesReComma = new Regex(@"[^\s\d],[^\s]", RegexOptions.Compiled);
-        static readonly Regex fixMissingSpacesRePeriod = new Regex(@"[a-z][.][a-zA-Z]", RegexOptions.Compiled);
-        static readonly Regex fixMissingSpacesReQuestionMark = new Regex(@"[^\s\d]\?[a-zA-Z]", RegexOptions.Compiled);
-        static readonly Regex fixMissingSpacesReExclamation = new Regex(@"[^\s\d]\![a-zA-Z]", RegexOptions.Compiled);
-        static readonly Regex fixMissingSpacesReColon = new Regex(@"[^\s\d]\:[a-zA-Z]", RegexOptions.Compiled);
-        static readonly Regex urlCom = new Regex(@"\w\.com\b", RegexOptions.Compiled);
-        static readonly Regex urlNet = new Regex(@"\w\.net\b", RegexOptions.Compiled);
-        static readonly Regex urlOrg = new Regex(@"\w\.org\b", RegexOptions.Compiled);
+        static readonly Regex FixMissingSpacesReComma = new Regex(@"[^\s\d],[^\s]", RegexOptions.Compiled);
+        static readonly Regex FixMissingSpacesRePeriod = new Regex(@"[a-z][.][a-zA-Z]", RegexOptions.Compiled);
+        static readonly Regex FixMissingSpacesReQuestionMark = new Regex(@"[^\s\d]\?[a-zA-Z]", RegexOptions.Compiled);
+        static readonly Regex FixMissingSpacesReExclamation = new Regex(@"[^\s\d]\![a-zA-Z]", RegexOptions.Compiled);
+        static readonly Regex FixMissingSpacesReColon = new Regex(@"[^\s\d]\:[a-zA-Z]", RegexOptions.Compiled);
+        static readonly Regex UrlCom = new Regex(@"\w\.com\b", RegexOptions.Compiled);
+        static readonly Regex UrlNet = new Regex(@"\w\.net\b", RegexOptions.Compiled);
+        static readonly Regex UrlOrg = new Regex(@"\w\.org\b", RegexOptions.Compiled);
 
-        static readonly Regex reAfterLowercaseLetter = new Regex(@"[a-zæøåäöé]I", RegexOptions.Compiled);
-        static readonly Regex reBeforeLowercaseLetter = new Regex(@"I[a-zæøåäöé]", RegexOptions.Compiled);
+        static readonly Regex ReAfterLowercaseLetter = new Regex(@"[a-zæøåäöé]I", RegexOptions.Compiled);
+        static readonly Regex ReBeforeLowercaseLetter = new Regex(@"I[a-zæøåäöé]", RegexOptions.Compiled);
 
         static readonly Regex removeSpaceBetweenNumbersRegEx = new Regex(@"\d \d", RegexOptions.Compiled);
 
-        static readonly Regex fixAloneLowercaseIToUppercaseIRE = new Regex(@"\bi\b", RegexOptions.Compiled);
+        static readonly Regex FixAloneLowercaseIToUppercaseIRE = new Regex(@"\bi\b", RegexOptions.Compiled);
+
+        Keys _goToLine = Keys.None;
 
 
         class FixItem
@@ -248,6 +250,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             TopMost = true;
             BringToFront();
+            _goToLine = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainEditGoToLineNumber);
             TopMost = false;
         }
 
@@ -1074,7 +1077,7 @@ namespace Nikse.SubtitleEdit.Forms
                 Paragraph p = _subtitle.Paragraphs[i];
 
                 // missing space after comma ","
-                Match match = fixMissingSpacesReComma.Match(p.Text);
+                Match match = FixMissingSpacesReComma.Match(p.Text);
                 if (match.Success)
                 {
                     while (match.Success)
@@ -1096,7 +1099,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
 
                 // missing space after "?"
-                match = fixMissingSpacesReQuestionMark.Match(p.Text);
+                match = FixMissingSpacesReQuestionMark.Match(p.Text);
                 if (match.Success)
                 {
                     while (match.Success)
@@ -1113,12 +1116,12 @@ namespace Nikse.SubtitleEdit.Forms
                                 AddFixToListView(p, fixAction, oldText, p.Text);
                             }
                         }
-                        match = fixMissingSpacesReQuestionMark.Match(p.Text, match.Index + 1);
+                        match = FixMissingSpacesReQuestionMark.Match(p.Text, match.Index + 1);
                     }
                 }
 
                 // missing space after "!"
-                match = fixMissingSpacesReExclamation.Match(p.Text);
+                match = FixMissingSpacesReExclamation.Match(p.Text);
                 if (match.Success)
                 {
                     while (match.Success)
@@ -1135,12 +1138,12 @@ namespace Nikse.SubtitleEdit.Forms
                                 AddFixToListView(p, fixAction, oldText, p.Text);
                             }
                         }
-                        match = fixMissingSpacesReExclamation.Match(p.Text, match.Index + 1);
+                        match = FixMissingSpacesReExclamation.Match(p.Text, match.Index + 1);
                     }
                 }
 
                 // missing space after ":"
-                match = fixMissingSpacesReColon.Match(p.Text);
+                match = FixMissingSpacesReColon.Match(p.Text);
                 if (match.Success)
                 {
                     while (match.Success)
@@ -1167,21 +1170,21 @@ namespace Nikse.SubtitleEdit.Forms
                                 AddFixToListView(p, fixAction, oldText, p.Text);
                             }
                         }
-                        match = fixMissingSpacesReColon.Match(p.Text, match.Index + 1);
+                        match = FixMissingSpacesReColon.Match(p.Text, match.Index + 1);
                     }
                 }
 
                 // missing space after period "."
-                match = fixMissingSpacesRePeriod.Match(p.Text);
+                match = FixMissingSpacesRePeriod.Match(p.Text);
                 if (match.Success)
                 {
                     while (match.Success)
                     {
                         if (!p.Text.ToLower().Contains("www.") &&
                             !p.Text.ToLower().Contains("http://") &&
-                            !urlCom.IsMatch(p.Text) &&
-                            !urlNet.IsMatch(p.Text) &&
-                            !urlOrg.IsMatch(p.Text)) // urls are skipped
+                            !UrlCom.IsMatch(p.Text) &&
+                            !UrlNet.IsMatch(p.Text) &&
+                            !UrlOrg.IsMatch(p.Text)) // urls are skipped
                         {
                             bool isMatchAbbreviation = false;
 
@@ -1547,7 +1550,7 @@ namespace Nikse.SubtitleEdit.Forms
                 Paragraph p = _subtitle.Paragraphs[i];
                 string oldText = p.Text;
 
-                Match match = reAfterLowercaseLetter.Match(p.Text);
+                Match match = ReAfterLowercaseLetter.Match(p.Text);
                 if (match.Success)
                 {
                     while (match.Success)
@@ -1573,7 +1576,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
 
                 StripableText st = new StripableText(p.Text);
-                match = reBeforeLowercaseLetter.Match(st.StrippedText);
+                match = ReBeforeLowercaseLetter.Match(st.StrippedText);
                 if (match.Success)
                 {
                     while (match.Success)
@@ -2261,7 +2264,7 @@ namespace Nikse.SubtitleEdit.Forms
                 string s = p.Text;
                 if (s.Contains("i"))
                 {
-                    s = FixAloneLowercaseIToUppercaseLine(fixAloneLowercaseIToUppercaseIRE, oldText, s, 'i');
+                    s = FixAloneLowercaseIToUppercaseLine(FixAloneLowercaseIToUppercaseIRE, oldText, s, 'i');
 
                     if (s != oldText && AllowFix(p, fixAction))
                     {
@@ -3623,7 +3626,7 @@ namespace Nikse.SubtitleEdit.Forms
             subtitleListView1.EndUpdate();
         }
 
-        private void FormFix_KeyDown(object sender, KeyEventArgs e)
+        private void FormFixKeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Escape)
                 DialogResult = DialogResult.Cancel;
@@ -3631,8 +3634,24 @@ namespace Nikse.SubtitleEdit.Forms
                 Utilities.ShowHelp("#fixcommonerrors");
             else if (e.KeyCode == Keys.Enter && buttonNextFinish.Text == _language.Next)
                 ButtonFixClick(null, null);
+            else if (subtitleListView1.Visible && subtitleListView1.Items.Count > 0 && e.KeyData == _goToLine)
+                GoToLineNumber();
             else if (e.Modifiers == Keys.Control && e.KeyCode == Keys.P && listViewFixes.Items.Count > 0)
                 GenerateDiff();
+
+        }
+
+        private void GoToLineNumber()
+        {
+            var goToLine = new GoToLine();
+            goToLine.Initialize(1, subtitleListView1.Items.Count);
+            if (goToLine.ShowDialog(this) == DialogResult.OK)
+            {
+                subtitleListView1.SelectNone();
+                subtitleListView1.Items[goToLine.LineNumber - 1].Selected = true;
+                subtitleListView1.Items[goToLine.LineNumber - 1].EnsureVisible();
+                subtitleListView1.Items[goToLine.LineNumber - 1].Focused = true;
+            }
         }
 
         private void GenerateDiff()
@@ -4365,11 +4384,11 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void FixCommonErrors_Resize(object sender, EventArgs e)
+        private void FixCommonErrorsResize(object sender, EventArgs e)
         {
-            groupBox2.Width = this.Width - (groupBox2.Left * 2 + 15);
-            groupBoxStep1.Width = this.Width - (groupBoxStep1.Left * 2 + 15);
-            buttonCancel.Left = this.Width - (buttonCancel.Width + 26);
+            groupBox2.Width = Width - (groupBox2.Left * 2 + 15);
+            groupBoxStep1.Width = Width - (groupBoxStep1.Left * 2 + 15);
+            buttonCancel.Left = Width - (buttonCancel.Width + 26);
             buttonNextFinish.Left = buttonCancel.Left - (buttonNextFinish.Width + 6);
             buttonBack.Left = buttonNextFinish.Left - (buttonBack.Width + 6);
             tabControl1.Width = groupBox2.Width - (tabControl1.Left * 2);
@@ -4400,11 +4419,12 @@ namespace Nikse.SubtitleEdit.Forms
             width = (lengthAvailable - 10) / 2;
             listViewFixes.Columns[3].Width = width; // before
             listViewFixes.Columns[4].Width = width; // after
+            graphics.Dispose();
         }
 
-        private void FixCommonErrors_Shown(object sender, EventArgs e)
+        private void FixCommonErrorsShown(object sender, EventArgs e)
         {
-            FixCommonErrors_Resize(null, null);
+            FixCommonErrorsResize(null, null);
         }
 
         private void SplitSelectedParagraph(double? splitSeconds)
@@ -4481,18 +4501,18 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void buttonSplitLine_Click(object sender, EventArgs e)
+        private void ButtonSplitLineClick(object sender, EventArgs e)
         {
             SplitSelectedParagraph(null);
         }
 
-        private void textBoxListViewText_KeyDown(object sender, KeyEventArgs e)
+        private void TextBoxListViewTextKeyDown(object sender, KeyEventArgs e)
         {
             int numberOfNewLines = textBoxListViewText.Text.Length - textBoxListViewText.Text.Replace(Environment.NewLine, " ").Length;
             Utilities.CheckAutoWrap(textBoxListViewText, e, numberOfNewLines);
         }
 
-        private void FixCommonErrors_FormClosing(object sender, FormClosingEventArgs e)
+        private void FixCommonErrorsFormClosing(object sender, FormClosingEventArgs e)
         {
             Owner = null;
         }

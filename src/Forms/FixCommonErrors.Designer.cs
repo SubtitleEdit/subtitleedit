@@ -450,7 +450,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonSplitLine.TabIndex = 124;
             this.buttonSplitLine.Text = "Split line";
             this.buttonSplitLine.UseVisualStyleBackColor = true;
-            this.buttonSplitLine.Click += new System.EventHandler(this.buttonSplitLine_Click);
+            this.buttonSplitLine.Click += new System.EventHandler(this.ButtonSplitLineClick);
             // 
             // labelSingleLine
             // 
@@ -585,7 +585,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.textBoxListViewText.Size = new System.Drawing.Size(427, 56);
             this.textBoxListViewText.TabIndex = 118;
             this.textBoxListViewText.TextChanged += new System.EventHandler(this.TextBoxListViewTextTextChanged);
-            this.textBoxListViewText.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textBoxListViewText_KeyDown);
+            this.textBoxListViewText.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxListViewTextKeyDown);
             // 
             // tabPageLog
             // 
@@ -645,10 +645,10 @@ namespace Nikse.SubtitleEdit.Forms
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
             this.Text = "Fix common errors";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FixCommonErrors_FormClosing);
-            this.Shown += new System.EventHandler(this.FixCommonErrors_Shown);
-            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.FormFix_KeyDown);
-            this.Resize += new System.EventHandler(this.FixCommonErrors_Resize);
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FixCommonErrorsFormClosing);
+            this.Shown += new System.EventHandler(this.FixCommonErrorsShown);
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.FormFixKeyDown);
+            this.Resize += new System.EventHandler(this.FixCommonErrorsResize);
             this.groupBoxStep1.ResumeLayout(false);
             this.groupBox2.ResumeLayout(false);
             this.tabControl1.ResumeLayout(false);
