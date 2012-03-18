@@ -461,16 +461,14 @@ begin
       ExpandConstant('{dotnet20}');
     except
       begin
-        if not WizardSilent() then
-          if SuppressibleMsgBox(CustomMessage('msg_AskToDownNET'), mbCriticalError, MB_YESNO or MB_DEFBUTTON1, IDNO) = IDYES then begin
+        if not WizardSilent() then begin
+          if SuppressibleMsgBox(CustomMessage('msg_AskToDownNET'), mbCriticalError, MB_YESNO or MB_DEFBUTTON1, IDNO) = IDYES then
             ShellExec('open','http://download.microsoft.com/download/5/6/7/567758a3-759e-473e-bf8f-52154438565a/dotnetfx.exe','','',SW_SHOWNORMAL,ewNoWait,iErrorCode);
-            Result := False;
-          end
-          else
-            Result := False;
+          Result := False;
         end;
       end;
     end;
+  end;
 end;
 
 
