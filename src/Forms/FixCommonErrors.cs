@@ -541,7 +541,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     if (prevWantedDisplayTime <= (p.StartTime.TotalMilliseconds - prev.StartTime.TotalMilliseconds))
                     {
-                        if (AllowFix(p, fixAction))
+                        if (AllowFix(target, fixAction))
                         {
                             prev.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds - 1;
                             if (canBeEqual)
@@ -579,7 +579,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     else if (Math.Abs(p.StartTime.TotalMilliseconds - prev.StartTime.TotalMilliseconds) < 10 && Math.Abs(p.EndTime.TotalMilliseconds - prev.EndTime.TotalMilliseconds) < 10)
                     { // merge lines with same time codes
-                        if (AllowFix(p, fixAction))
+                        if (AllowFix(target, fixAction))
                         {
                             prev.Text = prev.Text.Replace(Environment.NewLine, " ");
                             p.Text = p.Text.Replace(Environment.NewLine, " ");
