@@ -1762,9 +1762,9 @@ namespace Nikse.SubtitleEdit.Forms
                                         else
                                         {
                                             if (p.Text.EndsWith("“") && tempNoHtml.StartsWith("„"))
-                                                p.Text = p.Text.Trim('“') + ".“";
+                                                p.Text = p.Text.TrimEnd('“') + ".“";
                                             else if (p.Text.EndsWith("\"") && tempNoHtml.StartsWith("\""))
-                                                p.Text = p.Text.Trim('"') + ".\"";
+                                                p.Text = p.Text.TrimEnd('"') + ".\"";
                                             else
                                                 p.Text += ".";
                                         }

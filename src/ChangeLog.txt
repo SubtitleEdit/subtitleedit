@@ -1,15 +1,16 @@
 Subtitle Edit Changelog
 
-3.2.5 (17th March 2012)
+3.2.5 (18th March 2012)
  * NEW:
    * Added new subtitle formats (now +90!)
  * IMPROVED:
-   * Improvements to fix common errors - thx Trottel
+   * Improvements to Fix common errors - thx Trottel
    * Optimized Fix Common OCR Errors
  * FIXED:
    * Crash in fix common errors (remove unneeded spaces) - thx menes
    * Merge selected lines with 2+ lines - thx Verteller
    * Prompt for save changes when opening new sub (if changed) - thx Chris
+   * No save prompt if subtitle is not changed (but was) - thx XhmikosR
    * Context menu normal/italic in ocr window - thx cipry
    * Editing search type for "Multiple replace"
    * Wrong positioning of some texts (mostly at startup) - thx Trottel
