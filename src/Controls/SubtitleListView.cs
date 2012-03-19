@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Globalization;
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Logic;
 
@@ -24,7 +25,8 @@ namespace Nikse.SubtitleEdit.Controls
         public bool IsAlternateTextColumnVisible { get; private set; }
         public bool IsExtraColumnVisible { get; private set; }
         public bool DisplayExtraFromExtra { get; set; }
-        Settings _settings = null;
+        Settings _settings;
+        private bool _saveColumnWidthChanges;
 
         public int FirstVisibleIndex
         {
@@ -54,14 +56,27 @@ namespace Nikse.SubtitleEdit.Controls
 
         public void InitializeTimeStampColumWidths(Form parentForm)
         {
-            Graphics graphics = parentForm.CreateGraphics();
-            SizeF timestampSizeF = graphics.MeasureString("00:00:33,527", Font);
-            int timeStampWidth = (int)(timestampSizeF.Width + 0.5) + 11;
-
-            Columns[ColumnIndexStart].Width = timeStampWidth;
-            Columns[ColumnIndexEnd].Width = timeStampWidth;
-            Columns[ColumnIndexDuration].Width = (int) (timeStampWidth * 0.8);
-            SubtitleListView_Resize(this, null);
+            if (_settings != null && _settings.General.ListViewColumsRememberSize && _settings.General.ListViewNumberWidth > 1 &&
+                _settings.General.ListViewStartWidth > 1 && _settings.General.ListViewEndWidth > 1 && _settings.General.ListViewDurationWidth > 1)
+            {
+                Columns[ColumnIndexNumber].Width = _settings.General.ListViewNumberWidth;
+                Columns[ColumnIndexStart].Width = _settings.General.ListViewStartWidth;
+                Columns[ColumnIndexEnd].Width = _settings.General.ListViewEndWidth;
+                Columns[ColumnIndexDuration].Width = _settings.General.ListViewDurationWidth;
+                Columns[ColumnIndexText].Width = _settings.General.ListViewTextWidth;
+                _saveColumnWidthChanges = true;
+            }
+            else
+            {
+                Graphics graphics = parentForm.CreateGraphics();
+                SizeF timestampSizeF = graphics.MeasureString("00:00:33,527", Font);
+                int timeStampWidth = (int)(timestampSizeF.Width + 0.5) + 11;
+                Columns[ColumnIndexStart].Width = timeStampWidth;
+                Columns[ColumnIndexEnd].Width = timeStampWidth;
+                Columns[ColumnIndexDuration].Width = (int)(timeStampWidth * 0.8);                
+            }
+                
+            SubtitleListViewResize(this, null);
         }
 
         public SubtitleListView()
@@ -75,17 +90,47 @@ namespace Nikse.SubtitleEdit.Controls
                 new ColumnHeader { Width= 55 },
                 new ColumnHeader { Width = -2 } // -2 = as rest of space (300)
             });
-            SubtitleListView_Resize(this, null);
+            SubtitleListViewResize(this, null);
 
             FullRowSelect = true;
             View = View.Details;
-            Resize += SubtitleListView_Resize;
+            Resize += SubtitleListViewResize;
             GridLines = true;
+            ColumnWidthChanged += SubtitleListViewColumnWidthChanged;
         }
+
+        void SubtitleListViewColumnWidthChanged(object sender, ColumnWidthChangedEventArgs e)
+       {
+            if (_settings != null && _saveColumnWidthChanges)
+            {
+                switch (e.ColumnIndex)
+                {
+                    case ColumnIndexNumber: 
+                        Configuration.Settings.General.ListViewNumberWidth = Columns[ColumnIndexNumber].Width;
+                        break;
+                    case ColumnIndexStart:
+                        Configuration.Settings.General.ListViewStartWidth = Columns[ColumnIndexStart].Width;
+                        break;
+                    case ColumnIndexEnd:
+                        Configuration.Settings.General.ListViewEndWidth = Columns[ColumnIndexEnd].Width;
+                        break;
+                    case ColumnIndexDuration:
+                        Configuration.Settings.General.ListViewDurationWidth = Columns[ColumnIndexDuration].Width;
+                        break;
+                    case ColumnIndexText:
+                        Configuration.Settings.General.ListViewTextWidth = Columns[ColumnIndexText].Width;
+                        break;
+                }
+            }
+       }
 
         public void AutoSizeAllColumns(Form parentForm)
         {
-            Columns[ColumnIndexNumber].Width = 55;
+            if (_settings != null && _settings.General.ListViewColumsRememberSize && _settings.General.ListViewNumberWidth > 1)
+                Columns[ColumnIndexNumber].Width = _settings.General.ListViewNumberWidth;
+            else
+                Columns[ColumnIndexNumber].Width = 55;
+
             InitializeTimeStampColumWidths(parentForm);
 
             int length = Columns[ColumnIndexNumber].Width + Columns[ColumnIndexStart].Width + Columns[ColumnIndexEnd].Width + Columns[ColumnIndexDuration].Width;
@@ -99,9 +144,19 @@ namespace Nikse.SubtitleEdit.Controls
 
             if (IsAlternateTextColumnVisible && !IsExtraColumnVisible)
             {
-                int restWidth = (lengthAvailable / 2) - 15;
-                Columns[ColumnIndexText].Width = restWidth;
-                Columns[ColumnIndexTextAlternate].Width = restWidth;
+                if (_settings != null && _settings.General.ListViewColumsRememberSize && _settings.General.ListViewNumberWidth > 1 &&
+                    _settings.General.ListViewStartWidth > 1 && _settings.General.ListViewEndWidth > 1 && _settings.General.ListViewDurationWidth > 1)
+                {
+                    int restWidth = lengthAvailable - 15 - Columns[ColumnIndexText].Width;
+                    if (restWidth > 0)
+                        Columns[ColumnIndexTextAlternate].Width = restWidth;
+                }
+                else
+                {
+                    int restWidth = (lengthAvailable / 2) - 15;
+                    Columns[ColumnIndexText].Width = restWidth;
+                    Columns[ColumnIndexTextAlternate].Width = restWidth;                    
+                }
             }
             else if (!IsAlternateTextColumnVisible && !IsExtraColumnVisible)
             {
@@ -153,11 +208,11 @@ namespace Nikse.SubtitleEdit.Controls
                 IsAlternateTextColumnVisible = false;
                 Columns.RemoveAt(ColumnIndexTextAlternate);
                 ColumnIndexExtra = ColumnIndexTextAlternate;
-                SubtitleListView_Resize(null, null);
+                SubtitleListViewResize(null, null);
             }
         }
 
-        void SubtitleListView_Resize(object sender, EventArgs e)
+        void SubtitleListViewResize(object sender, EventArgs e)
         {
             int width = 0;
             for (int i = 0; i < Columns.Count - 1; i++)
@@ -220,7 +275,7 @@ namespace Nikse.SubtitleEdit.Controls
             int i = 0;
             foreach (Paragraph paragraph in paragraphs)
             {
-                Add(paragraph, i.ToString());
+                Add(paragraph, i.ToString(CultureInfo.InvariantCulture));
                 if (DisplayExtraFromExtra && IsExtraColumnVisible)
                     Items[i].SubItems[ColumnIndexExtra].Text = paragraph.Extra;
                 SyntaxColorLine(paragraphs, i, paragraph);
@@ -244,7 +299,7 @@ namespace Nikse.SubtitleEdit.Controls
             int i = 0;
             foreach (Paragraph paragraph in paragraphs)
             {
-                Add(paragraph, i.ToString());
+                Add(paragraph, i.ToString(CultureInfo.InvariantCulture));
                 Paragraph alternate = Utilities.GetOriginalParagraph(i, paragraph, paragraphsAlternate);
                 if (alternate != null)
                     SetAlternateText(i, alternate.Text);
@@ -413,7 +468,7 @@ namespace Nikse.SubtitleEdit.Controls
 
             foreach (ListViewItem item in Items)
             {
-                if (item.Text == p.Number.ToString() &&
+                if (item.Text == p.Number.ToString(CultureInfo.InvariantCulture) &&
                     item.SubItems[ColumnIndexStart].Text == p.StartTime.ToString() &&
                     item.SubItems[ColumnIndexEnd].Text == p.EndTime.ToString() &&
                     item.SubItems[ColumnIndexText].Text == p.Text)
@@ -519,12 +574,12 @@ namespace Nikse.SubtitleEdit.Controls
                     if (Items[i].SubItems.Count == ColumnIndexExtra + 1)
                     {
                         Items[i].SubItems[ColumnIndexExtra].Text = string.Empty;
-                        Items[i].SubItems[ColumnIndexExtra].BackColor = this.BackColor;
-                        Items[i].SubItems[ColumnIndexExtra].ForeColor = this.ForeColor;
+                        Items[i].SubItems[ColumnIndexExtra].BackColor = BackColor;
+                        Items[i].SubItems[ColumnIndexExtra].ForeColor = ForeColor;
                     }
                 }
                 Columns.RemoveAt(ColumnIndexExtra);
-                SubtitleListView_Resize(null, null);
+                SubtitleListViewResize(null, null);
             }
         }
 
@@ -664,6 +719,26 @@ namespace Nikse.SubtitleEdit.Controls
 
         public void ShowAllColumns()
         {
+            if (_settings != null && _settings.General.ListViewColumsRememberSize && _settings.General.ListViewNumberWidth > 1 &&
+                _settings.General.ListViewStartWidth > 1 && _settings.General.ListViewEndWidth > 1 && _settings.General.ListViewDurationWidth > 1)
+            {
+                Columns[ColumnIndexNumber].Width = _settings.General.ListViewNumberWidth;
+                Columns[ColumnIndexStart].Width = _settings.General.ListViewStartWidth;
+                Columns[ColumnIndexEnd].Width = _settings.General.ListViewEndWidth;
+                Columns[ColumnIndexDuration].Width = _settings.General.ListViewDurationWidth;
+                Columns[ColumnIndexText].Width = _settings.General.ListViewTextWidth;
+
+                if (IsAlternateTextColumnVisible)
+                {
+                    Columns[ColumnIndexTextAlternate].Width = -2;
+                }
+                else
+                {
+                    Columns[ColumnIndexText].Width = -2;
+                }
+                return;
+            }            
+
             Columns[ColumnIndexNumber].Width = 45;
             Columns[ColumnIndexEnd].Width = 80;
             Columns[ColumnIndexDuration].Width = 55;
