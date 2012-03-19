@@ -261,7 +261,7 @@ namespace Nikse.SubtitleEdit.Forms
                 Utilities.InitializeSubtitleFont(textBoxListViewText);
                 Utilities.InitializeSubtitleFont(textBoxListViewTextAlternate);
                 Utilities.InitializeSubtitleFont(SubtitleListview1);
-                SubtitleListview1.AutoSizeAllColumns(this);
+                //SubtitleListview1.AutoSizeAllColumns(this);
 
                 tabControlSubtitle.SelectTab(TabControlSourceView); // AC
                 ShowSourceLineNumber();                             // AC
@@ -5803,6 +5803,8 @@ namespace Nikse.SubtitleEdit.Forms
 
                 SaveUndockedPositions();
 
+                SaveListViewWidths();
+
                 Configuration.Settings.Save();
 
                 if (mediaPlayer.VideoPlayer != null)
@@ -5810,6 +5812,18 @@ namespace Nikse.SubtitleEdit.Forms
                     mediaPlayer.VideoPlayer.DisposeVideoPlayer();
                 }
 
+            }
+        }
+
+        private void SaveListViewWidths()
+        {
+            if (Configuration.Settings.General.ListViewColumsRememberSize)
+            {
+                Configuration.Settings.General.ListViewNumberWidth = SubtitleListview1.Columns[0].Width;
+                Configuration.Settings.General.ListViewStartWidth = SubtitleListview1.Columns[1].Width;
+                Configuration.Settings.General.ListViewEndWidth = SubtitleListview1.Columns[2].Width;
+                Configuration.Settings.General.ListViewDurationWidth = SubtitleListview1.Columns[3].Width;
+                Configuration.Settings.General.ListViewTextWidth = SubtitleListview1.Columns[4].Width;
             }
         }
 

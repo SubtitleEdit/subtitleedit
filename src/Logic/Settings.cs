@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Globalization;
 using System.IO;
 using System.Text;
 using System.Xml;
@@ -294,6 +295,12 @@ namespace Nikse.SubtitleEdit.Logic
         public bool ShowOriginalAsPreviewIfAvailable { get; set; }
         public int LastPacCodePage { get; set; }
         public string OpenSubtitleExtraExtensions { get; set; }
+        public bool ListViewColumsRememberSize { get; set; }
+        public int ListViewNumberWidth { get; set; }
+        public int ListViewStartWidth { get; set; }
+        public int ListViewEndWidth { get; set; }
+        public int ListViewDurationWidth { get; set; }
+        public int ListViewTextWidth { get; set; }
 
         public GeneralSettings()
         {
@@ -360,7 +367,7 @@ namespace Nikse.SubtitleEdit.Logic
             SmallDelayMilliseconds = 500;
             LargeDelayMilliseconds = 5000;
 
-            OpenSubtitleExtraExtensions = "*.mp4;*.m4v;*.mkv;"; // matroska/mp4/m4v files (can contain subtitles)
+            OpenSubtitleExtraExtensions = "*.mp4;*.m4v;*.mkv;"; // matroska/mp4/m4v files (can contain subtitles)            
         }
     }
 
@@ -752,7 +759,7 @@ namespace Nikse.SubtitleEdit.Logic
                 settings.RecentFiles.Files.Add(new RecentFileEntry() { FileName = listNode.InnerText, FirstVisibleIndex = int.Parse(firstVisibleIndex), FirstSelectedIndex = int.Parse(firstSelectedIndex), VideoFileName = videoFileName, OriginalFileName = originalFileName });
             }
 
-            settings.General = new Nikse.SubtitleEdit.Logic.GeneralSettings();
+            settings.General = new GeneralSettings();
             node = doc.DocumentElement.SelectSingleNode("General");
             XmlNode subNode = node.SelectSingleNode("ShowToolbarNew");
             if (subNode != null)
@@ -957,8 +964,26 @@ namespace Nikse.SubtitleEdit.Logic
             subNode = node.SelectSingleNode("OpenSubtitleExtraExtensions");
             if (subNode != null)
                 settings.General.OpenSubtitleExtraExtensions = subNode.InnerText.Trim();
+            subNode = node.SelectSingleNode("ListViewColumsRememberSize");
+            if (subNode != null)
+                settings.General.ListViewColumsRememberSize = Convert.ToBoolean(subNode.InnerText.Trim());
+            subNode = node.SelectSingleNode("ListViewNumberWidth");
+            if (subNode != null)
+                settings.General.ListViewNumberWidth = Convert.ToInt32(subNode.InnerText.Trim());
+            subNode = node.SelectSingleNode("ListViewStartWidth");
+            if (subNode != null)
+                settings.General.ListViewStartWidth = Convert.ToInt32(subNode.InnerText.Trim());
+            subNode = node.SelectSingleNode("ListViewEndWidth");
+            if (subNode != null)
+                settings.General.ListViewEndWidth = Convert.ToInt32(subNode.InnerText.Trim());
+            subNode = node.SelectSingleNode("ListViewDurationWidth");
+            if (subNode != null)
+                settings.General.ListViewDurationWidth = Convert.ToInt32(subNode.InnerText.Trim());
+            subNode = node.SelectSingleNode("ListViewTextWidth");
+            if (subNode != null)
+                settings.General.ListViewTextWidth = Convert.ToInt32(subNode.InnerText.Trim());
 
-            settings.Tools = new Nikse.SubtitleEdit.Logic.ToolsSettings();
+            settings.Tools = new ToolsSettings();
             node = doc.DocumentElement.SelectSingleNode("Tools");
             subNode = node.SelectSingleNode("StartSceneIndex");
             if (subNode != null)
@@ -1604,6 +1629,14 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("ShowOriginalAsPreviewIfAvailable", settings.General.ShowOriginalAsPreviewIfAvailable.ToString());
             textWriter.WriteElementString("LastPacCodePage", settings.General.LastPacCodePage.ToString());
             textWriter.WriteElementString("OpenSubtitleExtraExtensions", settings.General.OpenSubtitleExtraExtensions);
+            textWriter.WriteElementString("ListViewColumsRememberSize", settings.General.ListViewColumsRememberSize.ToString(CultureInfo.InvariantCulture));
+            textWriter.WriteElementString("ListViewNumberWidth", settings.General.ListViewNumberWidth.ToString(CultureInfo.InvariantCulture));
+            textWriter.WriteElementString("ListViewStartWidth", settings.General.ListViewStartWidth.ToString(CultureInfo.InvariantCulture));
+            textWriter.WriteElementString("ListViewEndWidth", settings.General.ListViewEndWidth.ToString(CultureInfo.InvariantCulture));
+            textWriter.WriteElementString("ListViewDurationWidth", settings.General.ListViewDurationWidth.ToString(CultureInfo.InvariantCulture));
+            textWriter.WriteElementString("ListViewTextWidth", settings.General.ListViewTextWidth.ToString(CultureInfo.InvariantCulture));
+
+
             textWriter.WriteEndElement();
 
             textWriter.WriteStartElement("Tools", "");
