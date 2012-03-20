@@ -2270,6 +2270,16 @@ namespace Nikse.SubtitleEdit.Forms
                              newWordsNotFound < wordsNotFound || (newWordsNotFound == wordsNotFound && newText.EndsWith("!") && textWithOutFixes.EndsWith("l")))
                     {
                         wordsNotFound = newWordsNotFound;
+                        if (textWithOutFixes.Length > 3 && textWithOutFixes.EndsWith("...") && !newText.EndsWith(".") && !newText.EndsWith(",") && !newText.EndsWith("!") &&
+                            !newText.EndsWith("?") && !newText.EndsWith("</i>"))
+                            newText = newText.TrimEnd() + "...";
+                        else if (textWithOutFixes.Length > 0 && textWithOutFixes.EndsWith(".") && !newText.EndsWith(".") && !newText.EndsWith(",") && !newText.EndsWith("!") &&
+                            !newText.EndsWith("?") && !newText.EndsWith("</i>"))
+                            newText = newText.TrimEnd() + ".";
+                        else if (textWithOutFixes.Length > 0 && textWithOutFixes.EndsWith("?") && !newText.EndsWith(".") && !newText.EndsWith(",") && !newText.EndsWith("!") &&
+                            !newText.EndsWith("?") && !newText.EndsWith("</i>"))
+                            newText = newText.TrimEnd() + "?";
+
                         textWithOutFixes = newUnfixedText;
                         line = newText;
                     }
