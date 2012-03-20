@@ -3930,9 +3930,9 @@ namespace Nikse.SubtitleEdit.Forms
                 SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
 
                 if (selectedIndex >= 0 && selectedIndex < _subtitle.Paragraphs.Count)
-                    SubtitleListview1.SelectIndexAndEnsureVisible(selectedIndex);
+                    SubtitleListview1.SelectIndexAndEnsureVisible(selectedIndex, true);
                 else
-                    SubtitleListview1.SelectIndexAndEnsureVisible(0);
+                    SubtitleListview1.SelectIndexAndEnsureVisible(0, true);
 
                 audioVisualizer.Invalidate();
                 if (undo)
@@ -4004,9 +4004,9 @@ namespace Nikse.SubtitleEdit.Forms
                     SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
 
                     if (selectedIndex >= 0 && selectedIndex < _subtitle.Paragraphs.Count)
-                        SubtitleListview1.SelectIndexAndEnsureVisible(selectedIndex);
+                        SubtitleListview1.SelectIndexAndEnsureVisible(selectedIndex, true);
                     else
-                        SubtitleListview1.SelectIndexAndEnsureVisible(0);
+                        SubtitleListview1.SelectIndexAndEnsureVisible(0, true);
 
                     audioVisualizer.Invalidate();
                 }
@@ -4480,11 +4480,11 @@ namespace Nikse.SubtitleEdit.Forms
                         SubtitleListview1.FirstVisibleIndex = -1;
                     if (SubtitleListview1.Items.Count > firstIndex)
                     {
-                        SubtitleListview1.SelectIndexAndEnsureVisible(firstIndex);
+                        SubtitleListview1.SelectIndexAndEnsureVisible(firstIndex, true);
                     }
                     else if (SubtitleListview1.Items.Count > 0)
                     {
-                        SubtitleListview1.SelectIndexAndEnsureVisible(SubtitleListview1.Items.Count - 1);
+                        SubtitleListview1.SelectIndexAndEnsureVisible(SubtitleListview1.Items.Count - 1, true);
                     }
                 }
 
@@ -5228,6 +5228,7 @@ namespace Nikse.SubtitleEdit.Forms
                 ShowStatus(_language.LineSplitted);
                 SubtitleListview1.SelectedIndexChanged += SubtitleListview1_SelectedIndexChanged;
                 RefreshSelectedParagraph();
+                SubtitleListview1.SelectIndexAndEnsureVisible(firstSelectedIndex, true);
             }
         }
 
@@ -5292,7 +5293,7 @@ namespace Nikse.SubtitleEdit.Forms
                         SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
                         SubtitleListview1.Items[firstSelectedIndex-1].Selected = true;
                     }
-                    SubtitleListview1.SelectIndexAndEnsureVisible(firstSelectedIndex - 1);
+                    SubtitleListview1.SelectIndexAndEnsureVisible(firstSelectedIndex - 1, true);
                     ShowSource();
                     ShowStatus(_language.LinesMerged);
                     SubtitleListview1.SelectedIndexChanged += SubtitleListview1_SelectedIndexChanged;
@@ -5396,7 +5397,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 ShowSource();
                 ShowStatus(_language.LinesMerged);
-                SubtitleListview1.SelectIndexAndEnsureVisible(firstIndex);
+                SubtitleListview1.SelectIndexAndEnsureVisible(firstIndex, true);
                 SubtitleListview1.SelectedIndexChanged += SubtitleListview1_SelectedIndexChanged;
                 RefreshSelectedParagraph();
             }
@@ -5544,6 +5545,7 @@ namespace Nikse.SubtitleEdit.Forms
                 SubtitleListview1.SelectIndexAndEnsureVisible(firstSelectedIndex);
                 SubtitleListview1.SelectedIndexChanged += SubtitleListview1_SelectedIndexChanged;
                 RefreshSelectedParagraph();
+                SubtitleListview1.SelectIndexAndEnsureVisible(firstSelectedIndex, true);
             }
         }
 
@@ -7272,8 +7274,7 @@ namespace Nikse.SubtitleEdit.Forms
             else if (_mainMergeDialogue == e.KeyData && inListView)
             {
                 MergeDialogues();
-                e.SuppressKeyPress = true;
-                textBoxListViewText.Focus();
+                e.SuppressKeyPress = true;                
             }
             else if (_mainListViewToggleDashes == e.KeyData && inListView)
             {

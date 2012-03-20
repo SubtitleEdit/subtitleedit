@@ -426,13 +426,13 @@ namespace Nikse.SubtitleEdit.Controls
                 item.Selected = false;
         }
 
-        public void SelectIndexAndEnsureVisible(int index)
+        public void SelectIndexAndEnsureVisible(int index, bool focus)
         {
             if (index < 0 || index >= Items.Count || Items.Count == 0)
                 return;
 
             int bottomIndex = TopItem.Index + ((Height - 25) / 16);
-            int itemsBeforeAfterCount = ((bottomIndex - TopItem.Index) / 2)- 1;
+            int itemsBeforeAfterCount = ((bottomIndex - TopItem.Index) / 2) - 1;
             if (itemsBeforeAfterCount < 0)
                 itemsBeforeAfterCount = 1;
 
@@ -458,6 +458,13 @@ namespace Nikse.SubtitleEdit.Controls
             EnsureVisible(afterIndex);
             Items[index].Selected = true;
             Items[index].EnsureVisible();
+            if (focus)
+                Items[index].Focused = true;
+        }
+
+        public void SelectIndexAndEnsureVisible(int index)
+        {
+            SelectIndexAndEnsureVisible(index, false);
         }
 
         public void SelectIndexAndEnsureVisible(Paragraph p)
