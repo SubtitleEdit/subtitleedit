@@ -666,21 +666,23 @@ namespace Nikse.SubtitleEdit.Forms
             int noOfInvalidHtmlTags = 0;
             for (int i = 0; i < _subtitle.Paragraphs.Count; i++)
             {
-                string text = _subtitle.Paragraphs[i].Text.Replace(beginTag.ToUpper(), beginTag).Replace(endTag.ToUpper(), endTag);
-                string oldText = text;
+                if (_subtitle.Paragraphs[i].Text.Contains("<"))
+                {                
+                    string text = _subtitle.Paragraphs[i].Text.Replace(beginTag.ToUpper(), beginTag).Replace(endTag.ToUpper(), endTag);
+                    string oldText = text;
 
-                text = Utilities.FixInvalidItalicTags(text);
-                if (text != oldText)
-                {
-                    if (AllowFix(_subtitle.Paragraphs[i], fixAction))
+                    text = Utilities.FixInvalidItalicTags(text);
+                    if (text != oldText)
                     {
-                        _subtitle.Paragraphs[i].Text = text;
-                        _totalFixes++;
-                        noOfInvalidHtmlTags++;
-                        AddFixToListView(_subtitle.Paragraphs[i], fixAction, oldText, text);
+                        if (AllowFix(_subtitle.Paragraphs[i], fixAction))
+                        {
+                            _subtitle.Paragraphs[i].Text = text;
+                            _totalFixes++;
+                            noOfInvalidHtmlTags++;
+                            AddFixToListView(_subtitle.Paragraphs[i], fixAction, oldText, text);
+                        }
                     }
                 }
-
             }
             if (noOfInvalidHtmlTags > 0)
                 LogStatus(_language.FixInvalidItalicTags, string.Format(_language.XInvalidHtmlTagsFixed, noOfInvalidHtmlTags));
@@ -3608,13 +3610,18 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 if (item.Checked && item.Index != IndexRemoveEmptyLines)
                 {
-                    FixItem fixItem = (FixItem)item.Tag;
+                    var fixItem = (FixItem)item.Tag;
                     fixItem.Action.Invoke(null, null);
                 }
             }
+            if (listView1.Items[IndexInvalidItalicTags].Checked)
+            {
+                var fixItem = (FixItem)listView1.Items[IndexInvalidItalicTags].Tag;
+                fixItem.Action.Invoke(null, null);
+            }
             if (listView1.Items[IndexRemoveEmptyLines].Checked)
             {
-                FixItem fixItem = (FixItem)listView1.Items[IndexRemoveEmptyLines].Tag;
+                var fixItem = (FixItem)listView1.Items[IndexRemoveEmptyLines].Tag;
                 fixItem.Action.Invoke(null, null);
             }
 
