@@ -931,7 +931,7 @@ namespace Nikse.SubtitleEdit.Logic
         {
             int bestCount = subtitle.Paragraphs.Count / 14;
 
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             foreach (Paragraph p in subtitle.Paragraphs)
                 sb.AppendLine(p.Text);
             string text = sb.ToString();
@@ -950,21 +950,21 @@ namespace Nikse.SubtitleEdit.Logic
                 languageName = "en_US";
             int bestCount = subtitle.Paragraphs.Count / 14;
 
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             foreach (Paragraph p in subtitle.Paragraphs)
                 sb.AppendLine(p.Text);
             string text = sb.ToString();
 
             List<string> dictionaryNames = GetDictionaryLanguages();
 
-            bool containsEnGB = false;
-            bool containsEnUS = false;
+            bool containsEnGb = false;
+            bool containsEnUs = false;
             foreach (string name in dictionaryNames)
             {
                 if (name.Contains("[en_GB]"))
-                    containsEnGB = true;
+                    containsEnGb = true;
                 if (name.Contains("[en_US]"))
-                    containsEnUS = true;
+                    containsEnUs = true;
             }
 
             foreach (string name in dictionaryNames)
@@ -1002,52 +1002,34 @@ namespace Nikse.SubtitleEdit.Logic
                     case "en_US":
                         count = GetCount(text, "we", "are", "and", "you", "your", "what");
                         if (count > bestCount)
-                        {
-                            if (!string.IsNullOrEmpty(languageName) && languageName.StartsWith("en_"))
+                        {                          
+                            if (containsEnGb)
                             {
-                                //keep existing english language
+                                int usCount = GetCount(text, "color", "flavor", "honor", "humor", "neighbor", "honor");
+                                int gbCount = GetCount(text, "colour", "flavour", "honour", "humour", "neighbour", "honour");
+                                if (usCount >= gbCount)
+                                    languageName = "en_US";
+                                else
+                                    languageName = "en_GB";
                             }
                             else
                             {
-                                if (containsEnGB)
-                                {
-                                    int usCount = GetCount("color", "flavor", "ass", "humor", "neighbor", "honor", "airplane");
-                                    int gbCount = GetCount("colour", "flavour", "arse", "humour", "neighbour", "honour", "aeroplane");
-                                    if (usCount >= gbCount)
-                                        languageName = shortName;
-                                    else
-                                        languageName = "en_GB";
-                                }
-                                else
-                                {
-                                    languageName = shortName;
-                                }
-                            }
+                                languageName = shortName;
+                            }                            
                         }
                         break;
                     case "en_GB":
                         count = GetCount(text, "we", "are", "and", "you", "your", "what");
                         if (count > bestCount)
                         {
-                            if (!string.IsNullOrEmpty(languageName) && languageName.StartsWith("en_"))
+                            if (containsEnUs)
                             {
-                                //keep existing english language
-                            }
-                            else
-                            {
-                                if (containsEnUS)
-                                {
-                                    int usCount = GetCount("color", "flavor", "ass", "humor", "neighbor", "honor", "airplane");
-                                    int gbCount = GetCount("colour", "flavour", "arse", "humour", "neighbour", "honour", "aeroplane");
-                                    if (usCount >= gbCount)
-                                        languageName = "en_US";
-                                    else
-                                        languageName = "en_GB";
-                                }
+                                int usCount = GetCount(text, "color", "flavor", "honor", "humor", "neighbor", "honor");
+                                int gbCount = GetCount(text, "colour", "flavour", "honour", "humour", "neighbour", "honour");
+                                if (usCount >= gbCount)
+                                    languageName = "en_US";
                                 else
-                                {
-                                    languageName = shortName;
-                                }
+                                    languageName = "en_GB";
                             }
                         }
                         break;
@@ -1135,7 +1117,6 @@ namespace Nikse.SubtitleEdit.Logic
                         if (count > bestCount)
                             languageName = shortName;
                         break;
-
                     default:
                         break;
                 }
