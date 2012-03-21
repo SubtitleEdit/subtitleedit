@@ -358,7 +358,7 @@
             this.checkBoxPromptDeleteLines.AutoSize = true;
             this.checkBoxPromptDeleteLines.Location = new System.Drawing.Point(436, 319);
             this.checkBoxPromptDeleteLines.Name = "checkBoxPromptDeleteLines";
-            this.checkBoxPromptDeleteLines.Size = new System.Drawing.Size(142, 17);
+            this.checkBoxPromptDeleteLines.Size = new System.Drawing.Size(138, 17);
             this.checkBoxPromptDeleteLines.TabIndex = 40;
             this.checkBoxPromptDeleteLines.Text = "Prompt for deleting lines";
             this.checkBoxPromptDeleteLines.UseVisualStyleBackColor = true;
@@ -368,7 +368,7 @@
             this.checkBoxAutoWrapWhileTyping.AutoSize = true;
             this.checkBoxAutoWrapWhileTyping.Location = new System.Drawing.Point(193, 146);
             this.checkBoxAutoWrapWhileTyping.Name = "checkBoxAutoWrapWhileTyping";
-            this.checkBoxAutoWrapWhileTyping.Size = new System.Drawing.Size(137, 17);
+            this.checkBoxAutoWrapWhileTyping.Size = new System.Drawing.Size(132, 17);
             this.checkBoxAutoWrapWhileTyping.TabIndex = 4;
             this.checkBoxAutoWrapWhileTyping.Text = "Auto-wrap while typing";
             this.checkBoxAutoWrapWhileTyping.UseVisualStyleBackColor = true;
@@ -396,7 +396,7 @@
             this.checkBoxAllowEditOfOriginalSubtitle.AutoSize = true;
             this.checkBoxAllowEditOfOriginalSubtitle.Location = new System.Drawing.Point(436, 296);
             this.checkBoxAllowEditOfOriginalSubtitle.Name = "checkBoxAllowEditOfOriginalSubtitle";
-            this.checkBoxAllowEditOfOriginalSubtitle.Size = new System.Drawing.Size(160, 17);
+            this.checkBoxAllowEditOfOriginalSubtitle.Size = new System.Drawing.Size(155, 17);
             this.checkBoxAllowEditOfOriginalSubtitle.TabIndex = 24;
             this.checkBoxAllowEditOfOriginalSubtitle.Text = "Allow edit of original subtitle";
             this.checkBoxAllowEditOfOriginalSubtitle.UseVisualStyleBackColor = true;
@@ -564,7 +564,7 @@
             this.checkBoxRememberWindowPosition.AutoSize = true;
             this.checkBoxRememberWindowPosition.Location = new System.Drawing.Point(436, 101);
             this.checkBoxRememberWindowPosition.Name = "checkBoxRememberWindowPosition";
-            this.checkBoxRememberWindowPosition.Size = new System.Drawing.Size(223, 17);
+            this.checkBoxRememberWindowPosition.Size = new System.Drawing.Size(222, 17);
             this.checkBoxRememberWindowPosition.TabIndex = 15;
             this.checkBoxRememberWindowPosition.Text = "Remember main window position and size";
             this.checkBoxRememberWindowPosition.UseVisualStyleBackColor = true;
@@ -611,7 +611,7 @@
             this.checkBoxStartInSourceView.AutoSize = true;
             this.checkBoxStartInSourceView.Location = new System.Drawing.Point(436, 124);
             this.checkBoxStartInSourceView.Name = "checkBoxStartInSourceView";
-            this.checkBoxStartInSourceView.Size = new System.Drawing.Size(121, 17);
+            this.checkBoxStartInSourceView.Size = new System.Drawing.Size(119, 17);
             this.checkBoxStartInSourceView.TabIndex = 16;
             this.checkBoxStartInSourceView.Text = "Start in source view";
             this.checkBoxStartInSourceView.UseVisualStyleBackColor = true;
@@ -621,7 +621,7 @@
             this.checkBoxReopenLastOpened.AutoSize = true;
             this.checkBoxReopenLastOpened.Location = new System.Drawing.Point(444, 52);
             this.checkBoxReopenLastOpened.Name = "checkBoxReopenLastOpened";
-            this.checkBoxReopenLastOpened.Size = new System.Drawing.Size(145, 17);
+            this.checkBoxReopenLastOpened.Size = new System.Drawing.Size(140, 17);
             this.checkBoxReopenLastOpened.TabIndex = 13;
             this.checkBoxReopenLastOpened.Text = "Start with last file loaded";
             this.checkBoxReopenLastOpened.UseVisualStyleBackColor = true;
@@ -631,7 +631,7 @@
             this.checkBoxRememberRecentFiles.AutoSize = true;
             this.checkBoxRememberRecentFiles.Location = new System.Drawing.Point(436, 28);
             this.checkBoxRememberRecentFiles.Name = "checkBoxRememberRecentFiles";
-            this.checkBoxRememberRecentFiles.Size = new System.Drawing.Size(195, 17);
+            this.checkBoxRememberRecentFiles.Size = new System.Drawing.Size(188, 17);
             this.checkBoxRememberRecentFiles.TabIndex = 12;
             this.checkBoxRememberRecentFiles.Text = "Remember recent files (for reopen)";
             this.checkBoxRememberRecentFiles.UseVisualStyleBackColor = true;
@@ -642,7 +642,7 @@
             this.checkBoxSubtitleFontBold.AutoSize = true;
             this.checkBoxSubtitleFontBold.Location = new System.Drawing.Point(193, 269);
             this.checkBoxSubtitleFontBold.Name = "checkBoxSubtitleFontBold";
-            this.checkBoxSubtitleFontBold.Size = new System.Drawing.Size(46, 17);
+            this.checkBoxSubtitleFontBold.Size = new System.Drawing.Size(47, 17);
             this.checkBoxSubtitleFontBold.TabIndex = 8;
             this.checkBoxSubtitleFontBold.Text = "Bold";
             this.checkBoxSubtitleFontBold.UseVisualStyleBackColor = true;
@@ -2220,6 +2220,7 @@
             "Del",
             "Down",
             "End",
+            "Escape",
             "Ins",
             "Left",
             "Pause",
