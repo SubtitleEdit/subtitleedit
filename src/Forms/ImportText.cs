@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Globalization;
 using System.IO;
 using System.Text;
 using System.Windows.Forms;
@@ -13,6 +14,7 @@ namespace Nikse.SubtitleEdit.Forms
     {
         Subtitle _subtitle;
         string _videoFileName;
+        private readonly Timer _refreshTimer = new Timer();
 
         public Subtitle FixedSubtitle { get { return _subtitle; } }
         public string VideoFileName { get { return _videoFileName; } }
@@ -21,7 +23,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             InitializeComponent();
 
-            this.Text = Configuration.Settings.Language.ImportText.Title;
+            Text = Configuration.Settings.Language.ImportText.Title;
             groupBoxImportText.Text = Configuration.Settings.Language.ImportText.Title;
             buttonOpenText.Text = Configuration.Settings.Language.ImportText.OpenTextFile;
             groupBoxImportOptions.Text = Configuration.Settings.Language.ImportText.ImportOptions;
@@ -45,12 +47,20 @@ namespace Nikse.SubtitleEdit.Forms
 
             numericUpDownDurationFixed.Enabled = radioButtonDurationFixed.Checked;
             FixLargeFonts();
+            _refreshTimer.Interval = 400;
+            _refreshTimer.Tick += RefreshTimerTick;
+        }
+
+        void RefreshTimerTick(object sender, EventArgs e)
+        {
+            _refreshTimer.Stop();
+            GeneratePreviewReal();
         }
 
         private void FixLargeFonts()
         {
-            Graphics graphics = this.CreateGraphics();
-            SizeF textSize = graphics.MeasureString(buttonOK.Text, this.Font);
+            Graphics graphics = CreateGraphics();
+            SizeF textSize = graphics.MeasureString(buttonOK.Text, Font);
             if (textSize.Height > buttonOK.Height - 4)
             {
                 int newButtonHeight = (int)(textSize.Height + 7 + 0.5);
@@ -58,7 +68,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void buttonOpenText_Click(object sender, EventArgs e)
+        private void ButtonOpenTextClick(object sender, EventArgs e)
         {
             openFileDialog1.Title = buttonOpenText.Text;
             openFileDialog1.Filter = Configuration.Settings.Language.ImportText.TextFiles + "|*.txt|Adobe Story|*.astx|" + Configuration.Settings.Language.General.AllFiles + "|*.*";
@@ -75,6 +85,19 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void GeneratePreview()
         {
+            if (_refreshTimer.Enabled)
+            {
+                _refreshTimer.Stop();
+                _refreshTimer.Start();
+            }            
+            else
+            {
+                _refreshTimer.Start();
+            }
+        }
+
+        private void GeneratePreviewReal()
+        {
             _subtitle = new Subtitle();
             if (radioButtonLineMode.Checked)
                 ImportLineMode(textBoxText.Lines);
@@ -90,13 +113,12 @@ namespace Nikse.SubtitleEdit.Forms
 
             groupBoxImportResult.Text = string.Format(Configuration.Settings.Language.ImportText.PreviewLinesModifiedX, _subtitle.Paragraphs.Count);
             SubtitleListview1.Fill(_subtitle);
-            if (_subtitle.Paragraphs.Count > 0)
-                SubtitleListview1.Items[0].Selected = true;
+            SubtitleListview1.SelectIndexAndEnsureVisible(0);
         }
 
         private void MergeLinesWithContinuation()
         {
-            Subtitle temp = new Subtitle();
+            var temp = new Subtitle();
             bool skipNext = false;
             for (int i=0; i < _subtitle.Paragraphs.Count; i++)
             {
@@ -105,15 +127,12 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     Paragraph next = _subtitle.GetParagraphOrDefault(i + 1);
 
-                    bool merge = true;
-
-                    if (p.Text.Contains(Environment.NewLine) || next == null)
-                        merge = false;
+                    bool merge = !(p.Text.Contains(Environment.NewLine) || next == null);
 
                     if (merge && (p.Text.TrimEnd().EndsWith("!") || p.Text.TrimEnd().EndsWith(".") || p.Text.TrimEnd().EndsWith("!")))
                     {
-                        StripableText st = new StripableText(p.Text);
-                        if (st.StrippedText.Length > 0 && Utilities.UppercaseLetters.Contains(st.StrippedText[0].ToString()))
+                        var st = new StripableText(p.Text);
+                        if (st.StrippedText.Length > 0 && Utilities.UppercaseLetters.Contains(st.StrippedText[0].ToString(CultureInfo.InvariantCulture)))
                             merge = false;
                     }
 
@@ -122,7 +141,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                     if (merge)
                     {
-                        temp.Paragraphs.Add(new Paragraph() { Text = p.Text + Environment.NewLine + next.Text });
+                        temp.Paragraphs.Add(new Paragraph { Text = p.Text + Environment.NewLine + next.Text });
                         skipNext = true;
                     }
                     else
@@ -147,7 +166,7 @@ namespace Nikse.SubtitleEdit.Forms
                 p.EndTime.TotalMilliseconds = millisecondsIndex + p.Duration.TotalMilliseconds;
                 p.StartTime.TotalMilliseconds = millisecondsIndex;
 
-                millisecondsIndex +=  p.Duration.TotalMilliseconds + millisecondsInterval;
+                millisecondsIndex += p.Duration.TotalMilliseconds + millisecondsInterval;
             }
         }
 
@@ -192,7 +211,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ImportAutoSplit(IEnumerable<string> textLines)
         {
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             foreach (string line in textLines)
             {
                 if (line.Trim().Length == 0)
@@ -230,7 +249,7 @@ namespace Nikse.SubtitleEdit.Forms
                 lines[i] = lines[i].Replace("_@PER_", ".");
             }
 
-            List<string> list = new List<string>();
+            var list = new List<string>();
             foreach (string s in lines)
                 AutoSplit(list, s);
 
@@ -243,22 +262,22 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 if (split.Length < Configuration.Settings.General.SubtitleLineMaximumLength)
                     list.Add(split);
-                else
+                else if (split != line)
                     AutoSplit(list, split);
             }
         }
 
         private bool ContainsLetters(string line)
         {
-            foreach (char ch in line.ToCharArray())
+            foreach (char ch in line)
             {
-                if (!("\r\n\t .?" + Convert.ToChar(0)).Contains(ch.ToString()))
+                if (!("\r\n\t .?" + Convert.ToChar(0)).Contains(ch.ToString(CultureInfo.InvariantCulture)))
                     return true;
             }
             return false;
         }
 
-        private void buttonOK_Click(object sender, EventArgs e)
+        private void ButtonOkClick(object sender, EventArgs e)
         {
             if (SubtitleListview1.Items.Count > 0)
                 DialogResult = DialogResult.OK;
@@ -266,43 +285,38 @@ namespace Nikse.SubtitleEdit.Forms
                 DialogResult = DialogResult.Cancel;
         }
 
-        private void buttonCancel_Click(object sender, EventArgs e)
+        private void ButtonCancelClick(object sender, EventArgs e)
         {
             DialogResult = DialogResult.Cancel;
         }
 
-        private void checkBoxRemoveLinesWithoutLettersOrNumbers_CheckedChanged(object sender, EventArgs e)
+        private void CheckBoxRemoveLinesWithoutLettersOrNumbersCheckedChanged(object sender, EventArgs e)
         {
             GeneratePreview();
         }
 
-        private void checkBoxRemoveEmptyLines_CheckedChanged(object sender, EventArgs e)
+        private void CheckBoxRemoveEmptyLinesCheckedChanged(object sender, EventArgs e)
         {
             GeneratePreview();
         }
 
-        private void radioButtonLineMode_CheckedChanged(object sender, EventArgs e)
+        private void RadioButtonLineModeCheckedChanged(object sender, EventArgs e)
         {
             GeneratePreview();
         }
 
-        private void radioButtonOneTwoLineMode_CheckedChanged(object sender, EventArgs e)
+        private void RadioButtonAutoSplitCheckedChanged(object sender, EventArgs e)
         {
             GeneratePreview();
         }
 
-        private void radioButtonAutoSplit_CheckedChanged(object sender, EventArgs e)
-        {
-            GeneratePreview();
-        }
-
-        private void textBoxText_DragEnter(object sender, DragEventArgs e)
+        private void TextBoxTextDragEnter(object sender, DragEventArgs e)
         {
             if (e.Data.GetDataPresent(DataFormats.FileDrop, false))
                 e.Effect = DragDropEffects.All;
         }
 
-        private void textBoxText_DragDrop(object sender, DragEventArgs e)
+        private void TextBoxTextDragDrop(object sender, DragEventArgs e)
         {
             string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
             if (files.Length == 1)
@@ -330,8 +344,8 @@ namespace Nikse.SubtitleEdit.Forms
         {
             try
             {
-                StringBuilder sb = new StringBuilder();
-                XmlDocument doc = new XmlDocument();
+                var sb = new StringBuilder();
+                var doc = new XmlDocument();
                 doc.Load(fileName);
                 foreach (XmlNode node in doc.DocumentElement.SelectNodes("//paragraph[@element='Dialog']")) // <paragraph objID="1:28" element="Dialog">
                 {
@@ -376,31 +390,46 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void buttonRefresh_Click(object sender, EventArgs e)
+        private void ButtonRefreshClick(object sender, EventArgs e)
         {
             GeneratePreview();
         }
 
-        private void radioButtonDurationFixed_CheckedChanged(object sender, EventArgs e)
+        private void RadioButtonDurationFixedCheckedChanged(object sender, EventArgs e)
         {
             numericUpDownDurationFixed.Enabled = radioButtonDurationFixed.Checked;
             GeneratePreview();
         }
 
-        private void checkBoxMergeShortLines_CheckedChanged(object sender, EventArgs e)
+        private void CheckBoxMergeShortLinesCheckedChanged(object sender, EventArgs e)
         {
             GeneratePreview();
         }
 
-        private void ImportText_KeyDown(object sender, KeyEventArgs e)
+        private void ImportTextKeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Escape)
                 DialogResult = DialogResult.Cancel;
         }
 
-        private void textBoxText_TextChanged(object sender, EventArgs e)
+        private void TextBoxTextTextChanged(object sender, EventArgs e)
         {
-            buttonRefresh_Click(null, null);
+            GeneratePreview();
+        }
+
+        private void NumericUpDownDurationFixedValueChanged(object sender, EventArgs e)
+        {
+            GeneratePreview();
+        }
+
+        private void NumericUpDownGapBetweenLinesValueChanged(object sender, EventArgs e)
+        {
+            GeneratePreview();
+        }
+
+        private void RadioButtonDurationAutoCheckedChanged(object sender, EventArgs e)
+        {
+            GeneratePreview();
         }
 
     }

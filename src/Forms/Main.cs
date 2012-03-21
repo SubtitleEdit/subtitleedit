@@ -93,7 +93,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         GoogleOrMicrosoftTranslate _googleOrMicrosoftTranslate = null;
 
-        bool _cancelWordSpellCheck = false;
+        bool _cancelWordSpellCheck = true;
 
         Keys _toggleVideoDockUndock = Keys.None;
         Keys _videoPause = Keys.None;
@@ -4085,6 +4085,7 @@ namespace Nikse.SubtitleEdit.Forms
             wordSpellChecker.Quit();
             ShowStatus(string.Format(_language.SpellCheckCompletedXCorrections, totalLinesChanged));
             Cursor = Cursors.Default;
+            _cancelWordSpellCheck = true;
         }
 
         private void SpellCheck(bool autoDetect)
@@ -7232,7 +7233,11 @@ namespace Nikse.SubtitleEdit.Forms
 
             bool inListView = tabControlSubtitle.SelectedIndex == TabControlListView;
 
-            if (audioVisualizer != null && audioVisualizer.Visible & e.KeyData == _waveformVerticalZoom)
+            if (e.KeyCode == Keys.Escape && !_cancelWordSpellCheck)
+            {
+                _cancelWordSpellCheck = true;
+            }
+            else if (audioVisualizer != null && audioVisualizer.Visible & e.KeyData == _waveformVerticalZoom)
             {
                 if (audioVisualizer.VerticalZoomPercent > 0.2)
                     audioVisualizer.VerticalZoomPercent -= 0.1;
@@ -7577,10 +7582,6 @@ namespace Nikse.SubtitleEdit.Forms
                         RefreshSelectedParagraph();
                     }
                 }
-            }
-            else if (e.KeyCode == Keys.Escape)
-            {
-                _cancelWordSpellCheck = true;
             }
             else if (e.Modifiers == (Keys.Control | Keys.Shift) && e.KeyCode == Keys.U) // Ctrl+Shift+U = switch original/current
             {
@@ -12125,6 +12126,8 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
+            MakeHistoryForUndoOnlyIfNotResent(string.Format(_language.VideoControls.BeforeChangingTimeInWaveFormX, "#" + p.Number + " " + p.Text));
+
             timeUpDownStartTime.MaskedTextBox.TextChanged -= MaskedTextBox_TextChanged;
             var oldParagraph = new Paragraph(_subtitle.Paragraphs[index]);
             double videoPosition = mediaPlayer.CurrentPosition;
@@ -12147,7 +12150,7 @@ namespace Nikse.SubtitleEdit.Forms
             timeUpDownStartTime.TimeCode = _subtitle.Paragraphs[index].StartTime;
             timeUpDownStartTime.MaskedTextBox.TextChanged += MaskedTextBox_TextChanged;
             UpdateOriginalTimeCodes(oldParagraph);
-
+            _subtitleListViewIndex = -1;
             SubtitleListview1.SelectIndexAndEnsureVisible(index + 1);
             audioVisualizer.Invalidate();
         }

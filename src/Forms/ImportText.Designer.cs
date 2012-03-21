@@ -68,7 +68,7 @@
             this.buttonOpenText.TabIndex = 0;
             this.buttonOpenText.Text = "Open file...";
             this.buttonOpenText.UseVisualStyleBackColor = true;
-            this.buttonOpenText.Click += new System.EventHandler(this.buttonOpenText_Click);
+            this.buttonOpenText.Click += new System.EventHandler(this.ButtonOpenTextClick);
             // 
             // groupBoxImportText
             // 
@@ -89,15 +89,15 @@
             this.textBoxText.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxText.Location = new System.Drawing.Point(6, 48);
-            this.textBoxText.MaxLength = 232767;
+            this.textBoxText.MaxLength = 0;
             this.textBoxText.Multiline = true;
             this.textBoxText.Name = "textBoxText";
             this.textBoxText.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.textBoxText.Size = new System.Drawing.Size(495, 272);
             this.textBoxText.TabIndex = 2;
-            this.textBoxText.TextChanged += new System.EventHandler(this.textBoxText_TextChanged);
-            this.textBoxText.DragDrop += new System.Windows.Forms.DragEventHandler(this.textBoxText_DragDrop);
-            this.textBoxText.DragEnter += new System.Windows.Forms.DragEventHandler(this.textBoxText_DragEnter);
+            this.textBoxText.TextChanged += new System.EventHandler(this.TextBoxTextTextChanged);
+            this.textBoxText.DragDrop += new System.Windows.Forms.DragEventHandler(this.TextBoxTextDragDrop);
+            this.textBoxText.DragEnter += new System.Windows.Forms.DragEventHandler(this.TextBoxTextDragEnter);
             // 
             // groupBoxImportOptions
             // 
@@ -128,7 +128,7 @@
             this.checkBoxMergeShortLines.TabIndex = 40;
             this.checkBoxMergeShortLines.Text = "Merge short lines with continuation";
             this.checkBoxMergeShortLines.UseVisualStyleBackColor = true;
-            this.checkBoxMergeShortLines.CheckedChanged += new System.EventHandler(this.checkBoxMergeShortLines_CheckedChanged);
+            this.checkBoxMergeShortLines.CheckedChanged += new System.EventHandler(this.CheckBoxMergeShortLinesCheckedChanged);
             // 
             // groupBoxDuration
             // 
@@ -146,7 +146,7 @@
             // 
             this.numericUpDownDurationFixed.Location = new System.Drawing.Point(111, 42);
             this.numericUpDownDurationFixed.Maximum = new decimal(new int[] {
-            10000,
+            100000,
             0,
             0,
             0});
@@ -159,10 +159,11 @@
             this.numericUpDownDurationFixed.Size = new System.Drawing.Size(64, 21);
             this.numericUpDownDurationFixed.TabIndex = 37;
             this.numericUpDownDurationFixed.Value = new decimal(new int[] {
-            1000,
+            2000,
             0,
             0,
             0});
+            this.numericUpDownDurationFixed.ValueChanged += new System.EventHandler(this.NumericUpDownDurationFixedValueChanged);
             // 
             // radioButtonDurationFixed
             // 
@@ -173,7 +174,7 @@
             this.radioButtonDurationFixed.TabIndex = 3;
             this.radioButtonDurationFixed.Text = "Fixed";
             this.radioButtonDurationFixed.UseVisualStyleBackColor = true;
-            this.radioButtonDurationFixed.CheckedChanged += new System.EventHandler(this.radioButtonDurationFixed_CheckedChanged);
+            this.radioButtonDurationFixed.CheckedChanged += new System.EventHandler(this.RadioButtonDurationFixedCheckedChanged);
             // 
             // radioButtonDurationAuto
             // 
@@ -186,6 +187,7 @@
             this.radioButtonDurationAuto.TabStop = true;
             this.radioButtonDurationAuto.Text = "Auto";
             this.radioButtonDurationAuto.UseVisualStyleBackColor = true;
+            this.radioButtonDurationAuto.CheckedChanged += new System.EventHandler(this.RadioButtonDurationAutoCheckedChanged);
             // 
             // buttonRefresh
             // 
@@ -196,13 +198,13 @@
             this.buttonRefresh.TabIndex = 38;
             this.buttonRefresh.Text = "Refresh";
             this.buttonRefresh.UseVisualStyleBackColor = true;
-            this.buttonRefresh.Click += new System.EventHandler(this.buttonRefresh_Click);
+            this.buttonRefresh.Click += new System.EventHandler(this.ButtonRefreshClick);
             // 
             // numericUpDownGapBetweenLines
             // 
             this.numericUpDownGapBetweenLines.Location = new System.Drawing.Point(19, 192);
             this.numericUpDownGapBetweenLines.Maximum = new decimal(new int[] {
-            10000,
+            100000,
             0,
             0,
             0});
@@ -219,6 +221,7 @@
             0,
             0,
             0});
+            this.numericUpDownGapBetweenLines.ValueChanged += new System.EventHandler(this.NumericUpDownGapBetweenLinesValueChanged);
             // 
             // labelGapBetweenSubtitles
             // 
@@ -240,7 +243,7 @@
             this.checkBoxRemoveLinesWithoutLetters.TabIndex = 5;
             this.checkBoxRemoveLinesWithoutLetters.Text = "Remove lines without letters";
             this.checkBoxRemoveLinesWithoutLetters.UseVisualStyleBackColor = true;
-            this.checkBoxRemoveLinesWithoutLetters.CheckedChanged += new System.EventHandler(this.checkBoxRemoveLinesWithoutLettersOrNumbers_CheckedChanged);
+            this.checkBoxRemoveLinesWithoutLetters.CheckedChanged += new System.EventHandler(this.CheckBoxRemoveLinesWithoutLettersOrNumbersCheckedChanged);
             // 
             // groupBoxSplitting
             // 
@@ -264,7 +267,7 @@
             this.radioButtonAutoSplit.TabStop = true;
             this.radioButtonAutoSplit.Text = "Auto split text";
             this.radioButtonAutoSplit.UseVisualStyleBackColor = true;
-            this.radioButtonAutoSplit.CheckedChanged += new System.EventHandler(this.radioButtonAutoSplit_CheckedChanged);
+            this.radioButtonAutoSplit.CheckedChanged += new System.EventHandler(this.RadioButtonAutoSplitCheckedChanged);
             // 
             // radioButtonLineMode
             // 
@@ -275,7 +278,7 @@
             this.radioButtonLineMode.TabIndex = 0;
             this.radioButtonLineMode.Text = "One line is one subtitle";
             this.radioButtonLineMode.UseVisualStyleBackColor = true;
-            this.radioButtonLineMode.CheckedChanged += new System.EventHandler(this.radioButtonLineMode_CheckedChanged);
+            this.radioButtonLineMode.CheckedChanged += new System.EventHandler(this.RadioButtonLineModeCheckedChanged);
             // 
             // checkBoxRemoveEmptyLines
             // 
@@ -288,7 +291,7 @@
             this.checkBoxRemoveEmptyLines.TabIndex = 3;
             this.checkBoxRemoveEmptyLines.Text = "Remove empty lines";
             this.checkBoxRemoveEmptyLines.UseVisualStyleBackColor = true;
-            this.checkBoxRemoveEmptyLines.CheckedChanged += new System.EventHandler(this.checkBoxRemoveEmptyLines_CheckedChanged);
+            this.checkBoxRemoveEmptyLines.CheckedChanged += new System.EventHandler(this.CheckBoxRemoveEmptyLinesCheckedChanged);
             // 
             // groupBoxImportResult
             // 
@@ -337,7 +340,7 @@
             this.buttonCancel.TabIndex = 17;
             this.buttonCancel.Text = "C&ancel";
             this.buttonCancel.UseVisualStyleBackColor = true;
-            this.buttonCancel.Click += new System.EventHandler(this.buttonCancel_Click);
+            this.buttonCancel.Click += new System.EventHandler(this.ButtonCancelClick);
             // 
             // buttonOK
             // 
@@ -349,7 +352,7 @@
             this.buttonOK.TabIndex = 16;
             this.buttonOK.Text = "&Next >";
             this.buttonOK.UseVisualStyleBackColor = true;
-            this.buttonOK.Click += new System.EventHandler(this.buttonOK_Click);
+            this.buttonOK.Click += new System.EventHandler(this.ButtonOkClick);
             // 
             // ImportText
             // 
@@ -368,7 +371,7 @@
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
             this.Text = "Import text";
-            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ImportText_KeyDown);
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ImportTextKeyDown);
             this.groupBoxImportText.ResumeLayout(false);
             this.groupBoxImportText.PerformLayout();
             this.groupBoxImportOptions.ResumeLayout(false);
