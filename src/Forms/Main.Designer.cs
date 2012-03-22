@@ -101,10 +101,6 @@
             this.showHistoryforUndoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator14 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripMenuItemInsertUnicodeCharacter = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItemSingleNote = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItemDoubleNote = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItemSmiley = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItemLove = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparatorInsertUnicodeCharacter = new System.Windows.Forms.ToolStripSeparator();
             this.findToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.findNextToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -197,6 +193,7 @@
             this.underlineToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.colorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemFont = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemSurroundWithMusicSymbols = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripMenuItemAutoBreakLines = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemUnbreakLines = new System.Windows.Forms.ToolStripMenuItem();
@@ -341,10 +338,6 @@
             this.fontNameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator26 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripMenuItemInsertUnicodeSymbol = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem4 = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem5 = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem6 = new System.Windows.Forms.ToolStripMenuItem();
             this.labelSingleLine = new System.Windows.Forms.Label();
             this.buttonAutoBreak = new System.Windows.Forms.Button();
             this.labelTextLineLengths = new System.Windows.Forms.Label();
@@ -1061,46 +1054,9 @@
             // 
             // toolStripMenuItemInsertUnicodeCharacter
             // 
-            this.toolStripMenuItemInsertUnicodeCharacter.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripMenuItemSingleNote,
-            this.toolStripMenuItemDoubleNote,
-            this.toolStripMenuItemSmiley,
-            this.toolStripMenuItemLove});
             this.toolStripMenuItemInsertUnicodeCharacter.Name = "toolStripMenuItemInsertUnicodeCharacter";
             this.toolStripMenuItemInsertUnicodeCharacter.Size = new System.Drawing.Size(222, 22);
             this.toolStripMenuItemInsertUnicodeCharacter.Text = "Insert unicode character";
-            // 
-            // toolStripMenuItemSingleNote
-            // 
-            this.toolStripMenuItemSingleNote.Font = new System.Drawing.Font("Times New Roman", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.toolStripMenuItemSingleNote.Name = "toolStripMenuItemSingleNote";
-            this.toolStripMenuItemSingleNote.Size = new System.Drawing.Size(86, 22);
-            this.toolStripMenuItemSingleNote.Text = "♪";
-            this.toolStripMenuItemSingleNote.Click += new System.EventHandler(this.InsertUnicodeSymbol);
-            // 
-            // toolStripMenuItemDoubleNote
-            // 
-            this.toolStripMenuItemDoubleNote.Font = new System.Drawing.Font("Times New Roman", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.toolStripMenuItemDoubleNote.Name = "toolStripMenuItemDoubleNote";
-            this.toolStripMenuItemDoubleNote.Size = new System.Drawing.Size(86, 22);
-            this.toolStripMenuItemDoubleNote.Text = "♫";
-            this.toolStripMenuItemDoubleNote.Click += new System.EventHandler(this.InsertUnicodeSymbol);
-            // 
-            // toolStripMenuItemSmiley
-            // 
-            this.toolStripMenuItemSmiley.Font = new System.Drawing.Font("Times New Roman", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.toolStripMenuItemSmiley.Name = "toolStripMenuItemSmiley";
-            this.toolStripMenuItemSmiley.Size = new System.Drawing.Size(86, 22);
-            this.toolStripMenuItemSmiley.Text = "☺";
-            this.toolStripMenuItemSmiley.Click += new System.EventHandler(this.InsertUnicodeSymbol);
-            // 
-            // toolStripMenuItemLove
-            // 
-            this.toolStripMenuItemLove.Font = new System.Drawing.Font("Times New Roman", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.toolStripMenuItemLove.Name = "toolStripMenuItemLove";
-            this.toolStripMenuItemLove.Size = new System.Drawing.Size(86, 22);
-            this.toolStripMenuItemLove.Text = "♥";
-            this.toolStripMenuItemLove.Click += new System.EventHandler(this.InsertUnicodeSymbol);
             // 
             // toolStripSeparatorInsertUnicodeCharacter
             // 
@@ -1702,6 +1658,7 @@
             this.underlineToolStripMenuItem,
             this.colorToolStripMenuItem,
             this.toolStripMenuItemFont,
+            this.toolStripMenuItemSurroundWithMusicSymbols,
             this.toolStripSeparator2,
             this.toolStripMenuItemAutoBreakLines,
             this.toolStripMenuItemUnbreakLines,
@@ -1717,7 +1674,7 @@
             this.fixCommonErrorsInSelectedLinesToolStripMenuItem,
             this.changeCasingForSelectedLinesToolStripMenuItem});
             this.contextMenuStripListview.Name = "contextMenuStripListview";
-            this.contextMenuStripListview.Size = new System.Drawing.Size(285, 672);
+            this.contextMenuStripListview.Size = new System.Drawing.Size(285, 694);
             this.contextMenuStripListview.Opening += new System.ComponentModel.CancelEventHandler(this.ContextMenuStripListviewOpening);
             // 
             // setStylesForSelectedLinesToolStripMenuItem
@@ -1850,6 +1807,13 @@
             this.toolStripMenuItemFont.Size = new System.Drawing.Size(284, 22);
             this.toolStripMenuItemFont.Text = "Font name...";
             this.toolStripMenuItemFont.Click += new System.EventHandler(this.toolStripMenuItemFont_Click);
+            // 
+            // toolStripMenuItemSurroundWithMusicSymbols
+            // 
+            this.toolStripMenuItemSurroundWithMusicSymbols.Name = "toolStripMenuItemSurroundWithMusicSymbols";
+            this.toolStripMenuItemSurroundWithMusicSymbols.Size = new System.Drawing.Size(284, 22);
+            this.toolStripMenuItemSurroundWithMusicSymbols.Text = "♪";
+            this.toolStripMenuItemSurroundWithMusicSymbols.Click += new System.EventHandler(this.ToolStripMenuItemSurroundWithMusicSymbolsClick);
             // 
             // toolStripSeparator2
             // 
@@ -3228,7 +3192,7 @@
             this.toolStripSeparator26,
             this.toolStripMenuItemInsertUnicodeSymbol});
             this.contextMenuStripTextBoxListView.Name = "contextMenuStripTextBoxListView";
-            this.contextMenuStripTextBoxListView.Size = new System.Drawing.Size(215, 308);
+            this.contextMenuStripTextBoxListView.Size = new System.Drawing.Size(215, 330);
             this.contextMenuStripTextBoxListView.Opening += new System.ComponentModel.CancelEventHandler(this.ContextMenuStripTextBoxListViewOpening);
             // 
             // cutToolStripMenuItem
@@ -3337,42 +3301,9 @@
             // 
             // toolStripMenuItemInsertUnicodeSymbol
             // 
-            this.toolStripMenuItemInsertUnicodeSymbol.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripMenuItem3,
-            this.toolStripMenuItem4,
-            this.toolStripMenuItem5,
-            this.toolStripMenuItem6});
             this.toolStripMenuItemInsertUnicodeSymbol.Name = "toolStripMenuItemInsertUnicodeSymbol";
             this.toolStripMenuItemInsertUnicodeSymbol.Size = new System.Drawing.Size(214, 22);
             this.toolStripMenuItemInsertUnicodeSymbol.Text = "Insert unicode character";
-            // 
-            // toolStripMenuItem3
-            // 
-            this.toolStripMenuItem3.Name = "toolStripMenuItem3";
-            this.toolStripMenuItem3.Size = new System.Drawing.Size(86, 22);
-            this.toolStripMenuItem3.Text = "♪";
-            this.toolStripMenuItem3.Click += new System.EventHandler(this.InsertUnicodeSymbol);
-            // 
-            // toolStripMenuItem4
-            // 
-            this.toolStripMenuItem4.Name = "toolStripMenuItem4";
-            this.toolStripMenuItem4.Size = new System.Drawing.Size(86, 22);
-            this.toolStripMenuItem4.Text = "♫";
-            this.toolStripMenuItem4.Click += new System.EventHandler(this.InsertUnicodeSymbol);
-            // 
-            // toolStripMenuItem5
-            // 
-            this.toolStripMenuItem5.Name = "toolStripMenuItem5";
-            this.toolStripMenuItem5.Size = new System.Drawing.Size(86, 22);
-            this.toolStripMenuItem5.Text = "☺";
-            this.toolStripMenuItem5.Click += new System.EventHandler(this.InsertUnicodeSymbol);
-            // 
-            // toolStripMenuItem6
-            // 
-            this.toolStripMenuItem6.Name = "toolStripMenuItem6";
-            this.toolStripMenuItem6.Size = new System.Drawing.Size(86, 22);
-            this.toolStripMenuItem6.Text = "♥";
-            this.toolStripMenuItem6.Click += new System.EventHandler(this.InsertUnicodeSymbol);
             // 
             // labelSingleLine
             // 
@@ -3875,11 +3806,7 @@
         private System.Windows.Forms.ToolStripStatusLabel toolStripSelected;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemInsertUnicodeCharacter;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparatorInsertUnicodeCharacter;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemSingleNote;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemDoubleNote;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemAutoMergeShortLines;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemSmiley;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemLove;
         private System.Windows.Forms.ToolStripMenuItem setMinimumDisplayTimeBetweenParagraphsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemImportText;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemImportTimeCodes;
@@ -4079,10 +4006,6 @@
         private System.Windows.Forms.ToolStripMenuItem showOnlySpectrogramToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator26;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemInsertUnicodeSymbol;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem3;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem4;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem5;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem6;
         private System.Windows.Forms.ToolStripMenuItem setStylesForSelectedLinesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem FindDoubleLinesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem eBUSTLToolStripMenuItem;
@@ -4098,6 +4021,7 @@
         private System.Windows.Forms.Timer timerAlternateTextUndo;
         private System.Windows.Forms.ToolStripMenuItem adobeEncoreFABImageScriptToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemMergeDialogue;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemSurroundWithMusicSymbols;
     }
 }
 

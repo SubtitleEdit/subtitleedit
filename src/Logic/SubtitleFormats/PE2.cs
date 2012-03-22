@@ -7,6 +7,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
     public class PE2 : SubtitleFormat
     {
+
+        static readonly Regex RegexTimeCode = new Regex(@"^\d\d:\d\d:\d\d:\d\d ", RegexOptions.Compiled);
+        static readonly Regex RegexTimeCodeEnd = new Regex(@"^\d\d:\d\d:\d\d:\d\d$", RegexOptions.Compiled);
+
         enum ExpectingLine
         {
             TimeStart,
@@ -36,7 +40,14 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public override bool IsMine(List<string> lines, string fileName)
         {
-            Subtitle subtitle = new Subtitle();
+            var sb = new StringBuilder();
+            foreach (string line in lines)
+                sb.AppendLine(line);
+            string s = sb.ToString();
+            if (s.Contains("[HEADER]") && s.Contains("[BODY]"))
+                return false; // UnknownSubtitle17
+
+            var subtitle = new Subtitle();
             LoadSubtitle(subtitle, lines, fileName);
             return subtitle.Paragraphs.Count > _errorCount;
         }
@@ -66,9 +77,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
-            var regexTimeCode = new Regex(@"^\d\d:\d\d:\d\d:\d\d ", RegexOptions.Compiled);
-            var regexTimeCodeEnd = new Regex(@"^\d\d:\d\d:\d\d:\d\d$", RegexOptions.Compiled);
-
             var paragraph = new Paragraph();
             ExpectingLine expecting = ExpectingLine.TimeStart;
             _errorCount = 0;
@@ -76,7 +84,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             subtitle.Paragraphs.Clear();
             foreach (string line in lines)
             {
-                if (regexTimeCode.IsMatch(line))
+                if (RegexTimeCode.IsMatch(line))
                 {
                     string[] parts = line.Substring(0, 11).Split(":".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
                     if (parts.Length == 4)
@@ -100,7 +108,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         }
                     }
                 }
-                else if (regexTimeCodeEnd.IsMatch(line))
+                else if (RegexTimeCodeEnd.IsMatch(line))
                 {
                     string[] parts = line.Substring(0, 11).Split(":".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
                     if (parts.Length == 4)

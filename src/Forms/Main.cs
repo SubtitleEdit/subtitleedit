@@ -496,7 +496,6 @@ namespace Nikse.SubtitleEdit.Forms
             int converted = 0;
             int errors = 0;
             var formats = SubtitleFormat.AllSubtitleFormats;
-            string outputFileName;
 
             foreach (string fileName in files)
             {
@@ -504,9 +503,8 @@ namespace Nikse.SubtitleEdit.Forms
 
                 if (File.Exists(fileName))
                 {
-
                     Encoding encoding;
-                    Subtitle sub = new Subtitle();
+                    var sub = new Subtitle();
                     SubtitleFormat format = sub.LoadSubtitle(fileName, out encoding, null);
                     if (format == null)
                     {
@@ -573,6 +571,7 @@ namespace Nikse.SubtitleEdit.Forms
                         }
 
                         bool targetFormatFound = false;
+                        string outputFileName;
                         foreach (SubtitleFormat sf in formats)
                         {
                             if (sf.Name.ToLower().Replace(" ", string.Empty) == toFormat.ToLower())
@@ -584,13 +583,13 @@ namespace Nikse.SubtitleEdit.Forms
                                     sub.CalculateFrameNumbersFromTimeCodesNoCheck(Configuration.Settings.General.DefaultFrameRate);
                                 else if (sf.IsTimeBased && sub.WasLoadedWithFrameNumbers)
                                     sub.CalculateTimeCodesFromFrameNumbers(Configuration.Settings.General.DefaultFrameRate);
-                                System.IO.File.WriteAllText(outputFileName, sub.ToText(sf), targetEncoding);
+                                File.WriteAllText(outputFileName, sub.ToText(sf), targetEncoding);
                                 if (format.GetType() == typeof(Sami))
                                 {
-                                    Sami sami = (Sami)format;
+                                    var sami = (Sami)format;
                                     foreach (string className in sami.GetClasses(sub))
                                     {
-                                        Subtitle newSub = new Subtitle();
+                                        var newSub = new Subtitle();
                                         foreach (Paragraph p in sub.Paragraphs)
                                         {
                                             if (p.Extra != null && p.Extra.ToLower().Trim() == className.ToLower().Trim())
@@ -604,7 +603,7 @@ namespace Nikse.SubtitleEdit.Forms
                                             else
                                                 s += "_" + className + format.Extension;
                                             outputFileName = FormatOutputFileNameForBatchConvert(s , sf.Extension);
-                                            System.IO.File.WriteAllText(outputFileName, newSub.ToText(sf), targetEncoding);
+                                            File.WriteAllText(outputFileName, newSub.ToText(sf), targetEncoding);
                                         }
                                     }
                                 }
@@ -920,7 +919,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void VideoPositionChanged(object sender, EventArgs e)
         {
-            TimeUpDown tud = (TimeUpDown)sender;
+            var tud = (TimeUpDown)sender;
             if (tud.Enabled)
             {
                 mediaPlayer.CurrentPosition = tud.TimeCode.TotalSeconds;
@@ -999,18 +998,14 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (Environment.OSVersion.Version.Major < 6 && Configuration.Settings.General.SubtitleFontName == Utilities.WinXp2kUnicodeFontName) // 6 == Vista/Win2008Server/Win7
             {
-                string unicodeFontName = Utilities.WinXp2kUnicodeFontName;
+                const string unicodeFontName = Utilities.WinXp2kUnicodeFontName;
                 Configuration.Settings.General.SubtitleFontName = unicodeFontName;
-                float fontSize = toolStripMenuItemSingleNote.Font.Size;
-                toolStripMenuItemSingleNote.Font = new System.Drawing.Font(unicodeFontName, fontSize);
-                toolStripMenuItemDoubleNote.Font = new System.Drawing.Font(unicodeFontName, fontSize);
-                toolStripMenuItemSmiley.Font = new System.Drawing.Font(unicodeFontName, fontSize);
-                toolStripMenuItemLove.Font = new System.Drawing.Font(unicodeFontName, fontSize);
-                textBoxSource.Font = new System.Drawing.Font(unicodeFontName, fontSize);
-                textBoxListViewText.Font = new System.Drawing.Font(unicodeFontName, fontSize);
-                SubtitleListview1.Font = new System.Drawing.Font(unicodeFontName, fontSize);
-
+                float fontSize = toolStripMenuItemInsertUnicodeSymbol.Font.Size;
+                textBoxSource.Font = new Font(unicodeFontName, fontSize);
+                textBoxListViewText.Font = new Font(unicodeFontName, fontSize);
+                SubtitleListview1.Font = new Font(unicodeFontName, fontSize);
                 toolStripWaveControls.RenderMode = ToolStripRenderMode.System;
+                toolStripMenuItemSurroundWithMusicSymbols.Font = new Font(unicodeFontName, fontSize);
             }
         }
 
@@ -4273,6 +4268,7 @@ namespace Nikse.SubtitleEdit.Forms
                 toolStripMenuItemUnbreakLines.Visible = true;
                 toolStripMenuItemAutoBreakLines.Visible = true;
                 toolStripSeparatorBreakLines.Visible = true;
+                toolStripMenuItemSurroundWithMusicSymbols.Visible = IsUnicode;
 
                 if (SubtitleListview1.SelectedItems.Count == 1)
                 {
@@ -4882,6 +4878,7 @@ namespace Nikse.SubtitleEdit.Forms
                     if (p != null)
                     {
                         p.Text = Utilities.RemoveHtmlTags(p.Text);
+                        p.Text = p.Text.Replace("♪", string.Empty);
                         if (isSsa)
                             p.Text = RemoveSsaStyle(p.Text);
                         SubtitleListview1.SetText(item.Index, p.Text);
@@ -4892,6 +4889,7 @@ namespace Nikse.SubtitleEdit.Forms
                             if (original != null)
                             {
                                 original.Text = Utilities.RemoveHtmlTags(original.Text);
+                                original.Text = original.Text.Replace("♪", string.Empty);
                                 if (isSsa)
                                     original.Text = RemoveSsaStyle(original.Text);
                                 SubtitleListview1.SetAlternateText(item.Index, original.Text);
@@ -8381,33 +8379,56 @@ namespace Nikse.SubtitleEdit.Forms
             _formPositionsAndSizes.SavePositionAndSize(addToNamesList);
         }
 
+        private bool IsUnicode
+        {
+            get 
+            { 
+                var enc = GetCurrentEncoding();
+                return enc == Encoding.UTF8 || enc == Encoding.Unicode || enc == Encoding.UTF7 || enc == Encoding.UTF32 || enc == Encoding.BigEndianUnicode;
+            }
+        }
+
         private void EditToolStripMenuItemDropDownOpening(object sender, EventArgs e)
         {
-            if (GetCurrentEncoding() == Encoding.Default || _subtitleListViewIndex == -1)
+            if (!IsUnicode || _subtitleListViewIndex == -1)
             {
                 toolStripMenuItemInsertUnicodeCharacter.Visible = false;
                 toolStripSeparatorInsertUnicodeCharacter.Visible = false;
             }
             else
             {
-                toolStripMenuItemInsertUnicodeCharacter.Visible = true;
-                toolStripSeparatorInsertUnicodeCharacter.Visible = true;
+                if (toolStripMenuItemInsertUnicodeCharacter.DropDownItems.Count == 0)
+                {
+                    foreach (string s in Configuration.Settings.Tools.UnicodeSymbolsToInsert.Split(";".ToCharArray(), StringSplitOptions.RemoveEmptyEntries))
+                    {
+                        toolStripMenuItemInsertUnicodeCharacter.DropDownItems.Add(s, null, InsertUnicodeGlyph);
+                        if (Environment.OSVersion.Version.Major < 6 && Configuration.Settings.General.SubtitleFontName == Utilities.WinXp2kUnicodeFontName) // 6 == Vista/Win2008Server/Win7
+                            toolStripMenuItemInsertUnicodeCharacter.DropDownItems[toolStripMenuItemInsertUnicodeCharacter.DropDownItems.Count - 1].Font = new Font(Utilities.WinXp2kUnicodeFontName, toolStripMenuItemInsertUnicodeSymbol.Font.Size);
+                    }
+                }
+                toolStripMenuItemInsertUnicodeCharacter.Visible = toolStripMenuItemInsertUnicodeCharacter.DropDownItems.Count > 0;
+                toolStripSeparatorInsertUnicodeCharacter.Visible = toolStripMenuItemInsertUnicodeCharacter.DropDownItems.Count > 0;
             }
         }
 
-        private void InsertUnicodeSymbol(object sender, EventArgs e)
+        private void InsertUnicodeGlyph(object sender, EventArgs e)
         {
-            if (tabControlSubtitle.SelectedIndex == TabControlSourceView)
+            var item = sender as ToolStripItem;
+            if (item != null)
             {
+                string s = item.Text;
 
-                textBoxSource.Text = textBoxSource.Text.Insert(textBoxSource.SelectionStart, (sender as ToolStripMenuItem).Text);
-            }
-            else
-            {
-                if (textBoxListViewTextAlternate.Visible && textBoxListViewTextAlternate.Enabled && textBoxListViewTextAlternate.Focused)
-                    textBoxListViewTextAlternate.Text = textBoxListViewTextAlternate.Text.Insert(textBoxListViewTextAlternate.SelectionStart, (sender as ToolStripMenuItem).Text);
+                if (tabControlSubtitle.SelectedIndex == TabControlSourceView)
+                {
+                    textBoxSource.Text = textBoxSource.Text.Insert(textBoxSource.SelectionStart, s);
+                }
                 else
-                    textBoxListViewText.Text = textBoxListViewText.Text.Insert(textBoxListViewText.SelectionStart, (sender as ToolStripMenuItem).Text);
+                {
+                    if (textBoxListViewTextAlternate.Visible && textBoxListViewTextAlternate.Enabled && textBoxListViewTextAlternate.Focused)
+                        textBoxListViewTextAlternate.Text = textBoxListViewTextAlternate.Text.Insert(textBoxListViewTextAlternate.SelectionStart, s);
+                    else
+                        textBoxListViewText.Text = textBoxListViewText.Text.Insert(textBoxListViewText.SelectionStart, s);
+                }
             }
         }
 
@@ -12180,15 +12201,24 @@ namespace Nikse.SubtitleEdit.Forms
                 tb = textBoxListViewTextAlternate;
             toolStripMenuItemSplitTextAtCursor.Visible = tb.Text.Length > 5 && tb.SelectionStart > 2 && tb.SelectionStart < tb.Text.Length - 2;
 
-            if (GetCurrentEncoding() == Encoding.Default || _subtitleListViewIndex == -1)
+            if (IsUnicode)
             {
-                toolStripMenuItemInsertUnicodeSymbol.Visible = false;
-                toolStripSeparator26.Visible = false;
+                if (toolStripMenuItemInsertUnicodeSymbol.DropDownItems.Count == 0)
+                {
+                    foreach (string s in Configuration.Settings.Tools.UnicodeSymbolsToInsert.Split(";".ToCharArray(), StringSplitOptions.RemoveEmptyEntries))
+                    {
+                        toolStripMenuItemInsertUnicodeSymbol.DropDownItems.Add(s, null, InsertUnicodeGlyph);
+                        if (Environment.OSVersion.Version.Major < 6 && Configuration.Settings.General.SubtitleFontName == Utilities.WinXp2kUnicodeFontName) // 6 == Vista/Win2008Server/Win7
+                            toolStripMenuItemInsertUnicodeSymbol.DropDownItems[toolStripMenuItemInsertUnicodeSymbol.DropDownItems.Count - 1].Font = new Font(Utilities.WinXp2kUnicodeFontName, toolStripMenuItemInsertUnicodeSymbol.Font.Size);
+                    }
+                }
+                toolStripMenuItemInsertUnicodeSymbol.Visible = toolStripMenuItemInsertUnicodeSymbol.DropDownItems.Count > 0;
+                toolStripSeparator26.Visible = toolStripMenuItemInsertUnicodeSymbol.DropDownItems.Count > 0;
             }
             else
             {
-                toolStripMenuItemInsertUnicodeSymbol.Visible = true;
-                toolStripSeparator26.Visible = true;
+                toolStripMenuItemInsertUnicodeSymbol.Visible = false;
+                toolStripSeparator26.Visible = false;
             }
         }
 
@@ -12772,5 +12802,55 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
+        private void ToolStripMenuItemSurroundWithMusicSymbolsClick(object sender, EventArgs e)
+        {
+            const string tag = "♪";
+            if (_subtitle.Paragraphs.Count > 0 && SubtitleListview1.SelectedItems.Count > 0)
+            {
+                SubtitleListview1.SelectedIndexChanged -= SubtitleListview1_SelectedIndexChanged;
+                MakeHistoryForUndo(string.Format(_language.BeforeAddingTagX, tag));
+
+                var indexes = new List<int>();
+                foreach (ListViewItem item in SubtitleListview1.SelectedItems)
+                    indexes.Add(item.Index);
+
+                SubtitleListview1.BeginUpdate();
+                foreach (int i in indexes)
+                {
+                    if (_subtitleAlternate != null)
+                    {
+                        Paragraph original = Utilities.GetOriginalParagraph(i, _subtitle.Paragraphs[i], _subtitleAlternate.Paragraphs);
+                        if (original != null)
+                        {
+                            if (original.Text.Contains(tag))
+                            {
+                                original.Text = original.Text.Replace(tag, string.Empty);
+                            }
+                            else
+                            {
+                                original.Text = string.Format("{0}{1}{0}", tag, original.Text.Replace(Environment.NewLine, "♪" + Environment.NewLine + "♪"));
+                            }
+                            SubtitleListview1.SetAlternateText(i, original.Text);
+                        }
+                    }
+
+                    if (_subtitle.Paragraphs[i].Text.Contains(tag))
+                    {
+                        _subtitle.Paragraphs[i].Text = _subtitle.Paragraphs[i].Text.Replace("♪", string.Empty);
+                    }
+                    else
+                    {
+                        _subtitle.Paragraphs[i].Text = string.Format("{0}{1}{0}", tag, _subtitle.Paragraphs[i].Text.Replace(Environment.NewLine, "♪" + Environment.NewLine + "♪"));
+                    }
+                    SubtitleListview1.SetText(i, _subtitle.Paragraphs[i].Text);
+                }
+                SubtitleListview1.EndUpdate();
+
+                ShowStatus(string.Format(_language.TagXAdded, tag));
+                ShowSource();
+                RefreshSelectedParagraph();
+                SubtitleListview1.SelectedIndexChanged += SubtitleListview1_SelectedIndexChanged;
+            }
+        }
     }
 }
