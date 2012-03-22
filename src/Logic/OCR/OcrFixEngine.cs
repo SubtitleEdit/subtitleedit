@@ -1285,7 +1285,9 @@ namespace Nikse.SubtitleEdit.Logic.OCR
                         bool allSlashedCorrect = true;
                         foreach (var slashedWord in slashedWords)
                         {
-                            if (slashedWord.Length < 2 || !IsWordKnownOrNumber(slashedWord, line))
+                            if (slashedWord.Length < 2)
+                                allSlashedCorrect = false;
+                            if (allSlashedCorrect && !(DoSpell(slashedWord) || IsWordKnownOrNumber(slashedWord, line)))
                                 allSlashedCorrect = false;
                         }
                         correct = allSlashedCorrect;

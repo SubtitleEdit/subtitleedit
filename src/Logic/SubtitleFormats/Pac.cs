@@ -12,10 +12,12 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
     public class Pac : SubtitleFormat
     {
+        public static TimeCode PacNullTime = new TimeCode(7, 35, 0, 0);
+
         /// <summary>
         /// Contains Swedish, Danish, German, Spanish, and French letters
         /// </summary>
-        static List<int> _latinCodes = new List<int> {
+        static readonly List<int> LatinCodes = new List<int> {
             0xe041, // Ã
             0xe04e, // Ñ
             0xe04f, // Õ
@@ -111,7 +113,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             0xe87a, // ż
         };
 
-        static List<string> _latinLetters = new List<string> {
+        static readonly List<string> LatinLetters = new List<string> {
             "Ã",
             "Ñ",
             "Õ",
@@ -207,7 +209,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             "ż",
         };
 
-        static List<int> _hebrewCodes = new List<int>
+        static readonly List<int> HebrewCodes = new List<int>
         {
             0xa0, // א
             0xa1, // ב
@@ -239,7 +241,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         };
 
-        static List<string> _hebrewLetters = new List<string>
+        static readonly List<string> HebrewLetters = new List<string>
         {
             "א", // 0xa0
             "ב", // 0xa1
@@ -272,7 +274,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
 
 
-        static List<int> _arabicCodes = new List<int> {
+        static readonly List<int> ArabicCodes = new List<int> {
             0xe081, //=أ
             0xe09b, //=ؤ
             0xe09c, //=ئ
@@ -313,7 +315,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             0xa0, //=ء
         };
 
-        static List<string> _arabicLetters = new List<string> {
+        static readonly List<string> ArabicLetters = new List<string> {
             "أ",
             "ؤ",
             "ئ",
@@ -355,7 +357,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         };
 
 
-        static List<int> _cyrillicCodes = new List<int> {
+        static readonly List<int> CyrillicCodes = new List<int> {
             0x20, //space
             0x21, //!
             0x22, //Э
@@ -482,7 +484,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         };
 
-        static List<string> _cyrillicLetters = new List<string> {
+        static readonly List<string> CyrillicLetters = new List<string> {
             " ", //0x20
             "!", //0x21
             "Э", //0x22
@@ -634,7 +636,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public void Save(string fileName, Subtitle subtitle)
         {
-            FileStream fs = new FileStream(fileName, FileMode.Create, FileAccess.Write);
+            var fs = new FileStream(fileName, FileMode.Create, FileAccess.Write);
             _fileName = fileName;
 
             // header
@@ -657,7 +659,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 fs.WriteByte(0);
             fs.WriteByte(0x11);
             fs.WriteByte(0);
-            byte[] footerBuffer = System.Text.Encoding.ASCII.GetBytes("dummy end of file");
+            byte[] footerBuffer = Encoding.ASCII.GetBytes("dummy end of file");
             fs.Write(footerBuffer, 0, footerBuffer.Length);
 
             fs.Close();
@@ -665,14 +667,14 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         private void WriteParagraph(FileStream fs, Paragraph p, int number, bool isLast)
         {
-            WriteTimeCode(fs, p.StartTime);
-            WriteTimeCode(fs, p.EndTime);
+            WriteTimeCode(fs, p.StartTime, p.StartTime.TotalMilliseconds == 0 &&  p.Extra != null && p.Extra.Contains("(STARTFFFF0000)"));
+            WriteTimeCode(fs, p.EndTime, p.EndTime.TotalMilliseconds == 0 && p.Extra != null && p.Extra.Contains("(ENDFFFF0000)"));
 
             if (_codePage == -1)
                 GetCodePage(null, 0, 0);
 
             string text = MakePacItalicsAndRemoveOtherTags(p.Text);
-            text = text.Replace(Environment.NewLine, System.Text.Encoding.Default.GetString(new byte[] { 0xfe, 0x02, 0x03 })); // fix line breaks
+            text = text.Replace(Environment.NewLine, Encoding.Default.GetString(new byte[] { 0xfe, 0x02, 0x03 })); // fix line breaks
 
             Encoding encoding = GetEncoding(_codePage);
             byte[] textBuffer;
@@ -688,7 +690,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 textBuffer = encoding.GetBytes(text);
 
             // write text length
-            UInt16 length = (UInt16)(textBuffer.Length + 4);
+            var length = (UInt16)(textBuffer.Length + 4);
             fs.Write(BitConverter.GetBytes(length), 0, 2);
 
             fs.WriteByte(0x0a); // sometimes 0x0b?
@@ -702,8 +704,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             if (!isLast)
             {
                 fs.WriteByte(0);
-                fs.WriteByte((byte)(number + 1));
-                fs.WriteByte(0);
+                fs.WriteByte((byte)((number + 1) % 256));
+                fs.WriteByte((byte)((number + 1) / 256));
                 fs.WriteByte(0x60);
             }
         }
@@ -743,13 +745,19 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             return sb.ToString().Trim();
         }
 
-        private void WriteTimeCode(FileStream fs, TimeCode timeCode)
+        private void WriteTimeCode(FileStream fs, TimeCode timeCode, bool nullTimeCode)
         {
-            // write four bytes time code
-            string highPart = string.Format("{0:00}", timeCode.Hours) + string.Format("{0:00}", timeCode.Minutes);
-            if (timeCode.Hours == 7 && timeCode.Minutes == 35)
-                highPart = "065535";
+            if (nullTimeCode)
+            {
+                fs.WriteByte(0xff);
+                fs.WriteByte(0xff);
+                fs.WriteByte(0);
+                fs.WriteByte(0);
+                return;
+            }            
 
+            // write four bytes time code
+            string highPart = string.Format("{0:00}", timeCode.Hours) + string.Format("{0:00}", timeCode.Minutes);            
             byte frames = (byte)MillisecondsToFrames(timeCode.Milliseconds);
             string lowPart = string.Format("{0:00}", timeCode.Seconds) + string.Format("{0:00}", frames);
 
@@ -782,7 +790,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         {
             if (!string.IsNullOrEmpty(fileName) && File.Exists(fileName))
             {
-                FileInfo fi = new FileInfo(fileName);
+                var fi = new FileInfo(fileName);
                 if (fi.Length > 100 && fi.Length < 1024000) // not too small or too big
                 {
                     byte[] buffer = File.ReadAllBytes(fileName);
@@ -859,14 +867,14 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     con = false;
             }
 
-            int FEIndex = index;
-            int endDelimiter = 0x00;
+            int feIndex = index;
+            const int endDelimiter = 0x00;
 
             if (_codePage == -1)
                 GetCodePage(buffer, index, endDelimiter);
 
             var sb = new StringBuilder();
-            index = FEIndex + 3;
+            index = feIndex + 3;
             while (index < buffer.Length && buffer[index] != endDelimiter)
             {
                 if (buffer[index] == 0xFF)
@@ -896,12 +904,11 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             if (index + 20 >= buffer.Length)
                 return null;
 
-            var p = new Paragraph();
-            p.Text = sb.ToString();
+            var p = new Paragraph {Text = sb.ToString()};
             p.Text = FixItalics(p.Text);
             if (_codePage == 3)
                 p.Text = Utilities.FixEnglishTextInRightToLeftLanguage(p.Text, "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ");
-            int timeStartIndex = FEIndex - 15;
+            int timeStartIndex = feIndex - 15;
             if (buffer[timeStartIndex] == 0x60)
             {
                 p.StartTime = GetTimeCode(timeStartIndex + 1, buffer);
@@ -911,7 +918,18 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             {
                 timeStartIndex += 3;
                 p.StartTime = GetTimeCode(timeStartIndex + 1, buffer);
+                if (p.StartTime.TotalMilliseconds == 0)
+                {
+                    p.StartTime.TotalMilliseconds = 0;
+                    p.Extra = "(STARTFFFF0000)";
+                }
+
                 p.EndTime = GetTimeCode(timeStartIndex + 5, buffer);
+                if (p.StartTime.TotalMilliseconds == 0 && p.EndTime.Hours == PacNullTime.Hours && p.EndTime.Minutes == Pac.PacNullTime.Minutes)
+                {
+                    p.EndTime.TotalMilliseconds = 0;
+                    p.Extra = "(ENDFFFF0000)";
+                }
             }
             else
             {
@@ -925,15 +943,15 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         /// </summary>
         private string FixItalics(string text)
         {
-            int index = text.IndexOf("<");
+            int index = text.IndexOf("<", StringComparison.Ordinal);
             if (index < 0)
                 return text;
 
             while (index >= 0 && index < text.Length-1)
             {
                 text = text.Insert(index+1, "i>");
-                int indexOfNewLine = text.IndexOf(Environment.NewLine, index);
-                int indexOfEnd = text.IndexOf(">", index+3);
+                int indexOfNewLine = text.IndexOf(Environment.NewLine, index, StringComparison.Ordinal);
+                int indexOfEnd = text.IndexOf(">", index+3, StringComparison.Ordinal);
                 if (indexOfNewLine < 0 && indexOfEnd < 0)
                 {
                     index = -1;
@@ -944,12 +962,12 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     if (indexOfNewLine < 0 || (indexOfEnd > 0 && indexOfEnd < indexOfNewLine))
                     {
                         text = text.Insert(indexOfEnd, "</i");
-                        index = text.IndexOf("<", indexOfEnd+3);
+                        index = text.IndexOf("<", indexOfEnd+3, StringComparison.Ordinal);
                     }
                     else
                     {
                         text = text.Insert(indexOfNewLine, "</i>");
-                        index = text.IndexOf("<", indexOfNewLine + 4);
+                        index = text.IndexOf("<", indexOfNewLine + 4, StringComparison.Ordinal);
                     }
                 }
             }
@@ -1035,10 +1053,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             while (i < text.Length)
             {
                 string letter = text.Substring(i, 1);
-                int idx = _latinLetters.IndexOf(letter);
+                int idx = LatinLetters.IndexOf(letter);
                 if (idx >= 0)
                 {
-                    int byteValue = _latinCodes[idx];
+                    int byteValue = LatinCodes[idx];
                     if (byteValue < 256)
                     {
                         buffer[i + extra] = (byte)byteValue;
@@ -1076,17 +1094,17 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         private byte[] GetArabicBytes(string text)
         {
-            return GetBytesViaLists(text, _arabicLetters, _arabicCodes);
+            return GetBytesViaLists(text, ArabicLetters, ArabicCodes);
         }
 
         private byte[] GetHebrewBytes(string text)
         {
-            return GetBytesViaLists(text, _hebrewLetters, _hebrewCodes);
+            return GetBytesViaLists(text, HebrewLetters, HebrewCodes);
         }
 
         private byte[] GetCyrillicBytes(string text)
         {
-            return GetBytesViaLists(text, _cyrillicLetters, _cyrillicCodes);
+            return GetBytesViaLists(text, CyrillicLetters, CyrillicCodes);
         }
 
         private byte[] GetBytesViaLists(string text, List<string> letters, List<int> codes)
@@ -1163,17 +1181,17 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             if (b >= 0x20 && b < 0x70)
                 return Encoding.ASCII.GetString(buffer, index, 1);
 
-            int idx = _arabicCodes.IndexOf(b);
+            int idx = ArabicCodes.IndexOf(b);
             if (idx >= 0)
-                return _arabicLetters[idx];
+                return ArabicLetters[idx];
 
             if (buffer.Length > index + 1)
             {
-                idx = _arabicCodes.IndexOf(b * 256 + buffer[index + 1]);
+                idx = ArabicCodes.IndexOf(b * 256 + buffer[index + 1]);
                 if (idx >= 0)
                 {
                     index++;
-                    return _arabicLetters[idx];
+                    return ArabicLetters[idx];
                 }
             }
 
@@ -1186,9 +1204,9 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             if (b >= 0x20 && b < 0x70)
                 return Encoding.ASCII.GetString(buffer, index, 1);
 
-            int idx = _hebrewCodes.IndexOf(b);
+            int idx = HebrewCodes.IndexOf(b);
             if (idx >= 0)
-                return _hebrewLetters[idx];
+                return HebrewLetters[idx];
 
             return string.Format("({0})", b);
         }
@@ -1197,17 +1215,17 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         {
             byte b = buffer[index];
 
-            int idx = _latinCodes.IndexOf(b);
+            int idx = LatinCodes.IndexOf(b);
             if (idx >= 0)
-                return _latinLetters[idx];
+                return LatinLetters[idx];
 
             if (buffer.Length > index + 1)
             {
-                idx = _latinCodes.IndexOf(b * 256 + buffer[index + 1]);
+                idx = LatinCodes.IndexOf(b * 256 + buffer[index + 1]);
                 if (idx >= 0)
                 {
                     index++;
-                    return _latinLetters[idx];
+                    return LatinLetters[idx];
                 }
             }
 
@@ -1221,17 +1239,17 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             if (b >= 0x30 && b <= 0x39) // numbers
                 return Encoding.ASCII.GetString(buffer, index, 1);
 
-            int idx = _cyrillicCodes.IndexOf(b);
+            int idx = CyrillicCodes.IndexOf(b);
             if (idx >= 0)
-                return _cyrillicLetters[idx];
+                return CyrillicLetters[idx];
 
             if (buffer.Length > index + 1)
             {
-                idx = _cyrillicCodes.IndexOf(b * 256 + buffer[index + 1]);
+                idx = CyrillicCodes.IndexOf(b * 256 + buffer[index + 1]);
                 if (idx >= 0)
                 {
                     index++;
-                    return _cyrillicLetters[idx];
+                    return CyrillicLetters[idx];
                 }
             }
 

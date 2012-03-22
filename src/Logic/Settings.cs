@@ -77,6 +77,7 @@ namespace Nikse.SubtitleEdit.Logic
         public int MergeLinesShorterThan { get; set; }
         public string MusicSymbol { get; set; }
         public string MusicSymbolToReplace { get; set; }
+        public string UnicodeSymbolsToInsert { get; set; }        
         public bool SpellCheckAutoChangeNames { get; set; }
         public bool SpellCheckOneLetterWords { get; set; }
         public bool OcrFixUseHardcodedRules { get; set; }
@@ -97,6 +98,7 @@ namespace Nikse.SubtitleEdit.Logic
             MergeLinesShorterThan = 33;
             MusicSymbol = "♪";
             MusicSymbolToReplace = "âª â¶ â™ª âTª ã¢â™âª ?t×3 ?t¤3 #";
+            UnicodeSymbolsToInsert = "♪;♫;☺;☹;♥;©;☮;☯";
             SpellCheckAutoChangeNames = true;
             OcrFixUseHardcodedRules = true;
             Interjections = "Ah;Ahh;Ahhh;Eh;Ehh;Ehhh;Hm;Hmm;Hmmm;Phew;Gah;Oh;Ohh;Ohhh;Ow;Oww;Owww;Ugh;Ughh;Uh;Uhh;Uhhh;Whew";
@@ -1003,6 +1005,9 @@ namespace Nikse.SubtitleEdit.Logic
             subNode = node.SelectSingleNode("MusicSymbolToReplace");
             if (subNode != null)
                 settings.Tools.MusicSymbolToReplace = subNode.InnerText;
+            subNode = node.SelectSingleNode("UnicodeSymbolsToInsert");
+            if (subNode != null)
+                settings.Tools.MusicSymbolToReplace = subNode.InnerText;            
             subNode = node.SelectSingleNode("SpellCheckAutoChangeNames");
             if (subNode != null)
                 settings.Tools.SpellCheckAutoChangeNames = Convert.ToBoolean(subNode.InnerText);
@@ -1646,6 +1651,7 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("MergeLinesShorterThan", settings.Tools.MergeLinesShorterThan.ToString());
             textWriter.WriteElementString("MusicSymbol", settings.Tools.MusicSymbol);
             textWriter.WriteElementString("MusicSymbolToReplace", settings.Tools.MusicSymbolToReplace);
+            textWriter.WriteElementString("MusicSymbolToReplace", settings.Tools.UnicodeSymbolsToInsert);            
             textWriter.WriteElementString("SpellCheckAutoChangeNames", settings.Tools.SpellCheckAutoChangeNames.ToString());
             textWriter.WriteElementString("SpellCheckOneLetterWords", settings.Tools.SpellCheckOneLetterWords.ToString());
             textWriter.WriteElementString("OcrFixUseHardcodedRules", settings.Tools.OcrFixUseHardcodedRules.ToString());
