@@ -517,6 +517,10 @@ namespace Nikse.SubtitleEdit.Forms
             adjustNode.Nodes.Add(Configuration.Settings.Language.Settings.AdjustViaEndAutoStartAndGoToNext + GetShortcutText(Configuration.Settings.Shortcuts.MainAdjustViaEndAutoStartAndGoToNext));
             if (!string.IsNullOrEmpty(Configuration.Settings.Language.Settings.AdjustSetStartAutoDurationAndGoToNext)) // TODO: Remove in SE 3.3
                 adjustNode.Nodes.Add(Configuration.Settings.Language.Settings.AdjustSetStartAutoDurationAndGoToNext + GetShortcutText(Configuration.Settings.Shortcuts.MainAdjustSetStartAutoDurationAndGoToNext));
+            if (!string.IsNullOrEmpty(Configuration.Settings.Language.Settings.AdjustSetEndNextStartAndGoToNext)) // TODO: Remove in SE 3.3
+                adjustNode.Nodes.Add(Configuration.Settings.Language.Settings.AdjustSetEndNextStartAndGoToNext + GetShortcutText(Configuration.Settings.Shortcuts.MainAdjustSetEndNextStartAndGoToNext));
+            if (!string.IsNullOrEmpty(Configuration.Settings.Language.Settings.AdjustStartDownEndUpAndGoToNext)) // TODO: Remove in SE 3.3
+                adjustNode.Nodes.Add(Configuration.Settings.Language.Settings.AdjustStartDownEndUpAndGoToNext + GetShortcutText(Configuration.Settings.Shortcuts.MainAdjustStartDownEndUpAndGoToNext));
             adjustNode.Nodes.Add(Configuration.Settings.Language.Main.VideoControls.SetStartTime + GetShortcutText(Configuration.Settings.Shortcuts.MainAdjustSetStart));
             if (!string.IsNullOrEmpty(Configuration.Settings.Language.Settings.AdjustSetStartTimeOnly)) // TODO: Remove in SE 3.3
                 adjustNode.Nodes.Add(Configuration.Settings.Language.Settings.AdjustSetStartTimeOnly + GetShortcutText(Configuration.Settings.Shortcuts.MainAdjustSetStartOnly));
@@ -1038,6 +1042,10 @@ namespace Nikse.SubtitleEdit.Forms
                         Configuration.Settings.Shortcuts.MainAdjustSetEndAndGotoNext = GetShortcut(node.Text);
                     else if (Configuration.Settings.Language.Settings.AdjustSetStartAutoDurationAndGoToNext != null && text == Configuration.Settings.Language.Settings.AdjustSetStartAutoDurationAndGoToNext.Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.MainAdjustSetStartAutoDurationAndGoToNext = GetShortcut(node.Text);
+                    else if (Configuration.Settings.Language.Settings.AdjustSetEndNextStartAndGoToNext != null && text == Configuration.Settings.Language.Settings.AdjustSetEndNextStartAndGoToNext.Replace("&", string.Empty))
+                        Configuration.Settings.Shortcuts.MainAdjustSetEndNextStartAndGoToNext = GetShortcut(node.Text);
+                    else if (Configuration.Settings.Language.Settings.AdjustStartDownEndUpAndGoToNext != null && text == Configuration.Settings.Language.Settings.AdjustStartDownEndUpAndGoToNext.Replace("&", string.Empty))
+                        Configuration.Settings.Shortcuts.MainAdjustStartDownEndUpAndGoToNext = GetShortcut(node.Text);
                     else if (text == Configuration.Settings.Language.Main.VideoControls.SetStartTime.Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.MainAdjustSetStart = GetShortcut(node.Text);
                     else if (Configuration.Settings.Language.Settings.AdjustSetStartTimeOnly != null && text == Configuration.Settings.Language.Settings.AdjustSetStartTimeOnly.Replace("&", string.Empty))

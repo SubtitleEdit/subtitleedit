@@ -112,6 +112,8 @@ namespace Nikse.SubtitleEdit.Forms
         Keys _mainAdjustSetEndAndGotoNext = Keys.None;
         Keys _mainAdjustInsertViaEndAutoStartAndGoToNext = Keys.None;
         Keys _mainAdjustSetStartAutoDurationAndGoToNext = Keys.None;
+        Keys _mainAdjustSetEndNextStartAndGoToNext = Keys.None;
+        Keys _mainAdjustStartDownEndUpAndGoToNext = Keys.None;
         Keys _mainAdjustSetStart = Keys.None;
         Keys _mainAdjustSetStartOnly = Keys.None;
         Keys _mainAdjustSetEnd = Keys.None;
@@ -134,6 +136,7 @@ namespace Nikse.SubtitleEdit.Forms
         bool _makeHistory = true;
         string _cutText = string.Empty;
         private Paragraph _mainCreateStartDownEndUpParagraph;
+        private Paragraph _mainAdjustStartDownEndUpAndGoToNextParagraph;
 
         private bool AutoRepeatContinueOn
         {
@@ -7724,7 +7727,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     else if (_mainAdjustSetEndAndGotoNext == e.KeyData) // e.Modifiers == Keys.Shift && e.KeyCode == Keys.Space)
                     {
-                        buttonSetEndAndGoToNext_Click(null, null);
+                        ButtonSetEndAndGoToNextClick(null, null);
                         e.SuppressKeyPress = true;
                     }
                     else if (e.Modifiers == Keys.None && e.KeyCode == Keys.F9)
@@ -7734,7 +7737,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     else if (e.Modifiers == Keys.None && e.KeyCode == Keys.F10)
                     {
-                        buttonSetEndAndGoToNext_Click(null, null);
+                        ButtonSetEndAndGoToNextClick(null, null);
                         e.SuppressKeyPress = true;
                     }
                     else if ((e.Modifiers == Keys.None && e.KeyCode == Keys.F11) || _mainAdjustSetStart == e.KeyData)
@@ -7750,7 +7753,7 @@ namespace Nikse.SubtitleEdit.Forms
                     else if ((e.Modifiers == Keys.None && e.KeyCode == Keys.F12) || _mainAdjustSetEnd == e.KeyData)
                     {
                         StopAutoDuration();
-                        buttonSetEnd_Click(null, null);
+                        ButtonSetEndClick(null, null);
                         e.SuppressKeyPress = true;
                     }
                     else if (_mainAdjustInsertViaEndAutoStartAndGoToNext == e.KeyData)
@@ -7761,6 +7764,17 @@ namespace Nikse.SubtitleEdit.Forms
                     else if (_mainAdjustSetStartAutoDurationAndGoToNext == e.KeyData)
                     {
                         SetCurrentStartAutoDurationAndGotoNext(FirstSelectedIndex);
+                        e.SuppressKeyPress = true;
+                    }
+                    else if (_mainAdjustSetEndNextStartAndGoToNext == e.KeyData)
+                    {
+                        SetCurrentEndNextStartAndGoToNext(FirstSelectedIndex);
+                        e.SuppressKeyPress = true;
+                    }
+                    else if (_mainAdjustStartDownEndUpAndGoToNext == e.KeyData && _mainAdjustStartDownEndUpAndGoToNextParagraph == null)
+                    {
+                        _mainAdjustStartDownEndUpAndGoToNextParagraph = _subtitle.GetParagraphOrDefault(FirstSelectedIndex);
+                        SetStartTime(true);
                         e.SuppressKeyPress = true;
                     }
                 }
@@ -7783,12 +7797,12 @@ namespace Nikse.SubtitleEdit.Forms
                 else if (e.Modifiers == Keys.Alt && e.KeyCode == Keys.F9)
                 {
                     StopAutoDuration();
-                    buttonSetEnd_Click(null, null);
+                    ButtonSetEndClick(null, null);
                     e.SuppressKeyPress = true;
                 }
                 else if (e.Modifiers == Keys.None && e.KeyCode == Keys.F9)
                 {
-                    buttonInsertNewText_Click(null, null);
+                    ButtonInsertNewTextClick(null, null);
                     e.SuppressKeyPress = true;
                 }
                 else if ((e.Modifiers == Keys.None && e.KeyCode == Keys.F10) || _mainCreatePlayFromJustBefore == e.KeyData)
@@ -7804,7 +7818,7 @@ namespace Nikse.SubtitleEdit.Forms
                 else if ((e.Modifiers == Keys.None && e.KeyCode == Keys.F12) || _mainCreateSetEnd == e.KeyData)
                 {
                     StopAutoDuration();
-                    buttonSetEnd_Click(null, null);
+                    ButtonSetEndClick(null, null);
                     e.SuppressKeyPress = true;
                 }
                 else if (_mainCreateStartDownEndUp == e.KeyData)
@@ -9345,12 +9359,13 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void buttonSetEnd_Click(object sender, EventArgs e)
+        private void ButtonSetEndClick(object sender, EventArgs e)
         {
             if (SubtitleListview1.SelectedItems.Count == 1)
             {
-                int index = SubtitleListview1.SelectedItems[0].Index;
                 double videoPosition = mediaPlayer.CurrentPosition;
+                int index = SubtitleListview1.SelectedItems[0].Index;
+                MakeHistoryForUndoOnlyIfNotResent(string.Format(_language.VideoControls.BeforeChangingTimeInWaveFormX, "#" + _subtitle.Paragraphs[index].Number + " " + _subtitle.Paragraphs[index].Text));
 
                 _subtitle.Paragraphs[index].EndTime = new TimeCode(TimeSpan.FromSeconds(videoPosition));
                 SubtitleListview1.SetStartTime(index, _subtitle.Paragraphs[index]);
@@ -9360,7 +9375,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void buttonInsertNewText_Click(object sender, EventArgs e)
+        private void ButtonInsertNewTextClick(object sender, EventArgs e)
         {
             mediaPlayer.Pause();
 
@@ -9950,7 +9965,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void buttonSetEndAndGoToNext_Click(object sender, EventArgs e)
+        private void ButtonSetEndAndGoToNextClick(object sender, EventArgs e)
         {
             if (SubtitleListview1.SelectedItems.Count == 1)
             {
@@ -9960,7 +9975,7 @@ namespace Nikse.SubtitleEdit.Forms
                 // save history
                 _makeHistory = false;
                 string oldDuration = _subtitle.Paragraphs[index].Duration.ToString();
-                Paragraph temp = new Paragraph(_subtitle.Paragraphs[index]);
+                var temp = new Paragraph(_subtitle.Paragraphs[index]);
                 temp.EndTime.TotalMilliseconds = new TimeCode(TimeSpan.FromSeconds(videoPosition)).TotalMilliseconds;
                 MakeHistoryForUndoOnlyIfNotResent(string.Format(_language.DisplayTimeAdjustedX, "#" + _subtitle.Paragraphs[index].Number + ": " + oldDuration + " -> " + temp.Duration.ToString()));
 
@@ -9980,20 +9995,18 @@ namespace Nikse.SubtitleEdit.Forms
                             ShowSource();
                     }
                     SubtitleListview1.SetStartTime(index + 1, _subtitle.Paragraphs[index + 1]);
-                    SubtitleListview1.AutoScrollOffset.Offset(0, index * 16);
-                    SubtitleListview1.EnsureVisible(Math.Min(SubtitleListview1.Items.Count - 1, index + 5));
+                    SubtitleListview1.SelectIndexAndEnsureVisible(index + 1, true);
                 }
-
                 _makeHistory = true;
             }
         }
 
-        private void buttonAdjustSecBack_Click(object sender, EventArgs e)
+        private void ButtonAdjustSecBackClick(object sender, EventArgs e)
         {
             GoBackSeconds((double)numericUpDownSecAdjust1.Value);
         }
 
-        private void buttonAdjustSecForward_Click(object sender, EventArgs e)
+        private void ButtonAdjustSecForwardClick(object sender, EventArgs e)
         {
             GoBackSeconds(-(double)numericUpDownSecAdjust1.Value);
         }
@@ -10132,6 +10145,8 @@ namespace Nikse.SubtitleEdit.Forms
             _mainAdjustSetEndAndGotoNext = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainAdjustSetEndAndGotoNext);
             _mainAdjustInsertViaEndAutoStartAndGoToNext = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainAdjustViaEndAutoStartAndGoToNext);
             _mainAdjustSetStartAutoDurationAndGoToNext = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainAdjustSetStartAutoDurationAndGoToNext);
+            _mainAdjustSetEndNextStartAndGoToNext = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainAdjustSetEndNextStartAndGoToNext);
+            _mainAdjustStartDownEndUpAndGoToNext = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainAdjustStartDownEndUpAndGoToNext);            
             _mainAdjustSetStart = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainAdjustSetStart);
             _mainAdjustSetStartOnly = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainAdjustSetStartOnly);
             _mainAdjustSetEnd = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainAdjustSetEnd);
@@ -12176,6 +12191,42 @@ namespace Nikse.SubtitleEdit.Forms
             audioVisualizer.Invalidate();
         }
 
+        public void SetCurrentEndNextStartAndGoToNext(int index)
+        {
+            Paragraph p = _subtitle.GetParagraphOrDefault(index);
+            Paragraph next = _subtitle.GetParagraphOrDefault(index + 1);
+            if (p == null)
+                return;
+
+            if (mediaPlayer.VideoPlayer == null || string.IsNullOrEmpty(_videoFileName))
+            {
+                MessageBox.Show(Configuration.Settings.Language.General.NoVideoLoaded);
+                return;
+            }
+
+            MakeHistoryForUndoOnlyIfNotResent(string.Format(_language.VideoControls.BeforeChangingTimeInWaveFormX, "#" + p.Number + " " + p.Text));
+
+
+            double videoPosition = mediaPlayer.CurrentPosition;
+
+            p.EndTime = new TimeCode(TimeSpan.FromSeconds(videoPosition));
+            if (p.Duration.TotalSeconds < 0 || p.Duration.TotalSeconds > 10)
+                p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + Utilities.GetDisplayMillisecondsFromText(p.Text);
+
+            SubtitleListview1.SetStartTime(index, p);
+            SubtitleListview1.SetDuration(index, p);
+
+            numericUpDownDuration.Value = (decimal)(_subtitle.Paragraphs[index].Duration.TotalSeconds + 0.001);
+            if (next != null)
+            {
+                var oldDuration = next.Duration.TotalMilliseconds;
+                next.StartTime.TotalMilliseconds = p.EndTime.TotalMilliseconds + 1;
+                next.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds + oldDuration;
+                SubtitleListview1.SelectIndexAndEnsureVisible(index + 1);
+            }
+            audioVisualizer.Invalidate();
+        }
+
         private void EditSelectAllToolStripMenuItemClick(object sender, EventArgs e)
         {
             for (int i = 0; i < SubtitleListview1.Items.Count; i++)
@@ -12797,8 +12848,20 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 var p = _subtitle.Paragraphs[_subtitleListViewIndex];
                 if (p.ToString() == _mainCreateStartDownEndUpParagraph.ToString())
-                    buttonSetEnd_Click(null, null);
+                    ButtonSetEndClick(null, null);
                 _mainCreateStartDownEndUpParagraph = null;
+            }
+            else if (_mainAdjustStartDownEndUpAndGoToNextParagraph != null)
+            {
+                var p = _subtitle.Paragraphs[_subtitleListViewIndex];
+                if (p.ToString() == _mainAdjustStartDownEndUpAndGoToNextParagraph.ToString())
+                {
+                    double videoPositionInSeconds = mediaPlayer.CurrentPosition;
+                    if (p.StartTime.TotalSeconds + 0.1 < videoPositionInSeconds)
+                        ButtonSetEndClick(null, null);
+                    SubtitleListview1.SelectIndexAndEnsureVisible(_subtitleListViewIndex+1);
+                }
+                _mainAdjustStartDownEndUpAndGoToNextParagraph = null;
             }
         }
 

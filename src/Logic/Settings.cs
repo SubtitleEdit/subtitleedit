@@ -502,6 +502,8 @@ namespace Nikse.SubtitleEdit.Logic
         public string MainAdjustSetEndAndGotoNext { get; set; }
         public string MainAdjustViaEndAutoStartAndGoToNext { get; set; }
         public string MainAdjustSetStartAutoDurationAndGoToNext { get; set; }
+        public string MainAdjustSetEndNextStartAndGoToNext { get; set; }
+        public string MainAdjustStartDownEndUpAndGoToNext { get; set; }
         public string MainAdjustSetStart { get; set; }
         public string MainAdjustSetStartOnly { get; set; }
         public string MainAdjustSetEnd { get; set; }
@@ -553,6 +555,8 @@ namespace Nikse.SubtitleEdit.Logic
             MainAdjustSetEndAndGotoNext = string.Empty;
             MainAdjustViaEndAutoStartAndGoToNext = string.Empty;
             MainAdjustSetStartAutoDurationAndGoToNext = string.Empty;
+            MainAdjustSetEndNextStartAndGoToNext = string.Empty;
+            MainAdjustStartDownEndUpAndGoToNext = string.Empty;
             MainAdjustSetStart = string.Empty;
             MainAdjustSetStartOnly = string.Empty;
             MainAdjustSetEnd = string.Empty;
@@ -1421,6 +1425,12 @@ namespace Nikse.SubtitleEdit.Logic
                 subNode = node.SelectSingleNode("MainAdjustSetStartAutoDurationAndGoToNext");
                 if (subNode != null)
                     settings.Shortcuts.MainAdjustSetStartAutoDurationAndGoToNext = subNode.InnerText;
+                subNode = node.SelectSingleNode("MainAdjustSetEndNextStartAndGoToNext");
+                if (subNode != null)
+                    settings.Shortcuts.MainAdjustSetEndNextStartAndGoToNext = subNode.InnerText;
+                subNode = node.SelectSingleNode("MainAdjustStartDownEndUpAndGoToNext");
+                if (subNode != null)
+                    settings.Shortcuts.MainAdjustStartDownEndUpAndGoToNext = subNode.InnerText;               
                 subNode = node.SelectSingleNode("MainAdjustSetStart");
                 if (subNode != null)
                     settings.Shortcuts.MainAdjustSetStart = subNode.InnerText;
@@ -1651,7 +1661,7 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("MergeLinesShorterThan", settings.Tools.MergeLinesShorterThan.ToString());
             textWriter.WriteElementString("MusicSymbol", settings.Tools.MusicSymbol);
             textWriter.WriteElementString("MusicSymbolToReplace", settings.Tools.MusicSymbolToReplace);
-            textWriter.WriteElementString("MusicSymbolToReplace", settings.Tools.UnicodeSymbolsToInsert);
+            textWriter.WriteElementString("UnicodeSymbolsToInsert", settings.Tools.UnicodeSymbolsToInsert);            
             textWriter.WriteElementString("SpellCheckAutoChangeNames", settings.Tools.SpellCheckAutoChangeNames.ToString());
             textWriter.WriteElementString("SpellCheckOneLetterWords", settings.Tools.SpellCheckOneLetterWords.ToString());
             textWriter.WriteElementString("OcrFixUseHardcodedRules", settings.Tools.OcrFixUseHardcodedRules.ToString());
@@ -1810,6 +1820,8 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("MainAdjustSetEndAndGotoNext", settings.Shortcuts.MainAdjustSetEndAndGotoNext);
             textWriter.WriteElementString("MainAdjustViaEndAutoStartAndGoToNext", settings.Shortcuts.MainAdjustViaEndAutoStartAndGoToNext);
             textWriter.WriteElementString("MainAdjustSetStartAutoDurationAndGoToNext", settings.Shortcuts.MainAdjustSetStartAutoDurationAndGoToNext);
+            textWriter.WriteElementString("MainAdjustSetEndNextStartAndGoToNext", settings.Shortcuts.MainAdjustSetEndNextStartAndGoToNext);
+            textWriter.WriteElementString("MainAdjustStartDownEndUpAndGoToNext", settings.Shortcuts.MainAdjustStartDownEndUpAndGoToNext);                        
             textWriter.WriteElementString("MainAdjustSetStart", settings.Shortcuts.MainAdjustSetStart);
             textWriter.WriteElementString("MainAdjustSetStartOnly", settings.Shortcuts.MainAdjustSetStartOnly);
             textWriter.WriteElementString("MainAdjustSetEnd", settings.Shortcuts.MainAdjustSetEnd);
