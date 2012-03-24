@@ -2452,7 +2452,7 @@
             this.buttonSetEnd.TabIndex = 4;
             this.buttonSetEnd.Text = "Set &end time";
             this.buttonSetEnd.UseVisualStyleBackColor = true;
-            this.buttonSetEnd.Click += new System.EventHandler(this.buttonSetEnd_Click);
+            this.buttonSetEnd.Click += new System.EventHandler(this.ButtonSetEndClick);
             // 
             // buttonInsertNewText
             // 
@@ -2462,7 +2462,7 @@
             this.buttonInsertNewText.TabIndex = 0;
             this.buttonInsertNewText.Text = "&Insert new subtitle at vpos";
             this.buttonInsertNewText.UseVisualStyleBackColor = true;
-            this.buttonInsertNewText.Click += new System.EventHandler(this.buttonInsertNewText_Click);
+            this.buttonInsertNewText.Click += new System.EventHandler(this.ButtonInsertNewTextClick);
             // 
             // buttonSetStartTime
             // 
@@ -2667,7 +2667,7 @@
             this.buttonAdjustSetEndTime.TabIndex = 3;
             this.buttonAdjustSetEndTime.Text = "Set end time";
             this.buttonAdjustSetEndTime.UseVisualStyleBackColor = true;
-            this.buttonAdjustSetEndTime.Click += new System.EventHandler(this.buttonSetEnd_Click);
+            this.buttonAdjustSetEndTime.Click += new System.EventHandler(this.ButtonSetEndClick);
             // 
             // buttonSetEndAndGoToNext
             // 
@@ -2677,7 +2677,7 @@
             this.buttonSetEndAndGoToNext.TabIndex = 1;
             this.buttonSetEndAndGoToNext.Text = "Set e&nd && goto next";
             this.buttonSetEndAndGoToNext.UseVisualStyleBackColor = true;
-            this.buttonSetEndAndGoToNext.Click += new System.EventHandler(this.buttonSetEndAndGoToNext_Click);
+            this.buttonSetEndAndGoToNext.Click += new System.EventHandler(this.ButtonSetEndAndGoToNextClick);
             // 
             // buttonSetStartAndOffsetRest
             // 
@@ -2801,7 +2801,7 @@
             this.buttonAdjustSecForward1.TabIndex = 8;
             this.buttonAdjustSecForward1.Text = ">>";
             this.buttonAdjustSecForward1.UseVisualStyleBackColor = true;
-            this.buttonAdjustSecForward1.Click += new System.EventHandler(this.buttonAdjustSecForward_Click);
+            this.buttonAdjustSecForward1.Click += new System.EventHandler(this.ButtonAdjustSecForwardClick);
             // 
             // numericUpDownSecAdjust1
             // 
@@ -2835,7 +2835,7 @@
             this.buttonAdjustSecBack1.TabIndex = 6;
             this.buttonAdjustSecBack1.Text = "<<";
             this.buttonAdjustSecBack1.UseVisualStyleBackColor = true;
-            this.buttonAdjustSecBack1.Click += new System.EventHandler(this.buttonAdjustSecBack_Click);
+            this.buttonAdjustSecBack1.Click += new System.EventHandler(this.ButtonAdjustSecBackClick);
             // 
             // labelVideoPosition2
             // 
