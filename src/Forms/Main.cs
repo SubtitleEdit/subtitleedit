@@ -2608,7 +2608,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void ToolStripButtonSaveClick(object sender, EventArgs e)
         {
             ReloadFromSourceView();
-            bool oldChange = _changeSubtitleToString != _subtitle.ToText(new SubRip()).Trim(); 
+            bool oldChange = _changeSubtitleToString != _subtitle.ToText(new SubRip()).Trim();
             SaveSubtitle(GetCurrentSubtitleFormat());
 
             if (_subtitleAlternate != null && _changeAlternateSubtitleToString != _subtitleAlternate.ToText(new SubRip()).Trim() && Configuration.Settings.General.AllowEditOfOriginalSubtitle && _subtitleAlternate.Paragraphs.Count > 0)
@@ -7277,7 +7277,7 @@ namespace Nikse.SubtitleEdit.Forms
             else if (_mainMergeDialogue == e.KeyData && inListView)
             {
                 MergeDialogues();
-                e.SuppressKeyPress = true;                
+                e.SuppressKeyPress = true;
             }
             else if (_mainListViewToggleDashes == e.KeyData && inListView)
             {
@@ -8381,8 +8381,8 @@ namespace Nikse.SubtitleEdit.Forms
 
         private bool IsUnicode
         {
-            get 
-            { 
+            get
+            {
                 var enc = GetCurrentEncoding();
                 return enc == Encoding.UTF8 || enc == Encoding.Unicode || enc == Encoding.UTF7 || enc == Encoding.UTF32 || enc == Encoding.BigEndianUnicode;
             }

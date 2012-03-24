@@ -667,7 +667,7 @@ namespace Nikse.SubtitleEdit.Forms
             for (int i = 0; i < _subtitle.Paragraphs.Count; i++)
             {
                 if (_subtitle.Paragraphs[i].Text.Contains("<"))
-                {                
+                {
                     string text = _subtitle.Paragraphs[i].Text.Replace(beginTag.ToUpper(), beginTag).Replace(endTag.ToUpper(), endTag);
                     string oldText = text;
 

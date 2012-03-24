@@ -1002,7 +1002,7 @@ namespace Nikse.SubtitleEdit.Logic
                     case "en_US":
                         count = GetCount(text, "we", "are", "and", "you", "your", "what");
                         if (count > bestCount)
-                        {                          
+                        {
                             if (containsEnGb)
                             {
                                 int usCount = GetCount(text, "color", "flavor", "honor", "humor", "neighbor", "honor");
@@ -1015,7 +1015,7 @@ namespace Nikse.SubtitleEdit.Logic
                             else
                             {
                                 languageName = shortName;
-                            }                            
+                            }
                         }
                         break;
                     case "en_GB":

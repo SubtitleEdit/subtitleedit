@@ -73,9 +73,9 @@ namespace Nikse.SubtitleEdit.Controls
                 int timeStampWidth = (int)(timestampSizeF.Width + 0.5) + 11;
                 Columns[ColumnIndexStart].Width = timeStampWidth;
                 Columns[ColumnIndexEnd].Width = timeStampWidth;
-                Columns[ColumnIndexDuration].Width = (int)(timeStampWidth * 0.8);                
+                Columns[ColumnIndexDuration].Width = (int)(timeStampWidth * 0.8);
             }
-                
+
             SubtitleListViewResize(this, null);
         }
 
@@ -105,7 +105,7 @@ namespace Nikse.SubtitleEdit.Controls
             {
                 switch (e.ColumnIndex)
                 {
-                    case ColumnIndexNumber: 
+                    case ColumnIndexNumber:
                         Configuration.Settings.General.ListViewNumberWidth = Columns[ColumnIndexNumber].Width;
                         break;
                     case ColumnIndexStart:
@@ -155,7 +155,7 @@ namespace Nikse.SubtitleEdit.Controls
                 {
                     int restWidth = (lengthAvailable / 2) - 15;
                     Columns[ColumnIndexText].Width = restWidth;
-                    Columns[ColumnIndexTextAlternate].Width = restWidth;                    
+                    Columns[ColumnIndexTextAlternate].Width = restWidth;
                 }
             }
             else if (!IsAlternateTextColumnVisible && !IsExtraColumnVisible)
@@ -744,7 +744,7 @@ namespace Nikse.SubtitleEdit.Controls
                     Columns[ColumnIndexText].Width = -2;
                 }
                 return;
-            }            
+            }
 
             Columns[ColumnIndexNumber].Width = 45;
             Columns[ColumnIndexEnd].Width = 80;
