@@ -286,7 +286,7 @@ namespace Test
             Assert.AreEqual(target._subtitle.Paragraphs[0].Text, "The clock is 12 a.m.");
         }
 
- 
+
         #endregion
 
     }

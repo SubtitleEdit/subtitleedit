@@ -89,7 +89,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 _refreshTimer.Stop();
                 _refreshTimer.Start();
-            }            
+            }
             else
             {
                 _refreshTimer.Start();

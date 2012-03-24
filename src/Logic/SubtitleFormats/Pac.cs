@@ -754,10 +754,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 fs.WriteByte(0);
                 fs.WriteByte(0);
                 return;
-            }            
+            }
 
             // write four bytes time code
-            string highPart = string.Format("{0:00}", timeCode.Hours) + string.Format("{0:00}", timeCode.Minutes);            
+            string highPart = string.Format("{0:00}", timeCode.Hours) + string.Format("{0:00}", timeCode.Minutes);
             byte frames = (byte)MillisecondsToFrames(timeCode.Milliseconds);
             string lowPart = string.Format("{0:00}", timeCode.Seconds) + string.Format("{0:00}", frames);
 

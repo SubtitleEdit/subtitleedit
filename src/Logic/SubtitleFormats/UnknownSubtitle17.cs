@@ -16,7 +16,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             Number,
             TimeStart,
             TimeEnd,
-            Text            
+            Text
         }
 
         public override string Extension
@@ -46,7 +46,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 sb.AppendLine(line);
             string s = sb.ToString();
             if (!s.Contains("[HEADER]") || !s.Contains("[BODY]"))
-                return false; 
+                return false;
 
             var subtitle = new Subtitle();
             LoadSubtitle(subtitle, lines, fileName);
@@ -100,7 +100,7 @@ DIGITAL_CINEMA=YES
                 if (RegexNumber.IsMatch(line))
                 {
                     if (paragraph != null)
-                        subtitle.Paragraphs.Add(paragraph);                    
+                        subtitle.Paragraphs.Add(paragraph);
                     paragraph = new Paragraph();
                     expecting = ExpectingLine.TimeStart;
                 }

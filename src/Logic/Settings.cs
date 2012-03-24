@@ -77,7 +77,7 @@ namespace Nikse.SubtitleEdit.Logic
         public int MergeLinesShorterThan { get; set; }
         public string MusicSymbol { get; set; }
         public string MusicSymbolToReplace { get; set; }
-        public string UnicodeSymbolsToInsert { get; set; }        
+        public string UnicodeSymbolsToInsert { get; set; }
         public bool SpellCheckAutoChangeNames { get; set; }
         public bool SpellCheckOneLetterWords { get; set; }
         public bool OcrFixUseHardcodedRules { get; set; }
@@ -369,7 +369,7 @@ namespace Nikse.SubtitleEdit.Logic
             SmallDelayMilliseconds = 500;
             LargeDelayMilliseconds = 5000;
 
-            OpenSubtitleExtraExtensions = "*.mp4;*.m4v;*.mkv;"; // matroska/mp4/m4v files (can contain subtitles)            
+            OpenSubtitleExtraExtensions = "*.mp4;*.m4v;*.mkv;"; // matroska/mp4/m4v files (can contain subtitles)
         }
     }
 
@@ -1007,7 +1007,7 @@ namespace Nikse.SubtitleEdit.Logic
                 settings.Tools.MusicSymbolToReplace = subNode.InnerText;
             subNode = node.SelectSingleNode("UnicodeSymbolsToInsert");
             if (subNode != null)
-                settings.Tools.MusicSymbolToReplace = subNode.InnerText;            
+                settings.Tools.MusicSymbolToReplace = subNode.InnerText;
             subNode = node.SelectSingleNode("SpellCheckAutoChangeNames");
             if (subNode != null)
                 settings.Tools.SpellCheckAutoChangeNames = Convert.ToBoolean(subNode.InnerText);
@@ -1651,7 +1651,7 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("MergeLinesShorterThan", settings.Tools.MergeLinesShorterThan.ToString());
             textWriter.WriteElementString("MusicSymbol", settings.Tools.MusicSymbol);
             textWriter.WriteElementString("MusicSymbolToReplace", settings.Tools.MusicSymbolToReplace);
-            textWriter.WriteElementString("MusicSymbolToReplace", settings.Tools.UnicodeSymbolsToInsert);            
+            textWriter.WriteElementString("MusicSymbolToReplace", settings.Tools.UnicodeSymbolsToInsert);
             textWriter.WriteElementString("SpellCheckAutoChangeNames", settings.Tools.SpellCheckAutoChangeNames.ToString());
             textWriter.WriteElementString("SpellCheckOneLetterWords", settings.Tools.SpellCheckOneLetterWords.ToString());
             textWriter.WriteElementString("OcrFixUseHardcodedRules", settings.Tools.OcrFixUseHardcodedRules.ToString());
