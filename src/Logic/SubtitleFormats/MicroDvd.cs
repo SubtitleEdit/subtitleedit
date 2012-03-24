@@ -35,17 +35,20 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             int errors = 0;
             foreach (string line in lines)
             {
-                if (line.Trim().Length > 0 && line.Contains("{"))
+                if (line.Trim().Length > 0)
                 {
-                    string s = RemoveIllegalSpacesAndFixEmptyCodes(line);
-                    if (_regexMicroDvdLine.IsMatch(s))
-                        trimmedLines.Add(s);
+                    if (line.Contains("{"))
+                    {
+                        string s = RemoveIllegalSpacesAndFixEmptyCodes(line);
+                        if (_regexMicroDvdLine.IsMatch(s))
+                            trimmedLines.Add(s);
+                        else
+                            errors++;
+                    }
                     else
+                    {
                         errors++;
-                }
-                else
-                {
-                    errors++;
+                    }
                 }
             }
 
