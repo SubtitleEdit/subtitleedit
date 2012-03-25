@@ -1,33 +1,32 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Text;
 using System.Text;
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Logic;
-using System.Collections.Generic;
 
 namespace Nikse.SubtitleEdit.Forms
 {
     public partial class Beamer : Form
     {
         private Subtitle _subtitle;
-        private int _index = 0;
-        private bool _fullscreen = false;
+        private int _index;
+        private bool _fullscreen;
         private Color _subtitleColor = Color.White;
         private string _subtitleFontName = "Verdana";
         private float _subtitleFontSize = 75.0f;
         private Color _borderColor = Color.Black;
         private float _borderWidth = 2.0f;
         private bool _isLoading = true;
-        private int _marginLeft = 0;
+        private int _marginLeft;
         private int _marginBottom = 25;
         private int _showIndex = -2;
-        private double _seconds = 0.0;
         private double _millisecondsFactor = 1.0;
         private Main _main;
-        private bool _noTimerAction = false;
-        private long _videoStartTick = 0;
+        private bool _noTimerAction;
+        private long _videoStartTick;
 
         public Beamer(Main main, Subtitle subtitle, int index)
         {
@@ -75,7 +74,7 @@ namespace Nikse.SubtitleEdit.Forms
             ShowCurrent();
         }
 
-        private void buttonColor_Click(object sender, EventArgs e)
+        private void ButtonColorClick(object sender, EventArgs e)
         {
             colorDialog1.Color = panelColor.BackColor;
             if (colorDialog1.ShowDialog() == DialogResult.OK)
@@ -85,12 +84,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void panelColor_MouseClick(object sender, MouseEventArgs e)
-        {
-            buttonColor_Click(null, null);
-        }
-
-        private void buttonBorderColor_Click(object sender, EventArgs e)
+        private void ButtonBorderColorClick(object sender, EventArgs e)
         {
             colorDialog1.Color = panelBorderColor.BackColor;
             if (colorDialog1.ShowDialog() == DialogResult.OK)
@@ -100,27 +94,22 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void panelBorderColor_MouseClick(object sender, MouseEventArgs e)
-        {
-            buttonBorderColor_Click(null, null);
-        }
-
-        private void comboBoxSubtitleFont_SelectedValueChanged(object sender, EventArgs e)
+        private void ComboBoxSubtitleFontSelectedValueChanged(object sender, EventArgs e)
         {
             ShowCurrent();
         }
 
-        private void comboBoxSubtitleFontSize_SelectedIndexChanged(object sender, EventArgs e)
+        private void ComboBoxSubtitleFontSizeSelectedIndexChanged(object sender, EventArgs e)
         {
             ShowCurrent();
         }
 
-        private void comboBoxBorderWidth_SelectedIndexChanged(object sender, EventArgs e)
+        private void ComboBoxBorderWidthSelectedIndexChanged(object sender, EventArgs e)
         {
             ShowCurrent();
         }
 
-        private void checkBoxAntiAlias_CheckedChanged(object sender, EventArgs e)
+        private void CheckBoxAntiAliasCheckedChanged(object sender, EventArgs e)
         {
             ShowCurrent();
         }
@@ -194,20 +183,20 @@ namespace Nikse.SubtitleEdit.Forms
             text = text.Replace("</u>", string.Empty);
             text = text.Replace("<U>", string.Empty);
             text = text.Replace("</U>", string.Empty);
-            text = Logic.Utilities.RemoveHtmlFontTag(text);
+            text = Utilities.RemoveHtmlFontTag(text);
 
             Font font;
             try
             {
-                font = new System.Drawing.Font(_subtitleFontName, _subtitleFontSize);
+                font = new Font(_subtitleFontName, _subtitleFontSize);
             }
             catch (Exception exception)
             {
                 MessageBox.Show(exception.Message);
-                font = new System.Drawing.Font("Verdana", _subtitleFontSize);
+                font = new Font("Verdana", _subtitleFontSize);
             }
-            Bitmap bmp = new Bitmap(400, 200);
-            Graphics g = Graphics.FromImage(bmp);
+            var bmp = new Bitmap(400, 200);
+            var g = Graphics.FromImage(bmp);
 
             SizeF textSize = g.MeasureString("Hj!", font);
             var lineHeight = (textSize.Height * 0.64f);
@@ -219,7 +208,7 @@ namespace Nikse.SubtitleEdit.Forms
             bmp = new Bitmap((int)(textSize.Width * 0.8), (int)(textSize.Height * 0.7) + 10);
             g = Graphics.FromImage(bmp);
 
-            List<float> lefts = new List<float>();
+            var lefts = new List<float>();
             foreach (string line in text.Replace("<i>", "i").Replace("</i>", "i").Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries))
             {
                 if (comboBoxHAlign.SelectedIndex == 0) // left
@@ -228,19 +217,17 @@ namespace Nikse.SubtitleEdit.Forms
                     lefts.Add((float)(bmp.Width - g.MeasureString(line, font).Width * 0.8) / 2);
             }
 
-
             if (checkBoxAntiAlias.Checked)
             {
                 g.TextRenderingHint = TextRenderingHint.AntiAlias;
                 g.SmoothingMode = SmoothingMode.AntiAlias;
             }
-            StringFormat sf = new StringFormat();
-            sf.Alignment = StringAlignment.Near;
-            sf.LineAlignment = StringAlignment.Near;// draw the text to a path
-            System.Drawing.Drawing2D.GraphicsPath path = new System.Drawing.Drawing2D.GraphicsPath();
+            var sf = new StringFormat {Alignment = StringAlignment.Near, LineAlignment = StringAlignment.Near};
+            // draw the text to a path
+            var path = new GraphicsPath();
 
             // display italic
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             int i = 0;
             bool isItalic = false;
             float left = 5;
@@ -252,6 +239,7 @@ namespace Nikse.SubtitleEdit.Forms
             int lineNumber = 0;
             float leftMargin = left;
             bool italicFromStart = false;
+            int pathPointsStart = -1;
             while (i < text.Length)
             {
                 if (text.Substring(i).ToLower().StartsWith("<i>"))
@@ -259,7 +247,7 @@ namespace Nikse.SubtitleEdit.Forms
                     italicFromStart = i == 0;
                     if (sb.Length > 0)
                     {
-                        TextDraw.DrawText(font, sf, path, sb, isItalic, false, left, top, ref newLine, addX, leftMargin);
+                        TextDraw.DrawText(font, sf, path, sb, isItalic, false, left, top, ref newLine, addX, leftMargin, ref pathPointsStart);
                         addX = 0;
                     }
                     isItalic = true;
@@ -271,7 +259,7 @@ namespace Nikse.SubtitleEdit.Forms
                         addX = 0;
                     else
                         addX = italicSpacing;
-                    TextDraw.DrawText(font, sf, path, sb, isItalic, false, left, top, ref newLine, addX, leftMargin);
+                    TextDraw.DrawText(font, sf, path, sb, isItalic, false, left, top, ref newLine, addX, leftMargin, ref pathPointsStart);
                     addX = 1;
                     if (_subtitleFontName.StartsWith("Arial"))
                         addX = 3;
@@ -285,16 +273,18 @@ namespace Nikse.SubtitleEdit.Forms
                     else
                         addX = italicSpacing;
 
-                    TextDraw.DrawText(font, sf, path, sb, isItalic, false, left, top, ref newLine, addX, leftMargin);
+                    TextDraw.DrawText(font, sf, path, sb, isItalic, false, left, top, ref newLine, addX, leftMargin, ref pathPointsStart);
 
-                    addX = 0;
                     top += lineHeight;
                     newLine = true;
                     i += Environment.NewLine.Length - 1;
                     addX = 0;
                     lineNumber++;
                     if (lineNumber < lefts.Count)
+                    {
                         leftMargin = lefts[lineNumber];
+                        left = leftMargin;
+                    }
                     if (isItalic)
                         italicFromStart = true;
                 }
@@ -310,7 +300,7 @@ namespace Nikse.SubtitleEdit.Forms
                     addX = 0;
                 else
                     addX = italicSpacing;
-                TextDraw.DrawText(font, sf, path, sb, isItalic, false, left, top, ref newLine, addX, leftMargin);
+                TextDraw.DrawText(font, sf, path, sb, isItalic, false, left, top, ref newLine, addX, leftMargin, ref pathPointsStart);
             }
 
             if (_borderWidth > 0)
@@ -320,45 +310,23 @@ namespace Nikse.SubtitleEdit.Forms
             return bmp;
         }
 
-        private static void DrawText(Font font, StringFormat sf, System.Drawing.Drawing2D.GraphicsPath path, StringBuilder sb, bool isItalic, int left, float top, ref bool newLine, float addX)
-        {
-            PointF next = new PointF(left, top);
-            if (path.PointCount > 0)
-                next.X = path.GetLastPoint().X;
-
-            next.X += addX;
-            if (newLine)
-            {
-                next.X = 5;
-                newLine = false;
-            }
-
-            if (isItalic)
-                path.AddString(sb.ToString(), font.FontFamily, (int)System.Drawing.FontStyle.Italic, font.Size, next, sf);
-            else
-                path.AddString(sb.ToString(), font.FontFamily, 0, font.Size, next, sf);
-
-            sb.Length = 0;
-        }
-
         private static string RemoveSubStationAlphaFormatting(string s)
         {
-            int indexOfBegin = s.IndexOf("{");
-            while (indexOfBegin >= 0 && s.IndexOf("}") > indexOfBegin)
+            int indexOfBegin = s.IndexOf("{", StringComparison.Ordinal);
+            while (indexOfBegin >= 0 && s.IndexOf("}", StringComparison.Ordinal) > indexOfBegin)
             {
-                int indexOfEnd = s.IndexOf("}");
+                int indexOfEnd = s.IndexOf("}", StringComparison.Ordinal);
                 s = s.Remove(indexOfBegin, (indexOfEnd - indexOfBegin) + 1);
-                indexOfBegin = s.IndexOf("{");
+                indexOfBegin = s.IndexOf("{", StringComparison.Ordinal);
             }
             return s;
         }
 
-        private void timer1_Tick(object sender, EventArgs e)
+        private void Timer1Tick(object sender, EventArgs e)
         {
             if (_noTimerAction)
                 return;
 
-            _seconds += 0.025;
             double positionInMilliseconds = (DateTime.Now.Ticks - _videoStartTick) / 10000; // 10,000 ticks = 1 millisecond
             positionInMilliseconds *= _millisecondsFactor;
             int index = 0;
@@ -385,23 +353,21 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void buttonStart_Click(object sender, EventArgs e)
+        private void ButtonStartClick(object sender, EventArgs e)
         {
             if (_index >= _subtitle.Paragraphs.Count - 1)
             {
-                _seconds = 0.0;
                 _index = -1;
                 _videoStartTick = DateTime.Now.Ticks;
             }
             else if (_index >= 0)
             {
-                _seconds = _subtitle.Paragraphs[_index].StartTime.TotalSeconds;
                 _videoStartTick = DateTime.Now.Ticks- ((long) (_subtitle.Paragraphs[_index].StartTime.TotalMilliseconds) * 10000); //10,000 ticks = 1 millisecond
             }
 
             groupBoxImageSettings.Hide();
             buttonStart.Hide();
-            FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
+            FormBorderStyle = FormBorderStyle.None;
             BackColor = Color.Black;
             WindowState = FormWindowState.Maximized;
             _fullscreen = true;
@@ -411,21 +377,18 @@ namespace Nikse.SubtitleEdit.Forms
             timer1.Start();
         }
 
-        private void Beamer_KeyDown(object sender, KeyEventArgs e)
+        private void BeamerKeyDown(object sender, KeyEventArgs e)
         {
             if (e.Modifiers == Keys.Control && e.KeyCode == Keys.Home)
             {
                 _index = 0;
-                _seconds = _subtitle.Paragraphs[_index].StartTime.TotalSeconds;
                 ShowCurrent();
                 e.Handled = true;
                 return;
             }
-            else if (e.Modifiers == Keys.None && e.KeyCode == Keys.End)
+            if (e.Modifiers == Keys.None && e.KeyCode == Keys.End)
             {
                 _index = _subtitle.Paragraphs.Count-1;
-                _seconds = _subtitle.Paragraphs[_index].StartTime.TotalSeconds;
-                _seconds = _subtitle.Paragraphs[_index].StartTime.TotalSeconds;
                 ShowCurrent();
                 e.Handled = true;
                 return;
@@ -441,7 +404,6 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     if (_index < _subtitle.Paragraphs.Count - 1)
                         _index++;
-                    _seconds = _subtitle.Paragraphs[_index].StartTime.TotalSeconds;
                     ShowCurrent();
                     e.Handled = true;
                 }
@@ -449,7 +411,6 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     if (_index > 0)
                         _index--;
-                    _seconds = _subtitle.Paragraphs[_index].StartTime.TotalSeconds;
                     ShowCurrent();
                     e.Handled = true;
                 }
@@ -459,7 +420,6 @@ namespace Nikse.SubtitleEdit.Forms
                         _index += 20;
                     else
                         _index = _subtitle.Paragraphs.Count-1;
-                    _seconds = _subtitle.Paragraphs[_index].StartTime.TotalSeconds;
                     ShowCurrent();
                     e.Handled = true;
                 }
@@ -469,7 +429,6 @@ namespace Nikse.SubtitleEdit.Forms
                         _index -= 20;
                     else
                         _index = 0;
-                    _seconds = _subtitle.Paragraphs[_index].StartTime.TotalSeconds;
                     ShowCurrent();
                     e.Handled = true;
                 }
@@ -482,7 +441,7 @@ namespace Nikse.SubtitleEdit.Forms
                 buttonStart.Show();
                 timer1.Stop();
                 Cursor.Show();
-                FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+                FormBorderStyle = FormBorderStyle.FixedDialog;
                 BackColor = Control.DefaultBackColor;
                 WindowState = FormWindowState.Normal;
                 _showIndex = -2;
@@ -502,9 +461,7 @@ namespace Nikse.SubtitleEdit.Forms
                 System.Threading.Thread.Sleep(100);
                 if (_index < _subtitle.Paragraphs.Count - 1)
                     _index++;
-                _seconds = _subtitle.Paragraphs[_index].StartTime.TotalSeconds;
 
-                _seconds = _subtitle.Paragraphs[_index].StartTime.TotalSeconds;
                 _videoStartTick = DateTime.Now.Ticks - ((long)(_subtitle.Paragraphs[_index].StartTime.TotalMilliseconds) * 10000); //10,000 ticks = 1 millisecond
 
                 ShowCurrent();
@@ -521,7 +478,6 @@ namespace Nikse.SubtitleEdit.Forms
                 System.Threading.Thread.Sleep(100);
                 if (_index > 0)
                     _index--;
-                _seconds = _subtitle.Paragraphs[_index].StartTime.TotalSeconds;
                 _videoStartTick = DateTime.Now.Ticks - ((long)(_subtitle.Paragraphs[_index].StartTime.TotalMilliseconds) * 10000); //10,000 ticks = 1 millisecond
                 ShowCurrent();
                 if (timer1Enabled)
@@ -533,7 +489,6 @@ namespace Nikse.SubtitleEdit.Forms
                     _index += 20;
                 else
                     _index = _subtitle.Paragraphs.Count - 1;
-                _seconds = _subtitle.Paragraphs[_index].StartTime.TotalSeconds;
                 ShowCurrent();
                 e.Handled = true;
             }
@@ -543,7 +498,6 @@ namespace Nikse.SubtitleEdit.Forms
                     _index -= 20;
                 else
                     _index = 0;
-                _seconds = _subtitle.Paragraphs[_index].StartTime.TotalSeconds;
                 ShowCurrent();
                 e.Handled = true;
             }
@@ -601,12 +555,12 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void Beamer_FormClosing(object sender, FormClosingEventArgs e)
+        private void BeamerFormClosing(object sender, FormClosingEventArgs e)
         {
             Cursor.Show();
         }
 
-        private void comboBoxHAlign_SelectedIndexChanged(object sender, EventArgs e)
+        private void ComboBoxHAlignSelectedIndexChanged(object sender, EventArgs e)
         {
             ShowCurrent();
         }

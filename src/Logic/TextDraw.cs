@@ -6,9 +6,9 @@ namespace Nikse.SubtitleEdit.Logic
     public static class TextDraw
     {
 
-        public static void DrawText(Font font, StringFormat sf, System.Drawing.Drawing2D.GraphicsPath path, StringBuilder sb, bool isItalic, bool isBold, float left, float top, ref bool newLine, float addX, float leftMargin)
+        public static void DrawText(Font font, StringFormat sf, System.Drawing.Drawing2D.GraphicsPath path, StringBuilder sb, bool isItalic, bool isBold, float left, float top, ref bool newLine, float addX, float leftMargin, ref int pathPointsStart)
         {
-            PointF next = new PointF(left, top);
+            var next = new PointF(left, top);
 
             if (path.PointCount > 0)
             {
@@ -18,7 +18,7 @@ namespace Nikse.SubtitleEdit.Logic
                     if (path.PathPoints[i].X > next.X)
                         next.X = path.PathPoints[i].X;
                     k++;
-                    if (k > 10)
+                    if (i > pathPointsStart)
                         break;
                 }
             }
@@ -28,6 +28,7 @@ namespace Nikse.SubtitleEdit.Logic
             {
                 next.X = leftMargin;
                 newLine = false;
+                pathPointsStart = path.PathPoints.Length;
             }
 
             var fontStyle = FontStyle.Regular;
