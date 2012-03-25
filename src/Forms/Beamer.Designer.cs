@@ -86,7 +86,7 @@
             this.comboBoxHAlign.Name = "comboBoxHAlign";
             this.comboBoxHAlign.Size = new System.Drawing.Size(121, 21);
             this.comboBoxHAlign.TabIndex = 25;
-            this.comboBoxHAlign.SelectedIndexChanged += new System.EventHandler(this.comboBoxHAlign_SelectedIndexChanged);
+            this.comboBoxHAlign.SelectedIndexChanged += new System.EventHandler(this.ComboBoxHAlignSelectedIndexChanged);
             // 
             // labelHorizontalAlign
             // 
@@ -108,7 +108,7 @@
             this.checkBoxAntiAlias.TabIndex = 21;
             this.checkBoxAntiAlias.Text = "AntiAlias";
             this.checkBoxAntiAlias.UseVisualStyleBackColor = true;
-            this.checkBoxAntiAlias.CheckedChanged += new System.EventHandler(this.checkBoxAntiAlias_CheckedChanged);
+            this.checkBoxAntiAlias.CheckedChanged += new System.EventHandler(this.CheckBoxAntiAliasCheckedChanged);
             // 
             // labelSubtitleFontSize
             // 
@@ -127,7 +127,7 @@
             this.comboBoxSubtitleFont.Name = "comboBoxSubtitleFont";
             this.comboBoxSubtitleFont.Size = new System.Drawing.Size(121, 21);
             this.comboBoxSubtitleFont.TabIndex = 17;
-            this.comboBoxSubtitleFont.SelectedIndexChanged += new System.EventHandler(this.comboBoxSubtitleFont_SelectedValueChanged);
+            this.comboBoxSubtitleFont.SelectedIndexChanged += new System.EventHandler(this.ComboBoxSubtitleFontSelectedValueChanged);
             // 
             // comboBoxSubtitleFontSize
             // 
@@ -208,7 +208,7 @@
             this.comboBoxSubtitleFontSize.Name = "comboBoxSubtitleFontSize";
             this.comboBoxSubtitleFontSize.Size = new System.Drawing.Size(121, 21);
             this.comboBoxSubtitleFontSize.TabIndex = 18;
-            this.comboBoxSubtitleFontSize.SelectedIndexChanged += new System.EventHandler(this.comboBoxSubtitleFontSize_SelectedIndexChanged);
+            this.comboBoxSubtitleFontSize.SelectedIndexChanged += new System.EventHandler(this.ComboBoxSubtitleFontSizeSelectedIndexChanged);
             // 
             // labelSubtitleFont
             // 
@@ -244,7 +244,7 @@
             this.comboBoxBorderWidth.Name = "comboBoxBorderWidth";
             this.comboBoxBorderWidth.Size = new System.Drawing.Size(121, 21);
             this.comboBoxBorderWidth.TabIndex = 15;
-            this.comboBoxBorderWidth.SelectedIndexChanged += new System.EventHandler(this.comboBoxBorderWidth_SelectedIndexChanged);
+            this.comboBoxBorderWidth.SelectedIndexChanged += new System.EventHandler(this.ComboBoxBorderWidthSelectedIndexChanged);
             // 
             // panelBorderColor
             // 
@@ -253,7 +253,7 @@
             this.panelBorderColor.Name = "panelBorderColor";
             this.panelBorderColor.Size = new System.Drawing.Size(21, 20);
             this.panelBorderColor.TabIndex = 14;
-            this.panelBorderColor.Click += new System.EventHandler(this.buttonBorderColor_Click);
+            this.panelBorderColor.Click += new System.EventHandler(this.ButtonBorderColorClick);
             // 
             // buttonBorderColor
             // 
@@ -263,7 +263,7 @@
             this.buttonBorderColor.TabIndex = 13;
             this.buttonBorderColor.Text = "Border color";
             this.buttonBorderColor.UseVisualStyleBackColor = true;
-            this.buttonBorderColor.Click += new System.EventHandler(this.buttonBorderColor_Click);
+            this.buttonBorderColor.Click += new System.EventHandler(this.ButtonBorderColorClick);
             // 
             // panelColor
             // 
@@ -272,7 +272,7 @@
             this.panelColor.Name = "panelColor";
             this.panelColor.Size = new System.Drawing.Size(21, 20);
             this.panelColor.TabIndex = 12;
-            this.panelColor.Click += new System.EventHandler(this.buttonColor_Click);
+            this.panelColor.Click += new System.EventHandler(this.ButtonColorClick);
             // 
             // buttonColor
             // 
@@ -282,7 +282,7 @@
             this.buttonColor.TabIndex = 11;
             this.buttonColor.Text = "Color";
             this.buttonColor.UseVisualStyleBackColor = true;
-            this.buttonColor.Click += new System.EventHandler(this.buttonColor_Click);
+            this.buttonColor.Click += new System.EventHandler(this.ButtonColorClick);
             // 
             // pictureBox1
             // 
@@ -300,12 +300,12 @@
             this.buttonStart.TabIndex = 24;
             this.buttonStart.Text = "&Start";
             this.buttonStart.UseVisualStyleBackColor = true;
-            this.buttonStart.Click += new System.EventHandler(this.buttonStart_Click);
+            this.buttonStart.Click += new System.EventHandler(this.ButtonStartClick);
             // 
             // timer1
             // 
             this.timer1.Interval = 25;
-            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
+            this.timer1.Tick += new System.EventHandler(this.Timer1Tick);
             // 
             // Beamer
             // 
@@ -323,8 +323,8 @@
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
             this.Text = "Beamer";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Beamer_FormClosing);
-            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Beamer_KeyDown);
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.BeamerFormClosing);
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.BeamerKeyDown);
             this.groupBoxImageSettings.ResumeLayout(false);
             this.groupBoxImageSettings.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
