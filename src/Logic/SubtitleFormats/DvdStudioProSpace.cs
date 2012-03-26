@@ -7,7 +7,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
     public class DvdStudioProSpace : SubtitleFormat
     {
-        static Regex _regexTimeCodes = new Regex(@"^\d+:\d+:\d+:\d+ , \d+:\d+:\d+:\d+ , .*$", RegexOptions.Compiled);
+        static readonly Regex RegexTimeCodes = new Regex(@"^\d+:\d+:\d+:\d+ , \d+:\d+:\d+:\d+ , .*$", RegexOptions.Compiled);
 
         public override string Extension
         {
@@ -31,7 +31,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public override bool IsMine(List<string> lines, string fileName)
         {
-            Subtitle subtitle = new Subtitle();
+            var subtitle = new Subtitle();
             LoadSubtitle(subtitle, lines, fileName);
             return subtitle.Paragraphs.Count > _errorCount;
         }
@@ -56,22 +56,21 @@ $FadeOut                =   0
 $HorzAlign          =   Center
 ";
 
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             sb.AppendLine(header);
             foreach (Paragraph p in subtitle.Paragraphs)
             {
                 double factor = (1000.0 / Configuration.Settings.General.CurrentFrameRate);
                 string startTime = string.Format(timeFormat, p.StartTime.Hours, p.StartTime.Minutes, p.StartTime.Seconds, (int)Math.Round(p.StartTime.Milliseconds / factor));
                 string endTime = string.Format(timeFormat, p.EndTime.Hours, p.EndTime.Minutes, p.EndTime.Seconds, (int)Math.Round(p.EndTime.Milliseconds / factor));
-                sb.Append(string.Format(paragraphWriteFormat, startTime, endTime, p.Text.Replace(Environment.NewLine, " | ")));
+                sb.Append(string.Format(paragraphWriteFormat, startTime, endTime, DvdStudioPro.EncodeStyles(p.Text.Replace(Environment.NewLine, " | "))));
             }
             return sb.ToString().Trim();
         }
 
         public static byte GetFrameFromMilliseconds(int milliseconds, double frameRate)
         {
-            int frame = (int)(milliseconds / (1000.0 / frameRate));
-            return (byte)(frame);
+            return (byte)Math.Round(milliseconds / (1000.0 / frameRate));
         }
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
@@ -82,7 +81,7 @@ $HorzAlign          =   Center
             {
                 if (line.Trim().Length > 0 && line[0] != '$' && !line.StartsWith("//"))
                 {
-                    if (_regexTimeCodes.Match(line).Success)
+                    if (RegexTimeCodes.Match(line).Success)
                     {
                         string[] toPart = line.Substring(0, 25).Split(new[] { " ," }, StringSplitOptions.None);
                         Paragraph p = new Paragraph();
@@ -94,6 +93,7 @@ $HorzAlign          =   Center
                             p.Number = number;
                             string text = line.Substring(27).Trim();
                             p.Text = text.Replace(" | ", Environment.NewLine).Replace("|", Environment.NewLine);
+                            p.Text = DvdStudioPro.DecodeStyles(p.Text);
                             subtitle.Paragraphs.Add(p);
                         }
                     }
@@ -115,7 +115,7 @@ $HorzAlign          =   Center
                 timeCode.Seconds = int.Parse(timeParts[2]);
                 int frames = int.Parse(timeParts[3]);
 
-                int milliseconds = (int)(1000.0 / Configuration.Settings.General.CurrentFrameRate * frames);
+                int milliseconds = (int)Math.Round(1000.0 / Configuration.Settings.General.CurrentFrameRate * frames);
                 if (milliseconds > 999)
                     milliseconds = 999;
 
