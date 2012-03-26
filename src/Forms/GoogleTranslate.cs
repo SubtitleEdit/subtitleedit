@@ -512,7 +512,7 @@ namespace Nikse.SubtitleEdit.Forms
             //            comboBox.Items.Add(new ComboBoxItem("DHIVEHI" , "dv"));
             comboBox.Items.Add(new ComboBoxItem("DUTCH", "nl"));
             comboBox.Items.Add(new ComboBoxItem("ENGLISH", "en"));
-            //            comboBox.Items.Add(new ComboBoxItem("ESPERANTO" , "eo"));
+            comboBox.Items.Add(new ComboBoxItem("ESPERANTO" , "eo"));
             comboBox.Items.Add(new ComboBoxItem("ESTONIAN", "et"));
             comboBox.Items.Add(new ComboBoxItem("FILIPINO", "tl"));
             comboBox.Items.Add(new ComboBoxItem("FINNISH", "fi"));
