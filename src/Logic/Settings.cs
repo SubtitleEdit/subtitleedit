@@ -1011,7 +1011,7 @@ namespace Nikse.SubtitleEdit.Logic
                 settings.Tools.MusicSymbolToReplace = subNode.InnerText;
             subNode = node.SelectSingleNode("UnicodeSymbolsToInsert");
             if (subNode != null)
-                settings.Tools.MusicSymbolToReplace = subNode.InnerText;
+                settings.Tools.UnicodeSymbolsToInsert = subNode.InnerText;
             subNode = node.SelectSingleNode("SpellCheckAutoChangeNames");
             if (subNode != null)
                 settings.Tools.SpellCheckAutoChangeNames = Convert.ToBoolean(subNode.InnerText);
