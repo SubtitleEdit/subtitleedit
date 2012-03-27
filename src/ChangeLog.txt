@@ -12,6 +12,7 @@ Subtitle Edit Changelog
    * PAC line numbers beyond 255 is now written correctly
    * First line in PAC files no longer messes up time-line/waveform - thx Peter
    * Second line alignment in export images in some cases - thx Juan
+   * Fixed italics/bold in Dvd Studio Pro format - thx Mikko
 
 
 3.2.5 (18th March 2012)
