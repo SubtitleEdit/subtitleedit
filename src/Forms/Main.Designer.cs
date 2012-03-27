@@ -91,6 +91,7 @@
             this.bluraySupToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemCavena890 = new System.Windows.Forms.ToolStripMenuItem();
             this.eBUSTLToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemImagePerFrame = new System.Windows.Forms.ToolStripMenuItem();
             this.pACScreenElectronicsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.plainTextToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.plainTextWithoutLineBreaksToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -338,6 +339,8 @@
             this.fontNameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator26 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripMenuItemInsertUnicodeSymbol = new System.Windows.Forms.ToolStripMenuItem();
+            this.superscriptToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.subscriptToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.labelSingleLine = new System.Windows.Forms.Label();
             this.buttonAutoBreak = new System.Windows.Forms.Button();
             this.labelTextLineLengths = new System.Windows.Forms.Label();
@@ -938,6 +941,7 @@
             this.bluraySupToolStripMenuItem,
             this.toolStripMenuItemCavena890,
             this.eBUSTLToolStripMenuItem,
+            this.toolStripMenuItemImagePerFrame,
             this.pACScreenElectronicsToolStripMenuItem,
             this.plainTextToolStripMenuItem,
             this.plainTextWithoutLineBreaksToolStripMenuItem,
@@ -980,6 +984,14 @@
             this.eBUSTLToolStripMenuItem.Size = new System.Drawing.Size(258, 22);
             this.eBUSTLToolStripMenuItem.Text = "EBU STL...";
             this.eBUSTLToolStripMenuItem.Click += new System.EventHandler(this.EBustlToolStripMenuItemClick);
+            // 
+            // toolStripMenuItemImagePerFrame
+            // 
+            this.toolStripMenuItemImagePerFrame.Name = "toolStripMenuItemImagePerFrame";
+            this.toolStripMenuItemImagePerFrame.Size = new System.Drawing.Size(258, 22);
+            this.toolStripMenuItemImagePerFrame.Text = "Image per frame...";
+            this.toolStripMenuItemImagePerFrame.Visible = false;
+            this.toolStripMenuItemImagePerFrame.Click += new System.EventHandler(this.ToolStripMenuItemImagePerFrameClick);
             // 
             // pACScreenElectronicsToolStripMenuItem
             // 
@@ -1674,7 +1686,7 @@
             this.fixCommonErrorsInSelectedLinesToolStripMenuItem,
             this.changeCasingForSelectedLinesToolStripMenuItem});
             this.contextMenuStripListview.Name = "contextMenuStripListview";
-            this.contextMenuStripListview.Size = new System.Drawing.Size(285, 694);
+            this.contextMenuStripListview.Size = new System.Drawing.Size(285, 672);
             this.contextMenuStripListview.Opening += new System.ComponentModel.CancelEventHandler(this.ContextMenuStripListviewOpening);
             // 
             // setStylesForSelectedLinesToolStripMenuItem
@@ -3190,9 +3202,11 @@
             this.colorToolStripMenuItem1,
             this.fontNameToolStripMenuItem,
             this.toolStripSeparator26,
-            this.toolStripMenuItemInsertUnicodeSymbol});
+            this.toolStripMenuItemInsertUnicodeSymbol,
+            this.superscriptToolStripMenuItem,
+            this.subscriptToolStripMenuItem});
             this.contextMenuStripTextBoxListView.Name = "contextMenuStripTextBoxListView";
-            this.contextMenuStripTextBoxListView.Size = new System.Drawing.Size(215, 330);
+            this.contextMenuStripTextBoxListView.Size = new System.Drawing.Size(215, 374);
             this.contextMenuStripTextBoxListView.Opening += new System.ComponentModel.CancelEventHandler(this.ContextMenuStripTextBoxListViewOpening);
             // 
             // cutToolStripMenuItem
@@ -3304,6 +3318,20 @@
             this.toolStripMenuItemInsertUnicodeSymbol.Name = "toolStripMenuItemInsertUnicodeSymbol";
             this.toolStripMenuItemInsertUnicodeSymbol.Size = new System.Drawing.Size(214, 22);
             this.toolStripMenuItemInsertUnicodeSymbol.Text = "Insert unicode character";
+            // 
+            // superscriptToolStripMenuItem
+            // 
+            this.superscriptToolStripMenuItem.Name = "superscriptToolStripMenuItem";
+            this.superscriptToolStripMenuItem.Size = new System.Drawing.Size(214, 22);
+            this.superscriptToolStripMenuItem.Text = "Superscript";
+            this.superscriptToolStripMenuItem.Click += new System.EventHandler(this.SuperscriptToolStripMenuItemClick);
+            // 
+            // subscriptToolStripMenuItem
+            // 
+            this.subscriptToolStripMenuItem.Name = "subscriptToolStripMenuItem";
+            this.subscriptToolStripMenuItem.Size = new System.Drawing.Size(214, 22);
+            this.subscriptToolStripMenuItem.Text = "Subscript";
+            this.subscriptToolStripMenuItem.Click += new System.EventHandler(this.SubscriptToolStripMenuItemClick);
             // 
             // labelSingleLine
             // 
@@ -4022,6 +4050,9 @@
         private System.Windows.Forms.ToolStripMenuItem adobeEncoreFABImageScriptToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemMergeDialogue;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemSurroundWithMusicSymbols;
+        private System.Windows.Forms.ToolStripMenuItem superscriptToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem subscriptToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemImagePerFrame;
     }
 }
 

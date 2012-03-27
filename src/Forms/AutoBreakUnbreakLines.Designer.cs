@@ -123,7 +123,7 @@
             this.comboBoxConditions.Name = "comboBoxConditions";
             this.comboBoxConditions.Size = new System.Drawing.Size(150, 25);
             this.comboBoxConditions.TabIndex = 8;
-            this.comboBoxConditions.SelectedIndexChanged += new System.EventHandler(this.comboBoxConditions_SelectedIndexChanged);
+            this.comboBoxConditions.SelectedIndexChanged += new System.EventHandler(this.ComboBoxConditionsSelectedIndexChanged);
             //
             // labelCondition
             //
@@ -153,7 +153,7 @@
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
             this.Text = "AutoBreakUnbreakLines";
-            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.AutoBreakUnbreakLines_KeyDown);
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.AutoBreakUnbreakLinesKeyDown);
             this.groupBoxLinesFound.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();

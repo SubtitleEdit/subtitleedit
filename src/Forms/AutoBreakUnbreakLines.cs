@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Logic;
 using System.Collections.Generic;
@@ -10,7 +11,12 @@ namespace Nikse.SubtitleEdit.Forms
     {
         List<Paragraph> _paragraphs;
         int _changes;
-        bool _modeAutoBalance = false;
+        bool _modeAutoBalance;
+
+        public int Changes
+        {
+            get { return _changes; }
+        }
 
         public List<Paragraph> FixedParagraphs
         {
@@ -38,11 +44,11 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void FixLargeFonts()
         {
-            Graphics graphics = this.CreateGraphics();
-            SizeF textSize = graphics.MeasureString(buttonOK.Text, this.Font);
+            Graphics graphics = CreateGraphics();
+            SizeF textSize = graphics.MeasureString(buttonOK.Text, Font);
             if (textSize.Height > buttonOK.Height - 4)
             {
-                int newButtonHeight = (int)(textSize.Height + 7 + 0.5);
+                var newButtonHeight = (int)(textSize.Height + 7 + 0.5);
                 Utilities.SetButtonHeight(this, newButtonHeight, 1);
             }
         }
@@ -61,7 +67,7 @@ namespace Nikse.SubtitleEdit.Forms
                 const int start = 10;
                 const int max = 60;
                 for (int i = start; i <= max; i++)
-                    comboBoxConditions.Items.Add(i.ToString());
+                    comboBoxConditions.Items.Add(i.ToString(CultureInfo.InvariantCulture));
 
                 int index = Configuration.Settings.Tools.MergeLinesShorterThan - (start +1);
                 if (index > 0 && index < max)
@@ -75,16 +81,34 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 labelCondition.Text = Configuration.Settings.Language.AutoBreakUnbreakLines.OnlyUnbreakLinesLongerThan;
                 for (int i = 5; i < 51; i++)
-                    comboBoxConditions.Items.Add(i.ToString());
+                    comboBoxConditions.Items.Add(i.ToString(CultureInfo.InvariantCulture));
                 comboBoxConditions.SelectedIndex = 5;
 
                 Unbreak();
             }
         }
 
+        public int MininumLength
+        {
+            get
+            {
+                return int.Parse(comboBoxConditions.Items[comboBoxConditions.SelectedIndex].ToString());
+            }
+        }
+
+        public int MergeLinesShorterThan
+        {
+            get 
+            {
+                if (Configuration.Settings.Tools.MergeLinesShorterThan > MininumLength)
+                    return MininumLength - 1;
+                return Configuration.Settings.Tools.MergeLinesShorterThan;
+            }
+        }
+
         private void AutoBalance()
         {
-            int minLength = int.Parse(comboBoxConditions.Items[comboBoxConditions.SelectedIndex].ToString());
+            int minLength = MininumLength;
             Text = Configuration.Settings.Language.AutoBreakUnbreakLines.TitleAutoBreak;
             listViewFixes.BeginUpdate();
             listViewFixes.Items.Clear();
@@ -92,7 +116,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 if (p.Text.Length > minLength || p.Text.Contains(Environment.NewLine))
                 {
-                    string text = Utilities.AutoBreakLine(p.Text);
+                    string text = Utilities.AutoBreakLine(p.Text, 5, minLength, MergeLinesShorterThan);
                     if (text != p.Text)
                     {
                         AddToListView(p, text);
@@ -129,7 +153,7 @@ namespace Nikse.SubtitleEdit.Forms
             groupBoxLinesFound.Text = string.Format(Configuration.Settings.Language.AutoBreakUnbreakLines.LinesFoundX, listViewFixes.Items.Count);
         }
 
-        private void AutoBreakUnbreakLines_KeyDown(object sender, KeyEventArgs e)
+        private void AutoBreakUnbreakLinesKeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Escape)
                 DialogResult = DialogResult.Cancel;
@@ -139,7 +163,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             var item = new ListViewItem(string.Empty) {Tag = p, Checked = true};
 
-            var subItem = new ListViewItem.ListViewSubItem(item, p.Number.ToString());
+            var subItem = new ListViewItem.ListViewSubItem(item, p.Number.ToString(CultureInfo.InvariantCulture));
             item.SubItems.Add(subItem);
             subItem = new ListViewItem.ListViewSubItem(item, p.Text.Replace(Environment.NewLine, Configuration.Settings.General.ListViewLineSeparatorString));
             item.SubItems.Add(subItem);
@@ -170,7 +194,7 @@ namespace Nikse.SubtitleEdit.Forms
             DialogResult = DialogResult.OK;
         }
 
-        private void comboBoxConditions_SelectedIndexChanged(object sender, EventArgs e)
+        private void ComboBoxConditionsSelectedIndexChanged(object sender, EventArgs e)
         {
             if (_modeAutoBalance)
                 AutoBalance();
