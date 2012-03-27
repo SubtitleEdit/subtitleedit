@@ -87,7 +87,7 @@
             this.buttonExport.TabIndex = 2;
             this.buttonExport.Text = "Export all lines...";
             this.buttonExport.UseVisualStyleBackColor = true;
-            this.buttonExport.Click += new System.EventHandler(this.buttonExport_Click);
+            this.buttonExport.Click += new System.EventHandler(this.ButtonExportClick);
             // 
             // buttonCancel
             // 

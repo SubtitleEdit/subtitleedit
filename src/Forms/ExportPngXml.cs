@@ -43,7 +43,7 @@ namespace Nikse.SubtitleEdit.Forms
         private Color _subtitleColor = Color.White;
         private string _subtitleFontName = "Verdana";
         private float _subtitleFontSize = 75.0f;
-        private bool _subtitleFontBold = false;
+        private bool _subtitleFontBold;
         private Color _borderColor = Color.Black;
         private float _borderWidth = 2.0f;
         private bool _isLoading = true;
@@ -135,7 +135,7 @@ namespace Nikse.SubtitleEdit.Forms
             return parameter;
         }
 
-        private void buttonExport_Click(object sender, EventArgs e)
+        private void ButtonExportClick(object sender, EventArgs e)
         {
             buttonExport.Enabled = false;
             SetupImageParameters();
@@ -168,7 +168,8 @@ namespace Nikse.SubtitleEdit.Forms
             if (_exportType == "BLURAYSUP" &&  saveFileDialog1.ShowDialog(this) == DialogResult.OK ||
                 _exportType == "VOBSUB" && saveFileDialog1.ShowDialog(this) == DialogResult.OK ||
                 _exportType == "BDNXML" && folderBrowserDialog1.ShowDialog(this) == DialogResult.OK ||
-                _exportType == "FAB" && folderBrowserDialog1.ShowDialog(this) == DialogResult.OK)
+                _exportType == "FAB" && folderBrowserDialog1.ShowDialog(this) == DialogResult.OK ||
+                _exportType == "IMAGE/FRAME" && folderBrowserDialog1.ShowDialog(this) == DialogResult.OK)
             {
                 int width = 1920;
                 int height = 1080;
@@ -301,6 +302,10 @@ namespace Nikse.SubtitleEdit.Forms
                     File.WriteAllText(Path.Combine(folderBrowserDialog1.SelectedPath, "Fab_Image_script.txt"), sb.ToString());
                     MessageBox.Show(string.Format(Configuration.Settings.Language.ExportPngXml.XImagesSavedInY, imagesSavedCount, folderBrowserDialog1.SelectedPath));
                 }
+                else if (_exportType == "IMAGE/FRAME")
+                {
+                    MessageBox.Show(string.Format(Configuration.Settings.Language.ExportPngXml.XImagesSavedInY, imagesSavedCount, folderBrowserDialog1.SelectedPath));
+                }
                 else
                 {
                     string videoFormat = "1080p";
@@ -385,8 +390,59 @@ namespace Nikse.SubtitleEdit.Forms
 
                         //RACE001.TIF 00;00;02;02 00;00;03;15 000 000 720 480
                         //RACE002.TIF 00;00;05;18 00;00;09;20 000 000 720 480
-                        int top = param.ScreenHeight - (param.Bitmap.Height + 20); // bottom margin=20
+                        int top = param.ScreenHeight - (param.Bitmap.Height + 20); // bottom margin=20 //TODO: Use combo bottom margin!
                         sb.AppendLine(string.Format("{0} {1} {2} {3} {4} {5} {6}", Path.GetFileName(fileName), FormatFabTime(param.P.StartTime, param), FormatFabTime(param.P.EndTime, param), 0, top, param.ScreenWidth, param.ScreenHeight));
+                        param.Saved = true;
+                    }
+                }
+                else if (_exportType == "IMAGE/FRAME")
+                {
+                    if (!param.Saved)
+                    {
+                        var imageFormat = System.Drawing.Imaging.ImageFormat.Png;
+                        if (comboBoxImageFormat.SelectedIndex == 0)
+                            imageFormat = System.Drawing.Imaging.ImageFormat.Bmp;
+                        else if (comboBoxImageFormat.SelectedIndex == 1)
+                            imageFormat = System.Drawing.Imaging.ImageFormat.Exif;
+                        else if (comboBoxImageFormat.SelectedIndex == 2)
+                            imageFormat = System.Drawing.Imaging.ImageFormat.Gif;
+                        else if (comboBoxImageFormat.SelectedIndex == 3)
+                            imageFormat = System.Drawing.Imaging.ImageFormat.Jpeg;
+                        else if (comboBoxImageFormat.SelectedIndex == 5)
+                            imageFormat = System.Drawing.Imaging.ImageFormat.Tiff;
+
+                        int lastFrame = imagesSavedCount;
+                        int startFrame = (int)Math.Round(param.P.StartTime.TotalMilliseconds / (1000.0 / param.FramesPerSeconds));
+                        var empty = new Bitmap(1, 1); //var empty = new Bitmap(param.ScreenWidth, param.ScreenHeight);
+                        
+                        // Save empty picture for each frame up to start frame
+                        for (int k=lastFrame+1; k<startFrame; k++)
+                        {
+                            string numberString = string.Format("{0:00000}", k);
+                            string fileName = Path.Combine(folderBrowserDialog1.SelectedPath, numberString + "." + comboBoxImageFormat.Text.ToLower());
+                            empty.Save(fileName, imageFormat);
+                            imagesSavedCount++;                            
+                        }
+
+                        int endFrame = (int)Math.Round(param.P.EndTime.TotalMilliseconds / (1000.0 / param.FramesPerSeconds));
+                        var fullSize = new Bitmap(param.ScreenWidth, param.ScreenHeight);
+                        Graphics g = Graphics.FromImage(fullSize);
+                        g.DrawImage(param.Bitmap, (param.ScreenWidth - param.Bitmap.Width) / 2, param.ScreenHeight - (param.Bitmap.Height + param.BottomMargin));
+                        g.Dispose();
+                        
+                        
+                        if (imagesSavedCount > startFrame)
+                            startFrame = imagesSavedCount; // no overlapping
+
+                        // Save sub picture for each frame in duration                        
+                        for (int k = startFrame; k <= endFrame; k++)
+                        {
+                            string numberString = string.Format("{0:00000}", k);
+                            string fileName = Path.Combine(folderBrowserDialog1.SelectedPath, numberString + "." + comboBoxImageFormat.Text.ToLower());
+                            fullSize.Save(fileName, imageFormat);
+                            imagesSavedCount++;
+                        }
+                        fullSize.Dispose();
                         param.Saved = true;
                     }
                 }
@@ -683,6 +739,8 @@ namespace Nikse.SubtitleEdit.Forms
                 Text = "VobSub (sub/idx)";
             else if (exportType == "FAB")
                 Text = "FAB Image Script";
+            else if (exportType == "IMAGE/FRAME")
+                Text = "Image per frame";
             else
                 Text = Configuration.Settings.Language.ExportPngXml.Title;
             groupBoxImageSettings.Text = Configuration.Settings.Language.ExportPngXml.ImageSettings;
@@ -736,10 +794,10 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 comboBoxLanguage.SelectedIndex = 25;
             }
-            comboBoxImageFormat.Visible = exportType == "FAB";
-            labelImageFormat.Visible = exportType == "FAB";
-            labelFrameRate.Visible = exportType == "BDNXML" || exportType == "BLURAYSUP";
-            comboBoxFramerate.Visible = exportType == "BDNXML" || exportType == "BLURAYSUP";
+            comboBoxImageFormat.Visible = exportType == "FAB" || exportType == "IMAGE/FRAME";
+            labelImageFormat.Visible = exportType == "FAB" || exportType == "IMAGE/FRAME";
+            labelFrameRate.Visible = exportType == "BDNXML" || exportType == "BLURAYSUP" || exportType == "IMAGE/FRAME";
+            comboBoxFramerate.Visible = exportType == "BDNXML" || exportType == "BLURAYSUP" || exportType == "IMAGE/FRAME";
             if (exportType == "BDNXML")
             {
                 labelFrameRate.Top = labelLanguage.Top;
@@ -748,8 +806,23 @@ namespace Nikse.SubtitleEdit.Forms
                 comboBoxFramerate.Items.Add("24");
                 comboBoxFramerate.Items.Add("25");
                 comboBoxFramerate.Items.Add("29.97");
+                comboBoxFramerate.Items.Add("30");
                 comboBoxFramerate.Items.Add("50");
                 comboBoxFramerate.Items.Add("59.94");
+                comboBoxFramerate.SelectedIndex = 2;
+            }
+            else if (exportType == "IMAGE/FRAME")
+            {
+                labelFrameRate.Top = labelLanguage.Top;
+                comboBoxFramerate.Top = comboBoxLanguage.Top;
+                comboBoxFramerate.Items.Add("23.976");
+                comboBoxFramerate.Items.Add("24");
+                comboBoxFramerate.Items.Add("25");
+                comboBoxFramerate.Items.Add("29.97");
+                comboBoxFramerate.Items.Add("30");
+                comboBoxFramerate.Items.Add("50");
+                comboBoxFramerate.Items.Add("59.94");
+                comboBoxFramerate.Items.Add("60");
                 comboBoxFramerate.SelectedIndex = 2;
             }
             else if (exportType == "BLURAYSUP")
@@ -769,9 +842,9 @@ namespace Nikse.SubtitleEdit.Forms
             for (int i=0; i<1000; i++)
                 comboBoxBottomMargin.Items.Add(i);
             comboBoxBottomMargin.SelectedIndex = 15;
-            if (exportType == "BLURAYSUP")
+            if (exportType == "BLURAYSUP" || exportType == "IMAGE/FRAME")
                 comboBoxBottomMargin.SelectedIndex = 20;
-            if (_exportType == "BLURAYSUP" || _exportType == "VOBSUB")
+            if (_exportType == "BLURAYSUP" || _exportType == "VOBSUB" || _exportType == "IMAGE/FRAME")
             {
                 comboBoxBottomMargin.Visible = true;
                 labelBottomMargin.Visible = true;

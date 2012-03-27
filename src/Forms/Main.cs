@@ -3846,115 +3846,133 @@ namespace Nikse.SubtitleEdit.Forms
                 TimerTextUndoTick(null, null);
                 TimerAlternateTextUndoTick(null, null);
 
-
-                int selectedIndex = FirstSelectedIndex;
-                string text = string.Empty;
-                if (undo)
+                try
                 {
-                    _subtitle.HistoryItems[_undoIndex].RedoParagraphs = new List<Paragraph>();
-                    _subtitle.HistoryItems[_undoIndex].RedoParagraphsAlternate = new List<Paragraph>();
-
-                    foreach (Paragraph p in _subtitle.Paragraphs)
-                        _subtitle.HistoryItems[_undoIndex].RedoParagraphs.Add(new Paragraph(p));
-                    if (Configuration.Settings.General.AllowEditOfOriginalSubtitle && _subtitleAlternate != null)
+                    int selectedIndex = FirstSelectedIndex;
+                    string text = string.Empty;
+                    if (undo)
                     {
-                        foreach (Paragraph p in _subtitleAlternate.Paragraphs)
-                            _subtitle.HistoryItems[_undoIndex].RedoParagraphsAlternate.Add(new Paragraph(p));
-                    }
-                    _subtitle.HistoryItems[_undoIndex].RedoFileName = _fileName;
-                    _subtitle.HistoryItems[_undoIndex].RedoFileModified = _fileDateTime;
+                        _subtitle.HistoryItems[_undoIndex].RedoParagraphs = new List<Paragraph>();
+                        _subtitle.HistoryItems[_undoIndex].RedoParagraphsAlternate = new List<Paragraph>();
 
-                    if (selectedIndex >= 0)
-                    {
-                        _subtitle.HistoryItems[_undoIndex].RedoParagraphs[selectedIndex].Text = textBoxListViewText.Text;
-                        if (Configuration.Settings.General.AllowEditOfOriginalSubtitle && _subtitleAlternate != null && selectedIndex < _subtitle.HistoryItems[_undoIndex].RedoParagraphsAlternate.Count)
-                            _subtitle.HistoryItems[_undoIndex].RedoParagraphsAlternate[selectedIndex].Text = textBoxListViewTextAlternate.Text;
-                        _subtitle.HistoryItems[_undoIndex].RedoLineIndex = selectedIndex;
-                        _subtitle.HistoryItems[_undoIndex].RedoLinePosition = textBoxListViewText.SelectionStart;
-                        _subtitle.HistoryItems[_undoIndex].RedoLinePositionAlternate = textBoxListViewTextAlternate.SelectionStart;
-                    }
-                    else
-                    {
-                        _subtitle.HistoryItems[_undoIndex].RedoLineIndex = -1;
-                        _subtitle.HistoryItems[_undoIndex].RedoLinePosition = -1;
-                    }
-                }
-                else
-                {
-                    _undoIndex++;
-                }
-                text = _subtitle.HistoryItems[_undoIndex].Description;
-
-                _subtitleListViewIndex = -1;
-                textBoxListViewText.Text = string.Empty;
-                textBoxListViewTextAlternate.Text = string.Empty;
-                string subtitleFormatFriendlyName;
-
-                string oldFileName = _fileName;
-                DateTime oldFileDateTime = _fileDateTime;
-
-                _fileName = _subtitle.UndoHistory(_undoIndex, out subtitleFormatFriendlyName, out _fileDateTime, out _subtitleAlternate, out _subtitleAlternateFileName);
-                if (!undo)
-                {
-                    if (_subtitle.HistoryItems[_undoIndex].RedoParagraphs != null) //TODO: sometimes redo paragraphs can be null - how?
-                    {
-                        _subtitle.Paragraphs.Clear();
-                        if (Configuration.Settings.General.AllowEditOfOriginalSubtitle && _subtitleAlternate != null)
-                            _subtitleAlternate.Paragraphs.Clear();
-                        foreach (Paragraph p in _subtitle.HistoryItems[_undoIndex].RedoParagraphs)
-                            _subtitle.Paragraphs.Add(new Paragraph(p));
+                        foreach (Paragraph p in _subtitle.Paragraphs)
+                            _subtitle.HistoryItems[_undoIndex].RedoParagraphs.Add(new Paragraph(p));
                         if (Configuration.Settings.General.AllowEditOfOriginalSubtitle && _subtitleAlternate != null)
                         {
-                            foreach (Paragraph p in _subtitle.HistoryItems[_undoIndex].RedoParagraphsAlternate)
-                                _subtitleAlternate.Paragraphs.Add(new Paragraph(p));
+                            foreach (Paragraph p in _subtitleAlternate.Paragraphs)
+                                _subtitle.HistoryItems[_undoIndex].RedoParagraphsAlternate.Add(new Paragraph(p));
+                        }
+                        _subtitle.HistoryItems[_undoIndex].RedoFileName = _fileName;
+                        _subtitle.HistoryItems[_undoIndex].RedoFileModified = _fileDateTime;
+
+                        if (selectedIndex >= 0)
+                        {
+                            _subtitle.HistoryItems[_undoIndex].RedoParagraphs[selectedIndex].Text =
+                                textBoxListViewText.Text;
+                            if (Configuration.Settings.General.AllowEditOfOriginalSubtitle && _subtitleAlternate != null &&
+                                selectedIndex < _subtitle.HistoryItems[_undoIndex].RedoParagraphsAlternate.Count)
+                                _subtitle.HistoryItems[_undoIndex].RedoParagraphsAlternate[selectedIndex].Text =
+                                    textBoxListViewTextAlternate.Text;
+                            _subtitle.HistoryItems[_undoIndex].RedoLineIndex = selectedIndex;
+                            _subtitle.HistoryItems[_undoIndex].RedoLinePosition = textBoxListViewText.SelectionStart;
+                            _subtitle.HistoryItems[_undoIndex].RedoLinePositionAlternate =
+                                textBoxListViewTextAlternate.SelectionStart;
+                        }
+                        else
+                        {
+                            _subtitle.HistoryItems[_undoIndex].RedoLineIndex = -1;
+                            _subtitle.HistoryItems[_undoIndex].RedoLinePosition = -1;
                         }
                     }
                     else
                     {
-                        System.Diagnostics.Debug.WriteLine("Undo failed at undo index: " + _undoIndex);
+                        _undoIndex++;
                     }
-                    _subtitle.HistoryItems[_undoIndex].RedoParagraphs = null;
-                    _subtitle.HistoryItems[_undoIndex].RedoParagraphsAlternate = null;
-                }
+                    text = _subtitle.HistoryItems[_undoIndex].Description;
 
-                if (string.Compare(oldFileName, _fileName, true) == 0)
-                    _fileDateTime = oldFileDateTime; // undo will not give overwrite-newer-file warning
+                    _subtitleListViewIndex = -1;
+                    textBoxListViewText.Text = string.Empty;
+                    textBoxListViewTextAlternate.Text = string.Empty;
+                    string subtitleFormatFriendlyName;
 
-                comboBoxSubtitleFormats.SelectedIndexChanged -= ComboBoxSubtitleFormatsSelectedIndexChanged;
-                SetCurrentFormat(subtitleFormatFriendlyName);
-                comboBoxSubtitleFormats.SelectedIndexChanged += ComboBoxSubtitleFormatsSelectedIndexChanged;
+                    string oldFileName = _fileName;
+                    DateTime oldFileDateTime = _fileDateTime;
 
-                ShowSource();
-                SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
-
-                if (selectedIndex >= 0 && selectedIndex < _subtitle.Paragraphs.Count)
-                    SubtitleListview1.SelectIndexAndEnsureVisible(selectedIndex, true);
-                else
-                    SubtitleListview1.SelectIndexAndEnsureVisible(0, true);
-
-                audioVisualizer.Invalidate();
-                if (undo)
-                {
-                    if (_subtitle.HistoryItems[_undoIndex].LineIndex == FirstSelectedIndex)
+                    _fileName = _subtitle.UndoHistory(_undoIndex, out subtitleFormatFriendlyName, out _fileDateTime,
+                                                      out _subtitleAlternate, out _subtitleAlternateFileName);
+                    if (!undo)
                     {
-                        textBoxListViewText.SelectionStart = _subtitle.HistoryItems[_undoIndex].LinePosition;
-                        if (_subtitleAlternate != null)
-                            textBoxListViewTextAlternate.SelectionStart = _subtitle.HistoryItems[_undoIndex].LinePositionAlternate;
+                        if (_subtitle.HistoryItems[_undoIndex].RedoParagraphs != null)
+                            //TODO: sometimes redo paragraphs can be null - how?
+                        {
+                            _subtitle.Paragraphs.Clear();
+                            if (Configuration.Settings.General.AllowEditOfOriginalSubtitle && _subtitleAlternate != null)
+                                _subtitleAlternate.Paragraphs.Clear();
+                            foreach (Paragraph p in _subtitle.HistoryItems[_undoIndex].RedoParagraphs)
+                                _subtitle.Paragraphs.Add(new Paragraph(p));
+                            if (Configuration.Settings.General.AllowEditOfOriginalSubtitle && _subtitleAlternate != null)
+                            {
+                                foreach (Paragraph p in _subtitle.HistoryItems[_undoIndex].RedoParagraphsAlternate)
+                                    _subtitleAlternate.Paragraphs.Add(new Paragraph(p));
+                            }
+                        }
+                        else
+                        {
+                            System.Diagnostics.Debug.WriteLine("Undo failed at undo index: " + _undoIndex);
+                        }
+                        _subtitle.HistoryItems[_undoIndex].RedoParagraphs = null;
+                        _subtitle.HistoryItems[_undoIndex].RedoParagraphsAlternate = null;
                     }
-                    ShowStatus(_language.UndoPerformed + ": " + text.Replace(Environment.NewLine, "  "));
-                    _undoIndex--;
+
+                    if (string.Compare(oldFileName, _fileName, true) == 0)
+                        _fileDateTime = oldFileDateTime; // undo will not give overwrite-newer-file warning
+
+                    comboBoxSubtitleFormats.SelectedIndexChanged -= ComboBoxSubtitleFormatsSelectedIndexChanged;
+                    SetCurrentFormat(subtitleFormatFriendlyName);
+                    comboBoxSubtitleFormats.SelectedIndexChanged += ComboBoxSubtitleFormatsSelectedIndexChanged;
+
+                    ShowSource();
+                    SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
+
+                    if (selectedIndex >= 0 && selectedIndex < _subtitle.Paragraphs.Count)
+                        SubtitleListview1.SelectIndexAndEnsureVisible(selectedIndex, true);
+                    else
+                        SubtitleListview1.SelectIndexAndEnsureVisible(0, true);
+
+                    audioVisualizer.Invalidate();
+                    if (undo)
+                    {
+                        if (_subtitle.HistoryItems[_undoIndex].LineIndex == FirstSelectedIndex)
+                        {
+                            textBoxListViewText.SelectionStart = _subtitle.HistoryItems[_undoIndex].LinePosition;
+                            if (_subtitleAlternate != null)
+                                textBoxListViewTextAlternate.SelectionStart =
+                                    _subtitle.HistoryItems[_undoIndex].LinePositionAlternate;
+                        }
+                        ShowStatus(_language.UndoPerformed + ": " + text.Replace(Environment.NewLine, "  "));
+                        _undoIndex--;
+                    }
+                    else
+                    {
+                        if (_subtitle.HistoryItems[_undoIndex].RedoLineIndex >= 0 &&
+                            _subtitle.HistoryItems[_undoIndex].RedoLineIndex == FirstSelectedIndex)
+                            textBoxListViewText.SelectionStart = _subtitle.HistoryItems[_undoIndex].RedoLinePosition;
+                        if (_subtitleAlternate != null && _subtitle.HistoryItems[_undoIndex].RedoLineIndex >= 0 &&
+                            _subtitle.HistoryItems[_undoIndex].RedoLineIndex == FirstSelectedIndex)
+                            textBoxListViewTextAlternate.SelectionStart =
+                                _subtitle.HistoryItems[_undoIndex].RedoLinePositionAlternate;
+                        if (string.Compare(_subtitle.HistoryItems[_undoIndex].RedoFileName, _fileName, true) == 0)
+                            _fileDateTime = _subtitle.HistoryItems[_undoIndex].RedoFileModified;
+                        _fileName = _subtitle.HistoryItems[_undoIndex].RedoFileName;
+                        ShowStatus("Redo performed"); //TODO: do not hardcode text... SE 3.3
+                    }
+
                 }
-                else
+                catch (Exception exception)
                 {
-                    if (_subtitle.HistoryItems[_undoIndex].RedoLineIndex >= 0 && _subtitle.HistoryItems[_undoIndex].RedoLineIndex == FirstSelectedIndex)
-                        textBoxListViewText.SelectionStart = _subtitle.HistoryItems[_undoIndex].RedoLinePosition;
-                    if (_subtitleAlternate != null && _subtitle.HistoryItems[_undoIndex].RedoLineIndex >= 0 && _subtitle.HistoryItems[_undoIndex].RedoLineIndex == FirstSelectedIndex)
-                        textBoxListViewTextAlternate.SelectionStart = _subtitle.HistoryItems[_undoIndex].RedoLinePositionAlternate;
-                    if (string.Compare(_subtitle.HistoryItems[_undoIndex].RedoFileName, _fileName, true) == 0)
-                        _fileDateTime = _subtitle.HistoryItems[_undoIndex].RedoFileModified;
-                    _fileName = _subtitle.HistoryItems[_undoIndex].RedoFileName;
-                    ShowStatus("Redo performed");  //TODO: do not hardcode text... SE 3.3
+                    System.Diagnostics.Debug.WriteLine(exception.Message);
                 }
+
                 timerTextUndo.Start();
                 timerAlternateTextUndo.Start();
                 SetTitle();
@@ -7231,12 +7249,19 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             if (e.Modifiers == Keys.Control && e.KeyCode == (Keys.LButton | Keys.ShiftKey))
                 return;
+            if (e.Modifiers == (Keys.Control | Keys.Shift) && e.KeyCode == Keys.ShiftKey)
+                return;
 
             bool inListView = tabControlSubtitle.SelectedIndex == TabControlListView;
 
             if (e.KeyCode == Keys.Escape && !_cancelWordSpellCheck)
             {
                 _cancelWordSpellCheck = true;
+            }
+            else if (inListView && (Keys.Shift | Keys.Control) == e.Modifiers && e.KeyCode == Keys.B)
+            {
+                AutoBalanceLinesAndAllow2PlusLines();
+                e.SuppressKeyPress = true;
             }
             else if (audioVisualizer != null && audioVisualizer.Visible & e.KeyData == _waveformVerticalZoom)
             {
@@ -8059,6 +8084,43 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
+        private void AutoBalanceLinesAndAllow2PlusLines()
+        {
+            if (_subtitle.Paragraphs.Count > 0 && SubtitleListview1.SelectedItems.Count > 0)
+            {
+                MakeHistoryForUndo(_language.BeforeAutoBalanceSelectedLines);
+
+                foreach (ListViewItem item in SubtitleListview1.SelectedItems)
+                {
+                    Paragraph p = _subtitle.GetParagraphOrDefault(item.Index);
+                    if (p != null)
+                    {
+                        string s = Utilities.AutoBreakLineMoreThanTwoLines(p.Text, Configuration.Settings.General.SubtitleLineMaximumLength);
+                        if (s != p.Text)
+                        {
+                            p.Text = s;
+                            SubtitleListview1.SetText(item.Index, p.Text);
+                        }
+                        if (_subtitleAlternate != null)
+                        {
+                            Paragraph original = Utilities.GetOriginalParagraph(item.Index, p, _subtitleAlternate.Paragraphs);
+                            if (original != null)
+                            {
+                                string s2 = Utilities.AutoBreakLineMoreThanTwoLines(original.Text, Configuration.Settings.General.SubtitleLineMaximumLength);
+                                if (s2 != original.Text)
+                                {
+                                    original.Text = s;
+                                    SubtitleListview1.SetAlternateText(item.Index, original.Text);
+                                }
+                            }
+                        }
+                    }
+                }
+                ShowSource();
+                RefreshSelectedParagraph();
+            }
+        }
+
         private void AdjustDisplayTimeForSelectedLinesToolStripMenuItemClick(object sender, EventArgs e)
         {
             AdjustDisplayTime(true);
@@ -8227,7 +8289,7 @@ namespace Nikse.SubtitleEdit.Forms
                         int indexFixed = autoBreakUnbreakLines.FixedParagraphs.IndexOf(p);
                         if (indexFixed >= 0)
                         {
-                            p.Text = Utilities.AutoBreakLine(p.Text);
+                            p.Text = Utilities.AutoBreakLine(p.Text, 5, autoBreakUnbreakLines.MininumLength, autoBreakUnbreakLines.MergeLinesShorterThan);
                             SubtitleListview1.SetText(index, p.Text);
                         }
                     }
@@ -12265,11 +12327,16 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 toolStripMenuItemInsertUnicodeSymbol.Visible = toolStripMenuItemInsertUnicodeSymbol.DropDownItems.Count > 0;
                 toolStripSeparator26.Visible = toolStripMenuItemInsertUnicodeSymbol.DropDownItems.Count > 0;
+
+                superscriptToolStripMenuItem.Visible = tb.SelectionLength > 0;
+                subscriptToolStripMenuItem.Visible = tb.SelectionLength > 0;
             }
             else
             {
                 toolStripMenuItemInsertUnicodeSymbol.Visible = false;
                 toolStripSeparator26.Visible = false;
+                superscriptToolStripMenuItem.Visible = false;
+                subscriptToolStripMenuItem.Visible = false;
             }
         }
 
@@ -12914,6 +12981,45 @@ namespace Nikse.SubtitleEdit.Forms
                 RefreshSelectedParagraph();
                 SubtitleListview1.SelectedIndexChanged += SubtitleListview1_SelectedIndexChanged;
             }
+        }
+
+        private void SuperscriptToolStripMenuItemClick(object sender, EventArgs e)
+        {
+            TextBox tb;
+            if (textBoxListViewTextAlternate.Focused)
+                tb = textBoxListViewTextAlternate;
+            else
+                tb = textBoxListViewText;
+
+            string text = tb.SelectedText;
+            int selectionStart = tb.SelectionStart;
+            text = Utilities.ToSuperscript(text);
+            tb.SelectedText = text;
+            tb.SelectionStart = selectionStart;
+            tb.SelectionLength = text.Length;
+        }
+
+        private void SubscriptToolStripMenuItemClick(object sender, EventArgs e)
+        {
+            TextBox tb;
+            if (textBoxListViewTextAlternate.Focused)
+                tb = textBoxListViewTextAlternate;
+            else
+                tb = textBoxListViewText;
+
+            string text = tb.SelectedText;
+            int selectionStart = tb.SelectionStart;
+            text = Utilities.ToSubscript(text);
+            tb.SelectedText = text;
+            tb.SelectionStart = selectionStart;
+            tb.SelectionLength = text.Length;
+        }
+
+        private void ToolStripMenuItemImagePerFrameClick(object sender, EventArgs e)
+        {
+            var exportBdnXmlPng = new ExportPngXml();
+            exportBdnXmlPng.Initialize(_subtitle, "IMAGE/FRAME", _fileName);
+            exportBdnXmlPng.ShowDialog(this);
         }
     }
 }

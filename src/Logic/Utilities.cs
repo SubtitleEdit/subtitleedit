@@ -276,6 +276,117 @@ namespace Nikse.SubtitleEdit.Logic
             return true;
         }
 
+        public static string AutoBreakLineMoreThanTwoLines(string text, int maximumLineLength)
+        {
+            string s = AutoBreakLine(text, 0, maximumLineLength, 0);
+
+            var arr = s.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+            if ((arr.Length < 2 && arr[0].Length <= maximumLineLength) || (arr[0].Length <= maximumLineLength && arr[1].Length <= maximumLineLength))
+                return s;
+
+            s = s.Replace("</i> " + Environment.NewLine + "<i>", " ");
+            s = s.Replace("</i>" + Environment.NewLine + " <i>", " ");
+            s = s.Replace("</i>" + Environment.NewLine + "<i>", " ");
+            s = s.Replace(Environment.NewLine, " ");
+            s = s.Replace("   ", " ");
+            s = s.Replace("  ", " ");
+            s = s.Replace("  ", " ");
+            s = s.Replace("  ", " ");
+
+            var htmlTags = new Dictionary<int, string>();
+            var sb = new StringBuilder();
+            int six = 0;
+            while (six < s.Length)
+            {
+                string letter = s[six].ToString();
+                bool tagFound = letter == "<" && (s.Substring(six).StartsWith("<font ") || s.Substring(six).StartsWith("</font ") ||
+                                                s.Substring(six).StartsWith("</font") || s.Substring(six).StartsWith("</FONT") ||
+                                                s.Substring(six).StartsWith("</Font") || s.Substring(six).StartsWith("</Font") ||
+                                                s.Substring(six).StartsWith("<u") || s.Substring(six).StartsWith("</u") ||
+                                                s.Substring(six).StartsWith("<U") || s.Substring(six).StartsWith("</U") ||
+                                                s.Substring(six).StartsWith("<b") || s.Substring(six).StartsWith("</b") ||
+                                                s.Substring(six).StartsWith("<B") || s.Substring(six).StartsWith("</B") ||
+                                                s.Substring(six).StartsWith("<i") || s.Substring(six).StartsWith("</i") ||
+                                                s.Substring(six).StartsWith("<I") || s.Substring(six).StartsWith("<I"));
+                int endIndex = -1;
+                if (tagFound)
+                    endIndex = s.IndexOf(">", six + 1);
+
+                if (tagFound && endIndex > 0)
+                {
+                    string tag = s.Substring(six, endIndex - six + 1);
+                    s = s.Remove(six, tag.Length);
+                    if (htmlTags.ContainsKey(six))
+                        htmlTags[six] = htmlTags[six] + tag;
+                    else
+                        htmlTags.Add(six, tag);
+                }
+                else
+                {
+                    sb.Append(letter);
+                    six++;
+                }
+            }
+            s = sb.ToString();
+
+            var words = s.Split(' ');           
+            for (int numberOfLines = 3; numberOfLines < 99; numberOfLines++)
+            {
+                int average = s.Length / numberOfLines + 1;
+                for (int len = average; len < maximumLineLength; len++)
+                {
+                    List<int> list = SplitToX(words, numberOfLines, average);
+                    bool allOk = true;
+                    foreach (var lineLength in list)
+                    {
+                        if (lineLength > maximumLineLength)
+                            allOk = false;
+                    }
+                    if (allOk)
+                    {
+                        int index = 0;
+                        foreach(var item in list)
+                        {
+                            index += item;
+                            htmlTags.Add(index, Environment.NewLine);
+                        }
+                        s = ReInsertHtmlTags(s, htmlTags);
+                        s = s.Replace(" " + Environment.NewLine, Environment.NewLine);
+                        s = s.Replace(Environment.NewLine + " ", Environment.NewLine);
+                        s = s.Replace(Environment.NewLine + "</i>", "<i>" + Environment.NewLine);
+                        s = s.Replace(Environment.NewLine + "</font>", "</font>" + Environment.NewLine);
+                        return s.TrimEnd();
+                    }
+                }
+            }
+
+            return text;
+        }
+
+        private static List<int> SplitToX(string[] words, int count, int average)
+        {
+            var list = new List<int>();
+            int currentIdx = 0;
+            int currentCount = 0;
+            foreach (string word in words)
+            {
+                if (currentCount + word.Length + 3 > average)
+                {
+                    if (currentIdx < count)
+                    {
+                        list.Add(currentCount);
+                        currentIdx++;
+                        currentCount = 0;
+                    }
+                }
+                currentCount += word.Length + 1;
+            }
+            if (currentIdx < count)
+                list.Add(currentCount);
+            return list;
+        }
+
+
         public static string AutoBreakLine(string text, int mininumLength, int maximumLength, int mergeLinesShorterThan)
         {
             string s = text;
@@ -2494,6 +2605,208 @@ namespace Nikse.SubtitleEdit.Logic
                 sb.AppendLine(s);
             }
             return sb.ToString().Trim();
+        }
+
+        public static string ToSuperscript(string text)
+        {
+            var sb = new StringBuilder();
+            var superscript = new List<string>{
+                                                "⁰",
+                                                "¹",
+                                                "²", 
+                                                "³", 
+                                                "⁴", 
+                                                "⁵", 
+                                                "⁶", 
+                                                "⁷", 
+                                                "⁸", 
+                                                "⁹", 
+                                                "⁺", 
+                                                "⁻", 
+                                                "⁼", 
+                                                "⁽", 
+                                                "⁾", 
+                                                "ᵃ", 
+                                                "ᵇ", 
+                                                "ᶜ", 
+                                                "ᵈ", 
+                                                "ᵉ", 
+                                                "ᶠ", 
+                                                "ᵍ",
+                                                "ʰ",
+                                                "ⁱ",
+                                                "ʲ",
+                                                "ᵏ",
+                                                "ˡ",
+                                                "ᵐ",
+                                                "ⁿ",
+                                                "ᵒ",
+                                                "ᵖ",
+                                                "ʳ",
+                                                "ˢ",
+                                                "ᵗ",
+                                                "ᵘ",
+                                                "ᵛ",
+                                                "ʷ",
+                                                "ˣ",
+                                                "ʸ",
+                                                "ᶻ",
+                                                "ᴬ",
+                                                "ᴮ",
+                                                "ᴰ",
+                                                "ᴱ",
+                                                "ᴳ",
+                                                "ᴴ",
+                                                "ᴵ",
+                                                "ᴶ",
+                                                "ᴷ",
+                                                "ᴸ",
+                                                "ᴹ",
+                                                "ᴺ",
+                                                "ᴼ",
+                                                "ᴾ",
+                                                "ᴿ",
+                                                "ᵀ",
+                                                "ᵁ",
+                                                "ᵂ",
+                                            };
+            var normal = new List<string>{
+                                                "0", // "⁰"
+                                                "1", // "¹"
+                                                "2", // "²"
+                                                "3", // "³"
+                                                "4", // "⁴"
+                                                "5", // "⁵"
+                                                "6", // "⁶"
+                                                "7", // "⁷"
+                                                "8", // "⁸"
+                                                "9", // "⁹"
+                                                "+", // "⁺"
+                                                "-", // "⁻"
+                                                "=", // "⁼"
+                                                "(", // "⁽"
+                                                ")", // "⁾"
+                                                "a", // "ᵃ"
+                                                "b", // "ᵇ"
+                                                "c", // "ᶜ"
+                                                "d", // "ᵈ"
+                                                "e", // "ᵉ"
+                                                "f", // "ᶠ"
+                                                "g", // "ᵍ"
+                                                "h", // "ʰ"
+                                                "i", // "ⁱ"
+                                                "j", // "ʲ"
+                                                "k", // "ᵏ"
+                                                "l", // "ˡ"
+                                                "m", // "ᵐ"
+                                                "n", // "ⁿ"
+                                                "o", // "ᵒ"
+                                                "p", // "ᵖ"
+                                                "r", // "ʳ"
+                                                "s", // "ˢ"
+                                                "t", // "ᵗ"
+                                                "u", // "ᵘ"
+                                                "v", // "ᵛ"
+                                                "w", // "ʷ"
+                                                "x", // "ˣ"
+                                                "y", // "ʸ"
+                                                "z", // "ᶻ"
+                                                "A", // "ᴬ"
+                                                "B", // "ᴮ"
+                                                "D", // "ᴰ"
+                                                "E", // "ᴱ"
+                                                "G", // "ᴳ"
+                                                "H", // "ᴴ"
+                                                "I", // "ᴵ"
+                                                "J", // "ᴶ"
+                                                "K", // "ᴷ"
+                                                "L", // "ᴸ"
+                                                "M", // "ᴹ"
+                                                "N", // "ᴺ"
+                                                "O", // "ᴼ"
+                                                "P", // "ᴾ"
+                                                "R", // "ᴿ"
+                                                "T", // "ᵀ"
+                                                "U", // "ᵁ"
+                                                "W", // "ᵂ"
+                                            };
+            for (int i = 0; i < text.Length; i++)
+            {
+                string s = text.Substring(i, 1);
+                int index = normal.IndexOf(s);
+                if (index >= 0)
+                    sb.Append(superscript[index]);
+                else
+                    sb.Append(s);
+            }
+            return sb.ToString();
+        }
+
+        public static string ToSubscript(string text)
+        {
+            var sb = new StringBuilder();
+            var subcript = new List<string>{
+                                                "₀",
+                                                "₁",
+                                                "₂",
+                                                "₃",
+                                                "₄",
+                                                "₅",
+                                                "₆",
+                                                "₇",
+                                                "₈",
+                                                "₉",
+                                                "₊",
+                                                "₋",
+                                                "₌",
+                                                "₍",
+                                                "₎",
+                                                "ₐ",
+                                                "ₑ",
+                                                "ᵢ",
+                                                "ₒ",
+                                                "ᵣ",
+                                                "ᵤ",
+                                                "ᵥ",
+                                                "ₓ",
+                                            };
+            var normal = new List<string>
+                             {
+                                                "0",  // "₀"
+                                                "1",  // "₁"
+                                                "2",  // "₂"
+                                                "3",  // "₃"
+                                                "4",  // "₄"
+                                                "5",  // "₅"
+                                                "6",  // "₆"
+                                                "7",  // "₇"
+                                                "8",  // "₈"
+                                                "9",  // "₉"
+                                                "+",  // "₊"
+                                                "-",  // "₋"
+                                                "=",  // "₌"
+                                                "(",  // "₍"
+                                                ")",  // "₎"
+                                                "a",  // "ₐ"
+                                                "e",  // "ₑ"
+                                                "i",  // "ᵢ"
+                                                "o",  // "ₒ"
+                                                "r",  // "ᵣ"
+                                                "u",  // "ᵤ"
+                                                "v",  // "ᵥ"
+                                                "x",  // "ₓ"
+                                 
+                             };
+            for (int i = 0; i < text.Length; i++)
+            {
+                string s = text.Substring(i, 1);
+                int index = normal.IndexOf(s);
+                if (index >= 0)
+                    sb.Append(subcript[index]);
+                else
+                    sb.Append(s);
+            }
+            return sb.ToString();
         }
 
     }
