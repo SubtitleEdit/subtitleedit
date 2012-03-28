@@ -1,4 +1,4 @@
-﻿<OCRFixReplaceList>
+<OCRFixReplaceList>
   <WholeWords>
     <Word from="$COff$" to="scoffs" />
     <Word from="$ergei" to="Sergei" />
@@ -238,6 +238,7 @@
     <Word from="couldn'tjust" to="couldn't just" />
     <Word from="Couldyou" to="Could you" />
     <Word from="cp" to="op" />
+    <Word from="crappyjob" to="crappy job" />
     <Word from="CRAsHING" to="CRASHING" />
     <Word from="crder" to="order" />
     <Word from="Crowdcheers" to="Crowd cheers" />
@@ -336,6 +337,7 @@
     <Word from="ExacUy_" to="Exactly." />
     <Word from="excitedshrieking" to="excited shrieking" />
     <Word from="ExcLAllvls" to="EXCLAIMS" />
+    <Word from="expreusion" to="expression" />
     <Word from="Fathef" to="Father" />
     <Word from="fatherfigure" to="father figure" />
     <Word from="FBl" to="FBI" />
@@ -383,8 +385,10 @@
     <Word from="genercsity" to="generosity" />
     <Word from="generosityn" to="generosity&quot;" />
     <Word from="getjust" to="get just" />
+    <Word from="giﬂfriend" to="girlfriend" />
     <Word from="gir/" to="girl" />
     <Word from="gir/s'boarding" to="girls' boarding" />
+    <Word from="giris" to="girls" />
     <Word from="gLlyS" to="guys" />
     <Word from="glum_" to="glum." />
     <Word from="gnyone" to="anyone" />
@@ -887,6 +891,7 @@
     <Word from="Numbertwo" to="Number two" />
     <Word from="oan't" to="can't" />
     <Word from="oan'tjust" to="can't just" />
+    <Word from="objecl" to="object" />
     <Word from="occultpowerand" to="occult power and" />
     <Word from="Ocps" to="Oops" />
     <Word from="ofa" to="of a" />
@@ -894,6 +899,7 @@
     <Word from="ofall" to="of all" />
     <Word from="ofcourse" to="of course" />
     <Word from="ofeither" to="of either" />
+    <Word from="Offioer's" to="Officer's" />
     <Word from="offreedom" to="of freedom" />
     <Word from="offthe" to="off the" />
     <Word from="offto" to="off to" />
@@ -953,6 +959,7 @@
     <Word from="orglory" to="or glory" />
     <Word from="orjust" to="or just" />
     <Word from="Orjust" to="Or just" />
+    <Word from="Orthat" to="Or that" />
     <Word from="Orwould" to="Or would" />
     <Word from="Othenzvise" to="Otherwise" />
     <Word from="our joumey" to="our journey" />
@@ -1033,6 +1040,7 @@
     <Word from="scund" to="sound" />
     <Word from="S'EOp" to="Stop" />
     <Word from="severa/parents" to="several parents" />
+    <Word from="sfill" to="still" />
     <Word from="shallrise" to="shall rise" />
     <Word from="sHATTERING" to="SHATTERING" />
     <Word from="shcws" to="shows" />
@@ -1207,6 +1215,7 @@
     <Word from="V\/hy" to="Why" />
     <Word from="v\/ith" to="with" />
     <Word from="v\/on't" to="won't" />
+    <Word from="valedictolian" to="valedictorian" />
     <Word from="vcice" to="voice" />
     <Word from="veiy" to="very" />
     <Word from="Véry" to="Very" />
@@ -1256,6 +1265,8 @@
     <Word from="wculd" to="would" />
     <Word from="We//" to="Well" />
     <Word from="We/came" to="Welcome" />
+    <Word from="we/come" to="welcome" />
+    <Word from="We/come" to="Welcome" />
     <Word from="We/I" to="Well" />
     <Word from="we'II" to="we'll" />
     <Word from="We'II" to="We'll" />
@@ -1294,6 +1305,7 @@
     <Word from="wnat's" to="what's" />
     <Word from="Wno" to="Who" />
     <Word from="Wo/f" to="Wolf" />
+    <Word from="woﬂd" to="world" />
     <Word from="WOI'1't" to="won't" />
     <Word from="wondernobody" to="wonder nobody" />
     <Word from="won'T" to="won't" />
@@ -1301,6 +1313,7 @@
     <Word from="won'tforget" to="won't forget" />
     <Word from="won'tletitbring" to="won't let it bring" />
     <Word from="Wo're" to="We're" />
+    <Word from="worfd" to="world" />
     <Word from="workyou" to="work you" />
     <Word from="wouIdn't" to="wouldn't" />
     <Word from="wouldn'!" to="wouldn't" />
@@ -1355,6 +1368,7 @@
     <Word from="yourjockey" to="your jockey" />
     <Word from="yourname" to="your name" />
     <Word from="you'ro" to="you're" />
+    <Word from="yourpoorleg" to="your poor leg" />
     <Word from="yourvveak" to="your weak" />
     <Word from="you'va" to="you've" />
     <Word from="You'va" to="You've" />
@@ -1365,18 +1379,8 @@
     <Word from="Yuu've" to="You've" />
     <Word from="z'housand" to="thousand" />
     <Word from="zlPPING" to="ZIPPING" />
-    <Word from="Offioer's" to="Officer's" />
-    <Word from="expreusion" to="expression" />
-    <Word from="Orthat" to="Or that" />
-    <Word from="sfill" to="still" />
-    <Word from="objecl" to="object" />
-    <Word from="yourpoorleg" to="your poor leg" />
-    <Word from="worfd" to="world" />
-    <Word from="crappyjob" to="crappy job" />
-    <Word from="giris" to="girls" />
-    <Word from="giﬂfriend" to="girlfriend" />
-    <Word from="valedictolian" to="valedictorian" />
-    <Word from="woﬂd" to="world" />
+    <Word from="unfilyou" to="until you" />
+    <Word from="VVhy" to="Why" />
   </WholeWords>
   <PartialWordsAlways>
     <!-- Will be replaced always -->
@@ -1425,6 +1429,16 @@
     <LinePart from=" aren'tyou" to=" aren't you" />
     <LinePart from=" doesn '1'" to=" doesn't" />
     <LinePart from=" I']I " to=" I'll " />
+    <LinePart from=" L am" to=" I am" />
+    <LinePart from=" L can" to=" I can" />
+    <LinePart from=" L don't " to=" I don't " />
+    <LinePart from=" L hate " to=" I hate " />
+    <LinePart from=" L have " to=" I have " />
+    <LinePart from=" L like " to=" I like " />
+    <LinePart from=" L will" to=" I will" />
+    <LinePart from=" L would" to=" I would" />
+    <LinePart from=" L'll " to=" I'll " />
+    <LinePart from=" L've " to=" I've " />
     <LinePart from=" 's " to="'s " />
     <LinePart from=" shou/dn '1 " to=" shouldn't " />
     <LinePart from="/ did" to="I did" />
@@ -1516,6 +1530,7 @@
     <LinePart from="shouldn 't" to="shouldn't" />
     <LinePart from="sta y" to="stay" />
     <LinePart from="Sta y" to="Stay" />
+    <LinePart from="SWO rd" to="Sword" />
     <LinePart from="taka care" to="take care" />
     <LinePart from="Taka care" to="Take care" />
     <LinePart from="the Hrst" to="the first" />
