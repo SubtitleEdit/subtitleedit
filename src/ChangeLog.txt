@@ -1,6 +1,6 @@
 Subtitle Edit Changelog
 
-3.2.6 (soon)
+3.2.6 (29th March 2012)
  * NEW:
    * Added new subtitle formats - now 100 formats supported
  * IMPROVED:
