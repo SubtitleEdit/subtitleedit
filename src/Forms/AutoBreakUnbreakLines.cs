@@ -98,7 +98,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         public int MergeLinesShorterThan
         {
-            get 
+            get
             {
                 if (Configuration.Settings.Tools.MergeLinesShorterThan > MininumLength)
                     return MininumLength - 1;

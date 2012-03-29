@@ -1429,7 +1429,7 @@ namespace Nikse.SubtitleEdit.Logic
                     settings.Shortcuts.MainAdjustSetEndNextStartAndGoToNext = subNode.InnerText;
                 subNode = node.SelectSingleNode("MainAdjustStartDownEndUpAndGoToNext");
                 if (subNode != null)
-                    settings.Shortcuts.MainAdjustStartDownEndUpAndGoToNext = subNode.InnerText;               
+                    settings.Shortcuts.MainAdjustStartDownEndUpAndGoToNext = subNode.InnerText;
                 subNode = node.SelectSingleNode("MainAdjustSetStart");
                 if (subNode != null)
                     settings.Shortcuts.MainAdjustSetStart = subNode.InnerText;
@@ -1660,7 +1660,7 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("MergeLinesShorterThan", settings.Tools.MergeLinesShorterThan.ToString());
             textWriter.WriteElementString("MusicSymbol", settings.Tools.MusicSymbol);
             textWriter.WriteElementString("MusicSymbolToReplace", settings.Tools.MusicSymbolToReplace);
-            textWriter.WriteElementString("UnicodeSymbolsToInsert", settings.Tools.UnicodeSymbolsToInsert);            
+            textWriter.WriteElementString("UnicodeSymbolsToInsert", settings.Tools.UnicodeSymbolsToInsert);
             textWriter.WriteElementString("SpellCheckAutoChangeNames", settings.Tools.SpellCheckAutoChangeNames.ToString());
             textWriter.WriteElementString("SpellCheckOneLetterWords", settings.Tools.SpellCheckOneLetterWords.ToString());
             textWriter.WriteElementString("OcrFixUseHardcodedRules", settings.Tools.OcrFixUseHardcodedRules.ToString());
@@ -1820,7 +1820,7 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("MainAdjustViaEndAutoStartAndGoToNext", settings.Shortcuts.MainAdjustViaEndAutoStartAndGoToNext);
             textWriter.WriteElementString("MainAdjustSetStartAutoDurationAndGoToNext", settings.Shortcuts.MainAdjustSetStartAutoDurationAndGoToNext);
             textWriter.WriteElementString("MainAdjustSetEndNextStartAndGoToNext", settings.Shortcuts.MainAdjustSetEndNextStartAndGoToNext);
-            textWriter.WriteElementString("MainAdjustStartDownEndUpAndGoToNext", settings.Shortcuts.MainAdjustStartDownEndUpAndGoToNext);                        
+            textWriter.WriteElementString("MainAdjustStartDownEndUpAndGoToNext", settings.Shortcuts.MainAdjustStartDownEndUpAndGoToNext);
             textWriter.WriteElementString("MainAdjustSetStart", settings.Shortcuts.MainAdjustSetStart);
             textWriter.WriteElementString("MainAdjustSetStartOnly", settings.Shortcuts.MainAdjustSetStartOnly);
             textWriter.WriteElementString("MainAdjustSetEnd", settings.Shortcuts.MainAdjustSetEnd);

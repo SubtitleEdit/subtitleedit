@@ -329,7 +329,7 @@ namespace Nikse.SubtitleEdit.Logic
             }
             s = sb.ToString();
 
-            var words = s.Split(' ');           
+            var words = s.Split(' ');
             for (int numberOfLines = 3; numberOfLines < 99; numberOfLines++)
             {
                 int average = s.Length / numberOfLines + 1;
@@ -2613,25 +2613,25 @@ namespace Nikse.SubtitleEdit.Logic
             var superscript = new List<string>{
                                                 "⁰",
                                                 "¹",
-                                                "²", 
-                                                "³", 
-                                                "⁴", 
-                                                "⁵", 
-                                                "⁶", 
-                                                "⁷", 
-                                                "⁸", 
-                                                "⁹", 
-                                                "⁺", 
-                                                "⁻", 
-                                                "⁼", 
-                                                "⁽", 
-                                                "⁾", 
-                                                "ᵃ", 
-                                                "ᵇ", 
-                                                "ᶜ", 
-                                                "ᵈ", 
-                                                "ᵉ", 
-                                                "ᶠ", 
+                                                "²",
+                                                "³",
+                                                "⁴",
+                                                "⁵",
+                                                "⁶",
+                                                "⁷",
+                                                "⁸",
+                                                "⁹",
+                                                "⁺",
+                                                "⁻",
+                                                "⁼",
+                                                "⁽",
+                                                "⁾",
+                                                "ᵃ",
+                                                "ᵇ",
+                                                "ᶜ",
+                                                "ᵈ",
+                                                "ᵉ",
+                                                "ᶠ",
                                                 "ᵍ",
                                                 "ʰ",
                                                 "ⁱ",
@@ -2795,7 +2795,7 @@ namespace Nikse.SubtitleEdit.Logic
                                                 "u",  // "ᵤ"
                                                 "v",  // "ᵥ"
                                                 "x",  // "ₓ"
-                                 
+
                              };
             for (int i = 0; i < text.Length; i++)
             {
