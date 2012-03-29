@@ -414,14 +414,14 @@ namespace Nikse.SubtitleEdit.Forms
                         int lastFrame = imagesSavedCount;
                         int startFrame = (int)Math.Round(param.P.StartTime.TotalMilliseconds / (1000.0 / param.FramesPerSeconds));
                         var empty = new Bitmap(1, 1); //var empty = new Bitmap(param.ScreenWidth, param.ScreenHeight);
-                        
+
                         // Save empty picture for each frame up to start frame
                         for (int k=lastFrame+1; k<startFrame; k++)
                         {
                             string numberString = string.Format("{0:00000}", k);
                             string fileName = Path.Combine(folderBrowserDialog1.SelectedPath, numberString + "." + comboBoxImageFormat.Text.ToLower());
                             empty.Save(fileName, imageFormat);
-                            imagesSavedCount++;                            
+                            imagesSavedCount++;
                         }
 
                         int endFrame = (int)Math.Round(param.P.EndTime.TotalMilliseconds / (1000.0 / param.FramesPerSeconds));
@@ -429,12 +429,12 @@ namespace Nikse.SubtitleEdit.Forms
                         Graphics g = Graphics.FromImage(fullSize);
                         g.DrawImage(param.Bitmap, (param.ScreenWidth - param.Bitmap.Width) / 2, param.ScreenHeight - (param.Bitmap.Height + param.BottomMargin));
                         g.Dispose();
-                        
-                        
+
+
                         if (imagesSavedCount > startFrame)
                             startFrame = imagesSavedCount; // no overlapping
 
-                        // Save sub picture for each frame in duration                        
+                        // Save sub picture for each frame in duration
                         for (int k = startFrame; k <= endFrame; k++)
                         {
                             string numberString = string.Format("{0:00000}", k);

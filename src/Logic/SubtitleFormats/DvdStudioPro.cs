@@ -139,7 +139,7 @@ $HorzAlign          =   Center
                     else
                     {
                         sb.Append(text.Substring(i, 1));
-                    }                    
+                    }
                 }
             }
             return sb.ToString();
