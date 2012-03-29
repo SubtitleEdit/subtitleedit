@@ -1858,7 +1858,7 @@ namespace Nikse.SubtitleEdit.Logic
             var sb = new StringBuilder();
 
             if (uppercase)
-                sb.Append(Configuration.Settings.General.UppercaseLetters);
+                sb.Append(Configuration.Settings.General.UppercaseLetters.ToUpper());
 
             if (lowercase)
                 sb.Append(Configuration.Settings.General.UppercaseLetters.ToLower());
