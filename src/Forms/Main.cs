@@ -8560,12 +8560,12 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void setMinimalDisplayTimeDifferenceToolStripMenuItem_Click(object sender, EventArgs e)
+        private void SetMinimalDisplayTimeDifferenceToolStripMenuItemClick(object sender, EventArgs e)
         {
-            SetMinimumDisplayTimeBetweenParagraphs setMinDisplayDiff = new SetMinimumDisplayTimeBetweenParagraphs();
+            var setMinDisplayDiff = new SetMinimumDisplayTimeBetweenParagraphs();
             _formPositionsAndSizes.SetPositionAndSize(setMinDisplayDiff);
             setMinDisplayDiff.Initialize(_subtitle);
-            if (setMinDisplayDiff.ShowDialog() == System.Windows.Forms.DialogResult.OK && setMinDisplayDiff.FixCount > 0)
+            if (setMinDisplayDiff.ShowDialog() == DialogResult.OK && setMinDisplayDiff.FixCount > 0)
             {
                 MakeHistoryForUndo(_language.BeforeSetMinimumDisplayTimeBetweenParagraphs);
                 _subtitle.Paragraphs.Clear();
@@ -8581,33 +8581,25 @@ namespace Nikse.SubtitleEdit.Forms
             _formPositionsAndSizes.SavePositionAndSize(setMinDisplayDiff);
         }
 
-        private void toolStripMenuItemImportText_Click(object sender, EventArgs e)
+        private void ToolStripMenuItemImportTextClick(object sender, EventArgs e)
         {
-            if (ContinueNewOrExit())
+            var importText = new ImportText();
+            if (importText.ShowDialog(this) == DialogResult.OK)
             {
-                ImportText importText = new ImportText();
-                if (importText.ShowDialog(this) == System.Windows.Forms.DialogResult.OK)
+                if (ContinueNewOrExit())
                 {
-                    FileNew();
-
+                    MakeHistoryForUndo(_language.BeforeImportText);
+                    ResetSubtitle();
                     if (!string.IsNullOrEmpty(importText.VideoFileName))
                         OpenVideo(importText.VideoFileName);
 
-                    SyncPointsSync syncPointSync = new SyncPointsSync();
-                    syncPointSync.Initialize(importText.FixedSubtitle, _fileName, importText.VideoFileName, _videoAudioTrackNumber);
-                    if (syncPointSync.ShowDialog(this) == System.Windows.Forms.DialogResult.OK)
-                    {
-                        ResetSubtitle();
-
-                        _subtitleListViewIndex = -1;
-                        MakeHistoryForUndo(_language.BeforeImportText);
-                        _subtitle = importText.FixedSubtitle;
-                        _subtitle.CalculateFrameNumbersFromTimeCodesNoCheck(CurrentFrameRate);
-                        ShowStatus(_language.TextImported);
-                        ShowSource();
-                        SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
-                    }
-                    _videoFileName = syncPointSync.VideoFileName;
+                    ResetSubtitle();
+                    _subtitleListViewIndex = -1;
+                    _subtitle = importText.FixedSubtitle;
+                    _subtitle.CalculateFrameNumbersFromTimeCodesNoCheck(CurrentFrameRate);
+                    ShowStatus(_language.TextImported);
+                    ShowSource();
+                    SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
                 }
             }
         }

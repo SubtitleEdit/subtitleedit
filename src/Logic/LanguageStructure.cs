@@ -477,7 +477,6 @@
             public string Auto { get; set; }
             public string Fixed { get; set; }
             public string Refresh { get; set; }
-            public string Next { get; set; }
             public string TextFiles { get; set; }
             public string PreviewLinesModifiedX { get; set; }
         }

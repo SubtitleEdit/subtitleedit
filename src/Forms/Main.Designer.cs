@@ -919,7 +919,7 @@
             this.toolStripMenuItemImportText.Name = "toolStripMenuItemImportText";
             this.toolStripMenuItemImportText.Size = new System.Drawing.Size(334, 22);
             this.toolStripMenuItemImportText.Text = "Import text...";
-            this.toolStripMenuItemImportText.Click += new System.EventHandler(this.toolStripMenuItemImportText_Click);
+            this.toolStripMenuItemImportText.Click += new System.EventHandler(this.ToolStripMenuItemImportTextClick);
             // 
             // toolStripMenuItemImportTimeCodes
             // 
@@ -1211,7 +1211,7 @@
             this.setMinimumDisplayTimeBetweenParagraphsToolStripMenuItem.Name = "setMinimumDisplayTimeBetweenParagraphsToolStripMenuItem";
             this.setMinimumDisplayTimeBetweenParagraphsToolStripMenuItem.Size = new System.Drawing.Size(346, 22);
             this.setMinimumDisplayTimeBetweenParagraphsToolStripMenuItem.Text = "Minimum display time between paragraphs...";
-            this.setMinimumDisplayTimeBetweenParagraphsToolStripMenuItem.Click += new System.EventHandler(this.setMinimalDisplayTimeDifferenceToolStripMenuItem_Click);
+            this.setMinimumDisplayTimeBetweenParagraphsToolStripMenuItem.Click += new System.EventHandler(this.SetMinimalDisplayTimeDifferenceToolStripMenuItemClick);
             // 
             // toolStripMenuItem1
             // 

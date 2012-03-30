@@ -1025,6 +1025,9 @@
     <Content Include="Languages\eu-ES.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Languages\fi-FI.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Languages\fr-FR.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

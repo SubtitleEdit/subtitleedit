@@ -554,7 +554,6 @@ namespace Nikse.SubtitleEdit.Logic
                 Auto = "Auto",
                 Fixed = "Fixed",
                 Refresh = "&Refresh",
-                Next = "&Next >>",
                 TextFiles = "Text files",
                 PreviewLinesModifiedX = "Preview - paragraphs modified: {0}",
             };
