@@ -214,6 +214,25 @@ eu.types_custom=Norbere ezarpena
 eu.types_default=Berezko ezarpena
 
 
+; Finnish
+fi.comp_translations=Translations
+fi.msg_AppIsRunning=Setup has detected that Subtitle Edit is currently running.%n%nPlease close all instances of it now, then click OK to continue, or Cancel to exit.
+fi.msg_AppIsRunningUninstall=Uninstall has detected that Subtitle Edit is currently running.%n%nPlease close all instances of it now, then click OK to continue, or Cancel to exit.
+fi.msg_AskToDownNET=Subtitle Edit requires the .NET Framework 2.0. Please download and install the .NET Framework and run setup again.%n%nDo you want to download the .NET Framework 2.0 now?
+fi.msg_DeleteSettings=Do you also want to delete Subtitle Edit's settings and any custom changes you made in the dictionaries?%n%nIf you plan on reinstalling Subtitle Edit you do not have to delete them.
+fi.msg_OptimizingPerformance=Optimizing performance...
+fi.msg_SetupIsRunningWarning=Subtitle Edit Setup is already running!
+fi.run_VisitWebsite=Visit Subtitle Edit's Website
+fi.sm_com_Changelog=Subtitle Edit's Changelog
+fi.tsk_AllUsers=For all users
+fi.tsk_CurrentUser=For the current user only
+fi.tsk_Other=Other:
+fi.tsk_ResetDictionaries=Reset Dictionaries and delete any custom names
+fi.tsk_ResetSettings=Reset Subtitle Edit's settings
+fi.types_custom=Custom installation
+fi.types_default=Default installation
+
+
 ; French
 fr.comp_translations=Translations
 fr.msg_AppIsRunning=Setup has detected that Subtitle Edit is currently running.%n%nPlease close all instances of it now, then click OK to continue, or Cancel to exit.
