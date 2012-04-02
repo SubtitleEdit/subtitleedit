@@ -215,22 +215,22 @@ eu.types_default=Berezko ezarpena
 
 
 ; Finnish
-fi.comp_translations=Translations
-fi.msg_AppIsRunning=Setup has detected that Subtitle Edit is currently running.%n%nPlease close all instances of it now, then click OK to continue, or Cancel to exit.
-fi.msg_AppIsRunningUninstall=Uninstall has detected that Subtitle Edit is currently running.%n%nPlease close all instances of it now, then click OK to continue, or Cancel to exit.
-fi.msg_AskToDownNET=Subtitle Edit requires the .NET Framework 2.0. Please download and install the .NET Framework and run setup again.%n%nDo you want to download the .NET Framework 2.0 now?
-fi.msg_DeleteSettings=Do you also want to delete Subtitle Edit's settings and any custom changes you made in the dictionaries?%n%nIf you plan on reinstalling Subtitle Edit you do not have to delete them.
-fi.msg_OptimizingPerformance=Optimizing performance...
-fi.msg_SetupIsRunningWarning=Subtitle Edit Setup is already running!
-fi.run_VisitWebsite=Visit Subtitle Edit's Website
-fi.sm_com_Changelog=Subtitle Edit's Changelog
-fi.tsk_AllUsers=For all users
-fi.tsk_CurrentUser=For the current user only
-fi.tsk_Other=Other:
-fi.tsk_ResetDictionaries=Reset Dictionaries and delete any custom names
-fi.tsk_ResetSettings=Reset Subtitle Edit's settings
-fi.types_custom=Custom installation
-fi.types_default=Default installation
+fi.comp_translations=Käännökset
+fi.msg_AppIsRunning=Asennusohjelma on havainnut, että Subtitle Edit on parhaillaan käynnissä.%n%nSulje kaikki tapaukset nyt, sitten klikkaa OK jatkaaksesi tai Peruuta poistuaksesi.
+fi.msg_AppIsRunningUninstall=Asennuksen purkuohjelma on havainnut, että Subtitle Edit on parhaillaan käynnissä.%n%nSulje kaikki tapaukset nyt, sitten klikkaa OK jatkaaksesi tai Peruuta poistuaksesi.
+fi.msg_AskToDownNET=Subtitle Edit tarvitsee .NET Framework 2.0. Lataa ja asenna .NET Framework ja suorita asennusohjelma uudelleen.%n%nHaluatko ladata .NET Framework 2.0 nyt?
+fi.msg_DeleteSettings=Haluatko myös poistaa Subtitle Edit'n asetukset ja mukautetut sanakirjoihin tehdyt muutokset?%n%nJos aiot uudelleenasentaa Subtitle Edit'n sinun ei tarvitse poistaa niitä.
+fi.msg_OptimizingPerformance=Optimoidaan suorituskykyä...
+fi.msg_SetupIsRunningWarning=Subtitle Edit'n asennusohjelma on jo käynnissä!
+fi.run_VisitWebsite=Vieraile Subtitle Edit'n verkkosivuilla
+fi.sm_com_Changelog=Subtitle Edit'n muutosloki
+fi.tsk_AllUsers=Kaikille käyttäjille
+fi.tsk_CurrentUser=Vain nykyiselle käyttäjälle
+fi.tsk_Other=Muuta:
+fi.tsk_ResetDictionaries=Tyhjennä sanakirjat ja poista kaikki mukautetut nimet
+fi.tsk_ResetSettings=Palauta Subtitle Edit'n asetukset
+fi.types_custom=Mukautettu asennus
+fi.types_default=Oletus asennus
 
 
 ; French
