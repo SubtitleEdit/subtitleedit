@@ -937,8 +937,6 @@ namespace Nikse.SubtitleEdit.Forms
                     int idx = p.Text.IndexOf("- ", 2);
                     while (idx > 0)
                     {
-                        if (p.Text.ToLower().StartsWith("<i>"))
-                            idx = p.Text.IndexOf("- ", 5);
                         if (idx > 0 && idx < p.Text.Length - 2)
                         {
                             string before = string.Empty;
