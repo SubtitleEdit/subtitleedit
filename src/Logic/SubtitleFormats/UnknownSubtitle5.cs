@@ -30,8 +30,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public override bool IsMine(List<string> lines, string fileName)
         {
-            Subtitle subtitle = new Subtitle();
-            this.LoadSubtitle(subtitle, lines, fileName);
+            var subtitle = new Subtitle();
+            LoadSubtitle(subtitle, lines, fileName);
             return subtitle.Paragraphs.Count > 0;
         }
 
@@ -41,7 +41,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 "<?xml version=\"1.0\" encoding=\"utf-8\" ?>" + Environment.NewLine +
                 "<transcript/>";
 
-            XmlDocument xml = new XmlDocument();
+            var xml = new XmlDocument();
             xml.LoadXml(xmlStructure);
 
             foreach (Paragraph p in subtitle.Paragraphs)
@@ -61,9 +61,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 xml.DocumentElement.AppendChild(paragraph);
             }
 
-            MemoryStream ms = new MemoryStream();
-            XmlTextWriter writer = new XmlTextWriter(ms, Encoding.UTF8);
-            writer.Formatting = Formatting.Indented;
+            var ms = new MemoryStream();
+            var writer = new XmlTextWriter(ms, Encoding.UTF8) {Formatting = Formatting.Indented};
             xml.Save(writer);
             return Encoding.UTF8.GetString(ms.ToArray()).Trim();
         }
@@ -72,14 +71,14 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         {
             _errorCount = 0;
 
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             lines.ForEach(line => sb.AppendLine(line));
 
             string allText = sb.ToString();
             if (!allText.Contains("<text") || !allText.Contains("start="))
                 return;
 
-            XmlDocument xml = new XmlDocument();
+            var xml = new XmlDocument();
             try
             {
                 xml.LoadXml(allText);

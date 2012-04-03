@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.Drawing.Imaging;
 using System.Drawing.Text;
 using System.Globalization;
 using System.IO;
@@ -304,6 +305,12 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 else if (_exportType == "IMAGE/FRAME")
                 {
+                    var empty = new Bitmap(width, height);
+                    imagesSavedCount++;
+                    string numberString = string.Format("{0:00000}", imagesSavedCount);
+                    string fileName = Path.Combine(folderBrowserDialog1.SelectedPath, numberString + "." + comboBoxImageFormat.Text.ToLower());
+                    empty.Save(fileName, ImageFormat);
+ 
                     MessageBox.Show(string.Format(Configuration.Settings.Language.ExportPngXml.XImagesSavedInY, imagesSavedCount, folderBrowserDialog1.SelectedPath));
                 }
                 else
@@ -371,21 +378,7 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         string numberString = string.Format("IMAGE{0:000}", i);
                         string fileName = Path.Combine(folderBrowserDialog1.SelectedPath, numberString + "." + comboBoxImageFormat.Text.ToLower());
-                        var imageFormat = System.Drawing.Imaging.ImageFormat.Png;
-                        if (comboBoxImageFormat.SelectedIndex == 0)
-                            imageFormat = System.Drawing.Imaging.ImageFormat.Bmp;
-                        else if (comboBoxImageFormat.SelectedIndex == 1)
-                            imageFormat = System.Drawing.Imaging.ImageFormat.Exif;
-                        else if (comboBoxImageFormat.SelectedIndex == 2)
-                            imageFormat = System.Drawing.Imaging.ImageFormat.Gif;
-                        else if (comboBoxImageFormat.SelectedIndex == 3)
-                            imageFormat = System.Drawing.Imaging.ImageFormat.Jpeg;
-                        else if (comboBoxImageFormat.SelectedIndex == 4)
-                            imageFormat = System.Drawing.Imaging.ImageFormat.Png;
-                        else if (comboBoxImageFormat.SelectedIndex == 5)
-                            imageFormat = System.Drawing.Imaging.ImageFormat.Tiff;
-
-                        param.Bitmap.Save(fileName, imageFormat);
+                        param.Bitmap.Save(fileName, ImageFormat);
                         imagesSavedCount++;
 
                         //RACE001.TIF 00;00;02;02 00;00;03;15 000 000 720 480
@@ -399,29 +392,25 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     if (!param.Saved)
                     {
-                        var imageFormat = System.Drawing.Imaging.ImageFormat.Png;
-                        if (comboBoxImageFormat.SelectedIndex == 0)
-                            imageFormat = System.Drawing.Imaging.ImageFormat.Bmp;
-                        else if (comboBoxImageFormat.SelectedIndex == 1)
-                            imageFormat = System.Drawing.Imaging.ImageFormat.Exif;
-                        else if (comboBoxImageFormat.SelectedIndex == 2)
-                            imageFormat = System.Drawing.Imaging.ImageFormat.Gif;
-                        else if (comboBoxImageFormat.SelectedIndex == 3)
-                            imageFormat = System.Drawing.Imaging.ImageFormat.Jpeg;
-                        else if (comboBoxImageFormat.SelectedIndex == 5)
-                            imageFormat = System.Drawing.Imaging.ImageFormat.Tiff;
+                        var imageFormat = ImageFormat;
 
                         int lastFrame = imagesSavedCount;
                         int startFrame = (int)Math.Round(param.P.StartTime.TotalMilliseconds / (1000.0 / param.FramesPerSeconds));
-                        var empty = new Bitmap(1, 1); //var empty = new Bitmap(param.ScreenWidth, param.ScreenHeight);
+                        var empty = new Bitmap(param.ScreenWidth, param.ScreenHeight);
 
-                        // Save empty picture for each frame up to start frame
-                        for (int k=lastFrame+1; k<startFrame; k++)
+                        if (imagesSavedCount == 0 && checkBoxSkipEmptyFrameAtStart.Checked)
                         {
-                            string numberString = string.Format("{0:00000}", k);
-                            string fileName = Path.Combine(folderBrowserDialog1.SelectedPath, numberString + "." + comboBoxImageFormat.Text.ToLower());
-                            empty.Save(fileName, imageFormat);
-                            imagesSavedCount++;
+                        }
+                        else
+                        {
+                            // Save empty picture for each frame up to start frame
+                            for (int k = lastFrame + 1; k < startFrame; k++)
+                            {
+                                string numberString = string.Format("{0:00000}", k);
+                                string fileName = Path.Combine(folderBrowserDialog1.SelectedPath, numberString + "." + comboBoxImageFormat.Text.ToLower());
+                                empty.Save(fileName, imageFormat);
+                                imagesSavedCount++;
+                            }                            
                         }
 
                         int endFrame = (int)Math.Round(param.P.EndTime.TotalMilliseconds / (1000.0 / param.FramesPerSeconds));
@@ -429,7 +418,6 @@ namespace Nikse.SubtitleEdit.Forms
                         Graphics g = Graphics.FromImage(fullSize);
                         g.DrawImage(param.Bitmap, (param.ScreenWidth - param.Bitmap.Width) / 2, param.ScreenHeight - (param.Bitmap.Height + param.BottomMargin));
                         g.Dispose();
-
 
                         if (imagesSavedCount > startFrame)
                             startFrame = imagesSavedCount; // no overlapping
@@ -452,7 +440,7 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         string numberString = string.Format("{0:0000}", i);
                         string fileName = Path.Combine(folderBrowserDialog1.SelectedPath, numberString + ".png");
-                        param.Bitmap.Save(fileName, System.Drawing.Imaging.ImageFormat.Png);
+                        param.Bitmap.Save(fileName, ImageFormat.Png);
                         imagesSavedCount++;
 
                         //<Event InTC="00:00:24:07" OutTC="00:00:31:13" Forced="False">
@@ -471,6 +459,27 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
             return imagesSavedCount;
+        }
+
+        private ImageFormat ImageFormat
+        {
+            get
+            {
+                var imageFormat = ImageFormat.Png;
+                if (comboBoxImageFormat.SelectedIndex == 0)
+                    imageFormat = ImageFormat.Bmp;
+                else if (comboBoxImageFormat.SelectedIndex == 1)
+                    imageFormat = ImageFormat.Exif;
+                else if (comboBoxImageFormat.SelectedIndex == 2)
+                    imageFormat = ImageFormat.Gif;
+                else if (comboBoxImageFormat.SelectedIndex == 3)
+                    imageFormat = ImageFormat.Jpeg;
+                else if (comboBoxImageFormat.SelectedIndex == 4)
+                    imageFormat = ImageFormat.Png;
+                else if (comboBoxImageFormat.SelectedIndex == 5)
+                    imageFormat = ImageFormat.Tiff;
+                return imageFormat;
+            }
         }
 
         private string FormatFabTime(TimeCode time, MakeBitmapParameter param)
@@ -854,6 +863,8 @@ namespace Nikse.SubtitleEdit.Forms
                 comboBoxBottomMargin.Visible = false;
                 labelBottomMargin.Visible = false;
             }
+
+            checkBoxSkipEmptyFrameAtStart.Visible = exportType == "IMAGE/FRAME";
 
             foreach (var x in FontFamily.Families)
             {
