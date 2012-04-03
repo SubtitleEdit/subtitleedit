@@ -990,7 +990,6 @@
             this.toolStripMenuItemImagePerFrame.Name = "toolStripMenuItemImagePerFrame";
             this.toolStripMenuItemImagePerFrame.Size = new System.Drawing.Size(258, 22);
             this.toolStripMenuItemImagePerFrame.Text = "Image per frame...";
-            this.toolStripMenuItemImagePerFrame.Visible = false;
             this.toolStripMenuItemImagePerFrame.Click += new System.EventHandler(this.ToolStripMenuItemImagePerFrameClick);
             // 
             // pACScreenElectronicsToolStripMenuItem

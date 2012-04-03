@@ -34,6 +34,10 @@
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.groupBoxImageSettings = new System.Windows.Forms.GroupBox();
+            this.comboBoxBottomMargin = new System.Windows.Forms.ComboBox();
+            this.labelBottomMargin = new System.Windows.Forms.Label();
+            this.labelFrameRate = new System.Windows.Forms.Label();
+            this.comboBoxFramerate = new System.Windows.Forms.ComboBox();
             this.labelLanguage = new System.Windows.Forms.Label();
             this.comboBoxLanguage = new System.Windows.Forms.ComboBox();
             this.labelImageFormat = new System.Windows.Forms.Label();
@@ -57,11 +61,8 @@
             this.colorDialog1 = new System.Windows.Forms.ColorDialog();
             this.labelImageResolution = new System.Windows.Forms.Label();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
-            this.comboBoxFramerate = new System.Windows.Forms.ComboBox();
-            this.labelFrameRate = new System.Windows.Forms.Label();
             this.subtitleListView1 = new Nikse.SubtitleEdit.Controls.SubtitleListView();
-            this.comboBoxBottomMargin = new System.Windows.Forms.ComboBox();
-            this.labelBottomMargin = new System.Windows.Forms.Label();
+            this.checkBoxSkipEmptyFrameAtStart = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.groupBoxImageSettings.SuspendLayout();
             this.SuspendLayout();
@@ -115,6 +116,7 @@
             // 
             this.groupBoxImageSettings.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxImageSettings.Controls.Add(this.checkBoxSkipEmptyFrameAtStart);
             this.groupBoxImageSettings.Controls.Add(this.comboBoxBottomMargin);
             this.groupBoxImageSettings.Controls.Add(this.labelBottomMargin);
             this.groupBoxImageSettings.Controls.Add(this.labelFrameRate);
@@ -145,6 +147,43 @@
             this.groupBoxImageSettings.TabIndex = 1;
             this.groupBoxImageSettings.TabStop = false;
             this.groupBoxImageSettings.Text = "Image settings";
+            // 
+            // comboBoxBottomMargin
+            // 
+            this.comboBoxBottomMargin.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxBottomMargin.FormattingEnabled = true;
+            this.comboBoxBottomMargin.Location = new System.Drawing.Point(100, 132);
+            this.comboBoxBottomMargin.Name = "comboBoxBottomMargin";
+            this.comboBoxBottomMargin.Size = new System.Drawing.Size(121, 21);
+            this.comboBoxBottomMargin.TabIndex = 35;
+            // 
+            // labelBottomMargin
+            // 
+            this.labelBottomMargin.AutoSize = true;
+            this.labelBottomMargin.Location = new System.Drawing.Point(10, 135);
+            this.labelBottomMargin.Name = "labelBottomMargin";
+            this.labelBottomMargin.Size = new System.Drawing.Size(74, 13);
+            this.labelBottomMargin.TabIndex = 36;
+            this.labelBottomMargin.Text = "Bottom margin";
+            // 
+            // labelFrameRate
+            // 
+            this.labelFrameRate.Location = new System.Drawing.Point(421, 137);
+            this.labelFrameRate.Name = "labelFrameRate";
+            this.labelFrameRate.RightToLeft = System.Windows.Forms.RightToLeft.No;
+            this.labelFrameRate.Size = new System.Drawing.Size(110, 13);
+            this.labelFrameRate.TabIndex = 34;
+            this.labelFrameRate.Text = "Frame rate";
+            this.labelFrameRate.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.labelFrameRate.Visible = false;
+            // 
+            // comboBoxFramerate
+            // 
+            this.comboBoxFramerate.FormattingEnabled = true;
+            this.comboBoxFramerate.Location = new System.Drawing.Point(537, 134);
+            this.comboBoxFramerate.Name = "comboBoxFramerate";
+            this.comboBoxFramerate.Size = new System.Drawing.Size(121, 21);
+            this.comboBoxFramerate.TabIndex = 33;
             // 
             // labelLanguage
             // 
@@ -455,25 +494,6 @@
             this.labelImageResolution.Text = "320x240";
             this.labelImageResolution.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
-            // comboBoxFramerate
-            // 
-            this.comboBoxFramerate.FormattingEnabled = true;
-            this.comboBoxFramerate.Location = new System.Drawing.Point(537, 134);
-            this.comboBoxFramerate.Name = "comboBoxFramerate";
-            this.comboBoxFramerate.Size = new System.Drawing.Size(121, 21);
-            this.comboBoxFramerate.TabIndex = 33;
-            // 
-            // labelFrameRate
-            // 
-            this.labelFrameRate.Location = new System.Drawing.Point(421, 137);
-            this.labelFrameRate.Name = "labelFrameRate";
-            this.labelFrameRate.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.labelFrameRate.Size = new System.Drawing.Size(110, 13);
-            this.labelFrameRate.TabIndex = 34;
-            this.labelFrameRate.Text = "Frame rate";
-            this.labelFrameRate.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.labelFrameRate.Visible = false;
-            // 
             // subtitleListView1
             // 
             this.subtitleListView1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
@@ -491,23 +511,17 @@
             this.subtitleListView1.View = System.Windows.Forms.View.Details;
             this.subtitleListView1.SelectedIndexChanged += new System.EventHandler(this.subtitleListView1_SelectedIndexChanged);
             // 
-            // comboBoxBottomMargin
+            // checkBoxSkipEmptyFrameAtStart
             // 
-            this.comboBoxBottomMargin.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBoxBottomMargin.FormattingEnabled = true;
-            this.comboBoxBottomMargin.Location = new System.Drawing.Point(100, 132);
-            this.comboBoxBottomMargin.Name = "comboBoxBottomMargin";
-            this.comboBoxBottomMargin.Size = new System.Drawing.Size(121, 21);
-            this.comboBoxBottomMargin.TabIndex = 35;
-            // 
-            // labelBottomMargin
-            // 
-            this.labelBottomMargin.AutoSize = true;
-            this.labelBottomMargin.Location = new System.Drawing.Point(10, 135);
-            this.labelBottomMargin.Name = "labelBottomMargin";
-            this.labelBottomMargin.Size = new System.Drawing.Size(74, 13);
-            this.labelBottomMargin.TabIndex = 36;
-            this.labelBottomMargin.Text = "Bottom margin";
+            this.checkBoxSkipEmptyFrameAtStart.AutoSize = true;
+            this.checkBoxSkipEmptyFrameAtStart.Checked = true;
+            this.checkBoxSkipEmptyFrameAtStart.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBoxSkipEmptyFrameAtStart.Location = new System.Drawing.Point(276, 131);
+            this.checkBoxSkipEmptyFrameAtStart.Name = "checkBoxSkipEmptyFrameAtStart";
+            this.checkBoxSkipEmptyFrameAtStart.Size = new System.Drawing.Size(147, 17);
+            this.checkBoxSkipEmptyFrameAtStart.TabIndex = 37;
+            this.checkBoxSkipEmptyFrameAtStart.Text = "Skip empty frames at start";
+            this.checkBoxSkipEmptyFrameAtStart.UseVisualStyleBackColor = true;
             // 
             // ExportPngXml
             // 
@@ -573,5 +587,6 @@
         private System.Windows.Forms.ComboBox comboBoxFramerate;
         private System.Windows.Forms.ComboBox comboBoxBottomMargin;
         private System.Windows.Forms.Label labelBottomMargin;
+        private System.Windows.Forms.CheckBox checkBoxSkipEmptyFrameAtStart;
     }
 }
