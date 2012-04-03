@@ -434,6 +434,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
             XmlNode trackNode = xml.DocumentElement.SelectSingleNode("sequence/media/video/track");
 
+            string newLine = "_____@___";
             int number = 1;
             foreach (Paragraph p in subtitle.Paragraphs)
             {
@@ -448,18 +449,19 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 end.InnerText = ((int)Math.Round(p.EndTime.TotalSeconds * frameRate)).ToString();
 
                 XmlNode text = generatorItem.SelectSingleNode("generatoritem/effect/parameter[parameterid='str']/value");
-                text.InnerText = Utilities.RemoveHtmlTags(p.Text).Replace(Environment.NewLine, "&#13;");
+                text.InnerText = Utilities.RemoveHtmlTags(p.Text);
+                text.InnerXml = text.InnerXml.Replace(Environment.NewLine, newLine);
 
                 trackNode.AppendChild(generatorItem.SelectSingleNode("generatoritem"));
                 number++;
             }
 
             var ms = new MemoryStream();
-            var writer = new XmlTextWriter(ms, Encoding.UTF8);
-            writer.Formatting = Formatting.Indented;
+            var writer = new XmlTextWriter(ms, Encoding.UTF8) {Formatting = Formatting.Indented};
             xml.Save(writer);
             string xmlAsText = Encoding.UTF8.GetString(ms.ToArray()).Trim();
             xmlAsText = xmlAsText.Replace("xmeml[]", "xmeml");
+            xmlAsText = xmlAsText.Replace(newLine, "&#13;");
             return xmlAsText;
         }
 
@@ -523,6 +525,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                             }
                             if (text.Length > 0)
                             {
+                                if (!text.Contains(Environment.NewLine))
+                                    text = text.Replace("\r", Environment.NewLine);
                                 subtitle.Paragraphs.Add(new Paragraph(text, Convert.ToDouble((startFrame / FrameRate) *1000), Convert.ToDouble((endFrame / FrameRate) * 1000)));
                             }
                         }
