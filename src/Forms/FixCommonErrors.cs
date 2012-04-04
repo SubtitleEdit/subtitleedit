@@ -64,7 +64,7 @@ namespace Nikse.SubtitleEdit.Forms
         static readonly Regex ReAfterLowercaseLetter = new Regex(@"[a-zæøåäöé]I", RegexOptions.Compiled);
         static readonly Regex ReBeforeLowercaseLetter = new Regex(@"I[a-zæøåäöé]", RegexOptions.Compiled);
 
-        static readonly Regex removeSpaceBetweenNumbersRegEx = new Regex(@"\d \d", RegexOptions.Compiled);
+        static readonly Regex RemoveSpaceBetweenNumbersRegEx = new Regex(@"\d \d", RegexOptions.Compiled);
 
         static readonly Regex FixAloneLowercaseIToUppercaseIRE = new Regex(@"\bi\b", RegexOptions.Compiled);
 
@@ -935,6 +935,8 @@ namespace Nikse.SubtitleEdit.Forms
                 if (p.Text.Contains("- ") && p.Text.Length > 5)
                 {
                     int idx = p.Text.IndexOf("- ", 2);
+                    if (p.Text.ToLower().StartsWith("<i>"))
+                        idx = p.Text.IndexOf("- ", 5);
                     while (idx > 0)
                     {
                         if (idx > 0 && idx < p.Text.Length - 2)
@@ -2182,11 +2184,11 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 Paragraph p = _subtitle.Paragraphs[i];
                 string text = p.Text;
-                Match match = removeSpaceBetweenNumbersRegEx.Match(text);
+                Match match = RemoveSpaceBetweenNumbersRegEx.Match(text);
                 while (match.Success)
                 {
                     text = text.Remove(match.Index + 1, 1);
-                    match = removeSpaceBetweenNumbersRegEx.Match(text);
+                    match = RemoveSpaceBetweenNumbersRegEx.Match(text);
                 }
                 if (p.Text != text)
                 {
