@@ -406,7 +406,7 @@ namespace Nikse.SubtitleEdit.Logic
                 if (lines.Length > 1) {
                     bool isDialog = true;
                     foreach (string line in lines) {
-                        string cleanLine = Utilities.RemoveHtmlTags(line).Trim();
+                        string cleanLine = RemoveHtmlTags(line).Trim();
                         isDialog = isDialog && (cleanLine.StartsWith("-") ||
                                                 cleanLine.StartsWith("—"));
                     }
@@ -521,7 +521,7 @@ namespace Nikse.SubtitleEdit.Logic
                 {
                     if (mid + j + 1 < s.Length && mid + j > 0)
                     {
-                        if (".!?, ".Contains(s[mid + j].ToString()) && !IsPartOfNumber(s, mid + j))
+                        if (".!?, ".Contains(s[mid + j].ToString()) && !IsPartOfNumber(s, mid + j) && s.Length > mid + j + 2)
                         {
                             splitPos = mid + j;
                             if (" .!?".Contains(s[mid + j + 1].ToString()))
@@ -532,13 +532,13 @@ namespace Nikse.SubtitleEdit.Logic
                             }
                             break;
                         }
-                        if (".!?, ".Contains(s[mid - j].ToString()) && !IsPartOfNumber(s, mid - j))
+                        if (".!?, ".Contains(s[mid - j].ToString()) && !IsPartOfNumber(s, mid - j) && s.Length > mid + j + 2)
                         {
                             splitPos = mid - j;
                             if (".!?".Contains(s[mid - (j + 1)].ToString()))
                             {
                                 splitPos--;
-                                if (".!?".Contains(s[mid + (j + 2)].ToString()))
+                                if (".!?".Contains(s[mid + j + 2].ToString()))
                                     splitPos--;
                             }
                             break;
