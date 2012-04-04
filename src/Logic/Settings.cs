@@ -303,6 +303,7 @@ namespace Nikse.SubtitleEdit.Logic
         public int ListViewEndWidth { get; set; }
         public int ListViewDurationWidth { get; set; }
         public int ListViewTextWidth { get; set; }
+        public string VlcWaveTranscodeSettings { get; set; }
 
         public GeneralSettings()
         {
@@ -369,6 +370,7 @@ namespace Nikse.SubtitleEdit.Logic
             LargeDelayMilliseconds = 5000;
             OpenSubtitleExtraExtensions = "*.mp4;*.m4v;*.mkv;"; // matroska/mp4/m4v files (can contain subtitles)
             ListViewColumsRememberSize = true;
+            VlcWaveTranscodeSettings = "acodec=s16l,channels=1,ab=64,samplerate=8000";
         }
     }
 
@@ -987,6 +989,10 @@ namespace Nikse.SubtitleEdit.Logic
             subNode = node.SelectSingleNode("ListViewTextWidth");
             if (subNode != null)
                 settings.General.ListViewTextWidth = Convert.ToInt32(subNode.InnerText.Trim());
+            subNode = node.SelectSingleNode("VlcWaveTranscodeSettings");
+            if (subNode != null)
+                settings.General.VlcWaveTranscodeSettings = subNode.InnerText.Trim();
+
 
             settings.Tools = new ToolsSettings();
             node = doc.DocumentElement.SelectSingleNode("Tools");
@@ -1067,6 +1073,9 @@ namespace Nikse.SubtitleEdit.Logic
                 subNode = node.SelectSingleNode("DCinemaBottomMargin");
                 if (subNode != null)
                     settings.SubtitleSettings.DCinemaBottomMargin = Convert.ToInt32(subNode.InnerText);
+                subNode = node.SelectSingleNode("DCinemaFadeUpDownTime");
+                if (subNode != null)
+                    settings.SubtitleSettings.DCinemaFadeUpDownTime = Convert.ToInt32(subNode.InnerText);
             }
 
             settings.Proxy = new Nikse.SubtitleEdit.Logic.ProxySettings();
@@ -1649,7 +1658,8 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("ListViewEndWidth", settings.General.ListViewEndWidth.ToString(CultureInfo.InvariantCulture));
             textWriter.WriteElementString("ListViewDurationWidth", settings.General.ListViewDurationWidth.ToString(CultureInfo.InvariantCulture));
             textWriter.WriteElementString("ListViewTextWidth", settings.General.ListViewTextWidth.ToString(CultureInfo.InvariantCulture));
-
+            textWriter.WriteElementString("VlcWaveTranscodeSettings", settings.General.VlcWaveTranscodeSettings);
+            
 
             textWriter.WriteEndElement();
 
