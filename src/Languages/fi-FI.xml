@@ -1,4 +1,4 @@
-<?xml version='1.0' encoding='UTF-8'?>
+﻿<?xml version='1.0' encoding='UTF-8'?>
 <Language Name='Finnish'>
 	<General>
 		<Title>Subtitle Edit</Title>
@@ -58,7 +58,7 @@
 		<WebServiceUrl>WebService-url</WebServiceUrl>
 		<IP>IP</IP>
 		<VideoWindowTitle>Video - {0}</VideoWindowTitle>
-		<AudioWindowTitle>Ääni - {0}</AudioWindowTitle>
+		<AudioWindowTitle>Ã„äni - {0}</AudioWindowTitle>
 		<ControlsWindowTitle>Ohjaimet - {0}</ControlsWindowTitle>
 	</General>
 	<About>
@@ -83,7 +83,7 @@ Sähköposti: mailto:nikse.dk@gmail.com</AboutText1>
 		<SourceVideoFile>Lähdevideotiedosto:</SourceVideoFile>
 		<GenerateWaveFormData>Luo aaltomuototiedot</GenerateWaveFormData>
 		<PleaseWait>Tämä voi kestää muutamia minuutteja - Odota</PleaseWait>
-		<VlcMediaPlayerNotFoundTitle>VLC Media Player ei löydy</VlcMediaPlayerNotFoundTitle>
+		<VlcMediaPlayerNotFoundTitle>VLC Media Playeria ei löydy</VlcMediaPlayerNotFoundTitle>
 		<VlcMediaPlayerNotFound>Subtitle Edit tarvitsee VLC media Playerin 1.1.x tai uudemman äänidatan purkamiseksi .</VlcMediaPlayerNotFound>
 		<GoToVlcMediaPlayerHomePage>Haluatko mennä VLC media player-kotisivulle?</GoToVlcMediaPlayerHomePage>
 		<GeneratingPeakFile>Luodaan peak-tiedosto...</GeneratingPeakFile>
@@ -360,12 +360,12 @@ Sähköposti: mailto:nikse.dk@gmail.com</AboutText1>
     <FixDoubleGreaterThan>Poista &gt;&gt;</FixDoubleGreaterThan>
     <FixEllipsesStart>Poista edeltävät '...'</FixEllipsesStart>
     <FixMissingOpenBracket>Korjaa riviltä puuttuva [ </FixMissingOpenBracket>
-    <FixMusicNotation>Korvaa musiikkisymbolit  (esimerkiksi âTª) suositellulla tunnuksella</FixMusicNotation>
+    <FixMusicNotation>Korvaa musiikkisymbolit  (esimerkiksi Ã¢TÂª) suositellulla tunnuksella</FixMusicNotation>
     <FixDoubleDashs>Korjaa '--'s -&gt; '...'s </FixDoubleDashs>
     <FixDoubleGreaterThans>Poista &gt;&gt; alusta</FixDoubleGreaterThans>
     <FixEllipsesStarts>Poista ... alusta</FixEllipsesStarts>
     <FixMissingOpenBrackets>Korjaa puuttuvat ['t</FixMissingOpenBrackets>
-    <FixMusicNotations>Korvaa âTª's tällä *'s</FixMusicNotations>
+    <FixMusicNotations>Korvaa Ã¢TÂª's tällä *'s</FixMusicNotations>
     <XFixDoubleDash>Korjattu {0} '--'</XFixDoubleDash>
     <XFixDoubleGreaterThan>Poistettu {0} &gt;&gt; </XFixDoubleGreaterThan>
     <XFixEllipsesStart>{0} poista alkupisteet '...'</XFixEllipsesStart>
@@ -375,7 +375,7 @@ Sähköposti: mailto:nikse.dk@gmail.com</AboutText1>
     <FixDoubleGreaterThanExample>'&gt;&gt; Robert: Juoppo jätkä!'  --&gt; ' Robert: Juoppo jätkä!'</FixDoubleGreaterThanExample>
 		<FixEllipsesStartExample>'... ja sitten me' --&gt; 'ja sitten me'</FixEllipsesStartExample>
 		<FixMissingOpenBracketExample>kalinaa] Varo!'--&gt; '[kalinaa] Varo!'</FixMissingOpenBracketExample>
-		<FixMusicNotationExample>'âTª makeat unet ovat'--&gt; '♫ makeat unet ovat'</FixMusicNotationExample>
+		<FixMusicNotationExample>'Ã¢TÂª makeat unet ovat'--&gt; 'â™« makeat unet ovat'</FixMusicNotationExample>
 		<NumberOfImportantLogMessages>{0} tärkeää lokiviestiä!</NumberOfImportantLogMessages>
 		<FixedOkXY>Korjattu '{0}': {1}</FixedOkXY>
 	</FixCommonErrors>
@@ -396,9 +396,9 @@ Sähköposti: mailto:nikse.dk@gmail.com</AboutText1>
 		<From>Lähettäjä:</From>
 		<To>Kenelle:</To>
 		<Translate>Käännä</Translate>
-		<PleaseWait>Ota Odota... Tämä saattaa kestää jonkin aikaa</PleaseWait>
-		<PoweredByGoogleTranslate>Powered by Google kääntäjä</PoweredByGoogleTranslate>
-		<PoweredByMicrosoftTranslate>Powered by Microsoft kääntäjä</PoweredByMicrosoftTranslate>
+		<PleaseWait>Odota... Kestää vähän aikaa</PleaseWait>
+		<PoweredByGoogleTranslate>Powered by Google translate</PoweredByGoogleTranslate>
+		<PoweredByMicrosoftTranslate>Powered by Microsoft translate</PoweredByMicrosoftTranslate>
 	</GoogleTranslate>
 	<GoogleOrMicrosoftTranslate>
 		<Title>Google vastaan Microsoft kääntäjä</Title>
@@ -949,8 +949,8 @@ Haluatko aloittaa asiakirjan alusta ja hakea kerran vielä?</FindContinue>
 		<Title>Määritä synkronointikohta riville {0}</Title>
 		<SyncPointTimeCode>Synkronointikohdan aikakoodi</SyncPointTimeCode>
 		<ThreeSecondsBack>&lt;&lt; 3 sekuntia</ThreeSecondsBack>
-		<HalfASecondBack>&lt;&lt; ½ s</HalfASecondBack>
-		<HalfASecondForward>½ s &gt;&gt;</HalfASecondForward>
+		<HalfASecondBack>&lt;&lt; Â½ s</HalfASecondBack>
+		<HalfASecondForward>Â½ s &gt;&gt;</HalfASecondForward>
 		<ThreeSecondsForward>3 sekuntia &gt;&gt;</ThreeSecondsForward>
 	</SetSyncPoint>
 	<Settings>
@@ -1184,7 +1184,7 @@ Haluatko aloittaa asiakirjan alusta ja hakea kerran vielä?</FindContinue>
 		<StartScene>Kohtauksen alku</StartScene>
 		<EndScene>Kohtauksen loppu</EndScene>
 		<Synchronize>Synkronointi</Synchronize>
-		<HalfASecondBack>&lt; ½ sek</HalfASecondBack>
+		<HalfASecondBack>&lt; Â½ sek</HalfASecondBack>
 		<ThreeSecondsBack>&lt; 3 sek</ThreeSecondsBack>
 		<PlayXSecondsAndBack>Toista {0} sekuntia ja takaisin</PlayXSecondsAndBack>
 		<FindText>Etsi teksti</FindText>
