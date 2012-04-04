@@ -260,10 +260,17 @@ namespace Nikse.SubtitleEdit.Forms
         {
             foreach (string split in Utilities.AutoBreakLine(line).Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries))
             {
-                if (split.Length < Configuration.Settings.General.SubtitleLineMaximumLength)
+                if (split.Length <= Configuration.Settings.General.SubtitleLineMaximumLength)
                     list.Add(split);
                 else if (split != line)
                     AutoSplit(list, split);
+                else
+                {
+                    string s = split.Trim();
+                    if (s.Length > Configuration.Settings.General.SubtitleLineMaximumLength)
+                        s = s.Insert(split.Length/2, Environment.NewLine);
+                    list.Add(s);
+                }
             }
         }
 
