@@ -121,7 +121,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else
             {
-                _mainForm.Main_KeyDown(sender, e);
+                _mainForm.MainKeyDown(sender, e);
             }
         }
 

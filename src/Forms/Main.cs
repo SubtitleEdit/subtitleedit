@@ -833,7 +833,7 @@ namespace Nikse.SubtitleEdit.Forms
                 timeUpDownStartTime.TimeCode = paragraph.StartTime;
                 decimal durationInSeconds = (decimal) (paragraph.Duration.TotalSeconds);
                 if (durationInSeconds >= numericUpDownDuration.Minimum && durationInSeconds <= numericUpDownDuration.Maximum)
-                    numericUpDownDuration.Value = durationInSeconds;
+                    SetDurationInSeconds((double)durationInSeconds);
 
                 if (original != null)
                 {
@@ -869,7 +869,7 @@ namespace Nikse.SubtitleEdit.Forms
                                 timeUpDownStartTime.TimeCode = paragraph.StartTime;
                                 decimal durationInSeconds = (decimal)(paragraph.Duration.TotalSeconds);
                                 if (durationInSeconds >= numericUpDownDuration.Minimum && durationInSeconds <= numericUpDownDuration.Maximum)
-                                    numericUpDownDuration.Value = durationInSeconds;
+                                    SetDurationInSeconds((double)durationInSeconds);
                             }
                         }
                     }
@@ -4706,7 +4706,7 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                     }
 
-                    double duration = (double)numericUpDownDuration.Value * 1000.0;
+                    double duration = GetDurationInMilliseconds();
                     if (duration > 0 && duration < 100000 && duration != last.Duration.TotalMilliseconds)
                     {
                         last.EndTime.TotalMilliseconds = last.StartTime.TotalMilliseconds + duration;
@@ -5627,7 +5627,7 @@ namespace Nikse.SubtitleEdit.Forms
                 Paragraph nextParagraph = _subtitle.GetParagraphOrDefault(firstSelectedIndex + 1);
                 if (nextParagraph != null)
                 {
-                    double durationMilliSeconds = (double)numericUpDownDuration.Value * 1000.0;
+                    double durationMilliSeconds = GetDurationInMilliseconds();
                     if (startTime.TotalMilliseconds + durationMilliSeconds > nextParagraph.StartTime.TotalMilliseconds)
                     {
                         labelDurationWarning.Text = string.Format(_languageGeneral.OverlapX, ((startTime.TotalMilliseconds + durationMilliSeconds) - nextParagraph.StartTime.TotalMilliseconds) / 1000.0);
@@ -5647,6 +5647,33 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
+        private double GetDurationInMilliseconds()
+        {
+            if (Configuration.Settings.General.UseTimeFormatHHMMSSFF)
+            {
+                int seconds = (int)numericUpDownDuration.Value;
+                int frames = (int)(Convert.ToDouble(numericUpDownDuration.Value) % 1.0 * 100.0);
+                return seconds * 1000.0 + frames * (1000.0 / Configuration.Settings.General.CurrentFrameRate);
+            }
+            return ((double)numericUpDownDuration.Value * 1000.0);
+        }
+
+        private void SetDurationInSeconds(double seconds)
+        {
+            if (Configuration.Settings.General.UseTimeFormatHHMMSSFF)
+            {
+                int wholeSeconds = (int)seconds;
+                int frames = SubtitleFormat.MillisecondsToFrames(seconds % 1.0 * 1000);
+                int extraSeconds = (int)(frames / Configuration.Settings.General.CurrentFrameRate);
+                int restFrames = (int)(frames % Configuration.Settings.General.CurrentFrameRate);
+                numericUpDownDuration.Value = (decimal)(wholeSeconds + extraSeconds + restFrames / 100.0);
+            }
+            else
+            {
+                numericUpDownDuration.Value = (decimal)seconds;                
+            }
+        }
+
         private void NumericUpDownDurationValueChanged(object sender, EventArgs e)
         {
             if (_subtitle.Paragraphs.Count > 0 && SubtitleListview1.SelectedItems.Count > 0)
@@ -5662,11 +5689,29 @@ namespace Nikse.SubtitleEdit.Forms
                     // update _subtitle + listview
                     string oldDuration = currentParagraph.Duration.ToString();
 
-                    Paragraph temp = new Paragraph(currentParagraph);
-                    temp.EndTime.TotalMilliseconds = currentParagraph.StartTime.TotalMilliseconds + ((double)numericUpDownDuration.Value * 1000.0);
+                    var temp = new Paragraph(currentParagraph);
+
+                    if (Configuration.Settings.General.UseTimeFormatHHMMSSFF)
+                    {                        
+                        int frames = (int)(Convert.ToDouble(numericUpDownDuration.Value) % 1.0 * 100.0);
+                        if (frames > Configuration.Settings.General.CurrentFrameRate-1)
+                        {
+                            int seconds = (int)numericUpDownDuration.Value;
+                            numericUpDownDuration.ValueChanged -= NumericUpDownDurationValueChanged;
+                            int extraSeconds = (int)(frames / (Configuration.Settings.General.CurrentFrameRate-1));
+                            int restFrames = (int)(frames % (Configuration.Settings.General.CurrentFrameRate-1));
+                            if (frames == 99)
+                                numericUpDownDuration.Value = (decimal)(seconds + (((int)(Configuration.Settings.General.CurrentFrameRate - 1)) / 100.0));
+                            else 
+                                numericUpDownDuration.Value = (decimal)(seconds + extraSeconds + restFrames / 100.0);
+                            numericUpDownDuration.ValueChanged += NumericUpDownDurationValueChanged;
+                        }
+
+                    }
+                    temp.EndTime.TotalMilliseconds = currentParagraph.StartTime.TotalMilliseconds + GetDurationInMilliseconds(); 
 
                     if (_makeHistory)
-                        MakeHistoryForUndoOnlyIfNotResent(string.Format(_language.DisplayTimeAdjustedX, "#" + currentParagraph.Number + ": " + oldDuration + " -> " + temp.Duration.ToString()));
+                        MakeHistoryForUndoOnlyIfNotResent(string.Format(_language.DisplayTimeAdjustedX, "#" + currentParagraph.Number + ": " + oldDuration + " -> " + temp.Duration));
 
                     currentParagraph.EndTime.TotalMilliseconds = temp.EndTime.TotalMilliseconds;
                     SubtitleListview1.SetDuration(firstSelectedIndex, currentParagraph);
@@ -5722,15 +5767,15 @@ namespace Nikse.SubtitleEdit.Forms
             textBoxListViewText.TextChanged += TextBoxListViewTextTextChanged;
             _listViewTextUndoLast = p.Text;
 
-            timeUpDownStartTime.MaskedTextBox.TextChanged -= MaskedTextBox_TextChanged;
+            timeUpDownStartTime.MaskedTextBox.TextChanged -= MaskedTextBoxTextChanged;
             timeUpDownStartTime.TimeCode = p.StartTime;
-            timeUpDownStartTime.MaskedTextBox.TextChanged += MaskedTextBox_TextChanged;
+            timeUpDownStartTime.MaskedTextBox.TextChanged += MaskedTextBoxTextChanged;
 
             numericUpDownDuration.ValueChanged -= NumericUpDownDurationValueChanged;
             if (p.Duration.TotalSeconds > (double)numericUpDownDuration.Maximum)
-                numericUpDownDuration.Value = numericUpDownDuration.Maximum;
+                SetDurationInSeconds((double)numericUpDownDuration.Maximum);
             else
-                numericUpDownDuration.Value = (decimal)(p.Duration.TotalSeconds);
+                SetDurationInSeconds(p.Duration.TotalSeconds);
             numericUpDownDuration.ValueChanged += NumericUpDownDurationValueChanged;
 
             UpdateOverlapErrors(timeUpDownStartTime.TimeCode);
@@ -5741,7 +5786,7 @@ namespace Nikse.SubtitleEdit.Forms
             StartUpdateListSyntaxColoring();
         }
 
-        void MaskedTextBox_TextChanged(object sender, EventArgs e)
+        void MaskedTextBoxTextChanged(object sender, EventArgs e)
         {
             if (_subtitleListViewIndex >= 0)
             {
@@ -7237,7 +7282,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        internal void Main_KeyDown(object sender, KeyEventArgs e)
+        internal void MainKeyDown(object sender, KeyEventArgs e)
         {
             if (e.Modifiers == Keys.Alt && e.KeyCode == (Keys.RButton | Keys.ShiftKey) && textBoxListViewText.Focused)
             { // annoying that focus leaves textbox while typing, when pressing Alt alone
@@ -7608,6 +7653,35 @@ namespace Nikse.SubtitleEdit.Forms
                         RefreshSelectedParagraph();
                     }
                 }
+            }
+            else if (e.Modifiers == (Keys.Control | Keys.Alt | Keys.Shift) && e.KeyCode == Keys.F) // Toggle HHMMSSFF / HHMMSSMMM
+            {
+                Configuration.Settings.General.UseTimeFormatHHMMSSFF = !Configuration.Settings.General.UseTimeFormatHHMMSSFF;
+                if (Configuration.Settings.General.UseTimeFormatHHMMSSFF)
+                {
+                    numericUpDownDuration.DecimalPlaces = 2;
+                    numericUpDownDuration.Increment = (decimal)(0.01);
+
+                    toolStripSeparatorFrameRate.Visible = true;
+                    toolStripLabelFrameRate.Visible = true;
+                    toolStripComboBoxFrameRate.Visible = true;
+                    toolStripButtonGetFrameRate.Visible = true;
+                }
+                else
+                {
+                    numericUpDownDuration.DecimalPlaces = 3;
+                    numericUpDownDuration.Increment = (decimal)(0.1);
+
+                    toolStripSeparatorFrameRate.Visible = Configuration.Settings.General.ShowFrameRate;
+                    toolStripLabelFrameRate.Visible = Configuration.Settings.General.ShowFrameRate;
+                    toolStripComboBoxFrameRate.Visible = Configuration.Settings.General.ShowFrameRate;
+                    toolStripButtonGetFrameRate.Visible = Configuration.Settings.General.ShowFrameRate;
+                }                
+
+                SaveSubtitleListviewIndexes();
+                SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
+                RestoreSubtitleListviewIndexes();
+                RefreshSelectedParagraph();             
             }
             else if (e.Modifiers == (Keys.Control | Keys.Shift) && e.KeyCode == Keys.U) // Ctrl+Shift+U = switch original/current
             {
@@ -7995,7 +8069,7 @@ namespace Nikse.SubtitleEdit.Forms
                                 double millisecondsBetween = p.StartTime.TotalMilliseconds - lastTempParagraph.EndTime.TotalMilliseconds;
                                 timeUpDownStartTime.TimeCode = new TimeCode(TimeSpan.FromMilliseconds(lastParagraph.EndTime.TotalMilliseconds + millisecondsBetween));
                             }
-                            numericUpDownDuration.Value = (decimal)p.Duration.TotalSeconds;
+                            SetDurationInSeconds(p.Duration.TotalSeconds);
                             lastParagraph = _subtitle.GetParagraphOrDefault(_subtitleListViewIndex);
                             lastTempParagraph = p;
                         }
@@ -9354,7 +9428,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (SubtitleListview1.SelectedItems.Count == 1)
             {
-                timeUpDownStartTime.MaskedTextBox.TextChanged -= MaskedTextBox_TextChanged;
+                timeUpDownStartTime.MaskedTextBox.TextChanged -= MaskedTextBoxTextChanged;
                 int index = SubtitleListview1.SelectedItems[0].Index;
                 Paragraph oldParagraph = new Paragraph(_subtitle.Paragraphs[index]);
                 double videoPosition = mediaPlayer.CurrentPosition;
@@ -9369,7 +9443,7 @@ namespace Nikse.SubtitleEdit.Forms
                 SubtitleListview1.SetStartTime(index, _subtitle.Paragraphs[index]);
                 SubtitleListview1.SetDuration(index, _subtitle.Paragraphs[index]);
                 timeUpDownStartTime.TimeCode = _subtitle.Paragraphs[index].StartTime;
-                timeUpDownStartTime.MaskedTextBox.TextChanged += MaskedTextBox_TextChanged;
+                timeUpDownStartTime.MaskedTextBox.TextChanged += MaskedTextBoxTextChanged;
                 UpdateOriginalTimeCodes(oldParagraph);
                 if (IsFramesRelevant && CurrentFrameRate > 0)
                 {
@@ -9402,7 +9476,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 else
                 {
-                    numericUpDownDuration.Value = (decimal)(_subtitle.Paragraphs[index].Duration.TotalSeconds);
+                    SetDurationInSeconds(_subtitle.Paragraphs[index].Duration.TotalSeconds);
                 }
                 if (IsFramesRelevant && CurrentFrameRate > 0)
                 {
@@ -9425,7 +9499,7 @@ namespace Nikse.SubtitleEdit.Forms
                 SubtitleListview1.SetStartTime(index, _subtitle.Paragraphs[index]);
                 SubtitleListview1.SetDuration(index, _subtitle.Paragraphs[index]);
 
-                numericUpDownDuration.Value = (decimal)(_subtitle.Paragraphs[index].Duration.TotalSeconds);
+                SetDurationInSeconds(_subtitle.Paragraphs[index].Duration.TotalSeconds);
             }
         }
 
@@ -9490,7 +9564,7 @@ namespace Nikse.SubtitleEdit.Forms
             labelAutoDuration.Visible = !labelAutoDuration.Visible;
 
             double duration = Utilities.GetDisplayMillisecondsFromText(textBoxListViewText.Text) * 1.4;
-            numericUpDownDuration.Value = (decimal)(duration / 1000.0);
+            SetDurationInSeconds(duration / 1000.0);
 
             // update _subtitle + listview
             if (SubtitleListview1.SelectedItems.Count > 0)
@@ -9978,7 +10052,7 @@ namespace Nikse.SubtitleEdit.Forms
                 bool oldSync = checkBoxSyncListViewWithVideoWhilePlaying.Checked;
                 checkBoxSyncListViewWithVideoWhilePlaying.Checked = false;
 
-                timeUpDownStartTime.MaskedTextBox.TextChanged -= MaskedTextBox_TextChanged;
+                timeUpDownStartTime.MaskedTextBox.TextChanged -= MaskedTextBoxTextChanged;
                 int index = SubtitleListview1.SelectedItems[0].Index;
                 double videoPosition = mediaPlayer.CurrentPosition;
                 var tc = new TimeCode(TimeSpan.FromSeconds(videoPosition));
@@ -10015,7 +10089,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
 
                 checkBoxSyncListViewWithVideoWhilePlaying.Checked = oldSync;
-                timeUpDownStartTime.MaskedTextBox.TextChanged += MaskedTextBox_TextChanged;
+                timeUpDownStartTime.MaskedTextBox.TextChanged += MaskedTextBoxTextChanged;
             }
         }
 
@@ -10035,7 +10109,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 _subtitle.Paragraphs[index].EndTime = new TimeCode(TimeSpan.FromSeconds(videoPosition));
                 SubtitleListview1.SetDuration(index, _subtitle.Paragraphs[index]);
-                numericUpDownDuration.Value = (decimal)(_subtitle.Paragraphs[index].Duration.TotalSeconds);
+                SetDurationInSeconds(_subtitle.Paragraphs[index].Duration.TotalSeconds);
 
                 if (index + 1 < _subtitle.Paragraphs.Count)
                 {
@@ -12193,9 +12267,9 @@ namespace Nikse.SubtitleEdit.Forms
             p.EndTime.TotalMilliseconds = totalMillisecondsEnd;
 
             timeUpDownStartTime.TimeCode = p.StartTime;
-            decimal durationInSeconds = (decimal)(p.Duration.TotalSeconds);
+            var durationInSeconds = (decimal)(p.Duration.TotalSeconds);
             if (durationInSeconds >= numericUpDownDuration.Minimum && durationInSeconds <= numericUpDownDuration.Maximum)
-                numericUpDownDuration.Value = durationInSeconds;
+                SetDurationInSeconds((double)durationInSeconds);
 
             SubtitleListview1.SelectIndexAndEnsureVisible(index+1);
             ShowStatus(string.Format(_language.VideoControls.AdjustedViaEndTime, p.StartTime.ToShortString()));
@@ -12218,7 +12292,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             MakeHistoryForUndoOnlyIfNotResent(string.Format(_language.VideoControls.BeforeChangingTimeInWaveFormX, "#" + p.Number + " " + p.Text));
 
-            timeUpDownStartTime.MaskedTextBox.TextChanged -= MaskedTextBox_TextChanged;
+            timeUpDownStartTime.MaskedTextBox.TextChanged -= MaskedTextBoxTextChanged;
             var oldParagraph = new Paragraph(_subtitle.Paragraphs[index]);
             double videoPosition = mediaPlayer.CurrentPosition;
 
@@ -12238,7 +12312,7 @@ namespace Nikse.SubtitleEdit.Forms
             SubtitleListview1.SetStartTime(index, _subtitle.Paragraphs[index]);
             SubtitleListview1.SetDuration(index, _subtitle.Paragraphs[index]);
             timeUpDownStartTime.TimeCode = _subtitle.Paragraphs[index].StartTime;
-            timeUpDownStartTime.MaskedTextBox.TextChanged += MaskedTextBox_TextChanged;
+            timeUpDownStartTime.MaskedTextBox.TextChanged += MaskedTextBoxTextChanged;
             UpdateOriginalTimeCodes(oldParagraph);
             _subtitleListViewIndex = -1;
             SubtitleListview1.SelectIndexAndEnsureVisible(index + 1);
@@ -12270,7 +12344,7 @@ namespace Nikse.SubtitleEdit.Forms
             SubtitleListview1.SetStartTime(index, p);
             SubtitleListview1.SetDuration(index, p);
 
-            numericUpDownDuration.Value = (decimal)(_subtitle.Paragraphs[index].Duration.TotalSeconds + 0.001);
+            SetDurationInSeconds(_subtitle.Paragraphs[index].Duration.TotalSeconds + 0.001);
             if (next != null)
             {
                 var oldDuration = next.Duration.TotalMilliseconds;
@@ -12818,12 +12892,12 @@ namespace Nikse.SubtitleEdit.Forms
             lineTotal.Text = string.Empty;
         }
 
-        private void textBoxListViewText_MouseClick(object sender, MouseEventArgs e)
+        private void TextBoxListViewTextMouseClick(object sender, MouseEventArgs e)
         {
             UpdatePositionAndTotalLength(labelTextLineTotal, textBoxListViewText);
         }
 
-        private void textBoxListViewTextAlternate_MouseClick(object sender, MouseEventArgs e)
+        private void TextBoxListViewTextAlternateMouseClick(object sender, MouseEventArgs e)
         {
             UpdatePositionAndTotalLength(labelTextAlternateLineTotal, textBoxListViewTextAlternate);
         }
@@ -12831,7 +12905,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void TabControlButtonsDrawItem(object sender, DrawItemEventArgs e)
         {
             var tc = (TabControl)sender;
-            var textBrush = new SolidBrush(this.ForeColor);
+            var textBrush = new SolidBrush(ForeColor);
             var tabFont = new Font(tc.Font, FontStyle.Regular);
             if (e.State == DrawItemState.Selected)
             {

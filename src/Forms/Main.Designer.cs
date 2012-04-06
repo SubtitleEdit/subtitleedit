@@ -3176,7 +3176,7 @@
             this.textBoxListViewTextAlternate.Size = new System.Drawing.Size(17, 56);
             this.textBoxListViewTextAlternate.TabIndex = 33;
             this.textBoxListViewTextAlternate.Visible = false;
-            this.textBoxListViewTextAlternate.MouseClick += new System.Windows.Forms.MouseEventHandler(this.textBoxListViewTextAlternate_MouseClick);
+            this.textBoxListViewTextAlternate.MouseClick += new System.Windows.Forms.MouseEventHandler(this.TextBoxListViewTextAlternateMouseClick);
             this.textBoxListViewTextAlternate.TextChanged += new System.EventHandler(this.textBoxListViewTextAlternate_TextChanged);
             this.textBoxListViewTextAlternate.Enter += new System.EventHandler(this.TextBoxListViewTextAlternateEnter);
             this.textBoxListViewTextAlternate.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxListViewTextAlternateKeyDown);
@@ -3488,7 +3488,7 @@
             this.textBoxListViewText.Name = "textBoxListViewText";
             this.textBoxListViewText.Size = new System.Drawing.Size(570, 56);
             this.textBoxListViewText.TabIndex = 5;
-            this.textBoxListViewText.MouseClick += new System.Windows.Forms.MouseEventHandler(this.textBoxListViewText_MouseClick);
+            this.textBoxListViewText.MouseClick += new System.Windows.Forms.MouseEventHandler(this.TextBoxListViewTextMouseClick);
             this.textBoxListViewText.TextChanged += new System.EventHandler(this.TextBoxListViewTextTextChanged);
             this.textBoxListViewText.Enter += new System.EventHandler(this.TextBoxListViewTextEnter);
             this.textBoxListViewText.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxListViewTextKeyDown);
@@ -3656,7 +3656,7 @@
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormMain_FormClosing);
             this.Load += new System.EventHandler(this.Main_Load);
             this.Shown += new System.EventHandler(this.Main_Shown);
-            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Main_KeyDown);
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.MainKeyDown);
             this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.MainKeyUp);
             this.Resize += new System.EventHandler(this.Main_Resize);
             this.statusStrip1.ResumeLayout(false);

@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
+using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.VideoPlayers;
 
 namespace Nikse.SubtitleEdit.Controls
@@ -70,21 +71,21 @@ namespace Nikse.SubtitleEdit.Controls
         private PictureBox _pictureBoxPlay;
         private PictureBox _pictureBoxPlayOver;
         private PictureBox _pictureBoxPlayDown;
-        private PictureBox _pictureBoxPause = new PictureBox();
-        private PictureBox _pictureBoxPauseOver = new PictureBox();
-        private PictureBox _pictureBoxPauseDown = new PictureBox();
-        private PictureBox _pictureBoxStop = new PictureBox();
-        private PictureBox _pictureBoxStopOver = new PictureBox();
-        private PictureBox _pictureBoxStopDown = new PictureBox();
-        private PictureBox _pictureBoxMute = new PictureBox();
-        private PictureBox _pictureBoxMuteOver = new PictureBox();
-        private PictureBox _pictureBoxMuteDown = new PictureBox();
-        private PictureBox _pictureBoxProgressbarBackground = new PictureBox();
-        private PictureBox _pictureBoxProgressBar = new PictureBox();
-        private PictureBox _pictureBoxVolumeBarBackground = new PictureBox();
-        private PictureBox _pictureBoxVolumeBar = new PictureBox();
-        private Label _labelTimeCode = new Label();
-        private Label _labelVideoPlayerName = new Label();
+        private readonly PictureBox _pictureBoxPause = new PictureBox();
+        private readonly PictureBox _pictureBoxPauseOver = new PictureBox();
+        private readonly PictureBox _pictureBoxPauseDown = new PictureBox();
+        private readonly PictureBox _pictureBoxStop = new PictureBox();
+        private readonly PictureBox _pictureBoxStopOver = new PictureBox();
+        private readonly PictureBox _pictureBoxStopDown = new PictureBox();
+        private readonly PictureBox _pictureBoxMute = new PictureBox();
+        private readonly PictureBox _pictureBoxMuteOver = new PictureBox();
+        private readonly PictureBox _pictureBoxMuteDown = new PictureBox();
+        private readonly PictureBox _pictureBoxProgressbarBackground = new PictureBox();
+        private readonly PictureBox _pictureBoxProgressBar = new PictureBox();
+        private readonly PictureBox _pictureBoxVolumeBarBackground = new PictureBox();
+        private readonly PictureBox _pictureBoxVolumeBar = new PictureBox();
+        private readonly Label _labelTimeCode = new Label();
+        private readonly Label _labelVideoPlayerName = new Label();
 
         public RightToLeft TextRightToLeft
         {
@@ -204,7 +205,7 @@ namespace Nikse.SubtitleEdit.Controls
 
         public void SetSubtitleFont()
         {
-            var gs = Logic.Configuration.Settings.General;
+            var gs = Configuration.Settings.General;
             if (string.IsNullOrEmpty(gs.SubtitleFontName))
                 gs.SubtitleFontName = "Tahoma";
             _subtitleTextBox.Font = new Font(gs.SubtitleFontName, gs.VideoPlayerPreviewFontSize * FontSizeFactor, FontStyle.Bold);
@@ -247,7 +248,7 @@ namespace Nikse.SubtitleEdit.Controls
                 text = text.Replace("</u>", string.Empty);
                 text = text.Replace("<U>", string.Empty);
                 text = text.Replace("</U>", string.Empty);
-                text = Logic.Utilities.RemoveHtmlFontTag(text);
+                text = Utilities.RemoveHtmlFontTag(text);
 
                 // display italic
                 var sb = new StringBuilder();
@@ -293,7 +294,7 @@ namespace Nikse.SubtitleEdit.Controls
                 foreach (var entry in italicLookups)
                 {
                     Font currentFont = _subtitleTextBox.SelectionFont;
-                    FontStyle newFontStyle = FontStyle.Italic | FontStyle.Bold;
+                    const FontStyle newFontStyle = FontStyle.Italic | FontStyle.Bold;
                     _subtitleTextBox.SelectionStart = entry.Key;
                     _subtitleTextBox.SelectionLength = entry.Value;
                     _subtitleTextBox.SelectionFont = new Font(currentFont.FontFamily, currentFont.Size, newFontStyle);
@@ -986,8 +987,12 @@ namespace Nikse.SubtitleEdit.Controls
                     pos = 0;
                 var span = TimeSpan.FromSeconds(pos);
                 var dur = TimeSpan.FromSeconds(Duration);
-                _labelTimeCode.Text = string.Format("{0:00}:{1:00}:{2:00},{3:000} / {4:00}:{5:00}:{6:00},{7:000}", span.Hours, span.Minutes, span.Seconds, span.Milliseconds,
-                                                     dur.Hours, dur.Minutes, dur.Seconds, dur.Milliseconds);
+
+
+                if (Configuration.Settings != null && Configuration.Settings.General.UseTimeFormatHHMMSSFF)
+                    _labelTimeCode.Text = string.Format("{0} / {1}", new TimeCode(span).ToHHMMSSFF(), new TimeCode(dur).ToHHMMSSFF());
+                else
+                    _labelTimeCode.Text = string.Format("{0:00}:{1:00}:{2:00},{3:000} / {4:00}:{5:00}:{6:00},{7:000}", span.Hours, span.Minutes, span.Seconds, span.Milliseconds, dur.Hours, dur.Minutes, dur.Seconds, dur.Milliseconds);
 
                 RefreshPlayPauseButtons();
             }

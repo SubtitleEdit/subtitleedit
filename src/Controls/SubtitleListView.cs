@@ -397,14 +397,30 @@ namespace Nikse.SubtitleEdit.Controls
         private void Add(Paragraph paragraph, string tag)
         {
             var item = new ListViewItem(paragraph.Number.ToString()) {Tag = tag};
-            var subItem = new ListViewItem.ListViewSubItem(item, paragraph.StartTime.ToString());
-            item.SubItems.Add(subItem);
+            ListViewItem.ListViewSubItem subItem;
 
-            subItem = new ListViewItem.ListViewSubItem(item, paragraph.EndTime.ToString());
-            item.SubItems.Add(subItem);
+            if (Configuration.Settings != null  && Configuration.Settings.General.UseTimeFormatHHMMSSFF)
+            {
+                subItem = new ListViewItem.ListViewSubItem(item, paragraph.StartTime.ToHHMMSSFF());
+                item.SubItems.Add(subItem);
 
-            subItem = new ListViewItem.ListViewSubItem(item, string.Format("{0},{1:000}", paragraph.Duration.Seconds, paragraph.Duration.Milliseconds));
-            item.SubItems.Add(subItem);
+                subItem = new ListViewItem.ListViewSubItem(item, paragraph.EndTime.ToHHMMSSFF());
+                item.SubItems.Add(subItem);
+
+                subItem = new ListViewItem.ListViewSubItem(item, string.Format("{0},{1:00}", paragraph.Duration.Seconds, Logic.SubtitleFormats.SubtitleFormat.MillisecondsToFrames(paragraph.Duration.Milliseconds)));
+                item.SubItems.Add(subItem);
+            }
+            else
+            {
+                subItem = new ListViewItem.ListViewSubItem(item, paragraph.StartTime.ToString());
+                item.SubItems.Add(subItem);
+
+                subItem = new ListViewItem.ListViewSubItem(item, paragraph.EndTime.ToString());
+                item.SubItems.Add(subItem);
+
+                subItem = new ListViewItem.ListViewSubItem(item, string.Format("{0},{1:000}", paragraph.Duration.Seconds, paragraph.Duration.Milliseconds));
+                item.SubItems.Add(subItem);
+            }
 
             subItem = new ListViewItem.ListViewSubItem(item, paragraph.Text.Replace(Environment.NewLine, _lineSeparatorString));
             if (SubtitleFontBold)
@@ -509,13 +525,6 @@ namespace Nikse.SubtitleEdit.Controls
             return null;
         }
 
-        public string GetStartTime(int index)
-        {
-            if (index >= 0 && index < Items.Count)
-                return Items[index].SubItems[ColumnIndexStart].Text;
-            return null;
-        }
-
         public void SetText(int index, string text)
         {
             if (index >= 0 && index < Items.Count)
@@ -527,9 +536,19 @@ namespace Nikse.SubtitleEdit.Controls
             if (index >= 0 && index < Items.Count)
             {
                 ListViewItem item = Items[index];
-                item.SubItems[ColumnIndexStart].Text = paragraph.StartTime.ToString();
-                item.SubItems[ColumnIndexEnd].Text = paragraph.EndTime.ToString();
-                item.SubItems[ColumnIndexDuration].Text = string.Format("{0},{1:000}", paragraph.Duration.Seconds, paragraph.Duration.Milliseconds);
+
+                if (Configuration.Settings != null && Configuration.Settings.General.UseTimeFormatHHMMSSFF)
+                {
+                    item.SubItems[ColumnIndexStart].Text = paragraph.StartTime.ToHHMMSSFF();
+                    item.SubItems[ColumnIndexEnd].Text = paragraph.EndTime.ToHHMMSSFF();
+                    item.SubItems[ColumnIndexDuration].Text = string.Format("{0},{1:00}", paragraph.Duration.Seconds, Logic.SubtitleFormats.SubtitleFormat.MillisecondsToFrames(paragraph.Duration.Milliseconds));
+                }
+                else
+                {
+                    item.SubItems[ColumnIndexStart].Text = paragraph.StartTime.ToString();
+                    item.SubItems[ColumnIndexEnd].Text = paragraph.EndTime.ToString();
+                    item.SubItems[ColumnIndexDuration].Text = string.Format("{0},{1:000}", paragraph.Duration.Seconds, paragraph.Duration.Milliseconds);                    
+                }
                 Items[index].SubItems[ColumnIndexText].Text = paragraph.Text.Replace(Environment.NewLine, _lineSeparatorString);
             }
         }
@@ -637,8 +656,16 @@ namespace Nikse.SubtitleEdit.Controls
             if (index >= 0 && index < Items.Count)
             {
                 ListViewItem item = Items[index];
-                item.SubItems[ColumnIndexDuration].Text = string.Format("{0},{1:000}", paragraph.Duration.Seconds, paragraph.Duration.Milliseconds);
-                item.SubItems[ColumnIndexEnd].Text = paragraph.EndTime.ToString();
+                if (Configuration.Settings != null && Configuration.Settings.General.UseTimeFormatHHMMSSFF)
+                {
+                    item.SubItems[ColumnIndexDuration].Text = string.Format("{0},{1:00}", paragraph.Duration.Seconds, Logic.SubtitleFormats.SubtitleFormat.MillisecondsToFrames(paragraph.Duration.Milliseconds));
+                    item.SubItems[ColumnIndexEnd].Text = paragraph.EndTime.ToHHMMSSFF();
+                }
+                else
+                {
+                    item.SubItems[ColumnIndexDuration].Text = string.Format("{0},{1:000}", paragraph.Duration.Seconds, paragraph.Duration.Milliseconds);
+                    item.SubItems[ColumnIndexEnd].Text = paragraph.EndTime.ToString();                    
+                }
             }
         }
 
@@ -656,8 +683,16 @@ namespace Nikse.SubtitleEdit.Controls
             if (index >= 0 && index < Items.Count)
             {
                 ListViewItem item = Items[index];
-                item.SubItems[ColumnIndexStart].Text = paragraph.StartTime.ToString();
-                item.SubItems[ColumnIndexEnd].Text = paragraph.EndTime.ToString();
+                if (Configuration.Settings != null && Configuration.Settings.General.UseTimeFormatHHMMSSFF)
+                {
+                    item.SubItems[ColumnIndexStart].Text = paragraph.StartTime.ToHHMMSSFF();
+                    item.SubItems[ColumnIndexEnd].Text = paragraph.EndTime.ToHHMMSSFF();
+                }
+                else
+                {
+                    item.SubItems[ColumnIndexStart].Text = paragraph.StartTime.ToString();
+                    item.SubItems[ColumnIndexEnd].Text = paragraph.EndTime.ToString();                    
+                }
             }
         }
 
