@@ -29,18 +29,20 @@
         private void InitializeComponent()
         {
             this.groupBoxImportResult = new System.Windows.Forms.GroupBox();
+            this.buttonFindTextOther = new System.Windows.Forms.Button();
+            this.buttonFindText = new System.Windows.Forms.Button();
             this.labelOtherSubtitleFileName = new System.Windows.Forms.Label();
             this.labelSubtitleFileName = new System.Windows.Forms.Label();
-            this.subtitleListView2 = new Nikse.SubtitleEdit.Controls.SubtitleListView();
             this.listBoxSyncPoints = new System.Windows.Forms.ListBox();
             this.labelNoOfSyncPoints = new System.Windows.Forms.Label();
-            this.labelSyncInfo = new System.Windows.Forms.Label();
             this.buttonRemoveSyncPoint = new System.Windows.Forms.Button();
             this.buttonSetSyncPoint = new System.Windows.Forms.Button();
-            this.SubtitleListview1 = new Nikse.SubtitleEdit.Controls.SubtitleListView();
+            this.labelSyncInfo = new System.Windows.Forms.Label();
             this.buttonApplySync = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.buttonOK = new System.Windows.Forms.Button();
+            this.subtitleListView2 = new Nikse.SubtitleEdit.Controls.SubtitleListView();
+            this.SubtitleListview1 = new Nikse.SubtitleEdit.Controls.SubtitleListView();
             this.groupBoxImportResult.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -49,12 +51,13 @@
             this.groupBoxImportResult.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxImportResult.Controls.Add(this.buttonFindTextOther);
+            this.groupBoxImportResult.Controls.Add(this.buttonFindText);
             this.groupBoxImportResult.Controls.Add(this.labelOtherSubtitleFileName);
             this.groupBoxImportResult.Controls.Add(this.labelSubtitleFileName);
             this.groupBoxImportResult.Controls.Add(this.subtitleListView2);
             this.groupBoxImportResult.Controls.Add(this.listBoxSyncPoints);
             this.groupBoxImportResult.Controls.Add(this.labelNoOfSyncPoints);
-            this.groupBoxImportResult.Controls.Add(this.labelSyncInfo);
             this.groupBoxImportResult.Controls.Add(this.buttonRemoveSyncPoint);
             this.groupBoxImportResult.Controls.Add(this.buttonSetSyncPoint);
             this.groupBoxImportResult.Controls.Add(this.SubtitleListview1);
@@ -63,6 +66,28 @@
             this.groupBoxImportResult.Size = new System.Drawing.Size(1096, 434);
             this.groupBoxImportResult.TabIndex = 16;
             this.groupBoxImportResult.TabStop = false;
+            // 
+            // buttonFindTextOther
+            // 
+            this.buttonFindTextOther.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonFindTextOther.Location = new System.Drawing.Point(976, 407);
+            this.buttonFindTextOther.Name = "buttonFindTextOther";
+            this.buttonFindTextOther.Size = new System.Drawing.Size(106, 21);
+            this.buttonFindTextOther.TabIndex = 34;
+            this.buttonFindTextOther.Text = "Find text...";
+            this.buttonFindTextOther.UseVisualStyleBackColor = true;
+            this.buttonFindTextOther.Click += new System.EventHandler(this.ButtonFindTextOtherClick);
+            // 
+            // buttonFindText
+            // 
+            this.buttonFindText.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonFindText.Location = new System.Drawing.Point(369, 407);
+            this.buttonFindText.Name = "buttonFindText";
+            this.buttonFindText.Size = new System.Drawing.Size(106, 21);
+            this.buttonFindText.TabIndex = 33;
+            this.buttonFindText.Text = "Find text...";
+            this.buttonFindText.UseVisualStyleBackColor = true;
+            this.buttonFindText.Click += new System.EventHandler(this.ButtonFindTextClick);
             // 
             // labelOtherSubtitleFileName
             // 
@@ -81,24 +106,6 @@
             this.labelSubtitleFileName.Size = new System.Drawing.Size(108, 13);
             this.labelSubtitleFileName.TabIndex = 20;
             this.labelSubtitleFileName.Text = "labelSubtitleFileName";
-            // 
-            // subtitleListView2
-            // 
-            this.subtitleListView2.AllowDrop = true;
-            this.subtitleListView2.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.subtitleListView2.DisplayExtraFromExtra = false;
-            this.subtitleListView2.FirstVisibleIndex = -1;
-            this.subtitleListView2.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.subtitleListView2.FullRowSelect = true;
-            this.subtitleListView2.GridLines = true;
-            this.subtitleListView2.HideSelection = false;
-            this.subtitleListView2.Location = new System.Drawing.Point(629, 33);
-            this.subtitleListView2.MultiSelect = false;
-            this.subtitleListView2.Name = "subtitleListView2";
-            this.subtitleListView2.Size = new System.Drawing.Size(453, 379);
-            this.subtitleListView2.TabIndex = 19;
-            this.subtitleListView2.UseCompatibleStateImageBehavior = false;
-            this.subtitleListView2.View = System.Windows.Forms.View.Details;
             // 
             // listBoxSyncPoints
             // 
@@ -119,16 +126,6 @@
             this.labelNoOfSyncPoints.Size = new System.Drawing.Size(75, 13);
             this.labelNoOfSyncPoints.TabIndex = 16;
             this.labelNoOfSyncPoints.Text = "Sync points: 0";
-            // 
-            // labelSyncInfo
-            // 
-            this.labelSyncInfo.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.labelSyncInfo.AutoSize = true;
-            this.labelSyncInfo.Location = new System.Drawing.Point(6, 415);
-            this.labelSyncInfo.Name = "labelSyncInfo";
-            this.labelSyncInfo.Size = new System.Drawing.Size(284, 13);
-            this.labelSyncInfo.TabIndex = 17;
-            this.labelSyncInfo.Text = "Set at least two sync points to make rough syncronization";
             // 
             // buttonRemoveSyncPoint
             // 
@@ -152,26 +149,15 @@
             this.buttonSetSyncPoint.UseVisualStyleBackColor = true;
             this.buttonSetSyncPoint.Click += new System.EventHandler(this.buttonSetSyncPoint_Click);
             // 
-            // SubtitleListview1
+            // labelSyncInfo
             // 
-            this.SubtitleListview1.AllowDrop = true;
-            this.SubtitleListview1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.SubtitleListview1.DisplayExtraFromExtra = false;
-            this.SubtitleListview1.FirstVisibleIndex = -1;
-            this.SubtitleListview1.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.SubtitleListview1.FullRowSelect = true;
-            this.SubtitleListview1.GridLines = true;
-            this.SubtitleListview1.HideSelection = false;
-            this.SubtitleListview1.Location = new System.Drawing.Point(9, 33);
-            this.SubtitleListview1.MultiSelect = false;
-            this.SubtitleListview1.Name = "SubtitleListview1";
-            this.SubtitleListview1.Size = new System.Drawing.Size(466, 379);
-            this.SubtitleListview1.TabIndex = 12;
-            this.SubtitleListview1.UseCompatibleStateImageBehavior = false;
-            this.SubtitleListview1.View = System.Windows.Forms.View.Details;
-            this.SubtitleListview1.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.SubtitleListview1_MouseDoubleClick);
+            this.labelSyncInfo.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.labelSyncInfo.AutoSize = true;
+            this.labelSyncInfo.Location = new System.Drawing.Point(18, 456);
+            this.labelSyncInfo.Name = "labelSyncInfo";
+            this.labelSyncInfo.Size = new System.Drawing.Size(284, 13);
+            this.labelSyncInfo.TabIndex = 17;
+            this.labelSyncInfo.Text = "Set at least two sync points to make rough syncronization";
             // 
             // buttonApplySync
             // 
@@ -209,6 +195,45 @@
             this.buttonOK.UseVisualStyleBackColor = true;
             this.buttonOK.Click += new System.EventHandler(this.buttonOK_Click);
             // 
+            // subtitleListView2
+            // 
+            this.subtitleListView2.AllowDrop = true;
+            this.subtitleListView2.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.subtitleListView2.DisplayExtraFromExtra = false;
+            this.subtitleListView2.FirstVisibleIndex = -1;
+            this.subtitleListView2.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.subtitleListView2.FullRowSelect = true;
+            this.subtitleListView2.GridLines = true;
+            this.subtitleListView2.HideSelection = false;
+            this.subtitleListView2.Location = new System.Drawing.Point(629, 33);
+            this.subtitleListView2.MultiSelect = false;
+            this.subtitleListView2.Name = "subtitleListView2";
+            this.subtitleListView2.Size = new System.Drawing.Size(453, 368);
+            this.subtitleListView2.TabIndex = 19;
+            this.subtitleListView2.UseCompatibleStateImageBehavior = false;
+            this.subtitleListView2.View = System.Windows.Forms.View.Details;
+            // 
+            // SubtitleListview1
+            // 
+            this.SubtitleListview1.AllowDrop = true;
+            this.SubtitleListview1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.SubtitleListview1.DisplayExtraFromExtra = false;
+            this.SubtitleListview1.FirstVisibleIndex = -1;
+            this.SubtitleListview1.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.SubtitleListview1.FullRowSelect = true;
+            this.SubtitleListview1.GridLines = true;
+            this.SubtitleListview1.HideSelection = false;
+            this.SubtitleListview1.Location = new System.Drawing.Point(9, 33);
+            this.SubtitleListview1.MultiSelect = false;
+            this.SubtitleListview1.Name = "SubtitleListview1";
+            this.SubtitleListview1.Size = new System.Drawing.Size(466, 368);
+            this.SubtitleListview1.TabIndex = 12;
+            this.SubtitleListview1.UseCompatibleStateImageBehavior = false;
+            this.SubtitleListview1.View = System.Windows.Forms.View.Details;
+            this.SubtitleListview1.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.SubtitleListview1_MouseDoubleClick);
+            // 
             // SyncPointsSync
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -218,21 +243,23 @@
             this.Controls.Add(this.buttonOK);
             this.Controls.Add(this.buttonApplySync);
             this.Controls.Add(this.groupBoxImportResult);
+            this.Controls.Add(this.labelSyncInfo);
             this.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.KeyPreview = true;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.MinimumSize = new System.Drawing.Size(600, 300);
+            this.MinimumSize = new System.Drawing.Size(600, 400);
             this.Name = "SyncPointsSync";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
             this.Text = "SyncPointsSync";
-            this.Shown += new System.EventHandler(this.SyncPointsSync_Shown);
+            this.Shown += new System.EventHandler(this.SyncPointsSyncShown);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.SyncPointsSync_KeyDown);
-            this.Resize += new System.EventHandler(this.SyncPointsSync_Resize);
+            this.Resize += new System.EventHandler(this.SyncPointsSyncResize);
             this.groupBoxImportResult.ResumeLayout(false);
             this.groupBoxImportResult.PerformLayout();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -251,5 +278,7 @@
         private System.Windows.Forms.Label labelOtherSubtitleFileName;
         private System.Windows.Forms.Label labelSubtitleFileName;
         private Controls.SubtitleListView subtitleListView2;
+        private System.Windows.Forms.Button buttonFindText;
+        private System.Windows.Forms.Button buttonFindTextOther;
     }
 }

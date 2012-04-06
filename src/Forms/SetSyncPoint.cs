@@ -33,6 +33,7 @@ namespace Nikse.SubtitleEdit.Forms
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
             subtitleListView1.InitializeLanguage(Configuration.Settings.Language.General, Configuration.Settings);
             subtitleListView1.InitializeTimeStampColumWidths(this);
+            buttonFindTextEnd.Text = Configuration.Settings.Language.VisualSync.FindText;
             FixLargeFonts();
         }
 
@@ -297,7 +298,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void GetTime_Load(object sender, EventArgs e)
+        private void GetTimeLoad(object sender, EventArgs e)
         {
             if (subtitleListView1.SelectedItems.Count == 1)
             {
@@ -305,7 +306,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void subtitleListView1_MouseDoubleClick(object sender, MouseEventArgs e)
+        private void SubtitleListView1MouseDoubleClick(object sender, MouseEventArgs e)
         {
             if (subtitleListView1.SelectedItems.Count == 1)
             {
@@ -314,6 +315,15 @@ namespace Nikse.SubtitleEdit.Forms
                 videoPlayerContainer1.Pause();
                 videoPlayerContainer1.CurrentPosition = _subtitle.Paragraphs[index].StartTime.TotalMilliseconds / 1000.0;
             }
+        }
+
+        private void ButtonFindTextEndClick(object sender, EventArgs e)
+        {
+            var findSubtitle = new FindSubtitleLine();
+            findSubtitle.Initialize(_subtitle.Paragraphs, string.Empty);
+            findSubtitle.ShowDialog();
+            if (findSubtitle.SelectedIndex >= 0)
+                subtitleListView1.SelectIndexAndEnsureVisible(findSubtitle.SelectedIndex);
         }
 
     }

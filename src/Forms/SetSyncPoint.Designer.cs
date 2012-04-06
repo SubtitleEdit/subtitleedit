@@ -46,6 +46,7 @@
             this.buttonVerify = new System.Windows.Forms.Button();
             this.labelSubtitle = new System.Windows.Forms.Label();
             this.videoPlayerContainer1 = new Nikse.SubtitleEdit.Controls.VideoPlayerContainer();
+            this.buttonFindTextEnd = new System.Windows.Forms.Button();
             this.groupBoxSyncPointTimeCode.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.SuspendLayout();
@@ -57,7 +58,7 @@
             this.groupBoxSyncPointTimeCode.Controls.Add(this.timeUpDownLine);
             this.groupBoxSyncPointTimeCode.Location = new System.Drawing.Point(12, 12);
             this.groupBoxSyncPointTimeCode.Name = "groupBoxSyncPointTimeCode";
-            this.groupBoxSyncPointTimeCode.Size = new System.Drawing.Size(172, 183);
+            this.groupBoxSyncPointTimeCode.Size = new System.Drawing.Size(172, 224);
             this.groupBoxSyncPointTimeCode.TabIndex = 1;
             this.groupBoxSyncPointTimeCode.TabStop = false;
             this.groupBoxSyncPointTimeCode.Text = "Sync point time code";
@@ -80,7 +81,7 @@
             this.groupBox2.Controls.Add(this.subtitleListView1);
             this.groupBox2.Location = new System.Drawing.Point(190, 13);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(554, 182);
+            this.groupBox2.Size = new System.Drawing.Size(605, 223);
             this.groupBox2.TabIndex = 10;
             this.groupBox2.TabStop = false;
             // 
@@ -97,17 +98,17 @@
             this.subtitleListView1.HideSelection = false;
             this.subtitleListView1.Location = new System.Drawing.Point(6, 18);
             this.subtitleListView1.Name = "subtitleListView1";
-            this.subtitleListView1.Size = new System.Drawing.Size(542, 158);
+            this.subtitleListView1.Size = new System.Drawing.Size(593, 199);
             this.subtitleListView1.TabIndex = 11;
             this.subtitleListView1.UseCompatibleStateImageBehavior = false;
             this.subtitleListView1.View = System.Windows.Forms.View.Details;
-            this.subtitleListView1.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.subtitleListView1_MouseDoubleClick);
+            this.subtitleListView1.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.SubtitleListView1MouseDoubleClick);
             // 
             // buttonCancel
             // 
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonCancel.Location = new System.Drawing.Point(662, 542);
+            this.buttonCancel.Location = new System.Drawing.Point(713, 584);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 21);
             this.buttonCancel.TabIndex = 31;
@@ -119,7 +120,7 @@
             // 
             this.buttonSetSyncPoint.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonSetSyncPoint.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonSetSyncPoint.Location = new System.Drawing.Point(533, 542);
+            this.buttonSetSyncPoint.Location = new System.Drawing.Point(584, 584);
             this.buttonSetSyncPoint.Name = "buttonSetSyncPoint";
             this.buttonSetSyncPoint.Size = new System.Drawing.Size(123, 21);
             this.buttonSetSyncPoint.TabIndex = 30;
@@ -134,7 +135,7 @@
             // buttonOpenMovie
             // 
             this.buttonOpenMovie.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonOpenMovie.Location = new System.Drawing.Point(631, 200);
+            this.buttonOpenMovie.Location = new System.Drawing.Point(682, 241);
             this.buttonOpenMovie.Name = "buttonOpenMovie";
             this.buttonOpenMovie.Size = new System.Drawing.Size(109, 21);
             this.buttonOpenMovie.TabIndex = 12;
@@ -151,7 +152,7 @@
             // 
             this.labelVideoFileName.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.labelVideoFileName.AutoSize = true;
-            this.labelVideoFileName.Location = new System.Drawing.Point(12, 209);
+            this.labelVideoFileName.Location = new System.Drawing.Point(12, 250);
             this.labelVideoFileName.Name = "labelVideoFileName";
             this.labelVideoFileName.Size = new System.Drawing.Size(98, 13);
             this.labelVideoFileName.TabIndex = 21;
@@ -160,7 +161,7 @@
             // buttonHalfASecondBack
             // 
             this.buttonHalfASecondBack.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.buttonHalfASecondBack.Location = new System.Drawing.Point(12, 526);
+            this.buttonHalfASecondBack.Location = new System.Drawing.Point(12, 560);
             this.buttonHalfASecondBack.Name = "buttonHalfASecondBack";
             this.buttonHalfASecondBack.Size = new System.Drawing.Size(77, 21);
             this.buttonHalfASecondBack.TabIndex = 20;
@@ -171,7 +172,7 @@
             // buttonThreeSecondsBack
             // 
             this.buttonThreeSecondsBack.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.buttonThreeSecondsBack.Location = new System.Drawing.Point(95, 526);
+            this.buttonThreeSecondsBack.Location = new System.Drawing.Point(95, 560);
             this.buttonThreeSecondsBack.Name = "buttonThreeSecondsBack";
             this.buttonThreeSecondsBack.Size = new System.Drawing.Size(77, 21);
             this.buttonThreeSecondsBack.TabIndex = 21;
@@ -182,7 +183,7 @@
             // buttonThreeSecondsAhead
             // 
             this.buttonThreeSecondsAhead.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.buttonThreeSecondsAhead.Location = new System.Drawing.Point(303, 526);
+            this.buttonThreeSecondsAhead.Location = new System.Drawing.Point(303, 560);
             this.buttonThreeSecondsAhead.Name = "buttonThreeSecondsAhead";
             this.buttonThreeSecondsAhead.Size = new System.Drawing.Size(77, 21);
             this.buttonThreeSecondsAhead.TabIndex = 23;
@@ -193,7 +194,7 @@
             // buttonHalfASecondAhead
             // 
             this.buttonHalfASecondAhead.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.buttonHalfASecondAhead.Location = new System.Drawing.Point(386, 526);
+            this.buttonHalfASecondAhead.Location = new System.Drawing.Point(386, 560);
             this.buttonHalfASecondAhead.Name = "buttonHalfASecondAhead";
             this.buttonHalfASecondAhead.Size = new System.Drawing.Size(77, 21);
             this.buttonHalfASecondAhead.TabIndex = 24;
@@ -204,7 +205,7 @@
             // buttonVerify
             // 
             this.buttonVerify.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.buttonVerify.Location = new System.Drawing.Point(178, 526);
+            this.buttonVerify.Location = new System.Drawing.Point(178, 560);
             this.buttonVerify.Name = "buttonVerify";
             this.buttonVerify.Size = new System.Drawing.Size(119, 21);
             this.buttonVerify.TabIndex = 22;
@@ -219,9 +220,9 @@
             this.labelSubtitle.BackColor = System.Drawing.Color.Black;
             this.labelSubtitle.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelSubtitle.ForeColor = System.Drawing.Color.White;
-            this.labelSubtitle.Location = new System.Drawing.Point(12, 492);
+            this.labelSubtitle.Location = new System.Drawing.Point(12, 529);
             this.labelSubtitle.Name = "labelSubtitle";
-            this.labelSubtitle.Size = new System.Drawing.Size(728, 28);
+            this.labelSubtitle.Size = new System.Drawing.Size(779, 28);
             this.labelSubtitle.TabIndex = 27;
             this.labelSubtitle.Text = "labelSubtitle";
             this.labelSubtitle.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -233,10 +234,10 @@
             this.videoPlayerContainer1.BackColor = System.Drawing.Color.Black;
             this.videoPlayerContainer1.CurrentPosition = 0D;
             this.videoPlayerContainer1.FontSizeFactor = 1F;
-            this.videoPlayerContainer1.Location = new System.Drawing.Point(12, 226);
+            this.videoPlayerContainer1.Location = new System.Drawing.Point(12, 267);
             this.videoPlayerContainer1.Name = "videoPlayerContainer1";
             this.videoPlayerContainer1.ShowStopButton = true;
-            this.videoPlayerContainer1.Size = new System.Drawing.Size(728, 265);
+            this.videoPlayerContainer1.Size = new System.Drawing.Size(779, 263);
             this.videoPlayerContainer1.SubtitleText = "";
             this.videoPlayerContainer1.TabIndex = 13;
             this.videoPlayerContainer1.TextRightToLeft = System.Windows.Forms.RightToLeft.No;
@@ -245,11 +246,22 @@
             this.videoPlayerContainer1.VideoWidth = 0;
             this.videoPlayerContainer1.Volume = 0D;
             // 
+            // buttonFindTextEnd
+            // 
+            this.buttonFindTextEnd.Location = new System.Drawing.Point(469, 560);
+            this.buttonFindTextEnd.Name = "buttonFindTextEnd";
+            this.buttonFindTextEnd.Size = new System.Drawing.Size(106, 21);
+            this.buttonFindTextEnd.TabIndex = 32;
+            this.buttonFindTextEnd.Text = "Find text...";
+            this.buttonFindTextEnd.UseVisualStyleBackColor = true;
+            this.buttonFindTextEnd.Click += new System.EventHandler(this.ButtonFindTextEndClick);
+            // 
             // SetSyncPoint
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(749, 568);
+            this.ClientSize = new System.Drawing.Size(800, 609);
+            this.Controls.Add(this.buttonFindTextEnd);
             this.Controls.Add(this.labelSubtitle);
             this.Controls.Add(this.buttonVerify);
             this.Controls.Add(this.buttonHalfASecondBack);
@@ -274,7 +286,7 @@
             this.Text = "Set sync point";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.GetTime_FormClosing);
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.GetTime_FormClosed);
-            this.Load += new System.EventHandler(this.GetTime_Load);
+            this.Load += new System.EventHandler(this.GetTimeLoad);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.GetTime_KeyDown);
             this.groupBoxSyncPointTimeCode.ResumeLayout(false);
             this.groupBoxSyncPointTimeCode.PerformLayout();
@@ -303,5 +315,6 @@
         private System.Windows.Forms.Button buttonVerify;
         private System.Windows.Forms.Label labelSubtitle;
         private Controls.SubtitleListView subtitleListView1;
+        private System.Windows.Forms.Button buttonFindTextEnd;
     }
 }
