@@ -123,7 +123,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             FillComboWithLanguages(comboBoxTo);
             i = 0;
-            string uiCultureTL = System.Globalization.CultureInfo.CurrentUICulture.TwoLetterISOLanguageName.ToLower();
+            string uiCultureTL = Configuration.Settings.Tools.GoogleTranslateLastTargetLanguage; 
             if (uiCultureTL == defaultFromLanguage)
             {
                 foreach (string s in Utilities.GetDictionaryLanguages())
@@ -229,6 +229,8 @@ namespace Nikse.SubtitleEdit.Forms
                 buttonTranslate.Enabled = true;
                 buttonOK.Enabled = true;
                 buttonCancel.Enabled = true;
+
+                Configuration.Settings.Tools.GoogleTranslateLastTargetLanguage = (comboBoxTo.SelectedItem as ComboBoxItem).Value;  
             }
         }
 
