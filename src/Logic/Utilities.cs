@@ -521,7 +521,7 @@ namespace Nikse.SubtitleEdit.Logic
                 {
                     if (mid + j + 1 < s.Length && mid + j > 0)
                     {
-                        if (".!?, ".Contains(s[mid + j].ToString()) && !IsPartOfNumber(s, mid + j) && s.Length > mid + j + 2)
+                        if (".!?, ".Contains(s[mid + j].ToString()) && !IsPartOfNumber(s, mid + j) && s.Length > mid + j + 2 && CanBreak(s, mid + j + 1))
                         {
                             splitPos = mid + j;
                             if (" .!?".Contains(s[mid + j + 1].ToString()))
@@ -532,7 +532,7 @@ namespace Nikse.SubtitleEdit.Logic
                             }
                             break;
                         }
-                        if (".!?, ".Contains(s[mid - j].ToString()) && !IsPartOfNumber(s, mid - j) && s.Length > mid + j + 2)
+                        if (".!?, ".Contains(s[mid - j].ToString()) && !IsPartOfNumber(s, mid - j) && s.Length > mid + j + 2 && CanBreak(s, mid - (j + 1)))
                         {
                             splitPos = mid - j;
                             if (".!?".Contains(s[mid - (j + 1)].ToString()))
