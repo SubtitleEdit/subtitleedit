@@ -304,6 +304,7 @@ namespace Nikse.SubtitleEdit.Logic
         public int ListViewDurationWidth { get; set; }
         public int ListViewTextWidth { get; set; }
         public string VlcWaveTranscodeSettings { get; set; }
+        public bool UseTimeFormatHHMMSSFF { get; set; }
 
         public GeneralSettings()
         {
@@ -371,6 +372,7 @@ namespace Nikse.SubtitleEdit.Logic
             OpenSubtitleExtraExtensions = "*.mp4;*.m4v;*.mkv;"; // matroska/mp4/m4v files (can contain subtitles)
             ListViewColumsRememberSize = true;
             VlcWaveTranscodeSettings = "acodec=s16l,channels=1,ab=64,samplerate=8000";
+            UseTimeFormatHHMMSSFF = false;
         }
     }
 

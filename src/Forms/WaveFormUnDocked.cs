@@ -50,7 +50,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (_redockKeys == e.KeyData)
                 _mainForm.RedockVideoControlsToolStripMenuItemClick(null, null);
             else
-                _mainForm.Main_KeyDown(sender, e);
+                _mainForm.MainKeyDown(sender, e);
         }
     }
 }

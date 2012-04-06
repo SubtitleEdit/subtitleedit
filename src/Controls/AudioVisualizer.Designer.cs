@@ -37,15 +37,15 @@
             this.BackColor = System.Drawing.Color.Black;
             this.Name = "WaveForm";
             this.Size = new System.Drawing.Size(682, 355);
-            this.Paint += new System.Windows.Forms.PaintEventHandler(this.WaveForm_Paint);
-            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.WaveForm_KeyDown);
-            this.MouseClick += new System.Windows.Forms.MouseEventHandler(this.WaveForm_MouseClick);
-            this.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.WaveForm_MouseDoubleClick);
-            this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.WaveForm_MouseDown);
-            this.MouseEnter += new System.EventHandler(this.WaveForm_MouseEnter);
-            this.MouseLeave += new System.EventHandler(this.WaveForm_MouseLeave);
-            this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.WaveForm_MouseMove);
-            this.MouseUp += new System.Windows.Forms.MouseEventHandler(this.WaveForm_MouseUp);
+            this.Paint += new System.Windows.Forms.PaintEventHandler(this.WaveFormPaint);
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.WaveFormKeyDown);
+            this.MouseClick += new System.Windows.Forms.MouseEventHandler(this.WaveFormMouseClick);
+            this.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.WaveFormMouseDoubleClick);
+            this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.WaveFormMouseDown);
+            this.MouseEnter += new System.EventHandler(this.WaveFormMouseEnter);
+            this.MouseLeave += new System.EventHandler(this.WaveFormMouseLeave);
+            this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.WaveFormMouseMove);
+            this.MouseUp += new System.Windows.Forms.MouseEventHandler(this.WaveFormMouseUp);
             this.ResumeLayout(false);
 
         }
