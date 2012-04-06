@@ -4925,10 +4925,44 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ButtonAutoBreakClick(object sender, EventArgs e)
         {
-            if (textBoxListViewText.Text.Length > 0)
-                textBoxListViewText.Text = Utilities.AutoBreakLine(textBoxListViewText.Text);
-            if (_subtitleAlternate != null && Configuration.Settings.General.AllowEditOfOriginalSubtitle &&  textBoxListViewTextAlternate.Text.Length > 0)
-                textBoxListViewTextAlternate.Text = Utilities.AutoBreakLine(textBoxListViewTextAlternate.Text);
+            if (SubtitleListview1.SelectedItems.Count > 1)
+            {
+                MakeHistoryForUndo(_language.BeforeRemoveLineBreaksInSelectedLines);
+
+                SubtitleListview1.BeginUpdate();
+                foreach (int index in SubtitleListview1.SelectedIndices)
+                {
+                    Paragraph p = _subtitle.GetParagraphOrDefault(index);
+                    if (p.Text.Length > Configuration.Settings.General.SubtitleLineMaximumLength)
+                    {
+                        p.Text = Utilities.AutoBreakLine(p.Text);
+                        SubtitleListview1.SetText(index, p.Text);
+                    }
+
+                    if (_subtitleAlternate != null && SubtitleListview1.IsAlternateTextColumnVisible && Configuration.Settings.General.AllowEditOfOriginalSubtitle)
+                    {
+                        var original = Utilities.GetOriginalParagraph(index, p, _subtitleAlternate.Paragraphs);
+                        if (original != null)
+                        {
+                            if (original.Text.Length > Configuration.Settings.General.SubtitleLineMaximumLength)
+                            {
+                                original.Text = Utilities.AutoBreakLine(p.Text);
+                                SubtitleListview1.SetAlternateText(index, original.Text);
+                            }
+                        }
+                    }
+                }
+                SubtitleListview1.EndUpdate();
+                RefreshSelectedParagraph();
+            }
+            else
+            {
+                if (textBoxListViewText.Text.Length > 0)
+                    textBoxListViewText.Text = Utilities.AutoBreakLine(textBoxListViewText.Text);
+                if (_subtitleAlternate != null && Configuration.Settings.General.AllowEditOfOriginalSubtitle && textBoxListViewTextAlternate.Text.Length > 0)
+                    textBoxListViewTextAlternate.Text = Utilities.AutoBreakLine(textBoxListViewTextAlternate.Text);
+            }
+
         }
 
         private void FixVerticalScrollBars(TextBox tb)
@@ -5906,7 +5940,24 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ButtonUnBreakClick(object sender, EventArgs e)
         {
-            textBoxListViewText.Text = Utilities.UnbreakLine(textBoxListViewText.Text);
+            if (SubtitleListview1.SelectedItems.Count > 1)
+            {
+                MakeHistoryForUndo(_language.BeforeRemoveLineBreaksInSelectedLines);
+
+                SubtitleListview1.BeginUpdate();
+                foreach (int index in SubtitleListview1.SelectedIndices)
+                {
+                    Paragraph p = _subtitle.GetParagraphOrDefault(index);
+                    p.Text = Utilities.UnbreakLine(p.Text);
+                    SubtitleListview1.SetText(index, p.Text);
+                }
+                SubtitleListview1.EndUpdate();
+                RefreshSelectedParagraph();
+            }
+            else
+            {
+                textBoxListViewText.Text = Utilities.UnbreakLine(textBoxListViewText.Text);                
+            }
         }
 
         private void TabControlSubtitleSelectedIndexChanged(object sender, EventArgs e)
