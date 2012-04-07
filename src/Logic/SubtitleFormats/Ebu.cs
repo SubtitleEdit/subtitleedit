@@ -13,7 +13,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
     /// </summary>
     public class Ebu : SubtitleFormat
     {
-        static Regex regExpr = new Regex(@"^[a-f0-9]{6}$", RegexOptions.Compiled);
+        static readonly Regex RegExpr = new Regex(@"^[a-f0-9]{6}$", RegexOptions.Compiled);
 
         internal EbuGeneralSubtitleInformation Header;
 
@@ -60,8 +60,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 {
                     if (DiskFormatCode.StartsWith("STL25"))
                         return 25.0;
-                    else
-                        return 30.0; // should be DiskFormatcode STL30.01
+                    return 30.0; // should be DiskFormatcode STL30.01
                 }
             }
 
@@ -250,7 +249,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
                 //font tags
                 string[] lines = TextField.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-                StringBuilder sb = new StringBuilder();
+                var sb = new StringBuilder();
                 string veryFirstColor = null;
                 foreach (string line in lines)
                 {
@@ -329,23 +328,23 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 color = color.ToLower();
                 if (color == "black" || color == "000000")
                     return encoding.GetString(new byte[] { 0x00 }); // black
-                else if (color == "red" || color == "ff0000")
+                if (color == "red" || color == "ff0000")
                     return encoding.GetString(new byte[] { 0x01 }); // red
-                else if (color == "green" || color == "00ff00")
+                if (color == "green" || color == "00ff00")
                     return encoding.GetString(new byte[] { 0x02 }); // green
-                else if (color == "yellow" || color == "ffff00")
+                if (color == "yellow" || color == "ffff00")
                     return encoding.GetString(new byte[] { 0x03 }); // yellow
-                else if (color == "blue" || color == "0000ff")
+                if (color == "blue" || color == "0000ff")
                     return encoding.GetString(new byte[] { 0x04 }); // blue
-                else if (color == "magenta" || color == "ff00ff")
+                if (color == "magenta" || color == "ff00ff")
                     return encoding.GetString(new byte[] { 0x05 }); // magenta
-                else if (color == "cyan" || color == "00ffff")
+                if (color == "cyan" || color == "00ffff")
                     return encoding.GetString(new byte[] { 0x06 }); // cyan
-                else if (color == "white" || color == "ffffff")
+                if (color == "white" || color == "ffffff")
                     return encoding.GetString(new byte[] { 0x07 }); // white
-                else if (color.Length == 6)
+                if (color.Length == 6)
                 {
-                    if (regExpr.IsMatch(color))
+                    if (RegExpr.IsMatch(color))
                     {
                         const int MaxDiff = 130;
                         int r = int.Parse(color.Substring(0, 2), System.Globalization.NumberStyles.HexNumber);
@@ -509,11 +508,14 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             subtitle.Header = Encoding.UTF8.GetString(buffer);
             foreach (EbuTextTimingInformation tti in ReadTTI(buffer, header))
             {
-                Paragraph p = new Paragraph();
-                p.Text = tti.TextField;
-                p.StartTime = new TimeCode(tti.TimeCodeInHours, tti.TimeCodeInMinutes, tti.TimeCodeInSeconds, tti.TimeCodeInMilliseconds);
-                p.EndTime = new TimeCode(tti.TimeCodeOutHours, tti.TimeCodeOutMinutes, tti.TimeCodeOutSeconds, tti.TimeCodeOutMilliseconds);
-                subtitle.Paragraphs.Add(p);
+                if (tti.ExtensionBlockNumber != 0xfe) // FEh : Reserved for User Data
+                {
+                    var p = new Paragraph();
+                    p.Text = tti.TextField;
+                    p.StartTime = new TimeCode(tti.TimeCodeInHours, tti.TimeCodeInMinutes, tti.TimeCodeInSeconds, tti.TimeCodeInMilliseconds);
+                    p.EndTime = new TimeCode(tti.TimeCodeOutHours, tti.TimeCodeOutMinutes, tti.TimeCodeOutSeconds, tti.TimeCodeOutMilliseconds);
+                    subtitle.Paragraphs.Add(p);
+                }
             }
             subtitle.Renumber(1);
             Header = header;
@@ -807,22 +809,22 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         return encoding.GetString(buffer, index, 1);
                 }
             }
-            else if (header.CharacterCodeTableNumber == "01") // Latin/Cyrillic alphabet - from ISO 8859/5-1988
+            if (header.CharacterCodeTableNumber == "01") // Latin/Cyrillic alphabet - from ISO 8859/5-1988
             {
                 Encoding encoding = Encoding.GetEncoding("ISO-8859-5");
                 return encoding.GetString(buffer, index, 1);
             }
-            else if (header.CharacterCodeTableNumber == "02") // Latin/Arabic alphabet - from ISO 8859/6-1987
+            if (header.CharacterCodeTableNumber == "02") // Latin/Arabic alphabet - from ISO 8859/6-1987
             {
                 Encoding encoding = Encoding.GetEncoding("ISO-8859-6");
                 return encoding.GetString(buffer, index, 1);
             }
-            else if (header.CharacterCodeTableNumber == "03") // Latin/Greek alphabet - from ISO 8859/7-1987
+            if (header.CharacterCodeTableNumber == "03") // Latin/Greek alphabet - from ISO 8859/7-1987
             {
                 Encoding encoding = Encoding.GetEncoding("ISO-8859-7"); // or ISO-8859-1 ?
                 return encoding.GetString(buffer, index, 1);
             }
-            else if (header.CharacterCodeTableNumber == "04") // Latin/Hebrew alphabet - from ISO 8859/8-1988
+            if (header.CharacterCodeTableNumber == "04") // Latin/Hebrew alphabet - from ISO 8859/8-1988
             {
                 Encoding encoding = Encoding.GetEncoding("ISO-8859-8");
                 return encoding.GetString(buffer, index, 1);
@@ -869,7 +871,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
                 // build text
                 bool skipNext = false;
-                StringBuilder sb = new StringBuilder();
+                var sb = new StringBuilder();
                 string endTags = string.Empty;
                 string color = string.Empty;
                 string lastColor = string.Empty;
