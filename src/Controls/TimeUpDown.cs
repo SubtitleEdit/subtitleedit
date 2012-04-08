@@ -179,7 +179,7 @@ namespace Nikse.SubtitleEdit.Controls
                     if (Mode == TimeMode.HHMMSSMS)
                         maskedTextBox1.Text = value.ToString();
                     else
-                        maskedTextBox1.Text = value.ToShortStringHHMMSSFF();                          
+                        maskedTextBox1.Text = value.ToHHMMSSFF();                          
                 }
                 else
                 {
