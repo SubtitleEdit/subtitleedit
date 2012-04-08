@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Logic.VobSub
 {
@@ -87,6 +88,9 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
             {
                 int delayBeforeExecute = Helper.GetEndianWord(_data, displayControlSequenceTableAddress + _pixelDataAddressOffset);
                 commandIndex = displayControlSequenceTableAddress + 4 + _pixelDataAddressOffset;
+                if (commandIndex >= _data.Length)
+                    break; // invalid index
+                    
                 int command = _data[commandIndex];
                 int numberOfCommands = 0;
                 while (command != 0xFF && numberOfCommands < 1000 && commandIndex < _data.Length)
