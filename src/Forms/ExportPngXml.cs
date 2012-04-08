@@ -310,7 +310,7 @@ namespace Nikse.SubtitleEdit.Forms
                     string numberString = string.Format("{0:00000}", imagesSavedCount);
                     string fileName = Path.Combine(folderBrowserDialog1.SelectedPath, numberString + "." + comboBoxImageFormat.Text.ToLower());
                     empty.Save(fileName, ImageFormat);
- 
+
                     MessageBox.Show(string.Format(Configuration.Settings.Language.ExportPngXml.XImagesSavedInY, imagesSavedCount, folderBrowserDialog1.SelectedPath));
                 }
                 else
@@ -410,7 +410,7 @@ namespace Nikse.SubtitleEdit.Forms
                                 string fileName = Path.Combine(folderBrowserDialog1.SelectedPath, numberString + "." + comboBoxImageFormat.Text.ToLower());
                                 empty.Save(fileName, imageFormat);
                                 imagesSavedCount++;
-                            }                            
+                            }
                         }
 
                         int endFrame = (int)Math.Round(param.P.EndTime.TotalMilliseconds / (1000.0 / param.FramesPerSeconds));

@@ -1666,7 +1666,7 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("ListViewDurationWidth", settings.General.ListViewDurationWidth.ToString(CultureInfo.InvariantCulture));
             textWriter.WriteElementString("ListViewTextWidth", settings.General.ListViewTextWidth.ToString(CultureInfo.InvariantCulture));
             textWriter.WriteElementString("VlcWaveTranscodeSettings", settings.General.VlcWaveTranscodeSettings);
-            
+
 
             textWriter.WriteEndElement();
 
@@ -1684,7 +1684,7 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("Interjections", settings.Tools.Interjections);
             textWriter.WriteElementString("MicrosoftBingApiId", settings.Tools.MicrosoftBingApiId);
             textWriter.WriteElementString("GoogleApiKey", settings.Tools.GoogleApiKey);
-            textWriter.WriteElementString("GoogleTranslateLastTargetLanguage", settings.Tools.GoogleTranslateLastTargetLanguage);            
+            textWriter.WriteElementString("GoogleTranslateLastTargetLanguage", settings.Tools.GoogleTranslateLastTargetLanguage);
             textWriter.WriteElementString("ListViewSyntaxColorDurationSmall", settings.Tools.ListViewSyntaxColorDurationSmall.ToString());
             textWriter.WriteElementString("ListViewSyntaxColorDurationBig", settings.Tools.ListViewSyntaxColorDurationBig.ToString());
             textWriter.WriteElementString("ListViewSyntaxColorLongLines", settings.Tools.ListViewSyntaxColorLongLines.ToString());

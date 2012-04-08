@@ -525,7 +525,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     {
                         subtitle.Paragraphs.Add(p);
                         last = p;
-                    }                    
+                    }
                     lastExtensionBlockNumber = tti.ExtensionBlockNumber;
                 }
             }

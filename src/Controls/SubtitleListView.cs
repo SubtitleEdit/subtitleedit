@@ -547,7 +547,7 @@ namespace Nikse.SubtitleEdit.Controls
                 {
                     item.SubItems[ColumnIndexStart].Text = paragraph.StartTime.ToString();
                     item.SubItems[ColumnIndexEnd].Text = paragraph.EndTime.ToString();
-                    item.SubItems[ColumnIndexDuration].Text = string.Format("{0},{1:000}", paragraph.Duration.Seconds, paragraph.Duration.Milliseconds);                    
+                    item.SubItems[ColumnIndexDuration].Text = string.Format("{0},{1:000}", paragraph.Duration.Seconds, paragraph.Duration.Milliseconds);
                 }
                 Items[index].SubItems[ColumnIndexText].Text = paragraph.Text.Replace(Environment.NewLine, _lineSeparatorString);
             }
@@ -664,7 +664,7 @@ namespace Nikse.SubtitleEdit.Controls
                 else
                 {
                     item.SubItems[ColumnIndexDuration].Text = string.Format("{0},{1:000}", paragraph.Duration.Seconds, paragraph.Duration.Milliseconds);
-                    item.SubItems[ColumnIndexEnd].Text = paragraph.EndTime.ToString();                    
+                    item.SubItems[ColumnIndexEnd].Text = paragraph.EndTime.ToString();
                 }
             }
         }
@@ -691,7 +691,7 @@ namespace Nikse.SubtitleEdit.Controls
                 else
                 {
                     item.SubItems[ColumnIndexStart].Text = paragraph.StartTime.ToString();
-                    item.SubItems[ColumnIndexEnd].Text = paragraph.EndTime.ToString();                    
+                    item.SubItems[ColumnIndexEnd].Text = paragraph.EndTime.ToString();
                 }
             }
         }

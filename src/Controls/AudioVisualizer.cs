@@ -544,7 +544,7 @@ namespace Nikse.SubtitleEdit.Controls
                     else if (_zoomFactor * _wavePeaks.Header.SampleRate > 51)
                         e.Graphics.DrawString("#" + paragraph.Number + "  " + paragraph.StartTime.ToShortString(), Font, textBrush, new PointF(currentRegionLeft + 3, Height - 32));
                     else if (_zoomFactor * _wavePeaks.Header.SampleRate > 25)
-                        e.Graphics.DrawString("#" + paragraph.Number, Font, textBrush, new PointF(currentRegionLeft + 3, Height - 32));                    
+                        e.Graphics.DrawString("#" + paragraph.Number, Font, textBrush, new PointF(currentRegionLeft + 3, Height - 32));
                 }
 
             }
