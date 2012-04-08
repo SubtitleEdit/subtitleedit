@@ -346,25 +346,25 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 {
                     if (RegExpr.IsMatch(color))
                     {
-                        const int MaxDiff = 130;
+                        const int maxDiff = 130;
                         int r = int.Parse(color.Substring(0, 2), System.Globalization.NumberStyles.HexNumber);
                         int g = int.Parse(color.Substring(2, 2), System.Globalization.NumberStyles.HexNumber);
                         int b = int.Parse(color.Substring(4, 2), System.Globalization.NumberStyles.HexNumber);
-                        if (r < MaxDiff && g < MaxDiff && b < MaxDiff)
+                        if (r < maxDiff && g < maxDiff && b < maxDiff)
                             return encoding.GetString(new byte[] { 0x00 }); // black
-                        if (r > 255 - MaxDiff && g < MaxDiff && b < MaxDiff)
+                        if (r > 255 - maxDiff && g < maxDiff && b < maxDiff)
                             return encoding.GetString(new byte[] { 0x01 }); // red
-                        if (r < MaxDiff && g > 255 - MaxDiff && b < MaxDiff)
+                        if (r < maxDiff && g > 255 - maxDiff && b < maxDiff)
                             return encoding.GetString(new byte[] { 0x02 }); // green
-                        if (r > 255 - MaxDiff && g > 255 - MaxDiff && b < MaxDiff)
+                        if (r > 255 - maxDiff && g > 255 - maxDiff && b < maxDiff)
                             return encoding.GetString(new byte[] { 0x03 }); // yellow
-                        if (r < MaxDiff && g < MaxDiff && b > 255 - MaxDiff)
+                        if (r < maxDiff && g < maxDiff && b > 255 - maxDiff)
                             return encoding.GetString(new byte[] { 0x04 }); // blue
-                        if (r > 255 - MaxDiff && g < MaxDiff && b > 255 - MaxDiff)
+                        if (r > 255 - maxDiff && g < maxDiff && b > 255 - maxDiff)
                             return encoding.GetString(new byte[] { 0x05 }); // magenta
-                        if (r < MaxDiff && g > 255 - MaxDiff && b > 255 - MaxDiff)
+                        if (r < maxDiff && g > 255 - maxDiff && b > 255 - maxDiff)
                             return encoding.GetString(new byte[] { 0x06 }); // cyan
-                        if (r > 255-MaxDiff && g > 255-MaxDiff && b > 255-MaxDiff)
+                        if (r > 255-maxDiff && g > 255-maxDiff && b > 255-maxDiff)
                             return encoding.GetString(new byte[] { 0x07 }); // white
                     }
                 }
@@ -411,8 +411,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         public void Save(string fileName, Subtitle subtitle)
         {
 
-            EbuGeneralSubtitleInformation header = new EbuGeneralSubtitleInformation();
-            EbuSaveOptions saveOptions = new EbuSaveOptions();
+            var header = new EbuGeneralSubtitleInformation();
+            var saveOptions = new EbuSaveOptions();
             if (subtitle.Header != null && subtitle.Header.Length > 1024 && (subtitle.Header.Contains("STL25") || subtitle.Header.Contains("STL30")))
             {
                 header = ReadHeader(Encoding.UTF8.GetBytes(subtitle.Header));
@@ -426,7 +426,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             if (saveOptions.ShowDialog() != DialogResult.OK)
                 return;
 
-            FileStream fs = new FileStream(fileName, FileMode.Create, FileAccess.Write);
+            var fs = new FileStream(fileName, FileMode.Create, FileAccess.Write);
             header.TotalNumberOfSubtitles = ((subtitle.Paragraphs.Count+1).ToString()).PadLeft(5, '0'); // seems to be 1 higher than actual number of subtitles
             header.TotalNumberOfTextAndTimingInformationBlocks = header.TotalNumberOfSubtitles;
 
@@ -446,13 +446,13 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     header.TimeCodeFirstInCue = firstTimeCode;
             }
 
-            byte[] buffer = ASCIIEncoding.ASCII.GetBytes(header.ToString());
+            byte[] buffer = Encoding.ASCII.GetBytes(header.ToString());
             fs.Write(buffer, 0, buffer.Length);
 
             int subtitleNumber = 0;
             foreach (Paragraph p in subtitle.Paragraphs)
             {
-                EbuTextTimingInformation tti = new EbuTextTimingInformation();
+                var tti = new EbuTextTimingInformation();
                 if (p.Text.Contains(Environment.NewLine))
                     tti.VerticalPosition = 0x14;
                 else
@@ -479,7 +479,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         {
             if (!string.IsNullOrEmpty(fileName) && File.Exists(fileName))
             {
-                FileInfo fi = new FileInfo(fileName);
+                var fi = new FileInfo(fileName);
                 if (fi.Length > 1024 + 128 && fi.Length < 1024000) // not too small or too big
                 {
                     byte[] buffer = File.ReadAllBytes(fileName);
@@ -506,6 +506,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             byte[] buffer = File.ReadAllBytes(fileName);
             EbuGeneralSubtitleInformation header = ReadHeader(buffer);
             subtitle.Header = Encoding.UTF8.GetString(buffer);
+            Paragraph last = null;
+            byte lastExtensionBlockNumber = 0xff;
             foreach (EbuTextTimingInformation tti in ReadTTI(buffer, header))
             {
                 if (tti.ExtensionBlockNumber != 0xfe) // FEh : Reserved for User Data
@@ -514,7 +516,17 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     p.Text = tti.TextField;
                     p.StartTime = new TimeCode(tti.TimeCodeInHours, tti.TimeCodeInMinutes, tti.TimeCodeInSeconds, tti.TimeCodeInMilliseconds);
                     p.EndTime = new TimeCode(tti.TimeCodeOutHours, tti.TimeCodeOutMinutes, tti.TimeCodeOutSeconds, tti.TimeCodeOutMilliseconds);
-                    subtitle.Paragraphs.Add(p);
+
+                    if (lastExtensionBlockNumber != 0xff && last != null)
+                    {
+                        last.Text += p.Text; // merge text
+                    }
+                    else
+                    {
+                        subtitle.Paragraphs.Add(p);
+                        last = p;
+                    }                    
+                    lastExtensionBlockNumber = tti.ExtensionBlockNumber;
                 }
             }
             subtitle.Renumber(1);
@@ -523,7 +535,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         private EbuGeneralSubtitleInformation ReadHeader(byte[] buffer)
         {
-            EbuGeneralSubtitleInformation header = new EbuGeneralSubtitleInformation();
+            var header = new EbuGeneralSubtitleInformation();
             header.CodePageNumber = Encoding.ASCII.GetString(buffer, 0, 3);
             header.DiskFormatCode = Encoding.ASCII.GetString(buffer, 3, 8);
             header.DisplayStandardCode = Encoding.ASCII.GetString(buffer, 11, 1);
@@ -835,18 +847,18 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         private IEnumerable<EbuTextTimingInformation> ReadTTI(byte[] buffer, EbuGeneralSubtitleInformation header)
         {
-            const int StartOfTTI = 1024;
-            const int TTISize = 128;
-            const byte TextFieldCRLF = 0x8A;
-            const byte TextFieldTerminator = 0x8F;
-            const byte ItalicsOn = 0x80;
-            const byte ItalicsOff = 0x81;
-            const byte UnderlineOn = 0x82;
-            const byte UnderlineOff = 0x83;
+            const int startOfTTI = 1024;
+            const int ttiSize = 128;
+            const byte textFieldCRLF = 0x8A;
+            const byte textFieldTerminator = 0x8F;
+            const byte italicsOn = 0x80;
+            const byte italicsOff = 0x81;
+            const byte underlineOn = 0x82;
+            const byte underlineOff = 0x83;
 
-            List<EbuTextTimingInformation> list = new List<EbuTextTimingInformation>();
-            int index = StartOfTTI;
-            while (index + TTISize <= buffer.Length)
+            var list = new List<EbuTextTimingInformation>();
+            int index = startOfTTI;
+            while (index + ttiSize <= buffer.Length)
             {
                 var tti = new EbuTextTimingInformation();
 
@@ -918,17 +930,17 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                                     break;
                             }
                         }
-                        if (b == TextFieldCRLF)
+                        if (b == textFieldCRLF)
                             sb.AppendLine();
-                        else if (b == ItalicsOn)
+                        else if (b == italicsOn)
                             sb.Append("<i>");
-                        else if (b == ItalicsOff)
+                        else if (b == italicsOff)
                             sb.Append("</i>");
-                        else if (b == UnderlineOn)
+                        else if (b == underlineOn)
                             sb.Append("<u>");
-                        else if (b == UnderlineOff)
+                        else if (b == underlineOff)
                             sb.Append("</u>");
-                        else if (b == TextFieldTerminator)
+                        else if (b == textFieldTerminator)
                             break;
                         else if ((b >= 0x20 && b <= 0x7F) || b >= 0xA1)
                         {
@@ -949,7 +961,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     }
                 }
                 tti.TextField = sb.ToString().Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine).TrimEnd() + endTags;
-                index += TTISize;
+                index += ttiSize;
                 list.Add(tti);
             }
             return list;
