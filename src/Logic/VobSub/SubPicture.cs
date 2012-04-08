@@ -90,7 +90,7 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
                 commandIndex = displayControlSequenceTableAddress + 4 + _pixelDataAddressOffset;
                 if (commandIndex >= _data.Length)
                     break; // invalid index
-                    
+
                 int command = _data[commandIndex];
                 int numberOfCommands = 0;
                 while (command != 0xFF && numberOfCommands < 1000 && commandIndex < _data.Length)

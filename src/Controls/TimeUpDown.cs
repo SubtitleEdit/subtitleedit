@@ -19,13 +19,13 @@ namespace Nikse.SubtitleEdit.Controls
 
         public TimeMode Mode
         {
-            get 
-            { 
+            get
+            {
                 if (Configuration.Settings == null)
                     return TimeMode.HHMMSSMS;
                 if (Configuration.Settings.General.UseTimeFormatHHMMSSFF)
                     return TimeMode.HHMMSSFF;
-                return TimeMode.HHMMSSMS;                
+                return TimeMode.HHMMSSMS;
             }
         }
 
@@ -38,7 +38,7 @@ namespace Nikse.SubtitleEdit.Controls
         }
 
         void NumericUpDownValueChanged(object sender, EventArgs e)
-        {            
+        {
             double? millisecs = GetTotalMilliseconds();
             if (millisecs.HasValue)
             {
@@ -69,7 +69,7 @@ namespace Nikse.SubtitleEdit.Controls
                             SetTotalMilliseconds(millisecs.Value - Logic.SubtitleFormats.SubtitleFormat.FramesToMilliseconds(1));
                         else if (millisecs.Value > 0)
                             SetTotalMilliseconds(0);
-                    }                    
+                    }
                 }
 
                 if (TimeCodeChanged != null)
@@ -179,7 +179,7 @@ namespace Nikse.SubtitleEdit.Controls
                     if (Mode == TimeMode.HHMMSSMS)
                         maskedTextBox1.Text = value.ToString();
                     else
-                        maskedTextBox1.Text = value.ToHHMMSSFF();                          
+                        maskedTextBox1.Text = value.ToHHMMSSFF();
                 }
                 else
                 {

@@ -45,7 +45,7 @@ namespace Nikse.SubtitleEdit.Forms
             string targetFile = Path.GetTempFileName() + ".wav";
 //            string parameters = "-I dummy -vvv \"" + SourceVideoFileName + "\" --sout=#transcode{vcodec=none,acodec=s16l}:file{dst=\"" + targetFile + "\"}  vlc://quit";
               string parameters = "-I dummy -vvv --no-sout-video --sout #transcode{" + Configuration.Settings.General.VlcWaveTranscodeSettings + "}:std{mux=wav,access=file,dst=\"" + targetFile + "\"} \"" + SourceVideoFileName + "\" vlc://quit";
-            
+
 
 
             string vlcPath;

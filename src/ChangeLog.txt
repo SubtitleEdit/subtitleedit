@@ -5,14 +5,14 @@ Subtitle Edit Changelog
    * Added Finnish language - thx Veikko
  * IMPROVED:
    * VLC audio extraction now generates smaller wave file - thx utocne
-     (transcoding parameters now in Settings.xml) 
+     (transcoding parameters now in Settings.xml)
    * Added "Find text" to Point Sync + Set Sync Point - thx eMWu
    * Unbreak/auto-break buttons now also work on selected lines - thx XhmikosR
  * FIXED:
    * Crash in "Fix common errors" - thx Dragan B
    * New-line character in Final Cut Pro Xml format - thx Axel Schmidt
-   * Bug in "Import plain text" regarding "Auto split text" 
-   * Crash in AutoBr line 
+   * Bug in "Import plain text" regarding "Auto split text"
+   * Crash in AutoBr line
    * Crash/bug in vobsub reading - thx T.S.
    * Crash when reading vobsub files with errors - thx Sofiaguy
    * EBU stl format reading now skips user data - thx Peter
@@ -49,8 +49,8 @@ Subtitle Edit Changelog
    * Wrong positioning of some texts (mostly at startup) - thx Trottel
    * Fix crash in image export (due to blank lines) - thx Mahdi
    * Line-breaking now works better with font tags - thx Trottel/XhmikosR
-   * Moving subtitles in timeline (waveform/spectrogram) with 
-     mouse is now fast again
+   * Moving subtitles in timeline (waveform/spectrogram) with mouse
+     is now fast again
 
 
 3.2.4 (11th March 2012)

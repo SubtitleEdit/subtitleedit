@@ -5704,7 +5704,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else
             {
-                numericUpDownDuration.Value = (decimal)seconds;                
+                numericUpDownDuration.Value = (decimal)seconds;
             }
         }
 
@@ -5726,7 +5726,7 @@ namespace Nikse.SubtitleEdit.Forms
                     var temp = new Paragraph(currentParagraph);
 
                     if (Configuration.Settings.General.UseTimeFormatHHMMSSFF)
-                    {                        
+                    {
                         int frames = (int)(Convert.ToDouble(numericUpDownDuration.Value) % 1.0 * 100.0);
                         if (frames > Configuration.Settings.General.CurrentFrameRate-1)
                         {
@@ -5736,13 +5736,13 @@ namespace Nikse.SubtitleEdit.Forms
                             int restFrames = (int)(frames % (Configuration.Settings.General.CurrentFrameRate-1));
                             if (frames == 99)
                                 numericUpDownDuration.Value = (decimal)(seconds + (((int)(Configuration.Settings.General.CurrentFrameRate - 1)) / 100.0));
-                            else 
+                            else
                                 numericUpDownDuration.Value = (decimal)(seconds + extraSeconds + restFrames / 100.0);
                             numericUpDownDuration.ValueChanged += NumericUpDownDurationValueChanged;
                         }
 
                     }
-                    temp.EndTime.TotalMilliseconds = currentParagraph.StartTime.TotalMilliseconds + GetDurationInMilliseconds(); 
+                    temp.EndTime.TotalMilliseconds = currentParagraph.StartTime.TotalMilliseconds + GetDurationInMilliseconds();
 
                     if (_makeHistory)
                         MakeHistoryForUndoOnlyIfNotResent(string.Format(_language.DisplayTimeAdjustedX, "#" + currentParagraph.Number + ": " + oldDuration + " -> " + temp.Duration));
@@ -5956,7 +5956,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else
             {
-                textBoxListViewText.Text = Utilities.UnbreakLine(textBoxListViewText.Text);                
+                textBoxListViewText.Text = Utilities.UnbreakLine(textBoxListViewText.Text);
             }
         }
 
@@ -7727,12 +7727,12 @@ namespace Nikse.SubtitleEdit.Forms
                     toolStripLabelFrameRate.Visible = Configuration.Settings.General.ShowFrameRate;
                     toolStripComboBoxFrameRate.Visible = Configuration.Settings.General.ShowFrameRate;
                     toolStripButtonGetFrameRate.Visible = Configuration.Settings.General.ShowFrameRate;
-                }                
+                }
 
                 SaveSubtitleListviewIndexes();
                 SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
                 RestoreSubtitleListviewIndexes();
-                RefreshSelectedParagraph();             
+                RefreshSelectedParagraph();
             }
             else if (e.Modifiers == (Keys.Control | Keys.Shift) && e.KeyCode == Keys.U) // Ctrl+Shift+U = switch original/current
             {

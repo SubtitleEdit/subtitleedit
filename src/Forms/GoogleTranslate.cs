@@ -123,7 +123,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             FillComboWithLanguages(comboBoxTo);
             i = 0;
-            string uiCultureTL = Configuration.Settings.Tools.GoogleTranslateLastTargetLanguage; 
+            string uiCultureTL = Configuration.Settings.Tools.GoogleTranslateLastTargetLanguage;
             if (uiCultureTL == defaultFromLanguage)
             {
                 foreach (string s in Utilities.GetDictionaryLanguages())
@@ -230,7 +230,7 @@ namespace Nikse.SubtitleEdit.Forms
                 buttonOK.Enabled = true;
                 buttonCancel.Enabled = true;
 
-                Configuration.Settings.Tools.GoogleTranslateLastTargetLanguage = (comboBoxTo.SelectedItem as ComboBoxItem).Value;  
+                Configuration.Settings.Tools.GoogleTranslateLastTargetLanguage = (comboBoxTo.SelectedItem as ComboBoxItem).Value;
             }
         }
 
