@@ -1,5 +1,23 @@
 Subtitle Edit Changelog
 
+3.2.7 (xth April 2012)
+ * NEW:
+   * Added Finnish language - thx Veikko
+ * IMPROVED:
+   * VLC audio extraction now generates smaller wave file - thx utocne
+     (transcoding parameters now in Settings.xml) 
+   * Added "Find text" to Point Sync + Set Sync Point - thx eMWu
+   * Unbreak/auto-break buttons now also work on selected lines - thx XhmikosR
+ * FIXED:
+   * Crash in "Fix common errors" - thx Dragan B
+   * New-line character in Final Cut Pro Xml format - thx Axel Schmidt
+   * Bug in "Import plain text" regarding "Auto split text" 
+   * Crash in AutoBr line 
+   * Crash/bug in vobsub reading - thx T.S.
+   * Crash when reading vobsub files with errors - thx Sofiaguy
+   * EBU stl format reading now skips user data - thx Peter
+
+
 3.2.6 (29th March 2012)
  * NEW:
    * Added new subtitle formats - now 100 formats supported
