@@ -697,7 +697,19 @@ namespace Nikse.SubtitleEdit.Forms
                 Paragraph p = _subtitle.Paragraphs[i];
                 double maxDisplayTime = Utilities.GetDisplayMillisecondsFromText(p.Text) * 6.0;
                 double displayTime = p.Duration.TotalMilliseconds;
-                if (maxDisplayTime < displayTime)
+                if (displayTime > Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds)
+                {
+                    if (AllowFix(p, fixAction))
+                    {
+                        string oldCurrent = p.ToString();
+                        displayTime = Utilities.GetDisplayMillisecondsFromText(p.Text) * 2.0;
+                        p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds;
+                        _totalFixes++;
+                        noOfLongDisplayTimes++;
+                        AddFixToListView(p, fixAction, oldCurrent, p.ToString());
+                    }
+                }
+                else if (maxDisplayTime < displayTime)
                 {
                     if (AllowFix(p, fixAction))
                     {
