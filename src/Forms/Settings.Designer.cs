@@ -33,6 +33,10 @@
             this.tabControlSettings = new System.Windows.Forms.TabControl();
             this.tabPageGenerel = new System.Windows.Forms.TabPage();
             this.groupBoxMiscellaneous = new System.Windows.Forms.GroupBox();
+            this.labelMaxDuration = new System.Windows.Forms.Label();
+            this.labelMinDuration = new System.Windows.Forms.Label();
+            this.numericUpDownDurationMax = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownDurationMin = new System.Windows.Forms.NumericUpDown();
             this.checkBoxPromptDeleteLines = new System.Windows.Forms.CheckBox();
             this.checkBoxAutoWrapWhileTyping = new System.Windows.Forms.CheckBox();
             this.labelMergeShortLines = new System.Windows.Forms.Label();
@@ -218,6 +222,8 @@
             this.tabControlSettings.SuspendLayout();
             this.tabPageGenerel.SuspendLayout();
             this.groupBoxMiscellaneous.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDurationMax)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDurationMin)).BeginInit();
             this.tabPageToolBar.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBoxShowToolBarButtons.SuspendLayout();
@@ -310,6 +316,10 @@
             // 
             // groupBoxMiscellaneous
             // 
+            this.groupBoxMiscellaneous.Controls.Add(this.labelMaxDuration);
+            this.groupBoxMiscellaneous.Controls.Add(this.labelMinDuration);
+            this.groupBoxMiscellaneous.Controls.Add(this.numericUpDownDurationMax);
+            this.groupBoxMiscellaneous.Controls.Add(this.numericUpDownDurationMin);
             this.groupBoxMiscellaneous.Controls.Add(this.checkBoxPromptDeleteLines);
             this.groupBoxMiscellaneous.Controls.Add(this.checkBoxAutoWrapWhileTyping);
             this.groupBoxMiscellaneous.Controls.Add(this.labelMergeShortLines);
@@ -353,13 +363,75 @@
             this.groupBoxMiscellaneous.TabStop = false;
             this.groupBoxMiscellaneous.Text = "Miscellaneous";
             // 
+            // labelMaxDuration
+            // 
+            this.labelMaxDuration.AutoSize = true;
+            this.labelMaxDuration.Location = new System.Drawing.Point(15, 370);
+            this.labelMaxDuration.Name = "labelMaxDuration";
+            this.labelMaxDuration.Size = new System.Drawing.Size(136, 13);
+            this.labelMaxDuration.TabIndex = 44;
+            this.labelMaxDuration.Text = "Max. duration, milliseconds";
+            // 
+            // labelMinDuration
+            // 
+            this.labelMinDuration.AutoSize = true;
+            this.labelMinDuration.Location = new System.Drawing.Point(14, 343);
+            this.labelMinDuration.Name = "labelMinDuration";
+            this.labelMinDuration.Size = new System.Drawing.Size(132, 13);
+            this.labelMinDuration.TabIndex = 43;
+            this.labelMinDuration.Text = "Min. duration, milliseconds";
+            // 
+            // numericUpDownDurationMax
+            // 
+            this.numericUpDownDurationMax.Location = new System.Drawing.Point(193, 368);
+            this.numericUpDownDurationMax.Maximum = new decimal(new int[] {
+            50000,
+            0,
+            0,
+            0});
+            this.numericUpDownDurationMax.Minimum = new decimal(new int[] {
+            3000,
+            0,
+            0,
+            0});
+            this.numericUpDownDurationMax.Name = "numericUpDownDurationMax";
+            this.numericUpDownDurationMax.Size = new System.Drawing.Size(56, 21);
+            this.numericUpDownDurationMax.TabIndex = 12;
+            this.numericUpDownDurationMax.Value = new decimal(new int[] {
+            50000,
+            0,
+            0,
+            0});
+            // 
+            // numericUpDownDurationMin
+            // 
+            this.numericUpDownDurationMin.Location = new System.Drawing.Point(193, 341);
+            this.numericUpDownDurationMin.Maximum = new decimal(new int[] {
+            2000,
+            0,
+            0,
+            0});
+            this.numericUpDownDurationMin.Minimum = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+            this.numericUpDownDurationMin.Name = "numericUpDownDurationMin";
+            this.numericUpDownDurationMin.Size = new System.Drawing.Size(56, 21);
+            this.numericUpDownDurationMin.TabIndex = 11;
+            this.numericUpDownDurationMin.Value = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+            // 
             // checkBoxPromptDeleteLines
             // 
             this.checkBoxPromptDeleteLines.AutoSize = true;
             this.checkBoxPromptDeleteLines.Location = new System.Drawing.Point(436, 319);
             this.checkBoxPromptDeleteLines.Name = "checkBoxPromptDeleteLines";
             this.checkBoxPromptDeleteLines.Size = new System.Drawing.Size(138, 17);
-            this.checkBoxPromptDeleteLines.TabIndex = 40;
+            this.checkBoxPromptDeleteLines.TabIndex = 26;
             this.checkBoxPromptDeleteLines.Text = "Prompt for deleting lines";
             this.checkBoxPromptDeleteLines.UseVisualStyleBackColor = true;
             // 
@@ -397,7 +469,7 @@
             this.checkBoxAllowEditOfOriginalSubtitle.Location = new System.Drawing.Point(436, 296);
             this.checkBoxAllowEditOfOriginalSubtitle.Name = "checkBoxAllowEditOfOriginalSubtitle";
             this.checkBoxAllowEditOfOriginalSubtitle.Size = new System.Drawing.Size(155, 17);
-            this.checkBoxAllowEditOfOriginalSubtitle.TabIndex = 24;
+            this.checkBoxAllowEditOfOriginalSubtitle.TabIndex = 25;
             this.checkBoxAllowEditOfOriginalSubtitle.Text = "Allow edit of original subtitle";
             this.checkBoxAllowEditOfOriginalSubtitle.UseVisualStyleBackColor = true;
             // 
@@ -408,18 +480,18 @@
             this.comboBoxSpellChecker.Items.AddRange(new object[] {
             "Hunspell",
             "Word"});
-            this.comboBoxSpellChecker.Location = new System.Drawing.Point(193, 354);
+            this.comboBoxSpellChecker.Location = new System.Drawing.Point(538, 356);
             this.comboBoxSpellChecker.Name = "comboBoxSpellChecker";
             this.comboBoxSpellChecker.Size = new System.Drawing.Size(121, 21);
-            this.comboBoxSpellChecker.TabIndex = 11;
+            this.comboBoxSpellChecker.TabIndex = 28;
             // 
             // labelSpellChecker
             // 
             this.labelSpellChecker.AutoSize = true;
-            this.labelSpellChecker.Location = new System.Drawing.Point(14, 357);
+            this.labelSpellChecker.Location = new System.Drawing.Point(433, 359);
             this.labelSpellChecker.Name = "labelSpellChecker";
             this.labelSpellChecker.Size = new System.Drawing.Size(69, 13);
-            this.labelSpellChecker.TabIndex = 36;
+            this.labelSpellChecker.TabIndex = 27;
             this.labelSpellChecker.Text = "Spell checker";
             // 
             // panelSubtitleBackgroundColor
@@ -470,7 +542,7 @@
             this.comboBoxAutoBackup.Location = new System.Drawing.Point(540, 252);
             this.comboBoxAutoBackup.Name = "comboBoxAutoBackup";
             this.comboBoxAutoBackup.Size = new System.Drawing.Size(121, 21);
-            this.comboBoxAutoBackup.TabIndex = 23;
+            this.comboBoxAutoBackup.TabIndex = 24;
             // 
             // labelAutoBackup
             // 
@@ -478,7 +550,7 @@
             this.labelAutoBackup.Location = new System.Drawing.Point(433, 255);
             this.labelAutoBackup.Name = "labelAutoBackup";
             this.labelAutoBackup.Size = new System.Drawing.Size(68, 13);
-            this.labelAutoBackup.TabIndex = 22;
+            this.labelAutoBackup.TabIndex = 23;
             this.labelAutoBackup.Text = "Auto-backup";
             // 
             // checkBoxRememberSelectedLine
@@ -487,7 +559,7 @@
             this.checkBoxRememberSelectedLine.Location = new System.Drawing.Point(444, 75);
             this.checkBoxRememberSelectedLine.Name = "checkBoxRememberSelectedLine";
             this.checkBoxRememberSelectedLine.Size = new System.Drawing.Size(139, 17);
-            this.checkBoxRememberSelectedLine.TabIndex = 14;
+            this.checkBoxRememberSelectedLine.TabIndex = 15;
             this.checkBoxRememberSelectedLine.Text = "Remember selected line";
             this.checkBoxRememberSelectedLine.UseVisualStyleBackColor = true;
             // 
@@ -497,7 +569,7 @@
             this.checkBoxRemoveBlankLinesWhenOpening.Location = new System.Drawing.Point(436, 147);
             this.checkBoxRemoveBlankLinesWhenOpening.Name = "checkBoxRemoveBlankLinesWhenOpening";
             this.checkBoxRemoveBlankLinesWhenOpening.Size = new System.Drawing.Size(225, 17);
-            this.checkBoxRemoveBlankLinesWhenOpening.TabIndex = 17;
+            this.checkBoxRemoveBlankLinesWhenOpening.TabIndex = 18;
             this.checkBoxRemoveBlankLinesWhenOpening.Text = "Remove blank lines when opening subtitle";
             this.checkBoxRemoveBlankLinesWhenOpening.UseVisualStyleBackColor = true;
             // 
@@ -531,7 +603,7 @@
             this.comboBoxListViewDoubleClickEvent.Location = new System.Drawing.Point(436, 219);
             this.comboBoxListViewDoubleClickEvent.Name = "comboBoxListViewDoubleClickEvent";
             this.comboBoxListViewDoubleClickEvent.Size = new System.Drawing.Size(332, 21);
-            this.comboBoxListViewDoubleClickEvent.TabIndex = 21;
+            this.comboBoxListViewDoubleClickEvent.TabIndex = 22;
             // 
             // labelListViewDoubleClickEvent
             // 
@@ -539,7 +611,7 @@
             this.labelListViewDoubleClickEvent.Location = new System.Drawing.Point(433, 202);
             this.labelListViewDoubleClickEvent.Name = "labelListViewDoubleClickEvent";
             this.labelListViewDoubleClickEvent.Size = new System.Drawing.Size(227, 13);
-            this.labelListViewDoubleClickEvent.TabIndex = 20;
+            this.labelListViewDoubleClickEvent.TabIndex = 21;
             this.labelListViewDoubleClickEvent.Text = "Double-click on line in main window listview will";
             // 
             // textBoxShowLineBreaksAs
@@ -548,7 +620,7 @@
             this.textBoxShowLineBreaksAs.MaxLength = 10;
             this.textBoxShowLineBreaksAs.Name = "textBoxShowLineBreaksAs";
             this.textBoxShowLineBreaksAs.Size = new System.Drawing.Size(69, 21);
-            this.textBoxShowLineBreaksAs.TabIndex = 19;
+            this.textBoxShowLineBreaksAs.TabIndex = 20;
             // 
             // labelShowLineBreaksAs
             // 
@@ -556,7 +628,7 @@
             this.labelShowLineBreaksAs.Location = new System.Drawing.Point(433, 175);
             this.labelShowLineBreaksAs.Name = "labelShowLineBreaksAs";
             this.labelShowLineBreaksAs.Size = new System.Drawing.Size(150, 13);
-            this.labelShowLineBreaksAs.TabIndex = 18;
+            this.labelShowLineBreaksAs.TabIndex = 19;
             this.labelShowLineBreaksAs.Text = "Show line breaks in listview as";
             // 
             // checkBoxRememberWindowPosition
@@ -565,7 +637,7 @@
             this.checkBoxRememberWindowPosition.Location = new System.Drawing.Point(436, 101);
             this.checkBoxRememberWindowPosition.Name = "checkBoxRememberWindowPosition";
             this.checkBoxRememberWindowPosition.Size = new System.Drawing.Size(222, 17);
-            this.checkBoxRememberWindowPosition.TabIndex = 15;
+            this.checkBoxRememberWindowPosition.TabIndex = 16;
             this.checkBoxRememberWindowPosition.Text = "Remember main window position and size";
             this.checkBoxRememberWindowPosition.UseVisualStyleBackColor = true;
             // 
@@ -612,7 +684,7 @@
             this.checkBoxStartInSourceView.Location = new System.Drawing.Point(436, 124);
             this.checkBoxStartInSourceView.Name = "checkBoxStartInSourceView";
             this.checkBoxStartInSourceView.Size = new System.Drawing.Size(119, 17);
-            this.checkBoxStartInSourceView.TabIndex = 16;
+            this.checkBoxStartInSourceView.TabIndex = 17;
             this.checkBoxStartInSourceView.Text = "Start in source view";
             this.checkBoxStartInSourceView.UseVisualStyleBackColor = true;
             // 
@@ -622,7 +694,7 @@
             this.checkBoxReopenLastOpened.Location = new System.Drawing.Point(444, 52);
             this.checkBoxReopenLastOpened.Name = "checkBoxReopenLastOpened";
             this.checkBoxReopenLastOpened.Size = new System.Drawing.Size(140, 17);
-            this.checkBoxReopenLastOpened.TabIndex = 13;
+            this.checkBoxReopenLastOpened.TabIndex = 14;
             this.checkBoxReopenLastOpened.Text = "Start with last file loaded";
             this.checkBoxReopenLastOpened.UseVisualStyleBackColor = true;
             // 
@@ -632,7 +704,7 @@
             this.checkBoxRememberRecentFiles.Location = new System.Drawing.Point(436, 28);
             this.checkBoxRememberRecentFiles.Name = "checkBoxRememberRecentFiles";
             this.checkBoxRememberRecentFiles.Size = new System.Drawing.Size(188, 17);
-            this.checkBoxRememberRecentFiles.TabIndex = 12;
+            this.checkBoxRememberRecentFiles.TabIndex = 13;
             this.checkBoxRememberRecentFiles.Text = "Remember recent files (for reopen)";
             this.checkBoxRememberRecentFiles.UseVisualStyleBackColor = true;
             this.checkBoxRememberRecentFiles.CheckedChanged += new System.EventHandler(this.checkBoxRememberRecentFiles_CheckedChanged);
@@ -1326,7 +1398,7 @@
             this.groupBoxSpectrogram.Location = new System.Drawing.Point(6, 216);
             this.groupBoxSpectrogram.Name = "groupBoxSpectrogram";
             this.groupBoxSpectrogram.Size = new System.Drawing.Size(786, 103);
-            this.groupBoxSpectrogram.TabIndex = 4;
+            this.groupBoxSpectrogram.TabIndex = 1;
             this.groupBoxSpectrogram.TabStop = false;
             this.groupBoxSpectrogram.Text = "Spectrogram";
             // 
@@ -1336,7 +1408,7 @@
             this.labelSpectrogramAppearance.Location = new System.Drawing.Point(10, 52);
             this.labelSpectrogramAppearance.Name = "labelSpectrogramAppearance";
             this.labelSpectrogramAppearance.Size = new System.Drawing.Size(164, 13);
-            this.labelSpectrogramAppearance.TabIndex = 15;
+            this.labelSpectrogramAppearance.TabIndex = 1;
             this.labelSpectrogramAppearance.Text = "Appearence (at generation time)";
             // 
             // comboBoxSpectrogramAppearance
@@ -1349,7 +1421,7 @@
             this.comboBoxSpectrogramAppearance.Location = new System.Drawing.Point(10, 70);
             this.comboBoxSpectrogramAppearance.Name = "comboBoxSpectrogramAppearance";
             this.comboBoxSpectrogramAppearance.Size = new System.Drawing.Size(325, 21);
-            this.comboBoxSpectrogramAppearance.TabIndex = 14;
+            this.comboBoxSpectrogramAppearance.TabIndex = 2;
             // 
             // checkBoxGenerateSpectrogram
             // 
@@ -1357,7 +1429,7 @@
             this.checkBoxGenerateSpectrogram.Location = new System.Drawing.Point(10, 20);
             this.checkBoxGenerateSpectrogram.Name = "checkBoxGenerateSpectrogram";
             this.checkBoxGenerateSpectrogram.Size = new System.Drawing.Size(131, 17);
-            this.checkBoxGenerateSpectrogram.TabIndex = 11;
+            this.checkBoxGenerateSpectrogram.TabIndex = 0;
             this.checkBoxGenerateSpectrogram.Text = "Generate spectrogram";
             this.checkBoxGenerateSpectrogram.UseVisualStyleBackColor = true;
             // 
@@ -1368,7 +1440,7 @@
             this.groupBox1.Location = new System.Drawing.Point(6, 325);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(786, 77);
-            this.groupBox1.TabIndex = 3;
+            this.groupBox1.TabIndex = 2;
             this.groupBox1.TabStop = false;
             // 
             // buttonWaveFormsFolderEmpty
@@ -1407,7 +1479,7 @@
             this.groupBoxWaveFormAppearence.Location = new System.Drawing.Point(6, 6);
             this.groupBoxWaveFormAppearence.Name = "groupBoxWaveFormAppearence";
             this.groupBoxWaveFormAppearence.Size = new System.Drawing.Size(786, 203);
-            this.groupBoxWaveFormAppearence.TabIndex = 2;
+            this.groupBoxWaveFormAppearence.TabIndex = 0;
             this.groupBoxWaveFormAppearence.TabStop = false;
             this.groupBoxWaveFormAppearence.Text = "Wave form appearence";
             // 
@@ -1417,7 +1489,7 @@
             this.checkBoxReverseMouseWheelScrollDirection.Location = new System.Drawing.Point(262, 31);
             this.checkBoxReverseMouseWheelScrollDirection.Name = "checkBoxReverseMouseWheelScrollDirection";
             this.checkBoxReverseMouseWheelScrollDirection.Size = new System.Drawing.Size(201, 17);
-            this.checkBoxReverseMouseWheelScrollDirection.TabIndex = 11;
+            this.checkBoxReverseMouseWheelScrollDirection.TabIndex = 6;
             this.checkBoxReverseMouseWheelScrollDirection.Text = "Reverse mouse wheel scroll direction";
             this.checkBoxReverseMouseWheelScrollDirection.UseVisualStyleBackColor = true;
             // 
@@ -1435,7 +1507,7 @@
             this.buttonWaveFormTextColor.Location = new System.Drawing.Point(16, 108);
             this.buttonWaveFormTextColor.Name = "buttonWaveFormTextColor";
             this.buttonWaveFormTextColor.Size = new System.Drawing.Size(112, 21);
-            this.buttonWaveFormTextColor.TabIndex = 6;
+            this.buttonWaveFormTextColor.TabIndex = 3;
             this.buttonWaveFormTextColor.Text = "Text color";
             this.buttonWaveFormTextColor.UseVisualStyleBackColor = true;
             this.buttonWaveFormTextColor.Click += new System.EventHandler(this.buttonWaveFormTextColor_Click);
@@ -1454,7 +1526,7 @@
             this.buttonWaveFormGridColor.Location = new System.Drawing.Point(16, 135);
             this.buttonWaveFormGridColor.Name = "buttonWaveFormGridColor";
             this.buttonWaveFormGridColor.Size = new System.Drawing.Size(112, 21);
-            this.buttonWaveFormGridColor.TabIndex = 8;
+            this.buttonWaveFormGridColor.TabIndex = 4;
             this.buttonWaveFormGridColor.Text = "Grid color";
             this.buttonWaveFormGridColor.UseVisualStyleBackColor = true;
             this.buttonWaveFormGridColor.Click += new System.EventHandler(this.buttonWaveFormGridColor_Click);
@@ -1473,7 +1545,7 @@
             this.buttonWaveFormBackgroundColor.Location = new System.Drawing.Point(16, 81);
             this.buttonWaveFormBackgroundColor.Name = "buttonWaveFormBackgroundColor";
             this.buttonWaveFormBackgroundColor.Size = new System.Drawing.Size(112, 21);
-            this.buttonWaveFormBackgroundColor.TabIndex = 4;
+            this.buttonWaveFormBackgroundColor.TabIndex = 2;
             this.buttonWaveFormBackgroundColor.Text = "Back color";
             this.buttonWaveFormBackgroundColor.UseVisualStyleBackColor = true;
             this.buttonWaveFormBackgroundColor.Click += new System.EventHandler(this.buttonWaveFormBackgroundColor_Click);
@@ -1492,7 +1564,7 @@
             this.buttonWaveFormColor.Location = new System.Drawing.Point(16, 54);
             this.buttonWaveFormColor.Name = "buttonWaveFormColor";
             this.buttonWaveFormColor.Size = new System.Drawing.Size(112, 21);
-            this.buttonWaveFormColor.TabIndex = 2;
+            this.buttonWaveFormColor.TabIndex = 1;
             this.buttonWaveFormColor.Text = "Color";
             this.buttonWaveFormColor.UseVisualStyleBackColor = true;
             this.buttonWaveFormColor.Click += new System.EventHandler(this.buttonWaveFormColor_Click);
@@ -1522,7 +1594,7 @@
             this.checkBoxWaveFormShowGrid.Location = new System.Drawing.Point(16, 162);
             this.checkBoxWaveFormShowGrid.Name = "checkBoxWaveFormShowGrid";
             this.checkBoxWaveFormShowGrid.Size = new System.Drawing.Size(73, 17);
-            this.checkBoxWaveFormShowGrid.TabIndex = 10;
+            this.checkBoxWaveFormShowGrid.TabIndex = 5;
             this.checkBoxWaveFormShowGrid.Text = "Show grid";
             this.checkBoxWaveFormShowGrid.UseVisualStyleBackColor = true;
             // 
@@ -2337,6 +2409,8 @@
             this.tabPageGenerel.ResumeLayout(false);
             this.groupBoxMiscellaneous.ResumeLayout(false);
             this.groupBoxMiscellaneous.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDurationMax)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDurationMin)).EndInit();
             this.tabPageToolBar.ResumeLayout(false);
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
@@ -2589,5 +2663,9 @@
         private System.Windows.Forms.Label labelSpectrogramAppearance;
         private System.Windows.Forms.ComboBox comboBoxSpectrogramAppearance;
         private System.Windows.Forms.CheckBox checkBoxReverseMouseWheelScrollDirection;
+        private System.Windows.Forms.Label labelMaxDuration;
+        private System.Windows.Forms.Label labelMinDuration;
+        private System.Windows.Forms.NumericUpDown numericUpDownDurationMax;
+        private System.Windows.Forms.NumericUpDown numericUpDownDurationMin;
     }
 }

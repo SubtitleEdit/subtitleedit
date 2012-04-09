@@ -91,6 +91,9 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxAutoWrapWhileTyping.Checked = gs.AutoWrapLineWhileTyping;
             textBoxShowLineBreaksAs.Text = gs.ListViewLineSeparatorString;
 
+            numericUpDownDurationMin.Value = Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds;
+            numericUpDownDurationMax.Value = Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds;
+
             if (string.Compare(gs.VideoPlayer.Trim(), "VLC", true) == 0 && LibVlc11xDynamic.IsInstalled)
                 radioButtonVideoPlayerVLC.Checked = true;
             else if (string.Compare(gs.VideoPlayer.Trim(), "MPlayer", true) == 0 && Utilities.IsMPlayerAvailable)
@@ -196,6 +199,20 @@ namespace Nikse.SubtitleEdit.Forms
             labelAutoDetectAnsiEncoding.Text = language.AutoDetectAnsiEncoding;
             labelSubMaxLen.Text = language.SubtitleLineMaximumLength;
             checkBoxAutoWrapWhileTyping.Text = language.AutoWrapWhileTyping;
+
+            if (!string.IsNullOrEmpty(language.DurationMinimumMilliseconds))
+            {
+                labelMinDuration.Text = language.DurationMinimumMilliseconds;
+                labelMaxDuration.Text = language.DurationMaximumMilliseconds;
+            }
+            else //TODO: remove in 3.3
+            {
+                labelMinDuration.Visible = false;
+                labelMaxDuration.Visible = false;
+                numericUpDownDurationMin.Visible = false;
+                numericUpDownDurationMax.Visible = false;
+            }
+
             labelSubtitleFont.Text = language.SubtitleFont;
             labelSubtitleFontSize.Text = language.SubtitleFontSize;
             checkBoxSubtitleFontBold.Text = language.SubtitleBold;
@@ -785,6 +802,10 @@ namespace Nikse.SubtitleEdit.Forms
             if (gs.ListViewLineSeparatorString.Trim().Length == 0)
                 gs.ListViewLineSeparatorString = Environment.NewLine;
             gs.ListViewDoubleClickAction = comboBoxListViewDoubleClickEvent.SelectedIndex;
+
+
+            gs.SubtitleMinimumDisplayMilliseconds = (int)numericUpDownDurationMin.Value;
+            gs.SubtitleMaximumDisplayMilliseconds = (int)numericUpDownDurationMax.Value;
 
             if (comboBoxAutoBackup.SelectedIndex == 1)
                 gs.AutoBackupSeconds = 60;
