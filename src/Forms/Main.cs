@@ -1701,6 +1701,8 @@ namespace Nikse.SubtitleEdit.Forms
                         ebu.LoadSubtitle(_subtitle, null, fileName);
                         _oldSubtitleFormat = ebu;
                         SetFormatToSubRip();
+                        SetEncoding(Configuration.Settings.General.DefaultEncoding);
+                        encoding = GetCurrentEncoding();
                         justConverted = true;
                         format = GetCurrentSubtitleFormat();
                     }
@@ -1714,6 +1716,8 @@ namespace Nikse.SubtitleEdit.Forms
                         pac.LoadSubtitle(_subtitle, null, fileName);
                         _oldSubtitleFormat = pac;
                         SetFormatToSubRip();
+                        SetEncoding(Configuration.Settings.General.DefaultEncoding);
+                        encoding = GetCurrentEncoding();
                         justConverted = true;
                         format = GetCurrentSubtitleFormat();
                     }
@@ -1727,6 +1731,8 @@ namespace Nikse.SubtitleEdit.Forms
                         cavena890.LoadSubtitle(_subtitle, null, fileName);
                         _oldSubtitleFormat = cavena890;
                         SetFormatToSubRip();
+                        SetEncoding(Configuration.Settings.General.DefaultEncoding);
+                        encoding = GetCurrentEncoding();
                         justConverted = true;
                         format = GetCurrentSubtitleFormat();
                     }
@@ -1740,6 +1746,8 @@ namespace Nikse.SubtitleEdit.Forms
                         spt.LoadSubtitle(_subtitle, null, fileName);
                         _oldSubtitleFormat = spt;
                         SetFormatToSubRip();
+                        SetEncoding(Configuration.Settings.General.DefaultEncoding);
+                        encoding = GetCurrentEncoding();
                         justConverted = true;
                         format = GetCurrentSubtitleFormat();
                     }
@@ -1757,6 +1765,8 @@ namespace Nikse.SubtitleEdit.Forms
                         wsb.LoadSubtitle(_subtitle, list, fileName);
                         _oldSubtitleFormat = wsb;
                         SetFormatToSubRip();
+                        SetEncoding(Configuration.Settings.General.DefaultEncoding);
+                        encoding = GetCurrentEncoding();
                         justConverted = true;
                         format = GetCurrentSubtitleFormat();
                     }
