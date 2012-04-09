@@ -1103,6 +1103,8 @@
             public string AutoDetectAnsiEncoding { get; set; }
             public string SubtitleLineMaximumLength { get; set; }
             public string AutoWrapWhileTyping { get; set; }
+            public string DurationMinimumMilliseconds { get; set; }
+            public string DurationMaximumMilliseconds { get; set; }
             public string SubtitleFont { get; set; }
             public string SubtitleFontSize { get; set; }
             public string SubtitleBold { get; set; }

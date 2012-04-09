@@ -113,7 +113,7 @@
     <After>Efter</After>
     <LinesFoundX>Linjer fundet: {0}</LinesFoundX>
     <OnlyBreakLinesLongerThan>Bryd kun linjer længere end</OnlyBreakLinesLongerThan>
-    <OnlyUnbreakLinesShorterThan>Saml kun linier kortere end</OnlyUnbreakLinesShorterThan>
+    <OnlyUnbreakLinesLongerThan>Fjern kun linjeskift fra linjer længere end</OnlyUnbreakLinesLongerThan>
   </AutoBreakUnbreakLines>
   <ChangeCasing>
     <Title>Skift mellem STORE/små/Normal</Title>
@@ -243,6 +243,11 @@
     <AntiAlias>Anti alias</AntiAlias>
     <ExportAllLines>Eksporter alle linjer...</ExportAllLines>
     <XImagesSavedInY>{0} billeder gemt i {1}</XImagesSavedInY>
+    <VideoResolution>Video str</VideoResolution>
+    <Align>Justering</Align>
+    <Left>Venstre</Left>
+    <Right>Højre</Right>
+    <Center>Centrer</Center>
   </ExportPngXml>
   <FindDialog>
     <Title>Find</Title>
@@ -430,7 +435,6 @@
     <Auto>Auto</Auto>
     <Fixed>Fast</Fixed>
     <Refresh>&amp;Opdater</Refresh>
-    <Next>&amp;Næste&gt;&gt;</Next>
     <TextFiles>Tekstfiler</TextFiles>
     <PreviewLinesModifiedX>Preview - ændrede linjer: {0}</PreviewLinesModifiedX>
   </ImportText>
@@ -584,6 +588,7 @@
         <CopyToClipboard>Kopier som tekst til udklipsholderen</CopyToClipboard>
         <Split>Split</Split>
         <MergeSelectedLines>Flet markerede linjer</MergeSelectedLines>
+        <MergeSelectedLinesASDialogue>Flet valgte linjer som dialog (bindestreg foran)</MergeSelectedLinesASDialogue>
         <MergeWithLineBefore>Flet med linjen før</MergeWithLineBefore>
         <MergeWithLineAfter>Flet med linjen efter</MergeWithLineAfter>
         <Normal>Normal</Normal>
@@ -988,6 +993,8 @@ Fortsæt?</SubtitleAppendPrompt>
     <AutoDetectAnsiEncoding>Auto opdag ANSI-kodning</AutoDetectAnsiEncoding>
     <SubtitleLineMaximumLength>undertekst max. længde</SubtitleLineMaximumLength>
     <AutoWrapWhileTyping>Auto-ombryd tekst mens du skriver</AutoWrapWhileTyping>
+    <DurationMinimumMilliseconds>Min. varighed, millisekunder</DurationMinimumMilliseconds>
+    <DurationMaximumMilliseconds>Max. varighed, millisekunder</DurationMaximumMilliseconds>
     <SubtitleFont>undertekst skrifttype</SubtitleFont>
     <SubtitleFontSize>undertekst skriftstørrelse</SubtitleFontSize>
     <SubtitleBold>Fed</SubtitleBold>
@@ -1090,10 +1097,16 @@ Fortsæt?</SubtitleAppendPrompt>
     <ToggleDockUndockOfVideoControls>Skift dok/frigør af video kontrol</ToggleDockUndockOfVideoControls>
     <AdjustViaEndAutoStartAndGoToNext>Juster via slutposition og gå til næste</AdjustViaEndAutoStartAndGoToNext>
     <AdjustSetStartAutoDurationAndGoToNext>Set start, auto varighed og gå til næste</AdjustSetStartAutoDurationAndGoToNext>
+    <AdjustSetEndNextStartAndGoToNext>Set slut, næste start og gå til næste</AdjustSetEndNextStartAndGoToNext>
+    <AdjustStartDownEndUpAndGoToNext>Tast ned = set start, tast op = sæt slut og gå til næste</AdjustStartDownEndUpAndGoToNext>
     <AdjustSelected100MsForward>Flyt valgte linjer 100 ms frem</AdjustSelected100MsForward>
     <AdjustSelected100MsBack>Flyt valgte linjer 100 ms tilbage</AdjustSelected100MsBack>
+    <AdjustSetStartTimeOnly>Sæt starttid, behold sluttid</AdjustSetStartTimeOnly>
+    <MainCreateStartDownEndUp>Opret ny på tast-ned, sæt sluttid ved tast-op</MainCreateStartDownEndUp>
+    <MergeDialogue>Flet dialog (indsæt tankestreger)</MergeDialogue>
     <GoToNext>Gå til næste linje</GoToNext>
     <GoToPrevious>Gå til forrige line</GoToPrevious>
+    <ToggleFocus>Skift fokus imellem liste visning og undertekst tekstboks</ToggleFocus>
     <ToggleDialogueDashes>Toogle dialog tankestreger</ToggleDialogueDashes>
     <VerticalZoom>Lodret zoom</VerticalZoom>
     <WaveformSeekSilenceForward>Søg stilhed frem</WaveformSeekSilenceForward>
@@ -1102,6 +1115,8 @@ Fortsæt?</SubtitleAppendPrompt>
     <GoForward100Milliseconds>100 ms frem</GoForward100Milliseconds>
     <GoBack500Milliseconds>500 ms tilbage</GoBack500Milliseconds>
     <GoForward500Milliseconds>500 ms frem</GoForward500Milliseconds>
+    <TogglePlayPause>Skift mellem afspil og pause</TogglePlayPause>
+    <Pause>Pause</Pause>
     <Fullscreen>Fuldskærm</Fullscreen>
   </Settings>
   <ShowEarlierLater>
