@@ -40,19 +40,19 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         {
             if (Configuration.Settings.General.CurrentFrameRate < 24)
                 return "24"; // ntsc 23.976
-            else if (Configuration.Settings.General.CurrentFrameRate < 25)
+            if (Configuration.Settings.General.CurrentFrameRate < 25)
                 return "24";
-            else if (Configuration.Settings.General.CurrentFrameRate < 29)
+            if (Configuration.Settings.General.CurrentFrameRate < 29)
                 return "25";
-            else if (Configuration.Settings.General.CurrentFrameRate < 29)
+            if (Configuration.Settings.General.CurrentFrameRate < 29)
                 return "25";
-            else if (Configuration.Settings.General.CurrentFrameRate < 30)
+            if (Configuration.Settings.General.CurrentFrameRate < 30)
                 return "30"; // ntsc 29.97
-            else if (Configuration.Settings.General.CurrentFrameRate < 40)
+            if (Configuration.Settings.General.CurrentFrameRate < 40)
                 return "30";
-            else if (Configuration.Settings.General.CurrentFrameRate < 40)
+            if (Configuration.Settings.General.CurrentFrameRate < 40)
                 return "30";
-            else if (Configuration.Settings.General.CurrentFrameRate < 60)
+            if (Configuration.Settings.General.CurrentFrameRate < 60)
                 return "60"; // ntsc 59.94
             return "60";
         }
@@ -61,19 +61,19 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         {
             if (Configuration.Settings.General.CurrentFrameRate < 24)
                 return "TRUE"; // ntsc 23.976
-            else if (Configuration.Settings.General.CurrentFrameRate < 25)
+            if (Configuration.Settings.General.CurrentFrameRate < 25)
                 return "FALSE";
-            else if (Configuration.Settings.General.CurrentFrameRate < 29)
+            if (Configuration.Settings.General.CurrentFrameRate < 29)
                 return "FALSE";
-            else if (Configuration.Settings.General.CurrentFrameRate < 29)
+            if (Configuration.Settings.General.CurrentFrameRate < 29)
                 return "FALSE";
-            else if (Configuration.Settings.General.CurrentFrameRate < 30)
+            if (Configuration.Settings.General.CurrentFrameRate < 30)
                 return "TRUE"; // ntsc 29.97
-            else if (Configuration.Settings.General.CurrentFrameRate < 40)
+            if (Configuration.Settings.General.CurrentFrameRate < 40)
                 return "FALSE";
-            else if (Configuration.Settings.General.CurrentFrameRate < 40)
+            if (Configuration.Settings.General.CurrentFrameRate < 40)
                 return "FALSE";
-            else if (Configuration.Settings.General.CurrentFrameRate < 60)
+            if (Configuration.Settings.General.CurrentFrameRate < 60)
                 return "TRUE"; // ntsc 59.94
             return "FALSE";
         }
@@ -161,7 +161,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 </xmeml>";
 
 
-            string xmlTrackStructure3 =
+            string xmlTrackStructure =
                 @"          <generatoritem id='Outline Text[NUMBER]'>
             <name>Outline Text</name>
             <duration>3000</duration>
@@ -236,7 +236,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     <value>4</value>
                   </valueentry>
                 </valuelist>
-                <value>1</value>
+                <value>[FONTSTYLE]</value>
               </parameter>
               <parameter>
                 <parameterid>align</parameterid>
@@ -439,7 +439,11 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             foreach (Paragraph p in subtitle.Paragraphs)
             {
                 XmlNode generatorItem = xml.CreateElement("generatoritem");
-                generatorItem.InnerXml = xmlTrackStructure3.Replace("[NUMBER]", number.ToString());
+                string fontStyle = "1"; //1==plain
+                string s = Utilities.RemoveHtmlFontTag(p.Text).Trim();
+                if (s.StartsWith("<i>") && s.EndsWith("</i>"))
+                    fontStyle = "3"; //3==italic
+                generatorItem.InnerXml = xmlTrackStructure.Replace("[NUMBER]", number.ToString()).Replace("[FONTSTYLE]", fontStyle);
 
                 double frameRate = Configuration.Settings.General.CurrentFrameRate;
                 XmlNode start = generatorItem.SelectSingleNode("generatoritem/start");
@@ -468,7 +472,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
             _errorCount = 0;
-            var FrameRate = Configuration.Settings.General.CurrentFrameRate;
+            var frameRate = Configuration.Settings.General.CurrentFrameRate;
 
             var sb = new StringBuilder();
             lines.ForEach(line => sb.AppendLine(line));
@@ -484,11 +488,11 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 {
                     try
                     {
-                        FrameRate = double.Parse(xml.DocumentElement.SelectSingleNode("sequence/rate/timebase").InnerText);
+                        frameRate = double.Parse(xml.DocumentElement.SelectSingleNode("sequence/rate/timebase").InnerText);
                     }
                     catch
                     {
-                        FrameRate = Configuration.Settings.General.CurrentFrameRate;
+                        frameRate = Configuration.Settings.General.CurrentFrameRate;
                     }
                 }
 
@@ -503,7 +507,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                             {
                                 XmlNode timebase = rate.SelectSingleNode("timebase");
                                 if (timebase != null)
-                                    FrameRate = double.Parse(timebase.InnerText);
+                                    frameRate = double.Parse(timebase.InnerText);
                             }
 
                             double startFrame = 0;
@@ -523,11 +527,38 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                                 if (valueNode != null)
                                     text += valueNode.InnerText;
                             }
+
+                            bool italic = false;
+                            foreach (XmlNode parameterNode in generatorItemNode.SelectNodes("effect/parameter[parameterid='style']"))
+                            {
+                                XmlNode valueNode = parameterNode.SelectSingleNode("value");
+                                var valueEntries = parameterNode.SelectNodes("valuelist/valueentry");
+                                if (valueNode != null)
+                                {
+                                    int no;
+                                    if (int.TryParse(valueNode.InnerText, out no))
+                                    {
+                                        no--;
+                                        if (no < valueEntries.Count)
+                                        {
+                                            var styleNameNode = valueEntries[no].SelectSingleNode("name");
+                                            if (styleNameNode != null)
+                                            {
+                                                string styleName = styleNameNode.InnerText;
+                                                italic = styleName.ToLower().Trim() == "italic";
+                                            }
+                                        }                                    
+                                    }                                    
+                                }
+                            }
+
                             if (text.Length > 0)
                             {
                                 if (!text.Contains(Environment.NewLine))
                                     text = text.Replace("\r", Environment.NewLine);
-                                subtitle.Paragraphs.Add(new Paragraph(text, Convert.ToDouble((startFrame / FrameRate) *1000), Convert.ToDouble((endFrame / FrameRate) * 1000)));
+                                if (italic)
+                                    text = "<i>" + text + "</i>";
+                                subtitle.Paragraphs.Add(new Paragraph(text, Convert.ToDouble((startFrame / frameRate) *1000), Convert.ToDouble((endFrame / frameRate) * 1000)));
                             }
                         }
                     }
@@ -543,7 +574,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 _errorCount = 1;
                 return;
             }
-            Configuration.Settings.General.CurrentFrameRate = FrameRate;
+            Configuration.Settings.General.CurrentFrameRate = frameRate;
         }
 
     }
