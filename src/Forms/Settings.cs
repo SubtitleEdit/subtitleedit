@@ -69,7 +69,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (ei.Name != Encoding.UTF8.BodyName && ei.CodePage >= Configuration.Settings.General.EncodingMininumCodePage)
                 {
                     comboBoxEncoding.Items.Add(ei.CodePage + ": " + ei.DisplayName);
-                    if (ei.Name == gs.DefaultEncoding)
+                    if (ei.Name == gs.DefaultEncoding || ei.CodePage + ": " + ei.DisplayName == gs.DefaultEncoding)
                         encodingSelectedIndex = comboBoxEncoding.Items.Count - 1;
                 }
             }
