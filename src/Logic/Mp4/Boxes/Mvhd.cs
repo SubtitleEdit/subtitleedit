@@ -4,7 +4,8 @@ namespace Nikse.SubtitleEdit.Logic.Mp4.Boxes
 {
     public class Mvhd : Box
     {
-
+        public readonly uint CreationTime;
+        public readonly uint ModificationTime;
         public readonly uint Duration;
         public readonly uint TimeScale;
 
@@ -15,9 +16,10 @@ namespace Nikse.SubtitleEdit.Logic.Mp4.Boxes
             if (bytesRead < buffer.Length)
                 return;
 
+            CreationTime = GetUInt(4);
+            ModificationTime = GetUInt(8);
             TimeScale = GetUInt(12);
             Duration = GetUInt(16);
         }
-
     }
 }
