@@ -39,6 +39,16 @@ namespace Nikse.SubtitleEdit.Logic.Mp4
             }
         }
 
+        public DateTime CreationDate
+        {
+            get
+            {
+                if (Moov != null && Moov.Mvhd != null && Moov.Mvhd.TimeScale > 0)
+                    return new DateTime(1904, 1, 1, 0, 0, 0, DateTimeKind.Utc).Add(TimeSpan.FromSeconds(Moov.Mvhd.CreationTime));
+                return DateTime.Now;
+            }
+        }
+
         /// <summary>
         /// Resolution of first video track. If not present returns 0.0
         /// </summary>
