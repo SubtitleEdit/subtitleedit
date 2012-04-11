@@ -484,7 +484,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 {
                     byte[] buffer = File.ReadAllBytes(fileName);
                     EbuGeneralSubtitleInformation header = ReadHeader(buffer);
-                    if (header.DiskFormatCode.StartsWith("STL25") ||
+                    if (header.DiskFormatCode.StartsWith("STL24") ||
+                        header.DiskFormatCode.StartsWith("STL25") ||
                         header.DiskFormatCode.StartsWith("STL30"))
                     {
                         return Utilities.IsInteger(header.CodePageNumber);
