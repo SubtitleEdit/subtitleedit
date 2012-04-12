@@ -72,7 +72,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             for (int i=0; i<lines.Count; i++)
             {
                 string line = lines[i].TrimEnd();
-                line = line.Trim(Convert.ToChar(127)); // 127=delete acscii 
+                line = line.Trim(Convert.ToChar(127)); // 127=delete acscii
 
                 string next = string.Empty;
                 if (i + 1 < lines.Count)
