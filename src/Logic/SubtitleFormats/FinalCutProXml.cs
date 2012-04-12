@@ -547,8 +547,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                                                 string styleName = styleNameNode.InnerText;
                                                 italic = styleName.ToLower().Trim() == "italic";
                                             }
-                                        }                                    
-                                    }                                    
+                                        }
+                                    }
                                 }
                             }
 
