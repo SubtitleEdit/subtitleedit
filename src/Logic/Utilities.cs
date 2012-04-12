@@ -97,8 +97,9 @@ namespace Nikse.SubtitleEdit.Logic
                     info.Width = dh.Width;
                     info.Height = dh.Height;
                     info.FramesPerSecond = dh.FrameRate;
-                    info.TotalFrames = dh.TotalFrames;
+                    info.TotalFrames = dh.TotalFrames;                    
                     info.TotalMilliseconds = dh.TotalMilliseconds;
+                    info.TotalSeconds = info.TotalMilliseconds / 1000.0;
                     info.VideoCodec = dh.VideoHandler;
                     info.Success = true;
                 }

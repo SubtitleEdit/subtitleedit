@@ -517,6 +517,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             var textBoxNode = new TreeNode(Configuration.Settings.Language.Settings.TextBox);
             textBoxNode.Nodes.Add(Configuration.Settings.Language.General.Italic + GetShortcutText(Configuration.Settings.Shortcuts.MainTextBoxItalic));
+            textBoxNode.Nodes.Add(Configuration.Settings.Language.Main.Menu.ContextMenu.SplitLineAtCursorPosition + GetShortcutText(Configuration.Settings.Shortcuts.MainTextBoxSplitAtCursor));
             treeViewShortcuts.Nodes.Add(textBoxNode);
 
             var createNode = new TreeNode(Configuration.Settings.Language.Main.VideoControls.Create);
@@ -1028,6 +1029,8 @@ namespace Nikse.SubtitleEdit.Forms
                     string text = node.Text.Substring(0, node.Text.IndexOf("[")).Trim();
                     if (text == Configuration.Settings.Language.General.Italic.Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.MainTextBoxItalic = GetShortcut(node.Text);
+                    else if (text == Configuration.Settings.Language.Main.Menu.ContextMenu.SplitLineAtCursorPosition.Replace("&", string.Empty))
+                        Configuration.Settings.Shortcuts.MainTextBoxSplitAtCursor = GetShortcut(node.Text);
                 }
             }
 
@@ -1049,7 +1052,6 @@ namespace Nikse.SubtitleEdit.Forms
                         Configuration.Settings.Shortcuts.MainCreateStartDownEndUp = GetShortcut(node.Text);
                 }
             }
-
 
             //Adjust
             foreach (TreeNode node in treeViewShortcuts.Nodes[8].Nodes)

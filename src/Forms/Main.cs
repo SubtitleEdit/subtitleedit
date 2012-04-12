@@ -103,6 +103,7 @@ namespace Nikse.SubtitleEdit.Forms
         Keys _video500MsLeft = Keys.None;
         Keys _video500MsRight = Keys.None;
         Keys _mainVideoFullscreen = Keys.None;
+        Keys _mainTextBoxSplitAtCursor = Keys.None;
         Keys _mainCreateInsertSubAtVideoPos = Keys.None;
         Keys _mainCreatePlayFromJustBefore = Keys.None;
         Keys _mainCreateSetStart = Keys.None;
@@ -545,6 +546,15 @@ namespace Nikse.SubtitleEdit.Forms
                             format = spt;
                         }
                     }
+                    if (format == null)
+                    {
+                        var cheetahCaption = new CheetahCaption();
+                        if (cheetahCaption.IsMine(null, fileName))
+                        {
+                            cheetahCaption.LoadSubtitle(_subtitle, null, fileName);
+                            format = cheetahCaption;
+                        }
+                    }
 
                     if (format == null)
                     {
@@ -646,6 +656,18 @@ namespace Nikse.SubtitleEdit.Forms
                                 outputFileName = FormatOutputFileNameForBatchConvert(fileName, cavena890.Extension);
                                 Console.Write(string.Format("{0}: {1} -> {2}...", count, Path.GetFileName(fileName), outputFileName));
                                 cavena890.Save(outputFileName, sub);
+                                Console.WriteLine(" done.");
+                            }
+                        }
+                        if (!targetFormatFound)
+                        {
+                            var cheetahCaption = new CheetahCaption();
+                            if (cheetahCaption.Name.ToLower().Replace(" ", string.Empty) == toFormat.ToLower())
+                            {
+                                targetFormatFound = true;
+                                outputFileName = FormatOutputFileNameForBatchConvert(fileName, cheetahCaption.Extension);
+                                Console.Write(string.Format("{0}: {1} -> {2}...", count, Path.GetFileName(fileName), outputFileName));
+                                cheetahCaption.Save(outputFileName, sub);
                                 Console.WriteLine(" done.");
                             }
                         }
@@ -1771,6 +1793,22 @@ namespace Nikse.SubtitleEdit.Forms
                         format = GetCurrentSubtitleFormat();
                     }
                 }
+
+                if (format == null)
+                {
+                    var cheetahCaption = new CheetahCaption();
+                    if (cheetahCaption.IsMine(null, fileName))
+                    {
+                        cheetahCaption.LoadSubtitle(_subtitle, null, fileName);
+                        _oldSubtitleFormat = cheetahCaption;
+                        SetFormatToSubRip();
+                        SetEncoding(Configuration.Settings.General.DefaultEncoding);
+                        encoding = GetCurrentEncoding();
+                        justConverted = true;
+                        format = GetCurrentSubtitleFormat();
+                    }
+                }
+
 
                 if (format == null)
                 {
@@ -5085,6 +5123,11 @@ namespace Nikse.SubtitleEdit.Forms
             if (e.Modifiers == Keys.Control && e.KeyCode == Keys.D)
             {
                 textBoxListViewText.SelectionLength = 0;
+                e.SuppressKeyPress = true;
+            }
+            else if (_mainTextBoxSplitAtCursor == e.KeyData)
+            {
+                ToolStripMenuItemSplitTextAtCursorClick(null, null);
                 e.SuppressKeyPress = true;
             }
 
@@ -10325,6 +10368,7 @@ namespace Nikse.SubtitleEdit.Forms
             italicToolStripMenuItem.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainListViewItalic);
             _mainListViewToggleDashes = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainListViewToggleDashes);
             italicToolStripMenuItem1.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxItalic);
+            _mainTextBoxSplitAtCursor = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxSplitAtCursor);
             _mainCreateInsertSubAtVideoPos = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainCreateInsertSubAtVideoPos);
             _mainCreatePlayFromJustBefore = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainCreatePlayFromJustBefore);
             _mainCreateSetStart = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainCreateSetStart);
@@ -12432,6 +12476,8 @@ namespace Nikse.SubtitleEdit.Forms
             if (tb.SelectionStart > 2 && tb.SelectionStart < tb.Text.Length - 2)
                 pos = tb.SelectionStart;
             SplitSelectedParagraph(null, pos);
+            tb.Focus();
+            tb.SelectionStart = tb.Text.Length;
         }
 
         private void ContextMenuStripTextBoxListViewOpening(object sender, System.ComponentModel.CancelEventArgs e)
@@ -13148,5 +13194,337 @@ namespace Nikse.SubtitleEdit.Forms
             exportBdnXmlPng.Initialize(_subtitle, "IMAGE/FRAME", _fileName);
             exportBdnXmlPng.ShowDialog(this);
         }
+
+        private void toolStripMenuItemAlignTop_Click(object sender, EventArgs e)
+        {
+            if (_subtitle.Paragraphs.Count > 0 && SubtitleListview1.SelectedItems.Count > 0)
+            {
+                SubtitleListview1.SelectedIndexChanged -= SubtitleListview1_SelectedIndexChanged;
+                MakeHistoryForUndo(string.Format(_language.BeforeAddingTagX, "+4"));
+
+                var indexes = new List<int>();
+                foreach (ListViewItem item in SubtitleListview1.SelectedItems)
+                    indexes.Add(item.Index);
+
+                SubtitleListview1.BeginUpdate();
+                foreach (int i in indexes)
+                {
+                    if (_subtitleAlternate != null && Configuration.Settings.General.AllowEditOfOriginalSubtitle)
+                    {
+                        Paragraph original = Utilities.GetOriginalParagraph(i, _subtitle.Paragraphs[i], _subtitleAlternate.Paragraphs);
+                        if (original != null)
+                        {
+                            ToggleAlignTop(original);
+                            SubtitleListview1.SetAlternateText(i, original.Text);
+                        }
+                    }
+
+                   ToggleAlignTop(_subtitle.Paragraphs[i]);
+                   SubtitleListview1.SetText(i, _subtitle.Paragraphs[i].Text);
+                }
+                SubtitleListview1.EndUpdate();
+
+                ShowStatus(string.Format(_language.TagXAdded, @"{\+4}"));
+                ShowSource();
+                RefreshSelectedParagraph();
+                SubtitleListview1.SelectedIndexChanged += SubtitleListview1_SelectedIndexChanged;
+            }
+        }
+
+        private void ToggleAlignTop(Paragraph p)
+        {
+            if (p.Text.Contains(@"{\a1}"))
+                p.Text = p.Text.Replace(@"{\a1}", @"{\a5}"); //1=left
+            else if (p.Text.Contains(@"{\a2}"))
+                p.Text = p.Text.Replace(@"{\a2}", @"{\a6}"); //2=center
+            else if (p.Text.Contains(@"{\a3}"))
+                p.Text = p.Text.Replace(@"{\a3}", @"{\a7}"); //3=right
+            else if (p.Text.Contains(@"{\a5}")) // +4=Toptitle
+                p.Text = p.Text.Replace(@"{\a5}", @"{\a1}");
+            else if (p.Text.Contains(@"{\a6}"))
+                p.Text = p.Text.Replace(@"{\a6}", "");
+            else if (p.Text.Contains(@"{\a7}"))
+                p.Text = p.Text.Replace(@"{\a7}", @"{\a3}");
+            else if (p.Text.Contains(@"{\a9}")) // +8=Midtitle
+                p.Text = p.Text.Replace(@"{\a9}", @"{\a5}");
+            else if (p.Text.Contains(@"{\a10}"))
+                p.Text = p.Text.Replace(@"{\a10}", @"{\a6}");
+            else if (p.Text.Contains(@"{\a11}"))
+                p.Text = p.Text.Replace(@"{\a11}", @"{\a7}");
+            else
+                p.Text = string.Format(@"{0}{1}", @"{\a6}", p.Text);
+        }
+
+        private void toolStripMenuItemAlignMiddle_Click(object sender, EventArgs e)
+        {
+            if (_subtitle.Paragraphs.Count > 0 && SubtitleListview1.SelectedItems.Count > 0)
+            {
+                SubtitleListview1.SelectedIndexChanged -= SubtitleListview1_SelectedIndexChanged;
+                MakeHistoryForUndo(string.Format(_language.BeforeAddingTagX, "+8"));
+
+                var indexes = new List<int>();
+                foreach (ListViewItem item in SubtitleListview1.SelectedItems)
+                    indexes.Add(item.Index);
+
+                SubtitleListview1.BeginUpdate();
+                foreach (int i in indexes)
+                {
+                    if (_subtitleAlternate != null && Configuration.Settings.General.AllowEditOfOriginalSubtitle)
+                    {
+                        Paragraph original = Utilities.GetOriginalParagraph(i, _subtitle.Paragraphs[i], _subtitleAlternate.Paragraphs);
+                        if (original != null)
+                        {
+                            ToggleAlignMiddle(original);
+                            SubtitleListview1.SetAlternateText(i, original.Text);
+                        }
+                    }
+
+                    ToggleAlignMiddle(_subtitle.Paragraphs[i]);
+                    SubtitleListview1.SetText(i, _subtitle.Paragraphs[i].Text);
+                }
+                SubtitleListview1.EndUpdate();
+
+                ShowStatus(string.Format(_language.TagXAdded, @"{\+8}"));
+                ShowSource();
+                RefreshSelectedParagraph();
+                SubtitleListview1.SelectedIndexChanged += SubtitleListview1_SelectedIndexChanged;
+            }
+        }
+
+        private void ToggleAlignMiddle(Paragraph p)
+        {
+            if (p.Text.Contains(@"{\a1}"))
+                p.Text = p.Text.Replace(@"{\a1}", @"{\a9}"); //1=left
+            else if (p.Text.Contains(@"{\a2}"))
+                p.Text = p.Text.Replace(@"{\a2}", @"{\a10}"); //2=center
+            else if (p.Text.Contains(@"{\a3}"))
+                p.Text = p.Text.Replace(@"{\a3}", @"{\a11}"); //3=right
+            else if (p.Text.Contains(@"{\a5}")) // +4=Toptitle
+                p.Text = p.Text.Replace(@"{\a5}", @"{\a9}");
+            else if (p.Text.Contains(@"{\a6}"))
+                p.Text = p.Text.Replace(@"{\a6}", @"{\a10}");
+            else if (p.Text.Contains(@"{\a7}"))
+                p.Text = p.Text.Replace(@"{\a7}", @"{\a11}");
+            else if (p.Text.Contains(@"{\a9}")) // +8=Midtitle
+                p.Text = p.Text.Replace(@"{\a9}", @"{\a1}");
+            else if (p.Text.Contains(@"{\a10}"))
+                p.Text = p.Text.Replace(@"{\a10}", @"");
+            else if (p.Text.Contains(@"{\a11}"))
+                p.Text = p.Text.Replace(@"{\a11}", @"{\a3}");
+            else
+                p.Text = string.Format(@"{0}{1}", @"{\a10}", p.Text);
+        }
+
+        private void toolStripMenuItemLeft_Click(object sender, EventArgs e)
+        {
+            if (_subtitle.Paragraphs.Count > 0 && SubtitleListview1.SelectedItems.Count > 0)
+            {
+                SubtitleListview1.SelectedIndexChanged -= SubtitleListview1_SelectedIndexChanged;
+                MakeHistoryForUndo(string.Format(_language.BeforeAddingTagX, @"{\a+left}"));
+
+                var indexes = new List<int>();
+                foreach (ListViewItem item in SubtitleListview1.SelectedItems)
+                    indexes.Add(item.Index);
+
+                SubtitleListview1.BeginUpdate();
+                foreach (int i in indexes)
+                {
+                    if (_subtitleAlternate != null && Configuration.Settings.General.AllowEditOfOriginalSubtitle)
+                    {
+                        Paragraph original = Utilities.GetOriginalParagraph(i, _subtitle.Paragraphs[i], _subtitleAlternate.Paragraphs);
+                        if (original != null)
+                        {
+                            ToggleAlignLeft(original);
+                            SubtitleListview1.SetAlternateText(i, original.Text);
+                        }
+                    }
+
+                    ToggleAlignLeft(_subtitle.Paragraphs[i]);
+                    SubtitleListview1.SetText(i, _subtitle.Paragraphs[i].Text);
+                }
+                SubtitleListview1.EndUpdate();
+
+                ShowStatus(string.Format(_language.TagXAdded, @"{\a+left}"));
+                ShowSource();
+                RefreshSelectedParagraph();
+                SubtitleListview1.SelectedIndexChanged += SubtitleListview1_SelectedIndexChanged;
+            }
+        }
+
+        private void ToggleAlignLeft(Paragraph p)
+        {
+            if (p.Text.Contains(@"{\a1}"))
+                p.Text = p.Text.Replace(@"{\a1}", @""); //1=left
+            else if (p.Text.Contains(@"{\a2}"))
+                p.Text = p.Text.Replace(@"{\a2}", @"{\a1}"); //2=center
+            else if (p.Text.Contains(@"{\a3}"))
+                p.Text = p.Text.Replace(@"{\a3}", @"{\a1}"); //3=right
+            else if (p.Text.Contains(@"{\a5}")) // +4=Toptitle
+                p.Text = p.Text.Replace(@"{\a5}", @"{\a6}");
+            else if (p.Text.Contains(@"{\a6}"))
+                p.Text = p.Text.Replace(@"{\a6}", @"{\a5}");
+            else if (p.Text.Contains(@"{\a7}"))
+                p.Text = p.Text.Replace(@"{\a7}", @"{\a5}");
+            else if (p.Text.Contains(@"{\a9}")) // +8=Midtitle
+                p.Text = p.Text.Replace(@"{\a9}", @"{\a10}");
+            else if (p.Text.Contains(@"{\a10}"))
+                p.Text = p.Text.Replace(@"{\a10}", @"{\a9}");
+            else if (p.Text.Contains(@"{\a11}"))
+                p.Text = p.Text.Replace(@"{\a11}", @"{\a9}");
+            else
+                p.Text = string.Format(@"{0}{1}", @"{\a1}", p.Text);
+        }
+
+        private void toolStripMenuItemRight_Click(object sender, EventArgs e)
+        {
+            if (_subtitle.Paragraphs.Count > 0 && SubtitleListview1.SelectedItems.Count > 0)
+            {
+                SubtitleListview1.SelectedIndexChanged -= SubtitleListview1_SelectedIndexChanged;
+                MakeHistoryForUndo(string.Format(_language.BeforeAddingTagX, @"{\a+right}"));
+
+                var indexes = new List<int>();
+                foreach (ListViewItem item in SubtitleListview1.SelectedItems)
+                    indexes.Add(item.Index);
+
+                SubtitleListview1.BeginUpdate();
+                foreach (int i in indexes)
+                {
+                    if (_subtitleAlternate != null && Configuration.Settings.General.AllowEditOfOriginalSubtitle)
+                    {
+                        Paragraph original = Utilities.GetOriginalParagraph(i, _subtitle.Paragraphs[i], _subtitleAlternate.Paragraphs);
+                        if (original != null)
+                        {
+                            ToggleAlignRight(original);
+                            SubtitleListview1.SetAlternateText(i, original.Text);
+                        }
+                    }
+
+                    ToggleAlignRight(_subtitle.Paragraphs[i]);
+                    SubtitleListview1.SetText(i, _subtitle.Paragraphs[i].Text);
+                }
+                SubtitleListview1.EndUpdate();
+
+                ShowStatus(string.Format(_language.TagXAdded, @"{\a+right}"));
+                ShowSource();
+                RefreshSelectedParagraph();
+                SubtitleListview1.SelectedIndexChanged += SubtitleListview1_SelectedIndexChanged;
+            }
+        }
+
+        private void ToggleAlignRight(Paragraph p)
+        {
+            if (p.Text.Contains(@"{\a1}"))
+                p.Text = p.Text.Replace(@"{\a1}", @"{\a3}"); //1=left
+            else if (p.Text.Contains(@"{\a2}"))
+                p.Text = p.Text.Replace(@"{\a2}", @"{\a3}"); //2=center
+            else if (p.Text.Contains(@"{\a3}"))
+                p.Text = p.Text.Replace(@"{\a3}", @""); //3=right
+            else if (p.Text.Contains(@"{\a5}")) // +4=Toptitle
+                p.Text = p.Text.Replace(@"{\a5}", @"{\a7}");
+            else if (p.Text.Contains(@"{\a6}"))
+                p.Text = p.Text.Replace(@"{\a6}", @"{\a7}");
+            else if (p.Text.Contains(@"{\a7}"))
+                p.Text = p.Text.Replace(@"{\a7}", @"{\a6}");
+            else if (p.Text.Contains(@"{\a9}")) // +8=Midtitle
+                p.Text = p.Text.Replace(@"{\a9}", @"{\a11}");
+            else if (p.Text.Contains(@"{\a10}"))
+                p.Text = p.Text.Replace(@"{\a10}", @"{\a11}");
+            else if (p.Text.Contains(@"{\a11}"))
+                p.Text = p.Text.Replace(@"{\a11}", @"{\a10}");
+            else
+                p.Text = string.Format(@"{0}{1}", @"{\a3}", p.Text);
+        }
+
+        private void toolStripMenuItemApplyDisplayTimeLimits_Click(object sender, EventArgs e)
+        {
+            ApplyDisplayTimeLimits(false);
+        }
+
+        private void ApplyDisplayTimeLimits(bool onlySelectedLines)
+        {
+            if (_subtitle != null && _subtitle.Paragraphs.Count > 1)
+            {
+                ReloadFromSourceView();
+                var applyDurationLimits = new ApplyDurationLimits();
+                _formPositionsAndSizes.SetPositionAndSize(applyDurationLimits);
+
+                if (onlySelectedLines)
+                {
+                    var selectedLines = new Subtitle { WasLoadedWithFrameNumbers = _subtitle.WasLoadedWithFrameNumbers };
+                    foreach (int index in SubtitleListview1.SelectedIndices)
+                        selectedLines.Paragraphs.Add(_subtitle.Paragraphs[index]);
+                    applyDurationLimits.Initialize(selectedLines);
+                }
+                else
+                {
+                    applyDurationLimits.Initialize(_subtitle);
+                }
+
+                applyDurationLimits.Initialize(_subtitle);
+                if (applyDurationLimits.ShowDialog(this) == DialogResult.OK)
+                {
+                    MakeHistoryForUndo(_language.BeforeDisplayTimeAdjustment);
+                    
+                    if (onlySelectedLines)
+                    { // we only update selected lines
+                        int i = 0;
+                        foreach (int index in SubtitleListview1.SelectedIndices)
+                        {
+                            _subtitle.Paragraphs[index] = applyDurationLimits.FixedSubtitle.Paragraphs[i];
+                            i++;
+                        }
+                        ShowStatus(_language.VisualSyncPerformedOnSelectedLines);
+                    }
+                    else
+                    {
+                        SaveSubtitleListviewIndexes();
+                        _subtitle.Paragraphs.Clear();
+                        foreach (Paragraph p in applyDurationLimits.FixedSubtitle.Paragraphs)
+                            _subtitle.Paragraphs.Add(new Paragraph(p));
+                        SubtitleListview1.Fill(_subtitle);
+                        RestoreSubtitleListviewIndexes();
+                    }
+
+                    if (IsFramesRelevant && CurrentFrameRate > 0)
+                        _subtitle.CalculateFrameNumbersFromTimeCodesNoCheck(CurrentFrameRate);
+                    ShowSource();
+                }
+                _formPositionsAndSizes.SavePositionAndSize(applyDurationLimits);
+            }
+            else
+            {
+                MessageBox.Show(_language.NoSubtitleLoaded, Title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+        }
+
+        private void generateDatetimeInfoFromVideoToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ReloadFromSourceView();
+            var extractDateTimeInfo = new ExtractDateTimeInfo();
+            _formPositionsAndSizes.SetPositionAndSize(extractDateTimeInfo);
+
+            if (extractDateTimeInfo.ShowDialog(this) == DialogResult.OK)
+            {
+                if (ContinueNewOrExit())
+                { 
+                    MakeHistoryForUndo(_language.BeforeDisplayTimeAdjustment);
+
+                    ResetSubtitle();
+                    _subtitle.Paragraphs.Clear();
+                    foreach (Paragraph p in extractDateTimeInfo.DateTimeSubtitle.Paragraphs)
+                        _subtitle.Paragraphs.Add(new Paragraph(p));
+                    SubtitleListview1.Fill(_subtitle);
+                    SubtitleListview1.SelectIndexAndEnsureVisible(0);
+
+                    if (IsFramesRelevant && CurrentFrameRate > 0)
+                        _subtitle.CalculateFrameNumbersFromTimeCodesNoCheck(CurrentFrameRate);
+                    ShowSource();
+
+                    OpenVideo(extractDateTimeInfo.VideoFileName);
+                }
+            }
+            _formPositionsAndSizes.SavePositionAndSize(extractDateTimeInfo);
+        }
+
     }
 }
