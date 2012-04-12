@@ -276,7 +276,7 @@ namespace Nikse.SubtitleEdit.Controls
             foreach (Paragraph paragraph in paragraphs)
             {
                 Add(paragraph, i.ToString(CultureInfo.InvariantCulture));
-                if (DisplayExtraFromExtra && IsExtraColumnVisible)
+                if (DisplayExtraFromExtra && IsExtraColumnVisible && Items[i].SubItems.Count > ColumnIndexExtra)
                     Items[i].SubItems[ColumnIndexExtra].Text = paragraph.Extra;
                 SyntaxColorLine(paragraphs, i, paragraph);
                 i++;

@@ -260,7 +260,11 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                         Height = Convert.ToInt32(value);
                         break;
                     case "ANS_fps":
-                        FramesPerSecond = (float)Convert.ToDouble(value);
+                        double d;
+                        if (double.TryParse(value, out d))
+                            FramesPerSecond = (float)Convert.ToDouble(value);
+                        else
+                            FramesPerSecond = 25.0f;
                         break;
                     case "ANS_video_format":
                         VideoFormat = value;

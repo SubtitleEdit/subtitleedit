@@ -134,6 +134,12 @@
     <Compile Include="Forms\AddWareForm.Designer.cs">
       <DependentUpon>AddWareForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\ApplyDurationLimits.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ApplyDurationLimits.Designer.cs">
+      <DependentUpon>ApplyDurationLimits.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\AutoBreakUnbreakLines.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -211,6 +217,12 @@
     </Compile>
     <Compile Include="Forms\ExportPngXml.Designer.cs">
       <DependentUpon>ExportPngXml.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\ExtractDateTimeInfo.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ExtractDateTimeInfo.Designer.cs">
+      <DependentUpon>ExtractDateTimeInfo.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\FindDialog.cs">
       <SubType>Form</SubType>
@@ -590,6 +602,7 @@
     <Compile Include="Logic\SubtitleFormats\CaptionateMs.cs" />
     <Compile Include="Logic\SubtitleFormats\CaraokeXml.cs" />
     <Compile Include="Logic\SubtitleFormats\Cavena890.cs" />
+    <Compile Include="Logic\SubtitleFormats\CheetahCaption.cs" />
     <Compile Include="Logic\SubtitleFormats\DCSubtitle.cs" />
     <Compile Include="Logic\SubtitleFormats\DvdStudioProSpace.cs" />
     <Compile Include="Logic\SubtitleFormats\Eeg708.cs" />
@@ -763,6 +776,9 @@
     <EmbeddedResource Include="Forms\AddWareForm.resx">
       <DependentUpon>AddWareForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ApplyDurationLimits.resx">
+      <DependentUpon>ApplyDurationLimits.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\Beamer.resx">
       <DependentUpon>Beamer.cs</DependentUpon>
     </EmbeddedResource>
@@ -795,6 +811,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\ExportPngXml.resx">
       <DependentUpon>ExportPngXml.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ExtractDateTimeInfo.resx">
+      <DependentUpon>ExtractDateTimeInfo.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\FindDialog.resx">
       <DependentUpon>FindDialog.cs</DependentUpon>
