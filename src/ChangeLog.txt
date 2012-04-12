@@ -3,11 +3,14 @@ Subtitle Edit Changelog
 3.2.7 (xth April 2012)
  * NEW:
    * Added Finnish language - thx Veikko
+   * Can now import binary subtitle format Cheetah Caption
  * IMPROVED:
    * VLC audio extraction now generates smaller wave file - thx utocne
      (transcoding parameters now in Settings.xml)
    * Added "Find text" to Point Sync + Set Sync Point - thx eMWu
    * Unbreak/auto-break buttons now also work on selected lines - thx XhmikosR
+   * EBU stl now also accepts STL 2.4 (besides STL25/STL30) - Thx Axel
+   * Added shortcut for split line at cursor position - Thx Daniela
  * FIXED:
    * Crash in "Fix common errors" - thx Dragan B
    * New-line character in Final Cut Pro Xml format - thx Axel Schmidt
@@ -16,6 +19,7 @@ Subtitle Edit Changelog
    * Crash/bug in vobsub reading - thx T.S.
    * Crash when reading vobsub files with errors - thx Sofiaguy
    * EBU stl format reading now skips user data - thx Peter
+   * Fixed crash in MPlayer due to unknown frame rate
 
 
 3.2.6 (29th March 2012)
