@@ -7,7 +7,6 @@ namespace Nikse.SubtitleEdit.Forms
 {
     public partial class ApplyDurationLimits : Form
     {
-
         private int _totalFixes;
         private int _totalErrors;
         private Subtitle _subtitle;

@@ -13481,7 +13481,7 @@ namespace Nikse.SubtitleEdit.Forms
                         _subtitle.Paragraphs.Clear();
                         foreach (Paragraph p in applyDurationLimits.FixedSubtitle.Paragraphs)
                             _subtitle.Paragraphs.Add(new Paragraph(p));
-                        SubtitleListview1.Fill(_subtitle);
+                        SubtitleListview1.Fill(_subtitle, _subtitleAlternate );
                         RestoreSubtitleListviewIndexes();
                     }
 
@@ -13513,7 +13513,7 @@ namespace Nikse.SubtitleEdit.Forms
                     _subtitle.Paragraphs.Clear();
                     foreach (Paragraph p in extractDateTimeInfo.DateTimeSubtitle.Paragraphs)
                         _subtitle.Paragraphs.Add(new Paragraph(p));
-                    SubtitleListview1.Fill(_subtitle);
+                    SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
                     SubtitleListview1.SelectIndexAndEnsureVisible(0);
 
                     if (IsFramesRelevant && CurrentFrameRate > 0)

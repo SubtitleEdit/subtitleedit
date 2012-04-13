@@ -74,56 +74,8 @@ namespace Nikse.SubtitleEdit.Forms
         private void buttonOK_Click(object sender, EventArgs e)
         {
             DateTimeSubtitle = new Subtitle();
-            DateTime start; 
-            double durationInSeconds;
-
-            if (Path.GetExtension(VideoFileName).ToLower() == ".mp4" || Path.GetExtension(VideoFileName).ToLower() == ".m4v" || Path.GetExtension(VideoFileName).ToLower() == ".3gp")
-            {
-                Logic.Mp4.Mp4Parser mp4Parser = new Logic.Mp4.Mp4Parser(VideoFileName);                
-                start = mp4Parser.CreationDate;
-                durationInSeconds = mp4Parser.Duration.TotalSeconds;
-            }
-            else if (Path.GetExtension(VideoFileName).ToLower() == ".mkv" || Path.GetExtension(VideoFileName).ToLower() == ".webm")
-            {
-                bool isValid;
-                var matroska = new Matroska();
-                var subtitleList = matroska.GetMatroskaSubtitleTracks(VideoFileName, out isValid);
-                if (isValid)
-                {
-
-                    bool hasConstantFrameRate = false;
-                    double frameRate = 0;
-                    int pixelWidth = 0;
-                    int pixelHeight = 0;
-                    double millisecsDuration = 0;
-                    string videoCodec = string.Empty;
-                    matroska.GetMatroskaInfo(VideoFileName, ref isValid, ref hasConstantFrameRate, ref frameRate, ref pixelWidth, ref pixelHeight, ref millisecsDuration, ref videoCodec);
-                    durationInSeconds = millisecsDuration / 1000.0;
-
-                    //TODO: read creation date from mkv file!??
-                    FileInfo fi = new FileInfo(VideoFileName);
-                    start = fi.CreationTime;
-                }
-                else
-                {
-                    MessageBox.Show("Invalid matroska file");
-                    return;
-                }
-            }
-            else
-            {
-                FileInfo fi = new FileInfo(VideoFileName);
-                start = fi.CreationTime;
-                VideoInfo vi = Utilities.GetVideoInfo(VideoFileName, null);                                        
-                durationInSeconds = vi.TotalSeconds;
-                if (durationInSeconds < 1)
-                {
-                    MessageBox.Show("Unable to get duration");
-                    return;
-                }
-            }
-
-            start = GetStartDateTime();
+            DateTime start = GetStartDateTime(); 
+            double durationInSeconds = timeUpDownDuration.TimeCode.TotalSeconds;           
             for (int i = 0; i < durationInSeconds; i++)
             {
                 Paragraph p = new Paragraph();
