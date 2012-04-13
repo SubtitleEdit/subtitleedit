@@ -141,33 +141,36 @@ namespace Nikse.SubtitleEdit.Forms
             string textToLower = text.ToLower();
             foreach (string name in namesEtcList)
             {
-                int startIndex = textToLower.IndexOf(name.ToLower());
-                while (startIndex >= 0 && startIndex < text.Length &&
-                       textToLower.Substring(startIndex).Contains(name.ToLower()) && name.Length > 1 && name != name.ToLower())
+                if (textToLower.Contains(name.ToLower())) // Optimization - Contains is much faster than IndexOf
                 {
-                    bool startOk = (startIndex == 0) || (text[startIndex - 1] == ' ') || (text[startIndex - 1] == '-') ||
-                                   (text[startIndex - 1] == '"') || (text[startIndex - 1] == '\'') || (text[startIndex - 1] == '>') ||
-                                   (Environment.NewLine.EndsWith(text[startIndex - 1].ToString()));
-
-                    if (startOk)
+                    int startIndex = textToLower.IndexOf(name.ToLower());
+                    while (startIndex >= 0 && startIndex < text.Length &&
+                           textToLower.Substring(startIndex).Contains(name.ToLower()) && name.Length > 1 && name != name.ToLower())
                     {
-                        int end = startIndex + name.Length;
-                        bool endOk = end <= text.Length;
-                        if (endOk)
-                            endOk = (end == text.Length) || ((" ,.!?:;')-<\"" + Environment.NewLine).Contains(text[end].ToString()));
+                        bool startOk = (startIndex == 0) || (text[startIndex - 1] == ' ') || (text[startIndex - 1] == '-') ||
+                                       (text[startIndex - 1] == '"') || (text[startIndex - 1] == '\'') || (text[startIndex - 1] == '>') ||
+                                       (Environment.NewLine.EndsWith(text[startIndex - 1].ToString()));
 
-                        if (endOk && text.Substring(startIndex, name.Length) != name) // do not add names where casing already is correct
+                        if (startOk)
                         {
-                            if (!_usedNames.Contains(name))
+                            int end = startIndex + name.Length;
+                            bool endOk = end <= text.Length;
+                            if (endOk)
+                                endOk = (end == text.Length) || ((" ,.!?:;')-<\"" + Environment.NewLine).Contains(text[end].ToString()));
+
+                            if (endOk && text.Substring(startIndex, name.Length) != name) // do not add names where casing already is correct
                             {
-                                _usedNames.Add(name);
-                                AddToListViewNames(name);
-                                break; // break while
+                                if (!_usedNames.Contains(name))
+                                {
+                                    _usedNames.Add(name);
+                                    AddToListViewNames(name);
+                                    break; // break while
+                                }
                             }
                         }
-                    }
 
-                    startIndex = textToLower.IndexOf(name.ToLower(), startIndex + 2);
+                        startIndex = textToLower.IndexOf(name.ToLower(), startIndex + 2);
+                    }
                 }
             }
             groupBoxNames.Text = string.Format(Configuration.Settings.Language.ChangeCasingNames.NamesFoundInSubtitleX, listViewNames.Items.Count);
