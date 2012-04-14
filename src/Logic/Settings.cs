@@ -307,6 +307,7 @@ namespace Nikse.SubtitleEdit.Logic
         public int ListViewTextWidth { get; set; }
         public string VlcWaveTranscodeSettings { get; set; }
         public bool UseTimeFormatHHMMSSFF { get; set; }
+        public bool ShowBetaStuff { get; set; }
 
         public GeneralSettings()
         {
@@ -375,6 +376,7 @@ namespace Nikse.SubtitleEdit.Logic
             ListViewColumsRememberSize = true;
             VlcWaveTranscodeSettings = "acodec=s16l,channels=1,ab=64,samplerate=8000";
             UseTimeFormatHHMMSSFF = false;
+            ShowBetaStuff = false;
         }
     }
 
@@ -998,6 +1000,9 @@ namespace Nikse.SubtitleEdit.Logic
             subNode = node.SelectSingleNode("VlcWaveTranscodeSettings");
             if (subNode != null)
                 settings.General.VlcWaveTranscodeSettings = subNode.InnerText.Trim();
+            subNode = node.SelectSingleNode("ShowBetaStuff");
+            if (subNode != null)
+                settings.General.ShowBetaStuff = Convert.ToBoolean(subNode.InnerText.Trim());
 
 
             settings.Tools = new ToolsSettings();
@@ -1671,6 +1676,7 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("ListViewDurationWidth", settings.General.ListViewDurationWidth.ToString(CultureInfo.InvariantCulture));
             textWriter.WriteElementString("ListViewTextWidth", settings.General.ListViewTextWidth.ToString(CultureInfo.InvariantCulture));
             textWriter.WriteElementString("VlcWaveTranscodeSettings", settings.General.VlcWaveTranscodeSettings);
+            textWriter.WriteElementString("ShowBetaStuff", settings.General.ShowBetaStuff.ToString());
 
 
             textWriter.WriteEndElement();

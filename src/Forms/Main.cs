@@ -2266,6 +2266,8 @@ namespace Nikse.SubtitleEdit.Forms
                     File.Delete(_fileName);
                 }
 
+                if (Control.ModifierKeys == (Keys.Control | Keys.Shift))
+                    allText = allText.Replace("\r\n", "\n");
                 File.WriteAllText(_fileName, allText, currentEncoding);
                 _fileDateTime = File.GetLastWriteTime(_fileName);
                 ShowStatus(string.Format(_language.SavedSubtitleX, _fileName));
@@ -10310,6 +10312,25 @@ namespace Nikse.SubtitleEdit.Forms
 
             _timerDoSyntaxColoring.Interval = 100;
             _timerDoSyntaxColoring.Tick +=_timerDoSyntaxColoring_Tick;
+
+            if (Configuration.Settings.General.ShowBetaStuff)
+            {
+                generateDatetimeInfoFromVideoToolStripMenuItem.Visible = true;
+                toolStripMenuItemApplyDurationLimits.Visible = true;
+                toolStripMenuItemAlignTop.Visible = true;
+                toolStripMenuItemAlignMiddle.Visible = true;
+                toolStripMenuItemLeft.Visible = true;
+                toolStripMenuItemRight.Visible = true;
+            }
+            else
+            {
+                generateDatetimeInfoFromVideoToolStripMenuItem.Visible = false;
+                toolStripMenuItemApplyDurationLimits.Visible = false;
+                toolStripMenuItemAlignTop.Visible = false;
+                toolStripMenuItemAlignMiddle.Visible = false;
+                toolStripMenuItemLeft.Visible = false;
+                toolStripMenuItemRight.Visible = false;
+            }
         }
 
         void  _timerDoSyntaxColoring_Tick(object sender, EventArgs e)
