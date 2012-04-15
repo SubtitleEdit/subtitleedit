@@ -60,7 +60,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 fs.WriteByte(0x10); // ??
 
                 buffer = Encoding.ASCII.GetBytes(text);
-                fs.Write(buffer, 0, buffer.Length); // Text starter på index 19 (0 baseret)                
+                fs.Write(buffer, 0, buffer.Length); // Text starter på index 19 (0 baseret)
             }
             fs.Close();
         }
@@ -115,7 +115,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             int i = 128;
             Paragraph last = null;
             while (i < buffer.Length - 20)
-            {                
+            {
                 Paragraph p = new Paragraph();
                 int length = buffer[i];
                 int textLength = length - 20;
@@ -137,7 +137,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         last.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds - Configuration.Settings.General.MininumMillisecondsBetweenLines;
 
                     p.EndTime = DecodeTimeStamp(buffer, i + 6);
-                    p.Text = Encoding.ASCII.GetString(buffer, i + start, textLength);                    
+                    p.Text = Encoding.ASCII.GetString(buffer, i + start, textLength);
                     p.Text = p.Text.Replace("\0\0\0\0", Environment.NewLine);
                     subtitle.Paragraphs.Add(p);
                     last = p;

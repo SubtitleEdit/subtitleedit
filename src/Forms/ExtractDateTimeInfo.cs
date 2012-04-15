@@ -66,16 +66,16 @@ namespace Nikse.SubtitleEdit.Forms
 
         private DateTime GetStartDateTime()
         {
-            return new DateTime(dateTimePicker1.Value.Year, dateTimePicker1.Value.Month, dateTimePicker1.Value.Day, 
-                                timeUpDownStartTime.TimeCode.Hours, timeUpDownStartTime.TimeCode.Minutes, 
-                                timeUpDownStartTime.TimeCode.Seconds, timeUpDownStartTime.TimeCode.Milliseconds);                        
+            return new DateTime(dateTimePicker1.Value.Year, dateTimePicker1.Value.Month, dateTimePicker1.Value.Day,
+                                timeUpDownStartTime.TimeCode.Hours, timeUpDownStartTime.TimeCode.Minutes,
+                                timeUpDownStartTime.TimeCode.Seconds, timeUpDownStartTime.TimeCode.Milliseconds);
         }
 
         private void buttonOK_Click(object sender, EventArgs e)
         {
             DateTimeSubtitle = new Subtitle();
-            DateTime start = GetStartDateTime(); 
-            double durationInSeconds = timeUpDownDuration.TimeCode.TotalSeconds;           
+            DateTime start = GetStartDateTime();
+            double durationInSeconds = timeUpDownDuration.TimeCode.TotalSeconds;
             for (int i = 0; i < durationInSeconds; i++)
             {
                 Paragraph p = new Paragraph();

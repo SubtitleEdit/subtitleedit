@@ -13485,7 +13485,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (applyDurationLimits.ShowDialog(this) == DialogResult.OK)
                 {
                     MakeHistoryForUndo(_language.BeforeDisplayTimeAdjustment);
-                    
+
                     if (onlySelectedLines)
                     { // we only update selected lines
                         int i = 0;
@@ -13527,7 +13527,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (extractDateTimeInfo.ShowDialog(this) == DialogResult.OK)
             {
                 if (ContinueNewOrExit())
-                { 
+                {
                     MakeHistoryForUndo(_language.BeforeDisplayTimeAdjustment);
 
                     ResetSubtitle();
