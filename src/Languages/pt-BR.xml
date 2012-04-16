@@ -3,7 +3,7 @@
   <General>
     <Title>Subtitle Edit</Title>
     <Version>3.2</Version>
-    <TranslatedBy>Traduzido por XXXXXXXXXX</TranslatedBy>
+    <TranslatedBy>Traduzido por Igor Rückert</TranslatedBy>
     <CultureName>pt-BR</CultureName>
     <HelpFile>
     </HelpFile>
@@ -67,13 +67,13 @@
     <AboutText1>Subtitle Edit é um Software Livre sob a licença pública GNU.
 Você pode distribuir, modificar e usar ele livremente.
 
-Código fonte en C# disponível em http://code.google.com/p/subtitleedit
+Código fonte em C# disponível em http://code.google.com/p/subtitleedit
 
-Visite www.nikse.dk para la última versión.
+Visite www.nikse.dk para a última versão.
 
-Se agradecen sugerencias.
+Agradecemos as sugestões.
 
-Email: mailto:nikse.dk@gmail.com</AboutText1>
+E-mail: mailto:nikse.dk@gmail.com</AboutText1>
   </About>
   <AddToNames>
     <Title>Adicionar à lista de nomes</Title>
@@ -111,7 +111,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <After>Depois</After>
     <LinesFoundX>Linhas encontradas: {0}</LinesFoundX>
     <OnlyBreakLinesLongerThan>Dividir somente linhas maiores que</OnlyBreakLinesLongerThan>
-    <OnlyUnbreakLinesShorterThan>Unir somente linhas menores que</OnlyUnbreakLinesShorterThan>
+    <OnlyUnbreakLinesLongerThan>
+    </OnlyUnbreakLinesLongerThan>
   </AutoBreakUnbreakLines>
   <ChangeCasing>
     <Title>Inverter maiúsculas</Title>
@@ -241,6 +242,11 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <AntiAlias>Anti alias</AntiAlias>
     <ExportAllLines>Exportar todas as linhas...</ExportAllLines>
     <XImagesSavedInY>{0} imagens salvas em {1}</XImagesSavedInY>
+    <VideoResolution>Res. vídeo</VideoResolution>
+    <Align>Alinhar</Align>
+    <Left>Esquerda</Left>
+    <Right>Direita</Right>
+    <Center>Centro</Center>
   </ExportPngXml>
   <FindDialog>
     <Title>Localizar</Title>
@@ -428,7 +434,6 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Auto>Auto</Auto>
     <Fixed>Corrigido</Fixed>
     <Refresh>&amp;Atualizar</Refresh>
-    <Next>&amp;Próximo &gt;&gt;</Next>
     <TextFiles>Arquivos de texto</TextFiles>
     <PreviewLinesModifiedX>Prévia - parágrafos modificados: {0}</PreviewLinesModifiedX>
   </ImportText>
@@ -458,6 +463,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <ImportTimecodes>Importar códigos de tempo...</ImportTimecodes>
         <Export>Exportar</Export>
         <ExportBdnXml>BDN xml/png...</ExportBdnXml>
+        <ExportBluRaySup>Blu-ray sup...</ExportBluRaySup>
+        <ExportVobSub>VobSub (sub/idx)...</ExportVobSub>
         <ExportCavena890>Cavena 890...</ExportCavena890>
         <ExportEbu>EBU stl...</ExportEbu>
         <ExportPac>PAC (Screen Electronics)...</ExportPac>
@@ -580,6 +587,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <CopyToClipboard>Copiar como texto para a área de transferência</CopyToClipboard>
         <Split>Dividir</Split>
         <MergeSelectedLines>Combinar linhas selecionadas</MergeSelectedLines>
+        <MergeSelectedLinesASDialogue>Combinar linhas selecionadas como diálogo</MergeSelectedLinesASDialogue>
         <MergeWithLineBefore>Combinar com linha anterior</MergeWithLineBefore>
         <MergeWithLineAfter>Combinar com linha seguinte</MergeWithLineAfter>
         <Normal>Normal</Normal>
@@ -984,6 +992,8 @@ possam editar o mesmo arquivo de legenda (colaboração)</Information>
     <AutoDetectAnsiEncoding>Autodetectar codificação ANSI</AutoDetectAnsiEncoding>
     <SubtitleLineMaximumLength>Comp. máx. linha única</SubtitleLineMaximumLength>
     <AutoWrapWhileTyping>Auto-ajustar linha durante digitação</AutoWrapWhileTyping>
+    <DurationMinimumMilliseconds>Duração mín., milisegundos</DurationMinimumMilliseconds>
+    <DurationMaximumMilliseconds>Duração máx., milisegundos</DurationMaximumMilliseconds>
     <SubtitleFont>Fonte da legenda</SubtitleFont>
     <SubtitleFontSize>Tamanho da fonte da legenda</SubtitleFontSize>
     <SubtitleBold>Negrito</SubtitleBold>
@@ -1086,12 +1096,27 @@ possam editar o mesmo arquivo de legenda (colaboração)</Information>
     <ToggleDockUndockOfVideoControls>Alternar acoplar/desacoplar controles de vídeo</ToggleDockUndockOfVideoControls>
     <AdjustViaEndAutoStartAndGoToNext>Ajustar posição final e ir ao seguinte</AdjustViaEndAutoStartAndGoToNext>
     <AdjustSetStartAutoDurationAndGoToNext>Ajustar início, autoduração e ir ao seguinte</AdjustSetStartAutoDurationAndGoToNext>
+    <AdjustSetEndNextStartAndGoToNext>Definir final, próximo início e seguir adiante</AdjustSetEndNextStartAndGoToNext>
+    <AdjustStartDownEndUpAndGoToNext>Seta abaixo=início inicial, Seta acima=definir final e seguir adiante</AdjustStartDownEndUpAndGoToNext>
+    <AdjustSelected100MsForward>Mover linhas selecionadas 100 ms adiante</AdjustSelected100MsForward>
+    <AdjustSelected100MsBack>Mover linhas selecionadas 100 ms atrás</AdjustSelected100MsBack>
+    <AdjustSetStartTimeOnly>Definir tempo inicial, manter tempo final</AdjustSetStartTimeOnly>
+    <MainCreateStartDownEndUp>Criar novo (seta abaixo), definir tempo final (seta acima)</MainCreateStartDownEndUp>
+    <MergeDialogue>Combinar diálogo (inserir traços)</MergeDialogue>
+    <GoToNext>Ir para próxima linha</GoToNext>
+    <GoToPrevious>Ir para linha anterior</GoToPrevious>
+    <ToggleFocus>Alternar foco entre exibição em lista e caixa de texto de legenda</ToggleFocus>
     <ToggleDialogueDashes>Alternar traços de diálogo</ToggleDialogueDashes>
     <VerticalZoom>Zoom vertical </VerticalZoom>
+    <WaveformSeekSilenceForward>Procurar silêncio adiante</WaveformSeekSilenceForward>
+    <WaveformSeekSilenceBack>Procurar silêncio atrás</WaveformSeekSilenceBack>
     <GoBack100Milliseconds>100 ms atrás</GoBack100Milliseconds>
     <GoForward100Milliseconds>100 ms adiante</GoForward100Milliseconds>
     <GoBack500Milliseconds>500 ms atrás</GoBack500Milliseconds>
     <GoForward500Milliseconds>500 ms adiante</GoForward500Milliseconds>
+    <TogglePlayPause>Alternar tocar/pausar</TogglePlayPause>
+    <Pause>Pausar</Pause>
+    <Fullscreen>Tela cheia</Fullscreen>
   </Settings>
   <ShowEarlierLater>
     <Title>Mostrar linhas selec. antes/depois</Title>
