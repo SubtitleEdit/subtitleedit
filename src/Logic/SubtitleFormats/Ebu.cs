@@ -58,6 +58,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             {
                 get
                 {
+                    if (DiskFormatCode.StartsWith("STL24"))
+                        return 24.0;
                     if (DiskFormatCode.StartsWith("STL25"))
                         return 25.0;
                     return 30.0; // should be DiskFormatcode STL30.01
