@@ -98,7 +98,6 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
                                     }
                                     else
                                     {
-                                        //fs.Position = position; // +0x800;
                                         position += 0x800;
                                         fs.Seek(position, SeekOrigin.Begin);
                                     }
@@ -126,7 +125,6 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
             var pts = new TimeSpan();
             var ms = new MemoryStream();
             int streamId = 0;
-            bool continuation = false;
 
             float ticksPerMillisecond = 90.000F;
             //if (!IsPal)
@@ -147,25 +145,19 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
             {
                 foreach (var p in VobSubPacks)
                 {
-                    if (p.PacketizedElementaryStream != null && p.PacketizedElementaryStream.SubPictureStreamId.HasValue &&
+                    if (p.PacketizedElementaryStream != null && p.PacketizedElementaryStream.SubPictureStreamId.HasValue && 
                         p.PacketizedElementaryStream.SubPictureStreamId.Value == uniqueStreamId)
                     {
-                        if (!continuation)
+                        if (p.PacketizedElementaryStream.PresentationTimeStampDecodeTimeStampFlags > 0)
                         {
                             if (ms.Length > 0)
                                 list.Add(new VobSubMergedPack(ms.ToArray(), pts, streamId, lastIdxParagraph));
-
                             ms = new MemoryStream();
-                            pts =
-                                TimeSpan.FromMilliseconds(
-                                    Convert.ToDouble(p.PacketizedElementaryStream.PresentationTimeStamp/
-                                                     ticksPerMillisecond)); //90000F * 1000)); (PAL)
+                            pts = TimeSpan.FromMilliseconds(Convert.ToDouble(p.PacketizedElementaryStream.PresentationTimeStamp/ticksPerMillisecond)); //90000F * 1000)); (PAL)
                             streamId = p.PacketizedElementaryStream.SubPictureStreamId.Value;
                         }
                         lastIdxParagraph = p.IdxLine;
-                        continuation = p.PacketizedElementaryStream.Length == PacketizedElementaryStreamMaximumLength;
-                        ms.Write(p.PacketizedElementaryStream.DataBuffer, 0,
-                                 p.PacketizedElementaryStream.DataBuffer.Length);
+                        ms.Write(p.PacketizedElementaryStream.DataBuffer, 0, p.PacketizedElementaryStream.DataBuffer.Length);
                     }
                 }
                 if (ms.Length > 0)
