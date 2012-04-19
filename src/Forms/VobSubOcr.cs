@@ -3399,6 +3399,7 @@ namespace Nikse.SubtitleEdit.Forms
                 Paragraph p = new Paragraph(string.Empty, header.StartTime.TotalMilliseconds, header.StartTime.TotalMilliseconds + header.Picture.Delay.TotalMilliseconds);
                 _subtitle.Paragraphs.Add(p);
             }
+            _subtitle.Renumber(1);
             subtitleListView1.Fill(_subtitle);
             subtitleListView1.SelectIndexAndEnsureVisible(0);
         }
