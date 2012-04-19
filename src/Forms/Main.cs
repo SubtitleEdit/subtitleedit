@@ -1086,6 +1086,7 @@ namespace Nikse.SubtitleEdit.Forms
             replaceToolStripMenuItem.Text = _language.Menu.Edit.Replace;
             multipleReplaceToolStripMenuItem.Text = _language.Menu.Edit.MultipleReplace;
             gotoLineNumberToolStripMenuItem.Text = _language.Menu.Edit.GoToSubtitleNumber;
+            toolStripMenuItemRightToLeftMode.Text = Configuration.Settings.Language.VobSubOcr.RightToLeft; //TODO: SE 3.3 new language tag
             editSelectAllToolStripMenuItem.Text = _language.Menu.ContextMenu.SelectAll;
 
             toolsToolStripMenuItem.Text = _language.Menu.Tools.Title;
@@ -7882,25 +7883,6 @@ namespace Nikse.SubtitleEdit.Forms
                 Beamer beamer = new Beamer(this, _subtitle, _subtitleListViewIndex);
                 beamer.ShowDialog(this);
             }
-            else if (e.Modifiers == (Keys.Control | Keys.Alt | Keys.Shift) && e.KeyCode == Keys.R) // Ctrl+Alt+Shift+R = Toggle RightToLeft
-            {
-                if (textBoxListViewText.RightToLeft == System.Windows.Forms.RightToLeft.Yes)
-                {
-                    textBoxListViewText.RightToLeft = System.Windows.Forms.RightToLeft.No;
-                    SubtitleListview1.RightToLeft = System.Windows.Forms.RightToLeft.No;
-                    textBoxSource.RightToLeft = System.Windows.Forms.RightToLeft.No;
-                    if (mediaPlayer != null)
-                        mediaPlayer.TextRightToLeft = System.Windows.Forms.RightToLeft.No;
-                }
-                else
-                {
-                    textBoxListViewText.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-                    SubtitleListview1.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-                    textBoxSource.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-                    if (mediaPlayer != null)
-                        mediaPlayer.TextRightToLeft = System.Windows.Forms.RightToLeft.Yes;
-                }
-            }
             else if (e.KeyData == _mainVideoFullscreen) // fullscreen
             {
                 if (_videoPlayerUnDocked == null || _videoPlayerUnDocked.IsDisposed)
@@ -10321,6 +10303,7 @@ namespace Nikse.SubtitleEdit.Forms
                 toolStripMenuItemAlignMiddle.Visible = true;
                 toolStripMenuItemLeft.Visible = true;
                 toolStripMenuItemRight.Visible = true;
+//                toolStripMenuItemRightToLeftMode.Visible = true;
             }
             else
             {
@@ -10330,6 +10313,7 @@ namespace Nikse.SubtitleEdit.Forms
                 toolStripMenuItemAlignMiddle.Visible = false;
                 toolStripMenuItemLeft.Visible = false;
                 toolStripMenuItemRight.Visible = false;
+                //                toolStripMenuItemRightToLeftMode.Visible = false;
             }
         }
 
@@ -10372,6 +10356,7 @@ namespace Nikse.SubtitleEdit.Forms
             replaceToolStripMenuItem.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainEditReplace);
             multipleReplaceToolStripMenuItem.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainEditMultipleReplace);
             gotoLineNumberToolStripMenuItem.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainEditGoToLineNumber);
+            toolStripMenuItemRightToLeftMode.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainEditRightToLeft);
 
             fixToolStripMenuItem.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainToolsFixCommonErrors);
 
@@ -13545,6 +13530,27 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
             _formPositionsAndSizes.SavePositionAndSize(extractDateTimeInfo);
+        }
+
+        private void ToolStripMenuItemRightToLeftModeClick(object sender, EventArgs e)
+        {
+            toolStripMenuItemRightToLeftMode.Checked = !toolStripMenuItemRightToLeftMode.Checked;
+            if (textBoxListViewText.RightToLeft == System.Windows.Forms.RightToLeft.Yes)
+            {
+                textBoxListViewText.RightToLeft = System.Windows.Forms.RightToLeft.No;
+                SubtitleListview1.RightToLeft = System.Windows.Forms.RightToLeft.No;
+                textBoxSource.RightToLeft = System.Windows.Forms.RightToLeft.No;
+                if (mediaPlayer != null)
+                    mediaPlayer.TextRightToLeft = System.Windows.Forms.RightToLeft.No;
+            }
+            else
+            {
+                textBoxListViewText.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+                SubtitleListview1.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+                textBoxSource.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+                if (mediaPlayer != null)
+                    mediaPlayer.TextRightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            }
         }
 
     }
