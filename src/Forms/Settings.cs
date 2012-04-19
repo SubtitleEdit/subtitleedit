@@ -219,6 +219,7 @@ namespace Nikse.SubtitleEdit.Forms
             labelSubtitleFontColor.Text = language.SubtitleFontColor;
             labelSubtitleFontBackgroundColor.Text = language.SubtitleBackgroundColor;
             labelSpellChecker.Text = language.SpellChecker;
+            comboBoxSpellChecker.Left = labelSpellChecker.Left + labelSpellChecker.Width + 3;
             checkBoxRememberRecentFiles.Text = language.RememberRecentFiles;
             checkBoxReopenLastOpened.Text = language.StartWithLastFileLoaded;
             checkBoxRememberSelectedLine.Text = language.RememberSelectedLine;
@@ -230,6 +231,7 @@ namespace Nikse.SubtitleEdit.Forms
             textBoxShowLineBreaksAs.Left = labelShowLineBreaksAs.Left + labelShowLineBreaksAs.Width;
             labelListViewDoubleClickEvent.Text = language.MainListViewDoubleClickAction;
             labelAutoBackup.Text = language.AutoBackup;
+            comboBoxAutoBackup.Left = labelAutoBackup.Left + labelAutoBackup.Width + 3;
             checkBoxAllowEditOfOriginalSubtitle.Text = language.AllowEditOfOriginalSubtitle;
             checkBoxPromptDeleteLines.Text = language.PromptDeleteLines;
             comboBoxAutoBackup.Items[0] = Configuration.Settings.Language.General.None;
