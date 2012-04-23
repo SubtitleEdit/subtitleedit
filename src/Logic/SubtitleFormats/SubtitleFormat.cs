@@ -44,6 +44,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     new FlashXml(),
                     new GpacTtxt(),
                     new Json(),
+                    new JsonType2(),
                     new MicroDvd(),
                     new MidwayInscriberCGX(),
                     new MPlayer2(),

@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
-    public class Json : SubtitleFormat
+    class JsonType2 : SubtitleFormat
     {
         public override string Extension
         {
@@ -13,7 +13,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public override string Name
         {
-            get { return "JSON"; }
+            get { return "JSON Type 2"; }
         }
 
         public override bool HasLineNumber
@@ -42,12 +42,12 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             {
                 if (count > 0)
                     sb.Append(",");
-                sb.Append("{\"start\":");
-                sb.Append(p.StartTime.TotalSeconds.ToString(System.Globalization.CultureInfo.InvariantCulture));
-                sb.Append(",\"end\":");
-                sb.Append(p.EndTime.TotalSeconds.ToString(System.Globalization.CultureInfo.InvariantCulture));
+                sb.Append("{\"startMillis\":");
+                sb.Append(p.StartTime.TotalMilliseconds.ToString(System.Globalization.CultureInfo.InvariantCulture));
+                sb.Append(",\"endMillis\":");
+                sb.Append(p.EndTime.TotalMilliseconds.ToString(System.Globalization.CultureInfo.InvariantCulture));
                 sb.Append(",\"text\":\"");
-                sb.Append(p.Text.Replace("\\", string.Empty).Replace("{", string.Empty).Replace("{", string.Empty).Replace("\"", "\\\"").Replace(Environment.NewLine, "<br />"));
+                sb.Append(p.Text.Replace("\\", string.Empty).Replace("{", string.Empty).Replace("{", string.Empty).Replace("\"", "\\\"").Replace(Environment.NewLine, "\\n"));
                 sb.Append("\"}");
                 count++;
             }
@@ -62,14 +62,14 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             var sb = new StringBuilder();
             foreach (string s in lines)
                 sb.Append(s);
-            if (!sb.ToString().Trim().StartsWith("[{\"start"))
+            if (!sb.ToString().Trim().StartsWith("[{\"startMillis"))
                 return;
 
             foreach (string line in sb.ToString().Replace("},{", Environment.NewLine).Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries))
             {
                 string s = line.Trim() + "}";
-                string start = ReadTag(s, "start");
-                string end = ReadTag(s, "end");
+                string start = ReadTag(s, "startMillis");
+                string end = ReadTag(s, "endMillis");
                 string text = ReadTag(s, "text");
                 if (start != null && end != null && text != null)
                 {
@@ -83,16 +83,16 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         text = text.Replace("<br>", Environment.NewLine);
                         text = text.Replace("<br/>", Environment.NewLine);
                         text = text.Replace("\\n", Environment.NewLine);
-                        subtitle.Paragraphs.Add(new Paragraph(text, startSeconds * 1000.0, endSeconds * 1000.0));
+                        subtitle.Paragraphs.Add(new Paragraph(text, startSeconds, endSeconds));
                     }
                     else
                     {
-                        _errorCount ++;
+                        _errorCount++;
                     }
                 }
                 else
                 {
-                    _errorCount ++;
+                    _errorCount++;
                 }
             }
             subtitle.Renumber(1);
@@ -109,14 +109,14 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             if (res.StartsWith("\""))
             { // text
                 res = res.Replace("\\u0027", "'");
-                res = res.Replace("\\\"", "@__1");
+                res = res.Replace("\\\"", "@__1");                
                 int endIndex = res.IndexOf("\"}");
                 if (endIndex == -1)
                     endIndex = res.IndexOf("\",");
                 if (endIndex == -1)
                     return null;
-                if (res.Length > 1)
-                    return res.Substring(1, endIndex - 1).Replace("@__1", "\"");
+                if (res.Length > 1 && endIndex > 1)
+                    return res.Substring(1, endIndex-1).Replace("@__1", "\"");
                 return string.Empty;
             }
             else
