@@ -3,7 +3,7 @@
   <assemblyIdentity
     name="SubtitleEdit"
     processorArchitecture="*"
-    version="3.2.7.0"
+    version="3.2.8.0"
     type="win32"
   />
   <description>SubtitleEdit</description>
