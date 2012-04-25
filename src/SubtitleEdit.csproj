@@ -659,6 +659,7 @@
     <Compile Include="Logic\SubtitleFormats\UnknownSubtitle16.cs" />
     <Compile Include="Logic\SubtitleFormats\UnknownSubtitle17.cs" />
     <Compile Include="Logic\SubtitleFormats\JsonType2.cs" />
+    <Compile Include="Logic\SubtitleFormats\UnknownSubtitle18.cs" />
     <Compile Include="Logic\SubtitleFormats\UnknownSubtitle5.cs" />
     <Compile Include="Logic\SubtitleFormats\OpenDvt.cs" />
     <Compile Include="Logic\SubtitleFormats\AbcIViewer.cs" />
@@ -1074,6 +1075,7 @@
     </Content>
     <Content Include="Languages\pl-PL.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </Content>
     <Content Include="Languages\pt-BR.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
