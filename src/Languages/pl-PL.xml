@@ -1040,7 +1040,7 @@ Chcesz zapisać?</NegativeTimeWarning>
     <WaveFormAppearance>Wygląd zewnętrzny próbkowania audio</WaveFormAppearance>
     <WaveFormGridColor>Kolor siatki</WaveFormGridColor>
     <WaveFormShowGridLines>Pokaż linie siatki</WaveFormShowGridLines>
-    <ReverseMouseWheelScrollDirection>Odwróć kierunek obrotu rolki myszki</ReverseMouseWheelScrollDirection>
+    <ReverseMouseWheelScrollDirection>Odwróć kierunek przewijania rolką myszki</ReverseMouseWheelScrollDirection>
     <WaveFormColor>Kolor wykresu</WaveFormColor>
     <WaveFormSelectedColor>Kolor zaznaczenia</WaveFormSelectedColor>
     <WaveFormBackgroundColor>Kolor tła</WaveFormBackgroundColor>
