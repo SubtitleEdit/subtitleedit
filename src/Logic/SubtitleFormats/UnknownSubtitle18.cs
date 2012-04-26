@@ -111,7 +111,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         _text = new StringBuilder();
                         _expecting = ExpectingLine.Text;
                     }
-                    else 
+                    else
                     {
                         _errorCount++;
                         _expecting = ExpectingLine.Text; // lets go to next paragraph

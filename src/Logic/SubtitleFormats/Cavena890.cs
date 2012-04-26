@@ -190,7 +190,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             0x5927, // 大
             0x8DB3, // 足
             0x7403, // 球
-            0x5B69, // 孩 
+            0x5B69, // 孩
             0x6E9C, // 溜
             0x51B0, // 冰
             0x5B69, // 孩
@@ -201,7 +201,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             0x602A, // 怪
             0x80CE, // 胎
             0x89BA, // 覺
-            0x81EA, // 自 
+            0x81EA, // 自
             0x5DF1, // 己
             0x50CF, // 像
             0x7375, // 獵
@@ -210,7 +210,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             0x6EFF, // 滿
             0x5E25, // 帥
             0x6C23, // 氣
-            0x6027, // 性 
+            0x6027, // 性
             0x7A9F, // 窟
             0x767C, // 發
             0x8A93, // 誓
@@ -231,11 +231,11 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             0x5E73, // 平
             0x66C9, // 曉
             0x904E, // 過
-            0x5F9E, // 從 
+            0x5F9E, // 從
             0x62BD, // 抽
             0x6876, // 桶
             0x62BD, // 抽
-            0x9846, // 顆 
+            0x9846, // 顆
             0x7C64, // 籤
             0x865F, // 號
             0x78BC, // 碼
@@ -247,7 +247,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             0x5B57, // 字
             0x53CD, // 反
             0x6B63, // 正
-            0x6700, // 最 
+            0x6700, // 最
             0x5F8C, // 後
             0x986F, // 顯
             0x8EAB, // 身
@@ -278,7 +278,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             0x745C, // 噴
             0x045F, // 射
             0x1564, // 引
-            0xCE00, // 擎            
+            0xCE00, // 擎
             0x3490, // ４
             0x1F63, // 速
             0x926A, // 排
@@ -299,9 +299,9 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             0x53EA, // 只
             0x6839, // 根
             0x672C, // 本
-            0x60F3, // 想 
+            0x60F3, // 想
             0x8DDF, // 跟
-            0x540C, // 同 
+            0x540C, // 同
             0x623F, // 房
             0x6A23, // 樣
             0x5B50, // 子
@@ -317,10 +317,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             0x59B9, // 妹
             0x6240, // 所
             0x4EE5, // 以
-            0x5B9A, // 定 
+            0x5B9A, // 定
             0x5C0A, // 尊
             0x91CD, // 重
-            0x610F, // 意 
+            0x610F, // 意
             0x898B, // 見
             0x6CD5, // 法
             0x7BA1, // 管
@@ -331,14 +331,14 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             0x7D55, // 絕
             0x5C0D, // 對
             0x7576, // 當
-            0x5BA4, // 室 
+            0x5BA4, // 室
             0x53CB, // 友
             0x561B, // 嘛
             0x53C8, // 又
             0x600E, // 怎
             0x5BB6, // 家
             0x7576, // 當
-            0x591A, // 多 
+            0x591A, // 多
             0x559C, // 喜
             0x6B61, // 歡
             0x5E36, // 帶
@@ -346,7 +346,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             0x7136, // 然
             0x5E36, // 帶
             0x8457, // 著
-            0x5C0F, // 小 
+            0x5C0F, // 小
             0x718A, // 熊
             0x8C93, // 貓
             0x8D77, // 起
@@ -380,7 +380,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             0x7E7C, // 繼
             0x7E8C, // 續
             0x8D70, // 走
-            0x8208, // 興 
+            0x8208, // 興
             0x8A8D, // 認
             0x8B58, // 識
             0x4F60, // 你
@@ -389,7 +389,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             0x821E, // 舞
             0x6587, // 文
             0x5F04, // 弄
-            0x58A8, // 墨        
+            0x58A8, // 墨
             0x4F60, // 你
             0x4EFD, // 份
             0x5168, // 全
@@ -415,8 +415,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             0x4F34, // 伴
             0x652F, // 支
             0x6490, // 撐
-            0x9806, // 順 
-            0x5B8C, // 完 
+            0x9806, // 順
+            0x5B8C, // 完
             0x66F8, // 書
             0x61C2, // 懂
             0x8F15, // 輕
@@ -918,7 +918,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
              "",
              "",
         };
-        
+
         public override string Extension
         {
             get { return ".890"; }
@@ -1310,7 +1310,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     if (buffer[index] != 0)
                     {
                         sb.Append(GetChineseString(Encoding.UTF8, buffer, ref index));
-                    }                    
+                    }
                     index++;
                     i = index - start;
                 }
@@ -1390,7 +1390,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     if (hx2.Length == 1)
                         hx2 = "0" + hx2;
                     return " (0x" + hx1 + hx2 + ") ";
-                    
+
                 }
             }
 

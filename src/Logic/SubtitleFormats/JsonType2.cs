@@ -109,7 +109,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             if (res.StartsWith("\""))
             { // text
                 res = res.Replace("\\u0027", "'");
-                res = res.Replace("\\\"", "@__1");                
+                res = res.Replace("\\\"", "@__1");
                 int endIndex = res.IndexOf("\"}");
                 if (endIndex == -1)
                     endIndex = res.IndexOf("\",");

@@ -7,13 +7,13 @@ Subtitle Edit Changelog
  * IMPROVED:
    * Updated Chinese language file - thx FeiXJ
    * Updated Brazilian Portuguese - thx Igor Rückert
-   * Updated Polish language file - thx Adam Malich   
-   * Better reading of format Cavena 890 
+   * Updated Polish language file - thx Adam Malich
+   * Better reading of format Cavena 890
  * FIXED:
    * Fixed bug (skip of subtitles) in dvd sub ripping - thx kowenant
    * Minor fix for blu-ray sup reading
-   * Correct time codes in EBU when reading 24 fps 
-   * HD DVD SUP lines are now re-numbered when importing for ocr 
+   * Correct time codes in EBU when reading 24 fps
+   * HD DVD SUP lines are now re-numbered when importing for ocr
 
 
 3.2.7 (14th April 2012)
