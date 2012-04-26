@@ -90,6 +90,10 @@ namespace Nikse.SubtitleEdit.Logic
         public bool ListViewSyntaxColorOverlap { get; set; }
         public bool ListViewSyntaxColorLongLines { get; set; }
         public bool ListViewSyntaxMoreThanTwoLines { get; set; }
+        public bool SplitAdvanced { get; set; }
+        public string SplitOutputFolder { get; set; }
+        public int SplitNumberOfParts { get; set; }
+        public string SplitVia { get; set; }
 
         public ToolsSettings()
         {
@@ -112,6 +116,9 @@ namespace Nikse.SubtitleEdit.Logic
             ListViewSyntaxColorOverlap = true;
             ListViewSyntaxColorLongLines = true;
             ListViewSyntaxMoreThanTwoLines = true;
+            SplitAdvanced = false;
+            SplitNumberOfParts = 3;
+            SplitVia = "Lines";
         }
     }
 
@@ -1066,6 +1073,19 @@ namespace Nikse.SubtitleEdit.Logic
             subNode = node.SelectSingleNode("ListViewSyntaxColorOverlap");
             if (subNode != null)
                 settings.Tools.ListViewSyntaxColorOverlap = Convert.ToBoolean(subNode.InnerText);
+            subNode = node.SelectSingleNode("SplitAdvanced");
+            if (subNode != null)
+                settings.Tools.SplitAdvanced = Convert.ToBoolean(subNode.InnerText);
+            subNode = node.SelectSingleNode("SplitOutputFolder");
+            if (subNode != null)
+                settings.Tools.SplitOutputFolder = subNode.InnerText;
+            subNode = node.SelectSingleNode("SplitNumberOfParts");
+            if (subNode != null)
+                settings.Tools.SplitNumberOfParts = Convert.ToInt32(subNode.InnerText);
+            subNode = node.SelectSingleNode("SplitVia");
+            if (subNode != null)
+                settings.Tools.SplitVia = subNode.InnerText;
+            
 
             settings.SubtitleSettings = new Nikse.SubtitleEdit.Logic.SubtitleSettings();
             node = doc.DocumentElement.SelectSingleNode("SubtitleSettings");
@@ -1706,6 +1726,10 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("ListViewSyntaxColorLongLines", settings.Tools.ListViewSyntaxColorLongLines.ToString());
             textWriter.WriteElementString("ListViewSyntaxMoreThanTwoLines", settings.Tools.ListViewSyntaxMoreThanTwoLines.ToString());
             textWriter.WriteElementString("ListViewSyntaxColorOverlap", settings.Tools.ListViewSyntaxColorOverlap.ToString());
+            textWriter.WriteElementString("SplitAdvanced", settings.Tools.SplitAdvanced.ToString());
+            textWriter.WriteElementString("SplitOutputFolder", settings.Tools.SplitOutputFolder);
+            textWriter.WriteElementString("SplitNumberOfParts", settings.Tools.SplitNumberOfParts.ToString());
+            textWriter.WriteElementString("SplitVia", settings.Tools.SplitVia);
             textWriter.WriteEndElement();
 
             textWriter.WriteStartElement("SubtitleSettings", "");
