@@ -168,8 +168,8 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
                 _parts.Add(temp);
-                ListViewItem lvi2 = new ListViewItem(temp.Paragraphs.Count.ToString());
-                lvi2.SubItems.Add(currentSize.ToString());
+                ListViewItem lvi2 = new ListViewItem(string.Format("{0:#,###,###}", temp.Paragraphs.Count));
+                lvi2.SubItems.Add(string.Format("{0:#,###,###}", currentSize));
                 lvi2.SubItems.Add(fileNameNoExt + ".Part" + numericUpDownParts.Value + ".srt");
                 listViewParts.Items.Add(lvi2);
             }
