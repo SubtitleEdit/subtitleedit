@@ -14,6 +14,7 @@ namespace Nikse.SubtitleEdit.Forms
         SubtitleFormat _format;
         Encoding _encoding;
         private string _fileName;
+        public bool ShowAdvanced { get; private set; }
 
         public SplitSubtitle()
         {
@@ -24,6 +25,10 @@ namespace Nikse.SubtitleEdit.Forms
             label2.Text = Configuration.Settings.Language.SplitSubtitle.Description2;
             buttonSplit.Text = Configuration.Settings.Language.SplitSubtitle.Split;
             buttonDone.Text = Configuration.Settings.Language.SplitSubtitle.Done;
+
+            //TODO: SE 3.3buttonAdvanced.Text = Configuration.Settings.Language.General.Advanced; 
+            buttonAdvanced.Visible = Configuration.Settings.General.ShowBetaStuff;
+
             labelHoursMinSecsMilliSecs.Text = Configuration.Settings.Language.General.HourMinutesSecondsMilliseconds;
             buttonGetFrameRate.Left = splitTimeUpDownAdjust.Left + splitTimeUpDownAdjust.Width;
             FixLargeFonts();
@@ -47,6 +52,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         public void Initialize(Subtitle subtitle, string fileName, SubtitleFormat format, Encoding encoding, double lengthInSeconds)
         {
+            ShowAdvanced = false;
             _subtitle = subtitle;
             _fileName = fileName;
             _format = format;
@@ -154,6 +160,12 @@ namespace Nikse.SubtitleEdit.Forms
                     splitTimeUpDownAdjust.TimeCode = new TimeCode(TimeSpan.FromMilliseconds(info.TotalMilliseconds));
                 }
             }
+        }
+
+        private void buttonAdvanced_Click(object sender, EventArgs e)
+        {
+            ShowAdvanced = true;
+            DialogResult = DialogResult.Cancel;            
         }
 
     }

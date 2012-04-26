@@ -3588,14 +3588,40 @@ namespace Nikse.SubtitleEdit.Forms
             if (_subtitle != null && _subtitle.Paragraphs.Count > 1)
             {
                 ReloadFromSourceView();
-                var splitSubtitle = new SplitSubtitle();
-                double lengthInSeconds = 0;
-                if (mediaPlayer.VideoPlayer != null)
-                    lengthInSeconds = mediaPlayer.Duration;
-                splitSubtitle.Initialize(_subtitle, _fileName , GetCurrentSubtitleFormat(), GetCurrentEncoding(), lengthInSeconds);
-                if (splitSubtitle.ShowDialog(this) == DialogResult.OK)
+
+                if (Configuration.Settings.Tools.SplitAdvanced)
                 {
-                    ShowStatus(_language.SubtitleSplitted);
+                    var split = new Split();
+                    double lengthInSeconds = 0;
+                    if (mediaPlayer.VideoPlayer != null)
+                        lengthInSeconds = mediaPlayer.Duration;
+                    split. Initialize(_subtitle, _fileName, GetCurrentSubtitleFormat(), GetCurrentEncoding(), lengthInSeconds);
+                    if (split.ShowDialog(this) == DialogResult.OK)
+                    {
+                        ShowStatus(_language.SubtitleSplitted);
+                    }
+                    else if (split.ShowBasic)
+                    {
+                        Configuration.Settings.Tools.SplitAdvanced = false;
+                        SplitToolStripMenuItemClick(null, null);
+                    }
+                }
+                else
+                {
+                    var splitSubtitle = new SplitSubtitle();
+                    double lengthInSeconds = 0;
+                    if (mediaPlayer.VideoPlayer != null)
+                        lengthInSeconds = mediaPlayer.Duration;
+                    splitSubtitle.Initialize(_subtitle, _fileName, GetCurrentSubtitleFormat(), GetCurrentEncoding(), lengthInSeconds);
+                    if (splitSubtitle.ShowDialog(this) == DialogResult.OK)
+                    {
+                        ShowStatus(_language.SubtitleSplitted);
+                    }
+                    else if (splitSubtitle.ShowAdvanced)
+                    {
+                        Configuration.Settings.Tools.SplitAdvanced = true;
+                        SplitToolStripMenuItemClick(null, null);
+                    }
                 }
             }
             else
