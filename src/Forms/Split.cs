@@ -217,7 +217,6 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
-
             Configuration.Settings.Tools.SplitNumberOfParts = (int)numericUpDownParts.Value;
             Configuration.Settings.Tools.SplitOutputFolder = textBoxOutputFolder.Text;
             if (RadioButtonLines.Checked)
@@ -285,6 +284,11 @@ namespace Nikse.SubtitleEdit.Forms
         {
             _loading = false;
             CalculateParts();           
+        }
+
+        private void Split_Resize(object sender, EventArgs e)
+        {
+            columnHeaderFileName.Width = -2;
         }
 
     }

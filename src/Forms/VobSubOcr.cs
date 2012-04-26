@@ -1067,7 +1067,20 @@ namespace Nikse.SubtitleEdit.Forms
                             if (!int.TryParse(node.Attributes["Expand"].InnerText, out expandCount))
                                 expandCount = 0;
                         }
-                        return new CompareMatch(node.Attributes["Text"].InnerText, isItalic, expandCount, _compareBitmaps[smallestIndex].Name);
+
+                        var text = node.Attributes["Text"].InnerText;
+                        bool ok = true;
+                        if ("iloc".Contains(text) && differencePercentage > 3)
+                            ok = false;
+                        else if ("OGEF".Contains(text) && differencePercentage > 4)
+                            ok = false;
+                        else if ("UN".Contains(text) && differencePercentage > 5)
+                            ok = false;
+                        else if ("LD".Contains(text) && differencePercentage > 5)
+                            ok = false;
+                        
+                        if (ok)
+                            return new CompareMatch(text, isItalic, expandCount, _compareBitmaps[smallestIndex].Name);
                     }
                 }
 

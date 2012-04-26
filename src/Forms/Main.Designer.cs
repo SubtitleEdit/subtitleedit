@@ -139,6 +139,7 @@
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.splitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.appendTextVisuallyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.joinSubtitlesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemVideo = new System.Windows.Forms.ToolStripMenuItem();
             this.openVideoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemSetAudioTrack = new System.Windows.Forms.ToolStripMenuItem();
@@ -1167,7 +1168,8 @@
             this.generateDatetimeInfoFromVideoToolStripMenuItem,
             this.toolStripSeparator3,
             this.splitToolStripMenuItem,
-            this.appendTextVisuallyToolStripMenuItem});
+            this.appendTextVisuallyToolStripMenuItem,
+            this.joinSubtitlesToolStripMenuItem});
             this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
             this.toolsToolStripMenuItem.Size = new System.Drawing.Size(48, 20);
             this.toolsToolStripMenuItem.Text = "Tools";
@@ -1367,6 +1369,13 @@
             this.appendTextVisuallyToolStripMenuItem.Size = new System.Drawing.Size(346, 22);
             this.appendTextVisuallyToolStripMenuItem.Text = "Append subtitle...";
             this.appendTextVisuallyToolStripMenuItem.Click += new System.EventHandler(this.AppendTextVisuallyToolStripMenuItemClick);
+            // 
+            // joinSubtitlesToolStripMenuItem
+            // 
+            this.joinSubtitlesToolStripMenuItem.Name = "joinSubtitlesToolStripMenuItem";
+            this.joinSubtitlesToolStripMenuItem.Size = new System.Drawing.Size(346, 22);
+            this.joinSubtitlesToolStripMenuItem.Text = "Join subtitles...";
+            this.joinSubtitlesToolStripMenuItem.Click += new System.EventHandler(this.joinSubtitlesToolStripMenuItem_Click);
             // 
             // toolStripMenuItemVideo
             // 
@@ -4131,6 +4140,7 @@
         private System.Windows.Forms.ToolStripMenuItem generateDatetimeInfoFromVideoToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator25;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemRightToLeftMode;
+        private System.Windows.Forms.ToolStripMenuItem joinSubtitlesToolStripMenuItem;
     }
 }
 
