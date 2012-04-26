@@ -145,7 +145,7 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
             {
                 foreach (var p in VobSubPacks)
                 {
-                    if (p.PacketizedElementaryStream != null && p.PacketizedElementaryStream.SubPictureStreamId.HasValue && 
+                    if (p.PacketizedElementaryStream != null && p.PacketizedElementaryStream.SubPictureStreamId.HasValue &&
                         p.PacketizedElementaryStream.SubPictureStreamId.Value == uniqueStreamId)
                     {
                         if (p.PacketizedElementaryStream.PresentationTimeStampDecodeTimeStampFlags > 0)

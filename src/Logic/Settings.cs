@@ -1382,7 +1382,7 @@ namespace Nikse.SubtitleEdit.Logic
                     settings.Shortcuts.MainEditGoToLineNumber = subNode.InnerText;
                 subNode = node.SelectSingleNode("MainEditRightToLeft");
                 if (subNode != null)
-                    settings.Shortcuts.MainEditRightToLeft = subNode.InnerText;                
+                    settings.Shortcuts.MainEditRightToLeft = subNode.InnerText;
                 subNode = node.SelectSingleNode("MainToolsFixCommonErrors");
                 if (subNode != null)
                     settings.Shortcuts.MainToolsFixCommonErrors = subNode.InnerText;

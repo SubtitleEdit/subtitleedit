@@ -278,7 +278,7 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
                                 so[0] = null;
                                 // store state to be able to revert to it
                                 picTmp = new BluRaySupPicture(pic); // deep copy
-                                
+
                                 // create new pic
                                 ParsePcs(segment, pic, so, buffer);
                             }
