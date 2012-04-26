@@ -37,6 +37,7 @@
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.labelHoursMinSecsMilliSecs = new System.Windows.Forms.Label();
             this.splitTimeUpDownAdjust = new Nikse.SubtitleEdit.Controls.TimeUpDown();
+            this.buttonAdvanced = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // buttonGetFrameRate
@@ -112,11 +113,23 @@
             this.splitTimeUpDownAdjust.Size = new System.Drawing.Size(92, 25);
             this.splitTimeUpDownAdjust.TabIndex = 21;
             // 
+            // buttonAdvanced
+            // 
+            this.buttonAdvanced.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.buttonAdvanced.Location = new System.Drawing.Point(54, 109);
+            this.buttonAdvanced.Name = "buttonAdvanced";
+            this.buttonAdvanced.Size = new System.Drawing.Size(98, 21);
+            this.buttonAdvanced.TabIndex = 23;
+            this.buttonAdvanced.Text = "&Advanced";
+            this.buttonAdvanced.UseVisualStyleBackColor = true;
+            this.buttonAdvanced.Click += new System.EventHandler(this.buttonAdvanced_Click);
+            // 
             // SplitSubtitle
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(325, 140);
+            this.Controls.Add(this.buttonAdvanced);
             this.Controls.Add(this.buttonGetFrameRate);
             this.Controls.Add(this.splitTimeUpDownAdjust);
             this.Controls.Add(this.labelHoursMinSecsMilliSecs);
@@ -149,5 +162,6 @@
         private System.Windows.Forms.SaveFileDialog saveFileDialog1;
         private Nikse.SubtitleEdit.Controls.TimeUpDown splitTimeUpDownAdjust;
         private System.Windows.Forms.Label labelHoursMinSecsMilliSecs;
+        private System.Windows.Forms.Button buttonAdvanced;
     }
 }

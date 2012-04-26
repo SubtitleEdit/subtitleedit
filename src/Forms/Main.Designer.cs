@@ -1065,31 +1065,31 @@
             // showHistoryforUndoToolStripMenuItem
             // 
             this.showHistoryforUndoToolStripMenuItem.Name = "showHistoryforUndoToolStripMenuItem";
-            this.showHistoryforUndoToolStripMenuItem.Size = new System.Drawing.Size(271, 22);
+            this.showHistoryforUndoToolStripMenuItem.Size = new System.Drawing.Size(222, 22);
             this.showHistoryforUndoToolStripMenuItem.Text = "Show history (for undo)";
             this.showHistoryforUndoToolStripMenuItem.Click += new System.EventHandler(this.ShowHistoryforUndoToolStripMenuItemClick);
             // 
             // toolStripSeparator14
             // 
             this.toolStripSeparator14.Name = "toolStripSeparator14";
-            this.toolStripSeparator14.Size = new System.Drawing.Size(268, 6);
+            this.toolStripSeparator14.Size = new System.Drawing.Size(219, 6);
             // 
             // toolStripMenuItemInsertUnicodeCharacter
             // 
             this.toolStripMenuItemInsertUnicodeCharacter.Name = "toolStripMenuItemInsertUnicodeCharacter";
-            this.toolStripMenuItemInsertUnicodeCharacter.Size = new System.Drawing.Size(271, 22);
+            this.toolStripMenuItemInsertUnicodeCharacter.Size = new System.Drawing.Size(222, 22);
             this.toolStripMenuItemInsertUnicodeCharacter.Text = "Insert unicode character";
             // 
             // toolStripSeparatorInsertUnicodeCharacter
             // 
             this.toolStripSeparatorInsertUnicodeCharacter.Name = "toolStripSeparatorInsertUnicodeCharacter";
-            this.toolStripSeparatorInsertUnicodeCharacter.Size = new System.Drawing.Size(268, 6);
+            this.toolStripSeparatorInsertUnicodeCharacter.Size = new System.Drawing.Size(219, 6);
             // 
             // findToolStripMenuItem
             // 
             this.findToolStripMenuItem.Name = "findToolStripMenuItem";
             this.findToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.F)));
-            this.findToolStripMenuItem.Size = new System.Drawing.Size(271, 22);
+            this.findToolStripMenuItem.Size = new System.Drawing.Size(222, 22);
             this.findToolStripMenuItem.Text = "Find";
             this.findToolStripMenuItem.Click += new System.EventHandler(this.FindToolStripMenuItemClick);
             // 
@@ -1097,7 +1097,7 @@
             // 
             this.findNextToolStripMenuItem.Name = "findNextToolStripMenuItem";
             this.findNextToolStripMenuItem.ShortcutKeys = System.Windows.Forms.Keys.F3;
-            this.findNextToolStripMenuItem.Size = new System.Drawing.Size(271, 22);
+            this.findNextToolStripMenuItem.Size = new System.Drawing.Size(222, 22);
             this.findNextToolStripMenuItem.Text = "Find next";
             this.findNextToolStripMenuItem.Click += new System.EventHandler(this.FindNextToolStripMenuItemClick);
             // 
@@ -1105,14 +1105,14 @@
             // 
             this.replaceToolStripMenuItem.Name = "replaceToolStripMenuItem";
             this.replaceToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.H)));
-            this.replaceToolStripMenuItem.Size = new System.Drawing.Size(271, 22);
+            this.replaceToolStripMenuItem.Size = new System.Drawing.Size(222, 22);
             this.replaceToolStripMenuItem.Text = "Replace";
             this.replaceToolStripMenuItem.Click += new System.EventHandler(this.ReplaceToolStripMenuItemClick);
             // 
             // multipleReplaceToolStripMenuItem
             // 
             this.multipleReplaceToolStripMenuItem.Name = "multipleReplaceToolStripMenuItem";
-            this.multipleReplaceToolStripMenuItem.Size = new System.Drawing.Size(271, 22);
+            this.multipleReplaceToolStripMenuItem.Size = new System.Drawing.Size(222, 22);
             this.multipleReplaceToolStripMenuItem.Text = "Multiple replace";
             this.multipleReplaceToolStripMenuItem.Click += new System.EventHandler(this.MultipleReplaceToolStripMenuItemClick);
             // 
@@ -1120,14 +1120,14 @@
             // 
             this.gotoLineNumberToolStripMenuItem.Name = "gotoLineNumberToolStripMenuItem";
             this.gotoLineNumberToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.G)));
-            this.gotoLineNumberToolStripMenuItem.Size = new System.Drawing.Size(271, 22);
+            this.gotoLineNumberToolStripMenuItem.Size = new System.Drawing.Size(222, 22);
             this.gotoLineNumberToolStripMenuItem.Text = "Goto line number...";
             this.gotoLineNumberToolStripMenuItem.Click += new System.EventHandler(this.GotoLineNumberToolStripMenuItemClick);
             // 
             // toolStripSeparator25
             // 
             this.toolStripSeparator25.Name = "toolStripSeparator25";
-            this.toolStripSeparator25.Size = new System.Drawing.Size(268, 6);
+            this.toolStripSeparator25.Size = new System.Drawing.Size(219, 6);
             // 
             // toolStripMenuItemRightToLeftMode
             // 
@@ -1139,12 +1139,12 @@
             // toolStripSeparator21
             // 
             this.toolStripSeparator21.Name = "toolStripSeparator21";
-            this.toolStripSeparator21.Size = new System.Drawing.Size(268, 6);
+            this.toolStripSeparator21.Size = new System.Drawing.Size(219, 6);
             // 
             // editSelectAllToolStripMenuItem
             // 
             this.editSelectAllToolStripMenuItem.Name = "editSelectAllToolStripMenuItem";
-            this.editSelectAllToolStripMenuItem.Size = new System.Drawing.Size(271, 22);
+            this.editSelectAllToolStripMenuItem.Size = new System.Drawing.Size(222, 22);
             this.editSelectAllToolStripMenuItem.Text = "Select all";
             this.editSelectAllToolStripMenuItem.Click += new System.EventHandler(this.EditSelectAllToolStripMenuItemClick);
             // 
