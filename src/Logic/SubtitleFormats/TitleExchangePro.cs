@@ -36,7 +36,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             var sb = new StringBuilder();
             foreach (string line in lines)
                 sb.AppendLine(line);
-            if (sb.ToString().Contains(Environment.NewLine + "SP_NUMBER	START	END	FILE_NAME"))
+            if (sb.ToString().Contains(Environment.NewLine + "SP_NUMBER\tSTART\tEND\tFILE_NAME"))
                 return false; // SON
 
             LoadSubtitle(subtitle, lines, fileName);
