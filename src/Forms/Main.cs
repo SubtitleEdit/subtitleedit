@@ -10330,6 +10330,7 @@ namespace Nikse.SubtitleEdit.Forms
                 toolStripMenuItemLeft.Visible = true;
                 toolStripMenuItemRight.Visible = true;
 //                toolStripMenuItemRightToLeftMode.Visible = true;
+                joinSubtitlesToolStripMenuItem.Visible = true;
             }
             else
             {
@@ -10340,6 +10341,7 @@ namespace Nikse.SubtitleEdit.Forms
                 toolStripMenuItemLeft.Visible = false;
                 toolStripMenuItemRight.Visible = false;
                 //                toolStripMenuItemRightToLeftMode.Visible = false;
+                joinSubtitlesToolStripMenuItem.Visible = false;
             }
         }
 
@@ -13576,6 +13578,30 @@ namespace Nikse.SubtitleEdit.Forms
                 textBoxSource.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
                 if (mediaPlayer != null)
                     mediaPlayer.TextRightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            }
+        }
+
+        private void joinSubtitlesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ReloadFromSourceView();
+            var joinSubtitles = new JoinSubtitles();
+            if (joinSubtitles.ShowDialog(this) == DialogResult.OK)
+            {
+                if (ContinueNewOrExit())
+                {
+                    MakeHistoryForUndo(_language.BeforeDisplayTimeAdjustment);//TODO: add language tags                    
+
+                    ResetSubtitle();
+                    _subtitle = joinSubtitles.JoinedSubtitle;
+                    SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
+                    SubtitleListview1.SelectIndexAndEnsureVisible(0);
+
+                    if (IsFramesRelevant && CurrentFrameRate > 0)
+                        _subtitle.CalculateFrameNumbersFromTimeCodesNoCheck(CurrentFrameRate);
+                    ShowSource();
+
+                    ShowStatus(_language.SubtitleSplitted); //TODO: add language tags
+                }
             }
         }
 
