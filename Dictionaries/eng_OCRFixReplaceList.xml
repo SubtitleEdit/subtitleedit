@@ -18,7 +18,10 @@
     <Word from="\/\/e'd" to="We'd" />
     <Word from="\/\/e're" to="We're" />
     <Word from="\/\/e've" to="We've" />
+    <Word from="\/\/hat" to="What" />
     <Word from="\/\/here'd" to="Where'd" />
+    <Word from="\/\/hoo" to="Whoo" />
+    <Word from="\/\/hy" to="Why" />
     <Word from="\/\/hy'd" to="Why'd" />
     <Word from="\/\le're" to="We're" />
     <Word from="\/Ve" to="We" />
@@ -147,6 +150,7 @@
     <Word from="atleast" to="at least" />
     <Word from="Atough" to="A tough" />
     <Word from="awoman" to="a woman" />
+    <Word from="barelytalked" to="barely talked" />
     <Word from="bcat" to="boat" />
     <Word from="Bcllvla" to="Bolivia" />
     <Word from="bcmb" to="bomb" />
@@ -163,6 +167,7 @@
     <Word from="bigos___" to="bigos..." />
     <Word from="BIind" to="Blind" />
     <Word from="BIood" to="Blood" />
+    <Word from="BIue" to="Blue" />
     <Word from="blonde" to="blonde" />
     <Word from="BLOVVS" to="BLOWS" />
     <Word from="blowholel" to="blowhole!" />
@@ -234,6 +239,7 @@
     <Word from="COUGH5" to="COUGHS" />
     <Word from="CouGHING" to="COUGHING" />
     <Word from="couIdn't" to="couldn't" />
+    <Word from="couldjust" to="could just" />
     <Word from="couldn'T" to="couldn't" />
     <Word from="couldn'tjust" to="couldn't just" />
     <Word from="Couldyou" to="Could you" />
@@ -313,6 +319,8 @@
     <Word from="DonWlook" to="Don't look" />
     <Word from="Dooropens" to="Door opens" />
     <Word from="doorshuts" to="door shuts" />
+    <Word from="dothat" to="do that" />
+    <Word from="dothis" to="do this" />
     <Word from="Drinkthis" to="Drink this" />
     <Word from="dumbass" to="dumb-ass" />
     <Word from="dumbto" to="dumb to" />
@@ -347,6 +355,7 @@
     <Word from="feeleverything" to="feel everything" />
     <Word from="feelsweet" to="feel sweet" />
     <Word from="ﬁngernail" to="fingernail" />
+    <Word from="finishedjunior" to="finished junior" />
     <Word from="FIynn" to="Flynn" />
     <Word from="flll" to="fill" />
     <Word from="flra" to="fira" />
@@ -395,8 +404,10 @@
     <Word from="Goddamit" to="Goddammit" />
     <Word from="golng" to="going" />
     <Word from="goodboyand" to="good boy and" />
+    <Word from="goodjob" to="good job" />
     <Word from="google" to="Google" />
     <Word from="gOt" to="got" />
+    <Word from="gothere" to="go there" />
     <Word from="gotmyfirstinterview" to="got my first interview" />
     <Word from="grandjury" to="grand jury" />
     <Word from="greatjob" to="great job" />
@@ -625,6 +636,7 @@
     <Word from="Itook" to="I took" />
     <Word from="itout" to="it out" />
     <Word from="it'S" to="it's" />
+    <Word from="it'sjinxed" to="it's jinxed" />
     <Word from="it'sjust" to="it's just" />
     <Word from="It'sjust" to="It's just" />
     <Word from="itso" to="it so" />
@@ -835,6 +847,7 @@
     <Word from="myselli" to="myself" />
     <Word from="Myshoes" to="My shoes" />
     <Word from="mysong" to="my song" />
+    <Word from="mytemper" to="my temper" />
     <Word from="mythumb" to="my thumb" />
     <Word from="Myworld" to="My world" />
     <Word from="N0" to="No" />
@@ -938,6 +951,7 @@
     <Word from="ofyou" to="of you" />
     <Word from="ofyour" to="of your" />
     <Word from="OId" to="Old" />
+    <Word from="OIsson" to="Olsson" />
     <Word from="okaY" to="okay" />
     <Word from="OKaY" to="Okay" />
     <Word from="OKGY" to="Okay" />
@@ -978,6 +992,7 @@
     <Word from="outlool&lt;'s" to="outlook's" />
     <Word from="overme" to="over me" />
     <Word from="overthe" to="over the" />
+    <Word from="overthere" to="over there" />
     <Word from="p/ace" to="place" />
     <Word from="P/ease" to="Please" />
     <Word from="p_m_" to="p.m." />
@@ -1017,6 +1032,7 @@
     <Word from="ReaHy" to="Really" />
     <Word from="reallyjust" to="really just" />
     <Word from="reallymiss" to="really miss" />
+    <Word from="reallytalked" to="really talked" />
     <Word from="reallythink" to="really think" />
     <Word from="reallythinkthis" to="really think this" />
     <Word from="rememberthem" to="remember them" />
@@ -1032,6 +1048,7 @@
     <Word from="S1oW1y" to="Slowly" />
     <Word from="sayeverything's" to="say everything's" />
     <Word from="saynothing" to="say nothing" />
+    <Word from="saythat" to="say that" />
     <Word from="sc" to="so" />
     <Word from="scientihc" to="scientific" />
     <Word from="SCREAIVHNG" to="SCREAMING" />
@@ -1178,6 +1195,9 @@
     <Word from="toldyou" to="told you" />
     <Word from="tomorrovv" to="tomorrow" />
     <Word from="Tonighfsjust" to="Tonight's just" />
+    <Word from="totake" to="to take" />
+    <Word from="totalk" to="to talk" />
+    <Word from="tothat" to="to that" />
     <Word from="tothe" to="to the" />
     <Word from="Towef" to="Tower" />
     <Word from="Traitur" to="Traitor" />
@@ -1190,9 +1210,11 @@
     <Word from="Tvvo" to="Two" />
     <Word from="twc" to="two" />
     <Word from="unconhrmed" to="unconfirmed" />
+    <Word from="underthat" to="under that" />
     <Word from="underthe" to="under the" />
     <Word from="underthese" to="under these" />
     <Word from="underyour" to="under your" />
+    <Word from="unfilyou" to="until you" />
     <Word from="Uninnabited" to="Uninhabited" />
     <Word from="untilApril" to="until April" />
     <Word from="untilyou" to="until you" />
@@ -1242,6 +1264,7 @@
     <Word from="VVhip" to="Whip" />
     <Word from="vvHooPING" to="WHOOPING" />
     <Word from="VvHooPING" to="WHOOPING" />
+    <Word from="VVhy" to="Why" />
     <Word from="VVill" to="Will" />
     <Word from="VVinters" to="Winters" />
     <Word from="vvlND" to="WIND" />
@@ -1268,6 +1291,7 @@
     <Word from="we/come" to="welcome" />
     <Word from="We/come" to="Welcome" />
     <Word from="We/I" to="Well" />
+    <Word from="weekendjust" to="weekend just" />
     <Word from="we'II" to="we'll" />
     <Word from="We'II" to="We'll" />
     <Word from="we'Il" to="we'll" />
@@ -1379,8 +1403,6 @@
     <Word from="Yuu've" to="You've" />
     <Word from="z'housand" to="thousand" />
     <Word from="zlPPING" to="ZIPPING" />
-    <Word from="unfilyou" to="until you" />
-    <Word from="VVhy" to="Why" />
   </WholeWords>
   <PartialWordsAlways>
     <!-- Will be replaced always -->
@@ -1641,5 +1663,6 @@
     <Line from="-N0." to="-No." />
     <Line from="Noll" to="No!!" />
     <Line from="Where're you gﬂing?" to="Where're you going?" />
+    <Line from="SQMEWH ERE ELSE" to="SOMEWHERE ELSE" />
   </WholeLines>
 </OCRFixReplaceList>
