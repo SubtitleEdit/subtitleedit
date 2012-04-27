@@ -317,7 +317,7 @@ Filename: {win}\Microsoft.NET\Framework\v2.0.50727\ngen.exe; Parameters: "uninst
 
 [Code]
 // Global variables/constants and general functions
-const installer_mutex_name = 'subtitle_edit_setup_mutex';
+const installer_mutex = 'subtitle_edit_setup_mutex';
 
 function IsModuleLoaded(modulename: AnsiString): Boolean;
 external 'IsModuleLoaded@files:psvince.dll stdcall setuponly';
@@ -445,13 +445,13 @@ var
   iErrorCode, iMsgBoxResult: Integer;
 begin
   // Create a mutex for the installer and if it's already running then expose a message and stop installation
-  if CheckForMutexes(installer_mutex_name) and not WizardSilent() then begin
+  if CheckForMutexes(installer_mutex) and not WizardSilent() then begin
     SuppressibleMsgBox(CustomMessage('msg_SetupIsRunningWarning'), mbError, MB_OK, MB_OK);
     Result := False;
   end
   else begin
     Result := True;
-    CreateMutex(installer_mutex_name);
+    CreateMutex(installer_mutex);
 
     while IsModuleLoaded('SubtitleEdit.exe') and (iMsgBoxResult <> IDCANCEL) do
       iMsgBoxResult := SuppressibleMsgBox(CustomMessage('msg_AppIsRunning'), mbError, MB_OKCANCEL, IDCANCEL);
@@ -479,13 +479,13 @@ function InitializeUninstall(): Boolean;
 var
   iMsgBoxResult: Integer;
 begin
-  if CheckForMutexes(installer_mutex_name) then begin
+  if CheckForMutexes(installer_mutex) then begin
     SuppressibleMsgBox(CustomMessage('msg_SetupIsRunningWarning'), mbError, MB_OK, MB_OK);
     Result := False;
   end
   else begin
     Result := True;
-    CreateMutex(installer_mutex_name);
+    CreateMutex(installer_mutex);
 
     // Check if app is running during uninstallation
     while IsModuleLoadedU('SubtitleEdit.exe') and (iMsgBoxResult <> IDCANCEL) do
