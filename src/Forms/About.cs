@@ -18,7 +18,7 @@ namespace Nikse.SubtitleEdit.Forms
             string minorMinorVersion = string.Empty;
             if (versionInfo.Length >= 3 && versionInfo[2] != "0")
                 minorMinorVersion = "." + versionInfo[2];
-            labelProduct.Text = String.Format("{0} {1}.{2}{3}, build {4}", _languageGeneral.Title, versionInfo[0], versionInfo[1], minorMinorVersion, versionInfo[3]);
+            labelProduct.Text = String.Format("{0} {1}.{2}{3} rev.{4}", _languageGeneral.Title, versionInfo[0], versionInfo[1], minorMinorVersion, versionInfo[3]);
             richTextBoxAbout1.Text = _language.AboutText1.TrimEnd() + Environment.NewLine +
                                      Environment.NewLine +
                                      _languageGeneral.TranslatedBy.Trim();
