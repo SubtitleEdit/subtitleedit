@@ -15,6 +15,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             InitializeComponent();
             JoinedSubtitle = new Subtitle();
+            labelTotalLines.Text = string.Empty;
         }
 
         private void buttonCancel_Click(object sender, EventArgs e)
@@ -129,6 +130,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
             JoinedSubtitle.Renumber(1);
+            labelTotalLines.Text = string.Format("Total number of lines: {0:#,###,###}", JoinedSubtitle.Paragraphs.Count);
         }
 
         private void JoinSubtitles_Resize(object sender, EventArgs e)

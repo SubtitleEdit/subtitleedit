@@ -40,6 +40,7 @@
             this.ButtonRemoveVob = new System.Windows.Forms.Button();
             this.buttonAddVobFile = new System.Windows.Forms.Button();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
+            this.labelTotalLines = new System.Windows.Forms.Label();
             this.groupBoxPreview.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -82,7 +83,7 @@
             this.listViewParts.HideSelection = false;
             this.listViewParts.Location = new System.Drawing.Point(6, 19);
             this.listViewParts.Name = "listViewParts";
-            this.listViewParts.Size = new System.Drawing.Size(628, 226);
+            this.listViewParts.Size = new System.Drawing.Size(628, 207);
             this.listViewParts.TabIndex = 101;
             this.listViewParts.UseCompatibleStateImageBehavior = false;
             this.listViewParts.View = System.Windows.Forms.View.Details;
@@ -114,6 +115,7 @@
             this.groupBoxPreview.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxPreview.Controls.Add(this.labelTotalLines);
             this.groupBoxPreview.Controls.Add(this.buttonClear);
             this.groupBoxPreview.Controls.Add(this.ButtonRemoveVob);
             this.groupBoxPreview.Controls.Add(this.buttonAddVobFile);
@@ -162,6 +164,15 @@
             // 
             this.openFileDialog1.FileName = "openFileDialog1";
             // 
+            // labelTotalLines
+            // 
+            this.labelTotalLines.AutoSize = true;
+            this.labelTotalLines.Location = new System.Drawing.Point(7, 232);
+            this.labelTotalLines.Name = "labelTotalLines";
+            this.labelTotalLines.Size = new System.Drawing.Size(78, 13);
+            this.labelTotalLines.TabIndex = 105;
+            this.labelTotalLines.Text = "labelTotalLines";
+            // 
             // JoinSubtitles
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -182,6 +193,7 @@
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.JoinSubtitles_KeyDown);
             this.Resize += new System.EventHandler(this.JoinSubtitles_Resize);
             this.groupBoxPreview.ResumeLayout(false);
+            this.groupBoxPreview.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -200,5 +212,6 @@
         private System.Windows.Forms.Button buttonAddVobFile;
         private System.Windows.Forms.ColumnHeader columnHeaderEndTime;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
+        private System.Windows.Forms.Label labelTotalLines;
     }
 }

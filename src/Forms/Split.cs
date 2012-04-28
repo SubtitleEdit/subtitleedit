@@ -150,7 +150,7 @@ namespace Nikse.SubtitleEdit.Forms
                 for (int i = 0; i < _subtitle.Paragraphs.Count; i++)
                 {
                     Paragraph p = _subtitle.Paragraphs[i];
-                    int size = Utilities.RemoveHtmlTags(p.Text).Length;
+                    int size = p.Text.Length;
                     if (currentSize + size > nextLimit && _parts.Count < numericUpDownParts.Value-1)
                     {
                         _parts.Add(temp);
@@ -160,6 +160,7 @@ namespace Nikse.SubtitleEdit.Forms
                         listViewParts.Items.Add(lvi);
                         currentSize = size;
                         temp = new Subtitle();
+                        temp.Paragraphs.Add(new Paragraph(p));
                     }
                     else
                     {
