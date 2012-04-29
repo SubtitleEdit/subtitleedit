@@ -13589,7 +13589,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 if (joinSubtitles.JoinedSubtitle != null && joinSubtitles.JoinedSubtitle.Paragraphs.Count > 0 && ContinueNewOrExit())
                 {
-                    MakeHistoryForUndo(_language.BeforeDisplayTimeAdjustment);//TODO: add language tags                    
+                    MakeHistoryForUndo(_language.BeforeDisplayTimeAdjustment);//TODO: add language tags
 
                     ResetSubtitle();
                     _subtitle = joinSubtitles.JoinedSubtitle;
@@ -13604,6 +13604,6 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
         }
-    
+
     }
 }

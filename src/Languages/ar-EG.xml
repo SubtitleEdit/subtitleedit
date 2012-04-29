@@ -1,73 +1,73 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Language Name="العربية">
-	<General>
-		<Title>Subtitle Edit</Title>
-		<Version>3.2</Version>
+    <General>
+        <Title>Subtitle Edit</Title>
+        <Version>3.2</Version>
 		<TranslatedBy>Translation By. Zakaria Farah Abu Wael 
-zakaria_farah2000@hotmail.com  : للتواصل 
+zakaria_farah2000@hotmail.com  : للتواصل
 https://www.facebook.com/zakaria2000
 منتديات عميد التعريب الأستاذ عوض الغامدى
 إضغط على الرابط التالى لزيارة المنتدى
 http://www.alghaamdi.com/vb/index.php</TranslatedBy>
-		<CultureName>ar-EG</CultureName>
-		<HelpFile/>
-		<OK>&amp;حسناً</OK>
-		<Cancel>إلغاء</Cancel>
-		<Apply>تطبيق</Apply>
-		<None>لاشىء</None>
-		<Preview>معاينة</Preview>
-		<SubtitleFiles>ملفات الترجمة</SubtitleFiles>
-		<AllFiles>جميع الملفات</AllFiles>
-		<VideoFiles>ملفات الفيديو</VideoFiles>
-		<OpenSubtitle>افتح ترجمة</OpenSubtitle>
-		<OpenVideoFile>افتح ملف فيديو</OpenVideoFile>
-		<OpenVideoFileTitle>افتح ملف فيديو معنون</OpenVideoFileTitle>
-		<NoVideoLoaded>لايوجد فيديو محمل</NoVideoLoaded>
-		<VideoInformation>معلومات الفيديو</VideoInformation>
-		<PositionX>{0} : تنظيم / المدة</PositionX>
-		<StartTime>بداية الوقت</StartTime>
-		<EndTime>نهاية الوقت</EndTime>
-		<Duration>المدة</Duration>
-		<NumberSymbol>#</NumberSymbol>
-		<Number>الرقم</Number>
-		<Text>ملف نصى</Text>
-		<HourMinutesSecondsMilliseconds>ساعة : دقيقة : ثانية : ميللي ثانية</HourMinutesSecondsMilliseconds>
-		<Bold>كثيف</Bold>
-		<Italic>مائل</Italic>
-		<Visible>ظاهر</Visible>
-		<FrameRate>معدل الإطار</FrameRate>
-		<Name>الأسم</Name>
-		<FileNameXAndSize>{0} ({1}) : اسم الملف</FileNameXAndSize>
-		<ResolutionX>{0} : دقة العرض</ResolutionX>
-		<FrameRateX>{0:0.0###} : معدل الإطار</FrameRateX>
-		<TotalFramesX>{0:#,##0.##} : مجموع الإطارات</TotalFramesX>
-		<VideoEncodingX>{0} : ترميز الفيديو</VideoEncodingX>
-		<SingleLineLengths>: سطر طول واحد</SingleLineLengths>
-		<TotalLengthX>{0} : الطول الإجمالي</TotalLengthX>
-		<TotalLengthXSplitLine>{0} : الطول الإجمالي انقسام السطر</TotalLengthXSplitLine>
-		<SplitLine>!انقسام السطر</SplitLine>
-		<NotAvailable>N/A</NotAvailable>
-		<OverlapPreviousLineX>({0:#,##0.###})تداخل خط سابق</OverlapPreviousLineX>
-		<OverlapX>({0:#,##0.###})تداخل</OverlapX>
-		<OverlapNextX>({0:#,##0.###})التداخل التالى</OverlapNextX>
-		<Negative>سلبي</Negative>
-		<RegularExpressionIsNotValid>! التعبير المنتظم ليس صحيح</RegularExpressionIsNotValid>
-		<SubtitleSaved>حفظ الترجمة</SubtitleSaved>
-		<CurrentSubtitle>الترجمة الحالية</CurrentSubtitle>
-		<OriginalText>النص الأصلي</OriginalText>
-		<OpenOriginalSubtitleFile>فتح ملف الترجمة الأصلي</OpenOriginalSubtitleFile>
-		<PleaseWait>...من فضلك أنتظر</PleaseWait>
-		<SessionKey>مفتاح الجلسة</SessionKey>
-		<UserName>اسم المستخدم</UserName>
-		<UserNameAlreadyInUse>اسم المستخدم  قيد الإستعمال</UserNameAlreadyInUse>
-		<WebServiceUrl>عنوان خدمة ويب</WebServiceUrl>
-		<IP>IP</IP>
-		<VideoWindowTitle>{0} - فيديو</VideoWindowTitle>
-		<AudioWindowTitle>{0} - صوت</AudioWindowTitle>
-		<ControlsWindowTitle>{0} - ضوابط</ControlsWindowTitle>
-	</General>
-	<About>
-		<Title>معلومات عن برنامج محرر الترجمة</Title>
+        <CultureName>ar-EG</CultureName>
+        <HelpFile/>
+        <OK>&amp;حسناً</OK>
+        <Cancel>إلغاء</Cancel>
+        <Apply>تطبيق</Apply>
+        <None>لاشىء</None>
+        <Preview>معاينة</Preview>
+        <SubtitleFiles>ملفات الترجمة</SubtitleFiles>
+        <AllFiles>جميع الملفات</AllFiles>
+        <VideoFiles>ملفات الفيديو</VideoFiles>
+        <OpenSubtitle>افتح ترجمة</OpenSubtitle>
+        <OpenVideoFile>افتح ملف فيديو</OpenVideoFile>
+        <OpenVideoFileTitle>افتح ملف فيديو معنون</OpenVideoFileTitle>
+        <NoVideoLoaded>لايوجد فيديو محمل</NoVideoLoaded>
+        <VideoInformation>معلومات الفيديو</VideoInformation>
+        <PositionX>{0} : تنظيم / المدة</PositionX>
+        <StartTime>بداية الوقت</StartTime>
+        <EndTime>نهاية الوقت</EndTime>
+        <Duration>المدة</Duration>
+        <NumberSymbol>#</NumberSymbol>
+        <Number>الرقم</Number>
+        <Text>ملف نصى</Text>
+        <HourMinutesSecondsMilliseconds>ساعة : دقيقة : ثانية : ميللي ثانية</HourMinutesSecondsMilliseconds>
+        <Bold>كثيف</Bold>
+        <Italic>مائل</Italic>
+        <Visible>ظاهر</Visible>
+        <FrameRate>معدل الإطار</FrameRate>
+        <Name>الأسم</Name>
+        <FileNameXAndSize>{0} ({1}) : اسم الملف</FileNameXAndSize>
+        <ResolutionX>{0} : دقة العرض</ResolutionX>
+        <FrameRateX>{0:0.0###} : معدل الإطار</FrameRateX>
+        <TotalFramesX>{0:#,##0.##} : مجموع الإطارات</TotalFramesX>
+        <VideoEncodingX>{0} : ترميز الفيديو</VideoEncodingX>
+        <SingleLineLengths>: سطر طول واحد</SingleLineLengths>
+        <TotalLengthX>{0} : الطول الإجمالي</TotalLengthX>
+        <TotalLengthXSplitLine>{0} : الطول الإجمالي انقسام السطر</TotalLengthXSplitLine>
+        <SplitLine>!انقسام السطر</SplitLine>
+        <NotAvailable>N/A</NotAvailable>
+        <OverlapPreviousLineX>({0:#,##0.###})تداخل خط سابق</OverlapPreviousLineX>
+        <OverlapX>({0:#,##0.###})تداخل</OverlapX>
+        <OverlapNextX>({0:#,##0.###})التداخل التالى</OverlapNextX>
+        <Negative>سلبي</Negative>
+        <RegularExpressionIsNotValid>! التعبير المنتظم ليس صحيح</RegularExpressionIsNotValid>
+        <SubtitleSaved>حفظ الترجمة</SubtitleSaved>
+        <CurrentSubtitle>الترجمة الحالية</CurrentSubtitle>
+        <OriginalText>النص الأصلي</OriginalText>
+        <OpenOriginalSubtitleFile>فتح ملف الترجمة الأصلي</OpenOriginalSubtitleFile>
+        <PleaseWait>...من فضلك أنتظر</PleaseWait>
+        <SessionKey>مفتاح الجلسة</SessionKey>
+        <UserName>اسم المستخدم</UserName>
+        <UserNameAlreadyInUse>اسم المستخدم  قيد الإستعمال</UserNameAlreadyInUse>
+        <WebServiceUrl>عنوان خدمة ويب</WebServiceUrl>
+        <IP>IP</IP>
+        <VideoWindowTitle>{0} - فيديو</VideoWindowTitle>
+        <AudioWindowTitle>{0} - صوت</AudioWindowTitle>
+        <ControlsWindowTitle>{0} - ضوابط</ControlsWindowTitle>
+    </General>
+    <About>
+        <Title>معلومات عن برنامج محرر الترجمة</Title>
 		<AboutText1>محرر الترجمة برنامج مجاني تحت رخصة جنو العمومية 
  تستطيع تعديلة  وتوزيعه واستخدامه بحرية
  http://code.google.com/p/subtitleedit البرنامج متاح على
@@ -78,1234 +78,1234 @@ http://www.alghaamdi.com/vb/index.php</TranslatedBy>
 Suggestions are very welcome.
 
 Email: mailto:nikse.dk@gmail.com</AboutText1>
-	</About>
-	<AddToNames>
-		<Title>إضافة إلى أسماء / قائمة الخ</Title>
-		<Description>(إضافة إلى الأسماء / قائمة الشوشرة (حالة حساسة</Description>
-	</AddToNames>
-	<AddWaveForm>
-		<Title>توليد بيانات الفيديو</Title>
-		<SourceVideoFile>:مصدر ملف الفيديو</SourceVideoFile>
-		<GenerateWaveFormData>توليد بيانات الفيديو</GenerateWaveFormData>
-		<PleaseWait>هذا قد يستغرق بضع دقائق -- يرجى الانتظار</PleaseWait>
-		<VlcMediaPlayerNotFoundTitle>VLC لم يتم العثور على ميديا بلاير</VlcMediaPlayerNotFoundTitle>
-		<VlcMediaPlayerNotFound>ميديا بلير أو أحدث لاستخراج البيانات الصوتية  VLC 1.1.x يحتاج لبرنامج</VlcMediaPlayerNotFound>
-		<GoToVlcMediaPlayerHomePage>ميديا بلير؟VLC  هل تريد أن تذهب إلى تحميل برنامج</GoToVlcMediaPlayerHomePage>
-		<GeneratingPeakFile>...توليد ملف الفيديو</GeneratingPeakFile>
-		<GeneratingSpectrogram>...توليد صورة طيفية</GeneratingSpectrogram>
-		<ExtractingSeconds>استخراج الصوت : {0:0.0} ثانية</ExtractingSeconds>
-		<ExtractingMinutes>{استخراج الصوت : {0} {1:00 دقيقة</ExtractingMinutes>
-	</AddWaveForm>
-	<AdjustDisplayDuration>
-		<Title>ضبط فترات</Title>
-		<AdjustVia>ضبط عن طريق</AdjustVia>
-		<Seconds>ثوانى</Seconds>
-		<Percent>في المئة</Percent>
-		<AddSeconds>أضف الثواني</AddSeconds>
-		<SetAsPercent>ادخال في المئة من مدة</SetAsPercent>
-		<Note>ملاحظة : سيتم عرض الوقت لن يتداخل وقت بدء النص التالي</Note>
-		<PleaseSelectAValueFromTheDropDownList>يرجى تحديد قيمة من القائمة المنسدلة</PleaseSelectAValueFromTheDropDownList>
-		<PleaseChoose>- الرجاء اختيار -</PleaseChoose>
-	</AdjustDisplayDuration>
-	<AutoBreakUnbreakLines>
-		<TitleAutoBreak>خطوط التوازن التلقائي المحدد</TitleAutoBreak>
-		<TitleUnbreak>إزالة فواصل سطر من أسطر مختارة</TitleUnbreak>
-		<LineNumber>#السطر</LineNumber>
-		<Before>قبل</Before>
-		<After>بعد</After>
-		<LinesFoundX>{0} : العثور على خطوط</LinesFoundX>
-		<OnlyBreakLinesLongerThan>تخطط المسافة الوحيدة أطول من</OnlyBreakLinesLongerThan>
-		<OnlyUnbreakLinesShorterThan>خطوط غير المسافة فقط أقصر من</OnlyUnbreakLinesShorterThan>
-	</AutoBreakUnbreakLines>
-	<ChangeCasing>
-		<Title>تغيير الغلاف</Title>
-		<ChangeCasingTo>تغيير الغلاف الى</ChangeCasingTo>
-		<NormalCasing>غلاف طبيعي. الجمل تبدأ بالأحرف الكبيرة</NormalCasing>
-		<FixNamesCasing>Etc.xml (إصلاح أسماء الغلاف (عبر القواميس \ الأسماء</FixNamesCasing>
-		<FixOnlyNamesCasing>Etc.xml (إصلاح أسماء الغلاف فقط (عبر القواميس \ أسماء</FixOnlyNamesCasing>
-		<OnlyChangeAllUppercaseLines>تغيير كل أسطر الأحرف الكبيرة فقط</OnlyChangeAllUppercaseLines>
-		<AllUppercase>كل الأحرف الكبيرة</AllUppercase>
-		<AllLowercase>كل الأحرف الصغيرة</AllLowercase>
-	</ChangeCasing>
-	<ChangeCasingNames>
-		<Title>تغيير الغلاف -- الأسماء</Title>
-		<NamesFoundInSubtitleX>{0} : وجدت الأسماء في المترجم</NamesFoundInSubtitleX>
-		<Enabled>اتاحة</Enabled>
-		<Name>الأسم</Name>
-		<LineNumber>#الخط</LineNumber>
-		<Before>قبل</Before>
-		<After>بعد</After>
-		<LinesFoundX>{0} :  احرف وجدت</LinesFoundX>
-	</ChangeCasingNames>
-	<ChangeFrameRate>
-		<Title>تغيير معدل الإطار</Title>
-		<ConvertFrameRateOfSubtitle>معدل تحويل الإطار المترجم</ConvertFrameRateOfSubtitle>
-		<FromFrameRate>من معدل الإطار</FromFrameRate>
-		<ToFrameRate>لمعدل الإطار</ToFrameRate>
-		<FrameRateNotCorrect>معدل الإطار غير صحيح</FrameRateNotCorrect>
-		<FrameRateNotChanged>معدل الإطار هو نفسه -- لا شيء لتحويل</FrameRateNotChanged>
-	</ChangeFrameRate>
-	<ChooseEncoding>
-		<Title>اختيار الترميز</Title>
-		<CodePage>الشفرة</CodePage>
-		<DisplayName>اسم العرض</DisplayName>
-		<PleaseSelectAnEncoding>يرجى تحديد الترميز</PleaseSelectAnEncoding>
-	</ChooseEncoding>
-	<ChooseLanguage>
-		<Title>اختيار اللغة</Title>
-		<Language>اللغة</Language>
-	</ChooseLanguage>
-	<CompareSubtitles>
-		<Title>مقارنة الترجمة</Title>
-		<PreviousDifference>الأمبير؛ الإختلاف السابق</PreviousDifference>
-		<NextDifference>الأمبير؛ الإختلاف التالى</NextDifference>
-		<SubtitlesNotAlike>الترجمة ليس لها تشابهات</SubtitlesNotAlike>
-		<XNumberOfDifference>{0} : عدد من الأختلافات</XNumberOfDifference>
-		<ShowOnlyDifferences>مشاهدة الفرق فقط</ShowOnlyDifferences>
-		<OnlyLookForDifferencesInText>إلأن ننظر للإختلافات في النص</OnlyLookForDifferencesInText>
-	</CompareSubtitles>
-	<DvdSubrip>
-		<Title>ifo/vobs (DVD) نسخ الترجمات من</Title>
-		<DvdGroupTitle>معلومات / DVD ملفات</DvdGroupTitle>
-		<IfoFile>IFO  ملف</IfoFile>
-		<IfoFiles>IFO  ملف</IfoFiles>
-		<VobFiles>VOB  ملف</VobFiles>
-		<Add>. . .أضف</Add>
-		<Remove>حذف</Remove>
-		<Clear>مسح</Clear>
-		<MoveUp>حرك لأعلى</MoveUp>
-		<MoveDown>حرك لإسفل</MoveDown>
-		<Languages>اللغات</Languages>
-		<PalNtsc>PAL/NTSC</PalNtsc>
-		<Pal>PAL (25fps)</Pal>
-		<Ntsc>NTSC (30fps)</Ntsc>
-		<StartRipping>إبدأ بالإنقسام</StartRipping>
-		<Abort>أجهاض</Abort>
-		<AbortedByUser>اُجهض من قبل المستخدم</AbortedByUser>
-		<ReadingSubtitleData>قراءة بيانات الترجمة</ReadingSubtitleData>
-		<RippingVobFileXofYZ>نسخ vob file {1} of {2}: {0}</RippingVobFileXofYZ>
-		<WrongIfoType>IFO وليس '{0}' النوع 'DVDVIDEO-VTS'.{1}محاولة أخرى من ملف {2}</WrongIfoType>
-	</DvdSubrip>
-	<DvdSubRipChooseLanguage>
-		<Title>اختيار اللغة</Title>
-		<ChooseLanguageStreamId>اختيار اللغة</ChooseLanguageStreamId>
-		<UnknownLanguage>لغة مجهولة</UnknownLanguage>
-		<SubtitleImageXofYAndWidthXHeight>{0}/{1}  -  {2}x{3} ترجمة تصوير</SubtitleImageXofYAndWidthXHeight>
-		<SubtitleImage>ترجمة تصوير</SubtitleImage>
-	</DvdSubRipChooseLanguage>
-	<EbuSaveOtpions>
-		<Title>EBU حفظ الخيارات</Title>
-		<GeneralSubtitleInformation>معلومات الترجمة العامة</GeneralSubtitleInformation>
-		<CodePageNumber>رمز رقم الصفحة</CodePageNumber>
-		<DiskFormatCode>تنسيق رمز القرص</DiskFormatCode>
-		<CharacterCodeTable>طابع الجدول</CharacterCodeTable>
-		<LanguageCode>لغة البرمجة</LanguageCode>
-		<OriginalProgramTitle>عنوان البرنامج الأصلي</OriginalProgramTitle>
-		<OriginalEpisodeTitle>عنوان الحلقة الأصلي</OriginalEpisodeTitle>
-		<TranslatedProgramTitle>ترجمة عنوان البرنامج</TranslatedProgramTitle>
-		<TranslatedEpisodeTitle>ترجمة عنوان الحلقة</TranslatedEpisodeTitle>
-		<TranslatorsName>اسم المترجمين</TranslatorsName>
-		<SubtitleListReferenceCode>رمز قائمة مراجع الترجمة</SubtitleListReferenceCode>
-		<CountryOfOrigin>بلد المنشأ</CountryOfOrigin>
-		<RevisionNumber>رقم المراجعة</RevisionNumber>
-		<MaxNoOfDisplayableChars>أقصى # عدد أحرف لكل صف</MaxNoOfDisplayableChars>
-		<MaxNumberOfDisplayableRows>أقصى # عدد الصفوف</MaxNumberOfDisplayableRows>
-		<DiskSequenceNumber>القرص تسلسل الأرقام</DiskSequenceNumber>
-		<TotalNumberOfDisks>إجمالي عدد الأقراص</TotalNumberOfDisks>
-		<Import>... استيراد</Import>
-		<TextAndTimingInformation>النص وتوقيت المعلومات</TextAndTimingInformation>
-		<JustificationCode>رمز مبرر</JustificationCode>
-		<Errors>أخطاء</Errors>
-		<ErrorsX>{0} : أخطاء</ErrorsX>
-		<MaxLengthError>{السطر {0} تجاوز الطول الاقصى ({1}) بواسطة {2}: {3</MaxLengthError>
-		<TextUnchangedPresentation>المقدمة بدون تغيير</TextUnchangedPresentation>
-		<TextLeftJustifiedText>يكتب النص باتجاه اليسار</TextLeftJustifiedText>
-		<TextCentredText>مركز النص</TextCentredText>
-		<TextRightJustifiedText>يكتب النص من اليمين</TextRightJustifiedText>
-	</EbuSaveOtpions>
-	<EffectKaraoke>
-		<Title>تأثير الكاريوكي</Title>
-		<ChooseColor>: اختر اللون</ChooseColor>
-		<TotalMilliseconds>:.مجموع ملي ثانية</TotalMilliseconds>
-		<EndDelayInMilliseconds>:.تأخير في نهاية ملي ثانية</EndDelayInMilliseconds>
-	</EffectKaraoke>
-	<EffectTypewriter>
-		<Title>تأثير آلة كاتبة</Title>
-		<TotalMilliseconds>:.مجموع ملي ثانية</TotalMilliseconds>
-		<EndDelayInMillisecs>:.تأخير في نهاية ملي ثانية</EndDelayInMillisecs>
-	</EffectTypewriter>
-	<ExportPngXml>
-		<Title>BDN XML/PNG تصدير</Title>
-		<ImageSettings>اعدادات الصورة</ImageSettings>
-		<FontFamily>مجموعة خط</FontFamily>
-		<FontSize>حجم الخط</FontSize>
-		<FontColor>لون الخط</FontColor>
-		<BorderColor>لون الحدود</BorderColor>
-		<BorderWidth>عرض الحدود</BorderWidth>
-		<AntiAlias>بدون أسم شهرة</AntiAlias>
-		<ExportAllLines>...تصدير جميع خطوط</ExportAllLines>
-		<XImagesSavedInY>{1} {0}الصور المحفوظة في</XImagesSavedInY>
-	</ExportPngXml>
-	<FindDialog>
-		<Title>بحث</Title>
-		<Find>بحث</Find>
-		<Normal>عادى</Normal>
-		<CaseSensitive>حالة دقة</CaseSensitive>
-		<RegularExpression>التعبير المنتظم</RegularExpression>
-	</FindDialog>
-	<FindSubtitleLine>
-		<Title>خط بحث الترجمة</Title>
-		<Find>&amp;بحث</Find>
-		<FindNext>البحث التالى</FindNext>
-	</FindSubtitleLine>
-	<FixCommonErrors>
-		<Title>إصلاح الأخطاء الشائعة</Title>
-		<Step1>اختر الخطوة 1/ 2 --  لإصلاح أي أخطاء</Step1>
-		<WhatToFix>ما لإصلاح</WhatToFix>
-		<Example>مثال</Example>
-		<SelectAll>أختار الكل</SelectAll>
-		<InverseSelection>لاتختار شىء</InverseSelection>
-		<Back>&lt; للخلف</Back>
-		<Next>التالى &gt;</Next>
-		<Step2>الخطوة 2 / 2 -- تحقق من الإصلاحات</Step2>
-		<Fixes>إصلاحات</Fixes>
-		<Log>سجل</Log>
-		<LineNumber>#سطر</LineNumber>
-		<Function>الوظيفة</Function>
-		<Before>قبل</Before>
-		<After>بعد</After>
-		<RemovedEmptyLine>إزالة السطر الفارغ</RemovedEmptyLine>
-		<RemovedEmptyLineAtTop>إزالة السطر الفارغ في أعلى</RemovedEmptyLineAtTop>
-		<RemovedEmptyLineAtBottom>إزالة سطر فارغ في أسفل</RemovedEmptyLineAtBottom>
-		<RemovedEmptyLinesUnsedLineBreaks>إزالة الأسطر الفارغة / فواصل الأسطر غير المستخدمة</RemovedEmptyLinesUnsedLineBreaks>
-		<EmptyLinesRemovedX>{إزالة الأسطر الفارغة : {0</EmptyLinesRemovedX>
-		<FixOverlappingDisplayTimes>إصلاح تداخل أوقات العرض</FixOverlappingDisplayTimes>
-		<FixShortDisplayTimes>إصلاح أوقات العرض القصيرة</FixShortDisplayTimes>
-		<FixLongDisplayTimes>إصلاح أوقات العرض الطويل</FixLongDisplayTimes>
-		<FixInvalidItalicTags>اصلاح العلامات المائلة غير صالحة</FixInvalidItalicTags>
-		<RemoveUnneededSpaces>إزالة المسافات غير الضرورية</RemoveUnneededSpaces>
-		<RemoveUnneededPeriods>إزالة الفترات الغير الضرورية</RemoveUnneededPeriods>
-		<FixMissingSpaces>إصلاح المساحات المفقودة</FixMissingSpaces>
-		<BreakLongLines>انقطاع أسطر طويلة</BreakLongLines>
-		<RemoveLineBreaks>إزالة فواصل الأسطر في نصوص قصيرة مع جملة واحدة فقط</RemoveLineBreaks>
-		<RemoveLineBreaksAll>(إزالة فواصل الأسطر في نصوص قصيرة (كافة باستثناء الحوارات</RemoveLineBreaksAll>
-		<FixUppercaseIInsindeLowercaseWords>داخل عبارة صغيرة 'i' الإصلاح الكبيرة OCR الخطأ</FixUppercaseIInsindeLowercaseWords>
-		<FixDoubleApostrophes>(") إصلاح الأحرف الفاصلة المزدوجة ('') لاقتباس واحد</FixDoubleApostrophes>
-		<AddPeriods>إضافة فترة ما بعد خطوط السطر التالي حيث تبدأ بحرف كبير</AddPeriods>
-		<StartWithUppercaseLetterAfterParagraph>تبدأ بالأحرف الكبيرة بعد الفقرة</StartWithUppercaseLetterAfterParagraph>
-		<StartWithUppercaseLetterAfterPeriodInsideParagraph>تبدأ الرسالة بعد فترة كبيرة داخل الفقرة</StartWithUppercaseLetterAfterPeriodInsideParagraph>
-		<FixLowercaseIToUppercaseI>(بالانجليزية)"I" إلى "i" الإصلاح وحده صغيرة</FixLowercaseIToUppercaseI>
-		<FixCommonOcrErrors>(باستخدام قائمة استبدالOCR ) إصلاح الأخطاء الشائعة في التعرف الضوئي على الحروف</FixCommonOcrErrors>
-		<CommonOcrErrorsFixed>{0} : قائمة ملف استبدال المستخدمة ) إصلاح الأخطاء الشائعة)</CommonOcrErrorsFixed>
-		<RemoveSpaceBetweenNumber>إزالة المسافة بين الأرقام</RemoveSpaceBetweenNumber>
-		<FixDialogsOnOneLine>إصلاح الحوارات على سطر واحد</FixDialogsOnOneLine>
-		<RemoveSpaceBetweenNumbersFixed>{إزالة المسافة بين الأرقام المصلحة : {0</RemoveSpaceBetweenNumbersFixed>
-		<FixDanishLetterI>'i' إصلاح الرسالة الدنماركية</FixDanishLetterI>
-		<FixSpanishInvertedQuestionAndExclamationMarks>إصلاح مسألة الاسبانية المقلوبة وعلامات التعجب</FixSpanishInvertedQuestionAndExclamationMarks>
-		<AddMissingQuote>(") أضف إقتباسا مفقوداً</AddMissingQuote>
-		<AddMissingQuotes>(")  أضافة إقتباساً مفقوداً</AddMissingQuotes>
-		<FixHyphens>(-) إصلاح خطوط تبدأ بشرطة</FixHyphens>
-		<FixHyphen>(-) إصلاح خطوط تبدأ بشرطة</FixHyphen>
-		<XHyphensFixed>{إصلاح الشرطات : {0</XHyphensFixed>
-		<AddMissingQuotesExample>"كيف حالك؟ -&gt;" كيف حالك؟ "</AddMissingQuotesExample>
-		<XMissingQuotesAdded>{الإقتباسات المفقودة أضيفت: {0</XMissingQuotesAdded>
-		<Fix3PlusLines>اصلاح الترجمة مع أكثر من سطرين</Fix3PlusLines>
-		<Fix3PlusLine>اصلاح الترجمة مع أكثر من سطرين</Fix3PlusLine>
-		<X3PlusLinesFixed>{اصلحت الترجمة مع أكثر من سطرين : {0</X3PlusLinesFixed>
-		<Analysing>...تحليل</Analysing>
-		<NothingToFix>لا شيء للإصلاح : )</NothingToFix>
-		<FixesFoundX>{إصلاحات وجدت : {0</FixesFoundX>
-		<XFixesApplied>{الإصلاحات التي تم تطبيقها : {0</XFixesApplied>
-		<NothingToFixBut>لا شيء لإصلاح ولكن يمكن تحسين بعض الأشياء - مراجعة السجل للحصول على التفاصيل</NothingToFixBut>
-		<FixLowercaseIToUppercaseICheckedButCurrentLanguageIsNotEnglish>بالانجليزية محددا ولكن الترجمة التي تم تحميلها حاليا لا تبدو أنها اللغة الإنجليزية ' i 'إلى' I ' الأصلاح الوحيد صغير</FixLowercaseIToUppercaseICheckedButCurrentLanguageIsNotEnglish>
-		<Continue>إستمر</Continue>
-		<ContinueAnyway>المتابعة على أية حال؟</ContinueAnyway>
-		<UncheckedFixLowercaseIToUppercaseI>بالانجليزية "' i 'إلى' I ' "  الأصلاح الوحيد صغير  لم يتم التحقق منه</UncheckedFixLowercaseIToUppercaseI>
-		<XIsChangedToUppercase>{0} i's متغير إلى أحرف كبيرة</XIsChangedToUppercase>
-		<FixFirstLetterToUppercaseAfterParagraph>الرسالة الأولى لإصلاح كبيرة بعد الفقرة</FixFirstLetterToUppercaseAfterParagraph>
-		<MergeShortLine>(إدمج سطراً قصيراً (جملة وحيدة</MergeShortLine>
-		<MergeShortLineAll>(دمج سطر قصير (الكل باستثناء الحوارات</MergeShortLineAll>
-		<XLineBreaksAdded>{0} فصل سطر مضاف</XLineBreaksAdded>
-		<BreakLongLine>فصل سطر طويل</BreakLongLine>
-		<FixLongDisplayTime>إصلاح وقت عرض طويل</FixLongDisplayTime>
-		<FixInvalidItalicTag>الإصلاح غير صالحة علامة مائل</FixInvalidItalicTag>
-		<FixShortDisplayTime>الإصلاح في وقت عرض قصير</FixShortDisplayTime>
-		<FixOverlappingDisplayTime>إصلاح تداخل وقت العرض</FixOverlappingDisplayTime>
-		<FixInvalidItalicTagsExample>&lt;i&gt;What do i care.&lt;i&gt; -&gt; &lt;i&gt;ماذا يهمني.&lt;/i&gt;</FixInvalidItalicTagsExample>
-		<RemoveUnneededSpacesExample>Hey   you , there. -&gt;يا أنت، هناك.</RemoveUnneededSpacesExample>
-		<RemoveUnneededPeriodsExample>Hey you!. -&gt;! يا أنت</RemoveUnneededPeriodsExample>
-		<FixMissingSpacesExample>Hey.You. -&gt;يا أنت.</FixMissingSpacesExample>
-		<FixUppercaseIInsindeLowercaseWordsExample>The earth is fIat. -&gt;الأرض مسطحة.</FixUppercaseIInsindeLowercaseWordsExample>
-		<FixLowercaseIToUppercaseIExample>What do i care. -&gt; ماذا يهمني.</FixLowercaseIToUppercaseIExample>
-		<StartTimeLaterThanEndTime>{رقم النص {0}: إبدأ الوقت التالي من وقت النهاية: {4}{1} --&gt; {2} {3</StartTimeLaterThanEndTime>
-		<UnableToFixStartTimeLaterThanEndTime>{غير قادر على إصلاح عدد النص {0}: وقت البدء والنهاية في وقت لاحق نهاية الوقت: {1</UnableToFixStartTimeLaterThanEndTime>
-		<XFixedToYZ>{0} إصلاح إلى: {1}{2</XFixedToYZ>
-		<UnableToFixTextXY>{غير قادر على إصلاح عدد النص {0}: {1</UnableToFixTextXY>
-		<XOverlappingTimestampsFixed>{0} الطوابع الزمنية المتداخلة الثابتة</XOverlappingTimestampsFixed>
-		<XDisplayTimesProlonged>{0} عرض أوقات طويلة</XDisplayTimesProlonged>
-		<XInvalidHtmlTagsFixed>{0} الثابتة HTML غير صالحة علامات</XInvalidHtmlTagsFixed>
-		<XDisplayTimesShortned>{0} تقصير أوقات العرض</XDisplayTimesShortned>
-		<XLinesUnbreaked>{0} فصل الأسطر</XLinesUnbreaked>
-		<UnneededSpace>الفراغ الغير مطلوب</UnneededSpace>
-		<XUnneededSpacesRemoved>{0} المسافات غير الضرورية إزالتها</XUnneededSpacesRemoved>
-		<UnneededPeriod>الفترة الغير مطلوبة</UnneededPeriod>
-		<XUnneededPeriodsRemoved>{0} فترات غير مطلوبة أزالت</XUnneededPeriodsRemoved>
-		<FixMissingSpace>اصلاح الفراغ المفقود</FixMissingSpace>
-		<XMissingSpacesAdded>{0} أضافت المساحات المفقودة</XMissingSpacesAdded>
-		<FixUppercaseIInsideLowercaseWord>الإصلاح الكبيرة كلمة 'i' صغيرة داخل</FixUppercaseIInsideLowercaseWord>
-		<XPeriodsAdded>{0} أضاف الفترات.</XPeriodsAdded>
-		<FixMissingPeriodAtEndOfLine>إضافة فترة مفقود في نهاية السطر</FixMissingPeriodAtEndOfLine>
-		<XDoubleApostrophesFixed>{0} الفواصل العليا مزدوجة ثابت.</XDoubleApostrophesFixed>
-		<XUppercaseIsFoundInsideLowercaseWords>{0} الكبيرة 'i's التي وجدت داخل عبارة صغيرة</XUppercaseIsFoundInsideLowercaseWords>
-		<RefreshFixes>إصلاحات التحديث المتاحة</RefreshFixes>
-		<ApplyFixes>تطبيق الإصلاحات المختارة</ApplyFixes>
-		<AutoBreak>مسافة تلقائى</AutoBreak>
-		<Unbreak>&amp;كسر</Unbreak>
-		<FixDoubleDash>حل '--' -&gt; '...'</FixDoubleDash>
-		<FixDoubleGreaterThan>إزالة &gt;&gt;</FixDoubleGreaterThan>
-		<FixEllipsesStart>إزالة المتقدم '...'</FixEllipsesStart>
-		<FixMissingOpenBracket>الإصلاح [مفقود في السطر</FixMissingOpenBracket>
-		<FixMusicNotation>مع الرمز المفضل (e.g. âTª) استبدال رموز الموسيقى</FixMusicNotation>
-		<FixDoubleDashs>اصلاح '--'s -&gt; '...'s</FixDoubleDashs>
-		<FixDoubleGreaterThans>إزالة&gt;&gt; من البداية</FixDoubleGreaterThans>
-		<FixEllipsesStarts>إزالة... من البداية</FixEllipsesStarts>
-		<FixMissingOpenBrackets>['s اصلاح المفقود</FixMissingOpenBrackets>
-		<FixMusicNotations>إستبدل âT?'s مع *'s</FixMusicNotations>
-		<XFixDoubleDash>{0} الثابتة '--'</XFixDoubleDash>
-		<XFixDoubleGreaterThan>{0} إزالة&gt;&gt;</XFixDoubleGreaterThan>
-		<XFixEllipsesStart>{0} إزالة بدءا '...'</XFixEllipsesStart>
-		<XFixMissingOpenBracket>{0} اصلاح [مفقود في السطر</XFixMissingOpenBracket>
-		<XFixMusicNotation>{0} تدوين الموسيقى الإصلاح في السطر</XFixMusicNotation>
-		<FixDoubleDashExample>'Whoa-- um yeah!' --&gt; 'قف... نعم أم!'</FixDoubleDashExample>
-		<FixDoubleGreaterThanExample>'&gt;&gt; Robert: Sup dude!'  --&gt; 'روبرت : سوب المتأنق!'</FixDoubleGreaterThanExample>
-		<FixEllipsesStartExample>'... and then we' -&gt; 'ومن ثم نحن'</FixEllipsesStartExample>
-		<FixMissingOpenBracketExample>'clanks] Look out!' --&gt; '[القعقعة] ابحثوا!'</FixMissingOpenBracketExample>
-		<FixMusicNotationExample>'âTª sweet dreams are' --&gt; '♫ أحلام حلوة'</FixMusicNotationExample>
-		<NumberOfImportantLogMessages>{0} رسائل سجل مهم</NumberOfImportantLogMessages>
-		<FixedOkXY>{الثابتة وموافق -- '{0}' : {1</FixedOkXY>
-	</FixCommonErrors>
-	<GetDictionaries>
-		<Title>تحتاج قواميس؟</Title>
-		<DescriptionLine1>NHunspell  تستند الترجمة لتحرير التدقيق الإملائي على المحرك</DescriptionLine1>
-		<DescriptionLine2>إستخدم قواميس التدقيق الإملائي من المكتب المفتوح</DescriptionLine2>
-		<GetDictionariesHere>الحصول على القواميس هنا :</GetDictionariesHere>
-		<OpenOpenOfficeWiki>قائمة قواميس Wiki افتح مكتب</OpenOpenOfficeWiki>
-		<GetAllDictionaries>الحصول على كل القواميس</GetAllDictionaries>
-		<ChooseLanguageAndClickDownload>اختر اللغة الخاصة بك وإضغط فوق تحميل</ChooseLanguageAndClickDownload>
-		<OpenDictionariesFolder>"فتح مجلد "القواميس</OpenDictionariesFolder>
-		<Download>تحميل</Download>
-		<XDownloaded>{0} تم تحميلها وتثبيتها</XDownloaded>
-	</GetDictionaries>
-	<GoogleTranslate>
-		<Title>ترجمة جوجل</Title>
-		<From>من :</From>
-		<To>الى :</To>
-		<Translate>ترجم</Translate>
-		<PleaseWait>يرجى الانتظار... وهذا قد يستغرق بعض الوقت</PleaseWait>
-		<PoweredByGoogleTranslate>ترجمة مدعومة من جوجل</PoweredByGoogleTranslate>
-		<PoweredByMicrosoftTranslate>ترجمة مدعومة من مايكروسوفت</PoweredByMicrosoftTranslate>
-	</GoogleTranslate>
-	<GoogleOrMicrosoftTranslate>
-		<Title>ترجمة جوجل و مايكروسوفت</Title>
-		<From>من :</From>
-		<To>الى :</To>
-		<Translate>ترجمة</Translate>
-		<SourceText>مصدر النص</SourceText>
-		<GoogleTranslate>ترجمة جوجل</GoogleTranslate>
-		<MicrosoftTranslate>ترجمة مايكروسوفت</MicrosoftTranslate>
-	</GoogleOrMicrosoftTranslate>
-	<GoToLine>
-		<Title>إذهب للترجمة رقم</Title>
-		<XIsNotAValidNumber>{0} ليس رقما صحيحا</XIsNotAValidNumber>
-	</GoToLine>
-	<ImportText>
-		<Title>استيراد نص عادي</Title>
-		<OpenTextFile>... فتح ملف نصي</OpenTextFile>
-		<ImportOptions>خيارات الاستيراد</ImportOptions>
-		<Splitting>أنفصام</Splitting>
-		<AutoSplitText>تقسيم النص تلقائي</AutoSplitText>
-		<OneLineIsOneSubtitle>سطر واحد هو واحد الترجمة</OneLineIsOneSubtitle>
-		<MergeShortLines>إدمج خطوط قصيرة بالإستمرار</MergeShortLines>
-		<RemoveEmptyLines>إزالة الأسطر الفارغة</RemoveEmptyLines>
-		<RemoveLinesWithoutLetters>إزالة خطوط دون رسائل</RemoveLinesWithoutLetters>
-		<GapBetweenSubtitles>( الفجوة بين الترجمة (مللي ثانية</GapBetweenSubtitles>
-		<Auto>تلقائى</Auto>
-		<Fixed>ثابت</Fixed>
-		<Refresh>&amp;أنعش</Refresh>
-		<Next>&amp;التالى &gt;&gt;</Next>
-		<TextFiles>ملفات نصية</TextFiles>
-		<PreviewLinesModifiedX>{المعاينة -- تعديل الفقرتين : {0</PreviewLinesModifiedX>
-	</ImportText>
-	<Interjections>
-		<Title>مداخلات</Title>
-	</Interjections>
-	<Main>
-		<Menu>
-			<File>
-				<Title>&amp;ملف</Title>
-				<New>&amp;جديد</New>
-				<Open>فتح</Open>
-				<Reopen>إعادة فتح</Reopen>
-				<Save>&amp;حفظ</Save>
-				<SaveAs>حفظ جديد</SaveAs>
-				<OpenOriginal>(أفتح الترجمة الأصلية (وضع المترجم</OpenOriginal>
-				<SaveOriginal>حفظ الترجمة الأصلية</SaveOriginal>
-				<CloseOriginal>أغلق الترجمة الأصلية</CloseOriginal>
-				<OpenContainingFolder>فتح المجلد الذي يحتوي على الترجمة</OpenContainingFolder>
-				<Compare>قارن بينهما</Compare>
-				<ImportOcrFromDvd>vob /ifo (dvd)إستيراد / الترجمة من</ImportOcrFromDvd>
-				<ImportOcrVobSubSubtitle>الترجمة / OCR VobSub (SUB / IDX) استيراد</ImportOcrVobSubSubtitle>
-				<ImportBluRaySupFile>OCR Blu-ray sup استيراد / ملف</ImportBluRaySupFile>
-				<ImportSubtitleFromMatroskaFile>Matroska إستيراد الترجمة من ملف</ImportSubtitleFromMatroskaFile>
-				<ImportSubtitleWithManualChosenEncoding>إستيراد الترجمة مع دليل الترميز المختار</ImportSubtitleWithManualChosenEncoding>
-				<ImportText>...استيراد نص عادي</ImportText>
-				<ImportTimecodes>...إستيراد كود الوقت</ImportTimecodes>
-				<Export>تصدير</Export>
-				<ExportBdnXml>BDN xml/png...</ExportBdnXml>
-				<ExportBluRaySup/>
-				<ExportVobSub/>
-				<ExportCavena890>Cavena 890...</ExportCavena890>
-				<ExportEbu>EBU stl...</ExportEbu>
-				<ExportPac>... (شاشة إلكترونية) PAC</ExportPac>
-				<ExportPlainText/>
-				<ExportPlainTextWithoutLineBreaks/>
-				<Exit>خروج</Exit>
-			</File>
-			<Edit>
-				<Title>تعديل</Title>
-				<ShowUndoHistory>(عرض التاريخ (لإلغاء</ShowUndoHistory>
-				<InsertUnicodeSymbol>أدخل رمز الشفرة</InsertUnicodeSymbol>
-				<Find>&amp;بحث</Find>
-				<FindNext>البحث التالى</FindNext>
-				<Replace>&amp;استبدل</Replace>
-				<MultipleReplace>... متعددة تحل محل</MultipleReplace>
-				<GoToSubtitleNumber>الذهاب إلى رقم الترجمة</GoToSubtitleNumber>
-			</Edit>
-			<Tools>
-				<Title>أدوات</Title>
-				<AdjustDisplayDuration>... ضبط فترات</AdjustDisplayDuration>
-				<FixCommonErrors>... إصلاح الأخطاء الشائعة</FixCommonErrors>
-				<StartNumberingFrom>... بدء الترقيم من</StartNumberingFrom>
-				<RemoveTextForHearingImpaired>... إزالة النص لضعاف السمع</RemoveTextForHearingImpaired>
-				<ChangeCasing>...تغيير الغلاف</ChangeCasing>
-				<ChangeFrameRate>...معدل تغير الإطار</ChangeFrameRate>
-				<MergeShortLines>... دمج أسطر قصيرة</MergeShortLines>
-				<SplitLongLines>...انقسام أسطر طويلة</SplitLongLines>
-				<MinimumDisplayTimeBetweenParagraphs>الحد الأدنى من عرض الوقت بين الفقرات</MinimumDisplayTimeBetweenParagraphs>
-				<SortBy>الترتيب حسب</SortBy>
-				<Number>الرقم</Number>
-				<StartTime>بداية الوقت</StartTime>
-				<EndTime>نهاية الوقت</EndTime>
-				<Duration>المدة</Duration>
-				<TextAlphabetically>النص - حسب الترتيب الأبجدي</TextAlphabetically>
-				<TextSingleLineMaximumLength>النص - خط واحد كحد أقصى . الطول</TextSingleLineMaximumLength>
-				<TextTotalLength>النص - الطول الإجمالي</TextTotalLength>
-				<TextNumberOfLines>النص - عدد الأسطر</TextNumberOfLines>
-				<TextNumberOfCharactersPerSeconds>النص - عدد الأحرف / ثانية</TextNumberOfCharactersPerSeconds>
-				<ShowOriginalTextInAudioAndVideoPreview>عرض النص الأصلي في الصوت / معاينات الفيديو</ShowOriginalTextInAudioAndVideoPreview>
-				<MakeNewEmptyTranslationFromCurrentSubtitle>إجعل الترجمة الفارغة الجديدة من الترجمة الحالية</MakeNewEmptyTranslationFromCurrentSubtitle>
-				<SplitSubtitle>...تقسيم  الترجمة</SplitSubtitle>
-				<AppendSubtitle>...إلحاق الترجمة</AppendSubtitle>
-			</Tools>
-			<Video>
-				<Title>فيديو</Title>
-				<OpenVideo>افتح ملف فيديو</OpenVideo>
-				<ChooseAudioTrack>اختيار المسار الصوتي</ChooseAudioTrack>
-				<CloseVideo>إغلاق ملف الفيديو</CloseVideo>
-				<ShowHideVideo>إظهار / إخفاء الفيديو</ShowHideVideo>
-				<ShowHideWaveForm>إظهار / إخفاء شكل الموجة</ShowHideWaveForm>
-				<ShowHideWaveformAndSpectrogram>إظهار / إخفاء الموجة والفيديو</ShowHideWaveformAndSpectrogram>
-				<UnDockVideoControls>إرساء ضوابط الفيديو</UnDockVideoControls>
-				<ReDockVideoControls>اعادة ضوابط الفيديو</ReDockVideoControls>
-			</Video>
-			<SpellCheck>
-				<Title>التدقيق الإملائي</Title>
-				<SpellCheck>...التدقيق الإملائي</SpellCheck>
-				<FindDoubleWords>العثور على الكلمات المزدوجة</FindDoubleWords>
-				<FindDoubleLines>العثور على الأسطر المزدوجة</FindDoubleLines>
-				<GetDictionaries>...الحصول على قواميس</GetDictionaries>
-				<AddToNamesEtcList>إضافة كلمة إلى الأسماء / قائمة إلخ</AddToNamesEtcList>
-			</SpellCheck>
-			<Synchronization>
-				<Title>التزامن</Title>
-				<AdjustAllTimes>(ضبط جميع الأوقات (تظهر في وقت سابق / لاحق</AdjustAllTimes>
-				<VisualSync>مزامنة الفيديو</VisualSync>
-				<PointSync>نقطة مزامنة</PointSync>
-				<PointSyncViaOtherSubtitle>مزامنة نقطة أخرى عبر الترجمة</PointSyncViaOtherSubtitle>
-			</Synchronization>
-			<AutoTranslate>
-				<Title>ترجمة-تلقائية</Title>
-				<TranslatePoweredByGoogle>(ترجمة (مدعومة من جوجل</TranslatePoweredByGoogle>
-				<TranslatePoweredByMicrosoft>(ترجمة (مدعومة من مايكروسوفت</TranslatePoweredByMicrosoft>
-				<TranslateFromSwedishToDanish>(nikse.dk ترجمة من اللغة السويدية إلى دانماركية (مدعومة من</TranslateFromSwedishToDanish>
-			</AutoTranslate>
-			<Options>
-				<Title>خيارات</Title>
-				<Settings>&amp;إعدادات</Settings>
-				<ChooseLanguage>&amp;اختيار اللغة</ChooseLanguage>
-			</Options>
-			<Networking>
-				<Title>الشبكات</Title>
-				<StartNewSession>بدء الجلسة الجديدة</StartNewSession>
-				<JoinSession>انضمام  للجلسة</JoinSession>
-				<ShowSessionInfoAndLog>عرض معلومات وسجل الجلسة</ShowSessionInfoAndLog>
-				<Chat>دردشة</Chat>
-				<LeaveSession>ترك الجلسة</LeaveSession>
-			</Networking>
-			<Help>
-				<Title>مساعدة</Title>
-				<Help>&amp;مساعدة</Help>
-				<About>&amp;عن البرنامج</About>
-			</Help>
-			<ToolBar>
-				<New>جديد</New>
-				<Open>أفتح</Open>
-				<Save>حفظ</Save>
-				<SaveAs>حفظ جديد</SaveAs>
-				<Find>العثور على</Find>
-				<Replace>استبدل</Replace>
-				<VisualSync>الفيديو مزامنة</VisualSync>
-				<SpellCheck>التدقيق الإملائي</SpellCheck>
-				<Settings>إعدادات</Settings>
-				<Help>مساعدة</Help>
-				<ShowHideWaveForm>إظهار / إخفاء شكل الموجة</ShowHideWaveForm>
-				<ShowHideVideo>إظهار / إخفاء الفيديو</ShowHideVideo>
-			</ToolBar>
-			<ContextMenu>
-				<SubStationAlphaSetStyle>(محطة ألفا الفرعية -- تعيين ستايل (متقدم</SubStationAlphaSetStyle>
-				<Cut>قص</Cut>
-				<Copy>نسخ</Copy>
-				<Paste>لصق</Paste>
-				<Delete>حذف</Delete>
-				<SplitLineAtCursorPosition>خط منقسم في موقع المؤشر</SplitLineAtCursorPosition>
-				<SelectAll>إختر الكل</SelectAll>
-				<InsertFirstLine>إدراج سطر</InsertFirstLine>
-				<InsertBefore>إدراج قبل</InsertBefore>
-				<InsertAfter>إدراج بعد</InsertAfter>
-				<InsertSubtitleAfter>ادراج ترجمة بعد هذا السطر</InsertSubtitleAfter>
-				<CopyToClipboard>إنسخ كنص إلى الحافظة</CopyToClipboard>
-				<Split>انقسام</Split>
-				<MergeSelectedLines>دمج اسطر مختارة</MergeSelectedLines>
-				<MergeWithLineBefore>دمج مع السطر قبل</MergeWithLineBefore>
-				<MergeWithLineAfter>دمج مع السطر بعد</MergeWithLineAfter>
-				<Normal>طبيعي</Normal>
-				<Underline>تسطير</Underline>
-				<Color>...اللون</Color>
-				<FontName>...اسم الخط</FontName>
-				<AutoBalanceSelectedLines>أسطر التوازن التلقائي المحدد</AutoBalanceSelectedLines>
-				<RemoveLineBreaksFromSelectedLines>إزالة خط فواصل من أسطر مختارة</RemoveLineBreaksFromSelectedLines>
-				<TypewriterEffect>تأثير الآلة الكاتبة</TypewriterEffect>
-				<KaraokeEffect>تأثير الكاريوكي</KaraokeEffect>
-				<ShowSelectedLinesEarlierLater>تظهر الأسطر المحددة في وقت سابق / لاحق</ShowSelectedLinesEarlierLater>
-				<VisualSyncSelectedLines>تزامن تحديد خطوط بصرية</VisualSyncSelectedLines>
-				<GoogleAndMicrosoftTranslateSelectedLine>ترجمة السطر الأصلي جوجل / مايكروسوفت</GoogleAndMicrosoftTranslateSelectedLine>
-				<GoogleTranslateSelectedLines>ترجمة جوجل أسطر مختارة</GoogleTranslateSelectedLines>
-				<AdjustDisplayDurationForSelectedLines>ضبط فترات سطور مختارة</AdjustDisplayDurationForSelectedLines>
-				<FixCommonErrorsInSelectedLines>إصلاح الأخطاء الشائعة في سطور مختارة</FixCommonErrorsInSelectedLines>
-				<ChangeCasingForSelectedLines>تغيير غلاف لسطور مختارة</ChangeCasingForSelectedLines>
-			</ContextMenu>
-		</Menu>
-		<Controls>
-			<SubtitleFormat>تشكيل</SubtitleFormat>
-			<FileEncoding>الترميز</FileEncoding>
-			<ListView>عرض القائمة</ListView>
-			<SourceView>عرض المصدر</SourceView>
-			<UndoChangesInEditPanel>التراجع عن التغييرات في لوحة التحرير</UndoChangesInEditPanel>
-			<Previous>&lt; السابق</Previous>
-			<Next>التالى &gt;</Next>
-			<AutoBreak>شريط آلى</AutoBreak>
-			<Unbreak>غير المسافة</Unbreak>
-		</Controls>
-		<VideoControls>
-			<Translate>ترجمة</Translate>
-			<Create>إنشاء</Create>
-			<Adjust>ضبط</Adjust>
-			<SelectCurrentElementWhilePlaying>حدد الترجمة الحالية أثناء التشغيل</SelectCurrentElementWhilePlaying>
-			<AutoRepeat>تكرار تلقائى</AutoRepeat>
-			<AutoRepeatOn>تلقائى كرر على</AutoRepeatOn>
-			<AutoRepeatCount>(تكرار العد (مرات</AutoRepeatCount>
-			<AutoContinue>استمر تلقائى</AutoContinue>
-			<AutoContinueOn>تلقائى استمر على</AutoContinueOn>
-			<DelayInSeconds>(تأخير (ثانية</DelayInSeconds>
-			<OriginalText>النص الأصلي</OriginalText>
-			<Previous>&lt; السابق</Previous>
-			<Stop>توقف</Stop>
-			<PlayCurrent>&amp;تشغيل الحالى</PlayCurrent>
-			<Next>&amp;التالى &gt;</Next>
-			<Playing>...تشغيل</Playing>
-			<RepeatingLastTime>تكرار... آخر مرة</RepeatingLastTime>
-			<RepeatingXTimesLeft>التكرار. . . {0} يوقت يسارا</RepeatingXTimesLeft>
-			<AutoContinueInOneSecond>تستمر تلقائى في الثانية الواحدة</AutoContinueInOneSecond>
-			<AutoContinueInXSeconds>يستمر تلقائى في {0} ثواني</AutoContinueInXSeconds>
-			<StillTypingAutoContinueStopped>ما زال يطبع. . . تستمر بالتوقف تلقائى</StillTypingAutoContinueStopped>
-			<InsertNewSubtitleAtVideoPosition>إدراج الترجمة الجديدة في موقع الفيديو</InsertNewSubtitleAtVideoPosition>
-			<Auto>تلقائى</Auto>
-			<PlayFromJustBeforeText>تشغيل من مباشرة قبل النص</PlayFromJustBeforeText>
-			<Pause>إيقاف مؤقت</Pause>
-			<GoToSubtitlePositionAndPause>إذهب إلى الموقع والإيقاف المؤقت</GoToSubtitlePositionAndPause>
-			<SetStartTime>تعيين وقت البدء</SetStartTime>
-			<SetEndTimeAndGoToNext>تعيين وانتقل إلى نهاية التالى</SetEndTimeAndGoToNext>
-			<AdjustedViaEndTime>{معدل عن طريق وقت النهاية {0</AdjustedViaEndTime>
-			<SetEndTime>ضبط وقت النهاية</SetEndTime>
-			<SetstartTimeAndOffsetOfRest>بدء تعيين وتعويض بقية</SetstartTimeAndOffsetOfRest>
-			<SearchTextOnline>البحث عن النص على الانترنت</SearchTextOnline>
-			<GoogleTranslate>ترجمة جوجل</GoogleTranslate>
-			<GoogleIt>صفحة جوجل</GoogleIt>
-			<SecondsBackShort>&lt;&lt;</SecondsBackShort>
-			<SecondsForwardShort>&gt;&gt;</SecondsForwardShort>
-			<VideoPosition>موقع فيديو:</VideoPosition>
-			<TranslateTip>&lt;السهم أعلى/أسفل+ alt &gt; للذهاب الى الترجمة  السابق / التالي أستخدم</TranslateTip>
-			<CreateTip>&lt;  السهم لليسار / يمين + CTRL &gt; نصيحة: استخدم مفاتيح</CreateTip>
-			<AdjustTip>&lt;السهم أعلى/أسفل+ alt &gt; للذهاب الى الترجمة  السابق / التالي أستخدم</AdjustTip>
-			<BeforeChangingTimeInWaveFormX>{قبل تغيير الوقت في شكل الموجة: {0</BeforeChangingTimeInWaveFormX>
-			<NewTextInsertAtX>{النص الجديد أدخل في {0</NewTextInsertAtX>
-			<Center>توسيط</Center>
-			<PlayRate>(معدل التشغيل (السرعة</PlayRate>
-			<Slow>بطىء</Slow>
-			<Normal>طبيعى</Normal>
-			<Fast>سريع</Fast>
-			<VeryFast>سريع جداً</VeryFast>
-		</VideoControls>
-		<SaveChangesToUntitled>Save changes to untitled?</SaveChangesToUntitled>
-		<SaveChangesToX>Save changes to {0}?</SaveChangesToX>
-		<SaveChangesToUntitledOriginal>Save changes to untitled original?</SaveChangesToUntitledOriginal>
-		<SaveChangesToOriginalX>Save changes to original {0}?</SaveChangesToOriginalX>
-		<SaveSubtitleAs>Save subtitle as...</SaveSubtitleAs>
-		<SaveOriginalSubtitleAs>Save original subtitle as...</SaveOriginalSubtitleAs>
-		<NoSubtitleLoaded>No subtitle loaded</NoSubtitleLoaded>
-		<VisualSyncSelectedLines>Visual sync - selected lines</VisualSyncSelectedLines>
-		<VisualSyncTitle>Visual sync</VisualSyncTitle>
-		<BeforeVisualSync>Before visual sync</BeforeVisualSync>
-		<VisualSyncPerformedOnSelectedLines>Visual sync performed on selected lines</VisualSyncPerformedOnSelectedLines>
-		<VisualSyncPerformed>Visual sync performed</VisualSyncPerformed>
-		<ImportThisVobSubSubtitle>Import this VobSub subtitle?</ImportThisVobSubSubtitle>
-		<FileXIsLargerThan10Mb>File is larger than 10 MB: {0}</FileXIsLargerThan10Mb>
-		<ContinueAnyway>Continue anyway?</ContinueAnyway>
-		<BeforeLoadOf>Before load of {0}</BeforeLoadOf>
-		<LoadedSubtitleX>Loaded subtitle {0}</LoadedSubtitleX>
-		<LoadedEmptyOrShort>Loaded empty or very short subtitle {0}</LoadedEmptyOrShort>
-		<FileIsEmptyOrShort>File is empty or very short!</FileIsEmptyOrShort>
-		<FileNotFound>File not found: {0}</FileNotFound>
-		<SavedSubtitleX>Saved subtitle {0}</SavedSubtitleX>
-		<SavedOriginalSubtitleX>Saved original subtitle {0}</SavedOriginalSubtitleX>
-		<FileOnDiskModified>file on disk modified</FileOnDiskModified>
-		<OverwriteModifiedFile>Overwrite the file {0} modified at {1} {2}{3} with current file loaded from disk at {4} {5}?</OverwriteModifiedFile>
-		<UnableToSaveSubtitleX>Unable to save subtitle file {0}</UnableToSaveSubtitleX>
-		<BeforeNew>Before new</BeforeNew>
-		<New>New</New>
-		<BeforeConvertingToX>Before converting to {0}</BeforeConvertingToX>
-		<ConvertedToX>Converted to {0}</ConvertedToX>
-		<BeforeShowEarlier>Before show earlier</BeforeShowEarlier>
-		<BeforeShowLater>Before show later</BeforeShowLater>
-		<LineNumberX>Line number: {0:#,##0.##}</LineNumberX>
-		<OpenVideoFile>Open video file...</OpenVideoFile>
-		<NewFrameRateUsedToCalculateTimeCodes>New frame rate ({0}) was used for calculating start/end time codes</NewFrameRateUsedToCalculateTimeCodes>
-		<NewFrameRateUsedToCalculateFrameNumbers>New frame rate ({0}) was used for calculating start/end frame numbers</NewFrameRateUsedToCalculateFrameNumbers>
-		<FindContinue>The search item was not found.
+    </About>
+    <AddToNames>
+        <Title>إضافة إلى أسماء / قائمة الخ</Title>
+        <Description>(إضافة إلى الأسماء / قائمة الشوشرة (حالة حساسة</Description>
+    </AddToNames>
+    <AddWaveForm>
+        <Title>توليد بيانات الفيديو</Title>
+        <SourceVideoFile>:مصدر ملف الفيديو</SourceVideoFile>
+        <GenerateWaveFormData>توليد بيانات الفيديو</GenerateWaveFormData>
+        <PleaseWait>هذا قد يستغرق بضع دقائق -- يرجى الانتظار</PleaseWait>
+        <VlcMediaPlayerNotFoundTitle>VLC لم يتم العثور على ميديا بلاير</VlcMediaPlayerNotFoundTitle>
+        <VlcMediaPlayerNotFound>ميديا بلير أو أحدث لاستخراج البيانات الصوتية  VLC 1.1.x يحتاج لبرنامج</VlcMediaPlayerNotFound>
+        <GoToVlcMediaPlayerHomePage>ميديا بلير؟VLC  هل تريد أن تذهب إلى تحميل برنامج</GoToVlcMediaPlayerHomePage>
+        <GeneratingPeakFile>...توليد ملف الفيديو</GeneratingPeakFile>
+        <GeneratingSpectrogram>...توليد صورة طيفية</GeneratingSpectrogram>
+        <ExtractingSeconds>استخراج الصوت : {0:0.0} ثانية</ExtractingSeconds>
+        <ExtractingMinutes>{استخراج الصوت : {0} {1:00 دقيقة</ExtractingMinutes>
+    </AddWaveForm>
+    <AdjustDisplayDuration>
+        <Title>ضبط فترات</Title>
+        <AdjustVia>ضبط عن طريق</AdjustVia>
+        <Seconds>ثوانى</Seconds>
+        <Percent>في المئة</Percent>
+        <AddSeconds>أضف الثواني</AddSeconds>
+        <SetAsPercent>ادخال في المئة من مدة</SetAsPercent>
+        <Note>ملاحظة : سيتم عرض الوقت لن يتداخل وقت بدء النص التالي</Note>
+        <PleaseSelectAValueFromTheDropDownList>يرجى تحديد قيمة من القائمة المنسدلة</PleaseSelectAValueFromTheDropDownList>
+        <PleaseChoose>- الرجاء اختيار -</PleaseChoose>
+    </AdjustDisplayDuration>
+    <AutoBreakUnbreakLines>
+        <TitleAutoBreak>خطوط التوازن التلقائي المحدد</TitleAutoBreak>
+        <TitleUnbreak>إزالة فواصل سطر من أسطر مختارة</TitleUnbreak>
+        <LineNumber>#السطر</LineNumber>
+        <Before>قبل</Before>
+        <After>بعد</After>
+        <LinesFoundX>{0} : العثور على خطوط</LinesFoundX>
+        <OnlyBreakLinesLongerThan>تخطط المسافة الوحيدة أطول من</OnlyBreakLinesLongerThan>
+        <OnlyUnbreakLinesShorterThan>خطوط غير المسافة فقط أقصر من</OnlyUnbreakLinesShorterThan>
+    </AutoBreakUnbreakLines>
+    <ChangeCasing>
+        <Title>تغيير الغلاف</Title>
+        <ChangeCasingTo>تغيير الغلاف الى</ChangeCasingTo>
+        <NormalCasing>غلاف طبيعي. الجمل تبدأ بالأحرف الكبيرة</NormalCasing>
+        <FixNamesCasing>Etc.xml (إصلاح أسماء الغلاف (عبر القواميس \ الأسماء</FixNamesCasing>
+        <FixOnlyNamesCasing>Etc.xml (إصلاح أسماء الغلاف فقط (عبر القواميس \ أسماء</FixOnlyNamesCasing>
+        <OnlyChangeAllUppercaseLines>تغيير كل أسطر الأحرف الكبيرة فقط</OnlyChangeAllUppercaseLines>
+        <AllUppercase>كل الأحرف الكبيرة</AllUppercase>
+        <AllLowercase>كل الأحرف الصغيرة</AllLowercase>
+    </ChangeCasing>
+    <ChangeCasingNames>
+        <Title>تغيير الغلاف -- الأسماء</Title>
+        <NamesFoundInSubtitleX>{0} : وجدت الأسماء في المترجم</NamesFoundInSubtitleX>
+        <Enabled>اتاحة</Enabled>
+        <Name>الأسم</Name>
+        <LineNumber>#الخط</LineNumber>
+        <Before>قبل</Before>
+        <After>بعد</After>
+        <LinesFoundX>{0} :  احرف وجدت</LinesFoundX>
+    </ChangeCasingNames>
+    <ChangeFrameRate>
+        <Title>تغيير معدل الإطار</Title>
+        <ConvertFrameRateOfSubtitle>معدل تحويل الإطار المترجم</ConvertFrameRateOfSubtitle>
+        <FromFrameRate>من معدل الإطار</FromFrameRate>
+        <ToFrameRate>لمعدل الإطار</ToFrameRate>
+        <FrameRateNotCorrect>معدل الإطار غير صحيح</FrameRateNotCorrect>
+        <FrameRateNotChanged>معدل الإطار هو نفسه -- لا شيء لتحويل</FrameRateNotChanged>
+    </ChangeFrameRate>
+    <ChooseEncoding>
+        <Title>اختيار الترميز</Title>
+        <CodePage>الشفرة</CodePage>
+        <DisplayName>اسم العرض</DisplayName>
+        <PleaseSelectAnEncoding>يرجى تحديد الترميز</PleaseSelectAnEncoding>
+    </ChooseEncoding>
+    <ChooseLanguage>
+        <Title>اختيار اللغة</Title>
+        <Language>اللغة</Language>
+    </ChooseLanguage>
+    <CompareSubtitles>
+        <Title>مقارنة الترجمة</Title>
+        <PreviousDifference>الأمبير؛ الإختلاف السابق</PreviousDifference>
+        <NextDifference>الأمبير؛ الإختلاف التالى</NextDifference>
+        <SubtitlesNotAlike>الترجمة ليس لها تشابهات</SubtitlesNotAlike>
+        <XNumberOfDifference>{0} : عدد من الأختلافات</XNumberOfDifference>
+        <ShowOnlyDifferences>مشاهدة الفرق فقط</ShowOnlyDifferences>
+        <OnlyLookForDifferencesInText>إلأن ننظر للإختلافات في النص</OnlyLookForDifferencesInText>
+    </CompareSubtitles>
+    <DvdSubrip>
+        <Title>ifo/vobs (DVD) نسخ الترجمات من</Title>
+        <DvdGroupTitle>معلومات / DVD ملفات</DvdGroupTitle>
+        <IfoFile>IFO  ملف</IfoFile>
+        <IfoFiles>IFO  ملف</IfoFiles>
+        <VobFiles>VOB  ملف</VobFiles>
+        <Add>. . .أضف</Add>
+        <Remove>حذف</Remove>
+        <Clear>مسح</Clear>
+        <MoveUp>حرك لأعلى</MoveUp>
+        <MoveDown>حرك لإسفل</MoveDown>
+        <Languages>اللغات</Languages>
+        <PalNtsc>PAL/NTSC</PalNtsc>
+        <Pal>PAL (25fps)</Pal>
+        <Ntsc>NTSC (30fps)</Ntsc>
+        <StartRipping>إبدأ بالإنقسام</StartRipping>
+        <Abort>أجهاض</Abort>
+        <AbortedByUser>اُجهض من قبل المستخدم</AbortedByUser>
+        <ReadingSubtitleData>قراءة بيانات الترجمة</ReadingSubtitleData>
+        <RippingVobFileXofYZ>نسخ vob file {1} of {2}: {0}</RippingVobFileXofYZ>
+        <WrongIfoType>IFO وليس '{0}' النوع 'DVDVIDEO-VTS'.{1}محاولة أخرى من ملف {2}</WrongIfoType>
+    </DvdSubrip>
+    <DvdSubRipChooseLanguage>
+        <Title>اختيار اللغة</Title>
+        <ChooseLanguageStreamId>اختيار اللغة</ChooseLanguageStreamId>
+        <UnknownLanguage>لغة مجهولة</UnknownLanguage>
+        <SubtitleImageXofYAndWidthXHeight>{0}/{1}  -  {2}x{3} ترجمة تصوير</SubtitleImageXofYAndWidthXHeight>
+        <SubtitleImage>ترجمة تصوير</SubtitleImage>
+    </DvdSubRipChooseLanguage>
+    <EbuSaveOtpions>
+        <Title>EBU حفظ الخيارات</Title>
+        <GeneralSubtitleInformation>معلومات الترجمة العامة</GeneralSubtitleInformation>
+        <CodePageNumber>رمز رقم الصفحة</CodePageNumber>
+        <DiskFormatCode>تنسيق رمز القرص</DiskFormatCode>
+        <CharacterCodeTable>طابع الجدول</CharacterCodeTable>
+        <LanguageCode>لغة البرمجة</LanguageCode>
+        <OriginalProgramTitle>عنوان البرنامج الأصلي</OriginalProgramTitle>
+        <OriginalEpisodeTitle>عنوان الحلقة الأصلي</OriginalEpisodeTitle>
+        <TranslatedProgramTitle>ترجمة عنوان البرنامج</TranslatedProgramTitle>
+        <TranslatedEpisodeTitle>ترجمة عنوان الحلقة</TranslatedEpisodeTitle>
+        <TranslatorsName>اسم المترجمين</TranslatorsName>
+        <SubtitleListReferenceCode>رمز قائمة مراجع الترجمة</SubtitleListReferenceCode>
+        <CountryOfOrigin>بلد المنشأ</CountryOfOrigin>
+        <RevisionNumber>رقم المراجعة</RevisionNumber>
+        <MaxNoOfDisplayableChars>أقصى # عدد أحرف لكل صف</MaxNoOfDisplayableChars>
+        <MaxNumberOfDisplayableRows>أقصى # عدد الصفوف</MaxNumberOfDisplayableRows>
+        <DiskSequenceNumber>القرص تسلسل الأرقام</DiskSequenceNumber>
+        <TotalNumberOfDisks>إجمالي عدد الأقراص</TotalNumberOfDisks>
+        <Import>... استيراد</Import>
+        <TextAndTimingInformation>النص وتوقيت المعلومات</TextAndTimingInformation>
+        <JustificationCode>رمز مبرر</JustificationCode>
+        <Errors>أخطاء</Errors>
+        <ErrorsX>{0} : أخطاء</ErrorsX>
+        <MaxLengthError>{السطر {0} تجاوز الطول الاقصى ({1}) بواسطة {2}: {3</MaxLengthError>
+        <TextUnchangedPresentation>المقدمة بدون تغيير</TextUnchangedPresentation>
+        <TextLeftJustifiedText>يكتب النص باتجاه اليسار</TextLeftJustifiedText>
+        <TextCentredText>مركز النص</TextCentredText>
+        <TextRightJustifiedText>يكتب النص من اليمين</TextRightJustifiedText>
+    </EbuSaveOtpions>
+    <EffectKaraoke>
+        <Title>تأثير الكاريوكي</Title>
+        <ChooseColor>: اختر اللون</ChooseColor>
+        <TotalMilliseconds>:.مجموع ملي ثانية</TotalMilliseconds>
+        <EndDelayInMilliseconds>:.تأخير في نهاية ملي ثانية</EndDelayInMilliseconds>
+    </EffectKaraoke>
+    <EffectTypewriter>
+        <Title>تأثير آلة كاتبة</Title>
+        <TotalMilliseconds>:.مجموع ملي ثانية</TotalMilliseconds>
+        <EndDelayInMillisecs>:.تأخير في نهاية ملي ثانية</EndDelayInMillisecs>
+    </EffectTypewriter>
+    <ExportPngXml>
+        <Title>BDN XML/PNG تصدير</Title>
+        <ImageSettings>اعدادات الصورة</ImageSettings>
+        <FontFamily>مجموعة خط</FontFamily>
+        <FontSize>حجم الخط</FontSize>
+        <FontColor>لون الخط</FontColor>
+        <BorderColor>لون الحدود</BorderColor>
+        <BorderWidth>عرض الحدود</BorderWidth>
+        <AntiAlias>بدون أسم شهرة</AntiAlias>
+        <ExportAllLines>...تصدير جميع خطوط</ExportAllLines>
+        <XImagesSavedInY>{1} {0}الصور المحفوظة في</XImagesSavedInY>
+    </ExportPngXml>
+    <FindDialog>
+        <Title>بحث</Title>
+        <Find>بحث</Find>
+        <Normal>عادى</Normal>
+        <CaseSensitive>حالة دقة</CaseSensitive>
+        <RegularExpression>التعبير المنتظم</RegularExpression>
+    </FindDialog>
+    <FindSubtitleLine>
+        <Title>خط بحث الترجمة</Title>
+        <Find>&amp;بحث</Find>
+        <FindNext>البحث التالى</FindNext>
+    </FindSubtitleLine>
+    <FixCommonErrors>
+        <Title>إصلاح الأخطاء الشائعة</Title>
+        <Step1>اختر الخطوة 1/ 2 --  لإصلاح أي أخطاء</Step1>
+        <WhatToFix>ما لإصلاح</WhatToFix>
+        <Example>مثال</Example>
+        <SelectAll>أختار الكل</SelectAll>
+        <InverseSelection>لاتختار شىء</InverseSelection>
+        <Back>&lt; للخلف</Back>
+        <Next>التالى &gt;</Next>
+        <Step2>الخطوة 2 / 2 -- تحقق من الإصلاحات</Step2>
+        <Fixes>إصلاحات</Fixes>
+        <Log>سجل</Log>
+        <LineNumber>#سطر</LineNumber>
+        <Function>الوظيفة</Function>
+        <Before>قبل</Before>
+        <After>بعد</After>
+        <RemovedEmptyLine>إزالة السطر الفارغ</RemovedEmptyLine>
+        <RemovedEmptyLineAtTop>إزالة السطر الفارغ في أعلى</RemovedEmptyLineAtTop>
+        <RemovedEmptyLineAtBottom>إزالة سطر فارغ في أسفل</RemovedEmptyLineAtBottom>
+        <RemovedEmptyLinesUnsedLineBreaks>إزالة الأسطر الفارغة / فواصل الأسطر غير المستخدمة</RemovedEmptyLinesUnsedLineBreaks>
+        <EmptyLinesRemovedX>{إزالة الأسطر الفارغة : {0</EmptyLinesRemovedX>
+        <FixOverlappingDisplayTimes>إصلاح تداخل أوقات العرض</FixOverlappingDisplayTimes>
+        <FixShortDisplayTimes>إصلاح أوقات العرض القصيرة</FixShortDisplayTimes>
+        <FixLongDisplayTimes>إصلاح أوقات العرض الطويل</FixLongDisplayTimes>
+        <FixInvalidItalicTags>اصلاح العلامات المائلة غير صالحة</FixInvalidItalicTags>
+        <RemoveUnneededSpaces>إزالة المسافات غير الضرورية</RemoveUnneededSpaces>
+        <RemoveUnneededPeriods>إزالة الفترات الغير الضرورية</RemoveUnneededPeriods>
+        <FixMissingSpaces>إصلاح المساحات المفقودة</FixMissingSpaces>
+        <BreakLongLines>انقطاع أسطر طويلة</BreakLongLines>
+        <RemoveLineBreaks>إزالة فواصل الأسطر في نصوص قصيرة مع جملة واحدة فقط</RemoveLineBreaks>
+        <RemoveLineBreaksAll>(إزالة فواصل الأسطر في نصوص قصيرة (كافة باستثناء الحوارات</RemoveLineBreaksAll>
+        <FixUppercaseIInsindeLowercaseWords>داخل عبارة صغيرة 'i' الإصلاح الكبيرة OCR الخطأ</FixUppercaseIInsindeLowercaseWords>
+        <FixDoubleApostrophes>(") إصلاح الأحرف الفاصلة المزدوجة ('') لاقتباس واحد</FixDoubleApostrophes>
+        <AddPeriods>إضافة فترة ما بعد خطوط السطر التالي حيث تبدأ بحرف كبير</AddPeriods>
+        <StartWithUppercaseLetterAfterParagraph>تبدأ بالأحرف الكبيرة بعد الفقرة</StartWithUppercaseLetterAfterParagraph>
+        <StartWithUppercaseLetterAfterPeriodInsideParagraph>تبدأ الرسالة بعد فترة كبيرة داخل الفقرة</StartWithUppercaseLetterAfterPeriodInsideParagraph>
+        <FixLowercaseIToUppercaseI>(بالانجليزية)"I" إلى "i" الإصلاح وحده صغيرة</FixLowercaseIToUppercaseI>
+        <FixCommonOcrErrors>(باستخدام قائمة استبدالOCR ) إصلاح الأخطاء الشائعة في التعرف الضوئي على الحروف</FixCommonOcrErrors>
+        <CommonOcrErrorsFixed>{0} : قائمة ملف استبدال المستخدمة ) إصلاح الأخطاء الشائعة)</CommonOcrErrorsFixed>
+        <RemoveSpaceBetweenNumber>إزالة المسافة بين الأرقام</RemoveSpaceBetweenNumber>
+        <FixDialogsOnOneLine>إصلاح الحوارات على سطر واحد</FixDialogsOnOneLine>
+        <RemoveSpaceBetweenNumbersFixed>{إزالة المسافة بين الأرقام المصلحة : {0</RemoveSpaceBetweenNumbersFixed>
+        <FixDanishLetterI>'i' إصلاح الرسالة الدنماركية</FixDanishLetterI>
+        <FixSpanishInvertedQuestionAndExclamationMarks>إصلاح مسألة الاسبانية المقلوبة وعلامات التعجب</FixSpanishInvertedQuestionAndExclamationMarks>
+        <AddMissingQuote>(") أضف إقتباسا مفقوداً</AddMissingQuote>
+        <AddMissingQuotes>(")  أضافة إقتباساً مفقوداً</AddMissingQuotes>
+        <FixHyphens>(-) إصلاح خطوط تبدأ بشرطة</FixHyphens>
+        <FixHyphen>(-) إصلاح خطوط تبدأ بشرطة</FixHyphen>
+        <XHyphensFixed>{إصلاح الشرطات : {0</XHyphensFixed>
+        <AddMissingQuotesExample>"كيف حالك؟ -&gt;" كيف حالك؟ "</AddMissingQuotesExample>
+        <XMissingQuotesAdded>{الإقتباسات المفقودة أضيفت: {0</XMissingQuotesAdded>
+        <Fix3PlusLines>اصلاح الترجمة مع أكثر من سطرين</Fix3PlusLines>
+        <Fix3PlusLine>اصلاح الترجمة مع أكثر من سطرين</Fix3PlusLine>
+        <X3PlusLinesFixed>{اصلحت الترجمة مع أكثر من سطرين : {0</X3PlusLinesFixed>
+        <Analysing>...تحليل</Analysing>
+        <NothingToFix>لا شيء للإصلاح : )</NothingToFix>
+        <FixesFoundX>{إصلاحات وجدت : {0</FixesFoundX>
+        <XFixesApplied>{الإصلاحات التي تم تطبيقها : {0</XFixesApplied>
+        <NothingToFixBut>لا شيء لإصلاح ولكن يمكن تحسين بعض الأشياء - مراجعة السجل للحصول على التفاصيل</NothingToFixBut>
+        <FixLowercaseIToUppercaseICheckedButCurrentLanguageIsNotEnglish>بالانجليزية محددا ولكن الترجمة التي تم تحميلها حاليا لا تبدو أنها اللغة الإنجليزية ' i 'إلى' I ' الأصلاح الوحيد صغير</FixLowercaseIToUppercaseICheckedButCurrentLanguageIsNotEnglish>
+        <Continue>إستمر</Continue>
+        <ContinueAnyway>المتابعة على أية حال؟</ContinueAnyway>
+        <UncheckedFixLowercaseIToUppercaseI>بالانجليزية "' i 'إلى' I ' "  الأصلاح الوحيد صغير  لم يتم التحقق منه</UncheckedFixLowercaseIToUppercaseI>
+        <XIsChangedToUppercase>{0} i's متغير إلى أحرف كبيرة</XIsChangedToUppercase>
+        <FixFirstLetterToUppercaseAfterParagraph>الرسالة الأولى لإصلاح كبيرة بعد الفقرة</FixFirstLetterToUppercaseAfterParagraph>
+        <MergeShortLine>(إدمج سطراً قصيراً (جملة وحيدة</MergeShortLine>
+        <MergeShortLineAll>(دمج سطر قصير (الكل باستثناء الحوارات</MergeShortLineAll>
+        <XLineBreaksAdded>{0} فصل سطر مضاف</XLineBreaksAdded>
+        <BreakLongLine>فصل سطر طويل</BreakLongLine>
+        <FixLongDisplayTime>إصلاح وقت عرض طويل</FixLongDisplayTime>
+        <FixInvalidItalicTag>الإصلاح غير صالحة علامة مائل</FixInvalidItalicTag>
+        <FixShortDisplayTime>الإصلاح في وقت عرض قصير</FixShortDisplayTime>
+        <FixOverlappingDisplayTime>إصلاح تداخل وقت العرض</FixOverlappingDisplayTime>
+        <FixInvalidItalicTagsExample>&lt;i&gt;What do i care.&lt;i&gt; -&gt; &lt;i&gt;ماذا يهمني.&lt;/i&gt;</FixInvalidItalicTagsExample>
+        <RemoveUnneededSpacesExample>Hey   you , there. -&gt;يا أنت، هناك.</RemoveUnneededSpacesExample>
+        <RemoveUnneededPeriodsExample>Hey you!. -&gt;! يا أنت</RemoveUnneededPeriodsExample>
+        <FixMissingSpacesExample>Hey.You. -&gt;يا أنت.</FixMissingSpacesExample>
+        <FixUppercaseIInsindeLowercaseWordsExample>The earth is fIat. -&gt;الأرض مسطحة.</FixUppercaseIInsindeLowercaseWordsExample>
+        <FixLowercaseIToUppercaseIExample>What do i care. -&gt; ماذا يهمني.</FixLowercaseIToUppercaseIExample>
+        <StartTimeLaterThanEndTime>{رقم النص {0}: إبدأ الوقت التالي من وقت النهاية: {4}{1} --&gt; {2} {3</StartTimeLaterThanEndTime>
+        <UnableToFixStartTimeLaterThanEndTime>{غير قادر على إصلاح عدد النص {0}: وقت البدء والنهاية في وقت لاحق نهاية الوقت: {1</UnableToFixStartTimeLaterThanEndTime>
+        <XFixedToYZ>{0} إصلاح إلى: {1}{2</XFixedToYZ>
+        <UnableToFixTextXY>{غير قادر على إصلاح عدد النص {0}: {1</UnableToFixTextXY>
+        <XOverlappingTimestampsFixed>{0} الطوابع الزمنية المتداخلة الثابتة</XOverlappingTimestampsFixed>
+        <XDisplayTimesProlonged>{0} عرض أوقات طويلة</XDisplayTimesProlonged>
+        <XInvalidHtmlTagsFixed>{0} الثابتة HTML غير صالحة علامات</XInvalidHtmlTagsFixed>
+        <XDisplayTimesShortned>{0} تقصير أوقات العرض</XDisplayTimesShortned>
+        <XLinesUnbreaked>{0} فصل الأسطر</XLinesUnbreaked>
+        <UnneededSpace>الفراغ الغير مطلوب</UnneededSpace>
+        <XUnneededSpacesRemoved>{0} المسافات غير الضرورية إزالتها</XUnneededSpacesRemoved>
+        <UnneededPeriod>الفترة الغير مطلوبة</UnneededPeriod>
+        <XUnneededPeriodsRemoved>{0} فترات غير مطلوبة أزالت</XUnneededPeriodsRemoved>
+        <FixMissingSpace>اصلاح الفراغ المفقود</FixMissingSpace>
+        <XMissingSpacesAdded>{0} أضافت المساحات المفقودة</XMissingSpacesAdded>
+        <FixUppercaseIInsideLowercaseWord>الإصلاح الكبيرة كلمة 'i' صغيرة داخل</FixUppercaseIInsideLowercaseWord>
+        <XPeriodsAdded>{0} أضاف الفترات.</XPeriodsAdded>
+        <FixMissingPeriodAtEndOfLine>إضافة فترة مفقود في نهاية السطر</FixMissingPeriodAtEndOfLine>
+        <XDoubleApostrophesFixed>{0} الفواصل العليا مزدوجة ثابت.</XDoubleApostrophesFixed>
+        <XUppercaseIsFoundInsideLowercaseWords>{0} الكبيرة 'i's التي وجدت داخل عبارة صغيرة</XUppercaseIsFoundInsideLowercaseWords>
+        <RefreshFixes>إصلاحات التحديث المتاحة</RefreshFixes>
+        <ApplyFixes>تطبيق الإصلاحات المختارة</ApplyFixes>
+        <AutoBreak>مسافة تلقائى</AutoBreak>
+        <Unbreak>&amp;كسر</Unbreak>
+        <FixDoubleDash>حل '--' -&gt; '...'</FixDoubleDash>
+        <FixDoubleGreaterThan>إزالة &gt;&gt;</FixDoubleGreaterThan>
+        <FixEllipsesStart>إزالة المتقدم '...'</FixEllipsesStart>
+        <FixMissingOpenBracket>الإصلاح [مفقود في السطر</FixMissingOpenBracket>
+        <FixMusicNotation>مع الرمز المفضل (e.g. âTª) استبدال رموز الموسيقى</FixMusicNotation>
+        <FixDoubleDashs>اصلاح '--'s -&gt; '...'s</FixDoubleDashs>
+        <FixDoubleGreaterThans>إزالة&gt;&gt; من البداية</FixDoubleGreaterThans>
+        <FixEllipsesStarts>إزالة... من البداية</FixEllipsesStarts>
+        <FixMissingOpenBrackets>['s اصلاح المفقود</FixMissingOpenBrackets>
+        <FixMusicNotations>إستبدل âT?'s مع *'s</FixMusicNotations>
+        <XFixDoubleDash>{0} الثابتة '--'</XFixDoubleDash>
+        <XFixDoubleGreaterThan>{0} إزالة&gt;&gt;</XFixDoubleGreaterThan>
+        <XFixEllipsesStart>{0} إزالة بدءا '...'</XFixEllipsesStart>
+        <XFixMissingOpenBracket>{0} اصلاح [مفقود في السطر</XFixMissingOpenBracket>
+        <XFixMusicNotation>{0} تدوين الموسيقى الإصلاح في السطر</XFixMusicNotation>
+        <FixDoubleDashExample>'Whoa-- um yeah!' --&gt; 'قف... نعم أم!'</FixDoubleDashExample>
+        <FixDoubleGreaterThanExample>'&gt;&gt; Robert: Sup dude!'  --&gt; 'روبرت : سوب المتأنق!'</FixDoubleGreaterThanExample>
+        <FixEllipsesStartExample>'... and then we' -&gt; 'ومن ثم نحن'</FixEllipsesStartExample>
+        <FixMissingOpenBracketExample>'clanks] Look out!' --&gt; '[القعقعة] ابحثوا!'</FixMissingOpenBracketExample>
+        <FixMusicNotationExample>'âTª sweet dreams are' --&gt; '♫ أحلام حلوة'</FixMusicNotationExample>
+        <NumberOfImportantLogMessages>{0} رسائل سجل مهم</NumberOfImportantLogMessages>
+        <FixedOkXY>{الثابتة وموافق -- '{0}' : {1</FixedOkXY>
+    </FixCommonErrors>
+    <GetDictionaries>
+        <Title>تحتاج قواميس؟</Title>
+        <DescriptionLine1>NHunspell  تستند الترجمة لتحرير التدقيق الإملائي على المحرك</DescriptionLine1>
+        <DescriptionLine2>إستخدم قواميس التدقيق الإملائي من المكتب المفتوح</DescriptionLine2>
+        <GetDictionariesHere>الحصول على القواميس هنا :</GetDictionariesHere>
+        <OpenOpenOfficeWiki>قائمة قواميس Wiki افتح مكتب</OpenOpenOfficeWiki>
+        <GetAllDictionaries>الحصول على كل القواميس</GetAllDictionaries>
+        <ChooseLanguageAndClickDownload>اختر اللغة الخاصة بك وإضغط فوق تحميل</ChooseLanguageAndClickDownload>
+        <OpenDictionariesFolder>"فتح مجلد "القواميس</OpenDictionariesFolder>
+        <Download>تحميل</Download>
+        <XDownloaded>{0} تم تحميلها وتثبيتها</XDownloaded>
+    </GetDictionaries>
+    <GoogleTranslate>
+        <Title>ترجمة جوجل</Title>
+        <From>من :</From>
+        <To>الى :</To>
+        <Translate>ترجم</Translate>
+        <PleaseWait>يرجى الانتظار... وهذا قد يستغرق بعض الوقت</PleaseWait>
+        <PoweredByGoogleTranslate>ترجمة مدعومة من جوجل</PoweredByGoogleTranslate>
+        <PoweredByMicrosoftTranslate>ترجمة مدعومة من مايكروسوفت</PoweredByMicrosoftTranslate>
+    </GoogleTranslate>
+    <GoogleOrMicrosoftTranslate>
+        <Title>ترجمة جوجل و مايكروسوفت</Title>
+        <From>من :</From>
+        <To>الى :</To>
+        <Translate>ترجمة</Translate>
+        <SourceText>مصدر النص</SourceText>
+        <GoogleTranslate>ترجمة جوجل</GoogleTranslate>
+        <MicrosoftTranslate>ترجمة مايكروسوفت</MicrosoftTranslate>
+    </GoogleOrMicrosoftTranslate>
+    <GoToLine>
+        <Title>إذهب للترجمة رقم</Title>
+        <XIsNotAValidNumber>{0} ليس رقما صحيحا</XIsNotAValidNumber>
+    </GoToLine>
+    <ImportText>
+        <Title>استيراد نص عادي</Title>
+        <OpenTextFile>... فتح ملف نصي</OpenTextFile>
+        <ImportOptions>خيارات الاستيراد</ImportOptions>
+        <Splitting>أنفصام</Splitting>
+        <AutoSplitText>تقسيم النص تلقائي</AutoSplitText>
+        <OneLineIsOneSubtitle>سطر واحد هو واحد الترجمة</OneLineIsOneSubtitle>
+        <MergeShortLines>إدمج خطوط قصيرة بالإستمرار</MergeShortLines>
+        <RemoveEmptyLines>إزالة الأسطر الفارغة</RemoveEmptyLines>
+        <RemoveLinesWithoutLetters>إزالة خطوط دون رسائل</RemoveLinesWithoutLetters>
+        <GapBetweenSubtitles>( الفجوة بين الترجمة (مللي ثانية</GapBetweenSubtitles>
+        <Auto>تلقائى</Auto>
+        <Fixed>ثابت</Fixed>
+        <Refresh>&amp;أنعش</Refresh>
+        <Next>&amp;التالى &gt;&gt;</Next>
+        <TextFiles>ملفات نصية</TextFiles>
+        <PreviewLinesModifiedX>{المعاينة -- تعديل الفقرتين : {0</PreviewLinesModifiedX>
+    </ImportText>
+    <Interjections>
+        <Title>مداخلات</Title>
+    </Interjections>
+    <Main>
+        <Menu>
+            <File>
+                <Title>&amp;ملف</Title>
+                <New>&amp;جديد</New>
+                <Open>فتح</Open>
+                <Reopen>إعادة فتح</Reopen>
+                <Save>&amp;حفظ</Save>
+                <SaveAs>حفظ جديد</SaveAs>
+                <OpenOriginal>(أفتح الترجمة الأصلية (وضع المترجم</OpenOriginal>
+                <SaveOriginal>حفظ الترجمة الأصلية</SaveOriginal>
+                <CloseOriginal>أغلق الترجمة الأصلية</CloseOriginal>
+                <OpenContainingFolder>فتح المجلد الذي يحتوي على الترجمة</OpenContainingFolder>
+                <Compare>قارن بينهما</Compare>
+                <ImportOcrFromDvd>vob /ifo (dvd)إستيراد / الترجمة من</ImportOcrFromDvd>
+                <ImportOcrVobSubSubtitle>الترجمة / OCR VobSub (SUB / IDX) استيراد</ImportOcrVobSubSubtitle>
+                <ImportBluRaySupFile>OCR Blu-ray sup استيراد / ملف</ImportBluRaySupFile>
+                <ImportSubtitleFromMatroskaFile>Matroska إستيراد الترجمة من ملف</ImportSubtitleFromMatroskaFile>
+                <ImportSubtitleWithManualChosenEncoding>إستيراد الترجمة مع دليل الترميز المختار</ImportSubtitleWithManualChosenEncoding>
+                <ImportText>...استيراد نص عادي</ImportText>
+                <ImportTimecodes>...إستيراد كود الوقت</ImportTimecodes>
+                <Export>تصدير</Export>
+                <ExportBdnXml>BDN xml/png...</ExportBdnXml>
+                <ExportBluRaySup/>
+                <ExportVobSub/>
+                <ExportCavena890>Cavena 890...</ExportCavena890>
+                <ExportEbu>EBU stl...</ExportEbu>
+                <ExportPac>... (شاشة إلكترونية) PAC</ExportPac>
+                <ExportPlainText/>
+                <ExportPlainTextWithoutLineBreaks/>
+                <Exit>خروج</Exit>
+            </File>
+            <Edit>
+                <Title>تعديل</Title>
+                <ShowUndoHistory>(عرض التاريخ (لإلغاء</ShowUndoHistory>
+                <InsertUnicodeSymbol>أدخل رمز الشفرة</InsertUnicodeSymbol>
+                <Find>&amp;بحث</Find>
+                <FindNext>البحث التالى</FindNext>
+                <Replace>&amp;استبدل</Replace>
+                <MultipleReplace>... متعددة تحل محل</MultipleReplace>
+                <GoToSubtitleNumber>الذهاب إلى رقم الترجمة</GoToSubtitleNumber>
+            </Edit>
+            <Tools>
+                <Title>أدوات</Title>
+                <AdjustDisplayDuration>... ضبط فترات</AdjustDisplayDuration>
+                <FixCommonErrors>... إصلاح الأخطاء الشائعة</FixCommonErrors>
+                <StartNumberingFrom>... بدء الترقيم من</StartNumberingFrom>
+                <RemoveTextForHearingImpaired>... إزالة النص لضعاف السمع</RemoveTextForHearingImpaired>
+                <ChangeCasing>...تغيير الغلاف</ChangeCasing>
+                <ChangeFrameRate>...معدل تغير الإطار</ChangeFrameRate>
+                <MergeShortLines>... دمج أسطر قصيرة</MergeShortLines>
+                <SplitLongLines>...انقسام أسطر طويلة</SplitLongLines>
+                <MinimumDisplayTimeBetweenParagraphs>الحد الأدنى من عرض الوقت بين الفقرات</MinimumDisplayTimeBetweenParagraphs>
+                <SortBy>الترتيب حسب</SortBy>
+                <Number>الرقم</Number>
+                <StartTime>بداية الوقت</StartTime>
+                <EndTime>نهاية الوقت</EndTime>
+                <Duration>المدة</Duration>
+                <TextAlphabetically>النص - حسب الترتيب الأبجدي</TextAlphabetically>
+                <TextSingleLineMaximumLength>النص - خط واحد كحد أقصى . الطول</TextSingleLineMaximumLength>
+                <TextTotalLength>النص - الطول الإجمالي</TextTotalLength>
+                <TextNumberOfLines>النص - عدد الأسطر</TextNumberOfLines>
+                <TextNumberOfCharactersPerSeconds>النص - عدد الأحرف / ثانية</TextNumberOfCharactersPerSeconds>
+                <ShowOriginalTextInAudioAndVideoPreview>عرض النص الأصلي في الصوت / معاينات الفيديو</ShowOriginalTextInAudioAndVideoPreview>
+                <MakeNewEmptyTranslationFromCurrentSubtitle>إجعل الترجمة الفارغة الجديدة من الترجمة الحالية</MakeNewEmptyTranslationFromCurrentSubtitle>
+                <SplitSubtitle>...تقسيم  الترجمة</SplitSubtitle>
+                <AppendSubtitle>...إلحاق الترجمة</AppendSubtitle>
+            </Tools>
+            <Video>
+                <Title>فيديو</Title>
+                <OpenVideo>افتح ملف فيديو</OpenVideo>
+                <ChooseAudioTrack>اختيار المسار الصوتي</ChooseAudioTrack>
+                <CloseVideo>إغلاق ملف الفيديو</CloseVideo>
+                <ShowHideVideo>إظهار / إخفاء الفيديو</ShowHideVideo>
+                <ShowHideWaveForm>إظهار / إخفاء شكل الموجة</ShowHideWaveForm>
+                <ShowHideWaveformAndSpectrogram>إظهار / إخفاء الموجة والفيديو</ShowHideWaveformAndSpectrogram>
+                <UnDockVideoControls>إرساء ضوابط الفيديو</UnDockVideoControls>
+                <ReDockVideoControls>اعادة ضوابط الفيديو</ReDockVideoControls>
+            </Video>
+            <SpellCheck>
+                <Title>التدقيق الإملائي</Title>
+                <SpellCheck>...التدقيق الإملائي</SpellCheck>
+                <FindDoubleWords>العثور على الكلمات المزدوجة</FindDoubleWords>
+                <FindDoubleLines>العثور على الأسطر المزدوجة</FindDoubleLines>
+                <GetDictionaries>...الحصول على قواميس</GetDictionaries>
+                <AddToNamesEtcList>إضافة كلمة إلى الأسماء / قائمة إلخ</AddToNamesEtcList>
+            </SpellCheck>
+            <Synchronization>
+                <Title>التزامن</Title>
+                <AdjustAllTimes>(ضبط جميع الأوقات (تظهر في وقت سابق / لاحق</AdjustAllTimes>
+                <VisualSync>مزامنة الفيديو</VisualSync>
+                <PointSync>نقطة مزامنة</PointSync>
+                <PointSyncViaOtherSubtitle>مزامنة نقطة أخرى عبر الترجمة</PointSyncViaOtherSubtitle>
+            </Synchronization>
+            <AutoTranslate>
+                <Title>ترجمة-تلقائية</Title>
+                <TranslatePoweredByGoogle>(ترجمة (مدعومة من جوجل</TranslatePoweredByGoogle>
+                <TranslatePoweredByMicrosoft>(ترجمة (مدعومة من مايكروسوفت</TranslatePoweredByMicrosoft>
+                <TranslateFromSwedishToDanish>(nikse.dk ترجمة من اللغة السويدية إلى دانماركية (مدعومة من</TranslateFromSwedishToDanish>
+            </AutoTranslate>
+            <Options>
+                <Title>خيارات</Title>
+                <Settings>&amp;إعدادات</Settings>
+                <ChooseLanguage>&amp;اختيار اللغة</ChooseLanguage>
+            </Options>
+            <Networking>
+                <Title>الشبكات</Title>
+                <StartNewSession>بدء الجلسة الجديدة</StartNewSession>
+                <JoinSession>انضمام  للجلسة</JoinSession>
+                <ShowSessionInfoAndLog>عرض معلومات وسجل الجلسة</ShowSessionInfoAndLog>
+                <Chat>دردشة</Chat>
+                <LeaveSession>ترك الجلسة</LeaveSession>
+            </Networking>
+            <Help>
+                <Title>مساعدة</Title>
+                <Help>&amp;مساعدة</Help>
+                <About>&amp;عن البرنامج</About>
+            </Help>
+            <ToolBar>
+                <New>جديد</New>
+                <Open>أفتح</Open>
+                <Save>حفظ</Save>
+                <SaveAs>حفظ جديد</SaveAs>
+                <Find>العثور على</Find>
+                <Replace>استبدل</Replace>
+                <VisualSync>الفيديو مزامنة</VisualSync>
+                <SpellCheck>التدقيق الإملائي</SpellCheck>
+                <Settings>إعدادات</Settings>
+                <Help>مساعدة</Help>
+                <ShowHideWaveForm>إظهار / إخفاء شكل الموجة</ShowHideWaveForm>
+                <ShowHideVideo>إظهار / إخفاء الفيديو</ShowHideVideo>
+            </ToolBar>
+            <ContextMenu>
+                <SubStationAlphaSetStyle>(محطة ألفا الفرعية -- تعيين ستايل (متقدم</SubStationAlphaSetStyle>
+                <Cut>قص</Cut>
+                <Copy>نسخ</Copy>
+                <Paste>لصق</Paste>
+                <Delete>حذف</Delete>
+                <SplitLineAtCursorPosition>خط منقسم في موقع المؤشر</SplitLineAtCursorPosition>
+                <SelectAll>إختر الكل</SelectAll>
+                <InsertFirstLine>إدراج سطر</InsertFirstLine>
+                <InsertBefore>إدراج قبل</InsertBefore>
+                <InsertAfter>إدراج بعد</InsertAfter>
+                <InsertSubtitleAfter>ادراج ترجمة بعد هذا السطر</InsertSubtitleAfter>
+                <CopyToClipboard>إنسخ كنص إلى الحافظة</CopyToClipboard>
+                <Split>انقسام</Split>
+                <MergeSelectedLines>دمج اسطر مختارة</MergeSelectedLines>
+                <MergeWithLineBefore>دمج مع السطر قبل</MergeWithLineBefore>
+                <MergeWithLineAfter>دمج مع السطر بعد</MergeWithLineAfter>
+                <Normal>طبيعي</Normal>
+                <Underline>تسطير</Underline>
+                <Color>...اللون</Color>
+                <FontName>...اسم الخط</FontName>
+                <AutoBalanceSelectedLines>أسطر التوازن التلقائي المحدد</AutoBalanceSelectedLines>
+                <RemoveLineBreaksFromSelectedLines>إزالة خط فواصل من أسطر مختارة</RemoveLineBreaksFromSelectedLines>
+                <TypewriterEffect>تأثير الآلة الكاتبة</TypewriterEffect>
+                <KaraokeEffect>تأثير الكاريوكي</KaraokeEffect>
+                <ShowSelectedLinesEarlierLater>تظهر الأسطر المحددة في وقت سابق / لاحق</ShowSelectedLinesEarlierLater>
+                <VisualSyncSelectedLines>تزامن تحديد خطوط بصرية</VisualSyncSelectedLines>
+                <GoogleAndMicrosoftTranslateSelectedLine>ترجمة السطر الأصلي جوجل / مايكروسوفت</GoogleAndMicrosoftTranslateSelectedLine>
+                <GoogleTranslateSelectedLines>ترجمة جوجل أسطر مختارة</GoogleTranslateSelectedLines>
+                <AdjustDisplayDurationForSelectedLines>ضبط فترات سطور مختارة</AdjustDisplayDurationForSelectedLines>
+                <FixCommonErrorsInSelectedLines>إصلاح الأخطاء الشائعة في سطور مختارة</FixCommonErrorsInSelectedLines>
+                <ChangeCasingForSelectedLines>تغيير غلاف لسطور مختارة</ChangeCasingForSelectedLines>
+            </ContextMenu>
+        </Menu>
+        <Controls>
+            <SubtitleFormat>تشكيل</SubtitleFormat>
+            <FileEncoding>الترميز</FileEncoding>
+            <ListView>عرض القائمة</ListView>
+            <SourceView>عرض المصدر</SourceView>
+            <UndoChangesInEditPanel>التراجع عن التغييرات في لوحة التحرير</UndoChangesInEditPanel>
+            <Previous>&lt; السابق</Previous>
+            <Next>التالى &gt;</Next>
+            <AutoBreak>شريط آلى</AutoBreak>
+            <Unbreak>غير المسافة</Unbreak>
+        </Controls>
+        <VideoControls>
+            <Translate>ترجمة</Translate>
+            <Create>إنشاء</Create>
+            <Adjust>ضبط</Adjust>
+            <SelectCurrentElementWhilePlaying>حدد الترجمة الحالية أثناء التشغيل</SelectCurrentElementWhilePlaying>
+            <AutoRepeat>تكرار تلقائى</AutoRepeat>
+            <AutoRepeatOn>تلقائى كرر على</AutoRepeatOn>
+            <AutoRepeatCount>(تكرار العد (مرات</AutoRepeatCount>
+            <AutoContinue>استمر تلقائى</AutoContinue>
+            <AutoContinueOn>تلقائى استمر على</AutoContinueOn>
+            <DelayInSeconds>(تأخير (ثانية</DelayInSeconds>
+            <OriginalText>النص الأصلي</OriginalText>
+            <Previous>&lt; السابق</Previous>
+            <Stop>توقف</Stop>
+            <PlayCurrent>&amp;تشغيل الحالى</PlayCurrent>
+            <Next>&amp;التالى &gt;</Next>
+            <Playing>...تشغيل</Playing>
+            <RepeatingLastTime>تكرار... آخر مرة</RepeatingLastTime>
+            <RepeatingXTimesLeft>التكرار. . . {0} يوقت يسارا</RepeatingXTimesLeft>
+            <AutoContinueInOneSecond>تستمر تلقائى في الثانية الواحدة</AutoContinueInOneSecond>
+            <AutoContinueInXSeconds>يستمر تلقائى في {0} ثواني</AutoContinueInXSeconds>
+            <StillTypingAutoContinueStopped>ما زال يطبع. . . تستمر بالتوقف تلقائى</StillTypingAutoContinueStopped>
+            <InsertNewSubtitleAtVideoPosition>إدراج الترجمة الجديدة في موقع الفيديو</InsertNewSubtitleAtVideoPosition>
+            <Auto>تلقائى</Auto>
+            <PlayFromJustBeforeText>تشغيل من مباشرة قبل النص</PlayFromJustBeforeText>
+            <Pause>إيقاف مؤقت</Pause>
+            <GoToSubtitlePositionAndPause>إذهب إلى الموقع والإيقاف المؤقت</GoToSubtitlePositionAndPause>
+            <SetStartTime>تعيين وقت البدء</SetStartTime>
+            <SetEndTimeAndGoToNext>تعيين وانتقل إلى نهاية التالى</SetEndTimeAndGoToNext>
+            <AdjustedViaEndTime>{معدل عن طريق وقت النهاية {0</AdjustedViaEndTime>
+            <SetEndTime>ضبط وقت النهاية</SetEndTime>
+            <SetstartTimeAndOffsetOfRest>بدء تعيين وتعويض بقية</SetstartTimeAndOffsetOfRest>
+            <SearchTextOnline>البحث عن النص على الانترنت</SearchTextOnline>
+            <GoogleTranslate>ترجمة جوجل</GoogleTranslate>
+            <GoogleIt>صفحة جوجل</GoogleIt>
+            <SecondsBackShort>&lt;&lt;</SecondsBackShort>
+            <SecondsForwardShort>&gt;&gt;</SecondsForwardShort>
+            <VideoPosition>موقع فيديو:</VideoPosition>
+            <TranslateTip>&lt;السهم أعلى/أسفل+ alt &gt; للذهاب الى الترجمة  السابق / التالي أستخدم</TranslateTip>
+            <CreateTip>&lt;  السهم لليسار / يمين + CTRL &gt; نصيحة: استخدم مفاتيح</CreateTip>
+            <AdjustTip>&lt;السهم أعلى/أسفل+ alt &gt; للذهاب الى الترجمة  السابق / التالي أستخدم</AdjustTip>
+            <BeforeChangingTimeInWaveFormX>{قبل تغيير الوقت في شكل الموجة: {0</BeforeChangingTimeInWaveFormX>
+            <NewTextInsertAtX>{النص الجديد أدخل في {0</NewTextInsertAtX>
+            <Center>توسيط</Center>
+            <PlayRate>(معدل التشغيل (السرعة</PlayRate>
+            <Slow>بطىء</Slow>
+            <Normal>طبيعى</Normal>
+            <Fast>سريع</Fast>
+            <VeryFast>سريع جداً</VeryFast>
+        </VideoControls>
+        <SaveChangesToUntitled>Save changes to untitled?</SaveChangesToUntitled>
+        <SaveChangesToX>Save changes to {0}?</SaveChangesToX>
+        <SaveChangesToUntitledOriginal>Save changes to untitled original?</SaveChangesToUntitledOriginal>
+        <SaveChangesToOriginalX>Save changes to original {0}?</SaveChangesToOriginalX>
+        <SaveSubtitleAs>Save subtitle as...</SaveSubtitleAs>
+        <SaveOriginalSubtitleAs>Save original subtitle as...</SaveOriginalSubtitleAs>
+        <NoSubtitleLoaded>No subtitle loaded</NoSubtitleLoaded>
+        <VisualSyncSelectedLines>Visual sync - selected lines</VisualSyncSelectedLines>
+        <VisualSyncTitle>Visual sync</VisualSyncTitle>
+        <BeforeVisualSync>Before visual sync</BeforeVisualSync>
+        <VisualSyncPerformedOnSelectedLines>Visual sync performed on selected lines</VisualSyncPerformedOnSelectedLines>
+        <VisualSyncPerformed>Visual sync performed</VisualSyncPerformed>
+        <ImportThisVobSubSubtitle>Import this VobSub subtitle?</ImportThisVobSubSubtitle>
+        <FileXIsLargerThan10Mb>File is larger than 10 MB: {0}</FileXIsLargerThan10Mb>
+        <ContinueAnyway>Continue anyway?</ContinueAnyway>
+        <BeforeLoadOf>Before load of {0}</BeforeLoadOf>
+        <LoadedSubtitleX>Loaded subtitle {0}</LoadedSubtitleX>
+        <LoadedEmptyOrShort>Loaded empty or very short subtitle {0}</LoadedEmptyOrShort>
+        <FileIsEmptyOrShort>File is empty or very short!</FileIsEmptyOrShort>
+        <FileNotFound>File not found: {0}</FileNotFound>
+        <SavedSubtitleX>Saved subtitle {0}</SavedSubtitleX>
+        <SavedOriginalSubtitleX>Saved original subtitle {0}</SavedOriginalSubtitleX>
+        <FileOnDiskModified>file on disk modified</FileOnDiskModified>
+        <OverwriteModifiedFile>Overwrite the file {0} modified at {1} {2}{3} with current file loaded from disk at {4} {5}?</OverwriteModifiedFile>
+        <UnableToSaveSubtitleX>Unable to save subtitle file {0}</UnableToSaveSubtitleX>
+        <BeforeNew>Before new</BeforeNew>
+        <New>New</New>
+        <BeforeConvertingToX>Before converting to {0}</BeforeConvertingToX>
+        <ConvertedToX>Converted to {0}</ConvertedToX>
+        <BeforeShowEarlier>Before show earlier</BeforeShowEarlier>
+        <BeforeShowLater>Before show later</BeforeShowLater>
+        <LineNumberX>Line number: {0:#,##0.##}</LineNumberX>
+        <OpenVideoFile>Open video file...</OpenVideoFile>
+        <NewFrameRateUsedToCalculateTimeCodes>New frame rate ({0}) was used for calculating start/end time codes</NewFrameRateUsedToCalculateTimeCodes>
+        <NewFrameRateUsedToCalculateFrameNumbers>New frame rate ({0}) was used for calculating start/end frame numbers</NewFrameRateUsedToCalculateFrameNumbers>
+        <FindContinue>The search item was not found.
 Would you like to start from the top of the document and search one more time?</FindContinue>
-		<FindContinueTitle>Continue Find?</FindContinueTitle>
-		<XFoundAtLineNumberY>'{0}' found at line number {1}</XFoundAtLineNumberY>
-		<XNotFound>'{0}' not found</XNotFound>
-		<BeforeReplace>Before replace: {0}</BeforeReplace>
-		<MatchFoundX>Match found: {0}</MatchFoundX>
-		<NoMatchFoundX>No match found: {0}</NoMatchFoundX>
-		<FoundNothingToReplace>Found nothing to replace</FoundNothingToReplace>
-		<ReplaceCountX>Replace count: {0}</ReplaceCountX>
-		<NoXFoundAtLineY>Match found at line {0}: {1}</NoXFoundAtLineY>
-		<OneReplacementMade>One replacement made.</OneReplacementMade>
-		<BeforeChangesMadeInSourceView>Before changes made in source view</BeforeChangesMadeInSourceView>
-		<UnableToParseSourceView>Unable to parse source view text!</UnableToParseSourceView>
-		<GoToLineNumberX>Go to line number {0}</GoToLineNumberX>
-		<CreateAdjustChangesApplied>Create/adjust lines changes applied</CreateAdjustChangesApplied>
-		<SelectedLines>selected lines</SelectedLines>
-		<BeforeDisplayTimeAdjustment>Before display time adjustment</BeforeDisplayTimeAdjustment>
-		<DisplayTimeAdjustedX>Display time adjusted: {0}</DisplayTimeAdjustedX>
-		<DisplayTimesAdjustedX>Display times adjusted: {0}</DisplayTimesAdjustedX>
-		<StarTimeAdjustedX>Start time adjusted: {0}</StarTimeAdjustedX>
-		<BeforeCommonErrorFixes>Before common error fixes</BeforeCommonErrorFixes>
-		<CommonErrorsFixedInSelectedLines>Common errors fixed in selected lines</CommonErrorsFixedInSelectedLines>
-		<CommonErrorsFixed>Common errors fixed</CommonErrorsFixed>
-		<BeforeRenumbering>Before renumbering</BeforeRenumbering>
-		<RenumberedStartingFromX>Renumbered starting from: {0}</RenumberedStartingFromX>
-		<BeforeRemovalOfTextingForHearingImpaired>Before removal of texting for hearing impaired</BeforeRemovalOfTextingForHearingImpaired>
-		<TextingForHearingImpairedRemovedOneLine>Texting for hearing impaired removed : One line</TextingForHearingImpairedRemovedOneLine>
-		<TextingForHearingImpairedRemovedXLines>Texting for hearing impaired removed : {0} lines</TextingForHearingImpairedRemovedXLines>
-		<SubtitleSplitted>Subtitle splitted</SubtitleSplitted>
-		<SubtitleAppendPrompt>This will append an existing subtitle to the currently loaded subtitle which should
+        <FindContinueTitle>Continue Find?</FindContinueTitle>
+        <XFoundAtLineNumberY>'{0}' found at line number {1}</XFoundAtLineNumberY>
+        <XNotFound>'{0}' not found</XNotFound>
+        <BeforeReplace>Before replace: {0}</BeforeReplace>
+        <MatchFoundX>Match found: {0}</MatchFoundX>
+        <NoMatchFoundX>No match found: {0}</NoMatchFoundX>
+        <FoundNothingToReplace>Found nothing to replace</FoundNothingToReplace>
+        <ReplaceCountX>Replace count: {0}</ReplaceCountX>
+        <NoXFoundAtLineY>Match found at line {0}: {1}</NoXFoundAtLineY>
+        <OneReplacementMade>One replacement made.</OneReplacementMade>
+        <BeforeChangesMadeInSourceView>Before changes made in source view</BeforeChangesMadeInSourceView>
+        <UnableToParseSourceView>Unable to parse source view text!</UnableToParseSourceView>
+        <GoToLineNumberX>Go to line number {0}</GoToLineNumberX>
+        <CreateAdjustChangesApplied>Create/adjust lines changes applied</CreateAdjustChangesApplied>
+        <SelectedLines>selected lines</SelectedLines>
+        <BeforeDisplayTimeAdjustment>Before display time adjustment</BeforeDisplayTimeAdjustment>
+        <DisplayTimeAdjustedX>Display time adjusted: {0}</DisplayTimeAdjustedX>
+        <DisplayTimesAdjustedX>Display times adjusted: {0}</DisplayTimesAdjustedX>
+        <StarTimeAdjustedX>Start time adjusted: {0}</StarTimeAdjustedX>
+        <BeforeCommonErrorFixes>Before common error fixes</BeforeCommonErrorFixes>
+        <CommonErrorsFixedInSelectedLines>Common errors fixed in selected lines</CommonErrorsFixedInSelectedLines>
+        <CommonErrorsFixed>Common errors fixed</CommonErrorsFixed>
+        <BeforeRenumbering>Before renumbering</BeforeRenumbering>
+        <RenumberedStartingFromX>Renumbered starting from: {0}</RenumberedStartingFromX>
+        <BeforeRemovalOfTextingForHearingImpaired>Before removal of texting for hearing impaired</BeforeRemovalOfTextingForHearingImpaired>
+        <TextingForHearingImpairedRemovedOneLine>Texting for hearing impaired removed : One line</TextingForHearingImpairedRemovedOneLine>
+        <TextingForHearingImpairedRemovedXLines>Texting for hearing impaired removed : {0} lines</TextingForHearingImpairedRemovedXLines>
+        <SubtitleSplitted>Subtitle splitted</SubtitleSplitted>
+        <SubtitleAppendPrompt>This will append an existing subtitle to the currently loaded subtitle which should
 already be in sync with video file.
 
 Continue?</SubtitleAppendPrompt>
-		<SubtitleAppendPromptTitle>Append subtitle</SubtitleAppendPromptTitle>
-		<OpenSubtitleToAppend>Open subtitle to append...</OpenSubtitleToAppend>
-		<AppendViaVisualSyncTitle>Visual sync - append second part of subtitle</AppendViaVisualSyncTitle>
-		<AppendSynchronizedSubtitlePrompt>Append this synchronized subtitle?</AppendSynchronizedSubtitlePrompt>
-		<BeforeAppend>Before append</BeforeAppend>
-		<SubtitleAppendedX>Subtitle appended: {0}</SubtitleAppendedX>
-		<SubtitleNotAppended>Subtitle NOT appended!</SubtitleNotAppended>
-		<GoogleTranslate>Google translate</GoogleTranslate>
-		<MicrosoftTranslate>Microsoft translate</MicrosoftTranslate>
-		<BeforeGoogleTranslation>Before Google translation</BeforeGoogleTranslation>
-		<SelectedLinesTranslated>Selected lines translated</SelectedLinesTranslated>
-		<SubtitleTranslated>Subtitle translated</SubtitleTranslated>
-		<TranslateSwedishToDanish>Translate currently loaded Swedish subtitle to Danish</TranslateSwedishToDanish>
-		<TranslateSwedishToDanishWarning>Translate currently loaded SWEDISH (are you sure it's Swedish?) subtitle to Danish?</TranslateSwedishToDanishWarning>
-		<TranslatingViaNikseDkMt>ترجمة خاصة www.nikse.dk/mt...</TranslatingViaNikseDkMt>
-		<BeforeSwedishToDanishTranslation>قبل الترجمة السويدية الدنماركية</BeforeSwedishToDanishTranslation>
-		<TranslationFromSwedishToDanishComplete>الترجمة من اللغة السويدية لإكمال الدنماركية</TranslationFromSwedishToDanishComplete>
-		<TranslationFromSwedishToDanishFailed>فشلت الترجمة من اللغة السويدية إلى دانماركي</TranslationFromSwedishToDanishFailed>
-		<BeforeUndo>قبل التراجع</BeforeUndo>
-		<UndoPerformed>التراجع عن التنفيذ</UndoPerformed>
-		<NothingToUndo>لا شيء للتراجع</NothingToUndo>
-		<InvalidLanguageNameX>{0}: اسم اللغة غير صالح</InvalidLanguageNameX>
-		<UnableToChangeLanguage>غير قادر على تغيير اللغة!</UnableToChangeLanguage>
-		<NumberOfCorrectedWords>{0}:تصحيح عدد الكلمات</NumberOfCorrectedWords>
-		<NumberOfSkippedWords>{0}:تخطي عدد الكلمات</NumberOfSkippedWords>
-		<NumberOfCorrectWords>{0}:عدد من الكلمات الصحيحة</NumberOfCorrectWords>
-		<NumberOfWordsAddedToDictionary>{0}: أضافة عدد من الكلمات إلى القاموس</NumberOfWordsAddedToDictionary>
-		<NumberOfNameHits>{0}:عدد المشاهادات</NumberOfNameHits>
-		<SpellCheck>التدقيق الإملائي</SpellCheck>
-		<BeforeSpellCheck>قبل التدقيق الإملائي</BeforeSpellCheck>
-		<SpellCheckChangedXToY>{التدقيق الإملائي : تم تغيير '{0}' إلى '{1'</SpellCheckChangedXToY>
-		<BeforeAddingTagX>قبل إضافة &lt;{0}&gt; العلامة</BeforeAddingTagX>
-		<TagXAdded>&lt;{0}&gt; العلامات إضيفت</TagXAdded>
-		<LineXOfY>{السطر {0} من {1</LineXOfY>
-		<XLinesDeleted>{0} الأسطر المحذوفة</XLinesDeleted>
-		<BeforeDeletingXLines>قبل حذف {0} الأسطر</BeforeDeletingXLines>
-		<DeleteXLinesPrompt>حذف {0} الأسطر ؟</DeleteXLinesPrompt>
-		<OneLineDeleted>حذف سطر</OneLineDeleted>
-		<BeforeDeletingOneLine>قبل حذف سطر واحد</BeforeDeletingOneLine>
-		<DeleteOneLinePrompt>حذف سطر واحد؟</DeleteOneLinePrompt>
-		<BeforeInsertLine>قبل إدراج سطر</BeforeInsertLine>
-		<LineInserted>السطر أدخل</LineInserted>
-		<BeforeLineUpdatedInListView>قبل السطر المحدث في عرض القائمة</BeforeLineUpdatedInListView>
-		<BeforeSettingFontToNormal>قبل إعداد الخط إلى وضعه الطبيعي</BeforeSettingFontToNormal>
-		<BeforeSplitLine>قبل انقسام السطر</BeforeSplitLine>
-		<LineSplitted>أنقسام السطر</LineSplitted>
-		<BeforeMergeLines>قبل دمج الأسطر</BeforeMergeLines>
-		<LinesMerged>دمج الأسطر</LinesMerged>
-		<BeforeSettingColor>قبل وضع اللون</BeforeSettingColor>
-		<BeforeSettingFontName>قبل تحديد اسم الخط</BeforeSettingFontName>
-		<BeforeTypeWriterEffect>قبل مؤثرات الآلة الكاتبة</BeforeTypeWriterEffect>
-		<BeforeKaraokeEffect>قبل مؤثرات الكاريوكي</BeforeKaraokeEffect>
-		<BeforeImportingDvdSubtitle>DVD قبل إستيراد الترجمة من</BeforeImportingDvdSubtitle>
-		<OpenMatroskaFile>فتح ملفات متروسكا</OpenMatroskaFile>
-		<MatroskaFiles>ملفات متروسكا</MatroskaFiles>
-		<NoSubtitlesFound>لم يعثر على ترجمات</NoSubtitlesFound>
-		<NotAValidMatroskaFileX>{هذا ليس ملف متروسكا صالح : {0</NotAValidMatroskaFileX>
-		<ParsingMatroskaFile>تحليل ملف متروسكا. يرجى الانتظار</ParsingMatroskaFile>
-		<BeforeImportFromMatroskaFile>قبل الترجمة استيراد من ملف متروسكا</BeforeImportFromMatroskaFile>
-		<SubtitleImportedFromMatroskaFile>الترجمة المستوردة من ملف متروسكا</SubtitleImportedFromMatroskaFile>
-		<DropFileXNotAccepted>ملف إسقاط '{0}' غير مقبولة -- الملف كبير جدا</DropFileXNotAccepted>
-		<DropOnlyOneFile>يمكنك إسقاط ملف واحد فقط</DropOnlyOneFile>
-		<BeforeCreateAdjustLines>قبل إنشاء / تعديل الأسطر</BeforeCreateAdjustLines>
-		<OpenAnsiSubtitle>فتح الترجمة</OpenAnsiSubtitle>
-		<BeforeChangeCasing>قبل تغيير غلاف</BeforeChangeCasing>
-		<CasingCompleteMessageNoNames>{عدد الأسطر مع تغيير الغلاف : {0} / {1</CasingCompleteMessageNoNames>
-		<CasingCompleteMessageOnlyNames>{عدد الأسطر مع تغيير أسماء الغلاف : {0} / {1</CasingCompleteMessageOnlyNames>
-		<CasingCompleteMessage>{عدد الأسطر مع تغيير الغلاف : {0} / {1} ، تغيير غلاف لأسماء : {2</CasingCompleteMessage>
-		<BeforeChangeFrameRate>قبل تغيير معدل الإطار</BeforeChangeFrameRate>
-		<FrameRateChangedFromXToY>{الإطار معدل تغير من {0} إلى {1</FrameRateChangedFromXToY>
-		<IdxFileNotFoundWarning>على أية حال؟ VobSub غير موجود!  {0}  استيراد ملف</IdxFileNotFoundWarning>
-		<InvalidVobSubHeader>{0} :العنوان الرأسي ليس ملف صحيح   VobSub</InvalidVobSubHeader>
-		<OpenVobSubFile>ترجمة VobSub (sub/idx) فتح</OpenVobSubFile>
-		<VobSubFiles>VobSub ملفات ترجمة</VobSubFiles>
-		<OpenBluRaySupFile>Blu-ray .sup فتح ملف</OpenBluRaySupFile>
-		<BluRaySupFiles>Blu-ray .sup ملفات</BluRaySupFiles>
-		<BeforeImportingVobSubFile>VobSub قبل استيراد الترجمة</BeforeImportingVobSubFile>
-		<BeforeImportingBluRaySupFile>قبل استيراد بلو راي الملف سوب</BeforeImportingBluRaySupFile>
-		<BeforeImportingBdnXml>XML BDN قبل استيراد ملف</BeforeImportingBdnXml>
-		<BeforeShowSelectedLinesEarlierLater>أسطر عرض مختارة في وقت سابق من قبل / بعد</BeforeShowSelectedLinesEarlierLater>
-		<ShowSelectedLinesEarlierLaterPerformed>مشاهدة في وقت سابق / لاحق يقوم على أسطر مختارة</ShowSelectedLinesEarlierLaterPerformed>
-		<DoubleWordsViaRegEx>{الكلمات المضاعفة  باستخدام التعابير المنطقية {0</DoubleWordsViaRegEx>
-		<BeforeSortX>{قبل الفرز : {0</BeforeSortX>
-		<SortedByX>{مرتبة حسب : {0</SortedByX>
-		<BeforeAutoBalanceSelectedLines>قبل اختيار أسطر التوازن التلقائى</BeforeAutoBalanceSelectedLines>
-		<NumberOfLinesAutoBalancedX>{عدد أسطر متوازنة تلقائى : {0</NumberOfLinesAutoBalancedX>
-		<BeforeRemoveLineBreaksInSelectedLines>قبل إزالة سطر فواصل من اسطر مختارة</BeforeRemoveLineBreaksInSelectedLines>
-		<NumberOfWithRemovedLineBreakX>{عدد الأسطر مع إزالة كسر السطر : {0</NumberOfWithRemovedLineBreakX>
-		<BeforeMultipleReplace>قبل أن يستبدل المضاعف</BeforeMultipleReplace>
-		<NumberOfLinesReplacedX>{استبدال عدد من الأسطر مع النص : {0</NumberOfLinesReplacedX>
-		<NameXAddedToNamesEtcList>أضيف اسم '{0}' إلى أسماء / قائمة الخ</NameXAddedToNamesEtcList>
-		<NameXNotAddedToNamesEtcList>الاسم '{0}' لم يتم إضافة إلى أسماء / قائمة الخ</NameXNotAddedToNamesEtcList>
-		<XLinesSelected>{0} أسطر مختارة</XLinesSelected>
-		<UnicodeMusicSymbolsAnsiWarning>الترجمة تحتوي على ملاحظات الموسيقى يونيكود. سوف إنقاذ باستخدام  ترميز ملف تفقد هذه. تواصل مع حفظ؟</UnicodeMusicSymbolsAnsiWarning>
-		<NegativeTimeWarning>الترجمة تحتوي على رموز الوقت سلبية. تواصل مع حفظ؟</NegativeTimeWarning>
-		<BeforeMergeShortLines>قبل دمج أسطر قصيرة</BeforeMergeShortLines>
-		<BeforeSplitLongLines>قبل أنقسام اسطر طويلة</BeforeSplitLongLines>
-		<MergedShortLinesX>{عدد الخطوط المدمجة : {0</MergedShortLinesX>
-		<BeforeSetMinimumDisplayTimeBetweenParagraphs>قبل الوقت المحدد لعرض الحد الأدنى بين الفقرات</BeforeSetMinimumDisplayTimeBetweenParagraphs>
-		<XMinimumDisplayTimeBetweenParagraphsChanged>{عدد الأسطر بالحد الأدنى لعرض الوقت بين الفقرات تغير: {0</XMinimumDisplayTimeBetweenParagraphsChanged>
-		<BeforeImportText>قبل استيراد نص عادي</BeforeImportText>
-		<TextImported>النص إستورد</TextImported>
-		<BeforePointSynchronization>قبل تزامن النقطة</BeforePointSynchronization>
-		<PointSynchronizationDone>تزامن ذلك النقطة</PointSynchronizationDone>
-		<BeforeTimeCodeImport>قبل إستيراد رموز الوقت</BeforeTimeCodeImport>
-		<TimeCodeImportedFromXY>{0}: {1} رموز وقت إستوردت من</TimeCodeImportedFromXY>
-		<BeforeInsertSubtitleAtVideoPosition>قبل إدراج الترجمة في موقف الفيديو</BeforeInsertSubtitleAtVideoPosition>
-		<BeforeSetStartTimeAndOffsetTheRest>قبل تعيين وقت البدء ووازن البقية</BeforeSetStartTimeAndOffsetTheRest>
-		<BeforeSetEndAndVideoPosition>قبل نهاية الوقت المحدد في موقف الفيديو وبدء حساب تلقائى</BeforeSetEndAndVideoPosition>
-		<ContinueWithCurrentSpellCheck>تواصل مع التدقيق الإملائي الحالي؟</ContinueWithCurrentSpellCheck>
-		<CharactersPerSecond>{0:0.00} : حرف / ثانية</CharactersPerSecond>
-		<GetFrameRateFromVideoFile>الحصول على معدل الإطار من ملف الفيديو</GetFrameRateFromVideoFile>
-		<NetworkMessage>{0} ({1}): {2} : رسالة جديدة</NetworkMessage>
-		<NetworkUpdate>{0} ({1}): Index={2}, Text={3}:سطر محدث</NetworkUpdate>
-		<NetworkInsert>{0} ({1}): Index={2}, Text={3}:إدراج سطر</NetworkInsert>
-		<NetworkDelete>{0} ({1}): Index={2} :حذف السطر</NetworkDelete>
-		<NetworkNewUser>{0} ({1}) :مستخدم جديد</NetworkNewUser>
-		<NetworkByeUser>{0} ({1}) وداعا</NetworkByeUser>
-		<NetworkUnableToConnectToServer>{غير قادر على الاتصال بالملقم : {0</NetworkUnableToConnectToServer>
-		<UserAndAction>المستخدم / عمل</UserAndAction>
-		<NetworkMode>نمط ربط شبكات</NetworkMode>
-		<XStartedSessionYAtZ>{0}: {بدأت جلسة{1} فى {2</XStartedSessionYAtZ>
-		<SpellChekingViaWordXLineYOfX>{التدقيق الإملائي باستخدام كلمة {0} - سطر {1} / {2</SpellChekingViaWordXLineYOfX>
-		<UnableToStartWord>غير قادر على بدء نص مايكروسوفت</UnableToStartWord>
-		<SpellCheckAbortedXCorrections>التدقيق الإملائي إحبط. {0} تعديل الأسطر</SpellCheckAbortedXCorrections>
-		<SpellCheckCompletedXCorrections>التدقيق الإملائي إكتمل. {0} تعديل الأسطر</SpellCheckCompletedXCorrections>
-		<OpenOtherSubtitle>أفتح ترجمة أخرى</OpenOtherSubtitle>
-		<BeforeToggleDialogueDashes/>
-		<ExportPlainTextAs/>
-		<TextFiles/>
-	</Main>
-	<MatroskaSubtitleChooser>
-		<Title>اختيار الترجمة من ملف متروسكا</Title>
-		<PleaseChoose>العثور على أكثر من ترجمة - يرجى الاختيار</PleaseChoose>
-		<TrackXLanguageYTypeZ>{المسار {0} - {1} - اللغة : {2} - اكتب : {3</TrackXLanguageYTypeZ>
-	</MatroskaSubtitleChooser>
-	<MergedShortLines>
-		<Title>دمج سطور قصيرة</Title>
-		<MaximumCharacters>الحد الأقصى للأحرف في فقرة واحدة</MaximumCharacters>
-		<MaximumMillisecondsBetween>أقصى ميلي ثانية بين السطور</MaximumMillisecondsBetween>
-		<NumberOfMergesX>{دمج عدد من : {0</NumberOfMergesX>
-		<LineNumber># سطر</LineNumber>
-		<MergedText>النص المدمج</MergedText>
-		<OnlyMergeContinuationLines>دمج أسطر فقط باستمرار</OnlyMergeContinuationLines>
-	</MergedShortLines>
-	<MultipleReplace>
-		<Title>استبدال متعددة</Title>
-		<FindWhat>العثور على ماذا</FindWhat>
-		<ReplaceWith>استبدال</ReplaceWith>
-		<Normal>طبيعي</Normal>
-		<CaseSensitive>غلاف رقيق</CaseSensitive>
-		<RegularExpression>التعبير المنتظم</RegularExpression>
-		<LineNumber>#سطر</LineNumber>
-		<Before>قبل</Before>
-		<After>بعد</After>
-		<LinesFoundX>{العثور على أسطر: {0</LinesFoundX>
-		<Delete>حذف</Delete>
-		<Add>إضافة</Add>
-		<Update>التحديث</Update>
-		<Enabled>اتاحة</Enabled>
-		<SearchType>نوع البحث</SearchType>
-	</MultipleReplace>
-	<NetworkChat>
-		<Title>الدردشة</Title>
-		<Send>إرسال</Send>
-	</NetworkChat>
-	<NetworkJoin>
-		<Title>انضمام لجلسة الشبكة</Title>
-		<Information>انضمام للجلسة الحالية فيها أشخاص متعددة
+        <SubtitleAppendPromptTitle>Append subtitle</SubtitleAppendPromptTitle>
+        <OpenSubtitleToAppend>Open subtitle to append...</OpenSubtitleToAppend>
+        <AppendViaVisualSyncTitle>Visual sync - append second part of subtitle</AppendViaVisualSyncTitle>
+        <AppendSynchronizedSubtitlePrompt>Append this synchronized subtitle?</AppendSynchronizedSubtitlePrompt>
+        <BeforeAppend>Before append</BeforeAppend>
+        <SubtitleAppendedX>Subtitle appended: {0}</SubtitleAppendedX>
+        <SubtitleNotAppended>Subtitle NOT appended!</SubtitleNotAppended>
+        <GoogleTranslate>Google translate</GoogleTranslate>
+        <MicrosoftTranslate>Microsoft translate</MicrosoftTranslate>
+        <BeforeGoogleTranslation>Before Google translation</BeforeGoogleTranslation>
+        <SelectedLinesTranslated>Selected lines translated</SelectedLinesTranslated>
+        <SubtitleTranslated>Subtitle translated</SubtitleTranslated>
+        <TranslateSwedishToDanish>Translate currently loaded Swedish subtitle to Danish</TranslateSwedishToDanish>
+        <TranslateSwedishToDanishWarning>Translate currently loaded SWEDISH (are you sure it's Swedish?) subtitle to Danish?</TranslateSwedishToDanishWarning>
+        <TranslatingViaNikseDkMt>ترجمة خاصة www.nikse.dk/mt...</TranslatingViaNikseDkMt>
+        <BeforeSwedishToDanishTranslation>قبل الترجمة السويدية الدنماركية</BeforeSwedishToDanishTranslation>
+        <TranslationFromSwedishToDanishComplete>الترجمة من اللغة السويدية لإكمال الدنماركية</TranslationFromSwedishToDanishComplete>
+        <TranslationFromSwedishToDanishFailed>فشلت الترجمة من اللغة السويدية إلى دانماركي</TranslationFromSwedishToDanishFailed>
+        <BeforeUndo>قبل التراجع</BeforeUndo>
+        <UndoPerformed>التراجع عن التنفيذ</UndoPerformed>
+        <NothingToUndo>لا شيء للتراجع</NothingToUndo>
+        <InvalidLanguageNameX>{0}: اسم اللغة غير صالح</InvalidLanguageNameX>
+        <UnableToChangeLanguage>غير قادر على تغيير اللغة!</UnableToChangeLanguage>
+        <NumberOfCorrectedWords>{0}:تصحيح عدد الكلمات</NumberOfCorrectedWords>
+        <NumberOfSkippedWords>{0}:تخطي عدد الكلمات</NumberOfSkippedWords>
+        <NumberOfCorrectWords>{0}:عدد من الكلمات الصحيحة</NumberOfCorrectWords>
+        <NumberOfWordsAddedToDictionary>{0}: أضافة عدد من الكلمات إلى القاموس</NumberOfWordsAddedToDictionary>
+        <NumberOfNameHits>{0}:عدد المشاهادات</NumberOfNameHits>
+        <SpellCheck>التدقيق الإملائي</SpellCheck>
+        <BeforeSpellCheck>قبل التدقيق الإملائي</BeforeSpellCheck>
+        <SpellCheckChangedXToY>{التدقيق الإملائي : تم تغيير '{0}' إلى '{1'</SpellCheckChangedXToY>
+        <BeforeAddingTagX>قبل إضافة &lt;{0}&gt; العلامة</BeforeAddingTagX>
+        <TagXAdded>&lt;{0}&gt; العلامات إضيفت</TagXAdded>
+        <LineXOfY>{السطر {0} من {1</LineXOfY>
+        <XLinesDeleted>{0} الأسطر المحذوفة</XLinesDeleted>
+        <BeforeDeletingXLines>قبل حذف {0} الأسطر</BeforeDeletingXLines>
+        <DeleteXLinesPrompt>حذف {0} الأسطر ؟</DeleteXLinesPrompt>
+        <OneLineDeleted>حذف سطر</OneLineDeleted>
+        <BeforeDeletingOneLine>قبل حذف سطر واحد</BeforeDeletingOneLine>
+        <DeleteOneLinePrompt>حذف سطر واحد؟</DeleteOneLinePrompt>
+        <BeforeInsertLine>قبل إدراج سطر</BeforeInsertLine>
+        <LineInserted>السطر أدخل</LineInserted>
+        <BeforeLineUpdatedInListView>قبل السطر المحدث في عرض القائمة</BeforeLineUpdatedInListView>
+        <BeforeSettingFontToNormal>قبل إعداد الخط إلى وضعه الطبيعي</BeforeSettingFontToNormal>
+        <BeforeSplitLine>قبل انقسام السطر</BeforeSplitLine>
+        <LineSplitted>أنقسام السطر</LineSplitted>
+        <BeforeMergeLines>قبل دمج الأسطر</BeforeMergeLines>
+        <LinesMerged>دمج الأسطر</LinesMerged>
+        <BeforeSettingColor>قبل وضع اللون</BeforeSettingColor>
+        <BeforeSettingFontName>قبل تحديد اسم الخط</BeforeSettingFontName>
+        <BeforeTypeWriterEffect>قبل مؤثرات الآلة الكاتبة</BeforeTypeWriterEffect>
+        <BeforeKaraokeEffect>قبل مؤثرات الكاريوكي</BeforeKaraokeEffect>
+        <BeforeImportingDvdSubtitle>DVD قبل إستيراد الترجمة من</BeforeImportingDvdSubtitle>
+        <OpenMatroskaFile>فتح ملفات متروسكا</OpenMatroskaFile>
+        <MatroskaFiles>ملفات متروسكا</MatroskaFiles>
+        <NoSubtitlesFound>لم يعثر على ترجمات</NoSubtitlesFound>
+        <NotAValidMatroskaFileX>{هذا ليس ملف متروسكا صالح : {0</NotAValidMatroskaFileX>
+        <ParsingMatroskaFile>تحليل ملف متروسكا. يرجى الانتظار</ParsingMatroskaFile>
+        <BeforeImportFromMatroskaFile>قبل الترجمة استيراد من ملف متروسكا</BeforeImportFromMatroskaFile>
+        <SubtitleImportedFromMatroskaFile>الترجمة المستوردة من ملف متروسكا</SubtitleImportedFromMatroskaFile>
+        <DropFileXNotAccepted>ملف إسقاط '{0}' غير مقبولة -- الملف كبير جدا</DropFileXNotAccepted>
+        <DropOnlyOneFile>يمكنك إسقاط ملف واحد فقط</DropOnlyOneFile>
+        <BeforeCreateAdjustLines>قبل إنشاء / تعديل الأسطر</BeforeCreateAdjustLines>
+        <OpenAnsiSubtitle>فتح الترجمة</OpenAnsiSubtitle>
+        <BeforeChangeCasing>قبل تغيير غلاف</BeforeChangeCasing>
+        <CasingCompleteMessageNoNames>{عدد الأسطر مع تغيير الغلاف : {0} / {1</CasingCompleteMessageNoNames>
+        <CasingCompleteMessageOnlyNames>{عدد الأسطر مع تغيير أسماء الغلاف : {0} / {1</CasingCompleteMessageOnlyNames>
+        <CasingCompleteMessage>{عدد الأسطر مع تغيير الغلاف : {0} / {1} ، تغيير غلاف لأسماء : {2</CasingCompleteMessage>
+        <BeforeChangeFrameRate>قبل تغيير معدل الإطار</BeforeChangeFrameRate>
+        <FrameRateChangedFromXToY>{الإطار معدل تغير من {0} إلى {1</FrameRateChangedFromXToY>
+        <IdxFileNotFoundWarning>على أية حال؟ VobSub غير موجود!  {0}  استيراد ملف</IdxFileNotFoundWarning>
+        <InvalidVobSubHeader>{0} :العنوان الرأسي ليس ملف صحيح   VobSub</InvalidVobSubHeader>
+        <OpenVobSubFile>ترجمة VobSub (sub/idx) فتح</OpenVobSubFile>
+        <VobSubFiles>VobSub ملفات ترجمة</VobSubFiles>
+        <OpenBluRaySupFile>Blu-ray .sup فتح ملف</OpenBluRaySupFile>
+        <BluRaySupFiles>Blu-ray .sup ملفات</BluRaySupFiles>
+        <BeforeImportingVobSubFile>VobSub قبل استيراد الترجمة</BeforeImportingVobSubFile>
+        <BeforeImportingBluRaySupFile>قبل استيراد بلو راي الملف سوب</BeforeImportingBluRaySupFile>
+        <BeforeImportingBdnXml>XML BDN قبل استيراد ملف</BeforeImportingBdnXml>
+        <BeforeShowSelectedLinesEarlierLater>أسطر عرض مختارة في وقت سابق من قبل / بعد</BeforeShowSelectedLinesEarlierLater>
+        <ShowSelectedLinesEarlierLaterPerformed>مشاهدة في وقت سابق / لاحق يقوم على أسطر مختارة</ShowSelectedLinesEarlierLaterPerformed>
+        <DoubleWordsViaRegEx>{الكلمات المضاعفة  باستخدام التعابير المنطقية {0</DoubleWordsViaRegEx>
+        <BeforeSortX>{قبل الفرز : {0</BeforeSortX>
+        <SortedByX>{مرتبة حسب : {0</SortedByX>
+        <BeforeAutoBalanceSelectedLines>قبل اختيار أسطر التوازن التلقائى</BeforeAutoBalanceSelectedLines>
+        <NumberOfLinesAutoBalancedX>{عدد أسطر متوازنة تلقائى : {0</NumberOfLinesAutoBalancedX>
+        <BeforeRemoveLineBreaksInSelectedLines>قبل إزالة سطر فواصل من اسطر مختارة</BeforeRemoveLineBreaksInSelectedLines>
+        <NumberOfWithRemovedLineBreakX>{عدد الأسطر مع إزالة كسر السطر : {0</NumberOfWithRemovedLineBreakX>
+        <BeforeMultipleReplace>قبل أن يستبدل المضاعف</BeforeMultipleReplace>
+        <NumberOfLinesReplacedX>{استبدال عدد من الأسطر مع النص : {0</NumberOfLinesReplacedX>
+        <NameXAddedToNamesEtcList>أضيف اسم '{0}' إلى أسماء / قائمة الخ</NameXAddedToNamesEtcList>
+        <NameXNotAddedToNamesEtcList>الاسم '{0}' لم يتم إضافة إلى أسماء / قائمة الخ</NameXNotAddedToNamesEtcList>
+        <XLinesSelected>{0} أسطر مختارة</XLinesSelected>
+        <UnicodeMusicSymbolsAnsiWarning>الترجمة تحتوي على ملاحظات الموسيقى يونيكود. سوف إنقاذ باستخدام  ترميز ملف تفقد هذه. تواصل مع حفظ؟</UnicodeMusicSymbolsAnsiWarning>
+        <NegativeTimeWarning>الترجمة تحتوي على رموز الوقت سلبية. تواصل مع حفظ؟</NegativeTimeWarning>
+        <BeforeMergeShortLines>قبل دمج أسطر قصيرة</BeforeMergeShortLines>
+        <BeforeSplitLongLines>قبل أنقسام اسطر طويلة</BeforeSplitLongLines>
+        <MergedShortLinesX>{عدد الخطوط المدمجة : {0</MergedShortLinesX>
+        <BeforeSetMinimumDisplayTimeBetweenParagraphs>قبل الوقت المحدد لعرض الحد الأدنى بين الفقرات</BeforeSetMinimumDisplayTimeBetweenParagraphs>
+        <XMinimumDisplayTimeBetweenParagraphsChanged>{عدد الأسطر بالحد الأدنى لعرض الوقت بين الفقرات تغير: {0</XMinimumDisplayTimeBetweenParagraphsChanged>
+        <BeforeImportText>قبل استيراد نص عادي</BeforeImportText>
+        <TextImported>النص إستورد</TextImported>
+        <BeforePointSynchronization>قبل تزامن النقطة</BeforePointSynchronization>
+        <PointSynchronizationDone>تزامن ذلك النقطة</PointSynchronizationDone>
+        <BeforeTimeCodeImport>قبل إستيراد رموز الوقت</BeforeTimeCodeImport>
+        <TimeCodeImportedFromXY>{0}: {1} رموز وقت إستوردت من</TimeCodeImportedFromXY>
+        <BeforeInsertSubtitleAtVideoPosition>قبل إدراج الترجمة في موقف الفيديو</BeforeInsertSubtitleAtVideoPosition>
+        <BeforeSetStartTimeAndOffsetTheRest>قبل تعيين وقت البدء ووازن البقية</BeforeSetStartTimeAndOffsetTheRest>
+        <BeforeSetEndAndVideoPosition>قبل نهاية الوقت المحدد في موقف الفيديو وبدء حساب تلقائى</BeforeSetEndAndVideoPosition>
+        <ContinueWithCurrentSpellCheck>تواصل مع التدقيق الإملائي الحالي؟</ContinueWithCurrentSpellCheck>
+        <CharactersPerSecond>{0:0.00} : حرف / ثانية</CharactersPerSecond>
+        <GetFrameRateFromVideoFile>الحصول على معدل الإطار من ملف الفيديو</GetFrameRateFromVideoFile>
+        <NetworkMessage>{0} ({1}): {2} : رسالة جديدة</NetworkMessage>
+        <NetworkUpdate>{0} ({1}): Index={2}, Text={3}:سطر محدث</NetworkUpdate>
+        <NetworkInsert>{0} ({1}): Index={2}, Text={3}:إدراج سطر</NetworkInsert>
+        <NetworkDelete>{0} ({1}): Index={2} :حذف السطر</NetworkDelete>
+        <NetworkNewUser>{0} ({1}) :مستخدم جديد</NetworkNewUser>
+        <NetworkByeUser>{0} ({1}) وداعا</NetworkByeUser>
+        <NetworkUnableToConnectToServer>{غير قادر على الاتصال بالملقم : {0</NetworkUnableToConnectToServer>
+        <UserAndAction>المستخدم / عمل</UserAndAction>
+        <NetworkMode>نمط ربط شبكات</NetworkMode>
+        <XStartedSessionYAtZ>{0}: {بدأت جلسة{1} فى {2</XStartedSessionYAtZ>
+        <SpellChekingViaWordXLineYOfX>{التدقيق الإملائي باستخدام كلمة {0} - سطر {1} / {2</SpellChekingViaWordXLineYOfX>
+        <UnableToStartWord>غير قادر على بدء نص مايكروسوفت</UnableToStartWord>
+        <SpellCheckAbortedXCorrections>التدقيق الإملائي إحبط. {0} تعديل الأسطر</SpellCheckAbortedXCorrections>
+        <SpellCheckCompletedXCorrections>التدقيق الإملائي إكتمل. {0} تعديل الأسطر</SpellCheckCompletedXCorrections>
+        <OpenOtherSubtitle>أفتح ترجمة أخرى</OpenOtherSubtitle>
+        <BeforeToggleDialogueDashes/>
+        <ExportPlainTextAs/>
+        <TextFiles/>
+    </Main>
+    <MatroskaSubtitleChooser>
+        <Title>اختيار الترجمة من ملف متروسكا</Title>
+        <PleaseChoose>العثور على أكثر من ترجمة - يرجى الاختيار</PleaseChoose>
+        <TrackXLanguageYTypeZ>{المسار {0} - {1} - اللغة : {2} - اكتب : {3</TrackXLanguageYTypeZ>
+    </MatroskaSubtitleChooser>
+    <MergedShortLines>
+        <Title>دمج سطور قصيرة</Title>
+        <MaximumCharacters>الحد الأقصى للأحرف في فقرة واحدة</MaximumCharacters>
+        <MaximumMillisecondsBetween>أقصى ميلي ثانية بين السطور</MaximumMillisecondsBetween>
+        <NumberOfMergesX>{دمج عدد من : {0</NumberOfMergesX>
+        <LineNumber># سطر</LineNumber>
+        <MergedText>النص المدمج</MergedText>
+        <OnlyMergeContinuationLines>دمج أسطر فقط باستمرار</OnlyMergeContinuationLines>
+    </MergedShortLines>
+    <MultipleReplace>
+        <Title>استبدال متعددة</Title>
+        <FindWhat>العثور على ماذا</FindWhat>
+        <ReplaceWith>استبدال</ReplaceWith>
+        <Normal>طبيعي</Normal>
+        <CaseSensitive>غلاف رقيق</CaseSensitive>
+        <RegularExpression>التعبير المنتظم</RegularExpression>
+        <LineNumber>#سطر</LineNumber>
+        <Before>قبل</Before>
+        <After>بعد</After>
+        <LinesFoundX>{العثور على أسطر: {0</LinesFoundX>
+        <Delete>حذف</Delete>
+        <Add>إضافة</Add>
+        <Update>التحديث</Update>
+        <Enabled>اتاحة</Enabled>
+        <SearchType>نوع البحث</SearchType>
+    </MultipleReplace>
+    <NetworkChat>
+        <Title>الدردشة</Title>
+        <Send>إرسال</Send>
+    </NetworkChat>
+    <NetworkJoin>
+        <Title>انضمام لجلسة الشبكة</Title>
+        <Information>انضمام للجلسة الحالية فيها أشخاص متعددة
 ويمكن تحريرها في ملف الترجمة نفسه</Information>
-		<Join>انضم</Join>
-	</NetworkJoin>
-	<NetworkLogAndInfo>
-		<Title>معلومات وسجل دورة الشبكة</Title>
-		<Log>:السجل</Log>
-	</NetworkLogAndInfo>
-	<NetworkStart>
-		<Title>بدء جلسة الشبكة</Title>
-		<ConnectionTo>...{الاتصال الى {0</ConnectionTo>
-		<Information>بدء الجلسة الجديدة فيها أشخاص متعددة
+        <Join>انضم</Join>
+    </NetworkJoin>
+    <NetworkLogAndInfo>
+        <Title>معلومات وسجل دورة الشبكة</Title>
+        <Log>:السجل</Log>
+    </NetworkLogAndInfo>
+    <NetworkStart>
+        <Title>بدء جلسة الشبكة</Title>
+        <ConnectionTo>...{الاتصال الى {0</ConnectionTo>
+        <Information>بدء الجلسة الجديدة فيها أشخاص متعددة
 ويمكن تحريرها في ملف الترجمة نفسه</Information>
-		<Start>أبدء</Start>
-	</NetworkStart>
-	<RemoveTextFromHearImpaired>
-		<Title>إزالة النص لضعاف السمع</Title>
-		<RemoveTextConditions>إزالة شروط النص</RemoveTextConditions>
-		<RemoveTextBetween>إزالة شروط النص</RemoveTextBetween>
-		<SquareBrackets>'[' و ']'</SquareBrackets>
-		<Brackets>'{' و '}'</Brackets>
-		<Parentheses>'(' و ')'</Parentheses>
-		<QuestionMarks>'?' و '?'</QuestionMarks>
-		<And>و</And>
-		<RemoveTextBeforeColon>(':') إزالة النص قبل النقطتان</RemoveTextBeforeColon>
-		<OnlyIfTextIsUppercase>إلا إذا كان نص أحرف كبيرة</OnlyIfTextIsUppercase>
-		<OnlyIfInSeparateLine>إلا إذا كان في سطر منفصل</OnlyIfInSeparateLine>
-		<LineNumber>#سطر</LineNumber>
-		<Before>قبل</Before>
-		<After>بعد</After>
-		<LinesFoundX>{العثور على الأسطر : {0</LinesFoundX>
-		<RemoveTextIfContains>إزالة النص إذا كان يحتوي على :</RemoveTextIfContains>
-		<RemoveInterjections>(shh, hmm, etc.)إزالة مداخلات</RemoveInterjections>
-		<EditInterjections>...تحرير</EditInterjections>
-	</RemoveTextFromHearImpaired>
-	<ReplaceDialog>
-		<Title>استبدل</Title>
-		<FindWhat>العثور على ما :</FindWhat>
-		<Normal>طبيعى</Normal>
-		<CaseSensitive>غلاف رقيق</CaseSensitive>
-		<RegularExpression>الترتيب المنتظم</RegularExpression>
-		<ReplaceWith>إستبدل به</ReplaceWith>
-		<Find>بحث</Find>
-		<Replace>إستبدل</Replace>
-		<ReplaceAll>إستبدل الكل</ReplaceAll>
-	</ReplaceDialog>
-	<SetMinimumDisplayTimeBetweenParagraphs>
-		<Title>تعيين عرض الوقت الأدنى بين الفقرات</Title>
-		<PreviewLinesModifiedX>{المعاينة -- تعديل الفقرتين : {0</PreviewLinesModifiedX>
-		<ShowOnlyModifiedLines>عرض الأسطر المعدلة فقط</ShowOnlyModifiedLines>
-		<MinimumMillisecondsBetweenParagraphs>الحد الأدنى ميلي ثانية بين السطور</MinimumMillisecondsBetweenParagraphs>
-	</SetMinimumDisplayTimeBetweenParagraphs>
-	<SetSyncPoint>
-		<Title>{تعيين نقطة مزامنة السطر {0</Title>
-		<SyncPointTimeCode>مزامنة الوقت رمز نقطة</SyncPointTimeCode>
-		<ThreeSecondsBack>&lt;&lt; 3 ثوانى</ThreeSecondsBack>
-		<HalfASecondBack>&lt;&lt; ½ ثانية</HalfASecondBack>
-		<HalfASecondForward>½ ثانية &gt;&gt;</HalfASecondForward>
-		<ThreeSecondsForward>3 ثوانى &gt;&gt;</ThreeSecondsForward>
-	</SetSyncPoint>
-	<Settings>
-		<Title>إعدادات</Title>
-		<General>عام</General>
-		<Toolbar>شريط الأدوات</Toolbar>
-		<VideoPlayer>جهاز عرض فيديو</VideoPlayer>
-		<WaveformAndSpectrogram>شكل الموجة / الفيديو</WaveformAndSpectrogram>
-		<Tools>ادوات</Tools>
-		<WordLists>قوائم الكلمة</WordLists>
-		<SsaStyle>SSA طراز</SsaStyle>
-		<Proxy>الوكيل</Proxy>
-		<ShowToolBarButtons>عرض أزرار شريط الادوات</ShowToolBarButtons>
-		<New>جديد</New>
-		<Open>فتح</Open>
-		<Save>حفظ</Save>
-		<SaveAs>حفظ جديد</SaveAs>
-		<Find>بحث</Find>
-		<Replace>استبدل</Replace>
-		<VisualSync>مزامنة الفيديو</VisualSync>
-		<SpellCheck>التدقيق الإملائي</SpellCheck>
-		<SettingsName>إعدادات</SettingsName>
-		<Help>مساعدة</Help>
-		<ShowFrameRate>عرض معدل الإطار في شريط الأدوات</ShowFrameRate>
-		<DefaultFrameRate>معدل الإطار الافتراضي</DefaultFrameRate>
-		<DefaultFileEncoding>ملف الترميز الافتراضي</DefaultFileEncoding>
-		<AutoDetectAnsiEncoding>ANSI  تلقائى كشف الترميز</AutoDetectAnsiEncoding>
-		<SubtitleLineMaximumLength>سطر واحد كحد أقصى. طول</SubtitleLineMaximumLength>
-		<AutoWrapWhileTyping>التفاف أثناء الكتابة تلقائي</AutoWrapWhileTyping>
-		<SubtitleFont>خط الترجمة</SubtitleFont>
-		<SubtitleFontSize>حجم خط الترجمة</SubtitleFontSize>
-		<SubtitleBold>كثيف</SubtitleBold>
-		<SubtitleFontColor>لون خط الترجمة</SubtitleFontColor>
-		<SubtitleBackgroundColor>لون خلفية الترجمة</SubtitleBackgroundColor>
-		<SpellChecker>المدقق الإملائي</SpellChecker>
-		<RememberRecentFiles>(تذكر الملفات الأخيرة (للفتح</RememberRecentFiles>
-		<StartWithLastFileLoaded>يبدأ تحميل الملف الأخير</StartWithLastFileLoaded>
-		<RememberSelectedLine>تذكر السطر المحدد</RememberSelectedLine>
-		<RememberPositionAndSize>تذكر موقع وحجم نافذة رئيسي</RememberPositionAndSize>
-		<StartInSourceView>تبدأ في عرض المصدر</StartInSourceView>
-		<RemoveBlankLinesWhenOpening>إزالة الأسطر الفارغة عند فتح الترجمة</RemoveBlankLinesWhenOpening>
-		<ShowLineBreaksAs>تظهر فواصل الأسطر في عرض القائمة على النحو</ShowLineBreaksAs>
-		<MainListViewDoubleClickAction>نقرا مزدوجا فوق على الخط الرئيسي في إطار عرض قائمة</MainListViewDoubleClickAction>
-		<MainListViewNothing>لا شيء</MainListViewNothing>
-		<MainListViewVideoGoToPositionAndPause>انتقل إلى الفيديو وتوقف</MainListViewVideoGoToPositionAndPause>
-		<MainListViewVideoGoToPositionAndPlay>انتقل إلى الفيديو وشغل</MainListViewVideoGoToPositionAndPlay>
-		<MainListViewEditText>انتقل إلى مربع تحرير النص</MainListViewEditText>
-		<AutoBackup>نسخ احتياطي تلقائي</AutoBackup>
-		<AutoBackupEveryMinute>كل دقيقة</AutoBackupEveryMinute>
-		<AutoBackupEveryFiveMinutes>كل خمسة دقائق</AutoBackupEveryFiveMinutes>
-		<AutoBackupEveryFifteenMinutes>كل خمسة عشر دقيقة</AutoBackupEveryFifteenMinutes>
-		<AllowEditOfOriginalSubtitle>السماح لتحرير الترجمة الأصلية</AllowEditOfOriginalSubtitle>
-		<PromptDeleteLines>حثة ليحذف السطور</PromptDeleteLines>
-		<VideoEngine>محرك فيديو</VideoEngine>
-		<DirectShow>عرض مباشر</DirectShow>
-		<DirectShowDescription>quartz.dll in system32 folder</DirectShowDescription>
-		<ManagedDirectX>Managed DirectX</ManagedDirectX>
-		<ManagedDirectXDescription>Microsoft.DirectX الصوت والفيديو التشغيل مرة أخرى -- NET رمز المدارة من دايركت</ManagedDirectXDescription>
-		<MPlayer>MPlayer</MPlayer>
-		<MPlayerDescription>MPlayer2/Mplayer</MPlayerDescription>
-		<VlcMediaPlayer>VLC ميديا ​​بلاير</VlcMediaPlayer>
-		<VlcMediaPlayerDescription>libvlc.dll from VLC Media Player 1.1.0 or newer</VlcMediaPlayerDescription>
-		<ShowStopButton>عرض زر توقف</ShowStopButton>
-		<DefaultVolume>حجم  افتراضى</DefaultVolume>
-		<VolumeNotes>0 لا صوت ، 100 هو أعلى حجم</VolumeNotes>
-		<PreviewFontSize>معاينة حجم خط الترجمة</PreviewFontSize>
-		<MainWindowVideoControls>نافذة ضوابط الفيديو الرئيسية</MainWindowVideoControls>
-		<CustomSearchTextAndUrl>مخصص للتسجيل والبحث عن النص</CustomSearchTextAndUrl>
-		<WaveFormAppearance>ظهور شكل الموجة</WaveFormAppearance>
-		<WaveFormGridColor>شبكة الألوان</WaveFormGridColor>
-		<WaveFormShowGridLines>عرض خطوط الشبكة</WaveFormShowGridLines>
-		<ReverseMouseWheelScrollDirection/>
-		<WaveFormColor>اللون</WaveFormColor>
-		<WaveFormSelectedColor>اختيار اللون</WaveFormSelectedColor>
-		<WaveFormBackgroundColor>اللون الخلفي</WaveFormBackgroundColor>
-		<WaveFormTextColor>لون النص</WaveFormTextColor>
-		<WaveformAndSpectrogramsFolderEmpty>فارغة 'فيديو' والمجلدات 'الفيديو'</WaveformAndSpectrogramsFolderEmpty>
-		<WaveformAndSpectrogramsFolderInfo>('الطول الموجي" والمجلدات "فيديو' يحتوي على {0} ملفات ({} 1:0.00 ميجابايت</WaveformAndSpectrogramsFolderInfo>
-		<Spectrogram>الفيديو</Spectrogram>
-		<GenerateSpectrogram>توليد صورة فيديو</GenerateSpectrogram>
-		<SpectrogramAppearance>ظهور صورة فيديو</SpectrogramAppearance>
-		<SpectrogramOneColorGradient>تدرج لون واحد</SpectrogramOneColorGradient>
-		<SpectrogramClassic>كلاسيكي</SpectrogramClassic>
-		<SubStationAlphaStyle>Sub مركز ألفا نمط</SubStationAlphaStyle>
-		<ChooseFont>اختيار الخط</ChooseFont>
-		<ChooseColor>اختيار اللون</ChooseColor>
-		<Example>مثال</Example>
-		<Testing123>...الاختبار 123</Testing123>
-		<Language>لغة</Language>
-		<NamesIgnoreLists>(أسماء / قائمة التجاهل (غلاف رقيق</NamesIgnoreLists>
-		<AddNameEtc>أضف أسم</AddNameEtc>
-		<AddWord>إضافة كلمة</AddWord>
-		<Remove>إزالة</Remove>
-		<AddPair>أضف زوجى</AddPair>
-		<UserWordList>قائمة المستخدم كلمة</UserWordList>
-		<OcrFixList>OCR إصلاح قائمة</OcrFixList>
-		<Location>الموقع</Location>
-		<UseOnlineNamesEtc>الخ xml استخدام الانترنت أسماء ملف</UseOnlineNamesEtc>
-		<WordAddedX>{أضاف الكلمة : {0</WordAddedX>
-		<WordAlreadyExists>الكلمة موجودة بالفعل</WordAlreadyExists>
-		<WordNotFound>لم يتم العثور على الكلمة</WordNotFound>
-		<RemoveX>إزالة {0}؟</RemoveX>
-		<CannotUpdateNamesEtcOnline>Etc.xml! لا يمكن تحديث الأسماء على الانترنت</CannotUpdateNamesEtcOnline>
-		<ProxyServerSettings>إعدادات خادم الوكيل</ProxyServerSettings>
-		<ProxyAddress>عنوان الوكيل</ProxyAddress>
-		<ProxyAuthentication>التحقق</ProxyAuthentication>
-		<ProxyUserName>اسم المستخدم</ProxyUserName>
-		<ProxyPassword>كلمة السر</ProxyPassword>
-		<ProxyDomain>نطاق</ProxyDomain>
-		<PlayXSecondsAndBack>هوا X ثوانى والعودة ، X تشغيل</PlayXSecondsAndBack>
-		<StartSceneIndex>بداية فقرة مشهد</StartSceneIndex>
-		<EndSceneIndex>نهاية فقرة مشهد</EndSceneIndex>
-		<FirstPlusX>{أولاً + {0</FirstPlusX>
-		<LastMinusX>{أولاً - {0</LastMinusX>
-		<FixCommonerrors>إصلاح الأخطاء الشائعة</FixCommonerrors>
-		<MergeLinesShorterThan>دمج أسطر أقصر من</MergeLinesShorterThan>
-		<MusicSymbol>رمز موسيقى</MusicSymbol>
-		<MusicSymbolsToReplace>(رموز الموسيقى لتحل محل (مساحة منفصلة</MusicSymbolsToReplace>
-		<FixCommonOcrErrorsUseHardcodedRules>أيضا استخدام قواعد ضمنية OCR -- تصحيح الأخطاء الشائعة</FixCommonOcrErrorsUseHardcodedRules>
-		<Shortcuts>اختصارات</Shortcuts>
-		<Shortcut>الاختصار</Shortcut>
-		<Control>Control</Control>
-		<Alt>Alt</Alt>
-		<Shift>Shift</Shift>
-		<Key>مفتاح</Key>
-		<TextBox>مربع النص</TextBox>
-		<UpdateShortcut>التحديث</UpdateShortcut>
-		<ShortcutIsNotValid>{الاختصار غير صالح : {0</ShortcutIsNotValid>
-		<ToggleDockUndockOfVideoControls>تبديل حوض / إرساء ضوابط الفيديو</ToggleDockUndockOfVideoControls>
-		<AdjustViaEndAutoStartAndGoToNext>عدل عن طريق موقع النهاية وإذهب إلى التالى</AdjustViaEndAutoStartAndGoToNext>
-		<AdjustSetStartAutoDurationAndGoToNext/>
-		<AdjustSelected100MsForward/>
-		<AdjustSelected100MsBack/>
-		<GoToNext/>
-		<GoToPrevious/>
-		<ToggleDialogueDashes/>
-		<VerticalZoom/>
-		<WaveformSeekSilenceForward/>
-		<WaveformSeekSilenceBack/>
-		<GoBack100Milliseconds/>
-		<GoForward100Milliseconds/>
-		<GoBack500Milliseconds/>
-		<GoForward500Milliseconds/>
-		<Fullscreen/>
-	</Settings>
-	<ShowEarlierLater>
-		<Title>عرض الأسطر المحددة في وقت سابق / لاحق</Title>
-		<TitleAll>عرض كل الأسطر في وقت سابق / لاحق</TitleAll>
-		<ShowEarlier>شاهد في وقت سابق</ShowEarlier>
-		<ShowLater>شاهد لاحقا</ShowLater>
-		<TotalAdjustmentX>{التعديل الكلي: {0</TotalAdjustmentX>
-		<AllLines>كل الأسطر</AllLines>
-		<SelectedLinesonly>الأسطر المختارة فقط</SelectedLinesonly>
-	</ShowEarlierLater>
-	<ShowHistory>
-		<Title>(التاريخ (للتراجع</Title>
-		<SelectRollbackPoint>حدد وقت / وصف للأستعادة</SelectRollbackPoint>
-		<Time>الوقت</Time>
-		<Description>وصف</Description>
-		<CompareHistoryItems>قارن بين عناصر التاريخ</CompareHistoryItems>
-		<CompareWithCurrent>مقارنة مع الحالي</CompareWithCurrent>
-		<Rollback>العودة</Rollback>
-	</ShowHistory>
-	<SpellCheck>
-		<Title>التدقيق الإملائي</Title>
-		<FullText>كامل النص</FullText>
-		<WordNotFound>لم يتم العثور على الكلمة</WordNotFound>
-		<Language>اللغة</Language>
-		<Change>تغيير</Change>
-		<ChangeAll>تغيير الكل</ChangeAll>
-		<SkipOnce>تخطي واحد</SkipOnce>
-		<SkipAll>تخطي الكل</SkipAll>
-		<AddToUserDictionary>إضافة إلى القاموس المستخدم</AddToUserDictionary>
-		<AddToNamesAndIgnoreList>(أضف إلى الأسماء / قائمة ضوضاء (حالة حساس</AddToNamesAndIgnoreList>
-		<Abort>إحباط</Abort>
-		<Use>استخدم</Use>
-		<UseAlways>استخدم دائماً</UseAlways>
-		<Suggestions>اقتراحات</Suggestions>
-		<SpellCheckProgress>{التدقيق الإملائي [{0}] -- {1</SpellCheckProgress>
-		<EditWholeText>تحرير النص بالكامل</EditWholeText>
-		<EditWordOnly>تحرير كلمة واحدة</EditWordOnly>
-		<AddXToNamesEtc>اضافة '{0}' إلى أسماء / قائمة الخ</AddXToNamesEtc>
-		<AutoFixNames>إصلاح الأسماء تلقائى حيث الغلاف فقط يختلف</AutoFixNames>
-		<ImageText>صورة نص</ImageText>
-		<SpellCheckCompleted>أكتمل التدقيق الإملائي</SpellCheckCompleted>
-		<SpellCheckAborted>التدقيق الإملائي إحبط</SpellCheckAborted>
-	</SpellCheck>
-	<SplitLongLines>
-		<Title>انقسام اسطر طويلة</Title>
-		<SingleLineMaximumLength>طول السطر الأقصى الوحيد</SingleLineMaximumLength>
-		<LineMaximumLength>الحد الأقصى لطول سطر</LineMaximumLength>
-		<LineContinuationBeginEndStrings>استمرار سطر تبدأ / نهاية السلاسل</LineContinuationBeginEndStrings>
-		<NumberOfSplits>{عدد من التقسيمات : {0</NumberOfSplits>
-		<LongestSingleLineIsXAtY>{طول أطول خط واحد هو {0} في السطر {1</LongestSingleLineIsXAtY>
-		<LongestLineIsXAtY>{أطول طول الخط الكلي هو {0} في السطر {1</LongestLineIsXAtY>
-	</SplitLongLines>
-	<SplitSubtitle>
-		<Title>تقسيم  الترجمة</Title>
-		<Description1>أدخل طول الجزء الأول من الفيديو أو تصفح</Description1>
-		<Description2>: ويحصل على الطول من ملف الفيديو</Description2>
-		<Split>تقسيم</Split>
-		<Done>تم</Done>
-		<NothingToSplit>! ليس لتقسيم</NothingToSplit>
-		<SavePartOneAs>...1 حفظ  جديد للجزء</SavePartOneAs>
-		<SavePartTwoAs>...2 حفظ  جديد للجزء</SavePartTwoAs>
-		<Part1>جزء 1</Part1>
-		<Part2>جزء 2</Part2>
-		<UnableToSaveFileX>{0} غير قادر على حفظ</UnableToSaveFileX>
-	</SplitSubtitle>
-	<StartNumberingFrom>
-		<Title>... بدء الترقيم من</Title>
-		<StartFromNumber>: ابدأ من رقم</StartFromNumber>
-		<PleaseEnterAValidNumber>يرفع، رجاء إدخل رقم</PleaseEnterAValidNumber>
-	</StartNumberingFrom>
-	<PointSync>
-		<Title>نقطة التزامن</Title>
-		<TitleViaOtherSubtitle>مزامنة نقطة أخرى عبر الترجمة</TitleViaOtherSubtitle>
-		<SyncHelp>تعيين نقطة مزامنة اثنين على الاقل لجعل التزامن الخام</SyncHelp>
-		<SetSyncPoint>تعيين نقطة مزامنة</SetSyncPoint>
-		<RemoveSyncPoint>إزالة نقطة مزامنة</RemoveSyncPoint>
-		<SyncPointsX>{تزامن نقاط : {0</SyncPointsX>
-		<Info>نقطة واحدة متزامنة وضبط الموقف ، ونقطة مزامنة اثنين أو أكثر وضبط الموقف وسرعة</Info>
-		<ApplySync>تطبيق</ApplySync>
-	</PointSync>
-	<UnknownSubtitle>
-		<Title>نوع الترجمة مجهول</Title>
-		<Message>إذا كنت تريد هذا ثابت الرجاء إرسال بريد إلكتروني إلى niksedk@gmail.com  وتشمل نسخة من الترجمة</Message>
-	</UnknownSubtitle>
-	<VisualSync>
-		<Title>مزامنة الفيديو</Title>
-		<StartScene>بداية المشهد</StartScene>
-		<EndScene>نهاية المشهد</EndScene>
-		<Synchronize>المزامنة</Synchronize>
-		<HalfASecondBack>&lt;ثانية ½</HalfASecondBack>
-		<ThreeSecondsBack>&lt; 3 ثوان</ThreeSecondsBack>
-		<PlayXSecondsAndBack>{0} التشغيل والعودة ثانية</PlayXSecondsAndBack>
-		<FindText>العثور على النص</FindText>
-		<GoToSubPosition>sub انتقل إلى نقاط</GoToSubPosition>
-		<KeepChangesTitle>حفظ التغييرات؟</KeepChangesTitle>
-		<KeepChangesMessage>"لقد بذلت التغيرات على الترجمة في" متزامنة الفيديو
+        <Start>أبدء</Start>
+    </NetworkStart>
+    <RemoveTextFromHearImpaired>
+        <Title>إزالة النص لضعاف السمع</Title>
+        <RemoveTextConditions>إزالة شروط النص</RemoveTextConditions>
+        <RemoveTextBetween>إزالة شروط النص</RemoveTextBetween>
+        <SquareBrackets>'[' و ']'</SquareBrackets>
+        <Brackets>'{' و '}'</Brackets>
+        <Parentheses>'(' و ')'</Parentheses>
+        <QuestionMarks>'?' و '?'</QuestionMarks>
+        <And>و</And>
+        <RemoveTextBeforeColon>(':') إزالة النص قبل النقطتان</RemoveTextBeforeColon>
+        <OnlyIfTextIsUppercase>إلا إذا كان نص أحرف كبيرة</OnlyIfTextIsUppercase>
+        <OnlyIfInSeparateLine>إلا إذا كان في سطر منفصل</OnlyIfInSeparateLine>
+        <LineNumber>#سطر</LineNumber>
+        <Before>قبل</Before>
+        <After>بعد</After>
+        <LinesFoundX>{العثور على الأسطر : {0</LinesFoundX>
+        <RemoveTextIfContains>إزالة النص إذا كان يحتوي على :</RemoveTextIfContains>
+        <RemoveInterjections>(shh, hmm, etc.)إزالة مداخلات</RemoveInterjections>
+        <EditInterjections>...تحرير</EditInterjections>
+    </RemoveTextFromHearImpaired>
+    <ReplaceDialog>
+        <Title>استبدل</Title>
+        <FindWhat>العثور على ما :</FindWhat>
+        <Normal>طبيعى</Normal>
+        <CaseSensitive>غلاف رقيق</CaseSensitive>
+        <RegularExpression>الترتيب المنتظم</RegularExpression>
+        <ReplaceWith>إستبدل به</ReplaceWith>
+        <Find>بحث</Find>
+        <Replace>إستبدل</Replace>
+        <ReplaceAll>إستبدل الكل</ReplaceAll>
+    </ReplaceDialog>
+    <SetMinimumDisplayTimeBetweenParagraphs>
+        <Title>تعيين عرض الوقت الأدنى بين الفقرات</Title>
+        <PreviewLinesModifiedX>{المعاينة -- تعديل الفقرتين : {0</PreviewLinesModifiedX>
+        <ShowOnlyModifiedLines>عرض الأسطر المعدلة فقط</ShowOnlyModifiedLines>
+        <MinimumMillisecondsBetweenParagraphs>الحد الأدنى ميلي ثانية بين السطور</MinimumMillisecondsBetweenParagraphs>
+    </SetMinimumDisplayTimeBetweenParagraphs>
+    <SetSyncPoint>
+        <Title>{تعيين نقطة مزامنة السطر {0</Title>
+        <SyncPointTimeCode>مزامنة الوقت رمز نقطة</SyncPointTimeCode>
+        <ThreeSecondsBack>&lt;&lt; 3 ثوانى</ThreeSecondsBack>
+        <HalfASecondBack>&lt;&lt; ½ ثانية</HalfASecondBack>
+        <HalfASecondForward>½ ثانية &gt;&gt;</HalfASecondForward>
+        <ThreeSecondsForward>3 ثوانى &gt;&gt;</ThreeSecondsForward>
+    </SetSyncPoint>
+    <Settings>
+        <Title>إعدادات</Title>
+        <General>عام</General>
+        <Toolbar>شريط الأدوات</Toolbar>
+        <VideoPlayer>جهاز عرض فيديو</VideoPlayer>
+        <WaveformAndSpectrogram>شكل الموجة / الفيديو</WaveformAndSpectrogram>
+        <Tools>ادوات</Tools>
+        <WordLists>قوائم الكلمة</WordLists>
+        <SsaStyle>SSA طراز</SsaStyle>
+        <Proxy>الوكيل</Proxy>
+        <ShowToolBarButtons>عرض أزرار شريط الادوات</ShowToolBarButtons>
+        <New>جديد</New>
+        <Open>فتح</Open>
+        <Save>حفظ</Save>
+        <SaveAs>حفظ جديد</SaveAs>
+        <Find>بحث</Find>
+        <Replace>استبدل</Replace>
+        <VisualSync>مزامنة الفيديو</VisualSync>
+        <SpellCheck>التدقيق الإملائي</SpellCheck>
+        <SettingsName>إعدادات</SettingsName>
+        <Help>مساعدة</Help>
+        <ShowFrameRate>عرض معدل الإطار في شريط الأدوات</ShowFrameRate>
+        <DefaultFrameRate>معدل الإطار الافتراضي</DefaultFrameRate>
+        <DefaultFileEncoding>ملف الترميز الافتراضي</DefaultFileEncoding>
+        <AutoDetectAnsiEncoding>ANSI  تلقائى كشف الترميز</AutoDetectAnsiEncoding>
+        <SubtitleLineMaximumLength>سطر واحد كحد أقصى. طول</SubtitleLineMaximumLength>
+        <AutoWrapWhileTyping>التفاف أثناء الكتابة تلقائي</AutoWrapWhileTyping>
+        <SubtitleFont>خط الترجمة</SubtitleFont>
+        <SubtitleFontSize>حجم خط الترجمة</SubtitleFontSize>
+        <SubtitleBold>كثيف</SubtitleBold>
+        <SubtitleFontColor>لون خط الترجمة</SubtitleFontColor>
+        <SubtitleBackgroundColor>لون خلفية الترجمة</SubtitleBackgroundColor>
+        <SpellChecker>المدقق الإملائي</SpellChecker>
+        <RememberRecentFiles>(تذكر الملفات الأخيرة (للفتح</RememberRecentFiles>
+        <StartWithLastFileLoaded>يبدأ تحميل الملف الأخير</StartWithLastFileLoaded>
+        <RememberSelectedLine>تذكر السطر المحدد</RememberSelectedLine>
+        <RememberPositionAndSize>تذكر موقع وحجم نافذة رئيسي</RememberPositionAndSize>
+        <StartInSourceView>تبدأ في عرض المصدر</StartInSourceView>
+        <RemoveBlankLinesWhenOpening>إزالة الأسطر الفارغة عند فتح الترجمة</RemoveBlankLinesWhenOpening>
+        <ShowLineBreaksAs>تظهر فواصل الأسطر في عرض القائمة على النحو</ShowLineBreaksAs>
+        <MainListViewDoubleClickAction>نقرا مزدوجا فوق على الخط الرئيسي في إطار عرض قائمة</MainListViewDoubleClickAction>
+        <MainListViewNothing>لا شيء</MainListViewNothing>
+        <MainListViewVideoGoToPositionAndPause>انتقل إلى الفيديو وتوقف</MainListViewVideoGoToPositionAndPause>
+        <MainListViewVideoGoToPositionAndPlay>انتقل إلى الفيديو وشغل</MainListViewVideoGoToPositionAndPlay>
+        <MainListViewEditText>انتقل إلى مربع تحرير النص</MainListViewEditText>
+        <AutoBackup>نسخ احتياطي تلقائي</AutoBackup>
+        <AutoBackupEveryMinute>كل دقيقة</AutoBackupEveryMinute>
+        <AutoBackupEveryFiveMinutes>كل خمسة دقائق</AutoBackupEveryFiveMinutes>
+        <AutoBackupEveryFifteenMinutes>كل خمسة عشر دقيقة</AutoBackupEveryFifteenMinutes>
+        <AllowEditOfOriginalSubtitle>السماح لتحرير الترجمة الأصلية</AllowEditOfOriginalSubtitle>
+        <PromptDeleteLines>حثة ليحذف السطور</PromptDeleteLines>
+        <VideoEngine>محرك فيديو</VideoEngine>
+        <DirectShow>عرض مباشر</DirectShow>
+        <DirectShowDescription>quartz.dll in system32 folder</DirectShowDescription>
+        <ManagedDirectX>Managed DirectX</ManagedDirectX>
+        <ManagedDirectXDescription>Microsoft.DirectX الصوت والفيديو التشغيل مرة أخرى -- NET رمز المدارة من دايركت</ManagedDirectXDescription>
+        <MPlayer>MPlayer</MPlayer>
+        <MPlayerDescription>MPlayer2/Mplayer</MPlayerDescription>
+        <VlcMediaPlayer>VLC ميديا ​​بلاير</VlcMediaPlayer>
+        <VlcMediaPlayerDescription>libvlc.dll from VLC Media Player 1.1.0 or newer</VlcMediaPlayerDescription>
+        <ShowStopButton>عرض زر توقف</ShowStopButton>
+        <DefaultVolume>حجم  افتراضى</DefaultVolume>
+        <VolumeNotes>0 لا صوت ، 100 هو أعلى حجم</VolumeNotes>
+        <PreviewFontSize>معاينة حجم خط الترجمة</PreviewFontSize>
+        <MainWindowVideoControls>نافذة ضوابط الفيديو الرئيسية</MainWindowVideoControls>
+        <CustomSearchTextAndUrl>مخصص للتسجيل والبحث عن النص</CustomSearchTextAndUrl>
+        <WaveFormAppearance>ظهور شكل الموجة</WaveFormAppearance>
+        <WaveFormGridColor>شبكة الألوان</WaveFormGridColor>
+        <WaveFormShowGridLines>عرض خطوط الشبكة</WaveFormShowGridLines>
+        <ReverseMouseWheelScrollDirection/>
+        <WaveFormColor>اللون</WaveFormColor>
+        <WaveFormSelectedColor>اختيار اللون</WaveFormSelectedColor>
+        <WaveFormBackgroundColor>اللون الخلفي</WaveFormBackgroundColor>
+        <WaveFormTextColor>لون النص</WaveFormTextColor>
+        <WaveformAndSpectrogramsFolderEmpty>فارغة 'فيديو' والمجلدات 'الفيديو'</WaveformAndSpectrogramsFolderEmpty>
+        <WaveformAndSpectrogramsFolderInfo>('الطول الموجي" والمجلدات "فيديو' يحتوي على {0} ملفات ({} 1:0.00 ميجابايت</WaveformAndSpectrogramsFolderInfo>
+        <Spectrogram>الفيديو</Spectrogram>
+        <GenerateSpectrogram>توليد صورة فيديو</GenerateSpectrogram>
+        <SpectrogramAppearance>ظهور صورة فيديو</SpectrogramAppearance>
+        <SpectrogramOneColorGradient>تدرج لون واحد</SpectrogramOneColorGradient>
+        <SpectrogramClassic>كلاسيكي</SpectrogramClassic>
+        <SubStationAlphaStyle>Sub مركز ألفا نمط</SubStationAlphaStyle>
+        <ChooseFont>اختيار الخط</ChooseFont>
+        <ChooseColor>اختيار اللون</ChooseColor>
+        <Example>مثال</Example>
+        <Testing123>...الاختبار 123</Testing123>
+        <Language>لغة</Language>
+        <NamesIgnoreLists>(أسماء / قائمة التجاهل (غلاف رقيق</NamesIgnoreLists>
+        <AddNameEtc>أضف أسم</AddNameEtc>
+        <AddWord>إضافة كلمة</AddWord>
+        <Remove>إزالة</Remove>
+        <AddPair>أضف زوجى</AddPair>
+        <UserWordList>قائمة المستخدم كلمة</UserWordList>
+        <OcrFixList>OCR إصلاح قائمة</OcrFixList>
+        <Location>الموقع</Location>
+        <UseOnlineNamesEtc>الخ xml استخدام الانترنت أسماء ملف</UseOnlineNamesEtc>
+        <WordAddedX>{أضاف الكلمة : {0</WordAddedX>
+        <WordAlreadyExists>الكلمة موجودة بالفعل</WordAlreadyExists>
+        <WordNotFound>لم يتم العثور على الكلمة</WordNotFound>
+        <RemoveX>إزالة {0}؟</RemoveX>
+        <CannotUpdateNamesEtcOnline>Etc.xml! لا يمكن تحديث الأسماء على الانترنت</CannotUpdateNamesEtcOnline>
+        <ProxyServerSettings>إعدادات خادم الوكيل</ProxyServerSettings>
+        <ProxyAddress>عنوان الوكيل</ProxyAddress>
+        <ProxyAuthentication>التحقق</ProxyAuthentication>
+        <ProxyUserName>اسم المستخدم</ProxyUserName>
+        <ProxyPassword>كلمة السر</ProxyPassword>
+        <ProxyDomain>نطاق</ProxyDomain>
+        <PlayXSecondsAndBack>هوا X ثوانى والعودة ، X تشغيل</PlayXSecondsAndBack>
+        <StartSceneIndex>بداية فقرة مشهد</StartSceneIndex>
+        <EndSceneIndex>نهاية فقرة مشهد</EndSceneIndex>
+        <FirstPlusX>{أولاً + {0</FirstPlusX>
+        <LastMinusX>{أولاً - {0</LastMinusX>
+        <FixCommonerrors>إصلاح الأخطاء الشائعة</FixCommonerrors>
+        <MergeLinesShorterThan>دمج أسطر أقصر من</MergeLinesShorterThan>
+        <MusicSymbol>رمز موسيقى</MusicSymbol>
+        <MusicSymbolsToReplace>(رموز الموسيقى لتحل محل (مساحة منفصلة</MusicSymbolsToReplace>
+        <FixCommonOcrErrorsUseHardcodedRules>أيضا استخدام قواعد ضمنية OCR -- تصحيح الأخطاء الشائعة</FixCommonOcrErrorsUseHardcodedRules>
+        <Shortcuts>اختصارات</Shortcuts>
+        <Shortcut>الاختصار</Shortcut>
+        <Control>Control</Control>
+        <Alt>Alt</Alt>
+        <Shift>Shift</Shift>
+        <Key>مفتاح</Key>
+        <TextBox>مربع النص</TextBox>
+        <UpdateShortcut>التحديث</UpdateShortcut>
+        <ShortcutIsNotValid>{الاختصار غير صالح : {0</ShortcutIsNotValid>
+        <ToggleDockUndockOfVideoControls>تبديل حوض / إرساء ضوابط الفيديو</ToggleDockUndockOfVideoControls>
+        <AdjustViaEndAutoStartAndGoToNext>عدل عن طريق موقع النهاية وإذهب إلى التالى</AdjustViaEndAutoStartAndGoToNext>
+        <AdjustSetStartAutoDurationAndGoToNext/>
+        <AdjustSelected100MsForward/>
+        <AdjustSelected100MsBack/>
+        <GoToNext/>
+        <GoToPrevious/>
+        <ToggleDialogueDashes/>
+        <VerticalZoom/>
+        <WaveformSeekSilenceForward/>
+        <WaveformSeekSilenceBack/>
+        <GoBack100Milliseconds/>
+        <GoForward100Milliseconds/>
+        <GoBack500Milliseconds/>
+        <GoForward500Milliseconds/>
+        <Fullscreen/>
+    </Settings>
+    <ShowEarlierLater>
+        <Title>عرض الأسطر المحددة في وقت سابق / لاحق</Title>
+        <TitleAll>عرض كل الأسطر في وقت سابق / لاحق</TitleAll>
+        <ShowEarlier>شاهد في وقت سابق</ShowEarlier>
+        <ShowLater>شاهد لاحقا</ShowLater>
+        <TotalAdjustmentX>{التعديل الكلي: {0</TotalAdjustmentX>
+        <AllLines>كل الأسطر</AllLines>
+        <SelectedLinesonly>الأسطر المختارة فقط</SelectedLinesonly>
+    </ShowEarlierLater>
+    <ShowHistory>
+        <Title>(التاريخ (للتراجع</Title>
+        <SelectRollbackPoint>حدد وقت / وصف للأستعادة</SelectRollbackPoint>
+        <Time>الوقت</Time>
+        <Description>وصف</Description>
+        <CompareHistoryItems>قارن بين عناصر التاريخ</CompareHistoryItems>
+        <CompareWithCurrent>مقارنة مع الحالي</CompareWithCurrent>
+        <Rollback>العودة</Rollback>
+    </ShowHistory>
+    <SpellCheck>
+        <Title>التدقيق الإملائي</Title>
+        <FullText>كامل النص</FullText>
+        <WordNotFound>لم يتم العثور على الكلمة</WordNotFound>
+        <Language>اللغة</Language>
+        <Change>تغيير</Change>
+        <ChangeAll>تغيير الكل</ChangeAll>
+        <SkipOnce>تخطي واحد</SkipOnce>
+        <SkipAll>تخطي الكل</SkipAll>
+        <AddToUserDictionary>إضافة إلى القاموس المستخدم</AddToUserDictionary>
+        <AddToNamesAndIgnoreList>(أضف إلى الأسماء / قائمة ضوضاء (حالة حساس</AddToNamesAndIgnoreList>
+        <Abort>إحباط</Abort>
+        <Use>استخدم</Use>
+        <UseAlways>استخدم دائماً</UseAlways>
+        <Suggestions>اقتراحات</Suggestions>
+        <SpellCheckProgress>{التدقيق الإملائي [{0}] -- {1</SpellCheckProgress>
+        <EditWholeText>تحرير النص بالكامل</EditWholeText>
+        <EditWordOnly>تحرير كلمة واحدة</EditWordOnly>
+        <AddXToNamesEtc>اضافة '{0}' إلى أسماء / قائمة الخ</AddXToNamesEtc>
+        <AutoFixNames>إصلاح الأسماء تلقائى حيث الغلاف فقط يختلف</AutoFixNames>
+        <ImageText>صورة نص</ImageText>
+        <SpellCheckCompleted>أكتمل التدقيق الإملائي</SpellCheckCompleted>
+        <SpellCheckAborted>التدقيق الإملائي إحبط</SpellCheckAborted>
+    </SpellCheck>
+    <SplitLongLines>
+        <Title>انقسام اسطر طويلة</Title>
+        <SingleLineMaximumLength>طول السطر الأقصى الوحيد</SingleLineMaximumLength>
+        <LineMaximumLength>الحد الأقصى لطول سطر</LineMaximumLength>
+        <LineContinuationBeginEndStrings>استمرار سطر تبدأ / نهاية السلاسل</LineContinuationBeginEndStrings>
+        <NumberOfSplits>{عدد من التقسيمات : {0</NumberOfSplits>
+        <LongestSingleLineIsXAtY>{طول أطول خط واحد هو {0} في السطر {1</LongestSingleLineIsXAtY>
+        <LongestLineIsXAtY>{أطول طول الخط الكلي هو {0} في السطر {1</LongestLineIsXAtY>
+    </SplitLongLines>
+    <SplitSubtitle>
+        <Title>تقسيم  الترجمة</Title>
+        <Description1>أدخل طول الجزء الأول من الفيديو أو تصفح</Description1>
+        <Description2>: ويحصل على الطول من ملف الفيديو</Description2>
+        <Split>تقسيم</Split>
+        <Done>تم</Done>
+        <NothingToSplit>! ليس لتقسيم</NothingToSplit>
+        <SavePartOneAs>...1 حفظ  جديد للجزء</SavePartOneAs>
+        <SavePartTwoAs>...2 حفظ  جديد للجزء</SavePartTwoAs>
+        <Part1>جزء 1</Part1>
+        <Part2>جزء 2</Part2>
+        <UnableToSaveFileX>{0} غير قادر على حفظ</UnableToSaveFileX>
+    </SplitSubtitle>
+    <StartNumberingFrom>
+        <Title>... بدء الترقيم من</Title>
+        <StartFromNumber>: ابدأ من رقم</StartFromNumber>
+        <PleaseEnterAValidNumber>يرفع، رجاء إدخل رقم</PleaseEnterAValidNumber>
+    </StartNumberingFrom>
+    <PointSync>
+        <Title>نقطة التزامن</Title>
+        <TitleViaOtherSubtitle>مزامنة نقطة أخرى عبر الترجمة</TitleViaOtherSubtitle>
+        <SyncHelp>تعيين نقطة مزامنة اثنين على الاقل لجعل التزامن الخام</SyncHelp>
+        <SetSyncPoint>تعيين نقطة مزامنة</SetSyncPoint>
+        <RemoveSyncPoint>إزالة نقطة مزامنة</RemoveSyncPoint>
+        <SyncPointsX>{تزامن نقاط : {0</SyncPointsX>
+        <Info>نقطة واحدة متزامنة وضبط الموقف ، ونقطة مزامنة اثنين أو أكثر وضبط الموقف وسرعة</Info>
+        <ApplySync>تطبيق</ApplySync>
+    </PointSync>
+    <UnknownSubtitle>
+        <Title>نوع الترجمة مجهول</Title>
+        <Message>إذا كنت تريد هذا ثابت الرجاء إرسال بريد إلكتروني إلى niksedk@gmail.com  وتشمل نسخة من الترجمة</Message>
+    </UnknownSubtitle>
+    <VisualSync>
+        <Title>مزامنة الفيديو</Title>
+        <StartScene>بداية المشهد</StartScene>
+        <EndScene>نهاية المشهد</EndScene>
+        <Synchronize>المزامنة</Synchronize>
+        <HalfASecondBack>&lt;ثانية ½</HalfASecondBack>
+        <ThreeSecondsBack>&lt; 3 ثوان</ThreeSecondsBack>
+        <PlayXSecondsAndBack>{0} التشغيل والعودة ثانية</PlayXSecondsAndBack>
+        <FindText>العثور على النص</FindText>
+        <GoToSubPosition>sub انتقل إلى نقاط</GoToSubPosition>
+        <KeepChangesTitle>حفظ التغييرات؟</KeepChangesTitle>
+        <KeepChangesMessage>"لقد بذلت التغيرات على الترجمة في" متزامنة الفيديو
 
 Keep changes?</KeepChangesMessage>
-		<SynchronizationDone>Sync done!</SynchronizationDone>
-		<StartSceneMustComeBeforeEndScene>Start scene must come before end scene!</StartSceneMustComeBeforeEndScene>
-		<Tip>Tip: Use &lt;ctrl+arrow left/right&gt; keys to move 100 ms back/forward</Tip>
-	</VisualSync>
-	<VobSubEditCharacters>
-		<Title>تحرير صورة مقارنة قاعدة البيانات</Title>
-		<ChooseCharacter>(s) اختر الحرف</ChooseCharacter>
-		<ImageCompareFiles>صورة مقارنة الملفات</ImageCompareFiles>
-		<CurrentCompareImage>مقارنة الصورة الحالية</CurrentCompareImage>
-		<TextAssociatedWithImage>إرتبط النص بالصورة</TextAssociatedWithImage>
-		<IsItalic>مائل</IsItalic>
-		<Update>التحديث</Update>
-		<Delete>إحذف</Delete>
-		<ImageDoubleSize>حجم صورة مضاعف</ImageDoubleSize>
-		<ImageFileNotFound>ملف صورة غير موجود</ImageFileNotFound>
-		<Image>صورة</Image>
-	</VobSubEditCharacters>
-	<VobSubOcr>
-		<Title>ترجمة/OCR VobSub (sub/idx) استيراد</Title>
-		<TitleBluRay>ترجمة/OCR Blu-ray (.sup) استيراد</TitleBluRay>
-		<OcrMethod>OCR أسلوب</OcrMethod>
-		<OcrViaModi>OCR via يتطلب مايكروسوفت أوفيس (MODI). عن طريق تصوير وثيقة مكتب مايكروسوفت</OcrViaModi>
-		<OcrViaTesseract>OCR via Tesseract</OcrViaTesseract>
-		<Language>اللغة</Language>
-		<OcrViaImageCompare>OCR via مقارنة صورة</OcrViaImageCompare>
-		<ImageDatabase>صورة قاعدة بيانات</ImageDatabase>
-		<NoOfPixelsIsSpace>لايوجد مساحة باسكل</NoOfPixelsIsSpace>
-		<New>جديد</New>
-		<Edit>تعديل</Edit>
-		<StartOcr>OCR بدء</StartOcr>
-		<Stop>توقف</Stop>
-		<StartOcrFrom>: لا الترجمة  OCR ابدأ من</StartOcrFrom>
-		<LoadingVobSubImages>... VobSub تحميل تصوير</LoadingVobSubImages>
-		<SubtitleImage>ترجمة تصوير</SubtitleImage>
-		<SubtitleText>ترجمة نصية</SubtitleText>
-		<UnableToCreateCharacterDatabaseFolder>{0} : غير قادر على إنشاء "مجلد قاعدة البيانات الأحرف"</UnableToCreateCharacterDatabaseFolder>
-		<SubtitleImageXofY>{0} ترجمة تصوير {1} من</SubtitleImageXofY>
-		<ImagePalette>صورة لوحة</ImagePalette>
-		<UseCustomColors>استخدام ألوان مخصصة</UseCustomColors>
-		<Transparent>شفاف</Transparent>
-		<PromptForUnknownWords>موجه لكلمات غير معروفة</PromptForUnknownWords>
-		<TryToGuessUnkownWords>في محاولة لتخمين كلمات غير معروفة</TryToGuessUnkownWords>
-		<AutoBreakSubtitleIfMoreThanTwoLines>قطع الفقرة تلقائى إذا كان أكثر من سطرين</AutoBreakSubtitleIfMoreThanTwoLines>
-		<AllFixes>إصلاح الكل</AllFixes>
-		<GuessesUsed>استخدمت التخمينات</GuessesUsed>
-		<UnknownWords>الكلمات المجهولة</UnknownWords>
-		<OcrAutoCorrectionSpellchecking>OCR التصحيح التلقائي / التدقيق الإملائي</OcrAutoCorrectionSpellchecking>
-		<FixOcrErrors>OCR إصلاح أخطاء</FixOcrErrors>
-		<ImportTextWithMatchingTimeCodes>... استيراد النص مطابقة رموز الوقت</ImportTextWithMatchingTimeCodes>
-		<SaveSubtitleImageAs>...حفظ التصوير والترجمة</SaveSubtitleImageAs>
-		<SaveAllSubtitleImagesAsBdnXml>(png/bdn xml) حفظ كافة الصور</SaveAllSubtitleImagesAsBdnXml>
-		<SaveAllSubtitleImagesWithHtml>HTML حفظ كافة الصور بدليل</SaveAllSubtitleImagesWithHtml>
-		<XImagesSavedInY>{1}الصورة المحفوظة فى{}</XImagesSavedInY>
-		<TryModiForUnknownWords>محاولة MS MODI OCR لكلمات غير معروفة</TryModiForUnknownWords>
-		<DictionaryX>{القاموس : {0</DictionaryX>
-		<RightToLeft>من اليمين إلى اليسار</RightToLeft>
-		<ShowOnlyForcedSubtitles>تظهر الترجمة الإجبارية فقط</ShowOnlyForcedSubtitles>
-		<UseTimeCodesFromIdx>IDX. استخدام رموز الوقت من ملف</UseTimeCodesFromIdx>
-		<NoMatch>&lt;لا مثيل&gt;</NoMatch>
-		<AutoTransparentBackground>خلفية شفافة تلقائى</AutoTransparentBackground>
-		<InspectCompareMatchesForCurrentImage>... لفحص مقارنة مثيل الصورة الحالية</InspectCompareMatchesForCurrentImage>
-		<EditLastAdditions>. . . تعديل إضافات مقارنة الصورة الأخيرة</EditLastAdditions>
-	</VobSubOcr>
-	<VobSubOcrCharacter>
-		<Title>مساعد محرر - صورة يدوية إلى نص</Title>
-		<ShrinkSelection>تقليص التحديد</ShrinkSelection>
-		<ExpandSelection>توسيع نطاق الاختيار</ExpandSelection>
-		<SubtitleImage>صورة الترجمة</SubtitleImage>
-		<Characters>(s) علامة</Characters>
-		<CharactersAsText>كنص (s) علامة</CharactersAsText>
-		<Italic>مائل</Italic>
-		<Abort>إحباط</Abort>
-		<Skip>تخطى</Skip>
-		<Nordic>الاسكندنافية</Nordic>
-		<Spanish>الأسبانية</Spanish>
-		<German>الألمانية</German>
-		<AutoSubmitOnFirstChar>تقدم تلقائى على الحرق الأول</AutoSubmitOnFirstChar>
-		<EditLastX>{آخر تعديل : {0</EditLastX>
-	</VobSubOcrCharacter>
-	<VobSubOcrCharacterInspect>
-		<Title>قارن المثيل لتفقد الصورة الحالية</Title>
-		<InspectItems>تفقد المواد</InspectItems>
-		<AddBetterMatch>إضافة أفضل مثيل</AddBetterMatch>
-	</VobSubOcrCharacterInspect>
-	<VobSubOcrNewFolder>
-		<Title>مجلد جديد</Title>
-		<Message>اسم مجلد قاعدة بيانات علامة جديدة</Message>
-	</VobSubOcrNewFolder>
-	<WaveForm>
-		<ClickToAddWaveForm>إضغط لإضافة الفيديو</ClickToAddWaveForm>
-		<ClickToAddWaveformAndSpectrogram>إضغط لإضافة شكل الموجة / الفيديو</ClickToAddWaveformAndSpectrogram>
-		<Seconds>ثوانى</Seconds>
-		<ZoomIn>تكبير</ZoomIn>
-		<ZoomOut>تصغير</ZoomOut>
-		<AddParagraphHere>إضافة نص هنا</AddParagraphHere>
-		<DeleteParagraph>حذف النص</DeleteParagraph>
-		<Split>انقسام</Split>
-		<SplitAtCursor>انقسام في المؤشر</SplitAtCursor>
-		<MergeWithPrevious>دمج مع السابق</MergeWithPrevious>
-		<MergeWithNext>دمج مع التالى</MergeWithNext>
-		<PlaySelection>تشغيل المختار</PlaySelection>
-		<ShowWaveformAndSpectrogram>عرض شكل الموجة والفيديو</ShowWaveformAndSpectrogram>
-		<ShowWaveformOnly>عرض شكل الموجة فقط</ShowWaveformOnly>
-		<ShowSpectrogramOnly>عرض الفيديو فقط</ShowSpectrogramOnly>
-	</WaveForm>
+        <SynchronizationDone>Sync done!</SynchronizationDone>
+        <StartSceneMustComeBeforeEndScene>Start scene must come before end scene!</StartSceneMustComeBeforeEndScene>
+        <Tip>Tip: Use &lt;ctrl+arrow left/right&gt; keys to move 100 ms back/forward</Tip>
+    </VisualSync>
+    <VobSubEditCharacters>
+        <Title>تحرير صورة مقارنة قاعدة البيانات</Title>
+        <ChooseCharacter>(s) اختر الحرف</ChooseCharacter>
+        <ImageCompareFiles>صورة مقارنة الملفات</ImageCompareFiles>
+        <CurrentCompareImage>مقارنة الصورة الحالية</CurrentCompareImage>
+        <TextAssociatedWithImage>إرتبط النص بالصورة</TextAssociatedWithImage>
+        <IsItalic>مائل</IsItalic>
+        <Update>التحديث</Update>
+        <Delete>إحذف</Delete>
+        <ImageDoubleSize>حجم صورة مضاعف</ImageDoubleSize>
+        <ImageFileNotFound>ملف صورة غير موجود</ImageFileNotFound>
+        <Image>صورة</Image>
+    </VobSubEditCharacters>
+    <VobSubOcr>
+        <Title>ترجمة/OCR VobSub (sub/idx) استيراد</Title>
+        <TitleBluRay>ترجمة/OCR Blu-ray (.sup) استيراد</TitleBluRay>
+        <OcrMethod>OCR أسلوب</OcrMethod>
+        <OcrViaModi>OCR via يتطلب مايكروسوفت أوفيس (MODI). عن طريق تصوير وثيقة مكتب مايكروسوفت</OcrViaModi>
+        <OcrViaTesseract>OCR via Tesseract</OcrViaTesseract>
+        <Language>اللغة</Language>
+        <OcrViaImageCompare>OCR via مقارنة صورة</OcrViaImageCompare>
+        <ImageDatabase>صورة قاعدة بيانات</ImageDatabase>
+        <NoOfPixelsIsSpace>لايوجد مساحة باسكل</NoOfPixelsIsSpace>
+        <New>جديد</New>
+        <Edit>تعديل</Edit>
+        <StartOcr>OCR بدء</StartOcr>
+        <Stop>توقف</Stop>
+        <StartOcrFrom>: لا الترجمة  OCR ابدأ من</StartOcrFrom>
+        <LoadingVobSubImages>... VobSub تحميل تصوير</LoadingVobSubImages>
+        <SubtitleImage>ترجمة تصوير</SubtitleImage>
+        <SubtitleText>ترجمة نصية</SubtitleText>
+        <UnableToCreateCharacterDatabaseFolder>{0} : غير قادر على إنشاء "مجلد قاعدة البيانات الأحرف"</UnableToCreateCharacterDatabaseFolder>
+        <SubtitleImageXofY>{0} ترجمة تصوير {1} من</SubtitleImageXofY>
+        <ImagePalette>صورة لوحة</ImagePalette>
+        <UseCustomColors>استخدام ألوان مخصصة</UseCustomColors>
+        <Transparent>شفاف</Transparent>
+        <PromptForUnknownWords>موجه لكلمات غير معروفة</PromptForUnknownWords>
+        <TryToGuessUnkownWords>في محاولة لتخمين كلمات غير معروفة</TryToGuessUnkownWords>
+        <AutoBreakSubtitleIfMoreThanTwoLines>قطع الفقرة تلقائى إذا كان أكثر من سطرين</AutoBreakSubtitleIfMoreThanTwoLines>
+        <AllFixes>إصلاح الكل</AllFixes>
+        <GuessesUsed>استخدمت التخمينات</GuessesUsed>
+        <UnknownWords>الكلمات المجهولة</UnknownWords>
+        <OcrAutoCorrectionSpellchecking>OCR التصحيح التلقائي / التدقيق الإملائي</OcrAutoCorrectionSpellchecking>
+        <FixOcrErrors>OCR إصلاح أخطاء</FixOcrErrors>
+        <ImportTextWithMatchingTimeCodes>... استيراد النص مطابقة رموز الوقت</ImportTextWithMatchingTimeCodes>
+        <SaveSubtitleImageAs>...حفظ التصوير والترجمة</SaveSubtitleImageAs>
+        <SaveAllSubtitleImagesAsBdnXml>(png/bdn xml) حفظ كافة الصور</SaveAllSubtitleImagesAsBdnXml>
+        <SaveAllSubtitleImagesWithHtml>HTML حفظ كافة الصور بدليل</SaveAllSubtitleImagesWithHtml>
+        <XImagesSavedInY>{1}الصورة المحفوظة فى{}</XImagesSavedInY>
+        <TryModiForUnknownWords>محاولة MS MODI OCR لكلمات غير معروفة</TryModiForUnknownWords>
+        <DictionaryX>{القاموس : {0</DictionaryX>
+        <RightToLeft>من اليمين إلى اليسار</RightToLeft>
+        <ShowOnlyForcedSubtitles>تظهر الترجمة الإجبارية فقط</ShowOnlyForcedSubtitles>
+        <UseTimeCodesFromIdx>IDX. استخدام رموز الوقت من ملف</UseTimeCodesFromIdx>
+        <NoMatch>&lt;لا مثيل&gt;</NoMatch>
+        <AutoTransparentBackground>خلفية شفافة تلقائى</AutoTransparentBackground>
+        <InspectCompareMatchesForCurrentImage>... لفحص مقارنة مثيل الصورة الحالية</InspectCompareMatchesForCurrentImage>
+        <EditLastAdditions>. . . تعديل إضافات مقارنة الصورة الأخيرة</EditLastAdditions>
+    </VobSubOcr>
+    <VobSubOcrCharacter>
+        <Title>مساعد محرر - صورة يدوية إلى نص</Title>
+        <ShrinkSelection>تقليص التحديد</ShrinkSelection>
+        <ExpandSelection>توسيع نطاق الاختيار</ExpandSelection>
+        <SubtitleImage>صورة الترجمة</SubtitleImage>
+        <Characters>(s) علامة</Characters>
+        <CharactersAsText>كنص (s) علامة</CharactersAsText>
+        <Italic>مائل</Italic>
+        <Abort>إحباط</Abort>
+        <Skip>تخطى</Skip>
+        <Nordic>الاسكندنافية</Nordic>
+        <Spanish>الأسبانية</Spanish>
+        <German>الألمانية</German>
+        <AutoSubmitOnFirstChar>تقدم تلقائى على الحرق الأول</AutoSubmitOnFirstChar>
+        <EditLastX>{آخر تعديل : {0</EditLastX>
+    </VobSubOcrCharacter>
+    <VobSubOcrCharacterInspect>
+        <Title>قارن المثيل لتفقد الصورة الحالية</Title>
+        <InspectItems>تفقد المواد</InspectItems>
+        <AddBetterMatch>إضافة أفضل مثيل</AddBetterMatch>
+    </VobSubOcrCharacterInspect>
+    <VobSubOcrNewFolder>
+        <Title>مجلد جديد</Title>
+        <Message>اسم مجلد قاعدة بيانات علامة جديدة</Message>
+    </VobSubOcrNewFolder>
+    <WaveForm>
+        <ClickToAddWaveForm>إضغط لإضافة الفيديو</ClickToAddWaveForm>
+        <ClickToAddWaveformAndSpectrogram>إضغط لإضافة شكل الموجة / الفيديو</ClickToAddWaveformAndSpectrogram>
+        <Seconds>ثوانى</Seconds>
+        <ZoomIn>تكبير</ZoomIn>
+        <ZoomOut>تصغير</ZoomOut>
+        <AddParagraphHere>إضافة نص هنا</AddParagraphHere>
+        <DeleteParagraph>حذف النص</DeleteParagraph>
+        <Split>انقسام</Split>
+        <SplitAtCursor>انقسام في المؤشر</SplitAtCursor>
+        <MergeWithPrevious>دمج مع السابق</MergeWithPrevious>
+        <MergeWithNext>دمج مع التالى</MergeWithNext>
+        <PlaySelection>تشغيل المختار</PlaySelection>
+        <ShowWaveformAndSpectrogram>عرض شكل الموجة والفيديو</ShowWaveformAndSpectrogram>
+        <ShowWaveformOnly>عرض شكل الموجة فقط</ShowWaveformOnly>
+        <ShowSpectrogramOnly>عرض الفيديو فقط</ShowSpectrogramOnly>
+    </WaveForm>
 </Language>

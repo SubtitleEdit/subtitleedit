@@ -886,7 +886,7 @@ koji bi trebalo da je već usklađen s video snimkom.
   <NetworkJoin>
     <Title>Mrežna sesija</Title>
     <Information>Ovde možete da se pridružite postojećoj sesiji u kojoj
-	možete da uređujete određeni titl s drugim ljudima.</Information>
+    možete da uređujete određeni titl s drugim ljudima.</Information>
     <Join>&amp;Poveži me</Join>
   </NetworkJoin>
   <NetworkLogAndInfo>
@@ -897,7 +897,7 @@ koji bi trebalo da je već usklađen s video snimkom.
     <Title>Mrežna sesija</Title>
     <ConnectionTo>Povezujem se na {0}…</ConnectionTo>
     <Information>Ovde možete da napravite sesiju u kojoj ćete moći da uređujete
-	određeni titl s drugim ljudima.</Information>
+    određeni titl s drugim ljudima.</Information>
     <Start>&amp;Započni</Start>
   </NetworkStart>
   <RemoveTextFromHearImpaired>
@@ -1168,8 +1168,8 @@ koji bi trebalo da je već usklađen s video snimkom.
     <GoToSubPosition>&amp;Idi</GoToSubPosition>
     <KeepChangesTitle>Čuvanje izmena</KeepChangesTitle>
     <KeepChangesMessage>Izmenili ste titl koristeći Vizuelno usklađivanje.
-	
-	Želite li da sačuvate izmene?</KeepChangesMessage>
+
+    Želite li da sačuvate izmene?</KeepChangesMessage>
     <SynchronizationDone>Usklađivanje je završeno.</SynchronizationDone>
     <StartSceneMustComeBeforeEndScene>Početna scena mora biti pre završne!</StartSceneMustComeBeforeEndScene>
     <Tip>Koristite ktrl i levu ili desnu strelicu da pomerite 100 ms unazad ili unapred.</Tip>

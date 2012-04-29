@@ -1078,7 +1078,7 @@ namespace Nikse.SubtitleEdit.Forms
                             ok = false;
                         else if ("LD".Contains(text) && differencePercentage > 5)
                             ok = false;
-                        
+
                         if (ok)
                             return new CompareMatch(text, isItalic, expandCount, _compareBitmaps[smallestIndex].Name);
                     }

@@ -52,7 +52,7 @@ namespace Nikse.SubtitleEdit.Forms
                         alreadyInList = true;
                 }
                 if (!alreadyInList)
-                    _fileNamesToJoin.Add(fileName);                
+                    _fileNamesToJoin.Add(fileName);
             }
             SortAndLoad();
         }
@@ -158,7 +158,7 @@ namespace Nikse.SubtitleEdit.Forms
                         _fileNamesToJoin.Add(fileName);
                 }
                 SortAndLoad();
-            }            
+            }
         }
 
         private void ButtonRemoveVob_Click(object sender, EventArgs e)

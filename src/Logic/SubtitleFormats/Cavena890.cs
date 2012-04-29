@@ -517,7 +517,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             0x74F6, // 瓶
             0x9EDE, // 點
             0x731C, // 猜
-            0x62F3, // 拳        
+            0x62F3, // 拳
             0x4F7F, // 使
             0x547D, // 命
             0x90E8, // 部
@@ -530,7 +530,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             0x5FEB, // 快
             0x7FD2, // 習
             0x6163, // 慣
-        
+
         };
 
         static List<string> _chineseLetters = new List<string> {

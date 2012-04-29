@@ -730,7 +730,7 @@ Nahi duzu agiriaren goialdetik hastea eta bilaketa beste behin egitea?</FindCont
     <SubtitleSplitted>Azpidatzia bananduta</SubtitleSplitted>
     <SubtitleAppendPrompt>Honek dagoen azpidatzi bat gehituko du orain igota dagoen azpidatziarekin zein bideo agiriarekin jadanik aldiberetuta dagoena.
 
-	
+
 Jarraitu nahi duzu?</SubtitleAppendPrompt>
     <SubtitleAppendPromptTitle>Atxiki azpidatzia</SubtitleAppendPromptTitle>
     <OpenSubtitleToAppend>Ireki azpidatzia atxikitzeko...</OpenSubtitleToAppend>
@@ -1196,8 +1196,8 @@ Jarraitu nahi duzu?</SubtitleAppendPrompt>
     <GoToSubPosition>Joan azp.</GoToSubPosition>
     <KeepChangesTitle>Aldaketak gorde?</KeepChangesTitle>
     <KeepChangesMessage>Azpidatzian aldaketak 'Ikus aldiberetzearekin' egin dira.
-	
-	aldaketak?</KeepChangesMessage>
+
+    aldaketak?</KeepChangesMessage>
     <SynchronizationDone>Aldiberetzea eginda!</SynchronizationDone>
     <StartSceneMustComeBeforeEndScene>Hasierako agerraldia amaierako agerraldia baino lehenago etorri behar da!</StartSceneMustComeBeforeEndScene>
     <Tip>Oharra: Erabili &lt;ktrl+ezk/esk geziak&gt; teklak 100 sm mugitzeko atzera/aurrera</Tip>
