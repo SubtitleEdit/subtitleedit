@@ -26,7 +26,7 @@ namespace Nikse.SubtitleEdit.Forms
             buttonSplit.Text = Configuration.Settings.Language.SplitSubtitle.Split;
             buttonDone.Text = Configuration.Settings.Language.SplitSubtitle.Done;
 
-            //TODO: SE 3.3buttonAdvanced.Text = Configuration.Settings.Language.General.Advanced; 
+            //TODO: SE 3.3buttonAdvanced.Text = Configuration.Settings.Language.General.Advanced;
             buttonAdvanced.Visible = Configuration.Settings.General.ShowBetaStuff;
 
             labelHoursMinSecsMilliSecs.Text = Configuration.Settings.Language.General.HourMinutesSecondsMilliseconds;
@@ -165,7 +165,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void buttonAdvanced_Click(object sender, EventArgs e)
         {
             ShowAdvanced = true;
-            DialogResult = DialogResult.Cancel;            
+            DialogResult = DialogResult.Cancel;
         }
 
     }

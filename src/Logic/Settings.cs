@@ -1085,7 +1085,7 @@ namespace Nikse.SubtitleEdit.Logic
             subNode = node.SelectSingleNode("SplitVia");
             if (subNode != null)
                 settings.Tools.SplitVia = subNode.InnerText;
-            
+
 
             settings.SubtitleSettings = new Nikse.SubtitleEdit.Logic.SubtitleSettings();
             node = doc.DocumentElement.SelectSingleNode("SubtitleSettings");

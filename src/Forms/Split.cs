@@ -24,7 +24,7 @@ namespace Nikse.SubtitleEdit.Forms
         public Split()
         {
             InitializeComponent();
-      
+
             Text = Configuration.Settings.Language.SplitSubtitle.Title;
             FixLargeFonts();
         }
@@ -57,7 +57,7 @@ namespace Nikse.SubtitleEdit.Forms
                 numericUpDownParts.Value = Configuration.Settings.Tools.SplitNumberOfParts;
             }
             catch
-            { 
+            {
             }
 
             if (Configuration.Settings.Tools.SplitVia.Trim().ToLower() == "lines")
@@ -111,7 +111,7 @@ namespace Nikse.SubtitleEdit.Forms
             _parts = new List<Subtitle>();
             if (string.IsNullOrEmpty(textBoxOutputFolder.Text) || !System.IO.Directory.Exists(textBoxOutputFolder.Text))
                 textBoxOutputFolder.Text = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
-            var format = Utilities.GetSubtitleFormatByFriendlyName(comboBoxSubtitleFormats.SelectedItem.ToString());            
+            var format = Utilities.GetSubtitleFormatByFriendlyName(comboBoxSubtitleFormats.SelectedItem.ToString());
             string fileNameNoExt = System.IO.Path.GetFileNameWithoutExtension(_fileName);
             listViewParts.Items.Clear();
             int startNumber = 0;
@@ -119,7 +119,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 int partSize = (int) (_subtitle.Paragraphs.Count / numericUpDownParts.Value);
                 for (int i = 0; i < numericUpDownParts.Value; i++)
-                { 
+                {
                     int noOfLines = partSize;
                     if (i == numericUpDownParts.Value -1)
                         noOfLines = (int) (_subtitle.Paragraphs.Count - ((numericUpDownParts.Value-1) * partSize));
@@ -186,7 +186,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void buttonBasic_Click(object sender, EventArgs e)
         {
             ShowBasic = true;
-            DialogResult = DialogResult.Cancel;            
+            DialogResult = DialogResult.Cancel;
         }
 
         private void buttonSplit_Click(object sender, EventArgs e)
@@ -229,7 +229,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonCancel_Click(object sender, EventArgs e)
         {
-            DialogResult = DialogResult.Cancel;            
+            DialogResult = DialogResult.Cancel;
         }
 
         private void numericUpDownParts_ValueChanged(object sender, EventArgs e)
@@ -284,7 +284,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void Split_Shown(object sender, EventArgs e)
         {
             _loading = false;
-            CalculateParts();           
+            CalculateParts();
         }
 
         private void Split_Resize(object sender, EventArgs e)
