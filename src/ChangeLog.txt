@@ -9,11 +9,13 @@ Subtitle Edit Changelog
    * Updated Brazilian Portuguese - thx Igor Rückert
    * Updated Polish language file - thx Adam Malich
    * Better reading of format Cavena 890
+   * Version number now inlucdes revision from SVN - thx XhmikosR
  * FIXED:
-   * Fixed bug (skip of subtitles) in dvd sub ripping - thx kowenant
+   * Bug (skip of subtitles) in dvd sub ripping - thx kowenant
    * Minor fix for blu-ray sup reading
    * Correct time codes in EBU when reading 24 fps
    * HD DVD SUP lines are now re-numbered when importing for ocr
+   * Bug in waveform regarding new selection/right-click-menu
 
 
 3.2.7 (14th April 2012)
