@@ -321,8 +321,11 @@ namespace Nikse.SubtitleEdit.Controls
         {
             if (_settings != null)
             {
-                Items[i].UseItemStyleForSubItems = false;
-                Items[i].SubItems[ColumnIndexDuration].BackColor = BackColor;
+                if (Items[i].UseItemStyleForSubItems)
+                {
+                    Items[i].UseItemStyleForSubItems = false;
+                    Items[i].SubItems[ColumnIndexDuration].BackColor = BackColor;
+                }
                 if (_settings.Tools.ListViewSyntaxColorDurationSmall)
                 {
                     double charactersPerSecond = Utilities.GetCharactersPerSecond(paragraph);
@@ -354,8 +357,10 @@ namespace Nikse.SubtitleEdit.Controls
                     }
                     else
                     {
-                        Items[i - 1].SubItems[ColumnIndexEnd].BackColor = BackColor;
-                        Items[i].SubItems[ColumnIndexStart].BackColor = BackColor;
+                        if (Items[i - 1].SubItems[ColumnIndexEnd].BackColor != BackColor)
+                            Items[i - 1].SubItems[ColumnIndexEnd].BackColor = BackColor;
+                        if (Items[i].SubItems[ColumnIndexStart].BackColor != BackColor)
+                            Items[i].SubItems[ColumnIndexStart].BackColor = BackColor;
                     }
                 }
 
@@ -369,7 +374,7 @@ namespace Nikse.SubtitleEdit.Controls
                             Items[i].SubItems[ColumnIndexText].BackColor = Color.Orange;
                         else if (noOfLines > 3)
                             Items[i].SubItems[ColumnIndexText].BackColor = Color.Red;
-                        else
+                        else if (Items[i].SubItems[ColumnIndexText].BackColor != BackColor)
                             Items[i].SubItems[ColumnIndexText].BackColor = BackColor;
                     }
                     else if (s.Length < Configuration.Settings.General.SubtitleLineMaximumLength * 2.1)
