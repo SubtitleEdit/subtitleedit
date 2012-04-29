@@ -35,6 +35,8 @@
 ; If you don't define "localize", i.e. comment out the following line then no translations
 ; for SubtitleEdit or the installer itself will be included in the installer
 #define localize
+;#define TWO_DIGIT_VER
+#define THREE_DIGIT_VER
 
 
 #define VerMajor
@@ -50,9 +52,17 @@
 
 #expr ParseVersion(bindir + "\SubtitleEdit.exe", VerMajor, VerMinor, VerBuild, VerRevision)
 
-;#define app_version   str(VerMajor) + "." + str(VerMinor)
-; The following app_version is for 3 digit releases, one of the two must be uncommented at a time
-#define app_version   str(VerMajor) + "." + str(VerMinor) + "." + str(VerBuild)
+#if defined(TWO_DIGIT_VER) && defined(THREE_DIGIT_VER)
+  #error You can't define TWO_DIGIT_VER and THREE_DIGIT_VER at the same time
+#elif !defined(TWO_DIGIT_VER) && !defined(THREE_DIGIT_VER)
+  #error You must define TWO_DIGIT_VER or THREE_DIGIT_VER
+#elif defined(TWO_DIGIT_VER)
+  #define app_ver       str(VerMajor) + "." + str(VerMinor)
+  #define app_ver_full  str(VerMajor) + "." + str(VerMinor) + ".0." + str(VerRevision)
+#elif defined(THREE_DIGIT_VER)
+  #define app_ver       str(VerMajor) + "." + str(VerMinor) + "." + str(VerBuild)
+  #define app_ver_full  str(VerMajor) + "." + str(VerMinor) + "." + str(VerBuild) + "." + str(VerRevision)
+#endif
 
 #define quick_launch  "{userappdata}\Microsoft\Internet Explorer\Quick Launch"
 
@@ -62,13 +72,13 @@ AppID=SubtitleEdit
 AppCopyright={#app_copyright}
 AppContact=http://www.nikse.dk/SubtitleEdit/
 AppName=Subtitle Edit
-AppVerName=Subtitle Edit {#app_version}
-AppVersion={#app_version}
+AppVerName=Subtitle Edit {#app_ver}
+AppVersion={#app_ver_full}
 AppPublisher=Nikse
 AppPublisherURL=http://www.nikse.dk/SubtitleEdit/
 AppSupportURL=http://www.nikse.dk/SubtitleEdit/
 AppUpdatesURL=http://www.nikse.dk/SubtitleEdit/
-UninstallDisplayName=Subtitle Edit {#app_version}
+UninstallDisplayName=Subtitle Edit {#app_ver}
 UninstallDisplayIcon={app}\SubtitleEdit.exe
 DefaultDirName={pf}\Subtitle Edit
 DefaultGroupName=Subtitle Edit
@@ -76,10 +86,10 @@ VersionInfoCompany=Nikse
 VersionInfoCopyright={#app_copyright}
 VersionInfoDescription=Subtitle Edit Setup
 VersionInfoProductName=Subtitle Edit
-VersionInfoProductVersion={#app_version}
-VersionInfoProductTextVersion={#app_version}
-VersionInfoTextVersion={#app_version}
-VersionInfoVersion={#app_version}
+VersionInfoProductVersion={#app_ver_full}
+VersionInfoProductTextVersion={#app_ver_full}
+VersionInfoTextVersion={#app_ver_full}
+VersionInfoVersion={#app_ver_full}
 MinVersion=0,5.1
 LicenseFile=..\src\gpl.txt
 InfoAfterFile=..\src\Changelog.txt
@@ -87,7 +97,7 @@ SetupIconFile=..\src\Icons\SE.ico
 WizardImageFile=Icons\WizardImageFile.bmp
 WizardSmallImageFile=Icons\WizardSmallImageFile.bmp
 OutputDir=.
-OutputBaseFilename=SubtitleEdit-{#app_version}-setup
+OutputBaseFilename=SubtitleEdit-{#app_ver}-setup
 AllowNoIcons=yes
 Compression=lzma2/ultra
 SolidCompression=yes
@@ -131,7 +141,7 @@ Name: sv;  MessagesFile: Languages\Swedish.isl
 
 
 [Messages]
-BeveledLabel=Subtitle Edit {#app_version} by Nikse
+BeveledLabel=Subtitle Edit {#app_ver} by Nikse
 SetupAppTitle=Setup - Subtitle Edit
 SetupWindowTitle=Setup - Subtitle Edit
 
@@ -142,7 +152,7 @@ Name: custom;             Description: {cm:types_custom}; Flags: iscustom
 
 
 [Components]
-Name: main;               Description: Subtitle Edit {#app_version}; Types: default custom; Flags: fixed
+Name: main;               Description: Subtitle Edit {#app_ver}; Types: default custom; Flags: fixed
 #ifdef localize
 Name: translations;       Description: {cm:comp_translations};       Types: default custom; Flags: disablenouninstallwarning
 #endif
@@ -229,15 +239,15 @@ Source: ..\Dictionaries\swe_OCRFixReplaceList.xml; DestDir: {userappdata}\Subtit
 
 
 [Icons]
-Name: {group}\Subtitle Edit;                Filename: {app}\SubtitleEdit.exe; WorkingDir: {app}; Comment: Subtitle Edit {#app_version}; AppUserModelID: Nikse.SubtitleEdit; IconFilename: {app}\SubtitleEdit.exe; IconIndex: 0
+Name: {group}\Subtitle Edit;                Filename: {app}\SubtitleEdit.exe; WorkingDir: {app}; Comment: Subtitle Edit {#app_ver}; AppUserModelID: Nikse.SubtitleEdit; IconFilename: {app}\SubtitleEdit.exe; IconIndex: 0
 Name: {group}\Help and Support\Changelog;   Filename: {app}\Changelog.txt;    WorkingDir: {app}; Comment: {cm:sm_com_Changelog}
 Name: {group}\Help and Support\Online Help; Filename: http://www.nikse.dk/SubtitleEdit/Help
 Name: {group}\Help and Support\{cm:ProgramOnTheWeb,Subtitle Edit}; Filename: http://www.nikse.dk/SubtitleEdit/;  Comment: {cm:ProgramOnTheWeb,Subtitle Edit}
 Name: {group}\{cm:UninstallProgram,Subtitle Edit};                 Filename: {uninstallexe};                     Comment: {cm:UninstallProgram,Subtitle Edit}; WorkingDir: {app}; IconFilename: {app}\Icons\uninstall.ico
 
-Name: {commondesktop}\Subtitle Edit;        Filename: {app}\SubtitleEdit.exe; WorkingDir: {app}; Comment: Subtitle Edit {#app_version}; AppUserModelID: Nikse.SubtitleEdit; IconFilename: {app}\SubtitleEdit.exe; IconIndex: 0; Tasks: desktopicon\common
-Name: {userdesktop}\Subtitle Edit;          Filename: {app}\SubtitleEdit.exe; WorkingDir: {app}; Comment: Subtitle Edit {#app_version}; AppUserModelID: Nikse.SubtitleEdit; IconFilename: {app}\SubtitleEdit.exe; IconIndex: 0; Tasks: desktopicon\user
-Name: {#quick_launch}\Subtitle Edit;        Filename: {app}\SubtitleEdit.exe; WorkingDir: {app}; Comment: Subtitle Edit {#app_version};                                     IconFilename: {app}\SubtitleEdit.exe; IconIndex: 0; Tasks: quicklaunchicon
+Name: {commondesktop}\Subtitle Edit;        Filename: {app}\SubtitleEdit.exe; WorkingDir: {app}; Comment: Subtitle Edit {#app_ver}; AppUserModelID: Nikse.SubtitleEdit; IconFilename: {app}\SubtitleEdit.exe; IconIndex: 0; Tasks: desktopicon\common
+Name: {userdesktop}\Subtitle Edit;          Filename: {app}\SubtitleEdit.exe; WorkingDir: {app}; Comment: Subtitle Edit {#app_ver}; AppUserModelID: Nikse.SubtitleEdit; IconFilename: {app}\SubtitleEdit.exe; IconIndex: 0; Tasks: desktopicon\user
+Name: {#quick_launch}\Subtitle Edit;        Filename: {app}\SubtitleEdit.exe; WorkingDir: {app}; Comment: Subtitle Edit {#app_ver};                                     IconFilename: {app}\SubtitleEdit.exe; IconIndex: 0; Tasks: quicklaunchicon
 
 
 [InstallDelete]
