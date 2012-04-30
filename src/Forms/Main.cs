@@ -237,21 +237,13 @@ namespace Nikse.SubtitleEdit.Forms
                 SetFormatToSubRip();
 
                 comboBoxEncoding.Items.Clear();
-                int encodingSelectedIndex = 0;
                 comboBoxEncoding.Items.Add(Encoding.UTF8.EncodingName);
                 foreach (EncodingInfo ei in Encoding.GetEncodings())
                 {
-                    if (ei.Name != Encoding.UTF8.BodyName)
-                    {
-                        if (ei.CodePage >= Configuration.Settings.General.EncodingMininumCodePage)
-                        {
-                            comboBoxEncoding.Items.Add(ei.CodePage + ": " + ei.DisplayName);
-                            if (ei.Name == Configuration.Settings.General.DefaultEncoding)
-                                encodingSelectedIndex = comboBoxEncoding.Items.Count - 1;
-                        }
-                    }
+                    if (ei.Name != Encoding.UTF8.BodyName && ei.CodePage >= Configuration.Settings.General.EncodingMininumCodePage)
+                        comboBoxEncoding.Items.Add(ei.CodePage + ": " + ei.DisplayName);
                 }
-                comboBoxEncoding.SelectedIndex = encodingSelectedIndex;
+                SetEncoding(Configuration.Settings.General.DefaultEncoding);
 
                 toolStripComboBoxFrameRate.Items.Add((23.976).ToString());
                 toolStripComboBoxFrameRate.Items.Add((24.0).ToString());
