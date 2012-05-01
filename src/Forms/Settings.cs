@@ -849,10 +849,10 @@ namespace Nikse.SubtitleEdit.Forms
             int maxLength;
             if (int.TryParse(textBoxSubtitleLineMaximumLength.Text, out maxLength))
             {
-                if (maxLength > 10 && maxLength < 201)
+                if (maxLength > 10 && maxLength < 1000)
                     gs.SubtitleLineMaximumLength = maxLength;
-                else if (maxLength > 200)
-                    gs.SubtitleLineMaximumLength = 200;
+                else if (maxLength > 999)
+                    gs.SubtitleLineMaximumLength = 999;
                 else
                     gs.SubtitleLineMaximumLength = 45;
             }

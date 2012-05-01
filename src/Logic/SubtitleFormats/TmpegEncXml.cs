@@ -1,8 +1,9 @@
-﻿using System.Text;
-using System.Xml;
-using System;
-using System.IO;
+﻿using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Text;
+using System.Xml;
+
 namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
 
@@ -157,6 +158,29 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             <TextAlign>1</TextAlign>
             <DirectionRightToLeft>1</DirectionRightToLeft>
         </LayoutItem>
+        <LayoutItem index='4'>
+            <Name>
+                <![CDATA[Picture bottom layout]]>
+            </Name>
+            <Position>4</Position>
+            <FontName>
+                <![CDATA[Tahoma]]>
+            </FontName>
+            <FontHeight>0.069</FontHeight>
+            <FontColor>17588159451135</FontColor>
+            <FontBold>0</FontBold>
+            <FontItalic>1</FontItalic>
+            <FontUnderline>0</FontUnderline>
+            <FontStrikeOut>0</FontStrikeOut>
+            <HorizonAlign>1</HorizonAlign>
+            <VerticalAlign>2</VerticalAlign>
+            <DirectionVertical>0</DirectionVertical>
+            <BorderActive>1</BorderActive>
+            <BorderSize>0.00345</BorderSize>
+            <BorderColor>0</BorderColor>
+            <TextAlign>1</TextAlign>
+            <DirectionRightToLeft>0</DirectionRightToLeft>
+        </LayoutItem>
     </Layout>
     <Subtitle>
     </Subtitle>
@@ -175,7 +199,11 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 paragraph.InnerXml = "<Text><![CDATA[" + paragraph.InnerXml.Replace(Environment.NewLine, "\\n") + "]]></Text>";
 
                 XmlAttribute layoutIndex = xml.CreateAttribute("layoutindex");
-                layoutIndex.InnerText = "0";
+                if (p.Text.Trim().StartsWith("<i>") && p.Text.Trim().EndsWith("</i>"))
+                    layoutIndex.InnerText = "4";
+                else
+                    layoutIndex.InnerText = "0";
+                
                 paragraph.Attributes.Append(layoutIndex);
 
                 XmlAttribute enable = xml.CreateAttribute("enable");
@@ -194,8 +222,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 no++;
             }
 
-            MemoryStream ms = new MemoryStream();
-            XmlTextWriter writer = new XmlTextWriter(ms, Encoding.UTF8);
+            var ms = new MemoryStream();
+            var writer = new XmlTextWriter(ms, Encoding.UTF8);
             writer.Formatting = Formatting.Indented;
             xml.Save(writer);
             return Encoding.UTF8.GetString(ms.ToArray()).Trim();
@@ -206,16 +234,26 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             _errorCount = 0;
             double startSeconds = 0;
 
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             lines.ForEach(line => sb.AppendLine(line));
-            XmlDocument xml = new XmlDocument();
+            var xml = new XmlDocument();
             xml.LoadXml(sb.ToString());
+            var italicStyles = new List<bool>();
+            
+            foreach (XmlNode node in xml.DocumentElement.SelectNodes("Layout/LayoutItem"))
+            {
+                XmlNode fontItalic = node.SelectSingleNode("FontItalic");
+                if (fontItalic != null && fontItalic.InnerText == "1")
+                    italicStyles.Add(true);
+                else
+                    italicStyles.Add(false);
+            }
 
             foreach (XmlNode node in xml.DocumentElement.SelectNodes("Subtitle/SubtitleItem"))
             {
                 try
                 {
-                    StringBuilder pText = new StringBuilder();
+                    var pText = new StringBuilder();
                     foreach (XmlNode innerNode in node.SelectSingleNode("Text").ChildNodes)
                     {
                         switch (innerNode.Name.ToString())
@@ -241,7 +279,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         end = node.Attributes["endtime"].InnerText;
                     }
 
-                    TimeCode startCode = new TimeCode(TimeSpan.FromSeconds(startSeconds));
+                    var startCode = new TimeCode(TimeSpan.FromSeconds(startSeconds));
                     if (start != string.Empty)
                     {
                         startCode = GetTimeCode(start);
@@ -257,7 +295,17 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         endCode = new TimeCode(TimeSpan.FromMilliseconds(startCode.TotalMilliseconds + 3000));
                     }
                     startSeconds = endCode.TotalSeconds;
-                    subtitle.Paragraphs.Add(new Paragraph(startCode, endCode, pText.ToString().Trim().Replace("<Text>", string.Empty).Replace("</Text>", string.Empty).Replace("\\n", Environment.NewLine)));
+                    var p = new Paragraph(startCode, endCode, pText.ToString().Trim().Replace("<Text>", string.Empty).Replace("</Text>", string.Empty).Replace("\\n", Environment.NewLine));
+                    if (node.Attributes["layoutindex"] != null)
+                    {
+                        int idx;
+                        if (int.TryParse(node.Attributes["layoutindex"].InnerText, out idx))
+                        {
+                            if (idx >= 0 && idx < italicStyles.Count && italicStyles[idx])
+                                p.Text = "<i>" + p.Text + "</i>";
+                        }
+                    }
+                    subtitle.Paragraphs.Add(p);
                 }
                 catch (Exception ex)
                 {
@@ -273,13 +321,13 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             if (s.EndsWith("s"))
             {
                 s = s.TrimEnd('s');
-                TimeSpan ts = TimeSpan.FromSeconds(double.Parse(s));
+                var ts = TimeSpan.FromSeconds(double.Parse(s));
                 return new TimeCode(ts);
             }
             else
             {
                 string[] parts = s.Split(new char[] { ':', '.', ',' });
-                TimeSpan ts = new TimeSpan(0, int.Parse(parts[0]), int.Parse(parts[1]), int.Parse(parts[2]), int.Parse(parts[3]));
+                var ts = new TimeSpan(0, int.Parse(parts[0]), int.Parse(parts[1]), int.Parse(parts[2]), int.Parse(parts[3]));
                 return new TimeCode(ts);
             }
         }
