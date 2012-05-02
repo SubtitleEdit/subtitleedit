@@ -547,6 +547,7 @@ namespace Nikse.SubtitleEdit.Logic
                 Splitting = "Splitting",
                 AutoSplitText = "Auto split text",
                 OneLineIsOneSubtitle = "One line is one subtitle",
+                SplitAtBlankLines = "Split at blank lines",
                 MergeShortLines = "Merge short lines with continuation",
                 RemoveEmptyLines = "Remove empty lines",
                 RemoveLinesWithoutLetters = "Remove lines without letters",

@@ -155,7 +155,7 @@ namespace Nikse.SubtitleEdit.Logic
             DCinemaFontFile = "Arial.ttf";
             DCinemaFontSize = 42;
             DCinemaBottomMargin = 8;
-            DCinemaFadeUpDownTime = 20;
+            DCinemaFadeUpDownTime = 5;
         }
     }
 

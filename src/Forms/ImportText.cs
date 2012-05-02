@@ -30,6 +30,10 @@ namespace Nikse.SubtitleEdit.Forms
             groupBoxSplitting.Text = Configuration.Settings.Language.ImportText.Splitting;
             radioButtonAutoSplit.Text = Configuration.Settings.Language.ImportText.AutoSplitText;
             radioButtonLineMode.Text = Configuration.Settings.Language.ImportText.OneLineIsOneSubtitle;
+            if (!string.IsNullOrEmpty(Configuration.Settings.Language.ImportText.SplitAtBlankLines)) //TODO: Fix in SE 3.3
+                radioButtonSplitAtBlankLines.Text = Configuration.Settings.Language.ImportText.SplitAtBlankLines;
+            else
+                radioButtonSplitAtBlankLines.Visible = false;
             checkBoxMergeShortLines.Text = Configuration.Settings.Language.ImportText.MergeShortLines;
             checkBoxRemoveEmptyLines.Text = Configuration.Settings.Language.ImportText.RemoveEmptyLines;
             checkBoxRemoveLinesWithoutLetters.Text = Configuration.Settings.Language.ImportText.RemoveLinesWithoutLetters;
@@ -101,8 +105,10 @@ namespace Nikse.SubtitleEdit.Forms
             _subtitle = new Subtitle();
             if (radioButtonLineMode.Checked)
                 ImportLineMode(textBoxText.Lines);
-            else
+            else if (radioButtonAutoSplit.Checked)
                 ImportAutoSplit(textBoxText.Lines);
+            else
+                ImportSplitAtBlankLine(textBoxText.Lines);
 
             if (checkBoxMergeShortLines.Checked)
                 MergeLinesWithContinuation();
@@ -205,6 +211,30 @@ namespace Nikse.SubtitleEdit.Forms
                 else
                 {
                     _subtitle.Paragraphs.Add(new Paragraph(0, 0, line.Trim()));
+                }
+            }
+        }
+
+        private void ImportSplitAtBlankLine(IEnumerable<string> lines)
+        {
+            var sb = new StringBuilder();
+            foreach (string line in lines)
+            {
+                
+                if (line.Trim().Length == 0)
+                {
+                    if (sb.Length > 0)
+                        _subtitle.Paragraphs.Add(new Paragraph(0, 0, sb.ToString().Trim()));
+                    sb = new StringBuilder();
+                }
+                else if (!ContainsLetters(line))
+                {
+                    if (!checkBoxRemoveLinesWithoutLetters.Checked)
+                        sb.AppendLine(line.Trim());
+                }
+                else
+                {
+                    sb.AppendLine(line.Trim());
                 }
             }
         }
@@ -440,6 +470,11 @@ namespace Nikse.SubtitleEdit.Forms
         }
 
         private void RadioButtonDurationAutoCheckedChanged(object sender, EventArgs e)
+        {
+            GeneratePreview();
+        }
+
+        private void radioButtonSplitAtBlankLines_CheckedChanged(object sender, EventArgs e)
         {
             GeneratePreview();
         }

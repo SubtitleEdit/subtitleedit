@@ -50,6 +50,7 @@
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.buttonOK = new System.Windows.Forms.Button();
+            this.radioButtonSplitAtBlankLines = new System.Windows.Forms.RadioButton();
             this.groupBoxImportText.SuspendLayout();
             this.groupBoxImportOptions.SuspendLayout();
             this.groupBoxDuration.SuspendLayout();
@@ -247,6 +248,7 @@
             // 
             // groupBoxSplitting
             // 
+            this.groupBoxSplitting.Controls.Add(this.radioButtonSplitAtBlankLines);
             this.groupBoxSplitting.Controls.Add(this.radioButtonAutoSplit);
             this.groupBoxSplitting.Controls.Add(this.radioButtonLineMode);
             this.groupBoxSplitting.Location = new System.Drawing.Point(6, 19);
@@ -262,7 +264,7 @@
             this.radioButtonAutoSplit.Checked = true;
             this.radioButtonAutoSplit.Location = new System.Drawing.Point(14, 19);
             this.radioButtonAutoSplit.Name = "radioButtonAutoSplit";
-            this.radioButtonAutoSplit.Size = new System.Drawing.Size(88, 17);
+            this.radioButtonAutoSplit.Size = new System.Drawing.Size(93, 17);
             this.radioButtonAutoSplit.TabIndex = 2;
             this.radioButtonAutoSplit.TabStop = true;
             this.radioButtonAutoSplit.Text = "Auto split text";
@@ -274,7 +276,7 @@
             this.radioButtonLineMode.AutoSize = true;
             this.radioButtonLineMode.Location = new System.Drawing.Point(14, 42);
             this.radioButtonLineMode.Name = "radioButtonLineMode";
-            this.radioButtonLineMode.Size = new System.Drawing.Size(131, 17);
+            this.radioButtonLineMode.Size = new System.Drawing.Size(133, 17);
             this.radioButtonLineMode.TabIndex = 0;
             this.radioButtonLineMode.Text = "One line is one subtitle";
             this.radioButtonLineMode.UseVisualStyleBackColor = true;
@@ -321,6 +323,7 @@
             this.SubtitleListview1.Location = new System.Drawing.Point(6, 19);
             this.SubtitleListview1.MultiSelect = false;
             this.SubtitleListview1.Name = "SubtitleListview1";
+            this.SubtitleListview1.OwnerDraw = true;
             this.SubtitleListview1.Size = new System.Drawing.Size(811, 186);
             this.SubtitleListview1.TabIndex = 12;
             this.SubtitleListview1.UseCompatibleStateImageBehavior = false;
@@ -353,6 +356,17 @@
             this.buttonOK.Text = "&Next >";
             this.buttonOK.UseVisualStyleBackColor = true;
             this.buttonOK.Click += new System.EventHandler(this.ButtonOkClick);
+            // 
+            // radioButtonSplitAtBlankLines
+            // 
+            this.radioButtonSplitAtBlankLines.AutoSize = true;
+            this.radioButtonSplitAtBlankLines.Location = new System.Drawing.Point(159, 19);
+            this.radioButtonSplitAtBlankLines.Name = "radioButtonSplitAtBlankLines";
+            this.radioButtonSplitAtBlankLines.Size = new System.Drawing.Size(110, 17);
+            this.radioButtonSplitAtBlankLines.TabIndex = 3;
+            this.radioButtonSplitAtBlankLines.Text = "Split at blank lines";
+            this.radioButtonSplitAtBlankLines.UseVisualStyleBackColor = true;
+            this.radioButtonSplitAtBlankLines.CheckedChanged += new System.EventHandler(this.radioButtonSplitAtBlankLines_CheckedChanged);
             // 
             // ImportText
             // 
@@ -411,5 +425,6 @@
         private System.Windows.Forms.RadioButton radioButtonDurationFixed;
         private System.Windows.Forms.RadioButton radioButtonDurationAuto;
         private System.Windows.Forms.CheckBox checkBoxMergeShortLines;
+        private System.Windows.Forms.RadioButton radioButtonSplitAtBlankLines;
     }
 }
