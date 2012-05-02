@@ -14,7 +14,7 @@ namespace Nikse.SubtitleEdit.Forms
     {
         Subtitle _subtitle;
         SubtitleFormat _format;
-        Encoding _encoding;        
+        Encoding _encoding;
         public bool ShowBasic { get; private set; }
         int _totalNumberOfCharacters;
         bool _loading = true;

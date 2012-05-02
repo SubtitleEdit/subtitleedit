@@ -3610,7 +3610,7 @@ namespace Nikse.SubtitleEdit.Forms
             else if (_xSubList != null)
             {
                 foreach (int idx in indices)
-                    _xSubList.RemoveAt(idx);            
+                    _xSubList.RemoveAt(idx);
             }
             else if (_bluRaySubtitlesOriginal != null)
             {
@@ -3631,13 +3631,13 @@ namespace Nikse.SubtitleEdit.Forms
                     _bluRaySubtitles.RemoveAt(idx);
                 }
             }
-            else 
+            else
             {
                 foreach (int idx in indices)
                 {
                     var x1 = _vobSubMergedPackist[idx];
                     int i = 0;
-                    while (i<_vobSubMergedPackistOriginal.Count)                    
+                    while (i<_vobSubMergedPackistOriginal.Count)
                     {
                         var x2 = _vobSubMergedPackistOriginal[i];
                         if (x2.StartTime.TotalMilliseconds == x1.StartTime.TotalMilliseconds)
@@ -3658,7 +3658,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (selIdx < subtitleListView1.Items.Count)
                 subtitleListView1.SelectIndexAndEnsureVisible(selIdx);
             else
-                subtitleListView1.SelectIndexAndEnsureVisible(subtitleListView1.Items.Count-1);                       
+                subtitleListView1.SelectIndexAndEnsureVisible(subtitleListView1.Items.Count-1);
         }
 
     }

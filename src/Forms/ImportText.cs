@@ -220,7 +220,7 @@ namespace Nikse.SubtitleEdit.Forms
             var sb = new StringBuilder();
             foreach (string line in lines)
             {
-                
+
                 if (line.Trim().Length == 0)
                 {
                     if (sb.Length > 0)
