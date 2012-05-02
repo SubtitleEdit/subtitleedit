@@ -97,8 +97,75 @@ namespace Nikse.SubtitleEdit.Controls
             Resize += SubtitleListViewResize;
             GridLines = true;
             ColumnWidthChanged += SubtitleListViewColumnWidthChanged;
+            OwnerDraw = true;
+            DrawItem += new DrawListViewItemEventHandler(SubtitleListView_DrawItem);
+            DrawSubItem += new DrawListViewSubItemEventHandler(SubtitleListView_DrawSubItem);
+            DrawColumnHeader += new DrawListViewColumnHeaderEventHandler(SubtitleListView_DrawColumnHeader);
         }
 
+        void SubtitleListView_DrawColumnHeader(object sender, DrawListViewColumnHeaderEventArgs e)
+        {
+            e.DrawDefault = true;
+        }
+
+        void SubtitleListView_DrawSubItem(object sender, DrawListViewSubItemEventArgs e)
+        {
+            if (Focused)
+            {
+                e.DrawDefault = true;
+                return;
+            }
+
+            using (StringFormat sf = new StringFormat())
+            {
+                switch (e.Header.TextAlign)
+                {
+                    case HorizontalAlignment.Center:
+                        sf.Alignment = StringAlignment.Center;
+                        break;
+                    case HorizontalAlignment.Right:
+                        sf.Alignment = StringAlignment.Far;
+                        break;
+                }
+
+                if (e.Item.Selected)
+                {
+                    Rectangle r = e.Bounds;
+                    if (Configuration.Settings != null)
+                    {
+                        SolidBrush sb = new SolidBrush(Configuration.Settings.Tools.ListViewUnfocusedSelectedColor);
+                        e.Graphics.FillRectangle(sb, r);
+                    }
+                    else
+                    {
+                        e.Graphics.FillRectangle(Brushes.LightBlue, r);
+                    }
+                    r = new Rectangle(e.Bounds.Left + 4, e.Bounds.Top+2, e.Bounds.Width - 3, e.Bounds.Height);
+                    Font f = new System.Drawing.Font(SubtitleFontName, SubtitleFontSize, e.Item.Font.Style);
+                    e.Graphics.DrawString(e.SubItem.Text, f, new SolidBrush(e.Item.ForeColor), r, sf);                       
+                }
+                else
+                {
+                    e.DrawDefault = true;
+                }
+            }
+        }
+
+        void SubtitleListView_DrawItem(object sender, DrawListViewItemEventArgs e)
+        {
+            if (!Focused && (e.State & ListViewItemStates.Selected) != 0)
+            {
+                //Rectangle r = new Rectangle(e.Bounds.Left + 1, e.Bounds.Top + 1, e.Bounds.Width - 2, e.Bounds.Height - 2);
+                //e.Graphics.FillRectangle(Brushes.LightGoldenrodYellow, r);
+
+                if (e.Item.Focused)
+                    e.DrawFocusRectangle();
+            }
+            else
+            {
+                e.DrawDefault = true;
+            }
+        }
         void SubtitleListViewColumnWidthChanged(object sender, ColumnWidthChangedEventArgs e)
        {
             if (_settings != null && _saveColumnWidthChanges)

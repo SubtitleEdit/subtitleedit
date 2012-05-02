@@ -85,7 +85,7 @@
             this.groupBox1.Location = new System.Drawing.Point(311, 13);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(367, 67);
-            this.groupBox1.TabIndex = 4;
+            this.groupBox1.TabIndex = 2;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Subtitle info";
             // 
@@ -126,7 +126,7 @@
             0});
             this.numericUpDownParts.Name = "numericUpDownParts";
             this.numericUpDownParts.Size = new System.Drawing.Size(50, 20);
-            this.numericUpDownParts.TabIndex = 2;
+            this.numericUpDownParts.TabIndex = 1;
             this.numericUpDownParts.Value = new decimal(new int[] {
             2,
             0,
@@ -140,7 +140,7 @@
             this.radioButtonCharacters.Location = new System.Drawing.Point(15, 43);
             this.radioButtonCharacters.Name = "radioButtonCharacters";
             this.radioButtonCharacters.Size = new System.Drawing.Size(76, 17);
-            this.radioButtonCharacters.TabIndex = 1;
+            this.radioButtonCharacters.TabIndex = 0;
             this.radioButtonCharacters.Text = "Characters";
             this.radioButtonCharacters.UseVisualStyleBackColor = true;
             this.radioButtonCharacters.CheckedChanged += new System.EventHandler(this.radioButtonCharacters_CheckedChanged);
@@ -183,7 +183,7 @@
             this.comboBoxSubtitleFormats.Location = new System.Drawing.Point(51, 69);
             this.comboBoxSubtitleFormats.Name = "comboBoxSubtitleFormats";
             this.comboBoxSubtitleFormats.Size = new System.Drawing.Size(225, 21);
-            this.comboBoxSubtitleFormats.TabIndex = 8;
+            this.comboBoxSubtitleFormats.TabIndex = 4;
             // 
             // label1
             // 
@@ -191,7 +191,7 @@
             this.label1.Location = new System.Drawing.Point(309, 72);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(52, 13);
-            this.label1.TabIndex = 7;
+            this.label1.TabIndex = 5;
             this.label1.Text = "Encoding";
             // 
             // comboBoxEncoding
@@ -209,7 +209,7 @@
             this.labelOutputFormat.Location = new System.Drawing.Point(6, 72);
             this.labelOutputFormat.Name = "labelOutputFormat";
             this.labelOutputFormat.Size = new System.Drawing.Size(39, 13);
-            this.labelOutputFormat.TabIndex = 5;
+            this.labelOutputFormat.TabIndex = 3;
             this.labelOutputFormat.Text = "Format";
             // 
             // labelChooseOutputFolder
@@ -218,7 +218,7 @@
             this.labelChooseOutputFolder.Location = new System.Drawing.Point(6, 23);
             this.labelChooseOutputFolder.Name = "labelChooseOutputFolder";
             this.labelChooseOutputFolder.Size = new System.Drawing.Size(105, 13);
-            this.labelChooseOutputFolder.TabIndex = 4;
+            this.labelChooseOutputFolder.TabIndex = 0;
             this.labelChooseOutputFolder.Text = "Choose output folder";
             // 
             // buttonChooseFolder
@@ -226,7 +226,7 @@
             this.buttonChooseFolder.Location = new System.Drawing.Point(566, 39);
             this.buttonChooseFolder.Name = "buttonChooseFolder";
             this.buttonChooseFolder.Size = new System.Drawing.Size(26, 23);
-            this.buttonChooseFolder.TabIndex = 1;
+            this.buttonChooseFolder.TabIndex = 2;
             this.buttonChooseFolder.Text = "...";
             this.buttonChooseFolder.UseVisualStyleBackColor = true;
             this.buttonChooseFolder.Click += new System.EventHandler(this.buttonChooseFolder_Click);
@@ -236,7 +236,7 @@
             this.textBoxOutputFolder.Location = new System.Drawing.Point(7, 39);
             this.textBoxOutputFolder.Name = "textBoxOutputFolder";
             this.textBoxOutputFolder.Size = new System.Drawing.Size(553, 20);
-            this.textBoxOutputFolder.TabIndex = 0;
+            this.textBoxOutputFolder.TabIndex = 1;
             this.textBoxOutputFolder.TextChanged += new System.EventHandler(this.textBoxOutputFolder_TextChanged);
             // 
             // groupBoxPreview
@@ -264,7 +264,7 @@
             this.listViewParts.Location = new System.Drawing.Point(3, 16);
             this.listViewParts.Name = "listViewParts";
             this.listViewParts.Size = new System.Drawing.Size(682, 129);
-            this.listViewParts.TabIndex = 101;
+            this.listViewParts.TabIndex = 0;
             this.listViewParts.UseCompatibleStateImageBehavior = false;
             this.listViewParts.View = System.Windows.Forms.View.Details;
             // 
@@ -290,7 +290,7 @@
             this.buttonCancel.Location = new System.Drawing.Point(625, 371);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 21);
-            this.buttonCancel.TabIndex = 4;
+            this.buttonCancel.TabIndex = 5;
             this.buttonCancel.Text = "C&ancel";
             this.buttonCancel.UseVisualStyleBackColor = true;
             this.buttonCancel.Click += new System.EventHandler(this.buttonCancel_Click);
@@ -302,7 +302,7 @@
             this.buttonSplit.Location = new System.Drawing.Point(544, 371);
             this.buttonSplit.Name = "buttonSplit";
             this.buttonSplit.Size = new System.Drawing.Size(75, 21);
-            this.buttonSplit.TabIndex = 3;
+            this.buttonSplit.TabIndex = 4;
             this.buttonSplit.Text = "&Split";
             this.buttonSplit.UseVisualStyleBackColor = true;
             this.buttonSplit.Click += new System.EventHandler(this.buttonSplit_Click);
@@ -314,7 +314,7 @@
             this.buttonBasic.Location = new System.Drawing.Point(440, 371);
             this.buttonBasic.Name = "buttonBasic";
             this.buttonBasic.Size = new System.Drawing.Size(98, 21);
-            this.buttonBasic.TabIndex = 24;
+            this.buttonBasic.TabIndex = 3;
             this.buttonBasic.Text = "&Basic";
             this.buttonBasic.UseVisualStyleBackColor = true;
             this.buttonBasic.Click += new System.EventHandler(this.buttonBasic_Click);
@@ -330,6 +330,7 @@
             this.Controls.Add(this.groupBoxPreview);
             this.Controls.Add(this.groupBoxOutput);
             this.Controls.Add(this.groupBoxParts);
+            this.KeyPreview = true;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.MinimumSize = new System.Drawing.Size(640, 420);
@@ -339,6 +340,7 @@
             this.Text = "Split";
             this.Shown += new System.EventHandler(this.Split_Shown);
             this.ResizeEnd += new System.EventHandler(this.Split_ResizeEnd);
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Split_KeyDown);
             this.Resize += new System.EventHandler(this.Split_Resize);
             this.groupBoxParts.ResumeLayout(false);
             this.groupBoxParts.PerformLayout();

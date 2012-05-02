@@ -4,6 +4,7 @@ Subtitle Edit Changelog
  * NEW:
    * Added "Right to left" in Edit menu - also with configuable shortcut
    * Added two new subtitle formats
+   * Added delete line(s) context menu to ocr - thx Mario
  * IMPROVED:
    * Updated Chinese language file - thx FeiXJ
    * Updated Brazilian Portuguese - thx Igor Rückert
