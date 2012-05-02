@@ -470,6 +470,7 @@
             public string Splitting { get; set; }
             public string AutoSplitText { get; set; }
             public string OneLineIsOneSubtitle { get; set; }
+            public string SplitAtBlankLines { get; set; }
             public string MergeShortLines { get; set; }
             public string RemoveEmptyLines { get; set; }
             public string RemoveLinesWithoutLetters { get; set; }
