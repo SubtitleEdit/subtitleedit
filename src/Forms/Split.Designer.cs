@@ -37,6 +37,8 @@
             this.radioButtonCharacters = new System.Windows.Forms.RadioButton();
             this.RadioButtonLines = new System.Windows.Forms.RadioButton();
             this.groupBoxOutput = new System.Windows.Forms.GroupBox();
+            this.labelFileName = new System.Windows.Forms.Label();
+            this.textBoxFileName = new System.Windows.Forms.TextBox();
             this.comboBoxSubtitleFormats = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
             this.comboBoxEncoding = new System.Windows.Forms.ComboBox();
@@ -53,6 +55,7 @@
             this.buttonCancel = new System.Windows.Forms.Button();
             this.buttonSplit = new System.Windows.Forms.Button();
             this.buttonBasic = new System.Windows.Forms.Button();
+            this.buttonOpenOutputFolder = new System.Windows.Forms.Button();
             this.groupBoxParts.SuspendLayout();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownParts)).BeginInit();
@@ -162,6 +165,9 @@
             // 
             this.groupBoxOutput.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxOutput.Controls.Add(this.buttonOpenOutputFolder);
+            this.groupBoxOutput.Controls.Add(this.labelFileName);
+            this.groupBoxOutput.Controls.Add(this.textBoxFileName);
             this.groupBoxOutput.Controls.Add(this.comboBoxSubtitleFormats);
             this.groupBoxOutput.Controls.Add(this.label1);
             this.groupBoxOutput.Controls.Add(this.comboBoxEncoding);
@@ -171,72 +177,90 @@
             this.groupBoxOutput.Controls.Add(this.textBoxOutputFolder);
             this.groupBoxOutput.Location = new System.Drawing.Point(12, 105);
             this.groupBoxOutput.Name = "groupBoxOutput";
-            this.groupBoxOutput.Size = new System.Drawing.Size(688, 106);
+            this.groupBoxOutput.Size = new System.Drawing.Size(688, 143);
             this.groupBoxOutput.TabIndex = 1;
             this.groupBoxOutput.TabStop = false;
             this.groupBoxOutput.Text = "Output";
+            // 
+            // labelFileName
+            // 
+            this.labelFileName.AutoSize = true;
+            this.labelFileName.Location = new System.Drawing.Point(6, 16);
+            this.labelFileName.Name = "labelFileName";
+            this.labelFileName.Size = new System.Drawing.Size(52, 13);
+            this.labelFileName.TabIndex = 0;
+            this.labelFileName.Text = "File name";
+            // 
+            // textBoxFileName
+            // 
+            this.textBoxFileName.Location = new System.Drawing.Point(7, 32);
+            this.textBoxFileName.Name = "textBoxFileName";
+            this.textBoxFileName.Size = new System.Drawing.Size(529, 20);
+            this.textBoxFileName.TabIndex = 1;
+            this.textBoxFileName.TextChanged += new System.EventHandler(this.textBoxFileName_TextChanged);
             // 
             // comboBoxSubtitleFormats
             // 
             this.comboBoxSubtitleFormats.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxSubtitleFormats.FormattingEnabled = true;
-            this.comboBoxSubtitleFormats.Location = new System.Drawing.Point(51, 69);
+            this.comboBoxSubtitleFormats.Location = new System.Drawing.Point(51, 107);
             this.comboBoxSubtitleFormats.Name = "comboBoxSubtitleFormats";
             this.comboBoxSubtitleFormats.Size = new System.Drawing.Size(225, 21);
-            this.comboBoxSubtitleFormats.TabIndex = 4;
+            this.comboBoxSubtitleFormats.TabIndex = 7;
+            this.comboBoxSubtitleFormats.SelectedIndexChanged += new System.EventHandler(this.comboBoxSubtitleFormats_SelectedIndexChanged);
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(309, 72);
+            this.label1.Location = new System.Drawing.Point(309, 110);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(52, 13);
-            this.label1.TabIndex = 5;
+            this.label1.TabIndex = 8;
             this.label1.Text = "Encoding";
             // 
             // comboBoxEncoding
             // 
             this.comboBoxEncoding.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxEncoding.FormattingEnabled = true;
-            this.comboBoxEncoding.Location = new System.Drawing.Point(367, 69);
+            this.comboBoxEncoding.Location = new System.Drawing.Point(367, 107);
             this.comboBoxEncoding.Name = "comboBoxEncoding";
             this.comboBoxEncoding.Size = new System.Drawing.Size(221, 21);
-            this.comboBoxEncoding.TabIndex = 6;
+            this.comboBoxEncoding.TabIndex = 9;
             // 
             // labelOutputFormat
             // 
             this.labelOutputFormat.AutoSize = true;
-            this.labelOutputFormat.Location = new System.Drawing.Point(6, 72);
+            this.labelOutputFormat.Location = new System.Drawing.Point(6, 110);
             this.labelOutputFormat.Name = "labelOutputFormat";
             this.labelOutputFormat.Size = new System.Drawing.Size(39, 13);
-            this.labelOutputFormat.TabIndex = 3;
+            this.labelOutputFormat.TabIndex = 6;
             this.labelOutputFormat.Text = "Format";
             // 
             // labelChooseOutputFolder
             // 
             this.labelChooseOutputFolder.AutoSize = true;
-            this.labelChooseOutputFolder.Location = new System.Drawing.Point(6, 23);
+            this.labelChooseOutputFolder.Location = new System.Drawing.Point(6, 61);
             this.labelChooseOutputFolder.Name = "labelChooseOutputFolder";
             this.labelChooseOutputFolder.Size = new System.Drawing.Size(105, 13);
-            this.labelChooseOutputFolder.TabIndex = 0;
+            this.labelChooseOutputFolder.TabIndex = 2;
             this.labelChooseOutputFolder.Text = "Choose output folder";
             // 
             // buttonChooseFolder
             // 
-            this.buttonChooseFolder.Location = new System.Drawing.Point(566, 39);
+            this.buttonChooseFolder.Location = new System.Drawing.Point(542, 75);
             this.buttonChooseFolder.Name = "buttonChooseFolder";
             this.buttonChooseFolder.Size = new System.Drawing.Size(26, 23);
-            this.buttonChooseFolder.TabIndex = 2;
+            this.buttonChooseFolder.TabIndex = 4;
             this.buttonChooseFolder.Text = "...";
             this.buttonChooseFolder.UseVisualStyleBackColor = true;
             this.buttonChooseFolder.Click += new System.EventHandler(this.buttonChooseFolder_Click);
             // 
             // textBoxOutputFolder
             // 
-            this.textBoxOutputFolder.Location = new System.Drawing.Point(7, 39);
+            this.textBoxOutputFolder.Location = new System.Drawing.Point(7, 77);
             this.textBoxOutputFolder.Name = "textBoxOutputFolder";
-            this.textBoxOutputFolder.Size = new System.Drawing.Size(553, 20);
-            this.textBoxOutputFolder.TabIndex = 1;
+            this.textBoxOutputFolder.Size = new System.Drawing.Size(529, 20);
+            this.textBoxOutputFolder.TabIndex = 3;
             this.textBoxOutputFolder.TextChanged += new System.EventHandler(this.textBoxOutputFolder_TextChanged);
             // 
             // groupBoxPreview
@@ -245,9 +269,9 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBoxPreview.Controls.Add(this.listViewParts);
-            this.groupBoxPreview.Location = new System.Drawing.Point(12, 217);
+            this.groupBoxPreview.Location = new System.Drawing.Point(12, 254);
             this.groupBoxPreview.Name = "groupBoxPreview";
-            this.groupBoxPreview.Size = new System.Drawing.Size(688, 148);
+            this.groupBoxPreview.Size = new System.Drawing.Size(688, 245);
             this.groupBoxPreview.TabIndex = 2;
             this.groupBoxPreview.TabStop = false;
             this.groupBoxPreview.Text = "Prevew";
@@ -263,7 +287,7 @@
             this.listViewParts.HideSelection = false;
             this.listViewParts.Location = new System.Drawing.Point(3, 16);
             this.listViewParts.Name = "listViewParts";
-            this.listViewParts.Size = new System.Drawing.Size(682, 129);
+            this.listViewParts.Size = new System.Drawing.Size(682, 226);
             this.listViewParts.TabIndex = 0;
             this.listViewParts.UseCompatibleStateImageBehavior = false;
             this.listViewParts.View = System.Windows.Forms.View.Details;
@@ -287,7 +311,7 @@
             // 
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonCancel.Location = new System.Drawing.Point(625, 371);
+            this.buttonCancel.Location = new System.Drawing.Point(625, 505);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 21);
             this.buttonCancel.TabIndex = 5;
@@ -299,7 +323,7 @@
             // 
             this.buttonSplit.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonSplit.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonSplit.Location = new System.Drawing.Point(544, 371);
+            this.buttonSplit.Location = new System.Drawing.Point(544, 505);
             this.buttonSplit.Name = "buttonSplit";
             this.buttonSplit.Size = new System.Drawing.Size(75, 21);
             this.buttonSplit.TabIndex = 4;
@@ -311,7 +335,7 @@
             // 
             this.buttonBasic.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonBasic.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonBasic.Location = new System.Drawing.Point(440, 371);
+            this.buttonBasic.Location = new System.Drawing.Point(440, 505);
             this.buttonBasic.Name = "buttonBasic";
             this.buttonBasic.Size = new System.Drawing.Size(98, 21);
             this.buttonBasic.TabIndex = 3;
@@ -319,11 +343,21 @@
             this.buttonBasic.UseVisualStyleBackColor = true;
             this.buttonBasic.Click += new System.EventHandler(this.buttonBasic_Click);
             // 
+            // buttonOpenOutputFolder
+            // 
+            this.buttonOpenOutputFolder.Location = new System.Drawing.Point(574, 75);
+            this.buttonOpenOutputFolder.Name = "buttonOpenOutputFolder";
+            this.buttonOpenOutputFolder.Size = new System.Drawing.Size(81, 23);
+            this.buttonOpenOutputFolder.TabIndex = 5;
+            this.buttonOpenOutputFolder.Text = "Open...";
+            this.buttonOpenOutputFolder.UseVisualStyleBackColor = true;
+            this.buttonOpenOutputFolder.Click += new System.EventHandler(this.buttonOpenOutputFolder_Click);
+            // 
             // Split
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(712, 403);
+            this.ClientSize = new System.Drawing.Size(712, 537);
             this.Controls.Add(this.buttonBasic);
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.buttonSplit);
@@ -381,5 +415,8 @@
         private System.Windows.Forms.Label labelLines;
         private System.Windows.Forms.ComboBox comboBoxSubtitleFormats;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label labelFileName;
+        private System.Windows.Forms.TextBox textBoxFileName;
+        private System.Windows.Forms.Button buttonOpenOutputFolder;
     }
 }

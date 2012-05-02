@@ -11,6 +11,7 @@ Subtitle Edit Changelog
    * Updated Polish language file - thx Adam Malich
    * Better reading of format Cavena 890
    * Version number now inlucdes revision from SVN - thx XhmikosR   
+   * Unfocused selection in list view now has more visible color - thx Adem
  * FIXED:
    * Bug (skip of subtitles) in dvd sub ripping - thx kowenant
    * Minor fix for blu-ray sup reading
