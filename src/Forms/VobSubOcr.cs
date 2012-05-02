@@ -246,6 +246,7 @@ namespace Nikse.SubtitleEdit.Forms
             inspectImageCompareMatchesForCurrentImageToolStripMenuItem.Text = language.InspectCompareMatchesForCurrentImage;
             EditLastAdditionsToolStripMenuItem.Text = language.EditLastAdditions;
             checkBoxRightToLeft.Checked = Configuration.Settings.VobSubOcr.RightToLeft;
+            deleteToolStripMenuItem.Text = Configuration.Settings.Language.Main.Menu.ContextMenu.Delete;
 
             comboBoxTesseractLanguages.Left = labelTesseractLanguage.Left + labelTesseractLanguage.Width;
 
@@ -3568,6 +3569,96 @@ namespace Nikse.SubtitleEdit.Forms
                 e.Handled = true;
                 e.SuppressKeyPress = true;
             }
+        }
+
+        private void DeleteToolStripMenuItemClick(object sender, EventArgs e)
+        {
+            if (subtitleListView1.SelectedItems.Count == 0)
+                return;
+
+            string askText;
+            if (subtitleListView1.SelectedItems.Count > 1)
+                askText = string.Format(Configuration.Settings.Language.Main.DeleteXLinesPrompt, subtitleListView1.SelectedItems.Count);
+            else
+                askText = Configuration.Settings.Language.Main.DeleteOneLinePrompt;
+            if (Configuration.Settings.General.PromptDeleteLines && MessageBox.Show(askText, "", MessageBoxButtons.YesNo) == DialogResult.No)
+                return;
+
+            ResetTesseractThread();
+
+            int selIdx = subtitleListView1.SelectedItems[0].Index;
+            List<int> indices = new List<int>();
+            foreach (int idx in subtitleListView1.SelectedIndices)
+                indices.Add(idx);
+            indices.Reverse();
+
+            if (_mp4List != null)
+            {
+                foreach (int idx in indices)
+                    _mp4List.RemoveAt(idx);
+            }
+            else if (_spList != null)
+            {
+                foreach (int idx in indices)
+                    _spList.RemoveAt(idx);
+            }
+            else if (_bdnXmlSubtitle != null)
+            {
+                foreach (int idx in indices)
+                    _bdnXmlSubtitle.Paragraphs.RemoveAt(idx);
+            }
+            else if (_xSubList != null)
+            {
+                foreach (int idx in indices)
+                    _xSubList.RemoveAt(idx);            
+            }
+            else if (_bluRaySubtitlesOriginal != null)
+            {
+                foreach (int idx in indices)
+                {
+                    var x1 = _bluRaySubtitles[idx];
+                    int i = 0;
+                    while (i < _bluRaySubtitlesOriginal.Count)
+                    {
+                        var x2 = _bluRaySubtitlesOriginal[i];
+                        if (x2.StartTime == x1.StartTime)
+                        {
+                            _bluRaySubtitlesOriginal.Remove(x2);
+                            break;
+                        }
+                        i++;
+                    }
+                    _bluRaySubtitles.RemoveAt(idx);
+                }
+            }
+            else 
+            {
+                foreach (int idx in indices)
+                {
+                    var x1 = _vobSubMergedPackist[idx];
+                    int i = 0;
+                    while (i<_vobSubMergedPackistOriginal.Count)                    
+                    {
+                        var x2 = _vobSubMergedPackistOriginal[i];
+                        if (x2.StartTime.TotalMilliseconds == x1.StartTime.TotalMilliseconds)
+                        {
+                            _vobSubMergedPackistOriginal.Remove(x2);
+                            break;
+                        }
+                        i++;
+                    }
+                    _vobSubMergedPackist.RemoveAt(idx);
+                }
+            }
+
+           foreach (int idx in indices)
+               _subtitle.Paragraphs.RemoveAt(idx);
+           subtitleListView1.Fill(_subtitle);
+
+            if (selIdx < subtitleListView1.Items.Count)
+                subtitleListView1.SelectIndexAndEnsureVisible(selIdx);
+            else
+                subtitleListView1.SelectIndexAndEnsureVisible(subtitleListView1.Items.Count-1);                       
         }
 
     }
