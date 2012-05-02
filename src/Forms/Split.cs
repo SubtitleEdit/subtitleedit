@@ -14,8 +14,7 @@ namespace Nikse.SubtitleEdit.Forms
     {
         Subtitle _subtitle;
         SubtitleFormat _format;
-        Encoding _encoding;
-        private string _fileName;
+        Encoding _encoding;        
         public bool ShowBasic { get; private set; }
         int _totalNumberOfCharacters;
         bool _loading = true;
@@ -44,7 +43,10 @@ namespace Nikse.SubtitleEdit.Forms
         {
             ShowBasic = false;
             _subtitle = subtitle;
-            _fileName = fileName;
+            if (string.IsNullOrEmpty(fileName))
+                textBoxFileName.Text = "Untitled";
+            else
+                textBoxFileName.Text = fileName;
             _format = format;
             _encoding = encoding;
             foreach (Paragraph p in _subtitle.Paragraphs)
@@ -112,15 +114,17 @@ namespace Nikse.SubtitleEdit.Forms
             if (string.IsNullOrEmpty(textBoxOutputFolder.Text) || !System.IO.Directory.Exists(textBoxOutputFolder.Text))
                 textBoxOutputFolder.Text = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
             var format = Utilities.GetSubtitleFormatByFriendlyName(comboBoxSubtitleFormats.SelectedItem.ToString());
-            string fileNameNoExt = System.IO.Path.GetFileNameWithoutExtension(_fileName);
+            string fileNameNoExt = System.IO.Path.GetFileNameWithoutExtension(textBoxFileName.Text);
+            if (fileNameNoExt.Trim().Length == 0)
+                fileNameNoExt = "Untitled";
             listViewParts.Items.Clear();
             int startNumber = 0;
             if (RadioButtonLines.Checked)
             {
-                int partSize = (int) (_subtitle.Paragraphs.Count / numericUpDownParts.Value);
+                int partSize = (int)(_subtitle.Paragraphs.Count / numericUpDownParts.Value);
                 for (int i = 0; i < numericUpDownParts.Value; i++)
                 {
-                    int noOfLines = partSize;
+                    int noOfLines = (int) partSize;
                     if (i == numericUpDownParts.Value -1)
                         noOfLines = (int) (_subtitle.Paragraphs.Count - ((numericUpDownParts.Value-1) * partSize));
 
@@ -151,7 +155,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     Paragraph p = _subtitle.Paragraphs[i];
                     int size = p.Text.Length;
-                    if (currentSize + size > nextLimit && _parts.Count < numericUpDownParts.Value-1)
+                    if (currentSize + size > nextLimit + 4 && _parts.Count < numericUpDownParts.Value-1)
                     {
                         _parts.Add(temp);
                         ListViewItem lvi = new ListViewItem(string.Format("{0:#,###,###}", temp.Paragraphs.Count));
@@ -193,7 +197,9 @@ namespace Nikse.SubtitleEdit.Forms
         {
             bool overwrite = false;
             var format = Utilities.GetSubtitleFormatByFriendlyName(comboBoxSubtitleFormats.SelectedItem.ToString());
-            string fileNameNoExt = System.IO.Path.GetFileNameWithoutExtension(_fileName);
+            string fileNameNoExt = System.IO.Path.GetFileNameWithoutExtension(textBoxFileName.Text);
+            if (fileNameNoExt.Trim().Length == 0)
+                fileNameNoExt = "Untitled";
 
             int number = 1;
             try
@@ -204,7 +210,7 @@ namespace Nikse.SubtitleEdit.Forms
                     string allText = sub.ToText(format);
                     if (System.IO.File.Exists(fileName) && !overwrite)
                     {
-                        if (MessageBox.Show( "Overwrite existing files?", "", MessageBoxButtons.YesNo) == DialogResult.No)
+                        if (MessageBox.Show("Overwrite existing files?", "", MessageBoxButtons.YesNo) == DialogResult.No)
                             return;
                         overwrite = true;
                     }
@@ -296,6 +302,24 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (e.KeyCode == Keys.Escape)
                 DialogResult = DialogResult.Cancel;
+        }
+
+        private void textBoxFileName_TextChanged(object sender, EventArgs e)
+        {
+            CalculateParts();
+        }
+
+        private void comboBoxSubtitleFormats_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            CalculateParts();
+        }
+
+        private void buttonOpenOutputFolder_Click(object sender, EventArgs e)
+        {
+            if (System.IO.Directory.Exists(textBoxOutputFolder.Text))
+                System.Diagnostics.Process.Start(textBoxOutputFolder.Text);
+            else
+                MessageBox.Show("Folder not found: " + textBoxOutputFolder.Text);
         }
 
     }

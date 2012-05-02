@@ -208,7 +208,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         public Main()
         {
-           // try
+            try
             {
                 InitializeComponent();
 
@@ -361,11 +361,11 @@ namespace Nikse.SubtitleEdit.Forms
 
                 FixLargeFonts();
             }
-            //catch (Exception exception)
-            //{
-            //    Cursor = Cursors.Default;
-            //    MessageBox.Show(exception.Message + Environment.NewLine + exception.StackTrace);
-            //}
+            catch (Exception exception)
+            {
+                Cursor = Cursors.Default;
+                MessageBox.Show(exception.Message + Environment.NewLine + exception.StackTrace);
+            }
         }
 
         private void SetEncoding(Encoding encoding)
