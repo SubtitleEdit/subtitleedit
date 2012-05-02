@@ -1848,7 +1848,7 @@ namespace Nikse.SubtitleEdit.Forms
                             ImportAndOcrSst(fileName, sst, list);
                         return;
                     }
-                }                
+                }
 
 
                 _fileDateTime = File.GetLastWriteTime(fileName);

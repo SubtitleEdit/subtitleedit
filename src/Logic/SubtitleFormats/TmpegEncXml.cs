@@ -203,7 +203,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     layoutIndex.InnerText = "4";
                 else
                     layoutIndex.InnerText = "0";
-                
+
                 paragraph.Attributes.Append(layoutIndex);
 
                 XmlAttribute enable = xml.CreateAttribute("enable");
@@ -239,7 +239,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             var xml = new XmlDocument();
             xml.LoadXml(sb.ToString());
             var italicStyles = new List<bool>();
-            
+
             foreach (XmlNode node in xml.DocumentElement.SelectNodes("Layout/LayoutItem"))
             {
                 XmlNode fontItalic = node.SelectSingleNode("FontItalic");
