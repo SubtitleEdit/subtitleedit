@@ -1835,6 +1835,22 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
 
+                if (format == null || format.Name == new Scenarist().Name)
+                {
+                    var sst = new SonicScenaristBitmaps();
+                    string[] arr = File.ReadAllLines(fileName, Utilities.GetEncodingFromFile(fileName));
+                    var list = new List<string>();
+                    foreach (string l in arr)
+                        list.Add(l);
+                    if (sst.IsMine(list, fileName))
+                    {
+                        if (ContinueNewOrExit())
+                            ImportAndOcrSst(fileName, sst, list);
+                        return;
+                    }
+                }                
+
+
                 _fileDateTime = File.GetLastWriteTime(fileName);
 
                 if (GetCurrentSubtitleFormat().IsFrameBased)
@@ -2020,6 +2036,38 @@ namespace Nikse.SubtitleEdit.Forms
         }
 
         private void ImportAndOcrSon(string fileName, Son format, List<string> list)
+        {
+            Subtitle sub = new Subtitle();
+            format.LoadSubtitle(sub, list, fileName);
+            sub.FileName = fileName;
+            var formSubOcr = new VobSubOcr();
+            formSubOcr.Initialize(sub, Configuration.Settings.VobSubOcr, true);
+            if (formSubOcr.ShowDialog(this) == DialogResult.OK)
+            {
+                MakeHistoryForUndo(_language.BeforeImportingBdnXml);
+                FileNew();
+                _subtitle.Paragraphs.Clear();
+                SetCurrentFormat(new SubRip().FriendlyName);
+                _subtitle.WasLoadedWithFrameNumbers = false;
+                _subtitle.CalculateFrameNumbersFromTimeCodes(CurrentFrameRate);
+                foreach (Paragraph p in formSubOcr.SubtitleFromOcr.Paragraphs)
+                {
+                    _subtitle.Paragraphs.Add(p);
+                }
+
+                ShowSource();
+                SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
+                _subtitleListViewIndex = -1;
+                SubtitleListview1.FirstVisibleIndex = -1;
+                SubtitleListview1.SelectIndexAndEnsureVisible(0);
+
+                _fileName = Path.ChangeExtension(formSubOcr.FileName, ".srt");
+                SetTitle();
+                _converted = true;
+            }
+        }
+
+        private void ImportAndOcrSst(string fileName, SonicScenaristBitmaps format, List<string> list)
         {
             Subtitle sub = new Subtitle();
             format.LoadSubtitle(sub, list, fileName);
