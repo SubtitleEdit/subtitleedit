@@ -10379,6 +10379,7 @@ namespace Nikse.SubtitleEdit.Forms
             toolStripMenuItemRightToLeftMode.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainEditRightToLeft);
 
             fixToolStripMenuItem.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainToolsFixCommonErrors);
+            removeTextForHearImparedToolStripMenuItem.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainToolsRemoveTextForHI);
 
             showhideVideoToolStripMenuItem.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainVideoShowHideVideo);
             _toggleVideoDockUndock = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainVideoToggleVideoControls);
