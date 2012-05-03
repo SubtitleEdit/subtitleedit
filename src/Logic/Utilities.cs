@@ -686,8 +686,21 @@ namespace Nikse.SubtitleEdit.Logic
         public static Encoding GetEncodingFromFile(string fileName)
         {
             Encoding encoding = Encoding.Default;
+            
             try
             {
+                foreach (EncodingInfo ei in Encoding.GetEncodings())
+                {
+                    if (ei.CodePage + ": " + ei.DisplayName == Configuration.Settings.General.DefaultEncoding &&
+                        ei.Name != Encoding.UTF8.BodyName &&
+                        ei.Name != Encoding.Unicode.BodyName &&
+                        ei.CodePage >= Configuration.Settings.General.EncodingMininumCodePage)
+                    {
+                        encoding = ei.GetEncoding();
+                        break;
+                    }
+                }
+
                 var file = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
 
                 var bom = new byte[12]; // Get the byte-order mark, if there is one
@@ -714,6 +727,10 @@ namespace Nikse.SubtitleEdit.Logic
                     bool couldBeUtf8;
                     if (IsUtf8(buffer, out couldBeUtf8))
                     {
+                        encoding = Encoding.UTF8;
+                    }
+                    else if (couldBeUtf8 && Configuration.Settings.General.DefaultEncoding == Encoding.UTF8.BodyName)
+                    { // keep utf-8 encoding if it's default
                         encoding = Encoding.UTF8;
                     }
                     else if (couldBeUtf8 && fileName.ToLower().EndsWith(".xml") && Encoding.Default.GetString(buffer).ToLower().Replace("'", "\"").Contains("encoding=\"utf-8\""))
@@ -745,6 +762,10 @@ namespace Nikse.SubtitleEdit.Logic
                         }
                         else if (GetCount(hewbrewEncoding.GetString(buffer), "אתה", "אולי", "הוא", "בסדר", "יודע", "טוב") > 5)
                             return hewbrewEncoding;
+
+                        Encoding romanianEncoding = Encoding.GetEncoding(1250); // Romanian
+                        if (GetCount(romanianEncoding.GetString(buffer), "să", "şi", "văzut", "regulă", "găsit", "viaţă") > 99)
+                            return romanianEncoding;
                     }
                 }
                 file.Close();
