@@ -44,68 +44,23 @@ namespace Nikse.SubtitleEdit.Forms
             sb.AppendLine();
             if (Configuration.Settings.General.VideoPlayer != "VLC")
             {
+                sb.AppendLine("You need to install/update LAV Filters - DirectShow Media Splitter and Decoders: http://code.google.com/p/lavfilters/");
+                sb.AppendLine();
                 sb.AppendLine("NOTE: Subtitle Edit can also use VLC media player as built-in video player. See Options -> Settings -> Video Player");
                 sb.AppendLine("http://www.videolan.org/vlc/");
                 sb.AppendLine();
             }
-
-
-            if (!string.IsNullOrEmpty(fileName) && fileName.ToLower().EndsWith(".mkv"))
+            else
             {
-                sb.AppendLine("This file uses the matroska container file format.");
-                if (Is64BitOS)
-                {
-                    sb.AppendLine("You need a matroska splitter like 'Matroska Splitter' under 'DirectShow Filters (64-bit)': http://sourceforge.net/projects/guliverkli2/files/");
-                    sb.AppendLine("(Unzip the .ax file to " + Environment.SystemDirectory + ", then register MatroskaSplitter from the commandline: regsvr32 MatroskaSplitter.ax)");
-                }
-                else
-                {
-                    sb.AppendLine("You need a matroska splitter like 'MatroskaSplitter': http://haali.cs.msu.ru/mkv/");
-                }
-                sb.AppendLine("");
-                matraskaSplitterSuggested = true;
-            }
-            else if (!string.IsNullOrEmpty(fileName) && fileName.ToLower().EndsWith(".mp4") && isWindowsXpOrVista)
-            {
-                sb.AppendLine("This file uses the mp4 container file format.");
-                if (Is64BitOS)
-                {
-                    sb.AppendLine("You need an mp4 splitter like 'MP4 Splitter' under 'DirectShow Filters (64-bit)': http://sourceforge.net/projects/guliverkli2/files/");
-                    sb.AppendLine("(Unzip the .ax file to " + Environment.SystemDirectory + ", then register MP4Splitter from the commandline: regsvr32 MP4Splitter.ax)");
-                }
-                else
-                {
-                    sb.AppendLine("You need an mp4 splitter like 'MatroskaSplitter': http://haali.cs.msu.ru/mkv/");
-                }
-                sb.AppendLine("");
-                mp4SplitterSuggested = true;
+                sb.AppendLine("VLC media player was unable to play this file - you can change video player via Options -> Settings -> Video Player");
+                sb.AppendLine("Latest version of VLC is available here: http://www.videolan.org/vlc/");
+                sb.AppendLine();
             }
 
             if (videInfo != null && !string.IsNullOrEmpty(videInfo.VideoCodec))
             {
                 sb.AppendLine(string.Format("The file {0} is encoded with {1}!", Path.GetFileName(fileName), videInfo.VideoCodec.Replace('\0', ' ')));
                 sb.AppendLine("");
-            }
-
-            if (matraskaSplitterSuggested || mp4SplitterSuggested)
-                sb.AppendLine("You might also need to install:");
-            else
-                sb.AppendLine("You might need to install:");
-
-
-            if (Is64BitOS)
-            {
-                sb.AppendLine(" - ffdshow (64-bit builds): http://ffdshow-tryout.sourceforge.net/");
-                if (!matraskaSplitterSuggested)
-                    sb.AppendLine(" - 'Matroska Splitter' under 'DirectShow Filters (64-bit)': http://sourceforge.net/projects/guliverkli2/files/");
-                if (!mp4SplitterSuggested && isWindowsXpOrVista)
-                    sb.AppendLine(" - 'MP4 Splitter' under 'DirectShow Filters (64-bit)': http://sourceforge.net/projects/guliverkli2/files/");
-            }
-            else
-            {
-                sb.AppendLine(" - ffdshow: http://ffdshow-tryout.sourceforge.net/");
-                if (!matraskaSplitterSuggested && !mp4SplitterSuggested)
-                    sb.AppendLine(" - MatroskaSplitter: http://haali.cs.msu.ru/mkv/");
             }
 
             sb.AppendLine("");
