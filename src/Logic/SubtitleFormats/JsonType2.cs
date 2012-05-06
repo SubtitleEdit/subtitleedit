@@ -68,9 +68,9 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             foreach (string line in sb.ToString().Replace("},{", Environment.NewLine).Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries))
             {
                 string s = line.Trim() + "}";
-                string start = ReadTag(s, "startMillis");
-                string end = ReadTag(s, "endMillis");
-                string text = ReadTag(s, "text");
+                string start = Json.ReadTag(s, "startMillis");
+                string end = Json.ReadTag(s, "endMillis");
+                string text = Json.ReadTag(s, "text");
                 if (start != null && end != null && text != null)
                 {
                     double startSeconds;
@@ -96,38 +96,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 }
             }
             subtitle.Renumber(1);
-        }
-
-        private string ReadTag(string s, string tag)
-        {
-            int startIndex = s.IndexOf("\"" + tag + "\"");
-            if (startIndex == -1)
-                startIndex = s.IndexOf("'" + tag + "'");
-            if (startIndex == -1)
-                return null;
-            string res = s.Substring(startIndex + 3 + tag.Length).Trim().TrimStart(':').TrimStart();
-            if (res.StartsWith("\""))
-            { // text
-                res = res.Replace("\\u0027", "'");
-                res = res.Replace("\\\"", "@__1");
-                int endIndex = res.IndexOf("\"}");
-                if (endIndex == -1)
-                    endIndex = res.IndexOf("\",");
-                if (endIndex == -1)
-                    return null;
-                if (res.Length > 1 && endIndex > 1)
-                    return res.Substring(1, endIndex-1).Replace("@__1", "\"");
-                return string.Empty;
-            }
-            else
-            { // number
-                int endIndex = res.IndexOf(",");
-                if (endIndex == -1)
-                    endIndex = res.IndexOf("}");
-                if (endIndex == -1)
-                    return null;
-                return res.Substring(0, endIndex);
-            }
         }
 
     }

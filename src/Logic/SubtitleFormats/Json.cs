@@ -98,7 +98,22 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             subtitle.Renumber(1);
         }
 
-        private string ReadTag(string s, string tag)
+        public static string ConvertJsonSpecialCharacters(string s)
+        {
+            if (s.Contains("\\u00"))
+            {
+                for (int i = 33; i < 200; i++)
+                {
+                    string tag = "\\u" + i.ToString("X4").ToLower();
+                    if (s.Contains(tag))
+                        s = s.Replace(tag, Convert.ToChar(i).ToString());
+                }
+            }
+            return s;
+        }
+
+
+        public static string ReadTag(string s, string tag)
         {
             int startIndex = s.IndexOf("\"" + tag + "\"");
             if (startIndex == -1)
@@ -108,7 +123,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             string res = s.Substring(startIndex + 3 + tag.Length).Trim().TrimStart(':').TrimStart();
             if (res.StartsWith("\""))
             { // text
-                res = res.Replace("\\u0027", "'");
+                res = Json.ConvertJsonSpecialCharacters(res);
                 res = res.Replace("\\\"", "@__1");
                 int endIndex = res.IndexOf("\"}");
                 if (endIndex == -1)
