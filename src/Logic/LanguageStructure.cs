@@ -731,6 +731,8 @@
                     public string Replace { get; set; }
                     public string MultipleReplace { get; set; }
                     public string GoToSubtitleNumber { get; set; }
+                    public string RightToLeftMode { get; set; }
+                    public string ReverseRightToLeftStartEnd { get; set; }
                 }
                 public class ToolsMenu
                 {
@@ -1219,6 +1221,7 @@
             public string GoToPrevious { get; set; }
             public string ToggleFocus { get; set; }
             public string ToggleDialogueDashes { get; set; }
+            public string ReverseStartAndEndingForRTL { get; set; }
             public string VerticalZoom { get; set; }
             public string WaveformSeekSilenceForward { get; set; }
             public string WaveformSeekSilenceBack { get; set; }

@@ -810,6 +810,8 @@ namespace Nikse.SubtitleEdit.Logic
                         Replace = "&Replace",
                         MultipleReplace = "&Multiple replace...",
                         GoToSubtitleNumber = "&Go to subtitle number...",
+                        RightToLeftMode = "Right-to-left mode",
+                        ReverseRightToLeftStartEnd = "Reverse RTL start/end (for selected lines)",
                     },
 
                     Tools = new LanguageStructure.Main.MainMenu.ToolsMenu
@@ -1290,6 +1292,7 @@ can edit in same subtitle file (collaboration)",
                 GoToPrevious = "Go to previous line",
                 ToggleFocus = "Toggle focus between list view and subtitle text box",
                 ToggleDialogueDashes = "Toogle dialogue dashes",
+                ReverseStartAndEndingForRTL = "Reverse RTL start/end", 
                 VerticalZoom = "Vertical zoom",
                 WaveformSeekSilenceForward = "Seek silence forward",
                 WaveformSeekSilenceBack = "Seek silence back",
