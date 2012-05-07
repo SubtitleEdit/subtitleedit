@@ -428,6 +428,7 @@
     <Splitting>Opdeling</Splitting>
     <AutoSplitText>Auto split tekst</AutoSplitText>
     <OneLineIsOneSubtitle>En linje er en undertekst</OneLineIsOneSubtitle>
+    <SplitAtBlankLines>Split ved blanke linjer</SplitAtBlankLines>
     <MergeShortLines>Flet kort linjer med fortsættelsen</MergeShortLines>
     <RemoveEmptyLines>Fjern tomme linjer</RemoveEmptyLines>
     <RemoveLinesWithoutLetters>Fjern linjer uden bogstaver</RemoveLinesWithoutLetters>
@@ -482,6 +483,8 @@
         <Replace>&amp;Erstat</Replace>
         <MultipleReplace>&amp;Multi-erstat...</MultipleReplace>
         <GoToSubtitleNumber>&amp;Gå til undertekst nummer...</GoToSubtitleNumber>
+        <RightToLeftMode>Højre-mod-venstre mode</RightToLeftMode>
+        <ReverseRightToLeftStartEnd>Byt rundt på højre-mod-venstre start/slut</ReverseRightToLeftStartEnd>
       </Edit>
       <Tools>
         <Title>Værktøj</Title>
@@ -1108,6 +1111,7 @@ Fortsæt?</SubtitleAppendPrompt>
     <GoToPrevious>Gå til forrige line</GoToPrevious>
     <ToggleFocus>Skift fokus imellem liste visning og undertekst tekstboks</ToggleFocus>
     <ToggleDialogueDashes>Toogle dialog tankestreger</ToggleDialogueDashes>
+    <ReverseStartAndEndingForRTL>Byt rundt på højre-mod-venstre start/slut</ReverseStartAndEndingForRTL>
     <VerticalZoom>Lodret zoom</VerticalZoom>
     <WaveformSeekSilenceForward>Søg stilhed frem</WaveformSeekSilenceForward>
     <WaveformSeekSilenceBack>Søg stilhed tilbage</WaveformSeekSilenceBack>

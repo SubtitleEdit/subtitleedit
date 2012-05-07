@@ -127,6 +127,7 @@ namespace Nikse.SubtitleEdit.Forms
         Keys _mainGoToPrevious = Keys.None;
         Keys _mainToggleFocus = Keys.None;
         Keys _mainListViewToggleDashes = Keys.None;
+        Keys _mainEditReverseStartAndEndingForRTL = Keys.None;
         Keys _waveformVerticalZoom = Keys.None;
         Keys _waveformZoomIn = Keys.None;
         Keys _waveformZoomOut = Keys.None;
@@ -1079,6 +1080,8 @@ namespace Nikse.SubtitleEdit.Forms
             multipleReplaceToolStripMenuItem.Text = _language.Menu.Edit.MultipleReplace;
             gotoLineNumberToolStripMenuItem.Text = _language.Menu.Edit.GoToSubtitleNumber;
             toolStripMenuItemRightToLeftMode.Text = Configuration.Settings.Language.VobSubOcr.RightToLeft; //TODO: SE 3.3 new language tag
+            if (!string.IsNullOrEmpty(_language.Menu.Edit.ReverseRightToLeftStartEnd))
+                toolStripMenuItemReverseRightToLeftStartEnd.Text = _language.Menu.Edit.ReverseRightToLeftStartEnd; ; //TODO: SE 3.3 new language tag
             editSelectAllToolStripMenuItem.Text = _language.Menu.ContextMenu.SelectAll;
 
             toolsToolStripMenuItem.Text = _language.Menu.Tools.Title;
@@ -7530,6 +7533,11 @@ namespace Nikse.SubtitleEdit.Forms
                 ToggleDashes();
                 e.SuppressKeyPress = true;
             }
+            else if (!toolStripMenuItemReverseRightToLeftStartEnd.Visible && _mainEditReverseStartAndEndingForRTL == e.KeyData && inListView)
+            {
+                ReverseStartAndEndingForRTL();
+                e.SuppressKeyPress = true;
+            }                
             else if (e.Modifiers == Keys.Control && e.KeyCode == Keys.Z) // undo
             {
                 UndoLastAction();
@@ -8082,6 +8090,91 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
             // put new entries above tabs
+        }
+
+        private void ReverseStartAndEndingForRTL()
+        {
+            int selectedIndex = FirstSelectedIndex;
+            foreach (int index in SubtitleListview1.SelectedIndices)
+            {
+                Paragraph p = _subtitle.Paragraphs[index];
+                p.Text = ReverseStartAndEndingForRTL(p.Text);
+                SubtitleListview1.SetText(index , p.Text);
+                if (index == selectedIndex)
+                    textBoxListViewText.Text = p.Text;
+            }
+        }
+
+        private static string ReverseString(string s)
+        {
+            char[] charArray = s.ToCharArray();
+            Array.Reverse(charArray);
+            return new string(charArray);
+        }
+
+        private static string ReverseParethesis(string s)
+        {
+            string k = "@__<<>___@";
+
+            s = s.Replace("(", k);
+            s = s.Replace(")", "(");
+            s = s.Replace(k, ")");
+
+            s = s.Replace("[", k);
+            s = s.Replace("]", "[");
+            s = s.Replace(k, "]");
+
+            return s;
+        }
+
+        private static string ReverseStartAndEndingForRTL(string s)
+        {
+            var lines = s.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+            var newLines = new StringBuilder();
+            foreach (string line in lines)
+            {
+                string s2 = line;
+
+                bool startsWithItalic = false;
+                if (s2.StartsWith("<i>"))
+                {
+                    startsWithItalic = true;
+                    s2 = s2.Remove(0,3);
+                }
+                bool endsWithItalic = false;
+                if (s2.EndsWith("</i>"))
+                {
+                    endsWithItalic = true;
+                    s2 = s2.Remove(s2.Length-4, 4);
+                }
+
+                var pre = new StringBuilder();
+                var post = new StringBuilder();
+                var text = new StringBuilder();
+
+                int i = 0;
+                while (i < s2.Length && "- !?.\"،,():;[]".Contains(s2[i].ToString()))
+                {
+                    pre.Append(s2[i].ToString());
+                    i++;
+                }
+                int j = s2.Length - 1;
+                while (j > i && "- !?.\"،,():;[]".Contains(s2[j].ToString()))
+                {
+                    post.Append(s2[j].ToString());
+                    j--;
+                }
+                if (startsWithItalic)
+                    newLines.Append("<i>");
+                newLines.Append(ReverseParethesis(post.ToString()));
+                newLines.Append(s2.Substring(pre.Length, s2.Length - (pre.Length + post.Length)));
+                newLines.Append(ReverseParethesis(ReverseString(pre.ToString())));
+                if (endsWithItalic)
+                    newLines.Append("</i>");
+                newLines.AppendLine();
+
+            }
+            return newLines.ToString().Trim();
         }
 
         private void MergeDialogues()
@@ -10370,6 +10463,7 @@ namespace Nikse.SubtitleEdit.Forms
                 toolStripMenuItemLeft.Visible = true;
                 toolStripMenuItemRight.Visible = true;
 //                toolStripMenuItemRightToLeftMode.Visible = true;
+                toolStripMenuItemReverseRightToLeftStartEnd.Visible = true;
                 joinSubtitlesToolStripMenuItem.Visible = true;
             }
             else
@@ -10381,6 +10475,7 @@ namespace Nikse.SubtitleEdit.Forms
                 toolStripMenuItemLeft.Visible = false;
                 toolStripMenuItemRight.Visible = false;
                 //                toolStripMenuItemRightToLeftMode.Visible = false;
+                toolStripMenuItemReverseRightToLeftStartEnd.Visible = !string.IsNullOrEmpty(_language.Menu.Edit.ReverseRightToLeftStartEnd);
                 joinSubtitlesToolStripMenuItem.Visible = false;
             }
         }
@@ -10442,6 +10537,8 @@ namespace Nikse.SubtitleEdit.Forms
             toolStripMenuItemAdjustAllTimes.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainSynchronizationAdjustTimes);
             italicToolStripMenuItem.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainListViewItalic);
             _mainListViewToggleDashes = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainListViewToggleDashes);
+            _mainEditReverseStartAndEndingForRTL = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainEditReverseStartAndEndingForRTL);
+            toolStripMenuItemReverseRightToLeftStartEnd.ShortcutKeys = _mainEditReverseStartAndEndingForRTL;
             italicToolStripMenuItem1.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxItalic);
             _mainTextBoxSplitAtCursor = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxSplitAtCursor);
             _mainCreateInsertSubAtVideoPos = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainCreateInsertSubAtVideoPos);
@@ -13644,6 +13741,11 @@ namespace Nikse.SubtitleEdit.Forms
                     ShowStatus(_language.SubtitleSplitted); //TODO: add language tags
                 }
             }
+        }
+
+        private void toolStripMenuItemReverseRightToLeftStartEnd_Click(object sender, EventArgs e)
+        {
+            ReverseStartAndEndingForRTL();
         }
 
     }

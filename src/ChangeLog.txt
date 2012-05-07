@@ -1,6 +1,6 @@
 Subtitle Edit Changelog
 
-3.2.8 (x 2012)
+3.2.8 (xth May 2012)
  * NEW:
    * Added "Right to left" in Edit menu - also with configuable shortcut
    * Added two new subtitle formats
@@ -9,6 +9,7 @@ Subtitle Edit Changelog
    * Updated Chinese language file - thx FeiXJ
    * Updated Brazilian Portuguese - thx Igor Rückert
    * Updated Polish language file - thx Adam Malich
+   * Updated Romanian language file - thx dr. Jackson
    * Better reading of format Cavena 890
    * Version number now inlucdes revision from SVN - thx XhmikosR   
    * Unfocused selection in list view now has more visible color - thx Adem

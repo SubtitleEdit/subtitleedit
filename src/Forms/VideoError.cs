@@ -35,8 +35,6 @@ namespace Nikse.SubtitleEdit.Forms
 
         public void Initialize(string fileName, VideoInfo videInfo, Exception exception)
         {
-            bool matraskaSplitterSuggested = false;
-            bool mp4SplitterSuggested = false;
             bool isWindowsXpOrVista = Environment.OSVersion.Version.Major < 7;
 
             var sb = new StringBuilder();

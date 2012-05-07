@@ -376,6 +376,7 @@
             this.imageListPlayRate = new System.Windows.Forms.ImageList(this.components);
             this.timerTextUndo = new System.Windows.Forms.Timer(this.components);
             this.timerAlternateTextUndo = new System.Windows.Forms.Timer(this.components);
+            this.toolStripMenuItemReverseRightToLeftStartEnd = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
@@ -1056,6 +1057,7 @@
             this.gotoLineNumberToolStripMenuItem,
             this.toolStripSeparator25,
             this.toolStripMenuItemRightToLeftMode,
+            this.toolStripMenuItemReverseRightToLeftStartEnd,
             this.toolStripSeparator21,
             this.editSelectAllToolStripMenuItem});
             this.editToolStripMenuItem.Name = "editToolStripMenuItem";
@@ -3719,6 +3721,13 @@
             this.timerAlternateTextUndo.Interval = 700;
             this.timerAlternateTextUndo.Tick += new System.EventHandler(this.TimerAlternateTextUndoTick);
             // 
+            // toolStripMenuItemReverseRightToLeftStartEnd
+            // 
+            this.toolStripMenuItemReverseRightToLeftStartEnd.Name = "toolStripMenuItemReverseRightToLeftStartEnd";
+            this.toolStripMenuItemReverseRightToLeftStartEnd.Size = new System.Drawing.Size(222, 22);
+            this.toolStripMenuItemReverseRightToLeftStartEnd.Text = "Reverse RTL start/end";
+            this.toolStripMenuItemReverseRightToLeftStartEnd.Click += new System.EventHandler(this.toolStripMenuItemReverseRightToLeftStartEnd_Click);
+            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -4142,6 +4151,7 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator25;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemRightToLeftMode;
         private System.Windows.Forms.ToolStripMenuItem joinSubtitlesToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemReverseRightToLeftStartEnd;
     }
 }
 

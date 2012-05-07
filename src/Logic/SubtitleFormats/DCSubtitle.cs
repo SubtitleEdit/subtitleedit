@@ -91,7 +91,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             }
 
             string xmlStructure = "<DCSubtitle Version=\"1.0\">" + Environment.NewLine +
-                                    "    <SubtitleID>4EB245B8-4D3A-4158-9516-95DD20E8322E</SubtitleID>" + Environment.NewLine +
+                                    "    <SubtitleID>" + "4EB245B8-4D3A-4158-9516-95DD20E8322E".ToLower() + "</SubtitleID>" + Environment.NewLine +
                                     "    <MovieTitle></MovieTitle>" + Environment.NewLine +
                                     "    <ReelNumber>1</ReelNumber>" + Environment.NewLine +
                                     "    <Language>" + languageEnglishName + "</Language>" + Environment.NewLine +

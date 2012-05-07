@@ -496,8 +496,9 @@ namespace Nikse.SubtitleEdit.Logic
         public string MainEditMultipleReplace { get; set; }
         public string MainEditGoToLineNumber { get; set; }
         public string MainEditRightToLeft { get; set; }
+        public string MainEditReverseStartAndEndingForRTL { get; set; }
         public string MainToolsFixCommonErrors { get; set; }
-        public string MainToolsRemoveTextForHI { get; set; }
+        public string MainToolsRemoveTextForHI { get; set; }        
         public string MainVideoPause { get; set; }
         public string MainVideoPlayPauseToggle { get; set; }
         public string MainVideoShowHideVideo { get; set; }
@@ -555,7 +556,7 @@ namespace Nikse.SubtitleEdit.Logic
             MainEditGoToLineNumber = "Control+G";
             MainEditRightToLeft = "Control+Shift+Alt+R";
             MainToolsFixCommonErrors = "Control+Shift+F";
-            MainToolsRemoveTextForHI = "Control+Shift+H";
+            MainToolsRemoveTextForHI = "Control+Shift+H";            
             MainVideoPlayPauseToggle = "Control+P";
             MainVideoPause = "Control+Alt+P";
             MainVideoShowHideVideo = "Control+Q";
@@ -566,6 +567,7 @@ namespace Nikse.SubtitleEdit.Logic
             MainVideoFullscreen = "Alt+Return";
             MainSynchronizationAdjustTimes = "Control+Shift+A";
             MainListViewItalic = "Control+I";
+            MainEditReverseStartAndEndingForRTL = string.Empty;
             MainTextBoxItalic = "Control+I";
             MainTextBoxSplitAtCursor = "Control+Alt+V";
             MainCreateInsertSubAtVideoPos = string.Empty;
@@ -1413,6 +1415,9 @@ namespace Nikse.SubtitleEdit.Logic
                 subNode = node.SelectSingleNode("MainToolsFixCommonErrors");
                 if (subNode != null)
                     settings.Shortcuts.MainToolsFixCommonErrors = subNode.InnerText;
+                subNode = node.SelectSingleNode("MainToolsRemoveTextForHI");
+                if (subNode != null)
+                    settings.Shortcuts.MainToolsRemoveTextForHI = subNode.InnerText;
                 subNode = node.SelectSingleNode("MainVideoPause");
                 if (subNode != null)
                     settings.Shortcuts.MainVideoPause = subNode.InnerText;
@@ -1449,6 +1454,9 @@ namespace Nikse.SubtitleEdit.Logic
                 subNode = node.SelectSingleNode("MainListViewToggleDashes");
                 if (subNode != null)
                     settings.Shortcuts.MainListViewToggleDashes = subNode.InnerText;
+                subNode = node.SelectSingleNode("MainEditReverseStartAndEndingForRTL");
+                if (subNode != null)
+                    settings.Shortcuts.MainEditReverseStartAndEndingForRTL = subNode.InnerText;
                 subNode = node.SelectSingleNode("MainTextBoxItalic");
                 if (subNode != null)
                     settings.Shortcuts.MainTextBoxItalic = subNode.InnerText;
@@ -1864,6 +1872,7 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("MainEditGoToLineNumber", settings.Shortcuts.MainEditGoToLineNumber);
             textWriter.WriteElementString("MainEditRightToLeft", settings.Shortcuts.MainEditRightToLeft);
             textWriter.WriteElementString("MainToolsFixCommonErrors", settings.Shortcuts.MainToolsFixCommonErrors);
+            textWriter.WriteElementString("MainToolsRemoveTextForHI", settings.Shortcuts.MainToolsRemoveTextForHI);
             textWriter.WriteElementString("MainVideoPause", settings.Shortcuts.MainVideoPause);
             textWriter.WriteElementString("MainVideoPlayPauseToggle", settings.Shortcuts.MainVideoPlayPauseToggle);
             textWriter.WriteElementString("MainVideoShowHideVideo", settings.Shortcuts.MainVideoShowHideVideo);
@@ -1876,6 +1885,7 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("MainSynchronizationAdjustTimes", settings.Shortcuts.MainSynchronizationAdjustTimes);
             textWriter.WriteElementString("MainListViewItalic", settings.Shortcuts.MainListViewItalic);
             textWriter.WriteElementString("MainListViewToggleDashes", settings.Shortcuts.MainListViewToggleDashes);
+            textWriter.WriteElementString("MainEditReverseStartAndEndingForRTL", settings.Shortcuts.MainEditReverseStartAndEndingForRTL);
             textWriter.WriteElementString("MainTextBoxItalic", settings.Shortcuts.MainTextBoxItalic);
             textWriter.WriteElementString("MainTextBoxSplitAtCursor", settings.Shortcuts.MainTextBoxSplitAtCursor);
             textWriter.WriteElementString("MainCreateInsertSubAtVideoPos", settings.Shortcuts.MainCreateInsertSubAtVideoPos);
