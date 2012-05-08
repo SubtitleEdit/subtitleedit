@@ -1215,7 +1215,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         private byte[] GetTextAsBytes(string text)
         {
             byte[] buffer = new byte[51];
-
+            int skipCount = 0;
             for (int i = 0; i < buffer.Length; i++)
                 buffer[i] = 0x7F;
 
@@ -1224,17 +1224,31 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             for (int i = 0; i < text.Length; i++)
             {
                 string current = text.Substring(i, 1);
-                if (_language != null && _language.StartsWith("HEB"))
+                if (skipCount > 0)
+                {
+                    skipCount--;
+                }
+                else if (_language != null && _language.StartsWith("HEB"))
                 {
                     int letterIndex = _hebrewLetters.IndexOf(current);
                     if (letterIndex >= 0)
+                    {
                         buffer[index] = (byte)_hebrewCodes[letterIndex];
+                    }
                     else if (i + 3 < text.Length && text.Substring(i, 3) == "<i>")
+                    {
                         buffer[index] = 0x88;
-                    else if (i + 4 < text.Length && text.Substring(i, 4) == "</i>")
+                        skipCount = 2;
+                    }
+                    else if (i + 4 <= text.Length && text.Substring(i, 4) == "</i>")
+                    {
                         buffer[index] = 0x98;
+                        skipCount = 2;
+                    }
                     else
+                    {
                         buffer[index] = encoding.GetBytes(current)[0];
+                    }
                     index++;
                 }
                 else
@@ -1290,11 +1304,19 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                             buffer[index] = 0x41;
                         }
                         else if (i + 3 < text.Length && text.Substring(i, 3) == "<i>")
+                        {
                             buffer[index] = 0x88;
-                        else if (i + 4 < text.Length && text.Substring(i, 4) == "</i>")
+                            skipCount = 2;
+                        }
+                        else if (i + 4 <= text.Length && text.Substring(i, 4) == "</i>")
+                        {
                             buffer[index] = 0x98;
+                            skipCount = 3;
+                        }
                         else
+                        {
                             buffer[index] = encoding.GetBytes(current)[0];
+                        }
                         index++;
                     }
                 }
