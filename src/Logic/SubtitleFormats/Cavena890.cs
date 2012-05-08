@@ -1303,6 +1303,69 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                             index++;
                             buffer[index] = 0x41;
                         }
+
+                        // ăĂ îÎ şŞ ţŢ âÂ (romanian)
+                        else if (current == "ă") 
+                        {
+                            buffer[index] = 0x89;
+                            index++;
+                            buffer[index] = 0x61;
+                        }
+                        else if (current == "Ă") 
+                        {
+                            buffer[index] = 0x89;
+                            index++;
+                            buffer[index] = 0x41;
+                        }
+                        else if (current == "î") 
+                        {
+                            buffer[index] = 0x83;
+                            index++;
+                            buffer[index] = 0x69;
+                        }
+                        else if (current == "Î") 
+                        {
+                            buffer[index] = 0x83;
+                            index++;
+                            buffer[index] = 0x49;
+                        }
+                        else if (current == "ş") 
+                        {
+                            buffer[index] = 0x87;
+                            index++;
+                            buffer[index] = 0x73;
+                        }
+                        else if (current == "Ş") 
+                        {
+                            buffer[index] = 0x87;
+                            index++;
+                            buffer[index] = 0x53;
+                        }
+                        else if (current == "ţ") 
+                        {
+                            buffer[index] = 0x87;
+                            index++;
+                            buffer[index] = 0x74;
+                        }
+                        else if (current == "Ţ") 
+                        {
+                            buffer[index] = 0x87;
+                            index++;
+                            buffer[index] = 0x74;
+                        }
+                        else if (current == "â") 
+                        {
+                            buffer[index] = 0x83;
+                            index++;
+                            buffer[index] = 0x61;
+                        }
+                        else if (current == "Â") 
+                        {
+                            buffer[index] = 0x83;
+                            index++;
+                            buffer[index] = 0x41;
+                        }
+
                         else if (i + 3 < text.Length && text.Substring(i, 3) == "<i>")
                         {
                             buffer[index] = 0x88;
@@ -1492,6 +1555,20 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
                 text = text.Replace(encoding.GetString(new byte[] { 0x88 }), "<i>");
                 text = text.Replace(encoding.GetString(new byte[] { 0x98 }), "</i>");
+
+
+                //ăĂ îÎ şŞ ţŢ âÂ (romanian)
+                text = text.Replace(encoding.GetString(new byte[] { 0x89, 0x61 }), "ă");
+                text = text.Replace(encoding.GetString(new byte[] { 0x89, 0x41 }), "Ă");
+                text = text.Replace(encoding.GetString(new byte[] { 0x83, 0x69 }), "î");
+                text = text.Replace(encoding.GetString(new byte[] { 0x83, 0x49 }), "Î");
+                text = text.Replace(encoding.GetString(new byte[] { 0x87, 0x73 }), "ş");
+                text = text.Replace(encoding.GetString(new byte[] { 0x87, 0x53 }), "Ş");
+                text = text.Replace(encoding.GetString(new byte[] { 0x87, 0x74 }), "ţ");
+                text = text.Replace(encoding.GetString(new byte[] { 0x87, 0x54 }), "Ţ");
+                text = text.Replace(encoding.GetString(new byte[] { 0x83, 0x61 }), "â");
+                text = text.Replace(encoding.GetString(new byte[] { 0x83, 0x41 }), "Â");
+
 
                 if (text.Contains("<i></i>"))
                     text = text.Replace("<i></i>", "<i>");
