@@ -3,8 +3,8 @@ Subtitle Edit Changelog
 3.2.8 (xth May 2012)
  * NEW:
    * Added "Right to left" in Edit menu - also with configuable shortcut
-   * Added two new subtitle formats
-   * Added delete line(s) context menu to ocr - thx Mario
+   * Added three new subtitle formats
+   * Added "Delete line(s)" context menu to ocr - thx Mario
  * IMPROVED:
    * Updated Chinese language file - thx FeiXJ
    * Updated Brazilian Portuguese - thx Igor Rückert
@@ -22,6 +22,7 @@ Subtitle Edit Changelog
    * Sets default encoding at start when no subtitle is loaded - thx TC
    * Can now set single line max lengt to large values - thx cmaj135
    * Removed flickering in subtitle list view when typing
+   * Fixed italics in .890 writing - thx victor
 
 
 3.2.7 (14th April 2012)

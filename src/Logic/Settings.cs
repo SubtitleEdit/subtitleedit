@@ -498,6 +498,7 @@ namespace Nikse.SubtitleEdit.Logic
         public string MainEditRightToLeft { get; set; }
         public string MainEditReverseStartAndEndingForRTL { get; set; }
         public string MainToolsFixCommonErrors { get; set; }
+        public string MainToolsFixCommonErrorsPreview { get; set; }
         public string MainToolsRemoveTextForHI { get; set; }        
         public string MainVideoPause { get; set; }
         public string MainVideoPlayPauseToggle { get; set; }
@@ -556,6 +557,7 @@ namespace Nikse.SubtitleEdit.Logic
             MainEditGoToLineNumber = "Control+G";
             MainEditRightToLeft = "Control+Shift+Alt+R";
             MainToolsFixCommonErrors = "Control+Shift+F";
+            MainToolsFixCommonErrorsPreview = "Control+P";
             MainToolsRemoveTextForHI = "Control+Shift+H";            
             MainVideoPlayPauseToggle = "Control+P";
             MainVideoPause = "Control+Alt+P";
@@ -1415,6 +1417,9 @@ namespace Nikse.SubtitleEdit.Logic
                 subNode = node.SelectSingleNode("MainToolsFixCommonErrors");
                 if (subNode != null)
                     settings.Shortcuts.MainToolsFixCommonErrors = subNode.InnerText;
+                subNode = node.SelectSingleNode("MainToolsFixCommonErrorsPreview");
+                if (subNode != null)
+                    settings.Shortcuts.MainToolsFixCommonErrorsPreview = subNode.InnerText;
                 subNode = node.SelectSingleNode("MainToolsRemoveTextForHI");
                 if (subNode != null)
                     settings.Shortcuts.MainToolsRemoveTextForHI = subNode.InnerText;
@@ -1872,6 +1877,7 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("MainEditGoToLineNumber", settings.Shortcuts.MainEditGoToLineNumber);
             textWriter.WriteElementString("MainEditRightToLeft", settings.Shortcuts.MainEditRightToLeft);
             textWriter.WriteElementString("MainToolsFixCommonErrors", settings.Shortcuts.MainToolsFixCommonErrors);
+            textWriter.WriteElementString("MainToolsFixCommonErrorsPreview", settings.Shortcuts.MainToolsFixCommonErrorsPreview);
             textWriter.WriteElementString("MainToolsRemoveTextForHI", settings.Shortcuts.MainToolsRemoveTextForHI);
             textWriter.WriteElementString("MainVideoPause", settings.Shortcuts.MainVideoPause);
             textWriter.WriteElementString("MainVideoPlayPauseToggle", settings.Shortcuts.MainVideoPlayPauseToggle);
