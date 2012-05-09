@@ -610,6 +610,7 @@
     <Compile Include="Logic\SubtitleFormats\AvidCaption.cs" />
     <Compile Include="Logic\SubtitleFormats\BdnXml.cs" />
     <Compile Include="Logic\SubtitleFormats\BelleNuitSubtitler.cs" />
+    <Compile Include="Logic\SubtitleFormats\CapMakerPlus.cs" />
     <Compile Include="Logic\SubtitleFormats\Captionate.cs" />
     <Compile Include="Logic\SubtitleFormats\CaptionateMs.cs" />
     <Compile Include="Logic\SubtitleFormats\CaraokeXml.cs" />

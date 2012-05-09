@@ -69,7 +69,7 @@ namespace Nikse.SubtitleEdit.Forms
         static readonly Regex FixAloneLowercaseIToUppercaseIRE = new Regex(@"\bi\b", RegexOptions.Compiled);
 
         Keys _goToLine = Keys.None;
-
+        Keys _preview = Keys.None;
 
         class FixItem
         {
@@ -251,6 +251,7 @@ namespace Nikse.SubtitleEdit.Forms
             TopMost = true;
             BringToFront();
             _goToLine = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainEditGoToLineNumber);
+            _preview = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainToolsFixCommonErrorsPreview);
             TopMost = false;
         }
 
@@ -1096,7 +1097,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     while (match.Success)
                     {
-                        if ("\"<.".Contains(p.Text[match.Index + 2].ToString()) == false)
+                        if ("\"”<.".Contains(p.Text[match.Index + 2].ToString()) == false)
                         {
                             if (AllowFix(p, fixAction))
                             {
@@ -3655,9 +3656,8 @@ namespace Nikse.SubtitleEdit.Forms
                 ButtonFixClick(null, null);
             else if (subtitleListView1.Visible && subtitleListView1.Items.Count > 0 && e.KeyData == _goToLine)
                 GoToLineNumber();
-            else if (e.Modifiers == Keys.Control && e.KeyCode == Keys.P && listViewFixes.Items.Count > 0)
+            else if (e.KeyData == _preview && listViewFixes.Items.Count > 0)
                 GenerateDiff();
-
         }
 
         private void GoToLineNumber()

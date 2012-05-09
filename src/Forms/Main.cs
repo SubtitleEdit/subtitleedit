@@ -1805,6 +1805,21 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
 
+                if (format == null)
+                {
+                    var capMakerPlus = new CapMakerPlus();
+                    if (capMakerPlus.IsMine(null, fileName))
+                    {
+                        capMakerPlus.LoadSubtitle(_subtitle, null, fileName);
+                        _oldSubtitleFormat = capMakerPlus;
+                        SetFormatToSubRip();
+                        SetEncoding(Configuration.Settings.General.DefaultEncoding);
+                        encoding = GetCurrentEncoding();
+                        justConverted = true;
+                        format = GetCurrentSubtitleFormat();
+                    }
+                }
+
 
                 if (format == null)
                 {
