@@ -319,8 +319,8 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 int index = listViewFixes.SelectedIndices[0];
                 ListViewItem item = listViewFixes.Items[index];
-                index = int.Parse(item.SubItems[1].Text);
-                SubtitleListview1.EnsureVisible(index);
+                index = int.Parse(item.SubItems[1].Text) -1;
+                SubtitleListview1.SelectIndexAndEnsureVisible(index);
             }
         }
 
