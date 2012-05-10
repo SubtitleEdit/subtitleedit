@@ -166,23 +166,46 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 }
                 i++;    
             }
-            if (last != null && last.Duration.TotalMilliseconds > Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds)
+            if (last != null)
                 last.EndTime.TotalMilliseconds = last.StartTime.TotalMilliseconds + Utilities.GetDisplayMillisecondsFromText(last.Text);
 
             for (i = 0; i < subtitle.Paragraphs.Count - 1; i++)
             {
                 subtitle.Paragraphs[i].EndTime.TotalMilliseconds = subtitle.Paragraphs[i + 1].StartTime.TotalMilliseconds;
             }
-            for (i = subtitle.Paragraphs.Count - 1; i > 0; i--)
+            for (i = subtitle.Paragraphs.Count - 1; i >= 0; i--)
             {
                 if (string.IsNullOrEmpty(subtitle.Paragraphs[i].Text))
                     subtitle.Paragraphs.RemoveAt(i);
             }
+            
+            var deletes = new List<int>();
             for (i = 0; i < subtitle.Paragraphs.Count - 1; i++)
             {
-                if (subtitle.Paragraphs[i].EndTime.TotalMilliseconds == subtitle.Paragraphs[i + 1].StartTime.TotalMilliseconds)
-                    subtitle.Paragraphs[i].EndTime.TotalMilliseconds = subtitle.Paragraphs[i + 1].StartTime.TotalMilliseconds-1;
+                if (subtitle.Paragraphs[i].StartTime.TotalMilliseconds == subtitle.Paragraphs[i + 1].StartTime.TotalMilliseconds)
+                {
+                    subtitle.Paragraphs[i].Text += Environment.NewLine + subtitle.Paragraphs[i+1].Text;
+                    subtitle.Paragraphs[i].EndTime = subtitle.Paragraphs[i + 1].EndTime;
+                    deletes.Add(i + 1);
+                }
             }
+            deletes.Reverse();
+            foreach (int index in deletes)
+            {
+                subtitle.Paragraphs.RemoveAt(index);
+            }
+
+            for (i = 0; i < subtitle.Paragraphs.Count - 1; i++)
+            {
+                if (subtitle.Paragraphs[i].StartTime.TotalMilliseconds == subtitle.Paragraphs[i + 1].StartTime.TotalMilliseconds)
+                {
+                }
+                else if (subtitle.Paragraphs[i].EndTime.TotalMilliseconds == subtitle.Paragraphs[i + 1].StartTime.TotalMilliseconds)
+                {
+                    subtitle.Paragraphs[i].EndTime.TotalMilliseconds = subtitle.Paragraphs[i + 1].StartTime.TotalMilliseconds - 1;
+                }
+            }
+
 
             subtitle.Renumber(1);
         }
