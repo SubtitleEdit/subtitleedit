@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using Nikse.SubtitleEdit.Logic.VobSub;
+using System.Text;
 
 namespace Nikse.SubtitleEdit.Logic.Mp4.Boxes
 {
@@ -11,9 +12,11 @@ namespace Nikse.SubtitleEdit.Logic.Mp4.Boxes
         public readonly List<SubPicture> SubPictures = new List<SubPicture>();
         public readonly List<double> StartTimeCodes = new List<double>();
         public readonly List<double> EndTimeCodes = new List<double>();
+        Mdia _mdia;
 
-        public Stbl(FileStream fs, ulong maximumLength, UInt32 timeScale, string handlerType)
+        public Stbl(FileStream fs, ulong maximumLength, UInt32 timeScale, string handlerType, Mdia mdia)
         {
+            _mdia = mdia;
             pos = (ulong)fs.Position;
             while (fs.Position < (long)maximumLength)
             {
@@ -71,15 +74,32 @@ namespace Nikse.SubtitleEdit.Logic.Mp4.Boxes
                     int version = buffer[0];
                     uint numberOfSampleTimes = GetUInt(4);
                     double totalTime = 0;
-                    for (int i = 0; i < numberOfSampleTimes; i++)
+                    if (_mdia.IsClosedCaption)
                     {
-                        uint sampleCount = GetUInt(8 + i * 8);
-                        uint sampleDelta = GetUInt(12 + i * 8);
-                        totalTime += (double)(sampleDelta / (double)timeScale);
-                        if (StartTimeCodes.Count <= EndTimeCodes.Count)
+                        for (int i = 0; i < numberOfSampleTimes; i++)
+                        {
+                            uint sampleCount = GetUInt(8 + i * 8);
+                            uint sampleDelta = GetUInt(12 + i * 8);
+                            totalTime += (double)(sampleDelta / (double)timeScale);
+                            if (StartTimeCodes.Count > 0)
+                                EndTimeCodes[EndTimeCodes.Count - 1] = totalTime - 0.001;
                             StartTimeCodes.Add(totalTime);
-                        else
-                            EndTimeCodes.Add(totalTime);
+                            EndTimeCodes.Add(totalTime + 2.5);
+                        }
+                    }
+                    else
+                    {
+                        for (int i = 0; i < numberOfSampleTimes; i++)
+                        {
+
+                            uint sampleCount = GetUInt(8 + i * 8);
+                            uint sampleDelta = GetUInt(12 + i * 8);
+                            totalTime += (double)(sampleDelta / (double)timeScale);
+                            if (StartTimeCodes.Count <= EndTimeCodes.Count)
+                                StartTimeCodes.Add(totalTime);
+                            else
+                                EndTimeCodes.Add(totalTime);
+                        }
                     }
                 }
                 else if (name == "stsc") // sample table sample to chunk map
@@ -129,6 +149,32 @@ namespace Nikse.SubtitleEdit.Logic.Mp4.Boxes
                     data = new byte[textSize];
                     fs.Read(data, 0, data.Length);
                     string text = GetString(data, 0, (int)textSize).TrimEnd();
+
+                    if (_mdia.IsClosedCaption)
+                    {
+                        var sb = new StringBuilder();
+                        for (int j = 8; j < data.Length - 3; j++)
+                        {
+                            string h = data[j].ToString("X2").ToLower();
+                            if (h.Length < 2)
+                                h = "0" + h;
+                            sb.Append(h);
+                            if (j % 2 == 1)
+                                sb.Append(" ");
+                        }
+                        string hex = sb.ToString();
+                        int errorCount = 0;
+                        text = Nikse.SubtitleEdit.Logic.SubtitleFormats.ScenaristClosedCaptions.GetSccText(hex, ref errorCount);
+                        if (text.StartsWith("n") && text.Length > 1)
+                            text = "<i>" + text.Substring(1) + "</i>";
+                        if (text.StartsWith("-n"))
+                            text = text.Remove(0, 2);
+                        if (text.StartsWith("-N"))
+                            text = text.Remove(0, 2);
+                        if (text.StartsWith("-"))
+                            text = text.Remove(0, 1);
+                    }
+
                     Texts.Add(text.Replace("\n", Environment.NewLine));
                 }
             }

@@ -35,7 +35,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         //00:01:00:29   9420 9420 94ae 94ae 94d0 94d0 4920 f761 7320 ...
         static readonly Regex RegexTimeCodes = new Regex(@"^\d+:\d\d:\d\d[:,]\d\d\t", RegexOptions.Compiled);
 
-        private readonly List<string> _letters = new List<string>
+        private static readonly List<string> _letters = new List<string>
                                                      {
                                                          " ",
                                                          "!",
@@ -238,7 +238,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                                                          "", //2c2f=?
                                                      };
 
-        private readonly List<string> _letterCodes = new List<string>
+        private static  readonly List<string> _letterCodes = new List<string>
                                                          {
                                                              "20",    //  " ",
                                                              "a1",    //  "!",
@@ -721,7 +721,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             return string.Format("{0:00}:{1:00}:{2:00}:{3:00}", ts.Hours, ts.Minutes, ts.Seconds, MillisecondsToFrames(ts.Milliseconds));
         }
 
-        private SCCPositionAndStyle GetColorAndPosition(string code)
+        private static SCCPositionAndStyle GetColorAndPosition(string code)
         {
             switch (code.ToLower())
             {
@@ -1229,7 +1229,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 if (match.Success)
                 {
                     TimeCode startTime = ParseTimeCode(s.Substring(0, match.Length-1));
-                    string text = GetSccText(s.Substring(match.Index));
+                    string text = GetSccText(s.Substring(match.Index), ref _errorCount);
 
                     if (text == "942c 942c" || text == "942c")
                     {
@@ -1258,7 +1258,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             subtitle.Renumber(1);
         }
 
-        private string GetSccText(string s)
+        public static string GetSccText(string s, ref int errorCount)
         {
             int y = 0;
             string[] parts = s.Split(" \t".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
@@ -1318,7 +1318,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 else if (part.Length > 0)
                 {
                     if (first)
-                        _errorCount++;
+                        errorCount++;
                 }
                 first = false;
             }
@@ -1327,7 +1327,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             return Utilities.FixInvalidItalicTags(res);
         }
 
-        private string GetLetter(string hexCode)
+        private static string GetLetter(string hexCode)
         {
             int index = _letterCodes.IndexOf(hexCode.ToLower());
             if (index < 0)
