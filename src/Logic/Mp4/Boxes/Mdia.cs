@@ -20,6 +20,11 @@ namespace Nikse.SubtitleEdit.Logic.Mp4.Boxes
             get { return HandlerType == "subp"; }
         }
 
+        public bool IsClosedCaption
+        {
+            get { return HandlerType == "clcp"; }
+        }
+
         public bool IsVideo
         {
             get { return HandlerType == "vide"; }
@@ -38,12 +43,12 @@ namespace Nikse.SubtitleEdit.Logic.Mp4.Boxes
                 if (!InitializeSizeAndName(fs))
                     return;
 
-                if (name == "minf" && IsTextSubtitle || IsVobSubSubtitle)
+                if (name == "minf" && IsTextSubtitle || IsVobSubSubtitle || IsClosedCaption)
                 {
                     UInt32 timeScale = 90000;
                     if (Mdhd != null)
                         timeScale = Mdhd.TimeScale;
-                    Minf = new Minf(fs, pos, timeScale, HandlerType);
+                    Minf = new Minf(fs, pos, timeScale, HandlerType, this);
                 }
                 else if (name == "hdlr")
                 {

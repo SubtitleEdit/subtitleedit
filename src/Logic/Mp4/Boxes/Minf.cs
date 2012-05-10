@@ -8,7 +8,7 @@ namespace Nikse.SubtitleEdit.Logic.Mp4.Boxes
 
         public readonly Stbl Stbl;
 
-        public Minf(FileStream fs, ulong maximumLength, UInt32 timeScale, string handlerType)
+        public Minf(FileStream fs, ulong maximumLength, UInt32 timeScale, string handlerType, Mdia mdia)
         {
             pos = (ulong)fs.Position;
             while (fs.Position < (long)maximumLength)
@@ -17,7 +17,7 @@ namespace Nikse.SubtitleEdit.Logic.Mp4.Boxes
                     return;
 
                 if (name == "stbl")
-                    Stbl = new Stbl(fs, pos, timeScale, handlerType);
+                    Stbl = new Stbl(fs, pos, timeScale, handlerType, mdia);
 
                 fs.Seek((long)pos, SeekOrigin.Begin);
             }

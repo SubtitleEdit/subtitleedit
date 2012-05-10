@@ -1692,7 +1692,8 @@ namespace Nikse.SubtitleEdit.Forms
                 if ((Path.GetExtension(fileName).ToLower() == ".mp4" || Path.GetExtension(fileName).ToLower() == ".m4v" || Path.GetExtension(fileName).ToLower() == ".3gp")
                     && fi.Length > 10000)
                 {
-                    ImportSubtitleFromMp4(fileName);
+                    if (ImportSubtitleFromMp4(fileName))
+                        OpenVideo(fileName);
                     return;
                 }
 
@@ -6957,7 +6958,18 @@ namespace Nikse.SubtitleEdit.Forms
                         var start = TimeSpan.FromSeconds(mp4SubtitleTrack.Mdia.Minf.Stbl.StartTimeCodes[i]);
                         var end = TimeSpan.FromSeconds(mp4SubtitleTrack.Mdia.Minf.Stbl.EndTimeCodes[i]);
                         string text = mp4SubtitleTrack.Mdia.Minf.Stbl.Texts[i];
-                        _subtitle.Paragraphs.Add(new Paragraph(text, start.TotalMilliseconds, end.TotalMilliseconds));
+                        Paragraph p = new Paragraph(text, start.TotalMilliseconds, end.TotalMilliseconds);
+                        if (p.EndTime.TotalMilliseconds - p.StartTime.TotalMilliseconds > Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds)
+                            p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds +Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds;
+
+                        if (mp4SubtitleTrack.Mdia.IsClosedCaption && string.IsNullOrEmpty(text))
+                        {
+                            // do not add empty lines
+                        }
+                        else
+                        {
+                            _subtitle.Paragraphs.Add(p);
+                        }                        
                     }
                 }
 
