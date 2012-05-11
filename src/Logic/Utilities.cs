@@ -686,7 +686,7 @@ namespace Nikse.SubtitleEdit.Logic
         public static Encoding GetEncodingFromFile(string fileName)
         {
             Encoding encoding = Encoding.Default;
-            
+
             try
             {
                 foreach (EncodingInfo ei in Encoding.GetEncodings())

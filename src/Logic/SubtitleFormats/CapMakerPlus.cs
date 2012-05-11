@@ -164,7 +164,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         subtitle.Paragraphs.Add(p);
                     }
                 }
-                i++;    
+                i++;
             }
             if (last != null)
                 last.EndTime.TotalMilliseconds = last.StartTime.TotalMilliseconds + Utilities.GetDisplayMillisecondsFromText(last.Text);
@@ -178,7 +178,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 if (string.IsNullOrEmpty(subtitle.Paragraphs[i].Text))
                     subtitle.Paragraphs.RemoveAt(i);
             }
-            
+
             var deletes = new List<int>();
             for (i = 0; i < subtitle.Paragraphs.Count - 1; i++)
             {

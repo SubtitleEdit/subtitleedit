@@ -1305,61 +1305,61 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         }
 
                         // ăĂ îÎ şŞ ţŢ âÂ (romanian)
-                        else if (current == "ă") 
+                        else if (current == "ă")
                         {
                             buffer[index] = 0x89;
                             index++;
                             buffer[index] = 0x61;
                         }
-                        else if (current == "Ă") 
+                        else if (current == "Ă")
                         {
                             buffer[index] = 0x89;
                             index++;
                             buffer[index] = 0x41;
                         }
-                        else if (current == "î") 
+                        else if (current == "î")
                         {
                             buffer[index] = 0x83;
                             index++;
                             buffer[index] = 0x69;
                         }
-                        else if (current == "Î") 
+                        else if (current == "Î")
                         {
                             buffer[index] = 0x83;
                             index++;
                             buffer[index] = 0x49;
                         }
-                        else if (current == "ş") 
+                        else if (current == "ş")
                         {
                             buffer[index] = 0x87;
                             index++;
                             buffer[index] = 0x73;
                         }
-                        else if (current == "Ş") 
+                        else if (current == "Ş")
                         {
                             buffer[index] = 0x87;
                             index++;
                             buffer[index] = 0x53;
                         }
-                        else if (current == "ţ") 
+                        else if (current == "ţ")
                         {
                             buffer[index] = 0x87;
                             index++;
                             buffer[index] = 0x74;
                         }
-                        else if (current == "Ţ") 
+                        else if (current == "Ţ")
                         {
                             buffer[index] = 0x87;
                             index++;
                             buffer[index] = 0x74;
                         }
-                        else if (current == "â") 
+                        else if (current == "â")
                         {
                             buffer[index] = 0x83;
                             index++;
                             buffer[index] = 0x61;
                         }
-                        else if (current == "Â") 
+                        else if (current == "Â")
                         {
                             buffer[index] = 0x83;
                             index++;

@@ -6969,7 +6969,7 @@ namespace Nikse.SubtitleEdit.Forms
                         else
                         {
                             _subtitle.Paragraphs.Add(p);
-                        }                        
+                        }
                     }
                 }
 
@@ -7564,7 +7564,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 ReverseStartAndEndingForRTL();
                 e.SuppressKeyPress = true;
-            }                
+            }
             else if (e.Modifiers == Keys.Control && e.KeyCode == Keys.Z) // undo
             {
                 UndoLastAction();
