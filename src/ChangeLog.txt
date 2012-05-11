@@ -10,17 +10,17 @@ Subtitle Edit Changelog
    * Updated Brazilian Portuguese - thx Igor Rückert
    * Updated Polish language file - thx Adam Malich
    * Updated Romanian language file - thx dr. Jackson
-   * Better reading of format Cavena 890
-   * Version number now inlucdes revision from SVN - thx XhmikosR   
+   * Better reading of Cavena 890 format
+   * Version number now inludes the revision from SVN - thx XhmikosR
    * Unfocused selection in list view now has more visible color - thx Adem
  * FIXED:
    * Bug (skip of subtitles) in dvd sub ripping - thx kowenant
-   * Minor fix for blu-ray sup reading
+   * Minor fix for Blu-ray sup reading
    * Correct time codes in EBU when reading 24 fps
    * HD DVD SUP lines are now re-numbered when importing for ocr
    * Bug in waveform regarding new selection/right-click-menu
    * Sets default encoding at start when no subtitle is loaded - thx TC
-   * Can now set single line max lengt to large values - thx cmaj135
+   * Can now set single line max length to large values - thx cmaj135
    * Removed flickering in subtitle list view when typing
    * Fixed italics in .890 writing - thx victor
 
@@ -177,7 +177,7 @@ Subtitle Edit Changelog
    * Possible crash when fixing italics - thx StainlessS
    * Fixed bug when editing time codes - issue 46, thx mobo
    * Fixed memory leak in spell check - thx thx aMvEL
-   * Fixed WinXP crash when ocr'ing blu-ray/SON - thx edea
+   * Fixed WinXP crash when ocr'ing Blu-ray/SON - thx edea
    * Can now acutally use MPlayer2 on windows - thx rotulos1
    * Fixed a (rare) crash in change casing - fix names
    * Fixed a bug in format Timed Text draft - thx Thomas
@@ -202,7 +202,7 @@ Subtitle Edit Changelog
    * List view context menu: Copy as text to clipboard 
      (you can also use ctrl+c/ctrl+v)
    * Text box context menu -> Split line at cursor position (thx DrJackson)
-   * Import+ocr of blu-ray sup files inside matroska files
+   * Import+ocr of Blu-ray sup files inside matroska files
    * Now remembers undocked controls pos/size
    * New customizable shortcut for Adjust mode: 
      Set current subtitle end time 

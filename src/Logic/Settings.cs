@@ -499,7 +499,7 @@ namespace Nikse.SubtitleEdit.Logic
         public string MainEditReverseStartAndEndingForRTL { get; set; }
         public string MainToolsFixCommonErrors { get; set; }
         public string MainToolsFixCommonErrorsPreview { get; set; }
-        public string MainToolsRemoveTextForHI { get; set; }        
+        public string MainToolsRemoveTextForHI { get; set; }
         public string MainVideoPause { get; set; }
         public string MainVideoPlayPauseToggle { get; set; }
         public string MainVideoShowHideVideo { get; set; }
@@ -558,7 +558,7 @@ namespace Nikse.SubtitleEdit.Logic
             MainEditRightToLeft = "Control+Shift+Alt+R";
             MainToolsFixCommonErrors = "Control+Shift+F";
             MainToolsFixCommonErrorsPreview = "Control+P";
-            MainToolsRemoveTextForHI = "Control+Shift+H";            
+            MainToolsRemoveTextForHI = "Control+Shift+H";
             MainVideoPlayPauseToggle = "Control+P";
             MainVideoPause = "Control+Alt+P";
             MainVideoShowHideVideo = "Control+Q";
