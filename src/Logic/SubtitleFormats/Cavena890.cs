@@ -1404,12 +1404,12 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 var fi = new FileInfo(fileName);
                 if (fi.Length >= 640 && fi.Length < 1024000) // not too small or too big
                 {
-                    if (fileName.EndsWith(".890"))
-                    {
-                        byte[] buffer = File.ReadAllBytes(fileName);
-                        if (buffer.Length > 0x185 && buffer[0x185] == 0x10)
-                            return true;
-                    }
+                    if (!fileName.EndsWith(".890"))
+                        return false;
+
+                    var sub = new Subtitle();
+                    LoadSubtitle(sub, lines, fileName);
+                    return sub.Paragraphs.Count > 0;
                 }
             }
             return false;
