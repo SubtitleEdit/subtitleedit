@@ -548,6 +548,15 @@ namespace Nikse.SubtitleEdit.Forms
                             format = cheetahCaption;
                         }
                     }
+                    if (format == null)
+                    {
+                        var capMakerPlus = new CapMakerPlus();
+                        if (capMakerPlus.IsMine(null, fileName))
+                        {
+                            capMakerPlus.LoadSubtitle(_subtitle, null, fileName);
+                            format = capMakerPlus;
+                        }
+                    }
 
                     if (format == null)
                     {
@@ -661,6 +670,18 @@ namespace Nikse.SubtitleEdit.Forms
                                 outputFileName = FormatOutputFileNameForBatchConvert(fileName, cheetahCaption.Extension);
                                 Console.Write(string.Format("{0}: {1} -> {2}...", count, Path.GetFileName(fileName), outputFileName));
                                 cheetahCaption.Save(outputFileName, sub);
+                                Console.WriteLine(" done.");
+                            }
+                        }
+                        if (!targetFormatFound)
+                        {
+                            var capMakerPlus = new CapMakerPlus();
+                            if (capMakerPlus.Name.ToLower().Replace(" ", string.Empty) == toFormat.ToLower())
+                            {
+                                targetFormatFound = true;
+                                outputFileName = FormatOutputFileNameForBatchConvert(fileName, capMakerPlus.Extension);
+                                Console.Write(string.Format("{0}: {1} -> {2}...", count, Path.GetFileName(fileName), outputFileName));
+                                capMakerPlus.Save(outputFileName, sub);
                                 Console.WriteLine(" done.");
                             }
                         }
@@ -13804,7 +13825,7 @@ namespace Nikse.SubtitleEdit.Forms
                         fileName = fileName.Substring(0, fileName.Length - 1);
                     fileName += capMakerPlus.Extension;
                 }
-                capMakerPlus.Save(fileName, _subtitle, VideoFileName);
+                capMakerPlus.Save(fileName, _subtitle);
             }
         }
 
