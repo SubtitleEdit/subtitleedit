@@ -31,7 +31,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             get { return true; }
         }
 
-        public void Save(string fileName, Subtitle subtitle, string videoFileName)
+        public void Save(string fileName, Subtitle subtitle)
         {
             Paragraph p;
             int gridDataCount = subtitle.Paragraphs.Count;
