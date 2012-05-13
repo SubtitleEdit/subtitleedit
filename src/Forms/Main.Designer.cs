@@ -89,6 +89,7 @@
             this.adobeEncoreFABImageScriptToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemExportPngXml = new System.Windows.Forms.ToolStripMenuItem();
             this.bluraySupToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemExportCapMakerPlus = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemCavena890 = new System.Windows.Forms.ToolStripMenuItem();
             this.eBUSTLToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemImagePerFrame = new System.Windows.Forms.ToolStripMenuItem();
@@ -110,6 +111,7 @@
             this.gotoLineNumberToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator25 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripMenuItemRightToLeftMode = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemReverseRightToLeftStartEnd = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator21 = new System.Windows.Forms.ToolStripSeparator();
             this.editSelectAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -376,7 +378,6 @@
             this.imageListPlayRate = new System.Windows.Forms.ImageList(this.components);
             this.timerTextUndo = new System.Windows.Forms.Timer(this.components);
             this.timerAlternateTextUndo = new System.Windows.Forms.Timer(this.components);
-            this.toolStripMenuItemReverseRightToLeftStartEnd = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
@@ -949,6 +950,7 @@
             this.adobeEncoreFABImageScriptToolStripMenuItem,
             this.toolStripMenuItemExportPngXml,
             this.bluraySupToolStripMenuItem,
+            this.toolStripMenuItemExportCapMakerPlus,
             this.toolStripMenuItemCavena890,
             this.eBUSTLToolStripMenuItem,
             this.toolStripMenuItemImagePerFrame,
@@ -980,6 +982,13 @@
             this.bluraySupToolStripMenuItem.Size = new System.Drawing.Size(258, 22);
             this.bluraySupToolStripMenuItem.Text = "Blu-ray sup...";
             this.bluraySupToolStripMenuItem.Click += new System.EventHandler(this.BluraySupToolStripMenuItemClick);
+            // 
+            // toolStripMenuItemExportCapMakerPlus
+            // 
+            this.toolStripMenuItemExportCapMakerPlus.Name = "toolStripMenuItemExportCapMakerPlus";
+            this.toolStripMenuItemExportCapMakerPlus.Size = new System.Drawing.Size(258, 22);
+            this.toolStripMenuItemExportCapMakerPlus.Text = "CapMaker Plus...";
+            this.toolStripMenuItemExportCapMakerPlus.Click += new System.EventHandler(this.toolStripMenuItemExportCapMakerPlus_Click);
             // 
             // toolStripMenuItemCavena890
             // 
@@ -1138,6 +1147,13 @@
             this.toolStripMenuItemRightToLeftMode.Size = new System.Drawing.Size(222, 22);
             this.toolStripMenuItemRightToLeftMode.Text = "Right to left mode";
             this.toolStripMenuItemRightToLeftMode.Click += new System.EventHandler(this.ToolStripMenuItemRightToLeftModeClick);
+            // 
+            // toolStripMenuItemReverseRightToLeftStartEnd
+            // 
+            this.toolStripMenuItemReverseRightToLeftStartEnd.Name = "toolStripMenuItemReverseRightToLeftStartEnd";
+            this.toolStripMenuItemReverseRightToLeftStartEnd.Size = new System.Drawing.Size(222, 22);
+            this.toolStripMenuItemReverseRightToLeftStartEnd.Text = "Reverse RTL start/end";
+            this.toolStripMenuItemReverseRightToLeftStartEnd.Click += new System.EventHandler(this.toolStripMenuItemReverseRightToLeftStartEnd_Click);
             // 
             // toolStripSeparator21
             // 
@@ -3721,13 +3737,6 @@
             this.timerAlternateTextUndo.Interval = 700;
             this.timerAlternateTextUndo.Tick += new System.EventHandler(this.TimerAlternateTextUndoTick);
             // 
-            // toolStripMenuItemReverseRightToLeftStartEnd
-            // 
-            this.toolStripMenuItemReverseRightToLeftStartEnd.Name = "toolStripMenuItemReverseRightToLeftStartEnd";
-            this.toolStripMenuItemReverseRightToLeftStartEnd.Size = new System.Drawing.Size(222, 22);
-            this.toolStripMenuItemReverseRightToLeftStartEnd.Text = "Reverse RTL start/end";
-            this.toolStripMenuItemReverseRightToLeftStartEnd.Click += new System.EventHandler(this.toolStripMenuItemReverseRightToLeftStartEnd_Click);
-            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -4152,6 +4161,7 @@
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemRightToLeftMode;
         private System.Windows.Forms.ToolStripMenuItem joinSubtitlesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemReverseRightToLeftStartEnd;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemExportCapMakerPlus;
     }
 }
 

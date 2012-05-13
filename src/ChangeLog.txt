@@ -13,6 +13,7 @@ Subtitle Edit Changelog
    * Better reading of Cavena 890 format
    * Version number now inludes the revision from SVN - thx XhmikosR
    * Unfocused selection in list view now has more visible color - thx Adem
+   * Import of subs from mp4 files can now read closed captions - thx Zsolt
  * FIXED:
    * Bug (skip of subtitles) in dvd sub ripping - thx kowenant
    * Minor fix for Blu-ray sup reading

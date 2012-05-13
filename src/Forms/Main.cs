@@ -13775,5 +13775,38 @@ namespace Nikse.SubtitleEdit.Forms
             ReverseStartAndEndingForRTL();
         }
 
+        private void toolStripMenuItemExportCapMakerPlus_Click(object sender, EventArgs e)
+        {
+            var capMakerPlus = new CapMakerPlus();
+            saveFileDialog1.Filter = capMakerPlus.Name + "|*" + capMakerPlus.Extension;
+            saveFileDialog1.Title = _language.SaveSubtitleAs;
+            saveFileDialog1.DefaultExt = "*" + capMakerPlus.Extension;
+            saveFileDialog1.AddExtension = true;
+
+            if (!string.IsNullOrEmpty(_videoFileName))
+                saveFileDialog1.FileName = Path.GetFileNameWithoutExtension(_videoFileName);
+            else
+                saveFileDialog1.FileName = Path.GetFileNameWithoutExtension(_fileName);
+
+            if (!string.IsNullOrEmpty(openFileDialog1.InitialDirectory))
+                saveFileDialog1.InitialDirectory = openFileDialog1.InitialDirectory;
+
+            DialogResult result = saveFileDialog1.ShowDialog(this);
+            if (result == DialogResult.OK)
+            {
+                openFileDialog1.InitialDirectory = saveFileDialog1.InitialDirectory;
+                string fileName = saveFileDialog1.FileName;
+                string ext = Path.GetExtension(fileName).ToLower();
+                bool extOk = ext == capMakerPlus.Extension.ToLower();
+                if (!extOk)
+                {
+                    if (fileName.EndsWith("."))
+                        fileName = fileName.Substring(0, fileName.Length - 1);
+                    fileName += capMakerPlus.Extension;
+                }
+                capMakerPlus.Save(fileName, _subtitle, VideoFileName);
+            }
+        }
+
     }
 }
