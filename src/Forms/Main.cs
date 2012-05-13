@@ -5930,6 +5930,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
                 labelStatus.Text = string.Empty;
+                StartUpdateListSyntaxColoring();
             }
         }
 
