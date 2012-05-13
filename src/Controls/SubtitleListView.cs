@@ -110,7 +110,8 @@ namespace Nikse.SubtitleEdit.Controls
 
         void SubtitleListView_DrawSubItem(object sender, DrawListViewSubItemEventArgs e)
         {
-            if (Focused)
+            Color backgroundColor = Items[e.ItemIndex].SubItems[e.ColumnIndex].BackColor;
+            if (Focused && backgroundColor == BackColor)
             {
                 e.DrawDefault = true;
                 return;
@@ -133,7 +134,9 @@ namespace Nikse.SubtitleEdit.Controls
                     Rectangle r = e.Bounds;
                     if (Configuration.Settings != null)
                     {
-                        SolidBrush sb = new SolidBrush(Configuration.Settings.Tools.ListViewUnfocusedSelectedColor);
+                        if (backgroundColor == BackColor)
+                            backgroundColor = Configuration.Settings.Tools.ListViewUnfocusedSelectedColor;
+                        SolidBrush sb = new SolidBrush(backgroundColor);
                         e.Graphics.FillRectangle(sb, r);
                     }
                     else
@@ -388,31 +391,53 @@ namespace Nikse.SubtitleEdit.Controls
         {
             if (_settings != null)
             {
-                if (Items[i].UseItemStyleForSubItems)
+                var item = Items[i];
+                if (item.UseItemStyleForSubItems)
                 {
-                    Items[i].UseItemStyleForSubItems = false;
-                    Items[i].SubItems[ColumnIndexDuration].BackColor = BackColor;
+                    item.UseItemStyleForSubItems = false;
+                    item.SubItems[ColumnIndexDuration].BackColor = BackColor;
                 }
+                bool durationChanged = false;
                 if (_settings.Tools.ListViewSyntaxColorDurationSmall)
                 {
                     double charactersPerSecond = Utilities.GetCharactersPerSecond(paragraph);
                     if (charactersPerSecond > Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds + 7)
-                        Items[i].SubItems[ColumnIndexDuration].BackColor = Color.Red;
+                    {
+                        item.SubItems[ColumnIndexDuration].BackColor = Color.Red;
+                        durationChanged = true;
+                    }
                     else if (charactersPerSecond > Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds)
-                        Items[i].SubItems[ColumnIndexDuration].BackColor = Color.Orange;
+                    {
+                        item.SubItems[ColumnIndexDuration].BackColor = Color.Orange;
+                        durationChanged = true;
+                    }
                     else if (paragraph.Duration.TotalMilliseconds < Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds - 100)
-                        Items[i].SubItems[ColumnIndexDuration].BackColor = Color.Red;
+                    {
+                        item.SubItems[ColumnIndexDuration].BackColor = Color.Red;
+                        durationChanged = true;
+                    }
                     else if (paragraph.Duration.TotalMilliseconds < Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds)
-                        Items[i].SubItems[ColumnIndexDuration].BackColor = Color.Orange;
+                    {
+                        item.SubItems[ColumnIndexDuration].BackColor = Color.Orange;
+                        durationChanged = true;
+                    }
                 }
                 if (_settings.Tools.ListViewSyntaxColorDurationBig)
                 {
                 //    double charactersPerSecond = Utilities.GetCharactersPerSecond(paragraph);
                     if (paragraph.Duration.TotalMilliseconds > Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds + 100)
-                        Items[i].SubItems[ColumnIndexDuration].BackColor = Color.Red;
+                    {
+                        item.SubItems[ColumnIndexDuration].BackColor = Color.Red;
+                        durationChanged = true;
+                    }
                     else if (paragraph.Duration.TotalMilliseconds > Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds)
-                        Items[i].SubItems[ColumnIndexDuration].BackColor = Color.Orange;
+                    {
+                        item.SubItems[ColumnIndexDuration].BackColor = Color.Orange;
+                        durationChanged = true;
+                    }
                 }
+                if (!durationChanged && item.SubItems[ColumnIndexDuration].BackColor != BackColor)
+                    item.SubItems[ColumnIndexDuration].BackColor = BackColor;
 
                 if (_settings.Tools.ListViewSyntaxColorOverlap && i > 0)
                 {
@@ -420,14 +445,14 @@ namespace Nikse.SubtitleEdit.Controls
                     if (paragraph.StartTime.TotalMilliseconds < prev.EndTime.TotalMilliseconds)
                     {
                         Items[i - 1].SubItems[ColumnIndexEnd].BackColor = Color.Orange;
-                        Items[i].SubItems[ColumnIndexStart].BackColor = Color.Orange;
+                        item.SubItems[ColumnIndexStart].BackColor = Color.Orange;
                     }
                     else
                     {
                         if (Items[i - 1].SubItems[ColumnIndexEnd].BackColor != BackColor)
                             Items[i - 1].SubItems[ColumnIndexEnd].BackColor = BackColor;
-                        if (Items[i].SubItems[ColumnIndexStart].BackColor != BackColor)
-                            Items[i].SubItems[ColumnIndexStart].BackColor = BackColor;
+                        if (item.SubItems[ColumnIndexStart].BackColor != BackColor)
+                            item.SubItems[ColumnIndexStart].BackColor = BackColor;
                     }
                 }
 
@@ -438,30 +463,30 @@ namespace Nikse.SubtitleEdit.Controls
                     if (s.Length < Configuration.Settings.General.SubtitleLineMaximumLength * 1.9)
                     {
                         if (noOfLines == 3)
-                            Items[i].SubItems[ColumnIndexText].BackColor = Color.Orange;
+                            item.SubItems[ColumnIndexText].BackColor = Color.Orange;
                         else if (noOfLines > 3)
-                            Items[i].SubItems[ColumnIndexText].BackColor = Color.Red;
-                        else if (Items[i].SubItems[ColumnIndexText].BackColor != BackColor)
-                            Items[i].SubItems[ColumnIndexText].BackColor = BackColor;
+                            item.SubItems[ColumnIndexText].BackColor = Color.Red;
+                        else if (item.SubItems[ColumnIndexText].BackColor != BackColor)
+                            item.SubItems[ColumnIndexText].BackColor = BackColor;
                     }
                     else if (s.Length < Configuration.Settings.General.SubtitleLineMaximumLength * 2.1)
                     {
-                        Items[i].SubItems[ColumnIndexText].BackColor = Color.Orange;
+                        item.SubItems[ColumnIndexText].BackColor = Color.Orange;
                     }
                     else
                     {
-                        Items[i].SubItems[ColumnIndexText].BackColor = Color.Red;
+                        item.SubItems[ColumnIndexText].BackColor = Color.Red;
                     }
                 }
                 if (_settings.Tools.ListViewSyntaxMoreThanTwoLines &&
-                    Items[i].SubItems[ColumnIndexText].BackColor != Color.Orange &&
-                    Items[i].SubItems[ColumnIndexText].BackColor != Color.Red)
+                    item.SubItems[ColumnIndexText].BackColor != Color.Orange &&
+                    item.SubItems[ColumnIndexText].BackColor != Color.Red)
                 {
                     int newLines = paragraph.Text.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries).Length;
                     if (newLines == 3)
-                        Items[i].SubItems[ColumnIndexText].BackColor = Color.Orange;
+                        item.SubItems[ColumnIndexText].BackColor = Color.Orange;
                     else if (newLines > 3)
-                        Items[i].SubItems[ColumnIndexText].BackColor = Color.Red;
+                        item.SubItems[ColumnIndexText].BackColor = Color.Red;
                 }
             }
         }
