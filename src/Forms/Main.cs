@@ -134,6 +134,7 @@ namespace Nikse.SubtitleEdit.Forms
         Keys _waveformPlaySelection = Keys.None;
         Keys _waveformSearchSilenceForward = Keys.None;
         Keys _waveformSearchSilenceBack = Keys.None;
+        Keys _waveformAddTextAtHere = Keys.None;
         bool _videoLoadedGoToSubPosAndPause = false;
         bool _makeHistory = true;
         string _cutText = string.Empty;
@@ -8014,6 +8015,16 @@ namespace Nikse.SubtitleEdit.Forms
                 _videoPlayerUnDocked.GoFullscreen();
                 _videoPlayerUnDocked.RedockOnFullscreenEnd = true;
             }
+            else if (audioVisualizer.Focused && audioVisualizer.NewSelectionParagraph != null && e.KeyData == _waveformAddTextAtHere)
+            {
+                addParagraphHereToolStripMenuItem_Click(null, null);
+                e.SuppressKeyPress = true;
+            }
+            else if (audioVisualizer.Focused && e.KeyCode == Keys.Delete)
+            {
+                ToolStripMenuItemDeleteClick(null, null);
+                e.SuppressKeyPress = true;
+            }
 
             // TABS - MUST BE LAST
             else if (tabControlButtons.SelectedTab == tabPageAdjust)
@@ -10618,6 +10629,7 @@ namespace Nikse.SubtitleEdit.Forms
             _waveformPlaySelection = Utilities.GetKeys(Configuration.Settings.Shortcuts.WaveformPlaySelection);
             _waveformSearchSilenceForward = Utilities.GetKeys(Configuration.Settings.Shortcuts.WaveformSearchSilenceForward);
             _waveformSearchSilenceBack = Utilities.GetKeys(Configuration.Settings.Shortcuts.WaveformSearchSilenceBack);
+            _waveformAddTextAtHere = Utilities.GetKeys(Configuration.Settings.Shortcuts.WaveformAddTextHere);
         }
 
         private void LoadPlugins()
