@@ -305,7 +305,11 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                 if (Utilities.IsRunningOnLinux() || Utilities.IsRunningOnMac())
                     return "mplayer";
 
-                string fileName = Path.Combine(Configuration.BaseDirectory, "mplayer.exe");
+                string fileName = Path.Combine(Configuration.BaseDirectory, "mplayer2.exe");
+                if (File.Exists(fileName))
+                    return fileName;
+
+                fileName = Path.Combine(Configuration.BaseDirectory, "mplayer.exe");
                 if (File.Exists(fileName))
                     return fileName;
 
