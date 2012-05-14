@@ -542,6 +542,7 @@ namespace Nikse.SubtitleEdit.Logic
         public string WaveformPlaySelection { get; set; }
         public string WaveformSearchSilenceForward { get; set; }
         public string WaveformSearchSilenceBack { get; set; }
+        public string WaveformAddTextHere { get; set; }        
 
         public Shortcuts()
         {
@@ -595,6 +596,7 @@ namespace Nikse.SubtitleEdit.Logic
             WaveformPlaySelection = string.Empty;
             WaveformSearchSilenceForward = string.Empty;
             WaveformSearchSilenceBack = string.Empty;
+            WaveformAddTextHere = string.Empty;
         }
     }
 
@@ -1552,6 +1554,9 @@ namespace Nikse.SubtitleEdit.Logic
                 subNode = node.SelectSingleNode("WaveformSearchSilenceBack");
                 if (subNode != null)
                     settings.Shortcuts.WaveformSearchSilenceBack = subNode.InnerText;
+                subNode = node.SelectSingleNode("WaveformAddTextHere");
+                if (subNode != null)
+                    settings.Shortcuts.WaveformAddTextHere = subNode.InnerText;
             }
 
             settings.RemoveTextForHearingImpaired = new RemoveTextForHearingImpairedSettings();
@@ -1922,6 +1927,7 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("WaveformPlaySelection", settings.Shortcuts.WaveformPlaySelection);
             textWriter.WriteElementString("WaveformSearchSilenceForward", settings.Shortcuts.WaveformSearchSilenceForward);
             textWriter.WriteElementString("WaveformSearchSilenceBack", settings.Shortcuts.WaveformSearchSilenceBack);
+            textWriter.WriteElementString("WaveformAddTextHere", settings.Shortcuts.WaveformAddTextHere);
             textWriter.WriteEndElement();
 
             textWriter.WriteStartElement("RemoveTextForHearingImpaired", "");
