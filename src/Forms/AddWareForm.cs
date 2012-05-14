@@ -52,7 +52,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (Utilities.IsRunningOnLinux() || Utilities.IsRunningOnMac())
             {
                 vlcPath = "cvlc";
-                parameters = "-vvv --no-sout-video --sout '#transcode{" + Configuration.Settings.General.VlcWaveTranscodeSettings + "}:std{mux=wav,access=file,dst=" + targetFile + "}' \"" + SourceVideoFileName + "\" vlc://quit";
+                parameters = "-vvv --no-sout-video --sout '#transcode{acodec=s16l}:std{mux=wav,access=file,dst=" + targetFile + "}' \"" + SourceVideoFileName + "\" vlc://quit";
             }
             else // windows
             {
