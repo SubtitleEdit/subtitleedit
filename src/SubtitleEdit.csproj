@@ -613,6 +613,7 @@
     <Compile Include="Logic\SubtitleFormats\CapMakerPlus.cs" />
     <Compile Include="Logic\SubtitleFormats\Captionate.cs" />
     <Compile Include="Logic\SubtitleFormats\CaptionateMs.cs" />
+    <Compile Include="Logic\SubtitleFormats\CaptionsInc.cs" />
     <Compile Include="Logic\SubtitleFormats\CaraokeXml.cs" />
     <Compile Include="Logic\SubtitleFormats\Cavena890.cs" />
     <Compile Include="Logic\SubtitleFormats\CheetahCaption.cs" />
@@ -638,6 +639,7 @@
     <Compile Include="Logic\SubtitleFormats\RealTime.cs" />
     <Compile Include="Logic\SubtitleFormats\Scenarist.cs" />
     <Compile Include="Logic\SubtitleFormats\ScenaristClosedCaptions.cs" />
+    <Compile Include="Logic\SubtitleFormats\SoftNiSub.cs" />
     <Compile Include="Logic\SubtitleFormats\Son.cs" />
     <Compile Include="Logic\SubtitleFormats\SonicScenaristBitmaps.cs" />
     <Compile Include="Logic\SubtitleFormats\SonyDVDArchitectExplicitDuration.cs" />

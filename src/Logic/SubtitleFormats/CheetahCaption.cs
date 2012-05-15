@@ -1,4 +1,4 @@
-﻿using System;
+﻿using System; 
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
@@ -32,35 +32,35 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         {
             var fs = new FileStream(fileName, FileMode.Create, FileAccess.Write);
 
-            byte[] buffer = new byte[127];
-            for (int i = 0; i < buffer.Length; i++)
-                buffer[i] = 0;
-            buffer[01] = 0xEA;
-            buffer[02] = 0x22;
-            buffer[02] = 0x01;
+            byte[] buffer = new byte[] { 0xEA, 0x22, 1, 0 }; // header
+            fs.Write(buffer, 0, buffer.Length);
+
+            buffer = new byte[] { 5, 0, 9, 0xA8, 0xAF, 0x4F }; // sizes
+            fs.Write(buffer, 0, buffer.Length);
+
+            for (int i = 0; i < 118; i++)
+                fs.WriteByte(0);
 
             // paragraphs
             foreach (Paragraph p in subtitle.Paragraphs)
             {
                 string text = p.Text.Replace(Environment.NewLine, "\0\0\0\0");
-                int length = 20 + text.Length;
-                fs.WriteByte((byte)length);
-                fs.WriteByte(0x61); // ??
-                WriteTime(fs, p.StartTime);
-                WriteTime(fs, p.EndTime);
+                int length = text.Length + 16;
+                long end = fs.Position + length;
+                fs.WriteByte((byte)(length));
 
-                fs.WriteByte(0x12); // ??
-                fs.WriteByte(0x03); // ??
-                fs.WriteByte(0x00); // ??
-                fs.WriteByte(0x00); // ??
-                fs.WriteByte(0x00); // ??
-                fs.WriteByte(0x00); // ??
-                fs.WriteByte(0x03); // ??
-                fs.WriteByte(0x0F); // ??
-                fs.WriteByte(0x10); // ??
+                fs.WriteByte(0x42); // ?
+
+                WriteTime(fs, p.StartTime); 
+
+                buffer = new byte[] { 0x12, 1,0,0,0,0,1,0x0F,1 }; // sizes ?
+                fs.Write(buffer, 0, buffer.Length);
 
                 buffer = Encoding.ASCII.GetBytes(text);
                 fs.Write(buffer, 0, buffer.Length); // Text starter på index 19 (0 baseret)
+
+                while (end > fs.Position)
+                    fs.WriteByte(0);
             }
             fs.Close();
         }
@@ -77,8 +77,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         {
             if (!string.IsNullOrEmpty(fileName) && File.Exists(fileName))
             {
-                FileInfo fi = new FileInfo(fileName);
-                if (fi.Length >= 640 && fi.Length < 1024000) // not too small or too big
+                var fi = new FileInfo(fileName);
+                if (fi.Length >= 200 && fi.Length < 1024000) // not too small or too big
                 {
                     if (fileName.ToLower().EndsWith(".cap"))
                     {
@@ -116,7 +116,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             Paragraph last = null;
             while (i < buffer.Length - 20)
             {
-                Paragraph p = new Paragraph();
+                var p = new Paragraph();
                 int length = buffer[i];
                 int textLength = length - 20;
                 int start = 19;
@@ -142,6 +142,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     subtitle.Paragraphs.Add(p);
                     last = p;
                 }
+                if (length == 0)
+                    length++;
                 i += length;
             }
             if (last != null && last.Duration.TotalMilliseconds > Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds)
