@@ -66,6 +66,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     new SubViewer20(),
                     new RhozetHarmonic(),
                     new Sami(),
+                    new SoftNiSub(),
                     new Spruce(),
                     new SpruceWithSpace(),
                     new StructuredTitles(),

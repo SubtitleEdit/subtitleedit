@@ -383,7 +383,7 @@ namespace Nikse.SubtitleEdit.Logic
             LargeDelayMilliseconds = 5000;
             OpenSubtitleExtraExtensions = "*.mp4;*.m4v;*.mkv;"; // matroska/mp4/m4v files (can contain subtitles)
             ListViewColumsRememberSize = true;
-            VlcWaveTranscodeSettings = "acodec=s16l,channels=1,ab=64,samplerate=8000";
+            VlcWaveTranscodeSettings = "acodec=s16l"; // "acodec=s16l,channels=1,ab=64,samplerate=8000";
             UseTimeFormatHHMMSSFF = false;
             ShowBetaStuff = false;
         }

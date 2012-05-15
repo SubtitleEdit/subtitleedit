@@ -15,6 +15,8 @@ namespace Nikse.SubtitleEdit.Forms
         private string _wavFileName = null;
         private string _spectrogramDirectory;
         public List<Bitmap> SpectrogramBitmaps { get; private set; }
+        private string _encodeParamters;
+        private const string RetryEncodeParameters = "acodec=s16l";
 
         public AddWareForm()
         {
@@ -34,6 +36,7 @@ namespace Nikse.SubtitleEdit.Forms
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
             labelSourcevideoFile.Text = Configuration.Settings.Language.AddWaveForm.SourceVideoFile;
             _spectrogramDirectory = spectrogramDirectory;
+            _encodeParamters = Configuration.Settings.General.VlcWaveTranscodeSettings;
         }
 
         private void buttonRipWave_Click(object sender, EventArgs e)
@@ -44,7 +47,7 @@ namespace Nikse.SubtitleEdit.Forms
             SourceVideoFileName = labelVideoFileName.Text;
             string targetFile = Path.GetTempFileName() + ".wav";
 //            string parameters = "-I dummy -vvv \"" + SourceVideoFileName + "\" --sout=#transcode{vcodec=none,acodec=s16l}:file{dst=\"" + targetFile + "\"}  vlc://quit";
-              string parameters = "-I dummy -vvv --no-sout-video --sout #transcode{" + Configuration.Settings.General.VlcWaveTranscodeSettings + "}:std{mux=wav,access=file,dst=\"" + targetFile + "\"} \"" + SourceVideoFileName + "\" vlc://quit";
+            string parameters = "-I dummy -vvv --no-sout-video --sout #transcode{" + _encodeParamters + "}:std{mux=wav,access=file,dst=\"" + targetFile + "\"} \"" + SourceVideoFileName + "\" vlc://quit";
 
 
 
@@ -52,7 +55,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (Utilities.IsRunningOnLinux() || Utilities.IsRunningOnMac())
             {
                 vlcPath = "cvlc";
-                parameters = "-vvv --no-sout-video --sout '#transcode{acodec=s16l}:std{mux=wav,access=file,dst=" + targetFile + "}' \"" + SourceVideoFileName + "\" vlc://quit";
+                parameters = "-vvv --no-sout-video --sout '#transcode{" + _encodeParamters + "}:std{mux=wav,access=file,dst=" + targetFile + "}' \"" + SourceVideoFileName + "\" vlc://quit";
             }
             else // windows
             {
@@ -109,6 +112,13 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (!File.Exists(targetFile))
             {
+                if (_encodeParamters != RetryEncodeParameters)
+                {
+                    _encodeParamters = RetryEncodeParameters;
+                    buttonRipWave_Click(null, null);
+                    return;
+                }
+
                 MessageBox.Show("Could not find extracted wave file! This feature requires VLC media player 1.1.x or newer." + Environment.NewLine
                                 + Environment.NewLine +
                                 "Command line: " + vlcPath + " " + parameters);

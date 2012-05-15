@@ -1337,6 +1337,7 @@ namespace Nikse.SubtitleEdit.Logic
             sb.Append("*" + new Spt().Extension + ";");
             sb.Append("*" + new Wsb().Extension + ";");
             sb.Append("*" + new CheetahCaption().Extension + ";");
+            sb.Append("*" + new CaptionsInc().Extension + ";");
             sb.Append("*" + new SonicScenaristBitmaps().Extension + ";");
             sb.Append("*.mks;"); // matroska subtitlefiles (normally contain subtitles)
             sb.Append("*.sup;"); // blu-ray sup
