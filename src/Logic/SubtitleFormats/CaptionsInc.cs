@@ -41,7 +41,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
             buffer = Encoding.ASCII.GetBytes("00000617");
             fs.Write(buffer, 0, buffer.Length);
-            
+
             buffer = Encoding.ASCII.GetBytes("00011818");
             fs.Write(buffer, 0, buffer.Length);
 
@@ -182,9 +182,9 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     }
                 }
                 while (i < buffer.Length && buffer[i] != 0xa)
-                    i++;                
+                    i++;
                 i++;
-                
+
                 if (buffer[i] == 0xfe)
                 {
                     string endTime = Encoding.ASCII.GetString(buffer, i+ 4, 8);

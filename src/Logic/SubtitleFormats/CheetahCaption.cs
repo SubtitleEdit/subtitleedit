@@ -1,4 +1,4 @@
-﻿using System; 
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
@@ -38,7 +38,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             int numberOfLines = subtitle.Paragraphs.Count;
             fs.WriteByte((byte)(numberOfLines % 256)); // paragraphs - low byte
             fs.WriteByte((byte)(numberOfLines / 256)); // paragraphs - high byte
-            
+
 
             buffer = new byte[] { 9, 0xA8, 0xAF, 0x4F }; // ?
             fs.Write(buffer, 0, buffer.Length);
@@ -52,8 +52,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 string text = p.Text.Replace(Environment.NewLine, "\0\0\0\0");
 
                 //styles + ?
-                buffer = new byte[] { 
-                    0x12, 
+                buffer = new byte[] {
+                    0x12,
                     1,
                     0,
                     0,
@@ -107,7 +107,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 fs.WriteByte(0x62); // ?
 
                 WriteTime(fs, p.StartTime);
-                WriteTime(fs, p.EndTime); 
+                WriteTime(fs, p.EndTime);
 
 
                 fs.Write(buffer, 0, buffer.Length);

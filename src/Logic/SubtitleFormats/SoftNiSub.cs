@@ -6,7 +6,7 @@ using System.Text.RegularExpressions;
 namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
     /// <summary>
-    /// SoftNi - http://www.softni.com/ 
+    /// SoftNi - http://www.softni.com/
     /// </summary>
     public class SoftNiSub : SubtitleFormat
     {
