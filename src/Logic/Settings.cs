@@ -542,7 +542,7 @@ namespace Nikse.SubtitleEdit.Logic
         public string WaveformPlaySelection { get; set; }
         public string WaveformSearchSilenceForward { get; set; }
         public string WaveformSearchSilenceBack { get; set; }
-        public string WaveformAddTextHere { get; set; }        
+        public string WaveformAddTextHere { get; set; }
 
         public Shortcuts()
         {

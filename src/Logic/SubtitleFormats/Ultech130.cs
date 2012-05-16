@@ -49,7 +49,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
             buffer = buffer = Encoding.ASCII.GetBytes("Subtitle Edit");
             fs.Write(buffer, 0, buffer.Length);
-            
+
             while (fs.Length < 512)
                 fs.WriteByte(0);
 
@@ -66,7 +66,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 if (italic)
                 {
                     sb.Append(Convert.ToChar(0x11).ToString());
-                    sb.Append(Convert.ToChar(0x2E).ToString());                        
+                    sb.Append(Convert.ToChar(0x2E).ToString());
                 }
                 int y = 0x74 - (numberOfNewLines * 0x20);
                 for (int j=0; j<text.Length; j++)
@@ -101,14 +101,14 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
 
                 // codes?
-                buffer = new byte[] { 
+                buffer = new byte[] {
                     0x14,
-                    0x20, 
+                    0x20,
                     0x14,
-                    0x2E, 
-                    0x14, 
-                    (byte)(0x74 - (numberOfNewLines * 0x20)), 
-                    0x17, 
+                    0x2E,
+                    0x14,
+                    (byte)(0x74 - (numberOfNewLines * 0x20)),
+                    0x17,
                     0x21,
                 };
 
@@ -141,17 +141,17 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 //}
 
                 fs.WriteByte(0xF1); //ID of start record
-                
+
                 // length
                 int length = text.Length + 15;
-                fs.WriteByte((byte)(length));                 
-                fs.WriteByte(0);                
+                fs.WriteByte((byte)(length));
+                fs.WriteByte(0);
 
                 // start time
                 WriteTime(fs, p.StartTime);
                 fs.Write(buffer, 0, buffer.Length);
 
-                // text 
+                // text
                 buffer = Encoding.ASCII.GetBytes(text);
                 fs.Write(buffer, 0, buffer.Length); // Text starter på index 19 (0 baseret)
                 fs.WriteByte(0x14);
@@ -160,7 +160,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
                 // end time
                 fs.WriteByte(0xF1); // id of start record
-                fs.WriteByte(7); // length of end time 
+                fs.WriteByte(7); // length of end time
                 fs.WriteByte(0);
                 WriteTime(fs, p.EndTime);
                 fs.WriteByte(0x14);
@@ -220,7 +220,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             Paragraph last = null;
             while (i < buffer.Length - 25)
             {
-                var p = new Paragraph();                
+                var p = new Paragraph();
                 int length = buffer[i+1];
 
                 p.StartTime = DecodeTimeStamp(buffer, i + 3);
@@ -229,14 +229,14 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
                 if (length > 22)
                 {
-                    int start = i + 7;                   
+                    int start = i + 7;
                     var sb = new StringBuilder();
                     int skipCount = 0;
                     for (int k = start; k < length + i; k++)
                     {
                         byte b = buffer[k];
                         if (skipCount > 0)
-                        { 
+                        {
                             skipCount--;
                         }
                         else if (b < 0x1F)
@@ -254,7 +254,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                             sb.Append(Convert.ToChar(b).ToString());
                         }
                     }
-               
+
                     p.Text = sb.ToString();
                     p.Text = p.Text.Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine);
                     p.Text = p.Text.Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine);
