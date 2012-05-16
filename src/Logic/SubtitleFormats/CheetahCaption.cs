@@ -35,7 +35,12 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             byte[] buffer = new byte[] { 0xEA, 0x22, 1, 0 }; // header
             fs.Write(buffer, 0, buffer.Length);
 
-            buffer = new byte[] { 5, 0, 9, 0xA8, 0xAF, 0x4F }; // sizes
+            int numberOfLines = subtitle.Paragraphs.Count;
+            fs.WriteByte((byte)(numberOfLines % 256)); // paragraphs - low byte
+            fs.WriteByte((byte)(numberOfLines / 256)); // paragraphs - high byte
+            
+
+            buffer = new byte[] { 9, 0xA8, 0xAF, 0x4F }; // ?
             fs.Write(buffer, 0, buffer.Length);
 
             for (int i = 0; i < 118; i++)
@@ -45,19 +50,71 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             foreach (Paragraph p in subtitle.Paragraphs)
             {
                 string text = p.Text.Replace(Environment.NewLine, "\0\0\0\0");
-                int length = text.Length + 16;
+
+                //styles + ?
+                buffer = new byte[] { 
+                    0x12, 
+                    1,
+                    0,
+                    0,
+                    0,
+                    0,
+                    3, // justification, 1=left, 2=right, 3=center
+                    0xF, //horizontal position, 1=top, F=bottom
+                    0x10 //horizontal position, 3=left, 0x10=center, 0x19=right
+                };
+
+                //Normal        : 12 01 00 00 00 00 03 0F 10
+                //Right-top     : 12 01 00 00 00 00 03 01 1C
+                //Top           : 12 01 00 00 00 00 03 01 10
+                //Left-top      : 12 01 00 00 00 00 03 01 05
+                //Left          : 12 01 00 00 00 00 03 0F 0A
+                //Right         : 12 01 00 00 00 00 03 0F 1E
+                //Left          : 12 03 00 00 00 00 03 0F 07
+
+                if (text.StartsWith("{\\a6}"))
+                {
+                    text = p.Text.Remove(0, 5);
+                    buffer[7] = 1; // align top
+                }
+                else if (text.StartsWith("{\\a1}"))
+                {
+                    text = p.Text.Remove(0, 5);
+                    buffer[8] = 0x0A; // align left
+                }
+                else if (text.StartsWith("{\\a3}"))
+                {
+                    text = p.Text.Remove(0, 5);
+                    buffer[8] = 0x1E; // align right
+                }
+                else if (text.StartsWith("{\\a5}"))
+                {
+                    text = p.Text.Remove(0, 5);
+                    buffer[7] = 1; // align top
+                    buffer[8] = 05; // align left
+                }
+                else if (text.StartsWith("{\\a7}"))
+                {
+                    text = p.Text.Remove(0, 5);
+                    buffer[7] = 1; // align top
+                    buffer[8] = 0xc; // align right
+                }
+
+                int length = text.Length + 20;
                 long end = fs.Position + length;
                 fs.WriteByte((byte)(length));
 
-                fs.WriteByte(0x42); // ?
+                fs.WriteByte(0x62); // ?
 
-                WriteTime(fs, p.StartTime); 
+                WriteTime(fs, p.StartTime);
+                WriteTime(fs, p.EndTime); 
 
-                buffer = new byte[] { 0x12, 1,0,0,0,0,1,0x0F,1 }; // sizes ?
+
                 fs.Write(buffer, 0, buffer.Length);
 
                 buffer = Encoding.ASCII.GetBytes(text);
                 fs.Write(buffer, 0, buffer.Length); // Text starter på index 19 (0 baseret)
+                fs.WriteByte(0);
 
                 while (end > fs.Position)
                     fs.WriteByte(0);

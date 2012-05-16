@@ -177,21 +177,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             <anamorphic>FALSE</anamorphic>
             <alphatype>black</alphatype>
             <masterclipid>Outline Text1</masterclipid>
-            <logginginfo>
-              <scene/>
-              <shottake/>
-              <lognote/>
-              <good>FALSE</good>
-            </logginginfo>
-            <labels>
-              <label2/>
-            </labels>
-            <comments>
-              <mastercomment1/>
-              <mastercomment2/>
-              <mastercomment3/>
-              <mastercomment4/>
-            </comments>
             <effect>
               <name>Outline Text</name>
               <effectid>Outline Text</effectid>
@@ -341,10 +326,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 </value>
               </parameter>
               <parameter>
-                <parameterid>superline</parameterid>
-                <name>Line Graphic</name>
-              </parameter>
-              <parameter>
                 <parameterid>part2</parameterid>
                 <name>Background Settings</name>
                 <value/>
@@ -378,20 +359,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 <value>0</value>
               </parameter>
               <parameter>
-                <parameterid>backsoft</parameterid>
-                <name>Back Soft</name>
-                <valuemin>0</valuemin>
-                <valuemax>100</valuemax>
-                <value>0</value>
-              </parameter>
-              <parameter>
-                <parameterid>backopacity</parameterid>
-                <name>Back Opacity</name>
-                <valuemin>0</valuemin>
-                <valuemax>100</valuemax>
-                <value>50</value>
-              </parameter>
-              <parameter>
                 <parameterid>backcolor</parameterid>
                 <name>Back Color</name>
                 <value>
@@ -419,9 +386,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             <sourcetrack>
               <mediatype>video</mediatype>
             </sourcetrack>
-            <itemhistory>
-              <uuid>8F00E937-5C83-4A2F-9827-AE0612006D05</uuid>
-            </itemhistory>
           </generatoritem>";
 
             var xml = new XmlDocument();

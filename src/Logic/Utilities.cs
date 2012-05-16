@@ -1318,29 +1318,33 @@ namespace Nikse.SubtitleEdit.Logic
             }
         }
 
+        private static void AddExtension(StringBuilder sb, string extension)
+        {
+            if (!sb.ToString().Contains("*" + extension + ";"))
+                sb.Append("*" + extension + ";");
+        }
+
         public static string GetOpenDialogFilter()
         {
             StringBuilder sb = new StringBuilder();
             sb.Append(Configuration.Settings.Language.General.SubtitleFiles + "|");
             foreach (SubtitleFormat s in SubtitleFormat.AllSubtitleFormats)
             {
-                if (!sb.ToString().Contains("*" + s.Extension + ";"))
-                    sb.Append("*" + s.Extension + ";");
+                AddExtension(sb, s.Extension);
                 foreach (string ext in s.AlternateExtensions)
-                {
-                    if (!sb.ToString().Contains("*" + ext + ";"))
-                        sb.Append("*" + ext + ";");
-                }
+                    AddExtension(sb, ext);
             }
-            sb.Append("*" + new Pac().Extension + ";");
-            sb.Append("*" + new Cavena890().Extension + ";");
-            sb.Append("*" + new Spt().Extension + ";");
-            sb.Append("*" + new Wsb().Extension + ";");
-            sb.Append("*" + new CheetahCaption().Extension + ";");
-            sb.Append("*" + new CaptionsInc().Extension + ";");
-            sb.Append("*" + new SonicScenaristBitmaps().Extension + ";");
-            sb.Append("*.mks;"); // matroska subtitlefiles (normally contain subtitles)
-            sb.Append("*.sup;"); // blu-ray sup
+            AddExtension(sb, new Pac().Extension);
+            AddExtension(sb, new Cavena890().Extension);
+            AddExtension(sb, new Spt().Extension);
+            AddExtension(sb, new Wsb().Extension);
+            AddExtension(sb, new CheetahCaption().Extension);
+            AddExtension(sb, new CaptionsInc().Extension);
+            AddExtension(sb, new Ultech130().Extension);
+            AddExtension(sb, ".uld"); // Ultech drop frame
+            AddExtension(sb, new SonicScenaristBitmaps().Extension);
+            AddExtension(sb, ".mks");
+            AddExtension(sb, ".sup");
 
             if (!string.IsNullOrEmpty(Configuration.Settings.General.OpenSubtitleExtraExtensions))
             {

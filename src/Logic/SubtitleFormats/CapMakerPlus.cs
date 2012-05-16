@@ -61,27 +61,55 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 buffer = new byte[] { // styles 00 00 80 BF 00 00 00 C0 02 00 01 00
                     0, 
                     0, 
-                    0x80, 
+                    0x80, //horizontal align, 0x80BF= center, 0x0000=left, 0x00c0=right
                     0xBF, 
                     0, 
                     0, 
                     0, 
-                    0xC0, // horizontal pos: C0=bottom, 0=top
-                    2, 
+                    0xC0, // vertical pos: C0=bottom, 0=top
+                    2, //justification, 1=left, 2=center
                     0, 
                     1, //1=normal font, 3=italic
                     0 };
 
-                if (p.Text.StartsWith("{\\a6}"))
+                string text = p.Text;
+                if (text.StartsWith("{\\a6}"))
                 {
-                    p.Text = p.Text.Remove(0, 5);
+                    text = p.Text.Remove(0, 5);
                     buffer[7] = 0; // align top
                 }
-                if (p.Text.StartsWith("<i>") && p.Text.EndsWith("</i>"))
+                else if (text.StartsWith("{\\a1}"))
+                {
+                    text = p.Text.Remove(0, 5);
+                    buffer[2] = 0; // align left
+                    buffer[3] = 0; // align left
+                }
+                else if (text.StartsWith("{\\a3}"))
+                {
+                    text = p.Text.Remove(0, 5);
+                    buffer[2] = 0; // align right
+                    buffer[3] = 0xc0; // align right
+                }
+                else if (text.StartsWith("{\\a5}"))
+                {
+                    text = p.Text.Remove(0, 5);
+                    buffer[7] = 0; // align top
+                    buffer[2] = 0; // align left
+                    buffer[3] = 0; // align left
+                }
+                else if (text.StartsWith("{\\a7}"))
+                {
+                    text = p.Text.Remove(0, 5);
+                    buffer[7] = 0; // align top
+                    buffer[2] = 0; // align right
+                    buffer[3] = 0xc0; // align right
+                }
+
+                if (text.StartsWith("<i>") && text.EndsWith("</i>"))
                     buffer[10] = 3;
                 fs.Write(buffer, 0, buffer.Length);
 
-                string text = Utilities.RemoveHtmlTags(p.Text);
+                text = Utilities.RemoveHtmlTags(text);
                 if (text.Length > 118)
                     text = text.Substring(0, 118);
                 fs.WriteByte((byte)(text.Length));
