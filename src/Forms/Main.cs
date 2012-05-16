@@ -1843,6 +1843,35 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
 
+                if (format == null)
+                {
+                    var captionsInc = new CaptionsInc();
+                    if (captionsInc.IsMine(null, fileName))
+                    {
+                        captionsInc.LoadSubtitle(_subtitle, null, fileName);
+                        _oldSubtitleFormat = captionsInc;
+                        SetFormatToSubRip();
+                        SetEncoding(Configuration.Settings.General.DefaultEncoding);
+                        encoding = GetCurrentEncoding();
+                        justConverted = true;
+                        format = GetCurrentSubtitleFormat();
+                    }
+                }
+
+                if (format == null)
+                {
+                    var ultech130 = new Ultech130();
+                    if (ultech130.IsMine(null, fileName))
+                    {
+                        ultech130.LoadSubtitle(_subtitle, null, fileName);
+                        _oldSubtitleFormat = ultech130;
+                        SetFormatToSubRip();
+                        SetEncoding(Configuration.Settings.General.DefaultEncoding);
+                        encoding = GetCurrentEncoding();
+                        justConverted = true;
+                        format = GetCurrentSubtitleFormat();
+                    }
+                }
 
                 if (format == null)
                 {
@@ -12247,7 +12276,16 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void InsertLineToolStripMenuItemClick(object sender, EventArgs e)
         {
-            InsertBefore();
+            if (_subtitle == null || _subtitle.Paragraphs.Count == 0)
+            {
+                InsertBefore();
+            }
+            else
+            {
+                SubtitleListview1.SelectIndexAndEnsureVisible(_subtitle.Paragraphs.Count - 1);
+                InsertAfter();
+                SubtitleListview1.SelectIndexAndEnsureVisible(_subtitle.Paragraphs.Count - 1);
+            }
         }
 
         private void CloseVideoToolStripMenuItemClick(object sender, EventArgs e)
@@ -13839,6 +13877,105 @@ namespace Nikse.SubtitleEdit.Forms
                     fileName += capMakerPlus.Extension;
                 }
                 capMakerPlus.Save(fileName, _subtitle);
+            }
+        }
+
+        private void toolStripMenuItemExportCheetahCap_Click(object sender, EventArgs e)
+        {
+            var cheetahCaption = new CheetahCaption();
+            saveFileDialog1.Filter = cheetahCaption.Name + "|*" + cheetahCaption.Extension;
+            saveFileDialog1.Title = _language.SaveSubtitleAs;
+            saveFileDialog1.DefaultExt = "*" + cheetahCaption.Extension;
+            saveFileDialog1.AddExtension = true;
+
+            if (!string.IsNullOrEmpty(_videoFileName))
+                saveFileDialog1.FileName = Path.GetFileNameWithoutExtension(_videoFileName);
+            else
+                saveFileDialog1.FileName = Path.GetFileNameWithoutExtension(_fileName);
+
+            if (!string.IsNullOrEmpty(openFileDialog1.InitialDirectory))
+                saveFileDialog1.InitialDirectory = openFileDialog1.InitialDirectory;
+
+            DialogResult result = saveFileDialog1.ShowDialog(this);
+            if (result == DialogResult.OK)
+            {
+                openFileDialog1.InitialDirectory = saveFileDialog1.InitialDirectory;
+                string fileName = saveFileDialog1.FileName;
+                string ext = Path.GetExtension(fileName).ToLower();
+                bool extOk = ext == cheetahCaption.Extension.ToLower();
+                if (!extOk)
+                {
+                    if (fileName.EndsWith("."))
+                        fileName = fileName.Substring(0, fileName.Length - 1);
+                    fileName += cheetahCaption.Extension;
+                }
+                cheetahCaption.Save(fileName, _subtitle);
+            }
+        }
+
+        private void toolStripMenuItemExportCaptionInc_Click(object sender, EventArgs e)
+        {
+            var captionInc = new CaptionsInc();
+            saveFileDialog1.Filter = captionInc.Name + "|*" + captionInc.Extension;
+            saveFileDialog1.Title = _language.SaveSubtitleAs;
+            saveFileDialog1.DefaultExt = "*" + captionInc.Extension;
+            saveFileDialog1.AddExtension = true;
+
+            if (!string.IsNullOrEmpty(_videoFileName))
+                saveFileDialog1.FileName = Path.GetFileNameWithoutExtension(_videoFileName);
+            else
+                saveFileDialog1.FileName = Path.GetFileNameWithoutExtension(_fileName);
+
+            if (!string.IsNullOrEmpty(openFileDialog1.InitialDirectory))
+                saveFileDialog1.InitialDirectory = openFileDialog1.InitialDirectory;
+
+            DialogResult result = saveFileDialog1.ShowDialog(this);
+            if (result == DialogResult.OK)
+            {
+                openFileDialog1.InitialDirectory = saveFileDialog1.InitialDirectory;
+                string fileName = saveFileDialog1.FileName;
+                string ext = Path.GetExtension(fileName).ToLower();
+                bool extOk = ext == captionInc.Extension.ToLower();
+                if (!extOk)
+                {
+                    if (fileName.EndsWith("."))
+                        fileName = fileName.Substring(0, fileName.Length - 1);
+                    fileName += captionInc.Extension;
+                }
+                captionInc.Save(fileName, _subtitle);
+            }
+        }
+
+        private void toolStripMenuItemExportUltech130_Click(object sender, EventArgs e)
+        {
+            var ultech130 = new Ultech130();
+            saveFileDialog1.Filter = ultech130.Name + "|*" + ultech130.Extension;
+            saveFileDialog1.Title = _language.SaveSubtitleAs;
+            saveFileDialog1.DefaultExt = "*" + ultech130.Extension;
+            saveFileDialog1.AddExtension = true;
+
+            if (!string.IsNullOrEmpty(_videoFileName))
+                saveFileDialog1.FileName = Path.GetFileNameWithoutExtension(_videoFileName);
+            else
+                saveFileDialog1.FileName = Path.GetFileNameWithoutExtension(_fileName);
+
+            if (!string.IsNullOrEmpty(openFileDialog1.InitialDirectory))
+                saveFileDialog1.InitialDirectory = openFileDialog1.InitialDirectory;
+
+            DialogResult result = saveFileDialog1.ShowDialog(this);
+            if (result == DialogResult.OK)
+            {
+                openFileDialog1.InitialDirectory = saveFileDialog1.InitialDirectory;
+                string fileName = saveFileDialog1.FileName;
+                string ext = Path.GetExtension(fileName).ToLower();
+                bool extOk = ext == ultech130.Extension.ToLower();
+                if (!extOk)
+                {
+                    if (fileName.EndsWith("."))
+                        fileName = fileName.Substring(0, fileName.Length - 1);
+                    fileName += ultech130.Extension;
+                }
+                ultech130.Save(fileName, _subtitle);
             }
         }
 

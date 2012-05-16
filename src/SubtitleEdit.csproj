@@ -660,6 +660,7 @@
     <Compile Include="Logic\SubtitleFormats\TranscriberXml.cs" />
     <Compile Include="Logic\SubtitleFormats\TurboTitler.cs" />
     <Compile Include="Logic\SubtitleFormats\UleadSubtitleFormat.cs" />
+    <Compile Include="Logic\SubtitleFormats\Ultech130.cs" />
     <Compile Include="Logic\SubtitleFormats\UnknownSubtitle10.cs" />
     <Compile Include="Logic\SubtitleFormats\UnknownSubtitle11.cs" />
     <Compile Include="Logic\SubtitleFormats\UnknownSubtitle12.cs" />

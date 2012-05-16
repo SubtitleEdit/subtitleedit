@@ -90,11 +90,14 @@
             this.toolStripMenuItemExportPngXml = new System.Windows.Forms.ToolStripMenuItem();
             this.bluraySupToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemExportCapMakerPlus = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemExportCaptionInc = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemCavena890 = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemExportCheetahCap = new System.Windows.Forms.ToolStripMenuItem();
             this.eBUSTLToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemImagePerFrame = new System.Windows.Forms.ToolStripMenuItem();
             this.pACScreenElectronicsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.plainTextToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemExportUltech130 = new System.Windows.Forms.ToolStripMenuItem();
             this.plainTextWithoutLineBreaksToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.vobSubsubidxToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator10 = new System.Windows.Forms.ToolStripSeparator();
@@ -951,11 +954,14 @@
             this.toolStripMenuItemExportPngXml,
             this.bluraySupToolStripMenuItem,
             this.toolStripMenuItemExportCapMakerPlus,
+            this.toolStripMenuItemExportCaptionInc,
             this.toolStripMenuItemCavena890,
+            this.toolStripMenuItemExportCheetahCap,
             this.eBUSTLToolStripMenuItem,
             this.toolStripMenuItemImagePerFrame,
             this.pACScreenElectronicsToolStripMenuItem,
             this.plainTextToolStripMenuItem,
+            this.toolStripMenuItemExportUltech130,
             this.plainTextWithoutLineBreaksToolStripMenuItem,
             this.vobSubsubidxToolStripMenuItem});
             this.toolStripMenuItemExport.Name = "toolStripMenuItemExport";
@@ -990,12 +996,26 @@
             this.toolStripMenuItemExportCapMakerPlus.Text = "CapMaker Plus...";
             this.toolStripMenuItemExportCapMakerPlus.Click += new System.EventHandler(this.toolStripMenuItemExportCapMakerPlus_Click);
             // 
+            // toolStripMenuItemExportCaptionInc
+            // 
+            this.toolStripMenuItemExportCaptionInc.Name = "toolStripMenuItemExportCaptionInc";
+            this.toolStripMenuItemExportCaptionInc.Size = new System.Drawing.Size(258, 22);
+            this.toolStripMenuItemExportCaptionInc.Text = "Captions Inc...";
+            this.toolStripMenuItemExportCaptionInc.Click += new System.EventHandler(this.toolStripMenuItemExportCaptionInc_Click);
+            // 
             // toolStripMenuItemCavena890
             // 
             this.toolStripMenuItemCavena890.Name = "toolStripMenuItemCavena890";
             this.toolStripMenuItemCavena890.Size = new System.Drawing.Size(258, 22);
             this.toolStripMenuItemCavena890.Text = "Cavena 890...";
             this.toolStripMenuItemCavena890.Click += new System.EventHandler(this.ToolStripMenuItemCavena890Click);
+            // 
+            // toolStripMenuItemExportCheetahCap
+            // 
+            this.toolStripMenuItemExportCheetahCap.Name = "toolStripMenuItemExportCheetahCap";
+            this.toolStripMenuItemExportCheetahCap.Size = new System.Drawing.Size(258, 22);
+            this.toolStripMenuItemExportCheetahCap.Text = "Cheetah CAP...";
+            this.toolStripMenuItemExportCheetahCap.Click += new System.EventHandler(this.toolStripMenuItemExportCheetahCap_Click);
             // 
             // eBUSTLToolStripMenuItem
             // 
@@ -1025,6 +1045,13 @@
             this.plainTextToolStripMenuItem.Size = new System.Drawing.Size(258, 22);
             this.plainTextToolStripMenuItem.Text = "Plain text...";
             this.plainTextToolStripMenuItem.Click += new System.EventHandler(this.PlainTextToolStripMenuItemClick);
+            // 
+            // toolStripMenuItemExportUltech130
+            // 
+            this.toolStripMenuItemExportUltech130.Name = "toolStripMenuItemExportUltech130";
+            this.toolStripMenuItemExportUltech130.Size = new System.Drawing.Size(258, 22);
+            this.toolStripMenuItemExportUltech130.Text = "Ultech caption...";
+            this.toolStripMenuItemExportUltech130.Click += new System.EventHandler(this.toolStripMenuItemExportUltech130_Click);
             // 
             // plainTextWithoutLineBreaksToolStripMenuItem
             // 
@@ -1755,7 +1782,7 @@
             this.fixCommonErrorsInSelectedLinesToolStripMenuItem,
             this.changeCasingForSelectedLinesToolStripMenuItem});
             this.contextMenuStripListview.Name = "contextMenuStripListview";
-            this.contextMenuStripListview.Size = new System.Drawing.Size(285, 782);
+            this.contextMenuStripListview.Size = new System.Drawing.Size(285, 760);
             this.contextMenuStripListview.Opening += new System.ComponentModel.CancelEventHandler(this.ContextMenuStripListviewOpening);
             // 
             // setStylesForSelectedLinesToolStripMenuItem
@@ -3014,7 +3041,7 @@
             this.showOnlyWaveformToolStripMenuItem,
             this.showOnlySpectrogramToolStripMenuItem});
             this.contextMenuStripWaveForm.Name = "contextMenuStripWaveForm";
-            this.contextMenuStripWaveForm.Size = new System.Drawing.Size(253, 236);
+            this.contextMenuStripWaveForm.Size = new System.Drawing.Size(253, 214);
             this.contextMenuStripWaveForm.Opening += new System.ComponentModel.CancelEventHandler(this.ContextMenuStripWaveFormOpening);
             // 
             // addParagraphHereToolStripMenuItem
@@ -4162,6 +4189,9 @@
         private System.Windows.Forms.ToolStripMenuItem joinSubtitlesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemReverseRightToLeftStartEnd;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemExportCapMakerPlus;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemExportCheetahCap;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemExportCaptionInc;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemExportUltech130;
     }
 }
 

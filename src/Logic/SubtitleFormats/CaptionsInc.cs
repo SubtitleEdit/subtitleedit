@@ -139,10 +139,11 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 bool textEnd = false;
                 while (!startFound && !textEnd && i < buffer.Length - 20)
                 {
+                    bool skip = false;
                     if (buffer[i] == 0x0d)
                         i++;
                     else if (buffer[i] == 0x0a)
-                        ;
+                        skip = true;
                     else if (buffer[i] == 0x14 && buffer[i + 1] == 0x2c) // text end
                         textEnd = true;
                     else if (buffer[i] <= 0x20) // text start
@@ -150,7 +151,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     else
                         startFound = true;
 
-                    i++;
+                    if (!skip)
+                        i++;
                 }
                 i++;
 

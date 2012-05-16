@@ -589,8 +589,8 @@ namespace Nikse.SubtitleEdit.Logic
             MainAdjustSetEnd = string.Empty;
             MainAdjustSelected100MsForward = string.Empty;
             MainAdjustSelected100MsBack = string.Empty;
-            MainInsertAfter = "Alt+Ins";
-            MainInsertBefore = "Control+Shift+Ins";
+            MainInsertAfter = "Alt+Insert";
+            MainInsertBefore = "Control+Shift+Insert";
             MainMergeDialogue = string.Empty;
             WaveformVerticalZoom = string.Empty;
             WaveformPlaySelection = string.Empty;

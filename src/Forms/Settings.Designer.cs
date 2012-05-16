@@ -2293,7 +2293,7 @@
             "Down",
             "End",
             "Escape",
-            "Ins",
+            "Insert",
             "Left",
             "Pause",
             "Return",
