@@ -7,7 +7,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
     class Ultech130 : SubtitleFormat
     {
-
         private const string UltechId = "ULTECH\01.30";
 
         public override string Extension
@@ -98,7 +97,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 if (line.Length > 0)
                     sb.Append(line);
                 text = sb.ToString();
-
 
                 // codes?
                 buffer = new byte[] {
@@ -251,15 +249,13 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         }
                         else
                         {
-                            sb.Append(Convert.ToChar(b).ToString());
+                            sb.Append(Encoding.GetEncoding(1252).GetString(buffer, k, 1));
                         }
                     }
-
                     p.Text = sb.ToString();
                     p.Text = p.Text.Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine);
                     p.Text = p.Text.Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine);
                     p.Text = p.Text.Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine);
-
                     subtitle.Paragraphs.Add(p);
                 }
                 else if (last != null)

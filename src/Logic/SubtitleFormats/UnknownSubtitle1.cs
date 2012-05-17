@@ -6,18 +6,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
     public class UnknownSubtitle1 : SubtitleFormat
     {
-        enum ExpectingLine
-        {
-            TimeCodes,
-            Text
-        }
-
-        Paragraph _paragraph;
-        StringBuilder _text = new StringBuilder();
-        ExpectingLine _expecting = ExpectingLine.TimeCodes;
-
-
-        static readonly Regex RegexTimeCodes = new Regex(@"^TIMEIN:\s*[0123456789-]+:[0123456789-]+:[0123456789-]+:[0123456789-]+\s*DURATION:\s*[0123456789-]+:[0123456789-]+\s*TIMEOUT:\s*[0123456789-]+:[0123456789-]+:[0123456789-]+:[0123456789-]+$", RegexOptions.Compiled);
+        //0:01 – 0:11 
+        static readonly Regex RegexTimeCodes = new Regex(@"^\d+:\d\d – \d+:\d\d ", RegexOptions.Compiled);
 
         public override string Extension
         {
@@ -48,124 +38,85 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public override string ToText(Subtitle subtitle, string title)
         {
-//TIMEIN: 01:00:01:09   DURATION: 01:20 TIMEOUT: --:--:--:--
-//Broadcasting
-//from an undisclosed location...
+            //0:01 – 0:11 "My vengeance needs blood!" -Marquis De Sade
+            //[Laughter, thunder]
+            //0:17 – 0:19 - On this 5th day of December -
+            //0:19 – 0:22 in the year of our Lord 1648, -
 
-//TIMEIN: 01:00:04:12   DURATION: 04:25 TIMEOUT: 01:00:09:07
-
-            const string paragraphWriteFormat = "TIMEIN: {0}\tDURATION: {1}\tTIMEOUT: {2}\r\n{3}\r\n";
+            const string paragraphWriteFormat = "{0} – {1} {2}";
 
             var sb = new StringBuilder();
             foreach (Paragraph p in subtitle.Paragraphs)
             {
-                string startTime = string.Format("{0:00}:{1:00}:{2:00}:{3:00}", p.StartTime.Hours, p.StartTime.Minutes, p.StartTime.Seconds, p.StartTime.Milliseconds / 10);
-                string duration = string.Format("{0:00}:{1:00}", p.Duration.Seconds, p.Duration.Milliseconds / 10);
-                string timeOut = string.Format("{0:00}:{1:00}:{2:00}:{3:00}", p.EndTime.Hours, p.EndTime.Minutes, p.EndTime.Seconds, p.EndTime.Milliseconds / 10);
-                sb.AppendLine(string.Format(paragraphWriteFormat, startTime, duration, timeOut, p.Text));
+                int seconds = p.StartTime.Seconds;
+                if (p.StartTime.Milliseconds >= 500)
+                    seconds++;
+                string startTime = string.Format("{0:0}:{1:00}", (int)(p.StartTime.Minutes + p.StartTime.Hours * 60), seconds);
+
+                seconds = p.EndTime.Seconds;
+                if (p.EndTime.Milliseconds >= 500)
+                    seconds++;
+                string timeOut = string.Format("{0:0}:{1:00}", (int)(p.EndTime.Minutes + p.EndTime.Hours * 60), seconds);
+
+                sb.AppendLine(string.Format(paragraphWriteFormat, startTime, timeOut, p.Text));
             }
             return sb.ToString().Trim();
         }
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
-            _paragraph = new Paragraph();
-            _expecting = ExpectingLine.TimeCodes;
+            Paragraph p = null;
             _errorCount = 0;
 
             subtitle.Paragraphs.Clear();
+            var text = new StringBuilder();
+
             foreach (string line in lines)
             {
-                ReadLine(subtitle, line);
+                var match = RegexTimeCodes.Match(line);
+                if (match.Success)
+                {
+                    if (p != null)
+                        p.Text = (p.Text + System.Environment.NewLine + text.ToString().Trim()).Trim();
+                    var parts = line.Substring(0, match.Length).Trim().Split("– ".ToCharArray(), System.StringSplitOptions.RemoveEmptyEntries);
+                    try
+                    {
+                        p = new Paragraph();
+                        p.StartTime = DecodeTimeCode(parts[0]);
+                        p.EndTime = DecodeTimeCode(parts[1]);
+                        p.Text = line.Substring(match.Length - 1).Trim();
+                        subtitle.Paragraphs.Add(p);
+                        text = new StringBuilder();
+                    }
+                    catch
+                    {
+                        p = null;
+                        _errorCount++;
+                    }
+
+                }
+                else if (p == null)
+                {
+                    _errorCount++;
+                }
+                else
+                {
+                    text.AppendLine(line);
+                }
+                if (_errorCount > 20)
+                    return;
             }
-            if (_paragraph.Text.Trim().Length > 0)
-                subtitle.Paragraphs.Add(_paragraph);
+            if (p != null)
+                p.Text = (p.Text + System.Environment.NewLine + text.ToString().Trim()).Trim();
 
             subtitle.Renumber(1);
         }
 
-        private void ReadLine(Subtitle subtitle, string line)
+        private TimeCode DecodeTimeCode(string code)
         {
-            switch (_expecting)
-            {
-                case ExpectingLine.TimeCodes:
-                    if (TryReadTimeCodesLine(line, _paragraph))
-                    {
-                        _text = new StringBuilder();
-                        _expecting = ExpectingLine.Text;
-                    }
-                    else if (line.Trim().Length > 0)
-                    {
-                        _errorCount++;
-                        _expecting = ExpectingLine.Text ; // lets go to next paragraph
-                    }
-                    break;
-                case ExpectingLine.Text:
-                    if (line.Trim().Length > 0)
-                    {
-                        _text.AppendLine(line.TrimEnd());
-                    }
-                    else
-                    {
-                        _paragraph.Text = _text.ToString().Trim();
-                        subtitle.Paragraphs.Add(_paragraph);
-                        _paragraph = new Paragraph();
-                        _expecting = ExpectingLine.TimeCodes;
-                    }
-                    break;
-            }
-        }
-
-        private bool TryReadTimeCodesLine(string line, Paragraph paragraph)
-        {
-            line = line.Trim();
-            if (RegexTimeCodes.IsMatch(line))
-            {
-
-                //TIMEIN: 01:00:04:12   DURATION: 04:25 TIMEOUT: 01:00:09:07
-                string s = line.Replace("TIMEIN:", string.Empty).Replace("DURATION", string.Empty).Replace("TIMEOUT", string.Empty).Replace(" ", string.Empty).Replace("\t", string.Empty);
-                string[] parts = s.Split(':');
-                try
-                {
-                    int startHours = int.Parse(parts[0]);
-                    int startMinutes = int.Parse(parts[1]);
-                    int startSeconds = int.Parse(parts[2]);
-                    int startMilliseconds = int.Parse(parts[3]) * 10;
-
-                    int durationSeconds = 0;
-                    if (parts[4] != "-")
-                        durationSeconds = int.Parse(parts[4]);
-                    int durationMilliseconds = 0;
-                    if (parts[5] != "--")
-                        durationMilliseconds = int.Parse(parts[5]) * 10;
-
-                    int endHours = 0;
-                    if (parts[6] != "--")
-                        endHours = int.Parse(parts[6]);
-                    int endMinutes = 0;
-                    if (parts[7] != "--")
-                        endMinutes = int.Parse(parts[7]);
-                    int endSeconds = 0;
-                    if (parts[8] != "--")
-                        endSeconds = int.Parse(parts[8]);
-                    int endMilliseconds = 0;
-                    if (parts[9] != "--")
-                        endMilliseconds = int.Parse(parts[9]) * 10;
-
-                    paragraph.StartTime = new TimeCode(startHours, startMinutes, startSeconds, startMilliseconds);
-
-                    if (durationSeconds > 0 || durationMilliseconds > 0)
-                        paragraph.EndTime.TotalMilliseconds = paragraph.StartTime.TotalMilliseconds + (durationSeconds * 1000 + durationMilliseconds);
-                    else
-                        paragraph.EndTime = new TimeCode(endHours, endMinutes, endSeconds, endMilliseconds);
-                    return true;
-                }
-                catch
-                {
-                    return false;
-                }
-            }
-            return false;
+            //68:20  (minutes:seconds)
+            var parts = code.Trim().Split(':');
+            return new TimeCode(0, int.Parse(parts[0]), int.Parse(parts[1]), 0);
         }
     }
 }
