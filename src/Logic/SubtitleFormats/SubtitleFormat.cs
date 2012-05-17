@@ -71,6 +71,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     new SpruceWithSpace(),
                     new StructuredTitles(),
                     new SubtitleEditorProject(),
+                    new SwiftText(),
                     new TimedText(),
                     new TimedText10(),
                     new TimeXml(),
