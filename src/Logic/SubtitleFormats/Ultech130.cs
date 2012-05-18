@@ -79,6 +79,12 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         skipCount = Environment.NewLine.Length - 1;
                         sb.Append(Convert.ToChar(0x14).ToString());
                         sb.Append(Convert.ToChar((byte)(y)).ToString());
+
+                        //center
+                        sb.Append(Convert.ToChar(0x17).ToString());
+                        sb.Append(Convert.ToChar(0x21).ToString());
+
+
                         if (italic)
                         {
                             sb.Append(Convert.ToChar(0x11).ToString());
@@ -106,9 +112,9 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     0x2E,
                     0x14,
                     (byte)(0x74 - (numberOfNewLines * 0x20)),
-                    0x17,
-                    0x21,
-                };
+                
+                    0x17,  0x21, // 0x1721=center, 0x1722=right ?
+                };                
 
                 //if (text.StartsWith("{\\a6}"))
                 //{

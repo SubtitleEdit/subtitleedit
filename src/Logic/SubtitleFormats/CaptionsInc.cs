@@ -39,41 +39,64 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             while (fs.Length < 8)
                 fs.WriteByte(0x20);
 
-            buffer = Encoding.ASCII.GetBytes("00000617");
-            fs.Write(buffer, 0, buffer.Length);
+            WriteTime(fs, subtitle.Paragraphs[0].StartTime); // first start time
+            WriteTime(fs, subtitle.Paragraphs[subtitle.Paragraphs.Count-1].EndTime); // last end time
 
-            buffer = Encoding.ASCII.GetBytes("00011818");
+            buffer = Encoding.ASCII.GetBytes("Generic Unknown Unknown \"\" Unknown Unknown Unknown                                                                                                                                                                                    ");
             fs.Write(buffer, 0, buffer.Length);
-
-            buffer = Encoding.ASCII.GetBytes("program description                                                                                                                                                                                             CPC CaptionMaker     D");
-            fs.Write(buffer, 0, buffer.Length);
-
 
             // paragraphs
             foreach (Paragraph p in subtitle.Paragraphs)
             {
-                buffer = new byte[] { 0x0D, 0x0A, 0xFE, 0x30, 0x34, 0x31, 0x30, 0x30, 0x30, 0x30, 0x30, 0x36, 0x31, 0x37, 0x0D, 0x0A, 0x14, 0x20, 0x14, 0x2E, 0x14 };
+                buffer = new byte[] { 0x0D, 0x0A, 0xFE }; // header
                 fs.Write(buffer, 0, buffer.Length);
 
-                buffer = Encoding.GetEncoding(1252).GetBytes(p.Text);
+                // styles
+                List<byte> text = new List<byte>();
+                text.Add(0x14);
+                text.Add(0x20);
+                text.Add(0x14);
+                text.Add(0x2E);
+                text.Add(0x14);
+                text.Add(0x54);
+                text.Add(0x17);
+                text.Add(0x21);
+                var lines = p.Text.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.None);
+                foreach (string line in lines)
+                { 
+                    foreach (char ch in line)
+                        text.Add(Encoding.GetEncoding(1252).GetBytes(ch.ToString())[0]);
+
+                    // new line
+                    text.Add(0x14); 
+                    text.Add(0x72);
+                }
+
+                // codes+text length
+                buffer = Encoding.ASCII.GetBytes(string.Format("{0:000}", text.Count));
                 fs.Write(buffer, 0, buffer.Length);
+                
+                WriteTime(fs, p.StartTime);
 
+                // write codes + text
+                foreach (byte b in text)
+                    fs.WriteByte(b);
 
-                buffer = new byte[] { 0x14, 0x2C, 0x14, 0x2F };
+                buffer = new byte[] { 0x14, 0x2F, 0x0D, 0x0A, 0xFE, 0x30, 0x30, 0x32, 0x30 };
                 fs.Write(buffer, 0, buffer.Length);
-
-                //WriteTime(fs, p.StartTime);
-                //WriteTime(fs, p.EndTime);
+                WriteTime(fs, p.EndTime);
+                buffer = new byte[] { 0x14, 0x2C };
             }
             fs.Close();
         }
 
         private void WriteTime(FileStream fs, TimeCode timeCode)
         {
-            fs.WriteByte((byte)timeCode.Hours);
-            fs.WriteByte((byte)timeCode.Minutes);
-            fs.WriteByte((byte)timeCode.Seconds);
-            fs.WriteByte((byte)MillisecondsToFrames(timeCode.Milliseconds));
+            string time = string.Format("{0:00}{1:00}{2:00}{3:00}", timeCode.Hours, timeCode.Minutes, timeCode.Seconds, MillisecondsToFrames(timeCode.Milliseconds));
+            var buffer = Encoding.ASCII.GetBytes(time);
+            fs.Write(buffer, 0, buffer.Length);
+            fs.WriteByte(0xd);
+            fs.WriteByte(0xa);
         }
 
         public override bool IsMine(List<string> lines, string fileName)
@@ -160,37 +183,57 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 {
                     i-=2;
                     int start = i;
-                    int textLength = 0;
-
+                    var sb = new StringBuilder();
                     while (!textEnd && i < buffer.Length - 20)
                     {
                         if (buffer[i] == 0x14 && buffer[i + 1] == 0x2c) // text end
                             textEnd = true;
                         else if (buffer[i] == 0xd && buffer[i + 1] == 0xa) // text end
                             textEnd = true;
-                        textLength++;
+                        else if (buffer[i] <= 0x17)
+                        {
+                            if (!sb.ToString().EndsWith(Environment.NewLine))
+                                sb.Append(Environment.NewLine);
+                            i++;
+                        }
+                        else
+                          sb.Append(Encoding.GetEncoding(1252).GetString(buffer, i, 1));
                         i++;
                     }
                     i++;
-                    if (start + textLength < buffer.Length - 10 && textLength > 1)
+                    if (sb.Length > 0)
                     {
-                        string text = Encoding.GetEncoding(1252).GetString(buffer, start, textLength - 1);
-                        text = text.Replace(Encoding.GetEncoding(1252).GetString(new byte[] { 0x14, 0x70 }, 0, 2), Environment.NewLine);
+                        string text = sb.ToString().Trim();
                         p.Text = text;
                         subtitle.Paragraphs.Add(p);
                         last = p;
                     }
                 }
-                while (i < buffer.Length && buffer[i] != 0xa)
-                    i++;
-                i++;
 
-                if (buffer[i] == 0xfe)
+                if (buffer[i] == 0xFE)
                 {
-                    string endTime = Encoding.ASCII.GetString(buffer, i+ 4, 8);
+                    string endTime = Encoding.ASCII.GetString(buffer, i + 4, 8);
                     if (Utilities.IsInteger(endTime))
                     {
                         p.EndTime = DecodeTimeStamp(endTime);
+                    }
+                    while (i < buffer.Length && buffer[i] != 0xa)
+                        i++;
+                    i++;
+                }
+                else
+                {
+                    while (i < buffer.Length && buffer[i] != 0xa)
+                        i++;
+                    i++;
+
+                    if (buffer[i] == 0xfe)
+                    {
+                        string endTime = Encoding.ASCII.GetString(buffer, i + 4, 8);
+                        if (Utilities.IsInteger(endTime))
+                        {
+                            p.EndTime = DecodeTimeStamp(endTime);
+                        }
                     }
                 }
             }
