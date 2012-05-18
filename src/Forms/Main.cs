@@ -1920,6 +1920,25 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
 
+                if (format == null)
+                {
+                    var htmlSamiArray = new HtmlSamiArray();
+                    string[] arr = File.ReadAllLines(fileName, Utilities.GetEncodingFromFile(fileName));
+                    var list = new List<string>();
+                    foreach (string l in arr)
+                        list.Add(l);
+                    if (htmlSamiArray.IsMine(list, fileName))
+                    {
+                        htmlSamiArray.LoadSubtitle(_subtitle, list, fileName);
+                        _oldSubtitleFormat = htmlSamiArray;
+                        SetFormatToSubRip();
+                        SetEncoding(Configuration.Settings.General.DefaultEncoding);
+                        encoding = GetCurrentEncoding();
+                        justConverted = true;
+                        format = GetCurrentSubtitleFormat();
+                    }
+                }
+
 
                 _fileDateTime = File.GetLastWriteTime(fileName);
 
