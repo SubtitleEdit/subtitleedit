@@ -41,13 +41,13 @@ namespace Nikse.SubtitleEdit.Logic.OCR
         static readonly Regex RegexAloneI = new Regex(@"\bi\b", RegexOptions.Compiled);
         static readonly Regex RegexAloneIasL = new Regex(@"\bl\b", RegexOptions.Compiled);
         static readonly Regex RegexSpaceBetweenNumbers = new Regex(@"\d \d", RegexOptions.Compiled);
-        static readonly Regex RegExLowercaseL = new Regex("[A-ZÆØÅÄÖÉÁ]l[A-ZÆØÅÄÖÉÁ]", RegexOptions.Compiled);
-        static readonly Regex RegExUppercaseI = new Regex("[a-zæøåöäé]I.", RegexOptions.Compiled);
+        static readonly Regex RegExLowercaseL = new Regex("[A-ZÆØÅÄÖÉÈÀÙÂÊÎÔÛËÏ]l[A-ZÆØÅÄÖÉÈÀÙÂÊÎÔÛËÏ]", RegexOptions.Compiled);
+        static readonly Regex RegExUppercaseI = new Regex("[a-zæøåöääöéèàùâêîôûëï]I.", RegexOptions.Compiled);
         static readonly Regex RegExNumber1 = new Regex(@"\d\ 1", RegexOptions.Compiled);
         static readonly Regex RegExQuestion = new Regex(@"\S\?[A-ZÆØÅÄÖÉÈÀÙÂÊÎÔÛËÏa-zæøåäöéèàùâêîôûëï]", RegexOptions.Compiled);
-        static readonly Regex RegExIandZero = new Regex(@"[a-zæøåäöé][I1]", RegexOptions.Compiled);
-        static readonly Regex RegExTime1 = new Regex(@"[a-zæøåäöé][0]", RegexOptions.Compiled);
-        static readonly Regex RegExTime2 = new Regex(@"0[a-zæøåäöé]", RegexOptions.Compiled);
+        static readonly Regex RegExIandZero = new Regex(@"[a-zæøåöääöéèàùâêîôûëï][I1]", RegexOptions.Compiled);
+        static readonly Regex RegExTime1 = new Regex(@"[a-zæøåöääöéèàùâêîôûëï][0]", RegexOptions.Compiled);
+        static readonly Regex RegExTime2 = new Regex(@"0[a-zæøåöääöéèàùâêîôûëï]", RegexOptions.Compiled);
         static readonly Regex HexNumber = new Regex(@"^#?[\dABDEFabcdef]+$", RegexOptions.Compiled);
         static readonly Regex StartEndEndsWithNumber = new Regex(@"^\d+.+\d$", RegexOptions.Compiled);
 
