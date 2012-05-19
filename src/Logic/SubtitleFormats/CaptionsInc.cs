@@ -39,8 +39,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             while (fs.Length < 8)
                 fs.WriteByte(0x20);
 
-            WriteTime(fs, subtitle.Paragraphs[0].StartTime); // first start time
-            WriteTime(fs, subtitle.Paragraphs[subtitle.Paragraphs.Count-1].EndTime); // last end time
+            WriteTime(fs, subtitle.Paragraphs[0].StartTime, false); // first start time
+            WriteTime(fs, subtitle.Paragraphs[subtitle.Paragraphs.Count-1].EndTime, false); // last end time
 
             buffer = Encoding.ASCII.GetBytes("Generic Unknown Unknown \"\" Unknown Unknown Unknown                                                                                                                                                                                    ");
             fs.Write(buffer, 0, buffer.Length);
@@ -60,7 +60,13 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 text.Add(0x14);
                 text.Add(0x54);
                 text.Add(0x17);
-                text.Add(0x21);
+                int noNewLines = Utilities.CountTagInText(p.Text, Environment.NewLine);
+                if (noNewLines == 0)
+                    text.Add(0x22); // 1 line?
+                else
+
+                    text.Add(0x21); // 2 lines?
+
                 var lines = p.Text.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.None);
                 foreach (string line in lines)
                 { 
@@ -68,15 +74,21 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         text.Add(Encoding.GetEncoding(1252).GetBytes(ch.ToString())[0]);
 
                     // new line
-                    text.Add(0x14); 
-                    text.Add(0x72);
+                    //text.Add(0x14); // y? 0x14 was lower!? 0x17 is higher??? 12=little top 11=top, 13=most buttom?, 15=little over middle
+                    //text.Add(0x72);
+
+                    text.Add(0x14);
+                    text.Add(0x74);
+                    //text.Add(0x17); 
+                    //text.Add(0x21);
+
                 }
 
                 // codes+text length
                 buffer = Encoding.ASCII.GetBytes(string.Format("{0:000}", text.Count));
                 fs.Write(buffer, 0, buffer.Length);
                 
-                WriteTime(fs, p.StartTime);
+                WriteTime(fs, p.StartTime, true);
 
                 // write codes + text
                 foreach (byte b in text)
@@ -84,19 +96,22 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
                 buffer = new byte[] { 0x14, 0x2F, 0x0D, 0x0A, 0xFE, 0x30, 0x30, 0x32, 0x30 };
                 fs.Write(buffer, 0, buffer.Length);
-                WriteTime(fs, p.EndTime);
+                WriteTime(fs, p.EndTime, true);
                 buffer = new byte[] { 0x14, 0x2C };
             }
             fs.Close();
         }
 
-        private void WriteTime(FileStream fs, TimeCode timeCode)
+        private void WriteTime(FileStream fs, TimeCode timeCode, bool addEndBytes)
         {
             string time = string.Format("{0:00}{1:00}{2:00}{3:00}", timeCode.Hours, timeCode.Minutes, timeCode.Seconds, MillisecondsToFrames(timeCode.Milliseconds));
             var buffer = Encoding.ASCII.GetBytes(time);
             fs.Write(buffer, 0, buffer.Length);
-            fs.WriteByte(0xd);
-            fs.WriteByte(0xa);
+            if (addEndBytes)
+            {
+                fs.WriteByte(0xd);
+                fs.WriteByte(0xa);
+            }
         }
 
         public override bool IsMine(List<string> lines, string fileName)
