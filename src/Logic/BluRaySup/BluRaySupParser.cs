@@ -372,6 +372,12 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
                 i++;
             }
         //    File.WriteAllText(@"C:\Users\Nikse\Desktop\Blu-Ray Sup\log.txt", log.ToString());
+
+            for (i = subPictures.Count - 1; i >= 0; i--)
+            {
+                if (subPictures[i].EndTime - subPictures[i].StartTime < 100)
+                    subPictures.RemoveAt(i);
+            }
             return subPictures;
         }
 

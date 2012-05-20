@@ -1752,10 +1752,10 @@ namespace Nikse.SubtitleEdit.Forms
                     next.Text.Length > 0 &&
                     Utilities.UppercaseLetters.Contains(nextText[0].ToString()) &&
                     tempNoHtml.Length > 0 &&
-                    (!",.!?:;>-])♪♫".Contains(tempNoHtml[tempNoHtml.Length - 1].ToString())))
+                    (!",.!?:;>-])♪♫…".Contains(tempNoHtml[tempNoHtml.Length - 1].ToString())))
                 {
                     if (!tempNoHtml.EndsWith(")") && !tempNoHtml.EndsWith("]") && !tempNoHtml.EndsWith("*") && !tempNoHtml.EndsWith("#") && !tempNoHtml.EndsWith("¶") && // hear impaired
-                        !tempNoHtml.EndsWith(".\"") && !tempNoHtml.EndsWith("!\"") && !tempNoHtml.EndsWith("?\"") && !tempNoHtml.EndsWith(".“"))
+                        !tempNoHtml.EndsWith(".\"") && !tempNoHtml.EndsWith("!\"") && !tempNoHtml.EndsWith("?\"") && !tempNoHtml.EndsWith(".“") && !tempNoHtml.EndsWith(".”"))
                     {
                         if (p.Text != p.Text.ToUpper())
                         {

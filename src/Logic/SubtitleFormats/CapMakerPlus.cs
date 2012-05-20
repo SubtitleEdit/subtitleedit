@@ -276,8 +276,16 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     subtitle.Paragraphs[i].EndTime.TotalMilliseconds = subtitle.Paragraphs[i + 1].StartTime.TotalMilliseconds - 1;
                 }
             }
-
             subtitle.Renumber(1);
+
+            // adjust all times 
+            if (buffer.Length > 1364)
+            {
+                string adjust = Encoding.GetEncoding(1252).GetString(buffer, 1354, 11); // 00:59:59:28
+                TimeCode tc = DecodeTimeCode(adjust.Split(':'));
+                if (tc.TotalMilliseconds > 0)
+                    subtitle.AddTimeToAllParagraphs(TimeSpan.FromMilliseconds(-tc.TotalMilliseconds));
+            }
         }
 
     }
