@@ -258,6 +258,15 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             string[] parts = s.Split(new[] { ':', '.', ',' });
             return new TimeCode(new TimeSpan(0, int.Parse(parts[0]), int.Parse(parts[1]), int.Parse(parts[2]), int.Parse(parts[3])));
         }
+
+        public override List<string> AlternateExtensions
+        {
+            get
+            {
+                return new List<string>() { ".itt" }; // iTunes Timed Text
+            }
+        }
+
     }
 }
 

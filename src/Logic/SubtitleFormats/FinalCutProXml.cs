@@ -70,9 +70,9 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             if (Configuration.Settings.General.CurrentFrameRate < 30)
                 return "TRUE"; // ntsc 29.97
             if (Configuration.Settings.General.CurrentFrameRate < 40)
-                return "FALSE";
+                return "TRUE";
             if (Configuration.Settings.General.CurrentFrameRate < 40)
-                return "FALSE";
+                return "TRUE";
             if (Configuration.Settings.General.CurrentFrameRate < 60)
                 return "TRUE"; // ntsc 59.94
             return "FALSE";
@@ -80,15 +80,18 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public override string ToText(Subtitle subtitle, string title)
         {
+            int duration = 0;
+            if (subtitle.Paragraphs.Count > 0)
+                duration = (int)Math.Round(subtitle.Paragraphs[subtitle.Paragraphs.Count - 1].EndTime.TotalSeconds * Configuration.Settings.General.CurrentFrameRate);
 
             string xmlStructure =
                 "<?xml version=\"1.0\" encoding=\"utf-8\" ?>" + Environment.NewLine +
                 "<xmeml version=\"5\">" + Environment.NewLine +
-                "<sequence id=\"LOF_master til dialogliste\">" + Environment.NewLine +
+                "<sequence id=\"X\">" + Environment.NewLine +
   @"    <uuid>5B3B0C07-9A9D-42AA-872C-C953923F97D8</uuid>
     <updatebehavior>add</updatebehavior>
-    <name>LOF_master til dialogliste</name>
-    <duration>73574</duration>
+    <name>X</name>
+    <duration>" + duration.ToString() + @"</duration>
     <rate>
       <ntsc>" + GetNtsc() + @"</ntsc>
       <timebase>" + GetFrameRateAsString() + @"</timebase>
@@ -104,7 +107,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
       <displayformat>NDF</displayformat>
     </timecode>
     <in>0</in>
-    <out>73575</out>
+    <out>" + duration.ToString() + @"</out>
     <media>
       <video>
         <format>
@@ -158,8 +161,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
       </video>
     </media>
   </sequence>
-</xmeml>";
-
+</xmeml>";           
 
             string xmlTrackStructure =
                 @"          <generatoritem id='Outline Text[NUMBER]'>
@@ -388,13 +390,28 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             </sourcetrack>
           </generatoritem>";
 
+            if (string.IsNullOrEmpty(title))
+                title = "Subtitle Edit subtitle";
+
             var xml = new XmlDocument();
             xml.LoadXml(xmlStructure);
+            xml.DocumentElement.SelectSingleNode("sequence").Attributes["id"].Value = title;
             xml.DocumentElement.SelectSingleNode("sequence/name").InnerText = title;
-            if (subtitle.Header != null && subtitle.Header.StartsWith("<uuid>") && subtitle.Header.EndsWith("</uuid>"))
-                xml.DocumentElement.SelectSingleNode("sequence/uuid").InnerText = subtitle.Header.Replace("<uuid>", string.Empty).Replace("</uuid>", string.Empty).Trim();
-            else
-                xml.DocumentElement.SelectSingleNode("sequence/uuid").InnerText = Guid.NewGuid().ToString().ToUpper();
+            xml.DocumentElement.SelectSingleNode("sequence/uuid").InnerText = Guid.NewGuid().ToString().ToUpper();
+            if (!string.IsNullOrEmpty(subtitle.Header))
+            {
+                var header = new XmlDocument();
+                try
+                {
+                    header.LoadXml(subtitle.Header);
+                    var node = header.DocumentElement.SelectSingleNode("sequence/uuid");
+                    if (node != null)
+                        xml.DocumentElement.SelectSingleNode("sequence/uuid").InnerText = node.InnerText;
+                }
+                catch
+                {
+                }
+            }            
 
             XmlNode trackNode = xml.DocumentElement.SelectSingleNode("sequence/media/video/track");
 
@@ -405,7 +422,9 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 XmlNode generatorItem = xml.CreateElement("generatoritem");
                 string fontStyle = "1"; //1==plain
                 string s = Utilities.RemoveHtmlFontTag(p.Text).Trim();
-                if (s.StartsWith("<i>") && s.EndsWith("</i>"))
+                if ((s.StartsWith("<i><b>") && s.EndsWith("</b></i>")) || (s.StartsWith("<b><i>") && s.EndsWith("</i></b>")))
+                    fontStyle = "4"; //4==bold/italic
+                else if (s.StartsWith("<i>") && s.EndsWith("</i>"))
                     fontStyle = "3"; //3==italic
                 generatorItem.InnerXml = xmlTrackStructure.Replace("[NUMBER]", number.ToString()).Replace("[FONTSTYLE]", fontStyle);
 
@@ -445,8 +464,11 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             {
                 xml.LoadXml(sb.ToString());
 
-                if (xml.DocumentElement.SelectSingleNode("sequence/uuid") != null)
-                    subtitle.Header = "<uuid>" + xml.DocumentElement.SelectSingleNode("sequence/uuid").InnerText + "</uuid>";
+                XmlDocument header = new XmlDocument();
+                header.LoadXml(sb.ToString());
+                if (header.SelectSingleNode("sequence/media/video/track") != null)
+                    header.RemoveChild(header.SelectSingleNode("sequence/media/video/track"));
+                subtitle.Header = header.OuterXml;
 
                 if (xml.DocumentElement.SelectSingleNode("sequence/rate") != null && xml.DocumentElement.SelectSingleNode("sequence/rate/timebase") != null)
                 {
@@ -493,6 +515,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                             }
 
                             bool italic = false;
+                            bool bold = false;
                             foreach (XmlNode parameterNode in generatorItemNode.SelectNodes("effect/parameter[parameterid='style']"))
                             {
                                 XmlNode valueNode = parameterNode.SelectSingleNode("value");
@@ -509,7 +532,34 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                                             if (styleNameNode != null)
                                             {
                                                 string styleName = styleNameNode.InnerText;
-                                                italic = styleName.ToLower().Trim() == "italic";
+                                                italic = styleName.ToLower().Trim() == "italic" || styleName.ToLower().Trim() == "bold/italic";
+                                                bold = styleName.ToLower().Trim() == "bold" || styleName.ToLower().Trim() == "bold/italic";
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            if (!bold && !italic)
+                            {
+                                foreach (XmlNode parameterNode in generatorItemNode.SelectNodes("effect/parameter[parameterid='fontstyle']"))
+                                {
+                                    XmlNode valueNode = parameterNode.SelectSingleNode("value");
+                                    var valueEntries = parameterNode.SelectNodes("valuelist/valueentry");
+                                    if (valueNode != null)
+                                    {
+                                        int no;
+                                        if (int.TryParse(valueNode.InnerText, out no))
+                                        {
+                                            no--;
+                                            if (no < valueEntries.Count)
+                                            {
+                                                var styleNameNode = valueEntries[no].SelectSingleNode("name");
+                                                if (styleNameNode != null)
+                                                {
+                                                    string styleName = styleNameNode.InnerText;
+                                                    italic = styleName.ToLower().Trim() == "italic" || styleName.ToLower().Trim() == "bold/italic";
+                                                    bold = styleName.ToLower().Trim() == "bold" || styleName.ToLower().Trim() == "bold/italic";
+                                                }
                                             }
                                         }
                                     }
@@ -520,9 +570,11 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                             {
                                 if (!text.Contains(Environment.NewLine))
                                     text = text.Replace("\r", Environment.NewLine);
+                                if (bold)
+                                    text = "<b>" + text + "</b>";
                                 if (italic)
                                     text = "<i>" + text + "</i>";
-                                subtitle.Paragraphs.Add(new Paragraph(text, Convert.ToDouble((startFrame / frameRate) *1000), Convert.ToDouble((endFrame / frameRate) * 1000)));
+                                subtitle.Paragraphs.Add(new Paragraph(text, Convert.ToDouble((startFrame / frameRate) * 1000), Convert.ToDouble((endFrame / frameRate) * 1000)));
                             }
                         }
                     }
