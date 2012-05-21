@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
+using System.Drawing;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Xml;
-using System.Drawing;
 
 namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
@@ -16,7 +14,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
     public class ScenaristClosedCaptions : SubtitleFormat
     {
 
-        private class SCCPositionAndStyle
+        public class SCCPositionAndStyle
         {
             public Color ForeColor { get; set; }
             public FontStyle Style { get; set; }
@@ -673,7 +671,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             return sb.ToString().Trim();
         }
 
-        private string GetCenterCodes(string text, int lineNumber, int totalLines)
+        public string GetCenterCodes(string text, int lineNumber, int totalLines)
         {
             int row = 14 - (totalLines - lineNumber);
 
@@ -721,7 +719,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             return string.Format("{0:00}:{1:00}:{2:00}:{3:00}", ts.Hours, ts.Minutes, ts.Seconds, MillisecondsToFrames(ts.Milliseconds));
         }
 
-        private static SCCPositionAndStyle GetColorAndPosition(string code)
+        public static SCCPositionAndStyle GetColorAndPosition(string code)
         {
             switch (code.ToLower())
             {

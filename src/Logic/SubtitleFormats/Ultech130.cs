@@ -5,6 +5,9 @@ using System.Text;
 
 namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
+    /// <summary>
+    /// The ULTECH caption file format (ULT/ULD file) is a compact binary file that stores captions with embedded EIA-608 control codes
+    /// </summary>
     class Ultech130 : SubtitleFormat
     {
         private const string UltechId = "ULTECH\01.30";
@@ -281,6 +284,15 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             }
 
             subtitle.Renumber(1);
+        }
+
+
+        public override List<string> AlternateExtensions
+        {
+            get
+            {
+                return new List<string>() { ".uld" }; // Ultech drop frame
+            }
         }
 
     }

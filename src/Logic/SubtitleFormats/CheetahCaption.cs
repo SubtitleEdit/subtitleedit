@@ -49,7 +49,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             // paragraphs
             foreach (Paragraph p in subtitle.Paragraphs)
             {
-                string text = p.Text.Replace(Environment.NewLine, "\0\0\0\0");
+                string text = p.Text; 
 
                 //styles + ?
                 buffer = new byte[] {
@@ -61,7 +61,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     0,
                     3, // justification, 1=left, 2=right, 3=center
                     0xF, //horizontal position, 1=top, F=bottom
-                    0x10 //horizontal position, 3=left, 0x10=center, 0x19=right
+                    0x10, //horizontal position, 3=left, 0x10=center, 0x19=right                    
                 };
 
                 //Normal        : 12 01 00 00 00 00 03 0F 10
@@ -100,7 +100,34 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     buffer[8] = 0xc; // align right
                 }
 
-                int length = text.Length + 20;
+                var textBytes = new List<byte>();
+                bool italic = false;             
+                if (p.Text.StartsWith("<i>") && p.Text.EndsWith("</i>"))
+                    italic = true;
+                text = Utilities.RemoveHtmlTags(text);
+                int j = 0;
+                if (italic)
+                    textBytes.Add(0xd0);
+                while (j < text.Length)
+                {
+                    if (text.Substring(j).StartsWith(Environment.NewLine))
+                    {
+                        j += Environment.NewLine.Length;
+                        textBytes.Add(0);
+                        textBytes.Add(0);
+                        textBytes.Add(0);
+                        textBytes.Add(0);
+                        if (italic)
+                            textBytes.Add(0xd0);
+                    }
+                    else
+                    {
+                        textBytes.Add(Encoding.GetEncoding(1252).GetBytes(text.Substring(j, 1))[0]);
+                        j++;
+                    }                    
+                }
+
+                int length = textBytes.Count + 20;
                 long end = fs.Position + length;
                 fs.WriteByte((byte)(length));
 
@@ -109,12 +136,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 WriteTime(fs, p.StartTime);
                 WriteTime(fs, p.EndTime);
 
+                fs.Write(buffer, 0, buffer.Length); // styles
 
-                fs.Write(buffer, 0, buffer.Length);
-
-                buffer = Encoding.ASCII.GetBytes(text);
-                fs.Write(buffer, 0, buffer.Length); // Text starter på index 19 (0 baseret)
-                fs.WriteByte(0);
+                foreach (byte b in textBytes) // text
+                    fs.WriteByte(b);
 
                 while (end > fs.Position)
                     fs.WriteByte(0);
@@ -194,8 +219,40 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         last.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds - Configuration.Settings.General.MininumMillisecondsBetweenLines;
 
                     p.EndTime = DecodeTimeStamp(buffer, i + 6);
-                    p.Text = Encoding.ASCII.GetString(buffer, i + start, textLength);
-                    p.Text = p.Text.Replace("\0\0\0\0", Environment.NewLine);
+
+                    var sb = new StringBuilder();
+                    int j = 0;
+                    bool italics = false;
+                    while (j < textLength)
+                    {
+                        int index = i + start + j;
+                        if (buffer[index] == 0)
+                        {
+                            if (italics)
+                                sb.Append("</i>");
+                            italics = false;
+                            if (!sb.ToString().EndsWith(Environment.NewLine))
+                                sb.AppendLine();
+                        }
+                        else if (buffer[index] >= 0xC0 || buffer[index] <= 0x14) // codes/styles?
+                        {
+                            if (buffer[index] == 0xd0) // italics
+                            {
+                                italics = true;
+                                sb.Append("<i>");
+                            }
+                        }
+                        else
+                        { 
+                            sb.Append(Encoding.ASCII.GetString(buffer, index, 1));
+                        }
+                        j++;
+                    }
+                    if (italics)
+                        sb.Append("</i>");
+                    p.Text = sb.ToString();
+                    p.Text = p.Text.Replace("</i>" + Environment.NewLine + "<i>", Environment.NewLine);
+
                     subtitle.Paragraphs.Add(p);
                     last = p;
                 }
