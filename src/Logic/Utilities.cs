@@ -536,12 +536,12 @@ namespace Nikse.SubtitleEdit.Logic
                         if (".!?, ".Contains(s[mid - j].ToString()) && !IsPartOfNumber(s, mid - j) && s.Length > mid + j + 2 && CanBreak(s, mid - j))
                         {
                             splitPos = mid - j;
-                            if (".!?".Contains(s[mid - (j + 1)].ToString()))
-                            {
+                            if (".!?".Contains(s[splitPos].ToString()))
                                 splitPos--;
-                                if (".!?".Contains(s[mid + j + 2].ToString()))
-                                    splitPos--;
-                            }
+                            if (".!?".Contains(s[splitPos].ToString()))
+                                splitPos--;
+                            if (".!?".Contains(s[splitPos].ToString()))
+                                splitPos--;
                             break;
                         }
                     }

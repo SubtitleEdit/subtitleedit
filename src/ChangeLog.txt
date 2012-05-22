@@ -10,17 +10,18 @@ Subtitle Edit Changelog
    * Updated Brazilian Portuguese - thx Igor Rückert
    * Updated Polish language file - thx Adam Malich
    * Updated Romanian language file - thx dr. Jackson
-   * Better reading of Cavena 890 format
+   * Better reading of Cavena 890 format - thx Victor
    * Version number now inludes the revision from SVN - thx XhmikosR
    * Unfocused selection in list view now has more visible color - thx Adem
    * Import of subs from mp4 files can now read closed captions - thx Zsolt
  * FIXED:
+   * Bug in linebreaking - thx Renault
    * Bug (skip of subtitles) in dvd sub ripping - thx kowenant
    * Minor fix for Blu-ray sup reading
    * Correct time codes in EBU when reading 24 fps
    * HD DVD SUP lines are now re-numbered when importing for ocr
    * Bug in waveform regarding new selection/right-click-menu
-   * Sets default encoding at start when no subtitle is loaded - thx TC
+   * Sets default encoding at start if no subtitle is loaded - thx TC
    * Can now set single line max length to large values - thx cmaj135
    * Removed flickering in subtitle list view when typing
    * Fixed italics in .890 writing - thx victor
