@@ -49,7 +49,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             // paragraphs
             foreach (Paragraph p in subtitle.Paragraphs)
             {
-                string text = p.Text; 
+                string text = p.Text;
 
                 //styles + ?
                 buffer = new byte[] {
@@ -61,7 +61,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     0,
                     3, // justification, 1=left, 2=right, 3=center
                     0xF, //horizontal position, 1=top, F=bottom
-                    0x10, //horizontal position, 3=left, 0x10=center, 0x19=right                    
+                    0x10, //horizontal position, 3=left, 0x10=center, 0x19=right
                 };
 
                 //Normal        : 12 01 00 00 00 00 03 0F 10
@@ -101,7 +101,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 }
 
                 var textBytes = new List<byte>();
-                bool italic = false;             
+                bool italic = false;
                 if (p.Text.StartsWith("<i>") && p.Text.EndsWith("</i>"))
                     italic = true;
                 text = Utilities.RemoveHtmlTags(text);
@@ -124,7 +124,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     {
                         textBytes.Add(Encoding.GetEncoding(1252).GetBytes(text.Substring(j, 1))[0]);
                         j++;
-                    }                    
+                    }
                 }
 
                 int length = textBytes.Count + 20;
@@ -243,7 +243,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                             }
                         }
                         else
-                        { 
+                        {
                             sb.Append(Encoding.ASCII.GetString(buffer, index, 1));
                         }
                         j++;

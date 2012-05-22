@@ -115,9 +115,9 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     0x2E,
                     0x14,
                     (byte)(0x74 - (numberOfNewLines * 0x20)),
-                
+
                     0x17,  0x21, // 0x1721=center, 0x1722=right ?
-                };                
+                };
 
                 //if (text.StartsWith("{\\a6}"))
                 //{
