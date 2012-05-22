@@ -2544,10 +2544,13 @@ namespace Nikse.SubtitleEdit.Forms
                     SubtitleListview1.HideExtraColumn();
                 }
             }
-            ShowSource();
-
-            SubtitleListview1.DisplayExtraFromExtra = false;
             SubtitleFormat format = GetCurrentSubtitleFormat();
+            if (_oldSubtitleFormat != null && !_oldSubtitleFormat.IsFrameBased && format.IsFrameBased)
+                _subtitle.CalculateFrameNumbersFromTimeCodesNoCheck(CurrentFrameRate);
+            else if (_oldSubtitleFormat != null && _oldSubtitleFormat.IsFrameBased && !format.IsFrameBased)
+                _subtitle.CalculateTimeCodesFromFrameNumbers(CurrentFrameRate);
+            ShowSource();
+            SubtitleListview1.DisplayExtraFromExtra = false;
             if (format != null)
             {
                 ShowStatus(string.Format(_language.ConvertedToX, format.FriendlyName));
@@ -8438,7 +8441,17 @@ namespace Nikse.SubtitleEdit.Forms
                         SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
                         SubtitleListview1.SelectIndexAndEnsureVisible(0);
                     }
-
+                    else if (list.Count > 1 && list.Count < 500)
+                    {
+                        foreach (string line in list)
+                        {
+                            if (line.Trim().Length > 0)
+                            {
+                                InsertAfter();
+                                textBoxListViewText.Text = Utilities.AutoBreakLine(line);
+                            }
+                        }                       
+                    }
                 }
                 e.SuppressKeyPress = true;
             }
