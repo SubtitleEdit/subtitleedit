@@ -161,7 +161,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
       </video>
     </media>
   </sequence>
-</xmeml>";           
+</xmeml>";
 
             string xmlTrackStructure =
                 @"          <generatoritem id='Outline Text[NUMBER]'>
@@ -411,7 +411,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 catch
                 {
                 }
-            }            
+            }
 
             XmlNode trackNode = xml.DocumentElement.SelectSingleNode("sequence/media/video/track");
 

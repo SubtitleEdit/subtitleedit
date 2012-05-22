@@ -8450,7 +8450,7 @@ namespace Nikse.SubtitleEdit.Forms
                                 InsertAfter();
                                 textBoxListViewText.Text = Utilities.AutoBreakLine(line);
                             }
-                        }                       
+                        }
                     }
                 }
                 e.SuppressKeyPress = true;

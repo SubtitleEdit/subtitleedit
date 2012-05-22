@@ -278,7 +278,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             }
             subtitle.Renumber(1);
 
-            // adjust all times 
+            // adjust all times
             if (buffer.Length > 1364)
             {
                 string adjust = Encoding.GetEncoding(1252).GetString(buffer, 1354, 11); // 00:59:59:28

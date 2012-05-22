@@ -69,7 +69,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
                 var lines = p.Text.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.None);
                 foreach (string line in lines)
-                { 
+                {
                     foreach (char ch in line)
                         text.Add(Encoding.GetEncoding(1252).GetBytes(ch.ToString())[0]);
 
@@ -79,7 +79,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
                     text.Add(0x14);
                     text.Add(0x74);
-                    //text.Add(0x17); 
+                    //text.Add(0x17);
                     //text.Add(0x21);
 
                 }
@@ -87,7 +87,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 // codes+text length
                 buffer = Encoding.ASCII.GetBytes(string.Format("{0:000}", text.Count));
                 fs.Write(buffer, 0, buffer.Length);
-                
+
                 WriteTime(fs, p.StartTime, true);
 
                 // write codes + text
