@@ -131,21 +131,34 @@ namespace Nikse.SubtitleEdit.Controls
 
                 if (e.Item.Selected)
                 {
-                    Rectangle r = e.Bounds;
+                    Rectangle rect = e.Bounds;
                     if (Configuration.Settings != null)
                     {
                         if (backgroundColor == BackColor)
                             backgroundColor = Configuration.Settings.Tools.ListViewUnfocusedSelectedColor;
+                        else
+                        {
+                            int r = backgroundColor.R -39;
+                            int g = backgroundColor.G - 39;
+                            int b = backgroundColor.B - 39;
+                            if (r < 0)
+                                r = 0;
+                            if (g < 0)
+                                g = 0;
+                            if (b < 0)
+                                b = 0;
+                            backgroundColor = Color.FromArgb(backgroundColor.A, r, g, b);
+                        }
                         SolidBrush sb = new SolidBrush(backgroundColor);
-                        e.Graphics.FillRectangle(sb, r);
+                        e.Graphics.FillRectangle(sb, rect);
                     }
                     else
                     {
-                        e.Graphics.FillRectangle(Brushes.LightBlue, r);
+                        e.Graphics.FillRectangle(Brushes.LightBlue, rect);
                     }
-                    r = new Rectangle(e.Bounds.Left + 4, e.Bounds.Top+2, e.Bounds.Width - 3, e.Bounds.Height);
+                    rect = new Rectangle(e.Bounds.Left + 4, e.Bounds.Top+2, e.Bounds.Width - 3, e.Bounds.Height);
                     Font f = new System.Drawing.Font(SubtitleFontName, SubtitleFontSize, e.Item.Font.Style);
-                    e.Graphics.DrawString(e.SubItem.Text, f, new SolidBrush(e.Item.ForeColor), r, sf);
+                    e.Graphics.DrawString(e.SubItem.Text, f, new SolidBrush(e.Item.ForeColor), rect, sf);
                 }
                 else
                 {

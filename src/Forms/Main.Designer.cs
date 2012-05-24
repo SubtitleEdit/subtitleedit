@@ -97,8 +97,8 @@
             this.toolStripMenuItemImagePerFrame = new System.Windows.Forms.ToolStripMenuItem();
             this.pACScreenElectronicsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.plainTextToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItemExportUltech130 = new System.Windows.Forms.ToolStripMenuItem();
             this.plainTextWithoutLineBreaksToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemExportUltech130 = new System.Windows.Forms.ToolStripMenuItem();
             this.vobSubsubidxToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator10 = new System.Windows.Forms.ToolStripSeparator();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -961,8 +961,8 @@
             this.toolStripMenuItemImagePerFrame,
             this.pACScreenElectronicsToolStripMenuItem,
             this.plainTextToolStripMenuItem,
-            this.toolStripMenuItemExportUltech130,
             this.plainTextWithoutLineBreaksToolStripMenuItem,
+            this.toolStripMenuItemExportUltech130,
             this.vobSubsubidxToolStripMenuItem});
             this.toolStripMenuItemExport.Name = "toolStripMenuItemExport";
             this.toolStripMenuItemExport.Size = new System.Drawing.Size(334, 22);
@@ -1046,19 +1046,19 @@
             this.plainTextToolStripMenuItem.Text = "Plain text...";
             this.plainTextToolStripMenuItem.Click += new System.EventHandler(this.PlainTextToolStripMenuItemClick);
             // 
-            // toolStripMenuItemExportUltech130
-            // 
-            this.toolStripMenuItemExportUltech130.Name = "toolStripMenuItemExportUltech130";
-            this.toolStripMenuItemExportUltech130.Size = new System.Drawing.Size(258, 22);
-            this.toolStripMenuItemExportUltech130.Text = "Ultech caption...";
-            this.toolStripMenuItemExportUltech130.Click += new System.EventHandler(this.toolStripMenuItemExportUltech130_Click);
-            // 
             // plainTextWithoutLineBreaksToolStripMenuItem
             // 
             this.plainTextWithoutLineBreaksToolStripMenuItem.Name = "plainTextWithoutLineBreaksToolStripMenuItem";
             this.plainTextWithoutLineBreaksToolStripMenuItem.Size = new System.Drawing.Size(258, 22);
             this.plainTextWithoutLineBreaksToolStripMenuItem.Text = "Plain text without line breaks...";
             this.plainTextWithoutLineBreaksToolStripMenuItem.Click += new System.EventHandler(this.PlainTextWithoutLineBreaksToolStripMenuItemClick);
+            // 
+            // toolStripMenuItemExportUltech130
+            // 
+            this.toolStripMenuItemExportUltech130.Name = "toolStripMenuItemExportUltech130";
+            this.toolStripMenuItemExportUltech130.Size = new System.Drawing.Size(258, 22);
+            this.toolStripMenuItemExportUltech130.Text = "Ultech caption...";
+            this.toolStripMenuItemExportUltech130.Click += new System.EventHandler(this.toolStripMenuItemExportUltech130_Click);
             // 
             // vobSubsubidxToolStripMenuItem
             // 
@@ -1782,7 +1782,7 @@
             this.fixCommonErrorsInSelectedLinesToolStripMenuItem,
             this.changeCasingForSelectedLinesToolStripMenuItem});
             this.contextMenuStripListview.Name = "contextMenuStripListview";
-            this.contextMenuStripListview.Size = new System.Drawing.Size(285, 760);
+            this.contextMenuStripListview.Size = new System.Drawing.Size(285, 782);
             this.contextMenuStripListview.Opening += new System.ComponentModel.CancelEventHandler(this.ContextMenuStripListviewOpening);
             // 
             // setStylesForSelectedLinesToolStripMenuItem

@@ -218,6 +218,12 @@
     <Compile Include="Forms\ExportPngXml.Designer.cs">
       <DependentUpon>ExportPngXml.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\ExportText.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ExportText.Designer.cs">
+      <DependentUpon>ExportText.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\ExtractDateTimeInfo.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -832,6 +838,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\ExportPngXml.resx">
       <DependentUpon>ExportPngXml.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ExportText.resx">
+      <DependentUpon>ExportText.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\ExtractDateTimeInfo.resx">
       <DependentUpon>ExtractDateTimeInfo.cs</DependentUpon>
