@@ -87,11 +87,11 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 }
                 else if (line.Trim().Length == 0)
                 {
-                    // skip these lines
                 }
                 else if (line.Trim().Length > 0 && p != null)
                 {
-                    _errorCount++;
+                    if (p.Text.Length < 200)
+                        p.Text = (p.Text + Environment.NewLine + line).Trim();
                 }
             }
 
