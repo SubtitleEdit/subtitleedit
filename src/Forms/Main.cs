@@ -4335,10 +4335,10 @@ namespace Nikse.SubtitleEdit.Forms
                     if (_spellCheckForm != null)
                     {
                         DialogResult result = MessageBox.Show(_language.ContinueWithCurrentSpellCheck, Title, MessageBoxButtons.YesNoCancel);
-                        if (result == System.Windows.Forms.DialogResult.Cancel)
+                        if (result == DialogResult.Cancel)
                             return;
 
-                        if (result == System.Windows.Forms.DialogResult.No)
+                        if (result == DialogResult.No)
                         {
                             _spellCheckForm = new SpellCheck();
                             _spellCheckForm.DoSpellCheck(autoDetect, _subtitle, dictionaryFolder, this);
@@ -4596,7 +4596,11 @@ namespace Nikse.SubtitleEdit.Forms
                             }
                             else
                             {
-                                original.Text = string.Format("<{0}>{1}</{0}>", tag, original.Text);
+                                int indexOfEndBracket = original.Text.IndexOf("}");
+                                if (original.Text.StartsWith("{\\") && indexOfEndBracket > 1 && indexOfEndBracket < 6)
+                                    original.Text = string.Format("{2}<{0}>{1}</{0}>", tag, original.Text.Remove(0, indexOfEndBracket+1), original.Text.Substring(0, indexOfEndBracket+1));
+                                else
+                                    original.Text = string.Format("<{0}>{1}</{0}>", tag, original.Text);
                             }
                             SubtitleListview1.SetAlternateText(i, original.Text);
                         }
@@ -4609,7 +4613,11 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     else
                     {
-                        _subtitle.Paragraphs[i].Text = string.Format("<{0}>{1}</{0}>", tag, _subtitle.Paragraphs[i].Text);
+                        int indexOfEndBracket = _subtitle.Paragraphs[i].Text.IndexOf("}");
+                        if (_subtitle.Paragraphs[i].Text.StartsWith("{\\") && indexOfEndBracket > 1 && indexOfEndBracket < 6)
+                            _subtitle.Paragraphs[i].Text = string.Format("{2}<{0}>{1}</{0}>", tag, _subtitle.Paragraphs[i].Text.Remove(0, indexOfEndBracket + 1), _subtitle.Paragraphs[i].Text.Substring(0, indexOfEndBracket+1));
+                        else
+                            _subtitle.Paragraphs[i].Text = string.Format("<{0}>{1}</{0}>", tag, _subtitle.Paragraphs[i].Text);
                     }
                     SubtitleListview1.SetText(i, _subtitle.Paragraphs[i].Text);
                 }
@@ -5107,6 +5115,9 @@ namespace Nikse.SubtitleEdit.Forms
                     Paragraph p = _subtitle.GetParagraphOrDefault(item.Index);
                     if (p != null)
                     {
+                        int indexOfEndBracket = p.Text.IndexOf("}");
+                        if (p.Text.StartsWith("{\\") && indexOfEndBracket > 1 && indexOfEndBracket < 6)
+                            p.Text = p.Text.Remove(0, indexOfEndBracket+1);
                         p.Text = Utilities.RemoveHtmlTags(p.Text);
                         p.Text = p.Text.Replace("♪", string.Empty);
                         if (isSsa)
@@ -10586,6 +10597,7 @@ namespace Nikse.SubtitleEdit.Forms
 //                toolStripMenuItemRightToLeftMode.Visible = true;
                 toolStripMenuItemReverseRightToLeftStartEnd.Visible = true;
                 joinSubtitlesToolStripMenuItem.Visible = true;
+                plainTextWithoutLineBreaksToolStripMenuItem.Visible = false;
             }
             else
             {
@@ -10948,7 +10960,7 @@ namespace Nikse.SubtitleEdit.Forms
                 string peakWaveFileName = GetPeakWaveFileName(_videoFileName);
                 string spectrogramFolder = GetSpectrogramFolder(_videoFileName);
                 addWaveForm.Initialize(_videoFileName, spectrogramFolder);
-                if (addWaveForm.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                if (addWaveForm.ShowDialog() == DialogResult.OK)
                 {
                     addWaveForm.WavePeak.WritePeakSamples(peakWaveFileName);
                     var audioPeakWave = new WavePeakGenerator(peakWaveFileName);
@@ -13148,7 +13160,19 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void PlainTextToolStripMenuItemClick(object sender, EventArgs e)
         {
-            ExportTextOnly(false);
+            if (Configuration.Settings.General.ShowBetaStuff)
+            {
+                var exportText = new ExportText();
+                exportText.Initialize(_subtitle, _fileName);
+                if (exportText.ShowDialog() == DialogResult.OK)
+                {
+                    ShowStatus("Subtitle exported"); //TODO: Translate
+                }
+            }
+            else
+            {
+                ExportTextOnly(false);
+            }
         }
 
         private void PlainTextWithoutLineBreaksToolStripMenuItemClick(object sender, EventArgs e)
