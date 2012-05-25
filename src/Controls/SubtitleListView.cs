@@ -575,6 +575,8 @@ namespace Nikse.SubtitleEdit.Controls
             {
                 Items[index].Selected = true;
                 Items[index].EnsureVisible();
+                if (focus)
+                   Items[index].Focused = true;
                 return;
             }
 
