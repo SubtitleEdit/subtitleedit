@@ -70,7 +70,7 @@
             this.textBoxText.Name = "textBoxText";
             this.textBoxText.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.textBoxText.Size = new System.Drawing.Size(403, 405);
-            this.textBoxText.TabIndex = 0;
+            this.textBoxText.TabIndex = 3;
             // 
             // groupBoxImportOptions
             // 
@@ -98,7 +98,7 @@
             this.label1.Location = new System.Drawing.Point(13, 392);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(52, 13);
-            this.label1.TabIndex = 10;
+            this.label1.TabIndex = 8;
             this.label1.Text = "Encoding";
             // 
             // comboBoxEncoding
@@ -108,7 +108,7 @@
             this.comboBoxEncoding.Location = new System.Drawing.Point(71, 389);
             this.comboBoxEncoding.Name = "comboBoxEncoding";
             this.comboBoxEncoding.Size = new System.Drawing.Size(221, 21);
-            this.comboBoxEncoding.TabIndex = 11;
+            this.comboBoxEncoding.TabIndex = 9;
             // 
             // checkBoxAddNewlineAfterTimeCodes
             // 
@@ -198,7 +198,7 @@
             this.comboBoxTimeCodeSeperator.Location = new System.Drawing.Point(121, 90);
             this.comboBoxTimeCodeSeperator.Name = "comboBoxTimeCodeSeperator";
             this.comboBoxTimeCodeSeperator.Size = new System.Drawing.Size(121, 21);
-            this.comboBoxTimeCodeSeperator.TabIndex = 5;
+            this.comboBoxTimeCodeSeperator.TabIndex = 4;
             this.comboBoxTimeCodeSeperator.SelectedIndexChanged += new System.EventHandler(this.radioButtonFormatNone_CheckedChanged);
             // 
             // labelTimeCodeSeperator
@@ -207,7 +207,7 @@
             this.labelTimeCodeSeperator.Location = new System.Drawing.Point(13, 93);
             this.labelTimeCodeSeperator.Name = "labelTimeCodeSeperator";
             this.labelTimeCodeSeperator.Size = new System.Drawing.Size(104, 13);
-            this.labelTimeCodeSeperator.TabIndex = 4;
+            this.labelTimeCodeSeperator.TabIndex = 3;
             this.labelTimeCodeSeperator.Text = "Time code seperator";
             // 
             // radioButtonTimeCodeHHMMSSFF
