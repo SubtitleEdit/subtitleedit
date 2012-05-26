@@ -438,7 +438,7 @@ namespace Nikse.SubtitleEdit.Forms
             Console.WriteLine();
             Console.WriteLine(Title + " - Batch converter");
             Console.WriteLine();
-            Console.WriteLine("- Syntax: SubtitleEdit /convert <pattern> <name-of-format-without-spaces> [/offset:hh:mm:ss:msec] [/encoding:<encoding name>]");
+            Console.WriteLine("- Syntax: SubtitleEdit /convert <pattern> <name-of-format-without-spaces> [/offset:hh:mm:ss:msec] [/encoding:<encoding name>] [/fps:<frame rate>]");
             Console.WriteLine("    example: SubtitleEdit /convert *.srt sami");
             Console.WriteLine();
 
@@ -449,11 +449,34 @@ namespace Nikse.SubtitleEdit.Forms
                 offset = args[4].ToLower();
             else if (args.Length > 5 && args[5].ToLower().StartsWith("/offset:"))
                 offset = args[5].ToLower();
+            else if (args.Length > 6 && args[6].ToLower().StartsWith("/offset:"))
+                offset = args[6].ToLower();
+
+            string fps = string.Empty;
+            if (args.Length > 4 && args[4].ToLower().StartsWith("/fps:"))
+                fps = args[4].ToLower();
+            else if (args.Length > 5 && args[5].ToLower().StartsWith("/fps:"))
+                fps = args[5].ToLower();
+            else if (args.Length > 6 && args[6].ToLower().StartsWith("/fps:"))
+                fps = args[6].ToLower();
+            if (fps.Length > 6)
+            {
+                fps = fps.Replace(",", ".").Trim();
+                double d;
+                if (double.TryParse(fps,System.Globalization.NumberStyles.AllowCurrencySymbol, System.Globalization.CultureInfo.InvariantCulture, out d))
+                {
+                    toolStripComboBoxFrameRate.Text = d.ToString(System.Globalization.CultureInfo.InvariantCulture);
+                    Configuration.Settings.General.CurrentFrameRate = d;                    
+                }                    
+            }
+            
             string targetEncodingName = string.Empty;
             if (args.Length > 4 && args[4].ToLower().StartsWith("/encoding:"))
                 targetEncodingName = args[4].ToLower();
             else if (args.Length > 5 && args[5].ToLower().StartsWith("/encoding:"))
                 targetEncodingName = args[5].ToLower();
+            else if (args.Length > 6 && args[6].ToLower().StartsWith("/encoding:"))
+                targetEncodingName = args[6].ToLower();
 
             Encoding targetEncoding = Encoding.UTF8;
             try
@@ -556,6 +579,24 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             capMakerPlus.LoadSubtitle(_subtitle, null, fileName);
                             format = capMakerPlus;
+                        }
+                    }
+                    if (format == null)
+                    {
+                        var captionate = new Captionate();
+                        if (captionate.IsMine(null, fileName))
+                        {
+                            captionate.LoadSubtitle(_subtitle, null, fileName);
+                            format = captionate;
+                        }
+                    }
+                    if (format == null)
+                    {
+                        var ultech130 = new Ultech130();
+                        if (ultech130.IsMine(null, fileName))
+                        {
+                            ultech130.LoadSubtitle(_subtitle, null, fileName);
+                            format = ultech130;
                         }
                     }
 
@@ -1398,7 +1439,6 @@ namespace Nikse.SubtitleEdit.Forms
 
         private bool ContinueNewOrExit()
         {
-            //if (_change)
             if (_changeSubtitleToString != _subtitle.ToText(new SubRip()).Trim())
             {
                 string promptText = _language.SaveChangesToUntitled;
@@ -1536,9 +1576,21 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
+        private bool IsSubtitleLoaded
+        {
+            get
+            { 
+                if (_subtitle == null || _subtitle.Paragraphs.Count == 0)
+                    return false;
+                if (_subtitle.Paragraphs.Count == 1 && string.IsNullOrEmpty(_subtitle.Paragraphs[0].Text))
+                    return false;
+                return true;
+            }
+        }
+
         private void ShowVisualSync(bool onlySelectedLines)
         {
-            if (_subtitle != null && _subtitle.Paragraphs.Count > 1)
+            if (IsSubtitleLoaded)
             {
                 var visualSync = new VisualSync();
                 _formPositionsAndSizes.SetPositionAndSize(visualSync);
@@ -3456,7 +3508,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void GotoLineNumberToolStripMenuItemClick(object sender, EventArgs e)
         {
             ReloadFromSourceView();
-            if (_subtitle.Paragraphs.Count < 1 || textBoxSource.Lines.Length < 1)
+            if (!IsSubtitleLoaded)
             {
                 MessageBox.Show(_language.NoSubtitleLoaded, Title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
@@ -3534,7 +3586,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void AdjustDisplayTime(bool onlySelectedLines)
         {
-            if (_subtitle != null && _subtitle.Paragraphs.Count > 1)
+            if (IsSubtitleLoaded)
             {
                 ReloadFromSourceView();
                 var adjustDisplayTime = new AdjustDisplayDuration();
@@ -3595,7 +3647,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void FixCommonErrors(bool onlySelectedLines)
         {
-            if (_subtitle != null && _subtitle.Paragraphs.Count > 1)
+            if (IsSubtitleLoaded)
             {
                 ReloadFromSourceView();
                 SaveSubtitleListviewIndexes();
@@ -3652,7 +3704,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void StartNumberingFromToolStripMenuItemClick(object sender, EventArgs e)
         {
-            if (_subtitle != null && _subtitle.Paragraphs.Count > 1)
+            if (IsSubtitleLoaded)
             {
                 ReloadFromSourceView();
                 var startNumberingFrom = new StartNumberingFrom();
@@ -3683,7 +3735,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void RemoveTextForHearImparedToolStripMenuItemClick(object sender, EventArgs e)
         {
-            if (_subtitle != null && _subtitle.Paragraphs.Count > 1)
+            if (IsSubtitleLoaded)
             {
                 ReloadFromSourceView();
                 var removeTextFromHearImpaired = new FormRemoveTextForHearImpaired();
@@ -3717,7 +3769,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void SplitToolStripMenuItemClick(object sender, EventArgs e)
         {
-            if (_subtitle != null && _subtitle.Paragraphs.Count > 1)
+            if (IsSubtitleLoaded)
             {
                 ReloadFromSourceView();
 
@@ -3764,7 +3816,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void AppendTextVisuallyToolStripMenuItemClick(object sender, EventArgs e)
         {
-            if (_subtitle != null && _subtitle.Paragraphs.Count > 1)
+            if (IsSubtitleLoaded)
             {
                 ReloadFromSourceView();
 
@@ -3860,7 +3912,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void TranslateViaGoogle(bool onlySelectedLines, bool useGoogle)
         {
-            if (_subtitle != null && _subtitle.Paragraphs.Count >= 1)
+            if (IsSubtitleLoaded)
             {
                 ReloadFromSourceView();
                 var googleTranslate = new GoogleTranslate();
@@ -3957,7 +4009,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void TranslateFromSwedishToDanishToolStripMenuItemClick(object sender, EventArgs e)
         {
-            if (_subtitle != null && _subtitle.Paragraphs.Count > 1)
+            if (IsSubtitleLoaded)
             {
                 bool isSwedish = Utilities.AutoDetectGoogleLanguage(_subtitle) == "sv";
                 string promptText = _language.TranslateSwedishToDanish;
@@ -5860,7 +5912,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (_loading)
                 return;
 
-            if (_subtitle == null || _subtitle.Paragraphs.Count == 0 || _subtitleListViewIndex < 0 || _subtitleListViewIndex >= _subtitle.Paragraphs.Count)
+            if (!IsSubtitleLoaded || _subtitleListViewIndex < 0 || _subtitleListViewIndex >= _subtitle.Paragraphs.Count)
                 return;
 
             SubtitleListview1.SyntaxColorLine(_subtitle.Paragraphs, _subtitleListViewIndex, _subtitle.Paragraphs[_subtitleListViewIndex]);
@@ -7200,7 +7252,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ChangeCasing(bool onlySelectedLines)
         {
-            if (_subtitle != null && _subtitle.Paragraphs.Count > 1)
+            if (IsSubtitleLoaded)
             {
                 SaveSubtitleListviewIndexes();
                 var changeCasing = new ChangeCasing();
@@ -7290,7 +7342,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ToolStripMenuItemChangeFramerateClick(object sender, EventArgs e)
         {
-            if (_subtitle != null && _subtitle.Paragraphs.Count > 1)
+            if (IsSubtitleLoaded)
             {
                 int lastSelectedIndex = 0;
                 if (SubtitleListview1.SelectedItems.Count > 0)
@@ -7533,7 +7585,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ShowSelectedLinesEarlierlaterToolStripMenuItemClick(object sender, EventArgs e)
         {
-            if (_subtitle != null && _subtitle.Paragraphs.Count > 1)
+            if (IsSubtitleLoaded)
             {
                 if (_showEarlierOrLater != null && !_showEarlierOrLater.IsDisposed)
                 {
@@ -8721,7 +8773,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ToolStripMenuItemAutoBreakLinesClick(object sender, EventArgs e)
         {
-            if (_subtitle != null && _subtitle.Paragraphs.Count > 1)
+            if (IsSubtitleLoaded)
             {
                 ReloadFromSourceView();
                 var autoBreakUnbreakLines = new AutoBreakUnbreakLines();
@@ -8759,7 +8811,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ToolStripMenuItemUnbreakLinesClick(object sender, EventArgs e)
         {
-            if (_subtitle != null && _subtitle.Paragraphs.Count > 1)
+            if (IsSubtitleLoaded)
             {
                 ReloadFromSourceView();
                 var autoBreakUnbreakLines = new AutoBreakUnbreakLines();
@@ -8963,7 +9015,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ToolStripMenuItemAutoMergeShortLinesClick(object sender, EventArgs e)
         {
-            if (_subtitle != null && _subtitle.Paragraphs.Count > 1)
+            if (IsSubtitleLoaded)
             {
                 ReloadFromSourceView();
                 var formMergeShortLines = new MergeShortLines();
@@ -8989,7 +9041,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void toolStripMenuItemAutoSplitLongLines_Click(object sender, EventArgs e)
         {
-            if (_subtitle != null && _subtitle.Paragraphs.Count > 1)
+            if (IsSubtitleLoaded)
             {
                 ReloadFromSourceView();
                 var splitLongLines = new SplitLongLines();
@@ -10117,7 +10169,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else
             {
-                if (_subtitle != null && _subtitle.Paragraphs.Count > 1)
+                if (IsSubtitleLoaded)
                 {
                     mediaPlayer.Pause();
 
@@ -12320,7 +12372,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void InsertLineToolStripMenuItemClick(object sender, EventArgs e)
         {
-            if (_subtitle == null || _subtitle.Paragraphs.Count == 0)
+            if (!IsSubtitleLoaded)
             {
                 InsertBefore();
             }
@@ -13769,7 +13821,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ApplyDisplayTimeLimits(bool onlySelectedLines)
         {
-            if (_subtitle != null && _subtitle.Paragraphs.Count > 1)
+            if (IsSubtitleLoaded)
             {
                 ReloadFromSourceView();
                 var applyDurationLimits = new ApplyDurationLimits();

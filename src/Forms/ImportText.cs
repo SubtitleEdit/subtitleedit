@@ -224,7 +224,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (line.Trim().Length == 0)
                 {
                     if (sb.Length > 0)
-                        _subtitle.Paragraphs.Add(new Paragraph(0, 0, sb.ToString().Trim()));
+                        SplitSingle(sb);                        
                     sb = new StringBuilder();
                 }
                 else if (!ContainsLetters(line))
@@ -237,6 +237,96 @@ namespace Nikse.SubtitleEdit.Forms
                     sb.AppendLine(line.Trim());
                 }
             }
+            if (sb.Length > 0)
+                SplitSingle(sb);                        
+        }
+
+        private bool CanMakeThreeLiner(out string text, string input)
+        {
+            text = string.Empty;
+            if (input.Length < Configuration.Settings.General.SubtitleLineMaximumLength * 3 && input.Length > Configuration.Settings.General.SubtitleLineMaximumLength * 1.5)
+            {
+                var breaked = Utilities.AutoBreakLine(input).Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                if (breaked.Length == 2 && (breaked[0].Length > Configuration.Settings.General.SubtitleLineMaximumLength || breaked[1].Length > Configuration.Settings.General.SubtitleLineMaximumLength))
+                {
+                    var first = new StringBuilder();
+                    var second = new StringBuilder();
+                    var third  = new StringBuilder();
+                    foreach (string word in input.Replace(Environment.NewLine, " ").Replace("  ", " ").Split(' '))
+                    {
+                        if (first.Length + word.Length < Configuration.Settings.General.SubtitleLineMaximumLength)
+                            first.Append(" " + word);
+                        else if (second.Length + word.Length < Configuration.Settings.General.SubtitleLineMaximumLength)
+                            second.Append(" " + word);
+                        else 
+                            third.Append(" " + word);
+                    }
+                    if (first.Length <= Configuration.Settings.General.SubtitleLineMaximumLength &&
+                        second.Length <= Configuration.Settings.General.SubtitleLineMaximumLength &&
+                        third.Length <= Configuration.Settings.General.SubtitleLineMaximumLength &&
+                        third.Length > 10)
+                    {                        
+                        if (second.Length > 15)
+                        {
+                            string ending = second.ToString().Substring(second.Length - 9);
+                            int splitPos = -1;
+                            if (ending.Contains(". "))
+                                splitPos = ending.IndexOf(". ") + second.Length - 9;
+                            else if (ending.Contains("! "))
+                                splitPos = ending.IndexOf("! ") + second.Length - 9;
+                            else if (ending.Contains(", "))
+                                splitPos = ending.IndexOf(", ") + second.Length - 9;
+                            else if (ending.Contains("? "))
+                                splitPos = ending.IndexOf("? ") + second.Length - 9;
+                            if (splitPos > 0)
+                            { 
+                                text = Utilities.AutoBreakLine(first.ToString().Trim() + second.ToString().Substring(0, splitPos+1)).Trim() + Environment.NewLine + (second.ToString().Substring(splitPos+1) + third).Trim();
+                                return true;
+                            }
+                        }
+
+
+                        text = first + Environment.NewLine + second + Environment.NewLine + third;
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
+        private void SplitSingle(StringBuilder sb)
+        {
+            Paragraph p = null;
+            string threeliner;
+            if (CanMakeThreeLiner(out threeliner, sb.ToString()))
+            { 
+                var parts = threeliner.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                _subtitle.Paragraphs.Add(new Paragraph() { Text = parts[0] + Environment.NewLine + parts[1] });
+                _subtitle.Paragraphs.Add(new Paragraph() { Text = parts[2].Trim()});
+                return;
+            }
+
+            foreach (string text in Utilities.AutoBreakLineMoreThanTwoLines(sb.ToString(), Configuration.Settings.General.SubtitleLineMaximumLength).Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries))
+            {
+                if (p == null)
+                {
+                    p = new Paragraph();
+                    p.Text = text;
+                }
+                else if (p.Text.Contains(Environment.NewLine))
+                {
+                    _subtitle.Paragraphs.Add(p);
+                    p = null;
+                    p = new Paragraph();
+                    p.Text = text;
+                }
+                else
+                {
+                    p.Text = p.Text + Environment.NewLine + text.Trim();
+                }
+            }
+            if (p != null)
+                _subtitle.Paragraphs.Add(p);
         }
 
         private void ImportAutoSplit(IEnumerable<string> textLines)
@@ -259,7 +349,6 @@ namespace Nikse.SubtitleEdit.Forms
                     sb.AppendLine(line);
                 }
             }
-
 
             string text = sb.ToString().Replace(Environment.NewLine, " ");
 

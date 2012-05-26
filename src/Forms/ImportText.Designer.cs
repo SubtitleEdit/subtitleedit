@@ -42,6 +42,7 @@
             this.labelGapBetweenSubtitles = new System.Windows.Forms.Label();
             this.checkBoxRemoveLinesWithoutLetters = new System.Windows.Forms.CheckBox();
             this.groupBoxSplitting = new System.Windows.Forms.GroupBox();
+            this.radioButtonSplitAtBlankLines = new System.Windows.Forms.RadioButton();
             this.radioButtonAutoSplit = new System.Windows.Forms.RadioButton();
             this.radioButtonLineMode = new System.Windows.Forms.RadioButton();
             this.checkBoxRemoveEmptyLines = new System.Windows.Forms.CheckBox();
@@ -50,7 +51,6 @@
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.buttonOK = new System.Windows.Forms.Button();
-            this.radioButtonSplitAtBlankLines = new System.Windows.Forms.RadioButton();
             this.groupBoxImportText.SuspendLayout();
             this.groupBoxImportOptions.SuspendLayout();
             this.groupBoxDuration.SuspendLayout();
@@ -63,7 +63,7 @@
             // buttonOpenText
             // 
             this.buttonOpenText.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonOpenText.Location = new System.Drawing.Point(358, 19);
+            this.buttonOpenText.Location = new System.Drawing.Point(367, 19);
             this.buttonOpenText.Name = "buttonOpenText";
             this.buttonOpenText.Size = new System.Drawing.Size(143, 21);
             this.buttonOpenText.TabIndex = 0;
@@ -79,8 +79,8 @@
             this.groupBoxImportText.Controls.Add(this.buttonOpenText);
             this.groupBoxImportText.Location = new System.Drawing.Point(12, 12);
             this.groupBoxImportText.Name = "groupBoxImportText";
-            this.groupBoxImportText.Size = new System.Drawing.Size(507, 326);
-            this.groupBoxImportText.TabIndex = 13;
+            this.groupBoxImportText.Size = new System.Drawing.Size(516, 326);
+            this.groupBoxImportText.TabIndex = 0;
             this.groupBoxImportText.TabStop = false;
             this.groupBoxImportText.Text = "Import text";
             // 
@@ -94,7 +94,7 @@
             this.textBoxText.Multiline = true;
             this.textBoxText.Name = "textBoxText";
             this.textBoxText.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.textBoxText.Size = new System.Drawing.Size(495, 272);
+            this.textBoxText.Size = new System.Drawing.Size(504, 272);
             this.textBoxText.TabIndex = 2;
             this.textBoxText.TextChanged += new System.EventHandler(this.TextBoxTextTextChanged);
             this.textBoxText.DragDrop += new System.Windows.Forms.DragEventHandler(this.TextBoxTextDragDrop);
@@ -111,10 +111,10 @@
             this.groupBoxImportOptions.Controls.Add(this.checkBoxRemoveLinesWithoutLetters);
             this.groupBoxImportOptions.Controls.Add(this.groupBoxSplitting);
             this.groupBoxImportOptions.Controls.Add(this.checkBoxRemoveEmptyLines);
-            this.groupBoxImportOptions.Location = new System.Drawing.Point(525, 12);
+            this.groupBoxImportOptions.Location = new System.Drawing.Point(534, 12);
             this.groupBoxImportOptions.Name = "groupBoxImportOptions";
             this.groupBoxImportOptions.Size = new System.Drawing.Size(310, 326);
-            this.groupBoxImportOptions.TabIndex = 14;
+            this.groupBoxImportOptions.TabIndex = 1;
             this.groupBoxImportOptions.TabStop = false;
             this.groupBoxImportOptions.Text = "Import options";
             // 
@@ -126,7 +126,7 @@
             this.checkBoxMergeShortLines.Location = new System.Drawing.Point(19, 98);
             this.checkBoxMergeShortLines.Name = "checkBoxMergeShortLines";
             this.checkBoxMergeShortLines.Size = new System.Drawing.Size(189, 17);
-            this.checkBoxMergeShortLines.TabIndex = 40;
+            this.checkBoxMergeShortLines.TabIndex = 1;
             this.checkBoxMergeShortLines.Text = "Merge short lines with continuation";
             this.checkBoxMergeShortLines.UseVisualStyleBackColor = true;
             this.checkBoxMergeShortLines.CheckedChanged += new System.EventHandler(this.CheckBoxMergeShortLinesCheckedChanged);
@@ -139,7 +139,7 @@
             this.groupBoxDuration.Location = new System.Drawing.Point(6, 223);
             this.groupBoxDuration.Name = "groupBoxDuration";
             this.groupBoxDuration.Size = new System.Drawing.Size(298, 70);
-            this.groupBoxDuration.TabIndex = 39;
+            this.groupBoxDuration.TabIndex = 6;
             this.groupBoxDuration.TabStop = false;
             this.groupBoxDuration.Text = "Duration";
             // 
@@ -158,7 +158,7 @@
             0});
             this.numericUpDownDurationFixed.Name = "numericUpDownDurationFixed";
             this.numericUpDownDurationFixed.Size = new System.Drawing.Size(64, 21);
-            this.numericUpDownDurationFixed.TabIndex = 37;
+            this.numericUpDownDurationFixed.TabIndex = 2;
             this.numericUpDownDurationFixed.Value = new decimal(new int[] {
             2000,
             0,
@@ -172,7 +172,7 @@
             this.radioButtonDurationFixed.Location = new System.Drawing.Point(16, 42);
             this.radioButtonDurationFixed.Name = "radioButtonDurationFixed";
             this.radioButtonDurationFixed.Size = new System.Drawing.Size(50, 17);
-            this.radioButtonDurationFixed.TabIndex = 3;
+            this.radioButtonDurationFixed.TabIndex = 1;
             this.radioButtonDurationFixed.Text = "Fixed";
             this.radioButtonDurationFixed.UseVisualStyleBackColor = true;
             this.radioButtonDurationFixed.CheckedChanged += new System.EventHandler(this.RadioButtonDurationFixedCheckedChanged);
@@ -184,7 +184,7 @@
             this.radioButtonDurationAuto.Location = new System.Drawing.Point(16, 19);
             this.radioButtonDurationAuto.Name = "radioButtonDurationAuto";
             this.radioButtonDurationAuto.Size = new System.Drawing.Size(47, 17);
-            this.radioButtonDurationAuto.TabIndex = 2;
+            this.radioButtonDurationAuto.TabIndex = 0;
             this.radioButtonDurationAuto.TabStop = true;
             this.radioButtonDurationAuto.Text = "Auto";
             this.radioButtonDurationAuto.UseVisualStyleBackColor = true;
@@ -196,7 +196,7 @@
             this.buttonRefresh.Location = new System.Drawing.Point(11, 299);
             this.buttonRefresh.Name = "buttonRefresh";
             this.buttonRefresh.Size = new System.Drawing.Size(102, 21);
-            this.buttonRefresh.TabIndex = 38;
+            this.buttonRefresh.TabIndex = 7;
             this.buttonRefresh.Text = "Refresh";
             this.buttonRefresh.UseVisualStyleBackColor = true;
             this.buttonRefresh.Click += new System.EventHandler(this.ButtonRefreshClick);
@@ -216,7 +216,7 @@
             0});
             this.numericUpDownGapBetweenLines.Name = "numericUpDownGapBetweenLines";
             this.numericUpDownGapBetweenLines.Size = new System.Drawing.Size(64, 21);
-            this.numericUpDownGapBetweenLines.TabIndex = 36;
+            this.numericUpDownGapBetweenLines.TabIndex = 5;
             this.numericUpDownGapBetweenLines.Value = new decimal(new int[] {
             1000,
             0,
@@ -230,7 +230,7 @@
             this.labelGapBetweenSubtitles.Location = new System.Drawing.Point(19, 175);
             this.labelGapBetweenSubtitles.Name = "labelGapBetweenSubtitles";
             this.labelGapBetweenSubtitles.Size = new System.Drawing.Size(180, 13);
-            this.labelGapBetweenSubtitles.TabIndex = 37;
+            this.labelGapBetweenSubtitles.TabIndex = 4;
             this.labelGapBetweenSubtitles.Text = "Gap between subtitles (milliseconds)";
             // 
             // checkBoxRemoveLinesWithoutLetters
@@ -241,7 +241,7 @@
             this.checkBoxRemoveLinesWithoutLetters.Location = new System.Drawing.Point(19, 144);
             this.checkBoxRemoveLinesWithoutLetters.Name = "checkBoxRemoveLinesWithoutLetters";
             this.checkBoxRemoveLinesWithoutLetters.Size = new System.Drawing.Size(158, 17);
-            this.checkBoxRemoveLinesWithoutLetters.TabIndex = 5;
+            this.checkBoxRemoveLinesWithoutLetters.TabIndex = 3;
             this.checkBoxRemoveLinesWithoutLetters.Text = "Remove lines without letters";
             this.checkBoxRemoveLinesWithoutLetters.UseVisualStyleBackColor = true;
             this.checkBoxRemoveLinesWithoutLetters.CheckedChanged += new System.EventHandler(this.CheckBoxRemoveLinesWithoutLettersOrNumbersCheckedChanged);
@@ -254,9 +254,20 @@
             this.groupBoxSplitting.Location = new System.Drawing.Point(6, 19);
             this.groupBoxSplitting.Name = "groupBoxSplitting";
             this.groupBoxSplitting.Size = new System.Drawing.Size(298, 68);
-            this.groupBoxSplitting.TabIndex = 4;
+            this.groupBoxSplitting.TabIndex = 0;
             this.groupBoxSplitting.TabStop = false;
             this.groupBoxSplitting.Text = "Splitting";
+            // 
+            // radioButtonSplitAtBlankLines
+            // 
+            this.radioButtonSplitAtBlankLines.AutoSize = true;
+            this.radioButtonSplitAtBlankLines.Location = new System.Drawing.Point(159, 19);
+            this.radioButtonSplitAtBlankLines.Name = "radioButtonSplitAtBlankLines";
+            this.radioButtonSplitAtBlankLines.Size = new System.Drawing.Size(110, 17);
+            this.radioButtonSplitAtBlankLines.TabIndex = 1;
+            this.radioButtonSplitAtBlankLines.Text = "Split at blank lines";
+            this.radioButtonSplitAtBlankLines.UseVisualStyleBackColor = true;
+            this.radioButtonSplitAtBlankLines.CheckedChanged += new System.EventHandler(this.radioButtonSplitAtBlankLines_CheckedChanged);
             // 
             // radioButtonAutoSplit
             // 
@@ -264,8 +275,8 @@
             this.radioButtonAutoSplit.Checked = true;
             this.radioButtonAutoSplit.Location = new System.Drawing.Point(14, 19);
             this.radioButtonAutoSplit.Name = "radioButtonAutoSplit";
-            this.radioButtonAutoSplit.Size = new System.Drawing.Size(93, 17);
-            this.radioButtonAutoSplit.TabIndex = 2;
+            this.radioButtonAutoSplit.Size = new System.Drawing.Size(88, 17);
+            this.radioButtonAutoSplit.TabIndex = 0;
             this.radioButtonAutoSplit.TabStop = true;
             this.radioButtonAutoSplit.Text = "Auto split text";
             this.radioButtonAutoSplit.UseVisualStyleBackColor = true;
@@ -276,8 +287,8 @@
             this.radioButtonLineMode.AutoSize = true;
             this.radioButtonLineMode.Location = new System.Drawing.Point(14, 42);
             this.radioButtonLineMode.Name = "radioButtonLineMode";
-            this.radioButtonLineMode.Size = new System.Drawing.Size(133, 17);
-            this.radioButtonLineMode.TabIndex = 0;
+            this.radioButtonLineMode.Size = new System.Drawing.Size(131, 17);
+            this.radioButtonLineMode.TabIndex = 2;
             this.radioButtonLineMode.Text = "One line is one subtitle";
             this.radioButtonLineMode.UseVisualStyleBackColor = true;
             this.radioButtonLineMode.CheckedChanged += new System.EventHandler(this.RadioButtonLineModeCheckedChanged);
@@ -290,7 +301,7 @@
             this.checkBoxRemoveEmptyLines.Location = new System.Drawing.Point(19, 121);
             this.checkBoxRemoveEmptyLines.Name = "checkBoxRemoveEmptyLines";
             this.checkBoxRemoveEmptyLines.Size = new System.Drawing.Size(121, 17);
-            this.checkBoxRemoveEmptyLines.TabIndex = 3;
+            this.checkBoxRemoveEmptyLines.TabIndex = 2;
             this.checkBoxRemoveEmptyLines.Text = "Remove empty lines";
             this.checkBoxRemoveEmptyLines.UseVisualStyleBackColor = true;
             this.checkBoxRemoveEmptyLines.CheckedChanged += new System.EventHandler(this.CheckBoxRemoveEmptyLinesCheckedChanged);
@@ -303,8 +314,8 @@
             this.groupBoxImportResult.Controls.Add(this.SubtitleListview1);
             this.groupBoxImportResult.Location = new System.Drawing.Point(12, 344);
             this.groupBoxImportResult.Name = "groupBoxImportResult";
-            this.groupBoxImportResult.Size = new System.Drawing.Size(823, 227);
-            this.groupBoxImportResult.TabIndex = 15;
+            this.groupBoxImportResult.Size = new System.Drawing.Size(832, 227);
+            this.groupBoxImportResult.TabIndex = 2;
             this.groupBoxImportResult.TabStop = false;
             this.groupBoxImportResult.Text = "Preview";
             // 
@@ -324,8 +335,8 @@
             this.SubtitleListview1.MultiSelect = false;
             this.SubtitleListview1.Name = "SubtitleListview1";
             this.SubtitleListview1.OwnerDraw = true;
-            this.SubtitleListview1.Size = new System.Drawing.Size(811, 186);
-            this.SubtitleListview1.TabIndex = 12;
+            this.SubtitleListview1.Size = new System.Drawing.Size(820, 186);
+            this.SubtitleListview1.TabIndex = 0;
             this.SubtitleListview1.UseCompatibleStateImageBehavior = false;
             this.SubtitleListview1.View = System.Windows.Forms.View.Details;
             // 
@@ -337,10 +348,10 @@
             // 
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonCancel.Location = new System.Drawing.Point(754, 579);
+            this.buttonCancel.Location = new System.Drawing.Point(763, 579);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 21);
-            this.buttonCancel.TabIndex = 17;
+            this.buttonCancel.TabIndex = 4;
             this.buttonCancel.Text = "C&ancel";
             this.buttonCancel.UseVisualStyleBackColor = true;
             this.buttonCancel.Click += new System.EventHandler(this.ButtonCancelClick);
@@ -349,30 +360,19 @@
             // 
             this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonOK.Location = new System.Drawing.Point(673, 579);
+            this.buttonOK.Location = new System.Drawing.Point(682, 579);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 21);
-            this.buttonOK.TabIndex = 16;
+            this.buttonOK.TabIndex = 3;
             this.buttonOK.Text = "&Next >";
             this.buttonOK.UseVisualStyleBackColor = true;
             this.buttonOK.Click += new System.EventHandler(this.ButtonOkClick);
-            // 
-            // radioButtonSplitAtBlankLines
-            // 
-            this.radioButtonSplitAtBlankLines.AutoSize = true;
-            this.radioButtonSplitAtBlankLines.Location = new System.Drawing.Point(159, 19);
-            this.radioButtonSplitAtBlankLines.Name = "radioButtonSplitAtBlankLines";
-            this.radioButtonSplitAtBlankLines.Size = new System.Drawing.Size(110, 17);
-            this.radioButtonSplitAtBlankLines.TabIndex = 3;
-            this.radioButtonSplitAtBlankLines.Text = "Split at blank lines";
-            this.radioButtonSplitAtBlankLines.UseVisualStyleBackColor = true;
-            this.radioButtonSplitAtBlankLines.CheckedChanged += new System.EventHandler(this.radioButtonSplitAtBlankLines_CheckedChanged);
             // 
             // ImportText
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(847, 616);
+            this.ClientSize = new System.Drawing.Size(856, 616);
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.buttonOK);
             this.Controls.Add(this.groupBoxImportResult);
