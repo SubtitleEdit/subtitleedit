@@ -716,9 +716,16 @@ namespace Nikse.SubtitleEdit.Forms
                             }
                             temp = pre + temp;
 
+                            if (temp.EndsWith(Environment.NewLine + "- "))
+                                temp = temp.Remove(temp.Length - 4, 4);
+
                             var st = new StripableText(temp);
                             if (st.StrippedText.Length == 0)
                                 return string.Empty;
+
+                            if (!temp.Contains(Environment.NewLine) && text.Contains(Environment.NewLine) && temp.StartsWith("-"))
+                                temp = temp.Remove(0,1).Trim();
+
                             text = temp;
                         }
                     }
