@@ -165,6 +165,20 @@ namespace Test
             Assert.AreEqual(expected, actual);
         }
 
+        [TestMethod()]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void RemoveHIQuotes()
+        {
+            FormRemoveTextForHearImpaired_Accessor target = new FormRemoveTextForHearImpaired_Accessor();
+            string text = "- Where?!" + Environment.NewLine + "- Ow!";
+            string expected = "Where?!";
+            string actual = target.RemoveInterjections(text);
+            Assert.AreEqual(expected, actual);
+        }
+
+        
+
+
 
         //
         //
