@@ -27,6 +27,8 @@ Subtitle Edit Changelog
    * Fixed italics in .890 writing - thx victor
    * Insert line before/after shortcuts - thx Omar
    * Minor bug with fixing I inside lowercase word - thx Alberto
+   * New line in format Encore with tabs - thx Tim
+   * Minor bug in Remove interjections - thx Pson
 
 
 3.2.7 (14th April 2012)

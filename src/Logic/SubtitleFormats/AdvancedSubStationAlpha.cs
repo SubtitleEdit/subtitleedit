@@ -46,19 +46,19 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 @"[Script Info]
 ; This is an Advanced Sub Station Alpha v4+ script.
 Title: {0}
-ScriptType: v4.00
+ScriptType: v4.00+
 Collisions: Normal
 PlayDepth: 0
 
 [V4+ Styles]
 Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
-Style: Default,Tahoma,25,&H00FFFFFF,&HF0000000,&H001509AE,&H32270EA8,-1,0,0,0,100,100,0,0.00,1,2,1,2,30,30,10,1
+Style: Default,Tahoma,20,&H00FFFFFF,&H000000FF,&H00000000,&H00000000,0,0,0,0,100,100,0,0,1,1,1,2,10,10,10,1
 
 [Events]
 Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text";
 
             const string timeCodeFormat = "{0}:{1:00}:{2:00}.{3:00}"; // h:mm:ss.cc
-            const string paragraphWriteFormat = "Dialogue: 0,{0},{1},{3},NTP,0000,0000,0000,,{2}";
+            const string paragraphWriteFormat = "Dialogue: 0,{0},{1},{3},Default,0000,0000,0000,,{2}";
 
             var sb = new StringBuilder();
             System.Drawing.Color fontColor = System.Drawing.Color.FromArgb(Configuration.Settings.SubtitleSettings.SsaFontColorArgb);
@@ -101,7 +101,7 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
             List<string> list = new List<string>();
 
             if (headerLines == null)
-                headerLines = "Style: Default,Tahoma,25,&H00FFFFFF,&HF0000000,&H001509AE,&H32270EA8,-1,0,0,0,100,100,0,0.00,1,2,1,2,30,30,10,1"; 
+                headerLines = "Style: Default,Tahoma,20,&H00FFFFFF,&H000000FF,&H00000000,&H00000000,0,0,0,0,100,100,0,0,1,2,2,2,10,10,10,1"; 
             
             foreach (string line in headerLines.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries))
             {
