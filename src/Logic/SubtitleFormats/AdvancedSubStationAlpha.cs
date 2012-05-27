@@ -99,6 +99,10 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
         public static List<string> GetStylesFromHeader(string headerLines)
         {
             List<string> list = new List<string>();
+
+            if (headerLines == null)
+                headerLines = "Style: Default,Tahoma,25,&H00FFFFFF,&HF0000000,&H001509AE,&H32270EA8,-1,0,0,0,100,100,0,0.00,1,2,1,2,30,30,10,1"; 
+            
             foreach (string line in headerLines.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries))
             {
                 if (line.StartsWith("Style:"))
@@ -107,7 +111,7 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                     if (end > 0)
                         list.Add(line.Substring(6, end - 6).Trim());
                 }
-            }
+            }            
             return list;
         }
 
