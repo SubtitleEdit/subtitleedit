@@ -607,7 +607,7 @@ namespace Nikse.SubtitleEdit.Forms
             g.Dispose();
             bmp.Dispose();
             int sizeX = (int) (textSize.Width*0.8);
-            int sizeY = (int)(textSize.Height * 0.7) + 10;
+            int sizeY = (int)(textSize.Height * 0.8) + 30;
             if (sizeX < 1)
                 sizeX = 1;
             if (sizeY < 1)
