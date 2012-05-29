@@ -1,4 +1,5 @@
 ﻿using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Text;
 
 namespace Nikse.SubtitleEdit.Logic
@@ -6,7 +7,7 @@ namespace Nikse.SubtitleEdit.Logic
     public static class TextDraw
     {
 
-        public static void DrawText(Font font, StringFormat sf, System.Drawing.Drawing2D.GraphicsPath path, StringBuilder sb, bool isItalic, bool isBold, float left, float top, ref bool newLine, float addX, float leftMargin, ref int pathPointsStart)
+        public static void DrawText(Font font, StringFormat sf, System.Drawing.Drawing2D.GraphicsPath path, StringBuilder sb, bool isItalic, bool isBold, bool isUnderline, float left, float top, ref bool newLine, float addX, float leftMargin, ref int pathPointsStart)
         {
             var next = new PointF(left, top);
 
@@ -32,16 +33,59 @@ namespace Nikse.SubtitleEdit.Logic
             }
 
             var fontStyle = FontStyle.Regular;
-            if (isItalic && isBold)
+            if (isItalic && isBold && isUnderline)
+                fontStyle = FontStyle.Italic | FontStyle.Bold | FontStyle.Underline;
+            else if (isItalic && isBold)
                 fontStyle = FontStyle.Italic | FontStyle.Bold;
+            else if (isItalic && isUnderline)
+                fontStyle = FontStyle.Italic | FontStyle.Underline;
+            else if (isUnderline && isBold)
+                fontStyle = FontStyle.Underline | FontStyle.Bold;
             else if (isItalic)
-                fontStyle = FontStyle.Italic;
+                    fontStyle = FontStyle.Italic;
             else if (isBold)
                 fontStyle = FontStyle.Bold;
+            else if (isUnderline)
+                fontStyle = FontStyle.Underline;
             path.AddString(sb.ToString(), font.FontFamily, (int)fontStyle, font.Size, next, sf);
 
             sb.Length = 0;
         }
+
+        public static float MeasureTextWidth(Font font, string text, bool bold)
+        {
+            var sf = new StringFormat { Alignment = StringAlignment.Near, LineAlignment = StringAlignment.Near };
+            var path = new GraphicsPath();
+
+            var sb = new StringBuilder(text);
+            bool isItalic = false;
+            bool newLine = false;
+            int addX = 0;
+            int leftMargin = 0;
+            int pathPointsStart = -1;
+            TextDraw.DrawText(font, sf, path, sb, isItalic, bold, false, 0, 0, ref newLine, addX, leftMargin, ref pathPointsStart);
+
+            float width = 0;
+            int index = path.PathPoints.Length - 30;
+            if (index < 0)
+                index = 0;
+            for (int i = index; i < path.PathPoints.Length; i++)
+            {
+                if (path.PathPoints[i].X > width)
+                    width = path.PathPoints[i].X;
+            }
+            int max = 30;
+            if (30 >= path.PathPoints.Length)
+                max = path.PathPoints.Length;
+            for (int i = 0; i < max; i++)
+            {
+                if (path.PathPoints[i].X > width)
+                    width = path.PathPoints[i].X;
+            }
+
+            return width;
+        }
+
 
     }
 }

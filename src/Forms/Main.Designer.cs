@@ -381,6 +381,7 @@
             this.imageListPlayRate = new System.Windows.Forms.ImageList(this.components);
             this.timerTextUndo = new System.Windows.Forms.Timer(this.components);
             this.timerAlternateTextUndo = new System.Windows.Forms.Timer(this.components);
+            this.toolStripMenuItemAssStyles = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
@@ -1744,6 +1745,7 @@
             // 
             this.contextMenuStripListview.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.setStylesForSelectedLinesToolStripMenuItem,
+            this.toolStripMenuItemAssStyles,
             this.toolStripMenuItemDelete,
             this.toolStripMenuItemInsertBefore,
             this.toolStripMenuItemInsertAfter,
@@ -1782,7 +1784,7 @@
             this.fixCommonErrorsInSelectedLinesToolStripMenuItem,
             this.changeCasingForSelectedLinesToolStripMenuItem});
             this.contextMenuStripListview.Name = "contextMenuStripListview";
-            this.contextMenuStripListview.Size = new System.Drawing.Size(285, 782);
+            this.contextMenuStripListview.Size = new System.Drawing.Size(285, 804);
             this.contextMenuStripListview.Opening += new System.ComponentModel.CancelEventHandler(this.ContextMenuStripListviewOpening);
             // 
             // setStylesForSelectedLinesToolStripMenuItem
@@ -3764,6 +3766,13 @@
             this.timerAlternateTextUndo.Interval = 700;
             this.timerAlternateTextUndo.Tick += new System.EventHandler(this.TimerAlternateTextUndoTick);
             // 
+            // toolStripMenuItemAssStyles
+            // 
+            this.toolStripMenuItemAssStyles.Name = "toolStripMenuItemAssStyles";
+            this.toolStripMenuItemAssStyles.Size = new System.Drawing.Size(284, 22);
+            this.toolStripMenuItemAssStyles.Text = "ASS: Styles...";
+            this.toolStripMenuItemAssStyles.Click += new System.EventHandler(this.toolStripMenuItemAssStyles_Click);
+            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -4192,6 +4201,7 @@
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemExportCheetahCap;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemExportCaptionInc;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemExportUltech130;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemAssStyles;
     }
 }
 

@@ -6,6 +6,14 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
     class AdvancedSubStationAlpha : SubtitleFormat
     {
+        public static string DefaultStyle
+        {
+            get
+            {
+                return "Style: Default,Tahoma,20,&H00FFFFFF,&H000000FF,&H00000000,&H00000000,0,0,0,0,100,100,0,0,1,1,1,2,10,10,10,1";
+            }
+        }
+
         public override string Extension
         {
             get { return ".ass"; }
@@ -42,7 +50,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public override string ToText(Subtitle subtitle, string title)
         {
-            const string header =
+            string header =
 @"[Script Info]
 ; This is an Advanced Sub Station Alpha v4+ script.
 Title: {0}
@@ -52,7 +60,7 @@ PlayDepth: 0
 
 [V4+ Styles]
 Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
-Style: Default,Tahoma,20,&H00FFFFFF,&H000000FF,&H00000000,&H00000000,0,0,0,0,100,100,0,0,1,1,1,2,10,10,10,1
+" + DefaultStyle + @"
 
 [Events]
 Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text";
@@ -101,7 +109,7 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
             List<string> list = new List<string>();
 
             if (headerLines == null)
-                headerLines = "Style: Default,Tahoma,20,&H00FFFFFF,&H000000FF,&H00000000,&H00000000,0,0,0,0,100,100,0,0,1,2,2,2,10,10,10,1"; 
+                headerLines = DefaultStyle;
             
             foreach (string line in headerLines.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries))
             {

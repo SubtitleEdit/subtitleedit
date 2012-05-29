@@ -993,11 +993,11 @@ Chcesz zapisać?</NegativeTimeWarning>
     <ShowFrameRate>Pokaż ilość klatek na sekundę na Pasku narzędzi</ShowFrameRate>
     <DefaultFrameRate>Domyślna ilość klatek/sekundę</DefaultFrameRate>
     <DefaultFileEncoding>Domyślne kodowanie</DefaultFileEncoding>
-    <AutoDetectAnsiEncoding>Autom. detekcja kodowania ANSI</AutoDetectAnsiEncoding>
-    <SubtitleLineMaximumLength>Maksymalna długość linii napisów</SubtitleLineMaximumLength>
-    <AutoWrapWhileTyping>Automatycznie zawijaj podczas pisania</AutoWrapWhileTyping>
-    <DurationMinimumMilliseconds>Minimalny czas trwania w msek.</DurationMinimumMilliseconds>
-    <DurationMaximumMilliseconds>Maksymalny czas trwania w msek.</DurationMaximumMilliseconds>
+    <AutoDetectAnsiEncoding>Auto-detekcja kodow. ANSI</AutoDetectAnsiEncoding>
+    <SubtitleLineMaximumLength>Maks. dł. linii napisów</SubtitleLineMaximumLength>
+    <AutoWrapWhileTyping>Zawijaj podczas pisania</AutoWrapWhileTyping>
+    <DurationMinimumMilliseconds>Min. czas trwania w msek.</DurationMinimumMilliseconds>
+    <DurationMaximumMilliseconds>Maks. czas trwania w msek.</DurationMaximumMilliseconds>
     <SubtitleFont>Czcionka napisów</SubtitleFont>
     <SubtitleFontSize>Rozmiar czcionki napisów</SubtitleFontSize>
     <SubtitleBold>Pogrubienie</SubtitleBold>
@@ -1009,7 +1009,7 @@ Chcesz zapisać?</NegativeTimeWarning>
     <RememberSelectedLine>Pamiętaj zaznaczoną linię</RememberSelectedLine>
     <RememberPositionAndSize>Pamiętaj rozmiar i pozycję głównego okna programu</RememberPositionAndSize>
     <StartInSourceView>Po uruchomieniu pokaż napisy źródłowe</StartInSourceView>
-    <RemoveBlankLinesWhenOpening>Podczas otwierania napisów usuwaj puste linie</RemoveBlankLinesWhenOpening>
+    <RemoveBlankLinesWhenOpening>Usuwaj puste linie podczas otwierania napisów </RemoveBlankLinesWhenOpening>
     <ShowLineBreaksAs>Widok linii łamania w liście napisów:</ShowLineBreaksAs>
     <MainListViewDoubleClickAction>Akcja po dwukliku na linii w głównym oknie</MainListViewDoubleClickAction>
     <MainListViewNothing>Nic nie rób</MainListViewNothing>
@@ -1032,7 +1032,7 @@ Chcesz zapisać?</NegativeTimeWarning>
     <VlcMediaPlayer>VLC Media Player</VlcMediaPlayer>
     <VlcMediaPlayerDescription>libvlc.dll z VLC Media Player 1.1.0 lub nowszy</VlcMediaPlayerDescription>
     <ShowStopButton>Pokaż przycisk Stop</ShowStopButton>
-    <DefaultVolume>Domyślna głośność:</DefaultVolume>
+    <DefaultVolume>Głośność:</DefaultVolume>
     <VolumeNotes>0 - bez dźwięku, 100 - najwyższa głośność</VolumeNotes>
     <PreviewFontSize>Rozmiar czcionki napisów dla podglądu:</PreviewFontSize>
     <MainWindowVideoControls>Główne okno panelu wideo</MainWindowVideoControls>
@@ -1078,7 +1078,7 @@ Chcesz zapisać?</NegativeTimeWarning>
     <ProxyUserName>Użytkownik:</ProxyUserName>
     <ProxyPassword>Hasło:</ProxyPassword>
     <ProxyDomain>Domena:</ProxyDomain>
-    <PlayXSecondsAndBack>Odtwórz X sek i wróć, gdzie X to:</PlayXSecondsAndBack>
+    <PlayXSecondsAndBack>Odtwórz X sek. i wróć - X =</PlayXSecondsAndBack>
     <StartSceneIndex>Akapit sceny początkowej:</StartSceneIndex>
     <EndSceneIndex>Akapit sceny końcowej:</EndSceneIndex>
     <FirstPlusX>Pierwsza + {0}</FirstPlusX>

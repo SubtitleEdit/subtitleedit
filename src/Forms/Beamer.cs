@@ -247,7 +247,7 @@ namespace Nikse.SubtitleEdit.Forms
                     italicFromStart = i == 0;
                     if (sb.Length > 0)
                     {
-                        TextDraw.DrawText(font, sf, path, sb, isItalic, false, left, top, ref newLine, addX, leftMargin, ref pathPointsStart);
+                        TextDraw.DrawText(font, sf, path, sb, isItalic, false, false, left, top, ref newLine, addX, leftMargin, ref pathPointsStart);
                         addX = 0;
                     }
                     isItalic = true;
@@ -259,7 +259,7 @@ namespace Nikse.SubtitleEdit.Forms
                         addX = 0;
                     else
                         addX = italicSpacing;
-                    TextDraw.DrawText(font, sf, path, sb, isItalic, false, left, top, ref newLine, addX, leftMargin, ref pathPointsStart);
+                    TextDraw.DrawText(font, sf, path, sb, isItalic, false, false, left, top, ref newLine, addX, leftMargin, ref pathPointsStart);
                     addX = 1;
                     if (_subtitleFontName.StartsWith("Arial"))
                         addX = 3;
@@ -273,7 +273,7 @@ namespace Nikse.SubtitleEdit.Forms
                     else
                         addX = italicSpacing;
 
-                    TextDraw.DrawText(font, sf, path, sb, isItalic, false, left, top, ref newLine, addX, leftMargin, ref pathPointsStart);
+                    TextDraw.DrawText(font, sf, path, sb, isItalic, false, false, left, top, ref newLine, addX, leftMargin, ref pathPointsStart);
 
                     top += lineHeight;
                     newLine = true;
@@ -300,7 +300,7 @@ namespace Nikse.SubtitleEdit.Forms
                     addX = 0;
                 else
                     addX = italicSpacing;
-                TextDraw.DrawText(font, sf, path, sb, isItalic, false, left, top, ref newLine, addX, leftMargin, ref pathPointsStart);
+                TextDraw.DrawText(font, sf, path, sb, isItalic, false, false, left, top, ref newLine, addX, leftMargin, ref pathPointsStart);
             }
 
             if (_borderWidth > 0)

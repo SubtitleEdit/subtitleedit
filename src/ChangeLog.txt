@@ -16,7 +16,7 @@ Subtitle Edit Changelog
    * Import of subs from mp4 files can now read closed captions - thx Zsolt
  * FIXED:
    * Bug in linebreaking - thx Renault
-   * Bug (skip of subtitles) in dvd sub ripping - thx kowenant
+   * Bug (skip of subtitles) in dvd sub ripping - thx kowenant/cipry
    * Minor fix for Blu-ray sup reading
    * Correct time codes in EBU when reading 24 fps
    * HD DVD SUP lines are now re-numbered when importing for ocr
@@ -29,6 +29,7 @@ Subtitle Edit Changelog
    * Minor bug with fixing I inside lowercase word - thx Alberto
    * New line in format Encore with tabs - thx Tim
    * Minor bug in Remove interjections - thx Pson
+   * Crash when working with Advanced Sub Station Alpha styles
 
 
 3.2.7 (14th April 2012)
