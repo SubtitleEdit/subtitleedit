@@ -533,40 +533,6 @@ namespace Nikse.SubtitleEdit.Forms
             return bmp;
         }
 
-        private static float MeasureTextWidth(Font font, string text, bool bold)
-        {
-            var sf = new StringFormat {Alignment = StringAlignment.Near, LineAlignment = StringAlignment.Near};
-            var path = new GraphicsPath();
-
-            var sb = new StringBuilder(text);
-            bool isItalic = false;
-            bool newLine = false;
-            int addX = 0;
-            int leftMargin = 0;
-            int pathPointsStart = -1;
-            TextDraw.DrawText(font, sf, path, sb, isItalic, bold, 0, 0, ref newLine, addX, leftMargin, ref pathPointsStart);
-
-            float width = 0;
-            int index = path.PathPoints.Length - 30;
-            if (index < 0)
-                index = 0;
-            for (int i = index; i < path.PathPoints.Length; i++)
-            {
-                if (path.PathPoints[i].X > width)
-                    width = path.PathPoints[i].X;
-            }
-            int max = 30;
-            if (30 >= path.PathPoints.Length)
-                max = path.PathPoints.Length;
-            for (int i = 0; i < max; i++)
-            {
-                if (path.PathPoints[i].X > width)
-                    width = path.PathPoints[i].X;
-            }
-
-            return width;
-        }
-
         private static Bitmap GenerateImageFromTextWithStyle(MakeBitmapParameter parameter)
         {
             string text = parameter.P.Text;
@@ -621,7 +587,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (parameter.AlignLeft)
                     lefts.Add(5);
                 else if (parameter.AlignRight)
-                    lefts.Add(bmp.Width - (MeasureTextWidth(font, line, parameter.SubtitleFontBold) + 15));
+                    lefts.Add(bmp.Width - (TextDraw.MeasureTextWidth(font, line, parameter.SubtitleFontBold) + 15));
                 else
                     lefts.Add((float)(bmp.Width - g.MeasureString(line, font).Width * 0.8+15) / 2);
             }
@@ -658,7 +624,7 @@ namespace Nikse.SubtitleEdit.Forms
                     italicFromStart = i == 0;
                     if (sb.Length > 0)
                     {
-                        TextDraw.DrawText(font, sf, path, sb, isItalic, parameter.SubtitleFontBold, left, top, ref newLine, addX, leftMargin, ref newLinePathPoint);
+                        TextDraw.DrawText(font, sf, path, sb, isItalic, parameter.SubtitleFontBold, false, left, top, ref newLine, addX, leftMargin, ref newLinePathPoint);
                         addX = 0;
                         firstLinePart = false;
                     }
@@ -671,7 +637,7 @@ namespace Nikse.SubtitleEdit.Forms
                         addX = 0;
                     else
                         addX = italicSpacing;
-                    TextDraw.DrawText(font, sf, path, sb, isItalic, parameter.SubtitleFontBold, left, top, ref newLine, addX, leftMargin, ref newLinePathPoint);
+                    TextDraw.DrawText(font, sf, path, sb, isItalic, parameter.SubtitleFontBold, false, left, top, ref newLine, addX, leftMargin, ref newLinePathPoint);
                     firstLinePart = false;
                     addX = 1;
                     if (parameter.SubtitleFontName.StartsWith("Arial"))
@@ -686,7 +652,7 @@ namespace Nikse.SubtitleEdit.Forms
                     else
                         addX = italicSpacing;
 
-                    TextDraw.DrawText(font, sf, path, sb, isItalic, parameter.SubtitleFontBold, left, top, ref newLine, addX, leftMargin, ref newLinePathPoint);
+                    TextDraw.DrawText(font, sf, path, sb, isItalic, parameter.SubtitleFontBold, false, left, top, ref newLine, addX, leftMargin, ref newLinePathPoint);
                     firstLinePart = true;
 
                     top += lineHeight;
@@ -714,7 +680,7 @@ namespace Nikse.SubtitleEdit.Forms
                     addX = 0;
                 else
                     addX = italicSpacing;
-                TextDraw.DrawText(font, sf, path, sb, isItalic, parameter.SubtitleFontBold, left, top, ref newLine, addX, leftMargin, ref newLinePathPoint);
+                TextDraw.DrawText(font, sf, path, sb, isItalic, parameter.SubtitleFontBold, false, left, top, ref newLine, addX, leftMargin, ref newLinePathPoint);
             }
 
             if (parameter.BorderWidth > 0)

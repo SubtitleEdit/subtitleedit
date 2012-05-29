@@ -4517,10 +4517,12 @@ namespace Nikse.SubtitleEdit.Forms
                     setStylesForSelectedLinesToolStripMenuItem.DropDownItems.Add(style, null, tsi_Click);
                 }
                 setStylesForSelectedLinesToolStripMenuItem.Visible = styles.Count > 1;
+                toolStripMenuItemAssStyles.Visible = Configuration.Settings.General.ShowBetaStuff;
             }
             else
             {
                 setStylesForSelectedLinesToolStripMenuItem.Visible = false;
+                toolStripMenuItemAssStyles.Visible = false;
             }
 
 
@@ -14084,6 +14086,15 @@ namespace Nikse.SubtitleEdit.Forms
                     fileName += ultech130.Extension;
                 }
                 ultech130.Save(fileName, _subtitle);
+            }
+        }
+
+        private void toolStripMenuItemAssStyles_Click(object sender, EventArgs e)
+        {
+            var styles = new SubStationAlphaStyles(_subtitle);
+            if (styles.ShowDialog(this) == DialogResult.OK)
+            {
+                _subtitle.Header = styles.Header;
             }
         }
 

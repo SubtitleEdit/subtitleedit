@@ -150,11 +150,14 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
                     {
                         if (p.PacketizedElementaryStream.PresentationTimeStampDecodeTimeStampFlags > 0)
                         {
-                            if (ms.Length > 0)
-                                list.Add(new VobSubMergedPack(ms.ToArray(), pts, streamId, lastIdxParagraph));
-                            ms = new MemoryStream();
-                            pts = TimeSpan.FromMilliseconds(Convert.ToDouble(p.PacketizedElementaryStream.PresentationTimeStamp/ticksPerMillisecond)); //90000F * 1000)); (PAL)
-                            streamId = p.PacketizedElementaryStream.SubPictureStreamId.Value;
+                            if (lastIdxParagraph == null || p.IdxLine.FilePosition != lastIdxParagraph.FilePosition)
+                            {
+                                if (ms.Length > 0)
+                                    list.Add(new VobSubMergedPack(ms.ToArray(), pts, streamId, lastIdxParagraph));
+                                ms = new MemoryStream();
+                                pts = TimeSpan.FromMilliseconds(Convert.ToDouble(p.PacketizedElementaryStream.PresentationTimeStamp / ticksPerMillisecond)); //90000F * 1000)); (PAL)
+                                streamId = p.PacketizedElementaryStream.SubPictureStreamId.Value;
+                            }
                         }
                         lastIdxParagraph = p.IdxLine;
                         ms.Write(p.PacketizedElementaryStream.DataBuffer, 0, p.PacketizedElementaryStream.DataBuffer.Length);
