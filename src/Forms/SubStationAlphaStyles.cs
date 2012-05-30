@@ -1085,5 +1085,10 @@ namespace Nikse.SubtitleEdit.Forms
             buttonRemoveAll_Click(null, null);
         }
 
+        private void SubStationAlphaStyles_SizeChanged(object sender, EventArgs e)
+        {
+            GeneratePreview();
+        }
+
     }
 }

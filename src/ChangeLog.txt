@@ -14,6 +14,7 @@ Subtitle Edit Changelog
    * Version number now inludes the revision from SVN - thx XhmikosR
    * Unfocused selection in list view now has more visible color - thx Adem
    * Import of subs from mp4 files can now read closed captions - thx Zsolt
+   * Some new parameters to command line converting - thx Mateo
  * FIXED:
    * Bug in linebreaking - thx Renault
    * Bug (skip of subtitles) in dvd sub ripping - thx kowenant/cipry
