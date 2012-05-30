@@ -110,6 +110,16 @@ namespace Nikse.SubtitleEdit.Forms
             buttonSecondaryColor.Text = l.Secondary;
             buttonOutlineColor.Text = l.Outline;
             buttonBackColor.Text = l.Back;
+            groupBoxMargins.Text = l.Margins;
+            labelMarginLeft.Text = l.MarginLeft;
+            labelMarginRight.Text = l.MarginRight;
+            labelMarginRight.Text = l.MarginRight;
+            labelMarginVertical.Text = l.MarginVertical;
+            groupBoxBorder.Text = l.Border;
+            radioButtonOutline.Text = l.Outline;
+            labelShadow.Text = l.PlusShadow;
+            radioButtonOpaqueBox.Text = l.OpaqueBox;
+
 
             buttonOK.Text = Configuration.Settings.Language.General.OK;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
@@ -118,6 +128,17 @@ namespace Nikse.SubtitleEdit.Forms
             FixLargeFonts();
             _previewTimer.Interval = 200;
             _previewTimer.Tick += RefreshTimerTick;
+
+            comboBoxFontName.Left = labelFontName.Left + labelFontName.Width + 10;
+            numericUpDownFontSize.Left = labelFontSize.Left + labelFontSize.Width + 10;
+            if (comboBoxFontName.Left > numericUpDownFontSize.Left)
+                numericUpDownFontSize.Left = comboBoxFontName.Left;
+            else
+                comboBoxFontName.Left = numericUpDownFontSize.Left;           
+
+            numericUpDownOutline.Left = radioButtonOutline.Left + radioButtonOutline.Width + 5;
+            labelShadow.Left = numericUpDownOutline.Left + numericUpDownOutline.Width + 5;
+            numericUpDownShadowWidth.Left = labelShadow.Left + labelShadow.Width + 5;
         }
 
         void RefreshTimerTick(object sender, EventArgs e)
