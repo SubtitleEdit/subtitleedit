@@ -33,6 +33,7 @@
             public string HourMinutesSecondsMilliseconds { get; set; }
             public string Bold { get; set; }
             public string Italic { get; set; }
+            public string Underline { get; set; }
             public string Visible { get; set; }
             public string FrameRate { get; set; }
             public string Name { get; set; }
@@ -274,6 +275,29 @@
             public string Left { get; set; }
             public string Right { get; set; }
             public string Center { get; set; }
+        }
+
+        public class ExportText
+        {
+            public string Title { get; set; }
+            public string Preview { get; set; }
+            public string ExportOptions { get; set; }
+            public string FormatText { get; set; }
+            public string None { get; set; }
+            public string MergeAllLines { get; set; }
+            public string UnbreakLines { get; set; }
+            public string RemoveStyling { get; set; }
+            public string ShowLineNumbers { get; set; }
+            public string AddNewLineAfterLineNumber { get; set; }
+            public string ShowTimeCode { get; set; }
+            public string AddNewLineAfterTimeCode { get; set; }
+            public string AddNewLineAfterTexts { get; set; }
+            public string AddNewLineBetweenSubtitles { get; set; }
+            public string TimeCodeFormat { get; set; }
+            public string Srt { get; set; }
+            public string Milliseconds { get; set; }
+            public string HHMMSSFF { get; set; }
+            public string TimeCodeSeperator { get; set; }
         }
 
         public class FindDialog
@@ -840,6 +864,7 @@
                 public class ListViewContextMenu
                 {
                     public string SubStationAlphaSetStyle { get; set; }
+                    public string SubStationAlphaStyles { get; set; }
                     public string Cut { get; set; }
                     public string Copy { get; set; }
                     public string Paste { get; set; }
@@ -1315,6 +1340,32 @@
             public string StartFromNumber { get; set; }
             public string PleaseEnterAValidNumber { get; set; }
         }
+
+        public class SubStationAlphaStyles
+        {
+            public string Title { get; set; }
+            public string Styles { get; set; }
+            public string Properties { get; set; }
+            public string Name { get; set; }
+            public string Font { get; set; }
+            public string FontName { get; set; }
+            public string FontSize { get; set; }
+            public string Primary { get; set; }
+            public string Secondary { get; set; }
+            public string Outline { get; set; }
+            public string Back { get; set; }
+            public string Alignment { get; set; }
+            public string TopLeft { get; set; }
+            public string TopCenter { get; set; }
+            public string TopRight { get; set; }
+            public string MiddleLeft { get; set; }
+            public string MiddleCenter { get; set; }
+            public string MiddleRight { get; set; }
+            public string BottomLeft { get; set; }
+            public string BottomCenter { get; set; }
+            public string BottomRight { get; set; }
+            public string Colors { get; set; }
+        }        
 
         public class PointSync
         {

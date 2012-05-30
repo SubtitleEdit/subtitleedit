@@ -7,6 +7,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
     /// <summary>
     /// The ULTECH caption file format (ULT/ULD file) is a compact binary file that stores captions with embedded EIA-608 control codes
+    /// http://en.wikipedia.org/wiki/EIA-608
     /// </summary>
     class Ultech130 : SubtitleFormat
     {
@@ -239,6 +240,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     int start = i + 7;
                     var sb = new StringBuilder();
                     int skipCount = 0;
+                    bool italics = false;
+                    bool font = false;
                     for (int k = start; k < length + i; k++)
                     {
                         byte b = buffer[k];
@@ -248,20 +251,192 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         }
                         else if (b < 0x1F)
                         {
+                            byte b2 = buffer[k+1];
                             skipCount = 1;
-                            if (sb.Length > 0)
+                            if (sb.Length > 0 && !sb.ToString().EndsWith(Environment.NewLine) && !sb.ToString().EndsWith(">"))
+                            {
+                                if (font)
+                                    sb.Append("</font>");
+                                if (italics)
+                                    sb.Append("</i>");
                                 sb.AppendLine();
+                                font = false;
+                                italics = false;
+                            }
+                            //string code = VobSub.Helper.IntToBin(buffer[k] * 256 + buffer[k+1], 16);
+                            //var codeBytes = new List<char>();
+                            //if (b == 0x11 && b2 == 0x28)
+                            //{
+                            //    sb.Append("<font color=\"red\">");
+                            //    font = true;
+                            //}
+                            //else 
+                                
+                            if (b == 0x11 && b2 == 0x2e)
+                            {
+                                sb.Append("<i>");
+                                italics = true;
+                            }
+
+
+                            //foreach (char ch in code)
+                            //    codeBytes.Insert(0, ch);
+                            //if (codeBytes[13] == '0' && codeBytes[14] == '0' && codeBytes[12] == '1' && codeBytes[6] == '1')
+                            //{ // preamble address code 
+                            //    if (code.Substring(11, 4) == "1000")
+                            //    {
+                            //        sb.Append("<font color=\"green\">");
+                            //        font = true;
+                            //    }
+                            //    else if (code.Substring(11, 4) == "0010")
+                            //    {
+                            //        sb.Append("<font color=\"blue\">");
+                            //        font = true;
+                            //    }
+                            //    else if (code.Substring(11, 4) == "0011")
+                            //    {
+                            //        sb.Append("<font color=\"cyan\">");
+                            //        font = true;
+                            //    }
+                            //    else if (code.Substring(11, 4) == "0100")
+                            //    {
+                            //        sb.Append("<font color=\"red\">");
+                            //        font = true;
+                            //    }
+                            //    else if (code.Substring(11, 4) == "0101")
+                            //    {
+                            //        sb.Append("<font color=\"yellow\">");
+                            //        font = true;
+                            //    }
+                            //    //else if (code.Substring(11, 4) == "0110")
+                            //    //{
+                            //    //    sb.Append("<font color=\"magenta\">");
+                            //    //    font = true;
+                            //    //}
+                            //}
+                            //else if (codeBytes[14] == '0' && codeBytes[13] == '0' && codeBytes[10] == '0' && codeBytes[9] == '0' && codeBytes[6] == '0' &&
+                            //         codeBytes[12] == '1' && codeBytes[8] == '1' && codeBytes[6] == '1')
+                            //{ // midrow code
+
+                            //    if (code.Substring(11, 4) == "1000")
+                            //    {
+                            //        sb.Append("<font color=\"green\">");
+                            //        font = true;
+                            //    }
+                            //    else if (code.Substring(11, 4) == "0010")
+                            //    {
+                            //        sb.Append("<font color=\"blue\">");
+                            //        font = true;
+                            //    }
+                            //    else if (code.Substring(11, 4) == "0011")
+                            //    {
+                            //        sb.Append("<font color=\"cyan\">");
+                            //        font = true;
+                            //    }
+                            //    else if (code.Substring(11, 4) == "0100")
+                            //    {
+                            //        sb.Append("<font color=\"red\">");
+                            //        font = true;
+                            //    }
+                            //    else if (code.Substring(11, 4) == "0101")
+                            //    {
+                            //        sb.Append("<font color=\"yellow\">");
+                            //        font = true;
+                            //    }
+                            //    //else if (code.Substring(11, 4) == "0110")
+                            //    //{
+                            //    //    sb.Append("<font color=\"magenta\">");
+                            //    //    font = true;
+                            //    //}
+                            //}
+                            //else if ((codeBytes[14] == '0' && codeBytes[13] == '0' && codeBytes[9] == '0' && codeBytes[6] == '0' && codeBytes[4] == '0' &&
+                            //         codeBytes[12] == '1' && codeBytes[10] == '1' && codeBytes[5] == '1') || b == 0x11)
+                            //{ // codeBytes[10]  == 0 ???
+                            //    //control codes
+                            //    if (code.Substring(11, 4) == "0111" && buffer[k] == 0x11)
+                            //    {
+                            //        sb.Append("<i>");
+                            //        italics = true;
+                            //    }
+                            //    else if (code.Substring(11, 4) == "1000")
+                            //    {
+                            //        sb.Append("<font color=\"green\">");
+                            //        font = true;
+                            //    }
+                            //    else if (code.Substring(11, 4) == "0010")
+                            //    {
+                            //        sb.Append("<font color=\"blue\">");
+                            //        font = true;
+                            //    }
+                            //    else if (code.Substring(11, 4) == "0011")
+                            //    {
+                            //        sb.Append("<font color=\"cyan\">");
+                            //        font = true;
+                            //    }
+                            //    else if (code.Substring(11, 4) == "0100")
+                            //    {
+                            //        sb.Append("<font color=\"red\">");
+                            //        font = true;
+                            //    }
+                            //    else if (code.Substring(11, 4) == "0101")
+                            //    {
+                            //        sb.Append("<font color=\"yellow\">");
+                            //        font = true;
+                            //    }
+                            //    //else if (code.Substring(11, 4) == "0110")
+                            //    //{
+                            //    //    sb.Append("<font color=\"magenta\">");
+                            //    //    font = true;
+                            //    //}
+                            //}
+                            //else
+                            //{
+                            //    if (code.Substring(11, 4) == "0111" && buffer[k] == 0x11)
+                            //    {
+                            //        sb.Append("<i>");
+                            //        italics = true;
+                            //    }
+                            //    else if (code.Substring(11, 4) == "0101" && b == 0x11)
+                            //    {
+                            //        sb.Append("<font color=\"yellow\">");
+                            //        font = true;
+                            //    }
+                            ////    if (code.Substring(11, 4) == "0111")
+                            ////    {
+                            ////        //System.Windows.Forms.MessageBox.Show(code);
+                            ////        sb.Append("<i>");
+                            ////    }
+                            ////    else if (code.Substring(11, 4) == "0101")
+                            ////        sb.Append("<font color=\"yellow\">");
+                            //}
+                            
                         }
                         else if (b == 0x80)
                         {
-                            break;
+                            //if (sb.Length == 0)
+                            //    break;
+
+                            //if (sb.Length > 0 && !sb.ToString().EndsWith(Environment.NewLine))
+                            //{
+                            //    if (font)
+                            //        sb.Append("</font>");
+                            //    if (italics)
+                            //        sb.Append("</i>");
+                            //    sb.AppendLine();
+                            //    font = false;
+                            //    italics = false;
+                            //}
                         }
                         else
                         {
                             sb.Append(Encoding.GetEncoding(1252).GetString(buffer, k, 1));
                         }
                     }
-                    p.Text = sb.ToString();
+                    p.Text = sb.ToString().Trim();
+                    if (font)
+                        p.Text += "</font>";
+                    if (italics)
+                        p.Text += "</i>";
                     p.Text = p.Text.Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine);
                     p.Text = p.Text.Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine);
                     p.Text = p.Text.Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine);

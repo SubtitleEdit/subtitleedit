@@ -521,7 +521,7 @@
         <ShowHideWaveForm>Vis/skjul lyd kurve</ShowHideWaveForm>
         <ShowHideWaveformAndSpectrogram>Vis/skjul bølgeform og spektrogram</ShowHideWaveformAndSpectrogram>
         <UnDockVideoControls>Pop video vinduer ud</UnDockVideoControls>
-        <ReDockVideoControls>Saml video vindue</ReDockVideoControls>
+        <ReDockVideoControls>Saml video vinduer</ReDockVideoControls>
       </Video>
       <SpellCheck>
         <Title>Stavekontrol</Title>
