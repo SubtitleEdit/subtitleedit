@@ -133,7 +133,6 @@ SelectDirDesc=Var skall [name] installeras?
 SelectDirLabel3=Installationsprogrammet kommer att installera [name] i följande katalog
 SelectDirBrowseLabel=För att fortsätta klickar du på Nästa. Om du vill välja en annan katalog klickar du på Bläddra.
 DiskSpaceMBLabel=Programmet kräver minst [mb] MB hårddiskutrymme.
-ToUNCPathname=Installationsprogrammet kan inte installera till UNC sökväg. Om du försöker installera via ett nätverk, ska du ange  nätverksenheten.
 InvalidPath=Du måste skriva en fullständig sökväg med enhetsbeteckning; till exempel:%n%nC:\Program%n%neller en UNC-sökväg i formatet:%n%n\\server\resurs
 InvalidDrive=Enheten du har valt finns inte eller är inte tillgänglig. Välj en annan.
 DiskSpaceWarningTitle=Ej tillräckligt med diskutrymme
