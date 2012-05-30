@@ -224,7 +224,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (line.Trim().Length == 0)
                 {
                     if (sb.Length > 0)
-                        SplitSingle(sb);                        
+                        SplitSingle(sb);
                     sb = new StringBuilder();
                 }
                 else if (!ContainsLetters(line))
@@ -238,7 +238,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
             if (sb.Length > 0)
-                SplitSingle(sb);                        
+                SplitSingle(sb);
         }
 
         private bool CanMakeThreeLiner(out string text, string input)
@@ -258,14 +258,14 @@ namespace Nikse.SubtitleEdit.Forms
                             first.Append(" " + word);
                         else if (second.Length + word.Length < Configuration.Settings.General.SubtitleLineMaximumLength)
                             second.Append(" " + word);
-                        else 
+                        else
                             third.Append(" " + word);
                     }
                     if (first.Length <= Configuration.Settings.General.SubtitleLineMaximumLength &&
                         second.Length <= Configuration.Settings.General.SubtitleLineMaximumLength &&
                         third.Length <= Configuration.Settings.General.SubtitleLineMaximumLength &&
                         third.Length > 10)
-                    {                        
+                    {
                         if (second.Length > 15)
                         {
                             string ending = second.ToString().Substring(second.Length - 9);
@@ -279,7 +279,7 @@ namespace Nikse.SubtitleEdit.Forms
                             else if (ending.Contains("? "))
                                 splitPos = ending.IndexOf("? ") + second.Length - 9;
                             if (splitPos > 0)
-                            { 
+                            {
                                 text = Utilities.AutoBreakLine(first.ToString().Trim() + second.ToString().Substring(0, splitPos+1)).Trim() + Environment.NewLine + (second.ToString().Substring(splitPos+1) + third).Trim();
                                 return true;
                             }
@@ -299,7 +299,7 @@ namespace Nikse.SubtitleEdit.Forms
             Paragraph p = null;
             string threeliner;
             if (CanMakeThreeLiner(out threeliner, sb.ToString()))
-            { 
+            {
                 var parts = threeliner.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
                 _subtitle.Paragraphs.Add(new Paragraph() { Text = parts[0] + Environment.NewLine + parts[1] });
                 _subtitle.Paragraphs.Add(new Paragraph() { Text = parts[2].Trim()});
