@@ -207,7 +207,7 @@
             this.buttonCancel.Location = new System.Drawing.Point(797, 509);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 21);
-            this.buttonCancel.TabIndex = 0;
+            this.buttonCancel.TabIndex = 5;
             this.buttonCancel.Text = "C&ancel";
             this.buttonCancel.UseVisualStyleBackColor = true;
             this.buttonCancel.Click += new System.EventHandler(this.buttonCancel_Click);
@@ -318,7 +318,7 @@
             this.groupBoxBorder.Location = new System.Drawing.Point(6, 415);
             this.groupBoxBorder.Name = "groupBoxBorder";
             this.groupBoxBorder.Size = new System.Drawing.Size(385, 68);
-            this.groupBoxBorder.TabIndex = 6;
+            this.groupBoxBorder.TabIndex = 3;
             this.groupBoxBorder.TabStop = false;
             this.groupBoxBorder.Text = "Border";
             // 
@@ -397,7 +397,7 @@
             this.groupBoxMargins.Location = new System.Drawing.Point(7, 344);
             this.groupBoxMargins.Name = "groupBoxMargins";
             this.groupBoxMargins.Size = new System.Drawing.Size(384, 65);
-            this.groupBoxMargins.TabIndex = 5;
+            this.groupBoxMargins.TabIndex = 2;
             this.groupBoxMargins.TabStop = false;
             this.groupBoxMargins.Text = "Margins";
             // 
@@ -467,7 +467,7 @@
             this.groupBoxColors.Location = new System.Drawing.Point(7, 255);
             this.groupBoxColors.Name = "groupBoxColors";
             this.groupBoxColors.Size = new System.Drawing.Size(385, 83);
-            this.groupBoxColors.TabIndex = 0;
+            this.groupBoxColors.TabIndex = 1;
             this.groupBoxColors.TabStop = false;
             this.groupBoxColors.Text = "Colors";
             // 
@@ -563,7 +563,7 @@
             this.groupBoxAlignment.Location = new System.Drawing.Point(7, 156);
             this.groupBoxAlignment.Name = "groupBoxAlignment";
             this.groupBoxAlignment.Size = new System.Drawing.Size(384, 93);
-            this.groupBoxAlignment.TabIndex = 4;
+            this.groupBoxAlignment.TabIndex = 0;
             this.groupBoxAlignment.TabStop = false;
             this.groupBoxAlignment.Text = "Alignment";
             // 
@@ -795,6 +795,7 @@
             this.ShowInTaskbar = false;
             this.Text = "Advanced SubStation Alpha styles";
             this.ResizeEnd += new System.EventHandler(this.SubStationAlphaStyles_ResizeEnd);
+            this.SizeChanged += new System.EventHandler(this.SubStationAlphaStyles_SizeChanged);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.SubStationAlphaStyles_KeyDown);
             this.contextMenuStripStyles.ResumeLayout(false);
             this.groupBoxStyles.ResumeLayout(false);
