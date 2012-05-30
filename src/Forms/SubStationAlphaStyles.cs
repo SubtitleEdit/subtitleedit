@@ -530,59 +530,6 @@ namespace Nikse.SubtitleEdit.Forms
             Header = sub.Header;
         }
 
-<<<<<<< .mine
-=======
-        /// <summary>
-        /// BGR color like this: &HBBGGRR& (where BB, GG, and RR are hex values in uppercase)
-        /// </summary>
-        /// <param name="f">Input string</param>
-        /// <param name="defaultColor">Default color</param>
-        /// <returns>Input string as color, or default color if problems</returns>
-        private Color GetSsaColor(string f, Color defaultColor)
-        {
-            //Red = &H0000FF&
-            //Green = &H00FF00&
-            //Blue = &HFF0000&
-            //White = &HFFFFFF&
-            //Black = &H000000&
-            string s = f.Trim().Trim('&');
-            if (s.ToLower().StartsWith("h") && s.Length == 7)
-            {
-                s = s.Substring(1);
-                string hexColor = "#" + s.Substring(4, 2) + s.Substring(2, 2) + s.Substring(0, 2);
-                try
-                {
-                    return System.Drawing.ColorTranslator.FromHtml(hexColor);
-                }
-                catch
-                {
-                    return defaultColor;
-                }
-            }
-            else if (s.ToLower().StartsWith("h") && s.Length == 9)
-            {
-                s = s.Substring(3);
-                string hexColor = "#" + s.Substring(4, 2) + s.Substring(2, 2) + s.Substring(0, 2);
-                try
-                {
-                    var c = System.Drawing.ColorTranslator.FromHtml(hexColor);
-
-                    return c;
-                }
-                catch
-                {
-                    return defaultColor;
-                }
-            }
-            return defaultColor;
-        }
-
-        private string GetSsaColorString(Color c)
-        {
-            return string.Format("&H00{0:x2}{1:x2}{2:x2}&", c.B, c.G, c.R).ToUpper();
-        }
-
->>>>>>> .r1207
         private void SubStationAlphaStyles_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Escape)
@@ -834,16 +781,11 @@ namespace Nikse.SubtitleEdit.Forms
             if (listViewStyles.SelectedItems.Count == 1)
             {
                 string name = listViewStyles.SelectedItems[0].Text;
-<<<<<<< .mine
                 listViewStyles.Items.RemoveAt(listViewStyles.SelectedItems[0].Index);
 
                 if (listViewStyles.Items.Count == 0)
                     buttonRemoveAll_Click(null, null);
-            }            
-=======
-                listViewStyles.Items.RemoveAt(listViewStyles.SelectedItems[0].Index);
             }
->>>>>>> .r1207
         }
 
         private void buttonRemoveAll_Click(object sender, EventArgs e)
