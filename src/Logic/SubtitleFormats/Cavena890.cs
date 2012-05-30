@@ -507,7 +507,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             0x59AE, // 妮
             0x6D41, // 流
             0x5A9B, // 媛
-
             0x7D50, // 結
             0x675F, // 束
             0x7559, // 留
@@ -530,6 +529,33 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             0x5FEB, // 快
             0x7FD2, // 習
             0x6163, // 慣
+
+            // perhaps changed to simplified from here?
+            0x6E6F, // 湯
+            0x666E, // 普
+            0x50AD, // 傭
+            0x6295, // 投
+            0x8A34, // 訴
+            0x2659, // … 
+            0x2A90, // 太
+            0x8B90, // 邋
+            0x624E, // 遢
+            0x8600, // 了
+            0x4E45, // 久
+            0x63DB, // 換
+            0x6B21, // 次
+            0x5E8A, // 床
+            0x55AE, // 單
+            0x5E8A, // 床
+            0x63DB, // 換
+            0x6210, // 成
+                         
+          
+
+
+
+            
+            
 
         };
 
@@ -996,24 +1022,24 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
              "快",
              "習",
              "慣",
-             "",
-             "",
-             "",
-             "",
-             "",
-             "",
-             "",
-             "",
-             "",
-             "",
-             "",
-             "",
-             "",
-             "",
-             "",
-             "",
-             "",
-             "",
+             "湯",
+             "普",
+             "傭",
+             "投",
+             "訴",
+             "… ",
+             "太",
+             "邋",
+             "遢",
+             "了",
+             "久",
+             "換",
+             "次",
+             "床",
+             "單",
+             "床",
+             "換",
+             "成",
              "",
              "",
              "",

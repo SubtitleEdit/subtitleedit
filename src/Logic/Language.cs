@@ -1403,7 +1403,7 @@ can edit in same subtitle file (collaboration)",
                 Primary = "Primary",
                 Secondary  = "Secondary",
                 Outline  = "Outline",
-                Back  = "Back",
+                Shadow  = "Shadow",
                 Alignment  = "Alignment",
                 TopLeft  = "Top/left",
                 TopCenter  = "Top/center",
@@ -1421,7 +1421,7 @@ can edit in same subtitle file (collaboration)",
                 MarginVertical = "Margin vertical", 
                 Border = "Border",
                 PlusShadow = "+ Shadow",
-                OpaqueBox = "Opaque box",
+                OpaqueBox = "Opaque box (uses outline color)",
             };
 
             PointSync = new LanguageStructure.PointSync

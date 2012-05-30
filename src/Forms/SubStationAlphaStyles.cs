@@ -109,7 +109,7 @@ namespace Nikse.SubtitleEdit.Forms
             buttonPrimaryColor.Text = l.Primary;
             buttonSecondaryColor.Text = l.Secondary;
             buttonOutlineColor.Text = l.Outline;
-            buttonBackColor.Text = l.Back;
+            buttonBackColor.Text = l.Shadow;
             groupBoxMargins.Text = l.Margins;
             labelMarginLeft.Text = l.MarginLeft;
             labelMarginRight.Text = l.MarginRight;
@@ -237,14 +237,31 @@ namespace Nikse.SubtitleEdit.Forms
                 int pathPointsStart = -1;
 
                 if (radioButtonOpaqueBox.Checked)
-                    g.FillRectangle(new SolidBrush(panelBackColor.BackColor), left, top, measuredWidth+3, measuredHeight);
+                    g.FillRectangle(new SolidBrush(panelOutlineColor.BackColor), left, top, measuredWidth+3, measuredHeight);
 
                 TextDraw.DrawText(font, sf, path, sb, checkBoxFontItalic.Checked, checkBoxFontBold.Checked, checkBoxFontUnderline.Checked, left, top, ref newLine, addX, leftMargin, ref pathPointsStart);
 
                 int outline = (int)numericUpDownOutline.Value;
+
+                // draw shadow
+                if (numericUpDownShadowWidth.Value > 0 && radioButtonOutline.Checked)
+                {
+                    for (int i = 0; i < (int)numericUpDownShadowWidth.Value; i++)
+                    {
+                        var shadowPath = new GraphicsPath();
+                        sb = new StringBuilder();
+                        sb.Append("This is a test!");
+                        int pathPointsStart2 = -1;
+                        TextDraw.DrawText(font, sf, shadowPath, sb, checkBoxFontItalic.Checked, checkBoxFontBold.Checked, checkBoxFontUnderline.Checked, left + i + outline, top + i + outline, ref newLine, addX, leftMargin, ref pathPointsStart2);
+                        g.FillPath(new SolidBrush(Color.FromArgb(200, panelBackColor.BackColor)), shadowPath);
+                    }
+                }
+              
                 if (outline > 0 && radioButtonOutline.Checked)
                     g.DrawPath(new Pen(panelOutlineColor.BackColor, outline), path);
                 g.FillPath(new SolidBrush(panelPrimaryColor.BackColor), path);
+
+
             }
             pictureBoxPreview.Image = bmp;
         }
@@ -579,6 +596,7 @@ namespace Nikse.SubtitleEdit.Forms
                 comboBoxFontName.Text = style.FontName;
                 checkBoxFontItalic.Checked = style.Italic;
                 checkBoxFontBold.Checked = style.Bold;
+                checkBoxFontUnderline.Checked = style.Underline;
                 numericUpDownFontSize.Value = style.FontSize;
                 panelPrimaryColor.BackColor = style.Primary;
                 panelSecondaryColor.BackColor = style.Secondary;
@@ -647,7 +665,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 panelPrimaryColor.BackColor = colorDialogSSAStyle.Color;
                 string name = listViewStyles.SelectedItems[0].Text;
-                SetSsaStyle(name, "primarycolor", GetSsaColorString(colorDialogSSAStyle.Color));
+                SetSsaStyle(name, "primarycolour", GetSsaColorString(colorDialogSSAStyle.Color));
                 GeneratePreview();
             }
         }
@@ -659,7 +677,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 panelSecondaryColor.BackColor = colorDialogSSAStyle.Color;
                 string name = listViewStyles.SelectedItems[0].Text;
-                SetSsaStyle(name, "secondarycolor", GetSsaColorString(colorDialogSSAStyle.Color));
+                SetSsaStyle(name, "secondarycolour", GetSsaColorString(colorDialogSSAStyle.Color));
                 GeneratePreview();
             }
         }
@@ -671,7 +689,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 panelOutlineColor.BackColor = colorDialogSSAStyle.Color;
                 string name = listViewStyles.SelectedItems[0].Text;
-                SetSsaStyle(name, "outlinecolor", GetSsaColorString(colorDialogSSAStyle.Color));
+                SetSsaStyle(name, "outlinecolour", GetSsaColorString(colorDialogSSAStyle.Color));
                 GeneratePreview();
             }
         }
@@ -683,7 +701,8 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 panelBackColor.BackColor = colorDialogSSAStyle.Color;
                 string name = listViewStyles.SelectedItems[0].Text;
-                SetSsaStyle(name, "backcolor", GetSsaColorString(colorDialogSSAStyle.Color));
+                SetSsaStyle(name, "backcolour", GetSsaColorString(colorDialogSSAStyle.Color));
+                GeneratePreview();
             }
         }
 
@@ -801,11 +820,20 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (listViewStyles.SelectedItems.Count == 1)
             {
+                int index = listViewStyles.SelectedItems[0].Index;
                 string name = listViewStyles.SelectedItems[0].Text;
                 listViewStyles.Items.RemoveAt(listViewStyles.SelectedItems[0].Index);
 
                 if (listViewStyles.Items.Count == 0)
+                {
                     buttonRemoveAll_Click(null, null);
+                }
+                else
+                {
+                    if (index >= listViewStyles.Items.Count)
+                        index--;
+                    listViewStyles.Items[index].Selected = true;
+                }
             }
         }
 
@@ -998,7 +1026,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (listViewStyles.SelectedItems.Count == 1 && _doUpdate)
             {
                 string name = listViewStyles.SelectedItems[0].Text;
-                SetSsaStyle(name, "marginr", numericUpDownMarginLeft.Value.ToString());
+                SetSsaStyle(name, "marginr", numericUpDownMarginRight.Value.ToString());
                 GeneratePreview();
             }
         }
@@ -1008,7 +1036,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (listViewStyles.SelectedItems.Count == 1 && _doUpdate)
             {
                 string name = listViewStyles.SelectedItems[0].Text;
-                SetSsaStyle(name, "marginv", numericUpDownMarginLeft.Value.ToString());
+                SetSsaStyle(name, "marginv", numericUpDownMarginVertical.Value.ToString());
                 GeneratePreview();
             }
         }
@@ -1043,6 +1071,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (listViewStyles.SelectedItems.Count == 1 && _doUpdate && (sender as RadioButton).Checked)
             {
+                numericUpDownShadowWidth.Value = 2;
                 string name = listViewStyles.SelectedItems[0].Text;
                 SetSsaStyle(name, "outline", numericUpDownOutline.Value.ToString());
                 SetSsaStyle(name, "borderstyle", "1");
@@ -1057,6 +1086,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (listViewStyles.SelectedItems.Count == 1 && _doUpdate && (sender as RadioButton).Checked)
             {
+                numericUpDownShadowWidth.Value = 0;
                 string name = listViewStyles.SelectedItems[0].Text;
                 SetSsaStyle(name, "outline", numericUpDownOutline.Value.ToString());
                 SetSsaStyle(name, "borderstyle", "3");
