@@ -325,18 +325,19 @@
             // radioButtonOpaqueBox
             // 
             this.radioButtonOpaqueBox.AutoSize = true;
+            this.radioButtonOpaqueBox.BackColor = System.Drawing.Color.White;
             this.radioButtonOpaqueBox.Location = new System.Drawing.Point(14, 42);
             this.radioButtonOpaqueBox.Name = "radioButtonOpaqueBox";
             this.radioButtonOpaqueBox.Size = new System.Drawing.Size(83, 17);
             this.radioButtonOpaqueBox.TabIndex = 4;
             this.radioButtonOpaqueBox.Text = "Opaque bo&x";
-            this.radioButtonOpaqueBox.UseVisualStyleBackColor = true;
+            this.radioButtonOpaqueBox.UseVisualStyleBackColor = false;
             this.radioButtonOpaqueBox.CheckedChanged += new System.EventHandler(this.radioButtonOpaqueBox_CheckedChanged);
             // 
             // radioButtonOutline
             // 
             this.radioButtonOutline.AutoSize = true;
-            this.radioButtonOutline.Location = new System.Drawing.Point(14, 19);
+            this.radioButtonOutline.Location = new System.Drawing.Point(14, 18);
             this.radioButtonOutline.Name = "radioButtonOutline";
             this.radioButtonOutline.Size = new System.Drawing.Size(58, 17);
             this.radioButtonOutline.TabIndex = 0;
@@ -346,7 +347,7 @@
             // 
             // numericUpDownShadowWidth
             // 
-            this.numericUpDownShadowWidth.Location = new System.Drawing.Point(188, 19);
+            this.numericUpDownShadowWidth.Location = new System.Drawing.Point(186, 18);
             this.numericUpDownShadowWidth.Name = "numericUpDownShadowWidth";
             this.numericUpDownShadowWidth.Size = new System.Drawing.Size(44, 20);
             this.numericUpDownShadowWidth.TabIndex = 3;
@@ -354,7 +355,7 @@
             // 
             // numericUpDownOutline
             // 
-            this.numericUpDownOutline.Location = new System.Drawing.Point(76, 19);
+            this.numericUpDownOutline.Location = new System.Drawing.Point(76, 18);
             this.numericUpDownOutline.Name = "numericUpDownOutline";
             this.numericUpDownOutline.Size = new System.Drawing.Size(44, 20);
             this.numericUpDownOutline.TabIndex = 1;
@@ -363,7 +364,7 @@
             // labelShadow
             // 
             this.labelShadow.AutoSize = true;
-            this.labelShadow.Location = new System.Drawing.Point(126, 23);
+            this.labelShadow.Location = new System.Drawing.Point(126, 21);
             this.labelShadow.Name = "labelShadow";
             this.labelShadow.Size = new System.Drawing.Size(58, 13);
             this.labelShadow.TabIndex = 2;
@@ -428,7 +429,7 @@
             // labelMarginVertical
             // 
             this.labelMarginVertical.AutoSize = true;
-            this.labelMarginVertical.Location = new System.Drawing.Point(150, 17);
+            this.labelMarginVertical.Location = new System.Drawing.Point(145, 16);
             this.labelMarginVertical.Name = "labelMarginVertical";
             this.labelMarginVertical.Size = new System.Drawing.Size(42, 13);
             this.labelMarginVertical.TabIndex = 4;
@@ -486,7 +487,7 @@
             this.buttonBackColor.Name = "buttonBackColor";
             this.buttonBackColor.Size = new System.Drawing.Size(112, 21);
             this.buttonBackColor.TabIndex = 6;
-            this.buttonBackColor.Text = "&Back";
+            this.buttonBackColor.Text = "Shadow";
             this.buttonBackColor.UseVisualStyleBackColor = true;
             this.buttonBackColor.Click += new System.EventHandler(this.buttonShadowColor_Click);
             // 
@@ -689,6 +690,7 @@
             // checkBoxFontUnderline
             // 
             this.checkBoxFontUnderline.AutoSize = true;
+            this.checkBoxFontUnderline.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.checkBoxFontUnderline.Location = new System.Drawing.Point(169, 73);
             this.checkBoxFontUnderline.Name = "checkBoxFontUnderline";
             this.checkBoxFontUnderline.Size = new System.Drawing.Size(71, 17);
@@ -700,6 +702,11 @@
             // numericUpDownFontSize
             // 
             this.numericUpDownFontSize.Location = new System.Drawing.Point(100, 44);
+            this.numericUpDownFontSize.Maximum = new decimal(new int[] {
+            200,
+            0,
+            0,
+            0});
             this.numericUpDownFontSize.Name = "numericUpDownFontSize";
             this.numericUpDownFontSize.Size = new System.Drawing.Size(51, 20);
             this.numericUpDownFontSize.TabIndex = 3;
@@ -708,6 +715,7 @@
             // checkBoxFontItalic
             // 
             this.checkBoxFontItalic.AutoSize = true;
+            this.checkBoxFontItalic.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.checkBoxFontItalic.Location = new System.Drawing.Point(90, 73);
             this.checkBoxFontItalic.Name = "checkBoxFontItalic";
             this.checkBoxFontItalic.Size = new System.Drawing.Size(48, 17);
@@ -719,9 +727,10 @@
             // checkBoxFontBold
             // 
             this.checkBoxFontBold.AutoSize = true;
+            this.checkBoxFontBold.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.checkBoxFontBold.Location = new System.Drawing.Point(13, 73);
             this.checkBoxFontBold.Name = "checkBoxFontBold";
-            this.checkBoxFontBold.Size = new System.Drawing.Size(47, 17);
+            this.checkBoxFontBold.Size = new System.Drawing.Size(51, 17);
             this.checkBoxFontBold.TabIndex = 3;
             this.checkBoxFontBold.Text = "Bold";
             this.checkBoxFontBold.UseVisualStyleBackColor = true;
