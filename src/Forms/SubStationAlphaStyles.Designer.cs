@@ -60,9 +60,9 @@
             this.numericUpDownMarginVertical = new System.Windows.Forms.NumericUpDown();
             this.numericUpDownMarginRight = new System.Windows.Forms.NumericUpDown();
             this.numericUpDownMarginLeft = new System.Windows.Forms.NumericUpDown();
-            this.label3 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
-            this.label1 = new System.Windows.Forms.Label();
+            this.labelMarginVertical = new System.Windows.Forms.Label();
+            this.labelMarginRight = new System.Windows.Forms.Label();
+            this.labelMarginLeft = new System.Windows.Forms.Label();
             this.groupBoxColors = new System.Windows.Forms.GroupBox();
             this.panelBackColor = new System.Windows.Forms.Panel();
             this.buttonBackColor = new System.Windows.Forms.Button();
@@ -391,9 +391,9 @@
             this.groupBoxMargins.Controls.Add(this.numericUpDownMarginVertical);
             this.groupBoxMargins.Controls.Add(this.numericUpDownMarginRight);
             this.groupBoxMargins.Controls.Add(this.numericUpDownMarginLeft);
-            this.groupBoxMargins.Controls.Add(this.label3);
-            this.groupBoxMargins.Controls.Add(this.label2);
-            this.groupBoxMargins.Controls.Add(this.label1);
+            this.groupBoxMargins.Controls.Add(this.labelMarginVertical);
+            this.groupBoxMargins.Controls.Add(this.labelMarginRight);
+            this.groupBoxMargins.Controls.Add(this.labelMarginLeft);
             this.groupBoxMargins.Location = new System.Drawing.Point(7, 344);
             this.groupBoxMargins.Name = "groupBoxMargins";
             this.groupBoxMargins.Size = new System.Drawing.Size(384, 65);
@@ -425,32 +425,32 @@
             this.numericUpDownMarginLeft.TabIndex = 1;
             this.numericUpDownMarginLeft.ValueChanged += new System.EventHandler(this.numericUpDownMarginLeft_ValueChanged);
             // 
-            // label3
+            // labelMarginVertical
             // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(150, 17);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(42, 13);
-            this.label3.TabIndex = 4;
-            this.label3.Text = "Vertical";
+            this.labelMarginVertical.AutoSize = true;
+            this.labelMarginVertical.Location = new System.Drawing.Point(150, 17);
+            this.labelMarginVertical.Name = "labelMarginVertical";
+            this.labelMarginVertical.Size = new System.Drawing.Size(42, 13);
+            this.labelMarginVertical.TabIndex = 4;
+            this.labelMarginVertical.Text = "Vertical";
             // 
-            // label2
+            // labelMarginRight
             // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(78, 16);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(32, 13);
-            this.label2.TabIndex = 2;
-            this.label2.Text = "Right";
+            this.labelMarginRight.AutoSize = true;
+            this.labelMarginRight.Location = new System.Drawing.Point(78, 16);
+            this.labelMarginRight.Name = "labelMarginRight";
+            this.labelMarginRight.Size = new System.Drawing.Size(32, 13);
+            this.labelMarginRight.TabIndex = 2;
+            this.labelMarginRight.Text = "Right";
             // 
-            // label1
+            // labelMarginLeft
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(13, 16);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(25, 13);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "Left";
+            this.labelMarginLeft.AutoSize = true;
+            this.labelMarginLeft.Location = new System.Drawing.Point(13, 16);
+            this.labelMarginLeft.Name = "labelMarginLeft";
+            this.labelMarginLeft.Size = new System.Drawing.Size(25, 13);
+            this.labelMarginLeft.TabIndex = 0;
+            this.labelMarginLeft.Text = "Left";
             // 
             // groupBoxColors
             // 
@@ -689,7 +689,7 @@
             // checkBoxFontUnderline
             // 
             this.checkBoxFontUnderline.AutoSize = true;
-            this.checkBoxFontUnderline.Location = new System.Drawing.Point(169, 71);
+            this.checkBoxFontUnderline.Location = new System.Drawing.Point(169, 73);
             this.checkBoxFontUnderline.Name = "checkBoxFontUnderline";
             this.checkBoxFontUnderline.Size = new System.Drawing.Size(71, 17);
             this.checkBoxFontUnderline.TabIndex = 5;
@@ -699,7 +699,7 @@
             // 
             // numericUpDownFontSize
             // 
-            this.numericUpDownFontSize.Location = new System.Drawing.Point(190, 48);
+            this.numericUpDownFontSize.Location = new System.Drawing.Point(100, 44);
             this.numericUpDownFontSize.Name = "numericUpDownFontSize";
             this.numericUpDownFontSize.Size = new System.Drawing.Size(51, 20);
             this.numericUpDownFontSize.TabIndex = 3;
@@ -708,7 +708,7 @@
             // checkBoxFontItalic
             // 
             this.checkBoxFontItalic.AutoSize = true;
-            this.checkBoxFontItalic.Location = new System.Drawing.Point(90, 71);
+            this.checkBoxFontItalic.Location = new System.Drawing.Point(90, 73);
             this.checkBoxFontItalic.Name = "checkBoxFontItalic";
             this.checkBoxFontItalic.Size = new System.Drawing.Size(48, 17);
             this.checkBoxFontItalic.TabIndex = 4;
@@ -719,7 +719,7 @@
             // checkBoxFontBold
             // 
             this.checkBoxFontBold.AutoSize = true;
-            this.checkBoxFontBold.Location = new System.Drawing.Point(13, 71);
+            this.checkBoxFontBold.Location = new System.Drawing.Point(13, 73);
             this.checkBoxFontBold.Name = "checkBoxFontBold";
             this.checkBoxFontBold.Size = new System.Drawing.Size(47, 17);
             this.checkBoxFontBold.TabIndex = 3;
@@ -730,7 +730,7 @@
             // comboBoxFontName
             // 
             this.comboBoxFontName.FormattingEnabled = true;
-            this.comboBoxFontName.Location = new System.Drawing.Point(190, 19);
+            this.comboBoxFontName.Location = new System.Drawing.Point(100, 17);
             this.comboBoxFontName.Name = "comboBoxFontName";
             this.comboBoxFontName.Size = new System.Drawing.Size(188, 21);
             this.comboBoxFontName.TabIndex = 1;
@@ -740,20 +740,20 @@
             // labelFontSize
             // 
             this.labelFontSize.AutoSize = true;
-            this.labelFontSize.Location = new System.Drawing.Point(10, 50);
+            this.labelFontSize.Location = new System.Drawing.Point(10, 46);
             this.labelFontSize.Name = "labelFontSize";
-            this.labelFontSize.Size = new System.Drawing.Size(84, 13);
+            this.labelFontSize.Size = new System.Drawing.Size(49, 13);
             this.labelFontSize.TabIndex = 2;
-            this.labelFontSize.Text = "Subtitle font size";
+            this.labelFontSize.Text = "Font size";
             // 
             // labelFontName
             // 
             this.labelFontName.AutoSize = true;
-            this.labelFontName.Location = new System.Drawing.Point(10, 25);
+            this.labelFontName.Location = new System.Drawing.Point(10, 20);
             this.labelFontName.Name = "labelFontName";
-            this.labelFontName.Size = new System.Drawing.Size(63, 13);
+            this.labelFontName.Size = new System.Drawing.Size(57, 13);
             this.labelFontName.TabIndex = 0;
-            this.labelFontName.Text = "Subtitle font";
+            this.labelFontName.Text = "Font name";
             // 
             // groupBoxPreview
             // 
@@ -855,9 +855,9 @@
         private System.Windows.Forms.NumericUpDown numericUpDownMarginVertical;
         private System.Windows.Forms.NumericUpDown numericUpDownMarginRight;
         private System.Windows.Forms.NumericUpDown numericUpDownMarginLeft;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label labelMarginVertical;
+        private System.Windows.Forms.Label labelMarginRight;
+        private System.Windows.Forms.Label labelMarginLeft;
         private System.Windows.Forms.Panel panelBackColor;
         private System.Windows.Forms.Button buttonBackColor;
         private System.Windows.Forms.Panel panelOutlineColor;

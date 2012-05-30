@@ -1365,6 +1365,13 @@
             public string BottomCenter { get; set; }
             public string BottomRight { get; set; }
             public string Colors { get; set; }
+            public string Margins { get; set; }
+            public string MarginLeft { get; set; }
+            public string MarginRight { get; set; }
+            public string MarginVertical { get; set; }
+            public string Border { get; set; }
+            public string PlusShadow { get; set; }
+            public string OpaqueBox { get; set; }
         }        
 
         public class PointSync

@@ -1415,6 +1415,13 @@ can edit in same subtitle file (collaboration)",
                 BottomCenter = "Bottom/center",
                 BottomRight = "Bottom/right",                
                 Colors = "Colors",
+                Margins = "Margins",
+                MarginLeft = "Margin left",
+                MarginRight = "Margin right",
+                MarginVertical = "Margin vertical", 
+                Border = "Border",
+                PlusShadow = "+ Shadow",
+                OpaqueBox = "Opaque box",
             };
 
             PointSync = new LanguageStructure.PointSync
