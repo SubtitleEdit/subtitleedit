@@ -331,12 +331,12 @@ namespace Nikse.SubtitleEdit.Logic
             s = sb.ToString();
 
             var words = s.Split(' ');
-            for (int numberOfLines = 3; numberOfLines < 99; numberOfLines++)
+            for (int numberOfLines = 3; numberOfLines < 9999; numberOfLines++)
             {
                 int average = s.Length / numberOfLines + 1;
                 for (int len = average; len < maximumLineLength; len++)
                 {
-                    List<int> list = SplitToX(words, numberOfLines, average);
+                    List<int> list = SplitToX(words, numberOfLines, len);
                     bool allOk = true;
                     foreach (var lineLength in list)
                     {
@@ -384,6 +384,8 @@ namespace Nikse.SubtitleEdit.Logic
             }
             if (currentIdx < count)
                 list.Add(currentCount);
+            else
+                list[list.Count - 1] += currentCount;
             return list;
         }
 

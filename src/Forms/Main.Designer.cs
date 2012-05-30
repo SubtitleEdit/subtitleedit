@@ -186,6 +186,7 @@
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuStripListview = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.setStylesForSelectedLinesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemAssStyles = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemDelete = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemInsertBefore = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemInsertAfter = new System.Windows.Forms.ToolStripMenuItem();
@@ -381,7 +382,6 @@
             this.imageListPlayRate = new System.Windows.Forms.ImageList(this.components);
             this.timerTextUndo = new System.Windows.Forms.Timer(this.components);
             this.timerAlternateTextUndo = new System.Windows.Forms.Timer(this.components);
-            this.toolStripMenuItemAssStyles = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
@@ -1792,6 +1792,13 @@
             this.setStylesForSelectedLinesToolStripMenuItem.Name = "setStylesForSelectedLinesToolStripMenuItem";
             this.setStylesForSelectedLinesToolStripMenuItem.Size = new System.Drawing.Size(284, 22);
             this.setStylesForSelectedLinesToolStripMenuItem.Text = "ASS: Set styles for selected lines...";
+            // 
+            // toolStripMenuItemAssStyles
+            // 
+            this.toolStripMenuItemAssStyles.Name = "toolStripMenuItemAssStyles";
+            this.toolStripMenuItemAssStyles.Size = new System.Drawing.Size(284, 22);
+            this.toolStripMenuItemAssStyles.Text = "ASS: Styles...";
+            this.toolStripMenuItemAssStyles.Click += new System.EventHandler(this.toolStripMenuItemAssStyles_Click);
             // 
             // toolStripMenuItemDelete
             // 
@@ -3765,13 +3772,6 @@
             // 
             this.timerAlternateTextUndo.Interval = 700;
             this.timerAlternateTextUndo.Tick += new System.EventHandler(this.TimerAlternateTextUndoTick);
-            // 
-            // toolStripMenuItemAssStyles
-            // 
-            this.toolStripMenuItemAssStyles.Name = "toolStripMenuItemAssStyles";
-            this.toolStripMenuItemAssStyles.Size = new System.Drawing.Size(284, 22);
-            this.toolStripMenuItemAssStyles.Text = "ASS: Styles...";
-            this.toolStripMenuItemAssStyles.Click += new System.EventHandler(this.toolStripMenuItemAssStyles_Click);
             // 
             // Main
             // 

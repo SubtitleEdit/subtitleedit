@@ -451,6 +451,8 @@ namespace Nikse.SubtitleEdit.Forms
                 offset = args[5].ToLower();
             else if (args.Length > 6 && args[6].ToLower().StartsWith("/offset:"))
                 offset = args[6].ToLower();
+            else if (args.Length > 7 && args[7].ToLower().StartsWith("/offset:"))
+                offset = args[7].ToLower();
 
             string fps = string.Empty;
             if (args.Length > 4 && args[4].ToLower().StartsWith("/fps:"))
@@ -459,6 +461,8 @@ namespace Nikse.SubtitleEdit.Forms
                 fps = args[5].ToLower();
             else if (args.Length > 6 && args[6].ToLower().StartsWith("/fps:"))
                 fps = args[6].ToLower();
+            else if (args.Length > 7 && args[7].ToLower().StartsWith("/fps:"))
+                fps = args[7].ToLower();
             if (fps.Length > 6)
             {
                 fps = fps.Replace(",", ".").Trim();
@@ -477,7 +481,8 @@ namespace Nikse.SubtitleEdit.Forms
                 targetEncodingName = args[5].ToLower();
             else if (args.Length > 6 && args[6].ToLower().StartsWith("/encoding:"))
                 targetEncodingName = args[6].ToLower();
-
+            else if (args.Length > 7 && args[7].ToLower().StartsWith("/encoding:"))
+                targetEncodingName = args[7].ToLower();
             Encoding targetEncoding = Encoding.UTF8;
             try
             {
@@ -492,6 +497,22 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 Console.WriteLine("Unable to set encoding (" + exception.Message +") - using UTF-8");
                 targetEncoding = Encoding.UTF8;
+            }
+
+            string outputFolder = string.Empty;
+            if (args.Length > 4 && args[4].ToLower().StartsWith("/outputfolder:"))
+                outputFolder = args[4].ToLower();
+            else if (args.Length > 5 && args[5].ToLower().StartsWith("/outputfolder:"))
+                outputFolder = args[5].ToLower();
+            else if (args.Length > 6 && args[6].ToLower().StartsWith("/outputfolder:"))
+                outputFolder = args[6].ToLower();
+            else if (args.Length > 7 && args[7].ToLower().StartsWith("/outputfolder:"))
+                outputFolder = args[7].ToLower();
+            if (outputFolder.Length > "/outputFolder:".Length)
+            {
+                outputFolder = outputFolder.Remove(0, "/outputFolder:".Length);
+                if (!Directory.Exists(outputFolder))
+                    outputFolder = string.Empty;
             }
 
             string[] files;
@@ -634,7 +655,7 @@ namespace Nikse.SubtitleEdit.Forms
                             if (sf.Name.ToLower().Replace(" ", string.Empty) == toFormat.ToLower())
                             {
                                 targetFormatFound = true;
-                                outputFileName = FormatOutputFileNameForBatchConvert(fileName, sf.Extension);
+                                outputFileName = FormatOutputFileNameForBatchConvert(fileName, sf.Extension, outputFolder);
                                 Console.Write(string.Format("{0}: {1} -> {2}...", count, Path.GetFileName(fileName), outputFileName));
                                 if (sf.IsFrameBased && !sub.WasLoadedWithFrameNumbers)
                                     sub.CalculateFrameNumbersFromTimeCodesNoCheck(Configuration.Settings.General.DefaultFrameRate);
@@ -659,7 +680,7 @@ namespace Nikse.SubtitleEdit.Forms
                                                 s = s.Insert(s.LastIndexOf('.'),  "_" + className);
                                             else
                                                 s += "_" + className + format.Extension;
-                                            outputFileName = FormatOutputFileNameForBatchConvert(s , sf.Extension);
+                                            outputFileName = FormatOutputFileNameForBatchConvert(s, sf.Extension, outputFolder);
                                             File.WriteAllText(outputFileName, newSub.ToText(sf), targetEncoding);
                                         }
                                     }
@@ -673,7 +694,7 @@ namespace Nikse.SubtitleEdit.Forms
                             if (ebu.Name.ToLower().Replace(" ", string.Empty) == toFormat.ToLower())
                             {
                                 targetFormatFound = true;
-                                outputFileName = FormatOutputFileNameForBatchConvert(fileName, ebu.Extension);
+                                outputFileName = FormatOutputFileNameForBatchConvert(fileName, ebu.Extension, outputFolder);
                                 Console.Write(string.Format("{0}: {1} -> {2}...", count, Path.GetFileName(fileName), outputFileName));
                                 ebu.Save(outputFileName, sub);
                                 Console.WriteLine(" done.");
@@ -685,7 +706,7 @@ namespace Nikse.SubtitleEdit.Forms
                             if (pac.Name.ToLower().Replace(" ", string.Empty) == toFormat.ToLower())
                             {
                                 targetFormatFound = true;
-                                outputFileName = FormatOutputFileNameForBatchConvert(fileName, pac.Extension);
+                                outputFileName = FormatOutputFileNameForBatchConvert(fileName, pac.Extension, outputFolder);
                                 Console.Write(string.Format("{0}: {1} -> {2}...", count, Path.GetFileName(fileName), outputFileName));
                                 pac.Save(outputFileName, sub);
                                 Console.WriteLine(" done.");
@@ -697,7 +718,7 @@ namespace Nikse.SubtitleEdit.Forms
                             if (cavena890.Name.ToLower().Replace(" ", string.Empty) == toFormat.ToLower())
                             {
                                 targetFormatFound = true;
-                                outputFileName = FormatOutputFileNameForBatchConvert(fileName, cavena890.Extension);
+                                outputFileName = FormatOutputFileNameForBatchConvert(fileName, cavena890.Extension, outputFolder);
                                 Console.Write(string.Format("{0}: {1} -> {2}...", count, Path.GetFileName(fileName), outputFileName));
                                 cavena890.Save(outputFileName, sub);
                                 Console.WriteLine(" done.");
@@ -709,7 +730,7 @@ namespace Nikse.SubtitleEdit.Forms
                             if (cheetahCaption.Name.ToLower().Replace(" ", string.Empty) == toFormat.ToLower())
                             {
                                 targetFormatFound = true;
-                                outputFileName = FormatOutputFileNameForBatchConvert(fileName, cheetahCaption.Extension);
+                                outputFileName = FormatOutputFileNameForBatchConvert(fileName, cheetahCaption.Extension, outputFolder);
                                 Console.Write(string.Format("{0}: {1} -> {2}...", count, Path.GetFileName(fileName), outputFileName));
                                 cheetahCaption.Save(outputFileName, sub);
                                 Console.WriteLine(" done.");
@@ -721,7 +742,7 @@ namespace Nikse.SubtitleEdit.Forms
                             if (capMakerPlus.Name.ToLower().Replace(" ", string.Empty) == toFormat.ToLower())
                             {
                                 targetFormatFound = true;
-                                outputFileName = FormatOutputFileNameForBatchConvert(fileName, capMakerPlus.Extension);
+                                outputFileName = FormatOutputFileNameForBatchConvert(fileName, capMakerPlus.Extension, outputFolder);
                                 Console.Write(string.Format("{0}: {1} -> {2}...", count, Path.GetFileName(fileName), outputFileName));
                                 capMakerPlus.Save(outputFileName, sub);
                                 Console.WriteLine(" done.");
@@ -758,12 +779,13 @@ namespace Nikse.SubtitleEdit.Forms
                 Environment.Exit(1);
         }
 
-        string FormatOutputFileNameForBatchConvert(string fileName, string extension)
+        string FormatOutputFileNameForBatchConvert(string fileName, string extension, string outputFolder)
         {
             string outputFileName = Path.ChangeExtension(fileName,extension);
+            if (!string.IsNullOrEmpty(outputFolder))
+                outputFileName = Path.Combine(outputFolder, Path.GetFileName(outputFileName));
             if (File.Exists(outputFileName))
                 outputFileName = Path.ChangeExtension(fileName, Guid.NewGuid().ToString() + extension);
-
             return outputFileName;
         }
 
@@ -1268,6 +1290,9 @@ namespace Nikse.SubtitleEdit.Forms
             toolStripButtonToggleVideo.ToolTipText = _language.Menu.ToolBar.ShowHideVideo;
 
             setStylesForSelectedLinesToolStripMenuItem.Text = _language.Menu.ContextMenu.SubStationAlphaSetStyle;
+            if (!string.IsNullOrEmpty(_language.Menu.ContextMenu.SubStationAlphaStyles)) //TODO: Remove check in 3.3
+                toolStripMenuItemAssStyles.Text = _language.Menu.ContextMenu.SubStationAlphaStyles;
+
             toolStripMenuItemDelete.Text = _language.Menu.ContextMenu.Delete;
             insertLineToolStripMenuItem.Text = _language.Menu.ContextMenu.InsertFirstLine;
             toolStripMenuItemInsertBefore.Text = _language.Menu.ContextMenu.InsertBefore;
@@ -2610,8 +2635,15 @@ namespace Nikse.SubtitleEdit.Forms
 
                 if ((format.GetType() == typeof(AdvancedSubStationAlpha) || format.GetType() == typeof(SubStationAlpha)) && _networkSession == null)
                 {
+                    List<string> styles = AdvancedSubStationAlpha.GetStylesFromHeader(_subtitle.Header);
+                    foreach (Paragraph p in _subtitle.Paragraphs)
+                    {
+                        if (string.IsNullOrEmpty(p.Extra))
+                            p.Extra = styles[0];
+                    }
                     SubtitleListview1.ShowExtraColumn("Style");
                     SubtitleListview1.DisplayExtraFromExtra = true;
+                    SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
                 }
             }
 
@@ -14091,7 +14123,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void toolStripMenuItemAssStyles_Click(object sender, EventArgs e)
         {
-            var styles = new SubStationAlphaStyles(_subtitle);
+            var styles = new SubStationAlphaStyles(_subtitle, GetCurrentSubtitleFormat());
             if (styles.ShowDialog(this) == DialogResult.OK)
             {
                 _subtitle.Header = styles.Header;

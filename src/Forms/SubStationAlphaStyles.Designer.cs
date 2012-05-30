@@ -28,20 +28,32 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.listViewStyles = new System.Windows.Forms.ListView();
             this.columnHeaderName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeaderFontName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeaderFontSize = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeaderPrimaryColor = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeaderOutline = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.contextMenuStripStyles = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.copyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.newToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.removeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.removeAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.buttonCancel = new System.Windows.Forms.Button();
-            this.buttonNextFinish = new System.Windows.Forms.Button();
+            this.buttonOK = new System.Windows.Forms.Button();
             this.groupBoxStyles = new System.Windows.Forms.GroupBox();
             this.buttonCopy = new System.Windows.Forms.Button();
             this.buttonRemoveAll = new System.Windows.Forms.Button();
             this.buttonAdd = new System.Windows.Forms.Button();
             this.buttonRemove = new System.Windows.Forms.Button();
             this.groupBoxProperties = new System.Windows.Forms.GroupBox();
+            this.groupBoxBorder = new System.Windows.Forms.GroupBox();
+            this.radioButtonOpaqueBox = new System.Windows.Forms.RadioButton();
+            this.radioButtonOutline = new System.Windows.Forms.RadioButton();
+            this.numericUpDownShadowWidth = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownOutline = new System.Windows.Forms.NumericUpDown();
+            this.labelShadow = new System.Windows.Forms.Label();
             this.textBoxStyleName = new System.Windows.Forms.TextBox();
             this.labelStyleName = new System.Windows.Forms.Label();
             this.groupBoxMargins = new System.Windows.Forms.GroupBox();
@@ -51,11 +63,8 @@
             this.label3 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
-            this.groupBoxPreview = new System.Windows.Forms.GroupBox();
-            this.pictureBoxPreview = new System.Windows.Forms.PictureBox();
             this.groupBoxColors = new System.Windows.Forms.GroupBox();
             this.panelBackColor = new System.Windows.Forms.Panel();
-            this.numericUpDownOutline = new System.Windows.Forms.NumericUpDown();
             this.buttonBackColor = new System.Windows.Forms.Button();
             this.panelOutlineColor = new System.Windows.Forms.Panel();
             this.buttonOutlineColor = new System.Windows.Forms.Button();
@@ -81,26 +90,25 @@
             this.comboBoxFontName = new System.Windows.Forms.ComboBox();
             this.labelFontSize = new System.Windows.Forms.Label();
             this.labelFontName = new System.Windows.Forms.Label();
+            this.groupBoxPreview = new System.Windows.Forms.GroupBox();
+            this.pictureBoxPreview = new System.Windows.Forms.PictureBox();
             this.colorDialogSSAStyle = new System.Windows.Forms.ColorDialog();
-            this.groupBoxOutlineShadow = new System.Windows.Forms.GroupBox();
-            this.numericUpDownShadowWidth = new System.Windows.Forms.NumericUpDown();
-            this.labelShadow = new System.Windows.Forms.Label();
-            this.labelOutline = new System.Windows.Forms.Label();
+            this.contextMenuStripStyles.SuspendLayout();
             this.groupBoxStyles.SuspendLayout();
             this.groupBoxProperties.SuspendLayout();
+            this.groupBoxBorder.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownShadowWidth)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownOutline)).BeginInit();
             this.groupBoxMargins.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMarginVertical)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMarginRight)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMarginLeft)).BeginInit();
-            this.groupBoxPreview.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxPreview)).BeginInit();
             this.groupBoxColors.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownOutline)).BeginInit();
             this.groupBoxAlignment.SuspendLayout();
             this.groupBoxFont.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownFontSize)).BeginInit();
-            this.groupBoxOutlineShadow.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownShadowWidth)).BeginInit();
+            this.groupBoxPreview.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxPreview)).BeginInit();
             this.SuspendLayout();
             // 
             // listViewStyles
@@ -114,17 +122,18 @@
             this.columnHeaderFontSize,
             this.columnHeaderPrimaryColor,
             this.columnHeaderOutline});
+            this.listViewStyles.ContextMenuStrip = this.contextMenuStripStyles;
             this.listViewStyles.FullRowSelect = true;
             this.listViewStyles.HideSelection = false;
             this.listViewStyles.Location = new System.Drawing.Point(6, 19);
-            this.listViewStyles.MinimumSize = new System.Drawing.Size(340, 447);
             this.listViewStyles.MultiSelect = false;
             this.listViewStyles.Name = "listViewStyles";
-            this.listViewStyles.Size = new System.Drawing.Size(445, 509);
-            this.listViewStyles.TabIndex = 1;
+            this.listViewStyles.Size = new System.Drawing.Size(445, 283);
+            this.listViewStyles.TabIndex = 0;
             this.listViewStyles.UseCompatibleStateImageBehavior = false;
             this.listViewStyles.View = System.Windows.Forms.View.Details;
             this.listViewStyles.SelectedIndexChanged += new System.EventHandler(this.listViewStyles_SelectedIndexChanged);
+            this.listViewStyles.KeyDown += new System.Windows.Forms.KeyEventHandler(this.listViewStyles_KeyDown);
             // 
             // columnHeaderName
             // 
@@ -151,12 +160,51 @@
             this.columnHeaderOutline.Text = "Outline";
             this.columnHeaderOutline.Width = 55;
             // 
+            // contextMenuStripStyles
+            // 
+            this.contextMenuStripStyles.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.copyToolStripMenuItem,
+            this.newToolStripMenuItem,
+            this.removeToolStripMenuItem,
+            this.removeAllToolStripMenuItem});
+            this.contextMenuStripStyles.Name = "contextMenuStripStyles";
+            this.contextMenuStripStyles.Size = new System.Drawing.Size(133, 92);
+            this.contextMenuStripStyles.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStripStyles_Opening);
+            // 
+            // copyToolStripMenuItem
+            // 
+            this.copyToolStripMenuItem.Name = "copyToolStripMenuItem";
+            this.copyToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.copyToolStripMenuItem.Text = "Copy";
+            this.copyToolStripMenuItem.Click += new System.EventHandler(this.copyToolStripMenuItem_Click);
+            // 
+            // newToolStripMenuItem
+            // 
+            this.newToolStripMenuItem.Name = "newToolStripMenuItem";
+            this.newToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.newToolStripMenuItem.Text = "New";
+            this.newToolStripMenuItem.Click += new System.EventHandler(this.newToolStripMenuItem_Click);
+            // 
+            // removeToolStripMenuItem
+            // 
+            this.removeToolStripMenuItem.Name = "removeToolStripMenuItem";
+            this.removeToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.removeToolStripMenuItem.Text = "Remove";
+            this.removeToolStripMenuItem.Click += new System.EventHandler(this.removeToolStripMenuItem_Click);
+            // 
+            // removeAllToolStripMenuItem
+            // 
+            this.removeAllToolStripMenuItem.Name = "removeAllToolStripMenuItem";
+            this.removeAllToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.removeAllToolStripMenuItem.Text = "Remove all";
+            this.removeAllToolStripMenuItem.Click += new System.EventHandler(this.removeAllToolStripMenuItem_Click);
+            // 
             // buttonCancel
             // 
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonCancel.Location = new System.Drawing.Point(797, 579);
+            this.buttonCancel.Location = new System.Drawing.Point(797, 509);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 21);
             this.buttonCancel.TabIndex = 0;
@@ -164,22 +212,21 @@
             this.buttonCancel.UseVisualStyleBackColor = true;
             this.buttonCancel.Click += new System.EventHandler(this.buttonCancel_Click);
             // 
-            // buttonNextFinish
+            // buttonOK
             // 
-            this.buttonNextFinish.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonNextFinish.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonNextFinish.Location = new System.Drawing.Point(716, 579);
-            this.buttonNextFinish.Name = "buttonNextFinish";
-            this.buttonNextFinish.Size = new System.Drawing.Size(75, 21);
-            this.buttonNextFinish.TabIndex = 3;
-            this.buttonNextFinish.Text = "&OK";
-            this.buttonNextFinish.UseVisualStyleBackColor = true;
-            this.buttonNextFinish.Click += new System.EventHandler(this.buttonNextFinish_Click);
+            this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.buttonOK.Location = new System.Drawing.Point(716, 509);
+            this.buttonOK.Name = "buttonOK";
+            this.buttonOK.Size = new System.Drawing.Size(75, 21);
+            this.buttonOK.TabIndex = 4;
+            this.buttonOK.Text = "&OK";
+            this.buttonOK.UseVisualStyleBackColor = true;
+            this.buttonOK.Click += new System.EventHandler(this.buttonNextFinish_Click);
             // 
             // groupBoxStyles
             // 
-            this.groupBoxStyles.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
+            this.groupBoxStyles.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBoxStyles.Controls.Add(this.buttonCopy);
             this.groupBoxStyles.Controls.Add(this.buttonRemoveAll);
@@ -188,7 +235,7 @@
             this.groupBoxStyles.Controls.Add(this.listViewStyles);
             this.groupBoxStyles.Location = new System.Drawing.Point(12, 12);
             this.groupBoxStyles.Name = "groupBoxStyles";
-            this.groupBoxStyles.Size = new System.Drawing.Size(457, 561);
+            this.groupBoxStyles.Size = new System.Drawing.Size(457, 338);
             this.groupBoxStyles.TabIndex = 0;
             this.groupBoxStyles.TabStop = false;
             this.groupBoxStyles.Text = "Styles";
@@ -197,10 +244,10 @@
             // 
             this.buttonCopy.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCopy.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonCopy.Location = new System.Drawing.Point(133, 534);
+            this.buttonCopy.Location = new System.Drawing.Point(133, 311);
             this.buttonCopy.Name = "buttonCopy";
             this.buttonCopy.Size = new System.Drawing.Size(75, 21);
-            this.buttonCopy.TabIndex = 2;
+            this.buttonCopy.TabIndex = 1;
             this.buttonCopy.Text = "Copy";
             this.buttonCopy.UseVisualStyleBackColor = true;
             this.buttonCopy.Click += new System.EventHandler(this.buttonCopy_Click);
@@ -209,10 +256,10 @@
             // 
             this.buttonRemoveAll.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonRemoveAll.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonRemoveAll.Location = new System.Drawing.Point(376, 534);
+            this.buttonRemoveAll.Location = new System.Drawing.Point(376, 311);
             this.buttonRemoveAll.Name = "buttonRemoveAll";
             this.buttonRemoveAll.Size = new System.Drawing.Size(75, 21);
-            this.buttonRemoveAll.TabIndex = 0;
+            this.buttonRemoveAll.TabIndex = 4;
             this.buttonRemoveAll.Text = "Remove all";
             this.buttonRemoveAll.UseVisualStyleBackColor = true;
             this.buttonRemoveAll.Click += new System.EventHandler(this.buttonRemoveAll_Click);
@@ -221,11 +268,11 @@
             // 
             this.buttonAdd.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonAdd.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonAdd.Location = new System.Drawing.Point(214, 534);
+            this.buttonAdd.Location = new System.Drawing.Point(214, 311);
             this.buttonAdd.Name = "buttonAdd";
             this.buttonAdd.Size = new System.Drawing.Size(75, 21);
-            this.buttonAdd.TabIndex = 3;
-            this.buttonAdd.Text = "Add";
+            this.buttonAdd.TabIndex = 2;
+            this.buttonAdd.Text = "New";
             this.buttonAdd.UseVisualStyleBackColor = true;
             this.buttonAdd.Click += new System.EventHandler(this.buttonAdd_Click);
             // 
@@ -233,10 +280,10 @@
             // 
             this.buttonRemove.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonRemove.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonRemove.Location = new System.Drawing.Point(295, 534);
+            this.buttonRemove.Location = new System.Drawing.Point(295, 311);
             this.buttonRemove.Name = "buttonRemove";
             this.buttonRemove.Size = new System.Drawing.Size(75, 21);
-            this.buttonRemove.TabIndex = 4;
+            this.buttonRemove.TabIndex = 3;
             this.buttonRemove.Text = "Remove";
             this.buttonRemove.UseVisualStyleBackColor = true;
             this.buttonRemove.Click += new System.EventHandler(this.buttonRemove_Click);
@@ -245,20 +292,82 @@
             // 
             this.groupBoxProperties.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBoxProperties.Controls.Add(this.groupBoxOutlineShadow);
+            this.groupBoxProperties.Controls.Add(this.groupBoxBorder);
             this.groupBoxProperties.Controls.Add(this.textBoxStyleName);
             this.groupBoxProperties.Controls.Add(this.labelStyleName);
             this.groupBoxProperties.Controls.Add(this.groupBoxMargins);
-            this.groupBoxProperties.Controls.Add(this.groupBoxPreview);
             this.groupBoxProperties.Controls.Add(this.groupBoxColors);
             this.groupBoxProperties.Controls.Add(this.groupBoxAlignment);
             this.groupBoxProperties.Controls.Add(this.groupBoxFont);
             this.groupBoxProperties.Location = new System.Drawing.Point(475, 12);
             this.groupBoxProperties.Name = "groupBoxProperties";
-            this.groupBoxProperties.Size = new System.Drawing.Size(397, 561);
-            this.groupBoxProperties.TabIndex = 2;
+            this.groupBoxProperties.Size = new System.Drawing.Size(397, 491);
+            this.groupBoxProperties.TabIndex = 3;
             this.groupBoxProperties.TabStop = false;
             this.groupBoxProperties.Text = "Properties";
+            // 
+            // groupBoxBorder
+            // 
+            this.groupBoxBorder.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxBorder.Controls.Add(this.radioButtonOpaqueBox);
+            this.groupBoxBorder.Controls.Add(this.radioButtonOutline);
+            this.groupBoxBorder.Controls.Add(this.numericUpDownShadowWidth);
+            this.groupBoxBorder.Controls.Add(this.numericUpDownOutline);
+            this.groupBoxBorder.Controls.Add(this.labelShadow);
+            this.groupBoxBorder.Location = new System.Drawing.Point(6, 415);
+            this.groupBoxBorder.Name = "groupBoxBorder";
+            this.groupBoxBorder.Size = new System.Drawing.Size(385, 68);
+            this.groupBoxBorder.TabIndex = 6;
+            this.groupBoxBorder.TabStop = false;
+            this.groupBoxBorder.Text = "Border";
+            // 
+            // radioButtonOpaqueBox
+            // 
+            this.radioButtonOpaqueBox.AutoSize = true;
+            this.radioButtonOpaqueBox.Location = new System.Drawing.Point(14, 42);
+            this.radioButtonOpaqueBox.Name = "radioButtonOpaqueBox";
+            this.radioButtonOpaqueBox.Size = new System.Drawing.Size(83, 17);
+            this.radioButtonOpaqueBox.TabIndex = 4;
+            this.radioButtonOpaqueBox.Text = "Opaque bo&x";
+            this.radioButtonOpaqueBox.UseVisualStyleBackColor = true;
+            this.radioButtonOpaqueBox.CheckedChanged += new System.EventHandler(this.radioButtonOpaqueBox_CheckedChanged);
+            // 
+            // radioButtonOutline
+            // 
+            this.radioButtonOutline.AutoSize = true;
+            this.radioButtonOutline.Location = new System.Drawing.Point(14, 19);
+            this.radioButtonOutline.Name = "radioButtonOutline";
+            this.radioButtonOutline.Size = new System.Drawing.Size(58, 17);
+            this.radioButtonOutline.TabIndex = 0;
+            this.radioButtonOutline.Text = "Outline";
+            this.radioButtonOutline.UseVisualStyleBackColor = true;
+            this.radioButtonOutline.CheckedChanged += new System.EventHandler(this.radioButtonOutline_CheckedChanged);
+            // 
+            // numericUpDownShadowWidth
+            // 
+            this.numericUpDownShadowWidth.Location = new System.Drawing.Point(188, 19);
+            this.numericUpDownShadowWidth.Name = "numericUpDownShadowWidth";
+            this.numericUpDownShadowWidth.Size = new System.Drawing.Size(44, 20);
+            this.numericUpDownShadowWidth.TabIndex = 3;
+            this.numericUpDownShadowWidth.ValueChanged += new System.EventHandler(this.numericUpDownShadowWidth_ValueChanged);
+            // 
+            // numericUpDownOutline
+            // 
+            this.numericUpDownOutline.Location = new System.Drawing.Point(76, 19);
+            this.numericUpDownOutline.Name = "numericUpDownOutline";
+            this.numericUpDownOutline.Size = new System.Drawing.Size(44, 20);
+            this.numericUpDownOutline.TabIndex = 1;
+            this.numericUpDownOutline.ValueChanged += new System.EventHandler(this.numericUpDownOutline_ValueChanged);
+            // 
+            // labelShadow
+            // 
+            this.labelShadow.AutoSize = true;
+            this.labelShadow.Location = new System.Drawing.Point(126, 23);
+            this.labelShadow.Name = "labelShadow";
+            this.labelShadow.Size = new System.Drawing.Size(58, 13);
+            this.labelShadow.TabIndex = 2;
+            this.labelShadow.Text = "+  Shadow";
             // 
             // textBoxStyleName
             // 
@@ -287,7 +396,7 @@
             this.groupBoxMargins.Controls.Add(this.label1);
             this.groupBoxMargins.Location = new System.Drawing.Point(7, 344);
             this.groupBoxMargins.Name = "groupBoxMargins";
-            this.groupBoxMargins.Size = new System.Drawing.Size(207, 65);
+            this.groupBoxMargins.Size = new System.Drawing.Size(384, 65);
             this.groupBoxMargins.TabIndex = 5;
             this.groupBoxMargins.TabStop = false;
             this.groupBoxMargins.Text = "Margins";
@@ -343,29 +452,10 @@
             this.label1.TabIndex = 0;
             this.label1.Text = "Left";
             // 
-            // groupBoxPreview
-            // 
-            this.groupBoxPreview.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left)));
-            this.groupBoxPreview.Controls.Add(this.pictureBoxPreview);
-            this.groupBoxPreview.Location = new System.Drawing.Point(7, 413);
-            this.groupBoxPreview.Name = "groupBoxPreview";
-            this.groupBoxPreview.Size = new System.Drawing.Size(384, 142);
-            this.groupBoxPreview.TabIndex = 0;
-            this.groupBoxPreview.TabStop = false;
-            this.groupBoxPreview.Text = "Preview";
-            // 
-            // pictureBoxPreview
-            // 
-            this.pictureBoxPreview.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pictureBoxPreview.Location = new System.Drawing.Point(3, 16);
-            this.pictureBoxPreview.Name = "pictureBoxPreview";
-            this.pictureBoxPreview.Size = new System.Drawing.Size(378, 123);
-            this.pictureBoxPreview.TabIndex = 0;
-            this.pictureBoxPreview.TabStop = false;
-            // 
             // groupBoxColors
             // 
+            this.groupBoxColors.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBoxColors.Controls.Add(this.panelBackColor);
             this.groupBoxColors.Controls.Add(this.buttonBackColor);
             this.groupBoxColors.Controls.Add(this.panelOutlineColor);
@@ -374,10 +464,10 @@
             this.groupBoxColors.Controls.Add(this.buttonSecondaryColor);
             this.groupBoxColors.Controls.Add(this.panelPrimaryColor);
             this.groupBoxColors.Controls.Add(this.buttonPrimaryColor);
-            this.groupBoxColors.Location = new System.Drawing.Point(6, 255);
+            this.groupBoxColors.Location = new System.Drawing.Point(7, 255);
             this.groupBoxColors.Name = "groupBoxColors";
             this.groupBoxColors.Size = new System.Drawing.Size(385, 83);
-            this.groupBoxColors.TabIndex = 4;
+            this.groupBoxColors.TabIndex = 0;
             this.groupBoxColors.TabStop = false;
             this.groupBoxColors.Text = "Colors";
             // 
@@ -390,21 +480,13 @@
             this.panelBackColor.TabIndex = 7;
             this.panelBackColor.Click += new System.EventHandler(this.buttonShadowColor_Click);
             // 
-            // numericUpDownOutline
-            // 
-            this.numericUpDownOutline.Location = new System.Drawing.Point(16, 33);
-            this.numericUpDownOutline.Name = "numericUpDownOutline";
-            this.numericUpDownOutline.Size = new System.Drawing.Size(44, 20);
-            this.numericUpDownOutline.TabIndex = 1;
-            this.numericUpDownOutline.ValueChanged += new System.EventHandler(this.numericUpDownOutline_ValueChanged);
-            // 
             // buttonBackColor
             // 
             this.buttonBackColor.Location = new System.Drawing.Point(212, 49);
             this.buttonBackColor.Name = "buttonBackColor";
             this.buttonBackColor.Size = new System.Drawing.Size(112, 21);
             this.buttonBackColor.TabIndex = 6;
-            this.buttonBackColor.Text = "Back";
+            this.buttonBackColor.Text = "&Back";
             this.buttonBackColor.UseVisualStyleBackColor = true;
             this.buttonBackColor.Click += new System.EventHandler(this.buttonShadowColor_Click);
             // 
@@ -442,7 +524,7 @@
             this.buttonSecondaryColor.Name = "buttonSecondaryColor";
             this.buttonSecondaryColor.Size = new System.Drawing.Size(112, 21);
             this.buttonSecondaryColor.TabIndex = 2;
-            this.buttonSecondaryColor.Text = "Secondary";
+            this.buttonSecondaryColor.Text = "S&econdary";
             this.buttonSecondaryColor.UseVisualStyleBackColor = true;
             this.buttonSecondaryColor.Click += new System.EventHandler(this.buttonSecondaryColor_Click);
             // 
@@ -461,12 +543,14 @@
             this.buttonPrimaryColor.Name = "buttonPrimaryColor";
             this.buttonPrimaryColor.Size = new System.Drawing.Size(112, 21);
             this.buttonPrimaryColor.TabIndex = 0;
-            this.buttonPrimaryColor.Text = "Primary";
+            this.buttonPrimaryColor.Text = "&Primary";
             this.buttonPrimaryColor.UseVisualStyleBackColor = true;
             this.buttonPrimaryColor.Click += new System.EventHandler(this.buttonPrimaryColor_Click);
             // 
             // groupBoxAlignment
             // 
+            this.groupBoxAlignment.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBoxAlignment.Controls.Add(this.radioButtonBottomRight);
             this.groupBoxAlignment.Controls.Add(this.radioButtonBottomCenter);
             this.groupBoxAlignment.Controls.Add(this.radioButtonMiddleRight);
@@ -479,7 +563,7 @@
             this.groupBoxAlignment.Location = new System.Drawing.Point(7, 156);
             this.groupBoxAlignment.Name = "groupBoxAlignment";
             this.groupBoxAlignment.Size = new System.Drawing.Size(384, 93);
-            this.groupBoxAlignment.TabIndex = 3;
+            this.groupBoxAlignment.TabIndex = 4;
             this.groupBoxAlignment.TabStop = false;
             this.groupBoxAlignment.Text = "Alignment";
             // 
@@ -586,6 +670,8 @@
             // 
             // groupBoxFont
             // 
+            this.groupBoxFont.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBoxFont.Controls.Add(this.checkBoxFontUnderline);
             this.groupBoxFont.Controls.Add(this.numericUpDownFontSize);
             this.groupBoxFont.Controls.Add(this.checkBoxFontItalic);
@@ -596,7 +682,7 @@
             this.groupBoxFont.Location = new System.Drawing.Point(7, 51);
             this.groupBoxFont.Name = "groupBoxFont";
             this.groupBoxFont.Size = new System.Drawing.Size(384, 99);
-            this.groupBoxFont.TabIndex = 2;
+            this.groupBoxFont.TabIndex = 3;
             this.groupBoxFont.TabStop = false;
             this.groupBoxFont.Text = "Font";
             // 
@@ -606,7 +692,7 @@
             this.checkBoxFontUnderline.Location = new System.Drawing.Point(169, 71);
             this.checkBoxFontUnderline.Name = "checkBoxFontUnderline";
             this.checkBoxFontUnderline.Size = new System.Drawing.Size(71, 17);
-            this.checkBoxFontUnderline.TabIndex = 6;
+            this.checkBoxFontUnderline.TabIndex = 5;
             this.checkBoxFontUnderline.Text = "Underline";
             this.checkBoxFontUnderline.UseVisualStyleBackColor = true;
             this.checkBoxFontUnderline.CheckedChanged += new System.EventHandler(this.checkBoxUnderline_CheckedChanged);
@@ -625,7 +711,7 @@
             this.checkBoxFontItalic.Location = new System.Drawing.Point(90, 71);
             this.checkBoxFontItalic.Name = "checkBoxFontItalic";
             this.checkBoxFontItalic.Size = new System.Drawing.Size(48, 17);
-            this.checkBoxFontItalic.TabIndex = 5;
+            this.checkBoxFontItalic.TabIndex = 4;
             this.checkBoxFontItalic.Text = "Italic";
             this.checkBoxFontItalic.UseVisualStyleBackColor = true;
             this.checkBoxFontItalic.CheckedChanged += new System.EventHandler(this.checkBoxFontItalic_CheckedChanged);
@@ -636,7 +722,7 @@
             this.checkBoxFontBold.Location = new System.Drawing.Point(13, 71);
             this.checkBoxFontBold.Name = "checkBoxFontBold";
             this.checkBoxFontBold.Size = new System.Drawing.Size(47, 17);
-            this.checkBoxFontBold.TabIndex = 4;
+            this.checkBoxFontBold.TabIndex = 3;
             this.checkBoxFontBold.Text = "Bold";
             this.checkBoxFontBold.UseVisualStyleBackColor = true;
             this.checkBoxFontBold.CheckedChanged += new System.EventHandler(this.checkBoxFontBold_CheckedChanged);
@@ -669,83 +755,68 @@
             this.labelFontName.TabIndex = 0;
             this.labelFontName.Text = "Subtitle font";
             // 
-            // groupBoxOutlineShadow
+            // groupBoxPreview
             // 
-            this.groupBoxOutlineShadow.Controls.Add(this.numericUpDownShadowWidth);
-            this.groupBoxOutlineShadow.Controls.Add(this.numericUpDownOutline);
-            this.groupBoxOutlineShadow.Controls.Add(this.labelShadow);
-            this.groupBoxOutlineShadow.Controls.Add(this.labelOutline);
-            this.groupBoxOutlineShadow.Location = new System.Drawing.Point(220, 344);
-            this.groupBoxOutlineShadow.Name = "groupBoxOutlineShadow";
-            this.groupBoxOutlineShadow.Size = new System.Drawing.Size(171, 65);
-            this.groupBoxOutlineShadow.TabIndex = 6;
-            this.groupBoxOutlineShadow.TabStop = false;
-            this.groupBoxOutlineShadow.Text = "Outline/shadow width";
+            this.groupBoxPreview.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxPreview.Controls.Add(this.pictureBoxPreview);
+            this.groupBoxPreview.Location = new System.Drawing.Point(12, 356);
+            this.groupBoxPreview.Name = "groupBoxPreview";
+            this.groupBoxPreview.Size = new System.Drawing.Size(457, 147);
+            this.groupBoxPreview.TabIndex = 2;
+            this.groupBoxPreview.TabStop = false;
+            this.groupBoxPreview.Text = "Preview";
             // 
-            // numericUpDownShadowWidth
+            // pictureBoxPreview
             // 
-            this.numericUpDownShadowWidth.Location = new System.Drawing.Point(81, 33);
-            this.numericUpDownShadowWidth.Name = "numericUpDownShadowWidth";
-            this.numericUpDownShadowWidth.Size = new System.Drawing.Size(44, 20);
-            this.numericUpDownShadowWidth.TabIndex = 3;
-            this.numericUpDownShadowWidth.ValueChanged += new System.EventHandler(this.numericUpDownShadowWidth_ValueChanged);
-            // 
-            // labelShadow
-            // 
-            this.labelShadow.AutoSize = true;
-            this.labelShadow.Location = new System.Drawing.Point(78, 16);
-            this.labelShadow.Name = "labelShadow";
-            this.labelShadow.Size = new System.Drawing.Size(46, 13);
-            this.labelShadow.TabIndex = 2;
-            this.labelShadow.Text = "Shadow";
-            // 
-            // labelOutline
-            // 
-            this.labelOutline.AutoSize = true;
-            this.labelOutline.Location = new System.Drawing.Point(13, 16);
-            this.labelOutline.Name = "labelOutline";
-            this.labelOutline.Size = new System.Drawing.Size(40, 13);
-            this.labelOutline.TabIndex = 0;
-            this.labelOutline.Text = "Outline";
+            this.pictureBoxPreview.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pictureBoxPreview.Location = new System.Drawing.Point(3, 16);
+            this.pictureBoxPreview.Name = "pictureBoxPreview";
+            this.pictureBoxPreview.Size = new System.Drawing.Size(451, 128);
+            this.pictureBoxPreview.TabIndex = 0;
+            this.pictureBoxPreview.TabStop = false;
             // 
             // SubStationAlphaStyles
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(884, 612);
+            this.ClientSize = new System.Drawing.Size(884, 542);
             this.Controls.Add(this.groupBoxProperties);
             this.Controls.Add(this.groupBoxStyles);
             this.Controls.Add(this.buttonCancel);
-            this.Controls.Add(this.buttonNextFinish);
+            this.Controls.Add(this.buttonOK);
+            this.Controls.Add(this.groupBoxPreview);
             this.KeyPreview = true;
             this.MinimizeBox = false;
-            this.MinimumSize = new System.Drawing.Size(700, 590);
+            this.MinimumSize = new System.Drawing.Size(800, 580);
             this.Name = "SubStationAlphaStyles";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
             this.Text = "Advanced SubStation Alpha styles";
             this.ResizeEnd += new System.EventHandler(this.SubStationAlphaStyles_ResizeEnd);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.SubStationAlphaStyles_KeyDown);
+            this.contextMenuStripStyles.ResumeLayout(false);
             this.groupBoxStyles.ResumeLayout(false);
             this.groupBoxProperties.ResumeLayout(false);
             this.groupBoxProperties.PerformLayout();
+            this.groupBoxBorder.ResumeLayout(false);
+            this.groupBoxBorder.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownShadowWidth)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownOutline)).EndInit();
             this.groupBoxMargins.ResumeLayout(false);
             this.groupBoxMargins.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMarginVertical)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMarginRight)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMarginLeft)).EndInit();
-            this.groupBoxPreview.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxPreview)).EndInit();
             this.groupBoxColors.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownOutline)).EndInit();
             this.groupBoxAlignment.ResumeLayout(false);
             this.groupBoxAlignment.PerformLayout();
             this.groupBoxFont.ResumeLayout(false);
             this.groupBoxFont.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownFontSize)).EndInit();
-            this.groupBoxOutlineShadow.ResumeLayout(false);
-            this.groupBoxOutlineShadow.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownShadowWidth)).EndInit();
+            this.groupBoxPreview.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxPreview)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -758,7 +829,7 @@
         private System.Windows.Forms.ColumnHeader columnHeaderFontSize;
         private System.Windows.Forms.ColumnHeader columnHeaderPrimaryColor;
         private System.Windows.Forms.Button buttonCancel;
-        private System.Windows.Forms.Button buttonNextFinish;
+        private System.Windows.Forms.Button buttonOK;
         private System.Windows.Forms.GroupBox groupBoxStyles;
         private System.Windows.Forms.Button buttonAdd;
         private System.Windows.Forms.Button buttonRemove;
@@ -806,9 +877,15 @@
         private System.Windows.Forms.Button buttonCopy;
         private System.Windows.Forms.ColorDialog colorDialogSSAStyle;
         private System.Windows.Forms.NumericUpDown numericUpDownOutline;
-        private System.Windows.Forms.GroupBox groupBoxOutlineShadow;
+        private System.Windows.Forms.GroupBox groupBoxBorder;
         private System.Windows.Forms.NumericUpDown numericUpDownShadowWidth;
         private System.Windows.Forms.Label labelShadow;
-        private System.Windows.Forms.Label labelOutline;
+        private System.Windows.Forms.RadioButton radioButtonOpaqueBox;
+        private System.Windows.Forms.RadioButton radioButtonOutline;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStripStyles;
+        private System.Windows.Forms.ToolStripMenuItem copyToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem newToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem removeToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem removeAllToolStripMenuItem;
     }
 }

@@ -318,11 +318,14 @@ namespace Nikse.SubtitleEdit.Forms
                     _subtitle.Paragraphs.Add(p);
                     p = null;
                     p = new Paragraph();
-                    p.Text = text;
+                    if (text.Length >= Configuration.Settings.General.SubtitleLineMaximumLength)
+                        p.Text = Utilities.AutoBreakLine(text);
+                    else
+                        p.Text = text;
                 }
                 else
                 {
-                    p.Text = p.Text + Environment.NewLine + text.Trim();
+                    p.Text = Utilities.AutoBreakLine(p.Text + Environment.NewLine + text.Trim());
                 }
             }
             if (p != null)

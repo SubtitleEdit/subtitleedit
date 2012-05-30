@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Text;
 
 namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
@@ -10,7 +11,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         {
             get
             {
-                return "Style: Default,Tahoma,20,&H00FFFFFF,&H000000FF,&H00000000,&H00000000,0,0,0,0,100,100,0,0,1,1,1,2,10,10,10,1";
+                return "Style: Default," + Configuration.Settings.SubtitleSettings.SsaFontName + "," +
+                    ((int)Configuration.Settings.SubtitleSettings.SsaFontSize) + "," +
+                    GetSsaColorString(Color.FromArgb(Configuration.Settings.SubtitleSettings.SsaFontColorArgb)) + "," +
+                    "&H0300FFFF,&H00000000,&H02000000,0,0,0,0,100,100,0,0,1,2,2,2,10,10,10,1";
             }
         }
 
@@ -106,14 +110,14 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
 
         public static List<string> GetStylesFromHeader(string headerLines)
         {
-            List<string> list = new List<string>();
+            var list = new List<string>();
 
             if (headerLines == null)
                 headerLines = DefaultStyle;
 
             foreach (string line in headerLines.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries))
             {
-                if (line.StartsWith("Style:"))
+                if (line.ToLower().StartsWith("style:"))
                 {
                     int end = line.IndexOf(",");
                     if (end > 0)
@@ -378,6 +382,65 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                     indexOfBegin = p.Text.IndexOf("{");
                 }
             }
+        }
+
+        /// <summary>
+        /// BGR color like this: &HBBGGRR& (where BB, GG, and RR are hex values in uppercase)
+        /// </summary>
+        /// <param name="f">Input string</param>
+        /// <param name="defaultColor">Default color</param>
+        /// <returns>Input string as color, or default color if problems</returns>
+        public static Color GetSsaColor(string f, Color defaultColor)
+        {
+            //Red = &H0000FF&
+            //Green = &H00FF00&
+            //Blue = &HFF0000&
+            //White = &HFFFFFF&
+            //Black = &H000000&
+            string s = f.Trim().Trim('&');
+            if (s.ToLower().StartsWith("h") && s.Length == 7)
+            {
+                s = s.Substring(1);
+                string hexColor = "#" + s.Substring(4, 2) + s.Substring(2, 2) + s.Substring(0, 2);
+                try
+                {
+                    return System.Drawing.ColorTranslator.FromHtml(hexColor);
+                }
+                catch
+                {
+                    return defaultColor;
+                }
+            }
+            else if (s.ToLower().StartsWith("h") && s.Length == 9)
+            {
+                s = s.Substring(3);
+                string hexColor = "#" + s.Substring(4, 2) + s.Substring(2, 2) + s.Substring(0, 2);
+                try
+                {
+                    var c = System.Drawing.ColorTranslator.FromHtml(hexColor);
+
+                    return c;
+                }
+                catch
+                {
+                    return defaultColor;
+                }
+            }
+            else
+            {
+                int number;
+                if (int.TryParse(f, out number))
+                { 
+                    Color temp = Color.FromArgb(number);
+                    return Color.FromArgb(255, temp.B, temp.G, temp.R);
+                }
+            }
+            return defaultColor;
+        }
+
+        public static string GetSsaColorString(Color c)
+        {
+            return string.Format("&H00{0:x2}{1:x2}{2:x2}", c.B, c.G, c.R).ToUpper();
         }
 
     }

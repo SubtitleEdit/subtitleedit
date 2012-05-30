@@ -29,6 +29,7 @@ namespace Nikse.SubtitleEdit.Logic
         public LanguageStructure.EffectKaraoke EffectKaraoke;
         public LanguageStructure.EffectTypewriter EffectTypewriter;
         public LanguageStructure.ExportPngXml ExportPngXml;
+        public LanguageStructure.ExportText ExportText;
         public LanguageStructure.FindDialog FindDialog;
         public LanguageStructure.FindSubtitleLine FindSubtitleLine;
         public LanguageStructure.FixCommonErrors FixCommonErrors;
@@ -57,6 +58,7 @@ namespace Nikse.SubtitleEdit.Logic
         public LanguageStructure.SplitLongLines SplitLongLines;
         public LanguageStructure.SplitSubtitle SplitSubtitle;
         public LanguageStructure.StartNumberingFrom StartNumberingFrom;
+        public LanguageStructure.SubStationAlphaStyles SubStationAlphaStyles;
         public LanguageStructure.PointSync PointSync;
         public LanguageStructure.UnknownSubtitle UnknownSubtitle;
         public LanguageStructure.VisualSync VisualSync;
@@ -101,6 +103,7 @@ namespace Nikse.SubtitleEdit.Logic
                 HourMinutesSecondsMilliseconds = "Hour:min:sec:msec",
                 Bold = "Bold",
                 Italic = "Italic",
+                Underline = "Underline",
                 Visible = "Visible",
                 FrameRate = "Frame rate",
                 Name = "Name",
@@ -925,6 +928,7 @@ namespace Nikse.SubtitleEdit.Logic
                     ContextMenu = new LanguageStructure.Main.MainMenu.ListViewContextMenu
                     {
                         SubStationAlphaSetStyle = "(Advanced) Sub Station Alpha - Set Style",
+                        SubStationAlphaStyles = "(Advanced) Sub Station Alpha Styles...",
                         Cut = "Cut",
                         Copy = "Copy",
                         Paste = "Paste",
@@ -1385,6 +1389,32 @@ can edit in same subtitle file (collaboration)",
                 Title = "Start numbering from...",
                 StartFromNumber = "Start from number:",
                 PleaseEnterAValidNumber = "Ups, please enter a number",
+            };
+
+            SubStationAlphaStyles = new LanguageStructure.SubStationAlphaStyles
+            {
+                Title = "Advanced SubStation Alpha styles",
+                Styles = "Styles",
+                Properties = "Properties",
+                Name  = "Name",
+                Font = "Font",
+                FontName = "Font name",
+                FontSize = "Font size",
+                Primary = "Primary",
+                Secondary  = "Secondary",
+                Outline  = "Outline",
+                Back  = "Back",
+                Alignment  = "Alignment",
+                TopLeft  = "Top/left",
+                TopCenter  = "Top/center",
+                TopRight = "Top/right",
+                MiddleLeft = "Middle/left",
+                MiddleCenter = "Middle/center",
+                MiddleRight = "Middle/right",
+                BottomLeft = "Bottom/left",
+                BottomCenter = "Bottom/center",
+                BottomRight = "Bottom/right",                
+                Colors = "Colors",
             };
 
             PointSync = new LanguageStructure.PointSync
