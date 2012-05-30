@@ -466,10 +466,10 @@ namespace Nikse.SubtitleEdit.Forms
                 if (double.TryParse(fps,System.Globalization.NumberStyles.AllowCurrencySymbol, System.Globalization.CultureInfo.InvariantCulture, out d))
                 {
                     toolStripComboBoxFrameRate.Text = d.ToString(System.Globalization.CultureInfo.InvariantCulture);
-                    Configuration.Settings.General.CurrentFrameRate = d;                    
-                }                    
+                    Configuration.Settings.General.CurrentFrameRate = d;
+                }
             }
-            
+
             string targetEncodingName = string.Empty;
             if (args.Length > 4 && args[4].ToLower().StartsWith("/encoding:"))
                 targetEncodingName = args[4].ToLower();
@@ -1579,7 +1579,7 @@ namespace Nikse.SubtitleEdit.Forms
         private bool IsSubtitleLoaded
         {
             get
-            { 
+            {
                 if (_subtitle == null || _subtitle.Paragraphs.Count == 0)
                     return false;
                 if (_subtitle.Paragraphs.Count == 1 && string.IsNullOrEmpty(_subtitle.Paragraphs[0].Text))

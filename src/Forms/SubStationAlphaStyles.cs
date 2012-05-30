@@ -9,7 +9,7 @@ using System.Drawing.Text;
 using System.Drawing.Drawing2D;
 
 namespace Nikse.SubtitleEdit.Forms
-{    
+{
 
     public partial class SubStationAlphaStyles : Form
     {
@@ -135,7 +135,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     font = new Font(comboBoxFontName.Text, (float)numericUpDownFontSize.Value);
                 }
-                catch 
+                catch
                 {
                     font = new Font(Font, FontStyle.Regular);
                 }
@@ -243,7 +243,7 @@ namespace Nikse.SubtitleEdit.Forms
                             if (f == "name")
                                 nameIndex = i;
                             else if (f == propertyName)
-                                propertyIndex = i;                            
+                                propertyIndex = i;
                         }
                     }
                     sb.AppendLine(line);
@@ -282,7 +282,7 @@ namespace Nikse.SubtitleEdit.Forms
         private SsaStyle GetSsaStyle(string styleName)
         {
             SsaStyle style = new SsaStyle();
-            style.Name = styleName;          
+            style.Name = styleName;
 
             int nameIndex = -1;
             int fontNameIndex = -1;
@@ -408,7 +408,7 @@ namespace Nikse.SubtitleEdit.Forms
                             else if (i == alignmentIndex)
                             {
                                 style.Alignment = f;
-                            }                                
+                            }
                             else if (i == marginLIndex)
                             {
                                 int number;
@@ -482,7 +482,7 @@ namespace Nikse.SubtitleEdit.Forms
                 try
                 {
                     var c = System.Drawing.ColorTranslator.FromHtml(hexColor);
-                    
+
                     return c;
                 }
                 catch
@@ -517,7 +517,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void listViewStyles_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (listViewStyles.SelectedItems.Count == 1)
-            { 
+            {
                 string styleName = listViewStyles.SelectedItems[0].Text;
                 _oldSsaName = styleName;
                 SsaStyle style = GetSsaStyle(styleName);
@@ -534,7 +534,7 @@ namespace Nikse.SubtitleEdit.Forms
                 numericUpDownShadowWidth.Value = style.ShadowWidth;
 
                 switch (style.Alignment)
-                { 
+                {
                     case "1":
                         radioButtonBottomLeft.Checked = true;
                         break;
@@ -612,7 +612,7 @@ namespace Nikse.SubtitleEdit.Forms
                 SetSsaStyle(name, "outlinecolor", GetSsaColorString(colorDialogSSAStyle.Color));
                 GeneratePreview();
             }
-        }    
+        }
 
         private void buttonShadowColor_Click(object sender, EventArgs e)
         {
@@ -669,7 +669,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (listViewStyles.SelectedItems.Count == 1)
             {
                 string name = listViewStyles.SelectedItems[0].Text;
-                listViewStyles.Items.RemoveAt(listViewStyles.SelectedItems[0].Index);                
+                listViewStyles.Items.RemoveAt(listViewStyles.SelectedItems[0].Index);
             }
         }
 

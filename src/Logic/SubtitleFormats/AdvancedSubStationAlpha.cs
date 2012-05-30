@@ -110,7 +110,7 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
 
             if (headerLines == null)
                 headerLines = DefaultStyle;
-            
+
             foreach (string line in headerLines.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries))
             {
                 if (line.StartsWith("Style:"))
@@ -119,7 +119,7 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                     if (end > 0)
                         list.Add(line.Substring(6, end - 6).Trim());
                 }
-            }            
+            }
             return list;
         }
 
