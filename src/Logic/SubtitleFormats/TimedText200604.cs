@@ -6,7 +6,7 @@ using System.Xml;
 
 namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
-    class TimedText : SubtitleFormat
+    class TimedText200604 : SubtitleFormat
     {
         public override string Extension
         {
@@ -15,7 +15,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public override string Name
         {
-            get { return "Timed Text draft 2006-10"; }
+            get { return "Timed Text draft 2006-04"; }
         }
 
         public override bool HasLineNumber
@@ -65,16 +65,13 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         {
             string xmlStructure =
                 "<?xml version=\"1.0\" encoding=\"utf-8\" ?>" + Environment.NewLine +
-                "<tt xmlns=\"http://www.w3.org/2006/10/ttaf1\" xmlns:ttp=\"http://www.w3.org/2006/10/ttaf1#parameter\" ttp:timeBase=\"media\" xmlns:tts=\"http://www.w3.org/2006/10/ttaf1#style\" xml:lang=\"en\" xmlns:ttm=\"http://www.w3.org/2006/10/ttaf1#metadata\">" + Environment.NewLine +                             
+                "<tt xmlns=\"http://www.w3.org/2006/04/ttaf1\" xmlns:tts=\"http://www.w3.org/2006/04/ttaf1#styling\">" + Environment.NewLine +
                 "   <head>" + Environment.NewLine +
-                "       <metadata>" + Environment.NewLine +
-                "           <ttm:title></ttm:title>" + Environment.NewLine +
-                "      </metadata>" + Environment.NewLine +
                 "       <styling>" + Environment.NewLine +
-                "         <style id=\"s0\" tts:backgroundColor=\"black\" tts:fontStyle=\"normal\" tts:fontSize=\"16\" tts:fontFamily=\"sansSerif\" tts:color=\"white\" />" + Environment.NewLine +
+                "         <style id=\"defaultSpeaker\" tts:fontSize=\"12px\" tts:fontFamily=\"SansSerif\" tts:fontWeight=\"normal\" tts:fontStyle=\"normal\" tts:textDecoration=\"none\" tts:color=\"white\" tts:backgroundColor=\"black\" tts:textAlign=\"center\" />" + Environment.NewLine +     
                 "      </styling>" + Environment.NewLine +
                 "   </head>" + Environment.NewLine +
-                "   <body tts:textAlign=\"center\" style=\"s0\">" + Environment.NewLine +
+                "   <body id=\"thebody\" style=\"defaultCaption\">" + Environment.NewLine +
                 "       <div />" + Environment.NewLine +
                 "   </body>" + Environment.NewLine +
                 "</tt>";
@@ -82,10 +79,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             var xml = new XmlDocument();
             xml.LoadXml(xmlStructure);
             var nsmgr = new XmlNamespaceManager(xml.NameTable);
-            nsmgr.AddNamespace("ttaf1", "http://www.w3.org/2006/10/ttaf1");
-            nsmgr.AddNamespace("ttp", "http://www.w3.org/2006/10/ttaf1#parameter");
-            nsmgr.AddNamespace("tts", "http://www.w3.org/2006/10/ttaf1#style");
-            nsmgr.AddNamespace("ttm", "http://www.w3.org/2006/10/ttaf1#metadata");
+            nsmgr.AddNamespace("ttaf1", "http://www.w3.org/2006/04/ttaf1");
+            nsmgr.AddNamespace("tts", "http://www.w3.org/2006/04/ttaf1#styling");
 
             XmlNode titleNode = xml.DocumentElement.SelectSingleNode("//ttaf1:head", nsmgr).FirstChild.FirstChild;
             titleNode.InnerText = title;
@@ -94,15 +89,15 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             int no = 0;
             foreach (Paragraph p in subtitle.Paragraphs)
             {
-                XmlNode paragraph = xml.CreateElement("p", "http://www.w3.org/2006/10/ttaf1");
+                XmlNode paragraph = xml.CreateElement("p", "http://www.w3.org/2006/04/ttaf1");
                 string text = Utilities.RemoveHtmlTags(p.Text);
 
                 bool first = true;
-                foreach (string line in text.Split(Environment.NewLine.ToCharArray(),  StringSplitOptions.RemoveEmptyEntries))
+                foreach (string line in text.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries))
                 {
                     if (!first)
                     {
-                        XmlNode br = xml.CreateElement("br", "http://www.w3.org/2006/10/ttaf1");
+                        XmlNode br = xml.CreateElement("br", "http://www.w3.org/2006/04/ttaf1");
                         paragraph.AppendChild(br);
                     }
                     XmlNode textNode = xml.CreateTextNode(line);
@@ -127,7 +122,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             }
 
             var ms = new MemoryStream();
-            var writer = new XmlTextWriter(ms, Encoding.UTF8) {Formatting = Formatting.Indented};
+            var writer = new XmlTextWriter(ms, Encoding.UTF8) { Formatting = Formatting.Indented };
             xml.Save(writer);
             return Encoding.UTF8.GetString(ms.ToArray()).Trim();
         }
@@ -215,6 +210,20 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     System.Diagnostics.Debug.WriteLine(ex.Message);
                     _errorCount++;
                 }
+            }
+            bool allBelow100 = true;
+            foreach (Paragraph p in subtitle.Paragraphs)
+            {
+                if (p.StartTime.Milliseconds >= 100 || p.EndTime.Milliseconds >= 100)
+                    allBelow100 = false;
+            }
+            if (allBelow100)
+            {
+                foreach (Paragraph p in subtitle.Paragraphs)
+                {
+                    p.StartTime.Milliseconds *= 10;
+                    p.EndTime.Milliseconds *= 10;                    
+                } 
             }
             subtitle.Renumber(1);
         }
