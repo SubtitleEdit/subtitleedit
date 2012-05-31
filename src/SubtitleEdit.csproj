@@ -668,6 +668,7 @@
     <Compile Include="Logic\SubtitleFormats\SubtitleEditorProject.cs" />
     <Compile Include="Logic\SubtitleFormats\SwiftText .cs" />
     <Compile Include="Logic\SubtitleFormats\TimedText10.cs" />
+    <Compile Include="Logic\SubtitleFormats\TimedText200604.cs" />
     <Compile Include="Logic\SubtitleFormats\TitleExchangePro.cs" />
     <Compile Include="Logic\SubtitleFormats\TmpegEncText.cs" />
     <Compile Include="Logic\SubtitleFormats\TmpegEncXml.cs" />

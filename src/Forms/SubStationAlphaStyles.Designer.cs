@@ -325,7 +325,6 @@
             // radioButtonOpaqueBox
             // 
             this.radioButtonOpaqueBox.AutoSize = true;
-            this.radioButtonOpaqueBox.BackColor = System.Drawing.Color.White;
             this.radioButtonOpaqueBox.Location = new System.Drawing.Point(14, 42);
             this.radioButtonOpaqueBox.Name = "radioButtonOpaqueBox";
             this.radioButtonOpaqueBox.Size = new System.Drawing.Size(83, 17);
