@@ -430,7 +430,7 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
             {
                 int number;
                 if (int.TryParse(f, out number))
-                { 
+                {
                     Color temp = Color.FromArgb(number);
                     return Color.FromArgb(255, temp.B, temp.G, temp.R);
                 }

@@ -1372,7 +1372,7 @@
             public string Border { get; set; }
             public string PlusShadow { get; set; }
             public string OpaqueBox { get; set; }
-        }        
+        }
 
         public class PointSync
         {

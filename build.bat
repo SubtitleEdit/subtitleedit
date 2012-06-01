@@ -42,7 +42,7 @@ IF "%~1" == "" (
 :START
 PUSHD "src"
 
-CALL "%VS100COMNTOOLS%vsvars32.bat"
+CALL "%VS100COMNTOOLS%vsvars32.bat" x86
 TITLE %BUILDTYPE%ing SubtitleEdit - Release^|Any CPU...
 
 "%WINDIR%\Microsoft.NET\Framework\v4.0.30319\MSBuild.exe" SubtitleEdit.sln^

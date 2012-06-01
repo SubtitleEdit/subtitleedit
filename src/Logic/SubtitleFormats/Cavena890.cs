@@ -536,7 +536,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             0x50AD, // 傭
             0x6295, // 投
             0x8A34, // 訴
-            0x2659, // … 
+            0x2659, // …
             0x2A90, // 太
             0x8B90, // 邋
             0x624E, // 遢
@@ -549,13 +549,13 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             0x5E8A, // 床
             0x63DB, // 換
             0x6210, // 成
-                         
-          
 
 
 
-            
-            
+
+
+
+
 
         };
 

@@ -134,7 +134,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (comboBoxFontName.Left > numericUpDownFontSize.Left)
                 numericUpDownFontSize.Left = comboBoxFontName.Left;
             else
-                comboBoxFontName.Left = numericUpDownFontSize.Left;           
+                comboBoxFontName.Left = numericUpDownFontSize.Left;
 
             numericUpDownOutline.Left = radioButtonOutline.Left + radioButtonOutline.Width + 5;
             labelShadow.Left = numericUpDownOutline.Left + numericUpDownOutline.Width + 5;
@@ -256,7 +256,7 @@ namespace Nikse.SubtitleEdit.Forms
                         g.FillPath(new SolidBrush(Color.FromArgb(200, panelBackColor.BackColor)), shadowPath);
                     }
                 }
-              
+
                 if (outline > 0 && radioButtonOutline.Checked)
                     g.DrawPath(new Pen(panelOutlineColor.BackColor, outline), path);
                 g.FillPath(new SolidBrush(panelPrimaryColor.BackColor), path);
@@ -732,7 +732,7 @@ namespace Nikse.SubtitleEdit.Forms
                         doRepeat = GetSsaStyle(style.Name).LoadedFromHeader;
                         count++;
                     }
-                }             
+                }
 
                 _doUpdate = false;
                 AddStyle(style);
@@ -764,7 +764,7 @@ namespace Nikse.SubtitleEdit.Forms
                 else
                 {
                     Header += Environment.NewLine + newLine;
-                }                
+                }
             }
         }
 
@@ -796,9 +796,9 @@ namespace Nikse.SubtitleEdit.Forms
         }
 
         private void textBoxStyleName_TextChanged(object sender, EventArgs e)
-        { 
+        {
             if (listViewStyles.SelectedItems.Count == 1)
-            {                
+            {
                 if (_doUpdate)
                 {
                     if (!GetSsaStyle(textBoxStyleName.Text).LoadedFromHeader)

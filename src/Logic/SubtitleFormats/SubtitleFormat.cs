@@ -74,7 +74,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     new SwiftText(),
                     new TimedText10(),
                     new TimedText200604(),
-                    new TimedText(),                   
+                    new TimedText(),
                     new TimeXml(),
                     new TitleExchangePro(),
                     new TmpegEncText(),
