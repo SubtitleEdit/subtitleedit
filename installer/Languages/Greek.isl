@@ -81,7 +81,7 @@ AboutSetupMenuItem=&Σχετικά με την Εγκατάσταση...
 AboutSetupTitle=Σχετικά με την Εγκατάσταση
 AboutSetupMessage=%1 έκδοση %2%n%3%n%n%1 προσωπική σελίδα%n%4
 AboutSetupNote=
-TranslatorNote=Η Ελληνική μετάφραση ενημερώνεται από τον XhmikosR, my_nickname at yahoo dot com
+TranslatorNote=Αρχική μετάφραση από τον Anastasis Chatzioglou.%nΕνημερώσεις και βελτιώσεις από τον XhmikosR, my_nickname at yahoo dot com
 
 ; *** Buttons
 ButtonBack=< &Πίσω
@@ -235,15 +235,15 @@ RunEntryExec=Να εκτελεστεί το πρόγραμμα %1
 RunEntryShellExec=Να εκτελεστεί το %1
 
 ; *** "Setup Needs the Next Disk" stuff
-ChangeDiskTitle=Η εγκατάσταση χρειάζεται τον επόμενο δίσκο/δισκέτα
-SelectDiskLabel2=Παρακαλώ εισάγετε το Δίσκο/Δισκέτα %1 και πατήστε OK.%n%nΑν τα αρχεία αυτού του δίσκου/δισκέτας βρίσκονται σε κάποιον φάκελο εκτός αυτού που φαίνεται παρακάτω, εισάγετε τη σωστή διαδρομή ή πατήστε Εύρεση.
+ChangeDiskTitle=Η Εγκατάσταση χρειάζεται τον επόμενο δίσκο/δισκέτα
+SelectDiskLabel2=Παρακαλώ, εισάγετε το Δίσκο/Δισκέτα %1 και πατήστε OK.%n%nΑν τα αρχεία αυτού του δίσκου/δισκέτας βρίσκονται σε κάποιον φάκελο εκτός αυτού που φαίνεται παρακάτω, εισάγετε τη σωστή διαδρομή ή πατήστε Εύρεση.
 PathLabel=&Διαδρομή:
 FileNotInDir2=Το αρχείο "%1" δε βρέθηκε στο "%2". Παρακαλώ εισάγετε το σωστό δίσκο/δισκέτα ή επιλέξτε κάποιον άλλο φάκελο.
 SelectDirectoryLabel=Παρακαλώ καθορίσετε την τοποθεσία του επόμενου δίσκου/δισκέτας.
 
 ; *** Installation phase messages
-SetupAborted=Η εγκατάσταση δεν ολοκληρώθηκε.%n%nΔιορθώστε το πρόβλημα και εκτελέστε ξανά την εγκατάσταση.
-EntryAbortRetryIgnore=Πατήστε Retry για να ξαναπροσπαθήσετε, Ignore για να συνεχίσετε ή Abort για να τερματίσετε την εγκατάσταση.
+SetupAborted=Η εγκατάσταση δεν ολοκληρώθηκε.%n%nΠαρακαλώ, διορθώστε το πρόβλημα και εκτελέστε ξανά την Εγκατάσταση.
+EntryAbortRetryIgnore=Πατήστε Retry για να ξαναπροσπαθήσετε, Ignore για να συνεχίσετε ή Abort για να τερματίσετε την Εγκατάσταση.
 
 ; *** Installation status messages
 StatusClosingApplications=Κλείσιμο εφαρμογών...
@@ -259,11 +259,11 @@ StatusRestartingApplications=Επανεκκίνηση εφαρμογών...
 StatusRollback=Επαναφορά αλλαγών...
 
 ; *** Misc. errors
-ErrorInternal2=Σφάλμα %1
+ErrorInternal2=Εσωτερικό σφάλμα %1
 ErrorFunctionFailedNoCode=%1 Σφάλμα
 ErrorFunctionFailed=%1 Σφάλμα, κωδικός %2
-ErrorFunctionFailedWithMessage=%1 Σφάλμα, κωδικός %2%n%3
-ErrorExecutingProgram=Δεν μπορεί να εκτελεστεί το αρχείο:%n%1
+ErrorFunctionFailedWithMessage=%1 Σφάλμα, κωδικός %2.%n%3
+ErrorExecutingProgram=Αδύνατη η εκτέλεση του αρχείου:%n%1
 
 ; *** Registry errors
 ErrorRegOpenKey=Δεν μπορεί να διαβαστεί το κλειδί μητρώου συστήματος:%n%1\%2
@@ -280,7 +280,7 @@ SourceIsCorrupted=Το αρχείο προέλευσης είναι κατεστραμμένο
 SourceDoesntExist=Το αρχείο προέλευσης "%1" δεν υπάρχει
 ExistingFileReadOnly=Το αρχείο είναι μαρκαρισμένο μόνο για ανάγνωση.%n%nΠατήστε Retry για να το ξεμαρκάρετε και να προσπαθήσετε πάλι, Ignore για να το προσπεράσετε ή Abort για να τερματίσετε την εγκατάσταση.
 ErrorReadingExistingDest=Παρουσιάστηκε σφάλμα κατά την ανάγνωση του αρχείου:
-FileExists=Το αρχείο υπάρχει.%n%nΘέλετε να ξαναγραφτεί;
+FileExists=Το αρχείο υπάρχει ήδη.%n%nΘέλετε να ξαναγραφτεί;
 ExistingFileNewer=Ένα αρχείο που βρέθηκε στον υπολογιστή σας είναι νεότερης έκδοσης από εκείνο της εγκατάστασης. Προτείνεται να κρατήσετε το υπάρχον αρχείο.%n%nΘέλετε να κρατήσετε το υπάρχον αρχείο;
 ErrorChangingAttr=Προέκυψε σφάλμα στην προσπάθεια να αλλαχτούν τα χαρακτηριστικά του αρχείου:
 ErrorCreatingTemp=Προέκυψε σφάλμα στην προσπάθεια να δημιουργηθεί ένα αρχείο στον κατάλογο προορισμού:
