@@ -68,7 +68,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 "<tt xmlns=\"http://www.w3.org/2006/04/ttaf1\" xmlns:tts=\"http://www.w3.org/2006/04/ttaf1#styling\">" + Environment.NewLine +
                 "   <head>" + Environment.NewLine +
                 "       <styling>" + Environment.NewLine +
-                "         <style id=\"defaultSpeaker\" tts:fontSize=\"12px\" tts:fontFamily=\"SansSerif\" tts:fontWeight=\"normal\" tts:fontStyle=\"normal\" tts:textDecoration=\"none\" tts:color=\"white\" tts:backgroundColor=\"black\" tts:textAlign=\"center\" />" + Environment.NewLine +     
+                "         <style id=\"defaultSpeaker\" tts:fontSize=\"12px\" tts:fontFamily=\"SansSerif\" tts:fontWeight=\"normal\" tts:fontStyle=\"normal\" tts:textDecoration=\"none\" tts:color=\"white\" tts:backgroundColor=\"black\" tts:textAlign=\"center\" />" + Environment.NewLine +
                 "      </styling>" + Environment.NewLine +
                 "   </head>" + Environment.NewLine +
                 "   <body id=\"thebody\" style=\"defaultCaption\">" + Environment.NewLine +
@@ -222,8 +222,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 foreach (Paragraph p in subtitle.Paragraphs)
                 {
                     p.StartTime.Milliseconds *= 10;
-                    p.EndTime.Milliseconds *= 10;                    
-                } 
+                    p.EndTime.Milliseconds *= 10;
+                }
             }
             subtitle.Renumber(1);
         }

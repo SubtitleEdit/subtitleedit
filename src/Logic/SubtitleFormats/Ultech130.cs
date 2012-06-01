@@ -270,8 +270,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                             //    sb.Append("<font color=\"red\">");
                             //    font = true;
                             //}
-                            //else 
-                                
+                            //else
+
                             if (b == 0x11 && b2 == 0x2e)
                             {
                                 sb.Append("<i>");
@@ -282,7 +282,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                             //foreach (char ch in code)
                             //    codeBytes.Insert(0, ch);
                             //if (codeBytes[13] == '0' && codeBytes[14] == '0' && codeBytes[12] == '1' && codeBytes[6] == '1')
-                            //{ // preamble address code 
+                            //{ // preamble address code
                             //    if (code.Substring(11, 4) == "1000")
                             //    {
                             //        sb.Append("<font color=\"green\">");
@@ -409,7 +409,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                             ////    else if (code.Substring(11, 4) == "0101")
                             ////        sb.Append("<font color=\"yellow\">");
                             //}
-                            
+
                         }
                         else if (b == 0x80)
                         {
