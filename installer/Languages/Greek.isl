@@ -10,7 +10,7 @@
 ; Updated by XhmikosR [XhmikosR, my_nickname at yahoo dot com]
 ; 29th October 2011 [XhmikosR]:
 ;   various cleanup and minor updates
-; 30th May 2012 [XhmikosR]:
+; 30th May 2012/1st June 2012 [XhmikosR]:
 ;   updated strings for Inno Setup 5.5.0, updated older untranslated strings;
 ;   the translation should be complete now
 ;
@@ -47,8 +47,8 @@ ErrorTitle=Σφάλμα
 
 ; *** SetupLdr messages
 SetupLdrStartupMessage=Θα εκτελεστεί η εγκατάσταση του %1. Θέλετε να συνεχίσετε;
-LdrCannotCreateTemp=Σφάλμα στη δημιουργία προσωρινού αρχείου. Η εγκατάσταση θα τερματιστεί τώρα.
-LdrCannotExecTemp=Σφάλμα στην εκτέλεση αρχείου στον προσωρινό κατάλογο. Η εγκατάσταση τερματίζεται.
+LdrCannotCreateTemp=Σφάλμα στη δημιουργία προσωρινού αρχείου. Η εγκατάσταση τερματίστηκε.
+LdrCannotExecTemp=Αδύνατη η εκτέλεση αρχείου στον φάκελο προσωρινών αρχείων. Η εγκατάσταση τερματίστηκε.
 
 ; *** Startup error messages
 LastErrorMessage=%1.%n%nΣφάλμα %2: %3
@@ -71,8 +71,8 @@ SetupAppRunningError=Η εγκατάσταση εντόπισε ότι εκτελείται η εφαρμογή %1.%n%nΠαρ
 UninstallAppRunningError=Η απεγκατάσταση εντόπισε ότι εκτελείται η εφαρμογή %1.%n%nΠαρακαλώ κλείστε την εφαρμογή τώρα και πατήστε Εντάξει για να συνεχίσετε, ή ’κυρο για έξοδο.
 
 ; *** Misc. errors
-ErrorCreatingDir=Η εγκατάσταση δεν μπορεί να δημιουργήσει τον κατάλογο %1
-ErrorTooManyFilesInDir=Δεν μπορεί να δημιουργηθεί ένα αρχείο στον κατάλογο "%1" επειδή ήδη περιέχει πολλά αρχεία
+ErrorCreatingDir=Η εγκατάσταση δεν μπορεί να δημιουργήσει τον φάκελο %1
+ErrorTooManyFilesInDir=Δεν μπορεί να δημιουργηθεί ένα αρχείο στον φάκελο "%1" επειδή ήδη περιέχει πολλά αρχεία
 
 ; *** Setup common messages
 ExitSetupTitle=Τέλος Εγκατάστασης
@@ -100,51 +100,51 @@ ButtonNewFolder=&Δημιουργία νέου φακέλου
 
 ; *** "Select Language" dialog messages
 SelectLanguageTitle=Επιλογή της γλώσσας εγκατάστασης
-SelectLanguageLabel=Επιλογή της γλώσσας για χρήση κατά την διάρκεια της εγκατάστασης:
+SelectLanguageLabel=Επιλέξτε τη γλώσσα που θα χρησιμοποιηθεί κατά τη διάρκεια της εγκατάστασης:
 
 ; *** Common wizard text
 ClickNext=Πατήστε Επόμενο για να συνεχίσετε ή ’κυρο για να τερματίσετε την εγκατάσταση.
 BeveledLabel=
 BrowseDialogTitle=Εύρεση φακέλου
-BrowseDialogLabel=Επιλέξτε φάκελο στην λίστα και μετά πατήστε OK.
+BrowseDialogLabel=Επιλέξτε ένα φάκελο από την ακόλουθη λίστα και μετά πατήστε OK.
 NewFolderName=Νέος φάκελος
 
 ; *** "Welcome" wizard page
 WelcomeLabel1=Καλωσορίσατε στην εγκατάσταση του [name]
-WelcomeLabel2=Θα γίνει εγκατάσταση του [name/ver] στον υπολογιστή σας.%n%nΠριν συνεχίσετε σας συνιστούμε να κλείσετε κάθε άλλη εφαρμογή που πιθανόν εκτελείτε.
+WelcomeLabel2=Θα γίνει εγκατάσταση του [name/ver] στον υπολογιστή σας.%n%nΠριν συνεχίσετε σας συνιστούμε να κλείσετε κάθε άλλη εφαρμογή πριν συνεχίσετε.
 
 ; *** "Password" wizard page
 WizardPassword=Εισαγωγή Κωδικού
-PasswordLabel1=Αυτή η εγκατάσταση χρειάζεται κωδικό για να εκτελεστεί.
-PasswordLabel3=Παρακαλώ δώστε τον κωδικό σας και πατήστε Επόμενο για να συνεχίσετε.
+PasswordLabel1=Αυτή η εγκατάσταση προστατεύεται με κωδικό.
+PasswordLabel3=Παρακαλώ εισάγετε τον κωδικό και πατήστε Επόμενο.
 PasswordEditLabel=&Κωδικός:
-IncorrectPassword=Ο κωδικός που δώσατε είναι λάθος. Προσπαθήστε ξανά.
+IncorrectPassword=Ο κωδικός που εισάγατε είναι λάθος. Παρακαλώ, προσπαθήστε ξανά.
 
 ; *** "License Agreement" wizard page
 WizardLicense=’δεια Χρήσης
 LicenseLabel=Παρακαλώ διαβάστε προσεκτικά τις παρακάτω πληροφορίες πριν συνεχίσετε.
-LicenseLabel3=Παρακαλώ διαβάστε προσεκτικά τις παρακάτω πληροφορίες πριν συνεχίσετε. Πρέπει να αποδέχεστε τους όρους της ’δειας Χρήσης πριν να συνεχίσετε την εγκατάσταση.
-LicenseAccepted=&Δέχομαι τους όρους της ’δειας Χρήσης
+LicenseLabel3=Παρακαλώ διαβάστε προσεκτικά τις παρακάτω πληροφορίες πριν συνεχίσετε. Πρέπει να αποδεχθείτε τους όρους της ’δειας Χρήσης πριν συνεχίσετε την εγκατάσταση.
+LicenseAccepted=&Αποδέχομαι τους όρους της ’δειας Χρήσης
 LicenseNotAccepted=Δεν &αποδέχομαι τους όρους της ’δειας Χρήσης
 
 ; *** "Information" wizard pages
 WizardInfoBefore=Πληροφορίες
 InfoBeforeLabel=Παρακαλώ διαβάστε προσεκτικά τις παρακάτω πληροφορίες πριν συνεχίσετε.
-InfoBeforeClickLabel=Αν είστε έτοιμοι να συνεχίσετε πατήστε Επόμενο.
+InfoBeforeClickLabel=Όταν είστε έτοιμοι να συνεχίσετε με την Εγκατάσταση, πατήστε Επόμενο.
 WizardInfoAfter=Πληροφορίες
 InfoAfterLabel=Παρακαλώ διαβάστε προσεκτικά τις παρακάτω πληροφορίες πριν συνεχίσετε.
-InfoAfterClickLabel=Αν είστε έτοιμοι να συνεχίσετε πατήστε Επόμενο.
+InfoAfterClickLabel=Όταν είστε έτοιμοι να συνεχίσετε με την Εγκατάσταση, πατήστε Επόμενο.
 
 ; *** "User Information" wizard page
-WizardUserInfo=Πληροφορίες για τον Χρήστη
-UserInfoDesc=Παρακαλώ δώστε τις πληροφορίες.
+WizardUserInfo=Πληροφορίες Χρήστη
+UserInfoDesc=Παρακαλώ εισάγετε τις πληροφορίες σας.
 UserInfoName=&Ονομα Χρήστη:
 UserInfoOrg=&Εταιρεία:
 UserInfoSerial=&Σειριακός Αριθμός:
-UserInfoNameRequired=Πρέπει να δώσετε όνομα.
+UserInfoNameRequired=Πρέπει να εισάγετε ένα όνομα.
 
 ; *** "Select Destination Location" wizard page
-WizardSelectDir=Επιλέξτε τον κατάλογο στον οποίο θα εγκατασταθεί το πρόγραμμα
+WizardSelectDir=Επιλέξτε τον φάκελο στον οποίο θα εγκατασταθεί το πρόγραμμα
 SelectDirDesc=Πού θα εγκατασταθεί το [name];
 SelectDirLabel3=Το [name] θα εγκατασταθεί στον ακόλουθο φάκελο.
 SelectDirBrowseLabel=Για συνέχεια πατήστε Επόμενο. Αν θέλετε άλλο φάκελο, πατήστε Εύρεση.
@@ -157,11 +157,11 @@ DiskSpaceWarningTitle=Δεν υπάρχει αρκετός χώρος στο δίσκο
 DiskSpaceWarning=Η εγκατάσταση χρειάζεται τουλάχιστον %1 KB ελεύθερο χώρο στο δίσκο αλλά ο επιλεγμένος οδηγός διαθέτει μόνον %2 KB.%n%nΘέλετε να συνεχίσετε οπωσδήποτε;
 DirNameTooLong=Το όνομα του φακέλου είναι πολύ μεγάλο.
 InvalidDirName=Λάθος όνομα φακέλου.
-BadDirName32=Ονόματα καταλόγων δεν μπορούν να περιέχουν κάποιον από τους παρακάτω χαρακτήρες:%n%n%1
-DirExistsTitle=Ο κατάλογος υπάρχει
-DirExists=Ο κατάλογος:%n%n%1%n%nυπάρχει ήδη. Θέλετε να γίνει η εγκατάσταση σε αυτόν τον κατάλογο;
-DirDoesntExistTitle=Ο κατάλογος δεν υπάρχει
-DirDoesntExist=Ο κατάλογος:%n%n%1%n%nδεν υπάρχει. Θέλετε να δημιουργηθεί;
+BadDirName32=Τα ονόματα φακέλων δεν μπορούν να περιέχουν κάποιον από τους παρακάτω χαρακτήρες:%n%n%1
+DirExistsTitle=Ο φάκελος υπάρχει
+DirExists=Ο φάκελος:%n%n%1%n%nυπάρχει ήδη. Θέλετε να γίνει η εγκατάσταση σε αυτόν τον φάκελο;
+DirDoesntExistTitle=Ο φάκελος δεν υπάρχει
+DirDoesntExist=Ο φάκελος:%n%n%1%n%nδεν υπάρχει. Θέλετε να δημιουργηθεί;
 
 ; *** "Select Components" wizard page
 WizardSelectComponents=Επιλογή Συστατικών
@@ -186,7 +186,7 @@ SelectTasksLabel2=Επιλέξτε τις επιπλέον ενέργειες που θέλετε να γίνουν κατά την 
 WizardSelectProgramGroup=Επιλογή Καταλόγου Στο Μενού Εκκίνηση
 SelectStartMenuFolderDesc=Πού θα τοποθετηθούν οι συντομεύσεις του προγράμματος;
 SelectStartMenuFolderLabel3=Η εγκατάσταση θα δημιουργήσει τις συντομεύσεις του προγράμματος στην ακόλουθη ομάδα.
-SelectStartMenuFolderBrowseLabel=Για συνέχεια, πατήστε Επόμενο. Αν θέλετε άλλη ομάδα, πατήστε εύρεση.
+SelectStartMenuFolderBrowseLabel=Για συνέχεια, πατήστε Επόμενο. Αν θέλετε άλλη ομάδα, πατήστε Εύρεση.
 MustEnterGroupName=Πρέπει να δώσετε το όνομα ενός καταλόγου.
 GroupNameTooLong=Το όνομα του καταλόγου είναι πολύ μεγάλο.
 InvalidGroupName=Το όνομα του καταλόγου δεν είναι σωστό.
@@ -199,7 +199,7 @@ ReadyLabel1=Η εγκατάσταση του [name] είναι έτοιμη να εκτελεστεί στον υπολογιστή 
 ReadyLabel2a=Πατήστε Εγκατάσταση για να συνεχίσετε ή Πίσω αν θέλετε να αλλάξετε κάποιες ρυθμίσεις.
 ReadyLabel2b=Πατήστε Εγκατάσταση για να συνεχίσετε.
 ReadyMemoUserInfo=Πληροφορίες Χρήστη:
-ReadyMemoDir=Κατάλογος προορισμού:
+ReadyMemoDir=Φάκελος προορισμού:
 ReadyMemoType=Είδος εγκατάστασης:
 ReadyMemoComponents=Επιλεγμένα συστατικά:
 ReadyMemoGroup=Κατάλογος στο μενού Προγράμματα:
@@ -213,7 +213,7 @@ CannotContinue=Η εγκατάσταση δε μπορεί να συνεχίσει. Παρακαλώ πατήστε ’κυρο για 
 ApplicationsFound=Οι ακόλουθες εφαρμογές χρησιμοποιούν αρχεία τα οποία πρέπει να ενημερωθούν από την Εγκατάσταση. Προτείνεται να επιτρέψετε στην Εγκατάσταση να κλείσει αυτές τις εφαρμογές αυτόματα.
 ApplicationsFound2=Οι ακόλουθες εφαρμογές χρησιμοποιούν αρχεία τα οποία πρέπει να ενημερωθούν από την Εγκατάσταση. Προτείνεται να επιτρέψετε στην Εγκατάσταση να κλείσει αυτές τις εφαρμογές αυτόματα. Μετά την ολοκλήρωση της διαδικασίας, η Εγκατάσταση θα προσπαθήσει να επανεκκινήσει τις εφαρμογές.
 CloseApplications=&Αυτόματο κλείσιμο των εφαρμογών
-DontCloseApplications=&Μην κλείσεις τις εφαρμογές
+DontCloseApplications=&Χωρίς κλείσιμο των εφαρμογών
 
 ; *** "Installing" wizard page
 WizardInstalling=Πρόοδος Εγκατάστασης
@@ -247,10 +247,10 @@ EntryAbortRetryIgnore=Πατήστε Retry για να ξαναπροσπαθήσετε, Ignore για να συνεχ
 
 ; *** Installation status messages
 StatusClosingApplications=Κλείσιμο εφαρμογών...
-StatusCreateDirs=Δημιουργία καταλόγων...
+StatusCreateDirs=Δημιουργία φακέλων...
 StatusExtractFiles=Αποσυμπίεση αρχείων...
 StatusCreateIcons=Δημιουργία εικονιδίων...
-StatusCreateIniEntries=Καταχώρηση στο ΙΝΙ αρχείο συστήματος...
+StatusCreateIniEntries=Καταχώρηση στο ΙΝΙ αρχείο...
 StatusCreateRegistryEntries=Καταχώρηση στο μητρώο συστήματος...
 StatusRegisterFiles=Καταχώρηση αρχείων
 StatusSavingUninstall=Πληροφορίες απεγκατάστασης...
@@ -271,7 +271,7 @@ ErrorRegCreateKey=Δεν μπορεί να δημιουργηθεί το κλειδί μητρώου συστήματος:%n%1\%
 ErrorRegWriteKey=Δεν μπορεί να γίνει καταχώρηση στο κλειδί μητρώου συστήματος:%n%1\%2
 
 ; *** INI errors
-ErrorIniEntry=Δεν μπορεί να γίνει καταχώρηση στο ΙΝΙ αρχείο συστήματος "%1".
+ErrorIniEntry=Δεν μπορεί να γίνει καταχώρηση στο αρχείο ΙΝΙ "%1".
 
 ; *** File copying errors
 FileAbortRetryIgnore=Πατήστε Retry για να ξαναπροσπαθήσετε, Ignore για να συνεχίσετε ή Abort για να τερματίσετε την εγκατάσταση.
@@ -340,4 +340,3 @@ AssocingFileExtension=Γίνεται αντιστοίχηση του %1 με την %2 επέκταση αρχείου...
 AutoStartProgramGroupDescription=Εκκίνηση:
 AutoStartProgram=Αυτόματη εκκίνηση του %1
 AddonHostProgramNotFound=Το %1 δε βρέθηκε στο φάκελο που επιλέξατε.%n%nΘέλετε να συνεχίσετε παρόλα αυτά;
-
