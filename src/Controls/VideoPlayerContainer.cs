@@ -238,6 +238,9 @@ namespace Nikse.SubtitleEdit.Controls
             {
                 _subtitleText = value;
 
+                bool alignLeft = _subtitleText.StartsWith("{\\a1}") || _subtitleText.StartsWith("{\\a5}") || _subtitleText.StartsWith("{\\a9}");
+                bool alignRight = _subtitleText.StartsWith("{\\a3}") || _subtitleText.StartsWith("{\\a7}") || _subtitleText.StartsWith("{\\a11}");
+
                 // remove styles for display text (except italic)
                 string text = RemoveSubStationAlphaFormatting(_subtitleText);
                 text = text.Replace("<b>", string.Empty);
@@ -289,7 +292,14 @@ namespace Nikse.SubtitleEdit.Controls
                 }
                 _subtitleTextBox.Text += sb.ToString();
                 _subtitleTextBox.SelectAll();
-                _subtitleTextBox.SelectionAlignment = HorizontalAlignment.Center;
+
+                if (alignLeft)
+                    _subtitleTextBox.SelectionAlignment = HorizontalAlignment.Left;
+                else if (alignRight)
+                    _subtitleTextBox.SelectionAlignment = HorizontalAlignment.Right;
+                else
+                    _subtitleTextBox.SelectionAlignment = HorizontalAlignment.Center;
+                
                 _subtitleTextBox.DeselectAll();
                 foreach (var entry in italicLookups)
                 {
