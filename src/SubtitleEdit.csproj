@@ -638,6 +638,7 @@
     <Compile Include="Logic\SubtitleFormats\FabSubtitler.cs" />
     <Compile Include="Logic\SubtitleFormats\FinalCutProTextXml.cs" />
     <Compile Include="Logic\SubtitleFormats\FinalCutProXml.cs" />
+    <Compile Include="Logic\SubtitleFormats\FinalCutProXXml.cs" />
     <Compile Include="Logic\SubtitleFormats\FlashXml.cs" />
     <Compile Include="Logic\SubtitleFormats\GpacTtxt.cs" />
     <Compile Include="Logic\SubtitleFormats\HtmlSamiArray.cs" />
