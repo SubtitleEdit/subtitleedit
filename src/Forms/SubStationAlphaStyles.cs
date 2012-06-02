@@ -19,6 +19,7 @@ namespace Nikse.SubtitleEdit.Forms
         private string _oldSsaName = null;
         private Timer _previewTimer = new Timer();
         private SubtitleFormat _format = null;
+        private bool _isSubStationAlpha = false;        
 
         private class SsaStyle
         {
@@ -30,6 +31,7 @@ namespace Nikse.SubtitleEdit.Forms
             public bool Underline { get; set; }
             public Color Primary { get; set; }
             public Color Secondary { get; set; }
+            public Color Tertiary { get; set; }
             public Color Outline { get; set; }
             public Color Background { get; set; }
             public int ShadowWidth { get; set; }
@@ -67,9 +69,10 @@ namespace Nikse.SubtitleEdit.Forms
         public SubStationAlphaStyles(Subtitle subtitle, SubtitleFormat format)
         {
             InitializeComponent();
-
+            
             Header = subtitle.Header;
             _format = format;
+            _isSubStationAlpha = _format.FriendlyName == new SubStationAlpha().FriendlyName;
             if (Header == null || !Header.ToLower().Contains("style:"))
                 ResetHeader();
 
@@ -120,6 +123,14 @@ namespace Nikse.SubtitleEdit.Forms
             labelShadow.Text = l.PlusShadow;
             radioButtonOpaqueBox.Text = l.OpaqueBox;
 
+            if (_isSubStationAlpha)
+            {
+                Text = l.TitleSubstationAlpha;
+                buttonOutlineColor.Text = l.Tertiary;
+                buttonBackColor.Text = l.Back;
+                listViewStyles.Columns[4].Text = l.Back;
+                checkBoxFontUnderline.Visible = false;
+            }
 
             buttonOK.Text = Configuration.Settings.Language.General.OK;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
@@ -237,7 +248,12 @@ namespace Nikse.SubtitleEdit.Forms
                 int pathPointsStart = -1;
 
                 if (radioButtonOpaqueBox.Checked)
-                    g.FillRectangle(new SolidBrush(panelOutlineColor.BackColor), left, top, measuredWidth+3, measuredHeight);
+                {
+                    if (_isSubStationAlpha)
+                        g.FillRectangle(new SolidBrush(panelBackColor.BackColor), left, top, measuredWidth + 3, measuredHeight);
+                    else
+                        g.FillRectangle(new SolidBrush(panelOutlineColor.BackColor), left, top, measuredWidth + 3, measuredHeight);
+                }
 
                 TextDraw.DrawText(font, sf, path, sb, checkBoxFontItalic.Checked, checkBoxFontBold.Checked, checkBoxFontUnderline.Checked, left, top, ref newLine, addX, leftMargin, ref pathPointsStart);
 
@@ -258,7 +274,12 @@ namespace Nikse.SubtitleEdit.Forms
                 }
 
                 if (outline > 0 && radioButtonOutline.Checked)
-                    g.DrawPath(new Pen(panelOutlineColor.BackColor, outline), path);
+                {
+                    if (_isSubStationAlpha)
+                        g.DrawPath(new Pen(panelBackColor.BackColor, outline), path);
+                    else
+                        g.DrawPath(new Pen(panelOutlineColor.BackColor, outline), path);
+                }
                 g.FillPath(new SolidBrush(panelPrimaryColor.BackColor), path);
 
 
@@ -306,7 +327,10 @@ namespace Nikse.SubtitleEdit.Forms
             item.SubItems.Add(subItem);
 
             subItem = new ListViewItem.ListViewSubItem(item, string.Empty);
-            subItem.BackColor = ssaStyle.Outline;
+            if (_isSubStationAlpha)
+                subItem.BackColor = ssaStyle.Background;
+            else
+                subItem.BackColor = ssaStyle.Outline;
             item.SubItems.Add(subItem);
 
             listViewStyles.Items.Add(item);
@@ -392,6 +416,7 @@ namespace Nikse.SubtitleEdit.Forms
             int fontsizeIndex = -1;
             int primaryColourIndex = -1;
             int secondaryColourIndex = -1;
+            int tertiaryColourIndex = -1;
             int outlineColourIndex = -1;
             int backColourIndex = -1;
             int boldIndex = -1;
@@ -426,6 +451,8 @@ namespace Nikse.SubtitleEdit.Forms
                                 primaryColourIndex = i;
                             else if (f == "secondarycolour")
                                 secondaryColourIndex = i;
+                            else if (f == "tertiarycolour")
+                                tertiaryColourIndex = i;
                             else if (f == "outlinecolour")
                                 outlineColourIndex = i;
                             else if (f == "backcolour")
@@ -483,6 +510,10 @@ namespace Nikse.SubtitleEdit.Forms
                             else if (i == secondaryColourIndex)
                             {
                                 style.Secondary = AdvancedSubStationAlpha.GetSsaColor(f, Color.Yellow);
+                            }
+                            else if (i == tertiaryColourIndex)
+                            {
+                                style.Tertiary = AdvancedSubStationAlpha.GetSsaColor(f, Color.Yellow);
                             }
                             else if (i == outlineColourIndex)
                             {
@@ -600,7 +631,10 @@ namespace Nikse.SubtitleEdit.Forms
                 numericUpDownFontSize.Value = style.FontSize;
                 panelPrimaryColor.BackColor = style.Primary;
                 panelSecondaryColor.BackColor = style.Secondary;
-                panelOutlineColor.BackColor = style.Outline;
+                if (_isSubStationAlpha)
+                    panelOutlineColor.BackColor = style.Tertiary;
+                else
+                    panelOutlineColor.BackColor = style.Outline;
                 panelBackColor.BackColor = style.Background;
                 numericUpDownOutline.Value = style.OutlineWidth;
                 numericUpDownShadowWidth.Value = style.ShadowWidth;
@@ -689,7 +723,10 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 panelOutlineColor.BackColor = colorDialogSSAStyle.Color;
                 string name = listViewStyles.SelectedItems[0].Text;
-                SetSsaStyle(name, "outlinecolour", GetSsaColorString(colorDialogSSAStyle.Color));
+                if (_isSubStationAlpha)
+                    SetSsaStyle(name, "tertiarycolour", GetSsaColorString(colorDialogSSAStyle.Color));
+                else
+                    SetSsaStyle(name, "outlinecolour", GetSsaColorString(colorDialogSSAStyle.Color));
                 GeneratePreview();
             }
         }
@@ -708,9 +745,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         private string GetSsaColorString(Color c)
         {
-            if (_format.FriendlyName == new AdvancedSubStationAlpha().FriendlyName)
-                return string.Format("&H00{0:x2}{1:x2}{2:x2}", c.B, c.G, c.R).ToUpper();
-            return Color.FromArgb(c.B, c.G, c.R).ToArgb().ToString();
+            if (_isSubStationAlpha)
+                return Color.FromArgb(c.B, c.G, c.R).ToArgb().ToString();
+            return string.Format("&H00{0:x2}{1:x2}{2:x2}", c.B, c.G, c.R).ToUpper();
         }
 
         private void buttonCopy_Click(object sender, EventArgs e)

@@ -443,5 +443,246 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
             return string.Format("&H00{0:x2}{1:x2}{2:x2}", c.B, c.G, c.R).ToUpper();
         }
 
+        public static string CheckForErrors(string header)
+        {
+            var sb = new StringBuilder();
+
+            int styleCount = -1;
+
+            int nameIndex = -1;
+            int fontNameIndex = -1;
+            int fontsizeIndex = -1;
+            int primaryColourIndex = -1;
+            int secondaryColourIndex = -1;
+            int outlineColourIndex = -1;
+            int backColourIndex = -1;
+            int boldIndex = -1;
+            int italicIndex = -1;
+            int underlineIndex = -1;
+            int outlineIndex = -1;
+            int shadowIndex = -1;
+            int alignmentIndex = -1;
+            int marginLIndex = -1;
+            int marginRIndex = -1;
+            int marginVIndex = -1;
+            int borderStyleIndex = -1;
+
+            foreach (string line in header.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries))
+            {
+                string s = line.Trim().ToLower();
+                if (s.StartsWith("format:"))
+                {
+                    if (line.Length > 10)
+                    {
+                        var format = line.ToLower().Substring(8).Split(',');
+                        styleCount = format.Length;
+                        for (int i = 0; i < format.Length; i++)
+                        {
+                            string f = format[i].Trim().ToLower();
+                            if (f == "name")
+                                nameIndex = i;
+                            else if (f == "fontname")
+                                fontNameIndex = i;
+                            else if (f == "fontsize")
+                                fontsizeIndex = i;
+                            else if (f == "primarycolour")
+                                primaryColourIndex = i;
+                            else if (f == "secondarycolour")
+                                secondaryColourIndex = i;
+                            else if (f == "outlinecolour")
+                                outlineColourIndex = i;
+                            else if (f == "backcolour")
+                                backColourIndex = i;
+                            else if (f == "bold")
+                                boldIndex = i;
+                            else if (f == "italic")
+                                italicIndex = i;
+                            else if (f == "underline")
+                                underlineIndex = i;
+                            else if (f == "outline")
+                                outlineIndex = i;
+                            else if (f == "shadow")
+                                shadowIndex = i;
+                            else if (f == "alignment")
+                                alignmentIndex = i;
+                            else if (f == "marginl")
+                                marginLIndex = i;
+                            else if (f == "marginr")
+                                marginRIndex = i;
+                            else if (f == "marginv")
+                                marginVIndex = i;
+                            else if (f == "borderstyle")
+                                borderStyleIndex = i;
+                        }
+                    }
+                }
+                else if (s.Replace(" ", string.Empty).StartsWith("style:"))
+                {
+                    if (line.Length > 10)
+                    {
+                        string rawLine = line;
+                        var format = line.Substring(6).Split(',');
+
+                        if (format.Length != styleCount)
+                        {
+                            sb.AppendLine("Number of expected Style elements do not match number of Format elements: " + rawLine);
+                            sb.AppendLine();
+                        }
+                        else
+                        {
+                            Color dummyColor = Color.FromArgb(9, 14, 16, 26);
+                            for (int i = 0; i < format.Length; i++)
+                            {
+                                string f = format[i].Trim().ToLower();
+                                if (i == nameIndex)
+                                {
+                                    if (format[i].Trim().Length == 0)
+                                    {
+                                        sb.AppendLine("'Name' is empty: " + rawLine);
+                                        sb.AppendLine();
+                                    }
+                                }
+                                else if (i == fontNameIndex)
+                                {
+                                    if (format[i].Trim().Length == 0)
+                                    {
+                                        sb.AppendLine("'Fontname' is empty: " + rawLine);
+                                        sb.AppendLine();
+                                    }
+                                }
+                                else if (i == fontsizeIndex)
+                                {
+                                    int number;
+                                    if (!int.TryParse(f, out number) || f.StartsWith("-"))
+                                    {
+                                        sb.AppendLine("'Fontsize' incorrect: " + rawLine);
+                                        sb.AppendLine();
+                                    }
+                                }
+                                else if (i == primaryColourIndex)
+                                {
+                                    if (AdvancedSubStationAlpha.GetSsaColor(f, dummyColor) == dummyColor)
+                                    {
+                                        sb.AppendLine("'PrimaryColour' incorrect: " + rawLine);
+                                        sb.AppendLine();
+                                    }
+                                }
+                                else if (i == secondaryColourIndex)
+                                {
+                                    if (AdvancedSubStationAlpha.GetSsaColor(f, dummyColor) == dummyColor)
+                                    {
+                                        sb.AppendLine("'SecondaryColour' incorrect: " + rawLine);
+                                        sb.AppendLine();
+                                    }
+                                }
+                                else if (i == outlineColourIndex)
+                                {
+                                    if (AdvancedSubStationAlpha.GetSsaColor(f, dummyColor) == dummyColor)
+                                    {
+                                        sb.AppendLine("'OutlineColour' incorrect: " + rawLine);
+                                        sb.AppendLine();
+                                    }
+                                }
+                                else if (i == backColourIndex)
+                                {
+                                    if (AdvancedSubStationAlpha.GetSsaColor(f, dummyColor) == dummyColor)
+                                    {
+                                        sb.AppendLine("'BackColour' incorrect: " + rawLine);
+                                        sb.AppendLine();
+                                    }
+                                }
+                                else if (i == boldIndex)
+                                {
+                                    if (Utilities.AllLetters.Contains(f))
+                                    {
+                                        sb.AppendLine("'Bold' incorrect: " + rawLine);
+                                        sb.AppendLine();
+                                    }
+                                }
+                                else if (i == italicIndex)
+                                {
+                                    if (Utilities.AllLetters.Contains(f))
+                                    {
+                                        sb.AppendLine("'Italic' incorrect: " + rawLine);
+                                        sb.AppendLine();
+                                    }
+                                }
+                                else if (i == underlineIndex)
+                                {
+                                    if (Utilities.AllLetters.Contains(f))
+                                    {
+                                        sb.AppendLine("'Underline' incorrect: " + rawLine);
+                                        sb.AppendLine();
+                                    }
+                                }
+                                else if (i == outlineIndex)
+                                {
+                                    float number;
+                                    if (!float.TryParse(f, out number) || f.StartsWith("-"))
+                                    {
+                                        sb.AppendLine("'Outline' (width) incorrect: " + rawLine);
+                                        sb.AppendLine();
+                                    }
+                                }
+                                else if (i == shadowIndex)
+                                {
+                                    float number;
+                                    if (!float.TryParse(f, out number) || f.StartsWith("-"))
+                                    {
+                                        sb.AppendLine("'Shadow' (width) incorrect: " + rawLine);
+                                        sb.AppendLine();
+                                    }
+                                }
+                                else if (i == alignmentIndex)
+                                {
+                                    if (!"0123456789 ".Contains(f))
+                                    {
+                                        sb.AppendLine("'Alignment' incorrect: " + rawLine);
+                                        sb.AppendLine();
+                                    }
+                                }
+                                else if (i == marginLIndex)
+                                {
+                                    int number;
+                                    if (!int.TryParse(f, out number) || f.StartsWith("-"))
+                                    {
+                                        sb.AppendLine("'MarginL' incorrect: " + rawLine);
+                                        sb.AppendLine();
+                                    }
+                                }
+                                else if (i == marginRIndex)
+                                {
+                                    int number;
+                                    if (!int.TryParse(f, out number) || f.StartsWith("-"))
+                                    {
+                                        sb.AppendLine("'MarginR' incorrect: " + rawLine);
+                                        sb.AppendLine();
+                                    }
+                                }
+                                else if (i == marginVIndex)
+                                {
+                                    int number;
+                                    if (!int.TryParse(f, out number) || f.StartsWith("-"))
+                                    {
+                                        sb.AppendLine("'MarginV' incorrect: " + rawLine);
+                                        sb.AppendLine();
+                                    }
+                                }
+                                else if (i == borderStyleIndex)
+                                {
+                                    if (!string.IsNullOrEmpty(f) && !("123").Contains(f))
+                                    {
+                                        sb.AppendLine("'BorderStyle' incorrect: " + rawLine);
+                                        sb.AppendLine();
+                                    }
+                                }
+                            }
+                        }
+                    }                   
+                }
+            }
+            return sb.ToString();
+        }
+
     }
 }

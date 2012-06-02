@@ -2093,6 +2093,13 @@ namespace Nikse.SubtitleEdit.Forms
                         ShowStatus(string.Format(_language.LoadedSubtitleX, _fileName) + " - " + string.Format(_language.ConvertedToX, format.FriendlyName));
                     }
                     SetEncoding(encoding);
+
+                    if (format.FriendlyName == new AdvancedSubStationAlpha().FriendlyName || format.FriendlyName == new SubStationAlpha().FriendlyName)
+                    {
+                        string errors = AdvancedSubStationAlpha.CheckForErrors(_subtitle.Header);
+                        if (!string.IsNullOrEmpty(errors))
+                            MessageBox.Show(errors);
+                    }
                 }
                 else
                 {

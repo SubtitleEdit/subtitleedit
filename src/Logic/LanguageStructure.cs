@@ -1344,6 +1344,7 @@
         public class SubStationAlphaStyles
         {
             public string Title { get; set; }
+            public string TitleSubstationAlpha { get; set; }            
             public string Styles { get; set; }
             public string Properties { get; set; }
             public string Name { get; set; }
@@ -1352,8 +1353,10 @@
             public string FontSize { get; set; }
             public string Primary { get; set; }
             public string Secondary { get; set; }
+            public string Tertiary { get; set; }
             public string Outline { get; set; }
             public string Shadow { get; set; }
+            public string Back { get; set; }
             public string Alignment { get; set; }
             public string TopLeft { get; set; }
             public string TopCenter { get; set; }
