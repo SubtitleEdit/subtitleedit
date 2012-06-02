@@ -63,19 +63,20 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 return "TRUE"; // ntsc 23.976
             if (Configuration.Settings.General.CurrentFrameRate < 25)
                 return "FALSE";
-            if (Configuration.Settings.General.CurrentFrameRate < 29)
-                return "FALSE";
-            if (Configuration.Settings.General.CurrentFrameRate < 29)
-                return "FALSE";
-            if (Configuration.Settings.General.CurrentFrameRate < 30)
-                return "TRUE"; // ntsc 29.97
-            if (Configuration.Settings.General.CurrentFrameRate < 40)
-                return "TRUE";
-            if (Configuration.Settings.General.CurrentFrameRate < 40)
-                return "TRUE";
-            if (Configuration.Settings.General.CurrentFrameRate < 60)
-                return "TRUE"; // ntsc 59.94
-            return "FALSE";
+            return "TRUE";
+            //if (Configuration.Settings.General.CurrentFrameRate < 29)
+            //    return "FALSE";
+            //if (Configuration.Settings.General.CurrentFrameRate < 29)
+            //    return "FALSE";
+            //if (Configuration.Settings.General.CurrentFrameRate < 30)
+            //    return "TRUE"; // ntsc 29.97
+            //if (Configuration.Settings.General.CurrentFrameRate < 40)
+            //    return "TRUE";
+            //if (Configuration.Settings.General.CurrentFrameRate < 40)
+            //    return "TRUE";
+            //if (Configuration.Settings.General.CurrentFrameRate < 60)
+            //    return "TRUE"; // ntsc 59.94
+            //return "FALSE";
         }
 
         public override string ToText(Subtitle subtitle, string title)
