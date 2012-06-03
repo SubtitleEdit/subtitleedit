@@ -220,18 +220,16 @@
             this.labelShortcut = new System.Windows.Forms.Label();
             this.tabPageSyntaxColoring = new System.Windows.Forms.TabPage();
             this.groupBoxListViewSyntaxColoring = new System.Windows.Forms.GroupBox();
+            this.checkBoxSyntaxColorTextMoreThanTwoLines = new System.Windows.Forms.CheckBox();
             this.checkBoxSyntaxOverlap = new System.Windows.Forms.CheckBox();
+            this.checkBoxSyntaxColorDurationTooSmall = new System.Windows.Forms.CheckBox();
+            this.buttonListViewSyntaxColorError = new System.Windows.Forms.Button();
             this.checkBoxSyntaxColorTextTooLong = new System.Windows.Forms.CheckBox();
             this.checkBoxSyntaxColorDurationTooLarge = new System.Windows.Forms.CheckBox();
-            this.checkBoxSyntaxColorDurationTooSmall = new System.Windows.Forms.CheckBox();
+            this.panelListViewSyntaxColorError = new System.Windows.Forms.Panel();
             this.colorDialogSSAStyle = new System.Windows.Forms.ColorDialog();
             this.fontDialogSSAStyle = new System.Windows.Forms.FontDialog();
             this.labelStatus = new System.Windows.Forms.Label();
-            this.panel1 = new System.Windows.Forms.Panel();
-            this.buttonListViewSyntaxColorWarning = new System.Windows.Forms.Button();
-            this.panel2 = new System.Windows.Forms.Panel();
-            this.buttonListViewSyntaxColorError = new System.Windows.Forms.Button();
-            this.checkBoxSyntaxColorTextMoreThanTwoLines = new System.Windows.Forms.CheckBox();
             this.tabControlSettings.SuspendLayout();
             this.tabPageGenerel.SuspendLayout();
             this.groupBoxMiscellaneous.SuspendLayout();
@@ -2431,14 +2429,12 @@
             // groupBoxListViewSyntaxColoring
             // 
             this.groupBoxListViewSyntaxColoring.Controls.Add(this.checkBoxSyntaxColorTextMoreThanTwoLines);
-            this.groupBoxListViewSyntaxColoring.Controls.Add(this.panel1);
             this.groupBoxListViewSyntaxColoring.Controls.Add(this.checkBoxSyntaxOverlap);
             this.groupBoxListViewSyntaxColoring.Controls.Add(this.checkBoxSyntaxColorDurationTooSmall);
-            this.groupBoxListViewSyntaxColoring.Controls.Add(this.buttonListViewSyntaxColorWarning);
             this.groupBoxListViewSyntaxColoring.Controls.Add(this.buttonListViewSyntaxColorError);
             this.groupBoxListViewSyntaxColoring.Controls.Add(this.checkBoxSyntaxColorTextTooLong);
             this.groupBoxListViewSyntaxColoring.Controls.Add(this.checkBoxSyntaxColorDurationTooLarge);
-            this.groupBoxListViewSyntaxColoring.Controls.Add(this.panel2);
+            this.groupBoxListViewSyntaxColoring.Controls.Add(this.panelListViewSyntaxColorError);
             this.groupBoxListViewSyntaxColoring.Location = new System.Drawing.Point(6, 6);
             this.groupBoxListViewSyntaxColoring.Name = "groupBoxListViewSyntaxColoring";
             this.groupBoxListViewSyntaxColoring.Size = new System.Drawing.Size(808, 399);
@@ -2446,15 +2442,44 @@
             this.groupBoxListViewSyntaxColoring.TabStop = false;
             this.groupBoxListViewSyntaxColoring.Text = "List view syntax coloring";
             // 
+            // checkBoxSyntaxColorTextMoreThanTwoLines
+            // 
+            this.checkBoxSyntaxColorTextMoreThanTwoLines.AutoSize = true;
+            this.checkBoxSyntaxColorTextMoreThanTwoLines.Location = new System.Drawing.Point(20, 116);
+            this.checkBoxSyntaxColorTextMoreThanTwoLines.Name = "checkBoxSyntaxColorTextMoreThanTwoLines";
+            this.checkBoxSyntaxColorTextMoreThanTwoLines.Size = new System.Drawing.Size(187, 17);
+            this.checkBoxSyntaxColorTextMoreThanTwoLines.TabIndex = 14;
+            this.checkBoxSyntaxColorTextMoreThanTwoLines.Text = "Text - color if more than two lines";
+            this.checkBoxSyntaxColorTextMoreThanTwoLines.UseVisualStyleBackColor = true;
+            // 
             // checkBoxSyntaxOverlap
             // 
             this.checkBoxSyntaxOverlap.AutoSize = true;
             this.checkBoxSyntaxOverlap.Location = new System.Drawing.Point(20, 154);
             this.checkBoxSyntaxOverlap.Name = "checkBoxSyntaxOverlap";
-            this.checkBoxSyntaxOverlap.Size = new System.Drawing.Size(97, 17);
+            this.checkBoxSyntaxOverlap.Size = new System.Drawing.Size(129, 17);
             this.checkBoxSyntaxOverlap.TabIndex = 13;
-            this.checkBoxSyntaxOverlap.Text = "Overlap - color";
+            this.checkBoxSyntaxOverlap.Text = "Time - color if overlap";
             this.checkBoxSyntaxOverlap.UseVisualStyleBackColor = true;
+            // 
+            // checkBoxSyntaxColorDurationTooSmall
+            // 
+            this.checkBoxSyntaxColorDurationTooSmall.Location = new System.Drawing.Point(20, 35);
+            this.checkBoxSyntaxColorDurationTooSmall.Name = "checkBoxSyntaxColorDurationTooSmall";
+            this.checkBoxSyntaxColorDurationTooSmall.Size = new System.Drawing.Size(154, 17);
+            this.checkBoxSyntaxColorDurationTooSmall.TabIndex = 10;
+            this.checkBoxSyntaxColorDurationTooSmall.Text = "Duration - color if too small";
+            this.checkBoxSyntaxColorDurationTooSmall.UseVisualStyleBackColor = true;
+            // 
+            // buttonListViewSyntaxColorError
+            // 
+            this.buttonListViewSyntaxColorError.Location = new System.Drawing.Point(20, 192);
+            this.buttonListViewSyntaxColorError.Name = "buttonListViewSyntaxColorError";
+            this.buttonListViewSyntaxColorError.Size = new System.Drawing.Size(112, 21);
+            this.buttonListViewSyntaxColorError.TabIndex = 4;
+            this.buttonListViewSyntaxColorError.Text = "Error color";
+            this.buttonListViewSyntaxColorError.UseVisualStyleBackColor = true;
+            this.buttonListViewSyntaxColorError.Click += new System.EventHandler(this.buttonListViewSyntaxColorError_Click);
             // 
             // checkBoxSyntaxColorTextTooLong
             // 
@@ -2476,15 +2501,14 @@
             this.checkBoxSyntaxColorDurationTooLarge.Text = "Duration - color if too large";
             this.checkBoxSyntaxColorDurationTooLarge.UseVisualStyleBackColor = true;
             // 
-            // checkBoxSyntaxColorDurationTooSmall
+            // panelListViewSyntaxColorError
             // 
-            this.checkBoxSyntaxColorDurationTooSmall.AutoSize = true;
-            this.checkBoxSyntaxColorDurationTooSmall.Location = new System.Drawing.Point(20, 35);
-            this.checkBoxSyntaxColorDurationTooSmall.Name = "checkBoxSyntaxColorDurationTooSmall";
-            this.checkBoxSyntaxColorDurationTooSmall.Size = new System.Drawing.Size(154, 17);
-            this.checkBoxSyntaxColorDurationTooSmall.TabIndex = 10;
-            this.checkBoxSyntaxColorDurationTooSmall.Text = "Duration - color if too small";
-            this.checkBoxSyntaxColorDurationTooSmall.UseVisualStyleBackColor = true;
+            this.panelListViewSyntaxColorError.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panelListViewSyntaxColorError.Location = new System.Drawing.Point(142, 192);
+            this.panelListViewSyntaxColorError.Name = "panelListViewSyntaxColorError";
+            this.panelListViewSyntaxColorError.Size = new System.Drawing.Size(21, 20);
+            this.panelListViewSyntaxColorError.TabIndex = 5;
+            this.panelListViewSyntaxColorError.Click += new System.EventHandler(this.buttonListViewSyntaxColorError_Click);
             // 
             // labelStatus
             // 
@@ -2494,50 +2518,6 @@
             this.labelStatus.Size = new System.Drawing.Size(60, 13);
             this.labelStatus.TabIndex = 3;
             this.labelStatus.Text = "labelStatus";
-            // 
-            // panel1
-            // 
-            this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel1.Location = new System.Drawing.Point(414, 59);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(21, 20);
-            this.panel1.TabIndex = 7;
-            // 
-            // buttonListViewSyntaxColorWarning
-            // 
-            this.buttonListViewSyntaxColorWarning.Location = new System.Drawing.Point(292, 58);
-            this.buttonListViewSyntaxColorWarning.Name = "buttonListViewSyntaxColorWarning";
-            this.buttonListViewSyntaxColorWarning.Size = new System.Drawing.Size(112, 21);
-            this.buttonListViewSyntaxColorWarning.TabIndex = 6;
-            this.buttonListViewSyntaxColorWarning.Text = "Warning color";
-            this.buttonListViewSyntaxColorWarning.UseVisualStyleBackColor = true;
-            // 
-            // panel2
-            // 
-            this.panel2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel2.Location = new System.Drawing.Point(414, 31);
-            this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(21, 20);
-            this.panel2.TabIndex = 5;
-            // 
-            // buttonListViewSyntaxColorError
-            // 
-            this.buttonListViewSyntaxColorError.Location = new System.Drawing.Point(292, 31);
-            this.buttonListViewSyntaxColorError.Name = "buttonListViewSyntaxColorError";
-            this.buttonListViewSyntaxColorError.Size = new System.Drawing.Size(112, 21);
-            this.buttonListViewSyntaxColorError.TabIndex = 4;
-            this.buttonListViewSyntaxColorError.Text = "Error color";
-            this.buttonListViewSyntaxColorError.UseVisualStyleBackColor = true;
-            // 
-            // checkBoxSyntaxColorTextMoreThanTwoLines
-            // 
-            this.checkBoxSyntaxColorTextMoreThanTwoLines.AutoSize = true;
-            this.checkBoxSyntaxColorTextMoreThanTwoLines.Location = new System.Drawing.Point(20, 116);
-            this.checkBoxSyntaxColorTextMoreThanTwoLines.Name = "checkBoxSyntaxColorTextMoreThanTwoLines";
-            this.checkBoxSyntaxColorTextMoreThanTwoLines.Size = new System.Drawing.Size(187, 17);
-            this.checkBoxSyntaxColorTextMoreThanTwoLines.TabIndex = 14;
-            this.checkBoxSyntaxColorTextMoreThanTwoLines.Text = "Text - color if more than two lines";
-            this.checkBoxSyntaxColorTextMoreThanTwoLines.UseVisualStyleBackColor = true;
             // 
             // Settings
             // 
@@ -2832,9 +2812,7 @@
         private System.Windows.Forms.CheckBox checkBoxSyntaxColorDurationTooLarge;
         private System.Windows.Forms.CheckBox checkBoxSyntaxColorDurationTooSmall;
         private System.Windows.Forms.CheckBox checkBoxSyntaxColorTextMoreThanTwoLines;
-        private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.Button buttonListViewSyntaxColorWarning;
         private System.Windows.Forms.Button buttonListViewSyntaxColorError;
-        private System.Windows.Forms.Panel panel2;
+        private System.Windows.Forms.Panel panelListViewSyntaxColorError;
     }
 }

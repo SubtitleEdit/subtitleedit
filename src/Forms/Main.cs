@@ -2719,6 +2719,13 @@ namespace Nikse.SubtitleEdit.Forms
                                           Configuration.Settings.General.SubtitleBackgroundColor.ToArgb().ToString();
             bool oldUseTimeFormatHHMMSSFF = Configuration.Settings.General.UseTimeFormatHHMMSSFF;
 
+            string oldSyntaxColoring = Configuration.Settings.Tools.ListViewSyntaxColorDurationSmall.ToString() +
+                                       Configuration.Settings.Tools.ListViewSyntaxColorDurationBig.ToString() +
+                                       Configuration.Settings.Tools.ListViewSyntaxColorLongLines.ToString() +
+                                       Configuration.Settings.Tools.ListViewSyntaxColorOverlap.ToString() +
+                                       Configuration.Settings.Tools.ListViewSyntaxMoreThanTwoLines.ToString() +
+                                       Configuration.Settings.Tools.ListViewSyntaxErrorColor.ToArgb().ToString();
+
             var oldAllowEditOfOriginalSubtitle = Configuration.Settings.General.AllowEditOfOriginalSubtitle;
             var settings = new Settings();
             settings.Initialize(this.Icon, toolStripButtonFileNew.Image, toolStripButtonFileOpen.Image, toolStripButtonSave.Image, toolStripButtonSaveAs.Image,
@@ -2745,11 +2752,20 @@ namespace Nikse.SubtitleEdit.Forms
             audioVisualizer.TextColor =  Configuration.Settings.VideoControls.WaveFormTextColor;
             audioVisualizer.MouseWheelScrollUpIsForward = Configuration.Settings.VideoControls.WaveFormMouseWheelScrollUpIsForward;
 
+            string newSyntaxColoring = Configuration.Settings.Tools.ListViewSyntaxColorDurationSmall.ToString() +
+                           Configuration.Settings.Tools.ListViewSyntaxColorDurationBig.ToString() +
+                           Configuration.Settings.Tools.ListViewSyntaxColorLongLines.ToString() +
+                           Configuration.Settings.Tools.ListViewSyntaxColorOverlap.ToString() +
+                           Configuration.Settings.Tools.ListViewSyntaxMoreThanTwoLines.ToString() +
+                           Configuration.Settings.Tools.ListViewSyntaxErrorColor.ToArgb().ToString();
+
+
             if (oldSubtitleFontSettings != Configuration.Settings.General.SubtitleFontName +
                                           Configuration.Settings.General.SubtitleFontBold +
                                           Configuration.Settings.General.SubtitleFontSize +
                                           Configuration.Settings.General.SubtitleFontColor.ToArgb().ToString() +
-                                          Configuration.Settings.General.SubtitleBackgroundColor.ToArgb().ToString())
+                                          Configuration.Settings.General.SubtitleBackgroundColor.ToArgb().ToString() ||
+                oldSyntaxColoring != newSyntaxColoring)
             {
                 Utilities.InitializeSubtitleFont(textBoxListViewText);
                 Utilities.InitializeSubtitleFont(textBoxListViewTextAlternate);
