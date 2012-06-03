@@ -635,7 +635,7 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                                 }
                                 else if (i == alignmentIndex)
                                 {
-                                    if (!"0123456789 ".Contains(f))
+                                    if (!"101123456789 ".Contains(f))
                                     {
                                         sb.AppendLine("'Alignment' incorrect: " + rawLine);
                                         sb.AppendLine();

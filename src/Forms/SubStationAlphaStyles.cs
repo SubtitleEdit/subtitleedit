@@ -122,6 +122,11 @@ namespace Nikse.SubtitleEdit.Forms
             radioButtonOutline.Text = l.Outline;
             labelShadow.Text = l.PlusShadow;
             radioButtonOpaqueBox.Text = l.OpaqueBox;
+            buttonImport.Text = l.Import;
+            buttonCopy.Text = l.Copy;
+            buttonAdd.Text = l.New;
+            buttonRemove.Text = l.Remove;
+            buttonRemoveAll.Text = l.RemoveAll;
 
             if (_isSubStationAlpha)
             {
@@ -639,35 +644,71 @@ namespace Nikse.SubtitleEdit.Forms
                 numericUpDownOutline.Value = style.OutlineWidth;
                 numericUpDownShadowWidth.Value = style.ShadowWidth;
 
-                switch (style.Alignment)
+                if (_isSubStationAlpha)
                 {
-                    case "1":
-                        radioButtonBottomLeft.Checked = true;
-                        break;
-                    case "3":
-                        radioButtonBottomRight.Checked = true;
-                        break;
-                    case "4":
-                        radioButtonMiddleLeft.Checked = true;
-                        break;
-                    case "5":
-                        radioButtonMiddleCenter.Checked = true;
-                        break;
-                    case "6":
-                        radioButtonMiddleRight.Checked = true;
-                        break;
-                    case "7":
-                        radioButtonTopLeft.Checked = true;
-                        break;
-                    case "8":
-                        radioButtonTopCenter.Checked = true;
-                        break;
-                    case "9":
-                        radioButtonTopRight.Checked = true;
-                        break;
-                    default:
-                        radioButtonBottomCenter.Checked = true;
-                        break;
+                    switch (style.Alignment)
+                    {
+                        case "1":
+                            radioButtonBottomLeft.Checked = true;
+                            break;
+                        case "3":
+                            radioButtonBottomRight.Checked = true;
+                            break;
+                        case "9":
+                            radioButtonMiddleLeft.Checked = true;
+                            break;
+                        case "10":
+                            radioButtonMiddleCenter.Checked = true;
+                            break;
+                        case "11":
+                            radioButtonMiddleRight.Checked = true;
+                            break;
+                        case "5":
+                            radioButtonTopLeft.Checked = true;
+                            break;
+                        case "6":
+                            radioButtonTopCenter.Checked = true;
+                            break;
+                        case "7":
+                            radioButtonTopRight.Checked = true;
+                            break;
+                        default:
+                            radioButtonBottomCenter.Checked = true;
+                            break;
+                    }
+                }
+                else
+                {
+                    switch (style.Alignment)
+                    {
+                        case "1":
+                            radioButtonBottomLeft.Checked = true;
+                            break;
+                        case "3":
+                            radioButtonBottomRight.Checked = true;
+                            break;
+                        case "4":
+                            radioButtonMiddleLeft.Checked = true;
+                            break;
+                        case "5":
+                            radioButtonMiddleCenter.Checked = true;
+                            break;
+                        case "6":
+                            radioButtonMiddleRight.Checked = true;
+                            break;
+                        case "7":
+                            radioButtonTopLeft.Checked = true;
+                            break;
+                        case "8":
+                            radioButtonTopCenter.Checked = true;
+                            break;
+                        case "9":
+                            radioButtonTopRight.Checked = true;
+                            break;
+                        default:
+                            radioButtonBottomCenter.Checked = true;
+                            break;
+                    }
                 }
 
                 numericUpDownMarginLeft.Value = style.MarginLeft;
@@ -684,6 +725,16 @@ namespace Nikse.SubtitleEdit.Forms
                 _doUpdate = true;
                 groupBoxProperties.Enabled = true;
                 GeneratePreview();
+                if (listViewStyles.SelectedItems[0].Index == 0)
+                {
+                    buttonRemove.Enabled = false;
+                    textBoxStyleName.Enabled = false;
+                }
+                else
+                {
+                    buttonRemove.Enabled = true;
+                    textBoxStyleName.Enabled = true;
+                }
             }
             else
             {
@@ -757,7 +808,7 @@ namespace Nikse.SubtitleEdit.Forms
                 string styleName = listViewStyles.SelectedItems[0].Text;
                 SsaStyle oldStyle = GetSsaStyle(styleName);
                 SsaStyle style = GetSsaStyle(styleName);
-                style.Name = string.Format("Copy{0} of {1}", string.Empty, styleName);
+                style.Name = string.Format("Copy {0} of {1}", string.Empty, styleName);
 
                 if (GetSsaStyle(style.Name).LoadedFromHeader)
                 {
@@ -765,7 +816,7 @@ namespace Nikse.SubtitleEdit.Forms
                     bool doRepeat = true;
                     while (doRepeat)
                     {
-                        style.Name = string.Format("Copy{0} of {1}", count, styleName);
+                        style.Name = string.Format("Copy {0} of {1}", count, styleName);
                         doRepeat = GetSsaStyle(style.Name).LoadedFromHeader;
                         count++;
                     }
@@ -807,14 +858,14 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonAdd_Click(object sender, EventArgs e)
         {
-            SsaStyle style = GetSsaStyle("New");
+            SsaStyle style = GetSsaStyle(Configuration.Settings.Language.SubStationAlphaStyles.New);
             if (GetSsaStyle(style.Name).LoadedFromHeader)
             {
                 int count = 2;
                 bool doRepeat = true;
                 while (doRepeat)
                 {
-                    style = GetSsaStyle("New" + count.ToString());
+                    style = GetSsaStyle(Configuration.Settings.Language.SubStationAlphaStyles.New + count.ToString());
                     doRepeat = GetSsaStyle(style.Name).LoadedFromHeader;
                     count++;
                 }
@@ -993,7 +1044,10 @@ namespace Nikse.SubtitleEdit.Forms
             if (listViewStyles.SelectedItems.Count == 1 && _doUpdate && (sender as RadioButton).Checked)
             {
                 string name = listViewStyles.SelectedItems[0].Text;
-                SetSsaStyle(name, "alignment", "4");
+                if (_isSubStationAlpha)
+                    SetSsaStyle(name, "alignment", "9");
+                else
+                    SetSsaStyle(name, "alignment", "4");
                 GeneratePreview();
             }
         }
@@ -1003,7 +1057,10 @@ namespace Nikse.SubtitleEdit.Forms
             if (listViewStyles.SelectedItems.Count == 1 && _doUpdate && (sender as RadioButton).Checked)
             {
                 string name = listViewStyles.SelectedItems[0].Text;
-                SetSsaStyle(name, "alignment", "5");
+                if (_isSubStationAlpha)
+                    SetSsaStyle(name, "alignment", "10");
+                else
+                    SetSsaStyle(name, "alignment", "5");
                 GeneratePreview();
             }
         }
@@ -1013,7 +1070,10 @@ namespace Nikse.SubtitleEdit.Forms
             if (listViewStyles.SelectedItems.Count == 1 && _doUpdate && (sender as RadioButton).Checked)
             {
                 string name = listViewStyles.SelectedItems[0].Text;
-                SetSsaStyle(name, "alignment", "6");
+                if (_isSubStationAlpha)
+                    SetSsaStyle(name, "alignment", "11");
+                else
+                    SetSsaStyle(name, "alignment", "6");
                 GeneratePreview();
             }
         }
@@ -1023,7 +1083,10 @@ namespace Nikse.SubtitleEdit.Forms
             if (listViewStyles.SelectedItems.Count == 1 && _doUpdate && (sender as RadioButton).Checked)
             {
                 string name = listViewStyles.SelectedItems[0].Text;
-                SetSsaStyle(name, "alignment", "7");
+                if (_isSubStationAlpha)
+                    SetSsaStyle(name, "alignment", "5");
+                else
+                    SetSsaStyle(name, "alignment", "7");
                 GeneratePreview();
             }
         }
@@ -1033,7 +1096,10 @@ namespace Nikse.SubtitleEdit.Forms
             if (listViewStyles.SelectedItems.Count == 1 && _doUpdate && (sender as RadioButton).Checked)
             {
                 string name = listViewStyles.SelectedItems[0].Text;
-                SetSsaStyle(name, "alignment", "8");
+                if (_isSubStationAlpha)
+                    SetSsaStyle(name, "alignment", "6");
+                else
+                    SetSsaStyle(name, "alignment", "8");
                 GeneratePreview();
             }
         }
@@ -1043,7 +1109,10 @@ namespace Nikse.SubtitleEdit.Forms
             if (listViewStyles.SelectedItems.Count == 1 && _doUpdate && (sender as RadioButton).Checked)
             {
                 string name = listViewStyles.SelectedItems[0].Text;
-                SetSsaStyle(name, "alignment", "9");
+                if (_isSubStationAlpha)
+                    SetSsaStyle(name, "alignment", "7");
+                else
+                    SetSsaStyle(name, "alignment", "9");
                 GeneratePreview();
             }
         }
@@ -1176,6 +1245,20 @@ namespace Nikse.SubtitleEdit.Forms
         private void SubStationAlphaStyles_SizeChanged(object sender, EventArgs e)
         {
             GeneratePreview();
+        }
+
+        private void buttonImport_Click(object sender, EventArgs e)
+        {
+            openFileDialogImport.Title = "Import style from file...";
+            openFileDialogImport.FileName = string.Empty;
+            if (_isSubStationAlpha)
+                openFileDialogImport.Filter = new SubStationAlpha().FriendlyName + "|*.ssa|" + Configuration.Settings.Language.General.AllFiles + "|*.*";
+            else
+                openFileDialogImport.Filter = new AdvancedSubStationAlpha().FriendlyName + "|*.ass|" + Configuration.Settings.Language.General.AllFiles + "|*.*";
+
+            if (openFileDialogImport.ShowDialog(this) == DialogResult.OK)
+            {
+            }
         }
 
     }

@@ -1019,6 +1019,9 @@ namespace Nikse.SubtitleEdit.Logic
             subNode = node.SelectSingleNode("VlcWaveTranscodeSettings");
             if (subNode != null)
                 settings.General.VlcWaveTranscodeSettings = subNode.InnerText.Trim();
+            subNode = node.SelectSingleNode("UseTimeFormatHHMMSSFF");
+            if (subNode != null)
+                settings.General.UseTimeFormatHHMMSSFF = Convert.ToBoolean(subNode.InnerText.Trim());
             subNode = node.SelectSingleNode("ShowBetaStuff");
             if (subNode != null)
                 settings.General.ShowBetaStuff = Convert.ToBoolean(subNode.InnerText.Trim());
@@ -1726,6 +1729,7 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("ListViewDurationWidth", settings.General.ListViewDurationWidth.ToString(CultureInfo.InvariantCulture));
             textWriter.WriteElementString("ListViewTextWidth", settings.General.ListViewTextWidth.ToString(CultureInfo.InvariantCulture));
             textWriter.WriteElementString("VlcWaveTranscodeSettings", settings.General.VlcWaveTranscodeSettings);
+            textWriter.WriteElementString("UseTimeFormatHHMMSSFF", settings.General.UseTimeFormatHHMMSSFF.ToString(CultureInfo.InvariantCulture));
             textWriter.WriteElementString("ShowBetaStuff", settings.General.ShowBetaStuff.ToString());
 
 

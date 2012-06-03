@@ -276,6 +276,16 @@ namespace Nikse.SubtitleEdit.Forms
                 toolStripButtonToggleWaveForm.Checked = Configuration.Settings.General.ShowAudioVisualizer;
                 toolStripButtonToggleVideo.Checked = Configuration.Settings.General.ShowVideoPlayer;
 
+                if (Configuration.Settings.General.UseTimeFormatHHMMSSFF)
+                {
+                    numericUpDownDuration.DecimalPlaces = 2;
+                    numericUpDownDuration.Increment = (decimal)(0.01);
+                    toolStripSeparatorFrameRate.Visible = true;
+                    toolStripLabelFrameRate.Visible = true;
+                    toolStripComboBoxFrameRate.Visible = true;
+                    toolStripButtonGetFrameRate.Visible = true;
+                }
+
                 string fileName = string.Empty;
                 string[] args = Environment.GetCommandLineArgs();
                 if (args.Length >= 4 && args[1].ToLower() == "/convert")
@@ -1289,9 +1299,9 @@ namespace Nikse.SubtitleEdit.Forms
             toolStripButtonToggleWaveForm.ToolTipText = _language.Menu.ToolBar.ShowHideWaveForm;
             toolStripButtonToggleVideo.ToolTipText = _language.Menu.ToolBar.ShowHideVideo;
 
-            setStylesForSelectedLinesToolStripMenuItem.Text = _language.Menu.ContextMenu.SubStationAlphaSetStyle;
             if (!string.IsNullOrEmpty(_language.Menu.ContextMenu.SubStationAlphaStyles)) //TODO: Remove check in 3.3
                 toolStripMenuItemAssStyles.Text = _language.Menu.ContextMenu.SubStationAlphaStyles;
+            setStylesForSelectedLinesToolStripMenuItem.Text = _language.Menu.ContextMenu.SubStationAlphaSetStyle;
 
             toolStripMenuItemDelete.Text = _language.Menu.ContextMenu.Delete;
             insertLineToolStripMenuItem.Text = _language.Menu.ContextMenu.InsertFirstLine;
@@ -2653,7 +2663,6 @@ namespace Nikse.SubtitleEdit.Forms
                     SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
                 }
             }
-
         }
 
         private void ComboBoxSubtitleFormatsEnter(object sender, EventArgs e)
@@ -2705,6 +2714,7 @@ namespace Nikse.SubtitleEdit.Forms
                                           Configuration.Settings.General.SubtitleFontSize +
                                           Configuration.Settings.General.SubtitleFontColor.ToArgb().ToString() +
                                           Configuration.Settings.General.SubtitleBackgroundColor.ToArgb().ToString();
+            bool oldUseTimeFormatHHMMSSFF = Configuration.Settings.General.UseTimeFormatHHMMSSFF;
 
             var oldAllowEditOfOriginalSubtitle = Configuration.Settings.General.AllowEditOfOriginalSubtitle;
             var settings = new Settings();
@@ -2813,6 +2823,9 @@ namespace Nikse.SubtitleEdit.Forms
                 showhideWaveFormToolStripMenuItem.Text = _language.Menu.Video.ShowHideWaveForm;
             }
             audioVisualizer.Invalidate();
+
+            if (oldUseTimeFormatHHMMSSFF != Configuration.Settings.General.UseTimeFormatHHMMSSFF)
+                RefreshTimeCodeMode();
         }
 
         private int ShowSubtitle()
@@ -3516,6 +3529,13 @@ namespace Nikse.SubtitleEdit.Forms
                             if (obj.ToString() == format.FriendlyName)
                                 comboBoxSubtitleFormats.SelectedIndex = index;
                             index++;
+                        }
+
+                        if (format.FriendlyName == new AdvancedSubStationAlpha().FriendlyName || format.FriendlyName == new SubStationAlpha().FriendlyName)
+                        {
+                            string errors = AdvancedSubStationAlpha.CheckForErrors(_subtitle.Header);
+                            if (!string.IsNullOrEmpty(errors))
+                                MessageBox.Show(errors);
                         }
                     }
                 }
@@ -4557,6 +4577,19 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 setStylesForSelectedLinesToolStripMenuItem.Visible = styles.Count > 1;
                 toolStripMenuItemAssStyles.Visible = Configuration.Settings.General.ShowBetaStuff;
+                if (GetCurrentSubtitleFormat().GetType() == typeof(AdvancedSubStationAlpha))
+                {
+                    if (!string.IsNullOrEmpty(_language.Menu.ContextMenu.AdvancedSubStationAlphaStyles)) //TODO:SE 3.3
+                        toolStripMenuItemAssStyles.Text = _language.Menu.ContextMenu.AdvancedSubStationAlphaStyles;
+                    if (!string.IsNullOrEmpty(_language.Menu.ContextMenu.AdvancedSubStationAlphaSetStyle)) //TODO:SE 3.3
+                        setStylesForSelectedLinesToolStripMenuItem.Text = _language.Menu.ContextMenu.AdvancedSubStationAlphaSetStyle;
+                }
+                else
+                {
+                    if (!string.IsNullOrEmpty(_language.Menu.ContextMenu.SubStationAlphaStyles)) //TODO: Remove check in 3.3
+                        toolStripMenuItemAssStyles.Text = _language.Menu.ContextMenu.SubStationAlphaStyles;
+                    setStylesForSelectedLinesToolStripMenuItem.Text = _language.Menu.ContextMenu.SubStationAlphaSetStyle;
+                }
             }
             else
             {
@@ -5966,7 +5999,6 @@ namespace Nikse.SubtitleEdit.Forms
         {
             labelStartTimeWarning.Text = string.Empty;
             labelDurationWarning.Text = string.Empty;
-
             if (_subtitle.Paragraphs.Count > 0 && SubtitleListview1.SelectedItems.Count > 0 && startTime != null)
             {
 
@@ -5995,7 +6027,7 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         labelDurationWarning.Text = _languageGeneral.Negative;
                     }
-                }
+                }          
             }
         }
 
@@ -8043,31 +8075,7 @@ namespace Nikse.SubtitleEdit.Forms
             else if (e.Modifiers == (Keys.Control | Keys.Alt | Keys.Shift) && e.KeyCode == Keys.F) // Toggle HHMMSSFF / HHMMSSMMM
             {
                 Configuration.Settings.General.UseTimeFormatHHMMSSFF = !Configuration.Settings.General.UseTimeFormatHHMMSSFF;
-                if (Configuration.Settings.General.UseTimeFormatHHMMSSFF)
-                {
-                    numericUpDownDuration.DecimalPlaces = 2;
-                    numericUpDownDuration.Increment = (decimal)(0.01);
-
-                    toolStripSeparatorFrameRate.Visible = true;
-                    toolStripLabelFrameRate.Visible = true;
-                    toolStripComboBoxFrameRate.Visible = true;
-                    toolStripButtonGetFrameRate.Visible = true;
-                }
-                else
-                {
-                    numericUpDownDuration.DecimalPlaces = 3;
-                    numericUpDownDuration.Increment = (decimal)(0.1);
-
-                    toolStripSeparatorFrameRate.Visible = Configuration.Settings.General.ShowFrameRate;
-                    toolStripLabelFrameRate.Visible = Configuration.Settings.General.ShowFrameRate;
-                    toolStripComboBoxFrameRate.Visible = Configuration.Settings.General.ShowFrameRate;
-                    toolStripButtonGetFrameRate.Visible = Configuration.Settings.General.ShowFrameRate;
-                }
-
-                SaveSubtitleListviewIndexes();
-                SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
-                RestoreSubtitleListviewIndexes();
-                RefreshSelectedParagraph();
+                RefreshTimeCodeMode();
             }
             else if (e.Modifiers == (Keys.Control | Keys.Shift) && e.KeyCode == Keys.U) // Ctrl+Shift+U = switch original/current
             {
@@ -8305,6 +8313,35 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
             // put new entries above tabs
+        }
+
+        private void RefreshTimeCodeMode()
+        {
+            if (Configuration.Settings.General.UseTimeFormatHHMMSSFF)
+            {
+                numericUpDownDuration.DecimalPlaces = 2;
+                numericUpDownDuration.Increment = (decimal)(0.01);
+
+                toolStripSeparatorFrameRate.Visible = true;
+                toolStripLabelFrameRate.Visible = true;
+                toolStripComboBoxFrameRate.Visible = true;
+                toolStripButtonGetFrameRate.Visible = true;
+            }
+            else
+            {
+                numericUpDownDuration.DecimalPlaces = 3;
+                numericUpDownDuration.Increment = (decimal)(0.1);
+
+                toolStripSeparatorFrameRate.Visible = Configuration.Settings.General.ShowFrameRate;
+                toolStripLabelFrameRate.Visible = Configuration.Settings.General.ShowFrameRate;
+                toolStripComboBoxFrameRate.Visible = Configuration.Settings.General.ShowFrameRate;
+                toolStripButtonGetFrameRate.Visible = Configuration.Settings.General.ShowFrameRate;
+            }
+
+            SaveSubtitleListviewIndexes();
+            SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
+            RestoreSubtitleListviewIndexes();
+            RefreshSelectedParagraph();
         }
 
         private void ReverseStartAndEndingForRTL()

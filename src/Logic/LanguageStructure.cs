@@ -863,8 +863,10 @@
 
                 public class ListViewContextMenu
                 {
+                    public string AdvancedSubStationAlphaSetStyle { get; set; }
                     public string SubStationAlphaSetStyle { get; set; }
                     public string SubStationAlphaStyles { get; set; }
+                    public string AdvancedSubStationAlphaStyles { get; set; }
                     public string Cut { get; set; }
                     public string Copy { get; set; }
                     public string Paste { get; set; }
@@ -1157,6 +1159,9 @@
             public string AutoBackupEveryFifteenMinutes { get; set; }
             public string AllowEditOfOriginalSubtitle { get; set; }
             public string PromptDeleteLines { get; set; }
+            public string TimeCodeMode { get; set; }
+            public string TimeCodeModeHHMMSSMsec { get; set; }
+            public string TimeCodeModeHHMMSSFF { get; set; }
             public string VideoEngine { get; set; }
             public string DirectShow { get; set; }
             public string DirectShowDescription { get; set; }
@@ -1375,6 +1380,12 @@
             public string Border { get; set; }
             public string PlusShadow { get; set; }
             public string OpaqueBox { get; set; }
+            public string Import { get; set; }
+            public string Copy { get; set; }
+            public string CopyXofY { get; set; }
+            public string New { get; set; }
+            public string Remove { get; set; }
+            public string RemoveAll { get; set; }
         }
 
         public class PointSync
