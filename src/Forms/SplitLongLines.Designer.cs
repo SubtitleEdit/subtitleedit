@@ -253,6 +253,7 @@
             this.SubtitleListview1.HideSelection = false;
             this.SubtitleListview1.Location = new System.Drawing.Point(12, 270);
             this.SubtitleListview1.Name = "SubtitleListview1";
+            this.SubtitleListview1.OwnerDraw = true;
             this.SubtitleListview1.Size = new System.Drawing.Size(750, 301);
             this.SubtitleListview1.TabIndex = 5;
             this.SubtitleListview1.UseCompatibleStateImageBehavior = false;
@@ -279,6 +280,7 @@
             this.Name = "SplitLongLines";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Split long lines";
             this.Shown += new System.EventHandler(this.SplitLongLines_Shown);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.SplitLongLines_KeyDown);

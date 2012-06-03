@@ -136,6 +136,7 @@
             this.MinimizeBox = false;
             this.Name = "Watermark";
             this.ShowInTaskbar = false;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Watermark";
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Watermark_KeyDown);
             this.groupBoxGenerate.ResumeLayout(false);

@@ -217,6 +217,7 @@
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "ExtractDateTimeInfo";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Extract date and time information";
             this.ResumeLayout(false);
             this.PerformLayout();

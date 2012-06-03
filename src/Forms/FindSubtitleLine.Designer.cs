@@ -106,6 +106,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.subtitleListView1.Location = new System.Drawing.Point(12, 59);
             this.subtitleListView1.MultiSelect = false;
             this.subtitleListView1.Name = "subtitleListView1";
+            this.subtitleListView1.OwnerDraw = true;
             this.subtitleListView1.Size = new System.Drawing.Size(572, 250);
             this.subtitleListView1.TabIndex = 3;
             this.subtitleListView1.UseCompatibleStateImageBehavior = false;
@@ -130,6 +131,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.MinimizeBox = false;
             this.Name = "FindSubtitleLine";
             this.ShowInTaskbar = false;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Find subtitle line";
             this.Load += new System.EventHandler(this.FormFindSubtitleLine_Load);
             this.Shown += new System.EventHandler(this.FormFindSubtitleLine_Shown);

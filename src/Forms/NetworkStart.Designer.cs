@@ -155,6 +155,7 @@
             this.MinimizeBox = false;
             this.Name = "NetworkStart";
             this.ShowInTaskbar = false;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Start network session";
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.NetworkNew_KeyDown);
             this.ResumeLayout(false);

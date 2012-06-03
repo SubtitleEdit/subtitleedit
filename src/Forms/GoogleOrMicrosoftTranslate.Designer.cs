@@ -175,6 +175,7 @@
             this.MinimizeBox = false;
             this.Name = "GoogleOrMicrosoftTranslate";
             this.ShowInTaskbar = false;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "GoogleOrMicrosoftTranslate";
             this.Shown += new System.EventHandler(this.GoogleOrMicrosoftTranslate_Shown);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.GoogleOrMicrosoftTranslate_KeyDown);

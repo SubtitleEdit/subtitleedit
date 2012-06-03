@@ -156,6 +156,7 @@
             this.MinimizeBox = false;
             this.Name = "NetworkJoin";
             this.ShowInTaskbar = false;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Join network session";
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.NetworkJoin_KeyDown);
             this.ResumeLayout(false);

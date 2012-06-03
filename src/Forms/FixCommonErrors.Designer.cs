@@ -382,6 +382,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.subtitleListView1.HideSelection = false;
             this.subtitleListView1.Location = new System.Drawing.Point(3, 5);
             this.subtitleListView1.Name = "subtitleListView1";
+            this.subtitleListView1.OwnerDraw = true;
             this.subtitleListView1.Size = new System.Drawing.Size(785, 156);
             this.subtitleListView1.TabIndex = 110;
             this.subtitleListView1.UseCompatibleStateImageBehavior = false;
@@ -644,6 +645,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.Name = "FixCommonErrors";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Fix common errors";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FixCommonErrorsFormClosing);
             this.Shown += new System.EventHandler(this.FixCommonErrorsShown);

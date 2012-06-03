@@ -1560,7 +1560,10 @@ namespace Nikse.SubtitleEdit.Forms
         private void AboutToolStripMenuItemClick(object sender, EventArgs e)
         {
             ReloadFromSourceView();
-            new About().ShowDialog(this);
+            var about = new About();
+            _formPositionsAndSizes.SetPositionAndSize(about);
+            about.ShowDialog(this);
+            _formPositionsAndSizes.SavePositionAndSize(about);
         }
 
         private void VisualSyncToolStripMenuItemClick(object sender, EventArgs e)
@@ -10482,6 +10485,22 @@ namespace Nikse.SubtitleEdit.Forms
                 else
                     removeOriginalToolStripMenuItem.Visible = false;
             }
+            var format = GetCurrentSubtitleFormat();
+            if (format.GetType() == typeof(AdvancedSubStationAlpha))
+            {
+                toolStripMenuItemSubStationAlpha.Visible = true;
+                toolStripMenuItemSubStationAlpha.Text = Configuration.Settings.Language.Main.Menu.File.AdvancedSubStationAlphaProperties;
+            }
+            else if (format.GetType() == typeof(SubStationAlpha))
+            {
+                toolStripMenuItemSubStationAlpha.Visible = true;
+                toolStripMenuItemSubStationAlpha.Text = Configuration.Settings.Language.Main.Menu.File.SubStationAlphaProperties;
+            }
+            else
+            {
+                toolStripMenuItemSubStationAlpha.Visible = false;
+            }
+            
             toolStripSeparator20.Visible = subtitleLoaded;
         }
 
@@ -10728,6 +10747,9 @@ namespace Nikse.SubtitleEdit.Forms
                 toolStripMenuItemReverseRightToLeftStartEnd.Visible = true;
                 joinSubtitlesToolStripMenuItem.Visible = true;
                 plainTextWithoutLineBreaksToolStripMenuItem.Visible = false;
+
+                toolStripMenuItemExportCaptionInc.Visible = true;
+                toolStripMenuItemExportUltech130.Visible = true;
             }
             else
             {
@@ -10740,6 +10762,9 @@ namespace Nikse.SubtitleEdit.Forms
                 //                toolStripMenuItemRightToLeftMode.Visible = false;
                 toolStripMenuItemReverseRightToLeftStartEnd.Visible = !string.IsNullOrEmpty(_language.Menu.Edit.ReverseRightToLeftStartEnd);
                 joinSubtitlesToolStripMenuItem.Visible = false;
+
+                toolStripMenuItemExportCaptionInc.Visible = false;
+                toolStripMenuItemExportUltech130.Visible = false;
             }
         }
 
@@ -11715,6 +11740,7 @@ namespace Nikse.SubtitleEdit.Forms
             _networkSession = new NikseWebServiceSession(_subtitle, _subtitleAlternate, TimerWebServiceTick, OnUpdateUserLogEntries);
             NetworkStart networkNew = new NetworkStart();
             networkNew.Initialize(_networkSession, _fileName);
+            _formPositionsAndSizes.SetPositionAndSize(networkNew);
             if (networkNew.ShowDialog(this) == DialogResult.OK)
             {
                 if (GetCurrentSubtitleFormat().GetType() == typeof(AdvancedSubStationAlpha) || GetCurrentSubtitleFormat().GetType() == typeof(SubStationAlpha))
@@ -11734,6 +11760,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 _networkSession = null;
             }
+            _formPositionsAndSizes.SavePositionAndSize(networkNew);
         }
 
         private void joinSessionToolStripMenuItem_Click(object sender, EventArgs e)
@@ -14008,6 +14035,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             ReloadFromSourceView();
             var joinSubtitles = new JoinSubtitles();
+            _formPositionsAndSizes.SetPositionAndSize(joinSubtitles);
             if (joinSubtitles.ShowDialog(this) == DialogResult.OK)
             {
                 if (joinSubtitles.JoinedSubtitle != null && joinSubtitles.JoinedSubtitle.Paragraphs.Count > 0 && ContinueNewOrExit())
@@ -14026,6 +14054,7 @@ namespace Nikse.SubtitleEdit.Forms
                     ShowStatus(_language.SubtitleSplitted); //TODO: add language tags
                 }
             }
+            _formPositionsAndSizes.SavePositionAndSize(joinSubtitles);
         }
 
         private void toolStripMenuItemReverseRightToLeftStartEnd_Click(object sender, EventArgs e)
@@ -14172,6 +14201,14 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 _subtitle.Header = styles.Header;
             }
+        }
+
+        private void toolStripMenuItemSubStationAlpha_Click(object sender, EventArgs e)
+        {
+            var properties = new SubStationAlphaProperties(_subtitle, GetCurrentSubtitleFormat());
+            _formPositionsAndSizes.SetPositionAndSize(properties);
+            properties.ShowDialog(this);
+            _formPositionsAndSizes.SavePositionAndSize(properties);
         }
 
     }

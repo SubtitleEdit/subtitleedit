@@ -40,12 +40,12 @@
             this.textBoxChat = new System.Windows.Forms.TextBox();
             this.buttonSendChat = new System.Windows.Forms.Button();
             this.SuspendLayout();
-            //
+            // 
             // listViewChat
-            //
-            this.listViewChat.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            // 
+            this.listViewChat.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.listViewChat.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.columnHeader1,
             this.columnHeader4});
@@ -56,19 +56,19 @@
             this.listViewChat.TabIndex = 3;
             this.listViewChat.UseCompatibleStateImageBehavior = false;
             this.listViewChat.View = System.Windows.Forms.View.Details;
-            //
+            // 
             // columnHeader1
-            //
+            // 
             this.columnHeader1.Text = "Username";
             this.columnHeader1.Width = 82;
-            //
+            // 
             // columnHeader4
-            //
+            // 
             this.columnHeader4.Text = "Text";
             this.columnHeader4.Width = 188;
-            //
+            // 
             // imageListUsers
-            //
+            // 
             this.imageListUsers.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageListUsers.ImageStream")));
             this.imageListUsers.TransparentColor = System.Drawing.Color.Transparent;
             this.imageListUsers.Images.SetKeyName(0, "person.jpg");
@@ -79,11 +79,11 @@
             this.imageListUsers.Images.SetKeyName(5, "Person6.jpg");
             this.imageListUsers.Images.SetKeyName(6, "Person7.jpg");
             this.imageListUsers.Images.SetKeyName(7, "Person8.jpg");
-            //
+            // 
             // listViewUsers
-            //
-            this.listViewUsers.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            // 
+            this.listViewUsers.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.listViewUsers.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.columnHeaderNick,
             this.columnHeader2});
@@ -94,30 +94,30 @@
             this.listViewUsers.TabIndex = 2;
             this.listViewUsers.UseCompatibleStateImageBehavior = false;
             this.listViewUsers.View = System.Windows.Forms.View.Details;
-            //
+            // 
             // columnHeaderNick
-            //
+            // 
             this.columnHeaderNick.Text = "Username";
             this.columnHeaderNick.Width = 178;
-            //
+            // 
             // columnHeader2
-            //
+            // 
             this.columnHeader2.Text = "IP";
             this.columnHeader2.Width = 93;
-            //
+            // 
             // textBoxChat
-            //
-            this.textBoxChat.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            // 
+            this.textBoxChat.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxChat.Location = new System.Drawing.Point(3, 352);
             this.textBoxChat.Multiline = true;
             this.textBoxChat.Name = "textBoxChat";
             this.textBoxChat.Size = new System.Drawing.Size(188, 46);
             this.textBoxChat.TabIndex = 0;
             this.textBoxChat.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textBoxChat_KeyDown);
-            //
+            // 
             // buttonSendChat
-            //
+            // 
             this.buttonSendChat.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonSendChat.Location = new System.Drawing.Point(197, 375);
             this.buttonSendChat.Name = "buttonSendChat";
@@ -126,9 +126,9 @@
             this.buttonSendChat.Text = "Send message";
             this.buttonSendChat.UseVisualStyleBackColor = true;
             this.buttonSendChat.Click += new System.EventHandler(this.buttonSendChat_Click);
-            //
+            // 
             // NetworkChat
-            //
+            // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(281, 402);
@@ -141,6 +141,7 @@
             this.MinimumSize = new System.Drawing.Size(200, 300);
             this.Name = "NetworkChat";
             this.ShowIcon = false;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "NetworkChat";
             this.ResumeLayout(false);
             this.PerformLayout();

@@ -209,6 +209,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.SubtitleListview1.HideSelection = false;
             this.SubtitleListview1.Location = new System.Drawing.Point(10, 274);
             this.SubtitleListview1.Name = "SubtitleListview1";
+            this.SubtitleListview1.OwnerDraw = true;
             this.SubtitleListview1.Size = new System.Drawing.Size(757, 282);
             this.SubtitleListview1.TabIndex = 4;
             this.SubtitleListview1.UseCompatibleStateImageBehavior = false;
@@ -234,6 +235,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.Name = "MergeShortLines";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "MergeShortLines";
             this.Shown += new System.EventHandler(this.MergeShortLines_Shown);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.MergeShortLines_KeyDown);

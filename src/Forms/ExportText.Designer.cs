@@ -364,6 +364,7 @@
             this.Name = "ExportText";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Export plain text";
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ExportText_KeyDown);
             this.groupBoxImportOptions.ResumeLayout(false);

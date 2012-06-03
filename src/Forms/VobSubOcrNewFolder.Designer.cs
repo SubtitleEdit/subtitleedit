@@ -89,6 +89,7 @@
             this.MinimizeBox = false;
             this.Name = "VobSubOcrNewFolder";
             this.ShowInTaskbar = false;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "New folder";
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.FormVobSubOcrNewFolder_KeyDown);
             this.ResumeLayout(false);

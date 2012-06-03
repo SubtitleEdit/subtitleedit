@@ -817,6 +817,7 @@
             this.Name = "SubStationAlphaStyles";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Advanced SubStation Alpha styles";
             this.ResizeEnd += new System.EventHandler(this.SubStationAlphaStyles_ResizeEnd);
             this.SizeChanged += new System.EventHandler(this.SubStationAlphaStyles_SizeChanged);

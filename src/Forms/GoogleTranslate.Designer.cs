@@ -150,6 +150,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.subtitleListViewTo.HideSelection = false;
             this.subtitleListViewTo.Location = new System.Drawing.Point(471, 64);
             this.subtitleListViewTo.Name = "subtitleListViewTo";
+            this.subtitleListViewTo.OwnerDraw = true;
             this.subtitleListViewTo.Size = new System.Drawing.Size(428, 459);
             this.subtitleListViewTo.TabIndex = 2;
             this.subtitleListViewTo.UseCompatibleStateImageBehavior = false;
@@ -167,6 +168,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.subtitleListViewFrom.HideSelection = false;
             this.subtitleListViewFrom.Location = new System.Drawing.Point(18, 64);
             this.subtitleListViewFrom.Name = "subtitleListViewFrom";
+            this.subtitleListViewFrom.OwnerDraw = true;
             this.subtitleListViewFrom.Size = new System.Drawing.Size(430, 459);
             this.subtitleListViewFrom.TabIndex = 0;
             this.subtitleListViewFrom.UseCompatibleStateImageBehavior = false;
@@ -199,6 +201,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.Name = "GoogleTranslate";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Google translate";
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.FormGoogleTranslate_KeyDown);
             this.Resize += new System.EventHandler(this.GoogleTranslate_Resize);

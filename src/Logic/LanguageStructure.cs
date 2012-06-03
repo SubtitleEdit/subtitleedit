@@ -722,6 +722,8 @@
                     public string Reopen { get; set; }
                     public string Save { get; set; }
                     public string SaveAs { get; set; }
+                    public string AdvancedSubStationAlphaProperties { get; set; }
+                    public string SubStationAlphaProperties { get; set; }
                     public string OpenOriginal { get; set; }
                     public string SaveOriginal { get; set; }
                     public string CloseOriginal { get; set; }
@@ -1344,6 +1346,27 @@
             public string Title { get; set; }
             public string StartFromNumber { get; set; }
             public string PleaseEnterAValidNumber { get; set; }
+        }
+
+        public class SubStationAlphaProperties
+        {
+            public string Title { get; set; }
+            public string TitleSubstationAlpha { get; set; }
+            public string Script { get; set; }
+            public string ScriptTitle { get; set; }
+            public string OriginalScript { get; set; }
+            public string Translation { get; set; }
+            public string Editing { get; set; }
+            public string Timing { get; set; }
+            public string SyncPoint { get; set; }
+            public string UpdatedBy { get; set; }
+            public string UpdateDetails { get; set; }
+            public string Resolution { get; set; }
+            public string VideoResolution { get; set; }
+            public string Options { get; set; }
+            public string WrapStyle { get; set; }
+            public string Collision { get; set; }
+            public string ScaleBorderAndShadow { get; set; }
         }
 
         public class SubStationAlphaStyles

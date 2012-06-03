@@ -36,11 +36,11 @@
             this.columnHeaderEndTime = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeaderFileName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.groupBoxPreview = new System.Windows.Forms.GroupBox();
+            this.labelTotalLines = new System.Windows.Forms.Label();
             this.buttonClear = new System.Windows.Forms.Button();
             this.ButtonRemoveVob = new System.Windows.Forms.Button();
             this.buttonAddVobFile = new System.Windows.Forms.Button();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
-            this.labelTotalLines = new System.Windows.Forms.Label();
             this.groupBoxPreview.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -127,6 +127,15 @@
             this.groupBoxPreview.TabStop = false;
             this.groupBoxPreview.Text = "Add subtitles to join (drop also supported)";
             // 
+            // labelTotalLines
+            // 
+            this.labelTotalLines.AutoSize = true;
+            this.labelTotalLines.Location = new System.Drawing.Point(7, 232);
+            this.labelTotalLines.Name = "labelTotalLines";
+            this.labelTotalLines.Size = new System.Drawing.Size(78, 13);
+            this.labelTotalLines.TabIndex = 105;
+            this.labelTotalLines.Text = "labelTotalLines";
+            // 
             // buttonClear
             // 
             this.buttonClear.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
@@ -164,15 +173,6 @@
             // 
             this.openFileDialog1.FileName = "openFileDialog1";
             // 
-            // labelTotalLines
-            // 
-            this.labelTotalLines.AutoSize = true;
-            this.labelTotalLines.Location = new System.Drawing.Point(7, 232);
-            this.labelTotalLines.Name = "labelTotalLines";
-            this.labelTotalLines.Size = new System.Drawing.Size(78, 13);
-            this.labelTotalLines.TabIndex = 105;
-            this.labelTotalLines.Text = "labelTotalLines";
-            // 
             // JoinSubtitles
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -188,6 +188,7 @@
             this.Name = "JoinSubtitles";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Join subtitles";
             this.Shown += new System.EventHandler(this.JoinSubtitles_Shown);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.JoinSubtitles_KeyDown);

@@ -139,6 +139,7 @@
             this.MinimizeBox = false;
             this.Name = "GetDictionaries";
             this.ShowInTaskbar = false;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Need dictionaries?";
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.FormGetDictionaries_KeyDown);
             this.ResumeLayout(false);

@@ -122,6 +122,7 @@
             this.MinimizeBox = false;
             this.Name = "PacEncoding";
             this.ShowInTaskbar = false;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "PacEncoding";
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.PacEncoding_KeyDown);
             this.ResumeLayout(false);

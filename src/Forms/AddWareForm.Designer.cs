@@ -124,6 +124,7 @@
             this.Name = "AddWareForm";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Generate wave form data";
             this.Shown += new System.EventHandler(this.AddWareForm_Shown);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.AddWareForm_KeyDown);

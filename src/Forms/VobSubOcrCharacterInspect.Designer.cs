@@ -228,6 +228,7 @@
             this.Controls.Add(this.buttonOK);
             this.Name = "VobSubOcrCharacterInspect";
             this.ShowInTaskbar = false;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "VobSubOcrCharacterInspect";
             this.groupBoxCurrentCompareImage.ResumeLayout(false);
             this.groupBoxCurrentCompareImage.PerformLayout();

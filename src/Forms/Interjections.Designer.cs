@@ -122,6 +122,7 @@
             this.Name = "Interjections";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Interjections";
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Interjections_KeyDown);
             this.groupBoxNamesIgonoreLists.ResumeLayout(false);

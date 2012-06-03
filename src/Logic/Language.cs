@@ -58,6 +58,7 @@ namespace Nikse.SubtitleEdit.Logic
         public LanguageStructure.SplitLongLines SplitLongLines;
         public LanguageStructure.SplitSubtitle SplitSubtitle;
         public LanguageStructure.StartNumberingFrom StartNumberingFrom;
+        public LanguageStructure.SubStationAlphaProperties SubStationAlphaProperties;
         public LanguageStructure.SubStationAlphaStyles SubStationAlphaStyles;
         public LanguageStructure.PointSync PointSync;
         public LanguageStructure.UnknownSubtitle UnknownSubtitle;
@@ -779,6 +780,8 @@ namespace Nikse.SubtitleEdit.Logic
                         Reopen = "&Reopen",
                         Save = "&Save",
                         SaveAs = "Save &as...",
+                        AdvancedSubStationAlphaProperties = "Advanced Sub Station Alpha properties...",
+                        SubStationAlphaProperties = "Sub Station Alpha properties...",
                         OpenOriginal = "Open original subtitle (translator mode)...",
                         SaveOriginal = "Save original subtitle",
                         CloseOriginal = "Close original subtitle",
@@ -1396,10 +1399,20 @@ can edit in same subtitle file (collaboration)",
                 PleaseEnterAValidNumber = "Ups, please enter a number",
             };
 
+            SubStationAlphaProperties= new LanguageStructure.SubStationAlphaProperties
+            {
+                Title = "Advanced Sub Station Alpha properties",
+                TitleSubstationAlpha = "Sub Station Alpha properties",
+                Script = "Script",
+                ScriptTitle = "Title",
+
+            };
+
+
             SubStationAlphaStyles = new LanguageStructure.SubStationAlphaStyles
             {
-                Title = "Advanced SubStation Alpha styles",
-                TitleSubstationAlpha = "SubStation Alpha styles",
+                Title = "Advanced Sub Station Alpha styles",
+                TitleSubstationAlpha = "Sub Station Alpha styles",
                 Styles = "Styles",
                 Properties = "Properties",
                 Name  = "Name",
