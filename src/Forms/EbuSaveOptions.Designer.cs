@@ -618,6 +618,7 @@
             this.MinimumSize = new System.Drawing.Size(648, 462);
             this.Name = "EbuSaveOptions";
             this.ShowInTaskbar = false;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "EbuSaveOptions";
             this.tabControl1.ResumeLayout(false);
             this.tabPageHeader.ResumeLayout(false);

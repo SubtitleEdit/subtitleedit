@@ -352,6 +352,7 @@
             this.Name = "OcrSpellCheck";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "OCR spellcheck";
             this.groupBoxSuggestions.ResumeLayout(false);
             this.GroupBoxEditWord.ResumeLayout(false);

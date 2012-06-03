@@ -136,6 +136,7 @@
             this.MinimizeBox = false;
             this.Name = "ShowHistory";
             this.ShowInTaskbar = false;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "History (for undo)";
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.FormShowHistory_KeyDown);
             this.ResumeLayout(false);

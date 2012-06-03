@@ -34,6 +34,7 @@
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.groupBoxImageSettings = new System.Windows.Forms.GroupBox();
+            this.checkBoxSkipEmptyFrameAtStart = new System.Windows.Forms.CheckBox();
             this.comboBoxBottomMargin = new System.Windows.Forms.ComboBox();
             this.labelBottomMargin = new System.Windows.Forms.Label();
             this.labelFrameRate = new System.Windows.Forms.Label();
@@ -62,7 +63,6 @@
             this.labelImageResolution = new System.Windows.Forms.Label();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.subtitleListView1 = new Nikse.SubtitleEdit.Controls.SubtitleListView();
-            this.checkBoxSkipEmptyFrameAtStart = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.groupBoxImageSettings.SuspendLayout();
             this.SuspendLayout();
@@ -147,6 +147,18 @@
             this.groupBoxImageSettings.TabIndex = 1;
             this.groupBoxImageSettings.TabStop = false;
             this.groupBoxImageSettings.Text = "Image settings";
+            // 
+            // checkBoxSkipEmptyFrameAtStart
+            // 
+            this.checkBoxSkipEmptyFrameAtStart.AutoSize = true;
+            this.checkBoxSkipEmptyFrameAtStart.Checked = true;
+            this.checkBoxSkipEmptyFrameAtStart.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBoxSkipEmptyFrameAtStart.Location = new System.Drawing.Point(276, 131);
+            this.checkBoxSkipEmptyFrameAtStart.Name = "checkBoxSkipEmptyFrameAtStart";
+            this.checkBoxSkipEmptyFrameAtStart.Size = new System.Drawing.Size(147, 17);
+            this.checkBoxSkipEmptyFrameAtStart.TabIndex = 37;
+            this.checkBoxSkipEmptyFrameAtStart.Text = "Skip empty frames at start";
+            this.checkBoxSkipEmptyFrameAtStart.UseVisualStyleBackColor = true;
             // 
             // comboBoxBottomMargin
             // 
@@ -505,23 +517,12 @@
             this.subtitleListView1.GridLines = true;
             this.subtitleListView1.Location = new System.Drawing.Point(12, 12);
             this.subtitleListView1.Name = "subtitleListView1";
+            this.subtitleListView1.OwnerDraw = true;
             this.subtitleListView1.Size = new System.Drawing.Size(712, 200);
             this.subtitleListView1.TabIndex = 0;
             this.subtitleListView1.UseCompatibleStateImageBehavior = false;
             this.subtitleListView1.View = System.Windows.Forms.View.Details;
             this.subtitleListView1.SelectedIndexChanged += new System.EventHandler(this.subtitleListView1_SelectedIndexChanged);
-            // 
-            // checkBoxSkipEmptyFrameAtStart
-            // 
-            this.checkBoxSkipEmptyFrameAtStart.AutoSize = true;
-            this.checkBoxSkipEmptyFrameAtStart.Checked = true;
-            this.checkBoxSkipEmptyFrameAtStart.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBoxSkipEmptyFrameAtStart.Location = new System.Drawing.Point(276, 131);
-            this.checkBoxSkipEmptyFrameAtStart.Name = "checkBoxSkipEmptyFrameAtStart";
-            this.checkBoxSkipEmptyFrameAtStart.Size = new System.Drawing.Size(147, 17);
-            this.checkBoxSkipEmptyFrameAtStart.TabIndex = 37;
-            this.checkBoxSkipEmptyFrameAtStart.Text = "Skip empty frames at start";
-            this.checkBoxSkipEmptyFrameAtStart.UseVisualStyleBackColor = true;
             // 
             // ExportPngXml
             // 
@@ -541,6 +542,7 @@
             this.MinimumSize = new System.Drawing.Size(730, 430);
             this.Name = "ExportPngXml";
             this.ShowIcon = false;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "ExportPngXml";
             this.Shown += new System.EventHandler(this.ExportPngXml_Shown);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ExportPngXml_KeyDown);

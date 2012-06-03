@@ -102,6 +102,7 @@
             this.MinimizeBox = false;
             this.Name = "AddToNamesList";
             this.ShowInTaskbar = false;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Add to Names List";
             this.ResumeLayout(false);
             this.PerformLayout();

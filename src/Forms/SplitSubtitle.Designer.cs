@@ -144,6 +144,7 @@
             this.MinimizeBox = false;
             this.Name = "SplitSubtitle";
             this.ShowInTaskbar = false;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Split subtitle";
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.FormSplitSubtitle_KeyDown);
             this.ResumeLayout(false);

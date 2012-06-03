@@ -83,6 +83,7 @@
             this.MinimizeBox = false;
             this.Name = "UnknownSubtitle";
             this.ShowInTaskbar = false;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Uknown subtitle";
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.FormUnknownSubtitle_KeyDown);
             this.ResumeLayout(false);

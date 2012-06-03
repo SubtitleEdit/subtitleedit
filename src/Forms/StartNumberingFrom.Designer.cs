@@ -88,6 +88,7 @@
             this.MinimizeBox = false;
             this.Name = "StartNumberingFrom";
             this.ShowInTaskbar = false;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Start numbering from...";
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.FormStartNumberingFrom_KeyDown);
             this.ResumeLayout(false);

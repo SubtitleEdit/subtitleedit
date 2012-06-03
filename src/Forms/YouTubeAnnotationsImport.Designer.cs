@@ -105,6 +105,7 @@
             this.MinimizeBox = false;
             this.Name = "YouTubeAnnotationsImport";
             this.ShowInTaskbar = false;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "YouTubeAnnotationsImport";
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.YouTubeAnnotationsImport_KeyDown);
             this.ResumeLayout(false);

@@ -189,6 +189,7 @@
             this.Name = "ChangeCasingNames";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Change casing - Names";
             this.Shown += new System.EventHandler(this.ChangeCasingNames_Shown);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ChangeCasingNames_KeyDown);

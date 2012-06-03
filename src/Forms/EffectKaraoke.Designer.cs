@@ -203,6 +203,7 @@
             this.MinimizeBox = false;
             this.Name = "EffectKaraoke";
             this.ShowInTaskbar = false;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Karaoke effect";
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.FormEffectkaraoke_KeyDown);
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDelay)).EndInit();

@@ -148,7 +148,6 @@ namespace Nikse.SubtitleEdit.Forms
             UpdateSsaExample();
 
 
-
             var proxy = Configuration.Settings.Proxy;
             textBoxProxyAddress.Text = proxy.ProxyAddress;
             textBoxProxyUserName.Text = proxy.UserName;
@@ -157,6 +156,12 @@ namespace Nikse.SubtitleEdit.Forms
             else
                 textBoxProxyPassword.Text = proxy.DecodePassword();
             textBoxProxyDomain.Text = proxy.Domain;
+
+            checkBoxSyntaxColorDurationTooSmall.Checked = Configuration.Settings.Tools.ListViewSyntaxColorDurationSmall;
+            checkBoxSyntaxColorDurationTooLarge.Checked = Configuration.Settings.Tools.ListViewSyntaxColorDurationBig;
+            checkBoxSyntaxColorTextTooLong.Checked = Configuration.Settings.Tools.ListViewSyntaxColorLongLines;
+            checkBoxSyntaxColorTextMoreThanTwoLines.Checked = Configuration.Settings.Tools.ListViewSyntaxMoreThanTwoLines;
+            checkBoxSyntaxOverlap.Checked = Configuration.Settings.Tools.ListViewSyntaxColorOverlap;
 
             // Language
             var language = Configuration.Settings.Language.Settings;
@@ -617,6 +622,9 @@ namespace Nikse.SubtitleEdit.Forms
             comboBoxShortcutKey.Left = labelShortcutKey.Left + labelShortcutKey.Width;
             comboBoxShortcutKey.Items[0] = Configuration.Settings.Language.General.None;
 
+            if (!Configuration.Settings.General.ShowBetaStuff)
+                tabControlSettings.TabPages.Remove(tabPageSyntaxColoring);
+
             FixLargeFonts();
         }
 
@@ -931,6 +939,12 @@ namespace Nikse.SubtitleEdit.Forms
             else
                 proxy.EncodePassword(textBoxProxyPassword.Text);
             proxy.Domain = textBoxProxyDomain.Text;
+
+            Configuration.Settings.Tools.ListViewSyntaxColorDurationSmall = checkBoxSyntaxColorDurationTooSmall.Checked;
+            Configuration.Settings.Tools.ListViewSyntaxColorDurationBig = checkBoxSyntaxColorDurationTooLarge.Checked;
+            Configuration.Settings.Tools.ListViewSyntaxColorLongLines = checkBoxSyntaxColorTextTooLong.Checked ;
+            Configuration.Settings.Tools.ListViewSyntaxMoreThanTwoLines = checkBoxSyntaxColorTextMoreThanTwoLines.Checked;
+            Configuration.Settings.Tools.ListViewSyntaxColorOverlap = checkBoxSyntaxOverlap.Checked;
 
             Configuration.Settings.VideoControls.WaveFormDrawGrid = checkBoxWaveFormShowGrid.Checked;
             Configuration.Settings.VideoControls.WaveFormGridColor = panelWaveFormGridColor.BackColor;
@@ -2064,9 +2078,7 @@ namespace Nikse.SubtitleEdit.Forms
                     MessageBox.Show(string.Format(Configuration.Settings.Language.Settings.ShortcutIsNotValid, sb));
                     return;
                 }
-
                 treeViewShortcuts.SelectedNode.Text = text + " " + sb;
-
             }
         }
 

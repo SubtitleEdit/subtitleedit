@@ -222,6 +222,7 @@
             this.MinimizeBox = false;
             this.Name = "AdjustDisplayDuration";
             this.ShowInTaskbar = false;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Adjust display time";
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.FormAdjustDisplayTime_KeyDown);
             this.groupBoxAdjustVia.ResumeLayout(false);

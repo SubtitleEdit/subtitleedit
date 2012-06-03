@@ -161,6 +161,7 @@
             this.MinimizeBox = false;
             this.Name = "ChangeCasing";
             this.ShowInTaskbar = false;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Change casing";
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.FormChangeCasing_KeyDown);
             this.groupBoxChangeCasing.ResumeLayout(false);

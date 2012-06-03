@@ -382,6 +382,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.MinimumSize = new System.Drawing.Size(935, 540);
             this.Name = "VisualSync";
             this.ShowInTaskbar = false;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Visual Sync";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormVisualSync_FormClosing);
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.VisualSync_FormClosed);

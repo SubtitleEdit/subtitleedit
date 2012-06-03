@@ -66,6 +66,7 @@
             this.SubtitleListview1.HideSelection = false;
             this.SubtitleListview1.Location = new System.Drawing.Point(6, 19);
             this.SubtitleListview1.Name = "SubtitleListview1";
+            this.SubtitleListview1.OwnerDraw = true;
             this.SubtitleListview1.Size = new System.Drawing.Size(714, 341);
             this.SubtitleListview1.TabIndex = 5;
             this.SubtitleListview1.UseCompatibleStateImageBehavior = false;
@@ -154,6 +155,7 @@
             this.Name = "SetMinimumDisplayTimeBetweenParagraphs";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Set minimum display time between paragraphs";
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.SetMinimalDisplayTimeDifference_KeyDown);
             this.groupBoxLinesFound.ResumeLayout(false);

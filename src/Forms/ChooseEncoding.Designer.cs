@@ -133,6 +133,7 @@
             this.Name = "ChooseEncoding";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Choose encoding";
             this.Load += new System.EventHandler(this.ChooseEncoding_Load);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.FormChooseEncoding_KeyDown);

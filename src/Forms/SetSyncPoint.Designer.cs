@@ -98,6 +98,7 @@
             this.subtitleListView1.HideSelection = false;
             this.subtitleListView1.Location = new System.Drawing.Point(6, 18);
             this.subtitleListView1.Name = "subtitleListView1";
+            this.subtitleListView1.OwnerDraw = true;
             this.subtitleListView1.Size = new System.Drawing.Size(593, 199);
             this.subtitleListView1.TabIndex = 11;
             this.subtitleListView1.UseCompatibleStateImageBehavior = false;
@@ -283,6 +284,7 @@
             this.Name = "SetSyncPoint";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Set sync point";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.GetTime_FormClosing);
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.GetTime_FormClosed);

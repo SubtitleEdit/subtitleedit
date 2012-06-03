@@ -37,6 +37,7 @@
             this.radioButtonCharacters = new System.Windows.Forms.RadioButton();
             this.RadioButtonLines = new System.Windows.Forms.RadioButton();
             this.groupBoxOutput = new System.Windows.Forms.GroupBox();
+            this.buttonOpenOutputFolder = new System.Windows.Forms.Button();
             this.labelFileName = new System.Windows.Forms.Label();
             this.textBoxFileName = new System.Windows.Forms.TextBox();
             this.comboBoxSubtitleFormats = new System.Windows.Forms.ComboBox();
@@ -55,7 +56,6 @@
             this.buttonCancel = new System.Windows.Forms.Button();
             this.buttonSplit = new System.Windows.Forms.Button();
             this.buttonBasic = new System.Windows.Forms.Button();
-            this.buttonOpenOutputFolder = new System.Windows.Forms.Button();
             this.groupBoxParts.SuspendLayout();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownParts)).BeginInit();
@@ -181,6 +181,16 @@
             this.groupBoxOutput.TabIndex = 1;
             this.groupBoxOutput.TabStop = false;
             this.groupBoxOutput.Text = "Output";
+            // 
+            // buttonOpenOutputFolder
+            // 
+            this.buttonOpenOutputFolder.Location = new System.Drawing.Point(574, 75);
+            this.buttonOpenOutputFolder.Name = "buttonOpenOutputFolder";
+            this.buttonOpenOutputFolder.Size = new System.Drawing.Size(81, 23);
+            this.buttonOpenOutputFolder.TabIndex = 5;
+            this.buttonOpenOutputFolder.Text = "Open...";
+            this.buttonOpenOutputFolder.UseVisualStyleBackColor = true;
+            this.buttonOpenOutputFolder.Click += new System.EventHandler(this.buttonOpenOutputFolder_Click);
             // 
             // labelFileName
             // 
@@ -343,16 +353,6 @@
             this.buttonBasic.UseVisualStyleBackColor = true;
             this.buttonBasic.Click += new System.EventHandler(this.buttonBasic_Click);
             // 
-            // buttonOpenOutputFolder
-            // 
-            this.buttonOpenOutputFolder.Location = new System.Drawing.Point(574, 75);
-            this.buttonOpenOutputFolder.Name = "buttonOpenOutputFolder";
-            this.buttonOpenOutputFolder.Size = new System.Drawing.Size(81, 23);
-            this.buttonOpenOutputFolder.TabIndex = 5;
-            this.buttonOpenOutputFolder.Text = "Open...";
-            this.buttonOpenOutputFolder.UseVisualStyleBackColor = true;
-            this.buttonOpenOutputFolder.Click += new System.EventHandler(this.buttonOpenOutputFolder_Click);
-            // 
             // Split
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -371,6 +371,7 @@
             this.Name = "Split";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Split";
             this.Shown += new System.EventHandler(this.Split_Shown);
             this.ResizeEnd += new System.EventHandler(this.Split_ResizeEnd);

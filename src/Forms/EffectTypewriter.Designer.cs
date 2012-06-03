@@ -159,6 +159,7 @@
             this.MinimizeBox = false;
             this.Name = "EffectTypewriter";
             this.ShowInTaskbar = false;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Typewriter effect";
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.FormEffectTypewriter_KeyDown);
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDelay)).EndInit();

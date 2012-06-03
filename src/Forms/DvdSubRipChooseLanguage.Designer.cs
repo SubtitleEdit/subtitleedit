@@ -137,6 +137,7 @@
             this.Name = "DvdSubRipChooseLanguage";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Choose language";
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.DvdSubRipShowSubtitles_KeyDown);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxImage)).EndInit();

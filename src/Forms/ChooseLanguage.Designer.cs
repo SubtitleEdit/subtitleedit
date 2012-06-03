@@ -91,6 +91,7 @@
             this.MinimizeBox = false;
             this.Name = "ChooseLanguage";
             this.ShowInTaskbar = false;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Choose language";
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ChangeLanguage_KeyDown);
             this.ResumeLayout(false);

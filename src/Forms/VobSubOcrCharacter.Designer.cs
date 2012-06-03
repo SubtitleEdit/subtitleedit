@@ -623,6 +623,7 @@
             this.Name = "VobSubOcrCharacter";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "VobSub - Manual image to text";
             this.Shown += new System.EventHandler(this.VobSubOcrCharacter_Shown);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.VobSubOcrCharacter_KeyDown);

@@ -428,6 +428,12 @@
     <Compile Include="Forms\StartNumberingFrom.Designer.cs">
       <DependentUpon>StartNumberingFrom.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\SubStationAlphaProperties.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\SubStationAlphaProperties.Designer.cs">
+      <DependentUpon>SubStationAlphaProperties.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\SubStationAlphaStyles.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -953,6 +959,9 @@
     <EmbeddedResource Include="Forms\StartNumberingFrom.resx">
       <DependentUpon>StartNumberingFrom.cs</DependentUpon>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\SubStationAlphaProperties.resx">
+      <DependentUpon>SubStationAlphaProperties.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\SubStationAlphaStyles.resx">
       <DependentUpon>SubStationAlphaStyles.cs</DependentUpon>

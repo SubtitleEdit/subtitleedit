@@ -384,6 +384,7 @@
             this.Name = "ImportText";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Import text";
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ImportTextKeyDown);
             this.groupBoxImportText.ResumeLayout(false);

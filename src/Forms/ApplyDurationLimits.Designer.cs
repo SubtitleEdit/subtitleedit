@@ -225,6 +225,7 @@
             this.subtitleListView1.HideSelection = false;
             this.subtitleListView1.Location = new System.Drawing.Point(6, 19);
             this.subtitleListView1.Name = "subtitleListView1";
+            this.subtitleListView1.OwnerDraw = true;
             this.subtitleListView1.Size = new System.Drawing.Size(905, 127);
             this.subtitleListView1.TabIndex = 111;
             this.subtitleListView1.UseCompatibleStateImageBehavior = false;
@@ -250,6 +251,7 @@
             this.Name = "ApplyDurationLimits";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Apply duration limits";
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ApplyDurationLimits_KeyDown);
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDurationMax)).EndInit();

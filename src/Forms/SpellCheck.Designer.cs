@@ -268,7 +268,7 @@
             this.checkBoxAutoChangeNames.AutoSize = true;
             this.checkBoxAutoChangeNames.Location = new System.Drawing.Point(8, 157);
             this.checkBoxAutoChangeNames.Name = "checkBoxAutoChangeNames";
-            this.checkBoxAutoChangeNames.Size = new System.Drawing.Size(216, 17);
+            this.checkBoxAutoChangeNames.Size = new System.Drawing.Size(209, 17);
             this.checkBoxAutoChangeNames.TabIndex = 12;
             this.checkBoxAutoChangeNames.Text = "Auto fix names where only casing differ";
             this.checkBoxAutoChangeNames.UseVisualStyleBackColor = true;
@@ -357,6 +357,7 @@
             this.MinimizeBox = false;
             this.Name = "SpellCheck";
             this.ShowInTaskbar = false;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Spell check";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.SpellCheck_FormClosing);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.FormSpellCheck_KeyDown);

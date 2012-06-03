@@ -101,6 +101,7 @@
             this.MinimumSize = new System.Drawing.Size(700, 500);
             this.Name = "VideoError";
             this.ShowInTaskbar = false;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Error playing video file - ";
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.VideoError_KeyDown);
             this.groupBox1.ResumeLayout(false);
