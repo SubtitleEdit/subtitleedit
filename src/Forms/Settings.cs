@@ -234,6 +234,27 @@ namespace Nikse.SubtitleEdit.Forms
             comboBoxAutoBackup.Left = labelAutoBackup.Left + labelAutoBackup.Width + 3;
             checkBoxAllowEditOfOriginalSubtitle.Text = language.AllowEditOfOriginalSubtitle;
             checkBoxPromptDeleteLines.Text = language.PromptDeleteLines;
+
+            if (Configuration.Settings.General.ShowBetaStuff && !string.IsNullOrEmpty(language.TimeCodeMode) &&
+                !string.IsNullOrEmpty(language.TimeCodeModeHHMMSSMsec) && !string.IsNullOrEmpty(language.TimeCodeModeHHMMSSFF))
+            {
+                comboBoxTimeCodeMode.Items.Clear();
+                comboBoxTimeCodeMode.Items.Add(language.TimeCodeModeHHMMSSMsec);
+                comboBoxTimeCodeMode.Items.Add(language.TimeCodeModeHHMMSSFF);
+                if (Configuration.Settings.General.UseTimeFormatHHMMSSFF)
+                    comboBoxTimeCodeMode.SelectedIndex = 1;
+                else
+                    comboBoxTimeCodeMode.SelectedIndex = 0;
+                comboBoxTimeCodeMode.Visible = true;
+                labelTimeCodeMode.Visible = true;
+                comboBoxTimeCodeMode.Left = labelTimeCodeMode.Left + labelTimeCodeMode.Width + 5;
+            }
+            else
+            {
+                comboBoxTimeCodeMode.Visible = false;
+                labelTimeCodeMode.Visible = false;
+            }
+
             comboBoxAutoBackup.Items[0] = Configuration.Settings.Language.General.None;
             comboBoxAutoBackup.Items[1] = language.AutoBackupEveryMinute;
             comboBoxAutoBackup.Items[2] = language.AutoBackupEveryFiveMinutes;
@@ -289,6 +310,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             groupBoxWordLists.Text = language.WordLists;
             labelWordListLanguage.Text = language.Language;
+            comboBoxWordListLanguage.Left = labelWordListLanguage.Left + labelWordListLanguage.Width + 5;
             groupBoxNamesIgonoreLists.Text = language.NamesIgnoreLists;
             groupBoxUserWordList.Text = language.UserWordList;
             groupBoxOcrFixList.Text = language.OcrFixList;
@@ -824,6 +846,10 @@ namespace Nikse.SubtitleEdit.Forms
                 gs.AutoBackupSeconds = 60 * 15;
             else
                 gs.AutoBackupSeconds = 0;
+
+
+            if (comboBoxTimeCodeMode.Visible)
+                Configuration.Settings.General.UseTimeFormatHHMMSSFF = comboBoxTimeCodeMode.SelectedIndex == 1;
 
             if (comboBoxSpellChecker.SelectedIndex == 1)
                 gs.SpellChecker = "word";

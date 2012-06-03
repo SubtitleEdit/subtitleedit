@@ -43,6 +43,7 @@
             this.buttonCancel = new System.Windows.Forms.Button();
             this.buttonOK = new System.Windows.Forms.Button();
             this.groupBoxStyles = new System.Windows.Forms.GroupBox();
+            this.buttonImport = new System.Windows.Forms.Button();
             this.buttonCopy = new System.Windows.Forms.Button();
             this.buttonRemoveAll = new System.Windows.Forms.Button();
             this.buttonAdd = new System.Windows.Forms.Button();
@@ -93,6 +94,7 @@
             this.groupBoxPreview = new System.Windows.Forms.GroupBox();
             this.pictureBoxPreview = new System.Windows.Forms.PictureBox();
             this.colorDialogSSAStyle = new System.Windows.Forms.ColorDialog();
+            this.openFileDialogImport = new System.Windows.Forms.OpenFileDialog();
             this.contextMenuStripStyles.SuspendLayout();
             this.groupBoxStyles.SuspendLayout();
             this.groupBoxProperties.SuspendLayout();
@@ -143,7 +145,7 @@
             // columnHeaderFontName
             // 
             this.columnHeaderFontName.Text = "Font name";
-            this.columnHeaderFontName.Width = 130;
+            this.columnHeaderFontName.Width = 128;
             // 
             // columnHeaderFontSize
             // 
@@ -228,6 +230,7 @@
             // 
             this.groupBoxStyles.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxStyles.Controls.Add(this.buttonImport);
             this.groupBoxStyles.Controls.Add(this.buttonCopy);
             this.groupBoxStyles.Controls.Add(this.buttonRemoveAll);
             this.groupBoxStyles.Controls.Add(this.buttonAdd);
@@ -240,13 +243,26 @@
             this.groupBoxStyles.TabStop = false;
             this.groupBoxStyles.Text = "Styles";
             // 
+            // buttonImport
+            // 
+            this.buttonImport.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonImport.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.buttonImport.Location = new System.Drawing.Point(6, 311);
+            this.buttonImport.Name = "buttonImport";
+            this.buttonImport.Size = new System.Drawing.Size(82, 21);
+            this.buttonImport.TabIndex = 5;
+            this.buttonImport.Text = "Import...";
+            this.buttonImport.UseVisualStyleBackColor = true;
+            this.buttonImport.Visible = false;
+            this.buttonImport.Click += new System.EventHandler(this.buttonImport_Click);
+            // 
             // buttonCopy
             // 
             this.buttonCopy.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCopy.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonCopy.Location = new System.Drawing.Point(133, 311);
+            this.buttonCopy.Location = new System.Drawing.Point(94, 311);
             this.buttonCopy.Name = "buttonCopy";
-            this.buttonCopy.Size = new System.Drawing.Size(75, 21);
+            this.buttonCopy.Size = new System.Drawing.Size(82, 21);
             this.buttonCopy.TabIndex = 1;
             this.buttonCopy.Text = "Copy";
             this.buttonCopy.UseVisualStyleBackColor = true;
@@ -256,9 +272,9 @@
             // 
             this.buttonRemoveAll.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonRemoveAll.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonRemoveAll.Location = new System.Drawing.Point(376, 311);
+            this.buttonRemoveAll.Location = new System.Drawing.Point(358, 311);
             this.buttonRemoveAll.Name = "buttonRemoveAll";
-            this.buttonRemoveAll.Size = new System.Drawing.Size(75, 21);
+            this.buttonRemoveAll.Size = new System.Drawing.Size(92, 21);
             this.buttonRemoveAll.TabIndex = 4;
             this.buttonRemoveAll.Text = "Remove all";
             this.buttonRemoveAll.UseVisualStyleBackColor = true;
@@ -268,9 +284,9 @@
             // 
             this.buttonAdd.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonAdd.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonAdd.Location = new System.Drawing.Point(214, 311);
+            this.buttonAdd.Location = new System.Drawing.Point(182, 311);
             this.buttonAdd.Name = "buttonAdd";
-            this.buttonAdd.Size = new System.Drawing.Size(75, 21);
+            this.buttonAdd.Size = new System.Drawing.Size(82, 21);
             this.buttonAdd.TabIndex = 2;
             this.buttonAdd.Text = "New";
             this.buttonAdd.UseVisualStyleBackColor = true;
@@ -280,9 +296,9 @@
             // 
             this.buttonRemove.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonRemove.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonRemove.Location = new System.Drawing.Point(295, 311);
+            this.buttonRemove.Location = new System.Drawing.Point(270, 311);
             this.buttonRemove.Name = "buttonRemove";
-            this.buttonRemove.Size = new System.Drawing.Size(75, 21);
+            this.buttonRemove.Size = new System.Drawing.Size(82, 21);
             this.buttonRemove.TabIndex = 3;
             this.buttonRemove.Text = "Remove";
             this.buttonRemove.UseVisualStyleBackColor = true;
@@ -797,7 +813,7 @@
             this.Controls.Add(this.groupBoxPreview);
             this.KeyPreview = true;
             this.MinimizeBox = false;
-            this.MinimumSize = new System.Drawing.Size(800, 580);
+            this.MinimumSize = new System.Drawing.Size(898, 580);
             this.Name = "SubStationAlphaStyles";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
@@ -896,5 +912,7 @@
         private System.Windows.Forms.ToolStripMenuItem newToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem removeToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem removeAllToolStripMenuItem;
+        private System.Windows.Forms.Button buttonImport;
+        private System.Windows.Forms.OpenFileDialog openFileDialogImport;
     }
 }

@@ -927,8 +927,10 @@ namespace Nikse.SubtitleEdit.Logic
 
                     ContextMenu = new LanguageStructure.Main.MainMenu.ListViewContextMenu
                     {
-                        SubStationAlphaSetStyle = "(Advanced) Sub Station Alpha - Set Style",
-                        SubStationAlphaStyles = "(Advanced) Sub Station Alpha Styles...",
+                        AdvancedSubStationAlphaSetStyle = "Advanced Sub Station Alpha - Set Style",
+                        SubStationAlphaSetStyle = "Sub Station Alpha - Set Style",
+                        AdvancedSubStationAlphaStyles = "Advanced Sub Station Alpha Styles...",
+                        SubStationAlphaStyles = "Sub Station Alpha Styles...",
                         Cut = "Cut",
                         Copy = "Copy",
                         Paste = "Paste",
@@ -1207,6 +1209,9 @@ can edit in same subtitle file (collaboration)",
                 AutoBackupEveryFifteenMinutes = "Every 15th minute",
                 AllowEditOfOriginalSubtitle = "Allow edit of original subtitle",
                 PromptDeleteLines = "Prompt for delete lines",
+                TimeCodeMode = "Time code mode",
+                TimeCodeModeHHMMSSMsec = "HH:MM:SS.Msec (00:00:01.500)",
+                TimeCodeModeHHMMSSFF = "HH:MM:SS:FF (00:00:01:12)",
                 VideoEngine = "Video engine",
                 DirectShow = "DirectShow",
                 DirectShowDescription = "quartz.dll in system32 folder",
@@ -1425,6 +1430,12 @@ can edit in same subtitle file (collaboration)",
                 Border = "Border",
                 PlusShadow = "+ Shadow",
                 OpaqueBox = "Opaque box (uses outline color)",
+                Import = "Import...",
+                New = "New",
+                Copy = "Copy",
+                CopyXofY = "Copy {0} of {1}",
+                Remove = "Remove",
+                RemoveAll = "Remove all",
             };
 
             PointSync = new LanguageStructure.PointSync
