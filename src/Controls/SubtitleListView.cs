@@ -414,38 +414,23 @@ namespace Nikse.SubtitleEdit.Controls
                 if (_settings.Tools.ListViewSyntaxColorDurationSmall)
                 {
                     double charactersPerSecond = Utilities.GetCharactersPerSecond(paragraph);
-                    if (charactersPerSecond > Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds + 7)
+                    if (charactersPerSecond > Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds)
                     {
-                        item.SubItems[ColumnIndexDuration].BackColor = Color.Red;
-                        durationChanged = true;
-                    }
-                    else if (charactersPerSecond > Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds)
-                    {
-                        item.SubItems[ColumnIndexDuration].BackColor = Color.Orange;
-                        durationChanged = true;
-                    }
-                    else if (paragraph.Duration.TotalMilliseconds < Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds - 100)
-                    {
-                        item.SubItems[ColumnIndexDuration].BackColor = Color.Red;
+                        item.SubItems[ColumnIndexDuration].BackColor = Configuration.Settings.Tools.ListViewSyntaxErrorColor;
                         durationChanged = true;
                     }
                     else if (paragraph.Duration.TotalMilliseconds < Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds)
                     {
-                        item.SubItems[ColumnIndexDuration].BackColor = Color.Orange;
+                        item.SubItems[ColumnIndexDuration].BackColor = Configuration.Settings.Tools.ListViewSyntaxErrorColor;
                         durationChanged = true;
                     }
                 }
                 if (_settings.Tools.ListViewSyntaxColorDurationBig)
                 {
                 //    double charactersPerSecond = Utilities.GetCharactersPerSecond(paragraph);
-                    if (paragraph.Duration.TotalMilliseconds > Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds + 100)
+                    if (paragraph.Duration.TotalMilliseconds > Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds)
                     {
-                        item.SubItems[ColumnIndexDuration].BackColor = Color.Red;
-                        durationChanged = true;
-                    }
-                    else if (paragraph.Duration.TotalMilliseconds > Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds)
-                    {
-                        item.SubItems[ColumnIndexDuration].BackColor = Color.Orange;
+                        item.SubItems[ColumnIndexDuration].BackColor = Configuration.Settings.Tools.ListViewSyntaxErrorColor;
                         durationChanged = true;
                     }
                 }
@@ -457,8 +442,8 @@ namespace Nikse.SubtitleEdit.Controls
                     Paragraph prev = paragraphs[i - 1];
                     if (paragraph.StartTime.TotalMilliseconds < prev.EndTime.TotalMilliseconds)
                     {
-                        Items[i - 1].SubItems[ColumnIndexEnd].BackColor = Color.Orange;
-                        item.SubItems[ColumnIndexStart].BackColor = Color.Orange;
+                        Items[i - 1].SubItems[ColumnIndexEnd].BackColor = Configuration.Settings.Tools.ListViewSyntaxErrorColor;
+                        item.SubItems[ColumnIndexStart].BackColor = Configuration.Settings.Tools.ListViewSyntaxErrorColor;
                     }
                     else
                     {
@@ -473,33 +458,25 @@ namespace Nikse.SubtitleEdit.Controls
                 {
                     int noOfLines = paragraph.Text.Split(Environment.NewLine[0]).Length;
                     string s = Utilities.RemoveHtmlTags(paragraph.Text).Replace(Environment.NewLine, string.Empty); // we don't count new line in total length... correct?
-                    if (s.Length < Configuration.Settings.General.SubtitleLineMaximumLength * 1.9)
+                    if (s.Length <= Configuration.Settings.General.SubtitleLineMaximumLength * 2)
                     {
-                        if (noOfLines == 3)
-                            item.SubItems[ColumnIndexText].BackColor = Color.Orange;
-                        else if (noOfLines > 3)
-                            item.SubItems[ColumnIndexText].BackColor = Color.Red;
+                        if (noOfLines >= 3)
+                            item.SubItems[ColumnIndexText].BackColor = Configuration.Settings.Tools.ListViewSyntaxErrorColor;
                         else if (item.SubItems[ColumnIndexText].BackColor != BackColor)
                             item.SubItems[ColumnIndexText].BackColor = BackColor;
                     }
-                    else if (s.Length < Configuration.Settings.General.SubtitleLineMaximumLength * 2.1)
-                    {
-                        item.SubItems[ColumnIndexText].BackColor = Color.Orange;
-                    }
                     else
                     {
-                        item.SubItems[ColumnIndexText].BackColor = Color.Red;
+                        item.SubItems[ColumnIndexText].BackColor = Configuration.Settings.Tools.ListViewSyntaxErrorColor;
                     }
                 }
                 if (_settings.Tools.ListViewSyntaxMoreThanTwoLines &&
                     item.SubItems[ColumnIndexText].BackColor != Color.Orange &&
-                    item.SubItems[ColumnIndexText].BackColor != Color.Red)
+                    item.SubItems[ColumnIndexText].BackColor != Configuration.Settings.Tools.ListViewSyntaxErrorColor)
                 {
                     int newLines = paragraph.Text.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries).Length;
-                    if (newLines == 3)
-                        item.SubItems[ColumnIndexText].BackColor = Color.Orange;
-                    else if (newLines > 3)
-                        item.SubItems[ColumnIndexText].BackColor = Color.Red;
+                    if (newLines >= 3)
+                        item.SubItems[ColumnIndexText].BackColor = Configuration.Settings.Tools.ListViewSyntaxErrorColor;
                 }
             }
         }

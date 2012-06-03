@@ -162,6 +162,7 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxSyntaxColorTextTooLong.Checked = Configuration.Settings.Tools.ListViewSyntaxColorLongLines;
             checkBoxSyntaxColorTextMoreThanTwoLines.Checked = Configuration.Settings.Tools.ListViewSyntaxMoreThanTwoLines;
             checkBoxSyntaxOverlap.Checked = Configuration.Settings.Tools.ListViewSyntaxColorOverlap;
+            panelListViewSyntaxColorError.BackColor = Configuration.Settings.Tools.ListViewSyntaxErrorColor;
 
             // Language
             var language = Configuration.Settings.Language.Settings;
@@ -175,6 +176,7 @@ namespace Nikse.SubtitleEdit.Forms
             tabPageProxy.Text = language.Proxy;
             tabPageToolBar.Text = language.Toolbar;
             tabPageShortcuts.Text = language.Shortcuts;
+            tabPageSyntaxColoring.Text = language.SyntaxColoring;
             groupBoxShowToolBarButtons.Text = language.ShowToolBarButtons;
             labelTBNew.Text = language.New;
             labelTBOpen.Text = language.Open;
@@ -622,6 +624,13 @@ namespace Nikse.SubtitleEdit.Forms
             comboBoxShortcutKey.Left = labelShortcutKey.Left + labelShortcutKey.Width;
             comboBoxShortcutKey.Items[0] = Configuration.Settings.Language.General.None;
 
+            groupBoxListViewSyntaxColoring.Text = language.ListViewSyntaxColoring;
+            checkBoxSyntaxColorDurationTooSmall.Text = language.SyntaxColorDurationIfTooSmall;
+            checkBoxSyntaxColorDurationTooLarge.Text = language.SyntaxColorDurationIfTooLarge;
+            checkBoxSyntaxColorTextTooLong.Text = language.SyntaxColorTextIfTooLong;
+            checkBoxSyntaxColorTextMoreThanTwoLines.Text = language.SyntaxColorTextMoreThanTwoLines;
+            checkBoxSyntaxOverlap.Text = language.SyntaxColorOverlap;
+
             if (!Configuration.Settings.General.ShowBetaStuff)
                 tabControlSettings.TabPages.Remove(tabPageSyntaxColoring);
 
@@ -945,6 +954,7 @@ namespace Nikse.SubtitleEdit.Forms
             Configuration.Settings.Tools.ListViewSyntaxColorLongLines = checkBoxSyntaxColorTextTooLong.Checked ;
             Configuration.Settings.Tools.ListViewSyntaxMoreThanTwoLines = checkBoxSyntaxColorTextMoreThanTwoLines.Checked;
             Configuration.Settings.Tools.ListViewSyntaxColorOverlap = checkBoxSyntaxOverlap.Checked;
+            Configuration.Settings.Tools.ListViewSyntaxErrorColor = panelListViewSyntaxColorError.BackColor;
 
             Configuration.Settings.VideoControls.WaveFormDrawGrid = checkBoxWaveFormShowGrid.Checked;
             Configuration.Settings.VideoControls.WaveFormGridColor = panelWaveFormGridColor.BackColor;
@@ -2080,6 +2090,13 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 treeViewShortcuts.SelectedNode.Text = text + " " + sb;
             }
+        }
+
+        private void buttonListViewSyntaxColorError_Click(object sender, EventArgs e)
+        {
+            colorDialogSSAStyle.Color = panelListViewSyntaxColorError.BackColor;
+            if (colorDialogSSAStyle.ShowDialog() == DialogResult.OK)
+                panelListViewSyntaxColorError.BackColor = colorDialogSSAStyle.Color;
         }
 
     }

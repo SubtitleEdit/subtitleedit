@@ -831,6 +831,7 @@ namespace Nikse.SubtitleEdit.Forms
                 textBoxStyleName.Focus();
                 AddStyleToHeader(style, oldStyle);
                 _doUpdate = true;
+                listViewStyles_SelectedIndexChanged(null, null);
             }
         }
 
@@ -881,6 +882,7 @@ namespace Nikse.SubtitleEdit.Forms
             SsaStyle oldStyle = GetSsaStyle(listViewStyles.Items[0].Text);
             AddStyleToHeader(style, oldStyle);
             _doUpdate = true;
+            listViewStyles_SelectedIndexChanged(null, null);
         }
 
         private void textBoxStyleName_TextChanged(object sender, EventArgs e)

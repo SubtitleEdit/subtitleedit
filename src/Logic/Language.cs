@@ -930,10 +930,10 @@ namespace Nikse.SubtitleEdit.Logic
 
                     ContextMenu = new LanguageStructure.Main.MainMenu.ListViewContextMenu
                     {
-                        AdvancedSubStationAlphaSetStyle = "Advanced Sub Station Alpha - Set Style",
-                        SubStationAlphaSetStyle = "Sub Station Alpha - Set Style",
-                        AdvancedSubStationAlphaStyles = "Advanced Sub Station Alpha Styles...",
-                        SubStationAlphaStyles = "Sub Station Alpha Styles...",
+                        AdvancedSubStationAlphaSetStyle = "Advanced Sub Station Alpha - set style",
+                        SubStationAlphaSetStyle = "Sub Station Alpha - set style",
+                        AdvancedSubStationAlphaStyles = "Advanced Sub Station Alpha styles...",
+                        SubStationAlphaStyles = "Sub Station Alpha styles...",
                         Cut = "Cut",
                         Copy = "Copy",
                         Paste = "Paste",
@@ -1316,6 +1316,14 @@ can edit in same subtitle file (collaboration)",
                 Pause = "Pause",
                 TogglePlayPause = "Toggle play/pause",
                 Fullscreen = "Fullscreen",
+                SyntaxColoring = "Syntax coloring",
+                ListViewSyntaxColoring = "List view syntax coloring",
+                SyntaxColorDurationIfTooSmall = "Color duration if too short",
+                SyntaxColorDurationIfTooLarge = "Color duration if too long",
+                SyntaxColorTextIfTooLong = "Color text if too long",
+                SyntaxColorTextMoreThanTwoLines = "Color text if more than two lines",
+                SyntaxColorOverlap = "Color time code overlap",
+                SyntaxColorErrorColor = "Error background color",
             };
 
             ShowEarlierLater = new LanguageStructure.ShowEarlierLater
@@ -1407,7 +1415,6 @@ can edit in same subtitle file (collaboration)",
                 ScriptTitle = "Title",
 
             };
-
 
             SubStationAlphaStyles = new LanguageStructure.SubStationAlphaStyles
             {

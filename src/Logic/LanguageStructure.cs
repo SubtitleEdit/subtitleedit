@@ -1265,6 +1265,14 @@
             public string TogglePlayPause { get; set; }
             public string Pause { get; set; }
             public string Fullscreen { get; set; }
+            public string SyntaxColoring { get; set; }
+            public string ListViewSyntaxColoring { get; set; }
+            public string SyntaxColorDurationIfTooSmall { get; set; }
+            public string SyntaxColorDurationIfTooLarge { get; set; }
+            public string SyntaxColorTextIfTooLong { get; set; }
+            public string SyntaxColorTextMoreThanTwoLines { get; set; }
+            public string SyntaxColorOverlap { get; set; }
+            public string SyntaxColorErrorColor { get; set; }
         }
 
         public class ShowEarlierLater
