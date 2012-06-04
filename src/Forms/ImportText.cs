@@ -30,10 +30,7 @@ namespace Nikse.SubtitleEdit.Forms
             groupBoxSplitting.Text = Configuration.Settings.Language.ImportText.Splitting;
             radioButtonAutoSplit.Text = Configuration.Settings.Language.ImportText.AutoSplitText;
             radioButtonLineMode.Text = Configuration.Settings.Language.ImportText.OneLineIsOneSubtitle;
-            if (!string.IsNullOrEmpty(Configuration.Settings.Language.ImportText.SplitAtBlankLines)) //TODO: Fix in SE 3.3
-                radioButtonSplitAtBlankLines.Text = Configuration.Settings.Language.ImportText.SplitAtBlankLines;
-            else
-                radioButtonSplitAtBlankLines.Visible = false;
+            radioButtonSplitAtBlankLines.Text = Configuration.Settings.Language.ImportText.SplitAtBlankLines;
             checkBoxMergeShortLines.Text = Configuration.Settings.Language.ImportText.MergeShortLines;
             checkBoxRemoveEmptyLines.Text = Configuration.Settings.Language.ImportText.RemoveEmptyLines;
             checkBoxRemoveLinesWithoutLetters.Text = Configuration.Settings.Language.ImportText.RemoveLinesWithoutLetters;

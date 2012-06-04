@@ -53,13 +53,11 @@ namespace Nikse.SubtitleEdit.Forms
                 Outline = Color.Black;
                 Background = Color.Black;
                 Alignment = "2";
-                OutlineWidth = 1;
-                ShadowWidth = 1;
-                MarginLeft = 1;
-                MarginRight = 1;
-                MarginVertical = 1;
-                OutlineWidth = 1;
-                ShadowWidth = 1;
+                OutlineWidth = 2;
+                ShadowWidth = 2;
+                MarginLeft = 10;
+                MarginRight = 10;
+                MarginVertical = 10;
                 BorderStyle = "1";
                 RawLine = string.Empty;
                 LoadedFromHeader = false;
@@ -593,14 +591,18 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ResetHeader()
         {
-            var ass = new AdvancedSubStationAlpha();
-            Subtitle sub = new Subtitle();
-            string text = ass.ToText(sub, string.Empty);
+            SubtitleFormat format;
+            if (_isSubStationAlpha)
+                format = new SubStationAlpha();
+            else
+                format = new AdvancedSubStationAlpha();
+            var sub = new Subtitle();
+            string text = format.ToText(sub, string.Empty);
             string[] lineArray = text.Split(Environment.NewLine.ToCharArray());
             var lines = new List<string>();
             foreach (string line in lineArray)
                 lines.Add(line);
-            ass.LoadSubtitle(sub, lines, string.Empty);
+            format.LoadSubtitle(sub, lines, string.Empty);
             Header = sub.Header;
         }
 

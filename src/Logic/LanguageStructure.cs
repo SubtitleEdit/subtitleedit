@@ -65,6 +65,7 @@
             public string VideoWindowTitle { get; set; }
             public string AudioWindowTitle { get; set; }
             public string ControlsWindowTitle { get; set; }
+            public string Advanced { get; set; }
         }
 
         public class About
@@ -176,6 +177,7 @@
             public string XNumberOfDifference { get; set; }
             public string ShowOnlyDifferences { get; set; }
             public string OnlyLookForDifferencesInText { get; set; }
+            public string CannotCompareWithImageBasedSubtitles { get; set; }
         }
 
         public class DvdSubRip
@@ -601,6 +603,7 @@
             public string TranslationFromSwedishToDanishFailed { get; set; }
             public string BeforeUndo { get; set; }
             public string UndoPerformed { get; set; }
+            public string RedoPerformed { get; set; }
             public string NothingToUndo { get; set; }
             public string InvalidLanguageNameX { get; set; }
             public string UnableToChangeLanguage { get; set; }
@@ -889,6 +892,7 @@
                     public string Underline { get; set; }
                     public string Color { get; set; }
                     public string FontName { get; set; }
+                    public string Alignment { get; set; }
                     public string AutoBalanceSelectedLines { get; set; }
                     public string RemoveLineBreaksFromSelectedLines { get; set; }
                     public string TypewriterEffect { get; set; }
@@ -1155,6 +1159,9 @@
             public string MainListViewVideoGoToPositionAndPause { get; set; }
             public string MainListViewVideoGoToPositionAndPlay { get; set; }
             public string MainListViewEditText { get; set; }
+            public string MainListViewVideoGoToPositionMinus1SecAndPause { get; set; }
+            public string MainListViewVideoGoToPositionMinus1SecAndPlay { get; set; }
+            public string MainListViewEditTextAndPause { get; set; }
             public string AutoBackup { get; set; }
             public string AutoBackupEveryMinute { get; set; }
             public string AutoBackupEveryFiveMinutes { get; set; }
