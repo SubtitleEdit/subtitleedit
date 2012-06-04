@@ -86,8 +86,9 @@ namespace Nikse.SubtitleEdit.Forms
             listViewStyles.Columns[0].Text = l.Name;
             listViewStyles.Columns[1].Text = l.FontName;
             listViewStyles.Columns[2].Text = l.FontSize;
-            listViewStyles.Columns[3].Text = l.Primary;
-            listViewStyles.Columns[4].Text = l.Outline;
+            listViewStyles.Columns[3].Text = l.UseCount;
+            listViewStyles.Columns[4].Text = l.Primary;
+            listViewStyles.Columns[5].Text = l.Outline;
             groupBoxProperties.Text = l.Properties;
             labelStyleName.Text = l.Name;
             groupBoxFont.Text = l.FontSize;
@@ -131,7 +132,7 @@ namespace Nikse.SubtitleEdit.Forms
                 Text = l.TitleSubstationAlpha;
                 buttonOutlineColor.Text = l.Tertiary;
                 buttonBackColor.Text = l.Back;
-                listViewStyles.Columns[4].Text = l.Back;
+                listViewStyles.Columns[5].Text = l.Back;
                 checkBoxFontUnderline.Visible = false;
             }
 
@@ -153,6 +154,8 @@ namespace Nikse.SubtitleEdit.Forms
             numericUpDownOutline.Left = radioButtonOutline.Left + radioButtonOutline.Width + 5;
             labelShadow.Left = numericUpDownOutline.Left + numericUpDownOutline.Width + 5;
             numericUpDownShadowWidth.Left = labelShadow.Left + labelShadow.Width + 5;
+
+            listViewStyles.Columns[5].Width = -2;
         }
 
         void RefreshTimerTick(object sender, EventArgs e)
@@ -323,6 +326,17 @@ namespace Nikse.SubtitleEdit.Forms
             item.SubItems.Add(subItem);
 
             subItem = new ListViewItem.ListViewSubItem(item, ssaStyle.FontSize.ToString());
+            item.SubItems.Add(subItem);
+
+            int count = 0;
+            foreach (Paragraph p in _subtitle.Paragraphs)
+            {
+                if (string.IsNullOrEmpty(p.Extra) && ssaStyle.Name.TrimStart('*') == "Default")
+                    count++;
+                else if (ssaStyle.Name.TrimStart('*').ToLower() == p.Extra.TrimStart('*').ToLower())
+                    count++;
+            }
+            subItem = new ListViewItem.ListViewSubItem(item, count.ToString());
             item.SubItems.Add(subItem);
 
             subItem = new ListViewItem.ListViewSubItem(item, string.Empty);
@@ -1153,7 +1167,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void SubStationAlphaStyles_ResizeEnd(object sender, EventArgs e)
         {
-            listViewStyles.Columns[4].Width = -2;
+            listViewStyles.Columns[5].Width = -2;
             GeneratePreview();
         }
 

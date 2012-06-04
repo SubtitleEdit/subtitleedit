@@ -1394,6 +1394,7 @@
             public string Font { get; set; }
             public string FontName { get; set; }
             public string FontSize { get; set; }
+            public string UseCount { get; set; }
             public string Primary { get; set; }
             public string Secondary { get; set; }
             public string Tertiary { get; set; }
