@@ -725,6 +725,7 @@
                     public string Reopen { get; set; }
                     public string Save { get; set; }
                     public string SaveAs { get; set; }
+                    public string RestoreAutoBackup { get; set; }
                     public string AdvancedSubStationAlphaProperties { get; set; }
                     public string SubStationAlphaProperties { get; set; }
                     public string OpenOriginal { get; set; }
@@ -1091,6 +1092,16 @@
             public string Find { get; set; }
             public string Replace { get; set; }
             public string ReplaceAll { get; set; }
+        }
+
+        public class RestoreAutoBackup
+        {
+            public string Title { get; set; }
+            public string Information { get; set; }
+            public string DateAndTime { get; set; }
+            public string FileName { get; set; }
+            public string Extension { get; set; }
+            public string NoBackedUpFilesFound { get; set; }
         }
 
         public class SetMinimumDisplayTimeBetweenParagraphs

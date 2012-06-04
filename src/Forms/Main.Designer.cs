@@ -68,6 +68,7 @@
             this.reopenToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveAsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemRestoreAutoBackup = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemSubStationAlpha = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator20 = new System.Windows.Forms.ToolStripSeparator();
             this.openOriginalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -773,6 +774,7 @@
             this.reopenToolStripMenuItem,
             this.saveToolStripMenuItem,
             this.saveAsToolStripMenuItem,
+            this.toolStripMenuItemRestoreAutoBackup,
             this.toolStripMenuItemSubStationAlpha,
             this.toolStripSeparator20,
             this.openOriginalToolStripMenuItem,
@@ -835,6 +837,13 @@
             this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(334, 22);
             this.saveAsToolStripMenuItem.Text = "Save as...";
             this.saveAsToolStripMenuItem.Click += new System.EventHandler(this.SaveAsToolStripMenuItemClick);
+            // 
+            // toolStripMenuItemRestoreAutoBackup
+            // 
+            this.toolStripMenuItemRestoreAutoBackup.Name = "toolStripMenuItemRestoreAutoBackup";
+            this.toolStripMenuItemRestoreAutoBackup.Size = new System.Drawing.Size(334, 22);
+            this.toolStripMenuItemRestoreAutoBackup.Text = "Restore auto-backup...";
+            this.toolStripMenuItemRestoreAutoBackup.Click += new System.EventHandler(this.toolStripMenuItemRestoreAutoBackup_Click);
             // 
             // toolStripMenuItemSubStationAlpha
             // 
@@ -4184,6 +4193,7 @@
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemAssStyles;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemSubStationAlpha;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemAlignment;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemRestoreAutoBackup;
     }
 }
 

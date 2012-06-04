@@ -314,6 +314,12 @@
     <Compile Include="Forms\PacEncoding.Designer.cs">
       <DependentUpon>PacEncoding.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\RestoreAutoBackup.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\RestoreAutoBackup.Designer.cs">
+      <DependentUpon>RestoreAutoBackup.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\SetSyncPoint.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -910,6 +916,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\PacEncoding.resx">
       <DependentUpon>PacEncoding.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\RestoreAutoBackup.resx">
+      <DependentUpon>RestoreAutoBackup.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\SetSyncPoint.resx">
       <DependentUpon>SetSyncPoint.cs</DependentUpon>
