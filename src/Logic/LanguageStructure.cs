@@ -513,6 +513,12 @@
             public string Title { get; set; }
         }
 
+        public class JoinSubtitles
+        {
+            public string Title { get; set; }
+            public string Information { get; set; }
+        }        
+
         public class Main
         {
             public MainMenu Menu { get; set; }
@@ -714,6 +720,7 @@
             public string BeforeToggleDialogueDashes { get; set; }
             public string ExportPlainTextAs { get; set; }
             public string TextFiles { get; set; }
+            public string SubtitleExported { get; set; }
 
             public class MainMenu
             {
@@ -748,7 +755,6 @@
                     public string ExportEbu { get; set; }
                     public string ExportPac { get; set; }
                     public string ExportPlainText { get; set; }
-                    public string ExportPlainTextWithoutLineBreaks { get; set; }
                     public string Exit { get; set; }
                 }
                 public class EditMenu

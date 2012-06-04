@@ -99,7 +99,6 @@
             this.toolStripMenuItemImagePerFrame = new System.Windows.Forms.ToolStripMenuItem();
             this.pACScreenElectronicsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.plainTextToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.plainTextWithoutLineBreaksToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemExportUltech130 = new System.Windows.Forms.ToolStripMenuItem();
             this.vobSubsubidxToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator10 = new System.Windows.Forms.ToolStripSeparator();
@@ -977,7 +976,6 @@
             this.toolStripMenuItemImagePerFrame,
             this.pACScreenElectronicsToolStripMenuItem,
             this.plainTextToolStripMenuItem,
-            this.plainTextWithoutLineBreaksToolStripMenuItem,
             this.toolStripMenuItemExportUltech130,
             this.vobSubsubidxToolStripMenuItem});
             this.toolStripMenuItemExport.Name = "toolStripMenuItemExport";
@@ -1061,13 +1059,6 @@
             this.plainTextToolStripMenuItem.Size = new System.Drawing.Size(258, 22);
             this.plainTextToolStripMenuItem.Text = "Plain text...";
             this.plainTextToolStripMenuItem.Click += new System.EventHandler(this.PlainTextToolStripMenuItemClick);
-            // 
-            // plainTextWithoutLineBreaksToolStripMenuItem
-            // 
-            this.plainTextWithoutLineBreaksToolStripMenuItem.Name = "plainTextWithoutLineBreaksToolStripMenuItem";
-            this.plainTextWithoutLineBreaksToolStripMenuItem.Size = new System.Drawing.Size(258, 22);
-            this.plainTextWithoutLineBreaksToolStripMenuItem.Text = "Plain text without line breaks...";
-            this.plainTextWithoutLineBreaksToolStripMenuItem.Click += new System.EventHandler(this.PlainTextWithoutLineBreaksToolStripMenuItemClick);
             // 
             // toolStripMenuItemExportUltech130
             // 
@@ -4169,7 +4160,6 @@
         private Controls.SETextBox textBoxListViewTextAlternate;
         private System.Windows.Forms.ToolStripMenuItem textCharssecToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem plainTextToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem plainTextWithoutLineBreaksToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem bluraySupToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem vobSubsubidxToolStripMenuItem;
         private System.Windows.Forms.Timer timerTextUndo;

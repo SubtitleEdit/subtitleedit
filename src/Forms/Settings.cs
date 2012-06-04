@@ -232,25 +232,14 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxAllowEditOfOriginalSubtitle.Text = language.AllowEditOfOriginalSubtitle;
             checkBoxPromptDeleteLines.Text = language.PromptDeleteLines;
 
-            if (Configuration.Settings.General.ShowBetaStuff && !string.IsNullOrEmpty(language.TimeCodeMode) &&
-                !string.IsNullOrEmpty(language.TimeCodeModeHHMMSSMsec) && !string.IsNullOrEmpty(language.TimeCodeModeHHMMSSFF))
-            {
-                comboBoxTimeCodeMode.Items.Clear();
-                comboBoxTimeCodeMode.Items.Add(language.TimeCodeModeHHMMSSMsec);
-                comboBoxTimeCodeMode.Items.Add(language.TimeCodeModeHHMMSSFF);
-                if (Configuration.Settings.General.UseTimeFormatHHMMSSFF)
-                    comboBoxTimeCodeMode.SelectedIndex = 1;
-                else
-                    comboBoxTimeCodeMode.SelectedIndex = 0;
-                comboBoxTimeCodeMode.Visible = true;
-                labelTimeCodeMode.Visible = true;
-                comboBoxTimeCodeMode.Left = labelTimeCodeMode.Left + labelTimeCodeMode.Width + 5;
-            }
+            comboBoxTimeCodeMode.Items.Clear();
+            comboBoxTimeCodeMode.Items.Add(language.TimeCodeModeHHMMSSMsec);
+            comboBoxTimeCodeMode.Items.Add(language.TimeCodeModeHHMMSSFF);
+            if (Configuration.Settings.General.UseTimeFormatHHMMSSFF)
+                comboBoxTimeCodeMode.SelectedIndex = 1;
             else
-            {
-                comboBoxTimeCodeMode.Visible = false;
-                labelTimeCodeMode.Visible = false;
-            }
+                comboBoxTimeCodeMode.SelectedIndex = 0;
+            comboBoxTimeCodeMode.Left = labelTimeCodeMode.Left + labelTimeCodeMode.Width + 5;
 
             comboBoxAutoBackup.Items[0] = Configuration.Settings.Language.General.None;
             comboBoxAutoBackup.Items[1] = language.AutoBackupEveryMinute;
@@ -599,9 +588,6 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxSyntaxColorTextTooLong.Text = language.SyntaxColorTextIfTooLong;
             checkBoxSyntaxColorTextMoreThanTwoLines.Text = language.SyntaxColorTextMoreThanTwoLines;
             checkBoxSyntaxOverlap.Text = language.SyntaxColorOverlap;
-
-            if (!Configuration.Settings.General.ShowBetaStuff)
-                tabControlSettings.TabPages.Remove(tabPageSyntaxColoring);
 
             FixLargeFonts();
         }
