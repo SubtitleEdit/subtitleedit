@@ -1159,7 +1159,6 @@ namespace Nikse.SubtitleEdit.Forms
             eBUSTLToolStripMenuItem.Text = _language.Menu.File.ExportEbu;
             pACScreenElectronicsToolStripMenuItem.Text = _language.Menu.File.ExportPac;
             plainTextToolStripMenuItem.Text = _language.Menu.File.ExportPlainText;            
-            plainTextWithoutLineBreaksToolStripMenuItem.Text = _language.Menu.File.ExportPlainTextWithoutLineBreaks;
             exitToolStripMenuItem.Text = _language.Menu.File.Exit;
 
             editToolStripMenuItem.Text = _language.Menu.Edit.Title;
@@ -4592,7 +4591,7 @@ namespace Nikse.SubtitleEdit.Forms
                     setStylesForSelectedLinesToolStripMenuItem.DropDownItems.Add(style, null, tsi_Click);
                 }
                 setStylesForSelectedLinesToolStripMenuItem.Visible = styles.Count > 1;
-                toolStripMenuItemAssStyles.Visible = Configuration.Settings.General.ShowBetaStuff;
+                toolStripMenuItemAssStyles.Visible = true;
                 if (GetCurrentSubtitleFormat().GetType() == typeof(AdvancedSubStationAlpha))
                 {
                     toolStripMenuItemAssStyles.Text = _language.Menu.ContextMenu.AdvancedSubStationAlphaStyles;
@@ -10802,12 +10801,12 @@ namespace Nikse.SubtitleEdit.Forms
             if (Configuration.Settings.General.ShowBetaStuff)
             {
                 generateDatetimeInfoFromVideoToolStripMenuItem.Visible = true;
-                toolStripMenuItemApplyDurationLimits.Visible = true;
-                toolStripMenuItemAlignment.Visible = true;
+//                toolStripMenuItemApplyDurationLimits.Visible = true;
+//                toolStripMenuItemAlignment.Visible = true;
 //                toolStripMenuItemRightToLeftMode.Visible = true;
-                toolStripMenuItemReverseRightToLeftStartEnd.Visible = true;
-                joinSubtitlesToolStripMenuItem.Visible = true;
-                plainTextWithoutLineBreaksToolStripMenuItem.Visible = false;
+                //toolStripMenuItemReverseRightToLeftStartEnd.Visible = true;
+                //joinSubtitlesToolStripMenuItem.Visible = true;
+                //plainTextWithoutLineBreaksToolStripMenuItem.Visible = false;
 
                 toolStripMenuItemExportCaptionInc.Visible = true;
                 toolStripMenuItemExportUltech130.Visible = true;
@@ -10815,11 +10814,11 @@ namespace Nikse.SubtitleEdit.Forms
             else
             {
                 generateDatetimeInfoFromVideoToolStripMenuItem.Visible = false;
-                toolStripMenuItemApplyDurationLimits.Visible = false;
-                toolStripMenuItemAlignment.Visible = false;
+//                toolStripMenuItemApplyDurationLimits.Visible = false;
+//                toolStripMenuItemAlignment.Visible = false;
                 //                toolStripMenuItemRightToLeftMode.Visible = false;
-                toolStripMenuItemReverseRightToLeftStartEnd.Visible = !string.IsNullOrEmpty(_language.Menu.Edit.ReverseRightToLeftStartEnd);
-                joinSubtitlesToolStripMenuItem.Visible = false;
+//                toolStripMenuItemReverseRightToLeftStartEnd.Visible = !string.IsNullOrEmpty(_language.Menu.Edit.ReverseRightToLeftStartEnd);
+                //joinSubtitlesToolStripMenuItem.Visible = false;
 
                 toolStripMenuItemExportCaptionInc.Visible = false;
                 toolStripMenuItemExportUltech130.Visible = false;
@@ -13375,49 +13374,11 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void PlainTextToolStripMenuItemClick(object sender, EventArgs e)
         {
-            if (Configuration.Settings.General.ShowBetaStuff)
+            var exportText = new ExportText();
+            exportText.Initialize(_subtitle, _fileName);
+            if (exportText.ShowDialog() == DialogResult.OK)
             {
-                var exportText = new ExportText();
-                exportText.Initialize(_subtitle, _fileName);
-                if (exportText.ShowDialog() == DialogResult.OK)
-                {
-                    ShowStatus("Subtitle exported"); //TODO: Translate
-                }
-            }
-            else
-            {
-                ExportTextOnly(false);
-            }
-        }
-
-        private void PlainTextWithoutLineBreaksToolStripMenuItemClick(object sender, EventArgs e)
-        {
-            ExportTextOnly(true);
-        }
-
-        private void ExportTextOnly(bool removeLineBreaks)
-        {
-            if (SubtitleListview1.Items.Count > 0)
-            {
-                if (!string.IsNullOrEmpty(openFileDialog1.InitialDirectory))
-                    saveFileDialog1.InitialDirectory = openFileDialog1.InitialDirectory;
-                saveFileDialog1.Title = _language.ExportPlainTextAs;
-                saveFileDialog1.Filter =  _language.TextFiles +  "|*.txt";
-                if (saveFileDialog1.ShowDialog(this) == DialogResult.OK)
-                {
-                    var sb = new StringBuilder();
-                    foreach (Paragraph p in _subtitle.Paragraphs)
-                    {
-                        sb.AppendLine(Utilities.RemoveHtmlTags(p.Text));
-                    }
-                    string text = sb.ToString().Trim();
-                    if (removeLineBreaks)
-                    {
-                        text = text.Replace(Environment.NewLine, " ");
-                        text = text.Replace("  ", " ").Replace("  ", " ");
-                    }
-                    File.WriteAllText(saveFileDialog1.FileName, text);
-                }
+                ShowStatus(Configuration.Settings.Language.Main.SubtitleExported);
             }
         }
 

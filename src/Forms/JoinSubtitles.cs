@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Logic;
+using System.Drawing;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -16,6 +17,23 @@ namespace Nikse.SubtitleEdit.Forms
             InitializeComponent();
             JoinedSubtitle = new Subtitle();
             labelTotalLines.Text = string.Empty;
+
+            Text = Configuration.Settings.Language.JoinSubtitles.Title;
+            groupBoxPreview.Text = Configuration.Settings.Language.JoinSubtitles.Information;
+            buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
+
+            FixLargeFonts();
+        }
+
+        private void FixLargeFonts()
+        {
+            Graphics graphics = CreateGraphics();
+            SizeF textSize = graphics.MeasureString(buttonCancel.Text, Font);
+            if (textSize.Height > buttonCancel.Height - 4)
+            {
+                int newButtonHeight = (int)(textSize.Height + 7 + 0.5);
+                Utilities.SetButtonHeight(this, newButtonHeight, 1);
+            }
         }
 
         private void buttonCancel_Click(object sender, EventArgs e)
@@ -60,8 +78,9 @@ namespace Nikse.SubtitleEdit.Forms
         private void SortAndLoad()
         {
             List<Subtitle> subtitles = new List<Subtitle>();
-            foreach (string fileName in _fileNamesToJoin)
+            for (int k = 0; k < _fileNamesToJoin.Count; k++)            
             {
+                string fileName = _fileNamesToJoin[k];
                 try
                 {
                     Subtitle sub = new Subtitle();
@@ -69,6 +88,8 @@ namespace Nikse.SubtitleEdit.Forms
                     var format = sub.LoadSubtitle(fileName, out encoding, null);
                     if (format == null)
                     {
+                        for (int j = k; j < _fileNamesToJoin.Count; j++)
+                            _fileNamesToJoin.RemoveAt(j);
                         MessageBox.Show("Unkown subtitle format: " + fileName);
                         return;
                     }
@@ -76,6 +97,8 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 catch (Exception exception)
                 {
+                    for (int j = k; j < _fileNamesToJoin.Count; j++)
+                        _fileNamesToJoin.RemoveAt(j);
                     MessageBox.Show(exception.Message);
                     return;
                 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Logic;
@@ -97,6 +98,21 @@ namespace Nikse.SubtitleEdit.Forms
                         checkBoxScaleBorderAndShadow.Checked = s.Remove(0, 22).Trim().ToLower() == "yes";
                     }
                 }
+            }
+            buttonOK.Text = Configuration.Settings.Language.General.OK;
+            buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
+
+            FixLargeFonts();
+        }
+
+        private void FixLargeFonts()
+        {
+            Graphics graphics = CreateGraphics();
+            SizeF textSize = graphics.MeasureString(buttonCancel.Text, Font);
+            if (textSize.Height > buttonCancel.Height - 4)
+            {
+                int newButtonHeight = (int)(textSize.Height + 7 + 0.5);
+                Utilities.SetButtonHeight(this, newButtonHeight, 1);
             }
         }
 

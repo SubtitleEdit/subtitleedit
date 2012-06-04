@@ -39,6 +39,7 @@ namespace Nikse.SubtitleEdit.Logic
         public LanguageStructure.GoToLine GoToLine;
         public LanguageStructure.ImportText ImportText;
         public LanguageStructure.Interjections Interjections;
+        public LanguageStructure.JoinSubtitles JoinSubtitles;
         public LanguageStructure.Main Main;
         public LanguageStructure.MatroskaSubtitleChooser MatroskaSubtitleChooser;
         public LanguageStructure.MergeShortLines MergedShortLines;
@@ -571,6 +572,12 @@ namespace Nikse.SubtitleEdit.Logic
                 Title = "Interjections",
             };
 
+            JoinSubtitles = new LanguageStructure.JoinSubtitles
+            {
+                Title = "Join subtitles",
+                Information = "Add subtitles to join (drop also supported)",
+            };
+
             Main = new LanguageStructure.Main
             {
                 SaveChangesToUntitled = "Save changes to untitled?",
@@ -773,6 +780,7 @@ namespace Nikse.SubtitleEdit.Logic
                 BeforeToggleDialogueDashes = "Before toggle of dialogue dashes",
                 TextFiles = "Text files",
                 ExportPlainTextAs = "Export plain text as",
+                SubtitleExported = "Subtitle exported",
 
                 Menu = new LanguageStructure.Main.MainMenu
                 {
@@ -807,7 +815,6 @@ namespace Nikse.SubtitleEdit.Logic
                         ExportEbu = "EBU stl...",
                         ExportPac = "PAC (Screen Electronics)...",
                         ExportPlainText = "Plain text...",
-                        ExportPlainTextWithoutLineBreaks = "Plain text without line breaks...",
                         Exit = "E&xit"
                     },
 

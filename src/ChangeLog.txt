@@ -1,5 +1,25 @@
 Subtitle Edit Changelog
 
+3.3 Beta 1 (x June 2012)
+* NEW:
+ * Edit -> Reverse RTL start/end (fix punctuations)  
+ * Easy import of auto backed up files (File -> Restore auto-backup...)
+ * Improved support for Advanced Substation Alpha (+ Substation Alpha)
+ * Advanced Substation Alpha style viewer/creater (right click in list view)
+ * Can now display frames instead of milliseconds in main window (see options -> settings)
+ * New settings in options regarding "Max. chars/second"
+ * New settings in options regarding "Min. duration" + "Max. duration"
+ * New settings in options regarding syntax coloring
+ * Tools -> Join subtitles (merge of multiple parts)
+ * Tools -> Apply duration limits
+ * Tools -> Sort -> Text - chars/sec
+* IMPROVED:
+  * Added extra options for double click on list view line - thx Fredrik + TaeGyun :)
+  * Added extra options for export as text
+* FIXED:
+   * Auto-translate now works for English to Portuguese - thx w.tambley :)
+
+
 3.2.8 (3rd June 2012)
  * NEW:
    * Added "Right to left" in Edit menu - also with configuable shortcut

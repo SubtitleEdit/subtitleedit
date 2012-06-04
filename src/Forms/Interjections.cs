@@ -18,7 +18,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         public string GetInterjectionsSemiColonSeperatedString()
         {
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             foreach (string s in _interjections)
                 sb.Append(";" + s.Trim());
             return sb.ToString().Trim(';');
