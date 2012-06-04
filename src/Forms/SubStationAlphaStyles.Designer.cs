@@ -95,6 +95,7 @@
             this.pictureBoxPreview = new System.Windows.Forms.PictureBox();
             this.colorDialogSSAStyle = new System.Windows.Forms.ColorDialog();
             this.openFileDialogImport = new System.Windows.Forms.OpenFileDialog();
+            this.columnHeaderUseCount = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.contextMenuStripStyles.SuspendLayout();
             this.groupBoxStyles.SuspendLayout();
             this.groupBoxProperties.SuspendLayout();
@@ -122,6 +123,7 @@
             this.columnHeaderName,
             this.columnHeaderFontName,
             this.columnHeaderFontSize,
+            this.columnHeaderUseCount,
             this.columnHeaderPrimaryColor,
             this.columnHeaderOutline});
             this.listViewStyles.ContextMenuStrip = this.contextMenuStripStyles;
@@ -130,7 +132,7 @@
             this.listViewStyles.Location = new System.Drawing.Point(6, 19);
             this.listViewStyles.MultiSelect = false;
             this.listViewStyles.Name = "listViewStyles";
-            this.listViewStyles.Size = new System.Drawing.Size(445, 283);
+            this.listViewStyles.Size = new System.Drawing.Size(543, 283);
             this.listViewStyles.TabIndex = 0;
             this.listViewStyles.UseCompatibleStateImageBehavior = false;
             this.listViewStyles.View = System.Windows.Forms.View.Details;
@@ -206,7 +208,7 @@
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonCancel.Location = new System.Drawing.Point(797, 509);
+            this.buttonCancel.Location = new System.Drawing.Point(895, 569);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 21);
             this.buttonCancel.TabIndex = 5;
@@ -218,7 +220,7 @@
             // 
             this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonOK.Location = new System.Drawing.Point(716, 509);
+            this.buttonOK.Location = new System.Drawing.Point(814, 569);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 21);
             this.buttonOK.TabIndex = 4;
@@ -238,7 +240,7 @@
             this.groupBoxStyles.Controls.Add(this.listViewStyles);
             this.groupBoxStyles.Location = new System.Drawing.Point(12, 12);
             this.groupBoxStyles.Name = "groupBoxStyles";
-            this.groupBoxStyles.Size = new System.Drawing.Size(457, 338);
+            this.groupBoxStyles.Size = new System.Drawing.Size(555, 338);
             this.groupBoxStyles.TabIndex = 0;
             this.groupBoxStyles.TabStop = false;
             this.groupBoxStyles.Text = "Styles";
@@ -247,7 +249,7 @@
             // 
             this.buttonImport.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonImport.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonImport.Location = new System.Drawing.Point(6, 311);
+            this.buttonImport.Location = new System.Drawing.Point(104, 311);
             this.buttonImport.Name = "buttonImport";
             this.buttonImport.Size = new System.Drawing.Size(82, 21);
             this.buttonImport.TabIndex = 5;
@@ -260,7 +262,7 @@
             // 
             this.buttonCopy.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCopy.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonCopy.Location = new System.Drawing.Point(94, 311);
+            this.buttonCopy.Location = new System.Drawing.Point(192, 311);
             this.buttonCopy.Name = "buttonCopy";
             this.buttonCopy.Size = new System.Drawing.Size(82, 21);
             this.buttonCopy.TabIndex = 1;
@@ -272,7 +274,7 @@
             // 
             this.buttonRemoveAll.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonRemoveAll.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonRemoveAll.Location = new System.Drawing.Point(358, 311);
+            this.buttonRemoveAll.Location = new System.Drawing.Point(456, 311);
             this.buttonRemoveAll.Name = "buttonRemoveAll";
             this.buttonRemoveAll.Size = new System.Drawing.Size(92, 21);
             this.buttonRemoveAll.TabIndex = 4;
@@ -284,7 +286,7 @@
             // 
             this.buttonAdd.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonAdd.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonAdd.Location = new System.Drawing.Point(182, 311);
+            this.buttonAdd.Location = new System.Drawing.Point(280, 311);
             this.buttonAdd.Name = "buttonAdd";
             this.buttonAdd.Size = new System.Drawing.Size(82, 21);
             this.buttonAdd.TabIndex = 2;
@@ -296,7 +298,7 @@
             // 
             this.buttonRemove.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonRemove.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonRemove.Location = new System.Drawing.Point(270, 311);
+            this.buttonRemove.Location = new System.Drawing.Point(368, 311);
             this.buttonRemove.Name = "buttonRemove";
             this.buttonRemove.Size = new System.Drawing.Size(82, 21);
             this.buttonRemove.TabIndex = 3;
@@ -315,9 +317,9 @@
             this.groupBoxProperties.Controls.Add(this.groupBoxColors);
             this.groupBoxProperties.Controls.Add(this.groupBoxAlignment);
             this.groupBoxProperties.Controls.Add(this.groupBoxFont);
-            this.groupBoxProperties.Location = new System.Drawing.Point(475, 12);
+            this.groupBoxProperties.Location = new System.Drawing.Point(573, 12);
             this.groupBoxProperties.Name = "groupBoxProperties";
-            this.groupBoxProperties.Size = new System.Drawing.Size(397, 491);
+            this.groupBoxProperties.Size = new System.Drawing.Size(397, 551);
             this.groupBoxProperties.TabIndex = 3;
             this.groupBoxProperties.TabStop = false;
             this.groupBoxProperties.Text = "Properties";
@@ -787,7 +789,7 @@
             this.groupBoxPreview.Controls.Add(this.pictureBoxPreview);
             this.groupBoxPreview.Location = new System.Drawing.Point(12, 356);
             this.groupBoxPreview.Name = "groupBoxPreview";
-            this.groupBoxPreview.Size = new System.Drawing.Size(457, 147);
+            this.groupBoxPreview.Size = new System.Drawing.Size(555, 207);
             this.groupBoxPreview.TabIndex = 2;
             this.groupBoxPreview.TabStop = false;
             this.groupBoxPreview.Text = "Preview";
@@ -797,15 +799,19 @@
             this.pictureBoxPreview.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pictureBoxPreview.Location = new System.Drawing.Point(3, 16);
             this.pictureBoxPreview.Name = "pictureBoxPreview";
-            this.pictureBoxPreview.Size = new System.Drawing.Size(451, 128);
+            this.pictureBoxPreview.Size = new System.Drawing.Size(549, 188);
             this.pictureBoxPreview.TabIndex = 0;
             this.pictureBoxPreview.TabStop = false;
+            // 
+            // columnHeaderUseCount
+            // 
+            this.columnHeaderUseCount.Text = "Used#";
             // 
             // SubStationAlphaStyles
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(884, 542);
+            this.ClientSize = new System.Drawing.Size(982, 602);
             this.Controls.Add(this.groupBoxProperties);
             this.Controls.Add(this.groupBoxStyles);
             this.Controls.Add(this.buttonCancel);
@@ -915,5 +921,6 @@
         private System.Windows.Forms.ToolStripMenuItem removeAllToolStripMenuItem;
         private System.Windows.Forms.Button buttonImport;
         private System.Windows.Forms.OpenFileDialog openFileDialogImport;
+        private System.Windows.Forms.ColumnHeader columnHeaderUseCount;
     }
 }
