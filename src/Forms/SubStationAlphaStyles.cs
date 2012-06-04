@@ -764,6 +764,7 @@ namespace Nikse.SubtitleEdit.Forms
             colorDialogSSAStyle.Color = panelPrimaryColor.BackColor;
             if (colorDialogSSAStyle.ShowDialog() == DialogResult.OK)
             {
+                listViewStyles.SelectedItems[0].SubItems[3].BackColor = colorDialogSSAStyle.Color;
                 panelPrimaryColor.BackColor = colorDialogSSAStyle.Color;
                 string name = listViewStyles.SelectedItems[0].Text;
                 SetSsaStyle(name, "primarycolour", GetSsaColorString(colorDialogSSAStyle.Color));
@@ -788,6 +789,8 @@ namespace Nikse.SubtitleEdit.Forms
             colorDialogSSAStyle.Color = panelOutlineColor.BackColor;
             if (colorDialogSSAStyle.ShowDialog() == DialogResult.OK)
             {
+                if (!_isSubStationAlpha)
+                    listViewStyles.SelectedItems[0].SubItems[4].BackColor = colorDialogSSAStyle.Color;
                 panelOutlineColor.BackColor = colorDialogSSAStyle.Color;
                 string name = listViewStyles.SelectedItems[0].Text;
                 if (_isSubStationAlpha)
@@ -803,6 +806,8 @@ namespace Nikse.SubtitleEdit.Forms
             colorDialogSSAStyle.Color = panelBackColor.BackColor;
             if (colorDialogSSAStyle.ShowDialog() == DialogResult.OK)
             {
+                if (_isSubStationAlpha)
+                    listViewStyles.SelectedItems[0].SubItems[4].BackColor = colorDialogSSAStyle.Color;
                 panelBackColor.BackColor = colorDialogSSAStyle.Color;
                 string name = listViewStyles.SelectedItems[0].Text;
                 SetSsaStyle(name, "backcolour", GetSsaColorString(colorDialogSSAStyle.Color));
@@ -962,6 +967,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (listViewStyles.SelectedItems.Count == 1 && _doUpdate)
             {
+                listViewStyles.SelectedItems[0].SubItems[1].Text = comboBoxFontName.SelectedItem.ToString();
                 string name = listViewStyles.SelectedItems[0].Text;
                 SetSsaStyle(name, "fontname", comboBoxFontName.SelectedItem.ToString());
                 GeneratePreview();
@@ -982,6 +988,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (listViewStyles.SelectedItems.Count == 1 && _doUpdate)
             {
+                listViewStyles.SelectedItems[0].SubItems[2].Text = numericUpDownFontSize.Value.ToString();
                 string name = listViewStyles.SelectedItems[0].Text;
                 SetSsaStyle(name, "fontsize", numericUpDownFontSize.Value.ToString());
                 GeneratePreview();
