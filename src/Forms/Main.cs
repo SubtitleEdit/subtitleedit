@@ -1130,6 +1130,7 @@ namespace Nikse.SubtitleEdit.Forms
             reopenToolStripMenuItem.Text = _language.Menu.File.Reopen;
             saveToolStripMenuItem.Text = _language.Menu.File.Save;
             saveAsToolStripMenuItem.Text = _language.Menu.File.SaveAs;
+            toolStripMenuItemRestoreAutoBackup.Text = _language.Menu.File.RestoreAutoBackup;
             openOriginalToolStripMenuItem.Text = _language.Menu.File.OpenOriginal;
             saveOriginalToolStripMenuItem.Text = _language.Menu.File.SaveOriginal;
             saveOriginalAstoolStripMenuItem.Text = _language.SaveOriginalSubtitleAs;
@@ -4875,6 +4876,12 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void InsertBefore()
         {
+            bool useExtraForStyle = _oldSubtitleFormat.GetType() == typeof(AdvancedSubStationAlpha) || _oldSubtitleFormat.GetType() == typeof(SubStationAlpha);
+            List<string> styles = AdvancedSubStationAlpha.GetStylesFromHeader(_subtitle.Header);
+            string style = "Default";
+            if (styles.Count > 0)
+                style = styles[0];
+
             MakeHistoryForUndo(_language.BeforeInsertLine);
 
             int startNumber = 1;
@@ -4889,6 +4896,9 @@ namespace Nikse.SubtitleEdit.Forms
                 addMilliseconds = 1;
 
             var newParagraph = new Paragraph();
+            if (useExtraForStyle)
+                newParagraph.Extra = style;
+
             Paragraph prev = _subtitle.GetParagraphOrDefault(firstSelectedIndex - 1);
             Paragraph next = _subtitle.GetParagraphOrDefault(firstSelectedIndex);
             if (prev != null && next != null)
@@ -4959,6 +4969,12 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void InsertAfter()
         {
+            bool useExtraForStyle = _oldSubtitleFormat.GetType() == typeof(AdvancedSubStationAlpha) || _oldSubtitleFormat.GetType() == typeof(SubStationAlpha);
+            List<string> styles = AdvancedSubStationAlpha.GetStylesFromHeader(_subtitle.Header);
+            string style = "Default";
+            if (styles.Count > 0)
+                style = styles[0];
+             
             MakeHistoryForUndo(_language.BeforeInsertLine);
 
             int startNumber = 1;
@@ -4970,6 +4986,8 @@ namespace Nikse.SubtitleEdit.Forms
                 firstSelectedIndex = SubtitleListview1.SelectedItems[0].Index + 1;
 
             var newParagraph = new Paragraph();
+            if (useExtraForStyle)
+                newParagraph.Extra = style;
             Paragraph prev = _subtitle.GetParagraphOrDefault(firstSelectedIndex - 1);
             Paragraph next = _subtitle.GetParagraphOrDefault(firstSelectedIndex);
             if (prev != null)
@@ -14149,6 +14167,21 @@ namespace Nikse.SubtitleEdit.Forms
                     SubtitleListview1.SelectedIndexChanged += SubtitleListview1_SelectedIndexChanged;
                 }
             }
+        }
+
+        private void toolStripMenuItemRestoreAutoBackup_Click(object sender, EventArgs e)
+        {
+            var restoreAutoBackup = new RestoreAutoBackup();
+            _formPositionsAndSizes.SetPositionAndSize(restoreAutoBackup);
+            if (restoreAutoBackup.ShowDialog(this) == DialogResult.OK && !string.IsNullOrEmpty(restoreAutoBackup.AutoBackupFileName))
+            {
+                if (ContinueNewOrExit())
+                {
+                    OpenSubtitle(restoreAutoBackup.AutoBackupFileName, null);
+                    _converted = true;
+                }
+            }
+            _formPositionsAndSizes.SavePositionAndSize(restoreAutoBackup);
         }
 
     }

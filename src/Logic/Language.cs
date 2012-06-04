@@ -49,6 +49,7 @@ namespace Nikse.SubtitleEdit.Logic
         public LanguageStructure.NetworkStart NetworkStart;
         public LanguageStructure.RemoveTextFromHearImpaired RemoveTextFromHearImpaired;
         public LanguageStructure.ReplaceDialog ReplaceDialog;
+        public LanguageStructure.RestoreAutoBackup RestoreAutoBackup;
         public LanguageStructure.SetMinimumDisplayTimeBetweenParagraphs SetMinimumDisplayTimeBetweenParagraphs;
         public LanguageStructure.SetSyncPoint SetSyncPoint;
         public LanguageStructure.Settings Settings;
@@ -783,6 +784,7 @@ namespace Nikse.SubtitleEdit.Logic
                         Reopen = "&Reopen",
                         Save = "&Save",
                         SaveAs = "Save &as...",
+                        RestoreAutoBackup = "Restore auto-backup...",
                         AdvancedSubStationAlphaProperties = "Advanced Sub Station Alpha properties...",
                         SubStationAlphaProperties = "Sub Station Alpha properties...",
                         OpenOriginal = "Open original subtitle (translator mode)...",
@@ -1138,10 +1140,20 @@ can edit in same subtitle file (collaboration)",
                 Normal = "Normal",
                 CaseSensitive = "Case sensitive",
                 RegularExpression = "Regular expression",
-                ReplaceWith  = "Replace with",
-                Find  = "&Find",
-                Replace  = "&Replace",
+                ReplaceWith = "Replace with",
+                Find = "&Find",
+                Replace = "&Replace",
                 ReplaceAll = "Replace &all",
+            };
+
+            RestoreAutoBackup = new LanguageStructure.RestoreAutoBackup
+            {
+                Title = "Restore auto backup",
+                Information = "Open auto saved backup",
+                DateAndTime = "Date and time",
+                FileName = "File name",
+                Extension = "Extension",
+                NoBackedUpFilesFound = "No backed up files found!",
             };
 
             SetMinimumDisplayTimeBetweenParagraphs = new LanguageStructure.SetMinimumDisplayTimeBetweenParagraphs
