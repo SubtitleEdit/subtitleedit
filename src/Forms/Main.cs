@@ -160,7 +160,7 @@ namespace Nikse.SubtitleEdit.Forms
                     if (versionInfo.Length >= 3 && versionInfo[2] != "0")
                         _title += "." + versionInfo[2];
                 }
-                return _title;
+                return _title + " preview";
             }
         }
 
@@ -1149,8 +1149,7 @@ namespace Nikse.SubtitleEdit.Forms
             toolStripMenuItemImportTimeCodes.Text = _language.Menu.File.ImportTimecodes;
             toolStripMenuItemExport.Text = _language.Menu.File.Export;
             toolStripMenuItemExportPngXml.Text = _language.Menu.File.ExportBdnXml;
-            if (!string.IsNullOrEmpty(_language.Menu.File.ExportBluRaySup)) //TODO: Remove in 3.3
-                bluraySupToolStripMenuItem.Text = _language.Menu.File.ExportBluRaySup;
+            bluraySupToolStripMenuItem.Text = _language.Menu.File.ExportBluRaySup;
 
             //vobSubsubidxToolStripMenuItem.Visible = true;
             //vobSubsubidxToolStripMenuItem.Text = _language.Menu.File.ExportVobSub;
@@ -1158,10 +1157,8 @@ namespace Nikse.SubtitleEdit.Forms
             toolStripMenuItemCavena890.Text = _language.Menu.File.ExportCavena890;
             eBUSTLToolStripMenuItem.Text = _language.Menu.File.ExportEbu;
             pACScreenElectronicsToolStripMenuItem.Text = _language.Menu.File.ExportPac;
-            plainTextToolStripMenuItem.Text = _language.Menu.File.ExportPlainText;
-            plainTextToolStripMenuItem.Visible = !string.IsNullOrEmpty(_language.Menu.File.ExportPlainText); //TODO: Remove in 3.3
+            plainTextToolStripMenuItem.Text = _language.Menu.File.ExportPlainText;            
             plainTextWithoutLineBreaksToolStripMenuItem.Text = _language.Menu.File.ExportPlainTextWithoutLineBreaks;
-            plainTextWithoutLineBreaksToolStripMenuItem.Visible = !string.IsNullOrEmpty(_language.Menu.File.ExportPlainTextWithoutLineBreaks); //TODO: Remove in 3.3
             exitToolStripMenuItem.Text = _language.Menu.File.Exit;
 
             editToolStripMenuItem.Text = _language.Menu.Edit.Title;
@@ -1174,9 +1171,8 @@ namespace Nikse.SubtitleEdit.Forms
             replaceToolStripMenuItem.Text = _language.Menu.Edit.Replace;
             multipleReplaceToolStripMenuItem.Text = _language.Menu.Edit.MultipleReplace;
             gotoLineNumberToolStripMenuItem.Text = _language.Menu.Edit.GoToSubtitleNumber;
-            toolStripMenuItemRightToLeftMode.Text = Configuration.Settings.Language.VobSubOcr.RightToLeft; //TODO: SE 3.3 new language tag
-            if (!string.IsNullOrEmpty(_language.Menu.Edit.ReverseRightToLeftStartEnd))
-                toolStripMenuItemReverseRightToLeftStartEnd.Text = _language.Menu.Edit.ReverseRightToLeftStartEnd; ; //TODO: SE 3.3 new language tag
+            toolStripMenuItemRightToLeftMode.Text = _language.Menu.Edit.RightToLeftMode;
+            toolStripMenuItemReverseRightToLeftStartEnd.Text = _language.Menu.Edit.ReverseRightToLeftStartEnd;
             editSelectAllToolStripMenuItem.Text = _language.Menu.ContextMenu.SelectAll;
 
             toolsToolStripMenuItem.Text = _language.Menu.Tools.Title;
@@ -1299,8 +1295,7 @@ namespace Nikse.SubtitleEdit.Forms
             toolStripButtonToggleWaveForm.ToolTipText = _language.Menu.ToolBar.ShowHideWaveForm;
             toolStripButtonToggleVideo.ToolTipText = _language.Menu.ToolBar.ShowHideVideo;
 
-            if (!string.IsNullOrEmpty(_language.Menu.ContextMenu.SubStationAlphaStyles)) //TODO: Remove check in 3.3
-                toolStripMenuItemAssStyles.Text = _language.Menu.ContextMenu.SubStationAlphaStyles;
+            toolStripMenuItemAssStyles.Text = _language.Menu.ContextMenu.SubStationAlphaStyles;
             setStylesForSelectedLinesToolStripMenuItem.Text = _language.Menu.ContextMenu.SubStationAlphaSetStyle;
 
             toolStripMenuItemDelete.Text = _language.Menu.ContextMenu.Delete;
@@ -1322,6 +1317,7 @@ namespace Nikse.SubtitleEdit.Forms
             italicToolStripMenuItem.Text = _languageGeneral.Italic;
             colorToolStripMenuItem.Text = _language.Menu.ContextMenu.Color;
             toolStripMenuItemFont.Text = _language.Menu.ContextMenu.FontName;
+            toolStripMenuItemAlignment.Text = _language.Menu.ContextMenu.Alignment;
             toolStripMenuItemAutoBreakLines.Text = _language.Menu.ContextMenu.AutoBalanceSelectedLines;
             toolStripMenuItemUnbreakLines.Text = _language.Menu.ContextMenu.RemoveLineBreaksFromSelectedLines;
             typeEffectToolStripMenuItem.Text = _language.Menu.ContextMenu.TypewriterEffect;
@@ -4303,7 +4299,7 @@ namespace Nikse.SubtitleEdit.Forms
                         if (string.Compare(_subtitle.HistoryItems[_undoIndex].RedoFileName, _fileName, true) == 0)
                             _fileDateTime = _subtitle.HistoryItems[_undoIndex].RedoFileModified;
                         _fileName = _subtitle.HistoryItems[_undoIndex].RedoFileName;
-                        ShowStatus("Redo performed"); //TODO: do not hardcode text... SE 3.3
+                        ShowStatus(_language.UndoPerformed); 
                     }
 
                 }
@@ -4598,15 +4594,12 @@ namespace Nikse.SubtitleEdit.Forms
                 toolStripMenuItemAssStyles.Visible = Configuration.Settings.General.ShowBetaStuff;
                 if (GetCurrentSubtitleFormat().GetType() == typeof(AdvancedSubStationAlpha))
                 {
-                    if (!string.IsNullOrEmpty(_language.Menu.ContextMenu.AdvancedSubStationAlphaStyles)) //TODO:SE 3.3
-                        toolStripMenuItemAssStyles.Text = _language.Menu.ContextMenu.AdvancedSubStationAlphaStyles;
-                    if (!string.IsNullOrEmpty(_language.Menu.ContextMenu.AdvancedSubStationAlphaSetStyle)) //TODO:SE 3.3
-                        setStylesForSelectedLinesToolStripMenuItem.Text = _language.Menu.ContextMenu.AdvancedSubStationAlphaSetStyle;
+                    toolStripMenuItemAssStyles.Text = _language.Menu.ContextMenu.AdvancedSubStationAlphaStyles;
+                    setStylesForSelectedLinesToolStripMenuItem.Text = _language.Menu.ContextMenu.AdvancedSubStationAlphaSetStyle;
                 }
                 else
                 {
-                    if (!string.IsNullOrEmpty(_language.Menu.ContextMenu.SubStationAlphaStyles)) //TODO: Remove check in 3.3
-                        toolStripMenuItemAssStyles.Text = _language.Menu.ContextMenu.SubStationAlphaStyles;
+                    toolStripMenuItemAssStyles.Text = _language.Menu.ContextMenu.SubStationAlphaStyles;
                     setStylesForSelectedLinesToolStripMenuItem.Text = _language.Menu.ContextMenu.SubStationAlphaSetStyle;
                 }
             }
@@ -4664,7 +4657,7 @@ namespace Nikse.SubtitleEdit.Forms
                     mergeBeforeToolStripMenuItem.Visible = false;
                     splitLineToolStripMenuItem.Visible = false;
                     typeEffectToolStripMenuItem.Visible = false;
-                    toolStripMenuItemMergeDialogue.Visible = false; //TODO: SE 3.3 - change to true
+                    toolStripMenuItemMergeDialogue.Visible = true; 
                 }
                 else if (SubtitleListview1.SelectedItems.Count >= 2)
                 {
@@ -9041,6 +9034,35 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (Configuration.Settings.General.ListViewDoubleClickAction == 3)
             {
+                GotoSubPositionAndPause(-1.0);
+            }
+            else if (Configuration.Settings.General.ListViewDoubleClickAction == 4)
+            {
+                if (AutoRepeatContinueOn)
+                    PlayCurrent();
+                else
+                {
+                    if (SubtitleListview1.SelectedItems.Count > 0)
+                    {
+                        int index = SubtitleListview1.SelectedItems[0].Index;
+
+                        mediaPlayer.Pause();
+                        double pos = _subtitle.Paragraphs[index].StartTime.TotalSeconds;
+                        if (pos > 1)
+                            mediaPlayer.CurrentPosition = (_subtitle.Paragraphs[index].StartTime.TotalSeconds) - 1.0;
+                        else
+                            mediaPlayer.CurrentPosition = _subtitle.Paragraphs[index].StartTime.TotalSeconds;
+                        mediaPlayer.Play();
+                    }
+                }
+            }
+            else if (Configuration.Settings.General.ListViewDoubleClickAction == 5)
+            {
+                GotoSubPositionAndPause();
+                textBoxListViewText.Focus();
+            }
+            else if (Configuration.Settings.General.ListViewDoubleClickAction == 6)
+            {
                 textBoxListViewText.Focus();
             }
         }
@@ -10122,12 +10144,20 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void GotoSubPositionAndPause()
         {
+            GotoSubPositionAndPause(0);
+        }
+
+        private void GotoSubPositionAndPause(double adjustSeconds)
+        {
             if (SubtitleListview1.SelectedItems.Count > 0)
             {
                 int index = SubtitleListview1.SelectedItems[0].Index;
 
                 mediaPlayer.Pause();
-                mediaPlayer.CurrentPosition = _subtitle.Paragraphs[index].StartTime.TotalSeconds;
+                double newPos = _subtitle.Paragraphs[index].StartTime.TotalSeconds + adjustSeconds;
+                if (newPos < 0)
+                    newPos = 0;
+                mediaPlayer.CurrentPosition = newPos;
                 ShowSubtitle();
 
                 double startPos = mediaPlayer.CurrentPosition - 1;
@@ -10755,10 +10785,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 generateDatetimeInfoFromVideoToolStripMenuItem.Visible = true;
                 toolStripMenuItemApplyDurationLimits.Visible = true;
-                toolStripMenuItemAlignTop.Visible = true;
-                toolStripMenuItemAlignMiddle.Visible = true;
-                toolStripMenuItemLeft.Visible = true;
-                toolStripMenuItemRight.Visible = true;
+                toolStripMenuItemAlignment.Visible = true;
 //                toolStripMenuItemRightToLeftMode.Visible = true;
                 toolStripMenuItemReverseRightToLeftStartEnd.Visible = true;
                 joinSubtitlesToolStripMenuItem.Visible = true;
@@ -10771,10 +10798,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 generateDatetimeInfoFromVideoToolStripMenuItem.Visible = false;
                 toolStripMenuItemApplyDurationLimits.Visible = false;
-                toolStripMenuItemAlignTop.Visible = false;
-                toolStripMenuItemAlignMiddle.Visible = false;
-                toolStripMenuItemLeft.Visible = false;
-                toolStripMenuItemRight.Visible = false;
+                toolStripMenuItemAlignment.Visible = false;
                 //                toolStripMenuItemRightToLeftMode.Visible = false;
                 toolStripMenuItemReverseRightToLeftStartEnd.Visible = !string.IsNullOrEmpty(_language.Menu.Edit.ReverseRightToLeftStartEnd);
                 joinSubtitlesToolStripMenuItem.Visible = false;
@@ -13695,246 +13719,6 @@ namespace Nikse.SubtitleEdit.Forms
             exportBdnXmlPng.ShowDialog(this);
         }
 
-        private void toolStripMenuItemAlignTop_Click(object sender, EventArgs e)
-        {
-            if (_subtitle.Paragraphs.Count > 0 && SubtitleListview1.SelectedItems.Count > 0)
-            {
-                SubtitleListview1.SelectedIndexChanged -= SubtitleListview1_SelectedIndexChanged;
-                MakeHistoryForUndo(string.Format(_language.BeforeAddingTagX, "+4"));
-
-                var indexes = new List<int>();
-                foreach (ListViewItem item in SubtitleListview1.SelectedItems)
-                    indexes.Add(item.Index);
-
-                SubtitleListview1.BeginUpdate();
-                foreach (int i in indexes)
-                {
-                    if (_subtitleAlternate != null && Configuration.Settings.General.AllowEditOfOriginalSubtitle)
-                    {
-                        Paragraph original = Utilities.GetOriginalParagraph(i, _subtitle.Paragraphs[i], _subtitleAlternate.Paragraphs);
-                        if (original != null)
-                        {
-                            ToggleAlignTop(original);
-                            SubtitleListview1.SetAlternateText(i, original.Text);
-                        }
-                    }
-
-                   ToggleAlignTop(_subtitle.Paragraphs[i]);
-                   SubtitleListview1.SetText(i, _subtitle.Paragraphs[i].Text);
-                }
-                SubtitleListview1.EndUpdate();
-
-                ShowStatus(string.Format(_language.TagXAdded, @"{\+4}"));
-                ShowSource();
-                RefreshSelectedParagraph();
-                SubtitleListview1.SelectedIndexChanged += SubtitleListview1_SelectedIndexChanged;
-            }
-        }
-
-        private void ToggleAlignTop(Paragraph p)
-        {
-            if (p.Text.Contains(@"{\a1}"))
-                p.Text = p.Text.Replace(@"{\a1}", @"{\a5}"); //1=left
-            else if (p.Text.Contains(@"{\a2}"))
-                p.Text = p.Text.Replace(@"{\a2}", @"{\a6}"); //2=center
-            else if (p.Text.Contains(@"{\a3}"))
-                p.Text = p.Text.Replace(@"{\a3}", @"{\a7}"); //3=right
-            else if (p.Text.Contains(@"{\a5}")) // +4=Toptitle
-                p.Text = p.Text.Replace(@"{\a5}", @"{\a1}");
-            else if (p.Text.Contains(@"{\a6}"))
-                p.Text = p.Text.Replace(@"{\a6}", "");
-            else if (p.Text.Contains(@"{\a7}"))
-                p.Text = p.Text.Replace(@"{\a7}", @"{\a3}");
-            else if (p.Text.Contains(@"{\a9}")) // +8=Midtitle
-                p.Text = p.Text.Replace(@"{\a9}", @"{\a5}");
-            else if (p.Text.Contains(@"{\a10}"))
-                p.Text = p.Text.Replace(@"{\a10}", @"{\a6}");
-            else if (p.Text.Contains(@"{\a11}"))
-                p.Text = p.Text.Replace(@"{\a11}", @"{\a7}");
-            else
-                p.Text = string.Format(@"{0}{1}", @"{\a6}", p.Text);
-        }
-
-        private void toolStripMenuItemAlignMiddle_Click(object sender, EventArgs e)
-        {
-            if (_subtitle.Paragraphs.Count > 0 && SubtitleListview1.SelectedItems.Count > 0)
-            {
-                SubtitleListview1.SelectedIndexChanged -= SubtitleListview1_SelectedIndexChanged;
-                MakeHistoryForUndo(string.Format(_language.BeforeAddingTagX, "+8"));
-
-                var indexes = new List<int>();
-                foreach (ListViewItem item in SubtitleListview1.SelectedItems)
-                    indexes.Add(item.Index);
-
-                SubtitleListview1.BeginUpdate();
-                foreach (int i in indexes)
-                {
-                    if (_subtitleAlternate != null && Configuration.Settings.General.AllowEditOfOriginalSubtitle)
-                    {
-                        Paragraph original = Utilities.GetOriginalParagraph(i, _subtitle.Paragraphs[i], _subtitleAlternate.Paragraphs);
-                        if (original != null)
-                        {
-                            ToggleAlignMiddle(original);
-                            SubtitleListview1.SetAlternateText(i, original.Text);
-                        }
-                    }
-
-                    ToggleAlignMiddle(_subtitle.Paragraphs[i]);
-                    SubtitleListview1.SetText(i, _subtitle.Paragraphs[i].Text);
-                }
-                SubtitleListview1.EndUpdate();
-
-                ShowStatus(string.Format(_language.TagXAdded, @"{\+8}"));
-                ShowSource();
-                RefreshSelectedParagraph();
-                SubtitleListview1.SelectedIndexChanged += SubtitleListview1_SelectedIndexChanged;
-            }
-        }
-
-        private void ToggleAlignMiddle(Paragraph p)
-        {
-            if (p.Text.Contains(@"{\a1}"))
-                p.Text = p.Text.Replace(@"{\a1}", @"{\a9}"); //1=left
-            else if (p.Text.Contains(@"{\a2}"))
-                p.Text = p.Text.Replace(@"{\a2}", @"{\a10}"); //2=center
-            else if (p.Text.Contains(@"{\a3}"))
-                p.Text = p.Text.Replace(@"{\a3}", @"{\a11}"); //3=right
-            else if (p.Text.Contains(@"{\a5}")) // +4=Toptitle
-                p.Text = p.Text.Replace(@"{\a5}", @"{\a9}");
-            else if (p.Text.Contains(@"{\a6}"))
-                p.Text = p.Text.Replace(@"{\a6}", @"{\a10}");
-            else if (p.Text.Contains(@"{\a7}"))
-                p.Text = p.Text.Replace(@"{\a7}", @"{\a11}");
-            else if (p.Text.Contains(@"{\a9}")) // +8=Midtitle
-                p.Text = p.Text.Replace(@"{\a9}", @"{\a1}");
-            else if (p.Text.Contains(@"{\a10}"))
-                p.Text = p.Text.Replace(@"{\a10}", @"");
-            else if (p.Text.Contains(@"{\a11}"))
-                p.Text = p.Text.Replace(@"{\a11}", @"{\a3}");
-            else
-                p.Text = string.Format(@"{0}{1}", @"{\a10}", p.Text);
-        }
-
-        private void toolStripMenuItemLeft_Click(object sender, EventArgs e)
-        {
-            if (_subtitle.Paragraphs.Count > 0 && SubtitleListview1.SelectedItems.Count > 0)
-            {
-                SubtitleListview1.SelectedIndexChanged -= SubtitleListview1_SelectedIndexChanged;
-                MakeHistoryForUndo(string.Format(_language.BeforeAddingTagX, @"{\a+left}"));
-
-                var indexes = new List<int>();
-                foreach (ListViewItem item in SubtitleListview1.SelectedItems)
-                    indexes.Add(item.Index);
-
-                SubtitleListview1.BeginUpdate();
-                foreach (int i in indexes)
-                {
-                    if (_subtitleAlternate != null && Configuration.Settings.General.AllowEditOfOriginalSubtitle)
-                    {
-                        Paragraph original = Utilities.GetOriginalParagraph(i, _subtitle.Paragraphs[i], _subtitleAlternate.Paragraphs);
-                        if (original != null)
-                        {
-                            ToggleAlignLeft(original);
-                            SubtitleListview1.SetAlternateText(i, original.Text);
-                        }
-                    }
-
-                    ToggleAlignLeft(_subtitle.Paragraphs[i]);
-                    SubtitleListview1.SetText(i, _subtitle.Paragraphs[i].Text);
-                }
-                SubtitleListview1.EndUpdate();
-
-                ShowStatus(string.Format(_language.TagXAdded, @"{\a+left}"));
-                ShowSource();
-                RefreshSelectedParagraph();
-                SubtitleListview1.SelectedIndexChanged += SubtitleListview1_SelectedIndexChanged;
-            }
-        }
-
-        private void ToggleAlignLeft(Paragraph p)
-        {
-            if (p.Text.Contains(@"{\a1}"))
-                p.Text = p.Text.Replace(@"{\a1}", @""); //1=left
-            else if (p.Text.Contains(@"{\a2}"))
-                p.Text = p.Text.Replace(@"{\a2}", @"{\a1}"); //2=center
-            else if (p.Text.Contains(@"{\a3}"))
-                p.Text = p.Text.Replace(@"{\a3}", @"{\a1}"); //3=right
-            else if (p.Text.Contains(@"{\a5}")) // +4=Toptitle
-                p.Text = p.Text.Replace(@"{\a5}", @"{\a6}");
-            else if (p.Text.Contains(@"{\a6}"))
-                p.Text = p.Text.Replace(@"{\a6}", @"{\a5}");
-            else if (p.Text.Contains(@"{\a7}"))
-                p.Text = p.Text.Replace(@"{\a7}", @"{\a5}");
-            else if (p.Text.Contains(@"{\a9}")) // +8=Midtitle
-                p.Text = p.Text.Replace(@"{\a9}", @"{\a10}");
-            else if (p.Text.Contains(@"{\a10}"))
-                p.Text = p.Text.Replace(@"{\a10}", @"{\a9}");
-            else if (p.Text.Contains(@"{\a11}"))
-                p.Text = p.Text.Replace(@"{\a11}", @"{\a9}");
-            else
-                p.Text = string.Format(@"{0}{1}", @"{\a1}", p.Text);
-        }
-
-        private void toolStripMenuItemRight_Click(object sender, EventArgs e)
-        {
-            if (_subtitle.Paragraphs.Count > 0 && SubtitleListview1.SelectedItems.Count > 0)
-            {
-                SubtitleListview1.SelectedIndexChanged -= SubtitleListview1_SelectedIndexChanged;
-                MakeHistoryForUndo(string.Format(_language.BeforeAddingTagX, @"{\a+right}"));
-
-                var indexes = new List<int>();
-                foreach (ListViewItem item in SubtitleListview1.SelectedItems)
-                    indexes.Add(item.Index);
-
-                SubtitleListview1.BeginUpdate();
-                foreach (int i in indexes)
-                {
-                    if (_subtitleAlternate != null && Configuration.Settings.General.AllowEditOfOriginalSubtitle)
-                    {
-                        Paragraph original = Utilities.GetOriginalParagraph(i, _subtitle.Paragraphs[i], _subtitleAlternate.Paragraphs);
-                        if (original != null)
-                        {
-                            ToggleAlignRight(original);
-                            SubtitleListview1.SetAlternateText(i, original.Text);
-                        }
-                    }
-
-                    ToggleAlignRight(_subtitle.Paragraphs[i]);
-                    SubtitleListview1.SetText(i, _subtitle.Paragraphs[i].Text);
-                }
-                SubtitleListview1.EndUpdate();
-
-                ShowStatus(string.Format(_language.TagXAdded, @"{\a+right}"));
-                ShowSource();
-                RefreshSelectedParagraph();
-                SubtitleListview1.SelectedIndexChanged += SubtitleListview1_SelectedIndexChanged;
-            }
-        }
-
-        private void ToggleAlignRight(Paragraph p)
-        {
-            if (p.Text.Contains(@"{\a1}"))
-                p.Text = p.Text.Replace(@"{\a1}", @"{\a3}"); //1=left
-            else if (p.Text.Contains(@"{\a2}"))
-                p.Text = p.Text.Replace(@"{\a2}", @"{\a3}"); //2=center
-            else if (p.Text.Contains(@"{\a3}"))
-                p.Text = p.Text.Replace(@"{\a3}", @""); //3=right
-            else if (p.Text.Contains(@"{\a5}")) // +4=Toptitle
-                p.Text = p.Text.Replace(@"{\a5}", @"{\a7}");
-            else if (p.Text.Contains(@"{\a6}"))
-                p.Text = p.Text.Replace(@"{\a6}", @"{\a7}");
-            else if (p.Text.Contains(@"{\a7}"))
-                p.Text = p.Text.Replace(@"{\a7}", @"{\a6}");
-            else if (p.Text.Contains(@"{\a9}")) // +8=Midtitle
-                p.Text = p.Text.Replace(@"{\a9}", @"{\a11}");
-            else if (p.Text.Contains(@"{\a10}"))
-                p.Text = p.Text.Replace(@"{\a10}", @"{\a11}");
-            else if (p.Text.Contains(@"{\a11}"))
-                p.Text = p.Text.Replace(@"{\a11}", @"{\a10}");
-            else
-                p.Text = string.Format(@"{0}{1}", @"{\a3}", p.Text);
-        }
-
         private void toolStripMenuItemApplyDisplayTimeLimits_Click(object sender, EventArgs e)
         {
             ApplyDisplayTimeLimits(false);
@@ -14221,10 +14005,150 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void toolStripMenuItemSubStationAlpha_Click(object sender, EventArgs e)
         {
-            var properties = new SubStationAlphaProperties(_subtitle, GetCurrentSubtitleFormat());
-            _formPositionsAndSizes.SetPositionAndSize(properties);
+            var properties = new SubStationAlphaProperties(_subtitle, GetCurrentSubtitleFormat(), _videoFileName);
+            _formPositionsAndSizes.SetPositionAndSize(properties, true);
             properties.ShowDialog(this);
             _formPositionsAndSizes.SavePositionAndSize(properties);
+        }
+
+        private void SetAlignTag(Paragraph p, string tag)
+        {
+            if (p.Text.StartsWith("{\\a") && p.Text.Length > 5 && p.Text[5] == '}')
+                p.Text = p.Text.Remove(0, 6);
+            else if (p.Text.StartsWith("{\\a") && p.Text.Length > 4 && p.Text[4] == '}')
+                p.Text = p.Text.Remove(0, 5);
+            p.Text = string.Format(@"{0}{1}", tag, p.Text);
+        }
+
+        private void toolStripMenuItemAlignment_Click(object sender, EventArgs e)
+        {
+            var f = new AlignmentPicker();
+            f.TopMost = true;
+            f.StartPosition = FormStartPosition.Manual;
+            f.Left = System.Windows.Forms.Cursor.Position.X - 125;
+            f.Top = System.Windows.Forms.Cursor.Position.Y - 52;
+            if (f.ShowDialog(this) == DialogResult.OK)
+            {
+                string tag = string.Empty;
+                if (_oldSubtitleFormat.GetType() == typeof(SubStationAlpha))
+                {
+                    //1: Bottom left
+                    //2: Bottom center
+                    //3: Bottom right
+                    //9: Middle left
+                    //10: Middle center
+                    //11: Middle right
+                    //5: Top left
+                    //6: Top center
+                    //7: Top right 
+                    switch (f.Alignment)
+                    {
+                        case ContentAlignment.BottomLeft:
+                            tag = "{\\a1}";
+                            break;
+                        case ContentAlignment.BottomCenter:
+                            tag = "{\\a2}";
+                            break;
+                        case ContentAlignment.BottomRight:
+                            tag = "{\\a3}";
+                            break;
+                        case ContentAlignment.MiddleLeft:
+                            tag = "{\\a9}";
+                            break;
+                        case ContentAlignment.MiddleCenter:
+                            tag = "{\\a10}";
+                            break;
+                        case ContentAlignment.MiddleRight:
+                            tag = "{\\a11}";
+                            break;
+                        case ContentAlignment.TopLeft:
+                            tag = "{\\a5}";
+                            break;
+                        case ContentAlignment.TopCenter:
+                            tag = "{\\a6}";
+                            break;
+                        case ContentAlignment.TopRight:
+                            tag = "{\\a7}";
+                            break;
+                    }
+                }
+                else
+                {
+                    //1: Bottom left
+                    //2: Bottom center
+                    //3: Bottom right
+                    //4: Middle left
+                    //5: Middle center
+                    //6: Middle right
+                    //7: Top left
+                    //8: Top center
+                    //9: Top right 
+                    switch (f.Alignment)
+                    {
+                        case ContentAlignment.BottomLeft:
+                            tag = "{\\an1}";
+                            break;
+                        case ContentAlignment.BottomCenter:
+                            if (_oldSubtitleFormat.GetType() == typeof(SubRip))
+                                tag = string.Empty;
+                            else
+                                tag = "{\\an2}";
+                            break;
+                        case ContentAlignment.BottomRight:
+                            tag = "{\\an3}";
+                            break;
+                        case ContentAlignment.MiddleLeft:
+                            tag = "{\\an4}";
+                            break;
+                        case ContentAlignment.MiddleCenter:
+                            tag = "{\\an5}";
+                            break;
+                        case ContentAlignment.MiddleRight:
+                            tag = "{\\an6}";
+                            break;
+                        case ContentAlignment.TopLeft:
+                            tag = "{\\an7}";
+                            break;
+                        case ContentAlignment.TopCenter:
+                            tag = "{\\an8}";
+                            break;
+                        case ContentAlignment.TopRight:
+                            tag = "{\\an9}";
+                            break;
+                    }
+                }
+                if (_subtitle.Paragraphs.Count > 0 && SubtitleListview1.SelectedItems.Count > 0)
+                {
+                    SubtitleListview1.SelectedIndexChanged -= SubtitleListview1_SelectedIndexChanged;
+                    MakeHistoryForUndo(string.Format(_language.BeforeAddingTagX, tag));
+
+                    var indexes = new List<int>();
+                    foreach (ListViewItem item in SubtitleListview1.SelectedItems)
+                        indexes.Add(item.Index);
+
+                    SubtitleListview1.BeginUpdate();
+                    foreach (int i in indexes)
+                    {
+                        if (_subtitleAlternate != null && Configuration.Settings.General.AllowEditOfOriginalSubtitle)
+                        {
+                            Paragraph original = Utilities.GetOriginalParagraph(i, _subtitle.Paragraphs[i], _subtitleAlternate.Paragraphs);
+                            if (original != null)
+                            {
+                                SetAlignTag(original, tag);
+                                SubtitleListview1.SetAlternateText(i, original.Text);
+                            }
+                        }
+                        SetAlignTag(_subtitle.Paragraphs[i], tag);
+                        SubtitleListview1.SetText(i, _subtitle.Paragraphs[i].Text);
+                    }
+                    SubtitleListview1.EndUpdate();
+
+                    ShowStatus(string.Format(_language.TagXAdded, tag));
+                    ShowSource();
+                    RefreshSelectedParagraph();
+                    SubtitleListview1.SelectedIndexChanged += SubtitleListview1_SelectedIndexChanged;
+                }
+            }
         }
 
     }

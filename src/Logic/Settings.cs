@@ -151,8 +151,8 @@ namespace Nikse.SubtitleEdit.Logic
 
         public SubtitleSettings()
         {
-            SsaFontName = "Tahoma";
-            SsaFontSize = 18;
+            SsaFontName = "Arial";
+            SsaFontSize = 20;
             SsaFontColorArgb = System.Drawing.Color.FromArgb(255, 255, 255).ToArgb();
             DCinemaFontFile = "Arial.ttf";
             DCinemaFontSize = 42;

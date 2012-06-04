@@ -134,6 +134,12 @@
     <Compile Include="Forms\AddWareForm.Designer.cs">
       <DependentUpon>AddWareForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\AlignmentPicker.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\AlignmentPicker.Designer.cs">
+      <DependentUpon>AlignmentPicker.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\ApplyDurationLimits.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -816,6 +822,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\AddWareForm.resx">
       <DependentUpon>AddWareForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\AlignmentPicker.resx">
+      <DependentUpon>AlignmentPicker.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\ApplyDurationLimits.resx">
       <DependentUpon>ApplyDurationLimits.cs</DependentUpon>

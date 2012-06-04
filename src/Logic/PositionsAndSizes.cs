@@ -14,6 +14,11 @@ namespace Nikse.SubtitleEdit.Logic
 
         public bool SetPositionAndSize(Form form)
         {
+            return SetPositionAndSize(form, false);
+        }
+
+        public bool SetPositionAndSize(Form form, bool ignoreSize)
+        {
             if (form == null)
                 return false;
 
@@ -24,7 +29,8 @@ namespace Nikse.SubtitleEdit.Logic
                     form.StartPosition = FormStartPosition.Manual;
                     form.Left = ps.Left;
                     form.Top = ps.Top;
-                    form.Size = ps.Size;
+                    if (!ignoreSize)
+                        form.Size = ps.Size;
                     return true;
                 }
             }

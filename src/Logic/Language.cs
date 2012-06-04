@@ -136,6 +136,7 @@ namespace Nikse.SubtitleEdit.Logic
                 VideoWindowTitle = "Video - {0}",
                 AudioWindowTitle = "Audio - {0}",
                 ControlsWindowTitle = "Controls - {0}",
+                Advanced = "Advanced",
             };
 
             About = new LanguageStructure.About
@@ -256,6 +257,7 @@ namespace Nikse.SubtitleEdit.Logic
                 XNumberOfDifference = "Number of differences: {0}",
                 ShowOnlyDifferences = "Show only differences",
                 OnlyLookForDifferencesInText = "Only look for differences in text",
+                CannotCompareWithImageBasedSubtitles = "Cannot compare with image based subtitles",
             };
 
             DvdSubrip = new LanguageStructure.DvdSubRip
@@ -659,6 +661,7 @@ namespace Nikse.SubtitleEdit.Logic
                 TranslationFromSwedishToDanishFailed = "Translation from Swedish to Danish failed",
                 BeforeUndo = "Before undo",
                 UndoPerformed = "Undo performed",
+                RedoPerformed = "Redo performed",
                 NothingToUndo = "Nothing to undo",
                 InvalidLanguageNameX = "Invalid language name: {0}",
                 UnableToChangeLanguage = "Unable to change language!",
@@ -954,6 +957,7 @@ namespace Nikse.SubtitleEdit.Logic
                         Underline = "Underline",
                         Color = "Color...",
                         FontName = "Font name...",
+                        Alignment = "Alignment...",
                         AutoBalanceSelectedLines = "Auto balance selected lines...",
                         RemoveLineBreaksFromSelectedLines = "Remove line-breaks from selected lines...",
                         TypewriterEffect = "Typewriter effect...",
@@ -1206,6 +1210,9 @@ can edit in same subtitle file (collaboration)",
                 MainListViewVideoGoToPositionAndPause= "Go to video pos and pause",
                 MainListViewVideoGoToPositionAndPlay = "Go to video pos and play",
                 MainListViewEditText = "Go to edit text box",
+                MainListViewVideoGoToPositionMinus1SecAndPause = "Go to video pos - 1 sec and pause",
+                MainListViewVideoGoToPositionMinus1SecAndPlay  = "Go to video pos - 1 sec and play",
+                MainListViewEditTextAndPause = "Go to edit text box, and pause at video position",
                 AutoBackup = "Auto-backup",
                 AutoBackupEveryMinute = "Every minute",
                 AutoBackupEveryFiveMinutes = "Every 5th minute",

@@ -206,11 +206,8 @@
             this.underlineToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.colorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemFont = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemAlignment = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemSurroundWithMusicSymbols = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItemAlignTop = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItemAlignMiddle = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItemLeft = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItemRight = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripMenuItemAutoBreakLines = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemUnbreakLines = new System.Windows.Forms.ToolStripMenuItem();
@@ -1773,11 +1770,8 @@
             this.underlineToolStripMenuItem,
             this.colorToolStripMenuItem,
             this.toolStripMenuItemFont,
+            this.toolStripMenuItemAlignment,
             this.toolStripMenuItemSurroundWithMusicSymbols,
-            this.toolStripMenuItemAlignTop,
-            this.toolStripMenuItemAlignMiddle,
-            this.toolStripMenuItemLeft,
-            this.toolStripMenuItemRight,
             this.toolStripSeparator2,
             this.toolStripMenuItemAutoBreakLines,
             this.toolStripMenuItemUnbreakLines,
@@ -1793,7 +1787,7 @@
             this.fixCommonErrorsInSelectedLinesToolStripMenuItem,
             this.changeCasingForSelectedLinesToolStripMenuItem});
             this.contextMenuStripListview.Name = "contextMenuStripListview";
-            this.contextMenuStripListview.Size = new System.Drawing.Size(285, 782);
+            this.contextMenuStripListview.Size = new System.Drawing.Size(285, 738);
             this.contextMenuStripListview.Opening += new System.ComponentModel.CancelEventHandler(this.ContextMenuStripListviewOpening);
             // 
             // setStylesForSelectedLinesToolStripMenuItem
@@ -1934,40 +1928,19 @@
             this.toolStripMenuItemFont.Text = "Font name...";
             this.toolStripMenuItemFont.Click += new System.EventHandler(this.toolStripMenuItemFont_Click);
             // 
+            // toolStripMenuItemAlignment
+            // 
+            this.toolStripMenuItemAlignment.Name = "toolStripMenuItemAlignment";
+            this.toolStripMenuItemAlignment.Size = new System.Drawing.Size(284, 22);
+            this.toolStripMenuItemAlignment.Text = "Alignment";
+            this.toolStripMenuItemAlignment.Click += new System.EventHandler(this.toolStripMenuItemAlignment_Click);
+            // 
             // toolStripMenuItemSurroundWithMusicSymbols
             // 
             this.toolStripMenuItemSurroundWithMusicSymbols.Name = "toolStripMenuItemSurroundWithMusicSymbols";
             this.toolStripMenuItemSurroundWithMusicSymbols.Size = new System.Drawing.Size(284, 22);
             this.toolStripMenuItemSurroundWithMusicSymbols.Text = "♪";
             this.toolStripMenuItemSurroundWithMusicSymbols.Click += new System.EventHandler(this.ToolStripMenuItemSurroundWithMusicSymbolsClick);
-            // 
-            // toolStripMenuItemAlignTop
-            // 
-            this.toolStripMenuItemAlignTop.Name = "toolStripMenuItemAlignTop";
-            this.toolStripMenuItemAlignTop.Size = new System.Drawing.Size(284, 22);
-            this.toolStripMenuItemAlignTop.Text = "Align top";
-            this.toolStripMenuItemAlignTop.Click += new System.EventHandler(this.toolStripMenuItemAlignTop_Click);
-            // 
-            // toolStripMenuItemAlignMiddle
-            // 
-            this.toolStripMenuItemAlignMiddle.Name = "toolStripMenuItemAlignMiddle";
-            this.toolStripMenuItemAlignMiddle.Size = new System.Drawing.Size(284, 22);
-            this.toolStripMenuItemAlignMiddle.Text = "Align middle";
-            this.toolStripMenuItemAlignMiddle.Click += new System.EventHandler(this.toolStripMenuItemAlignMiddle_Click);
-            // 
-            // toolStripMenuItemLeft
-            // 
-            this.toolStripMenuItemLeft.Name = "toolStripMenuItemLeft";
-            this.toolStripMenuItemLeft.Size = new System.Drawing.Size(284, 22);
-            this.toolStripMenuItemLeft.Text = "Align left";
-            this.toolStripMenuItemLeft.Click += new System.EventHandler(this.toolStripMenuItemLeft_Click);
-            // 
-            // toolStripMenuItemRight
-            // 
-            this.toolStripMenuItemRight.Name = "toolStripMenuItemRight";
-            this.toolStripMenuItemRight.Size = new System.Drawing.Size(284, 22);
-            this.toolStripMenuItemRight.Text = "Align right";
-            this.toolStripMenuItemRight.Click += new System.EventHandler(this.toolStripMenuItemRight_Click);
             // 
             // toolStripSeparator2
             // 
@@ -4198,10 +4171,6 @@
         private System.Windows.Forms.ToolStripMenuItem superscriptToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem subscriptToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemImagePerFrame;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemAlignTop;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemAlignMiddle;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemLeft;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemRight;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemApplyDurationLimits;
         private System.Windows.Forms.ToolStripMenuItem generateDatetimeInfoFromVideoToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator25;
@@ -4214,6 +4183,7 @@
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemExportUltech130;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemAssStyles;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemSubStationAlpha;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemAlignment;
     }
 }
 

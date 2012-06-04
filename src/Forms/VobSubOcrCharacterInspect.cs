@@ -29,10 +29,7 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxItalic.Text = Configuration.Settings.Language.VobSubEditCharacters.IsItalic;
             buttonUpdate.Text = Configuration.Settings.Language.VobSubEditCharacters.Update;
             buttonDelete.Text = Configuration.Settings.Language.VobSubEditCharacters.Delete;
-            if (string.IsNullOrEmpty(Configuration.Settings.Language.VobSubOcrCharacterInspect.AddBetterMatch)) //TODO: Fix in 3.3 (remove test)
-                buttonAddBetterMatch.Text = Configuration.Settings.Language.MultipleReplace.Add;
-            else
-                buttonAddBetterMatch.Text = Configuration.Settings.Language.VobSubOcrCharacterInspect.AddBetterMatch;
+            buttonAddBetterMatch.Text = Configuration.Settings.Language.VobSubOcrCharacterInspect.AddBetterMatch;
             labelDoubleSize.Text = Configuration.Settings.Language.VobSubEditCharacters.ImageDoubleSize;
             buttonOK.Text = Configuration.Settings.Language.General.OK;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;

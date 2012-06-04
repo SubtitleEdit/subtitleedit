@@ -557,7 +557,7 @@ namespace Nikse.SubtitleEdit.Forms
             //            comboBox.Items.Add(new ComboBoxItem("PASHTO" , "ps"));
             comboBox.Items.Add(new ComboBoxItem("PERSIAN", "fa"));
             comboBox.Items.Add(new ComboBoxItem("POLISH", "pl"));
-            comboBox.Items.Add(new ComboBoxItem("PORTUGUESE", "pt-PT"));
+            comboBox.Items.Add(new ComboBoxItem("PORTUGUESE", "pt"));
             //            comboBox.Items.Add(new ComboBoxItem("PUNJABI" , "pa"));
             comboBox.Items.Add(new ComboBoxItem("ROMANIAN", "ro"));
             comboBox.Items.Add(new ComboBoxItem("RUSSIAN", "ru"));

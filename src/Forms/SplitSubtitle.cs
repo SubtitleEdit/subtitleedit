@@ -26,7 +26,7 @@ namespace Nikse.SubtitleEdit.Forms
             buttonSplit.Text = Configuration.Settings.Language.SplitSubtitle.Split;
             buttonDone.Text = Configuration.Settings.Language.SplitSubtitle.Done;
 
-            //TODO: SE 3.3buttonAdvanced.Text = Configuration.Settings.Language.General.Advanced;
+            buttonAdvanced.Text = Configuration.Settings.Language.General.Advanced;
             buttonAdvanced.Visible = Configuration.Settings.General.ShowBetaStuff;
 
             labelHoursMinSecsMilliSecs.Text = Configuration.Settings.Language.General.HourMinutesSecondsMilliseconds;
