@@ -519,6 +519,7 @@ namespace Nikse.SubtitleEdit.Forms
             listViewNode.Nodes.Add(Configuration.Settings.Language.Settings.GoToPrevious + GetShortcutText(Configuration.Settings.Shortcuts.MainGoToPrevious));
             listViewNode.Nodes.Add(Configuration.Settings.Language.Settings.ToggleFocus + GetShortcutText(Configuration.Settings.Shortcuts.MainToogleFocus));
             listViewNode.Nodes.Add(Configuration.Settings.Language.Settings.ToggleDialogueDashes + GetShortcutText(Configuration.Settings.Shortcuts.MainListViewToggleDashes));
+            listViewNode.Nodes.Add(Configuration.Settings.Language.Settings.Alignment + GetShortcutText(Configuration.Settings.Shortcuts.MainListViewAlignment));
             treeViewShortcuts.Nodes.Add(listViewNode);
 
             var textBoxNode = new TreeNode(Configuration.Settings.Language.Settings.TextBox);
@@ -1027,16 +1028,18 @@ namespace Nikse.SubtitleEdit.Forms
                         Configuration.Settings.Shortcuts.MainInsertAfter = GetShortcut(node.Text);
                     else if (text == Configuration.Settings.Language.Main.Menu.ContextMenu.InsertBefore.Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.MainInsertBefore = GetShortcut(node.Text);
-                    else if (Configuration.Settings.Language.Settings.MergeDialogue != null && text == Configuration.Settings.Language.Settings.MergeDialogue.Replace("&", string.Empty))
+                    else if (text == Configuration.Settings.Language.Settings.MergeDialogue.Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.MainMergeDialogue = GetShortcut(node.Text);
-                    else if (Configuration.Settings.Language.Settings.GoToNext != null && text == Configuration.Settings.Language.Settings.GoToNext.Replace("&", string.Empty))
+                    else if (text == Configuration.Settings.Language.Settings.GoToNext.Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.MainGoToNext = GetShortcut(node.Text);
-                    else if (Configuration.Settings.Language.Settings.GoToPrevious != null && text == Configuration.Settings.Language.Settings.GoToPrevious.Replace("&", string.Empty))
+                    else if (text == Configuration.Settings.Language.Settings.GoToPrevious.Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.MainGoToPrevious = GetShortcut(node.Text);
-                    else if (Configuration.Settings.Language.Settings.ToggleFocus != null && text == Configuration.Settings.Language.Settings.ToggleFocus.Replace("&", string.Empty))
+                    else if (text == Configuration.Settings.Language.Settings.ToggleFocus.Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.MainToogleFocus = GetShortcut(node.Text);
-                    else if (Configuration.Settings.Language.Settings.ToggleDialogueDashes != null && text == Configuration.Settings.Language.Settings.ToggleDialogueDashes.Replace("&", string.Empty))
+                    else if (text == Configuration.Settings.Language.Settings.ToggleDialogueDashes.Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.MainListViewToggleDashes = GetShortcut(node.Text);
+                    else if (text == Configuration.Settings.Language.Settings.Alignment.Replace("&", string.Empty))
+                        Configuration.Settings.Shortcuts.MainListViewAlignment = GetShortcut(node.Text);
                 }
             }
 
