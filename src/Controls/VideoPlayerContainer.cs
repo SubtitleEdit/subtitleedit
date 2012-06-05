@@ -238,8 +238,11 @@ namespace Nikse.SubtitleEdit.Controls
             {
                 _subtitleText = value;
 
-                bool alignLeft = _subtitleText.StartsWith("{\\a1}") || _subtitleText.StartsWith("{\\a5}") || _subtitleText.StartsWith("{\\a9}");
-                bool alignRight = _subtitleText.StartsWith("{\\a3}") || _subtitleText.StartsWith("{\\a7}") || _subtitleText.StartsWith("{\\a11}");
+                bool alignLeft = _subtitleText.StartsWith("{\\a1}") || _subtitleText.StartsWith("{\\a5}") || _subtitleText.StartsWith("{\\a9}") || // sub station alpha
+                                 _subtitleText.StartsWith("{\\an1}") || _subtitleText.StartsWith("{\\an4}") || _subtitleText.StartsWith("{\\an7}"); // advanced sub station alpha
+
+                bool alignRight = _subtitleText.StartsWith("{\\a3}") || _subtitleText.StartsWith("{\\a7}") || _subtitleText.StartsWith("{\\a11}") || // sub station alpha
+                                  _subtitleText.StartsWith("{\\an3}") || _subtitleText.StartsWith("{\\an6}") || _subtitleText.StartsWith("{\\an9}"); // advanced sub station alpha
 
                 // remove styles for display text (except italic)
                 string text = RemoveSubStationAlphaFormatting(_subtitleText);

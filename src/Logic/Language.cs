@@ -781,6 +781,8 @@ namespace Nikse.SubtitleEdit.Logic
                 TextFiles = "Text files",
                 ExportPlainTextAs = "Export plain text as",
                 SubtitleExported = "Subtitle exported",
+                LineNumberXErrorReadingTimeCodeFromSourceLineY = "Line {0} - error reading time code: {1}",
+                LineNumberXExpectedNumberFromSourceLineY = "Line {0} - expected subtitle number: {1}",
 
                 Menu = new LanguageStructure.Main.MainMenu
                 {

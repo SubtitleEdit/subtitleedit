@@ -7,6 +7,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
     public class SubRip : SubtitleFormat
     {
+        public string Errors { get; private set; }
+        private StringBuilder _errors;
+        private int _lineNumber;
+
         enum ExpectingLine
         {
             Number,
@@ -63,6 +67,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
             bool doRenum = false;
+            _errors = new StringBuilder();
+            _lineNumber = 0;
 
             _paragraph = new Paragraph();
             _expecting = ExpectingLine.Number;
@@ -71,6 +77,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             subtitle.Paragraphs.Clear();
             for (int i=0; i<lines.Count; i++)
             {
+                _lineNumber++;
                 string line = lines[i].TrimEnd();
                 line = line.Trim(Convert.ToChar(127)); // 127=delete acscii
 
@@ -101,6 +108,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
             if (doRenum)
                 subtitle.Renumber(1);
+
+            Errors = _errors.ToString();
         }
 
         private void ReadLine(Subtitle subtitle, string line, string next)
@@ -115,6 +124,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     }
                     else if (line.Trim().Length > 0)
                     {
+                        if (_errors.Length < 2000)
+                            _errors.AppendLine(string.Format(Configuration.Settings.Language.Main.LineNumberXExpectedNumberFromSourceLineY, _lineNumber, line));
                         _errorCount++;
                     }
                     break;
@@ -126,6 +137,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     }
                     else if (line.Trim().Length > 0)
                     {
+                        if (_errors.Length < 2000)
+                            _errors.AppendLine(string.Format(Configuration.Settings.Language.Main.LineNumberXErrorReadingTimeCodeFromSourceLineY, _lineNumber, line));
                         _errorCount++;
                         _expecting = ExpectingLine.Number ; // lets go to next paragraph
                     }
@@ -180,19 +193,12 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         private string RemoveBadChars(string line)
         {
             line = line.Replace("\0", " ");
-
             return line;
         }
 
         private bool TryReadTimeCodesLine(string line, Paragraph paragraph)
-        {
+        {            
             line = line.Replace("،", ",");
-
-            line = line.Trim();
-            line = line.Replace(": ", ":"); // I've seen this
-            line = line.Replace(" :", ":");
-            line = line.Replace(" ,", ",");
-            line = line.Replace(", ", ",");
 
             // Fix some badly formatted separator sequences - anything can happen if you manually edit ;)
             line = line.Replace(" -> ", " --> "); // I've seen this
@@ -201,11 +207,16 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             line = line.Replace(" -- > ", " --> ");
             line = line.Replace(" - -> ", " --> ");
             line = line.Replace(" -->> ", " --> ");
+            line = line.Replace(" ---> ", " --> ");
 
             // Removed stuff after timecodes - like subtitle position
             //  - example of position info: 00:02:26,407 --> 00:02:31,356  X1:100 X2:100 Y1:100 Y2:100
             if (line.Length > 30 && line[30] == ' ')
                 line = line.Substring(0, 29);
+
+            // removes all extra spaces
+            line = line.Replace(" ", string.Empty).Replace("-->", " --> ");
+            line = line.Trim();
 
             // Fix a few more cases of wrong time codes, seen this: 00.00.02,000 --> 00.00.04,000
             line = line.Replace('.', ':');
