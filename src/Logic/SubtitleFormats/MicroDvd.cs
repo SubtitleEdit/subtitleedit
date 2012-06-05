@@ -8,6 +8,9 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
     public class MicroDvd : SubtitleFormat
     {
         static Regex _regexMicroDvdLine = new Regex(@"^\{-?\d+}\{-?\d+}.*$", RegexOptions.Compiled);
+        public string Errors { get; private set; }
+        private StringBuilder _errors;
+        private int _lineNumber;
 
         public override string Extension
         {
@@ -154,9 +157,12 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
             _errorCount = 0;
+            _errors = new StringBuilder();
+            _lineNumber = 0;
 
             foreach (string line in lines)
             {
+                _lineNumber++;
                 string s = RemoveIllegalSpacesAndFixEmptyCodes(line);
                 if (_regexMicroDvdLine.IsMatch(s))
                 {
@@ -217,17 +223,20 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                             }
                             text = lineSb.ToString() + post;
                             subtitle.Paragraphs.Add(new Paragraph(startFrame, endFrame, text));
-
                         }
                     }
                     catch
                     {
                         _errorCount++;
+                        if (_errors.Length < 2000)
+                            _errors.AppendLine(string.Format(Configuration.Settings.Language.Main.LineNumberXErrorReadingFromSourceLineY, _lineNumber, line));
                     }
                 }
                 else
                 {
                     _errorCount++;
+                    if (_errors.Length < 2000)
+                        _errors.AppendLine(string.Format(Configuration.Settings.Language.Main.LineNumberXErrorReadingFromSourceLineY, _lineNumber, line));
                 }
             }
 
@@ -247,6 +256,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             }
 
             subtitle.Renumber(1);
+            Errors = _errors.ToString();
         }
 
         private static int GetTextStartIndex(string line)
@@ -257,7 +267,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             {
                 if (line[i] == '{' || line[i] == '}')
                     tagCount++;
-
                 i++;
             }
             return i;

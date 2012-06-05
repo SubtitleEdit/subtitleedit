@@ -2127,7 +2127,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     SetEncoding(encoding);
 
-                    if (format.FriendlyName == new AdvancedSubStationAlpha().FriendlyName || format.FriendlyName == new SubStationAlpha().FriendlyName)
+                    if (format.GetType() == typeof(AdvancedSubStationAlpha) || format.GetType() == typeof(SubStationAlpha))
                     {
                         string errors = AdvancedSubStationAlpha.CheckForErrors(_subtitle.Header);
                         if (!string.IsNullOrEmpty(errors))
@@ -2137,7 +2137,13 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         string errors = (format as SubRip).Errors;
                         if (!string.IsNullOrEmpty(errors))
-                            MessageBox.Show((format as SubRip).Errors, Title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                            MessageBox.Show(errors, Title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    }
+                    else if (format.GetType() == typeof(MicroDvd))
+                    {
+                        string errors = (format as MicroDvd).Errors;
+                        if (!string.IsNullOrEmpty(errors))
+                            MessageBox.Show(errors, Title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     }
                 }
                 else
@@ -3586,9 +3592,14 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             string errors = (format as SubRip).Errors;
                             if (!string.IsNullOrEmpty(errors))
-                                MessageBox.Show((format as SubRip).Errors, Title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                                MessageBox.Show(errors, Title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                         }
-
+                        else if (format.GetType() == typeof(MicroDvd))
+                        {
+                            string errors = (format as MicroDvd).Errors;
+                            if (!string.IsNullOrEmpty(errors))
+                                MessageBox.Show(errors, Title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        }
                     }
                 }
                 else
@@ -9088,9 +9099,13 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (Configuration.Settings.General.ListViewDoubleClickAction == 3)
             {
-                GotoSubPositionAndPause(-1.0);
+                GotoSubPositionAndPause(-0.5);
             }
             else if (Configuration.Settings.General.ListViewDoubleClickAction == 4)
+            {
+                GotoSubPositionAndPause(-1.0);
+            }
+            else if (Configuration.Settings.General.ListViewDoubleClickAction == 5)
             {
                 if (AutoRepeatContinueOn)
                     PlayCurrent();
@@ -9110,12 +9125,12 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
             }
-            else if (Configuration.Settings.General.ListViewDoubleClickAction == 5)
+            else if (Configuration.Settings.General.ListViewDoubleClickAction == 6)
             {
                 GotoSubPositionAndPause();
                 textBoxListViewText.Focus();
             }
-            else if (Configuration.Settings.General.ListViewDoubleClickAction == 6)
+            else if (Configuration.Settings.General.ListViewDoubleClickAction == 7)
             {
                 textBoxListViewText.Focus();
             }

@@ -721,6 +721,7 @@
             public string ExportPlainTextAs { get; set; }
             public string TextFiles { get; set; }
             public string SubtitleExported { get; set; }
+            public string LineNumberXErrorReadingFromSourceLineY { get; set; }
             public string LineNumberXErrorReadingTimeCodeFromSourceLineY { get; set; }
             public string LineNumberXExpectedNumberFromSourceLineY { get; set; }            
             
@@ -1180,6 +1181,7 @@
             public string MainListViewVideoGoToPositionAndPlay { get; set; }
             public string MainListViewEditText { get; set; }
             public string MainListViewVideoGoToPositionMinus1SecAndPause { get; set; }
+            public string MainListViewVideoGoToPositionMinusHalfSecAndPause { get; set; }
             public string MainListViewVideoGoToPositionMinus1SecAndPlay { get; set; }
             public string MainListViewEditTextAndPause { get; set; }
             public string AutoBackup { get; set; }
