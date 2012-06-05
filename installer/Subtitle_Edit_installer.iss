@@ -35,8 +35,8 @@
 ; If you don't define "localize", i.e. comment out the following line then no translations
 ; for SubtitleEdit or the installer itself will be included in the installer
 #define localize
-;#define TWO_DIGIT_VER
-#define THREE_DIGIT_VER
+#define TWO_DIGIT_VER
+;#define THREE_DIGIT_VER
 
 
 #define VerMajor
