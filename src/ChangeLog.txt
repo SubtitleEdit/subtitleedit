@@ -7,12 +7,13 @@ Subtitle Edit Changelog
  * Improved support for Advanced Substation Alpha (+ Substation Alpha)
  * Advanced Substation Alpha style viewer/creater (right click in list view)
  * Can now display frames instead of milliseconds in main window (see options -> settings)
- * New settings in options regarding "Max. chars/second"
+ * New setting in options: "Max. chars/second"
  * New settings in options regarding "Min. duration" + "Max. duration"
  * New settings in options regarding syntax coloring
  * Tools -> Join subtitles (merge of multiple parts)
  * Tools -> Apply duration limits
  * Tools -> Sort -> Text - chars/sec
+ * Will now display any errors found in SubRip on load
 * IMPROVED:
   * Added extra options for double click on list view line - thx Fredrik + TaeGyun :)
   * Added extra options for export as text

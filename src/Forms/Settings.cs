@@ -88,6 +88,7 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxRemoveBlankLinesWhenOpening.Checked = gs.RemoveBlankLinesWhenOpening;
             checkBoxRememberWindowPosition.Checked = gs.StartRememberPositionAndSize;
             numericUpDownSubtitleLineMaximumLength.Value = gs.SubtitleLineMaximumLength;
+            numericUpDownMaxCharsSec.Value = (decimal)gs.SubtitleMaximumCharactersPerSeconds;
             checkBoxAutoWrapWhileTyping.Checked = gs.AutoWrapLineWhileTyping;
             textBoxShowLineBreaksAs.Text = gs.ListViewLineSeparatorString;
 
@@ -856,6 +857,8 @@ namespace Nikse.SubtitleEdit.Forms
                 gs.SubtitleLineMaximumLength = 999;
             else
                 gs.SubtitleLineMaximumLength = 45;
+
+            gs.SubtitleMaximumCharactersPerSeconds = (double) numericUpDownMaxCharsSec.Value;
 
             gs.AutoWrapLineWhileTyping = checkBoxAutoWrapWhileTyping.Checked;
 

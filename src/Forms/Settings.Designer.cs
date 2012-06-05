@@ -33,6 +33,9 @@
             this.tabControlSettings = new System.Windows.Forms.TabControl();
             this.tabPageGenerel = new System.Windows.Forms.TabPage();
             this.groupBoxMiscellaneous = new System.Windows.Forms.GroupBox();
+            this.numericUpDownSubtitleLineMaximumLength = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownMaxCharsSec = new System.Windows.Forms.NumericUpDown();
+            this.labelMaxCharsPerSecond = new System.Windows.Forms.Label();
             this.comboBoxTimeCodeMode = new System.Windows.Forms.ComboBox();
             this.labelTimeCodeMode = new System.Windows.Forms.Label();
             this.comboBoxEncoding = new System.Windows.Forms.ComboBox();
@@ -229,12 +232,11 @@
             this.colorDialogSSAStyle = new System.Windows.Forms.ColorDialog();
             this.fontDialogSSAStyle = new System.Windows.Forms.FontDialog();
             this.labelStatus = new System.Windows.Forms.Label();
-            this.labelMaxCharsPerSecond = new System.Windows.Forms.Label();
-            this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
-            this.numericUpDownSubtitleLineMaximumLength = new System.Windows.Forms.NumericUpDown();
             this.tabControlSettings.SuspendLayout();
             this.tabPageGenerel.SuspendLayout();
             this.groupBoxMiscellaneous.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSubtitleLineMaximumLength)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMaxCharsSec)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDurationMax)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDurationMin)).BeginInit();
             this.tabPageToolBar.SuspendLayout();
@@ -277,14 +279,12 @@
             this.groupBoxShortcuts.SuspendLayout();
             this.tabPageSyntaxColoring.SuspendLayout();
             this.groupBoxListViewSyntaxColoring.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSubtitleLineMaximumLength)).BeginInit();
             this.SuspendLayout();
             // 
             // buttonOK
             // 
             this.buttonOK.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.buttonOK.Location = new System.Drawing.Point(694, 489);
+            this.buttonOK.Location = new System.Drawing.Point(686, 489);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 21);
             this.buttonOK.TabIndex = 0;
@@ -335,7 +335,7 @@
             // groupBoxMiscellaneous
             // 
             this.groupBoxMiscellaneous.Controls.Add(this.numericUpDownSubtitleLineMaximumLength);
-            this.groupBoxMiscellaneous.Controls.Add(this.numericUpDown1);
+            this.groupBoxMiscellaneous.Controls.Add(this.numericUpDownMaxCharsSec);
             this.groupBoxMiscellaneous.Controls.Add(this.labelMaxCharsPerSecond);
             this.groupBoxMiscellaneous.Controls.Add(this.comboBoxTimeCodeMode);
             this.groupBoxMiscellaneous.Controls.Add(this.labelTimeCodeMode);
@@ -384,6 +384,60 @@
             this.groupBoxMiscellaneous.TabIndex = 0;
             this.groupBoxMiscellaneous.TabStop = false;
             this.groupBoxMiscellaneous.Text = "Miscellaneous";
+            // 
+            // numericUpDownSubtitleLineMaximumLength
+            // 
+            this.numericUpDownSubtitleLineMaximumLength.Location = new System.Drawing.Point(193, 123);
+            this.numericUpDownSubtitleLineMaximumLength.Maximum = new decimal(new int[] {
+            999,
+            0,
+            0,
+            0});
+            this.numericUpDownSubtitleLineMaximumLength.Minimum = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            this.numericUpDownSubtitleLineMaximumLength.Name = "numericUpDownSubtitleLineMaximumLength";
+            this.numericUpDownSubtitleLineMaximumLength.Size = new System.Drawing.Size(56, 21);
+            this.numericUpDownSubtitleLineMaximumLength.TabIndex = 3;
+            this.numericUpDownSubtitleLineMaximumLength.Value = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+            // 
+            // numericUpDownMaxCharsSec
+            // 
+            this.numericUpDownMaxCharsSec.DecimalPlaces = 1;
+            this.numericUpDownMaxCharsSec.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            65536});
+            this.numericUpDownMaxCharsSec.Location = new System.Drawing.Point(193, 148);
+            this.numericUpDownMaxCharsSec.Minimum = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            this.numericUpDownMaxCharsSec.Name = "numericUpDownMaxCharsSec";
+            this.numericUpDownMaxCharsSec.Size = new System.Drawing.Size(56, 21);
+            this.numericUpDownMaxCharsSec.TabIndex = 4;
+            this.numericUpDownMaxCharsSec.Value = new decimal(new int[] {
+            24,
+            0,
+            0,
+            0});
+            // 
+            // labelMaxCharsPerSecond
+            // 
+            this.labelMaxCharsPerSecond.AutoSize = true;
+            this.labelMaxCharsPerSecond.Location = new System.Drawing.Point(15, 151);
+            this.labelMaxCharsPerSecond.Name = "labelMaxCharsPerSecond";
+            this.labelMaxCharsPerSecond.Size = new System.Drawing.Size(80, 13);
+            this.labelMaxCharsPerSecond.TabIndex = 48;
+            this.labelMaxCharsPerSecond.Text = "Max. chars/sec";
             // 
             // comboBoxTimeCodeMode
             // 
@@ -451,7 +505,7 @@
             this.checkBoxAutoWrapWhileTyping.AutoSize = true;
             this.checkBoxAutoWrapWhileTyping.Location = new System.Drawing.Point(193, 177);
             this.checkBoxAutoWrapWhileTyping.Name = "checkBoxAutoWrapWhileTyping";
-            this.checkBoxAutoWrapWhileTyping.Size = new System.Drawing.Size(137, 17);
+            this.checkBoxAutoWrapWhileTyping.Size = new System.Drawing.Size(132, 17);
             this.checkBoxAutoWrapWhileTyping.TabIndex = 5;
             this.checkBoxAutoWrapWhileTyping.Text = "Auto-wrap while typing";
             this.checkBoxAutoWrapWhileTyping.UseVisualStyleBackColor = true;
@@ -541,7 +595,7 @@
             this.checkBoxPromptDeleteLines.AutoSize = true;
             this.checkBoxPromptDeleteLines.Location = new System.Drawing.Point(436, 309);
             this.checkBoxPromptDeleteLines.Name = "checkBoxPromptDeleteLines";
-            this.checkBoxPromptDeleteLines.Size = new System.Drawing.Size(142, 17);
+            this.checkBoxPromptDeleteLines.Size = new System.Drawing.Size(138, 17);
             this.checkBoxPromptDeleteLines.TabIndex = 27;
             this.checkBoxPromptDeleteLines.Text = "Prompt for deleting lines";
             this.checkBoxPromptDeleteLines.UseVisualStyleBackColor = true;
@@ -560,7 +614,7 @@
             this.checkBoxAllowEditOfOriginalSubtitle.AutoSize = true;
             this.checkBoxAllowEditOfOriginalSubtitle.Location = new System.Drawing.Point(436, 286);
             this.checkBoxAllowEditOfOriginalSubtitle.Name = "checkBoxAllowEditOfOriginalSubtitle";
-            this.checkBoxAllowEditOfOriginalSubtitle.Size = new System.Drawing.Size(160, 17);
+            this.checkBoxAllowEditOfOriginalSubtitle.Size = new System.Drawing.Size(155, 17);
             this.checkBoxAllowEditOfOriginalSubtitle.TabIndex = 26;
             this.checkBoxAllowEditOfOriginalSubtitle.Text = "Allow edit of original subtitle";
             this.checkBoxAllowEditOfOriginalSubtitle.UseVisualStyleBackColor = true;
@@ -693,7 +747,7 @@
             this.checkBoxRememberWindowPosition.AutoSize = true;
             this.checkBoxRememberWindowPosition.Location = new System.Drawing.Point(436, 101);
             this.checkBoxRememberWindowPosition.Name = "checkBoxRememberWindowPosition";
-            this.checkBoxRememberWindowPosition.Size = new System.Drawing.Size(223, 17);
+            this.checkBoxRememberWindowPosition.Size = new System.Drawing.Size(222, 17);
             this.checkBoxRememberWindowPosition.TabIndex = 17;
             this.checkBoxRememberWindowPosition.Text = "Remember main window position and size";
             this.checkBoxRememberWindowPosition.UseVisualStyleBackColor = true;
@@ -730,7 +784,7 @@
             this.checkBoxStartInSourceView.AutoSize = true;
             this.checkBoxStartInSourceView.Location = new System.Drawing.Point(436, 124);
             this.checkBoxStartInSourceView.Name = "checkBoxStartInSourceView";
-            this.checkBoxStartInSourceView.Size = new System.Drawing.Size(121, 17);
+            this.checkBoxStartInSourceView.Size = new System.Drawing.Size(119, 17);
             this.checkBoxStartInSourceView.TabIndex = 18;
             this.checkBoxStartInSourceView.Text = "Start in source view";
             this.checkBoxStartInSourceView.UseVisualStyleBackColor = true;
@@ -740,7 +794,7 @@
             this.checkBoxReopenLastOpened.AutoSize = true;
             this.checkBoxReopenLastOpened.Location = new System.Drawing.Point(444, 52);
             this.checkBoxReopenLastOpened.Name = "checkBoxReopenLastOpened";
-            this.checkBoxReopenLastOpened.Size = new System.Drawing.Size(145, 17);
+            this.checkBoxReopenLastOpened.Size = new System.Drawing.Size(140, 17);
             this.checkBoxReopenLastOpened.TabIndex = 15;
             this.checkBoxReopenLastOpened.Text = "Start with last file loaded";
             this.checkBoxReopenLastOpened.UseVisualStyleBackColor = true;
@@ -750,7 +804,7 @@
             this.checkBoxRememberRecentFiles.AutoSize = true;
             this.checkBoxRememberRecentFiles.Location = new System.Drawing.Point(436, 28);
             this.checkBoxRememberRecentFiles.Name = "checkBoxRememberRecentFiles";
-            this.checkBoxRememberRecentFiles.Size = new System.Drawing.Size(195, 17);
+            this.checkBoxRememberRecentFiles.Size = new System.Drawing.Size(188, 17);
             this.checkBoxRememberRecentFiles.TabIndex = 14;
             this.checkBoxRememberRecentFiles.Text = "Remember recent files (for reopen)";
             this.checkBoxRememberRecentFiles.UseVisualStyleBackColor = true;
@@ -761,7 +815,7 @@
             this.checkBoxSubtitleFontBold.AutoSize = true;
             this.checkBoxSubtitleFontBold.Location = new System.Drawing.Point(193, 300);
             this.checkBoxSubtitleFontBold.Name = "checkBoxSubtitleFontBold";
-            this.checkBoxSubtitleFontBold.Size = new System.Drawing.Size(46, 17);
+            this.checkBoxSubtitleFontBold.Size = new System.Drawing.Size(47, 17);
             this.checkBoxSubtitleFontBold.TabIndex = 9;
             this.checkBoxSubtitleFontBold.Text = "Bold";
             this.checkBoxSubtitleFontBold.UseVisualStyleBackColor = true;
@@ -851,7 +905,7 @@
             this.checkBoxShowFrameRate.AutoSize = true;
             this.checkBoxShowFrameRate.Location = new System.Drawing.Point(16, 29);
             this.checkBoxShowFrameRate.Name = "checkBoxShowFrameRate";
-            this.checkBoxShowFrameRate.Size = new System.Drawing.Size(154, 17);
+            this.checkBoxShowFrameRate.Size = new System.Drawing.Size(149, 17);
             this.checkBoxShowFrameRate.TabIndex = 34;
             this.checkBoxShowFrameRate.Text = "Show frame rate in toolbar";
             this.checkBoxShowFrameRate.UseVisualStyleBackColor = true;
@@ -917,7 +971,7 @@
             this.checkBoxHelp.AutoSize = true;
             this.checkBoxHelp.Location = new System.Drawing.Point(704, 80);
             this.checkBoxHelp.Name = "checkBoxHelp";
-            this.checkBoxHelp.Size = new System.Drawing.Size(55, 17);
+            this.checkBoxHelp.Size = new System.Drawing.Size(56, 17);
             this.checkBoxHelp.TabIndex = 31;
             this.checkBoxHelp.Text = "Visible";
             this.checkBoxHelp.UseVisualStyleBackColor = true;
@@ -944,7 +998,7 @@
             this.checkBoxSettings.AutoSize = true;
             this.checkBoxSettings.Location = new System.Drawing.Point(628, 80);
             this.checkBoxSettings.Name = "checkBoxSettings";
-            this.checkBoxSettings.Size = new System.Drawing.Size(55, 17);
+            this.checkBoxSettings.Size = new System.Drawing.Size(56, 17);
             this.checkBoxSettings.TabIndex = 28;
             this.checkBoxSettings.Text = "Visible";
             this.checkBoxSettings.UseVisualStyleBackColor = true;
@@ -971,7 +1025,7 @@
             this.checkBoxSpellCheck.AutoSize = true;
             this.checkBoxSpellCheck.Location = new System.Drawing.Point(550, 80);
             this.checkBoxSpellCheck.Name = "checkBoxSpellCheck";
-            this.checkBoxSpellCheck.Size = new System.Drawing.Size(55, 17);
+            this.checkBoxSpellCheck.Size = new System.Drawing.Size(56, 17);
             this.checkBoxSpellCheck.TabIndex = 26;
             this.checkBoxSpellCheck.Text = "Visible";
             this.checkBoxSpellCheck.UseVisualStyleBackColor = true;
@@ -998,7 +1052,7 @@
             this.checkBoxVisualSync.AutoSize = true;
             this.checkBoxVisualSync.Location = new System.Drawing.Point(476, 80);
             this.checkBoxVisualSync.Name = "checkBoxVisualSync";
-            this.checkBoxVisualSync.Size = new System.Drawing.Size(55, 17);
+            this.checkBoxVisualSync.Size = new System.Drawing.Size(56, 17);
             this.checkBoxVisualSync.TabIndex = 19;
             this.checkBoxVisualSync.Text = "Visible";
             this.checkBoxVisualSync.UseVisualStyleBackColor = true;
@@ -1025,7 +1079,7 @@
             this.checkBoxReplace.AutoSize = true;
             this.checkBoxReplace.Location = new System.Drawing.Point(400, 80);
             this.checkBoxReplace.Name = "checkBoxReplace";
-            this.checkBoxReplace.Size = new System.Drawing.Size(55, 17);
+            this.checkBoxReplace.Size = new System.Drawing.Size(56, 17);
             this.checkBoxReplace.TabIndex = 16;
             this.checkBoxReplace.Text = "Visible";
             this.checkBoxReplace.UseVisualStyleBackColor = true;
@@ -1052,7 +1106,7 @@
             this.checkBoxToolbarFind.AutoSize = true;
             this.checkBoxToolbarFind.Location = new System.Drawing.Point(324, 80);
             this.checkBoxToolbarFind.Name = "checkBoxToolbarFind";
-            this.checkBoxToolbarFind.Size = new System.Drawing.Size(55, 17);
+            this.checkBoxToolbarFind.Size = new System.Drawing.Size(56, 17);
             this.checkBoxToolbarFind.TabIndex = 13;
             this.checkBoxToolbarFind.Text = "Visible";
             this.checkBoxToolbarFind.UseVisualStyleBackColor = true;
@@ -1079,7 +1133,7 @@
             this.checkBoxToolbarSaveAs.AutoSize = true;
             this.checkBoxToolbarSaveAs.Location = new System.Drawing.Point(248, 80);
             this.checkBoxToolbarSaveAs.Name = "checkBoxToolbarSaveAs";
-            this.checkBoxToolbarSaveAs.Size = new System.Drawing.Size(55, 17);
+            this.checkBoxToolbarSaveAs.Size = new System.Drawing.Size(56, 17);
             this.checkBoxToolbarSaveAs.TabIndex = 10;
             this.checkBoxToolbarSaveAs.Text = "Visible";
             this.checkBoxToolbarSaveAs.UseVisualStyleBackColor = true;
@@ -1106,7 +1160,7 @@
             this.checkBoxToolbarSave.AutoSize = true;
             this.checkBoxToolbarSave.Location = new System.Drawing.Point(172, 80);
             this.checkBoxToolbarSave.Name = "checkBoxToolbarSave";
-            this.checkBoxToolbarSave.Size = new System.Drawing.Size(55, 17);
+            this.checkBoxToolbarSave.Size = new System.Drawing.Size(56, 17);
             this.checkBoxToolbarSave.TabIndex = 7;
             this.checkBoxToolbarSave.Text = "Visible";
             this.checkBoxToolbarSave.UseVisualStyleBackColor = true;
@@ -1133,7 +1187,7 @@
             this.checkBoxToolbarOpen.AutoSize = true;
             this.checkBoxToolbarOpen.Location = new System.Drawing.Point(96, 80);
             this.checkBoxToolbarOpen.Name = "checkBoxToolbarOpen";
-            this.checkBoxToolbarOpen.Size = new System.Drawing.Size(55, 17);
+            this.checkBoxToolbarOpen.Size = new System.Drawing.Size(56, 17);
             this.checkBoxToolbarOpen.TabIndex = 4;
             this.checkBoxToolbarOpen.Text = "Visible";
             this.checkBoxToolbarOpen.UseVisualStyleBackColor = true;
@@ -1160,7 +1214,7 @@
             this.checkBoxToolbarNew.AutoSize = true;
             this.checkBoxToolbarNew.Location = new System.Drawing.Point(20, 80);
             this.checkBoxToolbarNew.Name = "checkBoxToolbarNew";
-            this.checkBoxToolbarNew.Size = new System.Drawing.Size(55, 17);
+            this.checkBoxToolbarNew.Size = new System.Drawing.Size(56, 17);
             this.checkBoxToolbarNew.TabIndex = 1;
             this.checkBoxToolbarNew.Text = "Visible";
             this.checkBoxToolbarNew.UseVisualStyleBackColor = true;
@@ -1270,7 +1324,7 @@
             this.checkBoxVideoPlayerShowStopButton.AutoSize = true;
             this.checkBoxVideoPlayerShowStopButton.Location = new System.Drawing.Point(9, 19);
             this.checkBoxVideoPlayerShowStopButton.Name = "checkBoxVideoPlayerShowStopButton";
-            this.checkBoxVideoPlayerShowStopButton.Size = new System.Drawing.Size(111, 17);
+            this.checkBoxVideoPlayerShowStopButton.Size = new System.Drawing.Size(109, 17);
             this.checkBoxVideoPlayerShowStopButton.TabIndex = 10;
             this.checkBoxVideoPlayerShowStopButton.Text = "Show stop button";
             this.checkBoxVideoPlayerShowStopButton.UseVisualStyleBackColor = true;
@@ -1337,7 +1391,7 @@
             this.radioButtonVideoPlayerVLC.AutoSize = true;
             this.radioButtonVideoPlayerVLC.Location = new System.Drawing.Point(10, 46);
             this.radioButtonVideoPlayerVLC.Name = "radioButtonVideoPlayerVLC";
-            this.radioButtonVideoPlayerVLC.Size = new System.Drawing.Size(43, 17);
+            this.radioButtonVideoPlayerVLC.Size = new System.Drawing.Size(45, 17);
             this.radioButtonVideoPlayerVLC.TabIndex = 4;
             this.radioButtonVideoPlayerVLC.TabStop = true;
             this.radioButtonVideoPlayerVLC.Text = "VLC";
@@ -1393,7 +1447,7 @@
             this.radioButtonVideoPlayerDirectShow.AutoSize = true;
             this.radioButtonVideoPlayerDirectShow.Location = new System.Drawing.Point(10, 23);
             this.radioButtonVideoPlayerDirectShow.Name = "radioButtonVideoPlayerDirectShow";
-            this.radioButtonVideoPlayerDirectShow.Size = new System.Drawing.Size(82, 17);
+            this.radioButtonVideoPlayerDirectShow.Size = new System.Drawing.Size(83, 17);
             this.radioButtonVideoPlayerDirectShow.TabIndex = 1;
             this.radioButtonVideoPlayerDirectShow.TabStop = true;
             this.radioButtonVideoPlayerDirectShow.Text = "DirectShow ";
@@ -1404,7 +1458,7 @@
             this.radioButtonVideoPlayerManagedDirectX.AutoSize = true;
             this.radioButtonVideoPlayerManagedDirectX.Location = new System.Drawing.Point(10, 90);
             this.radioButtonVideoPlayerManagedDirectX.Name = "radioButtonVideoPlayerManagedDirectX";
-            this.radioButtonVideoPlayerManagedDirectX.Size = new System.Drawing.Size(106, 17);
+            this.radioButtonVideoPlayerManagedDirectX.Size = new System.Drawing.Size(108, 17);
             this.radioButtonVideoPlayerManagedDirectX.TabIndex = 6;
             this.radioButtonVideoPlayerManagedDirectX.TabStop = true;
             this.radioButtonVideoPlayerManagedDirectX.Text = "Managed DirectX";
@@ -1461,7 +1515,7 @@
             this.checkBoxGenerateSpectrogram.AutoSize = true;
             this.checkBoxGenerateSpectrogram.Location = new System.Drawing.Point(10, 20);
             this.checkBoxGenerateSpectrogram.Name = "checkBoxGenerateSpectrogram";
-            this.checkBoxGenerateSpectrogram.Size = new System.Drawing.Size(134, 17);
+            this.checkBoxGenerateSpectrogram.Size = new System.Drawing.Size(131, 17);
             this.checkBoxGenerateSpectrogram.TabIndex = 0;
             this.checkBoxGenerateSpectrogram.Text = "Generate spectrogram";
             this.checkBoxGenerateSpectrogram.UseVisualStyleBackColor = true;
@@ -1521,7 +1575,7 @@
             this.checkBoxReverseMouseWheelScrollDirection.AutoSize = true;
             this.checkBoxReverseMouseWheelScrollDirection.Location = new System.Drawing.Point(262, 31);
             this.checkBoxReverseMouseWheelScrollDirection.Name = "checkBoxReverseMouseWheelScrollDirection";
-            this.checkBoxReverseMouseWheelScrollDirection.Size = new System.Drawing.Size(202, 17);
+            this.checkBoxReverseMouseWheelScrollDirection.Size = new System.Drawing.Size(201, 17);
             this.checkBoxReverseMouseWheelScrollDirection.TabIndex = 6;
             this.checkBoxReverseMouseWheelScrollDirection.Text = "Reverse mouse wheel scroll direction";
             this.checkBoxReverseMouseWheelScrollDirection.UseVisualStyleBackColor = true;
@@ -1659,7 +1713,7 @@
             this.checkBoxSpellCheckAutoChangeNames.AutoSize = true;
             this.checkBoxSpellCheckAutoChangeNames.Location = new System.Drawing.Point(15, 20);
             this.checkBoxSpellCheckAutoChangeNames.Name = "checkBoxSpellCheckAutoChangeNames";
-            this.checkBoxSpellCheckAutoChangeNames.Size = new System.Drawing.Size(216, 17);
+            this.checkBoxSpellCheckAutoChangeNames.Size = new System.Drawing.Size(209, 17);
             this.checkBoxSpellCheckAutoChangeNames.TabIndex = 0;
             this.checkBoxSpellCheckAutoChangeNames.Text = "Auto fix names where only casing differ";
             this.checkBoxSpellCheckAutoChangeNames.UseVisualStyleBackColor = true;
@@ -1683,7 +1737,7 @@
             this.checkBoxFixCommonOcrErrorsUsingHardcodedRules.AutoSize = true;
             this.checkBoxFixCommonOcrErrorsUsingHardcodedRules.Location = new System.Drawing.Point(15, 115);
             this.checkBoxFixCommonOcrErrorsUsingHardcodedRules.Name = "checkBoxFixCommonOcrErrorsUsingHardcodedRules";
-            this.checkBoxFixCommonOcrErrorsUsingHardcodedRules.Size = new System.Drawing.Size(268, 17);
+            this.checkBoxFixCommonOcrErrorsUsingHardcodedRules.Size = new System.Drawing.Size(264, 17);
             this.checkBoxFixCommonOcrErrorsUsingHardcodedRules.TabIndex = 2;
             this.checkBoxFixCommonOcrErrorsUsingHardcodedRules.Text = "Fix common OCR errors - also use hardcoded rules";
             this.checkBoxFixCommonOcrErrorsUsingHardcodedRules.UseVisualStyleBackColor = true;
@@ -1968,7 +2022,7 @@
             this.checkBoxNamesEtcOnline.AutoSize = true;
             this.checkBoxNamesEtcOnline.Location = new System.Drawing.Point(7, 22);
             this.checkBoxNamesEtcOnline.Name = "checkBoxNamesEtcOnline";
-            this.checkBoxNamesEtcOnline.Size = new System.Drawing.Size(163, 17);
+            this.checkBoxNamesEtcOnline.Size = new System.Drawing.Size(162, 17);
             this.checkBoxNamesEtcOnline.TabIndex = 26;
             this.checkBoxNamesEtcOnline.Text = "Use online names etc xml file";
             this.checkBoxNamesEtcOnline.UseVisualStyleBackColor = true;
@@ -2355,7 +2409,7 @@
             this.checkBoxShortcutsShift.Enabled = false;
             this.checkBoxShortcutsShift.Location = new System.Drawing.Point(245, 407);
             this.checkBoxShortcutsShift.Name = "checkBoxShortcutsShift";
-            this.checkBoxShortcutsShift.Size = new System.Drawing.Size(48, 17);
+            this.checkBoxShortcutsShift.Size = new System.Drawing.Size(47, 17);
             this.checkBoxShortcutsShift.TabIndex = 3;
             this.checkBoxShortcutsShift.Text = "Shift";
             this.checkBoxShortcutsShift.UseVisualStyleBackColor = true;
@@ -2366,7 +2420,7 @@
             this.checkBoxShortcutsAlt.Enabled = false;
             this.checkBoxShortcutsAlt.Location = new System.Drawing.Point(176, 407);
             this.checkBoxShortcutsAlt.Name = "checkBoxShortcutsAlt";
-            this.checkBoxShortcutsAlt.Size = new System.Drawing.Size(39, 17);
+            this.checkBoxShortcutsAlt.Size = new System.Drawing.Size(38, 17);
             this.checkBoxShortcutsAlt.TabIndex = 2;
             this.checkBoxShortcutsAlt.Text = "Alt";
             this.checkBoxShortcutsAlt.UseVisualStyleBackColor = true;
@@ -2377,7 +2431,7 @@
             this.checkBoxShortcutsControl.Enabled = false;
             this.checkBoxShortcutsControl.Location = new System.Drawing.Point(89, 407);
             this.checkBoxShortcutsControl.Name = "checkBoxShortcutsControl";
-            this.checkBoxShortcutsControl.Size = new System.Drawing.Size(61, 17);
+            this.checkBoxShortcutsControl.Size = new System.Drawing.Size(59, 17);
             this.checkBoxShortcutsControl.TabIndex = 1;
             this.checkBoxShortcutsControl.Text = "Control";
             this.checkBoxShortcutsControl.UseVisualStyleBackColor = true;
@@ -2443,8 +2497,8 @@
             this.checkBoxSyntaxColorTextMoreThanTwoLines.AutoSize = true;
             this.checkBoxSyntaxColorTextMoreThanTwoLines.Location = new System.Drawing.Point(20, 116);
             this.checkBoxSyntaxColorTextMoreThanTwoLines.Name = "checkBoxSyntaxColorTextMoreThanTwoLines";
-            this.checkBoxSyntaxColorTextMoreThanTwoLines.Size = new System.Drawing.Size(187, 17);
-            this.checkBoxSyntaxColorTextMoreThanTwoLines.TabIndex = 14;
+            this.checkBoxSyntaxColorTextMoreThanTwoLines.Size = new System.Drawing.Size(181, 17);
+            this.checkBoxSyntaxColorTextMoreThanTwoLines.TabIndex = 3;
             this.checkBoxSyntaxColorTextMoreThanTwoLines.Text = "Text - color if more than two lines";
             this.checkBoxSyntaxColorTextMoreThanTwoLines.UseVisualStyleBackColor = true;
             // 
@@ -2453,8 +2507,8 @@
             this.checkBoxSyntaxOverlap.AutoSize = true;
             this.checkBoxSyntaxOverlap.Location = new System.Drawing.Point(20, 154);
             this.checkBoxSyntaxOverlap.Name = "checkBoxSyntaxOverlap";
-            this.checkBoxSyntaxOverlap.Size = new System.Drawing.Size(129, 17);
-            this.checkBoxSyntaxOverlap.TabIndex = 13;
+            this.checkBoxSyntaxOverlap.Size = new System.Drawing.Size(127, 17);
+            this.checkBoxSyntaxOverlap.TabIndex = 4;
             this.checkBoxSyntaxOverlap.Text = "Time - color if overlap";
             this.checkBoxSyntaxOverlap.UseVisualStyleBackColor = true;
             // 
@@ -2463,7 +2517,7 @@
             this.checkBoxSyntaxColorDurationTooSmall.Location = new System.Drawing.Point(20, 35);
             this.checkBoxSyntaxColorDurationTooSmall.Name = "checkBoxSyntaxColorDurationTooSmall";
             this.checkBoxSyntaxColorDurationTooSmall.Size = new System.Drawing.Size(154, 17);
-            this.checkBoxSyntaxColorDurationTooSmall.TabIndex = 10;
+            this.checkBoxSyntaxColorDurationTooSmall.TabIndex = 0;
             this.checkBoxSyntaxColorDurationTooSmall.Text = "Duration - color if too small";
             this.checkBoxSyntaxColorDurationTooSmall.UseVisualStyleBackColor = true;
             // 
@@ -2472,7 +2526,7 @@
             this.buttonListViewSyntaxColorError.Location = new System.Drawing.Point(20, 192);
             this.buttonListViewSyntaxColorError.Name = "buttonListViewSyntaxColorError";
             this.buttonListViewSyntaxColorError.Size = new System.Drawing.Size(112, 21);
-            this.buttonListViewSyntaxColorError.TabIndex = 4;
+            this.buttonListViewSyntaxColorError.TabIndex = 5;
             this.buttonListViewSyntaxColorError.Text = "Error color";
             this.buttonListViewSyntaxColorError.UseVisualStyleBackColor = true;
             this.buttonListViewSyntaxColorError.Click += new System.EventHandler(this.buttonListViewSyntaxColorError_Click);
@@ -2482,8 +2536,8 @@
             this.checkBoxSyntaxColorTextTooLong.AutoSize = true;
             this.checkBoxSyntaxColorTextTooLong.Location = new System.Drawing.Point(20, 93);
             this.checkBoxSyntaxColorTextTooLong.Name = "checkBoxSyntaxColorTextTooLong";
-            this.checkBoxSyntaxColorTextTooLong.Size = new System.Drawing.Size(132, 17);
-            this.checkBoxSyntaxColorTextTooLong.TabIndex = 12;
+            this.checkBoxSyntaxColorTextTooLong.Size = new System.Drawing.Size(128, 17);
+            this.checkBoxSyntaxColorTextTooLong.TabIndex = 2;
             this.checkBoxSyntaxColorTextTooLong.Text = "Text - color if too long";
             this.checkBoxSyntaxColorTextTooLong.UseVisualStyleBackColor = true;
             // 
@@ -2492,8 +2546,8 @@
             this.checkBoxSyntaxColorDurationTooLarge.AutoSize = true;
             this.checkBoxSyntaxColorDurationTooLarge.Location = new System.Drawing.Point(20, 58);
             this.checkBoxSyntaxColorDurationTooLarge.Name = "checkBoxSyntaxColorDurationTooLarge";
-            this.checkBoxSyntaxColorDurationTooLarge.Size = new System.Drawing.Size(155, 17);
-            this.checkBoxSyntaxColorDurationTooLarge.TabIndex = 11;
+            this.checkBoxSyntaxColorDurationTooLarge.Size = new System.Drawing.Size(150, 17);
+            this.checkBoxSyntaxColorDurationTooLarge.TabIndex = 1;
             this.checkBoxSyntaxColorDurationTooLarge.Text = "Duration - color if too large";
             this.checkBoxSyntaxColorDurationTooLarge.UseVisualStyleBackColor = true;
             // 
@@ -2503,7 +2557,7 @@
             this.panelListViewSyntaxColorError.Location = new System.Drawing.Point(142, 192);
             this.panelListViewSyntaxColorError.Name = "panelListViewSyntaxColorError";
             this.panelListViewSyntaxColorError.Size = new System.Drawing.Size(21, 20);
-            this.panelListViewSyntaxColorError.TabIndex = 5;
+            this.panelListViewSyntaxColorError.TabIndex = 6;
             this.panelListViewSyntaxColorError.Click += new System.EventHandler(this.buttonListViewSyntaxColorError_Click);
             // 
             // labelStatus
@@ -2514,54 +2568,6 @@
             this.labelStatus.Size = new System.Drawing.Size(60, 13);
             this.labelStatus.TabIndex = 3;
             this.labelStatus.Text = "labelStatus";
-            // 
-            // labelMaxCharsPerSecond
-            // 
-            this.labelMaxCharsPerSecond.AutoSize = true;
-            this.labelMaxCharsPerSecond.Location = new System.Drawing.Point(15, 151);
-            this.labelMaxCharsPerSecond.Name = "labelMaxCharsPerSecond";
-            this.labelMaxCharsPerSecond.Size = new System.Drawing.Size(80, 13);
-            this.labelMaxCharsPerSecond.TabIndex = 48;
-            this.labelMaxCharsPerSecond.Text = "Max. chars/sec";
-            // 
-            // numericUpDown1
-            // 
-            this.numericUpDown1.Location = new System.Drawing.Point(193, 148);
-            this.numericUpDown1.Minimum = new decimal(new int[] {
-            10,
-            0,
-            0,
-            0});
-            this.numericUpDown1.Name = "numericUpDown1";
-            this.numericUpDown1.Size = new System.Drawing.Size(56, 21);
-            this.numericUpDown1.TabIndex = 4;
-            this.numericUpDown1.Value = new decimal(new int[] {
-            100,
-            0,
-            0,
-            0});
-            // 
-            // numericUpDownSubtitleLineMaximumLength
-            // 
-            this.numericUpDownSubtitleLineMaximumLength.Location = new System.Drawing.Point(193, 123);
-            this.numericUpDownSubtitleLineMaximumLength.Maximum = new decimal(new int[] {
-            999,
-            0,
-            0,
-            0});
-            this.numericUpDownSubtitleLineMaximumLength.Minimum = new decimal(new int[] {
-            10,
-            0,
-            0,
-            0});
-            this.numericUpDownSubtitleLineMaximumLength.Name = "numericUpDownSubtitleLineMaximumLength";
-            this.numericUpDownSubtitleLineMaximumLength.Size = new System.Drawing.Size(56, 21);
-            this.numericUpDownSubtitleLineMaximumLength.TabIndex = 3;
-            this.numericUpDownSubtitleLineMaximumLength.Value = new decimal(new int[] {
-            100,
-            0,
-            0,
-            0});
             // 
             // Settings
             // 
@@ -2586,6 +2592,8 @@
             this.tabPageGenerel.ResumeLayout(false);
             this.groupBoxMiscellaneous.ResumeLayout(false);
             this.groupBoxMiscellaneous.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSubtitleLineMaximumLength)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMaxCharsSec)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDurationMax)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDurationMin)).EndInit();
             this.tabPageToolBar.ResumeLayout(false);
@@ -2649,8 +2657,6 @@
             this.tabPageSyntaxColoring.ResumeLayout(false);
             this.groupBoxListViewSyntaxColoring.ResumeLayout(false);
             this.groupBoxListViewSyntaxColoring.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSubtitleLineMaximumLength)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -2860,7 +2866,7 @@
         private System.Windows.Forms.Button buttonListViewSyntaxColorError;
         private System.Windows.Forms.Panel panelListViewSyntaxColorError;
         private System.Windows.Forms.Label labelMaxCharsPerSecond;
-        private System.Windows.Forms.NumericUpDown numericUpDown1;
+        private System.Windows.Forms.NumericUpDown numericUpDownMaxCharsSec;
         private System.Windows.Forms.NumericUpDown numericUpDownSubtitleLineMaximumLength;
     }
 }

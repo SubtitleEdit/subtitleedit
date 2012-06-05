@@ -373,7 +373,7 @@ namespace Nikse.SubtitleEdit.Logic
             AutoRepeatOn = true;
             AutoContinueOn = false;
             SyncListViewWithVideoWhilePlaying = false;
-            AutoBackupSeconds = 0;
+            AutoBackupSeconds = 60 * 15;
             SpellChecker = "hunspell";
             AllowEditOfOriginalSubtitle = false;
             PromptDeleteLines = true;
