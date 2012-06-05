@@ -630,6 +630,15 @@ namespace Nikse.SubtitleEdit.Forms
                             format = ultech130;
                         }
                     }
+                    if (format == null)
+                    {
+                        var nciCaption = new NciCaption();
+                        if (nciCaption.IsMine(null, fileName))
+                        {
+                            nciCaption.LoadSubtitle(_subtitle, null, fileName);
+                            format = nciCaption;
+                        }
+                    }
 
                     if (format == null)
                     {
@@ -1951,6 +1960,21 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         ultech130.LoadSubtitle(_subtitle, null, fileName);
                         _oldSubtitleFormat = ultech130;
+                        SetFormatToSubRip();
+                        SetEncoding(Configuration.Settings.General.DefaultEncoding);
+                        encoding = GetCurrentEncoding();
+                        justConverted = true;
+                        format = GetCurrentSubtitleFormat();
+                    }
+                }
+
+                if (format == null)
+                {
+                    var nciCaption = new NciCaption();
+                    if (nciCaption.IsMine(null, fileName))
+                    {
+                        nciCaption.LoadSubtitle(_subtitle, null, fileName);
+                        _oldSubtitleFormat = nciCaption;
                         SetFormatToSubRip();
                         SetEncoding(Configuration.Settings.General.DefaultEncoding);
                         encoding = GetCurrentEncoding();
