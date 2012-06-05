@@ -5,6 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
+using Nikse.SubtitleEdit.Logic;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -21,6 +22,19 @@ namespace Nikse.SubtitleEdit.Forms
             t1.Interval = 100;
             t1.Tick += new EventHandler(t1_Tick);
             t1.Start();
+            Text = Configuration.Settings.Language.SubStationAlphaStyles.Alignment;
+
+            button1.Text = Configuration.Settings.Language.SubStationAlphaStyles.TopLeft;
+            button2.Text = Configuration.Settings.Language.SubStationAlphaStyles.TopCenter;
+            button3.Text = Configuration.Settings.Language.SubStationAlphaStyles.TopRight;
+
+            button4.Text = Configuration.Settings.Language.SubStationAlphaStyles.MiddleLeft;
+            button5.Text = Configuration.Settings.Language.SubStationAlphaStyles.MiddleCenter;
+            button6.Text = Configuration.Settings.Language.SubStationAlphaStyles.MiddleRight;
+
+            button7.Text = Configuration.Settings.Language.SubStationAlphaStyles.BottomLeft;
+            button8.Text = Configuration.Settings.Language.SubStationAlphaStyles.BottomCenter;
+            button9.Text = Configuration.Settings.Language.SubStationAlphaStyles.BottomRight;
         }
 
         public void Done()
