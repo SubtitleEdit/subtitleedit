@@ -14056,12 +14056,13 @@ namespace Nikse.SubtitleEdit.Forms
             var f = new AlignmentPicker();
             f.TopMost = true;
             f.StartPosition = FormStartPosition.Manual;
-            f.Left = System.Windows.Forms.Cursor.Position.X - 125;
-            f.Top = System.Windows.Forms.Cursor.Position.Y - 52;
+            f.Left = System.Windows.Forms.Cursor.Position.X - 150;
+            f.Top = System.Windows.Forms.Cursor.Position.Y - 75;
             if (f.ShowDialog(this) == DialogResult.OK)
             {
                 string tag = string.Empty;
-                if (_oldSubtitleFormat.GetType() == typeof(SubStationAlpha))
+                var format = GetCurrentSubtitleFormat();
+                if (format.GetType() == typeof(SubStationAlpha))
                 {
                     //1: Bottom left
                     //2: Bottom center
@@ -14120,7 +14121,7 @@ namespace Nikse.SubtitleEdit.Forms
                             tag = "{\\an1}";
                             break;
                         case ContentAlignment.BottomCenter:
-                            if (_oldSubtitleFormat.GetType() == typeof(SubRip))
+                            if (format.GetType() == typeof(SubRip))
                                 tag = string.Empty;
                             else
                                 tag = "{\\an2}";
