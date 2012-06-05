@@ -1158,7 +1158,7 @@ namespace Nikse.SubtitleEdit.Forms
             toolStripMenuItemCavena890.Text = _language.Menu.File.ExportCavena890;
             eBUSTLToolStripMenuItem.Text = _language.Menu.File.ExportEbu;
             pACScreenElectronicsToolStripMenuItem.Text = _language.Menu.File.ExportPac;
-            plainTextToolStripMenuItem.Text = _language.Menu.File.ExportPlainText;            
+            plainTextToolStripMenuItem.Text = _language.Menu.File.ExportPlainText;
             exitToolStripMenuItem.Text = _language.Menu.File.Exit;
 
             editToolStripMenuItem.Text = _language.Menu.Edit.Title;
@@ -4299,7 +4299,7 @@ namespace Nikse.SubtitleEdit.Forms
                         if (string.Compare(_subtitle.HistoryItems[_undoIndex].RedoFileName, _fileName, true) == 0)
                             _fileDateTime = _subtitle.HistoryItems[_undoIndex].RedoFileModified;
                         _fileName = _subtitle.HistoryItems[_undoIndex].RedoFileName;
-                        ShowStatus(_language.UndoPerformed); 
+                        ShowStatus(_language.UndoPerformed);
                     }
 
                 }
@@ -4657,7 +4657,7 @@ namespace Nikse.SubtitleEdit.Forms
                     mergeBeforeToolStripMenuItem.Visible = false;
                     splitLineToolStripMenuItem.Visible = false;
                     typeEffectToolStripMenuItem.Visible = false;
-                    toolStripMenuItemMergeDialogue.Visible = true; 
+                    toolStripMenuItemMergeDialogue.Visible = true;
                 }
                 else if (SubtitleListview1.SelectedItems.Count >= 2)
                 {
@@ -4973,7 +4973,7 @@ namespace Nikse.SubtitleEdit.Forms
             string style = "Default";
             if (styles.Count > 0)
                 style = styles[0];
-             
+
             MakeHistoryForUndo(_language.BeforeInsertLine);
 
             int startNumber = 1;
@@ -6056,7 +6056,7 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         labelDurationWarning.Text = _languageGeneral.Negative;
                     }
-                }          
+                }
             }
         }
 
@@ -10563,7 +10563,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 toolStripMenuItemSubStationAlpha.Visible = false;
             }
-            
+
             toolStripSeparator20.Visible = subtitleLoaded;
         }
 
@@ -14019,7 +14019,7 @@ namespace Nikse.SubtitleEdit.Forms
                     //11: Middle right
                     //5: Top left
                     //6: Top center
-                    //7: Top right 
+                    //7: Top right
                     switch (f.Alignment)
                     {
                         case ContentAlignment.BottomLeft:
@@ -14061,7 +14061,7 @@ namespace Nikse.SubtitleEdit.Forms
                     //6: Middle right
                     //7: Top left
                     //8: Top center
-                    //9: Top right 
+                    //9: Top right
                     switch (f.Alignment)
                     {
                         case ContentAlignment.BottomLeft:

@@ -517,7 +517,7 @@
         {
             public string Title { get; set; }
             public string Information { get; set; }
-        }        
+        }
 
         public class Main
         {
@@ -1404,7 +1404,7 @@
         public class SubStationAlphaStyles
         {
             public string Title { get; set; }
-            public string TitleSubstationAlpha { get; set; }            
+            public string TitleSubstationAlpha { get; set; }
             public string Styles { get; set; }
             public string Properties { get; set; }
             public string Name { get; set; }

@@ -157,8 +157,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                                     Paragraph p = new Paragraph();
                                     p.Text = text.Trim();
                                     p.StartTime = DecodeTime(title.Attributes["offset"]);
-                                    p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + DecodeTime(title.Attributes["duration"]).TotalMilliseconds;                                    
-                                    subtitle.Paragraphs.Add(p);                                    
+                                    p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + DecodeTime(title.Attributes["duration"]).TotalMilliseconds;
+                                    subtitle.Paragraphs.Add(p);
                                 }
                             }
                         }

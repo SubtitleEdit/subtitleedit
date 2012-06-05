@@ -299,7 +299,7 @@ namespace Nikse.SubtitleEdit.Controls
                     _subtitleTextBox.SelectionAlignment = HorizontalAlignment.Right;
                 else
                     _subtitleTextBox.SelectionAlignment = HorizontalAlignment.Center;
-                
+
                 _subtitleTextBox.DeselectAll();
                 foreach (var entry in italicLookups)
                 {

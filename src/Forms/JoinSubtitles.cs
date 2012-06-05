@@ -78,7 +78,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void SortAndLoad()
         {
             List<Subtitle> subtitles = new List<Subtitle>();
-            for (int k = 0; k < _fileNamesToJoin.Count; k++)            
+            for (int k = 0; k < _fileNamesToJoin.Count; k++)
             {
                 string fileName = _fileNamesToJoin[k];
                 try

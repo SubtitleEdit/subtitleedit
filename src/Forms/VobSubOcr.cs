@@ -215,7 +215,7 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxAutoFixCommonErrors.Text = language.FixOcrErrors;
             checkBoxRightToLeft.Text = language.RightToLeft;
             checkBoxRightToLeft.Left = numericUpDownPixelsIsSpace.Left;
-            groupBoxOCRControls.Text = string.Empty; 
+            groupBoxOCRControls.Text = string.Empty;
 
             comboBoxDictionaries.SelectedIndexChanged -= comboBoxDictionaries_SelectedIndexChanged;
             comboBoxDictionaries.Items.Clear();
