@@ -8,7 +8,7 @@ using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Forms
 {
-   
+
 
     public partial class AlignmentPicker : Form
     {

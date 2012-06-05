@@ -28,7 +28,7 @@ namespace Nikse.SubtitleEdit.Forms
             buttonOK.Text = Configuration.Settings.Language.General.OK;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
 
-            FixLargeFonts();                
+            FixLargeFonts();
         }
 
         private void FixLargeFonts()

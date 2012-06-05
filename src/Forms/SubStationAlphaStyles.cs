@@ -19,7 +19,7 @@ namespace Nikse.SubtitleEdit.Forms
         private string _oldSsaName = null;
         private Timer _previewTimer = new Timer();
         private SubtitleFormat _format = null;
-        private bool _isSubStationAlpha = false;        
+        private bool _isSubStationAlpha = false;
 
         private class SsaStyle
         {
@@ -67,7 +67,7 @@ namespace Nikse.SubtitleEdit.Forms
         public SubStationAlphaStyles(Subtitle subtitle, SubtitleFormat format)
         {
             InitializeComponent();
-            
+
             Header = subtitle.Header;
             _format = format;
             _isSubStationAlpha = _format.FriendlyName == new SubStationAlpha().FriendlyName;

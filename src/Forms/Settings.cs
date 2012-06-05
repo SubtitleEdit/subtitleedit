@@ -1063,7 +1063,7 @@ namespace Nikse.SubtitleEdit.Forms
                         Configuration.Settings.Shortcuts.MainCreateSetStart = GetShortcut(node.Text);
                     else if (text == Configuration.Settings.Language.Main.VideoControls.SetEndTime.Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.MainCreateSetEnd = GetShortcut(node.Text);
-                    if (text == Configuration.Settings.Language.Settings.MainCreateStartDownEndUp.Replace("&", string.Empty)) 
+                    if (text == Configuration.Settings.Language.Settings.MainCreateStartDownEndUp.Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.MainCreateStartDownEndUp = GetShortcut(node.Text);
                 }
             }
@@ -1113,11 +1113,11 @@ namespace Nikse.SubtitleEdit.Forms
                         Configuration.Settings.Shortcuts.WaveformPlaySelection = GetShortcut(node.Text);
                     else if (text == (Configuration.Settings.Language.Settings.VerticalZoom).Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.WaveformVerticalZoom = GetShortcut(node.Text);
-                    else if (text == (Configuration.Settings.Language.Settings.WaveformSeekSilenceForward).Replace("&", string.Empty)) 
+                    else if (text == (Configuration.Settings.Language.Settings.WaveformSeekSilenceForward).Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.WaveformSearchSilenceForward = GetShortcut(node.Text);
-                    else if (text == (Configuration.Settings.Language.Settings.WaveformSeekSilenceBack).Replace("&", string.Empty)) 
+                    else if (text == (Configuration.Settings.Language.Settings.WaveformSeekSilenceBack).Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.WaveformSearchSilenceBack = GetShortcut(node.Text);
-                    else if (text == (Configuration.Settings.Language.Settings.WaveformAddTextHere).Replace("&", string.Empty)) 
+                    else if (text == (Configuration.Settings.Language.Settings.WaveformAddTextHere).Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.WaveformAddTextHere = GetShortcut(node.Text);
                 }
             }
