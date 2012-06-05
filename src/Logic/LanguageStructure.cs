@@ -721,6 +721,9 @@
             public string ExportPlainTextAs { get; set; }
             public string TextFiles { get; set; }
             public string SubtitleExported { get; set; }
+            public string LineNumberXErrorReadingTimeCodeFromSourceLineY { get; set; }
+            public string LineNumberXExpectedNumberFromSourceLineY { get; set; }            
+            
 
             public class MainMenu
             {

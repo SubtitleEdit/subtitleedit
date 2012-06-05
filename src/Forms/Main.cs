@@ -2131,7 +2131,13 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         string errors = AdvancedSubStationAlpha.CheckForErrors(_subtitle.Header);
                         if (!string.IsNullOrEmpty(errors))
-                            MessageBox.Show(errors);
+                            MessageBox.Show(errors, Title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    }
+                    else if (format.GetType() == typeof(SubRip))
+                    {
+                        string errors = (format as SubRip).Errors;
+                        if (!string.IsNullOrEmpty(errors))
+                            MessageBox.Show((format as SubRip).Errors, Title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     }
                 }
                 else
@@ -3570,12 +3576,19 @@ namespace Nikse.SubtitleEdit.Forms
                             index++;
                         }
 
-                        if (format.FriendlyName == new AdvancedSubStationAlpha().FriendlyName || format.FriendlyName == new SubStationAlpha().FriendlyName)
+                        if (format.GetType() == typeof(AdvancedSubStationAlpha) || format.GetType() == typeof(SubStationAlpha))
                         {
                             string errors = AdvancedSubStationAlpha.CheckForErrors(_subtitle.Header);
                             if (!string.IsNullOrEmpty(errors))
-                                MessageBox.Show(errors);
+                                MessageBox.Show(errors, Title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                         }
+                        else if (format.GetType() == typeof(SubRip))
+                        {
+                            string errors = (format as SubRip).Errors;
+                            if (!string.IsNullOrEmpty(errors))
+                                MessageBox.Show((format as SubRip).Errors, Title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        }
+
                     }
                 }
                 else
