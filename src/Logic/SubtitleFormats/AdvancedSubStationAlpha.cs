@@ -169,7 +169,13 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                 {
                     string subTag = fontTag.Substring(fontStart + tag.Length, fontEnd - (fontStart + tag.Length));
                     if (tag.Contains("color"))
+                    {
                         subTag = subTag.Replace("#", string.Empty);
+
+                        // switch from rrggbb to bbggrr           
+                        if (subTag.Length >= 6)
+                            subTag = subTag.Remove(subTag.Length - 6) + subTag.Substring(subTag.Length - 2, 2) + subTag.Substring(subTag.Length - 4, 2) + subTag.Substring(subTag.Length - 6, 2);
+                    }
                     fontTag = fontTag.Remove(fontStart, fontEnd - fontStart + 1);
                     text = text.Insert(start, @"{\" + ssaTagName + subTag + endSsaTag);
                 }
@@ -235,6 +241,11 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                     {
                         string color = text.Substring(start + 4, end - (start + 4));
                         color = color.Replace("&", string.Empty).TrimStart('H');
+                        color = color.PadLeft(6, '0');
+
+                        // switch to rrggbb from bbggrr                        
+                        color = "#" + color.Remove(color.Length - 6) + color.Substring(color.Length - 2, 2) + color.Substring(color.Length - 4, 2) + color.Substring(color.Length - 6, 2); 
+
                         text = text.Remove(start, end - start + 1);
                         text = text.Insert(start, "<font color=\"" + color + "\">");
                         text += "</font>";
