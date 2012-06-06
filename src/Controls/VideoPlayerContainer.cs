@@ -254,16 +254,21 @@ namespace Nikse.SubtitleEdit.Controls
                 text = text.Replace("</u>", string.Empty);
                 text = text.Replace("<U>", string.Empty);
                 text = text.Replace("</U>", string.Empty);
-                text = Utilities.RemoveHtmlFontTag(text);
+            //    text = Utilities.RemoveHtmlFontTag(text);
 
                 // display italic
                 var sb = new StringBuilder();
                 int i = 0;
                 bool isItalic = false;
+                bool isFontColor = false;
                 int italicBegin = 0;
+                int fontColorBegin = 0;
                 _subtitleTextBox.Text = string.Empty;
                 int letterCount = 0;
                 var italicLookups = new System.Collections.Generic.Dictionary<int, int>();
+                var fontColorLookups = new System.Collections.Generic.Dictionary<Point, Color>();
+                System.Collections.Generic.Stack<Color> colorStack = new System.Collections.Generic.Stack<Color>();
+                Color fontColor = Color.White;
                 while  (i < text.Length)
                 {
                     if (text.Substring(i).ToLower().StartsWith("<i>"))
@@ -272,7 +277,7 @@ namespace Nikse.SubtitleEdit.Controls
                         sb = new StringBuilder();
                         isItalic = true;
                         italicBegin = letterCount;
-                        i+=2;
+                        i += 2;
                     }
                     else if (text.Substring(i).ToLower().StartsWith("</i>") && isItalic)
                     {
@@ -281,6 +286,57 @@ namespace Nikse.SubtitleEdit.Controls
                         sb = new StringBuilder();
                         isItalic = false;
                         i += 3;
+                    }
+                    else if (text.Substring(i).ToLower().StartsWith("<font "))
+                    {
+                        string s = text.Substring(i);
+                        bool fontFound = false;
+                        int start = s.IndexOf("<font ");
+                        if (start >= 0)
+                        {
+                            int end = s.IndexOf(">", start);
+                            if (end > 0)
+                            {
+                                string f = s.Substring(start, end - start);
+                                int colorStart = f.IndexOf(" color=");
+                                if (colorStart > 0)
+                                {
+                                    int colorEnd = f.IndexOf("\"", colorStart + " color=".Length + 1);
+                                    if (colorEnd > 0)
+                                    {
+                                        s = f.Substring(colorStart, colorEnd - colorStart);
+                                        s = s.Remove(0, " color=".Length);
+                                        s = s.Trim('"');
+                                        s = s.Trim('\'');
+                                        try
+                                        {
+                                            fontColor = System.Drawing.ColorTranslator.FromHtml(s);
+                                            fontFound = true;
+                                        }
+                                        catch
+                                        {
+                                            fontFound = false;
+                                        }                                        
+                                    }
+                                }
+                            }
+                            i+=end;
+                        }
+                        if (fontFound)
+                        {
+                            _subtitleTextBox.AppendText(sb.ToString());
+                            sb = new StringBuilder();
+                            isFontColor = true;
+                            fontColorBegin = letterCount;
+                        }
+                    }
+                    else if (text.Substring(i).ToLower().StartsWith("</font>") && isFontColor)
+                    {
+                        fontColorLookups.Add(new Point(fontColorBegin, sb.Length), fontColor);
+                        _subtitleTextBox.AppendText(sb.ToString());
+                        sb = new StringBuilder();
+                        isFontColor = false;
+                        i += 6;
                     }
                     else if (text.Substring(i, 1) == "\n") // RichTextBox only count NewLine as one character!
                     {
@@ -311,6 +367,13 @@ namespace Nikse.SubtitleEdit.Controls
                     _subtitleTextBox.SelectionStart = entry.Key;
                     _subtitleTextBox.SelectionLength = entry.Value;
                     _subtitleTextBox.SelectionFont = new Font(currentFont.FontFamily, currentFont.Size, newFontStyle);
+                    _subtitleTextBox.DeselectAll();
+                }
+                foreach (var entry in fontColorLookups)
+                {
+                    _subtitleTextBox.SelectionStart = entry.Key.X;
+                    _subtitleTextBox.SelectionLength = entry.Key.Y;
+                    _subtitleTextBox.SelectionColor = entry.Value;
                     _subtitleTextBox.DeselectAll();
                 }
             }
