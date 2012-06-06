@@ -66,7 +66,7 @@ namespace Nikse.SubtitleEdit.Logic
             TextDraw.DrawText(font, sf, path, sb, isItalic, bold, false, 0, 0, ref newLine, addX, leftMargin, ref pathPointsStart);
 
             float width = 0;
-            int index = path.PathPoints.Length - 30;
+            int index = path.PathPoints.Length - 40;
             if (index < 0)
                 index = 0;
             for (int i = index; i < path.PathPoints.Length; i++)
@@ -74,8 +74,8 @@ namespace Nikse.SubtitleEdit.Logic
                 if (path.PathPoints[i].X > width)
                     width = path.PathPoints[i].X;
             }
-            int max = 30;
-            if (30 >= path.PathPoints.Length)
+            int max = 40;
+            if (max > path.PathPoints.Length)
                 max = path.PathPoints.Length;
             for (int i = 0; i < max; i++)
             {
@@ -84,6 +84,40 @@ namespace Nikse.SubtitleEdit.Logic
             }
 
             return width;
+        }
+
+        public static float MeasureTextHeight(Font font, string text, bool bold)
+        {
+            var sf = new StringFormat { Alignment = StringAlignment.Near, LineAlignment = StringAlignment.Near };
+            var path = new GraphicsPath();
+
+            var sb = new StringBuilder(text);
+            bool isItalic = false;
+            bool newLine = false;
+            int addX = 0;
+            int leftMargin = 0;
+            int pathPointsStart = -1;
+            TextDraw.DrawText(font, sf, path, sb, isItalic, bold, false, 0, 0, ref newLine, addX, leftMargin, ref pathPointsStart);
+
+            float height = 0;
+            int index = path.PathPoints.Length - 80;
+            if (index < 0)
+                index = 0;
+            for (int i = index; i < path.PathPoints.Length; i++)
+            {
+                if (path.PathPoints[i].Y > height)
+                    height = path.PathPoints[i].Y;
+            }
+            int max = 80;
+            if (max > path.PathPoints.Length)
+                max = path.PathPoints.Length;
+            for (int i = 0; i < max; i++)
+            {
+                if (path.PathPoints[i].Y > height)
+                    height = path.PathPoints[i].Y;
+            }
+
+            return height;
         }
 
 
