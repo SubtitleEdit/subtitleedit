@@ -229,11 +229,12 @@ Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
                 if (!eventsStarted)
                     header.AppendLine(line);
 
+
                 if (line.Trim().ToLower() == "[events]")
                 {
                     eventsStarted = true;
                 }
-                else if (eventsStarted)
+                else if (eventsStarted && line.Trim().Length > 0)
                 {
                     string s = line.Trim().ToLower();
                     if (s.StartsWith("format:"))

@@ -649,7 +649,12 @@ namespace Nikse.SubtitleEdit.Forms
                 checkBoxFontItalic.Checked = style.Italic;
                 checkBoxFontBold.Checked = style.Bold;
                 checkBoxFontUnderline.Checked = style.Underline;
-                numericUpDownFontSize.Value = style.FontSize;
+
+                if (style.FontSize > 0 && style.FontSize <= numericUpDownFontSize.Maximum)
+                    numericUpDownFontSize.Value = style.FontSize;
+                else
+                    numericUpDownFontSize.Value = 20;
+
                 panelPrimaryColor.BackColor = style.Primary;
                 panelSecondaryColor.BackColor = style.Secondary;
                 if (_isSubStationAlpha)
@@ -727,9 +732,21 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
 
-                numericUpDownMarginLeft.Value = style.MarginLeft;
-                numericUpDownMarginRight.Value = style.MarginRight;
-                numericUpDownMarginVertical.Value = style.MarginVertical;
+                if (style.MarginLeft >= 0 && style.MarginLeft <= numericUpDownMarginLeft.Maximum)
+                    numericUpDownMarginLeft.Value = style.MarginLeft;
+                else
+                    numericUpDownMarginLeft.Value = 10;
+
+                if (style.MarginRight >= 0 && style.MarginRight <= numericUpDownMarginRight.Maximum)
+                    numericUpDownMarginRight.Value = style.MarginRight;
+                else
+                    numericUpDownMarginRight.Value = 10;
+
+                if (style.MarginVertical >= 0 && style.MarginVertical <= numericUpDownMarginVertical.Maximum)
+                    numericUpDownMarginVertical.Value = style.MarginVertical;
+                else
+                    numericUpDownMarginVertical.Value = 10;
+
                 if (style.BorderStyle == "3")
                 {
                     radioButtonOpaqueBox.Checked = true;

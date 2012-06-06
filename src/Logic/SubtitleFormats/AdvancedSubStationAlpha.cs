@@ -275,7 +275,11 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                 if (!eventsStarted && !fontsStarted)
                     header.AppendLine(line);
 
-                if (line.Trim().ToLower().StartsWith("dialogue:")) // fix faulty font tags...
+                if (line.Trim().Length == 0)
+                { 
+                    // skip empty lines
+                }
+                else if (line.Trim().ToLower().StartsWith("dialogue:")) // fix faulty font tags...
                 {
                     eventsStarted = true;
                     fontsStarted = false;
@@ -409,6 +413,13 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
             //White = &HFFFFFF&
             //Black = &H000000&
             string s = f.Trim().Trim('&');
+
+            if (s.ToLower().StartsWith("h") && s.Length < 7)
+            {
+                while (s.Length < 7)
+                    s = s.Insert(1, "0");
+            }
+
             if (s.ToLower().StartsWith("h") && s.Length == 7)
             {
                 s = s.Substring(1);
@@ -572,7 +583,7 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                                 }
                                 else if (i == primaryColourIndex)
                                 {
-                                    if (AdvancedSubStationAlpha.GetSsaColor(f, dummyColor) == dummyColor)
+                                    if (AdvancedSubStationAlpha.GetSsaColor(f, dummyColor) == dummyColor || f == "&h")
                                     {
                                         sb.AppendLine("'PrimaryColour' incorrect: " + rawLine);
                                         sb.AppendLine();
