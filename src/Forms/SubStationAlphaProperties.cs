@@ -43,7 +43,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 foreach (string line in subtitle.Header.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries))
                 {
-                    string s = line.ToLower();
+                    string s = line.ToLower().Trim();
                     if (s.StartsWith("title:"))
                     {
                         textBoxTitle.Text = s.Remove(0, 6).Trim();

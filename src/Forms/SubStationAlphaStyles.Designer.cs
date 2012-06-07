@@ -33,6 +33,7 @@
             this.columnHeaderName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeaderFontName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeaderFontSize = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeaderUseCount = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeaderPrimaryColor = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeaderOutline = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.contextMenuStripStyles = new System.Windows.Forms.ContextMenuStrip(this.components);
@@ -95,7 +96,6 @@
             this.pictureBoxPreview = new System.Windows.Forms.PictureBox();
             this.colorDialogSSAStyle = new System.Windows.Forms.ColorDialog();
             this.openFileDialogImport = new System.Windows.Forms.OpenFileDialog();
-            this.columnHeaderUseCount = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.contextMenuStripStyles.SuspendLayout();
             this.groupBoxStyles.SuspendLayout();
             this.groupBoxProperties.SuspendLayout();
@@ -153,6 +153,10 @@
             // 
             this.columnHeaderFontSize.Text = "Font size";
             this.columnHeaderFontSize.Width = 80;
+            // 
+            // columnHeaderUseCount
+            // 
+            this.columnHeaderUseCount.Text = "Used#";
             // 
             // columnHeaderPrimaryColor
             // 
@@ -803,10 +807,6 @@
             this.pictureBoxPreview.TabIndex = 0;
             this.pictureBoxPreview.TabStop = false;
             // 
-            // columnHeaderUseCount
-            // 
-            this.columnHeaderUseCount.Text = "Used#";
-            // 
             // SubStationAlphaStyles
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -817,7 +817,9 @@
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.buttonOK);
             this.Controls.Add(this.groupBoxPreview);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.KeyPreview = true;
+            this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.MinimumSize = new System.Drawing.Size(898, 580);
             this.Name = "SubStationAlphaStyles";
