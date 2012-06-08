@@ -4923,7 +4923,8 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void InsertBefore()
         {
-            bool useExtraForStyle = _oldSubtitleFormat.GetType() == typeof(AdvancedSubStationAlpha) || _oldSubtitleFormat.GetType() == typeof(SubStationAlpha);
+            var format = GetCurrentSubtitleFormat();
+            bool useExtraForStyle = format.GetType() == typeof(AdvancedSubStationAlpha) || format.GetType() == typeof(SubStationAlpha);
             List<string> styles = AdvancedSubStationAlpha.GetStylesFromHeader(_subtitle.Header);
             string style = "Default";
             if (styles.Count > 0)
@@ -5016,7 +5017,8 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void InsertAfter()
         {
-            bool useExtraForStyle = _oldSubtitleFormat.GetType() == typeof(AdvancedSubStationAlpha) || _oldSubtitleFormat.GetType() == typeof(SubStationAlpha);
+            var format = GetCurrentSubtitleFormat();
+            bool useExtraForStyle = format.GetType() == typeof(AdvancedSubStationAlpha) || format.GetType() == typeof(SubStationAlpha);
             List<string> styles = AdvancedSubStationAlpha.GetStylesFromHeader(_subtitle.Header);
             string style = "Default";
             if (styles.Count > 0)
