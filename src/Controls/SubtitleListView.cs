@@ -158,7 +158,8 @@ namespace Nikse.SubtitleEdit.Controls
                     }
                     rect = new Rectangle(e.Bounds.Left + 4, e.Bounds.Top+2, e.Bounds.Width - 3, e.Bounds.Height);
                     Font f = new System.Drawing.Font(SubtitleFontName, SubtitleFontSize, e.Item.Font.Style);
-                    e.Graphics.DrawString(e.SubItem.Text, f, new SolidBrush(e.Item.ForeColor), rect, sf);
+                    //e.Graphics.DrawString(e.SubItem.Text, f, new SolidBrush(e.Item.ForeColor), rect, sf);
+                    TextRenderer.DrawText(e.Graphics, e.Item.SubItems[e.ColumnIndex].Text, f, new Point(e.Bounds.Left + 3, e.Bounds.Top + 2), e.Item.ForeColor, TextFormatFlags.Default);
                 }
                 else
                 {
