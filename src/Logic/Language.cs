@@ -1352,7 +1352,7 @@ can edit in same subtitle file (collaboration)",
                 SyntaxColorDurationIfTooSmall = "Color duration if too short",
                 SyntaxColorDurationIfTooLarge = "Color duration if too long",
                 SyntaxColorTextIfTooLong = "Color text if too long",
-                SyntaxColorTextMoreThanTwoLines = "Color text if more than two lines",
+                SyntaxColorTextMoreThanXLines = "Color text if more than lines:",
                 SyntaxColorOverlap = "Color time code overlap",
                 SyntaxColorErrorColor = "Error background color",
             };
