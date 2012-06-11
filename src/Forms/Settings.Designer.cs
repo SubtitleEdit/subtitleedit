@@ -232,6 +232,7 @@
             this.colorDialogSSAStyle = new System.Windows.Forms.ColorDialog();
             this.fontDialogSSAStyle = new System.Windows.Forms.FontDialog();
             this.labelStatus = new System.Windows.Forms.Label();
+            this.numericUpDownSyntaxColorTextMoreThanXLines = new System.Windows.Forms.NumericUpDown();
             this.tabControlSettings.SuspendLayout();
             this.tabPageGenerel.SuspendLayout();
             this.groupBoxMiscellaneous.SuspendLayout();
@@ -279,6 +280,7 @@
             this.groupBoxShortcuts.SuspendLayout();
             this.tabPageSyntaxColoring.SuspendLayout();
             this.groupBoxListViewSyntaxColoring.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSyntaxColorTextMoreThanXLines)).BeginInit();
             this.SuspendLayout();
             // 
             // buttonOK
@@ -2535,6 +2537,7 @@
             // 
             // groupBoxListViewSyntaxColoring
             // 
+            this.groupBoxListViewSyntaxColoring.Controls.Add(this.numericUpDownSyntaxColorTextMoreThanXLines);
             this.groupBoxListViewSyntaxColoring.Controls.Add(this.checkBoxSyntaxColorTextMoreThanTwoLines);
             this.groupBoxListViewSyntaxColoring.Controls.Add(this.checkBoxSyntaxOverlap);
             this.groupBoxListViewSyntaxColoring.Controls.Add(this.checkBoxSyntaxColorDurationTooSmall);
@@ -2554,9 +2557,9 @@
             this.checkBoxSyntaxColorTextMoreThanTwoLines.AutoSize = true;
             this.checkBoxSyntaxColorTextMoreThanTwoLines.Location = new System.Drawing.Point(20, 116);
             this.checkBoxSyntaxColorTextMoreThanTwoLines.Name = "checkBoxSyntaxColorTextMoreThanTwoLines";
-            this.checkBoxSyntaxColorTextMoreThanTwoLines.Size = new System.Drawing.Size(181, 17);
+            this.checkBoxSyntaxColorTextMoreThanTwoLines.Size = new System.Drawing.Size(170, 17);
             this.checkBoxSyntaxColorTextMoreThanTwoLines.TabIndex = 3;
-            this.checkBoxSyntaxColorTextMoreThanTwoLines.Text = "Text - color if more than two lines";
+            this.checkBoxSyntaxColorTextMoreThanTwoLines.Text = "Text - color if more than lines:";
             this.checkBoxSyntaxColorTextMoreThanTwoLines.UseVisualStyleBackColor = true;
             // 
             // checkBoxSyntaxOverlap
@@ -2564,7 +2567,7 @@
             this.checkBoxSyntaxOverlap.AutoSize = true;
             this.checkBoxSyntaxOverlap.Location = new System.Drawing.Point(20, 154);
             this.checkBoxSyntaxOverlap.Name = "checkBoxSyntaxOverlap";
-            this.checkBoxSyntaxOverlap.Size = new System.Drawing.Size(127, 17);
+            this.checkBoxSyntaxOverlap.Size = new System.Drawing.Size(129, 17);
             this.checkBoxSyntaxOverlap.TabIndex = 4;
             this.checkBoxSyntaxOverlap.Text = "Time - color if overlap";
             this.checkBoxSyntaxOverlap.UseVisualStyleBackColor = true;
@@ -2593,7 +2596,7 @@
             this.checkBoxSyntaxColorTextTooLong.AutoSize = true;
             this.checkBoxSyntaxColorTextTooLong.Location = new System.Drawing.Point(20, 93);
             this.checkBoxSyntaxColorTextTooLong.Name = "checkBoxSyntaxColorTextTooLong";
-            this.checkBoxSyntaxColorTextTooLong.Size = new System.Drawing.Size(128, 17);
+            this.checkBoxSyntaxColorTextTooLong.Size = new System.Drawing.Size(132, 17);
             this.checkBoxSyntaxColorTextTooLong.TabIndex = 2;
             this.checkBoxSyntaxColorTextTooLong.Text = "Text - color if too long";
             this.checkBoxSyntaxColorTextTooLong.UseVisualStyleBackColor = true;
@@ -2603,7 +2606,7 @@
             this.checkBoxSyntaxColorDurationTooLarge.AutoSize = true;
             this.checkBoxSyntaxColorDurationTooLarge.Location = new System.Drawing.Point(20, 58);
             this.checkBoxSyntaxColorDurationTooLarge.Name = "checkBoxSyntaxColorDurationTooLarge";
-            this.checkBoxSyntaxColorDurationTooLarge.Size = new System.Drawing.Size(150, 17);
+            this.checkBoxSyntaxColorDurationTooLarge.Size = new System.Drawing.Size(155, 17);
             this.checkBoxSyntaxColorDurationTooLarge.TabIndex = 1;
             this.checkBoxSyntaxColorDurationTooLarge.Text = "Duration - color if too large";
             this.checkBoxSyntaxColorDurationTooLarge.UseVisualStyleBackColor = true;
@@ -2625,6 +2628,28 @@
             this.labelStatus.Size = new System.Drawing.Size(60, 13);
             this.labelStatus.TabIndex = 3;
             this.labelStatus.Text = "labelStatus";
+            // 
+            // numericUpDownSyntaxColorTextMoreThanXLines
+            // 
+            this.numericUpDownSyntaxColorTextMoreThanXLines.Location = new System.Drawing.Point(196, 112);
+            this.numericUpDownSyntaxColorTextMoreThanXLines.Maximum = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            this.numericUpDownSyntaxColorTextMoreThanXLines.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.numericUpDownSyntaxColorTextMoreThanXLines.Name = "numericUpDownSyntaxColorTextMoreThanXLines";
+            this.numericUpDownSyntaxColorTextMoreThanXLines.Size = new System.Drawing.Size(48, 21);
+            this.numericUpDownSyntaxColorTextMoreThanXLines.TabIndex = 7;
+            this.numericUpDownSyntaxColorTextMoreThanXLines.Value = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
             // 
             // Settings
             // 
@@ -2714,6 +2739,7 @@
             this.tabPageSyntaxColoring.ResumeLayout(false);
             this.groupBoxListViewSyntaxColoring.ResumeLayout(false);
             this.groupBoxListViewSyntaxColoring.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSyntaxColorTextMoreThanXLines)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -2925,5 +2951,6 @@
         private System.Windows.Forms.Label labelMaxCharsPerSecond;
         private System.Windows.Forms.NumericUpDown numericUpDownMaxCharsSec;
         private System.Windows.Forms.NumericUpDown numericUpDownSubtitleLineMaximumLength;
+        private System.Windows.Forms.NumericUpDown numericUpDownSyntaxColorTextMoreThanXLines;
     }
 }

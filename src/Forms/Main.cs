@@ -2755,7 +2755,8 @@ namespace Nikse.SubtitleEdit.Forms
                                        Configuration.Settings.Tools.ListViewSyntaxColorDurationBig.ToString() +
                                        Configuration.Settings.Tools.ListViewSyntaxColorLongLines.ToString() +
                                        Configuration.Settings.Tools.ListViewSyntaxColorOverlap.ToString() +
-                                       Configuration.Settings.Tools.ListViewSyntaxMoreThanTwoLines.ToString() +
+                                       Configuration.Settings.Tools.ListViewSyntaxMoreThanXLines.ToString() +
+                                       Configuration.Settings.Tools.ListViewSyntaxMoreThanXLinesX.ToString() +
                                        Configuration.Settings.Tools.ListViewSyntaxErrorColor.ToArgb().ToString();
 
             var oldAllowEditOfOriginalSubtitle = Configuration.Settings.General.AllowEditOfOriginalSubtitle;
@@ -2788,7 +2789,8 @@ namespace Nikse.SubtitleEdit.Forms
                            Configuration.Settings.Tools.ListViewSyntaxColorDurationBig.ToString() +
                            Configuration.Settings.Tools.ListViewSyntaxColorLongLines.ToString() +
                            Configuration.Settings.Tools.ListViewSyntaxColorOverlap.ToString() +
-                           Configuration.Settings.Tools.ListViewSyntaxMoreThanTwoLines.ToString() +
+                           Configuration.Settings.Tools.ListViewSyntaxMoreThanXLines.ToString() +
+                           Configuration.Settings.Tools.ListViewSyntaxMoreThanXLinesX.ToString() +
                            Configuration.Settings.Tools.ListViewSyntaxErrorColor.ToArgb().ToString();
 
 

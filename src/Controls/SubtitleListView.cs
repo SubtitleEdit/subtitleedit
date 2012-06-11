@@ -461,7 +461,7 @@ namespace Nikse.SubtitleEdit.Controls
                     string s = Utilities.RemoveHtmlTags(paragraph.Text).Replace(Environment.NewLine, string.Empty); // we don't count new line in total length... correct?
                     if (s.Length <= Configuration.Settings.General.SubtitleLineMaximumLength * 2)
                     {
-                        if (noOfLines >= 3)
+                        if (noOfLines > Configuration.Settings.Tools.ListViewSyntaxMoreThanXLinesX)
                             item.SubItems[ColumnIndexText].BackColor = Configuration.Settings.Tools.ListViewSyntaxErrorColor;
                         else if (item.SubItems[ColumnIndexText].BackColor != BackColor)
                             item.SubItems[ColumnIndexText].BackColor = BackColor;
@@ -471,12 +471,11 @@ namespace Nikse.SubtitleEdit.Controls
                         item.SubItems[ColumnIndexText].BackColor = Configuration.Settings.Tools.ListViewSyntaxErrorColor;
                     }
                 }
-                if (_settings.Tools.ListViewSyntaxMoreThanTwoLines &&
-                    item.SubItems[ColumnIndexText].BackColor != Color.Orange &&
+                if (_settings.Tools.ListViewSyntaxMoreThanXLines &&
                     item.SubItems[ColumnIndexText].BackColor != Configuration.Settings.Tools.ListViewSyntaxErrorColor)
                 {
                     int newLines = paragraph.Text.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries).Length;
-                    if (newLines >= 3)
+                    if (newLines > Configuration.Settings.Tools.ListViewSyntaxMoreThanXLinesX)
                         item.SubItems[ColumnIndexText].BackColor = Configuration.Settings.Tools.ListViewSyntaxErrorColor;
                 }
             }

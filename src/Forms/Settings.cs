@@ -161,7 +161,8 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxSyntaxColorDurationTooSmall.Checked = Configuration.Settings.Tools.ListViewSyntaxColorDurationSmall;
             checkBoxSyntaxColorDurationTooLarge.Checked = Configuration.Settings.Tools.ListViewSyntaxColorDurationBig;
             checkBoxSyntaxColorTextTooLong.Checked = Configuration.Settings.Tools.ListViewSyntaxColorLongLines;
-            checkBoxSyntaxColorTextMoreThanTwoLines.Checked = Configuration.Settings.Tools.ListViewSyntaxMoreThanTwoLines;
+            checkBoxSyntaxColorTextMoreThanTwoLines.Checked = Configuration.Settings.Tools.ListViewSyntaxMoreThanXLines;
+            numericUpDownSyntaxColorTextMoreThanXLines.Value = Configuration.Settings.Tools.ListViewSyntaxMoreThanXLinesX;
             checkBoxSyntaxOverlap.Checked = Configuration.Settings.Tools.ListViewSyntaxColorOverlap;
             panelListViewSyntaxColorError.BackColor = Configuration.Settings.Tools.ListViewSyntaxErrorColor;
 
@@ -589,7 +590,8 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxSyntaxColorDurationTooSmall.Text = language.SyntaxColorDurationIfTooSmall;
             checkBoxSyntaxColorDurationTooLarge.Text = language.SyntaxColorDurationIfTooLarge;
             checkBoxSyntaxColorTextTooLong.Text = language.SyntaxColorTextIfTooLong;
-            checkBoxSyntaxColorTextMoreThanTwoLines.Text = language.SyntaxColorTextMoreThanTwoLines;
+            checkBoxSyntaxColorTextMoreThanTwoLines.Text = language.SyntaxColorTextMoreThanXLines;
+            numericUpDownSyntaxColorTextMoreThanXLines.Left = checkBoxSyntaxColorTextMoreThanTwoLines.Left + checkBoxSyntaxColorTextMoreThanTwoLines.Width + 5;
             checkBoxSyntaxOverlap.Text = language.SyntaxColorOverlap;
 
             FixLargeFonts();
@@ -906,7 +908,8 @@ namespace Nikse.SubtitleEdit.Forms
             Configuration.Settings.Tools.ListViewSyntaxColorDurationSmall = checkBoxSyntaxColorDurationTooSmall.Checked;
             Configuration.Settings.Tools.ListViewSyntaxColorDurationBig = checkBoxSyntaxColorDurationTooLarge.Checked;
             Configuration.Settings.Tools.ListViewSyntaxColorLongLines = checkBoxSyntaxColorTextTooLong.Checked ;
-            Configuration.Settings.Tools.ListViewSyntaxMoreThanTwoLines = checkBoxSyntaxColorTextMoreThanTwoLines.Checked;
+            Configuration.Settings.Tools.ListViewSyntaxMoreThanXLines = checkBoxSyntaxColorTextMoreThanTwoLines.Checked;
+            Configuration.Settings.Tools.ListViewSyntaxMoreThanXLinesX = (int)numericUpDownSyntaxColorTextMoreThanXLines.Value;
             Configuration.Settings.Tools.ListViewSyntaxColorOverlap = checkBoxSyntaxOverlap.Checked;
             Configuration.Settings.Tools.ListViewSyntaxErrorColor = panelListViewSyntaxColorError.BackColor;
 

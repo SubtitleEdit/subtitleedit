@@ -89,7 +89,8 @@ namespace Nikse.SubtitleEdit.Logic
         public bool ListViewSyntaxColorDurationBig { get; set; }
         public bool ListViewSyntaxColorOverlap { get; set; }
         public bool ListViewSyntaxColorLongLines { get; set; }
-        public bool ListViewSyntaxMoreThanTwoLines { get; set; }
+        public bool ListViewSyntaxMoreThanXLines { get; set; }
+        public int ListViewSyntaxMoreThanXLinesX { get; set; }
         public Color ListViewSyntaxErrorColor { get; set; }
         public Color ListViewUnfocusedSelectedColor { get; set; }
         public bool SplitAdvanced { get; set; }
@@ -117,7 +118,8 @@ namespace Nikse.SubtitleEdit.Logic
             ListViewSyntaxColorDurationBig = true;
             ListViewSyntaxColorOverlap = true;
             ListViewSyntaxColorLongLines = true;
-            ListViewSyntaxMoreThanTwoLines = true;
+            ListViewSyntaxMoreThanXLines = true;
+            ListViewSyntaxMoreThanXLinesX = 2;
             ListViewSyntaxErrorColor = Color.FromArgb(255, 125, 125);
             ListViewUnfocusedSelectedColor = Color.LightBlue;
             SplitAdvanced = false;
@@ -1083,9 +1085,12 @@ namespace Nikse.SubtitleEdit.Logic
             subNode = node.SelectSingleNode("ListViewSyntaxColorLongLines");
             if (subNode != null)
                 settings.Tools.ListViewSyntaxColorLongLines = Convert.ToBoolean(subNode.InnerText);
-            subNode = node.SelectSingleNode("ListViewSyntaxMoreThanTwoLines");
+            subNode = node.SelectSingleNode("ListViewSyntaxMoreThanXLines");
             if (subNode != null)
-                settings.Tools.ListViewSyntaxMoreThanTwoLines = Convert.ToBoolean(subNode.InnerText);
+                settings.Tools.ListViewSyntaxMoreThanXLines = Convert.ToBoolean(subNode.InnerText);
+            subNode = node.SelectSingleNode("ListViewSyntaxMoreThanXLinesX");
+            if (subNode != null)
+                settings.Tools.ListViewSyntaxMoreThanXLinesX = Convert.ToInt32(subNode.InnerText);
             subNode = node.SelectSingleNode("ListViewSyntaxColorOverlap");
             if (subNode != null)
                 settings.Tools.ListViewSyntaxColorOverlap = Convert.ToBoolean(subNode.InnerText);
@@ -1762,7 +1767,8 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("ListViewSyntaxColorDurationSmall", settings.Tools.ListViewSyntaxColorDurationSmall.ToString());
             textWriter.WriteElementString("ListViewSyntaxColorDurationBig", settings.Tools.ListViewSyntaxColorDurationBig.ToString());
             textWriter.WriteElementString("ListViewSyntaxColorLongLines", settings.Tools.ListViewSyntaxColorLongLines.ToString());
-            textWriter.WriteElementString("ListViewSyntaxMoreThanTwoLines", settings.Tools.ListViewSyntaxMoreThanTwoLines.ToString());
+            textWriter.WriteElementString("ListViewSyntaxMoreThanXLines", settings.Tools.ListViewSyntaxMoreThanXLines.ToString());
+            textWriter.WriteElementString("ListViewSyntaxMoreThanXLinesX", settings.Tools.ListViewSyntaxMoreThanXLinesX.ToString());
             textWriter.WriteElementString("ListViewSyntaxColorOverlap", settings.Tools.ListViewSyntaxColorOverlap.ToString());
             textWriter.WriteElementString("ListViewSyntaxErrorColor", settings.Tools.ListViewSyntaxErrorColor.ToArgb().ToString());
             textWriter.WriteElementString("ListViewUnfocusedSelectedColor", settings.Tools.ListViewUnfocusedSelectedColor.ToArgb().ToString());
