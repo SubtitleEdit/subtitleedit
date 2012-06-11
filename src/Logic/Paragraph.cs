@@ -83,8 +83,8 @@ namespace Nikse.SubtitleEdit.Logic
 
         public void CalculateFrameNumbersFromTimeCodes(double frameRate)
         {
-            StartFrame = (int)(StartTime.TotalMilliseconds / 1000.0 * frameRate);
-            EndFrame = (int)(EndTime.TotalMilliseconds / 1000.0 * frameRate);
+            StartFrame = (int) Math.Round((StartTime.TotalMilliseconds / 1000.0 * frameRate));
+            EndFrame = (int) Math.Round((EndTime.TotalMilliseconds / 1000.0 * frameRate));
         }
 
         public void CalculateTimeCodesFromFrameNumbers(double frameRate)
