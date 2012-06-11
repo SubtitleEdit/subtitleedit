@@ -201,7 +201,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         }
 
         private bool TryReadTimeCodesLine(string line, Paragraph paragraph)
-        {            
+        {
             line = line.Replace("،", ",");
 
             // Fix some badly formatted separator sequences - anything can happen if you manually edit ;)

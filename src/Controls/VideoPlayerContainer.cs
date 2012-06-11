@@ -316,7 +316,7 @@ namespace Nikse.SubtitleEdit.Controls
                                         catch
                                         {
                                             fontFound = false;
-                                        }                                        
+                                        }
                                     }
                                 }
                             }

@@ -841,7 +841,7 @@ namespace Nikse.SubtitleEdit.Logic
                 if (GetCount(greekEncoding.GetString(buffer), "μου", "είναι", "Είναι", "αυτό", "Τόμπυ", "καλά") > 5)
                     return greekEncoding;
 
-                Encoding russianEncoding = Encoding.GetEncoding(1251); // Cyrillic 
+                Encoding russianEncoding = Encoding.GetEncoding(1251); // Cyrillic
                 if (GetCount(russianEncoding.GetString(buffer), "что", "быть", "весь", "этот", "один", "такой") > 5) // Russian
                     return russianEncoding;
                 if (GetCount(russianEncoding.GetString(buffer), "Какво", "тук", "може", "Как", "Ваше", "какво") > 5) // Bulgarian

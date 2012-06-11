@@ -721,7 +721,7 @@ M&#246;chten Sie vom Anfang des Dokuments weitersuchen?</FindContinue>
     <TextingForHearingImpairedRemovedOneLine>Text f&#252;r H&#246;rgesch&#228;digte entfernt : Ein Item</TextingForHearingImpairedRemovedOneLine>
     <TextingForHearingImpairedRemovedXLines>Text f&#252;r H&#246;rgesch&#228;digte entfernt: {0} Items</TextingForHearingImpairedRemovedXLines>
     <SubtitleSplitted>Untertitel geteilt</SubtitleSplitted>
-    <SubtitleAppendPrompt>Es wird ein existierender Untertitel an den aktuell geladenen Untertitel angeh&#228;ngt, 
+    <SubtitleAppendPrompt>Es wird ein existierender Untertitel an den aktuell geladenen Untertitel angeh&#228;ngt,
 der schon an das Video angepasst sein sollte.
 
 Fortfahren?</SubtitleAppendPrompt>
