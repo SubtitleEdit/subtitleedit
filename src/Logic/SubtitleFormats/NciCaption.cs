@@ -114,7 +114,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                             j++;
                         }
                         else
-                        { 
+                        {
                             sb.Append(Encoding.GetEncoding(1252).GetString(buffer, j, 1));
                             j++;
                         }
@@ -126,7 +126,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 else
                 {
                     i++;
-                }                
+                }
             }
             subtitle.Renumber(1);
 
@@ -157,7 +157,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                             int index = start + 2 + (14 * k);
                             int number = buffer[index] + buffer[index + 1] * 255;
                             if (number != lastNumber + 1)
-                            {                                
+                            {
                                 int tempNumber = buffer[index-2] + buffer[index -1] * 255;
                                 if (tempNumber == lastNumber + 1)
                                 {

@@ -172,7 +172,7 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                     {
                         subTag = subTag.Replace("#", string.Empty);
 
-                        // switch from rrggbb to bbggrr           
+                        // switch from rrggbb to bbggrr
                         if (subTag.Length >= 6)
                             subTag = subTag.Remove(subTag.Length - 6) + subTag.Substring(subTag.Length - 2, 2) + subTag.Substring(subTag.Length - 4, 2) + subTag.Substring(subTag.Length - 6, 2);
                     }
@@ -243,8 +243,8 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                         color = color.Replace("&", string.Empty).TrimStart('H');
                         color = color.PadLeft(6, '0');
 
-                        // switch to rrggbb from bbggrr                        
-                        color = "#" + color.Remove(color.Length - 6) + color.Substring(color.Length - 2, 2) + color.Substring(color.Length - 4, 2) + color.Substring(color.Length - 6, 2); 
+                        // switch to rrggbb from bbggrr
+                        color = "#" + color.Remove(color.Length - 6) + color.Substring(color.Length - 2, 2) + color.Substring(color.Length - 4, 2) + color.Substring(color.Length - 6, 2);
 
                         text = text.Remove(start, end - start + 1);
                         text = text.Insert(start, "<font color=\"" + color + "\">");
@@ -276,7 +276,7 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                     header.AppendLine(line);
 
                 if (line.Trim().Length == 0)
-                { 
+                {
                     // skip empty lines
                 }
                 else if (line.Trim().ToLower().StartsWith("dialogue:")) // fix faulty font tags...

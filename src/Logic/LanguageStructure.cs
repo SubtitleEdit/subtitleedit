@@ -723,8 +723,8 @@
             public string SubtitleExported { get; set; }
             public string LineNumberXErrorReadingFromSourceLineY { get; set; }
             public string LineNumberXErrorReadingTimeCodeFromSourceLineY { get; set; }
-            public string LineNumberXExpectedNumberFromSourceLineY { get; set; }            
-            
+            public string LineNumberXExpectedNumberFromSourceLineY { get; set; }
+
 
             public class MainMenu
             {
