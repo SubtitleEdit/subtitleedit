@@ -104,7 +104,11 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 subtitle.Paragraphs.Add(_paragraph);
 
             foreach (Paragraph p in subtitle.Paragraphs)
+            {
                 p.Text = p.Text.Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine);
+                p.Text = p.Text.Replace("<32>", "<i>").Replace("</32>", "</i>"); // .wsrt
+                p.Text = p.Text.Replace("<33>", "<i>").Replace("</33>", "</i>"); // .wsrt
+            }
 
             if (doRenum)
                 subtitle.Renumber(1);
@@ -211,7 +215,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
             // Removed stuff after timecodes - like subtitle position
             //  - example of position info: 00:02:26,407 --> 00:02:31,356  X1:100 X2:100 Y1:100 Y2:100
-            if (line.Length > 30 && line[30] == ' ')
+            if (line.Length > 30 && line[29] == ' ')
                 line = line.Substring(0, 29);
 
             // removes all extra spaces
@@ -252,6 +256,14 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 }
             }
             return false;
+        }
+
+        public override List<string> AlternateExtensions
+        {
+            get
+            {
+                return new List<string> { ".wsrt" };
+            }
         }
     }
 }
