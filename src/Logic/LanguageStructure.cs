@@ -1444,7 +1444,8 @@
             public string OpaqueBox { get; set; }
             public string Import { get; set; }
             public string Copy { get; set; }
-            public string CopyXofY { get; set; }
+            public string CopyOfY { get; set; }
+            public string CopyXOfY { get; set; }
             public string New { get; set; }
             public string Remove { get; set; }
             public string RemoveAll { get; set; }

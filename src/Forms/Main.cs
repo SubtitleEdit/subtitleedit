@@ -2127,9 +2127,21 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     SetEncoding(encoding);
 
-                    if (format.GetType() == typeof(AdvancedSubStationAlpha) || format.GetType() == typeof(SubStationAlpha))
+                    if (format.GetType() == typeof(SubStationAlpha))
                     {
                         string errors = AdvancedSubStationAlpha.CheckForErrors(_subtitle.Header);
+                        if (!string.IsNullOrEmpty(errors))
+                            MessageBox.Show(errors, Title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        errors = (format as SubStationAlpha).Errors;
+                        if (!string.IsNullOrEmpty(errors))
+                            MessageBox.Show(errors, Title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    }
+                    else if (format.GetType() == typeof(AdvancedSubStationAlpha))
+                    {
+                        string errors = AdvancedSubStationAlpha.CheckForErrors(_subtitle.Header);
+                        if (!string.IsNullOrEmpty(errors))
+                            MessageBox.Show(errors, Title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        errors = (format as AdvancedSubStationAlpha).Errors;
                         if (!string.IsNullOrEmpty(errors))
                             MessageBox.Show(errors, Title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     }

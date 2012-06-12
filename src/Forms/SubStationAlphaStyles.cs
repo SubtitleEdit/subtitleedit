@@ -319,7 +319,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void AddStyle(SsaStyle ssaStyle)
         {
-            var item = new ListViewItem(ssaStyle.Name);
+            var item = new ListViewItem(ssaStyle.Name.Trim());
             item.UseItemStyleForSubItems = false;
 
             var subItem = new ListViewItem.ListViewSubItem(item, ssaStyle.FontName);
@@ -846,7 +846,7 @@ namespace Nikse.SubtitleEdit.Forms
                 string styleName = listViewStyles.SelectedItems[0].Text;
                 SsaStyle oldStyle = GetSsaStyle(styleName);
                 SsaStyle style = GetSsaStyle(styleName);
-                style.Name = string.Format("Copy {0} of {1}", string.Empty, styleName);
+                style.Name = string.Format(Configuration.Settings.Language.SubStationAlphaStyles.CopyOfY, styleName);
 
                 if (GetSsaStyle(style.Name).LoadedFromHeader)
                 {
@@ -854,7 +854,7 @@ namespace Nikse.SubtitleEdit.Forms
                     bool doRepeat = true;
                     while (doRepeat)
                     {
-                        style.Name = string.Format("Copy {0} of {1}", count, styleName);
+                        style.Name = string.Format(Configuration.Settings.Language.SubStationAlphaStyles.CopyXOfY, count, styleName);
                         doRepeat = GetSsaStyle(style.Name).LoadedFromHeader;
                         count++;
                     }

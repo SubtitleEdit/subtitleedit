@@ -6,6 +6,9 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
     public class SubStationAlpha : SubtitleFormat
     {
+
+        public string Errors { get; private set; }
+
         public override string Extension
         {
             get { return ".ssa"; }
@@ -52,6 +55,7 @@ Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
 
             const string timeCodeFormat = "{0}:{1:00}:{2:00}.{3:00}"; // h:mm:ss.cc
             const string paragraphWriteFormat = "Dialogue: Marked=0,{0},{1},{3},NTP,0000,0000,0000,!Effect,{2}";
+            const string commentWriteFormat = "Dialogue: Marked=0,{0},{1},{3},NTP,0000,0000,0000,!Effect,{2}";
 
             var sb = new StringBuilder();
             System.Drawing.Color fontColor = System.Drawing.Color.FromArgb(Configuration.Settings.SubtitleSettings.SsaFontColorArgb);
@@ -78,7 +82,10 @@ Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
                 string style = "Default";
                 if (!string.IsNullOrEmpty(p.Extra) && isValidAssHeader && styles.Contains(p.Extra))
                     style = p.Extra;
-                sb.AppendLine(string.Format(paragraphWriteFormat, start, end, FormatText(p), style));
+                if (p.IsComment)
+                    sb.AppendLine(string.Format(commentWriteFormat, start, end, FormatText(p), style));
+                else
+                    sb.AppendLine(string.Format(paragraphWriteFormat, start, end, FormatText(p), style));
             }
             return sb.ToString().Trim();
         }
@@ -92,7 +99,8 @@ Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
             text = text.Replace("</u>", @"{\u0}");
             text = text.Replace("<b>", @"{\b1}");
             text = text.Replace("</b>", @"{\b0}");
-            if (text.Contains("<font "))
+            int count = 0;
+            while (text.Contains("<font ") && count < 10)
             {
                 int start = text.IndexOf(@"<font ");
                 int end = text.IndexOf('>', start);
@@ -111,6 +119,7 @@ Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
                     fontTag = FormatTag(ref text, start, fontTag, "color=\"", "\"", "c&H", "&}");
                     fontTag = FormatTag(ref text, start, fontTag, "color='", "'", "c&H", "&}");
                 }
+                count++;
             }
             return text;
         }
@@ -158,7 +167,7 @@ Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
             if (Utilities.CountTagInText(text, "<b>") > Utilities.CountTagInText(text, "</b>"))
                 text += "</b>";
 
-            for (int i = 0; i < 5; i++) // just look five times...
+            for (int i = 0; i < 10; i++) // just look ten times...
             {
                 if (text.Contains(@"{\fn"))
                 {
@@ -222,13 +231,15 @@ Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
             int indexEnd = 2;
             int indexStyle = 3;
             int indexText = 9;
+            var errors = new StringBuilder();
+            int lineNumber = 0;
 
             var header = new StringBuilder();
             foreach (string line in lines)
             {
+                lineNumber++;
                 if (!eventsStarted)
                     header.AppendLine(line);
-
 
                 if (line.Trim().ToLower() == "[events]")
                 {
@@ -255,7 +266,7 @@ Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
                             }
                         }
                     }
-                    else
+                    else if (!string.IsNullOrEmpty(s))
                     {
                         string text = string.Empty;
                         string start = string.Empty;
@@ -292,11 +303,14 @@ Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
                             p.Text = GetFormattedText(text);
                             if (!string.IsNullOrEmpty(style))
                                 p.Extra = style;
+                            p.IsComment = s.StartsWith("comment:");
                             subtitle.Paragraphs.Add(p);
                         }
                         catch
                         {
                             _errorCount++;
+                            if (errors.Length < 2000)
+                                errors.AppendLine(string.Format(Configuration.Settings.Language.Main.LineNumberXErrorReadingTimeCodeFromSourceLineY, lineNumber, line));
                         }
                     }
                 }
@@ -304,6 +318,7 @@ Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
             if (header.Length > 0)
                 subtitle.Header = header.ToString();
             subtitle.Renumber(1);
+            Errors = errors.ToString();
         }
 
         private static TimeCode GetTimeCodeFromString(string time)
