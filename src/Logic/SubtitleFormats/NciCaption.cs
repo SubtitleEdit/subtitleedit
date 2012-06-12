@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Text;
-using System.Text.RegularExpressions;
 
 namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
@@ -165,21 +164,23 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                                     number = tempNumber;
                                 }
                             }
-                            lastNumber = number;
-
-                            Paragraph p = subtitle.GetParagraphOrDefault(number);
-                            if (p != null)
+                            if (number > lastNumber)
                             {
-                                if (k < count - 1)
+                                lastNumber = number;
+                                Paragraph p = subtitle.GetParagraphOrDefault(number);
+                                if (p != null)
                                 {
-                                    p.StartTime = DecodeTimeCode(buffer, index + 6);
-                                    p.EndTime = DecodeTimeCode(buffer, index + 10);
+                                    if (k < count - 1)
+                                    {
+                                        p.StartTime = DecodeTimeCode(buffer, index + 6);
+                                        p.EndTime = DecodeTimeCode(buffer, index + 10);
+                                    }
+                                    else
+                                    {
+                                        p.StartTime = DecodeTimeCode(buffer, index + 6);
+                                    }
+                                    countTimecodes++;
                                 }
-                                else
-                                {
-                                    p.StartTime = DecodeTimeCode(buffer, index + 6);
-                                }
-                                countTimecodes++;
                             }
                         }
                     }
@@ -205,6 +206,11 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     p.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - 1;
             }
 
+            subtitle.RemoveEmptyLines();
+            Paragraph last = subtitle.GetParagraphOrDefault(subtitle.Paragraphs.Count - 1);
+            if (last != null)
+                last.EndTime.TotalMilliseconds = last.StartTime.TotalMilliseconds + Utilities.GetDisplayMillisecondsFromText(last.Text) * 1.3;
+            subtitle.Renumber(1);
         }
 
     }
