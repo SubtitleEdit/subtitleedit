@@ -281,10 +281,16 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             // adjust all times
             if (buffer.Length > 1364)
             {
-                string adjust = Encoding.GetEncoding(1252).GetString(buffer, 1354, 11); // 00:59:59:28
-                TimeCode tc = DecodeTimeCode(adjust.Split(':'));
-                if (tc.TotalMilliseconds > 0)
-                    subtitle.AddTimeToAllParagraphs(TimeSpan.FromMilliseconds(-tc.TotalMilliseconds));
+                try
+                {
+                    string adjust = Encoding.GetEncoding(1252).GetString(buffer, 1354, 11); // 00:59:59:28
+                    TimeCode tc = DecodeTimeCode(adjust.Split(':'));
+                    if (tc.TotalMilliseconds > 0)
+                        subtitle.AddTimeToAllParagraphs(TimeSpan.FromMilliseconds(-tc.TotalMilliseconds));
+                }
+                catch
+                {
+                }
             }
         }
 
