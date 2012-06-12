@@ -643,118 +643,7 @@ namespace Nikse.SubtitleEdit.Forms
                 string styleName = listViewStyles.SelectedItems[0].Text;
                 _oldSsaName = styleName;
                 SsaStyle style = GetSsaStyle(styleName);
-                textBoxStyleName.Text = style.Name;
-                textBoxStyleName.BackColor = listViewStyles.BackColor;
-                comboBoxFontName.Text = style.FontName;
-                checkBoxFontItalic.Checked = style.Italic;
-                checkBoxFontBold.Checked = style.Bold;
-                checkBoxFontUnderline.Checked = style.Underline;
-
-                if (style.FontSize > 0 && style.FontSize <= numericUpDownFontSize.Maximum)
-                    numericUpDownFontSize.Value = style.FontSize;
-                else
-                    numericUpDownFontSize.Value = 20;
-
-                panelPrimaryColor.BackColor = style.Primary;
-                panelSecondaryColor.BackColor = style.Secondary;
-                if (_isSubStationAlpha)
-                    panelOutlineColor.BackColor = style.Tertiary;
-                else
-                    panelOutlineColor.BackColor = style.Outline;
-                panelBackColor.BackColor = style.Background;
-                numericUpDownOutline.Value = style.OutlineWidth;
-                numericUpDownShadowWidth.Value = style.ShadowWidth;
-
-                if (_isSubStationAlpha)
-                {
-                    switch (style.Alignment)
-                    {
-                        case "1":
-                            radioButtonBottomLeft.Checked = true;
-                            break;
-                        case "3":
-                            radioButtonBottomRight.Checked = true;
-                            break;
-                        case "9":
-                            radioButtonMiddleLeft.Checked = true;
-                            break;
-                        case "10":
-                            radioButtonMiddleCenter.Checked = true;
-                            break;
-                        case "11":
-                            radioButtonMiddleRight.Checked = true;
-                            break;
-                        case "5":
-                            radioButtonTopLeft.Checked = true;
-                            break;
-                        case "6":
-                            radioButtonTopCenter.Checked = true;
-                            break;
-                        case "7":
-                            radioButtonTopRight.Checked = true;
-                            break;
-                        default:
-                            radioButtonBottomCenter.Checked = true;
-                            break;
-                    }
-                }
-                else
-                {
-                    switch (style.Alignment)
-                    {
-                        case "1":
-                            radioButtonBottomLeft.Checked = true;
-                            break;
-                        case "3":
-                            radioButtonBottomRight.Checked = true;
-                            break;
-                        case "4":
-                            radioButtonMiddleLeft.Checked = true;
-                            break;
-                        case "5":
-                            radioButtonMiddleCenter.Checked = true;
-                            break;
-                        case "6":
-                            radioButtonMiddleRight.Checked = true;
-                            break;
-                        case "7":
-                            radioButtonTopLeft.Checked = true;
-                            break;
-                        case "8":
-                            radioButtonTopCenter.Checked = true;
-                            break;
-                        case "9":
-                            radioButtonTopRight.Checked = true;
-                            break;
-                        default:
-                            radioButtonBottomCenter.Checked = true;
-                            break;
-                    }
-                }
-
-                if (style.MarginLeft >= 0 && style.MarginLeft <= numericUpDownMarginLeft.Maximum)
-                    numericUpDownMarginLeft.Value = style.MarginLeft;
-                else
-                    numericUpDownMarginLeft.Value = 10;
-
-                if (style.MarginRight >= 0 && style.MarginRight <= numericUpDownMarginRight.Maximum)
-                    numericUpDownMarginRight.Value = style.MarginRight;
-                else
-                    numericUpDownMarginRight.Value = 10;
-
-                if (style.MarginVertical >= 0 && style.MarginVertical <= numericUpDownMarginVertical.Maximum)
-                    numericUpDownMarginVertical.Value = style.MarginVertical;
-                else
-                    numericUpDownMarginVertical.Value = 10;
-
-                if (style.BorderStyle == "3")
-                {
-                    radioButtonOpaqueBox.Checked = true;
-                }
-                else
-                {
-                    radioButtonOutline.Checked = true;
-                }
+                SetControlsFromStyle(style);
                 _doUpdate = true;
                 groupBoxProperties.Enabled = true;
                 GeneratePreview();
@@ -773,6 +662,122 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 groupBoxProperties.Enabled = false;
                 _doUpdate = false;
+            }
+        }
+
+        private void SetControlsFromStyle(SsaStyle style)
+        {
+            textBoxStyleName.Text = style.Name;
+            textBoxStyleName.BackColor = listViewStyles.BackColor;
+            comboBoxFontName.Text = style.FontName;
+            checkBoxFontItalic.Checked = style.Italic;
+            checkBoxFontBold.Checked = style.Bold;
+            checkBoxFontUnderline.Checked = style.Underline;
+
+            if (style.FontSize > 0 && style.FontSize <= numericUpDownFontSize.Maximum)
+                numericUpDownFontSize.Value = style.FontSize;
+            else
+                numericUpDownFontSize.Value = 20;
+
+            panelPrimaryColor.BackColor = style.Primary;
+            panelSecondaryColor.BackColor = style.Secondary;
+            if (_isSubStationAlpha)
+                panelOutlineColor.BackColor = style.Tertiary;
+            else
+                panelOutlineColor.BackColor = style.Outline;
+            panelBackColor.BackColor = style.Background;
+            numericUpDownOutline.Value = style.OutlineWidth;
+            numericUpDownShadowWidth.Value = style.ShadowWidth;
+
+            if (_isSubStationAlpha)
+            {
+                switch (style.Alignment)
+                {
+                    case "1":
+                        radioButtonBottomLeft.Checked = true;
+                        break;
+                    case "3":
+                        radioButtonBottomRight.Checked = true;
+                        break;
+                    case "9":
+                        radioButtonMiddleLeft.Checked = true;
+                        break;
+                    case "10":
+                        radioButtonMiddleCenter.Checked = true;
+                        break;
+                    case "11":
+                        radioButtonMiddleRight.Checked = true;
+                        break;
+                    case "5":
+                        radioButtonTopLeft.Checked = true;
+                        break;
+                    case "6":
+                        radioButtonTopCenter.Checked = true;
+                        break;
+                    case "7":
+                        radioButtonTopRight.Checked = true;
+                        break;
+                    default:
+                        radioButtonBottomCenter.Checked = true;
+                        break;
+                }
+            }
+            else
+            {
+                switch (style.Alignment)
+                {
+                    case "1":
+                        radioButtonBottomLeft.Checked = true;
+                        break;
+                    case "3":
+                        radioButtonBottomRight.Checked = true;
+                        break;
+                    case "4":
+                        radioButtonMiddleLeft.Checked = true;
+                        break;
+                    case "5":
+                        radioButtonMiddleCenter.Checked = true;
+                        break;
+                    case "6":
+                        radioButtonMiddleRight.Checked = true;
+                        break;
+                    case "7":
+                        radioButtonTopLeft.Checked = true;
+                        break;
+                    case "8":
+                        radioButtonTopCenter.Checked = true;
+                        break;
+                    case "9":
+                        radioButtonTopRight.Checked = true;
+                        break;
+                    default:
+                        radioButtonBottomCenter.Checked = true;
+                        break;
+                }
+            }
+
+            if (style.MarginLeft >= 0 && style.MarginLeft <= numericUpDownMarginLeft.Maximum)
+                numericUpDownMarginLeft.Value = style.MarginLeft;
+            else
+                numericUpDownMarginLeft.Value = 10;
+
+            if (style.MarginRight >= 0 && style.MarginRight <= numericUpDownMarginRight.Maximum)
+                numericUpDownMarginRight.Value = style.MarginRight;
+            else
+                numericUpDownMarginRight.Value = 10;
+
+            if (style.MarginVertical >= 0 && style.MarginVertical <= numericUpDownMarginVertical.Maximum)
+                numericUpDownMarginVertical.Value = style.MarginVertical;
+            else
+                numericUpDownMarginVertical.Value = 10;
+
+            if (style.BorderStyle == "3")
+            {
+                radioButtonOpaqueBox.Checked = true;
+            }
+            else
+            {
+                radioButtonOutline.Checked = true;
             }
         }
 
@@ -883,7 +888,7 @@ namespace Nikse.SubtitleEdit.Forms
                 int indexOfEvents = Header.IndexOf("[Events]");
                 if (indexOfEvents > 0)
                 {
-                    int i = indexOfEvents-1;
+                    int i = indexOfEvents - 1;
                     while (i > 0 && Environment.NewLine.Contains(Header[i].ToString()))
                         i--;
                     Header = Header.Insert(i, Environment.NewLine + newLine);
@@ -893,6 +898,17 @@ namespace Nikse.SubtitleEdit.Forms
                     Header += Environment.NewLine + newLine;
                 }
             }
+        }
+
+        private void RemoveStyleFromHeader(string name)
+        {
+            var sb = new StringBuilder();
+            foreach (string line in Header.Split(new string[] { Environment.NewLine}, StringSplitOptions.None))
+            {
+                if (!line.ToLower().Replace(" ", string.Empty).StartsWith("style:" + name.ToLower() + ","))
+                    sb.AppendLine(line);
+            }
+            Header = sb.ToString();
         }
 
         private void buttonAdd_Click(object sender, EventArgs e)
@@ -912,14 +928,15 @@ namespace Nikse.SubtitleEdit.Forms
 
             _doUpdate = false;
             AddStyle(style);
+            SsaStyle oldStyle = GetSsaStyle(listViewStyles.Items[0].Text);
+            AddStyleToHeader(style, oldStyle);
             listViewStyles.Items[listViewStyles.Items.Count - 1].Selected = true;
             listViewStyles.Items[listViewStyles.Items.Count - 1].EnsureVisible();
             listViewStyles.Items[listViewStyles.Items.Count - 1].Focused = true;
             textBoxStyleName.Text = style.Name;
             textBoxStyleName.Focus();
-            SsaStyle oldStyle = GetSsaStyle(listViewStyles.Items[0].Text);
-            AddStyleToHeader(style, oldStyle);
             _doUpdate = true;
+            SetControlsFromStyle(style);
             listViewStyles_SelectedIndexChanged(null, null);
         }
 
@@ -951,6 +968,7 @@ namespace Nikse.SubtitleEdit.Forms
                 int index = listViewStyles.SelectedItems[0].Index;
                 string name = listViewStyles.SelectedItems[0].Text;
                 listViewStyles.Items.RemoveAt(listViewStyles.SelectedItems[0].Index);
+                RemoveStyleFromHeader(name); 
 
                 if (listViewStyles.Items.Count == 0)
                 {
@@ -968,15 +986,29 @@ namespace Nikse.SubtitleEdit.Forms
         private void buttonRemoveAll_Click(object sender, EventArgs e)
         {
             listViewStyles.Items.Clear();
-            var ass = new AdvancedSubStationAlpha();
-            Subtitle sub = new Subtitle();
-            var text = ass.ToText(sub, string.Empty);
-            string[] lineArray = text.Split(Environment.NewLine.ToCharArray());
-            var lines = new List<string>();
-            foreach (string line in lineArray)
-                lines.Add(line);
-            ass.LoadSubtitle(sub, lines, string.Empty);
-            Header = sub.Header;
+            var sub = new Subtitle();
+            if (_isSubStationAlpha)
+            {
+                var ssa = new SubStationAlpha();
+                string text = ssa.ToText(sub, string.Empty);
+                string[] lineArray = text.Split(new string[] { Environment.NewLine }, StringSplitOptions.None);
+                var lines = new List<string>();
+                foreach (string line in lineArray)
+                    lines.Add(line);
+                ssa.LoadSubtitle(sub, lines, string.Empty);
+                Header = Header.Remove(Header.IndexOf("[V4 Styles]")) + sub.Header.Substring(sub.Header.IndexOf("[V4 Styles]"));
+            }
+            else
+            {
+                var ass = new AdvancedSubStationAlpha();
+                string text = ass.ToText(sub, string.Empty);
+                string[] lineArray = text.Split(new string[] { Environment.NewLine }, StringSplitOptions.None);
+                var lines = new List<string>();
+                foreach (string line in lineArray)
+                    lines.Add(line);
+                ass.LoadSubtitle(sub, lines, string.Empty);
+                Header = Header.Remove(Header.IndexOf("[V4+ Styles]")) + sub.Header.Substring(sub.Header.IndexOf("[V4+ Styles]"));
+            }
             InitializeListView();
         }
 
