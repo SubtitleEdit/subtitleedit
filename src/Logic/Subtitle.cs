@@ -239,9 +239,10 @@ namespace Nikse.SubtitleEdit.Logic
             {
                 double startFrame = p.StartTime.TotalMilliseconds / 1000.0 * oldFramerate;
                 double endFrame = p.EndTime.TotalMilliseconds / 1000.0 * oldFramerate;
-
                 p.StartTime.TotalMilliseconds = startFrame * (1000.0 / newFramerate);
                 p.EndTime.TotalMilliseconds = endFrame * (1000.0 / newFramerate);
+
+                p.CalculateFrameNumbersFromTimeCodes(newFramerate);
             }
         }
 

@@ -120,7 +120,7 @@ namespace Nikse.SubtitleEdit.Logic
             ListViewSyntaxColorLongLines = true;
             ListViewSyntaxMoreThanXLines = true;
             ListViewSyntaxMoreThanXLinesX = 2;
-            ListViewSyntaxErrorColor = Color.FromArgb(255, 125, 125);
+            ListViewSyntaxErrorColor = Color.FromArgb(255, 180, 150);
             ListViewUnfocusedSelectedColor = Color.LightBlue;
             SplitAdvanced = false;
             SplitNumberOfParts = 3;
