@@ -6406,12 +6406,33 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void TabControlSubtitleSelectedIndexChanged(object sender, EventArgs e)
         {
+            var format = GetCurrentSubtitleFormat();
             if (tabControlSubtitle.SelectedIndex == TabControlSourceView)
             {
                 ShowSource();
                 ShowSourceLineNumber();
                 if (textBoxSource.CanFocus)
                     textBoxSource.Focus();
+
+                // go to correct line in source view
+                if (SubtitleListview1.SelectedItems.Count > 0)
+                {
+                    if (format.GetType() == typeof(SubRip))
+                    {
+                        Paragraph p = _subtitle.GetParagraphOrDefault(FirstSelectedIndex);
+                        if (p != null)
+                        {
+                            string tc = p.StartTime.ToString() + " --> " + p.EndTime.ToString();
+                            int start = textBoxSource.Text.IndexOf(tc);
+                            if (start > 0)
+                            {
+                                textBoxSource.SelectionStart = start + tc.Length + Environment.NewLine.Length;
+                                textBoxSource.SelectionLength = 0;
+                                textBoxSource.ScrollToCaret();
+                            }
+                        }
+                    }
+                }
             }
             else
             {
@@ -6419,6 +6440,43 @@ namespace Nikse.SubtitleEdit.Forms
                 ShowLineInformationListView();
                 if (SubtitleListview1.CanFocus)
                     SubtitleListview1.Focus();
+
+                // go to (select + focus) correct line in list view
+                if (textBoxSource.SelectionStart > 0 && textBoxSource.TextLength > 30)
+                {
+                    if (format.GetType() == typeof(SubRip))
+                    {
+                        int pos = textBoxSource.SelectionStart;
+                        if (pos + 35 < textBoxSource.TextLength)
+                            pos += 35;
+                        string s = textBoxSource.Text.Substring(0, pos);
+                        int lastTimeCode = s.LastIndexOf(" --> "); // 00:02:26,407 --> 00:02:31,356
+                        if (lastTimeCode > 14 && lastTimeCode + 16 >= s.Length)
+                        {
+                            s = s.Substring(0, lastTimeCode - 5);
+                            lastTimeCode = s.LastIndexOf(" --> "); 
+                        }
+
+                        if (lastTimeCode > 14 && lastTimeCode + 16 < s.Length)
+                        {
+                            string tc = s.Substring(lastTimeCode - 13, 30).Trim();
+                            int index = 0;
+                            foreach (Paragraph p in _subtitle.Paragraphs)
+                            {
+                                if (tc == p.StartTime.ToString() + " --> " + p.EndTime.ToString())
+                                {
+                                    SubtitleListview1.SelectIndexAndEnsureVisible(index, true);
+                                    break;
+                                }
+                                index++;
+                            }
+                        }
+                    }
+                }
+                else if (textBoxSource.SelectionStart == 0 && textBoxSource.TextLength > 30)
+                {
+                    SubtitleListview1.SelectIndexAndEnsureVisible(0, true);
+                }
             }
         }
 
