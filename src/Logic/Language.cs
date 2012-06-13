@@ -414,6 +414,7 @@ namespace Nikse.SubtitleEdit.Logic
                 AddPeriods = "Add period after lines where next line start with uppercase letter",
                 StartWithUppercaseLetterAfterParagraph = "Start with uppercase letter after paragraph",
                 StartWithUppercaseLetterAfterPeriodInsideParagraph = "Start with uppercase letter after period inside paragraph",
+                StartWithUppercaseLetterAfterColon = "Start with uppercase letter after colon/semicolon",
                 CommonOcrErrorsFixed = "Common OCR errors fixed (OcrReplaceList file used): {0}",
                 RemoveSpaceBetweenNumber = "Remove space between numbers",
                 FixDialogsOnOneLine = "Fix dialogs on one line",
