@@ -30,20 +30,21 @@ namespace Nikse.SubtitleEdit.Forms
         const int IndexAddPeriodAfterParagraph = 13;
         const int IndexStartWithUppercaseLetterAfterParagraph = 14;
         const int IndexStartWithUppercaseLetterAfterPeriodInsideParagraph = 15;
-        const int IndexAddMissingQuotes = 16;
-        const int IndexFixHyphens = 17;
-        const int IndexFix3PlusLines = 18;
-        const int IndexFixDoubleDash = 19;
-        const int IndexFixDoubleGreaterThan = 20;
-        const int IndexFixEllipsesStart = 21;
-        const int IndexFixMissingOpenBracket = 22;
-        const int IndexFixOcrErrorsViaReplaceList = 23;
-        const int IndexUppercaseIInsideLowercaseWord = 24;
-        const int IndexAloneLowercaseIToUppercaseIEnglish = 25;
-        const int IndexRemoveSpaceBetweenNumbers = 26;
-        const int IndexDialogsOnOneLine = 27;
-        const int IndexDanishLetterI = 28;
-        const int IndexFixSpanishInvertedQuestionAndExclamationMarks = 29;
+        const int IndexStartWithUppercaseLetterAfterColon = 16;
+        const int IndexAddMissingQuotes = 17;
+        const int IndexFixHyphens = 18;
+        const int IndexFix3PlusLines = 19;
+        const int IndexFixDoubleDash = 20;
+        const int IndexFixDoubleGreaterThan = 21;
+        const int IndexFixEllipsesStart = 22;
+        const int IndexFixMissingOpenBracket = 23;
+        const int IndexFixOcrErrorsViaReplaceList = 24;
+        const int IndexUppercaseIInsideLowercaseWord = 25;
+        const int IndexAloneLowercaseIToUppercaseIEnglish = 26;
+        const int IndexRemoveSpaceBetweenNumbers = 27;
+        const int IndexDialogsOnOneLine = 28;
+        const int IndexDanishLetterI = 29;
+        const int IndexFixSpanishInvertedQuestionAndExclamationMarks = 30;
 
         int _danishLetterIIndex = -1;
         int _spanishInvertedQuestionAndExclamationMarksIndex = -1;
@@ -169,6 +170,7 @@ namespace Nikse.SubtitleEdit.Forms
             _fixActions.Add(new FixItem(_language.AddPeriods, string.Empty, delegate { FixMissingPeriodsAtEndOfLine(); }, ce.AddPeriodAfterParagraphTicked));
             _fixActions.Add(new FixItem(_language.StartWithUppercaseLetterAfterParagraph, string.Empty, delegate { FixStartWithUppercaseLetterAfterParagraph(); }, ce.StartWithUppercaseLetterAfterParagraphTicked));
             _fixActions.Add(new FixItem(_language.StartWithUppercaseLetterAfterPeriodInsideParagraph, string.Empty, delegate { FixStartWithUppercaseLetterAfterPeriodInsideParagraph(); }, ce.StartWithUppercaseLetterAfterPeriodInsideParagraphTicked));
+            _fixActions.Add(new FixItem(_language.StartWithUppercaseLetterAfterColon, string.Empty, delegate { FixStartWithUppercaseLetterAfterColon(); }, ce.StartWithUppercaseLetterAfterColonTicked));
             _fixActions.Add(new FixItem(_language.AddMissingQuotes, _language.AddMissingQuotesExample, delegate { AddMissingQuotes(); }, ce.AddMissingQuotesTicked));
             _fixActions.Add(new FixItem(_language.FixHyphens, string.Empty, delegate { FixHyphens(); }, ce.FixHyphensTicked));
             _fixActions.Add(new FixItem(_language.Fix3PlusLines, string.Empty, delegate { Fix3PlusLines(); }, ce.Fix3PlusLinesTicked));
@@ -2075,9 +2077,7 @@ namespace Nikse.SubtitleEdit.Forms
                                    !prevText.EndsWith("...") &&
                                    (prevText.EndsWith(".") ||
                                     prevText.EndsWith("!") ||
-                                    prevText.EndsWith("?") ||
-                                    prevText.EndsWith(":") ||
-                                    prevText.EndsWith(";"));
+                                    prevText.EndsWith("?"));
 
             if (isPrevEndOfLine && prevText.Length > 5 && prevText.EndsWith(".") &&
                 prevText[prevText.Length - 3] == '.' &&
@@ -2138,8 +2138,74 @@ namespace Nikse.SubtitleEdit.Forms
             }
             if (noOfFixes > 0)
                 LogStatus(_language.StartWithUppercaseLetterAfterPeriodInsideParagraph, noOfFixes.ToString());
-
         }
+
+        private void FixStartWithUppercaseLetterAfterColon()
+        {
+            string fixAction = _language.StartWithUppercaseLetterAfterColon;
+            int noOfFixes = 0;
+            for (int i = 0; i < _subtitle.Paragraphs.Count; i++)
+            {
+                Paragraph p = _subtitle.Paragraphs[i];
+                Paragraph last = _subtitle.GetParagraphOrDefault(i - 1);
+                string oldText = p.Text;
+                int skipCount = 0;
+
+                if (last != null)
+                {
+                    string lastText = Utilities.RemoveHtmlTags(last.Text);
+                    if (lastText.EndsWith(":") || lastText.EndsWith(";"))
+                    { 
+                        var st = new StripableText(p.Text);
+                        if (st.StrippedText.Length > 0 && st.StrippedText[0].ToString() != st.StrippedText[0].ToString().ToUpper())
+                            p.Text = st.Pre + st.StrippedText[0].ToString().ToUpper() + st.StrippedText.Remove(0, 1) + st.Post;
+                    }
+                }
+                    
+                if (oldText.Contains(":") || oldText.Contains(";"))
+                {
+                    bool lastWasColon = false;
+                    for (int j = 0; j < p.Text.Length; j++)
+                    {
+                        string s = p.Text[j].ToString();
+                        if (s == ":" || s == ";")
+                        {
+                            lastWasColon = true;
+                        }
+                        else if (lastWasColon)
+                        {
+                            if (skipCount > 0)
+                                skipCount--;
+                            else if (p.Text.Substring(j).StartsWith("<i>"))
+                                skipCount = 2;
+                            else if (p.Text.Substring(j).StartsWith("<b>"))
+                                skipCount = 2;
+                            else if (p.Text.Substring(j).StartsWith("<u>"))
+                                skipCount = 2;
+                            else if (p.Text.Substring(j).StartsWith("<font ") && p.Text.Substring(j).Contains(">"))
+                                skipCount = p.Text.Substring(j).IndexOf(">") - p.Text.Substring(j).IndexOf("<font ");
+                            else if (s != s.ToUpper())
+                            {
+                                p.Text = p.Text.Remove(j, 1).Insert(j, s.ToUpper());
+                                lastWasColon = false;
+                            }
+                            else if (!(" " + Environment.NewLine).Contains(s))
+                                lastWasColon = false;
+                        }
+                    }
+                }
+
+                if (oldText != p.Text)
+                {
+                    noOfFixes++;
+                    _totalFixes++;
+                    AddFixToListView(p, fixAction, oldText, p.Text);
+                }
+            }
+            if (noOfFixes > 0)
+                LogStatus(_language.StartWithUppercaseLetterAfterColon, noOfFixes.ToString());
+        }
+
 
         private bool IsAbbreviation(string text, int index)
         {
@@ -3865,6 +3931,7 @@ namespace Nikse.SubtitleEdit.Forms
             ce.AddPeriodAfterParagraphTicked = listView1.Items[IndexAddPeriodAfterParagraph].Checked;
             ce.StartWithUppercaseLetterAfterParagraphTicked = listView1.Items[IndexStartWithUppercaseLetterAfterParagraph].Checked;
             ce.StartWithUppercaseLetterAfterPeriodInsideParagraphTicked = listView1.Items[IndexStartWithUppercaseLetterAfterPeriodInsideParagraph].Checked;
+            ce.StartWithUppercaseLetterAfterColonTicked = listView1.Items[IndexStartWithUppercaseLetterAfterColon].Checked;
             ce.AddMissingQuotesTicked = listView1.Items[IndexAddMissingQuotes].Checked;
             ce.FixHyphensTicked = listView1.Items[IndexFixHyphens].Checked;
             ce.Fix3PlusLinesTicked = listView1.Items[IndexFix3PlusLines].Checked;

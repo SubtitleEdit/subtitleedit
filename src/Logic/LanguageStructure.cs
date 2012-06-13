@@ -355,6 +355,7 @@
             public string AddPeriods { get; set; }
             public string StartWithUppercaseLetterAfterParagraph { get; set; }
             public string StartWithUppercaseLetterAfterPeriodInsideParagraph { get; set; }
+            public string StartWithUppercaseLetterAfterColon { get; set; }
             public string FixLowercaseIToUppercaseI { get; set; }
             public string FixCommonOcrErrors { get; set; }
             public string CommonOcrErrorsFixed { get; set; }

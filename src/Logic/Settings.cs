@@ -203,6 +203,7 @@ namespace Nikse.SubtitleEdit.Logic
         public bool AddPeriodAfterParagraphTicked { get; set; }
         public bool StartWithUppercaseLetterAfterParagraphTicked { get; set; }
         public bool StartWithUppercaseLetterAfterPeriodInsideParagraphTicked { get; set; }
+        public bool StartWithUppercaseLetterAfterColonTicked { get; set; }
         public bool AloneLowercaseIToUppercaseIEnglishTicked { get; set; }
         public bool FixOcrErrorsViaReplaceListTicked { get; set; }
         public bool RemoveSpaceBetweenNumberTicked { get; set; }
@@ -232,6 +233,7 @@ namespace Nikse.SubtitleEdit.Logic
             AddPeriodAfterParagraphTicked = false;
             StartWithUppercaseLetterAfterParagraphTicked = true;
             StartWithUppercaseLetterAfterPeriodInsideParagraphTicked = false;
+            StartWithUppercaseLetterAfterColonTicked = false;
             AloneLowercaseIToUppercaseIEnglishTicked = false;
             DanishLetterITicked = false;
             FixDoubleDashTicked = true;
@@ -1233,6 +1235,9 @@ namespace Nikse.SubtitleEdit.Logic
             subNode = node.SelectSingleNode("StartWithUppercaseLetterAfterPeriodInsideParagraphTicked");
             if (subNode != null)
                 settings.CommonErrors.StartWithUppercaseLetterAfterPeriodInsideParagraphTicked = Convert.ToBoolean(subNode.InnerText);
+            subNode = node.SelectSingleNode("StartWithUppercaseLetterAfterColonTicked");
+            if (subNode != null)
+                settings.CommonErrors.StartWithUppercaseLetterAfterColonTicked = Convert.ToBoolean(subNode.InnerText);
             subNode = node.SelectSingleNode("AloneLowercaseIToUppercaseIEnglishTicked");
             if (subNode != null)
                 settings.CommonErrors.AloneLowercaseIToUppercaseIEnglishTicked = Convert.ToBoolean(subNode.InnerText);
@@ -1823,6 +1828,7 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("AddPeriodAfterParagraphTicked", settings.CommonErrors.AddPeriodAfterParagraphTicked.ToString());
             textWriter.WriteElementString("StartWithUppercaseLetterAfterParagraphTicked", settings.CommonErrors.StartWithUppercaseLetterAfterParagraphTicked.ToString());
             textWriter.WriteElementString("StartWithUppercaseLetterAfterPeriodInsideParagraphTicked", settings.CommonErrors.StartWithUppercaseLetterAfterPeriodInsideParagraphTicked.ToString());
+            textWriter.WriteElementString("StartWithUppercaseLetterAfterColonTicked", settings.CommonErrors.StartWithUppercaseLetterAfterColonTicked.ToString());
             textWriter.WriteElementString("AloneLowercaseIToUppercaseIEnglishTicked", settings.CommonErrors.AloneLowercaseIToUppercaseIEnglishTicked.ToString());
             textWriter.WriteElementString("FixOcrErrorsViaReplaceListTicked", settings.CommonErrors.FixOcrErrorsViaReplaceListTicked.ToString());
             textWriter.WriteElementString("RemoveSpaceBetweenNumberTicked", settings.CommonErrors.RemoveSpaceBetweenNumberTicked.ToString());
