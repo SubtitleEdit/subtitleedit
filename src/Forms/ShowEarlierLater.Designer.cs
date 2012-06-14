@@ -39,19 +39,20 @@ namespace Nikse.SubtitleEdit.Forms
             this.radioButtonAllLines = new System.Windows.Forms.RadioButton();
             this.radioButtonSelectedLinesOnly = new System.Windows.Forms.RadioButton();
             this.timeUpDownAdjust = new Nikse.SubtitleEdit.Controls.TimeUpDown();
+            this.radioButtonSelectedLineAndForward = new System.Windows.Forms.RadioButton();
             this.SuspendLayout();
-            //
+            // 
             // labelHoursMinSecsMilliSecs
-            //
+            // 
             this.labelHoursMinSecsMilliSecs.AutoSize = true;
             this.labelHoursMinSecsMilliSecs.Location = new System.Drawing.Point(11, 6);
             this.labelHoursMinSecsMilliSecs.Name = "labelHoursMinSecsMilliSecs";
             this.labelHoursMinSecsMilliSecs.Size = new System.Drawing.Size(108, 13);
             this.labelHoursMinSecsMilliSecs.TabIndex = 18;
             this.labelHoursMinSecsMilliSecs.Text = "Hours:min:sec.msecs";
-            //
+            // 
             // buttonShowLater
-            //
+            // 
             this.buttonShowLater.Location = new System.Drawing.Point(145, 53);
             this.buttonShowLater.Name = "buttonShowLater";
             this.buttonShowLater.Size = new System.Drawing.Size(119, 21);
@@ -59,9 +60,9 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonShowLater.Text = "Show later";
             this.buttonShowLater.UseVisualStyleBackColor = true;
             this.buttonShowLater.Click += new System.EventHandler(this.ButtonShowLaterClick);
-            //
+            // 
             // buttonShowEarlier
-            //
+            // 
             this.buttonShowEarlier.Location = new System.Drawing.Point(145, 26);
             this.buttonShowEarlier.Name = "buttonShowEarlier";
             this.buttonShowEarlier.Size = new System.Drawing.Size(120, 21);
@@ -69,22 +70,22 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonShowEarlier.Text = "Show earlier";
             this.buttonShowEarlier.UseVisualStyleBackColor = true;
             this.buttonShowEarlier.Click += new System.EventHandler(this.ButtonShowEarlierClick);
-            //
+            // 
             // labelTotalAdjustment
-            //
+            // 
             this.labelTotalAdjustment.AutoSize = true;
-            this.labelTotalAdjustment.Location = new System.Drawing.Point(12, 128);
+            this.labelTotalAdjustment.Location = new System.Drawing.Point(9, 148);
             this.labelTotalAdjustment.Name = "labelTotalAdjustment";
             this.labelTotalAdjustment.Size = new System.Drawing.Size(108, 13);
             this.labelTotalAdjustment.TabIndex = 38;
             this.labelTotalAdjustment.Text = "labelTotalAdjustment";
-            //
+            // 
             // timer1
-            //
+            // 
             this.timer1.Interval = 250;
-            //
+            // 
             // radioButtonAllLines
-            //
+            // 
             this.radioButtonAllLines.AutoSize = true;
             this.radioButtonAllLines.Location = new System.Drawing.Point(14, 70);
             this.radioButtonAllLines.Name = "radioButtonAllLines";
@@ -94,9 +95,9 @@ namespace Nikse.SubtitleEdit.Forms
             this.radioButtonAllLines.Text = "All lines";
             this.radioButtonAllLines.UseVisualStyleBackColor = true;
             this.radioButtonAllLines.CheckedChanged += new System.EventHandler(this.radioButtonAllLines_CheckedChanged);
-            //
+            // 
             // radioButtonSelectedLinesOnly
-            //
+            // 
             this.radioButtonSelectedLinesOnly.AutoSize = true;
             this.radioButtonSelectedLinesOnly.Location = new System.Drawing.Point(14, 93);
             this.radioButtonSelectedLinesOnly.Name = "radioButtonSelectedLinesOnly";
@@ -106,9 +107,9 @@ namespace Nikse.SubtitleEdit.Forms
             this.radioButtonSelectedLinesOnly.Text = "Selected lines only";
             this.radioButtonSelectedLinesOnly.UseVisualStyleBackColor = true;
             this.radioButtonSelectedLinesOnly.CheckedChanged += new System.EventHandler(this.radioButtonAllLines_CheckedChanged);
-            //
+            // 
             // timeUpDownAdjust
-            //
+            // 
             this.timeUpDownAdjust.AutoSize = true;
             this.timeUpDownAdjust.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.timeUpDownAdjust.Location = new System.Drawing.Point(12, 23);
@@ -116,12 +117,24 @@ namespace Nikse.SubtitleEdit.Forms
             this.timeUpDownAdjust.Name = "timeUpDownAdjust";
             this.timeUpDownAdjust.Size = new System.Drawing.Size(92, 25);
             this.timeUpDownAdjust.TabIndex = 21;
-            //
+            // 
+            // radioButtonSelectedLineAndForward
+            // 
+            this.radioButtonSelectedLineAndForward.AutoSize = true;
+            this.radioButtonSelectedLineAndForward.Location = new System.Drawing.Point(14, 116);
+            this.radioButtonSelectedLineAndForward.Name = "radioButtonSelectedLineAndForward";
+            this.radioButtonSelectedLineAndForward.Size = new System.Drawing.Size(160, 17);
+            this.radioButtonSelectedLineAndForward.TabIndex = 41;
+            this.radioButtonSelectedLineAndForward.TabStop = true;
+            this.radioButtonSelectedLineAndForward.Text = "Selected line(s) and forward";
+            this.radioButtonSelectedLineAndForward.UseVisualStyleBackColor = true;
+            // 
             // ShowEarlierLater
-            //
+            // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(291, 150);
+            this.ClientSize = new System.Drawing.Size(301, 170);
+            this.Controls.Add(this.radioButtonSelectedLineAndForward);
             this.Controls.Add(this.radioButtonSelectedLinesOnly);
             this.Controls.Add(this.radioButtonAllLines);
             this.Controls.Add(this.buttonShowLater);
@@ -154,5 +167,6 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.Timer timer1;
         private System.Windows.Forms.RadioButton radioButtonAllLines;
         private System.Windows.Forms.RadioButton radioButtonSelectedLinesOnly;
+        private System.Windows.Forms.RadioButton radioButtonSelectedLineAndForward;
     }
 }

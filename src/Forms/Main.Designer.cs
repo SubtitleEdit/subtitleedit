@@ -435,6 +435,7 @@
             this.labelStatus.Name = "labelStatus";
             this.labelStatus.Size = new System.Drawing.Size(700, 22);
             this.labelStatus.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.labelStatus.Click += new System.EventHandler(this.labelStatus_Click);
             // 
             // toolStripSelected
             // 

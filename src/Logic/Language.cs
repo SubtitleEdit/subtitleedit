@@ -79,7 +79,7 @@ namespace Nikse.SubtitleEdit.Logic
             General = new LanguageStructure.General
             {
                 Title = "Subtitle Edit",
-                Version = "3.2",
+                Version = "3.3",
                 TranslatedBy = " ",
                 CultureName = "en-US",
                 HelpFile = string.Empty,
@@ -1367,6 +1367,7 @@ can edit in same subtitle file (collaboration)",
                 TotalAdjustmentX = "Total adjustment: {0}",
                 AllLines = "All lines",
                 SelectedLinesonly = "Selected lines only",
+                SelectedLinesAndForward = "Selected line(s) and forward",
             };
 
             ShowHistory = new LanguageStructure.ShowHistory

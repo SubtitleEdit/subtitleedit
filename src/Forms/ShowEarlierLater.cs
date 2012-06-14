@@ -2,12 +2,13 @@
 using System.Drawing;
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Logic;
+using Nikse.SubtitleEdit.Logic.Enums;
 
 namespace Nikse.SubtitleEdit.Forms
 {
     public sealed partial class ShowEarlierLater : Form
     {
-        public delegate void AdjustEventHandler(double adjustMilliseconds, bool onlySelected);
+        public delegate void AdjustEventHandler(double adjustMilliseconds, SelectionChoice selection);
 
         TimeSpan _totalAdjustment = TimeSpan.FromMilliseconds(0);
         AdjustEventHandler _adjustCallback;
@@ -57,6 +58,8 @@ namespace Nikse.SubtitleEdit.Forms
             _formPositionsAndSizes = formPositionsAndSizes;
             if (onlySelected)
                 radioButtonSelectedLinesOnly.Checked = true;
+            else if (Configuration.Settings.Tools.LastShowEarlierOrLaterSelection == SelectionChoice.SelectionAndForward.ToString())
+                radioButtonSelectedLineAndForward.Checked = true;
             else
                 radioButtonAllLines.Checked = true;
 
@@ -64,12 +67,23 @@ namespace Nikse.SubtitleEdit.Forms
             timeUpDownAdjust.TimeCode = new TimeCode(TimeSpan.FromMilliseconds(Configuration.Settings.General.DefaultAdjustMilliseconds));
         }
 
+        private SelectionChoice GetSelectionChoice()
+        {            
+            if (radioButtonSelectedLinesOnly.Checked)
+                return SelectionChoice.SelectionOnly;
+            else if (radioButtonSelectedLineAndForward.Checked)
+                return SelectionChoice.SelectionAndForward;
+            else
+                return SelectionChoice.AllLines;
+        }
+
         private void ButtonShowEarlierClick(object sender, EventArgs e)
         {
             TimeCode tc = timeUpDownAdjust.TimeCode;
             if (tc != null && tc.TotalMilliseconds > 0)
             {
-                _adjustCallback.Invoke(-tc.TotalMilliseconds, radioButtonSelectedLinesOnly.Checked);
+
+                _adjustCallback.Invoke(-tc.TotalMilliseconds, GetSelectionChoice());
                 _totalAdjustment = TimeSpan.FromMilliseconds(_totalAdjustment.TotalMilliseconds - tc.TotalMilliseconds);
                 ShowTotalAdjustMent();
                 Configuration.Settings.General.DefaultAdjustMilliseconds = (int)tc.TotalMilliseconds;
@@ -87,7 +101,7 @@ namespace Nikse.SubtitleEdit.Forms
             TimeCode tc = timeUpDownAdjust.TimeCode;
             if (tc != null && tc.TotalMilliseconds > 0)
             {
-                _adjustCallback.Invoke(tc.TotalMilliseconds, radioButtonSelectedLinesOnly.Checked);
+                _adjustCallback.Invoke(tc.TotalMilliseconds, GetSelectionChoice());
                 _totalAdjustment = TimeSpan.FromMilliseconds(_totalAdjustment.TotalMilliseconds + tc.TotalMilliseconds);
                 ShowTotalAdjustMent();
                 Configuration.Settings.General.DefaultAdjustMilliseconds = (int)tc.TotalMilliseconds;
@@ -105,6 +119,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void ShowEarlierLater_FormClosing(object sender, FormClosingEventArgs e)
         {
             _formPositionsAndSizes.SavePositionAndSize(this);
+            Configuration.Settings.Tools.LastShowEarlierOrLaterSelection = GetSelectionChoice().ToString();
         }
 
     }
