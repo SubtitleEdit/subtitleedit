@@ -79,7 +79,9 @@ namespace Nikse.SubtitleEdit.Forms
         double? _audioWaveFormRightClickSeconds = null;
         private System.Windows.Forms.Timer _timerDoSyntaxColoring = new Timer();
         System.Windows.Forms.Timer _timerAutoSave = new Timer();
+        System.Windows.Forms.Timer _timerClearStatus = new Timer();
         string _textAutoSave;
+        StringBuilder _statusLog = new StringBuilder();
 
         NikseWebServiceSession _networkSession;
         NetworkChat _networkChat = null;
@@ -372,12 +374,20 @@ namespace Nikse.SubtitleEdit.Forms
                 toolStripComboBoxWaveForm.SelectedIndexChanged += toolStripComboBoxWaveForm_SelectedIndexChanged;
 
                 FixLargeFonts();
+
+                _timerClearStatus.Interval = 5000;
+                _timerClearStatus.Tick += TimerClearStatus_Tick;
             }
             catch (Exception exception)
             {
                 Cursor = Cursors.Default;
                 MessageBox.Show(exception.Message + Environment.NewLine + exception.StackTrace);
             }
+        }
+
+        void TimerClearStatus_Tick(object sender, EventArgs e)
+        {
+            ShowStatus(string.Empty);
         }
 
         private void SetEncoding(Encoding encoding)
@@ -1220,15 +1230,7 @@ namespace Nikse.SubtitleEdit.Forms
             sortTextMaxLineLengthToolStripMenuItem.Text = _language.Menu.Tools.TextSingleLineMaximumLength;
             sortTextTotalLengthToolStripMenuItem.Text = _language.Menu.Tools.TextTotalLength;
             sortTextNumberOfLinesToolStripMenuItem.Text = _language.Menu.Tools.TextNumberOfLines;
-            if (!string.IsNullOrEmpty(_language.Menu.Tools.TextNumberOfCharactersPerSeconds))
-            {
-                textCharssecToolStripMenuItem.Text = _language.Menu.Tools.TextNumberOfCharactersPerSeconds;
-                textCharssecToolStripMenuItem.Visible = true;
-            }
-            else
-            {
-                textCharssecToolStripMenuItem.Visible = false;
-            }
+            textCharssecToolStripMenuItem.Text = _language.Menu.Tools.TextNumberOfCharactersPerSeconds;
 
             toolStripMenuItemShowOriginalInPreview.Text = _language.Menu.Tools.ShowOriginalTextInAudioAndVideoPreview;
             toolStripMenuItemMakeEmptyFromCurrent.Text = _language.Menu.Tools.MakeNewEmptyTranslationFromCurrentSubtitle;
@@ -3565,6 +3567,12 @@ namespace Nikse.SubtitleEdit.Forms
         {
             labelStatus.Text = message;
             statusStrip1.Refresh();
+            if (!string.IsNullOrEmpty(message))
+            {
+                _timerClearStatus.Stop();
+                _statusLog.AppendLine(string.Format("{0:0000}-{1:00}-{2:00} {3}: {4}", DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, DateTime.Now.ToLongTimeString(), message));
+                _timerClearStatus.Start();
+            }
         }
 
         private void ReloadFromSourceView()
@@ -8345,12 +8353,12 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 if (_mainAdjustSelected100MsForward == e.KeyData)
                 {
-                    ShowEarlierOrLater(100, true);
+                    ShowEarlierOrLater(100, SelectionChoice.SelectionOnly);
                     e.SuppressKeyPress = true;
                 }
                 else if (_mainAdjustSelected100MsBack == e.KeyData)
                 {
-                    ShowEarlierOrLater(-100, true);
+                    ShowEarlierOrLater(-100, SelectionChoice.SelectionOnly);
                     e.SuppressKeyPress = true;
                 }
                 else if (mediaPlayer.VideoPlayer != null)
@@ -10373,49 +10381,39 @@ namespace Nikse.SubtitleEdit.Forms
             Refresh();
         }
 
-        public void ShowEarlierOrLater(double adjustMilliseconds, bool onlySelected)
+        public void ShowEarlierOrLater(double adjustMilliseconds, SelectionChoice selection)
         {
             TimeCode tc = new TimeCode(TimeSpan.FromMilliseconds(adjustMilliseconds));
             MakeHistoryForUndo(_language.BeforeShowSelectedLinesEarlierLater  + ": " + tc.ToString());
 
             double frameRate = CurrentFrameRate;
             SubtitleListview1.BeginUpdate();
-            for (int i = 0; i < _subtitle.Paragraphs.Count; i++)
-            {
-                if (SubtitleListview1.Items[i].Selected || !onlySelected)
-                {
-                    Paragraph p = _subtitle.GetParagraphOrDefault(i);
-                    if (p != null)
-                    {
-                        if (_subtitleAlternate != null && onlySelected)
-                        {
-                            Paragraph original = Utilities.GetOriginalParagraph(i, p, _subtitleAlternate.Paragraphs);
-                            if (original != null)
-                            {
-                                original.StartTime.TotalMilliseconds += adjustMilliseconds;
-                                original.EndTime.TotalMilliseconds += adjustMilliseconds;
-                            }
-                        }
 
-                        p.StartTime.TotalMilliseconds += adjustMilliseconds;
-                        p.EndTime.TotalMilliseconds += adjustMilliseconds;
-                        SubtitleListview1.SetStartTime(i, p);
-                    }
-                }
+            int startFrom = 0;
+            if (selection == SelectionChoice.SelectionAndForward)
+            {
+                if (SubtitleListview1.SelectedItems.Count > 0)
+                    startFrom = SubtitleListview1.SelectedItems[0].Index;
+                else
+                    startFrom = _subtitle.Paragraphs.Count;
             }
 
-            if (_subtitleAlternate != null && !onlySelected)
+            for (int i = startFrom; i < _subtitle.Paragraphs.Count; i++)
             {
-                for (int i = 0; i < _subtitleAlternate.Paragraphs.Count; i++)
+                switch (selection)
                 {
-                    Paragraph p = _subtitleAlternate.GetParagraphOrDefault(i);
-                    if (p != null)
-                    {
-                        p.StartTime.TotalMilliseconds += adjustMilliseconds;
-                        p.EndTime.TotalMilliseconds += adjustMilliseconds;
-                    }
-                }
-            }
+                    case SelectionChoice.SelectionOnly:
+                        if (SubtitleListview1.Items[i].Selected)
+                            ShowEarlierOrLaterParagraph(adjustMilliseconds, i);
+                        break;
+                    case SelectionChoice.AllLines:
+                        ShowEarlierOrLaterParagraph(adjustMilliseconds, i);
+                        break;
+                    case SelectionChoice.SelectionAndForward:
+                        ShowEarlierOrLaterParagraph(adjustMilliseconds, i);
+                        break;
+                }               
+            }  
 
             SubtitleListview1.EndUpdate();
             if (_subtitle.WasLoadedWithFrameNumbers)
@@ -10423,6 +10421,27 @@ namespace Nikse.SubtitleEdit.Forms
             RefreshSelectedParagraph();
             UpdateSourceView();
             UpdateListSyntaxColoring();
+        }
+
+        private void ShowEarlierOrLaterParagraph(double adjustMilliseconds, int i)
+        {
+            Paragraph p = _subtitle.GetParagraphOrDefault(i);
+            if (p != null)
+            {
+                if (_subtitleAlternate != null)
+                {
+                    Paragraph original = Utilities.GetOriginalParagraph(i, p, _subtitleAlternate.Paragraphs);
+                    if (original != null)
+                    {
+                        original.StartTime.TotalMilliseconds += adjustMilliseconds;
+                        original.EndTime.TotalMilliseconds += adjustMilliseconds;
+                    }
+                }
+
+                p.StartTime.TotalMilliseconds += adjustMilliseconds;
+                p.EndTime.TotalMilliseconds += adjustMilliseconds;
+                SubtitleListview1.SetStartTime(i, p);
+            }
         }
 
         private void UpdateSourceView()
@@ -14271,6 +14290,17 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
             _formPositionsAndSizes.SavePositionAndSize(restoreAutoBackup);
+        }
+
+        private void labelStatus_Click(object sender, EventArgs e)
+        {
+            if (_statusLog.Length > 0)
+            {
+                var statusLog = new StatusLog(_statusLog.ToString());
+                _formPositionsAndSizes.SetPositionAndSize(statusLog);
+                statusLog.ShowDialog(this);
+                _formPositionsAndSizes.SavePositionAndSize(statusLog);
+            }
         }
 
     }

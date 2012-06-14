@@ -2,7 +2,7 @@
 <Language Name="Dansk">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.2</Version>
+    <Version>3.3</Version>
     <TranslatedBy>Oversat til dansk af Nikse (mailto:nikse.dk@gmail.com)</TranslatedBy>
     <CultureName>da-DK</CultureName>
     <HelpFile>
@@ -30,6 +30,7 @@
     <HourMinutesSecondsMilliseconds>Timer:min:sek:msek</HourMinutesSecondsMilliseconds>
     <Bold>Fed</Bold>
     <Italic>Kursiv</Italic>
+    <Underline>Understreg</Underline>
     <Visible>Synlig</Visible>
     <FrameRate>Billeder pr. sekund</FrameRate>
     <Name>Navn</Name>
@@ -61,6 +62,7 @@
     <VideoWindowTitle>Video - {0}</VideoWindowTitle>
     <AudioWindowTitle>Lydspor - {0}</AudioWindowTitle>
     <ControlsWindowTitle>Kommandoer - {0}</ControlsWindowTitle>
+    <Advanced>Avanceret</Advanced>
   </General>
   <About>
     <Title>Om Subtitle Edit</Title>
@@ -161,6 +163,7 @@
     <XNumberOfDifference>Antal forskelle: {0}</XNumberOfDifference>
     <ShowOnlyDifferences>Vis kun forskelle</ShowOnlyDifferences>
     <OnlyLookForDifferencesInText>Vis kun forskelle i teksten</OnlyLookForDifferencesInText>
+    <CannotCompareWithImageBasedSubtitles>Kan ikke sammenligne med billede baseret undertekster</CannotCompareWithImageBasedSubtitles>
   </CompareSubtitles>
   <DvdSubrip>
     <Title>Rip undertekster fra ifo/vobs (dvd)</Title>
@@ -297,6 +300,7 @@
     <AddPeriods>Tilføj punktum efter de linjer, hvor næste linje starter med stort bogstav</AddPeriods>
     <StartWithUppercaseLetterAfterParagraph>Start nye linier med stort bogstav efter punktum</StartWithUppercaseLetterAfterParagraph>
     <StartWithUppercaseLetterAfterPeriodInsideParagraph>Start med stort bogstav efter punktum inde i linjer</StartWithUppercaseLetterAfterPeriodInsideParagraph>
+    <StartWithUppercaseLetterAfterColon>Start med stort bogstav efter kolon/semikolon</StartWithUppercaseLetterAfterColon>
     <FixLowercaseIToUppercaseI>Ret alene lille 'i' til 'I' (engelsk)</FixLowercaseIToUppercaseI>
     <FixCommonOcrErrors>Ret OCR-fejl (ved hjælp af OCR erstat liste)</FixCommonOcrErrors>
     <CommonOcrErrorsFixed>Ret OCR fejl (via OcrReplaceList fil): {0}</CommonOcrErrorsFixed>
@@ -442,6 +446,10 @@
   <Interjections>
     <Title>Følelsesudbrud</Title>
   </Interjections>
+  <JoinSubtitles>
+    <Title>Flet undertekster</Title>
+    <Information>Tilføj undertekster til at deltage (droppe også understøttet)</Information>
+  </JoinSubtitles>
   <Main>
     <Menu>
       <File>
@@ -451,6 +459,9 @@
         <Reopen>&amp;Genåbn</Reopen>
         <Save>&amp;Gem</Save>
         <SaveAs>Gem &amp;som...</SaveAs>
+        <RestoreAutoBackup>Gendan fra auto-backup...</RestoreAutoBackup>
+        <AdvancedSubStationAlphaProperties>Advanced Sub Station Alpha egenskaber...</AdvancedSubStationAlphaProperties>
+        <SubStationAlphaProperties>Sub Station Alpha egenskaber...</SubStationAlphaProperties>
         <OpenOriginal>Åbn original undertekst (oversætter mode)...</OpenOriginal>
         <SaveOriginal>Gem original</SaveOriginal>
         <CloseOriginal>Luk original</CloseOriginal>
@@ -471,7 +482,6 @@
         <ExportEbu>EBU STL...</ExportEbu>
         <ExportPac>PAC (Screen Electronics)...</ExportPac>
         <ExportPlainText>Almindelig tekst...</ExportPlainText>
-        <ExportPlainTextWithoutLineBreaks>Almindelig tekst uden linjeskift...</ExportPlainTextWithoutLineBreaks>
         <Exit>&amp;Afslut</Exit>
       </File>
       <Edit>
@@ -577,7 +587,10 @@
         <ShowHideVideo>Vis/skjul video</ShowHideVideo>
       </ToolBar>
       <ContextMenu>
-        <SubStationAlphaSetStyle>(Advanced) Sub Station Alpha - Sæt style</SubStationAlphaSetStyle>
+        <AdvancedSubStationAlphaSetStyle>Advanced Sub Station Alpha - vælg stilart</AdvancedSubStationAlphaSetStyle>
+        <SubStationAlphaSetStyle>(Advanced) Sub Station Alpha - vælg stilart</SubStationAlphaSetStyle>
+        <SubStationAlphaStyles>Sub Station Alpha stilarter...</SubStationAlphaStyles>
+        <AdvancedSubStationAlphaStyles>Advanced Sub Station Alpha stilarter...</AdvancedSubStationAlphaStyles>
         <Cut>Klip</Cut>
         <Copy>Kopier</Copy>
         <Paste>Indsæt</Paste>
@@ -598,6 +611,7 @@
         <Underline>Understregning</Underline>
         <Color>Farve...</Color>
         <FontName>Font navn...</FontName>
+        <Alignment>Juestring...</Alignment>
         <AutoBalanceSelectedLines>Auto balancer markerede linjer...</AutoBalanceSelectedLines>
         <RemoveLineBreaksFromSelectedLines>Fjern line-skift fra valgte linjer...</RemoveLineBreaksFromSelectedLines>
         <TypewriterEffect>Skrivemaskine effekt...</TypewriterEffect>
@@ -761,6 +775,7 @@ Fortsæt?</SubtitleAppendPrompt>
     <TranslationFromSwedishToDanishFailed>Oversættelse fra svensk til dansk mislykkedes</TranslationFromSwedishToDanishFailed>
     <BeforeUndo>Før fortryd</BeforeUndo>
     <UndoPerformed>Fortryd udført</UndoPerformed>
+    <RedoPerformed>Redo udført</RedoPerformed>
     <NothingToUndo>Intet at fortryde</NothingToUndo>
     <InvalidLanguageNameX>Ugyldigt sprog navn: {0}</InvalidLanguageNameX>
     <UnableToChangeLanguage>Kunne ikke skifte sprog!</UnableToChangeLanguage>
@@ -871,6 +886,10 @@ Fortsæt?</SubtitleAppendPrompt>
     <BeforeToggleDialogueDashes>Før skift af dialog tankestreger</BeforeToggleDialogueDashes>
     <ExportPlainTextAs>Eksporter almindelig tekst som</ExportPlainTextAs>
     <TextFiles>Tekst filer</TextFiles>
+    <SubtitleExported>Subtitle eksporteret</SubtitleExported>
+    <LineNumberXErrorReadingFromSourceLineY>Linie {0} - fejl ved læsning: {1}</LineNumberXErrorReadingFromSourceLineY>
+    <LineNumberXErrorReadingTimeCodeFromSourceLineY>Linie {0} - Fejl ved læsning af tidskode: {1}</LineNumberXErrorReadingTimeCodeFromSourceLineY>
+    <LineNumberXExpectedNumberFromSourceLineY>Linie {0} - fejl ved linjenummer: {1}</LineNumberXExpectedNumberFromSourceLineY>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Vælg undertekst fra Matroska fil</Title>
@@ -955,6 +974,14 @@ Fortsæt?</SubtitleAppendPrompt>
     <Replace>&amp;Erstat</Replace>
     <ReplaceAll>Erstat &amp;alle</ReplaceAll>
   </ReplaceDialog>
+  <RestoreAutoBackup>
+    <Title>Gendan auto backup</Title>
+    <Information>Åbn auto-gemt backup</Information>
+    <DateAndTime>Dato og tid</DateAndTime>
+    <FileName>Filnavn</FileName>
+    <Extension>Type</Extension>
+    <NoBackedUpFilesFound>Ingen sikkerhedskopierede filer fundet!</NoBackedUpFilesFound>
+  </RestoreAutoBackup>
   <SetMinimumDisplayTimeBetweenParagraphs>
     <Title>Mindste visningstid mellem tekster</Title>
     <PreviewLinesModifiedX>Resultat - antal linier rettet: {0}</PreviewLinesModifiedX>
@@ -1016,12 +1043,19 @@ Fortsæt?</SubtitleAppendPrompt>
     <MainListViewVideoGoToPositionAndPause>Gå til video pos og pause</MainListViewVideoGoToPositionAndPause>
     <MainListViewVideoGoToPositionAndPlay>Gå til video pos og afspi</MainListViewVideoGoToPositionAndPlay>
     <MainListViewEditText>Gå til at rediger tekst</MainListViewEditText>
+    <MainListViewVideoGoToPositionMinus1SecAndPause>Gå til video pos - 1 sek og pause</MainListViewVideoGoToPositionMinus1SecAndPause>
+    <MainListViewVideoGoToPositionMinusHalfSecAndPause>Gå til video pos - 0,5 sek og pause</MainListViewVideoGoToPositionMinusHalfSecAndPause>
+    <MainListViewVideoGoToPositionMinus1SecAndPlay>Gå til video pos - 1 sek og afspil</MainListViewVideoGoToPositionMinus1SecAndPlay>
+    <MainListViewEditTextAndPause>Gå at redigere tekstfeltet, og pause på video position</MainListViewEditTextAndPause>
     <AutoBackup>Auto-backup</AutoBackup>
     <AutoBackupEveryMinute>Hvert minut</AutoBackupEveryMinute>
     <AutoBackupEveryFiveMinutes>Hver 5. minut</AutoBackupEveryFiveMinutes>
     <AutoBackupEveryFifteenMinutes>Hver 15. minut</AutoBackupEveryFifteenMinutes>
     <AllowEditOfOriginalSubtitle>Tillad redigering af originale undertekst</AllowEditOfOriginalSubtitle>
     <PromptDeleteLines>Spørg om slet af linjer</PromptDeleteLines>
+    <TimeCodeMode>Tidskode indstillinger</TimeCodeMode>
+    <TimeCodeModeHHMMSSMsec>HH:MM:SS.Msec (00:00:01.500)</TimeCodeModeHHMMSSMsec>
+    <TimeCodeModeHHMMSSFF>HH:MM:SS:FF (00:00:01:12)</TimeCodeModeHHMMSSFF>
     <VideoEngine>Video afspiller</VideoEngine>
     <DirectShow>DirectShow</DirectShow>
     <DirectShowDescription>Quartz.dll i system32 mappen</DirectShowDescription>
@@ -1111,10 +1145,12 @@ Fortsæt?</SubtitleAppendPrompt>
     <GoToPrevious>Gå til forrige line</GoToPrevious>
     <ToggleFocus>Skift fokus imellem liste visning og undertekst tekstboks</ToggleFocus>
     <ToggleDialogueDashes>Toogle dialog tankestreger</ToggleDialogueDashes>
+    <Alignment>Justering (valgte linier)</Alignment>
     <ReverseStartAndEndingForRTL>Byt rundt på højre-mod-venstre start/slut</ReverseStartAndEndingForRTL>
     <VerticalZoom>Lodret zoom</VerticalZoom>
     <WaveformSeekSilenceForward>Søg stilhed frem</WaveformSeekSilenceForward>
     <WaveformSeekSilenceBack>Søg stilhed tilbage</WaveformSeekSilenceBack>
+    <WaveformAddTextHere>Tilføj tekst her (for ny selektion)</WaveformAddTextHere>
     <GoBack100Milliseconds>100 ms tilbage</GoBack100Milliseconds>
     <GoForward100Milliseconds>100 ms frem</GoForward100Milliseconds>
     <GoBack500Milliseconds>500 ms tilbage</GoBack500Milliseconds>
@@ -1122,6 +1158,14 @@ Fortsæt?</SubtitleAppendPrompt>
     <TogglePlayPause>Skift mellem afspil og pause</TogglePlayPause>
     <Pause>Pause</Pause>
     <Fullscreen>Fuldskærm</Fullscreen>
+    <SyntaxColoring>Syntaks farvelægning</SyntaxColoring>
+    <ListViewSyntaxColoring>Listevisning syntaks farvelægning</ListViewSyntaxColoring>
+    <SyntaxColorDurationIfTooSmall>Farve - varighed, hvis for kort</SyntaxColorDurationIfTooSmall>
+    <SyntaxColorDurationIfTooLarge>Farve - varighed, hvis for længe</SyntaxColorDurationIfTooLarge>
+    <SyntaxColorTextIfTooLong>Farve - tekst, hvis for lang</SyntaxColorTextIfTooLong>
+    <SyntaxColorTextMoreThanXLines>Farve - tekst, hvis mere end linjer:</SyntaxColorTextMoreThanXLines>
+    <SyntaxColorOverlap>Farve - tidskode overlapper</SyntaxColorOverlap>
+    <SyntaxColorErrorColor>Fejl baggrund farve</SyntaxColorErrorColor>
   </Settings>
   <ShowEarlierLater>
     <Title>Vis valgte linjer tidligere/senere</Title>
@@ -1131,6 +1175,7 @@ Fortsæt?</SubtitleAppendPrompt>
     <TotalAdjustmentX>Samlede justering: {0}</TotalAdjustmentX>
     <AllLines>Alle linjer</AllLines>
     <SelectedLinesonly>Valgte linjer</SelectedLinesonly>
+    <SelectedLinesAndForward>Valgte linier og frem</SelectedLinesAndForward>
   </ShowEarlierLater>
   <ShowHistory>
     <Title>Historik (fortryd)</Title>
@@ -1192,6 +1237,54 @@ Fortsæt?</SubtitleAppendPrompt>
     <StartFromNumber>Start fra nummer:</StartFromNumber>
     <PleaseEnterAValidNumber>Ups, du skal indtaste et nummer</PleaseEnterAValidNumber>
   </StartNumberingFrom>
+  <SubStationAlphaProperties>
+    <Title>Advanced Sub Station Alpha egenskaber</Title>
+    <TitleSubstationAlpha>Sub Station Alpha egenskaber</TitleSubstationAlpha>
+    <Script>Script</Script>
+    <ScriptTitle>Titel</ScriptTitle>
+  </SubStationAlphaProperties>
+  <SubStationAlphaStyles>
+    <Title>Avanceret Sub Station Alpha stilarter</Title>
+    <TitleSubstationAlpha>Sub Station Alpha stilarter</TitleSubstationAlpha>
+    <Styles>Stilarter</Styles>
+    <Properties>Egenskaber</Properties>
+    <Name>Navn</Name>
+    <Font>Font</Font>
+    <FontName>Font navn</FontName>
+    <FontSize>Skriftstørrelse</FontSize>
+    <UseCount>Bruges</UseCount>
+    <Primary>Primær</Primary>
+    <Secondary>Sekundær</Secondary>
+    <Tertiary>Tertiær</Tertiary>
+    <Outline>Kontur</Outline>
+    <Shadow>Skygge</Shadow>
+    <Back>Tilbage</Back>
+    <Alignment>Justering</Alignment>
+    <TopLeft>Top/venstre</TopLeft>
+    <TopCenter>Top/center</TopCenter>
+    <TopRight>Top/højre</TopRight>
+    <MiddleLeft>Midt/venstre</MiddleLeft>
+    <MiddleCenter>Midt/center</MiddleCenter>
+    <MiddleRight>Midt/højre</MiddleRight>
+    <BottomLeft>Bund/venstre</BottomLeft>
+    <BottomCenter>Bund/center</BottomCenter>
+    <BottomRight>Bund/højre</BottomRight>
+    <Colors>Farver</Colors>
+    <Margins>Margener</Margins>
+    <MarginLeft>Margen venstre</MarginLeft>
+    <MarginRight>Margin højre</MarginRight>
+    <MarginVertical>Margen lodret</MarginVertical>
+    <Border>Kant</Border>
+    <PlusShadow>+ Skygge</PlusShadow>
+    <OpaqueBox>Kasse (bruger konturfarve)</OpaqueBox>
+    <Import>Importer...</Import>
+    <Copy>Kopi</Copy>
+    <CopyOfY>Kopi af {0}</CopyOfY>
+    <CopyXOfY>Kopier {0} af {1}</CopyXOfY>
+    <New>Ny</New>
+    <Remove>Fjern</Remove>
+    <RemoveAll>Fjern alle</RemoveAll>
+  </SubStationAlphaStyles>
   <PointSync>
     <Title>Punkt synkronisering</Title>
     <TitleViaOtherSubtitle>Punkt synkroniser via anden undertekst</TitleViaOtherSubtitle>

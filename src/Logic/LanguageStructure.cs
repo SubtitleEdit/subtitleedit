@@ -1315,6 +1315,7 @@
             public string TotalAdjustmentX { get; set; }
             public string AllLines { get; set; }
             public string SelectedLinesonly { get; set; }
+            public string SelectedLinesAndForward { get; set; }
         }
 
         public class ShowHistory

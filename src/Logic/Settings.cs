@@ -97,6 +97,7 @@ namespace Nikse.SubtitleEdit.Logic
         public string SplitOutputFolder { get; set; }
         public int SplitNumberOfParts { get; set; }
         public string SplitVia { get; set; }
+        public string LastShowEarlierOrLaterSelection { get; set; }
 
         public ToolsSettings()
         {
