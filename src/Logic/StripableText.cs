@@ -41,6 +41,14 @@ namespace Nikse.SubtitleEdit.Logic
                         text = text.Substring(1);
                     }
 
+                    // codes like {an9}
+                    if (text.StartsWith("{") && text.IndexOf("}") <= 5)
+                    {
+                        int index = text.IndexOf("}") + 1;
+                        Pre += text.Substring(0, index);
+                        text = text.Substring(index);
+                    }
+
                     // tags like <i> or <font color="#ff0000">
                     if (text.StartsWith("<") && text.IndexOf(">") <= 21)
                     {
