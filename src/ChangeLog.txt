@@ -18,9 +18,13 @@ Subtitle Edit Changelog
 * IMPROVED:
   * Added extra options for double click on list view line - thx Fredrik + TaeGyun
   * Added extra options for export as text
+  * Added many new possible shortcut keys
+  * Find and replace, better undo, faster + a little UI - thx Adem
+  * Fix common errors -> Start with uppercase letter after colon/semicolon moved to 
+    seperate fix item (no longer in "Start with uppercase after paragraph/period") 
 * FIXED:
    * Auto-translate now works for English to Portuguese - thx w.tambley
-
+   * Fixed shortcuts with numbers (0-9)   
 
 3.2.8 (3rd June 2012)
  * NEW:
