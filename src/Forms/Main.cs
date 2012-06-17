@@ -288,6 +288,9 @@ namespace Nikse.SubtitleEdit.Forms
                     toolStripButtonGetFrameRate.Visible = true;
                 }
 
+                _timerClearStatus.Interval = Configuration.Settings.General.ClearStatusBarAfterSeconds * 1000;
+                _timerClearStatus.Tick += TimerClearStatus_Tick;
+
                 string fileName = string.Empty;
                 string[] args = Environment.GetCommandLineArgs();
                 if (args.Length >= 4 && args[1].ToLower() == "/convert")
@@ -374,9 +377,6 @@ namespace Nikse.SubtitleEdit.Forms
                 toolStripComboBoxWaveForm.SelectedIndexChanged += toolStripComboBoxWaveForm_SelectedIndexChanged;
 
                 FixLargeFonts();
-
-                _timerClearStatus.Interval = 5000;
-                _timerClearStatus.Tick += TimerClearStatus_Tick;
             }
             catch (Exception exception)
             {
@@ -3109,6 +3109,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (findDialog.ShowDialog(this) == DialogResult.OK)
             {
                 _findHelper = findDialog.GetFindDialogHelper(_subtitleListViewIndex);
+                ShowStatus(string.Format(_language.SearchingForXFromLineY, _findHelper.FindText, _subtitleListViewIndex +1));
                 if (tabControlSubtitle.SelectedIndex == TabControlListView)
                 {
                     int selectedIndex = -1;
@@ -3281,6 +3282,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (replaceDialog.ShowDialog(this) == DialogResult.OK)
             {
                 _findHelper = replaceDialog.GetFindDialogHelper(_subtitleListViewIndex);
+                ShowStatus(string.Format(_language.SearchingForXFromLineY, _findHelper.FindText, _subtitleListViewIndex + 1));
                 int replaceCount = 0;
                 bool searchStringFound = true;
                 while (searchStringFound)
@@ -3381,23 +3383,34 @@ namespace Nikse.SubtitleEdit.Forms
                     _findHelper.SelectedPosition = pos;
                     _findHelper.Success = success;
                 }
+                ShowStatus(string.Format(_language.SearchingForXFromLineY, _findHelper.FindText, _subtitleListViewIndex + 1));
                 int replaceCount = 0;
                 bool searchStringFound = true;
+                int firstIndex = FirstSelectedIndex;
                 while (searchStringFound)
-                {
+                {                    
                     searchStringFound = false;
                     if (isFirst)
                     {
                         MakeHistoryForUndo(string.Format(_language.BeforeReplace, _findHelper.FindText));
                         isFirst = false;
-                        _makeHistoryPaused = true;
+                        _makeHistoryPaused = true;                        
                     }
 
                     if (replaceDialog.ReplaceAll)
                     {
                         if (_findHelper.FindNext(_subtitle, _subtitleAlternate, _findHelper.SelectedIndex, _findHelper.SelectedPosition, Configuration.Settings.General.AllowEditOfOriginalSubtitle))
                         {
-                            SubtitleListview1.SelectIndexAndEnsureVisible(_findHelper.SelectedIndex);
+                            textBoxListViewText.Visible = false;
+                            _subtitleListViewIndex = _findHelper.SelectedIndex;
+                            textBoxListViewText.Text = _subtitle.Paragraphs[_findHelper.SelectedIndex].Text;
+                            if (_subtitleAlternate != null && textBoxListViewTextAlternate.Visible)
+                            {
+                                var orginial = Utilities.GetOriginalParagraph(_findHelper.SelectedIndex, _subtitle.Paragraphs[_findHelper.SelectedIndex], _subtitleAlternate.Paragraphs);
+                                if (orginial != null)
+                                    textBoxListViewTextAlternate.Text = orginial.Text;
+                            }
+                                                       
                             if (_findHelper.MatchInOriginal)
                             {
                                 textBoxListViewTextAlternate.SelectionStart = _findHelper.SelectedPosition;
@@ -3416,6 +3429,9 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                         else
                         {
+                            textBoxListViewText.Visible = true;
+                            _subtitleListViewIndex = -1;
+                            SubtitleListview1.SelectIndexAndEnsureVisible(firstIndex, true);
                             ShowStatus(string.Format(_language.NoMatchFoundX, _findHelper.FindText));
 
                             if (_replaceStartLineIndex >= 1) // Prompt for start over
@@ -3446,7 +3462,7 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         if (_findHelper.FindNext(_subtitle, _subtitleAlternate, _findHelper.SelectedIndex, _findHelper.SelectedPosition, Configuration.Settings.General.AllowEditOfOriginalSubtitle))
                         {
-                            SubtitleListview1.SelectIndexAndEnsureVisible(_findHelper.SelectedIndex);
+                            SubtitleListview1.SelectIndexAndEnsureVisible(_findHelper.SelectedIndex, true);
                             textBoxListViewText.Focus();
                             textBoxListViewText.SelectionStart = _findHelper.SelectedPosition;
                             textBoxListViewText.SelectionLength = _findHelper.FindTextLength;
@@ -3533,7 +3549,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                                     if (_findHelper.FindNext(_subtitle, _subtitleAlternate, _findHelper.SelectedIndex, _findHelper.SelectedPosition, Configuration.Settings.General.AllowEditOfOriginalSubtitle))
                                     {
-                                        SubtitleListview1.SelectIndexAndEnsureVisible(_findHelper.SelectedIndex);
+                                        SubtitleListview1.SelectIndexAndEnsureVisible(_findHelper.SelectedIndex, true);
                                         textBoxListViewText.Focus();
                                         textBoxListViewText.SelectionStart = _findHelper.SelectedPosition;
                                         textBoxListViewText.SelectionLength = _findHelper.FindTextLength;
@@ -10421,7 +10437,25 @@ namespace Nikse.SubtitleEdit.Forms
         {
             TimeCode tc = new TimeCode(TimeSpan.FromMilliseconds(adjustMilliseconds));
             MakeHistoryForUndo(_language.BeforeShowSelectedLinesEarlierLater  + ": " + tc.ToString());
-
+            if (adjustMilliseconds < 0)
+            {
+                if (selection == SelectionChoice.AllLines)
+                    ShowStatus(string.Format(_language.ShowAllLinesXSecondsLinesEarlier, adjustMilliseconds / -1000.0));
+                else if (selection == SelectionChoice.SelectionOnly)
+                    ShowStatus(string.Format(_language.ShowSelectedLinesXSecondsLinesEarlier, adjustMilliseconds / -1000.0));
+                else if (selection == SelectionChoice.SelectionAndForward)
+                    ShowStatus(string.Format(_language.ShowSelectionAndForwardXSecondsLinesEarlier, adjustMilliseconds / -1000.0));
+            }
+            else
+            {
+                if (selection == SelectionChoice.AllLines)
+                    ShowStatus(string.Format(_language.ShowAllLinesXSecondsLinesLater, adjustMilliseconds / 1000.0));
+                else if (selection == SelectionChoice.SelectionOnly)
+                    ShowStatus(string.Format(_language.ShowSelectedLinesXSecondsLinesLater, adjustMilliseconds / 1000.0));
+                else if (selection == SelectionChoice.SelectionAndForward)
+                    ShowStatus(string.Format(_language.ShowSelectionAndForwardXSecondsLinesLater, adjustMilliseconds / 1000.0));
+            }
+            
             double frameRate = CurrentFrameRate;
             SubtitleListview1.BeginUpdate();
 
