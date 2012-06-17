@@ -3431,7 +3431,12 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             textBoxListViewText.Visible = true;
                             _subtitleListViewIndex = -1;
-                            SubtitleListview1.SelectIndexAndEnsureVisible(firstIndex, true);
+                            if (firstIndex >= 0 && firstIndex < SubtitleListview1.Items.Count)
+                            {
+                                SubtitleListview1.Items[firstIndex].Selected = true;
+                                SubtitleListview1.Items[firstIndex].Focused = true;
+                                SubtitleListview1.Focus();                                
+                            }
                             ShowStatus(string.Format(_language.NoMatchFoundX, _findHelper.FindText));
 
                             if (_replaceStartLineIndex >= 1) // Prompt for start over

@@ -43,10 +43,10 @@
             // radioButtonRegEx
             // 
             this.radioButtonRegEx.AutoSize = true;
-            this.radioButtonRegEx.Location = new System.Drawing.Point(17, 97);
+            this.radioButtonRegEx.Location = new System.Drawing.Point(15, 149);
             this.radioButtonRegEx.Name = "radioButtonRegEx";
             this.radioButtonRegEx.Size = new System.Drawing.Size(56, 17);
-            this.radioButtonRegEx.TabIndex = 3;
+            this.radioButtonRegEx.TabIndex = 4;
             this.radioButtonRegEx.Text = "RegEx";
             this.radioButtonRegEx.UseVisualStyleBackColor = true;
             this.radioButtonRegEx.CheckedChanged += new System.EventHandler(this.RadioButtonCheckedChanged);
@@ -54,10 +54,10 @@
             // radioButtonCaseSensitive
             // 
             this.radioButtonCaseSensitive.AutoSize = true;
-            this.radioButtonCaseSensitive.Location = new System.Drawing.Point(17, 74);
+            this.radioButtonCaseSensitive.Location = new System.Drawing.Point(15, 126);
             this.radioButtonCaseSensitive.Name = "radioButtonCaseSensitive";
             this.radioButtonCaseSensitive.Size = new System.Drawing.Size(94, 17);
-            this.radioButtonCaseSensitive.TabIndex = 2;
+            this.radioButtonCaseSensitive.TabIndex = 3;
             this.radioButtonCaseSensitive.Text = "Case sensitive";
             this.radioButtonCaseSensitive.UseVisualStyleBackColor = true;
             this.radioButtonCaseSensitive.CheckedChanged += new System.EventHandler(this.RadioButtonCheckedChanged);
@@ -66,10 +66,10 @@
             // 
             this.radioButtonNormal.AutoSize = true;
             this.radioButtonNormal.Checked = true;
-            this.radioButtonNormal.Location = new System.Drawing.Point(17, 51);
+            this.radioButtonNormal.Location = new System.Drawing.Point(15, 103);
             this.radioButtonNormal.Name = "radioButtonNormal";
             this.radioButtonNormal.Size = new System.Drawing.Size(58, 17);
-            this.radioButtonNormal.TabIndex = 1;
+            this.radioButtonNormal.TabIndex = 2;
             this.radioButtonNormal.TabStop = true;
             this.radioButtonNormal.Text = "Normal";
             this.radioButtonNormal.UseVisualStyleBackColor = true;
@@ -105,16 +105,16 @@
             // 
             // textBoxReplace
             // 
-            this.textBoxReplace.Location = new System.Drawing.Point(15, 144);
+            this.textBoxReplace.Location = new System.Drawing.Point(15, 71);
             this.textBoxReplace.Name = "textBoxReplace";
             this.textBoxReplace.Size = new System.Drawing.Size(265, 21);
-            this.textBoxReplace.TabIndex = 4;
+            this.textBoxReplace.TabIndex = 1;
             this.textBoxReplace.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxFindKeyDown);
             // 
             // labelReplaceWith
             // 
             this.labelReplaceWith.AutoSize = true;
-            this.labelReplaceWith.Location = new System.Drawing.Point(12, 127);
+            this.labelReplaceWith.Location = new System.Drawing.Point(12, 54);
             this.labelReplaceWith.Name = "labelReplaceWith";
             this.labelReplaceWith.Size = new System.Drawing.Size(72, 13);
             this.labelReplaceWith.TabIndex = 14;
@@ -126,7 +126,7 @@
             this.labelFindWhat.Location = new System.Drawing.Point(12, 8);
             this.labelFindWhat.Name = "labelFindWhat";
             this.labelFindWhat.Size = new System.Drawing.Size(58, 13);
-            this.labelFindWhat.TabIndex = 15;
+            this.labelFindWhat.TabIndex = 9;
             this.labelFindWhat.Text = "Find what:";
             // 
             // buttonFind

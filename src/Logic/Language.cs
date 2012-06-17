@@ -365,9 +365,9 @@ namespace Nikse.SubtitleEdit.Logic
             {
                 Title = "Find",
                 Find = "Find",
-                Normal = "Normal",
-                CaseSensitive = "Case sensitive",
-                RegularExpression = "Regular expression",
+                Normal = "&Normal",
+                CaseSensitive = "&Case sensitive",
+                RegularExpression = "Regular e&xpression",
             };
 
             FindSubtitleLine = new LanguageStructure.FindSubtitleLine
@@ -1086,9 +1086,9 @@ namespace Nikse.SubtitleEdit.Logic
                 Title = "Multiple replace",
                 FindWhat = "Find what",
                 ReplaceWith = "Replace with",
-                Normal = "Normal",
-                CaseSensitive = "Case sensitive",
-                RegularExpression = "Regular expression",
+                Normal = "&Normal",
+                CaseSensitive = "&Case sensitive",
+                RegularExpression = "Regular e&xpression",
                 LineNumber = "Line#",
                 Before = "Before",
                 After = "After",
@@ -1155,9 +1155,9 @@ can edit in same subtitle file (collaboration)",
             {
                 Title = "Replace",
                 FindWhat = "Find what:",
-                Normal = "Normal",
-                CaseSensitive = "Case sensitive",
-                RegularExpression = "Regular expression",
+                Normal = "&Normal",
+                CaseSensitive = "&Case sensitive",
+                RegularExpression = "Regular e&xpression",
                 ReplaceWith = "Replace with",
                 Find = "&Find",
                 Replace = "&Replace",
