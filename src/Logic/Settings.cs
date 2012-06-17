@@ -323,6 +323,7 @@ namespace Nikse.SubtitleEdit.Logic
         public int ListViewTextWidth { get; set; }
         public string VlcWaveTranscodeSettings { get; set; }
         public bool UseTimeFormatHHMMSSFF { get; set; }
+        public int ClearStatusBarAfterSeconds { get; set; }
         public bool ShowBetaStuff { get; set; }
 
         public GeneralSettings()
@@ -373,7 +374,7 @@ namespace Nikse.SubtitleEdit.Logic
             VideoPlayerShowStopButton = true;
             ListViewLineSeparatorString = "<br />";
             ListViewDoubleClickAction = 1;
-            UppercaseLetters = "ABCDEFGHIJKLMNOPQRSTUVWZYXÆØÃÅÄÖÉÈÁÂÀÇÉÊÍÓÔÕÚŁАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯوهنملكقفغعظطضصشسزرذدخحجثتبأآأؤإئابةتثجحخدذرزسشصضطظعغػؼؽؾؿـفقكلمنهوىيٯٰٱٲٳٴٵٶٷٸٹٺٻټٽپٿڀځڂڃڄڅچڇڈډڊڋڌڍڎڏڐڑڒړڔڕږڗژڙښڛڜڝڞڟڠڡڢڣڤڥڦڧڨکڪګڬڭڮگڰڱڲڳڴڵڶڷڸڹںڻڼڽھڿۀہۂۃۄۅۆۇۈۉۊۋیۍێۏېۑےۓกขฃคฅฆงจฉชซฌญฎฏฐฑฒณดตถทธนบปผฝพฟภมยรลวศษสหฬอฮ";
+            UppercaseLetters = "ABCDEFGHIJKLMNOPQRSTUVWZYXÆØÃÅÄÖÉÈÁÂÀÇÉÊÍÓÔÕÚŁАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯĞİŞÜ";
             DefaultAdjustMilliseconds = 1000;
             AutoRepeatOn = true;
             AutoContinueOn = false;
@@ -392,6 +393,7 @@ namespace Nikse.SubtitleEdit.Logic
             ListViewColumsRememberSize = true;
             VlcWaveTranscodeSettings = "acodec=s16l"; // "acodec=s16l,channels=1,ab=64,samplerate=8000";
             UseTimeFormatHHMMSSFF = false;
+            ClearStatusBarAfterSeconds = 10;
             ShowBetaStuff = false;
         }
     }
@@ -1030,6 +1032,9 @@ namespace Nikse.SubtitleEdit.Logic
             subNode = node.SelectSingleNode("UseTimeFormatHHMMSSFF");
             if (subNode != null)
                 settings.General.UseTimeFormatHHMMSSFF = Convert.ToBoolean(subNode.InnerText.Trim());
+            subNode = node.SelectSingleNode("ClearStatusBarAfterSeconds");
+            if (subNode != null)
+                settings.General.ClearStatusBarAfterSeconds = Convert.ToInt32(subNode.InnerText.Trim());
             subNode = node.SelectSingleNode("ShowBetaStuff");
             if (subNode != null)
                 settings.General.ShowBetaStuff = Convert.ToBoolean(subNode.InnerText.Trim());
@@ -1750,6 +1755,7 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("ListViewTextWidth", settings.General.ListViewTextWidth.ToString(CultureInfo.InvariantCulture));
             textWriter.WriteElementString("VlcWaveTranscodeSettings", settings.General.VlcWaveTranscodeSettings);
             textWriter.WriteElementString("UseTimeFormatHHMMSSFF", settings.General.UseTimeFormatHHMMSSFF.ToString(CultureInfo.InvariantCulture));
+            textWriter.WriteElementString("ClearStatusBarAfterSeconds", settings.General.ClearStatusBarAfterSeconds.ToString(CultureInfo.InvariantCulture));
             textWriter.WriteElementString("ShowBetaStuff", settings.General.ShowBetaStuff.ToString());
 
 

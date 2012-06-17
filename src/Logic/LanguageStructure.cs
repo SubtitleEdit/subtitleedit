@@ -562,6 +562,7 @@
             public string NewFrameRateUsedToCalculateFrameNumbers { get; set; }
             public string FindContinue { get; set; }
             public string FindContinueTitle { get; set; }
+            public string SearchingForXFromLineY { get; set; }
             public string XFoundAtLineNumberY { get; set; }
             public string XNotFound { get; set; }
             public string BeforeReplace { get; set; }
@@ -671,6 +672,12 @@
             public string BeforeImportingBluRaySupFile { get; set; }
             public string BeforeImportingBdnXml { get; set; }
             public string BeforeShowSelectedLinesEarlierLater { get; set; }
+            public string ShowAllLinesXSecondsLinesEarlier { get; set; }
+            public string ShowAllLinesXSecondsLinesLater { get; set; }
+            public string ShowSelectedLinesXSecondsLinesEarlier { get; set; }
+            public string ShowSelectedLinesXSecondsLinesLater { get; set; }
+            public string ShowSelectionAndForwardXSecondsLinesEarlier { get; set; }
+            public string ShowSelectionAndForwardXSecondsLinesLater { get; set; }
             public string ShowSelectedLinesEarlierLaterPerformed { get; set; }
             public string DoubleWordsViaRegEx { get; set; }
             public string BeforeSortX { get; set; }
