@@ -3336,6 +3336,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ReplaceListView(ReplaceDialog replaceDialog)
         {
+            int firstIndex = FirstSelectedIndex;
             bool isFirst = true;
             string selectedText = textBoxListViewText.SelectedText;
             if (selectedText.Length == 0 && _findHelper != null)
@@ -3386,7 +3387,6 @@ namespace Nikse.SubtitleEdit.Forms
                 ShowStatus(string.Format(_language.SearchingForXFromLineY, _findHelper.FindText, _subtitleListViewIndex + 1));
                 int replaceCount = 0;
                 bool searchStringFound = true;
-                int firstIndex = FirstSelectedIndex;
                 while (searchStringFound)
                 {                    
                     searchStringFound = false;
@@ -3402,27 +3402,7 @@ namespace Nikse.SubtitleEdit.Forms
                         if (_findHelper.FindNext(_subtitle, _subtitleAlternate, _findHelper.SelectedIndex, _findHelper.SelectedPosition, Configuration.Settings.General.AllowEditOfOriginalSubtitle))
                         {
                             textBoxListViewText.Visible = false;
-                            _subtitleListViewIndex = _findHelper.SelectedIndex;
-                            textBoxListViewText.Text = _subtitle.Paragraphs[_findHelper.SelectedIndex].Text;
-                            if (_subtitleAlternate != null && textBoxListViewTextAlternate.Visible)
-                            {
-                                var orginial = Utilities.GetOriginalParagraph(_findHelper.SelectedIndex, _subtitle.Paragraphs[_findHelper.SelectedIndex], _subtitleAlternate.Paragraphs);
-                                if (orginial != null)
-                                    textBoxListViewTextAlternate.Text = orginial.Text;
-                            }
-                                                       
-                            if (_findHelper.MatchInOriginal)
-                            {
-                                textBoxListViewTextAlternate.SelectionStart = _findHelper.SelectedPosition;
-                                textBoxListViewTextAlternate.SelectionLength = _findHelper.FindTextLength;
-                                textBoxListViewTextAlternate.SelectedText = _findHelper.ReplaceText;
-                            }
-                            else
-                            {
-                                textBoxListViewText.SelectionStart = _findHelper.SelectedPosition;
-                                textBoxListViewText.SelectionLength = _findHelper.FindTextLength;
-                                textBoxListViewText.SelectedText = _findHelper.ReplaceText;
-                            }
+                            SetTextForFindAndReplace(true);
                             _findHelper.SelectedPosition += _findHelper.ReplaceText.Length;
                             searchStringFound = true;
                             replaceCount++;
@@ -3435,7 +3415,18 @@ namespace Nikse.SubtitleEdit.Forms
                             {
                                 SubtitleListview1.Items[firstIndex].Selected = true;
                                 SubtitleListview1.Items[firstIndex].Focused = true;
-                                SubtitleListview1.Focus();                                
+                                SubtitleListview1.Focus();
+                                textBoxListViewText.Text = _subtitle.Paragraphs[firstIndex].Text;
+                                if (_subtitleAlternate != null && textBoxListViewTextAlternate.Visible)
+                                {
+                                    var orginial = Utilities.GetOriginalParagraph(_findHelper.SelectedIndex, _subtitle.Paragraphs[_findHelper.SelectedIndex], _subtitleAlternate.Paragraphs);
+                                    if (orginial != null)
+                                        textBoxListViewTextAlternate.Text = orginial.Text;
+                                }
+                            }
+                            else
+                            {
+                                SubtitleListview1.SelectIndexAndEnsureVisible(0, true);
                             }
                             ShowStatus(string.Format(_language.NoMatchFoundX, _findHelper.FindText));
 
@@ -3444,17 +3435,14 @@ namespace Nikse.SubtitleEdit.Forms
                                 _replaceStartLineIndex = 0;
                                 if (MessageBox.Show(_language.FindContinue, _language.FindContinueTitle, MessageBoxButtons.YesNo) == DialogResult.Yes)
                                 {
-                                    SubtitleListview1.SelectIndexAndEnsureVisible(0);
                                     _findHelper.StartLineIndex = 0;
                                     _findHelper.SelectedIndex = 0;
                                     _findHelper.SelectedPosition = 0;
+                                    SetTextForFindAndReplace(false);
 
                                     if (_findHelper.FindNext(_subtitle, _subtitleAlternate, _findHelper.SelectedIndex, _findHelper.SelectedPosition, Configuration.Settings.General.AllowEditOfOriginalSubtitle))
                                     {
-                                        SubtitleListview1.SelectIndexAndEnsureVisible(_findHelper.SelectedIndex);
-                                        textBoxListViewText.SelectionStart = _findHelper.SelectedPosition;
-                                        textBoxListViewText.SelectionLength = _findHelper.FindTextLength;
-                                        textBoxListViewText.SelectedText = _findHelper.ReplaceText;
+                                        SetTextForFindAndReplace(true);
                                         _findHelper.SelectedPosition += _findHelper.ReplaceText.Length;
                                         searchStringFound = true;
                                         replaceCount++;
@@ -3584,6 +3572,34 @@ namespace Nikse.SubtitleEdit.Forms
             if (_makeHistoryPaused)
                 RestartHistory();
             replaceDialog.Dispose();
+        }
+
+        private void SetTextForFindAndReplace(bool replace)
+        {
+            _subtitleListViewIndex = _findHelper.SelectedIndex;
+            textBoxListViewText.Text = _subtitle.Paragraphs[_findHelper.SelectedIndex].Text;
+            if (_subtitleAlternate != null && textBoxListViewTextAlternate.Visible)
+            {
+                var orginial = Utilities.GetOriginalParagraph(_findHelper.SelectedIndex, _subtitle.Paragraphs[_findHelper.SelectedIndex], _subtitleAlternate.Paragraphs);
+                if (orginial != null)
+                    textBoxListViewTextAlternate.Text = orginial.Text;
+            }
+
+            if (replace)
+            {
+                if (_findHelper.MatchInOriginal)
+                {
+                    textBoxListViewTextAlternate.SelectionStart = _findHelper.SelectedPosition;
+                    textBoxListViewTextAlternate.SelectionLength = _findHelper.FindTextLength;
+                    textBoxListViewTextAlternate.SelectedText = _findHelper.ReplaceText;
+                }
+                else
+                {
+                    textBoxListViewText.SelectionStart = _findHelper.SelectedPosition;
+                    textBoxListViewText.SelectionLength = _findHelper.FindTextLength;
+                    textBoxListViewText.SelectedText = _findHelper.ReplaceText;
+                }
+            }
         }
 
         private void Replace(ReplaceDialog replaceDialog)
