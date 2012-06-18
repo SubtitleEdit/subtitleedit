@@ -1068,6 +1068,13 @@ namespace Nikse.SubtitleEdit.Logic
             if (count > bestCount)
                 return "hu"; // Hungarian
 
+            count = GetCount(text, "için", "Tamam", "Hayır", "benim", "daha", "deðil");
+            if (count > bestCount)
+                return "tr"; // Turkish
+            count = GetCount(text, "diye", "Tamam", "sonra", "benim", "daha", "devam");
+            if (count > bestCount)
+                return "tr"; // Turkish
+            
             return string.Empty;
         }
 
