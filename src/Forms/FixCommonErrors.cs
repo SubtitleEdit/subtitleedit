@@ -2155,13 +2155,13 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     string lastText = Utilities.RemoveHtmlTags(last.Text);
                     if (lastText.EndsWith(":") || lastText.EndsWith(";"))
-                    { 
+                    {
                         var st = new StripableText(p.Text);
                         if (st.StrippedText.Length > 0 && st.StrippedText[0].ToString() != st.StrippedText[0].ToString().ToUpper())
                             p.Text = st.Pre + st.StrippedText[0].ToString().ToUpper() + st.StrippedText.Remove(0, 1) + st.Post;
                     }
                 }
-                    
+
                 if (oldText.Contains(":") || oldText.Contains(";"))
                 {
                     bool lastWasColon = false;

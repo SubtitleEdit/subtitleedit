@@ -1074,7 +1074,7 @@ namespace Nikse.SubtitleEdit.Logic
             count = GetCount(text, "diye", "Tamam", "sonra", "benim", "daha", "devam");
             if (count > bestCount)
                 return "tr"; // Turkish
-            
+
             return string.Empty;
         }
 

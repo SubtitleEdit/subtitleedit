@@ -968,7 +968,7 @@ namespace Nikse.SubtitleEdit.Forms
                 int index = listViewStyles.SelectedItems[0].Index;
                 string name = listViewStyles.SelectedItems[0].Text;
                 listViewStyles.Items.RemoveAt(listViewStyles.SelectedItems[0].Index);
-                RemoveStyleFromHeader(name); 
+                RemoveStyleFromHeader(name);
 
                 if (listViewStyles.Items.Count == 0)
                 {

@@ -230,7 +230,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             if (line.Length >= 29 && ":;".Contains(line[8].ToString()))
                 line = line.Substring(0, 8) + ',' + line.Substring(8 + 1);
             if (line.Length >= 29 && line.Length <= 30 && ":;".Contains(line[25].ToString()))
-                line = line.Substring(0, 25) + ',' + line.Substring(25 + 1);               
+                line = line.Substring(0, 25) + ',' + line.Substring(25 + 1);
 
             if (_regexTimeCodes.IsMatch(line) || _regexTimeCodes2.IsMatch(line))
             {
