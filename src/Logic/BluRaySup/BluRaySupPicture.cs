@@ -325,7 +325,7 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
             do
             {
                 int b = buf[index++] & 0xff;
-                if (b == 0)
+                if (b == 0 && index < buf.Length)
                 {
                     b = buf[index++] & 0xff;
                     if (b == 0)
