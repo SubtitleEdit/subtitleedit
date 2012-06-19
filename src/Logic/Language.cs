@@ -60,6 +60,7 @@ namespace Nikse.SubtitleEdit.Logic
         public LanguageStructure.SplitLongLines SplitLongLines;
         public LanguageStructure.SplitSubtitle SplitSubtitle;
         public LanguageStructure.StartNumberingFrom StartNumberingFrom;
+        public LanguageStructure.Statistics Statistics;
         public LanguageStructure.SubStationAlphaProperties SubStationAlphaProperties;
         public LanguageStructure.SubStationAlphaStyles SubStationAlphaStyles;
         public LanguageStructure.PointSync PointSync;
@@ -1447,7 +1448,28 @@ can edit in same subtitle file (collaboration)",
                 PleaseEnterAValidNumber = "Ups, please enter a number",
             };
 
-            SubStationAlphaProperties= new LanguageStructure.SubStationAlphaProperties
+            Statistics = new LanguageStructure.Statistics
+            {
+                Title = "Statistics",
+                TitleWithFileName = "Statics - {0}",
+                GeneralStatistics = "General statistics",
+                NothingFound = "Nothing found",
+                MostUsed = "Most used...",
+                MostUsedWords = "Most used words",
+                MostUsedLines = "Most used lines",      
+                NumberOfLinesX = "Number of subtitle lines: {0:#,###}",
+                LengthInFormatXinCharactersY = "Number of characters as {0}: {1:#,###,##0}",
+                NumberOfCharactersInTextOnly = "Number of characters in text only: {0:#,###,##0}",
+                NumberOfItalicTags = "Number of italic tags: {0}",
+                LineLengthMinimum = "Line length - minimum: {0}",
+                LineLengthMaximum = "Line length - maximum: {0}",
+                LineLengthAvarage = "Line length - average: {0}",
+                DurationMinimum = "Duration - minimum: {0:0.0} seconds",
+                DurationMaximum = "Duration - maximum: {0:0.0} seconds",
+                DurationAvarage = "Duration - average: {0:0.0} seconds",
+            };
+
+            SubStationAlphaProperties = new LanguageStructure.SubStationAlphaProperties
             {
                 Title = "Advanced Sub Station Alpha properties",
                 TitleSubstationAlpha = "Sub Station Alpha properties",

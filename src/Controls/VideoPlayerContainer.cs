@@ -10,7 +10,7 @@ namespace Nikse.SubtitleEdit.Controls
     public sealed class VideoPlayerContainer : Panel
     {
 
-        class RichTextBoxViewOnly : RichTextBox
+        public class RichTextBoxViewOnly : RichTextBox
         {
             public RichTextBoxViewOnly()
             {
@@ -48,6 +48,11 @@ namespace Nikse.SubtitleEdit.Controls
                 if (_videoPlayer != null)
                     SetPlayerName(_videoPlayer.PlayerName);
             }
+        }
+
+        public RichTextBoxViewOnly TextBox
+        {
+            get { return _subtitleTextBox; }
         }
 
         public int VideoWidth { get; set; }

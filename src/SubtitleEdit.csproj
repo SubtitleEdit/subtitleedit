@@ -440,6 +440,12 @@
     <Compile Include="Forms\StartNumberingFrom.Designer.cs">
       <DependentUpon>StartNumberingFrom.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\Statistics.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Statistics.Designer.cs">
+      <DependentUpon>Statistics.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\StatusLog.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -985,6 +991,9 @@
     <EmbeddedResource Include="Forms\StartNumberingFrom.resx">
       <DependentUpon>StartNumberingFrom.cs</DependentUpon>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Statistics.resx">
+      <DependentUpon>Statistics.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\StatusLog.resx">
       <DependentUpon>StatusLog.cs</DependentUpon>
