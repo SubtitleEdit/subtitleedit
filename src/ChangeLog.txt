@@ -6,10 +6,10 @@ Subtitle Edit Changelog
  * Easy import of auto backed up files (File -> Restore auto-backup...)
  * Improved support for Advanced Substation Alpha (+ Substation Alpha)
  * Advanced Substation Alpha style viewer/creater (right click in list view)
- * Can now display frames instead of milliseconds in main window (see options -> settings)
- * New setting in options: "Max. chars/second"
- * New settings in options regarding "Min. duration" + "Max. duration"
- * New settings in options regarding syntax coloring
+ * Can now display frames instead of milliseconds in main window (see Options -> settings)
+ * New setting in Options: "Max. chars/second"
+ * New settings in Options regarding "Min. duration" + "Max. duration"
+ * New settings in Options regarding syntax coloring
  * Tools -> Join subtitles (merge of multiple parts)
  * Tools -> Apply duration limits
  * Tools -> Sort -> Text - chars/sec
@@ -20,11 +20,11 @@ Subtitle Edit Changelog
   * Added extra options for export as text
   * Added many new possible shortcut keys
   * Find and replace, better undo, faster + a little UI - thx Adem
-  * Fix common errors -> Start with uppercase letter after colon/semicolon moved to 
-    seperate fix item (no longer in "Start with uppercase after paragraph/period") 
+  * Fix common errors -> Start with uppercase letter after colon/semicolon moved
+    to seperate fix item (no longer in "Start with uppercase after paragraph/period")
 * FIXED:
    * Auto-translate now works for English to Portuguese - thx w.tambley
-   * Fixed shortcuts with numbers (0-9)   
+   * Fixed shortcuts with numbers (0-9)
 
 3.2.8 (3rd June 2012)
  * NEW:

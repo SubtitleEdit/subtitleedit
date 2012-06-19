@@ -68,7 +68,7 @@ namespace Nikse.SubtitleEdit.Forms
         }
 
         private SelectionChoice GetSelectionChoice()
-        {            
+        {
             if (radioButtonSelectedLinesOnly.Checked)
                 return SelectionChoice.SelectionOnly;
             else if (radioButtonSelectedLineAndForward.Checked)

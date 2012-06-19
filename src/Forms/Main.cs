@@ -3388,13 +3388,13 @@ namespace Nikse.SubtitleEdit.Forms
                 int replaceCount = 0;
                 bool searchStringFound = true;
                 while (searchStringFound)
-                {                    
+                {
                     searchStringFound = false;
                     if (isFirst)
                     {
                         MakeHistoryForUndo(string.Format(_language.BeforeReplace, _findHelper.FindText));
                         isFirst = false;
-                        _makeHistoryPaused = true;                        
+                        _makeHistoryPaused = true;
                     }
 
                     if (replaceDialog.ReplaceAll)
@@ -6517,7 +6517,7 @@ namespace Nikse.SubtitleEdit.Forms
                         if (lastTimeCode > 14 && lastTimeCode + 16 >= s.Length)
                         {
                             s = s.Substring(0, lastTimeCode - 5);
-                            lastTimeCode = s.LastIndexOf(" --> "); 
+                            lastTimeCode = s.LastIndexOf(" --> ");
                         }
 
                         if (lastTimeCode > 14 && lastTimeCode + 16 < s.Length)
@@ -10476,7 +10476,7 @@ namespace Nikse.SubtitleEdit.Forms
                 else if (selection == SelectionChoice.SelectionAndForward)
                     ShowStatus(string.Format(_language.ShowSelectionAndForwardXSecondsLinesLater, adjustMilliseconds / 1000.0));
             }
-            
+
             double frameRate = CurrentFrameRate;
             SubtitleListview1.BeginUpdate();
 
@@ -10503,8 +10503,8 @@ namespace Nikse.SubtitleEdit.Forms
                     case SelectionChoice.SelectionAndForward:
                         ShowEarlierOrLaterParagraph(adjustMilliseconds, i);
                         break;
-                }               
-            }  
+                }
+            }
 
             SubtitleListview1.EndUpdate();
             if (_subtitle.WasLoadedWithFrameNumbers)
