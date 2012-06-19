@@ -50,6 +50,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         public void Initialize(Subtitle subtitle1, string subtitleFileName1, string title)
         {
+            subtitleListView1.UseSyntaxColoring = false;
+            subtitleListView2.UseSyntaxColoring = false;
+
             Compare_Resize(null, null);
             labelStatus.Text = string.Empty;
             _subtitle1 = subtitle1;
@@ -88,7 +91,6 @@ namespace Nikse.SubtitleEdit.Forms
                 openFileDialog1.InitialDirectory = Path.GetDirectoryName(subtitleFileName1);
             openFileDialog1.Filter = Utilities.GetOpenDialogFilter();
         }
-
 
         private void ButtonOpenSubtitle1Click(object sender, EventArgs e)
         {
@@ -399,10 +401,8 @@ namespace Nikse.SubtitleEdit.Forms
                 if (subtitleListView2.Items.Count > subtitleListView1.SelectedItems[0].Index)
                     text2 = subtitleListView2.GetText(subtitleListView1.SelectedItems[0].Index);
             }
-
             richTextBox1.Text = text1;
             richTextBox2.Text = text2;
-
 
             //showdiff
             if (text1 == text2)
@@ -416,8 +416,6 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ShowTextDifference()
         {
-
-
             // from start
             int minLength = Math.Min(richTextBox1.Text.Length, richTextBox2.Text.Length);
             int startCharactersOk = 0;
@@ -505,6 +503,26 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         break;
                     }
+                }
+            }
+
+            // special situation - equal, but one has more chars
+            if (richTextBox1.Text.Length > richTextBox2.Text.Length)
+            {
+                if (richTextBox1.Text.StartsWith(richTextBox2.Text))
+                {
+                    richTextBox1.SelectionStart = richTextBox2.Text.Length;
+                    richTextBox1.SelectionLength = richTextBox1.Text.Length - richTextBox2.Text.Length;
+                    richTextBox1.SelectionBackColor = Color.Red;                    
+                }
+            }
+            else if (richTextBox2.Text.Length > richTextBox1.Text.Length)
+            {
+                if (richTextBox2.Text.StartsWith(richTextBox1.Text))
+                {
+                    richTextBox2.SelectionStart = richTextBox1.Text.Length;
+                    richTextBox2.SelectionLength = richTextBox2.Text.Length - richTextBox1.Text.Length;
+                    richTextBox2.SelectionColor = Color.Red;
                 }
             }
         }
