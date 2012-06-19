@@ -14392,5 +14392,13 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
+        private void toolStripMenuItemStatistics_Click(object sender, EventArgs e)
+        {
+            Statistics stats = new Statistics(_subtitle, _fileName, GetCurrentSubtitleFormat());
+            _formPositionsAndSizes.SetPositionAndSize(stats);
+            stats.ShowDialog(this);
+            _formPositionsAndSizes.SavePositionAndSize(stats);
+        }
+
     }
 }

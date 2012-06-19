@@ -30,6 +30,8 @@ namespace Nikse.SubtitleEdit.Forms
             _videoPlayerContainer = videoPlayerContainer;
             _redockKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainVideoToggleVideoControls);
             RedockOnFullscreenEnd = false;
+
+            videoPlayerContainer.TextBox.MouseMove += VideoPlayerUnDocked_MouseMove;
         }
 
         public VideoPlayerUnDocked()
@@ -110,10 +112,6 @@ namespace Nikse.SubtitleEdit.Forms
                 _mainForm.GotoNextSubPosFromvideoPos();
                 e.Handled = true;
             }
-
-
-
-
             else if (_redockKeys == e.KeyData)
             {
                 _mainForm.RedockVideoControlsToolStripMenuItemClick(null, null);

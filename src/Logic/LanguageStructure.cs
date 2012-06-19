@@ -1395,6 +1395,27 @@
             public string PleaseEnterAValidNumber { get; set; }
         }
 
+        public class Statistics
+        {
+            public string Title { get; set; }
+            public string TitleWithFileName { get; set; }
+            public string GeneralStatistics { get; set; }
+            public string MostUsed { get; set; }
+            public string MostUsedLines { get; set; }
+            public string MostUsedWords { get; set; }
+            public string NothingFound { get; set; }
+            public string NumberOfLinesX { get; set; }
+            public string LengthInFormatXinCharactersY { get; set; }
+            public string NumberOfCharactersInTextOnly { get; set; }
+            public string NumberOfItalicTags { get; set; }            
+            public string LineLengthMinimum { get; set; }
+            public string LineLengthMaximum { get; set; }
+            public string LineLengthAvarage{ get; set; }
+            public string DurationMinimum { get; set; }
+            public string DurationMaximum { get; set; }
+            public string DurationAvarage{ get; set; }
+        }
+
         public class SubStationAlphaProperties
         {
             public string Title { get; set; }

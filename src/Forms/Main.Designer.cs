@@ -380,6 +380,7 @@
             this.imageListPlayRate = new System.Windows.Forms.ImageList(this.components);
             this.timerTextUndo = new System.Windows.Forms.Timer(this.components);
             this.timerAlternateTextUndo = new System.Windows.Forms.Timer(this.components);
+            this.toolStripMenuItemStatistics = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
@@ -784,6 +785,7 @@
             this.toolStripSeparator12,
             this.toolStripMenuItemOpenContainingFolder,
             this.toolStripMenuItemCompare,
+            this.toolStripMenuItemStatistics,
             this.toolStripSeparator1,
             this.toolStripMenuItemImportDvdSubtitles,
             this.toolStripMenuItemSubIdx,
@@ -3652,6 +3654,7 @@
             this.SubtitleListview1.Size = new System.Drawing.Size(933, 148);
             this.SubtitleListview1.TabIndex = 0;
             this.SubtitleListview1.UseCompatibleStateImageBehavior = false;
+            this.SubtitleListview1.UseSyntaxColoring = true;
             this.SubtitleListview1.View = System.Windows.Forms.View.Details;
             this.SubtitleListview1.SelectedIndexChanged += new System.EventHandler(this.SubtitleListview1_SelectedIndexChanged);
             this.SubtitleListview1.DragDrop += new System.Windows.Forms.DragEventHandler(this.SubtitleListview1_DragDrop);
@@ -3757,6 +3760,13 @@
             // 
             this.timerAlternateTextUndo.Interval = 700;
             this.timerAlternateTextUndo.Tick += new System.EventHandler(this.TimerAlternateTextUndoTick);
+            // 
+            // toolStripMenuItemStatistics
+            // 
+            this.toolStripMenuItemStatistics.Name = "toolStripMenuItemStatistics";
+            this.toolStripMenuItemStatistics.Size = new System.Drawing.Size(334, 22);
+            this.toolStripMenuItemStatistics.Text = "Statistics...";
+            this.toolStripMenuItemStatistics.Click += new System.EventHandler(this.toolStripMenuItemStatistics_Click);
             // 
             // Main
             // 
@@ -4185,6 +4195,7 @@
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemSubStationAlpha;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemAlignment;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemRestoreAutoBackup;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemStatistics;
     }
 }
 
