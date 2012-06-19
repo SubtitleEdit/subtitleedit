@@ -25,6 +25,7 @@ namespace Nikse.SubtitleEdit.Controls
         public bool IsAlternateTextColumnVisible { get; private set; }
         public bool IsExtraColumnVisible { get; private set; }
         public bool DisplayExtraFromExtra { get; set; }
+        public bool UseSyntaxColoring { get; set; }
         Settings _settings;
         private bool _saveColumnWidthChanges;
 
@@ -81,6 +82,7 @@ namespace Nikse.SubtitleEdit.Controls
 
         public SubtitleListView()
         {
+            UseSyntaxColoring = true;
             Font = new Font("Tahoma", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
             Columns.AddRange(new[]
             {
@@ -403,7 +405,7 @@ namespace Nikse.SubtitleEdit.Controls
 
         public void SyntaxColorLine(List<Paragraph> paragraphs, int i, Paragraph paragraph)
         {
-            if (_settings != null)
+            if (UseSyntaxColoring && _settings != null)
             {
                 var item = Items[i];
                 if (item.UseItemStyleForSubItems)
