@@ -133,9 +133,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             while (syncStartPos >= 0)
             {
                 string millisecAsString = string.Empty;
-                while (index < allInput.Length && "0123456789".Contains(allInput[index].ToString()))
+                while (index < allInput.Length && "\"'0123456789".Contains(allInput[index].ToString()))
                 {
-                    millisecAsString += allInput[index];
+                    if (allInput[index] != '"' && allInput[index] != '\'')
+                        millisecAsString += allInput[index];
                     index++;
                 }
 
@@ -210,7 +211,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 cleanText = cleanText.Replace("&nbsp;", string.Empty).Replace("&NBSP;", string.Empty);
                 cleanText = cleanText.Trim();
 
-                if (!string.IsNullOrEmpty(p.Text))
+                if (!string.IsNullOrEmpty(p.Text) && !string.IsNullOrEmpty(millisecAsString))
                 {
                     p.EndTime = new TimeCode(TimeSpan.FromMilliseconds(long.Parse(millisecAsString)));
                     subtitle.Paragraphs.Add(p);
