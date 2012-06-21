@@ -1157,6 +1157,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             toolStripMenuItemOpenContainingFolder.Text = _language.Menu.File.OpenContainingFolder;
             toolStripMenuItemCompare.Text = _language.Menu.File.Compare;
+            toolStripMenuItemStatistics.Text = _language.Menu.File.Statistics;
             toolStripMenuItemImportDvdSubtitles.Text = _language.Menu.File.ImportOcrFromDvd;
             toolStripMenuItemSubIdx.Text = _language.Menu.File.ImportOcrVobSubSubtitle;
             toolStripButtonGetFrameRate.ToolTipText = _language.GetFrameRateFromVideoFile;
@@ -3854,11 +3855,11 @@ namespace Nikse.SubtitleEdit.Forms
                     var selectedLines = new Subtitle { WasLoadedWithFrameNumbers = _subtitle.WasLoadedWithFrameNumbers };
                     foreach (int index in SubtitleListview1.SelectedIndices)
                         selectedLines.Paragraphs.Add(_subtitle.Paragraphs[index]);
-                    fixErrors.Initialize(selectedLines, GetCurrentSubtitleFormat());
+                    fixErrors.Initialize(selectedLines, GetCurrentSubtitleFormat(), GetCurrentEncoding());
                 }
                 else
                 {
-                    fixErrors.Initialize(_subtitle, GetCurrentSubtitleFormat());
+                    fixErrors.Initialize(_subtitle, GetCurrentSubtitleFormat(), GetCurrentEncoding());
                 }
 
                 if (fixErrors.ShowDialog(this) == DialogResult.OK)
@@ -10766,6 +10767,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void fileToolStripMenuItem_DropDownOpening(object sender, EventArgs e)
         {
             toolStripMenuItemOpenContainingFolder.Visible = !string.IsNullOrEmpty(_fileName) && File.Exists(_fileName);
+            toolStripMenuItemStatistics.Visible = IsSubtitleLoaded;
 
             bool subtitleLoaded = _subtitle != null && _subtitle.Paragraphs.Count > 0;
             openOriginalToolStripMenuItem.Visible = subtitleLoaded;

@@ -22,7 +22,7 @@ namespace Test
         {
             var subtitle = new Subtitle();
             subtitle.Paragraphs.Add(new Paragraph(line, 100, 10000));
-            target.Initialize(subtitle, new Nikse.SubtitleEdit.Logic.SubtitleFormats.SubRip());
+            target.Initialize(subtitle, new Nikse.SubtitleEdit.Logic.SubtitleFormats.SubRip(), System.Text.Encoding.UTF8);
         }
 
         private static void InitializeFixCommonErrorsLine(FixCommonErrors_Accessor target, string line, string line2)
@@ -30,7 +30,7 @@ namespace Test
             var subtitle = new Subtitle();
             subtitle.Paragraphs.Add(new Paragraph(line, 100, 10000));
             subtitle.Paragraphs.Add(new Paragraph(line2, 10001, 30000));
-            target.Initialize(subtitle, new Nikse.SubtitleEdit.Logic.SubtitleFormats.SubRip());
+            target.Initialize(subtitle, new Nikse.SubtitleEdit.Logic.SubtitleFormats.SubRip(), System.Text.Encoding.UTF8);
         }
 
         #region Additional test attributes

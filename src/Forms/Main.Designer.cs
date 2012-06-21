@@ -78,6 +78,7 @@
             this.toolStripSeparator12 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripMenuItemOpenContainingFolder = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemCompare = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemStatistics = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripMenuItemImportDvdSubtitles = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemSubIdx = new System.Windows.Forms.ToolStripMenuItem();
@@ -380,7 +381,6 @@
             this.imageListPlayRate = new System.Windows.Forms.ImageList(this.components);
             this.timerTextUndo = new System.Windows.Forms.Timer(this.components);
             this.timerAlternateTextUndo = new System.Windows.Forms.Timer(this.components);
-            this.toolStripMenuItemStatistics = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
@@ -905,6 +905,13 @@
             this.toolStripMenuItemCompare.Size = new System.Drawing.Size(334, 22);
             this.toolStripMenuItemCompare.Text = "Compare...";
             this.toolStripMenuItemCompare.Click += new System.EventHandler(this.ToolStripMenuItemCompareClick);
+            // 
+            // toolStripMenuItemStatistics
+            // 
+            this.toolStripMenuItemStatistics.Name = "toolStripMenuItemStatistics";
+            this.toolStripMenuItemStatistics.Size = new System.Drawing.Size(334, 22);
+            this.toolStripMenuItemStatistics.Text = "Statistics...";
+            this.toolStripMenuItemStatistics.Click += new System.EventHandler(this.toolStripMenuItemStatistics_Click);
             // 
             // toolStripSeparator1
             // 
@@ -3760,13 +3767,6 @@
             // 
             this.timerAlternateTextUndo.Interval = 700;
             this.timerAlternateTextUndo.Tick += new System.EventHandler(this.TimerAlternateTextUndoTick);
-            // 
-            // toolStripMenuItemStatistics
-            // 
-            this.toolStripMenuItemStatistics.Name = "toolStripMenuItemStatistics";
-            this.toolStripMenuItemStatistics.Size = new System.Drawing.Size(334, 22);
-            this.toolStripMenuItemStatistics.Text = "Statistics...";
-            this.toolStripMenuItemStatistics.Click += new System.EventHandler(this.toolStripMenuItemStatistics_Click);
             // 
             // Main
             // 

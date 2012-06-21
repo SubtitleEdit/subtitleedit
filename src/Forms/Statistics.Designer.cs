@@ -47,7 +47,7 @@
             this.buttonOK.Location = new System.Drawing.Point(640, 495);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 21);
-            this.buttonOK.TabIndex = 4;
+            this.buttonOK.TabIndex = 2;
             this.buttonOK.Text = "&OK";
             this.buttonOK.UseVisualStyleBackColor = true;
             this.buttonOK.Click += new System.EventHandler(this.buttonOK_Click);
@@ -60,7 +60,7 @@
             this.groupBoxGeneral.Location = new System.Drawing.Point(15, 12);
             this.groupBoxGeneral.Name = "groupBoxGeneral";
             this.groupBoxGeneral.Size = new System.Drawing.Size(703, 229);
-            this.groupBoxGeneral.TabIndex = 6;
+            this.groupBoxGeneral.TabIndex = 0;
             this.groupBoxGeneral.TabStop = false;
             this.groupBoxGeneral.Text = "General statistics";
             // 
@@ -89,7 +89,7 @@
             this.groupBoxMostUsed.Location = new System.Drawing.Point(12, 247);
             this.groupBoxMostUsed.Name = "groupBoxMostUsed";
             this.groupBoxMostUsed.Size = new System.Drawing.Size(703, 242);
-            this.groupBoxMostUsed.TabIndex = 7;
+            this.groupBoxMostUsed.TabIndex = 1;
             this.groupBoxMostUsed.TabStop = false;
             this.groupBoxMostUsed.Text = "Most used";
             // 
@@ -105,7 +105,7 @@
             // labelMostUsedWords
             // 
             this.labelMostUsedWords.AutoSize = true;
-            this.labelMostUsedWords.Location = new System.Drawing.Point(9, 24);
+            this.labelMostUsedWords.Location = new System.Drawing.Point(6, 27);
             this.labelMostUsedWords.Name = "labelMostUsedWords";
             this.labelMostUsedWords.Size = new System.Drawing.Size(87, 13);
             this.labelMostUsedWords.TabIndex = 5;
@@ -122,7 +122,7 @@
             this.textBoxMostUsedLines.ReadOnly = true;
             this.textBoxMostUsedLines.ScrollBars = System.Windows.Forms.ScrollBars.Both;
             this.textBoxMostUsedLines.Size = new System.Drawing.Size(357, 193);
-            this.textBoxMostUsedLines.TabIndex = 4;
+            this.textBoxMostUsedLines.TabIndex = 1;
             // 
             // textBoxMostUsedWords
             // 
@@ -134,7 +134,7 @@
             this.textBoxMostUsedWords.ReadOnly = true;
             this.textBoxMostUsedWords.ScrollBars = System.Windows.Forms.ScrollBars.Both;
             this.textBoxMostUsedWords.Size = new System.Drawing.Size(320, 193);
-            this.textBoxMostUsedWords.TabIndex = 1;
+            this.textBoxMostUsedWords.TabIndex = 0;
             // 
             // Statistics
             // 

@@ -45,7 +45,7 @@ namespace Nikse.SubtitleEdit.Forms
         const int IndexDialogsOnOneLine = 28;
         const int IndexDanishLetterI = 29;
         const int IndexFixSpanishInvertedQuestionAndExclamationMarks = 30;
-
+        int _turkishAnsiIndex = -1;
         int _danishLetterIIndex = -1;
         int _spanishInvertedQuestionAndExclamationMarksIndex = -1;
 
@@ -124,6 +124,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         Subtitle _subtitle;
         SubtitleFormat _format;
+        Encoding _encoding = Encoding.UTF8;
         Subtitle _originalSubtitle;
         int _totalFixes;
         int _totalErrors;
@@ -143,7 +144,7 @@ namespace Nikse.SubtitleEdit.Forms
             get { return _originalSubtitle; }
         }
 
-        public void Initialize(Subtitle subtitle, SubtitleFormat format)
+        public void Initialize(Subtitle subtitle, SubtitleFormat format, Encoding encoding)
         {
             _autoDetectGoogleLanguage = Utilities.AutoDetectGoogleLanguage(subtitle);
             if (_autoDetectGoogleLanguage.ToLower() == "zh")
@@ -151,57 +152,34 @@ namespace Nikse.SubtitleEdit.Forms
             CultureInfo ci = CultureInfo.GetCultureInfo(_autoDetectGoogleLanguage);
             string threeLetterISOLanguageName = ci.ThreeLetterISOLanguageName;
 
-            FixCommonErrorsSettings ce = Configuration.Settings.CommonErrors;
-
-            _fixActions = new List<FixItem>();
-            _fixActions.Add(new FixItem(_language.RemovedEmptyLinesUnsedLineBreaks, string.Empty, delegate { FixEmptyLines(); }, ce.EmptyLinesTicked));
-            _fixActions.Add(new FixItem(_language.FixOverlappingDisplayTimes, string.Empty, delegate { FixOverlappingDisplayTimes(); }, ce.OverlappingDisplayTimeTicked));
-            _fixActions.Add(new FixItem(_language.FixShortDisplayTimes, string.Empty, delegate { FixShortDisplayTimes(); }, ce.TooShortDisplayTimeTicked));
-            _fixActions.Add(new FixItem(_language.FixLongDisplayTimes, string.Empty, delegate { FixLongDisplayTimes(); }, ce.TooLongDisplayTimeTicked));
-            _fixActions.Add(new FixItem(_language.FixInvalidItalicTags, _language.FixInvalidItalicTagsExample, delegate { FixInvalidItalicTags(); }, ce.InvalidItalicTagsTicked));
-            _fixActions.Add(new FixItem(_language.RemoveUnneededSpaces, _language.RemoveUnneededSpacesExample, delegate { FixUnneededSpaces(); }, ce.UnneededSpacesTicked));
-            _fixActions.Add(new FixItem(_language.RemoveUnneededPeriods, _language.RemoveUnneededPeriodsExample, delegate { FixUnneededPeriods(); }, ce.UnneededPeriodsTicked));
-            _fixActions.Add(new FixItem(_language.FixMissingSpaces, _language.FixMissingSpacesExample, delegate { FixMissingSpaces(); }, ce.MissingSpacesTicked));
-            _fixActions.Add(new FixItem(_language.BreakLongLines, string.Empty, delegate { FixLongLines(); }, ce.BreakLongLinesTicked));
-            _fixActions.Add(new FixItem(_language.RemoveLineBreaks, string.Empty, delegate { FixShortLines(); }, ce.MergeShortLinesTicked));
-            _fixActions.Add(new FixItem(_language.RemoveLineBreaksAll, string.Empty, delegate { FixShortLinesAll(); }, ce.MergeShortLinesAllTicked));
-            _fixActions.Add(new FixItem(_language.FixDoubleApostrophes, string.Empty, delegate { FixDoubleApostrophes(); }, ce.DoubleApostropheToQuoteTicked));
-            _fixActions.Add(new FixItem(_language.FixMusicNotation, _language.FixMusicNotationExample, delegate { FixMusicNotation(); }, ce.FixMusicNotationTicked));
-            _fixActions.Add(new FixItem(_language.AddPeriods, string.Empty, delegate { FixMissingPeriodsAtEndOfLine(); }, ce.AddPeriodAfterParagraphTicked));
-            _fixActions.Add(new FixItem(_language.StartWithUppercaseLetterAfterParagraph, string.Empty, delegate { FixStartWithUppercaseLetterAfterParagraph(); }, ce.StartWithUppercaseLetterAfterParagraphTicked));
-            _fixActions.Add(new FixItem(_language.StartWithUppercaseLetterAfterPeriodInsideParagraph, string.Empty, delegate { FixStartWithUppercaseLetterAfterPeriodInsideParagraph(); }, ce.StartWithUppercaseLetterAfterPeriodInsideParagraphTicked));
-            _fixActions.Add(new FixItem(_language.StartWithUppercaseLetterAfterColon, string.Empty, delegate { FixStartWithUppercaseLetterAfterColon(); }, ce.StartWithUppercaseLetterAfterColonTicked));
-            _fixActions.Add(new FixItem(_language.AddMissingQuotes, _language.AddMissingQuotesExample, delegate { AddMissingQuotes(); }, ce.AddMissingQuotesTicked));
-            _fixActions.Add(new FixItem(_language.FixHyphens, string.Empty, delegate { FixHyphens(); }, ce.FixHyphensTicked));
-            _fixActions.Add(new FixItem(_language.Fix3PlusLines, string.Empty, delegate { Fix3PlusLines(); }, ce.Fix3PlusLinesTicked));
-            _fixActions.Add(new FixItem(_language.FixDoubleDash, _language.FixDoubleDashExample, delegate { FixDoubleDash(); }, ce.FixDoubleDashTicked));
-            _fixActions.Add(new FixItem(_language.FixDoubleGreaterThan, _language.FixDoubleGreaterThanExample, delegate { FixDoubleGreaterThan(); }, ce.FixDoubleGreaterThanTicked));
-            _fixActions.Add(new FixItem(_language.FixEllipsesStart, _language.FixEllipsesStartExample, delegate { FixEllipsesStart(); }, ce.FixEllipsesStartTicked));
-            _fixActions.Add(new FixItem(_language.FixMissingOpenBracket, _language.FixMissingOpenBracketExample, delegate { FixMissingOpenBracket(); }, ce.FixMissingOpenBracketTicked));
-            _fixActions.Add(new FixItem(_language.FixCommonOcrErrors, "D0n't -> Don't", delegate { FixOcrErrorsViaReplaceList(threeLetterISOLanguageName); }, ce.FixOcrErrorsViaReplaceListTicked));
-            _fixActions.Add(new FixItem(_language.FixUppercaseIInsindeLowercaseWords, _language.FixUppercaseIInsindeLowercaseWordsExample, delegate { FixUppercaseIInsideWords(); }, ce.UppercaseIInsideLowercaseWordTicked));
-            _fixActions.Add(new FixItem(_language.FixLowercaseIToUppercaseI, _language.FixLowercaseIToUppercaseIExample, delegate { FixAloneLowercaseIToUppercaseI(); }, ce.AloneLowercaseIToUppercaseIEnglishTicked));
-            _fixActions.Add(new FixItem(_language.RemoveSpaceBetweenNumber, "1 100 -> 1100", delegate { RemoveSpaceBetweenNumbers(); }, ce.RemoveSpaceBetweenNumberTicked));
-            _fixActions.Add(new FixItem(_language.FixDialogsOnOneLine, "Hi John! - Hi Ida! > Hi John!" + Configuration.Settings.General.ListViewLineSeparatorString + "- Hi Ida!", delegate { DialogsOnOneLine(); }, ce.FixDialogsOnOneLineTicked));
-
-            if (_autoDetectGoogleLanguage == "da" || subtitle.Paragraphs.Count < 25) // && Thread.CurrentThread.CurrentCulture.Name == "da-DK" &&
+            comboBoxLanguage.Items.Clear();
+            foreach (CultureInfo x in CultureInfo.GetCultures(CultureTypes.NeutralCultures))
+                comboBoxLanguage.Items.Add(x);
+            comboBoxLanguage.Sorted = true;
+            int languageIndex = 0;
+            int j = 0;
+            foreach (var x in comboBoxLanguage.Items)
             {
-                _danishLetterIIndex = _fixActions.Count;
-                _fixActions.Add(new FixItem(_language.FixDanishLetterI, "Jeg synes i er søde. -> Jeg synes I er søde.", delegate { FixDanishLetterI(); }, ce.DanishLetterITicked));
+                var xci = (CultureInfo)x;
+                if (xci.TwoLetterISOLanguageName == ci.TwoLetterISOLanguageName)
+                {
+                    languageIndex = j;
+                    break;
+                }
+                else if (xci.TwoLetterISOLanguageName == "en")
+                {
+                    languageIndex = j;
+                }
+                j++;
             }
+            comboBoxLanguage.SelectedIndex = languageIndex;
 
-            if (_autoDetectGoogleLanguage == "es" || subtitle.Paragraphs.Count < 25) // && Thread.CurrentThread.CurrentCulture.Name.StartsWith("es") ||
-            {
-                _spanishInvertedQuestionAndExclamationMarksIndex = _fixActions.Count;
-                _fixActions.Add(new FixItem(_language.FixSpanishInvertedQuestionAndExclamationMarks, "Hablas bien castellano? -> ¿Hablas bien castellano?", delegate { FixSpanishInvertedQuestionAndExclamationMarks(); }, ce.SpanishInvertedQuestionAndExclamationMarksTicked));
-            }
-
-            foreach (FixItem fi in _fixActions)
-                AddFixActionItemToListView(fi);
+            AddFixActions(subtitle, threeLetterISOLanguageName);
 
             _originalSubtitle = new Subtitle(subtitle); // copy constructor
             _subtitle = new Subtitle(subtitle); // copy constructor
             _format = format;
+            _encoding = encoding;
             labelStatus.Text = string.Empty;
             labelTextLineLengths.Text = string.Empty;
             labelTextLineTotal.Text = string.Empty;
@@ -257,6 +235,63 @@ namespace Nikse.SubtitleEdit.Forms
             TopMost = false;
         }
 
+        private void AddFixActions(Subtitle subtitle, string threeLetterISOLanguageName)
+        {
+            FixCommonErrorsSettings ce = Configuration.Settings.CommonErrors;
+            _fixActions = new List<FixItem>();
+            _fixActions.Add(new FixItem(_language.RemovedEmptyLinesUnsedLineBreaks, string.Empty, delegate { FixEmptyLines(); }, ce.EmptyLinesTicked));
+            _fixActions.Add(new FixItem(_language.FixOverlappingDisplayTimes, string.Empty, delegate { FixOverlappingDisplayTimes(); }, ce.OverlappingDisplayTimeTicked));
+            _fixActions.Add(new FixItem(_language.FixShortDisplayTimes, string.Empty, delegate { FixShortDisplayTimes(); }, ce.TooShortDisplayTimeTicked));
+            _fixActions.Add(new FixItem(_language.FixLongDisplayTimes, string.Empty, delegate { FixLongDisplayTimes(); }, ce.TooLongDisplayTimeTicked));
+            _fixActions.Add(new FixItem(_language.FixInvalidItalicTags, _language.FixInvalidItalicTagsExample, delegate { FixInvalidItalicTags(); }, ce.InvalidItalicTagsTicked));
+            _fixActions.Add(new FixItem(_language.RemoveUnneededSpaces, _language.RemoveUnneededSpacesExample, delegate { FixUnneededSpaces(); }, ce.UnneededSpacesTicked));
+            _fixActions.Add(new FixItem(_language.RemoveUnneededPeriods, _language.RemoveUnneededPeriodsExample, delegate { FixUnneededPeriods(); }, ce.UnneededPeriodsTicked));
+            _fixActions.Add(new FixItem(_language.FixMissingSpaces, _language.FixMissingSpacesExample, delegate { FixMissingSpaces(); }, ce.MissingSpacesTicked));
+            _fixActions.Add(new FixItem(_language.BreakLongLines, string.Empty, delegate { FixLongLines(); }, ce.BreakLongLinesTicked));
+            _fixActions.Add(new FixItem(_language.RemoveLineBreaks, string.Empty, delegate { FixShortLines(); }, ce.MergeShortLinesTicked));
+            _fixActions.Add(new FixItem(_language.RemoveLineBreaksAll, string.Empty, delegate { FixShortLinesAll(); }, ce.MergeShortLinesAllTicked));
+            _fixActions.Add(new FixItem(_language.FixDoubleApostrophes, string.Empty, delegate { FixDoubleApostrophes(); }, ce.DoubleApostropheToQuoteTicked));
+            _fixActions.Add(new FixItem(_language.FixMusicNotation, _language.FixMusicNotationExample, delegate { FixMusicNotation(); }, ce.FixMusicNotationTicked));
+            _fixActions.Add(new FixItem(_language.AddPeriods, string.Empty, delegate { FixMissingPeriodsAtEndOfLine(); }, ce.AddPeriodAfterParagraphTicked));
+            _fixActions.Add(new FixItem(_language.StartWithUppercaseLetterAfterParagraph, string.Empty, delegate { FixStartWithUppercaseLetterAfterParagraph(); }, ce.StartWithUppercaseLetterAfterParagraphTicked));
+            _fixActions.Add(new FixItem(_language.StartWithUppercaseLetterAfterPeriodInsideParagraph, string.Empty, delegate { FixStartWithUppercaseLetterAfterPeriodInsideParagraph(); }, ce.StartWithUppercaseLetterAfterPeriodInsideParagraphTicked));
+            _fixActions.Add(new FixItem(_language.StartWithUppercaseLetterAfterColon, string.Empty, delegate { FixStartWithUppercaseLetterAfterColon(); }, ce.StartWithUppercaseLetterAfterColonTicked));
+            _fixActions.Add(new FixItem(_language.AddMissingQuotes, _language.AddMissingQuotesExample, delegate { AddMissingQuotes(); }, ce.AddMissingQuotesTicked));
+            _fixActions.Add(new FixItem(_language.FixHyphens, string.Empty, delegate { FixHyphens(); }, ce.FixHyphensTicked));
+            _fixActions.Add(new FixItem(_language.Fix3PlusLines, string.Empty, delegate { Fix3PlusLines(); }, ce.Fix3PlusLinesTicked));
+            _fixActions.Add(new FixItem(_language.FixDoubleDash, _language.FixDoubleDashExample, delegate { FixDoubleDash(); }, ce.FixDoubleDashTicked));
+            _fixActions.Add(new FixItem(_language.FixDoubleGreaterThan, _language.FixDoubleGreaterThanExample, delegate { FixDoubleGreaterThan(); }, ce.FixDoubleGreaterThanTicked));
+            _fixActions.Add(new FixItem(_language.FixEllipsesStart, _language.FixEllipsesStartExample, delegate { FixEllipsesStart(); }, ce.FixEllipsesStartTicked));
+            _fixActions.Add(new FixItem(_language.FixMissingOpenBracket, _language.FixMissingOpenBracketExample, delegate { FixMissingOpenBracket(); }, ce.FixMissingOpenBracketTicked));
+            _fixActions.Add(new FixItem(_language.FixCommonOcrErrors, "D0n't -> Don't", delegate { FixOcrErrorsViaReplaceList(threeLetterISOLanguageName); }, ce.FixOcrErrorsViaReplaceListTicked));
+            _fixActions.Add(new FixItem(_language.FixUppercaseIInsindeLowercaseWords, _language.FixUppercaseIInsindeLowercaseWordsExample, delegate { FixUppercaseIInsideWords(); }, ce.UppercaseIInsideLowercaseWordTicked));
+            _fixActions.Add(new FixItem(_language.FixLowercaseIToUppercaseI, _language.FixLowercaseIToUppercaseIExample, delegate { FixAloneLowercaseIToUppercaseI(); }, ce.AloneLowercaseIToUppercaseIEnglishTicked));
+            _fixActions.Add(new FixItem(_language.RemoveSpaceBetweenNumber, "1 100 -> 1100", delegate { RemoveSpaceBetweenNumbers(); }, ce.RemoveSpaceBetweenNumberTicked));
+            _fixActions.Add(new FixItem(_language.FixDialogsOnOneLine, "Hi John! - Hi Ida! > Hi John!" + Configuration.Settings.General.ListViewLineSeparatorString + "- Hi Ida!", delegate { DialogsOnOneLine(); }, ce.FixDialogsOnOneLineTicked));
+
+            if (_autoDetectGoogleLanguage == "tr")
+            {
+                _turkishAnsiIndex = _fixActions.Count;
+                _fixActions.Add(new FixItem(_language.FixTurkishAnsi, "Ý > İ, Ð > Ğ, Þ > Ş, ý > ı, ð > ğ, þ > ş", delegate { TurkishAnsiToUnicode(); }, ce.TurkishAnsiTicked));
+            }
+
+            if (_autoDetectGoogleLanguage == "da")
+            {
+                _danishLetterIIndex = _fixActions.Count;
+                _fixActions.Add(new FixItem(_language.FixDanishLetterI, "Jeg synes i er søde. -> Jeg synes I er søde.", delegate { FixDanishLetterI(); }, ce.DanishLetterITicked));
+            }
+
+            if (_autoDetectGoogleLanguage == "es")
+            {
+                _spanishInvertedQuestionAndExclamationMarksIndex = _fixActions.Count;
+                _fixActions.Add(new FixItem(_language.FixSpanishInvertedQuestionAndExclamationMarks, "Hablas bien castellano? -> ¿Hablas bien castellano?", delegate { FixSpanishInvertedQuestionAndExclamationMarks(); }, ce.SpanishInvertedQuestionAndExclamationMarksTicked));
+            }
+
+            listView1.Items.Clear();
+            foreach (FixItem fi in _fixActions)
+                AddFixActionItemToListView(fi);
+        }
+
         public FixCommonErrors()
         {
             InitializeComponent();
@@ -294,6 +329,7 @@ namespace Nikse.SubtitleEdit.Forms
             buttonAutoBreak.Text = _language.AutoBreak;
             buttonUnBreak.Text = _language.Unbreak;
             subtitleListView1.InitializeLanguage(_languageGeneral, Configuration.Settings);
+            labelLanguage.Text = Configuration.Settings.Language.ChooseLanguage.Language;
 
             splitContainerStep2.Panel1MinSize = 110;
             splitContainerStep2.Panel2MinSize = 160;
@@ -1963,7 +1999,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                     bool isPrevEndOfLine = IsPrevoiusTextEndOfParagraph(prevText);
                     if (!text.StartsWith("www.") &&
-                        firstLetter != firstLetter.ToUpper() &&
+                        (firstLetter != firstLetter.ToUpper() || IsTurkishLittleI(firstLetter)) &&
                         !"0123456789".Contains(firstLetter) &&
                         isPrevEndOfLine)
                     {
@@ -1974,7 +2010,10 @@ namespace Nikse.SubtitleEdit.Forms
 
                         if (!isMatchInKnowAbbreviations && AllowFix(p, fixAction1))
                         {
-                            p.Text = pre + firstLetter.ToUpper() + text.Substring(1);
+                            if (IsTurkishLittleI(firstLetter))
+                                p.Text = pre + GetTurkishUppercaseLetter(firstLetter) + text.Substring(1);
+                            else
+                                p.Text = pre + firstLetter.ToUpper() + text.Substring(1);
                             _totalFixes++;
                             fixedStartWithUppercaseLetterAfterParagraphTicked++;
                             AddFixToListView(p, fixAction1, oldText, p.Text);
@@ -2015,7 +2054,7 @@ namespace Nikse.SubtitleEdit.Forms
                         string prevText = Utilities.RemoveHtmlTags(arr[0]);
                         bool isPrevEndOfLine = IsPrevoiusTextEndOfParagraph(prevText);
                         if (!text.StartsWith("www.") &&
-                            firstLetter != firstLetter.ToUpper() &&
+                            (firstLetter != firstLetter.ToUpper() || IsTurkishLittleI(firstLetter)) &&
                             !prevText.EndsWith("...") &&
                             isPrevEndOfLine)
                         {
@@ -2024,10 +2063,12 @@ namespace Nikse.SubtitleEdit.Forms
                                  prevText.EndsWith(" a.m.") ||
                                  prevText.EndsWith(" p.m."));
 
-
                             if (!isMatchInKnowAbbreviations && AllowFix(p, fixAction2))
                             {
-                                text = pre + firstLetter.ToUpper() + text.Substring(1);
+                                if (IsTurkishLittleI(firstLetter))
+                                    text = pre + GetTurkishUppercaseLetter(firstLetter) + text.Substring(1);
+                                else
+                                    text = pre + firstLetter.ToUpper() + text.Substring(1);
                                 _totalFixes++;
                                 fixedStartWithUppercaseLetterAfterParagraphTicked++;
                                 p.Text = arr[0] + Environment.NewLine + text;
@@ -2050,7 +2091,21 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         string text = p.Text.Substring(indexOfNewLine + 2);
                         StripableText st = new StripableText(text);
-                        if (st.StrippedText.Length > 0 && st.StrippedText[0].ToString() != st.StrippedText[0].ToString().ToUpper() && !st.Pre.EndsWith("[") && !st.Pre.Contains("..."))
+
+                        if (st.StrippedText.Length > 0 && IsTurkishLittleI(st.StrippedText) && !st.Pre.EndsWith("[") && !st.Pre.Contains("..."))
+                        {
+                            text = st.Pre + st.StrippedText.Remove(0, 1).Insert(0, GetTurkishUppercaseLetter(st.StrippedText)) + st.Post;
+
+                            if (AllowFix(p, fixAction2))
+                            {
+                                string oldText = p.Text;
+                                p.Text = p.Text.Remove(indexOfNewLine + 2).Insert(indexOfNewLine + 2, text);
+                                _totalFixes++;
+                                fixedStartWithUppercaseLetterAfterParagraphTicked++;
+                                AddFixToListView(p, fixAction2, oldText, p.Text);
+                            }
+                        }
+                        else if (st.StrippedText.Length > 0 && st.StrippedText[0].ToString() != st.StrippedText[0].ToString().ToUpper() && !st.Pre.EndsWith("[") && !st.Pre.Contains("..."))
                         {
                             text = st.Pre + st.StrippedText.Remove(0, 1).Insert(0, st.StrippedText[0].ToString().ToUpper()) + st.Post;
 
@@ -2062,13 +2117,40 @@ namespace Nikse.SubtitleEdit.Forms
                                 fixedStartWithUppercaseLetterAfterParagraphTicked++;
                                 AddFixToListView(p, fixAction2, oldText, p.Text);
                             }
-                        }
+                        }                        
                     }
 
                 }
             }
             if (fixedStartWithUppercaseLetterAfterParagraphTicked > 0)
                 LogStatus(_language.StartWithUppercaseLetterAfterParagraph, fixedStartWithUppercaseLetterAfterParagraphTicked.ToString());
+        }
+
+        private bool IsTurkishLittleI(string firstLetter)
+        {
+            if (_encoding == Encoding.UTF8)
+                return _autoDetectGoogleLanguage == "tr" && (firstLetter.StartsWith("ı") || firstLetter.StartsWith("i"));
+            else
+                return _autoDetectGoogleLanguage == "tr" && (firstLetter.StartsWith("ý") || firstLetter.StartsWith("i"));
+        }
+
+        private string GetTurkishUppercaseLetter(string s)
+        { 
+            if (_encoding == Encoding.UTF8)
+            {
+                if (s.StartsWith("ı"))
+                    return "I";
+                else if (s.StartsWith("i"))
+                    return "İ";
+            }
+            else
+            {
+                if (s.StartsWith("i"))
+                    return "Ý";
+                else if (s.StartsWith("ý"))
+                    return "I";
+            }
+            return s.Substring(0, 1);
         }
 
         private static bool IsPrevoiusTextEndOfParagraph(string prevText)
@@ -2110,7 +2192,18 @@ namespace Nikse.SubtitleEdit.Forms
                             if (!IsAbbreviation(text, start))
                             {
                                 StripableText subText = new StripableText(text.Substring(start + 2));
-                                if (subText.StrippedText.Length > 0 && Configuration.Settings.General.UppercaseLetters.ToLower().Contains(subText.StrippedText[0].ToString()))
+                                if (subText.StrippedText.Length > 0 && IsTurkishLittleI(subText.StrippedText))
+                                {
+                                    if (subText.StrippedText.Length > 1 && !(subText.Pre.Contains("'") && subText.StrippedText.StartsWith("s")))
+                                    {
+                                        text = text.Substring(0, start + 2) + subText.Pre + GetTurkishUppercaseLetter(subText.StrippedText) + subText.StrippedText.Substring(1) + subText.Post;
+                                        if (AllowFix(p, fixAction))
+                                        {
+                                            p.Text = st.Pre + text + st.Post;
+                                        }
+                                    }
+                                }
+                                else if (subText.StrippedText.Length > 0 && Configuration.Settings.General.UppercaseLetters.ToLower().Contains(subText.StrippedText[0].ToString()))
                                 {
                                     if (subText.StrippedText.Length > 1 && !(subText.Pre.Contains("'") && subText.StrippedText.StartsWith("s")))
                                     {
@@ -2184,6 +2277,11 @@ namespace Nikse.SubtitleEdit.Forms
                                 skipCount = 2;
                             else if (p.Text.Substring(j).StartsWith("<font ") && p.Text.Substring(j).Contains(">"))
                                 skipCount = p.Text.Substring(j).IndexOf(">") - p.Text.Substring(j).IndexOf("<font ");
+                            else if (IsTurkishLittleI(s))
+                            {                                
+                                p.Text = p.Text.Remove(j, 1).Insert(j, GetTurkishUppercaseLetter(s));                                                               
+                                lastWasColon = false;
+                            }
                             else if (s != s.ToUpper())
                             {
                                 p.Text = p.Text.Remove(j, 1).Insert(j, s.ToUpper());
@@ -2205,7 +2303,6 @@ namespace Nikse.SubtitleEdit.Forms
             if (noOfFixes > 0)
                 LogStatus(_language.StartWithUppercaseLetterAfterColon, noOfFixes.ToString());
         }
-
 
         private bool IsAbbreviation(string text, int index)
         {
@@ -2331,7 +2428,35 @@ namespace Nikse.SubtitleEdit.Forms
                 LogStatus(_language.FixCommonOcrErrors, string.Format(_language.RemoveSpaceBetweenNumbersFixed, noOfFixes));
         }
 
-
+        private void TurkishAnsiToUnicode()
+        {
+            string fixAction = _language.FixTurkishAnsi;
+            int noOfFixes = 0;
+            for (int i = 0; i < _subtitle.Paragraphs.Count; i++)
+            {
+                Paragraph p = _subtitle.Paragraphs[i];
+                string text = p.Text;
+                string oldText = text;
+                text = text.Replace("Ý", "İ");
+                text = text.Replace("Ð", "Ğ");
+                text = text.Replace("Þ", "Ş");
+                text = text.Replace("ý", "ı");
+                text = text.Replace("ð", "ğ");
+                text = text.Replace("þ", "ş");
+                if (oldText != text)
+                {
+                    if (AllowFix(p, fixAction))
+                    {
+                        p.Text = text;
+                        noOfFixes++;
+                        _totalFixes++;
+                        AddFixToListView(p, fixAction, oldText, p.Text);
+                    }
+                }
+            }
+            if (noOfFixes > 0)
+                LogStatus(_language.FixCommonOcrErrors, string.Format(_language.FixTurkishAnsi, noOfFixes));
+        }
 
         private void FixAloneLowercaseIToUppercaseI()
         {
@@ -4601,6 +4726,16 @@ namespace Nikse.SubtitleEdit.Forms
         private void FixCommonErrorsFormClosing(object sender, FormClosingEventArgs e)
         {
             Owner = null;
+        }
+
+        private void comboBoxLanguage_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (_subtitle != null)
+            {
+                var ci = (CultureInfo)comboBoxLanguage.SelectedItem;
+                _autoDetectGoogleLanguage = ci.TwoLetterISOLanguageName;
+                AddFixActions(_subtitle, ci.ThreeLetterISOLanguageName);
+            }
         }
 
     }

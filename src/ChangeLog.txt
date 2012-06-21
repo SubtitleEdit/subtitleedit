@@ -13,8 +13,11 @@ Subtitle Edit Changelog
  * Tools -> Join subtitles (merge of multiple parts)
  * Tools -> Apply duration limits
  * Tools -> Sort -> Text - chars/sec
- * Will now display any errors found in SubRip/MicroDvd on load
+ * Will now display any errors found in SubRip/MicroDvd/SSA/ASS on load
  * Can now read NCI cap files - thx Ramon
+ * File -> Statistics: Displays info about current subtitle
+ * Click on status bar in footer will now show status history
+ * "Fix common errors" item to fix Turkish ANSI letters to Unicode - thx Adem
 * IMPROVED:
   * Added extra options for double click on list view line - thx Fredrik + TaeGyun
   * Added extra options for export as text
@@ -25,6 +28,8 @@ Subtitle Edit Changelog
 * FIXED:
    * Auto-translate now works for English to Portuguese - thx w.tambley
    * Fixed shortcuts with numbers (0-9)
+   * Fixed reading of Bluray sup with errors in image - thx Simon
+
 
 3.2.8 (3rd June 2012)
  * NEW:
