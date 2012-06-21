@@ -756,6 +756,10 @@ namespace Nikse.SubtitleEdit.Logic
                         if (GetCount(russianEncoding.GetString(buffer), "что", "быть", "весь", "этот", "один", "такой") > 5)
                             return russianEncoding;
 
+                        Encoding thaiEncoding = Encoding.GetEncoding(874); // Thai
+                        if (GetCount(thaiEncoding.GetString(buffer), "โอ", "โรเบิร์ต", "วิตตอเรีย", "ดร", "คุณตำรวจ", "ราเชล") + GetCount(thaiEncoding.GetString(buffer), "ไม่", "เลดดิส", "พระเจ้า", "เท็ดดี้", "หัวหน้า", "แอนดรูว์") > 5)
+                            return thaiEncoding;
+
                         Encoding arabicEncoding = Encoding.GetEncoding(28596); // Arabic
                         Encoding hewbrewEncoding = Encoding.GetEncoding(28598); // Hebrew
                         if (GetCount(arabicEncoding.GetString(buffer), "من", "هل", "لا", "فى", "لقد", "ما") > 5)
@@ -850,6 +854,10 @@ namespace Nikse.SubtitleEdit.Logic
                 russianEncoding = Encoding.GetEncoding(28595); // Russian
                 if (GetCount(russianEncoding.GetString(buffer), "что", "быть", "весь", "этот", "один", "такой") > 5) // Russian
                     return russianEncoding;
+
+                Encoding thaiEncoding = Encoding.GetEncoding(874); // Thai
+                if (GetCount(thaiEncoding.GetString(buffer), "โอ", "โรเบิร์ต", "วิตตอเรีย", "ดร", "คุณตำรวจ", "ราเชล") + GetCount(thaiEncoding.GetString(buffer), "ไม่", "เลดดิส", "พระเจ้า", "เท็ดดี้", "หัวหน้า", "แอนดรูว์") > 5)
+                    return thaiEncoding;
 
                 Encoding arabicEncoding = Encoding.GetEncoding(28596); // Arabic
                 Encoding hewbrewEncoding = Encoding.GetEncoding(28598); // Hebrew
@@ -1022,7 +1030,7 @@ namespace Nikse.SubtitleEdit.Logic
 
             count = GetCount(text, "não", "Não", "Estás", "Então", "isso", "com");
             if (count > bestCount)
-                return "pt"; // PORTUGUESE
+                return "pt"; // Portuguese
 
             count = GetCount(text, "μου", "είναι", "Είναι", "αυτό", "Τόμπυ", "καλά");
             if (count > bestCount)
@@ -1068,12 +1076,17 @@ namespace Nikse.SubtitleEdit.Logic
             if (count > bestCount)
                 return "hu"; // Hungarian
 
-            count = GetCount(text, "için", "Tamam", "Hayır", "benim", "daha", "deðil");
+            count = GetCount(text, "için", "Tamam", "Hayır", "benim", "daha", "deðil") + GetCount(text, "önce", "lazým", "benim", "çalýþýyor", "burada", "efendim");
             if (count > bestCount)
                 return "tr"; // Turkish
-            count = GetCount(text, "diye", "Tamam", "sonra", "benim", "daha", "devam");
+
+            count = GetCount(text, "yang", "tahu", "bisa", "akan", "tahun", "tapi") + GetCount(text, "dengan", "untuk", "rumah", "dalam", "sudah", "bertemu");
             if (count > bestCount)
-                return "tr"; // Turkish
+                return "id"; // Indonesian
+
+            count = GetCount(text, "โอ", "โรเบิร์ต", "วิตตอเรีย", "ดร", "คุณตำรวจ", "ราเชล") + GetCount(text, "ไม่", "เลดดิส", "พระเจ้า", "เท็ดดี้", "หัวหน้า", "แอนดรูว์");
+            if (count > 10 || count > bestCount)
+                return "th"; // Thai
 
             return string.Empty;
         }

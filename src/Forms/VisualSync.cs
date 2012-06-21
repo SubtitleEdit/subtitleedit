@@ -415,7 +415,7 @@ namespace Nikse.SubtitleEdit.Forms
                 var tmpSubtitle = new Subtitle { WasLoadedWithFrameNumbers = _originalSubtitle.WasLoadedWithFrameNumbers };
                 foreach (Paragraph p in _paragraphs)
                     tmpSubtitle.Paragraphs.Add(new Paragraph(p));
-                formFix.Initialize(tmpSubtitle, tmpSubtitle.OriginalFormat);
+                formFix.Initialize(tmpSubtitle, tmpSubtitle.OriginalFormat, System.Text.Encoding.UTF8);
                 formFix.FixOverlappingDisplayTimes();
                 _paragraphs.Clear();
                 foreach (Paragraph p in formFix.FixedSubtitle.Paragraphs)

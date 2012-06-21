@@ -362,6 +362,7 @@
             public string RemoveSpaceBetweenNumber { get; set; }
             public string FixDialogsOnOneLine { get; set; }
             public string RemoveSpaceBetweenNumbersFixed { get; set; }
+            public string FixTurkishAnsi { get; set; }
             public string FixDanishLetterI { get; set; }
             public string FixSpanishInvertedQuestionAndExclamationMarks { get; set; }
             public string AddMissingQuote { get; set; }
@@ -752,6 +753,7 @@
                     public string CloseOriginal { get; set; }
                     public string OpenContainingFolder { get; set; }
                     public string Compare { get; set; }
+                    public string Statistics { get; set; }
                     public string ImportOcrFromDvd { get; set; }
                     public string ImportOcrVobSubSubtitle { get; set; }
                     public string ImportBluRaySupFile { get; set; }
