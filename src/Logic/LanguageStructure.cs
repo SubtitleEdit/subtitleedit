@@ -1409,13 +1409,22 @@
             public string NumberOfLinesX { get; set; }
             public string LengthInFormatXinCharactersY { get; set; }
             public string NumberOfCharactersInTextOnly { get; set; }
-            public string NumberOfItalicTags { get; set; }            
+            public string TotalCharsPerSecond { get; set; }
+            public string NumberOfItalicTags { get; set; }
+            public string NumberOfBoldTags { get; set; }
+            public string NumberOfUnderlineTags { get; set; }
+            public string NumberOfFontTags { get; set; }
+            public string NumberOfAlignmentTags { get; set; }
             public string LineLengthMinimum { get; set; }
             public string LineLengthMaximum { get; set; }
-            public string LineLengthAvarage{ get; set; }
+            public string LineLengthAvarage { get; set; }
+            public string LinesPerSubtitleAvarage { get; set; }
+            public string SingleLineLengthMinimum { get; set; }
+            public string SingleLineLengthMaximum { get; set; }
+            public string SingleLineLengthAvarage { get; set; }
             public string DurationMinimum { get; set; }
             public string DurationMaximum { get; set; }
-            public string DurationAvarage{ get; set; }
+            public string DurationAvarage { get; set; }
         }
 
         public class SubStationAlphaProperties

@@ -50,8 +50,12 @@ namespace Nikse.SubtitleEdit.Forms
             int minimumLineLength = 99999999;
             int maximumLineLength = 0;
             long totalLineLength = 0;
-            double minimumDuration = 0;
-            double maximumDuration = 1000000;
+            int minimumSingleLineLength = 99999999;
+            int maximumSingleLineLength = 0;
+            long totalSingleLineLength = 0;
+            long totalSingleLines = 0;
+            double minimumDuration = 100000000;
+            double maximumDuration = 0;
             double totalDuration = 0;
             foreach (Paragraph p in _subtitle.Paragraphs)
             {
@@ -66,10 +70,21 @@ namespace Nikse.SubtitleEdit.Forms
 
                 double duration = p.Duration.TotalMilliseconds;
                 if (duration < minimumDuration)
-                    minimumDuration = len;
+                    minimumDuration = duration;
                 if (duration > maximumDuration)
-                    maximumDuration = len;
+                    maximumDuration = duration;
                 totalDuration += duration;
+
+                foreach (string line in p.Text.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries))
+                {
+                    len = line.Length;
+                    if (len < minimumSingleLineLength)
+                        minimumSingleLineLength = len;
+                    if (len > maximumSingleLineLength)
+                        maximumSingleLineLength = len;
+                    totalSingleLineLength += len;
+                    totalSingleLines++;
+                }
             }
 
             var sb = new StringBuilder();
@@ -77,17 +92,30 @@ namespace Nikse.SubtitleEdit.Forms
             sb.AppendLine(string.Format(_l.NumberOfLinesX, _subtitle.Paragraphs.Count));
             sb.AppendLine(string.Format(_l.LengthInFormatXinCharactersY, _format.FriendlyName, sourceLength));
             sb.AppendLine(string.Format(_l.NumberOfCharactersInTextOnly, allText.Length));
+            sb.AppendLine(string.Format(_l.TotalCharsPerSecond, Utilities.RemoveHtmlTags(allText.ToString()).Length / (totalDuration / 1000.0)));
             sb.AppendLine(string.Format(_l.NumberOfItalicTags, Utilities.CountTagInText(allText.ToString().ToLower(), "<i>")));
+            sb.AppendLine(string.Format(_l.NumberOfBoldTags, Utilities.CountTagInText(allText.ToString().ToLower(), "<b>")));
+            sb.AppendLine(string.Format(_l.NumberOfUnderlineTags, Utilities.CountTagInText(allText.ToString().ToLower(), "<u>")));
+            sb.AppendLine(string.Format(_l.NumberOfFontTags, Utilities.CountTagInText(allText.ToString().ToLower(), "<font ")));
+            sb.AppendLine(string.Format(_l.NumberOfAlignmentTags, Utilities.CountTagInText(allText.ToString().ToLower(), "{\\a")));
             sb.AppendLine();
             sb.AppendLine(string.Format(_l.LineLengthMinimum, minimumLineLength));
             sb.AppendLine(string.Format(_l.LineLengthMaximum, maximumLineLength));
             sb.AppendLine(string.Format(_l.LineLengthAvarage, totalLineLength / _subtitle.Paragraphs.Count));
+            sb.AppendLine(string.Format(_l.LinesPerSubtitleAvarage, (((double)totalSingleLines) / _subtitle.Paragraphs.Count)));
+            sb.AppendLine();
+            sb.AppendLine(string.Format(_l.SingleLineLengthMinimum, minimumSingleLineLength));
+            sb.AppendLine(string.Format(_l.SingleLineLengthMaximum, maximumSingleLineLength));
+            sb.AppendLine(string.Format(_l.SingleLineLengthAvarage, totalSingleLineLength / totalSingleLines));
             sb.AppendLine();
             sb.AppendLine(string.Format(_l.DurationMinimum, minimumDuration / 1000.0));
-            sb.AppendLine(string.Format(_l.DurationMinimum, maximumDuration / 1000.0));
+            sb.AppendLine(string.Format(_l.DurationMaximum, maximumDuration / 1000.0));
             sb.AppendLine(string.Format(_l.DurationAvarage, totalDuration / _subtitle.Paragraphs.Count / 1000.0));
             sb.AppendLine();
-            textBoxGeneral.Text = sb.ToString();
+            textBoxGeneral.Text = sb.ToString().Trim();
+            textBoxGeneral.SelectionStart = 0;
+            textBoxGeneral.SelectionLength = 0;
+            textBoxGeneral.ScrollToCaret();
         }
 
         private void FixLargeFonts()
