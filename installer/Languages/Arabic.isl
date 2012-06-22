@@ -1,7 +1,7 @@
-; *** Inno Setup version 5.1.11+ Arabic messages ***
+; *** Inno Setup version  5.5.0+ Arabic messages ***
 ;
 ; Translated by Awadh Al-Ghaamdi (awadh_al_ghaamdi@hotmail.com)
-;   http://www.jrsoftware.org/is3rdparty.php
+;   http://www.jrsoftware.org/files/istrans/
 ;
 ; Note: When translating this text, do not add periods (.) to the end of
 ; messages that didn't have them already, because on those messages Inno
@@ -29,9 +29,9 @@ LanguageCodePage=1256
 
 ; *** Application titles
 SetupAppTitle=ÅÚÏÇÏ
-SetupWindowTitle=%1 ÊËÈíÊ
-UninstallAppTitle=ÅáÛÇÁ ÊËÈíÊ
-UninstallAppFullTitle=%1 ÅáÛÇÁ ÇáÊËÈíÊ
+SetupWindowTitle=%1 - ÊËÈíÊ
+UninstallAppTitle=ÅáÛÇÁ ÇáÊËÈíÊ
+UninstallAppFullTitle=%1 ÅáÛÇÁ ÊËÈíÊ
 
 ; *** Misc. common
 InformationTitle=ãÚáæãÇÊ
@@ -48,6 +48,10 @@ LastErrorMessage=%1.%n%nÎØÃ %2: %3
 SetupFileMissing=Çáãáİ %1 ãİŞæÏ ãä ãÌáÏ ÇáÊËÈíÊ. ÑÌÇÁ Íá ÇáãÔßáÉ Ãæ ÍÇæá ÇáÍÕæá Úáì äÓÎÉ ÌÏíÏÉ ãä ÇáÈÑäÇãÌ
 SetupFileCorrupt=ãáİÇÊ ÇáÊËÈíÊ ãÚØæÈÉ. ÇáÑÌÇÁ ÍÇæá ÇáÍÕæá Úáì äÓÎÉ ÌÏíÏÉ ãä ÇáÈÑäÇãÌ
 SetupFileCorruptOrWrongVer=ãáİÇÊ ÇáÊËÈíÊ ãÚØæÈÉ ¡ Ãæ ÛíÑ ãÊæÇİŞÉ ãÚ ÅÕÏÇÑ ÈÑäÇãÌ ÇáÊËÈíÊ ¡ ÇáÑÌÇÁ Íá ÇáãÔßáÉ Ãæ ÍÇæá ÇáÍÕæá Úáì äÓÎÉ ÌÏíÏÉ ãä ÇáÈÑäÇãÌ
+InvalidParameter=Êã ÊãÑíÑ ãÚáãÉ ÛíÑ ÕÇáÍÉ İí ÓØÑ ÇáÃæÇãÑ:%n%n%1
+SetupAlreadyRunning=ÇáÊËÈíÊ ŞíÏ ÇáÊÔÛíá ãÓÈŞÇ
+WindowsVersionNotSupported=ÇáĞí Úáì ÊÓÊÎÏãå ÇáÂä Úáì ßãÈíæÊÑß Windows åĞÇ ÇáÈÑäÇãÌ áÇ íÏÚã äæÚ äÙÇã
+WindowsServicePackRequired=Ãæ ÃÚáì %1 Service Pack %2 ÇáÈÑäÇãÌ íÊØáÈ
 NotOnThisPlatform=åĞÇ ÇáÈÑäÇãÌ áÇ íãßäå ÇáÚãá Úáì %1.
 OnlyOnThisPlatform=åĞÇ ÇáÈÑäÇãÌ íÌÈ Ãä íÚãá Úáì %1.
 OnlyOnTheseArchitectures=%n%n%1 : åĞÇ ÇáÈÑäÇãÌ íãßä İŞØ Ãä íËÈÊ Úáì äÓÎ ÇáæíäÏæÒ ÇáãÕããÉ ááåäÏÓÉ ÇáãÚãÇÑíÉ ÇáÊÇáíÉ
@@ -138,6 +142,8 @@ SelectDirDesc=¿  [name] Ãíä ÊÑíÏ Ãä íÊã ÊËÈíÊ
 SelectDirLabel3= Åáì ÇáãÌáÏ ÇáÊÇáí [name] ÓíŞæã ÇáÅÚÏÇÏ ÈÊËÈíÊ
 SelectDirBrowseLabel=ÅÖÛØ ÇáÊÇáí ááãÊÇÈÚÉ , ÅĞÇ ÊÑÛÈ ÈÊÍÏíÏ ãÌáÏ ãÎÊáİ ÅÖÛØ ÊÕİÍ
 DiskSpaceMBLabel=ÇáÈÑäÇãÌ íÊØáÈ Úáì ÇáÃŞá [mb] ãíŞÇ ÈÇíÊ ãä ãÓÇÍÉ ÇáÊÎÒíä.
+CannotInstallToNetworkDrive=áÇ íãßä áÈÑäÇãÌ ÇáÅÚÏÇÏ ÇáÊËÈíÊ Åáì ãÍÑß ÃŞÑÇÕ ÇáÔÈßÉ
+CannotInstallToUNCPath=UNC áÇ íãßä áÈÑäÇãÌ ÇáÅÚÏÇÏ ÇáÊËÈíÊ Åáì ãÓÇÑ
 InvalidPath=íÌÈ Ãä ÊÏÎá ãÓÇÑ ßÇãá ãÚ ÇÓã ÇáŞÑÕ; ãËá:%n%nC:\APP%n%n
 InvalidDrive=ÇáŞÑÕ Ãæ ÇáÜ UNC ÇáĞí ÍÏÏÊ áíÓ ãæÌæÏÇ Ãæ áÇ íãßä ÇáæÕæá Åáíå. ÇáÑÌÇÁ ÊÍÏíÏ ÛíÑå
 DiskSpaceWarningTitle=áÇ íæÌÏ ãÓÇÍÉ ÊÎÒíä ßÇİíÉ
@@ -172,7 +178,7 @@ SelectTasksLabel2=Ëã ÅÖÛØ ÇáÊÇáí [name] ÍÏÏ ØáÈÇÊß ãä
 ; *** "Select Start Menu Folder" wizard page
 WizardSelectProgramGroup=ÊÍÏíÏ ãÌáÏ ŞÇÆãÉ ÇÈÏÃ
 SelectStartMenuFolderDesc=Ãíä íÌÈ æÖÚ ÇÎÊÕÇÑ ááÈÑäÇãÌ¿
-SelectStartMenuFolderLabel3=ÓíŞæã ÇáÅÚÏÇÏ ÈÅäÔÇÁ ÅÎÊÕÇÑ ááÈÑäÇãÌ İí ãÌáÏ ŞÇÆãÉ ÇÈÏÃ ÇáÊÇáí
+SelectStartMenuFolderLabel3=ÓíŞæã ÇáÊËÈíÊ ÈÅäÔÇÁ ÅÎÊÕÇÑ ááÈÑäÇãÌ İí ãÌáÏ ŞÇÆãÉ ÇÈÏÃ ÇáÊÇáí
 SelectStartMenuFolderBrowseLabel=ÅÖÛØ ÇáÊÇáí ááãÊÇÈÚÉ , ÅĞÇ ÊÑÛÈ ÈÊÍÏíÏ ãÌáÏ ãÎÊáİ ÅÖÛØ ÊÕİÍ
 MustEnterGroupName=íÌÈ ÅÏÎÇá ÇÓã ÇáãÌáÏ
 GroupNameTooLong=ÅÓã ÇáãÌáÏ Ãæ ÇáãÓÇÑ Øæíá ÌÏÇ
@@ -195,8 +201,12 @@ ReadyMemoTasks=ÇáÚãáíÇÊ ÇáÅÖÇİíÉ:
 ; *** "Preparing to Install" wizard page
 WizardPreparing=ÇáÅÓÊÚÏÇÏ ááÊËÈíÊ
 PreparingDesc=İí ßãÈíæÊÑß  [name] íŞæã ÇáÅÚÏÇÏ ÈÊÌåíÒ ÊËÈíÊ
-PreviousInstallNotCompleted=ÊËÈíÊ Ãæ ÅÒÇáÉ ÈÑäÇãÌ ãÇ ÓÇÈŞ áóã íßÊãá . ÊóÍÊÇÌ áÅÚÇÏÉ ÊÔÛíá ÇáßãÈíæÊÑ áÅßãÇá Ğáß ÇáÊËÈíÊ%n%n[name] ÈÚÏ ÅÚÇÏÉ ÇáÊÔÛíá  ¡ ÔÛøá ÇáÅÚÏÇÏ ãóÑÉ ËÇäíÉ  áÅßãÇá ÊËÈíÊ
+PreviousInstallNotCompleted=áã íÊã ÅßãÇá ÊËÈíÊ Ãæ ÅÒÇáÉ ÃÍÏ ÇáÈÑÇãÌ ÇáÓÇÈŞÉ. ÃäÊ ÊÍÊÇÌ Åáì ÅÚÇÏÉ ÊÔÛíá ÇáßãÈíæÊÑ áÅßãÇá ÚãáíÉ ÇáÊËÈíÊ Ãæ ÇáÅÒÇáÉ ÇáÓÇÈŞÉ%n%n[name] ÈÚÏ ÅÚÇÏÉ ÊÔÛíá ÇáßãÈíæÊÑ¡ Şã ÈÅÚÇÏÉ ÊËÈíÊ
 CannotContinue=ÇáÅÚÏÇÏ áÇ íóÓÊØíÚ ÇáÅÓÊãÑÇÑ . ÇáÑÌÇÁ ÅÖÛØ ÅáÛÇÁ ÇáÃãÑ ááÎõÑõæÌ
+ApplicationsFound=ÇáÊØÈíŞÇÊ ÇáÊÇáíÉ ÊÓÊÎÏã ãáİÇÊ ÈÍÇÌÉ Åáì ÊÍÏíËåÇ ÈæÇÓØÉ ÈÑäÇãÌ ÇáÊËÈíÊ. íÓÊÍÓä ÇáÓãÇÍ áÈÑäÇãÌ ÇáÊËÈíÊ ÈÅÛáÇŞ åĞå ÇáÊØÈíŞÇÊ ÊáŞÇÆíÇ
+ApplicationsFound2=ÇáÊØÈíŞÇÊ ÇáÊÇáíÉ ÊÓÊÎÏã ãáİÇÊ ÈÍÇÌÉ Åáì ÊÍÏíËåÇ ÈæÇÓØÉ ÈÑäÇãÌ ÇáÊËÈíÊ. íÓÊÍÓä ÇáÓãÇÍ áÈÑäÇãÌ ÇáÊËÈíÊ ÈÅÛáÇŞ åĞå ÇáÊØÈíŞÇÊ ÊáŞÇÆíÇ æ ÈÚÏ ÇßÊãÇá ÚãáíÉ ÇáÊËÈíÊ¡ ÓíÍÇæá ÈÑäÇãÌ ÇáÊËÈíÊ ÅÚÇÏÉ ÊÔÛíá ÇáÊØÈíŞÇÊ
+CloseApplications=Å&ÛáÇŞ ÇáÊØÈíŞÇÊ ÊáŞÇÆíÇ
+DontCloseApplications=&ÛÏã ÅÛáÇŞ ÇáÊØÈíŞÇÊ
 
 ; *** "Installing" wizard page
 WizardInstalling=ÊÊã ÚãáíÉ ÇáÊËÈíÊ
@@ -229,6 +239,7 @@ SetupAborted=ÚãáíÉ ÇáÊËÈíÊ áã ÊßÊãá%n%nÇáÑÌÇÁ Íá ÇáãÔßáÉ Ëã ÇÚÇÏÉ ÊÔÛíá ÇáÊËÈíÊ 
 EntryAbortRetryIgnore=ÅÖÛØ ÅÚÇÏÉ ááãÍÇæáÉ ãÑÉ ÃÎÑì ¡ ÊÌÇåá ááãæÇÕáÉ Úáì Ãí ÍÇá Ãæ ÊæŞİ áÅáÛÇÁ ÚãáíÉ ÇáÊËÈíÊ
 
 ; *** Installation status messages
+StatusClosingApplications=...íÊã ÅÛáÇŞ ÇáÊØÈíŞÇÊ
 StatusCreateDirs=ÅäÔÇÁ ÇáãÌáÏÇÊ...
 StatusExtractFiles=İß ÖÛØ ÇáãáİÇÊ...
 StatusCreateIcons=ÅäÔÇÁ ÃíŞæäÇÊ ÇáÈÑäÇãÌ...
@@ -237,6 +248,7 @@ StatusCreateRegistryEntries=ÅäÔÇÁ ãÏÎáÇÊ ãáİ ÇáÊÓÌíá...
 StatusRegisterFiles=ÊÓÌíá ÇáãáİÇÊ...
 StatusSavingUninstall=ÍİÙ ãÚáæãÇÊ ÅáÛÇÁ ÇáÊËÈíÊ...
 StatusRunProgram=ÅäåÇÁ ÚãáíÉ ÇáÊËÈíÊ...
+StatusRestartingApplications=...íÊã ÅÚÇÏÉ ÊÔÛíá ÇáÊØÈíŞÇÊ
 StatusRollback=ÅÑÌÇÚ ÇáÊÛííÑÇÊ...
 
 ; *** Misc. errors
@@ -300,6 +312,10 @@ SharedFileLocationLabel=ÇáãßÇä:
 WizardUninstalling=ÍÇáÉ ÅáÛÇÁ ÇáÊËÈíÊ
 StatusUninstalling=ÅáÛÇÁ ÊËÈíÊ %1...
 
+; *** Shutdown block reasons
+ShutdownBlockReasonInstallingApp=ÊËÈíÊ %1
+ShutdownBlockReasonUninstallingApp=ÅáÛÇÁ ÊËÈíÊ %1
+
 ; The custom messages below aren't used by Setup itself, but if you make
 ; use of them in your scripts, you'll want to translate them.
 
@@ -314,3 +330,6 @@ UninstallProgram=%1 ÅáÛÇÁ ÊËÈíÊ
 LaunchProgram=%1 ÊÔÛíá
 AssocFileExtension=ÅÔÑÇß %1 ãÚ ÅãÊÏÇÏ ãáİ %2
 AssocingFileExtension=íÊã ÅÔÑÇß %1 ãÚ ÅãÊÏÇÏ ãáİ %2 ...
+AutoStartProgramGroupDescription=ÈÏÁ ÇáÊÔÛíá:
+AutoStartProgram=ÊÔÛíá %1 ÊáŞÇÆíÇ
+AddonHostProgramNotFound=ÊÚĞÑ ÇáÚËæÑ Úáì %1 İí ÇáãÌáÏ ÇáĞí ŞãÊ ÈÊÍÏíÏå%n%nåá ÊÑíÏ ÇáãÊÇÈÚÉ Úáì Ãí ÍÇá ¿

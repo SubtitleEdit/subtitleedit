@@ -154,7 +154,7 @@ Name: custom;             Description: {cm:types_custom}; Flags: iscustom
 [Components]
 Name: main;               Description: Subtitle Edit {#app_ver}; Types: default custom; Flags: fixed
 #ifdef localize
-Name: translations;       Description: {cm:comp_translations};       Types: default custom; Flags: disablenouninstallwarning
+Name: translations;       Description: {cm:comp_translations};   Types: default custom; Flags: disablenouninstallwarning
 #endif
 
 [Tasks]

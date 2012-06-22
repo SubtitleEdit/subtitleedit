@@ -157,7 +157,7 @@ dk.types_custom=Brugerdefineret installation
 dk.types_default=Default installation
 
 
-;Greek
+; Greek
 el.comp_translations=Μεταφράσεις
 el.msg_AppIsRunning=Η εγκατάσταση εντόπισε ότι εκτελείται η εφαρμογή Subtitle Edit.%n%nΠαρακαλώ κλείστε την εφαρμογή τώρα και πατήστε Εντάξει για να συνεχίσετε, ή Άκυρο για έξοδο.
 el.msg_AppIsRunningUninstall=Η απεγκατάσταση εντόπισε ότι εκτελείται η εφαρμογή Subtitle Edit.%n%nΠαρακαλώ κλείστε την εφαρμογή τώρα και πατήστε Εντάξει για να συνεχίσετε, ή Άκυρο για έξοδο.
