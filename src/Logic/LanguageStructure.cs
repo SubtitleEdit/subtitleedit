@@ -1050,6 +1050,12 @@
             public string Update { get; set; }
             public string Enabled { get; set; }
             public string SearchType { get; set; }
+            public string RemoveAll { get; set; }
+            public string Import { get; set; }
+            public string Export { get; set; }
+            public string ImportRulesTitle { get; set; }
+            public string ExportRulesTitle { get; set; }
+            public string Rules { get; set; }
         }
 
         public class NetworkChat

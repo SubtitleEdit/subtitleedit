@@ -38,6 +38,8 @@
             this.columnHeader7 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader8 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.groupBoxReplaces = new System.Windows.Forms.GroupBox();
+            this.buttonExport = new System.Windows.Forms.Button();
+            this.buttonImport = new System.Windows.Forms.Button();
             this.textBoxFind = new System.Windows.Forms.TextBox();
             this.textBoxReplace = new System.Windows.Forms.TextBox();
             this.buttonUpdate = new System.Windows.Forms.Button();
@@ -59,6 +61,9 @@
             this.buttonOK = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
+            this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
+            this.buttonRemoveAll = new System.Windows.Forms.Button();
             this.groupBoxLinesFound.SuspendLayout();
             this.groupBoxReplaces.SuspendLayout();
             this.contextMenuStrip1.SuspendLayout();
@@ -75,9 +80,9 @@
             this.groupBoxLinesFound.Controls.Add(this.buttonReplacesInverseSelection);
             this.groupBoxLinesFound.Controls.Add(this.buttonReplacesSelectAll);
             this.groupBoxLinesFound.Controls.Add(this.listViewFixes);
-            this.groupBoxLinesFound.Location = new System.Drawing.Point(4, 3);
+            this.groupBoxLinesFound.Location = new System.Drawing.Point(4, 14);
             this.groupBoxLinesFound.Name = "groupBoxLinesFound";
-            this.groupBoxLinesFound.Size = new System.Drawing.Size(926, 315);
+            this.groupBoxLinesFound.Size = new System.Drawing.Size(926, 289);
             this.groupBoxLinesFound.TabIndex = 8;
             this.groupBoxLinesFound.TabStop = false;
             this.groupBoxLinesFound.Text = "Lines found: {0}";
@@ -86,7 +91,7 @@
             // 
             this.buttonReplacesInverseSelection.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.buttonReplacesInverseSelection.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonReplacesInverseSelection.Location = new System.Drawing.Point(91, 287);
+            this.buttonReplacesInverseSelection.Location = new System.Drawing.Point(91, 261);
             this.buttonReplacesInverseSelection.Name = "buttonReplacesInverseSelection";
             this.buttonReplacesInverseSelection.Size = new System.Drawing.Size(100, 21);
             this.buttonReplacesInverseSelection.TabIndex = 106;
@@ -98,7 +103,7 @@
             // 
             this.buttonReplacesSelectAll.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.buttonReplacesSelectAll.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonReplacesSelectAll.Location = new System.Drawing.Point(10, 287);
+            this.buttonReplacesSelectAll.Location = new System.Drawing.Point(10, 261);
             this.buttonReplacesSelectAll.Name = "buttonReplacesSelectAll";
             this.buttonReplacesSelectAll.Size = new System.Drawing.Size(75, 21);
             this.buttonReplacesSelectAll.TabIndex = 105;
@@ -121,7 +126,7 @@
             this.listViewFixes.HideSelection = false;
             this.listViewFixes.Location = new System.Drawing.Point(10, 21);
             this.listViewFixes.Name = "listViewFixes";
-            this.listViewFixes.Size = new System.Drawing.Size(910, 260);
+            this.listViewFixes.Size = new System.Drawing.Size(910, 234);
             this.listViewFixes.TabIndex = 9;
             this.listViewFixes.UseCompatibleStateImageBehavior = false;
             this.listViewFixes.View = System.Windows.Forms.View.Details;
@@ -151,6 +156,9 @@
             this.groupBoxReplaces.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxReplaces.Controls.Add(this.buttonRemoveAll);
+            this.groupBoxReplaces.Controls.Add(this.buttonExport);
+            this.groupBoxReplaces.Controls.Add(this.buttonImport);
             this.groupBoxReplaces.Controls.Add(this.textBoxFind);
             this.groupBoxReplaces.Controls.Add(this.textBoxReplace);
             this.groupBoxReplaces.Controls.Add(this.buttonUpdate);
@@ -163,23 +171,45 @@
             this.groupBoxReplaces.Controls.Add(this.listViewReplaceList);
             this.groupBoxReplaces.Location = new System.Drawing.Point(8, 3);
             this.groupBoxReplaces.Name = "groupBoxReplaces";
-            this.groupBoxReplaces.Size = new System.Drawing.Size(922, 297);
+            this.groupBoxReplaces.Size = new System.Drawing.Size(922, 312);
             this.groupBoxReplaces.TabIndex = 0;
             this.groupBoxReplaces.TabStop = false;
+            // 
+            // buttonExport
+            // 
+            this.buttonExport.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonExport.Location = new System.Drawing.Point(793, 285);
+            this.buttonExport.Name = "buttonExport";
+            this.buttonExport.Size = new System.Drawing.Size(120, 21);
+            this.buttonExport.TabIndex = 7;
+            this.buttonExport.Text = "Export...";
+            this.buttonExport.UseVisualStyleBackColor = true;
+            this.buttonExport.Click += new System.EventHandler(this.ExportClick);
+            // 
+            // buttonImport
+            // 
+            this.buttonImport.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonImport.Location = new System.Drawing.Point(667, 285);
+            this.buttonImport.Name = "buttonImport";
+            this.buttonImport.Size = new System.Drawing.Size(120, 21);
+            this.buttonImport.TabIndex = 6;
+            this.buttonImport.Text = "Import...";
+            this.buttonImport.UseVisualStyleBackColor = true;
+            this.buttonImport.Click += new System.EventHandler(this.buttonOpen_Click);
             // 
             // textBoxFind
             // 
             this.textBoxFind.Location = new System.Drawing.Point(20, 35);
             this.textBoxFind.Name = "textBoxFind";
             this.textBoxFind.Size = new System.Drawing.Size(224, 21);
-            this.textBoxFind.TabIndex = 1;
+            this.textBoxFind.TabIndex = 0;
             // 
             // textBoxReplace
             // 
             this.textBoxReplace.Location = new System.Drawing.Point(250, 35);
             this.textBoxReplace.Name = "textBoxReplace";
             this.textBoxReplace.Size = new System.Drawing.Size(227, 21);
-            this.textBoxReplace.TabIndex = 2;
+            this.textBoxReplace.TabIndex = 1;
             this.textBoxReplace.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxReplaceKeyDown);
             // 
             // buttonUpdate
@@ -187,7 +217,7 @@
             this.buttonUpdate.Location = new System.Drawing.Point(588, 35);
             this.buttonUpdate.Name = "buttonUpdate";
             this.buttonUpdate.Size = new System.Drawing.Size(99, 21);
-            this.buttonUpdate.TabIndex = 23;
+            this.buttonUpdate.TabIndex = 3;
             this.buttonUpdate.Text = "&Update";
             this.buttonUpdate.UseVisualStyleBackColor = true;
             this.buttonUpdate.Click += new System.EventHandler(this.ButtonUpdateClick);
@@ -197,7 +227,7 @@
             this.buttonAdd.Location = new System.Drawing.Point(483, 35);
             this.buttonAdd.Name = "buttonAdd";
             this.buttonAdd.Size = new System.Drawing.Size(99, 21);
-            this.buttonAdd.TabIndex = 3;
+            this.buttonAdd.TabIndex = 2;
             this.buttonAdd.Text = "&Add";
             this.buttonAdd.UseVisualStyleBackColor = true;
             this.buttonAdd.Click += new System.EventHandler(this.ButtonAddClick);
@@ -225,7 +255,7 @@
             this.radioButtonRegEx.AutoSize = true;
             this.radioButtonRegEx.Location = new System.Drawing.Point(286, 62);
             this.radioButtonRegEx.Name = "radioButtonRegEx";
-            this.radioButtonRegEx.Size = new System.Drawing.Size(57, 17);
+            this.radioButtonRegEx.Size = new System.Drawing.Size(56, 17);
             this.radioButtonRegEx.TabIndex = 6;
             this.radioButtonRegEx.Text = "RegEx";
             this.radioButtonRegEx.UseVisualStyleBackColor = true;
@@ -236,7 +266,7 @@
             this.radioButtonCaseSensitive.AutoSize = true;
             this.radioButtonCaseSensitive.Location = new System.Drawing.Point(146, 62);
             this.radioButtonCaseSensitive.Name = "radioButtonCaseSensitive";
-            this.radioButtonCaseSensitive.Size = new System.Drawing.Size(93, 17);
+            this.radioButtonCaseSensitive.Size = new System.Drawing.Size(94, 17);
             this.radioButtonCaseSensitive.TabIndex = 5;
             this.radioButtonCaseSensitive.Text = "Case sensitive";
             this.radioButtonCaseSensitive.UseVisualStyleBackColor = true;
@@ -271,8 +301,8 @@
             this.listViewReplaceList.HideSelection = false;
             this.listViewReplaceList.Location = new System.Drawing.Point(6, 96);
             this.listViewReplaceList.Name = "listViewReplaceList";
-            this.listViewReplaceList.Size = new System.Drawing.Size(910, 195);
-            this.listViewReplaceList.TabIndex = 7;
+            this.listViewReplaceList.Size = new System.Drawing.Size(910, 183);
+            this.listViewReplaceList.TabIndex = 4;
             this.listViewReplaceList.UseCompatibleStateImageBehavior = false;
             this.listViewReplaceList.View = System.Windows.Forms.View.Details;
             this.listViewReplaceList.ItemChecked += new System.Windows.Forms.ItemCheckedEventHandler(this.ListViewReplaceListItemChecked);
@@ -333,7 +363,7 @@
             // buttonOK
             // 
             this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonOK.Location = new System.Drawing.Point(768, 323);
+            this.buttonOK.Location = new System.Drawing.Point(768, 308);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 21);
             this.buttonOK.TabIndex = 10;
@@ -345,7 +375,7 @@
             // 
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.buttonCancel.Location = new System.Drawing.Point(849, 323);
+            this.buttonCancel.Location = new System.Drawing.Point(849, 308);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 21);
             this.buttonCancel.TabIndex = 11;
@@ -369,8 +399,23 @@
             this.splitContainer1.Panel2.Controls.Add(this.buttonOK);
             this.splitContainer1.Panel2.Controls.Add(this.buttonCancel);
             this.splitContainer1.Size = new System.Drawing.Size(933, 667);
-            this.splitContainer1.SplitterDistance = 303;
+            this.splitContainer1.SplitterDistance = 318;
             this.splitContainer1.TabIndex = 12;
+            // 
+            // openFileDialog1
+            // 
+            this.openFileDialog1.FileName = "openFileDialog1";
+            // 
+            // buttonRemoveAll
+            // 
+            this.buttonRemoveAll.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonRemoveAll.Location = new System.Drawing.Point(541, 285);
+            this.buttonRemoveAll.Name = "buttonRemoveAll";
+            this.buttonRemoveAll.Size = new System.Drawing.Size(120, 21);
+            this.buttonRemoveAll.TabIndex = 5;
+            this.buttonRemoveAll.Text = "Remove all";
+            this.buttonRemoveAll.UseVisualStyleBackColor = true;
+            this.buttonRemoveAll.Click += new System.EventHandler(this.buttonRemoveAll_Click);
             // 
             // MultipleReplace
             // 
@@ -431,5 +476,10 @@
         private System.Windows.Forms.Button buttonReplacesInverseSelection;
         private System.Windows.Forms.ToolStripMenuItem moveUpToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem moveDownToolStripMenuItem;
+        private System.Windows.Forms.Button buttonExport;
+        private System.Windows.Forms.Button buttonImport;
+        private System.Windows.Forms.OpenFileDialog openFileDialog1;
+        private System.Windows.Forms.SaveFileDialog saveFileDialog1;
+        private System.Windows.Forms.Button buttonRemoveAll;
     }
 }
