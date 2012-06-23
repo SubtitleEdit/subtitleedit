@@ -103,13 +103,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 subtitle.Paragraphs.Add(_paragraph);
 
             foreach (Paragraph p in subtitle.Paragraphs)
-            {
                 p.Text = p.Text.Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine);
-                p.Text = p.Text.Replace("<32>", "<i>").Replace("</32>", "</i>"); // .wsrt - music or similar?
-                p.Text = p.Text.Replace("<33>", "<i>").Replace("</33>", "</i>"); // .wsrt - speaker
-                p.Text = p.Text.Replace("<35>", "[").Replace("</35>", "]"); // .wsrt - text for HI
-                p.Text = p.Text.Replace("<36>", "").Replace("</36>", ""); // .wsrt - shouting
-            }
 
             if (doRenum)
                 subtitle.Renumber(1);

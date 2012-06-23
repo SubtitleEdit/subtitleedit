@@ -9162,6 +9162,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             var multipleReplace = new MultipleReplace();
             multipleReplace.Initialize(_subtitle);
+            _formPositionsAndSizes.SetPositionAndSize(multipleReplace);
             if (multipleReplace.ShowDialog(this) == DialogResult.OK)
             {
                 MakeHistoryForUndo(_language.BeforeMultipleReplace);
@@ -9178,6 +9179,7 @@ namespace Nikse.SubtitleEdit.Forms
                 ShowSource();
                 ShowStatus(string.Format(_language.NumberOfLinesReplacedX , multipleReplace.FixCount));
             }
+            _formPositionsAndSizes.SavePositionAndSize(multipleReplace);
         }
 
         private void ToolStripMenuItemImportDvdSubtitlesClick(object sender, EventArgs e)

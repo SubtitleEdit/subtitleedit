@@ -1089,9 +1089,9 @@ namespace Nikse.SubtitleEdit.Logic
                 Title = "Multiple replace",
                 FindWhat = "Find what",
                 ReplaceWith = "Replace with",
-                Normal = "&Normal",
-                CaseSensitive = "&Case sensitive",
-                RegularExpression = "Regular e&xpression",
+                Normal = "Normal",
+                CaseSensitive = "Case sensitive",
+                RegularExpression = "Regular expression",
                 LineNumber = "Line#",
                 Before = "Before",
                 After = "After",
@@ -1101,6 +1101,12 @@ namespace Nikse.SubtitleEdit.Logic
                 Update = "&Update",
                 Enabled = "Enabled",
                 SearchType = "Search type",
+                RemoveAll = "Remove all",
+                Import = "Import...",
+                Export = "Export...",
+                ImportRulesTitle = "Import replace rule(s) from...",
+                ExportRulesTitle = "Export replace rule(s) to...",
+                Rules = "Export rules",
             };
 
             NetworkChat = new LanguageStructure.NetworkChat

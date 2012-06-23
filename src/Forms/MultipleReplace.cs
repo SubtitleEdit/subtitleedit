@@ -4,6 +4,7 @@ using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Logic;
 using System.Drawing;
+using System.Xml;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -20,6 +21,9 @@ namespace Nikse.SubtitleEdit.Forms
         public MultipleReplace()
         {
             InitializeComponent();
+
+            openFileDialog1.FileName = string.Empty;
+            saveFileDialog1.FileName = string.Empty;
 
             textBoxReplace.ContextMenu = FindReplaceDialogHelper.GetReplaceTextContextMenu(textBoxReplace);
             buttonUpdate.Enabled = false;
@@ -42,6 +46,9 @@ namespace Nikse.SubtitleEdit.Forms
             listViewFixes.Columns[2].Text = Configuration.Settings.Language.MultipleReplace.Before;
             listViewFixes.Columns[3].Text = Configuration.Settings.Language.MultipleReplace.After;
             deleteToolStripMenuItem.Text = Configuration.Settings.Language.MultipleReplace.Delete;
+            buttonRemoveAll.Text = Configuration.Settings.Language.MultipleReplace.RemoveAll;
+            buttonImport.Text = Configuration.Settings.Language.MultipleReplace.Import;
+            buttonExport.Text = Configuration.Settings.Language.MultipleReplace.Export;
             buttonOK.Text = Configuration.Settings.Language.General.OK;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
             buttonReplacesSelectAll.Text = Configuration.Settings.Language.FixCommonErrors.SelectAll;
@@ -430,6 +437,85 @@ namespace Nikse.SubtitleEdit.Forms
 
             SwapReplaceList(index, index + 1);
         }
+
+        private void ExportClick(object sender, EventArgs e)
+        {
+            if (listViewReplaceList.Items.Count == 0)
+                return;
+
+            saveFileDialog1.Title = Configuration.Settings.Language.MultipleReplace.ImportRulesTitle;
+            saveFileDialog1.Filter = Configuration.Settings.Language.MultipleReplace.Rules + "|*.template";
+            if (saveFileDialog1.ShowDialog(this) == DialogResult.OK)
+            {
+                SaveReplaceList(false);
+
+                var textWriter = new XmlTextWriter(saveFileDialog1.FileName, null) { Formatting = Formatting.Indented };
+                textWriter.WriteStartDocument();
+                textWriter.WriteStartElement("Settings", "");
+                textWriter.WriteStartElement("MultipleSearchAndReplaceList", "");
+                foreach (var item in Configuration.Settings.MultipleSearchAndReplaceList)
+                {
+                    textWriter.WriteStartElement("MultipleSearchAndReplaceItem", "");
+                    textWriter.WriteElementString("Enabled", item.Enabled.ToString());
+                    textWriter.WriteElementString("FindWhat", item.FindWhat);
+                    textWriter.WriteElementString("ReplaceWith", item.ReplaceWith);
+                    textWriter.WriteElementString("SearchType", item.SearchType);
+                    textWriter.WriteEndElement();
+                }
+                textWriter.WriteEndElement();
+                textWriter.WriteEndElement();
+                textWriter.WriteEndDocument();
+                textWriter.Close();
+            }
+        }
+
+        private void buttonOpen_Click(object sender, EventArgs e)
+        {
+            openFileDialog1.Title = Configuration.Settings.Language.MultipleReplace.ImportRulesTitle;
+            openFileDialog1.Filter = Configuration.Settings.Language.MultipleReplace.Rules + "|*.template";
+            if (openFileDialog1.ShowDialog(this) == DialogResult.OK)
+            {
+                var doc = new XmlDocument();
+                try
+                {
+                    doc.Load(openFileDialog1.FileName);
+                }
+                catch (Exception exception)
+                {
+                    MessageBox.Show(exception.Message);
+                    return;
+                }
+
+                foreach (XmlNode listNode in doc.DocumentElement.SelectNodes("MultipleSearchAndReplaceList/MultipleSearchAndReplaceItem"))
+                {
+                    MultipleSearchAndReplaceSetting item = new MultipleSearchAndReplaceSetting();
+                    XmlNode subNode = listNode.SelectSingleNode("Enabled");
+                    if (subNode != null)
+                        item.Enabled = Convert.ToBoolean(subNode.InnerText);
+                    subNode = listNode.SelectSingleNode("FindWhat");
+                    if (subNode != null)
+                        item.FindWhat = subNode.InnerText;
+                    subNode = listNode.SelectSingleNode("ReplaceWith");
+                    if (subNode != null)
+                        item.ReplaceWith = subNode.InnerText;
+                    subNode = listNode.SelectSingleNode("SearchType");
+                    if (subNode != null)
+                        item.SearchType = subNode.InnerText;
+                    Configuration.Settings.MultipleSearchAndReplaceList.Add(item);
+                }
+
+                listViewReplaceList.Items.Clear();
+                foreach (var item in Configuration.Settings.MultipleSearchAndReplaceList)
+                    AddToReplaceListView(item.Enabled, item.FindWhat, item.ReplaceWith, EnglishSearchTypeToLocal(item.SearchType));
+                GeneratePreview();
+            }
+        }
+
+        private void buttonRemoveAll_Click(object sender, EventArgs e)
+        {
+            listViewReplaceList.Items.Clear();
+        }
+
 
     }
 }
