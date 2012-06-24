@@ -133,7 +133,7 @@ namespace Nikse.SubtitleEdit.Controls
 
                         int milliSeconds = 0;
                         if (Utilities.IsInteger(times[3]))
-                            milliSeconds = int.Parse(times[3]);
+                            milliSeconds = int.Parse(times[3].PadRight(3, '0'));
 
                         return new TimeCode(hours, minutes, seconds, milliSeconds);
                     }
