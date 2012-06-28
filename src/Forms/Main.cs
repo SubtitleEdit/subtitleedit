@@ -10804,6 +10804,15 @@ namespace Nikse.SubtitleEdit.Forms
                 toolStripMenuItemSubStationAlpha.Visible = false;
             }
 
+            if (format.GetType() == typeof(DCSubtitle) || format.GetType() == typeof(DCinemaSmpte))
+            {
+                toolStripMenuItemDCinemaProperties.Visible = true;
+            }
+            else
+            {
+                toolStripMenuItemDCinemaProperties.Visible = false;
+            }
+
             toolStripSeparator20.Visible = subtitleLoaded;
         }
 
@@ -14402,6 +14411,24 @@ namespace Nikse.SubtitleEdit.Forms
             _formPositionsAndSizes.SetPositionAndSize(stats);
             stats.ShowDialog(this);
             _formPositionsAndSizes.SavePositionAndSize(stats);
+        }
+
+        private void toolStripMenuItemDCinemaProperties_Click(object sender, EventArgs e)
+        {
+            if (GetCurrentSubtitleFormat().GetType() == typeof(DCSubtitle))
+            {
+                var properties = new DCinemaPropertiesInterop(_subtitle, _videoFileName);
+                _formPositionsAndSizes.SetPositionAndSize(properties, true);
+                properties.ShowDialog(this);
+                _formPositionsAndSizes.SavePositionAndSize(properties);
+            }
+            else
+            {
+                var properties = new DCinemaPropertiesSmpte(_subtitle, _videoFileName);
+                _formPositionsAndSizes.SetPositionAndSize(properties, true);
+                properties.ShowDialog(this);
+                _formPositionsAndSizes.SavePositionAndSize(properties);
+            }
         }
 
     }

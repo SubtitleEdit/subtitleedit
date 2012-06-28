@@ -381,6 +381,7 @@
             this.imageListPlayRate = new System.Windows.Forms.ImageList(this.components);
             this.timerTextUndo = new System.Windows.Forms.Timer(this.components);
             this.timerAlternateTextUndo = new System.Windows.Forms.Timer(this.components);
+            this.toolStripMenuItemDCinemaProperties = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
@@ -776,6 +777,7 @@
             this.saveToolStripMenuItem,
             this.saveAsToolStripMenuItem,
             this.toolStripMenuItemRestoreAutoBackup,
+            this.toolStripMenuItemDCinemaProperties,
             this.toolStripMenuItemSubStationAlpha,
             this.toolStripSeparator20,
             this.openOriginalToolStripMenuItem,
@@ -3768,6 +3770,13 @@
             this.timerAlternateTextUndo.Interval = 700;
             this.timerAlternateTextUndo.Tick += new System.EventHandler(this.TimerAlternateTextUndoTick);
             // 
+            // toolStripMenuItemDCinemaProperties
+            // 
+            this.toolStripMenuItemDCinemaProperties.Name = "toolStripMenuItemDCinemaProperties";
+            this.toolStripMenuItemDCinemaProperties.Size = new System.Drawing.Size(334, 22);
+            this.toolStripMenuItemDCinemaProperties.Text = "DCinema properties...";
+            this.toolStripMenuItemDCinemaProperties.Click += new System.EventHandler(this.toolStripMenuItemDCinemaProperties_Click);
+            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -4196,6 +4205,7 @@
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemAlignment;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemRestoreAutoBackup;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemStatistics;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemDCinemaProperties;
     }
 }
 

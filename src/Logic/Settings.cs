@@ -152,15 +152,52 @@ namespace Nikse.SubtitleEdit.Logic
         public int DCinemaBottomMargin { get; set; }
         public int DCinemaFadeUpDownTime { get; set; }
 
+        public string CurrentDCinemaSubtitleId { get; set; }
+        public string CurrentDCinemaMovieTitle { get; set; }
+        public string CurrentDCinemaReelNumber { get; set; }
+        public string CurrentDCinemaIssueDate { get; set; }
+        public string CurrentDCinemaLanguage { get; set; }
+        public string CurrentDCinemaEditRate { get; set; }
+        public string CurrentDCinemaFontId { get; set; }
+        public string CurrentDCinemaFontUri { get; set; }
+        public Color CurrentDCinemaFontColor { get; set; }
+        public string CurrentDCinemaFontEffect { get; set; }
+        public Color CurrentDCinemaFontEffectColor { get; set; }
+        public int CurrentDCinemaFontSize { get; set; }
+
         public SubtitleSettings()
         {
             SsaFontName = "Arial";
             SsaFontSize = 20;
             SsaFontColorArgb = System.Drawing.Color.FromArgb(255, 255, 255).ToArgb();
+            
             DCinemaFontFile = "Arial.ttf";
             DCinemaFontSize = 42;
             DCinemaBottomMargin = 8;
             DCinemaFadeUpDownTime = 5;
+        }
+
+        public void InitializeDCinameSettings(bool smpte)
+        {
+            if (smpte)
+            {
+                CurrentDCinemaSubtitleId = "urn:uuid:40950d85-63eb-4ee2-b1e8-45c126601b94";
+                CurrentDCinemaLanguage = "en";
+            }
+            else
+            {
+                CurrentDCinemaSubtitleId = "40950d85-63eb-4ee2-b1e8-45c126601b94";
+                CurrentDCinemaLanguage = "English";
+            }
+            CurrentDCinemaIssueDate = DateTime.Now.ToString("s") + ".000-00:00";
+            CurrentDCinemaMovieTitle = "title";
+            CurrentDCinemaReelNumber = "1";
+            CurrentDCinemaFontId = "Arial";
+            CurrentDCinemaFontUri = DCinemaFontFile;
+            CurrentDCinemaFontColor = Color.White;
+            CurrentDCinemaFontEffect = "border";
+            CurrentDCinemaFontEffectColor = Color.Black;
+            CurrentDCinemaFontSize = DCinemaFontSize;
         }
     }
 

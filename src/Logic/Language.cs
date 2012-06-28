@@ -23,6 +23,7 @@ namespace Nikse.SubtitleEdit.Logic
         public LanguageStructure.ChooseEncoding ChooseEncoding;
         public LanguageStructure.ChooseLanguage ChooseLanguage;
         public LanguageStructure.CompareSubtitles CompareSubtitles;
+        public LanguageStructure.DCinemaProperties DCinemaProperties;
         public LanguageStructure.DvdSubRip DvdSubrip;
         public LanguageStructure.DvdSubRipChooseLanguage DvdSubRipChooseLanguage;
         public LanguageStructure.EbuSaveOtpions EbuSaveOtpions;
@@ -261,6 +262,28 @@ namespace Nikse.SubtitleEdit.Logic
                 ShowOnlyDifferences = "Show only differences",
                 OnlyLookForDifferencesInText = "Only look for differences in text",
                 CannotCompareWithImageBasedSubtitles = "Cannot compare with image based subtitles",
+            };
+
+
+            DCinemaProperties = new LanguageStructure.DCinemaProperties
+            {
+                Title = "D-Cinema properties (interop)",
+                TitleSmpte = "D-Cinema properties (smpte)",
+                SubtitleId = "Subtitle ID",
+                GenerateId = "Generate ID",
+                MovieTitle = "Movie title",
+                ReelNumber = "Reel number",
+                Language = "Language",
+                IssueDate = "Issue date",
+                EditRate = "Edit rate",
+                Font = "Font",
+                FontId = "ID",
+                FontUri = "URI",
+                FontColor = "Color",
+                FontEffect = "Effect",
+                FontEffectColor = "Effect color",
+                FontSize = "Size",
+                ChooseColor = "Choose color...",
             };
 
             DvdSubrip = new LanguageStructure.DvdSubRip
@@ -579,6 +602,12 @@ namespace Nikse.SubtitleEdit.Logic
             {
                 Title = "Join subtitles",
                 Information = "Add subtitles to join (drop also supported)",
+                NumberOfLines = "#Lines",
+                StartTime = "Start time",
+                EndTime = "End time",
+                FileName = "File name",
+                Join = "Join",
+                TotalNumberOfLinesX = "Total number of lines: {0:#,###,###}",
             };
 
             Main = new LanguageStructure.Main

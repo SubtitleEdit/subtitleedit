@@ -200,6 +200,18 @@
     <Compile Include="Forms\AdjustDisplayDuration.Designer.cs">
       <DependentUpon>AdjustDisplayDuration.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\DCinemaPropertiesInterop.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\DCinemaPropertiesInterop.Designer.cs">
+      <DependentUpon>DCinemaPropertiesInterop.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\DCinemaPropertiesSmpte.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\DCinemaPropertiesSmpte.Designer.cs">
+      <DependentUpon>DCinemaPropertiesSmpte.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\EbuSaveOptions.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -660,6 +672,7 @@
     <Compile Include="Logic\SubtitleFormats\CaraokeXml.cs" />
     <Compile Include="Logic\SubtitleFormats\Cavena890.cs" />
     <Compile Include="Logic\SubtitleFormats\CheetahCaption.cs" />
+    <Compile Include="Logic\SubtitleFormats\DCinemaSmpte.cs" />
     <Compile Include="Logic\SubtitleFormats\DCSubtitle.cs" />
     <Compile Include="Logic\SubtitleFormats\DvdStudioProSpace.cs" />
     <Compile Include="Logic\SubtitleFormats\Eeg708.cs" />
@@ -867,6 +880,12 @@
     <EmbeddedResource Include="Forms\AdjustDisplayDuration.resx">
       <DependentUpon>AdjustDisplayDuration.cs</DependentUpon>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\DCinemaPropertiesInterop.resx">
+      <DependentUpon>DCinemaPropertiesInterop.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\DCinemaPropertiesSmpte.resx">
+      <DependentUpon>DCinemaPropertiesSmpte.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\EbuSaveOptions.resx">
       <DependentUpon>EbuSaveOptions.cs</DependentUpon>

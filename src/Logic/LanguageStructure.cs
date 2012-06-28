@@ -180,6 +180,27 @@
             public string CannotCompareWithImageBasedSubtitles { get; set; }
         }
 
+        public class DCinemaProperties
+        {
+            public string Title { get; set; }
+            public string TitleSmpte { get; set; }
+            public string SubtitleId { get; set; }
+            public string GenerateId { get; set; }
+            public string MovieTitle { get; set; }
+            public string ReelNumber { get; set; }
+            public string Language { get; set; }
+            public string IssueDate { get; set; }
+            public string EditRate { get; set; }
+            public string Font { get; set; }
+            public string FontId { get; set; }
+            public string FontUri { get; set; }
+            public string FontColor { get; set; }
+            public string FontEffect { get; set; }
+            public string FontEffectColor { get; set; }
+            public string FontSize { get; set; }
+            public string ChooseColor { get; set; }
+        }
+
         public class DvdSubRip
         {
             public string Title { get; set; }
@@ -519,6 +540,12 @@
         {
             public string Title { get; set; }
             public string Information { get; set; }
+            public string NumberOfLines { get; set; }
+            public string StartTime { get; set; }
+            public string EndTime { get; set; }
+            public string FileName { get; set; }
+            public string Join { get; set; }
+            public string TotalNumberOfLinesX { get; set; }
         }
 
         public class Main
