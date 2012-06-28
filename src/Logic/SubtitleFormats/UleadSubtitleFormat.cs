@@ -80,12 +80,13 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             Paragraph p = null;
             subtitle.Paragraphs.Clear();
             var regexTimeCodes = new Regex(@"^#\d+ \d\d;\d\d;\d\d;\d\d \d\d;\d\d;\d\d;\d\d", RegexOptions.Compiled);
-            foreach (string line in lines)
+            foreach (string l2 in lines)
             {
+                string line = l2.TrimEnd('ഀ');
                 if (regexTimeCodes.IsMatch(line))
                 {
                     string[] parts = line.Split(" ".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-                    if (parts.Length == 3)
+                    if (parts.Length >= 3)
                     {
                         string start = parts[1];
                         string end = parts[2];
@@ -107,9 +108,9 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 else if (line.Trim().Length > 0 && p != null)
                 {
                     if (string.IsNullOrEmpty(p.Text))
-                        p.Text = line;
+                        p.Text = line.TrimEnd();
                     else
-                        p.Text = p.Text + Environment.NewLine + line;
+                        p.Text = p.Text + Environment.NewLine + line.TrimEnd();
                 }
                 else
                 {
