@@ -260,6 +260,26 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                         text += "</font>";
                     }
                 }
+
+                if (text.Contains(@"{\1c")) // "1" specifices primary color
+                {
+                    int start = text.IndexOf(@"{\1c");
+                    int end = text.IndexOf('}', start);
+                    if (end > 0)
+                    {
+                        string color = text.Substring(start + 5, end - (start + 5));
+                        color = color.Replace("&", string.Empty).TrimStart('H');
+                        color = color.PadLeft(6, '0');
+
+                        // switch to rrggbb from bbggrr
+                        color = "#" + color.Remove(color.Length - 6) + color.Substring(color.Length - 2, 2) + color.Substring(color.Length - 4, 2) + color.Substring(color.Length - 6, 2);
+
+                        text = text.Remove(start, end - start + 1);
+                        text = text.Insert(start, "<font color=\"" + color + "\">");
+                        text += "</font>";
+                    }
+                }
+
             }
 
             return text;
@@ -405,13 +425,28 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
             foreach (Paragraph p in subtitle.Paragraphs)
             {
                 int indexOfBegin = p.Text.IndexOf("{");
+                string pre = string.Empty;
                 while (indexOfBegin >= 0 && p.Text.IndexOf("}") > indexOfBegin)
                 {
+                    string s = p.Text.Substring(indexOfBegin);
+                    if (s.StartsWith("{\\an1}") ||
+                        s.StartsWith("{\\an2}") ||
+                        s.StartsWith("{\\an3}") ||
+                        s.StartsWith("{\\an4}") ||
+                        s.StartsWith("{\\an5}") ||
+                        s.StartsWith("{\\an6}") ||
+                        s.StartsWith("{\\an7}") ||
+                        s.StartsWith("{\\an8}") ||
+                        s.StartsWith("{\\an9}"))
+                    {
+                        pre = s.Substring(0, 6);
+                    }
                     int indexOfEnd = p.Text.IndexOf("}");
                     p.Text = p.Text.Remove(indexOfBegin, (indexOfEnd - indexOfBegin) + 1);
 
-                    indexOfBegin = p.Text.IndexOf("{");
+                    indexOfBegin = p.Text.IndexOf("{");                    
                 }
+                p.Text = pre + p.Text;
             }
         }
 

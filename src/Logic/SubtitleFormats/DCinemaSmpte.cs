@@ -1,29 +1,35 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
 using System.Text;
 using System.Xml;
 
 namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
-
-// http://code.google.com/p/subtitleedit/issues/detail?id=18
-//<?xml version="1.0" encoding="UTF-8"?>
-//<DCSubtitle Version="1.0">
-//  <SubtitleID>4EB245B8-4D3A-4158-9516-95DD20E8322E</SubtitleID>
-//  <MovieTitle>Unknown</MovieTitle>
-//  <ReelNumber>1</ReelNumber>
-//  <Language>Swedish</Language>
-//  <Font Italic="no">
-//    <Subtitle SpotNumber="1" TimeIn="00:00:06:040" TimeOut="00:00:08:040" FadeUpTime="20" FadeDownTime="20">
-//      <Text Direction="horizontal" HAlign="center" HPosition="0.0" VAlign="bottom" VPosition="6.0">DETTA HAR HÄNT...</Text>
-//    </Subtitle>
-//  </Font>
-//</DCSubtitle>
-
-    class DCSubtitle : SubtitleFormat
+    class DCinemaSmpte : SubtitleFormat
     {
+        //<?xml version="1.0" encoding="UTF-8"?>
+        //<dcst:SubtitleReel xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:dcst="http://www.smpte-ra.org/schemas/428-7/2010/DCST"> 
+        //  <Id>urn:uuid:7be835a3-cfb4-43d0-bb4b-f0b4c95e962e</Id>
+        //  <ContentTitleText>2001, A Space Odissey</ContentTitleText> 
+        //  <AnnotationText>This is a subtitle file</AnnotationText>
+        //  <IssueDate>2012-06-26T12:33:59.000-00:00</IssueDate> 
+        //  <ReelNumber>1</ReelNumber> 
+        //  <Language>fr</Language>
+        //  <EditRate>25 1</EditRate>
+        //  <TimeCodeRate>25</TimeCodeRate>
+        //  <StartTime>00:00:00:00</StartTime> 
+        //  <LoadFont ID="theFontId">urn:uuid:3dec6dc0-39d0-498d-97d0-928d2eb78391</LoadFont>
+        //  <SubtitleList
+        //      <Font ID="theFontId" Size="39" Weight="normal" Color="FFFFFFFF">
+        //      <Subtitle FadeDownTime="00:00:00:00" FadeUpTime="00:00:00:00" TimeOut="00:00:00:01" TimeIn="00:00:00:00" SpotNumber="1">
+        //          <Text Vposition="10.0" Valign="bottom">Hallo</Text> 
+        //      </Subtitle>
+        //  </SubtitleList
+        //</dcst:SubtitleReel>
+
+        private double frameRate = 24;
+
         public override string Extension
         {
             get { return ".xml"; }
@@ -31,7 +37,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public override string Name
         {
-            get { return "D-Cinema interop"; }
+            get { return "D-Cinema smpte"; }
         }
 
         public override bool HasLineNumber
@@ -49,15 +55,15 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             var sb = new StringBuilder();
             lines.ForEach(line => sb.AppendLine(line));
             string xmlAsString = sb.ToString().Trim();
-            if (xmlAsString.Contains("<DCSubtitle"))
+            if (xmlAsString.Contains("<dcst:SubtitleReel"))
             {
                 var xml = new XmlDocument();
                 try
                 {
+                    xmlAsString = xmlAsString.Replace("<dcst:", "<").Replace("</dcst:", "</");
                     xml.LoadXml(xmlAsString);
-
                     var subtitles = xml.DocumentElement.SelectNodes("//Subtitle");
-                    if (subtitles != null)
+                    if (subtitles != null && subtitles.Count >= 0)                    
                         return subtitles != null && subtitles.Count > 0;
                     return false;
                 }
@@ -86,73 +92,77 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         }
 
         public override string ToText(Subtitle subtitle, string title)
-        {
-            string languageEnglishName;
-            try
-            {
-                string languageShortName = Utilities.AutoDetectGoogleLanguage(subtitle);
-                var ci = CultureInfo.CreateSpecificCulture(languageShortName);
-                languageEnglishName = ci.EnglishName;
-                int indexOfStartP = languageEnglishName.IndexOf("(");
-                if (indexOfStartP > 1)
-                    languageEnglishName = languageEnglishName.Remove(indexOfStartP).Trim();
-            }
-            catch
-            {
-                languageEnglishName = "English";
-            }
-
-            string xmlStructure = "<DCSubtitle Version=\"1.0\">" + Environment.NewLine +
-                                    "    <SubtitleID>" + "4EB245B8-4D3A-4158-9516-95DD20E8322E".ToLower() + "</SubtitleID>" + Environment.NewLine +
-                                    "    <MovieTitle></MovieTitle>" + Environment.NewLine +
-                                    "    <ReelNumber>1</ReelNumber>" + Environment.NewLine +
-                                    "    <Language>" + languageEnglishName + "</Language>" + Environment.NewLine +
-                                    "    <LoadFont URI=\"" + Configuration.Settings.SubtitleSettings.DCinemaFontFile + "\" Id=\"Font1\"/>" + Environment.NewLine +
-                                    "    <Font Id=\"Font1\" Color=\"FFFFFFFF\" Effect=\"border\" EffectColor=\"FF000000\" Italic=\"no\" Underlined=\"no\" Script=\"normal\" Size=\"42\">" + Environment.NewLine +
-                                    "    </Font>" + Environment.NewLine +
-                                    "</DCSubtitle>";
-
-            XmlDocument xml = new XmlDocument();
-            xml.LoadXml(xmlStructure);
-
+        {   
             var ss = Configuration.Settings.SubtitleSettings;
-            string loadedFontId = "Font1";
-            if (!string.IsNullOrEmpty(ss.CurrentDCinemaFontId))
-                loadedFontId = ss.CurrentDCinemaFontId;
+
+            if (!string.IsNullOrEmpty(ss.CurrentDCinemaEditRate))
+            {
+                string[] temp = ss.CurrentDCinemaEditRate.Split(" ".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                double d1, d2;
+                if (temp.Length == 2 && double.TryParse(temp[0], out d1) && double.TryParse(temp[1], out d2))
+                    frameRate = d1 / d2;
+            }
+
+            string xmlStructure =
+                "<dcst:SubtitleReel Version=\"1.0\" xmlns:dcst=\"http://www.smpte-ra.org/schemas/428-7/2010/DCST\" xmlns:xs=\"http://www.w3.org/2001/XMLSchema\">" + Environment.NewLine +
+                "  <dcst:Id>urn:uuid:7be835a3-cfb4-43d0-bb4b-f0b4c95e962e</dcst:Id>" + Environment.NewLine +
+                "  <dcst:ContentTitleText></dcst:ContentTitleText> " + Environment.NewLine +
+                "  <dcst:AnnotationText>This is a subtitle file</dcst:AnnotationText>" + Environment.NewLine +
+                "  <dcst:IssueDate>2012-06-26T12:33:59.000-00:00</dcst:IssueDate>" + Environment.NewLine +
+                "  <dcst:ReelNumber>1</dcst:ReelNumber>" + Environment.NewLine +
+                "  <dcst:Language>en</dcst:Language>" + Environment.NewLine +
+                "  <dcst:EditRate>25 1</dcst:EditRate>" + Environment.NewLine +
+                "  <dcst:TimeCodeRate>25</dcst:TimeCodeRate>" + Environment.NewLine +
+                "  <dcst:StartTime>00:00:00:00</dcst:StartTime> " + Environment.NewLine +
+                "  <dcst:LoadFont ID=\"theFontId\">urn:uuid:3dec6dc0-39d0-498d-97d0-928d2eb78391</dcst:LoadFont>" + Environment.NewLine +
+                "  <dcst:SubtitleList>" + Environment.NewLine +
+                "    <dcst:Font ID=\"theFontId\" Size=\"39\" Weight=\"normal\" Color=\"FFFFFFFF\" Effect=\"border\" EffectColor=\"FF000000\">" + Environment.NewLine +
+                "    </dcst:Font>" + Environment.NewLine +
+                "  </dcst:SubtitleList>" + Environment.NewLine +
+                "</dcst:SubtitleReel>";
+                       
+            var xml = new XmlDocument();
+            xml.LoadXml(xmlStructure);
+            var nsmgr = new XmlNamespaceManager(xml.NameTable);
+            nsmgr.AddNamespace("dcst", xml.DocumentElement.NamespaceURI);
 
             if (string.IsNullOrEmpty(ss.CurrentDCinemaMovieTitle))
                 ss.CurrentDCinemaMovieTitle = title;
-            xml.DocumentElement.SelectSingleNode("MovieTitle").InnerText = ss.CurrentDCinemaMovieTitle;
-            xml.DocumentElement.SelectSingleNode("SubtitleID").InnerText = ss.CurrentDCinemaSubtitleId;
-            xml.DocumentElement.SelectSingleNode("ReelNumber").InnerText = ss.CurrentDCinemaReelNumber;
-            xml.DocumentElement.SelectSingleNode("Language").InnerText = ss.CurrentDCinemaLanguage;
-            xml.DocumentElement.SelectSingleNode("LoadFont").Attributes["URI"].InnerText = ss.CurrentDCinemaFontUri;
-            xml.DocumentElement.SelectSingleNode("LoadFont").Attributes["Id"].InnerText = loadedFontId;
+            xml.DocumentElement.SelectSingleNode("dcst:ContentTitleText", nsmgr).InnerText = ss.CurrentDCinemaMovieTitle;
+            xml.DocumentElement.SelectSingleNode("dcst:Id", nsmgr).InnerText = ss.CurrentDCinemaSubtitleId;
+            xml.DocumentElement.SelectSingleNode("dcst:ReelNumber", nsmgr).InnerText = ss.CurrentDCinemaReelNumber;
+            xml.DocumentElement.SelectSingleNode("dcst:IssueDate", nsmgr).InnerText = ss.CurrentDCinemaIssueDate;
+            xml.DocumentElement.SelectSingleNode("dcst:Language", nsmgr).InnerText = ss.CurrentDCinemaLanguage;
+            xml.DocumentElement.SelectSingleNode("dcst:EditRate", nsmgr).InnerText = ss.CurrentDCinemaEditRate;
+            xml.DocumentElement.SelectSingleNode("dcst:LoadFont", nsmgr).InnerText = ss.CurrentDCinemaFontUri;
             int fontSize = ss.CurrentDCinemaFontSize;
-            xml.DocumentElement.SelectSingleNode("Font").Attributes["Id"].InnerText = loadedFontId;
-            xml.DocumentElement.SelectSingleNode("Font").Attributes["Color"].InnerText = "FF" + Utilities.ColorToHex(ss.CurrentDCinemaFontColor).TrimStart('#').ToUpper();
-            xml.DocumentElement.SelectSingleNode("Font").Attributes["Effect"].InnerText = ss.CurrentDCinemaFontEffect;
-            xml.DocumentElement.SelectSingleNode("Font").Attributes["EffectColor"].InnerText = "FF" + Utilities.ColorToHex(ss.CurrentDCinemaFontEffectColor).TrimStart('#').ToUpper();
-            xml.DocumentElement.SelectSingleNode("Font").Attributes["Size"].InnerText = ss.CurrentDCinemaFontSize.ToString();
+            string loadedFontId = "Font1";
+            if (!string.IsNullOrEmpty(ss.CurrentDCinemaFontId))
+                loadedFontId = ss.CurrentDCinemaFontId;
+            xml.DocumentElement.SelectSingleNode("dcst:SubtitleList/dcst:Font", nsmgr).Attributes["Size"].Value = fontSize.ToString();
+            xml.DocumentElement.SelectSingleNode("dcst:SubtitleList/dcst:Font", nsmgr).Attributes["Color"].Value = "FF" + Utilities.ColorToHex(ss.CurrentDCinemaFontColor).TrimStart('#').ToUpper();
+            xml.DocumentElement.SelectSingleNode("dcst:SubtitleList/dcst:Font", nsmgr).Attributes["ID"].Value = loadedFontId;
+            xml.DocumentElement.SelectSingleNode("dcst:SubtitleList/dcst:Font", nsmgr).Attributes["Effect"].Value = ss.CurrentDCinemaFontEffect;
+            xml.DocumentElement.SelectSingleNode("dcst:SubtitleList/dcst:Font", nsmgr).Attributes["EffectColor"].Value = "FF" + Utilities.ColorToHex(ss.CurrentDCinemaFontEffectColor).TrimStart('#').ToUpper();
 
-            XmlNode mainListFont = xml.DocumentElement.SelectSingleNode("Font");
+            XmlNode mainListFont = xml.DocumentElement.SelectSingleNode("dcst:SubtitleList/dcst:Font", nsmgr);
             int no = 0;
             foreach (Paragraph p in subtitle.Paragraphs)
             {
                 if (!string.IsNullOrEmpty(p.Text))
                 {
-                    XmlNode subNode = xml.CreateElement("Subtitle");
+                    XmlNode subNode = xml.CreateElement("dcst:Subtitle", "dcst");
 
                     XmlAttribute id = xml.CreateAttribute("SpotNumber");
                     id.InnerText = (no + 1).ToString();
                     subNode.Attributes.Append(id);
 
                     XmlAttribute fadeUpTime = xml.CreateAttribute("FadeUpTime");
-                    fadeUpTime.InnerText = Configuration.Settings.SubtitleSettings.DCinemaFadeUpDownTime.ToString();
+                    fadeUpTime.InnerText = "00:00:00:00"; //Configuration.Settings.SubtitleSettings.DCinemaFadeUpDownTime.ToString();
                     subNode.Attributes.Append(fadeUpTime);
 
                     XmlAttribute fadeDownTime = xml.CreateAttribute("FadeDownTime");
-                    fadeDownTime.InnerText = Configuration.Settings.SubtitleSettings.DCinemaFadeUpDownTime.ToString();
+                    fadeDownTime.InnerText = "00:00:00:00"; //Configuration.Settings.SubtitleSettings.DCinemaFadeUpDownTime.ToString();
                     subNode.Attributes.Append(fadeDownTime);
 
                     XmlAttribute start = xml.CreateAttribute("TimeIn");
@@ -201,7 +211,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     System.Collections.Generic.Stack<string> fontColors = new Stack<string>();
                     foreach (string line in lines)
                     {
-                        XmlNode textNode = xml.CreateElement("Text");
+                        XmlNode textNode = xml.CreateElement("dcst:Text", "dcst");
 
                         XmlAttribute vPosition = xml.CreateAttribute("VPosition");
                         vPosition.InnerText = vPos.ToString();
@@ -214,7 +224,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                             vAlign.InnerText = "center";
                         else
                             vAlign.InnerText = "bottom";
-                        textNode.Attributes.Append(vAlign);                       
+                        textNode.Attributes.Append(vAlign); textNode.Attributes.Append(vAlign);
 
                         XmlAttribute hAlign = xml.CreateAttribute("HAlign");
                         if (alignLeft)
@@ -250,7 +260,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                             {
                                 if (txt.Length > 0)
                                 {
-                                    XmlNode fontNode = xml.CreateElement("Font");
+                                    XmlNode fontNode = xml.CreateElement("dcst:Font", "dcst");
 
                                     XmlAttribute italic = xml.CreateAttribute("Italic");
                                     italic.InnerText = "yes";
@@ -263,7 +273,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                                 isItalic = false;
                                 i += 3;
                             }
-                            else if (line.Substring(i).StartsWith("<font color=") && line.Substring(i+3).Contains(">"))
+                            else if (line.Substring(i).StartsWith("<font color=") && line.Substring(i + 3).Contains(">"))
                             {
                                 int endOfFont = line.IndexOf(">", i);
                                 if (txt.Length > 0)
@@ -284,7 +294,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                             {
                                 if (txt.Length > 0)
                                 {
-                                    XmlNode fontNode = xml.CreateElement("Font");
+                                    XmlNode fontNode = xml.CreateElement("dcst:Font", "dcst");
 
                                     XmlAttribute fontColor = xml.CreateAttribute("Color");
                                     fontColor.InnerText = fontColors.Pop();
@@ -307,7 +317,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         {
                             if (txt.Length > 0)
                             {
-                                XmlNode fontNode = xml.CreateElement("Font");
+                                XmlNode fontNode = xml.CreateElement("dcst:Font", "dcst");
 
                                 XmlAttribute italic = xml.CreateAttribute("Italic");
                                 italic.InnerText = "yes";
@@ -350,13 +360,13 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             var sb = new StringBuilder();
             lines.ForEach(line => sb.AppendLine(line));
             var xml = new XmlDocument();
-            xml.LoadXml(sb.ToString());
+            xml.LoadXml(sb.ToString().Replace("<dcst:", "<").Replace("</dcst:", "</")); // tags might be prefixed with namespace (or not)... so we just remove them
 
             var ss = Configuration.Settings.SubtitleSettings;
             try
             {
-                ss.InitializeDCinameSettings(false);
-                XmlNode node = xml.DocumentElement.SelectSingleNode("SubtitleID");
+                ss.InitializeDCinameSettings(true);
+                XmlNode node = xml.DocumentElement.SelectSingleNode("Id");
                 if (node != null)
                     ss.CurrentDCinemaSubtitleId = node.InnerText;
 
@@ -364,18 +374,29 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 if (node != null)
                     ss.CurrentDCinemaReelNumber = node.InnerText;
 
+                node = xml.DocumentElement.SelectSingleNode("EditRate");
+                if (node != null)
+                    ss.CurrentDCinemaEditRate = node.InnerText;
+
                 node = xml.DocumentElement.SelectSingleNode("Language");
                 if (node != null)
                     ss.CurrentDCinemaLanguage = node.InnerText;
 
-                node = xml.DocumentElement.SelectSingleNode("MovieTitle");
+                node = xml.DocumentElement.SelectSingleNode("ContentTitleText");
                 if (node != null)
                     ss.CurrentDCinemaMovieTitle = node.InnerText;
 
-                node = xml.DocumentElement.SelectSingleNode("Font");
+                node = xml.DocumentElement.SelectSingleNode("IssueDate");
                 if (node != null)
-                {
+                    ss.CurrentDCinemaIssueDate = node.InnerText;
+
+                node = xml.DocumentElement.SelectSingleNode("LoadFont");
+                if (node != null)
                     ss.CurrentDCinemaFontUri = node.InnerText;
+
+                node = xml.DocumentElement.SelectSingleNode("SubtitleList/Font");
+                if (node != null)
+                {                    
                     if (node.Attributes["ID"] != null)
                         ss.CurrentDCinemaFontId = node.Attributes["ID"].InnerText;
                     if (node.Attributes["Size"] != null)
@@ -386,7 +407,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         ss.CurrentDCinemaFontEffect = node.Attributes["Effect"].InnerText;
                     if (node.Attributes["EffectColor"] != null)
                         ss.CurrentDCinemaFontEffectColor = System.Drawing.ColorTranslator.FromHtml("#" + node.Attributes["EffectColor"].InnerText);
-                }       
+                }                
             }
             catch (Exception exception)
             {
@@ -397,7 +418,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             {
                 try
                 {
-                    var pText = new StringBuilder();
+                    StringBuilder pText = new StringBuilder();
                     string lastVPosition = string.Empty;
                     foreach (XmlNode innerNode in node.ChildNodes)
                     {
@@ -503,7 +524,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 Replace("D", string.Empty).
                 Replace("E", string.Empty).
                 Replace("F", string.Empty).Length == 0)
-            {                
+            {
                 return s.TrimStart('#');
             }
             else
@@ -544,13 +565,11 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             }
         }
 
-        private static TimeCode GetTimeCode(string s)
+        private  TimeCode GetTimeCode(string s)
         {
             string[] parts = s.Split(new char[] { ':', '.', ',' });
-            
-            int milliseconds = (int)(int.Parse(parts[3]) * 4); // 000 to 249
-            if (s.Contains("."))
-                milliseconds = (int)(Math.Round((int.Parse(parts[3]) / 10.0 * 1000.0)));
+
+            int milliseconds = (int)System.Math.Round(int.Parse(parts[3]) * (1000.0 / frameRate));
             if (milliseconds > 999)
                 milliseconds = 999;
 
@@ -558,9 +577,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             return new TimeCode(ts);
         }
 
-        private static string ConvertToTimeString(TimeCode time)
+        private string ConvertToTimeString(TimeCode time)
         {
-            return string.Format("{0:00}:{1:00}:{2:00}:{3:000}", time.Hours, time.Minutes, time.Seconds, time.Milliseconds / 4);
+            int frames = (int)System.Math.Round(time.Milliseconds / (1000.0 / frameRate));
+            return string.Format("{0:00}:{1:00}:{2:00}:{3:00}", time.Hours, time.Minutes, time.Seconds, frames);
         }
 
     }

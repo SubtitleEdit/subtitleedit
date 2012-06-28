@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.buttonCancel = new System.Windows.Forms.Button();
-            this.buttonSplit = new System.Windows.Forms.Button();
+            this.buttonJoin = new System.Windows.Forms.Button();
             this.listViewParts = new System.Windows.Forms.ListView();
             this.columnHeaderLines = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeaderStartTime = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -56,17 +56,17 @@
             this.buttonCancel.UseVisualStyleBackColor = true;
             this.buttonCancel.Click += new System.EventHandler(this.buttonCancel_Click);
             // 
-            // buttonSplit
+            // buttonJoin
             // 
-            this.buttonSplit.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonSplit.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonSplit.Location = new System.Drawing.Point(587, 269);
-            this.buttonSplit.Name = "buttonSplit";
-            this.buttonSplit.Size = new System.Drawing.Size(75, 21);
-            this.buttonSplit.TabIndex = 28;
-            this.buttonSplit.Text = "&Join";
-            this.buttonSplit.UseVisualStyleBackColor = true;
-            this.buttonSplit.Click += new System.EventHandler(this.buttonSplit_Click);
+            this.buttonJoin.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonJoin.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.buttonJoin.Location = new System.Drawing.Point(587, 269);
+            this.buttonJoin.Name = "buttonJoin";
+            this.buttonJoin.Size = new System.Drawing.Size(75, 21);
+            this.buttonJoin.TabIndex = 28;
+            this.buttonJoin.Text = "&Join";
+            this.buttonJoin.UseVisualStyleBackColor = true;
+            this.buttonJoin.Click += new System.EventHandler(this.buttonSplit_Click);
             // 
             // listViewParts
             // 
@@ -179,7 +179,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(755, 302);
             this.Controls.Add(this.buttonCancel);
-            this.Controls.Add(this.buttonSplit);
+            this.Controls.Add(this.buttonJoin);
             this.Controls.Add(this.groupBoxPreview);
             this.KeyPreview = true;
             this.MaximizeBox = false;
@@ -202,7 +202,7 @@
         #endregion
 
         private System.Windows.Forms.Button buttonCancel;
-        private System.Windows.Forms.Button buttonSplit;
+        private System.Windows.Forms.Button buttonJoin;
         private System.Windows.Forms.ListView listViewParts;
         private System.Windows.Forms.ColumnHeader columnHeaderLines;
         private System.Windows.Forms.ColumnHeader columnHeaderStartTime;

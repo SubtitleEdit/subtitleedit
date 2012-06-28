@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Logic;
-using System.Drawing;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -18,8 +18,18 @@ namespace Nikse.SubtitleEdit.Forms
             JoinedSubtitle = new Subtitle();
             labelTotalLines.Text = string.Empty;
 
+            listViewParts.Columns[0].Text = Configuration.Settings.Language.JoinSubtitles.NumberOfLines;
+            listViewParts.Columns[1].Text = Configuration.Settings.Language.JoinSubtitles.StartTime;
+            listViewParts.Columns[2].Text = Configuration.Settings.Language.JoinSubtitles.EndTime;
+            listViewParts.Columns[3].Text = Configuration.Settings.Language.JoinSubtitles.FileName;
+
+            buttonAddVobFile.Text = Configuration.Settings.Language.DvdSubrip.Add;
+            ButtonRemoveVob.Text = Configuration.Settings.Language.DvdSubrip.Remove;
+            buttonClear.Text = Configuration.Settings.Language.DvdSubrip.Clear;
+
             Text = Configuration.Settings.Language.JoinSubtitles.Title;
             groupBoxPreview.Text = Configuration.Settings.Language.JoinSubtitles.Information;
+            buttonJoin.Text = Configuration.Settings.Language.JoinSubtitles.Join;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
 
             FixLargeFonts();
@@ -153,7 +163,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
             JoinedSubtitle.Renumber(1);
-            labelTotalLines.Text = string.Format("Total number of lines: {0:#,###,###}", JoinedSubtitle.Paragraphs.Count);
+            labelTotalLines.Text = string.Format(Configuration.Settings.Language.JoinSubtitles.TotalNumberOfLinesX, JoinedSubtitle.Paragraphs.Count);
         }
 
         private void JoinSubtitles_Resize(object sender, EventArgs e)

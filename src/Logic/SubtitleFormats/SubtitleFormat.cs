@@ -30,6 +30,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     new CaraokeXml(),
                     new Csv(),
                     new DCSubtitle(),
+                    new DCinemaSmpte(),
                     new DigiBeta(),
                     new DvdStudioPro(),
                     new DvdStudioProSpace(),
