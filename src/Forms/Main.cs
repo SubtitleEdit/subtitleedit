@@ -1062,8 +1062,8 @@ namespace Nikse.SubtitleEdit.Forms
         {
             splitContainer1.Panel1MinSize = 525;
             splitContainer1.Panel2MinSize = 250;
-            splitContainerMain.Panel1MinSize = 250;
-            splitContainerMain.Panel2MinSize = 200;
+            splitContainerMain.Panel1MinSize = 200;
+            splitContainerMain.Panel2MinSize = 220;
 
             if (Configuration.Settings.General.StartListViewWidth < 250)
                 Configuration.Settings.General.StartListViewWidth = (Width / 3) * 2;
