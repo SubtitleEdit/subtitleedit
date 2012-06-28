@@ -13,7 +13,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         public DCinemaPropertiesSmpte()
         {
-            
+
         }
 
         public DCinemaPropertiesSmpte(Subtitle _subtitle, string _videoFileName)
@@ -35,7 +35,7 @@ namespace Nikse.SubtitleEdit.Forms
             labelEffectColor.Text = l.FontEffectColor;
             buttonFontEffectColor.Text = l.ChooseColor;
             labelFontSize.Text = l.FontSize;
-            
+
             this._subtitle = _subtitle;
             this._videoFileName = _videoFileName;
 
@@ -66,7 +66,7 @@ namespace Nikse.SubtitleEdit.Forms
                     comboBoxFontEffect.SelectedIndex = 1;
                 else if (ss.CurrentDCinemaFontEffect == "shadow")
                     comboBoxFontEffect.SelectedIndex = 2;
-                else 
+                else
                     comboBoxFontEffect.SelectedIndex = 0;
                 panelFontEffectColor.BackColor = ss.CurrentDCinemaFontEffectColor;
                 numericUpDownFontSize.Value = ss.CurrentDCinemaFontSize;
@@ -142,8 +142,8 @@ namespace Nikse.SubtitleEdit.Forms
             else
                 ss.CurrentDCinemaFontEffect = string.Empty;
             ss.CurrentDCinemaFontEffectColor = panelFontEffectColor.BackColor;
-            ss.CurrentDCinemaFontSize = (int)numericUpDownFontSize.Value;            
-   
+            ss.CurrentDCinemaFontSize = (int)numericUpDownFontSize.Value;
+
             DialogResult = DialogResult.OK;
         }
 

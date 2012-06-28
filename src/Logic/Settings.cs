@@ -170,7 +170,7 @@ namespace Nikse.SubtitleEdit.Logic
             SsaFontName = "Arial";
             SsaFontSize = 20;
             SsaFontColorArgb = System.Drawing.Color.FromArgb(255, 255, 255).ToArgb();
-            
+
             DCinemaFontFile = "Arial.ttf";
             DCinemaFontSize = 42;
             DCinemaBottomMargin = 8;
