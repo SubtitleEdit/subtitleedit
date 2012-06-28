@@ -60,7 +60,7 @@ namespace Nikse.SubtitleEdit.Forms
             foreach (Paragraph p in _subtitle.Paragraphs)
             {
                 allText.Append(p.Text);
-                
+
                 int len = p.Text.Length;
                 if (len < minimumLineLength)
                     minimumLineLength = len;
@@ -245,10 +245,10 @@ namespace Nikse.SubtitleEdit.Forms
         private void CalculateMostUsedLines()
         {
             Dictionary<string, string> hashtable = new Dictionary<string, string>();
-            
+
             foreach (Paragraph p in _subtitle.Paragraphs)
                 MostUsedLinesAdd(hashtable, p.Text.Replace(Environment.NewLine, " ").Replace("  ", " "));
-            
+
 
             SortedDictionary<string, string> sortedTable = new SortedDictionary<string, string>();
             foreach (KeyValuePair<string, string> item in hashtable)

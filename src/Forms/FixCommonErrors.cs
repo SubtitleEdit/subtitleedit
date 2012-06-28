@@ -2117,7 +2117,7 @@ namespace Nikse.SubtitleEdit.Forms
                                 fixedStartWithUppercaseLetterAfterParagraphTicked++;
                                 AddFixToListView(p, fixAction2, oldText, p.Text);
                             }
-                        }                        
+                        }
                     }
 
                 }
@@ -2135,7 +2135,7 @@ namespace Nikse.SubtitleEdit.Forms
         }
 
         private string GetTurkishUppercaseLetter(string s)
-        { 
+        {
             if (_encoding == Encoding.UTF8)
             {
                 if (s.StartsWith("ı"))
@@ -2278,8 +2278,8 @@ namespace Nikse.SubtitleEdit.Forms
                             else if (p.Text.Substring(j).StartsWith("<font ") && p.Text.Substring(j).Contains(">"))
                                 skipCount = p.Text.Substring(j).IndexOf(">") - p.Text.Substring(j).IndexOf("<font ");
                             else if (IsTurkishLittleI(s))
-                            {                                
-                                p.Text = p.Text.Remove(j, 1).Insert(j, GetTurkishUppercaseLetter(s));                                                               
+                            {
+                                p.Text = p.Text.Remove(j, 1).Insert(j, GetTurkishUppercaseLetter(s));
                                 lastWasColon = false;
                             }
                             else if (s != s.ToUpper())

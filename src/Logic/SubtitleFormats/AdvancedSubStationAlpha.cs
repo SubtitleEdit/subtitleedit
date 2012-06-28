@@ -444,7 +444,7 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                     int indexOfEnd = p.Text.IndexOf("}");
                     p.Text = p.Text.Remove(indexOfBegin, (indexOfEnd - indexOfBegin) + 1);
 
-                    indexOfBegin = p.Text.IndexOf("{");                    
+                    indexOfBegin = p.Text.IndexOf("{");
                 }
                 p.Text = pre + p.Text;
             }

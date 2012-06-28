@@ -214,7 +214,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                             vAlign.InnerText = "center";
                         else
                             vAlign.InnerText = "bottom";
-                        textNode.Attributes.Append(vAlign);                       
+                        textNode.Attributes.Append(vAlign);
 
                         XmlAttribute hAlign = xml.CreateAttribute("HAlign");
                         if (alignLeft)
@@ -386,7 +386,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         ss.CurrentDCinemaFontEffect = node.Attributes["Effect"].InnerText;
                     if (node.Attributes["EffectColor"] != null)
                         ss.CurrentDCinemaFontEffectColor = System.Drawing.ColorTranslator.FromHtml("#" + node.Attributes["EffectColor"].InnerText);
-                }       
+                }
             }
             catch (Exception exception)
             {
@@ -503,7 +503,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 Replace("D", string.Empty).
                 Replace("E", string.Empty).
                 Replace("F", string.Empty).Length == 0)
-            {                
+            {
                 return s.TrimStart('#');
             }
             else
@@ -547,7 +547,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         private static TimeCode GetTimeCode(string s)
         {
             string[] parts = s.Split(new char[] { ':', '.', ',' });
-            
+
             int milliseconds = (int)(int.Parse(parts[3]) * 4); // 000 to 249
             if (s.Contains("."))
                 milliseconds = (int)(Math.Round((int.Parse(parts[3]) / 10.0 * 1000.0)));

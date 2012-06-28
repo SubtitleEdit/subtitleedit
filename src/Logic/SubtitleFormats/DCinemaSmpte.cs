@@ -9,21 +9,21 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
     class DCinemaSmpte : SubtitleFormat
     {
         //<?xml version="1.0" encoding="UTF-8"?>
-        //<dcst:SubtitleReel xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:dcst="http://www.smpte-ra.org/schemas/428-7/2010/DCST"> 
+        //<dcst:SubtitleReel xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:dcst="http://www.smpte-ra.org/schemas/428-7/2010/DCST">
         //  <Id>urn:uuid:7be835a3-cfb4-43d0-bb4b-f0b4c95e962e</Id>
-        //  <ContentTitleText>2001, A Space Odissey</ContentTitleText> 
+        //  <ContentTitleText>2001, A Space Odissey</ContentTitleText>
         //  <AnnotationText>This is a subtitle file</AnnotationText>
-        //  <IssueDate>2012-06-26T12:33:59.000-00:00</IssueDate> 
-        //  <ReelNumber>1</ReelNumber> 
+        //  <IssueDate>2012-06-26T12:33:59.000-00:00</IssueDate>
+        //  <ReelNumber>1</ReelNumber>
         //  <Language>fr</Language>
         //  <EditRate>25 1</EditRate>
         //  <TimeCodeRate>25</TimeCodeRate>
-        //  <StartTime>00:00:00:00</StartTime> 
+        //  <StartTime>00:00:00:00</StartTime>
         //  <LoadFont ID="theFontId">urn:uuid:3dec6dc0-39d0-498d-97d0-928d2eb78391</LoadFont>
         //  <SubtitleList
         //      <Font ID="theFontId" Size="39" Weight="normal" Color="FFFFFFFF">
         //      <Subtitle FadeDownTime="00:00:00:00" FadeUpTime="00:00:00:00" TimeOut="00:00:00:01" TimeIn="00:00:00:00" SpotNumber="1">
-        //          <Text Vposition="10.0" Valign="bottom">Hallo</Text> 
+        //          <Text Vposition="10.0" Valign="bottom">Hallo</Text>
         //      </Subtitle>
         //  </SubtitleList
         //</dcst:SubtitleReel>
@@ -63,7 +63,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     xmlAsString = xmlAsString.Replace("<dcst:", "<").Replace("</dcst:", "</");
                     xml.LoadXml(xmlAsString);
                     var subtitles = xml.DocumentElement.SelectNodes("//Subtitle");
-                    if (subtitles != null && subtitles.Count >= 0)                    
+                    if (subtitles != null && subtitles.Count >= 0)
                         return subtitles != null && subtitles.Count > 0;
                     return false;
                 }
@@ -92,7 +92,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         }
 
         public override string ToText(Subtitle subtitle, string title)
-        {   
+        {
             var ss = Configuration.Settings.SubtitleSettings;
 
             if (!string.IsNullOrEmpty(ss.CurrentDCinemaEditRate))
@@ -120,7 +120,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 "    </dcst:Font>" + Environment.NewLine +
                 "  </dcst:SubtitleList>" + Environment.NewLine +
                 "</dcst:SubtitleReel>";
-                       
+
             var xml = new XmlDocument();
             xml.LoadXml(xmlStructure);
             var nsmgr = new XmlNamespaceManager(xml.NameTable);
@@ -396,7 +396,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
                 node = xml.DocumentElement.SelectSingleNode("SubtitleList/Font");
                 if (node != null)
-                {                    
+                {
                     if (node.Attributes["ID"] != null)
                         ss.CurrentDCinemaFontId = node.Attributes["ID"].InnerText;
                     if (node.Attributes["Size"] != null)
@@ -407,7 +407,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         ss.CurrentDCinemaFontEffect = node.Attributes["Effect"].InnerText;
                     if (node.Attributes["EffectColor"] != null)
                         ss.CurrentDCinemaFontEffectColor = System.Drawing.ColorTranslator.FromHtml("#" + node.Attributes["EffectColor"].InnerText);
-                }                
+                }
             }
             catch (Exception exception)
             {

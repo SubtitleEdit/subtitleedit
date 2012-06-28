@@ -15,7 +15,7 @@ namespace Nikse.SubtitleEdit.Forms
         public DCinemaPropertiesInterop(Subtitle _subtitle, string _videoFileName)
         {
             InitializeComponent();
-            
+
             var l = Configuration.Settings.Language.DCinemaProperties;
             Text = l.Title;
             labelSubtitleID.Text = l.SubtitleId;
@@ -123,7 +123,7 @@ namespace Nikse.SubtitleEdit.Forms
             else
                 ss.CurrentDCinemaFontEffect = string.Empty;
             ss.CurrentDCinemaFontEffectColor = panelFontEffectColor.BackColor;
-            ss.CurrentDCinemaFontSize = (int)numericUpDownFontSize.Value;            
+            ss.CurrentDCinemaFontSize = (int)numericUpDownFontSize.Value;
 
             DialogResult = DialogResult.OK;
         }
