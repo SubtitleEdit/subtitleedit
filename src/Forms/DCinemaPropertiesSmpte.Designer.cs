@@ -90,7 +90,7 @@
             this.groupBox1.Location = new System.Drawing.Point(12, 12);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(511, 401);
-            this.groupBox1.TabIndex = 1;
+            this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             // 
             // textBoxEditRate
@@ -98,7 +98,7 @@
             this.textBoxEditRate.Location = new System.Drawing.Point(108, 161);
             this.textBoxEditRate.Name = "textBoxEditRate";
             this.textBoxEditRate.Size = new System.Drawing.Size(112, 20);
-            this.textBoxEditRate.TabIndex = 36;
+            this.textBoxEditRate.TabIndex = 7;
             this.textBoxEditRate.Text = "1 24";
             // 
             // labelEditRate
@@ -210,7 +210,7 @@
             this.groupBoxFont.Location = new System.Drawing.Point(6, 201);
             this.groupBoxFont.Name = "groupBoxFont";
             this.groupBoxFont.Size = new System.Drawing.Size(499, 194);
-            this.groupBoxFont.TabIndex = 7;
+            this.groupBoxFont.TabIndex = 8;
             this.groupBoxFont.TabStop = false;
             this.groupBoxFont.Text = "Font";
             // 
@@ -228,7 +228,7 @@
             this.buttonFontEffectColor.Location = new System.Drawing.Point(102, 128);
             this.buttonFontEffectColor.Name = "buttonFontEffectColor";
             this.buttonFontEffectColor.Size = new System.Drawing.Size(112, 21);
-            this.buttonFontEffectColor.TabIndex = 5;
+            this.buttonFontEffectColor.TabIndex = 4;
             this.buttonFontEffectColor.Text = "Choose color";
             this.buttonFontEffectColor.UseVisualStyleBackColor = true;
             this.buttonFontEffectColor.Click += new System.EventHandler(this.buttonFontEffectColor_Click);
@@ -271,7 +271,7 @@
             0});
             this.numericUpDownFontSize.Name = "numericUpDownFontSize";
             this.numericUpDownFontSize.Size = new System.Drawing.Size(112, 20);
-            this.numericUpDownFontSize.TabIndex = 7;
+            this.numericUpDownFontSize.TabIndex = 5;
             // 
             // labelFontSize
             // 
@@ -293,7 +293,7 @@
             this.comboBoxFontEffect.Location = new System.Drawing.Point(102, 102);
             this.comboBoxFontEffect.Name = "comboBoxFontEffect";
             this.comboBoxFontEffect.Size = new System.Drawing.Size(112, 21);
-            this.comboBoxFontEffect.TabIndex = 4;
+            this.comboBoxFontEffect.TabIndex = 3;
             // 
             // labelEffect
             // 
@@ -397,7 +397,7 @@
             this.buttonCancel.Location = new System.Drawing.Point(449, 419);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 21);
-            this.buttonCancel.TabIndex = 0;
+            this.buttonCancel.TabIndex = 2;
             this.buttonCancel.Text = "C&ancel";
             this.buttonCancel.UseVisualStyleBackColor = true;
             this.buttonCancel.Click += new System.EventHandler(this.buttonCancel_Click_1);
@@ -409,7 +409,7 @@
             this.buttonOK.Location = new System.Drawing.Point(368, 419);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 21);
-            this.buttonOK.TabIndex = 2;
+            this.buttonOK.TabIndex = 1;
             this.buttonOK.Text = "&OK";
             this.buttonOK.UseVisualStyleBackColor = true;
             this.buttonOK.Click += new System.EventHandler(this.buttonOK_Click_1);

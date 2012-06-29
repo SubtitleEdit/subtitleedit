@@ -205,6 +205,9 @@ Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
                     if (end > 0)
                     {
                         string color = text.Substring(start + 4, end - (start + 4));
+                        int indexOfNextTag = color.IndexOf("\\");
+                        if (indexOfNextTag > 1)
+                            color = color.Remove(indexOfNextTag);
                         color = color.Replace("&", string.Empty).TrimStart('H');
                         color = color.PadLeft(6, '0');
 
