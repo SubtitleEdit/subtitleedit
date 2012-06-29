@@ -2713,7 +2713,7 @@ namespace Nikse.SubtitleEdit.Forms
                     List<string> styles = AdvancedSubStationAlpha.GetStylesFromHeader(_subtitle.Header);
                     foreach (Paragraph p in _subtitle.Paragraphs)
                     {
-                        if (string.IsNullOrEmpty(p.Extra))
+                        if (string.IsNullOrEmpty(p.Extra) && styles.Count > 0)
                             p.Extra = styles[0];
                     }
                     SubtitleListview1.ShowExtraColumn("Style");
