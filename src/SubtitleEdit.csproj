@@ -686,6 +686,7 @@
     <Compile Include="Logic\SubtitleFormats\FlashXml.cs" />
     <Compile Include="Logic\SubtitleFormats\GpacTtxt.cs" />
     <Compile Include="Logic\SubtitleFormats\HtmlSamiArray.cs" />
+    <Compile Include="Logic\SubtitleFormats\JsonType3.cs" />
     <Compile Include="Logic\SubtitleFormats\NciCaption.cs" />
     <Compile Include="Logic\SubtitleFormats\RhozetHarmonic.cs" />
     <Compile Include="Logic\SubtitleFormats\Json.cs" />
@@ -732,6 +733,7 @@
     <Compile Include="Logic\SubtitleFormats\UnknownSubtitle17.cs" />
     <Compile Include="Logic\SubtitleFormats\JsonType2.cs" />
     <Compile Include="Logic\SubtitleFormats\UnknownSubtitle18.cs" />
+    <Compile Include="Logic\SubtitleFormats\UnknownSubtitle19.cs" />
     <Compile Include="Logic\SubtitleFormats\UnknownSubtitle5.cs" />
     <Compile Include="Logic\SubtitleFormats\OpenDvt.cs" />
     <Compile Include="Logic\SubtitleFormats\AbcIViewer.cs" />
