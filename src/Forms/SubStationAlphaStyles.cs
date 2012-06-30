@@ -333,7 +333,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 if (string.IsNullOrEmpty(p.Extra) && ssaStyle.Name.TrimStart('*') == "Default")
                     count++;
-                else if (ssaStyle.Name.TrimStart('*').ToLower() == p.Extra.TrimStart('*').ToLower())
+                else if (p.Extra != null && ssaStyle.Name.TrimStart('*').ToLower() == p.Extra.TrimStart('*').ToLower())
                     count++;
             }
             subItem = new ListViewItem.ListViewSubItem(item, count.ToString());
