@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Text;
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Logic;
 
@@ -13,15 +9,11 @@ namespace Nikse.SubtitleEdit.Forms
 
     public partial class AlignmentPicker : Form
     {
-        Timer t1 = new Timer();
         public ContentAlignment Alignment { get; set; }
 
         public AlignmentPicker()
         {
             InitializeComponent();
-            t1.Interval = 100;
-            t1.Tick += new EventHandler(t1_Tick);
-            t1.Start();
             Text = Configuration.Settings.Language.SubStationAlphaStyles.Alignment;
 
             button1.Text = Configuration.Settings.Language.SubStationAlphaStyles.TopLeft;
@@ -40,15 +32,6 @@ namespace Nikse.SubtitleEdit.Forms
         public void Done()
         {
             DialogResult = DialogResult.OK;
-        }
-
-        void t1_Tick(object sender, EventArgs e)
-        {
-            var currentPos = System.Windows.Forms.Cursor.Position;
-            if (currentPos.X < this.Left || currentPos.X > this.Left + this.Width)
-                Close();
-            if (currentPos.Y < this.Top || currentPos.Y > this.Top + this.Height)
-                Close();
         }
 
         private void button1_Click(object sender, EventArgs e)
