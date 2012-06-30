@@ -147,83 +147,7 @@ Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
             }
             return fontTag;
         }
-
-        private static string GetFormattedText(string text)
-        {
-            text = text.Replace("\\N", Environment.NewLine).Replace("\\n", Environment.NewLine);
-
-            text = text.Replace(@"{\i1}", "<i>");
-            text = text.Replace(@"{\i0}", "</i>");
-            if (Utilities.CountTagInText(text, "<i>") > Utilities.CountTagInText(text, "</i>"))
-                text += "</i>";
-
-            text = text.Replace(@"{\u1}", "<u>");
-            text = text.Replace(@"{\u0}", "</u>");
-            if (Utilities.CountTagInText(text, "<u>") > Utilities.CountTagInText(text, "</u>"))
-                text += "</u>";
-
-            text = text.Replace(@"{\b1}", "<b>");
-            text = text.Replace(@"{\b0}", "</b>");
-            if (Utilities.CountTagInText(text, "<b>") > Utilities.CountTagInText(text, "</b>"))
-                text += "</b>";
-
-            for (int i = 0; i < 10; i++) // just look ten times...
-            {
-                if (text.Contains(@"{\fn"))
-                {
-                    int start = text.IndexOf(@"{\fn");
-                    int end = text.IndexOf('}', start);
-                    if (end > 0)
-                    {
-                        string fontName = text.Substring(start + 4, end - (start + 4));
-                        text = text.Remove(start, end - start + 1);
-                        text = text.Insert(start, "<font name=\"" + fontName + "\">");
-                        text += "</font>";
-                    }
-                }
-
-                if (text.Contains(@"{\fs"))
-                {
-                    int start = text.IndexOf(@"{\fs");
-                    int end = text.IndexOf('}', start);
-                    if (end > 0)
-                    {
-                        string fontSize = text.Substring(start + 4, end - (start + 4));
-                        if (Utilities.IsInteger(fontSize))
-                        {
-                            text = text.Remove(start, end - start + 1);
-                            text = text.Insert(start, "<font size=\"" + fontSize + "\">");
-                            text += "</font>";
-                        }
-                    }
-                }
-
-                if (text.Contains(@"{\c"))
-                {
-                    int start = text.IndexOf(@"{\c");
-                    int end = text.IndexOf('}', start);
-                    if (end > 0)
-                    {
-                        string color = text.Substring(start + 4, end - (start + 4));
-                        int indexOfNextTag = color.IndexOf("\\");
-                        if (indexOfNextTag > 1)
-                            color = color.Remove(indexOfNextTag);
-                        color = color.Replace("&", string.Empty).TrimStart('H');
-                        color = color.PadLeft(6, '0');
-
-                        // switch to rrggbb from bbggrr
-                        color = "#" + color.Remove(color.Length-6) + color.Substring(color.Length-2,2) + color.Substring(color.Length-4,2) + color.Substring(color.Length-6,2);
-
-                        text = text.Remove(start, end - start + 1);
-                        text = text.Insert(start, "<font color=\"" + color + "\">");
-                        text += "</font>";
-                    }
-                }
-            }
-
-            return text;
-        }
-
+        
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
             _errorCount = 0;
@@ -303,7 +227,7 @@ Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
 
                             p.StartTime = GetTimeCodeFromString(start);
                             p.EndTime = GetTimeCodeFromString(end);
-                            p.Text = GetFormattedText(text);
+                            p.Text = AdvancedSubStationAlpha.GetFormattedText(text);
                             if (!string.IsNullOrEmpty(style))
                                 p.Extra = style;
                             p.IsComment = s.StartsWith("comment:");

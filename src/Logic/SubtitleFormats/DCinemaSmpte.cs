@@ -128,6 +128,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
             if (string.IsNullOrEmpty(ss.CurrentDCinemaMovieTitle))
                 ss.CurrentDCinemaMovieTitle = title;
+
+            if (ss.CurrentDCinemaFontSize == 0 || string.IsNullOrEmpty(ss.CurrentDCinemaFontEffect))
+                Configuration.Settings.SubtitleSettings.InitializeDCinameSettings(true);
+
             xml.DocumentElement.SelectSingleNode("dcst:ContentTitleText", nsmgr).InnerText = ss.CurrentDCinemaMovieTitle;
             xml.DocumentElement.SelectSingleNode("dcst:Id", nsmgr).InnerText = ss.CurrentDCinemaSubtitleId;
             xml.DocumentElement.SelectSingleNode("dcst:ReelNumber", nsmgr).InnerText = ss.CurrentDCinemaReelNumber;
@@ -266,6 +270,15 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                                     italic.InnerText = "yes";
                                     fontNode.Attributes.Append(italic);
 
+                                    if (line.Length > i + 5 && line.Substring(i+4).StartsWith("</font>"))
+                                    {
+                                        XmlAttribute fontColor = xml.CreateAttribute("Color");
+                                        fontColor.InnerText = fontColors.Pop();
+                                        fontNode.Attributes.Append(fontColor);
+                                        fontNo--;
+                                        i += 7;
+                                    }
+
                                     fontNode.InnerText = Utilities.RemoveHtmlTags(txt.ToString());
                                     html.Append(fontNode.OuterXml);
                                     txt = new StringBuilder();
@@ -299,6 +312,15 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                                     XmlAttribute fontColor = xml.CreateAttribute("Color");
                                     fontColor.InnerText = fontColors.Pop();
                                     fontNode.Attributes.Append(fontColor);
+
+                                    if (line.Length > i + 9 && line.Substring(i + 7).StartsWith("</i>"))
+                                    {
+                                        XmlAttribute italic = xml.CreateAttribute("Italic");
+                                        italic.InnerText = "yes";
+                                        fontNode.Attributes.Append(italic);
+                                        isItalic = false;
+                                        i += 4;
+                                    }
 
                                     fontNode.InnerText = Utilities.RemoveHtmlTags(txt.ToString());
                                     html.Append(fontNode.OuterXml);
@@ -350,7 +372,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             var writer = new XmlTextWriter(ms, Encoding.UTF8);
             writer.Formatting = Formatting.Indented;
             xml.Save(writer);
-            return Encoding.UTF8.GetString(ms.ToArray()).Trim().Replace("encoding=\"utf-8\"", "encoding=\"UTF-8\"");
+            return Encoding.UTF8.GetString(ms.ToArray()).Trim().Replace("encoding=\"utf-8\"", "encoding=\"UTF-8\"").Replace(" xmlns:dcst=\"dcst\"", string.Empty);
         }
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
@@ -468,11 +490,17 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                                         if (innerInnerNode.Name == "Font" && innerInnerNode.Attributes["Italic"] != null &&
                                             innerInnerNode.Attributes["Italic"].InnerText.ToLower() == "yes")
                                         {
-                                            pText.Append("<i>" + innerInnerNode.InnerText + "</i>");
+                                            if (innerInnerNode.Attributes["Color"] != null)
+                                                pText.Append("<i><font color=\"" + GetColorStringFromDCinema(innerInnerNode.Attributes["Color"].Value) + "\">" + innerInnerNode.InnerText + "</font><i>");
+                                            else
+                                                pText.Append("<i>" + innerInnerNode.InnerText + "</i>");
                                         }
                                         else if (innerInnerNode.Name == "Font" && innerInnerNode.Attributes["Color"] != null)
                                         {
-                                            pText.Append("<font color=\"" + GetColorStringFromDCinema(innerInnerNode.Attributes["Color"].Value) + "\">" + innerInnerNode.InnerText + "</font>");
+                                            if (innerInnerNode.Attributes["Italic"] != null && innerInnerNode.Attributes["Italic"].InnerText.ToLower() == "yes")
+                                                pText.Append("<i><font color=\"" + GetColorStringFromDCinema(innerInnerNode.Attributes["Color"].Value) + "\">" + innerInnerNode.InnerText + "</font><i>");
+                                            else
+                                                pText.Append("<font color=\"" + GetColorStringFromDCinema(innerInnerNode.Attributes["Color"].Value) + "\">" + innerInnerNode.InnerText + "</font>");
                                         }
                                         else
                                         {

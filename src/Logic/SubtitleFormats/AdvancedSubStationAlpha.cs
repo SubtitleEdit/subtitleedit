@@ -192,24 +192,9 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
             return fontTag;
         }
 
-        private static string GetFormattedText(string text)
+        public static string GetFormattedText(string text)
         {
-            text = text.Replace("\\N", Environment.NewLine).Replace("\\n", Environment.NewLine);
-
-            text = text.Replace(@"{\i1}", "<i>");
-            text = text.Replace(@"{\i0}", "</i>");
-            if (Utilities.CountTagInText(text, "<i>") > Utilities.CountTagInText(text, "</i>"))
-                text += "</i>";
-
-            text = text.Replace(@"{\u1}", "<u>");
-            text = text.Replace(@"{\u0}", "</u>");
-            if (Utilities.CountTagInText(text, "<u>") > Utilities.CountTagInText(text, "</u>"))
-                text += "</u>";
-
-            text = text.Replace(@"{\b1}", "<b>");
-            text = text.Replace(@"{\b0}", "</b>");
-            if (Utilities.CountTagInText(text, "<b>") > Utilities.CountTagInText(text, "</b>"))
-                text += "</b>";
+            text = text.Replace("\\N", Environment.NewLine).Replace("\\n", Environment.NewLine);           
 
             for (int i = 0; i < 10; i++) // just look ten times...
             {
@@ -250,16 +235,22 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                     {
                         string color = text.Substring(start + 4, end - (start + 4));
                         int indexOfNextTag = color.IndexOf("\\");
+                        string nextTag = string.Empty; 
                         if (indexOfNextTag > 1)
+                        {
+                            nextTag = "{" + color.Substring(indexOfNextTag) + "}";
                             color = color.Remove(indexOfNextTag);
+                        }
+                            
                         color = color.Replace("&", string.Empty).TrimStart('H');
                         color = color.PadLeft(6, '0');
 
                         // switch to rrggbb from bbggrr
                         color = "#" + color.Remove(color.Length - 6) + color.Substring(color.Length - 2, 2) + color.Substring(color.Length - 4, 2) + color.Substring(color.Length - 6, 2);
+                        color = color.ToLower();
 
                         text = text.Remove(start, end - start + 1);
-                        text = text.Insert(start, "<font color=\"" + color + "\">");
+                        text = text.Insert(start, "<font color=\"" + color + "\">" + nextTag);
                         text += "</font>";
                     }
                 }
@@ -272,21 +263,41 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                     {
                         string color = text.Substring(start + 5, end - (start + 5));
                         int indexOfNextTag = color.IndexOf("\\");
+                        string nextTag = string.Empty; 
                         if (indexOfNextTag > 1)
+                        {
+                            nextTag = "{" + color.Substring(indexOfNextTag) + "}";
                             color = color.Remove(indexOfNextTag);
+                        }
                         color = color.Replace("&", string.Empty).TrimStart('H');
                         color = color.PadLeft(6, '0');
 
                         // switch to rrggbb from bbggrr
                         color = "#" + color.Remove(color.Length - 6) + color.Substring(color.Length - 2, 2) + color.Substring(color.Length - 4, 2) + color.Substring(color.Length - 6, 2);
+                        color = color.ToLower();
 
                         text = text.Remove(start, end - start + 1);
-                        text = text.Insert(start, "<font color=\"" + color + "\">");
+                        text = text.Insert(start, "<font color=\"" + color + "\">" + nextTag);
                         text += "</font>";
                     }
                 }
 
             }
+
+            text = text.Replace(@"{\i1}", "<i>");
+            text = text.Replace(@"{\i0}", "</i>");
+            if (Utilities.CountTagInText(text, "<i>") > Utilities.CountTagInText(text, "</i>"))
+                text += "</i>";
+
+            text = text.Replace(@"{\u1}", "<u>");
+            text = text.Replace(@"{\u0}", "</u>");
+            if (Utilities.CountTagInText(text, "<u>") > Utilities.CountTagInText(text, "</u>"))
+                text += "</u>";
+
+            text = text.Replace(@"{\b1}", "<b>");
+            text = text.Replace(@"{\b0}", "</b>");
+            if (Utilities.CountTagInText(text, "<b>") > Utilities.CountTagInText(text, "</b>"))
+                text += "</b>";
 
             return text;
         }

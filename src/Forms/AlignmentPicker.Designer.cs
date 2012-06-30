@@ -153,7 +153,8 @@
             this.Name = "AlignmentPicker";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
-            this.Text = "Form2";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
+            this.Text = "Alignment";
             this.Shown += new System.EventHandler(this.AlignmentPicker_Shown);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.AlignmentPicker_KeyDown);
             this.panel1.ResumeLayout(false);
