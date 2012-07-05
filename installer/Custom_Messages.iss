@@ -309,6 +309,25 @@ ja.types_custom=Custom installation
 ja.types_default=Default installation
 
 
+; Korean
+kr.comp_translations=Translations
+kr.msg_AppIsRunning=Setup has detected that Subtitle Edit is currently running.%n%nPlease close all instances of it now, then click OK to continue, or Cancel to exit.
+kr.msg_AppIsRunningUninstall=Uninstall has detected that Subtitle Edit is currently running.%n%nPlease close all instances of it now, then click OK to continue, or Cancel to exit.
+kr.msg_AskToDownNET=Subtitle Edit requires the .NET Framework 2.0. Please download and install the .NET Framework and run setup again.%n%nDo you want to download the .NET Framework 2.0 now?
+kr.msg_DeleteSettings=Do you also want to delete Subtitle Edit's settings and any custom changes you made in the dictionaries?%n%nIf you plan on reinstalling Subtitle Edit you do not have to delete them.
+kr.msg_OptimizingPerformance=Optimizing performance...
+kr.msg_SetupIsRunningWarning=Subtitle Edit Setup is already running!
+kr.run_VisitWebsite=Visit Subtitle Edit's Website
+kr.sm_com_Changelog=Subtitle Edit's Changelog
+kr.tsk_AllUsers=For all users
+kr.tsk_CurrentUser=For the current user only
+kr.tsk_Other=Other:
+kr.tsk_ResetDictionaries=Reset Dictionaries and delete any custom names
+kr.tsk_ResetSettings=Reset Subtitle Edit's settings
+kr.types_custom=Custom installation
+kr.types_default=Default installation
+
+
 ; Dutch
 nl.comp_translations=Translations
 nl.msg_AppIsRunning=Setup constateert dat Subtitle Edit al aktief is.%n%nSluit alstublieft alle geopende vensters, dan klik OK om door te gaan of Cancel om af te sluiten.
