@@ -147,7 +147,7 @@ Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
             }
             return fontTag;
         }
-        
+
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
             _errorCount = 0;

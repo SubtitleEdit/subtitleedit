@@ -49,32 +49,32 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 "<?xml version=\"1.0\" encoding=\"utf-8\" ?>" + Environment.NewLine +
                 "<ISS>" + Environment.NewLine +
                 "   <Project ScreenHeight=\"480\" ScreenWidth=\"720\" OffsetTc=\"0\" TcMemo=\"\" TcEnd=\"\" TcStart=\"\" TcUser=\"\" TransMemo=\"\" TransEnd=\"\" TransStart=\"\" TransUser=\"\" CreateMemo=\"\" CreateDate=\"2012-06-30\" CreateUser=\"\" MovieFile=\"C:\\Documents and Settings\\Imac\\My Documents\\밀레니엄3부_1.5.mpg\" Title=\"프로젝트명\"/>" + Environment.NewLine +
-	            "   <StyleList CurStyle=\"\">" + Environment.NewLine +
-		        "       <Style Name=\"해설자\">" + Environment.NewLine +
-			    "           <FontAttr BoxGradientType=\"0\" BoxGradient=\"0\" BoxOpacity2=\"100\" BoxColor2=\"0,0,0\" BoxOpacity=\"100\" BoxColor=\"0,255,0\" BoxMargin=\"(0,0)\" Box=\"0\" ShadowDepth=\"(2,2)\" ShadowOpacity=\"10\" ShadowAntiAlias=\"1\" ShadowColor=\"128,128,128\" Shadow=\"0\" OutlineHardness2=\"50\" OutlineWidth2=\"3\" OutlineAntiAlias2=\"1\" OutlineColor2=\"0,0,0\" Outline2=\"0\" OutlineHardness=\"50\" OutlineWidth=\"2\" OutlineAntiAlias=\"1\" OutlineColor=\"0,0,0\" Outline=\"0\" GradientType=\"0\" Gradient=\"0\" Opacity2=\"100\" AntiAlias2=\"1\" Color2=\"255,255,255\" Opacity=\"100\" AntiAlias=\"1\" Color=\"255,0,255\" StrikeOut=\"0\" Underline=\"0\" Italic=\"0\" Bold=\"1\" CharSet=\"129\" Width=\"12\" Height=\"14\" FaceName=\"굴림\"/>" + Environment.NewLine +
-			    "           <ParaAttr ORDER=\"LEFT\" ALIGN=\"MIDDLE\" JUSTIFY=\"CENTER\"/>" + Environment.NewLine +
-		        "       </Style>" + Environment.NewLine +
-		        "       <Style Name=\"보통\">" + Environment.NewLine +
-			    "           <FontAttr BoxGradientType=\"0\" BoxGradient=\"0\" BoxOpacity2=\"100\" BoxColor2=\"0,0,0\" BoxOpacity=\"100\" BoxColor=\"0,255,0\" BoxMargin=\"(0,0)\" Box=\"0\" ShadowDepth=\"(2,2)\" ShadowOpacity=\"10\" ShadowAntiAlias=\"1\" ShadowColor=\"128,128,128\" Shadow=\"0\" OutlineHardness2=\"50\" OutlineWidth2=\"3\" OutlineAntiAlias2=\"1\" OutlineColor2=\"0,0,0\" Outline2=\"0\" OutlineHardness=\"50\" OutlineWidth=\"2\" OutlineAntiAlias=\"1\" OutlineColor=\"0,0,0\" Outline=\"1\" GradientType=\"0\" Gradient=\"0\" Opacity2=\"100\" AntiAlias2=\"1\" Color2=\"255,255,255\" Opacity=\"100\" AntiAlias=\"1\" Color=\"255,255,255\" StrikeOut=\"0\" Underline=\"0\" Italic=\"0\" Bold=\"0\" CharSet=\"129\" Width=\"12\" Height=\"12\" FaceName=\"굴림체\"/>" + Environment.NewLine +
-			    "           <ParaAttr ORDER=\"CENTER\" ALIGN=\"MIDDLE\" JUSTIFY=\"CENTER\"/>" + Environment.NewLine +
-		        "       </Style>" + Environment.NewLine +
-	            "   </StyleList>" + Environment.NewLine +
-	            "   <Environment DefaultStyle=\"해설자\"/>" + Environment.NewLine +
-	            "   <VoiceCheckInOut VoiceOutCheckFrame=\"3\" VoiceOutCheckPoint=\"4\" VoiceInCheckFrame=\"3\" VoiceInCheckPoint=\"8\"/><MoveUserTcFrame Value=\"3\"/>" + Environment.NewLine +
-	            "   <AutoSave DurationMin=\"10\" Use=\"1\"/>" + Environment.NewLine +
-	            "   <AutoMoveByEnter Use=\"1\"/>" + Environment.NewLine +
-	            "   <AutoMoveByCharCount Use=\"0\"/>" + Environment.NewLine +
-	            "   <TrackList>" + Environment.NewLine +
-		        "       <Track Name=\"기본 트랙\" DisplayChannel=\"0\" Display=\"1\" RowCount=\"280\" Bottom=\"470\" Right=\"710\" Top=\"320\" Left=\"10\" StyleName=\"해설자\">" + Environment.NewLine +
-			    "           <FcpProperty Use2997DropFrame=\"1\" LineColor=\"0,0,0\" UseLineColor=\"0\" TextColor=\"255,255,255\" UseTextColor=\"0\" CenterY=\"0\" CenterX=\"0\" UseCenter=\"0\" TextOpacity=\"100\" LineWidth=\"50\" UseLineWidth=\"0\" Aspect=\"1.000000\" FontSize=\"26\" UseFontSize=\"0\" Alignment=\"2\" UseAlignment=\"0\" Style=\"1\" UseStyle=\"0\" FontName=\"Stone Sans ITC TT\" UseFontName=\"0\" Tracking=\"0.800000\" LineSoftness=\"15\" Leading=\"-10.000000\"/>" + Environment.NewLine +
-			    "           <ChannelDefineList>" + Environment.NewLine +
-				"               <ChannelDefine Name=\"기본 채널\" Bottom=\"470\" Right=\"710\" Top=\"320\" Left=\"10\" StyleName=\"해설자\"/>" + Environment.NewLine +
-				"               <ChannelDefine Name=\"영어\" Bottom=\"470\" Right=\"710\" Top=\"320\" Left=\"10\" StyleName=\"해설자\"/>" + Environment.NewLine +
-				"               <ChannelDefine Name=\"시간\" Bottom=\"470\" Right=\"710\" Top=\"320\" Left=\"10\" StyleName=\"해설자\"/>" + Environment.NewLine +
-			    "           </ChannelDefineList>" + Environment.NewLine +
-			    "           <StItemList />" + Environment.NewLine +
-		        "       </Track>" + Environment.NewLine +
-	            "   </TrackList>" + Environment.NewLine +
+                "   <StyleList CurStyle=\"\">" + Environment.NewLine +
+                "       <Style Name=\"해설자\">" + Environment.NewLine +
+                "           <FontAttr BoxGradientType=\"0\" BoxGradient=\"0\" BoxOpacity2=\"100\" BoxColor2=\"0,0,0\" BoxOpacity=\"100\" BoxColor=\"0,255,0\" BoxMargin=\"(0,0)\" Box=\"0\" ShadowDepth=\"(2,2)\" ShadowOpacity=\"10\" ShadowAntiAlias=\"1\" ShadowColor=\"128,128,128\" Shadow=\"0\" OutlineHardness2=\"50\" OutlineWidth2=\"3\" OutlineAntiAlias2=\"1\" OutlineColor2=\"0,0,0\" Outline2=\"0\" OutlineHardness=\"50\" OutlineWidth=\"2\" OutlineAntiAlias=\"1\" OutlineColor=\"0,0,0\" Outline=\"0\" GradientType=\"0\" Gradient=\"0\" Opacity2=\"100\" AntiAlias2=\"1\" Color2=\"255,255,255\" Opacity=\"100\" AntiAlias=\"1\" Color=\"255,0,255\" StrikeOut=\"0\" Underline=\"0\" Italic=\"0\" Bold=\"1\" CharSet=\"129\" Width=\"12\" Height=\"14\" FaceName=\"굴림\"/>" + Environment.NewLine +
+                "           <ParaAttr ORDER=\"LEFT\" ALIGN=\"MIDDLE\" JUSTIFY=\"CENTER\"/>" + Environment.NewLine +
+                "       </Style>" + Environment.NewLine +
+                "       <Style Name=\"보통\">" + Environment.NewLine +
+                "           <FontAttr BoxGradientType=\"0\" BoxGradient=\"0\" BoxOpacity2=\"100\" BoxColor2=\"0,0,0\" BoxOpacity=\"100\" BoxColor=\"0,255,0\" BoxMargin=\"(0,0)\" Box=\"0\" ShadowDepth=\"(2,2)\" ShadowOpacity=\"10\" ShadowAntiAlias=\"1\" ShadowColor=\"128,128,128\" Shadow=\"0\" OutlineHardness2=\"50\" OutlineWidth2=\"3\" OutlineAntiAlias2=\"1\" OutlineColor2=\"0,0,0\" Outline2=\"0\" OutlineHardness=\"50\" OutlineWidth=\"2\" OutlineAntiAlias=\"1\" OutlineColor=\"0,0,0\" Outline=\"1\" GradientType=\"0\" Gradient=\"0\" Opacity2=\"100\" AntiAlias2=\"1\" Color2=\"255,255,255\" Opacity=\"100\" AntiAlias=\"1\" Color=\"255,255,255\" StrikeOut=\"0\" Underline=\"0\" Italic=\"0\" Bold=\"0\" CharSet=\"129\" Width=\"12\" Height=\"12\" FaceName=\"굴림체\"/>" + Environment.NewLine +
+                "           <ParaAttr ORDER=\"CENTER\" ALIGN=\"MIDDLE\" JUSTIFY=\"CENTER\"/>" + Environment.NewLine +
+                "       </Style>" + Environment.NewLine +
+                "   </StyleList>" + Environment.NewLine +
+                "   <Environment DefaultStyle=\"해설자\"/>" + Environment.NewLine +
+                "   <VoiceCheckInOut VoiceOutCheckFrame=\"3\" VoiceOutCheckPoint=\"4\" VoiceInCheckFrame=\"3\" VoiceInCheckPoint=\"8\"/><MoveUserTcFrame Value=\"3\"/>" + Environment.NewLine +
+                "   <AutoSave DurationMin=\"10\" Use=\"1\"/>" + Environment.NewLine +
+                "   <AutoMoveByEnter Use=\"1\"/>" + Environment.NewLine +
+                "   <AutoMoveByCharCount Use=\"0\"/>" + Environment.NewLine +
+                "   <TrackList>" + Environment.NewLine +
+                "       <Track Name=\"기본 트랙\" DisplayChannel=\"0\" Display=\"1\" RowCount=\"280\" Bottom=\"470\" Right=\"710\" Top=\"320\" Left=\"10\" StyleName=\"해설자\">" + Environment.NewLine +
+                "           <FcpProperty Use2997DropFrame=\"1\" LineColor=\"0,0,0\" UseLineColor=\"0\" TextColor=\"255,255,255\" UseTextColor=\"0\" CenterY=\"0\" CenterX=\"0\" UseCenter=\"0\" TextOpacity=\"100\" LineWidth=\"50\" UseLineWidth=\"0\" Aspect=\"1.000000\" FontSize=\"26\" UseFontSize=\"0\" Alignment=\"2\" UseAlignment=\"0\" Style=\"1\" UseStyle=\"0\" FontName=\"Stone Sans ITC TT\" UseFontName=\"0\" Tracking=\"0.800000\" LineSoftness=\"15\" Leading=\"-10.000000\"/>" + Environment.NewLine +
+                "           <ChannelDefineList>" + Environment.NewLine +
+                "               <ChannelDefine Name=\"기본 채널\" Bottom=\"470\" Right=\"710\" Top=\"320\" Left=\"10\" StyleName=\"해설자\"/>" + Environment.NewLine +
+                "               <ChannelDefine Name=\"영어\" Bottom=\"470\" Right=\"710\" Top=\"320\" Left=\"10\" StyleName=\"해설자\"/>" + Environment.NewLine +
+                "               <ChannelDefine Name=\"시간\" Bottom=\"470\" Right=\"710\" Top=\"320\" Left=\"10\" StyleName=\"해설자\"/>" + Environment.NewLine +
+                "           </ChannelDefineList>" + Environment.NewLine +
+                "           <StItemList />" + Environment.NewLine +
+                "       </Track>" + Environment.NewLine +
+                "   </TrackList>" + Environment.NewLine +
                 "</ISS>";
 
             string xmlTrackStructure =
@@ -108,7 +108,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 stItem.Attributes.Append(tc);
 
                 XmlAttribute row = xml.CreateAttribute("Row");
-                row.InnerText = number.ToString(); 
+                row.InnerText = number.ToString();
                 stItem.Attributes.Append(row);
 
                 XmlNodeList list = stItem.SelectNodes("StTextList/StText");
@@ -213,7 +213,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
             int i = 0;
             foreach (Paragraph p in subtitle.Paragraphs)
-            { 
+            {
                 i++;
                 var next = subtitle.GetParagraphOrDefault(i);
                 if (next != null)

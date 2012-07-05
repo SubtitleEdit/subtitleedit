@@ -65,7 +65,7 @@ namespace Test
 
 
         private List<string> GetSrtLines(string text)
-        {           
+        {
             var lines = new List<string>();
             string[] arr = text.Replace(Environment.NewLine, "\r").Replace("\n", "\r").Split('\r');
             foreach (string line in arr)
@@ -167,9 +167,9 @@ Line 3";
         {
             var text =
 @"[Script Info]
-Title: 
+Title:
 Original Script: swk
-Update Details: 
+Update Details:
 ScriptType: v4.00+
 Collisions: Normal
 PlayDepth: 0

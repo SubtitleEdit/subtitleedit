@@ -41,7 +41,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         }
 
         private TimeCode DecodeTimeCode(string s)
-        {            
+        {
             return new TimeCode(TimeSpan.FromSeconds(double.Parse(s)));
         }
 
@@ -76,7 +76,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
                 attr = xml.CreateAttribute("text");
                 attr.InnerText = Utilities.RemoveHtmlTags(p.Text);
-                paragraph.Attributes.Append(attr);                
+                paragraph.Attributes.Append(attr);
 
                 xml.DocumentElement.AppendChild(paragraph);
             //    count++;

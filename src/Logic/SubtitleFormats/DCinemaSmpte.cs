@@ -446,7 +446,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     {
                         switch (innerNode.Name.ToString())
                         {
-                            case "Text":                               
+                            case "Text":
                                 if (innerNode.Attributes["VPosition"] != null)
                                 {
                                     string vPosition = innerNode.Attributes["VPosition"].InnerText;

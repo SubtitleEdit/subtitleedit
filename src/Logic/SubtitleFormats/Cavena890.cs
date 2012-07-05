@@ -475,7 +475,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 Paragraph p = new Paragraph();
                 double startFrame = buffer[start - 14] * 256 * 256 + buffer[start - 13] * 256 + buffer[start - 12];
                 double endFrame = buffer[start - 11] * 256 * 256 + buffer[start - 10] * 256 + buffer[start - 9];
-                
+
                 string line1 = FixText(buffer, start, TextLength);
                 string line2 = FixText(buffer, start + TextLength + 6, TextLength);
                 if (lastNumber == number)
@@ -538,7 +538,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 var sb = new StringBuilder();
                 int index = start;
 
-                text = Encoding.GetEncoding(1201).GetString(buffer, index, textLength - 1).Replace("\0", string.Empty);                
+                text = Encoding.GetEncoding(1201).GetString(buffer, index, textLength - 1).Replace("\0", string.Empty);
 
                 var encoding = Encoding.Default; // which encoding?? Encoding.GetEncoding("ISO-8859-5")
                 text = text.Replace(encoding.GetString(new byte[] { 0x7F }), string.Empty); // Used to fill empty space upto 51 bytes
