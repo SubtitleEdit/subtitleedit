@@ -110,5 +110,16 @@ namespace Nikse.SubtitleEdit.Logic
                 return Text.Length - Text.Replace(Environment.NewLine, string.Empty).Length;
             }
         }
+
+        public double WordsPerMinute
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(Text))
+                    return 0;
+                int wordCount = Utilities.RemoveHtmlTags(Text).Split((" ,.!?;:()[]" + Environment.NewLine).ToCharArray(), StringSplitOptions.RemoveEmptyEntries).Length;
+                return (60.0 / Duration.TotalSeconds) * wordCount;
+            }
+        }
     }
 }

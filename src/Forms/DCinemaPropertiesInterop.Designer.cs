@@ -56,16 +56,19 @@
             this.buttonCancel = new System.Windows.Forms.Button();
             this.buttonOK = new System.Windows.Forms.Button();
             this.colorDialog1 = new System.Windows.Forms.ColorDialog();
+            this.numericUpDownTopBottomMargin = new System.Windows.Forms.NumericUpDown();
+            this.label2 = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownReelNumber)).BeginInit();
             this.groupBoxFont.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownFontSize)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownTopBottomMargin)).BeginInit();
             this.SuspendLayout();
             // 
             // panelFontEffectColor
             // 
             this.panelFontEffectColor.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panelFontEffectColor.Location = new System.Drawing.Point(224, 128);
+            this.panelFontEffectColor.Location = new System.Drawing.Point(255, 128);
             this.panelFontEffectColor.Name = "panelFontEffectColor";
             this.panelFontEffectColor.Size = new System.Drawing.Size(21, 20);
             this.panelFontEffectColor.TabIndex = 6;
@@ -88,14 +91,14 @@
             this.groupBox1.Controls.Add(this.labelSubtitleID);
             this.groupBox1.Location = new System.Drawing.Point(12, 12);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(444, 338);
+            this.groupBox1.Size = new System.Drawing.Size(537, 364);
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             // 
             // comboBoxLanguage
             // 
             this.comboBoxLanguage.FormattingEnabled = true;
-            this.comboBoxLanguage.Location = new System.Drawing.Point(108, 109);
+            this.comboBoxLanguage.Location = new System.Drawing.Point(139, 109);
             this.comboBoxLanguage.Name = "comboBoxLanguage";
             this.comboBoxLanguage.Size = new System.Drawing.Size(233, 21);
             this.comboBoxLanguage.TabIndex = 4;
@@ -111,7 +114,7 @@
             // 
             // numericUpDownReelNumber
             // 
-            this.numericUpDownReelNumber.Location = new System.Drawing.Point(108, 83);
+            this.numericUpDownReelNumber.Location = new System.Drawing.Point(139, 83);
             this.numericUpDownReelNumber.Maximum = new decimal(new int[] {
             250,
             0,
@@ -134,7 +137,7 @@
             // buttonGenerateID
             // 
             this.buttonGenerateID.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonGenerateID.Location = new System.Drawing.Point(338, 29);
+            this.buttonGenerateID.Location = new System.Drawing.Point(371, 29);
             this.buttonGenerateID.Name = "buttonGenerateID";
             this.buttonGenerateID.Size = new System.Drawing.Size(100, 21);
             this.buttonGenerateID.TabIndex = 1;
@@ -147,6 +150,8 @@
             this.groupBoxFont.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxFont.Controls.Add(this.numericUpDownTopBottomMargin);
+            this.groupBoxFont.Controls.Add(this.label2);
             this.groupBoxFont.Controls.Add(this.panelFontEffectColor);
             this.groupBoxFont.Controls.Add(this.buttonFontEffectColor);
             this.groupBoxFont.Controls.Add(this.panelFontColor);
@@ -163,14 +168,14 @@
             this.groupBoxFont.Controls.Add(this.labelFontUri);
             this.groupBoxFont.Location = new System.Drawing.Point(6, 141);
             this.groupBoxFont.Name = "groupBoxFont";
-            this.groupBoxFont.Size = new System.Drawing.Size(432, 191);
+            this.groupBoxFont.Size = new System.Drawing.Size(525, 217);
             this.groupBoxFont.TabIndex = 5;
             this.groupBoxFont.TabStop = false;
             this.groupBoxFont.Text = "Font";
             // 
             // buttonFontEffectColor
             // 
-            this.buttonFontEffectColor.Location = new System.Drawing.Point(102, 128);
+            this.buttonFontEffectColor.Location = new System.Drawing.Point(133, 128);
             this.buttonFontEffectColor.Name = "buttonFontEffectColor";
             this.buttonFontEffectColor.Size = new System.Drawing.Size(112, 21);
             this.buttonFontEffectColor.TabIndex = 5;
@@ -181,7 +186,7 @@
             // panelFontColor
             // 
             this.panelFontColor.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panelFontColor.Location = new System.Drawing.Point(224, 75);
+            this.panelFontColor.Location = new System.Drawing.Point(255, 75);
             this.panelFontColor.Name = "panelFontColor";
             this.panelFontColor.Size = new System.Drawing.Size(21, 20);
             this.panelFontColor.TabIndex = 3;
@@ -189,7 +194,7 @@
             // 
             // buttonFontColor
             // 
-            this.buttonFontColor.Location = new System.Drawing.Point(102, 75);
+            this.buttonFontColor.Location = new System.Drawing.Point(133, 75);
             this.buttonFontColor.Name = "buttonFontColor";
             this.buttonFontColor.Size = new System.Drawing.Size(112, 21);
             this.buttonFontColor.TabIndex = 2;
@@ -208,7 +213,7 @@
             // 
             // numericUpDownFontSize
             // 
-            this.numericUpDownFontSize.Location = new System.Drawing.Point(102, 155);
+            this.numericUpDownFontSize.Location = new System.Drawing.Point(133, 155);
             this.numericUpDownFontSize.Maximum = new decimal(new int[] {
             250,
             0,
@@ -235,7 +240,7 @@
             "None",
             "Border",
             "Shadow"});
-            this.comboBoxFontEffect.Location = new System.Drawing.Point(102, 102);
+            this.comboBoxFontEffect.Location = new System.Drawing.Point(133, 102);
             this.comboBoxFontEffect.Name = "comboBoxFontEffect";
             this.comboBoxFontEffect.Size = new System.Drawing.Size(112, 21);
             this.comboBoxFontEffect.TabIndex = 4;
@@ -260,7 +265,7 @@
             // 
             // textBoxFontID
             // 
-            this.textBoxFontID.Location = new System.Drawing.Point(102, 24);
+            this.textBoxFontID.Location = new System.Drawing.Point(133, 24);
             this.textBoxFontID.Name = "textBoxFontID";
             this.textBoxFontID.Size = new System.Drawing.Size(224, 20);
             this.textBoxFontID.TabIndex = 0;
@@ -277,7 +282,7 @@
             // 
             // textBoxFontUri
             // 
-            this.textBoxFontUri.Location = new System.Drawing.Point(102, 50);
+            this.textBoxFontUri.Location = new System.Drawing.Point(133, 50);
             this.textBoxFontUri.Name = "textBoxFontUri";
             this.textBoxFontUri.Size = new System.Drawing.Size(224, 20);
             this.textBoxFontUri.TabIndex = 1;
@@ -303,7 +308,7 @@
             // 
             // textBoxMovieTitle
             // 
-            this.textBoxMovieTitle.Location = new System.Drawing.Point(108, 56);
+            this.textBoxMovieTitle.Location = new System.Drawing.Point(139, 56);
             this.textBoxMovieTitle.Name = "textBoxMovieTitle";
             this.textBoxMovieTitle.Size = new System.Drawing.Size(224, 20);
             this.textBoxMovieTitle.TabIndex = 2;
@@ -320,7 +325,7 @@
             // 
             // textBoxSubtitleID
             // 
-            this.textBoxSubtitleID.Location = new System.Drawing.Point(108, 30);
+            this.textBoxSubtitleID.Location = new System.Drawing.Point(139, 30);
             this.textBoxSubtitleID.Name = "textBoxSubtitleID";
             this.textBoxSubtitleID.Size = new System.Drawing.Size(224, 20);
             this.textBoxSubtitleID.TabIndex = 0;
@@ -339,7 +344,7 @@
             // 
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonCancel.Location = new System.Drawing.Point(381, 356);
+            this.buttonCancel.Location = new System.Drawing.Point(474, 382);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 21);
             this.buttonCancel.TabIndex = 2;
@@ -351,7 +356,7 @@
             // 
             this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonOK.Location = new System.Drawing.Point(300, 356);
+            this.buttonOK.Location = new System.Drawing.Point(393, 382);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 21);
             this.buttonOK.TabIndex = 1;
@@ -359,11 +364,42 @@
             this.buttonOK.UseVisualStyleBackColor = true;
             this.buttonOK.Click += new System.EventHandler(this.buttonOK_Click);
             // 
+            // numericUpDownTopBottomMargin
+            // 
+            this.numericUpDownTopBottomMargin.Location = new System.Drawing.Point(133, 181);
+            this.numericUpDownTopBottomMargin.Maximum = new decimal(new int[] {
+            50,
+            0,
+            0,
+            0});
+            this.numericUpDownTopBottomMargin.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.numericUpDownTopBottomMargin.Name = "numericUpDownTopBottomMargin";
+            this.numericUpDownTopBottomMargin.Size = new System.Drawing.Size(112, 20);
+            this.numericUpDownTopBottomMargin.TabIndex = 31;
+            this.numericUpDownTopBottomMargin.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(9, 184);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(97, 13);
+            this.label2.TabIndex = 30;
+            this.label2.Text = "Top/bottom margin";
+            // 
             // DCinemaPropertiesInterop
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(468, 389);
+            this.ClientSize = new System.Drawing.Size(561, 415);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.buttonOK);
@@ -382,6 +418,7 @@
             this.groupBoxFont.ResumeLayout(false);
             this.groupBoxFont.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownFontSize)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownTopBottomMargin)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -416,5 +453,7 @@
         private System.Windows.Forms.NumericUpDown numericUpDownReelNumber;
         private System.Windows.Forms.ComboBox comboBoxLanguage;
         private System.Windows.Forms.Label labelLanguage;
+        private System.Windows.Forms.NumericUpDown numericUpDownTopBottomMargin;
+        private System.Windows.Forms.Label label2;
     }
 }

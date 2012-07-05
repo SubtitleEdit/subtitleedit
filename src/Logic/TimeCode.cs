@@ -1,4 +1,5 @@
 ﻿using System;
+using Nikse.SubtitleEdit.Logic.SubtitleFormats;
 
 namespace Nikse.SubtitleEdit.Logic
 {
@@ -18,6 +19,24 @@ namespace Nikse.SubtitleEdit.Logic
                 if (int.TryParse(parts[0], out hours) && int.TryParse(parts[1], out minutes) && int.TryParse(parts[2], out seconds) && int.TryParse(parts[3], out milliseconds))
                 {
                     TimeSpan ts = new TimeSpan(0, hours, minutes, seconds, milliseconds);
+                    return ts.TotalMilliseconds;
+                }
+            }
+            return 0;
+        }
+
+        public static double ParseHHMMSSFFToMilliseconds(string text)
+        {
+            string[] parts = text.Split(":,.".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+            if (parts.Length == 4)
+            {
+                int hours;
+                int minutes;
+                int seconds;
+                int frames;
+                if (int.TryParse(parts[0], out hours) && int.TryParse(parts[1], out minutes) && int.TryParse(parts[2], out seconds) && int.TryParse(parts[3], out frames))
+                {
+                    TimeSpan ts = new TimeSpan(0, hours, minutes, seconds, SubtitleFormat.FramesToMilliseconds(frames));
                     return ts.TotalMilliseconds;
                 }
             }

@@ -61,10 +61,13 @@
             this.buttonCancel = new System.Windows.Forms.Button();
             this.buttonOK = new System.Windows.Forms.Button();
             this.colorDialog1 = new System.Windows.Forms.ColorDialog();
+            this.label2 = new System.Windows.Forms.Label();
+            this.numericUpDownTopBottomMargin = new System.Windows.Forms.NumericUpDown();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownReelNumber)).BeginInit();
             this.groupBoxFont.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownFontSize)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownTopBottomMargin)).BeginInit();
             this.SuspendLayout();
             // 
             // groupBox1
@@ -89,13 +92,13 @@
             this.groupBox1.Controls.Add(this.labelSubtitleID);
             this.groupBox1.Location = new System.Drawing.Point(12, 12);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(511, 401);
+            this.groupBox1.Size = new System.Drawing.Size(583, 420);
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             // 
             // textBoxEditRate
             // 
-            this.textBoxEditRate.Location = new System.Drawing.Point(108, 161);
+            this.textBoxEditRate.Location = new System.Drawing.Point(181, 161);
             this.textBoxEditRate.Name = "textBoxEditRate";
             this.textBoxEditRate.Size = new System.Drawing.Size(112, 20);
             this.textBoxEditRate.TabIndex = 7;
@@ -113,7 +116,7 @@
             // buttonToday
             // 
             this.buttonToday.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonToday.Location = new System.Drawing.Point(388, 134);
+            this.buttonToday.Location = new System.Drawing.Point(461, 134);
             this.buttonToday.Name = "buttonToday";
             this.buttonToday.Size = new System.Drawing.Size(100, 21);
             this.buttonToday.TabIndex = 6;
@@ -123,7 +126,7 @@
             // 
             // textBoxIssueDate
             // 
-            this.textBoxIssueDate.Location = new System.Drawing.Point(108, 135);
+            this.textBoxIssueDate.Location = new System.Drawing.Point(181, 135);
             this.textBoxIssueDate.Name = "textBoxIssueDate";
             this.textBoxIssueDate.Size = new System.Drawing.Size(274, 20);
             this.textBoxIssueDate.TabIndex = 5;
@@ -141,7 +144,7 @@
             // comboBoxLanguage
             // 
             this.comboBoxLanguage.FormattingEnabled = true;
-            this.comboBoxLanguage.Location = new System.Drawing.Point(108, 108);
+            this.comboBoxLanguage.Location = new System.Drawing.Point(181, 108);
             this.comboBoxLanguage.Name = "comboBoxLanguage";
             this.comboBoxLanguage.Size = new System.Drawing.Size(112, 21);
             this.comboBoxLanguage.TabIndex = 4;
@@ -158,7 +161,7 @@
             // buttonGenerateID
             // 
             this.buttonGenerateID.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonGenerateID.Location = new System.Drawing.Point(388, 29);
+            this.buttonGenerateID.Location = new System.Drawing.Point(461, 29);
             this.buttonGenerateID.Name = "buttonGenerateID";
             this.buttonGenerateID.Size = new System.Drawing.Size(100, 21);
             this.buttonGenerateID.TabIndex = 1;
@@ -168,7 +171,7 @@
             // 
             // numericUpDownReelNumber
             // 
-            this.numericUpDownReelNumber.Location = new System.Drawing.Point(108, 82);
+            this.numericUpDownReelNumber.Location = new System.Drawing.Point(181, 82);
             this.numericUpDownReelNumber.Maximum = new decimal(new int[] {
             250,
             0,
@@ -193,6 +196,8 @@
             this.groupBoxFont.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxFont.Controls.Add(this.numericUpDownTopBottomMargin);
+            this.groupBoxFont.Controls.Add(this.label2);
             this.groupBoxFont.Controls.Add(this.panelFontEffectColor);
             this.groupBoxFont.Controls.Add(this.buttonFontEffectColor);
             this.groupBoxFont.Controls.Add(this.panelFontColor);
@@ -209,7 +214,7 @@
             this.groupBoxFont.Controls.Add(this.labelFontUri);
             this.groupBoxFont.Location = new System.Drawing.Point(6, 201);
             this.groupBoxFont.Name = "groupBoxFont";
-            this.groupBoxFont.Size = new System.Drawing.Size(499, 194);
+            this.groupBoxFont.Size = new System.Drawing.Size(571, 213);
             this.groupBoxFont.TabIndex = 8;
             this.groupBoxFont.TabStop = false;
             this.groupBoxFont.Text = "Font";
@@ -217,7 +222,7 @@
             // panelFontEffectColor
             // 
             this.panelFontEffectColor.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panelFontEffectColor.Location = new System.Drawing.Point(224, 128);
+            this.panelFontEffectColor.Location = new System.Drawing.Point(297, 123);
             this.panelFontEffectColor.Name = "panelFontEffectColor";
             this.panelFontEffectColor.Size = new System.Drawing.Size(21, 20);
             this.panelFontEffectColor.TabIndex = 6;
@@ -225,7 +230,7 @@
             // 
             // buttonFontEffectColor
             // 
-            this.buttonFontEffectColor.Location = new System.Drawing.Point(102, 128);
+            this.buttonFontEffectColor.Location = new System.Drawing.Point(175, 123);
             this.buttonFontEffectColor.Name = "buttonFontEffectColor";
             this.buttonFontEffectColor.Size = new System.Drawing.Size(112, 21);
             this.buttonFontEffectColor.TabIndex = 4;
@@ -236,7 +241,7 @@
             // panelFontColor
             // 
             this.panelFontColor.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panelFontColor.Location = new System.Drawing.Point(224, 75);
+            this.panelFontColor.Location = new System.Drawing.Point(297, 70);
             this.panelFontColor.Name = "panelFontColor";
             this.panelFontColor.Size = new System.Drawing.Size(21, 20);
             this.panelFontColor.TabIndex = 3;
@@ -244,7 +249,7 @@
             // 
             // buttonFontColor
             // 
-            this.buttonFontColor.Location = new System.Drawing.Point(102, 75);
+            this.buttonFontColor.Location = new System.Drawing.Point(175, 70);
             this.buttonFontColor.Name = "buttonFontColor";
             this.buttonFontColor.Size = new System.Drawing.Size(112, 21);
             this.buttonFontColor.TabIndex = 2;
@@ -255,7 +260,7 @@
             // labelEffectColor
             // 
             this.labelEffectColor.AutoSize = true;
-            this.labelEffectColor.Location = new System.Drawing.Point(9, 132);
+            this.labelEffectColor.Location = new System.Drawing.Point(6, 127);
             this.labelEffectColor.Name = "labelEffectColor";
             this.labelEffectColor.Size = new System.Drawing.Size(61, 13);
             this.labelEffectColor.TabIndex = 27;
@@ -263,7 +268,7 @@
             // 
             // numericUpDownFontSize
             // 
-            this.numericUpDownFontSize.Location = new System.Drawing.Point(102, 155);
+            this.numericUpDownFontSize.Location = new System.Drawing.Point(175, 150);
             this.numericUpDownFontSize.Maximum = new decimal(new int[] {
             250,
             0,
@@ -276,7 +281,7 @@
             // labelFontSize
             // 
             this.labelFontSize.AutoSize = true;
-            this.labelFontSize.Location = new System.Drawing.Point(9, 162);
+            this.labelFontSize.Location = new System.Drawing.Point(8, 152);
             this.labelFontSize.Name = "labelFontSize";
             this.labelFontSize.Size = new System.Drawing.Size(27, 13);
             this.labelFontSize.TabIndex = 25;
@@ -290,7 +295,7 @@
             "None",
             "Border",
             "Shadow"});
-            this.comboBoxFontEffect.Location = new System.Drawing.Point(102, 102);
+            this.comboBoxFontEffect.Location = new System.Drawing.Point(175, 97);
             this.comboBoxFontEffect.Name = "comboBoxFontEffect";
             this.comboBoxFontEffect.Size = new System.Drawing.Size(112, 21);
             this.comboBoxFontEffect.TabIndex = 3;
@@ -298,7 +303,7 @@
             // labelEffect
             // 
             this.labelEffect.AutoSize = true;
-            this.labelEffect.Location = new System.Drawing.Point(9, 105);
+            this.labelEffect.Location = new System.Drawing.Point(9, 100);
             this.labelEffect.Name = "labelEffect";
             this.labelEffect.Size = new System.Drawing.Size(35, 13);
             this.labelEffect.TabIndex = 22;
@@ -307,7 +312,7 @@
             // labelFontColor
             // 
             this.labelFontColor.AutoSize = true;
-            this.labelFontColor.Location = new System.Drawing.Point(9, 79);
+            this.labelFontColor.Location = new System.Drawing.Point(9, 74);
             this.labelFontColor.Name = "labelFontColor";
             this.labelFontColor.Size = new System.Drawing.Size(31, 13);
             this.labelFontColor.TabIndex = 18;
@@ -315,7 +320,7 @@
             // 
             // textBoxFontID
             // 
-            this.textBoxFontID.Location = new System.Drawing.Point(102, 24);
+            this.textBoxFontID.Location = new System.Drawing.Point(175, 19);
             this.textBoxFontID.Name = "textBoxFontID";
             this.textBoxFontID.Size = new System.Drawing.Size(274, 20);
             this.textBoxFontID.TabIndex = 0;
@@ -324,7 +329,7 @@
             // labelFontId
             // 
             this.labelFontId.AutoSize = true;
-            this.labelFontId.Location = new System.Drawing.Point(9, 27);
+            this.labelFontId.Location = new System.Drawing.Point(9, 22);
             this.labelFontId.Name = "labelFontId";
             this.labelFontId.Size = new System.Drawing.Size(18, 13);
             this.labelFontId.TabIndex = 16;
@@ -332,7 +337,7 @@
             // 
             // textBoxFontUri
             // 
-            this.textBoxFontUri.Location = new System.Drawing.Point(102, 50);
+            this.textBoxFontUri.Location = new System.Drawing.Point(175, 45);
             this.textBoxFontUri.Name = "textBoxFontUri";
             this.textBoxFontUri.Size = new System.Drawing.Size(274, 20);
             this.textBoxFontUri.TabIndex = 1;
@@ -341,7 +346,7 @@
             // labelFontUri
             // 
             this.labelFontUri.AutoSize = true;
-            this.labelFontUri.Location = new System.Drawing.Point(9, 53);
+            this.labelFontUri.Location = new System.Drawing.Point(9, 48);
             this.labelFontUri.Name = "labelFontUri";
             this.labelFontUri.Size = new System.Drawing.Size(26, 13);
             this.labelFontUri.TabIndex = 14;
@@ -358,7 +363,7 @@
             // 
             // textBoxMovieTitle
             // 
-            this.textBoxMovieTitle.Location = new System.Drawing.Point(108, 56);
+            this.textBoxMovieTitle.Location = new System.Drawing.Point(181, 56);
             this.textBoxMovieTitle.Name = "textBoxMovieTitle";
             this.textBoxMovieTitle.Size = new System.Drawing.Size(274, 20);
             this.textBoxMovieTitle.TabIndex = 2;
@@ -375,7 +380,7 @@
             // 
             // textBoxSubtitleID
             // 
-            this.textBoxSubtitleID.Location = new System.Drawing.Point(108, 30);
+            this.textBoxSubtitleID.Location = new System.Drawing.Point(181, 30);
             this.textBoxSubtitleID.Name = "textBoxSubtitleID";
             this.textBoxSubtitleID.Size = new System.Drawing.Size(274, 20);
             this.textBoxSubtitleID.TabIndex = 0;
@@ -394,7 +399,7 @@
             // 
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonCancel.Location = new System.Drawing.Point(449, 419);
+            this.buttonCancel.Location = new System.Drawing.Point(521, 438);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 21);
             this.buttonCancel.TabIndex = 2;
@@ -406,7 +411,7 @@
             // 
             this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonOK.Location = new System.Drawing.Point(368, 419);
+            this.buttonOK.Location = new System.Drawing.Point(440, 438);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 21);
             this.buttonOK.TabIndex = 1;
@@ -414,11 +419,42 @@
             this.buttonOK.UseVisualStyleBackColor = true;
             this.buttonOK.Click += new System.EventHandler(this.buttonOK_Click_1);
             // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(9, 178);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(97, 13);
+            this.label2.TabIndex = 28;
+            this.label2.Text = "Top/bottom margin";
+            // 
+            // numericUpDownTopBottomMargin
+            // 
+            this.numericUpDownTopBottomMargin.Location = new System.Drawing.Point(175, 176);
+            this.numericUpDownTopBottomMargin.Maximum = new decimal(new int[] {
+            50,
+            0,
+            0,
+            0});
+            this.numericUpDownTopBottomMargin.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.numericUpDownTopBottomMargin.Name = "numericUpDownTopBottomMargin";
+            this.numericUpDownTopBottomMargin.Size = new System.Drawing.Size(112, 20);
+            this.numericUpDownTopBottomMargin.TabIndex = 29;
+            this.numericUpDownTopBottomMargin.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            // 
             // DCinemaPropertiesSmpte
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(535, 452);
+            this.ClientSize = new System.Drawing.Size(607, 471);
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.buttonOK);
             this.Controls.Add(this.groupBox1);
@@ -437,6 +473,7 @@
             this.groupBoxFont.ResumeLayout(false);
             this.groupBoxFont.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownFontSize)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownTopBottomMargin)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -476,5 +513,7 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox textBoxEditRate;
         private System.Windows.Forms.Label labelEditRate;
+        private System.Windows.Forms.NumericUpDown numericUpDownTopBottomMargin;
+        private System.Windows.Forms.Label label2;
     }
 }

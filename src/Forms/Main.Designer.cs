@@ -90,6 +90,7 @@
             this.toolStripMenuItemImportTimeCodes = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator22 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripMenuItemExport = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemTextTimeCodePair = new System.Windows.Forms.ToolStripMenuItem();
             this.adobeEncoreFABImageScriptToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemExportPngXml = new System.Windows.Forms.ToolStripMenuItem();
             this.bluraySupToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -140,6 +141,7 @@
             this.sortTextTotalLengthToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.sortTextNumberOfLinesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.textCharssecToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.textWordsPerMinutewpmToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator23 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripMenuItemShowOriginalInPreview = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemMakeEmptyFromCurrent = new System.Windows.Forms.ToolStripMenuItem();
@@ -984,6 +986,7 @@
             // toolStripMenuItemExport
             // 
             this.toolStripMenuItemExport.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripMenuItemTextTimeCodePair,
             this.adobeEncoreFABImageScriptToolStripMenuItem,
             this.toolStripMenuItemExportPngXml,
             this.bluraySupToolStripMenuItem,
@@ -1000,6 +1003,13 @@
             this.toolStripMenuItemExport.Name = "toolStripMenuItemExport";
             this.toolStripMenuItemExport.Size = new System.Drawing.Size(334, 22);
             this.toolStripMenuItemExport.Text = "Export";
+            // 
+            // toolStripMenuItemTextTimeCodePair
+            // 
+            this.toolStripMenuItemTextTimeCodePair.Name = "toolStripMenuItemTextTimeCodePair";
+            this.toolStripMenuItemTextTimeCodePair.Size = new System.Drawing.Size(258, 22);
+            this.toolStripMenuItemTextTimeCodePair.Text = "Korean ATS file pair...";
+            this.toolStripMenuItemTextTimeCodePair.Click += new System.EventHandler(this.toolStripMenuItemTextTimeCodePair_Click);
             // 
             // adobeEncoreFABImageScriptToolStripMenuItem
             // 
@@ -1328,7 +1338,8 @@
             this.sortTextMaxLineLengthToolStripMenuItem,
             this.sortTextTotalLengthToolStripMenuItem,
             this.sortTextNumberOfLinesToolStripMenuItem,
-            this.textCharssecToolStripMenuItem});
+            this.textCharssecToolStripMenuItem,
+            this.textWordsPerMinutewpmToolStripMenuItem});
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
             this.toolStripMenuItem1.Size = new System.Drawing.Size(346, 22);
             this.toolStripMenuItem1.Text = "Sort by";
@@ -1336,65 +1347,72 @@
             // sortNumberToolStripMenuItem
             // 
             this.sortNumberToolStripMenuItem.Name = "sortNumberToolStripMenuItem";
-            this.sortNumberToolStripMenuItem.Size = new System.Drawing.Size(233, 22);
+            this.sortNumberToolStripMenuItem.Size = new System.Drawing.Size(250, 22);
             this.sortNumberToolStripMenuItem.Text = "Number";
             this.sortNumberToolStripMenuItem.Click += new System.EventHandler(this.SortNumberToolStripMenuItemClick);
             // 
             // sortStartTimeToolStripMenuItem
             // 
             this.sortStartTimeToolStripMenuItem.Name = "sortStartTimeToolStripMenuItem";
-            this.sortStartTimeToolStripMenuItem.Size = new System.Drawing.Size(233, 22);
+            this.sortStartTimeToolStripMenuItem.Size = new System.Drawing.Size(250, 22);
             this.sortStartTimeToolStripMenuItem.Text = "Start time";
             this.sortStartTimeToolStripMenuItem.Click += new System.EventHandler(this.SortStartTimeToolStripMenuItemClick);
             // 
             // sortEndTimeToolStripMenuItem
             // 
             this.sortEndTimeToolStripMenuItem.Name = "sortEndTimeToolStripMenuItem";
-            this.sortEndTimeToolStripMenuItem.Size = new System.Drawing.Size(233, 22);
+            this.sortEndTimeToolStripMenuItem.Size = new System.Drawing.Size(250, 22);
             this.sortEndTimeToolStripMenuItem.Text = "End time";
             this.sortEndTimeToolStripMenuItem.Click += new System.EventHandler(this.SortEndTimeToolStripMenuItemClick);
             // 
             // sortDisplayTimeToolStripMenuItem
             // 
             this.sortDisplayTimeToolStripMenuItem.Name = "sortDisplayTimeToolStripMenuItem";
-            this.sortDisplayTimeToolStripMenuItem.Size = new System.Drawing.Size(233, 22);
+            this.sortDisplayTimeToolStripMenuItem.Size = new System.Drawing.Size(250, 22);
             this.sortDisplayTimeToolStripMenuItem.Text = "Duration";
             this.sortDisplayTimeToolStripMenuItem.Click += new System.EventHandler(this.SortDisplayTimeToolStripMenuItemClick);
             // 
             // sortTextAlphabeticallytoolStripMenuItem
             // 
             this.sortTextAlphabeticallytoolStripMenuItem.Name = "sortTextAlphabeticallytoolStripMenuItem";
-            this.sortTextAlphabeticallytoolStripMenuItem.Size = new System.Drawing.Size(233, 22);
+            this.sortTextAlphabeticallytoolStripMenuItem.Size = new System.Drawing.Size(250, 22);
             this.sortTextAlphabeticallytoolStripMenuItem.Text = "Text - alphabetically";
             this.sortTextAlphabeticallytoolStripMenuItem.Click += new System.EventHandler(this.SortTextAlphabeticallytoolStripMenuItemClick);
             // 
             // sortTextMaxLineLengthToolStripMenuItem
             // 
             this.sortTextMaxLineLengthToolStripMenuItem.Name = "sortTextMaxLineLengthToolStripMenuItem";
-            this.sortTextMaxLineLengthToolStripMenuItem.Size = new System.Drawing.Size(233, 22);
+            this.sortTextMaxLineLengthToolStripMenuItem.Size = new System.Drawing.Size(250, 22);
             this.sortTextMaxLineLengthToolStripMenuItem.Text = "Text - single line max. length";
             this.sortTextMaxLineLengthToolStripMenuItem.Click += new System.EventHandler(this.SortTextMaxLineLengthToolStripMenuItemClick);
             // 
             // sortTextTotalLengthToolStripMenuItem
             // 
             this.sortTextTotalLengthToolStripMenuItem.Name = "sortTextTotalLengthToolStripMenuItem";
-            this.sortTextTotalLengthToolStripMenuItem.Size = new System.Drawing.Size(233, 22);
+            this.sortTextTotalLengthToolStripMenuItem.Size = new System.Drawing.Size(250, 22);
             this.sortTextTotalLengthToolStripMenuItem.Text = "Text - total length";
             this.sortTextTotalLengthToolStripMenuItem.Click += new System.EventHandler(this.SortTextTotalLengthToolStripMenuItemClick);
             // 
             // sortTextNumberOfLinesToolStripMenuItem
             // 
             this.sortTextNumberOfLinesToolStripMenuItem.Name = "sortTextNumberOfLinesToolStripMenuItem";
-            this.sortTextNumberOfLinesToolStripMenuItem.Size = new System.Drawing.Size(233, 22);
+            this.sortTextNumberOfLinesToolStripMenuItem.Size = new System.Drawing.Size(250, 22);
             this.sortTextNumberOfLinesToolStripMenuItem.Text = "Text - number of lines";
             this.sortTextNumberOfLinesToolStripMenuItem.Click += new System.EventHandler(this.SortTextNumberOfLinesToolStripMenuItemClick);
             // 
             // textCharssecToolStripMenuItem
             // 
             this.textCharssecToolStripMenuItem.Name = "textCharssecToolStripMenuItem";
-            this.textCharssecToolStripMenuItem.Size = new System.Drawing.Size(233, 22);
+            this.textCharssecToolStripMenuItem.Size = new System.Drawing.Size(250, 22);
             this.textCharssecToolStripMenuItem.Text = "Text - chars/sec";
             this.textCharssecToolStripMenuItem.Click += new System.EventHandler(this.textCharssecToolStripMenuItem_Click);
+            // 
+            // textWordsPerMinutewpmToolStripMenuItem
+            // 
+            this.textWordsPerMinutewpmToolStripMenuItem.Name = "textWordsPerMinutewpmToolStripMenuItem";
+            this.textWordsPerMinutewpmToolStripMenuItem.Size = new System.Drawing.Size(250, 22);
+            this.textWordsPerMinutewpmToolStripMenuItem.Text = "Text - words per minute (wpm)";
+            this.textWordsPerMinutewpmToolStripMenuItem.Click += new System.EventHandler(this.textWordsPerMinutewpmToolStripMenuItem_Click);
             // 
             // toolStripSeparator23
             // 
@@ -4206,6 +4224,8 @@
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemRestoreAutoBackup;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemStatistics;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemDCinemaProperties;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemTextTimeCodePair;
+        private System.Windows.Forms.ToolStripMenuItem textWordsPerMinutewpmToolStripMenuItem;
     }
 }
 

@@ -1232,6 +1232,7 @@ namespace Nikse.SubtitleEdit.Forms
             sortTextTotalLengthToolStripMenuItem.Text = _language.Menu.Tools.TextTotalLength;
             sortTextNumberOfLinesToolStripMenuItem.Text = _language.Menu.Tools.TextNumberOfLines;
             textCharssecToolStripMenuItem.Text = _language.Menu.Tools.TextNumberOfCharactersPerSeconds;
+            textWordsPerMinutewpmToolStripMenuItem.Text = _language.Menu.Tools.WordsPerMinute;
 
             toolStripMenuItemShowOriginalInPreview.Text = _language.Menu.Tools.ShowOriginalTextInAudioAndVideoPreview;
             toolStripMenuItemMakeEmptyFromCurrent.Text = _language.Menu.Tools.MakeNewEmptyTranslationFromCurrentSubtitle;
@@ -14429,6 +14430,45 @@ namespace Nikse.SubtitleEdit.Forms
                 properties.ShowDialog(this);
                 _formPositionsAndSizes.SavePositionAndSize(properties);
             }
+        }
+
+        private void toolStripMenuItemTextTimeCodePair_Click(object sender, EventArgs e)
+        {
+            if (saveFileDialog1.ShowDialog(this) == DialogResult.OK)
+            {
+                saveFileDialog1.Filter =  "Text files|*.txt";
+                saveFileDialog1.Title = _language.SaveSubtitleAs;
+                saveFileDialog1.DefaultExt = "*.txt";
+                saveFileDialog1.AddExtension = true;
+
+                string fname = saveFileDialog1.FileName;
+                if (string.IsNullOrEmpty(fname))
+                    fname = "ATS";
+                if (!fname.EndsWith(".txt"))
+                    fname += ".txt";
+                string fileNameTimeCode = fname.Insert(fname.Length - 4, "_timecode");
+                string fileNameText = fname.Insert(fname.Length - 4, "_text");
+
+                var timeCodeLines = new StringBuilder();
+                var textLines = new StringBuilder();
+
+                foreach (Paragraph p in _subtitle.Paragraphs)
+                {
+                    timeCodeLines.AppendLine(string.Format("{0:00}:{1:00}:{2:00}:{3:00}", p.StartTime.Hours, p.StartTime.Minutes, p.StartTime.Seconds, SubtitleFormat.MillisecondsToFrames(p.StartTime.Milliseconds)));
+                    timeCodeLines.AppendLine(string.Format("{0:00}:{1:00}:{2:00}:{3:00}", p.EndTime.Hours, p.EndTime.Minutes, p.EndTime.Seconds, SubtitleFormat.MillisecondsToFrames(p.EndTime.Milliseconds)));
+
+                    textLines.AppendLine(Utilities.RemoveHtmlTags(p.Text).Replace(Environment.NewLine, "|"));
+                    textLines.AppendLine();
+                }
+
+                File.WriteAllText(fileNameTimeCode, timeCodeLines.ToString(), Encoding.UTF8);
+                File.WriteAllText(fileNameText, textLines.ToString(), Encoding.UTF8);
+            }
+        }
+
+        private void textWordsPerMinutewpmToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SortSubtitle(SubtitleSortCriteria.WordsPerMinute, (sender as ToolStripItem).Text);
         }
 
     }

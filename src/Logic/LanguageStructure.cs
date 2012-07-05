@@ -833,6 +833,7 @@
                     public string TextTotalLength { get; set; }
                     public string TextNumberOfLines { get; set; }
                     public string TextNumberOfCharactersPerSeconds { get; set; }
+                    public string WordsPerMinute { get; set; }
                     public string ShowOriginalTextInAudioAndVideoPreview { get; set; }
                     public string MakeNewEmptyTranslationFromCurrentSubtitle { get; set; }
                     public string SplitSubtitle { get; set; }
