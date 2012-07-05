@@ -446,7 +446,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     {
                         switch (innerNode.Name.ToString())
                         {
-                            case "Text":
+                            case "Text":                               
                                 if (innerNode.Attributes["VPosition"] != null)
                                 {
                                     string vPosition = innerNode.Attributes["VPosition"].InnerText;
@@ -457,28 +457,62 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                                         lastVPosition = vPosition;
                                     }
                                 }
+                                bool alignLeft = false;
+                                bool alignRight = false;
+                                bool alignVTop = false;
+                                bool alignVCenter = false;
                                 if (innerNode.Attributes["HAlign"] != null)
                                 {
                                     string hAlign = innerNode.Attributes["HAlign"].InnerText;
                                     if (hAlign == "left")
-                                    {
-                                        if (!pText.ToString().StartsWith("{\\an"))
-                                        {
-                                            string temp = "{\\an1}" + pText.ToString();
-                                            pText = new StringBuilder();
-                                            pText.Append(temp);
-                                        }
-                                    }
+                                        alignLeft = true;
                                     else if (hAlign == "right")
+                                        alignRight = true;
+                                }
+                                if (innerNode.Attributes["VAlign"] != null)
+                                {
+                                    string hAlign = innerNode.Attributes["VAlign"].InnerText;
+                                    if (hAlign == "top")
+                                        alignVTop = true;
+                                    else if (hAlign == "center")
+                                        alignVCenter = true;
+                                }
+                                if (alignLeft || alignRight || alignVCenter || alignVTop)
+                                {
+                                    if (!pText.ToString().StartsWith("{\\an"))
                                     {
-                                        if (!pText.ToString().StartsWith("{\\an"))
+                                        string pre = string.Empty;
+                                        if (alignVTop)
                                         {
-                                            string temp = "{\\an3}" + pText.ToString();
-                                            pText = new StringBuilder();
-                                            pText.Append(temp);
+                                            if (alignLeft)
+                                                pre = "{\\an7}";
+                                            else if (alignRight)
+                                                pre = "{\\an9}";
+                                            else
+                                                pre = "{\\an8}";
                                         }
+                                        else if (alignVCenter)
+                                        {
+                                            if (alignLeft)
+                                                pre = "{\\an4}";
+                                            else if (alignRight)
+                                                pre = "{\\an6}";
+                                            else
+                                                pre = "{\\an5}";
+                                        }
+                                        else
+                                        {
+                                            if (alignLeft)
+                                                pre = "{\\an1}";
+                                            else if (alignRight)
+                                                pre = "{\\an3}";
+                                        }
+                                        string temp = pre + pText.ToString();
+                                        pText = new StringBuilder();
+                                        pText.Append(temp);
                                     }
                                 }
+
                                 if (innerNode.ChildNodes.Count == 0)
                                 {
                                     pText.Append(innerNode.InnerText);

@@ -446,6 +446,12 @@ namespace Nikse.SubtitleEdit.Logic
                         return Utilities.GetCharactersPerSecond(p1).CompareTo(Utilities.GetCharactersPerSecond(p2));
                     });
                     break;
+                case SubtitleSortCriteria.WordsPerMinute:
+                    _paragraphs.Sort(delegate(Paragraph p1, Paragraph p2)
+                    {
+                        return p1.WordsPerMinute.CompareTo(p2.WordsPerMinute);
+                    });
+                    break;
                 default:
                     break;
             }

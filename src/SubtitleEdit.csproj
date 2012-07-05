@@ -686,6 +686,7 @@
     <Compile Include="Logic\SubtitleFormats\FlashXml.cs" />
     <Compile Include="Logic\SubtitleFormats\GpacTtxt.cs" />
     <Compile Include="Logic\SubtitleFormats\HtmlSamiArray.cs" />
+    <Compile Include="Logic\SubtitleFormats\IssXml.cs" />
     <Compile Include="Logic\SubtitleFormats\JsonType3.cs" />
     <Compile Include="Logic\SubtitleFormats\NciCaption.cs" />
     <Compile Include="Logic\SubtitleFormats\RhozetHarmonic.cs" />

@@ -70,6 +70,12 @@ namespace Nikse.SubtitleEdit.Forms
                     comboBoxFontEffect.SelectedIndex = 0;
                 panelFontEffectColor.BackColor = ss.CurrentDCinemaFontEffectColor;
                 numericUpDownFontSize.Value = ss.CurrentDCinemaFontSize;
+                if (numericUpDownTopBottomMargin.Minimum <= Configuration.Settings.SubtitleSettings.DCinemaBottomMargin &&
+                    numericUpDownTopBottomMargin.Maximum >= Configuration.Settings.SubtitleSettings.DCinemaBottomMargin)
+                    numericUpDownTopBottomMargin.Value = Configuration.Settings.SubtitleSettings.DCinemaBottomMargin;
+                else
+                    numericUpDownTopBottomMargin.Value = 8;
+
             }
             FixLargeFonts();
         }
@@ -143,6 +149,7 @@ namespace Nikse.SubtitleEdit.Forms
                 ss.CurrentDCinemaFontEffect = string.Empty;
             ss.CurrentDCinemaFontEffectColor = panelFontEffectColor.BackColor;
             ss.CurrentDCinemaFontSize = (int)numericUpDownFontSize.Value;
+            Configuration.Settings.SubtitleSettings.DCinemaBottomMargin = (int)numericUpDownTopBottomMargin.Value;
 
             DialogResult = DialogResult.OK;
         }

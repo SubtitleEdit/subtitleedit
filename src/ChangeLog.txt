@@ -31,10 +31,11 @@ Subtitle Edit Changelog
    * Can now read Ulead format with positions - thx Steve
 * FIXED:
    * Auto-translate now works for English to Portuguese - thx w.tambley
-   * Fixed shortcuts with numbers (0-9)
-   * Fixed reading of Bluray sup with errors in image - thx Simon
-   * Fixed reading of SAMI files with time codes in quotes - thx Josh
-   * Fixed reading of Ulead files with position codes - thx Steve
+   * Shortcuts with numbers (0-9)
+   * Reading of Bluray sup with errors in image - thx Simon
+   * Reading of SAMI files with time codes in quotes - thx Josh
+   * Reading of Ulead files with position codes - thx Steve
+   * Reading of time codes + adjust with format SCC - thx Marquise
 
 
 3.2.8 (3rd June 2012)
