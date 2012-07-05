@@ -194,7 +194,7 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
 
         public static string GetFormattedText(string text)
         {
-            text = text.Replace("\\N", Environment.NewLine).Replace("\\n", Environment.NewLine);           
+            text = text.Replace("\\N", Environment.NewLine).Replace("\\n", Environment.NewLine);
 
             for (int i = 0; i < 10; i++) // just look ten times...
             {
@@ -235,13 +235,13 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                     {
                         string color = text.Substring(start + 4, end - (start + 4));
                         int indexOfNextTag = color.IndexOf("\\");
-                        string nextTag = string.Empty; 
+                        string nextTag = string.Empty;
                         if (indexOfNextTag > 1)
                         {
                             nextTag = "{" + color.Substring(indexOfNextTag) + "}";
                             color = color.Remove(indexOfNextTag);
                         }
-                            
+
                         color = color.Replace("&", string.Empty).TrimStart('H');
                         color = color.PadLeft(6, '0');
 
@@ -263,7 +263,7 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                     {
                         string color = text.Substring(start + 5, end - (start + 5));
                         int indexOfNextTag = color.IndexOf("\\");
-                        string nextTag = string.Empty; 
+                        string nextTag = string.Empty;
                         if (indexOfNextTag > 1)
                         {
                             nextTag = "{" + color.Substring(indexOfNextTag) + "}";
