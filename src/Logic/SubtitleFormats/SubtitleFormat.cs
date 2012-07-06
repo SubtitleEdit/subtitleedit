@@ -107,6 +107,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     new UnknownSubtitle17(),
                     new UnknownSubtitle18(),
                     new UnknownSubtitle19(),
+                    new UnknownSubtitle20(),
                     new UTSubtitleXml(),
                     new Utx(),
                     new UtxFrames(),
