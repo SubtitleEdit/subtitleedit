@@ -412,5 +412,83 @@ Dialogue: Marked=0,0:00:01.00,0:00:03.00,Default,NTP,0000,0000,0000,!Effect," + 
 
         #endregion
 
+
+        #region Scenerist SCC
+
+         [TestMethod()]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void CheckTimeCodes()
+        {
+            var target = new ScenaristClosedCaptions_Accessor();
+            var subtitle = new Subtitle();
+            subtitle.Paragraphs.Add(new Paragraph("Line1", 1000, 5000));
+            subtitle.Paragraphs.Add(new Paragraph("Line2", 6000, 8000));
+            subtitle.Paragraphs.Add(new Paragraph("Line2", 8000, 12000));
+
+
+            string text = @"Scenarist_SCC V1.0
+
+01:00:00:24	9420 94f8 5bc1 4c45 5254 20d3 4fd5 cec4 49ce c75d 9420 942c 942f 9420 94f2 4f43 544f cec1 d554 d320 544f 20d9 4fd5 5220 d354 c154 494f ced3 a180
+
+01:00:02:22	9420 942c 942f
+
+01:00:04:25	9420 94f4 c2c1 52ce c143 4c45 d3a1
+
+01:00:05:10	942c
+
+01:00:06:14	9420 942c 942f
+
+01:00:07:06	9420 9476 cb57 c1da 4949 a180
+
+01:00:08:24	9420 942c 942f 9420 9476 d045 d34f a180
+
+01:00:10:03	9420 942c 942f
+
+01:00:11:29	942c
+
+01:00:37:12	9420 9470 4558 d04c 4f52 45a1
+
+01:00:39:00	9420 942c 942f 9420 9476 5245 d343 d545 a180
+
+01:00:40:00	9420 942c 942f 9420 947a d052 4f54 4543 54a1
+
+01:00:41:00	9420 942c 942f
+
+01:00:41:10	9420 9154 4f43 544f cec1 d554 d3a1
+
+01:00:42:28	9420 942c 942f
+
+01:00:44:26	942c
+
+01:00:47:03	9420 9152 a254 c845 204f 4354 4fce c1d5 54d3 20c1 cec4 91f2 54c8 4520 c749 c1ce 5420 cb45 4cd0 2046 4f52 45d3 54ae a280
+
+01:00:49:00	9420 942c 942f
+
+01:00:52:04	942c";
+
+             
+             var sub2 = new Subtitle();
+             
+             List<string> lines = new List<string>();
+             foreach (string line in text.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries))
+                 lines.Add(line);
+
+             target.LoadSubtitle(sub2, lines, null);
+            
+            var copy = new Subtitle(sub2);
+            for (int i = 0; i<copy.Paragraphs.Count;i++)
+            {
+                sub2.Paragraphs[i].StartTime.TotalMilliseconds += 1000;
+                sub2.Paragraphs[i].EndTime.TotalMilliseconds += 1000;
+            }
+            for (int i = 0; i<copy.Paragraphs.Count;i++)
+            {
+                Assert.IsTrue(copy.Paragraphs[i].StartTime.TotalMilliseconds + 1000 == sub2.Paragraphs[i].StartTime.TotalMilliseconds);
+                Assert.IsTrue(copy.Paragraphs[i].EndTime.TotalMilliseconds + 1000 == sub2.Paragraphs[i].EndTime.TotalMilliseconds);
+            }
+        }
+        
+        #endregion
+
     }
 }

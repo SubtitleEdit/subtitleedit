@@ -735,6 +735,7 @@
     <Compile Include="Logic\SubtitleFormats\JsonType2.cs" />
     <Compile Include="Logic\SubtitleFormats\UnknownSubtitle18.cs" />
     <Compile Include="Logic\SubtitleFormats\UnknownSubtitle19.cs" />
+    <Compile Include="Logic\SubtitleFormats\UnknownSubtitle20.cs" />
     <Compile Include="Logic\SubtitleFormats\UnknownSubtitle5.cs" />
     <Compile Include="Logic\SubtitleFormats\OpenDvt.cs" />
     <Compile Include="Logic\SubtitleFormats\AbcIViewer.cs" />
