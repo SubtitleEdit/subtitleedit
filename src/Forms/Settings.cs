@@ -521,6 +521,7 @@ namespace Nikse.SubtitleEdit.Forms
             listViewNode.Nodes.Add(Configuration.Settings.Language.Settings.ToggleFocus + GetShortcutText(Configuration.Settings.Shortcuts.MainToogleFocus));
             listViewNode.Nodes.Add(Configuration.Settings.Language.Settings.ToggleDialogueDashes + GetShortcutText(Configuration.Settings.Shortcuts.MainListViewToggleDashes));
             listViewNode.Nodes.Add(Configuration.Settings.Language.Settings.Alignment + GetShortcutText(Configuration.Settings.Shortcuts.MainListViewAlignment));
+            listViewNode.Nodes.Add(Configuration.Settings.Language.Settings.CopyTextOnly + GetShortcutText(Configuration.Settings.Shortcuts.MainListViewCopyText));
             treeViewShortcuts.Nodes.Add(listViewNode);
 
             var textBoxNode = new TreeNode(Configuration.Settings.Language.Settings.TextBox);
@@ -1043,6 +1044,8 @@ namespace Nikse.SubtitleEdit.Forms
                         Configuration.Settings.Shortcuts.MainListViewToggleDashes = GetShortcut(node.Text);
                     else if (text == Configuration.Settings.Language.Settings.Alignment.Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.MainListViewAlignment = GetShortcut(node.Text);
+                    else if (text == Configuration.Settings.Language.Settings.CopyTextOnly.Replace("&", string.Empty))
+                        Configuration.Settings.Shortcuts.MainListViewCopyText = GetShortcut(node.Text);
                 }
             }
 

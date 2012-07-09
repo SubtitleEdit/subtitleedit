@@ -1327,6 +1327,7 @@
             public string ToggleFocus { get; set; }
             public string ToggleDialogueDashes { get; set; }
             public string Alignment { get; set; }
+            public string CopyTextOnly { get; set; }
             public string ReverseStartAndEndingForRTL { get; set; }
             public string VerticalZoom { get; set; }
             public string WaveformSeekSilenceForward { get; set; }
