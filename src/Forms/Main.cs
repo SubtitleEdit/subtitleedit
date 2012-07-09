@@ -130,6 +130,7 @@ namespace Nikse.SubtitleEdit.Forms
         Keys _mainGoToPrevious = Keys.None;
         Keys _mainToggleFocus = Keys.None;
         Keys _mainListViewToggleDashes = Keys.None;
+        Keys _mainListViewCopyText = Keys.None;
         Keys _mainEditReverseStartAndEndingForRTL = Keys.None;
         Keys _waveformVerticalZoom = Keys.None;
         Keys _waveformZoomIn = Keys.None;
@@ -8760,6 +8761,21 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 e.SuppressKeyPress = true;
             }
+            else if (e.KeyData == _mainListViewCopyText)
+            {
+                StringBuilder sb = new StringBuilder();
+                foreach (int i in SubtitleListview1.SelectedIndices)
+                {
+                    Paragraph p = _subtitle.GetParagraphOrDefault(i);
+                    if (p != null)
+                        sb.AppendLine(p.Text + Environment.NewLine);
+                }
+                if (sb.Length > 0)
+                {
+                    Clipboard.SetText(sb.ToString().Trim());
+                }
+                e.SuppressKeyPress = true;
+            }
             else if (e.KeyCode == Keys.V && e.Modifiers == Keys.Control) //Ctrl+vPaste from clipboard
             {
                 if (Clipboard.ContainsText())
@@ -11133,6 +11149,7 @@ namespace Nikse.SubtitleEdit.Forms
             _mainListViewToggleDashes = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainListViewToggleDashes);
             toolStripMenuItemAlignment.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainListViewAlignment);
             _mainEditReverseStartAndEndingForRTL = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainEditReverseStartAndEndingForRTL);
+            _mainListViewCopyText = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainListViewCopyText);
             toolStripMenuItemReverseRightToLeftStartEnd.ShortcutKeys = _mainEditReverseStartAndEndingForRTL;
             italicToolStripMenuItem1.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxItalic);
             _mainTextBoxSplitAtCursor = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxSplitAtCursor);

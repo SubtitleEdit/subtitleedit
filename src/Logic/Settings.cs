@@ -561,6 +561,7 @@ namespace Nikse.SubtitleEdit.Logic
         public string MainListViewItalic { get; set; }
         public string MainListViewToggleDashes { get; set; }
         public string MainListViewAlignment { get; set; }
+        public string MainListViewCopyText { get; set; }
         public string MainTextBoxItalic { get; set; }
         public string MainTextBoxSplitAtCursor { get; set; }
         public string MainCreateInsertSubAtVideoPos { get; set; }
@@ -1531,6 +1532,9 @@ namespace Nikse.SubtitleEdit.Logic
                 subNode = node.SelectSingleNode("MainListViewAlignment");
                 if (subNode != null)
                     settings.Shortcuts.MainListViewAlignment = subNode.InnerText;
+                subNode = node.SelectSingleNode("MainListViewCopyText");
+                if (subNode != null)
+                    settings.Shortcuts.MainListViewCopyText = subNode.InnerText;
                 subNode = node.SelectSingleNode("MainEditReverseStartAndEndingForRTL");
                 if (subNode != null)
                     settings.Shortcuts.MainEditReverseStartAndEndingForRTL = subNode.InnerText;
@@ -1973,6 +1977,7 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("MainListViewItalic", settings.Shortcuts.MainListViewItalic);
             textWriter.WriteElementString("MainListViewToggleDashes", settings.Shortcuts.MainListViewToggleDashes);
             textWriter.WriteElementString("MainListViewAlignment", settings.Shortcuts.MainListViewAlignment);
+            textWriter.WriteElementString("MainListViewCopyText", settings.Shortcuts.MainListViewCopyText);
             textWriter.WriteElementString("MainEditReverseStartAndEndingForRTL", settings.Shortcuts.MainEditReverseStartAndEndingForRTL);
             textWriter.WriteElementString("MainTextBoxItalic", settings.Shortcuts.MainTextBoxItalic);
             textWriter.WriteElementString("MainTextBoxSplitAtCursor", settings.Shortcuts.MainTextBoxSplitAtCursor);
