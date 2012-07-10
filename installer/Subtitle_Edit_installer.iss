@@ -22,8 +22,8 @@
 
 
 ; preprocessor checks
-#if VER < EncodeVer(5,5,0)
-  #error Update your Inno Setup version (5.5.0 or newer)
+#if VER < EncodeVer(5,5,1)
+  #error Update your Inno Setup version (5.5.1 or newer)
 #endif
 
 #ifndef UNICODE
@@ -118,9 +118,9 @@ Name: br;  MessagesFile: compiler:Languages\BrazilianPortuguese.isl
 Name: cs;  MessagesFile: compiler:Languages\Czech.isl
 Name: de;  MessagesFile: compiler:Languages\German.isl
 Name: dk;  MessagesFile: compiler:Languages\Danish.isl
-Name: el;  MessagesFile: Languages\Greek.isl
+Name: el;  MessagesFile: compiler:Languages\Greek.isl
 Name: es;  MessagesFile: compiler:Languages\Spanish.isl
-Name: eu;  MessagesFile: compiler:Languages\Basque.isl
+Name: eu;  MessagesFile: Languages\Basque.isl
 Name: fi;  MessagesFile: compiler:Languages\Finnish.isl
 Name: fr;  MessagesFile: compiler:Languages\French.isl
 Name: hu;  MessagesFile: compiler:Languages\Hungarian.isl
