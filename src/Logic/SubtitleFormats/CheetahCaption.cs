@@ -8,6 +8,54 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
     class CheetahCaption : SubtitleFormat
     {
 
+          static readonly List<int> LatinCodes = new List<int> {
+            0x81, // ♪
+            0x82, // á
+            0x83, // é
+            0x84, // í
+            0x85, // ó
+            0x86, // ú
+            0x87, // â
+            0x88, // ê
+            0x89, // î
+            0x8A, // ô
+            0x8B, // û
+            0x8C, // à
+            0x8D, // è
+            0x8E, // Ñ
+            0x8F, // ñ
+            0x90, // ç
+            0x91, // ¢
+            0x92, // £
+            0x93, // ¿
+            0x94, // ½
+            0x95, // ®
+          };
+                               
+          static readonly List<string> LatinLetters = new List<string> {
+            "♪",
+            "á",
+            "é",
+            "í",
+            "ó",
+            "ú",
+            "â",
+            "ê",
+            "î",
+            "ô",
+            "û",
+            "à",
+            "è",
+            "Ñ",
+            "ñ",
+            "ç",
+            "¢",
+            "£",
+            "¿",
+            "½",
+            "®",
+        };
+
         public override string Extension
         {
             get { return ".cap"; }
@@ -122,7 +170,12 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     }
                     else
                     {
-                        textBytes.Add(Encoding.GetEncoding(1252).GetBytes(text.Substring(j, 1))[0]);
+                        int idx = LatinLetters.IndexOf(text.Substring(j, 1));
+                        if (idx >= 0)
+                            textBytes.Add((byte)LatinCodes[idx]);
+                        else
+                            textBytes.Add(Encoding.GetEncoding(1252).GetBytes(text.Substring(j, 1))[0]);
+                        
                         j++;
                     }
                 }
@@ -234,6 +287,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                             if (!sb.ToString().EndsWith(Environment.NewLine))
                                 sb.AppendLine();
                         }
+                        else if (LatinCodes.Contains(buffer[index]))
+                        {
+                            sb.Append(LatinLetters[LatinCodes.IndexOf(buffer[index])]);
+                        }
                         else if (buffer[index] >= 0xC0 || buffer[index] <= 0x14) // codes/styles?
                         {
                             if (buffer[index] == 0xd0) // italics
@@ -244,7 +301,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         }
                         else
                         {
-                            sb.Append(Encoding.ASCII.GetString(buffer, index, 1));
+                            sb.Append(Encoding.GetEncoding(1252).GetString(buffer, index, 1));
                         }
                         j++;
                     }
