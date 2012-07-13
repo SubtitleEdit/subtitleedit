@@ -312,6 +312,7 @@ namespace Nikse.SubtitleEdit.Logic
         public bool SubtitleFontBold { get; set; }
         public Color SubtitleFontColor { get; set; }
         public Color SubtitleBackgroundColor { get; set; }
+        public bool CenterSubtitleInTextBox { get; set; }
         public bool ShowRecentFiles { get; set; }
         public bool RememberSelectedLine { get; set; }
         public bool StartLoadLastFile { get; set; }
@@ -393,6 +394,7 @@ namespace Nikse.SubtitleEdit.Logic
             SubtitleFontBold = false;
             SubtitleFontColor = System.Drawing.Color.Black;
             SubtitleBackgroundColor = System.Drawing.Color.White;
+            CenterSubtitleInTextBox = false;
             DefaultEncoding = Encoding.UTF8.EncodingName;
             EncodingMininumCodePage = 1200;
             AutoGuessAnsiEncoding = false;
@@ -922,6 +924,9 @@ namespace Nikse.SubtitleEdit.Logic
             subNode = node.SelectSingleNode("SubtitleBackgroundColor");
             if (subNode != null)
                 settings.General.SubtitleBackgroundColor = Color.FromArgb(Convert.ToInt32(subNode.InnerText));
+            subNode = node.SelectSingleNode("CenterSubtitleInTextBox");
+            if (subNode != null)
+                settings.General.CenterSubtitleInTextBox = Convert.ToBoolean(subNode.InnerText);
             subNode = node.SelectSingleNode("ShowRecentFiles");
             if (subNode != null)
                 settings.General.ShowRecentFiles = Convert.ToBoolean(subNode.InnerText);
@@ -1751,6 +1756,7 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("SubtitleFontBold", settings.General.SubtitleFontBold.ToString());
             textWriter.WriteElementString("SubtitleFontColor", settings.General.SubtitleFontColor.ToArgb().ToString());
             textWriter.WriteElementString("SubtitleBackgroundColor", settings.General.SubtitleBackgroundColor.ToArgb().ToString());
+            textWriter.WriteElementString("CenterSubtitleInTextBox", settings.General.CenterSubtitleInTextBox.ToString());
             textWriter.WriteElementString("ShowRecentFiles", settings.General.ShowRecentFiles.ToString());
             textWriter.WriteElementString("RememberSelectedLine", settings.General.RememberSelectedLine.ToString());
             textWriter.WriteElementString("StartLoadLastFile", settings.General.StartLoadLastFile.ToString());

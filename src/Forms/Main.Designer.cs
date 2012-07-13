@@ -70,6 +70,7 @@
             this.saveAsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemRestoreAutoBackup = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemDCinemaProperties = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemTTProperties = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemSubStationAlpha = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator20 = new System.Windows.Forms.ToolStripSeparator();
             this.openOriginalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -780,6 +781,7 @@
             this.saveAsToolStripMenuItem,
             this.toolStripMenuItemRestoreAutoBackup,
             this.toolStripMenuItemDCinemaProperties,
+            this.toolStripMenuItemTTProperties,
             this.toolStripMenuItemSubStationAlpha,
             this.toolStripSeparator20,
             this.openOriginalToolStripMenuItem,
@@ -857,6 +859,13 @@
             this.toolStripMenuItemDCinemaProperties.Size = new System.Drawing.Size(334, 22);
             this.toolStripMenuItemDCinemaProperties.Text = "DCinema properties...";
             this.toolStripMenuItemDCinemaProperties.Click += new System.EventHandler(this.toolStripMenuItemDCinemaProperties_Click);
+            // 
+            // toolStripMenuItemTTProperties
+            // 
+            this.toolStripMenuItemTTProperties.Name = "toolStripMenuItemTTProperties";
+            this.toolStripMenuItemTTProperties.Size = new System.Drawing.Size(334, 22);
+            this.toolStripMenuItemTTProperties.Text = "Timed Text properties...";
+            this.toolStripMenuItemTTProperties.Click += new System.EventHandler(this.toolStripMenuItemTTPropertiesClick);
             // 
             // toolStripMenuItemSubStationAlpha
             // 
@@ -4226,6 +4235,7 @@
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemDCinemaProperties;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemTextTimeCodePair;
         private System.Windows.Forms.ToolStripMenuItem textWordsPerMinutewpmToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemTTProperties;
     }
 }
 
