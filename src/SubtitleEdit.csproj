@@ -476,6 +476,18 @@
     <Compile Include="Forms\SubStationAlphaStyles.Designer.cs">
       <DependentUpon>SubStationAlphaStyles.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\TimedTextProperties.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\TimedTextProperties.Designer.cs">
+      <DependentUpon>TimedTextProperties.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\TimedTextStyles.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\TimedTextStyles.Designer.cs">
+      <DependentUpon>TimedTextStyles.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\UnknownSubtitle.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -654,6 +666,7 @@
     <Compile Include="Logic\Spellcheck\LinuxHunspell.cs" />
     <Compile Include="Logic\Spellcheck\MacHunspell.cs" />
     <Compile Include="Logic\Spellcheck\WindowsHunspell.cs" />
+    <Compile Include="Logic\SsaStyle.cs" />
     <Compile Include="Logic\StripableText.cs" />
     <Compile Include="Logic\SubtitleFormats\AdobeEncore.cs" />
     <Compile Include="Logic\SubtitleFormats\AdobeEncoreLineTabs.cs" />
@@ -1026,6 +1039,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\SubStationAlphaStyles.resx">
       <DependentUpon>SubStationAlphaStyles.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\TimedTextProperties.resx">
+      <DependentUpon>TimedTextProperties.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\TimedTextStyles.resx">
+      <DependentUpon>TimedTextStyles.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\UnknownSubtitle.resx">
       <DependentUpon>UnknownSubtitle.cs</DependentUpon>

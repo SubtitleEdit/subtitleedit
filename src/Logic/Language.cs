@@ -989,6 +989,8 @@ namespace Nikse.SubtitleEdit.Logic
                         SubStationAlphaSetStyle = "Sub Station Alpha - set style",
                         AdvancedSubStationAlphaStyles = "Advanced Sub Station Alpha styles...",
                         SubStationAlphaStyles = "Sub Station Alpha styles...",
+                        TimedTextStyles = "Timed Text styles...",
+                        TimedTextSetStyle = "Timed Text - set style",
                         Cut = "Cut",
                         Copy = "Copy",
                         Paste = "Paste",

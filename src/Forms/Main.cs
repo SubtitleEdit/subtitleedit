@@ -254,6 +254,7 @@ namespace Nikse.SubtitleEdit.Forms
                 toolStripComboBoxFrameRate.Items.Add((24.0).ToString());
                 toolStripComboBoxFrameRate.Items.Add((25.0).ToString());
                 toolStripComboBoxFrameRate.Items.Add((29.97).ToString());
+                toolStripComboBoxFrameRate.Items.Add((30).ToString());
                 toolStripComboBoxFrameRate.Text = Configuration.Settings.General.DefaultFrameRate.ToString();
 
                 UpdateRecentFilesUI();
@@ -262,6 +263,10 @@ namespace Nikse.SubtitleEdit.Forms
                 Utilities.InitializeSubtitleFont(textBoxListViewText);
                 Utilities.InitializeSubtitleFont(textBoxListViewTextAlternate);
                 Utilities.InitializeSubtitleFont(SubtitleListview1);
+                
+                if (Configuration.Settings.General.CenterSubtitleInTextBox)
+                    textBoxListViewText.TextAlign = HorizontalAlignment.Center;                
+
                 //SubtitleListview1.AutoSizeAllColumns(this);
 
                 tabControlSubtitle.SelectTab(TabControlSourceView); // AC
@@ -2693,7 +2698,8 @@ namespace Nikse.SubtitleEdit.Forms
                 SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
                 RestoreSubtitleListviewIndexes();
 
-                if ((_oldSubtitleFormat.GetType() == typeof(AdvancedSubStationAlpha) || _oldSubtitleFormat.GetType() == typeof(SubStationAlpha)) && _networkSession == null)
+                if ((_oldSubtitleFormat.GetType() == typeof(AdvancedSubStationAlpha) || _oldSubtitleFormat.GetType() == typeof(SubStationAlpha) || _oldSubtitleFormat.GetType() == typeof(TimedText10)) && 
+                    _networkSession == null)
                 {
                     SubtitleListview1.HideExtraColumn();
                 }
@@ -2710,7 +2716,7 @@ namespace Nikse.SubtitleEdit.Forms
                 ShowStatus(string.Format(_language.ConvertedToX, format.FriendlyName));
                 _oldSubtitleFormat = format;
 
-                if ((format.GetType() == typeof(AdvancedSubStationAlpha) || format.GetType() == typeof(SubStationAlpha)) && _networkSession == null)
+                if ((format.GetType() == typeof(AdvancedSubStationAlpha) || format.GetType() == typeof(SubStationAlpha) || format.GetType() == typeof(TimedText10)) && _networkSession == null)
                 {
                     List<string> styles = AdvancedSubStationAlpha.GetStylesFromHeader(_subtitle.Header);
                     foreach (Paragraph p in _subtitle.Paragraphs)
@@ -2771,6 +2777,7 @@ namespace Nikse.SubtitleEdit.Forms
             string oldListViewLineSeparatorString = Configuration.Settings.General.ListViewLineSeparatorString;
             string oldSubtitleFontSettings = Configuration.Settings.General.SubtitleFontName +
                                           Configuration.Settings.General.SubtitleFontBold +
+                                          Configuration.Settings.General.CenterSubtitleInTextBox +
                                           Configuration.Settings.General.SubtitleFontSize +
                                           Configuration.Settings.General.SubtitleFontColor.ToArgb().ToString() +
                                           Configuration.Settings.General.SubtitleBackgroundColor.ToArgb().ToString();
@@ -2821,6 +2828,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (oldSubtitleFontSettings != Configuration.Settings.General.SubtitleFontName +
                                           Configuration.Settings.General.SubtitleFontBold +
+                                          Configuration.Settings.General.CenterSubtitleInTextBox +
                                           Configuration.Settings.General.SubtitleFontSize +
                                           Configuration.Settings.General.SubtitleFontColor.ToArgb().ToString() +
                                           Configuration.Settings.General.SubtitleBackgroundColor.ToArgb().ToString() ||
@@ -2834,6 +2842,11 @@ namespace Nikse.SubtitleEdit.Forms
                 SubtitleListview1.SubtitleFontSize = Configuration.Settings.General.SubtitleFontSize;
                 SubtitleListview1.ForeColor = Configuration.Settings.General.SubtitleFontColor;
                 SubtitleListview1.BackColor = Configuration.Settings.General.SubtitleBackgroundColor;
+                if (Configuration.Settings.General.CenterSubtitleInTextBox)
+                    textBoxListViewText.TextAlign = HorizontalAlignment.Center;
+                else if (textBoxListViewText.TextAlign == HorizontalAlignment.Center)
+                    textBoxListViewText.TextAlign = HorizontalAlignment.Left;
+
                 SaveSubtitleListviewIndexes();
                 Utilities.InitializeSubtitleFont(SubtitleListview1);
                 SubtitleListview1.AutoSizeAllColumns(this);
@@ -4729,6 +4742,19 @@ namespace Nikse.SubtitleEdit.Forms
                     setStylesForSelectedLinesToolStripMenuItem.Text = _language.Menu.ContextMenu.SubStationAlphaSetStyle;
                 }
             }
+            else if (GetCurrentSubtitleFormat().GetType() == typeof(TimedText10) && SubtitleListview1.SelectedItems.Count > 0)
+            {
+                toolStripMenuItemAssStyles.Text = _language.Menu.ContextMenu.TimedTextStyles;
+                var styles = TimedText10.GetStylesFromHeader(_subtitle.Header);
+                setStylesForSelectedLinesToolStripMenuItem.DropDownItems.Clear();
+                foreach (string style in styles)
+                {
+                    setStylesForSelectedLinesToolStripMenuItem.DropDownItems.Add(style, null, tsi_Click);
+                }
+                setStylesForSelectedLinesToolStripMenuItem.Visible = styles.Count > 1;
+                toolStripMenuItemAssStyles.Visible = true;
+                setStylesForSelectedLinesToolStripMenuItem.Text = _language.Menu.ContextMenu.TimedTextSetStyle;
+            }
             else
             {
                 setStylesForSelectedLinesToolStripMenuItem.Visible = false;
@@ -5002,8 +5028,12 @@ namespace Nikse.SubtitleEdit.Forms
         private void InsertBefore()
         {
             var format = GetCurrentSubtitleFormat();
-            bool useExtraForStyle = format.GetType() == typeof(AdvancedSubStationAlpha) || format.GetType() == typeof(SubStationAlpha);
-            List<string> styles = AdvancedSubStationAlpha.GetStylesFromHeader(_subtitle.Header);
+            bool useExtraForStyle = format.GetType() == typeof(AdvancedSubStationAlpha) || format.GetType() == typeof(SubStationAlpha) || format.GetType() == typeof(TimedText10);
+            List<string> styles = new List<string>();
+            if (format.GetType() == typeof(AdvancedSubStationAlpha) || format.GetType() == typeof(SubStationAlpha))
+                styles = AdvancedSubStationAlpha.GetStylesFromHeader(_subtitle.Header);
+            else if (format.GetType() == typeof(TimedText10))
+                styles = TimedText10.GetStylesFromHeader(_subtitle.Header);
             string style = "Default";
             if (styles.Count > 0)
                 style = styles[0];
@@ -5096,8 +5126,12 @@ namespace Nikse.SubtitleEdit.Forms
         private void InsertAfter()
         {
             var format = GetCurrentSubtitleFormat();
-            bool useExtraForStyle = format.GetType() == typeof(AdvancedSubStationAlpha) || format.GetType() == typeof(SubStationAlpha);
-            List<string> styles = AdvancedSubStationAlpha.GetStylesFromHeader(_subtitle.Header);
+            bool useExtraForStyle = format.GetType() == typeof(AdvancedSubStationAlpha) || format.GetType() == typeof(SubStationAlpha) || format.GetType() == typeof(TimedText10);
+            var styles = new List<string>();
+            if (format.GetType() == typeof(AdvancedSubStationAlpha) || format.GetType() == typeof(SubStationAlpha))
+                styles = AdvancedSubStationAlpha.GetStylesFromHeader(_subtitle.Header);
+            else if (format.GetType() == typeof(TimedText10))
+                styles = TimedText10.GetStylesFromHeader(_subtitle.Header);
             string style = "Default";
             if (styles.Count > 0)
                 style = styles[0];
@@ -10830,6 +10864,15 @@ namespace Nikse.SubtitleEdit.Forms
                 toolStripMenuItemDCinemaProperties.Visible = false;
             }
 
+            if (format.GetType() == typeof(TimedText10))
+            {
+                toolStripMenuItemTTProperties.Visible = true;
+            }
+            else
+            {
+                toolStripMenuItemTTProperties.Visible = false;
+            }
+
             toolStripSeparator20.Visible = subtitleLoaded;
         }
 
@@ -12067,7 +12110,7 @@ namespace Nikse.SubtitleEdit.Forms
             _formPositionsAndSizes.SetPositionAndSize(networkNew);
             if (networkNew.ShowDialog(this) == DialogResult.OK)
             {
-                if (GetCurrentSubtitleFormat().GetType() == typeof(AdvancedSubStationAlpha) || GetCurrentSubtitleFormat().GetType() == typeof(SubStationAlpha))
+                if (GetCurrentSubtitleFormat().GetType() == typeof(AdvancedSubStationAlpha) || GetCurrentSubtitleFormat().GetType() == typeof(SubStationAlpha) || GetCurrentSubtitleFormat().GetType() == typeof(TimedText10))
                 {
                     SubtitleListview1.HideExtraColumn();
                 }
@@ -12437,7 +12480,8 @@ namespace Nikse.SubtitleEdit.Forms
             SubtitleListview1.HideExtraColumn();
             _networkChat = null;
 
-            if ((GetCurrentSubtitleFormat().GetType() == typeof(AdvancedSubStationAlpha) || GetCurrentSubtitleFormat().GetType() == typeof(SubStationAlpha)) && _networkSession == null)
+            if ((GetCurrentSubtitleFormat().GetType() == typeof(AdvancedSubStationAlpha) || GetCurrentSubtitleFormat().GetType() == typeof(SubStationAlpha) || GetCurrentSubtitleFormat().GetType() == typeof(TimedText10)) && 
+                _networkSession == null)
             {
                 SubtitleListview1.ShowExtraColumn("Style");
                 SubtitleListview1.DisplayExtraFromExtra = true;
@@ -14241,10 +14285,18 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void toolStripMenuItemAssStyles_Click(object sender, EventArgs e)
         {
-            var styles = new SubStationAlphaStyles(_subtitle, GetCurrentSubtitleFormat());
-            if (styles.ShowDialog(this) == DialogResult.OK)
+            var formatType = GetCurrentSubtitleFormat().GetType();
+            if (formatType == typeof(AdvancedSubStationAlpha) || formatType == typeof(SubStationAlpha))
             {
-                _subtitle.Header = styles.Header;
+                var styles = new SubStationAlphaStyles(_subtitle, GetCurrentSubtitleFormat());
+                if (styles.ShowDialog(this) == DialogResult.OK)
+                    _subtitle.Header = styles.Header;
+            }
+            else if (formatType == typeof(TimedText10))
+            {
+                var styles = new TimedTextStyles(_subtitle, GetCurrentSubtitleFormat());
+                if (styles.ShowDialog(this) == DialogResult.OK)
+                    _subtitle.Header = styles.Header;
             }
         }
 
@@ -14486,6 +14538,17 @@ namespace Nikse.SubtitleEdit.Forms
         private void textWordsPerMinutewpmToolStripMenuItem_Click(object sender, EventArgs e)
         {
             SortSubtitle(SubtitleSortCriteria.WordsPerMinute, (sender as ToolStripItem).Text);
+        }
+
+        private void toolStripMenuItemTTPropertiesClick(object sender, EventArgs e)
+        {
+            if (GetCurrentSubtitleFormat().GetType() == typeof(TimedText10))
+            {
+                var properties = new TimedTextProperties(_subtitle, _videoFileName);
+                _formPositionsAndSizes.SetPositionAndSize(properties, true);
+                properties.ShowDialog(this);
+                _formPositionsAndSizes.SavePositionAndSize(properties);
+            }
         }
 
     }

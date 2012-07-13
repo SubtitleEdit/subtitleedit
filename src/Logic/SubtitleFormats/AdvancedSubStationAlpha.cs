@@ -651,7 +651,7 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                                 }
                                 else if (i == primaryColourIndex)
                                 {
-                                    if (AdvancedSubStationAlpha.GetSsaColor(f, dummyColor) == dummyColor || f == "&h")
+                                    if (GetSsaColor(f, dummyColor) == dummyColor || f == "&h")
                                     {
                                         sb.AppendLine("'PrimaryColour' incorrect: " + rawLine);
                                         sb.AppendLine();
@@ -659,7 +659,7 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                                 }
                                 else if (i == secondaryColourIndex)
                                 {
-                                    if (AdvancedSubStationAlpha.GetSsaColor(f, dummyColor) == dummyColor)
+                                    if (GetSsaColor(f, dummyColor) == dummyColor)
                                     {
                                         sb.AppendLine("'SecondaryColour' incorrect: " + rawLine);
                                         sb.AppendLine();
@@ -667,7 +667,7 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                                 }
                                 else if (i == outlineColourIndex)
                                 {
-                                    if (AdvancedSubStationAlpha.GetSsaColor(f, dummyColor) == dummyColor)
+                                    if (GetSsaColor(f, dummyColor) == dummyColor)
                                     {
                                         sb.AppendLine("'OutlineColour' incorrect: " + rawLine);
                                         sb.AppendLine();
@@ -675,7 +675,7 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                                 }
                                 else if (i == backColourIndex)
                                 {
-                                    if (AdvancedSubStationAlpha.GetSsaColor(f, dummyColor) == dummyColor)
+                                    if (GetSsaColor(f, dummyColor) == dummyColor)
                                     {
                                         sb.AppendLine("'BackColour' incorrect: " + rawLine);
                                         sb.AppendLine();
@@ -773,6 +773,187 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
             }
             return sb.ToString();
         }
+
+        public static SsaStyle GetSsaStyle(string styleName, string header)
+        {
+            var style = new SsaStyle();
+            style.Name = styleName;
+
+            int nameIndex = -1;
+            int fontNameIndex = -1;
+            int fontsizeIndex = -1;
+            int primaryColourIndex = -1;
+            int secondaryColourIndex = -1;
+            int tertiaryColourIndex = -1;
+            int outlineColourIndex = -1;
+            int backColourIndex = -1;
+            int boldIndex = -1;
+            int italicIndex = -1;
+            int underlineIndex = -1;
+            int outlineIndex = -1;
+            int shadowIndex = -1;
+            int alignmentIndex = -1;
+            int marginLIndex = -1;
+            int marginRIndex = -1;
+            int marginVIndex = -1;
+            int borderStyleIndex = -1;
+
+            foreach (string line in header.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries))
+            {
+                string s = line.Trim().ToLower();
+                if (s.StartsWith("format:"))
+                {
+                    if (line.Length > 10)
+                    {
+                        var format = line.ToLower().Substring(8).Split(',');
+                        for (int i = 0; i < format.Length; i++)
+                        {
+                            string f = format[i].Trim().ToLower();
+                            if (f == "name")
+                                nameIndex = i;
+                            else if (f == "fontname")
+                                fontNameIndex = i;
+                            else if (f == "fontsize")
+                                fontsizeIndex = i;
+                            else if (f == "primarycolour")
+                                primaryColourIndex = i;
+                            else if (f == "secondarycolour")
+                                secondaryColourIndex = i;
+                            else if (f == "tertiarycolour")
+                                tertiaryColourIndex = i;
+                            else if (f == "outlinecolour")
+                                outlineColourIndex = i;
+                            else if (f == "backcolour")
+                                backColourIndex = i;
+                            else if (f == "bold")
+                                boldIndex = i;
+                            else if (f == "italic")
+                                italicIndex = i;
+                            else if (f == "underline")
+                                underlineIndex = i;
+                            else if (f == "outline")
+                                outlineIndex = i;
+                            else if (f == "shadow")
+                                shadowIndex = i;
+                            else if (f == "alignment")
+                                alignmentIndex = i;
+                            else if (f == "marginl")
+                                marginLIndex = i;
+                            else if (f == "marginr")
+                                marginRIndex = i;
+                            else if (f == "marginv")
+                                marginVIndex = i;
+                            else if (f == "borderstyle")
+                                borderStyleIndex = i;
+                        }
+                    }
+                }
+                else if (s.Replace(" ", string.Empty).StartsWith("style:"))
+                {
+                    if (line.Length > 10)
+                    {
+                        style.RawLine = line;
+                        var format = line.Substring(6).Split(',');
+                        for (int i = 0; i < format.Length; i++)
+                        {
+                            string f = format[i].Trim().ToLower();
+                            if (i == nameIndex)
+                            {
+                                style.Name = format[i].Trim();
+                            }
+                            else if (i == fontNameIndex)
+                            {
+                                style.FontName = f;
+                            }
+                            else if (i == fontsizeIndex)
+                            {
+                                int number;
+                                if (int.TryParse(f, out number))
+                                    style.FontSize = number;
+                            }
+                            else if (i == primaryColourIndex)
+                            {
+                                style.Primary = GetSsaColor(f, Color.White);
+                            }
+                            else if (i == secondaryColourIndex)
+                            {
+                                style.Secondary = GetSsaColor(f, Color.Yellow);
+                            }
+                            else if (i == tertiaryColourIndex)
+                            {
+                                style.Tertiary = GetSsaColor(f, Color.Yellow);
+                            }
+                            else if (i == outlineColourIndex)
+                            {
+                                style.Outline = GetSsaColor(f, Color.Black);
+                            }
+                            else if (i == backColourIndex)
+                            {
+                                style.Background = GetSsaColor(f, Color.Black);
+                            }
+                            else if (i == boldIndex)
+                            {
+                                style.Bold = f == "1";
+                            }
+                            else if (i == italicIndex)
+                            {
+                                style.Italic = f == "1";
+                            }
+                            else if (i == underlineIndex)
+                            {
+                                style.Underline = f == "1";
+                            }
+                            else if (i == outlineIndex)
+                            {
+                                int number;
+                                if (int.TryParse(f, out number))
+                                    style.OutlineWidth = number;
+                            }
+                            else if (i == shadowIndex)
+                            {
+                                int number;
+                                if (int.TryParse(f, out number))
+                                    style.ShadowWidth = number;
+                            }
+                            else if (i == alignmentIndex)
+                            {
+                                style.Alignment = f;
+                            }
+                            else if (i == marginLIndex)
+                            {
+                                int number;
+                                if (int.TryParse(f, out number))
+                                    style.MarginLeft = number;
+                            }
+                            else if (i == marginRIndex)
+                            {
+                                int number;
+                                if (int.TryParse(f, out number))
+                                    style.MarginRight = number;
+                            }
+                            else if (i == marginVIndex)
+                            {
+                                int number;
+                                if (int.TryParse(f, out number))
+                                    style.MarginVertical = number;
+                            }
+                            else if (i == borderStyleIndex)
+                            {
+                                style.BorderStyle = f;
+                            }
+                        }
+                    }
+                    if (styleName != null && style.Name != null && styleName.ToLower() == style.Name.ToLower())
+                    {
+                        style.LoadedFromHeader = true;
+                        return style;
+                    }
+                }
+            }
+
+            return new SsaStyle() { Name = styleName };
+        }
+
 
     }
 }
