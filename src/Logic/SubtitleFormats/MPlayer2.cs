@@ -19,11 +19,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             get { return "MPlayer2"; }
         }
 
-        public override bool HasLineNumber
-        {
-            get { return false; }
-        }
-
         public override bool IsTimeBased
         {
             get { return true; }

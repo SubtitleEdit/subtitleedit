@@ -40,11 +40,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             get { return "D-Cinema smpte"; }
         }
 
-        public override bool HasLineNumber
-        {
-            get { return true; }
-        }
-
         public override bool IsTimeBased
         {
             get { return true; }

@@ -359,6 +359,7 @@ namespace Nikse.SubtitleEdit.Forms
                 listViewStyles.SelectedItems[0].SubItems[3].BackColor = colorDialogStyle.Color;
                 listViewStyles.SelectedItems[0].SubItems[3].Text = Utilities.ColorToHex(colorDialogStyle.Color);
                 panelFontColor.BackColor = colorDialogStyle.Color;
+                UpdateHeaderXml(listViewStyles.SelectedItems[0].Text, "tts:color", Utilities.ColorToHex(colorDialogStyle.Color));
                 GeneratePreview();
             }
         }

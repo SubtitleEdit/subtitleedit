@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Text;
+using System.Xml;
 
 namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
@@ -31,11 +32,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             get { return "Advanced Sub Station Alpha"; }
         }
 
-        public override bool HasLineNumber
-        {
-            get { return false; }
-        }
-
         public override bool IsTimeBased
         {
             get { return true; }
@@ -57,8 +53,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public override string ToText(Subtitle subtitle, string title)
         {
-            string header =
-@"[Script Info]
+            string header = @"[Script Info]
 ; This is an Advanced Sub Station Alpha v4+ script.
 Title: {0}
 ScriptType: v4.00+
@@ -68,6 +63,20 @@ PlayDepth: 0
 [V4+ Styles]
 Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
 " + DefaultStyle + @"
+
+[Events]
+Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text";
+
+            string headerNoStyles = @"[Script Info]
+; This is an Advanced Sub Station Alpha v4+ script.
+Title: {0}
+ScriptType: v4.00+
+Collisions: Normal
+PlayDepth: 0
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+{1}
 
 [Events]
 Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text";
@@ -86,13 +95,13 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                 sb.AppendLine("Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text");
                 styles = GetStylesFromHeader(subtitle.Header);
             }
+            else if (subtitle.Header != null && subtitle.Header.Contains("http://www.w3.org/ns/ttml"))
+            { 
+                LoadStylesFromTimedText10(subtitle, title, header, headerNoStyles, sb);
+            }
             else
             {
-                sb.AppendLine(string.Format(header,
-                                            title,
-                                            Configuration.Settings.SubtitleSettings.SsaFontName,
-                                            (int)Configuration.Settings.SubtitleSettings.SsaFontSize,
-                                            System.Drawing.ColorTranslator.ToWin32(fontColor)));
+                sb.AppendLine(string.Format(header, title));
             }
             foreach (Paragraph p in subtitle.Paragraphs)
             {
@@ -113,6 +122,96 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                 sb.AppendLine(subtitle.Footer);
             }
             return sb.ToString().Trim();
+        }
+
+        private static void LoadStylesFromTimedText10(Subtitle subtitle, string title, string header, string headerNoStyles, StringBuilder sb)
+        {
+            try
+            {
+                var lines = new List<string>();
+                foreach (string s in subtitle.Header.Replace(Environment.NewLine, "\n").Split('\n'))
+                    lines.Add(s);
+                var tt = new TimedText10();
+                var sub = new Subtitle();
+                tt.LoadSubtitle(sub, lines, string.Empty);
+
+
+                var xml = new XmlDocument();
+                xml.LoadXml(subtitle.Header);
+                var nsmgr = new XmlNamespaceManager(xml.NameTable);
+                nsmgr.AddNamespace("ttml", "http://www.w3.org/ns/ttml");
+                XmlNode head = xml.DocumentElement.SelectSingleNode("ttml:head", nsmgr);
+                int stylexmlCount = 0;
+                var ttStyles = new StringBuilder();
+                foreach (XmlNode node in head.SelectNodes("//ttml:style", nsmgr))
+                {
+                    string name = null;
+                    if (node.Attributes["xml:id"] != null)
+                        name = node.Attributes["xml:id"].Value;
+                    else if (node.Attributes["id"] != null)
+                        name = node.Attributes["id"].Value;
+                    if (name != null)
+                    {
+                        stylexmlCount++;
+
+                        string fontFamily = "Arial";
+                        if (node.Attributes["tts:fontFamily"] != null)
+                            fontFamily = node.Attributes["tts:fontFamily"].Value;
+
+                        string fontWeight = "normal";
+                        if (node.Attributes["tts:fontWeight"] != null)
+                            fontWeight = node.Attributes["tts:fontWeight"].Value;
+
+                        string fontStyle = "normal";
+                        if (node.Attributes["tts:fontStyle"] != null)
+                            fontStyle = node.Attributes["tts:fontStyle"].Value;
+
+                        string color = "#ffffff";
+                        if (node.Attributes["tts:color"] != null)
+                            color = node.Attributes["tts:color"].Value.Trim();
+                        Color c = Color.White;
+                        try
+                        {
+                            if (color.StartsWith("rgb("))
+                            {
+                                string[] arr = color.Remove(0, 4).TrimEnd(')').Split(",".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                                c = Color.FromArgb(int.Parse(arr[0]), int.Parse(arr[1]), int.Parse(arr[2]));
+                            }
+                            else
+                            {
+                                c = System.Drawing.ColorTranslator.FromHtml(color);
+                            }
+                        }
+                        catch
+                        {
+                        }
+
+                        string fontSize = "20";
+                        if (node.Attributes["tts:fontSize"] != null)
+                            fontSize = node.Attributes["tts:fontSize"].Value.Replace("px", string.Empty).Replace("em", string.Empty);
+                        int fSize;
+                        if (!int.TryParse(fontSize, out fSize))
+                            fSize = 20;
+
+                        string styleFormat = "Style: {0},{1},{2},{3},&H0300FFFF,&H00000000,&H02000000,0,0,0,0,100,100,0,0,1,2,2,2,10,10,10,1";
+                        ttStyles.AppendLine(string.Format(styleFormat, name, fontFamily, fSize.ToString(), GetSsaColorString(c)));
+                    }
+                }
+
+                if (stylexmlCount > 0)
+                {
+                    sb.AppendLine(string.Format(headerNoStyles, title, ttStyles.ToString()));
+                    subtitle.Header = sb.ToString();
+                }
+                else
+                {
+                    sb.AppendLine(string.Format(header, title));
+                }
+            }
+            catch
+            {
+                sb.AppendLine(string.Format(header, title));
+            }
         }
 
         public static List<string> GetStylesFromHeader(string headerLines)

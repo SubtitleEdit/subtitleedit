@@ -129,12 +129,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         abstract public string Name
         {
             get;
-        }
-
-        abstract public bool HasLineNumber
-        {
-            get;
-        }
+        }     
 
         abstract public bool IsTimeBased
         {
@@ -193,6 +188,14 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         public static int FramesToMilliseconds(double frames)
         {
             return (int)System.Math.Round(frames * (1000.0 / Configuration.Settings.General.CurrentFrameRate));
+        }
+
+        public virtual bool SupportsStyles
+        {
+            get
+            {
+                return false;
+            }
         }
 
     }

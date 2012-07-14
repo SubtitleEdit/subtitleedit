@@ -17,11 +17,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             get { return "Ulead subtitle format"; }
         }
 
-        public override bool HasLineNumber
-        {
-            get { return true; }
-        }
-
         public override bool IsTimeBased
         {
             get { return true; }

@@ -22,11 +22,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             get { return "Belle Nuit Subtitler"; }
         }
 
-        public override bool HasLineNumber
-        {
-            get { return false; }
-        }
-
         public override bool IsTimeBased
         {
             get { return true; }

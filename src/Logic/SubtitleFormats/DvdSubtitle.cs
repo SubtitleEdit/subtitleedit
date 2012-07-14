@@ -20,11 +20,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             get { return "DVDSubtitle"; }
         }
 
-        public override bool HasLineNumber
-        {
-            get { return false; }
-        }
-
         public override bool IsTimeBased
         {
             get { return true; }

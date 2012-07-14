@@ -19,11 +19,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             get { return "DVD Studio Pro with space"; }
         }
 
-        public override bool HasLineNumber
-        {
-            get { return false; }
-        }
-
         public override bool IsTimeBased
         {
             get { return true; }

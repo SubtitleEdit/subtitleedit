@@ -400,11 +400,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             get { return "EBU stl"; }
         }
 
-        public override bool HasLineNumber
-        {
-            get { return true; }
-        }
-
         public override bool IsTimeBased
         {
             get { return true; }

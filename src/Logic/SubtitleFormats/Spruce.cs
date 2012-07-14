@@ -17,11 +17,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             get { return "Spruce Subtitle File"; }
         }
 
-        public override bool HasLineNumber
-        {
-            get { return false; }
-        }
-
         public override bool IsTimeBased
         {
             get { return true; }

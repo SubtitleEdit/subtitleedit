@@ -18,11 +18,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             get { return "Xml"; }
         }
 
-        public override bool HasLineNumber
-        {
-            get { return true; }
-        }
-
         public override bool IsTimeBased
         {
             get { return true; }

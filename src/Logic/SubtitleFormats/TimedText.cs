@@ -18,11 +18,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             get { return "Timed Text draft 2006-10"; }
         }
 
-        public override bool HasLineNumber
-        {
-            get { return false; }
-        }
-
         public override bool IsTimeBased
         {
             get { return true; }

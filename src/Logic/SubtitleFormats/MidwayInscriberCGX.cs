@@ -19,11 +19,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             get { return "Midway Inscriber CG-X"; }
         }
 
-        public override bool HasLineNumber
-        {
-            get { return false; }
-        }
-
         public override bool IsTimeBased
         {
             get { return true; }

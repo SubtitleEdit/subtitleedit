@@ -76,11 +76,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             get { return "Cavena 890"; }
         }
 
-        public override bool HasLineNumber
-        {
-            get { return false; }
-        }
-
         public override bool IsTimeBased
         {
             get { return false; }

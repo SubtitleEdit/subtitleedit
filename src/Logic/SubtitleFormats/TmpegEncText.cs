@@ -16,11 +16,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             get { return "Tmpeg Encoder Text"; }
         }
 
-        public override bool HasLineNumber
-        {
-            get { return true; }
-        }
-
         public override bool IsTimeBased
         {
             get { return true; }
