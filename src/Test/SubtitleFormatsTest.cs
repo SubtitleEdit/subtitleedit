@@ -466,15 +466,15 @@ Dialogue: Marked=0,0:00:01.00,0:00:03.00,Default,NTP,0000,0000,0000,!Effect," + 
 
 01:00:52:04	942c";
 
-             
+
              var sub2 = new Subtitle();
-             
+
              List<string> lines = new List<string>();
              foreach (string line in text.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries))
                  lines.Add(line);
 
              target.LoadSubtitle(sub2, lines, null);
-            
+
             var copy = new Subtitle(sub2);
             for (int i = 0; i<copy.Paragraphs.Count;i++)
             {
@@ -487,7 +487,7 @@ Dialogue: Marked=0,0:00:01.00,0:00:03.00,Default,NTP,0000,0000,0000,!Effect," + 
                 Assert.IsTrue(copy.Paragraphs[i].EndTime.TotalMilliseconds + 1000 == sub2.Paragraphs[i].EndTime.TotalMilliseconds);
             }
         }
-        
+
         #endregion
 
     }

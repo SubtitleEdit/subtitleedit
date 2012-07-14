@@ -129,7 +129,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     {
                         _errorCount++;
                         p = null;
-                    }                    
+                    }
                 }
                 else if (_regexTimeCode2.IsMatch(s))
                 {
