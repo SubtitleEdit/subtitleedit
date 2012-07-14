@@ -263,9 +263,9 @@ namespace Nikse.SubtitleEdit.Forms
                 Utilities.InitializeSubtitleFont(textBoxListViewText);
                 Utilities.InitializeSubtitleFont(textBoxListViewTextAlternate);
                 Utilities.InitializeSubtitleFont(SubtitleListview1);
-                
+
                 if (Configuration.Settings.General.CenterSubtitleInTextBox)
-                    textBoxListViewText.TextAlign = HorizontalAlignment.Center;                
+                    textBoxListViewText.TextAlign = HorizontalAlignment.Center;
 
                 //SubtitleListview1.AutoSizeAllColumns(this);
 
@@ -2698,7 +2698,7 @@ namespace Nikse.SubtitleEdit.Forms
                 SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
                 RestoreSubtitleListviewIndexes();
 
-                if ((_oldSubtitleFormat.GetType() == typeof(AdvancedSubStationAlpha) || _oldSubtitleFormat.GetType() == typeof(SubStationAlpha) || _oldSubtitleFormat.GetType() == typeof(TimedText10)) && 
+                if ((_oldSubtitleFormat.GetType() == typeof(AdvancedSubStationAlpha) || _oldSubtitleFormat.GetType() == typeof(SubStationAlpha) || _oldSubtitleFormat.GetType() == typeof(TimedText10)) &&
                     _networkSession == null)
                 {
                     SubtitleListview1.HideExtraColumn();
@@ -12480,7 +12480,7 @@ namespace Nikse.SubtitleEdit.Forms
             SubtitleListview1.HideExtraColumn();
             _networkChat = null;
 
-            if ((GetCurrentSubtitleFormat().GetType() == typeof(AdvancedSubStationAlpha) || GetCurrentSubtitleFormat().GetType() == typeof(SubStationAlpha) || GetCurrentSubtitleFormat().GetType() == typeof(TimedText10)) && 
+            if ((GetCurrentSubtitleFormat().GetType() == typeof(AdvancedSubStationAlpha) || GetCurrentSubtitleFormat().GetType() == typeof(SubStationAlpha) || GetCurrentSubtitleFormat().GetType() == typeof(TimedText10)) &&
                 _networkSession == null)
             {
                 SubtitleListview1.ShowExtraColumn("Style");

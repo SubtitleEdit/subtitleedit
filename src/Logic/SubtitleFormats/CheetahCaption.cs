@@ -31,7 +31,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             0x94, // ½
             0x95, // ®
           };
-                               
+
           static readonly List<string> LatinLetters = new List<string> {
             "♪",
             "á",
@@ -175,7 +175,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                             textBytes.Add((byte)LatinCodes[idx]);
                         else
                             textBytes.Add(Encoding.GetEncoding(1252).GetBytes(text.Substring(j, 1))[0]);
-                        
+
                         j++;
                     }
                 }

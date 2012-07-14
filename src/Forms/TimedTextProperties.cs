@@ -82,7 +82,7 @@ namespace Nikse.SubtitleEdit.Forms
             attr = _xml.DocumentElement.Attributes["ttp:dropMode"];
             if (attr != null)
                 comboBoxDropMode.Text = attr.InnerText;
-            
+
             foreach (string style in TimedText10.GetStylesFromHeader(_subtitle.Header))
             {
                 comboBoxDefaultStyle.Items.Add(style);
@@ -122,7 +122,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 var head = _xml.DocumentElement.SelectSingleNode("ttml:head", _nsmgr);
                 if (head == null)
-                {                    
+                {
                     head = _xml.CreateElement("ttml", "head", _nsmgr.LookupNamespace("ttml"));
                     _xml.DocumentElement.PrependChild(head);
                 }
@@ -267,6 +267,6 @@ namespace Nikse.SubtitleEdit.Forms
 
             DialogResult = DialogResult.OK;
         }
-       
+
     }
 }

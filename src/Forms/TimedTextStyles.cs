@@ -33,7 +33,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 _xml.LoadXml(subtitle.Header);
             }
-            catch 
+            catch
             {
                 _xml.LoadXml(new TimedText10().ToText(new Subtitle(), "tt")); // load default xml
             }
@@ -228,8 +228,8 @@ namespace Nikse.SubtitleEdit.Forms
                     c = System.Drawing.ColorTranslator.FromHtml(color);
                 }
             }
-            catch 
-            {               
+            catch
+            {
             }
             subItem.BackColor = c;
             item.SubItems.Add(subItem);
@@ -243,7 +243,7 @@ namespace Nikse.SubtitleEdit.Forms
                     count++;
             }
             subItem = new ListViewItem.ListViewSubItem(item, count.ToString());
-            item.SubItems.Add(subItem);           
+            item.SubItems.Add(subItem);
 
             listViewStyles.Items.Add(item);
         }
@@ -310,7 +310,7 @@ namespace Nikse.SubtitleEdit.Forms
                         comboBoxFontStyle.SelectedIndex = 1;
                     if (fontStyle.ToLower() == "oblique")
                         comboBoxFontStyle.SelectedIndex = 2;
-                    
+
                     // normal | bold
                     comboBoxFontWeight.SelectedIndex = 0;
                     if (fontStyle.ToLower() == "bold")
@@ -333,7 +333,7 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         MessageBox.Show("Unable to read color: " + fontColor + " - " + exception.Message);
                     }
-                    panelFontColor.BackColor = color;                   
+                    panelFontColor.BackColor = color;
                 }
             }
         }
@@ -348,7 +348,7 @@ namespace Nikse.SubtitleEdit.Forms
             else
             {
                 _previewTimer.Start();
-            }            
+            }
         }
 
         private void buttonFontColor_Click(object sender, EventArgs e)
@@ -366,7 +366,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void buttonRemoveAll_Click(object sender, EventArgs e)
         {
             foreach (ListViewItem item in listViewStyles.Items)
-            { 
+            {
                 UpdateHeaderXmlRemoveStyle(item.Text);
             }
             listViewStyles.Items.Clear();
