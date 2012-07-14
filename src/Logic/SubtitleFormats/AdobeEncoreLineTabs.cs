@@ -19,11 +19,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             get { return "Adobe Encore (line/tabs)"; }
         }
 
-        public override bool HasLineNumber
-        {
-            get { return true; }
-        }
-
         public override bool IsTimeBased
         {
             get { return true; }

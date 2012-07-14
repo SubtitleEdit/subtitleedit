@@ -19,11 +19,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             get { return "Scenarist"; }
         }
 
-        public override bool HasLineNumber
-        {
-            get { return true; }
-        }
-
         public override bool IsTimeBased
         {
             get { return true; }

@@ -17,11 +17,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             get { return "Sony DVDArchitect line/duration"; }
         }
 
-        public override bool HasLineNumber
-        {
-            get { return true; }
-        }
-
         public override bool IsTimeBased
         {
             get { return true; }

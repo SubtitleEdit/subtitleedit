@@ -21,11 +21,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             get { return "CapMaker Plus"; }
         }
 
-        public override bool HasLineNumber
-        {
-            get { return false; }
-        }
-
         public override bool IsTimeBased
         {
             get { return true; }

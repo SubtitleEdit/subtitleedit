@@ -24,11 +24,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             get { return "SubViewer 1.0"; }
         }
 
-        public override bool HasLineNumber
-        {
-            get { return false; }
-        }
-
         public override bool IsTimeBased
         {
             get { return true; }

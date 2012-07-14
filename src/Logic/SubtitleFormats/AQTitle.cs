@@ -24,11 +24,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             get { return "AQTitle"; }
         }
 
-        public override bool HasLineNumber
-        {
-            get { return false; }
-        }
-
         public override bool IsTimeBased
         {
             get { return false; }

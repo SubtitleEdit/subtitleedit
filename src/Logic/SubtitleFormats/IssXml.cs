@@ -22,11 +22,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             get { return "ATS ISS"; }
         }
 
-        public override bool HasLineNumber
-        {
-            get { return true; }
-        }
-
         public override bool IsTimeBased
         {
             get { return true; }

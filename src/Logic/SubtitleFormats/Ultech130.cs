@@ -23,11 +23,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             get { return "Ultech 1.30 Caption"; }
         }
 
-        public override bool HasLineNumber
-        {
-            get { return false; }
-        }
-
         public override bool IsTimeBased
         {
             get { return true; }
