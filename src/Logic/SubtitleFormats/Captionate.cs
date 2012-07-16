@@ -101,11 +101,24 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
             _errorCount = 0;
+            string xmlString;
 
-            StringBuilder sb = new StringBuilder();
-            lines.ForEach(line => sb.AppendLine(line));
+            if (lines == null && fileName != null)
+            {
+                xmlString = File.ReadAllText(fileName);
+            }
+            else if (lines != null)
+            {
+                StringBuilder sb = new StringBuilder();
+                lines.ForEach(line => sb.AppendLine(line));
+                xmlString = sb.ToString();
+            }
+            else
+            {
+                return;
+            }
 
-            string xmlString = sb.ToString();
+            
             if (!xmlString.Contains("<captionate>") || !xmlString.Contains("</caption>"))
                 return;
 

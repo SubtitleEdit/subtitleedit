@@ -72,6 +72,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             foreach (string line in lines)
             {
                 ReadLine(subtitle, line);
+                if (_text.Length > 10000)
+                    return;
             }
             if (_paragraph.Text.Trim().Length > 0)
                 subtitle.Paragraphs.Add(_paragraph);

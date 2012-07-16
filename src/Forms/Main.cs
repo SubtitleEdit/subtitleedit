@@ -620,94 +620,96 @@ namespace Nikse.SubtitleEdit.Forms
                     }
 
                     var fi = new FileInfo(fileName);
-                    if (fi.Length < 1024 * 1024 * 10 && !done) // max 10 mb                    
+                    if (fi.Length < 1024 * 1024 && !done) // max 1 mb           
+                    {
                         format = sub.LoadSubtitle(fileName, out encoding, null);
 
-                    if (format == null)
-                    {
-                        var ebu = new Ebu();
-                        if (ebu.IsMine(null, fileName))
+                        if (format == null)
                         {
-                            ebu.LoadSubtitle(sub, null, fileName);
-                            format = ebu;
+                            var ebu = new Ebu();
+                            if (ebu.IsMine(null, fileName))
+                            {
+                                ebu.LoadSubtitle(sub, null, fileName);
+                                format = ebu;
+                            }
                         }
-                    }
-                    if (format == null)
-                    {
-                        var pac = new Pac();
-                        if (pac.IsMine(null, fileName))
+                        if (format == null)
                         {
-                            pac.LoadSubtitle(sub, null, fileName);
-                            format = pac;
+                            var pac = new Pac();
+                            if (pac.IsMine(null, fileName))
+                            {
+                                pac.LoadSubtitle(sub, null, fileName);
+                                format = pac;
+                            }
                         }
-                    }
-                    if (format == null)
-                    {
-                        var cavena890 = new Cavena890();
-                        if (cavena890.IsMine(null, fileName))
+                        if (format == null)
                         {
-                            cavena890.LoadSubtitle(sub, null, fileName);
-                            format = cavena890;
+                            var cavena890 = new Cavena890();
+                            if (cavena890.IsMine(null, fileName))
+                            {
+                                cavena890.LoadSubtitle(sub, null, fileName);
+                                format = cavena890;
+                            }
                         }
-                    }
-                    if (format == null)
-                    {
-                        var spt = new Spt();
-                        if (spt.IsMine(null, fileName))
+                        if (format == null)
                         {
-                            spt.LoadSubtitle(sub, null, fileName);
-                            format = spt;
+                            var spt = new Spt();
+                            if (spt.IsMine(null, fileName))
+                            {
+                                spt.LoadSubtitle(sub, null, fileName);
+                                format = spt;
+                            }
                         }
-                    }
-                    if (format == null)
-                    {
-                        var cheetahCaption = new CheetahCaption();
-                        if (cheetahCaption.IsMine(null, fileName))
+                        if (format == null)
                         {
-                            cheetahCaption.LoadSubtitle(_subtitle, null, fileName);
-                            format = cheetahCaption;
+                            var cheetahCaption = new CheetahCaption();
+                            if (cheetahCaption.IsMine(null, fileName))
+                            {
+                                cheetahCaption.LoadSubtitle(_subtitle, null, fileName);
+                                format = cheetahCaption;
+                            }
                         }
-                    }
-                    if (format == null)
-                    {
-                        var capMakerPlus = new CapMakerPlus();
-                        if (capMakerPlus.IsMine(null, fileName))
+                        if (format == null)
                         {
-                            capMakerPlus.LoadSubtitle(_subtitle, null, fileName);
-                            format = capMakerPlus;
+                            var capMakerPlus = new CapMakerPlus();
+                            if (capMakerPlus.IsMine(null, fileName))
+                            {
+                                capMakerPlus.LoadSubtitle(_subtitle, null, fileName);
+                                format = capMakerPlus;
+                            }
                         }
-                    }
-                    if (format == null)
-                    {
-                        var captionate = new Captionate();
-                        if (captionate.IsMine(null, fileName))
+                        if (format == null)
                         {
-                            captionate.LoadSubtitle(_subtitle, null, fileName);
-                            format = captionate;
+                            var captionate = new Captionate();
+                            if (captionate.IsMine(null, fileName))
+                            {
+                                captionate.LoadSubtitle(_subtitle, null, fileName);
+                                format = captionate;
+                            }
                         }
-                    }
-                    if (format == null)
-                    {
-                        var ultech130 = new Ultech130();
-                        if (ultech130.IsMine(null, fileName))
+                        if (format == null)
                         {
-                            ultech130.LoadSubtitle(_subtitle, null, fileName);
-                            format = ultech130;
+                            var ultech130 = new Ultech130();
+                            if (ultech130.IsMine(null, fileName))
+                            {
+                                ultech130.LoadSubtitle(_subtitle, null, fileName);
+                                format = ultech130;
+                            }
                         }
-                    }
-                    if (format == null)
-                    {
-                        var nciCaption = new NciCaption();
-                        if (nciCaption.IsMine(null, fileName))
+                        if (format == null)
                         {
-                            nciCaption.LoadSubtitle(_subtitle, null, fileName);
-                            format = nciCaption;
+                            var nciCaption = new NciCaption();
+                            if (nciCaption.IsMine(null, fileName))
+                            {
+                                nciCaption.LoadSubtitle(_subtitle, null, fileName);
+                                format = nciCaption;
+                            }
                         }
                     }
 
                     if (format == null)
                     {
-                        if (fi.Length < 1024 * 1024 * 10) // max 10 mb                    
+                        if (fi.Length < 1024 * 1024) // max 10 mb                    
                             Console.WriteLine(string.Format("{0}: {1} - input file format unknown!", count, fileName, toFormat));
                         else
                             Console.WriteLine(string.Format("{0}: {1} - input file too large!", count, fileName, toFormat));
