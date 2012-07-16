@@ -245,7 +245,7 @@ namespace Nikse.SubtitleEdit.Forms
                 comboBoxEncoding.Items.Add(Encoding.UTF8.EncodingName);
                 foreach (EncodingInfo ei in Encoding.GetEncodings())
                 {
-                    if (ei.Name != Encoding.UTF8.BodyName && ei.CodePage >= Configuration.Settings.General.EncodingMininumCodePage)
+                    if (ei.Name != Encoding.UTF8.BodyName && ei.CodePage >= 949 && !ei.DisplayName.Contains("EBCDIC") && ei.CodePage != 1047) //Configuration.Settings.General.EncodingMininumCodePage)
                         comboBoxEncoding.Items.Add(ei.CodePage + ": " + ei.DisplayName);
                 }
                 SetEncoding(Configuration.Settings.General.DefaultEncoding);
@@ -265,7 +265,10 @@ namespace Nikse.SubtitleEdit.Forms
                 Utilities.InitializeSubtitleFont(SubtitleListview1);
 
                 if (Configuration.Settings.General.CenterSubtitleInTextBox)
+                {
                     textBoxListViewText.TextAlign = HorizontalAlignment.Center;
+                    textBoxListViewTextAlternate.TextAlign = HorizontalAlignment.Center;
+                }
 
                 //SubtitleListview1.AutoSizeAllColumns(this);
 
@@ -573,7 +576,53 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     Encoding encoding;
                     var sub = new Subtitle();
-                    SubtitleFormat format = sub.LoadSubtitle(fileName, out encoding, null);
+                    SubtitleFormat format = null;
+                    bool done = false;
+
+                    if (Path.GetExtension(fileName).ToLower() == ".mkv" || Path.GetExtension(fileName).ToLower() == ".mks")
+                    {
+                        Matroska mkv = new Matroska();
+                        bool isValid = false;
+                        bool hasConstantFrameRate = false;
+                        double frameRate = 0;
+                        int width = 0;
+                        int height = 0;
+                        double milliseconds = 0;
+                        string videoCodec = string.Empty;
+                        mkv.GetMatroskaInfo(fileName, ref isValid, ref hasConstantFrameRate, ref frameRate, ref width, ref height, ref milliseconds, ref videoCodec);
+                        if (isValid)
+                        {
+                            var subtitleList = mkv.GetMatroskaSubtitleTracks(fileName, out isValid);
+                            if (subtitleList.Count > 0)
+                            {
+                                foreach (MatroskaSubtitleInfo x in subtitleList)
+                                {
+                                    if (x.CodecId.ToUpper() == "S_VOBSUB")
+                                    {
+                                        Console.WriteLine(string.Format("{0}: {1} - Cannot convert from VobSub image based format!", count, fileName, toFormat));
+                                    }
+                                    else if (x.CodecId.ToUpper() == "S_HDMV/PGS")
+                                    {
+                                        Console.WriteLine(string.Format("{0}: {1} - Cannot convert from Blu-ray image based format!", count, fileName, toFormat));
+                                    }
+                                    else
+                                    {
+                                        LoadMatroskaSubtitle(x, fileName, true);
+                                        sub = _subtitle;
+                                        format = GetCurrentSubtitleFormat();
+                                        var newFileName = fileName.Insert(fileName.Length - 4, "_" + x.Language.Replace("?", string.Empty).Replace("!", string.Empty).Replace("*", string.Empty).Replace(",", string.Empty).Replace("/", string.Empty).Trim());
+                                        BatchConvertSave(toFormat, offset, targetEncoding, outputFolder, count, ref converted, ref errors, formats, newFileName, sub, format);
+                                        done = true;
+                                    }
+                                }                                
+                            }
+                        }
+                    }
+
+                    var fi = new FileInfo(fileName);
+                    if (fi.Length < 1024 * 1024 * 10 && !done) // max 10 mb                    
+                        format = sub.LoadSubtitle(fileName, out encoding, null);
+
                     if (format == null)
                     {
                         var ebu = new Ebu();
@@ -658,140 +707,14 @@ namespace Nikse.SubtitleEdit.Forms
 
                     if (format == null)
                     {
-                        Console.WriteLine(string.Format("{0}: {1} - input file format unknown!", count, fileName, toFormat));
-                    }
-                    else
-                    {
-                        // adjust offset
-                        if (!string.IsNullOrEmpty(offset) && (offset.StartsWith("/offset:") || offset.StartsWith("offset:")))
-                        {
-                            string[] parts = offset.Split(":".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-                            if (parts.Length == 5)
-                            {
-                                try
-                                {
-                                    TimeSpan ts = new TimeSpan(0, int.Parse(parts[1].TrimStart('-')), int.Parse(parts[2]), int.Parse(parts[3]), int.Parse(parts[4]));
-                                    if (parts[1].StartsWith("-"))
-                                        sub.AddTimeToAllParagraphs(ts.Negate());
-                                    else
-                                        sub.AddTimeToAllParagraphs(ts);
-                                }
-                                catch
-                                {
-                                    Console.Write(" (unable to read offset " + offset + ")");
-                                }
-                            }
-                        }
-
-                        bool targetFormatFound = false;
-                        string outputFileName;
-                        foreach (SubtitleFormat sf in formats)
-                        {
-                            if (sf.Name.ToLower().Replace(" ", string.Empty) == toFormat.ToLower())
-                            {
-                                targetFormatFound = true;
-                                outputFileName = FormatOutputFileNameForBatchConvert(fileName, sf.Extension, outputFolder);
-                                Console.Write(string.Format("{0}: {1} -> {2}...", count, Path.GetFileName(fileName), outputFileName));
-                                if (sf.IsFrameBased && !sub.WasLoadedWithFrameNumbers)
-                                    sub.CalculateFrameNumbersFromTimeCodesNoCheck(Configuration.Settings.General.DefaultFrameRate);
-                                else if (sf.IsTimeBased && sub.WasLoadedWithFrameNumbers)
-                                    sub.CalculateTimeCodesFromFrameNumbers(Configuration.Settings.General.DefaultFrameRate);
-                                File.WriteAllText(outputFileName, sub.ToText(sf), targetEncoding);
-                                if (format.GetType() == typeof(Sami))
-                                {
-                                    var sami = (Sami)format;
-                                    foreach (string className in sami.GetClasses(sub))
-                                    {
-                                        var newSub = new Subtitle();
-                                        foreach (Paragraph p in sub.Paragraphs)
-                                        {
-                                            if (p.Extra != null && p.Extra.ToLower().Trim() == className.ToLower().Trim())
-                                                newSub.Paragraphs.Add(p);
-                                        }
-                                        if (newSub.Paragraphs.Count > 0 && newSub.Paragraphs.Count < sub.Paragraphs.Count)
-                                        {
-                                            string s = fileName;
-                                            if (s.LastIndexOf('.') > 0)
-                                                s = s.Insert(s.LastIndexOf('.'),  "_" + className);
-                                            else
-                                                s += "_" + className + format.Extension;
-                                            outputFileName = FormatOutputFileNameForBatchConvert(s, sf.Extension, outputFolder);
-                                            File.WriteAllText(outputFileName, newSub.ToText(sf), targetEncoding);
-                                        }
-                                    }
-                                }
-                                Console.WriteLine(" done.");
-                            }
-                        }
-                        if (!targetFormatFound)
-                        {
-                            var ebu = new Ebu();
-                            if (ebu.Name.ToLower().Replace(" ", string.Empty) == toFormat.ToLower())
-                            {
-                                targetFormatFound = true;
-                                outputFileName = FormatOutputFileNameForBatchConvert(fileName, ebu.Extension, outputFolder);
-                                Console.Write(string.Format("{0}: {1} -> {2}...", count, Path.GetFileName(fileName), outputFileName));
-                                ebu.Save(outputFileName, sub);
-                                Console.WriteLine(" done.");
-                            }
-                        }
-                        if (!targetFormatFound)
-                        {
-                            var pac = new Pac();
-                            if (pac.Name.ToLower().Replace(" ", string.Empty) == toFormat.ToLower())
-                            {
-                                targetFormatFound = true;
-                                outputFileName = FormatOutputFileNameForBatchConvert(fileName, pac.Extension, outputFolder);
-                                Console.Write(string.Format("{0}: {1} -> {2}...", count, Path.GetFileName(fileName), outputFileName));
-                                pac.Save(outputFileName, sub);
-                                Console.WriteLine(" done.");
-                            }
-                        }
-                        if (!targetFormatFound)
-                        {
-                            var cavena890 = new Cavena890();
-                            if (cavena890.Name.ToLower().Replace(" ", string.Empty) == toFormat.ToLower())
-                            {
-                                targetFormatFound = true;
-                                outputFileName = FormatOutputFileNameForBatchConvert(fileName, cavena890.Extension, outputFolder);
-                                Console.Write(string.Format("{0}: {1} -> {2}...", count, Path.GetFileName(fileName), outputFileName));
-                                cavena890.Save(outputFileName, sub);
-                                Console.WriteLine(" done.");
-                            }
-                        }
-                        if (!targetFormatFound)
-                        {
-                            var cheetahCaption = new CheetahCaption();
-                            if (cheetahCaption.Name.ToLower().Replace(" ", string.Empty) == toFormat.ToLower())
-                            {
-                                targetFormatFound = true;
-                                outputFileName = FormatOutputFileNameForBatchConvert(fileName, cheetahCaption.Extension, outputFolder);
-                                Console.Write(string.Format("{0}: {1} -> {2}...", count, Path.GetFileName(fileName), outputFileName));
-                                cheetahCaption.Save(outputFileName, sub);
-                                Console.WriteLine(" done.");
-                            }
-                        }
-                        if (!targetFormatFound)
-                        {
-                            var capMakerPlus = new CapMakerPlus();
-                            if (capMakerPlus.Name.ToLower().Replace(" ", string.Empty) == toFormat.ToLower())
-                            {
-                                targetFormatFound = true;
-                                outputFileName = FormatOutputFileNameForBatchConvert(fileName, capMakerPlus.Extension, outputFolder);
-                                Console.Write(string.Format("{0}: {1} -> {2}...", count, Path.GetFileName(fileName), outputFileName));
-                                capMakerPlus.Save(outputFileName, sub);
-                                Console.WriteLine(" done.");
-                            }
-                        }
-                        if (!targetFormatFound)
-                        {
-                            Console.WriteLine(string.Format("{0}: {1} - target format '{2}' not found!", count, fileName, toFormat));
-                            errors++;
-                        }
+                        if (fi.Length < 1024 * 1024 * 10) // max 10 mb                    
+                            Console.WriteLine(string.Format("{0}: {1} - input file format unknown!", count, fileName, toFormat));
                         else
-                        {
-                            converted++;
-                        }
+                            Console.WriteLine(string.Format("{0}: {1} - input file too large!", count, fileName, toFormat));
+                    }
+                    else if (!done)
+                    {
+                        BatchConvertSave(toFormat, offset, targetEncoding, outputFolder, count, ref converted, ref errors, formats, fileName, sub, format);
                     }
                 }
                 else
@@ -812,6 +735,140 @@ namespace Nikse.SubtitleEdit.Forms
                 Environment.Exit(0);
             else
                 Environment.Exit(1);
+        }
+
+        private void BatchConvertSave(string toFormat, string offset, Encoding targetEncoding, string outputFolder, int count, ref int converted, ref int errors, IList<SubtitleFormat> formats, string fileName, Subtitle sub, SubtitleFormat format)
+        {
+            // adjust offset
+            if (!string.IsNullOrEmpty(offset) && (offset.StartsWith("/offset:") || offset.StartsWith("offset:")))
+            {
+                string[] parts = offset.Split(":".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                if (parts.Length == 5)
+                {
+                    try
+                    {
+                        TimeSpan ts = new TimeSpan(0, int.Parse(parts[1].TrimStart('-')), int.Parse(parts[2]), int.Parse(parts[3]), int.Parse(parts[4]));
+                        if (parts[1].StartsWith("-"))
+                            sub.AddTimeToAllParagraphs(ts.Negate());
+                        else
+                            sub.AddTimeToAllParagraphs(ts);
+                    }
+                    catch
+                    {
+                        Console.Write(" (unable to read offset " + offset + ")");
+                    }
+                }
+            }
+
+            bool targetFormatFound = false;
+            string outputFileName;
+            foreach (SubtitleFormat sf in formats)
+            {
+                if (sf.Name.ToLower().Replace(" ", string.Empty) == toFormat.ToLower())
+                {
+                    targetFormatFound = true;
+                    outputFileName = FormatOutputFileNameForBatchConvert(fileName, sf.Extension, outputFolder);
+                    Console.Write(string.Format("{0}: {1} -> {2}...", count, Path.GetFileName(fileName), outputFileName));
+                    if (sf.IsFrameBased && !sub.WasLoadedWithFrameNumbers)
+                        sub.CalculateFrameNumbersFromTimeCodesNoCheck(Configuration.Settings.General.DefaultFrameRate);
+                    else if (sf.IsTimeBased && sub.WasLoadedWithFrameNumbers)
+                        sub.CalculateTimeCodesFromFrameNumbers(Configuration.Settings.General.DefaultFrameRate);
+                    File.WriteAllText(outputFileName, sub.ToText(sf), targetEncoding);
+                    if (format.GetType() == typeof(Sami))
+                    {
+                        var sami = (Sami)format;
+                        foreach (string className in sami.GetClasses(sub))
+                        {
+                            var newSub = new Subtitle();
+                            foreach (Paragraph p in sub.Paragraphs)
+                            {
+                                if (p.Extra != null && p.Extra.ToLower().Trim() == className.ToLower().Trim())
+                                    newSub.Paragraphs.Add(p);
+                            }
+                            if (newSub.Paragraphs.Count > 0 && newSub.Paragraphs.Count < sub.Paragraphs.Count)
+                            {
+                                string s = fileName;
+                                if (s.LastIndexOf('.') > 0)
+                                    s = s.Insert(s.LastIndexOf('.'), "_" + className);
+                                else
+                                    s += "_" + className + format.Extension;
+                                outputFileName = FormatOutputFileNameForBatchConvert(s, sf.Extension, outputFolder);
+                                File.WriteAllText(outputFileName, newSub.ToText(sf), targetEncoding);
+                            }
+                        }
+                    }
+                    Console.WriteLine(" done.");
+                }
+            }
+            if (!targetFormatFound)
+            {
+                var ebu = new Ebu();
+                if (ebu.Name.ToLower().Replace(" ", string.Empty) == toFormat.ToLower())
+                {
+                    targetFormatFound = true;
+                    outputFileName = FormatOutputFileNameForBatchConvert(fileName, ebu.Extension, outputFolder);
+                    Console.Write(string.Format("{0}: {1} -> {2}...", count, Path.GetFileName(fileName), outputFileName));
+                    ebu.Save(outputFileName, sub);
+                    Console.WriteLine(" done.");
+                }
+            }
+            if (!targetFormatFound)
+            {
+                var pac = new Pac();
+                if (pac.Name.ToLower().Replace(" ", string.Empty) == toFormat.ToLower())
+                {
+                    targetFormatFound = true;
+                    outputFileName = FormatOutputFileNameForBatchConvert(fileName, pac.Extension, outputFolder);
+                    Console.Write(string.Format("{0}: {1} -> {2}...", count, Path.GetFileName(fileName), outputFileName));
+                    pac.Save(outputFileName, sub);
+                    Console.WriteLine(" done.");
+                }
+            }
+            if (!targetFormatFound)
+            {
+                var cavena890 = new Cavena890();
+                if (cavena890.Name.ToLower().Replace(" ", string.Empty) == toFormat.ToLower())
+                {
+                    targetFormatFound = true;
+                    outputFileName = FormatOutputFileNameForBatchConvert(fileName, cavena890.Extension, outputFolder);
+                    Console.Write(string.Format("{0}: {1} -> {2}...", count, Path.GetFileName(fileName), outputFileName));
+                    cavena890.Save(outputFileName, sub);
+                    Console.WriteLine(" done.");
+                }
+            }
+            if (!targetFormatFound)
+            {
+                var cheetahCaption = new CheetahCaption();
+                if (cheetahCaption.Name.ToLower().Replace(" ", string.Empty) == toFormat.ToLower())
+                {
+                    targetFormatFound = true;
+                    outputFileName = FormatOutputFileNameForBatchConvert(fileName, cheetahCaption.Extension, outputFolder);
+                    Console.Write(string.Format("{0}: {1} -> {2}...", count, Path.GetFileName(fileName), outputFileName));
+                    cheetahCaption.Save(outputFileName, sub);
+                    Console.WriteLine(" done.");
+                }
+            }
+            if (!targetFormatFound)
+            {
+                var capMakerPlus = new CapMakerPlus();
+                if (capMakerPlus.Name.ToLower().Replace(" ", string.Empty) == toFormat.ToLower())
+                {
+                    targetFormatFound = true;
+                    outputFileName = FormatOutputFileNameForBatchConvert(fileName, capMakerPlus.Extension, outputFolder);
+                    Console.Write(string.Format("{0}: {1} -> {2}...", count, Path.GetFileName(fileName), outputFileName));
+                    capMakerPlus.Save(outputFileName, sub);
+                    Console.WriteLine(" done.");
+                }
+            }
+            if (!targetFormatFound)
+            {
+                Console.WriteLine(string.Format("{0}: {1} - target format '{2}' not found!", count, fileName, toFormat));
+                errors++;
+            }
+            else
+            {
+                converted++;
+            }
         }
 
         string FormatOutputFileNameForBatchConvert(string fileName, string extension, string outputFolder)
@@ -1373,6 +1430,7 @@ namespace Nikse.SubtitleEdit.Forms
             labelDuration.Text = _languageGeneral.Duration;
             labelStartTime.Text = _languageGeneral.StartTime;
             labelText.Text = _languageGeneral.Text;
+            labelAlternateText.Text = Configuration.Settings.Language.General.OriginalText;
             toolStripLabelFrameRate.Text = _languageGeneral.FrameRate;
             buttonPrevious.Text = _language.Controls.Previous;
             buttonNext.Text = _language.Controls.Next;
@@ -2083,12 +2141,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
 
                     _subtitleListViewIndex = -1;
-
-                    if (format.FriendlyName == new Sami().FriendlyName)
-                        encoding = Encoding.Default;
-
                     SetCurrentFormat(format);
-
                     _subtitleAlternateFileName = null;
                     if (LoadAlternateSubtitleFile(originalFileName))
                         _subtitleAlternateFileName = originalFileName;
@@ -2698,8 +2751,7 @@ namespace Nikse.SubtitleEdit.Forms
                 SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
                 RestoreSubtitleListviewIndexes();
 
-                if ((_oldSubtitleFormat.GetType() == typeof(AdvancedSubStationAlpha) || _oldSubtitleFormat.GetType() == typeof(SubStationAlpha) || _oldSubtitleFormat.GetType() == typeof(TimedText10)) &&
-                    _networkSession == null)
+                if (_oldSubtitleFormat.HasStyleSupport && _networkSession == null)
                 {
                     SubtitleListview1.HideExtraColumn();
                 }
@@ -2716,9 +2768,13 @@ namespace Nikse.SubtitleEdit.Forms
                 ShowStatus(string.Format(_language.ConvertedToX, format.FriendlyName));
                 _oldSubtitleFormat = format;
 
-                if ((format.GetType() == typeof(AdvancedSubStationAlpha) || format.GetType() == typeof(SubStationAlpha) || format.GetType() == typeof(TimedText10)) && _networkSession == null)
+                if (format.HasStyleSupport && _networkSession == null)
                 {
-                    List<string> styles = AdvancedSubStationAlpha.GetStylesFromHeader(_subtitle.Header);
+                    List<string> styles = new List<string>();
+                    if (format.GetType() == typeof(AdvancedSubStationAlpha) || format.GetType() == typeof(SubStationAlpha))
+                        styles = AdvancedSubStationAlpha.GetStylesFromHeader(_subtitle.Header);
+                    else if (format.GetType() == typeof(TimedText10))
+                        styles = TimedText10.GetStylesFromHeader(_subtitle.Header);
                     foreach (Paragraph p in _subtitle.Paragraphs)
                     {
                         if (string.IsNullOrEmpty(p.Extra) && styles.Count > 0)
@@ -5028,7 +5084,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void InsertBefore()
         {
             var format = GetCurrentSubtitleFormat();
-            bool useExtraForStyle = format.GetType() == typeof(AdvancedSubStationAlpha) || format.GetType() == typeof(SubStationAlpha) || format.GetType() == typeof(TimedText10);
+            bool useExtraForStyle = format.HasStyleSupport;
             List<string> styles = new List<string>();
             if (format.GetType() == typeof(AdvancedSubStationAlpha) || format.GetType() == typeof(SubStationAlpha))
                 styles = AdvancedSubStationAlpha.GetStylesFromHeader(_subtitle.Header);
@@ -5126,7 +5182,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void InsertAfter()
         {
             var format = GetCurrentSubtitleFormat();
-            bool useExtraForStyle = format.GetType() == typeof(AdvancedSubStationAlpha) || format.GetType() == typeof(SubStationAlpha) || format.GetType() == typeof(TimedText10);
+            bool useExtraForStyle = format.HasStyleSupport;
             var styles = new List<string>();
             if (format.GetType() == typeof(AdvancedSubStationAlpha) || format.GetType() == typeof(SubStationAlpha))
                 styles = AdvancedSubStationAlpha.GetStylesFromHeader(_subtitle.Header);
@@ -5741,6 +5797,19 @@ namespace Nikse.SubtitleEdit.Forms
                 newParagraph.EndTime.TotalMilliseconds = currentParagraph.EndTime.TotalMilliseconds;
                 currentParagraph.EndTime.TotalMilliseconds = middle;
                 newParagraph.StartTime.TotalMilliseconds = currentParagraph.EndTime.TotalMilliseconds + 1;
+                if (Configuration.Settings.General.MininumMillisecondsBetweenLines > 0)
+                { 
+                    Paragraph next = _subtitle.GetParagraphOrDefault(firstSelectedIndex+1);
+                    if (next == null || next.StartTime.TotalMilliseconds > newParagraph.EndTime.TotalMilliseconds + Configuration.Settings.General.MininumMillisecondsBetweenLines + Configuration.Settings.General.MininumMillisecondsBetweenLines)
+                    {
+                        newParagraph.StartTime.TotalMilliseconds += Configuration.Settings.General.MininumMillisecondsBetweenLines;
+                        newParagraph.EndTime.TotalMilliseconds += Configuration.Settings.General.MininumMillisecondsBetweenLines;
+                    }
+                    else
+                    {
+                        newParagraph.StartTime.TotalMilliseconds += Configuration.Settings.General.MininumMillisecondsBetweenLines;
+                    }
+                }
 
                 if (Configuration.Settings.General.AllowEditOfOriginalSubtitle && _subtitleAlternate != null && _subtitleAlternate.Paragraphs.Count > 0)
                 {
@@ -6837,14 +6906,14 @@ namespace Nikse.SubtitleEdit.Forms
                             subtitleChooser.Initialize(subtitleList);
                             if (subtitleChooser.ShowDialog(this) == DialogResult.OK)
                             {
-                                LoadMatroskaSubtitle(subtitleList[subtitleChooser.SelectedIndex], fileName);
+                                LoadMatroskaSubtitle(subtitleList[subtitleChooser.SelectedIndex], fileName, false);
                                 if (Path.GetExtension(fileName).ToLower() == ".mkv")
                                     OpenVideo(fileName);
                             }
                         }
                         else
                         {
-                            LoadMatroskaSubtitle(subtitleList[0], fileName);
+                            LoadMatroskaSubtitle(subtitleList[0], fileName, false);
                             if (Path.GetExtension(fileName).ToLower() == ".mkv")
                                 OpenVideo(fileName);
                         }
@@ -6865,7 +6934,7 @@ namespace Nikse.SubtitleEdit.Forms
                 Application.DoEvents();
         }
 
-        private void LoadMatroskaSubtitle(MatroskaSubtitleInfo matroskaSubtitleInfo, string fileName)
+        private void LoadMatroskaSubtitle(MatroskaSubtitleInfo matroskaSubtitleInfo, string fileName, bool batchMode)
         {
             bool isValid;
             bool isSsa = false;
@@ -6875,11 +6944,15 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (matroskaSubtitleInfo.CodecId.ToUpper() == "S_VOBSUB")
             {
+                if (batchMode)
+                    return;
                 LoadVobSubFromMatroska(matroskaSubtitleInfo, fileName);
                 return;
             }
             if (matroskaSubtitleInfo.CodecId.ToUpper() == "S_HDMV/PGS")
             {
+                if (batchMode)
+                    return;
                 LoadBluRaySubFromMatroska(matroskaSubtitleInfo, fileName);
                 return;
             }
@@ -6906,7 +6979,8 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 MakeHistoryForUndo(_language.BeforeImportFromMatroskaFile);
                 _subtitleListViewIndex = -1;
-                FileNew();
+                if (!batchMode)
+                    FileNew();
                 _subtitle.Paragraphs.Clear();
 
                 if (isSsa)
@@ -6963,6 +7037,9 @@ namespace Nikse.SubtitleEdit.Forms
                 _fileDateTime = new DateTime();
 
                 _converted = true;
+
+                if (batchMode)
+                    return;
 
                 SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
                 if (_subtitle.Paragraphs.Count > 0)
@@ -7494,12 +7571,12 @@ namespace Nikse.SubtitleEdit.Forms
                                 subtitleChooser.Initialize(subtitleList);
                                 if (subtitleChooser.ShowDialog(this) == DialogResult.OK)
                                 {
-                                    LoadMatroskaSubtitle(subtitleList[subtitleChooser.SelectedIndex], fileName);
+                                    LoadMatroskaSubtitle(subtitleList[subtitleChooser.SelectedIndex], fileName, false);
                                 }
                             }
                             else
                             {
-                                LoadMatroskaSubtitle(subtitleList[0], fileName);
+                                LoadMatroskaSubtitle(subtitleList[0], fileName, false);
                             }
                         }
                         return;
@@ -9785,7 +9862,10 @@ namespace Nikse.SubtitleEdit.Forms
 
                 Utilities.InitializeVideoPlayerAndContainer(fileName, videoInfo, mediaPlayer, VideoLoaded, VideoEnded);
                 mediaPlayer.Volume = 0;
-                labelVideoInfo.Text = Path.GetFileName(fileName) + " " + videoInfo.Width + "x" + videoInfo.Height + " " + videoInfo.VideoCodec;
+                labelVideoInfo.Text = Path.GetFileName(fileName) + " " + videoInfo.Width + "x" + videoInfo.Height + " " + videoInfo.VideoCodec.Trim();
+                if (videoInfo.FramesPerSecond > 0)
+                    labelVideoInfo.Text = labelVideoInfo.Text + " " + string.Format("{0:0.0##}", videoInfo.FramesPerSecond);
+
 
                 string peakWaveFileName = GetPeakWaveFileName(fileName);
                 string spectrogramFolder = GetSpectrogramFolder(fileName);
@@ -12110,7 +12190,7 @@ namespace Nikse.SubtitleEdit.Forms
             _formPositionsAndSizes.SetPositionAndSize(networkNew);
             if (networkNew.ShowDialog(this) == DialogResult.OK)
             {
-                if (GetCurrentSubtitleFormat().GetType() == typeof(AdvancedSubStationAlpha) || GetCurrentSubtitleFormat().GetType() == typeof(SubStationAlpha) || GetCurrentSubtitleFormat().GetType() == typeof(TimedText10))
+                if (GetCurrentSubtitleFormat().HasStyleSupport)
                 {
                     SubtitleListview1.HideExtraColumn();
                 }
@@ -12480,8 +12560,7 @@ namespace Nikse.SubtitleEdit.Forms
             SubtitleListview1.HideExtraColumn();
             _networkChat = null;
 
-            if ((GetCurrentSubtitleFormat().GetType() == typeof(AdvancedSubStationAlpha) || GetCurrentSubtitleFormat().GetType() == typeof(SubStationAlpha) || GetCurrentSubtitleFormat().GetType() == typeof(TimedText10)) &&
-                _networkSession == null)
+            if (GetCurrentSubtitleFormat().HasStyleSupport && _networkSession == null)
             {
                 SubtitleListview1.ShowExtraColumn("Style");
                 SubtitleListview1.DisplayExtraFromExtra = true;

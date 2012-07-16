@@ -31,7 +31,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 if (ei.Name != Encoding.UTF8.BodyName)
                 {
-                    if (ei.CodePage >= Configuration.Settings.General.EncodingMininumCodePage)
+                    if (ei.Name != Encoding.UTF8.BodyName && ei.CodePage >= 949 && !ei.DisplayName.Contains("EBCDIC") && ei.CodePage != 1047)
                     {
                         comboBoxEncoding.Items.Add(ei.CodePage + ": " + ei.DisplayName);
                         if (ei.Name == Configuration.Settings.General.DefaultEncoding)

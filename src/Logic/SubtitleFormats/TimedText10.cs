@@ -492,6 +492,14 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             }
         }
 
+        public override bool HasStyleSupport
+        {
+            get
+            {
+                return true;
+            }
+        }
+
         public static List<string> GetStylesFromHeader(string xmlAsString)
         {
             var list = new List<string>();

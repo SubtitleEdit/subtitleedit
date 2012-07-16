@@ -5,6 +5,7 @@ Subtitle Edit Changelog
    * Edit -> Reverse RTL start/end (fix punctuations)
    * Easy import of auto backed up files (File -> Restore auto-backup...)
    * Advanced Substation Alpha style viewer/creater (right click in list view)
+   * Timed Text style view/creater (right click in list view)
    * File -> D-Cinema properties (for both smtpe and interop)
    * Can now display frames instead of milliseconds in main window (see Options -> settings)
    * New setting in Options: "Max. chars/second"
@@ -29,6 +30,7 @@ Subtitle Edit Changelog
    * Fix common errors -> Start with uppercase letter after colon/semicolon moved
      to seperate fix item (no longer in "Start with uppercase after paragraph/period")
    * Can now read Ulead format with positions - thx Steve
+   * Can now convert text subtitles in mkv/mks files via command line - thx the hulk
 * FIXED:
    * Auto-translate now works for English to Portuguese - thx w.tambley
    * Shortcuts with numbers (0-9)
@@ -36,6 +38,7 @@ Subtitle Edit Changelog
    * Reading of SAMI files with time codes in quotes - thx Josh
    * Reading of Ulead files with position codes - thx Steve
    * Reading of time codes + adjust with format SCC - thx Marquise
+   * Fixed accents and tildes in Cheetah caption format - thx David
 
 
 3.2.8 (3rd June 2012)
