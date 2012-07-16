@@ -695,8 +695,7 @@ namespace Nikse.SubtitleEdit.Logic
                 {
                     if (ei.CodePage + ": " + ei.DisplayName == Configuration.Settings.General.DefaultEncoding &&
                         ei.Name != Encoding.UTF8.BodyName &&
-                        ei.Name != Encoding.Unicode.BodyName &&
-                        ei.CodePage >= Configuration.Settings.General.EncodingMininumCodePage)
+                        ei.Name != Encoding.Unicode.BodyName)
                     {
                         encoding = ei.GetEncoding();
                         break;
@@ -774,6 +773,10 @@ namespace Nikse.SubtitleEdit.Logic
                         Encoding romanianEncoding = Encoding.GetEncoding(1250); // Romanian
                         if (GetCount(romanianEncoding.GetString(buffer), "să", "şi", "văzut", "regulă", "găsit", "viaţă") > 99)
                             return romanianEncoding;
+
+                        Encoding koreanEncoding = Encoding.GetEncoding(949); // Korean
+                        if (GetCount(koreanEncoding.GetString(buffer), "그리고", "아니야", "하지만", "말이야", "그들은", "우리가") > 5)
+                            return koreanEncoding;
                     }
                 }
                 file.Close();
@@ -1088,6 +1091,10 @@ namespace Nikse.SubtitleEdit.Logic
             if (count > 10 || count > bestCount)
                 return "th"; // Thai
 
+            count = GetCount(text, "그리고", "아니야", "하지만", "말이야", "그들은", "우리가");
+            if (count > 10 || count > bestCount)
+                return "th"; // Korean
+
             return string.Empty;
         }
 
@@ -1351,7 +1358,7 @@ namespace Nikse.SubtitleEdit.Logic
 
         private static void AddExtension(StringBuilder sb, string extension)
         {
-            if (!sb.ToString().Contains("*" + extension + ";"))
+            if (!sb.ToString().ToLower().Contains("*" + extension.ToLower() + ";"))
                 sb.Append("*" + extension + ";");
         }
 

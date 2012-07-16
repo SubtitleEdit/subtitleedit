@@ -190,7 +190,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             return (int)System.Math.Round(frames * (1000.0 / Configuration.Settings.General.CurrentFrameRate));
         }
 
-        public virtual bool SupportsStyles
+        public virtual bool HasStyleSupport
         {
             get
             {

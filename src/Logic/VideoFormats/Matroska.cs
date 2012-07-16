@@ -656,7 +656,7 @@ namespace Nikse.SubtitleEdit.Logic
             {
                 if (defaultDuration > 0)
                     _frameRate = 1.0 / (defaultDuration / 1000000000.0);
-                _videoCodecId = codecId + " " + biCompression.Trim();
+                _videoCodecId = codecId;
             }
             else if (isSubtitle)
             {
