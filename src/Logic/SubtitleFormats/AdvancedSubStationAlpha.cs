@@ -95,6 +95,10 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                 sb.AppendLine("Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text");
                 styles = GetStylesFromHeader(subtitle.Header);
             }
+            else if (!string.IsNullOrEmpty(subtitle.Header) && subtitle.Header.Contains("[V4 Styles]"))
+            {
+                LoadStylesFromSubstationAlpha(subtitle, title, header, headerNoStyles, sb);
+            }
             else if (subtitle.Header != null && subtitle.Header.Contains("http://www.w3.org/ns/ttml"))
             { 
                 LoadStylesFromTimedText10(subtitle, title, header, headerNoStyles, sb);
@@ -122,6 +126,87 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                 sb.AppendLine(subtitle.Footer);
             }
             return sb.ToString().Trim();
+        }
+
+        private void LoadStylesFromSubstationAlpha(Subtitle subtitle, string title, string header, string headerNoStyles, StringBuilder sb)
+        {
+            try
+            {
+                bool styleFound = false;
+                var ttStyles = new StringBuilder();
+                foreach (string styleName in AdvancedSubStationAlpha.GetStylesFromHeader(subtitle.Header))
+                {
+                    try
+                    {
+                        var ssaStyle = AdvancedSubStationAlpha.GetSsaStyle(styleName, subtitle.Header);
+                        if (ssaStyle != null)
+                        {
+                            // Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+                            string styleFormat = "Style: {0},{1},{2},{3},{4},{5},{6},{7},{8},{9},0,100,100,0,0,{10},{11},{12},{13},{14},{15},{16},1";
+                            string bold = "0";
+                            if (ssaStyle.Bold)
+                                bold = "1";
+                            string italic = "0";
+                            if (ssaStyle.Italic)
+                                italic = "1";
+                            string underline = "0";
+                            if (ssaStyle.Underline)
+                                underline = "1";
+
+                            string newAlignment = "2";
+                            switch (ssaStyle.Alignment)
+                            {
+                                case "1":
+                                    newAlignment = "1";
+                                    break;
+                                case "3":
+                                    newAlignment = "3";
+                                    break;
+                                case "9":
+                                    newAlignment = "4";
+                                    break;
+                                case "10":
+                                    newAlignment = "5";
+                                    break;
+                                case "11":
+                                    newAlignment = "6";
+                                    break;
+                                case "5":
+                                    newAlignment = "7";
+                                    break;
+                                case "6":
+                                    newAlignment = "8";
+                                    break;
+                                case "7":
+                                    newAlignment = "9";
+                                    break;
+                            }
+
+                            ttStyles.AppendLine(string.Format(styleFormat, ssaStyle.Name, ssaStyle.FontName, ssaStyle.FontSize, GetSsaColorString(ssaStyle.Primary), GetSsaColorString(ssaStyle.Secondary),                                
+                                                GetSsaColorString(ssaStyle.Outline), GetSsaColorString(ssaStyle.Background), bold, italic, underline, ssaStyle.BorderStyle, ssaStyle.OutlineWidth, ssaStyle.ShadowWidth,
+                                                newAlignment, ssaStyle.MarginLeft, ssaStyle.MarginRight, ssaStyle.MarginVertical));
+                            styleFound = true;
+                        }
+                    }
+                    catch
+                    {
+                    }
+                }
+
+                if (styleFound)
+                {
+                    sb.AppendLine(string.Format(headerNoStyles, title, ttStyles.ToString()));
+                    subtitle.Header = sb.ToString();
+                }
+                else
+                {
+                    sb.AppendLine(string.Format(header, title));
+                }
+            }
+            catch
+            {
+                sb.AppendLine(string.Format(header, title));
+            }
         }
 
         private static void LoadStylesFromTimedText10(Subtitle subtitle, string title, string header, string headerNoStyles, StringBuilder sb)
