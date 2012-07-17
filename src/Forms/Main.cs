@@ -1864,8 +1864,6 @@ namespace Nikse.SubtitleEdit.Forms
                     if (isValid)
                     {
                         ImportSubtitleFromMatroskaFile(fileName);
-                        if (Path.GetExtension(fileName).ToLower() == ".mkv")
-                            OpenVideo(fileName);
                         return;
                     }
                 }
@@ -6941,7 +6939,6 @@ namespace Nikse.SubtitleEdit.Forms
             bool isValid;
             bool isSsa = false;
             var matroska = new Matroska();
-
             SubtitleFormat format;
 
             if (matroskaSubtitleInfo.CodecId.ToUpper() == "S_VOBSUB")
@@ -6960,17 +6957,23 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (matroskaSubtitleInfo.CodecPrivate.ToLower().Contains("[script info]"))
             {
-                format = new SubStationAlpha();
+                if (matroskaSubtitleInfo.CodecPrivate.ToLower().Contains("[V4 Styles]".ToLower()))
+                    format = new SubStationAlpha();
+                else
+                    format = new AdvancedSubStationAlpha();
                 isSsa = true;
+                if (_networkSession == null)
+                {
+                    SubtitleListview1.ShowExtraColumn("Style");
+                    SubtitleListview1.DisplayExtraFromExtra = true;
+                }
             }
             else
             {
                 format = new SubRip();
+                if (_networkSession == null && SubtitleListview1.IsExtraColumnVisible)
+                    SubtitleListview1.HideExtraColumn();
             }
-
-            comboBoxSubtitleFormats.SelectedIndexChanged -= ComboBoxSubtitleFormatsSelectedIndexChanged;
-            SetCurrentFormat(format);
-            comboBoxSubtitleFormats.SelectedIndexChanged += ComboBoxSubtitleFormatsSelectedIndexChanged;
 
             ShowStatus(_language.ParsingMatroskaFile);
             Refresh();
@@ -6985,9 +6988,27 @@ namespace Nikse.SubtitleEdit.Forms
                     FileNew();
                 _subtitle.Paragraphs.Clear();
 
+                comboBoxSubtitleFormats.SelectedIndexChanged -= ComboBoxSubtitleFormatsSelectedIndexChanged;
+                SetCurrentFormat(format);
+                comboBoxSubtitleFormats.SelectedIndexChanged += ComboBoxSubtitleFormatsSelectedIndexChanged;
+
                 if (isSsa)
                 {
                     int commaCount = 100;
+                    _subtitle.Header = matroskaSubtitleInfo.CodecPrivate;
+                    if (!_subtitle.Header.Contains("[Events]"))
+                    {
+                        _subtitle.Header = _subtitle.Header.Trim() + Environment.NewLine +
+                                           Environment.NewLine +
+                                           "[Events]" + Environment.NewLine;
+                    }
+                    else
+                    {
+                        _subtitle.Header = _subtitle.Header.Remove(_subtitle.Header.IndexOf("[Events]"));
+                        _subtitle.Header = _subtitle.Header.Trim() + Environment.NewLine +
+                                           Environment.NewLine +
+                                           "[Events]" + Environment.NewLine;
+                    }
 
                     foreach (SubtitleSequence p in sub)
                     {
@@ -7001,18 +7022,24 @@ namespace Nikse.SubtitleEdit.Forms
 
                     foreach (SubtitleSequence p in sub)
                     {
+                        string extra = null;
                         string s = string.Empty;
                         string[] arr = p.Text.Split(',');
                         if (arr.Length >= commaCount)
                         {
+
+                            extra = arr[2].TrimStart('*');
+
                             for (int i = commaCount; i <= arr.Length; i++)
                             {
                                 if (s.Length > 0)
                                     s += ",";
-                                s += arr[i-1];
+                                s += arr[i - 1];
                             }
                         }
-                        _subtitle.Paragraphs.Add(new Paragraph(s, p.StartMilliseconds, p.EndMilliseconds));
+                        var p2 = new Paragraph(s, p.StartMilliseconds, p.EndMilliseconds);
+                        p2.Extra = extra;
+                        _subtitle.Paragraphs.Add(p2);
                     }
                 }
                 else
@@ -7047,8 +7074,6 @@ namespace Nikse.SubtitleEdit.Forms
                 if (_subtitle.Paragraphs.Count > 0)
                     SubtitleListview1.SelectIndexAndEnsureVisible(0);
 
-                if (format.FriendlyName == new SubStationAlpha().FriendlyName)
-                    _subtitle.Header = matroskaSubtitleInfo.CodecPrivate;
                 ShowSource();
             }
         }
