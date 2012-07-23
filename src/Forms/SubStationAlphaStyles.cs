@@ -206,7 +206,6 @@ namespace Nikse.SubtitleEdit.Forms
                 else
                     top = bmp.Height - measuredHeight - ((int)numericUpDownMarginVertical.Value);
 
-                int addX = 0;
                 int leftMargin = 0;
                 int pathPointsStart = -1;
 
@@ -218,7 +217,7 @@ namespace Nikse.SubtitleEdit.Forms
                         g.FillRectangle(new SolidBrush(panelOutlineColor.BackColor), left, top, measuredWidth + 3, measuredHeight + 3);
                 }
 
-                TextDraw.DrawText(font, sf, path, sb, checkBoxFontItalic.Checked, checkBoxFontBold.Checked, checkBoxFontUnderline.Checked, left, top, ref newLine, addX, leftMargin, ref pathPointsStart);
+                TextDraw.DrawText(font, sf, path, sb, checkBoxFontItalic.Checked, checkBoxFontBold.Checked, checkBoxFontUnderline.Checked, left, top, ref newLine, leftMargin, ref pathPointsStart);
 
                 int outline = (int)numericUpDownOutline.Value;
 
@@ -231,7 +230,7 @@ namespace Nikse.SubtitleEdit.Forms
                         sb = new StringBuilder();
                         sb.Append("This is a test!");
                         int pathPointsStart2 = -1;
-                        TextDraw.DrawText(font, sf, shadowPath, sb, checkBoxFontItalic.Checked, checkBoxFontBold.Checked, checkBoxFontUnderline.Checked, left + i + outline, top + i + outline, ref newLine, addX, leftMargin, ref pathPointsStart2);
+                        TextDraw.DrawText(font, sf, shadowPath, sb, checkBoxFontItalic.Checked, checkBoxFontBold.Checked, checkBoxFontUnderline.Checked, left + i + outline, top + i + outline, ref newLine, leftMargin, ref pathPointsStart2);
                         g.FillPath(new SolidBrush(Color.FromArgb(200, panelBackColor.BackColor)), shadowPath);
                     }
                 }
@@ -810,7 +809,9 @@ namespace Nikse.SubtitleEdit.Forms
             if (listViewStyles.SelectedItems.Count == 1 && _doUpdate)
             {
                 string name = listViewStyles.SelectedItems[0].Text;
-                SetSsaStyle(name, "fontname", comboBoxFontName.SelectedItem.ToString());
+                var item = comboBoxFontName.SelectedItem;
+                if (item != null)
+                    SetSsaStyle(name, "fontname", item.ToString());
                 GeneratePreview();
             }
         }

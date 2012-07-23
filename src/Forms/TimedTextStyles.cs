@@ -139,7 +139,6 @@ namespace Nikse.SubtitleEdit.Forms
                 //else
                 //    top = bmp.Height - measuredHeight - ((int)numericUpDownMarginVertical.Value);
 
-                int addX = 0;
                 int leftMargin = 0;
                 int pathPointsStart = -1;
 
@@ -151,7 +150,7 @@ namespace Nikse.SubtitleEdit.Forms
                 //        g.FillRectangle(new SolidBrush(panelOutlineColor.BackColor), left, top, measuredWidth + 3, measuredHeight + 3);
                 //}
 
-                TextDraw.DrawText(font, sf, path, sb, comboBoxFontStyle.Text == "italic", comboBoxFontWeight.Text == "bold", false, left, top, ref newLine, addX, leftMargin, ref pathPointsStart);
+                TextDraw.DrawText(font, sf, path, sb, comboBoxFontStyle.Text == "italic", comboBoxFontWeight.Text == "bold", false, left, top, ref newLine, leftMargin, ref pathPointsStart);
 
                 int outline = 0; // (int)numericUpDownOutline.Value;
 
