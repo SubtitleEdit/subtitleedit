@@ -135,6 +135,7 @@ Name: ru;  MessagesFile: compiler:Languages\Russian.isl
 Name: srC; MessagesFile: compiler:Languages\SerbianCyrillic.isl
 Name: srL; MessagesFile: compiler:Languages\SerbianLatin.isl
 Name: sv;  MessagesFile: Languages\Swedish.isl
+Name: tr;  MessagesFile: Languages\Turkish.isl
 #endif
 
 ; Include the installer's custom messages
@@ -218,6 +219,7 @@ Source: {#bindir}\Languages\ru-RU.xml;             DestDir: {app}\Languages;    
 Source: {#bindir}\Languages\sr-Cyrl-RS.xml;        DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
 Source: {#bindir}\Languages\sr-Latn-RS.xml;        DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
 Source: {#bindir}\Languages\sv-SE.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
+Source: {#bindir}\Languages\tr-TR.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
 Source: {#bindir}\Languages\zh-CHS.xml;            DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
 #endif
 
@@ -313,6 +315,7 @@ Type: files;      Name: {app}\Languages\ru-RU.xml;      Check: not IsComponentSe
 Type: files;      Name: {app}\Languages\sr-Cyrl-RS.xml; Check: not IsComponentSelected('translations') and IsUpgrade()
 Type: files;      Name: {app}\Languages\sr-Latn-RS.xml; Check: not IsComponentSelected('translations') and IsUpgrade()
 Type: files;      Name: {app}\Languages\sv-SE.xml;      Check: not IsComponentSelected('translations') and IsUpgrade()
+Type: files;      Name: {app}\Languages\tr-TR.xml;      Check: not IsComponentSelected('translations') and IsUpgrade()
 Type: files;      Name: {app}\Languages\zh-CHS.xml;     Check: not IsComponentSelected('translations') and IsUpgrade()
 Type: dirifempty; Name: {app}\Languages;                Check: not IsComponentSelected('translations') and IsUpgrade()
 #endif

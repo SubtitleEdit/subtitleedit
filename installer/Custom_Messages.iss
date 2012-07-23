@@ -479,4 +479,22 @@ sv.tsk_ResetSettings=Reset Subtitle Edit's settings
 sv.types_custom=Custom installation
 sv.types_default=Default installation
 
+; Turkish
+tr.comp_translations=Translations
+tr.msg_AppIsRunning=Setup has detected that Subtitle Edit is currently running.%n%nPlease close all instances of it now, then click OK to continue, or Cancel to exit.
+tr.msg_AppIsRunningUninstall=Uninstall has detected that Subtitle Edit is currently running.%n%nPlease close all instances of it now, then click OK to continue, or Cancel to exit.
+tr.msg_AskToDownNET=Subtitle Edit requires the .NET Framework 2.0. Please download and install the .NET Framework and run setup again.%n%nDo you want to download the .NET Framework 2.0 now?
+tr.msg_DeleteSettings=Do you also want to delete Subtitle Edit's settings and any custom changes you made in the dictionaries?%n%nIf you plan on reinstalling Subtitle Edit you do not have to delete them.
+tr.msg_OptimizingPerformance=Optimizing performance...
+tr.msg_SetupIsRunningWarning=Subtitle Edit Setup is already running!
+tr.run_VisitWebsite=Visit Subtitle Edit's Website
+tr.sm_com_Changelog=Subtitle Edit's Changelog
+tr.tsk_AllUsers=For all users
+tr.tsk_CurrentUser=For the current user only
+tr.tsk_Other=Other:
+tr.tsk_ResetDictionaries=Reset Dictionaries and delete any custom names
+tr.tsk_ResetSettings=Reset Subtitle Edit's settings
+tr.types_custom=Custom installation
+tr.types_default=Default installation
+
 #endif
