@@ -11,9 +11,9 @@ namespace Nikse.SubtitleEdit.Logic
         {
             var next = new PointF(left, top);
 
-            
+
             if (path.PointCount > 0)
-            {                
+            {
                 int k = 0;
                 for (int i = path.PathPoints.Length - 1; i >= 0; i--)
                 {

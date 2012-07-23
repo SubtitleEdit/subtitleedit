@@ -82,7 +82,7 @@ namespace Nikse.SubtitleEdit.Forms
             comboBoxEncoding.Items.Add(Encoding.UTF8.EncodingName);
             foreach (EncodingInfo ei in Encoding.GetEncodings())
             {
-                if (ei.Name != Encoding.UTF8.BodyName && ei.CodePage >= 949 && !ei.DisplayName.Contains("EBCDIC") && ei.CodePage != 1047) 
+                if (ei.Name != Encoding.UTF8.BodyName && ei.CodePage >= 949 && !ei.DisplayName.Contains("EBCDIC") && ei.CodePage != 1047)
                 {
                     comboBoxEncoding.Items.Add(ei.CodePage + ": " + ei.DisplayName);
                     if (ei.Name == Configuration.Settings.General.DefaultEncoding)

@@ -501,7 +501,7 @@ namespace Nikse.SubtitleEdit.Forms
                     FreeConsole();
                 Environment.Exit(1);
             }
-            
+
 
             string pattern = args[2];
             string toFormat = args[3];
@@ -658,13 +658,13 @@ namespace Nikse.SubtitleEdit.Forms
                                         BatchConvertSave(toFormat, offset, targetEncoding, outputFolder, count, ref converted, ref errors, formats, newFileName, sub, format);
                                         done = true;
                                     }
-                                }                                
+                                }
                             }
                         }
                     }
 
                     var fi = new FileInfo(fileName);
-                    if (fi.Length < 1024 * 1024 && !done) // max 1 mb           
+                    if (fi.Length < 1024 * 1024 && !done) // max 1 mb
                     {
                         format = sub.LoadSubtitle(fileName, out encoding, null);
 
@@ -753,7 +753,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                     if (format == null)
                     {
-                        if (fi.Length < 1024 * 1024) // max 10 mb                    
+                        if (fi.Length < 1024 * 1024) // max 10 mb
                             Console.WriteLine(string.Format("{0}: {1} - input file format unknown!", count, fileName, toFormat));
                         else
                             Console.WriteLine(string.Format("{0}: {1} - input file too large!", count, fileName, toFormat));
@@ -1840,7 +1840,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             _lastDoNotPrompt = string.Empty;
             if (!ContinueNewOrExit())
-                return;            
+                return;
             openFileDialog1.Title = _languageGeneral.OpenSubtitle;
             openFileDialog1.FileName = string.Empty;
             openFileDialog1.Filter = Utilities.GetOpenDialogFilter();
@@ -5861,7 +5861,7 @@ namespace Nikse.SubtitleEdit.Forms
                 currentParagraph.EndTime.TotalMilliseconds = middle;
                 newParagraph.StartTime.TotalMilliseconds = currentParagraph.EndTime.TotalMilliseconds + 1;
                 if (Configuration.Settings.General.MininumMillisecondsBetweenLines > 0)
-                { 
+                {
                     Paragraph next = _subtitle.GetParagraphOrDefault(firstSelectedIndex+1);
                     if (next == null || next.StartTime.TotalMilliseconds > newParagraph.EndTime.TotalMilliseconds + Configuration.Settings.General.MininumMillisecondsBetweenLines + Configuration.Settings.General.MininumMillisecondsBetweenLines)
                     {
@@ -7018,7 +7018,7 @@ namespace Nikse.SubtitleEdit.Forms
                     return;
                 LoadBluRaySubFromMatroska(matroskaSubtitleInfo, fileName);
                 return;
-            }            
+            }
 
             ShowStatus(_language.ParsingMatroskaFile);
             Refresh();
@@ -8732,12 +8732,12 @@ namespace Nikse.SubtitleEdit.Forms
         }
 
         private void GoFullscreen()
-        {            
+        {
             if (_videoPlayerUnDocked == null || _videoPlayerUnDocked.IsDisposed)
                 UndockVideoControlsToolStripMenuItemClick(null, null);
             _videoPlayerUnDocked.Focus();
             _videoPlayerUnDocked.GoFullscreen();
-            _videoPlayerUnDocked.RedockOnFullscreenEnd = true;            
+            _videoPlayerUnDocked.RedockOnFullscreenEnd = true;
         }
 
         private void RefreshTimeCodeMode()
@@ -11010,7 +11010,7 @@ namespace Nikse.SubtitleEdit.Forms
             bool subtitleLoaded = IsSubtitleLoaded;
             toolStripMenuItemStatistics.Visible = subtitleLoaded;
             toolStripSeparator22.Visible = subtitleLoaded;
-            toolStripMenuItemExport.Visible = subtitleLoaded;            
+            toolStripMenuItemExport.Visible = subtitleLoaded;
             openOriginalToolStripMenuItem.Visible = subtitleLoaded;
             if (subtitleLoaded && Configuration.Settings.General.AllowEditOfOriginalSubtitle && _subtitleAlternate != null && _subtitleAlternate.Paragraphs.Count > 0)
             {
@@ -12892,7 +12892,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             SaveUndockedPositions();
 
-            Configuration.Settings.General.Undocked = false;            
+            Configuration.Settings.General.Undocked = false;
 
             if (_videoControlsUnDocked != null && !_videoControlsUnDocked.IsDisposed)
             {

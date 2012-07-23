@@ -509,10 +509,10 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             panelColor.BackColor = style.Primary;
                             if (_format.GetType() == typeof(AdvancedSubStationAlpha))
-                                panelBorderColor.BackColor = style.Outline;    
+                                panelBorderColor.BackColor = style.Outline;
                             else
-                                panelBorderColor.BackColor = style.Background;    
-                            
+                                panelBorderColor.BackColor = style.Background;
+
                             int i;
                             for (i = 0; i < comboBoxSubtitleFont.Items.Count; i++)
                             {
@@ -523,13 +523,13 @@ namespace Nikse.SubtitleEdit.Forms
                             {
                                 if (string.Compare(comboBoxSubtitleFontSize.Items[i].ToString(), style.FontSize.ToString(), true) == 0)
                                     comboBoxSubtitleFontSize.SelectedIndex = i;
-                            }                            
+                            }
                             checkBoxBold.Checked = style.Bold;
                             for (i = 0; i < comboBoxBorderWidth.Items.Count; i++)
                             {
                                 if (string.Compare(comboBoxBorderWidth.Items[i].ToString(), style.OutlineWidth.ToString(), true) == 0)
                                     comboBoxBorderWidth.SelectedIndex = i;
-                            }                            
+                            }
                         }
                     }
                 }
@@ -546,7 +546,7 @@ namespace Nikse.SubtitleEdit.Forms
             _subtitleFontName = comboBoxSubtitleFont.SelectedItem.ToString();
             _subtitleFontSize = float.Parse(comboBoxSubtitleFontSize.SelectedItem.ToString());
             _subtitleFontBold = checkBoxBold.Checked;
-            _borderWidth = float.Parse(comboBoxBorderWidth.SelectedItem.ToString());           
+            _borderWidth = float.Parse(comboBoxBorderWidth.SelectedItem.ToString());
         }
 
         private static Color GetOutlineColor(Color borderColor)
@@ -661,7 +661,7 @@ namespace Nikse.SubtitleEdit.Forms
             bool italicFromStart = false;
             int newLinePathPoint = -1;
             Color c = parameter.SubtitleColor;
-            var colorStack = new Stack<Color>();            
+            var colorStack = new Stack<Color>();
             while (i < text.Length)
             {
                 if (text.Substring(i).ToLower().StartsWith("<font "))
@@ -687,7 +687,7 @@ namespace Nikse.SubtitleEdit.Forms
                     if (addLeft == 0)
                         addLeft = left + 2;
                     left = addLeft;
-                    
+
 
                     if (parameter.BorderWidth > 0)
                         g.DrawPath(new Pen(parameter.BorderColor, parameter.BorderWidth), path);
@@ -695,7 +695,7 @@ namespace Nikse.SubtitleEdit.Forms
                     path.Reset();
                     path = new GraphicsPath();
                     sb = new StringBuilder();
-                    
+
 
 
                     int endIndex = text.Substring(i).IndexOf(">");
@@ -723,7 +723,7 @@ namespace Nikse.SubtitleEdit.Forms
                                     else
                                     {
                                         c = System.Drawing.ColorTranslator.FromHtml(fontColor);
-                                    }                                    
+                                    }
                                 }
                                 catch
                                 {
@@ -735,7 +735,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
                 else if (text.Substring(i).ToLower().StartsWith("</font>"))
-                {                    
+                {
                     if (text.Substring(i).ToLower().Replace("</font>", string.Empty).Length > 0)
                     {
                         float addLeft = 0;
@@ -757,7 +757,7 @@ namespace Nikse.SubtitleEdit.Forms
                         if (addLeft == 0)
                             addLeft = left + 2;
                         left = addLeft;
-                        
+
 
                         if (parameter.BorderWidth > 0)
                             g.DrawPath(new Pen(parameter.BorderColor, parameter.BorderWidth), path);

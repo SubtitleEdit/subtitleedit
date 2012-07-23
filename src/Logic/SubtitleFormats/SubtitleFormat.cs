@@ -130,7 +130,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         abstract public string Name
         {
             get;
-        }     
+        }
 
         abstract public bool IsTimeBased
         {
