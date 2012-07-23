@@ -24,6 +24,12 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public override bool IsMine(List<string> lines, string fileName)
         {
+            var sb = new StringBuilder();
+            foreach (string l in lines)
+                sb.AppendLine(l);
+            if (sb.ToString().Contains("</SYNC>"))
+                return false;
+
             var subtitle = new Subtitle();
             LoadSubtitle(subtitle, lines, fileName);
             return subtitle.Paragraphs.Count > _errorCount;
@@ -69,15 +75,71 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             //<SYNC Start=65264><P>Let's go!
             //<SYNC Start=66697><P><BR>
 
-            const string paragraphWriteFormat =
-@"<SYNC Start={0}><P Class={3}>{2}</P></SYNC>
-<SYNC Start={1}><P Class={3}>&nbsp;</P></SYNC>";
+            string paragraphWriteFormat = @"<SYNC Start={0}><P Class={3}>{2}" + Environment.NewLine +
+                                           @"<SYNC Start={1}><P Class={3}>&nbsp;";
+            string paragraphWriteFormatOpen = @"<SYNC Start={0}><P Class={2}>{1}</P>";
+            if (Name == new SamiModern().Name)
+            {
+                paragraphWriteFormat = "<SYNC Start=\"{0}\"><P Class=\"{3}\">{2}</P></SYNC>" + Environment.NewLine +
+                                       "<SYNC Start=\"{1}\"><P Class=\"{3}\">&nbsp;</P></SYNC>";
+                paragraphWriteFormatOpen = "<SYNC Start=\"{0}\"><P Class=\"{2}\">{1}</P></SYNC>";
+            }
 
+            int count = 1;
             var sb = new StringBuilder();
             sb.AppendLine(header.Replace("_TITLE_", title).Replace("_LANGUAGE-STYLE_", languageStyle));
             foreach (Paragraph p in subtitle.Paragraphs)
             {
-                sb.AppendLine(string.Format(paragraphWriteFormat, p.StartTime.TotalMilliseconds, p.EndTime.TotalMilliseconds, p.Text.Replace(Environment.NewLine, "<br />"), languageTag));
+                Paragraph next = subtitle.GetParagraphOrDefault(count);
+                string text = p.Text;
+                var cleanTextBuilder = new StringBuilder();
+                bool tagOn = false;
+                int skipCount = 0;
+                for (int i = 0; i < text.Length; i++)
+                { // Remove html tags from text
+                    if (skipCount > 0)
+                        skipCount--;
+                    else if (text.Substring(i).StartsWith("<font color="))
+                    {
+                        int endPos = text.Substring(i).IndexOf(">");
+                        if (endPos > 0)
+                        {
+                            skipCount = endPos;
+                            string fontTag = text.Substring(i, endPos);
+                            string color = fontTag.Remove(0, 12).Split(' ')[0];
+                            color = color.Replace("\"", string.Empty).Replace("'", string.Empty);
+                            if (Name == new SamiModern().Name)
+                                cleanTextBuilder.Append("<font color=\"" + color + "\">");
+                            else
+                                cleanTextBuilder.Append("<font color=" + color + ">");
+                        }
+                        else
+                        {
+                            tagOn = true;
+                        }
+                    }
+                    else if (text.Substring(i).StartsWith("</font>") && Name == new SamiModern().Name)
+                    {
+                        cleanTextBuilder.Append("</font>");
+                        skipCount = 6;
+                    }
+                    else if (text[i] == '<')
+                        tagOn = true;
+                    else if (text[i] == '>')
+                        tagOn = false;
+                    else if (!tagOn)
+                        cleanTextBuilder.Append(text[i]);
+                }
+                if (Name == new SamiModern().Name)
+                    text = cleanTextBuilder.ToString().Replace(Environment.NewLine, "<br />");
+                else
+                    text = cleanTextBuilder.ToString().Replace(Environment.NewLine, "<br>");
+
+                if (next != null && p.EndTime.TotalMilliseconds <= next.StartTime.TotalMilliseconds && p.EndTime.TotalMilliseconds + 51 > next.StartTime.TotalMilliseconds)
+                    sb.AppendLine(string.Format(paragraphWriteFormatOpen, p.StartTime.TotalMilliseconds, text, languageTag));
+                else
+                    sb.AppendLine(string.Format(paragraphWriteFormat, p.StartTime.TotalMilliseconds, p.EndTime.TotalMilliseconds, text, languageTag));
+                count++;
             }
             sb.AppendLine("</BODY>");
             sb.AppendLine("</SAMI>");
@@ -192,19 +254,50 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 text = text.Replace("<br>", Environment.NewLine);
                 text = text.Replace("<br/>", Environment.NewLine);
                 text = text.Replace("<br />", Environment.NewLine);
-                string cleanText = string.Empty;
+                text = text.Replace(Environment.NewLine + "   ", Environment.NewLine);
+                text = text.Replace(Environment.NewLine + " ", Environment.NewLine);
+                text = text.Replace(Environment.NewLine + " ", Environment.NewLine);
+                text = text.Replace(Environment.NewLine + " ", Environment.NewLine);
+                text = text.Replace(Environment.NewLine + " ", Environment.NewLine);
+                text = text.Replace("   " + Environment.NewLine, Environment.NewLine);
+                text = text.Replace(" " + Environment.NewLine, Environment.NewLine);
+                text = text.Replace(" " + Environment.NewLine, Environment.NewLine);
+                text = text.Replace(" " + Environment.NewLine, Environment.NewLine);
+                var cleanTextBuilder = new StringBuilder();
                 bool tagOn = false;
+                int skipCount = 0;
                 for (int i = 0; i < text.Length; i++)
                 { // Remove html tags from text
-                    if (text[i] == '<')
+                    if (skipCount > 0)
+                        skipCount--;
+                    else if (text.Substring(i).StartsWith("<font color="))
+                    {
+                        int endPos = text.Substring(i).IndexOf(">");
+                        if (endPos > 0)
+                        {
+                            skipCount = endPos;
+                            string fontTag = text.Substring(i, endPos);
+                            string color = fontTag.Remove(0, 12).Split(' ')[0];
+                            color = color.Replace("\"", string.Empty).Replace("'", string.Empty);
+                            cleanTextBuilder.Append("<font color=\"" + color + "\">");
+                        }
+                        else
+                        {
+                            tagOn = true;
+                        }
+                    }
+                    else if (text[i] == '<')
                         tagOn = true;
                     else if (text[i] == '>')
                         tagOn = false;
                     else if (!tagOn)
-                        cleanText += text[i];
+                        cleanTextBuilder.Append(text[i]);
                 }
+                string cleanText = cleanTextBuilder.ToString();
                 cleanText = cleanText.Replace("&nbsp;", string.Empty).Replace("&NBSP;", string.Empty);
                 cleanText = cleanText.Trim();
+                if (cleanText.Contains("<font color=") && !cleanText.Contains("</font>"))
+                    cleanText += "</font>";
 
                 if (!string.IsNullOrEmpty(p.Text) && !string.IsNullOrEmpty(millisecAsString))
                 {
