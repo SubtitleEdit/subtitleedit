@@ -100,7 +100,7 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                 LoadStylesFromSubstationAlpha(subtitle, title, header, headerNoStyles, sb);
             }
             else if (subtitle.Header != null && subtitle.Header.Contains("http://www.w3.org/ns/ttml"))
-            { 
+            {
                 LoadStylesFromTimedText10(subtitle, title, header, headerNoStyles, sb);
             }
             else
@@ -182,7 +182,7 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                                     break;
                             }
 
-                            ttStyles.AppendLine(string.Format(styleFormat, ssaStyle.Name, ssaStyle.FontName, ssaStyle.FontSize, GetSsaColorString(ssaStyle.Primary), GetSsaColorString(ssaStyle.Secondary),                                
+                            ttStyles.AppendLine(string.Format(styleFormat, ssaStyle.Name, ssaStyle.FontName, ssaStyle.FontSize, GetSsaColorString(ssaStyle.Primary), GetSsaColorString(ssaStyle.Secondary),
                                                 GetSsaColorString(ssaStyle.Outline), GetSsaColorString(ssaStyle.Background), bold, italic, underline, ssaStyle.BorderStyle, ssaStyle.OutlineWidth, ssaStyle.ShadowWidth,
                                                 newAlignment, ssaStyle.MarginLeft, ssaStyle.MarginRight, ssaStyle.MarginVertical));
                             styleFound = true;

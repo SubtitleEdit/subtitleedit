@@ -404,7 +404,7 @@ namespace Nikse.SubtitleEdit.Logic
             //crop bottom
             done = false;
             int newHeight = Height;
-            for (int y = Height - 1; y > 0; y--)            
+            for (int y = Height - 1; y > 0; y--)
             {
                 for (int x = 0; x < Width; x++)
                 {

@@ -12,7 +12,7 @@ namespace Nikse.SubtitleEdit.Forms
         public ChooseResolution()
         {
             InitializeComponent();
-        }    
+        }
 
         private void button1_Click(object sender, EventArgs e)
         {
