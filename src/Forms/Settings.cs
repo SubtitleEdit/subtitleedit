@@ -78,6 +78,7 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxAutoDetectAnsiEncoding.Checked = gs.AutoGuessAnsiEncoding;
             comboBoxSubtitleFontSize.Text = gs.SubtitleFontSize.ToString();
             checkBoxSubtitleFontBold.Checked = gs.SubtitleFontBold;
+            checkBoxSubtitleCenter.Checked = gs.CenterSubtitleInTextBox;
             panelSubtitleFontColor.BackColor = gs.SubtitleFontColor;
             panelSubtitleBackgroundColor.BackColor = gs.SubtitleBackgroundColor;
             checkBoxRememberRecentFiles.Checked = gs.ShowRecentFiles;
@@ -119,6 +120,8 @@ namespace Nikse.SubtitleEdit.Forms
             if (gs.VideoPlayerDefaultVolume >= 0 && gs.VideoPlayerDefaultVolume <= 100)
                 comboBoxVideoPlayerDefaultVolume.SelectedIndex = gs.VideoPlayerDefaultVolume;
             checkBoxVideoPlayerShowStopButton.Checked = gs.VideoPlayerShowStopButton;
+            checkBoxVideoPlayerShowMuteButton.Checked = gs.VideoPlayerShowMuteButton;
+            checkBoxVideoPlayerShowFullscreenButton.Checked = gs.VideoPlayerShowFullscreenButton;
 
             int videoPlayerPreviewFontSizeIndex = gs.VideoPlayerPreviewFontSize - int.Parse(comboBoxlVideoPlayerPreviewFontSize.Items[0].ToString());
             if (videoPlayerPreviewFontSizeIndex >= 0 && videoPlayerPreviewFontSizeIndex < comboBoxlVideoPlayerPreviewFontSize.Items.Count)
@@ -215,6 +218,8 @@ namespace Nikse.SubtitleEdit.Forms
             labelSubtitleFont.Text = language.SubtitleFont;
             labelSubtitleFontSize.Text = language.SubtitleFontSize;
             checkBoxSubtitleFontBold.Text = language.SubtitleBold;
+            checkBoxSubtitleCenter.Text = language.SubtitleCenter;
+            checkBoxSubtitleCenter.Left = checkBoxSubtitleFontBold.Left + checkBoxSubtitleFontBold.Width + 6;
             labelSubtitleFontColor.Text = language.SubtitleFontColor;
             labelSubtitleFontBackgroundColor.Text = language.SubtitleBackgroundColor;
             labelSpellChecker.Text = language.SpellChecker;
@@ -262,6 +267,9 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             checkBoxVideoPlayerShowStopButton.Text = language.ShowStopButton;
+            checkBoxVideoPlayerShowMuteButton.Text = language.ShowMuteButton;
+            checkBoxVideoPlayerShowFullscreenButton.Text = language.ShowFullscreenButton;
+
             labelDefaultVol.Text = language.DefaultVolume;
             labelVolDescr.Text = language.VolumeNotes;
 
@@ -799,6 +807,7 @@ namespace Nikse.SubtitleEdit.Forms
             gs.AutoGuessAnsiEncoding = checkBoxAutoDetectAnsiEncoding.Checked;
             gs.SubtitleFontSize = int.Parse(comboBoxSubtitleFontSize.Text);
             gs.SubtitleFontBold = checkBoxSubtitleFontBold.Checked;
+            gs.CenterSubtitleInTextBox = checkBoxSubtitleCenter.Checked;
             gs.SubtitleFontColor = panelSubtitleFontColor.BackColor;
             gs.SubtitleBackgroundColor = panelSubtitleBackgroundColor.BackColor;
             gs.ShowRecentFiles = checkBoxRememberRecentFiles.Checked;
@@ -849,6 +858,8 @@ namespace Nikse.SubtitleEdit.Forms
             if (gs.VideoPlayerDefaultVolume < 0 || gs.VideoPlayerDefaultVolume > 100)
                 comboBoxVideoPlayerDefaultVolume.SelectedIndex = 50;
             gs.VideoPlayerShowStopButton = checkBoxVideoPlayerShowStopButton.Checked;
+            gs.VideoPlayerShowMuteButton = checkBoxVideoPlayerShowMuteButton.Checked;
+            gs.VideoPlayerShowFullscreenButton = checkBoxVideoPlayerShowFullscreenButton.Checked;
 
             gs.VideoPlayerPreviewFontSize = int.Parse(comboBoxlVideoPlayerPreviewFontSize.Items[0].ToString()) + comboBoxlVideoPlayerPreviewFontSize.SelectedIndex;
 

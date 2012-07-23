@@ -11,6 +11,7 @@ using System.Threading;
 using System.Windows.Forms;
 using System.Xml;
 using Nikse.SubtitleEdit.Logic;
+using Nikse.SubtitleEdit.Logic.SubtitleFormats;
 using Nikse.SubtitleEdit.Logic.VobSub;
 
 namespace Nikse.SubtitleEdit.Forms
@@ -41,6 +42,7 @@ namespace Nikse.SubtitleEdit.Forms
         }
 
         private Subtitle _subtitle;
+        private SubtitleFormat _format;
         private Color _subtitleColor = Color.White;
         private string _subtitleFontName = "Verdana";
         private float _subtitleFontSize = 75.0f;
@@ -211,8 +213,9 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 else if (comboBoxResolution.SelectedIndex == 8)
                 {
-                    width = 640;
-                    height = 272;
+                    string[] arr = comboBoxResolution.Text.Split('x');
+                    width = int.Parse(arr[0]);
+                    height = int.Parse(arr[1]);
                 }
 
                 FileStream binarySubtitleFile = null;
@@ -494,12 +497,56 @@ namespace Nikse.SubtitleEdit.Forms
             if (_isLoading)
                 return;
 
+            if (subtitleListView1.SelectedItems.Count > 0 && _format.HasStyleSupport)
+            {
+                Paragraph p = _subtitle.Paragraphs[subtitleListView1.SelectedItems[0].Index];
+                if (_format.GetType() == typeof(AdvancedSubStationAlpha) || _format.GetType() == typeof(SubStationAlpha))
+                {
+                    if (!string.IsNullOrEmpty(p.Extra))
+                    {
+                        SsaStyle style = AdvancedSubStationAlpha.GetSsaStyle(p.Extra, _subtitle.Header);
+                        if (style != null)
+                        {
+                            panelColor.BackColor = style.Primary;
+                            if (_format.GetType() == typeof(AdvancedSubStationAlpha))
+                                panelBorderColor.BackColor = style.Outline;    
+                            else
+                                panelBorderColor.BackColor = style.Background;    
+                            
+                            int i;
+                            for (i = 0; i < comboBoxSubtitleFont.Items.Count; i++)
+                            {
+                                if (string.Compare(comboBoxSubtitleFont.Items[i].ToString(), style.FontName, true) == 0)
+                                    comboBoxSubtitleFont.SelectedIndex = i;
+                            }
+                            for (i = 0; i < comboBoxSubtitleFontSize.Items.Count; i++)
+                            {
+                                if (string.Compare(comboBoxSubtitleFontSize.Items[i].ToString(), style.FontSize.ToString(), true) == 0)
+                                    comboBoxSubtitleFontSize.SelectedIndex = i;
+                            }                            
+                            checkBoxBold.Checked = style.Bold;
+                            for (i = 0; i < comboBoxBorderWidth.Items.Count; i++)
+                            {
+                                if (string.Compare(comboBoxBorderWidth.Items[i].ToString(), style.OutlineWidth.ToString(), true) == 0)
+                                    comboBoxBorderWidth.SelectedIndex = i;
+                            }                            
+                        }
+                    }
+                }
+                else if (_format.GetType() == typeof(TimedText10))
+                {
+                    if (!string.IsNullOrEmpty(p.Extra))
+                    {
+                    }
+                }
+            }
+
             _subtitleColor = panelColor.BackColor;
             _borderColor = panelBorderColor.BackColor;
             _subtitleFontName = comboBoxSubtitleFont.SelectedItem.ToString();
             _subtitleFontSize = float.Parse(comboBoxSubtitleFontSize.SelectedItem.ToString());
             _subtitleFontBold = checkBoxBold.Checked;
-            _borderWidth = float.Parse(comboBoxBorderWidth.SelectedItem.ToString());
+            _borderWidth = float.Parse(comboBoxBorderWidth.SelectedItem.ToString());           
         }
 
         private static Color GetOutlineColor(Color borderColor)
@@ -547,7 +594,6 @@ namespace Nikse.SubtitleEdit.Forms
             text = text.Replace("</u>", string.Empty);
             text = text.Replace("<U>", string.Empty);
             text = text.Replace("</U>", string.Empty);
-            text = Utilities.RemoveHtmlFontTag(text);
 
             Font font;
             try
@@ -567,12 +613,11 @@ namespace Nikse.SubtitleEdit.Forms
 
             SizeF textSize = g.MeasureString("Hj!", font);
             var lineHeight = (textSize.Height * 0.64f);
-            float italicSpacing = textSize.Width / 8;
 
-            textSize = g.MeasureString(text, font);
+            textSize = g.MeasureString(Utilities.RemoveHtmlTags(text), font);
             g.Dispose();
             bmp.Dispose();
-            int sizeX = (int) (textSize.Width*0.8);
+            int sizeX = (int)(textSize.Width * 0.8) + 40;
             int sizeY = (int)(textSize.Height * 0.8) + 30;
             if (sizeX < 1)
                 sizeX = 1;
@@ -582,7 +627,7 @@ namespace Nikse.SubtitleEdit.Forms
             g = Graphics.FromImage(bmp);
 
             var lefts = new List<float>();
-            foreach (string line in text.Replace("<i>", string.Empty).Replace("</i>", string.Empty).Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries))
+            foreach (string line in Utilities.RemoveHtmlFontTag(text.Replace("<i>", string.Empty).Replace("</i>", string.Empty)).Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries))
             {
                 if (parameter.AlignLeft)
                     lefts.Add(5);
@@ -611,54 +656,143 @@ namespace Nikse.SubtitleEdit.Forms
                 left = lefts[0];
             float top = 5;
             bool newLine = false;
-            float addX = 0;
             int lineNumber = 0;
             float leftMargin = left;
             bool italicFromStart = false;
-            bool firstLinePart = true;
             int newLinePathPoint = -1;
+            Color c = parameter.SubtitleColor;
+            var colorStack = new Stack<Color>();            
             while (i < text.Length)
             {
-                if (text.Substring(i).ToLower().StartsWith("<i>"))
+                if (text.Substring(i).ToLower().StartsWith("<font "))
+                {
+
+                    float addLeft = 0;
+                    int oldPathPointIndex = path.PointCount - 1;
+                    if (oldPathPointIndex < 0)
+                        oldPathPointIndex = 0;
+
+                    if (sb.Length > 0)
+                    {
+                        TextDraw.DrawText(font, sf, path, sb, isItalic, parameter.SubtitleFontBold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);
+                    }
+                    if (path.PointCount > 0)
+                    {
+                        for (int k = oldPathPointIndex; k < path.PathPoints.Length; k++)
+                        {
+                            if (path.PathPoints[k].X > addLeft)
+                                addLeft = path.PathPoints[k].X;
+                        }
+                    }
+                    if (addLeft == 0)
+                        addLeft = left + 2;
+                    left = addLeft;
+                    
+
+                    if (parameter.BorderWidth > 0)
+                        g.DrawPath(new Pen(parameter.BorderColor, parameter.BorderWidth), path);
+                    g.FillPath(new SolidBrush(c), path);
+                    path.Reset();
+                    path = new GraphicsPath();
+                    sb = new StringBuilder();
+                    
+
+
+                    int endIndex = text.Substring(i).IndexOf(">");
+                    if (endIndex == -1)
+                    {
+                        i += 9999;
+                    }
+                    else
+                    {
+                        string fontContent = text.Substring(i, endIndex);
+                        if (fontContent.Contains(" color="))
+                        {
+                            string[] arr = fontContent.Substring(fontContent.IndexOf(" color=") + 7).Trim().Split(" ".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                            if (arr.Length > 0)
+                            {
+                                string fontColor = arr[0].Trim('\'').Trim('"').Trim('\'');
+                                try
+                                {
+                                    colorStack.Push(c); // save old color
+                                    if (fontColor.StartsWith("rgb("))
+                                    {
+                                        arr = fontColor.Remove(0, 4).TrimEnd(')').Split(",".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                                        c = Color.FromArgb(int.Parse(arr[0]), int.Parse(arr[1]), int.Parse(arr[2]));
+                                    }
+                                    else
+                                    {
+                                        c = System.Drawing.ColorTranslator.FromHtml(fontColor);
+                                    }                                    
+                                }
+                                catch
+                                {
+                                    c = parameter.SubtitleColor;
+                                }
+                            }
+                        }
+                        i += endIndex;
+                    }
+                }
+                else if (text.Substring(i).ToLower().StartsWith("</font>"))
+                {                    
+                    if (text.Substring(i).ToLower().Replace("</font>", string.Empty).Length > 0)
+                    {
+                        float addLeft = 0;
+                        int oldPathPointIndex = path.PointCount -1;
+                        if (oldPathPointIndex < 0)
+                            oldPathPointIndex = 0;
+                        if (sb.Length > 0)
+                        {
+                            TextDraw.DrawText(font, sf, path, sb, isItalic, parameter.SubtitleFontBold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);
+                        }
+                        if (path.PointCount > 0)
+                        {
+                            for (int k = oldPathPointIndex; k < path.PathPoints.Length; k++)
+                            {
+                                if (path.PathPoints[k].X > addLeft)
+                                    addLeft = path.PathPoints[k].X;
+                            }
+                        }
+                        if (addLeft == 0)
+                            addLeft = left + 2;
+                        left = addLeft;
+                        
+
+                        if (parameter.BorderWidth > 0)
+                            g.DrawPath(new Pen(parameter.BorderColor, parameter.BorderWidth), path);
+                        g.FillPath(new SolidBrush(c), path);
+                        path.Reset();
+                        //path = new GraphicsPath();
+                        sb = new StringBuilder();
+                        if (colorStack.Count > 0)
+                            c = colorStack.Pop();
+                    }
+                    i += 6;
+                }
+                else if (text.Substring(i).ToLower().StartsWith("<i>"))
                 {
                     italicFromStart = i == 0;
                     if (sb.Length > 0)
                     {
-                        TextDraw.DrawText(font, sf, path, sb, isItalic, parameter.SubtitleFontBold, false, left, top, ref newLine, addX, leftMargin, ref newLinePathPoint);
-                        addX = 0;
-                        firstLinePart = false;
+                        TextDraw.DrawText(font, sf, path, sb, isItalic, parameter.SubtitleFontBold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);
                     }
                     isItalic = true;
                     i += 2;
                 }
                 else if (text.Substring(i).ToLower().StartsWith("</i>") && isItalic)
                 {
-                    if (italicFromStart || firstLinePart || !isItalic)
-                        addX = 0;
-                    else
-                        addX = italicSpacing;
-                    TextDraw.DrawText(font, sf, path, sb, isItalic, parameter.SubtitleFontBold, false, left, top, ref newLine, addX, leftMargin, ref newLinePathPoint);
-                    firstLinePart = false;
-                    addX = 1;
-                    if (parameter.SubtitleFontName.StartsWith("Arial"))
-                        addX = 3;
+                    TextDraw.DrawText(font, sf, path, sb, isItalic, parameter.SubtitleFontBold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);
                     isItalic = false;
                     i += 3;
                 }
                 else if (text.Substring(i).StartsWith(Environment.NewLine))
                 {
-                    if (italicFromStart || firstLinePart || !isItalic)
-                        addX = 0;
-                    else
-                        addX = italicSpacing;
-
-                    TextDraw.DrawText(font, sf, path, sb, isItalic, parameter.SubtitleFontBold, false, left, top, ref newLine, addX, leftMargin, ref newLinePathPoint);
-                    firstLinePart = true;
+                    TextDraw.DrawText(font, sf, path, sb, isItalic, parameter.SubtitleFontBold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);
 
                     top += lineHeight;
                     newLine = true;
                     i += Environment.NewLine.Length - 1;
-                    addX = 0;
                     lineNumber++;
                     if (lineNumber < lefts.Count)
                     {
@@ -675,20 +809,14 @@ namespace Nikse.SubtitleEdit.Forms
                 i++;
             }
             if (sb.Length > 0)
-            {
-                if ((italicFromStart || firstLinePart) && !isItalic)
-                    addX = 0;
-                else
-                    addX = italicSpacing;
-                TextDraw.DrawText(font, sf, path, sb, isItalic, parameter.SubtitleFontBold, false, left, top, ref newLine, addX, leftMargin, ref newLinePathPoint);
-            }
+                TextDraw.DrawText(font, sf, path, sb, isItalic, parameter.SubtitleFontBold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);
 
             if (parameter.BorderWidth > 0)
                 g.DrawPath(new Pen(parameter.BorderColor, parameter.BorderWidth), path);
-            g.FillPath(new SolidBrush(parameter.SubtitleColor), path);
+            g.FillPath(new SolidBrush(c), path);
             g.Dispose();
             var nbmp = new NikseBitmap(bmp);
-            nbmp.CropTransparentSides(5);
+            nbmp.CropTransparentSidesAndBottom(2);
             return nbmp.GetBitmap();
         }
 
@@ -704,10 +832,11 @@ namespace Nikse.SubtitleEdit.Forms
             return s;
         }
 
-        internal void Initialize(Subtitle subtitle, string exportType, string fileName)
+        internal void Initialize(Subtitle subtitle, SubtitleFormat format, string exportType, string fileName)
         {
             _exportType = exportType;
             _fileName = fileName;
+            _format = format;
             if (exportType == "BLURAYSUP")
                 Text = "Blu-ray SUP";
             else if (exportType == "VOBSUB")
@@ -937,6 +1066,16 @@ namespace Nikse.SubtitleEdit.Forms
         private void checkBoxBold_CheckedChanged(object sender, EventArgs e)
         {
             subtitleListView1_SelectedIndexChanged(null, null);
+        }
+
+        private void buttonCustomResolution_Click(object sender, EventArgs e)
+        {
+            ChooseResolution cr = new ChooseResolution();
+            if (cr.ShowDialog(this) == DialogResult.OK)
+            {
+                comboBoxResolution.Items[8] = cr.VideoWidth+ "x" + cr.VideoHeight;
+                comboBoxResolution.SelectedIndex = 8;
+            }
         }
 
     }

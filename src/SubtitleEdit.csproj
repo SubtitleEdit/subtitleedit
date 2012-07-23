@@ -188,6 +188,12 @@
     <Compile Include="Forms\ChooseEncoding.Designer.cs">
       <DependentUpon>ChooseEncoding.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\ChooseResolution.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ChooseResolution.Designer.cs">
+      <DependentUpon>ChooseResolution.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\Compare.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -711,6 +717,7 @@
     <Compile Include="Logic\SubtitleFormats\PListCaption.cs" />
     <Compile Include="Logic\SubtitleFormats\QuickTimeText.cs" />
     <Compile Include="Logic\SubtitleFormats\RealTime.cs" />
+    <Compile Include="Logic\SubtitleFormats\SamiModern.cs" />
     <Compile Include="Logic\SubtitleFormats\Scenarist.cs" />
     <Compile Include="Logic\SubtitleFormats\ScenaristClosedCaptions.cs" />
     <Compile Include="Logic\SubtitleFormats\SoftNiSub.cs" />
@@ -897,6 +904,9 @@
     <EmbeddedResource Include="Forms\AdjustDisplayDuration.resx">
       <DependentUpon>AdjustDisplayDuration.cs</DependentUpon>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ChooseResolution.resx">
+      <DependentUpon>ChooseResolution.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\DCinemaPropertiesInterop.resx">
       <DependentUpon>DCinemaPropertiesInterop.cs</DependentUpon>
@@ -1226,6 +1236,9 @@
     <Content Include="Languages\sv-SE.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Languages\tr-TR.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Languages\zh-CHS.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -1315,6 +1328,9 @@
     <Content Include="Icons\WaveFormToogle.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <None Include="pictureBoxFS.Image.png" />
+    <None Include="pictureBoxFSDown.Image.png" />
+    <None Include="pictureBoxFSOver.Image.png" />
     <Content Include="Resources\HunspellDictionaries.xml">
       <SubType>Designer</SubType>
     </Content>

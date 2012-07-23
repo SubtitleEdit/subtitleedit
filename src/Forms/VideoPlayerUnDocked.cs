@@ -30,8 +30,7 @@ namespace Nikse.SubtitleEdit.Forms
             _videoPlayerContainer = videoPlayerContainer;
             _redockKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainVideoToggleVideoControls);
             RedockOnFullscreenEnd = false;
-
-            videoPlayerContainer.TextBox.MouseMove += VideoPlayerUnDocked_MouseMove;
+            videoPlayerContainer.TextBox.MouseMove += VideoPlayerUnDocked_MouseMove;            
         }
 
         public VideoPlayerUnDocked()
@@ -70,6 +69,7 @@ namespace Nikse.SubtitleEdit.Forms
                     _videoPlayerContainer.FontSizeFactor = 1.0F;
                     _videoPlayerContainer.SetSubtitleFont();
                     _videoPlayerContainer.SubtitleText = string.Empty;
+                    _videoPlayerContainer.ShowFullscreenButton = Configuration.Settings.General.VideoPlayerShowFullscreenButton;
                     if (RedockOnFullscreenEnd)
                         this.Close();
                 }
@@ -86,6 +86,7 @@ namespace Nikse.SubtitleEdit.Forms
                 _videoPlayerContainer.FontSizeFactor = 1.0F;
                 _videoPlayerContainer.SetSubtitleFont();
                 _videoPlayerContainer.SubtitleText = string.Empty;
+                _videoPlayerContainer.ShowFullscreenButton = Configuration.Settings.General.VideoPlayerShowFullscreenButton;
                 e.SuppressKeyPress = true;
                 if (RedockOnFullscreenEnd)
                     this.Close();
@@ -147,7 +148,13 @@ namespace Nikse.SubtitleEdit.Forms
             _videoPlayerContainer.FontSizeFactor = 1.5F;
             _videoPlayerContainer.SetSubtitleFont();
             _videoPlayerContainer.SubtitleText = string.Empty;
+            _videoPlayerContainer.ShowFullscreenButton = false;
             timer1.Start();
+        }
+
+        private void VideoPlayerUnDocked_Shown(object sender, System.EventArgs e)
+        {
+            this.Refresh();
         }
     }
 }

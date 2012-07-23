@@ -235,7 +235,6 @@ namespace Nikse.SubtitleEdit.Forms
                 left = lefts[0];
             float top = 5;
             bool newLine = false;
-            float addX = 0;
             int lineNumber = 0;
             float leftMargin = left;
             bool italicFromStart = false;
@@ -247,38 +246,24 @@ namespace Nikse.SubtitleEdit.Forms
                     italicFromStart = i == 0;
                     if (sb.Length > 0)
                     {
-                        TextDraw.DrawText(font, sf, path, sb, isItalic, false, false, left, top, ref newLine, addX, leftMargin, ref pathPointsStart);
-                        addX = 0;
+                        TextDraw.DrawText(font, sf, path, sb, isItalic, false, false, left, top, ref newLine, leftMargin, ref pathPointsStart);
                     }
                     isItalic = true;
                     i += 2;
                 }
                 else if (text.Substring(i).ToLower().StartsWith("</i>") && isItalic)
                 {
-                    if (italicFromStart)
-                        addX = 0;
-                    else
-                        addX = italicSpacing;
-                    TextDraw.DrawText(font, sf, path, sb, isItalic, false, false, left, top, ref newLine, addX, leftMargin, ref pathPointsStart);
-                    addX = 1;
-                    if (_subtitleFontName.StartsWith("Arial"))
-                        addX = 3;
+                    TextDraw.DrawText(font, sf, path, sb, isItalic, false, false, left, top, ref newLine, leftMargin, ref pathPointsStart);
                     isItalic = false;
                     i += 3;
                 }
                 else if (text.Substring(i).StartsWith(Environment.NewLine))
                 {
-                    if (italicFromStart)
-                        addX = 0;
-                    else
-                        addX = italicSpacing;
-
-                    TextDraw.DrawText(font, sf, path, sb, isItalic, false, false, left, top, ref newLine, addX, leftMargin, ref pathPointsStart);
+                    TextDraw.DrawText(font, sf, path, sb, isItalic, false, false, left, top, ref newLine, leftMargin, ref pathPointsStart);
 
                     top += lineHeight;
                     newLine = true;
                     i += Environment.NewLine.Length - 1;
-                    addX = 0;
                     lineNumber++;
                     if (lineNumber < lefts.Count)
                     {
@@ -296,11 +281,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             if (sb.Length > 0)
             {
-                if (italicFromStart)
-                    addX = 0;
-                else
-                    addX = italicSpacing;
-                TextDraw.DrawText(font, sf, path, sb, isItalic, false, false, left, top, ref newLine, addX, leftMargin, ref pathPointsStart);
+                TextDraw.DrawText(font, sf, path, sb, isItalic, false, false, left, top, ref newLine, leftMargin, ref pathPointsStart);
             }
 
             if (_borderWidth > 0)

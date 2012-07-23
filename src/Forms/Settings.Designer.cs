@@ -33,6 +33,7 @@
             this.tabControlSettings = new System.Windows.Forms.TabControl();
             this.tabPageGenerel = new System.Windows.Forms.TabPage();
             this.groupBoxMiscellaneous = new System.Windows.Forms.GroupBox();
+            this.checkBoxSubtitleCenter = new System.Windows.Forms.CheckBox();
             this.numericUpDownSubtitleLineMaximumLength = new System.Windows.Forms.NumericUpDown();
             this.numericUpDownMaxCharsSec = new System.Windows.Forms.NumericUpDown();
             this.labelMaxCharsPerSecond = new System.Windows.Forms.Label();
@@ -117,6 +118,8 @@
             this.labelCustomSearch = new System.Windows.Forms.Label();
             this.comboBoxCustomSearch = new System.Windows.Forms.ComboBox();
             this.groupBoxVideoPlayerDefault = new System.Windows.Forms.GroupBox();
+            this.checkBoxVideoPlayerShowFullscreenButton = new System.Windows.Forms.CheckBox();
+            this.checkBoxVideoPlayerShowMuteButton = new System.Windows.Forms.CheckBox();
             this.labelVideoPlayerPreviewFontSize = new System.Windows.Forms.Label();
             this.comboBoxlVideoPlayerPreviewFontSize = new System.Windows.Forms.ComboBox();
             this.checkBoxVideoPlayerShowStopButton = new System.Windows.Forms.CheckBox();
@@ -222,6 +225,7 @@
             this.labelShortcut = new System.Windows.Forms.Label();
             this.tabPageSyntaxColoring = new System.Windows.Forms.TabPage();
             this.groupBoxListViewSyntaxColoring = new System.Windows.Forms.GroupBox();
+            this.numericUpDownSyntaxColorTextMoreThanXLines = new System.Windows.Forms.NumericUpDown();
             this.checkBoxSyntaxColorTextMoreThanTwoLines = new System.Windows.Forms.CheckBox();
             this.checkBoxSyntaxOverlap = new System.Windows.Forms.CheckBox();
             this.checkBoxSyntaxColorDurationTooSmall = new System.Windows.Forms.CheckBox();
@@ -232,7 +236,6 @@
             this.colorDialogSSAStyle = new System.Windows.Forms.ColorDialog();
             this.fontDialogSSAStyle = new System.Windows.Forms.FontDialog();
             this.labelStatus = new System.Windows.Forms.Label();
-            this.numericUpDownSyntaxColorTextMoreThanXLines = new System.Windows.Forms.NumericUpDown();
             this.tabControlSettings.SuspendLayout();
             this.tabPageGenerel.SuspendLayout();
             this.groupBoxMiscellaneous.SuspendLayout();
@@ -336,6 +339,7 @@
             // 
             // groupBoxMiscellaneous
             // 
+            this.groupBoxMiscellaneous.Controls.Add(this.checkBoxSubtitleCenter);
             this.groupBoxMiscellaneous.Controls.Add(this.numericUpDownSubtitleLineMaximumLength);
             this.groupBoxMiscellaneous.Controls.Add(this.numericUpDownMaxCharsSec);
             this.groupBoxMiscellaneous.Controls.Add(this.labelMaxCharsPerSecond);
@@ -386,6 +390,16 @@
             this.groupBoxMiscellaneous.TabIndex = 0;
             this.groupBoxMiscellaneous.TabStop = false;
             this.groupBoxMiscellaneous.Text = "Miscellaneous";
+            // 
+            // checkBoxSubtitleCenter
+            // 
+            this.checkBoxSubtitleCenter.AutoSize = true;
+            this.checkBoxSubtitleCenter.Location = new System.Drawing.Point(259, 300);
+            this.checkBoxSubtitleCenter.Name = "checkBoxSubtitleCenter";
+            this.checkBoxSubtitleCenter.Size = new System.Drawing.Size(57, 17);
+            this.checkBoxSubtitleCenter.TabIndex = 10;
+            this.checkBoxSubtitleCenter.Text = "Center";
+            this.checkBoxSubtitleCenter.UseVisualStyleBackColor = true;
             // 
             // numericUpDownSubtitleLineMaximumLength
             // 
@@ -1277,6 +1291,8 @@
             // 
             // groupBoxVideoPlayerDefault
             // 
+            this.groupBoxVideoPlayerDefault.Controls.Add(this.checkBoxVideoPlayerShowFullscreenButton);
+            this.groupBoxVideoPlayerDefault.Controls.Add(this.checkBoxVideoPlayerShowMuteButton);
             this.groupBoxVideoPlayerDefault.Controls.Add(this.labelVideoPlayerPreviewFontSize);
             this.groupBoxVideoPlayerDefault.Controls.Add(this.comboBoxlVideoPlayerPreviewFontSize);
             this.groupBoxVideoPlayerDefault.Controls.Add(this.checkBoxVideoPlayerShowStopButton);
@@ -1289,10 +1305,29 @@
             this.groupBoxVideoPlayerDefault.TabIndex = 14;
             this.groupBoxVideoPlayerDefault.TabStop = false;
             // 
+            // checkBoxVideoPlayerShowFullscreenButton
+            // 
+            this.checkBoxVideoPlayerShowFullscreenButton.Location = new System.Drawing.Point(9, 65);
+            this.checkBoxVideoPlayerShowFullscreenButton.Name = "checkBoxVideoPlayerShowFullscreenButton";
+            this.checkBoxVideoPlayerShowFullscreenButton.Size = new System.Drawing.Size(111, 17);
+            this.checkBoxVideoPlayerShowFullscreenButton.TabIndex = 12;
+            this.checkBoxVideoPlayerShowFullscreenButton.Text = "Show fullscreen button";
+            this.checkBoxVideoPlayerShowFullscreenButton.UseVisualStyleBackColor = true;
+            // 
+            // checkBoxVideoPlayerShowMuteButton
+            // 
+            this.checkBoxVideoPlayerShowMuteButton.AutoSize = true;
+            this.checkBoxVideoPlayerShowMuteButton.Location = new System.Drawing.Point(9, 42);
+            this.checkBoxVideoPlayerShowMuteButton.Name = "checkBoxVideoPlayerShowMuteButton";
+            this.checkBoxVideoPlayerShowMuteButton.Size = new System.Drawing.Size(114, 17);
+            this.checkBoxVideoPlayerShowMuteButton.TabIndex = 11;
+            this.checkBoxVideoPlayerShowMuteButton.Text = "Show mute button";
+            this.checkBoxVideoPlayerShowMuteButton.UseVisualStyleBackColor = true;
+            // 
             // labelVideoPlayerPreviewFontSize
             // 
             this.labelVideoPlayerPreviewFontSize.AutoSize = true;
-            this.labelVideoPlayerPreviewFontSize.Location = new System.Drawing.Point(11, 103);
+            this.labelVideoPlayerPreviewFontSize.Location = new System.Drawing.Point(11, 124);
             this.labelVideoPlayerPreviewFontSize.Name = "labelVideoPlayerPreviewFontSize";
             this.labelVideoPlayerPreviewFontSize.Size = new System.Drawing.Size(128, 13);
             this.labelVideoPlayerPreviewFontSize.TabIndex = 14;
@@ -1316,7 +1351,7 @@
             "18",
             "19",
             "20"});
-            this.comboBoxlVideoPlayerPreviewFontSize.Location = new System.Drawing.Point(145, 100);
+            this.comboBoxlVideoPlayerPreviewFontSize.Location = new System.Drawing.Point(145, 121);
             this.comboBoxlVideoPlayerPreviewFontSize.Name = "comboBoxlVideoPlayerPreviewFontSize";
             this.comboBoxlVideoPlayerPreviewFontSize.Size = new System.Drawing.Size(121, 21);
             this.comboBoxlVideoPlayerPreviewFontSize.TabIndex = 13;
@@ -1326,7 +1361,7 @@
             this.checkBoxVideoPlayerShowStopButton.AutoSize = true;
             this.checkBoxVideoPlayerShowStopButton.Location = new System.Drawing.Point(9, 19);
             this.checkBoxVideoPlayerShowStopButton.Name = "checkBoxVideoPlayerShowStopButton";
-            this.checkBoxVideoPlayerShowStopButton.Size = new System.Drawing.Size(109, 17);
+            this.checkBoxVideoPlayerShowStopButton.Size = new System.Drawing.Size(111, 17);
             this.checkBoxVideoPlayerShowStopButton.TabIndex = 10;
             this.checkBoxVideoPlayerShowStopButton.Text = "Show stop button";
             this.checkBoxVideoPlayerShowStopButton.UseVisualStyleBackColor = true;
@@ -1335,7 +1370,7 @@
             // 
             this.comboBoxVideoPlayerDefaultVolume.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxVideoPlayerDefaultVolume.FormattingEnabled = true;
-            this.comboBoxVideoPlayerDefaultVolume.Location = new System.Drawing.Point(127, 53);
+            this.comboBoxVideoPlayerDefaultVolume.Location = new System.Drawing.Point(127, 90);
             this.comboBoxVideoPlayerDefaultVolume.Name = "comboBoxVideoPlayerDefaultVolume";
             this.comboBoxVideoPlayerDefaultVolume.Size = new System.Drawing.Size(121, 21);
             this.comboBoxVideoPlayerDefaultVolume.TabIndex = 12;
@@ -1343,7 +1378,7 @@
             // labelDefaultVol
             // 
             this.labelDefaultVol.AutoSize = true;
-            this.labelDefaultVol.Location = new System.Drawing.Point(9, 56);
+            this.labelDefaultVol.Location = new System.Drawing.Point(9, 93);
             this.labelDefaultVol.Name = "labelDefaultVol";
             this.labelDefaultVol.Size = new System.Drawing.Size(79, 13);
             this.labelDefaultVol.TabIndex = 6;
@@ -1354,7 +1389,7 @@
             this.labelVolDescr.AutoSize = true;
             this.labelVolDescr.Font = new System.Drawing.Font("Tahoma", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelVolDescr.ForeColor = System.Drawing.Color.Gray;
-            this.labelVolDescr.Location = new System.Drawing.Point(254, 57);
+            this.labelVolDescr.Location = new System.Drawing.Point(254, 94);
             this.labelVolDescr.Name = "labelVolDescr";
             this.labelVolDescr.Size = new System.Drawing.Size(150, 11);
             this.labelVolDescr.TabIndex = 9;
@@ -2552,12 +2587,34 @@
             this.groupBoxListViewSyntaxColoring.TabStop = false;
             this.groupBoxListViewSyntaxColoring.Text = "List view syntax coloring";
             // 
+            // numericUpDownSyntaxColorTextMoreThanXLines
+            // 
+            this.numericUpDownSyntaxColorTextMoreThanXLines.Location = new System.Drawing.Point(196, 112);
+            this.numericUpDownSyntaxColorTextMoreThanXLines.Maximum = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            this.numericUpDownSyntaxColorTextMoreThanXLines.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.numericUpDownSyntaxColorTextMoreThanXLines.Name = "numericUpDownSyntaxColorTextMoreThanXLines";
+            this.numericUpDownSyntaxColorTextMoreThanXLines.Size = new System.Drawing.Size(48, 21);
+            this.numericUpDownSyntaxColorTextMoreThanXLines.TabIndex = 7;
+            this.numericUpDownSyntaxColorTextMoreThanXLines.Value = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            // 
             // checkBoxSyntaxColorTextMoreThanTwoLines
             // 
             this.checkBoxSyntaxColorTextMoreThanTwoLines.AutoSize = true;
             this.checkBoxSyntaxColorTextMoreThanTwoLines.Location = new System.Drawing.Point(20, 116);
             this.checkBoxSyntaxColorTextMoreThanTwoLines.Name = "checkBoxSyntaxColorTextMoreThanTwoLines";
-            this.checkBoxSyntaxColorTextMoreThanTwoLines.Size = new System.Drawing.Size(170, 17);
+            this.checkBoxSyntaxColorTextMoreThanTwoLines.Size = new System.Drawing.Size(164, 17);
             this.checkBoxSyntaxColorTextMoreThanTwoLines.TabIndex = 3;
             this.checkBoxSyntaxColorTextMoreThanTwoLines.Text = "Text - color if more than lines:";
             this.checkBoxSyntaxColorTextMoreThanTwoLines.UseVisualStyleBackColor = true;
@@ -2567,7 +2624,7 @@
             this.checkBoxSyntaxOverlap.AutoSize = true;
             this.checkBoxSyntaxOverlap.Location = new System.Drawing.Point(20, 154);
             this.checkBoxSyntaxOverlap.Name = "checkBoxSyntaxOverlap";
-            this.checkBoxSyntaxOverlap.Size = new System.Drawing.Size(129, 17);
+            this.checkBoxSyntaxOverlap.Size = new System.Drawing.Size(127, 17);
             this.checkBoxSyntaxOverlap.TabIndex = 4;
             this.checkBoxSyntaxOverlap.Text = "Time - color if overlap";
             this.checkBoxSyntaxOverlap.UseVisualStyleBackColor = true;
@@ -2596,7 +2653,7 @@
             this.checkBoxSyntaxColorTextTooLong.AutoSize = true;
             this.checkBoxSyntaxColorTextTooLong.Location = new System.Drawing.Point(20, 93);
             this.checkBoxSyntaxColorTextTooLong.Name = "checkBoxSyntaxColorTextTooLong";
-            this.checkBoxSyntaxColorTextTooLong.Size = new System.Drawing.Size(132, 17);
+            this.checkBoxSyntaxColorTextTooLong.Size = new System.Drawing.Size(128, 17);
             this.checkBoxSyntaxColorTextTooLong.TabIndex = 2;
             this.checkBoxSyntaxColorTextTooLong.Text = "Text - color if too long";
             this.checkBoxSyntaxColorTextTooLong.UseVisualStyleBackColor = true;
@@ -2606,7 +2663,7 @@
             this.checkBoxSyntaxColorDurationTooLarge.AutoSize = true;
             this.checkBoxSyntaxColorDurationTooLarge.Location = new System.Drawing.Point(20, 58);
             this.checkBoxSyntaxColorDurationTooLarge.Name = "checkBoxSyntaxColorDurationTooLarge";
-            this.checkBoxSyntaxColorDurationTooLarge.Size = new System.Drawing.Size(155, 17);
+            this.checkBoxSyntaxColorDurationTooLarge.Size = new System.Drawing.Size(150, 17);
             this.checkBoxSyntaxColorDurationTooLarge.TabIndex = 1;
             this.checkBoxSyntaxColorDurationTooLarge.Text = "Duration - color if too large";
             this.checkBoxSyntaxColorDurationTooLarge.UseVisualStyleBackColor = true;
@@ -2628,28 +2685,6 @@
             this.labelStatus.Size = new System.Drawing.Size(60, 13);
             this.labelStatus.TabIndex = 3;
             this.labelStatus.Text = "labelStatus";
-            // 
-            // numericUpDownSyntaxColorTextMoreThanXLines
-            // 
-            this.numericUpDownSyntaxColorTextMoreThanXLines.Location = new System.Drawing.Point(196, 112);
-            this.numericUpDownSyntaxColorTextMoreThanXLines.Maximum = new decimal(new int[] {
-            10,
-            0,
-            0,
-            0});
-            this.numericUpDownSyntaxColorTextMoreThanXLines.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.numericUpDownSyntaxColorTextMoreThanXLines.Name = "numericUpDownSyntaxColorTextMoreThanXLines";
-            this.numericUpDownSyntaxColorTextMoreThanXLines.Size = new System.Drawing.Size(48, 21);
-            this.numericUpDownSyntaxColorTextMoreThanXLines.TabIndex = 7;
-            this.numericUpDownSyntaxColorTextMoreThanXLines.Value = new decimal(new int[] {
-            10,
-            0,
-            0,
-            0});
             // 
             // Settings
             // 
@@ -2952,5 +2987,8 @@
         private System.Windows.Forms.NumericUpDown numericUpDownMaxCharsSec;
         private System.Windows.Forms.NumericUpDown numericUpDownSubtitleLineMaximumLength;
         private System.Windows.Forms.NumericUpDown numericUpDownSyntaxColorTextMoreThanXLines;
+        private System.Windows.Forms.CheckBox checkBoxSubtitleCenter;
+        private System.Windows.Forms.CheckBox checkBoxVideoPlayerShowFullscreenButton;
+        private System.Windows.Forms.CheckBox checkBoxVideoPlayerShowMuteButton;
     }
 }
