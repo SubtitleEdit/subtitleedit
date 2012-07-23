@@ -1498,6 +1498,8 @@ namespace Nikse.SubtitleEdit.Logic
                 videoPlayerContainer.VideoPlayer = GetVideoPlayer();
                 videoPlayerContainer.VideoPlayer.Initialize(videoPlayerContainer.PanelPlayer, fileName, onVideoLoaded, onVideoEnded);
                 videoPlayerContainer.ShowStopButton = Configuration.Settings.General.VideoPlayerShowStopButton;
+                videoPlayerContainer.ShowFullscreenButton = false;
+                videoPlayerContainer.ShowMuteButton = Configuration.Settings.General.VideoPlayerShowMuteButton;
                 videoPlayerContainer.Volume = Configuration.Settings.General.VideoPlayerDefaultVolume;
                 videoPlayerContainer.EnableMouseWheelStep();
                 videoPlayerContainer.VideoWidth = videoInfo.Width;

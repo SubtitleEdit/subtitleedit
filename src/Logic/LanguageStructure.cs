@@ -1211,6 +1211,7 @@
             public string SubtitleFont { get; set; }
             public string SubtitleFontSize { get; set; }
             public string SubtitleBold { get; set; }
+            public string SubtitleCenter { get; set; }
             public string SubtitleFontColor { get; set; }
             public string SubtitleBackgroundColor { get; set; }
             public string SpellChecker { get; set; }
@@ -1249,6 +1250,8 @@
             public string VlcMediaPlayer { get; set; }
             public string VlcMediaPlayerDescription { get; set; }
             public string ShowStopButton { get; set; }
+            public string ShowMuteButton { get; set; }
+            public string ShowFullscreenButton { get; set; }
             public string DefaultVolume { get; set; }
             public string VolumeNotes { get; set; }
             public string PreviewFontSize { get; set; }

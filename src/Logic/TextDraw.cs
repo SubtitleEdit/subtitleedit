@@ -7,29 +7,31 @@ namespace Nikse.SubtitleEdit.Logic
     public static class TextDraw
     {
 
-        public static void DrawText(Font font, StringFormat sf, System.Drawing.Drawing2D.GraphicsPath path, StringBuilder sb, bool isItalic, bool isBold, bool isUnderline, float left, float top, ref bool newLine, float addX, float leftMargin, ref int pathPointsStart)
+        public static void DrawText(Font font, StringFormat sf, System.Drawing.Drawing2D.GraphicsPath path, StringBuilder sb, bool isItalic, bool isBold, bool isUnderline, float left, float top, ref bool newLine, float leftMargin, ref int pathPointsStart)
         {
             var next = new PointF(left, top);
 
+            
             if (path.PointCount > 0)
-            {
+            {                
                 int k = 0;
                 for (int i = path.PathPoints.Length - 1; i >= 0; i--)
                 {
                     if (path.PathPoints[i].X > next.X)
                         next.X = path.PathPoints[i].X;
                     k++;
-                    if (i > pathPointsStart)
+                    if (k > 50)
+                        break;
+                    if (i > pathPointsStart && pathPointsStart != -1)
                         break;
                 }
             }
 
-            next.X += addX;
             if (newLine)
             {
                 next.X = leftMargin;
                 newLine = false;
-                pathPointsStart = path.PathPoints.Length;
+                pathPointsStart = path.PointCount;
             }
 
             var fontStyle = FontStyle.Regular;
@@ -60,10 +62,9 @@ namespace Nikse.SubtitleEdit.Logic
             var sb = new StringBuilder(text);
             bool isItalic = false;
             bool newLine = false;
-            int addX = 0;
             int leftMargin = 0;
             int pathPointsStart = -1;
-            TextDraw.DrawText(font, sf, path, sb, isItalic, bold, false, 0, 0, ref newLine, addX, leftMargin, ref pathPointsStart);
+            TextDraw.DrawText(font, sf, path, sb, isItalic, bold, false, 0, 0, ref newLine, leftMargin, ref pathPointsStart);
 
             float width = 0;
             int index = path.PathPoints.Length - 40;
@@ -94,10 +95,9 @@ namespace Nikse.SubtitleEdit.Logic
             var sb = new StringBuilder(text);
             bool isItalic = false;
             bool newLine = false;
-            int addX = 0;
             int leftMargin = 0;
             int pathPointsStart = -1;
-            TextDraw.DrawText(font, sf, path, sb, isItalic, bold, false, 0, 0, ref newLine, addX, leftMargin, ref pathPointsStart);
+            TextDraw.DrawText(font, sf, path, sb, isItalic, bold, false, 0, 0, ref newLine, leftMargin, ref pathPointsStart);
 
             float height = 0;
             int index = path.PathPoints.Length - 80;

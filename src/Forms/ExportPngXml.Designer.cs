@@ -34,6 +34,7 @@
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.groupBoxImageSettings = new System.Windows.Forms.GroupBox();
+            this.buttonCustomResolution = new System.Windows.Forms.Button();
             this.checkBoxSkipEmptyFrameAtStart = new System.Windows.Forms.CheckBox();
             this.comboBoxBottomMargin = new System.Windows.Forms.ComboBox();
             this.labelBottomMargin = new System.Windows.Forms.Label();
@@ -85,7 +86,7 @@
             this.buttonExport.Location = new System.Drawing.Point(517, 654);
             this.buttonExport.Name = "buttonExport";
             this.buttonExport.Size = new System.Drawing.Size(126, 21);
-            this.buttonExport.TabIndex = 2;
+            this.buttonExport.TabIndex = 3;
             this.buttonExport.Text = "Export all lines...";
             this.buttonExport.UseVisualStyleBackColor = true;
             this.buttonExport.Click += new System.EventHandler(this.ButtonExportClick);
@@ -98,7 +99,7 @@
             this.buttonCancel.Location = new System.Drawing.Point(649, 654);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 21);
-            this.buttonCancel.TabIndex = 3;
+            this.buttonCancel.TabIndex = 4;
             this.buttonCancel.Text = "C&ancel";
             this.buttonCancel.UseVisualStyleBackColor = true;
             // 
@@ -116,6 +117,7 @@
             // 
             this.groupBoxImageSettings.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxImageSettings.Controls.Add(this.buttonCustomResolution);
             this.groupBoxImageSettings.Controls.Add(this.checkBoxSkipEmptyFrameAtStart);
             this.groupBoxImageSettings.Controls.Add(this.comboBoxBottomMargin);
             this.groupBoxImageSettings.Controls.Add(this.labelBottomMargin);
@@ -148,6 +150,17 @@
             this.groupBoxImageSettings.TabStop = false;
             this.groupBoxImageSettings.Text = "Image settings";
             // 
+            // buttonCustomResolution
+            // 
+            this.buttonCustomResolution.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.buttonCustomResolution.Location = new System.Drawing.Point(224, 78);
+            this.buttonCustomResolution.Name = "buttonCustomResolution";
+            this.buttonCustomResolution.Size = new System.Drawing.Size(24, 21);
+            this.buttonCustomResolution.TabIndex = 3;
+            this.buttonCustomResolution.Text = "...";
+            this.buttonCustomResolution.UseVisualStyleBackColor = true;
+            this.buttonCustomResolution.Click += new System.EventHandler(this.buttonCustomResolution_Click);
+            // 
             // checkBoxSkipEmptyFrameAtStart
             // 
             this.checkBoxSkipEmptyFrameAtStart.AutoSize = true;
@@ -156,7 +169,7 @@
             this.checkBoxSkipEmptyFrameAtStart.Location = new System.Drawing.Point(276, 131);
             this.checkBoxSkipEmptyFrameAtStart.Name = "checkBoxSkipEmptyFrameAtStart";
             this.checkBoxSkipEmptyFrameAtStart.Size = new System.Drawing.Size(147, 17);
-            this.checkBoxSkipEmptyFrameAtStart.TabIndex = 37;
+            this.checkBoxSkipEmptyFrameAtStart.TabIndex = 10;
             this.checkBoxSkipEmptyFrameAtStart.Text = "Skip empty frames at start";
             this.checkBoxSkipEmptyFrameAtStart.UseVisualStyleBackColor = true;
             // 
@@ -167,7 +180,7 @@
             this.comboBoxBottomMargin.Location = new System.Drawing.Point(100, 132);
             this.comboBoxBottomMargin.Name = "comboBoxBottomMargin";
             this.comboBoxBottomMargin.Size = new System.Drawing.Size(121, 21);
-            this.comboBoxBottomMargin.TabIndex = 35;
+            this.comboBoxBottomMargin.TabIndex = 5;
             // 
             // labelBottomMargin
             // 
@@ -195,7 +208,7 @@
             this.comboBoxFramerate.Location = new System.Drawing.Point(537, 134);
             this.comboBoxFramerate.Name = "comboBoxFramerate";
             this.comboBoxFramerate.Size = new System.Drawing.Size(121, 21);
-            this.comboBoxFramerate.TabIndex = 33;
+            this.comboBoxFramerate.TabIndex = 16;
             // 
             // labelLanguage
             // 
@@ -222,7 +235,7 @@
             this.comboBoxLanguage.Location = new System.Drawing.Point(537, 105);
             this.comboBoxLanguage.Name = "comboBoxLanguage";
             this.comboBoxLanguage.Size = new System.Drawing.Size(121, 21);
-            this.comboBoxLanguage.TabIndex = 29;
+            this.comboBoxLanguage.TabIndex = 15;
             this.comboBoxLanguage.Visible = false;
             // 
             // labelImageFormat
@@ -249,7 +262,7 @@
             this.comboBoxImageFormat.Location = new System.Drawing.Point(537, 78);
             this.comboBoxImageFormat.Name = "comboBoxImageFormat";
             this.comboBoxImageFormat.Size = new System.Drawing.Size(121, 21);
-            this.comboBoxImageFormat.TabIndex = 27;
+            this.comboBoxImageFormat.TabIndex = 14;
             // 
             // checkBoxBold
             // 
@@ -257,7 +270,7 @@
             this.checkBoxBold.Location = new System.Drawing.Point(276, 53);
             this.checkBoxBold.Name = "checkBoxBold";
             this.checkBoxBold.Size = new System.Drawing.Size(47, 17);
-            this.checkBoxBold.TabIndex = 5;
+            this.checkBoxBold.TabIndex = 8;
             this.checkBoxBold.Text = "Bold";
             this.checkBoxBold.UseVisualStyleBackColor = true;
             this.checkBoxBold.CheckedChanged += new System.EventHandler(this.checkBoxBold_CheckedChanged);
@@ -301,7 +314,7 @@
             this.comboBoxHAlign.Location = new System.Drawing.Point(100, 105);
             this.comboBoxHAlign.Name = "comboBoxHAlign";
             this.comboBoxHAlign.Size = new System.Drawing.Size(121, 21);
-            this.comboBoxHAlign.TabIndex = 3;
+            this.comboBoxHAlign.TabIndex = 4;
             this.comboBoxHAlign.SelectedIndexChanged += new System.EventHandler(this.comboBoxHAlign_SelectedIndexChanged);
             // 
             // labelHorizontalAlign
@@ -321,7 +334,7 @@
             this.checkBoxAntiAlias.Location = new System.Drawing.Point(276, 76);
             this.checkBoxAntiAlias.Name = "checkBoxAntiAlias";
             this.checkBoxAntiAlias.Size = new System.Drawing.Size(66, 17);
-            this.checkBoxAntiAlias.TabIndex = 6;
+            this.checkBoxAntiAlias.TabIndex = 9;
             this.checkBoxAntiAlias.Text = "AntiAlias";
             this.checkBoxAntiAlias.UseVisualStyleBackColor = true;
             this.checkBoxAntiAlias.CheckedChanged += new System.EventHandler(this.checkBoxAntiAlias_CheckedChanged);
@@ -454,7 +467,7 @@
             this.comboBoxBorderWidth.Location = new System.Drawing.Point(537, 51);
             this.comboBoxBorderWidth.Name = "comboBoxBorderWidth";
             this.comboBoxBorderWidth.Size = new System.Drawing.Size(121, 21);
-            this.comboBoxBorderWidth.TabIndex = 8;
+            this.comboBoxBorderWidth.TabIndex = 13;
             this.comboBoxBorderWidth.SelectedIndexChanged += new System.EventHandler(this.comboBoxBorderWidth_SelectedIndexChanged);
             // 
             // panelBorderColor
@@ -463,7 +476,7 @@
             this.panelBorderColor.Location = new System.Drawing.Point(664, 25);
             this.panelBorderColor.Name = "panelBorderColor";
             this.panelBorderColor.Size = new System.Drawing.Size(21, 20);
-            this.panelBorderColor.TabIndex = 14;
+            this.panelBorderColor.TabIndex = 12;
             this.panelBorderColor.MouseClick += new System.Windows.Forms.MouseEventHandler(this.panelBorderColor_MouseClick);
             // 
             // buttonBorderColor
@@ -471,7 +484,7 @@
             this.buttonBorderColor.Location = new System.Drawing.Point(537, 24);
             this.buttonBorderColor.Name = "buttonBorderColor";
             this.buttonBorderColor.Size = new System.Drawing.Size(121, 21);
-            this.buttonBorderColor.TabIndex = 7;
+            this.buttonBorderColor.TabIndex = 11;
             this.buttonBorderColor.Text = "Border color";
             this.buttonBorderColor.UseVisualStyleBackColor = true;
             this.buttonBorderColor.Click += new System.EventHandler(this.buttonBorderColor_Click);
@@ -482,7 +495,7 @@
             this.panelColor.Location = new System.Drawing.Point(403, 25);
             this.panelColor.Name = "panelColor";
             this.panelColor.Size = new System.Drawing.Size(21, 20);
-            this.panelColor.TabIndex = 12;
+            this.panelColor.TabIndex = 7;
             this.panelColor.MouseClick += new System.Windows.Forms.MouseEventHandler(this.panelColor_MouseClick);
             // 
             // buttonColor
@@ -490,7 +503,7 @@
             this.buttonColor.Location = new System.Drawing.Point(276, 24);
             this.buttonColor.Name = "buttonColor";
             this.buttonColor.Size = new System.Drawing.Size(121, 21);
-            this.buttonColor.TabIndex = 4;
+            this.buttonColor.TabIndex = 6;
             this.buttonColor.Text = "Color";
             this.buttonColor.UseVisualStyleBackColor = true;
             this.buttonColor.Click += new System.EventHandler(this.buttonColor_Click);
@@ -502,7 +515,7 @@
             this.labelImageResolution.Location = new System.Drawing.Point(651, 382);
             this.labelImageResolution.Name = "labelImageResolution";
             this.labelImageResolution.Size = new System.Drawing.Size(73, 14);
-            this.labelImageResolution.TabIndex = 22;
+            this.labelImageResolution.TabIndex = 2;
             this.labelImageResolution.Text = "320x240";
             this.labelImageResolution.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
@@ -521,6 +534,7 @@
             this.subtitleListView1.Size = new System.Drawing.Size(712, 200);
             this.subtitleListView1.TabIndex = 0;
             this.subtitleListView1.UseCompatibleStateImageBehavior = false;
+            this.subtitleListView1.UseSyntaxColoring = true;
             this.subtitleListView1.View = System.Windows.Forms.View.Details;
             this.subtitleListView1.SelectedIndexChanged += new System.EventHandler(this.subtitleListView1_SelectedIndexChanged);
             // 
@@ -590,5 +604,6 @@
         private System.Windows.Forms.ComboBox comboBoxBottomMargin;
         private System.Windows.Forms.Label labelBottomMargin;
         private System.Windows.Forms.CheckBox checkBoxSkipEmptyFrameAtStart;
+        private System.Windows.Forms.Button buttonCustomResolution;
     }
 }

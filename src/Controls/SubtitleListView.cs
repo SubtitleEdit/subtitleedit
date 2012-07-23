@@ -405,7 +405,7 @@ namespace Nikse.SubtitleEdit.Controls
 
         public void SyntaxColorLine(List<Paragraph> paragraphs, int i, Paragraph paragraph)
         {
-            if (UseSyntaxColoring && _settings != null)
+            if (UseSyntaxColoring && _settings != null && Items.Count > 0)
             {
                 var item = Items[i];
                 if (item.UseItemStyleForSubItems)

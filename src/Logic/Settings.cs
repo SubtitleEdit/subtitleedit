@@ -332,6 +332,8 @@ namespace Nikse.SubtitleEdit.Logic
         public int VideoPlayerDefaultVolume { get; set; }
         public int VideoPlayerPreviewFontSize { get; set; }
         public bool VideoPlayerShowStopButton { get; set; }
+        public bool VideoPlayerShowFullscreenButton { get; set; }
+        public bool VideoPlayerShowMuteButton { get; set; }
         public string Language { get; set; }
         public string ListViewLineSeparatorString { get; set; }
         public int ListViewDoubleClickAction { get; set; }
@@ -411,6 +413,8 @@ namespace Nikse.SubtitleEdit.Logic
             VideoPlayerDefaultVolume = 75;
             VideoPlayerPreviewFontSize = 10;
             VideoPlayerShowStopButton = true;
+            VideoPlayerShowMuteButton = true;
+            VideoPlayerShowFullscreenButton = true;
             ListViewLineSeparatorString = "<br />";
             ListViewDoubleClickAction = 1;
             UppercaseLetters = "ABCDEFGHIJKLMNOPQRSTUVWZYXÆØÃÅÄÖÉÈÁÂÀÇÉÊÍÓÔÕÚŁАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯĞİŞÜ";
@@ -982,6 +986,12 @@ namespace Nikse.SubtitleEdit.Logic
             subNode = node.SelectSingleNode("VideoPlayerShowStopButton");
             if (subNode != null)
                 settings.General.VideoPlayerShowStopButton = Convert.ToBoolean(subNode.InnerText);
+            subNode = node.SelectSingleNode("VideoPlayerShowMuteButton");
+            if (subNode != null)
+                settings.General.VideoPlayerShowMuteButton = Convert.ToBoolean(subNode.InnerText);
+            subNode = node.SelectSingleNode("VideoPlayerShowFullscreenButton");
+            if (subNode != null)
+                settings.General.VideoPlayerShowFullscreenButton = Convert.ToBoolean(subNode.InnerText);
             subNode = node.SelectSingleNode("Language");
             if (subNode != null)
                 settings.General.Language = subNode.InnerText;
@@ -1771,6 +1781,8 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("VideoPlayerDefaultVolume", settings.General.VideoPlayerDefaultVolume.ToString());
             textWriter.WriteElementString("VideoPlayerPreviewFontSize", settings.General.VideoPlayerPreviewFontSize.ToString());
             textWriter.WriteElementString("VideoPlayerShowStopButton", settings.General.VideoPlayerShowStopButton.ToString());
+            textWriter.WriteElementString("VideoPlayerShowStopMute", settings.General.VideoPlayerShowMuteButton.ToString());
+            textWriter.WriteElementString("VideoPlayerShowStopFullscreen", settings.General.VideoPlayerShowFullscreenButton.ToString());
             textWriter.WriteElementString("Language", settings.General.Language);
             textWriter.WriteElementString("ListViewLineSeparatorString", settings.General.ListViewLineSeparatorString);
             textWriter.WriteElementString("ListViewDoubleClickAction", settings.General.ListViewDoubleClickAction.ToString());

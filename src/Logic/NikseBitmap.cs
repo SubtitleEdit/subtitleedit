@@ -357,7 +357,7 @@ namespace Nikse.SubtitleEdit.Logic
             return 0;
         }
 
-        public void CropTransparentSides(int maximumCropping)
+        public void CropTransparentSidesAndBottom(int maximumCropping)
         {
             int leftStart = 0;
             bool done = false;
@@ -401,6 +401,27 @@ namespace Nikse.SubtitleEdit.Logic
                 }
             }
 
+            //crop bottom
+            done = false;
+            int newHeight = Height;
+            for (int y = Height - 1; y > 0; y--)            
+            {
+                for (int x = 0; x < Width; x++)
+                {
+                    Color c = GetPixel(x, y);
+                    if (c.A != 0)
+                    {
+                        done = true;
+                        newHeight = y + maximumCropping;
+                        if (newHeight > Height)
+                            newHeight = Height;
+                        break;
+                    }
+                    if (done)
+                        break;
+                }
+            }
+
             if (leftStart < 2 && rightEnd >= Width - 3)
                 return;
 
@@ -408,15 +429,16 @@ namespace Nikse.SubtitleEdit.Logic
             if (newWidth <= 0)
                 return;
 
-            var newBitmapData = new byte[newWidth * Height * 4];
+            var newBitmapData = new byte[newWidth * newHeight * 4];
             int index = 0;
-            for (int y = 0; y < Height; y++)
+            for (int y = 0; y < newHeight; y++)
             {
                 int pixelAddress = (leftStart * 4) + (y * 4 * Width);
                 Buffer.BlockCopy(_bitmapData, pixelAddress, newBitmapData, index, 4 * newWidth);
                 index += 4 * newWidth;
             }
             Width = newWidth;
+            Height = newHeight;
             _bitmapData = newBitmapData;
         }
 

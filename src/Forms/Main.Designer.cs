@@ -3761,6 +3761,8 @@
             this.mediaPlayer.Location = new System.Drawing.Point(0, 0);
             this.mediaPlayer.Margin = new System.Windows.Forms.Padding(0);
             this.mediaPlayer.Name = "mediaPlayer";
+            this.mediaPlayer.ShowFullscreenButton = true;
+            this.mediaPlayer.ShowMuteButton = true;
             this.mediaPlayer.ShowStopButton = true;
             this.mediaPlayer.Size = new System.Drawing.Size(281, 278);
             this.mediaPlayer.SubtitleText = "";
