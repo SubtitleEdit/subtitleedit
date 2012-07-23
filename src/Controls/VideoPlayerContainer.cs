@@ -82,6 +82,9 @@ namespace Nikse.SubtitleEdit.Controls
         private readonly PictureBox _pictureBoxStop = new PictureBox();
         private readonly PictureBox _pictureBoxStopOver = new PictureBox();
         private readonly PictureBox _pictureBoxStopDown = new PictureBox();
+        private readonly PictureBox _pictureBoxFullscreen = new PictureBox();
+        private readonly PictureBox _pictureBoxFullscreenOver = new PictureBox();
+        private readonly PictureBox _pictureBoxFullscreenDown = new PictureBox();
         private readonly PictureBox _pictureBoxMute = new PictureBox();
         private readonly PictureBox _pictureBoxMuteOver = new PictureBox();
         private readonly PictureBox _pictureBoxMuteDown = new PictureBox();
@@ -125,6 +128,44 @@ namespace Nikse.SubtitleEdit.Controls
             }
         }
 
+        public bool ShowMuteButton
+        {
+            get
+            {
+                return _pictureBoxMute.Visible || _pictureBoxMuteOver.Visible || _pictureBoxMuteDown.Visible;
+            }
+            set
+            {
+                if (value)
+                {
+                    _pictureBoxMute.Visible = true;
+                }
+                else
+                {
+                    HideAllMuteImages();
+                }
+            }
+        }
+
+        public bool ShowFullscreenButton
+        {
+            get
+            {
+                return _pictureBoxFullscreen.Visible || _pictureBoxFullscreenOver.Visible || _pictureBoxFullscreenDown.Visible;
+            }
+            set
+            {
+                if (value)
+                {
+                    _pictureBoxFullscreen.Visible = true;
+                }
+                else
+                {
+                    HideAllFullscreenImages();
+                }
+            }
+        }
+
         public VideoPlayerContainer()
         {
             FontSizeFactor = 1.0F;
@@ -143,6 +184,9 @@ namespace Nikse.SubtitleEdit.Controls
 
             HideAllStopImages();
             _pictureBoxStop.Visible = true;
+
+            HideAllFullscreenImages();
+            _pictureBoxFullscreen.Visible = true;
 
             HideAllMuteImages();
             _pictureBoxMute.Visible = true;
@@ -500,7 +544,7 @@ namespace Nikse.SubtitleEdit.Controls
             _panelcontrols.Controls.Add(_pictureBoxPauseOver);
 
             _pictureBoxStop.Image = ((Image)(_resources.GetObject("pictureBoxStop.Image")));
-            _pictureBoxStop.Location = new Point(60, 130 - 113);
+            _pictureBoxStop.Location = new Point(52, 130 - 113);
             _pictureBoxStop.Name = "_pictureBoxStop";
             _pictureBoxStop.Size = new Size(20, 20);
             _pictureBoxStop.SizeMode = PictureBoxSizeMode.AutoSize;
@@ -509,7 +553,7 @@ namespace Nikse.SubtitleEdit.Controls
             _panelcontrols.Controls.Add(_pictureBoxStop);
 
             _pictureBoxStopDown.Image = ((Image)(_resources.GetObject("pictureBoxStopDown.Image")));
-            _pictureBoxStopDown.Location = new Point(60, 130 - 113);
+            _pictureBoxStopDown.Location = new Point(52, 130 - 113);
             _pictureBoxStopDown.Name = "_pictureBoxStopDown";
             _pictureBoxStopDown.Size = new Size(20, 20);
             _pictureBoxStopDown.SizeMode = PictureBoxSizeMode.AutoSize;
@@ -517,7 +561,7 @@ namespace Nikse.SubtitleEdit.Controls
             _panelcontrols.Controls.Add(_pictureBoxStopDown);
 
             _pictureBoxStopOver.Image = ((Image)(_resources.GetObject("pictureBoxStopOver.Image")));
-            _pictureBoxStopOver.Location = new Point(60, 130 - 113);
+            _pictureBoxStopOver.Location = new Point(52, 130 - 113);
             _pictureBoxStopOver.Name = "_pictureBoxStopOver";
             _pictureBoxStopOver.Size = new Size(20, 20);
             _pictureBoxStopOver.SizeMode = PictureBoxSizeMode.AutoSize;
@@ -526,6 +570,34 @@ namespace Nikse.SubtitleEdit.Controls
             _pictureBoxStopOver.MouseDown += PictureBoxStopOverMouseDown;
             _pictureBoxStopOver.MouseUp += PictureBoxStopOverMouseUp;
             _panelcontrols.Controls.Add(_pictureBoxStopOver);
+
+            _pictureBoxFullscreen.Image = ((Image)(_resources.GetObject("pictureBoxFS.Image")));
+            _pictureBoxFullscreen.Location = new Point(95, 130 - 113);
+            _pictureBoxFullscreen.Name = "_pictureBoxFullscreen";
+            _pictureBoxFullscreen.Size = new Size(20, 20);
+            _pictureBoxFullscreen.SizeMode = PictureBoxSizeMode.AutoSize;
+            _pictureBoxFullscreen.TabStop = false;
+            _pictureBoxFullscreen.MouseEnter += PictureBoxFullscreenMouseEnter;
+            _panelcontrols.Controls.Add(_pictureBoxFullscreen);
+
+            _pictureBoxFullscreenDown.Image = ((Image)(_resources.GetObject("pictureBoxFSDown.Image")));
+            _pictureBoxFullscreenDown.Location = new Point(95, 130 - 113);
+            _pictureBoxFullscreenDown.Name = "_pictureBoxFullscreenDown";
+            _pictureBoxFullscreenDown.Size = new Size(20, 20);
+            _pictureBoxFullscreenDown.SizeMode = PictureBoxSizeMode.AutoSize;
+            _pictureBoxFullscreenDown.TabStop = false;
+            _panelcontrols.Controls.Add(_pictureBoxFullscreenDown);
+
+            _pictureBoxFullscreenOver.Image = ((Image)(_resources.GetObject("pictureBoxFSOver.Image")));
+            _pictureBoxFullscreenOver.Location = new Point(95, 130 - 113);
+            _pictureBoxFullscreenOver.Name = "_pictureBoxFullscreenOver";
+            _pictureBoxFullscreenOver.Size = new Size(20, 20);
+            _pictureBoxFullscreenOver.SizeMode = PictureBoxSizeMode.AutoSize;
+            _pictureBoxFullscreenOver.TabStop = false;
+            _pictureBoxFullscreenOver.MouseLeave += PictureBoxFullscreenOverMouseLeave;
+            _pictureBoxFullscreenOver.MouseDown += PictureBoxFullscreenOverMouseDown;
+            _pictureBoxFullscreenOver.MouseUp += PictureBoxFullscreenOverMouseUp;
+            _panelcontrols.Controls.Add(_pictureBoxFullscreenOver);
 
             _pictureBoxProgressbarBackground.Anchor = AnchorStyles.Top | AnchorStyles.Left;
             _pictureBoxProgressbarBackground.BackColor = Color.Transparent;
@@ -550,7 +622,7 @@ namespace Nikse.SubtitleEdit.Controls
             _pictureBoxProgressBar.BringToFront();
 
             _pictureBoxMute.Image = ((Image)(_resources.GetObject("pictureBoxMute.Image")));
-            _pictureBoxMute.Location = new Point(91, 131 - 113);
+            _pictureBoxMute.Location = new Point(75, 131 - 113);
             _pictureBoxMute.Name = "_pictureBoxMute";
             _pictureBoxMute.Size = new Size(19, 19);
             _pictureBoxMute.SizeMode = PictureBoxSizeMode.AutoSize;
@@ -559,7 +631,7 @@ namespace Nikse.SubtitleEdit.Controls
             _panelcontrols.Controls.Add(_pictureBoxMute);
 
             _pictureBoxMuteDown.Image = ((Image)(_resources.GetObject("pictureBoxMuteDown.Image")));
-            _pictureBoxMuteDown.Location = new Point(91, 131 - 113);
+            _pictureBoxMuteDown.Location = new Point(75, 131 - 113);
             _pictureBoxMuteDown.Name = "_pictureBoxMuteDown";
             _pictureBoxMuteDown.Size = new Size(19, 19);
             _pictureBoxMuteDown.SizeMode = PictureBoxSizeMode.AutoSize;
@@ -568,7 +640,7 @@ namespace Nikse.SubtitleEdit.Controls
             _panelcontrols.Controls.Add(_pictureBoxMuteDown);
 
             _pictureBoxMuteOver.Image = ((Image)(_resources.GetObject("pictureBoxMuteOver.Image")));
-            _pictureBoxMuteOver.Location = new Point(91, 131 - 113);
+            _pictureBoxMuteOver.Location = new Point(75, 131 - 113);
             _pictureBoxMuteOver.Name = "_pictureBoxMuteOver";
             _pictureBoxMuteOver.Size = new Size(19, 19);
             _pictureBoxMuteOver.SizeMode = PictureBoxSizeMode.AutoSize;
@@ -879,6 +951,42 @@ namespace Nikse.SubtitleEdit.Controls
             HideAllStopImages();
             _pictureBoxStop.Visible = true;
             Stop();
+        }
+        #endregion
+
+        #region FullscreenButtons
+        private void HideAllFullscreenImages()
+        {
+            _pictureBoxFullscreenOver.Visible = false;
+            _pictureBoxFullscreenDown.Visible = false;
+            _pictureBoxFullscreen.Visible = false;
+        }
+
+        private void PictureBoxFullscreenMouseEnter(object sender, EventArgs e)
+        {
+            HideAllFullscreenImages();
+            _pictureBoxFullscreenOver.Visible = true;
+        }
+
+        private void PictureBoxFullscreenOverMouseLeave(object sender, EventArgs e)
+        {
+            if (_pictureBoxFullscreenOver.Visible)
+            {
+                HideAllFullscreenImages();
+                _pictureBoxFullscreen.Visible = true;
+            }
+        }
+
+        private void PictureBoxFullscreenOverMouseDown(object sender, MouseEventArgs e)
+        {
+            HideAllFullscreenImages();
+            if (OnButtonClicked != null)
+                OnButtonClicked.Invoke(sender, e);
+        }
+
+        private void PictureBoxFullscreenOverMouseUp(object sender, MouseEventArgs e)
+        {
+            HideAllFullscreenImages();
         }
         #endregion
 
