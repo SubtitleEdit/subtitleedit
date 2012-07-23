@@ -1803,6 +1803,8 @@ namespace Nikse.SubtitleEdit.Logic.OCR
                     else
                         wordsNotFound++;
                 }
+                else if (word.Length > 3)
+                    numberOfCorrectWords++;
             }
             return wordsNotFound;
         }
