@@ -95,7 +95,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
             bool isChinese = false;
             foreach (Paragraph p in subtitle.Paragraphs)
-            { 
+            {
                 if (p.Text.Contains("的") ||
                     p.Text.Contains("是") ||
                     p.Text.Contains("啊") ||
@@ -150,9 +150,9 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 buffer[191] = 0x4F;
                 buffer[192] = 0x41;
 
-                
+
                 if (isChinese)
-                { 
+                {
                     buffer[187] = 0x43; // CCKM44
                     buffer[188] = 0x43;
                     buffer[189] = 0x4B;
@@ -164,7 +164,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 buffer[193] = 0x2E;
                 buffer[194] = 0x56;
 
-                
+
 
                 buffer[208] = 0xf6;
                 buffer[209] = 0x01;
@@ -329,7 +329,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 }
                 else if (_language != null && _language.StartsWith("CCKM44"))
                 {
-                    encoding = Encoding.GetEncoding(1201); 
+                    encoding = Encoding.GetEncoding(1201);
                     if (index < 49)
                     {
                         if (i + 3 < text.Length && text.Substring(i, 3) == "<i>")
