@@ -45,16 +45,12 @@ namespace Nikse.SubtitleEdit.Logic.SpellCheck
         private static string n2s(IntPtr ptr)
         {
             if (ptr == IntPtr.Zero)
-            {
                 return null;
-            }
             List<byte> bytes = new List<byte>();
             unsafe
             {
                 for (byte* p = (byte*)ptr; *p != 0; p++)
-                {
                     bytes.Add(*p);
-                }
             }
             return n2s(bytes.ToArray());
         }
@@ -62,9 +58,7 @@ namespace Nikse.SubtitleEdit.Logic.SpellCheck
         private static string n2s(byte[] bytes)
         {
             if (bytes == null)
-            {
                 return null;
-            }
             return Encoding.UTF8.GetString(bytes);
         }
 
@@ -81,9 +75,7 @@ namespace Nikse.SubtitleEdit.Logic.SpellCheck
         private static byte[] s2encoding(string str, Encoding encoding)
         {
             if (str == null)
-            {
                 return null;
-            }
             return encoding.GetBytes(str + '\0');
         }
 
@@ -97,13 +89,29 @@ namespace Nikse.SubtitleEdit.Logic.SpellCheck
             return null;
         }
 
-        private void LoadLibVoikkoDynamic()
+        /// <summary>
+        /// Load dll dynamic + set pointers to needed methods
+        /// </summary>
+        /// <param name="dllFile">Voikko lib</param>
+        private void LoadLibVoikkoDynamic(string baseFolder)
         {
+            string dllFile = System.IO.Path.Combine(baseFolder, "Voikkox86.dll");
+            if (IntPtr.Size == 8)
+                dllFile = System.IO.Path.Combine(baseFolder, "Voikkox64.dll");
+            if (!File.Exists(dllFile))
+                throw new FileNotFoundException(dllFile);
+            _libDLL = LoadLibrary(dllFile);
+            if (_libDLL == IntPtr.Zero)
+                throw new FileLoadException("Unable to load " + dllFile);
+
             _voikkoInit = (VoikkoInit)GetDllType(typeof(VoikkoInit), "voikkoInit");
             _voikkoTerminate = (VoikkoTerminate)GetDllType(typeof(VoikkoTerminate), "voikkoTerminate");
             _voikkoSpell = (VoikkoSpell)GetDllType(typeof(VoikkoSpell), "voikkoSpellCstr");
             _voikkoSuggest = (VoikkoSuggest)GetDllType(typeof(VoikkoSuggest), "voikkoSuggestCstr");
             _voikkoFreeCstrArray = (VoikkoFreeCstrArray)GetDllType(typeof(VoikkoFreeCstrArray), "voikkoFreeCstrArray");
+
+            if (_voikkoInit == null || _voikkoTerminate == null || _voikkoSpell == null || _voikkoSuggest == null || _voikkoFreeCstrArray == null)
+                throw new FileLoadException("Not all methods in Voikko dll could be found!");
         }
 
         public override bool Spell(string word)
@@ -125,9 +133,7 @@ namespace Nikse.SubtitleEdit.Logic.SpellCheck
             unsafe
             {
                 for (byte** cStr = (byte**)voikkoSuggestCstr; *cStr != (byte*)0; cStr++)
-                {
                     suggestions.Add(n2s(new IntPtr(*cStr)));
-                }
             }
             _voikkoFreeCstrArray(voikkoSuggestCstr);
             return suggestions;
@@ -135,23 +141,12 @@ namespace Nikse.SubtitleEdit.Logic.SpellCheck
 
         public VoikkoSpellCheck(string baseFolder, string dictionaryFolder)
         {            
-            string dllFile = System.IO.Path.Combine(Configuration.BaseDirectory, "Voikkox86.dll");
-            if (IntPtr.Size == 8)
-                dllFile = System.IO.Path.Combine(Configuration.BaseDirectory, "Voikkox64.dll");
+            LoadLibVoikkoDynamic(baseFolder);
 
-            if (File.Exists(dllFile))
-            {
-                Directory.SetCurrentDirectory(Path.GetDirectoryName(dllFile));
-                _libDLL = LoadLibrary(dllFile);
-                LoadLibVoikkoDynamic();
-
-                IntPtr error = new IntPtr();
-                _libVoikko = _voikkoInit(ref error, s2n("fi"), s2ansi(dictionaryFolder));
-                if (_libVoikko == IntPtr.Zero && error != IntPtr.Zero)
-                {
-                    throw new Exception(n2s(error));
-                }
-            }
+            IntPtr error = new IntPtr();
+            _libVoikko = _voikkoInit(ref error, s2n("fi"), s2ansi(dictionaryFolder));
+            if (_libVoikko == IntPtr.Zero && error != IntPtr.Zero)
+                throw new Exception(n2s(error));
         }
 
         ~VoikkoSpellCheck()

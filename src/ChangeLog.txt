@@ -11,6 +11,7 @@ Subtitle Edit Changelog
    * New setting in Options: "Max. chars/second"
    * New settings in Options regarding "Min. duration" + "Max. duration"
    * New settings in Options regarding syntax coloring
+   * Several other new subtitle formats   
    * New settings in Options, center subtitle (in SE text boxes)
    * Tools -> Join subtitles (merge of multiple parts)
    * Tools -> Apply duration limits
@@ -21,8 +22,8 @@ Subtitle Edit Changelog
    * "Fix common errors" item to fix Turkish ANSI letters to Unicode - thx Adem
    * Support for D-Cinema smpte - thx Lillian
    * Can now read NCI cap files - thx Ramon
-   * Several other new subtitle formats   
    * Added fullscreen icon to video player (in main window only) - thx Leszek
+   * Voikko spell check for Finnish - thx Harri + Ile
 * IMPROVED:
    * Improved support for Advanced Substation Alpha (+ Substation Alpha)
    * Improved support for SAMI (now two different formats + font color support)
