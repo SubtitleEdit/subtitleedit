@@ -668,10 +668,11 @@
     <Compile Include="Logic\Enums\SpellCheckAction.cs" />
     <Compile Include="Logic\FindReplaceDialogHelper.cs" />
     <Compile Include="Logic\HistoryItem.cs" />
-    <Compile Include="Logic\Spellcheck\Hunspell.cs" />
-    <Compile Include="Logic\Spellcheck\LinuxHunspell.cs" />
-    <Compile Include="Logic\Spellcheck\MacHunspell.cs" />
-    <Compile Include="Logic\Spellcheck\WindowsHunspell.cs" />
+    <Compile Include="Logic\SpellCheck\Hunspell.cs" />
+    <Compile Include="Logic\SpellCheck\LinuxHunspell.cs" />
+    <Compile Include="Logic\SpellCheck\MacHunspell.cs" />
+    <Compile Include="Logic\SpellCheck\VoikkoSpellCheck.cs" />
+    <Compile Include="Logic\SpellCheck\WindowsHunspell.cs" />
     <Compile Include="Logic\SsaStyle.cs" />
     <Compile Include="Logic\StripableText.cs" />
     <Compile Include="Logic\SubtitleFormats\AdobeEncore.cs" />
@@ -1166,6 +1167,8 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="DLLs\Voikkox86.dll" />
+    <Content Include="DLLs\Voikkox64.dll" />
     <Content Include="Languages\ar-EG.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
