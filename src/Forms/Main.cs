@@ -10938,9 +10938,12 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         if (_endSeconds <= 0 || !checkBoxAutoRepeatOn.Checked)
                         {
-                            SubtitleListview1.BeginUpdate();
-                            SubtitleListview1.SelectIndexAndEnsureVisible(index, true);
-                            SubtitleListview1.EndUpdate();
+                            if (!timerAutoDuration.Enabled)
+                            {
+                                SubtitleListview1.BeginUpdate();
+                                SubtitleListview1.SelectIndexAndEnsureVisible(index, true);
+                                SubtitleListview1.EndUpdate();
+                            }
                         }
                     }
                 }
