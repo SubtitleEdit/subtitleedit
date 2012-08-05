@@ -140,7 +140,7 @@ namespace Nikse.SubtitleEdit.Logic.SpellCheck
         }
 
         public VoikkoSpellCheck(string baseFolder, string dictionaryFolder)
-        {            
+        {
             LoadLibVoikkoDynamic(baseFolder);
 
             IntPtr error = new IntPtr();

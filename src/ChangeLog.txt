@@ -11,7 +11,7 @@ Subtitle Edit Changelog
    * New setting in Options: "Max. chars/second"
    * New settings in Options regarding "Min. duration" + "Max. duration"
    * New settings in Options regarding syntax coloring
-   * Several other new subtitle formats   
+   * Several other new subtitle formats
    * New settings in Options, center subtitle (in SE text boxes)
    * Tools -> Join subtitles (merge of multiple parts)
    * Tools -> Apply duration limits

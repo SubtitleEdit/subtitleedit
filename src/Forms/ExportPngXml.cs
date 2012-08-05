@@ -104,7 +104,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 text = p.Text.Substring(0, 6);
                 alignment = GetSsaAlignment(text, alignment);
-                
+
             }
             else if (text.Length > 6)
             {
@@ -196,7 +196,7 @@ namespace Nikse.SubtitleEdit.Forms
                                     EndTime = (long) parameter.P.EndTime.TotalMilliseconds,
                                     Width = parameter.ScreenWidth,
                                     Height = parameter.ScreenHeight
-                                };                
+                                };
                 parameter.Buffer = Logic.BluRaySup.BluRaySupPicture.CreateSupFrame(brSub, parameter.Bitmap, parameter.FramesPerSeconds, parameter.BottomMargin, parameter.Alignment);
             }
             else if (parameter.Type == "VOBSUB")
@@ -593,9 +593,9 @@ namespace Nikse.SubtitleEdit.Forms
                                 x = width - param.Bitmap.Width - border;
                                 y = border;
                                 break;
-                            default: // ContentAlignment.BottomCenter:                                
+                            default: // ContentAlignment.BottomCenter:
                                 break;
-                        }                            
+                        }
 
                         sb.AppendLine("  <Graphic Width=\"" + param.Bitmap.Width.ToString() + "\" Height=\"" +
                                       param.Bitmap.Height.ToString() + "\" X=\"" + x.ToString() + "\" Y=\"" + y.ToString() +
@@ -1128,7 +1128,7 @@ namespace Nikse.SubtitleEdit.Forms
                 int w = groupBoxExportImage.Width - 4;
                 pictureBox1.Width = bmp.Width;
                 pictureBox1.Height = bmp.Height;
-                pictureBox1.Top = groupBoxExportImage.Height - bmp.Height - int.Parse(comboBoxBottomMargin.Text); 
+                pictureBox1.Top = groupBoxExportImage.Height - bmp.Height - int.Parse(comboBoxBottomMargin.Text);
                 pictureBox1.Left = (w - bmp.Width) / 2;
                 var alignment = GetAlignmentFromParagraph(_subtitle.Paragraphs[subtitleListView1.SelectedItems[0].Index], _format, _subtitle);
                 if (_exportType == "BDNXML" || _exportType == "BLURAYSUP")

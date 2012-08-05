@@ -7256,7 +7256,7 @@ namespace Nikse.SubtitleEdit.Forms
                             outZStream.Close();
                             inStream.Close();
                         }
-                        
+
                         if (!error)
                             mergedVobSubPacks.Add(new VobSubMergedPack(buffer, TimeSpan.FromMilliseconds(p.StartMilliseconds), 32, null));
                     }
@@ -7360,7 +7360,7 @@ namespace Nikse.SubtitleEdit.Forms
                         foreach (var sup in list)
                         {
                             sup.StartTime = (long)((p.StartMilliseconds - 45) * 90.0);
-                            sup.EndTime = (long)((p.EndMilliseconds - 45) * 90.0); 
+                            sup.EndTime = (long)((p.EndMilliseconds - 45) * 90.0);
                             subtitles.Add(sup);
 
                             // fix overlapping

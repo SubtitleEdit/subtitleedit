@@ -1850,7 +1850,7 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("SplitOutputFolder", settings.Tools.SplitOutputFolder);
             textWriter.WriteElementString("SplitNumberOfParts", settings.Tools.SplitNumberOfParts.ToString());
             textWriter.WriteElementString("SplitVia", settings.Tools.SplitVia);
-            textWriter.WriteElementString("NewEmptyTranslationText", settings.Tools.NewEmptyTranslationText);            
+            textWriter.WriteElementString("NewEmptyTranslationText", settings.Tools.NewEmptyTranslationText);
             textWriter.WriteEndElement();
 
             textWriter.WriteStartElement("SubtitleSettings", "");

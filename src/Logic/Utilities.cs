@@ -204,7 +204,7 @@ namespace Nikse.SubtitleEdit.Logic
                                 videoPlayerContainer.SetSubtitleText(text, p);
                                 return index;
                             }
-                            break;                            
+                            break;
                         }
                     }
                     index++;
@@ -1390,7 +1390,7 @@ namespace Nikse.SubtitleEdit.Logic
             {
                 var extraExtensions = Configuration.Settings.General.OpenSubtitleExtraExtensions.Split(";".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
                 foreach (string ext in extraExtensions)
-                {                    
+                {
                     if (ext.StartsWith("*.") && !sb.ToString().ToLower().Contains(ext.ToLower()))
                         AddExtension(sb, ext);
                 }
