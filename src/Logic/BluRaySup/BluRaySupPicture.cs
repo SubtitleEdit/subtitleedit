@@ -541,7 +541,7 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
         /// <param name="fps">frames per second</param>
         /// <param name="bottomMargin">image bottom margin</param>
         /// <returns>byte buffer containing the binary stream representation of one caption</returns>
-        public static byte[] CreateSupFrame(BluRaySupPicture pic, Bitmap bm, double fps, int bottomMargin)
+        public static byte[] CreateSupFrame(BluRaySupPicture pic, Bitmap bm, double fps, int bottomMargin, ContentAlignment alignment)
         {
             var colorPalette = GetBitmapPalette(bm);
             var pal = new BluRaySupPalette(colorPalette.Count);
@@ -578,8 +578,45 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
             size += (2 + palSize * 5) /* PDS */;
             size += rleBuf.Length;
 
-            pic.WindowXOffset = (pic.Width - bm.Width) / 2;
-            pic.WindowYOffset = pic.Height - (bm.Height + bottomMargin);
+            switch (alignment)
+            {
+                case ContentAlignment.BottomLeft:
+                    pic.WindowXOffset = bottomMargin;
+                    pic.WindowYOffset = pic.Height - (bm.Height + bottomMargin);
+                    break;
+                case ContentAlignment.BottomRight:
+                    pic.WindowXOffset = pic.Width - bm.Width - bottomMargin;
+                    pic.WindowYOffset = pic.Height - (bm.Height + bottomMargin);
+                    break;
+                case ContentAlignment.MiddleCenter:
+                    pic.WindowXOffset = (pic.Width - bm.Width) / 2;
+                    pic.WindowYOffset = (pic.Height - bm.Height) / 2;
+                    break;
+                case ContentAlignment.MiddleLeft:
+                    pic.WindowXOffset = bottomMargin;
+                    pic.WindowYOffset = (pic.Height - bm.Height) / 2;
+                    break;
+                case ContentAlignment.MiddleRight:
+                    pic.WindowXOffset = pic.Width - bm.Width - bottomMargin;
+                    pic.WindowYOffset = (pic.Height - bm.Height) / 2;
+                    break;
+                case ContentAlignment.TopCenter:
+                    pic.WindowXOffset = (pic.Width - bm.Width) / 2;
+                    pic.WindowYOffset = bottomMargin;
+                    break;
+                case ContentAlignment.TopLeft:
+                    pic.WindowXOffset = bottomMargin;
+                    pic.WindowYOffset = bottomMargin;
+                    break;
+                case ContentAlignment.TopRight:
+                    pic.WindowXOffset = pic.Width - bm.Width - bottomMargin;
+                    pic.WindowYOffset = bottomMargin;
+                    break;
+                default: // ContentAlignment.BottomCenter:
+                    pic.WindowXOffset = (pic.Width - bm.Width) / 2;
+                    pic.WindowYOffset = pic.Height - (bm.Height + bottomMargin);
+                    break;
+            }                            
 
             int yOfs = pic.WindowYOffset - Core.CropOfsY;
             if (yOfs < 0)

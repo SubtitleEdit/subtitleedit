@@ -66,6 +66,8 @@
             public string AudioWindowTitle { get; set; }
             public string ControlsWindowTitle { get; set; }
             public string Advanced { get; set; }
+            public string Style { get; set; }
+            public string Class { get; set; }
         }
 
         public class About
@@ -923,6 +925,7 @@
                     public string AdvancedSubStationAlphaStyles { get; set; }
                     public string TimedTextSetStyle { get; set; }
                     public string TimedTextStyles { get; set; }
+                    public string SamiSetStyle { get; set; }
                     public string Cut { get; set; }
                     public string Copy { get; set; }
                     public string Paste { get; set; }

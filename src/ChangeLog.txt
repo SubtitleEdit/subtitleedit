@@ -1,6 +1,6 @@
 Subtitle Edit Changelog
 
-3.3 Beta 1 (x July 2012)
+3.3 Beta 1 (x August 2012)
 * NEW:
    * Edit -> Reverse RTL start/end (fix punctuations)
    * Easy import of auto backed up files (File -> Restore auto-backup...)
@@ -11,6 +11,7 @@ Subtitle Edit Changelog
    * New setting in Options: "Max. chars/second"
    * New settings in Options regarding "Min. duration" + "Max. duration"
    * New settings in Options regarding syntax coloring
+   * New settings in Options, center subtitle (in SE text boxes)
    * Tools -> Join subtitles (merge of multiple parts)
    * Tools -> Apply duration limits
    * Tools -> Sort -> Text - chars/sec
@@ -20,9 +21,11 @@ Subtitle Edit Changelog
    * "Fix common errors" item to fix Turkish ANSI letters to Unicode - thx Adem
    * Support for D-Cinema smpte - thx Lillian
    * Can now read NCI cap files - thx Ramon
-   * Several other new subtitle formats
+   * Several other new subtitle formats   
+   * Added fullscreen icon to video player (in main window only) - thx Leszek
 * IMPROVED:
    * Improved support for Advanced Substation Alpha (+ Substation Alpha)
+   * Improved support for SAMI (now two different formats + font color support)
    * Added extra options for double click on list view line - thx Fredrik + TaeGyun
    * Added extra options for export as text
    * Added many new possible shortcut keys
@@ -31,6 +34,7 @@ Subtitle Edit Changelog
      to seperate fix item (no longer in "Start with uppercase after paragraph/period")
    * Can now read Ulead format with positions - thx Steve
    * Can now convert text subtitles in mkv/mks files via command line - thx the hulk
+   * File -> Export - can now chose custom video resolution + supports color
 * FIXED:
    * Auto-translate now works for English to Portuguese - thx w.tambley
    * Shortcuts with numbers (0-9)
@@ -38,7 +42,9 @@ Subtitle Edit Changelog
    * Reading of SAMI files with time codes in quotes - thx Josh
    * Reading of Ulead files with position codes - thx Steve
    * Reading of time codes + adjust with format SCC - thx Marquise
-   * Fixed accents and tildes in Cheetah caption format - thx David
+   * Accents and tildes in Cheetah caption format - thx David
+   * Now always uses output folder - thx the hulk
+   * Fixed cropping of bottom images in File -> Export - thx moob
 
 
 3.2.8 (3rd June 2012)
