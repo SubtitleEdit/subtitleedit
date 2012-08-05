@@ -468,9 +468,13 @@ namespace Nikse.SubtitleEdit.Forms
             Console.WriteLine();
             Console.WriteLine(Title + " - Batch converter");
             Console.WriteLine();
-            Console.WriteLine("- Syntax: SubtitleEdit /convert <pattern> <name-of-format-without-spaces> [/offset:hh:mm:ss:msec] [/encoding:<encoding name>] [/fps:<frame rate>] [/outputfolder:<output folder>]");
-            Console.WriteLine("    example: SubtitleEdit /convert *.srt sami");
+            Console.WriteLine("- Syntax: SubtitleEdit /convert <pattern> <name-of-format-without-spaces> [/offset:hh:mm:ss:msec] [/encoding:<encoding name>] [/fps:<frame rate>] [/inputfolder:<input folder>] [/outputfolder:<output folder>]");
             Console.WriteLine();
+            Console.WriteLine("    example: SubtitleEdit /convert *.srt sami");
+            Console.WriteLine("    list available formats: SubtitleEdit /convert /list");
+            Console.WriteLine();
+
+            string currentDir = Directory.GetCurrentDirectory();
 
             if (args.Length < 4)
             {
@@ -496,6 +500,8 @@ namespace Nikse.SubtitleEdit.Forms
                     Console.WriteLine("    " + new Ultech130().FriendlyName);
                 }
 
+                Console.WriteLine();
+                Console.Write(currentDir + ">");
                 if (!Utilities.IsRunningOnMac() && !Utilities.IsRunningOnLinux())
                     FreeConsole();
                 Environment.Exit(1);
@@ -562,6 +568,17 @@ namespace Nikse.SubtitleEdit.Forms
                         outputFolder = string.Empty;
                 }
 
+                string inputFolder = Directory.GetCurrentDirectory();
+                for (int idx = 4; idx < max; idx++)
+                    if (args.Length > idx && args[idx].ToLower().StartsWith("/inputFolder:"))
+                        inputFolder = args[idx].ToLower();
+                if (inputFolder.Length > "/inputFolder:".Length)
+                {
+                    inputFolder = inputFolder.Remove(0, "/inputFolder:".Length);
+                    if (!Directory.Exists(inputFolder))
+                        inputFolder = Directory.GetCurrentDirectory();
+                }
+
                 bool overwrite = false;
                 for (int idx=4; idx < max; idx++)
                     if (args.Length > idx && args[idx].ToLower() == ("/overwrite"))
@@ -569,6 +586,9 @@ namespace Nikse.SubtitleEdit.Forms
 
                 string[] files;
                 inputDirectory = Directory.GetCurrentDirectory();
+                if (!string.IsNullOrEmpty(inputFolder))
+                    inputDirectory = inputFolder;
+
                 if (pattern.Contains(","))
                 {
                     files = pattern.Split(",".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
@@ -587,9 +607,13 @@ namespace Nikse.SubtitleEdit.Forms
                 }
 
                 var formats = SubtitleFormat.AllSubtitleFormats;
-                foreach (string fileName in files)
+                foreach (string fName in files)
                 {
+                    string fileName = fName;
                     count++;
+
+                    if (!string.IsNullOrEmpty(inputFolder) && File.Exists(Path.Combine(inputFolder, fileName)))
+                        fileName = Path.Combine(inputFolder, fileName);
 
                     if (File.Exists(fileName))
                     {
@@ -767,7 +791,7 @@ namespace Nikse.SubtitleEdit.Forms
             Console.WriteLine();
             Console.WriteLine(string.Format("{0} file(s) converted", converted));
             Console.WriteLine();
-            Console.Write(inputDirectory + ">");
+            Console.Write(currentDir + ">");
 
             if (!Utilities.IsRunningOnMac() && !Utilities.IsRunningOnLinux())
                 FreeConsole();
@@ -7209,10 +7233,11 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     if (matroskaSubtitleInfo.ContentEncodingType == 0) // compressed with zlib
                     {
+                        bool error = false;
                         MemoryStream outStream = new MemoryStream();
                         ComponentAce.Compression.Libs.zlib.ZOutputStream outZStream = new ComponentAce.Compression.Libs.zlib.ZOutputStream(outStream);
                         MemoryStream inStream = new MemoryStream(p.BinaryData);
-                        byte[] buffer;
+                        byte[] buffer = null;
                         try
                         {
                             CopyStream(inStream, outZStream);
@@ -7220,13 +7245,20 @@ namespace Nikse.SubtitleEdit.Forms
                             outStream.Position = 0;
                             outStream.Read(buffer, 0, buffer.Length);
                         }
+                        catch (Exception exception)
+                        {
+                            MessageBox.Show(exception.Message + Environment.NewLine + Environment.NewLine + exception.StackTrace);
+                            error = true;
+                        }
                         finally
                         {
                             outStream.Close();
                             outZStream.Close();
                             inStream.Close();
                         }
-                        mergedVobSubPacks.Add(new VobSubMergedPack(buffer, TimeSpan.FromMilliseconds(p.StartMilliseconds), 32, null));
+                        
+                        if (!error)
+                            mergedVobSubPacks.Add(new VobSubMergedPack(buffer, TimeSpan.FromMilliseconds(p.StartMilliseconds), 32, null));
                     }
                     else
                     {
