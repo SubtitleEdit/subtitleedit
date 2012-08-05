@@ -31,7 +31,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         }
 
         //00:01:00:29   9420 9420 94ae 94ae 94d0 94d0 4920 f761 7320 ...
-        static readonly Regex RegexTimeCodes = new Regex(@"^\d+:\d\d:\d\d[:,]\d\d\t", RegexOptions.Compiled);
+        static readonly Regex RegexTimeCodes = new Regex(@"^\d+:\d\d:\d\d[:;,]\d\d\t", RegexOptions.Compiled);
 
         private static readonly List<string> _letters = new List<string>
                                                      {
@@ -1331,7 +1331,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         private TimeCode ParseTimeCode(string start)
         {
-            string[] arr = start.Split(':');
+            string[] arr = start.Split(":;,".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
 
             int milliseconds = (int)((1000 / Configuration.Settings.General.CurrentFrameRate) * int.Parse(arr[3]));
             if (milliseconds > 999)
