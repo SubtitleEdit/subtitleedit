@@ -33,8 +33,9 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             0x5A, // ת
             0x4b, // כ
             0x4a, // ך
-            0x48, // ע
+            0x48, // ט
             0x53, // ף
+            0x55, // ץ
         };
 
         static List<string> _hebrewLetters = new List<string> {
@@ -62,8 +63,9 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             "ת",
             "כ",
             "ך",
-            "ע",
+            "ט",
             "ף",
+            "ץ",
         };
 
         public override string Extension
@@ -91,7 +93,29 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
             var fs = new FileStream(fileName, FileMode.Create, FileAccess.Write);
 
-            if (_language != null && _language.StartsWith("HEB"))
+            bool isChinese = false;
+            foreach (Paragraph p in subtitle.Paragraphs)
+            { 
+                if (p.Text.Contains("的") ||
+                    p.Text.Contains("是") ||
+                    p.Text.Contains("啊") ||
+                    p.Text.Contains("吧") ||
+                    p.Text.Contains("好") ||
+                    p.Text.Contains("吧") ||
+                    p.Text.Contains("亲") ||
+                    p.Text.Contains("爱") ||
+                    p.Text.Contains("的") ||
+                    p.Text.Contains("早") ||
+                    p.Text.Contains("上") ||
+                    p.Text.Contains(""))
+                {
+                    isChinese = true;
+                    break;
+                }
+            }
+
+
+            if (_language != null && _language.StartsWith("HEB") || isChinese)
             {
                 byte[] buffer = new byte[388];
                 for (int i = 0; i < buffer.Length; i++)
@@ -125,8 +149,22 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 buffer[190] = 0x4E;
                 buffer[191] = 0x4F;
                 buffer[192] = 0x41;
+
+                
+                if (isChinese)
+                { 
+                    buffer[187] = 0x43; // CCKM44
+                    buffer[188] = 0x43;
+                    buffer[189] = 0x4B;
+                    buffer[190] = 0x4D;
+                    buffer[191] = 0x34;
+                    buffer[192] = 0x34;
+                }
+
                 buffer[193] = 0x2E;
                 buffer[194] = 0x56;
+
+                
 
                 buffer[208] = 0xf6;
                 buffer[209] = 0x01;
@@ -220,10 +258,15 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             string[] lines = text.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
             if (lines.Length > 2)
                 lines = Utilities.AutoBreakLine(text).Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-            if (lines.Length > 0)
-                line1 = lines[0];
             if (lines.Length > 1)
+            {
+                line1 = lines[0];
                 line2 = lines[1];
+            }
+            else if (lines.Length == 1)
+            {
+                line2 = lines[0];
+            }
 
             var buffer = GetTextAsBytes(line1);
             fs.Write(buffer, 0, buffer.Length);
@@ -245,6 +288,12 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             int skipCount = 0;
             for (int i = 0; i < buffer.Length; i++)
                 buffer[i] = 0x7F;
+
+            if (_language != null && _language.StartsWith("CCKM44"))
+            {
+                for (int i = 0; i < buffer.Length; i++)
+                    buffer[i] = 0;
+            }
 
             var encoding = Encoding.Default;
             int index = 0;
@@ -277,6 +326,32 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         buffer[index] = encoding.GetBytes(current)[0];
                     }
                     index++;
+                }
+                else if (_language != null && _language.StartsWith("CCKM44"))
+                {
+                    encoding = Encoding.GetEncoding(1201); 
+                    if (index < 49)
+                    {
+                        if (i + 3 < text.Length && text.Substring(i, 3) == "<i>")
+                        {
+                            buffer[index] = 0x88;
+                            skipCount = 2;
+                        }
+                        else if (i + 4 <= text.Length && text.Substring(i, 4) == "</i>")
+                        {
+                            buffer[index] = 0x98;
+                            skipCount = 3;
+                        }
+                        else
+                        {
+                            byte[] b = encoding.GetBytes(current);
+                            for (int f = 0; f < b.Length; f++)
+                            {
+                                buffer[index] = b[f];
+                                index++;
+                            }
+                        }
+                    }
                 }
                 else
                 {
@@ -526,7 +601,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 text = text.Replace(encoding.GetString(new byte[] { 0x7F }), string.Empty); // Used to fill empty space upto 51 bytes
                 text = text.Replace(encoding.GetString(new byte[] { 0xBE }), string.Empty); // Unknown?
 
-                text = Utilities.FixEnglishTextInRightToLeftLanguage(text, "0123456789abcdefghijklmnopqrstuvwxyz");
+                text = Utilities.FixEnglishTextInRightToLeftLanguage(text, ",.?-'/\"0123456789abcdefghijklmnopqrstuvwxyz");
             }
             else if (_language == "CCKM44")
             {
