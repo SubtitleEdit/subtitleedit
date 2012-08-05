@@ -46,7 +46,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             string languageStyle = string.Format(".{0} [ name: {1}; lang: {2} ; SAMIType: CC ; ]", languageTag, languageName, language.Replace("_", "-"));
             languageStyle = languageStyle.Replace("[", "{").Replace("]", "}");
 
-            const string header =
+            string header =
 @"<SAMI>
 
 <HEAD>
@@ -71,13 +71,40 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 <-- Open play menu, choose Captions and Subtiles, On if available -->
 <-- Open tools menu, Security, Show local captions when present -->
 ";
+
+            bool useExtra = false;
+            if (!string.IsNullOrEmpty(subtitle.Header) && subtitle.Header.ToLower().StartsWith("<style"))
+            {
+                useExtra = true;
+                header =
+@"<SAMI>
+
+<HEAD>
+<TITLE>_TITLE_</TITLE>
+
+<SAMIParam>
+  Metrics {time:ms;}
+  Spec {MSFT:1.0;}
+</SAMIParam>
+
+" + subtitle.Header.Trim() + @"
+
+</HEAD>
+
+<BODY>
+
+<-- Open play menu, choose Captions and Subtiles, On if available -->
+<-- Open tools menu, Security, Show local captions when present -->
+";
+            }
+
             // Example text (start numbers are milliseconds)
             //<SYNC Start=65264><P>Let's go!
             //<SYNC Start=66697><P><BR>
 
             string paragraphWriteFormat = @"<SYNC Start={0}><P Class={3}>{2}" + Environment.NewLine +
                                            @"<SYNC Start={1}><P Class={3}>&nbsp;";
-            string paragraphWriteFormatOpen = @"<SYNC Start={0}><P Class={2}>{1}</P>";
+            string paragraphWriteFormatOpen = @"<SYNC Start={0}><P Class={2}>{1}";
             if (Name == new SamiModern().Name)
             {
                 paragraphWriteFormat = "<SYNC Start=\"{0}\"><P Class=\"{3}\">{2}</P></SYNC>" + Environment.NewLine +
@@ -135,10 +162,13 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 else
                     text = cleanTextBuilder.ToString().Replace(Environment.NewLine, "<br>");
 
+                string currentClass = languageTag;
+                if (useExtra && !string.IsNullOrEmpty(p.Extra))
+                    currentClass = p.Extra;
                 if (next != null && p.EndTime.TotalMilliseconds <= next.StartTime.TotalMilliseconds && p.EndTime.TotalMilliseconds + 51 > next.StartTime.TotalMilliseconds)
-                    sb.AppendLine(string.Format(paragraphWriteFormatOpen, p.StartTime.TotalMilliseconds, text, languageTag));
+                    sb.AppendLine(string.Format(paragraphWriteFormatOpen, p.StartTime.TotalMilliseconds, text, currentClass));
                 else
-                    sb.AppendLine(string.Format(paragraphWriteFormat, p.StartTime.TotalMilliseconds, p.EndTime.TotalMilliseconds, text, languageTag));
+                    sb.AppendLine(string.Format(paragraphWriteFormat, p.StartTime.TotalMilliseconds, p.EndTime.TotalMilliseconds, text, currentClass));
                 count++;
             }
             sb.AppendLine("</BODY>");
@@ -146,12 +176,12 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             return sb.ToString().Trim();
         }
 
-        public List<string> GetClasses(Subtitle subtitle)
+        public static List<string> GetStylesFromHeader(string header)
         {
             var list = new List<string>();
-            if (!string.IsNullOrEmpty(subtitle.Header) && subtitle.Header.ToLower().StartsWith("<style"))
+            if (!string.IsNullOrEmpty(header) && header.ToLower().StartsWith("<style"))
             {
-                foreach (string line in subtitle.Header.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries))
+                foreach (string line in header.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries))
                 {
                     string s = line.Trim();
                     if (s.StartsWith(".") && s.IndexOf(" ") > 2)
@@ -160,6 +190,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         list.Add(name);
                     }
                 }
+            }
+            else
+            {
+                list.Add("ENUSCC");
             }
             return list;
         }
@@ -323,5 +357,11 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             }
             subtitle.Renumber(1);
         }
+
+        public override bool HasStyleSupport
+        {
+            get { return true; }
+        }
+
     }
 }
