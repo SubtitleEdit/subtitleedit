@@ -1,0 +1,173 @@
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Runtime.InteropServices;
+using System.Text;
+
+namespace Nikse.SubtitleEdit.Logic.SpellCheck
+{
+    public class VoikkoSpellCheck : Hunspell
+    {
+        // Win32 API functions for loading dlls dynamic
+        [DllImport("kernel32.dll")]
+        public static extern IntPtr LoadLibrary(string dllToLoad);
+
+        [DllImport("kernel32.dll")]
+        public static extern IntPtr GetProcAddress(IntPtr hModule, string procedureName);
+
+        [DllImport("kernel32.dll")]
+        public static extern bool FreeLibrary(IntPtr hModule);
+
+        // Voikko functions in dll
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        private delegate IntPtr VoikkoInit(ref IntPtr error, byte[] languageCode, byte[] path);
+        VoikkoInit _voikkoInit;
+
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        private delegate void VoikkoTerminate(IntPtr libVlc);
+        VoikkoTerminate _voikkoTerminate;
+
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        private delegate Int32 VoikkoSpell(IntPtr handle, byte[] word);
+        VoikkoSpell _voikkoSpell;
+
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        private delegate IntPtr VoikkoSuggest(IntPtr handle, byte[] word);
+        VoikkoSuggest _voikkoSuggest;
+
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        private delegate IntPtr VoikkoFreeCstrArray(IntPtr array);
+        VoikkoFreeCstrArray _voikkoFreeCstrArray;
+
+        private IntPtr _libDLL = IntPtr.Zero;
+        private IntPtr _libVoikko = IntPtr.Zero;
+
+        private static string n2s(IntPtr ptr)
+        {
+            if (ptr == IntPtr.Zero)
+            {
+                return null;
+            }
+            List<byte> bytes = new List<byte>();
+            unsafe
+            {
+                for (byte* p = (byte*)ptr; *p != 0; p++)
+                {
+                    bytes.Add(*p);
+                }
+            }
+            return n2s(bytes.ToArray());
+        }
+
+        private static string n2s(byte[] bytes)
+        {
+            if (bytes == null)
+            {
+                return null;
+            }
+            return Encoding.UTF8.GetString(bytes);
+        }
+
+        private static byte[] s2n(string str)
+        {
+            return s2encoding(str, Encoding.UTF8);
+        }
+
+        private static byte[] s2ansi(string str)
+        {
+            return s2encoding(str, Encoding.Default);
+        }
+
+        private static byte[] s2encoding(string str, Encoding encoding)
+        {
+            if (str == null)
+            {
+                return null;
+            }
+            return encoding.GetBytes(str + '\0');
+        }
+
+        private object GetDllType(Type type, string name)
+        {
+            IntPtr address = GetProcAddress(_libDLL, name);
+            if (address != IntPtr.Zero)
+            {
+                return Marshal.GetDelegateForFunctionPointer(address, type);
+            }
+            return null;
+        }
+
+        private void LoadLibVoikkoDynamic()
+        {
+            _voikkoInit = (VoikkoInit)GetDllType(typeof(VoikkoInit), "voikkoInit");
+            _voikkoTerminate = (VoikkoTerminate)GetDllType(typeof(VoikkoTerminate), "voikkoTerminate");
+            _voikkoSpell = (VoikkoSpell)GetDllType(typeof(VoikkoSpell), "voikkoSpellCstr");
+            _voikkoSuggest = (VoikkoSuggest)GetDllType(typeof(VoikkoSuggest), "voikkoSuggestCstr");
+            _voikkoFreeCstrArray = (VoikkoFreeCstrArray)GetDllType(typeof(VoikkoFreeCstrArray), "voikkoFreeCstrArray");
+        }
+
+        public override bool Spell(string word)
+        {
+            if (string.IsNullOrEmpty(word))
+                return false;
+
+            return Convert.ToBoolean(_voikkoSpell(_libVoikko, s2n(word)));
+        }
+
+        public override List<string> Suggest(string word)
+        {
+            var suggestions = new List<string>();
+            if (string.IsNullOrEmpty(word))
+                return suggestions;
+            IntPtr voikkoSuggestCstr = _voikkoSuggest(_libVoikko, s2n(word));
+            if (voikkoSuggestCstr == IntPtr.Zero)
+                return suggestions;
+            unsafe
+            {
+                for (byte** cStr = (byte**)voikkoSuggestCstr; *cStr != (byte*)0; cStr++)
+                {
+                    suggestions.Add(n2s(new IntPtr(*cStr)));
+                }
+            }
+            _voikkoFreeCstrArray(voikkoSuggestCstr);
+            return suggestions;
+        }
+
+        public VoikkoSpellCheck(string baseFolder, string dictionaryFolder)
+        {            
+            string dllFile = System.IO.Path.Combine(Configuration.BaseDirectory, "Voikkox86.dll");
+            if (IntPtr.Size == 8)
+                dllFile = System.IO.Path.Combine(Configuration.BaseDirectory, "Voikkox64.dll");
+
+            if (File.Exists(dllFile))
+            {
+                Directory.SetCurrentDirectory(Path.GetDirectoryName(dllFile));
+                _libDLL = LoadLibrary(dllFile);
+                LoadLibVoikkoDynamic();
+
+                IntPtr error = new IntPtr();
+                _libVoikko = _voikkoInit(ref error, s2n("fi"), s2ansi(dictionaryFolder));
+                if (_libVoikko == IntPtr.Zero && error != IntPtr.Zero)
+                {
+                    throw new Exception(n2s(error));
+                }
+            }
+        }
+
+        ~VoikkoSpellCheck()
+        {
+            try
+            {
+                if (_libVoikko != IntPtr.Zero)
+                    _voikkoTerminate(_libVoikko);
+
+                if (_libDLL != IntPtr.Zero)
+                    FreeLibrary(_libDLL);
+            }
+            catch
+            {
+            }
+        }
+
+    }
+}
