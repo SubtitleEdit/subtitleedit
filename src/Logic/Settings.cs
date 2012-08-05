@@ -98,6 +98,7 @@ namespace Nikse.SubtitleEdit.Logic
         public int SplitNumberOfParts { get; set; }
         public string SplitVia { get; set; }
         public string LastShowEarlierOrLaterSelection { get; set; }
+        public string NewEmptyTranslationText { get; set; }
 
         public ToolsSettings()
         {
@@ -126,6 +127,7 @@ namespace Nikse.SubtitleEdit.Logic
             SplitAdvanced = false;
             SplitNumberOfParts = 3;
             SplitVia = "Lines";
+            NewEmptyTranslationText = string.Empty;
         }
     }
 
@@ -1170,7 +1172,9 @@ namespace Nikse.SubtitleEdit.Logic
             subNode = node.SelectSingleNode("SplitVia");
             if (subNode != null)
                 settings.Tools.SplitVia = subNode.InnerText;
-
+            subNode = node.SelectSingleNode("NewEmptyTranslationText");
+            if (subNode != null)
+                settings.Tools.NewEmptyTranslationText = subNode.InnerText;
 
             settings.SubtitleSettings = new Nikse.SubtitleEdit.Logic.SubtitleSettings();
             node = doc.DocumentElement.SelectSingleNode("SubtitleSettings");
@@ -1846,6 +1850,7 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("SplitOutputFolder", settings.Tools.SplitOutputFolder);
             textWriter.WriteElementString("SplitNumberOfParts", settings.Tools.SplitNumberOfParts.ToString());
             textWriter.WriteElementString("SplitVia", settings.Tools.SplitVia);
+            textWriter.WriteElementString("NewEmptyTranslationText", settings.Tools.NewEmptyTranslationText);            
             textWriter.WriteEndElement();
 
             textWriter.WriteStartElement("SubtitleSettings", "");

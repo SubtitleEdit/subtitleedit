@@ -190,26 +190,24 @@ namespace Nikse.SubtitleEdit.Logic
             if (videoPlayerContainer.VideoPlayer != null)
             {
                 double positionInMilliseconds = (videoPlayerContainer.VideoPlayer.CurrentPosition * 1000.0) + 15;
-                string text = string.Empty;
                 foreach (Paragraph p in paragraphs)
                 {
                     if (p.StartTime.TotalMilliseconds <= positionInMilliseconds &&
                         p.EndTime.TotalMilliseconds > positionInMilliseconds)
                     {
-                        text = p.Text.Replace("|", Environment.NewLine);
+                        string text = p.Text.Replace("|", Environment.NewLine);
                         bool isInfo = p == paragraphs[0] && p.StartTime.TotalMilliseconds == 0 && positionInMilliseconds > 3000;
                         if (!isInfo)
-                            break;
+                        {
+                            if (videoPlayerContainer.LastParagraph != p)
+                            {
+                                videoPlayerContainer.SetSubtitleText(text, p);
+                                return index;
+                            }
+                            break;                            
+                        }
                     }
                     index++;
-                }
-                if (index == paragraphs.Count)
-                    index = -1;
-
-                if (videoPlayerContainer.SubtitleText != text)
-                {
-                    videoPlayerContainer.SubtitleText = text;
-                    return index;
                 }
             }
             return -1;
@@ -1095,6 +1093,10 @@ namespace Nikse.SubtitleEdit.Logic
             if (count > 10 || count > bestCount)
                 return "th"; // Korean
 
+            count = GetCount(text, "että", "kuin", "minä", "mitään", "Mutta", "siitä") + GetCount(text, "täällä", "poika", "Kiitos", "enää", "vielä", "tässä");
+            if (count > bestCount)
+                return "fi"; // Finnish
+
             return string.Empty;
         }
 
@@ -1359,7 +1361,7 @@ namespace Nikse.SubtitleEdit.Logic
         private static void AddExtension(StringBuilder sb, string extension)
         {
             if (!sb.ToString().ToLower().Contains("*" + extension.ToLower() + ";"))
-                sb.Append("*" + extension + ";");
+                sb.Append("*" + extension.TrimStart('*') + ";");
         }
 
         public static string GetOpenDialogFilter()
@@ -1388,13 +1390,13 @@ namespace Nikse.SubtitleEdit.Logic
             {
                 var extraExtensions = Configuration.Settings.General.OpenSubtitleExtraExtensions.Split(";".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
                 foreach (string ext in extraExtensions)
-                {
-                    if (ext.StartsWith("*.") && !sb.ToString().Contains(ext))
-                        sb.Append(ext + ";");
+                {                    
+                    if (ext.StartsWith("*.") && !sb.ToString().ToLower().Contains(ext.ToLower()))
+                        AddExtension(sb, ext);
                 }
             }
+            AddExtension(sb, ".son");
 
-            sb.Append("*.son"); // SON text/tif
             sb.Append("|" + Configuration.Settings.Language.General.AllFiles + "|*.*");
             return sb.ToString();
         }

@@ -61,21 +61,19 @@
             this.panelColor = new System.Windows.Forms.Panel();
             this.buttonColor = new System.Windows.Forms.Button();
             this.colorDialog1 = new System.Windows.Forms.ColorDialog();
-            this.labelImageResolution = new System.Windows.Forms.Label();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
+            this.groupBoxExportImage = new System.Windows.Forms.GroupBox();
             this.subtitleListView1 = new Nikse.SubtitleEdit.Controls.SubtitleListView();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.groupBoxImageSettings.SuspendLayout();
+            this.groupBoxExportImage.SuspendLayout();
             this.SuspendLayout();
             // 
             // pictureBox1
             // 
-            this.pictureBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.pictureBox1.Location = new System.Drawing.Point(12, 399);
+            this.pictureBox1.Location = new System.Drawing.Point(6, 19);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(712, 249);
+            this.pictureBox1.Size = new System.Drawing.Size(553, 152);
             this.pictureBox1.TabIndex = 1;
             this.pictureBox1.TabStop = false;
             // 
@@ -83,7 +81,7 @@
             // 
             this.buttonExport.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonExport.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonExport.Location = new System.Drawing.Point(517, 654);
+            this.buttonExport.Location = new System.Drawing.Point(517, 566);
             this.buttonExport.Name = "buttonExport";
             this.buttonExport.Size = new System.Drawing.Size(126, 21);
             this.buttonExport.TabIndex = 3;
@@ -96,7 +94,7 @@
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonCancel.Location = new System.Drawing.Point(649, 654);
+            this.buttonCancel.Location = new System.Drawing.Point(649, 566);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 21);
             this.buttonCancel.TabIndex = 4;
@@ -107,7 +105,7 @@
             // 
             this.progressBar1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.progressBar1.Location = new System.Drawing.Point(12, 654);
+            this.progressBar1.Location = new System.Drawing.Point(12, 566);
             this.progressBar1.Name = "progressBar1";
             this.progressBar1.Size = new System.Drawing.Size(499, 21);
             this.progressBar1.TabIndex = 20;
@@ -181,6 +179,7 @@
             this.comboBoxBottomMargin.Name = "comboBoxBottomMargin";
             this.comboBoxBottomMargin.Size = new System.Drawing.Size(121, 21);
             this.comboBoxBottomMargin.TabIndex = 5;
+            this.comboBoxBottomMargin.SelectedIndexChanged += new System.EventHandler(this.comboBoxBottomMargin_SelectedIndexChanged);
             // 
             // labelBottomMargin
             // 
@@ -508,16 +507,17 @@
             this.buttonColor.UseVisualStyleBackColor = true;
             this.buttonColor.Click += new System.EventHandler(this.buttonColor_Click);
             // 
-            // labelImageResolution
+            // groupBoxExportImage
             // 
-            this.labelImageResolution.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.labelImageResolution.BackColor = System.Drawing.Color.Transparent;
-            this.labelImageResolution.Location = new System.Drawing.Point(651, 382);
-            this.labelImageResolution.Name = "labelImageResolution";
-            this.labelImageResolution.Size = new System.Drawing.Size(73, 14);
-            this.labelImageResolution.TabIndex = 2;
-            this.labelImageResolution.Text = "320x240";
-            this.labelImageResolution.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            this.groupBoxExportImage.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxExportImage.Controls.Add(this.pictureBox1);
+            this.groupBoxExportImage.Location = new System.Drawing.Point(13, 386);
+            this.groupBoxExportImage.Name = "groupBoxExportImage";
+            this.groupBoxExportImage.Size = new System.Drawing.Size(711, 174);
+            this.groupBoxExportImage.TabIndex = 21;
+            this.groupBoxExportImage.TabStop = false;
             // 
             // subtitleListView1
             // 
@@ -542,27 +542,28 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(730, 680);
-            this.Controls.Add(this.labelImageResolution);
+            this.ClientSize = new System.Drawing.Size(730, 592);
+            this.Controls.Add(this.groupBoxExportImage);
             this.Controls.Add(this.groupBoxImageSettings);
             this.Controls.Add(this.progressBar1);
             this.Controls.Add(this.buttonExport);
             this.Controls.Add(this.buttonCancel);
-            this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.subtitleListView1);
             this.KeyPreview = true;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.MinimumSize = new System.Drawing.Size(730, 430);
+            this.MinimumSize = new System.Drawing.Size(730, 630);
             this.Name = "ExportPngXml";
             this.ShowIcon = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "ExportPngXml";
             this.Shown += new System.EventHandler(this.ExportPngXml_Shown);
+            this.ResizeEnd += new System.EventHandler(this.ExportPngXml_ResizeEnd);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ExportPngXml_KeyDown);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.groupBoxImageSettings.ResumeLayout(false);
             this.groupBoxImageSettings.PerformLayout();
+            this.groupBoxExportImage.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -588,7 +589,6 @@
         private System.Windows.Forms.Label labelSubtitleFont;
         private System.Windows.Forms.ColorDialog colorDialog1;
         private System.Windows.Forms.CheckBox checkBoxAntiAlias;
-        private System.Windows.Forms.Label labelImageResolution;
         private System.Windows.Forms.SaveFileDialog saveFileDialog1;
         private System.Windows.Forms.ComboBox comboBoxHAlign;
         private System.Windows.Forms.Label labelHorizontalAlign;
@@ -605,5 +605,6 @@
         private System.Windows.Forms.Label labelBottomMargin;
         private System.Windows.Forms.CheckBox checkBoxSkipEmptyFrameAtStart;
         private System.Windows.Forms.Button buttonCustomResolution;
+        private System.Windows.Forms.GroupBox groupBoxExportImage;
     }
 }

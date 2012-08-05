@@ -277,6 +277,14 @@ namespace Nikse.SubtitleEdit.Controls
             return s;
         }
 
+        public Paragraph LastParagraph { get; private set; }
+
+        public void SetSubtitleText(string text, Paragraph p)
+        {
+            SubtitleText = text;
+            LastParagraph = p;
+        }
+
         public string SubtitleText
         {
             get

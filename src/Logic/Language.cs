@@ -141,6 +141,8 @@ namespace Nikse.SubtitleEdit.Logic
                 AudioWindowTitle = "Audio - {0}",
                 ControlsWindowTitle = "Controls - {0}",
                 Advanced = "Advanced",
+                Style = "Style",
+                Class = "Class",
             };
 
             About = new LanguageStructure.About
@@ -992,6 +994,7 @@ namespace Nikse.SubtitleEdit.Logic
                         SubStationAlphaStyles = "Sub Station Alpha styles...",
                         TimedTextStyles = "Timed Text styles...",
                         TimedTextSetStyle = "Timed Text - set style",
+                        SamiSetStyle = "Sami - set class",
                         Cut = "Cut",
                         Copy = "Copy",
                         Paste = "Paste",

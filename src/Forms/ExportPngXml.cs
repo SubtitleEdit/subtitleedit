@@ -39,6 +39,7 @@ namespace Nikse.SubtitleEdit.Forms
             public double FramesPerSeconds { get; set; }
             public int BottomMargin { get; set; }
             public bool Saved { get; set; }
+            public ContentAlignment Alignment { get; set; }
         }
 
         private Subtitle _subtitle;
@@ -81,26 +82,128 @@ namespace Nikse.SubtitleEdit.Forms
             return string.Format("{0:00}:{1:00}:{2:00}:{3:00}", timecode.Hours, timecode.Minutes, timecode.Seconds, frames);
         }
 
+        private static ContentAlignment GetAlignmentFromParagraph(Paragraph p, SubtitleFormat format, Subtitle subtitle)
+        {
+            ContentAlignment alignment = ContentAlignment.BottomCenter;
+            if (format.HasStyleSupport && !string.IsNullOrEmpty(p.Extra))
+            {
+                if (format.GetType() == typeof(SubStationAlpha))
+                {
+                    var style = AdvancedSubStationAlpha.GetSsaStyle(p.Extra, subtitle.Header);
+                    alignment = GetSsaAlignment("{\\a" + style.Alignment + "}", alignment);
+                }
+                else if (format.GetType() == typeof(AdvancedSubStationAlpha))
+                {
+                    var style = AdvancedSubStationAlpha.GetSsaStyle(p.Extra, subtitle.Header);
+                    alignment = GetAssAlignment("{\\an" + style.Alignment + "}", alignment);
+                }
+            }
+
+            string text = p.Text;
+            if (format.GetType() == typeof(SubStationAlpha) && text.Length > 5)
+            {
+                text = p.Text.Substring(0, 6);
+                alignment = GetSsaAlignment(text, alignment);
+                
+            }
+            else if (text.Length > 6)
+            {
+                text = p.Text.Substring(0, 6);
+                alignment = GetAssAlignment(text, alignment);
+            }
+            return alignment;
+        }
+
+        private static ContentAlignment GetSsaAlignment(string text, ContentAlignment defaultAlignment)
+        {
+            //1: Bottom left
+            //2: Bottom center
+            //3: Bottom right
+            //9: Middle left
+            //10: Middle center
+            //11: Middle right
+            //5: Top left
+            //6: Top center
+            //7: Top right
+            switch (text)
+            {
+                case "{\\a1}":
+                    return ContentAlignment.BottomLeft;
+                case "{\\a2}":
+                    return ContentAlignment.BottomCenter;
+                case "{\\a3}":
+                    return ContentAlignment.BottomRight;
+                case "{\\a9}":
+                    return ContentAlignment.MiddleLeft;
+                case "{\\a10}":
+                    return ContentAlignment.MiddleCenter;
+                case "{\\a11}":
+                    return ContentAlignment.MiddleRight;
+                case "{\\a5}":
+                    return ContentAlignment.TopLeft;
+                case "{\\a6}":
+                    return ContentAlignment.TopCenter;
+                case "{\\a7}":
+                    return ContentAlignment.TopRight;
+            }
+            return defaultAlignment;
+        }
+
+        private static ContentAlignment GetAssAlignment(string text, ContentAlignment defaultAlignment)
+        {
+            //1: Bottom left
+            //2: Bottom center
+            //3: Bottom right
+            //4: Middle left
+            //5: Middle center
+            //6: Middle right
+            //7: Top left
+            //8: Top center
+            //9: Top right
+            switch (text)
+            {
+                case "{\\an1}":
+                    return ContentAlignment.BottomLeft;
+                case "{\\an2}":
+                    return ContentAlignment.BottomCenter;
+                case "{\\an3}":
+                    return ContentAlignment.BottomRight;
+                case "{\\an4}":
+                    return ContentAlignment.MiddleLeft;
+                case "{\\an5}":
+                    return ContentAlignment.MiddleCenter;
+                case "{\\an6}":
+                    return ContentAlignment.MiddleRight;
+                case "{\\an7}":
+                    return ContentAlignment.TopLeft;
+                case "{\\an8}":
+                    return ContentAlignment.TopCenter;
+                case "{\\an9}":
+                    return ContentAlignment.TopRight;
+            }
+            return defaultAlignment;
+        }
+
         public static void DoWork(object data)
         {
-            var paramter = (MakeBitmapParameter)data;
-            paramter.Bitmap = GenerateImageFromTextWithStyle(paramter);
-            if (paramter.Type == "BLURAYSUP")
+            var parameter = (MakeBitmapParameter)data;
+            parameter.Bitmap = GenerateImageFromTextWithStyle(parameter);
+            if (parameter.Type == "BLURAYSUP")
             {
                 var brSub = new Logic.BluRaySup.BluRaySupPicture
                                 {
-                                    StartTime = (long) paramter.P.StartTime.TotalMilliseconds,
-                                    EndTime = (long) paramter.P.EndTime.TotalMilliseconds,
-                                    Width = paramter.ScreenWidth,
-                                    Height = paramter.ScreenHeight
-                                };
-                paramter.Buffer = Logic.BluRaySup.BluRaySupPicture.CreateSupFrame(brSub, paramter.Bitmap, paramter.FramesPerSeconds, paramter.BottomMargin);
+                                    StartTime = (long) parameter.P.StartTime.TotalMilliseconds,
+                                    EndTime = (long) parameter.P.EndTime.TotalMilliseconds,
+                                    Width = parameter.ScreenWidth,
+                                    Height = parameter.ScreenHeight
+                                };                
+                parameter.Buffer = Logic.BluRaySup.BluRaySupPicture.CreateSupFrame(brSub, parameter.Bitmap, parameter.FramesPerSeconds, parameter.BottomMargin, parameter.Alignment);
             }
-            else if (paramter.Type == "VOBSUB")
+            else if (parameter.Type == "VOBSUB")
             {
 
             }
-            else if (paramter.Type == "FAB")
+            else if (parameter.Type == "FAB")
             {
 
             }
@@ -126,10 +229,12 @@ namespace Nikse.SubtitleEdit.Forms
                                     FramesPerSeconds = FrameRate,
                                     BottomMargin =  comboBoxBottomMargin.SelectedIndex,
                                     Saved = false,
+                                    Alignment = ContentAlignment.BottomCenter,
                                 };
             if (index < _subtitle.Paragraphs.Count)
             {
                 parameter.P = _subtitle.Paragraphs[index];
+                parameter.Alignment = GetAlignmentFromParagraph(parameter.P,_format, _subtitle);
             }
             else
             {
@@ -451,8 +556,47 @@ namespace Nikse.SubtitleEdit.Forms
                         //</Event>
                         sb.AppendLine("<Event InTC=\"" + BdnXmlTimeCode(param.P.StartTime) + "\" OutTC=\"" +
                                       BdnXmlTimeCode(param.P.EndTime) + "\" Forced=\"False\">");
+
                         int x = (width - param.Bitmap.Width) / 2;
                         int y = height - (param.Bitmap.Height + border);
+                        switch (param.Alignment)
+                        {
+                            case ContentAlignment.BottomLeft:
+                                x = border;
+                                y = height - (param.Bitmap.Height + border);
+                                break;
+                            case ContentAlignment.BottomRight:
+                                x = height - param.Bitmap.Width - border;
+                                y = height - (param.Bitmap.Height + border);
+                                break;
+                            case ContentAlignment.MiddleCenter:
+                                x = (width - param.Bitmap.Width) / 2;
+                                y = (height - param.Bitmap.Height) / 2;
+                                break;
+                            case ContentAlignment.MiddleLeft:
+                                x = border;
+                                y = (height - param.Bitmap.Height) / 2;
+                                break;
+                            case ContentAlignment.MiddleRight:
+                                x = width - param.Bitmap.Width - border;
+                                y = (height - param.Bitmap.Height) / 2;
+                                break;
+                            case ContentAlignment.TopCenter:
+                                x = (width - param.Bitmap.Width) / 2;
+                                y = border;
+                                break;
+                            case ContentAlignment.TopLeft:
+                                x = border;
+                                y = border;
+                                break;
+                            case ContentAlignment.TopRight:
+                                x = width - param.Bitmap.Width - border;
+                                y = border;
+                                break;
+                            default: // ContentAlignment.BottomCenter:                                
+                                break;
+                        }                            
+
                         sb.AppendLine("  <Graphic Width=\"" + param.Bitmap.Width.ToString() + "\" Height=\"" +
                                       param.Bitmap.Height.ToString() + "\" X=\"" + x.ToString() + "\" Y=\"" + y.ToString() +
                                       "\">" + numberString + ".png</Graphic>");
@@ -857,7 +1001,6 @@ namespace Nikse.SubtitleEdit.Forms
             labelBorderWidth.Text = Configuration.Settings.Language.ExportPngXml.BorderWidth;
             buttonExport.Text = Configuration.Settings.Language.ExportPngXml.ExportAllLines;
             buttonCancel.Text = Configuration.Settings.Language.General.OK;
-            labelImageResolution.Text = string.Empty;
             labelLanguage.Text = Configuration.Settings.Language.ChooseLanguage.Language;
             labelFrameRate.Text = Configuration.Settings.Language.General.FrameRate;
             labelHorizontalAlign.Text = Configuration.Settings.Language.ExportPngXml.Align;
@@ -981,7 +1124,26 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 var bmp = GenerateImageFromTextWithStyle(_subtitle.Paragraphs[subtitleListView1.SelectedItems[0].Index].Text);
                 pictureBox1.Image = bmp;
-                labelImageResolution.Text = string.Format("{0}x{1}", bmp.Width, bmp.Height);
+
+                int w = groupBoxExportImage.Width - 4;
+                pictureBox1.Width = bmp.Width;
+                pictureBox1.Height = bmp.Height;
+                pictureBox1.Top = groupBoxExportImage.Height - bmp.Height - int.Parse(comboBoxBottomMargin.Text); 
+                pictureBox1.Left = (w - bmp.Width) / 2;
+                var alignment = GetAlignmentFromParagraph(_subtitle.Paragraphs[subtitleListView1.SelectedItems[0].Index], _format, _subtitle);
+                if (_exportType == "BDNXML" || _exportType == "BLURAYSUP")
+                {
+                    if (alignment == ContentAlignment.BottomLeft || alignment == ContentAlignment.MiddleLeft || alignment == ContentAlignment.TopLeft)
+                        pictureBox1.Left = int.Parse(comboBoxBottomMargin.Text);
+                    else if (alignment == ContentAlignment.BottomRight || alignment == ContentAlignment.MiddleRight || alignment == ContentAlignment.TopRight)
+                        pictureBox1.Left = w - bmp.Width - int.Parse(comboBoxBottomMargin.Text);
+
+                    if (alignment == ContentAlignment.MiddleLeft || alignment == ContentAlignment.MiddleCenter || alignment == ContentAlignment.MiddleRight)
+                        pictureBox1.Top = (groupBoxExportImage.Height - 4 - bmp.Height) / 2;
+                    else if (alignment == ContentAlignment.TopLeft || alignment == ContentAlignment.TopCenter || alignment == ContentAlignment.TopRight)
+                        pictureBox1.Top = int.Parse(comboBoxBottomMargin.Text);
+                }
+                groupBoxExportImage.Text = string.Format("{0}x{1}", bmp.Width, bmp.Height);
             }
         }
 
@@ -1076,6 +1238,16 @@ namespace Nikse.SubtitleEdit.Forms
                 comboBoxResolution.Items[8] = cr.VideoWidth+ "x" + cr.VideoHeight;
                 comboBoxResolution.SelectedIndex = 8;
             }
+        }
+
+        private void ExportPngXml_ResizeEnd(object sender, EventArgs e)
+        {
+            subtitleListView1_SelectedIndexChanged(null, null);
+        }
+
+        private void comboBoxBottomMargin_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            subtitleListView1_SelectedIndexChanged(null, null);
         }
 
     }
