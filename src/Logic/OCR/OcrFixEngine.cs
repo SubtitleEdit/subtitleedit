@@ -1293,6 +1293,9 @@ namespace Nikse.SubtitleEdit.Logic.OCR
                         correct = allSlashedCorrect;
                     }
 
+                    if (word.Length == 0)
+                        correct = true;
+
                     if (!correct)
                     {
                         wordsNotFound++;
