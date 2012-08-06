@@ -7,7 +7,8 @@ Subtitle Edit Changelog
    * Advanced Substation Alpha style viewer/creater (right click in list view)
    * Timed Text style view/creater (right click in list view)
    * File -> D-Cinema properties (for both smtpe and interop)
-   * Can now display frames instead of milliseconds in main window (see Options -> settings)
+   * Can now display frames instead of milliseconds in main window
+     (see Options -> Settings)
    * New setting in Options: "Max. chars/second"
    * New settings in Options regarding "Min. duration" + "Max. duration"
    * New settings in Options regarding syntax coloring

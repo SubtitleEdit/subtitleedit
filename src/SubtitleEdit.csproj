@@ -1248,7 +1248,7 @@
     <None Include="Web References\SeNetworkService\SeService.disco" />
     <None Include="DLLs\Interop.QuartzTypeLib.dll" />
     <None Include="DLLs\NHunspell.dll" />
-    <Content Include="ChangeLog.txt" />
+    <Content Include="Changelog.txt" />
     <Content Include="gpl.txt" />
     <None Include="Dlls\Hunspellx64.dll" />
     <None Include="Dlls\Hunspellx86.dll" />
