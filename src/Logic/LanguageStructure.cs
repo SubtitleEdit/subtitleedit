@@ -762,6 +762,7 @@
             public string LineNumberXErrorReadingFromSourceLineY { get; set; }
             public string LineNumberXErrorReadingTimeCodeFromSourceLineY { get; set; }
             public string LineNumberXExpectedNumberFromSourceLineY { get; set; }
+            public string XLinesSavedAsY { get; set; }
 
 
             public class MainMenu
@@ -958,6 +959,7 @@
                     public string AdjustDisplayDurationForSelectedLines { get; set; }
                     public string FixCommonErrorsInSelectedLines { get; set; }
                     public string ChangeCasingForSelectedLines { get; set; }
+                    public string SaveSelectedLines { get; set; }                    
                 }
 
                 public FileMenu File { get; set; }

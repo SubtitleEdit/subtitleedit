@@ -848,6 +848,7 @@ namespace Nikse.SubtitleEdit.Logic
                 LineNumberXErrorReadingFromSourceLineY = "Line {0} - error reading: {1}",
                 LineNumberXErrorReadingTimeCodeFromSourceLineY = "Line {0} - error reading time code: {1}",
                 LineNumberXExpectedNumberFromSourceLineY = "Line {0} - expected subtitle number: {1}",
+                XLinesSavedAsY = "{0} lines saved as {1}",
 
                 Menu = new LanguageStructure.Main.MainMenu
                 {
@@ -1050,6 +1051,7 @@ namespace Nikse.SubtitleEdit.Logic
                         AdjustDisplayDurationForSelectedLines = "Adjust durations for selected lines...",
                         FixCommonErrorsInSelectedLines = "Fix common errors in selected lines...",
                         ChangeCasingForSelectedLines = "Change casing for selected lines...",
+                        SaveSelectedLines = "Save selected lines as...",
                     }
                 },
 
