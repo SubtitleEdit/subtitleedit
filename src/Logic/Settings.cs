@@ -237,7 +237,8 @@ namespace Nikse.SubtitleEdit.Logic
         public bool MissingSpacesTicked { get; set; }
         public bool AddMissingQuotesTicked { get; set; }
         public bool Fix3PlusLinesTicked { get; set; }
-        public bool FixHyphensTicked { get; set; }
+        public bool FixHyphenFirstLineTicked { get; set; }
+        public bool FixHyphenSecondLineTicked { get; set; }
         public bool UppercaseIInsideLowercaseWordTicked { get; set; }
         public bool DoubleApostropheToQuoteTicked { get; set; }
         public bool AddPeriodAfterParagraphTicked { get; set; }
@@ -1277,9 +1278,12 @@ namespace Nikse.SubtitleEdit.Logic
             subNode = node.SelectSingleNode("Fix3PlusLinesTicked");
             if (subNode != null)
                 settings.CommonErrors.Fix3PlusLinesTicked = Convert.ToBoolean(subNode.InnerText);
-            subNode = node.SelectSingleNode("FixHyphensTicked");
+            subNode = node.SelectSingleNode("FixHyphenFirstLineTicked");
             if (subNode != null)
-                settings.CommonErrors.FixHyphensTicked = Convert.ToBoolean(subNode.InnerText);
+                settings.CommonErrors.FixHyphenFirstLineTicked = Convert.ToBoolean(subNode.InnerText);
+            subNode = node.SelectSingleNode("FixHyphenSecondLineTicked");
+            if (subNode != null)
+                settings.CommonErrors.FixHyphenSecondLineTicked = Convert.ToBoolean(subNode.InnerText);
             subNode = node.SelectSingleNode("UppercaseIInsideLowercaseWordTicked");
             if (subNode != null)
                 settings.CommonErrors.UppercaseIInsideLowercaseWordTicked = Convert.ToBoolean(subNode.InnerText);
@@ -1892,7 +1896,8 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("MissingSpacesTicked", settings.CommonErrors.MissingSpacesTicked.ToString());
             textWriter.WriteElementString("AddMissingQuotesTicked", settings.CommonErrors.AddMissingQuotesTicked.ToString());
             textWriter.WriteElementString("Fix3PlusLinesTicked", settings.CommonErrors.Fix3PlusLinesTicked.ToString());
-            textWriter.WriteElementString("FixHyphensTicked", settings.CommonErrors.FixHyphensTicked.ToString());
+            textWriter.WriteElementString("FixHyphenFirstLineTicked", settings.CommonErrors.FixHyphenFirstLineTicked.ToString());
+            textWriter.WriteElementString("FixHyphenSecondLineTicked", settings.CommonErrors.FixHyphenSecondLineTicked.ToString());
             textWriter.WriteElementString("UppercaseIInsideLowercaseWordTicked", settings.CommonErrors.UppercaseIInsideLowercaseWordTicked.ToString());
             textWriter.WriteElementString("DoubleApostropheToQuoteTicked", settings.CommonErrors.DoubleApostropheToQuoteTicked.ToString());
             textWriter.WriteElementString("AddPeriodAfterParagraphTicked", settings.CommonErrors.AddPeriodAfterParagraphTicked.ToString());
