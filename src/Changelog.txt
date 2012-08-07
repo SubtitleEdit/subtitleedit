@@ -17,6 +17,7 @@ Subtitle Edit Changelog
    * Tools -> Join subtitles (merge of multiple parts)
    * Tools -> Apply duration limits
    * Tools -> Sort -> Text - chars/sec
+   * Main window list view context menu: Save selected lines as...
    * Will now display any errors found in SubRip/MicroDvd/SSA/ASS on load
    * File -> Statistics: Displays info about current subtitle
    * Click on status bar in footer will now show status history
@@ -50,7 +51,8 @@ Subtitle Edit Changelog
    * Cropping of bottom images in File -> Export - thx moob
    * Possible crash in OcrFixEngine - thx Ile
    * Possible crash when importing vobsub from mkv files - thx Ile
-   * Can now read SCC with ";" in time code - thx Thane :) 
+   * Can now read SCC with ";" in time code - thx Thane
+   * Crash when splitting an empty line - thx Pimmetje
 
 
 3.2.8 (3rd June 2012)

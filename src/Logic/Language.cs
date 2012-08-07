@@ -928,6 +928,7 @@ namespace Nikse.SubtitleEdit.Logic
                         MakeNewEmptyTranslationFromCurrentSubtitle = "Make new empty translation from current subtitle",
                         SplitSubtitle = "Split subtitle...",
                         AppendSubtitle = "Append subtitle...",
+                        JoinSubtitles = "Join subtitles...",
                     },
 
                     Video = new LanguageStructure.Main.MainMenu.VideoMenu
@@ -1511,6 +1512,11 @@ can edit in same subtitle file (collaboration)",
                 SavePartTwoAs = "Save part 2 as...",
                 NothingToSplit = "Nothing to split!",
                 UnableToSaveFileX =  "Unable to save {0}",
+                OverwriteExistingFiles = "Overwrite existing files?",
+                FolderNotFoundX = "Folder not found: {0}",
+                NumberOfLinesX = "Number of lines: {0:#,###}",
+                NumberOfCharactersX = "Number of characters: {0:#,###,###}",
+                Untitled = "Untitled",                
             };
 
             StartNumberingFrom = new LanguageStructure.StartNumberingFrom
