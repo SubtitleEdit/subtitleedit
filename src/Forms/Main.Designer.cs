@@ -227,6 +227,7 @@
             this.adjustDisplayTimeForSelectedLinesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.fixCommonErrorsInSelectedLinesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.changeCasingForSelectedLinesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemSaveSelectedLines = new System.Windows.Forms.ToolStripMenuItem();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
@@ -1831,7 +1832,8 @@
             this.googleTranslateSelectedLinesToolStripMenuItem,
             this.adjustDisplayTimeForSelectedLinesToolStripMenuItem,
             this.fixCommonErrorsInSelectedLinesToolStripMenuItem,
-            this.changeCasingForSelectedLinesToolStripMenuItem});
+            this.changeCasingForSelectedLinesToolStripMenuItem,
+            this.toolStripMenuItemSaveSelectedLines});
             this.contextMenuStripListview.Name = "contextMenuStripListview";
             this.contextMenuStripListview.Size = new System.Drawing.Size(285, 738);
             this.contextMenuStripListview.Opening += new System.ComponentModel.CancelEventHandler(this.ContextMenuStripListviewOpening);
@@ -2079,6 +2081,13 @@
             this.changeCasingForSelectedLinesToolStripMenuItem.Size = new System.Drawing.Size(284, 22);
             this.changeCasingForSelectedLinesToolStripMenuItem.Text = "Change casing for selected lines...";
             this.changeCasingForSelectedLinesToolStripMenuItem.Click += new System.EventHandler(this.ChangeCasingForSelectedLinesToolStripMenuItemClick);
+            // 
+            // toolStripMenuItemSaveSelectedLines
+            // 
+            this.toolStripMenuItemSaveSelectedLines.Name = "toolStripMenuItemSaveSelectedLines";
+            this.toolStripMenuItemSaveSelectedLines.Size = new System.Drawing.Size(284, 22);
+            this.toolStripMenuItemSaveSelectedLines.Text = "Save selected lines as...";
+            this.toolStripMenuItemSaveSelectedLines.Click += new System.EventHandler(this.toolStripMenuItemSaveSelectedLines_Click);
             // 
             // openFileDialog1
             // 
@@ -4238,6 +4247,7 @@
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemTextTimeCodePair;
         private System.Windows.Forms.ToolStripMenuItem textWordsPerMinutewpmToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemTTProperties;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemSaveSelectedLines;
     }
 }
 

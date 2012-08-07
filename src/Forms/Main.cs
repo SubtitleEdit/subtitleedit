@@ -1471,6 +1471,7 @@ namespace Nikse.SubtitleEdit.Forms
             adjustDisplayTimeForSelectedLinesToolStripMenuItem.Text = _language.Menu.ContextMenu.AdjustDisplayDurationForSelectedLines;
             fixCommonErrorsInSelectedLinesToolStripMenuItem.Text = _language.Menu.ContextMenu.FixCommonErrorsInSelectedLines;
             changeCasingForSelectedLinesToolStripMenuItem.Text = _language.Menu.ContextMenu.ChangeCasingForSelectedLines;
+            toolStripMenuItemSaveSelectedLines.Text = _language.Menu.ContextMenu.SaveSelectedLines;
 
             // textbox context menu
             cutToolStripMenuItem.Text = _language.Menu.ContextMenu.Cut;
@@ -4940,6 +4941,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else
             {
+                toolStripMenuItemSaveSelectedLines.Visible = false;
                 toolStripMenuItemInsertBefore.Visible = true;
                 toolStripMenuItemInsertAfter.Visible = true;
                 toolStripMenuItemInsertSubtitle.Visible = _networkSession == null;
@@ -4983,6 +4985,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 else if (SubtitleListview1.SelectedItems.Count >= 2)
                 {
+                    toolStripMenuItemSaveSelectedLines.Visible = true;
                     toolStripMenuItemInsertBefore.Visible = false;
                     toolStripMenuItemInsertAfter.Visible = false;
                     toolStripMenuItemInsertSubtitle.Visible = false;
@@ -14817,6 +14820,49 @@ namespace Nikse.SubtitleEdit.Forms
                 _formPositionsAndSizes.SetPositionAndSize(properties, true);
                 properties.ShowDialog(this);
                 _formPositionsAndSizes.SavePositionAndSize(properties);
+            }
+        }
+
+        private void toolStripMenuItemSaveSelectedLines_Click(object sender, EventArgs e)
+        {
+            var newSub = new Subtitle(_subtitle);
+            newSub.Paragraphs.Clear();
+            foreach (int index in SubtitleListview1.SelectedIndices)
+                newSub.Paragraphs.Add(_subtitle.Paragraphs[index]);
+
+            SubtitleFormat currentFormat = GetCurrentSubtitleFormat();
+            Utilities.SetSaveDialogFilter(saveFileDialog1, currentFormat);
+            saveFileDialog1.Title = _language.SaveSubtitleAs;
+            saveFileDialog1.DefaultExt = "*" + currentFormat.Extension;
+            saveFileDialog1.AddExtension = true;
+            if (!string.IsNullOrEmpty(_fileName))
+                saveFileDialog1.InitialDirectory = Path.GetDirectoryName(_fileName);
+
+            if (saveFileDialog1.ShowDialog(this) == DialogResult.OK)
+            {
+                int index = 0;
+                foreach (SubtitleFormat format in SubtitleFormat.AllSubtitleFormats)
+                {
+                    if (saveFileDialog1.FilterIndex == index + 1)
+                    {
+                        // only allow current extension or ".txt"
+                        string fileName = saveFileDialog1.FileName;
+                        string ext = Path.GetExtension(fileName).ToLower();
+                        bool extOk = ext == format.Extension.ToLower() || format.AlternateExtensions.Contains(ext) || ext == ".txt";
+                        if (!extOk)
+                        {
+                            if (fileName.EndsWith("."))
+                                fileName = fileName.Substring(0, _fileName.Length - 1);
+                            fileName += format.Extension;
+                        }
+
+                        string allText = newSub.ToText(format);
+                        File.WriteAllText(fileName, allText, GetCurrentEncoding());
+                        ShowStatus(string.Format("{0} lines saved as {1}", newSub.Paragraphs.Count, fileName));
+                        return;
+                    }
+                    index++;
+                }               
             }
         }
 
