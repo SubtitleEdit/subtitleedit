@@ -387,6 +387,29 @@ namespace Nikse.SubtitleEdit.Logic
                 Right = "Right",
             };
 
+            ExportText = new LanguageStructure.ExportText
+            {
+                Title = "Export text",
+                Preview = "Preview",
+                ExportOptions = "Export options",
+                FormatText = "Format text",
+                None = "None",
+                MergeAllLines = "Merge all lines",
+                UnbreakLines = "Unbreak lines",
+                RemoveStyling = "Remove styling",
+                ShowLineNumbers = "Show line numbers",
+                AddNewLineAfterLineNumber = "Add new line after line number",
+                ShowTimeCode = "Show time code",
+                AddNewLineAfterTimeCode = "Add new line after time code",
+                AddNewLineAfterTexts = "Add new line after text",
+                AddNewLineBetweenSubtitles = "Add new line between subitles",
+                TimeCodeFormat = "Time code format",
+                Srt = ".srt",
+                Milliseconds = "Milliseconds",
+                HHMMSSFF = "HH:MM:SS:FF",
+                TimeCodeSeperator = "Time code seperator",
+            };
+
             FindDialog = new LanguageStructure.FindDialog
             {
                 Title = "Find",
@@ -1498,7 +1521,7 @@ can edit in same subtitle file (collaboration)",
             Statistics = new LanguageStructure.Statistics
             {
                 Title = "Statistics",
-                TitleWithFileName = "Statics - {0}",
+                TitleWithFileName = "Statistics - {0}",
                 GeneralStatistics = "General statistics",
                 NothingFound = "Nothing found",
                 MostUsed = "Most used...",
@@ -1531,7 +1554,19 @@ can edit in same subtitle file (collaboration)",
                 TitleSubstationAlpha = "Sub Station Alpha properties",
                 Script = "Script",
                 ScriptTitle = "Title",
-
+                OriginalScript = "Original script",
+                Translation = "Translation",
+                Editing = "Editing",
+                Timing = "Timing",
+                SyncPoint = "Sync point",
+                UpdatedBy = "Updated by",
+                UpdateDetails = "Update details",
+                Resolution = "Resolution",
+                VideoResolution = "Video resolution",
+                Options = "Options",
+                WrapStyle = "Wrap style",
+                Collision = "Collision",
+                ScaleBorderAndShadow = "Scale border and shadow",
             };
 
             SubStationAlphaStyles = new LanguageStructure.SubStationAlphaStyles
@@ -1751,9 +1786,15 @@ Keep changes?",
         public void Save()
         {
             var s = new XmlSerializer(typeof(Language));
-            TextWriter w = new StreamWriter(Configuration.BaseDirectory + "Language.xml");
+            StringBuilder sb = new StringBuilder();
+            TextWriter w = new StringWriter(sb);
             s.Serialize(w, this);
             w.Close();
+
+            string xml = sb.ToString();
+            xml = xml.Replace("xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" ", string.Empty);
+            xml = xml.Replace("encoding=\"utf-16\"", "encoding=\"utf-8\"");
+            File.WriteAllText(Path.Combine(Configuration.BaseDirectory, "Language.xml"), xml, Encoding.UTF8);
         }
 
         public static void TranslateViaGoogle(string languagePair)

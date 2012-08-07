@@ -63,6 +63,8 @@
     <AudioWindowTitle>Lydspor - {0}</AudioWindowTitle>
     <ControlsWindowTitle>Kommandoer - {0}</ControlsWindowTitle>
     <Advanced>Avanceret</Advanced>
+    <Style>Style</Style>
+    <Class>Class</Class>
   </General>
   <About>
     <Title>Om Subtitle Edit</Title>
@@ -165,6 +167,25 @@
     <OnlyLookForDifferencesInText>Vis kun forskelle i teksten</OnlyLookForDifferencesInText>
     <CannotCompareWithImageBasedSubtitles>Kan ikke sammenligne med billede baseret undertekster</CannotCompareWithImageBasedSubtitles>
   </CompareSubtitles>
+  <DCinemaProperties>
+    <Title>D-Cinema egenskaber (INTEROP)</Title>
+    <TitleSmpte>D-Cinema egenskaber (SMPTE)</TitleSmpte>
+    <SubtitleId>Undertekst ID</SubtitleId>
+    <GenerateId>Generate ID</GenerateId>
+    <MovieTitle>Video titel</MovieTitle>
+    <ReelNumber>Rulle nummer</ReelNumber>
+    <Language>Sprog</Language>
+    <IssueDate>Udgivelsesdato</IssueDate>
+    <EditRate>Edit frame rate</EditRate>
+    <Font>Font</Font>
+    <FontId>ID</FontId>
+    <FontUri>URI</FontUri>
+    <FontColor>Farve</FontColor>
+    <FontEffect>Effekt</FontEffect>
+    <FontEffectColor>Effekt farve</FontEffectColor>
+    <FontSize>Str.</FontSize>
+    <ChooseColor>Vælg farve...</ChooseColor>
+  </DCinemaProperties>
   <DvdSubrip>
     <Title>Rip undertekster fra ifo/vobs (dvd)</Title>
     <DvdGroupTitle>DVD-filer/info</DvdGroupTitle>
@@ -252,6 +273,27 @@
     <Right>Højre</Right>
     <Center>Centrer</Center>
   </ExportPngXml>
+  <ExportText>
+    <Title>Eksport tekst</Title>
+    <Preview>Eksempel</Preview>
+    <ExportOptions>Eksport muligheder</ExportOptions>
+    <FormatText>Formater tekst</FormatText>
+    <None>Ingen</None>
+    <MergeAllLines>Sat linjer sammen</MergeAllLines>
+    <UnbreakLines>Fjern linje-brud</UnbreakLines>
+    <RemoveStyling>Fjern formatering</RemoveStyling>
+    <ShowLineNumbers>Vis linjenumre</ShowLineNumbers>
+    <AddNewLineAfterLineNumber>Tilføj ny linje efter linje nummer</AddNewLineAfterLineNumber>
+    <ShowTimeCode>Vis tidskoder</ShowTimeCode>
+    <AddNewLineAfterTimeCode>Tilføj ny linje efter tidskode</AddNewLineAfterTimeCode>
+    <AddNewLineAfterTexts>Tilføj ny linje efter tekst</AddNewLineAfterTexts>
+    <AddNewLineBetweenSubtitles>Tilføj ny linje mellem undertekster</AddNewLineBetweenSubtitles>
+    <TimeCodeFormat>Tidskode format</TimeCodeFormat>
+    <Srt>.srt</Srt>
+    <Milliseconds>Millisekunder</Milliseconds>
+    <HHMMSSFF>HH:MM:SS:FF</HHMMSSFF>
+    <TimeCodeSeperator>Tidskode skille-tegn</TimeCodeSeperator>
+  </ExportText>
   <FindDialog>
     <Title>Find</Title>
     <Find>Find</Find>
@@ -307,6 +349,7 @@
     <RemoveSpaceBetweenNumber>Fjern mellemrum mellem tal</RemoveSpaceBetweenNumber>
     <FixDialogsOnOneLine>Fix dialoger på én linje</FixDialogsOnOneLine>
     <RemoveSpaceBetweenNumbersFixed>Fjern mellemrum mellem tallene rettet: {0}</RemoveSpaceBetweenNumbersFixed>
+    <FixTurkishAnsi>Fix tyrkiske ANSI (islandske) bogstaver til Unicode</FixTurkishAnsi>
     <FixDanishLetterI>Ret fejl vedr. det dansk bogstav »i«</FixDanishLetterI>
     <FixSpanishInvertedQuestionAndExclamationMarks>Tilføj spanske omvendte spørgsmålstegn og udråbstegn</FixSpanishInvertedQuestionAndExclamationMarks>
     <AddMissingQuote>Tilføj manglende gåseøje</AddMissingQuote>
@@ -449,6 +492,12 @@
   <JoinSubtitles>
     <Title>Flet undertekster</Title>
     <Information>Tilføj undertekster til at deltage (droppe også understøttet)</Information>
+    <NumberOfLines>#Linjer</NumberOfLines>
+    <StartTime>Start tid</StartTime>
+    <EndTime>Sluttid</EndTime>
+    <FileName>Filnavn</FileName>
+    <Join>Sammensæt</Join>
+    <TotalNumberOfLinesX>Total antal  linjer: {0:#,###,###}</TotalNumberOfLinesX>
   </JoinSubtitles>
   <Main>
     <Menu>
@@ -467,6 +516,7 @@
         <CloseOriginal>Luk original</CloseOriginal>
         <OpenContainingFolder>Åbn indeholdende mappe</OpenContainingFolder>
         <Compare>Sammenlign...</Compare>
+        <Statistics>Statistik...</Statistics>
         <ImportOcrFromDvd>Import/OCR undertekster fra VOB/IFO (dvd) ...</ImportOcrFromDvd>
         <ImportOcrVobSubSubtitle>Importer/OCR VobSub (sub/idx) undertekst...</ImportOcrVobSubSubtitle>
         <ImportBluRaySupFile>Importer/OCR Blu-ray sup fil...</ImportBluRaySupFile>
@@ -517,6 +567,7 @@
         <TextTotalLength>Tekst - samlet længde</TextTotalLength>
         <TextNumberOfLines>Tekst - antal linjer</TextNumberOfLines>
         <TextNumberOfCharactersPerSeconds>Tekst - antallet af tegn/sek</TextNumberOfCharactersPerSeconds>
+        <WordsPerMinute>Tekst - ord i minuttet (WPM)</WordsPerMinute>
         <ShowOriginalTextInAudioAndVideoPreview>Vis oprindelig tekst i audio/video previews</ShowOriginalTextInAudioAndVideoPreview>
         <MakeNewEmptyTranslationFromCurrentSubtitle>Dan ny tom oversættelse fra aktuelle undertekst</MakeNewEmptyTranslationFromCurrentSubtitle>
         <SplitSubtitle>Split undertekst...</SplitSubtitle>
@@ -591,6 +642,9 @@
         <SubStationAlphaSetStyle>(Advanced) Sub Station Alpha - vælg stilart</SubStationAlphaSetStyle>
         <SubStationAlphaStyles>Sub Station Alpha stilarter...</SubStationAlphaStyles>
         <AdvancedSubStationAlphaStyles>Advanced Sub Station Alpha stilarter...</AdvancedSubStationAlphaStyles>
+        <TimedTextSetStyle>Timed Text - sæt style</TimedTextSetStyle>
+        <TimedTextStyles>Timed Text styles...</TimedTextStyles>
+        <SamiSetStyle>Sami - sæt class</SamiSetStyle>
         <Cut>Klip</Cut>
         <Copy>Kopier</Copy>
         <Paste>Indsæt</Paste>
@@ -724,6 +778,7 @@
     <FindContinue>Søgeudtrykket blev ikke fundet.
 Vil du starte fra toppen af dokumentet og søge videre?</FindContinue>
     <FindContinueTitle>Fortsæt Find?</FindContinueTitle>
+    <SearchingForXFromLineY>Søgning efter '{0}' fra linjenummer {1}...</SearchingForXFromLineY>
     <XFoundAtLineNumberY>'{0}' findet i linje {1}</XFoundAtLineNumberY>
     <XNotFound>'{0}' blev ikke fundet</XNotFound>
     <BeforeReplace>Før erstat: {0}</BeforeReplace>
@@ -836,6 +891,12 @@ Fortsæt?</SubtitleAppendPrompt>
     <BeforeImportingBluRaySupFile>Før import af Blu-ray sup undertekst</BeforeImportingBluRaySupFile>
     <BeforeImportingBdnXml>Før importer af BDN xml</BeforeImportingBdnXml>
     <BeforeShowSelectedLinesEarlierLater>Før vis udvalgte linjer tidligere/senere</BeforeShowSelectedLinesEarlierLater>
+    <ShowAllLinesXSecondsLinesEarlier>Vis alle linjer {0:0.0##} sekunder tidligere</ShowAllLinesXSecondsLinesEarlier>
+    <ShowAllLinesXSecondsLinesLater>Vis alle linjer {0:0.0##} sekunder senere</ShowAllLinesXSecondsLinesLater>
+    <ShowSelectedLinesXSecondsLinesEarlier>Vis valgte linjer {0:0.0##} sekunder tidligere</ShowSelectedLinesXSecondsLinesEarlier>
+    <ShowSelectedLinesXSecondsLinesLater>Vis valgte linjer {0:0.0##} sekunder senere</ShowSelectedLinesXSecondsLinesLater>
+    <ShowSelectionAndForwardXSecondsLinesEarlier>Vis valgte linje(r) og fremad {0:0.0##} sekunder tidligere</ShowSelectionAndForwardXSecondsLinesEarlier>
+    <ShowSelectionAndForwardXSecondsLinesLater>Vis valgte linje(r) og fremad {0:0.0##} sekunder senere</ShowSelectionAndForwardXSecondsLinesLater>
     <ShowSelectedLinesEarlierLaterPerformed>Vis tidligere/senere udført på udvalgte linjer</ShowSelectedLinesEarlierLaterPerformed>
     <DoubleWordsViaRegEx>Dobbelt ord via regex {0}</DoubleWordsViaRegEx>
     <BeforeSortX>Før sortering: {0}</BeforeSortX>
@@ -921,6 +982,12 @@ Fortsæt?</SubtitleAppendPrompt>
     <Update>Opdater</Update>
     <Enabled>Aktiv</Enabled>
     <SearchType>Søge type</SearchType>
+    <RemoveAll>Fjern alle</RemoveAll>
+    <Import>Import...</Import>
+    <Export>Eksport...</Export>
+    <ImportRulesTitle>Import erstat-regle(r) fra...</ImportRulesTitle>
+    <ExportRulesTitle>Export erstat-regle(r)...</ExportRulesTitle>
+    <Rules>Eksport regler</Rules>
   </MultipleReplace>
   <NetworkChat>
     <Title>Chat</Title>
@@ -1028,6 +1095,7 @@ Fortsæt?</SubtitleAppendPrompt>
     <SubtitleFont>undertekst skrifttype</SubtitleFont>
     <SubtitleFontSize>undertekst skriftstørrelse</SubtitleFontSize>
     <SubtitleBold>Fed</SubtitleBold>
+    <SubtitleCenter>Centrer</SubtitleCenter>
     <SubtitleFontColor>Undertekst skriftfarve</SubtitleFontColor>
     <SubtitleBackgroundColor>Undertekst baggrundsfarve</SubtitleBackgroundColor>
     <SpellChecker>Stavekontrol</SpellChecker>
@@ -1066,6 +1134,8 @@ Fortsæt?</SubtitleAppendPrompt>
     <VlcMediaPlayer>VLC Media Player</VlcMediaPlayer>
     <VlcMediaPlayerDescription>libvlc.dll fra VLC Media Player 1.1.0 eller nyere</VlcMediaPlayerDescription>
     <ShowStopButton>Vis stop-knap</ShowStopButton>
+    <ShowMuteButton>Vis mute-knap</ShowMuteButton>
+    <ShowFullscreenButton>Vis fuldskærm knap</ShowFullscreenButton>
     <DefaultVolume>Standard volumen</DefaultVolume>
     <VolumeNotes>0 er ingen lyd, 100 er højeste lydstyrke</VolumeNotes>
     <PreviewFontSize>Undertekst preview skriftstørrelse</PreviewFontSize>
@@ -1146,6 +1216,7 @@ Fortsæt?</SubtitleAppendPrompt>
     <ToggleFocus>Skift fokus imellem liste visning og undertekst tekstboks</ToggleFocus>
     <ToggleDialogueDashes>Toogle dialog tankestreger</ToggleDialogueDashes>
     <Alignment>Justering (valgte linier)</Alignment>
+    <CopyTextOnly>Kopier kun tekst til klippe-bord (valgte linier)</CopyTextOnly>
     <ReverseStartAndEndingForRTL>Byt rundt på højre-mod-venstre start/slut</ReverseStartAndEndingForRTL>
     <VerticalZoom>Lodret zoom</VerticalZoom>
     <WaveformSeekSilenceForward>Søg stilhed frem</WaveformSeekSilenceForward>
@@ -1237,11 +1308,52 @@ Fortsæt?</SubtitleAppendPrompt>
     <StartFromNumber>Start fra nummer:</StartFromNumber>
     <PleaseEnterAValidNumber>Ups, du skal indtaste et nummer</PleaseEnterAValidNumber>
   </StartNumberingFrom>
+  <Statistics>
+    <Title>Statistik</Title>
+    <TitleWithFileName>Statistik - {0}</TitleWithFileName>
+    <GeneralStatistics>Generel statistik</GeneralStatistics>
+    <MostUsed>Mest anvendte...</MostUsed>
+    <MostUsedLines>Mest anvendte linjer</MostUsedLines>
+    <MostUsedWords>Mest anvendte ord</MostUsedWords>
+    <NothingFound>Intet fundet</NothingFound>
+    <NumberOfLinesX>Antal undertekst linjer: {0:#,###}</NumberOfLinesX>
+    <LengthInFormatXinCharactersY>Antal tegn som {0}: {1: ####, ##0}</LengthInFormatXinCharactersY>
+    <NumberOfCharactersInTextOnly>Antal tegn (kun in tekst): {0:#,###,##0}</NumberOfCharactersInTextOnly>
+    <TotalCharsPerSecond>Total antal karakterer per sekund: {0:0.0} sekunder</TotalCharsPerSecond>
+    <NumberOfItalicTags>Antal kursiv tags: {0}</NumberOfItalicTags>
+    <NumberOfBoldTags>Antal fed tags: {0}</NumberOfBoldTags>
+    <NumberOfUnderlineTags>Antal understreg tags: {0}</NumberOfUnderlineTags>
+    <NumberOfFontTags>Antal skrifttype tags: {0}</NumberOfFontTags>
+    <NumberOfAlignmentTags>Antal tilpasning tags: {0}</NumberOfAlignmentTags>
+    <LineLengthMinimum>Undertekst længde - mindste: {0}</LineLengthMinimum>
+    <LineLengthMaximum>Subtitle længde - største: {0}</LineLengthMaximum>
+    <LineLengthAvarage>Undertekst længde - gennemsnit: {0}</LineLengthAvarage>
+    <LinesPerSubtitleAvarage>Undertekst, antal linjer - gennemsnit: {0:0.0}</LinesPerSubtitleAvarage>
+    <SingleLineLengthMinimum>Enkelt linje længde - minimum: {0}</SingleLineLengthMinimum>
+    <SingleLineLengthMaximum>Enkelt linjelængde - maks.: {0}</SingleLineLengthMaximum>
+    <SingleLineLengthAvarage>Enkelt linje længde - gennemsnit: {0}</SingleLineLengthAvarage>
+    <DurationMinimum>Varihed - minimum: {0:0.000} sekunder</DurationMinimum>
+    <DurationMaximum>Varihed - maximum: {0:0.000} sekunder</DurationMaximum>
+    <DurationAvarage>Varihed - average: {0:0.000} sekunder</DurationAvarage>
+  </Statistics>
   <SubStationAlphaProperties>
     <Title>Advanced Sub Station Alpha egenskaber</Title>
     <TitleSubstationAlpha>Sub Station Alpha egenskaber</TitleSubstationAlpha>
     <Script>Script</Script>
     <ScriptTitle>Titel</ScriptTitle>
+    <OriginalScript>Original script</OriginalScript>
+    <Translation>Oversættelse</Translation>
+    <Editing>Redigering</Editing>
+    <Timing>Timing</Timing>
+    <SyncPoint>Sync punkt</SyncPoint>
+    <UpdatedBy>Opdateret af</UpdatedBy>
+    <UpdateDetails>Opdatering detaljer</UpdateDetails>
+    <Resolution>Opløsning</Resolution>
+    <VideoResolution>Videoopløsning</VideoResolution>
+    <Options>Indstillinger</Options>
+    <WrapStyle>Wrap stil</WrapStyle>
+    <Collision>Kollision</Collision>
+    <ScaleBorderAndShadow>Scaler kant og skygge</ScaleBorderAndShadow>
   </SubStationAlphaProperties>
   <SubStationAlphaStyles>
     <Title>Avanceret Sub Station Alpha stilarter</Title>

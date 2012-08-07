@@ -43,7 +43,7 @@
             this.radioButtonTimeCodeHHMMSSFF = new System.Windows.Forms.RadioButton();
             this.radioButtonTimeCodeMs = new System.Windows.Forms.RadioButton();
             this.radioButtonTimeCodeSrt = new System.Windows.Forms.RadioButton();
-            this.groupBoxSplitting = new System.Windows.Forms.GroupBox();
+            this.groupBoxFormatText = new System.Windows.Forms.GroupBox();
             this.checkBoxRemoveStyling = new System.Windows.Forms.CheckBox();
             this.radioButtonFormatMergeAll = new System.Windows.Forms.RadioButton();
             this.radioButtonFormatNone = new System.Windows.Forms.RadioButton();
@@ -55,7 +55,7 @@
             this.labelPreview = new System.Windows.Forms.Label();
             this.groupBoxImportOptions.SuspendLayout();
             this.groupBoxTimeCodeFormat.SuspendLayout();
-            this.groupBoxSplitting.SuspendLayout();
+            this.groupBoxFormatText.SuspendLayout();
             this.SuspendLayout();
             // 
             // textBoxText
@@ -83,7 +83,7 @@
             this.groupBoxImportOptions.Controls.Add(this.checkBoxAddAfterText);
             this.groupBoxImportOptions.Controls.Add(this.checkBoxShowLineNumbers);
             this.groupBoxImportOptions.Controls.Add(this.groupBoxTimeCodeFormat);
-            this.groupBoxImportOptions.Controls.Add(this.groupBoxSplitting);
+            this.groupBoxImportOptions.Controls.Add(this.groupBoxFormatText);
             this.groupBoxImportOptions.Controls.Add(this.checkBoxShowTimeCodes);
             this.groupBoxImportOptions.Location = new System.Drawing.Point(421, 21);
             this.groupBoxImportOptions.Name = "groupBoxImportOptions";
@@ -121,7 +121,6 @@
             this.checkBoxAddNewlineAfterTimeCodes.TabIndex = 4;
             this.checkBoxAddNewlineAfterTimeCodes.Text = "Add new line after time code";
             this.checkBoxAddNewlineAfterTimeCodes.UseVisualStyleBackColor = true;
-            this.checkBoxAddNewlineAfterTimeCodes.CheckedChanged += new System.EventHandler(this.radioButtonFormatNone_CheckedChanged);
             // 
             // checkBoxAddNewlineAfterLineNumber
             // 
@@ -134,7 +133,6 @@
             this.checkBoxAddNewlineAfterLineNumber.TabIndex = 2;
             this.checkBoxAddNewlineAfterLineNumber.Text = "Add new line after line number";
             this.checkBoxAddNewlineAfterLineNumber.UseVisualStyleBackColor = true;
-            this.checkBoxAddNewlineAfterLineNumber.CheckedChanged += new System.EventHandler(this.radioButtonFormatNone_CheckedChanged);
             // 
             // checkBoxAddNewLine2
             // 
@@ -147,7 +145,6 @@
             this.checkBoxAddNewLine2.TabIndex = 6;
             this.checkBoxAddNewLine2.Text = "Add new line between subtitles";
             this.checkBoxAddNewLine2.UseVisualStyleBackColor = true;
-            this.checkBoxAddNewLine2.CheckedChanged += new System.EventHandler(this.radioButtonFormatNone_CheckedChanged);
             // 
             // checkBoxAddAfterText
             // 
@@ -160,7 +157,6 @@
             this.checkBoxAddAfterText.TabIndex = 5;
             this.checkBoxAddAfterText.Text = "Add new line after texts";
             this.checkBoxAddAfterText.UseVisualStyleBackColor = true;
-            this.checkBoxAddAfterText.CheckedChanged += new System.EventHandler(this.radioButtonFormatNone_CheckedChanged);
             // 
             // checkBoxShowLineNumbers
             // 
@@ -171,7 +167,6 @@
             this.checkBoxShowLineNumbers.TabIndex = 1;
             this.checkBoxShowLineNumbers.Text = "Show line numbers";
             this.checkBoxShowLineNumbers.UseVisualStyleBackColor = true;
-            this.checkBoxShowLineNumbers.CheckedChanged += new System.EventHandler(this.radioButtonFormatNone_CheckedChanged);
             // 
             // groupBoxTimeCodeFormat
             // 
@@ -199,7 +194,6 @@
             this.comboBoxTimeCodeSeperator.Name = "comboBoxTimeCodeSeperator";
             this.comboBoxTimeCodeSeperator.Size = new System.Drawing.Size(121, 21);
             this.comboBoxTimeCodeSeperator.TabIndex = 4;
-            this.comboBoxTimeCodeSeperator.SelectedIndexChanged += new System.EventHandler(this.radioButtonFormatNone_CheckedChanged);
             // 
             // labelTimeCodeSeperator
             // 
@@ -229,7 +223,6 @@
             this.radioButtonTimeCodeMs.TabIndex = 1;
             this.radioButtonTimeCodeMs.Text = "Milliseconds (0 - 2100)";
             this.radioButtonTimeCodeMs.UseVisualStyleBackColor = true;
-            this.radioButtonTimeCodeMs.CheckedChanged += new System.EventHandler(this.radioButtonFormatNone_CheckedChanged);
             // 
             // radioButtonTimeCodeSrt
             // 
@@ -242,20 +235,19 @@
             this.radioButtonTimeCodeSrt.TabStop = true;
             this.radioButtonTimeCodeSrt.Text = "Srt (00:00:00.000 --> 00:00:02.100)";
             this.radioButtonTimeCodeSrt.UseVisualStyleBackColor = true;
-            this.radioButtonTimeCodeSrt.CheckedChanged += new System.EventHandler(this.radioButtonFormatNone_CheckedChanged);
             // 
-            // groupBoxSplitting
+            // groupBoxFormatText
             // 
-            this.groupBoxSplitting.Controls.Add(this.checkBoxRemoveStyling);
-            this.groupBoxSplitting.Controls.Add(this.radioButtonFormatMergeAll);
-            this.groupBoxSplitting.Controls.Add(this.radioButtonFormatNone);
-            this.groupBoxSplitting.Controls.Add(this.radioButtonFormatUnbreak);
-            this.groupBoxSplitting.Location = new System.Drawing.Point(6, 19);
-            this.groupBoxSplitting.Name = "groupBoxSplitting";
-            this.groupBoxSplitting.Size = new System.Drawing.Size(326, 91);
-            this.groupBoxSplitting.TabIndex = 0;
-            this.groupBoxSplitting.TabStop = false;
-            this.groupBoxSplitting.Text = "Format text";
+            this.groupBoxFormatText.Controls.Add(this.checkBoxRemoveStyling);
+            this.groupBoxFormatText.Controls.Add(this.radioButtonFormatMergeAll);
+            this.groupBoxFormatText.Controls.Add(this.radioButtonFormatNone);
+            this.groupBoxFormatText.Controls.Add(this.radioButtonFormatUnbreak);
+            this.groupBoxFormatText.Location = new System.Drawing.Point(6, 19);
+            this.groupBoxFormatText.Name = "groupBoxFormatText";
+            this.groupBoxFormatText.Size = new System.Drawing.Size(326, 91);
+            this.groupBoxFormatText.TabIndex = 0;
+            this.groupBoxFormatText.TabStop = false;
+            this.groupBoxFormatText.Text = "Format text";
             // 
             // checkBoxRemoveStyling
             // 
@@ -268,7 +260,6 @@
             this.checkBoxRemoveStyling.TabIndex = 3;
             this.checkBoxRemoveStyling.Text = "Remove styling";
             this.checkBoxRemoveStyling.UseVisualStyleBackColor = true;
-            this.checkBoxRemoveStyling.CheckedChanged += new System.EventHandler(this.radioButtonFormatNone_CheckedChanged);
             // 
             // radioButtonFormatMergeAll
             // 
@@ -279,7 +270,6 @@
             this.radioButtonFormatMergeAll.TabIndex = 1;
             this.radioButtonFormatMergeAll.Text = "Merge all lines";
             this.radioButtonFormatMergeAll.UseVisualStyleBackColor = true;
-            this.radioButtonFormatMergeAll.CheckedChanged += new System.EventHandler(this.radioButtonFormatNone_CheckedChanged);
             // 
             // radioButtonFormatNone
             // 
@@ -292,7 +282,6 @@
             this.radioButtonFormatNone.TabStop = true;
             this.radioButtonFormatNone.Text = "None";
             this.radioButtonFormatNone.UseVisualStyleBackColor = true;
-            this.radioButtonFormatNone.CheckedChanged += new System.EventHandler(this.radioButtonFormatNone_CheckedChanged);
             // 
             // radioButtonFormatUnbreak
             // 
@@ -303,7 +292,6 @@
             this.radioButtonFormatUnbreak.TabIndex = 2;
             this.radioButtonFormatUnbreak.Text = "Unbreak lines";
             this.radioButtonFormatUnbreak.UseVisualStyleBackColor = true;
-            this.radioButtonFormatUnbreak.CheckedChanged += new System.EventHandler(this.radioButtonFormatNone_CheckedChanged);
             // 
             // checkBoxShowTimeCodes
             // 
@@ -314,7 +302,6 @@
             this.checkBoxShowTimeCodes.TabIndex = 3;
             this.checkBoxShowTimeCodes.Text = "Show time codes";
             this.checkBoxShowTimeCodes.UseVisualStyleBackColor = true;
-            this.checkBoxShowTimeCodes.CheckedChanged += new System.EventHandler(this.radioButtonFormatNone_CheckedChanged);
             // 
             // buttonCancel
             // 
@@ -326,7 +313,6 @@
             this.buttonCancel.TabIndex = 2;
             this.buttonCancel.Text = "C&ancel";
             this.buttonCancel.UseVisualStyleBackColor = true;
-            this.buttonCancel.Click += new System.EventHandler(this.buttonCancel_Click);
             // 
             // buttonOK
             // 
@@ -338,7 +324,6 @@
             this.buttonOK.TabIndex = 1;
             this.buttonOK.Text = "Save as...";
             this.buttonOK.UseVisualStyleBackColor = true;
-            this.buttonOK.Click += new System.EventHandler(this.buttonOK_Click);
             // 
             // labelPreview
             // 
@@ -366,13 +351,12 @@
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Export plain text";
-            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ExportText_KeyDown);
             this.groupBoxImportOptions.ResumeLayout(false);
             this.groupBoxImportOptions.PerformLayout();
             this.groupBoxTimeCodeFormat.ResumeLayout(false);
             this.groupBoxTimeCodeFormat.PerformLayout();
-            this.groupBoxSplitting.ResumeLayout(false);
-            this.groupBoxSplitting.PerformLayout();
+            this.groupBoxFormatText.ResumeLayout(false);
+            this.groupBoxFormatText.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -386,7 +370,7 @@
         private System.Windows.Forms.GroupBox groupBoxTimeCodeFormat;
         private System.Windows.Forms.RadioButton radioButtonTimeCodeMs;
         private System.Windows.Forms.RadioButton radioButtonTimeCodeSrt;
-        private System.Windows.Forms.GroupBox groupBoxSplitting;
+        private System.Windows.Forms.GroupBox groupBoxFormatText;
         private System.Windows.Forms.RadioButton radioButtonFormatMergeAll;
         private System.Windows.Forms.RadioButton radioButtonFormatNone;
         private System.Windows.Forms.RadioButton radioButtonFormatUnbreak;
