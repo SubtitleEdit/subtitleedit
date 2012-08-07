@@ -5903,13 +5903,18 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
 
-                double startFactor = (double)Utilities.RemoveHtmlTags(currentParagraph.Text).Length / Utilities.RemoveHtmlTags(oldText).Length;
-                if (startFactor < 0.20)
-                    startFactor = 0.20;
-                if (startFactor > 0.80)
-                    startFactor = 0.80;
-
-                double middle = currentParagraph.StartTime.TotalMilliseconds + (currentParagraph.Duration.TotalMilliseconds * startFactor);
+                double startFactor = 0;
+                double middle = currentParagraph.StartTime.TotalMilliseconds + (currentParagraph.Duration.TotalMilliseconds / 2);
+                if (Utilities.RemoveHtmlTags(oldText).Trim().Length > 0)
+                {
+                    startFactor = (double)Utilities.RemoveHtmlTags(currentParagraph.Text).Length / Utilities.RemoveHtmlTags(oldText).Length;
+                    if (startFactor < 0.20)
+                        startFactor = 0.20;
+                    if (startFactor > 0.80)
+                        startFactor = 0.80;
+                    middle = currentParagraph.StartTime.TotalMilliseconds + (currentParagraph.Duration.TotalMilliseconds * startFactor);
+                }
+                
                 if (splitSeconds.HasValue && splitSeconds.Value > (currentParagraph.StartTime.TotalSeconds + 0.2) && splitSeconds.Value < (currentParagraph.EndTime.TotalSeconds - 0.2))
                     middle = splitSeconds.Value * 1000.0;
                 newParagraph.EndTime.TotalMilliseconds = currentParagraph.EndTime.TotalMilliseconds;
