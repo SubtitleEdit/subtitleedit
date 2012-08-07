@@ -45,7 +45,7 @@ namespace Nikse.SubtitleEdit.Forms
             ShowBasic = false;
             _subtitle = subtitle;
             if (string.IsNullOrEmpty(fileName))
-                textBoxFileName.Text = "Untitled";
+                textBoxFileName.Text = Configuration.Settings.Language.SplitSubtitle.Untitled;
             else
                 textBoxFileName.Text = fileName;
             _fileName = fileName;
@@ -53,8 +53,8 @@ namespace Nikse.SubtitleEdit.Forms
             _encoding = encoding;
             foreach (Paragraph p in _subtitle.Paragraphs)
                 _totalNumberOfCharacters += p.Text.Length;
-            labelLines.Text = string.Format("Number of lines: {0:#,###}", _subtitle.Paragraphs.Count);
-            labelCharacters.Text = string.Format("Number of characters: {0:#,###,###}", _totalNumberOfCharacters);
+            labelLines.Text = string.Format(Configuration.Settings.Language.SplitSubtitle.NumberOfLinesX, _subtitle.Paragraphs.Count);
+            labelCharacters.Text = string.Format(Configuration.Settings.Language.SplitSubtitle.NumberOfCharactersX, _totalNumberOfCharacters);
 
             try
             {
@@ -117,7 +117,7 @@ namespace Nikse.SubtitleEdit.Forms
             var format = Utilities.GetSubtitleFormatByFriendlyName(comboBoxSubtitleFormats.SelectedItem.ToString());
             string fileNameNoExt = System.IO.Path.GetFileNameWithoutExtension(textBoxFileName.Text);
             if (fileNameNoExt.Trim().Length == 0)
-                fileNameNoExt = "Untitled";
+                fileNameNoExt = Configuration.Settings.Language.SplitSubtitle.Untitled;
             listViewParts.Items.Clear();
             int startNumber = 0;
             if (RadioButtonLines.Checked)
@@ -200,7 +200,7 @@ namespace Nikse.SubtitleEdit.Forms
             var format = Utilities.GetSubtitleFormatByFriendlyName(comboBoxSubtitleFormats.SelectedItem.ToString());
             string fileNameNoExt = System.IO.Path.GetFileNameWithoutExtension(textBoxFileName.Text);
             if (fileNameNoExt.Trim().Length == 0)
-                fileNameNoExt = "Untitled";
+                fileNameNoExt = Configuration.Settings.Language.SplitSubtitle.Untitled;
 
             int number = 1;
             try
@@ -211,7 +211,7 @@ namespace Nikse.SubtitleEdit.Forms
                     string allText = sub.ToText(format);
                     if (System.IO.File.Exists(fileName) && !overwrite)
                     {
-                        if (MessageBox.Show("Overwrite existing files?", "", MessageBoxButtons.YesNo) == DialogResult.No)
+                        if (MessageBox.Show(Configuration.Settings.Language.SplitSubtitle.OverwriteExistingFiles, "", MessageBoxButtons.YesNo) == DialogResult.No)
                             return;
                         overwrite = true;
                     }
@@ -320,7 +320,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (System.IO.Directory.Exists(textBoxOutputFolder.Text))
                 System.Diagnostics.Process.Start(textBoxOutputFolder.Text);
             else
-                MessageBox.Show("Folder not found: " + textBoxOutputFolder.Text);
+                MessageBox.Show(string.Format(Configuration.Settings.Language.SplitSubtitle.FolderNotFoundX, textBoxOutputFolder.Text));
         }
 
     }

@@ -841,6 +841,7 @@
                     public string MakeNewEmptyTranslationFromCurrentSubtitle { get; set; }
                     public string SplitSubtitle { get; set; }
                     public string AppendSubtitle { get; set; }
+                    public string JoinSubtitles { get; set; }
                 }
                 public class VideoMenu
                 {
@@ -1433,6 +1434,11 @@
             public string Part1 { get; set; }
             public string Part2 { get; set; }
             public string UnableToSaveFileX { get; set; }
+            public string OverwriteExistingFiles { get; set; }
+            public string FolderNotFoundX { get; set; }
+            public string NumberOfLinesX { get; set; }
+            public string NumberOfCharactersX { get; set; }
+            public string Untitled { get; set; }
         }
 
         public class StartNumberingFrom

@@ -1367,6 +1367,7 @@ namespace Nikse.SubtitleEdit.Forms
             toolStripMenuItemMakeEmptyFromCurrent.Text = _language.Menu.Tools.MakeNewEmptyTranslationFromCurrentSubtitle;
             splitToolStripMenuItem.Text = _language.Menu.Tools.SplitSubtitle;
             appendTextVisuallyToolStripMenuItem.Text = _language.Menu.Tools.AppendSubtitle;
+            joinSubtitlesToolStripMenuItem.Text = _language.Menu.Tools.JoinSubtitles;
 
             toolStripMenuItemVideo.Text = _language.Menu.Video.Title;
             openVideoToolStripMenuItem.Text = _language.Menu.Video.OpenVideo;
