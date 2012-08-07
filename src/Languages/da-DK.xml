@@ -572,6 +572,7 @@
         <MakeNewEmptyTranslationFromCurrentSubtitle>Dan ny tom oversættelse fra aktuelle undertekst</MakeNewEmptyTranslationFromCurrentSubtitle>
         <SplitSubtitle>Split undertekst...</SplitSubtitle>
         <AppendSubtitle>Tilføj/append undertekst...</AppendSubtitle>
+        <JoinSubtitles>Flet undertekster...</JoinSubtitles>
       </Tools>
       <Video>
         <Title>Video</Title>
@@ -677,6 +678,7 @@
         <AdjustDisplayDurationForSelectedLines>Juster visningstider for valgte linjer...</AdjustDisplayDurationForSelectedLines>
         <FixCommonErrorsInSelectedLines>Ret almindelige fejl i valgte linjer...</FixCommonErrorsInSelectedLines>
         <ChangeCasingForSelectedLines>Skift casing (små/store/normal) for valgte linjer...</ChangeCasingForSelectedLines>
+        <SaveSelectedLines>Gem valgte linjer som...</SaveSelectedLines>
       </ContextMenu>
     </Menu>
     <Controls>
@@ -951,6 +953,7 @@ Fortsæt?</SubtitleAppendPrompt>
     <LineNumberXErrorReadingFromSourceLineY>Linie {0} - fejl ved læsning: {1}</LineNumberXErrorReadingFromSourceLineY>
     <LineNumberXErrorReadingTimeCodeFromSourceLineY>Linie {0} - Fejl ved læsning af tidskode: {1}</LineNumberXErrorReadingTimeCodeFromSourceLineY>
     <LineNumberXExpectedNumberFromSourceLineY>Linie {0} - fejl ved linjenummer: {1}</LineNumberXExpectedNumberFromSourceLineY>
+    <XLinesSavedAsY>{0} linjer gemst som {1}</XLinesSavedAsY>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Vælg undertekst fra Matroska fil</Title>
@@ -1302,6 +1305,11 @@ Fortsæt?</SubtitleAppendPrompt>
     <Part1>Part1</Part1>
     <Part2>Part2</Part2>
     <UnableToSaveFileX>Kunne ikke gemme {0}</UnableToSaveFileX>
+    <OverwriteExistingFiles>Overskriv eksisterende filer?</OverwriteExistingFiles>
+    <FolderNotFoundX>Folder ikke fundet: {0}</FolderNotFoundX>
+    <NumberOfLinesX>Antal linjer: {0:#,###}</NumberOfLinesX>
+    <NumberOfCharactersX>Antal bogstaver: {0:#,###,###}</NumberOfCharactersX>
+    <Untitled>Unavngivet</Untitled>
   </SplitSubtitle>
   <StartNumberingFrom>
     <Title>Start nummerering fra...</Title>

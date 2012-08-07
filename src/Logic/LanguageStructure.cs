@@ -390,8 +390,8 @@
             public string FixSpanishInvertedQuestionAndExclamationMarks { get; set; }
             public string AddMissingQuote { get; set; }
             public string AddMissingQuotes { get; set; }
-            public string FixHyphens { get; set; }
-            public string FixHyphen { get; set; }
+            public string FixHyphenFirstLine { get; set; }
+            public string FixHyphenSecondLine { get; set; }
             public string XHyphensFixed { get; set; }
             public string AddMissingQuotesExample { get; set; }
             public string XMissingQuotesAdded { get; set; }
