@@ -144,6 +144,7 @@ namespace Nikse.SubtitleEdit.Forms
         private Paragraph _mainCreateStartDownEndUpParagraph;
         private Paragraph _mainAdjustStartDownEndUpAndGoToNextParagraph;
         private string _lastDoNotPrompt = string.Empty;
+        private VideoInfo _videoInfo = null;
 
         private bool AutoRepeatContinueOn
         {
@@ -2237,6 +2238,7 @@ namespace Nikse.SubtitleEdit.Forms
                     _findHelper = null;
                     _spellCheckForm = null;
                     _videoFileName = null;
+                    _videoInfo = null;
                     _videoAudioTrackNumber = -1;
                     labelVideoInfo.Text = Configuration.Settings.Language.General.NoVideoLoaded;
                     audioVisualizer.WavePeaks = null;
@@ -2321,6 +2323,7 @@ namespace Nikse.SubtitleEdit.Forms
                         _findHelper = null;
                         _spellCheckForm = null;
                         _videoFileName = null;
+                        _videoInfo = null;
                         _videoAudioTrackNumber = -1;
                         labelVideoInfo.Text = Configuration.Settings.Language.General.NoVideoLoaded;
                         audioVisualizer.WavePeaks = null;
@@ -2779,6 +2782,7 @@ namespace Nikse.SubtitleEdit.Forms
             _findHelper = null;
             _spellCheckForm = null;
             _videoFileName = null;
+            _videoInfo = null;
             _videoAudioTrackNumber = -1;
             labelVideoInfo.Text = Configuration.Settings.Language.General.NoVideoLoaded;
             audioVisualizer.WavePeaks = null;
@@ -10012,18 +10016,18 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 _endSeconds = -1;
 
-                VideoInfo videoInfo = ShowVideoInfo(fileName);
-                if (videoInfo.FramesPerSecond > 0)
-                    toolStripComboBoxFrameRate.Text = string.Format("{0:0.###}", videoInfo.FramesPerSecond);
+                _videoInfo = ShowVideoInfo(fileName);
+                if (_videoInfo.FramesPerSecond > 0)
+                    toolStripComboBoxFrameRate.Text = string.Format("{0:0.###}", _videoInfo.FramesPerSecond);
 
-                Utilities.InitializeVideoPlayerAndContainer(fileName, videoInfo, mediaPlayer, VideoLoaded, VideoEnded);
+                Utilities.InitializeVideoPlayerAndContainer(fileName, _videoInfo, mediaPlayer, VideoLoaded, VideoEnded);
                 mediaPlayer.ShowFullscreenButton = Configuration.Settings.General.VideoPlayerShowFullscreenButton;
                 mediaPlayer.OnButtonClicked -= MediaPlayer_OnButtonClicked;
                 mediaPlayer.OnButtonClicked += MediaPlayer_OnButtonClicked;
                 mediaPlayer.Volume = 0;
-                labelVideoInfo.Text = Path.GetFileName(fileName) + " " + videoInfo.Width + "x" + videoInfo.Height + " " + videoInfo.VideoCodec.Trim();
-                if (videoInfo.FramesPerSecond > 0)
-                    labelVideoInfo.Text = labelVideoInfo.Text + " " + string.Format("{0:0.0##}", videoInfo.FramesPerSecond);
+                labelVideoInfo.Text = Path.GetFileName(fileName) + " " + _videoInfo.Width + "x" + _videoInfo.Height + " " + _videoInfo.VideoCodec.Trim();
+                if (_videoInfo.FramesPerSecond > 0)
+                    labelVideoInfo.Text = labelVideoInfo.Text + " " + string.Format("{0:0.0##}", _videoInfo.FramesPerSecond);
 
 
                 string peakWaveFileName = GetPeakWaveFileName(fileName);
@@ -13121,6 +13125,7 @@ namespace Nikse.SubtitleEdit.Forms
             mediaPlayer.ResetTimeLabel();
             mediaPlayer.VideoPlayer = null;
             _videoFileName = null;
+            _videoInfo = null;
             _videoAudioTrackNumber = -1;
             labelVideoInfo.Text = Configuration.Settings.Language.General.NoVideoLoaded;
             audioVisualizer.WavePeaks = null;
@@ -13608,7 +13613,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void ToolStripMenuItemExportPngXmlClick(object sender, EventArgs e)
         {
             var exportBdnXmlPng = new ExportPngXml();
-            exportBdnXmlPng.Initialize(_subtitle, GetCurrentSubtitleFormat(), "BDNXML", _fileName);
+            exportBdnXmlPng.Initialize(_subtitle, GetCurrentSubtitleFormat(), "BDNXML", _fileName, _videoInfo);
             exportBdnXmlPng.ShowDialog(this);
         }
 
@@ -13953,14 +13958,14 @@ namespace Nikse.SubtitleEdit.Forms
         private void BluraySupToolStripMenuItemClick(object sender, EventArgs e)
         {
             var exportBdnXmlPng = new ExportPngXml();
-            exportBdnXmlPng.Initialize(_subtitle, GetCurrentSubtitleFormat(), "BLURAYSUP", _fileName);
+            exportBdnXmlPng.Initialize(_subtitle, GetCurrentSubtitleFormat(), "BLURAYSUP", _fileName, _videoInfo);
             exportBdnXmlPng.ShowDialog(this);
         }
 
         private void VobSubsubidxToolStripMenuItemClick(object sender, EventArgs e)
         {
             var exportBdnXmlPng = new ExportPngXml();
-            exportBdnXmlPng.Initialize(_subtitle, GetCurrentSubtitleFormat(), "VOBSUB", _fileName);
+            exportBdnXmlPng.Initialize(_subtitle, GetCurrentSubtitleFormat(), "VOBSUB", _fileName, _videoInfo);
             exportBdnXmlPng.ShowDialog(this);
         }
 
@@ -14144,7 +14149,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void AdobeEncoreFabImageScriptToolStripMenuItemClick(object sender, EventArgs e)
         {
             var exportBdnXmlPng = new ExportPngXml();
-            exportBdnXmlPng.Initialize(_subtitle, GetCurrentSubtitleFormat(), "FAB", _fileName);
+            exportBdnXmlPng.Initialize(_subtitle, GetCurrentSubtitleFormat(), "FAB", _fileName, _videoInfo);
             exportBdnXmlPng.ShowDialog(this);
         }
 
@@ -14262,7 +14267,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void ToolStripMenuItemImagePerFrameClick(object sender, EventArgs e)
         {
             var exportBdnXmlPng = new ExportPngXml();
-            exportBdnXmlPng.Initialize(_subtitle, GetCurrentSubtitleFormat(), "IMAGE/FRAME", _fileName);
+            exportBdnXmlPng.Initialize(_subtitle, GetCurrentSubtitleFormat(), "IMAGE/FRAME", _fileName, _videoInfo);
             exportBdnXmlPng.ShowDialog(this);
         }
 

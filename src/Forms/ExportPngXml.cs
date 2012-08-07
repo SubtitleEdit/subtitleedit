@@ -976,7 +976,7 @@ namespace Nikse.SubtitleEdit.Forms
             return s;
         }
 
-        internal void Initialize(Subtitle subtitle, SubtitleFormat format, string exportType, string fileName)
+        internal void Initialize(Subtitle subtitle, SubtitleFormat format, string exportType, string fileName, VideoInfo videoInfo)
         {
             _exportType = exportType;
             _fileName = fileName;
@@ -1112,6 +1112,12 @@ namespace Nikse.SubtitleEdit.Forms
             }
             if (comboBoxSubtitleFont.SelectedIndex == -1)
                 comboBoxSubtitleFont.SelectedIndex = 0; // take first font if default font not found (e.g. linux)
+
+            if (videoInfo != null && videoInfo.Height > 0 && videoInfo.Width > 0)
+            {
+                comboBoxResolution.Items[8] = videoInfo.Width + "x" + videoInfo.Height;
+                comboBoxResolution.SelectedIndex = 8;
+            }
 
             subtitleListView1.Fill(_subtitle);
             subtitleListView1.SelectIndexAndEnsureVisible(0);

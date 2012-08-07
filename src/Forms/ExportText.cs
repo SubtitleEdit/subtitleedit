@@ -14,6 +14,26 @@ namespace Nikse.SubtitleEdit.Forms
         public ExportText()
         {
             InitializeComponent();
+            var l = Configuration.Settings.Language.ExportText;
+            Text = l.Title;
+            labelPreview.Text = l.Preview;
+            groupBoxImportOptions.Text = l.ExportOptions;
+            groupBoxFormatText.Text = l.FormatText;
+            radioButtonFormatNone.Text = l.None;
+            radioButtonFormatMergeAll.Text = l.MergeAllLines;
+            radioButtonFormatUnbreak.Text = l.UnbreakLines;
+            checkBoxRemoveStyling.Text = l.RemoveStyling;
+            checkBoxShowLineNumbers.Text = l.ShowLineNumbers;
+            checkBoxAddNewlineAfterLineNumber.Text = l.AddNewLineAfterLineNumber;
+            checkBoxShowTimeCodes.Text = l.ShowTimeCode;
+            checkBoxAddAfterText.Text = l.AddNewLineAfterTexts;
+            checkBoxAddNewlineAfterTimeCodes.Text = l.AddNewLineAfterTimeCode;
+            checkBoxAddNewLine2.Text = l.AddNewLineBetweenSubtitles;            
+            groupBoxTimeCodeFormat.Text = l.TimeCodeFormat;
+            radioButtonTimeCodeSrt.Text = l.Srt;
+            radioButtonTimeCodeMs.Text = l.Milliseconds;
+            radioButtonTimeCodeHHMMSSFF.Text = l.HHMMSSFF;
+            labelTimeCodeSeperator.Text = l.TimeCodeSeperator;
         }
 
         internal void Initialize(Logic.Subtitle subtitle, string fileName)

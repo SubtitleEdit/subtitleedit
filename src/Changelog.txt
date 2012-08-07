@@ -36,7 +36,8 @@ Subtitle Edit Changelog
      to seperate fix item (no longer in "Start with uppercase after paragraph/period")
    * Can now read Ulead format with positions - thx Steve
    * Can now convert text subtitles in mkv/mks files via command line - thx the hulk
-   * File -> Export - can now chose custom video resolution + supports color
+   * New command line conversion parameters: /list, /overwrite, /inputfolder
+   * File -> Export - can now choose custom video resolution + supports color 
 * FIXED:
    * Auto-translate now works for English to Portuguese - thx w.tambley
    * Shortcuts with numbers (0-9)
@@ -46,7 +47,10 @@ Subtitle Edit Changelog
    * Reading of time codes + adjust with format SCC - thx Marquise
    * Accents and tildes in Cheetah caption format - thx David
    * Now always uses output folder - thx the hulk
-   * Fixed cropping of bottom images in File -> Export - thx moob
+   * Cropping of bottom images in File -> Export - thx moob
+   * Possible crash in OcrFixEngine - thx Ile
+   * Possible crash when importing vobsub from mkv files - thx Ile
+   * Can now read SCC with ";" in time code - thx Thane :) 
 
 
 3.2.8 (3rd June 2012)

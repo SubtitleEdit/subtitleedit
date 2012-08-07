@@ -19,6 +19,7 @@ namespace Nikse.SubtitleEdit.Forms
         int _totalNumberOfCharacters;
         bool _loading = true;
         List<Subtitle> _parts;
+        string _fileName;
 
         public Split()
         {
@@ -47,6 +48,7 @@ namespace Nikse.SubtitleEdit.Forms
                 textBoxFileName.Text = "Untitled";
             else
                 textBoxFileName.Text = fileName;
+            _fileName = fileName;
             _format = format;
             _encoding = encoding;
             foreach (Paragraph p in _subtitle.Paragraphs)
@@ -95,7 +97,9 @@ namespace Nikse.SubtitleEdit.Forms
             if (numericUpDownParts.Maximum > _subtitle.Paragraphs.Count)
                 numericUpDownParts.Maximum = _subtitle.Paragraphs.Count / 2;
 
-            if (string.IsNullOrEmpty(Configuration.Settings.Tools.SplitOutputFolder) || !System.IO.Directory.Exists(Configuration.Settings.Tools.SplitOutputFolder))
+            if (!string.IsNullOrEmpty(_fileName))
+                textBoxOutputFolder.Text = System.IO.Path.GetDirectoryName(_fileName);
+            else if (string.IsNullOrEmpty(Configuration.Settings.Tools.SplitOutputFolder) || !System.IO.Directory.Exists(Configuration.Settings.Tools.SplitOutputFolder))
                 textBoxOutputFolder.Text = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
             else
                 textBoxOutputFolder.Text = Configuration.Settings.Tools.SplitOutputFolder;
