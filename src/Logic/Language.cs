@@ -1516,7 +1516,7 @@ can edit in same subtitle file (collaboration)",
                 FolderNotFoundX = "Folder not found: {0}",
                 NumberOfLinesX = "Number of lines: {0:#,###}",
                 NumberOfCharactersX = "Number of characters: {0:#,###,###}",
-                Untitled = "Untitled",                
+                Untitled = "Untitled",
             };
 
             StartNumberingFrom = new LanguageStructure.StartNumberingFrom
