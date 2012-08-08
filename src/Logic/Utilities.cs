@@ -204,6 +204,10 @@ namespace Nikse.SubtitleEdit.Logic
                                 videoPlayerContainer.SetSubtitleText(text, p);
                                 return index;
                             }
+                            else if (videoPlayerContainer.SubtitleText != text)
+                            {
+                                videoPlayerContainer.SetSubtitleText(text, p);
+                            }
                             return -1;
                         }
                     }
