@@ -28,7 +28,7 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxShowTimeCodes.Text = l.ShowTimeCode;
             checkBoxAddAfterText.Text = l.AddNewLineAfterTexts;
             checkBoxAddNewlineAfterTimeCodes.Text = l.AddNewLineAfterTimeCode;
-            checkBoxAddNewLine2.Text = l.AddNewLineBetweenSubtitles;            
+            checkBoxAddNewLine2.Text = l.AddNewLineBetweenSubtitles;
             groupBoxTimeCodeFormat.Text = l.TimeCodeFormat;
             radioButtonTimeCodeSrt.Text = l.Srt;
             radioButtonTimeCodeMs.Text = l.Milliseconds;

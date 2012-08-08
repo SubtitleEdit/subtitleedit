@@ -38,7 +38,7 @@ Subtitle Edit Changelog
    * Can now read Ulead format with positions - thx Steve
    * Can now convert text subtitles in mkv/mks files via command line - thx the hulk
    * New command line conversion parameters: /list, /overwrite, /inputfolder
-   * File -> Export - can now choose custom video resolution + supports color 
+   * File -> Export - can now choose custom video resolution + supports color
 * FIXED:
    * Auto-translate now works for English to Portuguese - thx w.tambley
    * Shortcuts with numbers (0-9)

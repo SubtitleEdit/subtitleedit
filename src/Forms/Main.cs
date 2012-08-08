@@ -5918,7 +5918,7 @@ namespace Nikse.SubtitleEdit.Forms
                         startFactor = 0.80;
                     middle = currentParagraph.StartTime.TotalMilliseconds + (currentParagraph.Duration.TotalMilliseconds * startFactor);
                 }
-                
+
                 if (splitSeconds.HasValue && splitSeconds.Value > (currentParagraph.StartTime.TotalSeconds + 0.2) && splitSeconds.Value < (currentParagraph.EndTime.TotalSeconds - 0.2))
                     middle = splitSeconds.Value * 1000.0;
                 newParagraph.EndTime.TotalMilliseconds = currentParagraph.EndTime.TotalMilliseconds;
@@ -14863,7 +14863,7 @@ namespace Nikse.SubtitleEdit.Forms
                         return;
                     }
                     index++;
-                }               
+                }
             }
         }
 

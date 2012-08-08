@@ -62,7 +62,7 @@ namespace Test
         // [ClassCleanup()]
         // public static void MyClassCleanup() { }
         //
-        // Use TestInitialize to run code before running each test 
+        // Use TestInitialize to run code before running each test
         // [TestInitialize()]
         // public void MyTestInitialize() { }
         //
@@ -114,7 +114,7 @@ namespace Test
                         checkFields(cultureName, completeLang, cultureLang, fieldInfo.FieldType.GetFields());
                         checkProperty(cultureName, completeLangatt, cultureLangatt, fieldInfo.FieldType.GetProperties());
                     }
-                    else 
+                    else
                     {
                         Assert.Fail("no expecting a string here");
                     }
