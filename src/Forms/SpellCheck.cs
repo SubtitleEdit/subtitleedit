@@ -12,10 +12,10 @@ using Nikse.SubtitleEdit.Logic.SpellCheck;
 namespace Nikse.SubtitleEdit.Forms
 {
     public sealed partial class SpellCheck : Form
-    {
-
+    {    
         SpellCheckAction _action = SpellCheckAction.Skip;
         private List<string> _suggestions;
+        private string _currentAction = null;
         public SpellCheckAction Action { get { return _action; } set { _action = value; } }
         public string ChangeWord { get { return textBoxWord.Text; } set { textBoxWord.Text = value; } }
         public string ChangeWholeText { get { return textBoxWholeText.Text; } }
@@ -208,7 +208,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ButtonChangeClick(object sender, EventArgs e)
         {
-            DoAction(SpellCheckAction.Change);
+            DoAction(SpellCheckAction.Change);            
         }
 
         private void ButtonUseSuggestionClick(object sender, EventArgs e)
@@ -461,7 +461,22 @@ namespace Nikse.SubtitleEdit.Forms
                 default:
                     break;
             }
+            labelActionInfo.Text = string.Empty;
             PrepareNextWord();
+            CheckActions();
+        }
+
+        private void CheckActions()
+        {
+            if (string.IsNullOrEmpty(_currentAction))
+                return;
+
+            if (_currentAction == Configuration.Settings.Language.SpellCheck.Change)
+                ShowActionInfo(_currentAction, _currentWord + " > " + textBoxWord.Text);
+            else if (_currentAction == Configuration.Settings.Language.SpellCheck.ChangeAll)
+                ShowActionInfo(_currentAction, _currentWord + " > " + textBoxWord.Text);
+            else
+                ShowActionInfo(_currentAction, textBoxWord.Text);  
         }
 
         private void PrepareNextWord()
@@ -895,11 +910,13 @@ namespace Nikse.SubtitleEdit.Forms
         private void ShowActionInfo(string label, string text)
         {
             labelActionInfo.Text = string.Format("{0}: {1}", label, text.Trim());
+            _currentAction = label;
         }
 
         private void buttonAddToDictionary_MouseLeave(object sender, EventArgs e)
         {
             labelActionInfo.Text = string.Empty;
+            _currentAction = null;
         }
 
         private void buttonAddToNames_MouseEnter(object sender, EventArgs e)
@@ -910,6 +927,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void buttonAddToNames_MouseLeave(object sender, EventArgs e)
         {
             labelActionInfo.Text = string.Empty;
+            _currentAction = null;
         }
 
         private void buttonSkipOnce_MouseEnter(object sender, EventArgs e)
@@ -920,6 +938,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void buttonSkipOnce_MouseLeave(object sender, EventArgs e)
         {
             labelActionInfo.Text = string.Empty;
+            _currentAction = null;
         }
 
         private void buttonSkipAll_MouseEnter(object sender, EventArgs e)
@@ -930,6 +949,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void buttonSkipAll_MouseLeave(object sender, EventArgs e)
         {
             labelActionInfo.Text = string.Empty;
+            _currentAction = null;
         }
 
         private void buttonChange_MouseEnter(object sender, EventArgs e)
@@ -940,6 +960,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void buttonChange_MouseLeave(object sender, EventArgs e)
         {
             labelActionInfo.Text = string.Empty;
+            _currentAction = null;
         }
 
         private void buttonChangeAll_MouseEnter(object sender, EventArgs e)
@@ -950,6 +971,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void buttonChangeAll_MouseLeave(object sender, EventArgs e)
         {
             labelActionInfo.Text = string.Empty;
+            _currentAction = null;
         }
 
     }
