@@ -189,6 +189,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 else
                 {
                     styles.Add("popup");
+                    styles.Add("anchored");
                 }
 
                 foreach (XmlNode node in xml.SelectNodes("//annotation"))
