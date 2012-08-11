@@ -111,6 +111,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             0xe27a, // ź
             0xe85a, // Ż
             0xe87a, // ż
+            135, // þ
+            137, // ð
+            136, // Þ
+            140, // Ð
         };
 
         static readonly List<string> LatinLetters = new List<string> {
@@ -207,6 +211,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             "ź",
             "Ż",
             "ż",
+            "þ",
+            "ð",
+            "Þ",
+            "Ð",
         };
 
         static readonly List<int> HebrewCodes = new List<int>
@@ -893,7 +901,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 {
                     sb.Append(GetEncoding(_codePage).GetString(buffer, index, 1));
                 }
-
                 index++;
             }
             if (index + 20 >= buffer.Length)
