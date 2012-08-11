@@ -256,7 +256,8 @@
             this.tabPageTranslate = new System.Windows.Forms.TabPage();
             this.labelTranslateTip = new System.Windows.Forms.Label();
             this.groupBoxTranslateSearch = new System.Windows.Forms.GroupBox();
-            this.buttonCustomUrl = new System.Windows.Forms.Button();
+            this.buttonCustomUrl2 = new System.Windows.Forms.Button();
+            this.buttonCustomUrl1 = new System.Windows.Forms.Button();
             this.buttonGoogleTranslateIt = new System.Windows.Forms.Button();
             this.buttonGoogleIt = new System.Windows.Forms.Button();
             this.textBoxSearchWord = new System.Windows.Forms.TextBox();
@@ -2362,33 +2363,44 @@
             // 
             // groupBoxTranslateSearch
             // 
-            this.groupBoxTranslateSearch.Controls.Add(this.buttonCustomUrl);
+            this.groupBoxTranslateSearch.Controls.Add(this.buttonCustomUrl2);
+            this.groupBoxTranslateSearch.Controls.Add(this.buttonCustomUrl1);
             this.groupBoxTranslateSearch.Controls.Add(this.buttonGoogleTranslateIt);
             this.groupBoxTranslateSearch.Controls.Add(this.buttonGoogleIt);
             this.groupBoxTranslateSearch.Controls.Add(this.textBoxSearchWord);
-            this.groupBoxTranslateSearch.Location = new System.Drawing.Point(198, 75);
+            this.groupBoxTranslateSearch.Location = new System.Drawing.Point(198, 68);
             this.groupBoxTranslateSearch.Name = "groupBoxTranslateSearch";
-            this.groupBoxTranslateSearch.Size = new System.Drawing.Size(256, 143);
+            this.groupBoxTranslateSearch.Size = new System.Drawing.Size(256, 150);
             this.groupBoxTranslateSearch.TabIndex = 6;
             this.groupBoxTranslateSearch.TabStop = false;
             this.groupBoxTranslateSearch.Text = "Search text online";
             // 
-            // buttonCustomUrl
+            // buttonCustomUrl2
             // 
-            this.buttonCustomUrl.Enabled = false;
-            this.buttonCustomUrl.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonCustomUrl.Location = new System.Drawing.Point(6, 106);
-            this.buttonCustomUrl.Name = "buttonCustomUrl";
-            this.buttonCustomUrl.Size = new System.Drawing.Size(244, 21);
-            this.buttonCustomUrl.TabIndex = 3;
-            this.buttonCustomUrl.Text = "Custom url";
-            this.buttonCustomUrl.UseVisualStyleBackColor = true;
-            this.buttonCustomUrl.Click += new System.EventHandler(this.buttonCustomUrl_Click);
+            this.buttonCustomUrl2.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.buttonCustomUrl2.Location = new System.Drawing.Point(6, 116);
+            this.buttonCustomUrl2.Name = "buttonCustomUrl2";
+            this.buttonCustomUrl2.Size = new System.Drawing.Size(244, 21);
+            this.buttonCustomUrl2.TabIndex = 4;
+            this.buttonCustomUrl2.Text = "Custom url";
+            this.buttonCustomUrl2.UseVisualStyleBackColor = true;
+            this.buttonCustomUrl2.Click += new System.EventHandler(this.buttonCustomUrl2_Click);
+            // 
+            // buttonCustomUrl1
+            // 
+            this.buttonCustomUrl1.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.buttonCustomUrl1.Location = new System.Drawing.Point(6, 90);
+            this.buttonCustomUrl1.Name = "buttonCustomUrl1";
+            this.buttonCustomUrl1.Size = new System.Drawing.Size(244, 21);
+            this.buttonCustomUrl1.TabIndex = 3;
+            this.buttonCustomUrl1.Text = "Custom url";
+            this.buttonCustomUrl1.UseVisualStyleBackColor = true;
+            this.buttonCustomUrl1.Click += new System.EventHandler(this.buttonCustomUrl_Click);
             // 
             // buttonGoogleTranslateIt
             // 
             this.buttonGoogleTranslateIt.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonGoogleTranslateIt.Location = new System.Drawing.Point(132, 81);
+            this.buttonGoogleTranslateIt.Location = new System.Drawing.Point(132, 63);
             this.buttonGoogleTranslateIt.Name = "buttonGoogleTranslateIt";
             this.buttonGoogleTranslateIt.Size = new System.Drawing.Size(118, 21);
             this.buttonGoogleTranslateIt.TabIndex = 2;
@@ -2399,7 +2411,7 @@
             // buttonGoogleIt
             // 
             this.buttonGoogleIt.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonGoogleIt.Location = new System.Drawing.Point(6, 81);
+            this.buttonGoogleIt.Location = new System.Drawing.Point(6, 63);
             this.buttonGoogleIt.Name = "buttonGoogleIt";
             this.buttonGoogleIt.Size = new System.Drawing.Size(120, 21);
             this.buttonGoogleIt.TabIndex = 1;
@@ -2409,10 +2421,10 @@
             // 
             // textBoxSearchWord
             // 
-            this.textBoxSearchWord.Location = new System.Drawing.Point(6, 25);
+            this.textBoxSearchWord.Location = new System.Drawing.Point(6, 18);
             this.textBoxSearchWord.Multiline = true;
             this.textBoxSearchWord.Name = "textBoxSearchWord";
-            this.textBoxSearchWord.Size = new System.Drawing.Size(244, 50);
+            this.textBoxSearchWord.Size = new System.Drawing.Size(244, 39);
             this.textBoxSearchWord.TabIndex = 0;
             // 
             // groupBoxAutoContinue
@@ -4087,7 +4099,7 @@
         private System.Windows.Forms.Button buttonSetStartAndOffsetRest;
         private System.Windows.Forms.Button buttonAdjustSetStartTime;
         private System.Windows.Forms.Label labelTranslateTip;
-        private System.Windows.Forms.Button buttonCustomUrl;
+        private System.Windows.Forms.Button buttonCustomUrl1;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemOpenContainingFolder;
         private System.Windows.Forms.NumericUpDown numericUpDownSec1;
         private System.Windows.Forms.Button buttonForward1;
@@ -4248,6 +4260,7 @@
         private System.Windows.Forms.ToolStripMenuItem textWordsPerMinutewpmToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemTTProperties;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemSaveSelectedLines;
+        private System.Windows.Forms.Button buttonCustomUrl2;
     }
 }
 

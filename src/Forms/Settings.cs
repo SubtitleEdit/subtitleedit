@@ -129,8 +129,18 @@ namespace Nikse.SubtitleEdit.Forms
             else
                 comboBoxlVideoPlayerPreviewFontSize.SelectedIndex = 3;
 
-            comboBoxCustomSearch.Text = Configuration.Settings.VideoControls.CustomSearchText;
-            textBoxCustomSearchUrl.Text = Configuration.Settings.VideoControls.CustomSearchUrl;
+            comboBoxCustomSearch1.Text = Configuration.Settings.VideoControls.CustomSearchText1;
+            comboBoxCustomSearch2.Text = Configuration.Settings.VideoControls.CustomSearchText2;
+            comboBoxCustomSearch3.Text = Configuration.Settings.VideoControls.CustomSearchText3;
+            comboBoxCustomSearch4.Text = Configuration.Settings.VideoControls.CustomSearchText4;
+            comboBoxCustomSearch5.Text = Configuration.Settings.VideoControls.CustomSearchText5;
+            comboBoxCustomSearch6.Text = Configuration.Settings.VideoControls.CustomSearchText6;
+            textBoxCustomSearchUrl1.Text = Configuration.Settings.VideoControls.CustomSearchUrl1;
+            textBoxCustomSearchUrl2.Text = Configuration.Settings.VideoControls.CustomSearchUrl2;
+            textBoxCustomSearchUrl3.Text = Configuration.Settings.VideoControls.CustomSearchUrl3;
+            textBoxCustomSearchUrl4.Text = Configuration.Settings.VideoControls.CustomSearchUrl4;
+            textBoxCustomSearchUrl5.Text = Configuration.Settings.VideoControls.CustomSearchUrl5;
+            textBoxCustomSearchUrl6.Text = Configuration.Settings.VideoControls.CustomSearchUrl6;
 
             foreach (var x in System.Drawing.FontFamily.Families)
             {
@@ -219,11 +229,11 @@ namespace Nikse.SubtitleEdit.Forms
             labelSubtitleFontSize.Text = language.SubtitleFontSize;
             checkBoxSubtitleFontBold.Text = language.SubtitleBold;
             checkBoxSubtitleCenter.Text = language.SubtitleCenter;
-            checkBoxSubtitleCenter.Left = checkBoxSubtitleFontBold.Left + checkBoxSubtitleFontBold.Width + 6;
+            checkBoxSubtitleCenter.Left = checkBoxSubtitleFontBold.Left + checkBoxSubtitleFontBold.Width + 4;
             labelSubtitleFontColor.Text = language.SubtitleFontColor;
             labelSubtitleFontBackgroundColor.Text = language.SubtitleBackgroundColor;
             labelSpellChecker.Text = language.SpellChecker;
-            comboBoxSpellChecker.Left = labelSpellChecker.Left + labelSpellChecker.Width + 3;
+            comboBoxSpellChecker.Left = labelSpellChecker.Left + labelSpellChecker.Width + 4;
             checkBoxRememberRecentFiles.Text = language.RememberRecentFiles;
             checkBoxReopenLastOpened.Text = language.StartWithLastFileLoaded;
             checkBoxRememberSelectedLine.Text = language.RememberSelectedLine;
@@ -246,7 +256,7 @@ namespace Nikse.SubtitleEdit.Forms
                 comboBoxTimeCodeMode.SelectedIndex = 1;
             else
                 comboBoxTimeCodeMode.SelectedIndex = 0;
-            comboBoxTimeCodeMode.Left = labelTimeCodeMode.Left + labelTimeCodeMode.Width + 5;
+            comboBoxTimeCodeMode.Left = labelTimeCodeMode.Left + labelTimeCodeMode.Width + 4;
 
             comboBoxAutoBackup.Items[0] = Configuration.Settings.Language.General.None;
             comboBoxAutoBackup.Items[1] = language.AutoBackupEveryMinute;
@@ -271,10 +281,12 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxVideoPlayerShowFullscreenButton.Text = language.ShowFullscreenButton;
 
             labelDefaultVol.Text = language.DefaultVolume;
+            comboBoxVideoPlayerDefaultVolume.Left = labelDefaultVol.Left + labelDefaultVol.Width;
             labelVolDescr.Text = language.VolumeNotes;
+            labelVolDescr.Left = comboBoxVideoPlayerDefaultVolume.Left + comboBoxVideoPlayerDefaultVolume.Width + 4;
 
             labelVideoPlayerPreviewFontSize.Text = language.PreviewFontSize;
-            comboBoxlVideoPlayerPreviewFontSize.Left = labelVideoPlayerPreviewFontSize.Left + labelVideoPlayerPreviewFontSize.Width;
+            comboBoxlVideoPlayerPreviewFontSize.Left = labelVideoPlayerPreviewFontSize.Left + labelVideoPlayerPreviewFontSize.Width;            
 
             groupBoxMainWindowVideoControls.Text = language.MainWindowVideoControls;
             labelCustomSearch.Text = language.CustomSearchTextAndUrl;
@@ -305,7 +317,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             groupBoxWordLists.Text = language.WordLists;
             labelWordListLanguage.Text = language.Language;
-            comboBoxWordListLanguage.Left = labelWordListLanguage.Left + labelWordListLanguage.Width + 5;
+            comboBoxWordListLanguage.Left = labelWordListLanguage.Left + labelWordListLanguage.Width + 4;
             groupBoxNamesIgonoreLists.Text = language.NamesIgnoreLists;
             groupBoxUserWordList.Text = language.UserWordList;
             groupBoxOcrFixList.Text = language.OcrFixList;
@@ -545,6 +557,15 @@ namespace Nikse.SubtitleEdit.Forms
             createNode.Nodes.Add(Configuration.Settings.Language.Settings.MainCreateStartDownEndUp + GetShortcutText(Configuration.Settings.Shortcuts.MainCreateStartDownEndUp));
             treeViewShortcuts.Nodes.Add(createNode);
 
+            var translateNote = new TreeNode(Configuration.Settings.Language.Main.VideoControls.Translate);
+            translateNote.Nodes.Add(Configuration.Settings.Language.Settings.CustomSearch1 + GetShortcutText(Configuration.Settings.Shortcuts.MainTranslateCustomSearch1));
+            translateNote.Nodes.Add(Configuration.Settings.Language.Settings.CustomSearch2 + GetShortcutText(Configuration.Settings.Shortcuts.MainTranslateCustomSearch2));
+            translateNote.Nodes.Add(Configuration.Settings.Language.Settings.CustomSearch3 + GetShortcutText(Configuration.Settings.Shortcuts.MainTranslateCustomSearch3));
+            translateNote.Nodes.Add(Configuration.Settings.Language.Settings.CustomSearch4 + GetShortcutText(Configuration.Settings.Shortcuts.MainTranslateCustomSearch4));
+            translateNote.Nodes.Add(Configuration.Settings.Language.Settings.CustomSearch5 + GetShortcutText(Configuration.Settings.Shortcuts.MainTranslateCustomSearch5));
+            translateNote.Nodes.Add(Configuration.Settings.Language.Settings.CustomSearch6 + GetShortcutText(Configuration.Settings.Shortcuts.MainTranslateCustomSearch6));
+            treeViewShortcuts.Nodes.Add(translateNote);
+
             var adjustNode = new TreeNode(Configuration.Settings.Language.Main.VideoControls.Adjust);
             adjustNode.Nodes.Add(Configuration.Settings.Language.Main.VideoControls.SetstartTimeAndOffsetOfRest + GetShortcutText(Configuration.Settings.Shortcuts.MainAdjustSetStartAndOffsetTheRest));
             adjustNode.Nodes.Add(Configuration.Settings.Language.Main.VideoControls.SetEndTimeAndGoToNext + GetShortcutText(Configuration.Settings.Shortcuts.MainAdjustSetEndAndGotoNext));
@@ -600,7 +621,7 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxSyntaxColorDurationTooLarge.Text = language.SyntaxColorDurationIfTooLarge;
             checkBoxSyntaxColorTextTooLong.Text = language.SyntaxColorTextIfTooLong;
             checkBoxSyntaxColorTextMoreThanTwoLines.Text = language.SyntaxColorTextMoreThanXLines;
-            numericUpDownSyntaxColorTextMoreThanXLines.Left = checkBoxSyntaxColorTextMoreThanTwoLines.Left + checkBoxSyntaxColorTextMoreThanTwoLines.Width + 5;
+            numericUpDownSyntaxColorTextMoreThanXLines.Left = checkBoxSyntaxColorTextMoreThanTwoLines.Left + checkBoxSyntaxColorTextMoreThanTwoLines.Width + 4;
             checkBoxSyntaxOverlap.Text = language.SyntaxColorOverlap;
 
             FixLargeFonts();
@@ -863,8 +884,18 @@ namespace Nikse.SubtitleEdit.Forms
 
             gs.VideoPlayerPreviewFontSize = int.Parse(comboBoxlVideoPlayerPreviewFontSize.Items[0].ToString()) + comboBoxlVideoPlayerPreviewFontSize.SelectedIndex;
 
-            Configuration.Settings.VideoControls.CustomSearchText = comboBoxCustomSearch.Text;
-            Configuration.Settings.VideoControls.CustomSearchUrl = textBoxCustomSearchUrl.Text;
+            Configuration.Settings.VideoControls.CustomSearchText1 = comboBoxCustomSearch1.Text;
+            Configuration.Settings.VideoControls.CustomSearchText2 = comboBoxCustomSearch2.Text;
+            Configuration.Settings.VideoControls.CustomSearchText3 = comboBoxCustomSearch3.Text;
+            Configuration.Settings.VideoControls.CustomSearchText4 = comboBoxCustomSearch4.Text;
+            Configuration.Settings.VideoControls.CustomSearchText5 = comboBoxCustomSearch5.Text;
+            Configuration.Settings.VideoControls.CustomSearchText6 = comboBoxCustomSearch6.Text;
+            Configuration.Settings.VideoControls.CustomSearchUrl1 = textBoxCustomSearchUrl1.Text;
+            Configuration.Settings.VideoControls.CustomSearchUrl2 = textBoxCustomSearchUrl2.Text;
+            Configuration.Settings.VideoControls.CustomSearchUrl3 = textBoxCustomSearchUrl3.Text;
+            Configuration.Settings.VideoControls.CustomSearchUrl4 = textBoxCustomSearchUrl4.Text;
+            Configuration.Settings.VideoControls.CustomSearchUrl5 = textBoxCustomSearchUrl5.Text;
+            Configuration.Settings.VideoControls.CustomSearchUrl6 = textBoxCustomSearchUrl6.Text;
 
             int maxLength = (int)numericUpDownSubtitleLineMaximumLength.Value;
             if (maxLength > 10 && maxLength < 1000)
@@ -1087,13 +1118,35 @@ namespace Nikse.SubtitleEdit.Forms
                         Configuration.Settings.Shortcuts.MainCreateSetStart = GetShortcut(node.Text);
                     else if (text == Configuration.Settings.Language.Main.VideoControls.SetEndTime.Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.MainCreateSetEnd = GetShortcut(node.Text);
-                    if (text == Configuration.Settings.Language.Settings.MainCreateStartDownEndUp.Replace("&", string.Empty))
+                    else if (text == Configuration.Settings.Language.Settings.MainCreateStartDownEndUp.Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.MainCreateStartDownEndUp = GetShortcut(node.Text);
                 }
             }
 
-            //Adjust
+
+            //Translate
             foreach (TreeNode node in treeViewShortcuts.Nodes[8].Nodes)
+            {
+                if (node.Text.Contains("["))
+                {
+                    string text = node.Text.Substring(0, node.Text.IndexOf("[")).Trim();
+                    if (text == Configuration.Settings.Language.Settings.CustomSearch1.Replace("&", string.Empty))
+                        Configuration.Settings.Shortcuts.MainTranslateCustomSearch1 = GetShortcut(node.Text);
+                    else if (text == Configuration.Settings.Language.Settings.CustomSearch2.Replace("&", string.Empty))
+                        Configuration.Settings.Shortcuts.MainTranslateCustomSearch2 = GetShortcut(node.Text);
+                    else if (text == Configuration.Settings.Language.Settings.CustomSearch3.Replace("&", string.Empty))
+                        Configuration.Settings.Shortcuts.MainTranslateCustomSearch3 = GetShortcut(node.Text);
+                    else if (text == Configuration.Settings.Language.Settings.CustomSearch4.Replace("&", string.Empty))
+                        Configuration.Settings.Shortcuts.MainTranslateCustomSearch4 = GetShortcut(node.Text);
+                    else if (text == Configuration.Settings.Language.Settings.CustomSearch5.Replace("&", string.Empty))
+                        Configuration.Settings.Shortcuts.MainTranslateCustomSearch5 = GetShortcut(node.Text);
+                    else if (text == Configuration.Settings.Language.Settings.CustomSearch6.Replace("&", string.Empty))
+                        Configuration.Settings.Shortcuts.MainTranslateCustomSearch6 = GetShortcut(node.Text);
+                }
+            }
+
+            //Adjust
+            foreach (TreeNode node in treeViewShortcuts.Nodes[9].Nodes)
             {
                 if (node.Text.Contains("["))
                 {
@@ -1124,7 +1177,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             //Audio-visualizer
-            foreach (TreeNode node in treeViewShortcuts.Nodes[9].Nodes)
+            foreach (TreeNode node in treeViewShortcuts.Nodes[10].Nodes)
             {
                 if (node.Text.Contains("["))
                 {
@@ -1830,14 +1883,37 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void comboBoxCustomSearch_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (comboBoxCustomSearch.SelectedIndex >= 0)
+            ComboBox cb = (ComboBox)sender;
+            TextBox tb = textBoxCustomSearchUrl1;
+            if (cb == comboBoxCustomSearch2)
+                tb = textBoxCustomSearchUrl2;
+            else if (cb == comboBoxCustomSearch3)
+                tb = textBoxCustomSearchUrl3;
+            else if (cb == comboBoxCustomSearch4)
+                tb = textBoxCustomSearchUrl4;
+            else if (cb == comboBoxCustomSearch5)
+                tb = textBoxCustomSearchUrl5;
+            else if (cb == comboBoxCustomSearch6)
+                tb = textBoxCustomSearchUrl6;
+
+            if (cb.SelectedIndex >= 0)
             {
-                if (comboBoxCustomSearch.SelectedIndex == 0)
-                    textBoxCustomSearchUrl.Text = "http://www.thefreedictionary.com/{0}";
-                else if (comboBoxCustomSearch.SelectedIndex == 1)
-                    textBoxCustomSearchUrl.Text = "http://dictionary.reference.com/browse/{0}";
-                else if (comboBoxCustomSearch.SelectedIndex == 2)
-                    textBoxCustomSearchUrl.Text = "http://www.visuwords.com/?word={0}";
+                if (cb.SelectedIndex == 0)
+                    tb.Text = "http://dictionary.reference.com/browse/{0}";
+                else if (cb.SelectedIndex == 1)
+                    tb.Text = "http://www.learnersdictionary.com/search/{0}";
+                else if (cb.SelectedIndex == 2)
+                    tb.Text = "http://www.merriam-webster.com/dictionary/{0}";
+                else if (cb.SelectedIndex == 3)
+                    tb.Text = "http://www.thefreedictionary.com/{0}";
+                else if (cb.SelectedIndex == 4)
+                    tb.Text = "http://thesaurus.com/browse/{0}";
+                else if (cb.SelectedIndex == 5)
+                    tb.Text = "http://www.urbandictionary.com/define.php?term={0}";
+                else if (cb.SelectedIndex == 6)
+                    tb.Text = "http://www.visuwords.com/?word={0}";
+                else if (cb.SelectedIndex == 7)
+                    tb.Text = "http://en.m.wikipedia.org/wiki?search={0}";
             }
         }
 
@@ -2070,6 +2146,16 @@ namespace Nikse.SubtitleEdit.Forms
             colorDialogSSAStyle.Color = panelListViewSyntaxColorError.BackColor;
             if (colorDialogSSAStyle.ShowDialog() == DialogResult.OK)
                 panelListViewSyntaxColorError.BackColor = colorDialogSSAStyle.Color;
+        }
+
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label1_Click(object sender, EventArgs e)
+        {
+
         }
 
     }
