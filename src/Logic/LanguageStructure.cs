@@ -1351,6 +1351,12 @@
             public string TogglePlayPause { get; set; }
             public string Pause { get; set; }
             public string Fullscreen { get; set; }
+            public string CustomSearch1 { get; set; }
+            public string CustomSearch2 { get; set; }
+            public string CustomSearch3 { get; set; }
+            public string CustomSearch4 { get; set; }
+            public string CustomSearch5 { get; set; }
+            public string CustomSearch6 { get; set; }
             public string SyntaxColoring { get; set; }
             public string ListViewSyntaxColoring { get; set; }
             public string SyntaxColorDurationIfTooSmall { get; set; }

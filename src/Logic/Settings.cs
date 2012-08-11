@@ -446,8 +446,18 @@ namespace Nikse.SubtitleEdit.Logic
 
     public class VideoControlsSettings
     {
-        public string CustomSearchText { get; set; }
-        public string CustomSearchUrl { get; set; }
+        public string CustomSearchText1 { get; set; }
+        public string CustomSearchText2 { get; set; }
+        public string CustomSearchText3 { get; set; }
+        public string CustomSearchText4 { get; set; }
+        public string CustomSearchText5 { get; set; }
+        public string CustomSearchText6 { get; set; }
+        public string CustomSearchUrl1 { get; set; }
+        public string CustomSearchUrl2 { get; set; }
+        public string CustomSearchUrl3 { get; set; }
+        public string CustomSearchUrl4 { get; set; }
+        public string CustomSearchUrl5 { get; set; }
+        public string CustomSearchUrl6 { get; set; }
         public string LastActiveTab { get; set; }
         public bool WaveFormDrawGrid { get; set; }
         public Color WaveFormGridColor { get; set; }
@@ -466,8 +476,11 @@ namespace Nikse.SubtitleEdit.Logic
 
         public VideoControlsSettings()
         {
-            CustomSearchText = "The Free Dictionary";
-            CustomSearchUrl = "http://www.thefreedictionary.com/{0}";
+            CustomSearchText1 = "The Free Dictionary";
+            CustomSearchUrl1 = "http://www.thefreedictionary.com/{0}";
+            CustomSearchText2 = "Wikipedia";
+            CustomSearchUrl2 = "http://en.m.wikipedia.org/wiki?search={0}";
+        
             LastActiveTab = "Translate";
             WaveFormDrawGrid = true;
             WaveFormGridColor = Color.FromArgb(255, 20, 20, 18);
@@ -599,6 +612,12 @@ namespace Nikse.SubtitleEdit.Logic
         public string WaveformSearchSilenceForward { get; set; }
         public string WaveformSearchSilenceBack { get; set; }
         public string WaveformAddTextHere { get; set; }
+        public string MainTranslateCustomSearch1 { get; set; }
+        public string MainTranslateCustomSearch2 { get; set; }
+        public string MainTranslateCustomSearch3 { get; set; }
+        public string MainTranslateCustomSearch4 { get; set; }
+        public string MainTranslateCustomSearch5 { get; set; }
+        public string MainTranslateCustomSearch6 { get; set; }
 
         public Shortcuts()
         {
@@ -1337,12 +1356,42 @@ namespace Nikse.SubtitleEdit.Logic
 
             settings.VideoControls = new VideoControlsSettings();
             node = doc.DocumentElement.SelectSingleNode("VideoControls");
-            subNode = node.SelectSingleNode("CustomSearchText");
+            subNode = node.SelectSingleNode("CustomSearchText1");
             if (subNode != null)
-                settings.VideoControls.CustomSearchText = subNode.InnerText;
-            subNode = node.SelectSingleNode("CustomSearchUrl");
+                settings.VideoControls.CustomSearchText1 = subNode.InnerText;
+            subNode = node.SelectSingleNode("CustomSearchText2");
             if (subNode != null)
-                settings.VideoControls.CustomSearchUrl = subNode.InnerText;
+                settings.VideoControls.CustomSearchText2 = subNode.InnerText;
+            subNode = node.SelectSingleNode("CustomSearchText3");
+            if (subNode != null)
+                settings.VideoControls.CustomSearchText3 = subNode.InnerText;
+            subNode = node.SelectSingleNode("CustomSearchText4");
+            if (subNode != null)
+                settings.VideoControls.CustomSearchText4 = subNode.InnerText;
+            subNode = node.SelectSingleNode("CustomSearchText5");
+            if (subNode != null)
+                settings.VideoControls.CustomSearchText5 = subNode.InnerText;
+            subNode = node.SelectSingleNode("CustomSearchText6");
+            if (subNode != null)
+                settings.VideoControls.CustomSearchText6 = subNode.InnerText;
+            subNode = node.SelectSingleNode("CustomSearchUrl1");
+            if (subNode != null)
+                settings.VideoControls.CustomSearchUrl1 = subNode.InnerText;
+            subNode = node.SelectSingleNode("CustomSearchUrl1");
+            if (subNode != null)
+                settings.VideoControls.CustomSearchUrl1 = subNode.InnerText;
+            subNode = node.SelectSingleNode("CustomSearchUrl2");
+            if (subNode != null)
+                settings.VideoControls.CustomSearchUrl2 = subNode.InnerText;
+            subNode = node.SelectSingleNode("CustomSearchUrl3");
+            if (subNode != null)
+                settings.VideoControls.CustomSearchUrl3 = subNode.InnerText;
+            subNode = node.SelectSingleNode("CustomSearchUrl4");
+            if (subNode != null)
+                settings.VideoControls.CustomSearchUrl5 = subNode.InnerText;
+            subNode = node.SelectSingleNode("CustomSearchUrl6");
+            if (subNode != null)
+                settings.VideoControls.CustomSearchUrl6 = subNode.InnerText;
             subNode = node.SelectSingleNode("LastActiveTab");
             if (subNode != null)
                 settings.VideoControls.LastActiveTab = subNode.InnerText;
@@ -1645,6 +1694,24 @@ namespace Nikse.SubtitleEdit.Logic
                 subNode = node.SelectSingleNode("WaveformAddTextHere");
                 if (subNode != null)
                     settings.Shortcuts.WaveformAddTextHere = subNode.InnerText;
+                subNode = node.SelectSingleNode("MainTranslateCustomSearch1");
+                if (subNode != null)
+                    settings.Shortcuts.MainTranslateCustomSearch1 = subNode.InnerText;
+                subNode = node.SelectSingleNode("MainTranslateCustomSearch2");
+                if (subNode != null)
+                    settings.Shortcuts.MainTranslateCustomSearch2 = subNode.InnerText;
+                subNode = node.SelectSingleNode("MainTranslateCustomSearch3");
+                if (subNode != null)
+                    settings.Shortcuts.MainTranslateCustomSearch3 = subNode.InnerText;
+                subNode = node.SelectSingleNode("MainTranslateCustomSearch4");
+                if (subNode != null)
+                    settings.Shortcuts.MainTranslateCustomSearch4 = subNode.InnerText;
+                subNode = node.SelectSingleNode("MainTranslateCustomSearch5");
+                if (subNode != null)
+                    settings.Shortcuts.MainTranslateCustomSearch5 = subNode.InnerText;
+                subNode = node.SelectSingleNode("MainTranslateCustomSearch6");
+                if (subNode != null)
+                    settings.Shortcuts.MainTranslateCustomSearch6 = subNode.InnerText;
             }
 
             settings.RemoveTextForHearingImpaired = new RemoveTextForHearingImpairedSettings();
@@ -1914,8 +1981,18 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteEndElement();
 
             textWriter.WriteStartElement("VideoControls", "");
-            textWriter.WriteElementString("CustomSearchText", settings.VideoControls.CustomSearchText);
-            textWriter.WriteElementString("CustomSearchUrl", settings.VideoControls.CustomSearchUrl);
+            textWriter.WriteElementString("CustomSearchText1", settings.VideoControls.CustomSearchText1);
+            textWriter.WriteElementString("CustomSearchText2", settings.VideoControls.CustomSearchText2);
+            textWriter.WriteElementString("CustomSearchText3", settings.VideoControls.CustomSearchText3);
+            textWriter.WriteElementString("CustomSearchText4", settings.VideoControls.CustomSearchText4);
+            textWriter.WriteElementString("CustomSearchText5", settings.VideoControls.CustomSearchText5);
+            textWriter.WriteElementString("CustomSearchText6", settings.VideoControls.CustomSearchText6);
+            textWriter.WriteElementString("CustomSearchUrl1", settings.VideoControls.CustomSearchUrl1);
+            textWriter.WriteElementString("CustomSearchUrl2", settings.VideoControls.CustomSearchUrl2);
+            textWriter.WriteElementString("CustomSearchUrl3", settings.VideoControls.CustomSearchUrl3);
+            textWriter.WriteElementString("CustomSearchUrl4", settings.VideoControls.CustomSearchUrl4);
+            textWriter.WriteElementString("CustomSearchUrl5", settings.VideoControls.CustomSearchUrl5);
+            textWriter.WriteElementString("CustomSearchUrl6", settings.VideoControls.CustomSearchUrl6);
             textWriter.WriteElementString("LastActiveTab", settings.VideoControls.LastActiveTab);
             textWriter.WriteElementString("WaveFormDrawGrid", settings.VideoControls.WaveFormDrawGrid.ToString());
             textWriter.WriteElementString("WaveFormGridColor", settings.VideoControls.WaveFormGridColor.ToArgb().ToString());
@@ -2027,6 +2104,12 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("WaveformSearchSilenceForward", settings.Shortcuts.WaveformSearchSilenceForward);
             textWriter.WriteElementString("WaveformSearchSilenceBack", settings.Shortcuts.WaveformSearchSilenceBack);
             textWriter.WriteElementString("WaveformAddTextHere", settings.Shortcuts.WaveformAddTextHere);
+            textWriter.WriteElementString("MainTranslateCustomSearch1", settings.Shortcuts.MainTranslateCustomSearch1);
+            textWriter.WriteElementString("MainTranslateCustomSearch2", settings.Shortcuts.MainTranslateCustomSearch2);
+            textWriter.WriteElementString("MainTranslateCustomSearch3", settings.Shortcuts.MainTranslateCustomSearch3);
+            textWriter.WriteElementString("MainTranslateCustomSearch4", settings.Shortcuts.MainTranslateCustomSearch4);
+            textWriter.WriteElementString("MainTranslateCustomSearch5", settings.Shortcuts.MainTranslateCustomSearch5);
+            textWriter.WriteElementString("MainTranslateCustomSearch6", settings.Shortcuts.MainTranslateCustomSearch6);
             textWriter.WriteEndElement();
 
             textWriter.WriteStartElement("RemoveTextForHearingImpaired", "");

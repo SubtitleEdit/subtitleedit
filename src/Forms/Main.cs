@@ -139,6 +139,12 @@ namespace Nikse.SubtitleEdit.Forms
         Keys _waveformSearchSilenceForward = Keys.None;
         Keys _waveformSearchSilenceBack = Keys.None;
         Keys _waveformAddTextAtHere = Keys.None;
+        Keys _mainTranslateCustomSearch1 = Keys.None;
+        Keys _mainTranslateCustomSearch2 = Keys.None;
+        Keys _mainTranslateCustomSearch3 = Keys.None;
+        Keys _mainTranslateCustomSearch4 = Keys.None;
+        Keys _mainTranslateCustomSearch5 = Keys.None;
+        Keys _mainTranslateCustomSearch6 = Keys.None;
         bool _videoLoadedGoToSubPosAndPause = false;
         string _cutText = string.Empty;
         private Paragraph _mainCreateStartDownEndUpParagraph;
@@ -355,8 +361,11 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 tabControl1_SelectedIndexChanged(null, null);
 
-                buttonCustomUrl.Text = Configuration.Settings.VideoControls.CustomSearchText;
-                buttonCustomUrl.Enabled = Configuration.Settings.VideoControls.CustomSearchUrl.Length > 1;
+                buttonCustomUrl1.Text = Configuration.Settings.VideoControls.CustomSearchText1;
+                buttonCustomUrl1.Visible = Configuration.Settings.VideoControls.CustomSearchUrl1.Length > 1;
+
+                buttonCustomUrl2.Text = Configuration.Settings.VideoControls.CustomSearchText2;
+                buttonCustomUrl2.Visible = Configuration.Settings.VideoControls.CustomSearchUrl2.Length > 1;
 
                 // Initialize events etc. for audio wave form
                 audioVisualizer.OnDoubleClickNonParagraph += AudioWaveForm_OnDoubleClickNonParagraph;
@@ -2961,8 +2970,10 @@ namespace Nikse.SubtitleEdit.Forms
             Utilities.InitializeSubtitleFont(textBoxListViewText);
             Utilities.InitializeSubtitleFont(textBoxListViewTextAlternate);
             Utilities.InitializeSubtitleFont(SubtitleListview1);
-            buttonCustomUrl.Text = Configuration.Settings.VideoControls.CustomSearchText;
-            buttonCustomUrl.Enabled = Configuration.Settings.VideoControls.CustomSearchUrl.Length > 1;
+            buttonCustomUrl1.Text = Configuration.Settings.VideoControls.CustomSearchText1;
+            buttonCustomUrl1.Visible = Configuration.Settings.VideoControls.CustomSearchUrl1.Length > 1;
+            buttonCustomUrl2.Text = Configuration.Settings.VideoControls.CustomSearchText2;
+            buttonCustomUrl2.Visible = Configuration.Settings.VideoControls.CustomSearchUrl2.Length > 1;
 
             audioVisualizer.DrawGridLines = Configuration.Settings.VideoControls.WaveFormDrawGrid;
             audioVisualizer.GridColor = Configuration.Settings.VideoControls.WaveFormGridColor;
@@ -8195,6 +8206,10 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
+            if (e.Modifiers == Keys.Alt && e.KeyCode == (Keys.RButton | Keys.ShiftKey))
+                return;
+
+
             if (e.Modifiers == Keys.Shift && e.KeyCode == Keys.ShiftKey)
                 return;
             if (e.Modifiers == Keys.Control && e.KeyCode == (Keys.LButton | Keys.ShiftKey))
@@ -8800,9 +8815,54 @@ namespace Nikse.SubtitleEdit.Forms
                     e.SuppressKeyPress = true;
                 }
             }
+            else if (tabControlButtons.SelectedTab == tabPageTranslate)
+            {
+                if (_mainTranslateCustomSearch1 == e.KeyData)
+                {
+                    e.SuppressKeyPress = true;
+                    RunCustomSearch(Configuration.Settings.VideoControls.CustomSearchUrl1);
+                }
+                else if (_mainTranslateCustomSearch2 == e.KeyData)
+                {
+                    e.SuppressKeyPress = true;
+                    RunCustomSearch(Configuration.Settings.VideoControls.CustomSearchUrl2);
+                }
+                else if (_mainTranslateCustomSearch3 == e.KeyData)
+                {
+                    e.SuppressKeyPress = true;
+                    RunCustomSearch(Configuration.Settings.VideoControls.CustomSearchUrl3);
+                }
+                else if (_mainTranslateCustomSearch4 == e.KeyData)
+                {
+                    e.SuppressKeyPress = true;
+                    RunCustomSearch(Configuration.Settings.VideoControls.CustomSearchUrl4);
+                }
+                else if (_mainTranslateCustomSearch5 == e.KeyData)
+                {
+                    e.SuppressKeyPress = true;
+                    RunCustomSearch(Configuration.Settings.VideoControls.CustomSearchUrl5);
+                }
+                else if (_mainTranslateCustomSearch6 == e.KeyData)
+                {
+                    e.SuppressKeyPress = true;
+                    RunCustomSearch(Configuration.Settings.VideoControls.CustomSearchUrl6);
+                }
+            }
             // put new entries above tabs
         }
 
+        
+
+        private void RunCustomSearch(string url)
+        {
+            if (!string.IsNullOrEmpty(url) && !string.IsNullOrEmpty(textBoxSearchWord.Text))
+            {
+                if (url.Contains("{0}"))
+                    url = string.Format(url, Utilities.UrlEncode(textBoxSearchWord.Text));
+                System.Diagnostics.Process.Start(url);
+            }
+        }
+        
         private void GoFullscreen()
         {
             if (_videoPlayerUnDocked == null || _videoPlayerUnDocked.IsDisposed)
@@ -11486,6 +11546,12 @@ namespace Nikse.SubtitleEdit.Forms
             _waveformSearchSilenceForward = Utilities.GetKeys(Configuration.Settings.Shortcuts.WaveformSearchSilenceForward);
             _waveformSearchSilenceBack = Utilities.GetKeys(Configuration.Settings.Shortcuts.WaveformSearchSilenceBack);
             _waveformAddTextAtHere = Utilities.GetKeys(Configuration.Settings.Shortcuts.WaveformAddTextHere);
+            _mainTranslateCustomSearch1  = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainTranslateCustomSearch1);
+            _mainTranslateCustomSearch2  = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainTranslateCustomSearch2);
+            _mainTranslateCustomSearch3  = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainTranslateCustomSearch3);
+            _mainTranslateCustomSearch4  = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainTranslateCustomSearch4);
+            _mainTranslateCustomSearch5  = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainTranslateCustomSearch5);
+            _mainTranslateCustomSearch6  = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainTranslateCustomSearch6);
         }
 
         private void LoadPlugins()
@@ -12000,15 +12066,12 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonCustomUrl_Click(object sender, EventArgs e)
         {
-            string url = Configuration.Settings.VideoControls.CustomSearchUrl;
-            if (!string.IsNullOrEmpty(url))
-            {
-                if (url.Contains("{0}"))
-                {
-                    url = string.Format(url, Utilities.UrlEncode(textBoxSearchWord.Text));
-                }
-                System.Diagnostics.Process.Start(url);
-            }
+            RunCustomSearch(Configuration.Settings.VideoControls.CustomSearchUrl1);
+        }
+
+        private void buttonCustomUrl2_Click(object sender, EventArgs e)
+        {
+            RunCustomSearch(Configuration.Settings.VideoControls.CustomSearchUrl2);
         }
 
         private void ShowhideWaveFormToolStripMenuItemClick(object sender, EventArgs e)
@@ -14865,7 +14928,7 @@ namespace Nikse.SubtitleEdit.Forms
                     index++;
                 }
             }
-        }
+        }        
 
     }
 }
