@@ -1193,6 +1193,9 @@
     <Content Include="Languages\eu-ES.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Languages\fa-IR.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Languages\fi-FI.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

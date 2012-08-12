@@ -1,0 +1,1318 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Language Name="فارسي">
+  <General>
+    <Title>شادوساب</Title>
+    <Version>3.2.8</Version>
+    <TranslatedBy>ترجمه توسط:برنامه نويس جوان</TranslatedBy>
+    <CultureName>Fa-IR</CultureName>
+    <HelpFile>فایل راهنما</HelpFile>
+    <OK>تائید</OK>
+    <Cancel>لغو</Cancel>
+    <Apply>اعمال</Apply>
+    <None>هیچ کدام</None>
+    <Preview>پیشنمایش</Preview>
+    <SubtitleFiles>فایلهای زیرنویس</SubtitleFiles>
+    <AllFiles>همه فایل ها</AllFiles>
+    <VideoFiles>فایلهای ویدئویی</VideoFiles>
+    <OpenSubtitle>باز کردن زیرنویس</OpenSubtitle>
+    <OpenVideoFile>باز کردن فایل های ویدئویی</OpenVideoFile>
+    <OpenVideoFileTitle>باز کردن فایل های ویدئویی</OpenVideoFileTitle>
+    <NoVideoLoaded>هیچ فایل ویدئویی باز نشد</NoVideoLoaded>
+    <VideoInformation>اطلاعات ویدئو</VideoInformation>
+    <PositionX>موقعیت / مدت زمان : {0}</PositionX>
+    <StartTime>زمان شروع</StartTime>
+    <EndTime>زمان پایان</EndTime>
+    <Duration>مدت زمان</Duration>
+    <NumberSymbol>#</NumberSymbol>
+    <Number>شماره</Number>
+    <Text>متن</Text>
+    <HourMinutesSecondsMilliseconds>ساعت : دقیقه : ثانیه : میلی ثانیه</HourMinutesSecondsMilliseconds>
+    <Bold>توپر</Bold>
+    <Italic>کج</Italic>
+    <Visible>قابل رویت</Visible>
+    <FrameRate>تعداد فریم در ثانیه</FrameRate>
+    <Name>نام</Name>
+    <FileNameXAndSize>File name: {0} ({1})</FileNameXAndSize>
+    <ResolutionX>Resolution: {0}</ResolutionX>
+    <FrameRateX>Frame rate: {0:0.0###}</FrameRateX>
+    <TotalFramesX>Total frames: {0:#,##0.##}</TotalFramesX>
+    <VideoEncodingX>Video encoding: {0}</VideoEncodingX>
+    <SingleLineLengths>طول یک خط :</SingleLineLengths>
+    <TotalLengthX>Total length: {0}</TotalLengthX>
+    <TotalLengthXSplitLine>طول کل : {0} (خط تقسیم!)</TotalLengthXSplitLine>
+    <SplitLine>تقسیم خط!</SplitLine>
+    <NotAvailable>غیر قابل دسترس</NotAvailable>
+    <OverlapPreviousLineX>Overlap prev line ({0:#,##0.###})</OverlapPreviousLineX>
+    <OverlapX>Overlap ({0:#,##0.###})</OverlapX>
+    <OverlapNextX>Overlap next ({0:#,##0.###})</OverlapNextX>
+    <Negative>منفی</Negative>
+    <RegularExpressionIsNotValid>عبارت منظم معتبر نیست!</RegularExpressionIsNotValid>
+    <SubtitleSaved>زیرنویس ذخیره شد</SubtitleSaved>
+    <CurrentSubtitle>زیرنویس کنونی</CurrentSubtitle>
+    <OriginalText>متن اصلی</OriginalText>
+    <OpenOriginalSubtitleFile>باز کردن فایل زیرنویس اصلی</OpenOriginalSubtitleFile>
+    <PleaseWait>...لطفا صبر کنید</PleaseWait>
+    <SessionKey>کلید جلسه</SessionKey>
+    <UserName>نام کاربری</UserName>
+    <UserNameAlreadyInUse>نام کاربری در حال حاضر در حال استفاده</UserNameAlreadyInUse>
+    <WebServiceUrl>آدرس وب سرويس</WebServiceUrl>
+    <IP>آی پی</IP>
+    <VideoWindowTitle>Video - {0}</VideoWindowTitle>
+    <AudioWindowTitle>Audio - {0}</AudioWindowTitle>
+    <ControlsWindowTitle>Controls - {0}</ControlsWindowTitle>
+  </General>
+  <About>
+    <Title>درباره شادوساب</Title>
+    <AboutText1>شادوساب كاملا رايگان است كه براي ساخت و ويرايش زيرنويس ايجاد شده
+    و توسط مهدي حسيني برنامه نويسي شده است
+
+براي دسترسي به اطلاعات بيشتر و برنامه هاي بيشتر به سايت زير وارد شويد
+http://barnamenevisjavan.com
+
+براي دريافت نسخه جديدتر به سايت دانلود فارسي زير وارد شويد
+http://soft98.ir
+پیشنهادات شما را پذیرا هستم.
+
+ پست الکترونیکی : mailto:hellas2012@yahoo.com</AboutText1>
+  </About>
+  <AddToNames>
+    <Title>اضافه کردن به لیست نام/غیره</Title>
+    <Description>اضافه کردن به لیست نام/صدا</Description>
+  </AddToNames>
+  <AddWaveForm>
+    <Title>ساخت موج از اطلاعات</Title>
+    <SourceVideoFile>منبع فایل تصویری :</SourceVideoFile>
+    <GenerateWaveFormData>ساخت موج از اطلاعات</GenerateWaveFormData>
+    <PleaseWait>این کار ممکن است چند دقیقه طول بكشد - لطفا صبر کنید</PleaseWait>
+    <VlcMediaPlayerNotFoundTitle>وی ال سی مدیا پلیر پیدا نشد</VlcMediaPlayerNotFoundTitle>
+    <VlcMediaPlayerNotFound>برنامه به وی ال سی مدیا پلیر 1.1 برای استخراج داده های صوتی احتیاج دارد.</VlcMediaPlayerNotFound>
+    <GoToVlcMediaPlayerHomePage>رفتن به صفحه خانگي وي ال سي مديا پلير</GoToVlcMediaPlayerHomePage>
+    <GeneratingPeakFile>تولید فایل اوج</GeneratingPeakFile>
+    <GeneratingSpectrogram>مولد طیف نگار</GeneratingSpectrogram>
+    <ExtractingSeconds>استخراج صدا: {0:0.0} ثانیه</ExtractingSeconds>
+    <ExtractingMinutes>استخراج صدا: {0}.{1:00} دقیقه</ExtractingMinutes>
+  </AddWaveForm>
+  <AdjustDisplayDuration>
+    <Title>تنظیم مدت زمان</Title>
+    <AdjustVia>تنظیم وسیله</AdjustVia>
+    <Seconds>ثانیه</Seconds>
+    <Percent>درصد</Percent>
+    <AddSeconds>اضافه کردن ثانیه</AddSeconds>
+    <SetAsPercent>تنظیم به عنوان درصد مدت زمان</SetAsPercent>
+    <Note>توجه : زمان نمایش با زمان شروع متن بعدی نمی تواند تداخل داشته باشد.</Note>
+    <PleaseSelectAValueFromTheDropDownList>لطفا یک مقدار از لیست را انتخاب کنید</PleaseSelectAValueFromTheDropDownList>
+    <PleaseChoose>-- لطفا انتخاب کنید --</PleaseChoose>
+  </AdjustDisplayDuration>
+  <AutoBreakUnbreakLines>
+    <TitleAutoBreak>متعادل کردن اتوماتیک خطوط انتخاب شده</TitleAutoBreak>
+    <TitleUnbreak>گزارش پرش به خط از خطوط انتخاب شده</TitleUnbreak>
+    <LineNumber>خط #</LineNumber>
+    <Before>قبل از</Before>
+    <After>پس از</After>
+    <LinesFoundX>Lines found: {0}</LinesFoundX>
+    <OnlyBreakLinesLongerThan>بشکن فقط خطوط بزرگتر از</OnlyBreakLinesLongerThan>
+    <OnlyUnbreakLinesLongerThan>نشکن فقط خط های بزرگتر از</OnlyUnbreakLinesLongerThan>
+  </AutoBreakUnbreakLines>
+  <ChangeCasing>
+    <Title>تغییر پوشش</Title>
+    <ChangeCasingTo>تغییر پوشش به</ChangeCasingTo>
+    <NormalCasing>پوشش معمولی. جملات لاتین با حروف بزرگ آغاز خواهد شد.</NormalCasing>
+    <FixNamesCasing>پوشش اسامی را ثابت کن:از طریق:فایل دیکشنری</FixNamesCasing>
+    <FixOnlyNamesCasing>تنها پوشش اسامی را ثابت کن:از طریق فایل دیکشنری</FixOnlyNamesCasing>
+    <OnlyChangeAllUppercaseLines>فقط تمام خطوط با حروف بزرگ را تغییر دهید.</OnlyChangeAllUppercaseLines>
+    <AllUppercase>همه با حروف بزرگ</AllUppercase>
+    <AllLowercase>حروف با حروف کوچک</AllLowercase>
+  </ChangeCasing>
+  <ChangeCasingNames>
+    <Title>تغییر کوچک و بزرگی - اسامی</Title>
+    <NamesFoundInSubtitleX>Names found in subtitle: {0}</NamesFoundInSubtitleX>
+    <Enabled>توانا</Enabled>
+    <Name>نام</Name>
+    <LineNumber>خط #</LineNumber>
+    <Before>قبل از</Before>
+    <After>پس از</After>
+    <LinesFoundX>Lines found: {0}</LinesFoundX>
+  </ChangeCasingNames>
+  <ChangeFrameRate>
+    <Title>تغییر نرخ فریم</Title>
+    <ConvertFrameRateOfSubtitle>تبدیل نرخ فریم زیرنویس</ConvertFrameRateOfSubtitle>
+    <FromFrameRate>از فریم</FromFrameRate>
+    <ToFrameRate>به فریم</ToFrameRate>
+    <FrameRateNotCorrect>فریم وارد شده صحیح نیست</FrameRateNotCorrect>
+    <FrameRateNotChanged>فریم ها با هم برابرند - دقت کن عزیز</FrameRateNotChanged>
+  </ChangeFrameRate>
+  <ChooseEncoding>
+    <Title>نوع رمزگذاری فایل را انتخاب کنید</Title>
+    <CodePage>صفحه کد</CodePage>
+    <DisplayName>نام نمایشی</DisplayName>
+    <PleaseSelectAnEncoding>لطفا یک نوع رمزگذاری را انتخاب کنید</PleaseSelectAnEncoding>
+  </ChooseEncoding>
+  <ChooseLanguage>
+    <Title>یک زبان را انتخاب کنید</Title>
+    <Language>زبان</Language>
+  </ChooseLanguage>
+  <CompareSubtitles>
+    <Title>مقایسه زیرنویسها</Title>
+    <PreviousDifference>تفاوت قبلی</PreviousDifference>
+    <NextDifference>تفاوت بعدی</NextDifference>
+    <SubtitlesNotAlike>زیرنویسها هیچ شباهت</SubtitlesNotAlike>
+    <XNumberOfDifference>Number of differences: {0}</XNumberOfDifference>
+    <ShowOnlyDifferences>فقط تفاوت ها را نمایش بده</ShowOnlyDifferences>
+    <OnlyLookForDifferencesInText>فقط برای تفاوت های موجود در متن نگاه کن</OnlyLookForDifferencesInText>
+  </CompareSubtitles>
+  <DvdSubrip>
+    <Title>ifo/vobs (DVD)تبدیل زیرنویسها از</Title>
+    <DvdGroupTitle>فایلها/اطلاعات دی وی دی</DvdGroupTitle>
+    <IfoFile>IFO فایل</IfoFile>
+    <IfoFiles>IFO فایل های</IfoFiles>
+    <VobFiles>VOB فایل های</VobFiles>
+    <Add>اضافه کن</Add>
+    <Remove>حذف کن</Remove>
+    <Clear>حذف کن</Clear>
+    <MoveUp>حرکت به بالا</MoveUp>
+    <MoveDown>حرکت به پایین</MoveDown>
+    <Languages>زبان ها</Languages>
+    <PalNtsc>PAL/NTSC</PalNtsc>
+    <Pal>PAL (25fps)</Pal>
+    <Ntsc>NTSC (30fps)</Ntsc>
+    <StartRipping>شروع کردن تبدیل</StartRipping>
+    <Abort>انصراف</Abort>
+    <AbortedByUser>انصراف توسط کاربر</AbortedByUser>
+    <ReadingSubtitleData>در حال خواندن اطلاعات</ReadingSubtitleData>
+    <RippingVobFileXofYZ>Ripping vob file {1} of {2}: {0}</RippingVobFileXofYZ>
+    <WrongIfoType>نوعIFO '{0}' است و نه'DVDVIDEO-VTS'.{1}فایل دیگری را امتحان کنید {2}</WrongIfoType>
+  </DvdSubrip>
+  <DvdSubRipChooseLanguage>
+    <Title>زبان را انتخاب کنید</Title>
+    <ChooseLanguageStreamId>زبان را انتخاب کنید (stream-id)</ChooseLanguageStreamId>
+    <UnknownLanguage>زبان ناشناخته است</UnknownLanguage>
+    <SubtitleImageXofYAndWidthXHeight>Subtitle image {0}/{1}  -  {2}x{3} </SubtitleImageXofYAndWidthXHeight>
+    <SubtitleImage>تصویر زیرنویس</SubtitleImage>
+  </DvdSubRipChooseLanguage>
+  <EbuSaveOtpions>
+    <Title>ذخیره گزینه های ای بی یو</Title>
+    <GeneralSubtitleInformation>اطلاعات عمومی زیرنویس</GeneralSubtitleInformation>
+    <CodePageNumber>کد شماره صفحه</CodePageNumber>
+    <DiskFormatCode>کد فرمت دیسک</DiskFormatCode>
+    <CharacterCodeTable>میز کاراکتر</CharacterCodeTable>
+    <LanguageCode>کد زبان</LanguageCode>
+    <OriginalProgramTitle>عنوان اصلی برنامه</OriginalProgramTitle>
+    <OriginalEpisodeTitle>عنوان اصلی قسمت</OriginalEpisodeTitle>
+    <TranslatedProgramTitle>عنوان ترجمه شده برنامه</TranslatedProgramTitle>
+    <TranslatedEpisodeTitle>عنوان ترجمه شده قسمت</TranslatedEpisodeTitle>
+    <TranslatorsName>نام مترجم</TranslatorsName>
+    <SubtitleListReferenceCode>مرجع کد لیست زیرنویس</SubtitleListReferenceCode>
+    <CountryOfOrigin>منشا از کشور</CountryOfOrigin>
+    <RevisionNumber>تجدید نظر شماره</RevisionNumber>
+    <MaxNoOfDisplayableChars>Max# of chars per row</MaxNoOfDisplayableChars>
+    <MaxNumberOfDisplayableRows>Max# of row</MaxNumberOfDisplayableRows>
+    <DiskSequenceNumber>ترتیب شماره دیسک</DiskSequenceNumber>
+    <TotalNumberOfDisks>کل شماره ها از دیسک</TotalNumberOfDisks>
+    <Import>وارد کردن</Import>
+    <TextAndTimingInformation>متن و اطلاعات زمانی</TextAndTimingInformation>
+    <JustificationCode>مجوز کد</JustificationCode>
+    <Errors>خطاها</Errors>
+    <ErrorsX>Errors: {0}</ErrorsX>
+    <MaxLengthError>Line {0} exceeds max length ({0}) by {2}: {3}</MaxLengthError>
+    <TextUnchangedPresentation>معرفی عوض نشده</TextUnchangedPresentation>
+    <TextLeftJustifiedText>متن توجیه شده سمت چپ</TextLeftJustifiedText>
+    <TextCentredText>میانه متن</TextCentredText>
+    <TextRightJustifiedText>متن توجیه شده سمت راست</TextRightJustifiedText>
+  </EbuSaveOtpions>
+  <EffectKaraoke>
+    <Title>اثر کارائوکه</Title>
+    <ChooseColor>انتخاب رنگ:</ChooseColor>
+    <TotalMilliseconds>تعداد میلی ثانیه:</TotalMilliseconds>
+    <EndDelayInMilliseconds>پایان تأخیر در میلی ثانیه:</EndDelayInMilliseconds>
+  </EffectKaraoke>
+  <EffectTypewriter>
+    <Title>اثر ماشین تحریر</Title>
+    <TotalMilliseconds>تعداد میلی ثانیه:</TotalMilliseconds>
+    <EndDelayInMillisecs>پایان تأخیر در میلی ثانیه:</EndDelayInMillisecs>
+  </EffectTypewriter>
+  <ExportPngXml>
+    <Title>BDN XML/PNG خروجی گرفتن به</Title>
+    <ImageSettings>تنظیمات عکس</ImageSettings>
+    <FontFamily>خانواده فونت</FontFamily>
+    <FontSize>سایز فونت</FontSize>
+    <FontColor>رنگ فونت</FontColor>
+    <BorderColor>رنگ حاشیه</BorderColor>
+    <BorderWidth>عرض حاشیه</BorderWidth>
+    <AntiAlias>ضد نام مستعار</AntiAlias>
+    <ExportAllLines>خروجی گرفتن تمامی خط ها</ExportAllLines>
+    <XImagesSavedInY>{0} images saved in {1}</XImagesSavedInY>
+    <VideoResolution>دقت ویدئو</VideoResolution>
+    <Align>ردیف کردن</Align>
+    <Left>چپ</Left>
+    <Right>راست</Right>
+    <Center>مرکز</Center>
+  </ExportPngXml>
+  <FindDialog>
+    <Title>جستجو</Title>
+    <Find>جستجو</Find>
+    <Normal>عادی</Normal>
+    <CaseSensitive>حساس به بزرگی کوچکی حروف</CaseSensitive>
+    <RegularExpression>عبارت معمولی</RegularExpression>
+  </FindDialog>
+  <FindSubtitleLine>
+    <Title>یافتن خط زیرنویس</Title>
+    <Find>جستجو کن</Find>
+    <FindNext>یافتن بعدی</FindNext>
+  </FindSubtitleLine>
+  <FixCommonErrors>
+    <Title>تعمیر خطاهای رایج</Title>
+    <Step1>مرحله اول -- اخطاری را انتخاب کنید تا رفع شود.</Step1>
+    <WhatToFix>چه چیزی را باید تعمیر کرد</WhatToFix>
+    <Example>مثال</Example>
+    <SelectAll>انتخاب همه</SelectAll>
+    <InverseSelection>انتخاب معکوس</InverseSelection>
+    <Back>قبلی</Back>
+    <Next>بعدی</Next>
+    <Step2>گام دوم -- تائید تغییرات</Step2>
+    <Fixes>اصلاح شده ها</Fixes>
+    <Log>Log</Log>
+    <LineNumber>خط #</LineNumber>
+    <Function>تابع</Function>
+    <Before>قبل از</Before>
+    <After>پس از</After>
+    <RemovedEmptyLine>خط خالی حذف شده</RemovedEmptyLine>
+    <RemovedEmptyLineAtTop>خط خالی حذف شده از بالا</RemovedEmptyLineAtTop>
+    <RemovedEmptyLineAtBottom>خط خالی حذف شده از پایین</RemovedEmptyLineAtBottom>
+    <RemovedEmptyLinesUnsedLineBreaks>خطهای خالی را حذف کن</RemovedEmptyLinesUnsedLineBreaks>
+    <EmptyLinesRemovedX>Empty lines removed: {0}</EmptyLinesRemovedX>
+    <FixOverlappingDisplayTimes>زمانهای هم پوشانی را اصلاح کن</FixOverlappingDisplayTimes>
+    <FixShortDisplayTimes>اصلاح زمانهای کوتاه نمایش</FixShortDisplayTimes>
+    <FixLongDisplayTimes>اصلاح زمانهای طولانی نمایش</FixLongDisplayTimes>
+    <FixInvalidItalicTags>(Italic) اصلاح علائم کج کننده</FixInvalidItalicTags>
+    <RemoveUnneededSpaces>حذف فاصله های غیر ضروری</RemoveUnneededSpaces>
+    <RemoveUnneededPeriods>حذف دوره های غیر ضروری</RemoveUnneededPeriods>
+    <FixMissingSpaces>گذاشتن فاصله های لازم</FixMissingSpaces>
+    <BreakLongLines>شکستن خطوط طولانی</BreakLongLines>
+    <RemoveLineBreaks>حذف پرش به خط بعد در متون کوتاه با تنها یک جمله</RemoveLineBreaks>
+    <RemoveLineBreaksAll>گزارش پرش به خط بعد در متون کوتاه /همه به جز گفت وگو ها</RemoveLineBreaksAll>
+    <FixUppercaseIInsindeLowercaseWords>Fix uppercase 'i' inside lowercase words (ocr error)</FixUppercaseIInsindeLowercaseWords>
+    <FixDoubleApostrophes>جایگزین کردن دو علامت (') با یک علامت نقل قول (")</FixDoubleApostrophes>
+    <AddPeriods>اضافه کردن مدت زمان اگر شروع خط بعدی با حرف بزرگ باشد</AddPeriods>
+    <StartWithUppercaseLetterAfterParagraph>شروع با حرف بزرگ پس از یک پاراگراف</StartWithUppercaseLetterAfterParagraph>
+    <StartWithUppercaseLetterAfterPeriodInsideParagraph>شروع با حرف بزرگ پس از دوره در داخل پاراگراف</StartWithUppercaseLetterAfterPeriodInsideParagraph>
+    <FixLowercaseIToUppercaseI>Fix alone lowercase 'i' to 'I' (English)</FixLowercaseIToUppercaseI>
+    <FixCommonOcrErrors>تعمیر خطاهای او سی آر /با استفاده از لیست جایگزین</FixCommonOcrErrors>
+    <CommonOcrErrorsFixed>اشتباهات او سی آر معمول رفع شد /پرونده OcrReplaceList استفاده می شود : {0}</CommonOcrErrorsFixed>
+    <RemoveSpaceBetweenNumber>Remove space between numbers</RemoveSpaceBetweenNumber>
+    <FixDialogsOnOneLine>فیسک کردن گفتگو ها بر روی خط</FixDialogsOnOneLine>
+    <RemoveSpaceBetweenNumbersFixed>Remove space between numbers fixed: {0}</RemoveSpaceBetweenNumbersFixed>
+    <FixDanishLetterI>Fix Danish letter 'i'</FixDanishLetterI>
+    <FixSpanishInvertedQuestionAndExclamationMarks>اصلاح علامت سوال و تعجب وارونه اسپانیایی</FixSpanishInvertedQuestionAndExclamationMarks>
+    <AddMissingQuote>اضافه کردن نقل قول فراموش شده (")</AddMissingQuote>
+    <AddMissingQuotes>اضافه کردن نقل قول های فراموش شده (")</AddMissingQuotes>
+    <FixHyphens>اصلاح خطوطی که با خط تیره شروع می شوند (-)</FixHyphens>
+    <FixHyphen>اصلاح خطی که با خط تیره شروع می شوند (-)</FixHyphen>
+    <XHyphensFixed>Hyphens fixed: {0}</XHyphensFixed>
+    <AddMissingQuotesExample>"How are you?  -&gt; "How are you?"</AddMissingQuotesExample>
+    <XMissingQuotesAdded>Missing quotes added: {0}</XMissingQuotesAdded>
+    <Fix3PlusLines>اصلاح زیرنویسهایی با بیش از دو خط</Fix3PlusLines>
+    <Fix3PlusLine>اصلاح زیرنویسی با بیش از دو خط</Fix3PlusLine>
+    <X3PlusLinesFixed>Subtitles with more than two lines fixed: {0}</X3PlusLinesFixed>
+    <Analysing>در حال تجزیه و تحلیل</Analysing>
+    <NothingToFix>هیچ چیز برای اصلاح یافت نشد :)</NothingToFix>
+    <FixesFoundX>Fixes found: {0}</FixesFoundX>
+    <XFixesApplied>Fixes applied: {0}</XFixesApplied>
+    <NothingToFixBut>چیزی برای تصحیح پیدا نشد اما چند چیز می تواند بهبود یابد - نوشته (log) را برای جزییات ببینید.</NothingToFixBut>
+    <FixLowercaseIToUppercaseICheckedButCurrentLanguageIsNotEnglish>"حروف کوچک ثابت به تنهایی« من »به« من »(به انگلیسی)" انتخاب شده است اما در حال حاضر لود زیرنویس به نظر می رسد نمی شود انگلیسی.</FixLowercaseIToUppercaseICheckedButCurrentLanguageIsNotEnglish>
+    <Continue>ادامه</Continue>
+    <ContinueAnyway>در هر صورت ادامه میدهید؟</ContinueAnyway>
+    <UncheckedFixLowercaseIToUppercaseI>بدون کنترل "ثابت به تنهایی کوچک« من »به« من »/به انگلیسی"</UncheckedFixLowercaseIToUppercaseI>
+    <XIsChangedToUppercase>{0} من را به تغییر بزرگ</XIsChangedToUppercase>
+    <FixFirstLetterToUppercaseAfterParagraph>نامه اول ثابت به بزرگ پس از بند</FixFirstLetterToUppercaseAfterParagraph>
+    <MergeShortLine>ادغام خطوط کوتاه -عبارات تکی</MergeShortLine>
+    <MergeShortLineAll>ادغام خطوط کوتاه -عبارات تکی دیالوگها</MergeShortLineAll>
+    <XLineBreaksAdded>{0} خط شکسته شد -بدلیل طولانی بودن</XLineBreaksAdded>
+    <BreakLongLine>خطوط طولانی را بشکن</BreakLongLine>
+    <FixLongDisplayTime>تصحیح زمانهای نمایش طولانی</FixLongDisplayTime>
+    <FixInvalidItalicTag>تصحیح برچسبهای کج (ایتالیک) نامعتبر</FixInvalidItalicTag>
+    <FixShortDisplayTime>تصحیح زمانهای نمایش کوتاه</FixShortDisplayTime>
+    <FixOverlappingDisplayTime>رفع تداخل زمان نمایش</FixOverlappingDisplayTime>
+    <FixInvalidItalicTagsExample>&lt;i&gt;چه مراقبت من --&gt; چه کار کنم مراقبت.&lt;/i&gt;</FixInvalidItalicTagsExample>
+    <RemoveUnneededSpacesExample>هی تو ، وجود دارد. --&gt; هی تو ، وجود دارد.</RemoveUnneededSpacesExample>
+    <RemoveUnneededPeriodsExample>هی تو!. --&gt; هی تو!</RemoveUnneededPeriodsExample>
+    <FixMissingSpacesExample>Hey.You. -- هی&gt;. شما.</FixMissingSpacesExample>
+    <FixUppercaseIInsindeLowercaseWordsExample>فیات زمین است. --&gt; زمین صاف است.</FixUppercaseIInsindeLowercaseWordsExample>
+    <FixLowercaseIToUppercaseIExample>چه مراقبت می کنم. --&gt; چه کار کنم مراقبت.</FixLowercaseIToUppercaseIExample>
+    <StartTimeLaterThanEndTime>Text number {0}: Start time is later than end time: {4}{1} --&gt; {2} {3}</StartTimeLaterThanEndTime>
+    <UnableToFixStartTimeLaterThanEndTime>Unable to fix text number {0}: Start time is later end end time: {1}</UnableToFixStartTimeLaterThanEndTime>
+    <XFixedToYZ>{0} fixed to: {1}{2}</XFixedToYZ>
+    <UnableToFixTextXY>Unable to fix text number {0}: {1}</UnableToFixTextXY>
+    <XOverlappingTimestampsFixed>{0} با هم تداخل دارند timestamps ثابت</XOverlappingTimestampsFixed>
+    <XDisplayTimesProlonged>{0} بار نمایش طولانی</XDisplayTimesProlonged>
+    <XInvalidHtmlTagsFixed>{0} نامعتبر است و تگ های اچ تی ام ال ثابت</XInvalidHtmlTagsFixed>
+    <XDisplayTimesShortned>{0} بار نمایش کوتاه</XDisplayTimesShortned>
+    <XLinesUnbreaked>{0} خطوط unbreaked</XLinesUnbreaked>
+    <UnneededSpace>فضای زائد</UnneededSpace>
+    <XUnneededSpacesRemoved>{0} حذف فضاهای زائد</XUnneededSpacesRemoved>
+    <UnneededPeriod>دوره های زائد</UnneededPeriod>
+    <XUnneededPeriodsRemoved>{0} حذف دوره های غیر ضروری</XUnneededPeriodsRemoved>
+    <FixMissingSpace>فضای ثابت گم شده</FixMissingSpace>
+    <XMissingSpacesAdded>{0} فضای از دست رفته اضافه شده</XMissingSpacesAdded>
+    <FixUppercaseIInsideLowercaseWord>بزرگ ثابت «من» کلمه کوچک در داخل</FixUppercaseIInsideLowercaseWord>
+    <XPeriodsAdded>{0} دوره اضافه شده است.</XPeriodsAdded>
+    <FixMissingPeriodAtEndOfLine>افزودنیهای دوره گم شده در انتهای خط</FixMissingPeriodAtEndOfLine>
+    <XDoubleApostrophesFixed>{0} نشانه اپوستروف دو ثابت.</XDoubleApostrophesFixed>
+    <XUppercaseIsFoundInsideLowercaseWords>من {0} بزرگ 'در داخل کلمات کوچک در بر داشت</XUppercaseIsFoundInsideLowercaseWords>
+    <RefreshFixes>رفع تازه در دسترس</RefreshFixes>
+    <ApplyFixes>درخواست رفع انتخاب</ApplyFixes>
+    <AutoBreak>خودکار و برزیلی</AutoBreak>
+    <Unbreak>و Unbreak</Unbreak>
+    <FixDoubleDash>اصلاح '--' به '...'</FixDoubleDash>
+    <FixDoubleGreaterThan>حذف &lt;&lt;</FixDoubleGreaterThan>
+    <FixEllipsesStart> حذف  '...'</FixEllipsesStart>
+    <FixMissingOpenBracket>گذاشتن [ فراموش شده</FixMissingOpenBracket>
+    <FixMusicNotation>جابجایی علائم موسیقی</FixMusicNotation>
+    <FixDoubleDashs>اصلاح  '--'ها به '...'ها</FixDoubleDashs>
+    <FixDoubleGreaterThans>حذف &lt;&lt; از ابتدا</FixDoubleGreaterThans>
+    <FixEllipsesStarts>حذف... از آغاز</FixEllipsesStarts>
+    <FixMissingOpenBrackets>گذاشتن [های فراموش شده</FixMissingOpenBrackets>
+    <FixMusicNotations>اون که با * 'به جای ª در ثانیه</FixMusicNotations>
+    <XFixDoubleDash>{0} ثابت '--'</XFixDoubleDash>
+    <XFixDoubleGreaterThan>{0} حذف&gt;&gt;</XFixDoubleGreaterThan>
+    <XFixEllipsesStart>{0} حذف شروع '...'</XFixEllipsesStart>
+    <XFixMissingOpenBracket>{0} ثابت [گم شده در خط</XFixMissingOpenBracket>
+    <XFixMusicNotation>{0} نماد موسیقی در رفع خط</XFixMusicNotation>
+    <FixDoubleDashExample>'ایست -- آره ام!' ایست&gt; '... -- آره ام! '</FixDoubleDashExample>
+    <FixDoubleGreaterThanExample>'&gt;&gt; رابرت : شخص شام خوردن!' --&gt; ': رابرت شخص شام خوردن!'</FixDoubleGreaterThanExample>
+    <FixEllipsesStartExample>'... و پس از آن ما --&gt; 'و پس از آن چه ما</FixEllipsesStartExample>
+    <FixMissingOpenBracketExample>'clanks] بیرون نگاه کن!' --&gt; '[clanks] بیرون نگاه کن!'</FixMissingOpenBracketExample>
+    <FixMusicNotationExample>'در آرزوی ª شیرین هستند' --&gt; '♫ رویاهای شیرین هستند'</FixMusicNotationExample>
+    <NumberOfImportantLogMessages>{0} پیامهای مهم است!</NumberOfImportantLogMessages>
+    <FixedOkXY>Fixed and OK - '{0}': {1}</FixedOkXY>
+  </FixCommonErrors>
+  <GetDictionaries>
+    <Title>آیا نیازمند واژه نامه ها هسیتد؟</Title>
+    <DescriptionLine1>NHunspell ویرایش نام در طلسم بررسی در موتور بر اساس</DescriptionLine1>
+    <DescriptionLine2>با استفاده از طلسم چک کردن فرهنگ از باز کردن دفتر.</DescriptionLine2>
+    <GetDictionariesHere>دریافت واژه نامه اینجا هست : :</GetDictionariesHere>
+    <OpenOpenOfficeWiki>باز کردن دفتر ویکی فهرست واژه نامه ها</OpenOpenOfficeWiki>
+    <GetAllDictionaries>گرفتن همه واژه نامه ها</GetAllDictionaries>
+    <ChooseLanguageAndClickDownload>انتخاب زبان دانلود و کلیک</ChooseLanguageAndClickDownload>
+    <OpenDictionariesFolder>پوشه 'واژه نامه ها' باز</OpenDictionariesFolder>
+    <Download>دانلود</Download>
+    <XDownloaded>{0} شده است دانلود و نصب</XDownloaded>
+  </GetDictionaries>
+  <GoogleTranslate>
+    <Title>مترجم گوگل</Title>
+    <From>از :</From>
+    <To>به :</To>
+    <Translate>ترجمه کردن</Translate>
+    <PleaseWait>لطفا صبر کنید... این ممکن است مدتی طول بکشد</PleaseWait>
+    <PoweredByGoogleTranslate>طراحی شده توسط مترجم گوگل</PoweredByGoogleTranslate>
+    <PoweredByMicrosoftTranslate>طراحی شده توسط مایکروسافت ترجمه</PoweredByMicrosoftTranslate>
+  </GoogleTranslate>
+  <GoogleOrMicrosoftTranslate>
+    <Title>گوگل در برابر ترجمه ماکروسافت</Title>
+    <From>از:</From>
+    <To>به:</To>
+    <Translate>ترجمه</Translate>
+    <SourceText>منبع متن</SourceText>
+    <GoogleTranslate>ترجمه گوگل</GoogleTranslate>
+    <MicrosoftTranslate>ترجمه ماکروسافت</MicrosoftTranslate>
+  </GoogleOrMicrosoftTranslate>
+  <GoToLine>
+    <Title>برو به تعداد زیرنویس</Title>
+    <XIsNotAValidNumber>{0} یک عدد صحیح نمی باشد.</XIsNotAValidNumber>
+  </GoToLine>
+  <ImportText>
+    <Title>متن ساده واردات</Title>
+    <OpenTextFile>باز کردن فایل متن</OpenTextFile>
+    <ImportOptions>گزینه های واردات</ImportOptions>
+    <Splitting>فتق</Splitting>
+    <AutoSplitText>تقسیم خودکار متن</AutoSplitText>
+    <OneLineIsOneSubtitle>یک خط یک نام است</OneLineIsOneSubtitle>
+    <MergeShortLines>ادغام خطوط کوتاه با ادامه</MergeShortLines>
+    <RemoveEmptyLines>گزارش خطوط خالی</RemoveEmptyLines>
+    <RemoveLinesWithoutLetters>گزارش خطوط بدون نامه</RemoveLinesWithoutLetters>
+    <GapBetweenSubtitles>شکاف میان زیرنویسها (میلی ثانیه)ا</GapBetweenSubtitles>
+    <Auto>خودکار</Auto>
+    <Fixed>ثابت</Fixed>
+    <Refresh>و تازه کردن</Refresh>
+    <TextFiles>فایل متن</TextFiles>
+    <PreviewLinesModifiedX>Preview - paragraphs modified: {0}</PreviewLinesModifiedX>
+  </ImportText>
+  <Interjections>
+    <Title>Interjections</Title>
+  </Interjections>
+  <Main>
+    <Menu>
+      <File>
+        <Title>پرونده</Title>
+        <New>&amp;جدید</New>
+        <Open>باز</Open>
+        <Reopen>بازگشایی</Reopen>
+        <Save>ذخیره</Save>
+        <SaveAs>ذخیره و به عنوان</SaveAs>
+        <OpenOriginal>نام اصلی باز در حالت مترجم</OpenOriginal>
+        <SaveOriginal>ذخیره نام اصلی</SaveOriginal>
+        <CloseOriginal>بستن زیرنویس اصلی</CloseOriginal>
+        <OpenContainingFolder>باز شامل پوشه</OpenContainingFolder>
+        <Compare>مقایسه</Compare>
+        <ImportOcrFromDvd>vob/ifo (DVD) واردات و نام او سی آر از</ImportOcrFromDvd>
+        <ImportOcrVobSubSubtitle> VobSub (فرعی/idx) واردات/او سی آر</ImportOcrVobSubSubtitle>
+        <ImportBluRaySupFile>واردات/او سی آر ضبط و پخش فایل</ImportBluRaySupFile>
+        <ImportSubtitleFromMatroskaFile>MKVزیرنویس واردات از فایل</ImportSubtitleFromMatroskaFile>
+        <ImportSubtitleWithManualChosenEncoding>زیرنویس با واردات کتابچه راهنمای انتخاب را پشتیبانی می کند</ImportSubtitleWithManualChosenEncoding>
+        <ImportText>متن ساده واردات</ImportText>
+        <ImportTimecodes>کدهای واردات هم</ImportTimecodes>
+        <Export>خروجی گرفتن</Export>
+        <ExportBdnXml>BDN xml/PNG</ExportBdnXml>
+        <ExportBluRaySup>بلو-ری</ExportBluRaySup>
+        <ExportVobSub>Vobsub(sub/idx)</ExportVobSub>
+        <ExportCavena890>cavena 890</ExportCavena890>
+        <ExportEbu>EBU stl</ExportEbu>
+        <ExportPac>PAC</ExportPac>
+        <ExportPlainText>متن آشکار</ExportPlainText>
+        <ExportPlainTextWithoutLineBreaks>متن آشکار بدون خط های شکسته</ExportPlainTextWithoutLineBreaks>
+        <Exit>خروج</Exit>
+      </File>
+      <Edit>
+        <Title>ویرایش</Title>
+        <ShowUndoHistory>تاریخ نمایش برای خنثی سازی</ShowUndoHistory>
+        <InsertUnicodeSymbol>درج نماد یونیکد</InsertUnicodeSymbol>
+        <Find> یافتن</Find>
+        <FindNext>مشاهده و بعدی</FindNext>
+        <Replace> به جای</Replace>
+        <MultipleReplace>چندگانه و جایگزین</MultipleReplace>
+        <GoToSubtitleNumber>برو به تعداد و نام</GoToSubtitleNumber>
+      </Edit>
+      <Tools>
+        <Title>ابزار</Title>
+        <AdjustDisplayDuration>تنظیم مدت زمان</AdjustDisplayDuration>
+        <FixCommonErrors>اشتباهات رایج و ثابت</FixCommonErrors>
+        <StartNumberingFrom>شروع شماره از</StartNumberingFrom>
+        <RemoveTextForHearingImpaired>گزارش متن برای ناشنوایان</RemoveTextForHearingImpaired>
+        <ChangeCasing>پوشش تغییر</ChangeCasing>
+        <ChangeFrameRate>تغییر نرخ فریم</ChangeFrameRate>
+        <MergeShortLines>ادغام خطوط کوتاه</MergeShortLines>
+        <SplitLongLines>خطوط تقسیم طولانی</SplitLongLines>
+        <MinimumDisplayTimeBetweenParagraphs>حداقل زمان نمایش بین پاراگراف ها به</MinimumDisplayTimeBetweenParagraphs>
+        <SortBy>مرتب کردن بر اساس</SortBy>
+        <Number>شماره</Number>
+        <StartTime>زمان شروع</StartTime>
+        <EndTime>زمان پایان</EndTime>
+        <Duration>مدت</Duration>
+        <TextAlphabetically>متن -- حروف الفبا</TextAlphabetically>
+        <TextSingleLineMaximumLength>متن -- حداکثر خط. طول</TextSingleLineMaximumLength>
+        <TextTotalLength>متن -- مجموع طول</TextTotalLength>
+        <TextNumberOfLines>متن -- تعداد خطوط</TextNumberOfLines>
+        <TextNumberOfCharactersPerSeconds>Text - number of chars/Sec</TextNumberOfCharactersPerSeconds>
+        <ShowOriginalTextInAudioAndVideoPreview>نمایش متن اصلی در صدا/تصویر پیش نمایش</ShowOriginalTextInAudioAndVideoPreview>
+        <MakeNewEmptyTranslationFromCurrentSubtitle>ساخت ترجمه خالی جدید از زیرنویس جاری</MakeNewEmptyTranslationFromCurrentSubtitle>
+        <SplitSubtitle>نام اسپلیت</SplitSubtitle>
+        <AppendSubtitle>نام افزودن پرونده</AppendSubtitle>
+      </Tools>
+      <Video>
+        <Title>تصویری</Title>
+        <OpenVideo>باز کردن فایل های ویدئویی</OpenVideo>
+        <ChooseAudioTrack>آهنگ های صوتی را انتخاب کنید</ChooseAudioTrack>
+        <CloseVideo>بستن فایل تصویری</CloseVideo>
+        <ShowHideVideo>نمایش/پنهان سازی ویدئو</ShowHideVideo>
+        <ShowHideWaveForm>نمایش/پنهان سازی شکل موج</ShowHideWaveForm>
+        <ShowHideWaveformAndSpectrogram>نمایش/مخفی شکل موج و طیف نگار</ShowHideWaveformAndSpectrogram>
+        <UnDockVideoControls>سازمان ملل متحد کنترل اسکله های ویدئویی</UnDockVideoControls>
+        <ReDockVideoControls>دوباره حوض ویدیو کنترل</ReDockVideoControls>
+      </Video>
+      <SpellCheck>
+        <Title>بررسی املا</Title>
+        <SpellCheck>املا و بررسی</SpellCheck>
+        <FindDoubleWords>جستجوی واژه دو</FindDoubleWords>
+        <FindDoubleLines>پیدا کردن خط های دوبرابر</FindDoubleLines>
+        <GetDictionaries>دریافت واژه نامه ها</GetDictionaries>
+        <AddToNamesEtcList>اضافه کردن کلمه به نام های/لیست الکتروشوک</AddToNamesEtcList>
+      </SpellCheck>
+      <Synchronization>
+        <Title>همگام سازی</Title>
+        <AdjustAllTimes>تنظیم تمام بار-قبل از نشان دادن/بعد</AdjustAllTimes>
+        <VisualSync>همگام سازی</VisualSync>
+        <PointSync>نقطه همگام سازی</PointSync>
+        <PointSyncViaOtherSubtitle>نقطه همگام سازی از زیرنویس دیگر</PointSyncViaOtherSubtitle>
+      </Synchronization>
+      <AutoTranslate>
+        <Title>ترجمه خودكار</Title>
+        <TranslatePoweredByGoogle>ترجمه طراحی شده توسط گوگل</TranslatePoweredByGoogle>
+        <TranslatePoweredByMicrosoft>ترجمه طراحی شده توسط مایکروسافت</TranslatePoweredByMicrosoft>
+        <TranslateFromSwedishToDanish>ترجمه از سوئدی به دانمارکی طراحی اختصاصي</TranslateFromSwedishToDanish>
+      </AutoTranslate>
+      <Options>
+        <Title>گزینه ها</Title>
+        <Settings>تنظیمات &amp;</Settings>
+        <ChooseLanguage>انتخاب زبان</ChooseLanguage>
+      </Options>
+      <Networking>
+        <Title>شبکه</Title>
+        <StartNewSession>شروع جدید را وارد نمایید</StartNewSession>
+        <JoinSession>تاریخ را وارد نمایید</JoinSession>
+        <ShowSessionInfoAndLog>نمایش اطلاعات را وارد نمایید و وارد شوید</ShowSessionInfoAndLog>
+        <Chat>گپ</Chat>
+        <LeaveSession>مرخصی را وارد نمایید</LeaveSession>
+      </Networking>
+      <Help>
+        <Title>راهنما</Title>
+        <Help>بروزرسانی</Help>
+        <About>درباره</About>
+      </Help>
+      <ToolBar>
+        <New>جدید</New>
+        <Open>باز</Open>
+        <Save>ذخیره</Save>
+        <SaveAs>ذخیره به عنوان</SaveAs>
+        <Find>مشاهده</Find>
+        <Replace>جایگزین کردن</Replace>
+        <VisualSync>همگام سازی</VisualSync>
+        <SpellCheck>بررسی املا</SpellCheck>
+        <Settings>تنظیمات</Settings>
+        <Help>راهنما</Help>
+        <ShowHideWaveForm>نمایش/پنهان سازی شکل موج</ShowHideWaveForm>
+        <ShowHideVideo>نمایش/پنهان سازی ویدئو</ShowHideVideo>
+      </ToolBar>
+      <ContextMenu>
+        <SubStationAlphaSetStyle>(Advanced) Sub station Alpha - set style</SubStationAlphaSetStyle>
+        <Cut>قطع</Cut>
+        <Copy>نسخه</Copy>
+        <Paste>چسباندن</Paste>
+        <Delete>حذف</Delete>
+        <SplitLineAtCursorPosition>بریدن خط از محل موس</SplitLineAtCursorPosition>
+        <SelectAll>انتخاب همه</SelectAll>
+        <InsertFirstLine>خط قرار دادن</InsertFirstLine>
+        <InsertBefore>قبل از قرار دادن</InsertBefore>
+        <InsertAfter>پس از قرار دادن</InsertAfter>
+        <InsertSubtitleAfter>زیرنویس پس از قرار دادن این خط</InsertSubtitleAfter>
+        <CopyToClipboard>کپی از متن در حافظه موقت</CopyToClipboard>
+        <Split>انشعاب</Split>
+        <MergeSelectedLines>انتخاب خط ادغام</MergeSelectedLines>
+        <MergeSelectedLinesASDialogue>ترکیب کردن خط های انتخاب شده از گفتگو ها</MergeSelectedLinesASDialogue>
+        <MergeWithLineBefore>قبل از ادغام با خط</MergeWithLineBefore>
+        <MergeWithLineAfter>پس از ادغام با خط</MergeWithLineAfter>
+        <Normal>عادی</Normal>
+        <Underline>زیر خط دار خط</Underline>
+        <Color>رنگ</Color>
+        <FontName>نام فونت</FontName>
+        <AutoBalanceSelectedLines>خودکار تعادل انتخاب خطوط</AutoBalanceSelectedLines>
+        <RemoveLineBreaksFromSelectedLines>گزارش خط معافیت از خطوط انتخاب شده</RemoveLineBreaksFromSelectedLines>
+        <TypewriterEffect>اثر ماشین تحریر</TypewriterEffect>
+        <KaraokeEffect>اثر کارائوکه</KaraokeEffect>
+        <ShowSelectedLinesEarlierLater>انتخاب نمایش خطوط قبل/بعد</ShowSelectedLinesEarlierLater>
+        <VisualSyncSelectedLines>همگام سازی خطوط انتخاب شده</VisualSyncSelectedLines>
+        <GoogleAndMicrosoftTranslateSelectedLine>ترجمه اصلی خط توسط گوگل/ماکروسافت</GoogleAndMicrosoftTranslateSelectedLine>
+        <GoogleTranslateSelectedLines>گوگل ترجمه خطوط انتخاب شده</GoogleTranslateSelectedLines>
+        <AdjustDisplayDurationForSelectedLines>تنظیم مدت زمان انتخاب شده برای خطوط</AdjustDisplayDurationForSelectedLines>
+        <FixCommonErrorsInSelectedLines>تعمیر خطاهای رایج در خطوط انتخاب شده</FixCommonErrorsInSelectedLines>
+        <ChangeCasingForSelectedLines>تغییر برای پوشش خطوط انتخاب شده</ChangeCasingForSelectedLines>
+      </ContextMenu>
+    </Menu>
+    <Controls>
+      <SubtitleFormat>قالب</SubtitleFormat>
+      <FileEncoding>رمز گذاری</FileEncoding>
+      <ListView>مشاهده لیست</ListView>
+      <SourceView>نمایش مبدأ</SourceView>
+      <UndoChangesInEditPanel>تغییرات واگرد در پانل ویرایش</UndoChangesInEditPanel>
+      <Previous>&lt;قبلی</Previous>
+      <Next>بعدی&gt;</Next>
+      <AutoBreak>قسمت کردن خودکار</AutoBreak>
+      <Unbreak>قسمت نکن</Unbreak>
+    </Controls>
+    <VideoControls>
+      <Translate>ترجمه کن</Translate>
+      <Create>ایجاد کن</Create>
+      <Adjust>تنظیم کن</Adjust>
+      <SelectCurrentElementWhilePlaying>انتخاب زیرنویس جاری در حال اجرا</SelectCurrentElementWhilePlaying>
+      <AutoRepeat>تکرار خودکار</AutoRepeat>
+      <AutoRepeatOn>تکرار خودکار در</AutoRepeatOn>
+      <AutoRepeatCount>تعداد تکرار (بار)ا</AutoRepeatCount>
+      <AutoContinue>ادامه خودکار</AutoContinue>
+      <AutoContinueOn>خودکار ادامه</AutoContinueOn>
+      <DelayInSeconds>تاخیر (ثانیه)ا</DelayInSeconds>
+      <OriginalText>متن اصلی</OriginalText>
+      <Previous>&lt;قبل و بعد از vious</Previous>
+      <Stop>و توقف</Stop>
+      <PlayCurrent>و بازی فعلی</PlayCurrent>
+      <Next>و بعدی&gt;</Next>
+      <Playing>... در حال پخش</Playing>
+      <RepeatingLastTime>تکرار... زمان آخرین</RepeatingLastTime>
+      <RepeatingXTimesLeft>تکرار... {0} بار سمت چپ</RepeatingXTimesLeft>
+      <AutoContinueInOneSecond>ادامه خودکار در یک ثانیه</AutoContinueInOneSecond>
+      <AutoContinueInXSeconds>خودکار ادامه در {0} ثانیه</AutoContinueInXSeconds>
+      <StillTypingAutoContinueStopped>با این حال تایپ کردن است... ادامه خودکار متوقف</StillTypingAutoContinueStopped>
+      <InsertNewSubtitleAtVideoPosition>نام و قرار دادن جدید در استانداردهای فعلی ویدیو</InsertNewSubtitleAtVideoPosition>
+      <Auto>خودکار</Auto>
+      <PlayFromJustBeforeText>بازی از قبل و فقط متن</PlayFromJustBeforeText>
+      <Pause>وقفه</Pause>
+      <GoToSubtitlePositionAndPause>برو به subposition و مکث</GoToSubtitlePositionAndPause>
+      <SetStartTime>تنظیم زمان شروع و</SetStartTime>
+      <SetEndTimeAndGoToNext>تنظیم و پایان و و رفتن به آینده</SetEndTimeAndGoToNext>
+      <AdjustedViaEndTime>Adjusted via end time {0}</AdjustedViaEndTime>
+      <SetEndTime>نامه تنظیم و زمان دوم</SetEndTime>
+      <SetstartTimeAndOffsetOfRest>تنظیم &amp;sta rt افست و استراحت</SetstartTimeAndOffsetOfRest>
+      <SearchTextOnline>جستجوی متن آنلاین</SearchTextOnline>
+      <GoogleTranslate>مترجم گوگل</GoogleTranslate>
+      <GoogleIt>گوگل آن را</GoogleIt>
+      <SecondsBackShort>&lt;&lt;</SecondsBackShort>
+      <SecondsForwardShort>&gt;&gt;</SecondsForwardShort>
+      <VideoPosition>موقعیت ویدئو :</VideoPosition>
+      <TranslateTip>نکته : استفاده از &lt;alt+arrow up/down&gt; برای رفتن به قبلی/زیرنویس بعدی</TranslateTip>
+      <CreateTip>نکته : استفاده از &lt;ctrl+arrow left/right&gt; کلید</CreateTip>
+      <AdjustTip>نکته : استفاده از &lt;alt+arrow up/down&gt; برای رفتن به قبلی/زیرنویس بعدی</AdjustTip>
+      <BeforeChangingTimeInWaveFormX>Before changing time in wave form: {0}</BeforeChangingTimeInWaveFormX>
+      <NewTextInsertAtX>New text inserted at {0}</NewTextInsertAtX>
+      <Center>مرکز</Center>
+      <PlayRate>سرعت بازی (سرعت)ا</PlayRate>
+      <Slow>آرام</Slow>
+      <Normal>عادی</Normal>
+      <Fast>سریع</Fast>
+      <VeryFast>بسیار سریع</VeryFast>
+    </VideoControls>
+    <SaveChangesToUntitled>ذخیره تغییرات بدون عنوان؟</SaveChangesToUntitled>
+    <SaveChangesToX>ذخیره تغییرات را به {0}؟</SaveChangesToX>
+    <SaveChangesToUntitledOriginal>ذخیره تغییرات بدون عنوان اصلی؟</SaveChangesToUntitledOriginal>
+    <SaveChangesToOriginalX>ذخیره تغییرات اصلی به {0}؟</SaveChangesToOriginalX>
+    <SaveSubtitleAs>ذخیره زیرنویس به عنوان</SaveSubtitleAs>
+    <SaveOriginalSubtitleAs>ذخیره زیرنویس اصلی به عنوان</SaveOriginalSubtitleAs>
+    <NoSubtitleLoaded>بدون زیرنویس لود</NoSubtitleLoaded>
+    <VisualSyncSelectedLines>همگام تجسمی -- خطوط انتخاب شده</VisualSyncSelectedLines>
+    <VisualSyncTitle>همگام سازی</VisualSyncTitle>
+    <BeforeVisualSync>قبل از همگام بصری</BeforeVisualSync>
+    <VisualSyncPerformedOnSelectedLines>همگام سازی در انتخاب خطوط</VisualSyncPerformedOnSelectedLines>
+    <VisualSyncPerformed>همگام سازی انجام</VisualSyncPerformed>
+    <ImportThisVobSubSubtitle>؟VobSubواردات این نام</ImportThisVobSubSubtitle>
+    <FileXIsLargerThan10Mb>File is larger than 10 MB: {0}</FileXIsLargerThan10Mb>
+    <ContinueAnyway>هر حال ادامه میدهید؟</ContinueAnyway>
+    <BeforeLoadOf>Before load of {0}</BeforeLoadOf>
+    <LoadedSubtitleX>Loaded subtitle {0}</LoadedSubtitleX>
+    <LoadedEmptyOrShort>Loaded empty or very short subtitle {0}</LoadedEmptyOrShort>
+    <FileIsEmptyOrShort>پرونده خالی است و یا بسیار کوتاه!</FileIsEmptyOrShort>
+    <FileNotFound>File not found: {0}</FileNotFound>
+    <SavedSubtitleX>Saved subtitle {0}</SavedSubtitleX>
+    <SavedOriginalSubtitleX>Saved original subtitle {0}</SavedOriginalSubtitleX>
+    <FileOnDiskModified>پرونده بر روی دیسک تغییر</FileOnDiskModified>
+    <OverwriteModifiedFile>Overwrite the file {0} modified at {1} {2}{3} with current file loaded from disk at {4} {5}?</OverwriteModifiedFile>
+    <UnableToSaveSubtitleX>Unable to save subtitle file {0}</UnableToSaveSubtitleX>
+    <BeforeNew>قبل از جدید</BeforeNew>
+    <New>جدید</New>
+    <BeforeConvertingToX>Before converting to {0}</BeforeConvertingToX>
+    <ConvertedToX>Converted to {0}</ConvertedToX>
+    <BeforeShowEarlier>قبل از نشان دادن پیش</BeforeShowEarlier>
+    <BeforeShowLater>قبل از نشان دادن بعد</BeforeShowLater>
+    <LineNumberX>Line number: {0:#,##0.##}</LineNumberX>
+    <OpenVideoFile>باز کردن فایل های ویدئویی...</OpenVideoFile>
+    <NewFrameRateUsedToCalculateTimeCodes>جدید نرخ فریم ({0}) برای محاسبه شروع/پایان کدهای زمان استفاده شد</NewFrameRateUsedToCalculateTimeCodes>
+    <NewFrameRateUsedToCalculateFrameNumbers>جدید نرخ فریم ({0}) برای محاسبه شروع/پایان اعداد قاب مورد استفاده قرار گرفت</NewFrameRateUsedToCalculateFrameNumbers>
+    <FindContinue>مورد جستجو یافت نشد.
+ آیا می خواهید از بالا از سند و جستجو یک بار دیگر شروع کنم؟</FindContinue>
+    <FindContinueTitle>ادامه یافتن؟</FindContinueTitle>
+    <XFoundAtLineNumberY>'{0} در بر داشت در شماره خط {1}</XFoundAtLineNumberY>
+    <XNotFound>'{0} یافت نشد</XNotFound>
+    <BeforeReplace>Before replace: {0}</BeforeReplace>
+    <MatchFoundX>Match found: {0}</MatchFoundX>
+    <NoMatchFoundX>No match found: {0}</NoMatchFoundX>
+    <FoundNothingToReplace>موردی یافت نشد در بر داشت به جای</FoundNothingToReplace>
+    <ReplaceCountX>Replace count: {0}</ReplaceCountX>
+    <NoXFoundAtLineY>Match found at line {0}: {1}</NoXFoundAtLineY>
+    <OneReplacementMade>یک جایگزین ساخته شده است.</OneReplacementMade>
+    <BeforeChangesMadeInSourceView>قبل از اینکه تغییرات ساخته شده در نمایش مبدأ</BeforeChangesMadeInSourceView>
+    <UnableToParseSourceView>قادر به تجزیه منبع متن نمایش!</UnableToParseSourceView>
+    <GoToLineNumberX>Go to line number {0}</GoToLineNumberX>
+    <CreateAdjustChangesApplied>ساخت/تنظیم خطوط اعمال تغییرات</CreateAdjustChangesApplied>
+    <SelectedLines>خطوط انتخاب شده</SelectedLines>
+    <BeforeDisplayTimeAdjustment>قبل از تنظیم زمان نمایش</BeforeDisplayTimeAdjustment>
+    <DisplayTimeAdjustedX>Display time adjusted: {0}</DisplayTimeAdjustedX>
+    <DisplayTimesAdjustedX>Display times adjusted: {0}</DisplayTimesAdjustedX>
+    <StarTimeAdjustedX>Start time adjusted: {0}</StarTimeAdjustedX>
+    <BeforeCommonErrorFixes>قبل از رفع خطا مشترک</BeforeCommonErrorFixes>
+    <CommonErrorsFixedInSelectedLines>اشتباهات رایج در انتخاب خطوط ثابت</CommonErrorsFixedInSelectedLines>
+    <CommonErrorsFixed>اشتباهات رایج ثابت</CommonErrorsFixed>
+    <BeforeRenumbering>قبل از renumbering</BeforeRenumbering>
+    <RenumberedStartingFromX>Renumbered starting from: {0}</RenumberedStartingFromX>
+    <BeforeRemovalOfTextingForHearingImpaired>قبل از خروج از texting برای اختلال در شنوایی</BeforeRemovalOfTextingForHearingImpaired>
+    <TextingForHearingImpairedRemovedOneLine>Texting برای حذف اختلال شنوایی : یک خط</TextingForHearingImpairedRemovedOneLine>
+    <TextingForHearingImpairedRemovedXLines>Texting for hearing impaired removed : {0} lines</TextingForHearingImpairedRemovedXLines>
+    <SubtitleSplitted>نام پذیری</SubtitleSplitted>
+    <SubtitleAppendPrompt>این نام موجود در حال حاضر به نام لود پیوست که باید
+ در حال حاضر در هماهنگی با فایل تصویری می باشد.
+
+ ادامه؟</SubtitleAppendPrompt>
+    <SubtitleAppendPromptTitle>نام افزودن پرونده</SubtitleAppendPromptTitle>
+    <OpenSubtitleToAppend>نام برای اضافه</OpenSubtitleToAppend>
+    <AppendViaVisualSyncTitle>همگام تجسمی -- الحاق بخش دوم زیرنویس</AppendViaVisualSyncTitle>
+    <AppendSynchronizedSubtitlePrompt>الحاق این زیرنویس هماهنگ شده؟</AppendSynchronizedSubtitlePrompt>
+    <BeforeAppend>قبل از الحاق</BeforeAppend>
+    <SubtitleAppendedX>Subtitle appended: {0}</SubtitleAppendedX>
+    <SubtitleNotAppended>!نام نه افزوده</SubtitleNotAppended>
+    <GoogleTranslate>مترجم گوگل</GoogleTranslate>
+    <MicrosoftTranslate>مایکروسافت ترجمه</MicrosoftTranslate>
+    <BeforeGoogleTranslation>قبل از ترجمه گوگل</BeforeGoogleTranslation>
+    <SelectedLinesTranslated>انتخاب خطوط ترجمه</SelectedLinesTranslated>
+    <SubtitleTranslated>زیرنویس ترجمه شده</SubtitleTranslated>
+    <TranslateSwedishToDanish>در حال حاضر ترجمه لود زیرنویس سوئدی به دانمارکی</TranslateSwedishToDanish>
+    <TranslateSwedishToDanishWarning>در حال حاضر ترجمه لود سوئدی آیا مطمئن هستید؟</TranslateSwedishToDanishWarning>
+    <TranslatingViaNikseDkMt>ترجمه از طریق روش اختصاصي</TranslatingViaNikseDkMt>
+    <BeforeSwedishToDanishTranslation>قبل از سوئدی به دانمارکی ترجمه</BeforeSwedishToDanishTranslation>
+    <TranslationFromSwedishToDanishComplete>ترجمه از سوئدی به دانمارکی کامل</TranslationFromSwedishToDanishComplete>
+    <TranslationFromSwedishToDanishFailed>ترجمه از سوئدی به دانمارکی شکست خورد</TranslationFromSwedishToDanishFailed>
+    <BeforeUndo>قبل از خنثی سازی</BeforeUndo>
+    <UndoPerformed>واگرد انجام</UndoPerformed>
+    <NothingToUndo>هیچ چیز به خنثی سازی</NothingToUndo>
+    <InvalidLanguageNameX>نام نامعتبر زبان : {0}ا</InvalidLanguageNameX>
+    <UnableToChangeLanguage>!قادر به تغییر زبان</UnableToChangeLanguage>
+    <NumberOfCorrectedWords>Number of corrected words: {0}</NumberOfCorrectedWords>
+    <NumberOfSkippedWords>Number of skipped words: {0}</NumberOfSkippedWords>
+    <NumberOfCorrectWords>Number of correct words: {0}</NumberOfCorrectWords>
+    <NumberOfWordsAddedToDictionary>تعداد کلمات به فرهنگ لغت اضافه شده : {0}ا</NumberOfWordsAddedToDictionary>
+    <NumberOfNameHits>Number of name hits: {0}</NumberOfNameHits>
+    <SpellCheck>بررسی املا</SpellCheck>
+    <BeforeSpellCheck>قبل از بررسی املا</BeforeSpellCheck>
+    <SpellCheckChangedXToY>Spell check: Changed '{0}' to '{1}'</SpellCheckChangedXToY>
+    <BeforeAddingTagX>قبل از اضافه کردن &lt;{0}&gt; برچسب</BeforeAddingTagX>
+    <TagXAdded>&lt;{0}&gt; برچسب ها اضافه شده</TagXAdded>
+    <LineXOfY>خط {0} از {1}</LineXOfY>
+    <XLinesDeleted>{0} حذف خطوط</XLinesDeleted>
+    <BeforeDeletingXLines>قبل از حذف {0} خط</BeforeDeletingXLines>
+    <DeleteXLinesPrompt>حذف {0} خط؟</DeleteXLinesPrompt>
+    <OneLineDeleted>خط حذف</OneLineDeleted>
+    <BeforeDeletingOneLine>قبل از پاک کردن یک خط</BeforeDeletingOneLine>
+    <DeleteOneLinePrompt>پاک کردن یک خط؟</DeleteOneLinePrompt>
+    <BeforeInsertLine>قبل از قرار دادن خط</BeforeInsertLine>
+    <LineInserted>درج خط</LineInserted>
+    <BeforeLineUpdatedInListView>قبل از خط در listview به روز شده</BeforeLineUpdatedInListView>
+    <BeforeSettingFontToNormal>قبل از تنظیم فونت به حالت عادی</BeforeSettingFontToNormal>
+    <BeforeSplitLine>قبل از تقسیم خط</BeforeSplitLine>
+    <LineSplitted>خط پذیری</LineSplitted>
+    <BeforeMergeLines>قبل از ادغام خط</BeforeMergeLines>
+    <LinesMerged>خطوط هم ادغام شدند</LinesMerged>
+    <BeforeSettingColor>قبل از تنظیم رنگ</BeforeSettingColor>
+    <BeforeSettingFontName>قبل از تنظیم نام فونت</BeforeSettingFontName>
+    <BeforeTypeWriterEffect>قبل از اثر ماشین تحریر</BeforeTypeWriterEffect>
+    <BeforeKaraokeEffect>قبل از اثر کارائوکی</BeforeKaraokeEffect>
+    <BeforeImportingDvdSubtitle>قبل از وارد کردن زیرنویس از دی وی دی</BeforeImportingDvdSubtitle>
+    <OpenMatroskaFile>MKV باز کردن فایل</OpenMatroskaFile>
+    <MatroskaFiles>MKV فایل‌های</MatroskaFiles>
+    <NoSubtitlesFound>زیرنویسی پیدا نشد</NoSubtitlesFound>
+    <NotAValidMatroskaFileX>This is not a valid MKV file: {0}</NotAValidMatroskaFileX>
+    <ParsingMatroskaFile>MKV لطفا صبر کنید تجزیه فایل</ParsingMatroskaFile>
+    <BeforeImportFromMatroskaFile>MKV قبل از وارد کردن زیرنویس از فایل</BeforeImportFromMatroskaFile>
+    <SubtitleImportedFromMatroskaFile>MKV زیرنویس های وارد شده از فایل</SubtitleImportedFromMatroskaFile>
+    <DropFileXNotAccepted>اضافه کردن فایل '{0}' پذیرفته نیست -- فایل بسیار بزرگ است</DropFileXNotAccepted>
+    <DropOnlyOneFile>شما فقط می توانید یک فایل انتخاب کنید</DropOnlyOneFile>
+    <BeforeCreateAdjustLines>قبل از ایجاد/تنظیم خطوط</BeforeCreateAdjustLines>
+    <OpenAnsiSubtitle>نام را باز</OpenAnsiSubtitle>
+    <BeforeChangeCasing>قبل از تغییر پوشش</BeforeChangeCasing>
+    <CasingCompleteMessageNoNames>Number of lines with casing changed: {0}/{1}</CasingCompleteMessageNoNames>
+    <CasingCompleteMessageOnlyNames>Number of lines with names casing changed: {0}/{1}</CasingCompleteMessageOnlyNames>
+    <CasingCompleteMessage>Number of lines with casing changed: {0}/{1}, changed casing for names: {2}</CasingCompleteMessage>
+    <BeforeChangeFrameRate>قبل از تغییر نرخ فریم</BeforeChangeFrameRate>
+    <FrameRateChangedFromXToY>Frame rate changed from {0} to {1}</FrameRateChangedFromXToY>
+    <IdxFileNotFoundWarning>{0} یافت نشد! واردات فایل؟ VobSub</IdxFileNotFoundWarning>
+    <InvalidVobSubHeader>VobSubسربرگ فایل معتبر نمی باشد : {0}</InvalidVobSubHeader>
+    <OpenVobSubFile>باز VobSub (فرعی/idx) نام</OpenVobSubFile>
+    <VobSubFiles>VobSub نام فایل</VobSubFiles>
+    <OpenBluRaySupFile>باز بلو ری. پرونده شام خوردن</OpenBluRaySupFile>
+    <BluRaySupFiles>ضبط و پخش فایل های شام خوردن</BluRaySupFiles>
+    <BeforeImportingVobSubFile>VobSub قبل از وارد کردن نام</BeforeImportingVobSubFile>
+    <BeforeImportingBluRaySupFile>قبل از وارد کردن ضبط و پخش فایل شام خوردن</BeforeImportingBluRaySupFile>
+    <BeforeImportingBdnXml>BDN XML قبل از وارد کردن فایل</BeforeImportingBdnXml>
+    <BeforeShowSelectedLinesEarlierLater>قبل از نشان دادن خطوط انتخاب شده در اوایل/بعد</BeforeShowSelectedLinesEarlierLater>
+    <ShowSelectedLinesEarlierLaterPerformed>نمایش قبلی/بعد در خطوط انتخاب شده انجام</ShowSelectedLinesEarlierLaterPerformed>
+    <DoubleWordsViaRegEx>دو واژه از طریق regex {0}</DoubleWordsViaRegEx>
+    <BeforeSortX>Before sort: {0}</BeforeSortX>
+    <SortedByX>Sorted by: {0}</SortedByX>
+    <BeforeAutoBalanceSelectedLines>قبل از انتخاب خودکار توازن خطوط</BeforeAutoBalanceSelectedLines>
+    <NumberOfLinesAutoBalancedX>Number of lines auto balanced: {0}</NumberOfLinesAutoBalancedX>
+    <BeforeRemoveLineBreaksInSelectedLines>قبل از حذف خط معافیت از خطوط انتخاب شده</BeforeRemoveLineBreaksInSelectedLines>
+    <NumberOfWithRemovedLineBreakX>Number of lines with removed line-break: {0}</NumberOfWithRemovedLineBreakX>
+    <BeforeMultipleReplace>قبل از اینکه چند جایگزین</BeforeMultipleReplace>
+    <NumberOfLinesReplacedX>Number of lines with text replaced: {0}</NumberOfLinesReplacedX>
+    <NameXAddedToNamesEtcList>نام فایل '{0}' به نام/لیست و غیره اضافه شده است</NameXAddedToNamesEtcList>
+    <NameXNotAddedToNamesEtcList>نام فایل '{0}' بود نه به نام/لیست و غیره اضافه شده</NameXNotAddedToNamesEtcList>
+    <XLinesSelected>{0} انتخاب خطوط</XLinesSelected>
+    <UnicodeMusicSymbolsAnsiWarning>نام شامل یادداشت موسیقی یونیکد. صرفه جویی در مصرف با استفاده از مؤسسه رمزگذاری فایل خواهد شد این از دست خواهد رفت. ادامه با صرفه جویی؟</UnicodeMusicSymbolsAnsiWarning>
+    <NegativeTimeWarning>زیرنویس ها شامل کدهای ساعت هم منفی است. ادامه با صرفه جویی؟</NegativeTimeWarning>
+    <BeforeMergeShortLines>قبل از ادغام خطوط کوتاه</BeforeMergeShortLines>
+    <BeforeSplitLongLines>قبل از تقسیم خطوط طولانی</BeforeSplitLongLines>
+    <MergedShortLinesX>Number of lines merged: {0}</MergedShortLinesX>
+    <BeforeSetMinimumDisplayTimeBetweenParagraphs>قبل از تنظیم زمان نمایش حداقل بین پاراگراف</BeforeSetMinimumDisplayTimeBetweenParagraphs>
+    <XMinimumDisplayTimeBetweenParagraphsChanged>تعداد خطوط با صفحه نمایش حداقل زمان بین پاراگراف ها تغییر : {0}</XMinimumDisplayTimeBetweenParagraphsChanged>
+    <BeforeImportText>قبل از وارد کردن متن ساده</BeforeImportText>
+    <TextImported>متن وارداتی</TextImported>
+    <BeforePointSynchronization>قبل از هماهنگ سازی نقطه</BeforePointSynchronization>
+    <PointSynchronizationDone>هماهنگ سازی نقطه انجام</PointSynchronizationDone>
+    <BeforeTimeCodeImport>قبل از وارد کردن از کدهای زمان</BeforeTimeCodeImport>
+    <TimeCodeImportedFromXY>Time codes imported from {0}: {1}</TimeCodeImportedFromXY>
+    <BeforeInsertSubtitleAtVideoPosition>قبل از قرار دادن زیرنویس در موقعیت ویدیو</BeforeInsertSubtitleAtVideoPosition>
+    <BeforeSetStartTimeAndOffsetTheRest>قبل از تنظیم زمان شروع و افست بقیه</BeforeSetStartTimeAndOffsetTheRest>
+    <BeforeSetEndAndVideoPosition>قبل از قرار دادن زمان پایان در ویدئو محل و محاسبه خودکار شروع</BeforeSetEndAndVideoPosition>
+    <ContinueWithCurrentSpellCheck>ادامه با بررسی املا فعلی؟</ContinueWithCurrentSpellCheck>
+    <CharactersPerSecond>Chars/sec: {0:0.00}</CharactersPerSecond>
+    <GetFrameRateFromVideoFile>دریافت نرخ فریم از فایل های ویدیویی</GetFrameRateFromVideoFile>
+    <NetworkMessage>New message: {0} ({1}): {2}</NetworkMessage>
+    <NetworkUpdate>Line updated: {0} ({1}): Index={2}, Text={3}</NetworkUpdate>
+    <NetworkInsert>Line inserted: {0} ({1}): Index={2}, Text={3}</NetworkInsert>
+    <NetworkDelete>Line deleted: {0} ({1}): Index={2}</NetworkDelete>
+    <NetworkNewUser>New user: {0} ({1})</NetworkNewUser>
+    <NetworkByeUser>Bye {0} ({1})</NetworkByeUser>
+    <NetworkUnableToConnectToServer>قادر به اتصال به سرور : {0}</NetworkUnableToConnectToServer>
+    <UserAndAction>کاربر/اکشن</UserAndAction>
+    <NetworkMode>شبکه حالت</NetworkMode>
+    <XStartedSessionYAtZ>{0} : در آغاز جلسه {1} در {2}</XStartedSessionYAtZ>
+    <SpellChekingViaWordXLineYOfX>چک کردن املا کلمات با استفاده از {0} -- خط {1} / {2}</SpellChekingViaWordXLineYOfX>
+    <UnableToStartWord>قادر به آغاز مایکروسافت ورد</UnableToStartWord>
+    <SpellCheckAbortedXCorrections>بررسی املا خاتمه یافت. {0} خطوط تغییر یافتهاست.</SpellCheckAbortedXCorrections>
+    <SpellCheckCompletedXCorrections>املا چک به پایان رسید. {0} خطوط تغییر یافتهاست.</SpellCheckCompletedXCorrections>
+    <OpenOtherSubtitle>باز کردن زیرنویس دیگر</OpenOtherSubtitle>
+    <BeforeToggleDialogueDashes>قبل ضامن از گفتگوی خط ها</BeforeToggleDialogueDashes>
+    <ExportPlainTextAs>خروجی گرفتن نقشه متن از</ExportPlainTextAs>
+    <TextFiles>فایل های متنی</TextFiles>
+  </Main>
+  <MatroskaSubtitleChooser>
+    <Title>MKV نام فایل را انتخاب کنید از</Title>
+    <PleaseChoose>بیش از یک نام یافت -- لطفا انتخاب کنید</PleaseChoose>
+    <TrackXLanguageYTypeZ>Track {0} - {1} - language: {2} - type: {3}</TrackXLanguageYTypeZ>
+  </MatroskaSubtitleChooser>
+  <MergedShortLines>
+    <Title>ادغام خطوط کوتاه</Title>
+    <MaximumCharacters>حداکثر تعداد کاراکتر در یک پاراگراف</MaximumCharacters>
+    <MaximumMillisecondsBetween>حداکثر میلی ثانیه بین خطوط</MaximumMillisecondsBetween>
+    <NumberOfMergesX>Number of merges: {0}</NumberOfMergesX>
+    <LineNumber>خط #</LineNumber>
+    <MergedText>متن ادغام</MergedText>
+    <OnlyMergeContinuationLines>فقط ادامه خط ها را ترکیب کن</OnlyMergeContinuationLines>
+  </MergedShortLines>
+  <MultipleReplace>
+    <Title>چند جایگزین</Title>
+    <FindWhat>پیدا کردن آنچه</FindWhat>
+    <ReplaceWith>به جای</ReplaceWith>
+    <Normal>عادی</Normal>
+    <CaseSensitive>مورد حقوقی حساس</CaseSensitive>
+    <RegularExpression>بیان منظم</RegularExpression>
+    <LineNumber>خط #</LineNumber>
+    <Before>قبل از</Before>
+    <After>پس از</After>
+    <LinesFoundX>Lines found: {0}</LinesFoundX>
+    <Delete>حذف</Delete>
+    <Add>اضافه کردن</Add>
+    <Update>و بروز</Update>
+    <Enabled>کوکی ها</Enabled>
+    <SearchType>نوع جستجو</SearchType>
+  </MultipleReplace>
+  <NetworkChat>
+    <Title>گپ</Title>
+    <Send>ارسال</Send>
+  </NetworkChat>
+  <NetworkJoin>
+    <Title>تاریخ شبکه را وارد نمایید</Title>
+    <Information>تاریخ جلسه موجود که در آن چند نفر برای همکاری هستید</Information>
+    <Join>پیوستن</Join>
+  </NetworkJoin>
+  <NetworkLogAndInfo>
+    <Title>شبکه اطلاعات را وارد نمایید و وارد شوید</Title>
+    <Log>ورود به سیستم :</Log>
+  </NetworkLogAndInfo>
+  <NetworkStart>
+    <Title>شروع جلسه شبکه</Title>
+    <ConnectionTo>Connecting to {0}</ConnectionTo>
+    <Information>جلسه شروع جدید که در آن چند نفر برای همکاری هستید</Information>
+    <Start>شروع</Start>
+  </NetworkStart>
+  <RemoveTextFromHearImpaired>
+    <Title>گزارش متن برای ناشنوایان</Title>
+    <RemoveTextConditions>شرایط گزارش متن</RemoveTextConditions>
+    <RemoveTextBetween>شرایط گزارش متن</RemoveTextBetween>
+    <SquareBrackets>'[' و '] ='</SquareBrackets>
+    <Brackets>'{' و '}'</Brackets>
+    <Parentheses>'(' و ')'</Parentheses>
+    <QuestionMarks>'؟' و '؟'</QuestionMarks>
+    <And>و</And>
+    <RemoveTextBeforeColon>گزارش متن قبل از (':')روده بزرگ</RemoveTextBeforeColon>
+    <OnlyIfTextIsUppercase>فقط اگر متن بزرگ است</OnlyIfTextIsUppercase>
+    <OnlyIfInSeparateLine>فقط اگر در خط جدا از هم</OnlyIfInSeparateLine>
+    <LineNumber>خط #</LineNumber>
+    <Before>قبل از</Before>
+    <After>پس از</After>
+    <LinesFoundX>Lines found: {0}</LinesFoundX>
+    <RemoveTextIfContains>گزارش متن اگر در آن وجود دارد :</RemoveTextIfContains>
+    <RemoveInterjections>گزارش interjections (shh ، hmm ، و غیره)</RemoveInterjections>
+    <EditInterjections>ویرایش...</EditInterjections>
+  </RemoveTextFromHearImpaired>
+  <ReplaceDialog>
+    <Title>جایگزین کردن</Title>
+    <FindWhat>پیدا کردن آنچه که :</FindWhat>
+    <Normal>عادی</Normal>
+    <CaseSensitive>مورد حقوقی حساس</CaseSensitive>
+    <RegularExpression>بیان منظم</RegularExpression>
+    <ReplaceWith>به جای</ReplaceWith>
+    <Find>و یافتن</Find>
+    <Replace>و به جای</Replace>
+    <ReplaceAll>جایگزینی &amp;همه</ReplaceAll>
+  </ReplaceDialog>
+  <SetMinimumDisplayTimeBetweenParagraphs>
+    <Title>تنظیم زمان نمایش حداقل بین پاراگراف</Title>
+    <PreviewLinesModifiedX>Preview - paragraphs modified: {0}</PreviewLinesModifiedX>
+    <ShowOnlyModifiedLines>فقط نمایش تغییر خطوط</ShowOnlyModifiedLines>
+    <MinimumMillisecondsBetweenParagraphs>حداقل میلی ثانیه بین خطوط</MinimumMillisecondsBetweenParagraphs>
+  </SetMinimumDisplayTimeBetweenParagraphs>
+  <SetSyncPoint>
+    <Title>Set Sync point for line {0}</Title>
+    <SyncPointTimeCode>همزمانی نقطه کد ساعت</SyncPointTimeCode>
+    <ThreeSecondsBack>&lt;&lt;3 ثانیه</ThreeSecondsBack>
+    <HalfASecondBack>&lt;&lt;½ ثانیه</HalfASecondBack>
+    <HalfASecondForward>½ ثانیه&gt;&gt;</HalfASecondForward>
+    <ThreeSecondsForward>3 ثانیه&gt;&gt;</ThreeSecondsForward>
+  </SetSyncPoint>
+  <Settings>
+    <Title>تنظیمات</Title>
+    <General>عمومی</General>
+    <Toolbar>نوار ابزار</Toolbar>
+    <VideoPlayer>پخش کننده فیلم</VideoPlayer>
+    <WaveformAndSpectrogram>شکل موج/طیف نگار</WaveformAndSpectrogram>
+    <Tools>ابزار</Tools>
+    <WordLists>لیست کلمات</WordLists>
+    <SsaStyle>حالات نوشتار سبک</SsaStyle>
+    <Proxy>پروکسی</Proxy>
+    <ShowToolBarButtons>نمایش دکمه های نوار ابزار</ShowToolBarButtons>
+    <New>جدید</New>
+    <Open>باز</Open>
+    <Save>ذخیره</Save>
+    <SaveAs>ذخیره به عنوان</SaveAs>
+    <Find>مشاهده</Find>
+    <Replace>جایگزین کردن</Replace>
+    <VisualSync>همگام سازی</VisualSync>
+    <SpellCheck>بررسی املا</SpellCheck>
+    <SettingsName>تنظیمات</SettingsName>
+    <Help>راهنما</Help>
+    <ShowFrameRate>نمایش نرخ فریم را در نوار ابزار</ShowFrameRate>
+    <DefaultFrameRate>نرخ فریم پیش فرض</DefaultFrameRate>
+    <DefaultFileEncoding>به طور پیش فرض پشتیبانی می کند فایل</DefaultFileEncoding>
+    <AutoDetectAnsiEncoding>خودکار تشخیص رمزگذاری مؤسسه</AutoDetectAnsiEncoding>
+    <SubtitleLineMaximumLength>حداکثر طول یک خط</SubtitleLineMaximumLength>
+    <AutoWrapWhileTyping>بسته بندی خودکار در حال تایپ</AutoWrapWhileTyping>
+    <DurationMinimumMilliseconds>بیشترین.مدت،میلی ثانیه</DurationMinimumMilliseconds>
+    <DurationMaximumMilliseconds>بیشترین.مدت،میلی ثانیه</DurationMaximumMilliseconds>
+    <SubtitleFont>نوع قلم</SubtitleFont>
+    <SubtitleFontSize>اندازه قلم</SubtitleFontSize>
+    <SubtitleBold>جسور</SubtitleBold>
+    <SubtitleFontColor>رنگ قلم</SubtitleFontColor>
+    <SubtitleBackgroundColor>رنگ پس زمینه</SubtitleBackgroundColor>
+    <SpellChecker>کنترل کننده املا برای کلمات انگلیسی</SpellChecker>
+    <RememberRecentFiles>به یاد داشتن فایل های اخیر برای بازگشایی دوباره</RememberRecentFiles>
+    <StartWithLastFileLoaded>شروع با آخرین فایل لود شده</StartWithLastFileLoaded>
+    <RememberSelectedLine>به یاد داشتن خط انتخاب شده</RememberSelectedLine>
+    <RememberPositionAndSize>به یاد داشته باشید و موقعیت پنجره اصلی و اندازه</RememberPositionAndSize>
+    <StartInSourceView>در شروع نمایش مبدأ</StartInSourceView>
+    <RemoveBlankLinesWhenOpening>گزارش خط خالی هنگام باز کردن زیرنویس</RemoveBlankLinesWhenOpening>
+    <ShowLineBreaksAs>معافیت نمایش خط در لیست را به عنوان نمایش</ShowLineBreaksAs>
+    <MainListViewDoubleClickAction>دوبار کلیک بر روی خط در پنجره اصلی listview خواهد شد</MainListViewDoubleClickAction>
+    <MainListViewNothing>هیچ</MainListViewNothing>
+    <MainListViewVideoGoToPositionAndPause>برو به استانداردهای فعلی ویدیویی و مکث</MainListViewVideoGoToPositionAndPause>
+    <MainListViewVideoGoToPositionAndPlay>برو به استانداردهای فعلی ویدئو و اجرا</MainListViewVideoGoToPositionAndPlay>
+    <MainListViewEditText>برو جعبه متن برای ویرایش</MainListViewEditText>
+    <AutoBackup>خودکار پشتیبان</AutoBackup>
+    <AutoBackupEveryMinute>هر دقیقه</AutoBackupEveryMinute>
+    <AutoBackupEveryFiveMinutes>هر 5 دقیقه</AutoBackupEveryFiveMinutes>
+    <AutoBackupEveryFifteenMinutes>هر 15 دقیقه</AutoBackupEveryFifteenMinutes>
+    <AllowEditOfOriginalSubtitle>اجازه ویرایش از نام اصلی</AllowEditOfOriginalSubtitle>
+    <PromptDeleteLines>آماده برای حذف خط ها</PromptDeleteLines>
+    <VideoEngine>موتور ویدئو</VideoEngine>
+    <DirectShow>DirectShow</DirectShow>
+    <DirectShowDescription>quartz.dll در پوشه system32</DirectShowDescription>
+    <ManagedDirectX>مدیریت DirectX</ManagedDirectX>
+    <ManagedDirectXDescription>Microsoft.DirectX.AudioVideoPlayback -- کد مدیریت شده دات نت از DirectX</ManagedDirectXDescription>
+    <MPlayer>MPlayer</MPlayer>
+    <MPlayerDescription>MPlayer2/Mplayer</MPlayerDescription>
+    <VlcMediaPlayer>وی ال سی مدیا پلیر</VlcMediaPlayer>
+    <VlcMediaPlayerDescription>libvlc.dll از وی ال سی مدیا پلیر 1.1.0 و نسخه های جدیدتر</VlcMediaPlayerDescription>
+    <ShowStopButton>نمایش توقف را فشار دهید</ShowStopButton>
+    <DefaultVolume>حجم پیش فرض</DefaultVolume>
+    <VolumeNotes>0 بدون صدا است ، 100 است که بالاترین حجم</VolumeNotes>
+    <PreviewFontSize>پیش نمایش سایز فونت زیرنویس</PreviewFontSize>
+    <MainWindowVideoControls>صفحه اصلی ویدیو پنجره کنترل</MainWindowVideoControls>
+    <CustomSearchTextAndUrl>سفارشی متن جستجو و آدرس</CustomSearchTextAndUrl>
+    <WaveFormAppearance>موج ظاهر فرم</WaveFormAppearance>
+    <WaveFormGridColor>رنگ گرید</WaveFormGridColor>
+    <WaveFormShowGridLines>نمایش خطوط شبکه</WaveFormShowGridLines>
+    <ReverseMouseWheelScrollDirection>برگرداندن چرخ موس اسکرول برای راهبری </ReverseMouseWheelScrollDirection>
+    <WaveFormColor>رنگ</WaveFormColor>
+    <WaveFormSelectedColor>انتخاب رنگ</WaveFormSelectedColor>
+    <WaveFormBackgroundColor>برگشت رنگ</WaveFormBackgroundColor>
+    <WaveFormTextColor>رنگ متن</WaveFormTextColor>
+    <WaveformAndSpectrogramsFolderEmpty>پوشه های طیف نگار و شکل موج خالی است</WaveformAndSpectrogramsFolderEmpty>
+    <WaveformAndSpectrogramsFolderInfo>'waveforms'and spectograms'folder contain {0} files ({1:0:00} MB)</WaveformAndSpectrogramsFolderInfo>
+    <Spectrogram>طیف نگار</Spectrogram>
+    <GenerateSpectrogram>تولید کردن طیف نگار</GenerateSpectrogram>
+    <SpectrogramAppearance>نمایش طیف نگار</SpectrogramAppearance>
+    <SpectrogramOneColorGradient>یک رنگ متحرک</SpectrogramOneColorGradient>
+    <SpectrogramClassic>کلاسیک</SpectrogramClassic>
+    <SubStationAlphaStyle>زیر ایستگاه سبک آلفا</SubStationAlphaStyle>
+    <ChooseFont>انتخاب فونت</ChooseFont>
+    <ChooseColor>انتخاب رنگ</ChooseColor>
+    <Example>مثال</Example>
+    <Testing123>123 تست...</Testing123>
+    <Language>زبان</Language>
+    <NamesIgnoreLists>نام/لیست چشم پوشی -حساس به حروف کوچک</NamesIgnoreLists>
+    <AddNameEtc>اضافه کردن نام</AddNameEtc>
+    <AddWord>اضافه کردن کلمه</AddWord>
+    <Remove>گزارش</Remove>
+    <AddPair>اضافه کردن جفت</AddPair>
+    <UserWordList>لیست کاربر کلمه</UserWordList>
+    <OcrFixList>او سی آر لیست تعمیر</OcrFixList>
+    <Location>محل</Location>
+    <UseOnlineNamesEtc>استفاده از نام فایل و غیره آنلاین کاپرفیلد</UseOnlineNamesEtc>
+    <WordAddedX>Word added: {0}</WordAddedX>
+    <WordAlreadyExists>ورد از قبل وجود دارد!</WordAlreadyExists>
+    <WordNotFound>کلمه پیدا نشد</WordNotFound>
+    <RemoveX>گزارش {0}؟</RemoveX>
+    <CannotUpdateNamesEtcOnline>آیا می توانم بروز رسانی آنلاین NamesEtc.xml نیست!</CannotUpdateNamesEtcOnline>
+    <ProxyServerSettings>تنظیمات پروکسی سرور</ProxyServerSettings>
+    <ProxyAddress>آدرس پروکسی</ProxyAddress>
+    <ProxyAuthentication>تصدیق</ProxyAuthentication>
+    <ProxyUserName>نام کاربری</ProxyUserName>
+    <ProxyPassword>رمز عبور</ProxyPassword>
+    <ProxyDomain>دامنه</ProxyDomain>
+    <PlayXSecondsAndBack>ثانیه اجرا ایکس و برگشت ، ایکس است</PlayXSecondsAndBack>
+    <StartSceneIndex>شروع پاراگراف صحنه است</StartSceneIndex>
+    <EndSceneIndex>پایان پاراگراف صحنه است</EndSceneIndex>
+    <FirstPlusX>First + {0}</FirstPlusX>
+    <LastMinusX>Last - {0}</LastMinusX>
+    <FixCommonerrors>تعمیر خطاهای رایج</FixCommonerrors>
+    <MergeLinesShorterThan>ادغام خطوط کوتاه تر از</MergeLinesShorterThan>
+    <MusicSymbol>نماد موسیقی</MusicSymbol>
+    <MusicSymbolsToReplace>نماد های موسیقی به جای -جداگانه با فضای خالی</MusicSymbolsToReplace>
+    <FixCommonOcrErrorsUseHardcodedRules>تعمیر خطاهای او سی آر مشترک -- همچنین hardcoded قوانین استفاده</FixCommonOcrErrorsUseHardcodedRules>
+    <Shortcuts>میانبر ها</Shortcuts>
+    <Shortcut>میانبر</Shortcut>
+    <Control>کنترل</Control>
+    <Alt>Alt</Alt>
+    <Shift>shift</Shift>
+    <Key>Key</Key>
+    <TextBox>Textbox</TextBox>
+    <UpdateShortcut>Update</UpdateShortcut>
+    <ShortcutIsNotValid>Shortcut is not valid: {0}</ShortcutIsNotValid>
+    <ToggleDockUndockOfVideoControls>کنترل حالت چسبان/غیرچسبان بودن کنترل های ویدئو</ToggleDockUndockOfVideoControls>
+    <AdjustViaEndAutoStartAndGoToNext>میزان کردن توسط محل پایان و رفتن به ادامه</AdjustViaEndAutoStartAndGoToNext>
+    <AdjustSetStartAutoDurationAndGoToNext>تنظیم شروع،مدت اتوماتیک و رفتن به ادامه</AdjustSetStartAutoDurationAndGoToNext>
+    <AdjustSetEndNextStartAndGoToNext>تنظیم پایان،شروع بعدی و رفتن به ادامه</AdjustSetEndNextStartAndGoToNext>
+    <AdjustStartDownEndUpAndGoToNext>key down=start start,key up=set end and go to next</AdjustStartDownEndUpAndGoToNext>
+    <AdjustSelected100MsForward>حرکت خط های انتخاب شده 100 میلی ثانیه به جلو</AdjustSelected100MsForward>
+    <AdjustSelected100MsBack>حرکت خط های انتخاب شده 100 میلی ثانیه به عقب</AdjustSelected100MsBack>
+    <AdjustSetStartTimeOnly>تنظیم کردن زمان شروع،نگه داشتن زمان پایان</AdjustSetStartTimeOnly>
+    <MainCreateStartDownEndUp>create new at key-down,set end time at key up</MainCreateStartDownEndUp>
+    <MergeDialogue>ادغام کردن گفتگو ها/جاگذاری خط ها</MergeDialogue>
+    <GoToNext>برو به خط بعدی</GoToNext>
+    <GoToPrevious>برو به خط قبلی</GoToPrevious>
+    <ToggleFocus>ضامن مرکز میان لیست ظاهری و جعبه متن زیرنویس</ToggleFocus>
+    <ToggleDialogueDashes>کنترل ضامن خط های گفتگوها</ToggleDialogueDashes>
+    <VerticalZoom>بزرگنمایی عمودی</VerticalZoom>
+    <WaveformSeekSilenceForward>جستجوی آرام بعدی</WaveformSeekSilenceForward>
+    <WaveformSeekSilenceBack>جستجوی آرام قبلی</WaveformSeekSilenceBack>
+    <GoBack100Milliseconds>میلی ثانیه عقب 100</GoBack100Milliseconds>
+    <GoForward100Milliseconds>میلی ثانیه جلو100 </GoForward100Milliseconds>
+    <GoBack500Milliseconds>میلی ثانیه عقب 500</GoBack500Milliseconds>
+    <GoForward500Milliseconds>میلی ثانیه جلو500 </GoForward500Milliseconds>
+    <TogglePlayPause>کنترل پخش/مکث</TogglePlayPause>
+    <Pause>مکث</Pause>
+    <Fullscreen>تمام صفحه</Fullscreen>
+  </Settings>
+  <ShowEarlierLater>
+    <Title>انتخاب نمایش خطوط قبل/بعد</Title>
+    <TitleAll>نمایش همه خطوط قبل/بعد</TitleAll>
+    <ShowEarlier>نمایش قبلی</ShowEarlier>
+    <ShowLater>نمایش بعد</ShowLater>
+    <TotalAdjustmentX>Total adjustment: {0}</TotalAdjustmentX>
+    <AllLines>همه خطوط</AllLines>
+    <SelectedLinesonly>انتخاب خطوط تنها</SelectedLinesonly>
+  </ShowEarlierLater>
+  <ShowHistory>
+    <Title>تاریخچه -برای خنثی سازی</Title>
+    <SelectRollbackPoint>زمان را انتخاب کنید/برای توضیحات پسروی</SelectRollbackPoint>
+    <Time>زمان</Time>
+    <Description>شرح</Description>
+    <CompareHistoryItems>مقایسه اقلام تاریخچه</CompareHistoryItems>
+    <CompareWithCurrent>مقایسه با جریان</CompareWithCurrent>
+    <Rollback>پسروی</Rollback>
+  </ShowHistory>
+  <SpellCheck>
+    <Title>بررسی املا</Title>
+    <FullText>متن کامل</FullText>
+    <WordNotFound>کلمه پیدا نشد</WordNotFound>
+    <Language>زبان</Language>
+    <Change>تغییر</Change>
+    <ChangeAll>تغییر همه</ChangeAll>
+    <SkipOnce>پرش و یک</SkipOnce>
+    <SkipAll>پرش و تمام</SkipAll>
+    <AddToUserDictionary>اضافه کردن کاربر به فرهنگ لغت</AddToUserDictionary>
+    <AddToNamesAndIgnoreList>اضافه کردن به نام/لیست سر و صدا -حساس به حروف کوچک</AddToNamesAndIgnoreList>
+    <Abort>سقط جنین</Abort>
+    <Use>استفاده</Use>
+    <UseAlways>استفاده از همیشه</UseAlways>
+    <Suggestions>پیشنهادات</Suggestions>
+    <SpellCheckProgress>Spell check [{0}] - {1}</SpellCheckProgress>
+    <EditWholeText>ویرایش کل متن</EditWholeText>
+    <EditWordOnly>ویرایش واژه تنها</EditWordOnly>
+    <AddXToNamesEtc>اضافه کردن '{0}' به نام/لیست و غیره</AddXToNamesEtc>
+    <AutoFixNames>تعمیر خودکار اسامی که در آن فقط پوشش متفاوت</AutoFixNames>
+    <ImageText>متن تصویر</ImageText>
+    <SpellCheckCompleted>املا چک به پایان رسید.</SpellCheckCompleted>
+    <SpellCheckAborted>املا بررسی سقط شده</SpellCheckAborted>
+  </SpellCheck>
+  <SplitLongLines>
+    <Title>خطوط تقسیم طولانی</Title>
+    <SingleLineMaximumLength>تنها خط حداکثر طول</SingleLineMaximumLength>
+    <LineMaximumLength>خط حداکثر طول</LineMaximumLength>
+    <LineContinuationBeginEndStrings>ادامه خط شروع/پایان رشته ها</LineContinuationBeginEndStrings>
+    <NumberOfSplits>Number of splits: {0}</NumberOfSplits>
+    <LongestSingleLineIsXAtY>Longest single line length is {0} at line {1}</LongestSingleLineIsXAtY>
+    <LongestLineIsXAtY>طولانی ترین طول خط در کل برابر است با {0} در {1} خط</LongestLineIsXAtY>
+  </SplitLongLines>
+  <SplitSubtitle>
+    <Title>نام اسپلیت</Title>
+    <Description1>را وارد کنید طول قسمت اول از فیلم یا فهرست</Description1>
+    <Description2>طول و دریافت از فایل تصویری :</Description2>
+    <Split>و تقسیم</Split>
+    <Done>و انجام</Done>
+    <NothingToSplit>هیچ چیز به تقسیم!</NothingToSplit>
+    <SavePartOneAs>ذخیره 1 بخش به عنوان</SavePartOneAs>
+    <SavePartTwoAs>بخش 2 ذخیره به عنوان</SavePartTwoAs>
+    <Part1>Part1</Part1>
+    <Part2>Part2</Part2>
+    <UnableToSaveFileX>Unable to save {0}</UnableToSaveFileX>
+  </SplitSubtitle>
+  <StartNumberingFrom>
+    <Title>شروع شماره از</Title>
+    <StartFromNumber>شروع از شماره :</StartFromNumber>
+    <PleaseEnterAValidNumber>یو پی اس ، لطفا یک عدد وارد کنید</PleaseEnterAValidNumber>
+  </StartNumberingFrom>
+  <PointSync>
+    <Title>هماهنگ سازی نقطه</Title>
+    <TitleViaOtherSubtitle>همگام سازی توسط زیرنویس دیگر</TitleViaOtherSubtitle>
+    <SyncHelp>تنظیم حداقل دو نقطه همگام را به هماهنگ سازی خشن</SyncHelp>
+    <SetSyncPoint>تنظیم همگام نقطه</SetSyncPoint>
+    <RemoveSyncPoint>گزارش نقطه همگام</RemoveSyncPoint>
+    <SyncPointsX>Sync points: {0}</SyncPointsX>
+    <Info>همگام یک نقطه تنظیم خواهد شد و موقعیت ، دو یا چند نقطه همگام خواهد شد و موقعیت و سرعت تنظیم</Info>
+    <ApplySync>درخواست</ApplySync>
+  </PointSync>
+  <UnknownSubtitle>
+    <Title>نوع زیرنویس نامعلوم</Title>
+    <Message>اين موضوع را به ما اطلاع دهيد mailto : hellas2012@yahoo.com</Message>
+  </UnknownSubtitle>
+  <VisualSync>
+    <Title>همگام سازی</Title>
+    <StartScene>صحنه شروع</StartScene>
+    <EndScene>صحنه پایان</EndScene>
+    <Synchronize>همگام سازی</Synchronize>
+    <HalfASecondBack>½ ثانیه&gt;</HalfASecondBack>
+    <ThreeSecondsBack>3 ثانیه&gt;</ThreeSecondsBack>
+    <PlayXSecondsAndBack>اجرا {0} ثانیه و قبل</PlayXSecondsAndBack>
+    <FindText>یافتن بعدی</FindText>
+    <GoToSubPosition>برو به مکان زیرنویس</GoToSubPosition>
+    <KeepChangesTitle>ذخیره‌ی تغییرات؟</KeepChangesTitle>
+    <KeepChangesMessage>تغییرات ایجاد شده بر روی زیرنویس در 'Visual sync'.</KeepChangesMessage>
+    <SynchronizationDone>همگام سازی انجام شد!</SynchronizationDone>
+    <StartSceneMustComeBeforeEndScene>صحنه شروع باید قبل از پایان صحنه بیاید!</StartSceneMustComeBeforeEndScene>
+    <Tip>نکته : استفاده از &lt;ctrl+arrow left/right&gt; کلید به حرکت 100 کارشناسی ارشد عقب/جلو</Tip>
+  </VisualSync>
+  <VobSubEditCharacters>
+    <Title>ویرایش تصویر مقایسه پایگاه داده</Title>
+    <ChooseCharacter>شخصیت را انتخاب کنید (ها)ا</ChooseCharacter>
+    <ImageCompareFiles>تصویر مقایسه فایل ها</ImageCompareFiles>
+    <CurrentCompareImage>کنونی مقایسه تصویر</CurrentCompareImage>
+    <TextAssociatedWithImage>متن همراه با تصویر</TextAssociatedWithImage>
+    <IsItalic>است و مورب</IsItalic>
+    <Update>و بروز</Update>
+    <Delete>&amp;حذف</Delete>
+    <ImageDoubleSize>اندازه تصویر دو</ImageDoubleSize>
+    <ImageFileNotFound>فایل تصویر یافت نشد</ImageFileNotFound>
+    <Image>تصویر</Image>
+  </VobSubEditCharacters>
+  <VobSubOcr>
+    <Title>واردات/او سی آر VobSub (فرعی/idx) زیرنویس</Title>
+    <TitleBluRay>واردات/او سی آر بلو ری (. شام خوردن) زیرنویس</TitleBluRay>
+    <OcrMethod>روش او سی آر</OcrMethod>
+    <OcrViaModi>او سی آر از طریق مایکروسافت آفیس تصویربرداری سند (MODI). نیاز به دفتر کارشناسی ارشد</OcrViaModi>
+    <OcrViaTesseract>Tesseract از طریق او سی آر</OcrViaTesseract>
+    <Language>زبان</Language>
+    <OcrViaImageCompare>او سی آر از طریق مقایسه تصویر</OcrViaImageCompare>
+    <ImageDatabase>پایگاه تصویر</ImageDatabase>
+    <NoOfPixelsIsSpace>تعداد پیکسل فضا</NoOfPixelsIsSpace>
+    <New>جدید</New>
+    <Edit>ویرایش</Edit>
+    <StartOcr>شروع او سی آر</StartOcr>
+    <Stop>توقف</Stop>
+    <StartOcrFrom>او سی آر شروع از هیچ نام :</StartOcrFrom>
+    <LoadingVobSubImages>VobSub بارگذاری تصاویر</LoadingVobSubImages>
+    <SubtitleImage>نام تصویر</SubtitleImage>
+    <SubtitleText>متن زیرنویس</SubtitleText>
+    <UnableToCreateCharacterDatabaseFolder>قادر به ایجاد شخصیت پوشه پایگاه داده ': {0}ا</UnableToCreateCharacterDatabaseFolder>
+    <SubtitleImageXofY>Subtitle image {0} of {1}</SubtitleImageXofY>
+    <ImagePalette>پالت تصویر</ImagePalette>
+    <UseCustomColors>استفاده از رنگ های سفارشی</UseCustomColors>
+    <Transparent>شفاف</Transparent>
+    <PromptForUnknownWords>اعلان کلمات ناشناخته</PromptForUnknownWords>
+    <TryToGuessUnkownWords>سعی کنید به حدس زدن کلمات ناشناخته</TryToGuessUnkownWords>
+    <AutoBreakSubtitleIfMoreThanTwoLines>خودکار بند شکستن اگر بیش از دو خط</AutoBreakSubtitleIfMoreThanTwoLines>
+    <AllFixes>همه رفع</AllFixes>
+    <GuessesUsed>حدس استفاده</GuessesUsed>
+    <UnknownWords>کلمات نامعلوم</UnknownWords>
+    <OcrAutoCorrectionSpellchecking>او سی آر اصلاح خودکار / spellchecking</OcrAutoCorrectionSpellchecking>
+    <FixOcrErrors>تعمیر خطاهای او سی آر</FixOcrErrors>
+    <ImportTextWithMatchingTimeCodes>باز کردن متن با تطبیق دادن زمان کدها</ImportTextWithMatchingTimeCodes>
+    <SaveSubtitleImageAs>ذخیره کردن تصویر زیرنویس به عنوان</SaveSubtitleImageAs>
+    <SaveAllSubtitleImagesAsBdnXml>(PNG/bdn xml)ذخیره تمام عکس ها</SaveAllSubtitleImagesAsBdnXml>
+    <SaveAllSubtitleImagesWithHtml>html ذخیره تمام عکس ها با نمایه </SaveAllSubtitleImagesWithHtml>
+    <XImagesSavedInY>{0} images saved in {1}</XImagesSavedInY>
+    <TryModiForUnknownWords>سعی کنید او سی آر ام اس MODI کلمات ناشناخته</TryModiForUnknownWords>
+    <DictionaryX>Dictionary: {0}</DictionaryX>
+    <RightToLeft>راست به چپ</RightToLeft>
+    <ShowOnlyForcedSubtitles>فقط نمایش زیرنویسهای اجباری</ShowOnlyForcedSubtitles>
+    <UseTimeCodesFromIdx>idx استفاده از زمان‌‌‌های فایل</UseTimeCodesFromIdx>
+    <NoMatch>&lt;بدون تطبیق&gt;</NoMatch>
+    <AutoTransparentBackground>شفاف کردن پشت زمینه بصورت خودکار</AutoTransparentBackground>
+    <InspectCompareMatchesForCurrentImage>رسیدگی سنجیدن تطابق ها برای عکس جاری</InspectCompareMatchesForCurrentImage>
+    <EditLastAdditions>ویرایش آخرین عکس سنجیده شده و اضافه شده </EditLastAdditions>
+  </VobSubOcr>
+  <VobSubOcrCharacter>
+    <Title>VobSub -- تبدیل تصویر به متن بطور دستی</Title>
+    <ShrinkSelection>(Shrink) انتخاب کوچک</ShrinkSelection>
+    <ExpandSelection>(Expand) انتخاب باز</ExpandSelection>
+    <SubtitleImage>نام تصویر</SubtitleImage>
+    <Characters>شخصیت/ها</Characters>
+    <CharactersAsText>شخصیت (ها) به صورت متن</CharactersAsText>
+    <Italic>کج</Italic>
+    <Abort>لغو</Abort>
+    <Skip>رد کردن</Skip>
+    <Nordic>شمالی</Nordic>
+    <Spanish>اسپانیایی</Spanish>
+    <German>آلمانی</German>
+    <AutoSubmitOnFirstChar>اراده دادن خودکار بر روی&amp;اولین کاراکتر</AutoSubmitOnFirstChar>
+    <EditLastX>Edit last: {0}</EditLastX>
+  </VobSubOcrCharacter>
+  <VobSubOcrCharacterInspect>
+    <Title>رسیدگی سنجیدن تطابق ها برای عکس جاری</Title>
+    <InspectItems>رسیدگی به آیتم ها</InspectItems>
+    <AddBetterMatch>اضافه کردن تطبیق بهتر</AddBetterMatch>
+  </VobSubOcrCharacterInspect>
+  <VobSubOcrNewFolder>
+    <Title>پوشه جدید</Title>
+    <Message>نام پوشه پایگاه داده جدید</Message>
+  </VobSubOcrNewFolder>
+  <WaveForm>
+    <ClickToAddWaveForm>برای اضافه کردن شکل موج (waveform) کلیک کنید</ClickToAddWaveForm>
+    <ClickToAddWaveformAndSpectrogram>کلیک کنید تا شکل موج یا طیف نگار اضافه شود</ClickToAddWaveformAndSpectrogram>
+    <Seconds>ثانیه</Seconds>
+    <ZoomIn>بزرگ کردن</ZoomIn>
+    <ZoomOut>کوچک کردن</ZoomOut>
+    <AddParagraphHere>متن را در اینجا اضافه کنید</AddParagraphHere>
+    <DeleteParagraph>حذف متن</DeleteParagraph>
+    <Split>(Split) اسپلیت</Split>
+    <SplitAtCursor>اسپلیت در مکان نما</SplitAtCursor>
+    <MergeWithPrevious>ادغام با قبلی</MergeWithPrevious>
+    <MergeWithNext>ادغام با بعدی</MergeWithNext>
+    <PlaySelection>اجرای انتخاب شده ها</PlaySelection>
+    <ShowWaveformAndSpectrogram>نمایش شکل موج و طیف نگار</ShowWaveformAndSpectrogram>
+    <ShowWaveformOnly>فقط نمایش شکل موج</ShowWaveformOnly>
+    <ShowSpectrogramOnly>فقط نمایش طیف نگار</ShowSpectrogramOnly>
+  </WaveForm>
+</Language>
