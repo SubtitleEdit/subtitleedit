@@ -214,6 +214,25 @@ eu.types_custom=Norbere ezarpena
 eu.types_default=Berezko ezarpena
 
 
+; Persian
+fa.comp_translations=ترجمه ها
+fa.msg_AppIsRunning=برنامه ویرایش زیرنویس در حال اجرا میباشد.%n%nلطفا تمامی پنجره های ان را بسته , و بر روی ادامه کلیک کنید یا انصراف دهید
+fa.msg_AppIsRunningUninstall=برنامه ویرایش زیرنویس در حال اجرا میباشد%n%nلطفا تمامی پنجره های ان را بسته , و بر روی ادامه کلیک کنید یا انصراف دهید
+fa.msg_AskToDownNET=برنامه ویرایش زیرنویس به کتابخانه.NET Framework 2.0 نیاز دارد. لطفا آن را یا دانلود کنید یا نصب کنید و دوباره برنامه نصب را اجرا کنید%n%nآیا همین الان Framework 2.0 را دانلود میکنید?
+fa.msg_DeleteSettings=آیا میخواهید تمامی تنظیمات و گزینه های ایجاد شده توسط شما هم پاک شود?%n%nاگر شما قصد نصب دوباره را دارید نیازی به حذف آن ندارید
+fa.msg_OptimizingPerformance=بهینه سازی اجرا
+fa.msg_SetupIsRunningWarning=برنامه نصب ویرایش زیرنویس در حال اجرا میباشد
+fa.run_VisitWebsite=سایت ویرایش زیرنویس را مشاهده کنید
+fa.sm_com_Changelog=تغییرات در نسخه جدید
+fa.tsk_AllUsers=برای تمامی کاربران سیستم
+fa.tsk_CurrentUser=فقط برای کاربر جاری
+fa.tsk_Other=دیگر:
+fa.tsk_ResetDictionaries=ریست دیکشنری و حذف تمامی نام های معمولی
+fa.tsk_ResetSettings=ریست تنظیمات ویرایشگر زیرنویس
+fa.types_custom=نصب دستی
+fa.types_default=نصب پیشفرض
+
+
 ; Finnish
 fi.comp_translations=Käännökset
 fi.msg_AppIsRunning=Asennusohjelma on havainnut, että Subtitle Edit on parhaillaan käynnissä.%n%nSulje kaikki tapaukset nyt, sitten klikkaa OK jatkaaksesi tai Peruuta poistuaksesi.
