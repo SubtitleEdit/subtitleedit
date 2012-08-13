@@ -100,6 +100,7 @@ OutputDir=.
 OutputBaseFilename=SubtitleEdit-{#app_ver}-setup
 AllowNoIcons=yes
 Compression=lzma2/ultra
+InternalCompressLevel=ultra
 SolidCompression=yes
 ShowTasksTreeLines=yes
 DisableReadyPage=yes
