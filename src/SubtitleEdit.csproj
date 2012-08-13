@@ -1334,9 +1334,9 @@
     <Content Include="Icons\WaveFormToogle.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <None Include="pictureBoxFS.Image.png" />
-    <None Include="pictureBoxFSDown.Image.png" />
-    <None Include="pictureBoxFSOver.Image.png" />
+    <None Include="Resources\pictureBoxFS.Image.png" />
+    <None Include="Resources\pictureBoxFSDown.Image.png" />
+    <None Include="Resources\pictureBoxFSOver.Image.png" />
     <Content Include="Resources\HunspellDictionaries.xml">
       <SubType>Designer</SubType>
     </Content>
