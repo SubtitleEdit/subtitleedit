@@ -139,7 +139,6 @@ SelectDirDesc=Non instalatu beharko litzateke [name]?
 SelectDirLabel3=Instalatzaileak [name] ondorengo karpetan instalatuko du.
 SelectDirBrowseLabel=Jarraitzeko, klikatu Hurrengoa. Beste karpeta bat hautatu nahi baduzu, klikatu Arakatu.
 DiskSpaceMBLabel=Gutxienez [mb] MBko toki hutsa behar da diskan.
-ToUNCPathname=Instalatzaileak ezin du UNC bideizen baten instalatu. Sarean instalatzen saiatzen ari bazara, sareko diska bat mapeatu beharko duzu.
 InvalidPath=Bideizen oso bat sartu behar duzu, unitate hizki eta guzti; adibidez:%n%nC:\APP%n%nedo UNC bideizen bat honela:%n%n\\zerbitzaria\elkarbanatua
 InvalidDrive=Hautatu duzun unitatea edo UNC elkarbanatua ez dago edo ezin da bertara sartu. Hautatu beste bat.
 DiskSpaceWarningTitle=Ez Dago Behar Beste Toki Diskan
