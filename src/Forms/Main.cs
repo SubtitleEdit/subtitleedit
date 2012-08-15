@@ -959,6 +959,7 @@ namespace Nikse.SubtitleEdit.Forms
         void AudioWaveForm_OnNonParagraphRightClicked(double seconds, Paragraph paragraph)
         {
             addParagraphHereToolStripMenuItem.Visible = false;
+            addParagraphAndPasteToolStripMenuItem.Visible = false;
             deleteParagraphToolStripMenuItem.Visible = false;
             splitToolStripMenuItem1.Visible = false;
             mergeWithPreviousToolStripMenuItem.Visible = false;
@@ -1053,6 +1054,7 @@ namespace Nikse.SubtitleEdit.Forms
             SubtitleListview1.SelectIndexAndEnsureVisible(_subtitle.GetIndex(paragraph));
 
             addParagraphHereToolStripMenuItem.Visible = false;
+            addParagraphAndPasteToolStripMenuItem.Visible = false;
             deleteParagraphToolStripMenuItem.Visible = true;
             splitToolStripMenuItem1.Visible = true;
             mergeWithPreviousToolStripMenuItem.Visible = true;
@@ -1070,6 +1072,8 @@ namespace Nikse.SubtitleEdit.Forms
             SubtitleListview1.SelectIndexAndEnsureVisible(_subtitle.GetIndex(paragraph));
 
             addParagraphHereToolStripMenuItem.Visible = true;
+            addParagraphAndPasteToolStripMenuItem.Visible = Clipboard.ContainsText();
+
             deleteParagraphToolStripMenuItem.Visible = false;
             splitToolStripMenuItem1.Visible = false;
             mergeWithPreviousToolStripMenuItem.Visible = false;
@@ -1572,6 +1576,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             //waveform
             addParagraphHereToolStripMenuItem.Text = Configuration.Settings.Language.WaveForm.AddParagraphHere;
+            addParagraphAndPasteToolStripMenuItem.Text = Configuration.Settings.Language.WaveForm.AddParagraphHereAndPasteText;
             deleteParagraphToolStripMenuItem.Text = Configuration.Settings.Language.WaveForm.DeleteParagraph;
             splitToolStripMenuItem1.Text = Configuration.Settings.Language.WaveForm.Split;
             mergeWithPreviousToolStripMenuItem.Text = Configuration.Settings.Language.WaveForm.MergeWithPrevious;
@@ -11910,6 +11915,13 @@ namespace Nikse.SubtitleEdit.Forms
             audioVisualizer.Invalidate();
         }
 
+        private void addParagraphAndPasteToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            addParagraphHereToolStripMenuItem_Click(sender, e);
+            textBoxListViewText.Text = Clipboard.GetText();
+        }        
+
+
         private void mergeWithPreviousToolStripMenuItem_Click(object sender, EventArgs e)
         {
             int index = _subtitle.GetIndex(audioVisualizer.RightClickedParagraph);
@@ -14928,7 +14940,8 @@ namespace Nikse.SubtitleEdit.Forms
                     index++;
                 }
             }
-        }        
+        }
+
 
     }
 }
