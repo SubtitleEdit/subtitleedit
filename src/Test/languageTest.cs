@@ -7,7 +7,6 @@ using Nikse.SubtitleEdit.Logic;
 
 namespace Test
 {
-
     /// <summary>
     /// Summary description for languageTest
     /// </summary>
@@ -19,58 +18,19 @@ namespace Test
         /// </summary>
         public languageTest()
         {
-            list = new List<string>();
+            _list = new List<string>();
             if (Directory.Exists(Path.Combine(Configuration.BaseDirectory, "Languages")))
             {
                 foreach (string fileName in Directory.GetFiles(Path.Combine(Configuration.BaseDirectory, "Languages"), "*.xml"))
                 {
                     string cultureName = Path.GetFileNameWithoutExtension(fileName);
-                    list.Add(cultureName);
+                    _list.Add(cultureName);
                 }
             }
-            list.Sort();
+            _list.Sort();
         }
 
-        private TestContext testContextInstance;
-        private List<string> list; //Store the list of existing languages
-
-        /// <summary>
-        ///Gets or sets the test context which provides
-        ///information about and functionality for the current test run.
-        ///</summary>
-        public TestContext TestContext
-        {
-            get
-            {
-                return testContextInstance;
-            }
-            set
-            {
-                testContextInstance = value;
-            }
-        }
-
-        #region Additional test attributes
-        //
-        // You can use the following additional attributes as you write your tests:
-        //
-        // Use ClassInitialize to run code before running the first test in the class
-        // [ClassInitialize()]
-        // public static void MyClassInitialize(TestContext testContext) { }
-        //
-        // Use ClassCleanup to run code after all tests in a class have run
-        // [ClassCleanup()]
-        // public static void MyClassCleanup() { }
-        //
-        // Use TestInitialize to run code before running each test
-        // [TestInitialize()]
-        // public void MyTestInitialize() { }
-        //
-        // Use TestCleanup to run code after each test has run
-        // [TestCleanup()]
-        // public void MyTestCleanup() { }
-        //
-        #endregion
+        private List<string> _list; //Store the list of existing languages
 
         [TestMethod]
         public void TestAllLanguageTranslationsExists()
@@ -78,7 +38,8 @@ namespace Test
             Language defaultlang = new Language(); //Load the English version
             defaultlang.General.TranslatedBy = "Translated by ..."; // to avoid assertion
 
-            foreach (String cultureName in list) //Loop over all language files
+            _list.Clear(); _list.Add("da-DK");
+            foreach (String cultureName in _list) //Loop over all language files
             {
                 //Load language
                 var reader = new System.IO.StreamReader(Path.Combine(Configuration.BaseDirectory, "Languages") + Path.DirectorySeparatorChar + cultureName + ".xml");
