@@ -1232,6 +1232,12 @@ Fortsæt?</SubtitleAppendPrompt>
     <TogglePlayPause>Skift mellem afspil og pause</TogglePlayPause>
     <Pause>Pause</Pause>
     <Fullscreen>Fuldskærm</Fullscreen>
+    <CustomSearch1>Oversæt, brugerdefineret søgning 1</CustomSearch1>
+    <CustomSearch2>Oversæt, brugerdefineret søgning 2</CustomSearch2>
+    <CustomSearch3>Oversæt, brugerdefineret søgning 3</CustomSearch3>
+    <CustomSearch4>Oversæt, brugerdefineret søgning 4</CustomSearch4>
+    <CustomSearch5>Oversæt, brugerdefineret søgning 5</CustomSearch5>
+    <CustomSearch6>Oversæt, brugerdefineret søgning 6</CustomSearch6>
     <SyntaxColoring>Syntaks farvelægning</SyntaxColoring>
     <ListViewSyntaxColoring>Listevisning syntaks farvelægning</ListViewSyntaxColoring>
     <SyntaxColorDurationIfTooSmall>Farve - varighed, hvis for kort</SyntaxColorDurationIfTooSmall>
@@ -1526,6 +1532,7 @@ Fortsæt?</SubtitleAppendPrompt>
     <ZoomIn>Zoom ind</ZoomIn>
     <ZoomOut>Zoom ud</ZoomOut>
     <AddParagraphHere>Tilføj tekst her</AddParagraphHere>
+    <AddParagraphHereAndPasteText>Tilføj tekst fra 'klippebord' her</AddParagraphHereAndPasteText>
     <DeleteParagraph>Slet tekst</DeleteParagraph>
     <Split>Split</Split>
     <SplitAtCursor>Split ved markør</SplitAtCursor>
