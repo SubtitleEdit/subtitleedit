@@ -199,17 +199,18 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        public void SetCurrentFormat(string subtitleFormatFriendlyName)
+        public void SetCurrentFormat(string subtitleFormatName)
         {
-
             foreach (SubtitleFormat format in SubtitleFormat.AllSubtitleFormats)
             {
-                if (format.FriendlyName == subtitleFormatFriendlyName)
+                if (format.Name.ToLower().Trim() == subtitleFormatName.ToLower().Trim() ||
+                    format.FriendlyName.ToLower().Trim() == subtitleFormatName.ToLower().Trim())
                 {
                     SetCurrentFormat(format);
-                    break;
+                    return;
                 }
             }
+            SetCurrentFormat(new SubRip());
         }
 
         [System.Runtime.InteropServices.DllImport("kernel32.dll")]
@@ -248,6 +249,8 @@ namespace Nikse.SubtitleEdit.Forms
                 checkBoxSyncListViewWithVideoWhilePlaying.Checked = Configuration.Settings.General.SyncListViewWithVideoWhilePlaying;
 
                 SetFormatToSubRip();
+                if (Configuration.Settings.General.DefaultSubtitleFormat != "SubRip")
+                    SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
 
                 comboBoxEncoding.Items.Clear();
                 comboBoxEncoding.Items.Add(Encoding.UTF8.EncodingName);
@@ -2013,7 +2016,7 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         ebu.LoadSubtitle(_subtitle, null, fileName);
                         _oldSubtitleFormat = ebu;
-                        SetFormatToSubRip();
+                        SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
                         SetEncoding(Configuration.Settings.General.DefaultEncoding);
                         encoding = GetCurrentEncoding();
                         justConverted = true;
@@ -2028,7 +2031,7 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         pac.LoadSubtitle(_subtitle, null, fileName);
                         _oldSubtitleFormat = pac;
-                        SetFormatToSubRip();
+                        SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
                         SetEncoding(Configuration.Settings.General.DefaultEncoding);
                         encoding = GetCurrentEncoding();
                         justConverted = true;
@@ -2043,7 +2046,7 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         cavena890.LoadSubtitle(_subtitle, null, fileName);
                         _oldSubtitleFormat = cavena890;
-                        SetFormatToSubRip();
+                        SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
                         SetEncoding(Configuration.Settings.General.DefaultEncoding);
                         encoding = GetCurrentEncoding();
                         justConverted = true;
@@ -2058,7 +2061,7 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         spt.LoadSubtitle(_subtitle, null, fileName);
                         _oldSubtitleFormat = spt;
-                        SetFormatToSubRip();
+                        SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
                         SetEncoding(Configuration.Settings.General.DefaultEncoding);
                         encoding = GetCurrentEncoding();
                         justConverted = true;
@@ -2077,7 +2080,7 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         wsb.LoadSubtitle(_subtitle, list, fileName);
                         _oldSubtitleFormat = wsb;
-                        SetFormatToSubRip();
+                        SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
                         SetEncoding(Configuration.Settings.General.DefaultEncoding);
                         encoding = GetCurrentEncoding();
                         justConverted = true;
@@ -2092,7 +2095,7 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         cheetahCaption.LoadSubtitle(_subtitle, null, fileName);
                         _oldSubtitleFormat = cheetahCaption;
-                        SetFormatToSubRip();
+                        SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
                         SetEncoding(Configuration.Settings.General.DefaultEncoding);
                         encoding = GetCurrentEncoding();
                         justConverted = true;
@@ -2107,7 +2110,7 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         capMakerPlus.LoadSubtitle(_subtitle, null, fileName);
                         _oldSubtitleFormat = capMakerPlus;
-                        SetFormatToSubRip();
+                        SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
                         SetEncoding(Configuration.Settings.General.DefaultEncoding);
                         encoding = GetCurrentEncoding();
                         justConverted = true;
@@ -2122,7 +2125,7 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         captionsInc.LoadSubtitle(_subtitle, null, fileName);
                         _oldSubtitleFormat = captionsInc;
-                        SetFormatToSubRip();
+                        SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
                         SetEncoding(Configuration.Settings.General.DefaultEncoding);
                         encoding = GetCurrentEncoding();
                         justConverted = true;
@@ -2137,7 +2140,7 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         ultech130.LoadSubtitle(_subtitle, null, fileName);
                         _oldSubtitleFormat = ultech130;
-                        SetFormatToSubRip();
+                        SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
                         SetEncoding(Configuration.Settings.General.DefaultEncoding);
                         encoding = GetCurrentEncoding();
                         justConverted = true;
@@ -2152,7 +2155,7 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         nciCaption.LoadSubtitle(_subtitle, null, fileName);
                         _oldSubtitleFormat = nciCaption;
-                        SetFormatToSubRip();
+                        SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
                         SetEncoding(Configuration.Settings.General.DefaultEncoding);
                         encoding = GetCurrentEncoding();
                         justConverted = true;
@@ -2218,7 +2221,7 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         htmlSamiArray.LoadSubtitle(_subtitle, list, fileName);
                         _oldSubtitleFormat = htmlSamiArray;
-                        SetFormatToSubRip();
+                        SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
                         SetEncoding(Configuration.Settings.General.DefaultEncoding);
                         encoding = GetCurrentEncoding();
                         justConverted = true;
@@ -2419,7 +2422,7 @@ namespace Nikse.SubtitleEdit.Forms
                 MakeHistoryForUndo(_language.BeforeImportingBdnXml);
                 FileNew();
                 _subtitle.Paragraphs.Clear();
-                SetCurrentFormat(new SubRip().FriendlyName);
+                SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
                 _subtitle.WasLoadedWithFrameNumbers = false;
                 _subtitle.CalculateFrameNumbersFromTimeCodes(CurrentFrameRate);
                 foreach (Paragraph p in formSubOcr.SubtitleFromOcr.Paragraphs)
@@ -2451,7 +2454,7 @@ namespace Nikse.SubtitleEdit.Forms
                 MakeHistoryForUndo(_language.BeforeImportingBdnXml);
                 FileNew();
                 _subtitle.Paragraphs.Clear();
-                SetCurrentFormat(new SubRip().FriendlyName);
+                SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
                 _subtitle.WasLoadedWithFrameNumbers = false;
                 _subtitle.CalculateFrameNumbersFromTimeCodes(CurrentFrameRate);
                 foreach (Paragraph p in formSubOcr.SubtitleFromOcr.Paragraphs)
@@ -2483,7 +2486,7 @@ namespace Nikse.SubtitleEdit.Forms
                 MakeHistoryForUndo(_language.BeforeImportingBdnXml);
                 FileNew();
                 _subtitle.Paragraphs.Clear();
-                SetCurrentFormat(new SubRip().FriendlyName);
+                SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
                 _subtitle.WasLoadedWithFrameNumbers = false;
                 _subtitle.CalculateFrameNumbersFromTimeCodes(CurrentFrameRate);
                 foreach (Paragraph p in formSubOcr.SubtitleFromOcr.Paragraphs)
@@ -2774,7 +2777,8 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ResetSubtitle()
         {
-            SetCurrentFormat(new SubRip());
+            SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
+
             _subtitle = new Subtitle(_subtitle.HistoryItems);
             _subtitleAlternate = new Subtitle();
             _subtitleAlternateFileName = null;
@@ -7412,7 +7416,7 @@ namespace Nikse.SubtitleEdit.Forms
                     MakeHistoryForUndo(_language.BeforeImportingDvdSubtitle);
 
                     _subtitle.Paragraphs.Clear();
-                    SetCurrentFormat(new SubRip().FriendlyName);
+                    SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
                     _subtitle.WasLoadedWithFrameNumbers = false;
                     _subtitle.CalculateFrameNumbersFromTimeCodes(CurrentFrameRate);
                     foreach (Paragraph p in formSubOcr.SubtitleFromOcr.Paragraphs)
@@ -7475,7 +7479,7 @@ namespace Nikse.SubtitleEdit.Forms
                 MakeHistoryForUndo(_language.BeforeImportingDvdSubtitle);
 
                 _subtitle.Paragraphs.Clear();
-                SetCurrentFormat(new SubRip().FriendlyName);
+                SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
                 _subtitle.WasLoadedWithFrameNumbers = false;
                 _subtitle.CalculateFrameNumbersFromTimeCodes(CurrentFrameRate);
                 foreach (Paragraph p in formSubOcr.SubtitleFromOcr.Paragraphs)
@@ -8063,7 +8067,7 @@ namespace Nikse.SubtitleEdit.Forms
                 MakeHistoryForUndo(_language.BeforeImportingVobSubFile);
                 FileNew();
                 _subtitle.Paragraphs.Clear();
-                SetCurrentFormat(new SubRip().FriendlyName);
+                SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
                 _subtitle.WasLoadedWithFrameNumbers = false;
                 _subtitle.CalculateFrameNumbersFromTimeCodes(CurrentFrameRate);
                 foreach (Paragraph p in vobSubOcr.SubtitleFromOcr.Paragraphs)
@@ -8097,7 +8101,7 @@ namespace Nikse.SubtitleEdit.Forms
                         MakeHistoryForUndo(_language.BeforeImportingVobSubFile);
                         FileNew();
                         _subtitle.Paragraphs.Clear();
-                        SetCurrentFormat(new SubRip().FriendlyName);
+                        SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
                         _subtitle.WasLoadedWithFrameNumbers = false;
                         _subtitle.CalculateFrameNumbersFromTimeCodes(CurrentFrameRate);
                         foreach (Paragraph p in vobSubOcr.SubtitleFromOcr.Paragraphs)
@@ -9565,7 +9569,7 @@ namespace Nikse.SubtitleEdit.Forms
                             MakeHistoryForUndo(_language.BeforeImportingDvdSubtitle);
                             FileNew();
                             _subtitle.Paragraphs.Clear();
-                            SetCurrentFormat(new SubRip().FriendlyName);
+                            SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
                             _subtitle.WasLoadedWithFrameNumbers = false;
                             _subtitle.CalculateFrameNumbersFromTimeCodes(CurrentFrameRate);
                             foreach (Paragraph p in formSubOcr.SubtitleFromOcr.Paragraphs)
@@ -12163,7 +12167,7 @@ namespace Nikse.SubtitleEdit.Forms
                     MakeHistoryForUndo(_language.BeforeImportingBluRaySupFile);
                     FileNew();
                     _subtitle.Paragraphs.Clear();
-                    SetCurrentFormat(new SubRip().FriendlyName);
+                    SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
                     _subtitle.WasLoadedWithFrameNumbers = false;
                     _subtitle.CalculateFrameNumbersFromTimeCodes(CurrentFrameRate);
                     foreach (Paragraph p in vobSubOcr.SubtitleFromOcr.Paragraphs)
@@ -14823,7 +14827,9 @@ namespace Nikse.SubtitleEdit.Forms
                 if (ContinueNewOrExit())
                 {
                     OpenSubtitle(restoreAutoBackup.AutoBackupFileName, null);
+                    _fileName = _fileName.Remove(0, Configuration.AutoBackupFolder.Length).TrimStart(Path.DirectorySeparatorChar);
                     _converted = true;
+                    SetTitle();
                 }
             }
             _formPositionsAndSizes.SavePositionAndSize(restoreAutoBackup);
