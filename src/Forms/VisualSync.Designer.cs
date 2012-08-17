@@ -58,6 +58,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.labelTip = new System.Windows.Forms.Label();
             this.timerProgressBarRefresh = new System.Windows.Forms.Timer(this.components);
+            this.labelSyncDone = new System.Windows.Forms.Label();
             this.groupBoxStartScene.SuspendLayout();
             this.panelControlsStart.SuspendLayout();
             this.groupBoxEndScene.SuspendLayout();
@@ -111,6 +112,8 @@ namespace Nikse.SubtitleEdit.Forms
             this.MediaPlayerStart.FontSizeFactor = 1F;
             this.MediaPlayerStart.Location = new System.Drawing.Point(6, 34);
             this.MediaPlayerStart.Name = "MediaPlayerStart";
+            this.MediaPlayerStart.ShowFullscreenButton = true;
+            this.MediaPlayerStart.ShowMuteButton = true;
             this.MediaPlayerStart.ShowStopButton = true;
             this.MediaPlayerStart.Size = new System.Drawing.Size(450, 287);
             this.MediaPlayerStart.SubtitleText = "";
@@ -215,6 +218,8 @@ namespace Nikse.SubtitleEdit.Forms
             this.MediaPlayerEnd.FontSizeFactor = 1F;
             this.MediaPlayerEnd.Location = new System.Drawing.Point(6, 34);
             this.MediaPlayerEnd.Name = "MediaPlayerEnd";
+            this.MediaPlayerEnd.ShowFullscreenButton = true;
+            this.MediaPlayerEnd.ShowMuteButton = true;
             this.MediaPlayerEnd.ShowStopButton = true;
             this.MediaPlayerEnd.Size = new System.Drawing.Size(438, 287);
             this.MediaPlayerEnd.SubtitleText = "";
@@ -364,11 +369,23 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.timerProgressBarRefresh.Tick += new System.EventHandler(this.timerProgressBarRefresh_Tick);
             // 
+            // labelSyncDone
+            // 
+            this.labelSyncDone.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.labelSyncDone.AutoSize = true;
+            this.labelSyncDone.ForeColor = System.Drawing.Color.Gray;
+            this.labelSyncDone.Location = new System.Drawing.Point(546, 502);
+            this.labelSyncDone.Name = "labelSyncDone";
+            this.labelSyncDone.Size = new System.Drawing.Size(77, 13);
+            this.labelSyncDone.TabIndex = 16;
+            this.labelSyncDone.Text = "labelSyncDone";
+            // 
             // VisualSync
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(927, 525);
+            this.Controls.Add(this.labelSyncDone);
             this.Controls.Add(this.buttonSync);
             this.Controls.Add(this.labelTip);
             this.Controls.Add(this.groupBoxMovieInfo);
@@ -431,5 +448,6 @@ namespace Nikse.SubtitleEdit.Forms
         private Nikse.SubtitleEdit.Controls.VideoPlayerContainer MediaPlayerEnd;
         private System.Windows.Forms.Label labelTip;
         private System.Windows.Forms.Timer timerProgressBarRefresh;
+        private System.Windows.Forms.Label labelSyncDone;
     }
 }
