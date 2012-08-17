@@ -436,7 +436,12 @@ namespace Nikse.SubtitleEdit.Forms
                     }
 
                     if (removedInFirstLine && !removedInSecondLine && !text.StartsWith("-") && !text.StartsWith("<i>-"))
-                        insertDash = false;
+                    {
+                        if (insertDash && removedInFirstLine && (arr[1].StartsWith("-") || arr[1].StartsWith("<i>-")))
+                            insertDash = true;
+                        else
+                            insertDash = false;
+                    }
                 }
 
                 if (insertDash)

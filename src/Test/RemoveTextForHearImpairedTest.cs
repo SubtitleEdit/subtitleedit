@@ -177,10 +177,16 @@ namespace Test
         }
 
 
-
-
-
-        //
-        //
+        [TestMethod()]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void RemoveRemoveNameOfFirstLine()
+        {
+            FormRemoveTextForHearImpaired_Accessor target = new FormRemoveTextForHearImpaired_Accessor();
+            string text = "HECTOR: Hi." + Environment.NewLine + "-Oh, hey, Hector.";
+            string expected = "- Hi." + Environment.NewLine + "- Oh, hey, Hector.";
+            string actual = target.RemoveTextFromHearImpaired(text);
+            Assert.AreEqual(expected, actual);
+        }
+       
     }
 }
