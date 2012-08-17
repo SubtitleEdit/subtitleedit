@@ -306,6 +306,7 @@ namespace Nikse.SubtitleEdit.Logic
         public bool ShowFrameRate { get; set; }
         public double DefaultFrameRate { get; set; }
         public double CurrentFrameRate { get; set; }
+        public string DefaultSubtitleFormat { get; set; }
         public string DefaultEncoding { get; set; }
         public bool AutoGuessAnsiEncoding { get; set; }
         public string SubtitleFontName { get; set; }
@@ -398,6 +399,7 @@ namespace Nikse.SubtitleEdit.Logic
             SubtitleFontColor = System.Drawing.Color.Black;
             SubtitleBackgroundColor = System.Drawing.Color.White;
             CenterSubtitleInTextBox = false;
+            DefaultSubtitleFormat = "SubRip";
             DefaultEncoding = Encoding.UTF8.EncodingName;
             AutoGuessAnsiEncoding = false;
             ShowRecentFiles = true;
@@ -923,6 +925,9 @@ namespace Nikse.SubtitleEdit.Logic
                     settings.General.DefaultFrameRate = 23.976;
                 settings.General.CurrentFrameRate = settings.General.DefaultFrameRate;
             }
+            subNode = node.SelectSingleNode("DefaultSubtitleFormat");
+            if (subNode != null)
+                settings.General.DefaultSubtitleFormat = subNode.InnerText;
             subNode = node.SelectSingleNode("DefaultEncoding");
             if (subNode != null)
                 settings.General.DefaultEncoding = subNode.InnerText;
@@ -1824,6 +1829,7 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("ShowWaveform", settings.General.ShowWaveform.ToString());
             textWriter.WriteElementString("ShowSpectrogram", settings.General.ShowSpectrogram.ToString());
             textWriter.WriteElementString("DefaultFrameRate", settings.General.DefaultFrameRate.ToString());
+            textWriter.WriteElementString("DefaultSubtitleFormat", settings.General.DefaultSubtitleFormat);
             textWriter.WriteElementString("DefaultEncoding", settings.General.DefaultEncoding);
             textWriter.WriteElementString("AutoGuessAnsiEncoding", settings.General.AutoGuessAnsiEncoding.ToString());
             textWriter.WriteElementString("SubtitleFontName", settings.General.SubtitleFontName);

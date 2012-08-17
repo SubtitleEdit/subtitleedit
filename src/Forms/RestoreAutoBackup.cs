@@ -81,9 +81,12 @@ namespace Nikse.SubtitleEdit.Forms
         private void AddBackupToListView(string fileName)
         {
             string displayDate = Path.GetFileName(fileName).Substring(0, 19).Replace('_', ' ');
+            displayDate = displayDate.Remove(13, 1).Insert(13, ":");
+            displayDate = displayDate.Remove(16, 1).Insert(16, ":");
+
             string displayName = Path.GetFileName(fileName).Remove(0, 20);
 
-            var item = new ListViewItem(Path.GetFileName(displayDate));
+            var item = new ListViewItem(displayDate);
             item.UseItemStyleForSubItems = false;
             item.Tag = fileName;
 
@@ -96,10 +99,15 @@ namespace Nikse.SubtitleEdit.Forms
             listViewBackups.Items.Add(item);
         }
 
+        private void SetAutoBackupFileName()
+        {
+            AutoBackupFileName = listViewBackups.SelectedItems[0].Tag.ToString();
+        }
+
         private void buttonOK_Click(object sender, EventArgs e)
         {
             if (listViewBackups.SelectedItems.Count == 1)
-                AutoBackupFileName = listViewBackups.SelectedItems[0].Tag.ToString();
+                SetAutoBackupFileName();
             DialogResult = DialogResult.OK;
         }
 
@@ -107,7 +115,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (listViewBackups.SelectedItems.Count == 1)
             {
-                AutoBackupFileName = listViewBackups.SelectedItems[0].Tag.ToString();
+                SetAutoBackupFileName();
                 DialogResult = DialogResult.OK;
             }
         }
