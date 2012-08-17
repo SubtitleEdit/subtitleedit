@@ -2,7 +2,7 @@
 <Language Name="Catalan">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.2</Version>
+    <Version>3.2.8</Version>
     <TranslatedBy>Traduït per Juansa</TranslatedBy>
     <CultureName>ca-ES</CultureName>
     <HelpFile>
@@ -64,7 +64,16 @@
   </General>
   <About>
     <Title>Quant a Subtitle Edit</Title>
-    <AboutText1>Subtitle Edit és un programa lliure sota Llicència GNU Public. Podeu distribuir-lo, modificar-lo i emprar-lo lliurement. El codi C# està disponible en http://code.google.com/p/subtitleedit Visiteu www.nikse.dk per l'última versió. Les suggerències són benvingudes.</AboutText1>
+    <AboutText1>Subtitle Edit és un programa lliure sota Llicència GNU Public.
+Podeu distribuir-lo, modificar-lo i emprar-lo lliurement.
+
+El codi C# està disponible en http://code.google.com/p/subtitleedit 
+
+Visiteu www.nikse.dk per l'última versió.
+
+Les suggerències són benvingudes.
+
+Email: mailto:nikse.dk@gmail.com</AboutText1>
   </About>
   <AddToNames>
     <Title>Afegeix a la llista de names/etc</Title>
@@ -101,8 +110,8 @@
     <Before>Abans</Before>
     <After>Després</After>
     <LinesFoundX>S'han trobat: {0} Línies</LinesFoundX>
-    <OnlyBreakLinesLongerThan>Divideix només línies més llargues qué</OnlyBreakLinesLongerThan>
-    <OnlyUnbreakLinesLongerThan>Des-fés divideix línies sols més llargues qué</OnlyUnbreakLinesLongerThan>
+    <OnlyBreakLinesLongerThan>Divideix només línies més llargues què</OnlyBreakLinesLongerThan>
+    <OnlyUnbreakLinesShorterThan>Combina només línies més curtes què</OnlyUnbreakLinesShorterThan>
   </AutoBreakUnbreakLines>
   <ChangeCasing>
     <Title>Canvia majúscules</Title>
@@ -232,11 +241,6 @@
     <AntiAlias>Anti àlies</AntiAlias>
     <ExportAllLines>Exporta totes les línies...</ExportAllLines>
     <XImagesSavedInY>{0} imatges desades en {1}</XImagesSavedInY>
-    <VideoResolution>Res. Vídeo</VideoResolution>
-    <Align>Alínia</Align>
-    <Left>Esquerre</Left>
-    <Right>Dret</Right>
-    <Center>Centrat</Center>
   </ExportPngXml>
   <FindDialog>
     <Title>Recerca</Title>
@@ -424,6 +428,7 @@
     <Auto>Auto</Auto>
     <Fixed>Fixat</Fixed>
     <Refresh>&amp;Refresca</Refresh>
+    <Next>Següe&amp;nt</Next>
     <TextFiles>Fitxers de text</TextFiles>
     <PreviewLinesModifiedX>Vista prèvia - paràgrafs modificats: {0}</PreviewLinesModifiedX>
   </ImportText>
@@ -453,8 +458,6 @@
         <ImportTimecodes>Importa codis de temps...</ImportTimecodes>
         <Export>Exporta</Export>
         <ExportBdnXml>BDN xml/png...</ExportBdnXml>
-        <ExportBluRaySup>Exporta Blu-ray sup...</ExportBluRaySup>
-        <ExportVobSub>Exporta VobSub (sub/idx)...</ExportVobSub>
         <ExportCavena890>Cavena 890...</ExportCavena890>
         <ExportEbu>EBU stl...</ExportEbu>
         <ExportPac>PAC (Screen Electronics)...</ExportPac>
@@ -482,7 +485,7 @@
         <ChangeFrameRate>Canvia ràtio quadres...</ChangeFrameRate>
         <MergeShortLines>Combina línies curtes...</MergeShortLines>
         <SplitLongLines>Divideix línies llargues...</SplitLongLines>
-        <MinimumDisplayTimeBetweenParagraphs>Mínim temps de pantalla entre paràgrafs</MinimumDisplayTimeBetweenParagraphs>
+        <MinimumDisplayTimeBetweenParagraphs>Durada mínima entre paràgrafs</MinimumDisplayTimeBetweenParagraphs>
         <SortBy>Ordena per</SortBy>
         <Number>Nombre</Number>
         <StartTime>Temps d'inici</StartTime>
@@ -577,7 +580,6 @@
         <CopyToClipboard>Copia com a text al porta-retalls</CopyToClipboard>
         <Split>Divideix</Split>
         <MergeSelectedLines>Combina selecció de línies</MergeSelectedLines>
-        <MergeSelectedLinesASDialogue>Combina selecció de línies com a diàleg</MergeSelectedLinesASDialogue>
         <MergeWithLineBefore>Combina amb línia anterior</MergeWithLineBefore>
         <MergeWithLineAfter>Combina amb línia posterior</MergeWithLineAfter>
         <Normal>Normal</Normal>
@@ -603,9 +605,9 @@
       <ListView>Vista llista</ListView>
       <SourceView>Vista origen</SourceView>
       <UndoChangesInEditPanel>Des-fés canvis en panell Edita</UndoChangesInEditPanel>
-      <Previous>&lt; Previ</Previous>
-      <Next>Següent &gt;</Next>
-      <AutoBreak>Auto talla</AutoBreak>
+      <Previous>&lt; Prev.</Previous>
+      <Next>Seg. &gt;</Next>
+      <AutoBreak>Auto divideix</AutoBreak>
       <Unbreak>Enganxa</Unbreak>
     </Controls>
     <VideoControls>
@@ -967,7 +969,7 @@
     <Find>Cerca</Find>
     <Replace>Substitueix</Replace>
     <VisualSync>Sinc visual</VisualSync>
-    <SpellCheck>Corrector ortogràfic</SpellCheck>
+    <SpellCheck>Corrector</SpellCheck>
     <SettingsName>Configuració</SettingsName>
     <Help>Ajuda</Help>
     <ShowFrameRate>Mostra ràtio quadres en barra d'eines</ShowFrameRate>
@@ -976,8 +978,6 @@
     <AutoDetectAnsiEncoding>Auto-detecta codificació ANSI</AutoDetectAnsiEncoding>
     <SubtitleLineMaximumLength>Màx. llargaria línia única</SubtitleLineMaximumLength>
     <AutoWrapWhileTyping>Auto-empaqueta mentre s'escriu</AutoWrapWhileTyping>
-    <DurationMinimumMilliseconds>Durada mín, milisegons</DurationMinimumMilliseconds>
-    <DurationMaximumMilliseconds>Durada màx, milisegons</DurationMaximumMilliseconds>
     <SubtitleFont>Font subtítol</SubtitleFont>
     <SubtitleFontSize>Mida font subtítol</SubtitleFontSize>
     <SubtitleBold>Negreta</SubtitleBold>
@@ -1026,7 +1026,7 @@
     <WaveFormBackgroundColor>Color fons</WaveFormBackgroundColor>
     <WaveFormTextColor>Color text</WaveFormTextColor>
     <WaveformAndSpectrogramsFolderEmpty>Buida carpetes 'Espectrogrames' i 'FormesOna'</WaveformAndSpectrogramsFolderEmpty>
-    <WaveformAndSpectrogramsFolderInfo>Carpetes 'FormesOna' and 'Espectrogrames' contenen {0} fitxers ({1:0.00} MB)</WaveformAndSpectrogramsFolderInfo>
+    <WaveformAndSpectrogramsFolderInfo>Carpetes 'FormesOna' i 'Espectrogrames' contenen {0} fitxers ({1:0.00} MB)</WaveformAndSpectrogramsFolderInfo>
     <Spectrogram>Espectrograma</Spectrogram>
     <GenerateSpectrogram>Genera espectrograma</GenerateSpectrogram>
     <SpectrogramAppearance>Aparença espectrograma</SpectrogramAppearance>
@@ -1080,27 +1080,12 @@
     <ToggleDockUndockOfVideoControls>Alterna acoblament/desacoblament controls vídeo</ToggleDockUndockOfVideoControls>
     <AdjustViaEndAutoStartAndGoToNext>Ajustament via possició final i vés al següent</AdjustViaEndAutoStartAndGoToNext>
     <AdjustSetStartAutoDurationAndGoToNext>Estableix inici, auto-durada i vés al següent</AdjustSetStartAutoDurationAndGoToNext>
-    <AdjustSetEndNextStartAndGoToNext>Estableix final, inicia i vés al següent</AdjustSetEndNextStartAndGoToNext>
-    <AdjustStartDownEndUpAndGoToNext>Fletxa avall=Comença inici, fletxa amunt=estableix final i vés al següent</AdjustStartDownEndUpAndGoToNext>
-    <AdjustSelected100MsForward>Mou la selecció de línies 100 ms avant</AdjustSelected100MsForward>
-    <AdjustSelected100MsBack>Mou la selecció de línies 100 ms enrrere</AdjustSelected100MsBack>
-    <AdjustSetStartTimeOnly>Canvia inici, manté final</AdjustSetStartTimeOnly>
-    <MainCreateStartDownEndUp>Creat nou amb fletxa-avall, estableix final amb fletxa amunt</MainCreateStartDownEndUp>
-    <MergeDialogue>Combina diàleg (insereix guions)</MergeDialogue>
-    <GoToNext>Vés a línia següent</GoToNext>
-    <GoToPrevious>Vés a línia prèvia</GoToPrevious>
-    <ToggleFocus>Alterna focus entre vita llista i quadre de subtítol</ToggleFocus>
     <ToggleDialogueDashes>Activa/desactiva guions diàleg</ToggleDialogueDashes>
     <VerticalZoom>Amplia vertical</VerticalZoom>
-    <WaveformSeekSilenceForward>Cerca silenci avant</WaveformSeekSilenceForward>
-    <WaveformSeekSilenceBack>Cerca silenci enrrere</WaveformSeekSilenceBack>
     <GoBack100Milliseconds>100 ms enrrere</GoBack100Milliseconds>
     <GoForward100Milliseconds>100 ms avant</GoForward100Milliseconds>
     <GoBack500Milliseconds>500 ms enrrere</GoBack500Milliseconds>
     <GoForward500Milliseconds>500 ms avant</GoForward500Milliseconds>
-    <TogglePlayPause>Alterna Reprodueix/pausa</TogglePlayPause>
-    <Pause>Pausa</Pause>
-    <Fullscreen>Pantalla sencera</Fullscreen>
   </Settings>
   <ShowEarlierLater>
     <Title>Mostra selecció línies anterior/posterior</Title>
