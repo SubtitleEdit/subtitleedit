@@ -11082,7 +11082,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void textBoxListViewText_MouseMove(object sender, MouseEventArgs e)
         {
-            if (AutoRepeatContinueOn && !textBoxSearchWord.Focused)
+            if (AutoRepeatContinueOn && !textBoxSearchWord.Focused && textBoxListViewText.Focused)
             {
                 string selectedText = textBoxListViewText.SelectedText;
                 if (!string.IsNullOrEmpty(selectedText))
@@ -13915,6 +13915,23 @@ namespace Nikse.SubtitleEdit.Forms
                     textBoxListViewTextAlternate.DoDragDrop(textBoxListViewTextAlternate.SelectedText, DragDropEffects.Copy);
                 else
                     textBoxListViewTextAlternate.DoDragDrop(textBoxListViewTextAlternate.Text, DragDropEffects.Copy);
+            }
+            else if (AutoRepeatContinueOn && !textBoxSearchWord.Focused && textBoxListViewTextAlternate.Focused)
+            {
+                string selectedText = textBoxListViewTextAlternate.SelectedText;
+                if (!string.IsNullOrEmpty(selectedText))
+                {
+                    selectedText = selectedText.Trim();
+                    selectedText = selectedText.TrimEnd('.');
+                    selectedText = selectedText.TrimEnd(',');
+                    selectedText = selectedText.TrimEnd('!');
+                    selectedText = selectedText.TrimEnd('?');
+                    selectedText = selectedText.Trim();
+                    if (!string.IsNullOrEmpty(selectedText) && selectedText != textBoxSearchWord.Text)
+                    {
+                        textBoxSearchWord.Text = Utilities.RemoveHtmlTags(selectedText);
+                    }
+                }
             }
         }
 
