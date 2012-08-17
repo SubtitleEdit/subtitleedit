@@ -24,6 +24,7 @@ namespace Nikse.SubtitleEdit.Forms
         double _endStopPosition = -1.0;
         readonly LanguageStructure.VisualSync _language;
         readonly LanguageStructure.General _languageGeneral;
+        Timer timerHideSyncLabel = new Timer();
 
         public string VideoFileName { get; set; }
         public int AudioTrackNumber { get; set; }
@@ -59,6 +60,7 @@ namespace Nikse.SubtitleEdit.Forms
             MediaPlayerStart.InitializeVolume(Configuration.Settings.General.VideoPlayerDefaultVolume);
             MediaPlayerEnd.InitializeVolume(Configuration.Settings.General.VideoPlayerDefaultVolume);
 
+            labelSyncDone.Text = string.Empty;
             _language = Configuration.Settings.Language.VisualSync;
             _languageGeneral = Configuration.Settings.Language.General;
             Text = _language.Title;
@@ -82,6 +84,13 @@ namespace Nikse.SubtitleEdit.Forms
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
             labelTip.Text = _language.Tip;
             FixLargeFonts();
+            timerHideSyncLabel.Tick += new EventHandler(timerHideSyncLabel_Tick);
+            timerHideSyncLabel.Interval = 1000;
+        }
+
+        void timerHideSyncLabel_Tick(object sender, EventArgs e)
+        {
+            labelSyncDone.Text = string.Empty;
         }
 
         private void FixLargeFonts()
@@ -265,6 +274,8 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void FormVisualSync_FormClosing(object sender, FormClosingEventArgs e)
         {
+            timerHideSyncLabel.Stop();
+            labelSyncDone.Text = string.Empty;
             timer1.Stop();
             timerProgressBarRefresh.Stop();
             if (MediaPlayerStart != null)
@@ -428,7 +439,8 @@ namespace Nikse.SubtitleEdit.Forms
                 comboBoxStartTexts.SelectedIndex = startSaveIdx;
                 comboBoxEndTexts.SelectedIndex = endSaveIdx;
 
-                MessageBox.Show(_language.SynchronizationDone, "", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                labelSyncDone.Text = _language.SynchronizationDone;
+                timerHideSyncLabel.Start();
             }
             else
             {
