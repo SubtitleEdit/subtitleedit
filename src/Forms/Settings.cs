@@ -286,7 +286,7 @@ namespace Nikse.SubtitleEdit.Forms
             labelVolDescr.Left = comboBoxVideoPlayerDefaultVolume.Left + comboBoxVideoPlayerDefaultVolume.Width + 4;
 
             labelVideoPlayerPreviewFontSize.Text = language.PreviewFontSize;
-            comboBoxlVideoPlayerPreviewFontSize.Left = labelVideoPlayerPreviewFontSize.Left + labelVideoPlayerPreviewFontSize.Width;            
+            comboBoxlVideoPlayerPreviewFontSize.Left = labelVideoPlayerPreviewFontSize.Left + labelVideoPlayerPreviewFontSize.Width;
 
             groupBoxMainWindowVideoControls.Text = language.MainWindowVideoControls;
             labelCustomSearch.Text = language.CustomSearchTextAndUrl;

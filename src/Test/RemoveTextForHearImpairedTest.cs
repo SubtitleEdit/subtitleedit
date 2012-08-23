@@ -187,6 +187,6 @@ namespace Test
             string actual = target.RemoveTextFromHearImpaired(text);
             Assert.AreEqual(expected, actual);
         }
-       
+
     }
 }

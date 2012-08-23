@@ -12,7 +12,7 @@ using Nikse.SubtitleEdit.Logic.SpellCheck;
 namespace Nikse.SubtitleEdit.Forms
 {
     public sealed partial class SpellCheck : Form
-    {    
+    {
         SpellCheckAction _action = SpellCheckAction.Skip;
         private List<string> _suggestions;
         private string _currentAction = null;
@@ -208,7 +208,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ButtonChangeClick(object sender, EventArgs e)
         {
-            DoAction(SpellCheckAction.Change);            
+            DoAction(SpellCheckAction.Change);
         }
 
         private void ButtonUseSuggestionClick(object sender, EventArgs e)
@@ -476,7 +476,7 @@ namespace Nikse.SubtitleEdit.Forms
             else if (_currentAction == Configuration.Settings.Language.SpellCheck.ChangeAll)
                 ShowActionInfo(_currentAction, _currentWord + " > " + textBoxWord.Text);
             else
-                ShowActionInfo(_currentAction, textBoxWord.Text);  
+                ShowActionInfo(_currentAction, textBoxWord.Text);
         }
 
         private void PrepareNextWord()
