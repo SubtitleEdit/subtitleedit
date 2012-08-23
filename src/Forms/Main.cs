@@ -8860,7 +8860,7 @@ namespace Nikse.SubtitleEdit.Forms
             // put new entries above tabs
         }
 
-        
+
 
         private void RunCustomSearch(string url)
         {
@@ -8871,7 +8871,7 @@ namespace Nikse.SubtitleEdit.Forms
                 System.Diagnostics.Process.Start(url);
             }
         }
-        
+
         private void GoFullscreen()
         {
             if (_videoPlayerUnDocked == null || _videoPlayerUnDocked.IsDisposed)
@@ -11923,7 +11923,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             addParagraphHereToolStripMenuItem_Click(sender, e);
             textBoxListViewText.Text = Clipboard.GetText();
-        }        
+        }
 
 
         private void mergeWithPreviousToolStripMenuItem_Click(object sender, EventArgs e)

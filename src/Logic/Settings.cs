@@ -482,7 +482,7 @@ namespace Nikse.SubtitleEdit.Logic
             CustomSearchUrl1 = "http://www.thefreedictionary.com/{0}";
             CustomSearchText2 = "Wikipedia";
             CustomSearchUrl2 = "http://en.m.wikipedia.org/wiki?search={0}";
-        
+
             LastActiveTab = "Translate";
             WaveFormDrawGrid = true;
             WaveFormGridColor = Color.FromArgb(255, 20, 20, 18);
