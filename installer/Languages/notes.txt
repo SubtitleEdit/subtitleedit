@@ -1,6 +1,6 @@
 * The Romanian language is not the unofficial Inno Setup translation that
   can be found on the Inno Setup webpage. Be careful when updating it.
-* The "Swedish.isl" we use has the proper LanguageCodePage set
+* The "Swedish.isl" we use has the proper LanguageCodePage 1252 set
   compared to the unofficial one.
 The rest of the files should be identical to the ones found in the following page:
 http://www.jrsoftware.org/files/istrans/

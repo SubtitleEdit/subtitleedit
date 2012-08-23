@@ -1,4 +1,4 @@
-; *** Inno Setup version 5.1.11+ Korean messages ***
+; *** Inno Setup version 5.5.0+ Korean messages ***
 ;
 ; To download user-contributed translations of this file, go to:
 ;   http://www.jrsoftware.org/is3rdparty.php
@@ -9,14 +9,15 @@
 ; two periods being displayed).
 ;
 ; translated : Woong-Jae An (a183393@hanmail.net, Cyworld: http://cyworld.nate.com/nuclear_mine; for Korean Users Only)
-; 
+; Added : Hansoo KIM (iryna7@gmail.com)
+;
 ; 번역은 기본적으로 직역이 원칙이나, 한글로 직역 시 어색하거나 매끄럽지 않은 부분은 의역을 하였습니다.
 ; 제가 번역한 문장들이 원본과 뜻이 상이하거나 좀 더 매끈한 표현으로 바꿨으면 하는 부분, 그 밖에 건의 사항이나 질문이 있으시다면 제 싸이월드에 방문하셔서 방명록에 글을 남겨주시기 바랍니다.
 ; 단, 이 Translation File에 대한 문의만 받으며, 그 밖에 Inno Setup 사용 중 생긴 문제는 제가 프로그래머가 아닌 관계로 답변하여 드리지 못할 수도 있습니다.
 ; 스팸 메일(Spam Mail) 때문에 메일은 더 이상 확인하지 않으니 양해하여 주시기 바랍니다.
 
 [LangOptions]
-; The following three entries are very important. Be sure to read and 
+; The following three entries are very important. Be sure to read and
 ; understand the '[LangOptions] section' topic in the help file.
 LanguageName=<D55C><AD6D><C5B4>
 LanguageID=$0412
@@ -55,6 +56,10 @@ LastErrorMessage=%1.%n%n오류 %2: %3
 SetupFileMissing=설치 폴더에 %1 파일이 없습니다. 문제를 해결해 주시거나 새로운 설치 프로그램을 구해보십시오.
 SetupFileCorrupt=설치 파일이 손상되었습니다. 새로운 설치 프로그램을 구해보십시오.
 SetupFileCorruptOrWrongVer=설치 파일이 손상되었거나 이 버전의 설치 프로그램과 호환이 되지 않습니다. 문제를 해결해 주시거나 새로운 설치 프로그램을 구해보십시오.
+InvalidParameter=명령어 라인에 잘못된 인자가 전달되었습니다. %n%n%1
+SetupAlreadyRunning=설치 프로그램이 이미 실행중입니다.
+WindowsVersionNotSupported=이 프로그램은 현재 실행중인 윈도우 버전을 지원하지 않습니다.
+WindowsServicePackRequired=이 프로그램은 %1 서비스팩 %2나 이후 버전을 필요로 합니다.
 NotOnThisPlatform=이 프로그램은 %1 에서 설치되지 않습니다.
 OnlyOnThisPlatform=이 프로그램은 %1 에서만 설치됩니다.
 OnlyOnTheseArchitectures=이 프로그램은 다음과 같은 프로세서 아키텍처에 맞게 디자인된 Windows 에서만 설치됩니다:%n%n%1
@@ -145,6 +150,8 @@ SelectDirDesc=어디에 [name] 을(를) 설치하시겠습니까?
 SelectDirLabel3=설치 프로그램은 [name] 을(를) 다음 폴더에 설치할 것입니다.
 SelectDirBrowseLabel=계속하시려면 "다음"을 클릭하십시오. 다른 폴더를 선택하시려면, "찾아보기"를 클릭하십시오.
 DiskSpaceMBLabel=최소 [mb] MB 의 디스크 여유 공간이 설치에 필요합니다.
+CannotInstallToNetworkDrive=선택하신 네트워크 경로로 설치할 수 없습니다.
+CannotInstallToUNCPath=선택하신 UNC 경로로 설치할 수 없습니다.
 InvalidPath=드라이브 문자를 포함한 전체 경로를 입력하셔야 합니다. 예:%n%nC:\APP%n%n 네트워크 드라이브의 예:%n%n\\server\share
 InvalidDrive=설치할 드라이브나 네트워크 경로가 존재하지 않거나 접근할 수 없습니다. 다른 경로를 선택하십시오.
 DiskSpaceWarningTitle=디스크 공간 부족
@@ -204,6 +211,10 @@ WizardPreparing=설치 준비 중...
 PreparingDesc=설치 프로그램이 [name] 을(를) 설치할 준비를 하고 있습니다.
 PreviousInstallNotCompleted=이전의 설치나 프로그램 제거 작업이 완료되지 않았습니다. 이전의 설치를 완료하기 위하여 컴퓨터를 재시작 할 필요가 있습니다.%n%n컴퓨터를 재시작 한 후, 설치 프로그램을 재시작하여 [name] 의 설치를 완료하십시오.
 CannotContinue=설치를 계속할 수 없습니다. "취소"를 클릭하여 설치를 종료하십시오.
+ApplicationsFound=설치 프로그램에 의해 업데이트된 파일을 사용중입니다. 설치 프로그램이 프로그램을 자동으로 종료하도록 권장합니다.
+ApplicationsFound2=설치 프로그램에 의해 업데이트된 파일을 사용중입니다. 설치 프로그램이 프로그램을 자동으로 종료하도록 권장합니다. 설치 프로그램은 설치후 프로그램을 재시작합니다.
+CloseApplications=자동으로 프로그램을 종료합니다.
+DontCloseApplications=프로그램을 종료하지 마십시오.
 
 ; *** "Installing" wizard page
 WizardInstalling=설치 중...
@@ -236,6 +247,7 @@ SetupAborted=설치가 완료되지 않았습니다.%n%n문제를 해결하고 설치 프로그램을 다시
 EntryAbortRetryIgnore=다시 시도하시려면 "다시 시도"를, 무시하고 설치를 계속하시려면 "무시"를, 설치를 종료하시려면 "취소"를 클릭하십시오.
 
 ; *** Installation status messages
+StatusClosingApplications=프로그램 종료중...
 StatusCreateDirs=폴더 생성 중...
 StatusExtractFiles=파일의 압축을 푸는 중...
 StatusCreateIcons=바로 가기 생성 중...
@@ -244,6 +256,7 @@ StatusCreateRegistryEntries=레지스트리 키 생성 중...
 StatusRegisterFiles=파일 등록 중...
 StatusSavingUninstall=프로그램 제거 정보 저장 중...
 StatusRunProgram=설치 마무리 중...
+StatusRestartingApplications=프로그램 재시작 중...
 StatusRollback=설치 이전 상태로 되돌리는 중...
 
 ; *** Misc. errors
@@ -307,6 +320,11 @@ SharedFileLocationLabel=경로:
 WizardUninstalling=설치 제거 상태
 StatusUninstalling=%1 제거 중...
 
+; *** Shutdown block reasons
+ShutdownBlockReasonInstallingApp=설치 중 %1.
+ShutdownBlockReasonUninstallingApp=제거 중 %1.
+
+
 ; The custom messages below aren't used by Setup itself, but if you make
 ; use of them in your scripts, you'll want to translate them.
 
@@ -321,3 +339,6 @@ UninstallProgram=%1 제거
 LaunchProgram=%1 실행
 AssocFileExtension=%2 확장자를 %1 에 연결(&A)
 AssocingFileExtension=%2 확장자를 %1 에 연결 중...
+AutoStartProgramGroupDescription=시작:
+AutoStartProgram=자동 시작 프로그램 %1
+AddonHostProgramNotFound=%1 선택한 폴더에 위치할수 없습니다. %n%n계속 하시겠습니까?
