@@ -560,6 +560,12 @@
     <Compile Include="Forms\Watermark.Designer.cs">
       <DependentUpon>Watermark.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\WaveFormGenerateTimeCodes.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\WaveFormGenerateTimeCodes.Designer.cs">
+      <DependentUpon>WaveFormGenerateTimeCodes.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\WaveFormUnDocked.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -758,6 +764,12 @@
     <Compile Include="Logic\SubtitleFormats\UnknownSubtitle19.cs" />
     <Compile Include="Logic\SubtitleFormats\UnknownSubtitle20.cs" />
     <Compile Include="Logic\SubtitleFormats\ImageLogicAutocaption.cs" />
+    <Compile Include="Logic\SubtitleFormats\UnknownSubtitle21.cs" />
+    <Compile Include="Logic\SubtitleFormats\UnknownSubtitle22.cs" />
+    <Compile Include="Logic\SubtitleFormats\UnknownSubtitle23.cs" />
+    <Compile Include="Logic\SubtitleFormats\UnknownSubtitle24.cs" />
+    <Compile Include="Logic\SubtitleFormats\UnknownSubtitle25.cs" />
+    <Compile Include="Logic\SubtitleFormats\UnknownSubtitle26.cs" />
     <Compile Include="Logic\SubtitleFormats\UnknownSubtitle5.cs" />
     <Compile Include="Logic\SubtitleFormats\OpenDvt.cs" />
     <Compile Include="Logic\SubtitleFormats\AbcIViewer.cs" />
@@ -1089,6 +1101,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Watermark.resx">
       <DependentUpon>Watermark.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\WaveFormGenerateTimeCodes.resx">
+      <DependentUpon>WaveFormGenerateTimeCodes.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\WaveFormUnDocked.resx">
       <DependentUpon>WaveFormUnDocked.cs</DependentUpon>

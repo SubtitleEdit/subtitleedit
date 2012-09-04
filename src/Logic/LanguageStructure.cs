@@ -1047,6 +1047,9 @@
                 public string Normal { get; set; }
                 public string Fast { get; set; }
                 public string VeryFast { get; set; }
+
+                public string BeforeGuessingTimeCodes { get; set; }
+
             }
 
         }

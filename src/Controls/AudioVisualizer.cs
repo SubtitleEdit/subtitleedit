@@ -1307,5 +1307,115 @@ namespace Nikse.SubtitleEdit.Controls
             bmpDestination.Dispose();
         }
 
+
+        private double GetAverageVolumeForNextMilliseconds(int sampleIndex, int milliseconds)
+        {
+            milliseconds = 150;
+            int length = SecondsToXPosition(milliseconds / 1000.0); // min length
+            if (length < 9)
+                length = 9;
+            double v = 0;
+            int count = 0;
+            for (int i = sampleIndex; i < sampleIndex+length; i++)
+            {
+                if (i > 0 && i < _wavePeaks.AllSamples.Count)
+                {
+                    v += Math.Abs(_wavePeaks.AllSamples[i]);
+                    count++;
+                }
+            }
+            return v / count;
+        }
+
+        internal void GenerateTimeCodes(Subtitle subtitle, double startFromSeconds, int blockSizeMilliseconds, int mininumVolumePercent, int maximumVolumePercent, int defaultMilliseconds)
+        {
+            int begin = SecondsToXPosition(startFromSeconds);
+            
+            double average = 0;
+            for (int k=begin; k<_wavePeaks.AllSamples.Count; k++)
+                average += Math.Abs(_wavePeaks.AllSamples[k]);
+            average = average / (_wavePeaks.AllSamples.Count - begin);
+
+            int maxThresshold = (int)(_wavePeaks.DataMaxValue * (maximumVolumePercent / 100.0));
+            int silenceThresshold = 390;
+            silenceThresshold = (int)(average * (mininumVolumePercent / 100.0));
+
+            int length = SecondsToXPosition(0.1); // min length
+            int length50Ms = SecondsToXPosition(0.050);
+            double secondsPerParagraph = defaultMilliseconds / 1000.0;
+            int searchExtra = SecondsToXPosition(1.5); // search extra too see if subtitle ends.
+            int minBetween = SecondsToXPosition(Configuration.Settings.General.MininumMillisecondsBetweenLines / 1000.0);
+            bool subtitleOn = false;
+            int i = begin;
+            while (i < _wavePeaks.AllSamples.Count)
+            {
+                if (subtitleOn)
+                {
+                    var currentLengthInSeconds = XPositionToSeconds(i - begin) - StartPositionSeconds;
+                    if (currentLengthInSeconds > 1.0)
+                    {
+                        subtitleOn = EndParagraphDueToLowVolume(silenceThresshold, begin, subtitleOn, i, subtitle);
+                        if (!subtitleOn)
+                        {
+                            begin = i + minBetween;
+                            i = begin;
+                        }
+                    }
+                    if (subtitleOn && currentLengthInSeconds >= secondsPerParagraph)
+                    {
+                        for (int j = 0; j < 20; j++)
+                        {
+                            subtitleOn = EndParagraphDueToLowVolume(silenceThresshold, begin, subtitleOn, i + (j * length50Ms), subtitle);
+                            if (!subtitleOn)
+                            {
+                                i += (j * length50Ms);
+                                begin = i + minBetween;
+                                i = begin;
+                                break;
+                            }
+                        }
+                        
+                        if (subtitleOn) // force break
+                        {
+                            var p = new Paragraph(string.Empty, (XPositionToSeconds(begin) - StartPositionSeconds) * 1000.0, (XPositionToSeconds(i) - StartPositionSeconds) * 1000.0);
+                            _subtitle.Paragraphs.Add(p);
+                            begin = i + minBetween;
+                            i = begin;
+                        }
+                    }                    
+                }
+                else 
+                {
+                    double avgVol = GetAverageVolumeForNextMilliseconds(i, 100);
+                    if (avgVol > silenceThresshold)
+                    {
+                        if (avgVol < maxThresshold)
+                        {
+                            subtitleOn = true;
+                            begin = i;
+                        }
+                        else
+                        {
+//                            MessageBox.Show("Too much");
+                        }
+                    }
+                }
+                i++;
+            }
+        }
+
+        private bool EndParagraphDueToLowVolume(double silenceThresshold, int begin, bool subtitleOn, int i, Subtitle subtitle)
+        {
+            double avgVol = GetAverageVolumeForNextMilliseconds(i, 100);
+            if (avgVol < silenceThresshold)
+            {
+                var p = new Paragraph(string.Empty, (XPositionToSeconds(begin) - StartPositionSeconds) * 1000.0, (XPositionToSeconds(i) - StartPositionSeconds) * 1000.0);
+                _subtitle.Paragraphs.Add(p);
+                subtitleOn = false;
+            }
+            return subtitleOn;
+        }
+
+        
     }
 }
