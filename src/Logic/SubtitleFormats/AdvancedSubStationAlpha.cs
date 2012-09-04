@@ -349,7 +349,7 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                 }
                 count++;
             }
-            return text;
+            return text.Replace("}{", string.Empty);
         }
 
         private static string FormatTag(ref string text, int start, string fontTag, string tag, string endSign, string ssaTagName, string endSsaTag)
@@ -379,6 +379,7 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
         public static string GetFormattedText(string text)
         {
             text = text.Replace("\\N", Environment.NewLine).Replace("\\n", Environment.NewLine);
+            bool italic = false;
 
             for (int i = 0; i < 10; i++) // just look ten times...
             {
@@ -389,8 +390,14 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                     if (end > 0)
                     {
                         string fontName = text.Substring(start + 4, end - (start + 4));
+                        string extraTags = string.Empty;
+                        CheckAndAddSubTags(ref fontName, ref extraTags, out italic);
                         text = text.Remove(start, end - start + 1);
-                        text = text.Insert(start, "<font name=\"" + fontName + "\">");
+                        if (italic)
+                            text = text.Insert(start, "<font face=\"" + fontName + "\"" + extraTags + "><i>");
+                        else
+                            text = text.Insert(start, "<font face=\"" + fontName + "\"" + extraTags + ">");
+
                         text += "</font>";
                     }
                 }
@@ -402,10 +409,15 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                     if (end > 0)
                     {
                         string fontSize = text.Substring(start + 4, end - (start + 4));
+                        string extraTags = string.Empty;
+                        CheckAndAddSubTags(ref fontSize, ref extraTags, out italic);
                         if (Utilities.IsInteger(fontSize))
                         {
                             text = text.Remove(start, end - start + 1);
-                            text = text.Insert(start, "<font size=\"" + fontSize + "\">");
+                            if (italic)
+                                text = text.Insert(start, "<font size=\"" + fontSize + "\"" + extraTags + "><i>");
+                            else
+                                text = text.Insert(start, "<font size=\"" + fontSize + "\"" + extraTags + ">");
                             text += "</font>";
                         }
                     }
@@ -418,13 +430,8 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                     if (end > 0)
                     {
                         string color = text.Substring(start + 4, end - (start + 4));
-                        int indexOfNextTag = color.IndexOf("\\");
-                        string nextTag = string.Empty;
-                        if (indexOfNextTag > 1)
-                        {
-                            nextTag = "{" + color.Substring(indexOfNextTag) + "}";
-                            color = color.Remove(indexOfNextTag);
-                        }
+                        string extraTags = string.Empty;
+                        CheckAndAddSubTags(ref color, ref extraTags, out italic);
 
                         color = color.Replace("&", string.Empty).TrimStart('H');
                         color = color.PadLeft(6, '0');
@@ -434,7 +441,10 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                         color = color.ToLower();
 
                         text = text.Remove(start, end - start + 1);
-                        text = text.Insert(start, "<font color=\"" + color + "\">" + nextTag);
+                        if (italic)
+                            text = text.Insert(start, "<font color=\"" + color + "\"" + extraTags + "><i>");
+                        else
+                            text = text.Insert(start, "<font color=\"" + color + "\"" + extraTags + ">");
                         text += "</font>";
                     }
                 }
@@ -446,13 +456,9 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                     if (end > 0)
                     {
                         string color = text.Substring(start + 5, end - (start + 5));
-                        int indexOfNextTag = color.IndexOf("\\");
-                        string nextTag = string.Empty;
-                        if (indexOfNextTag > 1)
-                        {
-                            nextTag = "{" + color.Substring(indexOfNextTag) + "}";
-                            color = color.Remove(indexOfNextTag);
-                        }
+                        string extraTags = string.Empty;
+                        CheckAndAddSubTags(ref color, ref extraTags, out italic);
+
                         color = color.Replace("&", string.Empty).TrimStart('H');
                         color = color.PadLeft(6, '0');
 
@@ -461,7 +467,10 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                         color = color.ToLower();
 
                         text = text.Remove(start, end - start + 1);
-                        text = text.Insert(start, "<font color=\"" + color + "\">" + nextTag);
+                        if (italic)
+                            text = text.Insert(start, "<font color=\"" + color + "\"" + extraTags + "><i>");
+                        else
+                            text = text.Insert(start, "<font color=\"" + color + "\"" + extraTags + ">");
                         text += "</font>";
                     }
                 }
@@ -484,6 +493,92 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                 text += "</b>";
 
             return text;
+        }
+
+        private static void CheckAndAddSubTags(ref string tagName, ref string extraTags, out bool italic)
+        {
+            italic = false;
+            int indexOfSPlit = tagName.IndexOf(@"\");
+            if (indexOfSPlit > 0)
+            {
+                string rest = tagName.Substring(indexOfSPlit).TrimStart('\\');
+                tagName = tagName.Remove(indexOfSPlit);
+
+                for (int i = 0; i < 10; i++)
+                {
+                    if (rest.StartsWith("fs") && rest.Length > 2)
+                    {
+                        indexOfSPlit = rest.IndexOf(@"\");
+                        string fontSize = rest;
+                        if (indexOfSPlit > 0)
+                        {
+                            fontSize = rest.Substring(0, indexOfSPlit);
+                            rest = rest.Substring(indexOfSPlit).TrimStart('\\');
+                        }
+                        else
+                        {
+                            rest = string.Empty;
+                        }
+                        extraTags += " size=\"" + fontSize.Substring(2) + "\"";
+                    }
+                    else if (rest.StartsWith("fn") && rest.Length > 2)
+                    {
+                        indexOfSPlit = rest.IndexOf(@"\");
+                        string fontName = rest;
+                        if (indexOfSPlit > 0)
+                        {
+                            fontName = rest.Substring(0, indexOfSPlit);
+                            rest = rest.Substring(indexOfSPlit).TrimStart('\\');
+                        }
+                        else
+                        {
+                            rest = string.Empty;
+                        }
+                        extraTags += " face=\"" + fontName.Substring(2) + "\"";
+                    }
+                    else if (rest.StartsWith("c") && rest.Length > 2)
+                    {
+                        indexOfSPlit = rest.IndexOf(@"\");
+                        string fontColor = rest;
+                        if (indexOfSPlit > 0)
+                        {
+                            fontColor = rest.Substring(0, indexOfSPlit);
+                            rest = rest.Substring(indexOfSPlit).TrimStart('\\');
+                        }
+                        else
+                        {
+                            rest = string.Empty;
+                        }
+
+                        string color = fontColor.Substring(2);
+                        color = color.Replace("&", string.Empty).TrimStart('H');
+                        color = color.PadLeft(6, '0');
+                        // switch to rrggbb from bbggrr
+                        color = "#" + color.Remove(color.Length - 6) + color.Substring(color.Length - 2, 2) + color.Substring(color.Length - 4, 2) + color.Substring(color.Length - 6, 2);
+                        color = color.ToLower();
+
+                        extraTags += " color=\"" + color + "\"";
+                    }
+                    else if (rest.StartsWith("i1") && rest.Length > 1)
+                    {
+                        indexOfSPlit = rest.IndexOf(@"\");
+                        italic = true;
+                        if (indexOfSPlit > 0)
+                        {
+                            rest = rest.Substring(indexOfSPlit).TrimStart('\\');
+                        }
+                        else
+                        {
+                            rest = string.Empty;
+                        }
+                    }
+                    else if (rest.Length > 0 && rest.Contains("\\"))
+                    { 
+                        indexOfSPlit = rest.IndexOf(@"\");
+                        rest = rest.Substring(indexOfSPlit).TrimStart('\\');
+                    }
+                }
+            }
         }
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)

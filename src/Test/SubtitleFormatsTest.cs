@@ -251,7 +251,7 @@ Dialogue: 0,0:00:16.84,0:00:18.16,rechts,,0000,0000,0000,," + lineOneText;
             var subtitle = new Subtitle();
             target.LoadSubtitle(subtitle, GetAssLines(@"{\fnArial}Font"), null);
             string actual = subtitle.Paragraphs[0].Text;
-            string expected = "<font name=\"Arial\">Font</font>";
+            string expected = "<font face=\"Arial\">Font</font>";
             Assert.AreEqual(expected, actual);
         }
 
@@ -315,6 +315,17 @@ Dialogue: 0,0:00:16.84,0:00:18.16,rechts,,0000,0000,0000,," + lineOneText;
             Assert.AreEqual(expected, actual);
         }
 
+        [TestMethod()]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void AssFontNameAndSize()
+        {
+            var target = new AdvancedSubStationAlpha_Accessor();
+            var subtitle = new Subtitle();
+            target.LoadSubtitle(subtitle, GetAssLines(@"{\fnViner Hand ITC\fs28}Testing"), null);
+            string actual = subtitle.Paragraphs[0].Text;
+            string expected = "<font face=\"Viner Hand ITC\" size=\"28\">Testing</font>";
+            Assert.AreEqual(expected, actual);
+        }
         #endregion
 
 
