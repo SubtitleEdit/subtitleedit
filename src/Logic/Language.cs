@@ -1124,6 +1124,8 @@ namespace Nikse.SubtitleEdit.Logic
                     Normal = "Normal",
                     Fast = "Fast",
                     VeryFast = "Very fast",
+
+                    BeforeGuessingTimeCodes = "Before guessing time codes",
                 },
             };
 

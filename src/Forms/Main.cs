@@ -13847,18 +13847,21 @@ namespace Nikse.SubtitleEdit.Forms
                     showWaveformAndSpectrogramToolStripMenuItem.Visible = false;
                     showOnlyWaveformToolStripMenuItem.Visible = true;
                     showOnlySpectrogramToolStripMenuItem.Visible = true;
+                    toolStripSeparatorGuessTimeCodes.Visible = true;
                 }
                 else if (audioVisualizer.ShowSpectrogram)
                 {
                     showWaveformAndSpectrogramToolStripMenuItem.Visible = true;
                     showOnlyWaveformToolStripMenuItem.Visible = true;
                     showOnlySpectrogramToolStripMenuItem.Visible = false;
+                    toolStripSeparatorGuessTimeCodes.Visible = true;
                 }
                 else
                 {
                     showWaveformAndSpectrogramToolStripMenuItem.Visible = true;
                     showOnlyWaveformToolStripMenuItem.Visible = false;
                     showOnlySpectrogramToolStripMenuItem.Visible = true;
+                    toolStripSeparatorGuessTimeCodes.Visible = true;
                 }
             }
             else
@@ -13867,6 +13870,7 @@ namespace Nikse.SubtitleEdit.Forms
                 showWaveformAndSpectrogramToolStripMenuItem.Visible = false;
                 showOnlyWaveformToolStripMenuItem.Visible = false;
                 showOnlySpectrogramToolStripMenuItem.Visible = false;
+                toolStripSeparatorGuessTimeCodes.Visible = false;
             }
         }
 
@@ -14922,7 +14926,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void toolStripMenuItemSaveSelectedLines_Click(object sender, EventArgs e)
+        private void ToolStripMenuItemSaveSelectedLinesClick(object sender, EventArgs e)
         {
             var newSub = new Subtitle(_subtitle);
             newSub.Paragraphs.Clear();
@@ -14965,6 +14969,35 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
+        private void GuessTimeCodesToolStripMenuItemClick(object sender, EventArgs e)
+        {
+            var form = new WaveFormGenerateTimeCodes();
+            if (form.ShowDialog(this) == DialogResult.OK)
+            {
+                MakeHistoryForUndoOnlyIfNotResent(string.Format(_language.VideoControls.BeforeGuessingTimeCodes));
+
+                double startFrom = 0;
+                if (form.StartFromVideoPosition)
+                    startFrom = mediaPlayer.CurrentPosition;
+
+                if (form.DeleteAll)
+                {
+                    _subtitle.Paragraphs.Clear();
+                }
+                else if (form.DeleteForward)
+                {
+                    for (int i = _subtitle.Paragraphs.Count - 1; i > 0; i--)
+                    {
+                        if (_subtitle.Paragraphs[i].EndTime.TotalSeconds+1 > startFrom)
+                            _subtitle.Paragraphs.RemoveAt(i);
+                    }
+                }
+
+                audioVisualizer.GenerateTimeCodes(_subtitle, startFrom, form.BlockSize, form.VolumeMinimum, form.VolumeMaximum, form.DefaultMilliseconds);
+                SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
+                RefreshSelectedParagraph();
+            }            
+        }
 
     }
 }

@@ -330,6 +330,8 @@
             this.showWaveformAndSpectrogramToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showOnlyWaveformToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showOnlySpectrogramToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparatorGuessTimeCodes = new System.Windows.Forms.ToolStripSeparator();
+            this.guessTimeCodesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.splitContainerMain = new System.Windows.Forms.SplitContainer();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.tabControlSubtitle = new System.Windows.Forms.TabControl();
@@ -2089,7 +2091,7 @@
             this.toolStripMenuItemSaveSelectedLines.Name = "toolStripMenuItemSaveSelectedLines";
             this.toolStripMenuItemSaveSelectedLines.Size = new System.Drawing.Size(284, 22);
             this.toolStripMenuItemSaveSelectedLines.Text = "Save selected lines as...";
-            this.toolStripMenuItemSaveSelectedLines.Click += new System.EventHandler(this.toolStripMenuItemSaveSelectedLines_Click);
+            this.toolStripMenuItemSaveSelectedLines.Click += new System.EventHandler(this.ToolStripMenuItemSaveSelectedLinesClick);
             // 
             // openFileDialog1
             // 
@@ -3101,9 +3103,11 @@
             this.toolStripSeparator24,
             this.showWaveformAndSpectrogramToolStripMenuItem,
             this.showOnlyWaveformToolStripMenuItem,
-            this.showOnlySpectrogramToolStripMenuItem});
+            this.showOnlySpectrogramToolStripMenuItem,
+            this.toolStripSeparatorGuessTimeCodes,
+            this.guessTimeCodesToolStripMenuItem});
             this.contextMenuStripWaveForm.Name = "contextMenuStripWaveForm";
-            this.contextMenuStripWaveForm.Size = new System.Drawing.Size(275, 258);
+            this.contextMenuStripWaveForm.Size = new System.Drawing.Size(275, 286);
             this.contextMenuStripWaveForm.Opening += new System.ComponentModel.CancelEventHandler(this.ContextMenuStripWaveFormOpening);
             // 
             // addParagraphHereToolStripMenuItem
@@ -3185,6 +3189,18 @@
             this.showOnlySpectrogramToolStripMenuItem.Size = new System.Drawing.Size(274, 22);
             this.showOnlySpectrogramToolStripMenuItem.Text = "Show only spectrogram";
             this.showOnlySpectrogramToolStripMenuItem.Click += new System.EventHandler(this.ShowOnlySpectrogramToolStripMenuItemClick);
+            // 
+            // toolStripSeparatorGuessTimeCodes
+            // 
+            this.toolStripSeparatorGuessTimeCodes.Name = "toolStripSeparatorGuessTimeCodes";
+            this.toolStripSeparatorGuessTimeCodes.Size = new System.Drawing.Size(271, 6);
+            // 
+            // guessTimeCodesToolStripMenuItem
+            // 
+            this.guessTimeCodesToolStripMenuItem.Name = "guessTimeCodesToolStripMenuItem";
+            this.guessTimeCodesToolStripMenuItem.Size = new System.Drawing.Size(274, 22);
+            this.guessTimeCodesToolStripMenuItem.Text = "Guess time codes...";
+            this.guessTimeCodesToolStripMenuItem.Click += new System.EventHandler(this.GuessTimeCodesToolStripMenuItemClick);
             // 
             // splitContainerMain
             // 
@@ -4271,6 +4287,8 @@
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemSaveSelectedLines;
         private System.Windows.Forms.Button buttonCustomUrl2;
         private System.Windows.Forms.ToolStripMenuItem addParagraphAndPasteToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparatorGuessTimeCodes;
+        private System.Windows.Forms.ToolStripMenuItem guessTimeCodesToolStripMenuItem;
     }
 }
 
