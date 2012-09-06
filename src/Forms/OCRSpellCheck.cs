@@ -54,6 +54,7 @@ namespace Nikse.SubtitleEdit.Forms
             groupBoxSuggestions.Text = Configuration.Settings.Language.SpellCheck.Suggestions;
             groupBoxTextAsImage.Text = Configuration.Settings.Language.SpellCheck.ImageText;
             buttonAddToNames.Text = Configuration.Settings.Language.SpellCheck.AddToNamesAndIgnoreList;
+            buttonChangeAllWholeText.Text = Configuration.Settings.Language.SpellCheck.ChangeAll;
             FixLargeFonts();
         }
 
