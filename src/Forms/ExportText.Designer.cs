@@ -121,6 +121,7 @@
             this.checkBoxAddNewlineAfterTimeCodes.TabIndex = 4;
             this.checkBoxAddNewlineAfterTimeCodes.Text = "Add new line after time code";
             this.checkBoxAddNewlineAfterTimeCodes.UseVisualStyleBackColor = true;
+            this.checkBoxAddNewlineAfterTimeCodes.CheckedChanged += new System.EventHandler(this.radioButtonFormatNone_CheckedChanged);
             // 
             // checkBoxAddNewlineAfterLineNumber
             // 
@@ -133,6 +134,7 @@
             this.checkBoxAddNewlineAfterLineNumber.TabIndex = 2;
             this.checkBoxAddNewlineAfterLineNumber.Text = "Add new line after line number";
             this.checkBoxAddNewlineAfterLineNumber.UseVisualStyleBackColor = true;
+            this.checkBoxAddNewlineAfterLineNumber.CheckedChanged += new System.EventHandler(this.radioButtonFormatNone_CheckedChanged);
             // 
             // checkBoxAddNewLine2
             // 
@@ -145,6 +147,7 @@
             this.checkBoxAddNewLine2.TabIndex = 6;
             this.checkBoxAddNewLine2.Text = "Add new line between subtitles";
             this.checkBoxAddNewLine2.UseVisualStyleBackColor = true;
+            this.checkBoxAddNewLine2.CheckedChanged += new System.EventHandler(this.radioButtonFormatNone_CheckedChanged);
             // 
             // checkBoxAddAfterText
             // 
@@ -157,6 +160,7 @@
             this.checkBoxAddAfterText.TabIndex = 5;
             this.checkBoxAddAfterText.Text = "Add new line after texts";
             this.checkBoxAddAfterText.UseVisualStyleBackColor = true;
+            this.checkBoxAddAfterText.CheckedChanged += new System.EventHandler(this.radioButtonFormatNone_CheckedChanged);
             // 
             // checkBoxShowLineNumbers
             // 
@@ -167,6 +171,7 @@
             this.checkBoxShowLineNumbers.TabIndex = 1;
             this.checkBoxShowLineNumbers.Text = "Show line numbers";
             this.checkBoxShowLineNumbers.UseVisualStyleBackColor = true;
+            this.checkBoxShowLineNumbers.CheckedChanged += new System.EventHandler(this.radioButtonFormatNone_CheckedChanged);
             // 
             // groupBoxTimeCodeFormat
             // 
@@ -194,6 +199,7 @@
             this.comboBoxTimeCodeSeperator.Name = "comboBoxTimeCodeSeperator";
             this.comboBoxTimeCodeSeperator.Size = new System.Drawing.Size(121, 21);
             this.comboBoxTimeCodeSeperator.TabIndex = 4;
+            this.comboBoxTimeCodeSeperator.SelectedIndexChanged += new System.EventHandler(this.radioButtonFormatNone_CheckedChanged);
             // 
             // labelTimeCodeSeperator
             // 
@@ -213,6 +219,7 @@
             this.radioButtonTimeCodeHHMMSSFF.TabIndex = 2;
             this.radioButtonTimeCodeHHMMSSFF.Text = "HH:MM:SS:FF (00:00:00:01 - 00:00:02:05)";
             this.radioButtonTimeCodeHHMMSSFF.UseVisualStyleBackColor = true;
+            this.radioButtonTimeCodeHHMMSSFF.CheckedChanged += new System.EventHandler(this.radioButtonFormatNone_CheckedChanged);
             // 
             // radioButtonTimeCodeMs
             // 
@@ -223,6 +230,7 @@
             this.radioButtonTimeCodeMs.TabIndex = 1;
             this.radioButtonTimeCodeMs.Text = "Milliseconds (0 - 2100)";
             this.radioButtonTimeCodeMs.UseVisualStyleBackColor = true;
+            this.radioButtonTimeCodeMs.CheckedChanged += new System.EventHandler(this.radioButtonFormatNone_CheckedChanged);
             // 
             // radioButtonTimeCodeSrt
             // 
@@ -235,6 +243,7 @@
             this.radioButtonTimeCodeSrt.TabStop = true;
             this.radioButtonTimeCodeSrt.Text = "Srt (00:00:00.000 --> 00:00:02.100)";
             this.radioButtonTimeCodeSrt.UseVisualStyleBackColor = true;
+            this.radioButtonTimeCodeSrt.CheckedChanged += new System.EventHandler(this.radioButtonFormatNone_CheckedChanged);
             // 
             // groupBoxFormatText
             // 
@@ -260,6 +269,7 @@
             this.checkBoxRemoveStyling.TabIndex = 3;
             this.checkBoxRemoveStyling.Text = "Remove styling";
             this.checkBoxRemoveStyling.UseVisualStyleBackColor = true;
+            this.checkBoxRemoveStyling.CheckedChanged += new System.EventHandler(this.radioButtonFormatNone_CheckedChanged);
             // 
             // radioButtonFormatMergeAll
             // 
@@ -270,6 +280,7 @@
             this.radioButtonFormatMergeAll.TabIndex = 1;
             this.radioButtonFormatMergeAll.Text = "Merge all lines";
             this.radioButtonFormatMergeAll.UseVisualStyleBackColor = true;
+            this.radioButtonFormatMergeAll.CheckedChanged += new System.EventHandler(this.radioButtonFormatNone_CheckedChanged);
             // 
             // radioButtonFormatNone
             // 
@@ -282,6 +293,7 @@
             this.radioButtonFormatNone.TabStop = true;
             this.radioButtonFormatNone.Text = "None";
             this.radioButtonFormatNone.UseVisualStyleBackColor = true;
+            this.radioButtonFormatNone.CheckedChanged += new System.EventHandler(this.radioButtonFormatNone_CheckedChanged);
             // 
             // radioButtonFormatUnbreak
             // 
@@ -292,6 +304,7 @@
             this.radioButtonFormatUnbreak.TabIndex = 2;
             this.radioButtonFormatUnbreak.Text = "Unbreak lines";
             this.radioButtonFormatUnbreak.UseVisualStyleBackColor = true;
+            this.radioButtonFormatUnbreak.CheckedChanged += new System.EventHandler(this.radioButtonFormatNone_CheckedChanged);
             // 
             // checkBoxShowTimeCodes
             // 
@@ -302,6 +315,7 @@
             this.checkBoxShowTimeCodes.TabIndex = 3;
             this.checkBoxShowTimeCodes.Text = "Show time codes";
             this.checkBoxShowTimeCodes.UseVisualStyleBackColor = true;
+            this.checkBoxShowTimeCodes.CheckedChanged += new System.EventHandler(this.radioButtonFormatNone_CheckedChanged);
             // 
             // buttonCancel
             // 
