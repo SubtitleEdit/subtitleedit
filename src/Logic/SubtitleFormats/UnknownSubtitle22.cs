@@ -8,10 +8,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
     class UnknownSubtitle22 : SubtitleFormat
     {
 
-//25	10:03:20:23	02:07	10:03:23:05
+//25    10:03:20:23 02:07   10:03:23:05
 //I see, on my way.
 //
-//26	10:03:31:18	02:07	10:03:34:00
+//26    10:03:31:18 02:07   10:03:34:00
 //Panessa, why didn't they give them
 //an escape route ?
 
@@ -58,7 +58,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 sb.AppendLine(string.Format("{0}\t{1}\t{2}\r\n{3}\r\n", count, MakeTimeCode(p.StartTime), MakeTimeCode(p.EndTime), text));
                 count++;
             }
-            
+
             return sb.ToString();
         }
 
@@ -105,7 +105,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             {
                 p.Text = sb.ToString().Trim();
                 subtitle.Paragraphs.Add(p);
-            }           
+            }
             subtitle.Renumber(1);
         }
 

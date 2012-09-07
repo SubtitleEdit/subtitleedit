@@ -1330,7 +1330,7 @@ namespace Nikse.SubtitleEdit.Controls
         internal void GenerateTimeCodes(Subtitle subtitle, double startFromSeconds, int blockSizeMilliseconds, int mininumVolumePercent, int maximumVolumePercent, int defaultMilliseconds)
         {
             int begin = SecondsToXPosition(startFromSeconds);
-            
+
             double average = 0;
             for (int k=begin; k<_wavePeaks.AllSamples.Count; k++)
                 average += Math.Abs(_wavePeaks.AllSamples[k]);
@@ -1374,7 +1374,7 @@ namespace Nikse.SubtitleEdit.Controls
                                 break;
                             }
                         }
-                        
+
                         if (subtitleOn) // force break
                         {
                             var p = new Paragraph(string.Empty, (XPositionToSeconds(begin) - StartPositionSeconds) * 1000.0, (XPositionToSeconds(i) - StartPositionSeconds) * 1000.0);
@@ -1382,9 +1382,9 @@ namespace Nikse.SubtitleEdit.Controls
                             begin = i + minBetween;
                             i = begin;
                         }
-                    }                    
+                    }
                 }
-                else 
+                else
                 {
                     double avgVol = GetAverageVolumeForNextMilliseconds(i, 100);
                     if (avgVol > silenceThresshold)
@@ -1416,6 +1416,6 @@ namespace Nikse.SubtitleEdit.Controls
             return subtitleOn;
         }
 
-        
+
     }
 }

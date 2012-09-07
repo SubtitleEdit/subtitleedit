@@ -8,7 +8,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
     class UnknownSubtitle23 : SubtitleFormat
     {
-        //1:  01:00:19.04  01:00:21.05 
+        //1:  01:00:19.04  01:00:21.05
         static readonly Regex RegexTimeCode1 = new Regex(@"^\s*\d+:\s+\d\d:\d\d:\d\d.\d\d\s+\d\d:\d\d:\d\d.\d\d\s*$", RegexOptions.Compiled);
 
         public override string Extension
@@ -63,7 +63,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             }
 
             var rtBox = new System.Windows.Forms.RichTextBox {Text = sb.ToString().Trim()};
-            return rtBox.Rtf;           
+            return rtBox.Rtf;
         }
 
         private string MakeTimeCode(TimeCode timeCode)
@@ -121,7 +121,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         sb = new StringBuilder();
                         string[] arr = s.Split(" ".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
                         if (arr.Length == 3)
-                            p = new Paragraph(DecodeTimeCode(arr[1]), DecodeTimeCode(arr[2]), string.Empty);                 
+                            p = new Paragraph(DecodeTimeCode(arr[1]), DecodeTimeCode(arr[2]), string.Empty);
                     }
                     catch
                     {
@@ -143,7 +143,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 p.Text = sb.ToString().Trim();
                 subtitle.Paragraphs.Add(p);
             }
-           
+
             subtitle.Renumber(1);
         }
 
