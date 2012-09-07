@@ -573,7 +573,7 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                         }
                     }
                     else if (rest.Length > 0 && rest.Contains("\\"))
-                    { 
+                    {
                         indexOfSPlit = rest.IndexOf(@"\");
                         rest = rest.Substring(indexOfSPlit).TrimStart('\\');
                     }

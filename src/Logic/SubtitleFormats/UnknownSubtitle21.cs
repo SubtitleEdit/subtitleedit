@@ -56,7 +56,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 }
                 count++;
             }
-            
+
             var rtBox = new System.Windows.Forms.RichTextBox();
             rtBox.Text = sb.ToString();
             return rtBox.Rtf;
