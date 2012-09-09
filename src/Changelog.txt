@@ -1,6 +1,6 @@
 Subtitle Edit Changelog
 
-3.3 Beta 1 (x August 2012)
+3.3 Beta 1 (x September 2012)
 * NEW:
    * Edit -> Reverse RTL start/end (fix punctuations)
    * Easy import of auto backed up files (File -> Restore auto-backup...)
@@ -26,6 +26,8 @@ Subtitle Edit Changelog
    * Can now read NCI cap files - thx Ramon
    * Added fullscreen icon to video player (in main window only) - thx Leszek
    * Voikko spell check for Finnish - thx Harri + Ile
+   * Added guess time codes to waveform context menu
+   * Many new shortcuts
 * IMPROVED:
    * Improved support for Advanced Substation Alpha (+ Substation Alpha)
    * Improved support for SAMI (now two different formats + font color support)

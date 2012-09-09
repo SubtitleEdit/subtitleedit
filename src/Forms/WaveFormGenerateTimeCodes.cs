@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows.Forms;
+using Nikse.SubtitleEdit.Logic;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -16,6 +17,16 @@ namespace Nikse.SubtitleEdit.Forms
         public WaveFormGenerateTimeCodes()
         {
             InitializeComponent();
+
+            var l = Configuration.Settings.Language.WaveFormGenerateTimeCodes;
+            Text = l.Title;
+            groupBoxStartFrom.Text = l.StartFrom;
+            radioButtonStartFromPos.Text = l.CurrentVideoPosition;
+            radioButtonStartFromStart.Text = l.Beginning;
+            groupBoxDeleteLines.Text = l.DeleteLines;
+            radioButtonDeleteAll.Text = Configuration.Settings.Language.General.All;
+            radioButtonDeleteNone.Text = Configuration.Settings.Language.General.None;
+            radioButtonForward.Text = l.FromCurrentVideoPosition;
         }
 
         private void buttonOK_Click(object sender, EventArgs e)

@@ -747,6 +747,7 @@
     <Compile Include="Logic\SubtitleFormats\TitleExchangePro.cs" />
     <Compile Include="Logic\SubtitleFormats\TmpegEncText.cs" />
     <Compile Include="Logic\SubtitleFormats\TmpegEncXml.cs" />
+    <Compile Include="Logic\SubtitleFormats\Tmx14.cs" />
     <Compile Include="Logic\SubtitleFormats\TranscriberXml.cs" />
     <Compile Include="Logic\SubtitleFormats\TurboTitler.cs" />
     <Compile Include="Logic\SubtitleFormats\UleadSubtitleFormat.cs" />
@@ -1221,6 +1222,7 @@
     <Content Include="Languages\fr-FR.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Languages\hr-HR.xml" />
     <Content Include="Languages\hu-HU.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

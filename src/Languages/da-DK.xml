@@ -11,6 +11,7 @@
     <Cancel>&amp;Fortryd</Cancel>
     <Apply>Anvend</Apply>
     <None>Ingen</None>
+    <All>Alle</All>
     <Preview>Vist test</Preview>
     <SubtitleFiles>Undertekst filer</SubtitleFiles>
     <AllFiles>Alle filer</AllFiles>
@@ -651,6 +652,7 @@
         <Paste>Indsæt</Paste>
         <Delete>Slet</Delete>
         <SplitLineAtCursorPosition>Split ved markør</SplitLineAtCursorPosition>
+        <AutoDurationCurrentLine>Auto varighed (aktuelle linje)</AutoDurationCurrentLine>
         <SelectAll>Vælg alle</SelectAll>
         <InsertFirstLine>Indsæt linje</InsertFirstLine>
         <InsertBefore>Indsæt før</InsertBefore>
@@ -953,7 +955,8 @@ Fortsæt?</SubtitleAppendPrompt>
     <LineNumberXErrorReadingFromSourceLineY>Linie {0} - fejl ved læsning: {1}</LineNumberXErrorReadingFromSourceLineY>
     <LineNumberXErrorReadingTimeCodeFromSourceLineY>Linie {0} - Fejl ved læsning af tidskode: {1}</LineNumberXErrorReadingTimeCodeFromSourceLineY>
     <LineNumberXExpectedNumberFromSourceLineY>Linie {0} - fejl ved linjenummer: {1}</LineNumberXExpectedNumberFromSourceLineY>
-    <XLinesSavedAsY>{0} linjer gemst som {1}</XLinesSavedAsY>
+    <BeforeGuessingTimeCodes>Før gæt af tidskoder</BeforeGuessingTimeCodes>
+    <BeforeAutoDuration>Før auto-varighed for udvalgte linjer</BeforeAutoDuration>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Vælg undertekst fra Matroska fil</Title>
@@ -1220,6 +1223,7 @@ Fortsæt?</SubtitleAppendPrompt>
     <ToggleDialogueDashes>Toogle dialog tankestreger</ToggleDialogueDashes>
     <Alignment>Justering (valgte linier)</Alignment>
     <CopyTextOnly>Kopier kun tekst til klippe-bord (valgte linier)</CopyTextOnly>
+    <AutoDurationSelectedLines>Auto-varighed (valgte linjer)</AutoDurationSelectedLines>
     <ReverseStartAndEndingForRTL>Byt rundt på højre-mod-venstre start/slut</ReverseStartAndEndingForRTL>
     <VerticalZoom>Lodret zoom</VerticalZoom>
     <WaveformSeekSilenceForward>Søg stilhed frem</WaveformSeekSilenceForward>
@@ -1543,4 +1547,20 @@ Fortsæt?</SubtitleAppendPrompt>
     <ShowWaveformOnly>Vis kun bølgeform</ShowWaveformOnly>
     <ShowSpectrogramOnly>Vis kun spektrogram</ShowSpectrogramOnly>
   </WaveForm>
+  <WaveFormGenerateTimeCodes>
+    <Title>Gæt tidskoder</Title>
+    <StartFrom>Start fra</StartFrom>
+    <CurrentVideoPosition>Aktuel video position</CurrentVideoPosition>
+    <Beginning>Begyndelse</Beginning>
+    <DeleteLines>Slet linjer</DeleteLines>
+    <FromCurrentVideoPosition>Fra aktuel video position</FromCurrentVideoPosition>
+    <DetectOptions>Analyse indstillinger</DetectOptions>
+    <ScanBlocksOfMs>Scan blokke af millisekunder</ScanBlocksOfMs>
+    <BlockAverageVolMin1>Block gennemsnitlige volumen skal være over</BlockAverageVolMin1>
+    <BlockAverageVolMin2>% af den samlede gennemsnitlige lydstyrke</BlockAverageVolMin2>
+    <BlockAverageVolMax1>Block gennemsnitlige volumen skal være under</BlockAverageVolMax1>
+    <BlockAverageVolMax2>% af den samlede maks lydstyrke</BlockAverageVolMax2>
+    <SplitLongLinesAt1>Split lange undertekster ved</SplitLongLinesAt1>
+    <SplitLongLinesAt2>millisekunder</SplitLongLinesAt2>
+  </WaveFormGenerateTimeCodes>
 </Language>

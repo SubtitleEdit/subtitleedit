@@ -14,6 +14,7 @@
             public string Cancel { get; set; }
             public string Apply { get; set; }
             public string None { get; set; }
+            public string All { get; set; }
             public string Preview { get; set; }
             public string SubtitleFiles { get; set; }
             public string AllFiles { get; set; }
@@ -762,8 +763,8 @@
             public string LineNumberXErrorReadingFromSourceLineY { get; set; }
             public string LineNumberXErrorReadingTimeCodeFromSourceLineY { get; set; }
             public string LineNumberXExpectedNumberFromSourceLineY { get; set; }
-            public string XLinesSavedAsY { get; set; }
-
+            public string BeforeGuessingTimeCodes { get; set; }
+            public string BeforeAutoDuration { get; set; }
 
             public class MainMenu
             {
@@ -933,6 +934,7 @@
                     public string Paste { get; set; }
                     public string Delete { get; set; }
                     public string SplitLineAtCursorPosition { get; set; }
+                    public string AutoDurationCurrentLine { get; set; }
                     public string SelectAll { get; set; }
                     public string InsertFirstLine { get; set; }
                     public string InsertBefore { get; set; }
@@ -1047,9 +1049,6 @@
                 public string Normal { get; set; }
                 public string Fast { get; set; }
                 public string VeryFast { get; set; }
-
-                public string BeforeGuessingTimeCodes { get; set; }
-
             }
 
         }
@@ -1342,6 +1341,7 @@
             public string ToggleDialogueDashes { get; set; }
             public string Alignment { get; set; }
             public string CopyTextOnly { get; set; }
+            public string AutoDurationSelectedLines { get; set; }
             public string ReverseStartAndEndingForRTL { get; set; }
             public string VerticalZoom { get; set; }
             public string WaveformSeekSilenceForward { get; set; }
@@ -1700,6 +1700,24 @@
             public string ShowWaveformAndSpectrogram { get; set; }
             public string ShowWaveformOnly { get; set; }
             public string ShowSpectrogramOnly { get; set; }
+        }
+
+        public class WaveFormGenerateTimeCodes
+        {
+            public string Title { get; set; }
+            public string StartFrom { get; set; }
+            public string CurrentVideoPosition { get; set; }
+            public string Beginning { get; set; }
+            public string DeleteLines { get; set; }
+            public string FromCurrentVideoPosition { get; set; }
+            public string DetectOptions { get; set; }
+            public string ScanBlocksOfMs { get; set; }
+            public string BlockAverageVolMin1 { get; set; }
+            public string BlockAverageVolMin2 { get; set; }
+            public string BlockAverageVolMax1 { get; set; }
+            public string BlockAverageVolMax2 { get; set; }
+            public string SplitLongLinesAt1 { get; set; }
+            public string SplitLongLinesAt2 { get; set; }
         }
 
     }
