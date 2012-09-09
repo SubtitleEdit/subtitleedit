@@ -107,6 +107,7 @@ namespace Nikse.SubtitleEdit.Forms
         Keys _video500MsRight = Keys.None;
         Keys _mainVideoFullscreen = Keys.None;
         Keys _mainTextBoxSplitAtCursor = Keys.None;
+        Keys _mainTextBoxAutoDuration = Keys.None;        
         Keys _mainCreateInsertSubAtVideoPos = Keys.None;
         Keys _mainCreatePlayFromJustBefore = Keys.None;
         Keys _mainCreateSetStart = Keys.None;
@@ -130,6 +131,7 @@ namespace Nikse.SubtitleEdit.Forms
         Keys _mainGoToPrevious = Keys.None;
         Keys _mainToggleFocus = Keys.None;
         Keys _mainListViewToggleDashes = Keys.None;
+        Keys _mainListViewAutoDuration = Keys.None;        
         Keys _mainListViewCopyText = Keys.None;
         Keys _mainEditReverseStartAndEndingForRTL = Keys.None;
         Keys _waveformVerticalZoom = Keys.None;
@@ -5821,11 +5823,75 @@ namespace Nikse.SubtitleEdit.Forms
                 ToolStripMenuItemSplitTextAtCursorClick(null, null);
                 e.SuppressKeyPress = true;
             }
+            else if (_mainTextBoxAutoDuration == e.KeyData)
+            {
+                MakeAutoDuration();
+                e.SuppressKeyPress = true;
+            }
 
             // last key down in text
             _lastTextKeyDownTicks = DateTime.Now.Ticks;
 
             UpdatePositionAndTotalLength(labelTextLineTotal, textBoxListViewText);
+        }
+
+        private void MakeAutoDurationSelectedLines()
+        {
+            if (_subtitle.Paragraphs.Count == 0)
+                return;
+
+            if (SubtitleListview1.SelectedItems.Count == 1)
+            {
+                MakeAutoDuration();
+                return;
+            }
+
+            if (SubtitleListview1.SelectedItems.Count > 1)
+            {
+                MakeHistoryForUndo(_language.BeforeAutoDuration);
+                foreach (int index in SubtitleListview1.SelectedIndices)
+                {
+                    Paragraph p = _subtitle.GetParagraphOrDefault(index);
+                    if (p == null)
+                        return;
+
+                    double duration = Utilities.GetDisplayMillisecondsFromText(textBoxListViewText.Text) * 1.4;
+                    Paragraph next = _subtitle.GetParagraphOrDefault(index + 1);
+                    if (next != null && p.StartTime.TotalMilliseconds + duration + Configuration.Settings.General.MininumMillisecondsBetweenLines > next.StartTime.TotalMilliseconds)
+                    {
+                        duration = next.StartTime.TotalMilliseconds - p.StartTime.TotalMilliseconds - Configuration.Settings.General.MininumMillisecondsBetweenLines;
+                    }
+                    if (duration > 500)
+                    {
+                        p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + duration;
+                    }                                        
+                }
+                SaveSubtitleListviewIndexes();
+                SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
+                RestoreSubtitleListviewIndexes();
+                RefreshSelectedParagraph();
+            }
+        }
+
+        private void MakeAutoDuration()
+        {
+            int i = _subtitleListViewIndex;
+            Paragraph p = _subtitle.GetParagraphOrDefault(i);
+            if (p == null)
+                return;
+
+            double duration = Utilities.GetDisplayMillisecondsFromText(textBoxListViewText.Text) * 1.4;
+            Paragraph next = _subtitle.GetParagraphOrDefault(i+1);
+            if (next != null && p.StartTime.TotalMilliseconds + duration + Configuration.Settings.General.MininumMillisecondsBetweenLines > next.StartTime.TotalMilliseconds)
+            {
+                duration = next.StartTime.TotalMilliseconds - p.StartTime.TotalMilliseconds - Configuration.Settings.General.MininumMillisecondsBetweenLines;
+                if (duration < 500)
+                    return;
+            }
+            SetDurationInSeconds(duration / 1000.0);
+
+            p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + duration;
+            SubtitleListview1.SetDuration(i, p);            
         }
 
         private void SplitLineToolStripMenuItemClick(object sender, EventArgs e)
@@ -9125,6 +9191,10 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 e.SuppressKeyPress = true;
             }
+            else if (e.KeyData == _mainListViewAutoDuration)
+            {
+                MakeAutoDurationSelectedLines();
+            }
             else if (e.KeyCode == Keys.V && e.Modifiers == Keys.Control) //Ctrl+vPaste from clipboard
             {
                 if (Clipboard.ContainsText())
@@ -9246,7 +9316,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (e.Modifiers == Keys.Control && e.KeyCode == Keys.End)
             {
-                SubtitleListview1.SelectIndexAndEnsureVisible(SubtitleListview1.Items.Count-1, true);
+                SubtitleListview1.SelectIndexAndEnsureVisible(SubtitleListview1.Items.Count - 1, true);
                 e.SuppressKeyPress = true;
             }
             else if (e.Modifiers == Keys.None && e.KeyCode == Keys.Enter)
@@ -11521,11 +11591,13 @@ namespace Nikse.SubtitleEdit.Forms
             italicToolStripMenuItem.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainListViewItalic);
             _mainListViewToggleDashes = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainListViewToggleDashes);
             toolStripMenuItemAlignment.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainListViewAlignment);
+            _mainListViewAutoDuration = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainListViewAutoDuration);
             _mainEditReverseStartAndEndingForRTL = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainEditReverseStartAndEndingForRTL);
             _mainListViewCopyText = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainListViewCopyText);
             toolStripMenuItemReverseRightToLeftStartEnd.ShortcutKeys = _mainEditReverseStartAndEndingForRTL;
             italicToolStripMenuItem1.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxItalic);
             _mainTextBoxSplitAtCursor = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxSplitAtCursor);
+            _mainTextBoxAutoDuration = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxAutoDuration);
             _mainCreateInsertSubAtVideoPos = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainCreateInsertSubAtVideoPos);
             _mainCreatePlayFromJustBefore = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainCreatePlayFromJustBefore);
             _mainCreateSetStart = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainCreateSetStart);
@@ -14974,7 +15046,7 @@ namespace Nikse.SubtitleEdit.Forms
             var form = new WaveFormGenerateTimeCodes();
             if (form.ShowDialog(this) == DialogResult.OK)
             {
-                MakeHistoryForUndoOnlyIfNotResent(string.Format(_language.VideoControls.BeforeGuessingTimeCodes));
+                MakeHistoryForUndoOnlyIfNotResent(string.Format(_language.BeforeGuessingTimeCodes));
 
                 double startFrom = 0;
                 if (form.StartFromVideoPosition)

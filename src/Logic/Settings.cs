@@ -583,8 +583,10 @@ namespace Nikse.SubtitleEdit.Logic
         public string MainListViewToggleDashes { get; set; }
         public string MainListViewAlignment { get; set; }
         public string MainListViewCopyText { get; set; }
+        public string MainListViewAutoDuration { get; set; }
         public string MainTextBoxItalic { get; set; }
         public string MainTextBoxSplitAtCursor { get; set; }
+        public string MainTextBoxAutoDuration { get; set; }
         public string MainCreateInsertSubAtVideoPos { get; set; }
         public string MainCreatePlayFromJustBefore { get; set; }
         public string MainCreateSetStart { get; set; }
@@ -650,6 +652,7 @@ namespace Nikse.SubtitleEdit.Logic
             MainEditReverseStartAndEndingForRTL = string.Empty;
             MainTextBoxItalic = "Control+I";
             MainTextBoxSplitAtCursor = "Control+Alt+V";
+            MainTextBoxAutoDuration = string.Empty;
             MainCreateInsertSubAtVideoPos = string.Empty;
             MainCreatePlayFromJustBefore = string.Empty;
             MainCreateSetStart = string.Empty;
@@ -1603,6 +1606,9 @@ namespace Nikse.SubtitleEdit.Logic
                 subNode = node.SelectSingleNode("MainListViewCopyText");
                 if (subNode != null)
                     settings.Shortcuts.MainListViewCopyText = subNode.InnerText;
+                subNode = node.SelectSingleNode("MainListViewAutoDuration");
+                if (subNode != null)
+                    settings.Shortcuts.MainListViewAutoDuration = subNode.InnerText;
                 subNode = node.SelectSingleNode("MainEditReverseStartAndEndingForRTL");
                 if (subNode != null)
                     settings.Shortcuts.MainEditReverseStartAndEndingForRTL = subNode.InnerText;
@@ -1612,6 +1618,9 @@ namespace Nikse.SubtitleEdit.Logic
                 subNode = node.SelectSingleNode("MainTextBoxSplitAtCursor");
                 if (subNode != null)
                     settings.Shortcuts.MainTextBoxSplitAtCursor = subNode.InnerText;
+                subNode = node.SelectSingleNode("MainTextBoxAutoDuration");
+                if (subNode != null)
+                    settings.Shortcuts.MainTextBoxAutoDuration = subNode.InnerText;
                 subNode = node.SelectSingleNode("MainCreateInsertSubAtVideoPos");
                 if (subNode != null)
                     settings.Shortcuts.MainCreateInsertSubAtVideoPos = subNode.InnerText;
@@ -2078,9 +2087,11 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("MainListViewToggleDashes", settings.Shortcuts.MainListViewToggleDashes);
             textWriter.WriteElementString("MainListViewAlignment", settings.Shortcuts.MainListViewAlignment);
             textWriter.WriteElementString("MainListViewCopyText", settings.Shortcuts.MainListViewCopyText);
+            textWriter.WriteElementString("MainListViewAutoDuration", settings.Shortcuts.MainListViewAutoDuration);
             textWriter.WriteElementString("MainEditReverseStartAndEndingForRTL", settings.Shortcuts.MainEditReverseStartAndEndingForRTL);
             textWriter.WriteElementString("MainTextBoxItalic", settings.Shortcuts.MainTextBoxItalic);
             textWriter.WriteElementString("MainTextBoxSplitAtCursor", settings.Shortcuts.MainTextBoxSplitAtCursor);
+            textWriter.WriteElementString("MainTextBoxAutoDuration", settings.Shortcuts.MainTextBoxAutoDuration);
             textWriter.WriteElementString("MainCreateInsertSubAtVideoPos", settings.Shortcuts.MainCreateInsertSubAtVideoPos);
             textWriter.WriteElementString("MainCreatePlayFromJustBefore", settings.Shortcuts.MainCreatePlayFromJustBefore);
             textWriter.WriteElementString("MainCreateSetStart", settings.Shortcuts.MainCreateSetStart);

@@ -73,6 +73,7 @@ namespace Nikse.SubtitleEdit.Logic
         public LanguageStructure.VobSubOcrCharacterInspect VobSubOcrCharacterInspect;
         public LanguageStructure.VobSubOcrNewFolder VobSubOcrNewFolder;
         public LanguageStructure.WaveForm WaveForm;
+        public LanguageStructure.WaveFormGenerateTimeCodes WaveFormGenerateTimeCodes;
 
         public Language()
         {
@@ -89,6 +90,7 @@ namespace Nikse.SubtitleEdit.Logic
                 Cancel = "C&ancel",
                 Apply = "Apply",
                 None = "None",
+                All = "All",
                 Preview = "Preview",
                 SubtitleFiles = "Subtitle files",
                 AllFiles = "All files",
@@ -848,7 +850,9 @@ namespace Nikse.SubtitleEdit.Logic
                 LineNumberXErrorReadingFromSourceLineY = "Line {0} - error reading: {1}",
                 LineNumberXErrorReadingTimeCodeFromSourceLineY = "Line {0} - error reading time code: {1}",
                 LineNumberXExpectedNumberFromSourceLineY = "Line {0} - expected subtitle number: {1}",
-                XLinesSavedAsY = "{0} lines saved as {1}",
+                BeforeGuessingTimeCodes = "Before guessing time codes",
+                BeforeAutoDuration = "Before auto-duration for selected lines",
+
 
                 Menu = new LanguageStructure.Main.MainMenu
                 {
@@ -1025,6 +1029,7 @@ namespace Nikse.SubtitleEdit.Logic
                         Paste = "Paste",
                         Delete = "Delete",
                         SplitLineAtCursorPosition = "Split line at cursor position",
+                        AutoDurationCurrentLine = "Auto duration (current line)",
                         SelectAll = "Select all",
                         InsertFirstLine = "Insert line",
                         InsertBefore = "Insert before",
@@ -1123,9 +1128,7 @@ namespace Nikse.SubtitleEdit.Logic
                     Slow = "Slow",
                     Normal = "Normal",
                     Fast = "Fast",
-                    VeryFast = "Very fast",
-
-                    BeforeGuessingTimeCodes = "Before guessing time codes",
+                    VeryFast = "Very fast",                    
                 },
             };
 
@@ -1419,6 +1422,7 @@ can edit in same subtitle file (collaboration)",
                 ToggleDialogueDashes = "Toogle dialogue dashes",
                 Alignment = "Alignment (selected lines)",
                 CopyTextOnly = "Copy text only to clip board (selected lines)",
+                AutoDurationSelectedLines = "Auto-duration (selected lines)",
                 ReverseStartAndEndingForRTL = "Reverse RTL start/end",
                 VerticalZoom = "Vertical zoom",
                 WaveformSeekSilenceForward = "Seek silence forward",
@@ -1780,6 +1784,24 @@ Keep changes?",
                 ShowWaveformAndSpectrogram = "Show waveform and spectrogram",
                 ShowWaveformOnly = "Show waveform only",
                 ShowSpectrogramOnly = "Show spectrogram only",
+            };
+
+            WaveFormGenerateTimeCodes = new LanguageStructure.WaveFormGenerateTimeCodes
+            {
+                Title = "Guess time codes",
+                StartFrom = "Start from",
+                CurrentVideoPosition = "Current video position",
+                Beginning = "Beginning",
+                DeleteLines = "Delete lines",
+                FromCurrentVideoPosition = "From current video position",
+                DetectOptions = "Detect options",
+                ScanBlocksOfMs = "Scan blocks of milliseconds",
+                BlockAverageVolMin1 = "Block average volume must be above",
+                BlockAverageVolMin2 = "% of total average volume",
+                BlockAverageVolMax1 = "Block average volume must be below",
+                BlockAverageVolMax2 = "% of total max volume",
+                SplitLongLinesAt1 = "Split long subtitles at",
+                SplitLongLinesAt2 = "milliseconds",
             };
 
         }

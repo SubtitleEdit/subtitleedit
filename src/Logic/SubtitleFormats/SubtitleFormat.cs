@@ -87,6 +87,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     new TmpegEncXml(),
                     new TMPlayer(),
                     new TranscriberXml(),
+                    new Tmx14(),
                     new TurboTitler(),
                     //    new Idx(),
                     new UleadSubtitleFormat(),
