@@ -1222,7 +1222,9 @@
     <Content Include="Languages\fr-FR.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Languages\hr-HR.xml" />
+    <Content Include="Languages\hr-HR.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Languages\hu-HU.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -1240,7 +1242,6 @@
     </Content>
     <Content Include="Languages\pl-PL.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <SubType>Designer</SubType>
     </Content>
     <Content Include="Languages\pt-BR.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
