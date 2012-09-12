@@ -10,7 +10,7 @@ using Nikse.SubtitleEdit.Logic.SubtitleFormats;
 
 namespace Nikse.SubtitleEdit.Forms
 {
-    public partial class Split : Form
+    public sealed partial class Split : Form
     {
         Subtitle _subtitle;
         SubtitleFormat _format;
@@ -25,7 +25,28 @@ namespace Nikse.SubtitleEdit.Forms
         {
             InitializeComponent();
 
-            Text = Configuration.Settings.Language.SplitSubtitle.Title;
+            var l = Configuration.Settings.Language.Split;
+            Text = l.Title;
+            groupBoxSplitOptions.Text = l.SplitOptions;
+            RadioButtonLines.Text = l.Lines;
+            radioButtonCharacters.Text = l.Characters;
+            labelNumberOfParts.Text = l.NumberOfEqualParts;
+            groupBoxSubtitleInfo.Text = l.SubtitleInfo;
+            groupBoxOutput.Text = l.Output;
+            labelFileName.Text = l.FileName;
+            labelChooseOutputFolder.Text = l.OutputFolder;
+            labelOutputFormat.Text = Configuration.Settings.Language.Main.Controls.SubtitleFormat;
+            labelEncoding.Text = Configuration.Settings.Language.Main.Controls.FileEncoding;
+            groupBoxPreview.Text = Configuration.Settings.Language.General.Preview;
+
+            listViewParts.Columns[0].Text = l.Lines;
+            listViewParts.Columns[1].Text = l.Characters;
+            listViewParts.Columns[2].Text = l.FileName;
+
+            buttonSplit.Text = l.DoSplit;
+            buttonBasic.Text = l.Basic;
+            buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
+
             FixLargeFonts();
         }
 
@@ -53,8 +74,8 @@ namespace Nikse.SubtitleEdit.Forms
             _encoding = encoding;
             foreach (Paragraph p in _subtitle.Paragraphs)
                 _totalNumberOfCharacters += p.Text.Length;
-            labelLines.Text = string.Format(Configuration.Settings.Language.SplitSubtitle.NumberOfLinesX, _subtitle.Paragraphs.Count);
-            labelCharacters.Text = string.Format(Configuration.Settings.Language.SplitSubtitle.NumberOfCharactersX, _totalNumberOfCharacters);
+            labelLines.Text = string.Format(Configuration.Settings.Language.Split.NumberOfLinesX, _subtitle.Paragraphs.Count);
+            labelCharacters.Text = string.Format(Configuration.Settings.Language.Split.NumberOfCharactersX, _totalNumberOfCharacters);
 
             try
             {

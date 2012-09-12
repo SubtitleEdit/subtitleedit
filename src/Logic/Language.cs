@@ -58,6 +58,7 @@ namespace Nikse.SubtitleEdit.Logic
         public LanguageStructure.ShowEarlierLater ShowEarlierLater;
         public LanguageStructure.ShowHistory ShowHistory;
         public LanguageStructure.SpellCheck SpellCheck;
+        public LanguageStructure.Split Split;
         public LanguageStructure.SplitLongLines SplitLongLines;
         public LanguageStructure.SplitSubtitle SplitSubtitle;
         public LanguageStructure.StartNumberingFrom StartNumberingFrom;
@@ -1500,6 +1501,23 @@ can edit in same subtitle file (collaboration)",
                 SpellCheckAborted = "Spell check aborted",
             };
 
+            Split = new LanguageStructure.Split
+            {
+                Title = "Split",
+                SplitOptions = "Split options",
+                Lines = "Lines",
+                Characters = "Characters",
+                NumberOfEqualParts = "Number of equal parts",
+                SubtitleInfo = "Subtitle info",
+                NumberOfLinesX = "Number of lines: {0:#,###}",
+                NumberOfCharactersX = "Number of characters: {0:#,###,###}",
+                Output = "Output",
+                FileName = "File name",
+                OutputFolder = "Output folder",
+                DoSplit = "Split",
+                Basic = "Basic",
+            };
+
             SplitLongLines = new LanguageStructure.SplitLongLines
             {
                 Title = "Split long lines",
@@ -1526,8 +1544,6 @@ can edit in same subtitle file (collaboration)",
                 UnableToSaveFileX =  "Unable to save {0}",
                 OverwriteExistingFiles = "Overwrite existing files?",
                 FolderNotFoundX = "Folder not found: {0}",
-                NumberOfLinesX = "Number of lines: {0:#,###}",
-                NumberOfCharactersX = "Number of characters: {0:#,###,###}",
                 Untitled = "Untitled",
             };
 
