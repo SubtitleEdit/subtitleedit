@@ -10215,11 +10215,11 @@ namespace Nikse.SubtitleEdit.Forms
                     var p = Utilities.GetOriginalParagraph(i, _subtitle.Paragraphs[i], _subtitleAlternate.Paragraphs);
                     index = _subtitleAlternate.GetIndex(p);
                 }
-                audioVisualizer.SetPosition(startPositionSeconds, _subtitleAlternate, currentVideoPositionSeconds, index);
+                audioVisualizer.SetPosition(startPositionSeconds, _subtitleAlternate, currentVideoPositionSeconds, index, SubtitleListview1.SelectedIndices);
             }
             else
             {
-                audioVisualizer.SetPosition(startPositionSeconds, _subtitle, currentVideoPositionSeconds, subtitleIndex);
+                audioVisualizer.SetPosition(startPositionSeconds, _subtitle, currentVideoPositionSeconds, subtitleIndex, SubtitleListview1.SelectedIndices);
             }
         }
 

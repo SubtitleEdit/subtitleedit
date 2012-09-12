@@ -36,6 +36,7 @@ namespace Nikse.SubtitleEdit.Controls
         private double _currentVideoPositionSeconds = -1;
         private WavePeakGenerator _wavePeaks;
         private Subtitle _subtitle;
+        private ListView.SelectedIndexCollection _selectedIndices;
         private bool _noClear;
 
         private List<Bitmap> _spectrogramBitmaps = new List<Bitmap>();
@@ -288,9 +289,10 @@ namespace Nikse.SubtitleEdit.Controls
             }
         }
 
-        public void SetPosition(double startPositionSeconds, Subtitle subtitle, double currentVideoPositionSeconds, int subtitleIndex)
+        public void SetPosition(double startPositionSeconds, Subtitle subtitle, double currentVideoPositionSeconds, int subtitleIndex, ListView.SelectedIndexCollection selectedIndices)
         {
             StartPositionSeconds = startPositionSeconds;
+            _selectedIndices = selectedIndices;
             _subtitle = subtitle;
             _currentVideoPositionSeconds = currentVideoPositionSeconds;
             _selectedParagraph = _subtitle.GetParagraphOrDefault(subtitleIndex);
@@ -303,6 +305,24 @@ namespace Nikse.SubtitleEdit.Controls
             double percentage = value / maxHeight;
             int result = (int)Math.Round((percentage * imageHeight) + (imageHeight / 2.0));
             return imageHeight - result;
+        }
+     
+        private bool IsSelectedIndex(int pos)
+        {
+            if (_selectedIndices == null)
+                return false;
+
+            foreach (int index in _selectedIndices)
+            {
+                var p = _subtitle.Paragraphs[index];
+
+                int start = SecondsToXPosition(p.StartTime.TotalSeconds);
+                int end = SecondsToXPosition(p.EndTime.TotalSeconds);
+
+                if (pos >= start && pos <= end)
+                    return true;
+            }
+            return false;
         }
 
         private void WaveFormPaint(object sender, PaintEventArgs e)
@@ -361,10 +381,13 @@ namespace Nikse.SubtitleEdit.Controls
 
                                 x = i;
                                 y = newY;
-                                if (begin + i > end || begin + i < start)
-                                    pen = penNormal;
+                                int n = begin + i;
+                                if (n <= end && n >= start)
+                                    pen = penSelected;
+                                else if (IsSelectedIndex(n))
+                                    pen = penSelected;
                                 else
-                                    pen = penSelected; // selected paragraph
+                                    pen = penNormal;
                             }
                         }
                     }
@@ -382,10 +405,13 @@ namespace Nikse.SubtitleEdit.Controls
                                 graphics.DrawLine(pen, x2, y, x3, newY);
                                 x2 = x3;
                                 y = newY;
-                                if (begin + x2 > end || begin + x2 < start)
-                                    pen = penNormal;
+                                int n = begin + i;
+                                if (n <= end && n >= start)
+                                    pen = penSelected;
+                                else if (IsSelectedIndex(n))
+                                    pen = penSelected;
                                 else
-                                    pen = penSelected; // selected paragraph
+                                    pen = penNormal;
                             }
                         }
                     }
