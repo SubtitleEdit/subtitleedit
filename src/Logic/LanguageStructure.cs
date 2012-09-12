@@ -1419,6 +1419,23 @@
             public string SpellCheckAborted { get; set; }
         }
 
+        public class Split
+        {
+            public string Title { get; set; }
+            public string SplitOptions { get; set; }
+            public string Lines { get; set; }
+            public string Characters { get; set; }
+            public string NumberOfEqualParts { get; set; }
+            public string SubtitleInfo { get; set; }
+            public string NumberOfLinesX { get; set; }
+            public string NumberOfCharactersX { get; set; }
+            public string Output { get; set; }
+            public string FileName { get; set; }
+            public string OutputFolder { get; set; }
+            public string DoSplit { get; set; }
+            public string Basic { get; set; }
+        }
+
         public class SplitLongLines
         {
             public string Title { get; set; }
@@ -1445,8 +1462,6 @@
             public string UnableToSaveFileX { get; set; }
             public string OverwriteExistingFiles { get; set; }
             public string FolderNotFoundX { get; set; }
-            public string NumberOfLinesX { get; set; }
-            public string NumberOfCharactersX { get; set; }
             public string Untitled { get; set; }
         }
 

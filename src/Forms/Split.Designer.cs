@@ -28,8 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.groupBoxParts = new System.Windows.Forms.GroupBox();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.groupBoxSplitOptions = new System.Windows.Forms.GroupBox();
+            this.groupBoxSubtitleInfo = new System.Windows.Forms.GroupBox();
             this.labelCharacters = new System.Windows.Forms.Label();
             this.labelLines = new System.Windows.Forms.Label();
             this.labelNumberOfParts = new System.Windows.Forms.Label();
@@ -41,7 +41,7 @@
             this.labelFileName = new System.Windows.Forms.Label();
             this.textBoxFileName = new System.Windows.Forms.TextBox();
             this.comboBoxSubtitleFormats = new System.Windows.Forms.ComboBox();
-            this.label1 = new System.Windows.Forms.Label();
+            this.labelEncoding = new System.Windows.Forms.Label();
             this.comboBoxEncoding = new System.Windows.Forms.ComboBox();
             this.labelOutputFormat = new System.Windows.Forms.Label();
             this.labelChooseOutputFolder = new System.Windows.Forms.Label();
@@ -56,41 +56,41 @@
             this.buttonCancel = new System.Windows.Forms.Button();
             this.buttonSplit = new System.Windows.Forms.Button();
             this.buttonBasic = new System.Windows.Forms.Button();
-            this.groupBoxParts.SuspendLayout();
-            this.groupBox1.SuspendLayout();
+            this.groupBoxSplitOptions.SuspendLayout();
+            this.groupBoxSubtitleInfo.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownParts)).BeginInit();
             this.groupBoxOutput.SuspendLayout();
             this.groupBoxPreview.SuspendLayout();
             this.SuspendLayout();
             // 
-            // groupBoxParts
+            // groupBoxSplitOptions
             // 
-            this.groupBoxParts.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.groupBoxSplitOptions.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBoxParts.Controls.Add(this.groupBox1);
-            this.groupBoxParts.Controls.Add(this.labelNumberOfParts);
-            this.groupBoxParts.Controls.Add(this.numericUpDownParts);
-            this.groupBoxParts.Controls.Add(this.radioButtonCharacters);
-            this.groupBoxParts.Controls.Add(this.RadioButtonLines);
-            this.groupBoxParts.Location = new System.Drawing.Point(13, 13);
-            this.groupBoxParts.Name = "groupBoxParts";
-            this.groupBoxParts.Size = new System.Drawing.Size(684, 86);
-            this.groupBoxParts.TabIndex = 0;
-            this.groupBoxParts.TabStop = false;
-            this.groupBoxParts.Text = "Split options";
+            this.groupBoxSplitOptions.Controls.Add(this.groupBoxSubtitleInfo);
+            this.groupBoxSplitOptions.Controls.Add(this.labelNumberOfParts);
+            this.groupBoxSplitOptions.Controls.Add(this.numericUpDownParts);
+            this.groupBoxSplitOptions.Controls.Add(this.radioButtonCharacters);
+            this.groupBoxSplitOptions.Controls.Add(this.RadioButtonLines);
+            this.groupBoxSplitOptions.Location = new System.Drawing.Point(13, 13);
+            this.groupBoxSplitOptions.Name = "groupBoxSplitOptions";
+            this.groupBoxSplitOptions.Size = new System.Drawing.Size(684, 86);
+            this.groupBoxSplitOptions.TabIndex = 0;
+            this.groupBoxSplitOptions.TabStop = false;
+            this.groupBoxSplitOptions.Text = "Split options";
             // 
-            // groupBox1
+            // groupBoxSubtitleInfo
             // 
-            this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.groupBoxSubtitleInfo.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBox1.Controls.Add(this.labelCharacters);
-            this.groupBox1.Controls.Add(this.labelLines);
-            this.groupBox1.Location = new System.Drawing.Point(311, 13);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(367, 67);
-            this.groupBox1.TabIndex = 2;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Subtitle info";
+            this.groupBoxSubtitleInfo.Controls.Add(this.labelCharacters);
+            this.groupBoxSubtitleInfo.Controls.Add(this.labelLines);
+            this.groupBoxSubtitleInfo.Location = new System.Drawing.Point(311, 13);
+            this.groupBoxSubtitleInfo.Name = "groupBoxSubtitleInfo";
+            this.groupBoxSubtitleInfo.Size = new System.Drawing.Size(367, 67);
+            this.groupBoxSubtitleInfo.TabIndex = 2;
+            this.groupBoxSubtitleInfo.TabStop = false;
+            this.groupBoxSubtitleInfo.Text = "Subtitle info";
             // 
             // labelCharacters
             // 
@@ -169,7 +169,7 @@
             this.groupBoxOutput.Controls.Add(this.labelFileName);
             this.groupBoxOutput.Controls.Add(this.textBoxFileName);
             this.groupBoxOutput.Controls.Add(this.comboBoxSubtitleFormats);
-            this.groupBoxOutput.Controls.Add(this.label1);
+            this.groupBoxOutput.Controls.Add(this.labelEncoding);
             this.groupBoxOutput.Controls.Add(this.comboBoxEncoding);
             this.groupBoxOutput.Controls.Add(this.labelOutputFormat);
             this.groupBoxOutput.Controls.Add(this.labelChooseOutputFolder);
@@ -219,14 +219,14 @@
             this.comboBoxSubtitleFormats.TabIndex = 7;
             this.comboBoxSubtitleFormats.SelectedIndexChanged += new System.EventHandler(this.comboBoxSubtitleFormats_SelectedIndexChanged);
             // 
-            // label1
+            // labelEncoding
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(309, 110);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(52, 13);
-            this.label1.TabIndex = 8;
-            this.label1.Text = "Encoding";
+            this.labelEncoding.AutoSize = true;
+            this.labelEncoding.Location = new System.Drawing.Point(309, 110);
+            this.labelEncoding.Name = "labelEncoding";
+            this.labelEncoding.Size = new System.Drawing.Size(52, 13);
+            this.labelEncoding.TabIndex = 8;
+            this.labelEncoding.Text = "Encoding";
             // 
             // comboBoxEncoding
             // 
@@ -284,7 +284,7 @@
             this.groupBoxPreview.Size = new System.Drawing.Size(688, 245);
             this.groupBoxPreview.TabIndex = 2;
             this.groupBoxPreview.TabStop = false;
-            this.groupBoxPreview.Text = "Prevew";
+            this.groupBoxPreview.Text = "Preview";
             // 
             // listViewParts
             // 
@@ -363,7 +363,7 @@
             this.Controls.Add(this.buttonSplit);
             this.Controls.Add(this.groupBoxPreview);
             this.Controls.Add(this.groupBoxOutput);
-            this.Controls.Add(this.groupBoxParts);
+            this.Controls.Add(this.groupBoxSplitOptions);
             this.KeyPreview = true;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
@@ -377,10 +377,10 @@
             this.ResizeEnd += new System.EventHandler(this.Split_ResizeEnd);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Split_KeyDown);
             this.Resize += new System.EventHandler(this.Split_Resize);
-            this.groupBoxParts.ResumeLayout(false);
-            this.groupBoxParts.PerformLayout();
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
+            this.groupBoxSplitOptions.ResumeLayout(false);
+            this.groupBoxSplitOptions.PerformLayout();
+            this.groupBoxSubtitleInfo.ResumeLayout(false);
+            this.groupBoxSubtitleInfo.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownParts)).EndInit();
             this.groupBoxOutput.ResumeLayout(false);
             this.groupBoxOutput.PerformLayout();
@@ -391,7 +391,7 @@
 
         #endregion
 
-        private System.Windows.Forms.GroupBox groupBoxParts;
+        private System.Windows.Forms.GroupBox groupBoxSplitOptions;
         private System.Windows.Forms.Label labelNumberOfParts;
         private System.Windows.Forms.NumericUpDown numericUpDownParts;
         private System.Windows.Forms.RadioButton radioButtonCharacters;
@@ -411,11 +411,11 @@
         private System.Windows.Forms.ColumnHeader columnHeader5;
         private System.Windows.Forms.ColumnHeader columnHeader6;
         private System.Windows.Forms.Button buttonBasic;
-        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.GroupBox groupBoxSubtitleInfo;
         private System.Windows.Forms.Label labelCharacters;
         private System.Windows.Forms.Label labelLines;
         private System.Windows.Forms.ComboBox comboBoxSubtitleFormats;
-        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label labelEncoding;
         private System.Windows.Forms.Label labelFileName;
         private System.Windows.Forms.TextBox textBoxFileName;
         private System.Windows.Forms.Button buttonOpenOutputFolder;

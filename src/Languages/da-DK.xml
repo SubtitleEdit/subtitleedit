@@ -1294,6 +1294,21 @@ Fortsæt?</SubtitleAppendPrompt>
     <SpellCheckCompleted>Stavekontrol færdig</SpellCheckCompleted>
     <SpellCheckAborted>Stavekontrol afbrudt</SpellCheckAborted>
   </SpellCheck>
+  <Split>
+    <Title>Split</Title>
+    <SplitOptions>Split - indstillinger</SplitOptions>
+    <Lines>Linjer</Lines>
+    <Characters>Tegn</Characters>
+    <NumberOfEqualParts>Antal af lige store dele</NumberOfEqualParts>
+    <SubtitleInfo>Undertekst information</SubtitleInfo>
+    <NumberOfLinesX>Antal linjer: {0:#,###}</NumberOfLinesX>
+    <NumberOfCharactersX>Antal tegn: {0:#,###,###}</NumberOfCharactersX>
+    <Output>Output</Output>
+    <FileName>Filnavn</FileName>
+    <OutputFolder>Output folder</OutputFolder>
+    <DoSplit>Split</DoSplit>
+    <Basic>Simpel</Basic>
+  </Split>
   <SplitLongLines>
     <Title>Split lange linjer</Title>
     <SingleLineMaximumLength>Enkelt linje maksimale længde</SingleLineMaximumLength>
@@ -1317,8 +1332,6 @@ Fortsæt?</SubtitleAppendPrompt>
     <UnableToSaveFileX>Kunne ikke gemme {0}</UnableToSaveFileX>
     <OverwriteExistingFiles>Overskriv eksisterende filer?</OverwriteExistingFiles>
     <FolderNotFoundX>Folder ikke fundet: {0}</FolderNotFoundX>
-    <NumberOfLinesX>Antal linjer: {0:#,###}</NumberOfLinesX>
-    <NumberOfCharactersX>Antal bogstaver: {0:#,###,###}</NumberOfCharactersX>
     <Untitled>Unavngivet</Untitled>
   </SplitSubtitle>
   <StartNumberingFrom>
