@@ -110,6 +110,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     p.Text.Contains(""))
                 {
                     isChinese = true;
+                    _language = "CCKM44";
                     break;
                 }
             }

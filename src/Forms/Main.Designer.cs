@@ -95,6 +95,7 @@
             this.adobeEncoreFABImageScriptToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemExportPngXml = new System.Windows.Forms.ToolStripMenuItem();
             this.bluraySupToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.DvdStudioProStl = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemExportCapMakerPlus = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemExportCaptionInc = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemCavena890 = new System.Windows.Forms.ToolStripMenuItem();
@@ -108,6 +109,8 @@
             this.toolStripSeparator10 = new System.Windows.Forms.ToolStripSeparator();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemUndo = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemRedo = new System.Windows.Forms.ToolStripMenuItem();
             this.showHistoryforUndoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator14 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripMenuItemInsertUnicodeCharacter = new System.Windows.Forms.ToolStripMenuItem();
@@ -1004,6 +1007,7 @@
             this.adobeEncoreFABImageScriptToolStripMenuItem,
             this.toolStripMenuItemExportPngXml,
             this.bluraySupToolStripMenuItem,
+            this.DvdStudioProStl,
             this.toolStripMenuItemExportCapMakerPlus,
             this.toolStripMenuItemExportCaptionInc,
             this.toolStripMenuItemCavena890,
@@ -1045,6 +1049,13 @@
             this.bluraySupToolStripMenuItem.Size = new System.Drawing.Size(258, 22);
             this.bluraySupToolStripMenuItem.Text = "Blu-ray sup...";
             this.bluraySupToolStripMenuItem.Click += new System.EventHandler(this.BluraySupToolStripMenuItemClick);
+            // 
+            // DvdStudioProStl
+            // 
+            this.DvdStudioProStl.Name = "DvdStudioProStl";
+            this.DvdStudioProStl.Size = new System.Drawing.Size(258, 22);
+            this.DvdStudioProStl.Text = "DVD Studio Pro STL";
+            this.DvdStudioProStl.Click += new System.EventHandler(this.DvdStudioProStl_Click);
             // 
             // toolStripMenuItemExportCapMakerPlus
             // 
@@ -1132,6 +1143,8 @@
             // editToolStripMenuItem
             // 
             this.editToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripMenuItemUndo,
+            this.toolStripMenuItemRedo,
             this.showHistoryforUndoToolStripMenuItem,
             this.toolStripSeparator14,
             this.toolStripMenuItemInsertUnicodeCharacter,
@@ -1150,6 +1163,18 @@
             this.editToolStripMenuItem.Size = new System.Drawing.Size(40, 20);
             this.editToolStripMenuItem.Text = "Edit";
             this.editToolStripMenuItem.DropDownOpening += new System.EventHandler(this.EditToolStripMenuItemDropDownOpening);
+            // 
+            // toolStripMenuItemUndo
+            // 
+            this.toolStripMenuItemUndo.Name = "toolStripMenuItemUndo";
+            this.toolStripMenuItemUndo.Size = new System.Drawing.Size(222, 22);
+            this.toolStripMenuItemUndo.Text = "Undo";
+            // 
+            // toolStripMenuItemRedo
+            // 
+            this.toolStripMenuItemRedo.Name = "toolStripMenuItemRedo";
+            this.toolStripMenuItemRedo.Size = new System.Drawing.Size(222, 22);
+            this.toolStripMenuItemRedo.Text = "Redo";
             // 
             // showHistoryforUndoToolStripMenuItem
             // 
@@ -3107,7 +3132,7 @@
             this.toolStripSeparatorGuessTimeCodes,
             this.guessTimeCodesToolStripMenuItem});
             this.contextMenuStripWaveForm.Name = "contextMenuStripWaveForm";
-            this.contextMenuStripWaveForm.Size = new System.Drawing.Size(275, 286);
+            this.contextMenuStripWaveForm.Size = new System.Drawing.Size(275, 264);
             this.contextMenuStripWaveForm.Opening += new System.ComponentModel.CancelEventHandler(this.ContextMenuStripWaveFormOpening);
             // 
             // addParagraphHereToolStripMenuItem
@@ -4289,6 +4314,9 @@
         private System.Windows.Forms.ToolStripMenuItem addParagraphAndPasteToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparatorGuessTimeCodes;
         private System.Windows.Forms.ToolStripMenuItem guessTimeCodesToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem DvdStudioProStl;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemUndo;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemRedo;
     }
 }
 

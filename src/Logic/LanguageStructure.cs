@@ -69,6 +69,7 @@
             public string Advanced { get; set; }
             public string Style { get; set; }
             public string Class { get; set; }
+            public string GeneralText { get; set; }
         }
 
         public class About
@@ -301,6 +302,14 @@
             public string Left { get; set; }
             public string Right { get; set; }
             public string Center { get; set; }
+
+            public string BottomMargin { get; set; }            
+            public string SaveBluRraySupAs { get; set; }
+            public string SaveVobSubAs { get; set; }
+            public string SaveFabImageScriptAs { get; set; }
+            public string SaveDvdStudioProStlAs { get; set; }
+
+
         }
 
         public class ExportText
@@ -805,6 +814,8 @@
                 public class EditMenu
                 {
                     public string Title { get; set; }
+                    public string Undo { get; set; }
+                    public string Redo { get; set; }
                     public string ShowUndoHistory { get; set; }
                     public string InsertUnicodeSymbol { get; set; }
                     public string Find { get; set; }
@@ -1367,7 +1378,12 @@
             public string SyntaxColorTextIfTooLong { get; set; }
             public string SyntaxColorTextMoreThanXLines { get; set; }
             public string SyntaxColorOverlap { get; set; }
-            public string SyntaxColorErrorColor { get; set; }
+            public string GoToFirstSelectedLine { get; set; }
+            public string MergeSelectedLines { get; set; }
+            public string ToggleTranslationMode { get; set; }
+            public string SwitchOriginalAndTranslation { get; set; }
+            public string MergeOriginalAndTranslation { get; set; }
+            public string ShortcutIsAlreadyDefinedX { get; set; }
         }
 
         public class ShowEarlierLater

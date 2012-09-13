@@ -492,6 +492,14 @@ namespace Nikse.SubtitleEdit.Forms
                 comboBoxSpectrogramAppearance.SelectedIndex = 1;
             checkBoxReverseMouseWheelScrollDirection.Checked = Configuration.Settings.VideoControls.WaveFormMouseWheelScrollUpIsForward;
 
+            var generalNode = new TreeNode(Configuration.Settings.Language.General.GeneralText);
+            generalNode.Nodes.Add(language.GoToFirstSelectedLine + GetShortcutText(Configuration.Settings.Shortcuts.GeneralGoToFirstSelectedLine));
+            generalNode.Nodes.Add(language.MergeSelectedLines + GetShortcutText(Configuration.Settings.Shortcuts.GeneralMergeSelectedLines));
+            generalNode.Nodes.Add(language.ToggleTranslationMode + GetShortcutText(Configuration.Settings.Shortcuts.GeneralToggleTranslationMode));
+            generalNode.Nodes.Add(language.SwitchOriginalAndTranslation + GetShortcutText(Configuration.Settings.Shortcuts.GeneralSwitchOriginalAndTranslation));
+            generalNode.Nodes.Add(language.MergeOriginalAndTranslation + GetShortcutText(Configuration.Settings.Shortcuts.GeneralMergeOriginalAndTranslation));
+            treeViewShortcuts.Nodes.Add(generalNode);
+
             var fileNode = new TreeNode(Configuration.Settings.Language.Main.Menu.File.Title);
             fileNode.Nodes.Add(Configuration.Settings.Language.Main.Menu.File.New + GetShortcutText(Configuration.Settings.Shortcuts.MainFileNew));
             fileNode.Nodes.Add(Configuration.Settings.Language.Main.Menu.File.Open + GetShortcutText(Configuration.Settings.Shortcuts.MainFileOpen));
@@ -501,6 +509,8 @@ namespace Nikse.SubtitleEdit.Forms
             treeViewShortcuts.Nodes.Add(fileNode);
 
             var editNode = new TreeNode(Configuration.Settings.Language.Main.Menu.Edit.Title);
+            editNode.Nodes.Add(Configuration.Settings.Language.Main.Menu.Edit.Undo + GetShortcutText(Configuration.Settings.Shortcuts.MainEditUndo));
+            editNode.Nodes.Add(Configuration.Settings.Language.Main.Menu.Edit.Redo + GetShortcutText(Configuration.Settings.Shortcuts.MainEditRedo));
             editNode.Nodes.Add(Configuration.Settings.Language.Main.Menu.Edit.Find + GetShortcutText(Configuration.Settings.Shortcuts.MainEditFind));
             editNode.Nodes.Add(Configuration.Settings.Language.Main.Menu.Edit.FindNext + GetShortcutText(Configuration.Settings.Shortcuts.MainEditFindNext));
             editNode.Nodes.Add(Configuration.Settings.Language.Main.Menu.Edit.Replace + GetShortcutText(Configuration.Settings.Shortcuts.MainEditReplace));
@@ -512,7 +522,10 @@ namespace Nikse.SubtitleEdit.Forms
 
             var toolsNode = new TreeNode(Configuration.Settings.Language.Main.Menu.Tools.Title);
             toolsNode.Nodes.Add(Configuration.Settings.Language.Main.Menu.Tools.FixCommonErrors + GetShortcutText(Configuration.Settings.Shortcuts.MainToolsFixCommonErrors));
+            toolsNode.Nodes.Add(Configuration.Settings.Language.Main.Menu.Tools.StartNumberingFrom + GetShortcutText(Configuration.Settings.Shortcuts.MainToolsRenumber));
             toolsNode.Nodes.Add(Configuration.Settings.Language.Main.Menu.Tools.RemoveTextForHearingImpaired + GetShortcutText(Configuration.Settings.Shortcuts.MainToolsRemoveTextForHI));
+            toolsNode.Nodes.Add(Configuration.Settings.Language.Main.Menu.Tools.ChangeCasing + GetShortcutText(Configuration.Settings.Shortcuts.MainToolsChangeCasing));
+            toolsNode.Nodes.Add(Configuration.Settings.Language.Main.Menu.ContextMenu.AutoDurationCurrentLine + GetShortcutText(Configuration.Settings.Shortcuts.MainToolsAutoDuration));
             treeViewShortcuts.Nodes.Add(toolsNode);
 
             var videoNode = new TreeNode(Configuration.Settings.Language.Main.Menu.Video.Title);
@@ -527,8 +540,16 @@ namespace Nikse.SubtitleEdit.Forms
             videoNode.Nodes.Add(Configuration.Settings.Language.Settings.Fullscreen + GetShortcutText(Configuration.Settings.Shortcuts.MainVideoFullscreen));
             treeViewShortcuts.Nodes.Add(videoNode);
 
+            var spellCheckNode = new TreeNode(Configuration.Settings.Language.Main.Menu.SpellCheck.Title);
+            spellCheckNode.Nodes.Add(Configuration.Settings.Language.Main.Menu.SpellCheck.Title + GetShortcutText(Configuration.Settings.Shortcuts.MainSpellCheck));
+            spellCheckNode.Nodes.Add(Configuration.Settings.Language.Main.Menu.SpellCheck.FindDoubleWords + GetShortcutText(Configuration.Settings.Shortcuts.MainSpellCheckFindDoubleWords));
+            spellCheckNode.Nodes.Add(Configuration.Settings.Language.Main.Menu.SpellCheck.AddToNamesEtcList + GetShortcutText(Configuration.Settings.Shortcuts.MainSpellCheckAddWordToNames));
+            treeViewShortcuts.Nodes.Add(spellCheckNode);
+
             var syncNode = new TreeNode(Configuration.Settings.Language.Main.Menu.Synchronization.Title);
             syncNode.Nodes.Add(Configuration.Settings.Language.Main.Menu.Synchronization.AdjustAllTimes + GetShortcutText(Configuration.Settings.Shortcuts.MainSynchronizationAdjustTimes));
+            syncNode.Nodes.Add(Configuration.Settings.Language.Main.Menu.Synchronization.VisualSync + GetShortcutText(Configuration.Settings.Shortcuts.MainSynchronizationVisualSync));
+            syncNode.Nodes.Add(Configuration.Settings.Language.Main.Menu.Synchronization.PointSync + GetShortcutText(Configuration.Settings.Shortcuts.MainSynchronizationPointSync));
             treeViewShortcuts.Nodes.Add(syncNode);
 
             var listViewNode = new TreeNode(Configuration.Settings.Language.Main.Controls.ListView);
@@ -548,7 +569,6 @@ namespace Nikse.SubtitleEdit.Forms
             var textBoxNode = new TreeNode(Configuration.Settings.Language.Settings.TextBox);
             textBoxNode.Nodes.Add(Configuration.Settings.Language.General.Italic + GetShortcutText(Configuration.Settings.Shortcuts.MainTextBoxItalic));
             textBoxNode.Nodes.Add(Configuration.Settings.Language.Main.Menu.ContextMenu.SplitLineAtCursorPosition + GetShortcutText(Configuration.Settings.Shortcuts.MainTextBoxSplitAtCursor));
-            textBoxNode.Nodes.Add(Configuration.Settings.Language.Main.Menu.ContextMenu.AutoDurationCurrentLine + GetShortcutText(Configuration.Settings.Shortcuts.MainTextBoxAutoDuration));
             treeViewShortcuts.Nodes.Add(textBoxNode);
 
             var createNode = new TreeNode(Configuration.Settings.Language.Main.VideoControls.Create);
@@ -971,8 +991,27 @@ namespace Nikse.SubtitleEdit.Forms
                 Configuration.Settings.VideoControls.SpectrogramAppearance = "Classic";
             Configuration.Settings.VideoControls.WaveFormMouseWheelScrollUpIsForward = checkBoxReverseMouseWheelScrollDirection.Checked;
 
-            //Main File
+            //Main General
             foreach (TreeNode node in treeViewShortcuts.Nodes[0].Nodes)
+            {
+                if (node.Text.Contains("["))
+                {
+                    string text = node.Text.Substring(0, node.Text.IndexOf("[")).Trim();
+                    if (text == Configuration.Settings.Language.Settings.GoToFirstSelectedLine.Replace("&", string.Empty))
+                        Configuration.Settings.Shortcuts.GeneralGoToFirstSelectedLine = GetShortcut(node.Text);
+                    else if (text == Configuration.Settings.Language.Settings.MergeSelectedLines.Replace("&", string.Empty))
+                        Configuration.Settings.Shortcuts.GeneralMergeSelectedLines = GetShortcut(node.Text);
+                    else if (text == Configuration.Settings.Language.Settings.ToggleTranslationMode.Replace("&", string.Empty))
+                        Configuration.Settings.Shortcuts.GeneralToggleTranslationMode = GetShortcut(node.Text);
+                    else if (text == Configuration.Settings.Language.Settings.SwitchOriginalAndTranslation.Replace("&", string.Empty))
+                        Configuration.Settings.Shortcuts.GeneralSwitchOriginalAndTranslation = GetShortcut(node.Text);
+                    else if (text == Configuration.Settings.Language.Settings.MergeOriginalAndTranslation.Replace("&", string.Empty))
+                        Configuration.Settings.Shortcuts.GeneralMergeOriginalAndTranslation = GetShortcut(node.Text);
+                }
+            }
+
+            //Main File
+            foreach (TreeNode node in treeViewShortcuts.Nodes[1].Nodes)
             {
                 if (node.Text.Contains("["))
                 {
@@ -991,12 +1030,16 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             //Main Edit
-            foreach (TreeNode node in treeViewShortcuts.Nodes[1].Nodes)
+            foreach (TreeNode node in treeViewShortcuts.Nodes[2].Nodes)
             {
                 if (node.Text.Contains("["))
                 {
                     string text = node.Text.Substring(0, node.Text.IndexOf("[")).Trim();
-                    if (text == Configuration.Settings.Language.Main.Menu.Edit.Find.Replace("&", string.Empty))
+                    if (text == Configuration.Settings.Language.Main.Menu.Edit.Undo.Replace("&", string.Empty))
+                        Configuration.Settings.Shortcuts.MainEditUndo = GetShortcut(node.Text);
+                    else if (text == Configuration.Settings.Language.Main.Menu.Edit.Redo.Replace("&", string.Empty))
+                        Configuration.Settings.Shortcuts.MainEditRedo = GetShortcut(node.Text);
+                    else if (text == Configuration.Settings.Language.Main.Menu.Edit.Find.Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.MainEditFind = GetShortcut(node.Text);
                     else if (text == Configuration.Settings.Language.Main.Menu.Edit.FindNext.Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.MainEditFindNext = GetShortcut(node.Text);
@@ -1014,20 +1057,26 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             //Main Tools
-            foreach (TreeNode node in treeViewShortcuts.Nodes[2].Nodes)
+            foreach (TreeNode node in treeViewShortcuts.Nodes[3].Nodes)
             {
                 if (node.Text.Contains("["))
                 {
                     string text = node.Text.Substring(0, node.Text.IndexOf("[")).Trim();
                     if (text == Configuration.Settings.Language.Main.Menu.Tools.FixCommonErrors.Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.MainToolsFixCommonErrors = GetShortcut(node.Text);
+                    else if (text == Configuration.Settings.Language.Main.Menu.Tools.StartNumberingFrom.Replace("&", string.Empty))
+                        Configuration.Settings.Shortcuts.MainToolsRenumber = GetShortcut(node.Text);
                     else if (text == Configuration.Settings.Language.Main.Menu.Tools.RemoveTextForHearingImpaired.Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.MainToolsRemoveTextForHI = GetShortcut(node.Text);
+                    else if (text == Configuration.Settings.Language.Main.Menu.Tools.ChangeCasing.Replace("&", string.Empty))
+                        Configuration.Settings.Shortcuts.MainToolsChangeCasing = GetShortcut(node.Text);
+                    else if (text == Configuration.Settings.Language.Main.Menu.ContextMenu.AutoDurationCurrentLine.Replace("&", string.Empty))
+                        Configuration.Settings.Shortcuts.MainToolsAutoDuration = GetShortcut(node.Text);
                 }
             }
 
             //Main Video
-            foreach (TreeNode node in treeViewShortcuts.Nodes[3].Nodes)
+            foreach (TreeNode node in treeViewShortcuts.Nodes[4].Nodes)
             {
                 if (node.Text.Contains("["))
                 {
@@ -1053,19 +1102,38 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
 
+            //Main Spell check
+            foreach (TreeNode node in treeViewShortcuts.Nodes[5].Nodes)
+            {
+                if (node.Text.Contains("["))
+                {
+                    string text = node.Text.Substring(0, node.Text.IndexOf("[")).Trim();
+                    if (text == Configuration.Settings.Language.Main.Menu.SpellCheck.Title.Replace("&", string.Empty))
+                        Configuration.Settings.Shortcuts.MainSpellCheck = GetShortcut(node.Text);
+                    else if (text == Configuration.Settings.Language.Main.Menu.SpellCheck.FindDoubleWords.Replace("&", string.Empty))
+                        Configuration.Settings.Shortcuts.MainSpellCheckFindDoubleWords = GetShortcut(node.Text);
+                    else if (text == Configuration.Settings.Language.Main.Menu.SpellCheck.AddToNamesEtcList.Replace("&", string.Empty))
+                        Configuration.Settings.Shortcuts.MainSpellCheckAddWordToNames = GetShortcut(node.Text);
+                }
+            }
+
             //Main Sync
-            foreach (TreeNode node in treeViewShortcuts.Nodes[4].Nodes)
+            foreach (TreeNode node in treeViewShortcuts.Nodes[6].Nodes)
             {
                 if (node.Text.Contains("["))
                 {
                     string text = node.Text.Substring(0, node.Text.IndexOf("[")).Trim();
                     if (text == Configuration.Settings.Language.Main.Menu.Synchronization.AdjustAllTimes.Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.MainSynchronizationAdjustTimes = GetShortcut(node.Text);
+                    else if (text == Configuration.Settings.Language.Main.Menu.Synchronization.VisualSync.Replace("&", string.Empty))
+                        Configuration.Settings.Shortcuts.MainSynchronizationVisualSync = GetShortcut(node.Text);
+                    else if (text == Configuration.Settings.Language.Main.Menu.Synchronization.PointSync.Replace("&", string.Empty))
+                        Configuration.Settings.Shortcuts.MainSynchronizationPointSync = GetShortcut(node.Text);
                 }
             }
 
             //Main List view
-            foreach (TreeNode node in treeViewShortcuts.Nodes[5].Nodes)
+            foreach (TreeNode node in treeViewShortcuts.Nodes[7].Nodes)
             {
                 if (node.Text.Contains("["))
                 {
@@ -1096,7 +1164,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             //Main text box
-            foreach (TreeNode node in treeViewShortcuts.Nodes[6].Nodes)
+            foreach (TreeNode node in treeViewShortcuts.Nodes[8].Nodes)
             {
                 if (node.Text.Contains("["))
                 {
@@ -1105,13 +1173,11 @@ namespace Nikse.SubtitleEdit.Forms
                         Configuration.Settings.Shortcuts.MainTextBoxItalic = GetShortcut(node.Text);
                     else if (text == Configuration.Settings.Language.Main.Menu.ContextMenu.SplitLineAtCursorPosition.Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.MainTextBoxSplitAtCursor = GetShortcut(node.Text);
-                    else if (text == Configuration.Settings.Language.Main.Menu.ContextMenu.AutoDurationCurrentLine.Replace("&", string.Empty))
-                        Configuration.Settings.Shortcuts.MainTextBoxAutoDuration = GetShortcut(node.Text);
                 }
             }
 
             //Create
-            foreach (TreeNode node in treeViewShortcuts.Nodes[7].Nodes)
+            foreach (TreeNode node in treeViewShortcuts.Nodes[9].Nodes)
             {
                 if (node.Text.Contains("["))
                 {
@@ -1131,7 +1197,7 @@ namespace Nikse.SubtitleEdit.Forms
 
 
             //Translate
-            foreach (TreeNode node in treeViewShortcuts.Nodes[8].Nodes)
+            foreach (TreeNode node in treeViewShortcuts.Nodes[10].Nodes)
             {
                 if (node.Text.Contains("["))
                 {
@@ -1152,7 +1218,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             //Adjust
-            foreach (TreeNode node in treeViewShortcuts.Nodes[9].Nodes)
+            foreach (TreeNode node in treeViewShortcuts.Nodes[11].Nodes)
             {
                 if (node.Text.Contains("["))
                 {
@@ -1183,7 +1249,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             //Audio-visualizer
-            foreach (TreeNode node in treeViewShortcuts.Nodes[10].Nodes)
+            foreach (TreeNode node in treeViewShortcuts.Nodes[12].Nodes)
             {
                 if (node.Text.Contains("["))
                 {
@@ -2144,6 +2210,20 @@ namespace Nikse.SubtitleEdit.Forms
                     return;
                 }
                 treeViewShortcuts.SelectedNode.Text = text + " " + sb;
+
+                StringBuilder existsIn = new StringBuilder();
+                foreach (TreeNode node in treeViewShortcuts.Nodes)
+                {
+                    foreach (TreeNode subNode in node.Nodes)
+                    {
+                        if (subNode.Text.Contains(sb.ToString()) && treeViewShortcuts.SelectedNode.Text != subNode.Text)
+                            existsIn.AppendLine(string.Format(Configuration.Settings.Language.Settings.ShortcutIsAlreadyDefinedX, node.Text + " -> " + subNode.Text));
+                    }
+                }
+                if (existsIn.Length > 0)
+                {
+                    MessageBox.Show(existsIn.ToString(), string.Empty, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
             }
         }
 
@@ -2152,16 +2232,6 @@ namespace Nikse.SubtitleEdit.Forms
             colorDialogSSAStyle.Color = panelListViewSyntaxColorError.BackColor;
             if (colorDialogSSAStyle.ShowDialog() == DialogResult.OK)
                 panelListViewSyntaxColorError.BackColor = colorDialogSSAStyle.Color;
-        }
-
-        private void textBox1_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void label1_Click(object sender, EventArgs e)
-        {
-
         }
 
     }
