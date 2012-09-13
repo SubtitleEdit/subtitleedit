@@ -554,11 +554,18 @@ namespace Nikse.SubtitleEdit.Logic
 
     public class Shortcuts
     {
+        public string GeneralGoToFirstSelectedLine { get; set; }
+        public string GeneralMergeSelectedLines { get; set; }
+        public string GeneralToggleTranslationMode { get; set; }
+        public string GeneralSwitchOriginalAndTranslation { get; set; }
+        public string GeneralMergeOriginalAndTranslation { get; set; }
         public string MainFileNew { get; set; }
         public string MainFileOpen { get; set; }
         public string MainFileSave { get; set; }
         public string MainFileSaveAs { get; set; }
         public string MainFileExportEbu { get; set; }
+        public string MainEditUndo { get; set; }
+        public string MainEditRedo { get; set; }
         public string MainEditFind { get; set; }
         public string MainEditFindNext { get; set; }
         public string MainEditReplace { get; set; }
@@ -568,7 +575,10 @@ namespace Nikse.SubtitleEdit.Logic
         public string MainEditReverseStartAndEndingForRTL { get; set; }
         public string MainToolsFixCommonErrors { get; set; }
         public string MainToolsFixCommonErrorsPreview { get; set; }
+        public string MainToolsRenumber { get; set; }
         public string MainToolsRemoveTextForHI { get; set; }
+        public string MainToolsChangeCasing { get; set; }
+        public string MainToolsAutoDuration { get; set; }
         public string MainVideoPause { get; set; }
         public string MainVideoPlayPauseToggle { get; set; }
         public string MainVideoShowHideVideo { get; set; }
@@ -578,7 +588,12 @@ namespace Nikse.SubtitleEdit.Logic
         public string MainVideo500MsLeft { get; set; }
         public string MainVideo500MsRight { get; set; }
         public string MainVideoFullscreen { get; set; }
+        public string MainSpellCheck { get; set; }
+        public string MainSpellCheckFindDoubleWords { get; set; }
+        public string MainSpellCheckAddWordToNames { get; set; }
         public string MainSynchronizationAdjustTimes { get; set; }
+        public string MainSynchronizationVisualSync { get; set; }
+        public string MainSynchronizationPointSync { get; set; }
         public string MainListViewItalic { get; set; }
         public string MainListViewToggleDashes { get; set; }
         public string MainListViewAlignment { get; set; }
@@ -586,7 +601,6 @@ namespace Nikse.SubtitleEdit.Logic
         public string MainListViewAutoDuration { get; set; }
         public string MainTextBoxItalic { get; set; }
         public string MainTextBoxSplitAtCursor { get; set; }
-        public string MainTextBoxAutoDuration { get; set; }
         public string MainCreateInsertSubAtVideoPos { get; set; }
         public string MainCreatePlayFromJustBefore { get; set; }
         public string MainCreateSetStart { get; set; }
@@ -625,11 +639,18 @@ namespace Nikse.SubtitleEdit.Logic
 
         public Shortcuts()
         {
+            GeneralGoToFirstSelectedLine = "Control+L";
+            GeneralMergeSelectedLines = "Control+Shift+M";
+            GeneralToggleTranslationMode = "Control+U";
+            GeneralSwitchOriginalAndTranslation = "Control+Shift+U";
+            GeneralMergeOriginalAndTranslation = "Control+Alt+Shift+M";
             MainFileNew = "Control+N";
             MainFileOpen = "Control+O";
             MainFileSave = "Control+S";
             MainFileSaveAs = "";
             MainFileExportEbu = string.Empty;
+            MainEditUndo = "Control+Z";
+            MainEditRedo = "Control+Y";
             MainEditFind = "Control+F";
             MainEditFindNext = "F3";
             MainEditReplace = "Control+H";
@@ -638,7 +659,9 @@ namespace Nikse.SubtitleEdit.Logic
             MainEditRightToLeft = "Control+Shift+Alt+R";
             MainToolsFixCommonErrors = "Control+Shift+F";
             MainToolsFixCommonErrorsPreview = "Control+P";
+            MainToolsRenumber = "Control+Shift+N";
             MainToolsRemoveTextForHI = "Control+Shift+H";
+            MainToolsChangeCasing = "Control+Shift+C";
             MainVideoPlayPauseToggle = "Control+P";
             MainVideoPause = "Control+Alt+P";
             MainVideoShowHideVideo = "Control+Q";
@@ -647,12 +670,17 @@ namespace Nikse.SubtitleEdit.Logic
             MainVideo500MsLeft = "Alt+Left";
             MainVideo500MsRight = "Alt+Right";
             MainVideoFullscreen = "Alt+Return";
+            MainSpellCheck = "Control+Shift+S";
+            MainSpellCheckFindDoubleWords = "Control+Shift+D";
+            MainSpellCheckAddWordToNames = "Control+Shift+L";
             MainSynchronizationAdjustTimes = "Control+Shift+A";
+            MainSynchronizationVisualSync = "Control+Shift+V";
+            MainSynchronizationPointSync = "Control+Shift+P";
             MainListViewItalic = "Control+I";
             MainEditReverseStartAndEndingForRTL = string.Empty;
             MainTextBoxItalic = "Control+I";
             MainTextBoxSplitAtCursor = "Control+Alt+V";
-            MainTextBoxAutoDuration = string.Empty;
+            MainToolsAutoDuration = string.Empty;
             MainCreateInsertSubAtVideoPos = string.Empty;
             MainCreatePlayFromJustBefore = string.Empty;
             MainCreateSetStart = string.Empty;
@@ -1522,6 +1550,21 @@ namespace Nikse.SubtitleEdit.Logic
             node = doc.DocumentElement.SelectSingleNode("Shortcuts");
             if (node != null)
             {
+                subNode = node.SelectSingleNode("GeneralGoToFirstSelectedLine");
+                if (subNode != null)
+                    settings.Shortcuts.GeneralGoToFirstSelectedLine = subNode.InnerText;
+                subNode = node.SelectSingleNode("GeneralMergeSelectedLines");
+                if (subNode != null)
+                    settings.Shortcuts.GeneralMergeSelectedLines = subNode.InnerText;
+                subNode = node.SelectSingleNode("GeneralToggleTranslationMode");
+                if (subNode != null)
+                    settings.Shortcuts.GeneralToggleTranslationMode = subNode.InnerText;
+                subNode = node.SelectSingleNode("GeneralSwitchOriginalAndTranslation");
+                if (subNode != null)
+                    settings.Shortcuts.GeneralSwitchOriginalAndTranslation = subNode.InnerText;
+                subNode = node.SelectSingleNode("GeneralMergeOriginalAndTranslation");
+                if (subNode != null)
+                    settings.Shortcuts.GeneralMergeOriginalAndTranslation = subNode.InnerText;               
                 subNode = node.SelectSingleNode("MainFileNew");
                 if (subNode != null)
                     settings.Shortcuts.MainFileNew = subNode.InnerText;
@@ -1537,6 +1580,12 @@ namespace Nikse.SubtitleEdit.Logic
                 subNode = node.SelectSingleNode("MainFileExportEbu");
                 if (subNode != null)
                     settings.Shortcuts.MainFileExportEbu = subNode.InnerText;
+                subNode = node.SelectSingleNode("MainEditUndo");
+                if (subNode != null)
+                    settings.Shortcuts.MainEditUndo = subNode.InnerText;
+                subNode = node.SelectSingleNode("MainEditRedo");
+                if (subNode != null)
+                    settings.Shortcuts.MainEditRedo = subNode.InnerText;
                 subNode = node.SelectSingleNode("MainEditFind");
                 if (subNode != null)
                     settings.Shortcuts.MainEditFind = subNode.InnerText;
@@ -1561,9 +1610,18 @@ namespace Nikse.SubtitleEdit.Logic
                 subNode = node.SelectSingleNode("MainToolsFixCommonErrorsPreview");
                 if (subNode != null)
                     settings.Shortcuts.MainToolsFixCommonErrorsPreview = subNode.InnerText;
+                subNode = node.SelectSingleNode("MainToolsRenumber");
+                if (subNode != null)
+                    settings.Shortcuts.MainToolsRenumber = subNode.InnerText;
                 subNode = node.SelectSingleNode("MainToolsRemoveTextForHI");
                 if (subNode != null)
                     settings.Shortcuts.MainToolsRemoveTextForHI = subNode.InnerText;
+                subNode = node.SelectSingleNode("MainToolsChangeCasing");
+                if (subNode != null)
+                    settings.Shortcuts.MainToolsChangeCasing = subNode.InnerText;
+                subNode = node.SelectSingleNode("MainToolsAutoDuration");
+                if (subNode != null)
+                    settings.Shortcuts.MainToolsAutoDuration = subNode.InnerText;
                 subNode = node.SelectSingleNode("MainVideoPause");
                 if (subNode != null)
                     settings.Shortcuts.MainVideoPause = subNode.InnerText;
@@ -1591,9 +1649,24 @@ namespace Nikse.SubtitleEdit.Logic
                 subNode = node.SelectSingleNode("MainVideoFullscreen");
                 if (subNode != null)
                     settings.Shortcuts.MainVideoFullscreen = subNode.InnerText;
+                subNode = node.SelectSingleNode("MainSpellCheck");
+                if (subNode != null)
+                    settings.Shortcuts.MainSpellCheck = subNode.InnerText;
+                subNode = node.SelectSingleNode("MainSpellCheckFindDoubleWords");
+                if (subNode != null)
+                    settings.Shortcuts.MainSpellCheckFindDoubleWords = subNode.InnerText;
+                subNode = node.SelectSingleNode("MainSpellCheckAddWordToNames");
+                if (subNode != null)
+                    settings.Shortcuts.MainSpellCheckAddWordToNames = subNode.InnerText;
                 subNode = node.SelectSingleNode("MainSynchronizationAdjustTimes");
                 if (subNode != null)
                     settings.Shortcuts.MainSynchronizationAdjustTimes = subNode.InnerText;
+                subNode = node.SelectSingleNode("MainSynchronizationVisualSync");
+                if (subNode != null)
+                    settings.Shortcuts.MainSynchronizationVisualSync = subNode.InnerText;
+                subNode = node.SelectSingleNode("MainSynchronizationPointSync");
+                if (subNode != null)
+                    settings.Shortcuts.MainSynchronizationPointSync = subNode.InnerText;
                 subNode = node.SelectSingleNode("MainListViewItalic");
                 if (subNode != null)
                     settings.Shortcuts.MainListViewItalic = subNode.InnerText;
@@ -1618,9 +1691,6 @@ namespace Nikse.SubtitleEdit.Logic
                 subNode = node.SelectSingleNode("MainTextBoxSplitAtCursor");
                 if (subNode != null)
                     settings.Shortcuts.MainTextBoxSplitAtCursor = subNode.InnerText;
-                subNode = node.SelectSingleNode("MainTextBoxAutoDuration");
-                if (subNode != null)
-                    settings.Shortcuts.MainTextBoxAutoDuration = subNode.InnerText;
                 subNode = node.SelectSingleNode("MainCreateInsertSubAtVideoPos");
                 if (subNode != null)
                     settings.Shortcuts.MainCreateInsertSubAtVideoPos = subNode.InnerText;
@@ -2059,11 +2129,18 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteEndElement();
 
             textWriter.WriteStartElement("Shortcuts", "");
+            textWriter.WriteElementString("GeneralGoToFirstSelectedLine", settings.Shortcuts.GeneralGoToFirstSelectedLine);
+            textWriter.WriteElementString("GeneralMergeSelectedLines", settings.Shortcuts.GeneralMergeSelectedLines);
+            textWriter.WriteElementString("GeneralToggleTranslationMode", settings.Shortcuts.GeneralToggleTranslationMode);
+            textWriter.WriteElementString("GeneralSwitchOriginalAndTranslation", settings.Shortcuts.GeneralSwitchOriginalAndTranslation);
+            textWriter.WriteElementString("GeneralMergeOriginalAndTranslation", settings.Shortcuts.GeneralMergeOriginalAndTranslation);
             textWriter.WriteElementString("MainFileNew", settings.Shortcuts.MainFileNew);
             textWriter.WriteElementString("MainFileOpen", settings.Shortcuts.MainFileOpen);
             textWriter.WriteElementString("MainFileSave", settings.Shortcuts.MainFileSave);
             textWriter.WriteElementString("MainFileSaveAs", settings.Shortcuts.MainFileSaveAs);
             textWriter.WriteElementString("MainFileExportEbu", settings.Shortcuts.MainFileSaveAs);
+            textWriter.WriteElementString("MainEditUndo", settings.Shortcuts.MainEditUndo);
+            textWriter.WriteElementString("MainEditRedo", settings.Shortcuts.MainEditRedo);
             textWriter.WriteElementString("MainEditFind", settings.Shortcuts.MainEditFind);
             textWriter.WriteElementString("MainEditFindNext", settings.Shortcuts.MainEditFindNext);
             textWriter.WriteElementString("MainEditReplace", settings.Shortcuts.MainEditReplace);
@@ -2072,7 +2149,10 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("MainEditRightToLeft", settings.Shortcuts.MainEditRightToLeft);
             textWriter.WriteElementString("MainToolsFixCommonErrors", settings.Shortcuts.MainToolsFixCommonErrors);
             textWriter.WriteElementString("MainToolsFixCommonErrorsPreview", settings.Shortcuts.MainToolsFixCommonErrorsPreview);
+            textWriter.WriteElementString("MainToolsRenumber", settings.Shortcuts.MainToolsRenumber);
             textWriter.WriteElementString("MainToolsRemoveTextForHI", settings.Shortcuts.MainToolsRemoveTextForHI);
+            textWriter.WriteElementString("MainToolsChangeCasing", settings.Shortcuts.MainToolsChangeCasing);
+            textWriter.WriteElementString("MainToolsAutoDuration", settings.Shortcuts.MainToolsAutoDuration);
             textWriter.WriteElementString("MainVideoPause", settings.Shortcuts.MainVideoPause);
             textWriter.WriteElementString("MainVideoPlayPauseToggle", settings.Shortcuts.MainVideoPlayPauseToggle);
             textWriter.WriteElementString("MainVideoShowHideVideo", settings.Shortcuts.MainVideoShowHideVideo);
@@ -2082,7 +2162,12 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("MainVideo500MsLeft", settings.Shortcuts.MainVideo500MsLeft);
             textWriter.WriteElementString("MainVideo500MsRight", settings.Shortcuts.MainVideo500MsRight);
             textWriter.WriteElementString("MainVideoFullscreen", settings.Shortcuts.MainVideoFullscreen);
+            textWriter.WriteElementString("MainSpellCheck", settings.Shortcuts.MainSpellCheck);
+            textWriter.WriteElementString("MainSpellCheckFindDoubleWords", settings.Shortcuts.MainSpellCheckFindDoubleWords);
+            textWriter.WriteElementString("MainSpellCheckAddWordToNames", settings.Shortcuts.MainSpellCheckAddWordToNames);
             textWriter.WriteElementString("MainSynchronizationAdjustTimes", settings.Shortcuts.MainSynchronizationAdjustTimes);
+            textWriter.WriteElementString("MainSynchronizationVisualSync", settings.Shortcuts.MainSynchronizationVisualSync);
+            textWriter.WriteElementString("MainSynchronizationPointSync", settings.Shortcuts.MainSynchronizationPointSync);
             textWriter.WriteElementString("MainListViewItalic", settings.Shortcuts.MainListViewItalic);
             textWriter.WriteElementString("MainListViewToggleDashes", settings.Shortcuts.MainListViewToggleDashes);
             textWriter.WriteElementString("MainListViewAlignment", settings.Shortcuts.MainListViewAlignment);
@@ -2091,7 +2176,6 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("MainEditReverseStartAndEndingForRTL", settings.Shortcuts.MainEditReverseStartAndEndingForRTL);
             textWriter.WriteElementString("MainTextBoxItalic", settings.Shortcuts.MainTextBoxItalic);
             textWriter.WriteElementString("MainTextBoxSplitAtCursor", settings.Shortcuts.MainTextBoxSplitAtCursor);
-            textWriter.WriteElementString("MainTextBoxAutoDuration", settings.Shortcuts.MainTextBoxAutoDuration);
             textWriter.WriteElementString("MainCreateInsertSubAtVideoPos", settings.Shortcuts.MainCreateInsertSubAtVideoPos);
             textWriter.WriteElementString("MainCreatePlayFromJustBefore", settings.Shortcuts.MainCreatePlayFromJustBefore);
             textWriter.WriteElementString("MainCreateSetStart", settings.Shortcuts.MainCreateSetStart);

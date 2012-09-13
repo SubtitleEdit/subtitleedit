@@ -66,6 +66,7 @@
     <Advanced>Avanceret</Advanced>
     <Style>Style</Style>
     <Class>Class</Class>
+    <GeneralText>General</GeneralText>
   </General>
   <About>
     <Title>Om Subtitle Edit</Title>
@@ -273,6 +274,11 @@
     <Left>Venstre</Left>
     <Right>Højre</Right>
     <Center>Centrer</Center>
+    <BottomMargin>Bundmargen</BottomMargin>
+    <SaveBluRraySupAs>Vælg Blu-ray sup filnavn</SaveBluRraySupAs>
+    <SaveVobSubAs>Vælg VobSub filnavn</SaveVobSubAs>
+    <SaveFabImageScriptAs>Vælg Blu-ray sup filnavn</SaveFabImageScriptAs>
+    <SaveDvdStudioProStlAs>Vælg DVD Studio Pro STL filnavn</SaveDvdStudioProStlAs>
   </ExportPngXml>
   <ExportText>
     <Title>Eksport tekst</Title>
@@ -537,6 +543,8 @@
       </File>
       <Edit>
         <Title>Rediger</Title>
+        <Undo>Fortryd</Undo>
+        <Redo>Annuler fortryd</Redo>
         <ShowUndoHistory>Vis historik (fortryd)</ShowUndoHistory>
         <InsertUnicodeSymbol>Indsæt unicode symbol</InsertUnicodeSymbol>
         <Find>&amp;Find</Find>
@@ -1249,7 +1257,13 @@ Fortsæt?</SubtitleAppendPrompt>
     <SyntaxColorTextIfTooLong>Farve - tekst, hvis for lang</SyntaxColorTextIfTooLong>
     <SyntaxColorTextMoreThanXLines>Farve - tekst, hvis mere end linjer:</SyntaxColorTextMoreThanXLines>
     <SyntaxColorOverlap>Farve - tidskode overlapper</SyntaxColorOverlap>
-    <SyntaxColorErrorColor>Fejl baggrund farve</SyntaxColorErrorColor>
+    <GoToFirstSelectedLine>Gå til første valgte linje</GoToFirstSelectedLine>
+    <MergeSelectedLines>Flet markerede linjer</MergeSelectedLines>
+    <ToggleTranslationMode>Toggle oversættelses-tilstand</ToggleTranslationMode>
+    <SwitchOriginalAndTranslation>Byt original og oversættelse</SwitchOriginalAndTranslation>
+    <MergeOriginalAndTranslation>Flet original og oversættelse</MergeOriginalAndTranslation>
+    <ShortcutIsAlreadyDefinedX>Genvej allerede defineret:
+{0}</ShortcutIsAlreadyDefinedX>
   </Settings>
   <ShowEarlierLater>
     <Title>Vis valgte linjer tidligere/senere</Title>

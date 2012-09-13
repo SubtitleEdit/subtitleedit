@@ -203,10 +203,6 @@ namespace Nikse.SubtitleEdit.Forms
             {
 
             }
-            else if (parameter.Type == "FAB")
-            {
-
-            }
         }
 
         private MakeBitmapParameter MakeMakeBitmapParameter(int index, int screenWidth,int screenHeight)
@@ -253,31 +249,39 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (_exportType == "BLURAYSUP")
             {
-                saveFileDialog1.Title = "Choose Blu-ray sup file name...";
+                saveFileDialog1.Title = Configuration.Settings.Language.ExportPngXml.SaveBluRraySupAs;
                 saveFileDialog1.DefaultExt = "*.sup";
                 saveFileDialog1.AddExtension = true;
                 saveFileDialog1.Filter = "Blu-Ray sup|*.sup";
             }
             else if (_exportType == "VOBSUB")
             {
-                saveFileDialog1.Title = "Choose Vobsub file name...";
+                saveFileDialog1.Title = Configuration.Settings.Language.ExportPngXml.SaveVobSubAs;
                 saveFileDialog1.DefaultExt = "*.sub";
                 saveFileDialog1.AddExtension = true;
                 saveFileDialog1.Filter = "VobSub|*.sub";
             }
             else if (_exportType == "FAB")
             {
-                saveFileDialog1.Title = "Choose FAB image script file name...";
+                saveFileDialog1.Title = Configuration.Settings.Language.ExportPngXml.SaveFabImageScriptAs;
                 saveFileDialog1.DefaultExt = "*.txt";
                 saveFileDialog1.AddExtension = true;
                 saveFileDialog1.Filter = "FAB image scripts|*.txt";
+            }
+            else if (_exportType == "STL")
+            {
+                saveFileDialog1.Title = Configuration.Settings.Language.ExportPngXml.SaveDvdStudioProStlAs;
+                saveFileDialog1.DefaultExt = "*.txt";
+                saveFileDialog1.AddExtension = true;
+                saveFileDialog1.Filter = "DVD Studio Pro STL|*.stl";
             }
 
             if (_exportType == "BLURAYSUP" &&  saveFileDialog1.ShowDialog(this) == DialogResult.OK ||
                 _exportType == "VOBSUB" && saveFileDialog1.ShowDialog(this) == DialogResult.OK ||
                 _exportType == "BDNXML" && folderBrowserDialog1.ShowDialog(this) == DialogResult.OK ||
                 _exportType == "FAB" && folderBrowserDialog1.ShowDialog(this) == DialogResult.OK ||
-                _exportType == "IMAGE/FRAME" && folderBrowserDialog1.ShowDialog(this) == DialogResult.OK)
+                _exportType == "IMAGE/FRAME" && folderBrowserDialog1.ShowDialog(this) == DialogResult.OK ||
+                _exportType == "STL" && folderBrowserDialog1.ShowDialog(this) == DialogResult.OK)
             {
                 int width = 1920;
                 int height = 1080;
@@ -337,6 +341,11 @@ namespace Nikse.SubtitleEdit.Forms
                 int border = comboBoxBottomMargin.SelectedIndex;
                 int imagesSavedCount = 0;
                 var sb = new StringBuilder();
+                if (_exportType == "STL")
+                {
+                    sb.AppendLine("$SetFilePathToken =" + folderBrowserDialog1.SelectedPath);
+                    sb.AppendLine();
+                }
 
                 var threadEqual = new Thread(DoWork);
                 var paramEqual = MakeMakeBitmapParameter(0, width, height);
@@ -421,6 +430,11 @@ namespace Nikse.SubtitleEdit.Forms
 
                     MessageBox.Show(string.Format(Configuration.Settings.Language.ExportPngXml.XImagesSavedInY, imagesSavedCount, folderBrowserDialog1.SelectedPath));
                 }
+                else if (_exportType == "STL")
+                {
+                    File.WriteAllText(Path.Combine(folderBrowserDialog1.SelectedPath, "DVD_Studio_Pro_Image_script.stl"), sb.ToString());
+                    MessageBox.Show(string.Format(Configuration.Settings.Language.ExportPngXml.XImagesSavedInY, imagesSavedCount, folderBrowserDialog1.SelectedPath));
+                }
                 else
                 {
                     string videoFormat = "1080p";
@@ -493,6 +507,26 @@ namespace Nikse.SubtitleEdit.Forms
                         //RACE002.TIF 00;00;05;18 00;00;09;20 000 000 720 480
                         int top = param.ScreenHeight - (param.Bitmap.Height + 20); // bottom margin=20 //TODO: Use combo bottom margin!
                         sb.AppendLine(string.Format("{0} {1} {2} {3} {4} {5} {6}", Path.GetFileName(fileName), FormatFabTime(param.P.StartTime, param), FormatFabTime(param.P.EndTime, param), 0, top, param.ScreenWidth, param.ScreenHeight));
+                        param.Saved = true;
+                    }
+                }
+                else if (_exportType == "STL")
+                {
+                    if (!param.Saved)
+                    {
+                        string numberString = string.Format("IMAGE{0:000}", i);
+                        string fileName = Path.Combine(folderBrowserDialog1.SelectedPath, numberString + "." + comboBoxImageFormat.Text.ToLower());
+                        param.Bitmap.Save(fileName, ImageFormat);
+                        imagesSavedCount++;
+
+                        const string paragraphWriteFormat = "{0} , {1} , {2}\r\n";
+                        const string timeFormat = "{0:00}:{1:00}:{2:00}:{3:00}";
+                       
+                        double factor = (1000.0 / Configuration.Settings.General.CurrentFrameRate);
+                        string startTime = string.Format(timeFormat, param.P.StartTime.Hours, param.P.StartTime.Minutes, param.P.StartTime.Seconds, (int)Math.Round(param.P.StartTime.Milliseconds / factor));
+                        string endTime = string.Format(timeFormat, param.P.EndTime.Hours, param.P.EndTime.Minutes, param.P.EndTime.Seconds, (int)Math.Round(param.P.EndTime.Milliseconds / factor));
+                        sb.Append(string.Format(paragraphWriteFormat, startTime, endTime, fileName));
+
                         param.Saved = true;
                     }
                 }
@@ -715,7 +749,7 @@ namespace Nikse.SubtitleEdit.Forms
             mbp.P = new Paragraph(text, 0, 0);
 
             var bmp = GenerateImageFromTextWithStyle(mbp);
-            if (_exportType == "VOBSUB")
+            if (_exportType == "VOBSUB" || _exportType == "STL")
             {
                 var nbmp = new NikseBitmap(bmp);
                 nbmp.ConverToFourColors(Color.Transparent, _subtitleColor, _borderColor, GetOutlineColor(_borderColor));
@@ -989,6 +1023,8 @@ namespace Nikse.SubtitleEdit.Forms
                 Text = "FAB Image Script";
             else if (exportType == "IMAGE/FRAME")
                 Text = "Image per frame";
+            else if (exportType == "STL")
+                Text = "DVD Studio Pro STL";
             else
                 Text = Configuration.Settings.Language.ExportPngXml.Title;
             groupBoxImageSettings.Text = Configuration.Settings.Language.ExportPngXml.ImageSettings;
@@ -1004,6 +1040,7 @@ namespace Nikse.SubtitleEdit.Forms
             labelLanguage.Text = Configuration.Settings.Language.ChooseLanguage.Language;
             labelFrameRate.Text = Configuration.Settings.Language.General.FrameRate;
             labelHorizontalAlign.Text = Configuration.Settings.Language.ExportPngXml.Align;
+            labelBottomMargin.Text = Configuration.Settings.Language.ExportPngXml.BottomMargin;
             if (Configuration.Settings.Language.ExportPngXml.Left != null &&
                 Configuration.Settings.Language.ExportPngXml.Center != null &&
                 Configuration.Settings.Language.ExportPngXml.Right != null)
@@ -1041,8 +1078,8 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 comboBoxLanguage.SelectedIndex = 25;
             }
-            comboBoxImageFormat.Visible = exportType == "FAB" || exportType == "IMAGE/FRAME";
-            labelImageFormat.Visible = exportType == "FAB" || exportType == "IMAGE/FRAME";
+            comboBoxImageFormat.Visible = exportType == "FAB" || exportType == "IMAGE/FRAME" || exportType == "STL";
+            labelImageFormat.Visible = exportType == "FAB" || exportType == "IMAGE/FRAME" || exportType == "STL";
             labelFrameRate.Visible = exportType == "BDNXML" || exportType == "BLURAYSUP" || exportType == "IMAGE/FRAME";
             comboBoxFramerate.Visible = exportType == "BDNXML" || exportType == "BLURAYSUP" || exportType == "IMAGE/FRAME";
             if (exportType == "BDNXML")

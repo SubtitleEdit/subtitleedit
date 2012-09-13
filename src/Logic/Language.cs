@@ -146,6 +146,7 @@ namespace Nikse.SubtitleEdit.Logic
                 Advanced = "Advanced",
                 Style = "Style",
                 Class = "Class",
+                GeneralText = "General",
             };
 
             About = new LanguageStructure.About
@@ -388,6 +389,12 @@ namespace Nikse.SubtitleEdit.Logic
                 Left = "Left",
                 Center = "Center",
                 Right = "Right",
+
+                BottomMargin = "Bottom margin",
+                SaveBluRraySupAs = "Choose Blu-ray sup file name",
+                SaveVobSubAs = "Choose VobSub file name",
+                SaveFabImageScriptAs = "Choose Blu-ray sup file name",
+                SaveDvdStudioProStlAs = "Choose DVD Studio Pro STL file name",
             };
 
             ExportText = new LanguageStructure.ExportText
@@ -895,6 +902,8 @@ namespace Nikse.SubtitleEdit.Logic
                     Edit = new LanguageStructure.Main.MainMenu.EditMenu
                     {
                         Title = "Edit",
+                        Undo = "Undo",
+                        Redo = "Redo",
                         ShowUndoHistory = "Show history (for undo)",
                         InsertUnicodeSymbol = "Insert unicode symbol",
                         Find = "&Find",
@@ -1449,7 +1458,12 @@ can edit in same subtitle file (collaboration)",
                 SyntaxColorTextIfTooLong = "Color text if too long",
                 SyntaxColorTextMoreThanXLines = "Color text if more than lines:",
                 SyntaxColorOverlap = "Color time code overlap",
-                SyntaxColorErrorColor = "Error background color",
+                GoToFirstSelectedLine = "Go to first selected line",
+                MergeSelectedLines = "Merge selected lines",
+                ToggleTranslationMode = "Toggle translation mode",
+                SwitchOriginalAndTranslation = "Switch original and translation",
+                MergeOriginalAndTranslation = "Merge original and translation",
+                ShortcutIsAlreadyDefinedX = "Shortcut already defined: \r\n{0}\r\n",
             };
 
             ShowEarlierLater = new LanguageStructure.ShowEarlierLater

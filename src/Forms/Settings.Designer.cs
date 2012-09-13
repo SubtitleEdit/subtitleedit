@@ -2740,7 +2740,6 @@
             this.labelCustomSearch2.Size = new System.Drawing.Size(13, 13);
             this.labelCustomSearch2.TabIndex = 6;
             this.labelCustomSearch2.Text = "2";
-            this.labelCustomSearch2.Click += new System.EventHandler(this.label1_Click);
             // 
             // textBoxCustomSearchUrl2
             // 
@@ -2748,7 +2747,6 @@
             this.textBoxCustomSearchUrl2.Name = "textBoxCustomSearchUrl2";
             this.textBoxCustomSearchUrl2.Size = new System.Drawing.Size(574, 21);
             this.textBoxCustomSearchUrl2.TabIndex = 5;
-            this.textBoxCustomSearchUrl2.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
             // 
             // comboBoxCustomSearch2
             // 
