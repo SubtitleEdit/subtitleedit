@@ -322,6 +322,7 @@ namespace Nikse.SubtitleEdit.Logic
         public string StartPosition { get; set; }
         public string StartSize { get; set; }
         public int StartListViewWidth { get; set; }
+        public int StartListViewHeight { get; set; }
         public bool StartInSourceView { get; set; }
         public bool RemoveBlankLinesWhenOpening { get; set; }
         public int SubtitleLineMaximumLength { get; set; }
@@ -573,6 +574,7 @@ namespace Nikse.SubtitleEdit.Logic
         public string MainEditGoToLineNumber { get; set; }
         public string MainEditRightToLeft { get; set; }
         public string MainEditReverseStartAndEndingForRTL { get; set; }
+        public string MainEditToggleTranslationOriginalInPreviews { get; set; }
         public string MainToolsFixCommonErrors { get; set; }
         public string MainToolsFixCommonErrorsPreview { get; set; }
         public string MainToolsRenumber { get; set; }
@@ -1004,6 +1006,9 @@ namespace Nikse.SubtitleEdit.Logic
             subNode = node.SelectSingleNode("StartListViewWidth");
             if (subNode != null)
                 settings.General.StartListViewWidth = Convert.ToInt32(subNode.InnerText);
+            subNode = node.SelectSingleNode("StartListViewHeight");
+            if (subNode != null)
+                settings.General.StartListViewHeight = Convert.ToInt32(subNode.InnerText);
             subNode = node.SelectSingleNode("StartInSourceView");
             if (subNode != null)
                 settings.General.StartInSourceView = Convert.ToBoolean(subNode.InnerText);
@@ -1622,6 +1627,9 @@ namespace Nikse.SubtitleEdit.Logic
                 subNode = node.SelectSingleNode("MainToolsAutoDuration");
                 if (subNode != null)
                     settings.Shortcuts.MainToolsAutoDuration = subNode.InnerText;
+                subNode = node.SelectSingleNode("MainToolsToggleTranslationOriginalInPreviews");
+                if (subNode != null)
+                    settings.Shortcuts.MainEditToggleTranslationOriginalInPreviews = subNode.InnerText;                
                 subNode = node.SelectSingleNode("MainVideoPause");
                 if (subNode != null)
                     settings.Shortcuts.MainVideoPause = subNode.InnerText;
@@ -1924,6 +1932,7 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("StartPosition", settings.General.StartPosition);
             textWriter.WriteElementString("StartSize", settings.General.StartSize);
             textWriter.WriteElementString("StartListViewWidth", settings.General.StartListViewWidth.ToString());
+            textWriter.WriteElementString("StartListViewHeight", settings.General.StartListViewHeight.ToString());
             textWriter.WriteElementString("StartInSourceView", settings.General.StartInSourceView.ToString());
             textWriter.WriteElementString("RemoveBlankLinesWhenOpening", settings.General.RemoveBlankLinesWhenOpening.ToString());
             textWriter.WriteElementString("SubtitleLineMaximumLength", settings.General.SubtitleLineMaximumLength.ToString());
@@ -2153,6 +2162,7 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("MainToolsRemoveTextForHI", settings.Shortcuts.MainToolsRemoveTextForHI);
             textWriter.WriteElementString("MainToolsChangeCasing", settings.Shortcuts.MainToolsChangeCasing);
             textWriter.WriteElementString("MainToolsAutoDuration", settings.Shortcuts.MainToolsAutoDuration);
+            textWriter.WriteElementString("MainToolsToggleTranslationOriginalInPreviews", settings.Shortcuts.MainEditToggleTranslationOriginalInPreviews);            
             textWriter.WriteElementString("MainVideoPause", settings.Shortcuts.MainVideoPause);
             textWriter.WriteElementString("MainVideoPlayPauseToggle", settings.Shortcuts.MainVideoPlayPauseToggle);
             textWriter.WriteElementString("MainVideoShowHideVideo", settings.Shortcuts.MainVideoShowHideVideo);

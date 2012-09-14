@@ -825,6 +825,7 @@
                     public string GoToSubtitleNumber { get; set; }
                     public string RightToLeftMode { get; set; }
                     public string ReverseRightToLeftStartEnd { get; set; }
+                    public string ShowOriginalTextInAudioAndVideoPreview { get; set; }
                 }
                 public class ToolsMenu
                 {
@@ -849,7 +850,6 @@
                     public string TextNumberOfLines { get; set; }
                     public string TextNumberOfCharactersPerSeconds { get; set; }
                     public string WordsPerMinute { get; set; }
-                    public string ShowOriginalTextInAudioAndVideoPreview { get; set; }
                     public string MakeNewEmptyTranslationFromCurrentSubtitle { get; set; }
                     public string SplitSubtitle { get; set; }
                     public string AppendSubtitle { get; set; }
@@ -1384,6 +1384,7 @@
             public string SwitchOriginalAndTranslation { get; set; }
             public string MergeOriginalAndTranslation { get; set; }
             public string ShortcutIsAlreadyDefinedX { get; set; }
+            public string ToggleTranslationAndOriginalInPreviews { get; set; }            
         }
 
         public class ShowEarlierLater
