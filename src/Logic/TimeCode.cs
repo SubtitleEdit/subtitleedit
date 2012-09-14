@@ -170,6 +170,5 @@ namespace Nikse.SubtitleEdit.Logic
             return string.Format("{0:00}:{1:00}:{2:00}.{3:00}", _time.Hours, _time.Minutes, _time.Seconds, SubtitleFormats.SubtitleFormat.MillisecondsToFrames(_time.Milliseconds));
         }
 
-
     }
 }

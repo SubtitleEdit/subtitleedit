@@ -913,6 +913,7 @@ namespace Nikse.SubtitleEdit.Logic
                         GoToSubtitleNumber = "&Go to subtitle number...",
                         RightToLeftMode = "Right-to-left mode",
                         ReverseRightToLeftStartEnd = "Reverse RTL start/end (for selected lines)",
+                        ShowOriginalTextInAudioAndVideoPreview = "Show original text in audio/video previews",
                     },
 
                     Tools = new LanguageStructure.Main.MainMenu.ToolsMenu
@@ -938,7 +939,6 @@ namespace Nikse.SubtitleEdit.Logic
                         TextNumberOfLines = "Text - number of lines",
                         TextNumberOfCharactersPerSeconds = "Text - number of chars/sec",
                         WordsPerMinute = "Text - words per minute (wpm)",
-                        ShowOriginalTextInAudioAndVideoPreview = "Show original text in audio/video previews",
                         MakeNewEmptyTranslationFromCurrentSubtitle = "Make new empty translation from current subtitle",
                         SplitSubtitle = "Split subtitle...",
                         AppendSubtitle = "Append subtitle...",
@@ -1464,6 +1464,7 @@ can edit in same subtitle file (collaboration)",
                 SwitchOriginalAndTranslation = "Switch original and translation",
                 MergeOriginalAndTranslation = "Merge original and translation",
                 ShortcutIsAlreadyDefinedX = "Shortcut already defined: \r\n{0}\r\n",
+                ToggleTranslationAndOriginalInPreviews = "Toggle translation and original in video/audio preview",
             };
 
             ShowEarlierLater = new LanguageStructure.ShowEarlierLater
