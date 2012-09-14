@@ -306,21 +306,28 @@ namespace Nikse.SubtitleEdit.Controls
             int result = (int)Math.Round((percentage * imageHeight) + (imageHeight / 2.0));
             return imageHeight - result;
         }
-     
-        private bool IsSelectedIndex(int pos)
+
+        private bool IsSelectedIndex(int pos, ref int lastCurrentEnd)
         {
             if (_selectedIndices == null)
                 return false;
+
+            if (pos < lastCurrentEnd)
+                return true;
 
             foreach (int index in _selectedIndices)
             {
                 var p = _subtitle.Paragraphs[index];
 
-                int start = SecondsToXPosition(p.StartTime.TotalSeconds);
-                int end = SecondsToXPosition(p.EndTime.TotalSeconds);
+                int start = (int)Math.Round(p.StartTime.TotalSeconds * _wavePeaks.Header.SampleRate * _zoomFactor);
+                int end = (int)Math.Round(p.EndTime.TotalSeconds * _wavePeaks.Header.SampleRate * _zoomFactor); 
 
                 if (pos >= start && pos <= end)
+                {
+                    lastCurrentEnd = end;
                     return true;
+                }
+
             }
             return false;
         }
@@ -366,6 +373,7 @@ namespace Nikse.SubtitleEdit.Controls
 
                 var penNormal = new Pen(Color);
                 var penSelected = new Pen(SelectedColor); // selected paragraph
+                int lastCurrentEnd = -1;
 
                 if (ShowWaveform)
                 {
@@ -384,7 +392,7 @@ namespace Nikse.SubtitleEdit.Controls
                                 int n = begin + i;
                                 if (n <= end && n >= start)
                                     pen = penSelected;
-                                else if (IsSelectedIndex(n))
+                                else if (IsSelectedIndex(n, ref lastCurrentEnd))
                                     pen = penSelected;
                                 else
                                     pen = penNormal;
@@ -405,10 +413,10 @@ namespace Nikse.SubtitleEdit.Controls
                                 graphics.DrawLine(pen, x2, y, x3, newY);
                                 x2 = x3;
                                 y = newY;
-                                int n = begin + i;
+                                int n = (int)(begin + x3);
                                 if (n <= end && n >= start)
                                     pen = penSelected;
-                                else if (IsSelectedIndex(n))
+                                else if (IsSelectedIndex(n, ref lastCurrentEnd))
                                     pen = penSelected;
                                 else
                                     pen = penNormal;
