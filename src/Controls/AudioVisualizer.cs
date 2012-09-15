@@ -309,15 +309,17 @@ namespace Nikse.SubtitleEdit.Controls
 
         private bool IsSelectedIndex(int pos, ref int lastCurrentEnd)
         {
-            if (_selectedIndices == null)
-                return false;
-
             if (pos < lastCurrentEnd)
                 return true;
 
+            if (_selectedIndices == null)
+                return false;
+
             foreach (int index in _selectedIndices)
             {
-                var p = _subtitle.Paragraphs[index];
+                var p = _subtitle.GetParagraphOrDefault(index);
+                if (p == null)
+                    return false;
 
                 int start = (int)Math.Round(p.StartTime.TotalSeconds * _wavePeaks.Header.SampleRate * _zoomFactor);
                 int end = (int)Math.Round(p.EndTime.TotalSeconds * _wavePeaks.Header.SampleRate * _zoomFactor); 
