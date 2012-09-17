@@ -1138,7 +1138,7 @@ namespace Nikse.SubtitleEdit.Logic
                     Slow = "Slow",
                     Normal = "Normal",
                     Fast = "Fast",
-                    VeryFast = "Very fast",                    
+                    VeryFast = "Very fast",
                 },
             };
 

@@ -136,7 +136,7 @@ namespace Nikse.SubtitleEdit.Forms
         Keys _mainGoToPrevious = Keys.None;
         Keys _mainToggleFocus = Keys.None;
         Keys _mainListViewToggleDashes = Keys.None;
-        Keys _mainListViewAutoDuration = Keys.None;        
+        Keys _mainListViewAutoDuration = Keys.None;
         Keys _mainListViewCopyText = Keys.None;
         Keys _mainEditReverseStartAndEndingForRTL = Keys.None;
         Keys _waveformVerticalZoom = Keys.None;
@@ -1236,7 +1236,7 @@ namespace Nikse.SubtitleEdit.Forms
                             Left = x;
                             Top = y;
                         }
-                    }                    
+                    }
                 }
 
                 if (Configuration.Settings.General.StartSize == "Maximized")
@@ -1293,7 +1293,7 @@ namespace Nikse.SubtitleEdit.Forms
                 SubtitleListview1.Font = new Font(unicodeFontName, fontSize);
                 toolStripWaveControls.RenderMode = ToolStripRenderMode.System;
                 toolStripMenuItemSurroundWithMusicSymbols.Font = new Font(unicodeFontName, fontSize);
-            }            
+            }
         }
 
         private void InitializeLanguage()
@@ -2291,7 +2291,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     // Seungki end
 
-                  
+
                     textBoxSource.Text = _subtitle.ToText(format);
                     SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
                     if (SubtitleListview1.Items.Count > 0)
@@ -4697,7 +4697,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void ShowHistoryforUndoToolStripMenuItemClick(object sender, EventArgs e)
         {
             if (_subtitle != null && _subtitle.CanUndo)
-            {                
+            {
                 ReloadFromSourceView();
                 var showHistory = new ShowHistory();
                 showHistory.Initialize(_subtitle, _undoIndex);
@@ -5913,7 +5913,7 @@ namespace Nikse.SubtitleEdit.Forms
                     if (duration > 500)
                     {
                         p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + duration;
-                    }                                        
+                    }
                 }
                 SaveSubtitleListviewIndexes();
                 SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
@@ -5940,7 +5940,7 @@ namespace Nikse.SubtitleEdit.Forms
             SetDurationInSeconds(duration / 1000.0);
 
             p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + duration;
-            SubtitleListview1.SetDuration(i, p);            
+            SubtitleListview1.SetDuration(i, p);
         }
 
         private void SplitLineToolStripMenuItemClick(object sender, EventArgs e)
@@ -11595,7 +11595,7 @@ namespace Nikse.SubtitleEdit.Forms
             startNumberingFromToolStripMenuItem.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainToolsRenumber);
             removeTextForHearImparedToolStripMenuItem.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainToolsRemoveTextForHI);
             ChangeCasingToolStripMenuItem.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainToolsChangeCasing);
-            toolStripMenuItemShowOriginalInPreview.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainEditToggleTranslationOriginalInPreviews);            
+            toolStripMenuItemShowOriginalInPreview.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainEditToggleTranslationOriginalInPreviews);
 
             showhideVideoToolStripMenuItem.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainVideoShowHideVideo);
             _toggleVideoDockUndock = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainVideoToggleVideoControls);
@@ -11781,7 +11781,7 @@ namespace Nikse.SubtitleEdit.Forms
                                 toolStripMenuItemAutoTranslate.DropDownItems.Add(item);
                                 syncPluginCount++;
                             }
-                            
+
                             else if (string.Compare(actionType, "SpellCheck", true) == 0)
                             {
                                 if (syncPluginCount == 0)
@@ -12086,7 +12086,7 @@ namespace Nikse.SubtitleEdit.Forms
                 _subtitleListViewIndex = -1;
                 _subtitle.Renumber(startNumber);
                 SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
-            }            
+            }
             SubtitleListview1.SelectIndexAndEnsureVisible(index);
 
             textBoxListViewText.Focus();
@@ -15197,7 +15197,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void toolStripMenuItemRedo_Click(object sender, EventArgs e)
         {
             RedoLastAction();
-        }        
+        }
 
     }
 }

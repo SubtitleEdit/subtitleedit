@@ -127,7 +127,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         text = text.Replace("<br>", Environment.NewLine);
                         text = text.Replace("<BR />", Environment.NewLine);
                         text = text.Replace("<BR/>", Environment.NewLine);
-                        text = text.Replace("<BR>", Environment.NewLine);                       
+                        text = text.Replace("<BR>", Environment.NewLine);
                         subtitle.Paragraphs.Add(new Paragraph(DecodeTimeCode(start), DecodeTimeCode(end), text));
                     }
                 }
