@@ -219,6 +219,46 @@ namespace Nikse.SubtitleEdit.Logic
             return -1;
         }
 
+        public static int ShowSubtitle(List<Paragraph> paragraphs, Subtitle original, VideoPlayerContainer videoPlayerContainer)
+        {
+            int index = 0;
+            if (videoPlayerContainer.VideoPlayer != null)
+            {
+                double positionInMilliseconds = (videoPlayerContainer.VideoPlayer.CurrentPosition * 1000.0) + 15;
+                foreach (Paragraph p in paragraphs)
+                {
+                    if (p.StartTime.TotalMilliseconds <= positionInMilliseconds &&
+                        p.EndTime.TotalMilliseconds > positionInMilliseconds)
+                    {
+                        var op = Utilities.GetOriginalParagraph(index, p, original.Paragraphs);
+
+                        string text = p.Text.Replace("|", Environment.NewLine);
+                        if (op != null)
+                            text = text + Environment.NewLine + Environment.NewLine + op.Text.Replace("|", Environment.NewLine);
+
+                        bool isInfo = p == paragraphs[0] && p.StartTime.TotalMilliseconds == 0 && positionInMilliseconds > 3000;
+                        if (!isInfo)
+                        {
+                            if (videoPlayerContainer.LastParagraph != p)
+                            {
+                                videoPlayerContainer.SetSubtitleText(text, p);
+                                return index;
+                            }
+                            else if (videoPlayerContainer.SubtitleText != text)
+                            {
+                                videoPlayerContainer.SetSubtitleText(text, p);
+                            }
+                            return -1;
+                        }
+                    }
+                    index++;
+                }
+            }
+            if (!string.IsNullOrEmpty(videoPlayerContainer.SubtitleText))
+                videoPlayerContainer.SetSubtitleText(string.Empty, null);
+            return -1;
+        }
+
         public static string ReadTextFileViaUrlAndProxyIfAvailable(string url)
         {
             var wc = new WebClient { Proxy = GetProxy() };

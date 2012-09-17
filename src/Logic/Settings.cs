@@ -167,6 +167,8 @@ namespace Nikse.SubtitleEdit.Logic
         public Color CurrentDCinemaFontEffectColor { get; set; }
         public int CurrentDCinemaFontSize { get; set; }
 
+        public bool SamiDisplayTwoClassesAsTwoSubtitles { get; set; }
+
         public SubtitleSettings()
         {
             SsaFontName = "Arial";
@@ -177,6 +179,8 @@ namespace Nikse.SubtitleEdit.Logic
             DCinemaFontSize = 42;
             DCinemaBottomMargin = 8;
             DCinemaFadeUpDownTime = 5;
+
+            SamiDisplayTwoClassesAsTwoSubtitles = true;
         }
 
         public void InitializeDCinameSettings(bool smpte)
@@ -1261,6 +1265,9 @@ namespace Nikse.SubtitleEdit.Logic
                 subNode = node.SelectSingleNode("DCinemaFadeUpDownTime");
                 if (subNode != null)
                     settings.SubtitleSettings.DCinemaFadeUpDownTime = Convert.ToInt32(subNode.InnerText);
+                subNode = node.SelectSingleNode("SamiDisplayTwoClassesAsTwoSubtitles");
+                if (subNode != null)
+                    settings.SubtitleSettings.SamiDisplayTwoClassesAsTwoSubtitles = Convert.ToBoolean(subNode.InnerText);                
             }
 
             settings.Proxy = new Nikse.SubtitleEdit.Logic.ProxySettings();
@@ -2022,6 +2029,7 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("DCinemaFontSize", settings.SubtitleSettings.DCinemaFontSize.ToString());
             textWriter.WriteElementString("DCinemaBottomMargin", settings.SubtitleSettings.DCinemaBottomMargin.ToString());
             textWriter.WriteElementString("DCinemaFadeUpDownTime", settings.SubtitleSettings.DCinemaFadeUpDownTime.ToString());
+            textWriter.WriteElementString("SamiDisplayTwoClassesAsTwoSubtitles", settings.SubtitleSettings.SamiDisplayTwoClassesAsTwoSubtitles.ToString());            
             textWriter.WriteEndElement();
 
             textWriter.WriteStartElement("Proxy", "");
