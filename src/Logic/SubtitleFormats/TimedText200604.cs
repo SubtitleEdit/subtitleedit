@@ -190,12 +190,12 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     if (node.Attributes["end"] != null)
                     {
                         string end = node.Attributes["end"].InnerText;
-                        subtitle.Paragraphs.Add(new Paragraph(GetTimeCode(start), GetTimeCode(end), text));
+                        subtitle.Paragraphs.Add(new Paragraph(TimedText10.GetTimeCode(start), TimedText10.GetTimeCode(end), text));
                     }
                     else if (node.Attributes["dur"] != null)
                     {
-                        TimeCode duration = GetTimeCode(node.Attributes["dur"].InnerText);
-                        TimeCode startTime = GetTimeCode(start);
+                        TimeCode duration = TimedText10.GetTimeCode(node.Attributes["dur"].InnerText);
+                        TimeCode startTime = TimedText10.GetTimeCode(start);
                         TimeCode endTime = new TimeCode(TimeSpan.FromMilliseconds(startTime.TotalMilliseconds + duration.TotalMilliseconds));
                         subtitle.Paragraphs.Add(new Paragraph(startTime, endTime, text));
                     }
@@ -222,23 +222,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             }
             subtitle.Renumber(1);
         }
-
-        private static TimeCode GetTimeCode(string s)
-        {
-            TimeSpan ts;
-            s = s.ToLower().Trim();
-            if (s.EndsWith("s"))
-            {
-                s = s.TrimEnd('s');
-                ts = TimeSpan.FromSeconds(double.Parse(s));
-            }
-            else
-            {
-                string[] parts = s.Split(new[] { ':', '.', ',' });
-                ts = new TimeSpan(0, int.Parse(parts[0]), int.Parse(parts[1]), int.Parse(parts[2]), int.Parse(parts[3]));
-            }
-            return new TimeCode(ts);
-        }
+       
     }
 }
 
