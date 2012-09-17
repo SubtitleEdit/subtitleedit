@@ -81,6 +81,7 @@
             this.toolStripMenuItemOpenContainingFolder = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemCompare = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemStatistics = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemPlugins = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripMenuItemImportDvdSubtitles = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemSubIdx = new System.Windows.Forms.ToolStripMenuItem();
@@ -800,6 +801,7 @@
             this.toolStripMenuItemOpenContainingFolder,
             this.toolStripMenuItemCompare,
             this.toolStripMenuItemStatistics,
+            this.toolStripMenuItemPlugins,
             this.toolStripSeparator1,
             this.toolStripMenuItemImportDvdSubtitles,
             this.toolStripMenuItemSubIdx,
@@ -940,6 +942,13 @@
             this.toolStripMenuItemStatistics.Size = new System.Drawing.Size(334, 22);
             this.toolStripMenuItemStatistics.Text = "Statistics...";
             this.toolStripMenuItemStatistics.Click += new System.EventHandler(this.toolStripMenuItemStatistics_Click);
+            // 
+            // toolStripMenuItemPlugins
+            // 
+            this.toolStripMenuItemPlugins.Name = "toolStripMenuItemPlugins";
+            this.toolStripMenuItemPlugins.Size = new System.Drawing.Size(334, 22);
+            this.toolStripMenuItemPlugins.Text = "Plugins...";
+            this.toolStripMenuItemPlugins.Click += new System.EventHandler(this.toolStripMenuItemPlugins_Click);
             // 
             // toolStripSeparator1
             // 
@@ -1170,12 +1179,14 @@
             this.toolStripMenuItemUndo.Name = "toolStripMenuItemUndo";
             this.toolStripMenuItemUndo.Size = new System.Drawing.Size(305, 22);
             this.toolStripMenuItemUndo.Text = "Undo";
+            this.toolStripMenuItemUndo.Click += new System.EventHandler(this.toolStripMenuItemUndo_Click);
             // 
             // toolStripMenuItemRedo
             // 
             this.toolStripMenuItemRedo.Name = "toolStripMenuItemRedo";
             this.toolStripMenuItemRedo.Size = new System.Drawing.Size(305, 22);
             this.toolStripMenuItemRedo.Text = "Redo";
+            this.toolStripMenuItemRedo.Click += new System.EventHandler(this.toolStripMenuItemRedo_Click);
             // 
             // showHistoryforUndoToolStripMenuItem
             // 
@@ -4317,6 +4328,7 @@
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemUndo;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemRedo;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemShowOriginalInPreview;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemPlugins;
     }
 }
 

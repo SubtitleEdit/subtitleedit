@@ -312,24 +312,26 @@ namespace Nikse.SubtitleEdit.Controls
             if (pos < lastCurrentEnd)
                 return true;
 
-            if (_selectedIndices == null)
+            if (_selectedIndices == null || _subtitle == null)
                 return false;
 
             foreach (int index in _selectedIndices)
             {
-                var p = _subtitle.GetParagraphOrDefault(index);
-                if (p == null)
-                    return false;
-
-                int start = (int)Math.Round(p.StartTime.TotalSeconds * _wavePeaks.Header.SampleRate * _zoomFactor);
-                int end = (int)Math.Round(p.EndTime.TotalSeconds * _wavePeaks.Header.SampleRate * _zoomFactor); 
-
-                if (pos >= start && pos <= end)
+                try
                 {
-                    lastCurrentEnd = end;
-                    return true;
+                    var p = _subtitle.Paragraphs[index];
+                    int start = (int)Math.Round(p.StartTime.TotalSeconds * _wavePeaks.Header.SampleRate * _zoomFactor);
+                    int end = (int)Math.Round(p.EndTime.TotalSeconds * _wavePeaks.Header.SampleRate * _zoomFactor);
+                    if (pos >= start && pos <= end)
+                    {
+                        lastCurrentEnd = end;
+                        return true;
+                    }
                 }
-
+                catch
+                {
+                    return false;
+                }
             }
             return false;
         }

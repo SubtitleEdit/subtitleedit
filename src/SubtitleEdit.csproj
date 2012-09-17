@@ -332,6 +332,12 @@
     <Compile Include="Forms\PacEncoding.Designer.cs">
       <DependentUpon>PacEncoding.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\PluginsGet.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\PluginsGet.Designer.cs">
+      <DependentUpon>PluginsGet.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\RestoreAutoBackup.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -992,6 +998,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\PacEncoding.resx">
       <DependentUpon>PacEncoding.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\PluginsGet.resx">
+      <DependentUpon>PluginsGet.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\RestoreAutoBackup.resx">
       <DependentUpon>RestoreAutoBackup.cs</DependentUpon>
