@@ -472,12 +472,12 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 pText.Append("</bold>");
         }
 
-        private static TimeCode GetTimeCode(string s)
+        public static TimeCode GetTimeCode(string s)
         {
             if (s.EndsWith("s"))
             {
                 s = s.TrimEnd('s');
-                TimeSpan ts = TimeSpan.FromSeconds(double.Parse(s));
+                TimeSpan ts = TimeSpan.FromSeconds(double.Parse(s.Replace(",", "."), System.Globalization.CultureInfo.InvariantCulture));
                 return new TimeCode(ts);
             }
             string[] parts = s.Split(new[] { ':', '.', ',' });
