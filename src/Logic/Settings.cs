@@ -1267,7 +1267,7 @@ namespace Nikse.SubtitleEdit.Logic
                     settings.SubtitleSettings.DCinemaFadeUpDownTime = Convert.ToInt32(subNode.InnerText);
                 subNode = node.SelectSingleNode("SamiDisplayTwoClassesAsTwoSubtitles");
                 if (subNode != null)
-                    settings.SubtitleSettings.SamiDisplayTwoClassesAsTwoSubtitles = Convert.ToBoolean(subNode.InnerText);                
+                    settings.SubtitleSettings.SamiDisplayTwoClassesAsTwoSubtitles = Convert.ToBoolean(subNode.InnerText);
             }
 
             settings.Proxy = new Nikse.SubtitleEdit.Logic.ProxySettings();
@@ -1576,7 +1576,7 @@ namespace Nikse.SubtitleEdit.Logic
                     settings.Shortcuts.GeneralSwitchOriginalAndTranslation = subNode.InnerText;
                 subNode = node.SelectSingleNode("GeneralMergeOriginalAndTranslation");
                 if (subNode != null)
-                    settings.Shortcuts.GeneralMergeOriginalAndTranslation = subNode.InnerText;               
+                    settings.Shortcuts.GeneralMergeOriginalAndTranslation = subNode.InnerText;
                 subNode = node.SelectSingleNode("MainFileNew");
                 if (subNode != null)
                     settings.Shortcuts.MainFileNew = subNode.InnerText;
@@ -1636,7 +1636,7 @@ namespace Nikse.SubtitleEdit.Logic
                     settings.Shortcuts.MainToolsAutoDuration = subNode.InnerText;
                 subNode = node.SelectSingleNode("MainToolsToggleTranslationOriginalInPreviews");
                 if (subNode != null)
-                    settings.Shortcuts.MainEditToggleTranslationOriginalInPreviews = subNode.InnerText;                
+                    settings.Shortcuts.MainEditToggleTranslationOriginalInPreviews = subNode.InnerText;
                 subNode = node.SelectSingleNode("MainVideoPause");
                 if (subNode != null)
                     settings.Shortcuts.MainVideoPause = subNode.InnerText;
@@ -2029,7 +2029,7 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("DCinemaFontSize", settings.SubtitleSettings.DCinemaFontSize.ToString());
             textWriter.WriteElementString("DCinemaBottomMargin", settings.SubtitleSettings.DCinemaBottomMargin.ToString());
             textWriter.WriteElementString("DCinemaFadeUpDownTime", settings.SubtitleSettings.DCinemaFadeUpDownTime.ToString());
-            textWriter.WriteElementString("SamiDisplayTwoClassesAsTwoSubtitles", settings.SubtitleSettings.SamiDisplayTwoClassesAsTwoSubtitles.ToString());            
+            textWriter.WriteElementString("SamiDisplayTwoClassesAsTwoSubtitles", settings.SubtitleSettings.SamiDisplayTwoClassesAsTwoSubtitles.ToString());
             textWriter.WriteEndElement();
 
             textWriter.WriteStartElement("Proxy", "");
@@ -2170,7 +2170,7 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("MainToolsRemoveTextForHI", settings.Shortcuts.MainToolsRemoveTextForHI);
             textWriter.WriteElementString("MainToolsChangeCasing", settings.Shortcuts.MainToolsChangeCasing);
             textWriter.WriteElementString("MainToolsAutoDuration", settings.Shortcuts.MainToolsAutoDuration);
-            textWriter.WriteElementString("MainToolsToggleTranslationOriginalInPreviews", settings.Shortcuts.MainEditToggleTranslationOriginalInPreviews);            
+            textWriter.WriteElementString("MainToolsToggleTranslationOriginalInPreviews", settings.Shortcuts.MainEditToggleTranslationOriginalInPreviews);
             textWriter.WriteElementString("MainVideoPause", settings.Shortcuts.MainVideoPause);
             textWriter.WriteElementString("MainVideoPlayPauseToggle", settings.Shortcuts.MainVideoPlayPauseToggle);
             textWriter.WriteElementString("MainVideoShowHideVideo", settings.Shortcuts.MainVideoShowHideVideo);

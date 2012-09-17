@@ -521,7 +521,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                         const string paragraphWriteFormat = "{0} , {1} , {2}\r\n";
                         const string timeFormat = "{0:00}:{1:00}:{2:00}:{3:00}";
-                       
+
                         double factor = (1000.0 / Configuration.Settings.General.CurrentFrameRate);
                         string startTime = string.Format(timeFormat, param.P.StartTime.Hours, param.P.StartTime.Minutes, param.P.StartTime.Seconds, (int)Math.Round(param.P.StartTime.Milliseconds / factor));
                         string endTime = string.Format(timeFormat, param.P.EndTime.Hours, param.P.EndTime.Minutes, param.P.EndTime.Seconds, (int)Math.Round(param.P.EndTime.Milliseconds / factor));
