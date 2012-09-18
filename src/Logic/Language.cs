@@ -52,6 +52,7 @@ namespace Nikse.SubtitleEdit.Logic
         public LanguageStructure.RemoveTextFromHearImpaired RemoveTextFromHearImpaired;
         public LanguageStructure.ReplaceDialog ReplaceDialog;
         public LanguageStructure.RestoreAutoBackup RestoreAutoBackup;
+        public LanguageStructure.SeekSilence SeekSilence;
         public LanguageStructure.SetMinimumDisplayTimeBetweenParagraphs SetMinimumDisplayTimeBetweenParagraphs;
         public LanguageStructure.SetSyncPoint SetSyncPoint;
         public LanguageStructure.Settings Settings;
@@ -1257,6 +1258,16 @@ can edit in same subtitle file (collaboration)",
                 FileName = "File name",
                 Extension = "Extension",
                 NoBackedUpFilesFound = "No backed up files found!",
+            };
+
+            SeekSilence = new LanguageStructure.SeekSilence
+            {
+                Title = "Seek silence",
+                SearchDirection = "Search direction",
+                Forward = "Forward",
+                Back = "Back",
+                LengthInSeconds = "Silence must be at at least (seconds)",
+                MaxVolume = "Volume must be below",
             };
 
             SetMinimumDisplayTimeBetweenParagraphs = new LanguageStructure.SetMinimumDisplayTimeBetweenParagraphs

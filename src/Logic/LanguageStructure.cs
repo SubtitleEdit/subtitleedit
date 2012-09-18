@@ -1179,6 +1179,16 @@
             public string NoBackedUpFilesFound { get; set; }
         }
 
+        public class SeekSilence
+        {
+            public string Title { get; set; }
+            public string SearchDirection { get; set; }
+            public string Forward { get; set; }
+            public string Back { get; set; }
+            public string LengthInSeconds { get; set; }
+            public string MaxVolume { get; set; }
+        }
+
         public class SetMinimumDisplayTimeBetweenParagraphs
         {
             public string Title { get; set; }

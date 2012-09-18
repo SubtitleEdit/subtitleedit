@@ -394,6 +394,7 @@
             this.imageListPlayRate = new System.Windows.Forms.ImageList(this.components);
             this.timerTextUndo = new System.Windows.Forms.Timer(this.components);
             this.timerAlternateTextUndo = new System.Windows.Forms.Timer(this.components);
+            this.seekSilenceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
@@ -3141,9 +3142,10 @@
             this.showOnlyWaveformToolStripMenuItem,
             this.showOnlySpectrogramToolStripMenuItem,
             this.toolStripSeparatorGuessTimeCodes,
-            this.guessTimeCodesToolStripMenuItem});
+            this.guessTimeCodesToolStripMenuItem,
+            this.seekSilenceToolStripMenuItem});
             this.contextMenuStripWaveForm.Name = "contextMenuStripWaveForm";
-            this.contextMenuStripWaveForm.Size = new System.Drawing.Size(275, 264);
+            this.contextMenuStripWaveForm.Size = new System.Drawing.Size(275, 308);
             this.contextMenuStripWaveForm.Opening += new System.ComponentModel.CancelEventHandler(this.ContextMenuStripWaveFormOpening);
             // 
             // addParagraphHereToolStripMenuItem
@@ -3888,6 +3890,13 @@
             this.timerAlternateTextUndo.Interval = 700;
             this.timerAlternateTextUndo.Tick += new System.EventHandler(this.TimerAlternateTextUndoTick);
             // 
+            // seekSilenceToolStripMenuItem
+            // 
+            this.seekSilenceToolStripMenuItem.Name = "seekSilenceToolStripMenuItem";
+            this.seekSilenceToolStripMenuItem.Size = new System.Drawing.Size(274, 22);
+            this.seekSilenceToolStripMenuItem.Text = "Seek silence...";
+            this.seekSilenceToolStripMenuItem.Click += new System.EventHandler(this.seekSilenceToolStripMenuItem_Click);
+            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -4329,6 +4338,7 @@
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemRedo;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemShowOriginalInPreview;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemPlugins;
+        private System.Windows.Forms.ToolStripMenuItem seekSilenceToolStripMenuItem;
     }
 }
 
