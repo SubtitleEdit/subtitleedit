@@ -267,13 +267,13 @@ namespace Nikse.SubtitleEdit.Forms
             foreach (string style in styles)
             {
                 SsaStyle ssaStyle = GetSsaStyle(style);
-                AddStyle(ssaStyle);
+                AddStyle(listViewStyles, ssaStyle, _subtitle, _isSubStationAlpha);
             }
             if (listViewStyles.Items.Count > 0)
                 listViewStyles.Items[0].Selected = true;
         }
 
-        private void AddStyle(SsaStyle ssaStyle)
+        public static void AddStyle(ListView lv, SsaStyle ssaStyle, Subtitle subtitle, bool isSubstationAlpha)
         {
             var item = new ListViewItem(ssaStyle.Name.Trim());
             item.UseItemStyleForSubItems = false;
@@ -285,7 +285,7 @@ namespace Nikse.SubtitleEdit.Forms
             item.SubItems.Add(subItem);
 
             int count = 0;
-            foreach (Paragraph p in _subtitle.Paragraphs)
+            foreach (Paragraph p in subtitle.Paragraphs)
             {
                 if (string.IsNullOrEmpty(p.Extra) && ssaStyle.Name.TrimStart('*') == "Default")
                     count++;
@@ -300,13 +300,13 @@ namespace Nikse.SubtitleEdit.Forms
             item.SubItems.Add(subItem);
 
             subItem = new ListViewItem.ListViewSubItem(item, string.Empty);
-            if (_isSubStationAlpha)
+            if (isSubstationAlpha)
                 subItem.BackColor = ssaStyle.Background;
             else
                 subItem.BackColor = ssaStyle.Outline;
             item.SubItems.Add(subItem);
 
-            listViewStyles.Items.Add(item);
+            lv.Items.Add(item);
         }
 
         private void SetSsaStyle(string styleName, string propertyName, string propertyValue)
@@ -647,7 +647,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
 
                 _doUpdate = false;
-                AddStyle(style);
+                AddStyle(listViewStyles, style, _subtitle, _isSubStationAlpha);
                 listViewStyles.Items[listViewStyles.Items.Count - 1].Selected = true;
                 listViewStyles.Items[listViewStyles.Items.Count - 1].EnsureVisible();
                 listViewStyles.Items[listViewStyles.Items.Count - 1].Focused = true;
@@ -708,7 +708,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             _doUpdate = false;
-            AddStyle(style);
+            AddStyle(listViewStyles, style, _subtitle, _isSubStationAlpha);
             SsaStyle oldStyle = GetSsaStyle(listViewStyles.Items[0].Text);
             AddStyleToHeader(style, oldStyle);
             listViewStyles.Items[listViewStyles.Items.Count - 1].Selected = true;
@@ -720,6 +720,7 @@ namespace Nikse.SubtitleEdit.Forms
             SetControlsFromStyle(style);
             listViewStyles_SelectedIndexChanged(null, null);
         }
+
 
         private void textBoxStyleName_TextChanged(object sender, EventArgs e)
         {
@@ -1106,7 +1107,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonImport_Click(object sender, EventArgs e)
         {
-            openFileDialogImport.Title = "Import style from file...";
+            openFileDialogImport.Title = Configuration.Settings.Language.SubStationAlphaStyles.ImportStyleFromFile;
             openFileDialogImport.FileName = string.Empty;
             if (_isSubStationAlpha)
                 openFileDialogImport.Filter = new SubStationAlpha().FriendlyName + "|*.ssa|" + Configuration.Settings.Language.General.AllFiles + "|*.*";
@@ -1115,6 +1116,45 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (openFileDialogImport.ShowDialog(this) == DialogResult.OK)
             {
+                Encoding encoding = null;
+                var s = new Subtitle();
+                var format = s.LoadSubtitle(openFileDialogImport.FileName, out encoding, null);
+                if (format != null && format.HasStyleSupport)
+                {
+                    var styles = AdvancedSubStationAlpha.GetStylesFromHeader(s.Header);
+                    if (styles.Count > 0)
+                    {
+                        var cs = new ChooseStyle(s, format.GetType() == typeof(SubStationAlpha));
+                        if (cs.ShowDialog(this) == DialogResult.OK && cs.SelectedStyleName != null)
+                        {
+                            SsaStyle style = AdvancedSubStationAlpha.GetSsaStyle(cs.SelectedStyleName, s.Header);
+                            if (GetSsaStyle(style.Name).LoadedFromHeader)
+                            {
+                                int count = 2;
+                                bool doRepeat = true;
+                                while (doRepeat)
+                                {
+                                    style = GetSsaStyle(Configuration.Settings.Language.SubStationAlphaStyles.New + count.ToString());
+                                    doRepeat = GetSsaStyle(style.Name).LoadedFromHeader;
+                                    count++;
+                                }
+                            }
+
+                            _doUpdate = false;
+                            AddStyle(listViewStyles, style, _subtitle, _isSubStationAlpha);
+                            SsaStyle oldStyle = GetSsaStyle(listViewStyles.Items[0].Text);
+                            Header += Environment.NewLine + style.RawLine;
+                            listViewStyles.Items[listViewStyles.Items.Count - 1].Selected = true;
+                            listViewStyles.Items[listViewStyles.Items.Count - 1].EnsureVisible();
+                            listViewStyles.Items[listViewStyles.Items.Count - 1].Focused = true;
+                            textBoxStyleName.Text = style.Name;
+                            textBoxStyleName.Focus();
+                            _doUpdate = true;
+                            SetControlsFromStyle(style);
+                            listViewStyles_SelectedIndexChanged(null, null);
+                        }
+                    }
+                }
             }
         }
 

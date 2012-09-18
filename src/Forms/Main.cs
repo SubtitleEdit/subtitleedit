@@ -11706,7 +11706,7 @@ namespace Nikse.SubtitleEdit.Forms
             foreach (string pluginFileName in pluginFiles)
             {
                 Type pluginType = null;
-                System.Reflection.Assembly assembly = System.Reflection.Assembly.LoadFile(pluginFileName);
+                System.Reflection.Assembly assembly = System.Reflection.Assembly.Load(System.IO.File.ReadAllBytes(pluginFileName));               
                 string objectName = Path.GetFileNameWithoutExtension(pluginFileName);
                 if (assembly != null)
                 {
@@ -11813,9 +11813,9 @@ namespace Nikse.SubtitleEdit.Forms
         {
             try
             {
-                ToolStripItem item = (ToolStripItem) sender;
+                var item = (ToolStripItem) sender;
                 Type pluginType = null;
-                System.Reflection.Assembly assembly = System.Reflection.Assembly.LoadFile(item.Tag.ToString());
+                System.Reflection.Assembly assembly = System.Reflection.Assembly.Load(System.IO.File.ReadAllBytes(item.Tag.ToString()));
                 if (assembly != null)
                 {
                     string objectName = Path.GetFileNameWithoutExtension(item.Tag.ToString());
@@ -11828,19 +11828,24 @@ namespace Nikse.SubtitleEdit.Forms
                     pi = pluginType.GetProperty("Version");
                     string version = (string)pi.GetValue(pluginObject, null);
 
-
-                    Subtitle temp = new Subtitle(_subtitle);
+                    
+                    var temp = new Subtitle(_subtitle);
                     string text = temp.ToText(new SubRip());
                     string pluginResult = (string)mi.Invoke(pluginObject, new object[] { this, text, 25.0, _fileName, "", "" });
 
                     if (!string.IsNullOrEmpty(pluginResult) && pluginResult.Length > 10 && text != pluginResult)
                     {
-                        _subtitle.MakeHistoryForUndo(string.Format("Before running plugin: {0} {1}", name, version), GetCurrentSubtitleFormat(), _fileDateTime, _subtitleAlternate, _subtitleAlternateFileName, _subtitleListViewIndex, textBoxListViewText.SelectionStart, textBoxListViewTextAlternate.SelectionStart);
+                        MakeHistoryForUndo(string.Format("Before running plugin: {0} {1}", name, version));
                         string[] lineArray = pluginResult.Split(Environment.NewLine.ToCharArray());
                         List<string> lines = new List<string>();
                         foreach (string line in lineArray)
                             lines.Add(line);
-                        new SubRip().LoadSubtitle(_subtitle, lines, _fileName);
+                        var s = new Subtitle();
+                        new SubRip().LoadSubtitle(s, lines, null);
+                        _subtitle.Paragraphs.Clear();
+                        foreach (Paragraph p in s.Paragraphs)
+                            _subtitle.Paragraphs.Add(p);
+
                         SaveSubtitleListviewIndexes();
                         SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
                         RestoreSubtitleListviewIndexes();

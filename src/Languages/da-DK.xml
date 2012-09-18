@@ -554,6 +554,7 @@
         <GoToSubtitleNumber>&amp;Gå til undertekst nummer...</GoToSubtitleNumber>
         <RightToLeftMode>Højre-mod-venstre mode</RightToLeftMode>
         <ReverseRightToLeftStartEnd>Byt rundt på højre-mod-venstre start/slut</ReverseRightToLeftStartEnd>
+        <ShowOriginalTextInAudioAndVideoPreview>Vis oprindelig tekst i audio/video previews</ShowOriginalTextInAudioAndVideoPreview>
       </Edit>
       <Tools>
         <Title>Værktøj</Title>
@@ -577,7 +578,6 @@
         <TextNumberOfLines>Tekst - antal linjer</TextNumberOfLines>
         <TextNumberOfCharactersPerSeconds>Tekst - antallet af tegn/sek</TextNumberOfCharactersPerSeconds>
         <WordsPerMinute>Tekst - ord i minuttet (WPM)</WordsPerMinute>
-        <ShowOriginalTextInAudioAndVideoPreview>Vis oprindelig tekst i audio/video previews</ShowOriginalTextInAudioAndVideoPreview>
         <MakeNewEmptyTranslationFromCurrentSubtitle>Dan ny tom oversættelse fra aktuelle undertekst</MakeNewEmptyTranslationFromCurrentSubtitle>
         <SplitSubtitle>Split undertekst...</SplitSubtitle>
         <AppendSubtitle>Tilføj/append undertekst...</AppendSubtitle>
@@ -1063,6 +1063,14 @@ Fortsæt?</SubtitleAppendPrompt>
     <Extension>Type</Extension>
     <NoBackedUpFilesFound>Ingen sikkerhedskopierede filer fundet!</NoBackedUpFilesFound>
   </RestoreAutoBackup>
+  <SeekSilence>
+    <Title>Søg efter tavshed</Title>
+    <SearchDirection>Søge retning</SearchDirection>
+    <Forward>Fremad</Forward>
+    <Back>Tilbage</Back>
+    <LengthInSeconds>Tavshed skal være på mindst (sekunder)</LengthInSeconds>
+    <MaxVolume>Volumen skal være under</MaxVolume>
+  </SeekSilence>
   <SetMinimumDisplayTimeBetweenParagraphs>
     <Title>Mindste visningstid mellem tekster</Title>
     <PreviewLinesModifiedX>Resultat - antal linier rettet: {0}</PreviewLinesModifiedX>
@@ -1264,6 +1272,7 @@ Fortsæt?</SubtitleAppendPrompt>
     <MergeOriginalAndTranslation>Flet original og oversættelse</MergeOriginalAndTranslation>
     <ShortcutIsAlreadyDefinedX>Genvej allerede defineret:
 {0}</ShortcutIsAlreadyDefinedX>
+    <ToggleTranslationAndOriginalInPreviews>Skift mellem oversættelse og original i video/audio preview</ToggleTranslationAndOriginalInPreviews>
   </Settings>
   <ShowEarlierLater>
     <Title>Vis valgte linjer tidligere/senere</Title>

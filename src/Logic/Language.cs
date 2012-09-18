@@ -1673,6 +1673,8 @@ can edit in same subtitle file (collaboration)",
                 CopyXOfY = "Copy {0} of {1}",
                 Remove = "Remove",
                 RemoveAll = "Remove all",
+                ImportStyleFromFile = "Import style from file...",
+                ChooseStyle = "Choose style to import",
             };
 
             PointSync = new LanguageStructure.PointSync
