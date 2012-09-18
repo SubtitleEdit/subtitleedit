@@ -1592,6 +1592,8 @@
             public string New { get; set; }
             public string Remove { get; set; }
             public string RemoveAll { get; set; }
+            public string ImportStyleFromFile { get; set; }
+            public string ChooseStyle { get; set; }
         }
 
         public class PointSync

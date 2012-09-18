@@ -194,6 +194,12 @@
     <Compile Include="Forms\ChooseResolution.Designer.cs">
       <DependentUpon>ChooseResolution.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\ChooseStyle.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ChooseStyle.Designer.cs">
+      <DependentUpon>ChooseStyle.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\Compare.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -784,6 +790,7 @@
     <Compile Include="Logic\SubtitleFormats\UnknownSubtitle25.cs" />
     <Compile Include="Logic\SubtitleFormats\UnknownSubtitle26.cs" />
     <Compile Include="Logic\SubtitleFormats\UnknownSubtitle27.cs" />
+    <Compile Include="Logic\SubtitleFormats\UnknownSubtitle28.cs" />
     <Compile Include="Logic\SubtitleFormats\UnknownSubtitle5.cs" />
     <Compile Include="Logic\SubtitleFormats\OpenDvt.cs" />
     <Compile Include="Logic\SubtitleFormats\AbcIViewer.cs" />
@@ -935,6 +942,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\ChooseResolution.resx">
       <DependentUpon>ChooseResolution.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ChooseStyle.resx">
+      <DependentUpon>ChooseStyle.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\DCinemaPropertiesInterop.resx">
       <DependentUpon>DCinemaPropertiesInterop.cs</DependentUpon>

@@ -259,7 +259,6 @@
             this.buttonImport.TabIndex = 5;
             this.buttonImport.Text = "Import...";
             this.buttonImport.UseVisualStyleBackColor = true;
-            this.buttonImport.Visible = false;
             this.buttonImport.Click += new System.EventHandler(this.buttonImport_Click);
             // 
             // buttonCopy

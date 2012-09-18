@@ -2,7 +2,7 @@
 
 namespace Nikse.SubtitleEdit.Logic
 {
-    internal class SsaStyle
+    public class SsaStyle
     {
         public string Name { get; set; }
         public string FontName { get; set; }
