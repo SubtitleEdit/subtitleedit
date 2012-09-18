@@ -15199,5 +15199,24 @@ namespace Nikse.SubtitleEdit.Forms
             RedoLastAction();
         }
 
+        private void seekSilenceToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (audioVisualizer == null)
+                return;
+
+            var form = new SeekSilence();
+            if (form.ShowDialog(this) == DialogResult.OK)
+            {
+                if (form.SeekForward)
+                {
+                    audioVisualizer.FindDataBelowThresshold(form.VolumeBelow, form.SecondsDuration);
+                }
+                else
+                {
+                    audioVisualizer.FindDataBelowThressholdBack(form.VolumeBelow, form.SecondsDuration);
+                }                                
+            }
+        }
+
     }
 }

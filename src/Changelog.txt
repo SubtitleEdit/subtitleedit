@@ -56,6 +56,7 @@ Subtitle Edit Changelog
    * Can now read SCC with ";" in time code - thx Thane
    * Crash when splitting an empty line - thx Pimmetje
    * Fixed "Timed Text" time codes with comma in seconds - thx Steffan
+   * Fixed insert line via F9 or waveform in network mode - thx Martin
 
 
 3.2.8 (3rd June 2012)
