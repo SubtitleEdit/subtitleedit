@@ -676,6 +676,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private string RemoveInterjections(string text)
         {
+            string oldText = text;
             string[] arr = Configuration.Settings.Tools.Interjections.Split(";".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
             List<string> list = new List<string>();
             foreach (string s in arr)
@@ -686,7 +687,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (!list.Contains(lower))
                     list.Add(lower);
             }
-
+            
             bool doRepeat = true;
             while (doRepeat)
             {
@@ -736,6 +737,17 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
             }
+            arr = text.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+            if (text != oldText && arr.Length == 2)
+            {
+                if (arr[0] == "-" && arr[1] == "-")
+                    return string.Empty;
+                if (arr[0].StartsWith("-") && arr[0].Length > 1 && arr[1] == "-")
+                    return arr[0].Remove(0, 1).Trim();
+                if (arr[1].StartsWith("-") && arr[1].Length > 1 && arr[0] == "-")
+                    return arr[1].Remove(0, 1).Trim();
+            }
+
             return text;
         }
 
