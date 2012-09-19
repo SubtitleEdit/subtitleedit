@@ -428,16 +428,15 @@ namespace Nikse.SubtitleEdit.Forms
                 _doUpdate = true;
                 groupBoxProperties.Enabled = true;
                 GeneratePreview();
-                if (listViewStyles.SelectedItems[0].Index == 0)
-                {
-                    buttonRemove.Enabled = false;
-                    textBoxStyleName.Enabled = false;
-                }
-                else
-                {
-                    buttonRemove.Enabled = true;
-                    textBoxStyleName.Enabled = true;
-                }
+                //if (listViewStyles.SelectedItems[0].Index == 0)
+                //{
+                //    textBoxStyleName.Enabled = false;
+                //}
+                //else
+                //{
+                //    textBoxStyleName.Enabled = true;
+                //}
+                buttonRemove.Enabled = listViewStyles.Items.Count > 1;
             }
             else
             {
@@ -1131,19 +1130,31 @@ namespace Nikse.SubtitleEdit.Forms
                             if (GetSsaStyle(style.Name).LoadedFromHeader)
                             {
                                 int count = 2;
-                                bool doRepeat = true;
+                                bool doRepeat = GetSsaStyle(style.Name + count.ToString()).LoadedFromHeader;
                                 while (doRepeat)
                                 {
-                                    style = GetSsaStyle(Configuration.Settings.Language.SubStationAlphaStyles.New + count.ToString());
-                                    doRepeat = GetSsaStyle(style.Name).LoadedFromHeader;
+                                    doRepeat = GetSsaStyle(style.Name + count.ToString()).LoadedFromHeader;
                                     count++;
                                 }
+                                style.RawLine = style.RawLine.Replace(" " + style.Name + ",", " " + style.Name + count.ToString() + ",");
+                                style.Name = style.Name + count.ToString();
                             }
 
                             _doUpdate = false;
                             AddStyle(listViewStyles, style, _subtitle, _isSubStationAlpha);
                             SsaStyle oldStyle = GetSsaStyle(listViewStyles.Items[0].Text);
-                            Header += Environment.NewLine + style.RawLine;
+                            Header = Header.Trim();
+                            if (Header.EndsWith("[Events]"))
+                            {
+                                Header = Header.Substring(0, Header.Length - "[Events]".Length).Trim();
+                                Header += Environment.NewLine + style.RawLine;
+                                Header += Environment.NewLine + Environment.NewLine + "[Events]" + Environment.NewLine;
+                            }
+                            else
+                            {
+                                Header = Header.Trim() + Environment.NewLine + style.RawLine + Environment.NewLine;
+                            }
+                            
                             listViewStyles.Items[listViewStyles.Items.Count - 1].Selected = true;
                             listViewStyles.Items[listViewStyles.Items.Count - 1].EnsureVisible();
                             listViewStyles.Items[listViewStyles.Items.Count - 1].Focused = true;

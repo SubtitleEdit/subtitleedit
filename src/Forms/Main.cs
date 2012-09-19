@@ -14840,7 +14840,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             var formatType = GetCurrentSubtitleFormat().GetType();
             if (formatType == typeof(AdvancedSubStationAlpha) || formatType == typeof(SubStationAlpha))
-            {
+            {                
                 var styles = new SubStationAlphaStyles(_subtitle, GetCurrentSubtitleFormat());
                 if (styles.ShowDialog(this) == DialogResult.OK)
                     _subtitle.Header = styles.Header;
