@@ -393,7 +393,7 @@ namespace Nikse.SubtitleEdit.Forms
                 format = new AdvancedSubStationAlpha();
             var sub = new Subtitle();
             string text = format.ToText(sub, string.Empty);
-            string[] lineArray = text.Split(Environment.NewLine.ToCharArray());
+            string[] lineArray = text.Replace(Environment.NewLine, "\n").Split('\n');
             var lines = new List<string>();
             foreach (string line in lineArray)
                 lines.Add(line);
@@ -671,7 +671,7 @@ namespace Nikse.SubtitleEdit.Forms
                     int i = indexOfEvents - 1;
                     while (i > 0 && Environment.NewLine.Contains(Header[i].ToString()))
                         i--;
-                    Header = Header.Insert(i, Environment.NewLine + newLine);
+                    Header = Header.Insert(i+1, Environment.NewLine + newLine);
                 }
                 else
                 {

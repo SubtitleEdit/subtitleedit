@@ -6531,20 +6531,20 @@ namespace Nikse.SubtitleEdit.Forms
                 int firstSelectedIndex = SubtitleListview1.SelectedItems[0].Index;
 
                 Paragraph prevParagraph = _subtitle.GetParagraphOrDefault(firstSelectedIndex - 1);
-                if (prevParagraph != null && prevParagraph.EndTime.TotalMilliseconds > startTime.TotalMilliseconds)
+                if (prevParagraph != null && prevParagraph.EndTime.TotalMilliseconds > startTime.TotalMilliseconds && Configuration.Settings.Tools.ListViewSyntaxColorOverlap)
                     labelStartTimeWarning.Text = string.Format(_languageGeneral.OverlapPreviousLineX, prevParagraph.EndTime.TotalSeconds - startTime.TotalSeconds);
 
                 Paragraph nextParagraph = _subtitle.GetParagraphOrDefault(firstSelectedIndex + 1);
                 if (nextParagraph != null)
                 {
                     double durationMilliSeconds = GetDurationInMilliseconds();
-                    if (startTime.TotalMilliseconds + durationMilliSeconds > nextParagraph.StartTime.TotalMilliseconds)
+                    if (startTime.TotalMilliseconds + durationMilliSeconds > nextParagraph.StartTime.TotalMilliseconds && Configuration.Settings.Tools.ListViewSyntaxColorOverlap)
                     {
                         labelDurationWarning.Text = string.Format(_languageGeneral.OverlapX, ((startTime.TotalMilliseconds + durationMilliSeconds) - nextParagraph.StartTime.TotalMilliseconds) / 1000.0);
                     }
 
                     if (labelStartTimeWarning.Text.Length == 0 &&
-                        startTime.TotalMilliseconds > nextParagraph.StartTime.TotalMilliseconds)
+                        startTime.TotalMilliseconds > nextParagraph.StartTime.TotalMilliseconds && Configuration.Settings.Tools.ListViewSyntaxColorOverlap)
                     {
                         double di = (startTime.TotalMilliseconds - nextParagraph.StartTime.TotalMilliseconds) / 1000.0;
                         labelStartTimeWarning.Text = string.Format(_languageGeneral.OverlapNextX, di);

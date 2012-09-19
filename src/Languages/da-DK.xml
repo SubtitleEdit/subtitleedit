@@ -1450,6 +1450,8 @@ Fortsæt?</SubtitleAppendPrompt>
     <New>Ny</New>
     <Remove>Fjern</Remove>
     <RemoveAll>Fjern alle</RemoveAll>
+    <ImportStyleFromFile>Importer style fra fil...</ImportStyleFromFile>
+    <ChooseStyle>Vælg style der skal importeres</ChooseStyle>
   </SubStationAlphaStyles>
   <PointSync>
     <Title>Punkt synkronisering</Title>

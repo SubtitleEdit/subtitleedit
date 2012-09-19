@@ -336,6 +336,7 @@
             this.showOnlySpectrogramToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparatorGuessTimeCodes = new System.Windows.Forms.ToolStripSeparator();
             this.guessTimeCodesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.seekSilenceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.splitContainerMain = new System.Windows.Forms.SplitContainer();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.tabControlSubtitle = new System.Windows.Forms.TabControl();
@@ -394,7 +395,6 @@
             this.imageListPlayRate = new System.Windows.Forms.ImageList(this.components);
             this.timerTextUndo = new System.Windows.Forms.Timer(this.components);
             this.timerAlternateTextUndo = new System.Windows.Forms.Timer(this.components);
-            this.seekSilenceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
@@ -3240,6 +3240,13 @@
             this.guessTimeCodesToolStripMenuItem.Text = "Guess time codes...";
             this.guessTimeCodesToolStripMenuItem.Click += new System.EventHandler(this.GuessTimeCodesToolStripMenuItemClick);
             // 
+            // seekSilenceToolStripMenuItem
+            // 
+            this.seekSilenceToolStripMenuItem.Name = "seekSilenceToolStripMenuItem";
+            this.seekSilenceToolStripMenuItem.Size = new System.Drawing.Size(274, 22);
+            this.seekSilenceToolStripMenuItem.Text = "Seek silence...";
+            this.seekSilenceToolStripMenuItem.Click += new System.EventHandler(this.seekSilenceToolStripMenuItem_Click);
+            // 
             // splitContainerMain
             // 
             this.splitContainerMain.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -3889,13 +3896,6 @@
             // 
             this.timerAlternateTextUndo.Interval = 700;
             this.timerAlternateTextUndo.Tick += new System.EventHandler(this.TimerAlternateTextUndoTick);
-            // 
-            // seekSilenceToolStripMenuItem
-            // 
-            this.seekSilenceToolStripMenuItem.Name = "seekSilenceToolStripMenuItem";
-            this.seekSilenceToolStripMenuItem.Size = new System.Drawing.Size(274, 22);
-            this.seekSilenceToolStripMenuItem.Text = "Seek silence...";
-            this.seekSilenceToolStripMenuItem.Click += new System.EventHandler(this.seekSilenceToolStripMenuItem_Click);
             // 
             // Main
             // 
