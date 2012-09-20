@@ -4115,7 +4115,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (fixErrors.ShowDialog(this) == DialogResult.OK)
                 {
                     MakeHistoryForUndo(_language.BeforeCommonErrorFixes);
-
+                    _subtitle.Renumber(1);
                     if (onlySelectedLines)
                     { // we only update selected lines
                         int i = 0;
@@ -4133,6 +4133,7 @@ namespace Nikse.SubtitleEdit.Forms
                             _subtitle.Paragraphs.Add(p);
                         ShowStatus(_language.CommonErrorsFixed);
                     }
+                    _subtitle.Renumber(1);
                     ShowSource();
                     SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
                     RestoreSubtitleListviewIndexes();
