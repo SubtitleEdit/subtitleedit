@@ -5,6 +5,7 @@ using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Logic;
 using System.Collections.Generic;
+using System.Collections;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -673,6 +674,11 @@ namespace Nikse.SubtitleEdit.Forms
             result = result.TrimStart(" ()[]?{}".ToCharArray());
             return result;
         }
+       
+        static int CompareLength(string a, string b)
+        {
+            return b.Length.CompareTo(a.Length);
+        }
 
         private string RemoveInterjections(string text)
         {
@@ -687,6 +693,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (!list.Contains(lower))
                     list.Add(lower);
             }
+            list.Sort(new Comparison<string>(CompareLength));
             
             bool doRepeat = true;
             while (doRepeat)
@@ -707,6 +714,8 @@ namespace Nikse.SubtitleEdit.Forms
                             {
                                 pre = text.Substring(0, index);
                                 temp = temp.Remove(0, index);
+                                if (pre.EndsWith("-") && temp.StartsWith("-"))
+                                    temp = temp.Remove(0, 1);
                                 doRepeat = true;
                             }
 

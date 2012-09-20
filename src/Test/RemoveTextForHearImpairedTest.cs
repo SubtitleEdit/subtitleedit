@@ -201,5 +201,29 @@ namespace Test
             Assert.AreEqual(expected, actual);
         }
 
+        [TestMethod()]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void RemoveInterjections2()
+        {
+            FormRemoveTextForHearImpaired_Accessor target = new FormRemoveTextForHearImpaired_Accessor();
+            target.checkBoxRemoveInterjections.Checked = true;
+            string text = "-Ballpark." + Environment.NewLine + "-Mm-hm.";
+            string expected = "Ballpark.";
+            string actual = target.RemoveTextFromHearImpaired(text);
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod()]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void RemoveInterjections3()
+        {
+            FormRemoveTextForHearImpaired_Accessor target = new FormRemoveTextForHearImpaired_Accessor();
+            target.checkBoxRemoveInterjections.Checked = true;
+            string text = "-Mm-hm." + Environment.NewLine + "-Ballpark.";
+            string expected = "Ballpark.";
+            string actual = target.RemoveTextFromHearImpaired(text);
+            Assert.AreEqual(expected, actual);
+        }
+
     }
 }
