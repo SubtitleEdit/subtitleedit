@@ -176,6 +176,16 @@ namespace Test
             Assert.AreEqual(expected, actual);
         }
 
+        [TestMethod()]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void RemoveHIDouble()
+        {
+            FormRemoveTextForHearImpaired_Accessor target = new FormRemoveTextForHearImpaired_Accessor();
+            string text = "[MAN]Where?![MAN]";
+            string expected = "Where?!";
+            string actual = target.RemoveTextFromHearImpaired(text);
+            Assert.AreEqual(expected, actual);
+        }
 
         [TestMethod()]
         [DeploymentItem("SubtitleEdit.exe")]
@@ -197,7 +207,7 @@ namespace Test
             target.checkBoxRemoveInterjections.Checked = true;
             string text = "-Ballpark." + Environment.NewLine + "-Hmm.";
             string expected = "Ballpark.";
-            string actual = target.RemoveTextFromHearImpaired(text);
+            string actual = target.RemoveInterjections(text);
             Assert.AreEqual(expected, actual);
         }
 
@@ -209,7 +219,7 @@ namespace Test
             target.checkBoxRemoveInterjections.Checked = true;
             string text = "-Ballpark." + Environment.NewLine + "-Mm-hm.";
             string expected = "Ballpark.";
-            string actual = target.RemoveTextFromHearImpaired(text);
+            string actual = target.RemoveInterjections(text);
             Assert.AreEqual(expected, actual);
         }
 
@@ -221,7 +231,31 @@ namespace Test
             target.checkBoxRemoveInterjections.Checked = true;
             string text = "-Mm-hm." + Environment.NewLine + "-Ballpark.";
             string expected = "Ballpark.";
-            string actual = target.RemoveTextFromHearImpaired(text);
+            string actual = target.RemoveInterjections(text);
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod()]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void RemoveInterjections4()
+        {
+            FormRemoveTextForHearImpaired_Accessor target = new FormRemoveTextForHearImpaired_Accessor();
+            target.checkBoxRemoveInterjections.Checked = true;
+            string text = "- Mm-hm." + Environment.NewLine + "- Ballpark.";
+            string expected = "Ballpark.";
+            string actual = target.RemoveInterjections(text);
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod()]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void RemoveInterjections5()
+        {
+            FormRemoveTextForHearImpaired_Accessor target = new FormRemoveTextForHearImpaired_Accessor();
+            target.checkBoxRemoveInterjections.Checked = true;
+            string text = "- Ballpark." + Environment.NewLine + "- Hmm.";
+            string expected = "Ballpark.";
+            string actual = target.RemoveInterjections(text);
             Assert.AreEqual(expected, actual);
         }
 
