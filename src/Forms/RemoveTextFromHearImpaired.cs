@@ -187,14 +187,14 @@ namespace Nikse.SubtitleEdit.Forms
 
         private bool StartAndEndsWithHearImpariedTags(string text)
         {
-            return (text.StartsWith("[") && text.EndsWith("]") && checkBoxRemoveTextBetweenSquares.Checked) ||
-                   (text.StartsWith("{") && text.EndsWith("}") && checkBoxRemoveTextBetweenBrackets.Checked) ||
-                   (text.StartsWith("?") && text.EndsWith("?") && checkBoxRemoveTextBetweenQuestionMarks.Checked) ||
-                   (text.StartsWith("(") && text.EndsWith(")") && checkBoxRemoveTextBetweenParentheses.Checked) ||
-                   (text.StartsWith("[") && text.EndsWith("]:") && checkBoxRemoveTextBetweenSquares.Checked) ||
-                   (text.StartsWith("{") && text.EndsWith("}:") && checkBoxRemoveTextBetweenBrackets.Checked) ||
-                   (text.StartsWith("?") && text.EndsWith("?:") && checkBoxRemoveTextBetweenQuestionMarks.Checked) ||
-                   (text.StartsWith("(") && text.EndsWith("):") && checkBoxRemoveTextBetweenParentheses.Checked) ||
+            return (text.StartsWith("[") && text.EndsWith("]") && !text.Trim('[').Contains("[") && checkBoxRemoveTextBetweenSquares.Checked) ||
+                   (text.StartsWith("{") && text.EndsWith("}") && !text.Trim('{').Contains("{") && checkBoxRemoveTextBetweenBrackets.Checked) ||
+                   (text.StartsWith("?") && text.EndsWith("?") && !text.Trim('?').Contains("?") && checkBoxRemoveTextBetweenQuestionMarks.Checked) ||
+                   (text.StartsWith("(") && text.EndsWith(")") && !text.Trim('(').Contains("(") && checkBoxRemoveTextBetweenParentheses.Checked) ||
+                   (text.StartsWith("[") && text.EndsWith("]:") && !text.Trim('[').Contains("[") && checkBoxRemoveTextBetweenSquares.Checked) ||
+                   (text.StartsWith("{") && text.EndsWith("}:") && !text.Trim('{').Contains("{") && checkBoxRemoveTextBetweenBrackets.Checked) ||
+                   (text.StartsWith("?") && text.EndsWith("?:") && !text.Trim('?').Contains("?") && checkBoxRemoveTextBetweenQuestionMarks.Checked) ||
+                   (text.StartsWith("(") && text.EndsWith("):") && !text.Trim('(').Contains("(") && checkBoxRemoveTextBetweenParentheses.Checked) ||
                    (checkBoxRemoveTextBetweenCustomTags.Checked &&
                     comboBoxCustomStart.Text.Length > 0 && comboBoxCustomEnd.Text.Length > 0 &&
                     text.StartsWith(comboBoxCustomStart.Text) && text.EndsWith(comboBoxCustomEnd.Text));
@@ -716,6 +716,8 @@ namespace Nikse.SubtitleEdit.Forms
                                 temp = temp.Remove(0, index);
                                 if (pre.EndsWith("-") && temp.StartsWith("-"))
                                     temp = temp.Remove(0, 1);
+                                if (pre.EndsWith("- ") && temp.StartsWith("-"))
+                                    temp = temp.Remove(0, 1);
                                 doRepeat = true;
                             }
 
@@ -751,9 +753,9 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 if (arr[0] == "-" && arr[1] == "-")
                     return string.Empty;
-                if (arr[0].StartsWith("-") && arr[0].Length > 1 && arr[1] == "-")
+                if (arr[0].StartsWith("-") && arr[0].Length > 1 && arr[1].Trim() == "-")
                     return arr[0].Remove(0, 1).Trim();
-                if (arr[1].StartsWith("-") && arr[1].Length > 1 && arr[0] == "-")
+                if (arr[1].StartsWith("-") && arr[1].Length > 1 && arr[0].Trim() == "-")
                     return arr[1].Remove(0, 1).Trim();
             }
 
