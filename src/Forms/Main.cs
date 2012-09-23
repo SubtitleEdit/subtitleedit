@@ -1245,6 +1245,7 @@ namespace Nikse.SubtitleEdit.Forms
                     WindowState = FormWindowState.Maximized;
                     if (!splitContainer1.Panel2Collapsed && Configuration.Settings.General.StartRememberPositionAndSize)
                         splitContainer1.SplitterDistance = Configuration.Settings.General.StartListViewWidth;
+                    SetTextBoxHeight();
                     return;
                 }
 
@@ -1282,6 +1283,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (Configuration.Settings.General.StartRememberPositionAndSize && Configuration.Settings.General.StartListViewHeight > 20 && Configuration.Settings.General.StartListViewHeight < Width - 40)
                 splitContainerMain.SplitterDistance = Configuration.Settings.General.StartListViewHeight;
+            SetTextBoxHeight();
 
             if (Environment.OSVersion.Version.Major < 6 && Configuration.Settings.General.SubtitleFontName == Utilities.WinXp2kUnicodeFontName) // 6 == Vista/Win2008Server/Win7
             {
@@ -1294,6 +1296,14 @@ namespace Nikse.SubtitleEdit.Forms
                 toolStripWaveControls.RenderMode = ToolStripRenderMode.System;
                 toolStripMenuItemSurroundWithMusicSymbols.Font = new Font(unicodeFontName, fontSize);
             }
+        }
+
+        private void SetTextBoxHeight()
+        {
+            if (Configuration.Settings.General.StartRememberPositionAndSize && Configuration.Settings.General.StartTextBoxHeight > 104 && Configuration.Settings.General.StartTextBoxHeight < splitContainerListViewAndText.Height - 40)
+                splitContainerListViewAndText.SplitterDistance = Configuration.Settings.General.StartTextBoxHeight;
+            else
+                splitContainerListViewAndText.SplitterDistance = splitContainerListViewAndText.Height - 109;
         }
 
         private void InitializeLanguage()
@@ -3684,7 +3694,10 @@ namespace Nikse.SubtitleEdit.Forms
                             if (_replaceStartLineIndex >= 1) // Prompt for start over
                             {
                                 _replaceStartLineIndex = 0;
-                                if (MessageBox.Show(_language.FindContinue, _language.FindContinueTitle, MessageBoxButtons.YesNo) == DialogResult.Yes)
+                                string msgText = _language.ReplaceContinueNotFound;
+                                if (replaceCount > 0)
+                                    msgText = string.Format(_language.ReplaceXContinue, replaceCount);
+                                if (MessageBox.Show(msgText, _language.ReplaceContinueTitle, MessageBoxButtons.YesNo) == DialogResult.Yes)
                                 {
                                     _findHelper.StartLineIndex = 0;
                                     _findHelper.SelectedIndex = 0;
@@ -6764,6 +6777,7 @@ namespace Nikse.SubtitleEdit.Forms
                         Configuration.Settings.General.StartSize = Width + ";" + Height;
                     Configuration.Settings.General.StartListViewWidth = splitContainer1.SplitterDistance;
                     Configuration.Settings.General.StartListViewHeight = splitContainerMain.SplitterDistance;
+                    Configuration.Settings.General.StartTextBoxHeight = splitContainerListViewAndText.SplitterDistance;
                 }
                 else if (Configuration.Settings.General.StartRememberPositionAndSize)
                 {
@@ -10353,9 +10367,13 @@ namespace Nikse.SubtitleEdit.Forms
             if (mediaPlayer != null)
                 mediaPlayer.Pause();
 
+            int textHeight = splitContainerListViewAndText.Height - splitContainerListViewAndText.SplitterDistance;
+
             splitContainer1.Panel2Collapsed = true;
             splitContainerMain.Panel2Collapsed = true;
             Main_Resize(null, null);
+
+            splitContainerListViewAndText.SplitterDistance = splitContainerListViewAndText.Height - textHeight;
         }
 
         private void ShowVideoPlayer()
@@ -11461,7 +11479,7 @@ namespace Nikse.SubtitleEdit.Forms
         }
 
         private void Main_Shown(object sender, EventArgs e)
-        {
+        {            
             toolStripButtonToggleVideo.Checked = !Configuration.Settings.General.ShowVideoPlayer;
             toolStripButtonToggleVideo_Click(null, null);
 
@@ -15223,6 +15241,24 @@ namespace Nikse.SubtitleEdit.Forms
                 }                                
             }
         }
+
+        private void splitContainerListViewAndText_SizeChanged(object sender, EventArgs e)
+        {
+            ShowStatus(splitContainerListViewAndText.Panel1.Height.ToString() + " " + splitContainerListViewAndText.Panel2.Height.ToString());
+        }
+
+        private void splitContainerListViewAndText_SplitterMoved(object sender, SplitterEventArgs e)
+        {
+            ShowStatus(splitContainerListViewAndText.Panel1.Height.ToString() + " " + splitContainerListViewAndText.Panel2.Height.ToString());
+        }
+
+        private void toolStripMenuItemPasteSpecial_Click(object sender, EventArgs e)
+        {
+            var form = new PasteSpecial();
+            if (form.ShowDialog(this) == DialogResult.OK)
+            { 
+            }
+        }        
 
     }
 }

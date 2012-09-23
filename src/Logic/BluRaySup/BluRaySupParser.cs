@@ -377,7 +377,7 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
             {
                 for (i = subPictures.Count - 1; i >= 0; i--)
                 {
-                    if (subPictures[i].EndTime - subPictures[i].StartTime < 100)
+                    if (subPictures[i].EndTime - subPictures[i].StartTime < 100 && subPictures[i].EndTime > 0)
                         subPictures.RemoveAt(i);
                 }
             }
