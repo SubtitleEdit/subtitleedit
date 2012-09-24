@@ -789,7 +789,12 @@
     <NewFrameRateUsedToCalculateFrameNumbers>Ny frame rate ({0}) blev anvendt til beregning af frame numre</NewFrameRateUsedToCalculateFrameNumbers>
     <FindContinue>Søgeudtrykket blev ikke fundet.
 Vil du starte fra toppen af dokumentet og søge videre?</FindContinue>
-    <FindContinueTitle>Fortsæt Find?</FindContinueTitle>
+    <FindContinueTitle>Fortsæt 'Find'?</FindContinueTitle>
+    <ReplaceContinueNotFound>Søgeord blev ikke fundet.
+Vil du starte fra toppen af ​​underteksten og fortsætte søg og erstat?</ReplaceContinueNotFound>
+    <ReplaceXContinue>Søgeudtrykket blev erstattet {0} gange.
+Vil du starte fra toppen af ​​underteksten og fortsætte søg og erstat?</ReplaceXContinue>
+    <ReplaceContinueTitle>Fortsæt 'Erstat'?</ReplaceContinueTitle>
     <SearchingForXFromLineY>Søgning efter '{0}' fra linjenummer {1}...</SearchingForXFromLineY>
     <XFoundAtLineNumberY>'{0}' findet i linje {1}</XFoundAtLineNumberY>
     <XNotFound>'{0}' blev ikke fundet</XNotFound>
