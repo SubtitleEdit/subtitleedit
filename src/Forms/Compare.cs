@@ -642,7 +642,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 subtitleListView2.SelectedIndexChanged -= SubtitleListView2SelectedIndexChanged;
                 subtitleListView2.SelectIndexAndEnsureVisible(subtitleListView1.SelectedItems[0].Index);
-                if (subtitleListView1.TopItem.Index != subtitleListView2.TopItem.Index &&
+                if (subtitleListView2.TopItem != null && subtitleListView1.TopItem.Index != subtitleListView2.TopItem.Index &&
                     subtitleListView2.Items.Count > subtitleListView1.TopItem.Index)
                     subtitleListView2.TopItem = subtitleListView2.Items[subtitleListView1.TopItem.Index];
                 subtitleListView2.SelectedIndexChanged += SubtitleListView2SelectedIndexChanged;
