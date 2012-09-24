@@ -11479,7 +11479,7 @@ namespace Nikse.SubtitleEdit.Forms
         }
 
         private void Main_Shown(object sender, EventArgs e)
-        {            
+        {
             toolStripButtonToggleVideo.Checked = !Configuration.Settings.General.ShowVideoPlayer;
             toolStripButtonToggleVideo_Click(null, null);
 
@@ -11725,7 +11725,7 @@ namespace Nikse.SubtitleEdit.Forms
             foreach (string pluginFileName in pluginFiles)
             {
                 Type pluginType = null;
-                System.Reflection.Assembly assembly = System.Reflection.Assembly.Load(System.IO.File.ReadAllBytes(pluginFileName));               
+                System.Reflection.Assembly assembly = System.Reflection.Assembly.Load(System.IO.File.ReadAllBytes(pluginFileName));
                 string objectName = Path.GetFileNameWithoutExtension(pluginFileName);
                 if (assembly != null)
                 {
@@ -11847,7 +11847,7 @@ namespace Nikse.SubtitleEdit.Forms
                     pi = pluginType.GetProperty("Version");
                     string version = (string)pi.GetValue(pluginObject, null);
 
-                    
+
                     var temp = new Subtitle(_subtitle);
                     string text = temp.ToText(new SubRip());
                     string pluginResult = (string)mi.Invoke(pluginObject, new object[] { this, text, 25.0, _fileName, "", "" });
@@ -14859,7 +14859,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             var formatType = GetCurrentSubtitleFormat().GetType();
             if (formatType == typeof(AdvancedSubStationAlpha) || formatType == typeof(SubStationAlpha))
-            {                
+            {
                 var styles = new SubStationAlphaStyles(_subtitle, GetCurrentSubtitleFormat());
                 if (styles.ShowDialog(this) == DialogResult.OK)
                     _subtitle.Header = styles.Header;
@@ -15238,7 +15238,7 @@ namespace Nikse.SubtitleEdit.Forms
                 else
                 {
                     audioVisualizer.FindDataBelowThressholdBack(form.VolumeBelow, form.SecondsDuration);
-                }                                
+                }
             }
         }
 
@@ -15256,9 +15256,9 @@ namespace Nikse.SubtitleEdit.Forms
         {
             var form = new PasteSpecial();
             if (form.ShowDialog(this) == DialogResult.OK)
-            { 
+            {
             }
-        }        
+        }
 
     }
 }

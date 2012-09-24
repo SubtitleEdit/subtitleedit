@@ -905,7 +905,7 @@ koji bi trebao biti usklađen s video datotekom.
   <NetworkJoin>
     <Title>Mrežna sesija</Title>
     <Information>Ovdje možete da se pridružite postojećoj sesiji u kojoj
-	možete da uređujete određeni podnaslov s drugim ljudima.</Information>
+    možete da uređujete određeni podnaslov s drugim ljudima.</Information>
     <Join>&amp;Poveži me</Join>
   </NetworkJoin>
   <NetworkLogAndInfo>
@@ -916,7 +916,7 @@ koji bi trebao biti usklađen s video datotekom.
     <Title>Mrežna sesija</Title>
     <ConnectionTo>Povezujem se na {0}…</ConnectionTo>
     <Information>Ovdje možete da napravite sesiju u kojoj ćete moći da uređujete
-	određeni podnaslov s drugim ljudima.</Information>
+    određeni podnaslov s drugim ljudima.</Information>
     <Start>&amp;Započni</Start>
   </NetworkStart>
   <RemoveTextFromHearImpaired>
@@ -1212,8 +1212,8 @@ koji bi trebao biti usklađen s video datotekom.
     <GoToSubPosition>Idi na poziciju podnaslova</GoToSubPosition>
     <KeepChangesTitle>Spremanje izmjena</KeepChangesTitle>
     <KeepChangesMessage>Izmijenili ste podnaslov koristeći Vizualno usklađivanje.
-	
-	Želite li spremiti izmjene?</KeepChangesMessage>
+
+    Želite li spremiti izmjene?</KeepChangesMessage>
     <SynchronizationDone>Usklađivanje je završeno.</SynchronizationDone>
     <StartSceneMustComeBeforeEndScene>Početna scena mora biti prije završne!</StartSceneMustComeBeforeEndScene>
     <Tip>Koristite Ctrl i lijevu ili desnu strelicu da pomjerite 100 ms unazad ili unaprijed.</Tip>

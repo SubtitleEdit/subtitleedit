@@ -505,7 +505,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                         //RACE001.TIF 00;00;02;02 00;00;03;15 000 000 720 480
                         //RACE002.TIF 00;00;05;18 00;00;09;20 000 000 720 480
-                        int top = param.ScreenHeight - (param.Bitmap.Height + param.BottomMargin); 
+                        int top = param.ScreenHeight - (param.Bitmap.Height + param.BottomMargin);
                         int left = (param.ScreenWidth - param.Bitmap.Width) / 2;
 
                         if (param.Alignment == ContentAlignment.BottomLeft || param.Alignment == ContentAlignment.MiddleLeft || param.Alignment == ContentAlignment.TopLeft)

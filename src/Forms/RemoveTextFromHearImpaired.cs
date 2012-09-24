@@ -675,7 +675,7 @@ namespace Nikse.SubtitleEdit.Forms
             result = result.TrimStart(" ()[]?{}".ToCharArray());
             return result;
         }
-       
+
         static int CompareLength(string a, string b)
         {
             return b.Length.CompareTo(a.Length);
@@ -720,7 +720,7 @@ namespace Nikse.SubtitleEdit.Forms
                                 doRepeat = true;
 
                             bool removeAfter = true;
-                            
+
                             if (temp.Length > index - s.Length + 3 && index > s.Length)
                             {
                                 if (temp.Substring(index - s.Length + 1, 3) == ", !")
@@ -737,7 +737,7 @@ namespace Nikse.SubtitleEdit.Forms
                                 {
                                     temp = temp.Remove(index - s.Length + 1, 2);
                                     removeAfter = false;
-                                }                                
+                                }
                             }
                             if (removeAfter && temp.Length > index - s.Length + 2 && index > s.Length)
                             {

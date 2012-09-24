@@ -1154,7 +1154,7 @@ namespace Nikse.SubtitleEdit.Forms
                             {
                                 Header = Header.Trim() + Environment.NewLine + style.RawLine + Environment.NewLine;
                             }
-                            
+
                             listViewStyles.Items[listViewStyles.Items.Count - 1].Selected = true;
                             listViewStyles.Items[listViewStyles.Items.Count - 1].EnsureVisible();
                             listViewStyles.Items[listViewStyles.Items.Count - 1].Focused = true;
