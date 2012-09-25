@@ -202,6 +202,12 @@
             this.toolStripMenuItemInsertAfter = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemInsertSubtitle = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemCopySourceText = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemColumn = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemColumnDeleteTimeCodes = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemColumnDeleteText = new System.Windows.Forms.ToolStripMenuItem();
+            this.ShiftTextCellsDownToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemColumnImportText = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemPasteSpecial = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator7 = new System.Windows.Forms.ToolStripSeparator();
             this.splitLineToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemMergeLines = new System.Windows.Forms.ToolStripMenuItem();
@@ -341,6 +347,8 @@
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.tabControlSubtitle = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.splitContainerListViewAndText = new System.Windows.Forms.SplitContainer();
+            this.SubtitleListview1 = new Nikse.SubtitleEdit.Controls.SubtitleListView();
             this.groupBoxEdit = new System.Windows.Forms.GroupBox();
             this.labelDurationWarning = new System.Windows.Forms.Label();
             this.labelStartTimeWarning = new System.Windows.Forms.Label();
@@ -385,7 +393,6 @@
             this.textBoxListViewText = new Nikse.SubtitleEdit.Controls.SETextBox();
             this.labelDuration = new System.Windows.Forms.Label();
             this.labelAutoDuration = new System.Windows.Forms.Label();
-            this.SubtitleListview1 = new Nikse.SubtitleEdit.Controls.SubtitleListView();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.textBoxSource = new System.Windows.Forms.TextBox();
             this.panelVideoPlayer = new System.Windows.Forms.Panel();
@@ -423,6 +430,9 @@
             this.splitContainer1.SuspendLayout();
             this.tabControlSubtitle.SuspendLayout();
             this.tabPage1.SuspendLayout();
+            this.splitContainerListViewAndText.Panel1.SuspendLayout();
+            this.splitContainerListViewAndText.Panel2.SuspendLayout();
+            this.splitContainerListViewAndText.SuspendLayout();
             this.groupBoxEdit.SuspendLayout();
             this.contextMenuStripTextBoxListView.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDuration)).BeginInit();
@@ -440,7 +450,7 @@
             this.toolStripStatusNetworking});
             this.statusStrip1.Location = new System.Drawing.Point(0, 656);
             this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(1244, 27);
+            this.statusStrip1.Size = new System.Drawing.Size(1719, 27);
             this.statusStrip1.TabIndex = 4;
             this.statusStrip1.Text = "statusStrip1";
             // 
@@ -456,7 +466,7 @@
             // 
             this.toolStripSelected.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
             this.toolStripSelected.Name = "toolStripSelected";
-            this.toolStripSelected.Size = new System.Drawing.Size(312, 22);
+            this.toolStripSelected.Size = new System.Drawing.Size(787, 22);
             this.toolStripSelected.Spring = true;
             this.toolStripSelected.Text = "toolStripSelected";
             this.toolStripSelected.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -506,7 +516,7 @@
             this.toolStripButtonGetFrameRate});
             this.toolStrip1.Location = new System.Drawing.Point(0, 24);
             this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(1244, 40);
+            this.toolStrip1.Size = new System.Drawing.Size(1719, 40);
             this.toolStrip1.TabIndex = 5;
             this.toolStrip1.Text = "toolStrip1";
             // 
@@ -777,7 +787,7 @@
             this.helpToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(1244, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(1719, 24);
             this.menuStrip1.TabIndex = 6;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -1845,6 +1855,7 @@
             this.toolStripMenuItemInsertAfter,
             this.toolStripMenuItemInsertSubtitle,
             this.toolStripMenuItemCopySourceText,
+            this.toolStripMenuItemColumn,
             this.toolStripSeparator7,
             this.splitLineToolStripMenuItem,
             this.toolStripMenuItemMergeLines,
@@ -1876,7 +1887,7 @@
             this.changeCasingForSelectedLinesToolStripMenuItem,
             this.toolStripMenuItemSaveSelectedLines});
             this.contextMenuStripListview.Name = "contextMenuStripListview";
-            this.contextMenuStripListview.Size = new System.Drawing.Size(285, 738);
+            this.contextMenuStripListview.Size = new System.Drawing.Size(285, 782);
             this.contextMenuStripListview.Opening += new System.ComponentModel.CancelEventHandler(this.ContextMenuStripListviewOpening);
             // 
             // setStylesForSelectedLinesToolStripMenuItem
@@ -1926,6 +1937,53 @@
             this.toolStripMenuItemCopySourceText.Size = new System.Drawing.Size(284, 22);
             this.toolStripMenuItemCopySourceText.Text = "Copy as text to clipboard";
             this.toolStripMenuItemCopySourceText.Click += new System.EventHandler(this.ToolStripMenuItemCopySourceTextClick);
+            // 
+            // toolStripMenuItemColumn
+            // 
+            this.toolStripMenuItemColumn.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripMenuItemColumnDeleteTimeCodes,
+            this.toolStripMenuItemColumnDeleteText,
+            this.ShiftTextCellsDownToolStripMenuItem,
+            this.toolStripMenuItemColumnImportText,
+            this.toolStripMenuItemPasteSpecial});
+            this.toolStripMenuItemColumn.Name = "toolStripMenuItemColumn";
+            this.toolStripMenuItemColumn.Size = new System.Drawing.Size(284, 22);
+            this.toolStripMenuItemColumn.Text = "Column";
+            // 
+            // toolStripMenuItemColumnDeleteTimeCodes
+            // 
+            this.toolStripMenuItemColumnDeleteTimeCodes.Name = "toolStripMenuItemColumnDeleteTimeCodes";
+            this.toolStripMenuItemColumnDeleteTimeCodes.Size = new System.Drawing.Size(316, 22);
+            this.toolStripMenuItemColumnDeleteTimeCodes.Text = "Delete time codes and shift time code cells up";
+            this.toolStripMenuItemColumnDeleteTimeCodes.Click += new System.EventHandler(this.toolStripMenuItemColumnDeleteTimeCodes_Click);
+            // 
+            // toolStripMenuItemColumnDeleteText
+            // 
+            this.toolStripMenuItemColumnDeleteText.Name = "toolStripMenuItemColumnDeleteText";
+            this.toolStripMenuItemColumnDeleteText.Size = new System.Drawing.Size(316, 22);
+            this.toolStripMenuItemColumnDeleteText.Text = "Delete text and shift text cells up";
+            this.toolStripMenuItemColumnDeleteText.Click += new System.EventHandler(this.deleteAndShiftCellsUpToolStripMenuItem_Click);
+            // 
+            // ShiftTextCellsDownToolStripMenuItem
+            // 
+            this.ShiftTextCellsDownToolStripMenuItem.Name = "ShiftTextCellsDownToolStripMenuItem";
+            this.ShiftTextCellsDownToolStripMenuItem.Size = new System.Drawing.Size(316, 22);
+            this.ShiftTextCellsDownToolStripMenuItem.Text = "Insert and shift text cells down";
+            this.ShiftTextCellsDownToolStripMenuItem.Click += new System.EventHandler(this.ShiftTextCellsDownToolStripMenuItem_Click);
+            // 
+            // toolStripMenuItemColumnImportText
+            // 
+            this.toolStripMenuItemColumnImportText.Name = "toolStripMenuItemColumnImportText";
+            this.toolStripMenuItemColumnImportText.Size = new System.Drawing.Size(316, 22);
+            this.toolStripMenuItemColumnImportText.Text = "Import text and shift text cells down...";
+            this.toolStripMenuItemColumnImportText.Click += new System.EventHandler(this.toolStripMenuItemColumnImportText_Click);
+            // 
+            // toolStripMenuItemPasteSpecial
+            // 
+            this.toolStripMenuItemPasteSpecial.Name = "toolStripMenuItemPasteSpecial";
+            this.toolStripMenuItemPasteSpecial.Size = new System.Drawing.Size(316, 22);
+            this.toolStripMenuItemPasteSpecial.Text = "Paste...";
+            this.toolStripMenuItemPasteSpecial.Click += new System.EventHandler(this.toolStripMenuItemPasteSpecial_Click);
             // 
             // toolStripSeparator7
             // 
@@ -2153,7 +2211,7 @@
             this.groupBoxVideo.Margin = new System.Windows.Forms.Padding(0);
             this.groupBoxVideo.Name = "groupBoxVideo";
             this.groupBoxVideo.Padding = new System.Windows.Forms.Padding(0);
-            this.groupBoxVideo.Size = new System.Drawing.Size(1244, 305);
+            this.groupBoxVideo.Size = new System.Drawing.Size(1719, 305);
             this.groupBoxVideo.TabIndex = 1;
             this.groupBoxVideo.TabStop = false;
             // 
@@ -2170,7 +2228,7 @@
             // labelVideoInfo
             // 
             this.labelVideoInfo.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.labelVideoInfo.Location = new System.Drawing.Point(872, 12);
+            this.labelVideoInfo.Location = new System.Drawing.Point(1347, 12);
             this.labelVideoInfo.Name = "labelVideoInfo";
             this.labelVideoInfo.Size = new System.Drawing.Size(369, 19);
             this.labelVideoInfo.TabIndex = 12;
@@ -2185,7 +2243,7 @@
             this.trackBarWaveFormPosition.Location = new System.Drawing.Point(674, 267);
             this.trackBarWaveFormPosition.Maximum = 1000;
             this.trackBarWaveFormPosition.Name = "trackBarWaveFormPosition";
-            this.trackBarWaveFormPosition.Size = new System.Drawing.Size(566, 20);
+            this.trackBarWaveFormPosition.Size = new System.Drawing.Size(1041, 20);
             this.trackBarWaveFormPosition.TabIndex = 11;
             this.trackBarWaveFormPosition.TickStyle = System.Windows.Forms.TickStyle.None;
             this.trackBarWaveFormPosition.ValueChanged += new System.EventHandler(this.trackBarWaveFormPosition_ValueChanged);
@@ -2347,7 +2405,7 @@
             this.audioVisualizer.SelectedColor = System.Drawing.Color.Red;
             this.audioVisualizer.ShowSpectrogram = false;
             this.audioVisualizer.ShowWaveform = true;
-            this.audioVisualizer.Size = new System.Drawing.Size(768, 229);
+            this.audioVisualizer.Size = new System.Drawing.Size(1243, 229);
             this.audioVisualizer.StartPositionSeconds = 0D;
             this.audioVisualizer.TabIndex = 6;
             this.audioVisualizer.TextColor = System.Drawing.Color.Gray;
@@ -3145,7 +3203,7 @@
             this.guessTimeCodesToolStripMenuItem,
             this.seekSilenceToolStripMenuItem});
             this.contextMenuStripWaveForm.Name = "contextMenuStripWaveForm";
-            this.contextMenuStripWaveForm.Size = new System.Drawing.Size(275, 308);
+            this.contextMenuStripWaveForm.Size = new System.Drawing.Size(275, 286);
             this.contextMenuStripWaveForm.Opening += new System.ComponentModel.CancelEventHandler(this.ContextMenuStripWaveFormOpening);
             // 
             // addParagraphHereToolStripMenuItem
@@ -3262,7 +3320,7 @@
             // splitContainerMain.Panel2
             // 
             this.splitContainerMain.Panel2.Controls.Add(this.groupBoxVideo);
-            this.splitContainerMain.Size = new System.Drawing.Size(1244, 592);
+            this.splitContainerMain.Size = new System.Drawing.Size(1719, 592);
             this.splitContainerMain.SplitterDistance = 283;
             this.splitContainerMain.TabIndex = 8;
             this.splitContainerMain.SplitterMoved += new System.Windows.Forms.SplitterEventHandler(this.SplitContainerMainSplitterMoved);
@@ -3280,8 +3338,8 @@
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.panelVideoPlayer);
-            this.splitContainer1.Size = new System.Drawing.Size(1244, 283);
-            this.splitContainer1.SplitterDistance = 950;
+            this.splitContainer1.Size = new System.Drawing.Size(1719, 283);
+            this.splitContainer1.SplitterDistance = 1312;
             this.splitContainer1.TabIndex = 7;
             this.splitContainer1.SplitterMoved += new System.Windows.Forms.SplitterEventHandler(this.SplitContainer1SplitterMoved);
             // 
@@ -3296,27 +3354,71 @@
             this.tabControlSubtitle.Location = new System.Drawing.Point(3, 3);
             this.tabControlSubtitle.Name = "tabControlSubtitle";
             this.tabControlSubtitle.SelectedIndex = 0;
-            this.tabControlSubtitle.Size = new System.Drawing.Size(945, 280);
+            this.tabControlSubtitle.Size = new System.Drawing.Size(1307, 280);
             this.tabControlSubtitle.TabIndex = 0;
             this.tabControlSubtitle.SelectedIndexChanged += new System.EventHandler(this.TabControlSubtitleSelectedIndexChanged);
             this.tabControlSubtitle.Selecting += new System.Windows.Forms.TabControlCancelEventHandler(this.TabControlSubtitleSelecting);
             // 
             // tabPage1
             // 
-            this.tabPage1.Controls.Add(this.groupBoxEdit);
-            this.tabPage1.Controls.Add(this.SubtitleListview1);
+            this.tabPage1.Controls.Add(this.splitContainerListViewAndText);
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(937, 254);
+            this.tabPage1.Size = new System.Drawing.Size(1299, 254);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "List view";
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
+            // splitContainerListViewAndText
+            // 
+            this.splitContainerListViewAndText.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainerListViewAndText.Location = new System.Drawing.Point(3, 3);
+            this.splitContainerListViewAndText.Name = "splitContainerListViewAndText";
+            this.splitContainerListViewAndText.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            // 
+            // splitContainerListViewAndText.Panel1
+            // 
+            this.splitContainerListViewAndText.Panel1.Controls.Add(this.SubtitleListview1);
+            this.splitContainerListViewAndText.Panel1MinSize = 50;
+            // 
+            // splitContainerListViewAndText.Panel2
+            // 
+            this.splitContainerListViewAndText.Panel2.Controls.Add(this.groupBoxEdit);
+            this.splitContainerListViewAndText.Panel2MinSize = 105;
+            this.splitContainerListViewAndText.Size = new System.Drawing.Size(1293, 248);
+            this.splitContainerListViewAndText.SplitterDistance = 131;
+            this.splitContainerListViewAndText.TabIndex = 2;
+            this.splitContainerListViewAndText.SplitterMoved += new System.Windows.Forms.SplitterEventHandler(this.splitContainerListViewAndText_SplitterMoved);
+            this.splitContainerListViewAndText.SizeChanged += new System.EventHandler(this.splitContainerListViewAndText_SizeChanged);
+            // 
+            // SubtitleListview1
+            // 
+            this.SubtitleListview1.AllowDrop = true;
+            this.SubtitleListview1.ContextMenuStrip = this.contextMenuStripListview;
+            this.SubtitleListview1.DisplayExtraFromExtra = false;
+            this.SubtitleListview1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.SubtitleListview1.FirstVisibleIndex = -1;
+            this.SubtitleListview1.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.SubtitleListview1.FullRowSelect = true;
+            this.SubtitleListview1.GridLines = true;
+            this.SubtitleListview1.HideSelection = false;
+            this.SubtitleListview1.Location = new System.Drawing.Point(0, 0);
+            this.SubtitleListview1.Name = "SubtitleListview1";
+            this.SubtitleListview1.OwnerDraw = true;
+            this.SubtitleListview1.Size = new System.Drawing.Size(1293, 131);
+            this.SubtitleListview1.TabIndex = 0;
+            this.SubtitleListview1.UseCompatibleStateImageBehavior = false;
+            this.SubtitleListview1.UseSyntaxColoring = true;
+            this.SubtitleListview1.View = System.Windows.Forms.View.Details;
+            this.SubtitleListview1.SelectedIndexChanged += new System.EventHandler(this.SubtitleListview1_SelectedIndexChanged);
+            this.SubtitleListview1.DragDrop += new System.Windows.Forms.DragEventHandler(this.SubtitleListview1_DragDrop);
+            this.SubtitleListview1.DragEnter += new System.Windows.Forms.DragEventHandler(this.SubtitleListview1_DragEnter);
+            this.SubtitleListview1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.SubtitleListview1KeyDown);
+            this.SubtitleListview1.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.SubtitleListview1_MouseDoubleClick);
+            // 
             // groupBoxEdit
             // 
-            this.groupBoxEdit.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBoxEdit.Controls.Add(this.labelDurationWarning);
             this.groupBoxEdit.Controls.Add(this.labelStartTimeWarning);
             this.groupBoxEdit.Controls.Add(this.buttonSplitLine);
@@ -3341,9 +3443,10 @@
             this.groupBoxEdit.Controls.Add(this.textBoxListViewText);
             this.groupBoxEdit.Controls.Add(this.labelDuration);
             this.groupBoxEdit.Controls.Add(this.labelAutoDuration);
-            this.groupBoxEdit.Location = new System.Drawing.Point(3, 152);
+            this.groupBoxEdit.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.groupBoxEdit.Location = new System.Drawing.Point(0, 0);
             this.groupBoxEdit.Name = "groupBoxEdit";
-            this.groupBoxEdit.Size = new System.Drawing.Size(930, 102);
+            this.groupBoxEdit.Size = new System.Drawing.Size(1293, 113);
             this.groupBoxEdit.TabIndex = 1;
             this.groupBoxEdit.TabStop = false;
             // 
@@ -3371,7 +3474,7 @@
             // 
             this.buttonSplitLine.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonSplitLine.ForeColor = System.Drawing.Color.Red;
-            this.buttonSplitLine.Location = new System.Drawing.Point(810, 81);
+            this.buttonSplitLine.Location = new System.Drawing.Point(1173, 81);
             this.buttonSplitLine.Name = "buttonSplitLine";
             this.buttonSplitLine.Size = new System.Drawing.Size(115, 21);
             this.buttonSplitLine.TabIndex = 39;
@@ -3384,7 +3487,7 @@
             // 
             this.labelAlternateCharactersPerSecond.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.labelAlternateCharactersPerSecond.AutoSize = true;
-            this.labelAlternateCharactersPerSecond.Location = new System.Drawing.Point(842, 11);
+            this.labelAlternateCharactersPerSecond.Location = new System.Drawing.Point(1205, 11);
             this.labelAlternateCharactersPerSecond.Name = "labelAlternateCharactersPerSecond";
             this.labelAlternateCharactersPerSecond.Size = new System.Drawing.Size(64, 13);
             this.labelAlternateCharactersPerSecond.TabIndex = 38;
@@ -3394,7 +3497,7 @@
             // 
             this.labelTextAlternateLineTotal.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.labelTextAlternateLineTotal.AutoSize = true;
-            this.labelTextAlternateLineTotal.Location = new System.Drawing.Point(888, 86);
+            this.labelTextAlternateLineTotal.Location = new System.Drawing.Point(1251, 86);
             this.labelTextAlternateLineTotal.Name = "labelTextAlternateLineTotal";
             this.labelTextAlternateLineTotal.Size = new System.Drawing.Size(36, 13);
             this.labelTextAlternateLineTotal.TabIndex = 37;
@@ -3402,6 +3505,7 @@
             // 
             // labelAlternateSingleLine
             // 
+            this.labelAlternateSingleLine.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.labelAlternateSingleLine.AutoSize = true;
             this.labelAlternateSingleLine.Location = new System.Drawing.Point(839, 86);
             this.labelAlternateSingleLine.Name = "labelAlternateSingleLine";
@@ -3411,6 +3515,7 @@
             // 
             // labelTextAlternateLineLengths
             // 
+            this.labelTextAlternateLineLengths.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.labelTextAlternateLineLengths.AutoSize = true;
             this.labelTextAlternateLineLengths.Location = new System.Drawing.Point(786, 86);
             this.labelTextAlternateLineLengths.Name = "labelTextAlternateLineLengths";
@@ -3440,15 +3545,16 @@
             // textBoxListViewTextAlternate
             // 
             this.textBoxListViewTextAlternate.AllowDrop = true;
-            this.textBoxListViewTextAlternate.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.textBoxListViewTextAlternate.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxListViewTextAlternate.ContextMenuStrip = this.contextMenuStripTextBoxListView;
             this.textBoxListViewTextAlternate.Enabled = false;
             this.textBoxListViewTextAlternate.HideSelection = false;
-            this.textBoxListViewTextAlternate.Location = new System.Drawing.Point(806, 28);
+            this.textBoxListViewTextAlternate.Location = new System.Drawing.Point(946, 28);
             this.textBoxListViewTextAlternate.Multiline = true;
             this.textBoxListViewTextAlternate.Name = "textBoxListViewTextAlternate";
-            this.textBoxListViewTextAlternate.Size = new System.Drawing.Size(17, 56);
+            this.textBoxListViewTextAlternate.Size = new System.Drawing.Size(221, 55);
             this.textBoxListViewTextAlternate.TabIndex = 33;
             this.textBoxListViewTextAlternate.Visible = false;
             this.textBoxListViewTextAlternate.MouseClick += new System.Windows.Forms.MouseEventHandler(this.TextBoxListViewTextAlternateMouseClick);
@@ -3609,6 +3715,7 @@
             // 
             // labelSingleLine
             // 
+            this.labelSingleLine.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.labelSingleLine.AutoSize = true;
             this.labelSingleLine.Location = new System.Drawing.Point(346, 86);
             this.labelSingleLine.Name = "labelSingleLine";
@@ -3619,7 +3726,7 @@
             // buttonAutoBreak
             // 
             this.buttonAutoBreak.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonAutoBreak.Location = new System.Drawing.Point(810, 56);
+            this.buttonAutoBreak.Location = new System.Drawing.Point(1173, 56);
             this.buttonAutoBreak.Name = "buttonAutoBreak";
             this.buttonAutoBreak.Size = new System.Drawing.Size(115, 21);
             this.buttonAutoBreak.TabIndex = 7;
@@ -3629,6 +3736,7 @@
             // 
             // labelTextLineLengths
             // 
+            this.labelTextLineLengths.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.labelTextLineLengths.AutoSize = true;
             this.labelTextLineLengths.Location = new System.Drawing.Point(239, 86);
             this.labelTextLineLengths.Name = "labelTextLineLengths";
@@ -3638,9 +3746,9 @@
             // 
             // labelTextLineTotal
             // 
-            this.labelTextLineTotal.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.labelTextLineTotal.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.labelTextLineTotal.AutoSize = true;
-            this.labelTextLineTotal.Location = new System.Drawing.Point(638, 86);
+            this.labelTextLineTotal.Location = new System.Drawing.Point(1001, 86);
             this.labelTextLineTotal.Name = "labelTextLineTotal";
             this.labelTextLineTotal.Size = new System.Drawing.Size(94, 13);
             this.labelTextLineTotal.TabIndex = 21;
@@ -3650,7 +3758,7 @@
             // 
             this.labelCharactersPerSecond.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.labelCharactersPerSecond.AutoSize = true;
-            this.labelCharactersPerSecond.Location = new System.Drawing.Point(638, 11);
+            this.labelCharactersPerSecond.Location = new System.Drawing.Point(1001, 11);
             this.labelCharactersPerSecond.Name = "labelCharactersPerSecond";
             this.labelCharactersPerSecond.Size = new System.Drawing.Size(133, 13);
             this.labelCharactersPerSecond.TabIndex = 31;
@@ -3659,7 +3767,7 @@
             // buttonUnBreak
             // 
             this.buttonUnBreak.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonUnBreak.Location = new System.Drawing.Point(810, 30);
+            this.buttonUnBreak.Location = new System.Drawing.Point(1173, 30);
             this.buttonUnBreak.Name = "buttonUnBreak";
             this.buttonUnBreak.Size = new System.Drawing.Size(115, 21);
             this.buttonUnBreak.TabIndex = 6;
@@ -3733,7 +3841,8 @@
             // textBoxListViewText
             // 
             this.textBoxListViewText.AllowDrop = true;
-            this.textBoxListViewText.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.textBoxListViewText.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxListViewText.ContextMenuStrip = this.contextMenuStripTextBoxListView;
             this.textBoxListViewText.Enabled = false;
@@ -3741,7 +3850,7 @@
             this.textBoxListViewText.Location = new System.Drawing.Point(236, 28);
             this.textBoxListViewText.Multiline = true;
             this.textBoxListViewText.Name = "textBoxListViewText";
-            this.textBoxListViewText.Size = new System.Drawing.Size(570, 56);
+            this.textBoxListViewText.Size = new System.Drawing.Size(931, 55);
             this.textBoxListViewText.TabIndex = 5;
             this.textBoxListViewText.MouseClick += new System.Windows.Forms.MouseEventHandler(this.TextBoxListViewTextMouseClick);
             this.textBoxListViewText.TextChanged += new System.EventHandler(this.TextBoxListViewTextTextChanged);
@@ -3769,40 +3878,13 @@
             this.labelAutoDuration.TabIndex = 30;
             this.labelAutoDuration.Text = "Auto";
             // 
-            // SubtitleListview1
-            // 
-            this.SubtitleListview1.AllowDrop = true;
-            this.SubtitleListview1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.SubtitleListview1.ContextMenuStrip = this.contextMenuStripListview;
-            this.SubtitleListview1.DisplayExtraFromExtra = false;
-            this.SubtitleListview1.FirstVisibleIndex = -1;
-            this.SubtitleListview1.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.SubtitleListview1.FullRowSelect = true;
-            this.SubtitleListview1.GridLines = true;
-            this.SubtitleListview1.HideSelection = false;
-            this.SubtitleListview1.Location = new System.Drawing.Point(1, 3);
-            this.SubtitleListview1.Name = "SubtitleListview1";
-            this.SubtitleListview1.OwnerDraw = true;
-            this.SubtitleListview1.Size = new System.Drawing.Size(933, 148);
-            this.SubtitleListview1.TabIndex = 0;
-            this.SubtitleListview1.UseCompatibleStateImageBehavior = false;
-            this.SubtitleListview1.UseSyntaxColoring = true;
-            this.SubtitleListview1.View = System.Windows.Forms.View.Details;
-            this.SubtitleListview1.SelectedIndexChanged += new System.EventHandler(this.SubtitleListview1_SelectedIndexChanged);
-            this.SubtitleListview1.DragDrop += new System.Windows.Forms.DragEventHandler(this.SubtitleListview1_DragDrop);
-            this.SubtitleListview1.DragEnter += new System.Windows.Forms.DragEventHandler(this.SubtitleListview1_DragEnter);
-            this.SubtitleListview1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.SubtitleListview1KeyDown);
-            this.SubtitleListview1.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.SubtitleListview1_MouseDoubleClick);
-            // 
             // tabPage2
             // 
             this.tabPage2.Controls.Add(this.textBoxSource);
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(937, 254);
+            this.tabPage2.Size = new System.Drawing.Size(1299, 254);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Source view";
             this.tabPage2.UseVisualStyleBackColor = true;
@@ -3810,16 +3892,14 @@
             // textBoxSource
             // 
             this.textBoxSource.AllowDrop = true;
-            this.textBoxSource.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxSource.Dock = System.Windows.Forms.DockStyle.Fill;
             this.textBoxSource.HideSelection = false;
-            this.textBoxSource.Location = new System.Drawing.Point(1, 3);
+            this.textBoxSource.Location = new System.Drawing.Point(3, 3);
             this.textBoxSource.MaxLength = 0;
             this.textBoxSource.Multiline = true;
             this.textBoxSource.Name = "textBoxSource";
             this.textBoxSource.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.textBoxSource.Size = new System.Drawing.Size(932, 252);
+            this.textBoxSource.Size = new System.Drawing.Size(1293, 248);
             this.textBoxSource.TabIndex = 12;
             this.textBoxSource.WordWrap = false;
             this.textBoxSource.Click += new System.EventHandler(this.TextBoxSourceClick);
@@ -3837,7 +3917,7 @@
             this.panelVideoPlayer.Controls.Add(this.mediaPlayer);
             this.panelVideoPlayer.Location = new System.Drawing.Point(1, 1);
             this.panelVideoPlayer.Name = "panelVideoPlayer";
-            this.panelVideoPlayer.Size = new System.Drawing.Size(282, 278);
+            this.panelVideoPlayer.Size = new System.Drawing.Size(395, 278);
             this.panelVideoPlayer.TabIndex = 5;
             // 
             // mediaPlayer
@@ -3855,7 +3935,7 @@
             this.mediaPlayer.ShowFullscreenButton = true;
             this.mediaPlayer.ShowMuteButton = true;
             this.mediaPlayer.ShowStopButton = true;
-            this.mediaPlayer.Size = new System.Drawing.Size(281, 278);
+            this.mediaPlayer.Size = new System.Drawing.Size(394, 278);
             this.mediaPlayer.SubtitleText = "";
             this.mediaPlayer.TabIndex = 5;
             this.mediaPlayer.TextRightToLeft = System.Windows.Forms.RightToLeft.No;
@@ -3901,7 +3981,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1244, 683);
+            this.ClientSize = new System.Drawing.Size(1719, 683);
             this.Controls.Add(this.splitContainerMain);
             this.Controls.Add(this.toolStrip1);
             this.Controls.Add(this.statusStrip1);
@@ -3958,6 +4038,9 @@
             this.splitContainer1.ResumeLayout(false);
             this.tabControlSubtitle.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
+            this.splitContainerListViewAndText.Panel1.ResumeLayout(false);
+            this.splitContainerListViewAndText.Panel2.ResumeLayout(false);
+            this.splitContainerListViewAndText.ResumeLayout(false);
             this.groupBoxEdit.ResumeLayout(false);
             this.groupBoxEdit.PerformLayout();
             this.contextMenuStripTextBoxListView.ResumeLayout(false);
@@ -4339,6 +4422,13 @@
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemShowOriginalInPreview;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemPlugins;
         private System.Windows.Forms.ToolStripMenuItem seekSilenceToolStripMenuItem;
+        private System.Windows.Forms.SplitContainer splitContainerListViewAndText;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemColumn;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemColumnDeleteText;
+        private System.Windows.Forms.ToolStripMenuItem ShiftTextCellsDownToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemPasteSpecial;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemColumnDeleteTimeCodes;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemColumnImportText;
     }
 }
 

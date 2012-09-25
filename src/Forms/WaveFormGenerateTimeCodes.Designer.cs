@@ -302,7 +302,7 @@
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(168, 28);
+            this.label7.Location = new System.Drawing.Point(185, 28);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(63, 13);
             this.label7.TabIndex = 13;
@@ -321,7 +321,7 @@
             // 
             this.numericUpDownDefaultMilliseconds.Location = new System.Drawing.Point(111, 26);
             this.numericUpDownDefaultMilliseconds.Maximum = new decimal(new int[] {
-            8000,
+            99999,
             0,
             0,
             0});

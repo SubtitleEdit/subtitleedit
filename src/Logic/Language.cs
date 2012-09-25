@@ -686,6 +686,13 @@ namespace Nikse.SubtitleEdit.Logic
                 FindContinueTitle = "Continue Find?",
                 FindContinue = "The search item was not found." + Environment.NewLine +
                                "Would you like to start from the top of the document and search one more time?",
+                ReplaceContinueTitle = "Continue 'Replace'?",
+                ReplaceContinueNotFound = "The search item was not found." + Environment.NewLine +
+                               "Would you like to start from the top of the document and continue search and replace?",
+
+                ReplaceXContinue = "The search item was replaced {0} time(s)." + Environment.NewLine +
+                               "Would you like to start from the top of the document and continue search and replace?",
+
                 SearchingForXFromLineY = "Searching for '{0}' from line number {1}...",
                 XFoundAtLineNumberY = "'{0}' found at line number {1}",
                 XNotFound = "'{0}' not found",
@@ -861,7 +868,10 @@ namespace Nikse.SubtitleEdit.Logic
                 LineNumberXExpectedNumberFromSourceLineY = "Line {0} - expected subtitle number: {1}",
                 BeforeGuessingTimeCodes = "Before guessing time codes",
                 BeforeAutoDuration = "Before auto-duration for selected lines",
-
+                BeforeColumnPaste = "Before column paste",
+                BeforeColumnDelete = "Before column delete",
+                BeforeColumnImportText = "Before column import text",
+                BeforeColumnShiftCellsDown = "Before column shift cells down",
 
                 Menu = new LanguageStructure.Main.MainMenu
                 {
@@ -1476,6 +1486,9 @@ can edit in same subtitle file (collaboration)",
                 MergeOriginalAndTranslation = "Merge original and translation",
                 ShortcutIsAlreadyDefinedX = "Shortcut already defined: \r\n{0}\r\n",
                 ToggleTranslationAndOriginalInPreviews = "Toggle translation and original in video/audio preview",
+                ListViewColumnDelete = "Column, delete text",
+                ListViewColumnInsert = "Column, insert text",
+                ListViewColumnPaste ="Column, paste",
             };
 
             ShowEarlierLater = new LanguageStructure.ShowEarlierLater
