@@ -549,9 +549,9 @@ namespace Nikse.SubtitleEdit.Forms
                         fps = args[idx].ToLower();
                 if (fps.Length > 6)
                 {
-                    fps = fps.Replace(",", ".").Trim();
+                    fps = fps.Remove(0,5).Replace(",", ".").Trim();
                     double d;
-                    if (double.TryParse(fps, System.Globalization.NumberStyles.AllowCurrencySymbol, System.Globalization.CultureInfo.InvariantCulture, out d))
+                    if (double.TryParse(fps, System.Globalization.NumberStyles.AllowDecimalPoint, System.Globalization.CultureInfo.InvariantCulture, out d))
                     {
                         toolStripComboBoxFrameRate.Text = d.ToString(System.Globalization.CultureInfo.InvariantCulture);
                         Configuration.Settings.General.CurrentFrameRate = d;
