@@ -602,6 +602,9 @@
             public string NewFrameRateUsedToCalculateFrameNumbers { get; set; }
             public string FindContinue { get; set; }
             public string FindContinueTitle { get; set; }
+            public string ReplaceContinueNotFound { get; set; }
+            public string ReplaceXContinue { get; set; }
+            public string ReplaceContinueTitle { get; set; }
             public string SearchingForXFromLineY { get; set; }
             public string XFoundAtLineNumberY { get; set; }
             public string XNotFound { get; set; }
@@ -774,6 +777,10 @@
             public string LineNumberXExpectedNumberFromSourceLineY { get; set; }
             public string BeforeGuessingTimeCodes { get; set; }
             public string BeforeAutoDuration { get; set; }
+            public string BeforeColumnPaste { get; set; }
+            public string BeforeColumnDelete { get; set; }
+            public string BeforeColumnImportText { get; set; }
+            public string BeforeColumnShiftCellsDown { get; set; }             
 
             public class MainMenu
             {
@@ -1395,6 +1402,9 @@
             public string MergeOriginalAndTranslation { get; set; }
             public string ShortcutIsAlreadyDefinedX { get; set; }
             public string ToggleTranslationAndOriginalInPreviews { get; set; }
+            public string ListViewColumnDelete { get; set; }
+            public string ListViewColumnInsert { get; set; }
+            public string ListViewColumnPaste { get; set; }
         }
 
         public class ShowEarlierLater

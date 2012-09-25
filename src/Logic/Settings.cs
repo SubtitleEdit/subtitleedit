@@ -111,7 +111,7 @@ namespace Nikse.SubtitleEdit.Logic
             UnicodeSymbolsToInsert = "♪;♫;☺;☹;♥;©;☮;☯;Σ;∞;≡;⇒;π";
             SpellCheckAutoChangeNames = true;
             OcrFixUseHardcodedRules = true;
-            Interjections = "Ah;Ahh;Ahhh;Ahhhh;Eh;Ehh;Ehhh;Hm;Hmm;Hmmm;Mm;Mmm;Mmmm;Phew;Gah;Oh;Ohh;Ohhh;Ow;Oww;Owww;Ugh;Ughh;Uh;Uhh;Uhhh;Whew";
+            Interjections = "Ah;Ahh;Ahhh;Ahhhh;Eh;Ehh;Ehhh;Hm;Hmm;Hmmm;Huh;Mm;Mmm;Mmmm;Phew;Gah;Oh;Ohh;Ohhh;Ow;Oww;Owww;Ugh;Ughh;Uh;Uhh;Uhhh;Whew";
             MicrosoftBingApiId = "C2C2E9A508E6748F0494D68DFD92FAA1FF9B0BA4";
             GoogleApiKey = "ABQIAAAA4j5cWwa3lDH0RkZceh7PjBTDmNAghl5kWSyuukQ0wtoJG8nFBxRPlalq-gAvbeCXMCkmrysqjXV1Gw";
             GoogleTranslateLastTargetLanguage = "en";
@@ -327,6 +327,7 @@ namespace Nikse.SubtitleEdit.Logic
         public string StartSize { get; set; }
         public int StartListViewWidth { get; set; }
         public int StartListViewHeight { get; set; }
+        public int StartTextBoxHeight { get; set; }
         public bool StartInSourceView { get; set; }
         public bool RemoveBlankLinesWhenOpening { get; set; }
         public int SubtitleLineMaximumLength { get; set; }
@@ -433,7 +434,7 @@ namespace Nikse.SubtitleEdit.Logic
             SyncListViewWithVideoWhilePlaying = false;
             AutoBackupSeconds = 60 * 15;
             SpellChecker = "hunspell";
-            AllowEditOfOriginalSubtitle = false;
+            AllowEditOfOriginalSubtitle = true;
             PromptDeleteLines = true;
             Undocked = false;
             UndockedVideoPosition = "-32000;-32000";
@@ -605,6 +606,9 @@ namespace Nikse.SubtitleEdit.Logic
         public string MainListViewAlignment { get; set; }
         public string MainListViewCopyText { get; set; }
         public string MainListViewAutoDuration { get; set; }
+        public string MainListViewColumnDeleteText { get; set; }
+        public string MainListViewColumnInsertText { get; set; }
+        public string MainListViewColumnPaste { get; set; }
         public string MainTextBoxItalic { get; set; }
         public string MainTextBoxSplitAtCursor { get; set; }
         public string MainCreateInsertSubAtVideoPos { get; set; }
@@ -1013,6 +1017,9 @@ namespace Nikse.SubtitleEdit.Logic
             subNode = node.SelectSingleNode("StartListViewHeight");
             if (subNode != null)
                 settings.General.StartListViewHeight = Convert.ToInt32(subNode.InnerText);
+            subNode = node.SelectSingleNode("StartTextBoxHeight");
+            if (subNode != null)
+                settings.General.StartTextBoxHeight = Convert.ToInt32(subNode.InnerText);           
             subNode = node.SelectSingleNode("StartInSourceView");
             if (subNode != null)
                 settings.General.StartInSourceView = Convert.ToBoolean(subNode.InnerText);
@@ -1697,6 +1704,15 @@ namespace Nikse.SubtitleEdit.Logic
                 subNode = node.SelectSingleNode("MainListViewAutoDuration");
                 if (subNode != null)
                     settings.Shortcuts.MainListViewAutoDuration = subNode.InnerText;
+                subNode = node.SelectSingleNode("MainListViewColumnDeleteText");
+                if (subNode != null)
+                    settings.Shortcuts.MainListViewColumnDeleteText = subNode.InnerText;
+                subNode = node.SelectSingleNode("MainListViewColumnInsertText");
+                if (subNode != null)
+                    settings.Shortcuts.MainListViewColumnInsertText = subNode.InnerText;
+                subNode = node.SelectSingleNode("MainListViewColumnPaste");
+                if (subNode != null)
+                    settings.Shortcuts.MainListViewColumnPaste = subNode.InnerText;
                 subNode = node.SelectSingleNode("MainEditReverseStartAndEndingForRTL");
                 if (subNode != null)
                     settings.Shortcuts.MainEditReverseStartAndEndingForRTL = subNode.InnerText;
@@ -1940,6 +1956,7 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("StartSize", settings.General.StartSize);
             textWriter.WriteElementString("StartListViewWidth", settings.General.StartListViewWidth.ToString());
             textWriter.WriteElementString("StartListViewHeight", settings.General.StartListViewHeight.ToString());
+            textWriter.WriteElementString("StartTextBoxHeight", settings.General.StartTextBoxHeight.ToString());            
             textWriter.WriteElementString("StartInSourceView", settings.General.StartInSourceView.ToString());
             textWriter.WriteElementString("RemoveBlankLinesWhenOpening", settings.General.RemoveBlankLinesWhenOpening.ToString());
             textWriter.WriteElementString("SubtitleLineMaximumLength", settings.General.SubtitleLineMaximumLength.ToString());
@@ -2191,6 +2208,9 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("MainListViewAlignment", settings.Shortcuts.MainListViewAlignment);
             textWriter.WriteElementString("MainListViewCopyText", settings.Shortcuts.MainListViewCopyText);
             textWriter.WriteElementString("MainListViewAutoDuration", settings.Shortcuts.MainListViewAutoDuration);
+            textWriter.WriteElementString("MainListViewColumnDeleteText", settings.Shortcuts.MainListViewColumnDeleteText);
+            textWriter.WriteElementString("MainListViewColumnInsertText", settings.Shortcuts.MainListViewColumnInsertText);
+            textWriter.WriteElementString("MainListViewColumnPaste", settings.Shortcuts.MainListViewColumnPaste);            
             textWriter.WriteElementString("MainEditReverseStartAndEndingForRTL", settings.Shortcuts.MainEditReverseStartAndEndingForRTL);
             textWriter.WriteElementString("MainTextBoxItalic", settings.Shortcuts.MainTextBoxItalic);
             textWriter.WriteElementString("MainTextBoxSplitAtCursor", settings.Shortcuts.MainTextBoxSplitAtCursor);

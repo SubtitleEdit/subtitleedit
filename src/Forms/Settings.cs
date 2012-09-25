@@ -565,6 +565,9 @@ namespace Nikse.SubtitleEdit.Forms
             listViewNode.Nodes.Add(Configuration.Settings.Language.Settings.Alignment + GetShortcutText(Configuration.Settings.Shortcuts.MainListViewAlignment));
             listViewNode.Nodes.Add(Configuration.Settings.Language.Settings.CopyTextOnly + GetShortcutText(Configuration.Settings.Shortcuts.MainListViewCopyText));
             listViewNode.Nodes.Add(Configuration.Settings.Language.Settings.AutoDurationSelectedLines + GetShortcutText(Configuration.Settings.Shortcuts.MainListViewAutoDuration));
+            listViewNode.Nodes.Add(Configuration.Settings.Language.Settings.ListViewColumnDelete + GetShortcutText(Configuration.Settings.Shortcuts.MainListViewColumnDeleteText));
+            listViewNode.Nodes.Add(Configuration.Settings.Language.Settings.ListViewColumnInsert + GetShortcutText(Configuration.Settings.Shortcuts.MainListViewColumnInsertText));
+            listViewNode.Nodes.Add(Configuration.Settings.Language.Settings.ListViewColumnPaste + GetShortcutText(Configuration.Settings.Shortcuts.MainListViewColumnPaste));
             treeViewShortcuts.Nodes.Add(listViewNode);
 
             var textBoxNode = new TreeNode(Configuration.Settings.Language.Settings.TextBox);
@@ -1163,6 +1166,12 @@ namespace Nikse.SubtitleEdit.Forms
                         Configuration.Settings.Shortcuts.MainListViewCopyText = GetShortcut(node.Text);
                     else if (text == Configuration.Settings.Language.Settings.AutoDurationSelectedLines.Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.MainListViewAutoDuration = GetShortcut(node.Text);
+                    else if (text == Configuration.Settings.Language.Settings.ListViewColumnDelete.Replace("&", string.Empty))
+                        Configuration.Settings.Shortcuts.MainListViewColumnDeleteText = GetShortcut(node.Text);
+                    else if (text == Configuration.Settings.Language.Settings.ListViewColumnInsert.Replace("&", string.Empty))
+                        Configuration.Settings.Shortcuts.MainListViewColumnInsertText = GetShortcut(node.Text);
+                    else if (text == Configuration.Settings.Language.Settings.ListViewColumnPaste.Replace("&", string.Empty))
+                        Configuration.Settings.Shortcuts.MainListViewColumnPaste = GetShortcut(node.Text);
                 }
             }
 

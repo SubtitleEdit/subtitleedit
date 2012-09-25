@@ -11640,6 +11640,9 @@ namespace Nikse.SubtitleEdit.Forms
             _mainListViewAutoDuration = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainListViewAutoDuration);
             _mainEditReverseStartAndEndingForRTL = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainEditReverseStartAndEndingForRTL);
             _mainListViewCopyText = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainListViewCopyText);
+            toolStripMenuItemColumnDeleteText.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainListViewColumnDeleteText);
+            ShiftTextCellsDownToolStripMenuItem.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainListViewColumnInsertText);
+            toolStripMenuItemPasteSpecial.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainListViewColumnPaste);
             toolStripMenuItemReverseRightToLeftStartEnd.ShortcutKeys = _mainEditReverseStartAndEndingForRTL;
             italicToolStripMenuItem1.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxItalic);
             _mainTextBoxSplitAtCursor = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxSplitAtCursor);
@@ -15254,11 +15257,189 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void toolStripMenuItemPasteSpecial_Click(object sender, EventArgs e)
         {
-            var form = new PasteSpecial();
-            if (form.ShowDialog(this) == DialogResult.OK)
+            string text = Clipboard.GetText();
+            var tmp = new Subtitle();
+            var format = new SubRip();
+            var list = new List<string>();
+            foreach (string line in text.Replace(Environment.NewLine, "|").Split("|".ToCharArray(), StringSplitOptions.None))
+                list.Add(line);
+            format.LoadSubtitle(tmp, list, null);
+            if (SubtitleListview1.SelectedItems.Count == 1 && tmp.Paragraphs.Count > 0)
             {
+                var form = new ColumnPaste(_subtitleAlternate != null && Configuration.Settings.General.AllowEditOfOriginalSubtitle);
+                if (form.ShowDialog(this) == DialogResult.OK)
+                {
+                    MakeHistoryForUndo(_language.BeforeColumnPaste);
+
+                    int index = FirstSelectedIndex;
+
+                    if (!form.PasteOverwrite)
+                    {
+                        for (int i = 0; i < tmp.Paragraphs.Count; i++)
+                        {
+                            if (form.PasteAll)
+                            {
+                                for (int k = _subtitle.Paragraphs.Count - 2; k > index; k--)
+                                {
+                                    _subtitle.Paragraphs[k + 1] =  new Paragraph(_subtitle.Paragraphs[k]);
+                                }
+                                if (index + i < _subtitle.Paragraphs.Count)
+                                    _subtitle.Paragraphs[index + i].Text = string.Empty;
+                            }
+                            else if (form.PasteTimeCodesOnly)
+                            {
+                                for (int k = _subtitle.Paragraphs.Count - 2; k > index; k--)
+                                {
+                                    _subtitle.Paragraphs[k + 1].StartTime.TotalMilliseconds = _subtitle.Paragraphs[k].StartTime.TotalMilliseconds;
+                                    _subtitle.Paragraphs[k + 1].EndTime.TotalMilliseconds = _subtitle.Paragraphs[k].EndTime.TotalMilliseconds;
+                                    _subtitle.Paragraphs[k + 1].StartFrame = _subtitle.Paragraphs[k].StartFrame;
+                                    _subtitle.Paragraphs[k + 1].EndFrame = _subtitle.Paragraphs[k].EndFrame;
+                                }
+                            }
+                            else if (form.PasteTextOnly)
+                            {
+                                for (int k = _subtitle.Paragraphs.Count - 2; k > index; k--)
+                                {
+                                    _subtitle.Paragraphs[k + 1].Text = _subtitle.Paragraphs[k].Text;
+                                }
+                                if (index + i < _subtitle.Paragraphs.Count)
+                                    _subtitle.Paragraphs[index + i].Text = string.Empty;
+                            }
+                            else if (form.PasteOriginalTextOnly)
+                            {
+                                for (int k = _subtitle.Paragraphs.Count - 2; k > index; k--)
+                                {
+
+                                    Paragraph original = Utilities.GetOriginalParagraph(index, _subtitle.Paragraphs[k], _subtitleAlternate.Paragraphs);
+                                    Paragraph originalNext = Utilities.GetOriginalParagraph(index, _subtitle.Paragraphs[k + 1], _subtitleAlternate.Paragraphs);
+                                    if (original != null)
+                                    {
+                                        originalNext.Text = original.Text;
+                                    }
+                                }
+                                if (index + i < _subtitle.Paragraphs.Count)
+                                {
+                                    Paragraph original = Utilities.GetOriginalParagraph(index, _subtitle.Paragraphs[index + i], _subtitleAlternate.Paragraphs);
+                                    if (original != null)
+                                        original.Text = string.Empty;
+                                }
+                            }
+                        }
+                    }
+                    for (int i = 0; i + index < _subtitle.Paragraphs.Count && i < tmp.Paragraphs.Count; i++)
+                        _subtitle.Paragraphs[index + i].Text = tmp.Paragraphs[i].Text;
+                    
+                    SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
+                    RefreshSelectedParagraph();
+                }
             }
         }
 
+        private void deleteAndShiftCellsUpToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (SubtitleListview1.SelectedIndices.Count < 1)
+                return;
+
+            List<int> list = new List<int>();
+            foreach (int index in SubtitleListview1.SelectedIndices)
+                list.Add(index);
+            list.Sort();
+            list.Reverse();
+
+            MakeHistoryForUndo(_language.BeforeColumnDelete);
+            foreach (int index in list)
+            {
+                for (int k = index; k < _subtitle.Paragraphs.Count-1; k++)
+                {
+                    _subtitle.Paragraphs[k].Text = _subtitle.Paragraphs[k + 1].Text;
+                }
+                _subtitle.Paragraphs[_subtitle.Paragraphs.Count-1].Text = string.Empty;
+
+            }
+            SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
+            RefreshSelectedParagraph();
+        }
+
+        private void toolStripMenuItemColumnDeleteTimeCodes_Click(object sender, EventArgs e)
+        {
+            if (SubtitleListview1.SelectedIndices.Count < 1)
+                return;
+
+            List<int> list = new List<int>();
+            foreach (int index in SubtitleListview1.SelectedIndices)
+                list.Add(index);
+            list.Sort();
+            list.Reverse();
+
+            MakeHistoryForUndo(_language.BeforeColumnDelete);
+            foreach (int index in list)
+            {
+                for (int k = index; k < _subtitle.Paragraphs.Count - 1; k++)
+                {
+                    _subtitle.Paragraphs[k].StartTime.TotalMilliseconds = _subtitle.Paragraphs[k + 1].StartTime.TotalMilliseconds;
+                    _subtitle.Paragraphs[k].EndTime.TotalMilliseconds = _subtitle.Paragraphs[k + 1].EndTime.TotalMilliseconds;
+                    _subtitle.Paragraphs[k].StartFrame = _subtitle.Paragraphs[k + 1].StartFrame;
+                    _subtitle.Paragraphs[k].EndFrame = _subtitle.Paragraphs[k + 1].EndFrame;
+                }
+                _subtitle.Paragraphs[_subtitle.Paragraphs.Count - 1].StartTime = new TimeCode(0, 0, 0, 0);
+                _subtitle.Paragraphs[_subtitle.Paragraphs.Count - 1].EndTime = new TimeCode(0, 0, 0, 0);
+                _subtitle.Paragraphs[_subtitle.Paragraphs.Count - 1].StartFrame = 0;
+                _subtitle.Paragraphs[_subtitle.Paragraphs.Count - 1].EndFrame = 0;
+
+            }
+            SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
+            RefreshSelectedParagraph();
+        }
+
+        private void toolStripMenuItemColumnImportText_Click(object sender, EventArgs e)
+        {
+            if (SubtitleListview1.SelectedIndices.Count < 1)
+                return;
+
+            var importText = new ImportText();
+            if (importText.ShowDialog(this) == DialogResult.OK)
+            {
+                MakeHistoryForUndo(_language.BeforeColumnImportText);
+                int index = FirstSelectedIndex;
+                for (int i = 0; i < importText.FixedSubtitle.Paragraphs.Count; i++)
+                {
+                    for (int k = _subtitle.Paragraphs.Count - 2; k > index; k--)
+                    {
+                        _subtitle.Paragraphs[k+1].Text = _subtitle.Paragraphs[k].Text;
+                    }
+                    if (index + i < _subtitle.Paragraphs.Count)
+                        _subtitle.Paragraphs[index + i].Text = string.Empty;
+                }
+
+                for (int i = 0; i + index < _subtitle.Paragraphs.Count && i < importText.FixedSubtitle.Paragraphs.Count; i++)
+                    _subtitle.Paragraphs[index + i].Text = importText.FixedSubtitle.Paragraphs[i].Text;
+
+                SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
+                RefreshSelectedParagraph();
+            }
+        }
+
+        private void ShiftTextCellsDownToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (SubtitleListview1.SelectedIndices.Count < 1)
+                return;
+           
+            int index = FirstSelectedIndex;
+            int count = SubtitleListview1.SelectedIndices.Count;
+            MakeHistoryForUndo(_language.BeforeColumnShiftCellsDown);
+            for (int i = 0; i < count; i++)
+            {
+                for (int k = _subtitle.Paragraphs.Count - 2; k >= index; k--)
+                {
+                    _subtitle.Paragraphs[k + 1].Text = _subtitle.Paragraphs[k].Text;
+                }
+                if (index + i < _subtitle.Paragraphs.Count)
+                    _subtitle.Paragraphs[index + i].Text = string.Empty;
+            }
+
+            SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
+            RefreshSelectedParagraph();           
+        }
+ 
     }
 }

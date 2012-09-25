@@ -338,6 +338,12 @@
     <Compile Include="Forms\PacEncoding.Designer.cs">
       <DependentUpon>PacEncoding.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\ColumnPaste.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ColumnPaste.Designer.cs">
+      <DependentUpon>ColumnPaste.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\PluginsGet.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -791,6 +797,7 @@
     <Compile Include="Logic\SubtitleFormats\UnknownSubtitle26.cs" />
     <Compile Include="Logic\SubtitleFormats\UnknownSubtitle27.cs" />
     <Compile Include="Logic\SubtitleFormats\UnknownSubtitle28.cs" />
+    <Compile Include="Logic\SubtitleFormats\UnknownSubtitle29.cs" />
     <Compile Include="Logic\SubtitleFormats\UnknownSubtitle5.cs" />
     <Compile Include="Logic\SubtitleFormats\OpenDvt.cs" />
     <Compile Include="Logic\SubtitleFormats\AbcIViewer.cs" />
@@ -1014,6 +1021,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\PacEncoding.resx">
       <DependentUpon>PacEncoding.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ColumnPaste.resx">
+      <DependentUpon>ColumnPaste.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\PluginsGet.resx">
       <DependentUpon>PluginsGet.cs</DependentUpon>
