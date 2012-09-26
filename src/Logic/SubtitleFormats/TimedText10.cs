@@ -480,6 +480,12 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 TimeSpan ts = TimeSpan.FromSeconds(double.Parse(s.Replace(",", "."), System.Globalization.CultureInfo.InvariantCulture));
                 return new TimeCode(ts);
             }
+            else if (s.EndsWith("t"))
+            {
+                s = s.TrimEnd('t');
+                TimeSpan ts = TimeSpan.FromTicks(long.Parse(s, System.Globalization.CultureInfo.InvariantCulture));
+                return new TimeCode(ts);
+            }
             string[] parts = s.Split(new[] { ':', '.', ',' });
             return new TimeCode(new TimeSpan(0, int.Parse(parts[0]), int.Parse(parts[1]), int.Parse(parts[2]), int.Parse(parts[3])));
         }
