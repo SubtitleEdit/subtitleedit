@@ -856,9 +856,9 @@ namespace Nikse.SubtitleEdit.Forms
                     outputFileName = FormatOutputFileNameForBatchConvert(fileName, sf.Extension, outputFolder, overwrite);
                     Console.Write(string.Format("{0}: {1} -> {2}...", count, Path.GetFileName(fileName), outputFileName));
                     if (sf.IsFrameBased && !sub.WasLoadedWithFrameNumbers)
-                        sub.CalculateFrameNumbersFromTimeCodesNoCheck(Configuration.Settings.General.DefaultFrameRate);
+                        sub.CalculateFrameNumbersFromTimeCodesNoCheck(Configuration.Settings.General.CurrentFrameRate);
                     else if (sf.IsTimeBased && sub.WasLoadedWithFrameNumbers)
-                        sub.CalculateTimeCodesFromFrameNumbers(Configuration.Settings.General.DefaultFrameRate);
+                        sub.CalculateTimeCodesFromFrameNumbers(Configuration.Settings.General.CurrentFrameRate);
                     File.WriteAllText(outputFileName, sub.ToText(sf), targetEncoding);
                     if (format.GetType() == typeof(Sami) || format.GetType() == typeof(SamiModern))
                     {
@@ -3082,9 +3082,15 @@ namespace Nikse.SubtitleEdit.Forms
                 SubtitleListview1.ForeColor = Configuration.Settings.General.SubtitleFontColor;
                 SubtitleListview1.BackColor = Configuration.Settings.General.SubtitleBackgroundColor;
                 if (Configuration.Settings.General.CenterSubtitleInTextBox)
+                {
                     textBoxListViewText.TextAlign = HorizontalAlignment.Center;
+                    textBoxListViewTextAlternate.TextAlign = HorizontalAlignment.Center;
+                }
                 else if (textBoxListViewText.TextAlign == HorizontalAlignment.Center)
+                {
                     textBoxListViewText.TextAlign = HorizontalAlignment.Left;
+                    textBoxListViewTextAlternate.TextAlign = HorizontalAlignment.Left;
+                }
 
                 SaveSubtitleListviewIndexes();
                 Utilities.InitializeSubtitleFont(SubtitleListview1);
@@ -5097,6 +5103,7 @@ namespace Nikse.SubtitleEdit.Forms
                     toolStripSeparatorAdvancedFunctions.Visible = SubtitleListview1.SelectedItems.Count == 1;
                 }
             }
+            toolStripMenuItemPasteSpecial.Visible = Clipboard.ContainsText();
         }
 
         void tsi_Click(object sender, EventArgs e)
@@ -15264,12 +15271,19 @@ namespace Nikse.SubtitleEdit.Forms
             foreach (string line in text.Replace(Environment.NewLine, "|").Split("|".ToCharArray(), StringSplitOptions.None))
                 list.Add(line);
             format.LoadSubtitle(tmp, list, null);
-            if (SubtitleListview1.SelectedItems.Count == 1 && tmp.Paragraphs.Count > 0)
+
+            if (SubtitleListview1.SelectedItems.Count == 1 && text.Length > 0)
             {
-                var form = new ColumnPaste(_subtitleAlternate != null && Configuration.Settings.General.AllowEditOfOriginalSubtitle);
+                var form = new ColumnPaste(SubtitleListview1.IsAlternateTextColumnVisible && _subtitleAlternate != null && Configuration.Settings.General.AllowEditOfOriginalSubtitle, tmp.Paragraphs.Count == 0);
                 if (form.ShowDialog(this) == DialogResult.OK)
                 {
                     MakeHistoryForUndo(_language.BeforeColumnPaste);
+
+                    if (tmp.Paragraphs.Count == 0)
+                    {
+                        foreach (string line in text.Replace(Environment.NewLine, "|").Split("|".ToCharArray(), StringSplitOptions.RemoveEmptyEntries))
+                            tmp.Paragraphs.Add(new Paragraph(0, 0, line));
+                    }
 
                     int index = FirstSelectedIndex;
 
@@ -15301,9 +15315,7 @@ namespace Nikse.SubtitleEdit.Forms
                                 for (int k = _subtitle.Paragraphs.Count - 2; k > index; k--)
                                 {
                                     _subtitle.Paragraphs[k + 1].Text = _subtitle.Paragraphs[k].Text;
-                                }
-                                if (index + i < _subtitle.Paragraphs.Count)
-                                    _subtitle.Paragraphs[index + i].Text = string.Empty;
+                                }                              
                             }
                             else if (form.PasteOriginalTextOnly)
                             {
@@ -15326,10 +15338,19 @@ namespace Nikse.SubtitleEdit.Forms
                             }
                         }
                     }
-                    for (int i = 0; i + index < _subtitle.Paragraphs.Count && i < tmp.Paragraphs.Count; i++)
-                        _subtitle.Paragraphs[index + i].Text = tmp.Paragraphs[i].Text;
+                    if (form.PasteOverwrite)
+                    {
+                        for (int i = 0; i + index < _subtitle.Paragraphs.Count && i < tmp.Paragraphs.Count; i++)
+                            _subtitle.Paragraphs[index + i].Text = tmp.Paragraphs[i].Text;
+                    }
+                    else
+                    {
+                        for (int i = 0; i + index < _subtitle.Paragraphs.Count && i < tmp.Paragraphs.Count; i++)
+                            _subtitle.Paragraphs[index + i + 1].Text = tmp.Paragraphs[i].Text;
+                    }                    
                     
                     SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
+                    SubtitleListview1.Items[index].Selected = true;
                     RefreshSelectedParagraph();
                 }
             }
@@ -15340,6 +15361,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (SubtitleListview1.SelectedIndices.Count < 1)
                 return;
 
+            int first = FirstSelectedIndex;
             List<int> list = new List<int>();
             foreach (int index in SubtitleListview1.SelectedIndices)
                 list.Add(index);
@@ -15355,41 +15377,11 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 _subtitle.Paragraphs[_subtitle.Paragraphs.Count-1].Text = string.Empty;
 
-            }
+            }            
             SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
+            SubtitleListview1.Items[first].Selected = true;
             RefreshSelectedParagraph();
-        }
-
-        private void toolStripMenuItemColumnDeleteTimeCodes_Click(object sender, EventArgs e)
-        {
-            if (SubtitleListview1.SelectedIndices.Count < 1)
-                return;
-
-            List<int> list = new List<int>();
-            foreach (int index in SubtitleListview1.SelectedIndices)
-                list.Add(index);
-            list.Sort();
-            list.Reverse();
-
-            MakeHistoryForUndo(_language.BeforeColumnDelete);
-            foreach (int index in list)
-            {
-                for (int k = index; k < _subtitle.Paragraphs.Count - 1; k++)
-                {
-                    _subtitle.Paragraphs[k].StartTime.TotalMilliseconds = _subtitle.Paragraphs[k + 1].StartTime.TotalMilliseconds;
-                    _subtitle.Paragraphs[k].EndTime.TotalMilliseconds = _subtitle.Paragraphs[k + 1].EndTime.TotalMilliseconds;
-                    _subtitle.Paragraphs[k].StartFrame = _subtitle.Paragraphs[k + 1].StartFrame;
-                    _subtitle.Paragraphs[k].EndFrame = _subtitle.Paragraphs[k + 1].EndFrame;
-                }
-                _subtitle.Paragraphs[_subtitle.Paragraphs.Count - 1].StartTime = new TimeCode(0, 0, 0, 0);
-                _subtitle.Paragraphs[_subtitle.Paragraphs.Count - 1].EndTime = new TimeCode(0, 0, 0, 0);
-                _subtitle.Paragraphs[_subtitle.Paragraphs.Count - 1].StartFrame = 0;
-                _subtitle.Paragraphs[_subtitle.Paragraphs.Count - 1].EndFrame = 0;
-
-            }
-            SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
-            RefreshSelectedParagraph();
-        }
+        }      
 
         private void toolStripMenuItemColumnImportText_Click(object sender, EventArgs e)
         {
@@ -15415,6 +15407,7 @@ namespace Nikse.SubtitleEdit.Forms
                     _subtitle.Paragraphs[index + i].Text = importText.FixedSubtitle.Paragraphs[i].Text;
 
                 SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
+                SubtitleListview1.Items[index].Selected = true; ;
                 RefreshSelectedParagraph();
             }
         }
@@ -15438,7 +15431,8 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
-            RefreshSelectedParagraph();           
+            SubtitleListview1.Items[index].Selected = true; ;
+            RefreshSelectedParagraph();
         }
  
     }

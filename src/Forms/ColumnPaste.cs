@@ -14,10 +14,13 @@ namespace Nikse.SubtitleEdit.Forms
 
         public bool PasteOverwrite { get; set; }
 
-        public ColumnPaste(bool isOriginalAvailable)
+        public ColumnPaste(bool isOriginalAvailable, bool onlyText)
         {
             InitializeComponent();
             FixLargeFonts();
+
+            radioButtonAll.Enabled = !onlyText;
+            radioButtonTimeCodes.Enabled = !onlyText;
 
             radioButtonOriginalText.Visible = isOriginalAvailable;
         }

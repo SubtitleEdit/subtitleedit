@@ -2,6 +2,7 @@ Subtitle Edit Changelog
 
 3.3 Beta 1 (17th September 2012)
 * NEW:
+   * Added column commands to list view context menu - thx Seungki
    * Edit -> Reverse RTL start/end (fix punctuations)
    * Easy import of auto backed up files (File -> Restore auto-backup...)
    * Advanced Substation Alpha style viewer/creater (right click in list view)
@@ -41,6 +42,7 @@ Subtitle Edit Changelog
    * Can now convert text subtitles in mkv/mks files via command line - thx the hulk
    * New command line conversion parameters: /list, /overwrite, /inputfolder
    * File -> Export - can now choose custom video resolution + supports color
+   * Timed Text now allows for time codes in ticks - thx Allan
 * FIXED:
    * Auto-translate now works for English to Portuguese - thx w.tambley
    * Shortcuts with numbers (0-9)
@@ -57,6 +59,8 @@ Subtitle Edit Changelog
    * Crash when splitting an empty line - thx Pimmetje
    * Fixed "Timed Text" time codes with comma in seconds - thx Steffan
    * Fixed insert line via F9 or waveform in network mode - thx Martin
+   * Fixed crash in 'Compare' - thx SimplyTheBOSS
+   * Fixed some bugs in remove interjections - thx Pson
 
 
 3.2.8 (3rd June 2012)
