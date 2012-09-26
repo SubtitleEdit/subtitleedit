@@ -1487,6 +1487,12 @@ namespace Nikse.SubtitleEdit.Forms
 
             toolStripMenuItemCopySourceText.Text = _language.Menu.ContextMenu.CopyToClipboard;
 
+            toolStripMenuItemColumn.Text = _language.Menu.ContextMenu.Column;
+            toolStripMenuItemColumnDeleteText.Text = _language.Menu.ContextMenu.ColumnDeleteTextAndShiftCellsUp;
+            ShiftTextCellsDownToolStripMenuItem.Text = _language.Menu.ContextMenu.ColumnInsertEmptyTextAndShiftCellsDown;
+            toolStripMenuItemColumnImportText.Text = _language.Menu.ContextMenu.ColumnImportTextAndShiftCellsDown;
+            toolStripMenuItemPasteSpecial.Text = _language.Menu.ContextMenu.ColumnPasteFromClipboard;
+
             splitLineToolStripMenuItem.Text = _language.Menu.ContextMenu.Split;
             toolStripMenuItemMergeLines.Text = _language.Menu.ContextMenu.MergeSelectedLines;
             toolStripMenuItemMergeDialogue.Text = _language.Menu.ContextMenu.MergeSelectedLinesASDialogue;

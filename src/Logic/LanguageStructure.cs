@@ -959,6 +959,11 @@
                     public string InsertAfter { get; set; }
                     public string InsertSubtitleAfter { get; set; }
                     public string CopyToClipboard { get; set; }
+                    public string Column { get; set; }
+                    public string ColumnDeleteTextAndShiftCellsUp { get; set; }
+                    public string ColumnInsertEmptyTextAndShiftCellsDown { get; set; }
+                    public string ColumnImportTextAndShiftCellsDown { get; set; }
+                    public string ColumnPasteFromClipboard { get; set; }
                     public string Split { get; set; }
                     public string MergeSelectedLines { get; set; }
                     public string MergeSelectedLinesASDialogue { get; set; }
