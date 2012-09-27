@@ -132,6 +132,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                             }
                         }
                     }
+                    else if (line.Trim().Length > 0)
+                    {
+                        _errorCount++;
+                    }
                 }
             }
             subtitle.Renumber(1);
