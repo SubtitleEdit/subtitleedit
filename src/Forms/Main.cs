@@ -233,7 +233,7 @@ namespace Nikse.SubtitleEdit.Forms
             try
             {
                 InitializeComponent();
-
+                SubtitleListview1.Visible = false;
                 textBoxListViewTextAlternate.Visible = false;
                 labelAlternateText.Visible = false;
                 labelAlternateCharactersPerSecond.Visible = false;
@@ -11542,6 +11542,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             MainResize();
             _loading = false;
+            SubtitleListview1.Visible = true;
             OpenVideo(_videoFileName);
             timerTextUndo.Start();
             timerAlternateTextUndo.Start();
@@ -11569,8 +11570,8 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 generateDatetimeInfoFromVideoToolStripMenuItem.Visible = false;
                 toolStripMenuItemExportCaptionInc.Visible = false;
-                toolStripMenuItemExportUltech130.Visible = false;
-            }
+                toolStripMenuItemExportUltech130.Visible = false;            
+            }            
         }
 
         void  _timerDoSyntaxColoring_Tick(object sender, EventArgs e)
@@ -15256,17 +15257,7 @@ namespace Nikse.SubtitleEdit.Forms
                     audioVisualizer.FindDataBelowThressholdBack(form.VolumeBelow, form.SecondsDuration);
                 }
             }
-        }
-
-        private void splitContainerListViewAndText_SizeChanged(object sender, EventArgs e)
-        {
-            ShowStatus(splitContainerListViewAndText.Panel1.Height.ToString() + " " + splitContainerListViewAndText.Panel2.Height.ToString());
-        }
-
-        private void splitContainerListViewAndText_SplitterMoved(object sender, SplitterEventArgs e)
-        {
-            ShowStatus(splitContainerListViewAndText.Panel1.Height.ToString() + " " + splitContainerListViewAndText.Panel2.Height.ToString());
-        }
+        }      
 
         private void toolStripMenuItemPasteSpecial_Click(object sender, EventArgs e)
         {
@@ -15356,7 +15347,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }                    
                     
                     SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
-                    SubtitleListview1.SelectIndexAndEnsureVisible(index);
+                    SubtitleListview1.SelectIndexAndEnsureVisible(index, true);
                     RefreshSelectedParagraph();
                 }
             }
@@ -15385,7 +15376,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             }            
             SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
-            SubtitleListview1.SelectIndexAndEnsureVisible(first);
+            SubtitleListview1.SelectIndexAndEnsureVisible(first, true);
             RefreshSelectedParagraph();
         }      
 
@@ -15413,7 +15404,7 @@ namespace Nikse.SubtitleEdit.Forms
                     _subtitle.Paragraphs[index + i].Text = importText.FixedSubtitle.Paragraphs[i].Text;
 
                 SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
-                SubtitleListview1.SelectIndexAndEnsureVisible(index);
+                SubtitleListview1.SelectIndexAndEnsureVisible(index, true);
                 RefreshSelectedParagraph();
             }
         }
@@ -15437,7 +15428,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
-            SubtitleListview1.SelectIndexAndEnsureVisible(index);
+            SubtitleListview1.SelectIndexAndEnsureVisible(index, true);
             RefreshSelectedParagraph();
         }
 
@@ -15461,7 +15452,6 @@ namespace Nikse.SubtitleEdit.Forms
                         return;
                 }
 
-
                 Encoding encoding = null;
                 var tmp = new Subtitle();
                 SubtitleFormat format = tmp.LoadSubtitle(openFileDialog1.FileName, out encoding, encoding);
@@ -15475,9 +15465,6 @@ namespace Nikse.SubtitleEdit.Forms
 
                     if (Configuration.Settings.General.RemoveBlankLinesWhenOpening)
                         tmp.RemoveEmptyLines();
-
-
-
 
                     if (SubtitleListview1.SelectedIndices.Count < 1)
                         return;
@@ -15498,7 +15485,7 @@ namespace Nikse.SubtitleEdit.Forms
                     for (int i = 0; i + index < _subtitle.Paragraphs.Count && i < tmp.Paragraphs.Count; i++)
                         _subtitle.Paragraphs[index + i].Text = tmp.Paragraphs[i].Text;
                     SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
-                    SubtitleListview1.SelectIndexAndEnsureVisible(index);
+                    SubtitleListview1.SelectIndexAndEnsureVisible(index, true);
                     RefreshSelectedParagraph();
                 }
             }

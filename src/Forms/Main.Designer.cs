@@ -3389,8 +3389,6 @@
             this.splitContainerListViewAndText.Size = new System.Drawing.Size(1293, 248);
             this.splitContainerListViewAndText.SplitterDistance = 131;
             this.splitContainerListViewAndText.TabIndex = 2;
-            this.splitContainerListViewAndText.SplitterMoved += new System.Windows.Forms.SplitterEventHandler(this.splitContainerListViewAndText_SplitterMoved);
-            this.splitContainerListViewAndText.SizeChanged += new System.EventHandler(this.splitContainerListViewAndText_SizeChanged);
             // 
             // SubtitleListview1
             // 
