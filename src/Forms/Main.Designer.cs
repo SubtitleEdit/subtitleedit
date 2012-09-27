@@ -205,6 +205,7 @@
             this.toolStripMenuItemColumn = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemColumnDeleteText = new System.Windows.Forms.ToolStripMenuItem();
             this.ShiftTextCellsDownToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemInsertTextFromSub = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemColumnImportText = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemPasteSpecial = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator7 = new System.Windows.Forms.ToolStripSeparator();
@@ -1942,6 +1943,7 @@
             this.toolStripMenuItemColumn.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripMenuItemColumnDeleteText,
             this.ShiftTextCellsDownToolStripMenuItem,
+            this.toolStripMenuItemInsertTextFromSub,
             this.toolStripMenuItemColumnImportText,
             this.toolStripMenuItemPasteSpecial});
             this.toolStripMenuItemColumn.Name = "toolStripMenuItemColumn";
@@ -1951,28 +1953,35 @@
             // toolStripMenuItemColumnDeleteText
             // 
             this.toolStripMenuItemColumnDeleteText.Name = "toolStripMenuItemColumnDeleteText";
-            this.toolStripMenuItemColumnDeleteText.Size = new System.Drawing.Size(271, 22);
+            this.toolStripMenuItemColumnDeleteText.Size = new System.Drawing.Size(313, 22);
             this.toolStripMenuItemColumnDeleteText.Text = "Delete text and shift text cells up";
             this.toolStripMenuItemColumnDeleteText.Click += new System.EventHandler(this.deleteAndShiftCellsUpToolStripMenuItem_Click);
             // 
             // ShiftTextCellsDownToolStripMenuItem
             // 
             this.ShiftTextCellsDownToolStripMenuItem.Name = "ShiftTextCellsDownToolStripMenuItem";
-            this.ShiftTextCellsDownToolStripMenuItem.Size = new System.Drawing.Size(271, 22);
+            this.ShiftTextCellsDownToolStripMenuItem.Size = new System.Drawing.Size(313, 22);
             this.ShiftTextCellsDownToolStripMenuItem.Text = "Insert and shift text cells down";
             this.ShiftTextCellsDownToolStripMenuItem.Click += new System.EventHandler(this.ShiftTextCellsDownToolStripMenuItem_Click);
+            // 
+            // toolStripMenuItemInsertTextFromSub
+            // 
+            this.toolStripMenuItemInsertTextFromSub.Name = "toolStripMenuItemInsertTextFromSub";
+            this.toolStripMenuItemInsertTextFromSub.Size = new System.Drawing.Size(313, 22);
+            this.toolStripMenuItemInsertTextFromSub.Text = "Insert text from subtitle and shift cells down...";
+            this.toolStripMenuItemInsertTextFromSub.Click += new System.EventHandler(this.toolStripMenuItemInsertTextFromSub_Click);
             // 
             // toolStripMenuItemColumnImportText
             // 
             this.toolStripMenuItemColumnImportText.Name = "toolStripMenuItemColumnImportText";
-            this.toolStripMenuItemColumnImportText.Size = new System.Drawing.Size(271, 22);
+            this.toolStripMenuItemColumnImportText.Size = new System.Drawing.Size(313, 22);
             this.toolStripMenuItemColumnImportText.Text = "Import text and shift text cells down...";
             this.toolStripMenuItemColumnImportText.Click += new System.EventHandler(this.toolStripMenuItemColumnImportText_Click);
             // 
             // toolStripMenuItemPasteSpecial
             // 
             this.toolStripMenuItemPasteSpecial.Name = "toolStripMenuItemPasteSpecial";
-            this.toolStripMenuItemPasteSpecial.Size = new System.Drawing.Size(271, 22);
+            this.toolStripMenuItemPasteSpecial.Size = new System.Drawing.Size(313, 22);
             this.toolStripMenuItemPasteSpecial.Text = "Paste from clipboard...";
             this.toolStripMenuItemPasteSpecial.Click += new System.EventHandler(this.toolStripMenuItemPasteSpecial_Click);
             // 
@@ -4419,6 +4428,7 @@
         private System.Windows.Forms.ToolStripMenuItem ShiftTextCellsDownToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemPasteSpecial;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemColumnImportText;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemInsertTextFromSub;
     }
 }
 

@@ -5151,7 +5151,7 @@ namespace Nikse.SubtitleEdit.Forms
                 SubtitleListview1.BeginUpdate();
                 foreach (int i in indexes)
                 {
-                    if (_subtitleAlternate != null)
+                    if (_subtitleAlternate != null && Configuration.Settings.General.AllowEditOfOriginalSubtitle)
                     {
                         Paragraph original = Utilities.GetOriginalParagraph(i, _subtitle.Paragraphs[i], _subtitleAlternate.Paragraphs);
                         if (original != null)
@@ -5726,7 +5726,7 @@ namespace Nikse.SubtitleEdit.Forms
                             p.Text = RemoveSsaStyle(p.Text);
                         SubtitleListview1.SetText(item.Index, p.Text);
 
-                        if (_subtitleAlternate != null)
+                        if (_subtitleAlternate != null && Configuration.Settings.General.AllowEditOfOriginalSubtitle)
                         {
                             Paragraph original = Utilities.GetOriginalParagraph(item.Index, p, _subtitleAlternate.Paragraphs);
                             if (original != null)
@@ -6958,7 +6958,7 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             SetFontColor(p, color);
                             SubtitleListview1.SetText(item.Index, p.Text);
-                            if (_subtitleAlternate != null)
+                            if (_subtitleAlternate != null && Configuration.Settings.General.AllowEditOfOriginalSubtitle)
                             {
                                 Paragraph original = Utilities.GetOriginalParagraph(item.Index, p, _subtitleAlternate.Paragraphs);
                                 SetFontColor(original, color);
@@ -7027,7 +7027,7 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             SetFontName(p);
                             SubtitleListview1.SetText(item.Index, p.Text);
-                            if (_subtitleAlternate != null)
+                            if (_subtitleAlternate != null && Configuration.Settings.General.AllowEditOfOriginalSubtitle)
                             {
                                 Paragraph original = Utilities.GetOriginalParagraph(item.Index, p, _subtitleAlternate.Paragraphs);
                                 SetFontName(original);
@@ -14521,7 +14521,7 @@ namespace Nikse.SubtitleEdit.Forms
                 SubtitleListview1.BeginUpdate();
                 foreach (int i in indexes)
                 {
-                    if (_subtitleAlternate != null)
+                    if (_subtitleAlternate != null && Configuration.Settings.General.AllowEditOfOriginalSubtitle)
                     {
                         Paragraph original = Utilities.GetOriginalParagraph(i, _subtitle.Paragraphs[i], _subtitleAlternate.Paragraphs);
                         if (original != null)
@@ -15356,7 +15356,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }                    
                     
                     SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
-                    SubtitleListview1.Items[index].Selected = true;
+                    SubtitleListview1.SelectIndexAndEnsureVisible(index);
                     RefreshSelectedParagraph();
                 }
             }
@@ -15385,7 +15385,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             }            
             SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
-            SubtitleListview1.Items[first].Selected = true;
+            SubtitleListview1.SelectIndexAndEnsureVisible(first);
             RefreshSelectedParagraph();
         }      
 
@@ -15413,7 +15413,7 @@ namespace Nikse.SubtitleEdit.Forms
                     _subtitle.Paragraphs[index + i].Text = importText.FixedSubtitle.Paragraphs[i].Text;
 
                 SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
-                SubtitleListview1.Items[index].Selected = true; ;
+                SubtitleListview1.SelectIndexAndEnsureVisible(index);
                 RefreshSelectedParagraph();
             }
         }
@@ -15437,8 +15437,72 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
-            SubtitleListview1.Items[index].Selected = true; ;
+            SubtitleListview1.SelectIndexAndEnsureVisible(index);
             RefreshSelectedParagraph();
+        }
+
+        private void toolStripMenuItemInsertTextFromSub_Click(object sender, EventArgs e)
+        {
+            openFileDialog1.Title = _languageGeneral.OpenSubtitle;
+            openFileDialog1.FileName = string.Empty;
+            openFileDialog1.Filter = Utilities.GetOpenDialogFilter();
+            if (openFileDialog1.ShowDialog(this) == DialogResult.OK)
+            {
+                if (!File.Exists(openFileDialog1.FileName))
+                    return;
+
+                var fi = new FileInfo(openFileDialog1.FileName);
+                if (fi.Length > 1024 * 1024 * 10) // max 10 mb
+                {
+                    if (MessageBox.Show(string.Format(_language.FileXIsLargerThan10Mb + Environment.NewLine +
+                                                      Environment.NewLine +
+                                                      _language.ContinueAnyway,
+                                                      openFileDialog1.FileName), Title, MessageBoxButtons.YesNoCancel) != DialogResult.Yes)
+                        return;
+                }
+
+
+                Encoding encoding = null;
+                var tmp = new Subtitle();
+                SubtitleFormat format = tmp.LoadSubtitle(openFileDialog1.FileName, out encoding, encoding);
+
+                if (format != null)
+                {                    
+                    if (format.IsFrameBased)
+                        tmp.CalculateTimeCodesFromFrameNumbers(CurrentFrameRate);
+                    else
+                        tmp.CalculateFrameNumbersFromTimeCodes(CurrentFrameRate);
+
+                    if (Configuration.Settings.General.RemoveBlankLinesWhenOpening)
+                        tmp.RemoveEmptyLines();
+
+
+
+
+                    if (SubtitleListview1.SelectedIndices.Count < 1)
+                        return;
+
+                    MakeHistoryForUndo(_language.BeforeColumnShiftCellsDown);
+
+                    int index = FirstSelectedIndex;
+                    for (int i = 0; i < tmp.Paragraphs.Count; i++)
+                    {
+
+                        {
+                            for (int k = _subtitle.Paragraphs.Count - 2; k > index; k--)
+                            {
+                                _subtitle.Paragraphs[k + 1].Text = _subtitle.Paragraphs[k].Text;
+                            }
+                        }
+                    }
+                    for (int i = 0; i + index < _subtitle.Paragraphs.Count && i < tmp.Paragraphs.Count; i++)
+                        _subtitle.Paragraphs[index + i].Text = tmp.Paragraphs[i].Text;
+                    SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
+                    SubtitleListview1.SelectIndexAndEnsureVisible(index);
+                    RefreshSelectedParagraph();
+                }
+            }
+
         }
  
     }
