@@ -411,6 +411,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.subtitleListView1.Size = new System.Drawing.Size(785, 156);
             this.subtitleListView1.TabIndex = 110;
             this.subtitleListView1.UseCompatibleStateImageBehavior = false;
+            this.subtitleListView1.UseSyntaxColoring = true;
             this.subtitleListView1.View = System.Windows.Forms.View.Details;
             this.subtitleListView1.SelectedIndexChanged += new System.EventHandler(this.SubtitleListView1SelectedIndexChanged);
             // 
