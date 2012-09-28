@@ -486,6 +486,7 @@ namespace Nikse.SubtitleEdit.Logic
                 AddMissingQuote = "Add missing quote (\")",
                 AddMissingQuotes = "Add missing quotes (\")",
                 FixHyphens = "Fix (remove dash) lines beginning with dash (-)",
+                FixHyphensAdd = "Fix (add dash) line pairs with only one dash (-)",
                 FixHyphen = "Fix line beginning with dash (-)",
                 XHyphensFixed = "Dashes removed: {0}",
                 AddMissingQuotesExample = "\"How are you?  -> \"How are you?\"",

@@ -33,18 +33,19 @@ namespace Nikse.SubtitleEdit.Forms
         const int IndexStartWithUppercaseLetterAfterColon = 16;
         const int IndexAddMissingQuotes = 17;
         const int IndexFixHyphens = 18;
-        const int IndexFix3PlusLines = 19;
-        const int IndexFixDoubleDash = 20;
-        const int IndexFixDoubleGreaterThan = 21;
-        const int IndexFixEllipsesStart = 22;
-        const int IndexFixMissingOpenBracket = 23;
-        const int IndexFixOcrErrorsViaReplaceList = 24;
-        const int IndexUppercaseIInsideLowercaseWord = 25;
-        const int IndexAloneLowercaseIToUppercaseIEnglish = 26;
-        const int IndexRemoveSpaceBetweenNumbers = 27;
-        const int IndexDialogsOnOneLine = 28;
-        const int IndexDanishLetterI = 29;
-        const int IndexFixSpanishInvertedQuestionAndExclamationMarks = 30;
+        const int IndexFixHyphensAdd = 19;
+        const int IndexFix3PlusLines = 20;
+        const int IndexFixDoubleDash = 21;
+        const int IndexFixDoubleGreaterThan = 22;
+        const int IndexFixEllipsesStart = 23;
+        const int IndexFixMissingOpenBracket = 24;
+        const int IndexFixOcrErrorsViaReplaceList = 25;
+        const int IndexUppercaseIInsideLowercaseWord = 26;
+        const int IndexAloneLowercaseIToUppercaseIEnglish = 27;
+        const int IndexRemoveSpaceBetweenNumbers = 28;
+        const int IndexDialogsOnOneLine = 29;
+        const int IndexDanishLetterI = 30;
+        const int IndexFixSpanishInvertedQuestionAndExclamationMarks = 31;
         int _turkishAnsiIndex = -1;
         int _danishLetterIIndex = -1;
         int _spanishInvertedQuestionAndExclamationMarksIndex = -1;
@@ -258,6 +259,7 @@ namespace Nikse.SubtitleEdit.Forms
             _fixActions.Add(new FixItem(_language.StartWithUppercaseLetterAfterColon, string.Empty, delegate { FixStartWithUppercaseLetterAfterColon(); }, ce.StartWithUppercaseLetterAfterColonTicked));
             _fixActions.Add(new FixItem(_language.AddMissingQuotes, _language.AddMissingQuotesExample, delegate { AddMissingQuotes(); }, ce.AddMissingQuotesTicked));
             _fixActions.Add(new FixItem(_language.FixHyphens, string.Empty, delegate { FixHyphens(); }, ce.FixHyphensTicked));
+            _fixActions.Add(new FixItem(_language.FixHyphensAdd, string.Empty, delegate { FixHyphensAdd(); }, ce.FixHyphensAddTicked));
             _fixActions.Add(new FixItem(_language.Fix3PlusLines, string.Empty, delegate { Fix3PlusLines(); }, ce.Fix3PlusLinesTicked));
             _fixActions.Add(new FixItem(_language.FixDoubleDash, _language.FixDoubleDashExample, delegate { FixDoubleDash(); }, ce.FixDoubleDashTicked));
             _fixActions.Add(new FixItem(_language.FixDoubleGreaterThan, _language.FixDoubleGreaterThanExample, delegate { FixDoubleGreaterThan(); }, ce.FixDoubleGreaterThanTicked));
@@ -2652,6 +2654,96 @@ namespace Nikse.SubtitleEdit.Forms
                 LogStatus(_language.FixHyphens, string.Format(_language.XHyphensFixed, iFixes));
         }
 
+        private void FixHyphensAdd()
+        {
+            string fixAction = _language.FixHyphen;
+            int iFixes = 0;
+            for (int i = 0; i < _subtitle.Paragraphs.Count; i++)
+            {
+                Paragraph p = _subtitle.Paragraphs[i];
+                string text = p.Text;
+
+                if (text.Trim().StartsWith("-") ||
+                    text.Trim().StartsWith("<i>-") ||
+                    text.Trim().StartsWith("<i> -") ||
+                    text.Trim().StartsWith("<I>-") ||
+                    text.Trim().StartsWith("<I> -") ||
+                    text.Contains(Environment.NewLine + "-") ||
+                    text.Contains(Environment.NewLine + " -") ||
+                    text.Contains(Environment.NewLine + "<i>-") ||
+                    text.Contains(Environment.NewLine + "<i> -") ||
+                    text.Contains(Environment.NewLine + "<I>-") ||
+                    text.Contains(Environment.NewLine + "<I> -"))
+                {
+                    Paragraph prev = _subtitle.GetParagraphOrDefault(i - 1);
+
+                    if (prev == null || !Utilities.RemoveHtmlTags(prev.Text).Trim().EndsWith("-"))
+                    {
+                        var lines = Utilities.RemoveHtmlTags(p.Text).Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                        int startHyphenCount = 0;
+                        foreach (string line in lines)
+                        {
+                            if (line.Trim().StartsWith("-"))
+                                startHyphenCount++;
+                        }
+                        if (startHyphenCount == 1)
+                        {
+                            string oldText = p.Text;
+
+                            string[] parts = Utilities.RemoveHtmlTags(text).Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                            if (parts.Length == 2)
+                            {
+                                bool doAdd = parts[0].Trim().EndsWith(".") || parts[0].Trim().EndsWith("!") || parts[0].Trim().EndsWith("?");
+
+                                if (parts[0].Trim().StartsWith("-") && parts[1].Contains(":"))
+                                    doAdd = false;
+                                if (parts[1].Trim().StartsWith("-") && parts[0].Contains(":"))
+                                    doAdd = false;
+
+                                if (doAdd)
+                                {
+                                    int idx = text.IndexOf("-");
+                                    if (idx < 5)
+                                    {
+                                        // add dash in second line.
+                                        if (text.Contains(Environment.NewLine + "<i>"))
+                                            text.Replace(Environment.NewLine + "<i>", Environment.NewLine + "<i>- ");
+                                        else
+                                            text.Replace(Environment.NewLine, Environment.NewLine + "- ").Replace(Environment.NewLine + "-  ", Environment.NewLine + "- ");
+                                    }
+                                    else
+                                    {
+                                        // add dash in first line.
+                                        if (text.StartsWith("<i>"))
+                                            text = "<i>- " + text.Remove(0, 3).Trim();
+                                        else if (text.StartsWith("{\\an") && text.Length > 6 && text[5] == '}')
+                                            text = text.Insert(6, "- ");
+                                        else
+                                            text = "- " + text.Trim();                                        
+                                    }
+
+                                    if (text != oldText)
+                                    {
+                                        if (AllowFix(p, fixAction))
+                                        {
+                                            p.Text = text;
+                                            iFixes++;
+                                            _totalFixes++;
+                                            AddFixToListView(p, fixAction, oldText, p.Text);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+            }
+            if (iFixes > 0)
+                LogStatus(_language.FixHyphens, string.Format(_language.XHyphensFixed, iFixes));
+        }
+
+
         private void Fix3PlusLines()
         {
             string fixAction = _language.Fix3PlusLine;
@@ -4060,6 +4152,7 @@ namespace Nikse.SubtitleEdit.Forms
             ce.StartWithUppercaseLetterAfterColonTicked = listView1.Items[IndexStartWithUppercaseLetterAfterColon].Checked;
             ce.AddMissingQuotesTicked = listView1.Items[IndexAddMissingQuotes].Checked;
             ce.FixHyphensTicked = listView1.Items[IndexFixHyphens].Checked;
+            ce.FixHyphensAddTicked = listView1.Items[IndexFixHyphensAdd].Checked;
             ce.Fix3PlusLinesTicked = listView1.Items[IndexFix3PlusLines].Checked;
             ce.FixDoubleDashTicked = listView1.Items[IndexFixDoubleDash].Checked;
             ce.FixDoubleGreaterThanTicked = listView1.Items[IndexFixDoubleGreaterThan].Checked;

@@ -242,6 +242,7 @@ namespace Nikse.SubtitleEdit.Logic
         public bool AddMissingQuotesTicked { get; set; }
         public bool Fix3PlusLinesTicked { get; set; }
         public bool FixHyphensTicked { get; set; }
+        public bool FixHyphensAddTicked { get; set; }
         public bool UppercaseIInsideLowercaseWordTicked { get; set; }
         public bool DoubleApostropheToQuoteTicked { get; set; }
         public bool AddPeriodAfterParagraphTicked { get; set; }
@@ -1354,6 +1355,9 @@ namespace Nikse.SubtitleEdit.Logic
             subNode = node.SelectSingleNode("FixHyphensTicked");
             if (subNode != null)
                 settings.CommonErrors.FixHyphensTicked = Convert.ToBoolean(subNode.InnerText);
+            subNode = node.SelectSingleNode("FixHyphensAddTicked");
+            if (subNode != null)
+                settings.CommonErrors.FixHyphensAddTicked = Convert.ToBoolean(subNode.InnerText);
             subNode = node.SelectSingleNode("UppercaseIInsideLowercaseWordTicked");
             if (subNode != null)
                 settings.CommonErrors.UppercaseIInsideLowercaseWordTicked = Convert.ToBoolean(subNode.InnerText);
@@ -2079,6 +2083,7 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("AddMissingQuotesTicked", settings.CommonErrors.AddMissingQuotesTicked.ToString());
             textWriter.WriteElementString("Fix3PlusLinesTicked", settings.CommonErrors.Fix3PlusLinesTicked.ToString());
             textWriter.WriteElementString("FixHyphensTicked", settings.CommonErrors.FixHyphensTicked.ToString());
+            textWriter.WriteElementString("FixHyphensAddTicked", settings.CommonErrors.FixHyphensAddTicked.ToString());
             textWriter.WriteElementString("UppercaseIInsideLowercaseWordTicked", settings.CommonErrors.UppercaseIInsideLowercaseWordTicked.ToString());
             textWriter.WriteElementString("DoubleApostropheToQuoteTicked", settings.CommonErrors.DoubleApostropheToQuoteTicked.ToString());
             textWriter.WriteElementString("AddPeriodAfterParagraphTicked", settings.CommonErrors.AddPeriodAfterParagraphTicked.ToString());

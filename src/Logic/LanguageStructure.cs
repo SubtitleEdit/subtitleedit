@@ -401,6 +401,7 @@
             public string AddMissingQuote { get; set; }
             public string AddMissingQuotes { get; set; }
             public string FixHyphens { get; set; }
+            public string FixHyphensAdd { get; set; }
             public string FixHyphen { get; set; }
             public string XHyphensFixed { get; set; }
             public string AddMissingQuotesExample { get; set; }
