@@ -840,8 +840,11 @@ namespace Nikse.SubtitleEdit.Logic
                     settings = new Settings();
                 }
 
-                if (string.IsNullOrEmpty(settings.General.ListViewLineSeparatorString))
-                    settings.General.ListViewLineSeparatorString = Environment.NewLine;
+                if (!string.IsNullOrEmpty(settings.General.ListViewLineSeparatorString))
+                    settings.General.ListViewLineSeparatorString = settings.General.ListViewLineSeparatorString.Replace("\n", string.Empty).Replace("\r", string.Empty);
+
+                if (string.IsNullOrEmpty(settings.General.ListViewLineSeparatorString) || settings.General.ListViewLineSeparatorString.Trim().Length == 0)
+                    settings.General.ListViewLineSeparatorString = "<br />";
             }
 
             return settings;
