@@ -865,7 +865,7 @@ namespace Nikse.SubtitleEdit.Forms
             gs.RemoveBlankLinesWhenOpening = checkBoxRemoveBlankLinesWhenOpening.Checked;
             gs.ListViewLineSeparatorString = textBoxShowLineBreaksAs.Text;
             if (gs.ListViewLineSeparatorString.Trim().Length == 0)
-                gs.ListViewLineSeparatorString = Environment.NewLine;
+                gs.ListViewLineSeparatorString = "<br />";
             gs.ListViewDoubleClickAction = comboBoxListViewDoubleClickEvent.SelectedIndex;
 
 
