@@ -233,7 +233,6 @@ namespace Nikse.SubtitleEdit.Forms
             try
             {
                 InitializeComponent();
-                SubtitleListview1.Visible = false;
                 textBoxListViewTextAlternate.Visible = false;
                 labelAlternateText.Visible = false;
                 labelAlternateCharactersPerSecond.Visible = false;
@@ -11542,7 +11541,6 @@ namespace Nikse.SubtitleEdit.Forms
             }
             MainResize();
             _loading = false;
-            SubtitleListview1.Visible = true;
             OpenVideo(_videoFileName);
             timerTextUndo.Start();
             timerAlternateTextUndo.Start();
