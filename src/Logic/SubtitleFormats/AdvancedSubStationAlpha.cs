@@ -44,8 +44,13 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             var sb = new StringBuilder();
             lines.ForEach(line => sb.AppendLine(line));
             string all = sb.ToString();
-            if (!all.Contains("[V4+ Styles]"))
+            if (!string.IsNullOrEmpty(fileName) && fileName.ToLower().EndsWith(".ass") && !all.Contains("[V4 Styles]"))
+            {
+            }
+            else if (!all.Contains("[V4+ Styles]"))
+            {
                 return false;
+            }
 
             LoadSubtitle(subtitle, lines, fileName);
             return subtitle.Paragraphs.Count > _errorCount;
@@ -82,8 +87,8 @@ Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour,
 Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text";
 
             const string timeCodeFormat = "{0}:{1:00}:{2:00}.{3:00}"; // h:mm:ss.cc
-            const string paragraphWriteFormat = "Dialogue: 0,{0},{1},{3},Default,0000,0000,0000,,{2}";
-            const string commentWriteFormat = "Comment: 0,{0},{1},{3},Default,0000,0000,0000,,{2}";
+            const string paragraphWriteFormat = "Dialogue: 0,{0},{1},{3},{4},0000,0000,0000,,{2}";
+            const string commentWriteFormat = "Comment: 0,{0},{1},{3},{4},0000,0000,0000,,{2}";
 
             var sb = new StringBuilder();
             System.Drawing.Color fontColor = System.Drawing.Color.FromArgb(Configuration.Settings.SubtitleSettings.SsaFontColorArgb);
@@ -114,10 +119,14 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                 string style = "Default";
                 if (!string.IsNullOrEmpty(p.Extra) && isValidAssHeader && styles.Contains(p.Extra))
                     style = p.Extra;
+                string actor = "Default";
+                if (!string.IsNullOrEmpty(p.Actor))
+                    actor = p.Actor;
+
                 if (p.IsComment)
-                    sb.AppendLine(string.Format(commentWriteFormat, start, end, FormatText(p), style));
+                    sb.AppendLine(string.Format(commentWriteFormat, start, end, FormatText(p), style, actor));
                 else
-                    sb.AppendLine(string.Format(paragraphWriteFormat, start, end, FormatText(p), style));
+                    sb.AppendLine(string.Format(paragraphWriteFormat, start, end, FormatText(p), style, actor));
             }
 
             if (!string.IsNullOrEmpty(subtitle.Footer) && subtitle.Footer.Contains("[fonts]" + Environment.NewLine))
@@ -591,6 +600,7 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
             int indexStart = 1;
             int indexEnd = 2;
             int indexStyle = 3;
+            int indexActor = 4;
             int indexText = 9;
             var errors = new StringBuilder();
             int lineNumber = 0;
@@ -606,6 +616,10 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                 if (line.Trim().Length == 0)
                 {
                     // skip empty lines
+                } 
+                else if (!string.IsNullOrEmpty(line) && line.Trim().StartsWith(";"))
+                {
+                    // skip comment lines
                 }
                 else if (line.Trim().ToLower().StartsWith("dialogue:")) // fix faulty font tags...
                 {
@@ -646,6 +660,8 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                                     indexText = i;
                                 else if (format[i].Trim().ToLower() == "style")
                                     indexStyle = i;
+                                else if (format[i].Trim().ToLower() == "actor")
+                                    indexActor = i;
                             }
                         }
                     }
@@ -655,6 +671,7 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                         string start = string.Empty;
                         string end = string.Empty;
                         string style = string.Empty;
+                        string actor = string.Empty;
 
                         string[] splittedLine;
 
@@ -671,6 +688,8 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                                 end = splittedLine[i].Trim();
                             else if (i == indexStyle)
                                 style = splittedLine[i].Trim();
+                            else if (i == indexActor)
+                                actor = splittedLine[i].Trim();
                             else if (i == indexText)
                                 text = splittedLine[i];
                             else if (i > indexText)
@@ -686,6 +705,8 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                             p.Text = GetFormattedText(text);
                             if (!string.IsNullOrEmpty(style))
                                 p.Extra = style;
+                            if (!string.IsNullOrEmpty(actor))
+                                p.Actor = actor;
                             p.IsComment = s.StartsWith("comment:");
                             subtitle.Paragraphs.Add(p);
                         }

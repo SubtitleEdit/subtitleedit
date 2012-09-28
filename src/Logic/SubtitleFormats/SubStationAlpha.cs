@@ -67,7 +67,7 @@ Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
 
             const string timeCodeFormat = "{0}:{1:00}:{2:00}.{3:00}"; // h:mm:ss.cc
             const string paragraphWriteFormat = "Dialogue: Marked=0,{0},{1},{3},NTP,0000,0000,0000,!Effect,{2}";
-            const string commentWriteFormat = "Dialogue: Marked=0,{0},{1},{3},NTP,0000,0000,0000,!Effect,{2}";
+            const string commentWriteFormat = "Comment: Marked=0,{0},{1},{3},NTP,0000,0000,0000,!Effect,{2}";
 
             var sb = new StringBuilder();
             System.Drawing.Color fontColor = System.Drawing.Color.FromArgb(Configuration.Settings.SubtitleSettings.SsaFontColorArgb);
@@ -363,6 +363,10 @@ Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
                 if (line.Trim().ToLower() == "[events]")
                 {
                     eventsStarted = true;
+                }
+                else if (!string.IsNullOrEmpty(line) && line.Trim().StartsWith(";"))
+                {
+                    // skip comment lines
                 }
                 else if (eventsStarted && line.Trim().Length > 0)
                 {
