@@ -32,6 +32,8 @@ namespace Nikse.SubtitleEdit.Logic
 
         public bool IsComment { get; set; }
 
+        public string Actor { get; set; }
+
         public Paragraph()
         {
             StartTime = new TimeCode(TimeSpan.FromSeconds(0));
@@ -57,6 +59,7 @@ namespace Nikse.SubtitleEdit.Logic
             Forced = paragraph.Forced;
             Extra = paragraph.Extra;
             IsComment = paragraph.IsComment;
+            Actor = paragraph.Actor;
         }
 
         public Paragraph(int startFrame, int endFrame, string text)
