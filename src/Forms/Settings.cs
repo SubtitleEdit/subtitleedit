@@ -1568,13 +1568,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
 
                     if (removeCount > 0)
-                    {
-                        if (index < listBoxNamesEtc.Items.Count)
-                            listBoxNamesEtc.SelectedIndex = index;
-                        else if (listBoxNamesEtc.Items.Count > 0)
-                            listBoxNamesEtc.SelectedIndex = index - 1;
-                        listBoxNamesEtc.Focus();
-
+                    {                       
                         namesEtc.Sort();
                         var doc = new XmlDocument();
                         doc.Load(localNamesEtcFileName);
@@ -1600,6 +1594,12 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                         doc.Save(Utilities.DictionaryFolder + "names_etc.xml");
                         LoadNamesEtc(language, false, true); // reload
+                        
+                        if (index < listBoxNamesEtc.Items.Count)
+                            listBoxNamesEtc.SelectedIndex = index;
+                        else if (listBoxNamesEtc.Items.Count > 0)
+                            listBoxNamesEtc.SelectedIndex = index - 1;
+                        listBoxNamesEtc.Focus();
 
                         buttonRemoveNameEtc.Enabled = false;
                         return;
