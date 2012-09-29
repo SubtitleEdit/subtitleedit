@@ -81,6 +81,19 @@ namespace Nikse.SubtitleEdit.Logic
             data->Blue = color.B;
         }
 
+        public void SetPixel(int x, int y, Color color, int length)
+        {
+            var data = (PixelData*)(_pBase + y * _width + x * sizeof(PixelData));
+            for (int i = 0; i < length; i++)
+            {
+                data->Alpha = color.A;
+                data->Red = color.R;
+                data->Green = color.G;
+                data->Blue = color.B;
+                data++;
+            }
+        }
+
         public Bitmap GetBitmap()
         {
             return _workingBitmap;
