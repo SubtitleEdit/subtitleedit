@@ -616,7 +616,7 @@ namespace Nikse.SubtitleEdit.Logic
         public string MainCreatePlayFromJustBefore { get; set; }
         public string MainCreateSetStart { get; set; }
         public string MainCreateSetEnd { get; set; }
-        public string MainCreateSetEndAddNewAndGoToNew { get; set; }        
+        public string MainCreateSetEndAddNewAndGoToNew { get; set; }
         public string MainCreateStartDownEndUp { get; set; }
         public string MainAdjustSetStartAndOffsetTheRest { get; set; }
         public string MainAdjustSetEndAndGotoNext { get; set; }
@@ -1025,7 +1025,7 @@ namespace Nikse.SubtitleEdit.Logic
                 settings.General.StartListViewHeight = Convert.ToInt32(subNode.InnerText);
             subNode = node.SelectSingleNode("StartTextBoxHeight");
             if (subNode != null)
-                settings.General.StartTextBoxHeight = Convert.ToInt32(subNode.InnerText);           
+                settings.General.StartTextBoxHeight = Convert.ToInt32(subNode.InnerText);
             subNode = node.SelectSingleNode("StartInSourceView");
             if (subNode != null)
                 settings.General.StartInSourceView = Convert.ToBoolean(subNode.InnerText);
@@ -1968,7 +1968,7 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("StartSize", settings.General.StartSize);
             textWriter.WriteElementString("StartListViewWidth", settings.General.StartListViewWidth.ToString());
             textWriter.WriteElementString("StartListViewHeight", settings.General.StartListViewHeight.ToString());
-            textWriter.WriteElementString("StartTextBoxHeight", settings.General.StartTextBoxHeight.ToString());            
+            textWriter.WriteElementString("StartTextBoxHeight", settings.General.StartTextBoxHeight.ToString());
             textWriter.WriteElementString("StartInSourceView", settings.General.StartInSourceView.ToString());
             textWriter.WriteElementString("RemoveBlankLinesWhenOpening", settings.General.RemoveBlankLinesWhenOpening.ToString());
             textWriter.WriteElementString("SubtitleLineMaximumLength", settings.General.SubtitleLineMaximumLength.ToString());
@@ -2223,7 +2223,7 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("MainListViewAutoDuration", settings.Shortcuts.MainListViewAutoDuration);
             textWriter.WriteElementString("MainListViewColumnDeleteText", settings.Shortcuts.MainListViewColumnDeleteText);
             textWriter.WriteElementString("MainListViewColumnInsertText", settings.Shortcuts.MainListViewColumnInsertText);
-            textWriter.WriteElementString("MainListViewColumnPaste", settings.Shortcuts.MainListViewColumnPaste);            
+            textWriter.WriteElementString("MainListViewColumnPaste", settings.Shortcuts.MainListViewColumnPaste);
             textWriter.WriteElementString("MainEditReverseStartAndEndingForRTL", settings.Shortcuts.MainEditReverseStartAndEndingForRTL);
             textWriter.WriteElementString("MainTextBoxItalic", settings.Shortcuts.MainTextBoxItalic);
             textWriter.WriteElementString("MainTextBoxSplitAtCursor", settings.Shortcuts.MainTextBoxSplitAtCursor);
@@ -2231,7 +2231,7 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("MainCreatePlayFromJustBefore", settings.Shortcuts.MainCreatePlayFromJustBefore);
             textWriter.WriteElementString("MainCreateSetStart", settings.Shortcuts.MainCreateSetStart);
             textWriter.WriteElementString("MainCreateSetEnd", settings.Shortcuts.MainCreateSetEnd);
-            textWriter.WriteElementString("MainCreateSetEndAddNewAndGoToNew", settings.Shortcuts.MainCreateSetEndAddNewAndGoToNew);            
+            textWriter.WriteElementString("MainCreateSetEndAddNewAndGoToNew", settings.Shortcuts.MainCreateSetEndAddNewAndGoToNew);
             textWriter.WriteElementString("MainCreateStartDownEndUp", settings.Shortcuts.MainCreateStartDownEndUp);
             textWriter.WriteElementString("MainAdjustSetStartAndOffsetTheRest", settings.Shortcuts.MainAdjustSetStartAndOffsetTheRest);
             textWriter.WriteElementString("MainAdjustSetEndAndGotoNext", settings.Shortcuts.MainAdjustSetEndAndGotoNext);

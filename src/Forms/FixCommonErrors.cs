@@ -2719,7 +2719,7 @@ namespace Nikse.SubtitleEdit.Forms
                                         else if (text.StartsWith("{\\an") && text.Length > 6 && text[5] == '}')
                                             text = text.Insert(6, "- ");
                                         else
-                                            text = "- " + text.Trim();                                        
+                                            text = "- " + text.Trim();
                                     }
 
                                     if (text != oldText)

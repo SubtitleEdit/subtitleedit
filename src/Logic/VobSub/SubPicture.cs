@@ -371,7 +371,7 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
         private static int GetNibble(byte[] buf, int nibble_offset)
         {
             return (buf[nibble_offset >> 1] >> ((1 - (nibble_offset & 1)) << 2)) & 0xf;
-        }  
+        }
 
         private static int DecodeRle(int index, byte[] data, out int color, out int runLength, ref bool onlyHalf, out bool restOfLine)
         {
@@ -390,7 +390,7 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
             //    binary2 = binary2.Substring(4);
 
             if (onlyHalf)
-            { 
+            {
                 byte b3 = data[index + 2];
                 b1 = (byte)(((b1 & Helper.B00001111) << 4) | ((b2 & Helper.B11110000) >> 4));
                 b2 = (byte)(((b2 & Helper.B00001111) << 4) | ((b3 & Helper.B11110000) >> 4));

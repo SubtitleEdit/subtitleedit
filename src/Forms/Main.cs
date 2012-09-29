@@ -1913,7 +1913,7 @@ namespace Nikse.SubtitleEdit.Forms
             openFileDialog1.Filter = Utilities.GetOpenDialogFilter();
 
             if (openFileDialog1.ShowDialog(this) == DialogResult.OK)
-              OpenSubtitle(openFileDialog1.FileName, null);            
+              OpenSubtitle(openFileDialog1.FileName, null);
         }
 
         public double CurrentFrameRate
@@ -8929,7 +8929,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                         ButtonInsertNewTextClick(null, null);
                     }
-                    
+
                 }
                 else if (_mainCreateStartDownEndUp == e.KeyData)
                 {
@@ -11581,8 +11581,8 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 generateDatetimeInfoFromVideoToolStripMenuItem.Visible = false;
                 toolStripMenuItemExportCaptionInc.Visible = false;
-                toolStripMenuItemExportUltech130.Visible = false;            
-            }            
+                toolStripMenuItemExportUltech130.Visible = false;
+            }
         }
 
         void  _timerDoSyntaxColoring_Tick(object sender, EventArgs e)
@@ -15269,7 +15269,7 @@ namespace Nikse.SubtitleEdit.Forms
                     audioVisualizer.FindDataBelowThressholdBack(form.VolumeBelow, form.SecondsDuration);
                 }
             }
-        }      
+        }
 
         private void toolStripMenuItemPasteSpecial_Click(object sender, EventArgs e)
         {
@@ -15324,7 +15324,7 @@ namespace Nikse.SubtitleEdit.Forms
                                 for (int k = _subtitle.Paragraphs.Count - 2; k > index; k--)
                                 {
                                     _subtitle.Paragraphs[k + 1].Text = _subtitle.Paragraphs[k].Text;
-                                }                              
+                                }
                             }
                             else if (form.PasteOriginalTextOnly)
                             {
@@ -15356,8 +15356,8 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         for (int i = 0; i + index < _subtitle.Paragraphs.Count && i < tmp.Paragraphs.Count; i++)
                             _subtitle.Paragraphs[index + i + 1].Text = tmp.Paragraphs[i].Text;
-                    }                    
-                    
+                    }
+
                     SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
                     SubtitleListview1.SelectIndexAndEnsureVisible(index, true);
                     RefreshSelectedParagraph();
@@ -15386,11 +15386,11 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 _subtitle.Paragraphs[_subtitle.Paragraphs.Count-1].Text = string.Empty;
 
-            }            
+            }
             SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
             SubtitleListview1.SelectIndexAndEnsureVisible(first, true);
             RefreshSelectedParagraph();
-        }      
+        }
 
         private void toolStripMenuItemColumnImportText_Click(object sender, EventArgs e)
         {
@@ -15425,7 +15425,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (SubtitleListview1.SelectedIndices.Count < 1)
                 return;
-           
+
             int index = FirstSelectedIndex;
             int count = SubtitleListview1.SelectedIndices.Count;
             MakeHistoryForUndo(_language.BeforeColumnShiftCellsDown);
@@ -15469,7 +15469,7 @@ namespace Nikse.SubtitleEdit.Forms
                 SubtitleFormat format = tmp.LoadSubtitle(openFileDialog1.FileName, out encoding, encoding);
 
                 if (format != null)
-                {                    
+                {
                     if (format.IsFrameBased)
                         tmp.CalculateTimeCodesFromFrameNumbers(CurrentFrameRate);
                     else
@@ -15503,6 +15503,6 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
         }
- 
+
     }
 }

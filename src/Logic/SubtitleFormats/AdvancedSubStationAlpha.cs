@@ -616,7 +616,7 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                 if (line.Trim().Length == 0)
                 {
                     // skip empty lines
-                } 
+                }
                 else if (!string.IsNullOrEmpty(line) && line.Trim().StartsWith(";"))
                 {
                     // skip comment lines
