@@ -53,7 +53,7 @@ Sony,Sony DVD/UMD,1:85,16x9
 @/: Force title
 @+: reposition top
 @|: reposition middle
-");            
+");
             int count = 0;
             foreach (Paragraph p in subtitle.Paragraphs)
             {
@@ -133,7 +133,7 @@ Sony,Sony DVD/UMD,1:85,16x9
                 subtitle.Paragraphs.Add(paragraph);
 
             foreach (Paragraph p in subtitle.Paragraphs)
-            { 
+            {
 //@+: reposition top
 //@|: reposition middle
                 if (p.Text.Contains("@+"))

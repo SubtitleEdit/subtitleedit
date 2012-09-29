@@ -69,7 +69,7 @@ namespace Nikse.SubtitleEdit.Logic
                 if (color > 0)
                 {
                     Color c = fourColors[color];
-                    bmp.SetPixel(x, y, c, len);                   
+                    bmp.SetPixel(x, y, c, len);
                 }
                 x += len;
                 if (x >= w)
@@ -87,7 +87,7 @@ namespace Nikse.SubtitleEdit.Logic
         private static int GetNibble(byte[] buf, int nibble_offset)
         {
             return (buf[nibble_offset >> 1] >> ((1 - (nibble_offset & 1)) << 2)) & 0xf;
-        }               
+        }
 
         public Bitmap GetImage(Color background, Color pattern, Color emphasis1, Color emphasis2)
         {
@@ -100,7 +100,7 @@ namespace Nikse.SubtitleEdit.Logic
                 gr.Dispose();
             }
             var fastBmp = new FastBitmap(bmp);
-            fastBmp.LockImage();            
+            fastBmp.LockImage();
             GenerateBitmap(fastBmp, rleBuffer, fourColors);
             fastBmp.UnlockImage();
             return bmp;

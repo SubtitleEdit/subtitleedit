@@ -781,7 +781,7 @@
             public string BeforeColumnPaste { get; set; }
             public string BeforeColumnDelete { get; set; }
             public string BeforeColumnImportText { get; set; }
-            public string BeforeColumnShiftCellsDown { get; set; }             
+            public string BeforeColumnShiftCellsDown { get; set; }
 
             public class MainMenu
             {
