@@ -581,6 +581,7 @@ namespace Nikse.SubtitleEdit.Forms
             createNode.Nodes.Add(Configuration.Settings.Language.Main.VideoControls.SetStartTime + GetShortcutText(Configuration.Settings.Shortcuts.MainCreateSetStart));
             createNode.Nodes.Add(Configuration.Settings.Language.Main.VideoControls.SetEndTime + GetShortcutText(Configuration.Settings.Shortcuts.MainCreateSetEnd));
             createNode.Nodes.Add(Configuration.Settings.Language.Settings.MainCreateStartDownEndUp + GetShortcutText(Configuration.Settings.Shortcuts.MainCreateStartDownEndUp));
+            createNode.Nodes.Add(Configuration.Settings.Language.Settings.CreateSetEndAddNewAndGoToNew + GetShortcutText(Configuration.Settings.Shortcuts.MainCreateSetEndAddNewAndGoToNew));
             treeViewShortcuts.Nodes.Add(createNode);
 
             var translateNote = new TreeNode(Configuration.Settings.Language.Main.VideoControls.Translate);
@@ -1204,6 +1205,8 @@ namespace Nikse.SubtitleEdit.Forms
                         Configuration.Settings.Shortcuts.MainCreateSetEnd = GetShortcut(node.Text);
                     else if (text == Configuration.Settings.Language.Settings.MainCreateStartDownEndUp.Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.MainCreateStartDownEndUp = GetShortcut(node.Text);
+                    else if (text == Configuration.Settings.Language.Settings.CreateSetEndAddNewAndGoToNew.Replace("&", string.Empty))
+                        Configuration.Settings.Shortcuts.MainCreateSetEndAddNewAndGoToNew = GetShortcut(node.Text);
                 }
             }
 

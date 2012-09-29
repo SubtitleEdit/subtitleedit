@@ -13,7 +13,7 @@ Subtitle Edit Changelog
    * New setting in Options: "Max. chars/second"
    * New settings in Options regarding "Min. duration" + "Max. duration"
    * New settings in Options regarding syntax coloring
-   * Several other new subtitle formats
+   * Many new subtitle formats (now 130+ formats supported!)
    * New settings in Options, center subtitle (in SE text boxes)
    * Tools -> Join subtitles (merge of multiple parts)
    * Tools -> Apply duration limits
@@ -51,7 +51,7 @@ Subtitle Edit Changelog
    * Reading of Ulead files with position codes - thx Steve
    * Reading of time codes + adjust with format SCC - thx Marquise
    * Accents and tildes in Cheetah caption format - thx David
-   * Now always uses output folder - thx the hulk
+   * Now always uses output folder in command line convert - thx the hulk
    * Cropping of bottom images in File -> Export - thx moob
    * Possible crash in OcrFixEngine - thx Ile
    * Possible crash when importing vobsub from mkv files - thx Ile

@@ -118,6 +118,7 @@ namespace Nikse.SubtitleEdit.Forms
         Keys _mainCreateSetStart = Keys.None;
         Keys _mainCreateSetEnd = Keys.None;
         Keys _mainCreateStartDownEndUp = Keys.None;
+        Keys _mainCreateSetEndAddNewAndGoToNew = Keys.None;
         Keys _mainAdjustSetStartAndOffsetTheRest = Keys.None;
         Keys _mainAdjustSetEndAndGotoNext = Keys.None;
         Keys _mainAdjustInsertViaEndAutoStartAndGoToNext = Keys.None;
@@ -8918,6 +8919,27 @@ namespace Nikse.SubtitleEdit.Forms
                     ButtonSetEndClick(null, null);
                     e.SuppressKeyPress = true;
                 }
+                else if (_mainCreateSetEndAddNewAndGoToNew == e.KeyData)
+                {
+                    StopAutoDuration();
+                    e.SuppressKeyPress = true;
+
+                    if (SubtitleListview1.SelectedItems.Count == 1)
+                    {
+                        double videoPosition = mediaPlayer.CurrentPosition;
+                        int index = SubtitleListview1.SelectedItems[0].Index;
+                        MakeHistoryForUndoOnlyIfNotResent(string.Format(_language.VideoControls.BeforeChangingTimeInWaveFormX, "#" + _subtitle.Paragraphs[index].Number + " " + _subtitle.Paragraphs[index].Text));
+
+                        _subtitle.Paragraphs[index].EndTime = new TimeCode(TimeSpan.FromSeconds(videoPosition));
+                        SubtitleListview1.SetStartTime(index, _subtitle.Paragraphs[index]);
+                        SubtitleListview1.SetDuration(index, _subtitle.Paragraphs[index]);
+
+                        SetDurationInSeconds(_subtitle.Paragraphs[index].Duration.TotalSeconds);
+
+                        ButtonInsertNewTextClick(null, null);
+                    }
+                    
+                }
                 else if (_mainCreateStartDownEndUp == e.KeyData)
                 {
                     if (_mainCreateStartDownEndUpParagraph == null)
@@ -11663,6 +11685,7 @@ namespace Nikse.SubtitleEdit.Forms
             _mainCreateSetStart = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainCreateSetStart);
             _mainCreateSetEnd = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainCreateSetEnd);
             _mainCreateStartDownEndUp = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainCreateStartDownEndUp);
+            _mainCreateSetEndAddNewAndGoToNew = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainCreateSetEndAddNewAndGoToNew);
             _mainAdjustSetStartAndOffsetTheRest = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainAdjustSetStartAndOffsetTheRest);
             _mainAdjustSetEndAndGotoNext = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainAdjustSetEndAndGotoNext);
             _mainAdjustInsertViaEndAutoStartAndGoToNext = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainAdjustViaEndAutoStartAndGoToNext);
