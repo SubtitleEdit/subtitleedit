@@ -368,23 +368,38 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
             }
         }
 
+        private static int GetNibble(byte[] buf, int nibble_offset)
+        {
+            return (buf[nibble_offset >> 1] >> ((1 - (nibble_offset & 1)) << 2)) & 0xf;
+        }  
+
         private static int DecodeRle(int index, byte[] data, out int color, out int runLength, ref bool onlyHalf, out bool restOfLine)
         {
             //Value      Bits   n=length, c=color
-            //1-3        4      n n c c                           (half a byte)
-            //4-15       8      0 0 n n n n c c                   (one byte)
-            //16-63     12      0 0 0 0 n n n n n n c c           (one and a half byte)
-            //64-255    16      0 0 0 0 0 0 n n n n n n n n c c   (two bytes)
+            //1-3        4      nncc               (half a byte)
+            //4-15       8      00nnnncc           (one byte)
+            //16-63     12      0000nnnnnncc       (one and a half byte)
+            //64-255    16      000000nnnnnnnncc   (two bytes)
             // When reaching EndOfLine, index is byte aligned (skip 4 bits if necessary)
             restOfLine = false;
-            string binary2 = Helper.GetBinaryString(data, index, 3);
-            if (onlyHalf)
-                binary2 = binary2.Substring(4);
+            byte b1 = data[index];
+            byte b2 = data[index + 1];
 
-            if (binary2.StartsWith("000000"))
+            //string binary2 = Helper.GetBinaryString(data, index, 3);
+            //if (onlyHalf)
+            //    binary2 = binary2.Substring(4);
+
+            if (onlyHalf)
+            { 
+                byte b3 = data[index + 2];
+                b1 = (byte)(((b1 & Helper.B00001111) << 4) | ((b2 & Helper.B11110000) >> 4));
+                b2 = (byte)(((b2 & Helper.B00001111) << 4) | ((b3 & Helper.B11110000) >> 4));
+            }
+
+            if (b1 >> 2 == 0) // if (binary2.StartsWith("000000"))
             {
-                runLength = (int)Helper.GetUInt32FromBinaryString(binary2.Substring(6, 8));
-                color = (int)Helper.GetUInt32FromBinaryString(binary2.Substring(14, 2));
+                runLength = (b1 << 6) | (b2 >> 2);
+                color = b2 & Helper.B00000011;
                 if (runLength == 0)
                 {
                     // rest of line + skip 4 bits if Only half
@@ -395,31 +410,66 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
                         return 3;
                     }
                 }
+
+                    //int runLength2 = (int)Helper.GetUInt32FromBinaryString(binary2.Substring(6, 8));
+                    //int color2 = (int)Helper.GetUInt32FromBinaryString(binary2.Substring(14, 2));
+                    //if (runLength != runLength2)
+                    //    throw (new Exception("Error in runlength"));
+                    //if (color != color2)
+                    //    throw (new Exception("Error in runlength"));
+
                 return 2;
             }
 
-            if (binary2.StartsWith("0000"))
+            if (b1 >> 4 == 0) // if (binary2.StartsWith("0000"))
             {
-                runLength = (int)Helper.GetUInt32FromBinaryString(binary2.Substring(4, 6));
-                color = (int)Helper.GetUInt32FromBinaryString(binary2.Substring(10, 2));
+                runLength = (b1 << 2) | (b2 >> 6);
+                color = (b2 & Helper.B00110000) >> 4;
                 if (onlyHalf)
                 {
                     onlyHalf = false;
                     return 2;
                 }
                 onlyHalf = true;
+
+                    //int runLength2 = (int)Helper.GetUInt32FromBinaryString(binary2.Substring(4, 6));
+                    //int color2 = (int)Helper.GetUInt32FromBinaryString(binary2.Substring(10, 2));
+                    //if (runLength != runLength2)
+                    //    throw (new Exception("Error in runlength"));
+                    //if (color != color2)
+                    //    throw (new Exception("Error in runlength"));
+
                 return 1;
             }
 
-            if (binary2.StartsWith("00"))
+
+            if (b1 >> 6 == 0) // if (binary2.StartsWith("00"))
             {
-                runLength = (int)Helper.GetUInt32FromBinaryString(binary2.Substring(2, 4));
-                color = (int)Helper.GetUInt32FromBinaryString(binary2.Substring(6, 2));
+                runLength = b1 >> 2;
+                color = b1 & Helper.B00000011;
+
+                    //int runLength2 = (int)Helper.GetUInt32FromBinaryString(binary2.Substring(2, 4));
+                    //int color2 = (int)Helper.GetUInt32FromBinaryString(binary2.Substring(6, 2));
+                    //if (runLength != runLength2)
+                    //    throw (new Exception("Error in runlength"));
+                    //if (color != color2)
+                    //    throw (new Exception("Error in runlength"));
+
+
                 return 1;
             }
 
-            runLength = (int)Helper.GetUInt32FromBinaryString(binary2.Substring(0, 2));
-            color = (int)Helper.GetUInt32FromBinaryString(binary2.Substring(2, 2));
+
+            runLength = b1 >> 6;
+            color = (b1 & Helper.B00110000) >> 4;
+
+                //int runLength3 = (int)Helper.GetUInt32FromBinaryString(binary2.Substring(0, 2));
+                //int color3 = (int)Helper.GetUInt32FromBinaryString(binary2.Substring(2, 2));
+                //if (runLength != runLength3)
+                //    throw (new Exception("Error in runlength"));
+                //if (color != color3)
+                //    throw (new Exception("Error in runlength"));
+
             if (onlyHalf)
             {
                 onlyHalf = false;
@@ -428,6 +478,68 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
             onlyHalf = true;
             return 0;
         }
+
+
+        //private static int DecodeRleNonOptimized(int index, byte[] data, out int color, out int runLength, ref bool onlyHalf, out bool restOfLine)
+        //{
+        //    //Value      Bits   n=length, c=color
+        //    //1-3        4      n n c c                           (half a byte)
+        //    //4-15       8      0 0 n n n n c c                   (one byte)
+        //    //16-63     12      0 0 0 0 n n n n n n c c           (one and a half byte)
+        //    //64-255    16      0 0 0 0 0 0 n n n n n n n n c c   (two bytes)
+        //    // When reaching EndOfLine, index is byte aligned (skip 4 bits if necessary)
+        //    restOfLine = false;
+        //    string binary2 = Helper.GetBinaryString(data, index, 3);
+        //    if (onlyHalf)
+        //        binary2 = binary2.Substring(4);
+
+        //    if (binary2.StartsWith("000000"))
+        //    {
+        //        runLength = (int)Helper.GetUInt32FromBinaryString(binary2.Substring(6, 8));
+        //        color = (int)Helper.GetUInt32FromBinaryString(binary2.Substring(14, 2));
+        //        if (runLength == 0)
+        //        {
+        //            // rest of line + skip 4 bits if Only half
+        //            restOfLine = true;
+        //            if (onlyHalf)
+        //            {
+        //                onlyHalf = false;
+        //                return 3;
+        //            }
+        //        }
+        //        return 2;
+        //    }
+
+        //    if (binary2.StartsWith("0000"))
+        //    {
+        //        runLength = (int)Helper.GetUInt32FromBinaryString(binary2.Substring(4, 6));
+        //        color = (int)Helper.GetUInt32FromBinaryString(binary2.Substring(10, 2));
+        //        if (onlyHalf)
+        //        {
+        //            onlyHalf = false;
+        //            return 2;
+        //        }
+        //        onlyHalf = true;
+        //        return 1;
+        //    }
+
+        //    if (binary2.StartsWith("00"))
+        //    {
+        //        runLength = (int)Helper.GetUInt32FromBinaryString(binary2.Substring(2, 4));
+        //        color = (int)Helper.GetUInt32FromBinaryString(binary2.Substring(6, 2));
+        //        return 1;
+        //    }
+
+        //    runLength = (int)Helper.GetUInt32FromBinaryString(binary2.Substring(0, 2));
+        //    color = (int)Helper.GetUInt32FromBinaryString(binary2.Substring(2, 2));
+        //    if (onlyHalf)
+        //    {
+        //        onlyHalf = false;
+        //        return 1;
+        //    }
+        //    onlyHalf = true;
+        //    return 0;
+        //}
 
     }
 }

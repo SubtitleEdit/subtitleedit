@@ -1911,18 +1911,9 @@ namespace Nikse.SubtitleEdit.Forms
             openFileDialog1.Title = _languageGeneral.OpenSubtitle;
             openFileDialog1.FileName = string.Empty;
             openFileDialog1.Filter = Utilities.GetOpenDialogFilter();
-            try
-            {
-                if (openFileDialog1.ShowDialog(this) == DialogResult.OK)
-                    OpenSubtitle(openFileDialog1.FileName, null);
-            }
-            catch (Exception exception)
-            {
-                System.Diagnostics.Debug.Write(exception.Message + Environment.NewLine + exception.StackTrace + Environment.NewLine + openFileDialog1.Filter);
-                openFileDialog1.Filter = Configuration.Settings.Language.General.AllFiles + "|*.*";
-                if (openFileDialog1.ShowDialog(this) == DialogResult.OK)
-                    OpenSubtitle(openFileDialog1.FileName, null);
-            }
+
+            if (openFileDialog1.ShowDialog(this) == DialogResult.OK)
+              OpenSubtitle(openFileDialog1.FileName, null);            
         }
 
         public double CurrentFrameRate

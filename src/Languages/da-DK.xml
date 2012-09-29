@@ -361,7 +361,8 @@
     <FixSpanishInvertedQuestionAndExclamationMarks>Tilføj spanske omvendte spørgsmålstegn og udråbstegn</FixSpanishInvertedQuestionAndExclamationMarks>
     <AddMissingQuote>Tilføj manglende gåseøje</AddMissingQuote>
     <AddMissingQuotes>Tilføj manglende gåseøjne</AddMissingQuotes>
-    <FixHyphens>Ret linjer startende med bindestreg (-)</FixHyphens>
+    <FixHyphens>Ret linjer (fjern -) startende med bindestreg (-)</FixHyphens>
+    <FixHyphensAdd>Ret linjer (tilføj -) startende med bindestreg (-)</FixHyphensAdd>
     <FixHyphen>Ret linje startende med bindestreg (-)</FixHyphen>
     <XHyphensFixed>Bindestreger rettet: {0}</XHyphensFixed>
     <AddMissingQuotesExample>"Hvordan har du det? -&gt;" Hvordan har du det? "</AddMissingQuotesExample>
@@ -1238,9 +1239,10 @@ Fortsæt?</SubtitleAppendPrompt>
     <UpdateShortcut>Opdater</UpdateShortcut>
     <ShortcutIsNotValid>Genvej er ikke gyldig: {0}</ShortcutIsNotValid>
     <ToggleDockUndockOfVideoControls>Skift dok/frigør af video kontrol</ToggleDockUndockOfVideoControls>
+    <CreateSetEndAddNewAndGoToNew>Sæt slut, tilføj ny og gå til ny</CreateSetEndAddNewAndGoToNew>
     <AdjustViaEndAutoStartAndGoToNext>Juster via slutposition og gå til næste</AdjustViaEndAutoStartAndGoToNext>
-    <AdjustSetStartAutoDurationAndGoToNext>Set start, auto varighed og gå til næste</AdjustSetStartAutoDurationAndGoToNext>
-    <AdjustSetEndNextStartAndGoToNext>Set slut, næste start og gå til næste</AdjustSetEndNextStartAndGoToNext>
+    <AdjustSetStartAutoDurationAndGoToNext>Sæt start, auto varighed og gå til næste</AdjustSetStartAutoDurationAndGoToNext>
+    <AdjustSetEndNextStartAndGoToNext>Sæt slut, næste start og gå til næste</AdjustSetEndNextStartAndGoToNext>
     <AdjustStartDownEndUpAndGoToNext>Tast ned = set start, tast op = sæt slut og gå til næste</AdjustStartDownEndUpAndGoToNext>
     <AdjustSelected100MsForward>Flyt valgte linjer 100 ms frem</AdjustSelected100MsForward>
     <AdjustSelected100MsBack>Flyt valgte linjer 100 ms tilbage</AdjustSelected100MsBack>

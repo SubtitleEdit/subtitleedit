@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using Nikse.SubtitleEdit.Logic.VobSub;
 
 namespace Nikse.SubtitleEdit.Logic
 {
@@ -31,6 +30,65 @@ namespace Nikse.SubtitleEdit.Logic
             return new TimeCode(int.Parse(parts[0]), int.Parse(parts[1]), int.Parse(parts[2]), int.Parse(parts[3]));
         }
 
+        private static int GenerateBitmap(FastBitmap bmp, byte[] buf, List<Color> fourColors)
+        {
+            int w = bmp.Width;
+            int h = bmp.Height;
+            int v;
+            int x, y, len, color, nibble_end;
+            int nibbleOffset = 0;
+            nibble_end = buf.Length * 2;
+            x = 0;
+            y = 0;
+            for (; ; )
+            {
+                if (nibbleOffset >= nibble_end)
+                    return -1;
+                v = GetNibble(buf, nibbleOffset++);
+                if (v < 0x4)
+                {
+                    v = (v << 4) | GetNibble(buf, nibbleOffset++);
+                    if (v < 0x10)
+                    {
+                        v = (v << 4) | GetNibble(buf, nibbleOffset++);
+                        if (v < 0x040)
+                        {
+                            v = (v << 4) | GetNibble(buf, nibbleOffset++);
+                            if (v < 4)
+                            {
+                                v |= (w - x) << 2;
+                            }
+                        }
+                    }
+                }
+                len = v >> 2;
+                if (len > (w - x))
+                    len = (w - x);
+                color = v & 0x03;
+
+                if (color > 0)
+                {
+                    Color c = fourColors[color];
+                    bmp.SetPixel(x, y, c, len);                   
+                }
+                x += len;
+                if (x >= w)
+                {
+                    y++;
+                    if (y >= h)
+                        break;
+                    x = 0;
+                    nibbleOffset += (nibbleOffset & 1);
+                }
+            }
+            return 0;
+        }
+
+        private static int GetNibble(byte[] buf, int nibble_offset)
+        {
+            return (buf[nibble_offset >> 1] >> ((1 - (nibble_offset & 1)) << 2)) & 0xf;
+        }               
+
         public Bitmap GetImage(Color background, Color pattern, Color emphasis1, Color emphasis2)
         {
             var fourColors = new List<Color> { background, pattern, emphasis1, emphasis2 };
@@ -42,8 +100,8 @@ namespace Nikse.SubtitleEdit.Logic
                 gr.Dispose();
             }
             var fastBmp = new FastBitmap(bmp);
-            fastBmp.LockImage();
-            SubPicture.GenerateBitmap(rleBuffer, fastBmp, 0, 0, fourColors, 1);
+            fastBmp.LockImage();            
+            GenerateBitmap(fastBmp, rleBuffer, fourColors);
             fastBmp.UnlockImage();
             return bmp;
         }
