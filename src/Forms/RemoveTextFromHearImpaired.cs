@@ -783,6 +783,10 @@ namespace Nikse.SubtitleEdit.Forms
                                     if (!string.IsNullOrEmpty(temp) && temp.StartsWith("-"))
                                         temp = temp.Remove(0, 1).Trim();
                                 }
+                                else if (index == 3 && !string.IsNullOrEmpty(temp) && temp.StartsWith("<i>-"))
+                                {
+                                    temp = temp.Remove(3, 1);
+                                }
                                 else if (index > 0)
                                 {
                                     pre = text.Substring(0, index);

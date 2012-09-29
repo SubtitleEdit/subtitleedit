@@ -285,6 +285,18 @@ namespace Test
 
         [TestMethod()]
         [DeploymentItem("SubtitleEdit.exe")]
+        public void RemoveInterjections6bItalic()
+        {
+            FormRemoveTextForHearImpaired_Accessor target = new FormRemoveTextForHearImpaired_Accessor();
+            target.checkBoxRemoveInterjections.Checked = true;
+            string text = "<i>Mm-hm, Ballpark.</i>";
+            string expected = "<i>Ballpark.</i>";
+            string actual = target.RemoveInterjections(text);
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod()]
+        [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveInterjections7()
         {
             FormRemoveTextForHearImpaired_Accessor target = new FormRemoveTextForHearImpaired_Accessor();
@@ -330,6 +342,19 @@ namespace Test
             string actual = target.RemoveInterjections(text);
             Assert.AreEqual(expected, actual);
         }
+
+        [TestMethod()]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void RemoveInterjections10Italic()
+        {
+            FormRemoveTextForHearImpaired_Accessor target = new FormRemoveTextForHearImpaired_Accessor();
+            target.checkBoxRemoveInterjections.Checked = true;
+            string text = "<i>- You like her, huh." + Environment.NewLine + "- I do</i>";
+            string expected = "<i>- You like her." + Environment.NewLine + "- I do</i>";
+            string actual = target.RemoveInterjections(text);
+            Assert.AreEqual(expected, actual);
+        }
+
 
         [TestMethod()]
         [DeploymentItem("SubtitleEdit.exe")]
