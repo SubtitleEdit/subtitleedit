@@ -616,6 +616,7 @@ namespace Nikse.SubtitleEdit.Logic
         public string MainCreatePlayFromJustBefore { get; set; }
         public string MainCreateSetStart { get; set; }
         public string MainCreateSetEnd { get; set; }
+        public string MainCreateSetEndAddNewAndGoToNew { get; set; }        
         public string MainCreateStartDownEndUp { get; set; }
         public string MainAdjustSetStartAndOffsetTheRest { get; set; }
         public string MainAdjustSetEndAndGotoNext { get; set; }
@@ -696,6 +697,7 @@ namespace Nikse.SubtitleEdit.Logic
             MainCreatePlayFromJustBefore = string.Empty;
             MainCreateSetStart = string.Empty;
             MainCreateSetEnd = string.Empty;
+            MainCreateSetEndAddNewAndGoToNew = string.Empty;
             MainCreateStartDownEndUp = string.Empty;
             MainAdjustSetStartAndOffsetTheRest = "Control+Space";
             MainAdjustSetEndAndGotoNext = string.Empty;
@@ -1741,6 +1743,9 @@ namespace Nikse.SubtitleEdit.Logic
                 subNode = node.SelectSingleNode("MainCreateSetEnd");
                 if (subNode != null)
                     settings.Shortcuts.MainCreateSetEnd = subNode.InnerText;
+                subNode = node.SelectSingleNode("MainCreateSetEndAddNewAndGoToNew");
+                if (subNode != null)
+                    settings.Shortcuts.MainCreateSetEndAddNewAndGoToNew = subNode.InnerText;
                 subNode = node.SelectSingleNode("MainCreateStartDownEndUp");
                 if (subNode != null)
                     settings.Shortcuts.MainCreateStartDownEndUp = subNode.InnerText;
@@ -2226,6 +2231,7 @@ namespace Nikse.SubtitleEdit.Logic
             textWriter.WriteElementString("MainCreatePlayFromJustBefore", settings.Shortcuts.MainCreatePlayFromJustBefore);
             textWriter.WriteElementString("MainCreateSetStart", settings.Shortcuts.MainCreateSetStart);
             textWriter.WriteElementString("MainCreateSetEnd", settings.Shortcuts.MainCreateSetEnd);
+            textWriter.WriteElementString("MainCreateSetEndAddNewAndGoToNew", settings.Shortcuts.MainCreateSetEndAddNewAndGoToNew);            
             textWriter.WriteElementString("MainCreateStartDownEndUp", settings.Shortcuts.MainCreateStartDownEndUp);
             textWriter.WriteElementString("MainAdjustSetStartAndOffsetTheRest", settings.Shortcuts.MainAdjustSetStartAndOffsetTheRest);
             textWriter.WriteElementString("MainAdjustSetEndAndGotoNext", settings.Shortcuts.MainAdjustSetEndAndGotoNext);
