@@ -843,6 +843,7 @@
     <Compile Include="Logic\TimeCode.cs" />
     <Compile Include="Logic\TransportStream\AdaptationField.cs" />
     <Compile Include="Logic\TransportStream\Helper.cs" />
+    <Compile Include="Logic\TransportStream\HummingDecoder.cs" />
     <Compile Include="Logic\TransportStream\Packet.cs" />
     <Compile Include="Logic\TransportStream\PacketizedElementaryStream.cs" />
     <Compile Include="Logic\TransportStream\ProgramAssociationTable.cs" />

@@ -2431,7 +2431,7 @@ namespace Nikse.SubtitleEdit.Forms
             try
             {
                 var buffer = new byte[1];
-                var fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.Read) { Position = 0 };
+                var fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite) { Position = 0 };
                 fs.Read(buffer, 0, buffer.Length);
                 fs.Close();
                 return buffer[0] == 0x47; // 47hex (71 dec) == TS sync byte
@@ -7573,8 +7573,62 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
+        internal static void Invert(byte[] src, int srcOffset, byte[] dest, int destOffset, int count)
+        {
+
+        byte[] _inversionTable = new byte[256]
+		{
+			0x00, 0x80, 0x40, 0xc0, 0x20, 0xa0, 0x60, 0xe0,
+			0x10, 0x90, 0x50, 0xd0, 0x30, 0xb0, 0x70, 0xf0,
+			0x08, 0x88, 0x48, 0xc8, 0x28, 0xa8, 0x68, 0xe8,
+			0x18, 0x98, 0x58, 0xd8, 0x38, 0xb8, 0x78, 0xf8,
+			0x04, 0x84, 0x44, 0xc4, 0x24, 0xa4, 0x64, 0xe4,
+			0x14, 0x94, 0x54, 0xd4, 0x34, 0xb4, 0x74, 0xf4,
+			0x0c, 0x8c, 0x4c, 0xcc, 0x2c, 0xac, 0x6c, 0xec,
+			0x1c, 0x9c, 0x5c, 0xdc, 0x3c, 0xbc, 0x7c, 0xfc,
+			0x02, 0x82, 0x42, 0xc2, 0x22, 0xa2, 0x62, 0xe2,
+			0x12, 0x92, 0x52, 0xd2, 0x32, 0xb2, 0x72, 0xf2,
+			0x0a, 0x8a, 0x4a, 0xca, 0x2a, 0xaa, 0x6a, 0xea,
+			0x1a, 0x9a, 0x5a, 0xda, 0x3a, 0xba, 0x7a, 0xfa,
+			0x06, 0x86, 0x46, 0xc6, 0x26, 0xa6, 0x66, 0xe6,
+			0x16, 0x96, 0x56, 0xd6, 0x36, 0xb6, 0x76, 0xf6,
+			0x0e, 0x8e, 0x4e, 0xce, 0x2e, 0xae, 0x6e, 0xee,
+			0x1e, 0x9e, 0x5e, 0xde, 0x3e, 0xbe, 0x7e, 0xfe,
+			0x01, 0x81, 0x41, 0xc1, 0x21, 0xa1, 0x61, 0xe1,
+			0x11, 0x91, 0x51, 0xd1, 0x31, 0xb1, 0x71, 0xf1,
+			0x09, 0x89, 0x49, 0xc9, 0x29, 0xa9, 0x69, 0xe9,
+			0x19, 0x99, 0x59, 0xd9, 0x39, 0xb9, 0x79, 0xf9,
+			0x05, 0x85, 0x45, 0xc5, 0x25, 0xa5, 0x65, 0xe5,
+			0x15, 0x95, 0x55, 0xd5, 0x35, 0xb5, 0x75, 0xf5,
+			0x0d, 0x8d, 0x4d, 0xcd, 0x2d, 0xad, 0x6d, 0xed,
+			0x1d, 0x9d, 0x5d, 0xdd, 0x3d, 0xbd, 0x7d, 0xfd,
+			0x03, 0x83, 0x43, 0xc3, 0x23, 0xa3, 0x63, 0xe3,
+			0x13, 0x93, 0x53, 0xd3, 0x33, 0xb3, 0x73, 0xf3,
+			0x0b, 0x8b, 0x4b, 0xcb, 0x2b, 0xab, 0x6b, 0xeb,
+			0x1b, 0x9b, 0x5b, 0xdb, 0x3b, 0xbb, 0x7b, 0xfb,
+			0x07, 0x87, 0x47, 0xc7, 0x27, 0xa7, 0x67, 0xe7,
+			0x17, 0x97, 0x57, 0xd7, 0x37, 0xb7, 0x77, 0xf7,
+			0x0f, 0x8f, 0x4f, 0xcf, 0x2f, 0xaf, 0x6f, 0xef,
+			0x1f, 0x9f, 0x5f, 0xdf, 0x3f, 0xbf, 0x7f, 0xff,
+		};
+            for (int i = srcOffset; count-- > 0; i++)
+                dest[destOffset++] = _inversionTable[src[i]];
+        }
+
+        internal static void DecodePacketAddress(byte[] buffer, int offset, out int magazine, out int number)
+        {
+            byte magAndPacketNumber = Nikse.SubtitleEdit.Logic.TransportStream.HummingDecoder.Decode(buffer[offset], buffer[offset + 1]);
+            magazine = magAndPacketNumber & 7;
+            number = (magAndPacketNumber >> 3) & 0x1f; // packet number (Y)
+        }
+
+
         private bool ImportSubtitleFromTransportStream(string fileName)
         {
+		    const int TeletextPacketLength = 45;
+//		    const int TeletextPacketPayloadLength = TeletextPacketLength - 3; // without Clock Run-in and Framing Code
+
+
             var tsParser = new Nikse.SubtitleEdit.Logic.TransportStream.TransportStreamParser();
             tsParser.ParseTsFile(fileName);
 
@@ -7591,6 +7645,38 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 if (sp.DataBuffer != null)
                 {
+                    byte[] _buffer = new byte[sp.DataBuffer.Length];
+                    Invert(sp.DataBuffer, 5, _buffer, 0, sp.DataBuffer.Length-5);
+
+                    int magazineNumber;
+                    int packetNumber;
+                    DecodePacketAddress(_buffer, 0, out magazineNumber, out packetNumber);
+
+                    string text = System.Text.Encoding.UTF8.GetString(_buffer, 2, 40);
+
+                    StringBuilder sbText = new StringBuilder();
+                    for (int i=0; i<40; i+=2)
+                    {
+                        byte[] b = new byte[1];
+                        b[0] = Nikse.SubtitleEdit.Logic.TransportStream.HummingDecoder.Decode(_buffer[i+2], _buffer[i+3]);
+                        sbText.Append(System.Text.Encoding.UTF8.GetString(b, 0, 1));
+                    }
+
+                    //MessageBox.Show("RAW: " + text);
+                    //MessageBox.Show("Humming decoded:" + sbText.ToString());
+
+                    if (packetNumber == 0)
+                    { // Header
+                        MessageBox.Show("Header");
+                    }
+                    else if (packetNumber < 26)
+                    { // normal packets intended for direct display (1 to 25)
+                        MessageBox.Show("Normal packet: " + text);
+                    }
+                    else
+                    { // non-displayable packets (26 to 31)
+                    }
+
                     MemoryStream ms = new MemoryStream(sp.DataBuffer);
                     var list = BluRaySupParser.ParseBluRaySup(ms, log, true);
                     foreach (var sup in list)
@@ -11709,6 +11795,68 @@ namespace Nikse.SubtitleEdit.Forms
             _mainTranslateCustomSearch6  = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainTranslateCustomSearch6);
         }
 
+        public static object GetPropertiesAndDoAction(string pluginFileName, out string name, out string text, out decimal version, out string description, out string actionType, out string shortcut, out System.Reflection.MethodInfo mi)
+        {
+            name = null;
+            text = null;
+            version = 0;
+            description = null;
+            actionType = null;
+            shortcut = null;
+            mi = null;
+
+            System.Reflection.Assembly assembly = System.Reflection.Assembly.Load(System.IO.File.ReadAllBytes(pluginFileName));
+            string objectName = Path.GetFileNameWithoutExtension(pluginFileName);
+            if (assembly != null)
+            {
+                Type pluginType = assembly.GetType("SubtitleEdit." + objectName);
+                object pluginObject = Activator.CreateInstance(pluginType);
+
+                // IPlugin
+                System.Reflection.PropertyInfo[] pis = pluginType.GetProperties(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
+                Type[] tt = pluginType.GetInterfaces();
+                System.Reflection.PropertyInfo[] pis2 = tt[0].GetProperties(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
+                Type t = null;
+                foreach (Type t2 in tt)
+                {
+                    if (t2.Name == "IPlugin")
+                    {
+                        t = t2;
+                        break;
+                    }
+                }
+
+                System.Reflection.PropertyInfo pi = t.GetProperty("Name");
+                if (pi != null)
+                    name = (string)pi.GetValue(pluginObject, null);
+
+                pi = t.GetProperty("Text");
+                if (pi != null)
+                    text = (string)pi.GetValue(pluginObject, null);
+
+                pi = t.GetProperty("Description");
+                if (pi != null)
+                    description = (string)pi.GetValue(pluginObject, null);
+
+                pi = t.GetProperty("Version");
+                if (pi != null)
+                    version = Convert.ToDecimal(pi.GetValue(pluginObject, null));
+
+                pi = t.GetProperty("ActionType");
+                if (pi != null)
+                    actionType = (string)pi.GetValue(pluginObject, null);
+
+                mi = t.GetMethod("DoAction");
+
+                pi = t.GetProperty("Shortcut");
+                if (pi != null)
+                    shortcut = (string)pi.GetValue(pluginObject, null);
+
+                return pluginObject;
+            }
+            return null;
+        }
+
         private void LoadPlugins()
         {
             string path = Path.Combine(Configuration.BaseDirectory, "Plugins");
@@ -11753,106 +11901,89 @@ namespace Nikse.SubtitleEdit.Forms
 
             foreach (string pluginFileName in pluginFiles)
             {
-                Type pluginType = null;
-                System.Reflection.Assembly assembly = System.Reflection.Assembly.Load(System.IO.File.ReadAllBytes(pluginFileName));
-                string objectName = Path.GetFileNameWithoutExtension(pluginFileName);
-                if (assembly != null)
+                try
                 {
-                    try
+                    string name, description, text, shortcut, actionType;
+                    decimal version;
+                    System.Reflection.MethodInfo mi;
+                    GetPropertiesAndDoAction(pluginFileName, out name, out text, out version, out description, out actionType, out shortcut, out mi);
+                    if (!string.IsNullOrEmpty(name) && !string.IsNullOrEmpty(actionType) && mi != null)
                     {
-                        pluginType = assembly.GetType("SubtitleEdit." + objectName);
-                        object pluginObject = Activator.CreateInstance(pluginType);
-                        System.Reflection.PropertyInfo pi = pluginType.GetProperty("Name");
-                        string name = (string)pi.GetValue(pluginObject, null);
-                        pi = pluginType.GetProperty("Version");
-                        string version = (string)pi.GetValue(pluginObject, null);
-                        pi = pluginType.GetProperty("ActionType");
-                        string actionType = (string)pi.GetValue(pluginObject, null);
-                        System.Reflection.MethodInfo mi = pluginType.GetMethod("DoAction");
+                        ToolStripMenuItem item = new ToolStripMenuItem();
+                        item.Name = "Plugin" + toolsPluginCount.ToString();
+                        item.Text = name;
+                        item.Tag = pluginFileName;
 
-                        if (!string.IsNullOrEmpty(name) && !string.IsNullOrEmpty(version) && !string.IsNullOrEmpty(actionType) && mi != null)
+                        if (!string.IsNullOrEmpty(shortcut))
+                            item.ShortcutKeys = Utilities.GetKeys(shortcut);
+
+                        if (string.Compare(actionType, "File", true) == 0)
                         {
-                            ToolStripMenuItem item = new ToolStripMenuItem();
-                            item.Name = "Plugin" + toolsPluginCount.ToString();
-                            item.Text = name;
-                            item.Tag = pluginFileName;
-
-                            pi = pluginType.GetProperty("ShortCut");
-                            if (pi != null)
-                                item.ShortcutKeys = Utilities.GetKeys((string)pi.GetValue(pluginObject, null));
-
-                            if (string.Compare(actionType, "File", true) == 0)
+                            if (filePluginCount == 0)
                             {
-                                if (filePluginCount == 0)
-                                {
-                                    var tss = new ToolStripSeparator();
-                                    tss.Name = "PluginSepFile";
-                                    fileToolStripMenuItem.DropDownItems.Insert(fileToolStripMenuItem.DropDownItems.Count - 2, tss);
-                                }
-                                item.Click += PluginToolClick;
-                                fileToolStripMenuItem.DropDownItems.Insert(fileToolStripMenuItem.DropDownItems.Count - 2, item);
-                                filePluginCount++;
+                                var tss = new ToolStripSeparator();
+                                tss.Name = "PluginSepFile";
+                                fileToolStripMenuItem.DropDownItems.Insert(fileToolStripMenuItem.DropDownItems.Count - 2, tss);
                             }
-                            else if (string.Compare(actionType, "Tool", true) == 0)
+                            item.Click += PluginToolClick;
+                            fileToolStripMenuItem.DropDownItems.Insert(fileToolStripMenuItem.DropDownItems.Count - 2, item);
+                            filePluginCount++;
+                        }
+                        else if (string.Compare(actionType, "Tool", true) == 0)
+                        {
+                            if (toolsPluginCount == 0)
                             {
-                                if (toolsPluginCount == 0)
-                                {
-                                    var tss = new ToolStripSeparator();
-                                    tss.Name = "PluginSepTool";
-                                    toolsToolStripMenuItem.DropDownItems.Add(tss);
-                                }
-                                item.Click += PluginToolClick;
-                                toolsToolStripMenuItem.DropDownItems.Add(item);
-                                toolsPluginCount++;
+                                var tss = new ToolStripSeparator();
+                                tss.Name = "PluginSepTool";
+                                toolsToolStripMenuItem.DropDownItems.Add(tss);
                             }
-                            else if (string.Compare(actionType, "Sync", true) == 0)
+                            item.Click += PluginToolClick;
+                            toolsToolStripMenuItem.DropDownItems.Add(item);
+                            toolsPluginCount++;
+                        }
+                        else if (string.Compare(actionType, "Sync", true) == 0)
+                        {
+                            if (syncPluginCount == 0)
                             {
-                                if (syncPluginCount == 0)
-                                {
-                                    var tss = new ToolStripSeparator();
-                                    tss.Name = "PluginSepSync";
-                                    toolStripMenuItemSyncronization.DropDownItems.Add(tss);
-                                }
-                                item.Click += PluginToolClick;
-                                toolStripMenuItemSyncronization.DropDownItems.Add(item);
-                                syncPluginCount++;
+                                var tss = new ToolStripSeparator();
+                                tss.Name = "PluginSepSync";
+                                toolStripMenuItemSyncronization.DropDownItems.Add(tss);
                             }
-                            else if (string.Compare(actionType, "Translate", true) == 0)
+                            item.Click += PluginToolClick;
+                            toolStripMenuItemSyncronization.DropDownItems.Add(item);
+                            syncPluginCount++;
+                        }
+                        else if (string.Compare(actionType, "Translate", true) == 0)
+                        {
+                            if (syncPluginCount == 0)
                             {
-                                if (syncPluginCount == 0)
-                                {
-                                    var tss = new ToolStripSeparator();
-                                    tss.Name = "PluginSepTranslate";
-                                    toolStripMenuItemAutoTranslate.DropDownItems.Add(tss);
-                                }
-                                item.Click += PluginToolClick;
-                                toolStripMenuItemAutoTranslate.DropDownItems.Add(item);
-                                syncPluginCount++;
+                                var tss = new ToolStripSeparator();
+                                tss.Name = "PluginSepTranslate";
+                                toolStripMenuItemAutoTranslate.DropDownItems.Add(tss);
                             }
-
-                            else if (string.Compare(actionType, "SpellCheck", true) == 0)
-                            {
-                                if (syncPluginCount == 0)
-                                {
-                                    var tss = new ToolStripSeparator();
-                                    tss.Name = "PluginSepSpellCheck";
-                                    toolStripMenuItemSpellCheckMain.DropDownItems.Add(tss);
-                                }
-                                item.Click += PluginToolClick;
-                                toolStripMenuItemSpellCheckMain.DropDownItems.Add(item);
-                                syncPluginCount++;
-                            }
+                            item.Click += PluginToolClick;
+                            toolStripMenuItemAutoTranslate.DropDownItems.Add(item);
+                            syncPluginCount++;
                         }
 
+                        else if (string.Compare(actionType, "SpellCheck", true) == 0)
+                        {
+                            if (syncPluginCount == 0)
+                            {
+                                var tss = new ToolStripSeparator();
+                                tss.Name = "PluginSepSpellCheck";
+                                toolStripMenuItemSpellCheckMain.DropDownItems.Add(tss);
+                            }
+                            item.Click += PluginToolClick;
+                            toolStripMenuItemSpellCheckMain.DropDownItems.Add(item);
+                            syncPluginCount++;
+                        }
                     }
-                    catch (Exception exception)
-                    {
-                        MessageBox.Show("Error loading plugin:" + pluginFileName + ": " + exception.Message);
-                    }
-                    finally
-                    {
-                        assembly = null;
-                    }
+
+                }
+                catch (Exception exception)
+                {
+                    MessageBox.Show("Error loading plugin:" + pluginFileName + ": " + exception.Message);
                 }
             }
         }
@@ -11862,43 +11993,30 @@ namespace Nikse.SubtitleEdit.Forms
             try
             {
                 var item = (ToolStripItem) sender;
-                Type pluginType = null;
-                System.Reflection.Assembly assembly = System.Reflection.Assembly.Load(System.IO.File.ReadAllBytes(item.Tag.ToString()));
-                if (assembly != null)
+                string name, description, text, shortcut, actionType;
+                decimal version;
+                System.Reflection.MethodInfo mi;
+                object pluginObject = GetPropertiesAndDoAction(item.Tag.ToString(), out name, out text, out version, out description, out actionType, out shortcut, out mi);
+
+                string pluginResult = (string)mi.Invoke(pluginObject, new object[] { this, text, 25.0, _fileName, "", "" });
+
+                if (!string.IsNullOrEmpty(pluginResult) && pluginResult.Length > 10 && text != pluginResult)
                 {
-                    string objectName = Path.GetFileNameWithoutExtension(item.Tag.ToString());
-                    pluginType = assembly.GetType("SubtitleEdit." + objectName);
-                    object pluginObject = Activator.CreateInstance(pluginType);
-                    System.Reflection.MethodInfo mi = pluginType.GetMethod("DoAction");
+                    MakeHistoryForUndo(string.Format("Before running plugin: {0} {1}", name, version));
+                    string[] lineArray = pluginResult.Split(Environment.NewLine.ToCharArray());
+                    List<string> lines = new List<string>();
+                    foreach (string line in lineArray)
+                        lines.Add(line);
+                    var s = new Subtitle();
+                    new SubRip().LoadSubtitle(s, lines, null);
+                    _subtitle.Paragraphs.Clear();
+                    foreach (Paragraph p in s.Paragraphs)
+                        _subtitle.Paragraphs.Add(p);
 
-                    System.Reflection.PropertyInfo pi = pluginType.GetProperty("Name");
-                    string name = (string)pi.GetValue(pluginObject, null);
-                    pi = pluginType.GetProperty("Version");
-                    string version = (string)pi.GetValue(pluginObject, null);
-
-
-                    var temp = new Subtitle(_subtitle);
-                    string text = temp.ToText(new SubRip());
-                    string pluginResult = (string)mi.Invoke(pluginObject, new object[] { this, text, 25.0, _fileName, "", "" });
-
-                    if (!string.IsNullOrEmpty(pluginResult) && pluginResult.Length > 10 && text != pluginResult)
-                    {
-                        MakeHistoryForUndo(string.Format("Before running plugin: {0} {1}", name, version));
-                        string[] lineArray = pluginResult.Split(Environment.NewLine.ToCharArray());
-                        List<string> lines = new List<string>();
-                        foreach (string line in lineArray)
-                            lines.Add(line);
-                        var s = new Subtitle();
-                        new SubRip().LoadSubtitle(s, lines, null);
-                        _subtitle.Paragraphs.Clear();
-                        foreach (Paragraph p in s.Paragraphs)
-                            _subtitle.Paragraphs.Add(p);
-
-                        SaveSubtitleListviewIndexes();
-                        SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
-                        RestoreSubtitleListviewIndexes();
-                        ShowSource();
-                    }
+                    SaveSubtitleListviewIndexes();
+                    SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
+                    RestoreSubtitleListviewIndexes();
+                    ShowSource();
                 }
             }
             catch (Exception exception)

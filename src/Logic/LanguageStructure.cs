@@ -1147,6 +1147,22 @@
             public string Start { get; set; }
         }
 
+        public class PluginsGet
+        {
+            public string Title { get; set; }
+            public string InstalledPlugins { get; set; }
+            public string GetPlugins { get; set; }
+            public string Name { get; set; }
+            public string Description { get; set; }
+            public string Version { get; set; }
+            public string OpenPluginsFolder { get; set; }
+            public string GetPluginsInfo1 { get; set; }
+            public string GetPluginsInfo2 { get; set; }
+            public string PluginXDownloaded { get; set; }
+            public string Download { get; set; }
+            public string Remove { get; set; }
+        }
+
         public class RemoveTextFromHearImpaired
         {
             public string Title { get; set; }

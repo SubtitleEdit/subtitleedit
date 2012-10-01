@@ -49,6 +49,7 @@ namespace Nikse.SubtitleEdit.Logic
         public LanguageStructure.NetworkJoin NetworkJoin;
         public LanguageStructure.NetworkLogAndInfo NetworkLogAndInfo;
         public LanguageStructure.NetworkStart NetworkStart;
+        public LanguageStructure.PluginsGet PluginsGet;
         public LanguageStructure.RemoveTextFromHearImpaired RemoveTextFromHearImpaired;
         public LanguageStructure.ReplaceDialog ReplaceDialog;
         public LanguageStructure.RestoreAutoBackup RestoreAutoBackup;
@@ -1229,6 +1230,22 @@ can edit in same subtitle file (collaboration)",
                 Information = @"Start new session where multiple persons
 can edit in same subtitle file (collaboration)",
                 Start = "Start",
+            };
+
+            PluginsGet = new LanguageStructure.PluginsGet
+            {
+                Title = "Plugins",
+                InstalledPlugins = "Installed plugins",
+                GetPlugins = "Get plugins",
+                Name = "Navn",
+                Description = "Beskrivelse",
+                Version = "Version",
+                OpenPluginsFolder = "Open 'Plugins' folder",
+                GetPluginsInfo1 = "Subtitle Edit plugins must be downloaded to the 'Plugins' folder",
+                GetPluginsInfo2 = "Choose plugin and click 'Download'",
+                PluginXDownloaded = "Plugin {0} downloaded",
+                Download = "&Download",
+                Remove = "&Remove",
             };
 
             RemoveTextFromHearImpaired = new LanguageStructure.RemoveTextFromHearImpaired
