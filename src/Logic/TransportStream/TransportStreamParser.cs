@@ -88,7 +88,7 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
                         sb.AppendLine("SectionNumber: " + packet.ProgramAssociationTable.SectionNumber);
                         sb.AppendLine("LastSectionNumber: " + packet.ProgramAssociationTable.LastSectionNumber);
 
-                     //   MessageBox.Show(sb.ToString());
+                        //MessageBox.Show(sb.ToString());
                     }
                     else if (packet.IsPrivateStream1 || SubtitlePacketIds.Contains(packet.PacketId))
                     {
