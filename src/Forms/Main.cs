@@ -5984,7 +5984,7 @@ namespace Nikse.SubtitleEdit.Forms
                 int firstSelectedIndex = SubtitleListview1.SelectedItems[0].Index;
 
                 Paragraph currentParagraph = _subtitle.GetParagraphOrDefault(firstSelectedIndex);
-                var newParagraph = new Paragraph();
+                var newParagraph = new Paragraph(currentParagraph);
 
                 string oldText = currentParagraph.Text;
                 string[] lines = currentParagraph.Text.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
