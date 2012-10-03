@@ -766,6 +766,7 @@
     <Compile Include="Logic\SubtitleFormats\StructuredTitles.cs" />
     <Compile Include="Logic\SubtitleFormats\SubtitleEditorProject.cs" />
     <Compile Include="Logic\SubtitleFormats\SwiftText .cs" />
+    <Compile Include="Logic\SubtitleFormats\Tek.cs" />
     <Compile Include="Logic\SubtitleFormats\TimedText10.cs" />
     <Compile Include="Logic\SubtitleFormats\TimedText200604.cs" />
     <Compile Include="Logic\SubtitleFormats\TitleExchangePro.cs" />
@@ -800,6 +801,8 @@
     <Compile Include="Logic\SubtitleFormats\UnknownSubtitle29.cs" />
     <Compile Include="Logic\SubtitleFormats\UnknownSubtitle30.cs" />
     <Compile Include="Logic\SubtitleFormats\UnknownSubtitle32.cs" />
+    <Compile Include="Logic\SubtitleFormats\UnknownSubtitle33.cs" />
+    <Compile Include="Logic\SubtitleFormats\UnknownSubtitle34.cs" />
     <Compile Include="Logic\SubtitleFormats\UnknownSubtitle5.cs" />
     <Compile Include="Logic\SubtitleFormats\OpenDvt.cs" />
     <Compile Include="Logic\SubtitleFormats\AbcIViewer.cs" />
