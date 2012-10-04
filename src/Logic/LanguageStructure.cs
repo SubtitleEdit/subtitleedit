@@ -782,6 +782,10 @@
             public string BeforeColumnDelete { get; set; }
             public string BeforeColumnImportText { get; set; }
             public string BeforeColumnShiftCellsDown { get; set; }
+            public string ErrorLoadingPluginXErrorY { get; set; }
+            public string BeforeRunningPluginXVersionY { get; set; }
+            public string UnableToReadPluginResult { get; set; }
+            public string UnableToCreateBackupDirectory { get; set; }
 
             public class MainMenu
             {

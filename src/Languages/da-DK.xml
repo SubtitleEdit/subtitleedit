@@ -980,6 +980,10 @@ Fortsæt?</SubtitleAppendPrompt>
     <BeforeColumnDelete>Før kolonne slet</BeforeColumnDelete>
     <BeforeColumnImportText>Før kolonne import af tekst</BeforeColumnImportText>
     <BeforeColumnShiftCellsDown>Før indsæt og flyt kolonner ned</BeforeColumnShiftCellsDown>
+    <ErrorLoadingPluginXErrorY>Fejl ved indlæsning af plugin: {0}: {1}</ErrorLoadingPluginXErrorY>
+    <BeforeRunningPluginXVersionY>Før kørsel af plugin: {0}: {1}</BeforeRunningPluginXVersionY>
+    <UnableToReadPluginResult>Kan ikke læse underteksterne fra plugin!</UnableToReadPluginResult>
+    <UnableToCreateBackupDirectory>Ikke oprette backup mappe {0}: {1}</UnableToCreateBackupDirectory>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Vælg undertekst fra Matroska fil</Title>
@@ -1039,6 +1043,20 @@ Fortsæt?</SubtitleAppendPrompt>
  kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <Start>Start</Start>
   </NetworkStart>
+  <PluginsGet>
+    <Title>Plugins</Title>
+    <InstalledPlugins>Installerede plugins</InstalledPlugins>
+    <GetPlugins>Hent plugins</GetPlugins>
+    <Name>Name</Name>
+    <Description>Beskrivelse</Description>
+    <Version>Version</Version>
+    <OpenPluginsFolder>Åbn 'Plugins' mappe</OpenPluginsFolder>
+    <GetPluginsInfo1>Undertekst Rediger plugins skal downloades til 'Plugins' folder</GetPluginsInfo1>
+    <GetPluginsInfo2>Vælg plugin og klikke på ' , Download '</GetPluginsInfo2>
+    <PluginXDownloaded>Plugin {0} downloadet</PluginXDownloaded>
+    <Download>&amp;Download</Download>
+    <Remove>&amp;Fjern</Remove>
+  </PluginsGet>
   <RemoveTextFromHearImpaired>
     <Title>Fjern tekst for hørehæmmede</Title>
     <RemoveTextConditions>Betingelser</RemoveTextConditions>
