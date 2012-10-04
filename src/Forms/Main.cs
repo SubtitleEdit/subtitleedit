@@ -6953,7 +6953,7 @@ namespace Nikse.SubtitleEdit.Forms
                             {
                                 Paragraph original = Utilities.GetOriginalParagraph(item.Index, p, _subtitleAlternate.Paragraphs);
                                 SetFontColor(original, color);
-                                SubtitleListview1.SetAlternateText(item.Index, p.Text);
+                                SubtitleListview1.SetAlternateText(item.Index, original.Text);
                             }
                         }
                     }
@@ -7022,7 +7022,7 @@ namespace Nikse.SubtitleEdit.Forms
                             {
                                 Paragraph original = Utilities.GetOriginalParagraph(item.Index, p, _subtitleAlternate.Paragraphs);
                                 SetFontName(original);
-                                SubtitleListview1.SetAlternateText(item.Index, p.Text);
+                                SubtitleListview1.SetAlternateText(item.Index, original.Text);
                             }
                         }
                     }
@@ -10180,7 +10180,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
                 RestoreSubtitleListviewIndexes();
-
+                
                 Configuration.Settings.RecentFiles.Add(_fileName, FirstVisibleIndex, FirstSelectedIndex, _videoFileName, _subtitleAlternateFileName);
                 Configuration.Settings.Save();
                 UpdateRecentFilesUI();
@@ -11010,6 +11010,12 @@ namespace Nikse.SubtitleEdit.Forms
             openFileDialog1.FileName = string.Empty;
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
+                if (audioVisualizer.WavePeaks != null)
+                {
+                    audioVisualizer.WavePeaks = null;
+                    audioVisualizer.ResetSpectrogram();
+                    audioVisualizer.Invalidate();
+                }
                 openFileDialog1.InitialDirectory = Path.GetDirectoryName(openFileDialog1.FileName);
                 OpenVideo(openFileDialog1.FileName);
             }
@@ -11809,7 +11815,7 @@ namespace Nikse.SubtitleEdit.Forms
             string objectName = Path.GetFileNameWithoutExtension(pluginFileName);
             if (assembly != null)
             {
-                Type pluginType = assembly.GetType("SubtitleEdit." + objectName);
+                Type pluginType = assembly.GetType("Nikse.SubtitleEdit.PluginLogic." + objectName);
                 object pluginObject = Activator.CreateInstance(pluginType);
 
                 // IPlugin
@@ -11983,7 +11989,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 catch (Exception exception)
                 {
-                    MessageBox.Show("Error loading plugin:" + pluginFileName + ": " + exception.Message);
+                    MessageBox.Show(string.Format(_language.ErrorLoadingPluginXErrorY, pluginFileName, exception.Message));
                 }
             }
         }
@@ -11998,25 +12004,65 @@ namespace Nikse.SubtitleEdit.Forms
                 System.Reflection.MethodInfo mi;
                 object pluginObject = GetPropertiesAndDoAction(item.Tag.ToString(), out name, out text, out version, out description, out actionType, out shortcut, out mi);
 
-                string pluginResult = (string)mi.Invoke(pluginObject, new object[] { this, text, 25.0, _fileName, "", "" });
+                string rawText = null;
+                SubtitleFormat format = GetCurrentSubtitleFormat();
+                if (format != null)
+                {
+                    if (GetCurrentSubtitleFormat().IsFrameBased)
+                        _subtitle.CalculateTimeCodesFromFrameNumbers(CurrentFrameRate);
+                    else
+                        _subtitle.CalculateFrameNumbersFromTimeCodes(CurrentFrameRate);
+                    rawText = _subtitle.ToText(format);
+                }
+
+                string pluginResult = (string)mi.Invoke(pluginObject, 
+                                      new object[] 
+                                      { 
+                                        this, 
+                                        _subtitle.ToText(new SubRip()), 
+                                        Configuration.Settings.General.CurrentFrameRate, 
+                                        Configuration.Settings.General.ListViewLineSeparatorString, 
+                                        _fileName, 
+                                        _videoFileName, 
+                                        rawText 
+                                      });
 
                 if (!string.IsNullOrEmpty(pluginResult) && pluginResult.Length > 10 && text != pluginResult)
                 {
-                    MakeHistoryForUndo(string.Format("Before running plugin: {0} {1}", name, version));
-                    string[] lineArray = pluginResult.Split(Environment.NewLine.ToCharArray());
-                    List<string> lines = new List<string>();
-                    foreach (string line in lineArray)
+                    var lines = new List<string>();
+                    foreach (string line in pluginResult.Replace(Environment.NewLine, "|").Split("|".ToCharArray(), StringSplitOptions.None))
                         lines.Add(line);
-                    var s = new Subtitle();
-                    new SubRip().LoadSubtitle(s, lines, null);
-                    _subtitle.Paragraphs.Clear();
-                    foreach (Paragraph p in s.Paragraphs)
-                        _subtitle.Paragraphs.Add(p);
 
-                    SaveSubtitleListviewIndexes();
-                    SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
-                    RestoreSubtitleListviewIndexes();
-                    ShowSource();
+                    MakeHistoryForUndo(string.Format(_language.BeforeRunningPluginXVersionY, name, version));
+
+                    var s = new Subtitle();
+                    SubtitleFormat newFormat = null;
+                    foreach (SubtitleFormat subtitleFormat in SubtitleFormat.AllSubtitleFormats)
+                    {
+                        if (subtitleFormat.IsMine(lines, null))
+                        {
+                            subtitleFormat.LoadSubtitle(s, lines, null);
+                            newFormat = subtitleFormat;
+                        }
+                    }
+
+                    if (newFormat != null)
+                    {
+                        _subtitle.Paragraphs.Clear();
+                        _subtitle.Header = s.Header;
+                        _subtitle.Footer = s.Footer;
+                        foreach (Paragraph p in s.Paragraphs)
+                            _subtitle.Paragraphs.Add(p);
+
+                        SaveSubtitleListviewIndexes();
+                        SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
+                        RestoreSubtitleListviewIndexes();
+                        ShowSource();
+                    }
+                    else
+                    {
+                        MessageBox.Show(_language.UnableToReadPluginResult);
+                    }
                 }
             }
             catch (Exception exception)
@@ -12040,7 +12086,7 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                         catch (Exception exception)
                         {
-                            MessageBox.Show("Unable to create backup directory " + Configuration.AutoBackupFolder + ": " + exception.Message);
+                            MessageBox.Show(string.Format(_language.UnableToCreateBackupDirectory, Configuration.AutoBackupFolder, exception.Message));
                         }
                     }
                     string title = string.Empty;
@@ -13567,7 +13613,6 @@ namespace Nikse.SubtitleEdit.Forms
             audioVisualizer.WavePeaks = null;
             audioVisualizer.ResetSpectrogram();
             audioVisualizer.Invalidate();
-
         }
 
         private void ToolStripMenuItemVideoDropDownOpening(object sender, EventArgs e)

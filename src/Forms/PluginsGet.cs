@@ -77,13 +77,25 @@ namespace Nikse.SubtitleEdit.Forms
             labelPleaseWait.Text = string.Empty;
             if (e.Error != null)
             {
-                MessageBox.Show("Download failed: " + e.Error.Message);
-                DialogResult = DialogResult.Cancel;
+                MessageBox.Show("Download of plugin list failed: " + e.Error.Message);
                 return;
             }
             try
             {
                 _pluginDoc.LoadXml(System.Text.Encoding.UTF8.GetString(e.Result));
+                string[] arr = _pluginDoc.DocumentElement.SelectSingleNode("SubtitleEditVersion").InnerText.Split("., ".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                double requiredVersion = Convert.ToDouble(arr[0] + "." + arr[1]);
+
+                string[] versionInfo = Utilities.AssemblyVersion.Split('.');
+                double currentVersion = Convert.ToDouble(versionInfo[0] + "." + versionInfo[1]);
+
+                if (currentVersion < requiredVersion)
+                {
+                    MessageBox.Show("You need a newer version of Subtitle Edit!");
+                    DialogResult = DialogResult.Cancel;
+                    return;
+                }
+
                 foreach (XmlNode node in _pluginDoc.DocumentElement.SelectNodes("Plugin"))
                 {
                     ListViewItem item = new ListViewItem(node.SelectSingleNode("Name").InnerText);
