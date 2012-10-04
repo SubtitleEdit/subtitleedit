@@ -874,6 +874,10 @@ namespace Nikse.SubtitleEdit.Logic
                 BeforeColumnDelete = "Before column delete",
                 BeforeColumnImportText = "Before column import text",
                 BeforeColumnShiftCellsDown = "Before column shift cells down",
+                ErrorLoadingPluginXErrorY = "Error loading plugin: {0}: {1}",
+                BeforeRunningPluginXVersionY = "Before running plugin: {0}: {1}",
+                UnableToReadPluginResult = "Unable to read subtitle result from plugin!",
+                UnableToCreateBackupDirectory = "Unable to create backup directory {0}: {1}",
 
                 Menu = new LanguageStructure.Main.MainMenu
                 {
@@ -1237,8 +1241,8 @@ can edit in same subtitle file (collaboration)",
                 Title = "Plugins",
                 InstalledPlugins = "Installed plugins",
                 GetPlugins = "Get plugins",
-                Name = "Navn",
-                Description = "Beskrivelse",
+                Name = "Name",
+                Description = "Description",
                 Version = "Version",
                 OpenPluginsFolder = "Open 'Plugins' folder",
                 GetPluginsInfo1 = "Subtitle Edit plugins must be downloaded to the 'Plugins' folder",
