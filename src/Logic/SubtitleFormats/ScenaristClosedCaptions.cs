@@ -591,12 +591,18 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             sb.AppendLine("Scenarist_SCC V1.0");
             sb.AppendLine();
 
-            foreach (Paragraph p in subtitle.Paragraphs)
+            for (int i=0; i<subtitle.Paragraphs.Count; i++)
             {
+                Paragraph p = subtitle.Paragraphs[i];
                 sb.AppendLine(string.Format("{0}\t94ae 94ae 9420 9420 {1} 942f 942f", ToTimeCode(p.StartTime.TotalMilliseconds), ToSccText(p.Text)));
                 sb.AppendLine();
-                sb.AppendLine(string.Format("{0}\t942c 942c", ToTimeCode(p.EndTime.TotalMilliseconds)));
-                sb.AppendLine();
+
+                Paragraph next = subtitle.GetParagraphOrDefault(i + 1);
+                if (next == null || Math.Abs(next.StartTime.TotalMilliseconds - p.EndTime.TotalMilliseconds) > 100)
+                {
+                    sb.AppendLine(string.Format("{0}\t942c 942c", ToTimeCode(p.EndTime.TotalMilliseconds)));
+                    sb.AppendLine();
+                }
             }
             return sb.ToString();
         }
