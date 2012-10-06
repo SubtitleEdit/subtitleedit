@@ -878,9 +878,17 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
             var sb = new StringBuilder();
             index = feIndex + 3;
+            string preTextCode = System.Text.Encoding.ASCII.GetString(buffer, index +1, 3);
+            if (preTextCode == "W16")
+                index+=6;
             while (index < buffer.Length && buffer[index] != endDelimiter)
             {
-                if (buffer[index] == 0xFF)
+                if (preTextCode == "W16")
+                {
+                    sb.Append(System.Text.Encoding.GetEncoding(1200).GetString(buffer, index, 2)); // codepage 1200 = unicode
+                    index++;
+                }
+                else if (buffer[index] == 0xFF)
                 {
                     sb.Append(" ");
                 }

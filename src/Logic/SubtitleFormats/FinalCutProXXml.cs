@@ -53,7 +53,15 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 "<!DOCTYPE fcpxml>" + Environment.NewLine +
                 Environment.NewLine +
                 "<fcpxml version=\"1.1\">" + Environment.NewLine +
-                "  <project name=\"Yma LIVE in Moscow\" uid=\"C1E80D31-57D4-4E6C-84F6-86A75DCB7A54\" eventID=\"B5C98F73-1D7E-4205-AEF3-1485842EB191\" location=\"file://localhost/Volumes/Macintosh%20HD/Final%20Cut%20Projects/Yma%20Sumac/Yma%20LIVE%20in%20Moscow/\" >" + Environment.NewLine +
+                "  <project name=\"Subtitle Edit subtitle\" uid=\"C1E80D31-57D4-4E6C-84F6-86A75DCB7A54\" eventID=\"B5C98F73-1D7E-4205-AEF3-1485842EB191\" location=\"file://localhost/Volumes/Macintosh%20HD/Final%20Cut%20Projects/Yma%20Sumac/Yma%20LIVE%20in%20Moscow/\" >" + Environment.NewLine +
+                "    <resources>" + Environment.NewLine +
+                "      <format id=\"r1\" name=\"FFVideoFormatDV720x480i5994\" frameDuration=\"2002/60000s\" fieldOrder=\"lower first\" width=\"720\" height=\"480\" paspH=\"10\" paspV=\"11\"/>" + Environment.NewLine +
+                     //<projectRef id="r2" name="Yma DVD" uid="B5C98F73-1D7E-4205-AEF3-1485842EB191"/>
+                     //<asset id="r3" name="Live In Moscow MERGED-quicktime" uid="E2951D8A4091478C718D981E70B29220" projectRef="r2" src="file://localhost/Volumes/Macintosh%20HD/Final%20Cut%20Events/Yma%20DVD/Original%20Media/Live%20In%20Moscow%20MERGED-quicktime.mov" start="0s" duration="128865737/30000s" hasVideo="1"/>
+                     //<format id="r4" name="FFVideoFormatRateUndefined" width="640" height="480"/>
+                     //<asset id="r5" name="Moscow opening credit frame 2" uid="492B77C679B1EEDA87E214703CD9B236" projectRef="r2" src="file://localhost/Volumes/Macintosh%20HD/Final%20Cut%20Events/Yma%20DVD/Original%20Media/Moscow%20opening%20credit%20frame%202.png" start="0s" duration="0s" hasVideo="1"/>
+                "      <effect id=\"r6\" name=\"Custom\" uid=\".../Titles.localized/Build In:Out.localized/Custom.localized/Custom.moti\"/>" + Environment.NewLine +
+                "    </resources>" + Environment.NewLine +
                 "    <sequence duration=\"10282752480/2400000s\" format=\"r1\" tcStart=\"0s\" tcFormat=\"NDF\" audioLayout=\"stereo\" audioRate=\"48k\">" + Environment.NewLine +
                 "      <spine>" + Environment.NewLine +
                 "      </spine>" + Environment.NewLine +

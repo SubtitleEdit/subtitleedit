@@ -93,7 +93,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         _errorCount++;
                     }
                 }
-                else if (line.StartsWith("\t"))
+                else if (line.StartsWith("\t") && p != null)
                 {
                     if (p.Text.Length > 1000)
                     {
